@@ -1,0 +1,9 @@
+People = {anna,bob,carl}
+
+type(cold(People))
+type(contact(People,People))
+
+(cold(X))[0.3]
+(cold(X)|contact(X,Y)&&cold(Y))[0.5]
+(contact(anna,bob))[0.8]
+(cold(bob))[0.7]

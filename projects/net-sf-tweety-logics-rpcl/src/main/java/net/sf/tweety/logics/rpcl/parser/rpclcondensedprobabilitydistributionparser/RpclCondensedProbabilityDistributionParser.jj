@@ -1,0 +1,223 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  JDK_VERSION = "1.6";
+}
+
+PARSER_BEGIN(RpclCondensedProbabilityDistributionParser)
+package net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.rpclcondensedprobabilitydistributionparser;
+
+import java.io.*;
+import java.util.*;
+import net.sf.tweety.*;
+import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
+import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
+import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
+
+/**
+ * This class implements a parser for condensed relational probability distributions. The BNF for 
+ * condensed relational probability distributions is given by (start symbol is DISTRIBUTION)
+ * <br>
+ * <br>DISTRIBUTION				::== (PROBABILITYASSIGNMENT)*
+ * <br>PROBABILITYASSIGNMENT	::== INTERPRETATION "=" PROBABILITY
+ * <br>INTERPRETATION			::== "{" (INSTANCEASSIGNMENT ("," INSTANCEASSIGNMENT)*)? "}"
+ * <br>INSTANCEASSIGNMENT		::== "<" PREDICATE "," "{" (CONSTANTSET "=" MULTIPLICATOR ("," CONSTANTSET "=" MULTIPLICATOR)*)?  "}" ">"
+ * <br>CONSTANTSET				::== "{" CONSTANT ("," CONSTANT)* "}"
+ * <br>
+ * <br>PREDICATE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with a lowercase letter at the beginning.<br>
+ * <br>CONSTANT is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with a lowercase letter at the beginning.<br>
+ * <br>MULTIPLICATOR is a natural number.<br>
+ */
+public class RpclCondensedProbabilityDistributionParser {
+
+	/**
+     * The semantics used for the distribution to be read. 
+     */
+	private RpclSemantics semantics;
+	
+	/**
+	 * The signature for this parser (if one has been given)
+	 */
+	private FolSignature signature = null;
+
+	public RpclCondensedProbabilityDistributionParser(){
+	}
+	
+	public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics){
+		this(semantics,null);		
+	}
+	
+	public RpclCondensedProbabilityDistributionParser(RpclSemantics semantics, FolSignature signature){
+		this.semantics = semantics;		
+		this.signature = signature;
+	}
+
+	public void setSemantics(RpclSemantics semantics){
+	 	this.semantics = semantics;
+	}
+
+	public void setSignature(FolSignature signature){
+	 	this.signature = signature;
+	}
+	
+  	public CondensedProbabilityDistribution parseCondensedProbabilityDistribution(Reader reader) throws ParserException{
+  	  	try
+  	  	{
+  	  		RpclCondensedProbabilityDistributionParser theParser = new RpclCondensedProbabilityDistributionParser(reader);
+  	  		return theParser.Distribution(this.semantics, this.signature);
+  	 	}catch(ParseException e){
+			throw new ParserException(e);
+  	 	}  	 	  
+  	}
+  	
+}
+PARSER_END(RpclCondensedProbabilityDistributionParser)
+
+SKIP :
+{
+ 	" "
+|	"\r"
+|	"\t"
+|	"\n"
+}
+
+TOKEN :
+{
+     < STRUCTURENAME: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+   | < MULTIPLICATOR: (["0"-"9"])+ >
+   | < PROBABILITY: (["0"-"1"]) ("." (["0"-"9"])*)? >
+}
+
+CondensedProbabilityDistribution Distribution(RpclSemantics semantics, FolSignature signature) :
+{
+	Set<Pair<ReferenceWorld,Probability>> assignments = new HashSet<Pair<ReferenceWorld,Probability>>();
+	Pair<ReferenceWorld,Probability> assignment;
+}
+{
+	{
+		if(signature == null)
+			signature = new FolSignature();
+	}
+   (
+    assignment=ProbabilityAssignment(signature)
+  	{
+  		assignments.add(assignment);
+  	}
+   )* <EOF>
+  {
+  	CondensedProbabilityDistribution distribution = new CondensedProbabilityDistribution(semantics,signature);
+  	for(Pair<ReferenceWorld,Probability> a: assignments)
+  		distribution.put(a.getFirst(),a.getSecond()); 
+  	return distribution;
+  }
+}
+
+Pair<ReferenceWorld,Probability> ProbabilityAssignment(FolSignature signature) :
+{
+	ReferenceWorld world;	
+	Token probability;
+}
+{
+	// NOTE: probability might be "0" or "1" => maybe parse as multiplicator
+	world=Interpretation(signature) "=" (probability=<PROBABILITY> | probability=<MULTIPLICATOR>)
+	{
+		return new Pair<ReferenceWorld,Probability>(world,new Probability(new Double(token.image)));
+	} 	 
+}
+
+ReferenceWorld Interpretation(FolSignature signature) :
+{
+	Set<InstanceAssignment> assignments = new HashSet<InstanceAssignment>();
+	InstanceAssignment assignment;
+	Collection<? extends Collection<? extends Constant>> equivalenceClasses = new HashSet<Collection<Constant>>();
+	Set<Predicate> predicates = new HashSet<Predicate>();
+}
+{
+	"{" (assignment=InstanceAssignment(signature)
+	{
+		assignments.add(assignment);
+		equivalenceClasses = assignment.keySet();
+		predicates.add(assignment.getPredicate());
+	}
+	("," assignment=InstanceAssignment(signature)
+	{
+		assignments.add(assignment);
+		predicates.add(assignment.getPredicate());
+	}
+	)*)? "}"
+	{		
+		ReferenceWorld world = new ReferenceWorld(equivalenceClasses,predicates);
+		for(InstanceAssignment a: assignments)
+			world.put(a.getPredicate(),a);
+		return world;
+	}
+}
+
+InstanceAssignment InstanceAssignment(FolSignature signature) :
+{
+	Token predicate;
+	Token multiplicator;
+	Set<Constant> constantSet;
+	InstanceAssignment assignment;
+}
+{
+	"<" predicate=<STRUCTURENAME>
+	{
+		if(signature.containsPredicate(predicate.image)){
+			Predicate p = signature.getPredicate(predicate.image);
+			assignment = new InstanceAssignment(p);
+		}else{
+			Predicate p = new Predicate(predicate.image);
+			signature.add(p);
+			assignment = new InstanceAssignment(p);
+		}		
+	}
+	"," "{" (constantSet=ConstantSet(signature) "=" multiplicator=<MULTIPLICATOR>
+	{
+		assignment.put(constantSet, new Integer(multiplicator.image));
+	}
+	("," constantSet=ConstantSet(signature) "=" multiplicator=<MULTIPLICATOR>
+	{
+		assignment.put(constantSet, new Integer(multiplicator.image));
+	}
+	)*)?  "}" ">"
+	{
+		return assignment;
+	}	
+}
+
+Set<Constant> ConstantSet(FolSignature signature) :
+{
+	Token constantName;
+	Set<Constant> constants = new HashSet<Constant>();
+}
+{
+	"{" constantName=<STRUCTURENAME>
+	{
+		if(signature.containsConstant(constantName.image)){
+			constants.add(signature.getConstant(constantName.image));			
+		}else{
+			Constant c = new Constant(constantName.image);
+			signature.add(c);
+			constants.add(c);
+		}
+	}
+	("," constantName=<STRUCTURENAME>
+	{
+		if(signature.containsConstant(constantName.image)){
+			constants.add(signature.getConstant(constantName.image));			
+		}else{
+			Constant c = new Constant(constantName.image);
+			signature.add(c);
+			constants.add(c);
+		}
+	}
+	)* "}"
+	{
+		return constants;
+	}
+}

@@ -1,0 +1,69 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>zip</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <moduleSets>
+    <moduleSet>
+    
+      <!-- Enable access to all projects in the current multimodule build! -->
+      <useAllReactorProjects>true</useAllReactorProjects>
+      
+      <!-- Now, select which projects to include in this module-set. -->
+      <includes>
+        <include>net.sf:tweety</include>
+        
+        <include>net.sf.tweety:action</include>
+		<include>net.sf.tweety:agents</include>
+		<include>net.sf.tweety.agents:dialogues</include>
+		
+		<include>net.sf.tweety.arg:deductive</include>
+		<include>net.sf.tweety.arg:delp</include>
+		<include>net.sf.tweety.arg:dung</include>
+		<include>net.sf.tweety.arg:prob</include>
+		<include>net.sf.tweety.arg:lp</include>
+		<include>net.sf.tweety.arg:saf</include>
+		
+		<include>net.sf.tweety:beliefdynamics</include>
+		<include>net.sf.tweety:cli</include>
+		<include>net.sf.tweety:graphs</include>
+		
+		<include>net.sf.tweety.logics:cl</include>
+		<include>net.sf.tweety.logics:commons</include>
+		<include>net.sf.tweety.logics:dl</include>
+		<include>net.sf.tweety.logics:el</include>
+		<include>net.sf.tweety.logics:fol</include> 
+		<include>net.sf.tweety.logics:ml</include>
+		<include>net.sf.tweety.logics:pcl</include>
+		<include>net.sf.tweety.logics:pl</include>
+		<include>net.sf.tweety.logics:rcl</include>
+		<include>net.sf.tweety.logics:rpcl</include>
+		<include>net.sf.tweety.logics:translators</include>
+		
+		<include>net.sf.tweety.lp:asp</include>
+		<include>net.sf.tweety.lp.asp:beliefdynamics</include>
+		<include>net.sf.tweety.lp:nlp</include>
+		
+		<include>net.sf.tweety:machinelearning</include>
+		<include>net.sf.tweety:math</include>
+        <include>net.sf.tweety:plugin</include>
+		<include>net.sf.tweety:preferences</include>
+		
+	  </includes>
+      <binaries>
+        <outputDirectory>lib/</outputDirectory>
+        <unpack>false</unpack>
+        <outputFileNameMapping>${module.groupId}-${module.artifactId}-${module.version}${dashClassifier?}.${module.extension}</outputFileNameMapping>
+      </binaries>
+      
+      <!--
+      <sources>
+        <outputDirectory>src/</outputDirectory>
+      </sources>
+      -->
+    </moduleSet>
+  </moduleSets>
+</assembly>

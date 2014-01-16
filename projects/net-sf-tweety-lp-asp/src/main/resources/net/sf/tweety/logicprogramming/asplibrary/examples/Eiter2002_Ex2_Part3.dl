@@ -1,0 +1,4 @@
+concert(friday) :- not final_rehearsal(friday).
+final_rehearsal(friday) :- not concert(friday).
+concert(saturday) :- final_rehearsal(friday), not concert(sunday).
+concert(sunday) :- not concert(saturday).

@@ -1,0 +1,11 @@
+{a, b, c, d, e}
+e < a
+e < b
+e < c
+e <= d
+c <= a
+c < b
+c < d
+d < b
+d <= a
+a < b

@@ -1,0 +1,20 @@
+:- signature
+fluent oncondition
+fluent cooling
+action switchcondition
+action switchheat
+
+:- rules
+
+inertial oncondition
+inertial !oncondition
+inertial cooling
+inertial !cooling
+
+caused !cooling if !oncondition
+
+caused oncondition after switchcondition && !oncondition
+caused !oncondition after switchcondition && oncondition 
+
+caused cooling after switchheat && oncondition && !cooling
+caused !cooling after switchheat && cooling

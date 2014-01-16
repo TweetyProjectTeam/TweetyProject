@@ -1,0 +1,1 @@
+!(holds [!hasBananas && at(box,LBox) && at(bananas, LBanana) && !onBox && at(monkey,LBox)]) || necessarily [hasBananas] after {pushBox(LBanana),walk(LBanana)},{climbOn},{graspBananas} requires LBanana <> LBox

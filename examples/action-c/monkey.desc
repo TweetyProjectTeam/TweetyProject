@@ -1,0 +1,58 @@
+:- signature
+location = {l1,l2,l3}
+object = {monkey, bananas, box}
+
+fluent at(object,location)
+fluent hasBananas
+fluent onBox
+action walk(location)
+action pushBox(location)
+action climbOn
+action climbOff
+action graspBananas
+
+:- rules
+inertial at(X,Y)
+inertial !at(X,Y)
+inertial hasBananas
+inertial !hasBananas
+inertial onBox
+inertial !onBox
+
+% every object is at exactly one location
+caused - if !at(O,l1) && !at(O,l2) && !at(O,l3)
+caused !at(O,L) if at(O, L1) requires L <> L1
+
+caused at(bananas,L) if hasBananas && at(monkey,L)
+caused at(monkey,L) if onBox && at(box,L)
+
+% walking-effects
+walk(L) causes at(monkey,L)
+nonexecutable walk(L) if at(monkey,L)
+nonexecutable walk(L) && climbOn
+nonexecutable walk(L) && climbOff
+
+% climbing effects
+climbOn causes onBox
+nonexecutable climbOn if onBox
+nonexecutable climbOn if at(monkey,L) && !at(box,L)
+
+climbOff causes !onBox
+nonexecutable climbOff if !onBox
+nonexecutable climbOff && graspBananas
+
+%grasping effects
+graspBananas causes hasBananas
+
+nonexecutable graspBananas if hasBananas
+nonexecutable graspBananas if !onBox
+nonexecutable graspBananas if at(monkey,L) && !at(bananas,L)
+nonexecutable pushBox(L) if at(box,L)
+nonexecutable pushBox(L) if onBox
+nonexecutable pushBox(L) if at(monkey,L1) && !at(box,L1)
+nonexecutable pushBox(L) && climbOn
+nonexecutable walk(L1) && pushBox(L2) requires L1 <> L2
+
+% box-pushing effects
+caused at(box,L) if at(monkey,L) after pushBox(L)
+caused - if !at(monkey,L) after pushBox(L)

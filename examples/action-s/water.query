@@ -1,0 +1,8 @@
+% Flowers can be wet
+!always [!flowersWet]
+% turning the valve on causes water flow whenever possible
+necessarily [waterFlowing] after {turnWaterOn}
+% flowers may be watered either by being wet already, or by turning the water on, or by plugging in the hose and then turning the water on
+holds [flowersWet] || necessarily [flowersWet] after {turnWaterOn} || necessarily [flowersWet] after {plugHose};{turnWaterOn}
+% dry flowers will not get wet if the hose is not plugged in
+!holds [!flowersWet && !hosePluggedIn] || necessarily [!flowersWet] after {turnWaterOn}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+<plugins>
+
+	<plugin name="preferences">
+		<path>  plugins/preferences.jar  </path>
+	</plugin>
+
+	<plugin name="rpcl">
+		<path> plugins/rcpl.jar </path>
+	</plugin>
+
+	<plugin name="propositionallogic">
+		<path>  plugins/propositionallogic.jar  </path>
+	</plugin>
+
+	<plugin name="firstorderlogic">
+		<path>  plugins/firstorderlogic.jar  </path>
+	</plugin>
+</plugins>

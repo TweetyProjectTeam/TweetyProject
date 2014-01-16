@@ -1,0 +1,58 @@
+package net.sf.tweety.logics.commons.syntax.interfaces;
+
+import java.util.Map;
+
+import net.sf.tweety.Formula;
+import net.sf.tweety.Signature;
+import net.sf.tweety.util.rules.Rule;
+
+/**
+ * An interface for a logic program, which is a set of rules.
+ * @author Tim Janus
+ *
+ * @param <C>	The type of the formulas used for conclusions
+ * @param <P>	The type of the formulas used for the premise
+ * @param <T>	The type of the rules used in the program
+ */
+public interface LogicProgram<C extends Formula, P extends Formula, T extends Rule<?,?>>{
+	/**
+	 * Adds the given fact to the program
+	 * @param fact
+	 */
+	void addFact(C fact);
+	
+	/** @return the signature of the program */
+	Signature getSignature();
+	
+	/**
+	 * Substitutes all occurrences of term "v" in this formula
+	 * by term "t" and returns the new formula.
+	 * @param v the term to be substituted.
+	 * @param t the term to substitute.
+	 * @return a formula where every occurrence of "v" is replaced
+	 * 		by "t".
+	 * @throws IllegalArgumentException if "v" and "t" are of different sorts
+	 */
+	LogicProgram<?,?,?> substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
+	
+	/**
+	 * Substitutes all occurrences of all terms "v" in map.keyset() in this formula
+	 * by map.get(v) and returns the new formula.<br>
+	 * @param map a mapping defining which terms to be substituted.
+	 * @return a formula where every term in map.keyset() has been replaced by map.get(v).
+	 * @throws IllegalArgumentException if any term and its mapping are of different sorts
+	 */
+	LogicProgram<?,?,?> substitute(Map<? extends Term<?>,? extends Term<?>> map) 
+			throws IllegalArgumentException;
+	
+	/**
+	 * Substitutes all occurrences of term "v" in this formula
+	 * by term "t" and at the same time replaces all occurrences of term "t"
+	 * by term "v" and eventually returns the new formula.
+	 * @param v a term.
+	 * @param t a term.
+	 * @return a new logical formula with both "v" and "t" exchanged.
+	 * @throws IllegalArgumentException if "v" and "t" are of different sorts
+	 */
+	LogicProgram<?,?,?> exchange(Term<?> v, Term<?> t) throws IllegalArgumentException;
+}

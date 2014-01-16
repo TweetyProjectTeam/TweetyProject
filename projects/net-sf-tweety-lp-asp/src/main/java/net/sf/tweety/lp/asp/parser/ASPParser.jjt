@@ -1,0 +1,408 @@
+
+options {
+  MULTI=true;
+  VISITOR=true;
+  NODE_DEFAULT_VOID=true;
+  STATIC=false;
+}
+
+PARSER_BEGIN(ASPParser)
+
+package net.sf.tweety.logicprogramming.asplibrary.parser;
+import java.io.*;
+import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
+import net.sf.tweety.logicprogramming.asplibrary.util.*;
+
+/** Parser for DLV conform disjunctive logic programs using the
+ *	answer set semantics. The parser also provides methods to parse
+ *	the answer sets given by the DLV and clasp solver.
+ *
+ *	The parser is capable of parsing a disjunctive logic program using the following BNF:
+ *	- PROGRAM 		:= (RULE|COMMENT)*
+ *	- RULE 			:= HEAD (':-' (ELEMENTLST)? )?.
+ *	- HEAD 			:= ELEMENT (';' ELEMENT)*
+ *	- ELEMENT 		:= (ATOM|ARITHMETIC|COMPARATIVE)
+ *	- ATOM 			:= ('-')? IDENTIFIER ( '(' (TERMLST)? ')')?
+ *	- ARITHMETIC	:= (TERM '=' TERM ARITHMETICOP TERM)
+ *					|  (ARITHMETICOP '(' TERMLST ')'
+ *					|  ('#' IDENTIFIER '(' TERMLST ')'
+ *	- COMPARATIVE	:= (COMPAREOP '(' TERM ',' TERM ')) | (TERM COMPAREOP TERM)
+ *	- COMPAREOP		:= '<' | '<=' | '=' | '==' | '!=' | '>=' | '>'
+ *  - ARITHMETICOP	:= '+' | '-' | '*' | '/'
+ *  - TERMLST		:= TERM (',' TERM)*
+ *	- TERM			:= SIMPLETERM | NUMBER | SETTERM | LISTTERM
+ *	- SIMPLETERM	:= CONSTANT | VARIABLE
+ *	- ARIMETHICINT	:= VARIABLE | NUMBER
+ *	- SETTERM		:= '{' TERMLST '}' *	- LISTTERM		:= '(' (TERMLST | (TERM '|' TERM )) ')'
+ *	- NUMBER		:= (DIGIT)+
+ *	- IDENTIFIER	:= VARIABLE | CONSTANT
+ *	- VARIABLE		:= ["_", "A"-"Z"] (LETTER)*
+ *	- CONSTANT		:= ["a"-"z"] (LETTER)*
+ *	- LETTER		:= ["_","a"-"z","A"-"Z"]
+ *	- DIGIT			:= ["0"-"9"]
+ */
+public class ASPParser {
+  private static ASPParser oneThreadParser = new ASPParser(new StringReader(""));
+
+  private static InstantiateVisitor visitor = new InstantiateVisitor();
+
+  public static Program parseProgram(String program) throws ParseException  {
+    return parseProgram(new StringReader(program));  }
+  
+  public static Program parseProgram(Reader reader) throws ParseException  {
+    oneThreadParser.ReInit(reader);
+    return visitor.visit(oneThreadParser.Program(), null);  }
+
+  public static Rule parseRule(String rule) throws ParseException  {
+    return parseRule(new StringReader(rule));  }
+
+  public static Rule parseRule(Reader reader) throws ParseException  {
+    oneThreadParser.ReInit(reader);
+    return visitor.visit(oneThreadParser.Rule(), null);  }
+
+  public static AnswerSetList parseAnswerSetList(String answerSetList) throws ParseException  {
+    return parseAnswerSetList(new StringReader(answerSetList));  }
+
+  public static AnswerSetList parseAnswerSetList(Reader reader) throws ParseException  {
+    oneThreadParser.ReInit(reader);
+    return visitor.visit(oneThreadParser.AnswerSetList(), null);  }
+
+  public static AnswerSet parseAnswerSet(String answerSet) throws ParseException
+  {
+    return parseAnswerSet(new StringReader(answerSet));
+  }
+
+  public static AnswerSet parseAnswerSet(Reader reader) throws ParseException
+  {
+    oneThreadParser.ReInit(reader);
+    return visitor.visit(oneThreadParser.AnswerSet(), null);
+  }
+}
+
+PARSER_END(ASPParser)
+
+
+SKIP :
+{
+  " "
+| "\t"
+| "\r"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < IMPL: ":-" >
+| < NEG: "-" >
+| < SPECIAL_PREFIX: "#" >
+| < DEFNOT : "not" >
+| < DOT: "." >
+| < COMMA: "," >
+| < PAR_OPEN: "(" >
+| < PAR_CLOSE: ")" >
+| < CPAR_OPEN: "[" >
+| < CPAR_CLOSE: "]" >
+| < PIPE : "|" >
+| < ZPAR_OPEN: "{" >
+| < ZPAR_CLOSE: "}" >
+| < OR: ";" >
+}
+
+TOKEN : /* Arithmetic Operators */
+{
+  < PLUS: "+" >
+| < MUL:"*" >
+| < DIV:"/" >
+}
+
+TOKEN : /* Compare Operators */
+{
+  < LESS: "<" >
+| < LESSEQ: "<=" >
+| < GREATER: ">" >
+| < GREATEREQ: ">=" >
+| < EQUAL: "=" >
+| < EQUAL_OLD: "==" >
+| < NOTEQUAL: "!=" >
+}
+
+TOKEN : /* IDENTIFIERS */
+{
+  < NUMBER: (< DIGIT >)+ >
+| < CONSTANT: ["a"-"z"](<LETTER>|<DIGIT>)* >
+| < VARIABLE: ["A"-"Z","_"](<LETTER> | <DIGIT>)* >
+| < COMMENT: "%" (~["\n","\r"])* ("\n"|"\r"|"\r\n") >
+| < #LETTER: ["_","a"-"z","A"-"Z"] >
+| < #DIGIT: ["0"-"9"] >
+}
+
+ASTAnswerSetList AnswerSetList() #AnswerSetList : {}
+{
+  (
+    (AnswerSet())*
+  )
+  {
+    return jjtThis;
+  }
+}
+
+ASTAnswerSet AnswerSet() #AnswerSet : {}
+{
+  < ZPAR_OPEN > (Atom() (< COMMA > Atom())*)? < ZPAR_CLOSE >
+  {
+    return jjtThis;  }}
+ 
+ASTProgram Program() #Program :
+{
+  Token t;
+}
+{
+  (    Rule()
+  |
+  	t = < COMMENT >  	{  	}
+  )*
+  {
+    return jjtThis;  }}
+
+ASTRule Rule() #Rule : {}
+{
+(  (Head() (< IMPL > ElementLst())? <DOT >)
+| (< IMPL > ElementLst() < DOT >)
+)
+  {
+    return jjtThis;  }}
+
+ASTHead Head() #Head : {}{
+  Atom() (HeadOr() Atom())*
+  {
+    return jjtThis;
+  }}
+
+ASTElementLst ElementLst() #ElementLst : {}
+{
+  Element() ( < COMMA > Element())*
+  {
+    return jjtThis;
+  }}
+
+ASTAggregate Aggregate() #Aggregate :
+{
+  String op1 = "";
+  String op2 = "";
+}
+{
+  (    
+	(
+	  ArithmeticInteger()
+	  op1 = CompareOperator()
+	  SpecId() SymbolicSet()
+	  (op2 = CompareOperator()
+	   {
+	     if( (op1 != "<" && op1 != "<=") || (op2 != "<" && op2 != "<="))	     {
+	       throw new ParseException("In Aggregate ranges only the operators '<' and '<=' are allowed.");	     }
+	   }
+	   ArithmeticInteger())?
+	)
+	| 
+	(
+	 SpecId() SymbolicSet()
+	 CompareOperator() ArithmeticInteger() 	)
+  )
+  {
+    return jjtThis;  }}
+
+ASTSymbolicSet SymbolicSet() #SymbolicSet :
+{
+  Token t;
+}
+{
+(
+  < ZPAR_OPEN > t = <VARIABLE> {jjtThis.addVariable(t.image);}
+  (< COMMA > t = <VARIABLE > {jjtThis.addVariable(t.image);})* ":"
+  ElementNoAggregate()
+  (< COMMA > ElementNoAggregate())* < ZPAR_CLOSE >
+)
+{
+  return jjtThis;}}
+void ElementNoAggregate() : {}
+{
+  LOOKAHEAD(2)
+  Arithmetic() |
+  LOOKAHEAD(2)
+  Comparative() |
+  DefAtom()}
+
+
+void Element() : {}
+{
+  (
+    LOOKAHEAD(3)
+    Aggregate() |
+    LOOKAHEAD(2)
+	Arithmetic() |
+	LOOKAHEAD(2)
+  	Comparative() |
+    DefAtom() 
+  )}
+
+ASTArithmetic Arithmetic() #Arithmetic :
+{
+  Token t;}
+{
+(
+  (SpecId() < PAR_OPEN > ArithmeticInteger() (< COMMA > ArithmeticInteger() (< COMMA > ArithmeticInteger())?)? < PAR_CLOSE > ) |
+  (ArithmeticInteger() < EQUAL > ArithmeticInteger() ArithmeticOperator() ArithmeticInteger()) |
+  (ArithmeticOperator() <PAR_OPEN > ArithmeticInteger() < COMMA > ArithmeticInteger() < COMMA > ArithmeticInteger() < PAR_CLOSE > )
+)
+{
+  return jjtThis;}}
+
+ASTComparative Comparative() #Comparative : {}
+{
+(
+  (SimpleTerm() CompareOperator() SimpleTerm()) |
+  (CompareOperator() <PAR_OPEN > SimpleTerm() < COMMA > SimpleTerm() < PAR_CLOSE >)
+)
+{
+  return jjtThis;}}
+
+ASTDefAtom DefAtom() #DefAtom : {}
+{
+  (< DEFNOT >{jjtThis.setDefNeg(true);})? Atom()  {
+    return jjtThis;  }}
+
+
+ASTAtom Atom() #Atom : {}
+{
+  
+  (
+    (< NEG >{jjtThis.neg(true);})? Identifier() (< PAR_OPEN > (TermLst())? < PAR_CLOSE >)?
+  )
+  {
+    return jjtThis;  }}
+
+ASTFunctionalTerm FunctionalTerm() #FunctionalTerm :
+{
+  Token t;
+}
+{
+  (t = < CONSTANT > < PAR_OPEN > TermLst() <PAR_CLOSE >)
+  {
+    jjtThis.setFunctor(t.image);
+    return jjtThis;  }}
+
+ASTSetTerm SetTerm() #SetTerm : {}
+{
+  ( < ZPAR_OPEN > ( TermLst())? < ZPAR_CLOSE > )
+{
+  return jjtThis;}}
+
+ASTListTail ListTail() #ListTail :
+{
+  Token t = null;
+}
+{
+  (
+    t = < VARIABLE > | ListTerm()  )
+  {
+    if(t != null)
+    {
+      jjtThis.setVariableName(t.image);
+    }
+    return jjtThis;  }
+  }
+
+ASTListTerm ListTerm() #ListTerm : {}
+{
+  < CPAR_OPEN >
+  (    Term()
+    (
+      ( < PIPE > ListTail()) 
+    | ( (< COMMA > Term())*)    )
+  )?
+  < CPAR_CLOSE >
+  {
+    return jjtThis;
+  }}
+
+ASTTermLst TermLst() #TermLst : {}
+{
+  Term() ( < COMMA > Term() )*
+  {
+    return jjtThis;  }}
+
+ASTTerm Term() #Term : {}
+{
+  ( LOOKAHEAD(2)    FunctionalTerm() | SimpleTerm() | SetTerm() | ListTerm()
+  )  
+  {
+    return jjtThis;  }}
+
+ASTSimpleTerm SimpleTerm() #SimpleTerm : {}
+{
+  (Identifier() | Number())
+  {
+    
+    return jjtThis;  }}
+
+ASTArithmeticInteger ArithmeticInteger() #ArithmeticInteger :
+{
+  Token t=null;
+}
+{
+  (t = < VARIABLE > | Number())
+  {
+    if(t != null)    {      jjtThis.setVariableName(t.image);
+    }
+    return jjtThis;  }}
+
+void Number() #Number :
+{
+  Token t;}
+{
+  t=< NUMBER >
+  {
+    jjtThis.setNumber(t.image);  }}
+
+void HeadOr() : {}
+{
+  < OR >}
+
+void IdentifierLst() #IdLst : {}
+{  Identifier() ( < COMMA > Identifier() )*}
+
+void SpecId() #SpecId : {}
+{
+  (< SPECIAL_PREFIX > Identifier())}
+
+void Identifier() #Identifier :
+{
+  Token t;
+}
+{
+  (
+    (t=<CONSTANT>)
+  |
+  	(t=<VARIABLE >)
+  	{
+  	  jjtThis.setVariable(true);  	}
+  )
+  {
+    jjtThis.setName(t.image);
+  }
+}
+
+String CompareOperator() #CompareOp : {}
+{
+  (< LESS > | < LESSEQ > | < EQUAL > | < EQUAL_OLD > | < NOTEQUAL > | < GREATER > | < GREATEREQ >)
+  {
+    jjtThis.setOperator(this.token.image);
+    return this.token.image;  }}
+
+String ArithmeticOperator() #ArithmeticOp : {}
+{
+  (< PLUS > | < NEG > | < MUL > | < DIV >)
+  {
+    jjtThis.setOperator(this.token.image);
+    return this.token.image;  }
+}

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="nnintList">
+		<xs:list itemType="nonNegativeInt"/>
+	</xs:simpleType>
+	<xs:simpleType name="nonEmptyString">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nonNegativeInt">
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nonNegativeLong">
+		<xs:restriction base="xs:long">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nnintAndUnbounded">
+		<xs:union memberTypes="nonNegativeInt">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="unbounded"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="gridworld-percept" type="percept"/>
+	<xs:complexType name="percept">
+		<xs:all>
+			<xs:element name="cells" type="cells" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="messages" type="messages" minOccurs="0" maxOccurs="1"/>
+		</xs:all>
+		<xs:attribute name="xDimension" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="yDimension" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="time" type="nonNegativeLong" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="cells">
+		<xs:sequence>
+			<xs:element name="cell" type="cell" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="cell">
+		<xs:sequence>
+			<xs:element name="agents" type="agents" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="objects" type="gridObjects" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="wall" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="trench" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="fog" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="curtain" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="interference" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="xPos" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="yPos" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="freeCap" type="nnintAndUnbounded" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="agents">
+		<xs:sequence>
+			<xs:element name="agent" type="agent" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="agent">
+		<xs:all>
+			<xs:element name="properties" minOccurs="0" maxOccurs="1" type="properties"/>
+			<xs:element name="objects" minOccurs="0" maxOccurs="1" type="gridObjects"/>
+			<xs:element name="internalstate" type="nonEmptyString" minOccurs="0" maxOccurs="1"/>
+		</xs:all>
+		<xs:attribute name="name" type="nonEmptyString" use="required"/>
+		<xs:attribute name="freeCap" type="nnintAndUnbounded" use="required"/>
+		<xs:attribute name="capNeed" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="hearing" type="nnintAndUnbounded" use="optional"/>
+		<xs:attribute name="soundIntensity" type="nnintAndUnbounded" use="optional"/>
+		<xs:attribute name="priority" type="nonNegativeInt" use="optional"/>
+		<xs:attribute name="isYou" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="moveForce" type="nnintAndUnbounded" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="properties">
+		<xs:sequence>
+			<xs:element name="property" type="property" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="property">
+		<xs:attribute name="value" type="nonEmptyString" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="gridObjects">
+		<xs:sequence>
+			<xs:element name="object" type="gridObject" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="gridObject">
+		<xs:all>
+			<xs:element name="properties" minOccurs="0" maxOccurs="1" type="properties"/>
+			<xs:element name="objects" minOccurs="0" maxOccurs="1" type="gridObjects"/>
+		</xs:all>
+		<xs:attribute name="name" type="nonEmptyString" use="required"/>
+		<xs:attribute name="freeCap" type="nnintAndUnbounded" use="required"/>
+		<xs:attribute name="capNeed" type="nonNegativeInt" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="messages">
+		<xs:sequence>
+			<xs:element name="message" type="message" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType mixed="true" name="message">
+		<xs:attribute name="sender" type="nonEmptyString" use="optional"/>
+		<xs:attribute name="receiver" type="nonEmptyString" use="optional"/>
+		<xs:attribute name="isPublic" type="xs:boolean" use="required"/>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,190 @@
+/**
+ * JavaCC file
+ */
+options {
+  JDK_VERSION = "1.6";
+}
+
+PARSER_BEGIN(DelpParser)
+package net.sf.tweety.argumentation.delp.parser;
+
+import net.sf.tweety.*;
+import net.sf.tweety.argumentation.delp.*;
+import net.sf.tweety.argumentation.delp.syntax.*;
+import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.*;
+import net.sf.tweety.logics.commons.syntax.*;
+import java.io.*;
+import java.util.*;
+import java.util.regex.*;
+
+/**
+  * This class implements a parser for defeasible logic programs. The BNF for defeasible
+  * logic program files is given by (start symbol is THEORY)
+  * <br>
+  * <br>THEORY			::== (EXPRESSION)*
+  * <br>EXPRESSION		::== FACT | STRICTRULE | DEFEASIBLERULE
+  * <br>FACT			::== LITERAL + "."
+  * <br>STRICTRULE		::== LITERAL + "<-" + RULEBODY + "."
+  * <br>DEFEASIBLERULE	::== LITERAL + "-<" + RULEBODY + "."
+  * <br>RULEBODY		::== LITERAL | LITERAL + "," + RULEBODY
+  * <br>LITERAL			::== "~" + ATOM | ATOM
+  * <br>ATOM			::== PREDNAME | PREDNAME + "(" + TERMLIST + ")"
+  * <br>TERMLIST		::== TERM | TERM + "," + TERMLIST
+  * <br>TERM			::== VARIABLE | CONSTANT
+  *
+  * <br>PREDNAME is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
+  * <br>VARIABALE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
+  * <br>CONSTANT is  a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an lowercase letter at the beginning.
+  */
+public class DelpParser extends Parser<DefeasibleLogicProgram>{
+
+	private FolSignature signature = new FolSignature();
+
+	public DelpParser(){		
+	}
+
+  	public DefeasibleLogicProgram parseBeliefBase(Reader reader) throws ParserException{
+  	  	try
+  	  	{
+  	  		//DelpParser theParser = new DelpParser(reader);
+  	  		return DelpParser.Theory(this.signature);
+  	 	}catch(ParseException e){
+			throw new ParserException(e);
+  	 	}  	 	  
+  	}
+
+  	public Formula parseFormula(Reader reader) throws ParserException{
+  		throw new UnsupportedOperationException("This operation is not supported.");
+	}
+
+	public FolSignature getSignature(){
+		return this.signature;
+	}
+}
+
+PARSER_END(DelpParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+	< NAME: ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","-","0"-"9"] )* >
+}
+
+DefeasibleLogicProgram Theory(FolSignature signature) :
+{
+	DefeasibleLogicProgram delp = new DefeasibleLogicProgram();
+}
+{
+  ( Expression(delp,signature) )* <EOF>
+  {
+  	return delp;
+  }
+}
+
+void Expression(DefeasibleLogicProgram delp,FolSignature signature) :
+{
+	FolFormula lit;
+	Set<FolFormula> body = new HashSet<FolFormula>();
+	FolFormula b;
+}
+{
+		lit=Literal(delp,signature) ( "."
+				{
+					delp.add(new DelpFact(lit));
+				}
+		|
+		"<-" b=Literal(delp,signature)
+				{
+					body.add(b);
+				}
+
+		( "," b=Literal(delp,signature)
+				{
+					body.add(b);
+				}
+		)* "."
+				{
+					delp.add(new StrictRule(lit,body));
+				}
+		|
+		"-<" b=Literal(delp,signature)
+				{
+					body.add(b);
+				}
+		( "," b=Literal(delp,signature)
+				{
+					body.add(b);
+				}
+		)* "."
+				{
+					delp.add(new DefeasibleRule(lit,body));
+				}
+		)
+}
+
+
+FolFormula Literal(DefeasibleLogicProgram delp,FolSignature signature) :
+{
+	FOLAtom atom;
+}
+{
+	atom=Atom(delp,signature)
+	{
+		return atom;
+	}
+	|
+	"~" atom=Atom(delp,signature)
+	{
+		return new Negation(atom);
+	}
+}
+
+FOLAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) :
+{
+	Token p;
+	List<Term<?>> terms = new ArrayList<Term<?>>();
+	Term<?> t;
+}
+{
+	p=<NAME> ( "(" t=Term(delp,signature)
+				{
+					terms.add(t);
+				}
+	( "," t=Term(delp,signature)
+				{
+					terms.add(t);
+				}
+	)* ")" )?
+	{
+	  if(!signature.containsPredicate(p.image)){	  	signature.add(new Predicate(p.image,terms.size()));	  
+	  }
+	  Predicate pred = signature.getPredicate(p.image);
+	  if(pred.getArity() != terms.size())
+	   	throw new ParseException("Wrong arity of predicate \"" + p.image + "\"");
+	  return new FOLAtom(pred,terms);
+	}
+}
+
+Term Term(DefeasibleLogicProgram delp,FolSignature signature) :
+{
+	Token t;
+}
+{
+	t=<NAME>
+	{
+		if(Pattern.compile("^[A-Z]").matcher(t.image).find())
+			return new Variable(t.image);
+	    if(!signature.containsConstant(t.image)){
+	  		signature.add(new Constant(t.image));	  
+	  	}
+		return signature.getConstant(t.image);
+	}
+}

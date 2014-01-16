@@ -1,0 +1,33 @@
+% This example is taken from the paper
+% Nonmonotonic Causal Theories by Enrico Giunchiglia et. al. (2004)
+:- signature
+animal = { turkey1, turkey2}
+
+fluent loaded
+fluent alive(animal)
+fluent target(animal)
+
+action load
+action shoot
+action aim(animal)
+
+:- rules
+inertial loaded
+inertial !loaded
+inertial alive(X)
+inertial !alive(X)
+inertial target(X)
+inertial !target(X)
+
+% at most one target at a time
+caused !target(L1) if target(L2) requires L1 <> L2
+
+load causes loaded
+load causes !target(X)
+
+aim(X) causes target(X)
+
+shoot causes !alive(X) if target(X)
+shoot causes !loaded
+nonexecutable shoot if !loaded
+nonexecutable aim(X) && shoot

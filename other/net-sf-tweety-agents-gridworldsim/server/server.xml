@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an example XML configuration file for the GridWorldSim server to run. It specifies the world that is to be simulated by the 
+     GridWorldSim server and also technical aspects like which ports to listen on and authentication data for clients. -->
+
+<gridworld xsi:noNamespaceSchemaLocation="http://www.tittel.net/gridworldsim/schemas/server-1.0.xsd" xDimension="17" yDimension="15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<server agentPort="7777" observerPort="8888">
+		<execmode>
+			<ondemand/>
+		</execmode>
+		<debug level="info" data="false" filelog="false" path="/set/your/logging/path/here/"/>
+	</server>
+	<rules>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.FogRule">
+			<parameter paraName="createProb" value="0"/>
+			<parameter paraName="removeProb" value="0"/>
+			<parameter paraName="first" value="random"/>
+		</rule>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.MoveAgentRule">
+			<parameter paraName="diagcorrect" value="false"/>
+		</rule>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.MoveObjectRule">
+			<parameter paraName="diagcorrect" value="false"/>
+		</rule>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.TakeObjectRule"/>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.ReleaseObjectRule"/>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.CreateAcceptRule"/>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.RemoveAcceptRule"/>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.TransferObjectRule"/>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.LoadObjectRule"/>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.UnloadObjectRule"/>
+		<rule class="net.sf.tweety.agents.gridworldsim.server.statetrans.LockUnlockRule"/>
+	</rules>
+	<observers>
+		<observer name="bigbrother"/>
+	</observers>
+	<agents>
+		<types capNeed="0" freeCap="unbounded" moveForce="unbounded" viewRange="unbounded" hearing="10" soundIntensity="3">
+			<open>
+				<type typeName="Hercule" freeCap="42" capNeed="80" moveForce="150" xPos="1" yPos="0" hearing="6" soundIntensity="8" viewRange="15" priority="1">
+					<parameters>
+						<parameter paraName="property" value="Detective"/>
+					</parameters>
+				</type>
+			</open>
+			<closed>
+				<type typeName="penguin" freeCap="5" capNeed="5" moveForce="5" viewRange="3" soundIntensity="6" hearing="5" priority="2">
+					<parameters>
+						<parameter paraName="property" value="Penguin"/>
+					</parameters>
+				</type>
+			</closed>
+		</types>
+		<instances>
+			<instance agentTypeRef="penguin" name="Tweety" xPos="7" yPos="0">
+				<contains>
+					<instance objectTypeRef="food"/>
+					<instance objectTypeRef="locker" name="Purse">
+						<parameters>
+							<parameter paraName="property" value="Purse"/>
+						</parameters>
+					</instance>
+				</contains>
+				<parameters>
+					<parameter paraName="property" value="Intelligent"/>
+				</parameters>
+			</instance>
+		</instances><!-- <default viewRange="50" freeCap="4" capNeed="1" image="../icons/agent.png"/> -->
+	</agents>
+	<objects>
+		<types capNeed="3" freeCap="30">
+			<type typeName="box" freeCap="10" capNeed="2">
+				<parameters>
+					<parameter paraName="property" value="Box"/>
+				</parameters>
+			</type>
+			<type typeName="food" freeCap="0" capNeed="3">
+				<parameters>
+					<parameter paraName="property" value="Food"/>
+				</parameters>
+			</type>
+			<type typeName="parasites" freeCap="0" capNeed="0">
+				<parameters>
+					<parameter paraName="property" value="Dangerous"/>
+				</parameters>
+			</type>
+			<type typeName="locker" freeCap="30" capNeed="5" class="net.sf.tweety.agents.gridworldsim.server.LockerObject"/>
+		</types>
+		<instances>
+			<instance objectTypeRef="locker" xPos="4" yPos="0"/>
+			<instance objectTypeRef="box" xPos="0" yPos="0" capNeed="1"/>
+			<instance objectTypeRef="box" xPos="0" yPos="5" freeCap="30" name="Candybox">
+				<parameters>
+					<parameter paraName="property" value="Valuable"/>
+				</parameters>
+				<contains>
+					<instance objectTypeRef="box" capNeed="1" name="Chocolatebox">
+						<contains>
+							<instance objectTypeRef="food" name="Chocolatebar1"/>
+							<instance objectTypeRef="food" name="Coocolatebar2"/>
+						</contains>
+					</instance>
+					<instance objectTypeRef="box" capNeed="1" name="Cookiebox">
+						<parameters>
+							<parameter paraName="property" value="Damaged"/>
+						</parameters>
+						<contains>
+							<instance objectTypeRef="food" name="Cookie1"/>
+							<instance objectTypeRef="food" name="Cookie2"/>
+						</contains>
+					</instance>
+				</contains>
+			</instance>
+			<instance objectTypeRef="box" name="Emptybox" xPos="7" yPos="0"/>
+			<instance objectTypeRef="box" name="Fishbox" freeCap="15" capNeed="3" xPos="3" yPos="5">
+				<contains>
+					<instance objectTypeRef="food" freeCap="6" capNeed="1" name="Fish1">
+						<contains>
+							<instance objectTypeRef="parasites"/>
+						</contains>
+					</instance>
+				</contains>
+			</instance>
+		</instances>
+	</objects>
+	<obstacles>
+		<walls interfering="false">
+			<multi xPos="0" yPos="12" length="6" direction="e"/>
+			<multi xPos="7" yPos="6" length="2" direction="e"/>
+			<multi xPos="1" yPos="1" length="3" direction="e"/>
+			<multi xPos="15" yPos="5" length="6" direction="n"/>
+			<single xPos="6" yPos="2"/>
+		</walls>
+		<trenches interfering="false">
+			<multi xPos="2" yPos="3" length="3" direction="e"/>
+			<single xPos="8" yPos="4"/>
+		</trenches>
+		<curtains interfering="true">
+			<multi xPos="3" yPos="4" length="4" direction="n"/>
+			<single xPos="10" yPos="0"/>
+		</curtains>
+		<interferences>
+			<multi xPos="4" yPos="4" length="3" direction="e"/>
+			<single xPos="7" yPos="8"/>
+		</interferences>
+	</obstacles>
+	<cellcapacities default="90">
+		<cell xPos="0" yPos="0" capacity="2"/>
+	</cellcapacities>
+</gridworld>

@@ -1,0 +1,59 @@
+%
+% simuworld example 1
+%
+% a simple example where two agents are situated
+% in a fully connected graph. at each vertex, at
+% most one agent is allowed, and one agent can
+% only be at at most one vertex.
+%
+% the simuworld program consists of three parts:
+% - the $$ block is an elp and describes the current
+%   state of the world. if that program is stratified,
+%   exactly one future world state arises.
+% - actions (!), effects (*) and constraints (:-) come
+%   next. actions describe changes due to actions committed
+%   by an agent. effects describe changes that can
+%   appear every step naturally. constraints describe
+%   forbidden outcomes of actions and block actions if
+%   necessary.
+% - the ## block is an yet unimplemented post processing
+%   block after the previous program fragments are processed.
+
+% initial world description / pre action
+$$ {
+	% world: an undirected circular graph
+	vertex(1). vertex(2). vertex(3). vertex(4).
+	adj(1,2). adj(2,3). adj(3,4). adj(4,1).
+	adj(X,Y) :- adj(Y,X).
+
+	% agent starting positions	
+	at(1,alice).
+	at(3,bob).
+	
+	% agents
+	agent(alice).
+	agent(bob).
+
+	% exogenous actions from agents 
+	intends_goto(2,alice).
+	intends_goto(2,bob).
+	
+}
+
+
+% goto action
+!goto(X,Ag) {
+	C: at(Y,Ag), adj(Y,X).
+	A: at(X,Ag).
+	D: at(Y,Ag).
+}
+
+
+% no two agents at the same vertex
+:- at(X,Ag1), at(X,Ag2), Ag1 != Ag2.
+
+
+% final / post action
+## {
+	
+}

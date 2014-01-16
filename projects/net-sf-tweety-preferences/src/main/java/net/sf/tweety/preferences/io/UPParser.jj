@@ -1,0 +1,35 @@
+/**
+ * JavaCC file
+ */options{  JDK_VERSION = "1.6";  STATIC = false;}	PARSER_BEGIN(UPParser)package net.sf.tweety.preferences.io;import java.util.*;import net.sf.tweety.preferences.*;
+import net.sf.tweety.preferences.update.Update;
+import net.sf.tweety.preferences.Operation;
+/**
+Update Parser for reading updates for dynamic Preference Aggregation
+Please note: update file syntax changed from
+(index, operation, amount, element)
+e.g. (1, WEAKEN, 2, a)
+to
+(index, operation(amount), element)
+e.g. (1, -2, a)  where
+-(/+) is equal to WEAKEN(/STRENGTHEN)
+and 2 is the amount
+*/
+@SuppressWarnings("all")public class UPParser{
+	public UPParser()	{
+		}
+
+    public static ArrayList<Update < String >> parse(String updatefile) throws ParseException, java.io.FileNotFoundException  {    UPParser parser;    parser = new UPParser(new java.io.FileInputStream(updatefile));    return parser.getUpdate();  }  public static void main(String args []) throws ParseException  {    try    {
+		ArrayList<Update <String >> testUP = new ArrayList<Update <String >>();
+		testUP = parse("/home/bwolf/Universität/Tweety/tweety-code/projects/net-sf-tweety-preferences/src/main/java/net/sf/tweety/preferences/io/test.up");
+		System.out.println(testUP);
+    }    catch (Exception e)    {      System.out.println("error while parsing: ");
+      e.printStackTrace();    }  }}PARSER_END(UPParser)SKIP :{  " "}TOKEN : /* OPERATORS */{  < LBRA : "(" >| < RBRA : ")" >| < INDEX :    (
+      (["0"-"9"]) | (["1"-"9"]) ( ["0"-"9"])+     ) >| < OPERATION : ("+"["1"-"9"]) |  ("-"["1"-"9"])>| < ELEMENT : ([ "a"-"z" ])+ >/**
+| < AMOUNT :    (      ([ "1"-"9" ])    )    (      ([ "0"-"9" ])    )* >
+*/| < EOL :    "\n"  | "\r\n"  | "\t" >}ArrayList<Update < String > >   getUpdate() throws java.io.FileNotFoundException :{  Token index, op, element;  ArrayList < Update < String >> updates = new ArrayList < Update < String >> ();}{  (    < LBRA >    (      index = < INDEX > (",")? op = < OPERATION >  (",")? element = < ELEMENT >      {       
+		Integer ind = Integer.parseInt(index.image);
+		
+        // finding element to perform update on     	String elm = element.image;        Integer amnt = Integer.parseInt(op.image.substring(1));
+                if (op.image.startsWith("-"))        {          Update < String > tmp = new Update<String >(ind, Operation.WEAKEN, amnt, elm);          updates.add(tmp);        }        else if (op.image.startsWith("+"))        {          Update < String > tmp = new Update<String >(ind, Operation.STRENGTHEN, amnt, elm);          updates.add(tmp);        }        else        {          continue;        }
+              }
+            < RBRA >    )    < EOL >  )+  {    return updates;  }}

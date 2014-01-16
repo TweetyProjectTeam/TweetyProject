@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="nnintAndUnbounded">
+		<xs:union memberTypes="nonNegativeInt">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="unbounded"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:simpleType name="nonNegativeInt">
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nonEmptyString">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="empty"/>
+	<xs:complexType name="waitforall">
+		<xs:attribute name="timeout" use="optional" type="xs:positiveInteger"/>
+	</xs:complexType>
+	<xs:complexType name="position">
+		<xs:attribute name="xPos" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="yPos" type="nonNegativeInt" use="required"/>
+	</xs:complexType>
+	<xs:element type="gridworld" name="gridworld">
+		<xs:unique name="allNames">
+			<xs:selector xpath=".//*"/>
+			<xs:field xpath="@name"/>
+		</xs:unique>
+		<xs:keyref name="objectTypeNameRef" refer="objectTypeName">
+			<xs:selector xpath=".//*"/>
+			<xs:field xpath="@objectTypeRef"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:complexType name="gridworld">
+		<xs:sequence>
+			<xs:element name="server" type="server" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="rules" type="rules" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="observers" type="observers" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="agents" type="agents" minOccurs="1" maxOccurs="1">
+				<xs:keyref name="agentTypeNameRef" refer="agentClosedTypeNames">
+					<xs:selector xpath="instances/instance"/>
+					<xs:field xpath="@agentTypeRef"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="objects" type="objects" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="obstacles" type="obstacles" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="cellcapacities" type="cellcapacities" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="xDimension" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="yDimension" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="msgsightreq" type="xs:boolean" use="optional" default="true"/>
+	</xs:complexType>
+	<xs:complexType name="server">
+		<xs:all>
+			<xs:element name="execmode" type="execmode" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="debug" type="debug" minOccurs="0" maxOccurs="1"/>
+		</xs:all>
+		<xs:attribute name="agentPort" type="nonNegativeInt" use="required"/>
+		<xs:attribute name="observerPort" type="nonNegativeInt" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="fixed">
+		<xs:attribute name="interval" type="xs:positiveInteger" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="execmode">
+		<xs:choice>
+			<xs:element name="ondemand" type="empty"/>
+			<xs:element name="waitforall" type="waitforall"/>
+			<xs:element name="fixed" type="fixed"/>
+			<xs:element name="manual" type="empty"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="debug">
+		<xs:attribute name="level" type="debuglevel" use="optional" default="info"/>
+		<xs:attribute name="path" type="nonEmptyString" use="optional"/>
+		<xs:attribute name="data" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="filelog" type="xs:boolean" use="optional" default="false"/>
+	</xs:complexType>
+	<xs:simpleType name="debuglevel">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="debug"/>
+			<xs:enumeration value="info"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="rules">
+		<xs:sequence>
+			<xs:element name="rule" type="rule" minOccurs="1" maxOccurs="unbounded">
+				<xs:unique name="ruleParameters">
+					<xs:selector xpath="parameter"/>
+					<xs:field xpath="@paraName"/>
+				</xs:unique>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rule">
+		<xs:sequence>
+			<xs:element name="parameter" type="parameter" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="class" type="nonEmptyString" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="parameters">
+		<xs:sequence>
+			<xs:element name="parameter" type="parameter" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="parameter">
+		<xs:attribute name="paraName" type="nonEmptyString" use="required"/>
+		<xs:attribute name="value" type="nonEmptyString" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="observers">
+		<xs:sequence>
+			<xs:element name="observer" type="observer" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="observer">
+		<xs:attribute name="name" type="nonEmptyString" use="required"/>
+		<xs:attribute name="password" type="nonEmptyString" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="agents">
+		<xs:sequence>
+			<xs:element name="types" type="agentTypes" minOccurs="1" maxOccurs="1">
+				<xs:unique name="agentTypeNames">
+					<xs:selector xpath=".//*"/>
+					<xs:field xpath="@typeName"/>
+				</xs:unique>
+			</xs:element>
+			<xs:element name="instances" type="agentInstances" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="agentTypes">
+		<xs:all>
+			<xs:element name="open" type="agentOpenTypes" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="closed" type="agentClosedTypes" minOccurs="0" maxOccurs="1">
+				<xs:unique name="agentClosedTypeNames">
+					<xs:selector xpath="type"/>
+					<xs:field xpath="@typeName"/>
+				</xs:unique>
+			</xs:element>
+		</xs:all>
+		<xs:attribute name="freeCap" type="nnintAndUnbounded" use="optional" default="unbounded"/>
+		<xs:attribute name="capNeed" type="nonNegativeInt" use="optional" default="0"/>
+		<xs:attribute name="moveForce" type="nnintAndUnbounded" use="optional" default="unbounded"/>
+		<xs:attribute name="viewRange" type="nnintAndUnbounded" use="optional" default="unbounded"/>
+		<xs:attribute name="hearing" type="nnintAndUnbounded" use="optional" default="unbounded"/>
+		<xs:attribute name="soundIntensity" type="nnintAndUnbounded" use="optional" default="unbounded"/>
+	</xs:complexType>
+	<xs:complexType name="agentClosedTypes">
+		<xs:sequence>
+			<xs:element name="type" type="agentClosedType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="generalType">
+		<xs:sequence>
+			<xs:element name="parameters" type="parameters" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="freeCap" type="nnintAndUnbounded" use="optional"/>
+		<xs:attribute name="capNeed" type="nonNegativeInt" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="agentClosedType">
+		<xs:complexContent>
+			<xs:extension base="generalType">
+				<xs:attribute name="typeName" type="nonEmptyString" use="required"/>
+				<xs:attribute name="moveForce" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="viewRange" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="hearing" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="soundIntensity" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="priority" type="nonNegativeInt" use="optional"/>
+				<xs:attribute name="class" type="nonEmptyString" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="agentOpenTypes">
+		<xs:sequence>
+			<xs:element name="type" type="agentOpenType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="agentOpenType">
+		<xs:complexContent>
+			<xs:extension base="agentClosedType">
+				<xs:attribute name="xPos" type="nonNegativeInt" use="required"/>
+				<xs:attribute name="yPos" type="nonNegativeInt" use="required"/>
+				<xs:attribute name="password" type="nonEmptyString" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="agentInstances">
+		<xs:sequence>
+			<xs:element name="instance" type="agentInstance" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="generalInstance">
+		<xs:complexContent>
+			<xs:extension base="position">
+				<xs:all>
+					<xs:element name="parameters" type="parameters" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="contains" type="containedObjects" minOccurs="0" maxOccurs="1"/>
+				</xs:all>
+				<xs:attribute name="freeCap" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="capNeed" type="nonNegativeInt" use="optional"/>
+				<xs:attribute name="name" type="nonEmptyString" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="containedObjects">
+		<xs:sequence>
+			<xs:element name="instance" type="containedObjectInstance" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="containedObjectInstance">
+		<xs:all>
+			<xs:element name="parameters" type="parameters" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="contains" type="containedObjects" minOccurs="0" maxOccurs="1"/>
+		</xs:all>
+		<xs:attribute name="objectTypeRef" type="nonEmptyString" use="required"/>
+		<xs:attribute name="freeCap" type="nnintAndUnbounded" use="optional"/>
+		<xs:attribute name="capNeed" type="nonNegativeInt" use="optional"/>
+		<xs:attribute name="name" type="nonEmptyString" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="agentInstance">
+		<xs:complexContent>
+			<xs:extension base="generalInstance">
+				<xs:attribute name="agentTypeRef" type="nonEmptyString" use="required"/>
+				<xs:attribute name="moveForce" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="password" type="nonEmptyString" use="optional"/>
+				<xs:attribute name="viewRange" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="hearing" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="soundIntensity" type="nnintAndUnbounded" use="optional"/>
+				<xs:attribute name="priority" type="nonNegativeInt" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="objects">
+		<xs:sequence>
+			<xs:element name="types" type="objectTypes" minOccurs="1" maxOccurs="1">
+				<xs:unique name="objectTypeName">
+					<xs:selector xpath="type"/>
+					<xs:field xpath="@typeName"/>
+				</xs:unique>
+			</xs:element>
+			<xs:element name="instances" type="objectInstances" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="objectTypes">
+		<xs:sequence>
+			<xs:element name="type" type="objectType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="freeCap" type="nnintAndUnbounded" use="optional"/>
+		<xs:attribute name="capNeed" type="nonNegativeInt" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="objectType">
+		<xs:complexContent>
+			<xs:extension base="generalType">
+				<xs:attribute name="typeName" type="nonEmptyString" use="required"/>
+				<xs:attribute name="class" type="nonEmptyString" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="objectInstances">
+		<xs:sequence>
+			<xs:element name="instance" type="objectInstance" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="objectInstance">
+		<xs:complexContent>
+			<xs:extension base="generalInstance">
+				<xs:attribute name="objectTypeRef" type="nonEmptyString" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="obstacles">
+		<xs:all>
+			<xs:element name="walls" type="obsPositions" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="trenches" type="obsPositions" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="curtains" type="obsPositions" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="interferences" type="interferencePositions" minOccurs="0" maxOccurs="1"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="interferencePositions">
+		<xs:sequence>
+			<xs:element name="multi" type="positions" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="single" type="position" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="obsPositions">
+		<xs:complexContent>
+			<xs:extension base="interferencePositions">
+				<xs:attribute name="interfering" type="xs:boolean" use="optional" default="false"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="positions">
+		<xs:complexContent>
+			<xs:extension base="position">
+				<xs:attribute name="length" type="nonNegativeInt" use="required"/>
+				<xs:attribute name="direction" type="direction" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="direction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="n"/>
+			<xs:enumeration value="e"/>
+			<xs:enumeration value="s"/>
+			<xs:enumeration value="w"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="cellcapacities">
+		<xs:sequence>
+			<xs:element name="cell" type="cellcapacity" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="default" type="nnintAndUnbounded" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="cellcapacity">
+		<xs:complexContent>
+			<xs:extension base="position">
+				<xs:attribute name="capacity" type="nnintAndUnbounded" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

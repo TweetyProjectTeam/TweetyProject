@@ -1,0 +1,35 @@
+The subdirectories of this directory contain different parts of the 
+GridWorldSim platform for simulating grid-based MAS environments.
+
+commons/ contains common classes needed by all GridWorldSim components. Its
+only dependency is on log4j which can be found in the generalLibraries 
+directory.
+
+server/ contains the GridWorldSim server. It depends on the commons component
+mentioned above and also log4j.
+
+serverapi/ contains a Java API that can (and should) be used for
+implementing clients that wish to interact with the server. It depends on the
+commons component and log4j. 
+
+
+There are two graphical clients already in existence: One client to
+simulate agents "by hand" in order to test the environment that is simulated
+by the GridWorldSim server and another client to observe the environment in
+detail when a simulation is running. Due to legal issues (the graphical clients
+use icons that are released under a non-GPL compatible license) these clients
+are currently not part of the tweety project. This will change at a later date
+when those icons have either been relicensed or been replaced.
+
+Even though the graphical clients are not necessary to make full use of the
+GridWorldSim server, they can ease the development of environments quite a lot.
+So if you have an interest in getting the clients now, please drop me an e-mail
+to stefan@tittel.net.
+
+-- Stefan Tittel (2011-01-27)
+
+
+More information about GridWorldSim and binary builds of the graphical clients
+are now available at http://www.tittel.net/gridworldsim/.
+
+-- Stefan Tittel (2011-03-09)

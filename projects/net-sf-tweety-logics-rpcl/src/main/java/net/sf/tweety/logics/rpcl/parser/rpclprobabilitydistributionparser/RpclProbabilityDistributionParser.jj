@@ -1,0 +1,178 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  JDK_VERSION = "1.6";
+}
+
+PARSER_BEGIN(RpclProbabilityDistributionParser)
+package net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.rpclprobabilitydistributionparser;
+
+import java.io.*;
+import java.util.*;
+import net.sf.tweety.*;
+import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.logics.firstorderlogic.semantics.*;
+import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
+import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
+import net.sf.tweety.util.*;
+import net.sf.tweety.math.probability.*;
+
+/**
+ * This class implements a parser for relational probability distributions. The BNF for 
+ * relational probability distributions is given by (start symbol is DISTRIBUTION)
+ * <br>
+ * <br>DISTRIBUTION				::== (PROBABILITYASSIGNMENT)*
+ * <br>PROBABILITYASSIGNMENT	::== INTERPRETATION "=" PROBABILITY
+ * <br>INTERPRETATION			::== "{" (GROUNDATOM ("," GROUNDATOM)*)? "}"
+ * <br>GROUNDATOM				::== PREDICATE ("(" CONSTANT ("," CONSTANT)* ")")?
+ * <br>
+ * <br>PREDICATE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with a lowercase letter at the beginning.<br>
+ * <br>CONSTANT is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with a lowercase letter at the beginning.<br>
+ * <br>PROBABILITY is a number in [0,1].<br>
+ */
+public class RpclProbabilityDistributionParser {
+
+	/**
+     * The semantics used for the distribution to be read. 
+     */
+	private RpclSemantics semantics = null;
+	
+	/**
+	 * The signature for this parser (if one has been given)
+	 */
+	private FolSignature signature = null;
+
+	public RpclProbabilityDistributionParser(){
+	}	
+	public RpclProbabilityDistributionParser(RpclSemantics semantics){
+		this(semantics,null);		
+	}
+	
+	public RpclProbabilityDistributionParser(RpclSemantics semantics, FolSignature signature){
+		this.semantics = semantics;		
+		this.signature = signature;
+	}
+
+	public void setSemantics(RpclSemantics semantics){
+	 	this.semantics = semantics;	}	  
+
+	public void setSignature(FolSignature signature){
+	 	this.signature = signature;
+	}
+
+  	public RpclProbabilityDistribution parseProbabilityDistribution(Reader reader) throws ParserException{
+  	  	try
+  	  	{
+  	  		RpclProbabilityDistributionParser theParser = new RpclProbabilityDistributionParser(reader);
+  	  		return theParser.Distribution(this.semantics, this.signature);
+  	 	}catch(ParseException e){
+			throw new ParserException(e);
+  	 	}  	 	  
+  	}
+  	
+}
+PARSER_END(RpclProbabilityDistributionParser)
+
+SKIP :
+{
+ 	" "
+|	"\r"
+|	"\t"
+|	"\n"
+}
+
+TOKEN :
+{
+     < STRUCTURENAME: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+   | < PROBABILITY: ["0"-"1"] ("." (["0"-"9"])* )? >
+}
+
+RpclProbabilityDistribution Distribution(RpclSemantics semantics, FolSignature signature) :
+{
+	Set<Pair<HerbrandInterpretation,Probability>> assignments = new HashSet<Pair<HerbrandInterpretation,Probability>>();
+	Pair<HerbrandInterpretation,Probability> assignment;
+}
+{
+	{
+		if(signature == null)
+			signature = new FolSignature();
+	}
+   (
+    assignment=ProbabilityAssignment(signature)
+  	{
+  		assignments.add(assignment);
+  	}
+   )* <EOF>
+  {
+  	RpclProbabilityDistribution distribution = new RpclProbabilityDistribution(semantics,signature);
+  	for(Pair<HerbrandInterpretation,Probability> a: assignments)
+  		distribution.put(a.getFirst(),a.getSecond()); 
+  	return distribution;
+  }
+}
+
+Pair<HerbrandInterpretation,Probability> ProbabilityAssignment(FolSignature signature) :
+{
+	Set<Atom> atoms = new HashSet<Atom>();
+	Atom atom;
+	Token probability;
+}
+{
+	"{" (atom=GroundAtom(signature)
+	{
+		atoms.add(atom);
+	}
+	( "," atom=GroundAtom(signature)
+	{
+		atoms.add(atom);
+	}
+	)*)? "}" "=" probability=<PROBABILITY>
+	{
+		return new Pair<HerbrandInterpretation,Probability>(new HerbrandInterpretation(atoms),new Probability(new Double(token.image)));
+	} 	 
+}
+
+Atom GroundAtom(FolSignature signature) :
+{
+	Token predicate;
+	Token constant;
+	List<Constant> parameters = new ArrayList<Constant>();
+	Constant c = null;
+}
+{
+	predicate=<STRUCTURENAME> ("(" constant=<STRUCTURENAME>
+	{
+		if(signature.containsConstant(constant.image)){
+			c = signature.getConstant(constant.image);
+			parameters.add(c);
+		}else{
+			c = new Constant(constant.image);
+			signature.add(c);
+			parameters.add(c);
+		}		
+	}
+	("," constant=<STRUCTURENAME>
+	{
+		if(signature.containsConstant(constant.image)){
+			c = signature.getConstant(constant.image);
+			parameters.add(c);
+		}else{
+			c = new Constant(constant.image);
+			signature.add(c);
+			parameters.add(c);
+		}
+	}
+	)* ")")?
+	{
+		Predicate p;
+		if(signature.containsPredicate(predicate.image))
+			p = signature.getPredicate(predicate.image);
+		else{
+			p = new Predicate(predicate.image, parameters.size());
+			signature.add(p);
+		}
+		return new Atom(p,parameters);
+	}
+}

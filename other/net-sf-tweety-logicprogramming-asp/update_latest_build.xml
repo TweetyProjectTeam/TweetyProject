@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="update_latest_build" name="Update the latest build (JAR) in the latest builds folder">
+	<target name="update_latest_build" description="Update the latest build (JAR) in the latest builds folder">
+		<jar destfile="../../latestBuild/net-sf-tweety-logicprogramming-asp.jar">
+	    	<fileset dir="bin" includes="**/*.class"/>
+			<fileset dir="src" includes="**/*.java"/>
+		</jar>
+	</target>	
+</project>
