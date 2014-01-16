@@ -9,19 +9,19 @@
   <parent>
   	<groupId>net.sf.tweety</groupId>
   	<artifactId>maven-build-all</artifactId>
-  	<version>1.0.358</version>
+  	<version>1.1.dev-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>dung</artifactId>
-  		<version>1.0.358</version>
+  		<version>1.1.dev-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>pl</artifactId>
-  		<version>1.0.358</version>
+  		<version>1.1.dev-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>
