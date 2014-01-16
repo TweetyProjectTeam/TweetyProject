@@ -8,13 +8,13 @@
   	<dependency>
   		<groupId>net.sf</groupId>
   		<artifactId>tweety</artifactId>
-  		<version>1.0.0-SNAPSHOT</version>
+  		<version>1.0.358</version>
   	</dependency>
   </dependencies>
   <parent>
   	<groupId>net.sf.tweety</groupId>
   	<artifactId>maven-build-all</artifactId>
-  	<version>1.0.0-SNAPSHOT</version>
+  	<version>1.0.358</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>

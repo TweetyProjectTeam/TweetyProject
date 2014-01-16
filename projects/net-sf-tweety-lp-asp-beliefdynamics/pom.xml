@@ -15,12 +15,12 @@
     <dependency>
     	<groupId>net.sf.tweety.arg</groupId>
     	<artifactId>lp</artifactId>
-    	<version>1.0.0-SNAPSHOT</version>
+    	<version>1.0.358</version>
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.lp</groupId>
     	<artifactId>asp</artifactId>
-    	<version>1.0.0-SNAPSHOT</version>
+    	<version>1.0.358</version>
     </dependency>
     <dependency>
     	<groupId>junit</groupId>
@@ -31,7 +31,7 @@
   <parent>
   	<groupId>net.sf.tweety</groupId>
   	<artifactId>maven-build-all</artifactId>
-  	<version>1.0.0-SNAPSHOT</version>
+  	<version>1.0.358</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>
