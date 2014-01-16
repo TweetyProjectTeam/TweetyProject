@@ -145,7 +145,8 @@
 		  <configuration>
 		    <goals>deploy</goals>
 		    <autoVersionSubmodules>true</autoVersionSubmodules>
-		    <tagNameFormat>maven-release-v${project.version}</tagNameFormat>
+			<tagBase>https://svn.code.sf.net/p/tweety/code/tags</tagBase>
+		    <tagNameFormat>maven-release-v${version}</tagNameFormat>
 		  </configuration>
 		</plugin>
       </plugins>
