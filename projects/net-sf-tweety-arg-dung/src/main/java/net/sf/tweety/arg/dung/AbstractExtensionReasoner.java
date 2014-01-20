@@ -62,6 +62,12 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 			case Semantics.GROUNDED_SEMANTICS: return new GroundReasoner(beliefBase, inferenceType);
 			case Semantics.PREFERRED_SEMANTICS: return new PreferredReasoner(beliefBase, inferenceType);
 			case Semantics.STABLE_SEMANTICS: return new StableReasoner(beliefBase, inferenceType);
+			case Semantics.ADMISSIBLE_SEMANTICS: return new AdmissibleReasoner(beliefBase, inferenceType);
+			case Semantics.CONFLICTFREE_SEMANTICS: return new ConflictFreeReasoner(beliefBase, inferenceType);
+			case Semantics.SEMISTABLE_SEMANTICS: return new SemiStableReasoner(beliefBase, inferenceType);
+			case Semantics.IDEAL_SEMANTICS: return new IdealReasoner(beliefBase, inferenceType);
+			case Semantics.STAGE_SEMANTICS: return new StageReasoner(beliefBase, inferenceType);
+			case Semantics.CF2_SEMANTICS: return new CF2Reasoner(beliefBase, inferenceType);
 		}
 		throw new IllegalArgumentException("Unknown semantics.");
 	}
