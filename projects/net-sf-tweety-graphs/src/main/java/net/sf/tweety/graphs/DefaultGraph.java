@@ -236,4 +236,40 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 				return false;
 		return true;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getStronglyConnectedComponents()
+	 */
+	@Override
+	public Collection<Collection<T>> getStronglyConnectedComponents() {
+		return DefaultGraph.<T>getStronglyConnectedComponents(this);
+	}
+	
+	/**
+	 * Returns the strongly connected components of the given graph. A set
+	 * of nodes is strongly connected, if there is a path from each
+	 * node to each other. A set of nodes is called strongly connected
+	 * component if it is strongly connected and maximal with respect
+	 * to set inclusion. 
+	 * @param g some graph
+	 * @return the strongly connected components of the graph.
+	 */
+	public static <S extends Node> Collection<Collection<S>> getStronglyConnectedComponents(Graph<S> g){
+		// not very efficient but will do for now
+		Collection<Collection<S>> result = new HashSet<Collection<S>>(); 
+		Collection<S> notVisited = new HashSet<S>(g.getNodes());
+		for(S node: g.getNodes()){
+			if(notVisited.contains(node)){
+				notVisited.remove(node);
+				Collection<S> scc = new HashSet<S>();
+				scc.add(node);
+				for(S node2: notVisited){
+					if(g.existsDirectedPath(node, node2) && g.existsDirectedPath(node2, node))
+						scc.add(node2);					
+				}
+				notVisited.removeAll(scc);				
+			}
+		}		
+		return result;
+	}
 }

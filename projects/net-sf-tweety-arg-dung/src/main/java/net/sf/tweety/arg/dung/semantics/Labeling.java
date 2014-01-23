@@ -27,7 +27,8 @@ public class Labeling extends AbstractArgumentationInterpretation implements Map
 	}
 	
 	/**
-	 * Creates a new labeling from the given extension wrt. the given theory
+	 * Creates a new labeling from the given extension wrt. the given theory (this only gives
+	 * a valid labeling wrt. some semantics if the semantics is admissibility-based).
 	 * @param theory some Dung theory.
 	 * @param ext an extension
 	 */

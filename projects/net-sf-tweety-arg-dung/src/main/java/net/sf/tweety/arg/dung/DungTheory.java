@@ -551,4 +551,12 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 	public boolean isWeightedGraph() {
 		return false;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getStronglyConnectedComponents()
+	 */
+	@Override
+	public Collection<Collection<Argument>> getStronglyConnectedComponents() {
+		return DefaultGraph.getStronglyConnectedComponents(this);
+	}
 }

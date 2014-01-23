@@ -143,6 +143,16 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 */
 	public Graph<T> getComplementGraph(int selfloops);
 	
+	
+	/**
+	 * Returns the strongly connected components of this graph. A set
+	 * of nodes is strongly connected, if there is a path from each
+	 * node to each other. A set of nodes is called strongly connected
+	 * component if it is strongly connected and maximal with respect
+	 * to set inclusion.
+	 * @return the strongly connected components of this graph.
+	 */
+	public Collection<Collection<T>> getStronglyConnectedComponents();
 	/**
 	 * Returns "true" iff the graph has a self loop (an edge from a node to itself).
 	 * @return  "true" iff the graph has a self loop (an edge from a node to itself).
