@@ -50,7 +50,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 
 	private static final String PROPLOGIC__QUERY_DESCRIPTION = "-query <formula>, " +
 			"check whether result satisfies query. Please note: " +
-			"multiple queries MUST be surrounded by \"\" and separated with a single blank.";
+			"with multiple queries EACH MUST be surrounded by \" \" and separated with a single blank between.";
 
 // <---- STATIC DELCARATION ----->	
 	
@@ -98,6 +98,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 		PropositionalFormula[] queries = new PropositionalFormula[1];
 		// try to parse all given input files
 		
+		// TODO: check for multiple input files (kb is overwritten)!
 		for (int i = 0; i < input.length; i++) {
 			if (input[i].getAbsolutePath().endsWith(".proplogic")) {
 				try {
@@ -111,7 +112,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 		}
 		// iterate over all given command parameter
 		for (CommandParameter tempComParam : params) {
-			// if parameter identifier is for an solver
+			// if parameter identifier is for a solver
 			if (tempComParam.getIdentifier().equals("-reasoner")) {
 				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
 				if (tmp.getValue().equalsIgnoreCase("naive")) {
@@ -120,10 +121,12 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 				} else if (tmp.getValue().equalsIgnoreCase("sat4j")) {
 					Sat4jEntailment sat4jEntail = new Sat4jEntailment();
 					reasoner = new ClassicalInference(plbs, sat4jEntail);
+				} else {
+					throw new IllegalArgumentException("Illegal argument: "+ tempComParam.getIdentifier());
 				}
 
 			}
-			// if parameter identifier is for an query
+			// if parameter identifier is for a query
 			if (tempComParam.getIdentifier().equals("-query")) {
 
 				StringListCommandParameter tmp = (StringListCommandParameter) tempComParam;
@@ -132,10 +135,10 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 					try {
 						queries[i] = (PropositionalFormula) parser.parseFormula(tmp.getValue()[i]);
 					} catch (ParserException e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					}
 				}
@@ -147,8 +150,8 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 			System.out.println(reasoner.query(pf));
 		}
 		
-		// handle output and return appropriate representation
-		PluginOutput out = new PluginOutput("");
+		// TODO: handle output and return appropriate representation
+		PluginOutput out = new PluginOutput();
 		return out;
 	}
 

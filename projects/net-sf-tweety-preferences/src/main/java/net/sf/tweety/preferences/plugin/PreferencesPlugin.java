@@ -1,4 +1,4 @@
-package net.sf.tweety.preferences.cli;
+package net.sf.tweety.preferences.plugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -196,7 +196,8 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 				}
 			}
 		}
-		PluginOutput out = new PluginOutput(result.getLevelingFunction().toString());
+		// TODO: fill output
+		PluginOutput out = new PluginOutput();
 
 		return out;
 		

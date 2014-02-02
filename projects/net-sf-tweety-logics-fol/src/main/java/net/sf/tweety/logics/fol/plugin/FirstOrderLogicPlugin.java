@@ -75,7 +75,6 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 		this.addParameter(new StringListCommandParameter(FOLOGIC__QUERY_IDENTIFIER, FOLOGIC__QUERY_DESCRIPTION));
 	}
 
-
 	/**
 	 * Executes this plugin with given input files and other aggregated parameters
 	 * @param input files to be parsed (e.g. knowledge base)
@@ -149,7 +148,7 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 		}
 		
 		// TODO: make up and return plugin output
-		PluginOutput out = new PluginOutput("");
+		PluginOutput out = new PluginOutput();
 		
 		return out;
 		

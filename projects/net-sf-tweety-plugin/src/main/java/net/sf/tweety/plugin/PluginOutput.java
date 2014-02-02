@@ -1,5 +1,7 @@
 package net.sf.tweety.plugin;
 
+import java.util.ArrayList;
+
 /**
  * This class provides the output for each plugin to be used in the CLI.
  * Only meant for command line output, not for writing into output files (those are handled within each project
@@ -10,20 +12,31 @@ package net.sf.tweety.plugin;
  */
 
 public class PluginOutput {
-	
 	// TODO: implementation of solid representation (e.g. Output-Strings, error-messages, help-text)
-	private String out;
 	
-	public PluginOutput(String output) {
-		this.out = output;
+	// list of all fields this output contains
+	private ArrayList<OutputField> fields;
+	// merged output string from all fields
+	private String output;
+	
+	public void addField(OutputField field){
+		fields.add(field);
 	}
 	
-	public void appendToOutput(String ap){
-		out += ap;
+	public void addField(String value, String description){
+		fields.add(new OutputField(value, description));
+	}
+	
+	public void mergeFields(){
+		output = "";
+		for(OutputField f : fields){
+			output += f.merge()+"\n";
+		}
 	}
 	
 	public String getOutput(){
-		return out;
+		mergeFields();
+		return output;
 	}
 
 }
