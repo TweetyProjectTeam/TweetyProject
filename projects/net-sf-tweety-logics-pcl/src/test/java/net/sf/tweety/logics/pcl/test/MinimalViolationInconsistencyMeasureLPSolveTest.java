@@ -33,7 +33,8 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 	@Before
 	public void setUp() {
 		
-		lpsolveConfigured = LPSolveMathUtils.isLPSolveConfigured();
+		String errorMessage = LPSolveMathUtils.checkLPSolve();
+		lpsolveConfigured = errorMessage==null;
 		
 		if(lpsolveConfigured) {
 			
@@ -77,7 +78,8 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 			
 		}
 		else {
-			System.err.println("Can't perform unit test MinimalViolationInconsistencyMeasureLPSolveTest because LPSolve isn't configured properly.");
+			System.err.println("Warning: Can't perform unit test MinimalViolationInconsistencyMeasureLPSolveTest because LPSolve isn't configured properly.");
+			System.err.println("Error message: "+errorMessage);
 		}
 		
 	}

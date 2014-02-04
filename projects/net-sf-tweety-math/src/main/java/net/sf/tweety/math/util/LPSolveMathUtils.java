@@ -6,9 +6,9 @@ public class LPSolveMathUtils {
 
 	/**
 	 * Test whether LPSolve is configured correctly by solving a simple optimization problem.
-	 * @return
+	 * @return null if LPSolve is configured correctly, error message otherwise.
 	 */
-	public static boolean isLPSolveConfigured() {
+	public static String checkLPSolve() {
 
 		try {
 			//minimize x1 subject to x1 >= 0
@@ -27,14 +27,11 @@ public class LPSolveMathUtils {
 			
 			solver.solve();
 		}
-		catch(Error e) {
-			return false;
-		}
-		catch(Exception e) {
-			return false;
+		catch(Throwable t) {
+			return t.getMessage();
 		}
 		
-		return true;
+		return null;
 	}
 	
 }
