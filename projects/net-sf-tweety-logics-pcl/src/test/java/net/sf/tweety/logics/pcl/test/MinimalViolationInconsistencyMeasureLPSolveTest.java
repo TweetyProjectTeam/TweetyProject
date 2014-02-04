@@ -11,6 +11,7 @@ import net.sf.tweety.logics.pcl.analysis.MinimalViolation1InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolationInconsistencyMeasureLPSolve;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolationMaxInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.parser.PclParser;
+import net.sf.tweety.math.util.LPSolveMathUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,8 @@ import org.junit.Test;
 
 public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
+	boolean lpsolveConfigured;
+	
 	double accuracy;
 	
 	MinimalViolationInconsistencyMeasureLPSolve inc;
@@ -30,42 +33,51 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 	@Before
 	public void setUp() {
 		
-		accuracy = 0.001;
+		lpsolveConfigured = LPSolveMathUtils.isLPSolveConfigured();
 		
-		parser = new PclParser();
-		
-		kbs = new LinkedList<PclBeliefSet>();
-		try {
-			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.5]"));
-
-			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.49]\n"
-					                                    + "(A)[0.51]"));
-
-			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.4]\n"
-					                                    + "(A)[0.6]"));
-
-			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.2]\n"
-					                                    + "(A)[0.8]"));
-
-			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0d]\n"
-					                                    + "(A)[1d]"));
+		if(lpsolveConfigured) {
 			
+			accuracy = 0.001;
+			
+			parser = new PclParser();
+			
+			kbs = new LinkedList<PclBeliefSet>();
+			try {
+				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.5]"));
 
-			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.8]\n"
-					                                    + "(B)[0.6]\n"
-					                                    + "(B|A)[0.9]"));
-		} 
-		catch (IOException e) {
-		
-			System.err.println("Parsing error in MinimalViolationInconsistencyMeasureLPSolveTest setup.");
-			System.err.println(e.toString());
+				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.49]\n"
+						                                    + "(A)[0.51]"));
+
+				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.4]\n"
+						                                    + "(A)[0.6]"));
+
+				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.2]\n"
+						                                    + "(A)[0.8]"));
+
+				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0d]\n"
+						                                    + "(A)[1d]"));
+				
+
+				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.8]\n"
+						                                    + "(B)[0.6]\n"
+						                                    + "(B|A)[0.9]"));
+			} 
+			catch (IOException e) {
+			
+				System.err.println("Parsing error in MinimalViolationInconsistencyMeasureLPSolveTest setup.");
+				System.err.println(e.toString());
+				
+			}
+			catch (ParserException e) {
+
+				System.err.println("Parsing error in MinimalViolationInconsistencyMeasureLPSolveTest setup.");
+				System.err.println(e.toString());
+				
+			}
 			
 		}
-		catch (ParserException e) {
-
-			System.err.println("Parsing error in MinimalViolationInconsistencyMeasureLPSolveTest setup.");
-			System.err.println(e.toString());
-			
+		else {
+			System.err.println("Can't perform unit test MinimalViolationInconsistencyMeasureLPSolveTest because LPSolve isn't configured properly.");
 		}
 		
 	}
@@ -74,6 +86,8 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 	
 	@Test
 	public void check1Norm() {
+		
+		if(!lpsolveConfigured) return;
 
 		inc = new MinimalViolation1InconsistencyMeasure();
 		
@@ -88,8 +102,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 		
 		
 		for(PclBeliefSet kb: kbs) {
-		// TJ: Pls do not readd before release is tagged, it fails the tests
-		//	assertEquals(expected.removeFirst(), inc.inconsistencyMeasure(kb),accuracy);
+			assertEquals(expected.removeFirst(), inc.inconsistencyMeasure(kb),accuracy);
 			
 		}
 		
@@ -100,6 +113,9 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
 	@Test
 	public void checkMaxNorm() {
+		
+		if(!lpsolveConfigured) return;
+
 
 		inc = new MinimalViolationMaxInconsistencyMeasure();
 		
@@ -114,9 +130,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 		
 		
 		for(PclBeliefSet kb: kbs) {
-		// TJ: Pls do not readd before release is tagged, it fails the tests
-		//	assertEquals(expected.removeFirst(), inc.inconsistencyMeasure(kb),accuracy);
-			
+			assertEquals(expected.removeFirst(), inc.inconsistencyMeasure(kb),accuracy);
 		}
 		
 		
