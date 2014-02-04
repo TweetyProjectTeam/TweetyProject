@@ -28,11 +28,9 @@ public class LPSolveMathUtils {
 			solver.solve();
 		}
 		catch(Error e) {
-			System.err.println(false);
 			return false;
 		}
 		catch(Exception e) {
-			System.err.println(false);
 			return false;
 		}
 		
