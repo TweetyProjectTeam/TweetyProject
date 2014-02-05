@@ -44,6 +44,40 @@ public class MapTools<E,F> {
 		return result;
 	}
 	
+	/**
+	 * Computes the complete set of maps from E to F such that the following
+	 * condition holds. For every map "m" in the result the set m.keySet()
+	 * is equal to relations.keySet() and each
+	 * element "e" in m.keySet() is mapped to an element "f" such that "f" in
+	 * relations.get(S) with "e" in S. For example the map:<br>
+	 * a   => {1,2}<br>
+	 * b   => {3}<br>
+	 * c   => {4,5}<br>
+	 * yields the set of maps:<br>
+	 * a=>1, b=>3, c=>4<br>
+	 * a=>1, b=>3, c=>5<br>
+	 * a=>2, b=>3, c=>4<br>
+	 * a=>2, b=>3, c=>5<br>
+	 * @param relations a map from sets of E to sets of F.
+	 * @return a set of maps from E to F.
+	 */
+	public Set<Map<E,F>> allMapsSingleSource(Map<E,Set<F>> relations){
+		Set<Map<E,F>> result = new HashSet<Map<E,F>>();
+		result.add(new HashMap<E,F>());
+		for(E key: relations.keySet()){
+			Set<Map<E,F>> newResult = new HashSet<Map<E,F>>();
+			for(Map<E,F> map: result){
+				for(F val: relations.get(key)){
+					Map<E,F> newMap = new HashMap<E,F>(map);
+					newMap.put(key, val);
+					newResult.add(newMap);
+				}
+			}
+			result = newResult;
+		}	
+		return result;
+	}
+	
 	/** Computes all bijections from E to F.
 	 * E and F have to be of the same cardinality.
 	 * @param domain some set.

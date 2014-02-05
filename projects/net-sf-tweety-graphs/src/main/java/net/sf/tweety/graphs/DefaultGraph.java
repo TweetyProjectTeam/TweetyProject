@@ -152,20 +152,7 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	 * @see net.sf.tweety.graphs.Graph#existsDirectedPath(net.sf.tweety.graphs.Node, net.sf.tweety.graphs.Node)
 	 */
 	public boolean existsDirectedPath(T node1, T node2){
-		if(!this.nodes.contains(node1) || !this.nodes.contains(node2))
-			throw new IllegalArgumentException("The nodes are not in this graph.");
-		if(node1 == node2)
-			return true;
-		// we perform a DFS.
-		Stack<T> stack = new Stack<T>();
-		stack.addAll(this.getChildren(node1));
-		while(!stack.isEmpty()){
-			T node = stack.pop();
-			if(node == node2)
-				return true;
-			stack.addAll(this.getChildren(node));
-		}
-		return false;
+		return DefaultGraph.existsDirectedPath(this, node1, node2);		
 	}
 	
 	/* (non-Javadoc)
@@ -267,9 +254,37 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 					if(g.existsDirectedPath(node, node2) && g.existsDirectedPath(node2, node))
 						scc.add(node2);					
 				}
-				notVisited.removeAll(scc);				
+				notVisited.removeAll(scc);
+				result.add(scc);
 			}
 		}		
 		return result;
+	}
+	
+	/**
+	 * Checks whether there is a (directed) path from node1 to node2 in the given graph.
+	 * @param g some graph.
+	 * @param node1 some node.
+	 * @param node2 some node.
+	 * @return "true" if there is a directed path from node1 to node2.
+	 */
+	public static <S extends Node> boolean existsDirectedPath(Graph<S> g, S node1, S node2){
+		if(!g.getNodes().contains(node1) || !g.getNodes().contains(node2))
+			throw new IllegalArgumentException("The nodes are not in this graph.");
+		if(node1 == node2)
+			return true;
+		// we perform a DFS.
+		Stack<S> stack = new Stack<S>();
+		Collection<S> visited = new HashSet<S>();
+		stack.addAll(g.getChildren(node1));
+		while(!stack.isEmpty()){
+			S node = stack.pop();
+			visited.add(node);
+			if(node == node2)
+				return true;			
+			stack.addAll(g.getChildren(node));
+			stack.removeAll(visited);
+		}
+		return false;
 	}
 }

@@ -176,6 +176,18 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 	}
 	
 	/**
+	 * returns true if some argument of <source>ext</source> is attacked by argument.
+	 * @param argument an argument
+	 * @param ext an extension, ie. a set of arguments
+	 * @return true if some argument of <source>ext</source> is attacked by argument.
+	 */
+	public boolean isAttackedBy(Argument argument, Extension ext){
+		Set<Argument> attacked = this.getAttacked(argument);
+		attacked.retainAll(ext);
+		return attacked.size() > 0;
+	}
+	
+	/**
 	 * returns true if some argument of <source>ext2</source> attacks some argument
 	 * in <source>ext1</source>
 	 * @param ext1 an extension, ie. a set of arguments
@@ -468,7 +480,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 	 */
 	@Override
 	public boolean existsDirectedPath(Argument node1, Argument node2) {
-		throw new UnsupportedOperationException();
+		return DefaultGraph.existsDirectedPath(this, node1, node2);
 	}
 
 	/* (non-Javadoc)
