@@ -16,7 +16,6 @@ import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
-import net.sf.tweety.logics.rcl.syntax.RelationalConditional;
 import net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.semantics.RpclSemantics;
 import net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional;
@@ -258,7 +257,9 @@ public class RpclMeReasoner extends Reasoner {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
-				Solver solver = new OpenOptSolver(problem);
+				OpenOptSolver solver = new OpenOptSolver(problem);
+				solver.solver = "ralg";
+				solver.ignoreNotFeasibleError = true;
 				Map<Variable,Term> solution = solver.solve();
 				RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics,this.getSignature());
 				for(HerbrandInterpretation w: worlds2vars.keySet()){
@@ -279,14 +280,10 @@ public class RpclMeReasoner extends Reasoner {
 	 */
 	@Override
 	public Answer query(Formula query) {
-		if(!(query instanceof RelationalConditional) && !(query instanceof FolFormula))
-			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for conditional and first-order queries.");
-		ProbabilityDistribution<?> meDistribution = this.getMeDistribution();
-		RelationalConditional re;
-		if(query instanceof FolFormula)
-			re = new RelationalConditional((FolFormula)query);
-		else re = (RelationalConditional) query;
-		Probability prob = meDistribution.probability(re);
+		if(!(query instanceof FolFormula))
+			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for first-order queries.");
+		ProbabilityDistribution<?> meDistribution = this.getMeDistribution();		
+		Probability prob = meDistribution.probability(query);
 		Answer answer = new Answer(this.getKnowledgBase(),query);			
 		answer.setAnswer(prob.getValue());
 		answer.appendText("The probability of the query is " + prob + ".");

@@ -91,7 +91,7 @@ public class ProbabilityDistribution<T extends Interpretation> extends AbstractI
 	 * @param c a conditional
 	 * @return a probability.
 	 */
-	public Probability probability(Conditional c){
+	public Probability conditionalProbability(Conditional c){
 		PropositionalFormula head = c.getConclusion();
 		if(c.isFact())
 			return this.probability(head);
@@ -99,7 +99,7 @@ public class ProbabilityDistribution<T extends Interpretation> extends AbstractI
 		return this.probability(head.combineWithAnd(body)).divide(this.probability(body));
 		
 	}
-	
+		
 	/**
 	 * Normalizes the given list of probabilities, i.e. divides
 	 * each probability by the sum of all probabilities.
