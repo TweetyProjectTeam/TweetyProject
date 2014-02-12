@@ -97,6 +97,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	 * executes the given parameters and files in this plugin
 	 */
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
+		@SuppressWarnings("unused")
 		PreferenceOrder<String> result = new PreferenceOrder<String>();
 		// File-Handler
 		//Unused!

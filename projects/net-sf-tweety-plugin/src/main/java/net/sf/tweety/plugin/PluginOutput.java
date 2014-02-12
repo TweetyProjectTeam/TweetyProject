@@ -19,12 +19,21 @@ public class PluginOutput {
 	// merged output string from all fields
 	private String output;
 	
+	public PluginOutput(){
+		fields = new ArrayList<OutputField>();
+		output = new String();
+	}
+	
+	public PluginOutput(ArrayList<OutputField> fields){
+		this.fields = fields;
+	}
+	
 	public void addField(OutputField field){
 		fields.add(field);
 	}
 	
-	public void addField(String value, String description){
-		fields.add(new OutputField(value, description));
+	public void addField(String description, String value){
+		fields.add(new OutputField(description, value));
 	}
 	
 	public void mergeFields(){

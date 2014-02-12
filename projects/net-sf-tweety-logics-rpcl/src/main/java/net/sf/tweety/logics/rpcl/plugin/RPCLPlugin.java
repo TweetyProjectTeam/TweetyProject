@@ -122,7 +122,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 	
 	// static parameter
 	// probability input files
-	private static String[] probInputFiles = new String[1];
+	private static String[] probInputFiles = null;
 	// all available parsers
  	private static RpclParser parser = null;
 	// the used probability parser
@@ -247,6 +247,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 			if(tmpComParam.getIdentifier().equalsIgnoreCase(RPCLOGIC__INPROB_IDENTIFIER)){
 				FileListCommandParameter tmp = (FileListCommandParameter) tmpComParam;
 				if(tmp.getValue().length == 1){
+					probInputFiles = new String[1];
 					probInputFiles[0] = tmp.getValue()[0].getAbsolutePath(); 
 				} else {
 					System.err.println("Invalid input probability file amount (only one file allowed).");
@@ -271,6 +272,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 		for(CommandParameter tmpComParam : params){
 			if(tmpComParam.getIdentifier().equalsIgnoreCase(RPCLOGIC__PROBOUT_IDENTIFIER)){
 				FileListCommandParameter tmp = (FileListCommandParameter) tmpComParam; 
+				
 				if(tmp.getValue().length == 1){
 					probOutFile = tmp.getValue()[0].getAbsolutePath();
 				}
@@ -317,7 +319,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 		// parse files, apply queries
 		try {
 			RpclBeliefSet kb = (RpclBeliefSet) parser.parseBeliefBaseFromFile(input[0].getAbsolutePath());
-			pout.addField(kb.toString(), "Knowledge Base:");
+			pout.addField("Knowledge Base", kb.toString() );
 			
 			// no input probability distribution file
 			if(probInputFiles == null){
@@ -334,9 +336,9 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				// if query is given
 				if(query != null){
 					
-					pout.addField(query, "Query:");
+					pout.addField( "Query", query);
 					queryResult = reasoner.query(folParser.parseFormula(query));
-					pout.addField(queryResult.toString(), "Query Result: ");
+					pout.addField( "Query Result", queryResult.toString());
 					
 					// test output
 					if(outputFile == null){
@@ -344,6 +346,8 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 					} else {
 						log.info("Output written to file " + outputFile);
 						// TODO: Write output to file
+						probOutWriter.setObject(p);
+						probOutWriter.writeToFile(outputFile);
 						System.out.println("Write plugin output into file " + outputFile);
 					}
 				}else{
@@ -362,9 +366,9 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 //				} else log.error("Invalid probability input files");
 				
 				if (query != null){
-					pout.addField(query, "Query:");
+					pout.addField("Query", query);
 					Probability res = p.probability(folParser.parseFormula(query));
-					pout.addField(res.toString(), "Probability (Standard):");
+					pout.addField( "Probability (Standard)", res.toString());
 					// TODO: res and p to file?
 				} else {
 					log.info("No query given with standard probability distribution");
@@ -385,9 +389,9 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				CondensedProbabilityDistribution p = ((RpclCondensedProbabilityDistributionParser) probParser).parseCondensedProbabilityDistribution(new InputStreamReader(new FileInputStream(probInputFiles[0])));
 				
 				if (query != null){
-					pout.addField(query, "Query:");
+					pout.addField( "Query:", query);
 					Probability res = p.probability((FolFormula)folParser.parseFormula(query));
-					pout.addField(res.toString(), "Probability (Condensed):");
+					pout.addField( "Probability (Condensed):", res.toString());
 				}else {
 					log.info("No query given with lifted probability distribution");
 				}
@@ -411,6 +415,8 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 		}
 		
 		// returns plugin output
+		pout.mergeFields();
+		System.out.println(pout.getOutput());
 		return pout;
 	}
 }

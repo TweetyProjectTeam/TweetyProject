@@ -294,9 +294,11 @@ public class CliMain {
 				} catch (CloneNotSupportedException e) {
 					e.printStackTrace();
 				}
-				PluginOutput out = tp.execute(inputFiles,
+				PluginOutput out = new PluginOutput();
+//				tp.execute(inputFiles,ip.toArray(new CommandParameter[ip.size()]));
+				out = tp.execute(inputFiles,
 						ip.toArray(new CommandParameter[ip.size()]));
-				System.out.println("Output: " + out.getOutput());
+				System.out.println("Output: \n" + out.getOutput());
 
 			}
 

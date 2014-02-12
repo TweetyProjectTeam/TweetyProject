@@ -1,6 +1,7 @@
 package net.sf.tweety.plugin.parameter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -57,7 +58,18 @@ public class FileListCommandParameter extends CommandParameter {
 	@Override
 	public boolean isValid(String s) {
 		// check for valid path
-		if (new File(s).isFile()) {
+		
+		File tmp = new File(s);
+		try {
+			tmp.createNewFile();
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		if (tmp.exists() && tmp.isFile() && tmp.canWrite() && tmp.canRead()) {
+			
 			return true;
 		}
 		return false;
@@ -70,12 +82,14 @@ public class FileListCommandParameter extends CommandParameter {
 	@Override
 	public CommandParameter instantiate(String filename) {
 		File[] out = new File[1];
+		
 			if(isValid(filename)){
 				out[0] = new File(filename.toString()).getAbsoluteFile();
 			}
 			FileListCommandParameter file = (FileListCommandParameter) this
 					.clone();
 			file.setValue(out);
+			
 		return file;
 	}
 
