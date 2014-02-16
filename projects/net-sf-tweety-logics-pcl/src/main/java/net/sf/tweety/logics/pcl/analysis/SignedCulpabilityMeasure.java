@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.pcl.analysis;
 
+import net.sf.tweety.logics.commons.analysis.CulpabilityMeasure;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 
@@ -11,10 +12,10 @@ import net.sf.tweety.logics.pcl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public interface SignedCulpabilityMeasure extends CulpabilityMeasure {
+public interface SignedCulpabilityMeasure extends CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> {
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.CulpabilityMeasure#culpabilityMeasure(net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet, net.sf.tweety.logics.probabilisticconditionallogic.syntax.ProbabilisticConditional)
+	 * @see net.sf.tweety.logics.commons.analysis.CulpabilityMeasure#culpabilityMeasure(net.sf.tweety.BeliefSet, net.sf.tweety.Formula)
 	 */
 	@Override
 	public Double culpabilityMeasure(PclBeliefSet beliefSet, ProbabilisticConditional conditional);

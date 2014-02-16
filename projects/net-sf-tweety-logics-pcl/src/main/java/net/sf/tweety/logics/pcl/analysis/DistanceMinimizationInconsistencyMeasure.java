@@ -1,10 +1,11 @@
 package net.sf.tweety.logics.pcl.analysis;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.InconsistencyMeasure;
+import net.sf.tweety.logics.commons.analysis.*;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
@@ -31,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMeasure<PclBeliefSet> {
+public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> {
 
 	/**
 	 * Logger.
@@ -82,10 +83,11 @@ public class DistanceMinimizationInconsistencyMeasure implements InconsistencyMe
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(PclBeliefSet beliefSet) {
+	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {	
+		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
 		log.trace("Starting to compute minimal " + this.p + "-distance inconsistency measure for '" + beliefSet + "'.");
 		// check archive
 		if(this.archive.containsKey(beliefSet))

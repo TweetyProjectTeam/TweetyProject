@@ -3,6 +3,7 @@ package net.sf.tweety.logics.pcl.analysis;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.analysis.CulpabilityMeasure;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
@@ -26,9 +27,9 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 	public static final double PRECISIONOPT = 0.002;
 	
 	/** The culpability measure used by this machine shop. */
-	private CulpabilityMeasure culpabilityMeasure;
+	private CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure;
 	
-	public BalancedMachineShop(CulpabilityMeasure culpabilityMeasure){
+	public BalancedMachineShop(CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure){
 		this.culpabilityMeasure = culpabilityMeasure;
 	}
 	

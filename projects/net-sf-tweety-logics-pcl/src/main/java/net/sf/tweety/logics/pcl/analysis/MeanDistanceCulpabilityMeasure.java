@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import java.util.*;
 
-import net.sf.tweety.InconsistencyMeasure;
+import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;

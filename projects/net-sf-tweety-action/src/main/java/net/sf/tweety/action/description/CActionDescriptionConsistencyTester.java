@@ -3,9 +3,9 @@ package net.sf.tweety.action.description;
 import java.io.IOException;
 import java.util.Set;
 
-import net.sf.tweety.BeliefBase;
+import net.sf.tweety.action.ActionDescription;
 import net.sf.tweety.action.ActionDescriptionConsistencyTester;
-import net.sf.tweety.action.CausalLaw;
+import net.sf.tweety.action.description.syntax.CLaw;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.lp.asp.solver.AspInterface;
@@ -18,9 +18,10 @@ import net.sf.tweety.lp.asp.solver.AspInterface;
  * thus an answer set solver.
  * 
  * @author Sebastian Homann
+ * @author Matthias Thimm
  */
 public class CActionDescriptionConsistencyTester
-  implements ActionDescriptionConsistencyTester
+  implements ActionDescriptionConsistencyTester<CLaw>
 {
   private AspInterface aspsolver;
   
@@ -58,31 +59,11 @@ public class CActionDescriptionConsistencyTester
     return !states.isEmpty();
   }
   
-  /*
-   * (non-Javadoc)
-   * @see
-   * net.sf.tweety.action.ActionDescriptionConsistencyTester#isConsistent(java
-   * .util.Set)
+  /* (non-Javadoc)
+   * @see net.sf.tweety.action.ActionDescriptionConsistencyTester#isConsistent(net.sf.tweety.action.ActionDescription)
    */
   @Override
-  public boolean isConsistent( Set< CausalLaw > causalLaws )
-  {
-    return isConsistent( new CActionDescription( causalLaws ) );
-  }
-  
-  /*
-   * (non-Javadoc)
-   * @see
-   * net.sf.tweety.action.ActionDescriptionConsistencyTester#isConsistent(net
-   * .sf.tweety.BeliefBase)
-   */
-  @Override
-  public boolean isConsistent( BeliefBase actionDescription )
-  {
-    if ( actionDescription instanceof CActionDescription ) {
-      return isConsistent( (CActionDescription) actionDescription );
-    }
-    return false;
-  }
-  
+  public boolean isConsistent(ActionDescription<CLaw> causalRules) {
+	  return this.isConsistent(new CActionDescription(causalRules));
+  }  
 }

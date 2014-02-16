@@ -1,10 +1,11 @@
 package net.sf.tweety.logics.pcl.analysis;
 
+import java.util.Collection;
 import java.util.Set;
 
 import lpsolve.LpSolve;
 import lpsolve.LpSolveException;
-import net.sf.tweety.InconsistencyMeasure;
+import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Nico Potyka
  */
-public abstract class MinimalViolationInconsistencyMeasureLPSolve implements InconsistencyMeasure<PclBeliefSet> {
+public abstract class MinimalViolationInconsistencyMeasureLPSolve extends BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> {
 
 	
 	
@@ -34,8 +35,12 @@ public abstract class MinimalViolationInconsistencyMeasureLPSolve implements Inc
 	
 
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
+	 */
 	@Override
-	public Double inconsistencyMeasure(PclBeliefSet beliefBase) {
+	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {	
+		PclBeliefSet beliefBase = new PclBeliefSet(formulas);
 
 		log.info("Compute inconsistency value.");
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) beliefBase.getSignature());

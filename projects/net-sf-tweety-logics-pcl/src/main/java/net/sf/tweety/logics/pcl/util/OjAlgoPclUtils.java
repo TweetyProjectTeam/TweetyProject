@@ -3,7 +3,6 @@ package net.sf.tweety.logics.pcl.util;
 import java.util.Set;
 
 import net.sf.tweety.logics.pcl.PclBeliefSet;
-import net.sf.tweety.logics.pcl.analysis.MinimalViolationEuclideanMachineShop;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -11,13 +10,9 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import org.ojalgo.access.Access2D;
 import org.ojalgo.constant.BigMath;
 import org.ojalgo.matrix.PrimitiveMatrix;
-import org.ojalgo.matrix.store.SingleStore;
 import org.ojalgo.optimisation.Expression;
 import org.ojalgo.optimisation.ExpressionsBasedModel;
 import org.ojalgo.optimisation.Variable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Provides some utility functions for solving Pcl specific reasoning problems with ojAlgo.

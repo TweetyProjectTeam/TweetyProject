@@ -29,12 +29,12 @@ public class ConvexAggregatingMaxConsMeMachineShop implements BeliefBaseMachineS
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;
-		Set<Set<Formula>> maxCons = tester.maximalConsistentSubsets(beliefSet);
+		Collection<Collection<ProbabilisticConditional>> maxCons = tester.maximalConsistentSubsets(beliefSet);
 		// for each maximal consistent subset determine its ME-distribution
 		@SuppressWarnings("unchecked")
 		ProbabilityDistribution<PossibleWorld>[] distributions = new ProbabilityDistribution[maxCons.size()];
 		int cnt = 0;
-		for(Set<Formula> mc: maxCons){
+		for(Collection<ProbabilisticConditional> mc: maxCons){
 			PclBeliefSet bs = new PclBeliefSet();
 			for(Formula f: mc) 
 				bs.add((ProbabilisticConditional) f);

@@ -57,7 +57,7 @@ public class DefaultMeReasoner extends Reasoner {
 			throw new IllegalArgumentException("Knowledge base of class PclBeliefSet expected.");
 		// if belief set is inconsistent no reasoning is possible
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
-		if(!tester.isConsistent(beliefBase))
+		if(!tester.isConsistent((PclBeliefSet)beliefBase))
 			throw new IllegalArgumentException("Knowledge base is inconsistent.");
 		if(!beliefBase.getSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");

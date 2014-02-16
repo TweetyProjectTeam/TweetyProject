@@ -3,6 +3,7 @@ package net.sf.tweety.logics.pcl.test;
 import java.io.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.analysis.*;
 import net.sf.tweety.logics.pcl.syntax.*;

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import net.sf.tweety.BeliefBase;
 import net.sf.tweety.BeliefBaseMachineShop;
+import net.sf.tweety.logics.commons.analysis.CulpabilityMeasure;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
@@ -44,13 +45,13 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 	/**
 	 * The culpability measure this machine shop bases on.
 	 */
-	private CulpabilityMeasure culpabilityMeasure;
+	private CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure;
 	
 	/**
 	 * Creates a new machine shop based on the given culpability measure.
 	 * @param culpabilityMeasure a culpability measure.
 	 */
-	public PclBeliefSetQuadraticErrorMinimizationMachineShop(CulpabilityMeasure culpabilityMeasure){
+	public PclBeliefSetQuadraticErrorMinimizationMachineShop(CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure){
 		this.culpabilityMeasure = culpabilityMeasure;
 	}
 	
