@@ -7,7 +7,7 @@ import net.sf.tweety.Formula;
 
 /**
  * Classes extending this abstract class represent inconsistency measures
- * on belief bases.
+ * on belief sets.
  * 
  * @author Matthias Thimm
  * @param <S> The type of formulas this measure supports.

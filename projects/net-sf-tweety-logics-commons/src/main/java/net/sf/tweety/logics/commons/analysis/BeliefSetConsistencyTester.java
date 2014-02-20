@@ -36,6 +36,15 @@ public interface BeliefSetConsistencyTester<S extends Formula,T extends BeliefSe
 	public Collection<Collection<S>> minimalInconsistentSubsets(T beliefSet);
 	
 	/**
+	 * This method returns the minimal inconsistent subsets of the given
+	 * set of formulas. 
+	 * @param formulas a set of formulas.
+	 * @return the minimal inconsistent subsets of the given
+	 *  set of formulas
+	 */
+	public Collection<Collection<S>> minimalInconsistentSubsets(Collection<S> formulas);
+	
+	/**
 	 * This method returns the maximal consistent subsets of the given
 	 * belief set.
 	 * @param beliefSet a belief set
@@ -43,4 +52,13 @@ public interface BeliefSetConsistencyTester<S extends Formula,T extends BeliefSe
 	 *  belief set.
 	 */
 	public Collection<Collection<S>> maximalConsistentSubsets(T beliefSet);
+	
+	/**
+	 * This method returns the maximal consistent subsets of the given
+	 * set of formulas
+	 * @param formulas a set of formulas
+	 * @return the maximal consistent subsets of the given
+	 *  set of formulas.
+	 */
+	public Collection<Collection<S>> maximalConsistentSubsets(Collection<S> formulas);
 }

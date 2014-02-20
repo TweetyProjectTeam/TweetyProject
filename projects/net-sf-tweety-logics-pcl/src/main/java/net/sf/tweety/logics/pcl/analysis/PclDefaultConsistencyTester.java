@@ -97,4 +97,20 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#minimalInconsistentSubsets(java.util.Collection)
+	 */
+	@Override
+	public Collection<Collection<ProbabilisticConditional>> minimalInconsistentSubsets(	Collection<ProbabilisticConditional> formulas) {
+		return this.minimalInconsistentSubsets(new PclBeliefSet(formulas));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#maximalConsistentSubsets(java.util.Collection)
+	 */
+	@Override
+	public Collection<Collection<ProbabilisticConditional>> maximalConsistentSubsets(Collection<ProbabilisticConditional> formulas) {
+		return this.maximalConsistentSubsets(new PclBeliefSet(formulas));
+	}
+
 }

@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.commons.analysis;
 
+import java.util.Collection;
+
 import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 
@@ -8,7 +10,7 @@ import net.sf.tweety.Formula;
  * 
  * @author Matthias Thimm
  */
-public class MiInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> implements InconsistencyMeasure<T> {
+public class MiInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
 
 	/** The consistency tester used for measuring. */
 	private BeliefSetConsistencyTester<S,T> consTester;
@@ -20,13 +22,13 @@ public class MiInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> im
 	public MiInconsistencyMeasure(BeliefSetConsistencyTester<S,T> consTester){
 		this.consTester = consTester;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.BeliefBase)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(T beliefBase) {
-		return new Double(this.consTester.minimalInconsistentSubsets(beliefBase).size());
+	public Double inconsistencyMeasure(Collection<S> formulas) {
+		return new Double(this.consTester.minimalInconsistentSubsets(formulas).size());
 	}
 
 }
