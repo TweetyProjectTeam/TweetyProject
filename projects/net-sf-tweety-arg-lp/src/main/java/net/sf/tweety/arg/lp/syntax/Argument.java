@@ -18,7 +18,7 @@ import net.sf.tweety.lp.asp.syntax.*;
  * [1] Ralf Schweimeier and Michael Schroeder: A Parameterised Hierarchy of 
  *  Argumentation Semantics for Extended Logic Programming and its 
  *  Application to the Well-founded Semantics. 
- *  In: Theory and Practice of Logic Programming, 5(1-2):207–242, 2003.
+ *  In: Theory and Practice of Logic Programming, 5(1-2):207-242, 2003.
  * 
  * @author Sebastian Homann
  */

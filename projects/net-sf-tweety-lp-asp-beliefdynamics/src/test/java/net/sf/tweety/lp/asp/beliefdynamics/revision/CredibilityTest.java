@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Tests the revision method described in Krümpelmann et al. 2008. 
- * The two examples of Krümpelmann et al. 2008 are used. 
+ * Tests the revision method described in Kruempelmann et al. 2008. 
+ * The two examples of Kruempelmann et al. 2008 are used. 
  * @author Tim Janus
  */
 public class CredibilityTest {

@@ -14,7 +14,7 @@ import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 
 /**
- * P is neutral wrt. AF if for every A∈Arg it is P(A)=0.5.
+ * P is neutral wrt. AF if for every A in Arg it is P(A)=0.5.
  * @author Matthias Thimm
  */
 public class NeutralPASemantics extends AbstractPASemantics {

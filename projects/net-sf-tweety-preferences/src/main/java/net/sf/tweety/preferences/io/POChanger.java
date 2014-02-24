@@ -11,9 +11,9 @@ import net.sf.tweety.util.Triple;
  *
  */
 
-//TODO Struktur für dymanische Aggregation definieren (Signaturen, Attribute...)
+//TODO Struktur fuer dymanische Aggregation definieren (Signaturen, Attribute...)
 
-//TODO zu Stream ändern
+//TODO zu Stream aendern
 public class POChanger<T> {
 
 	/**

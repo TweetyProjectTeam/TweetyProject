@@ -14,7 +14,7 @@ import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
- * This class is an exemplary instantiation of a revision operator based on deductive argumentation [Krümpelmann:2011] where
+ * This class is an exemplary instantiation of a revision operator based on deductive argumentation [Kruempelmann:2011] where
  * several parameters have been fixed:
  * - the inner revision is a Levi revision which bases on the random kernel contraction
  * - the transformation function is credulous

@@ -15,7 +15,7 @@ import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.Term;
 
 /**
- * P is semi-optimistic wrt. AF if P(A) ≥ 1 − \sum_{B∈Attackers(A)} P(B) for every A ∈ Arg with Attackers(A)!=∅.
+ * P is semi-optimistic wrt. AF if P(A) \geq 1 - \sum_{B in Attackers(A)} P(B) for every A in Arg with Attackers(A)!= {}.
  * @author Matthias Thimm
  */
 public class SemiOptimisticPASemantics extends AbstractPASemantics{

@@ -23,11 +23,11 @@ import net.sf.tweety.lp.asp.beliefdynamics.baserevision.SelectionFunction;
  *  where "a" stands for Attack, "d" for Defeat, "sa" for Strong Attack and "ca" for Confident
  *  Attack. For further details see the parameterisedhierarchy tweety project and [2]. 
  * 
- * [1] Krümpelmann, Patrick und Gabriele Kern-Isberner: 
+ * [1] Kruempelmann, Patrick und Gabriele Kern-Isberner: 
  * 	Belief Base Change Operations for Answer Set Programming. 
- *  In: Cerro, Luis Fariñas, Andreas Herzig und Jérôme Mengin (Herausgeber):
+ *  In: Cerro, Luis Farinas, Andreas Herzig und Jerome Mengin (Herausgeber):
  *  Proceedings of the 13th European conference on Logics in Artificial 
- *  Intelligence, Band 7519, Seiten 294–306, Toulouse, France, 2012. 
+ *  Intelligence, Band 7519, Seiten 294-306, Toulouse, France, 2012. 
  *  Springer Berlin Heidelberg.
  * 
  * [2] Homann, Sebastian:

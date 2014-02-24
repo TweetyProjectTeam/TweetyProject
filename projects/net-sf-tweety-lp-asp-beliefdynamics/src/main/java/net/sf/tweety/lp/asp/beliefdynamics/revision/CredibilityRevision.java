@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Implements the credibility revision approach for ASP described in
- * Krümpelmann et al. 2008.
+ * Kruempelmann et al. 2008.
  * It extends the NonIterativeRevision interface by providing methods
  * to receive the last calculated answer sets and it's projection.
  * Internally the prefixes 'c__' 'neg_c' are used to prefix constants and the

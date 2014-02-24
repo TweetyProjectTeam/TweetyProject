@@ -116,7 +116,7 @@ public class CF2Reasoner extends AbstractExtensionReasoner {
 	}
 
 	/**
-	 * Returns the set { α ∈ A | α ∈/ S ∧ α → S }
+	 * Returns the set { a in A | a nicht in S und a -> S }
 	 * @param af some Dung theory
 	 * @param s a set of arguments
 	 * @return a set of arguments

@@ -15,7 +15,7 @@ import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.Term;
 
 /**
- * P is optimistic wrt. AF if P(A) ≥ 1 − \sum_{B∈Attackers(A)} P(B) for every A ∈ Arg.
+ * P is optimistic wrt. AF if P(A) \geq 1 - \sum_{B in Attackers(A)} P(B) for every A in Arg.
  * @author Matthias Thimm
  */
 public class OptimisticPASemantics extends AbstractPASemantics{

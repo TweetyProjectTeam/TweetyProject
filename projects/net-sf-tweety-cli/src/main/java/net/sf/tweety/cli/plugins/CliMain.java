@@ -102,8 +102,8 @@ public class CliMain {
 			e.printStackTrace();
 		}
 
-		// map über "plugins.plugin" mit keys ()
-		// TODO: Verhalten bei leeren Feldern prüfen
+		// map ueber "plugins.plugin" mit keys ()
+		// TODO: Verhalten bei leeren Feldern pruefen
 		Iterator<String> it = tweetyXmlConfig.getKeys("plugin");
 
 		

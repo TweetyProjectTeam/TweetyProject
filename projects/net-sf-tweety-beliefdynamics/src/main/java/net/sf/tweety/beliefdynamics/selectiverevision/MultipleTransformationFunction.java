@@ -5,7 +5,7 @@ import java.util.*;
 import net.sf.tweety.*;
 
 /**
- * This interface represents a multiple transformation function for selective revision [Krümpelmann:2011,Ferme:1999].
+ * This interface represents a multiple transformation function for selective revision [Kruempelmann:2011,Ferme:1999].
  * 
  * @author Matthias Thimm
  *

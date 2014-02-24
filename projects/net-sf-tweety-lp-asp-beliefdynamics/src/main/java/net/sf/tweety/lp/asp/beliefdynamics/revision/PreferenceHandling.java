@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * The implementation orients on the diploma thesis of Mirja Böhmer
+ * The implementation orients on the diploma thesis of Mirja Boehmer
  * 
  * in this class a variant of the approach
  * "A Preference-Based Framework for Updating Logic Programs" by James P.
@@ -162,7 +162,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 	
 	/**
 	 * Helper method: Finds all pairs of conflicting rules in program p1 and p2.
-	 * A conflicting rule is a pair(r1, r2 | r1 € p1, r2 € p2, H(r1) = -H(r2)) 
+	 * A conflicting rule is a pair(r1, r2 | r1 in p1, r2 in p2, H(r1) = -H(r2)) 
 	 * @param p1	The first program 
 	 * @param p2	The second program
 	 * @return		A list of all pairs representing the conflicting rules in p1 and p2.

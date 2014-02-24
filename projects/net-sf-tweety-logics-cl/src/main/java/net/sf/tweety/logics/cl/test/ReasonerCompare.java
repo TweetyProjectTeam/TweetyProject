@@ -26,9 +26,9 @@ public class ReasonerCompare {
 	private static ClBeliefSet [] beliefSets;
 	
 	private static final String [] descriptions = {
-		"Einfaches Beispiel enthält 3 Konditionale und 4 Symbole jedoch keine Spezialfälle.",
-		"Enthält das Drowning-Problem enkodiert als 'Pinguine sind Vögel die keine Flügel haben'.",
-		"Erhöht die Komplexität des Beispiels, so dass 6 Konditionale und 5 Symbole verwendet werden."
+		"Einfaches Beispiel enthaelt 3 Konditionale und 4 Symbole jedoch keine Spezialfaelle.",
+		"Enthaelt das Drowning-Problem enkodiert als 'Pinguine sind Voegel die keine Fluegel haben'.",
+		"Erhoeht die Komplexitaet des Beispiels, so dass 6 Konditionale und 5 Symbole verwendet werden."
 	};
 	
 	public static void main(String[] args) throws IOException {

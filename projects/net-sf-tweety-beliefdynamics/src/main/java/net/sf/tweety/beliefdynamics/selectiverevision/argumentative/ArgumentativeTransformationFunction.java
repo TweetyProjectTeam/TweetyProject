@@ -10,7 +10,7 @@ import net.sf.tweety.logics.pl.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**
- * This class implements the argumentative transformation functions proposed in [Krümpelmann:2011].
+ * This class implements the argumentative transformation functions proposed in [Kruempelmann:2011].
  * 
  * @author Matthias Thimm
  */

@@ -14,7 +14,7 @@ import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 
 /**
- * P is founded wrt. AF if P(A)=1 for every A∈Arg with Attackers(A)=∅.
+ * P is founded wrt. AF if P(A)=1 for every A in Arg with Attackers(A)={}.
  * @author Matthias Thimm
  */
 public class FoundedPASemantics extends AbstractPASemantics{

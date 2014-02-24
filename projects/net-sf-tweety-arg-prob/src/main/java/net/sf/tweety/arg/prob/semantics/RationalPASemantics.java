@@ -11,7 +11,7 @@ import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatVariable;
 
 /**
- * P is rational wrt. AF if for every A,B ∈ Arg, if A → B then P(A) > 0.5 implies P(B) ≤ 0.5.
+ * P is rational wrt. AF if for every A,B in Arg, if A -> B then P(A) > 0.5 implies P(B) \leq 0.5.
  * @author Matthias Thimm
  */
 public class RationalPASemantics extends AbstractPASemantics {

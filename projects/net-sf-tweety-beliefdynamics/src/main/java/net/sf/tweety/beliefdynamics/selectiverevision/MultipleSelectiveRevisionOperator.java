@@ -6,7 +6,7 @@ import net.sf.tweety.Formula;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 
 /**
- * This class implements a multiple selective revision operator following [Krümpelmann:2011,Ferme:1999].
+ * This class implements a multiple selective revision operator following [Kruempelmann:2011,Ferme:1999].
  * 
  * @author Matthias Thimm
  *
