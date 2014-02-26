@@ -29,6 +29,8 @@ public class OpenOptWebSolver extends OpenOptSolver {
 	public static String openopt_webservice_url = null;
 	/** The API key for using the service. */
 	public static String openopt_webservice_apikey = null;
+	/** Whether to use a local installation of OpenOpt. */
+	public static boolean openopt_use_local = false;
 	
 	/**
 	 * Logger.
@@ -57,7 +59,12 @@ public class OpenOptWebSolver extends OpenOptSolver {
 	 */
 	@Override
 	public Map<Variable, Term> solve() throws GeneralMathException {
-		// check for service parameters
+		// use local installation?
+		if(OpenOptWebSolver.openopt_use_local){
+			OpenOptSolver solver = new OpenOptSolver((OptimizationProblem)this.getProblem());
+			return solver.solve();
+		}
+		// check for service parameters		
 		if(OpenOptWebSolver.openopt_webservice_apikey == null || OpenOptWebSolver.openopt_webservice_url == null)
 			throw new RuntimeException("OpenOpt web service not configured, you have to supply an url and an API key.");
 		String output = "";
