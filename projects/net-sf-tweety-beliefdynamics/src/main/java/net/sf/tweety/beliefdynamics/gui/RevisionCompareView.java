@@ -40,9 +40,9 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	/** kill warning */
 	private static final long serialVersionUID = 5699544277473453367L;
 
-	protected JComboBox cbOperatorLeft;
+	protected JComboBox<BaseRevisionOperator<?>> cbOperatorLeft;
 	
-	protected JComboBox cbOperatorRight;
+	protected JComboBox<BaseRevisionOperator<?>> cbOperatorRight;
 
 	protected JCheckBox checkIterativeLeft;
 	
@@ -64,9 +64,9 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	
 	protected JTextArea txtBeliefBases;
 	
-	private DefaultListModel lstModel = new DefaultListModel();
+	private DefaultListModel<Collection<? extends Formula>> lstModel = new DefaultListModel<Collection<? extends Formula>>();
 	
-	protected JList lstBeliefBases;
+	protected JList<Collection<? extends Formula>> lstBeliefBases;
 	
 	/** Default Ctor: Creates the view */
 	public RevisionCompareView() {		
@@ -90,7 +90,7 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 		
 		JPanel lstPanel = new JPanel();
 		lstPanel.setLayout(new BorderLayout());
-		lstBeliefBases = new JList();
+		lstBeliefBases = new JList<Collection<? extends Formula>>();
 		lstBeliefBases.setModel(lstModel);
 		lstPanel.add(lstBeliefBases, BorderLayout.CENTER);
 		
@@ -151,14 +151,14 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 		JPanel actPanel = new JPanel();
 		
 		actPanel.add(new JLabel("Left Revisions Operator:"));
-		cbOperatorLeft = new JComboBox();
+		cbOperatorLeft = new JComboBox<BaseRevisionOperator<?>>();
 		checkIterativeLeft = new JCheckBox("i", true);
 		actPanel.add(checkIterativeLeft);
 		actPanel.add(cbOperatorLeft);
 		
 		
 		actPanel.add(new JLabel("Right Revisions Operator:"));
-		cbOperatorRight = new JComboBox();
+		cbOperatorRight = new JComboBox<BaseRevisionOperator<?>>();
 		checkIterativeRight = new JCheckBox("i", true);
 		actPanel.add(checkIterativeRight);
 		actPanel.add(cbOperatorRight);

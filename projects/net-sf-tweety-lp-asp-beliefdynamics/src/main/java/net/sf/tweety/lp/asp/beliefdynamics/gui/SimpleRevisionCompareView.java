@@ -38,9 +38,9 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 	/** kill warning */
 	private static final long serialVersionUID = 5699544277473453367L;
 
-	protected JComboBox cbOperatorLeft;
+	protected JComboBox<BaseRevisionOperator<?>> cbOperatorLeft;
 	
-	protected JComboBox cbOperatorRight;
+	protected JComboBox<BaseRevisionOperator<?>> cbOperatorRight;
 
 	protected JButton btnAddLeft;
 	
@@ -56,9 +56,9 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 	
 	protected JTextArea txtNewBeliefs;
 	
-	protected JList lstLeftAnswerSets;
+	protected JList<AnswerSet> lstLeftAnswerSets;
 	
-	protected JList lstRightAnswerSets;
+	protected JList<AnswerSet> lstRightAnswerSets;
 	
 	/** Default Ctor: Creates the view */
 	public SimpleRevisionCompareView() {
@@ -89,9 +89,9 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 		
 		JPanel txtPanel = new JPanel();
 		txtPanel.setLayout(new GridLayout(1,2, 5, 5));
-		lstLeftAnswerSets = new JList();
+		lstLeftAnswerSets = new JList<AnswerSet>();
 		lstLeftAnswerSets.setPreferredSize(new Dimension(10, 20));
-		lstRightAnswerSets = new JList();
+		lstRightAnswerSets = new JList<AnswerSet>();
 		lstRightAnswerSets.setPreferredSize(new Dimension(10, 20));
 		txtPanel.add(lstLeftAnswerSets);
 		txtPanel.add(lstRightAnswerSets);
@@ -155,13 +155,13 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 		result.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 		result.add(new JLabel("Left revision operator:"));
 		result.add(Box.createRigidArea(new Dimension(10, 0)));
-		cbOperatorLeft = new JComboBox();
+		cbOperatorLeft = new JComboBox<BaseRevisionOperator<?>>();
 		result.add(cbOperatorLeft);
 		
 		result.add(Box.createRigidArea(new Dimension(10, 0)));
 		result.add(new JLabel("Right revision operator:"));
 		result.add(Box.createRigidArea(new Dimension(10, 0)));
-		cbOperatorRight = new JComboBox();
+		cbOperatorRight = new JComboBox<BaseRevisionOperator<?>>();
 		result.add(cbOperatorRight);
 		return result;
 	}
@@ -239,14 +239,14 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 			JOptionPane.showMessageDialog(this, evt.getNewValue(), "Error", JOptionPane.ERROR_MESSAGE);
 		} else if(evt.getPropertyName() == "leftASL") {
 			AnswerSetList asl = (AnswerSetList) evt.getNewValue();
-			DefaultListModel model = new DefaultListModel();
+			DefaultListModel<AnswerSet> model = new DefaultListModel<AnswerSet>();
 			for(AnswerSet as : asl) {
 				model.addElement(as);
 			}
 			lstLeftAnswerSets.setModel(model);
 		} else if(evt.getPropertyName() == "rightASL") {
 			AnswerSetList asl = (AnswerSetList) evt.getNewValue();
-			DefaultListModel model = new DefaultListModel();
+			DefaultListModel<AnswerSet> model = new DefaultListModel<AnswerSet>();
 			for(AnswerSet as : asl) {
 				model.addElement(as);
 			}
