@@ -1,8 +1,19 @@
 package net.sf.tweety.logics.pcl.analysis;
 
+import java.util.Collection;
 import java.util.Set;
 
-import net.sf.tweety.BeliefBase;
+import org.ojalgo.constant.BigMath;
+import org.ojalgo.matrix.PrimitiveMatrix;
+import org.ojalgo.optimisation.Expression;
+import org.ojalgo.optimisation.ExpressionsBasedModel;
+import org.ojalgo.optimisation.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import lpsolve.LpSolve;
+import lpsolve.LpSolveException;
+import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
@@ -11,32 +22,25 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.math.probability.Probability;
 
-import org.ojalgo.constant.BigMath;
-import org.ojalgo.matrix.PrimitiveMatrix;
-import org.ojalgo.optimisation.Expression;
-import org.ojalgo.optimisation.ExpressionsBasedModel;
-import org.ojalgo.optimisation.Variable;
 
 /**
- * Repairs a probabilistic belief base by taking the probabilities from the probability function
- * that minimizes the "minimal violation inconsistency measure" with respect to the euclidean norm.
- * 
- * Implementation uses ojAlgos expression based representation (good numerical performance, but maybe slow).
+ * This class models the minimal violation inconsistency measure for the 1-norm.
  * 
  * @author Nico Potyka
  */
-public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends MinimalViolationEuclideanMachineShop {
+public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> {
 
 
-	
 	/**
-	 * Compute solution using ojalgos matrix representation.
-	 * @param beliefBase
-	 * @return
+	 * Logger.
 	 */
-	protected BeliefBase repair(PclBeliefSet beliefSet) {
+	static protected Logger log = LoggerFactory.getLogger(MinimalViolation2InconsistencyMeasure.class);
 
 
+	@Override
+	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {
+
+		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) beliefSet.getSignature());
 		int noWorlds = worlds.size();
 		
@@ -52,7 +56,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 		log.debug("Create objective.");
 		
 		//Objective is x' Q x + C' x
-		//Q = A' A for constraint matrix A, C' = 0
+		//Q = A' A for constraint matrix A, C' = 0 
 		PrimitiveMatrix tmpM = OjAlgoPclUtils.createConstraintMatrix(beliefSet, worlds);
 		PrimitiveMatrix tmpQ = tmpM.transpose().multiplyRight(tmpM);
 		
@@ -80,30 +84,19 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 		
 		long time = System.currentTimeMillis();
 		//by construction, the correct solution is the square root of the computed solution
-		double tmpObjFuncVal = Math.sqrt(2 * tmpModel.minimise().getValue());
-		log.info("Finished computation after "+(System.currentTimeMillis()-time)+" ms. Inconsistency value: "+tmpObjFuncVal);
+		double inc = Math.sqrt(tmpModel.minimise().getValue());
+		log.info("Finished computation after "+(System.currentTimeMillis()-time)+" ms.");
 		
+		return inc;
 		
-
-		log.debug("Repair knowledge base.");
-		
-		ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
-		int k=0;
-		for(PossibleWorld world: worlds) {
-			p.put(world, new Probability(tmpVariables[k++].getValue().doubleValue()));
-		}
-		
-		PclBeliefSet repairedSet = new PclBeliefSet();
-		for(ProbabilisticConditional pc: beliefSet) {
-			repairedSet.add(new ProbabilisticConditional(pc,p.probability(pc)));
-		}
-		
-		return repairedSet;
-		
+	}	
+	
+	
+	
+	@Override
+	public String toString() {
+		return "2-Norm Minimal Violation Measure";
 	}
 
-
-
-	
 
 }

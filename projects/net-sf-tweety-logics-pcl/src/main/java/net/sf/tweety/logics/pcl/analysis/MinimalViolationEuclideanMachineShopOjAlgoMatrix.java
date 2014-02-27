@@ -49,9 +49,8 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 		
 		PrimitiveMatrix tmpM = OjAlgoPclUtils.createConstraintMatrix(beliefSet, worlds);
 		
-		//Objective is sqrt( 1/2 x' Q x + C' x)
-		//Q = 2 A' A for constraint matrix A, C' = 0
-		//tmpQ = 1/2 Q = A' A to avoid scalar multiplication. If interested in correct function value, multiply optimization result by 2 and compute square root. 
+		//Objective is x' Q x + C' x
+		//Q = A' A for constraint matrix A, C' = 0
 		PrimitiveMatrix tmpQ = tmpM.transpose().multiplyRight(tmpM);
 		
 		PrimitiveDenseStore tmpC = PrimitiveDenseStore.FACTORY.makeZero(noWorlds, 1);
@@ -76,7 +75,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 
 		log.debug("Create solver.");
 
-		//by construction, the correct solution is the square root of the multiple of 2 of the computed solution
+		//by construction, the correct solution is the square root of the computed solution
 		QuadraticSolver qSolver = new QuadraticSolver.Builder(tmpQ.toPrimitiveStore(), tmpC)
 										.equalities(tmpAE.toPrimitiveStore(), tmpBE)
 										.inequalities(tmpAI.toPrimitiveStore(), tmpBI)
