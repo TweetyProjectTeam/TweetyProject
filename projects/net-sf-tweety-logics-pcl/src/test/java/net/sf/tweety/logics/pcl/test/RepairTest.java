@@ -38,7 +38,7 @@ public class RepairTest {
 		System.out.println(kb);
 		
 		// repair
-		GeneralizedMeMachineShop gm = new GeneralizedMeMachineShop(new PNorm(2));
+		GeneralizedMeMachineShop gm = new GeneralizedMeMachineShop(2);
 		System.out.println(gm.repair(kb));
 	}
 }
