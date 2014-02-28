@@ -56,7 +56,7 @@ public class GeneralizedMeMachineShop implements BeliefBaseMachineShop {
 		switch(p) {
 			case GeneralizedMeReasoner.MANHATTAN: return name + "Manhattan norm.";
 			case GeneralizedMeReasoner.EUCLIDEAN: return name + "Euclidean norm.";
-//			case GeneralizedMeReasoner.MAXIMUM: return name + "Maximum norm.";
+			case GeneralizedMeReasoner.MAXIMUM: return name + "Maximum norm.";
 			default: return name + p+"-norm.";
 		}
 	}

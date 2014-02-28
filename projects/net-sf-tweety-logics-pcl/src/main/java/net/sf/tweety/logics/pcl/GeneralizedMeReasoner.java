@@ -15,6 +15,7 @@ import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolation1InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolation2InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolationInconsistencyMeasure;
+import net.sf.tweety.logics.pcl.analysis.MinimalViolationMaxInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
@@ -24,6 +25,7 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.norm.ManhattanNorm;
+import net.sf.tweety.math.norm.MaximumNorm;
 import net.sf.tweety.math.norm.PNorm;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
@@ -50,7 +52,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 
 	public final static int MANHATTAN = 1;
 	public final static int EUCLIDEAN = 2;
-	//public final static int MAXIMUM = 0;
+	public final static int MAXIMUM = 0;
 	
 	/**
 	 * The ME-distribution this reasoner bases on.
@@ -103,7 +105,6 @@ public class GeneralizedMeReasoner extends Reasoner {
 				this.norm = new ManhattanNorm();
 				if(LPSolveMathUtils.checkLPSolve() == null) {
 					this.inc = new MinimalViolation1InconsistencyMeasure();
-					this.accuracy = 0.01;
 				}
 				else {
 					this.inc = new MinimalViolationInconsistencyMeasure(this.norm); 
@@ -112,14 +113,12 @@ public class GeneralizedMeReasoner extends Reasoner {
 			case EUCLIDEAN:
 				this.norm = new PNorm(2);
 				this.inc = new MinimalViolation2InconsistencyMeasure();
-				this.accuracy = 0.01;
 				break;
-//			case MAXIMUM:
-//				if(LPSolveMathUtils.checkLPSolve() != null) throw new IllegalArgumentException("LPSolve must be configured properly to use Maximum norm.");
-//				this.norm = new MaximumNorm();
-//				this.inc = new MinimalViolationMaxInconsistencyMeasure();
-//				this.accuracy = 0.01;
-//				break;
+			case MAXIMUM:
+				if(LPSolveMathUtils.checkLPSolve() != null) throw new IllegalArgumentException("LPSolve must be configured properly to use Maximum norm.");
+				this.norm = new MaximumNorm();
+				this.inc = new MinimalViolationMaxInconsistencyMeasure();
+				break;
 			default:
 				this.norm = new PNorm(p);
 				this.inc = new MinimalViolationInconsistencyMeasure(this.norm);
