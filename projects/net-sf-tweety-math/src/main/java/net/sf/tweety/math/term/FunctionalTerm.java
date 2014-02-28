@@ -55,6 +55,14 @@ public abstract class FunctionalTerm extends Term {
 	}
 
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getMaximums()
+	 */
+	@Override
+	public Set<Maximum> getMaximums() {
+		return this.term.getMaximums();
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getProducts()
 	 */
 	@Override

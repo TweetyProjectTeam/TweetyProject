@@ -123,6 +123,12 @@ public abstract class Term {
 	public abstract Set<Minimum> getMinimums();
 	
 	/**
+	 * Returns all maximums of this term.
+	 * @return all maximums of this term.
+	 */
+	public abstract Set<Maximum> getMaximums();
+	
+	/**
 	 * Returns all absolute values of this term.
 	 * @return all absolute values of this term.
 	 */

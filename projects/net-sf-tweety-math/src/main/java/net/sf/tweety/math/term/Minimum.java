@@ -70,6 +70,8 @@ public class Minimum extends AssociativeOperation{
 	public Set<Minimum> getMinimums(){
 		Set<Minimum> minimums = super.getMinimums();
 		minimums.add(this);
+		for(Term t: this.getTerms())
+			minimums.addAll(t.getMinimums());
 		return minimums;
 	}
 	
@@ -147,6 +149,15 @@ public class Minimum extends AssociativeOperation{
 				result += Minimum.MINIMUM_STRING_REPRESENTATION + "{" + t;
 			else result += "," + t; 
 		return result + "}";
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getMaximums()
+	 */
+	@Override
+	public Set<Maximum> getMaximums() {
+		Set<Maximum> maximums = super.getMaximums();
+		return maximums;
 	}
 	
 }

@@ -1,7 +1,11 @@
 package net.sf.tweety.math.norm;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
+import net.sf.tweety.math.term.AbsoluteValue;
+import net.sf.tweety.math.term.Maximum;
 import net.sf.tweety.math.term.Term;
 
 /**
@@ -42,9 +46,8 @@ public class MaximumNorm extends AbstractRealVectorNorm{
 	 * @see net.sf.tweety.math.norm.RealVectorNorm#normTerm(java.util.Vector)
 	 */
 	@Override
-	public Term normTerm(Vector<Term> obj) {
-		//TODO implement 
-		return null;
+	public Term normTerm(Vector<Term> obj) {		
+		return new Maximum(new ArrayList<Term>(obj));
 	}
 
 	/* (non-Javadoc)
@@ -52,8 +55,14 @@ public class MaximumNorm extends AbstractRealVectorNorm{
 	 */
 	@Override
 	public Term distanceTerm(Vector<Term> obj1, Vector<Term> obj2) {
-		//TODO implement 
-		return null;
+		if(obj1.size() != obj2.size())
+			throw new IllegalArgumentException("Dimensions of vectors do not match.");
+		List<Term> terms = new ArrayList<Term>();
+		for(int i=0; i< obj1.size();i++){
+			terms.add(new AbsoluteValue(obj1.get(i).minus(obj2.get(i))));
+			
+		}
+		return new Maximum(terms);
 	}
 
 }

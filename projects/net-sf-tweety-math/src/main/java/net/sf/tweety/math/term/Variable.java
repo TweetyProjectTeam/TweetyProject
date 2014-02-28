@@ -123,6 +123,14 @@ public abstract class Variable extends Term{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getMaximums()
+	 */
+	@Override
+	public Set<Maximum> getMaximums(){
+		return new HashSet<Maximum>();
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getAbsoluteValues()
 	 */
 	@Override

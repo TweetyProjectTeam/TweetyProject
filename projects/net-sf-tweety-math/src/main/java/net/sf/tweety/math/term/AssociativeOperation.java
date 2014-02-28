@@ -122,6 +122,17 @@ public abstract class AssociativeOperation extends Term {
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getMaximums()
+	 */
+	@Override
+	public Set<Maximum> getMaximums(){
+		Set<Maximum> maximums = new HashSet<Maximum>();
+		for(Term t: this.terms)
+			maximums.addAll(t.getMaximums());		
+		return maximums;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getAbsoluteValues()
 	 */
 	@Override

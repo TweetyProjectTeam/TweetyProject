@@ -79,6 +79,16 @@ public class Fraction extends Term {
 	}
 
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getMaximums()
+	 */
+	@Override
+	public Set<Maximum> getMaximums() {
+		Set<Maximum> result = this.nominator.getMaximums();
+		result.addAll(this.denominator.getMaximums());
+		return result;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getProducts()
 	 */
 	@Override
