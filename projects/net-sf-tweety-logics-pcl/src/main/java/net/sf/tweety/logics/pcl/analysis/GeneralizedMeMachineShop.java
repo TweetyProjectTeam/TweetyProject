@@ -8,7 +8,6 @@ import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
-import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -17,17 +16,19 @@ import net.sf.tweety.math.probability.Probability;
  * @author Matthias Thimm
  */
 public class GeneralizedMeMachineShop implements BeliefBaseMachineShop {
-
-	/** The norm. */
-	private RealVectorNorm norm;
+	
+	/** Parameter p for p-norm. */
+	private int p;
+	
 	
 	/**
 	 * Creates a new machine shop with the given norm.
 	 * @param norm some norm.
 	 */
-	public GeneralizedMeMachineShop(RealVectorNorm norm){
-		this.norm = norm;
+	public GeneralizedMeMachineShop(int p){
+		this.p = p;
 	}
+
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.BeliefBaseMachineShop#repair(net.sf.tweety.BeliefBase)
@@ -38,7 +39,7 @@ public class GeneralizedMeMachineShop implements BeliefBaseMachineShop {
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		// Get generalized ME-model
-		GeneralizedMeReasoner reasoner = new GeneralizedMeReasoner(beliefSet,this.norm);
+		GeneralizedMeReasoner reasoner = new GeneralizedMeReasoner(beliefSet,p);
 		ProbabilityDistribution<PossibleWorld> p =  reasoner.getMeDistribution();
 		PclBeliefSet result = new PclBeliefSet();
 		for(ProbabilisticConditional pc: beliefSet){
@@ -47,5 +48,16 @@ public class GeneralizedMeMachineShop implements BeliefBaseMachineShop {
 			else result.add(new ProbabilisticConditional(pc,p.conditionalProbability(pc)));				
 		}	
 		return result;
+	}
+	
+	@Override
+	public String toString() {
+		String name = "Generalized ME-consolidation operator for ";
+		switch(p) {
+			case GeneralizedMeReasoner.MANHATTAN: return name + "Manhattan norm.";
+			case GeneralizedMeReasoner.EUCLIDEAN: return name + "Euclidean norm.";
+//			case GeneralizedMeReasoner.MAXIMUM: return name + "Maximum norm.";
+			default: return name + p+"-norm.";
+		}
 	}
 }
