@@ -98,6 +98,6 @@ public class GroundedEnvironment implements Environment, Perceivable {
 	 * @return the projection of the universal theory.
 	 */
 	public DungTheory getPerceivedDungTheory(Extension arguments){
-		return this.universalTheory.getRestriction(arguments);
+		return new DungTheory(this.universalTheory.getRestriction(arguments));
 	}
 }

@@ -4,9 +4,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.util.Pair;
 import net.sf.tweety.util.SetTools;
 
@@ -52,6 +55,23 @@ public class Division extends Pair<Extension,Extension>{
 		if(tmp.size()>0)
 			return false;
 		return true;
+	}
+	
+	/**
+	 * Returns the dividers for this division, i.e. all sub-theories of the given
+	 * theory such that this division is in that sub-theories set of divisions.
+	 * @param theory some argumentation framework
+	 * @param semantics some semantics
+	 * @return the set of dividers of this devision
+	 */
+	public Collection<DungTheory> getDividers(DungTheory theory, int semantics){
+		Collection<DungTheory> result = new HashSet<DungTheory>();
+		for(Graph<Argument> g: theory.getSubgraphs()){
+			DungTheory sub = new DungTheory(g);
+			if(Division.getDivisions(AbstractExtensionReasoner.getReasonerForSemantics(sub, semantics, Semantics.CREDULOUS_INFERENCE).getExtensions(), sub).contains(this))
+				result.add(sub);
+		}		
+		return result;
 	}
 	
 	/**

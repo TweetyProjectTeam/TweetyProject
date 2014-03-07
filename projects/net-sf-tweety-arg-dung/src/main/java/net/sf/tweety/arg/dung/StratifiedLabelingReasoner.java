@@ -125,7 +125,7 @@ public class StratifiedLabelingReasoner extends Reasoner {
 					labeling.put(arg, 0);
 				Extension remainingArguments = new Extension(theory);
 				remainingArguments.removeAll(extension);
-				DungTheory remainingTheory = theory.getRestriction(remainingArguments);
+				DungTheory remainingTheory = new DungTheory(theory.getRestriction(remainingArguments));
 				StratifiedLabelingReasoner sReasoner = new StratifiedLabelingReasoner(remainingTheory, this.semantics, this.inferenceType);
 				for(StratifiedLabeling labeling2: sReasoner.getLabelings()){
 					for(Argument arg: labeling2.keySet())

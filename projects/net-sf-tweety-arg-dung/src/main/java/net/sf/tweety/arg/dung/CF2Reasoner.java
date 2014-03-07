@@ -64,7 +64,7 @@ public class CF2Reasoner extends AbstractExtensionReasoner {
 			for(Collection<Argument> scc: sccs){
 				Collection<Argument> t = new HashSet<Argument>(scc);
 				t.addAll(this.getOutparents(af, scc));
-				DungTheory restTheory = af.getRestriction(t);//this.getUP(af, scc, af));
+				DungTheory restTheory = new DungTheory(af.getRestriction(t));//this.getUP(af, scc, af));
 				Set<Extension> e = this.singleAFExtensions(restTheory);
 				exts.put(restTheory, e);
 			}

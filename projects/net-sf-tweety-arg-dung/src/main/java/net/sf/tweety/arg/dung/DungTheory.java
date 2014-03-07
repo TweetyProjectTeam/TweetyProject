@@ -37,6 +37,17 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 		attacks = new HashSet<Attack>();
 	}
 	
+	/**
+	 * Creates a new theory from the given graph.
+	 * @param graph some graph
+	 */
+	public DungTheory(Graph<Argument> graph){
+		super(graph.getNodes());
+		this.attacks = new HashSet<Attack>();
+		for(Edge<? extends Argument> e: graph.getEdges())
+			this.attacks.add(new Attack(e.getNodeA(),e.getNodeB()));		
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
@@ -369,13 +380,11 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 		return new HashSet<Attack>(this.attacks);
 	}
 	
-	/**
-	 * Returns copy of this theory consisting only of the given 
-	 * arguments 
-	 * @param arguments a set of arguments
-	 * @return a Dung theory.
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getRestriction(java.util.Collection)
 	 */
-	public DungTheory getRestriction(Collection<Argument> arguments) {
+	@Override
+	public Graph<Argument> getRestriction(Collection<Argument> arguments) {
 		DungTheory theory = new DungTheory();
 		theory.addAll(arguments);
 		for (Attack attack: this.attacks)
@@ -451,8 +460,8 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 	 * @see net.sf.tweety.graphs.Graph#getEdges()
 	 */
 	@Override
-	public Collection<Edge<Argument>> getEdges() {
-		throw new UnsupportedOperationException();
+	public Collection<? extends Edge<? extends Argument>> getEdges() {
+		return this.attacks;		
 	}
 
 	/* (non-Javadoc)
@@ -570,5 +579,13 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 	@Override
 	public Collection<Collection<Argument>> getStronglyConnectedComponents() {
 		return DefaultGraph.getStronglyConnectedComponents(this);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getSubgraphs()
+	 */
+	@Override
+	public Collection<Graph<Argument>> getSubgraphs() {		
+		return DefaultGraph.<Argument>getSubgraphs(this);
 	}
 }

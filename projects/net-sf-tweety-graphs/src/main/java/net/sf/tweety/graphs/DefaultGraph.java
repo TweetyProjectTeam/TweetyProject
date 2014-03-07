@@ -2,6 +2,8 @@ package net.sf.tweety.graphs;
 
 import java.util.*;
 
+import net.sf.tweety.util.SetTools;
+
 import Jama.Matrix;
 
 /**
@@ -260,6 +262,48 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 		}		
 		return result;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getSubgraphs()
+	 */
+	public Collection<Graph<T>> getSubgraphs(){
+		return DefaultGraph.<T>getSubgraphs(this);
+	}
+	
+	/**
+	 * Returns the set of sub graphs of the given graph.
+	 * @return the set of sub graphs of the given graph.
+	 */
+	public static <S extends Node> Collection<Graph<S>> getSubgraphs(Graph<S> g){
+		// not very efficient but will do for now
+		Collection<Graph<S>> result = new HashSet<Graph<S>>();
+		Set<Set<S>> subNodes = new SetTools<S>().subsets(g.getNodes());
+		for(Set<S> nodes: subNodes){
+			@SuppressWarnings("unchecked")
+			Set<Set<Edge<S>>> edges = new SetTools<Edge<S>>().subsets((Set<Edge<S>>)g.getRestriction(nodes).getEdges());
+			for (Set<Edge<S>> es: edges){
+				DefaultGraph<S> newg = new DefaultGraph<S>();
+				newg.nodes.addAll(nodes);
+				newg.edges.addAll(es);
+				result.add(newg);
+			}
+		}
+		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.Graph#getRestriction(java.util.Collection)
+	 */
+	@Override
+	public DefaultGraph<T> getRestriction(Collection<T> nodes) {
+		DefaultGraph<T> graph = new DefaultGraph<T>();
+		graph.nodes.addAll(nodes);
+		for (Edge<T> e: this.edges)
+			if(nodes.contains(e.getNodeA()) && nodes.contains(e.getNodeB()))
+				graph.add(e);
+		return graph;
+	}
+
 	
 	/**
 	 * Checks whether there is a (directed) path from node1 to node2 in the given graph.

@@ -73,7 +73,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * Returns the edges of this graph.
 	 * @return the edges of this graph.
 	 */
-	public Collection<Edge<T>> getEdges();
+	public Collection<? extends Edge<? extends T>> getEdges();
 
 	/* (non-Javadoc)
 	 * @see java.lang.Iterable#iterator()
@@ -141,8 +141,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 *  
 	 * @return the complement graph of this graph.
 	 */
-	public Graph<T> getComplementGraph(int selfloops);
-	
+	public Graph<T> getComplementGraph(int selfloops);	
 	
 	/**
 	 * Returns the strongly connected components of this graph. A set
@@ -153,6 +152,21 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * @return the strongly connected components of this graph.
 	 */
 	public Collection<Collection<T>> getStronglyConnectedComponents();
+	
+	/**
+	 * Returns the set of sub graphs of this graph.
+	 * @return the set of sub graphs of this graph.
+	 */
+	public Collection<Graph<T>> getSubgraphs();
+	
+	/**
+	 * Returns copy of this graph consisting only of the given 
+	 * nodes and all corresponding edges. 
+	 * @param nodes a set of nodes
+	 * @return a graph.
+	 */
+	public Graph<T> getRestriction(Collection<T> nodes);
+
 	/**
 	 * Returns "true" iff the graph has a self loop (an edge from a node to itself).
 	 * @return  "true" iff the graph has a self loop (an edge from a node to itself).

@@ -4,9 +4,10 @@ import java.util.Collection;
 
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.StableReasoner;
+import net.sf.tweety.arg.dung.GroundReasoner;
 import net.sf.tweety.arg.dung.divisions.Division;
 import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 
@@ -18,18 +19,15 @@ public class DivisionTest {
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");
 		Argument c = new Argument("c");
-		Argument d = new Argument("d");
 		theory.add(a);
 		theory.add(b);
-		theory.add(c);
-		theory.add(d);
+		theory.add(c);		
 		theory.add(new Attack(a,b));
-		theory.add(new Attack(b,c));
-		theory.add(new Attack(c,d));
 		theory.add(new Attack(b,a));
+		theory.add(new Attack(c,b));
 		
 		// Instantiate reasoner
-		AbstractExtensionReasoner r = new StableReasoner(theory);
+		AbstractExtensionReasoner r = new GroundReasoner(theory);
 		Collection<Extension> exts = r.getExtensions();
 		
 		// print theory
@@ -44,8 +42,13 @@ public class DivisionTest {
 		// print divisions
 		System.out.println();
 		System.out.println("Divisions: ");
-		for(Division div: Division.getDivisions(exts, theory))
+		for(Division div: Division.getDivisions(exts, theory)){
 			System.out.println(div);
+			System.out.println("\tDividers:");
+			for(DungTheory d: div.getDividers(theory, Semantics.GROUNDED_SEMANTICS))
+				System.out.println("\t" +d);			
+		}
+		
 		
 	}
 }
