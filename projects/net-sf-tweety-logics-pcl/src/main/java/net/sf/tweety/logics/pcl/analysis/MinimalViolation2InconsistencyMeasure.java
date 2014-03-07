@@ -11,16 +11,12 @@ import org.ojalgo.optimisation.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lpsolve.LpSolve;
-import lpsolve.LpSolveException;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
-import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pcl.util.OjAlgoPclUtils;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.math.probability.Probability;
 
 
 /**
