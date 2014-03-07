@@ -22,7 +22,7 @@ import net.sf.tweety.graphs.*;
  * @author Matthias Thimm, Tjitze Rienstra
  *
  */
-public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
+public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, Comparable<DungTheory> {
 
 	/**
 	 * The set of attacks
@@ -587,5 +587,16 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument> {
 	@Override
 	public Collection<Graph<Argument>> getSubgraphs() {		
 		return DefaultGraph.<Argument>getSubgraphs(this);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(DungTheory o) {
+		// DungTheory implements Comparable in order to 
+		// have a fixed (but arbitrary) order among all theories
+		// for that purpose we just use the hash code.
+		return this.hashCode() - o.hashCode();
 	}
 }

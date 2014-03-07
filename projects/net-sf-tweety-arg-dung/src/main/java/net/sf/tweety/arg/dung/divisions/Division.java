@@ -68,8 +68,14 @@ public class Division extends Pair<Extension,Extension>{
 		Collection<DungTheory> result = new HashSet<DungTheory>();
 		for(Graph<Argument> g: theory.getSubgraphs()){
 			DungTheory sub = new DungTheory(g);
-			if(Division.getDivisions(AbstractExtensionReasoner.getReasonerForSemantics(sub, semantics, Semantics.CREDULOUS_INFERENCE).getExtensions(), sub).contains(this))
-				result.add(sub);
+			for(Division d: Division.getDivisions(AbstractExtensionReasoner.getReasonerForSemantics(sub, semantics, Semantics.CREDULOUS_INFERENCE).getExtensions(), sub)){
+				if(d.getFirst().equals(this.getFirst())){
+					Extension e = new Extension(this.getSecond());
+					e.retainAll(sub);
+					if(e.equals(d.getSecond()))
+						result.add(sub);					
+				}
+			}
 		}		
 		return result;
 	}
@@ -106,4 +112,61 @@ public class Division extends Pair<Extension,Extension>{
 		return result;		
 	}
 	
+	/**
+	 * Checks whether the given set of divisions is exhaustive wrt. the given theory.
+	 * @param divisions a set of divisions.
+	 * @param theory some aaf.
+	 * @param semantics some semantics
+	 * @return "true" if the given set of divisions is exhaustive.
+	 */
+	public static boolean isExhaustive(Collection<Division> divisions, DungTheory theory, int semantics){
+		Collection<Graph<Argument>> subgraphs = theory.getSubgraphs();
+		// convert to Dung theories
+		Collection<DungTheory> subtheories = new HashSet<DungTheory>();
+		for(Graph<Argument> g: subgraphs)
+			subtheories.add(new DungTheory(g));
+		for(Division d: divisions){
+			subtheories.removeAll(d.getDividers(theory, semantics));			
+		}
+		return subtheories.isEmpty();
+	}
+	
+	/**
+	 * Checks whether the given set o divisions is disjoint wrt. the given theory.
+	 * @param divisions a set of divisions
+	 * @param theory some aaf
+	 * @param semantics some semantics
+	 * @return "true" if the given set of divisions is disjoint. 
+	 */
+	public static boolean isDisjoint(Collection<Division> divisions, DungTheory theory, int semantics){
+		for(Division d1: divisions){
+			Collection<DungTheory> dividers1 = d1.getDividers(theory, semantics);
+			for(Division d2: divisions){
+				if(!d1.equals(d2)){
+					Collection<DungTheory> dividers1a = new HashSet<DungTheory>(dividers1);
+					dividers1a.retainAll(d2.getDividers(theory, semantics));
+					if(!dividers1a.isEmpty())
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns the standard set of divisions of the given argumentation theory, i.e.
+	 * the set of all divisions of the form (A,Arg\A) where A\subseteq Arg and Arg is the
+	 * set of arguments of the given theory.
+	 * @param theory some theory.
+	 * @return the standard set of divisions.
+	 */
+	public static Collection<Division> getStandardDivisions(DungTheory theory){
+		Collection<Division> result = new HashSet<Division>();
+		for(Set<Argument> args: new SetTools<Argument>().subsets(theory)){
+			Collection<Argument> retainer = new HashSet<Argument>(theory);
+			retainer.removeAll(args);
+			result.add(new Division(new Extension(args), new Extension(retainer)));
+		}
+		return result;
+	}
 }
