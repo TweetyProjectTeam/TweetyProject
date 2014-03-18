@@ -82,6 +82,17 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		}
 		
 		/**
+		 * Normalizes this probability function to have mass 1.
+		 */
+		public void normalize(){
+			double sum = 0;
+			for(Probability p : this.probabilities.values())
+				sum += p.doubleValue();
+			for(T key: this.keySet())
+				this.put(key, new Probability(this.probability(key).doubleValue()/sum));
+		}
+		
+		/**
 		 * Computes the convex combination of this P1 and the
 		 * given probability distribution P2 with parameter d, i.e.
 		 * it returns a P with P(i)=d P1(i) + (1-d) P2(i) for every interpretation i.
@@ -183,8 +194,18 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		 * @return a sample from this probability function.
 		 */
 		public T sample(){
+			return this.sample(ProbabilityFunction.random);
+		}
+		
+		/**
+		 * Samples one element from the domain of this
+		 * probability function, depending on its probability.
+		 * @param random the number generator used.
+		 * @return a sample from this probability function.
+		 */
+		public T sample(Random random){
 			if(this.isEmpty()) return null;
-			double p = ProbabilityFunction.random.nextDouble();
+			double p = random.nextDouble();
 			Probability prob = new Probability(0d);
 			for(Entry<T, Probability> entry: this.entrySet()){
 				prob = prob.add(entry.getValue());

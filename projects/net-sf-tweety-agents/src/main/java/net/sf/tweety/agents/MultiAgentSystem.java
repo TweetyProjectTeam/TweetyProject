@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * A multi-agent system is a collection of agents with some environment.
  * 
@@ -17,10 +14,6 @@ import org.slf4j.LoggerFactory;
  */
 public class MultiAgentSystem<T extends Agent> implements Collection<T>{
 
-	/** Logger */
-	
-	private static Logger log = LoggerFactory.getLogger(MultiAgentSystem.class);
-	
 	/**
 	 * Indicates that the execution of this system's protocol should 
 	 * be repeated until it has terminated.
@@ -77,7 +70,6 @@ public class MultiAgentSystem<T extends Agent> implements Collection<T>{
 	 * 	negative and not equal to Protocol.EXECUTE_TILL_TERMINATION.
 	 */
 	public boolean execute(AbstractProtocol protocol, int numOfSteps) throws ProtocolTerminatedException, IllegalArgumentException{
-		log.info("Executing protocol " + protocol);
 		if(numOfSteps <= 0 && numOfSteps != EXECUTE_TILL_TERMINATION)
 			throw new IllegalArgumentException("Illegal number of steps: " + numOfSteps);
 		if(numOfSteps == EXECUTE_TILL_TERMINATION){

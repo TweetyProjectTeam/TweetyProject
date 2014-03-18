@@ -116,4 +116,20 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	public Probability getAcceptanceProbability(Extension ext, int semantics){
 		return this.getAcceptanceProbability(new Division(ext,new Extension()), semantics);
 	}
+	
+	/**
+	 * Updates this probability function with the given extension, i.e.
+	 * all theories that do not contain the given arguments get probability zero.
+	 * Afterwards the function is normalized.
+	 * @param e some extension
+	 */
+	public SubgraphProbabilityFunction update(Extension e){
+		SubgraphProbabilityFunction func = new SubgraphProbabilityFunction(this.theory);
+		for(DungTheory t: this.keySet())
+			if(t.containsAll(e))
+				func.put(t, this.probability(t));
+			else func.put(t, new Probability(0d));
+		func.normalize();
+		return func;
+	}
 }

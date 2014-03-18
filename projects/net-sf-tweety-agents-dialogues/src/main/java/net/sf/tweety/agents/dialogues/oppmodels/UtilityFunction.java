@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import net.sf.tweety.agents.dialogues.DialogueTrace;
-import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.*;
 /**
  * Objects of this class represent utility function that assess
@@ -21,7 +20,7 @@ public abstract class UtilityFunction<S,T extends Collection<S>> {
 	 * @param t some dialogue trace.
 	 * @return the utility of the trace
 	 */
-	public abstract double getUtility(DialogueTrace<Argument,Extension> t);
+	public abstract double getUtility(DialogueTrace<S,T> t);
 	
 	/** 
 	 * Gives the utility of the given dialogue trace that
@@ -33,6 +32,6 @@ public abstract class UtilityFunction<S,T extends Collection<S>> {
 	 * be taken into account
 	 * @return the utility of the trace
 	 */
-	public abstract double getUtility(DialogueTrace<Argument,Extension> t, Set<Argument> additionalArguments, Set<Attack> additionalAttacks);
+	public abstract double getUtility(DialogueTrace<S,T> t, Set<S> additionalArguments, Set<Attack> additionalAttacks);
 	
 }

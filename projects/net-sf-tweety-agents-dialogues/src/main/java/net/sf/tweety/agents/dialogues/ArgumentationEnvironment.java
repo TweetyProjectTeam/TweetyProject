@@ -1,4 +1,4 @@
-package net.sf.tweety.agents.dialogues.oppmodels;
+package net.sf.tweety.agents.dialogues;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,21 +8,19 @@ import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.Environment;
 import net.sf.tweety.agents.Executable;
 import net.sf.tweety.agents.Perceivable;
-import net.sf.tweety.agents.dialogues.DialogueTrace;
-import net.sf.tweety.agents.dialogues.ExecutableExtension;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 
 /**
- * This class models the environment for agents in a grounded
- * argumentation game. It consists of the universal Dung theory used
+ * This class models the environment for agents in argumentation games.
+ * It consists of the universal Dung theory used
  * for argumentation (but not completely revealed to all agents) and
  * the current trace of disclosed arguments.
  * 
  * @author Matthias Thimm
  */
-public class GroundedEnvironment implements Environment, Perceivable {
+public class ArgumentationEnvironment implements Environment, Perceivable {
 
 	/** The current dialogue trace. */
 	private DialogueTrace<Argument,Extension> trace;
@@ -33,7 +31,7 @@ public class GroundedEnvironment implements Environment, Perceivable {
 	 * Creates a new grounded environment.
 	 * @param universalTheory the universal Dung theory used for argumentation.
 	 */
-	public GroundedEnvironment(DungTheory universalTheory){
+	public ArgumentationEnvironment(DungTheory universalTheory){
 		this.trace = new DialogueTrace<Argument,Extension>();
 		this.universalTheory = universalTheory;
 	}

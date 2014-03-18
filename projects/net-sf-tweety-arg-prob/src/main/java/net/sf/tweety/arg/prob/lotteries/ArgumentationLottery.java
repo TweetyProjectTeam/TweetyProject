@@ -33,9 +33,9 @@ public class ArgumentationLottery {
 	 * @param semantics some semantics
 	 */
 	public ArgumentationLottery(Collection<Division> divisions, SubgraphProbabilityFunction p, int semantics){
-		// check whether divisions is exhaustive and disjoint
-		if(!Division.isDisjoint(divisions, p.getTheory(), semantics) || !Division.isExhaustive(divisions, p.getTheory(), semantics))
-			throw new IllegalArgumentException("Given set of divisions is not exhaustive and disjoint.");
+		// check whether divisions is exhaustive and disjoint (disabled for now)
+		//if(!Division.isDisjoint(divisions, p.getTheory(), semantics) || !Division.isExhaustive(divisions, p.getTheory(), semantics))
+		//	throw new IllegalArgumentException("Given set of divisions is not exhaustive and disjoint.");
 		prob = new HashMap<Division,Probability>();
 		for(Division d: divisions)
 			this.prob.put(d, p.getAcceptanceProbability(d, semantics));

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import net.sf.tweety.agents.dialogues.DialogueTrace;
 import net.sf.tweety.agents.dialogues.ExecutableExtension;
+import net.sf.tweety.agents.dialogues.ArgumentationEnvironment;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.util.Pair;
@@ -55,7 +56,7 @@ public class T1BeliefState extends BeliefState {
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#doMove(net.sf.tweety.agents.argumentation.oppmodels.GroundedEnvironment, net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public Pair<Double,Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace<Argument,Extension> trace) {
+	public Pair<Double,Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension> trace) {
 		double maxUtility = this.getUtilityFunction().getUtility(trace);
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
 		Set<ExecutableExtension> ee = this.getLegalMoves(env, trace);		

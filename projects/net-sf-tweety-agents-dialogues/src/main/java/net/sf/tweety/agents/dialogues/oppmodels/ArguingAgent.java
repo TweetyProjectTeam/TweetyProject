@@ -6,6 +6,7 @@ import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.Executable;
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.DialogueTrace;
+import net.sf.tweety.agents.dialogues.ArgumentationEnvironment;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 
@@ -56,9 +57,9 @@ public class ArguingAgent extends Agent {
 		// There should be just a single percept and that should be a dialogue trace
 		if(percepts.size()!=1)
 			throw new IllegalArgumentException("Only one percept expected.");
-		if(!(percepts.iterator().next() instanceof GroundedEnvironment))
+		if(!(percepts.iterator().next() instanceof ArgumentationEnvironment))
 			throw new IllegalArgumentException("Object of type GroundedEnvironment expected.");
-		GroundedEnvironment env = (GroundedEnvironment)percepts.iterator().next();
+		ArgumentationEnvironment env = (ArgumentationEnvironment)percepts.iterator().next();
 		this.beliefState.update(env.getDialogueTrace());		
 		return this.beliefState.move(env);
 	}

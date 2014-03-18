@@ -5,6 +5,7 @@ import java.util.Set;
 
 import net.sf.tweety.agents.dialogues.DialogueTrace;
 import net.sf.tweety.agents.dialogues.ExecutableExtension;
+import net.sf.tweety.agents.dialogues.ArgumentationEnvironment;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.math.probability.Probability;
@@ -76,7 +77,7 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @see net.sf.tweety.agents.argumentation.oppmodels.BeliefState#doMove(net.sf.tweety.agents.argumentation.oppmodels.GroundedEnvironment, net.sf.tweety.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	protected Pair<Double, Set<ExecutableExtension>> doMove(GroundedEnvironment env, DialogueTrace<Argument,Extension> trace) {
+	protected Pair<Double, Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension> trace) {
 		double bestEU = this.getUtilityFunction().getUtility(env.getDialogueTrace());
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
 		bestMoves.add(new ExecutableExtension());

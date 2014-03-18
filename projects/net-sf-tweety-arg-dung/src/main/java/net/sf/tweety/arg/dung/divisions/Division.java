@@ -105,10 +105,10 @@ public class Division extends Pair<Extension,Extension>{
 		remaining.removeAll(ext);
 		SetTools<Argument> setTools = new SetTools<Argument>();
 		Set<Set<Argument>> subsetsExt = setTools.subsets(ext);
-		Set<Set<Argument>> subsetsRem = setTools.subsets(remaining);
+		Set<Set<Argument>> subsetsRem = setTools.subsets(remaining);		
 		for(Set<Argument> p: subsetsExt)
 			for(Set<Argument> v: subsetsRem)
-				result.add(new Division(new Extension(p),new Extension(v)));
+				result.add(new Division(new Extension(p),new Extension(v)));		
 		return result;		
 	}
 	
@@ -142,14 +142,15 @@ public class Division extends Pair<Extension,Extension>{
 		for(Division d1: divisions){
 			Collection<DungTheory> dividers1 = d1.getDividers(theory, semantics);
 			for(Division d2: divisions){
-				if(!d1.equals(d2)){
+				if(!d1.equals(d2)){					
 					Collection<DungTheory> dividers1a = new HashSet<DungTheory>(dividers1);
 					dividers1a.retainAll(d2.getDividers(theory, semantics));
-					if(!dividers1a.isEmpty())
+					if(!dividers1a.isEmpty()){
 						return false;
+					}
 				}
 			}
-		}
+		}		
 		return true;
 	}
 	

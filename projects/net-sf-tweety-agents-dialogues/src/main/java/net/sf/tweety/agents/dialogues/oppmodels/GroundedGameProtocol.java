@@ -2,6 +2,7 @@ package net.sf.tweety.agents.dialogues.oppmodels;
 
 import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.RoundRobinProtocol;
+import net.sf.tweety.agents.dialogues.ArgumentationEnvironment;
 import net.sf.tweety.agents.sim.GameProtocol;
 
 import org.slf4j.Logger;
@@ -41,13 +42,13 @@ public class GroundedGameProtocol extends RoundRobinProtocol implements GameProt
 		Agent maxAgent = null;
 		double maxUtility = Double.NEGATIVE_INFINITY;
 		for(Agent a: this.getMultiAgentSystem()){
-			double util = ((ArguingAgent)a).getUtility(((GroundedEnvironment)this.getMultiAgentSystem().getEnvironment()).getDialogueTrace());			
+			double util = ((ArguingAgent)a).getUtility(((ArgumentationEnvironment)this.getMultiAgentSystem().getEnvironment()).getDialogueTrace());			
 			if(util > maxUtility){
 				maxAgent = a;
 				maxUtility = util; 
 			}				
 		}
-		log.info("Winner: " + maxAgent + ", dialogue trace: " + ((GroundedEnvironment)this.getMultiAgentSystem().getEnvironment()).getDialogueTrace());				
+		log.info("Winner: " + maxAgent + ", dialogue trace: " + ((ArgumentationEnvironment)this.getMultiAgentSystem().getEnvironment()).getDialogueTrace());				
 		return maxAgent;
 	}
 
@@ -55,7 +56,7 @@ public class GroundedGameProtocol extends RoundRobinProtocol implements GameProt
 	 * @see net.sf.tweety.agents.sim.GameProtocol#getUtility(net.sf.tweety.agents.Agent)
 	 */
 	public Double getUtility(Agent agent){
-		return ((ArguingAgent)agent).getUtility(((GroundedEnvironment)this.getMultiAgentSystem().getEnvironment()).getDialogueTrace());
+		return ((ArguingAgent)agent).getUtility(((ArgumentationEnvironment)this.getMultiAgentSystem().getEnvironment()).getDialogueTrace());
 	}
 	
 	/* (non-Javadoc)

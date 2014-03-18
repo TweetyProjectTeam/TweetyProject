@@ -9,9 +9,6 @@ import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.MultiAgentSystem;
 import net.sf.tweety.agents.ProtocolTerminatedException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This class implements a game simulator. It takes some agent and multi-agent system generators
  * and runs a series of simulations. In each simulation the winner of the game is determined and
@@ -22,9 +19,6 @@ import org.slf4j.LoggerFactory;
  * @param <R> The actual type of the multi-agent system.
  */
 public class GameSimulator<S extends AbstractProtocol & GameProtocol, T extends Agent, R extends MultiAgentSystem<T>> {
-
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(GameSimulator.class);
 	
 	/** The multi-agent system generator. */
 	private MultiAgentSystemGenerator<T,R> masGenerator;
@@ -59,7 +53,6 @@ public class GameSimulator<S extends AbstractProtocol & GameProtocol, T extends 
 	public SimulationResult<S,T,R> run(int repetitions) throws ProtocolTerminatedException{
 		SimulationResult<S,T,R> result = new SimulationResult<S,T,R>(this.agentGenerators);
 		for(int i = 0; i < repetitions; i++){
-			log.info("Starting simulation run #" + (i+1) + "/" + repetitions);
 			Map<Agent,AgentGenerator<T,R>> a2ag = new HashMap<Agent,AgentGenerator<T,R>>();
 			SimulationParameters params = new SimulationParameters();
 			R mas = this.masGenerator.generate(params);
@@ -76,10 +69,8 @@ public class GameSimulator<S extends AbstractProtocol & GameProtocol, T extends 
 				Map<AgentGenerator<T,R>,Double> utilities = new HashMap<AgentGenerator<T,R>,Double>();
 				for(Agent a: a2ag.keySet())
 					utilities.put(a2ag.get(a), prot.getUtility(a));
-				result.addEntry(a2ag.get(winner), utilities);				
-				log.info("Winner of simulation run #" + (i+1) + "/" + repetitions + " is " + winner);
+				result.addEntry(a2ag.get(winner), utilities);
 			}
-			log.info("Ending simulation run #" + (i+1) + "/" + repetitions);
 		}		
 		return result;
 	}
