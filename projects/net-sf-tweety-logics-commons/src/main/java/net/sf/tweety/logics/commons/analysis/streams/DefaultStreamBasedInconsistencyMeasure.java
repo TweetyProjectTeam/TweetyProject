@@ -1,9 +1,12 @@
 package net.sf.tweety.logics.commons.analysis.streams;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import net.sf.tweety.BeliefBase;
+import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 import net.sf.tweety.streams.FormulaStream;
 
@@ -15,18 +18,38 @@ import net.sf.tweety.streams.FormulaStream;
  * @param <S> The type of formulas
  * @param <T> The type of belief bases.
  */
-public class DefaultStreamBasedInconsistencyMeasure<S extends Formula,T extends BeliefBase> implements StreamBasedInconsistencyMeasure<S,T> {
+public class DefaultStreamBasedInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends StreamBasedInconsistencyMeasure<S,T> {
 
 	/** The class of inconsistency measurement processes. */
 	private Class<? extends InconsistencyMeasurementProcess<S>> clazz;
 	/** The listeners of this measure. */
 	private List<InconsistencyListener> listeners = new LinkedList<InconsistencyListener>();
+	/** Configuration options for to be given to the inconsistency measurement process. */
+	private Map<String,Object> config;
+	
+	/**
+	 * Creates a new inconsistency measure based on the given process class.
+	 * @param clazz some inconsistency measurement process class. 
+	 */
+	public DefaultStreamBasedInconsistencyMeasure(Class<? extends InconsistencyMeasurementProcess<S>> clazz){
+		this(clazz, new HashMap<String,Object>());
+	}
+	
+	/**
+	 * Creates a new inconsistency measure based on the given process class and the given configuration options for that process.
+	 * @param clazz some inconsistency measurement process class.
+	 * @param config configuration options for that class.
+	 */
+	public DefaultStreamBasedInconsistencyMeasure(Class<? extends InconsistencyMeasurementProcess<S>> clazz, Map<String,Object> config){
+		this.clazz = clazz;
+		this.config = config;
+	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.stream.StreamBasedInconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.BeliefBase)
+	 * @see net.sf.tweety.logics.commons.analysis.streams.StreamBasedInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(T beliefBase) {
+	public Double inconsistencyMeasure(Collection<S> formulas) {
 		// TODO
 		return null;
 	}
@@ -38,7 +61,7 @@ public class DefaultStreamBasedInconsistencyMeasure<S extends Formula,T extends 
 	public InconsistencyMeasurementProcess<S> getInconsistencyMeasureProcess(FormulaStream<S> stream) {		
 		try {
 			InconsistencyMeasurementProcess<S> imp = this.clazz.newInstance();
-			imp.init(stream, this);			
+			imp.init(stream, this, config);			
 			return imp;			
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);

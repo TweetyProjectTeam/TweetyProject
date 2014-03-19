@@ -1,8 +1,10 @@
 package net.sf.tweety.logics.commons.analysis.streams;
 
-import net.sf.tweety.BeliefBase;
+import java.util.Collection;
+
+import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
-import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
+import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.streams.FormulaStream;
 
 /**
@@ -12,13 +14,13 @@ import net.sf.tweety.streams.FormulaStream;
  * @param <S> The type of formulas
  * @param <T> The type of belief bases 
  */
-public interface StreamBasedInconsistencyMeasure<S extends Formula,T extends BeliefBase> extends InconsistencyMeasure<T>{
+public abstract class StreamBasedInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T>{
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.BeliefBase)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(T beliefBase);
+	public abstract Double inconsistencyMeasure(Collection<S> formulas);
 	
 	/**
 	 * Processes the formulas in the given stream one after the other.
@@ -31,24 +33,24 @@ public interface StreamBasedInconsistencyMeasure<S extends Formula,T extends Bel
 	 * @param stream some formula stream. 
 	 * @return an inconsistency measurement process.
 	 */
-	public InconsistencyMeasurementProcess<S> getInconsistencyMeasureProcess(FormulaStream<S> stream);
+	public abstract InconsistencyMeasurementProcess<S> getInconsistencyMeasureProcess(FormulaStream<S> stream);
 	
 	/**
 	 * Add a listener to this measure.
 	 * @param listener the listener to be added.
 	 */
-	public void addInconsistencyListener(InconsistencyListener listener);
+	public abstract void addInconsistencyListener(InconsistencyListener listener);
 	
 	/**
 	 * Remove a listener from this measure.
 	 * @param listener the listener to be removed.
 	 */
-	public void removeInconsistencyListener(InconsistencyListener listener);
+	public abstract void removeInconsistencyListener(InconsistencyListener listener);
 	
 	/**
 	 * This method is called by inconsistency measurement processes to dispatch
 	 * events to listeners.
 	 * @param evt some event to be fired.
 	 */
-	void fireInconsistencyUpdateEvent(InconsistencyUpdateEvent evt);
+	abstract void fireInconsistencyUpdateEvent(InconsistencyUpdateEvent evt);
 }

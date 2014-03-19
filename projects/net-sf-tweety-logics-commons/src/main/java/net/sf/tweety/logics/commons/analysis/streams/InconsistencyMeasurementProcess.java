@@ -1,5 +1,7 @@
 package net.sf.tweety.logics.commons.analysis.streams;
 
+import java.util.Map;
+
 import net.sf.tweety.Formula;
 import net.sf.tweety.streams.FormulaStream;
 
@@ -41,19 +43,20 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 	 * Initialization statements.
 	 * @param stream some formula stream.
 	 * @param parent the  measure from where this process has been dispatched.
+	 * @param config configuration options for the specific process.
 	 */
-	protected void init(FormulaStream<S> stream, StreamBasedInconsistencyMeasure<S,?> parent){
+	protected void init(FormulaStream<S> stream, StreamBasedInconsistencyMeasure<S,?> parent, Map<String,Object> config){
 		this.abort = false;
 		this.stream = stream;
 		this.iValue = 0d;
 		this.parent = parent;
-		this.init();
+		this.init(config);
 	}
 	
 	/**
 	 * Additional initialization statements are put here.
 	 */
-	protected abstract void init();
+	protected abstract void init(Map<String,Object> config);
 	
 	/**
 	 * Updates the inconsistency value with the new formula.
