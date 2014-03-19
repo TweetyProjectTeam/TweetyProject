@@ -35,7 +35,7 @@ public class LotteryDialogueTest {
 	public static boolean enforceTreeShape;
 	public static int timeout = 60*60*6; // timeout of six hours
 	
-	public static int numberOfRunsEach = 50;
+	public static int numberOfRunsEach = 100;
 	
 	public static int semantics = Semantics.GROUNDED_SEMANTICS;
 	
@@ -94,7 +94,7 @@ public class LotteryDialogueTest {
 	
 	public static void main(String[] args) throws ProtocolTerminatedException{
 		LotteryDialogueTest.attackProbability = 0.3;
-		LotteryDialogueTest.frameworkSize = 5;		
+		LotteryDialogueTest.frameworkSize = 10;		
 		LotteryDialogueTest.enforceTreeShape = true;
 		//baseline
 		LotteryDialogueTest.runSimulation(true);
