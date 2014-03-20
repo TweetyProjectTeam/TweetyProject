@@ -2,9 +2,7 @@ package net.sf.tweety.logics.pl;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
@@ -12,7 +10,6 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
-import net.sf.tweety.EntailmentRelation;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
@@ -27,9 +24,9 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * @author Matthias Thimm
  *
  */
-public class Sat4jEntailment extends EntailmentRelation<PropositionalFormula> {
+public class Sat4jEntailment extends SatSolverEntailment {
 
-	/** The solver actuall used. */
+	/** The solver actually used. */
 	private ISolver solver = null;
 
 	/** Max number of variables for this solver. */
@@ -37,32 +34,14 @@ public class Sat4jEntailment extends EntailmentRelation<PropositionalFormula> {
 	/** Max number of expected clauses for this solver. */
 	private static final int NBCLAUSES = 500000;
 	
-	/**
-	 * Initializes the solver.
-	 */
-	private void init(){
-		this.solver = SolverFactory.newLight();
-		this.solver.newVar(Sat4jEntailment.MAXVAR);
-		this.solver.setExpectedNumberOfClauses(Sat4jEntailment.NBCLAUSES);		
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.EntailmentRelation#entails(java.util.Collection, net.sf.tweety.Formula)
-	 */
-	@Override
-	public boolean entails(Collection<PropositionalFormula> formulas, PropositionalFormula formula) {
-		this.init();		
-		Set<PropositionalFormula> fset = new HashSet<PropositionalFormula>(formulas);
-		fset.add((PropositionalFormula)formula.complement());
-		return !this.isConsistent(fset);
-	}
-
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.EntailmentRelation#isConsistent(java.util.Collection)
 	 */
 	@Override
 	public boolean isConsistent(Collection<PropositionalFormula> formulas) {
-		this.init();		
+		this.solver = SolverFactory.newLight();
+		this.solver.newVar(Sat4jEntailment.MAXVAR);
+		this.solver.setExpectedNumberOfClauses(Sat4jEntailment.NBCLAUSES);		
 		PropositionalSignature sig = new PropositionalSignature();
 		for(PropositionalFormula f: formulas)
 			sig.addAll(f.getAtoms());		

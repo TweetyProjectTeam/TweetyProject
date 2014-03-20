@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.pl.test;
 
 import java.io.IOException;
+
 import net.sf.tweety.ParserException;
 import net.sf.tweety.logics.commons.analysis.HsInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
@@ -24,7 +25,7 @@ public class InconsistencyTest {
 		kb.add((PropositionalFormula)parser.parseFormula("b"));
 		kb.add((PropositionalFormula)parser.parseFormula("c"));
 		kb.add((PropositionalFormula)parser.parseFormula("!b && !c"));
-		
+				
 		// test hs inconsistency measure
 		InconsistencyMeasure<PlBeliefSet> hs = new HsInconsistencyMeasure<PropositionalFormula,PlBeliefSet>(new PossibleWorldIterator((PropositionalSignature)kb.getSignature()));
 		System.out.println(hs.inconsistencyMeasure(kb));
