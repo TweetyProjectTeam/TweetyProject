@@ -7,10 +7,10 @@ import java.util.*;
  * of a set of sample methods which generates some random belief bases
  * wrt. to a given signature.
  * 
- * @author Matthias Thimm
- *
+ * @author Matthias Thimm 
+ * @param <S> The type of belief bases sampled
  */
-public abstract class BeliefBaseSampler {
+public abstract class BeliefBaseSampler<S extends BeliefBase> {
 
 	/**
 	 * The signature of this sampler.
@@ -48,14 +48,14 @@ public abstract class BeliefBaseSampler {
 	 * @param maxLength the maximum length of the belief base.
 	 * @return a single belief base.
 	 */
-	public abstract BeliefBase randomSample(int minLength, int maxLength);
+	public abstract S randomSample(int minLength, int maxLength);
 	
 	/**
 	 * This method randomly samples a single belief base of the given signature
 	 * with the default maximum belief base length. 
 	 * @return a single belief base.
 	 */
-	public BeliefBase randomSample(){
+	public S randomSample(){
 		return this.randomSample(BeliefBaseSampler.DEFAULT_MINIMUM_BELIEFBASE_LENGTH,BeliefBaseSampler.DEFAULT_MAXIMUM_BELIEFBASE_LENGTH);		
 	}
 	
@@ -67,8 +67,8 @@ public abstract class BeliefBaseSampler {
 	 * @param numBeliefBases the number of belief bases to be sampled.
 	 * @return a set of belief bases.
 	 */
-	public Set<BeliefBase> randomSample(int minLength, int maxLength, int numBeliefBases){
-		Set<BeliefBase> beliefBases = new HashSet<BeliefBase>();
+	public Collection<S> randomSample(int minLength, int maxLength, int numBeliefBases){
+		Collection<S> beliefBases = new HashSet<S>();
 		for(int i = 0; i < numBeliefBases; i++)
 			beliefBases.add(this.randomSample(minLength,maxLength));
 		return beliefBases;

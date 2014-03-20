@@ -15,7 +15,7 @@ import net.sf.tweety.arg.saf.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class SimpleSafSampler extends BeliefBaseSampler {
+public class SimpleSafSampler extends BeliefBaseSampler<StructuredArgumentationFramework> {
 
 	/**
 	 * Creates a new SimpleSafSampler for the given signature. 
@@ -29,7 +29,7 @@ public class SimpleSafSampler extends BeliefBaseSampler {
 	 * @see net.sf.tweety.kr.BeliefBaseSampler#randomSample(int)
 	 */
 	@Override
-	public BeliefBase randomSample(int minLength, int maxLength) {
+	public StructuredArgumentationFramework randomSample(int minLength, int maxLength) {
 		//bbLength is interpreted as the maximum number of basic arguments
 		Random random = new Random();
 		int thisLength = random.nextInt(maxLength-minLength+1) + minLength;

@@ -4,7 +4,6 @@ import java.util.*;
 
 import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
-import net.sf.tweety.util.*;
 
 /**
  * Classes extending this abstract class are capable of testing
@@ -19,32 +18,89 @@ public abstract class AbstractBeliefSetConsistencyTester<S extends Formula,T ext
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#minimalInconsistentSubsets(net.sf.tweety.BeliefSet)
 	 */
 	public Collection<Collection<S>> minimalInconsistentSubsets(T beliefSet){
-		Collection<Collection<S>> result = new HashSet<Collection<S>>();
 		if(this.isConsistent(beliefSet))
-			return result;
-		Stack<Collection<S>> subsets = new Stack<Collection<S>>();
-		subsets.addAll(new SetTools<S>().subsets(beliefSet));
-		while(!subsets.isEmpty()){
-			Collection<S> subset = subsets.pop();
-			if(!this.isConsistent(subset)){
-				// remove all super sets of subset from result
-				Collection<Collection<S>> toBeRemoved = new HashSet<Collection<S>>();
-				for(Collection<S> set: result)
-					if(set.containsAll(subset))
-						toBeRemoved.add(set);
-				result.removeAll(toBeRemoved);
-				// remove all super sets of subset from the stack
-				toBeRemoved = new HashSet<Collection<S>>();
-				for(Collection<S> set: subsets)
-					if(set.containsAll(subset))
-						toBeRemoved.add(set);
-				subsets.removeAll(toBeRemoved);			
-				result.add(subset);
-			}
+			return new HashSet<Collection<S>>();
+		Collection<Collection<S>> result = new HashSet<Collection<S>>();
+		Collection<Collection<S>> candidates = new HashSet<Collection<S>>();
+		Collection<Collection<S>> new_candidates;
+		// start with singletons
+		Collection<S> candidate;
+		for(S f: beliefSet){
+			candidate = new HashSet<S>();
+			candidate.add(f);
+			candidates.add(candidate);
 		}
+		while(!candidates.isEmpty()){
+			new_candidates = new HashSet<Collection<S>>();
+			for(Collection<S> cand: candidates)
+				if(!this.isConsistent(cand))
+					result.add(cand);
+				else new_candidates.add(cand);
+			new_candidates = this.merge(new_candidates);
+			// remove candidates that already contain a minimal inconsistent subset
+			candidates = new HashSet<Collection<S>>();
+			boolean contains;
+			for(Collection<S> cand: new_candidates){
+				contains = false;
+				for(Collection<S> mi: result){					
+					if(!cand.containsAll(mi)){
+						contains = true;
+						break;
+					}						
+				}
+				if(!contains)
+					candidates.add(cand);
+			}
+		}		
 		return result;
 	}
 	
+	/** Auxiliary method that combines every two collections into one.
+	 * @param formulas a set of sets of formulas
+	 * @return a set of sets of formulas
+	 */
+	private Collection<Collection<S>> merge(Collection<Collection<S>> formulas){
+		 Collection<Collection<S>> result = new HashSet<Collection<S>>();
+		 Collection<S> merged;
+		 for(Collection<S> f1: formulas)
+			 for(Collection<S> f2: formulas)
+				 if(f1 != f2){
+					 merged = new HashSet<S>();
+					 merged.addAll(f1);
+					 merged.addAll(f2);
+					 result.add(merged);
+				 }
+		 return result;
+	}
+	
+	//Deprecated, slower version to compute minimal inconsistent subsets
+	//public Collection<Collection<S>> minimalInconsistentSubsets(T beliefSet){
+	//	Collection<Collection<S>> result = new HashSet<Collection<S>>();
+	//	if(this.isConsistent(beliefSet))
+	//		return result;
+	//	Stack<Collection<S>> subsets = new Stack<Collection<S>>();
+	//	subsets.addAll(new SetTools<S>().subsets(beliefSet));
+	//	while(!subsets.isEmpty()){
+	//		Collection<S> subset = subsets.pop();
+	//		if(!this.isConsistent(subset)){
+	//			// remove all super sets of subset from result
+	//			Collection<Collection<S>> toBeRemoved = new HashSet<Collection<S>>();
+	//			for(Collection<S> set: result)
+	//				if(set.containsAll(subset))
+	//					toBeRemoved.add(set);
+	//			result.removeAll(toBeRemoved);
+	//			// remove all super sets of subset from the stack
+	//			toBeRemoved = new HashSet<Collection<S>>();
+	//			for(Collection<S> set: subsets)
+	//				if(set.containsAll(subset))
+	//					toBeRemoved.add(set);
+	//			subsets.removeAll(toBeRemoved);			
+	//			result.add(subset);
+	//		}
+	//	}
+	//	return result;
+	//}
+		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#maximalConsistentSubsets(net.sf.tweety.BeliefSet)
 	 */

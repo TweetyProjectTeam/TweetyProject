@@ -14,8 +14,8 @@ import net.sf.tweety.math.term.*;
  */
 public class LpSolve extends Solver {
 	
-	/**Path to the binay or lp_solve*/
-	private static String binary = "lp_solve";
+	/**Path to the binary or lp_solve*/
+	public static String binary = "lp_solve";
 	
 	/**
 	 * Creates a new solver for the given optimization problem.
