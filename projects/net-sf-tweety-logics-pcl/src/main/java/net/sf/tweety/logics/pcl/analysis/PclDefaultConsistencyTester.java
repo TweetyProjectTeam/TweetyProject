@@ -113,4 +113,14 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 		return this.maximalConsistentSubsets(new PclBeliefSet(formulas));
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.Formula)
+	 */
+	@Override
+	public boolean isConsistent(ProbabilisticConditional formula) {
+		PclBeliefSet bs = new PclBeliefSet();
+		bs.add(formula);
+		return this.isConsistent(bs);
+	}
+
 }

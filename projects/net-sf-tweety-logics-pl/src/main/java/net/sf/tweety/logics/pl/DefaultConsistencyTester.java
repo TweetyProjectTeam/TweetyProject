@@ -47,4 +47,14 @@ public class DefaultConsistencyTester extends AbstractBeliefSetConsistencyTester
 		return this.rel.isConsistent(formulas);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.Formula)
+	 */
+	@Override
+	public boolean isConsistent(PropositionalFormula formula) {
+		PlBeliefSet bs = new PlBeliefSet();
+		bs.add(formula);
+		return this.isConsistent(bs);
+	}
+
 }

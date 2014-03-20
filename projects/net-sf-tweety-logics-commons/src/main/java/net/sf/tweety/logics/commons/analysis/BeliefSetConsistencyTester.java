@@ -27,6 +27,13 @@ public interface BeliefSetConsistencyTester<S extends Formula,T extends BeliefSe
 	public boolean isConsistent(Collection<S> formulas);
 	
 	/**
+	 * Checks whether the given formula is consistent.
+	 * @param formula a formulas.
+	 * @return "true" iff the formula is consistent.
+	 */
+	public boolean isConsistent(S formula);
+	
+	/**
 	 * This method returns the minimal inconsistent subsets of the given
 	 * belief set. 
 	 * @param beliefSet a belief set

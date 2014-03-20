@@ -6,11 +6,13 @@ import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 
 /**
- * This class models the MI inconsistency measure.
+ * This class models the I_M inconsistency measure from e.g. [Grant,Hunter,2011a]. It takes
+ * as inconsistency value the number of maximal consistent subsets plus the number of formulas
+ * that are self-contradicting minus 1.
  * 
  * @author Matthias Thimm
  */
-public class MiInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
+public class MaInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
 
 	/** The consistency tester used for measuring. */
 	private BeliefSetConsistencyTester<S,T> consTester;
@@ -19,7 +21,7 @@ public class MiInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> ex
 	 * Creates a new inconsistency measure.
 	 * @param consTester some consistency tester
 	 */
-	public MiInconsistencyMeasure(BeliefSetConsistencyTester<S,T> consTester){
+	public MaInconsistencyMeasure(BeliefSetConsistencyTester<S,T> consTester){
 		this.consTester = consTester;
 	}
 
@@ -28,7 +30,11 @@ public class MiInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> ex
 	 */
 	@Override
 	public Double inconsistencyMeasure(Collection<S> formulas) {
-		return new Double(this.consTester.minimalInconsistentSubsets(formulas).size());
+		Double scs = 0d;
+		for(S f: formulas)
+			if(!this.consTester.isConsistent(f))
+				scs++;
+		return scs + this.consTester.maximalConsistentSubsets(formulas).size() - 1;
 	}
 
 }
