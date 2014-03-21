@@ -1,5 +1,7 @@
 package net.sf.tweety.util;
 
+import java.util.Collection;
+
 /**
  * This class contains some useful math tools.
  * 
@@ -35,5 +37,24 @@ public class MathTools {
 		for(int j = 2; j <= i; j++)
 			result *= j;
 		return result;
+	}
+	
+	/**
+	 * Compute the average value and the variance of the given list of
+	 * numbers.
+	 * @param values some values
+	 * @return a pair of average value (first element) and variance (second element).
+	 */
+	public static Pair<Double,Double> averageAndVariance(Collection<Double> values){
+		Pair<Double,Double> result = new Pair<Double,Double>();
+		Double sum = 0d;
+		for(Double d: values)
+			sum += d;
+		result.setFirst(sum/values.size());
+		sum = 0d;
+		for(Double d: values)
+			sum += Math.pow((d-result.getFirst()), 2);
+		result.setSecond(sum/(values.size()-1));
+		return result;		
 	}
 }

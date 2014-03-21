@@ -33,7 +33,7 @@ public class LotteryDialogueTest {
 	public static int frameworkSize;
 	public static double attackProbability;
 	public static boolean enforceTreeShape;
-	public static int timeout = 60*60*6; // timeout of six hours
+	public static int timeout = 60*60*48; // timeout of 48 hours
 	
 	public static int numberOfRunsEach = 100;
 	

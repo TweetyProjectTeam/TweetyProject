@@ -1,12 +1,14 @@
 package net.sf.tweety.agents.sim;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.agents.AbstractProtocol;
 import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.MultiAgentSystem;
+import net.sf.tweety.util.MathTools;
 
 /**
  * Instances of this class summarize information
@@ -24,8 +26,8 @@ public class SimulationResult<S extends AbstractProtocol & GameProtocol, T exten
 	private int runs;
 	/** The number of wins of each agent generator. */
 	private Map<AgentGenerator<T,R>, Integer> wins;
-	/** The average utility of each agent generator. */
-	private Map<AgentGenerator<T,R>, Double> avgUtility;
+	/** all utilities. */
+	private Map<AgentGenerator<T,R>, List<Double>> utilities;
 	
 	/**
 	 * Creates a new SimulationResult for the given set of agent generators.
@@ -34,10 +36,11 @@ public class SimulationResult<S extends AbstractProtocol & GameProtocol, T exten
 	public SimulationResult(List<AgentGenerator<T,R>> agentGenerators){
 		this.runs = 0;
 		this.wins = new HashMap<AgentGenerator<T,R>, Integer>();
-		this.avgUtility = new HashMap<AgentGenerator<T,R>, Double>();
+		this.utilities = new HashMap<AgentGenerator<T,R>, List<Double>>();
+		
 		for(AgentGenerator<T,R> aGen: agentGenerators){
 			this.wins.put(aGen, 0);
-			this.avgUtility.put(aGen, 0d);
+			this.utilities.put(aGen, new LinkedList<Double>());
 		}
 	}
 	
@@ -47,9 +50,8 @@ public class SimulationResult<S extends AbstractProtocol & GameProtocol, T exten
 	 * @param utilities the utilities of each agent.
 	 */
 	public void addEntry(AgentGenerator<T,R> winner, Map<AgentGenerator<T,R>,Double> utilities){		
-		for(AgentGenerator<T,R> ag: utilities.keySet()){
-			this.avgUtility.put(ag, (this.avgUtility.get(ag)*this.runs + utilities.get(ag))/(this.runs+1));			
-		}
+		for(AgentGenerator<T,R> ag: utilities.keySet())
+			this.utilities.get(ag).add(utilities.get(ag));		
 		this.runs++;
 		this.wins.put(winner, this.wins.get(winner)+1);
 	}
@@ -63,9 +65,9 @@ public class SimulationResult<S extends AbstractProtocol & GameProtocol, T exten
 		str += "#Wins:\n";
 		for(AgentGenerator<T,R> ag: this.wins.keySet())
 			str += "\t" + ag.toString() + "=" + this.wins.get(ag) +"\n";
-		str += "Avg utilty:\n";
-		for(AgentGenerator<T,R> ag: this.avgUtility.keySet())
-			str += "\t" + ag.toString() + "=" + this.avgUtility.get(ag) +"\n";
+		str += "Avg utilty/variance:\n";
+		for(AgentGenerator<T,R> ag: this.utilities.keySet())
+			str += "\t" + ag.toString() + "=" + MathTools.averageAndVariance(this.utilities.get(ag)) +"\n";		
 		return str;
 	}
 	
@@ -74,11 +76,11 @@ public class SimulationResult<S extends AbstractProtocol & GameProtocol, T exten
 	 * @return a CSV representation of the result.
 	 */
 	public String csvDisplay(){
-		String str = "100;";
+		String str = "";
 		for(AgentGenerator<T,R> ag: this.wins.keySet())
 			str += ag.toString() + ";" + this.wins.get(ag) +";";
-		for(AgentGenerator<T,R> ag: this.avgUtility.keySet())
-			str += ag.toString() + ";" + this.avgUtility.get(ag) +";";
+		for(AgentGenerator<T,R> ag: this.utilities.keySet())
+			str += ag.toString() + ";" + MathTools.averageAndVariance(this.utilities.get(ag)) +";";
 		return str;
 	}
 	
