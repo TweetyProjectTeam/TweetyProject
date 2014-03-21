@@ -6,7 +6,10 @@ import net.sf.tweety.ParserException;
 import net.sf.tweety.logics.commons.analysis.EtaInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.HsInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
+import net.sf.tweety.logics.pl.DefaultConsistencyTester;
+import net.sf.tweety.logics.pl.LingelingEntailment;
 import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasure;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -36,5 +39,9 @@ public class InconsistencyTest {
 		LpSolve.binary = "/opt/local/bin/lp_solve";
 		InconsistencyMeasure<PlBeliefSet> eta = new EtaInconsistencyMeasure<PropositionalFormula,PlBeliefSet>(new PossibleWorldIterator((PropositionalSignature)kb.getSignature()));
 		System.out.println("Eta: " + eta.inconsistencyMeasure(kb));
+		
+		// test contension inconsistency measure		
+		InconsistencyMeasure<PlBeliefSet> cont = new ContensionInconsistencyMeasure(new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling")));
+		System.out.println("Cont: " + cont.inconsistencyMeasure(kb));
 	}
 }
