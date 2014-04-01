@@ -44,7 +44,7 @@ public class HsInconsistencyMeasure<S extends Formula, T extends BeliefSet<S>> e
 			if(hittingSet != null)
 				return new Double(hittingSet.size()-1);
 		}
-		// if now hitting set has been found there is a contradictory formula and we return Infinity as inconsistency value.
+		// if no hitting set has been found there is a contradictory formula and we return Infinity as inconsistency value.
 		return Double.POSITIVE_INFINITY;
 	}
 	
