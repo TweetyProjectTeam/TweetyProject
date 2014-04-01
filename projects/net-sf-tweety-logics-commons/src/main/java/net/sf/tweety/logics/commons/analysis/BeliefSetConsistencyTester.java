@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
+import net.sf.tweety.Interpretation;
 
 /**
  * Classes extending this abstract class are capable of testing
@@ -68,4 +69,25 @@ public interface BeliefSetConsistencyTester<S extends Formula,T extends BeliefSe
 	 *  set of formulas.
 	 */
 	public Collection<Collection<S>> maximalConsistentSubsets(Collection<S> formulas);
+	
+	/**
+	 * If the collection of formulas is consistent this method
+	 * returns some model of it or, if it is inconsistent, null.
+	 * @return some model of the formulas or null.
+	 */
+	public Interpretation getWitness(Collection<S> formulas);
+	
+	/**
+	 * If the formula is consistent this method
+	 * returns some model of it or, if it is inconsistent, null.
+	 * @return some model of the formula or null.
+	 */
+	public Interpretation getWitness(S formula);
+	
+	/**
+	 * If the belief set is consistent this method
+	 * returns some model of it or, if it is inconsistent, null.
+	 * @return some model of the belief set or null.
+	 */
+	public Interpretation getWitness(T bs);
 }

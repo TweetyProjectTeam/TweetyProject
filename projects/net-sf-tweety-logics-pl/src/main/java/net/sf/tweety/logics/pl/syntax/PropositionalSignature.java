@@ -29,6 +29,17 @@ public class PropositionalSignature extends SetSignature<Proposition> {
 	}
 	
 	/**
+	 * Creates a new propositional signature with the given number
+	 * of propositions (named "A0"..."Anumvars".
+	 * @param numvars the number of variables.
+	 */
+	public PropositionalSignature(int numvars){
+		super();
+		for(int i = 0; i < numvars; i++)
+			this.add(new Proposition("A" + i));
+	}
+	
+	/**
 	 * Adds the elements of another signature to the current one.
 	 * @param other a propositional signature.
 	 */

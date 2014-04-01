@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
+import net.sf.tweety.Interpretation;
 
 /**
  * Classes extending this abstract class are capable of testing
@@ -181,4 +182,25 @@ public abstract class AbstractBeliefSetConsistencyTester<S extends Formula,T ext
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(java.util.Collection)
 	 */
 	public abstract boolean isConsistent(Collection<S> formulas);
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#getWitness(java.util.Collection)
+	 */
+	public abstract Interpretation getWitness(Collection<S> formulas);
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#getWitness(net.sf.tweety.Formula)
+	 */
+	public Interpretation getWitness(S formula){
+		Collection<S> formulas = new HashSet<S>();
+		formulas.add(formula);
+		return this.getWitness(formulas);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#getWitness(net.sf.tweety.BeliefSet)
+	 */
+	public Interpretation getWitness(T bs){
+		return this.getWitness((Collection<S>)bs);
+	}
 }

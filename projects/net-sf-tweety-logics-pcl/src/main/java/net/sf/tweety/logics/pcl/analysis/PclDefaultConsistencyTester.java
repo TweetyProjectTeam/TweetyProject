@@ -2,6 +2,7 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import java.util.*;
 
+import net.sf.tweety.Interpretation;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
@@ -121,6 +122,14 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 		PclBeliefSet bs = new PclBeliefSet();
 		bs.add(formula);
 		return this.isConsistent(bs);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.AbstractBeliefSetConsistencyTester#getWitness(java.util.Collection)
+	 */
+	@Override
+	public Interpretation getWitness(Collection<ProbabilisticConditional> formulas) {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 
 }

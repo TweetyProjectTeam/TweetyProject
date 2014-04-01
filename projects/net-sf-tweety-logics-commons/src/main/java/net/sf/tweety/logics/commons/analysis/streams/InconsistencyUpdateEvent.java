@@ -33,6 +33,6 @@ public class InconsistencyUpdateEvent {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return "InconsistencyUpdateEvent: <" + this.measure + "," + this.process + "," + this.f + "," + this.inconsistencyValue + ">";
+		return "InconsistencyUpdateEvent: <" + this.inconsistencyValue + "," + this.process + "," + this.f + "," + this.measure + ">";
 	}
 }

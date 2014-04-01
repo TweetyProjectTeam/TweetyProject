@@ -10,6 +10,7 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
+import net.sf.tweety.Interpretation;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
@@ -81,6 +82,14 @@ public class Sat4jEntailment extends SatSolverEntailment {
 		} catch (TimeoutException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.EntailmentRelation#getWitness(java.util.Collection)
+	 */
+	@Override
+	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 
 }

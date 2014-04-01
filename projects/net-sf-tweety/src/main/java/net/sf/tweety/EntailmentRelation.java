@@ -29,6 +29,13 @@ public abstract class EntailmentRelation<T extends Formula> {
 	 */
 	public abstract boolean isConsistent(Collection<T> formulas);
 	
+	/**
+	 * If the collection of formulas is consistent this method
+	 * returns some model of it or, if it is inconsistent, null.
+	 * @return some model of the formulas or null.
+	 */
+	public abstract Interpretation getWitness(Collection<T> formulas);
+	
 	/** 
 	 * Checks whether the given set of formulas entails the other set of formulas.
 	 * @param formulas a collection of formulas.

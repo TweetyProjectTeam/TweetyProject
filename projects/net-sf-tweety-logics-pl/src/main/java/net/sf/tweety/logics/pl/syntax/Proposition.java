@@ -159,6 +159,5 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 		disj.add(this);
 		conj.add(disj);
 		return conj;
-	}
-	
+	}	
 }

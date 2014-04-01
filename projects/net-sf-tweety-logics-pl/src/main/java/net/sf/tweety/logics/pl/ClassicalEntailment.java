@@ -38,4 +38,19 @@ public class ClassicalEntailment extends EntailmentRelation<PropositionalFormula
 		return !this.entails(formulas, new Contradiction());
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.EntailmentRelation#getWitness(java.util.Collection)
+	 */
+	@Override
+	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
+		PropositionalSignature signature = new PropositionalSignature();
+		for(PropositionalFormula f: formulas)
+			signature.addAll(f.getAtoms());		
+		Set<PossibleWorld> possibleWorlds = PossibleWorld.getAllPossibleWorlds(signature);
+		for(PossibleWorld w: possibleWorlds)
+			if(w.satisfies(formulas))
+				return w;
+		return null;	
+	}
+
 }

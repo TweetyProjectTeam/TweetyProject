@@ -3,7 +3,6 @@ package net.sf.tweety.logics.pl;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -26,15 +25,13 @@ public abstract class SatSolverEntailment extends EntailmentRelation<Proposition
 	 * Converts the given set of formulas to their string representation in 
 	 * Dimacs CNF.
 	 * @param formulas a collection of formulas
+	 * @param a list of propositions (=signature) where the indices are used for writing the clauses.
 	 * @return a string in Dimacs CNF.
 	 */
-	public static String convertToDimacs(Collection<PropositionalFormula> formulas){
+	public static String convertToDimacs(Collection<PropositionalFormula> formulas, List<Proposition> props){
 		Conjunction conj = new Conjunction();
 		conj.addAll(formulas);
-		conj = conj.toCnf();
-		List<Proposition> props = new ArrayList<Proposition>();
-		for(Proposition p: conj.getSignature())
-			props.add(p);		
+		conj = conj.toCnf();			
 		String s = "p cnf " + props.size() + " " + conj.size() + "\n";
 		for(PropositionalFormula p1: conj){
 			// as conj is in CNF all formulas should be disjunctions
@@ -54,12 +51,13 @@ public abstract class SatSolverEntailment extends EntailmentRelation<Proposition
 	/**
 	 * Creates a temporary file in Dimacs format.
 	 * @param formulas a collection of formulas
-	 * @return the file handler.
+	 * @param a list of propositions (=signature) where the indices are used for writing the clauses.
+	 * @return the file handler. 
 	 * @throws IOException if something went wrong while creating a temporary file. 
 	 */
-	protected static File createTmpDimacsFile(Collection<PropositionalFormula> formulas) throws IOException{
-		String r = SatSolverEntailment.convertToDimacs(formulas);
-		File f = File.createTempFile("tweety-lingeling", ".cnf");
+	protected static File createTmpDimacsFile(Collection<PropositionalFormula> formulas, List<Proposition> props) throws IOException{
+		String r = SatSolverEntailment.convertToDimacs(formulas, props);
+		File f = File.createTempFile("tweety-sat", ".cnf");
 		f.deleteOnExit();
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
 		writer.println(r);

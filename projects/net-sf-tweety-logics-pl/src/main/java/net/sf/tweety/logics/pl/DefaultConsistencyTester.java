@@ -3,6 +3,7 @@ package net.sf.tweety.logics.pl;
 import java.util.Collection;
 
 import net.sf.tweety.EntailmentRelation;
+import net.sf.tweety.Interpretation;
 import net.sf.tweety.logics.commons.analysis.AbstractBeliefSetConsistencyTester;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -55,6 +56,14 @@ public class DefaultConsistencyTester extends AbstractBeliefSetConsistencyTester
 		PlBeliefSet bs = new PlBeliefSet();
 		bs.add(formula);
 		return this.isConsistent(bs);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.AbstractBeliefSetConsistencyTester#getWitness(java.util.Collection)
+	 */
+	@Override
+	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
+		return this.rel.getWitness(formulas);
 	}
 
 }
