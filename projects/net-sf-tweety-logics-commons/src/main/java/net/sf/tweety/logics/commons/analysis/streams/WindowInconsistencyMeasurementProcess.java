@@ -18,7 +18,7 @@ import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
  * @param <S> The type of formulas
  * @param <T> The type of belief bases
  */
-public class WindowInconsistencyMeasurementProcess<S extends Formula,T extends BeliefSet<S>> extends InconsistencyMeasurementProcess<S>{
+public abstract class WindowInconsistencyMeasurementProcess<S extends Formula,T extends BeliefSet<S>> extends InconsistencyMeasurementProcess<S>{
 
 	/** The inconsistency measure used */
 	private BeliefSetInconsistencyMeasure<S,T> measure;
@@ -33,6 +33,8 @@ public class WindowInconsistencyMeasurementProcess<S extends Formula,T extends B
 	 * the actual new inconsistency value X is determined by X=X1*smoothingFactor + X2*(1-smoothingFactor).
 	 * This value should be between 0 and 1. If it is -1 no smoothing is done. */
 	private double smoothingFactor;
+	/** The name of this process. */
+	private String name;
 	
 	/** Key for the configuration map that points to the inconsistency measure to be used. */
 	public static final String CONFIG_MEASURE = "config_measure";
@@ -44,6 +46,8 @@ public class WindowInconsistencyMeasurementProcess<S extends Formula,T extends B
 	 * This value should be between 0 and 1. If it is -1 no smoothing is done (the same as setting
 	 * the smoothing factor to 0. */
 	public static final String CONFIG_SMOOTHINGFACTOR = "config_smoothingfactor";
+	/** Key for the configuration map that points to the name to be used. */
+	public static final String CONFIG_NAME = "config_name";
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess#init()
@@ -61,6 +65,9 @@ public class WindowInconsistencyMeasurementProcess<S extends Formula,T extends B
 		if(config.containsKey(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR))
 			this.smoothingFactor = (double) config.get(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR);
 		else this.smoothingFactor = -1;
+		if(config.containsKey(WindowInconsistencyMeasurementProcess.CONFIG_NAME))
+			this.name = (String) config.get(WindowInconsistencyMeasurementProcess.CONFIG_NAME);
+		else this.name = "";		
 		this.previousValue = 0;
 	}
 
@@ -85,6 +92,6 @@ public class WindowInconsistencyMeasurementProcess<S extends Formula,T extends B
 	 */
 	@Override
 	public String toString() {
-		return "WIMP-" + this.measure.toString();
+		return "WIMP" + this.name + "-" + this.measure.toString();
 	}
 }

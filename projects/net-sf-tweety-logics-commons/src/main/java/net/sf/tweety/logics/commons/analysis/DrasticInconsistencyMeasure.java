@@ -1,32 +1,41 @@
 package net.sf.tweety.logics.commons.analysis;
 
-import net.sf.tweety.BeliefBase;
+import java.util.Collection;
+
+import net.sf.tweety.BeliefSet;
+import net.sf.tweety.Formula;
 
 /**
  * This class models the drastic inconsistency measure.
  * 
  * @author Matthias Thimm
  */
-public class DrasticInconsistencyMeasure<T extends BeliefBase> implements InconsistencyMeasure<T> {
+public class DrasticInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
 
 	/** The consistency tester used for measuring. */
-	private ConsistencyTester<T> consTester;
+	private BeliefSetConsistencyTester<S,T> consTester;
 	
 	/**
 	 * Creates a new drastic inconsistency measure.
 	 * @param consTester some consistency tester
 	 */
-	public DrasticInconsistencyMeasure(ConsistencyTester<T> consTester){
+	public DrasticInconsistencyMeasure(BeliefSetConsistencyTester<S,T> consTester){
 		this.consTester = consTester;
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.BeliefBase)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(T beliefBase) {
-		if(this.consTester.isConsistent(beliefBase)) return 0d;
+	public Double inconsistencyMeasure(Collection<S> formulas) {
+		if(this.consTester.isConsistent(formulas)) return 0d;
 		return 1d;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "drastic";
+	}
 }

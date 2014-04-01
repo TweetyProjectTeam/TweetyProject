@@ -17,4 +17,12 @@ public class DefaultInconsistencyListener implements InconsistencyListener{
 		System.out.println(evt);		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.streams.InconsistencyListener#inconsistencyMeasurementStarted(net.sf.tweety.logics.commons.analysis.streams.InconsistencyUpdateEvent)
+	 */
+	@Override
+	public void inconsistencyMeasurementStarted(InconsistencyUpdateEvent evt) {
+		// Nothing to do		
+	}
+
 }

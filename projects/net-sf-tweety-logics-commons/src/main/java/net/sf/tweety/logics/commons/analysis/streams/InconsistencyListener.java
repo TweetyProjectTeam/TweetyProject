@@ -14,4 +14,11 @@ public interface InconsistencyListener extends EventListener {
 	 * @param evt some event.
 	 */
 	public void inconsistencyUpdateOccured(InconsistencyUpdateEvent evt);
+	
+	/**
+	 * This method is called by a stream-based inconsistency measure when
+	 * an inconsistency measurement has started.
+	 * @param evt some event.
+	 */
+	public void inconsistencyMeasurementStarted(InconsistencyUpdateEvent evt);
 }

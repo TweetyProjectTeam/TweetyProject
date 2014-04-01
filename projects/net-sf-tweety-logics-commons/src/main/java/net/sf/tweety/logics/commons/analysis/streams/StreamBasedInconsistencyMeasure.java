@@ -53,4 +53,11 @@ public abstract class StreamBasedInconsistencyMeasure<S extends Formula,T extend
 	 * @param evt some event to be fired.
 	 */
 	abstract void fireInconsistencyUpdateEvent(InconsistencyUpdateEvent evt);
+	
+	/**
+	 * This method is called by inconsistency measurement processes to dispatch
+	 * an event about inconsistency measurement starts to listeners.
+	 * @param evt some event to be fired.
+	 */
+	abstract void fireInconsistencyMeasurementStartedEvent(InconsistencyUpdateEvent evt);
 }

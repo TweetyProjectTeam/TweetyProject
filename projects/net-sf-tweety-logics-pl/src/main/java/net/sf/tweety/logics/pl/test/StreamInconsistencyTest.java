@@ -12,21 +12,25 @@ import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.analysis.HsInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+
 import net.sf.tweety.logics.pl.util.HsSampler;
 import net.sf.tweety.streams.DefaultFormulaStream;
 
 public class StreamInconsistencyTest {
 
-	public static void main(String[] args){
-		PropositionalSignature sig = new PropositionalSignature(12);		
-		HsSampler sampler = new HsSampler(sig,10);
+	public static void main(String[] args) throws InterruptedException{
+		PropositionalSignature sig = new PropositionalSignature(15);		
+		HsSampler sampler = new HsSampler(sig,5);//
 		
-		DefaultFormulaStream<PropositionalFormula> stream = new DefaultFormulaStream<PropositionalFormula>(sampler.randomSample(10000, 10000), true);
+		PlBeliefSet bs = sampler.randomSample(10000, 10000);
+		
+		DefaultFormulaStream<PropositionalFormula> stream = new DefaultFormulaStream<PropositionalFormula>(bs, true);
 		
 		Map<String,Object> config = new HashMap<String,Object>();
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, sig);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_CONSISTENCYTESTER, new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling")));
-		
+		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 5);
+				
 		DefaultStreamBasedInconsistencyMeasure<PropositionalFormula,PlBeliefSet> inc = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula,PlBeliefSet>(HsInconsistencyMeasurementProcess.class,config);
 		
 		inc.addInconsistencyListener(new DefaultInconsistencyListener());

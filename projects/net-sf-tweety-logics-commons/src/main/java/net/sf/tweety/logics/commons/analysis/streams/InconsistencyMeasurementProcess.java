@@ -32,6 +32,7 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 	 */
 	@Override
 	public void run() {
+		this.parent.fireInconsistencyMeasurementStartedEvent(new InconsistencyUpdateEvent(this.parent, this, -1d, null));
 		while(!this.abort && this.stream.hasNext()){
 			S f = this.stream.next();
 			this.iValue = this.update(f);

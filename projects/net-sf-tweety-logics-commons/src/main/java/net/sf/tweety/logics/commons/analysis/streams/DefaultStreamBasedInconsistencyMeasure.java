@@ -99,4 +99,10 @@ public class DefaultStreamBasedInconsistencyMeasure<S extends Formula,T extends 
 	public String toString(){
 		return "DSBIM";
 	}
+
+	@Override
+	void fireInconsistencyMeasurementStartedEvent(InconsistencyUpdateEvent evt) {
+		for(InconsistencyListener listener: this.listeners)
+			listener.inconsistencyMeasurementStarted(evt);
+	}
 }
