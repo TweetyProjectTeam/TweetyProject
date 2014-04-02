@@ -24,18 +24,34 @@ public abstract class AbstractBeliefSetConsistencyTester<S extends Formula,T ext
 		Collection<Collection<S>> result = new HashSet<Collection<S>>();
 		Collection<Collection<S>> candidates = new HashSet<Collection<S>>();
 		Collection<Collection<S>> new_candidates;
+		Collection<Collection<S>> tmp = new HashSet<Collection<S>>();
+		boolean m;
 		// start with singletons
 		Collection<S> candidate;
 		for(S f: beliefSet){
 			candidate = new HashSet<S>();
 			candidate.add(f);
 			candidates.add(candidate);
-		}
+		}		
 		while(!candidates.isEmpty()){
 			new_candidates = new HashSet<Collection<S>>();
 			for(Collection<S> cand: candidates)
-				if(!this.isConsistent(cand))
-					result.add(cand);
+				if(!this.isConsistent(cand)){
+					//remove super sets erroneously added
+					//and check for smaller mis
+					tmp.clear();
+					m = true;
+					for(Collection<S> mi: result){						
+						if(mi.containsAll(cand))
+							tmp.add(mi);
+						if(cand.containsAll(mi)){
+							m = false;
+							break;
+						}
+					}
+					result.removeAll(tmp);
+					if(m) result.add(cand);
+				}
 				else new_candidates.add(cand);
 			new_candidates = this.merge(new_candidates);
 			// remove candidates that already contain a minimal inconsistent subset
@@ -44,7 +60,7 @@ public abstract class AbstractBeliefSetConsistencyTester<S extends Formula,T ext
 			for(Collection<S> cand: new_candidates){
 				contains = false;
 				for(Collection<S> mi: result){					
-					if(!cand.containsAll(mi)){
+					if(cand.containsAll(mi)){
 						contains = true;
 						break;
 					}						
@@ -53,6 +69,7 @@ public abstract class AbstractBeliefSetConsistencyTester<S extends Formula,T ext
 					candidates.add(cand);
 			}
 		}		
+		System.out.println(result);
 		return result;
 	}
 	

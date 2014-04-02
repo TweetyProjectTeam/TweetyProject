@@ -1,6 +1,11 @@
 package net.sf.tweety.logics.commons.analysis.streams;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.streams.FormulaStream;
@@ -13,6 +18,10 @@ import net.sf.tweety.streams.FormulaStream;
  */
 public abstract class InconsistencyMeasurementProcess<S extends Formula> extends Thread {
 	
+	/** Key for the configuration map that gives a time out (given in seconds) 
+	 * for a single update operation Default value is -1 which means no time out. */
+	public static final String CONFIG_TIMEOUT = "config_timeout";
+	
 	/** The stream.*/
 	private FormulaStream<S> stream;
 	/** Whether execution should be aborted. */
@@ -21,6 +30,24 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 	private Double iValue;
 	/** The measure from where this process has been dispatched. */
 	private StreamBasedInconsistencyMeasure<S,?> parent;
+	/** Time out for the update operation (in seconds). */
+	private long timeout;
+	
+	/**
+	 * For handling timeouts.
+	 */
+	private class UpdateCallee implements Callable<Double>{
+		InconsistencyMeasurementProcess<S> imp;
+		S formula;
+		public UpdateCallee(InconsistencyMeasurementProcess<S> imp, S formula){
+			this.imp = imp;
+			this.formula = formula;
+		}
+		@Override
+		public Double call() throws Exception {
+			return this.imp.update(this.formula);
+		}		
+	}
 	
 	/**
 	 * Creates a new process for the given stream.
@@ -33,11 +60,25 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 	@Override
 	public void run() {
 		this.parent.fireInconsistencyMeasurementStartedEvent(new InconsistencyUpdateEvent(this.parent, this, -1d, null));
+		ExecutorService executor = Executors.newSingleThreadExecutor();
 		while(!this.abort && this.stream.hasNext()){
 			S f = this.stream.next();
-			this.iValue = this.update(f);
+			if(this.timeout == -1)
+				this.iValue = this.update(f);
+			else{				
+			    try {
+			    	// handle timeout				
+				    Future<Double> future = executor.submit(new UpdateCallee(this,f));
+			    	this.iValue = future.get(this.timeout, TimeUnit.SECONDS);	            
+			    } catch (Exception e) {
+			        //abort the complete process
+			    	this.abort = true;
+			    	this.iValue = -1d;
+			    }			    
+			}
 			this.parent.fireInconsistencyUpdateEvent(new InconsistencyUpdateEvent(this.parent, this, this.iValue, f));
 		}
+		executor.shutdownNow();
 	}
 	
 	/**
@@ -51,6 +92,9 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 		this.stream = stream;
 		this.iValue = 0d;
 		this.parent = parent;
+		if(config.containsKey(InconsistencyMeasurementProcess.CONFIG_TIMEOUT))
+			this.timeout = (long) config.get(InconsistencyMeasurementProcess.CONFIG_TIMEOUT);
+		else this.timeout = -1;
 		this.init(config);
 	}
 	

@@ -50,8 +50,9 @@ public class EtaInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> e
 		Map<Interpretation,Variable> worlds2vars = new HashMap<Interpretation,Variable>();
 		int i = 0;
 		Term normConstraint = null;		
+		this.it = it.reset();
 		while(this.it.hasNext()){
-			Interpretation interpretation = it.next();
+			Interpretation interpretation = this.it.next();
 			FloatVariable var = new FloatVariable("w" + i++,0,1);
 			worlds2vars.put(interpretation, var);
 			if(normConstraint == null)
@@ -62,9 +63,9 @@ public class EtaInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> e
 		// for each formula, it probability must be at least as large as eta
 		for(S f: formulas){
 			Term leftTerm = null;
-			it = it.reset();
-			while(it.hasNext()){
-				Interpretation interpretation = it.next();
+			this.it = it.reset();
+			while(this.it.hasNext()){
+				Interpretation interpretation = this.it.next();
 				if(interpretation.satisfies(f))
 					if(leftTerm == null)
 						leftTerm = worlds2vars.get(interpretation);
@@ -76,5 +77,12 @@ public class EtaInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> e
 		LpSolve solver = new LpSolve(problem);
 		Map<Variable,Term> solution = solver.solve();
 		return 1-solution.get(eta).doubleValue();
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "eta";
 	}
 }

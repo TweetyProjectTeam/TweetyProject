@@ -63,5 +63,12 @@ public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasur
 		// to every proposition the truth value B is a model
 		throw new RuntimeException("Unforeseen exception in computing the contension inconsistency measure: no paraconsistent model found.");
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "contension";
+	}
 
 }

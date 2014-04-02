@@ -31,4 +31,10 @@ public class MiInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> ex
 		return new Double(this.consTester.minimalInconsistentSubsets(formulas).size());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "mi";
+	}
 }
