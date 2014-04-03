@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.commons.analysis;
 
-import net.sf.tweety.BeliefSet;
+import java.util.Collection;
+
 import net.sf.tweety.Formula;
 import net.sf.tweety.util.*;
 
@@ -9,21 +10,21 @@ import net.sf.tweety.util.*;
  * 
  * @author Matthias Thimm
  */
-public class NormalizedMiInconsistencyMeasure<S extends Formula, T extends BeliefSet<S>> extends MiInconsistencyMeasure<S,T> {
+public class NormalizedMiInconsistencyMeasure<S extends Formula> extends MiInconsistencyMeasure<S> {
 
 	/**
 	 * Creates a new inconsistency measure with the given consistency tester
-	 * @param consTester some consistency tester
+	 * @param enumerator some MUs enumerator.
 	 */
-	public NormalizedMiInconsistencyMeasure(BeliefSetConsistencyTester<S, T> consTester) {
-		super(consTester);
+	public NormalizedMiInconsistencyMeasure(MusEnumerator<S> enumerator) {
+		super(enumerator);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet)
+	 * @see net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(T beliefSet) {
+	public Double inconsistencyMeasure(Collection<S> beliefSet) {
 		Double value = super.inconsistencyMeasure(beliefSet);
 		if(value == 0) return value;
 		double normFactor = MathTools.binomial(beliefSet.size(), new Double(Math.ceil(new Double(beliefSet.size()) / 2)).intValue());

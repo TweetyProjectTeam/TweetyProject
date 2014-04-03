@@ -1,7 +1,6 @@
 package net.sf.tweety.logics.pl.analysis;
 
 import net.sf.tweety.logics.commons.analysis.streams.WindowInconsistencyMeasurementProcess;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -11,5 +10,5 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public class PlWindowInconsistencyMeasurementProcess extends WindowInconsistencyMeasurementProcess<PropositionalFormula, PlBeliefSet>{
+public class PlWindowInconsistencyMeasurementProcess extends WindowInconsistencyMeasurementProcess<PropositionalFormula>{
 }

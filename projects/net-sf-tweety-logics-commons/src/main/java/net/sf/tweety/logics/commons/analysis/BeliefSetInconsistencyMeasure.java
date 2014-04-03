@@ -13,12 +13,12 @@ import net.sf.tweety.Formula;
  * @param <S> The type of formulas this measure supports.
  * @param <T> The type of belief sets this measure supports.
  */
-public abstract class BeliefSetInconsistencyMeasure<S extends Formula, T extends BeliefSet<S>> implements InconsistencyMeasure<T> {
+public abstract class BeliefSetInconsistencyMeasure<S extends Formula> implements InconsistencyMeasure<BeliefSet<S>> {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.BeliefBase)
 	 */
-	public Double inconsistencyMeasure(T beliefBase){
+	public Double inconsistencyMeasure(BeliefSet<S> beliefBase){
 		return this.inconsistencyMeasure((Collection<S>) beliefBase);
 	}
 	

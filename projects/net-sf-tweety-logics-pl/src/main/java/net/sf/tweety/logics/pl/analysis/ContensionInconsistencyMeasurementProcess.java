@@ -1,8 +1,6 @@
 package net.sf.tweety.logics.pl.analysis;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -10,17 +8,19 @@ import java.util.Random;
 import net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider;
 import net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.semantics.PriestWorld;
+import net.sf.tweety.logics.pl.semantics.PriestWorld.TruthValue;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
- * Implements an approximation algorithm for the Hs inconsistency measure on streams.
+ * Implements an approximation algorithm for the Contension inconsistency measure on streams.
  * 
  * @author Matthias Thimm
  */
-public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementProcess<PropositionalFormula>{
-	
+public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeasurementProcess<PropositionalFormula>{
+
 	/** Configuration key for the signature. */
 	public static final String CONFIG_KEY_SIGNATURE = "signature";
 	/** Configuration key for the consistency tester. */
@@ -28,8 +28,8 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	/** Configuration key for the number of populations tried out. */
 	public static final String CONFIG_KEY_NUMBEROFPOPULATIONS = "numberOfPopulations";
 	
-	/** The current candidate populations for a hitting set. */
-	private Collection<List<PossibleWorld>> hittingSets;
+	/** The current candidate 3-valued models. */
+	private List<PriestWorld> worlds;
 	
 	/** The signature of the formulas. */
 	private PropositionalSignature sig;
@@ -51,12 +51,17 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void init(Map<String, Object> config) {
-		this.sig = (PropositionalSignature) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
-		this.witnessProvider = (ConsistencyWitnessProvider<PropositionalFormula>) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER);
-		this.numberOfPopulations = (int) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS);
-		this.hittingSets = new ArrayList<List<PossibleWorld>>();
-		for(int i = 0; i < this.numberOfPopulations; i++)
-			this.hittingSets.add(new LinkedList<PossibleWorld>());
+		this.sig = (PropositionalSignature) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
+		this.witnessProvider = (ConsistencyWitnessProvider<PropositionalFormula>) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER);
+		this.numberOfPopulations = (int) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS);
+		this.worlds = new ArrayList<PriestWorld>();
+		for(int i = 0; i < this.numberOfPopulations; i++){
+			PriestWorld w = new PriestWorld();
+			// initialize all assignments to BOTH
+			for(Proposition p: this.sig)
+				w.set(p, TruthValue.TRUE);
+			this.worlds.add(w);			
+		}
 		this.rand = new Random();
 		this.currentValue = 0;
 		this.numFormulas = 0;
@@ -69,44 +74,37 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	protected double update(PropositionalFormula formula) {
 		int newValue = Integer.MAX_VALUE;
 		//for every population
-		for(List<PossibleWorld> hs: this.hittingSets){
-			// first check if the formula is satisfied
-			boolean satisfied = false;		
-			for(PossibleWorld w: hs){
-				if(w.satisfies(formula)){
-					satisfied = true;
-					break;
-				}
+		for(PriestWorld w: this.worlds){
+			// random choice whether some variable assignment 
+			// is changed from BOTH to TRUE or FALSE
+			if(!w.getConflictbase().isEmpty() && rand.nextDouble() <= 1-new Double(this.numFormulas)/(this.numFormulas+1)){
+				TruthValue newVal = rand.nextBoolean() ? TruthValue.TRUE : TruthValue.FALSE;
+				List<Proposition> lst = new ArrayList<Proposition>(w.getConflictbase());
+				w.set(lst.get(rand.nextInt(lst.size())), newVal);				
 			}
-			// random choice whether an existing world is removed
-			// the probability of removal is decreasing in time
-			if(!hs.isEmpty() && rand.nextDouble() <= 1-new Double(this.numFormulas)/(this.numFormulas+1)){
-				hs.remove(rand.nextInt(hs.size()));
-			}
-			// add some model for the new formula
-			if(!satisfied){			
-				PossibleWorld w = (PossibleWorld)this.witnessProvider.getWitness(formula);
-				// arbitrarily set remaining propositions
-				PropositionalSignature sig = new PropositionalSignature(this.sig);
-				sig.removeAll(formula.getSignature());
-				for(Proposition p: sig)
-					if(this.rand.nextDouble() < 0.5)
-						w.add(p);			
-				hs.add(w);		
+			// adjust candidate
+			if(!w.satisfies(formula)){
+				PossibleWorld pw = (PossibleWorld)this.witnessProvider.getWitness(formula);
+				for(Proposition p: pw)
+					if(w.get(p).equals(TruthValue.FALSE)) w.set(p, TruthValue.BOTH);
+				PropositionalSignature sig2 = new PropositionalSignature(formula.getSignature());
+				sig2.removeAll(pw);
+				for(Proposition p: sig2)
+					if(w.get(p).equals(TruthValue.TRUE)) w.set(p, TruthValue.BOTH);				
 			}		
-			newValue = Math.min(hs.size()-1, newValue);
+			newValue = Math.min(w.getConflictbase().size(), newValue);
 		}
 		// we take the average of all inconsistency values.		
 		this.currentValue = (this.currentValue * this.numFormulas + newValue) / ++this.numFormulas;		
 		return this.currentValue > 0 ? this.currentValue : 0;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess#toString()
 	 */
 	@Override
 	public String toString() {
-		return "HSP";
+		return "approx-contension";
 	}
 
 }

@@ -29,7 +29,7 @@ import net.sf.tweety.math.term.Variable;
  * cf. [Potyka, 2014]. It accepts any real vector norm but may be slow in practice and is numerically not optimal.
  * @author Matthias Thimm
  */
-public class MinimalViolationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> {
+public class MinimalViolationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
 	/** The norm. */
 	private RealVectorNorm norm;

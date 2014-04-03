@@ -29,7 +29,7 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 	/** The current inconsistency value.*/
 	private Double iValue;
 	/** The measure from where this process has been dispatched. */
-	private StreamBasedInconsistencyMeasure<S,?> parent;
+	private StreamBasedInconsistencyMeasure<S> parent;
 	/** Time out for the update operation (in seconds). */
 	private long timeout;
 	
@@ -87,7 +87,7 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 	 * @param parent the  measure from where this process has been dispatched.
 	 * @param config configuration options for the specific process.
 	 */
-	protected void init(FormulaStream<S> stream, StreamBasedInconsistencyMeasure<S,?> parent, Map<String,Object> config){
+	protected void init(FormulaStream<S> stream, StreamBasedInconsistencyMeasure<S> parent, Map<String,Object> config){
 		this.abort = false;
 		this.stream = stream;
 		this.iValue = 0d;

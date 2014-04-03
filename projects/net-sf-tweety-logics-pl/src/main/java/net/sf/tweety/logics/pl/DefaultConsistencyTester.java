@@ -1,10 +1,13 @@
 package net.sf.tweety.logics.pl;
 
 import java.util.Collection;
+import java.util.HashSet;
 
+import net.sf.tweety.BeliefSet;
 import net.sf.tweety.EntailmentRelation;
 import net.sf.tweety.Interpretation;
 import net.sf.tweety.logics.commons.analysis.AbstractBeliefSetConsistencyTester;
+import net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -12,7 +15,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public class DefaultConsistencyTester extends AbstractBeliefSetConsistencyTester<PropositionalFormula,PlBeliefSet> {
+public class DefaultConsistencyTester extends AbstractBeliefSetConsistencyTester<PropositionalFormula> implements ConsistencyWitnessProvider<PropositionalFormula>{
 
 	private EntailmentRelation<PropositionalFormula> rel;
 	
@@ -22,22 +25,6 @@ public class DefaultConsistencyTester extends AbstractBeliefSetConsistencyTester
 	 */
 	public DefaultConsistencyTester(EntailmentRelation<PropositionalFormula> rel){
 		this.rel = rel;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#minimalInconsistentSubsets(java.util.Collection)
-	 */
-	@Override
-	public Collection<Collection<PropositionalFormula>> minimalInconsistentSubsets(Collection<PropositionalFormula> formulas) {
-		return this.minimalInconsistentSubsets(new PlBeliefSet(formulas));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#maximalConsistentSubsets(java.util.Collection)
-	 */
-	@Override
-	public Collection<Collection<PropositionalFormula>> maximalConsistentSubsets(Collection<PropositionalFormula> formulas) {
-		return this.maximalConsistentSubsets(new PlBeliefSet(formulas));
 	}
 
 	/* (non-Javadoc)
@@ -66,4 +53,23 @@ public class DefaultConsistencyTester extends AbstractBeliefSetConsistencyTester
 		return this.rel.getWitness(formulas);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.Formula)
+	 */
+	@Override
+	public Interpretation getWitness(PropositionalFormula formula) {
+		Collection<PropositionalFormula> f = new HashSet<PropositionalFormula>();
+		f.add(formula);
+		return this.getWitness(f);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.BeliefSet)
+	 */
+	@Override
+	public Interpretation getWitness(BeliefSet<PropositionalFormula> bs) {
+		return this.getWitness((Collection<PropositionalFormula>) bs);
+	}
+
+	
 }

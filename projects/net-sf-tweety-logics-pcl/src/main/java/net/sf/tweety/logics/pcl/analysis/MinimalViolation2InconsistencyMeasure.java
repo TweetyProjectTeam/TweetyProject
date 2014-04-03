@@ -24,7 +24,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Nico Potyka
  */
-public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> {
+public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
 
 	/**

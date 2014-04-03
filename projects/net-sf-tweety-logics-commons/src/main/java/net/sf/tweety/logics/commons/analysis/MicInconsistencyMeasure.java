@@ -9,23 +9,26 @@ import net.sf.tweety.*;
  * 
  * @author Matthias Thimm
  */
-public class MicInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
+public class MicInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
-	/** The consistency tester used for measuring. */
-	private BeliefSetConsistencyTester<S,T> consTester;
+	/** The MUs enumerator. */
+	private MusEnumerator<S> enumerator;
 	
 	/**
 	 * Creates a new drastic inconsistency measure.
-	 * @param consTester some consistency tester
+	 * @param enumerator some MUs enumerator
 	 */
-	public MicInconsistencyMeasure(BeliefSetConsistencyTester<S,T> consTester){
-		this.consTester = consTester;
+	public MicInconsistencyMeasure(MusEnumerator<S> enumerator){
+		this.enumerator = enumerator;
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
+	 */
 	@Override
 	public Double inconsistencyMeasure(Collection<S> formulas) {
 		double value = 0; 
-		for(Collection<S> minInconSet: this.consTester.minimalInconsistentSubsets(formulas)){			
+		for(Collection<S> minInconSet: this.enumerator.minimalInconsistentSubsets(formulas)){			
 			value += ( 1 / new Double(minInconSet.size()) );
 		}
 		return value;

@@ -22,8 +22,6 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 	private int maxEvents;
 	/**The current number of events. */
 	private int numberOfEvents;
-	/** The log that is written to the file. */
-	private String log;
 	/** The previous timestamp. */
 	private long lastMillis;
 	/** Sum of all steps. */
@@ -40,37 +38,44 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 	@Override
 	public void inconsistencyUpdateOccured(InconsistencyUpdateEvent evt) {
 		this.numberOfEvents++;
-		this.log += this.numberOfEvents + ";";
-		this.log += (System.currentTimeMillis() - this.lastMillis) + ";";
+		String log = this.numberOfEvents + ";";
+		log += (System.currentTimeMillis() - this.lastMillis) + ";";
 		this.cumulativeTime += (System.currentTimeMillis() - this.lastMillis);
 		this.lastMillis = System.currentTimeMillis();
-		this.log += this.cumulativeTime + ";";
-		this.log += evt.measure.toString() + ";";
-		this.log += evt.process.toString() + ";";
-		this.log += evt.f.toString() + ";";
-		this.log += evt.inconsistencyValue + "\n";
+		log += this.cumulativeTime + ";";
+		log += evt.measure.toString() + ";";
+		log += evt.process.toString() + ";";
+		log += evt.f.toString() + ";";
+		log += evt.inconsistencyValue + "\n";
 		if(this.numberOfEvents+1 > this.maxEvents){
 			// abort
 			evt.process.abort();
-			this.log += "END\n";
-			// write log to file			
-			try {
-				FileWriter writer = new FileWriter(this.file, true);
-				writer.append(this.log);
-				writer.close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}				
+			log += "END\n";							
 		}
+		this.writeToDisk(log);
 	}
 
+	/**
+	 * Writes the given log to disk.
+	 * @param log some string.
+	 */
+	private void writeToDisk(String log){
+		try {
+			FileWriter writer = new FileWriter(this.file, true);
+			writer.append(log);
+			writer.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.streams.InconsistencyListener#inconsistencyMeasurementStarted(net.sf.tweety.logics.commons.analysis.streams.InconsistencyUpdateEvent)
 	 */
 	@Override
 	public void inconsistencyMeasurementStarted(InconsistencyUpdateEvent evt) {
 		this.numberOfEvents = 0;
-		this.log = "BEGIN\n";
+		this.writeToDisk("BEGIN\n");
 		this.lastMillis = System.currentTimeMillis();
 		this.cumulativeTime = 0;
 	}	

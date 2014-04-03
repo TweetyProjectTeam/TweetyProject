@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> {
+public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
 	/**
 	 * Logger.

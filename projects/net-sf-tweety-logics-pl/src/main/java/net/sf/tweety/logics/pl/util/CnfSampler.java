@@ -47,8 +47,10 @@ public class CnfSampler extends BeliefBaseSampler<PlBeliefSet>{
 		if(maxLength - minLength > 0)
 			length = minLength + rand.nextInt(maxLength - minLength);
 		else length = minLength;
-		while(beliefSet.size() < length)
+		while(beliefSet.size() < length){
 			beliefSet.add(this.randomFormula());
+			System.out.println(beliefSet.size() + " " + beliefSet);
+		}
 		return beliefSet;
 	}
 	

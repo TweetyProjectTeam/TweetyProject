@@ -3,7 +3,6 @@ package net.sf.tweety.logics.commons.analysis;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 import net.sf.tweety.Interpretation;
 import net.sf.tweety.InterpretationIterator;
@@ -19,7 +18,7 @@ import net.sf.tweety.InterpretationIterator;
  * @param <S> some formula type
  * @param <T> some belief set type
  */
-public class HsInconsistencyMeasure<S extends Formula, T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
+public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
 	/** Used for iterating over interpretations of the underlying language. */
 	private InterpretationIterator it;
@@ -97,4 +96,10 @@ public class HsInconsistencyMeasure<S extends Formula, T extends BeliefSet<S>> e
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return "HS";
+	}
 }

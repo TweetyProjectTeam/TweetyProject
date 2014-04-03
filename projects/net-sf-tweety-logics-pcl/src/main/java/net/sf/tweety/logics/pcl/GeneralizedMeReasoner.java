@@ -68,7 +68,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 	private RealVectorNorm norm;
 
 	/** The corresponding inconsistency measure. */
-	private BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> inc;
+	private BeliefSetInconsistencyMeasure<ProbabilisticConditional> inc;
 
 	/** The numerical accuracy. */
 	private double accuracy;

@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Nico Potyka
  */
-public abstract class MinimalViolationInconsistencyMeasureLPSolve extends BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> {
+public abstract class MinimalViolationInconsistencyMeasureLPSolve extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
 	
 	

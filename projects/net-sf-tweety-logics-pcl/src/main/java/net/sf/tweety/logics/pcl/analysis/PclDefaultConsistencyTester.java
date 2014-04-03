@@ -2,7 +2,6 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import java.util.*;
 
-import net.sf.tweety.Interpretation;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
@@ -18,7 +17,7 @@ import net.sf.tweety.logics.commons.analysis.*;
  * 
  * @author Matthias Thimm
  */
-public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTester<ProbabilisticConditional,PclBeliefSet> {
+public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTester<ProbabilisticConditional> {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.AbstractBeliefSetConsistencyTester#isConsistent(java.util.Collection)
@@ -99,22 +98,6 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#minimalInconsistentSubsets(java.util.Collection)
-	 */
-	@Override
-	public Collection<Collection<ProbabilisticConditional>> minimalInconsistentSubsets(	Collection<ProbabilisticConditional> formulas) {
-		return this.minimalInconsistentSubsets(new PclBeliefSet(formulas));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#maximalConsistentSubsets(java.util.Collection)
-	 */
-	@Override
-	public Collection<Collection<ProbabilisticConditional>> maximalConsistentSubsets(Collection<ProbabilisticConditional> formulas) {
-		return this.maximalConsistentSubsets(new PclBeliefSet(formulas));
-	}
-
-	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.Formula)
 	 */
 	@Override
@@ -123,13 +106,4 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 		bs.add(formula);
 		return this.isConsistent(bs);
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.AbstractBeliefSetConsistencyTester#getWitness(java.util.Collection)
-	 */
-	@Override
-	public Interpretation getWitness(Collection<ProbabilisticConditional> formulas) {
-		throw new UnsupportedOperationException("IMPLEMENT ME");
-	}
-
 }

@@ -2,7 +2,6 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 
-import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 
 /**
@@ -12,17 +11,17 @@ import net.sf.tweety.Formula;
  * 
  * @author Matthias Thimm
  */
-public class MaInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
+public class MaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
-	/** The consistency tester used for measuring. */
-	private BeliefSetConsistencyTester<S,T> consTester;
+	/** The MUs enumerator. */
+	private MusEnumerator<S> enumerator;
 	
 	/**
 	 * Creates a new inconsistency measure.
-	 * @param consTester some consistency tester
+	 * @param enumerator some MUs enumerator
 	 */
-	public MaInconsistencyMeasure(BeliefSetConsistencyTester<S,T> consTester){
-		this.consTester = consTester;
+	public MaInconsistencyMeasure(MusEnumerator<S> enumerator){
+		this.enumerator = enumerator;
 	}
 
 	/* (non-Javadoc)
@@ -32,9 +31,9 @@ public class MaInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> ex
 	public Double inconsistencyMeasure(Collection<S> formulas) {
 		Double scs = 0d;
 		for(S f: formulas)
-			if(!this.consTester.isConsistent(f))
+			if(!this.enumerator.isConsistent(f))
 				scs++;
-		return scs + this.consTester.maximalConsistentSubsets(formulas).size() - 1;
+		return scs + this.enumerator.maximalConsistentSubsets(formulas).size() - 1;
 	}
 
 }

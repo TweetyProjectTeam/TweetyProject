@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 import net.sf.tweety.Interpretation;
 import net.sf.tweety.InterpretationIterator;
@@ -22,9 +21,8 @@ import net.sf.tweety.math.term.Variable;
  * @author Matthias Thimm
  *
  * @param <S> The type of formula
- * @param <T> The type of belief base
  */
-public class EtaInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T>{
+public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S>{
 
 	/** Used for enumerating the interpretations of the underlying language. */
 	private InterpretationIterator it;

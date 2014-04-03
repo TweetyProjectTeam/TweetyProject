@@ -41,8 +41,10 @@ public class LingelingEntailment extends SatSolverEntailment {
 	public boolean isConsistent(Collection<PropositionalFormula> formulas) {
 		try {			
 			List<Proposition> props = new ArrayList<Proposition>();
-			for(PropositionalFormula f: formulas)
+			for(PropositionalFormula f: formulas){
+				props.removeAll(f.getAtoms());
 				props.addAll(f.getAtoms());			
+			}
 			// create temporary file in Dimacs CNF format.
 			File f = SatSolverEntailment.createTmpDimacsFile(formulas,props);
 			String output = Exec.invokeExecutable(this.binaryLocation + " -q " + f.getAbsolutePath());
@@ -61,8 +63,10 @@ public class LingelingEntailment extends SatSolverEntailment {
 	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
 		try {
 			List<Proposition> props = new ArrayList<Proposition>();
-			for(PropositionalFormula f: formulas)
+			for(PropositionalFormula f: formulas){
+				props.removeAll(f.getAtoms());
 				props.addAll(f.getAtoms());	
+			}
 			// create temporary file in Dimacs CNF format.
 			File f = SatSolverEntailment.createTmpDimacsFile(formulas,props);
 			String output = Exec.invokeExecutable(this.binaryLocation + " -q --witness " + f.getAbsolutePath());

@@ -27,16 +27,16 @@ import net.sf.tweety.util.SubsetIterator;
  * the process is repeated with all pairs "p1,p2" of propositions, then triples, etc.  
  * @author Matthias Thimm
  */
-public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula,PlBeliefSet> {
+public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula> {
 
 	/** The consistency tester used for measuring. */
-	private BeliefSetConsistencyTester<PropositionalFormula,PlBeliefSet> consTester;
+	private BeliefSetConsistencyTester<PropositionalFormula> consTester;
 	
 	/**
 	 * Creates a new inconsistency measure.
 	 * @param consTester some consistency tester
 	 */
-	public ContensionInconsistencyMeasure(BeliefSetConsistencyTester<PropositionalFormula,PlBeliefSet> consTester){
+	public ContensionInconsistencyMeasure(BeliefSetConsistencyTester<PropositionalFormula> consTester){
 		this.consTester = consTester;
 	}	
 	

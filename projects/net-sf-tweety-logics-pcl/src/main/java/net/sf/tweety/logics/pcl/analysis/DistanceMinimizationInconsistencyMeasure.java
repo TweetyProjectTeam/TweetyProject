@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional,PclBeliefSet> {
+public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
 	/**
 	 * Logger.

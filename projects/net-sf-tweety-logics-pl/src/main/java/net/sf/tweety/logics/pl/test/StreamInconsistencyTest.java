@@ -28,10 +28,10 @@ public class StreamInconsistencyTest {
 		
 		Map<String,Object> config = new HashMap<String,Object>();
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, sig);
-		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_CONSISTENCYTESTER, new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling")));
+		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling")));
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 5);
 				
-		DefaultStreamBasedInconsistencyMeasure<PropositionalFormula,PlBeliefSet> inc = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula,PlBeliefSet>(HsInconsistencyMeasurementProcess.class,config);
+		DefaultStreamBasedInconsistencyMeasure<PropositionalFormula> inc = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(HsInconsistencyMeasurementProcess.class,config);
 		
 		inc.addInconsistencyListener(new DefaultInconsistencyListener());
 		

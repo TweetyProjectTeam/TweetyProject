@@ -10,7 +10,7 @@ import net.sf.tweety.Formula;
  */
 public class InconsistencyUpdateEvent {
 
-	protected StreamBasedInconsistencyMeasure<?,?> measure;
+	protected StreamBasedInconsistencyMeasure<?> measure;
 	protected InconsistencyMeasurementProcess<?> process;
 	protected Double inconsistencyValue;
 	protected Formula f;
@@ -22,7 +22,7 @@ public class InconsistencyUpdateEvent {
 	 * @param inconsistencyValue
 	 * @param f
 	 */
-	public InconsistencyUpdateEvent(StreamBasedInconsistencyMeasure<?,?> measure, InconsistencyMeasurementProcess<?> process, Double inconsistencyValue, Formula f){
+	public InconsistencyUpdateEvent(StreamBasedInconsistencyMeasure<?> measure, InconsistencyMeasurementProcess<?> process, Double inconsistencyValue, Formula f){
 		this.measure = measure;
 		this.process = process;
 		this.inconsistencyValue = inconsistencyValue;

@@ -3,7 +3,6 @@ package net.sf.tweety.logics.commons.analysis;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 
 /**
@@ -13,17 +12,17 @@ import net.sf.tweety.Formula;
  * 
  * @author Matthias Thimm
  */
-public class PrInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
+public class PrInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
-	/** The consistency tester used for measuring. */
-	private BeliefSetConsistencyTester<S,T> consTester;
+	/** The MUs enumerator. */
+	private MusEnumerator<S> enumerator;
 	
 	/**
 	 * Creates a new drastic inconsistency measure.
-	 * @param consTester some consistency tester
+	 * @param enumerator some MUs enumerator
 	 */
-	public PrInconsistencyMeasure(BeliefSetConsistencyTester<S,T> consTester){
-		this.consTester = consTester;
+	public PrInconsistencyMeasure(MusEnumerator<S> enumerator){
+		this.enumerator = enumerator;
 	}
 
 	/* (non-Javadoc)
@@ -31,7 +30,7 @@ public class PrInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> ex
 	 */
 	@Override
 	public Double inconsistencyMeasure(Collection<S> formulas) {
-		Collection<Collection<S>> mis = this.consTester.minimalInconsistentSubsets(formulas);
+		Collection<Collection<S>> mis = this.enumerator.minimalInconsistentSubsets(formulas);
 		Collection<S> problematic = new HashSet<S>();
 		for(Collection<S> mi: mis)
 			problematic.addAll(mi);

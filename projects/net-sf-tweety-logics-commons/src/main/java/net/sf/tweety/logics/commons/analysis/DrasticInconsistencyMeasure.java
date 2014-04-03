@@ -2,7 +2,6 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 
-import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 
 /**
@@ -10,16 +9,16 @@ import net.sf.tweety.Formula;
  * 
  * @author Matthias Thimm
  */
-public class DrasticInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T> {
+public class DrasticInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
 	/** The consistency tester used for measuring. */
-	private BeliefSetConsistencyTester<S,T> consTester;
+	private BeliefSetConsistencyTester<S> consTester;
 	
 	/**
 	 * Creates a new drastic inconsistency measure.
 	 * @param consTester some consistency tester
 	 */
-	public DrasticInconsistencyMeasure(BeliefSetConsistencyTester<S,T> consTester){
+	public DrasticInconsistencyMeasure(BeliefSetConsistencyTester<S> consTester){
 		this.consTester = consTester;
 	}
 

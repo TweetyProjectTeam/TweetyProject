@@ -2,7 +2,6 @@ package net.sf.tweety.logics.commons.analysis.streams;
 
 import java.util.Collection;
 
-import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.streams.FormulaStream;
@@ -14,7 +13,7 @@ import net.sf.tweety.streams.FormulaStream;
  * @param <S> The type of formulas
  * @param <T> The type of belief bases 
  */
-public abstract class StreamBasedInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends BeliefSetInconsistencyMeasure<S,T>{
+public abstract class StreamBasedInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)

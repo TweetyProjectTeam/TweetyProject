@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.BeliefSet;
 import net.sf.tweety.Formula;
 import net.sf.tweety.streams.FormulaStream;
 
@@ -18,7 +17,7 @@ import net.sf.tweety.streams.FormulaStream;
  * @param <S> The type of formulas
  * @param <T> The type of belief bases.
  */
-public class DefaultStreamBasedInconsistencyMeasure<S extends Formula,T extends BeliefSet<S>> extends StreamBasedInconsistencyMeasure<S,T> {
+public class DefaultStreamBasedInconsistencyMeasure<S extends Formula> extends StreamBasedInconsistencyMeasure<S> {
 
 	/** The class of inconsistency measurement processes. */
 	private Class<? extends InconsistencyMeasurementProcess<S>> clazz;

@@ -3,6 +3,8 @@ package net.sf.tweety.logics.pcl.analysis;
 import java.util.*;
 
 import net.sf.tweety.*;
+import net.sf.tweety.logics.commons.analysis.MusEnumerator;
+import net.sf.tweety.logics.commons.analysis.NaiveMusEnumerator;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.pcl.syntax.*;
@@ -29,7 +31,8 @@ public class ConvexAggregatingMaxConsMeMachineShop implements BeliefBaseMachineS
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;
-		Collection<Collection<ProbabilisticConditional>> maxCons = tester.maximalConsistentSubsets(beliefSet);
+		MusEnumerator<ProbabilisticConditional> mu = new NaiveMusEnumerator<ProbabilisticConditional>(tester);
+		Collection<Collection<ProbabilisticConditional>> maxCons = mu.maximalConsistentSubsets(beliefSet);
 		// for each maximal consistent subset determine its ME-distribution
 		@SuppressWarnings("unchecked")
 		ProbabilityDistribution<PossibleWorld>[] distributions = new ProbabilityDistribution[maxCons.size()];
