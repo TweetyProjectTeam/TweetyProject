@@ -47,6 +47,8 @@ public class MarcoMusEnumerator extends AbstractMusEnumerator<PropositionalFormu
 			// create temporary file in Dimacs CNF format.
 			Pair<File,List<PropositionalFormula>> p = SatSolverEntailment.createTmpDimacsFile(formulas);
 			String output = Exec.invokeExecutable(this.pathToMarco + " -v " + p.getFirst().getAbsolutePath());
+			// delete file
+			p.getFirst().delete();
 			// parse output
 			Collection<Collection<PropositionalFormula>> result = new HashSet<Collection<PropositionalFormula>>();
 			StringTokenizer tokenizer = new StringTokenizer(output, "\n");

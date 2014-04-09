@@ -23,6 +23,9 @@ import net.sf.tweety.util.Pair;
  */
 public abstract class SatSolverEntailment extends EntailmentRelation<PropositionalFormula>{
 
+	/** For temporary files. */
+	public static File tempFolder = null;
+	
 	/**
 	 * Converts the given set of formulas to their string representation in 
 	 * Dimacs CNF. Note that a single formula may be represented as multiple
@@ -102,7 +105,7 @@ public abstract class SatSolverEntailment extends EntailmentRelation<Proposition
 	 */
 	public static File createTmpDimacsFile(Collection<PropositionalFormula> formulas, List<Proposition> props) throws IOException{
 		String r = SatSolverEntailment.convertToDimacs(formulas, props);
-		File f = File.createTempFile("tweety-sat", ".cnf");
+		File f = File.createTempFile("tweety-sat", ".cnf", SatSolverEntailment.tempFolder);		
 		f.deleteOnExit();
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
 		writer.print(r);

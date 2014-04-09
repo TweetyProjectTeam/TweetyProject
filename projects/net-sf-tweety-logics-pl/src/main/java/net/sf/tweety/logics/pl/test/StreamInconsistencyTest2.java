@@ -26,6 +26,7 @@ import net.sf.tweety.logics.commons.analysis.streams.WindowInconsistencyMeasurem
 import net.sf.tweety.logics.pl.DefaultConsistencyTester;
 import net.sf.tweety.logics.pl.LingelingEntailment;
 import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.SatSolverEntailment;
 import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasure;
 import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.analysis.HsInconsistencyMeasurementProcess;
@@ -47,15 +48,18 @@ public class StreamInconsistencyTest2 {
 	public static final double 												STANDARD_SMOOTHING_FACTOR  	= 0.75;
 	public static final int 												STANDARD_WINDOW_SIZE	 	= 20;
 	public static final int													STANDARD_EVENTS				= SIZE_OF_KNOWLEDGEBASES * 20;
-	public static final BeliefSetConsistencyTester<PropositionalFormula>	STANDARD_CONSISTENCY_TESTER = new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));
-	public static final ConsistencyWitnessProvider<PropositionalFormula> 	STANDARD_WITNESS_PROVIDER	= new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));
-	public static final MusEnumerator<PropositionalFormula> 				STANDARD_MUS_ENUMERATOR     = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");
-	public static final String 												RESULT_PATH					= "/Users/mthimm/Desktop";
-	public static final String												BELIEFSET_PATH				= "/Users/mthimm/Desktop/beliefsets.txt";
+	public static final BeliefSetConsistencyTester<PropositionalFormula>	STANDARD_CONSISTENCY_TESTER = new DefaultConsistencyTester(new LingelingEntailment("/home/shared/strinc/lingeling/lingeling"));///Users/mthimm/Projects/misc_bins/lingeling
+	public static final ConsistencyWitnessProvider<PropositionalFormula> 	STANDARD_WITNESS_PROVIDER	= new DefaultConsistencyTester(new LingelingEntailment("/home/shared/strinc/lingeling/lingeling"));///Users/mthimm/Projects/misc_bins/lingeling
+	public static final MusEnumerator<PropositionalFormula> 				STANDARD_MUS_ENUMERATOR     = new MarcoMusEnumerator("/home/shared/strinc/marco/marco.py");///Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py
+	public static final String 												RESULT_PATH					= "/home/shared/strinc";///Users/mthimm/Desktop
+	public static final String												BELIEFSET_PATH				= "/home/shared/strinc/beliefsets.txt";///Users/mthimm/Desktop/beliefsets.txt
+	public static final String												TMP_FILE_FOLDER				= "/home/shared/strinc/tmp";
 	public static final long												TIMEOUT						= 120; //2 minutes
 	
 	public static void main(String[] args) throws InterruptedException{
 		LpSolve.binary = "/opt/local/bin/lp_solve";
+		LpSolve.tmpFolder = new File(TMP_FILE_FOLDER);
+		SatSolverEntailment.tempFolder = new File(TMP_FILE_FOLDER);
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
 		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		// -----------------------------------------

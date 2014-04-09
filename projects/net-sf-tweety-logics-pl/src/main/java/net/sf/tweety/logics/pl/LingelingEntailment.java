@@ -48,6 +48,8 @@ public class LingelingEntailment extends SatSolverEntailment {
 			// create temporary file in Dimacs CNF format.
 			File f = SatSolverEntailment.createTmpDimacsFile(formulas,props);
 			String output = Exec.invokeExecutable(this.binaryLocation + " -q " + f.getAbsolutePath());
+			// delete file
+			f.delete();
 			return (output.indexOf("UNSATISFIABLE") == -1);			
 		} catch (IOException e) {
 			throw new RuntimeException(e);

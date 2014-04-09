@@ -17,6 +17,9 @@ public class LpSolve extends Solver {
 	/**Path to the binary or lp_solve*/
 	public static String binary = "lp_solve";
 	
+	/** For temporary files. */
+	public static File tmpFolder = null;
+	
 	/**
 	 * Creates a new solver for the given optimization problem.
 	 * @param problem an optimization problem.
@@ -35,7 +38,7 @@ public class LpSolve extends Solver {
 		String output = new String();
 		//String error = "";
 		try{
-			File lpFile = File.createTempFile("lptmp", null);
+			File lpFile = File.createTempFile("lptmp", null, LpSolve.tmpFolder);
 //			File lpFile = new File("lptmp2");
 			// Delete temp file when program exits.
 			lpFile.deleteOnExit();    
@@ -53,12 +56,13 @@ public class LpSolve extends Solver {
 	        in = child.getErrorStream();
 	      //  while ((c = in.read()) != -1)
 	      //      error += (char)c;
-	        in.close();	        
+	        in.close();
+	        lpFile.delete();
 		}catch(IOException e){
 			//TODO add error handling
 			e.printStackTrace();
 			return null;
-		}
+		}		
 		//parse output		
 		String delimiter = "Actual values of the variables:";
 		String assignments = output.substring(output.indexOf(delimiter)+delimiter.length(), output.length());
