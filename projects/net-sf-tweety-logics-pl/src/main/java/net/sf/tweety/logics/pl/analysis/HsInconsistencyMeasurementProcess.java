@@ -70,18 +70,17 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 		int newValue = Integer.MAX_VALUE;
 		//for every population
 		for(List<PossibleWorld> hs: this.hittingSets){
-			// first check if the formula is satisfied
+			// random choice whether an existing world is removed
+			// the probability of removal is decreasing in time
+			if(!hs.isEmpty() && rand.nextDouble() <= 1-new Double(this.numFormulas)/(this.numFormulas+1)){
+				hs.remove(rand.nextInt(hs.size()));
+			}
 			boolean satisfied = false;		
 			for(PossibleWorld w: hs){
 				if(w.satisfies(formula)){
 					satisfied = true;
 					break;
 				}
-			}
-			// random choice whether an existing world is removed
-			// the probability of removal is decreasing in time
-			if(!hs.isEmpty() && rand.nextDouble() <= 1-new Double(this.numFormulas)/(this.numFormulas+1)){
-				hs.remove(rand.nextInt(hs.size()));
 			}
 			// add some model for the new formula
 			if(!satisfied){			
