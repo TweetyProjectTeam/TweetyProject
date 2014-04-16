@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+<plugins>
+	<plugin name="rpcl">
+		<path>  plugins/rpcl.plugin/rpcl.jar  </path>
+	</plugin>
+
+	<plugin name="pref">
+		<path>  plugins/pref.plugin/pref.jar  </path>
+	</plugin>
+
+	<plugin name="fol">
+		<path>  plugins/fol.plugin/fol.jar  </path>
+	</plugin>
+
+	<plugin name="pl">
+		<path>  plugins/pl.plugin/pl.jar  </path>
+	</plugin>
+</plugins>
