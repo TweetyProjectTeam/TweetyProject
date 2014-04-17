@@ -72,6 +72,7 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 			    	this.iValue = future.get(this.timeout, TimeUnit.SECONDS);	            
 			    } catch (Exception e) {
 			        //abort the complete process
+			    	e.printStackTrace();
 			    	this.abort = true;
 			    	this.iValue = -1d;
 			    }			    

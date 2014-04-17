@@ -41,27 +41,27 @@ import net.sf.tweety.streams.DefaultFormulaStream;
 
 public class StreamInconsistencyEvaluation {
 	
-	public static final int 												SIGNATURE_SIZE				= 25;
-	public static final double 												CNF_RATIO					= 1/8d;
+	public static final int 												SIGNATURE_SIZE				= 15;
+	public static final double 												CNF_RATIO					= 1/4d;
 	public static final int 												NUMBER_OF_ITERATIONS 		= 100;
 	public static final int 												SIZE_OF_KNOWLEDGEBASES 		= 1000;
 	public static final double 												STANDARD_SMOOTHING_FACTOR  	= 0.75;
 	public static final int 												STANDARD_WINDOW_SIZE	 	= 20;
-	public static final int													STANDARD_EVENTS				= SIZE_OF_KNOWLEDGEBASES * 20;
-	public static final BeliefSetConsistencyTester<PropositionalFormula>	STANDARD_CONSISTENCY_TESTER = new DefaultConsistencyTester(new LingelingEntailment("/home/mthimm/strinc/lingeling/lingeling"));///Users/mthimm/Projects/misc_bins/lingeling
-	public static final ConsistencyWitnessProvider<PropositionalFormula> 	STANDARD_WITNESS_PROVIDER	= new DefaultConsistencyTester(new LingelingEntailment("/home/mthimm/strinc/lingeling/lingeling"));///Users/mthimm/Projects/misc_bins/lingeling
-	public static final MusEnumerator<PropositionalFormula> 				STANDARD_MUS_ENUMERATOR     = new MarcoMusEnumerator("/home/mthimm/strinc/marco/marco.py");///Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py
-	public static final String 												RESULT_PATH					= "/home/mthimm/strinc";///Users/mthimm/Desktop
-	public static final String												BELIEFSET_PATH				= "/home/mthimm/strinc/beliefsets.txt";///Users/mthimm/Desktop/beliefsets.txt
-	public static final String												TMP_FILE_FOLDER				= "/home/mthimm/strinc/tmp";
+	public static final int													STANDARD_EVENTS				= 20000;
+	public static final BeliefSetConsistencyTester<PropositionalFormula>	STANDARD_CONSISTENCY_TESTER = new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));///Users/mthimm/Projects/misc_bins/lingeling
+	public static final ConsistencyWitnessProvider<PropositionalFormula> 	STANDARD_WITNESS_PROVIDER	= new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));///Users/mthimm/Projects/misc_bins/lingeling
+	public static final MusEnumerator<PropositionalFormula> 				STANDARD_MUS_ENUMERATOR     = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");///Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py
+	public static final String 												RESULT_PATH					= "/Users/mthimm/Desktop";///Users/mthimm/Desktop
+	public static final String												BELIEFSET_PATH				= "/Users/mthimm/Desktop/beliefsets.txt";///Users/mthimm/Desktop/beliefsets.txt
+	public static final String												TMP_FILE_FOLDER				= "/Users/mthimm/Desktop/tmp";
 	public static final long												TIMEOUT						= 120; //2 minutes
 	
 	public static void main(String[] args) throws InterruptedException{
-		LpSolve.binary = "/opt/local/bin/lp_solve";
+		LpSolve.binary = "/home/shared/strinc/lp_solve";
 		LpSolve.tmpFolder = new File(TMP_FILE_FOLDER);
 		SatSolverEntailment.tempFolder = new File(TMP_FILE_FOLDER);
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
-		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
+		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);//HsSampler(signature,10);
 		// -----------------------------------------
 		// the inconsistency measures to be compared
 		// -----------------------------------------
@@ -114,6 +114,7 @@ public class StreamInconsistencyEvaluation {
 		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, STANDARD_WITNESS_PROVIDER);
 		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 10);
 		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
+		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
 		StreamBasedInconsistencyMeasure<PropositionalFormula> cont_stream_1 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(ContensionInconsistencyMeasurementProcess.class,config);
 		cont_stream_1.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-cont-1.txt",STANDARD_EVENTS));
 		cont_stream_1.addInconsistencyListener(new DefaultInconsistencyListener());
@@ -124,6 +125,7 @@ public class StreamInconsistencyEvaluation {
 		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, STANDARD_WITNESS_PROVIDER);
 		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 100);
 		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
+		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
 		StreamBasedInconsistencyMeasure<PropositionalFormula> cont_stream_2 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(ContensionInconsistencyMeasurementProcess.class,config);
 		cont_stream_2.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-cont-2.txt",STANDARD_EVENTS));
 		cont_stream_2.addInconsistencyListener(new DefaultInconsistencyListener());
@@ -218,6 +220,7 @@ public class StreamInconsistencyEvaluation {
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, STANDARD_WITNESS_PROVIDER);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 10);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
+		config.put(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
 		StreamBasedInconsistencyMeasure<PropositionalFormula> hs_stream_1 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(HsInconsistencyMeasurementProcess.class,config);
 		hs_stream_1.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-hs-1.txt",STANDARD_EVENTS));
 		hs_stream_1.addInconsistencyListener(new DefaultInconsistencyListener());
@@ -228,11 +231,12 @@ public class StreamInconsistencyEvaluation {
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, STANDARD_WITNESS_PROVIDER);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 100);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
+		config.put(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
 		StreamBasedInconsistencyMeasure<PropositionalFormula> hs_stream_2 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(HsInconsistencyMeasurementProcess.class,config);
 		hs_stream_2.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-hs-2.txt",STANDARD_EVENTS));
 		hs_stream_2.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(hs_stream_2);
-				
+		
 		// -----------------------------------------
 		// iterate
 		// -----------------------------------------

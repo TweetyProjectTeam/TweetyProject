@@ -27,6 +27,12 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 	public static final String CONFIG_KEY_WITNESSPROVIDER = "witnessProvider";
 	/** Configuration key for the number of populations tried out. */
 	public static final String CONFIG_KEY_NUMBEROFPOPULATIONS = "numberOfPopulations";
+	/** Key for the configuration map that points to the smoothing factor to be used. if X1 is the previous
+	 * inconsistency value, X2 is the new inconsistency value on the new window, then
+	 * the actual new inconsistency value X is determined by X=X1*smoothingFactor + X2*(1-smoothingFactor).
+	 * This value should be between 0 and 1. If it is -1 no smoothing is done (the same as setting
+	 * the smoothing factor to 0. */
+	public static final String CONFIG_SMOOTHINGFACTOR = "config_smoothingfactor";	
 	
 	/** The current candidate 3-valued models. */
 	private List<PriestWorld> worlds;
@@ -37,6 +43,11 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 	private ConsistencyWitnessProvider<PropositionalFormula> witnessProvider;
 	/** For randomization. */
 	private Random rand;
+	/** Whether the inconsistency value should be smoothed: if X1 is the previous
+	 * inconsistency value, X2 is the new inconsistency value on the new window, then
+	 * the actual new inconsistency value X is determined by X=X1*smoothingFactor + X2*(1-smoothingFactor).
+	 * This value should be between 0 and 1. If it is -1 no smoothing is done. */
+	private double smoothingFactor;
 	
 	/** Current inconsistency value. */
 	private double currentValue;
@@ -54,6 +65,8 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 		this.sig = (PropositionalSignature) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
 		this.witnessProvider = (ConsistencyWitnessProvider<PropositionalFormula>) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER);
 		this.numberOfPopulations = (int) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS);
+		if(config.containsKey(ContensionInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR))
+			this.smoothingFactor = (double) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR);
 		this.worlds = new ArrayList<PriestWorld>();
 		for(int i = 0; i < this.numberOfPopulations; i++){
 			PriestWorld w = new PriestWorld();
@@ -72,7 +85,7 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 	 */
 	@Override
 	protected double update(PropositionalFormula formula) {
-		int newValue = Integer.MAX_VALUE;
+		int newValue = 0;
 		//for every population
 		for(PriestWorld w: this.worlds){
 			// random choice whether some variable assignment 
@@ -81,7 +94,7 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 				TruthValue newVal = rand.nextBoolean() ? TruthValue.TRUE : TruthValue.FALSE;
 				List<Proposition> lst = new ArrayList<Proposition>(w.getConflictbase());
 				w.set(lst.get(rand.nextInt(lst.size())), newVal);				
-			}
+			}			
 			// adjust candidate
 			if(!w.satisfies(formula)){
 				PossibleWorld pw = (PossibleWorld)this.witnessProvider.getWitness(formula);
@@ -92,10 +105,14 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 				for(Proposition p: sig2)
 					if(w.get(p).equals(TruthValue.TRUE)) w.set(p, TruthValue.BOTH);				
 			}		
-			newValue = Math.min(w.getConflictbase().size(), newValue);
+			newValue += w.getConflictbase().size();
 		}
-		// we take the average of all inconsistency values.		
-		this.currentValue = (this.currentValue * this.numFormulas + newValue) / ++this.numFormulas;		
+		newValue = newValue/this.worlds.size();
+		this.numFormulas++;
+		// do smoothing
+		if(this.smoothingFactor != -1)
+			this.currentValue = this.currentValue * this.smoothingFactor + newValue * (1-this.smoothingFactor);
+		else this.currentValue = newValue;		
 		return this.currentValue > 0 ? this.currentValue : 0;
 	}
 
