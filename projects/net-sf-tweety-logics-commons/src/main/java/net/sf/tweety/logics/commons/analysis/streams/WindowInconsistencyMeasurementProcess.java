@@ -77,6 +77,8 @@ public abstract class WindowInconsistencyMeasurementProcess<S extends Formula> e
 	protected double update(S formula) {
 		if((this.windowsize != -1) && (this.formulas.size() >= this.windowsize))
 			this.formulas.poll();
+		// remove formula from the queue if it appereared already
+		this.formulas.remove(formula);
 		this.formulas.add(formula);
 		double oldVal = this.previousValue;
 		double newVal = this.measure.inconsistencyMeasure(this.formulas);
