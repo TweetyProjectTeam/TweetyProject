@@ -61,7 +61,7 @@ public class StreamInconsistencyEvaluation {
 		LpSolve.tmpFolder = new File(TMP_FILE_FOLDER);
 		SatSolverEntailment.tempFolder = new File(TMP_FILE_FOLDER);
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
-		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);//HsSampler(signature,10);
+		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		// -----------------------------------------
 		// the inconsistency measures to be compared
 		// -----------------------------------------
@@ -236,6 +236,9 @@ public class StreamInconsistencyEvaluation {
 		hs_stream_2.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-hs-2.txt",STANDARD_EVENTS));
 		hs_stream_2.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(hs_stream_2);
+		
+		measures.clear();
+		measures.add(cont_stream_1);
 		
 		// -----------------------------------------
 		// iterate
