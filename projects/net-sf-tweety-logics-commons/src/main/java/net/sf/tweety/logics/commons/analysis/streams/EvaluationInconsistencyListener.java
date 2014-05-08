@@ -27,6 +27,15 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 	/** Sum of all steps. */
 	private long cumulativeTime;
 	
+
+	
+	// TEMPORARY BEGIN
+	public static double INCDEFAULTVALUE = -1;
+	public static double TOLERANCE = -1;
+	// TEMPORATY END
+	
+	
+	
 	public EvaluationInconsistencyListener(String file, int maxEvents){
 		this.file = new File(file);
 		this.maxEvents = maxEvents;
@@ -47,7 +56,17 @@ public class EvaluationInconsistencyListener implements InconsistencyListener{
 		log += evt.process.toString() + ";";
 		log += evt.f.toString() + ";";
 		log += evt.inconsistencyValue + "\n";
+		//TEMPORARY BEGIN
+		if(EvaluationInconsistencyListener.TOLERANCE != -1){		
+			if(evt.inconsistencyValue >= EvaluationInconsistencyListener.INCDEFAULTVALUE - EvaluationInconsistencyListener.TOLERANCE && 
+					evt.inconsistencyValue <= EvaluationInconsistencyListener.INCDEFAULTVALUE + EvaluationInconsistencyListener.TOLERANCE){
+				evt.process.abort();
+				log += "END\n";
+			}
+		}
+		//TEMPORARY END
 		if(this.numberOfEvents+1 > this.maxEvents){
+			
 			// abort
 			evt.process.abort();
 			log += "END\n";							

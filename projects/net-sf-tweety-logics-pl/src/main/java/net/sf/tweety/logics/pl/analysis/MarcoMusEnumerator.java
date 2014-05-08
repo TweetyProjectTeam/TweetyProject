@@ -46,7 +46,9 @@ public class MarcoMusEnumerator extends AbstractMusEnumerator<PropositionalFormu
 				props.addAll(f.getAtoms());			
 			// create temporary file in Dimacs CNF format.
 			Pair<File,List<PropositionalFormula>> p = SatSolverEntailment.createTmpDimacsFile(formulas);
-			String output = Exec.invokeExecutable(this.pathToMarco + " -v " + p.getFirst().getAbsolutePath());
+			// we only read a maximum number of 1000 lines from MARCO (TODO: this should be parameterized) as we bias on MUSes and the rest
+			// of the lines contains the description of the MCSes
+			String output = Exec.invokeExecutable(this.pathToMarco + " -v -b MUSes " + p.getFirst().getAbsolutePath(), 1000);
 			// delete file
 			p.getFirst().delete();
 			// parse output

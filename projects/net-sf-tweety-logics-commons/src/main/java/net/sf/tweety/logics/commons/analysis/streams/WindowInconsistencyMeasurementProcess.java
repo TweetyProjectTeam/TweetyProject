@@ -82,9 +82,12 @@ public abstract class WindowInconsistencyMeasurementProcess<S extends Formula> e
 		this.formulas.add(formula);
 		double oldVal = this.previousValue;
 		double newVal = this.measure.inconsistencyMeasure(this.formulas);
-		if(this.smoothingFactor != -1)
-			this.previousValue = oldVal * this.smoothingFactor + newVal * (1-this.smoothingFactor);
-		else this.previousValue = newVal;
+		//if(this.smoothingFactor != -1)
+		//	this.previousValue = oldVal * this.smoothingFactor + newVal * (1-this.smoothingFactor);
+		//else this.previousValue = newVal;
+		//temporary
+		this.previousValue = Math.max(this.previousValue,newVal); 
+		//temporary
 		return this.previousValue;
 	}
 
