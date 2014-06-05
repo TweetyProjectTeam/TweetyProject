@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Tweety@Web: Inconsistency Measurement</title>
+		<link rel="stylesheet" type="text/css" href="styles.css">
+		<script type="text/JavaScript" src="js/jquery-2.1.1.min.js"></script>
+		<script type="text/JavaScript" src="js/scripts.js"></script>
+	</head>
+	<body style="font-family: Arial;">
+		<div align="center" width="100%">
+			<table style="width:800px;" cellspacing="0" cellpadding="0">
+				<tr>		
+					<td colspan="2"><div style="font-size:14pt;font-weight:bold;">Tweety@Web</div><div style="font-size:11pt;">Inconsistency Measurement</div><hr noshade="noshade" size="1" /></td>		
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p style="font-size:10pt;">Some description...</p>
+					</td>
+				</tr>	
+				<tr>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">Online Inconsistency Measurement</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p style="font-size:10pt;">Some text...</p>
+						<div style="font-size:10pt;font-weight:bold;">Knowledge base:</div>
+						<textarea name="kb" style="width:100%;height:100px;font-size:8pt;">
+A
+B
+A && !C
+!A || C
+!B || C
+B && !C
+						</textarea>
+						<div style="font-size:10pt;font-weight:bold;">Knowledge base format (<a style="font-weigth:normal;" href="javascript:formatinfo();">?</a>):&nbsp;&nbsp;
+							<select name="kbformat" size="1">
+						    	<option>Tweety</option>
+    	  						<option>Whatever</option>
+    						</select>
+    					</div>
+    					<div style="font-size:10pt;font-weight:bold;">Selected inconsistency measures: <span id="selectedmeasures"></span>&nbsp;&nbsp;<button type="button" onclick="select()">...</button></div>
+    					<br/>
+						<div style="font-size:10pt;"><button type="button" onclick="query()">Compute inconsistency values</button></div><br/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">REST API and source code</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p style="font-size:10pt;">Some description...</p>
+					</td>
+				</tr>	
+				<tr>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">Contact</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p style="font-size:10pt;">This page and Tweety is maintained by <a href="http://www.mthimm.de">Matthias Thimm</a>, Wilhelmstr. 6, 56070 Koblenz, Germany.</p>
+						<p style="font-size:10pt;">Tweety is collaboratively developed by several contributors. Thanks go to Sebastian Homann, Patrick Kr&uuml;mpelmann, Tjitze Rienstra, Stefan Tittel, Thomas Vengels, Bastian Wolf.</p>
+			
+						<p style="font-size:10pt;">If you are interested in participating in the development of Tweety or have general comments and/or questions please write an e-mail to <a href="mailto:matthias@mthimm.de">matthias@mthimm.de</a>.</p>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><br/><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td style="font-size:8pt;">Last updated 05.06.2014, Matthias Thimm</td>
+					<td style="font-size:8pt;" align="right"></td>
+				</tr>
+			</table>
+			<div id="lightBox">
+				<div style="display:none;" id="boxMeasures">
+					<div id="boxMeasuresContent"></div>
+					<div style="align:center"><button type="button" onclick="applyMeasures()">Apply</button></div>
+				</div>
+				<div style="display:none;" id="boxFormats">
+					<div id="boxFormatsContent"></div>
+					<div style="align:center"><button type="button" onclick="closeFormats()">Close</button></div>
+				</div>			
+				<div style="display:none;height:300px;width:100%;background:url(img/loading.gif) no-repeat center center" id="boxLoading"></div>
+			</div>
+		</div>
+	</body>
+</html>
