@@ -46,21 +46,36 @@ function select(){
     	             "email" : "myemail"
    	           }),
   		dataType: "json",
-  		success: function(response){
-  			var s = "";
-  			for(var i = 0; i < response.measures.length; i++){
-  				s += response.measures[i].id + "<br/>";
-  				s += response.measures[i].label + "<br/>";
-  				s += response.measures[i].description + "<br/>";
-  				s += "<br/>";
-  			}  	             	
-			document.all.boxMeasuresContent.innerHTML = s;
-			document.all.boxLoading.style.display = "none";
-			document.all.boxMeasures.style.display = "block";
-  		},
-  		failure: function(response){
-  		}
+  		success: function(response){populateMeasures(response);},
+  		failure: function(response){}
 	}); 
+}
+
+/*
+ * Generates the HTML code for a measure
+ * in the measures overview.
+ */
+function measureToHtml(measure){
+	var result = "<tr>";
+	result += "<td><input type=\"checkbox\" id=\"mes_" + measure.id + "\"/></td>";
+	result += "<td>"+ measure.label +"</td>";
+	result += "<td><a target=\"blank\" href=\"doc.html#"+ measure.id +"\">doc</a></td>";
+	result += "</tr>";
+	return result;
+}
+
+/*
+ * Populate the measures div with the given measures.
+ */
+function populateMeasures(measures){
+		var s = "<table width=\"100%\" style=\"font-size:10pt;\">";
+		for(var i = 0; i < measures.measures.length; i++){
+			s += measureToHtml(measures.measures[i]);
+ 		}  	             	
+ 		s += "</table>";
+		document.all.boxMeasuresContent.innerHTML = s;
+		document.all.boxLoading.style.display = "none";
+		document.all.boxMeasures.style.display = "block";
 }
 
 /*

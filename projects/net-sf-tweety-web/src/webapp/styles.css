@@ -48,6 +48,7 @@ a:hover{
 	border-radius: 8px;
 	border: 1px solid black;
 	padding:5px;
+	text-align: left;
 }
 
 * html #lightBox { /* ie6 */
@@ -56,4 +57,8 @@ a:hover{
 		(TBWindowMargin = document.documentElement &&
 		document.documentElement.scrollTop ||
 		document.body.scrollTop) + 'px');
+}
+
+.measure_div{
+	font-size: 10pt;
 }
