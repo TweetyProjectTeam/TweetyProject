@@ -144,6 +144,9 @@ public class InconsistencyMeasurementService {
 			throw new JSONException("Malformed JSON: syntax of knowledge base does not conform to the given format.");
 		} catch (IOException e) {
 			throw new JSONException("Malformed JSON: syntax of knowledge base does not conform to the given format.");
+		} catch(Exception e){
+			e.printStackTrace();
+			throw new JSONException("An unexpected error occured. Please contact an administrator.");
 		}
 	}
 	

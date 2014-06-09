@@ -45,9 +45,9 @@ public abstract class InconsistencyMeasureFactory {
 	}
 	
 	/** The default belief set consistency tester. */
-	private static BeliefSetConsistencyTester<PropositionalFormula> defaultBeliefSetConsistencyTester = new DefaultConsistencyTester(new LingelingEntailment("/home/mthimm/strinc/lingeling/lingeling"));
+	private static BeliefSetConsistencyTester<PropositionalFormula> defaultBeliefSetConsistencyTester = new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));
 	/** The default MUS enumerator */
-	private static MusEnumerator<PropositionalFormula> defaultMusEnumerator = new MarcoMusEnumerator("/home/mthimm/strinc/marco/marco.py");
+	private static MusEnumerator<PropositionalFormula> defaultMusEnumerator = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");
 	
 	/**
 	 * Sets the default consistency tester.
