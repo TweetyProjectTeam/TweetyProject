@@ -35,29 +35,19 @@
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.dependencies</groupId>
-    	<artifactId>choco</artifactId>
-    	<version>1.2.03</version>
-    </dependency>
-    <dependency>
-    	<groupId>net.sf.tweety.dependencies</groupId>
-    	<artifactId>cream</artifactId>
-    	<version>1.0.06</version>
-    </dependency>
-    <dependency>
-    	<groupId>net.sf.tweety.dependencies</groupId>
     	<artifactId>qoca</artifactId>
     	<version>1.0.0</version>
     </dependency>
-    <dependency>
+	<dependency>
     	<groupId>net.sf.tweety.dependencies</groupId>
     	<artifactId>lpsolve</artifactId>
     	<version>5.5</version>
     </dependency>
-    <dependency>
+	<dependency>
     	<groupId>net.sf.tweety.dependencies</groupId>
     	<artifactId>ojalgo</artifactId>
     	<version>35</version>
-    </dependency>
+    </dependency>    
   </dependencies>
   <parent>
   	<groupId>net.sf.tweety</groupId>
