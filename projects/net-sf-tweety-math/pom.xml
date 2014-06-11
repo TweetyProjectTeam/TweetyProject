@@ -33,21 +33,21 @@
     	<artifactId>log4j-over-slf4j</artifactId>
     	<version>1.6.3</version>
     </dependency>
-    <dependency>
-    	<groupId>net.sf.tweety.dependencies</groupId>
-    	<artifactId>qoca</artifactId>
-    	<version>1.0.0</version>
-    </dependency>
 	<dependency>
     	<groupId>net.sf.tweety.dependencies</groupId>
     	<artifactId>lpsolve</artifactId>
     	<version>5.5</version>
     </dependency>
-	<dependency>
+    <dependency>
     	<groupId>net.sf.tweety.dependencies</groupId>
     	<artifactId>ojalgo</artifactId>
     	<version>35</version>
-    </dependency>    
+    </dependency>
+	<dependency>
+		<groupId>com.dbtsai.lbfgs</groupId>
+		<artifactId>lbfgs</artifactId>
+		<version>0.1</version>
+	</dependency>	    
   </dependencies>
   <parent>
   	<groupId>net.sf.tweety</groupId>

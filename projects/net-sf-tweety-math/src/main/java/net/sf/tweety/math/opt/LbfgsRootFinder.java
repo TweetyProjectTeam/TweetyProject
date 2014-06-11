@@ -3,7 +3,7 @@ package net.sf.tweety.math.opt;
 import java.util.*;
 
 import net.sf.tweety.math.*;
-import net.sf.tweety.math.opt.solver.lbfgs.*;
+import net.sf.tweety.math.opt.solver.LbfgsSolver;
 import net.sf.tweety.math.term.*;
 
 
