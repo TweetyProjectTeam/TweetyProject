@@ -140,13 +140,13 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.contol = 1e-8;
 			solver.gtol = 1e-15;
 			solver.ftol = 1e-15;
 			solver.xtol = 1e-15;
 			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			// prepare result
 			PclBeliefSet result = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet)

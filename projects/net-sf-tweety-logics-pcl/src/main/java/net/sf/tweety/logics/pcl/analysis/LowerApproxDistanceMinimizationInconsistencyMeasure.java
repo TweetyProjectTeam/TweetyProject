@@ -130,13 +130,13 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		problem.setTargetFunction(targetFunction);
 		try{			
 			//TODO use lp_solve
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.contol = 1e-3;
 			solver.gtol = 1e-60;
 			solver.ftol = 1e-60;
 			solver.xtol = 1e-60;
 			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			return problem.getTargetFunction().replaceAllTerms(solution).doubleValue();
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible

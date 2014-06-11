@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
@@ -36,33 +37,16 @@ public class OpenOptWebSolver extends OpenOptSolver {
 	 * Logger.
 	 */
 	private Logger log = LoggerFactory.getLogger(OpenOptWebSolver.class);
-	
-	/**
-	 * Creates a new solver for the given problem.
-	 * @param problem a csp.
-	 */
-	public OpenOptWebSolver(OptimizationProblem problem) {
-		this(problem,null);
-	}
-	
-	/**
-	 * Creates a new solver for the given problem.
-	 * @param problem a optimization problem.
-	 * @param startingPoint a starting point.
-	 */
-	public OpenOptWebSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
-		super(problem);
-	}
-		
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.solver.OpenOptSolver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
 		// use local installation?
 		if(OpenOptWebSolver.openopt_use_local){
-			OpenOptSolver solver = new OpenOptSolver((OptimizationProblem)this.getProblem());
-			return solver.solve();
+			OpenOptSolver solver = new OpenOptSolver();
+			return solver.solve(problem);
 		}
 		// check for service parameters		
 		if(OpenOptWebSolver.openopt_webservice_apikey == null || OpenOptWebSolver.openopt_webservice_url == null)
@@ -73,7 +57,7 @@ public class OpenOptWebSolver extends OpenOptSolver {
 			this.log.info("Calling OpenOpt web service.");
 			// prepare parameters for service
 		    String data = URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(OpenOptWebSolver.openopt_webservice_apikey, "UTF-8");
-		    data += "&" + URLEncoder.encode("script", "UTF-8") + "=" + URLEncoder.encode(this.getOpenOptCode(), "UTF-8");
+		    data += "&" + URLEncoder.encode("script", "UTF-8") + "=" + URLEncoder.encode(this.getOpenOptCode((OptimizationProblem)problem), "UTF-8");
 	        // send data
 		    URL url = new URL(OpenOptWebSolver.openopt_webservice_url);
 		    URLConnection conn = url.openConnection();

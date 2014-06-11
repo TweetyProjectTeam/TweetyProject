@@ -313,10 +313,10 @@ public class ProbDungTest {
 		TweetyLogging.initLogging();
 	
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.solver = "ralg";
 			solver.contol = 0.001;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			// construct probability distribution
 			ProbabilisticExtension p = new ProbabilisticExtension();
 			for(Set<Argument> w: configurations)

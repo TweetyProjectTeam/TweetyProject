@@ -140,9 +140,9 @@ public class DefaultMeReasoner extends Reasoner {
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.solver = "ralg";
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(this.signature);
 			for(PossibleWorld w: worlds)

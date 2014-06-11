@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * See http://commons.apache.org/math.  
  * @author Matthias Thimm
  */
-public class ApacheCommonsSimplex extends Solver {
+public class ApacheCommonsSimplex implements Solver {
 
 	/**
 	 * Logger.
@@ -46,33 +46,25 @@ public class ApacheCommonsSimplex extends Solver {
 	 * The maximum number of iterations of the simplex algorithm.
 	 */
 	public static final int MAXITERATIONS = 50000;
-	
-	/**
-	 * Creates a new solver for the given problem.
-	 * @param problem an constraint satisfaction (or optimization )problem.
-	 */
-	public ApacheCommonsSimplex(ConstraintSatisfactionProblem problem) {
-		super(problem);
-		if(!problem.isLinear())
-			throw new IllegalArgumentException("Simplex algorithm is for linear problems only.");
-	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() {	
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) {
+		if(!problem.isLinear())
+			throw new IllegalArgumentException("Simplex algorithm is for linear problems only.");
 		this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
-		for(Statement s: this.getProblem())
+		for(Statement s: problem)
 			constraints.add(s.toNormalizedForm().toLinearForm());
 		// 2.) for every constraint we need an extra variable
-		int numVariables = this.getProblem().getVariables().size();
+		int numVariables = problem.getVariables().size();
 		// 3.) define mappings from variables to indices
 		int index = 0;
 		Map<Variable,Integer> origVars2Idx = new HashMap<Variable,Integer>();
-		for(Variable v: this.getProblem().getVariables())
+		for(Variable v: problem.getVariables())
 			origVars2Idx.put(v, index++);
 		// 4.) Check for target function (for constraint satisfaction problems
 		//		its empty
@@ -81,9 +73,9 @@ public class ApacheCommonsSimplex extends Solver {
 		for(; i < numVariables; i++)
 			coefficientsTarget[i] = 0;
 		double constTerm = 0;
-		if(this.getProblem() instanceof OptimizationProblem){
+		if(problem instanceof OptimizationProblem){
 			// bring target function in linear form
-			Sum t = ((OptimizationProblem)this.getProblem()).getTargetFunction().toLinearForm();			
+			Sum t = ((OptimizationProblem)problem).getTargetFunction().toLinearForm();			
 			for(Term summand: t.getTerms()){
 				// as t is in linear form every summand is a product
 				Product p = (Product) summand;
@@ -142,8 +134,8 @@ public class ApacheCommonsSimplex extends Solver {
 			RealPointValuePair r = null;
 			//TODO: define the following as parameter
 			boolean justPositive = false;
-			if(this.getProblem() instanceof OptimizationProblem){
-				int type = ((OptimizationProblem)this.getProblem()).getType();
+			if(problem instanceof OptimizationProblem){
+				int type = ((OptimizationProblem)problem).getType();
 				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), justPositive);
 			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, justPositive);
 			this.log.info("Parsing output from the Apache Commons Simplex algorithm.");

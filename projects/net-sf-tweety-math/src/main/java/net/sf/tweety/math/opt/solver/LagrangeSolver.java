@@ -17,7 +17,7 @@ import net.sf.tweety.math.term.*;
  * 
  * @author Matthias Thimm
  */
-public class LagrangeSolver extends Solver {
+public class LagrangeSolver implements Solver {
 
 	/**
 	 * The starting points for finding the optimum.
@@ -32,14 +32,9 @@ public class LagrangeSolver extends Solver {
 	/**
 	 * Creates a new Lagrange solver for the given 
 	 * optimization problem
-	 * @param problem an optimization problem
 	 * @param startingPoint The starting point for finding the optimum.
 	 */
-	public LagrangeSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint){
-		super(problem);
-		for(Statement s: problem)
-			if(!(s instanceof Equation))
-				throw new IllegalArgumentException("This solver expects optimizations problems without inequations.");
+	public LagrangeSolver(Map<Variable,Term> startingPoint){
 		this.startingPoints = new HashSet<Map<Variable,Term>>();
 		this.startingPoints.add(startingPoint);
 	}
@@ -47,14 +42,9 @@ public class LagrangeSolver extends Solver {
 	/**
 	 * Creates a new Lagrange solver for the given 
 	 * optimization problem
-	 * @param problem an optimization problem
 	 * @param startingPoints Some starting points for finding the optimum.
 	 */
-	public LagrangeSolver(OptimizationProblem problem, Set<Map<Variable,Term>> startingPoints){
-		super(problem);
-		for(Statement s: problem)
-			if(!(s instanceof Equation))
-				throw new IllegalArgumentException("This solver expects optimizations problems without inequations.");
+	public LagrangeSolver(Set<Map<Variable,Term>> startingPoints){
 		this.startingPoints = startingPoints;
 	}
 
@@ -66,15 +56,18 @@ public class LagrangeSolver extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem prob) throws GeneralMathException {
+		for(Statement s: prob)
+			if(!(s instanceof Equation))
+				throw new IllegalArgumentException("This solver expects optimizations problems without inequations.");
 		// for convenience we consider maximization problems.
 		OptimizationProblem problem;
-		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
-			problem = (OptimizationProblem)this.getProblem();
+		if(((OptimizationProblem)prob).getType() == OptimizationProblem.MAXIMIZE)
+			problem = (OptimizationProblem)prob;
 		else{
 			problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
-			problem.addAll(this.getProblem());
-			problem.setTargetFunction(new IntegerConstant(-1).mult(((OptimizationProblem)this.getProblem()).getTargetFunction()));
+			problem.addAll(prob);
+			problem.setTargetFunction(new IntegerConstant(-1).mult(((OptimizationProblem)prob).getTargetFunction()));
 		}
 		Set<Variable> vars = problem.getVariables();
 		// construct lagrangian

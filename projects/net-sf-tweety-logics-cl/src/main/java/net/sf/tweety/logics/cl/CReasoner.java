@@ -129,7 +129,7 @@ public class CReasoner extends Reasoner {
 			problem.add(this.getRankConstraint(w, ranks.get(w), kappa_pos, kappa_neg));
 
 		//TODO: get default solver and not LpSolve
-		Map<Variable, Term> solution = new net.sf.tweety.math.opt.solver.LpSolve(problem).solve();
+		Map<Variable, Term> solution = new net.sf.tweety.math.opt.solver.LpSolve().solve(problem);
 		// extract ranking function
 		for(PossibleWorld w: ranks.keySet()){
 			crep.setRank(w, ((IntegerConstant)solution.get(ranks.get(w))).getValue());

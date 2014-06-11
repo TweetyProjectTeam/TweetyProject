@@ -118,8 +118,8 @@ public class LevelingFunction<T> extends Functions<T> {
 			opt.setTargetFunction(t);
 		}
 
-		LpSolve solver = new LpSolve(opt);
-		Map<Variable, Term> solution = solver.solve();
+		LpSolve solver = new LpSolve();
+		Map<Variable, Term> solution = solver.solve(opt);
 		Map<T, Integer> sol = new HashMap<T, Integer>();
 		for (Entry<Variable, Term> e : solution.entrySet()) {
 			//TODO: check the following cast

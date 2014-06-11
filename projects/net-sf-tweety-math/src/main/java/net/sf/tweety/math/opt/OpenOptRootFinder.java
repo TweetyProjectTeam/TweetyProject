@@ -43,7 +43,7 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 	 * @return the OpenOpt code for the given problem which can be interpreted by a python.
 	 */
 	public String getOpenOptCode(){
-		return new OpenOptSolver(this.buildOptimizationProblem(),this.getStartingPoint()).getOpenOptCode();
+		return new OpenOptSolver(this.getStartingPoint()).getOpenOptCode(this.buildOptimizationProblem());
 	}
 	
 	/* (non-Javadoc)
@@ -51,13 +51,13 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 	 */
 	@Override
 	public Map<Variable, Term> randomRoot() throws GeneralMathException {
-		OpenOptSolver solver = new OpenOptSolver(this.buildOptimizationProblem(),this.getStartingPoint());
+		OpenOptSolver solver = new OpenOptSolver(this.getStartingPoint());
 		// set some parameters
 		solver.contol = this.contol;
 		solver.xtol = this.xtol;
 		solver.ftol = this.ftol;
 		solver.gtol = this.gtol;
-		Map<Variable,Term> solution = solver.solve();
+		Map<Variable,Term> solution = solver.solve(this.buildOptimizationProblem());
 		// Check whether the solution is really a root
 		for(Term t: this.getFunctions()){
 			Double val = t.replaceAllTerms(solution).doubleValue();

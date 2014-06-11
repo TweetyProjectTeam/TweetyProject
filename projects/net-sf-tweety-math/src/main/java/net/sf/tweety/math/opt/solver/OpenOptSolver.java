@@ -16,6 +16,7 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
+import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Matthias Thimm
  *
  */
-public class OpenOptSolver extends Solver {
+public class OpenOptSolver implements Solver {
 	
 	/**
 	 * Logger.
@@ -71,11 +72,9 @@ public class OpenOptSolver extends Solver {
 	private Map<Integer,Variable> idx2newVars = new HashMap<Integer,Variable>();
 	
 	/**
-	 * Creates a new solver for the given problem.
-	 * @param problem a csp.
+	 * Creates a new solver.
 	 */
-	public OpenOptSolver(OptimizationProblem problem) {
-		this(problem,null);
+	public OpenOptSolver() {
 	}
 	
 	/**
@@ -83,25 +82,24 @@ public class OpenOptSolver extends Solver {
 	 * @param problem a csp.
 	 * @param startingPoint a starting point.
 	 */
-	public OpenOptSolver(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
-		super(problem.clone());
+	public OpenOptSolver(Map<Variable,Term> startingPoint) {
 		this.startingPoint = startingPoint;
-		// do a renaming of variables		
-		int idx = 0;
-		for(Variable v: this.getProblem().getVariables()){
-			Variable newV = new FloatVariable("x[" + idx + "]");
-			this.oldVars2newVars.put(v, newV);
-			this.newVars2oldVars.put(newV, v);
-			this.idx2newVars.put(idx,newV);
-			idx++;
-		}
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+		// do a renaming of variables		
+		int idx = 0;
+		for(Variable v: problem.getVariables()){
+			Variable newV = new FloatVariable("x[" + idx + "]");
+			this.oldVars2newVars.put(v, newV);
+			this.newVars2oldVars.put(newV, v);
+			this.idx2newVars.put(idx,newV);
+			idx++;
+		}
 		//System.out.println(this.getOpenOptCode());System.exit(0);
 		String output = "";
 		//String error = "";
@@ -114,7 +112,7 @@ public class OpenOptSolver extends Solver {
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
 			this.log.info("Building Python code for OpenOpt.");
-			out.write(this.getOpenOptCode());			
+			out.write(this.getOpenOptCode((OptimizationProblem)problem));			
 			out.close();
 			//execute openopt on problem and retrieve console output
 			this.log.info("Calling OpenOpt optimization library.");
@@ -159,8 +157,7 @@ public class OpenOptSolver extends Solver {
 	 * by a python.
 	 * @return the python code for the given problem
 	 */
-	public String getOpenOptCode(){
-		OptimizationProblem problem = (OptimizationProblem)this.getProblem();
+	public String getOpenOptCode(OptimizationProblem problem){
 		// replace vars
 		problem.setTargetFunction(problem.getTargetFunction().replaceAllTerms(this.oldVars2newVars));
 		// we have to minimize

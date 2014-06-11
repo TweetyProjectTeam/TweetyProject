@@ -118,14 +118,14 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 		}
 		problem.setTargetFunction(targetFunction);	
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);			
+			OpenOptSolver solver = new OpenOptSolver();			
 			solver.contol = 1e-6;
 			solver.gtol = 1e-15;
 			solver.ftol = 1e-15;
 			solver.xtol = 1e-15;
 			solver.solver = "ralg";
 			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
 			for(PossibleWorld w: worlds)

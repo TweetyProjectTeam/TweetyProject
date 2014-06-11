@@ -5,6 +5,7 @@ import java.util.*;
 
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.term.*;
+import net.sf.tweety.util.Exec;
 
 
 /**
@@ -12,29 +13,37 @@ import net.sf.tweety.math.term.*;
  * for mixed integer  linear programming. See http://lpsolve.sourceforge.net.
  * @author Matthias Thimm
  */
-public class LpSolve extends Solver {
+public class LpSolve implements Solver {
 	
 	/**Path to the binary or lp_solve*/
-	public static String binary = "lp_solve";
+	private static String binary = "lp_solve";
 	
 	/** For temporary files. */
-	public static File tmpFolder = null;
+	private static File tmpFolder = null;
 	
 	/**
-	 * Creates a new solver for the given optimization problem.
-	 * @param problem an optimization problem.
+	 * Checks whether the lp_solve binary is accessible
+	 * @return "true" if lp_solve is correctly installed
 	 */
-	public LpSolve(OptimizationProblem problem){
-		super(problem);
-		if(!problem.isLinear())
-			throw new IllegalArgumentException("The solver \"lpsolve\" needs linear optimization problems.");
+	public static boolean checkBinary(){
+		try {
+			Exec.invokeExecutable(LpSolve.binary + " -h");
+			return true;
+		} catch (Exception e) {
+			return false;
+		}		
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() {
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) {
+		if(!problem.isLinear())
+			throw new IllegalArgumentException("The solver \"lpsolve\" needs linear optimization problems.");
+		//check existence of lp_solve first
+		if(!LpSolve.checkBinary())
+			return null;
 		String output = new String();
 		//String error = "";
 		try{
@@ -44,7 +53,7 @@ public class LpSolve extends Solver {
 			lpFile.deleteOnExit();    
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(lpFile));
-			out.write(((OptimizationProblem)this.getProblem()).convertToLpFormat());
+			out.write(((OptimizationProblem)problem).convertToLpFormat());
 			out.close();		
 			//execute lp_solve on problem in lp format and retrieve console output					
 			Process child = Runtime.getRuntime().exec(LpSolve.binary+ " " + lpFile.getAbsolutePath());
@@ -67,7 +76,7 @@ public class LpSolve extends Solver {
 		String delimiter = "Actual values of the variables:";
 		String assignments = output.substring(output.indexOf(delimiter)+delimiter.length(), output.length());
 		StringTokenizer tokenizer = new StringTokenizer(assignments,"\n");
-		Set<Variable> variables = this.getProblem().getVariables();
+		Set<Variable> variables = problem.getVariables();
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
 		while(tokenizer.hasMoreTokens()){
 			String token = tokenizer.nextToken();
@@ -103,5 +112,13 @@ public class LpSolve extends Solver {
 	 */
 	public static void setBinary(String binary){
 		LpSolve.binary = binary;
+	}
+	
+	/**
+	 * Sets the path for the temporary folder.
+	 * @param path some path.
+	 */
+	public static void setTmpFolder(File path){
+		LpSolve.tmpFolder = path;
 	}
 }

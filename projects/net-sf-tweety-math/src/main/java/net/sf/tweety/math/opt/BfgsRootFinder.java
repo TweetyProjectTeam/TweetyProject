@@ -38,7 +38,7 @@ public class BfgsRootFinder extends OptimizationRootFinder {
 	 */
 	@Override
 	public Map<Variable, Term> randomRoot() throws GeneralMathException {			
-		return new BfgsSolver(this.buildOptimizationProblem(),this.getStartingPoint()).solve();
+		return new BfgsSolver(this.getStartingPoint()).solve(this.buildOptimizationProblem());
 	}
 
 }

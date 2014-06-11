@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * for solving unconstrained optimization problems.
  * @author Matthias Thimm
  */
-public class HessianGradientDescent extends Solver {
+public class HessianGradientDescent implements Solver {
 
 	/**
 	 * Logger.
@@ -41,10 +41,7 @@ public class HessianGradientDescent extends Solver {
 	 */
 	private Map<Variable,Term> startingPoint;
 	
-	public HessianGradientDescent(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
-		super(problem);		
-		if(problem.size() > 0)
-			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
+	public HessianGradientDescent(Map<Variable,Term> startingPoint) {
 		this.startingPoint = startingPoint;
 	}
 
@@ -52,10 +49,12 @@ public class HessianGradientDescent extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {
-		this.log.trace("Solving the following optimization problem using hessian gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
-		Term func = ((OptimizationProblem)this.getProblem()).getTargetFunction();
-		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+		if(problem.size() > 0)
+			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
+		this.log.trace("Solving the following optimization problem using hessian gradient descent:\n===BEGIN===\n" + problem + "\n===END===");
+		Term func = ((OptimizationProblem)problem).getTargetFunction();
+		if(((OptimizationProblem)problem).getType() == OptimizationProblem.MAXIMIZE)
 			func = new IntegerConstant(-1).mult(func);	
 		// variables need to be ordered
 		List<Variable> variables = new ArrayList<Variable>(func.getVariables());
@@ -142,9 +141,9 @@ public class HessianGradientDescent extends Solver {
 			}
 			problem.add(new Equation(t,new FloatConstant(-evaluatedGradient[i])));
 		}
-		ApacheCommonsSimplex solver = new ApacheCommonsSimplex(problem);
+		ApacheCommonsSimplex solver = new ApacheCommonsSimplex();
 		try{
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 		double[] result = new double[variables.size()];
 		int idx = 0;
 		for(Variable v: variables)

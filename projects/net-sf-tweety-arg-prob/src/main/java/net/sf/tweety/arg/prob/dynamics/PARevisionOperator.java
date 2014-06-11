@@ -71,10 +71,10 @@ public class PARevisionOperator extends AbstractPAChangeOperator {
 		problem.setTargetFunction(max.minus(min));				
 		// Do the optimization
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.solver = "ralg";
 			solver.contol = 0.0001;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			ProbabilisticExtension ext = new ProbabilisticExtension();
 			// select the best PPA-compliant prob'function
 			for(Collection<Argument> args: varsComp.keySet())

@@ -72,8 +72,8 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 			problem.add(new Inequation(leftTerm,eta,Inequation.GREATER_EQUAL));
 		}
 		// solve the problem
-		LpSolve solver = new LpSolve(problem);
-		Map<Variable,Term> solution = solver.solve();
+		LpSolve solver = new LpSolve();
+		Map<Variable,Term> solution = solver.solve(problem);
 		return 1-solution.get(eta).doubleValue();
 	}
 	

@@ -203,8 +203,8 @@ public class RpclMeReasoner extends Reasoner {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
-				Solver solver = new OpenOptSolver(problem);
-				Map<Variable,Term> solution = solver.solve();				
+				Solver solver = new OpenOptSolver();
+				Map<Variable,Term> solution = solver.solve(problem);				
 				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,this.getSignature());
 				for(ReferenceWorld w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
@@ -257,10 +257,10 @@ public class RpclMeReasoner extends Reasoner {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
-				OpenOptSolver solver = new OpenOptSolver(problem);
+				OpenOptSolver solver = new OpenOptSolver();
 				solver.solver = "ralg";
 				solver.ignoreNotFeasibleError = true;
-				Map<Variable,Term> solution = solver.solve();
+				Map<Variable,Term> solution = solver.solve(problem);
 				RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics,this.getSignature());
 				for(HerbrandInterpretation w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();

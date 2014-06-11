@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author Matthias Thimm
  *
  */
-public class GradientDescent extends Solver {
+public class GradientDescent implements Solver {
 	
 	/**
 	 * Logger.
@@ -55,13 +56,9 @@ public class GradientDescent extends Solver {
 	private Map<Variable,Term> startingPoint;
 	
 	/**
-	 * Creates a new gradient descent solver for the given optimization problem
-	 * @param problem an optimization problem
+	 * Creates a new gradient descent solver
 	 */
-	public GradientDescent(OptimizationProblem problem, Map<Variable,Term> startingPoint) {
-		super(problem);		
-		if(problem.size() > 0)
-			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
+	public GradientDescent(Map<Variable,Term> startingPoint) {
 		this.startingPoint = startingPoint;
 	}
 
@@ -69,10 +66,12 @@ public class GradientDescent extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {
-		this.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
-		Term f = ((OptimizationProblem)this.getProblem()).getTargetFunction();
-		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+		if(problem.size() > 0)
+			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
+		this.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + problem + "\n===END===");
+		Term f = ((OptimizationProblem)problem).getTargetFunction();
+		if(((OptimizationProblem)problem).getType() == OptimizationProblem.MAXIMIZE)
 			f = new IntegerConstant(-1).mult(f);	
 		// variables need to be ordered
 		List<Variable> variables = new ArrayList<Variable>(f.getVariables());

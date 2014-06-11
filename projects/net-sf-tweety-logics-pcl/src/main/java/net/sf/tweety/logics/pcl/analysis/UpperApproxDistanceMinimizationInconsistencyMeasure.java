@@ -130,13 +130,13 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.contol = 1e-3;
 			solver.gtol = 1e-60;
 			solver.ftol = 1e-60;
 			solver.xtol = 1e-60;
 			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			// transform into eta values
 			String values = "Eta-values for the solution:\n===BEGIN===\n";
 			Double result = 0d;

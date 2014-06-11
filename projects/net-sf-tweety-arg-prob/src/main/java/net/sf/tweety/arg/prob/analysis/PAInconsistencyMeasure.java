@@ -105,10 +105,10 @@ public class PAInconsistencyMeasure implements InconsistencyMeasure<PartialProba
 //		TweetyLogging.initLogging();
 //		System.out.println(problem);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.solver = "ralg";
 			solver.contol = 0.0001;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			//for(Variable v: solution.keySet())
 			//	System.out.println(v + "\t" + solution.get(v));
 			return problem.getTargetFunction().replaceAllTerms(solution).value().doubleValue();

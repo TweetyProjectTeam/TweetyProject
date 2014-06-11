@@ -119,11 +119,11 @@ public class DeductiveArgMeReasoner extends Reasoner {
 		}		
 		System.out.println(problem);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.solver = "ralg";
 			// TODO:
 			//solver.python = "/usr/bin/python";
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			ProbabilityFunction<PossibleWorld> prob = new ProbabilityFunction<PossibleWorld>();
 			for(PossibleWorld w: possibleWorlds)
 				prob.put(w, new Probability(solution.get(worlds2vars.get(w)).doubleValue()));

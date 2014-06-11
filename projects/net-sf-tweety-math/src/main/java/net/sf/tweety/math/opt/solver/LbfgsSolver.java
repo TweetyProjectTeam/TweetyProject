@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class LbfgsSolver extends Solver {
+public class LbfgsSolver implements Solver {
 	
 	/**
 	 * Logger.
@@ -37,10 +37,7 @@ public class LbfgsSolver extends Solver {
 	 */
 	private Map<Variable,Term> startingPoint;
 	
-	public LbfgsSolver(ConstraintSatisfactionProblem problem, Map<Variable,Term> startingPoint) {
-		super(problem);		
-		if(problem.size() > 0)
-			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
+	public LbfgsSolver(Map<Variable,Term> startingPoint) {
 		this.startingPoint = startingPoint;
 	}
 
@@ -48,10 +45,13 @@ public class LbfgsSolver extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve() throws GeneralMathException {
-		this.log.trace("Solving the following optimization problem using L-BFGS:\n===BEGIN===\n" + this.getProblem() + "\n===END===");
-		Term func = ((OptimizationProblem)this.getProblem()).getTargetFunction();
-		if(((OptimizationProblem)this.getProblem()).getType() == OptimizationProblem.MAXIMIZE)
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+		if(problem.size() > 0)
+			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
+		
+		this.log.trace("Solving the following optimization problem using L-BFGS:\n===BEGIN===\n" + problem + "\n===END===");
+		Term func = ((OptimizationProblem)problem).getTargetFunction();
+		if(((OptimizationProblem)problem).getType() == OptimizationProblem.MAXIMIZE)
 			func = new IntegerConstant(-1).mult(func);	
 		// variables need to be ordered
 		List<Variable> variables = new ArrayList<Variable>(func.getVariables());

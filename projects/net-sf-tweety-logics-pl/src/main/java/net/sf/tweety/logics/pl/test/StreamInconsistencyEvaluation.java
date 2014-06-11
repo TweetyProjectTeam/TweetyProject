@@ -54,8 +54,8 @@ public class StreamInconsistencyEvaluation {
 	public static final long												TIMEOUT						= -1;//120; //2 minutes
 	
 	public static void main(String[] args) throws InterruptedException{
-		LpSolve.binary = "/home/mthimm/strinc/lpsolve/lp_solve";
-		LpSolve.tmpFolder = new File(TMP_FILE_FOLDER);
+		LpSolve.setBinary("/home/mthimm/strinc/lpsolve/lp_solve");
+		LpSolve.setTmpFolder(new File(TMP_FILE_FOLDER));
 		SatSolverEntailment.tempFolder = new File(TMP_FILE_FOLDER);
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
 		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);

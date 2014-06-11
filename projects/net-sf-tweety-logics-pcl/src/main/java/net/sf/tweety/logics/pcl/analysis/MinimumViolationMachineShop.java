@@ -90,12 +90,12 @@ public class MinimumViolationMachineShop implements BeliefBaseMachineShop {
 		Term targetFunction = this.norm.normTerm(vio.values().toArray(new Term[0]));
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptWebSolver(problem);
+			OpenOptSolver solver = new OpenOptWebSolver();
 			solver.solver = "ralg";
 			solver.contol = 1e-4;			
 			solver.ignoreNotFeasibleError = true;
 			//System.out.println(solver.getOpenOptCode());
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			// prepare probability function
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
 			for(PossibleWorld world: worlds)

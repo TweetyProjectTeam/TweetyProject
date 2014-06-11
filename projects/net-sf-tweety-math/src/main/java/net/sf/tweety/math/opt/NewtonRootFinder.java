@@ -157,8 +157,8 @@ public class NewtonRootFinder extends RootFinder {
 			problem.add(new Equation(leftTerm,new FloatConstant(-itValue.next())));
 		}		
 		// We use a simplex solver to solve the equations.
-		Solver solver = new ApacheCommonsSimplex(problem);		
-		Map<Variable,Term> solution = solver.solve();
+		Solver solver = new ApacheCommonsSimplex();		
+		Map<Variable,Term> solution = solver.solve(problem);
 		List<Double> result = new LinkedList<Double>();
 		for(Variable v: vars)
 			result.add(solution.get(v).doubleValue());

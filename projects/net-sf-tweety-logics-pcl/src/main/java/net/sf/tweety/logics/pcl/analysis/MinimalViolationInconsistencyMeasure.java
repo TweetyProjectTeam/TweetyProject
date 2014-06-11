@@ -15,8 +15,7 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.OpenOptSolver;
-import net.sf.tweety.math.opt.solver.OpenOptWebSolver;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -26,20 +25,24 @@ import net.sf.tweety.math.term.Variable;
 
 /**
  * This class provides a general implementation for the minimal violation inconsistency measure,
- * cf. [Potyka, 2014]. It accepts any real vector norm but may be slow in practice and is numerically not optimal.
- * @author Matthias Thimm
+ * cf. [Potyka, 2014]. It accepts any real vector norm and the used solver can be configured.
+ * @author Nico Potyka, Matthias Thimm
  */
 public class MinimalViolationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
 	/** The norm. */
 	private RealVectorNorm norm;
 	
+	/** The solver used for solving the optimization problem*/
+	private Solver solver;
+	
 	/**
 	 * Creates a new measure the given norm
 	 * @param norm some norm.
 	 */
-	public MinimalViolationInconsistencyMeasure(RealVectorNorm norm){
+	public MinimalViolationInconsistencyMeasure(RealVectorNorm norm, Solver solver){
 		this.norm = norm;
+		this.solver = solver;
 	}
 	
 	/* (non-Javadoc)
@@ -87,12 +90,7 @@ public class MinimalViolationInconsistencyMeasure extends BeliefSetInconsistency
 		Term targetFunction = this.norm.normTerm(vio.values().toArray(new Term[0]));
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptWebSolver(problem);
-			solver.solver = "ralg";
-			solver.contol = 1e-4;			
-			solver.ignoreNotFeasibleError = true;
-			//System.out.println(solver.getOpenOptCode());
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = this.solver.solve(problem);
 			// prepare probability function
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
 			for(PossibleWorld world: worlds)

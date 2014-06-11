@@ -7,24 +7,28 @@ import java.util.LinkedList;
 
 import net.sf.tweety.ParserException;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
-import net.sf.tweety.logics.pcl.analysis.MinimalViolation1InconsistencyMeasure;
-import net.sf.tweety.logics.pcl.analysis.MinimalViolationInconsistencyMeasureLPSolve;
-import net.sf.tweety.logics.pcl.analysis.MinimalViolationMaxInconsistencyMeasure;
+import net.sf.tweety.logics.pcl.analysis.MinimalViolationInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.parser.PclParser;
-import net.sf.tweety.math.util.LPSolveMathUtils;
+import net.sf.tweety.math.norm.MaximumNorm;
+import net.sf.tweety.math.norm.PNorm;
+import net.sf.tweety.math.opt.solver.LpSolve;
 
 import org.junit.Before;
 import org.junit.Test;
 
 
 
+/**
+ * @author Nico Potyka, Matthias Thimm
+ *
+ */
 public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
 	boolean lpsolveConfigured;
 	
 	double accuracy;
 	
-	MinimalViolationInconsistencyMeasureLPSolve inc;
+	MinimalViolationInconsistencyMeasure inc;
 	
 	PclParser parser;
 	LinkedList<PclBeliefSet> kbs;
@@ -33,8 +37,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 	@Before
 	public void setUp() {
 		
-		String errorMessage = LPSolveMathUtils.checkLPSolve();
-		lpsolveConfigured = errorMessage==null;
+		lpsolveConfigured = LpSolve.checkBinary();
 		
 		if(lpsolveConfigured) {
 			
@@ -79,7 +82,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 		}
 		else {
 			System.err.println("Warning: Can't perform unit test MinimalViolationInconsistencyMeasureLPSolveTest because LPSolve isn't configured properly.");
-			System.err.println("Error message: "+errorMessage);
+			System.err.println("Error message: lpsolve executable not found");
 		}
 		
 	}
@@ -91,7 +94,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 		
 		if(!lpsolveConfigured) return;
 
-		inc = new MinimalViolation1InconsistencyMeasure();
+		inc = new MinimalViolationInconsistencyMeasure(new PNorm(1), new LpSolve());
 		
 		LinkedList<Double> expected = new LinkedList<Double>();
 		
@@ -119,7 +122,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 		if(!lpsolveConfigured) return;
 
 
-		inc = new MinimalViolationMaxInconsistencyMeasure();
+		inc = new MinimalViolationInconsistencyMeasure(new MaximumNorm(), new LpSolve());
 		
 		LinkedList<Double> expected = new LinkedList<Double>();
 		

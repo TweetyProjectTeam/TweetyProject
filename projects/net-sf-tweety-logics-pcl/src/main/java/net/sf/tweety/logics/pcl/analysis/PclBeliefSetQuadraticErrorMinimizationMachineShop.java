@@ -143,13 +143,13 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 		}		
 		problem.setTargetFunction(targetFunction);		
 		try{
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.contol = 1e-4;
 			solver.gtol = 1e-60;
 			solver.xtol = 1e-60;
 			solver.ftol = 1e-60;
 			solver.solver = "ralg";
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			log.trace("Problem solved, modifying belief set.");
 			// Modify belief set
 			PclBeliefSet newBeliefSet = new PclBeliefSet();

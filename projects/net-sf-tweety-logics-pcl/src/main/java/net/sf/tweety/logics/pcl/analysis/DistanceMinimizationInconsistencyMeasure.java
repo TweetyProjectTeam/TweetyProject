@@ -167,13 +167,13 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 		}
 		problem.setTargetFunction(targetFunction);		
 		try{			
-			OpenOptSolver solver = new OpenOptSolver(problem);
+			OpenOptSolver solver = new OpenOptSolver();
 			solver.contol = 1e-8;
 			solver.gtol = 1e-15;
 			solver.ftol = 1e-15;
 			solver.xtol = 1e-15;
 			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
 			if(this.p > 1)
 				result = Math.pow(result, 1d/this.p);

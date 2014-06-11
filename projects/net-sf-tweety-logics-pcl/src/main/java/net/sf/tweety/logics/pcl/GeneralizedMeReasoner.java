@@ -12,10 +12,8 @@ import net.sf.tweety.Reasoner;
 import net.sf.tweety.Signature;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.logics.pcl.analysis.MinimalViolation1InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolation2InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolationInconsistencyMeasure;
-import net.sf.tweety.logics.pcl.analysis.MinimalViolationMaxInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
@@ -29,6 +27,7 @@ import net.sf.tweety.math.norm.MaximumNorm;
 import net.sf.tweety.math.norm.PNorm;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.solver.LpSolve;
 import net.sf.tweety.math.opt.solver.OpenOptWebSolver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
@@ -36,7 +35,6 @@ import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.Logarithm;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
-import net.sf.tweety.math.util.LPSolveMathUtils;
 
 /**
  * This class implements a generalized maximum entropy reasoner for probabilistic
@@ -77,6 +75,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 	 * Creates a new generalized ME-reasoner for the given knowledge base.
 	 * @param beliefBase a pcl belief set. 
 	 * @param p determines p-norm for computing minimal violation.
+	 * @param solver the solver used
 	 */
 	public GeneralizedMeReasoner(BeliefBase beliefBase, int p){
 		this(beliefBase, beliefBase.getSignature(), p);
@@ -88,6 +87,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 	 * @param signature another signature (if the probability distribution should be defined 
 	 * on that one (that one should subsume the signature of the belief base)
 	 * @param norm the norm used for computing minimal violation.
+	 * @param solver the solver used
 	 */
 	public GeneralizedMeReasoner(BeliefBase beliefBase, Signature signature, int p){
 		super(beliefBase);	
@@ -103,25 +103,23 @@ public class GeneralizedMeReasoner extends Reasoner {
 		switch(p) {
 			case MANHATTAN:
 				this.norm = new ManhattanNorm();
-				if(LPSolveMathUtils.checkLPSolve() == null) {
-					this.inc = new MinimalViolation1InconsistencyMeasure();
-				}
-				else {
-					this.inc = new MinimalViolationInconsistencyMeasure(this.norm); 
-				}
+				if(LpSolve.checkBinary())
+					this.inc = new MinimalViolationInconsistencyMeasure(this.norm, new LpSolve());
+				else this.inc = new MinimalViolationInconsistencyMeasure(this.norm, new OpenOptWebSolver());
 				break;
 			case EUCLIDEAN:
+				//special case for Euclidean: we can use OjAlgo library
 				this.norm = new PNorm(2);
 				this.inc = new MinimalViolation2InconsistencyMeasure();
 				break;
 			case MAXIMUM:
-				if(LPSolveMathUtils.checkLPSolve() != null) throw new IllegalArgumentException("LPSolve must be configured properly to use Maximum norm.");
+				if(!LpSolve.checkBinary()) throw new IllegalArgumentException("LPSolve must be configured properly to use Maximum norm.");
 				this.norm = new MaximumNorm();
-				this.inc = new MinimalViolationMaxInconsistencyMeasure();
+				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, new LpSolve());
 				break;
 			default:
 				this.norm = new PNorm(p);
-				this.inc = new MinimalViolationInconsistencyMeasure(this.norm);
+				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, new OpenOptWebSolver());
 		}
 			
 		
@@ -216,9 +214,9 @@ public class GeneralizedMeReasoner extends Reasoner {
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptWebSolver solver = new OpenOptWebSolver(problem);
+			OpenOptWebSolver solver = new OpenOptWebSolver();
 			solver.solver = "ralg";
-			Map<Variable,Term> solution = solver.solve();
+			Map<Variable,Term> solution = solver.solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(this.signature);
 			for(PossibleWorld w: worlds)

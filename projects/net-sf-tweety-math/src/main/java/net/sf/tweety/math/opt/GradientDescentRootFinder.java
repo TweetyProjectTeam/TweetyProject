@@ -53,9 +53,9 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	@Override
 	public Map<Variable, Term> randomRoot() throws GeneralMathException {		
 		LOG.trace("Determining a random root of the function '" + this.getFunctions() + "' using the gradient descent root finder.");
-		GradientDescent solver = new GradientDescent(this.buildOptimizationProblem(),this.getStartingPoint());
+		GradientDescent solver = new GradientDescent(this.getStartingPoint());
 		solver.precision = this.precision;
-		return solver.solve();
+		return solver.solve(this.buildOptimizationProblem());
 	}
 
 }
