@@ -21,7 +21,8 @@ import net.sf.tweety.math.term.*;
  * 
  * k(w)=k0 + \sum_{w verifies ri} ki+ + \sum_{w falsifies ri} kj-
  * 
- * for every w. A c-representation is minimal if k0+...+kn- is minimal.
+ * for every w. A c-representation is minimal if k0+...+kn- is minimal. This reasoner uses mathematical 
+ * optimization for solving the above problem and is usually faster than the brute force approach.
  * 
  * <br><br>See Gabriele Kern-Isberner. Conditionals in nonmonotonic reasoning and belief revision.
  * Lecture Notes in Computer Science, Volume 2087. 2001.

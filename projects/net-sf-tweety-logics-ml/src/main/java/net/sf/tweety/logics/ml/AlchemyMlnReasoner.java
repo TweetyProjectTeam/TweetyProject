@@ -143,8 +143,15 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	        	throw new RuntimeException();	        	       
 			return new Double(token);
 		}catch(Exception e) {
-			// TODO
-			e.printStackTrace();
+			System.err.println("Could not find or missing rights to execute Alchemy binary 'infer'. "
+					+ "If 'infer' is not in your PATH please specify its location using the "
+					+ "'setAlchemyInferenceCommand(String)' method of 'AlchemyMlnReasoner'. "
+					+ "Installation instructions for Alchemy can be found at "
+					+ "http://alchemy.cs.washington.edu. If you do not wish to use Alchemy "
+					+ "you can choose e.g. 'SimpleSamplingMlnReasoner' as an alternative that is less "
+					+ "accurate but does not depend on third-party projects.\n\nThe application will "
+					+ "now terminate.");
+			System.exit(1);
 			return -1;
 		}		
 	}
