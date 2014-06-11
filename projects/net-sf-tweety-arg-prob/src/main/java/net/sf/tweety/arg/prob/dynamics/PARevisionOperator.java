@@ -12,7 +12,7 @@ import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
 import net.sf.tweety.arg.prob.semantics.PASemantics;
 import net.sf.tweety.arg.prob.semantics.ProbabilisticExtension;
 import net.sf.tweety.math.GeneralMathException;
-import net.sf.tweety.math.func.RealValuedFunction;
+import net.sf.tweety.math.func.SimpleRealValuedFunction;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.OpenOptSolver;
@@ -39,7 +39,7 @@ public class PARevisionOperator extends AbstractPAChangeOperator {
 	 * @param norm the norm used for distance measurement between probabilistic extensions.
 	 * @param f the function that is maximized on the set of probabilistic extensions with minimal distance. 
 	 */
-	public PARevisionOperator(PASemantics semantics, RealVectorNorm norm, RealValuedFunction f) {
+	public PARevisionOperator(PASemantics semantics, RealVectorNorm norm, SimpleRealValuedFunction f) {
 		super(semantics, norm, f);
 	}
 	

@@ -24,15 +24,17 @@ import net.sf.tweety.logics.pl.DefaultConsistencyTester;
 import net.sf.tweety.logics.pl.LingelingEntailment;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.SatSolverEntailment;
-import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasurementProcess;
-import net.sf.tweety.logics.pl.analysis.HsInconsistencyMeasurementProcess;
+//import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasurementProcess;
+//import net.sf.tweety.logics.pl.analysis.HsInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.analysis.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.analysis.PlWindowInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.logics.pl.util.CnfSampler;
-import net.sf.tweety.logics.pl.util.ContensionSampler;
+//import net.sf.tweety.logics.pl.util.ContensionSampler;
 import net.sf.tweety.logics.pl.util.MiSampler;
+import net.sf.tweety.math.func.BinaryFunction;
+import net.sf.tweety.math.func.MaxFunction;
 import net.sf.tweety.math.opt.solver.LpSolve;
 import net.sf.tweety.streams.DefaultFormulaStream;
 
@@ -42,7 +44,7 @@ public class StreamInconsistencyEvaluation2 {
 	public static final double 												CNF_RATIO					= 1/8d;
 	public static final int 												NUMBER_OF_ITERATIONS 		= 100;
 	public static final int 												SIZE_OF_KNOWLEDGEBASES 		= 5000;
-	public static final double 												STANDARD_SMOOTHING_FACTOR  	= 0.75;
+	public static final BinaryFunction<Double,Double,Double>				STANDARD_AGGFUNCTION		= new MaxFunction();
 	public static final int													STANDARD_EVENTS				= 10000;//40000;
 	public static final BeliefSetConsistencyTester<PropositionalFormula>	STANDARD_CONSISTENCY_TESTER = new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));//
 	public static final ConsistencyWitnessProvider<PropositionalFormula> 	STANDARD_WITNESS_PROVIDER	= new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));//
@@ -98,7 +100,7 @@ public class StreamInconsistencyEvaluation2 {
 //		// Window-based MI measure (window size = 500)
 		Map<String,Object> config = new HashMap<String,Object>();
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PropositionalFormula>(STANDARD_MUS_ENUMERATOR));
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);		
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 500);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mi-1");
@@ -109,7 +111,7 @@ public class StreamInconsistencyEvaluation2 {
 		// Window-based MI measure (window size = 1000)
 		config = new HashMap<String,Object>();
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PropositionalFormula>(STANDARD_MUS_ENUMERATOR));
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);		
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 1000);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mi-2");
@@ -120,7 +122,7 @@ public class StreamInconsistencyEvaluation2 {
 		// Window-based MI measure (window size = 2000)
 		config = new HashMap<String,Object>();
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PropositionalFormula>(STANDARD_MUS_ENUMERATOR));
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);		
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 2000);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mi-3");
@@ -131,7 +133,7 @@ public class StreamInconsistencyEvaluation2 {
 		// Window-based MI^C measure (window size = 500)
 		config = new HashMap<String,Object>();
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PropositionalFormula>(STANDARD_MUS_ENUMERATOR));
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);		
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 500);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mic-1");
@@ -142,7 +144,7 @@ public class StreamInconsistencyEvaluation2 {
 		// Window-based MI^C measure (window size = 1000)
 		config = new HashMap<String,Object>();
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PropositionalFormula>(STANDARD_MUS_ENUMERATOR));
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);		
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 1000);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mic-2");
@@ -153,7 +155,7 @@ public class StreamInconsistencyEvaluation2 {
 		// Window-based MI^C measure (window size = 2000)
 		config = new HashMap<String,Object>();
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PropositionalFormula>(STANDARD_MUS_ENUMERATOR));
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);		
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 2000);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mic-3");

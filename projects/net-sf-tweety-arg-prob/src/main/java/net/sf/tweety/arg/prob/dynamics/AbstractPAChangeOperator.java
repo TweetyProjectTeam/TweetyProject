@@ -10,7 +10,7 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
 import net.sf.tweety.arg.prob.semantics.*;
 import net.sf.tweety.math.equation.Equation;
-import net.sf.tweety.math.func.RealValuedFunction;
+import net.sf.tweety.math.func.SimpleRealValuedFunction;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.term.FloatConstant;
@@ -37,7 +37,7 @@ public abstract class AbstractPAChangeOperator implements ChangeOperator {
 	/** The norm used for distance measurement between probabilistic extensions. */
 	private RealVectorNorm norm;
 	/** The function that is maximized on the set of probabilistic extensions with minimal distance. */
-	private RealValuedFunction f;
+	private SimpleRealValuedFunction f;
 	
 	/**
 	 * Creates a new change operator for the given semantics that uses the specified norm
@@ -46,7 +46,7 @@ public abstract class AbstractPAChangeOperator implements ChangeOperator {
 	 * @param norm the norm used for distance measurement between probabilistic extensions.
 	 * @param f the function that is maximized on the set of probabilistic extensions with minimal distance. 
 	 */
-	public AbstractPAChangeOperator(PASemantics semantics, RealVectorNorm norm, RealValuedFunction f){
+	public AbstractPAChangeOperator(PASemantics semantics, RealVectorNorm norm, SimpleRealValuedFunction f){
 		this.semantics = semantics;
 		this.norm = norm;
 		this.f = f;
@@ -69,7 +69,7 @@ public abstract class AbstractPAChangeOperator implements ChangeOperator {
 	/** Returns the function f.
 	 * @return the function f.
 	 */
-	protected RealValuedFunction getFunction(){
+	protected SimpleRealValuedFunction getFunction(){
 		return this.f;
 	}
 	

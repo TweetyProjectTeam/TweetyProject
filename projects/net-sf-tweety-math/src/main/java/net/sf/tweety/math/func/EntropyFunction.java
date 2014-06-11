@@ -9,7 +9,7 @@ import net.sf.tweety.math.term.Term;
  * The entropy function.
  * @author Matthias Thimm
  */
-public class EntropyFunction implements RealValuedFunction {
+public class EntropyFunction implements SimpleRealValuedFunction {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.func.Function#eval(java.lang.Object)

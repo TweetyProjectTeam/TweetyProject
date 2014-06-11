@@ -6,6 +6,8 @@ import java.util.Queue;
 
 import net.sf.tweety.Formula;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
+import net.sf.tweety.math.func.BinaryFunction;
+import net.sf.tweety.math.func.MaxFunction;
 
 /**
  * This inconsistency measurement process keeps a window of a number of previous 
@@ -27,11 +29,11 @@ public abstract class WindowInconsistencyMeasurementProcess<S extends Formula> e
 	private Queue<S> formulas;	
 	/** The previous value of the measure. */
 	private double previousValue;
-	/** Whether the inconsistency value should be smoothed: if X1 is the previous
+	/** If X1 is the previous
 	 * inconsistency value, X2 is the new inconsistency value on the new window, then
-	 * the actual new inconsistency value X is determined by X=X1*smoothingFactor + X2*(1-smoothingFactor).
-	 * This value should be between 0 and 1. If it is -1 no smoothing is done. */
-	private double smoothingFactor;
+	 * the actual new inconsistency value X is determined by aggregating X1 and X2 with this function.
+	 * If none is given the maximum function is assumed. */
+	private BinaryFunction<Double,Double,Double> agg = null;
 	/** The name of this process. */
 	private String name;
 	
@@ -39,12 +41,11 @@ public abstract class WindowInconsistencyMeasurementProcess<S extends Formula> e
 	public static final String CONFIG_MEASURE = "config_measure";
 	/** Key for the configuration map that points to the window size to be used. */
 	public static final String CONFIG_WINDOWSIZE = "config_windowsize";
-	/** Key for the configuration map that points to the smoothing factor to be used. if X1 is the previous
+	/** Key for the configuration map that points to the aggregation function used. If X1 is the previous
 	 * inconsistency value, X2 is the new inconsistency value on the new window, then
-	 * the actual new inconsistency value X is determined by X=X1*smoothingFactor + X2*(1-smoothingFactor).
-	 * This value should be between 0 and 1. If it is -1 no smoothing is done (the same as setting
-	 * the smoothing factor to 0. */
-	public static final String CONFIG_SMOOTHINGFACTOR = "config_smoothingfactor";
+	 * the actual new inconsistency value X is determined by aggregating X1 and X2 with this function. If none
+	 * is given the maximum function is assumed. */
+	public static final String CONFIG_AGGREGATIONFUNCTION = "config_aggregationfunction";
 	/** Key for the configuration map that points to the name to be used. */
 	public static final String CONFIG_NAME = "config_name";
 	
@@ -61,9 +62,9 @@ public abstract class WindowInconsistencyMeasurementProcess<S extends Formula> e
 		if(config.containsKey(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE))
 			this.windowsize = (int) config.get(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE);
 		else this.windowsize = -1;
-		if(config.containsKey(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR))
-			this.smoothingFactor = (double) config.get(WindowInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR);
-		else this.smoothingFactor = -1;
+		if(config.containsKey(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION))
+			this.agg = (BinaryFunction<Double,Double,Double>) config.get(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION);
+		else this.agg = new MaxFunction();
 		if(config.containsKey(WindowInconsistencyMeasurementProcess.CONFIG_NAME))
 			this.name = (String) config.get(WindowInconsistencyMeasurementProcess.CONFIG_NAME);
 		else this.name = "";		
@@ -82,12 +83,7 @@ public abstract class WindowInconsistencyMeasurementProcess<S extends Formula> e
 		this.formulas.add(formula);
 		double oldVal = this.previousValue;
 		double newVal = this.measure.inconsistencyMeasure(this.formulas);
-		//if(this.smoothingFactor != -1)
-		//	this.previousValue = oldVal * this.smoothingFactor + newVal * (1-this.smoothingFactor);
-		//else this.previousValue = newVal;
-		//temporary
-		this.previousValue = Math.max(this.previousValue,newVal); 
-		//temporary
+		this.previousValue = this.agg.eval(oldVal, newVal); 
 		return this.previousValue;
 	}
 
