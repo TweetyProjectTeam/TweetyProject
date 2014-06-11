@@ -1,6 +1,6 @@
 package net.sf.tweety.machinelearning;
 
-import net.sf.tweety.util.Pair;
+import net.sf.tweety.commons.util.Pair;
 
 /**
  * Classes implementing this interface provide the means to test a training mechanism 

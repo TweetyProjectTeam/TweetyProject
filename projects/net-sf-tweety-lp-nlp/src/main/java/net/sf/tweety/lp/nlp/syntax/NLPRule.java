@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.error.LanguageException.LanguageExceptionReason;
 import net.sf.tweety.logics.commons.syntax.ComplexLogicalFormulaAdapter;
@@ -17,7 +18,6 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.nlp.error.NestedLogicProgramException;
-import net.sf.tweety.util.rules.Rule;
 
 /**
  * A rule of a nested logic program. A nested logic program contains not quantified 

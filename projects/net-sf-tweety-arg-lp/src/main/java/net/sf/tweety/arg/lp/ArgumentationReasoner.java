@@ -3,13 +3,13 @@ package net.sf.tweety.arg.lp;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Answer;
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
-import net.sf.tweety.Reasoner;
 import net.sf.tweety.arg.lp.semantics.AttackRelation;
 import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
 import net.sf.tweety.arg.lp.syntax.Argument;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Reasoner;
 
 /**
  * This class models a reasoner for extended logic programming based arguments using

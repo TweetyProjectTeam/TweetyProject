@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.math.func.BinaryFunction;
 import net.sf.tweety.math.func.MaxFunction;

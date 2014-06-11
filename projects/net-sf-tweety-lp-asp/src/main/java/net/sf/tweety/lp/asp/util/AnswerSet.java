@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.sf.tweety.lp.asp.syntax.DLPSignature;
 

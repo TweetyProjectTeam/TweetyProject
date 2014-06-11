@@ -29,7 +29,7 @@ public class Rule
 	extends 	DLPElementAdapter 
 	implements 	Comparable<Rule>, 
 				DLPElement, 
-				net.sf.tweety.util.rules.Rule<DLPHead, DLPElement> {
+				net.sf.tweety.commons.util.rules.Rule<DLPHead, DLPElement> {
 
 	DLPHead head = new DLPHead();
 	List<DLPElement>	body = new LinkedList<DLPElement>();

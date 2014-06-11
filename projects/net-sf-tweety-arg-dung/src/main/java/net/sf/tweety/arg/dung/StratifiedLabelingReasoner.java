@@ -3,12 +3,12 @@ package net.sf.tweety.arg.dung;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Answer;
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
-import net.sf.tweety.Reasoner;
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Reasoner;
 
 /**
  * This class implements a stratified labeling reasoner.

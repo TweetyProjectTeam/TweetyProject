@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.pcl.analysis;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.math.probability.*;

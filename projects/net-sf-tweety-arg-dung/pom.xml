@@ -7,15 +7,15 @@
   <name>Tweety (Dung Argumentation Library)</name>
 
   <parent>
-  	<groupId>net.sf.tweety</groupId>
-  	<artifactId>maven-build-all</artifactId>
+  	<groupId>net.sf</groupId>
+  	<artifactId>tweety</artifactId>
   	<version>1.1.dev-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
   	<dependency>
-  		<groupId>net.sf</groupId>
-  		<artifactId>tweety</artifactId>
+  		<groupId>net.sf.tweety</groupId>
+  		<artifactId>commons</artifactId>
   		<version>1.1.dev-SNAPSHOT</version>
   	</dependency>
   	<dependency>

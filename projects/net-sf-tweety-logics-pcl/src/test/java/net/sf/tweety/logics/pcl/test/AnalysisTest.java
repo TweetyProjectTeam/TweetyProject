@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pcl.test;
 
 import java.io.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.analysis.*;

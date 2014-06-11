@@ -2,7 +2,7 @@ package net.sf.tweety.action;
 
 import java.util.Collection;
 
-import net.sf.tweety.BeliefSet;
+import net.sf.tweety.commons.BeliefSet;
 
 /**
  * This class represents an action description as a set of causal laws.

@@ -3,8 +3,8 @@ package net.sf.tweety.logics.ml;
 import java.io.Serializable;
 import java.util.Collection;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.syntax.MlnFormula;

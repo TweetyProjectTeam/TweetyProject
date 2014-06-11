@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.util.SetTools;
 
 /**
  * Instances of this class represent deductive knowledge bases,

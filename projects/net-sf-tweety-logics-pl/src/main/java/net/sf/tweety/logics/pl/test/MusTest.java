@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pl.test;
 
 import java.io.IOException;
 
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.analysis.MusEnumerator;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.analysis.MarcoMusEnumerator;

@@ -1,9 +1,9 @@
 package net.sf.tweety.logics.pl.lang;
 
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
-import net.sf.tweety.Language;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Language;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;

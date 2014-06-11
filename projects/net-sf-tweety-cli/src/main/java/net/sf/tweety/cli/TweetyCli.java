@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.tweety.ParserException;
-import net.sf.tweety.TweetyConfiguration;
-import net.sf.tweety.TweetyLogging;
-import net.sf.tweety.Writer;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.TweetyConfiguration;
+import net.sf.tweety.commons.TweetyLogging;
+import net.sf.tweety.commons.Writer;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;

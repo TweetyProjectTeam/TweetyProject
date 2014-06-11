@@ -2,11 +2,11 @@ package net.sf.tweety.arg.prob.test.deductive;
 
 import java.io.IOException;
 
-import net.sf.tweety.ParserException;
-import net.sf.tweety.Reasoner;
-import net.sf.tweety.TweetyConfiguration;
-import net.sf.tweety.TweetyLogging;
 import net.sf.tweety.arg.deductive.semantics.attacks.*;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.TweetyConfiguration;
+import net.sf.tweety.commons.TweetyLogging;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.math.probability.Probability;

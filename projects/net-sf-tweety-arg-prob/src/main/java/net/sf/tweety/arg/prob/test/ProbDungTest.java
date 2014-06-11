@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.TweetyConfiguration;
-import net.sf.tweety.TweetyLogging;
 import net.sf.tweety.arg.dung.CompleteReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.GroundReasoner;
@@ -24,6 +22,9 @@ import net.sf.tweety.arg.dung.semantics.Labeling;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.prob.semantics.ProbabilisticExtension;
+import net.sf.tweety.commons.TweetyConfiguration;
+import net.sf.tweety.commons.TweetyLogging;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
@@ -35,7 +36,6 @@ import net.sf.tweety.math.term.Logarithm;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 import net.sf.tweety.math.probability.*;
-import net.sf.tweety.util.SetTools;
 
 /**
  * This class contains some experiments with probabilistic extensions.

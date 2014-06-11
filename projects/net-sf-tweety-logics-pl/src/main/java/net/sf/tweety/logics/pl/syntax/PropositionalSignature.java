@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pl.syntax;
 
 import java.util.Collection;
 
-import net.sf.tweety.SetSignature;
+import net.sf.tweety.commons.SetSignature;
 
 
 /**

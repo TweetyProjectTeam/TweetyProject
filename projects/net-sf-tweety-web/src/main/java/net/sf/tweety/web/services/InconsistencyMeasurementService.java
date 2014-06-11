@@ -9,9 +9,9 @@ import java.util.HashSet;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Parser;
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Parser;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.analysis.InconsistencyMeasureFactory;

@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.fol.lang;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.*;
 

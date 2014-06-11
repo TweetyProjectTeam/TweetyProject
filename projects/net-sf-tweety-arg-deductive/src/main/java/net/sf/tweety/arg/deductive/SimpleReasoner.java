@@ -3,12 +3,12 @@ package net.sf.tweety.arg.deductive;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.BeliefBase;
 import net.sf.tweety.arg.deductive.accumulator.Accumulator;
 import net.sf.tweety.arg.deductive.categorizer.Categorizer;
 import net.sf.tweety.arg.deductive.semantics.ArgumentTree;
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgumentNode;
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.graphs.DirectedEdge;
 import net.sf.tweety.graphs.Edge;
 import net.sf.tweety.logics.pl.syntax.Conjunction;

@@ -2,8 +2,8 @@ package net.sf.tweety.beliefdynamics.kernels;
 
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.beliefdynamics.*;
+import net.sf.tweety.commons.*;
 
 /**
  * This class implements kernel contraction for belief bases [Hansson:2001]. That is, 

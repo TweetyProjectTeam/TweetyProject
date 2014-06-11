@@ -2,9 +2,9 @@ package net.sf.tweety.logics.pl;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.pl.syntax.*;
-import net.sf.tweety.util.SetTools;
 
 /**
  * This class represents a knowledge base of propositional formulae.

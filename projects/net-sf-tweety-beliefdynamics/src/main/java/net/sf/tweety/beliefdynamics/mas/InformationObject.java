@@ -1,7 +1,7 @@
 package net.sf.tweety.beliefdynamics.mas;
 
-import net.sf.tweety.*;
 import net.sf.tweety.agents.*;
+import net.sf.tweety.commons.*;
 
 /**
  * This class represents a formula annotated with the source of the formula.

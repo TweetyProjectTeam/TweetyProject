@@ -5,8 +5,8 @@ import java.util.*;
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.arg.saf.*;
+import net.sf.tweety.commons.util.rules.*;
 import net.sf.tweety.logics.pl.syntax.*;
-import net.sf.tweety.util.rules.*;
 
 /**
  * This class models an argument structure, i.e. a minimal (with respect to set

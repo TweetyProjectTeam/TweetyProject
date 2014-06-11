@@ -13,8 +13,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;

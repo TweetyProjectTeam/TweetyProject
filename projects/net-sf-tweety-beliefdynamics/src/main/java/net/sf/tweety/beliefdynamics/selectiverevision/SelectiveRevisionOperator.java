@@ -2,8 +2,8 @@ package net.sf.tweety.beliefdynamics.selectiverevision;
 
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.beliefdynamics.*;
+import net.sf.tweety.commons.*;
 
 /**
  * This class implements a selective revision operator following [Ferme:1999].

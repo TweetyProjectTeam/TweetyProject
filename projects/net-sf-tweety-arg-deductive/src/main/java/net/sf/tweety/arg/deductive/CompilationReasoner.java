@@ -1,11 +1,11 @@
 package net.sf.tweety.arg.deductive;
 
-import net.sf.tweety.BeliefBase;
 import net.sf.tweety.arg.deductive.accumulator.Accumulator;
 import net.sf.tweety.arg.deductive.categorizer.Categorizer;
 import net.sf.tweety.arg.deductive.semantics.ArgumentTree;
 import net.sf.tweety.arg.deductive.semantics.Compilation;
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
+import net.sf.tweety.commons.BeliefBase;
 
 
 /**

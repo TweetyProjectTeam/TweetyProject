@@ -1,7 +1,7 @@
 package net.sf.tweety.preferences.io;
 
+import net.sf.tweety.commons.util.Triple;
 import net.sf.tweety.preferences.PreferenceOrder;
-import net.sf.tweety.util.Triple;
 
 /**
  * This class is meant to provide a structure to change preference orders and compare the results between changes

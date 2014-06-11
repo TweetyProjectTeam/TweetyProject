@@ -3,12 +3,12 @@ package net.sf.tweety.beliefdynamics.test;
 import java.io.*;
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.agents.*;
 import net.sf.tweety.beliefdynamics.*;
 import net.sf.tweety.beliefdynamics.kernels.*;
 import net.sf.tweety.beliefdynamics.mas.*;
 import net.sf.tweety.beliefdynamics.operators.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.orders.*;
 import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.parser.*;

@@ -2,7 +2,7 @@ package net.sf.tweety.logics.rpcl.writers;
 
 import java.text.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.rpcl.*;
 
 /**

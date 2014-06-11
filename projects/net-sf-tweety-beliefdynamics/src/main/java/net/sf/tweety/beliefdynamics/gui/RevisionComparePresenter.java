@@ -16,9 +16,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.Signature;
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Signature;
 
 /**
  * This class couples the RevisionCompare View and Model, it needs to know the implementation used to

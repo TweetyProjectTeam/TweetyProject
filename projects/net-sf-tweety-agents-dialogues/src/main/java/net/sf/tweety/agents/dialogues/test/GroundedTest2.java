@@ -6,8 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import net.sf.tweety.TweetyConfiguration;
-import net.sf.tweety.TweetyLogging;
 import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.ProtocolTerminatedException;
 import net.sf.tweety.agents.dialogues.oppmodels.ArguingAgent;
@@ -27,6 +25,8 @@ import net.sf.tweety.agents.sim.SimulationParameters;
 import net.sf.tweety.arg.dung.util.DefaultDungTheoryGenerator;
 import net.sf.tweety.arg.dung.util.DungTheoryGenerationParameters;
 import net.sf.tweety.arg.dung.util.DungTheoryGenerator;
+import net.sf.tweety.commons.TweetyConfiguration;
+import net.sf.tweety.commons.TweetyLogging;
 
 public class GroundedTest2 {
 

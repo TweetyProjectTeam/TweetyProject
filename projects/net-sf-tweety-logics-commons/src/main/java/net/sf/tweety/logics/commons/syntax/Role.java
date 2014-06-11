@@ -3,7 +3,7 @@ package net.sf.tweety.logics.commons.syntax;
 
 import java.util.Set;
 
-import net.sf.tweety.util.Pair;
+import net.sf.tweety.commons.util.Pair;
 
 /**
  * This class implements a role used in description logics

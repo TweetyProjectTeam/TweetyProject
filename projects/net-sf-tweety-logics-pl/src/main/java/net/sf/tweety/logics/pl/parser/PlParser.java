@@ -3,7 +3,7 @@ package net.sf.tweety.logics.pl.parser;
 import java.io.*;
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.pl.*;
 import net.sf.tweety.logics.pl.syntax.*;

@@ -23,10 +23,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 
-import net.sf.tweety.Formula;
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.CredibilityRevision;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
+import net.sf.tweety.commons.Formula;
 
 /**
  * The default view for a revision compare. This class is responsible to create the hierarchy of

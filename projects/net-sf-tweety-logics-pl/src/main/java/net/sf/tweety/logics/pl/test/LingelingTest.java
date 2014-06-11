@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pl.test;
 
 import java.io.IOException;
 
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.DefaultConsistencyTester;
 import net.sf.tweety.logics.pl.LingelingEntailment;
 import net.sf.tweety.logics.pl.PlBeliefSet;

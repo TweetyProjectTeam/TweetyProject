@@ -3,10 +3,9 @@ package net.sf.tweety.arg.dung;
 import java.util.*;
 
 import Jama.Matrix;
-
-import net.sf.tweety.*;
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.*;
 
 

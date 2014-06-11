@@ -3,7 +3,7 @@ package net.sf.tweety.beliefdynamics;
 import java.util.Collection;
 import java.util.List;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * Implements the list based method of the Revision interface by iterative calling

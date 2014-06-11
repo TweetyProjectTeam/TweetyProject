@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.pl;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**

@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.ParserException;
 import net.sf.tweety.action.description.syntax.DynamicLaw;
 import net.sf.tweety.action.description.syntax.StaticLaw;
 import net.sf.tweety.action.signature.ActionSignature;
@@ -16,6 +15,7 @@ import net.sf.tweety.action.signature.FolFluentName;
 import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.action.transitionsystem.Transition;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.lp.asp.solver.AspInterface;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.Conjunction;

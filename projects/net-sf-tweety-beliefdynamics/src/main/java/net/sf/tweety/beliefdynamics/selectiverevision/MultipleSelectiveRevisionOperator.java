@@ -2,8 +2,8 @@ package net.sf.tweety.beliefdynamics.selectiverevision;
 
 import java.util.Collection;
 
-import net.sf.tweety.Formula;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
+import net.sf.tweety.commons.Formula;
 
 /**
  * This class implements a multiple selective revision operator following [Kruempelmann:2011,Ferme:1999].

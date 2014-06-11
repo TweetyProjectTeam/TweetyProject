@@ -3,11 +3,11 @@ package net.sf.tweety.arg.dung.semantics;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.sf.tweety.AbstractInterpretation;
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.commons.AbstractInterpretation;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
 
 /**
  * This abstract class acts as a common ancestor for interpretations to

@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pl;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.*;
 

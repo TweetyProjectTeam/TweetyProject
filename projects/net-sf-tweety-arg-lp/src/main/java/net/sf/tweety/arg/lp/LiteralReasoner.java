@@ -1,10 +1,10 @@
 package net.sf.tweety.arg.lp;
 
-import net.sf.tweety.Answer;
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
 import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
 import net.sf.tweety.arg.lp.syntax.Argument;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 
 /**

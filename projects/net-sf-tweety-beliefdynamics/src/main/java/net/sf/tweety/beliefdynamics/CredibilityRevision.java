@@ -3,7 +3,7 @@ package net.sf.tweety.beliefdynamics;
 import java.util.Collection;
 import java.util.List;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * Abstract base class for a revision process on belief bases of type TBeliefBase, it

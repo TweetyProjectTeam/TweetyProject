@@ -2,8 +2,8 @@ package net.sf.tweety.arg.saf.util;
 
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.arg.saf.syntax.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**

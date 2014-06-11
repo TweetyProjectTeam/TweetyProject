@@ -3,12 +3,12 @@ package net.sf.tweety.logics.pl.syntax;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.math.probability.Probability;
-import net.sf.tweety.util.SetTools;
 
 /**
  * This class represents the common ancestor for propositional formulae.

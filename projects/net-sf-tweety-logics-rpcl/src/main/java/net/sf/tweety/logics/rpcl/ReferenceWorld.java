@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.AbstractInterpretation;
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.AbstractInterpretation;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.util.MathTools;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.FolBeliefSet;
@@ -23,8 +25,6 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
-import net.sf.tweety.util.MathTools;
-import net.sf.tweety.util.SetTools;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

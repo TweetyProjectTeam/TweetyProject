@@ -7,8 +7,8 @@ import java.util.Set;
 
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolFluentName;
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
-import net.sf.tweety.util.Pair;
 
 /**
  * This class represents an action transition system for a fixed action

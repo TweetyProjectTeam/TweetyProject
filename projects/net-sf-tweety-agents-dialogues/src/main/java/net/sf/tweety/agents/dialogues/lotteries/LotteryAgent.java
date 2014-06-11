@@ -13,7 +13,7 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.prob.lotteries.ArgumentationLottery;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.arg.prob.lotteries.UtilityFunction;
-import net.sf.tweety.util.SetTools;
+import net.sf.tweety.commons.util.SetTools;
 
 /**
  * An agent in a game of argumentation lotteries.

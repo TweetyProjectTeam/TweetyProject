@@ -2,7 +2,7 @@ package net.sf.tweety.logics.commons.syntax.interfaces;
 
 import java.util.Set;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 
 /**

@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.commons.util.Triple;
 import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.preferences.Relation;
-import net.sf.tweety.util.Triple;
 
 /**
  * This class is meant to provide ranking functions to given preference orders

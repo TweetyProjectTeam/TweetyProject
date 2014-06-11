@@ -3,7 +3,7 @@ package net.sf.tweety.logics.fol.parser;
 import java.io.*;
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.FunctionalTerm;

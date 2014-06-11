@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pl.parser;
 
 import java.io.File;
 
-import net.sf.tweety.Parser;
+import net.sf.tweety.commons.Parser;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 
 /**

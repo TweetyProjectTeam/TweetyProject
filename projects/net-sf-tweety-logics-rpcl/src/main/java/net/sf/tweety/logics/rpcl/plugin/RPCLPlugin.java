@@ -9,10 +9,10 @@ import java.io.InputStreamReader;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-import net.sf.tweety.Answer;
-import net.sf.tweety.ParserException;
-import net.sf.tweety.TweetyLogging;
-import net.sf.tweety.Writer;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.TweetyLogging;
+import net.sf.tweety.commons.Writer;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;

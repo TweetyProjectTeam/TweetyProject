@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
+import net.sf.tweety.commons.util.DefaultSubsetIterator;
 import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.util.DefaultSubsetIterator;
 
 /**
  * This attack notion models the undercut relation; A is defeated by B iff there is C subset of support(A) with claim(B) == \neg C.

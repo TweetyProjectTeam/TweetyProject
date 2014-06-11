@@ -2,7 +2,7 @@ package net.sf.tweety.logics.rpcl.semantics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;

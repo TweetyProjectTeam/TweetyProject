@@ -10,11 +10,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import net.sf.tweety.Formula;
 import net.sf.tweety.beliefdynamics.gui.RevisionCompareModel;
 import net.sf.tweety.beliefdynamics.gui.RevisionComparePresenter;
 import net.sf.tweety.beliefdynamics.gui.RevisionComparePresenter.FileHandler;
 import net.sf.tweety.beliefdynamics.gui.RevisionCompareView;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;

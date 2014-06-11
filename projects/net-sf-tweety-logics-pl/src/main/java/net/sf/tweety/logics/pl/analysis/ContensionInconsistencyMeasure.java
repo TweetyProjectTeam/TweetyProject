@@ -3,6 +3,8 @@ package net.sf.tweety.logics.pl.analysis;
 import java.util.Collection;
 import java.util.HashSet;
 
+import net.sf.tweety.commons.util.IncreasingSubsetIterator;
+import net.sf.tweety.commons.util.SubsetIterator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.PlBeliefSet;
@@ -10,8 +12,6 @@ import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.util.IncreasingSubsetIterator;
-import net.sf.tweety.util.SubsetIterator;
 
 /**
  * This class implements the contension inconsistency measure, cf. [Grant, Hunter, 2011].<br/>

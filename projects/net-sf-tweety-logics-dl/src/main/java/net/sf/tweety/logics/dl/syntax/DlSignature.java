@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.syntax.Concept;
 import net.sf.tweety.logics.commons.syntax.Individual;
 import net.sf.tweety.logics.commons.syntax.Role;

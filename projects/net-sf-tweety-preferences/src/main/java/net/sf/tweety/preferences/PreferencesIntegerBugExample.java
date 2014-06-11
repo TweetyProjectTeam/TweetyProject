@@ -2,8 +2,8 @@ package net.sf.tweety.preferences;
 
 import java.util.HashSet;
 
+import net.sf.tweety.commons.util.Triple;
 import net.sf.tweety.math.opt.solver.LpSolve;
-import net.sf.tweety.util.Triple;
 
 public class PreferencesIntegerBugExample {
 

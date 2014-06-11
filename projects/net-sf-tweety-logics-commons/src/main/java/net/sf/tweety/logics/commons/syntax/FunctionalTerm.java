@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.util.Pair;
 
 /**
  * A functional term in a logic language, i.e. a functor and a list

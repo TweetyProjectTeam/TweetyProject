@@ -3,7 +3,7 @@ package net.sf.tweety.logics.commons.analysis;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * A simple approach to compute minimal inconsistent subsets and maximal

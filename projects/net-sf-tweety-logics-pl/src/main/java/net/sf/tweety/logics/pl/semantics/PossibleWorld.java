@@ -2,10 +2,10 @@ package net.sf.tweety.logics.pl.semantics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
+import net.sf.tweety.commons.util.*;
 import net.sf.tweety.logics.pl.*;
 import net.sf.tweety.logics.pl.syntax.*;
-import net.sf.tweety.util.*;
 
 
 /**

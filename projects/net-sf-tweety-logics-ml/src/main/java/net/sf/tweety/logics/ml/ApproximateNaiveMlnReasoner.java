@@ -4,15 +4,15 @@ import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import net.sf.tweety.BeliefBase;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.util.DefaultSubsetIterator;
+import net.sf.tweety.commons.util.RandomSubsetIterator;
 import net.sf.tweety.logics.fol.semantics.*;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.math.probability.Probability;
-import net.sf.tweety.util.RandomSubsetIterator;
-import net.sf.tweety.util.DefaultSubsetIterator;
 
 /**
  * This reasoner performs approximate reasoning with MLNs by considering

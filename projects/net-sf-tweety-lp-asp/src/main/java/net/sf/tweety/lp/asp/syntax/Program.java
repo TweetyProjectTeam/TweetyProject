@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.tweety.commons.util.rules.RuleSet;
 import net.sf.tweety.logics.commons.syntax.interfaces.LogicProgram;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.util.rules.RuleSet;
 
 /**
  * this class models an disjunctive logical program, which is

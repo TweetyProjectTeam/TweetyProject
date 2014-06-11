@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.fol.lang;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 
 /**
  * This class models a first-order language without quantifiers and without functions.

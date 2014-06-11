@@ -9,6 +9,7 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
 import net.sf.tweety.arg.prob.semantics.*;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.func.SimpleRealValuedFunction;
 import net.sf.tweety.math.norm.RealVectorNorm;
@@ -16,7 +17,6 @@ import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.Term;
-import net.sf.tweety.util.SetTools;
 
 /**
  * Provides common functionality for change operators based on probabilistic semantics.

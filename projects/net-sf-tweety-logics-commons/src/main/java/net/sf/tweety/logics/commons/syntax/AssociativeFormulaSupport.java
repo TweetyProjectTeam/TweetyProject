@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.interfaces.AssociativeFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;

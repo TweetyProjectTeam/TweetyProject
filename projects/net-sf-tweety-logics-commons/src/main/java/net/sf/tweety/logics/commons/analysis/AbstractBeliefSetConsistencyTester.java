@@ -2,8 +2,8 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.*;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Formula;
 
 /**
  * Classes extending this abstract class are capable of testing

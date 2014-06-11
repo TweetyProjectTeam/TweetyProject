@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Signature;
 import net.sf.tweety.action.ActionDescription;
 import net.sf.tweety.action.CausalLaw;
 import net.sf.tweety.action.description.syntax.CLaw;
 import net.sf.tweety.action.description.syntax.DynamicLaw;
 import net.sf.tweety.action.description.syntax.StaticLaw;
 import net.sf.tweety.action.signature.ActionSignature;
+import net.sf.tweety.commons.Signature;
 
 /**
  * This class represents an action description for the action language C as a

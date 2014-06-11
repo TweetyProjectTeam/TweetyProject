@@ -2,9 +2,9 @@ package net.sf.tweety.logics.commons.analysis.streams;
 
 import java.util.Collection;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.streams.FormulaStream;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.streams.FormulaStream;
 
 /**
  * General interface for inconsistency measures working on streams.

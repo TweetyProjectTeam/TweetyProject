@@ -2,9 +2,9 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.*;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Formula;
-import net.sf.tweety.util.*;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.util.*;
 
 /**
  * This class implements the Shapley culpability measure.

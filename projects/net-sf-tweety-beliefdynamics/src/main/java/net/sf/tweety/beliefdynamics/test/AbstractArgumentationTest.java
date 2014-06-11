@@ -1,6 +1,5 @@
 package net.sf.tweety.beliefdynamics.test;
 
-import net.sf.tweety.BeliefBase;
 import net.sf.tweety.arg.dung.CompleteReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -10,6 +9,7 @@ import net.sf.tweety.beliefdynamics.LeviMultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.kernels.KernelContractionOperator;
 import net.sf.tweety.beliefdynamics.kernels.RandomIncisionFunction;
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.Sat4jEntailment;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;

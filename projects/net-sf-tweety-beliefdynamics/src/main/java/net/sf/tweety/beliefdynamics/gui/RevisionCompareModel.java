@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.Formula;
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
+import net.sf.tweety.commons.Formula;
 
 /**
  * The data-model used to compare two different revision approaches. Two approaches

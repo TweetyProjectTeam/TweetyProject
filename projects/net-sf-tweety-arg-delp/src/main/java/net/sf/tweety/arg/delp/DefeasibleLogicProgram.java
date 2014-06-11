@@ -6,10 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Formula;
-import net.sf.tweety.ParserException;
-import net.sf.tweety.Signature;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
 import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
 import net.sf.tweety.arg.delp.syntax.DelpArgument;
@@ -19,11 +15,15 @@ import net.sf.tweety.arg.delp.syntax.StrictRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.Signature;
+import net.sf.tweety.commons.util.rules.Derivation;
+import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.util.rules.Derivation;
-import net.sf.tweety.util.rules.Rule;
 
 /**
  * This class models a defeasible logic program (DeLP).

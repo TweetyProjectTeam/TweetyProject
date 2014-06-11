@@ -2,7 +2,7 @@ package net.sf.tweety.lp.asp.beliefdynamics.baserevision;
 
 import java.util.Collection;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * This interface models a general selection function for remainder sets

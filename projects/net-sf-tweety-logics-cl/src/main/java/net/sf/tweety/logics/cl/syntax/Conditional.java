@@ -4,7 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.Signature;
+import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
@@ -15,7 +16,6 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
 import net.sf.tweety.logics.pl.syntax.Tautology;
-import net.sf.tweety.util.rules.Rule;
 
 /**
  * This class represents a basic conditional (B|A) with formulas A,B.

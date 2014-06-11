@@ -2,9 +2,9 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Formula;
-import net.sf.tweety.Interpretation;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Interpretation;
 
 /**
  * Provides methods for returning some model (if it exists) of 

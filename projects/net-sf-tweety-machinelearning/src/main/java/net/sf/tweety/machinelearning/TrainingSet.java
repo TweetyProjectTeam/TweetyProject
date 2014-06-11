@@ -11,8 +11,7 @@ import java.util.StringTokenizer;
 
 import libsvm.svm_node;
 import libsvm.svm_problem;
-
-import net.sf.tweety.util.Pair;
+import net.sf.tweety.commons.util.Pair;
 
 /**
  * A set of observations together with their category. 

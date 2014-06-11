@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.Signature;
 import net.sf.tweety.action.ActionQuerySet;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.query.syntax.SActionQuery;
 import net.sf.tweety.action.signature.ActionSignature;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 
 /**

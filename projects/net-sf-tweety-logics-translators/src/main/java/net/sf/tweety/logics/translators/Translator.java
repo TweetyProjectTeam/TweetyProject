@@ -2,6 +2,8 @@ package net.sf.tweety.logics.translators;
 
 import java.util.Map;
 
+import net.sf.tweety.commons.util.Pair;
+import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.error.LanguageException.LanguageExceptionReason;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -10,8 +12,6 @@ import net.sf.tweety.logics.commons.syntax.interfaces.AssociativeFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.util.Pair;
-import net.sf.tweety.util.rules.Rule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

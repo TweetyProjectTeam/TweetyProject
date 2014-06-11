@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.streams.FormulaStream;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.streams.FormulaStream;
 
 /**
  * Implements a stream-based inconsistency measure on a given class of

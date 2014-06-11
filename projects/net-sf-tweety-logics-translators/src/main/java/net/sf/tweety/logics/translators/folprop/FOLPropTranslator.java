@@ -3,6 +3,7 @@ package net.sf.tweety.logics.translators.folprop;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.translators.Translator;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
@@ -13,7 +14,6 @@ import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
-import net.sf.tweety.util.Pair;
 
 /**
  * A Translator between the FOL and propositonal logic and vice versa.

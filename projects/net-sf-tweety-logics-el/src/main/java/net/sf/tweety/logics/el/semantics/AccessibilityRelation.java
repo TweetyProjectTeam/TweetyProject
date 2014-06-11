@@ -2,8 +2,8 @@ package net.sf.tweety.logics.el.semantics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
-import net.sf.tweety.util.*;
+import net.sf.tweety.commons.*;
+import net.sf.tweety.commons.util.*;
 
 
 /**

@@ -3,9 +3,9 @@ package net.sf.tweety.logics.commons.analysis;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.Interpretation;
-import net.sf.tweety.InterpretationIterator;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Interpretation;
+import net.sf.tweety.commons.InterpretationIterator;
 
 /**
  * This class implements the Hitting Set inconsistency measure as proposed in [Thimm, 2014, in preparation].

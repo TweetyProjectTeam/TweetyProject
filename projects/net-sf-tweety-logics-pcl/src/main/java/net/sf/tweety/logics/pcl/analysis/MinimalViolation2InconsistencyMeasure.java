@@ -20,7 +20,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 
 /**
- * This class models the minimal violation inconsistency measure for the 1-norm.
+ * This class models the minimal violation inconsistency measure for the 2-norm.
  * 
  * @author Nico Potyka
  */

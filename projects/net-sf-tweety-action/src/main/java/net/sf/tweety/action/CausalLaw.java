@@ -1,6 +1,6 @@
 package net.sf.tweety.action;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * A basic interface representing a causal law.

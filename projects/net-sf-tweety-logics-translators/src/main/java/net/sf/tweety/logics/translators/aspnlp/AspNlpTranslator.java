@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.lp.asp.syntax.*;
 import net.sf.tweety.lp.nlp.syntax.NLPProgram;
 import net.sf.tweety.lp.nlp.syntax.NLPRule;
@@ -13,7 +14,6 @@ import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 import net.sf.tweety.logics.translators.aspfol.AspFolTranslator;
-import net.sf.tweety.util.Pair;
 
 /**
  * Translates between DLP under the answer set semantics (ASP) and NLP.

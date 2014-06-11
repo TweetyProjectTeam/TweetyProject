@@ -2,7 +2,7 @@ package net.sf.tweety.beliefdynamics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 
 /**
  * This class implements the default multiple base expansion operator, ie. an operator

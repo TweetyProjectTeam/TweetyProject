@@ -8,12 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import net.sf.tweety.commons.util.Exec;
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.pl.SatSolverEntailment;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.util.Exec;
-import net.sf.tweety.util.Pair;
 
 /**
  * Implements a MUs enumerator based on MARCO (http://sun.iwu.edu/~mliffito/marco/). Tested

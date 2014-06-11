@@ -9,13 +9,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.EntailmentRelation;
+import net.sf.tweety.commons.EntailmentRelation;
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.util.Pair;
 
 /**
  * Abstract parent class for entailment relations utilizing SAT solvers.

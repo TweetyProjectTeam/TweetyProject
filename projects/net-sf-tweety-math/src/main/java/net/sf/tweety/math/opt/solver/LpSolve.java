@@ -3,9 +3,9 @@ package net.sf.tweety.math.opt.solver;
 import java.io.*;
 import java.util.*;
 
+import net.sf.tweety.commons.util.Exec;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.term.*;
-import net.sf.tweety.util.Exec;
 
 
 /**

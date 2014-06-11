@@ -3,7 +3,7 @@ package net.sf.tweety.machinelearning;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.tweety.util.Pair;
+import net.sf.tweety.commons.util.Pair;
 
 /**
  * Performs cross-validation in a classifier, i.e. it divides a given training set into

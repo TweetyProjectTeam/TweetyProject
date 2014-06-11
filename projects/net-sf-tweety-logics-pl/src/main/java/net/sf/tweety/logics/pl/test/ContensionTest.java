@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.streams.DefaultFormulaStream;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.streams.DefaultInconsistencyListener;
 import net.sf.tweety.logics.commons.analysis.streams.DefaultStreamBasedInconsistencyMeasure;
@@ -16,7 +17,6 @@ import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasure;
 import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.streams.DefaultFormulaStream;
 
 public class ContensionTest {
 	public static void main(String[] args) throws ParserException, IOException, InterruptedException{

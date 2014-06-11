@@ -2,7 +2,7 @@ package net.sf.tweety.logics.rpcl.semantics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.rpcl.syntax.*;

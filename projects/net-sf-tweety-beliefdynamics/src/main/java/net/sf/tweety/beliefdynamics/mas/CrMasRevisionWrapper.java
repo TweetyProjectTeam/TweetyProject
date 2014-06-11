@@ -2,8 +2,8 @@ package net.sf.tweety.beliefdynamics.mas;
 
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.beliefdynamics.*;
+import net.sf.tweety.commons.*;
 
 /**
  * This class is a wrapper for a revision for formulas of type T that is

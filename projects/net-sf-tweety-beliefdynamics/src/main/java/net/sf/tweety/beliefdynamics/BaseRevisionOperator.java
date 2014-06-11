@@ -2,7 +2,7 @@ package net.sf.tweety.beliefdynamics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 
 /**
  * This is the interface for a classic belief base revision operator, ie. an

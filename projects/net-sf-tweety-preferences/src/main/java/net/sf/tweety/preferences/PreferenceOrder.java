@@ -2,9 +2,9 @@ package net.sf.tweety.preferences;
 
 import java.util.*;
 
+import net.sf.tweety.commons.util.Triple;
 import net.sf.tweety.preferences.ranking.LevelingFunction;
 import net.sf.tweety.preferences.ranking.RankingFunction;
-import net.sf.tweety.util.Triple;
 
 /**
  * This class extends the BinaryRelation-class with a check for totality and

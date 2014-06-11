@@ -2,11 +2,11 @@ package net.sf.tweety.arg.delp.semantics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.arg.delp.syntax.*;
+import net.sf.tweety.commons.*;
+import net.sf.tweety.commons.util.*;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.util.*;
 
 /**
  * This class implements the generalized specificity criterion used to compare two arguments. Using this criterion, an argument is more specific

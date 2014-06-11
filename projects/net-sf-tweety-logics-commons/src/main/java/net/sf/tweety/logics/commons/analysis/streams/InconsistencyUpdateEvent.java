@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.commons.analysis.streams;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * An event that is thrown when an inconsistency value

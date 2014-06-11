@@ -2,9 +2,10 @@
 package net.sf.tweety.arg.dung.parser;
 
 import java.io.*;
-import net.sf.tweety.*;
+
 import net.sf.tweety.arg.dung.*;
 import net.sf.tweety.arg.dung.syntax.*;
+import net.sf.tweety.commons.*;
 
 /**
 

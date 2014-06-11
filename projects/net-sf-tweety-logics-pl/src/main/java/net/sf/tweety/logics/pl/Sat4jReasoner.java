@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.pl;
 
-import net.sf.tweety.BeliefBase;
+import net.sf.tweety.commons.BeliefBase;
 
 /**
  * Reasoner based on Sat4j.

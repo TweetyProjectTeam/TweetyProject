@@ -2,9 +2,9 @@ package net.sf.tweety.logics.commons.syntax.interfaces;
 
 import java.util.Map;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.Signature;
-import net.sf.tweety.util.rules.Rule;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Signature;
+import net.sf.tweety.commons.util.rules.Rule;
 
 /**
  * An interface for a logic program, which is a set of rules.

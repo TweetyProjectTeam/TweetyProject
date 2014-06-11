@@ -2,8 +2,8 @@ package net.sf.tweety.logics.pl.util;
 
 import java.util.Random;
 
-import net.sf.tweety.BeliefBaseSampler;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;

@@ -7,8 +7,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.streams.FormulaStream;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.streams.FormulaStream;
 
 /**
  * The actual process of an inconsistency measure on streams.

@@ -5,8 +5,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.BeliefBaseMachineShop;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.BeliefBaseMachineShop;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.analysis.CulpabilityMeasure;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
@@ -24,7 +25,6 @@ import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
-import net.sf.tweety.util.SetTools;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

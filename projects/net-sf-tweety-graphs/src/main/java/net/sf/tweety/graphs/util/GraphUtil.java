@@ -4,11 +4,10 @@ import java.util.*;
 
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
-
+import net.sf.tweety.commons.util.MapTools;
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.graphs.Node;
 import net.sf.tweety.math.ComplexNumber;
-import net.sf.tweety.util.MapTools;
 
 /**
  * This abstract class contains some auxiliary methods for working

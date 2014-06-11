@@ -4,12 +4,12 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import net.sf.tweety.Interpretation;
-import net.sf.tweety.InterpretationIterator;
+import net.sf.tweety.commons.Interpretation;
+import net.sf.tweety.commons.InterpretationIterator;
+import net.sf.tweety.commons.util.DefaultSubsetIterator;
+import net.sf.tweety.commons.util.SubsetIterator;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.util.DefaultSubsetIterator;
-import net.sf.tweety.util.SubsetIterator;
 
 
 /**

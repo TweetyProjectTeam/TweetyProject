@@ -8,7 +8,7 @@ import java.util.Map;
 import net.sf.tweety.agents.AbstractProtocol;
 import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.MultiAgentSystem;
-import net.sf.tweety.util.MathTools;
+import net.sf.tweety.commons.util.MathTools;
 
 /**
  * Instances of this class summarize information

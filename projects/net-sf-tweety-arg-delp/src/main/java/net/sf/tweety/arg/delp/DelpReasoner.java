@@ -2,9 +2,9 @@ package net.sf.tweety.arg.delp;
 
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.arg.delp.semantics.*;
 import net.sf.tweety.arg.delp.syntax.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.fol.syntax.*;
 
 /**

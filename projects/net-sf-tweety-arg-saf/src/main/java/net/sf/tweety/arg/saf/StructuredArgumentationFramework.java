@@ -2,12 +2,12 @@ package net.sf.tweety.arg.saf;
 
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.arg.dung.*;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.arg.saf.syntax.*;
+import net.sf.tweety.commons.*;
+import net.sf.tweety.commons.util.rules.*;
 import net.sf.tweety.logics.pl.syntax.*;
-import net.sf.tweety.util.rules.*;
 
 /**
  * This class represents a structured argumentation framework, i.e. a set of 

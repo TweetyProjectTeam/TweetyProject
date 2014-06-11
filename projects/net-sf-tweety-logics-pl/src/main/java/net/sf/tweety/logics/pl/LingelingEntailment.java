@@ -7,11 +7,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import net.sf.tweety.Interpretation;
+import net.sf.tweety.commons.Interpretation;
+import net.sf.tweety.commons.util.Exec;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.util.Exec;
 
 /**
  * Uses the Lingeling SAT solver for defining entailment

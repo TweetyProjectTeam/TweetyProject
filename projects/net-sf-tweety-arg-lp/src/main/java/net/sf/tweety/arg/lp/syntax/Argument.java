@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.lp.asp.syntax.*;
 
 

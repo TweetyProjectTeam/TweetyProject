@@ -3,7 +3,7 @@ package net.sf.tweety.lp.asp.beliefdynamics.baserevision;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * This class represents the set of remainder sets constructed

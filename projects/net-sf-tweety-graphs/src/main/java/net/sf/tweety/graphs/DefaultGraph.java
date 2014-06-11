@@ -2,8 +2,7 @@ package net.sf.tweety.graphs;
 
 import java.util.*;
 
-import net.sf.tweety.util.SetTools;
-
+import net.sf.tweety.commons.util.SetTools;
 import Jama.Matrix;
 
 /**

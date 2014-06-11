@@ -1,7 +1,7 @@
 package net.sf.tweety.logics.dl.syntax;
 
-import net.sf.tweety.Formula;
-import net.sf.tweety.Signature;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Signature;
 
 /**
  * This abstract class provides the base for terminological and assertional axioms

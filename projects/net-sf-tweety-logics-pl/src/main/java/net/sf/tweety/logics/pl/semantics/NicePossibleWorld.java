@@ -8,11 +8,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.sf.tweety.BeliefBase;
-import net.sf.tweety.Formula;
-import net.sf.tweety.InterpretationSet;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.InterpretationSet;
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.util.Pair;
 
 /**
  * Wrapper for the PossibleWorld providing better representation mechanisms, it knows all

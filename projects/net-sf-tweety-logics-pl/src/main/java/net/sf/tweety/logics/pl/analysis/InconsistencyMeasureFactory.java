@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pl.analysis;
 
 import java.io.File;
 
-import net.sf.tweety.BeliefSet;
+import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester;
 import net.sf.tweety.logics.commons.analysis.DrasticInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;

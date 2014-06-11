@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.util.rules.Rule;
 
 /**
  * This class models a basic argument in structured argumentation frameworks, i.e.

@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Signature;
 import net.sf.tweety.arg.lp.syntax.Argument;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.lp.asp.syntax.*;
 
 /**

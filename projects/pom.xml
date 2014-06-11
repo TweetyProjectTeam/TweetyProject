@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>net.sf.tweety</groupId>
-  <artifactId>maven-build-all</artifactId>
+  <groupId>net.sf</groupId>
+  <artifactId>tweety</artifactId>
   <version>1.1.dev-SNAPSHOT</version>
   <packaging>pom</packaging>
   
@@ -167,7 +167,7 @@
   
   <modules>
   	<module>deploy</module>  
-  	<module>net-sf-tweety</module>
+  	<module>net-sf-tweety-commons</module>
   	<module>net-sf-tweety-math</module>
   	<module>net-sf-tweety-action</module>
   	<module>net-sf-tweety-beliefdynamics</module>
@@ -198,6 +198,7 @@
   	<module>net-sf-tweety-arg-saf</module>  		
   	<module>net-sf-tweety-agents</module>
   	<module>net-sf-tweety-agents-dialogues</module>
+  	<module>net-sf-tweety-web</module>
   </modules>
   
 </project>

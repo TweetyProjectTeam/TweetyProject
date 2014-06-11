@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.ClassicalInference;
 import net.sf.tweety.logics.pl.PlBeliefSet;
@@ -16,7 +16,6 @@ import net.sf.tweety.plugin.*;
 import net.sf.tweety.plugin.parameter.CommandParameter;
 import net.sf.tweety.plugin.parameter.SelectionCommandParameter;
 import net.sf.tweety.plugin.parameter.StringListCommandParameter;
-
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**

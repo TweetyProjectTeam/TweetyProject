@@ -3,10 +3,10 @@ package net.sf.tweety.action.grounding.parser;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.ParserException;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.grounding.VarConstNeqRequirement;
 import net.sf.tweety.action.grounding.VarsNeqRequirement;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;

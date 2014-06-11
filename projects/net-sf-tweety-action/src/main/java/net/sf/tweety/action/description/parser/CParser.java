@@ -3,13 +3,12 @@ package net.sf.tweety.action.description.parser;
 import java.io.IOException;
 import java.io.Reader;
 
-
-import net.sf.tweety.Formula;
-import net.sf.tweety.Parser;
-import net.sf.tweety.ParserException;
 import net.sf.tweety.action.description.CActionDescription;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.parser.ActionSignatureParser;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Parser;
+import net.sf.tweety.commons.ParserException;
 
 /**
  * This class implements a parser for an Action Description in C. 

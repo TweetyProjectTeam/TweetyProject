@@ -2,7 +2,7 @@ package net.sf.tweety.logics.pcl;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.syntax.*;
 

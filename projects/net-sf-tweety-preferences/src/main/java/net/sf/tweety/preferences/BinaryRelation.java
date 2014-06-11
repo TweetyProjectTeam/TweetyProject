@@ -2,7 +2,7 @@ package net.sf.tweety.preferences;
 
 import java.util.Set;
 
-import net.sf.tweety.util.Triple;
+import net.sf.tweety.commons.util.Triple;
 
 /**
  * This abstract class provides a basic implementation of a generic set of pairs to be used for

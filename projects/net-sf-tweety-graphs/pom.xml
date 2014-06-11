@@ -3,8 +3,8 @@
   <artifactId>graphs</artifactId>
   <name>Tweety (Graph Library)</name>
   <parent>
-  	<groupId>net.sf.tweety</groupId>
-  	<artifactId>maven-build-all</artifactId>
+  	<groupId>net.sf</groupId>
+  	<artifactId>tweety</artifactId>
   	<version>1.1.dev-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
@@ -20,4 +20,5 @@
 		<version>1.0.3</version>
 	</dependency>
   </dependencies>
+   <groupId>net.sf.tweety</groupId>
 </project>

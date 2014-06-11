@@ -1,7 +1,7 @@
 package net.sf.tweety.logics.commons.analysis;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Formula;
 
 /**
  * Classes implementing this interface represent culpability measures, i.e.

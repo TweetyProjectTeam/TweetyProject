@@ -3,7 +3,7 @@ package net.sf.tweety.logics.ml.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.tweety.Reasoner;
+import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 import net.sf.tweety.logics.ml.MarkovLogicNetwork;

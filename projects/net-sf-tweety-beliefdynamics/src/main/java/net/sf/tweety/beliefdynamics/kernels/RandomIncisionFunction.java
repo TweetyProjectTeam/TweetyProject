@@ -2,7 +2,7 @@ package net.sf.tweety.beliefdynamics.kernels;
 
 import java.util.*;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 
 /**
  * This class implements an incision function that just randomly

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.LogicalSymbols;
-import net.sf.tweety.util.SetTools;
 
 /**
  * This class represents a disjunction in propositional logic.

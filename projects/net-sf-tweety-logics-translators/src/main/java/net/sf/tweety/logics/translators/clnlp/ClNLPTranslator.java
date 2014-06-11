@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.cl.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.error.LanguageException;
@@ -15,7 +16,6 @@ import net.sf.tweety.logics.translators.Translator;
 import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
 import net.sf.tweety.lp.nlp.syntax.NLPProgram;
 import net.sf.tweety.lp.nlp.syntax.NLPRule;
-import net.sf.tweety.util.Pair;
 
 /**
  * Translates between propositional Conditionals and NLP.

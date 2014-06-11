@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.commons.analysis;
 
-import net.sf.tweety.BeliefBase;
+import net.sf.tweety.commons.BeliefBase;
 
 /**
  * Classes implementing this interface represent inconsistency measures

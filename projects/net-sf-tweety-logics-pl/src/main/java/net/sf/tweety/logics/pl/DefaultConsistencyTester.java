@@ -3,9 +3,9 @@ package net.sf.tweety.logics.pl;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.EntailmentRelation;
-import net.sf.tweety.Interpretation;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.EntailmentRelation;
+import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.logics.commons.analysis.AbstractBeliefSetConsistencyTester;
 import net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;

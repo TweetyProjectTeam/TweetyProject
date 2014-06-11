@@ -2,13 +2,13 @@ package net.sf.tweety.logics.ml.test;
 
 import java.io.IOException;
 
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.AlchemyMlnReasoner;
 import net.sf.tweety.logics.ml.MarkovLogicNetwork;
-import net.sf.tweety.util.Pair;
 
 public class AlchemyTest {
 

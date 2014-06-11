@@ -2,8 +2,9 @@
 package net.sf.tweety.preferences.io;
 import java.io.File;
 import java.util.*;
+
+import net.sf.tweety.commons.util.Triple;
 import net.sf.tweety.preferences.*;
-import net.sf.tweety.util.Triple;
 
 @SuppressWarnings("all")
 public class POParser implements POParserConstants {

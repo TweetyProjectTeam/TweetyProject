@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.Parser;
-import net.sf.tweety.ParserException;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.grounding.parser.GroundingRequirementsParser;
 import net.sf.tweety.action.query.SActionQuerySet;
@@ -24,6 +22,8 @@ import net.sf.tweety.action.query.syntax.SActionQuery;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.action.signature.FolActionName;
+import net.sf.tweety.commons.Parser;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.parser.FolParser;

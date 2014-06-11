@@ -2,8 +2,8 @@ package net.sf.tweety.action;
 
 import java.util.Set;
 
-import net.sf.tweety.BeliefBase;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
+import net.sf.tweety.commons.BeliefBase;
 
 /**
  * Classes implementing this interface are capable of checking whether a

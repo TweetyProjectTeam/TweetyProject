@@ -2,7 +2,7 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * This class models the drastic inconsistency measure.

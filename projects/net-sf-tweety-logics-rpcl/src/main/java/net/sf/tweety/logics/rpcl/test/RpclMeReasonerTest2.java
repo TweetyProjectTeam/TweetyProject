@@ -3,7 +3,7 @@ package net.sf.tweety.logics.rpcl.test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;

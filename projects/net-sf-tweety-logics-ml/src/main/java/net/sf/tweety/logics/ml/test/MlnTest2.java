@@ -2,7 +2,8 @@ package net.sf.tweety.logics.ml.test;
 
 import java.io.IOException;
 
-import net.sf.tweety.ParserException;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.parser.FolParser;
@@ -11,7 +12,6 @@ import net.sf.tweety.logics.ml.*;
 import net.sf.tweety.logics.ml.analysis.*;
 import net.sf.tweety.logics.ml.syntax.MlnFormula;
 import net.sf.tweety.math.probability.Probability;
-import net.sf.tweety.util.Pair;
 
 public class MlnTest2 {
 

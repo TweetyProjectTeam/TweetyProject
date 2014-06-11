@@ -2,7 +2,7 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.Formula;
 
 /**
  * This class models the I_M inconsistency measure from e.g. [Grant,Hunter,2011a]. It takes

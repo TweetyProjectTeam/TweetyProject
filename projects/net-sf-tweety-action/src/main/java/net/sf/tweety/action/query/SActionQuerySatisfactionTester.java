@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.BeliefBase;
 import net.sf.tweety.action.ActionQuery;
 import net.sf.tweety.action.ActionQuerySatisfactionTester;
 import net.sf.tweety.action.query.syntax.AlwaysQuery;
@@ -19,6 +18,7 @@ import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.action.transitionsystem.Transition;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.lp.asp.solver.AspInterface;
 import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;

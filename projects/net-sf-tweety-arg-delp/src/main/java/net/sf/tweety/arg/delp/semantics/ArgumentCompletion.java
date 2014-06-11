@@ -2,11 +2,11 @@ package net.sf.tweety.arg.delp.semantics;
 
 import java.util.*;
 
-import net.sf.tweety.*;
 import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.arg.delp.syntax.*;
+import net.sf.tweety.commons.*;
+import net.sf.tweety.commons.util.*;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.util.*;
 
 /**
  * This class models the completion of an argument in the framework of defeasible logic programming. This class extends <source>DelpArgument</source>

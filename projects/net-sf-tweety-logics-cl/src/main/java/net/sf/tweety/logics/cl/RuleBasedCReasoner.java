@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.sf.tweety.Answer;
-import net.sf.tweety.Formula;
-import net.sf.tweety.Reasoner;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.logics.cl.kappa.ConditionalStructureKappaBuilder;
 import net.sf.tweety.logics.cl.kappa.KappaValue;
 import net.sf.tweety.logics.cl.rules.EvaluateRule;

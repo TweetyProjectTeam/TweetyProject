@@ -2,8 +2,8 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 
-import net.sf.tweety.BeliefSet;
-import net.sf.tweety.Formula;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Formula;
 
 /**
  * Classes extending this abstract class represent inconsistency measures

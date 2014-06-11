@@ -9,9 +9,9 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.commons.util.Pair;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.graphs.Graph;
-import net.sf.tweety.util.Pair;
-import net.sf.tweety.util.SetTools;
 
 /**
  * A pair <P,V> is a division of AAF G w.r.t. semantics X iff there is an X-extension E

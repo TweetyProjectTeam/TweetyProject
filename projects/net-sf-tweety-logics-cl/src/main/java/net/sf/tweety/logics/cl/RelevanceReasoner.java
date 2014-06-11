@@ -1,6 +1,6 @@
 package net.sf.tweety.logics.cl;
 
-import net.sf.tweety.*;
+import net.sf.tweety.commons.*;
 
 /**
  * Implements the approach from<br>

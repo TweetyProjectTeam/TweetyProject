@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.commons.util.Triple;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.opt.solver.*;
@@ -16,7 +17,6 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 import net.sf.tweety.preferences.PreferenceOrder;
 import net.sf.tweety.preferences.Relation;
-import net.sf.tweety.util.Triple;
 
 /**
  * This class is meant to provide leveling functions to given preference orders

@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import net.sf.tweety.BeliefBaseSampler;
+import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.streams.DefaultFormulaStream;
 import net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester;
 import net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider;
 import net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure;
@@ -36,7 +37,6 @@ import net.sf.tweety.logics.pl.util.MiSampler;
 import net.sf.tweety.math.func.BinaryFunction;
 import net.sf.tweety.math.func.MaxFunction;
 import net.sf.tweety.math.opt.solver.LpSolve;
-import net.sf.tweety.streams.DefaultFormulaStream;
 
 public class StreamInconsistencyEvaluation2 {
 	
