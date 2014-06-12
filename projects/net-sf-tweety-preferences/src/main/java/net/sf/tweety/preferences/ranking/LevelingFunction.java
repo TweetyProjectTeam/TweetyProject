@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.commons.util.Triple;
+import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.IntegerVariable;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
@@ -118,18 +118,23 @@ public class LevelingFunction<T> extends Functions<T> {
 			opt.setTargetFunction(t);
 		}
 
-		LpSolve solver = new LpSolve();
-		Map<Variable, Term> solution = solver.solve(opt);
-		Map<T, Integer> sol = new HashMap<T, Integer>();
-		for (Entry<Variable, Term> e : solution.entrySet()) {
-			//TODO: check the following cast
-			@SuppressWarnings("unchecked")
-			T key = (T) e.getKey().toString();
-			Integer val = (int) e.getValue().doubleValue();
-			sol.put(key, val);
+		try {
+			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(opt);
+			Map<T, Integer> sol = new HashMap<T, Integer>();
+			for (Entry<Variable, Term> e : solution.entrySet()) {
+				//TODO: check the following cast
+				@SuppressWarnings("unchecked")
+				T key = (T) e.getKey().toString();
+				Integer val = (int) e.getValue().doubleValue();
+				sol.put(key, val);
+			}
+			this.clear();
+			this.putAll(sol);
+		} catch (GeneralMathException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		this.clear();
-		this.putAll(sol);
+		
 
 		// } catch (StringIndexOutOfBoundsException e){
 		// System.err.println("You're input preference order seems to be invalid, please check it.");

@@ -17,7 +17,7 @@ import net.sf.tweety.math.term.*;
  * 
  * @author Matthias Thimm
  */
-public class LagrangeSolver implements Solver {
+public class LagrangeSolver extends Solver {
 
 	/**
 	 * The starting points for finding the optimum.
@@ -122,4 +122,11 @@ public class LagrangeSolver implements Solver {
 		throw new GeneralMathException("No feasible solution.");		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// as this is a native implementation it is always installed
+		return true;
+	}
 }

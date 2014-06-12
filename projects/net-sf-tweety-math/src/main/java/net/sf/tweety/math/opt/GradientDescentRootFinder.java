@@ -36,6 +36,9 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	 */
 	public GradientDescentRootFinder(Term function, Map<Variable,Term> startingPoint){
 		super(function,startingPoint);
+		//check whether the solver is installed
+		if(!GradientDescent.isInstalled())
+			throw new RuntimeException("Cannot instantiate GradientDescentRootFinder as the GradientDescent solver is not installed.");
 	}
 	
 	/**
@@ -45,6 +48,9 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	 */
 	public GradientDescentRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		super(functions,startingPoint);
+		//check whether the solver is installed
+		if(!GradientDescent.isInstalled())
+			throw new RuntimeException("Cannot instantiate GradientDescentRootFinder as the GradientDescent solver is not installed.");
 	}
 
 	/* (non-Javadoc)

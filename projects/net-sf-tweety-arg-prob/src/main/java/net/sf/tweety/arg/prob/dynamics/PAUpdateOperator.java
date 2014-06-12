@@ -15,7 +15,7 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.func.SimpleRealValuedFunction;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.OpenOptSolver;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -70,11 +70,8 @@ public class PAUpdateOperator extends AbstractPAChangeOperator {
 		Term min = new FloatConstant(AbstractPAChangeOperator.FIRST_OPTIMIZATION_WEIGHT).mult(this.getNorm().distanceTerm(varsCompVector,varsSemVector));		
 		problem.setTargetFunction(max.minus(min));				
 		// Do the optimization
-		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.solver = "ralg";
-			solver.contol = 0.0001;
-			Map<Variable,Term> solution = solver.solve(problem);
+		try{						
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			ProbabilisticExtension ext = new ProbabilisticExtension();
 			// select the best S-prob'function
 			for(Collection<Argument> args: varsSem.keySet())

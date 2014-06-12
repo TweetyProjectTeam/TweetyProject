@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class LbfgsSolver implements Solver {
+public class LbfgsSolver extends Solver {
 	
 	/**
 	 * Logger.
@@ -112,5 +112,14 @@ public class LbfgsSolver implements Solver {
 		}
 		this.log.trace("Optimum found: " + currentGuess);
 		return currentGuess;
-	}	
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// as Lbgfs is included as a Maven dependency, this solver
+		// is always installed
+		return true;
+	}
 }

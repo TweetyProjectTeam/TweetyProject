@@ -11,7 +11,7 @@ import net.sf.tweety.logics.pcl.analysis.MinimalViolationInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.parser.PclParser;
 import net.sf.tweety.math.norm.MaximumNorm;
 import net.sf.tweety.math.norm.PNorm;
-import net.sf.tweety.math.opt.solver.LpSolve;
+import net.sf.tweety.math.opt.Solver;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +24,6 @@ import org.junit.Test;
  */
 public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
-	boolean lpsolveConfigured;
-	
 	double accuracy;
 	
 	MinimalViolationInconsistencyMeasure inc;
@@ -36,54 +34,45 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 	
 	@Before
 	public void setUp() {
+		accuracy = 0.001;
 		
-		lpsolveConfigured = LpSolve.checkBinary();
+		parser = new PclParser();
 		
-		if(lpsolveConfigured) {
+		kbs = new LinkedList<PclBeliefSet>();
+		try {
+			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.5]"));
+
+			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.49]\n"
+					                                    + "(A)[0.51]"));
+
+			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.4]\n"
+					                                    + "(A)[0.6]"));
+
+			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.2]\n"
+					                                    + "(A)[0.8]"));
+
+			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0d]\n"
+					                                    + "(A)[1d]"));
 			
-			accuracy = 0.001;
-			
-			parser = new PclParser();
-			
-			kbs = new LinkedList<PclBeliefSet>();
-			try {
-				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.5]"));
 
-				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.49]\n"
-						                                    + "(A)[0.51]"));
-
-				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.4]\n"
-						                                    + "(A)[0.6]"));
-
-				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.2]\n"
-						                                    + "(A)[0.8]"));
-
-				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0d]\n"
-						                                    + "(A)[1d]"));
-				
-
-				kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.8]\n"
-						                                    + "(B)[0.6]\n"
-						                                    + "(B|A)[0.9]"));
-			} 
-			catch (IOException e) {
-			
-				System.err.println("Parsing error in MinimalViolationInconsistencyMeasureLPSolveTest setup.");
-				System.err.println(e.toString());
-				
-			}
-			catch (ParserException e) {
-
-				System.err.println("Parsing error in MinimalViolationInconsistencyMeasureLPSolveTest setup.");
-				System.err.println(e.toString());
-				
-			}
+			kbs.add((PclBeliefSet) parser.parseBeliefBase("(A)[0.8]\n"
+					                                    + "(B)[0.6]\n"
+					                                    + "(B|A)[0.9]"));
+		} 
+		catch (IOException e) {
+		
+			System.err.println("Parsing error in MinimalViolationInconsistencyMeasureLPSolveTest setup.");
+			System.err.println(e.toString());
 			
 		}
-		else {
-			System.err.println("Warning: Can't perform unit test MinimalViolationInconsistencyMeasureLPSolveTest because LPSolve isn't configured properly.");
-			System.err.println("Error message: lpsolve executable not found");
+		catch (ParserException e) {
+
+			System.err.println("Parsing error in MinimalViolationInconsistencyMeasureLPSolveTest setup.");
+			System.err.println(e.toString());
+			
 		}
+			
+		
 		
 	}
 
@@ -92,9 +81,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 	@Test
 	public void check1Norm() {
 		
-		if(!lpsolveConfigured) return;
-
-		inc = new MinimalViolationInconsistencyMeasure(new PNorm(1), new LpSolve());
+		inc = new MinimalViolationInconsistencyMeasure(new PNorm(1), Solver.getDefaultLinearSolver());
 		
 		LinkedList<Double> expected = new LinkedList<Double>();
 		
@@ -118,11 +105,10 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
 	@Test
 	public void checkMaxNorm() {
-		
-		if(!lpsolveConfigured) return;
 
 
-		inc = new MinimalViolationInconsistencyMeasure(new MaximumNorm(), new LpSolve());
+
+		inc = new MinimalViolationInconsistencyMeasure(new MaximumNorm(), Solver.getDefaultLinearSolver());
 		
 		LinkedList<Double> expected = new LinkedList<Double>();
 		

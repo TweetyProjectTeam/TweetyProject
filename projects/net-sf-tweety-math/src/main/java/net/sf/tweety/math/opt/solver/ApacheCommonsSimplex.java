@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * See http://commons.apache.org/math.  
  * @author Matthias Thimm
  */
-public class ApacheCommonsSimplex implements Solver {
+public class ApacheCommonsSimplex extends Solver {
 
 	/**
 	 * Logger.
@@ -45,7 +45,12 @@ public class ApacheCommonsSimplex implements Solver {
 	/**
 	 * The maximum number of iterations of the simplex algorithm.
 	 */
-	public static final int MAXITERATIONS = 50000;
+	public int MAXITERATIONS = 50000;
+	
+	/**
+	 * Whether only positive solutions are allowed.
+	 */
+	public boolean onlyPositive = false;
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.Solver#solve()
@@ -130,14 +135,12 @@ public class ApacheCommonsSimplex implements Solver {
 		try{
 			this.log.info("Calling the Apache Commons Simplex algorithm.");
 			SimplexSolver solver = new SimplexSolver(0.01);
-			solver.setMaxIterations(ApacheCommonsSimplex.MAXITERATIONS);
+			solver.setMaxIterations(this.MAXITERATIONS);
 			RealPointValuePair r = null;
-			//TODO: define the following as parameter
-			boolean justPositive = false;
 			if(problem instanceof OptimizationProblem){
 				int type = ((OptimizationProblem)problem).getType();
-				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), justPositive);
-			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, justPositive);
+				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), this.onlyPositive);
+			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, this.onlyPositive);
 			this.log.info("Parsing output from the Apache Commons Simplex algorithm.");
 			Map<Variable, Term> result = new HashMap<Variable, Term>();
 			for(Variable v: origVars2Idx.keySet())
@@ -149,4 +152,12 @@ public class ApacheCommonsSimplex implements Solver {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// as Apache commons is included as a Maven dependency, this solver
+		// is always installed
+		return true;
+	}
 }

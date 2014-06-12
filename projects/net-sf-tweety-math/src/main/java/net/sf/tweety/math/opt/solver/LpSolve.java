@@ -13,7 +13,7 @@ import net.sf.tweety.math.term.*;
  * for mixed integer  linear programming. See http://lpsolve.sourceforge.net.
  * @author Matthias Thimm
  */
-public class LpSolve implements Solver {
+public class LpSolve extends Solver {
 	
 	/**Path to the binary or lp_solve*/
 	private static String binary = "lp_solve";
@@ -21,17 +21,16 @@ public class LpSolve implements Solver {
 	/** For temporary files. */
 	private static File tmpFolder = null;
 	
-	/**
-	 * Checks whether the lp_solve binary is accessible
-	 * @return "true" if lp_solve is correctly installed
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
 	 */
-	public static boolean checkBinary(){
+	public static boolean isInstalled() throws UnsupportedOperationException{
 		try {
 			Exec.invokeExecutable(LpSolve.binary + " -h");
 			return true;
 		} catch (Exception e) {
 			return false;
-		}		
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -42,7 +41,7 @@ public class LpSolve implements Solver {
 		if(!problem.isLinear())
 			throw new IllegalArgumentException("The solver \"lpsolve\" needs linear optimization problems.");
 		//check existence of lp_solve first
-		if(!LpSolve.checkBinary())
+		if(!LpSolve.isInstalled())
 			return null;
 		String output = new String();
 		//String error = "";

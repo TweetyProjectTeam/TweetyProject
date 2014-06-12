@@ -14,7 +14,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.OpenOptSolver;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
@@ -129,14 +129,7 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			//TODO use lp_solve
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.contol = 1e-3;
-			solver.gtol = 1e-60;
-			solver.ftol = 1e-60;
-			solver.xtol = 1e-60;
-			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultLinearSolver().solve(problem);
 			return problem.getTargetFunction().replaceAllTerms(solution).doubleValue();
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible

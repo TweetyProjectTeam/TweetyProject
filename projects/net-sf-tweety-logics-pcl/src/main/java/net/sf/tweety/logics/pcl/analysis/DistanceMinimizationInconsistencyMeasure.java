@@ -14,7 +14,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.OpenOptSolver;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
@@ -167,13 +167,7 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 		}
 		problem.setTargetFunction(targetFunction);		
 		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.contol = 1e-8;
-			solver.gtol = 1e-15;
-			solver.ftol = 1e-15;
-			solver.xtol = 1e-15;
-			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
 			if(this.p > 1)
 				result = Math.pow(result, 1d/this.p);

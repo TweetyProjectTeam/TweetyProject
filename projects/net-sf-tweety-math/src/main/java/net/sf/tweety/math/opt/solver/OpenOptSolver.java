@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.commons.util.Exec;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
@@ -34,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author Matthias Thimm
  *
  */
-public class OpenOptSolver implements Solver {
+public class OpenOptSolver extends Solver {
 	
 	/**
 	 * Logger.
@@ -284,5 +285,39 @@ public class OpenOptSolver implements Solver {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// first check whether Python is installed
+		try {
+			Exec.invokeExecutable("python -h");
+		} catch (Exception e) {
+			return false;
+		}
+		// then check whether OpenOpt is installed as a Python package
+		// by running a small python script
+		try {
+			String scr = "try:\n"
+					+ "\timport openopt\n"
+					+ "\timport FuncDesigner\n"
+					+ "\timport numpy\n"
+					+ "\tprint \"yes\"\n"
+					+ "except ImportError:\n"
+					+ "\tprint \"no\"\n";
+			File ooFile = File.createTempFile("ootmp", null);
+			// Delete temp file when program exits.
+			ooFile.deleteOnExit();    
+			// Write to temp file
+			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
+			out.write(scr);			
+			out.close();
+			String output = Exec.invokeExecutable("python " + ooFile.getAbsolutePath());
+			ooFile.delete();
+			return output.trim().equals("yes");
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException("Unable to create a temporary file for testing whether OpenOpt is installed.");
+		}
+	}
 }

@@ -7,10 +7,11 @@ import java.util.Map;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.InterpretationIterator;
+import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.LpSolve;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Term;
@@ -72,9 +73,12 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 			problem.add(new Inequation(leftTerm,eta,Inequation.GREATER_EQUAL));
 		}
 		// solve the problem
-		LpSolve solver = new LpSolve();
-		Map<Variable,Term> solution = solver.solve(problem);
-		return 1-solution.get(eta).doubleValue();
+		try {
+			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(problem);
+			return 1-solution.get(eta).doubleValue();
+		} catch (GeneralMathException e) {
+			throw new RuntimeException(e);
+		}		
 	}
 	
 	/* (non-Javadoc)

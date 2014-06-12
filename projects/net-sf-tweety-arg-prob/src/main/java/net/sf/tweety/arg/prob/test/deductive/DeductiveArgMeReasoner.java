@@ -18,7 +18,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.OpenOptSolver;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.probability.ProbabilityFunction;
 import net.sf.tweety.math.term.FloatConstant;
@@ -117,13 +117,9 @@ public class DeductiveArgMeReasoner extends Reasoner {
 				//problem.add(new Inequation(this.getSumOfWorlds(new Conjunction(a.getSupport()), worlds2vars),t,Inequation.GREATER_EQUAL));
 			}
 		}		
-		System.out.println(problem);
+		//System.out.println(problem);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.solver = "ralg";
-			// TODO:
-			//solver.python = "/usr/bin/python";
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			ProbabilityFunction<PossibleWorld> prob = new ProbabilityFunction<PossibleWorld>();
 			for(PossibleWorld w: possibleWorlds)
 				prob.put(w, new Probability(solution.get(worlds2vars.get(w)).doubleValue()));

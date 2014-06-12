@@ -36,6 +36,7 @@ import net.sf.tweety.logics.pl.util.CnfSampler;
 import net.sf.tweety.logics.pl.util.MiSampler;
 import net.sf.tweety.math.func.BinaryFunction;
 import net.sf.tweety.math.func.MaxFunction;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.LpSolve;
 
 public class StreamInconsistencyEvaluation2 {
@@ -57,6 +58,7 @@ public class StreamInconsistencyEvaluation2 {
 	public static void main(String[] args) throws InterruptedException{
 		LpSolve.setBinary("/home/mthimm/strinc/lpsolve/lp_solve");
 		LpSolve.setTmpFolder(new File(TMP_FILE_FOLDER));
+		Solver.setDefaultLinearSolver(new LpSolve());
 		SatSolverEntailment.tempFolder = new File(TMP_FILE_FOLDER);
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
 		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);

@@ -93,4 +93,11 @@ public class OpenOptWebSolver extends OpenOptSolver {
 			throw new GeneralMathException(e.getMessage());
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		return OpenOptWebSolver.openopt_webservice_apikey != null && OpenOptWebSolver.openopt_webservice_url != null;
+	}
 }

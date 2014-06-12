@@ -27,8 +27,7 @@ import net.sf.tweety.math.norm.MaximumNorm;
 import net.sf.tweety.math.norm.PNorm;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.LpSolve;
-import net.sf.tweety.math.opt.solver.OpenOptWebSolver;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -103,9 +102,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 		switch(p) {
 			case MANHATTAN:
 				this.norm = new ManhattanNorm();
-				if(LpSolve.checkBinary())
-					this.inc = new MinimalViolationInconsistencyMeasure(this.norm, new LpSolve());
-				else this.inc = new MinimalViolationInconsistencyMeasure(this.norm, new OpenOptWebSolver());
+				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, Solver.getDefaultLinearSolver());
 				break;
 			case EUCLIDEAN:
 				//special case for Euclidean: we can use OjAlgo library
@@ -113,13 +110,12 @@ public class GeneralizedMeReasoner extends Reasoner {
 				this.inc = new MinimalViolation2InconsistencyMeasure();
 				break;
 			case MAXIMUM:
-				if(!LpSolve.checkBinary()) throw new IllegalArgumentException("LPSolve must be configured properly to use Maximum norm.");
 				this.norm = new MaximumNorm();
-				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, new LpSolve());
+				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, Solver.getDefaultLinearSolver());
 				break;
 			default:
 				this.norm = new PNorm(p);
-				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, new OpenOptWebSolver());
+				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, Solver.getDefaultGeneralSolver());
 		}
 			
 		
@@ -214,9 +210,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptWebSolver solver = new OpenOptWebSolver();
-			solver.solver = "ralg";
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(this.signature);
 			for(PossibleWorld w: worlds)

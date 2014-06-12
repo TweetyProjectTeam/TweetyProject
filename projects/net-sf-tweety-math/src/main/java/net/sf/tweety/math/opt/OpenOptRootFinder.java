@@ -27,6 +27,9 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 	 */
 	public OpenOptRootFinder(Term function, Map<Variable,Term> startingPoint){
 		super(function,startingPoint);
+		//check whether the solver is installed
+		if(!OpenOptSolver.isInstalled())
+			throw new RuntimeException("Cannot instantiate OpenOptRootFinder as the OpenOptSolver is not installed.");
 	}
 	
 	/**
@@ -36,6 +39,9 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 	 */
 	public OpenOptRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		super(functions,startingPoint);
+		//check whether the solver is installed
+		if(!OpenOptSolver.isInstalled())
+			throw new RuntimeException("Cannot instantiate OpenOptRootFinder as the OpenOptSolver is not installed.");
 	}
 
 	/**

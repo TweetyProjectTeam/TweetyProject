@@ -11,7 +11,6 @@ import net.sf.tweety.logics.pl.syntax.*;
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
 import net.sf.tweety.math.probability.*;
 
@@ -140,13 +139,7 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.contol = 1e-8;
-			solver.gtol = 1e-15;
-			solver.ftol = 1e-15;
-			solver.xtol = 1e-15;
-			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// prepare result
 			PclBeliefSet result = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet)

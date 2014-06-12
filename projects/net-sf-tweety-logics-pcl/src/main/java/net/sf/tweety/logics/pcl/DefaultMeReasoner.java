@@ -12,7 +12,6 @@ import net.sf.tweety.logics.pl.syntax.*;
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
 import net.sf.tweety.math.probability.*;
 
@@ -140,9 +139,7 @@ public class DefaultMeReasoner extends Reasoner {
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.solver = "ralg";
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(this.signature);
 			for(PossibleWorld w: worlds)

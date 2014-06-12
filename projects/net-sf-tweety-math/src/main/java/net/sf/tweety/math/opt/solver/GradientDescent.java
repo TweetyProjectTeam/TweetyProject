@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author Matthias Thimm
  *
  */
-public class GradientDescent implements Solver {
+public class GradientDescent extends Solver {
 	
 	/**
 	 * Logger.
@@ -115,5 +115,12 @@ public class GradientDescent implements Solver {
 		return currentGuess;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// as this is a native implementation it is always installed
+		return true;
+	}
 
 }

@@ -13,7 +13,6 @@ import net.sf.tweety.logics.pl.syntax.*;
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
 import net.sf.tweety.math.probability.*;
 
@@ -105,13 +104,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 		}
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.contol = 1e-6;
-			solver.gtol = 1e-30;
-			solver.ftol = 1e-30;
-			solver.xtol = 1e-30;
-			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// insert the mu/nu solution into the optimization problem
 			for(ProbabilisticConditional pc: beliefSet){
 				problem.add(new Equation(mus.get(pc),solution.get(mus.get(pc))));
@@ -126,14 +119,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 			}
 			problem.setTargetFunction(targetFunction);
 			//solve for me-distribution
-			solver = new OpenOptSolver();
-			solver.contol = 0.0001;
-			solver.ftol = 0.0001;
-			solver.gtol = 0.0001;
-			solver.xtol = 0.0001;
-			solver.solver = "ralg";
-			//System.out.println(solver.getOpenOptCode());
-			solution = solver.solve(problem);
+			solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
 			ProbabilityDistribution<PossibleWorld> meDistribution = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
 			for(PossibleWorld world: worlds)

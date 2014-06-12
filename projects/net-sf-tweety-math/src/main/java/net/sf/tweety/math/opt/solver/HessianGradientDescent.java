@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * for solving unconstrained optimization problems.
  * @author Matthias Thimm
  */
-public class HessianGradientDescent implements Solver {
+public class HessianGradientDescent extends Solver {
 
 	/**
 	 * Logger.
@@ -152,5 +152,13 @@ public class HessianGradientDescent implements Solver {
 		}catch(Exception e){
 			throw new RuntimeException();
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// as this is a native implementation it is always installed
+		return true;
 	}
 }

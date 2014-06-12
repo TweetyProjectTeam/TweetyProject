@@ -15,8 +15,7 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.OpenOptSolver;
-import net.sf.tweety.math.opt.solver.OpenOptWebSolver;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -90,12 +89,7 @@ public class MinimumViolationMachineShop implements BeliefBaseMachineShop {
 		Term targetFunction = this.norm.normTerm(vio.values().toArray(new Term[0]));
 		problem.setTargetFunction(targetFunction);
 		try{			
-			OpenOptSolver solver = new OpenOptWebSolver();
-			solver.solver = "ralg";
-			solver.contol = 1e-4;			
-			solver.ignoreNotFeasibleError = true;
-			//System.out.println(solver.getOpenOptCode());
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// prepare probability function
 			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
 			for(PossibleWorld world: worlds)

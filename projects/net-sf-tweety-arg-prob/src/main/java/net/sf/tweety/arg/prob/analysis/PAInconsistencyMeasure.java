@@ -16,7 +16,7 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.OpenOptSolver;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.Term;
@@ -105,10 +105,7 @@ public class PAInconsistencyMeasure implements InconsistencyMeasure<PartialProba
 //		TweetyLogging.initLogging();
 //		System.out.println(problem);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.solver = "ralg";
-			solver.contol = 0.0001;
-			Map<Variable,Term> solution = solver.solve(problem);
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			//for(Variable v: solution.keySet())
 			//	System.out.println(v + "\t" + solution.get(v));
 			return problem.getTargetFunction().replaceAllTerms(solution).value().doubleValue();

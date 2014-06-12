@@ -25,7 +25,6 @@ import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.ProblemInconsistentException;
 import net.sf.tweety.math.opt.Solver;
-import net.sf.tweety.math.opt.solver.OpenOptSolver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -202,9 +201,7 @@ public class RpclMeReasoner extends Reasoner {
 			}
 			problem.setTargetFunction(targetFunction);			
 			try{
-				log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
-				Solver solver = new OpenOptSolver();
-				Map<Variable,Term> solution = solver.solve(problem);				
+				Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);				
 				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,this.getSignature());
 				for(ReferenceWorld w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
@@ -256,11 +253,7 @@ public class RpclMeReasoner extends Reasoner {
 			}
 			problem.setTargetFunction(targetFunction);			
 			try{
-				log.info("Applying the OpenOpt optimization library to find the ME-distribution.");
-				OpenOptSolver solver = new OpenOptSolver();
-				solver.solver = "ralg";
-				solver.ignoreNotFeasibleError = true;
-				Map<Variable,Term> solution = solver.solve(problem);
+				Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 				RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics,this.getSignature());
 				for(HerbrandInterpretation w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();

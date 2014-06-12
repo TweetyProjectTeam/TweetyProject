@@ -7,6 +7,7 @@ import net.sf.tweety.logics.cl.semantics.*;
 import net.sf.tweety.logics.cl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
 import net.sf.tweety.logics.pl.syntax.*;
+import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
 import net.sf.tweety.math.term.*;
@@ -128,15 +129,16 @@ public class CReasoner extends Reasoner {
 		// for every possible world "w" the rank of the world should obey the above constraint
 		for(PossibleWorld w: ranks.keySet())
 			problem.add(this.getRankConstraint(w, ranks.get(w), kappa_pos, kappa_neg));
-
-		//TODO: get default solver and not LpSolve
-		Map<Variable, Term> solution = new net.sf.tweety.math.opt.solver.LpSolve().solve(problem);
-		// extract ranking function
-		for(PossibleWorld w: ranks.keySet()){
-			crep.setRank(w, ((IntegerConstant)solution.get(ranks.get(w))).getValue());
+		try {
+			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(problem);
+			// extract ranking function
+			for(PossibleWorld w: ranks.keySet()){
+				crep.setRank(w, ((IntegerConstant)solution.get(ranks.get(w))).getValue());
+			}		
+			return crep;
+		} catch (GeneralMathException e) {
+			throw new RuntimeException(e);
 		}		
-
-		return crep;
 	}
 	
 	/**

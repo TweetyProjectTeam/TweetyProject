@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @author Matthias Thimm
  *
  */
-public class BfgsSolver implements Solver {
+public class BfgsSolver extends Solver {
 
 	/**
 	 * Logger.
@@ -119,4 +119,11 @@ public class BfgsSolver implements Solver {
 		return result;	
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// as this is a native implementation it is always installed
+		return true;
+	}
 }

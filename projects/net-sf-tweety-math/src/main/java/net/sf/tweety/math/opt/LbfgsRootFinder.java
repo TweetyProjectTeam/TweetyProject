@@ -22,6 +22,9 @@ public class LbfgsRootFinder extends OptimizationRootFinder {
 	 */
 	public LbfgsRootFinder(Term function, Map<Variable,Term> startingPoint){
 		super(function,startingPoint);
+		//check whether the solver is installed
+		if(!LbfgsSolver.isInstalled())
+			throw new RuntimeException("Cannot instantiate LbfgsRootFinder as the LbfgsSolver is not installed.");
 	}
 	
 	/**
@@ -31,6 +34,9 @@ public class LbfgsRootFinder extends OptimizationRootFinder {
 	 */
 	public LbfgsRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		super(functions,startingPoint);
+		//check whether the solver is installed
+		if(!LbfgsSolver.isInstalled())
+			throw new RuntimeException("Cannot instantiate LbfgsRootFinder as the LbfgsSolver is not installed.");
 	}
 
 	/* (non-Javadoc)

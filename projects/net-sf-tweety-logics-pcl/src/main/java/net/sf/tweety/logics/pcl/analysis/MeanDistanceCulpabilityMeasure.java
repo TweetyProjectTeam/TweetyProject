@@ -10,7 +10,6 @@ import net.sf.tweety.logics.pl.syntax.*;
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
 
 /**
@@ -67,13 +66,7 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 		OptimizationProblem problem = this.getBaseProblem(beliefSet, conditional, incVal);
 		problem.setType(OptimizationProblem.MINIMIZE);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.contol = 0.0001;
-			solver.gtol = 1e-15;
-			solver.ftol = 1e-15;
-			solver.xtol = 1e-15;
-			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve(problem);		
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);		
 			return problem.getTargetFunction().replaceAllTerms(solution).doubleValue();
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible
@@ -90,13 +83,7 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 	private Double getMaximumValue(PclBeliefSet beliefSet, ProbabilisticConditional conditional, double incVal){
 		OptimizationProblem problem = this.getBaseProblem(beliefSet, conditional, incVal);
 		try{			
-			OpenOptSolver solver = new OpenOptSolver();
-			solver.contol = 0.0001;
-			solver.gtol = 1e-15;
-			solver.ftol = 1e-15;
-			solver.xtol = 1e-15;
-			//solver.ignoreNotFeasibleError = true;
-			Map<Variable,Term> solution = solver.solve(problem);			
+			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);			
 			return problem.getTargetFunction().replaceAllTerms(solution).doubleValue();
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible

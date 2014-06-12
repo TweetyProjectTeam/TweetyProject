@@ -22,6 +22,9 @@ public class HessianGradientDescentRootFinder extends OptimizationRootFinder {
 	 */
 	public HessianGradientDescentRootFinder(Term function, Map<Variable,Term> startingPoint){
 		super(function,startingPoint);
+		//check whether the solver is installed
+		if(!HessianGradientDescent.isInstalled())
+			throw new RuntimeException("Cannot instantiate HessianGradientDescentRootFinder as the HessianGradientDescent solver is not installed.");
 	}
 	
 	/**
@@ -31,6 +34,9 @@ public class HessianGradientDescentRootFinder extends OptimizationRootFinder {
 	 */
 	public HessianGradientDescentRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		super(functions,startingPoint);
+		//check whether the solver is installed
+		if(!HessianGradientDescent.isInstalled())
+			throw new RuntimeException("Cannot instantiate HessianGradientDescentRootFinder as the HessianGradientDescent solver is not installed.");
 	}
 
 	/* (non-Javadoc)

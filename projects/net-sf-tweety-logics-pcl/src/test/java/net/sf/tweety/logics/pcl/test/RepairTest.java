@@ -7,6 +7,7 @@ import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.analysis.GeneralizedMeMachineShop;
 import net.sf.tweety.logics.pcl.parser.PclParser;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.OpenOptWebSolver;
 
 public class RepairTest {
@@ -21,6 +22,9 @@ public class RepairTest {
 		// configure web service
 		OpenOptWebSolver.openopt_webservice_url = "http://tweety.west.uni-koblenz.de/opt/openopt/solve.php";		
 		OpenOptWebSolver.openopt_webservice_apikey = "Please request an API key from Matthias (thimm@uni-koblenz.de) or set up your own web service with the file OpenOptWebSolver.php (OpenOpt has to be installed on the server)";
+		
+		// register solver
+		Solver.setDefaultGeneralSolver(new OpenOptWebSolver());
 		
 		// some inconsistent belief base
 		PclBeliefSet kb = new PclBeliefSet();
