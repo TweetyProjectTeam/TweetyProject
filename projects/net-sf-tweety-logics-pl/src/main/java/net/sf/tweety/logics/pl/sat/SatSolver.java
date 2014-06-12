@@ -1,4 +1,4 @@
-package net.sf.tweety.logics.pl;
+package net.sf.tweety.logics.pl.sat;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import net.sf.tweety.commons.EntailmentRelation;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.Pair;
+import net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester;
+import net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -18,13 +20,59 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
- * Abstract parent class for entailment relations utilizing SAT solvers.
+ * Abstract class for specifying SAT solvers.
  * @author Matthias Thimm
  */
-public abstract class SatSolverEntailment extends EntailmentRelation<PropositionalFormula>{
+public abstract class SatSolver implements BeliefSetConsistencyTester<PropositionalFormula>, ConsistencyWitnessProvider<PropositionalFormula>{
 
+	/** The default SAT solver. */
+	private static SatSolver defaultSatSolver = null;
 	/** For temporary files. */
-	public static File tempFolder = null;
+	private static File tempFolder = null;
+	
+	/**
+	 * Sets the default SAT solver.
+	 * @param solver some SAT solver
+	 */
+	public static void setDefaultSolver(SatSolver solver){
+		SatSolver.defaultSatSolver = solver;
+	}
+	
+	/**
+	 * Set the folder for temporary files created by SAT solver.
+	 * @param tempFolder some temp folder.
+	 */
+	public static void setTempFolder(File tempFolder){
+		SatSolver.tempFolder = tempFolder;
+	}
+
+	/**
+	 * Returns "true" if a default SAT solver is configured.
+	 * @return "true" if a default SAT solver is configured.
+	 */
+	public static boolean hasDefaultSolver(){
+		return SatSolver.defaultSatSolver != null;
+	}
+
+	/**
+	 * Returns the default SAT solver.</br></br>
+	 * If no default SAT solver has been configured this solver
+	 * is returned by this method. If no default solver for general problems is 
+	 * configured, the Sat4j solver (<code>net.sf.tweety.pl.sat.Sat4jSolver</code>)
+	 * is returned as a fallback and a message is
+	 * printed to stderr pointing out that no default SAT solver is configured.
+	 * @return the default SAT solver.
+	 */
+	public static SatSolver getDefaultSolver(){
+		if(SatSolver.defaultSatSolver != null)
+			return SatSolver.defaultSatSolver;
+		System.err.println("No default SAT solver configured, using "
+				+ "'Sat4jSolver' with default settings as fallback. "
+				+ "It is strongly advised that a default SAT solver is manually configured, see "
+				+ "'http://www.mthimm.de/projects/tweety/doc/sat-solvers.html' "
+				+ "for more information.");
+		return new Sat4jSolver();
+	}
 	
 	/**
 	 * Converts the given set of formulas to their string representation in 
@@ -36,7 +84,7 @@ public abstract class SatSolverEntailment extends EntailmentRelation<Proposition
 	 * @param a list of propositions (=signature) where the indices are used for writing the clauses.
 	 * @return a string in Dimacs CNF.
 	 */
-	public static String convertToDimacs(Collection<PropositionalFormula> formulas, List<Proposition> props){
+	protected static String convertToDimacs(Collection<PropositionalFormula> formulas, List<Proposition> props){
 		Conjunction conj = new Conjunction();
 		conj.addAll(formulas);
 		conj = conj.toCnf();			
@@ -65,7 +113,7 @@ public abstract class SatSolverEntailment extends EntailmentRelation<Proposition
 	 * @param formulas a collection of formulas.
 	 * @return a string in Dimacs CNF and a mapping between clauses and original formulas.
 	 */
-	public static Pair<String,List<PropositionalFormula>> convertToDimacs(Collection<PropositionalFormula> formulas){
+	protected static Pair<String,List<PropositionalFormula>> convertToDimacs(Collection<PropositionalFormula> formulas){
 		List<Proposition> props = new ArrayList<Proposition>();
 		for(PropositionalFormula f: formulas){
 			props.removeAll(f.getAtoms());
@@ -103,9 +151,9 @@ public abstract class SatSolverEntailment extends EntailmentRelation<Proposition
 	 * @return the file handler. 
 	 * @throws IOException if something went wrong while creating a temporary file. 
 	 */
-	public static File createTmpDimacsFile(Collection<PropositionalFormula> formulas, List<Proposition> props) throws IOException{
-		String r = SatSolverEntailment.convertToDimacs(formulas, props);
-		File f = File.createTempFile("tweety-sat", ".cnf", SatSolverEntailment.tempFolder);		
+	protected static File createTmpDimacsFile(Collection<PropositionalFormula> formulas, List<Proposition> props) throws IOException{
+		String r = SatSolver.convertToDimacs(formulas, props);
+		File f = File.createTempFile("tweety-sat", ".cnf", SatSolver.tempFolder);		
 		f.deleteOnExit();
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
 		writer.print(r);
@@ -122,8 +170,8 @@ public abstract class SatSolverEntailment extends EntailmentRelation<Proposition
 	 * @return the file handler and a mapping between clauses and original formulas. 
 	 * @throws IOException if something went wrong while creating a temporary file. 
 	 */
-	public static Pair<File,List<PropositionalFormula>> createTmpDimacsFile(Collection<PropositionalFormula> formulas) throws IOException{
-		Pair<String,List<PropositionalFormula>> r = SatSolverEntailment.convertToDimacs(formulas);
+	protected static Pair<File,List<PropositionalFormula>> createTmpDimacsFile(Collection<PropositionalFormula> formulas) throws IOException{
+		Pair<String,List<PropositionalFormula>> r = SatSolver.convertToDimacs(formulas);
 		File f = File.createTempFile("tweety-sat", ".cnf");
 		f.deleteOnExit();
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
@@ -132,19 +180,61 @@ public abstract class SatSolverEntailment extends EntailmentRelation<Proposition
 		return new Pair<File,List<PropositionalFormula>>(f,r.getSecond());
 	}
 	
+	/**
+	 * If the collection of formulas is consistent this method
+	 * returns some model of it or, if it is inconsistent, null.
+	 * @return some model of the formulas or null.
+	 */
+	public abstract Interpretation getWitness(Collection<PropositionalFormula> formulas);
+	
+	/**
+	 * Checks whether the given set of formulas is satisfiable.
+	 * @param formulas a set of formulas.
+	 * @return "true" if the set is consistent.
+	 */
+	public abstract boolean isSatisfiable(Collection<PropositionalFormula> formulas);
+
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.EntailmentRelation#entails(java.util.Collection, net.sf.tweety.Formula)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.commons.BeliefSet)
 	 */
 	@Override
-	public boolean entails(Collection<PropositionalFormula> formulas, PropositionalFormula formula) {
-		Set<PropositionalFormula> fset = new HashSet<PropositionalFormula>(formulas);
-		fset.add((PropositionalFormula)formula.complement());
-		return !this.isConsistent(fset);
+	public boolean isConsistent(BeliefSet<PropositionalFormula> beliefSet) {
+		return this.isSatisfiable(beliefSet);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.EntailmentRelation#isConsistent(java.util.Collection)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(java.util.Collection)
 	 */
 	@Override
-	public abstract boolean isConsistent(Collection<PropositionalFormula> formulas);
+	public boolean isConsistent(Collection<PropositionalFormula> formulas) {
+		return this.isSatisfiable(formulas);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.commons.Formula)
+	 */
+	@Override
+	public boolean isConsistent(PropositionalFormula formula) {
+		Collection<PropositionalFormula> formulas = new HashSet<PropositionalFormula>();
+		formulas.add(formula);
+		return this.isSatisfiable(formulas);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.commons.Formula)
+	 */
+	@Override
+	public Interpretation getWitness(PropositionalFormula formula) {
+		Collection<PropositionalFormula> f = new HashSet<PropositionalFormula>();
+		f.add(formula);
+		return this.getWitness(f);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.commons.BeliefSet)
+	 */
+	@Override
+	public Interpretation getWitness(BeliefSet<PropositionalFormula> bs) {
+		return this.getWitness((Collection<PropositionalFormula>) bs);
+	}
 }

@@ -3,10 +3,10 @@ package net.sf.tweety.logics.pl.test;
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.pl.DefaultConsistencyTester;
-import net.sf.tweety.logics.pl.LingelingEntailment;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.sat.LingelingSolver;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 public class LingelingTest {
@@ -22,8 +22,9 @@ public static void main(String[] args) throws ParserException, IOException{
 		
 		System.out.println(beliefSet);
 		
-		DefaultConsistencyTester tester = new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));
+		SatSolver solver = new LingelingSolver("/Users/mthimm/Projects/misc_bins/lingeling");
 		
-		System.out.println(tester.getWitness(beliefSet));
+		
+		System.out.println(solver.getWitness(beliefSet));
 	}
 }

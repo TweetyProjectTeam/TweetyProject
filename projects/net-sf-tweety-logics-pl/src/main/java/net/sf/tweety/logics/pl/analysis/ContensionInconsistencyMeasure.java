@@ -5,9 +5,9 @@ import java.util.HashSet;
 
 import net.sf.tweety.commons.util.IncreasingSubsetIterator;
 import net.sf.tweety.commons.util.SubsetIterator;
-import net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -29,17 +29,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  */
 public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula> {
 
-	/** The consistency tester used for measuring. */
-	private BeliefSetConsistencyTester<PropositionalFormula> consTester;
-	
-	/**
-	 * Creates a new inconsistency measure.
-	 * @param consTester some consistency tester
-	 */
-	public ContensionInconsistencyMeasure(BeliefSetConsistencyTester<PropositionalFormula> consTester){
-		this.consTester = consTester;
-	}	
-	
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
@@ -56,7 +46,7 @@ public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasur
 					if(f.getAtoms().contains(p))
 						newCnf.remove(f);
 			}
-			if(this.consTester.isConsistent((PropositionalFormula)newCnf))
+			if(SatSolver.getDefaultSolver().isConsistent((PropositionalFormula)newCnf))
 				return new Double(props.size());
 		}
 		// this should not happen as at least the paraconsistent interpretation which assigns

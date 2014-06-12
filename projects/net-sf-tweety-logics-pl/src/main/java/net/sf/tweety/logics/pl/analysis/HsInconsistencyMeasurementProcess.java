@@ -23,8 +23,6 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	
 	/** Configuration key for the signature. */
 	public static final String CONFIG_KEY_SIGNATURE = "signature";
-	/** Configuration key for the consistency tester. */
-	public static final String CONFIG_KEY_WITNESSPROVIDER = "witnessProvider";
 	/** Configuration key for the number of populations tried out. */
 	public static final String CONFIG_KEY_NUMBEROFPOPULATIONS = "numberOfPopulations";
 	/** Key for the configuration map that points to the smoothing factor to be used. if X1 is the previous
@@ -59,11 +57,9 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess#init(java.util.Map)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void init(Map<String, Object> config) {
 		this.sig = (PropositionalSignature) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
-		this.witnessProvider = (ConsistencyWitnessProvider<PropositionalFormula>) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER);
 		this.numberOfPopulations = (int) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS);
 		if(config.containsKey(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR))
 			this.smoothingFactor = (double) config.get(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR);

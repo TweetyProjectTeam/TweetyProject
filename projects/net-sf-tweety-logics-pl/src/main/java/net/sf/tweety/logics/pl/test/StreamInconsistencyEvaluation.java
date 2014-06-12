@@ -10,8 +10,6 @@ import java.util.Map;
 
 import net.sf.tweety.commons.BeliefBaseSampler;
 import net.sf.tweety.commons.streams.DefaultFormulaStream;
-import net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester;
-import net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider;
 //import net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure;
 //import net.sf.tweety.logics.commons.analysis.MicInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.MusEnumerator;
@@ -21,13 +19,12 @@ import net.sf.tweety.logics.commons.analysis.streams.EvaluationInconsistencyList
 import net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess;
 import net.sf.tweety.logics.commons.analysis.streams.StreamBasedInconsistencyMeasure;
 //import net.sf.tweety.logics.commons.analysis.streams.WindowInconsistencyMeasurementProcess;
-import net.sf.tweety.logics.pl.DefaultConsistencyTester;
-import net.sf.tweety.logics.pl.LingelingEntailment;
 import net.sf.tweety.logics.pl.PlBeliefSet;
-import net.sf.tweety.logics.pl.SatSolverEntailment;
 //import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.analysis.HsInconsistencyMeasurementProcess;
-import net.sf.tweety.logics.pl.analysis.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.sat.LingelingSolver;
+import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 //import net.sf.tweety.logics.pl.analysis.PlWindowInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -46,8 +43,6 @@ public class StreamInconsistencyEvaluation {
 	public static final int 												SIZE_OF_KNOWLEDGEBASES 		= 5000;
 	public static final double 												STANDARD_SMOOTHING_FACTOR  	= 0.75;
 	public static final int													STANDARD_EVENTS				= 1000000;//40000;
-	public static final BeliefSetConsistencyTester<PropositionalFormula>	STANDARD_CONSISTENCY_TESTER = new DefaultConsistencyTester(new LingelingEntailment("/home/mthimm/strinc/lingeling/lingeling"));//new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));
-	public static final ConsistencyWitnessProvider<PropositionalFormula> 	STANDARD_WITNESS_PROVIDER	= new DefaultConsistencyTester(new LingelingEntailment("/home/mthimm/strinc/lingeling/lingeling"));//new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));
 	public static final MusEnumerator<PropositionalFormula> 				STANDARD_MUS_ENUMERATOR     = new MarcoMusEnumerator("/home/mthimm/strinc/marco/marco.py");// new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");
 	public static final String 												RESULT_PATH					= "/home/mthimm/strinc";//"/Users/mthimm/Desktop";
 	public static final String												BELIEFSET_PATH				= "/home/mthimm/strinc/beliefsets.txt";//"/Users/mthimm/Desktop/beliefsets.txt";
@@ -58,7 +53,8 @@ public class StreamInconsistencyEvaluation {
 		LpSolve.setBinary("/home/mthimm/strinc/lpsolve/lp_solve");
 		LpSolve.setTmpFolder(new File(TMP_FILE_FOLDER));
 		Solver.setDefaultLinearSolver(new LpSolve());
-		SatSolverEntailment.tempFolder = new File(TMP_FILE_FOLDER);
+		SatSolver.setTempFolder(new File(TMP_FILE_FOLDER));
+		SatSolver.setDefaultSolver(new LingelingSolver("/home/mthimm/strinc/lingeling/lingeling"));
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
 		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		// -----------------------------------------
@@ -167,7 +163,6 @@ public class StreamInconsistencyEvaluation {
 		// Stream hs measure (population size = 10)
 		Map<String,Object> config = new HashMap<String,Object>();
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
-		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, STANDARD_WITNESS_PROVIDER);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 10);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
@@ -179,7 +174,6 @@ public class StreamInconsistencyEvaluation {
 		// Stream hs measure (population size = 100)
 		config = new HashMap<String,Object>();
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
-		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, STANDARD_WITNESS_PROVIDER);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 100);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
@@ -190,7 +184,6 @@ public class StreamInconsistencyEvaluation {
 		// Stream hs measure (population size = 500)
 		config = new HashMap<String,Object>();
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
-		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, STANDARD_WITNESS_PROVIDER);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 500);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);

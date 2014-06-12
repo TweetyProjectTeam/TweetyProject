@@ -6,11 +6,14 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.ClassicalInference;
 import net.sf.tweety.logics.pl.PlBeliefSet;
-import net.sf.tweety.logics.pl.Sat4jEntailment;
+import net.sf.tweety.logics.pl.SatReasoner;
 import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.sat.Sat4jSolver;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.plugin.*;
 import net.sf.tweety.plugin.parameter.CommandParameter;
@@ -92,7 +95,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 		// new parser
 		PlParser parser = new PlParser();
 		// reasoner
-		ClassicalInference reasoner = null;
+		Reasoner reasoner = null;
 		// queries
 		PropositionalFormula[] queries = new PropositionalFormula[1];
 		// try to parse all given input files
@@ -118,8 +121,8 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 					ClassicalEntailment naiveEntail = new ClassicalEntailment();
 					reasoner = new ClassicalInference(plbs, naiveEntail);
 				} else if (tmp.getValue().equalsIgnoreCase("sat4j")) {
-					Sat4jEntailment sat4jEntail = new Sat4jEntailment();
-					reasoner = new ClassicalInference(plbs, sat4jEntail);
+					SatSolver.setDefaultSolver(new Sat4jSolver());
+					reasoner = new SatReasoner(plbs);
 				} else {
 					throw new IllegalArgumentException("Illegal argument: "+ tempComParam.getIdentifier());
 				}

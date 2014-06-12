@@ -3,14 +3,13 @@ package net.sf.tweety.logics.pl.analysis;
 import java.io.File;
 
 import net.sf.tweety.commons.BeliefSet;
-import net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester;
 import net.sf.tweety.logics.commons.analysis.DrasticInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.MicInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.MusEnumerator;
-import net.sf.tweety.logics.pl.DefaultConsistencyTester;
-import net.sf.tweety.logics.pl.LingelingEntailment;
+import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -44,18 +43,8 @@ public abstract class InconsistencyMeasureFactory {
 		}
 	}
 	
-	/** The default belief set consistency tester. */
-	private static BeliefSetConsistencyTester<PropositionalFormula> defaultBeliefSetConsistencyTester = new DefaultConsistencyTester(new LingelingEntailment("/Users/mthimm/Projects/misc_bins/lingeling"));
 	/** The default MUS enumerator */
 	private static MusEnumerator<PropositionalFormula> defaultMusEnumerator = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");
-	
-	/**
-	 * Sets the default consistency tester.
-	 * @param tester some consistency tester.
-	 */
-	public static void setDefaultBeliefSetConsistencyTester(BeliefSetConsistencyTester<PropositionalFormula> tester){
-		InconsistencyMeasureFactory.defaultBeliefSetConsistencyTester = tester;
-	}
 	
 	/**
 	 * Sets the default MUS enumerator.
@@ -74,9 +63,9 @@ public abstract class InconsistencyMeasureFactory {
 	public static InconsistencyMeasure<BeliefSet<PropositionalFormula>> getInconsistencyMeasure(Measure im){
 		switch(im){
 			case DRASTIC:
-				return new DrasticInconsistencyMeasure<PropositionalFormula>(InconsistencyMeasureFactory.defaultBeliefSetConsistencyTester);
+				return new DrasticInconsistencyMeasure<PropositionalFormula>(SatSolver.getDefaultSolver());
 			case CONTENSION:
-				return new ContensionInconsistencyMeasure(InconsistencyMeasureFactory.defaultBeliefSetConsistencyTester);
+				return new ContensionInconsistencyMeasure();
 			case MI:
 				return new MiInconsistencyMeasure<PropositionalFormula>(InconsistencyMeasureFactory.defaultMusEnumerator);
 			case MIC:

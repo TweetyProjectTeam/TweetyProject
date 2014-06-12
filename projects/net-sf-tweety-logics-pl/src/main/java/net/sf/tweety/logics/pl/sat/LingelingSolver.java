@@ -1,4 +1,4 @@
-package net.sf.tweety.logics.pl;
+package net.sf.tweety.logics.pl.sat;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,52 +14,29 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
- * Uses the Lingeling SAT solver for defining entailment
+ * A wrapper for the Lingeling SAT solver 
  * (tested with Lingeling version ats1 ce8c04fc97ef07cf279c0c5dcbbc7c5d9904230a).
  * See http://fmv.jku.at/lingeling/. 
- * NOTE: so far no further configuration possible 
+ * NOTE: so far no further configuration possible.
+ *  
  * @author Matthias Thimm
  */
-public class LingelingEntailment extends SatSolverEntailment {
+public class LingelingSolver extends SatSolver {
 
 	/** The binary location of Lingeling. */
 	private String binaryLocation;
 	
 	/**
-	 * Creates a new entailment relation based on the Lingeling
+	 * Creates a new solver based on the Lingeling
 	 * executable given as a parameter. 
 	 * @param binaryLocation the path to the executable.
 	 */
-	public LingelingEntailment(String binaryLocation){
+	public LingelingSolver(String binaryLocation){
 		this.binaryLocation = binaryLocation;
-	}	
+	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.SatSolverEntailment#isConsistent(java.util.Collection)
-	 */
-	@Override
-	public boolean isConsistent(Collection<PropositionalFormula> formulas) {
-		try {			
-			List<Proposition> props = new ArrayList<Proposition>();
-			for(PropositionalFormula f: formulas){
-				props.removeAll(f.getAtoms());
-				props.addAll(f.getAtoms());			
-			}
-			// create temporary file in Dimacs CNF format.
-			File f = SatSolverEntailment.createTmpDimacsFile(formulas,props);
-			String output = Exec.invokeExecutable(this.binaryLocation + " -q " + f.getAbsolutePath());
-			// delete file
-			f.delete();
-			return (output.indexOf("UNSATISFIABLE") == -1);			
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);						
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.EntailmentRelation#getWitness(java.util.Collection)
+	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
 	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
@@ -70,7 +47,7 @@ public class LingelingEntailment extends SatSolverEntailment {
 				props.addAll(f.getAtoms());	
 			}
 			// create temporary file in Dimacs CNF format.
-			File f = SatSolverEntailment.createTmpDimacsFile(formulas,props);
+			File f = SatSolver.createTmpDimacsFile(formulas,props);
 			String output = Exec.invokeExecutable(this.binaryLocation + " -q --witness " + f.getAbsolutePath());
 			if(output.indexOf("UNSATISFIABLE") != -1)
 				return null;
@@ -93,4 +70,27 @@ public class LingelingEntailment extends SatSolverEntailment {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.sat.SatSolver#isSatisfiable(java.util.Collection)
+	 */
+	@Override
+	public boolean isSatisfiable(Collection<PropositionalFormula> formulas) {
+		try {			
+			List<Proposition> props = new ArrayList<Proposition>();
+			for(PropositionalFormula f: formulas){
+				props.removeAll(f.getAtoms());
+				props.addAll(f.getAtoms());			
+			}
+			// create temporary file in Dimacs CNF format.
+			File f = SatSolver.createTmpDimacsFile(formulas,props);
+			String output = Exec.invokeExecutable(this.binaryLocation + " -q " + f.getAbsolutePath());
+			// delete file
+			f.delete();
+			return (output.indexOf("UNSATISFIABLE") == -1);			
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);						
+		}
+	}
 }
