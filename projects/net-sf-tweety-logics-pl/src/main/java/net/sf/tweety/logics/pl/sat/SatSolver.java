@@ -56,8 +56,8 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 
 	/**
 	 * Returns the default SAT solver.</br></br>
-	 * If no default SAT solver has been configured this solver
-	 * is returned by this method. If no default solver for general problems is 
+	 * If a default SAT solver has been configured this solver
+	 * is returned by this method. If no default solver is 
 	 * configured, the Sat4j solver (<code>net.sf.tweety.pl.sat.Sat4jSolver</code>)
 	 * is returned as a fallback and a message is
 	 * printed to stderr pointing out that no default SAT solver is configured.
