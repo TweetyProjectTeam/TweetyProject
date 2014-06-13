@@ -26,7 +26,6 @@ import java.util.StringTokenizer;
 
 import net.sf.tweety.commons.util.Exec;
 import net.sf.tweety.commons.util.Pair;
-import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -37,7 +36,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * @author Matthias Thimm
  *
  */
-public class MarcoMusEnumerator extends AbstractMusEnumerator<PropositionalFormula> {
+public class MarcoMusEnumerator extends PlMusEnumerator {
 
 	/** The MARCO executable. */
 	private String pathToMarco;

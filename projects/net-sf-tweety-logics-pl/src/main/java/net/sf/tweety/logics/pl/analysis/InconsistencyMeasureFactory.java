@@ -23,8 +23,7 @@ import net.sf.tweety.logics.commons.analysis.DrasticInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.MicInconsistencyMeasure;
-import net.sf.tweety.logics.commons.analysis.MusEnumerator;
-import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -58,18 +57,7 @@ public abstract class InconsistencyMeasureFactory {
 			return null;
 		}
 	}
-	
-	/** The default MUS enumerator */
-	private static MusEnumerator<PropositionalFormula> defaultMusEnumerator = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");
-	
-	/**
-	 * Sets the default MUS enumerator.
-	 * @param enumerator some MusEnumerator
-	 */
-	public static void setDefaultMusEnumerator(MusEnumerator<PropositionalFormula> enumerator){
-		InconsistencyMeasureFactory.defaultMusEnumerator = enumerator;
-	}
-	
+		
 	/**
 	 * Creates a new inconsistency measure of the given type with default
 	 * settings.
@@ -83,9 +71,9 @@ public abstract class InconsistencyMeasureFactory {
 			case CONTENSION:
 				return new ContensionInconsistencyMeasure();
 			case MI:
-				return new MiInconsistencyMeasure<PropositionalFormula>(InconsistencyMeasureFactory.defaultMusEnumerator);
+				return new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case MIC:
-				return new MicInconsistencyMeasure<PropositionalFormula>(InconsistencyMeasureFactory.defaultMusEnumerator);
+				return new MicInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}

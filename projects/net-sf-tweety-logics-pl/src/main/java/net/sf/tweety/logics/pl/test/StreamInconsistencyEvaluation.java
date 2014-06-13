@@ -28,7 +28,6 @@ import net.sf.tweety.commons.BeliefBaseSampler;
 import net.sf.tweety.commons.streams.DefaultFormulaStream;
 //import net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure;
 //import net.sf.tweety.logics.commons.analysis.MicInconsistencyMeasure;
-import net.sf.tweety.logics.commons.analysis.MusEnumerator;
 import net.sf.tweety.logics.commons.analysis.streams.DefaultInconsistencyListener;
 import net.sf.tweety.logics.commons.analysis.streams.DefaultStreamBasedInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.streams.EvaluationInconsistencyListener;
@@ -40,6 +39,7 @@ import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.analysis.HsInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.sat.LingelingSolver;
 import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 //import net.sf.tweety.logics.pl.analysis.PlWindowInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -59,7 +59,6 @@ public class StreamInconsistencyEvaluation {
 	public static final int 												SIZE_OF_KNOWLEDGEBASES 		= 5000;
 	public static final double 												STANDARD_SMOOTHING_FACTOR  	= 0.75;
 	public static final int													STANDARD_EVENTS				= 1000000;//40000;
-	public static final MusEnumerator<PropositionalFormula> 				STANDARD_MUS_ENUMERATOR     = new MarcoMusEnumerator("/home/mthimm/strinc/marco/marco.py");// new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");
 	public static final String 												RESULT_PATH					= "/home/mthimm/strinc";//"/Users/mthimm/Desktop";
 	public static final String												BELIEFSET_PATH				= "/home/mthimm/strinc/beliefsets.txt";//"/Users/mthimm/Desktop/beliefsets.txt";
 	public static final String												TMP_FILE_FOLDER				= "/home/mthimm/strinc/tmp";//"/Users/mthimm/Desktop/tmp";
@@ -71,6 +70,7 @@ public class StreamInconsistencyEvaluation {
 		Solver.setDefaultLinearSolver(new LpSolve());
 		SatSolver.setTempFolder(new File(TMP_FILE_FOLDER));
 		SatSolver.setDefaultSolver(new LingelingSolver("/home/mthimm/strinc/lingeling/lingeling"));
+		PlMusEnumerator.setDefaultEnumerator(new MarcoMusEnumerator("/home/mthimm/strinc/marco/marco.py"));
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
 		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		// -----------------------------------------
