@@ -1,3 +1,19 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.sf.tweety.web.services;
 
 import java.io.BufferedReader;
@@ -81,19 +97,14 @@ public class InconsistencyMeasurementService {
 			if(!jsonQuery.has(InconsistencyMeasurementService.JSON_ATTR_EMAIL))
 				throw new JSONException("Malformed JSON: no \"email\" attribute given");
 			JSONObject jsonReply;
-			switch(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD)){
-				case InconsistencyMeasurementService.JSON_VAL_VALUE:
-					jsonReply = this.handleGetValue(jsonQuery);
-					break;
-				case InconsistencyMeasurementService.JSON_VAL_FORMATS:
-					jsonReply = this.handleGetFormats(jsonQuery);
-					break;
-				case InconsistencyMeasurementService.JSON_VAL_MEASURES:
-					jsonReply = this.handleGetMeasures(jsonQuery);
-					break;
-				default:
-					throw new JSONException("Malformed JSON: no valid value for \"cmd\" attribute.");
-			}
+			if(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD).equals(InconsistencyMeasurementService.JSON_VAL_VALUE)){
+				jsonReply = this.handleGetValue(jsonQuery);
+			}else if(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD).equals(InconsistencyMeasurementService.JSON_VAL_FORMATS)){
+				jsonReply = this.handleGetFormats(jsonQuery);
+			}else if(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD).equals(InconsistencyMeasurementService.JSON_VAL_MEASURES)){
+				jsonReply = this.handleGetMeasures(jsonQuery);
+			}else
+				throw new JSONException("Malformed JSON: no valid value for \"cmd\" attribute.");			
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_REPLY, jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD));
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_EMAIL, jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_EMAIL));
 			//TODO: logging
