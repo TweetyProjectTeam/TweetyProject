@@ -83,7 +83,7 @@ public abstract class Solver {
 			return Solver.defaultGeneralSolver;
 		System.err.println("No default solver for general optimization problems configured, "
 				+ "the application will now terminate. See "
-				+ "'http://www.mthimm.de/projects/tweety/doc/optimization-problem-solvers.html' "
+				+ "'http://tweetyproject.org/doc/optimization-problem-solvers.html' "
 				+ "for information on how a default solver is configured.");
 		System.exit(1);
 		return null;
@@ -107,14 +107,14 @@ public abstract class Solver {
 		System.err.println("No default solver for linear optimization problems configured, using "
 				+ " default solver for general optimization problems. It is strongly advised "
 				+ "that a default solver is manually configured, see "
-				+ "'http://www.mthimm.de/projects/tweety/doc/optimization-problem-solvers.html' "
+				+ "'http://tweetyproject.org/doc/optimization-problem-solvers.html' "
 				+ "for more information.");
 		if(Solver.defaultGeneralSolver != null)
 			return Solver.defaultGeneralSolver;
 		System.err.println("No default solver for general optimization problems configured, using "
 				+ "'ApacheCommonSimplex' with default settings as fallback for linear optimization. "
 				+ "It is strongly advised that a default solver is manually configured, see "
-				+ "'http://www.mthimm.de/projects/tweety/doc/optimization-problem-solvers.html' "
+				+ "'http://tweetyproject.org/doc/optimization-problem-solvers.html' "
 				+ "for more information.");
 		return new ApacheCommonsSimplex();
 	}

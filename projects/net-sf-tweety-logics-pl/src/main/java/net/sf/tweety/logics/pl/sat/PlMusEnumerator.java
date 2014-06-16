@@ -66,7 +66,7 @@ public abstract class PlMusEnumerator extends AbstractMusEnumerator<Propositiona
 		System.err.println("No default MUS enumerator configured, using "
 				+ "naive enumerator based on default SAT solver as fallback. "
 				+ "It is strongly advised that a default MUS enumerator is manually configured, see "
-				+ "'http://www.mthimm.de/projects/tweety/doc/mus-enumerators.html' "
+				+ "'http://tweetyproject.org/doc/mus-enumerators.html' "
 				+ "for more information.");
 		return new NaiveMusEnumerator<PropositionalFormula>(SatSolver.getDefaultSolver());
 	}

@@ -85,7 +85,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 		System.err.println("No default SAT solver configured, using "
 				+ "'Sat4jSolver' with default settings as fallback. "
 				+ "It is strongly advised that a default SAT solver is manually configured, see "
-				+ "'http://www.mthimm.de/projects/tweety/doc/sat-solvers.html' "
+				+ "'http://tweetyproject.org/doc/sat-solvers.html' "
 				+ "for more information.");
 		return new Sat4jSolver();
 	}
