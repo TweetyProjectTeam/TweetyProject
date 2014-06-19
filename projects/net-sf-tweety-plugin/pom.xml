@@ -6,16 +6,16 @@
   <name>Tweety (Plugin Project)</name>
   
   <parent>
-  	<groupId>net.sf</groupId>
-  	<artifactId>tweety</artifactId>
+  <groupId>net.sf.tweety</groupId>
+  <artifactId>parent-pom</artifactId>
     <version>1.1.dev-SNAPSHOT</version>
   </parent>
   
   
   <dependencies>
   <dependency>
-  		<groupId>net.sf.tweety.dependencies</groupId>
-  		<artifactId>jspf</artifactId>
+  		<groupId>jspf</groupId>
+  		<artifactId>core</artifactId>
   		<version>1.0.2</version>
   	</dependency>
   <dependency>
@@ -24,5 +24,4 @@
   	<version>1.1.dev-SNAPSHOT</version>
   </dependency>
   </dependencies>
-  <groupId>net.sf.tweety</groupId>
 </project>

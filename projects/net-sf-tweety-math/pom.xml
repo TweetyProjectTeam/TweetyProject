@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.sf.tweety</groupId>
   <artifactId>math</artifactId>
   <packaging>jar</packaging>
 
@@ -35,9 +34,9 @@
     	<version>1.6.3</version>
     </dependency>
     <dependency>
-    	<groupId>net.sf.tweety.dependencies</groupId>
+    	<groupId>ojalgo</groupId>
     	<artifactId>ojalgo</artifactId>
-    	<version>35</version>
+    	<version>35.0.0</version>
     </dependency>
 	<dependency>
 		<groupId>com.dbtsai.lbfgs</groupId>
@@ -46,8 +45,8 @@
 	</dependency>	    
   </dependencies>
   <parent>
-  	<groupId>net.sf</groupId>
-  	<artifactId>tweety</artifactId>
+  <groupId>net.sf.tweety</groupId>
+  <artifactId>parent-pom</artifactId>
   	<version>1.1.dev-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>

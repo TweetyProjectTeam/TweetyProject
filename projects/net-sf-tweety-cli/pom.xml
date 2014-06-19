@@ -6,8 +6,8 @@
   <name>Tweety (Command Line Interface)</name>
   
   <parent>
-  	<groupId>net.sf</groupId>
-  	<artifactId>tweety</artifactId>
+  <groupId>net.sf.tweety</groupId>
+  <artifactId>parent-pom</artifactId>
   	<version>1.1.dev-SNAPSHOT</version>
   </parent>
   
@@ -18,8 +18,8 @@
   		<version>1.1.dev-SNAPSHOT</version>
   	</dependency>
   	<dependency>
-  		<groupId>net.sf.tweety.dependencies</groupId>
-  		<artifactId>jspf</artifactId>
+  		<groupId>jspf</groupId>
+  		<artifactId>core</artifactId>
   		<version>1.0.2</version>
   	</dependency>
   	<dependency>
@@ -28,5 +28,4 @@
   		<version>1.9</version>
   	</dependency>
   </dependencies>
-  <groupId>net.sf.tweety</groupId>
 </project>

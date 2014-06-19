@@ -1,7 +1,0 @@
-The third-party dependencies are deployed to the nexus-server at:
-http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/public
-
-To deploy third-party packages a account for the nexus server is needed,
-for further information see:
-- http://maven.apache.org/guides/mini/guide-3rd-party-jars-remote.html
-- https://support.sonatype.com/entries/21283268-Configure-Maven-to-Deploy-to-Nexus

@@ -4,8 +4,8 @@
   <artifactId>rcl</artifactId>
   <name>Tweety (Relational Conditional Logic Library)</name>
   <parent>
-  	<groupId>net.sf</groupId>
-  	<artifactId>tweety</artifactId>
+  <groupId>net.sf.tweety</groupId>
+  <artifactId>parent-pom</artifactId>
   	<version>1.1.dev-SNAPSHOT</version>
   </parent>
   <dependencies>

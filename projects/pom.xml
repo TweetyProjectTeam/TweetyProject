@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>net.sf</groupId>
-  <artifactId>tweety</artifactId>
+  <groupId>net.sf.tweety</groupId>
+  <artifactId>parent-pom</artifactId>
+  <name>Tweety (Parent POM)</name>
   <version>1.1.dev-SNAPSHOT</version>
   <packaging>pom</packaging>
   
-  <name>Parent-Tweety</name>
-  <description>Multi module maven project that contains all Tweety libraries</description>
-  <url>http://sourceforge.net/projects/tweety/</url>
+  <description>Tweety is a collection of various Java libraries that implement approaches to different areas of artificial intelligence. In particular, it provides a general interface layer for doing research and working with different knowledge representation formalisms such as classical logics, conditional logics, probabilistic logics, and argumentation. Furthermore, Tweety contains libraries for dealing with agents, multi-agent systems, and dialog systems for agents, as well as belief revision, preference reasoning, preference aggregation, and action languages. A series of utility libraries that deal with e.g. mathematical optimization complement the collection.</description>
+  <url>http://tweetyproject.org</url>
   
   <scm>
   	<url>https://svn.code.sf.net/p/tweety/code/trunk/</url>
@@ -16,76 +16,14 @@
 	<developerConnection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</developerConnection>
   </scm>
   
-  <distributionManagement>
-    <repository>
-      <id>nexus-angerona</id>
-      <name>Angerona/Tweety Releases</name>
-      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-releases</url>
-      <layout>default</layout>
-    </repository>
-    <snapshotRepository>
-      <id>nexus-angerona</id>
-      <name>Angerona/Tweety Snapshots</name>
-      <url>http://ls1-www.cs.tu-dortmund.de/nexus/content/repositories/angerona-snapshots</url>
-      <layout>default</layout>
-    </snapshotRepository>
-  </distributionManagement>
-  
-  <profiles>
-    <profile>
-      <id>FULL-Release</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      
-      <build>
-        <plugins>
-          <!-- Generate jar containing the sources of the project: -->
-          <plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-source-plugin</artifactId>
-			<version>2.2.1</version>
-			<executions>
-				<execution>
-					<id>attach-sources</id>
-					<goals>
-						<goal>jar</goal>
-					</goals>
-				</execution>
-			</executions>
-		  </plugin>
-		
-		<!-- Generate Jar containing java-docs -->
-		<plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-javadoc-plugin</artifactId>
-		  <version>2.9.1</version>
-		  <executions>
-		    <execution>
-		      <id>attach-javadocs</id>
-		      <goals>
-		        <goal>jar</goal>
-		      </goals>
-		    </execution>
-		  </executions>
-		  <configuration>
-		    <quiet>true</quiet>
-		    <tags>
-			  <tag>
-			    <name>todo</name>
-			    <placement>X</placement>
-			  </tag>
-			  <tag>
-			    <name>remark</name>
-			    <placement>X</placement>
-			  </tag>
-			</tags>
-		  </configuration>
-		</plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+  <!-- For third-party jars that are not in the central repository -->
+  <repositories>
+	<repository>
+	    <id>tweety-mvn</id>
+	    <name>Tweety MVN Repository</name>
+    	<url>http://tweetyproject.org/mvn</url>
+	</repository>
+  </repositories>
   
   <licenses>
     <license>
@@ -99,24 +37,26 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   
-  <!-- Enable java doc goals -->
-  <reporting> 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
-        <configuration>
-          <aggregate>true</aggregate>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
+  <distributionManagement>
+	<snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
   
   <build>
+  <resources>
+    <resource>
+      <directory>src/main/resources</directory>
+    </resource>
+    <resource>
+      <directory>src/main/java</directory>
+      <includes>
+        <include>**/*.java</include>
+      </includes>
+    </resource>
+  </resources>
     <plugins>
-      <!-- Note: Java Version now changed! -->
-      <!-- Set Java Compiler version to 1.7 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -126,47 +66,81 @@
           <target>1.7</target>
         </configuration>
       </plugin>
-	  
-	  <plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-release-plugin</artifactId>
-		  <version>2.4.2</version>
-		  <configuration>
-		    <goals>deploy</goals>
-		    <autoVersionSubmodules>true</autoVersionSubmodules>
-			<tagNameFormat>maven-release-v@{version}</tagNameFormat>
-			
-			
-			<tagBase>https://svn.code.sf.net/p/tweety/code/tags/</tagBase>
-			<remoteTagging>true</remoteTagging>
-			
-			<!-- un/comment this to allow changes in this pom.xml for testing purposes in maven-release-plugin -->
-			<!--  
-			<checkModificationExcludes>
-			  <checkModificationExclude>pom.xml</checkModificationExclude>
-			</checkModificationExcludes>
-			-->
-		  </configuration>
-		</plugin>
+      <!-- Generate jar containing the sources of the project: -->
+<!--  <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-source-plugin</artifactId>
+		<executions>
+			<execution>
+				<id>attach-sources</id>
+				<goals>
+					<goal>jar</goal>
+				</goals>
+			</execution>
+		</executions>
+  		<configuration>
+          <outputDirectory>../testBuild</outputDirectory>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName> 
+        </configuration>
+	  </plugin>-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>                   
+          <outputDirectory>../testBuild</outputDirectory>
+        </configuration>
+      </plugin>
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
+          <shadedClassifierName>${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</shadedClassifierName>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+          <outputDirectory>../testBuild</outputDirectory>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</finalName> 
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.1</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
-    
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.4</version>
-          <configuration>
-            <descriptors>
-              <descriptor>src/assemble/bin.xml</descriptor>
-            </descriptors>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
   
   <modules>
-  	<module>deploy</module>  
   	<module>net-sf-tweety-commons</module>
   	<module>net-sf-tweety-math</module>
   	<module>net-sf-tweety-action</module>
@@ -199,6 +173,7 @@
   	<module>net-sf-tweety-agents</module>
   	<module>net-sf-tweety-agents-dialogues</module>
   	<module>net-sf-tweety-web</module>
+  	<module>net-sf-tweety</module>
   </modules>
   
 </project>
