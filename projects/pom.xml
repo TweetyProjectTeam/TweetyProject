@@ -4,7 +4,7 @@
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
   <name>Tweety (Parent POM)</name>
-  <version>1.1.dev-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <description>Tweety is a collection of various Java libraries that implement approaches to different areas of artificial intelligence. In particular, it provides a general interface layer for doing research and working with different knowledge representation formalisms such as classical logics, conditional logics, probabilistic logics, and argumentation. Furthermore, Tweety contains libraries for dealing with agents, multi-agent systems, and dialog systems for agents, as well as belief revision, preference reasoning, preference aggregation, and action languages. A series of utility libraries that deal with e.g. mathematical optimization complement the collection.</description>
@@ -15,6 +15,14 @@
   	<connection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</connection>
 	<developerConnection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</developerConnection>
   </scm>
+  
+  <developers>
+    <developer>
+      <id>mthimm</id>
+      <name>Matthias Thimm</name>
+      <email>matthias@mthimm.de</email>
+    </developer>
+  </developers>
   
   <!-- For third-party jars that are not in the central repository -->
   <repositories>
@@ -45,7 +53,7 @@
   </distributionManagement>
   
   <build>
-  <resources>
+<!--  <resources>
     <resource>
       <directory>src/main/resources</directory>
     </resource>
@@ -55,7 +63,7 @@
         <include>**/*.java</include>
       </includes>
     </resource>
-  </resources>
+  </resources>-->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -67,38 +75,56 @@
         </configuration>
       </plugin>
       <!-- Generate jar containing the sources of the project: -->
-<!--  <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-source-plugin</artifactId>
-		<executions>
-			<execution>
-				<id>attach-sources</id>
-				<goals>
-					<goal>jar</goal>
-				</goals>
-			</execution>
-		</executions>
-  		<configuration>
+      <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-source-plugin</artifactId>
+      <version>2.2.1</version>
+      <executions>
+        <execution>
+          <id>attach-sources</id>
+          <goals>
+            <goal>jar-no-fork</goal>
+          </goals>
+        </execution>
+      </executions>
+      <configuration>
           <outputDirectory>../testBuild</outputDirectory>
-          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName> 
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
         </configuration>
-	  </plugin>-->
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <version>2.9.1</version>
+      <executions>
+        <execution>
+          <id>attach-javadocs</id>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+        </execution>
+      </executions>
+        <configuration>
+          <outputDirectory>../testBuild</outputDirectory>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+        </configuration>
+    </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.2</version>
-        <configuration>
+        <configuration>         
           <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>                   
           <outputDirectory>../testBuild</outputDirectory>
         </configuration>
       </plugin>
-     <plugin>
+   <!--  <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>2.3</version>
         <configuration>
           <shadedArtifactAttached>true</shadedArtifactAttached>
-          <shadedClassifierName>${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</shadedClassifierName>
+          <shadedClassifierName>${project.artifactId}-${project.version}-with-dependencies</shadedClassifierName>
           <createDependencyReducedPom>false</createDependencyReducedPom>
           <outputDirectory>../testBuild</outputDirectory>
           <finalName>${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</finalName> 
@@ -111,7 +137,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin>  -->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>

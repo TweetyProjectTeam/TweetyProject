@@ -5,24 +5,19 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.1.dev-SNAPSHOT</version>
+  	<version>1.2-SNAPSHOT</version>
   </parent>
   <dependencies>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>fol</artifactId>
-  		<version>1.1.dev-SNAPSHOT</version>
+  		<version>1.2-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>pcl</artifactId>
-  		<version>1.1.dev-SNAPSHOT</version>
+  		<version>1.2-SNAPSHOT</version>
   	</dependency>
-  	<dependency>
-		<groupId>org.jfree</groupId>
-		<artifactId>jfreechart</artifactId>
-		<version>1.0.14</version>
-	</dependency>
   </dependencies>
   <groupId>net.sf.tweety.logics</groupId>
 </project>

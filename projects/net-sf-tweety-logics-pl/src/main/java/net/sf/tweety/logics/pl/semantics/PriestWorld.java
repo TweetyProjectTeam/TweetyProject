@@ -35,7 +35,7 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * A three-valued interpretation for propositional logic from
- * Priest’s three valued logic (3VL) [Priest, G.: Logic of paradox. Journal of Philosophical Logic 8, 219–241 (1979)].
+ * Priest's three valued logic (3VL) [Priest, G.: Logic of paradox. Journal of Philosophical Logic 8, 219-241 (1979)].
  * 
  * Every proposition gets one of three truth values: true, false, both.
  * 

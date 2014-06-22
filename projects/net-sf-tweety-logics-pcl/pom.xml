@@ -9,14 +9,14 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.1.dev-SNAPSHOT</version>
+  	<version>1.2-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>cl</artifactId>
-  		<version>1.1.dev-SNAPSHOT</version>
+  		<version>1.2-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>junit</groupId>
@@ -27,7 +27,7 @@
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
     	<artifactId>commons</artifactId>
-    	<version>1.1.dev-SNAPSHOT</version>
+    	<version>1.2-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
