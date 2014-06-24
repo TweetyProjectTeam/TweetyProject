@@ -1,0 +1,565 @@
+\documentclass[10pt, a4paper, final]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage[english]{babel}
+\title{Tweety 3rd Party Dependencies \& Licenses\\ \color{red}{Draft!}}
+\begin{document}
+
+% Note: Tweety internal dependencies are not completetly mentioned here.
+% Some, maybe outdated, dependency graphs are still in another subfolder.
+
+% commands are used to shortcut table entries to each project.
+% for varying version of one dependency just copy the command and rename it like e.g.
+% \commandb 
+% and modify it
+
+% to be done: 
+% URL links to each dependencies website (see file end)
+% check for missing third party dependencies not included in maven (partially done)
+% short explanation for each mentioned license and its possible restrictions
+
+\maketitle
+%JUnit
+\newcommand{\junit}{& JUnit 				& 4.9 		& yes	& EPL v1.0\\}
+%Logback Core
+\newcommand{\lbcore}{& Logback Core 		& 0.9.30		& yes	& EPL v1.0 \& LGPL v2.1\\}
+%Logback Classic
+\newcommand{\lbclassic}{& Logback Classic 	& 0.9.30		& yes	&	EPL v1.0 \& LGPL v2.1 \\}
+%SLF4J
+\newcommand{\slf}{& SLF4J 				& 1.6.3 		& yes	& MIT License\\}
+%Sat4J Core
+\newcommand{\satcore}{& Sat4J	Core			& 2.3.4		& yes	& EPL v1.0 \& LGPL v2.1	\\}
+%JSPF
+\newcommand{\jspf}{& JSPF				& 1.0.2		& yes	& 3-clause BSD \\}
+%JavaCC
+\newcommand{\javacc}{& JavaCC				& 2.6 (?)	& yes	& BSD\\}
+%Log4J
+\newcommand{\logforj}{& Log4J				& 1.6.3		& yes	& Apache License v2.0\\ }
+%jama
+\newcommand{\jama}{& jama				& 1.0.3		& yes	& Public Domain	\\}
+% scala lib
+\newcommand{\scalalib}{& scala-library		&	2.10.3		& yes	& 3-clause BSD 	\\}
+%lbfgs
+\newcommand{\lbfgs}{& lbfgs 	& 0.1	 & ? 	& GPL v2+ \& Apache License v2 \\}
+%ojalgo
+\newcommand{\ojalgo}{& ojAlgo 	& 35	 & yes	& MIT License	\\}
+%hamcrest
+\newcommand{\hamcrest}{& hamcrest core 	& 1.1 & yes	& 3-clause BSD	\\}
+%lpsolve
+\newcommand{\lpsolve}{& lpSolve 	& 5.5.2	 & no & LGPL v2	\\}
+%lingeling
+\newcommand{\lingeling}{& Lingeling & ? & no & GPL (old)/Restricted (newer)\\}
+%marco
+\newcommand{\marco}{& MARCO & ? & no & ?\\}
+%python
+\newcommand{\python}{& Python & 2.7/3.3 (?) & no & - \\}
+
+
+%commons math
+\newcommand{\cmmnsmath}{& commons math 	& 2.1 & yes	&	\\}
+%commons configuration
+\newcommand{\cmmnsconf}{& commons configuration 	& 1.9 & yes	&	\\}
+%cmmnslang
+\newcommand{\cmmnslang}{& commons lang 	& 2.6 & yes	&	\\}
+%cmmnslog
+\newcommand{\cmmnslog}{& commons log & 1.1.1 & yes	&	\\}
+
+\section*{Dependencies}
+
+\begin{longtable}{p{2.5cm}|l|c|c|p{3.5cm}}
+\textbf{Project} & \textbf{Dependency} & \textbf{Version} & \textbf{Maven} & \textbf{License}\\
+\hline
+%\vspace{2mm}
+\multirow{3}{2.5cm}{Tweety Core} %& JUnit 				& 4.9 		& yes	& Eclipse Public License (EPL) v1.0\\
+\junit
+		%							& Logback Core 		& 0.9.30		& yes	& EPL v1.0 \& Lesser GNU Public License (LGPL) v2.1\\
+\lbcore		
+		%							& Logback Classic 	& 0.9.30		& yes	&	-	\\
+\lbclassic									
+									%& SLF4J 				& 1.6.3 		& yes	& Massachusetts Institute of Technology (MIT) License\\
+									\slf
+								%	& JavaCC				& 2.6 (?)	& yes	& to be checked...\\
+\javacc								
+	%								& Log4J				& 1.6.3		& yes	& Apache Lizenz v2.0\\ 
+\logforj	
+		%							& JSPF				&			&		&	\\
+\jspf
+%									& Sat4J				&			&		&	\\
+\satcore
+%									& jama				&			&		&	\\
+\jama									
+%									& commons-math		&			&		&	\\
+\cmmnsmath
+									& choco				&			&		&		\\
+									& cream				&			&		&	\\
+									& qoca				&			&		&	\\
+%									& lpsolve			&			&		&	\\
+\lpsolve
+%									& oljago				&			&		&	\\
+\ojalgo
+\hline
+
+\multirow{3}{2.5cm}{Tweety Action} 	%& Logback Core 		& 0.9.30		& yes	& EPL v1.0 \& Lesser Gnu Public License (LGPL) v2.1\\
+\lbcore
+		%							& Logback Classic 	& 0.9.30		& yes	&	-	\\
+\lbclassic
+		%							& SLF4J 				& 1.6.2 		& yes	& Massachusetts Institute of Technology (MIT) License\\
+		\slf
+			%						& Log4J				& 1.6.3		& yes	& Apache Lizenz v2.0 \\
+\logforj			
+		%							& JSPF				& 1.0.2		& yes	&	\\
+\jspf		
+	%								& Sat4J	Core			& 2.3.4		& yes	&	\\
+\satcore	
+		%							& jama				&			&		&	\\
+\jama		
+	%							& commons-math		&			&		&	\\
+	\cmmnsmath
+	%								& oljago				&			&		&	\\
+	\ojalgo
+	%								& lbfgs				&			&		&	\\
+	\lbfgs
+	%								& scala-library		&			&		&	\\
+\scalalib
+\hline
+
+\multirow{3}{2.5cm}{Tweety Agents} 	%& Logback Core 		& 0.9.30		& yes	& EPL v1.0 \& Lesser Gnu Public License (LGPL) v2.1\\
+\lbcore
+%									& Logback Classic 	& 0.9.30		& yes	&	-	\\
+\lbclassic
+%									& SLF4J 				& 1.6.2 		& yes	& Massachusetts Institute of Technology (MIT) License\\
+\slf
+%									& Log4J				& 1.6.3		& yes	& Apache Lizenz v2.0 \\
+\logforj
+
+
+\hline
+\multirow{3}{2.5cm}{Tweety Agents Dialogues} 	%& Logback Core 		& 0.9.30		& yes	& EPL v1.0 \& LGPL v2.1\\
+\lbcore
+		%									& Logback Classic 	& 0.9.30		& yes	&	-	\\
+\lbclassic		
+		%									& SLF4J 				& 1.6.2 		& yes	& MIT License\\
+\slf		
+%											& Log4J				& 1.6.3		& yes	& Apache License v2.0 \\
+\logforj
+%											& jama				&			&		&	\\
+\jama
+							%				& commons-math		&			&		&	\\
+\cmmnsmath							
+		%								& oljago				&			&		&	\\
+\ojalgo		
+	%										& lbfgs				&			&		&	\\
+\lbfgs
+%											& scala-library		&			&		&	\\
+\scalalib
+%											& Sat4J	Core			& 2.3.4		& yes	&	\\
+\satcore
+%											& JSPF				&			&		&	\\
+\jspf
+									
+\hline
+\multirow{3}{2.5cm}{Tweety Arg Deductive} 			\satcore
+													\jspf
+													\lbcore
+													\lbclassic
+													\logforj	
+													\slf
+													\ojalgo
+													\lbfgs
+													\scalalib
+													\jama
+\hline
+\multirow{3}{2.5cm}{Arg Delp}	\jspf
+								\lbcore
+								\lbclassic
+								\slf
+								\logforj
+								\jama
+								\cmmnsmath
+								\ojalgo
+								\lbfgs
+								\scalalib
+								\satcore
+
+\hline
+\multirow{3}{2.5cm}{Arg Dung}	\lbcore
+\lbclassic
+\slf
+\logforj
+\jama
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\satcore
+\jspf
+
+\hline
+\multirow{3}{2.5cm}{Arg Lp}	\lbcore
+\lbclassic
+\slf
+\logforj
+\satcore
+\jspf
+\jama
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\junit
+\hamcrest
+
+\hline
+\multirow{3}{2.5cm}{Arg prob} \satcore
+\jspf
+\jama
+\lbcore
+\lbclassic
+\slf
+\logforj
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+
+\hline
+\multirow{3}{2.5cm}{Arg saf}	\lbcore
+\lbclassic
+\slf
+\logforj
+\jama
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\satcore
+\jspf
+
+\hline
+\multirow{3}{2.5cm}{beliefdynamics}	\lbcore
+\lbclassic
+\slf
+\logforj
+\satcore
+\jspf
+\jama
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+
+\hline
+\multirow{3}{2.5cm}{cli}	\lbcore
+\lbclassic
+\slf
+\logforj
+\satcore
+\jama
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\jspf
+\cmmnsconf
+\cmmnslang
+\cmmnslog
+
+
+\hline
+\multirow{3}{2.5cm}{commons}	\junit
+\hamcrest
+\lbcore
+\lbclassic
+\slf
+\logforj
+
+%\hline
+%\multirow{3}{2.5cm}{graphs}			&					&			&		&\\
+
+\hline
+\multirow{3}{2.5cm}{logics cl} \lbcore
+\lbclassic
+\slf
+\logforj
+\satcore
+\jspf
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\junit
+\hamcrest
+
+\hline
+\multirow{3}{2.5cm}{logics commons}	\junit
+\hamcrest
+\lbcore
+\lbclassic
+\slf
+\logforj
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+
+\hline
+\multirow{3}{2.5cm}{logics dl} \lbcore
+\lbclassic
+\cmmnsmath
+\logforj
+\slf
+\ojalgo
+\lbfgs
+\scalalib
+\jspf
+			
+\hline
+\multirow{3}{2.5cm}{logics el} \lbcore
+\lbclassic
+\cmmnsmath
+\logforj
+\slf
+\ojalgo
+\lbfgs
+\scalalib
+\jspf
+
+\hline
+\multirow{3}{2.5cm}{logics fol}	\junit
+\hamcrest
+\lbcore
+\lbclassic
+\slf
+\logforj
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\jspf
+\javacc
+			
+\hline
+\multirow{3}{2.5cm}{logics ml} \lbcore
+\lbclassic
+\slf
+\logforj
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\jspf
+\satcore
+%\jfreechart
+%\jcommon
+%\xmlapis
+%\itext
+%\bcmail
+%\bcprov
+
+\hline
+\multirow{3}{2.5cm}{logics pcl} \lbcore
+\lbclassic
+\slf
+\logforj
+\satcore
+\jspf
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\junit
+\hamcrest
+
+\hline
+\multirow{3}{2.5cm}{logics pl}	\junit
+\hamcrest
+\satcore
+\lbcore
+\lbclassic
+\slf
+\logforj
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\jspf
+\lingeling
+\marco
+
+\hline
+\multirow{3}{2.5cm}{logics rcl} \lbcore
+\lbclassic
+\slf
+\logforj
+\satcore
+\jspf
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+
+
+\hline
+\multirow{3}{2.5cm}{logics rpcl}	\lbcore
+\lbclassic
+\slf
+\logforj
+\satcore
+\jspf
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+			
+\hline
+\multirow{3}{2.5cm}{logics translators}	\junit
+\hamcrest
+\lbcore
+\lbclassic
+\slf
+\logforj
+\jama
+\jspf
+\satcore
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+
+\hline
+\multirow{3}{2.5cm}{lp asp}	\junit
+\hamcrest
+\lbcore
+\lbclassic
+\slf
+\logforj
+\jspf
+\jama
+\satcore
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+
+\hline
+\multirow{3}{2.5cm}{lp asp beliefdynamics}	\lbcore
+\lbclassic
+\slf
+\logforj
+\satcore
+\jspf
+\jama
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\junit
+\hamcrest
+
+\hline
+\multirow{3}{2.5cm}{lp nlp}	\junit
+\hamcrest
+\lbcore
+\lbclassic
+\slf
+\logforj
+\cmmnsmath
+\ojalgo
+\lbfgs
+\scalalib
+\jspf
+
+\hline
+\multirow{3}{2.5cm}{machine learning} \lbcore
+\lbclassic
+\cmmnsmath
+\logforj
+\slf
+\ojalgo
+\lbfgs
+\scalalib
+%\libsvm
+
+\hline
+\multirow{3}{2.5cm}{math}	\junit
+\hamcrest
+\lbcore
+\lbclassic
+\cmmnsmath
+\logforj
+\slf
+\ojalgo
+\lbfgs
+\scalalib
+\lpsolve
+
+
+%\hline
+%\multirow{3}{2.5cm}{build all}			&					&			&		&\\
+
+\hline
+\multirow{3}{2.5cm}{plugin}		\jspf
+\lbcore
+\lbclassic
+\cmmnsmath
+\logforj
+\slf
+\ojalgo
+\lbfgs
+\scalalib
+
+
+\hline
+\multirow{3}{2.5cm}{preferences} \lbcore
+\lbclassic
+\cmmnsmath
+\logforj
+\slf
+\ojalgo
+\lbfgs
+\scalalib
+\jspf
+\hamcrest
+\junit
+
+\hline
+\multirow{3}{2.5cm}{web}			&					&			&		&\\
+\end{longtable}
+
+
+\section*{Licences}
+
+\subsection*{GNU General Public License (GPL)}
+
+
+
+\subsection*{GNU Lesser General Public License (LGPL)}
+
+\subsection*{Massachusetts Institute of Technology (MIT) License}
+
+\subsection*{Eclipse Public License (EPL)}
+
+\subsection*{Apache License}
+
+\subsection*{BSD License}
+
+\subsection*{BSD New/3-clause BSD License}
+
+\end{document}
+
+% Links:
+%
+% JUnit
+% https://github.com/junit-team/junit	
+%
+% Logback
+% http://logback.qos.ch/
+%
+% SLF4J
+% http://www.slf4j.org/
