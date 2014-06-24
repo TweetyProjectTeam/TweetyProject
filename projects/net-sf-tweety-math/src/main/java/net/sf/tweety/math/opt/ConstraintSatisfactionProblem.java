@@ -127,6 +127,31 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	}
 	
 	/**
+	 * Resolves all occurrences of maximums by substituting
+	 * a maximum "max{a,b}" by "0.5 a + 0.5 b + abs(a-b)".
+	 */
+	public void resolveMaximums(){
+		// expand all maximums		
+		for(Statement s: this)
+			s.expandAssociativeOperations();
+		// resolve maximums in statements
+		Set<Statement> newConstraints = new HashSet<Statement>();
+		for(Statement s: this){	
+			while(!s.getMaximums().isEmpty()){
+				Maximum m = s.getMaximums().iterator().next();
+				Term replacement = new FloatConstant(0.5F);
+				replacement = replacement.mult(m.getTerms().get(0));
+				replacement = replacement.add((new FloatConstant(0.5F).mult(m.getTerms().get(1))));
+				replacement = replacement.add(new AbsoluteValue(m.getTerms().get(0).minus(m.getTerms().get(1))));
+				s = s.replaceTerm(m, replacement);				
+			}
+			newConstraints.add(s);
+		}	
+		this.clear();
+		this.addAll(newConstraints);
+	}
+	
+	/**
 	 * Returns all variables of this problem.
 	 * @return all variables of this problem.
 	 */

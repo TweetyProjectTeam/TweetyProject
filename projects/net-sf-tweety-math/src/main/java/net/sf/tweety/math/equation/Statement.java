@@ -67,8 +67,19 @@ public abstract class Statement {
 	}
 	
 	/**
-	 * Returns all minimums of this statement.
-	 * @return all minimums of this statement.
+	 * Returns all maximums of this statement.
+	 * @return all maximums of this statement.
+	 */
+	public Set<Maximum> getMaximums(){
+		Set<Maximum> maximums = new HashSet<Maximum>();
+		maximums.addAll(this.leftTerm.getMaximums());
+		maximums.addAll(this.rightTerm.getMaximums());
+		return maximums;
+	}
+	
+	/**
+	 * Returns all absolute values of this statement.
+	 * @return all absolute values of this statement.
 	 */
 	public Set<AbsoluteValue> getAbsoluteValues(){
 		Set<AbsoluteValue> avs = new HashSet<AbsoluteValue>();

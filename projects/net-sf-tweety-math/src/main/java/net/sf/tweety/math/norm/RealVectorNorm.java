@@ -40,7 +40,7 @@ public interface RealVectorNorm extends Norm<Vector<Double>> {
 	 * @return the term of the norm
 	 */
 	public Term normTerm(Term[] obj);
-	
+			
 	/**
 	 * The distance between the two objects as a term.
 	 * @param obj1 some terms

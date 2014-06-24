@@ -62,7 +62,9 @@ public class MaximumNorm extends AbstractRealVectorNorm{
 	 * @see net.sf.tweety.math.norm.RealVectorNorm#normTerm(java.util.Vector)
 	 */
 	@Override
-	public Term normTerm(Vector<Term> obj) {		
+	public Term normTerm(Vector<Term> obj) {	
+		if(obj.size() == 1)
+			return obj.get(0);
 		return new Maximum(new ArrayList<Term>(obj));
 	}
 

@@ -26,7 +26,7 @@ import net.sf.tweety.math.*;
  */
 public class Maximum extends AssociativeOperation{
 
-	private static final String MAXIMUM_STRING_REPRESENTATION = "min"; 
+	private static final String MAXIMUM_STRING_REPRESENTATION = "max"; 
 	
 	/**
 	 * Creates a new maximum with the given terms.

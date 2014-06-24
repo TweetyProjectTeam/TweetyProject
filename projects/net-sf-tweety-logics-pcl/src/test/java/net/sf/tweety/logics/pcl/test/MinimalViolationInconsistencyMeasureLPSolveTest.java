@@ -21,16 +21,19 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolationInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.parser.PclParser;
+import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
+import net.sf.tweety.math.norm.ManhattanNorm;
 import net.sf.tweety.math.norm.MaximumNorm;
-import net.sf.tweety.math.norm.PNorm;
 import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.LpSolve;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -40,12 +43,12 @@ import org.junit.Test;
  *
  */
 // TODO: there are some bugs to be fixed in the code of the minimal violation measure
-@Ignore
+//@Ignore
 public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
 	double accuracy;
 	
-	MinimalViolationInconsistencyMeasure inc;
+	InconsistencyMeasure<BeliefSet<ProbabilisticConditional>> inc;
 	
 	PclParser parser;
 	LinkedList<PclBeliefSet> kbs;
@@ -56,6 +59,9 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 		accuracy = 0.001;
 		
 		parser = new PclParser();
+		
+		LpSolve.setBinary("/opt/local/bin/lp_solve");
+		Solver.setDefaultLinearSolver(new LpSolve());
 		
 		kbs = new LinkedList<PclBeliefSet>();
 		try {
@@ -100,7 +106,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 	@Test
 	public void check1Norm() {
 		
-		inc = new MinimalViolationInconsistencyMeasure(new PNorm(1), Solver.getDefaultLinearSolver());
+		inc = new MinimalViolationInconsistencyMeasure(new ManhattanNorm(), Solver.getDefaultLinearSolver());
 		
 		LinkedList<Double> expected = new LinkedList<Double>();
 		
@@ -113,8 +119,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 		
 		
 		for(PclBeliefSet kb: kbs) {
-			assertEquals(expected.removeFirst(), inc.inconsistencyMeasure(kb),accuracy);
-			
+			assertEquals(expected.removeFirst(), inc.inconsistencyMeasure(kb),accuracy);			
 		}
 		
 		
@@ -124,23 +129,20 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
 	@Test
 	public void checkMaxNorm() {
-
-
-
 		inc = new MinimalViolationInconsistencyMeasure(new MaximumNorm(), Solver.getDefaultLinearSolver());
 		
 		LinkedList<Double> expected = new LinkedList<Double>();
 		
 		expected.add(0d);
-		expected.add(0.01);
-		expected.add(0.1);
-		expected.add(0.3);
-		expected.add(0.5);
-		expected.add(0.0413);
+		expected.add(0.02);
+		expected.add(0.2);
+		expected.add(0.6);
+		expected.add(1.0);
+		expected.add(0.12);
 		
 		
 		for(PclBeliefSet kb: kbs) {
-			assertEquals(expected.removeFirst(), inc.inconsistencyMeasure(kb),accuracy);
+			assertEquals(expected.removeFirst(), inc.inconsistencyMeasure(kb),accuracy);			
 		}
 		
 		

@@ -47,14 +47,8 @@ public abstract class Term {
 	 * @param t a term
 	 * @return the sum of this and (-1) * the given term.
 	 */
-	public Sum minus(Term t){
-		Product p = new Product(new IntegerConstant(-1),t);
-		Sum sum = new Sum();
-		sum.addTerm(p);
-		if(this instanceof Sum)
-			sum.addAllTerm(((Sum)this).getTerms());
-		else sum.addTerm(this);
-		return sum;		
+	public Difference minus(Term t){
+		return new Difference(this,t);	
 	}
 	
 	/**

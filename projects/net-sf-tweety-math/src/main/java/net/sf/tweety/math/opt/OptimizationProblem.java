@@ -141,6 +141,29 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		}		
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.ConstraintSatisfactionProblem#resolveMaximums()
+	 */
+	@Override
+	public void resolveMaximums(){
+		super.resolveMaximums();
+		// expand all maximums
+		this.targetFunction.expandAssociativeOperations();
+		// resolve maximums in target function
+		while(!this.targetFunction.getMaximums().isEmpty()){
+			Maximum m = this.targetFunction.getMaximums().iterator().next();
+			if(m.size() == 1){
+				this.targetFunction = this.targetFunction.replaceTerm(m, m.getTerms().get(0));
+			}else{
+				Term replacement = new FloatConstant(0.5F);
+				replacement = replacement.mult(m.getTerms().get(0));
+				replacement = replacement.add((new FloatConstant(0.5F).mult(m.getTerms().get(1))));
+				replacement = replacement.add(new AbsoluteValue(m.getTerms().get(0).minus(m.getTerms().get(1))));
+				this.targetFunction = this.targetFunction.replaceTerm(m, replacement);
+			}
+		}		
+	}
+	
 	/**
 	 * Resolves all occurrences of absolute values "abs(X)" by
 	 * <ul>
@@ -157,13 +180,13 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		//resolve avs in target function
 		while(!this.targetFunction.getAbsoluteValues().isEmpty()){
 			AbsoluteValue av = this.targetFunction.getAbsoluteValues().iterator().next();
-			IntegerVariable tmpAbs = new IntegerVariable("TMPABS" + counter);
+			FloatVariable tmpAbs = new FloatVariable("TMPABS" + counter);
 			this.targetFunction = this.targetFunction.replaceTerm(av, tmpAbs);
 			Inequation con1 = new Inequation(tmpAbs.minus(av.getTerm()),new IntegerConstant(0),Inequation.GREATER_EQUAL);
 			Inequation con2 = new Inequation(tmpAbs.add(av.getTerm()),new IntegerConstant(0),Inequation.GREATER_EQUAL);
 			this.add(con1);
 			this.add(con2);
-			IntegerVariable tmpAbsB = new IntegerVariable("TMPABSB" + counter++);
+			FloatVariable tmpAbsB = new FloatVariable("TMPABSB" + counter++);
 			Inequation con3 = new Inequation(av.getTerm().add(new IntegerConstant(this.penalty).mult(tmpAbsB)).minus(tmpAbs),new IntegerConstant(0),Inequation.GREATER_EQUAL);
 			Inequation con4 = new Inequation(new IntegerConstant(-1).mult(av.getTerm()).minus(new IntegerConstant(this.penalty).mult(tmpAbsB)).minus(tmpAbs),new IntegerConstant(0-this.penalty),Inequation.GREATER_EQUAL);
 			Inequation con5 = new Inequation(tmpAbsB,new IntegerConstant(1),Inequation.LESS_EQUAL);
@@ -179,13 +202,13 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 			Statement s = statements.pop();
 			while(!s.getAbsoluteValues().isEmpty()){
 				AbsoluteValue av = s.getAbsoluteValues().iterator().next();
-				IntegerVariable tmpAbs = new IntegerVariable("TMPABS" + counter);
+				FloatVariable tmpAbs = new FloatVariable("TMPABS" + counter);
 				s = s.replaceTerm(av, tmpAbs);
 				Inequation con1 = new Inequation(tmpAbs.minus(av.getTerm()),new IntegerConstant(0),Inequation.GREATER_EQUAL);
 				Inequation con2 = new Inequation(tmpAbs.add(av.getTerm()),new IntegerConstant(0),Inequation.GREATER_EQUAL);
 				statements.add(con1);
 				statements.add(con2);
-				IntegerVariable tmpAbsB = new IntegerVariable("TMPABSB" + counter++);
+				FloatVariable tmpAbsB = new FloatVariable("TMPABSB" + counter++);
 				Inequation con3 = new Inequation(av.getTerm().add(new IntegerConstant(this.penalty).mult(tmpAbsB)).minus(tmpAbs),new IntegerConstant(0),Inequation.GREATER_EQUAL);
 				Inequation con4 = new Inequation(new IntegerConstant(-1).mult(av.getTerm()).minus(new IntegerConstant(this.penalty).mult(tmpAbsB)).minus(tmpAbs),new IntegerConstant(0-this.penalty),Inequation.GREATER_EQUAL);
 				Inequation con5 = new Inequation(tmpAbsB,new IntegerConstant(1),Inequation.LESS_EQUAL);
@@ -232,6 +255,7 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		}		
 		//TODO: solve the following workarounds
 		result = result.replaceAll("-1\\*", "-");
+		result = result.replaceAll("-1 \\*", "-");
 		result = result.replaceAll("--", "");
 		result = result.replaceAll("\\+ 0\\.5\\*-", "- 0.5\\*");
 		result = result.replaceAll("\\+ -", "-");

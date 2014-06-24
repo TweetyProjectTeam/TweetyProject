@@ -23,7 +23,6 @@ import java.util.Set;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.PclBeliefSet;
-import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -32,7 +31,6 @@ import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.Solver;
-import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
@@ -105,12 +103,15 @@ public class MinimalViolationInconsistencyMeasure extends BeliefSetInconsistency
 		// set up the target function which is the norm of the d_i variables
 		Term targetFunction = this.norm.normTerm(vio.values().toArray(new Term[0]));
 		problem.setTargetFunction(targetFunction);
-		try{			
+		try{
+			problem.resolveMaximums();
+			problem.resolveMinimums();
+			problem.resolveAbsoluteValues();			
 			Map<Variable,Term> solution = this.solver.solve(problem);
 			// prepare probability function
-			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
-			for(PossibleWorld world: worlds)
-				p.put(world, new Probability(solution.get(worlds2vars.get(world)).doubleValue()));
+			//ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
+			//for(PossibleWorld world: worlds)
+			//	p.put(world, new Probability(solution.get(worlds2vars.get(world)).doubleValue()));
 			return targetFunction.replaceAllTerms(solution).doubleValue();			
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible

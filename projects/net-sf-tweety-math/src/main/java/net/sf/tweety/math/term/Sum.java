@@ -95,7 +95,7 @@ public class Sum extends AssociativeOperation{
 			this.removeTerm(t1);
 			this.removeTerm(t2);
 			Sum m = new Sum(t1,t2);
-			this.add(m);			
+			this.addTerm(m);			
 		}
 	}
 	

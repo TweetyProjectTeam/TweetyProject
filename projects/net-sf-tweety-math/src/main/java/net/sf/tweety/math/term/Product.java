@@ -106,7 +106,7 @@ public class Product extends AssociativeOperation{
 			this.removeTerm(t1);
 			this.removeTerm(t2);
 			Product m = new Product(t1,t2);
-			this.add(m);			
+			this.addTerm(m);			
 		}
 	}
 	

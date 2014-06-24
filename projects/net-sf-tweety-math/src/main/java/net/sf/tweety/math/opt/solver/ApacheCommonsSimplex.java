@@ -75,7 +75,7 @@ public class ApacheCommonsSimplex extends Solver {
 	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) {
 		if(!problem.isLinear())
 			throw new IllegalArgumentException("Simplex algorithm is for linear problems only.");
-		this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");
+		this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");				
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
 		for(Statement s: problem)

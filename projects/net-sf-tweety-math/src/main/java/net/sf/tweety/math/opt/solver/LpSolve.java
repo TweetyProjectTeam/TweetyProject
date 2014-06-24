@@ -71,19 +71,14 @@ public class LpSolve extends Solver {
 			out.write(((OptimizationProblem)problem).convertToLpFormat());
 			out.close();		
 			//execute lp_solve on problem in lp format and retrieve console output					
-			Process child = Runtime.getRuntime().exec(LpSolve.binary+ " " + lpFile.getAbsolutePath());
-			int c;				
-	        InputStream in = child.getInputStream();
-	        while ((c = in.read()) != -1)
-	            output += ((char)c);
-	        in.close();		        		        
-	        in = child.getErrorStream();
-	      //  while ((c = in.read()) != -1)
-	      //      error += (char)c;
-	        in.close();
-	        lpFile.delete();
+			output = Exec.invokeExecutable(LpSolve.binary + " " + lpFile.getAbsolutePath());
+			lpFile.delete();
 		}catch(IOException e){
 			//TODO add error handling
+			e.printStackTrace();
+			return null;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}		
