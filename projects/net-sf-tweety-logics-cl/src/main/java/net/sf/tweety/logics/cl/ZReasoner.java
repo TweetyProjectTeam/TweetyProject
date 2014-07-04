@@ -138,6 +138,7 @@ public class ZReasoner extends Reasoner {
 		ArrayList<ClBeliefSet> tolerancePartition = partition( this.getKnowledgBase() );
 		if( tolerancePartition.isEmpty() ){
 			System.out.println("The belief base " + this.getKnowledgBase() + " is not consistent.");
+			return null;
 		}
 		
 		// Store Z-value for each conditional of the knowledge base
@@ -193,6 +194,14 @@ public class ZReasoner extends Reasoner {
 				}
 				
 			}
+			
+			 /*
+			  * If you're not doing any progress here, the belief base isn't
+			  * consistent and evaluation should be aborted.
+			  */
+			 if (partition.isEmpty())
+			  return new ArrayList<ClBeliefSet>();
+			 
 			// adding the partition with all tolerated conditionals to the partition set
 			// and remove all conditionals of this partition from the remaining conditional set
 			tolerancePartition.add( partition );

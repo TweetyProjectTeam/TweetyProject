@@ -80,9 +80,16 @@ public class ClParser extends Parser<ClBeliefSet> {
 		//check for a single "|" (note, that "||" denotes disjunction)
 		int idx = 0;		
 		while(idx != -1){
-			idx = s.indexOf("|", idx);
-			if(s.charAt(idx+1) != '|')
-				break;			
+			idx = s.indexOf("|", idx + 1);
+			 if (s.charAt(idx + 1) != '|')
+			  /* The current idx is seperating premise and conclusion */
+			  break;
+			 else
+			  /*
+			   * The current idx is the first of the two OR-'|'s and the next
+			   * one must be skipped
+			   */
+			  idx++;		
 		}
 		PlParser plParser = new PlParser();
 		if(idx == -1)
