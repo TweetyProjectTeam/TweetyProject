@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding ="UTF-8"?>
 <plugins>
 
-	<plugin name="preferences">
-		<path>  plugins/preferences.jar  </path>
+	<plugin name="pref">
+		<path>plugins/pref.jar</path>
 	</plugin>
 
 	<plugin name="rpcl">

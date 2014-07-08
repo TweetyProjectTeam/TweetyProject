@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import net.sf.tweety.plugin.*;
 import net.sf.tweety.plugin.parameter.CommandParameter;
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
+import net.xeoh.plugins.base.options.getplugin.OptionCapabilities;
 import net.xeoh.plugins.base.util.PluginManagerUtil;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -46,6 +48,7 @@ public class CliMain {
 
 	public static final String HELPTEXT = "help.txt";
 
+	// TODO: Create external configuration file and Setter
 	public static final String TWEETY_CLI_DEFAULT_CONFIG = "tweety_config.xml";
 
 	/** The argument name for the called plugin */
@@ -60,18 +63,26 @@ public class CliMain {
 	public static final String ARG__OUTPUT_FILE = "--output";
 	/** The argument name for the output file (short) */
 	public static final String ARG__OUTPUT_FILE_SHORT = "-o";
+	/** The argument name for debugging output */
+	public static final String ARG__DEBUG_FLAG = "--debug";
+	/** The argument name for debugging output (short) */
+	public static final String ARG__DEBUG_FLAG_SHORT = "-d";
 
 	/** the called plugin */
 	private static String plugin;
 	/** the list of input files */
 	private static File[] inputFiles = new File[1];
 	/** the output file */
-	//private static String outputFile = null;
+	private static String outputFile = null;
+
 	/** the optional plugin parameters */
-	//private static CommandParameter[] pluginParams = null;
+	// private static CommandParameter[] pluginParams = null;
+	// debug flag, false as default
+	// private boolean debug = false;
 
 	/**
-	 * prints help text if cli is called with parameter "--help" or empty argument array
+	 * prints help text if cli is called with parameter "--help" or empty
+	 * argument array
 	 */
 	public static void printHelpText() {
 		File help = new File(HELPTEXT).getAbsoluteFile();
@@ -81,9 +92,9 @@ public class CliMain {
 			try {
 				String line;
 				while ((line = bfrd.readLine()) != null) {
-//					if (line.length() >= 1) {
-						System.out.println(line);
-//					}
+					// if (line.length() >= 1) {
+					System.out.println(line);
+					// }
 				}
 				bfrd.close();
 			} catch (IOException e) {
@@ -104,35 +115,61 @@ public class CliMain {
 	 */
 	public static Map<String, String> configCLI()
 			throws ConfigurationException, FileNotFoundException {
+
+		System.out.println("Initialize CLI...");
+
 		// TODO : exception handling for empty/erroneous configuration
 		Map<String, String> loadablePlugins = new HashMap<String, String>();
 
 		XMLConfiguration tweetyXmlConfig = new XMLConfiguration();
 		File in = new File(TWEETY_CLI_DEFAULT_CONFIG);
 		try {
+			System.out.print("Loading Configuration...");
 			String inPath = in.getAbsolutePath();
 			tweetyXmlConfig.setBasePath(inPath.substring(0, inPath.length()
 					- TWEETY_CLI_DEFAULT_CONFIG.length() - 1));
 			tweetyXmlConfig.load(in);
+			System.out.print("success.\n");
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 
 		// map ueber "plugins.plugin" mit keys ()
 		// TODO: Verhalten bei leeren Feldern pruefen
+		// TODO: Verhalten bei einem einzelnen Eintrag prüfen
 		Iterator<String> it = tweetyXmlConfig.getKeys("plugin");
 
-		
-		//TODO fix the casts!
-		@SuppressWarnings("unchecked")
-		ArrayList<String> pluginPath = (ArrayList<String>) tweetyXmlConfig.getProperty(it.next());
-		@SuppressWarnings("unchecked")
-		ArrayList<String> pluginName = (ArrayList<String>) tweetyXmlConfig.getProperty(it.next());
+		// // TODO fix the casts!
+		// if (it.hasNext()) {
+		//
+		// String pluginPath = (String) tweetyXmlConfig.getProperty(it.next()
+		// .toString());
+		//
+		// String pluginName = (String) tweetyXmlConfig.getProperty(it.next()
+		// .toString());
+		//
+		// // for (int i = 0; i < pluginPath.size(); i++) {
+		// // System.out.println(pluginName.get(i) + pluginPath.get(i));
+		// loadablePlugins.put(pluginName, pluginPath);
+		// }
+		// }
+		System.out.print("Getting Plugins...");
+		// TODO fix the casts!
+		if (it.hasNext()) {
+			@SuppressWarnings("unchecked")
+			ArrayList<String> pluginPath = (ArrayList<String>) tweetyXmlConfig
+					.getProperty(it.next());
+			@SuppressWarnings("unchecked")
+			ArrayList<String> pluginName = (ArrayList<String>) tweetyXmlConfig
+					.getProperty(it.next());
 
-		for (int i = 0; i < pluginPath.size(); i++) {
-			System.out.println(pluginName.get(i) + pluginPath.get(i));
-			loadablePlugins.put(pluginName.get(i), pluginPath.get(i));
+			for (int i = 0; i < pluginPath.size(); i++) {
+				// System.out.println(pluginName.get(i) + pluginPath.get(i));
+				loadablePlugins.put(pluginName.get(i), pluginPath.get(i));
+			}
 		}
+		System.out.print("done.\n");
+		System.out.println("CLI initialized");
 		return loadablePlugins;
 	}
 
@@ -141,8 +178,40 @@ public class CliMain {
 	 * 
 	 * @param plugin
 	 */
-	public static void loadPlugin(String plugin) {
-		// move plugin loading in here
+	// public static boolean loadPlugin(Map<String, String> availablePlugins,
+	// PluginManager plugman, String plugin) {
+	// // move plugin loading in here
+	// if (availablePlugins.containsKey(plugin)) {
+	// plugman.addPluginsFrom(new File(availablePlugins.get(plugin))
+	// .toURI(), );
+	// } else {
+	// System.out.println("No such plugin available.");
+	//
+	// }
+	// }
+
+	/**
+	 * This function allows to print the content of the current configuration
+	 * file. It consists of pairs of each available plugin an its path.
+	 */
+	public void printConfiguration() {
+
+	}
+
+	/**
+	 * 
+	 * @param path
+	 */
+	public void setConfigurationFilePath(String path) {
+
+	}
+
+	/**
+	 * 
+	 * @param path
+	 */
+	public void setHelptextPath(String path) {
+
 	}
 
 	/**
@@ -183,34 +252,38 @@ public class CliMain {
 				}
 			}
 		}
-
 		return tmp;
 	}
 
 	public static void main(String[] args) {
-		// System.out.println(args.length);
+
+		// check, if first call parameter is for the helptext
 		if (args.length == 0) {
-			System.out.println("Tweety CLI: Obtain help with command --help");
+			System.out.println("Welcome to the Tweety command line interface.");
+			System.out.println("Obtain help with command --help");
 			System.exit(0);
 		} else if ((args.length == 1 && args[0].equals("--help"))) {
 			printHelpText();
 			System.exit(0);
-		} else if (args.length == 1 && !args[0].contains("--help")){
+		} else if (args.length == 1 && !args[0].contains("--help")) {
 			System.out.println("No valid input, call with --help for helptext");
 			System.exit(0);
 		}
 
-		// Unused!
-		//TweetyPlugin tweetyPlugin;
+		// create new plugin manager
 		PluginManager pm = PluginManagerFactory.createPluginManager();
+		// create plugin manager util
 		PluginManagerUtil pmu = new PluginManagerUtil(pm);
-		System.out.println(pmu.getPlugins());
-		ArrayList<ArrayList<String>> collectedparams = new ArrayList<ArrayList<String>>();
-		// Unused!
-		//List<CommandParameter> inParams = new ArrayList<CommandParameter>();
 
+		// System.out.println(pmu.getPlugins());
+
+		// collected parameter
+		ArrayList<ArrayList<String>> collectedparams = new ArrayList<ArrayList<String>>();
+
+		// list of available plugins
 		Map<String, String> availablePlugins = new HashMap<String, String>();
 
+		// try to configure CLI
 		try {
 			availablePlugins = configCLI();
 		} catch (ConfigurationException e) {
@@ -222,9 +295,8 @@ public class CliMain {
 			e.printStackTrace();
 		}
 
-		// TODO implement the main CLI
+		// handle all input parameter
 		for (int i = 0; i < args.length; i++) {
-
 			// The called plugin
 			if (args[i].equals(ARG__CALLED_PLUGIN)
 					|| args[i].equals(ARG__CALLED_PLUGIN_SHORT)) {
@@ -258,8 +330,8 @@ public class CliMain {
 			// output file
 			else if (args[i].equals(ARG__OUTPUT_FILE)
 					|| args[i].equals(ARG__OUTPUT_FILE_SHORT)) {
-				//outputFile not used!
-				//outputFile = args[++i];
+				// outputFile not used!
+				outputFile = args[++i];
 			}
 
 			// collecting given command parameters
@@ -271,7 +343,10 @@ public class CliMain {
 
 				}
 				collectedparams.add(temp);
-			}
+			} // else if (args[i].equals(ARG__DEBUG_FLAG)
+				// ||args[i].equals(ARG__DEBUG_FLAG_SHORT)){
+			// debug = true;
+			// }
 		}
 
 		// check whether the called plugin is present
@@ -279,44 +354,74 @@ public class CliMain {
 		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
 			if (tp.getCommand().equalsIgnoreCase(plugin)) {
 				pluginPresent = true;
+				System.out.println("Called plugin present");
 			}
 		}
 		// TODO: move loading into own method
 		// trying to load plugin if not present
+		// old method for loading plugins
 		if (!pluginPresent) {
+			System.out.print("Trying to find plugin...");
 			if (availablePlugins.containsKey(plugin)) {
 				pm.addPluginsFrom(new File(availablePlugins.get(plugin))
 						.toURI());
+				System.out.print("success.\n");
 			} else {
-				System.out.println("No such plugin available.");
-
+				System.out.print("no such plugin available.\n");
 			}
 		}
 
-		// Testausgabe aller Plugins
-		 System.out.println(pm.getPlugin(TweetyPlugin.class));
-		 System.out.println(pmu.getPlugins());
+		// Test: print all plugins
+		// System.out.println("Plugin loaded due to call parameter: " +
+		// pm.getPlugin(TweetyPlugin.class, new
+		// OptionCapabilities("Tweety Plugin", plugin) ));
+		// System.out.println("Print all plugins: " + pmu.getPlugins());
+		// System.out.println("Given plugin call parameter: " + plugin);
 
-		//
-		for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
-			if (tp.getCommand().equalsIgnoreCase(plugin)) {
-				// each input parameter is checked against the called plugin
-				// whether it is valid
-				ArrayList<CommandParameter> ip = new ArrayList<CommandParameter>();
-				//Unused!
-				//tweetyPlugin = tp;
+		// each plugin MUST implement the capabilites "Tweety Plugin" and the
+		// variable "call parameter" to select called plugin from plugin pool
+		TweetyPlugin tp = pm.getPlugin(TweetyPlugin.class,
+				new OptionCapabilities("Tweety Plugin", plugin));
+
+		// for (TweetyPlugin tp : pmu.getPlugins(TweetyPlugin.class)) {
+		if (tp.getCommand().equalsIgnoreCase(plugin)) {
+			System.out.println("Valid plugin found.");
+			// each input parameter is checked against the called plugin
+			// whether it is valid
+			ArrayList<CommandParameter> ip = new ArrayList<CommandParameter>();
+
+			System.out.print("Trying to instantiate parameters...");
+			try {
+				ip.addAll(instantiateParameters(tp, collectedparams));
+				System.out.print("done.\n");
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			PluginOutput out = new PluginOutput();
+
+			System.out.println("Execute Plugin...");
+			out = tp.execute(inputFiles,
+					ip.toArray(new CommandParameter[ip.size()]));
+
+			if (outputFile != null) {
+
 				try {
-					ip.addAll(instantiateParameters(tp, collectedparams));
-				} catch (CloneNotSupportedException e) {
+					FileWriter fw = new FileWriter(outputFile);
+					fw.write(out.getOutput());
+					fw.close();
+					System.out.println("Output written to file: " + outputFile);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				PluginOutput out = new PluginOutput();
-//				tp.execute(inputFiles,ip.toArray(new CommandParameter[ip.size()]));
-				out = tp.execute(inputFiles,
-						ip.toArray(new CommandParameter[ip.size()]));
-				System.out.println("Output: \n" + out.getOutput());
 
+			} else {
+				System.out
+						.println("No output file given, writing to console...");
+				System.out.println("Output: \n" + out.getOutput());
 			}
+		} else {
+			System.out.println("Faulty parameters. Please check input.");
 
 		}
 
