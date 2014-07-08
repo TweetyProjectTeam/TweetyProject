@@ -21,7 +21,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import net.sf.tweety.plugin.AbstractTweetyPlugin;
 import net.sf.tweety.plugin.PluginOutput;
 import net.sf.tweety.plugin.parameter.CommandParameter;
@@ -36,6 +35,11 @@ import net.sf.tweety.preferences.aggregation.PluralityScoringPreferenceAggregato
 import net.sf.tweety.preferences.aggregation.VetoScoringPreferenceAggregator;
 import net.sf.tweety.preferences.io.POParser;
 import net.sf.tweety.preferences.io.ParseException;
+import net.sf.tweety.preferences.io.UPParser;
+import net.sf.tweety.preferences.update.Update;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.LpSolve;
+import net.xeoh.plugins.base.annotations.Capabilities;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
@@ -48,11 +52,15 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 	// the static identifier for this plugin
-	private static final String PREF__CALL_PARAMETER = "preferences";
-	
+	private static final String PREF__CALL_PARAMETER = "pref";
+
 	// Unused!
-	//private static final String PREF__PLUGIN_DESCRIPTION = "";
-	
+	// private static final String PREF__PLUGIN_DESCRIPTION = "";
+
+	@Capabilities
+	public String[] capabilities() {
+		return new String[] { "Tweety Plugin", PREF__CALL_PARAMETER };
+	}
 
 	// preference aggregation
 	private static final String PREF__AGGR_IDENTIFIER = "-aggr";
@@ -75,24 +83,27 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 
 	private static final String PREF__UP_DESCRIPTION = "-up <file>, update file for dynamic preference aggregation command with <rule>={weaken, strengthen}";
 
-//	private static final File[] PREF__UP_RULES = new String[] { "weaken",
-//			"strengthen" };
-	
+	// private static final File[] PREF__UP_RULES = new String[] { "weaken",
+	// "strengthen" };
+
 	// determine, if aggregation is dynamic and updates are possible
 	private boolean isDynamic = false;
+	
+	
 	
 	public String getCommand() {
 		return PREF__CALL_PARAMETER;
 	}
-	
+
 	/**
 	 * non-empty constructur in case of errors in JSPF
+	 * 
 	 * @param args
 	 */
-	public PreferencesPlugin(String[] args){
+	public PreferencesPlugin(String[] args) {
 		this();
 	}
-	
+
 	// init command parameter
 	/**
 	 * Default empty constructor initializing this plugins parameter
@@ -106,23 +117,29 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 		this.addParameter(new FileListCommandParameter(PREF__UP_IDENTIFIER,
 				PREF__UP_DESCRIPTION));
 	}
-	
 
 	@Override
 	/**
 	 * executes the given parameters and files in this plugin
 	 */
 	public PluginOutput execute(File[] input, CommandParameter[] params) {
-		@SuppressWarnings("unused")
+
+		Solver.setDefaultLinearSolver(new LpSolve());
+		
+		// Init empty output
+		PluginOutput out = new PluginOutput();
+
 		PreferenceOrder<String> result = new PreferenceOrder<String>();
 		// File-Handler
-		//Unused!
-		//POParser parser;
+		// Unused!
+		// POParser parser;
 		// Parsing,...
+
 		List<PreferenceOrder<String>> poset = new ArrayList<PreferenceOrder<String>>();
+
 		for (int i = 0; i < input.length; i++) {
 			if (input[i].getAbsolutePath().endsWith(".po")) {
-//				 PreferenceOrder<String> po;
+				// PreferenceOrder<String> po;
 				try {
 					PreferenceOrder<String> po = POParser.parse(input[i]);
 					poset.add(po);
@@ -132,7 +149,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}	 
+				}
 			}
 		}
 
@@ -146,78 +163,152 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 					PluralityScoringPreferenceAggregator<String> pluraggr = new PluralityScoringPreferenceAggregator<String>();
 					result = pluraggr.aggregate(poset);
 
-				// borda scoring
+					// borda scoring
 				} else if (tmp.getValue().equalsIgnoreCase("borda")) {
 					BordaScoringPreferenceAggregator<String> brdaggr = new BordaScoringPreferenceAggregator<String>(
 							poset.iterator().next().size());
 					result = brdaggr.aggregate(poset);
 
-				// veto scoring
+					// veto scoring
 				} else if (tmp.getValue().equalsIgnoreCase("veto")) {
 					VetoScoringPreferenceAggregator<String> vetoaggr = new VetoScoringPreferenceAggregator<String>(
 							0);
 					result = vetoaggr.aggregate(poset);
 				}
-
+				
+				out.addField("Result: ", result.toString());
+				out.addField("Leveling Function: ", result.getLevelingFunction().toString());
+				out.addField("Ranking Function: ", result.getLevelingFunction().getRankingFunction().toString());
 			}
 
 			// if command parameter is for dynamic aggregation
 			if (tempComParam.getIdentifier().equals("-dynaggr")) {
 				// this aggregation is dynamic
 				isDynamic = true;
+
 				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
+
+				ArrayList<Update<String>> up = new ArrayList<Update<String>>();
+
+				for (CommandParameter searchUpdate : params) {
+					if (searchUpdate.getIdentifier().equals("-up")) {
+						if ((isDynamic)
+								&& (searchUpdate instanceof FileListCommandParameter)) {
+							// TODO: check dynamic preference aggregation
+							// throw new
+							// RuntimeException("Method not correctly implemented, please check source code");
+
+							// TODO: check the following code. The variable "up"
+							// is never read!
+
+							File[] tmpFile = ((FileListCommandParameter) searchUpdate)
+									.getValue();
+							// only one update file?
+							if (tmpFile.length == 1) {
+								if (tmpFile[0].getAbsolutePath()
+										.endsWith(".up")) {
+									try {
+										up = UPParser.parse(tmpFile[0]
+												.getAbsolutePath());
+									} catch (FileNotFoundException e) {
+										e.printStackTrace();
+									} catch (ParseException e) {
+										e.printStackTrace();
+									}
+								} else {
+									System.out
+											.println("This is no correctly formatted update file.");
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				// Update counter variable
+				int count = 1;
 
 				// dynamic plurality scoring
 				if (tmp.getValue().equalsIgnoreCase("dynplurality")) {
 					DynamicPluralityScoringPreferenceAggregator<String> dynpluraggr = new DynamicPluralityScoringPreferenceAggregator<String>();
 					result = dynpluraggr.aggregate(poset);
-				// dynamic borda scoring
+					out.addField("Result: ", result.toString());
+						for (Update<String> update : up) {
+							result = dynpluraggr.update(update, poset);
+							out.addField("Update "+count+": ", result.toString());
+							count++;
+						}
+
+					// dynamic borda scoring
 				} else if (tmp.getValue().equalsIgnoreCase("dynborda")) {
 					DynamicBordaScoringPreferenceAggregator<String> dynbrdaggr = new DynamicBordaScoringPreferenceAggregator<String>(
 							poset.iterator().next().size());
 					result = dynbrdaggr.aggregate(poset);
-				// dynamic veto scoring	
+					out.addField("Result: ", result.toString());
+					for (Update<String> update : up) {
+						result = dynbrdaggr.update(update, poset);
+						out.addField("Update "+count+": ", result.toString());
+						count++;
+					}
+
+					// dynamic veto scoring
 				} else if (tmp.getValue().equalsIgnoreCase("dynveto")) {
 					DynamicVetoScoringPreferenceAggregator<String> dynvetoaggr = new DynamicVetoScoringPreferenceAggregator<String>(
 							0);
 					result = dynvetoaggr.aggregate(poset);
+					out.addField("Result: ", result.toString());
+					for (Update<String> update : up) {
+						result = dynvetoaggr.update(update, poset);
+						out.addField("Update "+count+": ", result.toString());
+						count++;
+					}
 				}
 			}
 
+//			for (CommandParameter tempComParam : params) {
+//				// if command parameter is for aggregation
+//				if (tempComParam.getIdentifier().equals("-dynaggr") && ) {
+//					System.err.println("You either tried to apply one or more updates"
+//							"to ");
+//				}
+//			}
 			// if command parameter is for updates of dynamic aggregation
-			if (tempComParam.getIdentifier().equals("-up")) {
-				if(!isDynamic){
-					System.out.println("No Updates allowed within non-dynamic aggregation");
-				} else if((isDynamic) && (tempComParam instanceof FileListCommandParameter)) {
-					
-//					throw new RuntimeException("Method not correctly implemented, please check source code");
-					
-					// TODO: check the following code. The variable "up" is never read!
-//					ArrayList< Update <String>> up = new ArrayList<Update<String>>();
-					/*File[] tmp = ((FileListCommandParameter) tempComParam).getValue();
-					// only one update file?
-					if(tmp.length == 1){
-						if(tmp[0].getAbsolutePath().endsWith(".up")){
-							try{
-							up = UPParser.parse(tmp[0].getAbsolutePath());
-							} catch (FileNotFoundException e){
-								e.printStackTrace();
-							} catch (ParseException e){
-								e.printStackTrace();
-							}
-						} else {
-							System.out.println("This is no correctly formatted update file.");
-						}
-					} */
-					
-				}
-			}
+			// if (tempComParam.getIdentifier().equals("-up")) {
+			// if(!isDynamic){
+			// System.out.println("No Updates allowed within non-dynamic aggregation");
+			// } else if((isDynamic) && (tempComParam instanceof
+			// FileListCommandParameter)) {
+			// // TODO: check dynamic preference aggregation
+			// // throw new
+			// RuntimeException("Method not correctly implemented, please check source code");
+			//
+			// // TODO: check the following code. The variable "up" is never
+			// read!
+			// ArrayList< Update <String>> up = new ArrayList<Update<String>>();
+			// File[] tmp = ((FileListCommandParameter)
+			// tempComParam).getValue();
+			// // only one update file?
+			// if(tmp.length == 1){
+			// if(tmp[0].getAbsolutePath().endsWith(".up")){
+			// try{
+			// up = UPParser.parse(tmp[0].getAbsolutePath());
+			// } catch (FileNotFoundException e){
+			// e.printStackTrace();
+			// } catch (ParseException e){
+			// e.printStackTrace();
+			// }
+			// } else {
+			// System.out.println("This is no correctly formatted update file.");
+			// break;
+			// }
+			// }
+			//
+			// }
+			// }
 		}
-		// TODO: fill output
-		PluginOutput out = new PluginOutput();
-
+	
 		return out;
-		
+
 	}
 
 	@Override
