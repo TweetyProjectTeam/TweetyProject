@@ -50,7 +50,9 @@ import net.sf.tweety.plugin.parameter.CommandParameter;
 import net.sf.tweety.plugin.parameter.FileListCommandParameter;
 import net.sf.tweety.plugin.parameter.SelectionCommandParameter;
 import net.sf.tweety.plugin.parameter.StringListCommandParameter;
+import net.xeoh.plugins.base.annotations.Capabilities;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
+import net.xeoh.plugins.base.options.getplugin.OptionCapabilities;
 
 /**
  * relational probabilistic conditional logic plugin for the tweety cli 
@@ -63,24 +65,22 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 @PluginImplementation
 public class RPCLPlugin extends AbstractTweetyPlugin {
 	
-	/*
-	 * Used Parameters:
-	 * Fixed: Input-File
-	 * Necessary: -rpclogic, -semantics, -inference
-	 * Optional: -o (-output), -query (necessary?)
-	 * to be checked:
-	 * -inputreader, -outputwriter, -parser
-	 * 
-	 */
 	/**
 	 * Logger.
 	 */
 	private static Logger log = LoggerFactory.getLogger(RPCLPlugin.class);
 	
 	// necessary
-	private static final String RPCLOGIC__CALL_PARAMETER = "rpclogic";
+	private static final String RPCLOGIC__CALL_PARAMETER = "rpcl";
 
 //	private static final String RPCLOGIC__CALL_DESCRIPTION = "";
+
+	@Capabilities
+	public String[] capabilities() { return new String[] {"Tweety Plugin", RPCLOGIC__CALL_PARAMETER}; }
+	
+	
+	// option capabilities
+//	private static final OptionCapabilities RPCLOGIC__OPTIONS = new OptionCapabilities("Tweety Plugin", RPCLOGIC__CALL_PARAMETER);
 
 	private static final String RPCLOGIC__PARSER_IDENTIFIER = "-parser";
 	
@@ -204,16 +204,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 	 */
 	@Override
 	public PluginOutput execute(File[] input, CommandParameter[] params) {	
-		/*
-		- parse knowledge base
-		-> kb 
-		- parse semantics
-		- parse inference
-		- parse query
-		knowledge base: ".rpclkb"
-		probability function ".rpclfct"
-		extra output parameters? (P'function...) 
-		*/
+		
 		// init
 		
 		// <collect parameter>
