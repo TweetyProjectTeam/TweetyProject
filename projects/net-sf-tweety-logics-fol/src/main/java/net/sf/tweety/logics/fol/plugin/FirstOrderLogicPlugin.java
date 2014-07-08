@@ -31,11 +31,13 @@ import net.sf.tweety.plugin.PluginOutput;
 import net.sf.tweety.plugin.parameter.CommandParameter;
 import net.sf.tweety.plugin.parameter.SelectionCommandParameter;
 import net.sf.tweety.plugin.parameter.StringListCommandParameter;
+import net.xeoh.plugins.base.annotations.Capabilities;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
  * This class models the plugin for first order logics used in the tweety cli
- * Note: Very early state, not finished or debugged yet.
+ * Note: Currently FOL-files MUST BE named after the pattern "*.fologic"
+ *  Very early state, not finished or debugged yet.
  * @author Bastian Wolf
  *
  */
@@ -44,10 +46,14 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 
 	// <---- STATIC DELCARATION ----->	
 	
+
 	// the static identifier for this plugin
-	private static final String FOLOGIC__CALL_PARAMETER = "firstorderlogic";
+	private static final String FOLOGIC__CALL_PARAMETER = "fol";
 		
 //	private static final String FOL__PLUGIN_DESCRIPTION = "";
+	
+	@Capabilities
+	public String[] capabilities() { return new String[] {"Tweety Plugin", FOLOGIC__CALL_PARAMETER}; }
 	
 	// reasoner enum command parameter
 	private static final String FOLOGIC__REASONER_IDENTIFIER = "-reasoner";
@@ -164,10 +170,12 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 		
 		// TODO: make up and return plugin output
 		PluginOutput out = new PluginOutput();
+		out.addField("Belief Base: ", folbs.toString());
+		for(FolFormula folf : queries){
+			out.addField("Query: ", folf.toString());
+		}
 		
-		return out;
-		
-		
+		return out;		
 	}
 
 }
