@@ -35,6 +35,7 @@ import net.sf.tweety.plugin.*;
 import net.sf.tweety.plugin.parameter.CommandParameter;
 import net.sf.tweety.plugin.parameter.SelectionCommandParameter;
 import net.sf.tweety.plugin.parameter.StringListCommandParameter;
+import net.xeoh.plugins.base.annotations.Capabilities;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 /**
@@ -49,11 +50,20 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 
 	// <---- STATIC DELCARATION ----->	
 	
+	
+	
 	// this plugins call parameter
-	private static final String PROPLOGIC__CALL_PARAMETER = "propositionallogic";
+	private static final String PROPLOGIC__CALL_PARAMETER = "pl";
 	// this plugins description
 	// private static final String PROPLOGIC__PLUGIN_DESCRIPTION = "";
 
+	
+	// option capabilities
+//	private static final OptionCapabilities PROPLOGIC__OPTIONS = new OptionCapabilities("Tweety Plugin", PROPLOGIC__CALL_PARAMETER);
+	
+	@Capabilities
+	public String[] capabilities() { return new String[] {"Tweety Plugin", PROPLOGIC__CALL_PARAMETER}; }
+	
 	
 	// parameter for the used solver
 	private static final String PROPLOGIC__REASONER_IDENTIFIER = "-reasoner";
@@ -61,7 +71,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 	private static final String PROPLOGIC__REASONER_DESCRIPTION = "-reasoner <solver>, use given solver (as String)";
 
 	private static final String[] PROPLOGIC__REASONER_SOLVERENUM = new String[] {
-			"sat4j", "naive" };
+			"sat4j", "naive", "lingeling" };
 
 	// parameter for query formula
 	private static final String PROPLOGIC__QUERY_IDENTIFIER = "-query";
@@ -139,6 +149,9 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 				} else if (tmp.getValue().equalsIgnoreCase("sat4j")) {
 					SatSolver.setDefaultSolver(new Sat4jSolver());
 					reasoner = new SatReasoner(plbs);
+				} else if(tmp.getValue().equalsIgnoreCase("lingeling")){
+				// TODO: implement lingeling call
+				
 				} else {
 					throw new IllegalArgumentException("Illegal argument: "+ tempComParam.getIdentifier());
 				}
