@@ -17,24 +17,20 @@
 package net.sf.tweety.logics.pl.test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.commons.streams.DefaultFormulaStream;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.logics.commons.analysis.streams.DefaultInconsistencyListener;
-import net.sf.tweety.logics.commons.analysis.streams.DefaultStreamBasedInconsistencyMeasure;
-import net.sf.tweety.logics.commons.analysis.streams.StreamBasedInconsistencyMeasure;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasure;
-import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 public class ContensionTest {
 	public static void main(String[] args) throws ParserException, IOException, InterruptedException{
+		// Set SAT solver
+		SatSolver.setDefaultSolver(new Sat4jSolver());
 		// Create some knowledge base
 		PlBeliefSet kb = new PlBeliefSet();
 		PlParser parser = new PlParser();
@@ -52,16 +48,5 @@ public class ContensionTest {
 		// test contension inconsistency measure		
 		BeliefSetInconsistencyMeasure<PropositionalFormula> cont = new ContensionInconsistencyMeasure();
 		System.out.println("Cont: " + cont.inconsistencyMeasure(kb));
-		
-		Thread.sleep(1000);
-		
-		// test stream-based variant
-		Map<String,Object>config = new HashMap<String,Object>();
-		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER, SatSolver.getDefaultSolver());
-		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 10);
-		config.put(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, kb.getSignature());
-		StreamBasedInconsistencyMeasure<PropositionalFormula> cont2 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(ContensionInconsistencyMeasurementProcess.class,config);
-		cont2.addInconsistencyListener(new DefaultInconsistencyListener());
-		cont2.getInconsistencyMeasureProcess(new DefaultFormulaStream<PropositionalFormula>(kb,true)).start();
 	}
 }
