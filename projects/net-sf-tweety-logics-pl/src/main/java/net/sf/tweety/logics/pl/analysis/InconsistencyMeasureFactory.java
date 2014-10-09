@@ -19,12 +19,10 @@ package net.sf.tweety.logics.pl.analysis;
 import java.io.File;
 
 import net.sf.tweety.commons.BeliefSet;
-import net.sf.tweety.logics.commons.analysis.DrasticInconsistencyMeasure;
-import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
-import net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure;
-import net.sf.tweety.logics.commons.analysis.MicInconsistencyMeasure;
+import net.sf.tweety.logics.commons.analysis.*;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -38,7 +36,10 @@ public abstract class InconsistencyMeasureFactory {
 		DRASTIC ("drastic", "Drastic Inconsistency Measure", "/inc/DrasticInconsistencyMeasure.html"),
 		MI ("mi", "MI Inconsistency Measure", "/inc/MiInconsistencyMeasure.html"),
 		MIC ("mic", "MIC Inconsistency Measure", "/inc/MicInconsistencyMeasure.html"),
-		CONTENSION ("contension", "Contension Inconsistency Measure", "/inc/ContensionInconsistencyMeasure.html");
+		CONTENSION ("contension", "Contension Inconsistency Measure", "/inc/ContensionInconsistencyMeasure.html"),
+		HS ("hs", "Hitting Set Inconsistency Measure", "/inc/HittingSetInconsistencyMeasure.html"),
+		PR ("pr", "P Inconsistency Measure", "/inc/PrInconsistencyMeasure.html"),
+		ETA ("eta", "Eta Inconsistency Measure", "/inc/EtaInconsistencyMeasure.html");
 		
 		public String id;
 		public String label;
@@ -74,6 +75,12 @@ public abstract class InconsistencyMeasureFactory {
 				return new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case MIC:
 				return new MicInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+			case HS:
+				return new HsInconsistencyMeasure<PropositionalFormula>(new PossibleWorldIterator());
+			case PR:
+				return new PrInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+			case ETA:
+				return new EtaInconsistencyMeasure<PropositionalFormula>(new PossibleWorldIterator());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}

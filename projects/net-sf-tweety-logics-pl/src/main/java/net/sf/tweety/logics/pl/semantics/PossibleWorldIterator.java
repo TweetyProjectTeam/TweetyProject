@@ -16,15 +16,19 @@
  */
 package net.sf.tweety.logics.pl.semantics;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.InterpretationIterator;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
 import net.sf.tweety.commons.util.SubsetIterator;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 
@@ -37,16 +41,24 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 public class PossibleWorldIterator implements InterpretationIterator{
 
 	/** The signature used for creating possible worlds. */
-	private PropositionalSignature sig;
+	private PropositionalSignature sig = null;
 	
 	/** Used for iterating over subsets of propositions. */
-	private SubsetIterator<Proposition> it;
+	private SubsetIterator<Proposition> it = null;
+
+	/**
+	 * Creates new iterator for the given signature.
+	 * @param sig some signature
+	 */
+	public PossibleWorldIterator(){		
+	}
 	
 	/**
 	 * Creates new iterator for the given signature.
 	 * @param sig some signature
 	 */
 	public PossibleWorldIterator(PropositionalSignature sig){
+		this();
 		this.sig = sig;
 		this.it = new DefaultSubsetIterator<Proposition>(new HashSet<Proposition>(sig));
 	}
@@ -56,7 +68,7 @@ public class PossibleWorldIterator implements InterpretationIterator{
 	 */
 	@Override
 	public boolean hasNext() {
-		return this.it.hasNext();
+		return this.it != null && this.it.hasNext();
 	}
 
 	/* (non-Javadoc)
@@ -86,4 +98,27 @@ public class PossibleWorldIterator implements InterpretationIterator{
 		return new PossibleWorldIterator(this.sig);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.InterpretationIterator#reset(net.sf.tweety.commons.Signature)
+	 */
+	@Override
+	public InterpretationIterator reset(Signature sig){
+		if(!(sig instanceof PropositionalSignature))
+			throw new IllegalArgumentException("Signature of type 'PropositionalSignature' expected.");
+		return new PossibleWorldIterator((PropositionalSignature)sig);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.InterpretationIterator#reset(java.util.Collection)
+	 */
+	@Override
+	public InterpretationIterator reset(Collection<? extends Formula> formulas){
+		PropositionalSignature sig = new PropositionalSignature();
+		for(Formula f: formulas){
+			if(!(f instanceof PropositionalFormula))
+				throw new IllegalArgumentException("Formula of type 'PropositionalFormula' expected.");
+			sig.add(((PropositionalFormula)f).getSignature());
+		}	
+		return this.reset((Signature)sig);
+	}
 }

@@ -19,7 +19,10 @@ package net.sf.tweety.web;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
 
 /**
@@ -30,7 +33,9 @@ public class TweetyServer {
 	
     // Base URI of this server
     public static final String BASE_URI = "http://localhost:8080/tweety/";
-
+    // Log file of this server
+    private static final String LOG = "tweetyserver.log";
+    
     /**
      * Main server method.
      * @param args additional arguments (none expected)
@@ -39,11 +44,28 @@ public class TweetyServer {
      */
     public static void main(String[] args) throws IOException, InterruptedException {
     	// gather Tweety services (exposed as JAX-RS resources)
-        final ResourceConfig resourceConfig = new ResourceConfig().packages("net.sf.tweety.web.services");
+    	TweetyServer.log("server", "Initiliazing TweetyServer...");
+    	final ResourceConfig resourceConfig = new ResourceConfig().packages("net.sf.tweety.web.services");
+    	TweetyServer.log("server", "Starting TweetyServer...");
         // start server
-        GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), resourceConfig);
+        GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), resourceConfig);        
         while(true)
         	Thread.sleep(1000);        
+    }
+    
+    /**
+     * Writes the given message to the log of this server.
+     * @param source the source of the message (should be some identifier of the service)
+     * @param message some message 
+     */
+    public static void log(String source, String message){
+    	try {
+			Writer output = new BufferedWriter(new FileWriter(TweetyServer.LOG, true));
+			output.append(new java.util.Date() + "\t" + "[" + source + "]" + "\t" + message + "\n");
+			output.close();
+		} catch (IOException e) {
+			System.err.println("Log file '" + TweetyServer.LOG + "' cannot be written.");
+		}
     }
 }
 

@@ -21,6 +21,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -28,13 +33,21 @@ import javax.ws.rs.core.MediaType;
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.analysis.InconsistencyMeasureFactory;
 import net.sf.tweety.logics.pl.analysis.InconsistencyMeasureFactory.Measure;
 import net.sf.tweety.logics.pl.parser.PlParserFactory;
 import net.sf.tweety.logics.pl.parser.PlParserFactory.Format;
+import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
+import net.sf.tweety.logics.pl.sat.Sat4jSolver;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
+import net.sf.tweety.web.TweetyServer;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -43,8 +56,22 @@ import org.codehaus.jettison.json.JSONObject;
  * Inconsistency measurement service.
  */
 @Path("incmes")
-public class InconsistencyMeasurementService {
+public class InconsistencyMeasurementService{
 
+	/** The identifier of this service. */
+	public static final String ID = "incmes";
+	
+	/** The SAT solver configured for this service. */
+	public static SatSolver satSolver = new Sat4jSolver();
+	/** The MUS enumerator configured for this service. */
+	public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
+	/** The linear optimization solver configured for this service. */
+	public static Solver linearSolver = new ApacheCommonsSimplex();
+	
+	
+	/** Time out for the update operation (in seconds). */
+	public static long timeout = 60*30;	
+	
 	/** Attribute "cmd" of queries referring to the requested command. */
 	public static final String JSON_ATTR_CMD = "cmd";
 	/** "get inconsistency value" command. */
@@ -80,6 +107,32 @@ public class InconsistencyMeasurementService {
 	/** Attribute "description" of replies for information on measures and formats. */
 	public static final String JSON_ATTR_DESC = "description";
 	
+	/**
+	 * Default constructor
+	 */
+	public InconsistencyMeasurementService(){
+		// set some defaults for external algorithms
+		SatSolver.setDefaultSolver(InconsistencyMeasurementService.satSolver);
+		PlMusEnumerator.setDefaultEnumerator(InconsistencyMeasurementService.musEnumerator);
+		Solver.setDefaultLinearSolver(InconsistencyMeasurementService.linearSolver);
+	}
+	
+	/**
+	 * For handling timeouts.
+	 */
+	private class MeasurementCallee implements Callable<Double>{
+		InconsistencyMeasure<BeliefSet<PropositionalFormula>> measure;
+		BeliefSet<PropositionalFormula> beliefSet;
+		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PropositionalFormula>> measure, BeliefSet<PropositionalFormula> beliefSet){
+			this.measure = measure;
+			this.beliefSet = beliefSet;
+		}
+		@Override
+		public Double call() throws Exception {
+			return this.measure.inconsistencyMeasure(this.beliefSet);
+		}		
+	}
+	
     /**
      * Handles all requests for the inconsistency measurement
      * service.
@@ -96,6 +149,7 @@ public class InconsistencyMeasurementService {
 				throw new JSONException("Malformed JSON: no \"cmd\" attribute given");
 			if(!jsonQuery.has(InconsistencyMeasurementService.JSON_ATTR_EMAIL))
 				throw new JSONException("Malformed JSON: no \"email\" attribute given");
+			TweetyServer.log(InconsistencyMeasurementService.ID, "Received request " + jsonQuery);
 			JSONObject jsonReply;
 			if(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD).equals(InconsistencyMeasurementService.JSON_VAL_VALUE)){
 				jsonReply = this.handleGetValue(jsonQuery);
@@ -107,12 +161,12 @@ public class InconsistencyMeasurementService {
 				throw new JSONException("Malformed JSON: no valid value for \"cmd\" attribute.");			
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_REPLY, jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD));
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_EMAIL, jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_EMAIL));
-			//TODO: logging
+			TweetyServer.log(InconsistencyMeasurementService.ID, "Finished handling request " + jsonQuery + ", reply is " + jsonReply);			
 			return jsonReply.toString();
 		} catch (JSONException e) {
 			JSONObject jsonError = new JSONObject();
 			jsonError.put(InconsistencyMeasurementService.JSON_ATTR_ERROR, e.getMessage());
-			//TODO: logging
+			TweetyServer.log(InconsistencyMeasurementService.ID, "ERROR in handling request: " + e.getMessage());
 			return jsonError.toString();
 		}    	    	        
     }
@@ -125,8 +179,7 @@ public class InconsistencyMeasurementService {
 	 */
 	private JSONObject handleGetValue(JSONObject query) throws JSONException{
 		if(!query.has(InconsistencyMeasurementService.JSON_ATTR_MEASURE))
-			throw new JSONException("Malformed JSON: no \"measure\" attribute given");
-		//TODO: parameters (SAT solver, MUS enumerator)?
+			throw new JSONException("Malformed JSON: no \"measure\" attribute given");		
 		InconsistencyMeasure<BeliefSet<PropositionalFormula>> measure =
 				InconsistencyMeasureFactory.getInconsistencyMeasure(
 						Measure.getMeasure(query.getString(InconsistencyMeasurementService.JSON_ATTR_MEASURE)));
@@ -139,10 +192,18 @@ public class InconsistencyMeasurementService {
 		if(parser == null)
 			throw new JSONException("Malformed JSON: unknown value for attribute \"format\"");
 		try {
-			PlBeliefSet beliefSet = parser.parseBeliefBase(query.getString(InconsistencyMeasurementService.JSON_ATTR_KB));
+			PlBeliefSet beliefSet = parser.parseBeliefBase(query.getString(InconsistencyMeasurementService.JSON_ATTR_KB));			
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			double val;
 			long millis = System.currentTimeMillis();
-			//TODO add timeout, error handling?
-			double val = measure.inconsistencyMeasure(beliefSet);
+			try{
+				// handle timeout				
+				Future<Double> future = executor.submit(new MeasurementCallee(measure, beliefSet));
+			    val = future.get(InconsistencyMeasurementService.timeout, TimeUnit.SECONDS);
+			} catch (Exception e) {
+				//inconsistency value of -1 indicates that a timeout has occurred
+				val = -1;
+			}			
 			millis = System.currentTimeMillis() - millis;
 			JSONObject jsonReply = new JSONObject();
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_MEASURE, query.getString(InconsistencyMeasurementService.JSON_ATTR_MEASURE));

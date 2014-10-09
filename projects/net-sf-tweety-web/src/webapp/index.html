@@ -10,7 +10,12 @@
 		<div align="center" width="100%">
 			<table style="width:800px;" cellspacing="0" cellpadding="0">
 				<tr>		
-					<td colspan="2"><div style="font-size:14pt;font-weight:bold;">Tweety@Web</div><div style="font-size:11pt;">Inconsistency Measurement</div><hr noshade="noshade" size="1" /></td>		
+					<td colspan="2">
+						<img src="img/tweety_small.png" style="float:left;width:40px;padding-right:6px;"/>
+						<div style="font-size:14pt;font-weight:bold;">Tweety@Web</div>
+						<div style="font-size:11pt;">Inconsistency Measurement
+							<span style="float:right;font-size:10pt;">Server status: <span id="server_status"><img style="vertical-align:text-top;" width="15" height="15" src="img/loading.gif"></img></span></span>
+						</div><hr noshade="noshade" size="1" /></td>		
 				</tr>
 				<tr>
 					<td colspan="2">
@@ -22,7 +27,7 @@
 				</tr>
 				<tr>
 					<td colspan="2">
-						<p style="font-size:10pt;">Some text...</p>
+						<p style="font-size:10pt;">Some text...</p>						
 						<div style="font-size:10pt;font-weight:bold;">Knowledge base:</div>
 <textarea id="kb" style="width:100%;height:100px;font-size:8pt;">
 A
@@ -32,16 +37,19 @@ A && !C
 !B || C
 B && !C
 </textarea>
+<!--
 						<div style="font-size:10pt;font-weight:bold;">Knowledge base format (<a style="font-weigth:normal;" href="javascript:formatinfo();">?</a>):&nbsp;&nbsp;
 							<select name="kbformat" size="1">
 						    	<option>Tweety</option>
     	  						<option>Whatever</option>
     						</select>
     					</div>
+-->
     					<div style="font-size:10pt;"><span style="font-weight:bold;">Selected inconsistency measures:</span> <span id="selectedmeasures"></span>&nbsp;&nbsp;<button type="button" onclick="select()">...</button></div>
     					<br/>
-						<div style="font-size:10pt;"><button type="button" onclick="query()" id="computeButton" disabled>Compute inconsistency values</button></div>
-						<div id="results"></div>
+						<div style="font-size:10pt;"><button style="margin:0px;" type="button" onclick="query()" id="computeButton" disabled="disabled">Compute inconsistency values</button></div>
+						<div id="results" style="margin:0px;"></div>
+						<br/>
 					</td>
 				</tr>
 				<tr>
@@ -57,7 +65,7 @@ B && !C
 				</tr>
 				<tr>
 					<td colspan="2">
-						<p style="font-size:10pt;">This page and Tweety is maintained by <a href="http://www.mthimm.de">Matthias Thimm</a>, Wilhelmstr. 6, 56070 Koblenz, Germany.</p>
+						<p style="font-size:10pt;">This page and Tweety is maintained by <a href="http://www.mthimm.de">Matthias Thimm</a>, Hospitalstr. 3, 56072 Koblenz, Germany.</p>
 						<p style="font-size:10pt;">Tweety is collaboratively developed by several contributors. Thanks go to Sebastian Homann, Patrick Kr&uuml;mpelmann, Tjitze Rienstra, Stefan Tittel, Thomas Vengels, Bastian Wolf.</p>			
 						<p style="font-size:10pt;">If you are interested in participating in the development of Tweety or have general comments and/or questions please write an e-mail to <a href="mailto:matthias@mthimm.de">matthias@mthimm.de</a>.</p>
 					</td>
@@ -73,7 +81,11 @@ B && !C
 			<div id="lightBox">
 				<div style="display:none;" id="boxMeasures">
 					<div id="boxMeasuresContent"></div>
-					<div style="align:center"><button type="button" onclick="applyMeasures()">Apply</button></div>
+					<div style="width:100%;">
+						<br/>
+						<span style="float:left;font-size:10pt;"><a href="#" onclick="checkAll();">all</a> <a href="#" onclick="checkNone();">none</a></span>
+						<span style="float:right;"><button type="button" onclick="applyMeasures()">Apply</button></span>
+					</div>
 				</div>
 				<div style="display:none;" id="boxFormats">
 					<div id="boxFormatsContent"></div>
@@ -83,4 +95,7 @@ B && !C
 			</div>
 		</div>
 	</body>
+	<script type="text/JavaScript">
+		checkServerStatus();
+	</script>
 </html>

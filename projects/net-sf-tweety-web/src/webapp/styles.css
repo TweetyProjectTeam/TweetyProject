@@ -38,9 +38,9 @@ a:hover{
 	position:fixed;
 	left:50%;
 	top:200px;
-	margin-left:-350px;
+	margin-left:-375px;
 	z-index:200;
-	width:700px;
+	width:750px;
 	background-color:#fff;
 	visibility:hidden;
 	-moz-border-radius: 8px;

@@ -33,13 +33,13 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 public abstract class PlMusEnumerator extends AbstractMusEnumerator<PropositionalFormula>{
 
 	/** The default MUS enumerator. */
-	private static PlMusEnumerator defaultEnumerator = null;
+	private static AbstractMusEnumerator<PropositionalFormula> defaultEnumerator = null;
 	
 	/**
 	 * Sets the default MUS enumerator.
 	 * @param solver some MUS enumerator
 	 */
-	public static void setDefaultEnumerator(PlMusEnumerator enumerator){
+	public static void setDefaultEnumerator(AbstractMusEnumerator<PropositionalFormula> enumerator){
 		PlMusEnumerator.defaultEnumerator = enumerator;
 	}
 	

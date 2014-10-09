@@ -43,9 +43,6 @@ import org.sat4j.specs.TimeoutException;
  *
  */
 public class Sat4jSolver extends SatSolver{
-	
-	/** The solver actually used. */
-	private ISolver solver = null;
 
 	/** Default value for max number of variables for asolver. */
 	private static final int MAXVAR = 1000000;
@@ -80,9 +77,9 @@ public class Sat4jSolver extends SatSolver{
 	 */
 	@Override
 	public boolean isSatisfiable(Collection<PropositionalFormula> formulas) {
-		this.solver = SolverFactory.newLight();
-		this.solver.newVar(this.maxvar);
-		this.solver.setExpectedNumberOfClauses(this.nbclauses);		
+		ISolver solver = SolverFactory.newLight();
+		solver.newVar(this.maxvar);
+		solver.setExpectedNumberOfClauses(this.nbclauses);		
 		PropositionalSignature sig = new PropositionalSignature();
 		for(PropositionalFormula f: formulas)
 			sig.addAll(f.getAtoms());		
@@ -113,10 +110,10 @@ public class Sat4jSolver extends SatSolver{
 							break;
 						}else throw new RuntimeException("Unexpected formula type in conjunctive normal form: " + f3.getClass());
 					}
-					if(!taut) this.solver.addClause(new VecInt(clause));
+					if(!taut) solver.addClause(new VecInt(clause));
 				}
 			}
-			return this.solver.isSatisfiable();
+			return solver.isSatisfiable();
 		}catch(ContradictionException e){
 			return false;
 		} catch (TimeoutException e) {
@@ -129,9 +126,9 @@ public class Sat4jSolver extends SatSolver{
 	 */
 	@Override
 	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
-		this.solver = SolverFactory.newLight();
-		this.solver.newVar(this.maxvar);
-		this.solver.setExpectedNumberOfClauses(this.nbclauses);		
+		ISolver solver = SolverFactory.newLight();
+		solver.newVar(this.maxvar);
+		solver.setExpectedNumberOfClauses(this.nbclauses);		
 		PropositionalSignature sig = new PropositionalSignature();
 		for(PropositionalFormula f: formulas)
 			sig.addAll(f.getAtoms());		
@@ -162,12 +159,12 @@ public class Sat4jSolver extends SatSolver{
 							break;
 						}else throw new RuntimeException("Unexpected formula type in conjunctive normal form: " + f3.getClass());
 					}
-					if(!taut) this.solver.addClause(new VecInt(clause));
+					if(!taut) solver.addClause(new VecInt(clause));
 				}
 			}
-			if(!this.solver.isSatisfiable())
+			if(!solver.isSatisfiable())
 				return null;
-			int[] model = this.solver.model();
+			int[] model = solver.model();
 			PossibleWorld w = new PossibleWorld();
 			for(i = 0; i < model.length; i++)
 				if(model[i]>0)

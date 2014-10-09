@@ -58,6 +58,8 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 	 */
 	@Override
 	public Double inconsistencyMeasure(Collection<S> formulas) {
+		// re-initialize interpretation iterator with correct signature
+		this.it = it.reset(formulas);
 		// We implement this as an optimization problem and maximize eta
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 		FloatVariable eta = new FloatVariable("eta",0,1);
@@ -93,7 +95,8 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(problem);
 			return 1-solution.get(eta).doubleValue();
 		} catch (GeneralMathException e) {
-			throw new RuntimeException(e);
+			// there is probably an inconsistent formula, so it should have maximal inconsistency
+			return 1d;
 		}		
 	}
 	

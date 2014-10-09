@@ -1,7 +1,14 @@
 /*
+ * URLs of the TweetyServer
+ */
+var tweetyserver = "http://localhost:8080";
+var tweetyserverInc = "http://localhost:8080/tweety/incmes";
+var tweetyserverPing = "http://localhost:8080/tweety/ping";
+
+/*
  * Array of currently selected measures.
  */
-var selectedMeasures;
+var selectedMeasures = "";
 /*
  * Checkboxes for measures.
  */
@@ -10,22 +17,71 @@ var checkSelectedMeasures;
  * list of all measures.
  */
 var allMeasures;
+/*
+ * list of measures which computations have been aborted.
+ */
+var abortedMeasures;
+// counter for the number of retrieved results
+// once this reaches the number of queried measures the compute button is
+// enabled again
+var cnt;
+
+
+function checkServerStatus(){
+    var jsonObj = {};
+	$.ajax({
+	  	type: "POST",
+		contentType: "application/json; charset=utf-8",
+		url: tweetyserverPing,
+		data: JSON.stringify(jsonObj),
+		dataType: "json",
+		timeout:1000,
+		success: function(response){ 
+			document.getElementById("server_status").innerHTML = "<img style=\"vertical-align:text-top;\" width=\"15\" height=\"15\" src=\"img/green_light.png\"></img>";
+  		},
+		failure: function(response){
+  			document.getElementById("server_status").innerHTML = "<img style=\"vertical-align:text-top;\" width=\"15\" height=\"15\" src=\"img/red_light.png\"></img>";
+		},
+		error: function(response){
+  			document.getElementById("server_status").innerHTML = "<img style=\"vertical-align:text-top;\" width=\"15\" height=\"15\" src=\"img/red_light.png\"></img>";
+ 		}  		
+	});
+}
 
 /*
  * Click "Compute inconsistency values"
  */
 function query(){
-	document.all.computeButton.disabled = false;
+	document.all.computeButton.disabled = true;
+	// reset aborted measures
+	abortedMeasures = new Array();
 	//TODO: adapt format
 	format = "tweety";
-	s = "<table style=\"font-size:10pt;margin:5px;\">";
+	s = "<br/><table style=\"font-size:10pt;margin:5px;width:100%;margin-left:0px;\" cellPadding=\"1\" cellSpacing=\"0\">";
+	s += "<th style=\"text-align:left;width:200px;\">Measure</th>";
+	s += "<th style=\"text-align:left;\">Value</th>";
+	s += "<th style=\"text-align:left;width:200px;\">Runtime</th>";
+	s += "<th style=\"text-align:left;width:100px;\">Status</th></tr>"; 
+	// counter for the number of retrieved results
+	// once this reaches the number of queried measures the compute button is
+	// enabled again
+	cnt = 0;
 	// for each selected measure initiate a corresponding request
 	for(var i = 0; i < selectedMeasures.length; i++){
 		measure = selectedMeasures[i];
-		s += "<tr><td>"
-		s += measure;
+		s += "<tr><td>";
+		for(var j = 0; j < allMeasures.length; j++){
+			if(measure == allMeasures[j].id){
+				measureDetails = allMeasures[j];
+				break;
+			}
+		}
+		s += measureDetails.label + " (<a target=\"blank\" href=\"doc.html#"+ measureDetails.id +"\">?</a>)";
 		s += "</td>";
-		s += "<td id=\"res_"+measure+"\"><img width=\"20\" height=\"20\" src=\"img/loading.gif\"></img></td>";
+		s += "<td id=\"val_"+measure+"\"><img width=\"15\" height=\"15\" src=\"img/loading.gif\"></img></td>";
+		s += "<td id=\"rt_"+measure+"\"><img width=\"15\" height=\"15\" src=\"img/loading.gif\"></img></td>";
+		s += "<td id=\"status_"+measure+"\" style=\"font-size:10pt;\"><img width=\"15\" height=\"15\" src=\"img/loading.gif\"></img>";
+		s += "<a href=\"#\" onclick=\"abort(\'" + measure + "\');\"><img alt=\"abort\" title=\"abort\" width=\"15\" height=\"15\" style=\"padding-left:10px;\" border=\"0\" src=\"img/abort-icon.png\"></img></a></td>";
 		s += "</td></tr>";
 		var jsonObj = {};
 		jsonObj.cmd = "value";
@@ -36,13 +92,33 @@ function query(){
 		$.ajax({
 	  		type: "POST",
 	  		contentType: "application/json; charset=utf-8",
-	  		url: "http://localhost:8080/tweety/incmes",
+	  		url: tweetyserverInc,
 	  		data: JSON.stringify(jsonObj),
 	  		dataType: "json",
-			success: function(response){ 	  
-				document.getElementById("res_"+response.measure).innerHTML = response.value;
+			success: function(response){ 
+				// first check whether this has to be ignored due to abortion
+				for(var j = 0; j < abortedMeasures.length; j++){
+					if(abortedMeasures[j] == response.measure){
+						return;
+					}
+				}	
+				if(response.value != -1){	  
+					document.getElementById("val_"+response.measure).innerHTML = response.value;					
+					document.getElementById("status_"+response.measure).innerHTML = "<img width=\"15\" height=\"15\" src=\"img/green_light.png\"></img>";
+				}else{
+					document.getElementById("val_"+response.measure).innerHTML = "-";
+					document.getElementById("status_"+response.measure).innerHTML = "<span style=\"background: url(img/red_light15.png) left center no-repeat;width:100%,height:100%;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(timeout)</span>";
+				}
+				document.getElementById("rt_"+response.measure).innerHTML = response.time + "ms";
+				cnt++;
+				if(cnt >= selectedMeasures.length)
+					document.all.computeButton.disabled = false;
   			},
-  			failure: function(response){}
+  			failure: function(response){
+				cnt++;
+				if(cnt >= selectedMeasures.length)
+					document.all.computeButton.disabled = false;
+  			}
 		});
 	}
 	s += "</table>";
@@ -65,7 +141,7 @@ function select(){
 	$.ajax({
   		type: "POST",
   		contentType: "application/json; charset=utf-8",
-  		url: "http://localhost:8080/tweety/incmes",
+  		url: tweetyserverInc,
   		data: JSON.stringify({
     	             "cmd" : "measures",
     	             "email" : "tweetyweb@mthimm.de"
@@ -80,12 +156,23 @@ function select(){
  * Generates the HTML code for a measure
  * in the measures overview.
  */
-function measureToHtml(measure){
-	var result = "<tr>";
-	result += "<td><input type=\"checkbox\" id=\"mes_" + measure.id + "\"/></td>";
-	result += "<td>"+ measure.label +"</td>";
-	result += "<td><a target=\"blank\" href=\"doc.html#"+ measure.id +"\">doc</a></td>";
-	result += "</tr>";
+function measureToHtml(measure,idx){	
+	var result = "";
+	if(idx % 3 == 1)
+		result = "<tr>";
+	result += "<td width=\"20\"><input type=\"checkbox\" ";
+	// check whether measure is currently selected
+	if(selectedMeasures != "")
+		for(var i = 0; i < selectedMeasures.length; i++){
+			if(selectedMeasures[i] == measure.id){
+				result += " checked=\"checked\" ";
+				break;
+			}
+		}
+	result += "id=\"mes_" + measure.id + "\"/></td>";
+	result += "<td>"+ measure.label +" (<a target=\"blank\" href=\"doc.html#"+ measure.id +"\">?</a>)</td>";
+	if(idx % 3 == 0)
+		result += "</tr>";
 	checkSelectedMeasures.push(measure.id);
 	return result;
 }
@@ -97,9 +184,13 @@ function populateMeasures(measures){
 	checkSelectedMeasures = Array();
 	allMeasures = measures.measures;
 	var s = "<table width=\"100%\" style=\"font-size:10pt;\">";
+	var idx = 0;
 	for(var i = 0; i < measures.measures.length; i++){
-		s += measureToHtml(measures.measures[i]);
-	}  	             	
+		idx++;
+		s += measureToHtml(measures.measures[i],idx);
+	}  	    
+	if(idx % 3 != 0)
+		s += "</tr>";         	
 	s += "</table>";
 	document.all.boxMeasuresContent.innerHTML = s;
 	document.all.boxLoading.style.display = "none";
@@ -138,6 +229,22 @@ function applyMeasures(){
 }
 
 /*
+ * Check all measures in the "Select Inconsistency Measures" dialog
+ */
+function checkAll(){
+	for(i = 0; i < checkSelectedMeasures.length; i++)
+		document.getElementById("mes_"+checkSelectedMeasures[i]).checked = true;	
+}
+
+/*
+ * Uncheck all measures in the "Select Inconsistency Measures" dialog
+ */
+function checkNone(){
+	for(i = 0; i < checkSelectedMeasures.length; i++)
+		document.getElementById("mes_"+checkSelectedMeasures[i]).checked = false;	
+}
+
+/*
  * Open "Help on kb formats" dialog
  */
 function formatinfo(){
@@ -153,7 +260,7 @@ function formatinfo(){
 	$.ajax({
   		type: "POST",
   		contentType: "application/json; charset=utf-8",
-  		url: "http://localhost:8080/tweety/incmes",
+  		url: tweetyserverInc,
   		data: JSON.stringify({
     	             "cmd" : "formats",
     	             "email" : "tweetyweb@mthimm.de"
@@ -185,4 +292,50 @@ function closeFormats(){
 	document.all.boxFormats.style.display = "none";
 	// remove shadow div
 	document.getElementsByTagName("body")[0].removeChild(document.getElementById("overlay"));
+}
+
+/*
+ * Aborts computation of the given measure.
+ */
+function abort(measure){
+	document.getElementById("val_"+measure).innerHTML = "-";
+	document.getElementById("rt_"+measure).innerHTML = "-";
+	document.getElementById("status_"+measure).innerHTML = "<span style=\"background: url(img/red_light15.png) left center no-repeat;width:100%,height:100%;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(aborted)</span>";
+	abortedMeasures.push(measure);
+	cnt++;
+	if(cnt >= selectedMeasures.length)
+		document.all.computeButton.disabled = false;
+}
+
+/*
+ * Initializes the list of inconsistency measures on the documentation
+ * page.
+ */
+function initDocPage(){
+	// Retrieve measures
+	$.ajax({
+  		type: "POST",
+  		contentType: "application/json; charset=utf-8",
+  		url: tweetyserverInc,
+  		data: JSON.stringify({
+    	             "cmd" : "measures",
+    	             "email" : "tweetyweb@mthimm.de"
+   	           }),
+  		dataType: "json",
+  		success: function(response){
+  					html = "";
+  					for(var i = 0; i < response.measures.length; i++){
+  						measure = response.measures[i];
+						html += "<a name=\"" + measure.id + "\"></a>";
+						html += "<h4>" + measure.label + "</h4>";
+						html += measure.description;
+						html += "<br/>";
+						
+					}  	        
+  					document.all.measureList.innerHTML = html;
+  					//if the page has been opened with an anchor, jump to it
+  					window.location.href = window.location.href;  					
+  				 },
+  		failure: function(response){}
+	}); 
 }

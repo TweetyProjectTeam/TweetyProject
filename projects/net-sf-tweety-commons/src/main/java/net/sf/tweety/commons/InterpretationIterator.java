@@ -16,6 +16,7 @@
  */
 package net.sf.tweety.commons;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -45,4 +46,19 @@ public interface InterpretationIterator extends Iterator<Interpretation>{
 	 */
 	public InterpretationIterator reset();	
 	
+	/**
+	 * Initializes a new reseted iterator for the given signature. 
+	 * @param some signature.
+	 * @return a reseted iterator for the given signature.
+	 */
+	public InterpretationIterator reset(Signature sig);
+	
+	/**
+	 * Initializes a new reseted iterator for the given signature derived from
+	 * the given set of formulas. 
+	 * @param a set of formulas.
+	 * @return a reseted iterator for the given signature derived from
+	 * the given set of formulas. 
+	 */
+	public InterpretationIterator reset(Collection<? extends Formula> formulas);
 }
