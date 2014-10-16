@@ -42,14 +42,14 @@ import net.sf.tweety.math.term.Variable;
 public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S>{
 
 	/** Used for enumerating the interpretations of the underlying language. */
-	private InterpretationIterator it;
+	private InterpretationIterator<?> it;
 	
 	/** 
 	 * Creates a new inconsistency measure that uses the interpretations given
 	 * by the given iterator.
 	 * @param it some interpretation iterator.
 	 */
-	public EtaInconsistencyMeasure(InterpretationIterator it){
+	public EtaInconsistencyMeasure(InterpretationIterator<?> it){
 		this.it = it;
 	}
 	

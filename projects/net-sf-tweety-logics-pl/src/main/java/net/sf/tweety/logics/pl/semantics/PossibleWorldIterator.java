@@ -22,7 +22,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.InterpretationIterator;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
@@ -38,7 +37,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class PossibleWorldIterator implements InterpretationIterator{
+public class PossibleWorldIterator implements InterpretationIterator<PossibleWorld>{
 
 	/** The signature used for creating possible worlds. */
 	private PropositionalSignature sig = null;
@@ -75,7 +74,7 @@ public class PossibleWorldIterator implements InterpretationIterator{
 	 * @see net.sf.tweety.InterpretationIterator#next()
 	 */
 	@Override
-	public Interpretation next() {
+	public PossibleWorld next() {
 		if(!this.it.hasNext())
 			throw new NoSuchElementException();
 		Set<Proposition> s = this.it.next();
@@ -94,7 +93,7 @@ public class PossibleWorldIterator implements InterpretationIterator{
 	 * @see net.sf.tweety.InterpretationIterator#reset()
 	 */
 	@Override
-	public InterpretationIterator reset() {
+	public InterpretationIterator<PossibleWorld> reset() {
 		return new PossibleWorldIterator(this.sig);
 	}
 
@@ -102,7 +101,7 @@ public class PossibleWorldIterator implements InterpretationIterator{
 	 * @see net.sf.tweety.commons.InterpretationIterator#reset(net.sf.tweety.commons.Signature)
 	 */
 	@Override
-	public InterpretationIterator reset(Signature sig){
+	public InterpretationIterator<PossibleWorld> reset(Signature sig){
 		if(!(sig instanceof PropositionalSignature))
 			throw new IllegalArgumentException("Signature of type 'PropositionalSignature' expected.");
 		return new PossibleWorldIterator((PropositionalSignature)sig);
@@ -112,7 +111,7 @@ public class PossibleWorldIterator implements InterpretationIterator{
 	 * @see net.sf.tweety.commons.InterpretationIterator#reset(java.util.Collection)
 	 */
 	@Override
-	public InterpretationIterator reset(Collection<? extends Formula> formulas){
+	public InterpretationIterator<PossibleWorld> reset(Collection<? extends Formula> formulas){
 		PropositionalSignature sig = new PropositionalSignature();
 		for(Formula f: formulas){
 			if(!(f instanceof PropositionalFormula))

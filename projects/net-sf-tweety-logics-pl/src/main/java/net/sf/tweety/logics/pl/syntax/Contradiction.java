@@ -16,7 +16,11 @@
  */
 package net.sf.tweety.logics.pl.syntax;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * A contradictory formula.
@@ -51,5 +55,13 @@ public class Contradiction extends SpecialFormula{
 	@Override
 	public Contradiction clone() {
 		return new Contradiction();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+	 */
+	@Override
+	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+		return new HashSet<PossibleWorld>();
 	}
 }

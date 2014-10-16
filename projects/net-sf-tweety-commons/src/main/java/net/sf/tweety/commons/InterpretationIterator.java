@@ -22,8 +22,10 @@ import java.util.Iterator;
 /**
  * An iterator over interpretations.
  * @author Matthias Thimm
+ *
+ * @param <T> The actual type of interpretations
  */
-public interface InterpretationIterator extends Iterator<Interpretation>{
+public interface InterpretationIterator<T extends Interpretation> extends Iterator<T>{
 
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#hasNext()
@@ -33,7 +35,7 @@ public interface InterpretationIterator extends Iterator<Interpretation>{
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#next()
 	 */
-	public Interpretation next();
+	public T next();
 
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#remove()
@@ -44,14 +46,14 @@ public interface InterpretationIterator extends Iterator<Interpretation>{
 	 * Initializes a new reseted iterator. 
 	 * @return a reseted iterator.
 	 */
-	public InterpretationIterator reset();	
+	public InterpretationIterator<T> reset();	
 	
 	/**
 	 * Initializes a new reseted iterator for the given signature. 
 	 * @param some signature.
 	 * @return a reseted iterator for the given signature.
 	 */
-	public InterpretationIterator reset(Signature sig);
+	public InterpretationIterator<T> reset(Signature sig);
 	
 	/**
 	 * Initializes a new reseted iterator for the given signature derived from
@@ -60,5 +62,5 @@ public interface InterpretationIterator extends Iterator<Interpretation>{
 	 * @return a reseted iterator for the given signature derived from
 	 * the given set of formulas. 
 	 */
-	public InterpretationIterator reset(Collection<? extends Formula> formulas);
+	public InterpretationIterator<T> reset(Collection<? extends Formula> formulas);
 }

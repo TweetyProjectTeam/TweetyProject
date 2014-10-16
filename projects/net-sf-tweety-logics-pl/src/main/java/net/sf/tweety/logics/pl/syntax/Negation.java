@@ -19,6 +19,7 @@ package net.sf.tweety.logics.pl.syntax;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * This class models classical negation of propositional logic.
@@ -201,5 +202,16 @@ public class Negation extends PropositionalFormula {
 		disj.add(this);
 		conj.add(disj);
 		return conj;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+	 */
+	@Override
+	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+		Set<PossibleWorld> models = PossibleWorld.getAllPossibleWorlds(sig);
+		for(PossibleWorld w: this.formula.getModels(sig))
+			models.remove(w);
+		return models;
 	}
 }

@@ -22,6 +22,7 @@ import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.logics.commons.analysis.*;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -39,7 +40,10 @@ public abstract class InconsistencyMeasureFactory {
 		CONTENSION ("contension", "Contension Inconsistency Measure", "/inc/ContensionInconsistencyMeasure.html"),
 		HS ("hs", "Hitting Set Inconsistency Measure", "/inc/HittingSetInconsistencyMeasure.html"),
 		PR ("pr", "P Inconsistency Measure", "/inc/PrInconsistencyMeasure.html"),
-		ETA ("eta", "Eta Inconsistency Measure", "/inc/EtaInconsistencyMeasure.html");
+		ETA ("eta", "Eta Inconsistency Measure", "/inc/EtaInconsistencyMeasure.html"),
+		DALALSUM ("dalalsum", "Dalal-Sum Inconsistency Measure", "/inc/DalalSumInconsistencyMeasure.html"),
+		DALALMAX ("dalalmax", "Dalal-Max Inconsistency Measure", "/inc/DalalMaxInconsistencyMeasure.html"),
+		DALALHIT ("dalalhit", "Dalal-Hit Inconsistency Measure", "/inc/DalalHitInconsistencyMeasure.html");
 		
 		public String id;
 		public String label;
@@ -79,8 +83,14 @@ public abstract class InconsistencyMeasureFactory {
 				return new HsInconsistencyMeasure<PropositionalFormula>(new PossibleWorldIterator());
 			case PR:
 				return new PrInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
-			case ETA:
+			case ETA:			
 				return new EtaInconsistencyMeasure<PropositionalFormula>(new PossibleWorldIterator());
+			case DALALSUM:
+				return new DSumInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
+			case DALALMAX:
+				return new DMaxInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
+			case DALALHIT:
+				return new DHitInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}

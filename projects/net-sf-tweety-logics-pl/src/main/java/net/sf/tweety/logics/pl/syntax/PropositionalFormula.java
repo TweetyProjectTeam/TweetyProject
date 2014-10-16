@@ -99,6 +99,23 @@ public abstract class PropositionalFormula implements ClassicalFormula {
      */
 	public abstract Conjunction toCnf();
 	
+	/**
+	 * Returns the set of models of this formula wrt. a signature
+	 * that only contains the propositions appearing in this formula.
+	 * @return  the set of models of this formula wrt. a signature
+	 * that only contains the propositions appearing in this formula.
+	 */
+	public Set<PossibleWorld> getModels(){		
+		return this.getModels(this.getSignature());
+	}
+	
+	/**
+	 * Returns the set of models of this formula wrt. the given signature.
+	 * @param sig some propositional signature
+	 * @return the set of models of this formula wrt. the given signature.
+	 */
+	public abstract Set<PossibleWorld> getModels(PropositionalSignature sig);
+	
     /**
 	 * This method returns this formula in disjunctive normal form (DNF).
 	 * A formula is in DNF iff it is a disjunction of conjunctive clauses.
@@ -114,7 +131,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	        dnf.add( f.toDnf() );
 	      }
 	    return dnf;
-	}
+	    }
     
     /* DNF( P_1 && P_2 && ... && P_k) is calculated as follows:
      * 1. DNF(P_1) = P_11 || P_12 || ... || P_1l

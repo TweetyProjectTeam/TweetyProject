@@ -37,14 +37,14 @@ import net.sf.tweety.commons.InterpretationIterator;
 public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
 	/** Used for iterating over interpretations of the underlying language. */
-	private InterpretationIterator it;
+	private InterpretationIterator<?> it;
 	
 	/** 
 	 * Creates a new inconsistency measure that uses the interpretations given
 	 * by the given iterator.
 	 * @param it some interpretation iterator.
 	 */
-	public HsInconsistencyMeasure(InterpretationIterator it){
+	public HsInconsistencyMeasure(InterpretationIterator<?> it){
 		this.it = it;
 	}
 	
@@ -74,7 +74,7 @@ public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 	 * @return a hitting set or null.
 	 */
 	private Collection<Interpretation> getHittingSet(Collection<S> formulas, int card, Collection<Interpretation> interpretations){
-		InterpretationIterator it = this.it.reset();
+		InterpretationIterator<?> it = this.it.reset();
 		Collection<Interpretation> newInts;
 		Collection<Interpretation> cand;
 		while(it.hasNext()){

@@ -16,7 +16,10 @@
  */
 package net.sf.tweety.logics.pl.syntax;
 
+import java.util.Set;
+
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * A tautological formula.
@@ -52,5 +55,13 @@ public class Tautology extends SpecialFormula {
 	@Override
 	public Tautology clone() {
 		return new Tautology();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+	 */
+	@Override
+	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+		return PossibleWorld.getAllPossibleWorlds(sig);
 	}
 }

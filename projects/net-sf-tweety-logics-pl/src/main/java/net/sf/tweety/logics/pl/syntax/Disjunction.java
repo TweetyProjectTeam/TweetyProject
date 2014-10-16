@@ -18,10 +18,12 @@ package net.sf.tweety.logics.pl.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * This class represents a disjunction in propositional logic.
@@ -127,5 +129,20 @@ public class Disjunction extends AssociativePropositionalFormula {
 			newConjs.add(disj);
 		}		
 		return new Conjunction(newConjs);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+	 */
+	@Override
+	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
+		Iterator<PropositionalFormula> it = this.support.iterator();
+		if(!it.hasNext())
+			return PossibleWorld.getAllPossibleWorlds(sig);
+		models.addAll(it.next().getModels(sig));
+		while(it.hasNext())
+			models.addAll(it.next().getModels(sig));
+		return models;
 	}
 }

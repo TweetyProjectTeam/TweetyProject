@@ -25,6 +25,7 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * This class represents a simple proposition in propositional logic. 
@@ -175,5 +176,20 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 		disj.add(this);
 		conj.add(disj);
 		return conj;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+	 */
+	@Override
+	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
+		PropositionalSignature sig2 = new PropositionalSignature(sig);
+		sig2.remove(this);
+		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds(sig2)){
+			w.add(this);
+			models.add(w);
+		}
+		return models;
 	}	
 }

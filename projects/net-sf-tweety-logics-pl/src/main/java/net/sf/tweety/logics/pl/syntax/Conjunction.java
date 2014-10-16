@@ -18,8 +18,11 @@ package net.sf.tweety.logics.pl.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 
 /**
  * This class represents a conjunction in propositional logic.
@@ -119,5 +122,21 @@ public class Conjunction extends AssociativePropositionalFormula {
 			for(PropositionalFormula f: conjunct.toCnf())
 			cnf.add(f);		
 		return new Conjunction(cnf);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+	 */
+	@Override
+	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
+		Iterator<PropositionalFormula> it = this.support.iterator();
+		if(!it.hasNext())
+			return models;
+		models.addAll(it.next().getModels(sig));
+		while(it.hasNext())
+			models.retainAll(it.next().getModels(sig));
+		return models;
 	}
 }
