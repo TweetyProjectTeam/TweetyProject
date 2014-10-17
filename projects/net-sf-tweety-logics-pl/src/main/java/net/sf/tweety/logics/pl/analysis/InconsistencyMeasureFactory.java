@@ -37,10 +37,10 @@ public abstract class InconsistencyMeasureFactory {
 		DRASTIC ("drastic", "Drastic Inconsistency Measure", "/inc/DrasticInconsistencyMeasure.html"),
 		MI ("mi", "MI Inconsistency Measure", "/inc/MiInconsistencyMeasure.html"),
 		MIC ("mic", "MIC Inconsistency Measure", "/inc/MicInconsistencyMeasure.html"),
-		CONTENSION ("contension", "Contension Inconsistency Measure", "/inc/ContensionInconsistencyMeasure.html"),
-		HS ("hs", "Hitting Set Inconsistency Measure", "/inc/HittingSetInconsistencyMeasure.html"),
-		PR ("pr", "P Inconsistency Measure", "/inc/PrInconsistencyMeasure.html"),
 		ETA ("eta", "Eta Inconsistency Measure", "/inc/EtaInconsistencyMeasure.html"),
+		CONTENSION ("contension", "Contension Inconsistency Measure", "/inc/ContensionInconsistencyMeasure.html"),
+		PR ("pr", "P Inconsistency Measure", "/inc/PrInconsistencyMeasure.html"),
+		HS ("hs", "Hitting Set Inconsistency Measure", "/inc/HittingSetInconsistencyMeasure.html"),
 		DALALSUM ("dalalsum", "Dalal-Sum Inconsistency Measure", "/inc/DalalSumInconsistencyMeasure.html"),
 		DALALMAX ("dalalmax", "Dalal-Max Inconsistency Measure", "/inc/DalalMaxInconsistencyMeasure.html"),
 		DALALHIT ("dalalhit", "Dalal-Hit Inconsistency Measure", "/inc/DalalHitInconsistencyMeasure.html");

@@ -21,11 +21,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -200,10 +203,14 @@ public class InconsistencyMeasurementService{
 				// handle timeout				
 				Future<Double> future = executor.submit(new MeasurementCallee(measure, beliefSet));
 			    val = future.get(InconsistencyMeasurementService.timeout, TimeUnit.SECONDS);
-			} catch (Exception e) {
+			} catch (TimeoutException e) {
 				//inconsistency value of -1 indicates that a timeout has occurred
 				val = -1;
-			}			
+			} catch (Exception e){
+				//inconsistency value of -2 indicates some general error
+				TweetyServer.log(InconsistencyMeasurementService.ID, "Unhandled exception: " + e.getMessage());
+				val = -2;
+			}
 			millis = System.currentTimeMillis() - millis;
 			JSONObject jsonReply = new JSONObject();
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_MEASURE, query.getString(InconsistencyMeasurementService.JSON_ATTR_MEASURE));
@@ -212,9 +219,9 @@ public class InconsistencyMeasurementService{
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_VALUE, val);
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_TIME, millis);
 			return jsonReply;
-		} catch (ParserException e) {
+		} catch (ParserException e) {			
 			throw new JSONException("Malformed JSON: syntax of knowledge base does not conform to the given format.");
-		} catch (IOException e) {
+		} catch (IOException e) {			
 			throw new JSONException("Malformed JSON: syntax of knowledge base does not conform to the given format.");
 		} catch(Exception e){
 			e.printStackTrace();
@@ -230,7 +237,7 @@ public class InconsistencyMeasurementService{
 	 */
 	private JSONObject handleGetMeasures(JSONObject query) throws JSONException{
 		JSONObject jsonReply = new JSONObject();
-		Collection<JSONObject> value = new HashSet<JSONObject>();
+		List<JSONObject> value = new LinkedList<JSONObject>();
 		JSONObject jsonMes;
 		for(Measure m: InconsistencyMeasureFactory.Measure.values()){
 			jsonMes = new JSONObject();

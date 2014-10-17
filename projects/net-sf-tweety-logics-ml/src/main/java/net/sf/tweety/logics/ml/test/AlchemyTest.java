@@ -29,12 +29,12 @@ import net.sf.tweety.logics.ml.MarkovLogicNetwork;
 public class AlchemyTest {
 
 	public static void main(String[] args) throws ParserException, IOException{
-		Pair<MarkovLogicNetwork,FolSignature> exp1 = MlnTest.SmokersExample(4);
+		Pair<MarkovLogicNetwork,FolSignature> exp1 = MlnTest.SmokersExample(3);
 		AlchemyMlnReasoner reasoner = new AlchemyMlnReasoner(exp1.getFirst(),exp1.getSecond());
 		FolParser parser = new FolParser();
 		parser.setSignature(exp1.getSecond());
 		FolFormula query = (FolFormula) parser.parseFormula("cancer(d0)");
-		reasoner.setAlchemyInferenceCommand("/Users/mthimm/Desktop/infer");
-		reasoner.query(query);
+		reasoner.setAlchemyInferenceCommand("/Users/mthimm/Projects/misc_bins/alchemy/infer");
+		System.out.println(reasoner.query(query).getAnswerDouble());
 	}
 }
