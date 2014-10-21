@@ -1,1 +1,10 @@
-<div>Description coming soon</div>
+<p>
+In order to define the contension measure $\mathcal{I}_{c}$ we need to consider three-valued interpretations for propositional logic <a href="#Priest1979">[Priest:1979]</a>. A three-valued interpretation $\upsilon$ on $\mathsf{At}$ is a function $\upsilon:\mathsf{At}\rightarrow\{T,F,B\}$ where the values $T$ and $F$ correspond to the classical truth values $\mathsf{true}$ and $\mathsf{false}$, respectively. The additional truth value $B$ stands for <i>both</i> and is meant to represent a conflicting truth value for a proposition. The function $\upsilon$ is extended to arbitrary formulas as shown in the following table</p>
+<img style="width:70%;" src="img/inc/contension.png"></img>
+<p>Then, an interpretation $\upsilon$ satisfies a formula $\alpha$, denoted by $\upsilon\models^{3}\alpha$ if either $\upsilon(\alpha)=T$ or $\upsilon(\alpha)=B$.
+The <i>contension inconsistency measure</i> $\mathcal{I}_{c}$ is defined as
+\[
+	\mathcal{I}_{c}(\mathcal{K})	 =\min\{|\upsilon^{-1}(B)|\mid\upsilon\models^{3}\mathcal{K}\}
+\]
+The <i>contension inconsistency measure</i> has been discussed in e.g. <a href="#Grant2011">[Grant:2011]</a>.
+</p>

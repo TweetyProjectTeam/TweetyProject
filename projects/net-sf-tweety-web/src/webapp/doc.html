@@ -1,32 +1,79 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
-		<title>Tweety@Web: Inconsistency Measurement - Documentation</title>
+		<title>Tweety@Web: Inconsistency Measurement - Technical Documentation</title>
 		<link rel="stylesheet" type="text/css" href="styles.css">
 		<script type="text/JavaScript" src="js/jquery-2.1.1.min.js"></script>
-		<script type="text/JavaScript" src="js/scripts.js"></script>
+		<script type="text/JavaScript" src="js/scripts.js"></script>		
+		<script type="text/JavaScript" src="js/latexit.js"></script>
+		<script type="text/javascript">
+			LatexIT.add('p',true);
+			LatexIT.add('li',true);
+		</script>
 	</head>
 	<body style="font-family: Arial;">
 		<div align="center" width="100%">
 			<table style="width:800px;" cellspacing="0" cellpadding="0">
 				<tr>		
 					<td colspan="2">
-						<img src="img/tweety_small.png" style="float:left;width:40px;padding-right:6px;"/>
+						<a href="http://tweetyproject.org"><img border="0" src="img/tweety_small.png" style="float:left;width:40px;padding-right:6px;"/></a>
 						<div style="font-size:14pt;font-weight:bold;">Tweety@Web</div>
-						<div style="font-size:11pt;">Inconsistency Measurement - Documentation</div><hr noshade="noshade" size="1" /></td>		
+						<div style="font-size:11pt;">Inconsistency Measurement - Technical Documentation<span style="float:right;font-size:10pt;">Server status: <span id="server_status"><img style="vertical-align:text-top;" width="15" height="15" src="img/loading.gif"></img></span></span></div><hr noshade="noshade" size="1" /></td>		
 				</tr>
 				<tr>
 					<td colspan="2">
 						<p style="font-size:10pt;"><a href="index.html">back to the main page</a></p><br/>
-						<p style="font-size:10pt;">Some general documentation...</p>
+						<p style="font-size:10pt;">This page provides some formal background to the theory of inconsistency measurement and lists the definitions of all currently supported inconsistency measures in &quot;Tweety@Web - Inconsistency Measurement&quot;. Currently, the following <span id="cnt_measures"></span> inconsistency measures are supported:</p>
+						<ul id="overview_list"  style="font-size:10pt;">
+							
+						</ul>
+						<span style="font-size:10pt;color:red;" id="server_message"></span>
+						<p style="font-size:10pt;">The above list is continuously being extended. If your favorite measure is not yet in this list, please drop me a line (<a href="mailto:matthias@mthimm.de">matthias@mthimm.de</a>) and I will add it.</p>
 					</td>
 				</tr>	
 				<tr>
-					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">Supported Inconsistency Measures</div><hr noshade="noshade" size="1" /></td>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">Formal preliminaries</div><hr noshade="noshade" size="1" /></td>
 				</tr>
 				<tr>
 					<td colspan="2">
+						<p style="font-size:10pt;">Let $\mathsf{At}$ be a propositional signature, i.e., a (finite) set of propositions, and let $\mathcal{L}(\mathsf{At})$ be the corresponding propositional language constructed using the usual connectives $\wedge$ (<i>and</i>), $\vee$ (<i>or</i>), and $\neg$ (<i>negation</i>). The special symbols $\top$ and $\perp$ are used to denote <i>tautology</i> and <i>contradiction</i>, respectively.</p>
+						<p style="font-size:10pt;">A knowledge base $\mathcal{K}$ is a finite set of formulas $\mathcal{K}\subseteq\mathcal{L}(\mathsf{At})$. Let $\mathbb{K}(\mathsf{At})$ be the set of all knowledge bases wrt. to the signature $\mathsf{At}$.</p>						
+						<p style="font-size:10pt;">Semantics to $\mathcal{L}(\mathsf{At})$ is given by <i>interpretations</i> $\omega:\mathsf{At}\rightarrow\{\mathsf{true},\mathsf{false}\}$. Let $\mathsf{Int}(\mathsf{At})$ denote the set of all interpretations for $\mathsf{At}$. An interpretation $\omega$ <i>satisfies</i> (or is a <i>model</i> of) an atom $a\in\mathsf{At}$, denoted by $\omega\models a$ (or $\omega\in\mathsf{Mod}(a))$, if and only if $\omega(a)=\mathsf{true}$. Both $\models$ and $\mathsf{Mod}(\cdot)$ are extended to arbitrary formulas, sets, and knowledge bases as usual. A knowledge base $\mathcal{K}$ is called <i>inconsistent</i> if $\mathsf{Mod}(\mathcal{K})=\emptyset$ and <i>consistent</i> otherwise. Furthermore, for every interpretation $\omega$ it holds that $\omega\models \top$ and $\omega\not\models \perp$. 
+Two formulas $\phi$ and $\psi$ are <i>equivalent</i>, denoted by $\phi\equiv\psi$,  if and only if $\mathsf{Mod}(\phi)=\mathsf{Mod}(\psi)$.</p>
+						<p style="font-size:10pt;">Inconsistency measures are functions $\mathcal{I}:\mathbb{K}(\mathsf{At})\rightarrow[0,\infty)$ that aim at assessing the severity of the inconsistency in a knowledge base $\mathcal{K}$, cf. <a href="#Grant2011">[Grant:2011]</a>. The basic idea is that the larger the inconsistency in $\mathcal{K}$ the larger the value $\mathcal{I}(\mathcal{K})$. However, inconsistency is a concept that is not easily quantified and there have been a couple of proposals for inconsistency measures so far, see the list literature on this page.</p>
+						<p style="font-size:10pt;">There are some core notions that are essentiell for most inconsistency measures which we will recall now. Let $\mathcal{K}\in\mathbb{K}(\mathsf{At})$ be some knowledge base.</p>
+						<p style="font-size:10pt;">
+	A set $M\subseteq\mathcal{K}$ is called <i>minimal inconsistent subset</i> ($\mathsf{MI}$) of $\mathcal{K}$ if $M\models \perp$ and there is no $M'\subset M$ with $M'\models \perp$. Let $\mathsf{MI}(\mathcal{K})$ be the set of all minimal inconsistent subsets of $\mathcal{K}$.</p>
+					<p style="font-size:10pt;">A formula $\alpha\in\mathcal{K}$ is called <i>free formula</i> of $\mathcal{K}$ if there is no $M\in\mathsf{MI}(\mathcal{K})$ with $\alpha\in M$. Let $\mathsf{Free}(\mathcal{K})$ denote the set of all free formulas of $\mathcal{K}$.</p>
+					<p style="font-size:10pt;">We adopt the following definition of a (basic) inconsistency measure from <a href="#Grant2011">[Grant:2011]</a>.
+					<p style="font-size:10pt;">A <i>basic inconsistency measure</i> is a function $\mathcal{I}:\mathbb{K}(\mathsf{At})\rightarrow[0,\infty)$ that satisfies the following three conditions:</p>
+					<ol style="font-size:10pt;">
+						<li>$\mathcal{I}(\mathcal{K})=0$ if and only if $\mathcal{K}$ is consistent,</li>
+						<li>if $\mathcal{K}\subseteq\mathcal{K}'$ then $\mathcal{I}(\mathcal{K})\leq \mathcal{I}(\mathcal{K}')$, and</li>
+						<li>for all $\alpha\in \mathsf{Free}(\mathcal{K})$ we have $\mathcal{I}(\mathcal{K})=\mathcal{I}(\mathcal{K}\setminus\{\alpha\})$.</li>
+					</ol>
+					<p style="font-size:10pt;">The first property (also called <i>consistency</i>) of a basic inconsistency measure ensures that all consistent knowledge bases receive a minimal inconsistency value and every inconsistent knowledge base receive a positive inconsistency value. The second property (also called <i>monotony</i>) states that the value of inconsistency can only increase when adding new information. The third property (also called <i>free formula independence</i>) states that removing harmless formulas from a knowledge base, i.e., formulas that do not contribute to the inconsistency, does not change the value of inconsistency. If $\mathcal{I}$ is a basic inconsistency measure and $\mathcal{K}\in\mathbb{K}(\mathsf{At})$ is a knowledge base we say that $\mathcal{I}(\mathcal{K})$ is the inconsistency value of $\mathcal{K}$ wrt. $\mathcal{I}$.</p>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">Inconsistency Measures</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">						
 						<div style="font-size:10pt;" id="measureList"></div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><br/><div style="font-size:11pt;font-weight:bold">Literature</div><hr noshade="noshade" size="1" /></td>
+				</tr>
+				<tr>
+					<td colspan="2" style="font-size:10pt;">
+						<a name="Priest1979"></a><strong>[Priest:1979]</strong> Priest, G., 1979. Logic of Paradox. Journal of Philosophical Logic 8, 219-241. <br/>					
+						<a name="Knight2002"></a><strong>[Knight:2002]</strong> Knight, K. M., 2002. A theory of inconsistency. Ph.D. thesis, University Of Manchester. <br/>
+						<a name="Hunter2010"></a><strong>[Hunter:2010]</strong> Anthony Hunter, Sebastien Konieczny. On the measure of conflicts: Shapley Inconsistency Values. In Artificial Intelligence, 174(14):1007-1026. July 2010.<br/>
+						<a name="Grant2011"></a><strong>[Grant:2011]</strong> Grant, J., Hunter, A., 2011. Measuring consistency gain and information loss in stepwise inconsistency resolution. In: Proc. of the 11th European Conference on Symbolic and Quantitative Approaches to Reasoning with Uncertainty (ECSQARU 2011). pp. 362-373. <br/>	
+						<a name="Grant2013"></a><strong>[Grant:2013]</strong> J. Grant, A. Hunter. Distance-based Measures of Inconsistency. In Proceedings of the 12th Europen Conference on Symbolic and Quantitative Approaches to Reasoning with Uncertainty (ECSQARU'13), pages 230-241, Springer, volume of Lecture Notes in Computer Science. 2013.<br/>
+						<a name="Thimm2014d"></a><strong>[Thimm:2014d]</strong> Matthias Thimm. Towards Large-scale Inconsistency Measurement. In Proceedings of the 37th German Conference on Artificial Intelligence (KI'14). Stuttgart, Germany, September 2014.<br/>					
 					</td>
 				</tr>
 				<tr>

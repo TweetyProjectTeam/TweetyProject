@@ -67,6 +67,7 @@ public class InconsistencyMeasurementService{
 	/** The SAT solver configured for this service. */
 	public static SatSolver satSolver = new Sat4jSolver();
 	/** The MUS enumerator configured for this service. */
+	//public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/home/shared/incmes/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
 	public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
 	/** The linear optimization solver configured for this service. */
 	public static Solver linearSolver = new ApacheCommonsSimplex();
@@ -161,17 +162,17 @@ public class InconsistencyMeasurementService{
 			}else if(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD).equals(InconsistencyMeasurementService.JSON_VAL_MEASURES)){
 				jsonReply = this.handleGetMeasures(jsonQuery);
 			}else
-				throw new JSONException("Malformed JSON: no valid value for \"cmd\" attribute.");			
+				throw new JSONException("Malformed JSON: no valid value for \"cmd\" attribute.");
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_REPLY, jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD));
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_EMAIL, jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_EMAIL));
 			TweetyServer.log(InconsistencyMeasurementService.ID, "Finished handling request " + jsonQuery + ", reply is " + jsonReply);			
 			return jsonReply.toString();
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			JSONObject jsonError = new JSONObject();
 			jsonError.put(InconsistencyMeasurementService.JSON_ATTR_ERROR, e.getMessage());
 			TweetyServer.log(InconsistencyMeasurementService.ID, "ERROR in handling request: " + e.getMessage());
 			return jsonError.toString();
-		}    	    	        
+		}
     }
 	
 	/**
@@ -243,18 +244,7 @@ public class InconsistencyMeasurementService{
 			jsonMes = new JSONObject();
 			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_ID, m.id);
 			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_LABEL, m.label);
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(m.description));
-				String line;
-				String desc = "";
-				while((line = br.readLine()) != null) {
-					desc += line + " ";
-				}
-				br.close();
-				jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_DESC, desc);
-			} catch (IOException e) {
-				jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_DESC, "<Description not found>");
-			}
+			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_DESC, m.description);
 			value.add(jsonMes);
 		}
 		jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_MEASURES, value);

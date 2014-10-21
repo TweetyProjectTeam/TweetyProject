@@ -2,8 +2,8 @@
  * URLs of the TweetyServer
  */
 var tweetyserver = "http://localhost:8080";
-var tweetyserverInc = "http://localhost:8080/tweety/incmes";
-var tweetyserverPing = "http://localhost:8080/tweety/ping";
+var tweetyserverInc = tweetyserver + "/tweety/incmes";
+var tweetyserverPing = tweetyserver + "/tweety/ping";
 
 /*
  * Array of currently selected measures.
@@ -41,9 +41,11 @@ function checkServerStatus(){
   		},
 		failure: function(response){
   			document.getElementById("server_status").innerHTML = "<img style=\"vertical-align:text-top;\" width=\"15\" height=\"15\" src=\"img/red_light.png\"></img>";
+  			document.getElementById("server_message").innerHTML = "The Tweety Server is currently under maintenance, please come back later.";
 		},
 		error: function(response){
   			document.getElementById("server_status").innerHTML = "<img style=\"vertical-align:text-top;\" width=\"15\" height=\"15\" src=\"img/red_light.png\"></img>";
+  			document.getElementById("server_message").innerHTML = "The Tweety Server is currently under maintenance, please come back later.";
  		}  		
 	});
 }
@@ -315,6 +317,7 @@ function abort(measure){
  * page.
  */
 function initDocPage(){
+	checkServerStatus();
 	// Retrieve measures
 	$.ajax({
   		type: "POST",
@@ -326,18 +329,29 @@ function initDocPage(){
    	           }),
   		dataType: "json",
   		success: function(response){
+  					// cnt of measures
+  					document.all.cnt_measures.innerHTML = response.measures.length;
+  					// overview list
+  					html = "";
+  					for(var i = 0; i < response.measures.length; i++){
+  						measure = response.measures[i];
+						html += "<li><a href=\"#" + measure.id + "\">" + measure.label + "</a></li>";						
+					}  	        
+  					document.all.overview_list.innerHTML = html;
+  					// detailed list
   					html = "";
   					for(var i = 0; i < response.measures.length; i++){
   						measure = response.measures[i];
 						html += "<a name=\"" + measure.id + "\"></a>";
 						html += "<h4>" + measure.label + "</h4>";
 						html += measure.description;
-						html += "<br/>";
-						
+						html += "<br/>";						
 					}  	        
   					document.all.measureList.innerHTML = html;
+					LatexIT.render("p",true);
   					//if the page has been opened with an anchor, jump to it
-  					window.location.href = window.location.href;  					
+  					if(window.location.hash != '')
+	  					window.location.href = window.location.href;  					
   				 },
   		failure: function(response){}
 	}); 

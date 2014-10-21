@@ -16,7 +16,10 @@
  */
 package net.sf.tweety.logics.pl.analysis;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.logics.commons.analysis.*;
@@ -47,12 +50,23 @@ public abstract class InconsistencyMeasureFactory {
 		
 		public String id;
 		public String label;
-		public File description;
+		public String description;
 		
 		Measure(String id, String label, String description){
 			this.id = id;
 			this.label = label;
-			this.description = new File(getClass().getResource(description).getFile());
+			try {
+				InputStream stream = InconsistencyMeasureFactory.class.getResourceAsStream(description);
+				BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+				String line;
+				this.description = "";
+				while((line = br.readLine()) != null) {
+					this.description += line + " ";
+				}
+				br.close();
+			} catch (IOException e) {
+				this.description = "<Description not found>";
+			}			
 		}
 		
 		public static Measure getMeasure(String id){

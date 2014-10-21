@@ -59,6 +59,19 @@ a:hover{
 		document.body.scrollTop) + 'px');
 }
 
+span .latex{
+	vertical-align: middle;
+}
+
+p .latex{
+	vertical-align: middle;
+}
+
+li .latex{
+	vertical-align: middle;
+}
+
+
 .measure_div{
 	font-size: 10pt;
 }
