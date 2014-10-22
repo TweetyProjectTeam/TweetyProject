@@ -16,8 +16,6 @@
  */
 package net.sf.tweety.web.services;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,6 +36,7 @@ import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
+import net.sf.tweety.logics.commons.analysis.NaiveMusEnumerator;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.analysis.InconsistencyMeasureFactory;
 import net.sf.tweety.logics.pl.analysis.InconsistencyMeasureFactory.Measure;
@@ -68,7 +67,7 @@ public class InconsistencyMeasurementService{
 	public static SatSolver satSolver = new Sat4jSolver();
 	/** The MUS enumerator configured for this service. */
 	//public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/home/shared/incmes/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
-	public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
+	public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"); //new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
 	/** The linear optimization solver configured for this service. */
 	public static Solver linearSolver = new ApacheCommonsSimplex();
 	
@@ -165,7 +164,7 @@ public class InconsistencyMeasurementService{
 				throw new JSONException("Malformed JSON: no valid value for \"cmd\" attribute.");
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_REPLY, jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD));
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_EMAIL, jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_EMAIL));
-			TweetyServer.log(InconsistencyMeasurementService.ID, "Finished handling request " + jsonQuery + ", reply is " + jsonReply);			
+			TweetyServer.log(InconsistencyMeasurementService.ID, "Finished handling request " + jsonQuery + ", reply is " + jsonReply);
 			return jsonReply.toString();
 		} catch (Exception e) {
 			JSONObject jsonError = new JSONObject();
@@ -265,18 +264,7 @@ public class InconsistencyMeasurementService{
 			jsonFormat = new JSONObject();
 			jsonFormat.put(InconsistencyMeasurementService.JSON_ATTR_ID, f.id);
 			jsonFormat.put(InconsistencyMeasurementService.JSON_ATTR_LABEL, f.label);
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(f.description));
-				String line;
-				String desc = "";
-				while((line = br.readLine()) != null) {
-					desc += line + " ";
-				}
-				br.close();
-				jsonFormat.put(InconsistencyMeasurementService.JSON_ATTR_DESC, desc);
-			} catch (IOException e) {
-				jsonFormat.put(InconsistencyMeasurementService.JSON_ATTR_DESC, "<Description not found>");
-			}
+			jsonFormat.put(InconsistencyMeasurementService.JSON_ATTR_DESC, f.description);
 			value.add(jsonFormat);
 		}
 		jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_FORMATS, value);

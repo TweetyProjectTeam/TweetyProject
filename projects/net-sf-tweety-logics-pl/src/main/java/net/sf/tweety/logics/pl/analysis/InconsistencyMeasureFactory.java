@@ -17,7 +17,6 @@
 package net.sf.tweety.logics.pl.analysis;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -55,8 +54,11 @@ public abstract class InconsistencyMeasureFactory {
 		Measure(String id, String label, String description){
 			this.id = id;
 			this.label = label;
+			// for some reason this is the only way it works for
+			// both running the thing in Eclipse and from a JAR
+			boolean worked = true;
 			try {
-				InputStream stream = InconsistencyMeasureFactory.class.getResourceAsStream(description);
+				InputStream stream = getClass().getResourceAsStream(description);				
 				BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 				String line;
 				this.description = "";
@@ -64,9 +66,23 @@ public abstract class InconsistencyMeasureFactory {
 					this.description += line + " ";
 				}
 				br.close();
-			} catch (IOException e) {
-				this.description = "<Description not found>";
-			}			
+			} catch (Exception e) {
+				worked = false;
+			}	
+			if(!worked){
+				try {
+					InputStream stream = getClass().getResourceAsStream("/resources" + description);				
+					BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+					String line;
+					this.description = "";
+					while((line = br.readLine()) != null) {
+						this.description += line + " ";
+					}
+					br.close();
+				} catch (Exception e) {
+					this.description = "<Description not found>";
+				}
+			}
 		}
 		
 		public static Measure getMeasure(String id){
