@@ -66,7 +66,7 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 			// delete file
 			p.getFirst().delete();
 			// parse output
-			Collection<Collection<PropositionalFormula>> result = new HashSet<Collection<PropositionalFormula>>();
+			Collection<Collection<PropositionalFormula>> preResult = new HashSet<Collection<PropositionalFormula>>();
 			StringTokenizer tokenizer = new StringTokenizer(output, "\n");
 			Integer idx;
 			while(tokenizer.hasMoreTokens()){
@@ -77,10 +77,25 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 					while(tokenizer2.hasMoreTokens()){
 						idx = new Integer(tokenizer2.nextToken().trim()) - 1;
 						mus.add(p.getSecond().get(idx));
-					}
-					result.add(mus);
+					}					
+					preResult.add(mus);
 				}
 			}
+			// it may have happened that non-minimal sets have been added, 
+			// so we have to check that
+			Collection<Collection<PropositionalFormula>> result = new HashSet<Collection<PropositionalFormula>>();
+			boolean subTest;
+			for(Collection<PropositionalFormula> c: preResult){
+				subTest = true;
+				for(Collection<PropositionalFormula> c2: preResult){
+					if(c != c2 && c.containsAll(c2)){
+						subTest = false;
+						break;
+					}
+				}
+				if(subTest)
+					result.add(c);
+			}			 
 			return result;
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
@@ -95,6 +110,4 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-
 }
