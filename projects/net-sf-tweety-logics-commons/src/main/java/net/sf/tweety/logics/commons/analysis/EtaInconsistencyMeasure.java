@@ -97,7 +97,10 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 		} catch (GeneralMathException e) {
 			// there is probably an inconsistent formula, so it should have maximal inconsistency
 			return 1d;
-		}		
+		} catch (Exception e){
+			// now the problem is probably consistent.
+			return 0d;
+		}
 	}
 	
 	/* (non-Javadoc)

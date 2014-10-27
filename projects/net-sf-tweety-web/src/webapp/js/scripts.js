@@ -1,7 +1,7 @@
 /*
  * URLs of the TweetyServer
  */
-var tweetyserver = "http://tweety.west.uni-koblenz.de:8080";//"http://localhost:8080";
+var tweetyserver = "http://localhost:8080";//"http://tweety.west.uni-koblenz.de:8080";
 var tweetyserverInc = tweetyserver + "/tweety/incmes";
 var tweetyserverPing = tweetyserver + "/tweety/ping";
 
