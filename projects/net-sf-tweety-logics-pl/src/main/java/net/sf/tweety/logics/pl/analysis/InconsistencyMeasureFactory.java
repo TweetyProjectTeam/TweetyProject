@@ -47,7 +47,8 @@ public abstract class InconsistencyMeasureFactory {
 		DALALSUM ("dalalsum", "Dalal-Sum Inconsistency Measure", "/inc/DalalSumInconsistencyMeasure.html"),
 		DALALMAX ("dalalmax", "Dalal-Max Inconsistency Measure", "/inc/DalalMaxInconsistencyMeasure.html"),
 		DALALHIT ("dalalhit", "Dalal-Hit Inconsistency Measure", "/inc/DalalHitInconsistencyMeasure.html"),
-		DF ("df", "Df Inconsistency Measure", "/inc/DfInconsistencyMeasure.html");
+		DF ("df", "Df Inconsistency Measure", "/inc/DfInconsistencyMeasure.html"),
+		PM ("pm", "Pm Inconsistency Measure", "/inc/PmInconsistencyMeasure.html");
 		
 		public String id;
 		public String label;
@@ -125,6 +126,8 @@ public abstract class InconsistencyMeasureFactory {
 				return new DHitInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
 			case DF:
 				return new DfInconsistencyMeasure<PropositionalFormula>(new FracAggrFunction(),PlMusEnumerator.getDefaultEnumerator());
+			case PM:
+				return new PmInconsistencyMeasure();
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}

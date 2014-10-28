@@ -16,6 +16,7 @@
  */
 package net.sf.tweety.logics.pl.syntax;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
@@ -160,6 +161,17 @@ public class Negation extends PropositionalFormula {
 	@Override
 	public boolean isLiteral() {
 		return (formula instanceof Proposition);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getLiterals()
+	 */
+	@Override
+	public Set<PropositionalFormula> getLiterals(){
+		Set<PropositionalFormula> result = new HashSet<PropositionalFormula>();
+		if(this.isLiteral())			
+			result.add(this);
+		return result;
 	}
 	
 	@Override

@@ -17,6 +17,7 @@
 package net.sf.tweety.logics.pl.syntax;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -94,6 +95,18 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	@SuppressWarnings("unchecked")
 	public Set<Proposition> getAtoms() {
 		return (Set<Proposition>) support.getAtoms();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getLiterals()
+	 */
+	@Override
+	public Set<PropositionalFormula> getLiterals(){
+		Set<PropositionalFormula> result = new HashSet<PropositionalFormula>();
+		for(PropositionalFormula f: this.support){
+			result.addAll(f.getLiterals());
+		}
+		return result;
 	}
 	
 	@Override

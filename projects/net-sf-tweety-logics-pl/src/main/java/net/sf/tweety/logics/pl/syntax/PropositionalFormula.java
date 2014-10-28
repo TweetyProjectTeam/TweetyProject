@@ -46,6 +46,13 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 
 	@Override
 	public abstract Set<Proposition> getAtoms();
+
+	/**
+	 * Returns all literals, i.e. all formulas of the form "a" or "!a"
+	 * where "a" is a proposition, that appear in this formula.
+	 * @return all literals appearing in this formula.
+	 */
+	public abstract Set<PropositionalFormula> getLiterals();
 	
 	@Override
 	public Conjunction combineWithAnd(Conjuctable f){

@@ -154,6 +154,16 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getLiterals()
+	 */
+	@Override
+	public Set<PropositionalFormula> getLiterals(){
+		Set<PropositionalFormula> result = new HashSet<PropositionalFormula>();
+		result.add(this);
+		return result;
+	}
+	
 	@Override
 	public RETURN_SET_PREDICATE setPredicate(Predicate predicate) {
 		Predicate old = this.predicate;
