@@ -65,8 +65,8 @@ public class InconsistencyMeasurementService{
 	/** The SAT solver configured for this service. */
 	public static SatSolver satSolver = new Sat4jSolver();
 	/** The MUS enumerator configured for this service. */
-	//public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/home/shared/incmes/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
-	public static AbstractMusEnumerator<PropositionalFormula> musEnumerator =  new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
+	public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/home/shared/incmes/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
+	//public static AbstractMusEnumerator<PropositionalFormula> musEnumerator =  new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
 	/** The linear optimization solver configured for this service. */
 	public static Solver linearSolver = new ApacheCommonsSimplex();
 	
