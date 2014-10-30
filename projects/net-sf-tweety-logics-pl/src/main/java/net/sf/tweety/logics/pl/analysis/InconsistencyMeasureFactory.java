@@ -49,7 +49,8 @@ public abstract class InconsistencyMeasureFactory {
 		DALALHIT ("dalalhit", "Dalal-Hit Inconsistency Measure", "/inc/DalalHitInconsistencyMeasure.html"),
 		DF ("df", "Df Inconsistency Measure", "/inc/DfInconsistencyMeasure.html"),
 		PM ("pm", "Pm Inconsistency Measure", "/inc/PmInconsistencyMeasure.html"),
-		MV ("mv", "MusVar Inconsistency Measure", "/inc/MusVarInconsistencyMeasure.html");;
+		MV ("mv", "MusVar Inconsistency Measure", "/inc/MusVarInconsistencyMeasure.html"),
+		NC ("nc", "NCons Inconsistency Measure", "/inc/NConsInconsistencyMeasure.html");
 		
 		public String id;
 		public String label;
@@ -131,6 +132,8 @@ public abstract class InconsistencyMeasureFactory {
 				return new PmInconsistencyMeasure();
 			case MV:
 				return new MusVarInconsistencyMeasure();
+			case NC:
+				return new NConsInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}
