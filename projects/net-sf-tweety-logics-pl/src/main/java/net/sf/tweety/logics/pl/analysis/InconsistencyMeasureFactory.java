@@ -42,6 +42,7 @@ public abstract class InconsistencyMeasureFactory {
 		MIC ("mic", "MIC Inconsistency Measure", "/inc/MicInconsistencyMeasure.html"),
 		ETA ("eta", "Eta Inconsistency Measure", "/inc/EtaInconsistencyMeasure.html"),
 		CONTENSION ("contension", "Contension Inconsistency Measure", "/inc/ContensionInconsistencyMeasure.html"),
+		MC ("mc", "MaxCons Inconsistency Measure", "/inc/MaxConsInconsistencyMeasure.html"),
 		PR ("pr", "P Inconsistency Measure", "/inc/PrInconsistencyMeasure.html"),
 		HS ("hs", "Hitting Set Inconsistency Measure", "/inc/HittingSetInconsistencyMeasure.html"),
 		DALALSUM ("dalalsum", "Dalal-Sum Inconsistency Measure", "/inc/DalalSumInconsistencyMeasure.html"),
@@ -110,6 +111,8 @@ public abstract class InconsistencyMeasureFactory {
 				return new DrasticInconsistencyMeasure<PropositionalFormula>(SatSolver.getDefaultSolver());
 			case CONTENSION:
 				return new ContensionInconsistencyMeasure();
+			case MC:
+				return new MaInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case MI:
 				return new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case MIC:

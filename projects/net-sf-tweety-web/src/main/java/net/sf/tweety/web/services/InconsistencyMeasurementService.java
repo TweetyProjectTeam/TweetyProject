@@ -202,12 +202,15 @@ public class InconsistencyMeasurementService{
 				// handle timeout				
 				Future<Double> future = executor.submit(new MeasurementCallee(measure, beliefSet));
 			    val = future.get(InconsistencyMeasurementService.timeout, TimeUnit.SECONDS);
+			    executor.shutdownNow();
 			} catch (TimeoutException e) {
 				//inconsistency value of -1 indicates that a timeout has occurred
+				executor.shutdownNow();
 				val = -1;
 			} catch (Exception e){
 				//inconsistency value of -2 indicates some general error
 				TweetyServer.log(InconsistencyMeasurementService.ID, "Unhandled exception: " + e.getMessage());
+				executor.shutdownNow();
 				val = -2;
 			}
 			millis = System.currentTimeMillis() - millis;

@@ -17,8 +17,11 @@
 package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.util.SetTools;
 
 /**
  * This class models the I_M inconsistency measure from e.g. [Grant,Hunter,2011a]. It takes
@@ -49,7 +52,41 @@ public class MaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 		for(S f: formulas)
 			if(!this.enumerator.isConsistent(f))
 				scs++;
-		return scs + this.enumerator.maximalConsistentSubsets(formulas).size() - 1;
+		// we compute the number of max consistent subsets through the minimal
+		// inconsistent subsets, which is (probably) faster
+		return scs + this.numMaxConsistentFormulas(this.enumerator.minimalInconsistentSubsets(formulas)) - 1;
 	}
 
+	
+	/**
+	 * Computes the number of maximal consistent subsets by computing minimal hitting
+	 * sets from minimal inconsistent sets.  
+	 * @param muses the set of minimal consistent subsets
+	 * @return the number of maximal consistent subsets
+	 */
+	private double numMaxConsistentFormulas(Collection<Collection<S>> muses){
+		SetTools<S> setTools = new SetTools<S>();
+		//Convert to sets
+		Set<Set<S>> mSets = new HashSet<Set<S>>();
+		for(Collection<S> mus: muses)
+			mSets.add(new HashSet<S>(mus));
+		Set<Set<S>> hSets = setTools.permutations(mSets);
+		double result = 0;
+		boolean nonMin;
+		//check for set minimality
+		for(Set<S> h1: hSets){
+			nonMin = false;
+			for(Set<S> h2: hSets){
+				if(h1 != h2 && h1.containsAll(h2)){
+					nonMin = true;
+					break;
+				}
+			}
+			if(!nonMin){
+				System.out.println(h1);
+				result++;
+			}
+		}		
+		return result;
+	}
 }
