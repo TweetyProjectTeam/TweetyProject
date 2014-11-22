@@ -50,10 +50,10 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 	@Override
 	public DungTheory generate() {
 		if(this.params.enforceTreeShape)
-			return this.generateTreeShape(new Argument("A"));
+			return this.generateTreeShape(new Argument("a"));
 		DungTheory theory = new DungTheory();
 		for(int i = 0; i < this.params.numberOfArguments; i++)
-			theory.add(new Argument("A" + i));		
+			theory.add(new Argument("a" + i));		
 		for(Argument a: theory)
 			for(Argument b: theory){
 				if(a == b && this.params.avoidSelfAttacks)
@@ -80,7 +80,7 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 		}		
 		theory.add(arg);
 		for(int i = 1; i < this.params.numberOfArguments; i++)
-			theory.add(new Argument("A" + i));
+			theory.add(new Argument("a" + i));
 		for(Argument a: theory)
 			for(Argument b: theory){
 				if(a == b && this.params.avoidSelfAttacks)
@@ -116,7 +116,7 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 		Queue<Argument> q = new LinkedList<Argument>();
 		q.add(arg);
 		while(numOfArguments <= this.params.numberOfArguments){
-			Argument a = new Argument("A" + numOfArguments++);
+			Argument a = new Argument("a" + numOfArguments++);
 			theory.add(new Attack(a, (Argument)theory.toArray()[this.random.nextInt(numOfArguments-1)]));
 			theory.add(a);
 		}
