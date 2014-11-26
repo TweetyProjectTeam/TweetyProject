@@ -143,7 +143,7 @@ public class DLPHead extends DLPElementAdapter
 
 	@Override
 	public String getOperatorSymbol() {
-		return ",";
+		return ";";
 	}
 
 	@Override
