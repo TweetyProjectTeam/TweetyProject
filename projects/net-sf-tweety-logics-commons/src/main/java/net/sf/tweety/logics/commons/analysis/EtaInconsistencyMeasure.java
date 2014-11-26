@@ -28,6 +28,7 @@ import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Term;
@@ -62,7 +63,9 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 		this.it = it.reset(formulas);
 		// We implement this as an optimization problem and maximize eta
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
-		FloatVariable eta = new FloatVariable("eta",0,1);
+		FloatVariable eta = new FloatVariable("eta");
+		problem.add(new Inequation(eta,new FloatConstant(0),Inequation.GREATER_EQUAL));
+		problem.add(new Inequation(eta,new FloatConstant(1),Inequation.LESS_EQUAL));
 		problem.setTargetFunction(eta);
 		Map<Interpretation,Variable> worlds2vars = new HashMap<Interpretation,Variable>();
 		int i = 0;
@@ -70,7 +73,9 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 		this.it = it.reset();
 		while(this.it.hasNext()){
 			Interpretation interpretation = this.it.next();
-			FloatVariable var = new FloatVariable("w" + i++,0,1);
+			FloatVariable var = new FloatVariable("w" + i++);
+			problem.add(new Inequation(var,new FloatConstant(0),Inequation.GREATER_EQUAL));
+			problem.add(new Inequation(var,new FloatConstant(1),Inequation.LESS_EQUAL));
 			worlds2vars.put(interpretation, var);
 			if(normConstraint == null)
 				normConstraint = var;
@@ -90,15 +95,18 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 			}
 			problem.add(new Inequation(leftTerm,eta,Inequation.GREATER_EQUAL));
 		}
+		
+		
 		// solve the problem
 		try {
-			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(problem);
+			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(problem);			
 			return 1-solution.get(eta).doubleValue();
 		} catch (GeneralMathException e) {
 			// there is probably an inconsistent formula, so it should have maximal inconsistency
 			return 1d;
 		} catch (Exception e){
 			// now the problem is probably consistent.
+			e.printStackTrace();
 			return 0d;
 		}
 	}

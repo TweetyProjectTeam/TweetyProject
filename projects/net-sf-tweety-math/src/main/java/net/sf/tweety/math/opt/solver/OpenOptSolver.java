@@ -129,7 +129,7 @@ public class OpenOptSolver extends Solver {
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
 			this.log.info("Building Python code for OpenOpt.");
-			out.write(this.getOpenOptCode((OptimizationProblem)problem));			
+			out.write(this.getOpenOptCode((OptimizationProblem)problem));
 			out.close();
 			//execute openopt on problem and retrieve console output
 			this.log.info("Calling OpenOpt optimization library.");
