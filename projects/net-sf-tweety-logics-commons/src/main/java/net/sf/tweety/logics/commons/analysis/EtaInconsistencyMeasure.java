@@ -95,8 +95,6 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 			}
 			problem.add(new Inequation(leftTerm,eta,Inequation.GREATER_EQUAL));
 		}
-		
-		
 		// solve the problem
 		try {
 			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(problem);			
@@ -106,7 +104,6 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 			return 1d;
 		} catch (Exception e){
 			// now the problem is probably consistent.
-			e.printStackTrace();
 			return 0d;
 		}
 	}
