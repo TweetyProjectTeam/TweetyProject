@@ -69,23 +69,12 @@ public class StableReasoner extends AbstractExtensionReasoner {
 	 * @return the set of stable extensions that are a subset of <source>arguments</source>
 	 */
 	private Set<Extension> getStableExtensions(Extension ext){
-		Set<Extension> extensions = new HashSet<Extension>();
-		DungTheory dungTheory = (DungTheory) this.getKnowledgBase();
-		if(!dungTheory.isAttackingAllOtherArguments(ext)) return extensions;
-		if(ext.isConflictFree(dungTheory)){
-			extensions.add(ext);
-		}else{
-			Iterator<Argument> it = ext.iterator();
-			while(it.hasNext()){
-				Argument argument = it.next();
-				if(dungTheory.isAttacked(argument,ext)){
-					Extension newExtension = new Extension(ext);
-					newExtension.remove(argument);
-					extensions.addAll(this.getStableExtensions(newExtension));
-				}
-			}
-		}
-		return extensions;
+		Set<Extension> completeExtensions = new CompleteReasoner((DungTheory)this.getKnowledgBase()).getExtensions();
+		Set<Extension> result = new HashSet<Extension>();
+		for(Extension e: completeExtensions)
+			if(((DungTheory)this.getKnowledgBase()).isAttackingAllOtherArguments(e))
+				result.add(e);
+		return result;	
 	}
 	
 	/* (non-Javadoc)

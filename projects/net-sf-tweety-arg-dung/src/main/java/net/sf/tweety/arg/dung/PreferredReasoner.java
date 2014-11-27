@@ -53,36 +53,21 @@ public class PreferredReasoner extends AbstractExtensionReasoner {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
 	 */
-	protected Set<Extension> computeExtensions(){		
-		return this.getPreferredExtensions(new Extension());		
-	}
-	
-	/**
-	 * Auxiliary method to compute the set of all preferred extensions.
-	 * @param arguments
-	 */
-	private Set<Extension> getPreferredExtensions(Extension ext){
-		Set<Extension> extensions = new HashSet<Extension>();
-		DungTheory dungTheory = (DungTheory) this.getKnowledgBase();
-		Extension ext2 = new Extension();
-		for(Formula f: dungTheory)
-			ext2.add((Argument) f);		
-		ext2.removeAll(ext);
-		Iterator<Argument> it = ext2.iterator();
-		boolean isMaximal = true;
-		while(it.hasNext()){
-			Argument argument =it.next();
-			Extension ext3 = new Extension(ext);
-			ext3.add(argument);
-			Set<Extension> extensions2 = this.getPreferredExtensions(ext3);
-			if(extensions2.size()>0){
-				isMaximal = false;
-				extensions.addAll(extensions2);
-			}
-		}
-		if(isMaximal && ext.isAdmissable(dungTheory))
-				extensions.add(ext);
-		return extensions;
+	protected Set<Extension> computeExtensions(){
+		Set<Extension> completeExtensions = new CompleteReasoner((DungTheory)this.getKnowledgBase()).getExtensions();
+		Set<Extension> result = new HashSet<Extension>();
+		boolean maximal;
+		for(Extension e1: completeExtensions){
+			maximal = true;
+			for(Extension e2: completeExtensions)
+				if(e1 != e2 && e2.containsAll(e1)){
+					maximal = false;
+					break;
+				}
+			if(maximal)
+				result.add(e1);			
+		}		
+		return result;		
 	}
 	
 	/* (non-Javadoc)

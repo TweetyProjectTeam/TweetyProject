@@ -69,9 +69,11 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	private Set<Extension> getCompleteExtensions(Extension ext){
 		Set<Extension> extensions = new HashSet<Extension>();
 		DungTheory dungTheory = (DungTheory) this.getKnowledgBase();
+		// if ext has already conflicts, no complete extension can be obtained from it
 		if(ext.isConflictFree(dungTheory) && dungTheory.faf(ext).equals(ext)){
 			extensions.add(ext);
-		}
+		}else if(!ext.isConflictFree(dungTheory))
+			return extensions;
 		Extension ext2 = new Extension();
 		for(Formula f: dungTheory)
 			ext2.add((Argument) f);
