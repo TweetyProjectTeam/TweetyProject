@@ -58,34 +58,34 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	 */
 	public Set<Extension> computeExtensions(){
 		Extension groundedExtension = new GroundReasoner(this.getKnowledgBase(),this.getInferenceType()).getExtensions().iterator().next();
-		return this.getCompleteExtensions(groundedExtension);
+		Set<Argument> remaining = new HashSet<Argument>((DungTheory)this.getKnowledgBase());
+		remaining.removeAll(groundedExtension);
+		return this.getCompleteExtensions(groundedExtension,remaining);
 	}
 
 	/**
 	 * Auxiliary method to compute all complete extensions
 	 * @param arguments a set of arguments
+	 * @param remaining arguments that still have to be considered to be part of an extension
 	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>
 	 */
-	private Set<Extension> getCompleteExtensions(Extension ext){
+	private Set<Extension> getCompleteExtensions(Extension ext, Collection<Argument> remaining){
 		Set<Extension> extensions = new HashSet<Extension>();
 		DungTheory dungTheory = (DungTheory) this.getKnowledgBase();
-		// if ext has already conflicts, no complete extension can be obtained from it
-		if(ext.isConflictFree(dungTheory) && dungTheory.faf(ext).equals(ext)){
-			extensions.add(ext);
-		}else if(!ext.isConflictFree(dungTheory))
-			return extensions;
-		Extension ext2 = new Extension();
-		for(Formula f: dungTheory)
-			ext2.add((Argument) f);
-		ext2.removeAll(ext);
-		Iterator<Argument> it = ext2.iterator();
-		while(it.hasNext()){
-			Argument argument = it.next();
-			Extension ext3 = new Extension(ext);
-			ext3.add(argument);
-			extensions.addAll(this.getCompleteExtensions(ext3));
+		if(ext.isConflictFree(dungTheory)){
+			if(dungTheory.faf(ext).equals(ext))
+				extensions.add(ext);
+			if(!remaining.isEmpty()){
+				Argument arg = remaining.iterator().next();
+				Collection<Argument> remaining2 = new HashSet<Argument>(remaining);
+				remaining2.remove(arg);
+				extensions.addAll(this.getCompleteExtensions(ext, remaining2));
+				Extension ext2 = new Extension(ext);
+				ext2.add(arg);
+				extensions.addAll(this.getCompleteExtensions(ext2, remaining2));
+			}
 		}
-		return extensions;
+		return extensions;		
 	}
 
 	/* (non-Javadoc)
