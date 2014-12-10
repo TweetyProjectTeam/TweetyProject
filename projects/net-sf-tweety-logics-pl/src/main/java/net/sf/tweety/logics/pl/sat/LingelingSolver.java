@@ -68,15 +68,16 @@ public class LingelingSolver extends SatSolver {
 			if(output.indexOf("UNSATISFIABLE") != -1)
 				return null;
 			// parse the model	
-			String model = output.substring(output.indexOf("v")+1,output.indexOf("0")).trim();
+			String model = output.substring(output.indexOf("v")+1,output.indexOf(" 0")).trim();
+			model = model.replaceAll("v", "");
 			StringTokenizer tokenizer = new StringTokenizer(model, " ");
 			PossibleWorld w = new PossibleWorld();
 			while(tokenizer.hasMoreTokens()){
-				String s = tokenizer.nextToken().trim();
+				String s = tokenizer.nextToken().trim();				
 				Integer i = new Integer(s);
 				if(i > 0){
 					w.add(props.get(i-1));
-				}				
+				}
 			}
 			return w;			
 		} catch (IOException e) {

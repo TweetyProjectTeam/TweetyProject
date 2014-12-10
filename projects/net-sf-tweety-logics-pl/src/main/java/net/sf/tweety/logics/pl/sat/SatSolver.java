@@ -101,23 +101,25 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @return a string in Dimacs CNF.
 	 */
 	protected static String convertToDimacs(Collection<PropositionalFormula> formulas, List<Proposition> props){
-		Conjunction conj = new Conjunction();
-		conj.addAll(formulas);
-		conj = conj.toCnf();			
-		String s = "p cnf " + props.size() + " " + conj.size() + "\n";
-		for(PropositionalFormula p1: conj){
-			// as conj is in CNF all formulas should be disjunctions
-			Disjunction disj = (Disjunction) p1;
-			for(PropositionalFormula p2: disj){
-				if(p2 instanceof Proposition)
-					s += (props.indexOf(p2) + 1) + " ";
-				else if(p2 instanceof Negation){
-					s += "-" + (props.indexOf((Proposition)((Negation)p2).getFormula()) + 1) + " ";
-				}else throw new RuntimeException("This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered.");				
-			}			
-			s += "0\n";
+		String s = "";
+		int num_clauses = 0;
+		for(PropositionalFormula p: formulas){
+			Conjunction conj = p.toCnf();
+			for(PropositionalFormula p1: conj){
+				num_clauses++;
+				// as conj is in CNF all formulas should be disjunctions
+				Disjunction disj = (Disjunction) p1;
+				for(PropositionalFormula p2: disj){
+					if(p2 instanceof Proposition)
+						s += (props.indexOf(p2) + 1) + " ";
+					else if(p2 instanceof Negation){
+						s += "-" + (props.indexOf((Proposition)((Negation)p2).getFormula()) + 1) + " ";
+					}else throw new RuntimeException("This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered.");				
+				}			
+				s += "0\n";
+			}
 		}
-		return s;
+		return "p cnf " + props.size() + " " + num_clauses + "\n" + s;
 	}
 
 	/**

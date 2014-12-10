@@ -22,10 +22,13 @@ import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.Contradiction;
+import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.Tautology;
 
 
 /**
@@ -36,6 +39,9 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  */
 public class CompleteReasoner extends AbstractExtensionReasoner {
 
+	/** Whether to use the standard SAT solver instead of the brute force approach. */
+	private boolean useSatSolver = true;
+	
 	/**
 	 * Creates a new complete reasoner for the given knowledge base.
 	 * @param beliefBase a knowledge base.
@@ -43,6 +49,27 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	 */
 	public CompleteReasoner(BeliefBase beliefBase, int inferenceType){
 		super(beliefBase, inferenceType);		
+	}
+	
+	/**
+	 * Creates a new complete reasoner for the given knowledge base using sceptical inference.
+	 * @param beliefBase The knowledge base for this reasoner.
+	 * @param useSatSolver whether to use the standard SAT solver instead of the brute force approach.
+	 */
+	public CompleteReasoner(BeliefBase beliefBase, boolean useSatSolver){
+		super(beliefBase);
+		this.useSatSolver = useSatSolver;
+	}
+	
+	/**
+	 * Creates a new complete reasoner for the given knowledge base.
+	 * @param beliefBase a knowledge base.
+	 * @param inferenceType The inference type for this reasoner.
+	 * @param useSatSolver whether to use the standard SAT solver instead of the brute force approach.
+	 */
+	public CompleteReasoner(BeliefBase beliefBase, int inferenceType, boolean useSatSolver){
+		super(beliefBase, inferenceType);
+		this.useSatSolver = useSatSolver;
 	}
 	
 	/**
@@ -57,12 +84,45 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
 	 */
 	public Set<Extension> computeExtensions(){
+		if(this.useSatSolver)
+			return this.computeExtensionsBySatSolving();
 		Extension groundedExtension = new GroundReasoner(this.getKnowledgBase(),this.getInferenceType()).getExtensions().iterator().next();
 		Set<Argument> remaining = new HashSet<Argument>((DungTheory)this.getKnowledgBase());
 		remaining.removeAll(groundedExtension);
 		return this.getCompleteExtensions(groundedExtension,remaining);
 	}
 
+	/**
+	 * Computes the extensions by reducing the problem to SAT solving
+	 * @return the extensions of the given Dung theory.
+	 */
+	private Set<Extension> computeExtensionsBySatSolving(){
+		SatSolver solver = SatSolver.getDefaultSolver();
+		PlBeliefSet prop = this.getPropositionalCharacterisation();
+		// get some labeling from the solver, then add the negation of this to the program and repeat
+		// to obtain all labelings
+		Set<Extension> result = new HashSet<Extension>();
+		Extension ext;
+		do{
+			PossibleWorld w = (PossibleWorld) solver.getWitness(prop);
+			if(w == null)
+				break;
+			ext = new Extension();
+			for(Proposition p: w){
+				if(p.getName().startsWith("in_"))
+					ext.add(new Argument(p.getName().substring(3)));				
+			}
+			result.add(ext);
+			// add the newly found extension in negative form to prop
+			// so the next witness cannot be the same
+			Collection<PropositionalFormula> f = new HashSet<PropositionalFormula>();
+			for(Proposition p: w)
+				f.add(p);
+			prop.add(new Negation(new Conjunction(f)));
+		}while(true);
+		return result;
+	}
+	
 	/**
 	 * Auxiliary method to compute all complete extensions
 	 * @param arguments a set of arguments
@@ -87,7 +147,7 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 		}
 		return extensions;		
 	}
-
+		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
 	 */
@@ -97,20 +157,24 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		// an argument is in iff all attackers are out
 		for(Argument a: theory){
-			PropositionalFormula attackersAnd = new Tautology();
-			PropositionalFormula attackersOr = new Contradiction();
-			PropositionalFormula attackersNotAnd = new Tautology();
-			PropositionalFormula attackersNotOr = new Contradiction();
-			for(Argument b: theory.getAttackers(a)){
-				attackersAnd = attackersAnd.combineWithAnd(out.get(b));
-				attackersOr = attackersOr.combineWithOr(in.get(b));
-				attackersNotAnd = attackersNotAnd.combineWithAnd(in.get(b).complement());
-				attackersNotOr = attackersNotOr.combineWithOr(out.get(b).complement());
+			if(theory.getAttackers(a).isEmpty()){
+				beliefSet.add(((PropositionalFormula)in.get(a)));
+			}else{
+				Collection<PropositionalFormula> attackersAnd = new HashSet<PropositionalFormula>();//new Tautology();
+				Collection<PropositionalFormula> attackersOr = new HashSet<PropositionalFormula>();//new Contradiction();
+				Collection<PropositionalFormula> attackersNotAnd = new HashSet<PropositionalFormula>();//new Tautology();
+				Collection<PropositionalFormula> attackersNotOr = new HashSet<PropositionalFormula>();//new Contradiction();
+				for(Argument b: theory.getAttackers(a)){
+					attackersAnd.add(out.get(b));
+					attackersOr.add(in.get(b));
+					attackersNotAnd.add((PropositionalFormula)in.get(b).complement());
+					attackersNotOr.add((PropositionalFormula)out.get(b).complement());
+				}
+				beliefSet.add(((PropositionalFormula)out.get(a).complement()).combineWithOr(new Disjunction(attackersOr)));
+				beliefSet.add(((PropositionalFormula)in.get(a).complement()).combineWithOr(new Conjunction(attackersAnd)));
+				beliefSet.add(((PropositionalFormula)undec.get(a).complement()).combineWithOr(new Conjunction(attackersNotAnd)));
+				beliefSet.add(((PropositionalFormula)undec.get(a).complement()).combineWithOr(new Disjunction(attackersNotOr)));
 			}
-			beliefSet.add(((PropositionalFormula)out.get(a).complement()).combineWithOr(attackersOr));
-			beliefSet.add(((PropositionalFormula)in.get(a).complement()).combineWithOr(attackersAnd));
-			beliefSet.add(((PropositionalFormula)undec.get(a).complement()).combineWithOr(attackersNotAnd));
-			beliefSet.add(((PropositionalFormula)undec.get(a).complement()).combineWithOr(attackersNotOr));
 		}		
 		return beliefSet;
 	}
