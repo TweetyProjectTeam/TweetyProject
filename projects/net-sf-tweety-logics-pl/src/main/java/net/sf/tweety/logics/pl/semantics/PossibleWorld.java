@@ -108,6 +108,23 @@ public class PossibleWorld extends InterpretationSet<Proposition> implements Com
 		return possibleWorlds;
 	}
 	
+	/**
+	 * Returns the complete conjunction representing this possible world wrt.
+	 * 	the give signature
+	 * @param a propositional signature
+	 * @return the complete conjunction representing this possible world wrt.
+	 * 	the give signature
+	 */
+	public PropositionalFormula getCompleteConjunction(PropositionalSignature sig){
+		Conjunction c = new Conjunction();
+		for(Proposition p: this)
+			c.add(p);
+		Collection<Proposition> remaining = new HashSet<Proposition>(sig);
+		remaining.removeAll(this);
+		for(Proposition p: remaining)
+			c.add(new Negation(p));		
+		return c;
+	}
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
