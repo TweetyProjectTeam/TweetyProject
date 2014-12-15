@@ -1,6 +1,5 @@
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
-import net.sf.tweety.logics.fol.syntax.tptp.TptpFofLogicalSymbols;
 
 /**
  * This class implements the tptp-<fof_and_formula>

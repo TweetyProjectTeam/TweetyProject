@@ -3,7 +3,7 @@ package net.sf.tweety.logics.fol.syntax.tptp.fof;
 /**
  * Variables are used in quantified formulas
  * Each Variable must begin with an upper case letter followed by any amount (>=0) of lower case letters 
- * @author Bastian Wolf
+ * author Bastian Wolf
  */
 public class TptpFofVariable {
 

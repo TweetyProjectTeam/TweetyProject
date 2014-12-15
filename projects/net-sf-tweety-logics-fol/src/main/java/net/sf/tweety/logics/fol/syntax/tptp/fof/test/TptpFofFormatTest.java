@@ -3,12 +3,9 @@ package net.sf.tweety.logics.fol.syntax.tptp.fof.test;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofAndFormula;
 import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofBeliefBase;
 import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofConstant;
-import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofFormula;
-import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofLogicFormula;
 import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofNegation;
 import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofSort;
 import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofVariable;
@@ -16,6 +13,7 @@ import net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofVariable;
 /**
  * @author Bastian Wolf
  */
+@SuppressWarnings("unused")
 public class TptpFofFormatTest {
 
     public static void main(String[] args) {

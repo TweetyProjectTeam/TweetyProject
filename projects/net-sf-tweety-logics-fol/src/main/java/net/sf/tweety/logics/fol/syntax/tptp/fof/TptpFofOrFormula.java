@@ -1,6 +1,5 @@
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
-import net.sf.tweety.logics.fol.syntax.tptp.TptpFofLogicalSymbols;
 
 /**
  * 
