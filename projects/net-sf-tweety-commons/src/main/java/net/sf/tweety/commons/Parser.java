@@ -83,6 +83,18 @@ public abstract class Parser<T extends BeliefBase> {
 	 */
 	public abstract Formula parseFormula(Reader reader) throws IOException, ParserException;
 	
-	
+	/**
+	 * Checks whether the given string is a number.
+	 * @param str some string
+	 * @return "true" if the given string can be parsed as a number
+	 */
+	public static boolean isNumeric(String str){  
+	  try{  
+	    Double.parseDouble(str);  
+	  }catch(NumberFormatException nfe) {
+		  return false;  
+	  }  
+	  return true;  
+	}
 	
 }

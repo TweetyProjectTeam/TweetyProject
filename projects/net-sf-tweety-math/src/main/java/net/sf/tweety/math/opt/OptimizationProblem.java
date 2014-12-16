@@ -276,23 +276,18 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		}else throw new IllegalArgumentException("Unrecognized type of optimization problem.");
 		result += this.targetFunction + "\n";
 		result += "Subject To\n";
+		Statement s2;
 		for(Statement s: this){
 			// As the cplex lp format treats "<" and "<=" both as lesser or equal (same for ">" and ">="
 			// we have to add an "epsilon" to the lesser term in order to represent "<"
-			if(s instanceof Inequation && ((Inequation) s).getType() == Inequation.LESS){
-				result += s.getLeftTerm() +  s.getRelationSymbol() + s.getRightTerm() + " - " + OptimizationProblem.EPSILON + "\n";
-			}else if(s instanceof Inequation && ((Inequation) s).getType() == Inequation.GREATER){
-				result += s.getLeftTerm() + s.getRelationSymbol() + s.getRightTerm() + " + " + OptimizationProblem.EPSILON + "\n";
-			}else result += s.getLeftTerm() + s.getRelationSymbol() + s.getRightTerm() + "\n";
+			s2 = s;
+			if(s2 instanceof Inequation && ((Inequation) s2).getType() == Inequation.LESS){
+				result += s2.getLeftTerm() +  s2.getRelationSymbol() + s2.getRightTerm() + " - " + OptimizationProblem.EPSILON + "\n";
+			}else if(s2 instanceof Inequation && ((Inequation) s2).getType() == Inequation.GREATER){
+				result += s2.getLeftTerm() + s2.getRelationSymbol() + s2.getRightTerm() + " + " + OptimizationProblem.EPSILON + "\n";
+			}else result += s2.getLeftTerm() + s2.getRelationSymbol() + s2.getRightTerm() + "\n";
 		}
-		result += "General\n";
-		Set<Variable> variables = this.getVariables();
-		if(!variables.isEmpty()){			
-			Iterator<Variable> it = variables.iterator();
-			while(it.hasNext())
-				result += it.next() + "\n";			
-		}		
-		result += "End";
+		result += "End\n";
 		//TODO: solve the following workarounds
 		result = result.replaceAll("-1\\ ", "-");
 		result = result.replaceAll("--", "");

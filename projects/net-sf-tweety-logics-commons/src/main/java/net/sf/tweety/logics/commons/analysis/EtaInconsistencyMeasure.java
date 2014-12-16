@@ -93,7 +93,7 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 						leftTerm = worlds2vars.get(interpretation);
 					else leftTerm = leftTerm.add(worlds2vars.get(interpretation));					
 			}
-			problem.add(new Inequation(leftTerm,eta,Inequation.GREATER_EQUAL));
+			problem.add(new Inequation(leftTerm.minus(eta),new FloatConstant(0),Inequation.GREATER_EQUAL));
 		}
 		// solve the problem
 		try {
