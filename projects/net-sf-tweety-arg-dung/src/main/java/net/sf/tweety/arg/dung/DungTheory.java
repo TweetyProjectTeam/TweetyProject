@@ -99,12 +99,12 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 		boolean[] inProgress = new boolean[arguments.size()];
 		for(int i = 0; i < arguments.size(); i++){
 			dfn[i] = false;
-			inProgress[i] = false;
+			inProgress[i] = false;			
 		}
 		for(int i = 0; i < arguments.size(); i++)
 			if(!dfn[i])
 				if(dfs(i,arguments,dfn,inProgress))
-					return false;
+					return false;		
 		return true;
 	}
 
