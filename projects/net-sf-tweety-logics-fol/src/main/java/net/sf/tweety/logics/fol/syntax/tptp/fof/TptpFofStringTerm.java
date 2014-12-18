@@ -16,34 +16,60 @@
  */
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
-
 /**
- * Negation for a given formula
+ * This class implements the generic Fof-Term-class with Strings
  * @author Bastian Wolf
  */
-public class TptpFofNegation extends TptpFofUnitaryFormula {
+public abstract class TptpFofStringTerm extends TptpFofTerm<String> {
+
 	/**
-	 * The actual formula 
+	 * The name of this term
 	 */
-    private TptpFofFormula formula;
-
-    /**
-     * Static negation symbol
-     */
-    private static String negation = TptpFofLogicalSymbols.TPTP_NEGATION();
-
-    /*
-     * (non-Javadoc)
-     * @see net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofFormula#toString()
-     */
-    @Override
-    public String toString() {
-        return negation + this.formula.toString();
-    }
-
-	@Override
-	public boolean isParenthesized() {
-		// TODO Auto-generated method stub
-		return false;
+	protected String name;
+	
+	/**
+	 * Generic empty constructor
+	 */
+	public TptpFofStringTerm(){
+		super();
 	}
+	
+	/**
+	 * Constructor with given name
+	 * @param name
+	 */
+	public TptpFofStringTerm(String name) {
+		super(name);
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param sort
+	 */
+	public TptpFofStringTerm(String name, TptpFofSort sort){
+		super(name, sort);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public abstract void set(String name);
+
+	/**
+	 * 
+	 */
+	public TptpFofSort getSort(){
+		return this.sort;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public String toString(){
+		return this.name;
+	}
+	
 }

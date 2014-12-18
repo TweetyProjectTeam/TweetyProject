@@ -1,57 +1,58 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
 /**
  * A constant consists of an unique identifier name and a sort.
  * @author Bastian Wolf
  */
-public class TptpFofConstant {
-
-	/**
-	 * The identifier name
-	 */
-    private String name;
+public class TptpFofConstant extends TptpFofStringTerm {
 
     /**
-     * Internal representation with prefix "c_"
+     * Default Constructor with standard sort
+     * @param value the identifier name
      */
-    private String tptp_name;
-    
-    /**
-     * The sort of this constant
-     */
-    private TptpFofSort sort;
-    
+    public TptpFofConstant(String value){
+        this(value, TptpFofSort.THING);
+    }
+
     /**
      * Constructor
-     * @param name the identifier name
+     * @param value the identifier name
      * @param sort the sort of this constant
      */
-    public TptpFofConstant(String name, TptpFofSort sort) {
-        this.name = name;
-        
-    	this.tptp_name = "c_" + name;
-        
-    	this.sort = sort;
+    public TptpFofConstant(String value, TptpFofSort sort) {
+        super(value, sort);
     }
 
-    /*
-     * Getter
-     */
-    
-    public String getName() {
-        return name;
-    }
-    
-    public TptpFofSort getSort(){
-    	return sort;
-    }
-    
-    /**
-     * Returns this constants tptp name
-     */
-    public String getTptpName(){
-    	return tptp_name;
-    }
-    
+
+	@Override
+	public void set(String value) {
+        if(value == null || value.length() == 0){
+            throw new IllegalArgumentException();
+        }
+        this.value = value.toLowerCase();
+	}
+
+	@Override
+	public String get() {
+		
+		return this.value;
+	}
+
     
 }

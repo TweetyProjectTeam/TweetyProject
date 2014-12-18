@@ -16,34 +16,19 @@
  */
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
+@SuppressWarnings("unused")
+public class TptpFofBinaryNonAssociative {
 
-/**
- * Negation for a given formula
- * @author Bastian Wolf
- */
-public class TptpFofNegation extends TptpFofUnitaryFormula {
-	/**
-	 * The actual formula 
-	 */
-    private TptpFofFormula formula;
+	private static final String TPTP_BIN_EQUAL = "<=>";
+	
+	private static final String TPTP_BIN_CON_RIGHT = "=>";
+	
+	private static final String TPTP_BIN_CON_LEFT = "<=";
+	
+	private static final String TPTP_BIN_ASSOC_LEFT_RIGHT = "<~>";
+	
+	private static final String TPTP_BIN_NOR = TptpFofLogicalSymbols.TPTP_NEGATION() + TptpFofLogicalSymbols.DISJUNCTION();
+	
+	private static final String TPTP_BIN_NAND = TptpFofLogicalSymbols.TPTP_NEGATION() + TptpFofLogicalSymbols.CONJUNCTION();
 
-    /**
-     * Static negation symbol
-     */
-    private static String negation = TptpFofLogicalSymbols.TPTP_NEGATION();
-
-    /*
-     * (non-Javadoc)
-     * @see net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofFormula#toString()
-     */
-    @Override
-    public String toString() {
-        return negation + this.formula.toString();
-    }
-
-	@Override
-	public boolean isParenthesized() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

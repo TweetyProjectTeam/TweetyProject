@@ -67,10 +67,10 @@ public class TptpFofLogicalSymbols extends LogicalSymbols {
 	// public static String CONTRADICTION() {
 	// return contradiction;
 	// }
-	// public static String PARENTHESES_LEFT() {
-	// return "(";
-	// }
-	// public static String PARENTHESES_RIGHT() {
-	// return ")";
-	// }
+	public static String PARENTHESES_LEFT() {
+	return "(";
+	}
+	public static String PARENTHESES_RIGHT() {
+	return ")";
+	}
 }

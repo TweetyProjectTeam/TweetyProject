@@ -1,47 +1,86 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
 /**
  * Variables are used in quantified formulas
  * Each Variable must begin with an upper case letter followed by any amount (>=0) of lower case letters 
- * author Bastian Wolf
+ * @author Bastian Wolf
  */
-public class TptpFofVariable {
+public class TptpFofVariable extends TptpFofStringTerm {
 
     /**
-     * The variable identifier must begin with an upper case character followed by optional lower case characters
+     * The variable value must begin with an upper case character followed by optional lower case characters
      */
-    private String identifier;
+    private String value;
 
     /**
-     * construct new variable with given (valid) identifier
-     * @param identifier the identifier given
+     * construct new variable with given (valid) value
+     * @param value the value given
      */
-    public TptpFofVariable(String identifier) {
-    	if(identifier.matches("[A-Z][a-z]*")){
-        	this.identifier = identifier;
+    public TptpFofVariable(String value) {
+    	super(value);
+    	if(value instanceof String)
+    	if(value.matches("[A-Z][a-z]*")){
+        	this.value = value;
     	}
-        else if (identifier.length()>1){
-        	this.identifier = identifier.substring(0, 0).toUpperCase() + identifier.substring(1, identifier.length()-1);
+        else if (value.length()>1){
+        	this.value = (String) value.substring(0, 0).toUpperCase() + value.substring(1, value.length()-1);
         }
         	else {
-        	this.identifier = identifier.toUpperCase();	
+        	this.value = (String) value.toUpperCase();	
         	}
     }
 
-    /**
-     * returns identifier
-     * @return identifier
-     */
-	public String getIdentifier() {
-		return identifier;
+   /*
+    * Getter
+    */
+	public String getvalue() {
+		return value;
 	}
 
 
 	/**
-	 * Simply just returns the identifier.
+	 * Simply just returns the value.
 	 */
 	@Override
 	public String toString() {
-		return identifier;
+		return value;
 	}
+
+	@Override
+	public void set(String value) {
+		if(value instanceof String && value.length() > 0)
+			if(value.matches("[A-Z][a-z]*")) {
+				this.value = value;
+			}
+			else if (value.length()>1){
+				this.value = (String) value.substring(0, 0).toUpperCase() + value.substring(1, value.length()-1);
+			}
+			else {
+				this.value = (String) value.toUpperCase();
+			}
+
+	}
+
+	@Override
+	public String get() {
+		
+		return this.value;
+	}
+
 }

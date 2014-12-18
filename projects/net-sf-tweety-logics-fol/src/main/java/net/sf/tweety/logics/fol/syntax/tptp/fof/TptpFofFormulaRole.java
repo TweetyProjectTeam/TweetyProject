@@ -16,34 +16,19 @@
  */
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
-
 /**
- * Negation for a given formula
+ * This class provides all tptp roles used within the tptp format.
+ * Currently only "axiom" and "conjecture" are used.
  * @author Bastian Wolf
+ *
  */
-public class TptpFofNegation extends TptpFofUnitaryFormula {
-	/**
-	 * The actual formula 
-	 */
-    private TptpFofFormula formula;
 
-    /**
-     * Static negation symbol
-     */
-    private static String negation = TptpFofLogicalSymbols.TPTP_NEGATION();
-
-    /*
-     * (non-Javadoc)
-     * @see net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofFormula#toString()
-     */
-    @Override
-    public String toString() {
-        return negation + this.formula.toString();
-    }
-
-	@Override
-	public boolean isParenthesized() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+public enum TptpFofFormulaRole {
+	// used
+	axiom , conjecture ,
+	// currently unused
+	hypothesis , definition , assumption ,
+    lemma , theorem ,  negated_conjecture ,
+    plain , fi_domain , fi_functors , fi_predicates ,
+    type , unknown
 }

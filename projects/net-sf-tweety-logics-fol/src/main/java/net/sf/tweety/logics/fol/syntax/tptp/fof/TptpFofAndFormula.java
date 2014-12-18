@@ -1,3 +1,19 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
 
@@ -5,81 +21,23 @@ package net.sf.tweety.logics.fol.syntax.tptp.fof;
  * This class implements the tptp-<fof_and_formula>
  * @author Bastian Wolf
  */
-public class TptpFofAndFormula {
+public class TptpFofAndFormula extends TptpFofBinaryAssociativeFormula {
 
-	/**
-	 * the left part of the formula
-	 */
-    private TptpFofFormula first;
+    private static final TptpFofAssociative assoc = new TptpFofAssociative(TptpFofLogicalSymbols.CONJUNCTION());
 
-    /**
-     * the right part of the formula
-     */
-    private TptpFofFormula second;
-
-    /**
-     * the binary associative, set to "&"
-     */
-    private static TptpFofAssociative assoc = new TptpFofAssociative(TptpFofLogicalSymbols.CONJUNCTION());
-
-    /**
-     * Constructor given left and right part of the formula
-     * @param first the left part of the formula
-     * @param second the right part of the formula
-     */
-    public TptpFofAndFormula(TptpFofFormula first, TptpFofFormula second) {
-        this.first = first;
-        this.second = second;
+    public TptpFofAndFormula(TptpFofFormula left, TptpFofFormula right) {
+        super(left, right, assoc);
     }
 
-    /*
-     * Getter
-     */   
-    public TptpFofFormula getFirst() {
-        return first;
-    }
-
-    public TptpFofFormula getSecond() {
-        return second;
-    }
-
-    public TptpFofAssociative getAssoc() {
-        return assoc;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @SuppressWarnings("static-access")
 	@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public boolean isUnitary() {
+		return isParenthesized();
+	}
 
-        TptpFofAndFormula that = (TptpFofAndFormula) o;
-
-        if (assoc != null ? !assoc.equals(that.assoc) : that.assoc != null) return false;
-        if (first != null ? !first.equals(that.first) : that.first != null) return false;
-        if (second != null ? !second.equals(that.second) : that.second != null) return false;
-
-        return true;
-    }
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        int result = first != null ? first.hashCode() : 0;
-        result = 31 * result + (second != null ? second.hashCode() : 0);
-        result = 31 * result + (assoc != null ? assoc.hashCode() : 0);
-        return result;
-    }
-    
-    //TODO
-    public String toString(){
-    	return null;
-    }
+	@Override
+	public boolean isParenthesized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

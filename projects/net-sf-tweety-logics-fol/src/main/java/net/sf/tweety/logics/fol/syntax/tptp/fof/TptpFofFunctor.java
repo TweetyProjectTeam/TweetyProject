@@ -1,6 +1,20 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
-
-import java.util.List;
 
 /**
  * 
@@ -10,106 +24,33 @@ import java.util.List;
  */
 public class TptpFofFunctor {
 	
-	/**
-	 * Atom name
-	 */
-	private TptpFofAtom name;
+	private String name;
+
 	
-	/**
-	 * list of arguments
-	 */
-	private List<TptpFofSort> arguments;
-	
-	/**
-	 * arity of arguments 
-	 */
-	private int arity;
-	
-	/**
-	 * 
-	 * @param name
-	 */
-	public TptpFofFunctor(TptpFofAtom name){
-		this.name = name;
-		this.arity=0;
+	public TptpFofFunctor() {
+		
 	}
 	
-	/**
-	 * 
-	 * @param name
-	 * @param arguments
-	 */
-	public TptpFofFunctor(TptpFofAtom name, List<TptpFofSort> arguments){
+	public TptpFofFunctor(String name) {
+		super();
 		this.name = name;
-		this.arguments = arguments;
-		this.arity = arguments.size();
 	}
 
-	/*
-	 * Getter
+	/**
+	 * @return the name
 	 */
-	public TptpFofAtom getName() {
+	public String getName() {
 		return name;
 	}
 
-	public List<TptpFofSort> getArguments() {
-		return arguments;
-	}
-
-	public int getArity() {
-		return arity;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * @param name the name to set
 	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((arguments == null) ? 0 : arguments.hashCode());
-		result = prime * result + arity;
-		result = prime * result
-				+ ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TptpFofFunctor other = (TptpFofFunctor) obj;
-		if (arguments == null) {
-			if (other.arguments != null)
-				return false;
-		} else if (!arguments.equals(other.arguments))
-			return false;
-		if (arity != other.arity)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		// TODO implement
-		return null;
-	}
+	
+	
+
 }

@@ -16,34 +16,10 @@
  */
 package net.sf.tweety.logics.fol.syntax.tptp.fof;
 
+public abstract class TptpFofUnitaryFormula extends TptpFofLogicFormula {
 
-/**
- * Negation for a given formula
- * @author Bastian Wolf
- */
-public class TptpFofNegation extends TptpFofUnitaryFormula {
-	/**
-	 * The actual formula 
-	 */
-    private TptpFofFormula formula;
-
-    /**
-     * Static negation symbol
-     */
-    private static String negation = TptpFofLogicalSymbols.TPTP_NEGATION();
-
-    /*
-     * (non-Javadoc)
-     * @see net.sf.tweety.logics.fol.syntax.tptp.fof.TptpFofFormula#toString()
-     */
-    @Override
-    public String toString() {
-        return negation + this.formula.toString();
-    }
-
-	@Override
-	public boolean isParenthesized() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isUnitary(){
+		return true;
 	}
+	
 }
