@@ -59,7 +59,8 @@ public class GlpkSolver extends Solver {
 			File outputFile = File.createTempFile("lpoutput", null, GlpkSolver.tmpFolder);
 			File lpFile = File.createTempFile("lptmp", null, GlpkSolver.tmpFolder);
 			// Delete temp file when program exits.
-			lpFile.deleteOnExit();    
+			lpFile.deleteOnExit();
+			outputFile.deleteOnExit();   
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(lpFile));
 			out.write(((OptimizationProblem)problem).convertToCplexLpFormat());
