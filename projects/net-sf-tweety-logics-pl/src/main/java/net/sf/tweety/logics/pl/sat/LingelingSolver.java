@@ -65,6 +65,7 @@ public class LingelingSolver extends SatSolver {
 			// create temporary file in Dimacs CNF format.
 			File f = SatSolver.createTmpDimacsFile(formulas,props);
 			String output = Exec.invokeExecutable(this.binaryLocation + " -q --witness " + f.getAbsolutePath());
+			f.delete();
 			if(output.indexOf("UNSATISFIABLE") != -1)
 				return null;
 			// parse the model	
