@@ -16,6 +16,8 @@
  */
 package net.sf.tweety.arg.dung.syntax;
 
+import net.sf.tweety.arg.dung.ldo.syntax.LdoArgument;
+import net.sf.tweety.arg.dung.ldo.syntax.LdoFormula;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.Node;
 
@@ -24,7 +26,7 @@ import net.sf.tweety.graphs.Node;
  * @author Matthias Thimm
  *
  */
-public class Argument implements Formula, Node{
+public class Argument implements DungEntity, Node{
 	/**
 	 * The name of the argument.
 	 */
@@ -82,5 +84,17 @@ public class Argument implements Formula, Node{
 	 */
 	public String toString(){
 		return name;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.syntax.DungEntity#getLdoFormula()
+	 */
+	@Override
+	public LdoFormula getLdoFormula() {
+		return getLdoArgument();
+	}
+	
+	public LdoArgument getLdoArgument(){
+		return new LdoArgument(this.name);
 	}
 }

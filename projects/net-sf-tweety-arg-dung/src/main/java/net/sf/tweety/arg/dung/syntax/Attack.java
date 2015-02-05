@@ -18,6 +18,9 @@ package net.sf.tweety.arg.dung.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.arg.dung.ldo.syntax.LdoFormula;
+import net.sf.tweety.arg.dung.ldo.syntax.LdoNegation;
+import net.sf.tweety.arg.dung.ldo.syntax.LdoRelation;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.DirectedEdge;
 
@@ -28,7 +31,7 @@ import net.sf.tweety.graphs.DirectedEdge;
  * @author Matthias Thimm
  *
  */
-public class Attack extends DirectedEdge<Argument> implements Formula {
+public class Attack extends DirectedEdge<Argument> implements DungEntity {
 
 	/**
 	 * Default constructor; initializes the two arguments used in this attack relation
@@ -119,6 +122,14 @@ public class Attack extends DirectedEdge<Argument> implements Formula {
 	 */
 	public int hashCode(){
 		return this.getAttacked().hashCode() + 7 * this.getAttacker().hashCode();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.syntax.DungEntity#getLdoFormula()
+	 */
+	@Override
+	public LdoFormula getLdoFormula() {
+		return new LdoRelation(this.getAttacker().getLdoFormula(), new LdoNegation(this.getAttacked().getLdoFormula()));
 	}
 
 }
