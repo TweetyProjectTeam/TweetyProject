@@ -4,19 +4,19 @@ import java.util.Set;
 
 public class LdoGraphDiamondModality extends AbstractGraphLdoModality{
 	
-	public LdoGraphDiamondModality(LdoFormula innerFormula,	Set<LdoArgument> referenceArguments) {
-		super(innerFormula, referenceArguments);
+	public LdoGraphDiamondModality(LdoFormula innerFormula,	Set<LdoArgument> lowerReferenceArguments, Set<LdoArgument> upperReferenceArguments) {
+		super(innerFormula, lowerReferenceArguments,upperReferenceArguments);
 	}
 
 	@Override
 	public LdoFormula clone() {
-		return new LdoGraphBoxModality(this.getInnerFormula(),this.getReferenceArguments());
+		return new LdoGraphBoxModality(this.getInnerFormula(),this.getLowerReferenceArguments(),this.getUpperReferenceArguments());
 	}
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return "<" + this.getReferenceArguments() + ">(" + this.getInnerFormula() + ")";
+		return "<" + this.getLowerReferenceArguments() + "," + this.getUpperReferenceArguments() + ">(" + this.getInnerFormula() + ")";
 	}
 }

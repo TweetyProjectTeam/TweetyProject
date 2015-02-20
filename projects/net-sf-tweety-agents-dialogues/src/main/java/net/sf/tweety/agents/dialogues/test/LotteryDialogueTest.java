@@ -115,6 +115,6 @@ public class LotteryDialogueTest {
 		//baseline
 		LotteryDialogueTest.runSimulation(true);
 		//actual agent
-		LotteryDialogueTest.runSimulation(false);
+		//LotteryDialogueTest.runSimulation(false);
 	}
 }

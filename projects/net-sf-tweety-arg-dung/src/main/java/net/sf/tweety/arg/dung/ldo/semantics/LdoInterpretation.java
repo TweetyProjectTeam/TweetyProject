@@ -97,14 +97,18 @@ public class LdoInterpretation extends AbstractInterpretation {
 		if(formula instanceof AbstractLdoModality){
 			LdoFormula innerFormula = ((AbstractLdoModality)formula).getInnerFormula();
 			if(formula instanceof AbstractGraphLdoModality){
-				Set<LdoArgument> ref = ((AbstractGraphLdoModality)formula).getReferenceArguments();
-				Set<Argument> refArgs = new HashSet<Argument>();
-				for(LdoArgument a: ref)
-					refArgs.add(a.getArgument());
+				Set<LdoArgument> refLower = ((AbstractGraphLdoModality)formula).getLowerReferenceArguments();
+				Set<LdoArgument> refUpper = ((AbstractGraphLdoModality)formula).getUpperReferenceArguments();
+				Set<Argument> refArgsLower = new HashSet<Argument>();
+				Set<Argument> refArgsUpper = new HashSet<Argument>();
+				for(LdoArgument a: refLower)
+					refArgsLower.add(a.getArgument());
+				for(LdoArgument a: refUpper)
+					refArgsUpper.add(a.getArgument());
 				if(formula instanceof LdoGraphBoxModality){
 					for(Graph<Argument> t: theory.getSubgraphs()){
 						DungTheory th = new DungTheory(t);
-						if(th.containsAll(refArgs)){
+						if(th.containsAll(refArgsLower) && refArgsUpper.containsAll(th)){
 							LdoInterpretation i = new LdoInterpretation(th, this.ext, this.sem);
 							if(!i.satisfies(innerFormula))
 								return false;
@@ -115,7 +119,7 @@ public class LdoInterpretation extends AbstractInterpretation {
 				if(formula instanceof LdoGraphDiamondModality){
 					for(Graph<Argument> t: theory.getSubgraphs()){
 						DungTheory th = new DungTheory(t);
-						if(th.containsAll(refArgs)){
+						if(th.containsAll(refArgsLower) && refArgsUpper.containsAll(th)){
 							LdoInterpretation i = new LdoInterpretation(th, this.ext, this.sem);
 							if(i.satisfies(innerFormula))
 								return true;

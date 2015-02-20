@@ -42,10 +42,14 @@ public class LdoTest {
 		queries.add(a.getLdoFormula());
 		queries.add(b.getLdoFormula());
 		queries.add(c.getLdoFormula());
-		Set<LdoArgument> ref = new HashSet<LdoArgument>();
-		ref.add(b.getLdoArgument());
-		queries.add(new LdoGraphDiamondModality(new LdoDiamondModality(b.getLdoFormula()),ref));
-		queries.add(new LdoGraphBoxModality(new LdoDiamondModality(b.getLdoFormula()),ref));
+		Set<LdoArgument> refLower = new HashSet<LdoArgument>();
+		refLower.add(b.getLdoArgument());
+		Set<LdoArgument> refUpper = new HashSet<LdoArgument>();
+		refUpper.add(a.getLdoArgument());
+		refUpper.add(b.getLdoArgument());
+		refUpper.add(c.getLdoArgument());
+		queries.add(new LdoGraphDiamondModality(new LdoDiamondModality(b.getLdoFormula()),refLower,refUpper));
+		queries.add(new LdoGraphBoxModality(new LdoDiamondModality(b.getLdoFormula()),refLower,refUpper));
 		
 		
 		LdoInterpretation i = new LdoInterpretation(theory, Semantics.GROUNDED_SEMANTICS);

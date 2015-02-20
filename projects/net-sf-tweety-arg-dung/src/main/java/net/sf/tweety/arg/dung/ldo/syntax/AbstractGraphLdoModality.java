@@ -11,33 +11,45 @@ import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
  */
 public abstract class AbstractGraphLdoModality extends AbstractLdoModality {
 
-	private Set<LdoArgument> referenceArguments;
+	private Set<LdoArgument> upperReferenceArguments;
+	private Set<LdoArgument> lowerReferenceArguments;
 	
-	public AbstractGraphLdoModality(LdoFormula innerFormula, Set<LdoArgument> referenceArguments) {
+	public AbstractGraphLdoModality(LdoFormula innerFormula, Set<LdoArgument> lowerReferenceArguments, Set<LdoArgument> upperReferenceArguments) {
 		super(innerFormula);
-		this.referenceArguments = referenceArguments;
+		this.lowerReferenceArguments = lowerReferenceArguments;
+		this.upperReferenceArguments = upperReferenceArguments;
 	}
 
+	/**
+	 * Returns the lower reference arguments of this modality.
+	 * @return the lower reference arguments of this modality.
+	 */
+	public Set<LdoArgument> getLowerReferenceArguments(){
+		return this.lowerReferenceArguments;
+	}
 	
 	/**
-	 * Returns the reference arguments of this modality.
-	 * @return the reference arguments of this modality.
+	 * Returns the upper reference arguments of this modality.
+	 * @return the upper reference arguments of this modality.
 	 */
-	public Set<LdoArgument> getReferenceArguments(){
-		return this.referenceArguments;
+	public Set<LdoArgument> getUpperReferenceArguments(){
+		return this.upperReferenceArguments;
 	}
 	
 	@Override
 	public Set<LdoArgument> getAtoms() {
 		Set<LdoArgument> result = super.getAtoms();
-		result.addAll(referenceArguments);
+		result.addAll(lowerReferenceArguments);
+		result.addAll(upperReferenceArguments);
 		return result;
 	}
 	
 	@Override
 	public Set<PropositionalPredicate> getPredicates() {
 		Set<PropositionalPredicate> result = super.getPredicates();
-		for(LdoArgument a: this.referenceArguments)
+		for(LdoArgument a: this.lowerReferenceArguments)
+			result.add(a.getPredicate());
+		for(LdoArgument a: this.upperReferenceArguments)
 			result.add(a.getPredicate());
 		return result;
 	}
