@@ -21,7 +21,29 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 
 public class LdoTest {
 
+	public static void testDivider(){
+		DungTheory theory = new DungTheory();
+		Argument a = new Argument("a");
+		Argument b = new Argument("b");
+		Argument c = new Argument("c");
+		Attack ab = new Attack(a,b);
+		Attack bc = new Attack(b,c);
+		theory.add(a);
+		theory.add(b);
+		theory.add(c);
+		theory.add(ab);
+		theory.add(bc);
+		
+		System.out.println("Argumentation framework G=" + theory);
+		System.out.println();
+		
+		LdoFormula f = c.getLdoFormula();
+		
+		System.out.println(f.getDividers(theory, Semantics.GROUNDED_SEMANTICS));
+	}
+	
 	public static void main(String[] args){
+		testDivider(); System.exit(0);
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");

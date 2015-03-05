@@ -113,8 +113,8 @@ public class LotteryDialogueTest {
 		LotteryDialogueTest.frameworkSize = 10;		
 		LotteryDialogueTest.enforceTreeShape = true;
 		//baseline
-		LotteryDialogueTest.runSimulation(true);
+		//LotteryDialogueTest.runSimulation(true);
 		//actual agent
-		//LotteryDialogueTest.runSimulation(false);
+		LotteryDialogueTest.runSimulation(false);
 	}
 }

@@ -110,7 +110,7 @@ public class LotteryAgent extends Agent {
 		for(Set<Argument> posMove: new SetTools<Argument>().subsets(this.theory)){
 			//System.out.println( i++ + " of " + k + "\t" + bestUtility);
 			Extension move = new Extension(posMove);
-			SubgraphProbabilityFunction updFunc = this.prob.update(move);
+			SubgraphProbabilityFunction updFunc = this.prob.naiveUpdate(move);
 			ArgumentationLottery lot = new ArgumentationLottery(this.util.keySet(), updFunc, this.semantics);
 			Double d = this.util.getExpectedUtility(lot);
 			if(d > bestUtility){

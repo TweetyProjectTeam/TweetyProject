@@ -16,9 +16,15 @@
  */
 package net.sf.tweety.arg.dung.ldo.syntax;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.ldo.semantics.LdoInterpretation;
+import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungSignature;
+import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
@@ -73,6 +79,24 @@ public abstract class LdoFormula implements ClassicalFormula{
 	 */
 	public abstract Set<LdoFormula> getLiterals();
 
+	/**
+	 * Returns the dividers for this formula, i.e. all sub-theories of the given
+	 * theory such that this formula is satisfied by this sub-theory.
+	 * @param theory some argumentation framework
+	 * @param semantics some semantics
+	 * @return the set of dividers of this formula
+	 */
+	public Collection<DungTheory> getDividers(DungTheory theory, int semantics){
+		Collection<DungTheory> result = new HashSet<DungTheory>();
+		for(Graph<Argument> g: theory.getSubgraphs()){
+			DungTheory sub = new DungTheory(g);
+			LdoInterpretation i = new LdoInterpretation(sub,semantics);
+			if(i.satisfies(this))
+				result.add(sub);			
+		}		
+		return result;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.syntax.interfaces.ProbabilityAware#getUniformProbability()
 	 */

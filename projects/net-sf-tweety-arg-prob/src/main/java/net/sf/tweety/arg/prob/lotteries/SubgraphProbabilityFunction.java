@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.divisions.Division;
+import net.sf.tweety.arg.dung.ldo.syntax.LdoFormula;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
@@ -90,8 +91,25 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	}
 	
 	/**
+	 * Returns the probability of the given formula being acceptable wrt.
+	 * the given semantics and this probability function, i.e. the sum
+	 * of the probabilities of all sub-graphs that are dividers of the 
+	 * given formula.  
+	 * @param f some formula
+	 * @param semantics some semantics.
+	 * @return a probability
+	 */
+	public Probability getAcceptanceProbability(LdoFormula f, int semantics){
+		double p = 0;
+		for(Graph<Argument> divider: f.getDividers(this.theory, semantics)){
+			p += this.probability(new DungTheory(divider)).doubleValue();
+		}
+		return new Probability(p);		
+	}
+	
+	/**
 	 * Returns the probability of the given division being acceptable wrt.
-	 * the given semantics and this probability functions, i.e. the sum
+	 * the given semantics and this probability function, i.e. the sum
 	 * of the probabilities of all sub-graphs that are dividers of the 
 	 * given division.  
 	 * @param d some division
@@ -139,7 +157,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * Afterwards the function is normalized.
 	 * @param e some extension
 	 */
-	public SubgraphProbabilityFunction update(Extension e){
+	public SubgraphProbabilityFunction naiveUpdate(Extension e){
 		SubgraphProbabilityFunction func = new SubgraphProbabilityFunction(this.theory);
 		for(DungTheory t: this.keySet())
 			if(t.containsAll(e))
@@ -147,5 +165,36 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 			else func.put(t, new Probability(0d));
 		func.normalize();
 		return func;
+	}
+	
+	/**
+	 * Updates this probability function with the given theory using
+	 * "simple redistribution", cf. [Hunter, Thimm, 2015].
+	 * @param theory some abstract theory
+	 */
+	public SubgraphProbabilityFunction simpleUpdate(DungTheory theory){
+		//TODO
+		return null;
+	}
+	
+	/**
+	 * Updates this probability function with the given theory using
+	 * "sticky redistribution", cf. [Hunter, Thimm, 2015].
+	 * @param theory some abstract theory
+	 * @param stickyCoefficient the sticky coefficient
+	 */
+	public SubgraphProbabilityFunction stickyUpdate(DungTheory theory, double stickyCoefficient){
+		//TODO
+		return null;
+	}
+	
+	/**
+	 * Updates this probability function with the given theory using
+	 * "rough redistribution", cf. [Hunter, Thimm, 2015].
+	 * @param theory some abstract theory
+	 */
+	public SubgraphProbabilityFunction roughUpdate(DungTheory theory){
+		//TODO
+		return null;
 	}
 }
