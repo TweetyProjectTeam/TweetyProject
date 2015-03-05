@@ -65,7 +65,7 @@ public class OpenOptSolver extends Solver {
 	public double xtol = 1e-8;
 	public double maxIter = 1e16;
 	public double maxFunEvals = 1e16;
-	public String solver = "lincher";
+	public String solver = "ralg";
 	public boolean ignoreNotFeasibleError = false;
 	
 	/**
