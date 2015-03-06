@@ -388,6 +388,18 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	}
 
 	/**
+	 * Adds all arguments and attacks of the given theory to
+	 * this theory
+	 * @param theory some Dung theory
+	 * @return "true" if this Dung Theory has been modified 
+	 */
+	public boolean add(DungTheory theory){
+		boolean b1 = this.addAll(theory);
+		boolean b2 = this.addAllAttacks(theory.getAttacks());
+		return b1 || b2 ;		
+	}
+	
+	/**
 	 * Returns all attacks of this theory.
 	 * @return all attacks of this theory.
 	 */

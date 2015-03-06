@@ -17,6 +17,8 @@
 package net.sf.tweety.arg.prob.lotteries;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.divisions.Division;
@@ -24,6 +26,7 @@ import net.sf.tweety.arg.dung.ldo.syntax.LdoFormula;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.probability.ProbabilityFunction;
@@ -173,8 +176,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * @param theory some abstract theory
 	 */
 	public SubgraphProbabilityFunction simpleUpdate(DungTheory theory){
-		//TODO
-		return null;
+		return this.stickyUpdate(theory, 1);
 	}
 	
 	/**
@@ -184,8 +186,24 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * @param stickyCoefficient the sticky coefficient
 	 */
 	public SubgraphProbabilityFunction stickyUpdate(DungTheory theory, double stickyCoefficient){
-		//TODO
-		return null;
+		SubgraphProbabilityFunction func = new SubgraphProbabilityFunction(this.theory);
+		double p;
+		for(DungTheory t: this.keySet()){
+			if(t.containsAll(theory)){
+				p = 0;
+				Collection<Graph<Argument>> subtheories = t.getSubgraphs();
+				for(Graph<Argument> sub: subtheories){
+					DungTheory subTheory = new DungTheory(sub);
+					subTheory.add(theory);
+					if(subTheory.equals(t)){
+						p += this.probability(subTheory).doubleValue();
+					}
+				}				
+				func.put(t, new Probability(stickyCoefficient * p + (1-stickyCoefficient) * this.probability(t).doubleValue()));
+			}
+			else func.put(t, new Probability(this.probability(t).doubleValue() * (1-stickyCoefficient)));
+		}
+		return func;
 	}
 	
 	/**
@@ -194,7 +212,50 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * @param theory some abstract theory
 	 */
 	public SubgraphProbabilityFunction roughUpdate(DungTheory theory){
-		//TODO
-		return null;
+		SubgraphProbabilityFunction func = new SubgraphProbabilityFunction(this.theory);
+		double p;
+		for(DungTheory t: this.keySet()){
+			if(t.containsAll(theory)){
+				p = 0;
+				Collection<Graph<Argument>> subtheories = t.getSubgraphs();
+				for(Graph<Argument> sub: subtheories){
+					DungTheory subTheory = new DungTheory(sub);
+					subTheory.add(theory);
+					if(t.containsAll(subTheory)){
+						Set<Attack> superGraphs = this.superGraphs(this.theory, subTheory, theory);
+						SetTools<Attack> setTools = new SetTools<Attack>();
+						Collection<Set<Attack>> subsets = setTools.subsets(superGraphs);
+						for(Collection<Attack> subAttacks: subsets){
+							DungTheory subsubTheory = new DungTheory();
+							subsubTheory.add(subTheory);
+							subsubTheory.addAllAttacks(subAttacks);
+							if(subsubTheory.equals(t)){
+								p += this.probability(subTheory).doubleValue() * 1/subsets.size();
+							}
+						}
+					}
+				}
+				func.put(t, new Probability(p));
+			}
+			else func.put(t, new Probability(0d));
+		}
+		return func;
+	}
+	
+	/**
+	 * Computes Super(G,G′,Ci) = {(α,β) ∈ Arcs(G) | (α ∈ Nodes(G′) and β ∈ Nodes(Ci))
+	 * 	or (α ∈ Nodes(Ci) and β ∈ Nodes(G′))
+     * 	or (α ∈ Nodes(Ci) and β ∈ Nodes(Ci))
+	 * @return
+	 */
+	private Set<Attack> superGraphs(DungTheory g, DungTheory gp, DungTheory c){
+		Set<Attack> attacks = new HashSet<Attack>();
+		for(Attack at: g.getAttacks()){
+			if(gp.contains(at.getAttacker())&& c.contains(at.getAttacked()) ||
+					c.contains(at.getAttacker())&& gp.contains(at.getAttacked()) ||
+					c.contains(at.getAttacker())&& c.contains(at.getAttacked()))
+				attacks.add(at);
+		}
+		return attacks;
 	}
 }
