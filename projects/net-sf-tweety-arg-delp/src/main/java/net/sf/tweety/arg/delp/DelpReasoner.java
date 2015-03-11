@@ -68,15 +68,15 @@ public class DelpReasoner extends Reasoner {
 		if(!f.isLiteral())
 			throw new IllegalArgumentException("Formula is expected to be a literal.");
 		Answer answer = new Answer(this.getKnowledgBase(),f);
-		answer.setAnswer(false);
-		answer.appendText("The answer is: false");
 		for(DelpArgument arg: this.getWarrants()){
 			if(arg.getConclusion().equals(query)){
 				answer.setAnswer(true);
 				answer.appendText("The answer is: true");
-				break;
+				return answer;
 			}
 		}
+		answer.setAnswer(false);
+		answer.appendText("The answer is: false");
 		return answer;
 	}
 	
@@ -91,7 +91,7 @@ public class DelpReasoner extends Reasoner {
 		Iterator<DelpArgument> it = all_arguments.iterator();
 		while(it.hasNext()){
 			DelpArgument argument = it.next();
-			if(this.isWarrant((DelpArgument)argument,arguments))
+			if(this.isWarrant((DelpArgument)argument,all_arguments))
 				arguments.add((DelpArgument)argument);
 		}
 		return arguments;
