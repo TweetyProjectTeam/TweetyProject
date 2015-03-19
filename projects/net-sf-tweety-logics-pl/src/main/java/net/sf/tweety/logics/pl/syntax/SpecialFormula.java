@@ -72,4 +72,11 @@ public abstract class SpecialFormula extends PropositionalFormula {
 		conj.add(disj);
 		return conj;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
+	 */
+	public PropositionalFormula trim(){
+		return this;
+	}
 }

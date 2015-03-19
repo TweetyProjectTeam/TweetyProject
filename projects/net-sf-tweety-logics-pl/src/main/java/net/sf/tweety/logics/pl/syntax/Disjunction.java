@@ -128,7 +128,17 @@ public class Disjunction extends AssociativePropositionalFormula {
 				disj.addAll(((Disjunction)f));
 			newConjs.add(disj);
 		}		
-		return new Conjunction(newConjs);
+		return (Conjunction) new Conjunction(newConjs).trim();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
+	 */
+	public PropositionalFormula trim(){
+		Set<PropositionalFormula> disj = new HashSet<PropositionalFormula>();
+		for(PropositionalFormula f: this.support)
+			disj.add(f.trim());
+		return new Disjunction(disj);
 	}
 	
 	/* (non-Javadoc)

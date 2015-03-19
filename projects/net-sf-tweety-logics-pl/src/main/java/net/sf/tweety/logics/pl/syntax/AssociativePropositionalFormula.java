@@ -123,7 +123,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	public Signature createEmptySignature() {
 		return new PropositionalSignature();
 	}
-	
+		
 	//-------------------------------------------------------------------------
 	//	UTILITY METHODS
 	//-------------------------------------------------------------------------
@@ -136,7 +136,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((support == null) ? 0 : support.hashCode());
+				+ ((support == null) ? 0 : support.getFormulas().hashCode());
 		return result;
 	}
 
@@ -155,7 +155,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 		if (support == null) {
 			if (other.support != null)
 				return false;
-		} else if (!support.equals(other.support))
+		} else if (!support.getFormulas().equals(other.support.getFormulas()))
 			return false;
 		return true;
 	}

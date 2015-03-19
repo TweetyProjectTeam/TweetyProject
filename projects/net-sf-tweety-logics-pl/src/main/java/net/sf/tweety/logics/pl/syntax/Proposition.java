@@ -127,6 +127,13 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 		return new Proposition(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
+	 */
+	public PropositionalFormula trim(){
+		return this;
+	}
+	
 	@Override
 	public void addArgument(Term<?> arg) {
 		throw new UnsupportedOperationException("addArgument not supported by Propositional-Logic");

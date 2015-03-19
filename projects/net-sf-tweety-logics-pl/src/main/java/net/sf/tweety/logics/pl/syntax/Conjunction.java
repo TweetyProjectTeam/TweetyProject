@@ -121,9 +121,18 @@ public class Conjunction extends AssociativePropositionalFormula {
 		for(PropositionalFormula conjunct: this)
 			for(PropositionalFormula f: conjunct.toCnf())
 			cnf.add(f);		
-		return new Conjunction(cnf);
+		return (Conjunction) new Conjunction(cnf).trim();
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
+	 */
+	public PropositionalFormula trim(){
+		Set<PropositionalFormula> conj = new HashSet<PropositionalFormula>();
+		for(PropositionalFormula f: this.support)
+			conj.add(f.trim());
+		return new Conjunction(conj);
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)

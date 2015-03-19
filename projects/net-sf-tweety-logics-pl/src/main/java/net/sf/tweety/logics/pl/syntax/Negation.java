@@ -113,6 +113,16 @@ public class Negation extends PropositionalFormula {
 	}
 
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
+	 */
+	public PropositionalFormula trim(){
+		PropositionalFormula f = this.formula.trim();
+		if(f instanceof Negation)
+			return ((Negation)f).formula;
+		return new Negation(f);
+	}
+	
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

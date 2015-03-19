@@ -79,6 +79,13 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	public abstract Set<PropositionalPredicate> getPredicates();
 	
 	/**
+	 * Removes duplicates (identical formulas) from conjunctions and disjunctions and
+	 * duplicate negations.
+	 * @return an equivalent formula without duplicates.
+	 */
+	public abstract PropositionalFormula trim();
+	
+	/**
 	 * Returns this formula's probability in the uniform distribution. 
 	 * @return this formula's probability in the uniform distribution.
 	 */

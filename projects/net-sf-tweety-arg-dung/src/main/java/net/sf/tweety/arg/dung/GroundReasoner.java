@@ -58,8 +58,8 @@ public class GroundReasoner extends AbstractExtensionReasoner {
 		Extension ext = new Extension();
 		int size;
 		do{
-			size = ext.size();
-			ext = ((DungTheory)this.getKnowledgBase()).faf(ext);
+			size = ext.size();			
+			ext = ((DungTheory)this.getKnowledgBase()).faf(ext);			
 		}while(size!=ext.size());
 		Set<Extension> extensions = new HashSet<Extension>();
 		extensions.add(ext);
