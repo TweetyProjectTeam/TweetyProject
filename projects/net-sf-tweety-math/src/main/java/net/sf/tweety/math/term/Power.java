@@ -82,6 +82,8 @@ public class Power extends FunctionalTerm {
 	 */
 	@Override
 	public Term derive(Variable v) throws NonDifferentiableException {
+		if(!power.getVariables().contains(v))
+			return power.mult(new Power(this.getTerm(),power.minus(new FloatConstant(1))));
 		return new Power(this.getTerm(),this.power).mult(this.power.derive(v).mult(new Logarithm(this.getTerm())).add(new Fraction(this.power,this.getTerm()).mult(this.getTerm().derive(v)) ));
 	}
 

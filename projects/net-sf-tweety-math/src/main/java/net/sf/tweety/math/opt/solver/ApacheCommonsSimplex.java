@@ -42,8 +42,6 @@ import org.apache.commons.math.optimization.linear.LinearConstraint;
 import org.apache.commons.math.optimization.linear.LinearObjectiveFunction;
 import org.apache.commons.math.optimization.linear.Relationship;
 import org.apache.commons.math.optimization.linear.SimplexSolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,7 +54,7 @@ public class ApacheCommonsSimplex extends Solver {
 	/**
 	 * Logger.
 	 */
-	private Logger log = LoggerFactory.getLogger(ApacheCommonsSimplex.class);
+	//private Logger log = LoggerFactory.getLogger(ApacheCommonsSimplex.class);
 	
 	/**
 	 * The maximum number of iterations of the simplex algorithm.
@@ -75,7 +73,7 @@ public class ApacheCommonsSimplex extends Solver {
 	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) {
 		if(!problem.isLinear())
 			throw new IllegalArgumentException("Simplex algorithm is for linear problems only.");
-		this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");				
+		//this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");				
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
 		for(Statement s: problem)
@@ -149,7 +147,7 @@ public class ApacheCommonsSimplex extends Solver {
 		}
 		// 6.) Optimize.
 		try{
-			this.log.info("Calling the Apache Commons Simplex algorithm.");
+			//this.log.info("Calling the Apache Commons Simplex algorithm.");
 			SimplexSolver solver = new SimplexSolver(0.01);
 			solver.setMaxIterations(this.MAXITERATIONS);
 			RealPointValuePair r = null;
@@ -157,13 +155,13 @@ public class ApacheCommonsSimplex extends Solver {
 				int type = ((OptimizationProblem)problem).getType();
 				r = solver.optimize(target, finalConstraints, (type == OptimizationProblem.MINIMIZE)?(GoalType.MINIMIZE):(GoalType.MAXIMIZE), this.onlyPositive);
 			}else r = solver.optimize(target, finalConstraints, GoalType.MINIMIZE, this.onlyPositive);
-			this.log.info("Parsing output from the Apache Commons Simplex algorithm.");
+			//this.log.info("Parsing output from the Apache Commons Simplex algorithm.");
 			Map<Variable, Term> result = new HashMap<Variable, Term>();
 			for(Variable v: origVars2Idx.keySet())
 				result.put(v, new FloatConstant(r.getPoint()[origVars2Idx.get(v)]));
 			return result;
 		}catch(OptimizationException e){
-			log.error(e.getMessage());
+			//log.error(e.getMessage());
 			throw new ProblemInconsistentException();
 		}
 	}

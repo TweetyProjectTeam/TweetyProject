@@ -79,14 +79,14 @@ public class NewtonRootFinder extends RootFinder {
 		// We first need the Jacobian of the (multi-dimensional) function
 		List<List<Term>> jacobian = new LinkedList<List<Term>>();
 		if(this.jacobian == null){
-			System.out.println("Determining jacobian...");			
+			//System.out.println("Determining jacobian...");			
 			for(Term t: f){
 				List<Term> row = new LinkedList<Term>();
 				for(Variable v: variables)				
 					row.add(t.derive(v).simplify());	
 				jacobian.add(row);
 			}
-			System.out.println("Determining jacobian... finished");
+			//System.out.println("Determining jacobian... finished");
 			this.jacobian = jacobian;
 		}else jacobian = this.jacobian;
 		// iterate and refine current guess
@@ -98,7 +98,7 @@ public class NewtonRootFinder extends RootFinder {
 		int idx, fixit;
 		double actualPrecision = NewtonRootFinder.PRECISION * variables.size();
 		do{
-			System.out.println("Iterating...");
+			//System.out.println("Iterating...");
 			currentJacobianValue = this.evaluateMatrix(jacobian, currentGuess);
 			currentVector = new LinkedList<Double>();
 			for(Variable v: variables)
@@ -125,7 +125,7 @@ public class NewtonRootFinder extends RootFinder {
 			}			
 			currentGuess.putAll(nextGuess);
 			currentValue = nextValue;
-			System.out.println("Current distance to zero: " + VectorTools.manhattanDistanceToZero(currentValue));
+			//System.out.println("Current distance to zero: " + VectorTools.manhattanDistanceToZero(currentValue));
 		}while(VectorTools.manhattanDistanceToZero(currentValue) > actualPrecision);		
 		return currentGuess;
 	}
