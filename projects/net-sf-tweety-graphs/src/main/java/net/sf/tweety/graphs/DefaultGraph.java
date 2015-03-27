@@ -19,7 +19,9 @@ package net.sf.tweety.graphs;
 import java.util.*;
 
 import net.sf.tweety.commons.util.SetTools;
-import Jama.Matrix;
+import net.sf.tweety.math.matrix.Matrix;
+import net.sf.tweety.math.term.IntegerConstant;
+
 
 /**
  * Instance of this class represent graphs with
@@ -181,7 +183,7 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 		for(T a: this.nodes){
 			j = 0;
 			for(T b : this.nodes){
-				m.set(i, j, this.areAdjacent(a, b) ? 1 : 0);				
+				m.setEntry(i, j, new IntegerConstant(this.areAdjacent(a, b) ? 1 : 0));				
 				j++;
 			}
 			i++;

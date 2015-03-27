@@ -18,11 +18,12 @@ package net.sf.tweety.arg.dung;
 
 import java.util.*;
 
-import Jama.Matrix;
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.*;
+import net.sf.tweety.math.matrix.Matrix;
+import net.sf.tweety.math.term.IntegerConstant;
 
 
 /**
@@ -540,7 +541,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 		for(Argument a: this){
 			j = 0;
 			for(Argument b : this){
-				m.set(i, j, this.areAdjacent(a, b) ? 1 : 0);				
+				m.setEntry(i, j, new IntegerConstant(this.areAdjacent(a, b) ? 1 : 0));				
 				j++;
 			}
 			i++;

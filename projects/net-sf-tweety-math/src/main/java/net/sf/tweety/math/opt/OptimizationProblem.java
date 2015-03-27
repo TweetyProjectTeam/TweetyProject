@@ -291,6 +291,7 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		//TODO: solve the following workarounds
 		result = result.replaceAll("-1\\ ", "-");
 		result = result.replaceAll("--", "");
+		result = result.replaceAll("\\*", "");
 		result = result.replaceAll("\\+ 0\\.5\\ -", "- 0.5\\ ");
 		result = result.replaceAll("\\+ -", "-");
 		result = result.replaceAll("-0", "");

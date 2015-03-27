@@ -19,37 +19,26 @@ package net.sf.tweety.graphs.test;
 import net.sf.tweety.graphs.DefaultGraph;
 import net.sf.tweety.graphs.DirectedEdge;
 import net.sf.tweety.graphs.Graph;
-import net.sf.tweety.graphs.Node;
+import net.sf.tweety.graphs.SimpleNode;
 import net.sf.tweety.graphs.util.GraphUtil;
 import net.sf.tweety.math.ComplexNumber;
 
 public class GraphTest {
 	
-	public class SimpleNode implements Node{
-		private String name;
-		public SimpleNode(String s){
-			this.name = s;
-		}
-		public String toString(){
-			return this.name;
-		}
-		
-	}
-	
 	public void run(){
 		Graph<SimpleNode> g = new DefaultGraph<SimpleNode>();
 		SimpleNode[] nodes = new SimpleNode[11];
-		nodes[0] = new GraphTest.SimpleNode("A");
-		nodes[1] = new GraphTest.SimpleNode("B");
-		nodes[2] = new GraphTest.SimpleNode("C");
-		nodes[3] = new GraphTest.SimpleNode("D");
-		nodes[4] = new GraphTest.SimpleNode("E");
-		nodes[5] = new GraphTest.SimpleNode("F");
-		nodes[6] = new GraphTest.SimpleNode("G");
-		nodes[7] = new GraphTest.SimpleNode("H");
-		nodes[8] = new GraphTest.SimpleNode("I");
-		nodes[9] = new GraphTest.SimpleNode("J");
-		nodes[10] = new GraphTest.SimpleNode("K");
+		nodes[0] = new SimpleNode("A");
+		nodes[1] = new SimpleNode("B");
+		nodes[2] = new SimpleNode("C");
+		nodes[3] = new SimpleNode("D");
+		nodes[4] = new SimpleNode("E");
+		nodes[5] = new SimpleNode("F");
+		nodes[6] = new SimpleNode("G");
+		nodes[7] = new SimpleNode("H");
+		nodes[8] = new SimpleNode("I");
+		nodes[9] = new SimpleNode("J");
+		nodes[10] = new SimpleNode("K");
 		for(SimpleNode n: nodes)
 			g.add(n);
 		g.add(new DirectedEdge<SimpleNode>(nodes[1],nodes[2]));
@@ -78,11 +67,11 @@ public class GraphTest {
 	public void run2(){
 		Graph<SimpleNode> g = new DefaultGraph<SimpleNode>();
 		SimpleNode[] nodes = new SimpleNode[5];
-		nodes[0] = new GraphTest.SimpleNode("A");
-		nodes[1] = new GraphTest.SimpleNode("B");
-		nodes[2] = new GraphTest.SimpleNode("C");
-		nodes[3] = new GraphTest.SimpleNode("D");
-		nodes[4] = new GraphTest.SimpleNode("E");
+		nodes[0] = new SimpleNode("A");
+		nodes[1] = new SimpleNode("B");
+		nodes[2] = new SimpleNode("C");
+		nodes[3] = new SimpleNode("D");
+		nodes[4] = new SimpleNode("E");
 		for(SimpleNode n: nodes)
 			g.add(n);
 		g.add(new DirectedEdge<SimpleNode>(nodes[0],nodes[1]));
@@ -105,6 +94,6 @@ public class GraphTest {
 	}
 	
 	public static void main(String[] args){
-		new GraphTest().run2();		
+		new GraphTest().run();		
 	}	
 }

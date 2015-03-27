@@ -19,7 +19,8 @@ package net.sf.tweety.graphs;
 import java.util.Collection;
 import java.util.Iterator;
 
-import Jama.Matrix;
+import net.sf.tweety.math.matrix.Matrix;
+
 
 /**
  * Common interface for graphs with

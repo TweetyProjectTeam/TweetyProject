@@ -173,6 +173,24 @@ public class Matrix {
 	}
 	
 	/**
+	 * Creates the Jama matrix representation of this matrix.
+	 * @return the Jama matrix representation of this matrix.
+	 */
+	public Jama.Matrix getJamaMatrix(){
+		Jama.Matrix m = new Jama.Matrix(this.entries.length,this.entries[0].length);
+		int i = 0, j;
+		for(Term[] a: this.entries){
+			j = 0;
+			for(Term b : a){
+				m.set(i, j, b.doubleValue());				
+				j++;
+			}
+			i++;
+		}
+		return m;
+		
+	}
+	/**
 	 * Returns the distance of this matrix to the zero matrix.
 	 * @return the distance of this matrix to the zero matrix.
 	 */
@@ -183,6 +201,7 @@ public class Matrix {
 				result += Math.abs(this.getEntry(i, j).doubleValue());
 		return result;
 	}
+	
 	
 	/**
 	 * Returns the identity matrix of the given dimension.

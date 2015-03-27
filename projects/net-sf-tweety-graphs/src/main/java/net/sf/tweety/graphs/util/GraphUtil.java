@@ -19,11 +19,11 @@ package net.sf.tweety.graphs.util;
 import java.util.*;
 
 import Jama.EigenvalueDecomposition;
-import Jama.Matrix;
 import net.sf.tweety.commons.util.MapTools;
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.graphs.Node;
 import net.sf.tweety.math.ComplexNumber;
+import net.sf.tweety.math.matrix.Matrix;
 
 /**
  * This abstract class contains some auxiliary methods for working
@@ -167,7 +167,7 @@ public abstract class GraphUtil {
 	 */
 	public static ComplexNumber[] eigenvalues(Graph<? extends Node> g){
 		Matrix m = g.getAdjancyMatrix();
-		EigenvalueDecomposition ed = new EigenvalueDecomposition(m);		
+		EigenvalueDecomposition ed = new EigenvalueDecomposition(m.getJamaMatrix());		
 		ComplexNumber[] result = new ComplexNumber[ed.getRealEigenvalues().length];
 		for(int i = 0; i < ed.getImagEigenvalues().length; i++){
 			result[i] = new ComplexNumber(ed.getRealEigenvalues()[i], ed.getImagEigenvalues()[i]);
