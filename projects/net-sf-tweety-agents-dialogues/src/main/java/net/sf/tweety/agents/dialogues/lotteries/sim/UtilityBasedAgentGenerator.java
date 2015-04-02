@@ -16,25 +16,25 @@
  */
 package net.sf.tweety.agents.dialogues.lotteries.sim;
 
-
 import net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent;
-import net.sf.tweety.agents.dialogues.lotteries.DummyLotteryAgent;
+import net.sf.tweety.agents.dialogues.lotteries.UtilityBasedLotteryAgent;
 import net.sf.tweety.agents.dialogues.lotteries.LotteryGameSystem;
 import net.sf.tweety.agents.sim.AgentGenerator;
 import net.sf.tweety.agents.sim.SimulationParameters;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.prob.lotteries.UtilityFunction;
 
 /**
- * Generates dummy lottery agents.
+ * Generates baseline lottery agents.
  * @author Matthias Thimm
  */
-public class DummyAgentGenerator implements AgentGenerator<AbstractLotteryAgent,LotteryGameSystem> {
-
+public class UtilityBasedAgentGenerator implements AgentGenerator<AbstractLotteryAgent,LotteryGameSystem> {
+	
 	/** The name of the agents generator by this generator. */
 	private String name;
 	
 	
-	public DummyAgentGenerator(String name){
+	public UtilityBasedAgentGenerator(String name){
 		this.name = name;
 	}
 	
@@ -42,8 +42,8 @@ public class DummyAgentGenerator implements AgentGenerator<AbstractLotteryAgent,
 	 * @see net.sf.tweety.agents.sim.AgentGenerator#generate(net.sf.tweety.agents.MultiAgentSystem, net.sf.tweety.agents.sim.SimulationParameters)
 	 */
 	@Override
-	public AbstractLotteryAgent generate(LotteryGameSystem mas,	SimulationParameters params) {
-		return new DummyLotteryAgent(this.name, (DungTheory)params.get(LotteryGameGenerator.PARAM_DUMMY_THEORY), (Integer)params.get(LotteryGameGenerator.PARAM_SEM));
+	public AbstractLotteryAgent generate(LotteryGameSystem mas, SimulationParameters params) {
+		return new UtilityBasedLotteryAgent(this.name, (DungTheory)params.get(LotteryGameGenerator.PARAM_UNIVERSALTHEORY), (UtilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_UTIL), (Integer)params.get(LotteryGameGenerator.PARAM_SEM));
 	}
 
 	/* (non-Javadoc)
@@ -59,3 +59,4 @@ public class DummyAgentGenerator implements AgentGenerator<AbstractLotteryAgent,
 		return this.name;
 	}
 }
+

@@ -14,25 +14,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sf.tweety.agents.dialogues.lotteries.sim;
+package net.sf.tweety.arg.dung.parser;
 
-import net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent;
-import net.sf.tweety.agents.dialogues.lotteries.LotteryGameSystem;
-import net.sf.tweety.agents.sim.ProtocolGenerator;
-import net.sf.tweety.agents.sim.SimulationParameters;
+import java.io.File;
+import java.io.FilenameFilter;
 
 /**
- * Creates direct game protocols.
+ * Filename filter for APX files.
+ * 
  * @author Matthias Thimm
  */
-public class DirectGameProtocolGenerator implements ProtocolGenerator<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem> {
+public class ApxFilenameFilter implements FilenameFilter{
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.agents.sim.ProtocolGenerator#generate(net.sf.tweety.agents.MultiAgentSystem, net.sf.tweety.agents.sim.SimulationParameters)
+	 * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
 	 */
 	@Override
-	public DirectGameProtocol generate(LotteryGameSystem mas, SimulationParameters params) {		
-		return new DirectGameProtocol(mas);
+	public boolean accept(File dir, String name) {
+		return name.endsWith(".apx");
 	}
-
+	
 }

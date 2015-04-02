@@ -16,26 +16,34 @@
  */
 package net.sf.tweety.agents.dialogues.lotteries.sim;
 
-import net.sf.tweety.agents.dialogues.lotteries.LotteryAgent;
+import net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent;
+import net.sf.tweety.agents.dialogues.lotteries.RandomLotteryAgent;
 import net.sf.tweety.agents.dialogues.lotteries.LotteryGameSystem;
 import net.sf.tweety.agents.sim.AgentGenerator;
 import net.sf.tweety.agents.sim.SimulationParameters;
 import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.arg.prob.lotteries.UtilityFunction;
 
 /**
- * Generates lottery agents.
+ * Generates baseline lottery agents.
  * @author Matthias Thimm
  */
-public class LotteryAgentGenerator implements AgentGenerator<LotteryAgent,LotteryGameSystem> {
+public class RandomLotteryAgentGenerator implements AgentGenerator<AbstractLotteryAgent,LotteryGameSystem> {
+	
+	/** The name of the agents generator by this generator. */
+	private String name;
+	
+	
+	public RandomLotteryAgentGenerator(String name){
+		this.name = name;
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.agents.sim.AgentGenerator#generate(net.sf.tweety.agents.MultiAgentSystem, net.sf.tweety.agents.sim.SimulationParameters)
 	 */
 	@Override
-	public LotteryAgent generate(LotteryGameSystem mas,	SimulationParameters params) {
-		return new LotteryAgent("PRO", (DungTheory)params.get(LotteryGameGenerator.PARAM_UNIVERSALTHEORY), (SubgraphProbabilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_PROB), (UtilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_UTIL), (Integer)params.get(LotteryGameGenerator.PARAM_SEM), false, false);
+	public AbstractLotteryAgent generate(LotteryGameSystem mas, SimulationParameters params) {
+		return new RandomLotteryAgent(this.name, (DungTheory)params.get(LotteryGameGenerator.PARAM_UNIVERSALTHEORY), (UtilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_UTIL), (Integer)params.get(LotteryGameGenerator.PARAM_SEM));
 	}
 
 	/* (non-Javadoc)
@@ -48,7 +56,7 @@ public class LotteryAgentGenerator implements AgentGenerator<LotteryAgent,Lotter
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return "PRO";
+		return this.name;
 	}
 }
 

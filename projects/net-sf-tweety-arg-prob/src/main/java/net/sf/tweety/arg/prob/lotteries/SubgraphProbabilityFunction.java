@@ -196,7 +196,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 					DungTheory subTheory = new DungTheory(sub);
 					subTheory.add(theory);
 					if(subTheory.equals(t)){
-						p += this.probability(subTheory).doubleValue();
+						p += this.probability(new DungTheory(sub)).doubleValue();
 					}
 				}				
 				func.put(t, new Probability(stickyCoefficient * p + (1-stickyCoefficient) * this.probability(t).doubleValue()));
@@ -230,7 +230,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 							subsubTheory.add(subTheory);
 							subsubTheory.addAllAttacks(subAttacks);
 							if(subsubTheory.equals(t)){
-								p += this.probability(subTheory).doubleValue() * 1/subsets.size();
+								p += this.probability(new DungTheory(sub)).doubleValue() * 1/subsets.size();
 							}
 						}
 					}

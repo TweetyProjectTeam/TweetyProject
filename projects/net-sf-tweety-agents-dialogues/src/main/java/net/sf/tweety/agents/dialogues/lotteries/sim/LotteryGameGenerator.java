@@ -18,7 +18,7 @@ package net.sf.tweety.agents.dialogues.lotteries.sim;
 
 import java.util.Random;
 
-import net.sf.tweety.agents.dialogues.lotteries.LotteryAgent;
+import net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent;
 import net.sf.tweety.agents.dialogues.lotteries.LotteryGameSystem;
 import net.sf.tweety.agents.sim.MultiAgentSystemGenerator;
 import net.sf.tweety.agents.sim.SimulationParameters;
@@ -34,7 +34,7 @@ import net.sf.tweety.math.probability.Probability;
  * Generates lottery games.
  * @author Matthias Thimm
  */
-public class LotteryGameGenerator implements MultiAgentSystemGenerator<LotteryAgent,LotteryGameSystem> {
+public class LotteryGameGenerator implements MultiAgentSystemGenerator<AbstractLotteryAgent,LotteryGameSystem> {
 	
 	/** Key for the simulation parameter which refers to the universal theory generated. */
 	public static final int PARAM_UNIVERSALTHEORY = 0;
@@ -58,14 +58,30 @@ public class LotteryGameGenerator implements MultiAgentSystemGenerator<LotteryAg
 	/** Random numbers generator. */
 	private Random random = new Random();
 	
+	/** whether the theories generated should ensure 
+	 * 	one specific argument to be skeptically inferred. */
+	private boolean ensureArg;
+	
 	/**
 	 * Creates a new game generator.
 	 * @param gen for generating Dung theories.
 	 * @param semantics the semantics used.
 	 */
 	public LotteryGameGenerator(DungTheoryGenerator gen, int semantics){
+		this(gen,semantics,true);
+	}
+	
+	/**
+	 * Creates a new game generator.
+	 * @param gen for generating Dung theories.
+	 * @param semantics the semantics used.
+	 * @param ensureArg whether the theories generated should ensure 
+	 * 	one specific argument to be skeptically inferred. 
+	 */
+	public LotteryGameGenerator(DungTheoryGenerator gen, int semantics, boolean ensureArg){
 		this.gen = gen;
 		this.semantics = semantics;
+		this.ensureArg = ensureArg;
 	}
 	
 	/* (non-Javadoc)
@@ -73,11 +89,17 @@ public class LotteryGameGenerator implements MultiAgentSystemGenerator<LotteryAg
 	 */
 	@Override
 	public LotteryGameSystem generate(SimulationParameters params) {
-		Argument arg = new Argument("A");
-		DungTheory theory = this.gen.generate(arg);		
-		params.put(LotteryGameGenerator.PARAM_UNIVERSALTHEORY, theory);
-		params.put(LotteryGameGenerator.PARAM_ARGUMENT, arg);		
+		DungTheory theory;
+		if(this.ensureArg){
+			Argument arg = new Argument("A");
+			theory = this.gen.generate(arg);				
+			params.put(LotteryGameGenerator.PARAM_ARGUMENT, arg);		
+		
+		}else{
+			theory = this.gen.generate();
+		}
 		params.put(LotteryGameGenerator.PARAM_SEM, this.semantics);
+		params.put(LotteryGameGenerator.PARAM_UNIVERSALTHEORY, theory);
 		// random utility function		
 		UtilityFunction util = new UtilityFunction();
 		for(Division d: Division.getStandardDivisions(theory))

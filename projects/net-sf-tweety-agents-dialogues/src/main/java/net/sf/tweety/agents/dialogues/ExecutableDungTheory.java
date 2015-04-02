@@ -14,25 +14,38 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sf.tweety.agents.dialogues.lotteries.sim;
+package net.sf.tweety.agents.dialogues;
 
-import net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent;
-import net.sf.tweety.agents.dialogues.lotteries.LotteryGameSystem;
-import net.sf.tweety.agents.sim.ProtocolGenerator;
-import net.sf.tweety.agents.sim.SimulationParameters;
+import net.sf.tweety.agents.Executable;
+import net.sf.tweety.arg.dung.DungTheory;
 
 /**
- * Creates direct game protocols.
+ * This class packs a Dung theory into an executable object.
+ * 
  * @author Matthias Thimm
  */
-public class DirectGameProtocolGenerator implements ProtocolGenerator<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem> {
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.agents.sim.ProtocolGenerator#generate(net.sf.tweety.agents.MultiAgentSystem, net.sf.tweety.agents.sim.SimulationParameters)
+public class ExecutableDungTheory extends DungTheory implements Executable {
+
+	/**
+	 * Creates a new empty theory.
 	 */
-	@Override
-	public DirectGameProtocol generate(LotteryGameSystem mas, SimulationParameters params) {		
-		return new DirectGameProtocol(mas);
+	public ExecutableDungTheory() {
+		super();
+	}
+	
+	/**
+	 * Creates a new dung theory for the given Dung theory.
+	 * @param arguments a Dung theory.
+	 */
+	public ExecutableDungTheory(DungTheory theory) {
+		super(theory);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.agents.Executable#isNoOperation()
+	 */
+	@Override
+	public boolean isNoOperation() {
+		return this.isEmpty() && this.getAttacks().isEmpty();
+	}
 }

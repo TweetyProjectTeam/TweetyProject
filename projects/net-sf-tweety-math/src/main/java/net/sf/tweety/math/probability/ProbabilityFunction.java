@@ -93,7 +93,7 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 				return true;
 			double sum = 0;
 			for(Probability p : this.probabilities.values())
-				sum += p.doubleValue();
+				sum += p.doubleValue();		
 			return sum >= 1- Probability.PRECISION && sum <= 1+Probability.PRECISION;
 		}
 		

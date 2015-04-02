@@ -16,7 +16,8 @@
  */
 package net.sf.tweety.agents.dialogues.lotteries.sim;
 
-import net.sf.tweety.agents.dialogues.lotteries.LotteryAgent;
+import net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent;
+import net.sf.tweety.agents.dialogues.lotteries.ProbabilisticLotteryAgent;
 import net.sf.tweety.agents.dialogues.lotteries.LotteryGameSystem;
 import net.sf.tweety.agents.sim.AgentGenerator;
 import net.sf.tweety.agents.sim.SimulationParameters;
@@ -25,17 +26,37 @@ import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.arg.prob.lotteries.UtilityFunction;
 
 /**
- * Generates baseline lottery agents.
+ * Generates lottery agents.
  * @author Matthias Thimm
  */
-public class BaselineAgentGenerator implements AgentGenerator<LotteryAgent,LotteryGameSystem> {
+public class ProbabilisticLotteryAgentGenerator implements AgentGenerator<AbstractLotteryAgent,LotteryGameSystem> {
+	
+	/** The name of the agents generator by this generator. */
+	private String name;
+	
+	private byte updatestrategy;
+	private double stickynesscoefficient;
+	
+	public ProbabilisticLotteryAgentGenerator(String name){
+		this(name,ProbabilisticLotteryAgent.UPDATE_NAIVE);
+	}
+	
+	public ProbabilisticLotteryAgentGenerator(String name, byte updatestrategy){
+		this(name,updatestrategy,0.5);
+	}
+	
+	public ProbabilisticLotteryAgentGenerator(String name, byte updatestrategy, double stickynesscoefficient){
+		this.name = name;
+		this.updatestrategy = updatestrategy;
+		this.stickynesscoefficient = stickynesscoefficient;
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.agents.sim.AgentGenerator#generate(net.sf.tweety.agents.MultiAgentSystem, net.sf.tweety.agents.sim.SimulationParameters)
 	 */
 	@Override
-	public LotteryAgent generate(LotteryGameSystem mas,	SimulationParameters params) {
-		return new LotteryAgent("BASE", (DungTheory)params.get(LotteryGameGenerator.PARAM_UNIVERSALTHEORY), (SubgraphProbabilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_PROB), (UtilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_UTIL), (Integer)params.get(LotteryGameGenerator.PARAM_SEM), false, true);
+	public AbstractLotteryAgent generate(LotteryGameSystem mas,	SimulationParameters params) {
+		return new ProbabilisticLotteryAgent(this.name, (DungTheory)params.get(LotteryGameGenerator.PARAM_UNIVERSALTHEORY), (SubgraphProbabilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_PROB), (UtilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_UTIL), (Integer)params.get(LotteryGameGenerator.PARAM_SEM), this.updatestrategy,this.stickynesscoefficient);
 	}
 
 	/* (non-Javadoc)
@@ -48,7 +69,7 @@ public class BaselineAgentGenerator implements AgentGenerator<LotteryAgent,Lotte
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return "BASE";
+		return this.name;
 	}
 }
 
