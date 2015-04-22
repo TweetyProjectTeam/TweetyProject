@@ -133,8 +133,10 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 			Set<DefeasibleRule> rules = new HashSet<DefeasibleRule>();
 			for(DelpRule rule: derivation)
 				if(rule instanceof DefeasibleRule)
-					rules.add((DefeasibleRule)rule);
-			arguments.add(new DelpArgument(rules,(FolFormula)derivation.getConclusion()));
+					rules.add((DefeasibleRule)rule);			
+			// consistency check: rules have to be consistent with strict knowledge part
+			if(this.isConsistent(rules))			
+				arguments.add(new DelpArgument(rules,(FolFormula)derivation.getConclusion()));
 		}
 		// subargument test
 		Set<DelpArgument> result = new HashSet<DelpArgument>();
