@@ -83,7 +83,7 @@ public class MaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 				}
 			}
 			if(!nonMin){
-				System.out.println(h1);
+				//System.out.println(h1);
 				result++;
 			}
 		}		

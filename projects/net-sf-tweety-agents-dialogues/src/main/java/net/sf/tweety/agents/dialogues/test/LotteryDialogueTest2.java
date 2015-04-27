@@ -59,7 +59,7 @@ public class LotteryDialogueTest2 {
 	/** The argumentation semantics used */
 	public static int semantics = Semantics.GROUNDED_SEMANTICS;
 	/** Timeout */
-	public static int timeout = 60*60*72; // timeout of 72 hours	
+	public static int timeout = 60*60*72*3; // timeout of 72*3 hours	
 	/** Number of repetitions per file */
 	public static int rep = 10;
 	
