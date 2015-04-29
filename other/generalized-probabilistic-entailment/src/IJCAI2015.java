@@ -19,7 +19,8 @@ import edu.cs.ai.log4KR.structuredLogics.inconsistency.reasoning.GeneralizedEnta
 import edu.cs.ai.log4KR.structuredLogics.inconsistency.reasoning.GeneralizedEntailmentMaxNorm;
 
 /**
- * Examples from 'Probabilistic Reasoning with Inconsistent Beliefs using Inconsistency Measures', IJCAI 2015.
+ * Examples from 'Nico Potyka, Matthias Thimm: Probabilistic Reasoning with
+ * Inconsistent Beliefs using Inconsistency Measures', IJCAI 2015.
  * 
  * @author NicoPotyka
  *
