@@ -96,7 +96,7 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	 * Computes the extensions by reducing the problem to SAT solving
 	 * @return the extensions of the given Dung theory.
 	 */
-	private Set<Extension> computeExtensionsBySatSolving(){
+	protected Set<Extension> computeExtensionsBySatSolving(){
 		SatSolver solver = SatSolver.getDefaultSolver();
 		PlBeliefSet prop = this.getPropositionalCharacterisation();
 		// get some labeling from the solver, then add the negation of this to the program and repeat

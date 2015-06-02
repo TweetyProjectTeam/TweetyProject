@@ -69,7 +69,7 @@ public class StableReasoner extends AbstractExtensionReasoner {
 	 * @return the set of stable extensions that are a subset of <source>arguments</source>
 	 */
 	private Set<Extension> getStableExtensions(Extension ext){
-		Set<Extension> completeExtensions = new CompleteReasoner((DungTheory)this.getKnowledgBase()).getExtensions();
+		Set<Extension> completeExtensions = new SccCompleteReasoner((DungTheory)this.getKnowledgBase()).getExtensions();
 		Set<Extension> result = new HashSet<Extension>();
 		for(Extension e: completeExtensions)
 			if(((DungTheory)this.getKnowledgBase()).isAttackingAllOtherArguments(e))

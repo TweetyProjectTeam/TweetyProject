@@ -219,7 +219,8 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * in <source>ext1</source>
 	 * @param ext1 an extension, ie. a set of arguments
 	 * @param ext2 an extension, ie. a set of arguments
-	 * @return true if ext an extension, ie. a set of arguments
+	 * @return true if some argument of <source>ext2</source> attacks some argument
+	 * in <source>ext1</source>
 	 */
 	public boolean isAttacked(Extension ext1, Extension ext2){
 		for(Argument a: ext1)
@@ -355,6 +356,32 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 */
 	public boolean remove(Attack attack){
 		return this.attacks.remove(attack);
+	}
+	
+	/**
+	 * Removes the argument and all its attacks
+	 * @param a some argument
+	 * @return true if this structure has been changed
+	 */
+	public boolean remove(Argument a){
+		Collection<Attack> toBeRemoved = new HashSet<Attack>();
+		for(Attack att: this.attacks)
+			if(att.contains(a))
+				toBeRemoved.add(att);
+		boolean b = this.attacks.removeAll(toBeRemoved);
+		return super.remove(a) || b;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSet#removeAll(java.util.Collection)
+	 */
+	public boolean removeAll(Collection<?> c){
+		boolean result = true;
+		for(Object a: c)
+			if(a instanceof Argument)
+				result |= this.remove((Argument)a);
+			else result |= this.remove(a);
+		return result;
 	}
 	
 	/* (non-Javadoc)

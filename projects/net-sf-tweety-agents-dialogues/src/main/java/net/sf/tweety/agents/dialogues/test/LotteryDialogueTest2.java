@@ -61,7 +61,7 @@ public class LotteryDialogueTest2 {
 	/** Timeout */
 	public static int timeout = 60*60*72*3; // timeout of 72*3 hours	
 	/** Number of repetitions per file */
-	public static int rep = 10;
+	public static int rep = 1;
 	
 	/**
 	 * Main method for evaluation.
