@@ -295,7 +295,7 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 		// not very efficient but will do for now
 		Collection<Graph<S>> result = new HashSet<Graph<S>>();
 		Set<Set<S>> subNodes = new SetTools<S>().subsets(g.getNodes());
-		for(Set<S> nodes: subNodes){
+		for(Set<S> nodes: subNodes){			
 			@SuppressWarnings("unchecked")
 			Set<Set<Edge<S>>> edges = new SetTools<Edge<S>>().subsets((Set<Edge<S>>)g.getRestriction(nodes).getEdges());
 			for (Set<Edge<S>> es: edges){
@@ -304,7 +304,7 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 				newg.edges.addAll(es);
 				result.add(newg);
 			}
-		}
+		}		
 		return result;
 	}
 	

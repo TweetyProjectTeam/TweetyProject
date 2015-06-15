@@ -82,7 +82,8 @@ public class Division extends Pair<Extension,Extension>{
 	 */
 	public Collection<DungTheory> getDividers(DungTheory theory, int semantics){
 		Collection<DungTheory> result = new HashSet<DungTheory>();
-		for(Graph<Argument> g: theory.getSubgraphs()){
+		Collection<Graph<Argument>> subtheories = theory.getSubgraphs();
+		for(Graph<Argument> g: subtheories){
 			DungTheory sub = new DungTheory(g);
 			for(Division d: Division.getDivisions(AbstractExtensionReasoner.getReasonerForSemantics(sub, semantics, Semantics.CREDULOUS_INFERENCE).getExtensions(), sub)){
 				if(d.getFirst().equals(this.getFirst())){
@@ -92,7 +93,7 @@ public class Division extends Pair<Extension,Extension>{
 						result.add(sub);					
 				}
 			}
-		}		
+		}
 		return result;
 	}
 	
@@ -124,7 +125,7 @@ public class Division extends Pair<Extension,Extension>{
 		Set<Set<Argument>> subsetsRem = setTools.subsets(remaining);		
 		for(Set<Argument> p: subsetsExt)
 			for(Set<Argument> v: subsetsRem)
-				result.add(new Division(new Extension(p),new Extension(v)));		
+				result.add(new Division(new Extension(p),new Extension(v)));
 		return result;		
 	}
 	

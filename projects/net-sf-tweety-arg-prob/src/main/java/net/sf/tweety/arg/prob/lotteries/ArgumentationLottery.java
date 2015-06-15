@@ -52,9 +52,10 @@ public class ArgumentationLottery {
 		// check whether divisions is exhaustive and disjoint (disabled for now)
 		//if(!Division.isDisjoint(divisions, p.getTheory(), semantics) || !Division.isExhaustive(divisions, p.getTheory(), semantics))
 		//	throw new IllegalArgumentException("Given set of divisions is not exhaustive and disjoint.");
-		prob = new HashMap<Division,Probability>();
+		prob = new HashMap<Division,Probability>();		
 		for(Division d: divisions)
-			this.prob.put(d, p.getAcceptanceProbability(d, semantics));
+			this.prob.put(d, p.getAcceptanceProbability(d, semantics));		 
+		
 		this.semantics = semantics;
 		this.aaf = p.getTheory();
 	}

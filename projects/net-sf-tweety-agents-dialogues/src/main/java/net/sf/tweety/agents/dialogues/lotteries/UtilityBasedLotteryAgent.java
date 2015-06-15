@@ -25,13 +25,13 @@ public class UtilityBasedLotteryAgent extends AbstractLotteryAgent{
 	public ExecutableDungTheory next(Collection<? extends Perceivable> percepts) {
 		double bestUtility = Double.NEGATIVE_INFINITY;
 		DungTheory e = new DungTheory();
-		for(Graph<Argument> subgraph: this.theory.getSubgraphs()){				
+		for(Graph<Argument> subgraph: this.theory.getSubgraphs()){
 			DungTheory sub = new DungTheory(subgraph);
 			Double d = this.util.getUtility(sub, this.semantics);
 			if(d > bestUtility){
 				bestUtility = d;
 				e = sub;
-			}
+			}			
 		}		
 		return new ExecutableDungTheory(e);
 	}

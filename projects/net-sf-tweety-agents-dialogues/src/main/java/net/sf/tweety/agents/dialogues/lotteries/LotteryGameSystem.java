@@ -54,6 +54,6 @@ public class LotteryGameSystem extends MultiAgentSystem<AbstractLotteryAgent> {
 	public void execute(AbstractProtocol protocol) throws ProtocolTerminatedException{
 		if(this.size() != 2)		
 			throw new IllegalArgumentException("The lottery game is only defined for two agents.");		
-		super.execute(protocol);
+		super.execute(protocol);		
 	}
 }

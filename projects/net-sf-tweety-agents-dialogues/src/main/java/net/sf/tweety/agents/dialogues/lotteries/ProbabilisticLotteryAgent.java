@@ -115,21 +115,22 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 		Extension e = null;
 		double bestUtility = Double.NEGATIVE_INFINITY;
 		if(this.updatestrategy == ProbabilisticLotteryAgent.UPDATE_NAIVE){
-			for(Set<Argument> posMove: new SetTools<Argument>().subsets(this.theory)){
-				//System.out.println( i++ + " of " + k + "\t" + bestUtility);
+			Set<Set<Argument>> subsets =  new SetTools<Argument>().subsets(this.theory);
+			for(Set<Argument> posMove: subsets){
 				Extension move = new Extension(posMove);
-				SubgraphProbabilityFunction updFunc = this.prob.naiveUpdate(move);
+				SubgraphProbabilityFunction updFunc = this.prob.naiveUpdate(move);				
 				ArgumentationLottery lot = new ArgumentationLottery(this.util.keySet(), updFunc, this.semantics);
 				Double d = this.util.getExpectedUtility(lot);
 				if(d > bestUtility){
 					bestUtility = d;
 					e = move;
-				}
-			}
+				}				
+			}		
 			return new ExecutableDungTheory(new DungTheory(this.theory.getRestriction(e)));
 		}else{
 			DungTheory th = new DungTheory();
-			for(Graph<Argument> subgraph: this.theory.getSubgraphs()){				
+			Collection<Graph<Argument>> subgraphs = this.theory.getSubgraphs();
+			for(Graph<Argument> subgraph: subgraphs){		
 				DungTheory sub = new DungTheory(subgraph);				
 				SubgraphProbabilityFunction updFunc;
 				if(this.updatestrategy == ProbabilisticLotteryAgent.UPDATE_SIMPLE)
@@ -138,14 +139,14 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 					updFunc = this.prob.roughUpdate(sub);
 				else if(this.updatestrategy == ProbabilisticLotteryAgent.UPDATE_STICKY)
 					updFunc = this.prob.stickyUpdate(sub, this.stickynesscoefficient);
-				else throw new RuntimeException("Unrecognized update type");
+				else throw new RuntimeException("Unrecognized update type");				
 				ArgumentationLottery lot = new ArgumentationLottery(this.util.keySet(), updFunc, this.semantics);
 				Double d = this.util.getExpectedUtility(lot);
 				if(d > bestUtility){
 					bestUtility = d;
 					th = sub;
-				}
-			}		
+				}				
+			}
 			return new ExecutableDungTheory(th);
 		}
 	}

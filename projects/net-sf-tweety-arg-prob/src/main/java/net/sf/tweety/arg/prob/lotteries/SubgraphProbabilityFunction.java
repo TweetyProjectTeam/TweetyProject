@@ -50,7 +50,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 		super();
 		this.theory = theory;
 		Collection<Graph<Argument>> subtheories = theory.getSubgraphs();
-		for(Graph<Argument> g: theory.getSubgraphs()){
+		for(Graph<Argument> g: subtheories){
 			this.put(new DungTheory(g), new Probability(1d/subtheories.size()));
 		}
 	}
