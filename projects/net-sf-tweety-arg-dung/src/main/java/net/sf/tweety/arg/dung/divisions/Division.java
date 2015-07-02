@@ -17,7 +17,9 @@
 package net.sf.tweety.arg.dung.divisions;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
@@ -37,6 +39,9 @@ import net.sf.tweety.graphs.Graph;
  */
 public class Division extends Pair<Extension,Extension>{
 
+	/** archive of requested divisions. */
+	private static Map<DungTheory,Collection<Division>> archivedDivisons = new HashMap<DungTheory,Collection<Division>>();
+	
 	/**
 	 * Creates a new division for the given parameters.
 	 * @param p some set of arguments.
@@ -179,12 +184,15 @@ public class Division extends Pair<Extension,Extension>{
 	 * @return the standard set of divisions.
 	 */
 	public static Collection<Division> getStandardDivisions(DungTheory theory){
+		if(Division.archivedDivisons.containsKey(theory))
+			return Division.archivedDivisons.get(theory);
 		Collection<Division> result = new HashSet<Division>();
 		for(Set<Argument> args: new SetTools<Argument>().subsets(theory)){
 			Collection<Argument> retainer = new HashSet<Argument>(theory);
 			retainer.removeAll(args);
 			result.add(new Division(new Extension(args), new Extension(retainer)));
 		}
+		Division.archivedDivisons.put(theory, result);
 		return result;
 	}
 }

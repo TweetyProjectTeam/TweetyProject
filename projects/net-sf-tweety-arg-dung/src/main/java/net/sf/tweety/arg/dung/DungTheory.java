@@ -41,6 +41,11 @@ import net.sf.tweety.math.term.IntegerConstant;
 public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, Comparable<DungTheory> {
 
 	/**
+	 * For archiving sub graphs 
+	 */
+	private static Map<DungTheory, Collection<Graph<Argument>>> archivedSubgraphs = new HashMap<DungTheory, Collection<Graph<Argument>>>();
+		
+	/**
 	 * The set of attacks
 	 */
 	private Set<Attack> attacks;
@@ -640,8 +645,10 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @see net.sf.tweety.graphs.Graph#getSubgraphs()
 	 */
 	@Override
-	public Collection<Graph<Argument>> getSubgraphs() {		
-		return DefaultGraph.<Argument>getSubgraphs(this);
+	public Collection<Graph<Argument>> getSubgraphs() {	
+		if(!DungTheory.archivedSubgraphs.containsKey(this))			
+			DungTheory.archivedSubgraphs.put(this, DefaultGraph.<Argument>getSubgraphs(this));		
+		return DungTheory.archivedSubgraphs.get(this);
 	}
 
 	/* (non-Javadoc)

@@ -71,8 +71,8 @@ public class LotteryDialogueTest2 {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws ParserException, FileNotFoundException, IOException{
-		//String pathToApxGraphs = args[0];
-		String pathToApxGraphs = "/Users/mthimm/Desktop/test_graphs";//"../../examples/aaf";
+		String pathToApxGraphs = args[0];
+		//String pathToApxGraphs = "/Users/mthimm/Desktop/tmp";
 		
 		// Agent generators
 		List<AgentGenerator<AbstractLotteryAgent,LotteryGameSystem>> ag_gens = new ArrayList<AgentGenerator<AbstractLotteryAgent,LotteryGameSystem>>();
