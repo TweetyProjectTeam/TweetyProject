@@ -37,7 +37,7 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.3-SNAPSHOT</version>
+  	<version>1.4-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>
