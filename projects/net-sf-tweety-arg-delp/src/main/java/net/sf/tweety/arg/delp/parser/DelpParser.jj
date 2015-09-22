@@ -2,16 +2,17 @@
  * JavaCC file
  */
 options {
-  JDK_VERSION = "1.6";
+  JDK_VERSION = "1.8";
+  STATIC=false;
 }
 
 PARSER_BEGIN(DelpParser)
-package net.sf.tweety.argumentation.delp.parser;
+package net.sf.tweety.arg.delp.parser;
 
-import net.sf.tweety.*;
-import net.sf.tweety.argumentation.delp.*;
-import net.sf.tweety.argumentation.delp.syntax.*;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
+import net.sf.tweety.commons.*;
+import net.sf.tweety.arg.delp.*;
+import net.sf.tweety.arg.delp.syntax.*;
+import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.commons.syntax.interfaces.*;
 import net.sf.tweety.logics.commons.syntax.*;
 import java.io.*;
@@ -47,8 +48,8 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
   	public DefeasibleLogicProgram parseBeliefBase(Reader reader) throws ParserException{
   	  	try
   	  	{
-  	  		//DelpParser theParser = new DelpParser(reader);
-  	  		return DelpParser.Theory(this.signature);
+  	  		DelpParser theParser = new DelpParser(reader);
+  	  		return theParser.Theory(this.signature);
   	 	}catch(ParseException e){
 			throw new ParserException(e);
   	 	}  	 	  
