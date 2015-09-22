@@ -23,10 +23,13 @@ import net.sf.tweety.logics.rcl.syntax.*;
 import net.sf.tweety.logics.rpcl.*;
 import net.sf.tweety.logics.rpcl.semantics.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.OpenOptSolver;
 import net.sf.tweety.math.probability.*;
 
 public class RpclMeReasonerTest {
 	public static void main(String[] args){
+		Solver.setDefaultGeneralSolver(new OpenOptSolver());
 		Predicate a = new Predicate("a", 1);
 		Predicate b = new Predicate("b", 1);
 		Constant c1 = new Constant("c1");		

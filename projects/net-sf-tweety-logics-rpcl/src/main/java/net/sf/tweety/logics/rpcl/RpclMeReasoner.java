@@ -29,9 +29,11 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
+import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
+import net.sf.tweety.logics.rcl.syntax.RelationalConditional;
 import net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.semantics.RpclSemantics;
 import net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional;
@@ -289,10 +291,21 @@ public class RpclMeReasoner extends Reasoner {
 	 */
 	@Override
 	public Answer query(Formula query) {
-		if(!(query instanceof FolFormula))
-			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for first-order queries.");
+		if(!(query instanceof FolFormula) && !(query instanceof RelationalConditional))
+			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for first-order queries or relational conditionals.");
 		ProbabilityDistribution<?> meDistribution = this.getMeDistribution();		
-		Probability prob = meDistribution.probability(query);
+		Probability prob;
+		if(query instanceof FolFormula){
+			prob = meDistribution.probability(query);
+		}else{
+			FolFormula premise = new Conjunction(((RelationalConditional)query).getPremise());
+			FolFormula premiseConclusion = premise.combineWithAnd(((RelationalConditional)query).getConclusion());
+			Probability prob1 = meDistribution.probability(premise);
+			Probability prob2 = meDistribution.probability(premiseConclusion);
+			if(prob1.doubleValue() == 0)
+				prob = new Probability(0d);
+			else prob = prob2.divide(prob1);
+		}				
 		Answer answer = new Answer(this.getKnowledgBase(),query);			
 		answer.setAnswer(prob.getValue());
 		answer.appendText("The probability of the query is " + prob + ".");
