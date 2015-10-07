@@ -202,4 +202,83 @@ public abstract class GraphUtil {
 		return false;
 	}
 	
+	/**
+	 * Returns the (undirected) diameter of the graph, i.e. the longest shortest
+	 * path in the undirected version of the graph. 
+	 * @param g some graph
+	 * @return the (undirected) diameter of the graph
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Node> int undirecteddiameter(Graph<T> g){
+		// we use the Floyd-Warshall algorithm for that
+		Map<T,Integer> node2ids = new HashMap<T,Integer>();
+		Node[] ids2Nodes = new Node[g.getNumberOfNodes()];
+		int idx =0;
+		for(Node n: g){
+			ids2Nodes[idx] = n;
+			node2ids.put((T)n, idx);
+			idx++;
+		}
+		int[][] d = new int[g.getNumberOfNodes()][g.getNumberOfNodes()];
+		for(int i = 0; i < g.getNumberOfNodes(); i++)
+			d[i][i] = 0;
+		for(int i = 0; i < g.getNumberOfNodes(); i++)
+			for(int j = i+1; j < g.getNumberOfNodes(); j++)
+				if(g.areAdjacent((T)ids2Nodes[i], (T)ids2Nodes[j]) || g.areAdjacent((T)ids2Nodes[j], (T)ids2Nodes[i])){
+					d[i][j] = 1;
+					d[j][i] = 1;
+				}
+				else{
+					d[i][j] = Integer.MAX_VALUE;
+					d[j][i] = Integer.MAX_VALUE;
+				}
+		for(int k =0; k < g.getNumberOfNodes(); k++)
+			for(int i =0; i < g.getNumberOfNodes(); i++)
+				for(int j =0; j < g.getNumberOfNodes(); j++)
+					if(d[i][k] < Integer.MAX_VALUE && d[k][j] < Integer.MAX_VALUE && d[i][k] + d[k][j] < d[i][j]){
+						d[i][j] = d[i][k] + d[k][j];
+						d[j][i] = d[i][j];
+					}
+		int maximum = 0;
+		for(int i = 0; i < g.getNumberOfNodes(); i++)
+			for(int j = i+1; j < g.getNumberOfNodes(); j++)
+				if(d[i][j]>maximum)
+					maximum = d[i][j];
+	    return maximum;
+	}
+
+	/**
+	 * Returns the global clustering coefficient of the graph (if it is directed it is interpreted
+	 * as an undirected version).
+	 * @param g
+	 * @return
+	 */
+	public static <T extends Node> double globalclusteringcoefficient(Graph<T> g){
+		double numClosedTriplets = 0;
+		double numTriplets = 0;
+		byte numEdges;
+		for(T a: g){
+			for(T b: g){
+				if(b.equals(a))
+					continue;
+				for(T c:g){
+					if(c.equals(a)|| c.equals(b))
+						continue;
+					numEdges = 0;
+					if(g.areAdjacent(a, b) || g.areAdjacent(b, a))
+						numEdges++;
+					if(g.areAdjacent(a, c) || g.areAdjacent(c, a))
+						numEdges++;
+					if(g.areAdjacent(b, c) || g.areAdjacent(c, b))
+						numEdges++;
+					// note that we count every set {a,b,c} six times
+					if(numEdges >= 2)
+						numTriplets += 1d/6;
+					if(numEdges == 3)
+						numClosedTriplets += 1d/6;
+				}	
+			}
+		}
+		return numClosedTriplets/numTriplets;
+	}
 }
