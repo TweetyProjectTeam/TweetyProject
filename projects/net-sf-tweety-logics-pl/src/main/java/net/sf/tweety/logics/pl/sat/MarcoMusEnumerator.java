@@ -101,13 +101,4 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 			throw new RuntimeException(e);
 		}				
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator#maximalConsistentSubsets(java.util.Collection)
-	 */
-	@Override
-	public Collection<Collection<PropositionalFormula>> maximalConsistentSubsets(Collection<PropositionalFormula> formulas) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

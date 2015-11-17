@@ -117,7 +117,7 @@ public class OpenOptSolver extends Solver {
 			this.idx2newVars.put(idx,newV);
 			idx++;
 		}
-		//System.out.println(this.getOpenOptCode());System.exit(0);
+		//System.out.println(this.getOpenOptCode((OptimizationProblem)problem));System.exit(0);
 		String output = "";
 		//String error = "";
 		InputStream in = null;

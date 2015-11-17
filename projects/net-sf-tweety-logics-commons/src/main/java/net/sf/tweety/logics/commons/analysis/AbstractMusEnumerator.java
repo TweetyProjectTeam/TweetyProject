@@ -18,9 +18,11 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.util.SetTools;
 
 /**
  * Abstract implementation for MUes enumerators.
@@ -41,7 +43,27 @@ public abstract class AbstractMusEnumerator<S extends Formula> implements MusEnu
 	 * @see net.sf.tweety.logics.commons.analysis.MusEnumerator#maximalConsistentSubsets(java.util.Collection)
 	 */
 	@Override
-	public abstract Collection<Collection<S>> maximalConsistentSubsets(Collection<S> formulas);
+	public Collection<Collection<S>> maximalConsistentSubsets(Collection<S> formulas){
+		// we use the duality of minimal inconsistent subsets, minimal correction sets, and maximal consistent
+		// subsets to compute the set of maximal consistent subsets
+		Collection<Collection<S>> mis = this.minimalInconsistentSubsets(formulas);
+		// makes sets out of this
+		Set<Set<S>> mi_sets = new HashSet<Set<S>>();
+		for(Collection<S> m: mis)
+			mi_sets.add(new HashSet<S>(m));
+		SetTools<S> settools = new SetTools<S>();
+		// get the minimal correction sets, i.e. irreducible hitting sets of minimal inconsistent subsets
+		Set<Set<S>> md_sets = settools.irreducibleHittingSets(mi_sets);
+		// every maximal consistent subset is the complement of a minimal correction set
+		Set<Collection<S>> result = new HashSet<Collection<S>>();;
+		Set<S> tmp;
+		for(Set<S> ms: md_sets){
+			tmp = new HashSet<S>(formulas);
+			tmp.removeAll(ms);
+			result.add(tmp);
+		}			
+		return result;
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.MusEnumerator#isConsistent(net.sf.tweety.BeliefSet)

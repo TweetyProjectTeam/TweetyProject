@@ -18,6 +18,7 @@ package net.sf.tweety.math.func;
 
 import java.util.Vector;
 
+import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.Logarithm;
 import net.sf.tweety.math.term.Term;
 
@@ -47,12 +48,9 @@ public class EntropyFunction implements SimpleRealValuedFunction {
 	 */
 	@Override
 	public Term getTerm(Vector<Term> element) {
-		Term result = null;
-		for(Term t: element){
-			if(result == null)
-				result = t.mult(new Logarithm(t));
-			else result = result.minus(t.mult(new Logarithm(t)));
-		}
+		Term result = new FloatConstant(0);;
+		for(Term t: element)
+			result = result.minus(t.mult(new Logarithm(t)));		
 		return result;
 	}
 

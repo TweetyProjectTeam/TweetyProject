@@ -76,11 +76,4 @@ public abstract class PlMusEnumerator extends AbstractMusEnumerator<Propositiona
 	 */
 	@Override
 	public abstract Collection<Collection<PropositionalFormula>> minimalInconsistentSubsets(Collection<PropositionalFormula> formulas);
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator#maximalConsistentSubsets(java.util.Collection)
-	 */
-	@Override
-	public abstract Collection<Collection<PropositionalFormula>> maximalConsistentSubsets(Collection<PropositionalFormula> formulas);
-
 }

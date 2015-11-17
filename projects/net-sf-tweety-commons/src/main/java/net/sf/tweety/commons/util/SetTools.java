@@ -123,6 +123,69 @@ public class SetTools<E> {
 	}		
 	
 	/**
+	 * Computes the set of irreducible hitting sets of "sets". A hitting set
+	 * H is a set that has a non-empty intersection with every set in "sets".
+	 * H is irreducible if no proper subset of H is a hitting set.
+	 * @param sets a set of sets
+	 * @return the set of all irreducible hitting sets of "sets"
+	 */
+	public Set<Set<E>> irreducibleHittingSets(Set<Set<E>> sets){
+		// naive implementation, should be revised at some time
+		Set<Set<E>> result;
+		// if there is no set to hit, there are no hitting sets
+		if(sets.size() == 0)
+			return new HashSet<Set<E>>();;
+		// if there is only one set to hit, every element of that set
+		// forms a hitting set
+		if(sets.size() == 1){
+			result = new HashSet<Set<E>>();
+			Set<E> h;
+			for(E e: sets.iterator().next()){
+				h = new HashSet<E>();
+				h.add(e);
+				result.add(h);
+			}
+			return result;	
+		}
+		// if more than one set is to be hit, we recursively build up hitting sets
+		Set<E> current = sets.iterator().next();
+		Set<Set<E>> new_sets = new HashSet<Set<E>>();
+		new_sets.addAll(sets);
+		new_sets.remove(current);
+		// recursively solve the problem 
+		result = irreducibleHittingSets(new_sets);
+		// now check whether the current set is already hit; if not add some element
+		Set<E> tmp;
+		Set<Set<E>> new_result = new HashSet<Set<E>>();
+		for(Set<E> h: result){
+			tmp = new HashSet<E>();
+			tmp.addAll(current);
+			tmp.retainAll(h);
+			if(tmp.size() == 0){
+				for(E e: current){
+					tmp= new HashSet<E>();
+					tmp.addAll(h);
+					tmp.add(e);
+					new_result.add(tmp);
+				}
+			}else new_result.add(h);
+		}
+		// check for irreducibility
+		result.clear();
+		for(Set<E> h: new_result){
+			result.add(h);
+			for(Set<E> h2: new_result){
+				if(h != h2)
+					if(h.containsAll(h2)){
+						result.remove(h);
+						break;
+					}
+			}
+		}
+		return result;
+	}
+		
+	/**
 	 * Computes every bipartition of the given set, e.g. for
 	 * a set {a,b,c,d,e,f} this method returns a set containing for example
 	 * {{a,b,c,d,e},{f}} and {{a,b,c,},{d,e,f}} and {{a,b,c,d,e,f},{}}

@@ -66,13 +66,4 @@ public class MimusMusEnumerator extends PlMusEnumerator  {
 			throw new RuntimeException(e);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.sat.PlMusEnumerator#maximalConsistentSubsets(java.util.Collection)
-	 */
-	@Override
-	public Collection<Collection<PropositionalFormula>> maximalConsistentSubsets(Collection<PropositionalFormula> formulas) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
