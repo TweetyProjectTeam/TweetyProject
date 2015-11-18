@@ -17,6 +17,7 @@
 package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
+import java.util.Set;
 
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Formula;
@@ -47,6 +48,14 @@ public interface MusEnumerator<S extends Formula> extends BeliefSetConsistencyTe
 	 *  set of formulas.
 	 */
 	public Collection<Collection<S>> maximalConsistentSubsets(Collection<S> formulas);
+	
+	/**
+	 * This method returns the minimal correction subsets of the given
+	 * set of formulas (i.e. the complements of maximal consistent subsets)
+	 * @param formulas a set of formulas
+	 * @return the minimal corrections subsets of the given set of formulas.
+	 */
+	public Set<Set<S>> minimalCorrectionSubsets(Collection<S> formulas);
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.BeliefSet)

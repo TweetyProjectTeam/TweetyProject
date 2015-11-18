@@ -38,12 +38,11 @@ public abstract class AbstractMusEnumerator<S extends Formula> implements MusEnu
 	 */
 	@Override
 	public abstract Collection<Collection<S>> minimalInconsistentSubsets(Collection<S> formulas);
-
+	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.MusEnumerator#maximalConsistentSubsets(java.util.Collection)
+	 * @see net.sf.tweety.logics.commons.analysis.MusEnumerator#minimalCorrectionSubsets(java.util.Collection)
 	 */
-	@Override
-	public Collection<Collection<S>> maximalConsistentSubsets(Collection<S> formulas){
+	public Set<Set<S>> minimalCorrectionSubsets(Collection<S> formulas){
 		// we use the duality of minimal inconsistent subsets, minimal correction sets, and maximal consistent
 		// subsets to compute the set of maximal consistent subsets
 		Collection<Collection<S>> mis = this.minimalInconsistentSubsets(formulas);
@@ -53,11 +52,20 @@ public abstract class AbstractMusEnumerator<S extends Formula> implements MusEnu
 			mi_sets.add(new HashSet<S>(m));
 		SetTools<S> settools = new SetTools<S>();
 		// get the minimal correction sets, i.e. irreducible hitting sets of minimal inconsistent subsets
-		Set<Set<S>> md_sets = settools.irreducibleHittingSets(mi_sets);
+		Set<Set<S>> md_sets =  settools.irreducibleHittingSets(mi_sets);
+		return md_sets;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.MusEnumerator#maximalConsistentSubsets(java.util.Collection)
+	 */
+	@Override
+	public Collection<Collection<S>> maximalConsistentSubsets(Collection<S> formulas){
+		Set<Set<S>> md_sets = this.minimalCorrectionSubsets(formulas);
 		// every maximal consistent subset is the complement of a minimal correction set
 		Set<Collection<S>> result = new HashSet<Collection<S>>();;
 		Set<S> tmp;
-		for(Set<S> ms: md_sets){
+		for(Collection<S> ms: md_sets){
 			tmp = new HashSet<S>(formulas);
 			tmp.removeAll(ms);
 			result.add(tmp);

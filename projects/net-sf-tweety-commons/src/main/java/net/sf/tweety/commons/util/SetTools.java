@@ -184,6 +184,30 @@ public class SetTools<E> {
 		}
 		return result;
 	}
+	
+	/** Checks whether the given set of sets has an empty intersection
+	 * @param sets some set of sets
+	 * @return true iff the all sets have an empty intersection.
+	 */
+	public boolean hasEmptyIntersection(Set<Set<E>> sets){
+		Set<E> i = new HashSet<E>();
+		i.addAll(sets.iterator().next());
+		for(Set<E> s: sets)
+			i.retainAll(s);
+		return i.isEmpty();		
+	}
+	
+	/**
+	 * Returns the union of the set of sets.
+	 * @param sets some set of sets
+	 * @return the union of the set.
+	 */
+	public Set<E> getUnion(Set<Set<E>> sets){
+		Set<E> result = new HashSet<E>();
+		for(Set<E> s: sets)
+			result.addAll(s);
+		return result;
+	}
 		
 	/**
 	 * Computes every bipartition of the given set, e.g. for
