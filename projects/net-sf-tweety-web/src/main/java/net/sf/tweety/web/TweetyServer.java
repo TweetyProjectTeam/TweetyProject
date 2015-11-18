@@ -32,7 +32,7 @@ import java.net.URI;
 public class TweetyServer {
 	
     // Base URI of this server
-    public static final String BASE_URI = "http://localhost:8080/tweety/";//"http://192.168.0.2:8080/tweety/"; 
+    public static final String BASE_URI = "http://192.168.0.2:8080/tweety/";//"http://192.168.0.2:8080/tweety/"; 
     // Log file of this server
     private static final String LOG = "tweetyserver.log";
      
