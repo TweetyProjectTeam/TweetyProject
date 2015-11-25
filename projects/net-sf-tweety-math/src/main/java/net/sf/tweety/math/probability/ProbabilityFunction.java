@@ -51,6 +51,15 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		}
 			
 		/**
+		 * Creates a new probability function by copying the given one.
+		 */
+		public ProbabilityFunction(ProbabilityFunction<T> other){
+			this();
+			for(Entry<T, Probability> entry: other.entrySet())
+				this.probabilities.put(entry.getKey(), new Probability(entry.getValue()));
+		}
+		
+		/**
 		 * Gets the probability of the given object.
 		 * @param w some object.
 		 * @return the probability of the given object.
@@ -232,9 +241,10 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 			// ... but sometimes this happens
 			// until I figure it out just return the first element
 			// TODO fix this
+			System.out.println("X");
 			return this.keySet().iterator().next();
 			//throw new RuntimeException("Mass of this probability function is larger than one!");
-		}
+		}		
 		
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
