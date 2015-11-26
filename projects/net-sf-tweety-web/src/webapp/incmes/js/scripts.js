@@ -107,6 +107,9 @@ function query(){
 				if(response.value >= 0){	  
 					document.getElementById("val_"+response.measure).innerHTML = response.value;					
 					document.getElementById("status_"+response.measure).innerHTML = "<img width=\"15\" height=\"15\" src=\"img/green_light.png\"></img>";
+				}else if(response.value == -3){	  
+					document.getElementById("val_"+response.measure).innerHTML = "&infin;";					
+					document.getElementById("status_"+response.measure).innerHTML = "<img width=\"15\" height=\"15\" src=\"img/green_light.png\"></img>";
 				}else if(response.value == -1){	  
 					document.getElementById("val_"+response.measure).innerHTML = "-";
 					document.getElementById("status_"+response.measure).innerHTML = "<span style=\"background: url(img/red_light15.png) left center no-repeat;width:100%,height:100%;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(timeout)</span>";

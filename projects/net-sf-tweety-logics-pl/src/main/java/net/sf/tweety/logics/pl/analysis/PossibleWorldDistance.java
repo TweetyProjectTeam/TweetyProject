@@ -36,12 +36,12 @@ public abstract class PossibleWorldDistance implements InterpretationDistance<Po
 		// get models
 		Set<PossibleWorld> models = f.getModels();
 		// compute minimal distance
-		double dist = Double.MAX_VALUE;
+		double dist = Double.POSITIVE_INFINITY;
 		for(PossibleWorld w: models){
 			if(this.distance(w, b2) < dist)
 				dist = this.distance(w, b2);
 		}
-		// Note that the distance if maximal if there is no model.
+		// Note that the distance is maximal if there is no model.
 		return dist;
 	}
 }

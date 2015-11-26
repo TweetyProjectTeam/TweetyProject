@@ -99,6 +99,7 @@ public class McscInconsistencyMeasure<S extends Formula> extends BeliefSetIncons
 		boolean ismin;
 		int min_union_size = Integer.MAX_VALUE;
 		int size;
+		boolean found_finite = false;
 		for(Set<Set<S>> ac: anticover){
 			ismin = true;
 			for(Set<Set<S>> ac2: anticover){
@@ -109,11 +110,15 @@ public class McscInconsistencyMeasure<S extends Formula> extends BeliefSetIncons
 			}
 			if(ismin){
 				size = st.getUnion(ac).size();
-				if(size < min_union_size)
+				if(size < min_union_size){
 					min_union_size = size;
+					found_finite = true;
+				}
 			}		
 		}		
-		return new Double(min_union_size);
+		if(found_finite)
+			return new Double(min_union_size);
+		else return Double.POSITIVE_INFINITY;
 	}
 
 }

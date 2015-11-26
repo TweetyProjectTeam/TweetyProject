@@ -213,6 +213,9 @@ public class InconsistencyMeasurementService{
 				executor.shutdownNow();
 				val = -2;
 			}
+			//inconsistency value of -3 indicates infinity
+			if(val == Double.POSITIVE_INFINITY)
+				val = -3;
 			millis = System.currentTimeMillis() - millis;
 			JSONObject jsonReply = new JSONObject();
 			jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_MEASURE, query.getString(InconsistencyMeasurementService.JSON_ATTR_MEASURE));
@@ -226,7 +229,7 @@ public class InconsistencyMeasurementService{
 		} catch (IOException e) {			
 			throw new JSONException("Malformed JSON: syntax of knowledge base does not conform to the given format.");
 		} catch(Exception e){
-			e.printStackTrace();
+			TweetyServer.log(InconsistencyMeasurementService.ID, "Unhandled exception: " + e.getMessage());
 			throw new JSONException("An unexpected error occured. Please contact an administrator.");
 		}
 	}

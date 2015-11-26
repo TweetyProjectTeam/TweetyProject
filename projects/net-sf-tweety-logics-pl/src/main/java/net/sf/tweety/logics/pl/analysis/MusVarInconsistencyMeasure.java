@@ -24,6 +24,9 @@ public class MusVarInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pr
 	 */
 	@Override
 	public Double inconsistencyMeasure(Collection<PropositionalFormula> formulas) {
+		// check empty set of formulas
+		if(formulas.isEmpty())
+			return 0d;		
 		AbstractMusEnumerator<PropositionalFormula> musEnum = PlMusEnumerator.getDefaultEnumerator();
 		Collection<Collection<PropositionalFormula>> muses = musEnum.minimalInconsistentSubsets(formulas);
 		PropositionalSignature allSig = new PropositionalSignature();

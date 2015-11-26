@@ -41,7 +41,7 @@ public class DSumInconsistencyMeasure<T extends Interpretation,S extends Formula
 	 */
 	@Override
 	public Double inconsistencyMeasure(Collection<S> formulas) {
-		double val = Double.MAX_VALUE;
+		double val = Double.POSITIVE_INFINITY;
 		// check every interpretation
 		this.it = this.it.reset(formulas);
 		T i;
