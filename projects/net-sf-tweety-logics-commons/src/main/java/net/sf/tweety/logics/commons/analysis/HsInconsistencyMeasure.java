@@ -55,6 +55,9 @@ public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 	public Double inconsistencyMeasure(Collection<S> formulas) {
 		// re-initialize interpretation iterator with correct signature
 		this.it = it.reset(formulas);
+		// check empty set of formulas
+		if(formulas.isEmpty())
+			return 0d;
 		// this is not very efficient but works
 		for(int card = 1; card <= formulas.size(); card++){
 			Collection<Interpretation> hittingSet = this.getHittingSet(formulas, card, new HashSet<Interpretation>());
