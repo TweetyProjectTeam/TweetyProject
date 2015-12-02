@@ -194,6 +194,7 @@
   	<module>net-sf-tweety-logics-el</module>
   	<module>net-sf-tweety-logics-pcl</module>
   	<module>net-sf-tweety-logics-rcl</module>
+  	<module>net-sf-tweety-logics-rdl</module>
   	<module>net-sf-tweety-logics-rpcl</module>
   	<module>net-sf-tweety-logics-dl</module>
   	<module>net-sf-tweety-logics-translators</module>  	
