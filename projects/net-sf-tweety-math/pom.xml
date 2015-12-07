@@ -38,11 +38,11 @@
     	<artifactId>log4j-over-slf4j</artifactId>
     	<version>1.6.3</version>
     </dependency>
-    <dependency>
-    	<groupId>ojalgo</groupId>
-    	<artifactId>ojalgo</artifactId>
-    	<version>35.0.0</version>
-    </dependency>
+   	<dependency>
+		<groupId>org.ojalgo</groupId>
+		<artifactId>ojalgo</artifactId>
+		<version>35.0</version>
+	</dependency>
 	<dependency>
 		<groupId>com.dbtsai.lbfgs</groupId>
 		<artifactId>lbfgs</artifactId>
