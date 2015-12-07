@@ -54,6 +54,8 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 	 */
 	@Override
 	public Collection<Collection<PropositionalFormula>> minimalInconsistentSubsets(Collection<PropositionalFormula> formulas) {
+		if(formulas.isEmpty())
+			return new HashSet<Collection<PropositionalFormula>>();  
 		try {
 			List<Proposition> props = new ArrayList<Proposition>();
 			for(PropositionalFormula f: formulas)
