@@ -1,6 +1,8 @@
 package net.sf.tweety.logics.rdl.syntax;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Functor;
@@ -31,6 +33,14 @@ public class DefaultRule extends RelationalFormula{
 	/** The conclusion of the default rule */
 	private FolFormula conc;
 	
+	public DefaultRule(FolFormula pre, Collection<FolFormula> jus, FolFormula conc) {
+		super();
+		this.pre = pre;
+		this.jus = new LinkedList();
+		this.jus.addAll(jus);
+		this.conc = conc;
+	}
+
 	public boolean isNormal(){
 		//TODO implement me
 		return false;
@@ -147,7 +157,13 @@ public class DefaultRule extends RelationalFormula{
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return null;
+		String result = pre+"::";
+		Iterator i =jus.iterator();
+		if(i.hasNext())
+			result += i.next();
+		while(i.hasNext())
+			result += ";"+ i.next();
+		return result+ "/"+conc;
 	}
 	
 	@Override

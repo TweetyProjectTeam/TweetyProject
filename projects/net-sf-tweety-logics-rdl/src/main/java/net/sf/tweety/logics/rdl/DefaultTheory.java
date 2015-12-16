@@ -1,5 +1,6 @@
 package net.sf.tweety.logics.rdl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sf.tweety.commons.*;
@@ -19,10 +20,30 @@ public class DefaultTheory implements BeliefBase{
 	/** The set of default rules */
 	private Collection<DefaultRule> defaults;
 	
+	
+	
+	public DefaultTheory(FolBeliefSet facts, Collection<DefaultRule> defaults) {
+		super();
+		this.facts = facts;
+		this.defaults = new ArrayList<DefaultRule>();
+		this.defaults.addAll(defaults);
+	}
+
 	@Override
 	public Signature getSignature() {
 		// TODO Auto-generated method stub
 		// Use FolSignature 
-		return null;
+		return facts.getSignature();
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		String result = facts +"\n\n";
+		for(DefaultRule d : defaults)
+			result += d + "\n";
+		return result;
+	}
+	
+	
 }
