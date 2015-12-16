@@ -1,0 +1,13 @@
+Animal = {tweety, bear}
+
+type(Flies(Animal))
+
+Flies(tweety)
+
+--defaults--
+
+Flies(A)::Flies(A)/Flies(A)
+
+Flies(B)::Flies(C); Flies(D)/Flies(E)
+
+::Flies(C)/Flies(E)
