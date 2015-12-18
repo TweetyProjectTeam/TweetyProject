@@ -16,6 +16,8 @@
  */
 package net.sf.tweety.math.func.fuzzy;
 
+import net.sf.tweety.math.term.Term;
+
 /**
  * Represents the probabilistic sum in fuzzy logic, i.e., S(x,y)=x+y-xy 
  * 
@@ -39,6 +41,22 @@ public class ProbabilisticSum extends TCoNorm{
 	@Override
 	public TNorm getDualNorm(){
 		return new ProductNorm();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TCoNorm#evalTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
+	 */
+	@Override
+	public Term evalTerm(Term val1, Term val2) {
+		return val1.add(val2).minus(val1.mult(val2));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TCoNorm#isNilpotent()
+	 */
+	@Override
+	public boolean isNilpotent() {
+		return false;
 	}
 
 }

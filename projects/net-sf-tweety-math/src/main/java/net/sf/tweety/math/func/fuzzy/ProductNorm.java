@@ -16,6 +16,8 @@
  */
 package net.sf.tweety.math.func.fuzzy;
 
+import net.sf.tweety.math.term.Term;
+
 /**
  * Represents the product-norm in fuzzy logic, i.e., T(x,y)=xy 
  * 
@@ -39,5 +41,21 @@ public class ProductNorm extends TNorm{
 	@Override
 	public TCoNorm getDualCoNorm(){
 		return new ProbabilisticSum();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TNorm#evalTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
+	 */
+	@Override
+	public Term evalTerm(Term val1, Term val2) {		
+		return val1.mult(val2);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TNorm#isNilpotent()
+	 */
+	@Override
+	public boolean isNilpotent() {
+		return false;
 	}
 }

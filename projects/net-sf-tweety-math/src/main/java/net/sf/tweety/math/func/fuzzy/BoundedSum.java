@@ -16,6 +16,10 @@
  */
 package net.sf.tweety.math.func.fuzzy;
 
+import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.Minimum;
+import net.sf.tweety.math.term.Term;
+
 /**
  * Represents the bounded sum in fuzzy logic, i.e., S(x,y)=min(x+y,1) 
  * 
@@ -39,6 +43,22 @@ public class BoundedSum extends TCoNorm{
 	@Override
 	public TNorm getDualNorm(){
 		return new LukasiewiczNorm();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TCoNorm#evalTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
+	 */
+	@Override
+	public Term evalTerm(Term val1, Term val2) {		
+		return new Minimum(val1.add(val2),new FloatConstant(1));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TCoNorm#isNilpotent()
+	 */
+	@Override
+	public boolean isNilpotent() {
+		return true;
 	}
 
 }

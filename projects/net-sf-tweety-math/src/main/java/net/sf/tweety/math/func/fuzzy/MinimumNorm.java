@@ -16,6 +16,9 @@
  */
 package net.sf.tweety.math.func.fuzzy;
 
+import net.sf.tweety.math.term.Minimum;
+import net.sf.tweety.math.term.Term;
+
 /**
  * Represents the minimum-norm in fuzzy logic, i.e., T(x,y)=min(x,y) 
  * 
@@ -39,5 +42,21 @@ public class MinimumNorm extends TNorm{
 	@Override
 	public TCoNorm getDualCoNorm(){
 		return new MaximumCoNorm();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TNorm#evalTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
+	 */
+	@Override
+	public Term evalTerm(Term val1, Term val2) {		
+		return new Minimum(val1,val2);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TNorm#isNilpotent()
+	 */
+	@Override
+	public boolean isNilpotent() {
+		return false;
 	}
 }

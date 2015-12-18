@@ -16,6 +16,10 @@
  */
 package net.sf.tweety.math.func.fuzzy;
 
+import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.Maximum;
+import net.sf.tweety.math.term.Term;
+
 /**
  * Represents the Lukasiewicz-norm in fuzzy logic, i.e., T(x,y)=max(x+y-1,0) 
  * 
@@ -40,4 +44,20 @@ public class LukasiewiczNorm extends TNorm{
 	public TCoNorm getDualCoNorm(){
 		return new BoundedSum();
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TNorm#evalTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
+	 */
+	@Override
+	public Term evalTerm(Term val1, Term val2) {		
+		return new Maximum(val1.add(val2).minus(new FloatConstant(1)),new FloatConstant(0));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TNorm#isNilpotent()
+	 */
+	@Override
+	public boolean isNilpotent() {
+		return true;
+	}	
 }

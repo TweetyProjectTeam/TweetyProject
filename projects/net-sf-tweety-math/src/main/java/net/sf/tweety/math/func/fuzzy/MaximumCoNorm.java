@@ -16,6 +16,9 @@
  */
 package net.sf.tweety.math.func.fuzzy;
 
+import net.sf.tweety.math.term.Maximum;
+import net.sf.tweety.math.term.Term;
+
 /**
  * Represents the maximum-conorm in fuzzy logic, i.e., S(x,y)=max(x,y) 
  * 
@@ -39,6 +42,22 @@ public class MaximumCoNorm extends TCoNorm{
 	@Override
 	public TNorm getDualNorm(){
 		return new MinimumNorm();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TCoNorm#evalTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
+	 */
+	@Override
+	public Term evalTerm(Term val1, Term val2) {		
+		return new Maximum(val1,val2);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.fuzzy.TCoNorm#isNilpotent()
+	 */
+	@Override
+	public boolean isNilpotent() {
+		return false;
 	}
 
 }

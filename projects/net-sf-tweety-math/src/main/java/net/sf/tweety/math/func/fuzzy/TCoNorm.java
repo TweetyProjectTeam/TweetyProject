@@ -16,7 +16,11 @@
  */
 package net.sf.tweety.math.func.fuzzy;
 
+import java.util.Collection;
+
 import net.sf.tweety.math.func.BinaryFunction;
+import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.Term;
 
 /**
  * Represents a T-norm in fuzzy logic, i.e., a generalization of a logical
@@ -34,17 +38,50 @@ public abstract class TCoNorm implements BinaryFunction<Double,Double,Double>{
 	public abstract Double eval(Double val1, Double val2);
 
 	/**
+	 * Generalizes this conorm on sets of input parameters
+	 * (as t-conorms are associative, the order is not important).
+	 * @param vals a set of values
+	 * @return the evaluation result on the input
+	 */
+	public Double eval(Collection<Double> vals){
+		Double result = 0d;
+		for(Double d: vals)
+			result = this.eval(result, d);
+		return result;
+	}
+	
+	/**
+	 * Gives a representation of this conorm as a mathematical term
+	 * @param val1 the term denoting the first parameter
+	 * @param val2 the term denoting the second parameter
+	 * @return the term denoting this conorm evaluation on the two terms
+	 */
+	public abstract Term evalTerm(Term val1, Term val2);
+	
+	/**
+	 * Gives a representation of this conorm as a mathematical term.
+	 * Generalizes this conorm on sets of input parameters
+	 * (as t-conorms are associative, the order is not important).
+	 * @param vals a set of value terms
+	 * @return the evaluation result on the input as a term
+	 */
+	public Term evalTerm(Collection<Term> vals){
+		Term result = new FloatConstant(0);
+		for(Term t: vals)
+			result = this.evalTerm(result,t);
+		return result;
+	}
+	
+	/**
 	 * Returns the dual T-norm of this T-conorm.
 	 * @return
 	 */
-	public TNorm getDualNorm(){
-		final TCoNorm s = this;
-		final DefaultNegation neg = new DefaultNegation();
-		return new TNorm(){
-			public Double eval(Double val1, Double val2) {
-				return neg.eval(s.eval(neg.eval(val1), neg.eval(val2)));
-			}			
-		};
-	}
+	public abstract TNorm getDualNorm();
+	
+	/**
+	 * A T-conorm is nilpotent if there are x,y<1 with s(x,y)=1
+	 * @return true if the conorm is nilpotent
+	 */
+	public abstract boolean isNilpotent();
 	
 }
