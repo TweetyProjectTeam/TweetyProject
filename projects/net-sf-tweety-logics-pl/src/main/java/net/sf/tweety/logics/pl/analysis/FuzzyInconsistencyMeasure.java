@@ -49,17 +49,26 @@ import net.sf.tweety.math.term.Variable;
  */
 public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula>{
 
+	/** static constant for the T-version of the measure */
+	public static final byte TFUZZY_MEASURE = 0;
+	/** static constant for the Sum-version of the measure */
+	public static final byte SUMFUZZY_MEASURE = 1;
+	
 	/** The used T-norm */
 	private TNorm tnorm;
 	/** The used T-conorm*/
 	private TCoNorm tconorm;
 	
+	/** One of TFUZZY_MEASURE, SUMFUZZY_MEASURE */
+	private byte measure_version;
+	
 	/**
 	 * Creates a new measure for the given T-norm and T-conorm.
 	 * @param tnorm some T-norm
 	 * @param tconorm some T-conorm
+	 * @param measure_version one of TFUZZY_MEASURE, SUMFUZZY_MEASURE
 	 */
-	public FuzzyInconsistencyMeasure(TNorm tnorm, TCoNorm tconorm){
+	public FuzzyInconsistencyMeasure(TNorm tnorm, TCoNorm tconorm, byte measure_version){
 		// both tnorm and tconorm cannot be nilpotent
 		if(tnorm.isNilpotent())
 			throw new IllegalArgumentException("T-norm must not be nilpotent");
@@ -67,6 +76,16 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 			throw new IllegalArgumentException("T-conorm must not be nilpotent");
 		this.tnorm = tnorm;
 		this.tconorm = tconorm;
+		this.measure_version = measure_version;
+	}
+	
+	/**
+	 * Creates a new measure (T Version) for the given T-norm and T-conorm.
+	 * @param tnorm some T-norm
+	 * @param tconorm some T-conorm
+	 */
+	public FuzzyInconsistencyMeasure(TNorm tnorm, TCoNorm tconorm){
+		this(tnorm,tconorm,FuzzyInconsistencyMeasure.TFUZZY_MEASURE);
 	}
 	
 	/**
@@ -126,7 +145,15 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 		PropositionalSignature sig = c.getSignature();
 		for(Proposition p: sig)
 			assignments.put(p, new FloatVariable("x" + idx++, 0, 1));
-		Term t = new FloatConstant(1).minus(this.getTerm(c, assignments));
+		Term t;
+		if(this.measure_version == FuzzyInconsistencyMeasure.TFUZZY_MEASURE){
+			t = new FloatConstant(1).minus(this.getTerm(c, assignments));
+		}else{
+			t = new FloatConstant(0);
+			FloatConstant one = new FloatConstant(1);
+			for(PropositionalFormula f: formulas)
+				t = t.add(one.minus(this.getTerm(f, assignments)));
+		}
 		// use a simple genetic optimization algorithm to compute the minimal assignment
 		SimpleGeneticOptimizationSolver solver = new SimpleGeneticOptimizationSolver(sig.size()*10,sig.size()*20,sig.size()*20,sig.size()*50,0.000001);
 		try {
