@@ -61,6 +61,8 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 	private int populationIncreaseCrossOver;
 	/** If an iteration improves less than this value the algorithm ends. */
 	private double precision;
+	/** The minimal number of iterations. */
+	private int minIterations;
 	
 	/**
 	 * Compares individuals by the fitness (value of the target function)
@@ -87,12 +89,14 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 	 * @param populationSize The size of the population
 	 * @param populationIncreaseMutation How many new individuals are created by mutation (per individual)
 	 * @param populationIncreaseCrossOver How many new individuals are created by cross-over (per pair of individuals)
+	 * @param minIterations The minimal number of iterations
 	 * @param precision If an iteration improves less than this value the algorithm ends
 	 */
-	public SimpleGeneticOptimizationSolver(int populationSize, int populationIncreaseMutation, int populationIncreaseCrossOver, double precision){
+	public SimpleGeneticOptimizationSolver(int populationSize, int populationIncreaseMutation, int populationIncreaseCrossOver, int minIterations, double precision){
 		this.populationSize = populationSize;
 		this.populationIncreaseMutation = populationIncreaseMutation;
 		this.populationIncreaseCrossOver = populationIncreaseCrossOver;
+		this.minIterations = minIterations;
 		this.precision = precision;
 	}	
 	
@@ -123,11 +127,11 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 				// positive or negative mutation
 				if(rand.nextBoolean()){
 					double val = ind.get(v).doubleValue();
-					val = val + SimpleGeneticOptimizationSolver.VAR_MUTATE_STRENGTH * (v.getUpperBound() - val);
+					val = val + rand.nextDouble() * SimpleGeneticOptimizationSolver.VAR_MUTATE_STRENGTH * (v.getUpperBound() - val);
 					mutant.put(v, new FloatConstant(val));
 				}else{
 					double val = ind.get(v).doubleValue();
-					val = val - SimpleGeneticOptimizationSolver.VAR_MUTATE_STRENGTH * (val- v.getLowerBound());
+					val = val - rand.nextDouble() * SimpleGeneticOptimizationSolver.VAR_MUTATE_STRENGTH * (val- v.getLowerBound());
 					mutant.put(v, new FloatConstant(val));
 				}
 			}else
@@ -193,7 +197,8 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		double previous_val;
 		double current_val = Double.MAX_VALUE;
 		Map<FloatVariable,Term> currentBest = null;
-		PriorityQueue<Map<FloatVariable,Term>> p = new PriorityQueue<Map<FloatVariable,Term>>(this.populationSize,new FitnessComparator(minT)); 
+		PriorityQueue<Map<FloatVariable,Term>> p = new PriorityQueue<Map<FloatVariable,Term>>(this.populationSize,new FitnessComparator(minT));
+		int it = 0;
 		do{
 			previous_val = current_val;
 			// create new population
@@ -215,8 +220,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			currentPopulation.clear();			
 			for(int i = 0; i < this.populationSize; i++)
 				currentPopulation.add(p.poll());
-			
-		}while(previous_val - current_val < this.precision);
+		}while(previous_val - current_val > this.precision || it++ < this.minIterations);
 		// convert map again
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
 		if(currentBest == null)
