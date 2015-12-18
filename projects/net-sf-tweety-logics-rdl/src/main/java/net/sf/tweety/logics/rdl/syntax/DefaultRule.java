@@ -41,9 +41,14 @@ public class DefaultRule extends RelationalFormula{
 		this.conc = conc;
 	}
 
+	/*
+	 * normal ^= a:c/c
+	 */
 	public boolean isNormal(){
 		//TODO implement me
-		return false;
+		if(jus.size() > 1)
+			return false;
+		return true;
 	}
 	
 	@Override
@@ -73,7 +78,10 @@ public class DefaultRule extends RelationalFormula{
 	@Override
 	public boolean containsQuantifier() {
 		// TODO Auto-generated method stub
-		return false;
+		boolean result = pre.containsQuantifier() || conc.containsQuantifier();
+		for(FolFormula f: jus)
+			result |= f.containsQuantifier();
+		return result;
 	}
 	
 	@Override
@@ -127,6 +135,10 @@ public class DefaultRule extends RelationalFormula{
 	@Override
 	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
+		pre.substitute(v,t);
+		for(FolFormula f: jus)
+			f.substitute(v,t);
+		conc.substitute(v,t);
 		return null;
 	}
 	
@@ -157,13 +169,13 @@ public class DefaultRule extends RelationalFormula{
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		String result = pre+"::";
+		String result = pre+" :: ";
 		Iterator i =jus.iterator();
 		if(i.hasNext())
 			result += i.next();
 		while(i.hasNext())
-			result += ";"+ i.next();
-		return result+ "/"+conc;
+			result += " ; "+ i.next();
+		return result+ " / "+conc;
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ Animal = {tweety, bear}
 type(Flies(Animal))
 
 Flies(tweety)
+exists X: (Flies(X))
 
 --defaults--
 
@@ -11,3 +12,6 @@ Flies(A)::Flies(A)/Flies(A)
 Flies(B)::Flies(C); Flies(D)/Flies(E)
 
 ::Flies(C)/Flies(E)
+
+exists X: (Flies(X)) :: forall X: (Flies(X)) && Flies(B) ; Flies(B) /Flies(B) 
+
