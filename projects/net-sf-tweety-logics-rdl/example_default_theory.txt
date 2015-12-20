@@ -1,17 +1,28 @@
-Animal = {tweety, bear}
+Animal = {tweety, penguin, bat, bear, whale, shark, octopus}
+Person = {mary, peter, tom, anne}
 
 type(Flies(Animal))
+type(Swims(Animal))
+type(Bird(Animal))
+type(Fish(Animal))
+type(Mammal(Animal))
 
-Flies(tweety)
-exists X: (Flies(X))
+type(Mother(Person, Person))
+type(Father(Person, Person))
+type(Married(Person, Person))
+type(Male(Person))
+type(Female(Person))
+
+Bird(tweety)
+Bird(penguin)
+!Flies(penguin)
+Flies(bat)
+exists X:(Flies(X))
+
+Male(peter)
+
 
 --defaults--
 
-Flies(A)::Flies(A)/Flies(A)
-
-Flies(B)::Flies(C); Flies(D)/Flies(E)
-
-::Flies(C)/Flies(E)
-
-exists X: (Flies(X)) :: forall X: (Flies(X)) && Flies(B) ; Flies(B) /Flies(B) 
+Bird(X) :: Flies(X) / Flies(X)
 

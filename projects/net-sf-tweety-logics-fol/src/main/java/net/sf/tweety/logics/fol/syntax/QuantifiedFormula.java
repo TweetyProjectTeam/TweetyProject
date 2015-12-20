@@ -144,7 +144,10 @@ public abstract class QuantifiedFormula extends FolFormula {
 	 */
 	@Override
 	public Set<Variable> getUnboundVariables(){
-		Set<Variable> variables = this.getTerms(Variable.class);
+	/*	Set<Variable> variables = this.getTerms(Variable.class);
+		variables.removeAll(this.quantifier_variables);
+		return variables;*/
+		Set<Variable> variables = folFormula.getUnboundVariables();
 		variables.removeAll(this.quantifier_variables);
 		return variables;
 	}

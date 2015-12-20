@@ -5,12 +5,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
+import ch.qos.logback.core.db.dialect.SybaseSqlAnywhereDialect;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
@@ -33,8 +36,12 @@ public class DefaultRule extends RelationalFormula{
 	/** The conclusion of the default rule */
 	private FolFormula conc;
 	
-	public DefaultRule(FolFormula pre, Collection<FolFormula> jus, FolFormula conc) {
+	public DefaultRule(FolFormula pre, Collection<FolFormula> jus, FolFormula conc) throws ParserException {
 		super();
+		if(conc == null)
+			throw new ParserException("Conclusion needed to form default rule.");
+		if(jus.isEmpty())
+			throw new ParserException("Justification needed to form default rule.");
 		this.pre = pre;
 		this.jus = new LinkedList();
 		this.jus.addAll(jus);
@@ -46,8 +53,10 @@ public class DefaultRule extends RelationalFormula{
 	 */
 	public boolean isNormal(){
 		//TODO implement me
-		if(jus.size() > 1)
-			return false;
+		for(FolFormula f: jus){
+			if(! ClassicalInference.equivalent(f, conc))
+				return false;
+		}
 		return true;
 	}
 	
@@ -72,13 +81,20 @@ public class DefaultRule extends RelationalFormula{
 	@Override
 	public Set<Variable> getUnboundVariables() {
 		// TODO Auto-generated method stub
-		return null;
+		Set unbound = conc.getUnboundVariables();
+		if(pre != null)
+			unbound.addAll(pre.getUnboundVariables());
+		for(FolFormula f: jus)
+			unbound.addAll(f.getUnboundVariables());
+		return unbound;
 	}
 	
 	@Override
 	public boolean containsQuantifier() {
 		// TODO Auto-generated method stub
-		boolean result = pre.containsQuantifier() || conc.containsQuantifier();
+		boolean result = conc.containsQuantifier();
+		if(pre!=null)
+			result |= pre.containsQuantifier();
 		for(FolFormula f: jus)
 			result |= f.containsQuantifier();
 		return result;
@@ -181,6 +197,9 @@ public class DefaultRule extends RelationalFormula{
 	@Override
 	public RelationalFormula clone() {
 		// TODO Auto-generated method stub
+		try{
+		return new DefaultRule(pre, jus, conc);
+		}catch(Exception e){}
 		return null;
 	}	
 }

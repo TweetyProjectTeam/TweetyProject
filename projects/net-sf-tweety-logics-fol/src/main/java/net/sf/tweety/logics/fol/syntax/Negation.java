@@ -104,7 +104,8 @@ public class Negation extends FolFormula{
 	 */
 	@Override
 	public Set<Variable> getUnboundVariables(){
-		return this.getTerms(Variable.class);
+		//return this.getTerms(Variable.class);
+		return folFormula.getUnboundVariables();
 	}
 	
 	/* (non-Javadoc)
