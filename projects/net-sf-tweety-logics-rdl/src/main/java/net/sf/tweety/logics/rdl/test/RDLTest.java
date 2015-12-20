@@ -20,6 +20,6 @@ public class RDLTest {
 		
 		DefaultRule d = (DefaultRule)parser.parseFormula("exists X:(Flies(X))::Flies(B)/Flies(B)");
 		System.out.println(d);
-	}
+;	}
 
 }
