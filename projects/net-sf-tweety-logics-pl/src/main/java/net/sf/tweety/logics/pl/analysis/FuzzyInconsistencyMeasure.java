@@ -18,11 +18,13 @@ package net.sf.tweety.logics.pl.analysis;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
+import net.sf.tweety.logics.pl.semantics.FuzzyInterpretation;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
@@ -98,6 +100,16 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 	}
 	
 	/**
+	 * Creates a new measure for the given T-norm. Its dual
+	 * is used as t-conorm.
+	 * @param tnorm some T-norm
+	 * @param measure_version one of TFUZZY_MEASURE, SUMFUZZY_MEASURE
+	 */
+	public FuzzyInconsistencyMeasure(TNorm tnorm, byte measure_version){
+		this(tnorm, tnorm.getDualCoNorm(), measure_version);
+	}
+	
+	/**
 	 * Returns a mathematical term representation of the given formula by replacing
 	 * proposition by their given mathematical variables and replacing conjunction, disjunction,
 	 * and negation by their fuzzy counterparts (taking the given t-norm and t-conorm into account). 
@@ -116,15 +128,15 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 		if(formula instanceof Negation)
 			return new FloatConstant(1).minus(this.getTerm(((Negation)formula).getFormula(), assignments));
 		if(formula instanceof Conjunction){
-			Set<PropositionalFormula> conjuncts = ((Conjunction)formula).getFormulas();
-			Set<Term> conjunctTerms = new HashSet<Term>();
+			List<PropositionalFormula> conjuncts = ((Conjunction)formula).getFormulas();
+			List<Term> conjunctTerms = new LinkedList<Term>();
 			for(PropositionalFormula f: conjuncts)
 				conjunctTerms.add(this.getTerm(f, assignments));
 			return this.tnorm.evalTerm(conjunctTerms);
 		}
 		if(formula instanceof Disjunction){
-			Set<PropositionalFormula> disjuncts = ((Disjunction)formula).getFormulas();
-			Set<Term> disjunctsTerms = new HashSet<Term>();
+			List<PropositionalFormula> disjuncts = ((Disjunction)formula).getFormulas();
+			List<Term> disjunctsTerms = new LinkedList<Term>();
 			for(PropositionalFormula f: disjuncts)
 				disjunctsTerms.add(this.getTerm(f, assignments));
 			return this.tconorm.evalTerm(disjunctsTerms);
@@ -132,22 +144,18 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 		// this should not happen
 		throw new RuntimeException("Unexpected type of formula");
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
+
+	/**
+	 * Utility method 
+	 * @param formulas
+	 * @param assignments
+	 * @return
 	 */
-	@Override
-	public Double inconsistencyMeasure(Collection<PropositionalFormula> formulas) {
-		Conjunction c = new Conjunction();
-		c.addAll(formulas);
-		Map<Proposition,Variable> assignments = new HashMap<Proposition,Variable>();
-		int idx = 0;
-		PropositionalSignature sig = c.getSignature();
-		for(Proposition p: sig)
-			assignments.put(p, new FloatVariable("x" + idx++, 0, 1));
-		Term t;
+	private Pair<Map<Variable,Term>,Double> constructAndSolveProblem(Collection<PropositionalFormula> formulas, Map<Proposition,Variable> assignments){
+		PropositionalSignature sig = new Conjunction(formulas).getSignature();
+		Term t;		
 		if(this.measure_version == FuzzyInconsistencyMeasure.TFUZZY_MEASURE){
-			t = new FloatConstant(1).minus(this.getTerm(c, assignments));
+			t = new FloatConstant(1).minus(this.getTerm(new Conjunction(formulas), assignments));
 		}else{
 			t = new FloatConstant(0);
 			FloatConstant one = new FloatConstant(1);
@@ -158,9 +166,44 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 		SimpleGeneticOptimizationSolver solver = new SimpleGeneticOptimizationSolver(sig.size()*10,sig.size()*20,sig.size()*20,sig.size()*50,0.000001);
 		try {
 			Map<Variable,Term> result = solver.solve(t, OptimizationProblem.MINIMIZE);
-			return t.replaceAllTerms(result).doubleValue();
+			return new Pair<Map<Variable,Term>,Double>(result,t.replaceAllTerms(result).doubleValue());
 		} catch (GeneralMathException e) {
-			return -1d;
+			return null;
 		}
+	}
+
+	
+	/**
+	 * Returns an optimal interpretation as a witness for the inconsistency value.
+	 * @param formulas a set of formulas
+	 * @return an optimal interpretation as a witness for the inconsistency value.
+	 */
+	public FuzzyInterpretation getOptimalInterpretation(Collection<PropositionalFormula> formulas) {
+		Map<Proposition,Variable> assignments = new HashMap<Proposition,Variable>();
+		int idx = 0;		
+		for(Proposition p: new Conjunction(formulas).getSignature())
+			assignments.put(p, new FloatVariable("x" + idx++, 0, 1));
+		Pair<Map<Variable,Term>,Double> result = this.constructAndSolveProblem(formulas, assignments);
+		if(result != null){
+			FuzzyInterpretation i = new FuzzyInterpretation();
+			for(Proposition p: assignments.keySet())
+				i.put(p, result.getFirst().get(assignments.get(p)).doubleValue());
+			return i;
+		}else return null;		
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
+	 */
+	@Override
+	public Double inconsistencyMeasure(Collection<PropositionalFormula> formulas) {
+		Map<Proposition,Variable> assignments = new HashMap<Proposition,Variable>();
+		int idx = 0;		
+		for(Proposition p: new Conjunction(formulas).getSignature())
+			assignments.put(p, new FloatVariable("x" + idx++, 0, 1));
+		Pair<Map<Variable,Term>,Double> result = this.constructAndSolveProblem(formulas, assignments);
+		if(result != null)
+			return result.getSecond();
+		else return -1d;
 	}	
 }

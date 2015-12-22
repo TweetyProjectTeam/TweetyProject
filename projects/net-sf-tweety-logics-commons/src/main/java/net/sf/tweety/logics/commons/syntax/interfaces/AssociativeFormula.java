@@ -29,7 +29,7 @@ public interface AssociativeFormula<T extends SimpleLogicalFormula>
 	extends SimpleLogicalFormula, List<T> {
 	
 	/** @return all the formulas saved as childs in the associative formula */
-	Set<T> getFormulas();
+	List<T> getFormulas();
 	
 	/**
 	 * Process the formulas of type C that are children of this associative

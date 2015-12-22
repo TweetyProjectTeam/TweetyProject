@@ -81,7 +81,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	}
 	
 	@Override
-	public Set<PropositionalFormula> getFormulas() {
+	public List<PropositionalFormula> getFormulas() {
 		return support.getFormulas();
 	}
 
@@ -156,6 +156,8 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 			if (other.support != null)
 				return false;
 		} else if (!support.getFormulas().equals(other.support.getFormulas()))
+			return false;
+		else if(support.size() != other.support.size())
 			return false;
 		return true;
 	}

@@ -138,8 +138,8 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 	//-------------------------------------------------------------------------
 	
 	@Override
-	public Set<T> getFormulas() {
-		return new HashSet<T>(formulas);
+	public List<T> getFormulas() {
+		return new LinkedList<T>(formulas);
 	}
 
 	@Override

@@ -104,7 +104,7 @@ public class DLPHead extends DLPElementAdapter
 	}
 
 	@Override
-	public Set<DLPLiteral> getFormulas() {
+	public List<DLPLiteral> getFormulas() {
 		return assocSupport.getFormulas();
 	}
 

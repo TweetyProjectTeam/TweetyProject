@@ -64,7 +64,7 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 	}
 	
 	@Override
-	public Set<LdoFormula> getFormulas() {
+	public List<LdoFormula> getFormulas() {
 		return support.getFormulas();
 	}
 
