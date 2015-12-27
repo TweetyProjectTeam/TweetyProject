@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.fol.ClassicalInference;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
+import net.sf.tweety.logics.rdl.semantics.DefaultSequence;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
 public class RDLTest {
@@ -34,7 +37,7 @@ public class RDLTest {
 		System.out.println("\n--isNormal--");
 		for(DefaultRule d: testset){
 			System.out.print(d);
-			System.out.println("\t\t" + (d.isNormal() ? "normal" : "not normal"));
+			System.out.println("\t\t" + (d.isNormal(th) ? "normal" : "not normal"));
 		}
 		
 		System.out.println("\n--getUnboundVariables--");
@@ -45,6 +48,8 @@ public class RDLTest {
 				System.out.print(v);
 			System.out.println("}");
 		}
+		
+		
 	}
 	
 	static void parserTest() throws Exception{
@@ -55,10 +60,20 @@ public class RDLTest {
 		DefaultRule d = (DefaultRule)parser.parseFormula("exists X:(Flies(X))::Flies(B)/Flies(B)");
 		System.out.println(d);
 	}
+	
+	static void sequenceTest() throws Exception{
+		RdlParser parser = new RdlParser();
+		DefaultTheory th = parser.parseBeliefBaseFromFile("example_default_theory.txt");
+		DefaultSequence s = new DefaultSequence(th).app((DefaultRule)parser.parseFormula("::Flies(tweety)/Flies(tweety)")).app( (DefaultRule)parser.parseFormula("::!Flies(tweety); Bird(tweety)/!Flies(C)"));
+		
+		System.out.println(s.getIn());
+		System.out.println(s.getOut());
+		System.out.println(s.isProcess());
+	}
 
 	public static void main(String[] args) throws Exception {
 		//parserTest();
-		defaultRuleTest();
+		sequenceTest();
 		
 ;	}
 

@@ -13,12 +13,13 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
 public class RdlParser extends Parser<DefaultTheory> {
 
-	private final FolParser folparser = new FolParser();
+	private FolParser folparser;
 
 	private final String DIV_COLON = "::", DIV_COMMA = ";", DIV_SLASH = "/";
 
@@ -28,6 +29,7 @@ public class RdlParser extends Parser<DefaultTheory> {
 	@Override
 	public DefaultTheory parseBeliefBase(Reader reader) throws IOException, ParserException {
 		// TODO Auto-generated method stub
+		folparser= new FolParser();
 		BufferedReader br = new BufferedReader(reader);
 		String str = "";
 		String line;
@@ -50,7 +52,7 @@ public class RdlParser extends Parser<DefaultTheory> {
 		Matcher matcher = DEFAULT_SPLIT.matcher(line);
 		if (!matcher.matches())
 			return folparser.parseFormula(line);
-		FolFormula pre = null;
+		FolFormula pre = new Tautology();
 		if (!matcher.group(1).matches("^\\s*$"))
 			pre = (FolFormula) parseFormula(matcher.group(1));
 		FolFormula conc = (FolFormula) parseFormula(matcher.group(3));

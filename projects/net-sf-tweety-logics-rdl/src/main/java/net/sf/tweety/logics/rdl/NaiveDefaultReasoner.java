@@ -18,12 +18,16 @@ public class NaiveDefaultReasoner extends Reasoner{
 
 	public NaiveDefaultReasoner(BeliefBase beliefBase) {
 		super(beliefBase);
+		if( ! (beliefBase instanceof DefaultTheory))
+			throw new IllegalArgumentException("BeliefBase has to be a DefaultTheory");
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Answer query(Formula query) {
 		// TODO Auto-generated method stub
+		if(!(query instanceof FolFormula))
+			throw new IllegalArgumentException("NaiveDefaultReasoner is only defined for first-order queries.");
 		return null;
 	}
 

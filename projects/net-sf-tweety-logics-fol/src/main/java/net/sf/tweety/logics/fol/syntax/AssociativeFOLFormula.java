@@ -163,7 +163,7 @@ public abstract class AssociativeFOLFormula extends FolFormula implements
 	//-------------------------------------------------------------------------
 	
 	@Override
-	public List<RelationalFormula> getFormulas() {
+	public Set<RelationalFormula> getFormulas() {
 		return support.getFormulas();
 	}
 

@@ -16,11 +16,18 @@
  */
 package net.sf.tweety.logics.fol;
 
-import java.util.*;
+import java.util.Set;
 
-import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.fol.semantics.*;
-import net.sf.tweety.logics.fol.syntax.*;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.fol.semantics.HerbrandBase;
+import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 
 
 /**
@@ -69,6 +76,22 @@ public class ClassicalInference extends Reasoner {
 		answer.setAnswer(true);
 		answer.appendText("The answer is: true");
 		return answer;
+	}
+	
+	/**
+	 * Tests naively whether two fol formulas are equivalent
+	 * @param f1 some formula
+	 * @param f2 some formula
+	 * @return "true" if the two formulas are equivalent
+	 */
+	public boolean eq(FolFormula f1, FolFormula f2){
+		FolSignature sig = new FolSignature();
+		sig.addSignature(f1.getSignature());
+		sig.addSignature(f2.getSignature());
+		FolFormula f = f1.combineWithAnd(f2).combineWithOr(f1.complement().combineWithAnd(f2.complement()));
+		if(!f.getUnboundVariables().isEmpty())
+			f = new ForallQuantifiedFormula(f, f.getUnboundVariables());
+		return query(f).getAnswerBoolean();
 	}
 
 	/**

@@ -45,5 +45,9 @@ public class DefaultTheory implements BeliefBase{
 		return result;
 	}
 	
+	public FolBeliefSet getFacts(){
+		return facts;
+	}
+	
 	
 }
