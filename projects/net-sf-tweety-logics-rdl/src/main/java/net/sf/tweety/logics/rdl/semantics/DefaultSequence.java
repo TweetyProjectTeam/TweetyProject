@@ -19,6 +19,7 @@ public class DefaultSequence {
 	private Set<FolFormula> out = new HashSet();
 	private FolBeliefSet in = new FolBeliefSet();
 	private ClassicalInference reasoner = new ClassicalInference(in);
+	boolean process = false;
 
 	public DefaultSequence(DefaultTheory dt) {
 		in.addAll(dt.getFacts());
@@ -28,6 +29,12 @@ public class DefaultSequence {
 		defaults.addAll(ds.defaults);
 		defaults.add(d);
 		in.addAll(ds.in);
+		for(FolFormula f:in)
+			if(eq(f, d.getPre()))
+				process = true;
+		for(DefaultRule r: defaults)
+			if(d==r)
+				process = false;
 		in.add(d.getConc());
 		out.addAll(ds.out);
 		for(FolFormula f: d.getJus())
@@ -37,27 +44,29 @@ public class DefaultSequence {
 	public DefaultSequence app(DefaultRule d){
 		return new DefaultSequence(this,d);
 	}
+	
+	private boolean eq(FolFormula a, FolFormula b){
+		return false;
+	}
 
 	public Collection<FolFormula> getIn() {
-		// TODO implement me
 		return in;
 	}
 
 	public Collection<FolFormula> getOut() {
-		// TODO implement me
 		return out;
 	}
 
 	public boolean isProcess() {
-		for(FolFormula f : out)
-			if(reasoner.query(f).getAnswerBoolean())
-				return false;
-		return true;
+		return process;
 	}
 
 	public boolean isSuccessful() {
-		// TODO implement me
-		return false;
+		for(FolFormula f: in)
+			for(FolFormula g: out)
+				if(eq(f,g))
+					return false;
+		return true;
 	}
 
 	public boolean isClosed() {

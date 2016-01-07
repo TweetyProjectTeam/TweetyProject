@@ -22,6 +22,10 @@ public class DefaultTheory implements BeliefBase{
 	
 	
 	
+	public Collection<DefaultRule> getDefaults() {
+		return defaults;
+	}
+
 	public DefaultTheory(FolBeliefSet facts, Collection<DefaultRule> defaults) {
 		super();
 		this.facts = facts;
