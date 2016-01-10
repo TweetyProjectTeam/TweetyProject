@@ -19,7 +19,7 @@ public class DefaultSequence {
 	private Set<FolFormula> out = new HashSet();
 	private FolBeliefSet in = new FolBeliefSet();
 	private ClassicalInference reasoner = new ClassicalInference(in);
-	boolean process = false;
+	boolean process = true;
 
 	public DefaultSequence(DefaultTheory dt) {
 		in.addAll(dt.getFacts());
@@ -29,8 +29,9 @@ public class DefaultSequence {
 		defaults.addAll(ds.defaults);
 		defaults.add(d);
 		in.addAll(ds.in);
+		process = false;
 		for(FolFormula f:in)
-			if(eq(f, d.getPre()))
+			if(eq(f, (FolFormula)d.getPre())) 
 				process = true;
 		for(DefaultRule r: defaults)
 			if(d==r)
@@ -45,8 +46,14 @@ public class DefaultSequence {
 		return new DefaultSequence(this,d);
 	}
 	
-	private boolean eq(FolFormula a, FolFormula b){
-		return false;
+	/**
+	 * helper
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+ 	private boolean eq(FolFormula a, FolFormula b){
+		return ClassicalInference.equivalent(a, b);
 	}
 
 	public Collection<FolFormula> getIn() {
@@ -57,10 +64,18 @@ public class DefaultSequence {
 		return out;
 	}
 
+	/**
+	 * process <=> all defaults are unique and applicable in sequence
+	 * @return true iff is process
+	 */
 	public boolean isProcess() {
 		return process;
 	}
 
+	/**
+	 * successfull <=> no elem in In and Out
+	 * @return true iff successfull
+	 */
 	public boolean isSuccessful() {
 		for(FolFormula f: in)
 			for(FolFormula g: out)
@@ -69,8 +84,18 @@ public class DefaultSequence {
 		return true;
 	}
 
+	/**
+	 * @return true iff every possible default is applied
+	 */
 	public boolean isClosed() {
 		// TODO implement me
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return "DefaultSequence [\n\tdefaults = " + defaults + ", \n\tout = " + out + ", \n\tin = " + in + "\n\tprocess = "+ process +"\n]";
+	}
+	
+
 }

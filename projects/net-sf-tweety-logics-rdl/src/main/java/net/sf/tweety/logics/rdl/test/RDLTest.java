@@ -64,11 +64,14 @@ public class RDLTest {
 	static void sequenceTest() throws Exception{
 		RdlParser parser = new RdlParser();
 		DefaultTheory th = parser.parseBeliefBaseFromFile("example_default_theory.txt");
-		DefaultSequence s = new DefaultSequence(th).app((DefaultRule)parser.parseFormula("::Flies(tweety)/Flies(tweety)")).app( (DefaultRule)parser.parseFormula("::!Flies(tweety); Bird(tweety)/!Flies(C)"));
+		DefaultSequence s = new DefaultSequence(th);
 		
-		System.out.println(s.getIn());
-		System.out.println(s.getOut());
-		System.out.println(s.isProcess());
+		System.out.println(s);
+		
+		s = s.app((DefaultRule)parser.parseFormula("::!Flies(X)/!Flies(X)"));
+		
+		System.out.println(s);
+		
 	}
 
 	public static void main(String[] args) throws Exception {
