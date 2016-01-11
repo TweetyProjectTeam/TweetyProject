@@ -50,6 +50,11 @@ public class InconsistencyMeasurementValueDistributionTest {
 		InconsistencyMeasure<BeliefSet<PropositionalFormula>> im;
 		double v;
 		for(Measure m: InconsistencyMeasureFactory.Measure.values()){
+			//skip drastic
+			if(m.equals(InconsistencyMeasureFactory.Measure.DRASTIC)){
+				System.out.println("Skipped drastic measure...");
+				continue;
+			}
 			im = InconsistencyMeasureFactory.getInconsistencyMeasure(m);
 			distr = new HashMap<Double,Integer>();
 			for(File file: new File(args[0]).listFiles()){

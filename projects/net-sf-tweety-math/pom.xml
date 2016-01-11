@@ -21,7 +21,7 @@
     <dependency>
     	<groupId>net.sf.tweety</groupId>
     	<artifactId>commons</artifactId>
-    	<version>1.4-SNAPSHOT</version>
+    	<version>1.5-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.commons</groupId>
@@ -52,7 +52,7 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.4-SNAPSHOT</version>
+  	<version>1.5-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>
