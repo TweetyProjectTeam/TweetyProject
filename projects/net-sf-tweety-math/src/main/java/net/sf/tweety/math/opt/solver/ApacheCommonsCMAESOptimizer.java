@@ -1,3 +1,19 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.sf.tweety.math.opt.solver;
 
 import java.util.ArrayList;
@@ -108,6 +124,14 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 		for(int i = 0; i < vars.size(); i++)
 			result.put(vars.get(i), new FloatConstant(val.getPoint()[i]));
 		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// as this is a native implementation it is always installed
+		return true;
 	}
 
 }

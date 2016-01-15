@@ -109,9 +109,9 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		if(!(problem instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
 		OptimizationProblem p = (OptimizationProblem) problem; 
-		// only box constraints allows
+		// only box constraints allowed
 		if(!p.isEmpty())
-			throw new IllegalArgumentException("Only optimization problems with box constraints on variables allowed for this solver (no other constraints.");
+			throw new IllegalArgumentException("Only optimization problems with box constraints on variables allowed for this solver (no other constraints).");
 		return this.solve(p.getTargetFunction(), p.getType());
 	}
 	
@@ -228,6 +228,14 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		for(FloatVariable v: currentBest.keySet())
 			result.put(v, currentBest.get(v));
 		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
+	 */
+	public static boolean isInstalled() throws UnsupportedOperationException{
+		// as this is a native implementation it is always installed
+		return true;
 	}
 
 }
