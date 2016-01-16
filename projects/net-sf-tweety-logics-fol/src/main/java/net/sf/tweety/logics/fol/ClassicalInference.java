@@ -34,7 +34,7 @@ import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
  * This class implements the classical inference operator. A query, i.e. a closed
  * formula in first-order logic can be inferred by a knowledge base, iff every
  * model of the knowledge base is also a model of the query.
- * @author Matthias Thimm
+ * @author Matthias Thimm, Nils Geilen
  */
 public class ClassicalInference extends Reasoner {
 
