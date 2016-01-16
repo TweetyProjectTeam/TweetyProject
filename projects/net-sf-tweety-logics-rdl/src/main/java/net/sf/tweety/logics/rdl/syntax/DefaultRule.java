@@ -1,13 +1,12 @@
 package net.sf.tweety.logics.rdl.syntax;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
-import javax.swing.table.DefaultTableCellRenderer;
-
-import ch.qos.logback.core.db.dialect.SybaseSqlAnywhereDialect;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -16,7 +15,6 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.ClassicalInference;
-import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
@@ -29,7 +27,7 @@ import net.sf.tweety.math.probability.Probability;
  * Models a default rule in Reiter's default logic, see [R. Reiter. A logic for
  * default reasoning. Artificial Intelligence, 13:81–132, 1980].
  * 
- * @author Matthias Thimm
+ * @author Matthias Thimm, Nils Geilen
  *
  */
 public class DefaultRule extends RelationalFormula {
@@ -71,16 +69,16 @@ public class DefaultRule extends RelationalFormula {
 		}
 		return true;
 	}
-	
+
 	public FolFormula getPre() {
 		return pre;
 	}
-	
-	public Collection<FolFormula> getJus(){
+
+	public Collection<FolFormula> getJus() {
 		return jus;
 	}
-	
-	public FolFormula getConc(){
+
+	public FolFormula getConc() {
 		return conc;
 	}
 
@@ -212,11 +210,11 @@ public class DefaultRule extends RelationalFormula {
 	@Override
 	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		pre.substitute(v, t);
+		List<FolFormula> fs = new ArrayList<>();
 		for (FolFormula f : jus)
-			f.substitute(v, t);
-		conc.substitute(v, t);
-		return null;
+			fs.add(f.substitute(v, t));
+		;
+		return new DefaultRule((FolFormula)pre.substitute(v, t), fs, (FolFormula)conc.substitute(v, t));
 	}
 
 	@Override
@@ -264,4 +262,23 @@ public class DefaultRule extends RelationalFormula {
 		}
 		return null;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(this==o)
+			return true;
+		if(o instanceof DefaultRule){
+			DefaultRule d = (DefaultRule)o;
+			for(FolFormula f: this.jus){
+				boolean b= false;
+				for(FolFormula g: d.jus)
+					b|=f.equals(g);
+				if(!b)
+					return false;
+			}
+			return this.pre.equals(d.pre) && this.conc.equals(d.conc);
+		}
+		return false;
+	}
+
 }

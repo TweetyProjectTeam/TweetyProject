@@ -10,8 +10,15 @@ import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
+
+/**
+ * 
+ * @author Nils Geilen
+ *
+ */
 
 public class DefaultSequence {
 
@@ -27,16 +34,14 @@ public class DefaultSequence {
 
 	public DefaultSequence(DefaultSequence ds, DefaultRule d) {
 		defaults.addAll(ds.defaults);
-		defaults.add(d);
 		in.addAll(ds.in);
-		process = false;
-		for(FolFormula f:in)
-			if(eq(f, (FolFormula)d.getPre())) 
-				process = true;
+		// correct way ?
+		process = ds.isApplicable(d);
 		for(DefaultRule r: defaults)
-			if(d==r)
+			if(d.equals(r))
 				process = false;
 		in.add(d.getConc());
+		defaults.add(d);
 		out.addAll(ds.out);
 		for(FolFormula f: d.getJus())
 			out.add(new Negation(f));
@@ -47,10 +52,26 @@ public class DefaultSequence {
 	}
 	
 	/**
+	 * applicable ^= pre in In and (not jus_i) not in In forall i 
+	 * @param d
+	 * @return true iff d is applicable to In
+	 */
+	public boolean isApplicable(DefaultRule d){
+		for(FolFormula f: d.getJus())
+			for(FolFormula g: in)
+				if(eq(new Negation(f),g))
+					return false;
+		boolean result = d.getPre() instanceof Tautology;
+		for(FolFormula f: in)
+			result|=eq(d.getPre(),f);
+		return result;
+	}
+	
+	/**
 	 * helper
 	 * @param a
 	 * @param b
-	 * @return
+	 * @return a = b
 	 */
  	private boolean eq(FolFormula a, FolFormula b){
 		return ClassicalInference.equivalent(a, b);
@@ -87,14 +108,19 @@ public class DefaultSequence {
 	/**
 	 * @return true iff every possible default is applied
 	 */
-	public boolean isClosed() {
-		// TODO implement me
-		return false;
+	public boolean isClosed(DefaultTheory t) {
+		for(DefaultRule d: t.getDefaults())
+			if(this.app(d).isProcess())
+				return false;
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "DefaultSequence [\n\tdefaults = " + defaults + ", \n\tout = " + out + ", \n\tin = " + in + "\n\tprocess = "+ process +"\n]";
+		return "DefaultSequence"
+				+ (isProcess() ? " is process":"")
+				+ (isSuccessful()?" is successfull":"")
+				+" [\n\tdefaults = " + defaults + ", \n\tout = " + out + ", \n\tin = " + in + "\n]";
 	}
 	
 

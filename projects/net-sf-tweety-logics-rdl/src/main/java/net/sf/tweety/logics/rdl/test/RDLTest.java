@@ -5,12 +5,17 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.fol.ClassicalInference;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
+import net.sf.tweety.logics.rdl.semantics.DefaultProcessTree;
 import net.sf.tweety.logics.rdl.semantics.DefaultSequence;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
+
+/**
+ * RDL Test
+ * @author Nils Geilen
+ *
+ */
 
 public class RDLTest {
 	
@@ -24,7 +29,22 @@ public class RDLTest {
 	static void defaultRuleTest() throws Exception{
 		RdlParser parser = new RdlParser();
 		DefaultTheory th = parser.parseBeliefBaseFromFile("example_default_theory.txt");
-		List<DefaultRule> testset = createTestSet(parser, 
+		
+		System.out.println("\n--equals--");
+
+			DefaultRule dr = (DefaultRule)parser.parseFormula("a::b();d/c()");
+			List<DefaultRule> testset = createTestSet(parser, 
+					"a() :: b(); d / c()",
+					"::b(); d()/c()",
+					"a()::b(); d()/d()",
+					"a()::b()/d()",
+					"a()::b(); d(); c()/d()");
+			for(DefaultRule d: testset){
+				System.out.println(dr+" = "+d+"\t"+dr.equals(d));
+			}
+	
+		
+		testset = createTestSet(parser, 
 				"Bird(A)::Flies(A)/Flies(A)",
 				"::! Swims(A)/Flies(A)",
 				":: Flies(B)/Flies(A)",
@@ -34,6 +54,7 @@ public class RDLTest {
 				"Father(A,B) :: Married(A,C) / Mother(C,B) ",
 				"::(forall X: (Male(X)))/(exists Y:(Male(Y)))",
 				"exists Z:(Married(X,Z))::Male(X)  / exists Y:(Father(X,Y))");
+		
 		System.out.println("\n--isNormal--");
 		for(DefaultRule d: testset){
 			System.out.print(d);
@@ -63,21 +84,56 @@ public class RDLTest {
 	
 	static void sequenceTest() throws Exception{
 		RdlParser parser = new RdlParser();
-		DefaultTheory th = parser.parseBeliefBaseFromFile("example_default_theory.txt");
-		DefaultSequence s = new DefaultSequence(th);
+		DefaultTheory t = parser.parseBeliefBaseFromFile("simple_default_theory.txt");
 		
+		DefaultSequence s = new DefaultSequence(t);
+		System.out.println(s);
+		s = s.app((DefaultRule)parser.parseFormula("a::b/b"));
+		System.out.println(s);
+		s = s.app((DefaultRule)parser.parseFormula("::b/b"));
+		System.out.println(s);
+		DefaultSequence s2 = s.app((DefaultRule)parser.parseFormula("c::b/b"));
+		System.out.println(s2);
+		s = s.app((DefaultRule)parser.parseFormula("::!b/!b"));
 		System.out.println(s);
 		
-		s = s.app((DefaultRule)parser.parseFormula("::!Flies(X)/!Flies(X)"));
 		
+		System.out.println("\n--isClosed--");
+		s =  new DefaultSequence(t)
+				.app((DefaultRule)parser.parseFormula("::b;d/d"));
 		System.out.println(s);
+		System.out.println(s.isClosed(t));
+		s =  s.app((DefaultRule)parser.parseFormula("a::c/c"));
+		System.out.println(s);
+		System.out.println(s.isClosed(t));
+		s =  s.app((DefaultRule)parser.parseFormula("::!d/!d"));
+		System.out.println(s);
+		System.out.println(s.isClosed(t));
 		
+	}
+	
+	static void processTreeTest() throws Exception {
+		RdlParser parser = new RdlParser();
+		DefaultTheory t = parser.parseBeliefBaseFromFile("example_default_theory.txt");
+		DefaultProcessTree tree = new DefaultProcessTree(t);
+		for(DefaultSequence s: tree.getExtensions())
+			System.out.println(s);
+		System.out.println("done");
+	}
+	
+	static void extensionTest() throws Exception {
+		RdlParser parser = new RdlParser();
+		DefaultTheory t = parser.parseBeliefBaseFromFile("example_default_theory.txt");
+		
+		t.extend();
 	}
 
 	public static void main(String[] args) throws Exception {
 		//parserTest();
-		sequenceTest();
-		
+		//sequenceTest();
+		//defaultRuleTest();
+		processTreeTest();
+		//extensionTest();
 ;	}
 
 }
