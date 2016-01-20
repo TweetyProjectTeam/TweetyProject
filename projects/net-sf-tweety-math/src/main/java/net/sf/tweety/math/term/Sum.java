@@ -200,14 +200,14 @@ public class Sum extends AssociativeOperation{
 	 */
 	@Override
 	public String toString(){
-		String result = "";
+		String result = "(";
 		for(Term t: this.getTerms()){
-			if(result.equals("")){				
+			if(result.equals("(")){				
 				result += t;
 			}else{
 				result += " + " + t;				
 			}
 		}
-		return result;
+		return result + ")";
 	}
 }

@@ -17,6 +17,7 @@
 package net.sf.tweety.math.opt.solver;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +38,6 @@ import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
-import net.sf.tweety.math.term.FloatVariable;
-import net.sf.tweety.math.term.IntegerConstant;
-import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
@@ -53,10 +51,7 @@ import net.sf.tweety.math.term.Variable;
  * @author Matthias Thimm
  */
 public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
-	
-	/** penalty value for violating box constraints encoded in the target function. */
-	private final FloatConstant BIG_NUMBER = new FloatConstant(100000);
-	
+
 	/** The maximum number of evaluations. */
 	private int maxEval;
 	/** The precision */
@@ -88,7 +83,7 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 		final List<Variable> vars = new ArrayList<Variable>(target.getVariables());
 		MultivariateFunction acTarget = new MultivariateFunction(){
 			@Override
-			public double value(double[] arg0) {
+			public double value(double[] arg0) {				
 				return target.replaceAllTerms(arg0, vars).doubleValue();
 			}
 		};
@@ -100,7 +95,7 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 			public double[] value(double[] arg0) throws IllegalArgumentException {
 				double[] result = new double[arg0.length];
 				for(int i = 0 ; i < arg0.length; i++)
-					result[i] = targetGradient[i].replaceAllTerms(arg0, vars).doubleValue(); 
+					result[i] = targetGradient[i].replaceAllTerms(arg0, vars).doubleValue();				
 				return result;
 			}
 		};
@@ -121,69 +116,11 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizer extends Solver{
 		return result;
 	}
 	
-	/**
-	 * Returns the variable assignment that maximizes/minimizes the given term. If
-	 * encodeBoxConstraints is false, the optimization is unconstrained. If encodeBoxConstraints = true then upper and
-	 * lower bounds are encoded in the target function. 
-	 * @param t the term to be evaluated
-	 * @param optimization_objective one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE
-	 * @param  encodeBoxConstraints whether box constraints are encoded in the target function.
-	 * @return the optimal variable assignment
-	 * @throws GeneralMathException 
-	 */
-	public Map<Variable,Term> solve(Term t, int optimization_objective, boolean encodeBoxConstraints) throws GeneralMathException{
-		if(!encodeBoxConstraints){
-			OptimizationProblem p = new OptimizationProblem(optimization_objective);
-			p.setTargetFunction(t);
-			return this.solve(p);
-		}
-		// encode box constraints
-		// for each variable x with l <= x <= u we create variables x1,x2
-		// and define x = l +x1^2 = u - x2^2 and add a term
-		// K(l+x1^2-u+x2^2)^2 to the target function (with K being a very large positive number for 
-		// minimization problems and a very small negative number for maximization problems).
-		// At the optimal point of the target function it holds l+x1^2-u+x2^2=0 and
-		// x is therefore well-defined
-		List<Variable> vars = new ArrayList<Variable>(t.getVariables());
-		List<Variable> vars_l  = new ArrayList<Variable>();
-		List<Variable> vars_u  = new ArrayList<Variable>();
-		int i = 0;
-		Term target = t;
-		for(Variable v: vars){
-			i++;
-			Variable l = new FloatVariable("l_"+i);
-			Variable u = new FloatVariable("u_"+i); 
-			vars_l.add(l);
-			vars_u.add(u);
-			Term sub = new FloatConstant(v.getLowerBound()).add(new Power(l,new IntegerConstant(2)));
-			target = target.replaceTerm(v, sub);
-			Term add = BIG_NUMBER.mult(new Power(sub.minus(new FloatConstant(v.getUpperBound())).add(new Power(u,new IntegerConstant(2))),new IntegerConstant(2)));
-			if(optimization_objective == OptimizationProblem.MAXIMIZE)
-				target = target.add(add.mult(new FloatConstant(-1)));
-			else target = target.add(add);
-		}
-		OptimizationProblem p = new OptimizationProblem(optimization_objective);
-		p.setTargetFunction(target);
-		Map<Variable,Term> intermediateResult = this.solve(p);
-		Map<Variable,Term> result = new HashMap<Variable,Term>();
-		for(i = 0; i < vars.size(); i++)
-			result.put(vars.get(i), new FloatConstant(vars.get(i).getLowerBound()).add(intermediateResult.get(vars_l.get(i)).mult(intermediateResult.get(vars_l.get(i)))));
-		return result;
-	}
-	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		// as this is a native implementation it is always installed
 		return true;
-	}
-	
-	public static void main(String[] args) throws GeneralMathException{
-		Variable x = new FloatVariable("x",0,1);
-		Variable y = new FloatVariable("y",0,1);
-		Term t = x.add(y);
-		ApacheCommonsNonLinearConjugateGradientOptimizer solver = new ApacheCommonsNonLinearConjugateGradientOptimizer(1000000,1e-20);
-		System.out.println(solver.solve(t, OptimizationProblem.MAXIMIZE, true));
 	}
 }

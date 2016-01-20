@@ -102,7 +102,7 @@ public class Difference extends Term{
 	 */
 	@Override
 	public String toString(){
-		return this.first.toString() + " - " + this.second.toString();
+		return "(" + this.first.toString() + " - " + this.second.toString() + ")";
 	}
 
 	/* (non-Javadoc)
