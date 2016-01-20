@@ -126,6 +126,20 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 		return result;
 	}
 	
+	/**
+	 * Returns the variable assignment that maximizes/minimizes the given term
+	 * (which only contains variables with defined upper and lower bounds).
+	 * @param t the term to be evaluated
+	 * @param optimization_objective one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE 
+	 * @return the optimal variable assignment
+	 * @throws GeneralMathException 
+	 */
+	public Map<Variable, Term> solve(Term t, int optimization_type) throws GeneralMathException{
+		OptimizationProblem p = new OptimizationProblem(optimization_type);
+		p.setTargetFunction(t);
+		return this.solve(p);
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
 	 */

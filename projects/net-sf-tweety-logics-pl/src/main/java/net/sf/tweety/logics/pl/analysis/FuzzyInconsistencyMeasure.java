@@ -37,7 +37,7 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.func.fuzzy.TCoNorm;
 import net.sf.tweety.math.func.fuzzy.TNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolver;
+import net.sf.tweety.math.opt.solver.ApacheCommonsCMAESOptimizer;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.Term;
@@ -162,8 +162,7 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 			for(PropositionalFormula f: formulas)
 				t = t.add(one.minus(this.getTerm(f, assignments)));
 		}
-		// use a simple genetic optimization algorithm to compute the minimal assignment
-		SimpleGeneticOptimizationSolver solver = new SimpleGeneticOptimizationSolver(sig.size()*10,sig.size()*20,sig.size()*20,sig.size()*50,0.000001);
+		ApacheCommonsCMAESOptimizer solver = new ApacheCommonsCMAESOptimizer(sig.size()*100,sig.size()*10000,0,true,sig.size()*100,sig.size()*100,0.00000001);
 		try {
 			Map<Variable,Term> result = solver.solve(t, OptimizationProblem.MINIMIZE);
 			return new Pair<Map<Variable,Term>,Double>(result,t.replaceAllTerms(result).doubleValue());
