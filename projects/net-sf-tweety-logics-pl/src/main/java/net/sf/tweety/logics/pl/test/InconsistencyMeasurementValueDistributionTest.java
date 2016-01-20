@@ -55,6 +55,11 @@ public class InconsistencyMeasurementValueDistributionTest {
 				System.out.println("Skipped drastic measure...");
 				continue;
 			}
+			//skip mi
+			if(m.equals(InconsistencyMeasureFactory.Measure.MI)){
+				System.out.println("Skipped mi measure...");
+				continue;
+			}
 			im = InconsistencyMeasureFactory.getInconsistencyMeasure(m);
 			distr = new HashMap<Double,Integer>();
 			for(File file: new File(args[0]).listFiles()){
