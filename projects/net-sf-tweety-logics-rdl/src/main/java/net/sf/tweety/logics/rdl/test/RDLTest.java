@@ -4,10 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import ch.qos.logback.classic.net.SyslogAppender;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.DefaultTheory;
+import net.sf.tweety.logics.rdl.NaiveDefaultReasoner;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
-import net.sf.tweety.logics.rdl.semantics.DefaultProcessTree;
 import net.sf.tweety.logics.rdl.semantics.DefaultSequence;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
@@ -114,26 +116,28 @@ public class RDLTest {
 	
 	static void processTreeTest() throws Exception {
 		RdlParser parser = new RdlParser();
-		DefaultTheory t = parser.parseBeliefBaseFromFile("example_default_theory.txt");
-		DefaultProcessTree tree = new DefaultProcessTree(t);
-		for(DefaultSequence s: tree.getExtensions())
-			System.out.println(s);
-		System.out.println("done");
+		DefaultTheory t = parser.parseBeliefBaseFromFile("simple_default_theory.txt");
+		NaiveDefaultReasoner reasoner = new NaiveDefaultReasoner(t);
+		System.out.println(reasoner.getAllExtensions());
+		System.out.println(reasoner.query(parser.parseFormula("!a")).getAnswerBoolean());
 	}
 	
 	static void extensionTest() throws Exception {
 		RdlParser parser = new RdlParser();
 		DefaultTheory t = parser.parseBeliefBaseFromFile("example_default_theory.txt");
 		
-		t.extend();
+		t = t.ground();
+		
+		for(DefaultRule d:t.getDefaults())
+			System.out.println(d);
 	}
 
 	public static void main(String[] args) throws Exception {
 		//parserTest();
 		//sequenceTest();
 		//defaultRuleTest();
-		processTreeTest();
-		//extensionTest();
+		//processTreeTest();
+		extensionTest();
 ;	}
 
 }

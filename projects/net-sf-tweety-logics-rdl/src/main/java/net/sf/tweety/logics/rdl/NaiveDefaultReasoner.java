@@ -6,7 +6,10 @@ import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.logics.fol.ClassicalInference;
+import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.rdl.semantics.DefaultProcessTree;
 
 /**
  * Implements a naive reasoner for default logic based on exhaustive 
@@ -15,25 +18,35 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
  * @author Matthias Thimm
  */
 public class NaiveDefaultReasoner extends Reasoner{
+	
+	DefaultProcessTree tree ;
 
 	public NaiveDefaultReasoner(BeliefBase beliefBase) {
 		super(beliefBase);
 		if( ! (beliefBase instanceof DefaultTheory))
 			throw new IllegalArgumentException("BeliefBase has to be a DefaultTheory");
-		// TODO Auto-generated constructor stub
+		 tree = new DefaultProcessTree((DefaultTheory)beliefBase);
 	}
 
 	@Override
 	public Answer query(Formula query) {
-		// TODO Auto-generated method stub
 		if(!(query instanceof FolFormula))
 			throw new IllegalArgumentException("NaiveDefaultReasoner is only defined for first-order queries.");
-		return null;
+		Answer answer = new Answer(this.getKnowledgBase(),query);
+		answer.setAnswer(false);
+		for (Collection<FolFormula> extension: tree.getExtensions()){
+			FolBeliefSet fbs = (FolBeliefSet)extension;
+			ClassicalInference ci = new ClassicalInference(fbs);
+			if(ci.query(query).getAnswerBoolean()){
+				answer.setAnswer(true);
+				break;
+			}
+		}
+		return answer;
 	}
 
 	public Collection<Collection<FolFormula>> getAllExtensions(){
-		//TODO implement me
-		return null;
+		return tree.getExtensions();
 	}
 	
 }

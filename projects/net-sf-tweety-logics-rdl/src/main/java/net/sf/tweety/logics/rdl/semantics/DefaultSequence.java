@@ -15,15 +15,15 @@ import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
 /**
- * 
+ * sequence of defaults
  * @author Nils Geilen
  *
  */
 
 public class DefaultSequence {
 
-	private List<DefaultRule> defaults = new ArrayList();
-	private Set<FolFormula> out = new HashSet();
+	private List<DefaultRule> defaults = new ArrayList<>();
+	private Set<FolFormula> out = new HashSet<>();
 	private FolBeliefSet in = new FolBeliefSet();
 	private ClassicalInference reasoner = new ClassicalInference(in);
 	boolean process = true;
@@ -35,7 +35,6 @@ public class DefaultSequence {
 	public DefaultSequence(DefaultSequence ds, DefaultRule d) {
 		defaults.addAll(ds.defaults);
 		in.addAll(ds.in);
-		// correct way ?
 		process = ds.isApplicable(d);
 		for(DefaultRule r: defaults)
 			if(d.equals(r))
@@ -47,6 +46,11 @@ public class DefaultSequence {
 			out.add(new Negation(f));
 	}
 	
+	/**
+	 * 
+	 * @param d
+	 * @return new Sequence adding d to this
+	 */
 	public DefaultSequence app(DefaultRule d){
 		return new DefaultSequence(this,d);
 	}
@@ -57,14 +61,19 @@ public class DefaultSequence {
 	 * @return true iff d is applicable to In
 	 */
 	public boolean isApplicable(DefaultRule d){
+		// auch nicht
 		for(FolFormula f: d.getJus())
 			for(FolFormula g: in)
 				if(eq(new Negation(f),g))
 					return false;
+		// correct way ?
 		boolean result = d.getPre() instanceof Tautology;
+		// muss nicht äquivalent sein
 		for(FolFormula f: in)
 			result|=eq(d.getPre(),f);
 		return result;
+		//return reasoner.query(d.getPre()).getAnswerBoolean();
+		
 	}
 	
 	/**

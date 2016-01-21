@@ -48,7 +48,7 @@ public class DefaultRule extends RelationalFormula {
 		if (jus.isEmpty())
 			throw new ParserException("Justification needed to form default rule.");
 		this.pre = pre;
-		this.jus = new LinkedList();
+		this.jus = new LinkedList<>();
 		this.jus.addAll(jus);
 		this.conc = conc;
 	}
@@ -57,14 +57,13 @@ public class DefaultRule extends RelationalFormula {
 	 * normal ^= a:c/c
 	 */
 	public boolean isNormal(DefaultTheory dt) {
-		// TODO implement me
 		/*
 		 * for(FolFormula f: jus){ if(! ClassicalInference.equivalent(f, conc))
 		 * return false; } return true;
 		 */
 		ClassicalInference inf = new ClassicalInference(dt.getFacts());
 		for (FolFormula f : jus) {
-			if (!inf.eq(f, conc))
+			if (!inf.equivalent(f, conc))
 				return false;
 		}
 		return true;
@@ -96,7 +95,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public Set<Variable> getQuantifierVariables() {
-		// TODO Auto-generated method stub
 		Set<Variable> vars = conc.getQuantifierVariables();
 		vars.addAll(pre.getQuantifierVariables());
 		for (FolFormula f : jus)
@@ -106,8 +104,7 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public Set<Variable> getUnboundVariables() {
-		// TODO Auto-generated method stub
-		Set unbound = conc.getUnboundVariables();
+		Set<Variable> unbound = conc.getUnboundVariables();
 		unbound.addAll(pre.getUnboundVariables());
 		for (FolFormula f : jus)
 			unbound.addAll(f.getUnboundVariables());
@@ -116,7 +113,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public boolean containsQuantifier() {
-		// TODO Auto-generated method stub
 		boolean result = conc.containsQuantifier() || pre.containsQuantifier();
 		for (FolFormula f : jus)
 			result |= f.containsQuantifier();
@@ -125,7 +121,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public boolean isWellBound() {
-		// TODO Auto-generated method stub
 		if (!conc.isWellBound())
 			return false;
 		if (!pre.isWellBound())
@@ -138,7 +133,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public boolean isWellBound(Set<Variable> boundVariables) {
-		// TODO Auto-generated method stub
 		if (!conc.isWellBound(boundVariables))
 			return false;
 		if (!pre.isWellBound(boundVariables))
@@ -151,7 +145,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public boolean isClosed() {
-		// TODO Auto-generated method stub
 		if (!conc.isClosed())
 			return false;
 		if (!pre.isClosed())
@@ -164,7 +157,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public boolean isClosed(Set<Variable> boundVariables) {
-		// TODO Auto-generated method stub
 		if (!conc.isClosed(boundVariables))
 			return false;
 		if (!pre.isClosed(boundVariables))
@@ -189,7 +181,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public Set<FOLAtom> getAtoms() {
-		// TODO Auto-generated method stub
 		Set<FOLAtom> atoms = conc.getAtoms();
 		atoms.addAll(pre.getAtoms());
 		for (FolFormula f : jus)
@@ -199,7 +190,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public Set<Functor> getFunctors() {
-		// TODO Auto-generated method stub
 		Set<Functor> funs = conc.getFunctors();
 		funs.addAll(pre.getFunctors());
 		for (FolFormula f : jus)
@@ -209,7 +199,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
 		List<FolFormula> fs = new ArrayList<>();
 		for (FolFormula f : jus)
 			fs.add(f.substitute(v, t));
@@ -243,9 +232,8 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		String result = pre + " :: ";
-		Iterator i = jus.iterator();
+		Iterator<FolFormula> i = jus.iterator();
 		if (i.hasNext())
 			result += i.next();
 		while (i.hasNext())
@@ -255,7 +243,6 @@ public class DefaultRule extends RelationalFormula {
 
 	@Override
 	public RelationalFormula clone() {
-		// TODO Auto-generated method stub
 		try {
 			return new DefaultRule(pre, jus, conc);
 		} catch (Exception e) {
