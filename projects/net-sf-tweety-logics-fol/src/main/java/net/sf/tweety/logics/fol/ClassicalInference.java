@@ -22,7 +22,6 @@ import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Reasoner;
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -37,7 +36,7 @@ import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
  * @author Matthias Thimm, Nils Geilen
  */
 public class ClassicalInference extends Reasoner {
-
+	
 	/**
 	 * Creates a new classical inference operator for the given knowledge base.  
 	 * @param beliefBase
@@ -60,7 +59,9 @@ public class ClassicalInference extends Reasoner {
 			throw new IllegalArgumentException("The given formula " + formula + " is not well-formed.");
 		if(!formula.isClosed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");		
-		FolSignature sig = (FolSignature)this.getKnowledgBase().getSignature();
+		FolSignature sig = new FolSignature();
+		sig.addSignature(this.getKnowledgBase().getSignature());
+		sig.addSignature(query.getSignature());		
 		HerbrandBase hBase = new HerbrandBase(sig);
 		Set<HerbrandInterpretation> interpretations = hBase.allHerbrandInterpretations();
 		for(HerbrandInterpretation i: interpretations)
