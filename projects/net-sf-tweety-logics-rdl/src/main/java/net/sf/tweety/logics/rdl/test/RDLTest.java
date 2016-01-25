@@ -136,8 +136,8 @@ public class RDLTest {
 		//parserTest();
 		//sequenceTest();
 		//defaultRuleTest();
-		//processTreeTest();
-		extensionTest();
+		processTreeTest();
+		//extensionTest();
 ;	}
 
 }

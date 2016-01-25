@@ -25,8 +25,6 @@ public class DefaultProcessTree {
 		List<DefaultSequence> seqs_old  = new ArrayList<>();
 		List<DefaultSequence> seqs_new  = new ArrayList<>();
 		seqs_old.add(new DefaultSequence(t)) ;
-		System.out.println(t.getDefaults().size());
-		//for(int i=0;i<t.getDefaults().size();i++) {
 		while(!seqs_old.isEmpty()){
 			for(DefaultSequence seq_old: seqs_old) {
 				for(DefaultRule d: t.getDefaults()){

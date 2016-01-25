@@ -61,7 +61,8 @@ public class DefaultSequence {
 	 * @return true iff d is applicable to In
 	 */
 	public boolean isApplicable(DefaultRule d){
-		// auch nicht
+		/*
+		 * // auch nicht
 		for(FolFormula f: d.getJus())
 			for(FolFormula g: in)
 				if(eq(new Negation(f),g))
@@ -73,6 +74,12 @@ public class DefaultSequence {
 			result|=eq(d.getPre(),f);
 		return result;
 		//return reasoner.query(d.getPre()).getAnswerBoolean();
+		 * */
+		 
+		for(FolFormula f: d.getJus())
+			if(reasoner.query(new Negation(f)).getAnswerBoolean())
+				return false;
+		return reasoner.query(d.getPre()).getAnswerBoolean();
 		
 	}
 	
