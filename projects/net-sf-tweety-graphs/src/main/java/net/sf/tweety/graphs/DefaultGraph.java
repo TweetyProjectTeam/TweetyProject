@@ -252,32 +252,64 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	}
 	
 	/**
+	 * Main method for computing the strongly connected components using
+	 * Tarjan's algorithm.
+	 * @param idx the current node index
+	 * @param v the current node
+	 * @param stack the stack of nodes that need to be visited
+	 * @param sccs the set of SCCs that is computed
+	 * @param g the graph
+	 * @param index an index map for the vertices
+	 * @param lowlink the lowlink map for the vertices
+	 * @return
+	 */
+	private static <S extends Node> int getStronglyConnectedComponentsRec(int idx, S v,Stack<S> stack,Collection<Collection<S>> sccs,Graph<S> g,Map<S,Integer> index,Map<S,Integer> lowlink){
+		index.put(v, idx);
+		lowlink.put(v, idx);
+		idx++;
+		stack.push(v);
+		for(S w: g.getChildren(v)){
+			if(!index.containsKey(w)){
+				idx = getStronglyConnectedComponentsRec(idx,w,stack,sccs,g,index,lowlink);
+				lowlink.put(v, Math.min(lowlink.get(v), lowlink.get(w)));
+			}else if(stack.contains(w)){
+				lowlink.put(v, Math.min(lowlink.get(v), index.get(w)));
+			}
+		}
+		if(lowlink.get(v).equals(index.get(v))){
+			Collection<S> scc = new HashSet<S>();
+			S w;
+			do{
+				w = stack.pop();
+				scc.add(w);
+			}while(!v.equals(w));
+			sccs.add(scc);
+		}		
+		return idx;
+	}
+	
+	/**
 	 * Returns the strongly connected components of the given graph. A set
 	 * of nodes is strongly connected, if there is a path from each
 	 * node to each other. A set of nodes is called strongly connected
 	 * component if it is strongly connected and maximal with respect
 	 * to set inclusion. 
+	 * The strongly connected components are computed using Tarjan's
+	 * algorithm
 	 * @param g some graph
 	 * @return the strongly connected components of the graph.
 	 */
 	public static <S extends Node> Collection<Collection<S>> getStronglyConnectedComponents(Graph<S> g){
-		// not very efficient but will do for now
-		Collection<Collection<S>> result = new HashSet<Collection<S>>(); 
-		Collection<S> notVisited = new HashSet<S>(g.getNodes());
-		for(S node: g.getNodes()){
-			if(notVisited.contains(node)){
-				notVisited.remove(node);
-				Collection<S> scc = new HashSet<S>();
-				scc.add(node);
-				for(S node2: notVisited){
-					if(g.existsDirectedPath(node, node2) && g.existsDirectedPath(node2, node))
-						scc.add(node2);					
-				}
-				notVisited.removeAll(scc);
-				result.add(scc);
-			}
-		}		
-		return result;
+		int idx = 0;
+		Stack<S> stack = new Stack<S>();
+		Collection<Collection<S>> sccs = new HashSet<Collection<S>>();
+		Map<S,Integer> index = new HashMap<S,Integer>();
+		Map<S,Integer> lowlink = new HashMap<S,Integer>();
+		for(S v: g){
+			if(!index.containsKey(v))
+				idx = getStronglyConnectedComponentsRec(idx,v,stack,sccs,g,index,lowlink);
+		}
+		return sccs;
 	}
 	
 	/* (non-Javadoc)
@@ -332,16 +364,16 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	public static <S extends Node> boolean existsDirectedPath(Graph<S> g, S node1, S node2){
 		if(!g.getNodes().contains(node1) || !g.getNodes().contains(node2))
 			throw new IllegalArgumentException("The nodes are not in this graph.");
-		if(node1 == node2)
+		if(node1.equals(node2))
 			return true;
 		// we perform a DFS.
 		Stack<S> stack = new Stack<S>();
 		Collection<S> visited = new HashSet<S>();
-		stack.addAll(g.getChildren(node1));
+		stack.add(node1);
 		while(!stack.isEmpty()){
 			S node = stack.pop();
 			visited.add(node);
-			if(node == node2)
+			if(node.equals(node2))
 				return true;			
 			stack.addAll(g.getChildren(node));
 			stack.removeAll(visited);
