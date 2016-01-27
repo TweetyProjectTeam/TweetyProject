@@ -37,42 +37,28 @@ public class DefaultTheory implements BeliefBase{
 		this.defaults.addAll(defaults);
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public DefaultTheory ground(){
 		Set<DefaultRule> ds = new HashSet<>();
 		for(DefaultRule d: defaults){
-			/*if(d.getUnboundVariables().isEmpty())
-				ds.add(d);
-			else{
-				//System.out.println(d);
-				Set<DefaultRule> old = new HashSet<>(), 
-						open = new HashSet<>();
-				old.add(d);
-				for(Variable v:d.getUnboundVariables()){
-					// signature correct ?
-					//allGroundInstances?
-					d.allGroundInstances(constants)
-					for(Constant c:((FolSignature)facts.getSignature()).getConstants())
-						for(DefaultRule r:old)
-							try{
-								open.add((DefaultRule)r.substitute(v, c));
-							}catch(Exception e){e.printStackTrace();}
-					old =open;
-					open = new HashSet<>();
-				}
-				ds.addAll(old);
-				//System.out.println(old);
-			}*/
 			ds.addAll((Set)(d.allGroundInstances(((FolSignature)facts.getSignature()).getConstants())));
 		}
 		return new DefaultTheory(facts, ds);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefBase#getSignature()
+	 */
 	@Override
 	public Signature getSignature() {
 		// Use FolSignature 
 		return facts.getSignature();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		String result = facts +"\n\n";

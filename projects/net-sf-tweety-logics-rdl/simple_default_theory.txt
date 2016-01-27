@@ -7,7 +7,7 @@ type(e())
 a
 b
 
---defaults--
+
 
 a::c/c
 ::!d/!d

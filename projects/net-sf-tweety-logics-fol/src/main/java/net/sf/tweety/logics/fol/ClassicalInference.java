@@ -79,21 +79,6 @@ public class ClassicalInference extends Reasoner {
 		return answer;
 	}
 	
-	/**
-	 * Tests naively whether two fol formulas are equivalent
-	 * @param f1 some formula
-	 * @param f2 some formula
-	 * @return "true" if the two formulas are equivalent
-	 */
-/*	public boolean eq(FolFormula f1, FolFormula f2){
-		FolSignature sig = new FolSignature();
-		sig.addSignature(f1.getSignature());
-		sig.addSignature(f2.getSignature());
-		FolFormula f = f1.combineWithAnd(f2).combineWithOr(f1.complement().combineWithAnd(f2.complement()));
-		if(!f.getUnboundVariables().isEmpty())
-			f = new ForallQuantifiedFormula(f, f.getUnboundVariables());
-		return query(f).getAnswerBoolean();
-	}*/
 
 	/**
 	 * Tests naively whether two fol formulas are equivalent

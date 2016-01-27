@@ -29,7 +29,7 @@ Married(peter,mary)
 Married(tom,anne)
 
 
---defaults--
+
 
 Bird(X) :: Flies(X) / Flies(X)
 :: Flies(bat) / Flies(bat)

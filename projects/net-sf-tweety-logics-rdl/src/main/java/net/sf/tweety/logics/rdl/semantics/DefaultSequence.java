@@ -10,7 +10,6 @@ import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
-import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
@@ -47,7 +46,7 @@ public class DefaultSequence {
 	}
 	
 	/**
-	 * 
+	 * Constructs a new DefaultSequence
 	 * @param d
 	 * @return new Sequence adding d to this
 	 */
@@ -61,21 +60,6 @@ public class DefaultSequence {
 	 * @return true iff d is applicable to In
 	 */
 	public boolean isApplicable(DefaultRule d){
-		/*
-		 * // auch nicht
-		for(FolFormula f: d.getJus())
-			for(FolFormula g: in)
-				if(eq(new Negation(f),g))
-					return false;
-		// correct way ?
-		boolean result = d.getPre() instanceof Tautology;
-		// muss nicht äquivalent sein
-		for(FolFormula f: in)
-			result|=eq(d.getPre(),f);
-		return result;
-		//return reasoner.query(d.getPre()).getAnswerBoolean();
-		 * */
-		 
 		for(FolFormula f: d.getJus())
 			if(reasoner.query(new Negation(f)).getAnswerBoolean())
 				return false;
@@ -83,16 +67,7 @@ public class DefaultSequence {
 		
 	}
 	
-	/**
-	 * helper
-	 * @param a
-	 * @param b
-	 * @return a = b
-	 */
- 	private boolean eq(FolFormula a, FolFormula b){
-		return ClassicalInference.equivalent(a, b);
-	}
-
+	
 	public Collection<FolFormula> getIn() {
 		return in;
 	}
@@ -110,18 +85,18 @@ public class DefaultSequence {
 	}
 
 	/**
-	 * successfull <=> no elem in In and Out
+	 * successfull <=> there is no x: x in In and x in Out
 	 * @return true iff successfull
 	 */
 	public boolean isSuccessful() {
-		for(FolFormula f: in)
 			for(FolFormula g: out)
-				if(eq(f,g))
+				if(reasoner.query(g).getAnswerBoolean())
 					return false;
 		return true;
 	}
 
 	/**
+	 * Tests wether all applicble defaukts from t have been applied
 	 * @return true iff every possible default is applied
 	 */
 	public boolean isClosed(DefaultTheory t) {

@@ -15,7 +15,7 @@ import net.sf.tweety.logics.rdl.semantics.DefaultProcessTree;
  * Implements a naive reasoner for default logic based on exhaustive 
  * application of defaults in process trees.
  * 
- * @author Matthias Thimm
+ * @author Matthias Thimm, Nils Geilen
  */
 public class NaiveDefaultReasoner extends Reasoner{
 	
@@ -28,6 +28,9 @@ public class NaiveDefaultReasoner extends Reasoner{
 		 tree = new DefaultProcessTree((DefaultTheory)beliefBase);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
+	 */
 	@Override
 	public Answer query(Formula query) {
 		if(!(query instanceof FolFormula))
@@ -45,6 +48,10 @@ public class NaiveDefaultReasoner extends Reasoner{
 		return answer;
 	}
 
+	
+	/**
+	 * 	@return all extensions of the default theory
+	 */
 	public Collection<Collection<FolFormula>> getAllExtensions(){
 		return tree.getExtensions();
 	}

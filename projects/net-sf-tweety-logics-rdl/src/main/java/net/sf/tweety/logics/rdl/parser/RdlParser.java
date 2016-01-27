@@ -17,6 +17,11 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
+/**
+ * This class implements a parser for default logic. 
+ * @author Nils Geilen
+ *
+ */
 public class RdlParser extends Parser<DefaultTheory> {
 
 	private FolParser folparser;
@@ -26,6 +31,9 @@ public class RdlParser extends Parser<DefaultTheory> {
 	private final Pattern JUS_SPLIT = Pattern.compile("^([^;]+)" + DIV_COMMA + "(.*)$"),
 			DEFAULT_SPLIT = Pattern.compile("^(.*)" + DIV_COLON + "(.*)" + DIV_SLASH + "(.*)$");
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Parser#parseBeliefBase(java.io.Reader)
+	 */
 	@Override
 	public DefaultTheory parseBeliefBase(Reader reader) throws IOException, ParserException {
 		// TODO Auto-generated method stub
@@ -33,17 +41,20 @@ public class RdlParser extends Parser<DefaultTheory> {
 		BufferedReader br = new BufferedReader(reader);
 		String str = "";
 		String line;
-		while ((line = br.readLine()) != null && !line.matches("--defaults--"))
-			str += line + "\n";
+		while ((line = br.readLine()) != null && !line.matches(".*"+DIV_COLON+".*"))
+				str += line + "\n";
 		FolBeliefSet facts = folparser.parseBeliefBase(str);
 		LinkedList<DefaultRule> defaults = new LinkedList<>();
-		while ((line = br.readLine()) != null) {
+		do {
 			if (!line.matches("^\\s*$"))
 				defaults.add((DefaultRule) parseFormula(line));
-		}
+		}while ((line = br.readLine()) != null);
 		return new DefaultTheory(facts, defaults);
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Parser#parseFormula(java.io.Reader)
+	 */
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
 		// TODO Auto-generated method stub

@@ -4,9 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import ch.qos.logback.classic.net.SyslogAppender;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.NaiveDefaultReasoner;
 import net.sf.tweety.logics.rdl.parser.RdlParser;

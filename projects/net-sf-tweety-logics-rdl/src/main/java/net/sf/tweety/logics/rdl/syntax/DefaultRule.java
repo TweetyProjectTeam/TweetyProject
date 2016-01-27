@@ -53,17 +53,13 @@ public class DefaultRule extends RelationalFormula {
 		this.conc = conc;
 	}
 
-	/*
+	/**
+	 * Tests, wether the defautl is normal
 	 * normal ^= a:c/c
 	 */
 	public boolean isNormal(DefaultTheory dt) {
-		/*
-		 * for(FolFormula f: jus){ if(! ClassicalInference.equivalent(f, conc))
-		 * return false; } return true;
-		 */
-		ClassicalInference inf = new ClassicalInference(dt.getFacts());
 		for (FolFormula f : jus) {
-			if (!inf.equivalent(f, conc))
+			if (!ClassicalInference.equivalent(f, conc))
 				return false;
 		}
 		return true;
@@ -81,18 +77,27 @@ public class DefaultRule extends RelationalFormula {
 		return conc;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula#getPredicates()
+	 */
 	@Override
 	public Set<? extends Predicate> getPredicates() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula#isLiteral()
+	 */
 	@Override
 	public boolean isLiteral() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.QuantifiedFormula#getQuantifierVariables()
+	 */
 	@Override
 	public Set<Variable> getQuantifierVariables() {
 		Set<Variable> vars = conc.getQuantifierVariables();
@@ -102,6 +107,9 @@ public class DefaultRule extends RelationalFormula {
 		return vars;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.QuantifiedFormula#getUnboundVariables()
+	 */
 	@Override
 	public Set<Variable> getUnboundVariables() {
 		Set<Variable> unbound = conc.getUnboundVariables();
@@ -111,6 +119,9 @@ public class DefaultRule extends RelationalFormula {
 		return unbound;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.QuantifiedFormula#containsQuantifier()
+	 */
 	@Override
 	public boolean containsQuantifier() {
 		boolean result = conc.containsQuantifier() || pre.containsQuantifier();
@@ -119,6 +130,9 @@ public class DefaultRule extends RelationalFormula {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.QuantifiedFormula#isWellBound()
+	 */
 	@Override
 	public boolean isWellBound() {
 		if (!conc.isWellBound())
@@ -131,6 +145,9 @@ public class DefaultRule extends RelationalFormula {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.QuantifiedFormula#isWellBound(java.util.Set)
+	 */
 	@Override
 	public boolean isWellBound(Set<Variable> boundVariables) {
 		if (!conc.isWellBound(boundVariables))
@@ -143,6 +160,9 @@ public class DefaultRule extends RelationalFormula {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.QuantifiedFormula#isClosed()
+	 */
 	@Override
 	public boolean isClosed() {
 		if (!conc.isClosed())
@@ -155,6 +175,9 @@ public class DefaultRule extends RelationalFormula {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.QuantifiedFormula#isClosed(java.util.Set)
+	 */
 	@Override
 	public boolean isClosed(Set<Variable> boundVariables) {
 		if (!conc.isClosed(boundVariables))
@@ -167,18 +190,27 @@ public class DefaultRule extends RelationalFormula {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.LogicStructure#getTerms()
+	 */
 	@Override
 	public Set<Term<?>> getTerms() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.interfaces.LogicStructure#getTerms(java.lang.Class)
+	 */
 	@Override
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#getAtoms()
+	 */
 	@Override
 	public Set<FOLAtom> getAtoms() {
 		Set<FOLAtom> atoms = conc.getAtoms();
@@ -188,6 +220,9 @@ public class DefaultRule extends RelationalFormula {
 		return atoms;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#getFunctors()
+	 */
 	@Override
 	public Set<Functor> getFunctors() {
 		Set<Functor> funs = conc.getFunctors();
@@ -197,6 +232,9 @@ public class DefaultRule extends RelationalFormula {
 		return funs;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#substitute(net.sf.tweety.logics.commons.syntax.interfaces.Term, net.sf.tweety.logics.commons.syntax.interfaces.Term)
+	 */
 	@Override
 	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		List<FolFormula> fs = new ArrayList<>();
@@ -206,30 +244,45 @@ public class DefaultRule extends RelationalFormula {
 		return new DefaultRule((FolFormula)pre.substitute(v, t), fs, (FolFormula)conc.substitute(v, t));
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#getUniformProbability()
+	 */
 	@Override
 	public Probability getUniformProbability() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#complement()
+	 */
 	@Override
 	public RelationalFormula complement() {
 		// TODO Auto-generated method stub
 		throw new IllegalArgumentException("");
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#combineWithOr(net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable)
+	 */
 	@Override
 	public Disjunction combineWithOr(Disjunctable formula) {
 		// TODO Auto-generated method stub
 		throw new IllegalArgumentException("");
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#combineWithAnd(net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable)
+	 */
 	@Override
 	public Conjunction combineWithAnd(Conjuctable formula) {
 		// TODO Auto-generated method stub
 		throw new IllegalArgumentException("");
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#toString()
+	 */
 	@Override
 	public String toString() {
 		String result = pre + " :: ";
@@ -241,6 +294,9 @@ public class DefaultRule extends RelationalFormula {
 		return result + " / " + conc;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#clone()
+	 */
 	@Override
 	public RelationalFormula clone() {
 		try {
@@ -250,6 +306,9 @@ public class DefaultRule extends RelationalFormula {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if(this==o)
