@@ -8,10 +8,14 @@ import org.junit.Test;
 import net.sf.tweety.logics.rdl.NaiveDefaultReasoner;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
 
+/**
+ * 
+ * @author Nils Geilen
+ *
+ */
+
 public class RDLJUnitTest {
 	
-	String bsp1 = "Animal = {tweety, penguin} \n type(Flies(Animal)) \n type(Bird(Animal)) \n Bird(tweety) \n Bird(penguin) \n !Flies(penguin) \n Bird(X)::Flies(X)/Flies(X)";
-
 	@Test
 	public void test1() throws Exception{
 		String bsp = "Animal = {tweety, penguin} \n"
