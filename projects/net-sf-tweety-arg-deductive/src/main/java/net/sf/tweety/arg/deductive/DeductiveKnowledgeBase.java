@@ -24,6 +24,7 @@ import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -71,8 +72,8 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 					}
 				if(!properSet) continue;
 				// check for consistency
-				PlBeliefSet candidate = new PlBeliefSet(set);
-				if(!candidate.isConsistent()) continue;
+				PlBeliefSet candidate = new PlBeliefSet(set);				
+				if(!SatSolver.getDefaultSolver().isConsistent(candidate)) continue;
 				// check for entailment
 				ClassicalEntailment entailment = new ClassicalEntailment();
 				if(entailment.entails(candidate, claim))
@@ -94,7 +95,7 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 			for(Set<PropositionalFormula> set: sets){				
 				// check for consistency
 				PlBeliefSet candidate = new PlBeliefSet(set);
-				if(!candidate.isConsistent())
+				if(!SatSolver.getDefaultSolver().isConsistent(candidate))
 					continue;
 				// test if we already have a subset in arguments with equivalent claim
 				for(DeductiveArgument arg: arguments){

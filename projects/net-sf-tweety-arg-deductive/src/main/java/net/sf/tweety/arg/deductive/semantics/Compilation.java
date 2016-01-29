@@ -16,6 +16,7 @@
  */
 package net.sf.tweety.arg.deductive.semantics;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -23,6 +24,7 @@ import java.util.Stack;
 import net.sf.tweety.arg.deductive.DeductiveKnowledgeBase;
 import net.sf.tweety.graphs.*;
 import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -47,9 +49,9 @@ public class Compilation extends DefaultGraph<CompilationNode>{
 	/** Creates the compilation of the given knowledge base.
 	 * @param kb some deductive knowledge base.
 	 */
-	public Compilation(DeductiveKnowledgeBase kb){
-		Set<PlBeliefSet> minInconSets = kb.getMinimalInconsistentSubsets();
-		for(PlBeliefSet set: minInconSets)
+	public Compilation(DeductiveKnowledgeBase kb){		
+		Collection<Collection<PropositionalFormula>> minInconSets = PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb);
+		for(Collection<PropositionalFormula> set: minInconSets)
 			this.add(new CompilationNode(set));
 		Stack<CompilationNode> stackNodes = new Stack<CompilationNode>();
 		stackNodes.addAll(this.getNodes());

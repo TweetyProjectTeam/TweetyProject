@@ -57,6 +57,15 @@ public interface MusEnumerator<S extends Formula> extends BeliefSetConsistencyTe
 	 */
 	public Set<Set<S>> minimalCorrectionSubsets(Collection<S> formulas);
 	
+	/**
+	 * Computes the maximal (wrt. cardinality) partitioning {K1,...,Kn}
+	 * of K (ie. K is a disjoint union of K1,...,Kn) such that MI(K)
+	 * is a disjoint union of MI(K1),...,MI(Kn).
+	 * @param formulas a set of formulas K
+	 * @return the MI components of K
+	 */
+	public Collection<Collection<S>> getMiComponents(Collection<S> formulas);
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.BeliefSet)
 	 */

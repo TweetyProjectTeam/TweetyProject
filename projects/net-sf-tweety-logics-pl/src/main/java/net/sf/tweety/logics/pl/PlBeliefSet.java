@@ -19,7 +19,6 @@ package net.sf.tweety.logics.pl;
 import java.util.*;
 
 import net.sf.tweety.commons.*;
-import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**
@@ -45,42 +44,7 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	public PlBeliefSet(Collection<? extends PropositionalFormula> formulas){
 		super(formulas);
 	}
-	
-	/** Checks whether this belief set is consistent.
-	 * @return "true" if this belief set is consistent.
-	 */
-	public boolean isConsistent(){
-		return !new ClassicalInference(this, new ClassicalEntailment()).query(new Contradiction()).getAnswerBoolean();
-	}
-	
-	/** 
-	 * Returns the set of minimal inconsistent subsets of this set.
-	 * @return the set of minimal inconsistent subsets of this set.
-	 */
-	public Set<PlBeliefSet> getMinimalInconsistentSubsets(){
-		if(this.isConsistent()) return new HashSet<PlBeliefSet>();
-		SetTools<PropositionalFormula> setTools = new SetTools<PropositionalFormula>();
-		Set<PlBeliefSet> minInconSets = new HashSet<PlBeliefSet>();
-		for(int card = 1; card <= this.size(); card++){
-			Set<Set<PropositionalFormula>> sets = setTools.subsets(this, card);
-			for(Set<PropositionalFormula> set: sets){
-				// test if we already have a subset in minInconSets
-				boolean properSet = true;
-				for(PlBeliefSet set2: minInconSets)
-					if(set.containsAll(set2)){
-						properSet = false;
-						break;
-					}
-				if(!properSet) continue;
-				// check for consistency
-				PlBeliefSet candidate = new PlBeliefSet(set);
-				if(!candidate.isConsistent())
-					minInconSets.add(candidate);
-			}
-		}
-		return minInconSets;
-	}
-	
+		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
@@ -103,5 +67,35 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 			conj.add(f);
 		return conj.toCnf();
 	}
-
+	
+	/**
+	 * Returns the set of syntax components of this belief set, i.e.
+	 * a partitioning {K1,...,Kn} of K (a disjoint union K1u...uKn=K) such
+	 * that the signatures of K1,...,Kn are pairwise disjoint.
+	 * @return the set of syntax components of this belief set
+	 */
+	public Collection<PlBeliefSet> getSyntaxComponents(){
+		List<PlBeliefSet> sets = new LinkedList<PlBeliefSet>();
+		for(PropositionalFormula f: this){
+			PlBeliefSet s = new PlBeliefSet();
+			s.add(f);
+			sets.add(s);
+		}
+		boolean changed;
+		do{
+			changed = false;
+			for(int i = 0; i < sets.size(); i++){
+				for(int j = i+1; j< sets.size(); j++){
+					if(sets.get(i).getSignature().isOverlappingSignature(sets.get(j).getSignature())){
+						changed = true;
+						sets.get(i).addAll(sets.get(j));
+						sets.remove(j);
+						break;
+					}					
+				}
+				if(changed) break;
+			}
+		}while(changed);
+		return sets;
+	}
 }

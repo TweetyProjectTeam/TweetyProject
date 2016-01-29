@@ -17,7 +17,10 @@
 package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.commons.BeliefSet;
@@ -97,5 +100,28 @@ public abstract class AbstractMusEnumerator<S extends Formula> implements MusEnu
 	@Override
 	public boolean isConsistent(Collection<S> formulas){
 		return this.minimalInconsistentSubsets(formulas).isEmpty();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.analysis.MusEnumerator#getMiComponents(java.util.Collection)
+	 */
+	public Collection<Collection<S>> getMiComponents(Collection<S> formulas){
+		List<Collection<S>> comp = new LinkedList<Collection<S>>(this.minimalInconsistentSubsets(formulas));
+		boolean changed;
+		do{
+			changed = false;
+			for(int i = 0; i < comp.size(); i++){
+				for(int j = i+1; j< comp.size(); j++){
+					if(!Collections.disjoint(comp.get(i), comp.get(j))){
+						changed = true;
+						comp.get(i).addAll(comp.get(j));
+						comp.remove(j);
+						break;
+					}					
+				}
+				if(changed) break;
+			}
+		}while(changed);
+		return comp;
 	}
 }
