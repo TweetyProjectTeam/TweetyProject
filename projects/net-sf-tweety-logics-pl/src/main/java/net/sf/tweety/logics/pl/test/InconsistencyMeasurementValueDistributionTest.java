@@ -60,6 +60,16 @@ public class InconsistencyMeasurementValueDistributionTest {
 				System.out.println("Skipped mi measure...");
 				continue;
 			}
+			//skip eta
+			if(m.equals(InconsistencyMeasureFactory.Measure.ETA)){
+				System.out.println("Skipped eta measure...");
+				continue;
+			}
+			//skip mic
+			if(m.equals(InconsistencyMeasureFactory.Measure.MIC)){
+				System.out.println("Skipped mic measure...");
+				continue;
+			}
 			im = InconsistencyMeasureFactory.getInconsistencyMeasure(m);
 			distr = new HashMap<Double,Integer>();
 			for(File file: new File(args[0]).listFiles()){

@@ -52,7 +52,8 @@ public abstract class InconsistencyMeasureFactory {
 		PM ("pm", "Pm Inconsistency Measure", "/inc/PmInconsistencyMeasure.html"),
 		MV ("mv", "MusVar Inconsistency Measure", "/inc/MusVarInconsistencyMeasure.html"),
 		NC ("nc", "NCons Inconsistency Measure", "/inc/NConsInconsistencyMeasure.html"),
-		MCSC ("mcsc", "MCSC Inconsistency Measure", "/inc/McscInconsistencyMeasure.html");
+		MCSC ("mcsc", "MCSC Inconsistency Measure", "/inc/McscInconsistencyMeasure.html"),
+		CC ("cc","CC Inconsistency Measure","/inc/CcInconsistencyMeasure.html");
 		
 		public String id;
 		public String label;
@@ -140,6 +141,8 @@ public abstract class InconsistencyMeasureFactory {
 				return new NConsInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case MCSC:
 				return new McscInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+			case CC:
+				return new CcInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}
