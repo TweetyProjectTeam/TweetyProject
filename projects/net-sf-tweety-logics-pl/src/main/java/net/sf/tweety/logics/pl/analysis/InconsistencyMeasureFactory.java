@@ -30,6 +30,7 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.math.func.FracAggrFunction;
+import net.sf.tweety.math.opt.Solver;
 
 /**
  * Main factory for retrieving inconsistency measures for propositional logic.
@@ -144,7 +145,7 @@ public abstract class InconsistencyMeasureFactory {
 			case MCSC:
 				return new McscInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case CC:
-				return new CcInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+				return new CcInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator(), Solver.getDefaultIntegerLinearSolver());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}

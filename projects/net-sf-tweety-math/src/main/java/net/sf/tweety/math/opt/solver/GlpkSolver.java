@@ -44,7 +44,7 @@ import net.sf.tweety.math.term.Variable;
 public class GlpkSolver extends Solver {
 
 	/**Path to the binary or lp_solve*/
-	private static String binary = "glpsol";
+	public static String binary = "glpsol";
 	
 	/** For temporary files. */
 	private static File tmpFolder = null;
@@ -70,7 +70,7 @@ public class GlpkSolver extends Solver {
 			throw new IllegalArgumentException("The solver \"glpk\" needs linear optimization problems.");
 		//check existence of lp_solve first
 		if(!GlpkSolver.isInstalled())
-			return null;
+			throw new RuntimeException("The solver \"glpk\" seems not to be installed.");
 		String output = new String();
 		//String error = "";
 		try{

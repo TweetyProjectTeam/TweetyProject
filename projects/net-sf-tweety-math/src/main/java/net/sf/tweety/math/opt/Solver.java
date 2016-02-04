@@ -35,6 +35,8 @@ public abstract class Solver {
 	private static Solver defaultGeneralSolver = null;
 	/** The default solver for linear optimization problems. */
 	private static Solver defaultLinearSolver = null;
+	/** The default solver for integer linear problems*/
+	private static Solver defaultIntegerLinearSolver = null;
 	
 	/**
 	 * Sets the default solver for non-linear (general) optimization problems.
@@ -50,6 +52,14 @@ public abstract class Solver {
 	 */
 	public static void setDefaultLinearSolver(Solver solver){
 		Solver.defaultLinearSolver = solver;		
+	}
+	
+	/**
+	 * Sets the default solver for integer linear optimization problems.
+	 * @param solver some solver
+	 */
+	public static void setDefaultIntegerLinearSolver(Solver solver){
+		Solver.defaultIntegerLinearSolver = solver;
 	}
 	
 	/**
@@ -69,7 +79,17 @@ public abstract class Solver {
 	 * problems is configured.
 	 */
 	public static boolean hasDefaultLinearSolver(){
-		return Solver.defaultGeneralSolver != null;
+		return Solver.defaultLinearSolver != null;
+	}
+	
+	/**
+	 * Returns "true" if a default solver for integer linear optimization 
+	 * problems is configured.
+	 * @return "true" if a default solver for integer linear optimization 
+	 * problems is configured.
+	 */
+	public static boolean hasDefaultIntegerLinearSolver(){
+		return Solver.defaultIntegerLinearSolver != null;
 	}
 	
 	/**
@@ -84,6 +104,25 @@ public abstract class Solver {
 		if(Solver.defaultGeneralSolver != null)
 			return Solver.defaultGeneralSolver;
 		System.err.println("No default solver for general optimization problems configured, "
+				+ "the application will now terminate. See "
+				+ "'http://tweetyproject.org/doc/optimization-problem-solvers.html' "
+				+ "for information on how a default solver is configured.");
+		System.exit(1);
+		return null;
+	}
+	
+	/**
+	 * Returns the default solver for non-linear (general) optimization problems.
+	 * If a default solver for general problems has been configured this solver
+	 * is returned by this method. If no default solver for general problems is 
+	 * configured, a message is printed to stderr pointing out that no default
+	 * solver is configured and the application is terminated.
+	 * @return the default solver for non-linear (general) optimization problems.
+	 */
+	public static Solver getDefaultIntegerLinearSolver(){
+		if(Solver.defaultIntegerLinearSolver != null)
+			return Solver.defaultIntegerLinearSolver;
+		System.err.println("No default solver for integer linear optimization problems configured, "
 				+ "the application will now terminate. See "
 				+ "'http://tweetyproject.org/doc/optimization-problem-solvers.html' "
 				+ "for information on how a default solver is configured.");

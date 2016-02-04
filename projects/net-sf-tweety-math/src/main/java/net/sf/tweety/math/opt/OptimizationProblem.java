@@ -289,9 +289,32 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 				result += s2.getLeftTerm() + s2.getRelationSymbol() + s2.getRightTerm() + " + " + OptimizationProblem.EPSILON + "\n";
 			}else result += s2.getLeftTerm() + s2.getRelationSymbol() + s2.getRightTerm() + "\n";
 		}
+		// list integer variables
+		boolean hasInteger = false;
+		String integerPart = "General\n";
+		for(Variable v: this.getVariables())
+			if(v instanceof IntegerVariable){
+				hasInteger = true;
+				integerPart += v.getName() + "\n";
+			}
+		if(hasInteger)
+			result += integerPart;
+		// list binary variables
+		boolean hasBinary = false;
+		String binaryPart = "Binary\n";
+		for(Variable v: this.getVariables())
+			if(v instanceof BinaryVariable){
+				hasBinary = true;
+				binaryPart += v.getName() + "\n";
+			}
+		if(hasBinary)
+			result += binaryPart;
+		
 		result += "End\n";
 		//TODO: solve the following workarounds
 		result = result.replaceAll("-1\\ ", "-");
+		result = result.replaceAll("\\(", "");
+		result = result.replaceAll("\\)", "");
 		result = result.replaceAll("--", "");
 		result = result.replaceAll("\\*", "");
 		result = result.replaceAll("\\+ 0\\.5\\ -", "- 0.5\\ ");

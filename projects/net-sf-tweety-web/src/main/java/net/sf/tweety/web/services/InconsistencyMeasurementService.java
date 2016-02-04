@@ -50,6 +50,7 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
+import net.sf.tweety.math.opt.solver.GlpkSolver;
 import net.sf.tweety.web.TweetyServer;
 
 import org.codehaus.jettison.json.JSONException;
@@ -71,6 +72,8 @@ public class InconsistencyMeasurementService{
 	//public static AbstractMusEnumerator<PropositionalFormula> musEnumerator =  new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
 	/** The linear optimization solver configured for this service. */
 	public static Solver linearSolver = new ApacheCommonsSimplex();
+	/** The integer linear optimization solver configured for this service. */
+	public static Solver integerLinearSolver = new GlpkSolver();
 	
 	
 	/** Time out for the update operation (in seconds). */
@@ -119,6 +122,7 @@ public class InconsistencyMeasurementService{
 		SatSolver.setDefaultSolver(InconsistencyMeasurementService.satSolver);
 		PlMusEnumerator.setDefaultEnumerator(InconsistencyMeasurementService.musEnumerator);
 		Solver.setDefaultLinearSolver(InconsistencyMeasurementService.linearSolver);
+		Solver.setDefaultIntegerLinearSolver(InconsistencyMeasurementService.integerLinearSolver);		
 	}
 	
 	/**
