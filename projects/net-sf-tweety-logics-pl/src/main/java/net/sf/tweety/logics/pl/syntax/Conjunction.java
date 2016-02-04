@@ -150,4 +150,14 @@ public class Conjunction extends AssociativePropositionalFormula {
 			models.retainAll(it.next().getModels(sig));
 		return models;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#isConjunctiveClause()
+	 */
+	public boolean isConjunctiveClause(){
+		for(PropositionalFormula f: this.getFormulas())
+			if(!f.isLiteral())
+				return false;
+		return true;
+	}
 }
