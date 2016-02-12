@@ -85,11 +85,17 @@ public class DefaultSequence {
 		
 	}
 	
-	
+	/**
+	 * 	@return the sequence's in set
+	 */
 	public Collection<FolFormula> getIn() {
 		return in;
 	}
 
+	
+	/**
+	 * @return the sequence's out set
+	 */
 	public Collection<FolFormula> getOut() {
 		return out;
 	}
@@ -124,6 +130,10 @@ public class DefaultSequence {
 		return true;
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "DefaultSequence"

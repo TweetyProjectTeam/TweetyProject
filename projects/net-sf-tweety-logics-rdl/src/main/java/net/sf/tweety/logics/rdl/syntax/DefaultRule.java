@@ -83,14 +83,24 @@ public class DefaultRule extends RelationalFormula {
 		return true;
 	}
 
+	
+	/**
+	 * @return the default's prerequisite
+	 */
 	public FolFormula getPre() {
 		return pre;
 	}
 
+	/**
+	 * @return the default's justification
+	 */
 	public Collection<FolFormula> getJus() {
 		return jus;
 	}
 
+	/**
+	 * @return the default's conclusion
+	 */
 	public FolFormula getConc() {
 		return conc;
 	}

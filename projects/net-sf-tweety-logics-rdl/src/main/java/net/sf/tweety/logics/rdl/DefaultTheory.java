@@ -55,6 +55,10 @@ public class DefaultTheory implements BeliefBase{
 		this.defaults.addAll(defaults);
 	}
 	
+	/**
+	 * Removes Variables by expanding formulas
+	 * @return grounded version of the default theory
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public DefaultTheory ground(){
 		Set<DefaultRule> ds = new HashSet<>();
@@ -85,6 +89,10 @@ public class DefaultTheory implements BeliefBase{
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @return FoL formulas in default theories
+	 */
 	public FolBeliefSet getFacts(){
 		return facts;
 	}

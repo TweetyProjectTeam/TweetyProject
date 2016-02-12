@@ -63,10 +63,16 @@ public class DefaultProcessTree {
 		
 	}
 
+	/**
+	 * @return all processes (sequences of defaults from root to leaf)
+	 */
 	public Collection<DefaultSequence> getProcesses() {
 		return processes;
 	}
 
+	/**
+	 * @return all extensions (possible sets of facts)
+	 */
 	public Collection<Collection<FolFormula>> getExtensions() {
 		return extensions;
 	}
