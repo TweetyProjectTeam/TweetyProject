@@ -106,7 +106,8 @@ public class CcInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 						left = m2v.get(mis);
 					else left = left.add(m2v.get(mis));
 			}
-			problem.add(new Inequation(left,new IntegerConstant(1),Inequation.LESS_EQUAL));
+			if(left != null)
+				problem.add(new Inequation(left,new IntegerConstant(1),Inequation.LESS_EQUAL));
 		}
 		// 2) if a mis is selected, all its contained formulas must be selected
 		// 3) if all formulas of a mis are selected, the mis must be selected
@@ -118,7 +119,7 @@ public class CcInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 				left3 = left3.add(f2v.get(f));
 			}
 			problem.add(new Inequation(left2,new IntegerConstant(0),Inequation.GREATER_EQUAL));
-			problem.add(new Inequation(left3,new IntegerConstant(mis.size()-1),Inequation.LESS_EQUAL));
+			problem.add(new Inequation(left3,new IntegerConstant(mis.size()-1),Inequation.LESS_EQUAL));			
 		}		
 		try {
 			Map<Variable,Term> result = this.solver.solve(problem);
