@@ -63,7 +63,7 @@ public class DefaultTheory implements BeliefBase{
 	public DefaultTheory ground(){
 		Set<DefaultRule> ds = new HashSet<>();
 		for(DefaultRule d: defaults){
-			ds.addAll((Set)(d.allGroundInstances(((FolSignature)facts.getSignature()).getConstants())));
+			ds.addAll((Set)(d.allGroundInstances(((FolSignature)getSignature()).getConstants())));
 		}
 		return new DefaultTheory(facts, ds);
 	}
