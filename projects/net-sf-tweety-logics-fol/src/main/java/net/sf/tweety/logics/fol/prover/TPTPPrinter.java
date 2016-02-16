@@ -31,41 +31,18 @@ public class TPTPPrinter {
 		
 		// print types
 		FolSignature sig = (FolSignature)b.getSignature();
-		for(Sort sort: sig.getSorts())
-			sw.write(toTPTP(sort));
 		for(Constant c:sig.getConstants())
-			sw.write(toTPTP(c));
-		for(Predicate p:sig.getPredicates())
-			sw.write(toTPTP(p));
-		for(Functor f:sig.getFunctors())
-			sw.write(toTPTP(f));
+			sw.write(mk_axiom(c+"_type", c.getSort()+"("+c+")"));
 		
 		//print facts
 		for(FolFormula f: b)
-			sw.write(toTPTP(f));
+			sw.write(mk_axiom("axiom_"+ ++axiom_id, printFormula(f)));
 		
 		return sw.toString();
 	}
 	
-	public String toTPTP(Sort sort) {
-		return "tff("+sort+"_type,type,("+sort+":$tType)).\n";
-	}
-	
-	public String toTPTP(Constant c) {
-		return "tff("+c+"_type,type,("+c+":"+c.getSort()+")).\n";
-	}
-	
-	public String toTPTP(Predicate p) {
-		return "tff("+p.getName()+"_type,type,("+p.getName()+":"+join(p.getArgumentTypes()," * ","(",")")+" > $o)).\n";
-	}
-	
-	public String toTPTP(Functor f) {
-		// TODO ???
-		return "";
-	}
-	
-	public String toTPTP(FolFormula f) {
-		return "tff(axiom_"+ ++axiom_id+",axiom,("+printFormula(f)+")).\n";
+	private String mk_axiom(String name, String body){
+		return "fof("+name+", axiom, "+body+").\n";
 	}
 	
 	
@@ -80,11 +57,11 @@ public class TPTPPrinter {
 			String result = "! [";
 			if(f instanceof ExistsQuantifiedFormula)
 				result = "? [";
-			Iterator<Variable> i = fqf.getQuantifierVariables().iterator();
-			result += printVar(i.next());
-			while(i.hasNext())
-				result+=", "+printVar(i.next());
-			return result +"]: "+printFormula(fqf.getFormula());
+			//Iterator<Variable> i = fqf.getQuantifierVariables().iterator();
+			//result += printVar(i.next());
+			//while(i.hasNext())
+				//result+=", "+printVar(i.next());
+			return result +join(fqf.getQuantifierVariables(),", ") +"]: "+printFormula(fqf.getFormula());
 		}
 		if(f instanceof AssociativeFOLFormula){
 			AssociativeFOLFormula d= (AssociativeFOLFormula)f;
@@ -98,17 +75,10 @@ public class TPTPPrinter {
 		return f.toString();
 	}
 	
-	
-	private String printVar(Variable var){
-		return var+": "+var.getSort();
-	}
-	
 
 	
-	private <T> String join(Collection<T> c, String delimiter, String left, String right){
-		if(c.size()==1)
-			return c.iterator().next().toString();
-		String result=left;
+	private <T> String join(Collection<T> c, String delimiter){
+		String result="";
 		boolean first = true;
 		for(T o:c){
 			if(first)
@@ -117,7 +87,7 @@ public class TPTPPrinter {
 				result+=delimiter;
 			result+=o;
 		}
-		return result+right;
+		return result;
 	}
 
 }
