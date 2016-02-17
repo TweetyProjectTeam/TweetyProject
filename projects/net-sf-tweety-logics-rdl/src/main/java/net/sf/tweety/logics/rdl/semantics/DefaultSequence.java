@@ -39,16 +39,40 @@ import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
 public class DefaultSequence {
 
+	/**
+	 * the sequence of defaults
+	 */
 	private List<DefaultRule> defaults = new ArrayList<>();
+	
+	/**
+	 * the out set
+	 */
 	private Set<FolFormula> out = new HashSet<>();
+	
+	/**
+	 * the in set
+	 */
 	private FolBeliefSet in = new FolBeliefSet();
 	private ClassicalInference reasoner = new ClassicalInference(in);
+	
+	/**
+	 * true if the sequence is a process
+	 */
 	boolean process = true;
 
+	/**
+	 * constructs an empty sequence of defaults of the default theory dt
+	 * @param dt a default theory, from which defaults will be added to the sequence
+	 */
 	public DefaultSequence(DefaultTheory dt) {
 		in.addAll(dt.getFacts());
 	}
 
+	/**
+	 * constructs a sequence by appending d to ds 
+	 * @param ds
+	 * @param d
+	 */
 	public DefaultSequence(DefaultSequence ds, DefaultRule d) {
 		defaults.addAll(ds.defaults);
 		in.addAll(ds.in);
@@ -56,10 +80,10 @@ public class DefaultSequence {
 		for(DefaultRule r: defaults)
 			if(d.equals(r))
 				process = false;
-		in.add(d.getConc());
+		in.add(d.getConclusion());
 		defaults.add(d);
 		out.addAll(ds.out);
-		for(FolFormula f: d.getJus())
+		for(FolFormula f: d.getJustification())
 			out.add(new Negation(f));
 	}
 	
@@ -78,10 +102,10 @@ public class DefaultSequence {
 	 * @return true iff d is applicable to In
 	 */
 	public boolean isApplicable(DefaultRule d){
-		for(FolFormula f: d.getJus())
+		for(FolFormula f: d.getJustification())
 			if(reasoner.query(new Negation(f)).getAnswerBoolean())
 				return false;
-		return reasoner.query(d.getPre()).getAnswerBoolean();
+		return reasoner.query(d.getPrerequisite()).getAnswerBoolean();
 		
 	}
 	

@@ -35,9 +35,20 @@ import net.sf.tweety.logics.rdl.syntax.DefaultRule;
  */
 public class DefaultProcessTree {
 	
+	/**
+	 * all processes of the process tree
+	 */
 	Collection<DefaultSequence> processes = new ArrayList<>();
+	
+	/**
+	 * all extensions of the process tree
+	 */
 	Collection<Collection<FolFormula>> extensions = new HashSet<>();
 	
+	/**
+	 * constructs a default process tree out of the default theory t
+	 * @param t a default theory
+	 */
 	public DefaultProcessTree(DefaultTheory t) {
 		t = t.ground();
 		List<DefaultSequence> seqs_old  = new ArrayList<>();

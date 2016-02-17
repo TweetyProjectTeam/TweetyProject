@@ -53,6 +53,8 @@ public class NaiveDefaultReasoner extends Reasoner{
 	public Answer query(Formula query) {
 		if(!(query instanceof FolFormula))
 			throw new IllegalArgumentException("NaiveDefaultReasoner is only defined for first-order queries.");
+		if(!((FolFormula)query).isGround())
+			throw new IllegalArgumentException("Query is not grounded.");
 		Answer answer = new Answer(this.getKnowledgBase(),query);
 		answer.setAnswer(false);
 		for (Collection<FolFormula> extension: tree.getExtensions()){

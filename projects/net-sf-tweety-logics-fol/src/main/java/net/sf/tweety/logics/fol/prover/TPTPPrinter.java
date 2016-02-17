@@ -50,18 +50,14 @@ public class TPTPPrinter {
 	private String printFormula(RelationalFormula f) {
 		if(f instanceof Negation){
 			Negation n= (Negation)f;
-			return "~ "+printFormula(n.getFormula());
+			return parens("~ "+printFormula(n.getFormula()));
 		}
 		if(f instanceof QuantifiedFormula){
 			QuantifiedFormula fqf = (QuantifiedFormula)f;
 			String result = "! [";
 			if(f instanceof ExistsQuantifiedFormula)
 				result = "? [";
-			//Iterator<Variable> i = fqf.getQuantifierVariables().iterator();
-			//result += printVar(i.next());
-			//while(i.hasNext())
-				//result+=", "+printVar(i.next());
-			return result +join(fqf.getQuantifierVariables(),", ") +"]: "+printFormula(fqf.getFormula());
+			return parens(result +join(fqf.getQuantifierVariables(),", ") +"]: "+printFormula(fqf.getFormula()));
 		}
 		if(f instanceof AssociativeFOLFormula){
 			AssociativeFOLFormula d= (AssociativeFOLFormula)f;
@@ -70,11 +66,14 @@ public class TPTPPrinter {
 			String delimiter = (f instanceof Conjunction) ? " & ":" | ";
 			while(i.hasNext())
 				result += delimiter + printFormula(i.next());
-			return result;
+			return parens(result);
 		}
 		return f.toString();
 	}
 	
+	private String parens(String str) {
+		return "("+str+")";
+	}
 
 	
 	private <T> String join(Collection<T> c, String delimiter){

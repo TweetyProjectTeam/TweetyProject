@@ -19,7 +19,9 @@
 package net.sf.tweety.logics.rdl.syntax;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +39,7 @@ import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.math.probability.Probability;
@@ -56,6 +59,17 @@ public class DefaultRule extends RelationalFormula {
 	private Collection<FolFormula> jus;
 	/** The conclusion of the default rule */
 	private FolFormula conc;
+	
+	/**
+	 * an empty Default Rule
+	 */
+	public DefaultRule(){
+		
+	}
+	
+	public DefaultRule(FolFormula pre, FolFormula jus, FolFormula conc) throws ParserException {
+		this(pre, Arrays.asList(jus), conc);
+	}
 
 	public DefaultRule(FolFormula pre, Collection<FolFormula> jus, FolFormula conc) throws ParserException {
 		super();
@@ -63,7 +77,7 @@ public class DefaultRule extends RelationalFormula {
 			throw new ParserException("Prerequisite needed to form default rule.");
 		if (conc == null)
 			throw new ParserException("Conclusion needed to form default rule.");
-		if (jus.isEmpty())
+		if (jus == null)
 			throw new ParserException("Justification needed to form default rule.");
 		this.pre = pre;
 		this.jus = new LinkedList<>();
@@ -72,46 +86,48 @@ public class DefaultRule extends RelationalFormula {
 	}
 
 	/**
-	 * Tests, wether the defautl is normal
+	 * Tests, wether the default is normal
 	 * normal ^= a:c/c
 	 */
 	public boolean isNormal(DefaultTheory dt) {
-		for (FolFormula f : jus) {
-			if (!ClassicalInference.equivalent(f, conc))
-				return false;
-		}
-		return true;
+		if(jus.size()!=1)
+			return false;
+		return ClassicalInference.equivalent(jus.iterator().next(), conc);
 	}
 
 	
 	/**
 	 * @return the default's prerequisite
 	 */
-	public FolFormula getPre() {
+	public FolFormula getPrerequisite() {
 		return pre;
 	}
 
 	/**
 	 * @return the default's justification
 	 */
-	public Collection<FolFormula> getJus() {
+	public Collection<FolFormula> getJustification() {
 		return jus;
 	}
 
 	/**
 	 * @return the default's conclusion
 	 */
-	public FolFormula getConc() {
+	public FolFormula getConclusion() {
 		return conc;
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula#getPredicates()
 	 */
-	@Override
+	@Override 
+	@SuppressWarnings("all")
 	public Set<? extends Predicate> getPredicates() {
-		// TODO Auto-generated method stub
-		return null;
+		Set result = pre.getPredicates();
+		result.addAll(conc.getPredicates());
+		for(FolFormula f: jus)
+			result.add(f.getPredicates());
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -119,7 +135,6 @@ public class DefaultRule extends RelationalFormula {
 	 */
 	@Override
 	public boolean isLiteral() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -223,8 +238,11 @@ public class DefaultRule extends RelationalFormula {
 	 */
 	@Override
 	public Set<Term<?>> getTerms() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Term<?>> result=pre.getTerms();
+		result.addAll(conc.getTerms());
+		for(FolFormula f: jus)
+			result.addAll(f.getTerms());
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -232,8 +250,11 @@ public class DefaultRule extends RelationalFormula {
 	 */
 	@Override
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
-		// TODO Auto-generated method stub
-		return null;
+		Set<C> result=pre.getTerms(cls);
+		result.addAll(conc.getTerms(cls));
+		for(FolFormula f: jus)
+			result.addAll(f.getTerms(cls));
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -287,7 +308,7 @@ public class DefaultRule extends RelationalFormula {
 	@Override
 	public RelationalFormula complement() {
 		// TODO Auto-generated method stub
-		throw new IllegalArgumentException("");
+		throw new IllegalArgumentException("No complement of default");
 	}
 
 	/* (non-Javadoc)
@@ -296,7 +317,7 @@ public class DefaultRule extends RelationalFormula {
 	@Override
 	public Disjunction combineWithOr(Disjunctable formula) {
 		// TODO Auto-generated method stub
-		throw new IllegalArgumentException("");
+		throw new IllegalArgumentException("Not combinable with or");
 	}
 
 	/* (non-Javadoc)
@@ -305,7 +326,16 @@ public class DefaultRule extends RelationalFormula {
 	@Override
 	public Conjunction combineWithAnd(Conjuctable formula) {
 		// TODO Auto-generated method stub
-		throw new IllegalArgumentException("");
+		throw new IllegalArgumentException("Not combinable with and");
+	}
+	
+	@Override
+	public FolSignature getSignature() {
+		FolSignature result = pre.getSignature();
+		result.addSignature(conc.getSignature());
+		for(FolFormula f: jus)
+			result.addSignature(f.getSignature());
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -334,9 +364,17 @@ public class DefaultRule extends RelationalFormula {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((conc == null) ? 0 : conc.hashCode());
+		result = prime * result + ((jus == null) ? 0 : jus.hashCode());
+		result = prime * result + ((pre == null) ? 0 : pre.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if(this==o)
@@ -354,5 +392,7 @@ public class DefaultRule extends RelationalFormula {
 		}
 		return false;
 	}
+	
+	
 
 }

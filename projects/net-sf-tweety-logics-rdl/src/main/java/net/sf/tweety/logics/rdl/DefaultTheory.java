@@ -26,6 +26,7 @@ import java.util.Set;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
@@ -43,16 +44,60 @@ public class DefaultTheory implements BeliefBase{
 	private Collection<DefaultRule> defaults;
 	
 	
-	
-	public Collection<DefaultRule> getDefaults() {
-		return defaults;
+	/**
+	 * constructs empty default theory
+	 */
+	public DefaultTheory() {
+		super();
+		this.facts = new FolBeliefSet();
+		this.defaults = new ArrayList<DefaultRule>();
 	}
 
+	/**
+	 * constructs a default theory from a knowledge base and a set of defaults
+	 * @param facts the knowledge base
+	 * @param defaults the defaults
+	 */
 	public DefaultTheory(FolBeliefSet facts, Collection<DefaultRule> defaults) {
 		super();
 		this.facts = facts;
 		this.defaults = new ArrayList<DefaultRule>();
 		this.defaults.addAll(defaults);
+	}
+	
+	/**
+	 * add facts to knowledge base
+	 */
+	void addFact(FolFormula fact){
+		facts.add(fact);
+	}
+	
+	/**
+	 * removes fact from knowledge base
+	 */
+	void removeFact(FolFormula fact){
+		facts.remove(fact);
+	}
+	
+	/**
+	 * adds default rule 
+	 */
+	void addDefault(DefaultRule d){
+		defaults.add(d);
+	}
+	
+	/**
+	 * removes default rule 
+	 */
+	void removeDefault(DefaultRule d){
+		defaults.remove(d);
+	}
+	
+	/**
+	 * @return all the default rules
+	 */
+	public Collection<DefaultRule> getDefaults() {
+		return defaults;
 	}
 	
 	/**
@@ -74,8 +119,10 @@ public class DefaultTheory implements BeliefBase{
 	 */
 	@Override
 	public Signature getSignature() {
-		// Use FolSignature 
-		return facts.getSignature();
+		Signature result = facts.getSignature();
+		for(DefaultRule d: defaults)
+			result.addSignature(d.getSignature());
+		return result;
 	}
 
 	/* (non-Javadoc)

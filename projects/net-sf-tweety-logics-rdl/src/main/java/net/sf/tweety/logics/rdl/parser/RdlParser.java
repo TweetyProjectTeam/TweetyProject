@@ -42,10 +42,20 @@ import net.sf.tweety.logics.rdl.syntax.DefaultRule;
  */
 public class RdlParser extends Parser<DefaultTheory> {
 
+	/**
+	 * parser to parse knowledge base
+	 */
 	private FolParser folparser;
 
+	/**
+	 * tokens for parsing defaults
+	 */
 	private final String DIV_COLON = "::", DIV_COMMA = ";", DIV_SLASH = "/";
 
+	
+	/**
+	 * regexes for parsing a default and the justifications
+	 */
 	private final Pattern JUS_SPLIT = Pattern.compile("^([^;]+)" + DIV_COMMA + "(.*)$"),
 			DEFAULT_SPLIT = Pattern.compile("^(.*)" + DIV_COLON + "(.*)" + DIV_SLASH + "(.*)$");
 
@@ -54,7 +64,6 @@ public class RdlParser extends Parser<DefaultTheory> {
 	 */
 	@Override
 	public DefaultTheory parseBeliefBase(Reader reader) throws IOException, ParserException {
-		// TODO Auto-generated method stub
 		folparser= new FolParser();
 		BufferedReader br = new BufferedReader(reader);
 		String str = "";
