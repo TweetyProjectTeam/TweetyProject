@@ -18,9 +18,12 @@
  */
 package net.sf.tweety.logics.fol.prover;
 
+import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+
 /**
  * 
- * @author Bastian Wolf
+ * @author Bastian Wolf, Nils Geilen
  *
  */
 public class EProver extends FolTheoremProver {
@@ -28,8 +31,16 @@ public class EProver extends FolTheoremProver {
 	/**
 	 *  String representation of the E binary path
 	 */
-	private String binaryLocation;
+	private String binaryLocation, workspace;
 	
+	
+	
+	@Override
+	public boolean query(FolBeliefSet kb, FolFormula query) {
+		TPTPPrinter printer = new TPTPPrinter();
+		return true;
+	}
+
 	/**
 	 * Creates a new EProver with the E binary
 	 * path given as parameter

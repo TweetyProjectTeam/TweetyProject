@@ -5,26 +5,25 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.commons.syntax.Functor;
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
-import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.fol.syntax.QuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 
+/**
+ * Prints single fol formulas and full knowledge bases to TPTP
+ * @author Nils Geilen
+ *
+ */
+
 public class TPTPPrinter {
 	
 	private String dir;
-	private int axiom_id = 0;
 	
 	public String toTPTP(FolBeliefSet b) {
 		StringWriter sw = new StringWriter();
@@ -32,16 +31,21 @@ public class TPTPPrinter {
 		// print types
 		FolSignature sig = (FolSignature)b.getSignature();
 		for(Constant c:sig.getConstants())
-			sw.write(mk_axiom(c+"_type", c.getSort()+"("+c+")"));
+			sw.write(makeAxiom(c+"_type", c.getSort()+"("+c+")"));
 		
 		//print facts
+		int axiom_id = 0;
 		for(FolFormula f: b)
-			sw.write(mk_axiom("axiom_"+ ++axiom_id, printFormula(f)));
+			sw.write(makeAxiom("axiom_"+ ++axiom_id, printFormula(f)));
 		
 		return sw.toString();
 	}
 	
-	private String mk_axiom(String name, String body){
+	public String makeQuery(String name, FolFormula query) {
+		return "fof("+name+", conjecture, "+printFormula(query)+").\n";
+	}
+	
+	private String makeAxiom(String name, String body){
 		return "fof("+name+", axiom, "+body+").\n";
 	}
 	

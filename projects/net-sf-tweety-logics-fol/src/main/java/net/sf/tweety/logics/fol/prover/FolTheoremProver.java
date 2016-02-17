@@ -18,9 +18,12 @@
  */
 package net.sf.tweety.logics.fol.prover;
 
+import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+
 /**
  * 
- * @author Bastian Wolf
+ * @author Bastian Wolf, Nils Geilen
  *
  */
 public abstract class FolTheoremProver {
@@ -51,5 +54,7 @@ public abstract class FolTheoremProver {
 			return null;
 		}
 	}
+	
+	public abstract boolean query(FolBeliefSet kb, FolFormula query);
 	
 }
