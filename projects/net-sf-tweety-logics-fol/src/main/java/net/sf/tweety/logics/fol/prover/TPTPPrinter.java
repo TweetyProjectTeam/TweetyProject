@@ -1,6 +1,8 @@
 package net.sf.tweety.logics.fol.prover;
 
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -24,26 +26,32 @@ import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 
 public class TPTPPrinter {
 	
-	private String dir;
 	
 	public String toTPTP(FolBeliefSet b) {
 		StringWriter sw = new StringWriter();
-		
-		// print types
-		FolSignature sig = (FolSignature)b.getSignature();
-		for(Constant c:sig.getConstants())
-			sw.write(makeAxiom(c+"_type", c.getSort()+"("+c+")"));
-		
-		//print facts
-		int axiom_id = 0;
-		for(FolFormula f: b)
-			sw.write(makeAxiom("axiom_"+ ++axiom_id, printFormula(f)));
-		
+		printBase(sw,b);
 		return sw.toString();
 	}
 	
 	public String makeQuery(String name, FolFormula query) {
 		return "fof("+name+", conjecture, "+printFormula(query)+").\n";
+	}
+	
+	public void printBase(Writer w, FolBeliefSet b){
+		try{
+			// print types
+			FolSignature sig = (FolSignature)b.getSignature();
+			for(Constant c:sig.getConstants())
+				w.write(makeAxiom(c+"_type", c.getSort()+"("+c+")"));
+					
+			//print facts
+			int axiom_id = 0;
+			for(FolFormula f: b)
+				w.write(makeAxiom("axiom_"+ ++axiom_id, printFormula(f)));
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private String makeAxiom(String name, String body){
