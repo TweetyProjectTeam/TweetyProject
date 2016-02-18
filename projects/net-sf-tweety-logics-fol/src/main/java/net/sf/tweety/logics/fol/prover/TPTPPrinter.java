@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
@@ -49,7 +50,9 @@ public class TPTPPrinter {
 		return "fof("+name+", axiom, "+body+").\n";
 	}
 	
-	
+	private String printVar(Variable v){
+		return v.getSort() + parens(v.toString());
+	}
 	
 	private String printFormula(RelationalFormula f) {
 		if(f instanceof Negation){
@@ -58,10 +61,18 @@ public class TPTPPrinter {
 		}
 		if(f instanceof QuantifiedFormula){
 			QuantifiedFormula fqf = (QuantifiedFormula)f;
-			String result = "! [";
-			if(f instanceof ExistsQuantifiedFormula)
-				result = "? [";
-			return parens(result +join(fqf.getQuantifierVariables(),", ") +"]: "+printFormula(fqf.getFormula()));
+			boolean existential = f instanceof ExistsQuantifiedFormula;
+			String result = existential ? "? [" : "! [";
+			result += join(fqf.getQuantifierVariables(),", ") + "]: ";
+			// check if variables are of correct type
+			if(!existential){
+				Iterator<Variable> i = fqf.getQuantifierVariables().iterator();
+				result += printVar(i.next());
+				while(i.hasNext())
+					result += " & " + printVar(i.next());
+				result += " => ";
+			}
+			return parens(result+printFormula(fqf.getFormula()));
 		}
 		if(f instanceof AssociativeFOLFormula){
 			AssociativeFOLFormula d= (AssociativeFOLFormula)f;
