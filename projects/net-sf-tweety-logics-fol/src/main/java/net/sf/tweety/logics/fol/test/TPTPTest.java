@@ -12,6 +12,8 @@ public class TPTPTest {
 
 	@Test
 	public void test() throws Exception {
+		System.out.println(System.getProperty("os.name").matches("Lin.*"));
+		
 		FolParser parser = new FolParser();		
 		FolBeliefSet b = parser.parseBeliefBaseFromFile("eprover_example.txt");
 		TPTPPrinter printer = new TPTPPrinter();
@@ -20,7 +22,10 @@ public class TPTPTest {
 		FolFormula query = (FolFormula)parser.parseFormula("!test(tuffy)");
 		System.out.println(printer.makeQuery("query2", query));
 		
-		EProver e = new EProver("C:/app/E/PROVER/eprover.exe","C:/Users/me/tptp_ws/");
+		//EProver e = new EProver("C:/app/E/PROVER/eprover.exe","C:/Users/me/tptp_ws/");
+		
+		EProver e = new EProver("/home/nils/app/E/PROVER/eprover","/home/nils/tptp_ws/");
+
 		System.out.print(e.query(b, query));
 	}
 	

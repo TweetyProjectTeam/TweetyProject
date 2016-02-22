@@ -26,17 +26,32 @@ import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 
 public class TPTPPrinter {
 	
-	
+	/**
+	 * Prints TPTP representation of a knowledge base to a string.
+	 * @param b a knowledge base
+	 * @return TPTP representation of b
+	 */
 	public String toTPTP(FolBeliefSet b) {
 		StringWriter sw = new StringWriter();
 		printBase(sw,b);
 		return sw.toString();
 	}
 	
+	/**
+	 * Creates a TPTP conjecture.
+	 * @param name the identifying name of the conjecture
+	 * @param query the formula to be queried
+	 * @return the query as TPTP
+	 */
 	public String makeQuery(String name, FolFormula query) {
 		return "fof("+name+", conjecture, "+printFormula(query)+").\n";
 	}
 	
+	/**
+	 * Prints TPTP representation of a knowledge base to w.
+	 * @param w a writer
+	 * @param b a knowledge base
+	 */
 	public void printBase(Writer w, FolBeliefSet b){
 		try{
 			// print types
@@ -54,14 +69,30 @@ public class TPTPPrinter {
 		
 	}
 	
+	/**
+	 * Creates an TPTP axiom out of body.
+	 * @param name the identifying name of the axiom
+	 * @param body the axiom's formula in TPTP format
+	 * @return the axiom as a string
+	 */
 	private String makeAxiom(String name, String body){
 		return "fof("+name+", axiom, "+body+").\n";
 	}
 	
+	/**
+	 * Crates a type check or type def for a variable
+	 * @param v a variable
+	 * @return type(var)
+	 */
 	private String printVar(Variable v){
 		return v.getSort() + parens(v.toString());
 	}
 	
+	/**
+	 * Creates a TPTP representation of a formula.
+	 * @param f a formula
+	 * @return f in TPTP format
+	 */
 	private String printFormula(RelationalFormula f) {
 		if(f instanceof Negation){
 			Negation n= (Negation)f;
@@ -94,11 +125,21 @@ public class TPTPPrinter {
 		return f.toString();
 	}
 	
+	/**
+	 * Puts str in parentheses.
+	 * @param str a string
+	 * @return (str)
+	 */
 	private String parens(String str) {
 		return "("+str+")";
 	}
 
-	
+	/**
+	 * Joins the elements of c.
+	 * @param c a collection
+	 * @param delimiter will separate elements
+	 * @return a string representation of the elements of c separated by the delimiter
+	 */
 	private <T> String join(Collection<T> c, String delimiter){
 		String result="";
 		boolean first = true;

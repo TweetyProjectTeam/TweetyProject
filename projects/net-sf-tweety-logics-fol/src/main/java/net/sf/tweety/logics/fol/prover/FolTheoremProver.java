@@ -55,6 +55,18 @@ public abstract class FolTheoremProver {
 		}
 	}
 	
-	public abstract boolean query(FolBeliefSet kb, FolFormula query);
+	/**
+	 * This method determines the answer of the given query
+	 * wrt. to the given knowledge base.
+	 * @param query a query.
+	 * @return the answer to the query.
+	 */
+	/**
+	 * 
+	 * @param kb
+	 * @param query
+	 * @return
+	 */
+	public abstract boolean query(FolBeliefSet kb, FolFormula query) throws RuntimeException;
 	
 }

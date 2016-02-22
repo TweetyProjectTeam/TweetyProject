@@ -19,10 +19,13 @@
 package net.sf.tweety.logics.fol.prover;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
+import net.sf.tweety.commons.util.Exec;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
@@ -34,11 +37,13 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 public class EProver extends FolTheoremProver {
 
 	/**
-	 *  String representation of the E binary path
+	 *  String representation of the E binary path,
+	 *  directory, where the temporary files are stored
 	 */
 	private String binaryLocation, workspace;
 	
-	Shell bash = new CygwinShell("C:/cygwin64/bin/bash.exe");
+	//Shell bash = new CygwinShell("C:/cygwin64/bin/bash.exe");
+	Shell bash = new CygwinShell("/bin/bash");
 	
 	
 	
@@ -52,11 +57,17 @@ public class EProver extends FolTheoremProver {
 	public boolean query(FolBeliefSet kb, FolFormula query) {
 		TPTPPrinter printer = new TPTPPrinter();
 		try{
+			File file = new File(workspace + "problem.tptp");
+			file.getParentFile().mkdirs();
 			PrintWriter writer = new PrintWriter(workspace + "problem.tptp");
 			printer.printBase(writer, kb);
 			writer.write(printer.makeQuery("query", query));
 			writer.close();
-			bash.run(binaryLocation + " --tptp3-format " + workspace + "problem.tptp > " + workspace + "answer.txt");
+			String cmd = binaryLocation + " --tptp3-format " + workspace + "problem.tptp ";
+			System.out.println(cmd);
+			bash.run(cmd);
+			//String s = Exec.invokeExecutable(cmd);
+			//System.out.print(s);
 			BufferedReader reader = new BufferedReader(new FileReader(workspace + "answer.txt"));
 			String line;
 			while((line = reader.readLine()) != null)
@@ -67,6 +78,8 @@ public class EProver extends FolTheoremProver {
 					reader.close();
 					return false;
 				}	
+			reader.close();
+			throw new Exception("Failed to invoke eprover!");
 		}catch(Exception e){
 			e.printStackTrace();
 		}	
@@ -95,6 +108,24 @@ public class EProver extends FolTheoremProver {
 
 interface Shell {
 	public void run(String cmd);
+}
+
+class NativeShell implements Shell {
+
+	@Override
+	public void run(String cmd) {
+		 try
+	        {            
+	            Runtime rt = Runtime.getRuntime();
+	            Process proc = rt.exec(cmd);
+	            int exitVal = proc.exitValue();
+	            System.out.println("Process exitValue: " + exitVal);
+	        } catch (Throwable t)
+	          {
+	            t.printStackTrace();
+	          }
+	}
+	
 }
 
 class CygwinShell implements Shell{
