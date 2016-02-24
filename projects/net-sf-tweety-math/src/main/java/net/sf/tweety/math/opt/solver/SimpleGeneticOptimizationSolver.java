@@ -64,7 +64,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 	private static final double VAR_CROSSOVER_PROB = 0.2; 
 	
 	/** A very large number for encoding constraints in the target function. */
-	private static final IntegerConstant VERY_LARGE_NUMBER = new IntegerConstant(1000);
+	private static final IntegerConstant VERY_LARGE_NUMBER = new IntegerConstant(10000);
 	
 	/** For randomization */
 	private Random rand = new Random();

@@ -25,13 +25,14 @@ import net.sf.tweety.logics.rpcl.*;
 import net.sf.tweety.logics.rpcl.semantics.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
 import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.OctaveSqpSolver;
 import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolver;
 import net.sf.tweety.math.probability.*;
 
 public class RpclMeReasonerTest {
 	public static void main(String[] args){
-		
-		Solver.setDefaultGeneralSolver(new SimpleGeneticOptimizationSolver(30, 15, 5, 500, 0.01));
+		OctaveSqpSolver.setPathToOctave("/usr/local/octave/3.8.0/bin/octave");
+		Solver.setDefaultGeneralSolver(new OctaveSqpSolver());
 		Predicate a = new Predicate("a", 1);
 		Predicate b = new Predicate("b", 1);
 		Constant c1 = new Constant("c1");		

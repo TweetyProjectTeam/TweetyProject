@@ -322,7 +322,7 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		result = result.replaceAll("-0", "");
 		result = result.replaceAll("0 - 0.1", "0.1");
 		return result;
-	}
+	}	
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.constraints.ConstraintSatisfactionProblem#getVariables()
