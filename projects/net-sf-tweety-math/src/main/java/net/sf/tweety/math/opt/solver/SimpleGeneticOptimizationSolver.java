@@ -28,22 +28,33 @@ import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.equation.Inequation;
+import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
+import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
  * This class implements a simple genetic optimization algorithm for solving
- * optimization problems with only box constraints on float variables.
+ * optimization problems with box or equality constraints on float variables.
+ * Note that equality constraints are encoded in the target function!
  * 
  * @author Matthias Thimm
  */
 public class SimpleGeneticOptimizationSolver extends Solver{
+	
+	/** Logger */
+	static private Logger log = LoggerFactory.getLogger(SimpleGeneticOptimizationSolver.class);
 	
 	/** The probability of changing the value of a variable in the mutation step. */
 	private static final double VAR_MUTATE_PROB = 0.2; 
@@ -51,6 +62,9 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 	private static final double VAR_MUTATE_STRENGTH = 0.5;
 	/** The probability of taking the average value of a variable in the crossover step. */
 	private static final double VAR_CROSSOVER_PROB = 0.2; 
+	
+	/** A very large number for encoding constraints in the target function. */
+	private static final IntegerConstant VERY_LARGE_NUMBER = new IntegerConstant(1000);
 	
 	/** For randomization */
 	private Random rand = new Random();
@@ -112,8 +126,16 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
 		OptimizationProblem p = (OptimizationProblem) problem; 
 		// only box constraints allowed
-		if(!p.isEmpty())
-			throw new IllegalArgumentException("Only optimization problems with box constraints on variables allowed for this solver (no other constraints).");
+		if(!p.isEmpty()){
+			for(Statement s: p){
+				if(s instanceof Inequation)
+					throw new IllegalArgumentException("Only optimization problems with box and equality constraints allowed for this solver (no inequalities).");
+				Term t = SimpleGeneticOptimizationSolver.VERY_LARGE_NUMBER.mult(new Power(s.getLeftTerm().minus(s.getRightTerm()),new IntegerConstant(2)));
+				if(p.getType() == OptimizationProblem.MAXIMIZE)
+					p.setTargetFunction(p.getTargetFunction().minus(t));
+				else p.setTargetFunction(p.getTargetFunction().add(t));
+			}
+		}
 		return this.solve(p.getTargetFunction(), p.getType());
 	}
 	
@@ -222,6 +244,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			currentPopulation.clear();			
 			for(int i = 0; i < this.populationSize; i++)
 				currentPopulation.add(p.poll());
+			log.info("Optimizating... current value of target function: " + current_val);
 		}while(previous_val - current_val > this.precision || it++ < this.minIterations);
 		// convert map again
 		Map<Variable,Term> result = new HashMap<Variable,Term>();

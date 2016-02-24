@@ -29,6 +29,11 @@
     	<artifactId>fol</artifactId>
     	<version>1.6-SNAPSHOT</version>
     </dependency>
+    <dependency>
+    	<groupId>net.sf.tweety</groupId>
+    	<artifactId>math</artifactId>
+    	<version>1.6-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <parent>
   <groupId>net.sf.tweety</groupId>

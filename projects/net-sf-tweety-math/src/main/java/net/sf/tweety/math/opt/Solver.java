@@ -112,7 +112,7 @@ public abstract class Solver {
 	}
 	
 	/**
-	 * Returns the default solver for non-linear (general) optimization problems.
+	 * Returns the default solver for integer linear optimization problems.
 	 * If a default solver for general problems has been configured this solver
 	 * is returned by this method. If no default solver for general problems is 
 	 * configured, a message is printed to stderr pointing out that no default
