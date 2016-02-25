@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import net.sf.tweety.commons.ParserException;
@@ -31,9 +32,16 @@ import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.math.func.fuzzy.MinimumNorm;
 import net.sf.tweety.math.func.fuzzy.ProductNorm;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.ApacheCommonsCMAESOptimizer;
 
 public class FuzzyInconsistencyMeasureTest {
-
+	
+	@Before
+	public void setUp() {		
+		Solver.setDefaultGeneralSolver(new ApacheCommonsCMAESOptimizer(200,20000,0,true,200,200,0.00000001));
+	}
+	
 	@Test
 	public void test() throws ParserException, IOException {
 		double accuracy = 0.001;				

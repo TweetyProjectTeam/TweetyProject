@@ -33,13 +33,12 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.func.fuzzy.TCoNorm;
 import net.sf.tweety.math.func.fuzzy.TNorm;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.ApacheCommonsCMAESOptimizer;
+import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.Term;
@@ -154,7 +153,6 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 	 * @return
 	 */
 	private Pair<Map<Variable,Term>,Double> constructAndSolveProblem(Collection<PropositionalFormula> formulas, Map<Proposition,Variable> assignments){
-		PropositionalSignature sig = new Conjunction(formulas).getSignature();
 		Term t;		
 		if(this.measure_version == FuzzyInconsistencyMeasure.TFUZZY_MEASURE){
 			t = new FloatConstant(1).minus(this.getTerm(new Conjunction(formulas), assignments));
@@ -164,9 +162,11 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pro
 			for(PropositionalFormula f: formulas)
 				t = t.add(one.minus(this.getTerm(f, assignments)));
 		}
-		ApacheCommonsCMAESOptimizer solver = new ApacheCommonsCMAESOptimizer(sig.size()*100,sig.size()*10000,0,true,sig.size()*100,sig.size()*100,0.00000001);
+		Solver solver = Solver.getDefaultGeneralSolver();
+		OptimizationProblem p = new OptimizationProblem(OptimizationProblem.MINIMIZE);
+		p.setTargetFunction(t);
 		try {
-			Map<Variable,Term> result = solver.solve(t, OptimizationProblem.MINIMIZE);
+			Map<Variable,Term> result = solver.solve(p);
 			return new Pair<Map<Variable,Term>,Double>(result,t.replaceAllTerms(result).doubleValue());
 		} catch (GeneralMathException e) {
 			return null;

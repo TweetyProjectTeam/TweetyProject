@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.logics.rpcl.test;
 
+import net.sf.tweety.commons.TweetyConfiguration;
+import net.sf.tweety.commons.TweetyLogging;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.*;
@@ -26,11 +28,12 @@ import net.sf.tweety.logics.rpcl.semantics.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.OctaveSqpSolver;
-import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolver;
 import net.sf.tweety.math.probability.*;
 
 public class RpclMeReasonerTest {
 	public static void main(String[] args){
+		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
+		TweetyLogging.initLogging();
 		OctaveSqpSolver.setPathToOctave("/usr/local/octave/3.8.0/bin/octave");
 		Solver.setDefaultGeneralSolver(new OctaveSqpSolver());
 		Predicate a = new Predicate("a", 1);
@@ -39,13 +42,11 @@ public class RpclMeReasonerTest {
 		Constant c2 = new Constant("c2");
 		net.sf.tweety.logics.commons.syntax.Variable x = new net.sf.tweety.logics.commons.syntax.Variable("X");
 		net.sf.tweety.logics.fol.syntax.FOLAtom atomA = new net.sf.tweety.logics.fol.syntax.FOLAtom(a);
-		//atomA.addArgument(x);
-		atomA.addArgument(c1);
+		atomA.addArgument(x);		
 		net.sf.tweety.logics.fol.syntax.FOLAtom atomB = new net.sf.tweety.logics.fol.syntax.FOLAtom(b);
 		atomB.addArgument(x);
-		//RelationalProbabilisticConditional pc = new RelationalProbabilisticConditional(atomA,atomB,new Probability(0.3));
-		RelationalProbabilisticConditional pc = new RelationalProbabilisticConditional(atomA,new Probability(0.3));
-		
+		RelationalProbabilisticConditional pc = new RelationalProbabilisticConditional(atomA,atomB,new Probability(0.3));
+				
 		RpclBeliefSet bs = new RpclBeliefSet();
 		bs.add(pc);
 		
