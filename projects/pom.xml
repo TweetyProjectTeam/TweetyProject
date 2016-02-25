@@ -198,6 +198,7 @@
   	<module>net-sf-tweety-logics-rpcl</module>
   	<module>net-sf-tweety-logics-dl</module>
   	<module>net-sf-tweety-logics-translators</module>  	
+  	<module>net-sf-tweety-arg-adf</module>
   	<module>net-sf-tweety-arg-deductive</module>
   	<module>net-sf-tweety-arg-lp</module>
   	<module>net-sf-tweety-arg-delp</module>
