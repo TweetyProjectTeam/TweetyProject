@@ -19,7 +19,7 @@ public class TPTPTest {
 		TPTPPrinter printer = new TPTPPrinter();
 		System.out.println(printer.toTPTP(b));
 		
-		FolFormula query = (FolFormula)parser.parseFormula("!test(tuffy)");
+		FolFormula query = (FolFormula)parser.parseFormula("test(tuffy)");
 		System.out.println(printer.makeQuery("query2", query));
 		
 		//EProver e = new EProver("C:/app/E/PROVER/eprover.exe","C:/Users/me/tptp_ws/");

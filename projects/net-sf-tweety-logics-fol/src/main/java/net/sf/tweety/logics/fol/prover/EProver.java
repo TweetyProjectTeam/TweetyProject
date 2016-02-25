@@ -23,7 +23,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.regex.Pattern;
 
+import net.sf.tweety.commons.util.Exec;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
@@ -55,33 +57,26 @@ public class EProver extends FolTheoremProver {
 	public boolean query(FolBeliefSet kb, FolFormula query) {
 		TPTPPrinter printer = new TPTPPrinter();
 		try{
-			File file = new File(workspace + "problem.tptp");
-			file.getParentFile().mkdirs();
-			PrintWriter writer = new PrintWriter(workspace + "problem.tptp");
+			File file  = File.createTempFile("tmp", ".txt");
+			PrintWriter writer = new PrintWriter(file);
 			printer.printBase(writer, kb);
 			writer.write(printer.makeQuery("query", query));
 			writer.close();
-			String cmd = binaryLocation + " --tptp3-format " + workspace + "problem.tptp ";
+			
+			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath();
 			System.out.println(cmd);
-			bash.run(cmd);
-			//String s = Exec.invokeExecutable(cmd);
-			//System.out.print(s);
-			BufferedReader reader = new BufferedReader(new FileReader(workspace + "answer.txt"));
-			String line;
-			while((line = reader.readLine()) != null)
-				if(line.matches("# Proof found!")){
-					reader.close();
-					return true;
-				}else if(line.matches("# No proof found!")){
-					reader.close();
-					return false;
-				}	
-			reader.close();
-			throw new Exception("Failed to invoke eprover!");
+			//bash.run(cmd);
+			String output = Exec.invokeExecutable(cmd);
+			//System.out.print(output);
+			if(Pattern.compile("# Proof found!").matcher(output).find())
+				return true;
+			if(Pattern.compile("# No proof found!").matcher(output).find())
+				return false;
+			throw new RuntimeException("Failed to invoke eprover: Eprover returned no result which can be interpreted.");
 		}catch(Exception e){
 			e.printStackTrace();
+			return false;
 		}	
-		return false;
 	}
 
 	/**
