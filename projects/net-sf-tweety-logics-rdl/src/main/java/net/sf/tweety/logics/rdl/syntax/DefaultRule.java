@@ -85,7 +85,7 @@ public class DefaultRule extends RelationalFormula {
 	}
 
 	/**
-	 * Tests, wether the default is normal
+	 * Tests, whether the default is normal
 	 * normal ^= a:c/c
 	 */
 	public boolean isNormal(DefaultTheory dt) {
@@ -297,8 +297,7 @@ public class DefaultRule extends RelationalFormula {
 	 */
 	@Override
 	public Probability getUniformProbability() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("Uniform probability of default is undefined.");
 	}
 
 	/* (non-Javadoc)
@@ -306,7 +305,6 @@ public class DefaultRule extends RelationalFormula {
 	 */
 	@Override
 	public RelationalFormula complement() {
-		// TODO Auto-generated method stub
 		throw new IllegalArgumentException("No complement of default");
 	}
 
@@ -315,7 +313,6 @@ public class DefaultRule extends RelationalFormula {
 	 */
 	@Override
 	public Disjunction combineWithOr(Disjunctable formula) {
-		// TODO Auto-generated method stub
 		throw new IllegalArgumentException("Not combinable with or");
 	}
 
@@ -324,7 +321,6 @@ public class DefaultRule extends RelationalFormula {
 	 */
 	@Override
 	public Conjunction combineWithAnd(Conjuctable formula) {
-		// TODO Auto-generated method stub
 		throw new IllegalArgumentException("Not combinable with and");
 	}
 	

@@ -84,7 +84,6 @@ public class RdlParser extends Parser<DefaultTheory> {
 	 */
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
-		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(reader);
 		String line = br.readLine();
 		Matcher matcher = DEFAULT_SPLIT.matcher(line);
