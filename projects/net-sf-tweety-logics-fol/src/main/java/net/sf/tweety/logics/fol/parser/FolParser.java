@@ -442,7 +442,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 	private FolFormula parseNegation(List<Object> l) throws ParserException{
 		if(l.get(0).equals(LogicalSymbols.CLASSICAL_NEGATION())){
 			l.remove(0);
-			return new Negation(this.parseAtomic(l));			
+			return new Negation(this.parseNegation(l));			
 		}
 		return this.parseAtomic(l);		
 	}
