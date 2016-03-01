@@ -8,6 +8,12 @@ import net.sf.tweety.logics.fol.prover.EProver;
 import net.sf.tweety.logics.fol.prover.TPTPPrinter;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
+/**
+ * JUnitTest to test Eprover implemnetation
+ * @author Nls Geilen
+ *
+ */
+
 public class TPTPTest {
 
 	@Test
@@ -24,7 +30,7 @@ public class TPTPTest {
 		
 		//EProver e = new EProver("C:/app/E/PROVER/eprover.exe","C:/Users/me/tptp_ws/");
 		
-		EProver e = new EProver("/home/nils/app/E/PROVER/eprover","/home/nils/tptp_ws/");
+		EProver e = new EProver("/home/nils/app/E/PROVER/eprover");
 
 		System.out.print(e.query(b, query));
 	}

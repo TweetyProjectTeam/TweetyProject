@@ -42,8 +42,8 @@ public abstract class FolTheoremProver {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Returns the default theorem prover
+	 * @return the default theorem prover
 	 */
 	public static FolTheoremProver getDefaultProver(){
 		if(FolTheoremProver.defaultProver != null){
@@ -58,15 +58,10 @@ public abstract class FolTheoremProver {
 	/**
 	 * This method determines the answer of the given query
 	 * wrt. to the given knowledge base.
+	 * @param kb th eknowedge base
 	 * @param query a query.
 	 * @return the answer to the query.
 	 */
-	/**
-	 * 
-	 * @param kb
-	 * @param query
-	 * @return
-	 */
-	public abstract boolean query(FolBeliefSet kb, FolFormula query) throws RuntimeException;
+	public abstract boolean query(FolBeliefSet kb, FolFormula query);
 	
 }

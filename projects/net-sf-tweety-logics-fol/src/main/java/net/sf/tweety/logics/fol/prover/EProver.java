@@ -40,17 +40,16 @@ public class EProver extends FolTheoremProver {
 	 *  String representation of the E binary path,
 	 *  directory, where the temporary files are stored
 	 */
-	private String binaryLocation, workspace;
-	
-	//Shell bash = new CygwinShell("C:/cygwin64/bin/bash.exe");
-	Shell bash = new CygwinShell("/bin/bash");
+	private String binaryLocation;
 	
 	
-	
-	public EProver(String binaryLocation, String workspace) {
+	/**
+	 * Creates new Wrapper over Eprover solver
+	 * @param binaryLocation is the location of / the path to the Eprover instance in the filesystem
+	 */
+	public EProver(String binaryLocation) {
 		super();
 		this.binaryLocation = binaryLocation;
-		this.workspace = workspace;
 	}
 
 	@Override
@@ -65,9 +64,7 @@ public class EProver extends FolTheoremProver {
 			
 			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath();
 			System.out.println(cmd);
-			//bash.run(cmd);
 			String output = Exec.invokeExecutable(cmd);
-			//System.out.print(output);
 			if(Pattern.compile("# Proof found!").matcher(output).find())
 				return true;
 			if(Pattern.compile("# No proof found!").matcher(output).find())
