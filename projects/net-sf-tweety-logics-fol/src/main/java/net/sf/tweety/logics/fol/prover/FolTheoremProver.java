@@ -58,7 +58,7 @@ public abstract class FolTheoremProver {
 	/**
 	 * This method determines the answer of the given query
 	 * wrt. to the given knowledge base.
-	 * @param kb th eknowedge base
+	 * @param kb the knowledge base
 	 * @param query a query.
 	 * @return the answer to the query.
 	 */

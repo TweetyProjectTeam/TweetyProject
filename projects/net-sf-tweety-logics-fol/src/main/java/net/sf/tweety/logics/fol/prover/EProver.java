@@ -18,19 +18,15 @@
  */
 package net.sf.tweety.logics.fol.prover;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.commons.util.Exec;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
- * 
+ * Ivokes Eprover and returns its results
  * @author Bastian Wolf, Nils Geilen
  *
  */
@@ -42,14 +38,20 @@ public class EProver extends FolTheoremProver {
 	 */
 	private String binaryLocation;
 	
+	/**
+	 * Shell to run eprover
+	 */
+	Shell bash;
 	
 	/**
-	 * Creates new Wrapper over Eprover solver
-	 * @param binaryLocation is the location of / the path to the Eprover instance in the filesystem
+	 * Constructs a new instance pointing to a specific eprover 
+	 * @param binaryLocation of the eprover executable on the hard drive
+	 * @param bash shell to run commands
 	 */
-	public EProver(String binaryLocation) {
+	public EProver(String binaryLocation, Shell bash) {
 		super();
 		this.binaryLocation = binaryLocation;
+		this.bash = bash;
 	}
 
 	@Override
@@ -62,9 +64,11 @@ public class EProver extends FolTheoremProver {
 			writer.write(printer.makeQuery("query", query));
 			writer.close();
 			
-			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath();
-			System.out.println(cmd);
-			String output = Exec.invokeExecutable(cmd);
+			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
+			//System.out.println(cmd);
+			String output = bash.run(cmd);
+			//String output = Exec.invokeExecutable(cmd);
+			//System.out.print(output);
 			if(Pattern.compile("# Proof found!").matcher(output).find())
 				return true;
 			if(Pattern.compile("# No proof found!").matcher(output).find())
@@ -92,57 +96,7 @@ public class EProver extends FolTheoremProver {
 	public void setBinaryLocation(String binaryLocation) {
 		this.binaryLocation = binaryLocation;
 	}
-	
-	
 }
 
-interface Shell {
-	public void run(String cmd);
-}
-
-class NativeShell implements Shell {
-
-	@Override
-	public void run(String cmd) {
-		 try
-	        {            
-	            Runtime rt = Runtime.getRuntime();
-	            Process proc = rt.exec(cmd);
-	            int exitVal = proc.exitValue();
-	            System.out.println("Process exitValue: " + exitVal);
-	        } catch (Throwable t)
-	          {
-	            t.printStackTrace();
-	          }
-	}
-	
-}
-
-class CygwinShell implements Shell{
-	
-	String binaryLocation;
-
-	public CygwinShell(String binaryLocation) {
-		super();
-		this.binaryLocation = binaryLocation;
-	}
-
-	@Override
-	public void run(String cmd) {
-		Runtime runtime = Runtime.getRuntime();
-		
-		try {
-			Process proc = runtime.exec(new String[] {binaryLocation , "-c",cmd },new String[] {});
-			proc.waitFor();
-			BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			while (br.ready())
-				System.out.println(br.readLine());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
-}
 
 

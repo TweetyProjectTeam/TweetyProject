@@ -1,38 +1,68 @@
 package net.sf.tweety.logics.fol.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.prover.EProver;
+import net.sf.tweety.logics.fol.prover.Shell;
 import net.sf.tweety.logics.fol.prover.TPTPPrinter;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
  * JUnitTest to test Eprover implemnetation
- * @author Nls Geilen
+ * @author Nils Geilen
  *
  */
 
 public class TPTPTest {
+	
+	static EProver e;
+	TPTPPrinter printer = new TPTPPrinter();
+	
+	@BeforeClass public static void init(){
+		if(System.getProperty("os.name").matches("Win.*")){
+			System.out.println("Initializing Eprover Test for Windows");
+			 e = new EProver("C:/app/E/PROVER/eprover.exe", Shell.getCygwinShell("C:/cygwin64/bin/bash.exe"));
+		} else {
+			System.out.println("Initializing Eprover Test for Unix");
+			 e = new EProver("/home/nils/app/E/PROVER/eprover", Shell.getNativeShell());
+		}
+	}
 
 	@Test
-	public void test() throws Exception {
-		System.out.println(System.getProperty("os.name").matches("Lin.*"));
-		
-		FolParser parser = new FolParser();		
-		FolBeliefSet b = parser.parseBeliefBaseFromFile("eprover_example.txt");
-		TPTPPrinter printer = new TPTPPrinter();
+	public void test1() throws Exception {
+		FolParser parser = new FolParser();	
+		String source = "type(a) \n type(b) \n type(c) \n"
+				+ "a \n !b";
+		FolBeliefSet b = parser.parseBeliefBase(source);
 		System.out.println(printer.toTPTP(b));
-		
-		FolFormula query = (FolFormula)parser.parseFormula("test(tuffy)");
-		System.out.println(printer.makeQuery("query2", query));
-		
-		//EProver e = new EProver("C:/app/E/PROVER/eprover.exe","C:/Users/me/tptp_ws/");
-		
-		EProver e = new EProver("/home/nils/app/E/PROVER/eprover");
-
-		System.out.print(e.query(b, query));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("b")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("a")));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("c")));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!c")));
+	}
+	
+	@Test
+	public void test2() throws Exception {
+		FolParser parser = new FolParser();	
+		String source = "Animal = {horse, cow, lion} \n"
+				+ "type(Tame(Animal)) \n"
+				+ "type(Ridable(Animal)) \n"
+				+ "Tame(cow) \n"
+				+ "!Tame(lion) \n"
+				+ "Ridable(horse) \n"
+				+ "forall X: (!Ridable(X) || Tame(X)) \n";
+		FolBeliefSet b = parser.parseBeliefBase(source);
+		System.out.println(printer.toTPTP(b));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(cow)")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (Tame(X))")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(horse)")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!Ridable(lion)")));
 	}
 	
 	

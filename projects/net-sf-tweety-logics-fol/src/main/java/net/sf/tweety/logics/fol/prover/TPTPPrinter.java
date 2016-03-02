@@ -118,9 +118,8 @@ public class TPTPPrinter {
 			QuantifiedFormula fqf = (QuantifiedFormula) f;
 			boolean existential = f instanceof ExistsQuantifiedFormula;
 			String result = existential ? "? [" : "! [";
-			result += join(fqf.getQuantifierVariables(), ", ") + "]: ";
+			result += join(fqf.getQuantifierVariables(), ", ") + "]: (";
 			// check if variables are of correct type
-			result += "(";
 			Iterator<Variable> i = fqf.getQuantifierVariables().iterator();
 			result += printVar(i.next());
 			while (i.hasNext())
