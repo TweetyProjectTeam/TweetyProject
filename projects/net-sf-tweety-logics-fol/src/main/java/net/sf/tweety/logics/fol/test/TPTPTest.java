@@ -14,7 +14,7 @@ import net.sf.tweety.logics.fol.prover.TPTPPrinter;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
- * JUnitTest to test Eprover implemnetation
+ * JUnitTest to test TPTP priter and Eprover implemnetation
  * @author Nils Geilen
  *
  */
@@ -79,10 +79,14 @@ public class TPTPTest {
 		System.out.println(printer.toTPTP(b));
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("Eats(lion, tree)")));
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!Eats(lion, grass)")));
-		//!assertTrue(e.query(b, (FolFormula)parser.parseFormula("Eats(lion, grass)")));
+		//is not true according to the solver
+		//assertTrue(e.query(b, (FolFormula)parser.parseFormula("Eats(lion, grass)")));
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("Eats(horse, tree)")));
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!Eats(horse, tree)")));
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Eats(horse, grass)")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (forall Y: (!Eats(Y, X)))")));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(Y, X)))")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!(forall X: (forall Y: (Eats(Y, X))))")));
 	}
 	
 	

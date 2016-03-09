@@ -22,7 +22,7 @@ import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
- * 
+ * Abstract FOL Prover to be implemented by concrete solvers
  * @author Bastian Wolf, Nils Geilen
  *
  */
