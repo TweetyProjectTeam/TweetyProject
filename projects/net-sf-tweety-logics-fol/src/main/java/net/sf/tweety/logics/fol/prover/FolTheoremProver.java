@@ -49,9 +49,10 @@ public abstract class FolTheoremProver {
 		if(FolTheoremProver.defaultProver != null){
 			return FolTheoremProver.defaultProver;
 		} else{
-			// TODO return standard prover?
-			System.err.println("No default E Prover set! Returning null...");
-			return null;
+			System.err.println("No default theorem prover configured, using "
+					+ "'NaiveProver' with default settings as fallback. "
+					+ "It is strongly advised that a default theorem prover is manually configured");			
+			return new NaiveProver();
 		}
 	}
 	

@@ -22,11 +22,14 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
+import net.sf.tweety.commons.util.NativeShell;
+import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 /**
- * Ivokes Eprover and returns its results
+ * Invokes Eprover (http://eprover.org) and returns its results.
  * @author Bastian Wolf, Nils Geilen
  *
  */
@@ -41,7 +44,7 @@ public class EProver extends FolTheoremProver {
 	/**
 	 * Shell to run eprover
 	 */
-	Shell bash;
+	private Shell bash;
 	
 	/**
 	 * Constructs a new instance pointing to a specific eprover 
@@ -53,10 +56,21 @@ public class EProver extends FolTheoremProver {
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
 	}
+	
+	/**
+	 * Constructs a new instance pointing to a specific eprover 
+	 * @param binaryLocation of the eprover executable on the hard drive
+	 */
+	public EProver(String binaryLocation) {
+		this(binaryLocation,new NativeShell());
+	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.prover.FolTheoremProver#query(net.sf.tweety.logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
+	 */
 	@Override
 	public boolean query(FolBeliefSet kb, FolFormula query) {
-		TPTPPrinter printer = new TPTPPrinter();
+		TptpWriter printer = new TptpWriter();
 		try{
 			File file  = File.createTempFile("tmp", ".txt");
 			PrintWriter writer = new PrintWriter(file);

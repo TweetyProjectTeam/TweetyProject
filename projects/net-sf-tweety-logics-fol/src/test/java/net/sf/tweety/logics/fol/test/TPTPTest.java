@@ -6,12 +6,12 @@ import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.prover.EProver;
-import net.sf.tweety.logics.fol.prover.Shell;
-import net.sf.tweety.logics.fol.prover.TPTPPrinter;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 /**
  * JUnitTest to test TPTP priter and Eprover implemnetation
@@ -22,7 +22,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 public class TPTPTest {
 	
 	static EProver e;
-	TPTPPrinter printer = new TPTPPrinter();
+	TptpWriter printer = new TptpWriter();
 	
 	@BeforeClass public static void init(){
 		if(System.getProperty("os.name").matches("Win.*")){
@@ -31,6 +31,7 @@ public class TPTPTest {
 		} else {
 			System.out.println("Initializing Eprover Test for Unix");
 			 e = new EProver("/home/nils/app/E/PROVER/eprover", Shell.getNativeShell());
+			 //e = new EProver("/Users/mthimm/Projects/misc_bins/eprover/eprover");
 		}
 	}
 
