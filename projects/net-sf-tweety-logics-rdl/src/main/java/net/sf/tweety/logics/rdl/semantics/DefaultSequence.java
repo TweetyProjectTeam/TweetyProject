@@ -26,6 +26,7 @@ import java.util.Set;
 
 import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.rdl.DefaultTheory;
@@ -53,7 +54,7 @@ public class DefaultSequence {
 	 * the in set
 	 */
 	private FolBeliefSet in = new FolBeliefSet();
-	private ClassicalInference reasoner = new ClassicalInference(in);
+	//private ClassicalInference reasoner = new ClassicalInference(in);
 	
 	/**
 	 * true if the sequence is a process
@@ -102,10 +103,11 @@ public class DefaultSequence {
 	 * @return true iff d is applicable to In
 	 */
 	public boolean isApplicable(DefaultRule d){
+		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 		for(FolFormula f: d.getJustification())
-			if(reasoner.query(new Negation(f)).getAnswerBoolean())
+			if(prover.query(in, new Negation(f)))
 				return false;
-		return reasoner.query(d.getPrerequisite()).getAnswerBoolean();
+		return prover.query(in, d.getPrerequisite());
 		
 	}
 	
@@ -137,8 +139,9 @@ public class DefaultSequence {
 	 * @return true iff successfull
 	 */
 	public boolean isSuccessful() {
+		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 			for(FolFormula g: out)
-				if(reasoner.query(g).getAnswerBoolean())
+				if(prover.query(in,g))
 					return false;
 		return true;
 	}

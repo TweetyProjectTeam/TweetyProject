@@ -29,12 +29,14 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
+import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.fol.syntax.QuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.syntax.Tautology;
 
 /**
  * Prints single fol formulas and full knowledge bases to TPTP
@@ -69,6 +71,10 @@ public class TptpWriter {
 	 */
 	public String makeQuery(String name, FolFormula query) {
 		return "fof(" + name + ", conjecture, " + printFormula(query) + ").\n";
+	}
+	
+	public String makeEquivalence(String name, FolFormula a, FolFormula b) {
+		return "fof(" + name + ", conjecture, " + printFormula(a) + " <=> "+ printFormula(b) + ").\n";
 	}
 
 	/**
@@ -154,6 +160,12 @@ public class TptpWriter {
 				result += delimiter + printFormula(i.next());
 			return parens(result);
 		}
+		if(f instanceof Tautology) {
+			return "$true";
+		}
+		if(f instanceof Contradiction) {
+			return "$false";
+		}	
 		return f.toString();
 	}
 

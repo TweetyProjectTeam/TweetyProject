@@ -38,4 +38,11 @@ public class NaiveProver extends FolTheoremProver{
 		return inf.query(query).getAnswerBoolean();
 	}
 
+	@Override
+	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
+		return ClassicalInference.equivalent(a, b);
+	}
+
+	
+	
 }

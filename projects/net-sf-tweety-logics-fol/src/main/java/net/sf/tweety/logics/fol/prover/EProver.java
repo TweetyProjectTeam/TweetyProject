@@ -19,7 +19,9 @@
 package net.sf.tweety.logics.fol.prover;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.util.NativeShell;
@@ -77,6 +79,38 @@ public class EProver extends FolTheoremProver {
 			printer.printBase(writer, kb);
 			writer.write(printer.makeQuery("query", query));
 			writer.close();
+			
+			//System.out.println(Files.readAllLines(file.toPath()));
+			
+			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
+			//System.out.println(cmd);
+			String output = bash.run(cmd);
+			//String output = Exec.invokeExecutable(cmd);
+			//System.out.print(output);
+			if(Pattern.compile("# Proof found!").matcher(output).find())
+				return true;
+			if(Pattern.compile("# No proof found!").matcher(output).find())
+				return false;
+			throw new RuntimeException("Failed to invoke eprover: Eprover returned no result which can be interpreted.");
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}	
+	}
+	
+	
+
+	@Override
+	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
+		TptpWriter printer = new TptpWriter();
+		try{
+			File file  = File.createTempFile("tmp", ".txt");
+			PrintWriter writer = new PrintWriter(file);
+			printer.printBase(writer, kb);
+			writer.write(printer.makeEquivalence("query", a,b));
+			writer.close();
+			
+			//System.out.println(Files.readAllLines(file.toPath()));
 			
 			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
 			//System.out.println(cmd);

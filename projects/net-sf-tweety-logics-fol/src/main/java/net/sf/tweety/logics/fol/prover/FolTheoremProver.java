@@ -65,4 +65,6 @@ public abstract class FolTheoremProver {
 	 */
 	public abstract boolean query(FolBeliefSet kb, FolFormula query);
 	
+	public abstract boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b);
+	
 }

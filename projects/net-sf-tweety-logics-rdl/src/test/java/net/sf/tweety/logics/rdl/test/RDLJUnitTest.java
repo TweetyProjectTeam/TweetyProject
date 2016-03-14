@@ -21,8 +21,11 @@ package net.sf.tweety.logics.rdl.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import net.sf.tweety.logics.fol.prover.EProver;
+import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.rdl.NaiveDefaultReasoner;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
 
@@ -33,6 +36,11 @@ import net.sf.tweety.logics.rdl.parser.RdlParser;
  */
 
 public class RDLJUnitTest {
+	
+	@Before
+	public void init(){
+		FolTheoremProver.setDefaultProver(new EProver("/home/nils/app/E/PROVER/eprover"));
+	}
 	
 	@Test
 	public void test1() throws Exception{

@@ -26,6 +26,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.semantics.DefaultProcessTree;
 
@@ -59,8 +60,13 @@ public class NaiveDefaultReasoner extends Reasoner{
 		answer.setAnswer(false);
 		for (Collection<FolFormula> extension: tree.getExtensions()){
 			FolBeliefSet fbs = (FolBeliefSet)extension;
-			ClassicalInference ci = new ClassicalInference(fbs);
+			/*ClassicalInference ci = new ClassicalInference(fbs);
 			if(ci.query(query).getAnswerBoolean()){
+				answer.setAnswer(true);
+				break;
+			}*/
+			FolTheoremProver prover = FolTheoremProver.getDefaultProver();
+			if(prover.query(fbs, (FolFormula)query)){
 				answer.setAnswer(true);
 				break;
 			}
