@@ -31,6 +31,11 @@
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
+  		<artifactId>aspic</artifactId>
+  		<version>1.6-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>deductive</artifactId>
   		<version>1.6-SNAPSHOT</version>
   	</dependency>
