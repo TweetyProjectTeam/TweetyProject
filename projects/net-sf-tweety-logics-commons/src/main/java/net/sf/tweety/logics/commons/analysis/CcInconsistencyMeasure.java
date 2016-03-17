@@ -53,8 +53,10 @@ public class CcInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 	private Solver solver;
 	
 	/**
-	 * Creates a new measure that uses the given MUS enumerator
-	 * @param enumerator
+	 * Creates a new measure that uses the given MUS enumerator and
+	 * Integer programming solver
+	 * @param enumerator some MUS enumerator
+	 * @param solver some integer solver.
 	 */
 	public CcInconsistencyMeasure(MusEnumerator<S> enumerator, Solver solver){
 		this.enumerator = enumerator;

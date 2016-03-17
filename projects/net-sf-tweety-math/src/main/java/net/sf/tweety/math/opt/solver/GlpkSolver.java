@@ -82,6 +82,7 @@ public class GlpkSolver extends Solver {
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(lpFile));
 			out.write(((OptimizationProblem)problem).convertToCplexLpFormat());
+			//System.out.println(((OptimizationProblem)problem).convertToCplexLpFormat());
 			out.close();		
 			//execute lp_solve on problem in lp format and retrieve console output					
 			output = Exec.invokeExecutable(GlpkSolver.binary + " --lp " + lpFile.getAbsolutePath() + " -o " + outputFile.getAbsolutePath());
