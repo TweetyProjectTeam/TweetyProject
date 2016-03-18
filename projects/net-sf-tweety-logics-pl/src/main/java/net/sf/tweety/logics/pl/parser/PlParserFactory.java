@@ -18,10 +18,6 @@
  */
 package net.sf.tweety.logics.pl.parser;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 
@@ -33,44 +29,14 @@ public class PlParserFactory {
 	
 	/** An enumeration of all available knowledge base formats. */
 	public enum Format{
-		TWEETY ("tweety", "Tweety Propositional Beliefset Format", "/format/TweetyPlFormat.html");
+		TWEETY ("tweety", "Tweety Propositional Beliefset Format");
 		
 		public String id;
 		public String label;
-		public String description;
 		
-		Format(String id, String label, String description){
+		Format(String id, String label){
 			this.id = id;
 			this.label = label;
-			// for some reason this is the only way it works for
-			// both running the thing in Eclipse and from a JAR
-			boolean worked = true;
-			try {
-				InputStream stream = getClass().getResourceAsStream(description);				
-				BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-				String line;
-				this.description = "";
-				while((line = br.readLine()) != null) {
-					this.description += line + " ";
-				}
-				br.close();
-			} catch (Exception e) {
-				worked = false;
-			}	
-			if(!worked){
-				try {
-					InputStream stream = getClass().getResourceAsStream("/resources" + description);				
-					BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-					String line;
-					this.description = "";
-					while((line = br.readLine()) != null) {
-						this.description += line + " ";
-					}
-					br.close();
-				} catch (Exception e) {
-					this.description = "<Description not found>";
-				}
-			}
 		}
 		
 		public static Format getFormat(String id){

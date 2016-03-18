@@ -18,10 +18,6 @@
  */
 package net.sf.tweety.logics.pl.analysis;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.logics.commons.analysis.*;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
@@ -40,60 +36,31 @@ public abstract class InconsistencyMeasureFactory {
 
 	/** An enumeration of all available inconsistency measures. */
 	public enum Measure{
-		DRASTIC ("drastic", "Drastic Inconsistency Measure", "/inc/DrasticInconsistencyMeasure.html"),
-		MI ("mi", "MI Inconsistency Measure", "/inc/MiInconsistencyMeasure.html"),
-		MIC ("mic", "MIC Inconsistency Measure", "/inc/MicInconsistencyMeasure.html"),
-		ETA ("eta", "Eta Inconsistency Measure", "/inc/EtaInconsistencyMeasure.html"),
-		CONTENSION ("contension", "Contension Inconsistency Measure", "/inc/ContensionInconsistencyMeasure.html"),
-		MC ("mc", "MaxCons Inconsistency Measure", "/inc/MaxConsInconsistencyMeasure.html"),
-		PR ("pr", "P Inconsistency Measure", "/inc/PrInconsistencyMeasure.html"),
-		HS ("hs", "Hitting Set Inconsistency Measure", "/inc/HittingSetInconsistencyMeasure.html"),
-		DALALSUM ("dalalsum", "Dalal-Sum Inconsistency Measure", "/inc/DalalSumInconsistencyMeasure.html"),
-		DALALMAX ("dalalmax", "Dalal-Max Inconsistency Measure", "/inc/DalalMaxInconsistencyMeasure.html"),
-		DALALHIT ("dalalhit", "Dalal-Hit Inconsistency Measure", "/inc/DalalHitInconsistencyMeasure.html"),
-		DF ("df", "Df Inconsistency Measure", "/inc/DfInconsistencyMeasure.html"),
-		PM ("pm", "Pm Inconsistency Measure", "/inc/PmInconsistencyMeasure.html"),
-		MV ("mv", "MusVar Inconsistency Measure", "/inc/MusVarInconsistencyMeasure.html"),
-		NC ("nc", "NCons Inconsistency Measure", "/inc/NConsInconsistencyMeasure.html"),
-		MCSC ("mcsc", "MCSC Inconsistency Measure", "/inc/McscInconsistencyMeasure.html"),
-		CC ("cc","CC Inconsistency Measure","/inc/CcInconsistencyMeasure.html");
+		DRASTIC ("drastic", "Drastic Inconsistency Measure"),
+		MI ("mi", "MI Inconsistency Measure"),
+		MIC ("mic", "MIC Inconsistency Measure"),
+		ETA ("eta", "Eta Inconsistency Measure"),
+		CONTENSION ("contension", "Contension Inconsistency Measure"),
+		MC ("mc", "MaxCons Inconsistency Measure"),
+		PR ("pr", "P Inconsistency Measure"),
+		HS ("hs", "Hitting Set Inconsistency Measure"),
+		DALALSUM ("dalalsum", "Dalal-Sum Inconsistency Measure"),
+		DALALMAX ("dalalmax", "Dalal-Max Inconsistency Measure"),
+		DALALHIT ("dalalhit", "Dalal-Hit Inconsistency Measure"),
+		DF ("df", "Df Inconsistency Measure"),
+		PM ("pm", "Pm Inconsistency Measure"),
+		MV ("mv", "MusVar Inconsistency Measure"),
+		NC ("nc", "NCons Inconsistency Measure"),
+		MCSC ("mcsc", "MCSC Inconsistency Measure"),
+		CC ("cc","CC Inconsistency Measure"),
+		CSP ("csp","CSP Inconsistency Measure");
 		
 		public String id;
 		public String label;
-		public String description;
 		
-		Measure(String id, String label, String description){
+		Measure(String id, String label){
 			this.id = id;
-			this.label = label;
-			// for some reason this is the only way it works for
-			// both running the thing in Eclipse and from a JAR
-			boolean worked = true;
-			try {
-				InputStream stream = getClass().getResourceAsStream(description);				
-				BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-				String line;
-				this.description = "";
-				while((line = br.readLine()) != null) {
-					this.description += line + " ";
-				}
-				br.close();
-			} catch (Exception e) {
-				worked = false;
-			}	
-			if(!worked){
-				try {
-					InputStream stream = getClass().getResourceAsStream("/resources" + description);				
-					BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-					String line;
-					this.description = "";
-					while((line = br.readLine()) != null) {
-						this.description += line + " ";
-					}
-					br.close();
-				} catch (Exception e) {
-					this.description = "<Description not found>";
-				}
-			}
+			this.label = label;			
 		}
 		
 		public static Measure getMeasure(String id){
@@ -146,6 +113,8 @@ public abstract class InconsistencyMeasureFactory {
 				return new McscInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case CC:
 				return new CcInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator(), Solver.getDefaultIntegerLinearSolver());
+			case CSP:
+				return new CspInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator(), Solver.getDefaultIntegerLinearSolver());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}

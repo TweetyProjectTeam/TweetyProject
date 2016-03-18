@@ -19,8 +19,6 @@
 package net.sf.tweety.web.services;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -85,8 +83,6 @@ public class InconsistencyMeasurementService{
 	public static final String JSON_VAL_VALUE = "value";
 	/** "list inconsistency measures" command. */
 	public static final String JSON_VAL_MEASURES = "measures";
-	/** "list knowledge base formats" command. */
-	public static final String JSON_VAL_FORMATS = "formats";
 	/** Attribute "measure" of queries requesting a specific inconsistency value. */
 	public static final String JSON_ATTR_MEASURE = "measure";
 	/** Attribute "format" of queries requesting a specific inconsistency value. */
@@ -111,8 +107,6 @@ public class InconsistencyMeasurementService{
 	public static final String JSON_ATTR_ID = "id";
 	/** Attribute "label" of replies to list queries */
 	public static final String JSON_ATTR_LABEL = "label";
-	/** Attribute "description" of replies for information on measures and formats. */
-	public static final String JSON_ATTR_DESC = "description";
 	
 	/**
 	 * Default constructor
@@ -161,8 +155,6 @@ public class InconsistencyMeasurementService{
 			JSONObject jsonReply;
 			if(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD).equals(InconsistencyMeasurementService.JSON_VAL_VALUE)){
 				jsonReply = this.handleGetValue(jsonQuery);
-			}else if(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD).equals(InconsistencyMeasurementService.JSON_VAL_FORMATS)){
-				jsonReply = this.handleGetFormats(jsonQuery);
 			}else if(jsonQuery.getString(InconsistencyMeasurementService.JSON_ATTR_CMD).equals(InconsistencyMeasurementService.JSON_VAL_MEASURES)){
 				jsonReply = this.handleGetMeasures(jsonQuery);
 			}else
@@ -253,32 +245,10 @@ public class InconsistencyMeasurementService{
 		for(Measure m: InconsistencyMeasureFactory.Measure.values()){
 			jsonMes = new JSONObject();
 			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_ID, m.id);
-			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_LABEL, m.label);
-			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_DESC, m.description);
+			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_LABEL, m.label);	
 			value.add(jsonMes);
 		}
 		jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_MEASURES, value);
 		return jsonReply;
-	}
-	
-	/**
-	 * Handles the "List knowledge base formats" command
-	 * @param query some query
-	 * @return the reply
-	 * @throws JSONException 
-	 */
-	private JSONObject handleGetFormats(JSONObject query) throws JSONException{
-		JSONObject jsonReply = new JSONObject();
-		Collection<JSONObject> value = new HashSet<JSONObject>();
-		JSONObject jsonFormat;
-		for(Format f: PlParserFactory.Format.values()){
-			jsonFormat = new JSONObject();
-			jsonFormat.put(InconsistencyMeasurementService.JSON_ATTR_ID, f.id);
-			jsonFormat.put(InconsistencyMeasurementService.JSON_ATTR_LABEL, f.label);
-			jsonFormat.put(InconsistencyMeasurementService.JSON_ATTR_DESC, f.description);
-			value.add(jsonFormat);
-		}
-		jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_FORMATS, value);
-		return jsonReply;
-	}
+	}	
 }
