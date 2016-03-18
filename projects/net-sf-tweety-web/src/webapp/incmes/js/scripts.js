@@ -1,7 +1,7 @@
 /*
  * URLs of the TweetyServer
  */
-var tweetyserver = "http://localhost:8080";//"http://tweety.west.uni-koblenz.de:8080";
+var tweetyserver = "http://141.26.208.49:8080";
 var tweetyserverInc = tweetyserver + "/tweety/incmes";
 var tweetyserverPing = tweetyserver + "/tweety/ping";
 
@@ -35,7 +35,7 @@ function checkServerStatus(){
 		url: tweetyserverPing,
 		data: JSON.stringify(jsonObj),
 		dataType: "json",
-		timeout:1000,
+		timeout:10000,
 		success: function(response){ 
 			document.getElementById("server_status").innerHTML = "<img style=\"vertical-align:text-top;\" width=\"15\" height=\"15\" src=\"img/green_light.png\"></img>";
   		},
@@ -78,7 +78,7 @@ function query(){
 				break;
 			}
 		}
-		s += measureDetails.label + " (<a target=\"blank\" href=\"doc.html#"+ measureDetails.id +"\">?</a>)";
+		s += measureDetails.label + " (<a target=\"blank\" href=\"incmes_doc_v1.pdf\">?</a>)";
 		s += "</td>";
 		s += "<td id=\"val_"+measure+"\"><img width=\"15\" height=\"15\" src=\"img/loading.gif\"></img></td>";
 		s += "<td id=\"rt_"+measure+"\"><img width=\"15\" height=\"15\" src=\"img/loading.gif\"></img></td>";
@@ -178,7 +178,7 @@ function measureToHtml(measure,idx){
 			}
 		}
 	result += "id=\"mes_" + measure.id + "\"/></td>";
-	result += "<td>"+ measure.label +" (<a target=\"blank\" href=\"doc.html#"+ measure.id +"\">?</a>)</td>";
+	result += "<td>"+ measure.label +" (<a target=\"blank\" href=\"incmes_doc_v1.pdf\">?</a>)</td>";
 	if(idx % 3 == 0)
 		result += "</tr>";
 	checkSelectedMeasures.push(measure.id);
@@ -314,3 +314,4 @@ function abort(measure){
 	if(cnt >= selectedMeasures.length)
 		document.all.computeButton.disabled = false;
 }
+
