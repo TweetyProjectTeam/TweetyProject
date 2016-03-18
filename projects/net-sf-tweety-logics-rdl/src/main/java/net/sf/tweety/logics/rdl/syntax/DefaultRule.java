@@ -33,7 +33,6 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;

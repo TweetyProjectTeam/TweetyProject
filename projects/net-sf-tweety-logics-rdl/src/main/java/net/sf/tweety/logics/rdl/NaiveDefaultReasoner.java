@@ -24,7 +24,6 @@ import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Reasoner;
-import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;

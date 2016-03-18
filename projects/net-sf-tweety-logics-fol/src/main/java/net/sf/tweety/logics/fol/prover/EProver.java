@@ -19,9 +19,7 @@
 package net.sf.tweety.logics.fol.prover;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.util.NativeShell;
