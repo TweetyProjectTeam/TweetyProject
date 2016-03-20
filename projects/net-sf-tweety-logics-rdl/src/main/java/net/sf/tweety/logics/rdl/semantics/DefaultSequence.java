@@ -53,7 +53,6 @@ public class DefaultSequence {
 	 * the in set
 	 */
 	private FolBeliefSet in = new FolBeliefSet();
-	//private ClassicalInference reasoner = new ClassicalInference(in);
 	
 	/**
 	 * true if the sequence is a process

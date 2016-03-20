@@ -27,9 +27,9 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
+import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -50,8 +50,8 @@ public class FolTest {
 		parser.setSignature(sig);		
 		bs.add((FolFormula)parser.parseFormula("forall X: (forall Y: ((!A(X,Y) || A(Y,X)) && (!A(Y,X) || A(X,Y))))"));
 		bs.add((FolFormula)parser.parseFormula("A(b,c)"));
-		ClassicalInference infer = new ClassicalInference(bs);
-		System.out.println(infer.query(parser.parseFormula("A(c,b)")));
+		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
+		System.out.println(prover.query(bs, (FolFormula)parser.parseFormula("A(c,b)")));
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
@@ -59,7 +59,7 @@ public class FolTest {
 		FolParser parser = new FolParser();		
 		FolBeliefSet b = parser.parseBeliefBaseFromFile("examplebeliefbase.fologic");
 		System.out.println(b);
-		ClassicalInference infer = new ClassicalInference(b);
-		System.out.println(infer.query(parser.parseFormula("Knows(martin,carl)")));
+		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
+		System.out.println(prover.query(b, (FolFormula)parser.parseFormula("Knows(martin,carl)")));
 	}
 }

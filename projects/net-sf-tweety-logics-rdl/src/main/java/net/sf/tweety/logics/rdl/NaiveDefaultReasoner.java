@@ -59,11 +59,6 @@ public class NaiveDefaultReasoner extends Reasoner{
 		answer.setAnswer(false);
 		for (Collection<FolFormula> extension: tree.getExtensions()){
 			FolBeliefSet fbs = (FolBeliefSet)extension;
-			/*ClassicalInference ci = new ClassicalInference(fbs);
-			if(ci.query(query).getAnswerBoolean()){
-				answer.setAnswer(true);
-				break;
-			}*/
 			FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 			if(prover.query(fbs, (FolFormula)query)){
 				answer.setAnswer(true);
