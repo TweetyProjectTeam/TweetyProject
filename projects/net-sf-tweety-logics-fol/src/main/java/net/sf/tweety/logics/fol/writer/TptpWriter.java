@@ -45,19 +45,19 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  *
  */
 
-public class TptpWriter {
+public class TptpWriter implements FolWriter {
 
-	/**
-	 * Prints TPTP representation of a knowledge base to a string.
-	 * 
-	 * @param b
-	 *            a knowledge base
-	 * @return TPTP representation of b
-	 */
-	public String toTPTP(FolBeliefSet b) {
-		StringWriter sw = new StringWriter();
-		printBase(sw, b);
-		return sw.toString();
+	final Writer writer;
+	
+
+	public TptpWriter(Writer writer) {
+		super();
+		this.writer = writer;
+	}
+	
+	public TptpWriter() {
+		super();
+		this.writer = new StringWriter();
 	}
 
 	/**
@@ -69,12 +69,12 @@ public class TptpWriter {
 	 *            the formula to be queried
 	 * @return the query as TPTP
 	 */
-	public String makeQuery(String name, FolFormula query) {
-		return "fof(" + name + ", conjecture, " + printFormula(query) + ").\n";
+	public void printQuery( FolFormula query) throws IOException {
+		writer.write( "fof(" + "query" + ", conjecture, " + printFormula(query) + ").\n");
 	}
 	
-	public String makeEquivalence(String name, FolFormula a, FolFormula b) {
-		return "fof(" + name + ", conjecture, " + printFormula(a) + " <=> "+ printFormula(b) + ").\n";
+	public void printEquivalence( FolFormula a, FolFormula b) throws IOException {
+		writer.write( "fof(" + "equation" + ", conjecture, " + printFormula(a) + " <=> "+ printFormula(b) + ").\n");
 	}
 
 	/**
@@ -85,21 +85,16 @@ public class TptpWriter {
 	 * @param b
 	 *            a knowledge base
 	 */
-	public void printBase(Writer w, FolBeliefSet b) {
-		try {
+	public void printBase(FolBeliefSet b) throws IOException {
 			// print types
 			FolSignature sig = (FolSignature) b.getSignature();
 			for (Constant c : sig.getConstants())
-				w.write(makeAxiom(c + "_type", c.getSort() + "(" + c + ")"));
+				writer.write(makeAxiom(c + "_type", c.getSort() + "(" + c + ")"));
 
 			// print facts
 			int axiom_id = 0;
 			for (FolFormula f : b)
-				w.write(makeAxiom("axiom_" + ++axiom_id, printFormula(f)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+				writer.write(makeAxiom("axiom_" + ++axiom_id, printFormula(f)));
 	}
 
 	/**
@@ -201,6 +196,16 @@ public class TptpWriter {
 			result += o;
 		}
 		return result;
+	}
+	
+	public void close() throws IOException {
+		writer.close();
+	}
+	
+
+	@Override
+	public String toString() {
+		return writer.toString();
 	}
 
 }

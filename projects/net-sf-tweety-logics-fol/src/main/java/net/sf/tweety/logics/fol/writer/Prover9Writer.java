@@ -3,7 +3,6 @@ package net.sf.tweety.logics.fol.writer;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Collection;
 import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -20,20 +19,19 @@ import net.sf.tweety.logics.fol.syntax.QuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
-public class Prover9Writer {
+public class Prover9Writer implements FolWriter {
 	
-	/**
-	 * Prints TPTP representation of a knowledge base to a string.
-	 * 
-	 * @param b
-	 *            a knowledge base
-	 * @return TPTP representation of b
-	 */
-	public String toTPTP(FolBeliefSet b) {
-		StringWriter sw = new StringWriter();
-		printBase(sw, b);
-		return sw.toString();
+	Writer writer;
+	
+	public Prover9Writer(Writer writer) {
+		super();
+		this.writer = writer;
 	}
+	
+	public Prover9Writer() {
+		this.writer = new StringWriter();
+	}
+
 
 	/**
 	 * Creates a TPTP conjecture.
@@ -44,12 +42,16 @@ public class Prover9Writer {
 	 *            the formula to be queried
 	 * @return the query as TPTP
 	 */
-	public String makeQuery(String name, FolFormula query) {
-		return "fof(" + name + ", conjecture, " + printFormula(query) + ").\n";
+	public void printQuery(FolFormula query) throws IOException {
+		writer.write("formulas(goals).\n");
+		writer.write("\t" + printFormula(query) + ".\n");
+		writer.write("end_of_list.\n");
 	}
 	
-	public String makeEquivalence(String name, FolFormula a, FolFormula b) {
-		return "fof(" + name + ", conjecture, " + printFormula(a) + " <=> "+ printFormula(b) + ").\n";
+	public void printEquivalence( FolFormula a, FolFormula b) throws IOException {
+		writer.write("formulas(goals).\n");
+		writer.write("\t" + printFormula(a) + " <-> " + printFormula(b) + ".\n");
+		writer.write("end_of_list.\n");
 	}
 
 	/**
@@ -60,23 +62,19 @@ public class Prover9Writer {
 	 * @param b
 	 *            a knowledge base
 	 */
-	public void printBase(Writer w, FolBeliefSet b) {
-		try {
-			w.write("formulas(sos).\n");
+	public void printBase(FolBeliefSet b)  throws IOException {
+			writer.write("formulas(sos).\n");
 			
 			// print types
 			FolSignature sig = (FolSignature) b.getSignature();
 			for (Constant c : sig.getConstants())
-				w.write( "\t"+c.getSort() + "(" + c + ").\n");
+				writer.write( "\t"+c.getSort() + "(" + c + ").\n");
 
 			// print facts
 			for (FolFormula f : b)
-				w.write("\t"+printFormula(f)+".\n");
-			w.write("end_of_list.\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+				writer.write("\t"+printFormula(f)+".\n");
+			
+			writer.write("end_of_list.\n");
 	}
 
 
@@ -116,7 +114,7 @@ public class Prover9Writer {
 				result += "(";
 			}
 			result += printFormula(fqf.getFormula());
-			for(Variable v: fqf.getQuantifierVariables()) 
+			for(int i = 0; i < fqf.getQuantifierVariables().size(); i++) 
 				result += "))";
 			return result;
 		}
@@ -149,27 +147,16 @@ public class Prover9Writer {
 		return "(" + str + ")";
 	}
 
-	/**
-	 * Joins the elements of c.
-	 * 
-	 * @param c
-	 *            a collection
-	 * @param delimiter
-	 *            will separate elements
-	 * @return a string representation of the elements of c separated by the
-	 *         delimiter
-	 */
-	private <T> String join(Collection<T> c, String delimiter) {
-		String result = "";
-		boolean first = true;
-		for (T o : c) {
-			if (first)
-				first = false;
-			else
-				result += delimiter;
-			result += o;
-		}
-		return result;
+	
+	public void close() throws IOException {
+		writer.close();
 	}
+
+	@Override
+	public String toString() {
+		return writer.toString();
+	}
+	
+	
 
 }

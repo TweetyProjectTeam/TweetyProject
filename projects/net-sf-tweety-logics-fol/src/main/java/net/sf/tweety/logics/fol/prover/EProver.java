@@ -26,6 +26,7 @@ import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.writer.FolWriter;
 import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 /**
@@ -70,13 +71,12 @@ public class EProver extends FolTheoremProver {
 	 */
 	@Override
 	public boolean query(FolBeliefSet kb, FolFormula query) {
-		TptpWriter printer = new TptpWriter();
 		try{
 			File file  = File.createTempFile("tmp", ".txt");
-			PrintWriter writer = new PrintWriter(file);
-			printer.printBase(writer, kb);
-			writer.write(printer.makeQuery("query", query));
-			writer.close();
+			FolWriter printer = new TptpWriter(new PrintWriter(file));
+			printer.printBase(kb);
+			printer.printQuery(query);
+			printer.close();
 			
 			//System.out.println(Files.readAllLines(file.toPath()));
 			
@@ -100,13 +100,12 @@ public class EProver extends FolTheoremProver {
 
 	@Override
 	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
-		TptpWriter printer = new TptpWriter();
 		try{
 			File file  = File.createTempFile("tmp", ".txt");
-			PrintWriter writer = new PrintWriter(file);
-			printer.printBase(writer, kb);
-			writer.write(printer.makeEquivalence("query", a,b));
-			writer.close();
+			TptpWriter printer = new TptpWriter(new PrintWriter(file));
+			printer.printBase(kb);
+			printer.printEquivalence(a,b);
+			printer.close();
 			
 			//System.out.println(Files.readAllLines(file.toPath()));
 			

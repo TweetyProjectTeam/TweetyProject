@@ -10,7 +10,9 @@ import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.prover.EProver;
+import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.writer.FolWriter;
 import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 /**
@@ -21,8 +23,8 @@ import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 public class TPTPTest {
 	
-	static EProver e;
-	TptpWriter printer = new TptpWriter();
+	static FolTheoremProver e;
+	FolWriter printer = new TptpWriter();
 	
 	@BeforeClass public static void init(){
 		if(System.getProperty("os.name").matches("Win.*")){
@@ -41,7 +43,8 @@ public class TPTPTest {
 		String source = "type(a) \n type(b) \n type(c) \n"
 				+ "a \n !b";
 		FolBeliefSet b = parser.parseBeliefBase(source);
-		System.out.println(printer.toTPTP(b));
+		printer.printBase(b);
+		System.out.println(printer);
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("b")));
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("a")));
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("c")));
@@ -59,7 +62,8 @@ public class TPTPTest {
 				+ "Ridable(horse) \n"
 				+ "forall X: (!Ridable(X) || Tame(X)) \n";
 		FolBeliefSet b = parser.parseBeliefBase(source);
-		System.out.println(printer.toTPTP(b));
+		printer.printBase(b);
+		System.out.println(printer);
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(cow)")));
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (Tame(X))")));
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(horse)")));
@@ -77,7 +81,8 @@ public class TPTPTest {
 				+ "forall X: (!Eats(cow, X) || Eats(horse, X)) \n"
 				+ "exists X: (Eats(lion, X))";
 		FolBeliefSet b = parser.parseBeliefBase(source);
-		System.out.println(printer.toTPTP(b));
+		printer.printBase(b);
+		System.out.println(printer);
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("Eats(lion, tree)")));
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!Eats(lion, grass)")));
 		//is not true according to the solver
