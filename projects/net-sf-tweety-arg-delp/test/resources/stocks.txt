@@ -1,0 +1,9 @@
+Buy_stock(C) -< Good_price(C).
+~Buy_stock(C) -< Good_price(C), Risky_company(C).
+Risky_company(C) -< In_fusion(C,AC).
+Risky_company(C) -< Closing(C).
+~Risky_company(C) -< In_fusion(C,AC), Strong(AC).
+
+Good_price(acme).
+In_fusion(acme,steel).
+Strong(steel).
