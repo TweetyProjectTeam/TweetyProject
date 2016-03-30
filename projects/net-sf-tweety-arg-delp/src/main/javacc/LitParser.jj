@@ -125,7 +125,7 @@ FOLAtom Atom(FolSignature signature) :
 	  }
 	  Predicate pred = signature.getPredicate(p.image);
 	  if(pred.getArity() != terms.size())
-	   	throw new ParseException("Wrong arity of predicate " + p.image + "");
+	   	throw new ParseException("Wrong arity of predicate '" + p.image + "'");
 	  return new FOLAtom(pred,terms);
 	}
 }
