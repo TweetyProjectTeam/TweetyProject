@@ -180,7 +180,8 @@ FOLAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) :
 				}
 	)* ")" )?
 	{
-	  if(!signature.containsPredicate(p.image)){	  	signature.add(new Predicate(p.image,terms.size()));	  
+	  if(!signature.containsPredicate(p.image)){
+	  	signature.add(new Predicate(p.image,terms.size()));	  
 	  }
 	  Predicate pred = signature.getPredicate(p.image);
 	  if(pred.getArity() != terms.size())
