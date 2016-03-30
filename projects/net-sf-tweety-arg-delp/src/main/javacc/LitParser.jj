@@ -1,0 +1,147 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
+ */ 
+options {
+  JDK_VERSION = "1.8";
+  STATIC=false;
+}
+
+PARSER_BEGIN(LitParser)
+package net.sf.tweety.arg.delp.parser;
+
+import net.sf.tweety.commons.*;
+import net.sf.tweety.arg.delp.*;
+import net.sf.tweety.arg.delp.syntax.*;
+import net.sf.tweety.logics.fol.syntax.*;
+import net.sf.tweety.logics.commons.syntax.interfaces.*;
+import net.sf.tweety.logics.commons.syntax.*;
+import java.io.*;
+import java.util.*;
+import java.util.regex.*;
+
+/**
+  * This class implements a parser for literals of defeasible logic programs. The BNF for literals of defeasible
+  * logic program files is given by (start symbol is LITERAL)
+  * <br>
+  * <br>LITERAL			::== "~" + ATOM | ATOM
+  * <br>ATOM			::== PREDNAME | PREDNAME + "(" + TERMLIST + ")"
+  * <br>TERMLIST		::== TERM | TERM + "," + TERMLIST
+  * <br>TERM			::== VARIABLE | CONSTANT
+  *
+  * <br>PREDNAME is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
+  * <br>VARIABALE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
+  * <br>CONSTANT is  a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an lowercase letter at the beginning.
+  */
+public class LitParser extends Parser<DefeasibleLogicProgram>{
+
+	private FolSignature signature = new FolSignature();
+
+	public LitParser(){
+	}
+
+  	public DefeasibleLogicProgram parseBeliefBase(Reader reader) throws ParserException{
+  		throw new UnsupportedOperationException("This operation is not supported.");
+  	}
+
+  	public Formula parseFormula(Reader reader) throws ParserException{
+  	  	try {
+  	  		LitParser theParser = new LitParser(reader);
+  	  		return theParser.Literal(this.signature);
+  	 	}catch(ParseException e){
+			throw new ParserException(e);
+  	 	}
+	}
+
+	public void setSignature(FolSignature signature){
+    	this.signature = signature;
+    }
+}
+
+PARSER_END(LitParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+	< NAME: ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","-","0"-"9"] )* >
+}
+
+FolFormula Literal(FolSignature signature) :
+{
+	FOLAtom atom;
+}
+{
+	atom=Atom(signature)
+	{
+		return atom;
+	}
+	|
+	"~" atom=Atom(signature)
+	{
+		return new Negation(atom);
+	}
+}
+
+FOLAtom Atom(FolSignature signature) :
+{
+	Token p;
+	List<Term<?>> terms = new ArrayList<Term<?>>();
+	Term<?> t;
+}
+{
+	p=<NAME> ( "(" t=Term(signature)
+				{
+					terms.add(t);
+				}
+	( "," t=Term(signature)
+				{
+					terms.add(t);
+				}
+	)* ")" )?
+	{
+	  if(!signature.containsPredicate(p.image)){
+	  	signature.add(new Predicate(p.image,terms.size()));	  
+	  }
+	  Predicate pred = signature.getPredicate(p.image);
+	  if(pred.getArity() != terms.size())
+	   	throw new ParseException("Wrong arity of predicate " + p.image + "");
+	  return new FOLAtom(pred,terms);
+	}
+}
+
+Term Term(FolSignature signature) :
+{
+	Token t;
+}
+{
+	t=<NAME>
+	{
+		if(Pattern.compile("^[A-Z]").matcher(t.image).find())
+			return new Variable(t.image);
+	    if(!signature.containsConstant(t.image)){
+	  		signature.add(new Constant(t.image));	  
+	  	}
+		return signature.getConstant(t.image);
+	}
+}

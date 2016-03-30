@@ -1,6 +1,7 @@
 package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
+import net.sf.tweety.arg.delp.parser.LitParser;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
@@ -25,19 +26,13 @@ public final class TestQueries {
     private Answer query(String KB, String formula) throws IOException {
         // set up reasoner
         DelpParser parser = new DelpParser();
-        DelpReasoner reasoner = new DelpReasoner(parser.parseBeliefBase(KB),
-                new GeneralizedSpecificity());
+        DefeasibleLogicProgram delp = parser.parseBeliefBase(KB);
+        DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
 
         // set up query
-        FolParser folParser = new FolParser();
-        folParser.setSignature(parser.getSignature());
-        // TODO: if implementing proper DeLP negation, this could be avoided:
-        String formulaTrimmed = formula.trim();
-        Formula f;
-        if(formulaTrimmed.startsWith("~"))
-            f = new Negation((FolFormula)folParser.parseFormula(formulaTrimmed.substring(1)));
-        else f = folParser.parseFormula(formulaTrimmed);
-        return reasoner.query(f);
+        LitParser litParser = new LitParser();
+        litParser.setSignature(parser.getSignature());
+        return reasoner.query(litParser.parseFormula(formula));
     }
 
     private String getKB(String resourceName) throws IOException {
@@ -64,7 +59,7 @@ public final class TestQueries {
         // tweety
         answer = query(KB, "Flies(tweety)");
         assertFalse("Tweety does not fly", answer.getAnswerBoolean());
-        answer = query(KB, "!Flies(tweety)");
+        answer = query(KB, "~Flies(tweety)");
         assertTrue("Tweety does not fly", answer.getAnswerBoolean());
     }
 
@@ -74,10 +69,10 @@ public final class TestQueries {
 
         Answer answer;
         // tina
-        answer = query(KB, "Pacifist(nixon)");
+        answer = query(KB, "~Pacifist(nixon)");
         // TODO: should be UNDECIDED!
         assertFalse("Nixon may or may not be a pacifist", answer.getAnswerBoolean());
-//        "~Pacifist(nixon)" = UNDECIDED
+//        "Pacifist(nixon)" = UNDECIDED
 //        "Has_a_gun(nixon)" = UNDECIDED
     }
 
