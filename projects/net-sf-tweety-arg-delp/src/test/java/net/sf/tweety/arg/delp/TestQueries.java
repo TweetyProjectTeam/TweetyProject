@@ -1,21 +1,13 @@
 package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
-import net.sf.tweety.arg.delp.parser.LitParser;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.logics.fol.parser.FolParser;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.Negation;
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
