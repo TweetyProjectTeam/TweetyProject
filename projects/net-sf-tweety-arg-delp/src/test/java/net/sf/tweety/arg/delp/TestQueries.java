@@ -18,8 +18,9 @@ import static org.junit.Assert.assertTrue;
 public final class TestQueries {
 
     private Answer query(String KB, String formula) throws IOException {
-        // set up reasoner
         DelpParser parser = new DelpParser();
+
+        // set up reasoner
         DefeasibleLogicProgram delp = parser.parseBeliefBase(KB);
         DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
 
@@ -67,7 +68,10 @@ public final class TestQueries {
     @Test
     public void counterarguments() throws IOException {
         String KB = Utilities.getKB("/counterarg.txt");
+        Answer answer;
+//        answer = query(KB, "a");
 //        "a" = UNDECIDED
+//        answer = query(KB, "c");
 //        "c" = UNDECIDED
     }
 }

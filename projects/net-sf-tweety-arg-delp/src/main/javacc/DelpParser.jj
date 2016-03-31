@@ -38,44 +38,75 @@ import java.util.regex.*;
   * This class implements a parser for defeasible logic programs. The BNF for defeasible
   * logic program files is given by (start symbol is THEORY)
   * <br>
-  * <br>THEORY			::== (EXPRESSION)*
-  * <br>EXPRESSION		::== FACT | STRICTRULE | DEFEASIBLERULE
-  * <br>FACT			::== LITERAL + "."
-  * <br>STRICTRULE		::== LITERAL + "<-" + RULEBODY + "."
-  * <br>DEFEASIBLERULE	::== LITERAL + "-<" + RULEBODY + "."
-  * <br>RULEBODY		::== LITERAL | LITERAL + "," + RULEBODY
-  * <br>LITERAL			::== "~" + ATOM | ATOM
-  * <br>ATOM			::== PREDNAME | PREDNAME + "(" + TERMLIST + ")"
-  * <br>TERMLIST		::== TERM | TERM + "," + TERMLIST
-  * <br>TERM			::== VARIABLE | CONSTANT
+  * <pre>
+  * THEORY  		::== (EXPRESSION)+
+  * EXPRESSION 		::== FACT | STRICTRULE | DEFEASIBLERULE
+  * FACT 			::== LITERAL + "."
+  * STRICTRULE 		::== LITERAL + "<-" + RULEBODY + "."
+  * DEFEASIBLERULE 	::== LITERAL + "-<" + RULEBODY + "."
+  * RULEBODY 		::== LITERAL | LITERAL + "," + RULEBODY
+  * LITERAL 		::== "~" + ATOM | ATOM
+  * ATOM 			::== TERM | PREDICATE + "(" + TERMLIST + ")"
+  * TERMLIST 		::== TERM | TERM + "," + TERMLIST
+  * TERM 			::== VARIABLE | CONSTANT
   *
-  * <br>PREDNAME is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
-  * <br>VARIABALE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
-  * <br>CONSTANT is  a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an lowercase letter at the beginning.
+  * PREDICATE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with a letter at the beginning.
+  * VARIABLE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
+  * CONSTANT is  a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an lowercase letter at the beginning.
+  * </pre>
   */
 public class DelpParser extends Parser<DefeasibleLogicProgram>{
 
 	private FolSignature signature = new FolSignature();
 
-	public DelpParser(){		
-	}
+	public DelpParser() { this(new StringReader("")); }
 
   	public DefeasibleLogicProgram parseBeliefBase(Reader reader) throws ParserException{
-  	  	try
-  	  	{
-  	  		DelpParser theParser = new DelpParser(reader);
-  	  		return theParser.Theory(this.signature);
-  	 	}catch(ParseException e){
+  	  	try {
+  	  		ReInit(reader);
+  	  		return this.Theory(this.signature);
+  	 	} catch(ParseException e) {
 			throw new ParserException(e);
   	 	}  	 	  
   	}
 
+    /**
+     * A formula here is a Literal, that is an Atom or a negated Atom.
+     * The Atom is either a DeLP predicate (a predicate with arity > 0) or a
+     * DeLP constant or variable (a predicate with arity == 0).
+     * In the case of a real predicate, test all arguments whether they are
+     * DeLP variables (= begin with upper case letter) or DeLP constants.
+     *
+     * All predicates and constants need to be present in the current signature to parse.
+     *
+     * @param reader the reader to parse from
+     * @return a Formula that has been successfully parsed with the current signature in mind
+     * @throws ParserException if the reader cannot be successfully parsed into a formula
+     */
   	public Formula parseFormula(Reader reader) throws ParserException{
   	  	try {
-  	  		DelpParser theParser = new DelpParser(reader);
-  	  		// TODO: test that theParser has nothing left!
-  	  		return theParser.Literal(null, this.signature);
-  	 	}catch(ParseException e){
+  	  		ReInit(reader);
+  	  		FolFormula fol = this.Formula(this.signature);
+  	  		// check that formula contains only known constants and predicates:
+  	  		FOLAtom atom = fol.getAtoms().iterator().next();
+            Predicate p = atom.getPredicate();
+            if (p.getArity() == 0) { // we may have a constant or a variable
+                if (Character.isLowerCase(p.getName().charAt(0)) && // check that we do have a DeLP constant
+                    signature.getConstant(p.getName()) == null)
+                        throw new ParseException("Formula constains unknown constant '" + p + "'");
+            } else { // we have a predicate
+                if (signature.getPredicate(p.getName()) == null)
+                    throw new ParseException("Formula contains unknown predicate '" + p + "'");
+                if (signature.getPredicate(p.getName()).getArity() != p.getArity())
+                    throw new ParseException("Formula contains predicate '" + p + "' with non-matching arity");
+                for (Term t : atom.getArguments()) {
+                    if (t instanceof Constant &&
+                        signature.getConstant(((Constant) t).get()) == null)
+                            throw new ParseException("Formula constains unknown constant '" + t + "'");
+                }
+            }
+            return fol;
+  	 	} catch(ParseException e) {
 			throw new ParserException(e);
   	 	}
 	}
@@ -87,17 +118,9 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
 
 PARSER_END(DelpParser)
 
-SKIP :
-{
-  " "
-| "\t"
-| "\n"
-| "\r"
-}
-
-TOKEN :
-{
-	< NAME: ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","-","0"-"9"] )* >
+SKIP:  { " " | "\t" | "\n" | "\r" }
+TOKEN: {
+	<NAME:  ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z","_","-","0"-"9"])*>
 }
 
 DefeasibleLogicProgram Theory(FolSignature signature) :
@@ -105,10 +128,10 @@ DefeasibleLogicProgram Theory(FolSignature signature) :
 	DefeasibleLogicProgram delp = new DefeasibleLogicProgram();
 }
 {
-  ( Expression(delp,signature) )* <EOF>
-  {
-  	return delp;
-  }
+	( Expression(delp,signature) )+ <EOF>
+	{
+		return delp;
+	}
 }
 
 void Expression(DefeasibleLogicProgram delp,FolSignature signature) :
@@ -152,21 +175,22 @@ void Expression(DefeasibleLogicProgram delp,FolSignature signature) :
 		)
 }
 
+FolFormula Formula(FolSignature signature) :
+{
+	FolFormula lit;
+}
+{
+	lit=Literal(null,signature) <EOF> {return lit;}
+}
 
 FolFormula Literal(DefeasibleLogicProgram delp,FolSignature signature) :
 {
 	FOLAtom atom;
 }
 {
-	atom=Atom(delp,signature)
-	{
-		return atom;
-	}
-	|
-	"~" atom=Atom(delp,signature)
-	{
-		return new Negation(atom);
-	}
+	atom=Atom(delp,signature) {return atom;}
+|
+	"~" atom=Atom(delp,signature) {return new Negation(atom);}
 }
 
 FOLAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) :
@@ -176,23 +200,22 @@ FOLAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) :
 	Term<?> t;
 }
 {
-	p=<NAME> ( "(" t=Term(delp,signature)
-				{
-					terms.add(t);
-				}
-	( "," t=Term(delp,signature)
-				{
-					terms.add(t);
-				}
-	)* ")" )?
+	p=<NAME>
+	    (
+	        "(" t=Term(delp,signature) {terms.add(t);}
+                ( "," t=Term(delp,signature) {terms.add(t);} )*
+	        ")"
+	    )?
 	{
-	  if(!signature.containsPredicate(p.image)){
-	  	signature.add(new Predicate(p.image,terms.size()));	  
-	  }
-	  Predicate pred = signature.getPredicate(p.image);
-	  if(pred.getArity() != terms.size())
-	   	throw new ParseException("Wrong arity of predicate '" + p.image + "'");
-	  return new FOLAtom(pred,terms);
+        // TODO: if terms.size() == 0, return Variable() or Constant() instead!
+        // only add predicate to signature if parsing DeLP!
+        Predicate predicate = new Predicate(p.image,terms.size());
+        if(delp != null && !signature.containsPredicate(p.image)){
+            signature.add(predicate);
+        }
+        if(signature.containsPredicate(p.image) && signature.getPredicate(p.image).getArity() != terms.size())
+	        throw new ParseException("Wrong arity of predicate '" + p.image + "'");
+        return new FOLAtom(predicate,terms);
 	}
 }
 
@@ -203,11 +226,10 @@ Term Term(DefeasibleLogicProgram delp,FolSignature signature) :
 {
 	t=<NAME>
 	{
-		if(Pattern.compile("^[A-Z]").matcher(t.image).find())
+		if(Character.isUpperCase(t.image.charAt(0)))
 			return new Variable(t.image);
-	    if(!signature.containsConstant(t.image)){
+	    if(!signature.containsConstant(t.image))
 	  		signature.add(new Constant(t.image));	  
-	  	}
 		return signature.getConstant(t.image);
 	}
 }
