@@ -71,7 +71,13 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
   	}
 
   	public Formula parseFormula(Reader reader) throws ParserException{
-  		throw new UnsupportedOperationException("This operation is not supported.");
+  	  	try {
+  	  		DelpParser theParser = new DelpParser(reader);
+  	  		// TODO: test that theParser has nothing left!
+  	  		return theParser.Literal(null, this.signature);
+  	 	}catch(ParseException e){
+			throw new ParserException(e);
+  	 	}
 	}
 
 	public FolSignature getSignature(){

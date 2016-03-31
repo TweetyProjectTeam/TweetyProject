@@ -20,6 +20,8 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Testing some example KBs with various queries.
+ *
+ * @author Linda.Briesemeister
  */
 public final class TestQueries {
 
@@ -29,26 +31,13 @@ public final class TestQueries {
         DefeasibleLogicProgram delp = parser.parseBeliefBase(KB);
         DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
 
-        // set up query
-        LitParser litParser = new LitParser();
-        litParser.setSignature(parser.getSignature());
-        return reasoner.query(litParser.parseFormula(formula));
-    }
-
-    private String getKB(String resourceName) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                getClass().getResourceAsStream(resourceName)));
-        StringBuilder bufferKB = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            bufferKB.append(line);
-        }
-        return bufferKB.toString();
+        // perform query
+        return reasoner.query(parser.parseFormula(formula));
     }
 
     @Test
     public void birds() throws IOException {
-        String KB = getKB("/birds.txt"); // load birds.txt
+        String KB = Utilities.getKB("/birds.txt"); // load birds.txt
 
         Answer answer;
         // tina
@@ -65,7 +54,7 @@ public final class TestQueries {
 
     @Test
     public void nixon() throws IOException {
-        String KB = getKB("/nixon.txt"); // load nixon.txt
+        String KB = Utilities.getKB("/nixon.txt"); // load nixon.txt
 
         Answer answer;
         // tina
@@ -78,14 +67,14 @@ public final class TestQueries {
 
     @Test
     public void stocks() throws IOException {
-        String KB = getKB("/stocks.txt"); // load birds.txt
+        String KB = Utilities.getKB("/stocks.txt"); // load birds.txt
         Answer ans = query(KB, "Buy_stock(acme)");
         assertTrue("Buying stock ACME should be supported", ans.getAnswerBoolean());
     }
 
     @Test
     public void counterarguments() throws IOException {
-        String KB = getKB("/counterarg.txt");
+        String KB = Utilities.getKB("/counterarg.txt");
 //        "a" = UNDECIDED
 //        "c" = UNDECIDED
     }
