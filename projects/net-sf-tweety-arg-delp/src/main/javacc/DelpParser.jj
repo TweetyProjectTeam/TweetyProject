@@ -212,9 +212,8 @@ FOLAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) :
         // TODO: if terms.size() == 0, return Variable() or Constant() instead?
         // only add predicate to signature if parsing DeLP!
         Predicate predicate = new Predicate(p.image,terms.size());
-        if(delp != null && !signature.containsPredicate(p.image)){
+        if(delp != null && !signature.containsPredicate(p.image))
             signature.add(predicate);
-        }
         if(signature.containsPredicate(p.image) && signature.getPredicate(p.image).getArity() != terms.size())
 	        throw new ParseException("Wrong arity of predicate '" + p.image + "'");
         return new FOLAtom(predicate,terms);
@@ -230,8 +229,8 @@ Term Term(DefeasibleLogicProgram delp,FolSignature signature) :
 	{
 		if(Character.isUpperCase(t.image.charAt(0)))
 			return new Variable(t.image);
-	    // only add new constant if parsing DeLP!
-	    Constant constant = new Constant(t.image);
+		// only add constant if parsing DeLP!
+		Constant constant = new Constant(t.image);
 	    if(delp != null && !signature.containsConstant(t.image))
 	  		signature.add(constant);
 		return constant;

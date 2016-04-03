@@ -1,9 +1,7 @@
 package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
-import net.sf.tweety.arg.delp.syntax.DelpQuery;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import org.junit.BeforeClass;
@@ -11,7 +9,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Testing DeLP formula parsing.
@@ -33,61 +33,50 @@ public final class TestFormulaParsing {
         }
     }
 
-    private int getArityOfAtom(FolFormula fol) {
-        // get arity of predicate (if any, otherwise, return 0)
-        FOLAtom atom = fol.getAtoms().iterator().next();
-        assertNotNull("At least one atom present in FOL formula '"+fol+"'", atom);
-        return atom.getPredicate().getArity();
-    }
-
-    private FolFormula parseFormula(DelpParser parser, String formula) throws IOException {
-        return ((DelpQuery) parser.parseFormula(formula)).getFormula();
-    }
-
     @Test
     public void parseSimple() throws IOException {
         FolFormula fol;
-        fol = parseFormula(PARSER_BIRDS, "Bird(tweety)");
+        fol = (FolFormula) PARSER_BIRDS.parseFormula("Bird(tweety)");
         assertTrue("Formula '"+fol+"' is ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
 
-        fol = parseFormula(PARSER_BIRDS, "tweety");
+        fol = (FolFormula) PARSER_BIRDS.parseFormula("tweety");
         assertTrue("Formula '"+fol+"' is ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
-        assertEquals("First predicate has arity 0", 0, getArityOfAtom(fol));
+        assertEquals("First predicate has arity 0", 0, fol.getPredicates().iterator().next().getArity());
 
-        fol = parseFormula(PARSER_BIRDS, " \tPenguin(tina) \n");
+        fol = (FolFormula) PARSER_BIRDS.parseFormula(" \tPenguin(tina) \n");
         assertTrue("Formula '"+fol+"' is ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
 
-        fol = parseFormula(PARSER_BIRDS, "  Scared (  tweety )");
+        fol = (FolFormula) PARSER_BIRDS.parseFormula("  Scared (  tweety )");
         assertTrue("Formula '"+fol+"' is ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
-        assertEquals("First predicate has arity 1", 1, getArityOfAtom(fol));
+        assertEquals("First predicate has arity 1", 1, fol.getPredicates().iterator().next().getArity());
 
-        fol = parseFormula(PARSER_BIRDS, "~  Bird (\ntweety)");
+        fol = (FolFormula) PARSER_BIRDS.parseFormula("~  Bird (\ntweety)");
         assertTrue("Formula '"+fol+"' is ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
         assertTrue("Formula '"+fol+"' is negation", fol instanceof Negation);
 
-        fol = parseFormula(PARSER_BIRDS, " ~Bird (Ydog)");
+        fol = (FolFormula) PARSER_BIRDS.parseFormula(" ~Bird (Ydog)");
         assertFalse("Formula '"+fol+"' is NOT ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
         assertTrue("Formula '"+fol+"' is negation", fol instanceof Negation);
 
-        fol = parseFormula(PARSER_STOCKS, " In_fusion (A, B)");
+        fol = (FolFormula) PARSER_STOCKS.parseFormula(" In_fusion (A, B)");
         assertFalse("Formula '"+fol+"' is NOT ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
-        assertEquals("First predicate has arity 2", 2, getArityOfAtom(fol));
+        assertEquals("First predicate has arity 2", 2, fol.getPredicates().iterator().next().getArity());
 
-        fol = parseFormula(PARSER_STOCKS, " ~ In_fusion (A, steel)");
+        fol = (FolFormula) PARSER_STOCKS.parseFormula(" ~ In_fusion (A, steel)");
         assertFalse("Formula '"+fol+"' is NOT ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
 
-        fol = parseFormula(PARSER_STOCKS, " A  ");
-//        assertFalse("Formula '"+fol+"' is NOT ground", fol.isGround());
+        fol = (FolFormula) PARSER_STOCKS.parseFormula(" A  ");
+        assertTrue("Formula '"+fol+"' is ground", fol.isGround());
         assertTrue("Formula is literal", fol.isLiteral());
-        assertEquals("First predicate has arity 0", 0, getArityOfAtom(fol));
+        assertEquals("First predicate has arity 0", 0, fol.getPredicates().iterator().next().getArity());
     }
 
     // parsing exceptions: formula too long, unknown predicates or facts, symbols (!%& and -<. in formula)
