@@ -72,11 +72,6 @@ public final class TestFormulaParsing {
         fol = (FolFormula) PARSER_STOCKS.parseFormula(" ~ In_fusion (A, steel)");
         assertFalse("Formula '"+fol+"' is NOT ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
-
-        fol = (FolFormula) PARSER_STOCKS.parseFormula(" A  ");
-        assertTrue("Formula '"+fol+"' is ground", fol.isGround());
-        assertTrue("Formula is literal", fol.isLiteral());
-        assertEquals("First predicate has arity 0", 0, fol.getPredicates().iterator().next().getArity());
     }
 
     // parsing exceptions: formula too long, unknown predicates or facts, symbols (!%& and -<. in formula)
@@ -96,12 +91,23 @@ public final class TestFormulaParsing {
     public void parseUnknownPred() throws IOException {
         PARSER_STOCKS.parseFormula(" ~IPO(acme) ");
     }
-//    @Test(expected = ParserException.class)
-//    public void parseUnknownConstant() throws IOException {
-//        PARSER_STOCKS.parseFormula(" ~In_fusion (A, google)");
-//    }
+    @Test(expected = ParserException.class)
+    public void parseUnknownConstantAsPredicate() throws IOException {
+        FolFormula fol = (FolFormula) PARSER_STOCKS.parseFormula(" ~ google  ");
+    }
+    @Test //TODO: (expected = ParserException.class) -- how shall we treat this case???
+    public void parseUnknownVariableAsPredicate() throws IOException {
+        FolFormula fol = (FolFormula) PARSER_STOCKS.parseFormula(" A  ");
+        assertTrue("Formula '" + fol + "' is ground", fol.isGround());
+        assertTrue("Formula is literal", fol.isLiteral());
+        assertEquals("First predicate has arity 0", 0, fol.getPredicates().iterator().next().getArity());
+    }
+    @Test(expected = ParserException.class)
+    public void parseUnknownConstant() throws IOException {
+        PARSER_STOCKS.parseFormula(" ~In_fusion (A, google)");
+    }
     @Test(expected = ParserException.class)
     public void parseDoubleNegation() throws IOException {
-        PARSER_STOCKS.parseFormula(" ~ ~ Strong (google)");
+        PARSER_STOCKS.parseFormula(" ~ ~ Strong (acme)");
     }
 }
