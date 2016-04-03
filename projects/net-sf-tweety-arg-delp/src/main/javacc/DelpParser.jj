@@ -88,9 +88,9 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
   	public Formula parseFormula(Reader reader) throws ParserException{
   	  	try {
   	  		ReInit(reader);
-  	  		DelpQuery fol = this.Formula(this.signature);
+  	  		FolFormula fol = this.Formula(this.signature);
   	  		// check that formula contains only known constants and predicates:
-  	  		FOLAtom atom = fol.getFormula().getAtoms().iterator().next();
+  	  		FOLAtom atom = fol.getAtoms().iterator().next();
             Predicate p = atom.getPredicate();
             if (p.getArity() == 0) { // we may have a constant or a variable
                 if (Character.isLowerCase(p.getName().charAt(0)) && // check that we do have a DeLP constant
@@ -177,12 +177,12 @@ void Expression(DefeasibleLogicProgram delp,FolSignature signature) :
 		)
 }
 
-DelpQuery Formula(FolSignature signature) :
+FolFormula Formula(FolSignature signature) :
 {
 	FolFormula lit;
 }
 {
-	lit=Literal(null,signature) <EOF> {return new DelpQuery(lit,signature);}
+	lit=Literal(null,signature) <EOF> {return lit;}
 }
 
 FolFormula Literal(DefeasibleLogicProgram delp,FolSignature signature) :
