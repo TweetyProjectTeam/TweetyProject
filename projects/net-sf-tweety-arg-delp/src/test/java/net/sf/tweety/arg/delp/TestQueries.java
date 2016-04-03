@@ -69,7 +69,7 @@ public final class TestQueries {
     public void counterarguments() throws IOException {
         String KB = Utilities.getKB("/counterarg.txt");
         Answer answer;
-//        answer = query(KB, "a");
+        answer = query(KB, "a");
 //        "a" = UNDECIDED
 //        answer = query(KB, "c");
 //        "c" = UNDECIDED
