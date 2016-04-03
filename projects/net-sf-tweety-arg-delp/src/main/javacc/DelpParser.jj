@@ -72,6 +72,7 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
 
     /**
      * A formula here is a Literal, that is an Atom or a negated Atom.
+     * The class DelpQuery encapsulates the following.
      * The Atom is either a DeLP predicate (a predicate with arity > 0) or a
      * DeLP constant or variable (a predicate with arity == 0).
      * In the case of a real predicate, test all arguments whether they are
@@ -80,15 +81,16 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
      * All predicates and constants need to be present in the current signature to parse.
      *
      * @param reader the reader to parse from
-     * @return a Formula that has been successfully parsed with the current signature in mind
+     * @return a Formula, which is always a DelpQuery in this implementation,
+     *         that has been successfully parsed with the current signature in mind
      * @throws ParserException if the reader cannot be successfully parsed into a formula
      */
   	public Formula parseFormula(Reader reader) throws ParserException{
   	  	try {
   	  		ReInit(reader);
-  	  		FolFormula fol = this.Formula(this.signature);
+  	  		DelpQuery fol = this.Formula(this.signature);
   	  		// check that formula contains only known constants and predicates:
-  	  		FOLAtom atom = fol.getAtoms().iterator().next();
+  	  		FOLAtom atom = fol.getFormula().getAtoms().iterator().next();
             Predicate p = atom.getPredicate();
             if (p.getArity() == 0) { // we may have a constant or a variable
                 if (Character.isLowerCase(p.getName().charAt(0)) && // check that we do have a DeLP constant
@@ -175,12 +177,12 @@ void Expression(DefeasibleLogicProgram delp,FolSignature signature) :
 		)
 }
 
-FolFormula Formula(FolSignature signature) :
+DelpQuery Formula(FolSignature signature) :
 {
 	FolFormula lit;
 }
 {
-	lit=Literal(null,signature) <EOF> {return lit;}
+	lit=Literal(null,signature) <EOF> {return new DelpQuery(lit,signature);}
 }
 
 FolFormula Literal(DefeasibleLogicProgram delp,FolSignature signature) :
@@ -207,7 +209,7 @@ FOLAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) :
 	        ")"
 	    )?
 	{
-        // TODO: if terms.size() == 0, return Variable() or Constant() instead!
+        // TODO: if terms.size() == 0, return Variable() or Constant() instead?
         // only add predicate to signature if parsing DeLP!
         Predicate predicate = new Predicate(p.image,terms.size());
         if(delp != null && !signature.containsPredicate(p.image)){
@@ -228,8 +230,10 @@ Term Term(DefeasibleLogicProgram delp,FolSignature signature) :
 	{
 		if(Character.isUpperCase(t.image.charAt(0)))
 			return new Variable(t.image);
-	    if(!signature.containsConstant(t.image))
-	  		signature.add(new Constant(t.image));	  
-		return signature.getConstant(t.image);
+	    // only add new constant if parsing DeLP!
+	    Constant constant = new Constant(t.image);
+	    if(delp != null && !signature.containsConstant(t.image))
+	  		signature.add(constant);
+		return constant;
 	}
 }

@@ -18,12 +18,21 @@
  */
 package net.sf.tweety.arg.delp;
 
-import java.util.*;
+import net.sf.tweety.arg.delp.semantics.ComparisonCriterion;
+import net.sf.tweety.arg.delp.semantics.DialecticalTree;
+import net.sf.tweety.arg.delp.semantics.EmptyCriterion;
+import net.sf.tweety.arg.delp.syntax.DelpArgument;
+import net.sf.tweety.arg.delp.syntax.DelpQuery;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
-import net.sf.tweety.arg.delp.semantics.*;
-import net.sf.tweety.arg.delp.syntax.*;
-import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.fol.syntax.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Stack;
 
 /**
  * This reasoner performs default dialectical reasoning
@@ -64,14 +73,20 @@ public class DelpReasoner extends Reasoner {
 	 */
 	@Override
 	public Answer query(Formula query) {
-		if(!(query instanceof FolFormula))
+		// TODO: fix this after debugging
+		FolFormula f;
+		if (query instanceof DelpQuery) {
+//			throw new IllegalArgumentException("Formula of class DelpQuery expected.");
+			f = ((DelpQuery) query).getFormula();
+		} else if (!(query instanceof FolFormula)) {
 			throw new IllegalArgumentException("Formula of class FolFormula expected.");
-		FolFormula f = (FolFormula) query;
+		} else
+			f = (FolFormula) query;
 		if(!f.isLiteral())
 			throw new IllegalArgumentException("Formula is expected to be a literal.");
 		Answer answer = new Answer(this.getKnowledgBase(),f);
 		for(DelpArgument arg: this.getWarrants()){
-			if(arg.getConclusion().equals(query)){
+			if(arg.getConclusion().equals(f)){
 				answer.setAnswer(true);
 				answer.appendText("The answer is: true");
 				return answer;
@@ -103,7 +118,6 @@ public class DelpReasoner extends Reasoner {
 	 * Checks whether the given argument is a warrant regarding a given set of arguments
 	 * @param argument a DeLP argument
 	 * @param arguments a set of DeLP arguments
-	 * @param delp a delp.
 	 * @return <source>true</source> iff <source>argument</source> is a warrant given <source>arguments</source>.
 	 */
 	private boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){
