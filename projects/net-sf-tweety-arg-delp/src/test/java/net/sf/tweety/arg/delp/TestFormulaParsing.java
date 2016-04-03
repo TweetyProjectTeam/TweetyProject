@@ -93,14 +93,11 @@ public final class TestFormulaParsing {
     }
     @Test(expected = ParserException.class)
     public void parseUnknownConstantAsPredicate() throws IOException {
-        FolFormula fol = (FolFormula) PARSER_STOCKS.parseFormula(" ~ google  ");
+        PARSER_STOCKS.parseFormula(" ~ google  ");
     }
-    @Test //TODO: (expected = ParserException.class) -- how shall we treat this case???
+    @Test(expected = ParserException.class)
     public void parseUnknownVariableAsPredicate() throws IOException {
-        FolFormula fol = (FolFormula) PARSER_STOCKS.parseFormula(" A  ");
-        assertTrue("Formula '" + fol + "' is ground", fol.isGround());
-        assertTrue("Formula is literal", fol.isLiteral());
-        assertEquals("First predicate has arity 0", 0, fol.getPredicates().iterator().next().getArity());
+        PARSER_STOCKS.parseFormula(" A  ");
     }
     @Test(expected = ParserException.class)
     public void parseUnknownConstant() throws IOException {

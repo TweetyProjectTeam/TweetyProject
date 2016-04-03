@@ -24,15 +24,28 @@ options {
 PARSER_BEGIN(DelpParser)
 package net.sf.tweety.arg.delp.parser;
 
-import net.sf.tweety.commons.*;
-import net.sf.tweety.arg.delp.*;
-import net.sf.tweety.arg.delp.syntax.*;
-import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.commons.syntax.interfaces.*;
-import net.sf.tweety.logics.commons.syntax.*;
-import java.io.*;
-import java.util.*;
-import java.util.regex.*;
+import net.sf.tweety.arg.delp.DefeasibleLogicProgram;
+import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
+import net.sf.tweety.arg.delp.syntax.DelpFact;
+import net.sf.tweety.arg.delp.syntax.StrictRule;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Parser;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.fol.syntax.Negation;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
   * This class implements a parser for defeasible logic programs. The BNF for defeasible
@@ -46,7 +59,7 @@ import java.util.regex.*;
   * DEFEASIBLERULE 	::== LITERAL + "-<" + RULEBODY + "."
   * RULEBODY 		::== LITERAL | LITERAL + "," + RULEBODY
   * LITERAL 		::== "~" + ATOM | ATOM
-  * ATOM 			::== TERM | PREDICATE + "(" + TERMLIST + ")"
+  * ATOM 			::== PREDICATE | PREDICATE + "(" + TERMLIST + ")"
   * TERMLIST 		::== TERM | TERM + "," + TERMLIST
   * TERM 			::== VARIABLE | CONSTANT
   *
@@ -92,20 +105,14 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
   	  		// check that formula contains only known constants and predicates:
   	  		FOLAtom atom = fol.getAtoms().iterator().next();
             Predicate p = atom.getPredicate();
-            if (p.getArity() == 0) { // we may have a constant or a variable
-                if (Character.isLowerCase(p.getName().charAt(0)) && // check that we do have a DeLP constant
-                    signature.getConstant(p.getName()) == null)
-                        throw new ParseException("Formula constains unknown constant '" + p + "'");
-            } else { // we have a predicate
-                if (signature.getPredicate(p.getName()) == null)
-                    throw new ParseException("Formula contains unknown predicate '" + p + "'");
-                if (signature.getPredicate(p.getName()).getArity() != p.getArity())
-                    throw new ParseException("Formula contains predicate '" + p + "' with non-matching arity");
-                for (Term t : atom.getArguments()) {
-                    if (t instanceof Constant &&
-                        signature.getConstant(((Constant) t).get()) == null)
-                            throw new ParseException("Formula constains unknown constant '" + t + "'");
-                }
+            if (signature.getPredicate(p.getName()) == null)
+                throw new ParseException("Formula contains unknown predicate '" + p + "'");
+            if (signature.getPredicate(p.getName()).getArity() != p.getArity())
+                throw new ParseException("Formula contains predicate '" + p + "' with non-matching arity");
+            for (Term t : atom.getArguments()) {
+                if (t instanceof Constant &&
+                    signature.getConstant(((Constant) t).get()) == null)
+                        throw new ParseException("Formula constains unknown constant '" + t + "'");
             }
             return fol;
   	 	} catch(ParseException e) {
@@ -229,10 +236,19 @@ Term Term(DefeasibleLogicProgram delp,FolSignature signature) :
 	{
 		if(Character.isUpperCase(t.image.charAt(0)))
 			return new Variable(t.image);
-		// only add constant if parsing DeLP!
+
+		// treat constants also as predicates with arity = 0 to be consistent with
+		// parsing queries as formulae:
+
+		// only add constant/predicate to signature if parsing DeLP!
 		Constant constant = new Constant(t.image);
 	    if(delp != null && !signature.containsConstant(t.image))
 	  		signature.add(constant);
+        Predicate predicate = new Predicate(t.image);
+        if(delp != null && !signature.containsPredicate(t.image))
+            signature.add(predicate);
+        if(signature.containsPredicate(t.image) && signature.getPredicate(t.image).getArity() != 0)
+	        throw new ParseException("Wrong arity of predicate as constant '" + t.image + "'");
 		return constant;
 	}
 }
