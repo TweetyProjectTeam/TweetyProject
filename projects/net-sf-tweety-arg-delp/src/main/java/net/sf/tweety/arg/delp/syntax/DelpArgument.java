@@ -35,19 +35,19 @@ public class DelpArgument implements Formula{
 	/**
 	 * The support of this argument
 	 */
-	Set<DefeasibleRule> support;
+	private Set<DefeasibleRule> support;
 
 	/**
 	 * The conclusion of this argument (must be a literal)
 	 */
-	FolFormula conclusion;
+	private FolFormula conclusion;
 
 	/**
 	 * constructor; initializes the conclusion of this argument with the given literal
 	 * @param conclusion a literal
 	 */
 	public DelpArgument(FolFormula conclusion){
-		this(new HashSet<DefeasibleRule>(),conclusion);
+		this(Collections.emptySet(),conclusion);
 	}
 
 	/**
@@ -165,14 +165,13 @@ public class DelpArgument implements Formula{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		String str = "<{";
-		Iterator<DefeasibleRule> it = support.iterator();
-		if(it.hasNext())
-			str += it.next().toString();
-		while(it.hasNext())
-			str += ","+it.next().toString();
-		str += "},"+conclusion.toString()+">";
-		return str;
+		StringBuilder str = new StringBuilder("<{");
+		for (DefeasibleRule rule : support)
+			str.append(rule+",");
+		if (!support.isEmpty())
+			str.delete(str.length()-1,str.length());
+		str.append("},"+conclusion+">");
+		return str.toString();
 	}
 
 	/* (non-Javadoc)

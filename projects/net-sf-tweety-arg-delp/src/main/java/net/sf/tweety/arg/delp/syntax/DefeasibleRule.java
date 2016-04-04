@@ -19,6 +19,7 @@
 package net.sf.tweety.arg.delp.syntax;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.*;
@@ -37,27 +38,9 @@ public class DefeasibleRule extends DelpRule {
 	 * @param body a set of literals
 	 */
 	public DefeasibleRule(FolFormula head, Set<FolFormula> body){
-		super(head,body);
+		super(head,body," -< ");
 	}
 		
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.delp.DelpRule#toString()
-	 */
-	public String toString(){
-		String str = head.toString()+" -< ";
-		Iterator<FolFormula> it = body.iterator();
-		if(it.hasNext()){
-			FolFormula lit = (FolFormula) it.next();
-			str += lit.toString();
-		}
-		while(it.hasNext()){
-			FolFormula lit = (FolFormula) it.next();
-			str += ","+lit.toString();
-		}
-		str += ".";
-		return str;
-	}
-
 	/**
 	 * returns the translation of this rule as a strict rule
 	 * @return the translation of this rule as a strict rule
@@ -70,12 +53,12 @@ public class DefeasibleRule extends DelpRule {
 	 * @see net.sf.tweety.argumentation.delp.DelpRule#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
-	public RelationalFormula substitute(Term<?> v, Term<?> t)	throws IllegalArgumentException {
-		FolFormula newHead = (FolFormula)((FolFormula)this.getConclusion()).substitute(v,t);
-		Set<FolFormula> newBody = new HashSet<FolFormula>();
-		for(FolFormula f: this.body)
-			newBody.add((FolFormula)f.substitute(v, t));
-		return new DefeasibleRule(newHead,newBody);
+	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		return new DefeasibleRule(
+                getConclusion().substitute(v,t),
+                body.stream()
+                        .map(f -> f.substitute(v,t))
+                        .collect(Collectors.toSet()));
 	}
 
 	@Override

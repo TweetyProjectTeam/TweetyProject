@@ -29,35 +29,28 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class DelpFact extends DelpRule {
+public final class DelpFact extends DelpRule {
 	
 	/**
 	 * Default constructor; initializes this fact with the given literal
 	 * @param literal a literal
 	 */
 	public DelpFact(FolFormula literal){
-		super(literal, new HashSet<FolFormula>());
+		super(literal, Collections.emptySet(), "");
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString(){
-		return super.getConclusion().toString()+".";
-	}
-	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.argumentation.delp.DelpRule#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
 	public RelationalFormula substitute(Term<?> v, Term<?> t)	throws IllegalArgumentException {
-		return new DelpFact((FolFormula)((FolFormula)this.getConclusion()).substitute(v, t));
+		return new DelpFact(this.getConclusion().substitute(v, t));
 	}
 
 	@Override
 	public DelpFact clone() {
-		return new DelpFact((FolFormula) this.getFormula().clone());
+        // this is OK to call constructor because this class is now final:
+		return new DelpFact((FolFormula) getFormula().clone());
 	}
 
 }

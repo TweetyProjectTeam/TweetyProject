@@ -293,10 +293,10 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		String str = new String();
+		StringBuilder str = new StringBuilder();
 		for(DelpRule rule: this)
-			str += rule.toString()+"\n";		
-		return str;
+			str.append(rule.toString()+"\n");
+		return str.toString();
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		return signature;
 	}
 	
-	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
+	public static void main(String[] args) throws ParserException, IOException{
 		DefeasibleLogicProgram delp = (DefeasibleLogicProgram) new net.sf.tweety.arg.delp.parser.DelpParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/delp");
 		System.out.println(delp);
 				

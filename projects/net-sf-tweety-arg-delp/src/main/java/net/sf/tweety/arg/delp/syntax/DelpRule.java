@@ -56,19 +56,23 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	 */
 	protected Set<FolFormula> body;
 
+    private final String symbol;
+
 	/**
 	 * Default constructor; initializes head and body of the rule
-	 * @param head a literal
-	 * @param body a set of literals
-	 */
-	public DelpRule(FolFormula head, Collection<? extends FolFormula> body){
-		if(!head.isLiteral())
+     * @param head a literal
+     * @param body a set of literals
+     * @param symbol
+     */
+    DelpRule(FolFormula head, Collection<? extends FolFormula> body, String symbol){
+        this.symbol = symbol;
+        if(!head.isLiteral())
 			throw new IllegalArgumentException("Heads of DeLP rules need to consist of a single literal.");
 		for(FolFormula f: body)
 			if(!f.isLiteral())
 				throw new IllegalArgumentException("Body elements of DeLP rules need to consist of a single literal.");
 		this.head = head;
-		this.body = new HashSet<FolFormula>(body);
+		this.body = new HashSet<>(body);
 	}
 
 	/**
@@ -311,11 +315,19 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	public Probability getUniformProbability(){
 		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public abstract String toString();
+
+	@Override
+	public String toString(){
+		StringBuilder str = new StringBuilder(head.toString());
+		if (!body.isEmpty())
+			str.append(symbol);
+		for (FolFormula literal : body)
+			str.append(literal+",");
+		if (!body.isEmpty()) // remove last ","
+			str.delete(str.length()-1,str.length());
+		str.append(".");
+		return str.toString();
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

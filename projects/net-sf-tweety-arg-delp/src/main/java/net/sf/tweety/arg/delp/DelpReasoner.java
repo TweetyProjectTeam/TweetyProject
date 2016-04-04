@@ -19,6 +19,7 @@
 package net.sf.tweety.arg.delp;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import net.sf.tweety.arg.delp.semantics.*;
 import net.sf.tweety.arg.delp.syntax.*;
@@ -91,13 +92,10 @@ public class DelpReasoner extends Reasoner {
 	 */
     Set<DelpArgument> getWarrants(){
 		DefeasibleLogicProgram groundDelp = ((DefeasibleLogicProgram) this.getKnowledgBase()).ground();
-		Set<DelpArgument> arguments = new HashSet<>();
-		Set<DelpArgument> all_arguments = groundDelp.getArguments();
-        for (DelpArgument argument : all_arguments) {
-			if (this.isWarrant(argument, all_arguments))
-				arguments.add(argument);
-		}
-		return arguments;
+        Set<DelpArgument> all_arguments = groundDelp.getArguments();
+		return all_arguments.stream()
+                .filter(argument -> isWarrant(argument, all_arguments))
+                .collect(Collectors.toSet());
 	}
 
 	/**
