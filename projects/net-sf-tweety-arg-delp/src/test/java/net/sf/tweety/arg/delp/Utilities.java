@@ -1,8 +1,14 @@
 package net.sf.tweety.arg.delp;
 
+import net.sf.tweety.arg.delp.syntax.DelpRule;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Negation;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Comparator;
 
 /**
  * Utility functions for test classes to access KBs etc.
@@ -17,7 +23,7 @@ class Utilities {
      * @return knowledge base as a String
      * @throws IOException if text file cannot be read
      */
-    public static String getKB(String resourceName) throws IOException {
+    static String getKB(String resourceName) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 Utilities.class.getResourceAsStream(resourceName)));
         StringBuilder bufferKB = new StringBuilder();
@@ -27,5 +33,47 @@ class Utilities {
         }
         return bufferKB.toString();
     }
+
+    /**
+     * Compare DeLP literals as they arise in rules, i.e.,
+     *   ~B < A          (negation is always smaller)
+     *   A < B           (atoms = predicates are sorted by predicate name first... )
+     *   A(Y) < A(X,Z)   (... then arity, ...)
+     *   A(Z,X) < A(Z,Y) (... then names of arguments)
+     */
+    static Comparator<FolFormula> compareLiterals = (Comparator<FolFormula>) (fol1, fol2) -> {
+        if (fol1 instanceof Negation && !(fol2 instanceof Negation)) return -1;
+        if (fol2 instanceof Negation && !(fol1 instanceof Negation)) return 1;
+        FOLAtom atom1, atom2;
+        atom1 = fol1.getAtoms().iterator().next();
+        atom2 = fol2.getAtoms().iterator().next();
+        int result = atom1.getPredicate().getName().compareTo(atom2.getPredicate().getName());
+        if (result != 0) return result; // predicate names differ
+        // predicate names are equal: look at arity
+        result = Integer.compare(atom1.getPredicate().getArity(),atom2.getPredicate().getArity());
+        if (result != 0) return result; // arity differs
+        // arity is the same: look at arguments
+        assert atom1.isComplete();
+        assert atom2.isComplete();
+        assert atom1.getArguments().size() == atom2.getArguments().size();
+        for (int i=0; i < atom1.getArguments().size(); i++) {
+            result = atom1.getArguments().get(i).get().toString().compareTo(
+                    atom2.getArguments().get(i).get().toString());
+            if (result != 0) return result; //argument name differs
+        }
+        return 0;
+    };
+
+    /**
+     * Compare DeLP rules:
+     *   1) compare heads (conclusion) as literals
+     *   2) if the same, then
+     *     a) DelpFact < StrictRule < DefeasibleRule
+     *     b) within same subclass, compare set of literals...
+     */
+    static Comparator<DelpRule> compareRules = (Comparator<DelpRule>) (rule1, rule2) -> {
+        // TODO: implement!
+        return 0;
+    };
 
 }

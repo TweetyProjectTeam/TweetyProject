@@ -21,6 +21,7 @@ package net.sf.tweety.arg.delp.syntax;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Functor;
@@ -321,10 +322,9 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 		StringBuilder str = new StringBuilder(head.toString());
 		if (!body.isEmpty())
 			str.append(symbol);
-		for (FolFormula literal : body)
-			str.append(literal+",");
-		if (!body.isEmpty()) // remove last ","
-			str.delete(str.length()-1,str.length());
+		str.append(body.stream()
+				.map(Object::toString)
+				.collect(Collectors.joining(",")));
 		str.append(".");
 		return str.toString();
 	}

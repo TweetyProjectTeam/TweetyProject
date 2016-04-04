@@ -1,0 +1,94 @@
+package net.sf.tweety.arg.delp;
+
+import net.sf.tweety.arg.delp.parser.DelpParser;
+import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
+import net.sf.tweety.arg.delp.syntax.DelpArgument;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Negation;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertEquals;
+
+/**
+ * Testing argument syntax.
+ *
+ * @author Linda.Briesemeister
+ */
+public final class TestArguments {
+
+    private static DefeasibleLogicProgram DELP_BIRDS;
+
+    // some terms and formulae:
+    private final static List<Term<?>> TINA = Stream
+            .of(new Constant("tina"))
+            .collect(Collectors.toList());
+    private final static FolFormula FOL_FLIES_TINA = new FOLAtom(new Predicate("Flies",1), TINA);
+    private final static FolFormula FOL_NOT_FLIES_TINA = new Negation(FOL_FLIES_TINA);
+
+    // some interesting arguments as strings and data structures:
+    private final static String STR_TINA_NOT_FLIES = "<{!Flies(tina) -< Chicken(tina).},!Flies(tina)>";
+    private final static DelpArgument ARG_TINA_NOT_FLIES = new DelpArgument(Stream
+            .of(new DefeasibleRule(FOL_NOT_FLIES_TINA, Stream
+                    .of(new FOLAtom(new Predicate("Chicken",1), TINA))
+                    .collect(Collectors.toSet())))
+            .collect(Collectors.toSet()),
+            FOL_NOT_FLIES_TINA);
+    private final static String STR_TINA_FLIES1 = "<{Flies(tina) -< Bird(tina).},Flies(tina)>";
+    private final static DelpArgument ARG_TINA_FLIES1 = new DelpArgument(Stream
+            .of(new DefeasibleRule(FOL_FLIES_TINA, Stream
+                    .of(new FOLAtom(new Predicate("Bird",1), TINA))
+                    .collect(Collectors.toSet())))
+            .collect(Collectors.toSet()),
+            FOL_FLIES_TINA);
+    private final static String STR_TINA_FLIES2 = "<{Flies(tina) -< Chicken(tina),Scared(tina).},Flies(tina)>";
+    private final static DelpArgument ARG_TINA_FLIES2 = new DelpArgument(Stream
+            .of(new DefeasibleRule(FOL_FLIES_TINA, Stream
+                    .of(
+                            new FOLAtom(new Predicate("Chicken",1), TINA),
+                            new FOLAtom(new Predicate("Scared",1), TINA))
+                    .collect(Collectors.toSet())))
+            .collect(Collectors.toSet()),
+            FOL_FLIES_TINA);
+    private final static String STR_TINA_NESTS = "<{Flies(tina) -< Bird(tina).,Nests_in_trees(tina) -< Flies(tina).},Nests_in_trees(tina)>";
+    private final static DelpArgument ARG_TINA_NESTS = new DelpArgument(Stream
+            .of(
+                    new DefeasibleRule(new FOLAtom(new Predicate("Nests_in_trees",1), TINA), Stream
+                            .of(FOL_FLIES_TINA)
+                            .collect(Collectors.toSet())),
+                    new DefeasibleRule(FOL_FLIES_TINA, Stream
+                        .of(new FOLAtom(new Predicate("Bird",1), TINA))
+                        .collect(Collectors.toSet())))
+            .collect(Collectors.toSet()),
+            new FOLAtom(new Predicate("Nests_in_trees",1), TINA));
+
+    @BeforeClass
+    public static void init() throws IOException {
+        DELP_BIRDS = new DelpParser().parseBeliefBase(Utilities.getKB("/birds.txt")).ground();
+    }
+
+    @Test
+    public void argRepresentation() {
+        // compare all arguments that have only one supporting rule with only one literal in body
+        assertEquals("Tina does not fly", STR_TINA_NOT_FLIES, ARG_TINA_NOT_FLIES.toString());
+        assertEquals("Tina flies 1", STR_TINA_FLIES1, ARG_TINA_FLIES1.toString());
+
+        // TODO: compare 2 representations with sorting rules and literals in body...
+        //assertEquals("Tina nests", STR_TINA_NESTS, ARG_TINA_NESTS.toString());
+    }
+
+    public void countering() {
+        System.out.println("Attack opps Flies(tina): "+ARG_TINA_NOT_FLIES.getAttackOpportunities(DELP_BIRDS));
+        System.out.println("Attack opps ~Flies(tina): "+ARG_TINA_FLIES1.getAttackOpportunities(DELP_BIRDS));
+        System.out.println("Attack opps Nests_in_trees(tina): "+ARG_TINA_NESTS.getAttackOpportunities(DELP_BIRDS));
+    }
+}

@@ -19,6 +19,8 @@
 package net.sf.tweety.arg.delp.syntax;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.commons.*;
@@ -30,7 +32,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class DelpArgument implements Formula{
+public class DelpArgument implements Formula {
 
 	/**
 	 * The support of this argument
@@ -68,7 +70,7 @@ public class DelpArgument implements Formula{
 	 * @return <source>true</source> iff this argument is a subargument of the given argument
 	 */
 	public boolean isSubargumentOf(DelpArgument argument){
-		return argument.getSupport().containsAll(this.support);
+		return argument.getSupport().containsAll(support);
 	}
 
 	/**
@@ -79,8 +81,7 @@ public class DelpArgument implements Formula{
 	 */
 	public boolean isStrongSubargumentOf(DelpArgument argument){
 		if(!isSubargumentOf(argument)) return false;
-		if(argument.getSupport().size() > this.support.size()) return true;
-		return false;
+		return argument.getSupport().size() > support.size();
 	}
 
 	/**
@@ -89,19 +90,19 @@ public class DelpArgument implements Formula{
 	 * @return  the set of literals that disagree with the conclusion of a subargument of this argument
 	 */
 	public Set<FolFormula> getAttackOpportunities(DefeasibleLogicProgram delp){
-		Set<FolFormula> literals = new HashSet<FolFormula>();
-		Iterator<DefeasibleRule> it = support.iterator();
-		while(it.hasNext())
-			literals.add((FolFormula)it.next().getConclusion());
+		Set<FolFormula> literals = support.stream()
+				.map(f -> f.getConclusion())
+				.collect(Collectors.toSet());
+
 		Set<FolFormula> strictClosure = delp.getStrictClosure();
 		Set<FolFormula> strictClosureWithAP = delp.getStrictClosure(literals);
 		strictClosureWithAP.removeAll(strictClosure);
 		literals.addAll(strictClosureWithAP);
-		Set<FolFormula> attackOpportunities = new HashSet<FolFormula>();
-		Iterator<FolFormula> l_it = literals.iterator();
-		while(l_it.hasNext())
-			attackOpportunities.add((FolFormula) l_it.next().complement());
-		return attackOpportunities;
+
+        // compute attack opportunities as complements of literals:
+		return literals.stream()
+				.map(f -> (FolFormula) f.complement())
+				.collect(Collectors.toSet());
 	}
 
 	/**
@@ -112,18 +113,16 @@ public class DelpArgument implements Formula{
 	 * 	there is no disagreement subargument
 	 */
 	public DelpArgument getDisagreementSubargument(FolFormula lit, DefeasibleLogicProgram delp){
-		Set<DelpArgument> arguments = delp.getArguments();
-		Iterator<DelpArgument> it = arguments.iterator();
-		while(it.hasNext()){
-			DelpArgument argument = (DelpArgument) it.next();
-			if(argument.isSubargumentOf(this)){
-				Set<FolFormula> literals = new HashSet<FolFormula>();
-				literals.add(lit);
-				literals.add(argument.getConclusion());
-				if(delp.disagree(literals))
-					return argument;
-			}
-		}
+        for (DelpArgument argument : delp.getArguments()) {
+            if (argument.isSubargumentOf(this)) {
+                if (delp.disagree(Stream
+                        .of(
+                                lit,
+                                argument.getConclusion())
+                        .collect(Collectors.toSet())))
+                    return argument;
+            }
+        }
 		return null;
 	}
 
@@ -135,14 +134,9 @@ public class DelpArgument implements Formula{
 	 * @return a set defeasible rules
 	 */
 	public Set<DelpRule> getRulesWithHead(FolFormula l){
-		Set<DelpRule> rules = new HashSet<DelpRule>();
-		Iterator<DefeasibleRule> d_it = support.iterator();
-		while(d_it.hasNext()){
-			DefeasibleRule rule = d_it.next();
-			if(rule.getConclusion().equals(l))
-				rules.add(rule);
-		}
-		return rules;
+		return support.stream()
+                .filter(rule -> rule.getConclusion().equals(l))
+                .collect(Collectors.toSet());
 	}
 
 	/**
@@ -165,13 +159,11 @@ public class DelpArgument implements Formula{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		StringBuilder str = new StringBuilder("<{");
-		for (DefeasibleRule rule : support)
-			str.append(rule+",");
-		if (!support.isEmpty())
-			str.delete(str.length()-1,str.length());
-		str.append("},"+conclusion+">");
-		return str.toString();
+		return "<{"
+				+ support.stream().map(Object::toString).collect(Collectors.joining(","))
+				+ "},"
+				+ conclusion
+				+ ">";
 	}
 
 	/* (non-Javadoc)
@@ -179,7 +171,6 @@ public class DelpArgument implements Formula{
 	 */
 	@Override
 	public Signature getSignature() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
