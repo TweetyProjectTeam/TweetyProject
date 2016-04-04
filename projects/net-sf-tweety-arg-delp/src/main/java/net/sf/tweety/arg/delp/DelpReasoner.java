@@ -37,7 +37,7 @@ public class DelpReasoner extends Reasoner {
 	/**
 	 * The comparison criterion is initialized with the "empty criterion"
 	 */
-	protected ComparisonCriterion comparisonCriterion = new EmptyCriterion();
+	private ComparisonCriterion comparisonCriterion = new EmptyCriterion();
 
 	/**
 	 * Creates a new DelpReasoner for the given delp.
@@ -64,13 +64,18 @@ public class DelpReasoner extends Reasoner {
 	 */
 	@Override
 	public Answer query(Formula query) {
+        // check query:
 		if(!(query instanceof FolFormula))
 			throw new IllegalArgumentException("Formula of class FolFormula expected.");
 		FolFormula f = (FolFormula) query;
 		if(!f.isLiteral())
-			throw new IllegalArgumentException("Formula is expected to be a literal.");
+			throw new IllegalArgumentException("Formula is expected to be a literal: "+f);
+		if(!f.isGround())
+			throw new IllegalArgumentException("Formula is expected to be ground: "+f);
+
+        // compute answer:
 		DelpAnswer answer = new DelpAnswer(this.getKnowledgBase(),f);
-		for(DelpArgument arg: this.getWarrants()){
+		for(DelpArgument arg: getWarrants()){
 			if(arg.getConclusion().equals(f)){
 				answer.setAnswer(0d); // true
 				return answer;
@@ -82,17 +87,15 @@ public class DelpReasoner extends Reasoner {
 
 	/**
 	 * Computes the subset of the arguments of this program, that are warrants.
-	 * @return a set of <source>DelpArgument</source>
+	 * @return a set of <source>DelpArgument</source> that are warrants
 	 */
-	public Set<DelpArgument> getWarrants(){
+    Set<DelpArgument> getWarrants(){
 		DefeasibleLogicProgram groundDelp = ((DefeasibleLogicProgram) this.getKnowledgBase()).ground();
-		Set<DelpArgument> arguments = new HashSet<DelpArgument>();
+		Set<DelpArgument> arguments = new HashSet<>();
 		Set<DelpArgument> all_arguments = groundDelp.getArguments();
-		Iterator<DelpArgument> it = all_arguments.iterator();
-		while(it.hasNext()){
-			DelpArgument argument = it.next();
-			if(this.isWarrant((DelpArgument)argument,all_arguments))
-				arguments.add((DelpArgument)argument);
+        for (DelpArgument argument : all_arguments) {
+			if (this.isWarrant(argument, all_arguments))
+				arguments.add(argument);
 		}
 		return arguments;
 	}
@@ -106,7 +109,7 @@ public class DelpReasoner extends Reasoner {
 	private boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){
 		DefeasibleLogicProgram groundDelp = ((DefeasibleLogicProgram) this.getKnowledgBase()).ground();
 		DialecticalTree dtree = new DialecticalTree(argument);
-		Stack<DialecticalTree> stack = new Stack<DialecticalTree>();
+		Stack<DialecticalTree> stack = new Stack<>();
 		stack.add(dtree);
 		while(!stack.isEmpty()){
 			DialecticalTree dtree2 = stack.pop();

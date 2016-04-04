@@ -81,6 +81,14 @@ class DelpAnswer extends Answer {
 
     DelpAnswer(BeliefBase beliefBase, Formula query) { super(beliefBase, query); }
 
+    /**
+     * Obtain current type of this answer.
+     * Note that this method could return NULL if the answer is still empty.
+     *
+     * @return Type of answer as in YES, NO, UNDECIDED
+     */
+    public Type getType() { return currentType; }
+
     @Override
     public void appendText(String text) {
         // NO OP! Text is only set from the assignment of Type!
