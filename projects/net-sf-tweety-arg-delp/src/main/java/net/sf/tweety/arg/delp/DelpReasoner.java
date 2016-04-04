@@ -69,16 +69,14 @@ public class DelpReasoner extends Reasoner {
 		FolFormula f = (FolFormula) query;
 		if(!f.isLiteral())
 			throw new IllegalArgumentException("Formula is expected to be a literal.");
-		Answer answer = new Answer(this.getKnowledgBase(),f);
+		DelpAnswer answer = new DelpAnswer(this.getKnowledgBase(),f);
 		for(DelpArgument arg: this.getWarrants()){
 			if(arg.getConclusion().equals(f)){
-				answer.setAnswer(true);
-				answer.appendText("The answer is: true");
+				answer.setAnswer(0d); // true
 				return answer;
 			}
 		}
-		answer.setAnswer(false);
-		answer.appendText("The answer is: false");
+		answer.setAnswer(-1d); // false
 		return answer;
 	}
 
@@ -103,7 +101,6 @@ public class DelpReasoner extends Reasoner {
 	 * Checks whether the given argument is a warrant regarding a given set of arguments
 	 * @param argument a DeLP argument
 	 * @param arguments a set of DeLP arguments
-	 * @param delp a delp.
 	 * @return <source>true</source> iff <source>argument</source> is a warrant given <source>arguments</source>.
 	 */
 	private boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){

@@ -6,6 +6,7 @@ import net.sf.tweety.commons.Answer;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -17,6 +18,8 @@ import static org.junit.Assert.assertTrue;
  */
 public final class TestQueries {
 
+    private final static Logger LOGGER = Logger.getLogger(TestQueries.class.getName());
+
     private Answer query(String KB, String formula) throws IOException {
         DelpParser parser = new DelpParser();
 
@@ -25,7 +28,9 @@ public final class TestQueries {
         DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
 
         // perform query
-        return reasoner.query(parser.parseFormula(formula));
+        DelpAnswer answer = (DelpAnswer) reasoner.query(parser.parseFormula(formula));
+        LOGGER.info("DeLP answer to query '"+formula+"' = "+answer);
+        return answer;
     }
 
     @Test
