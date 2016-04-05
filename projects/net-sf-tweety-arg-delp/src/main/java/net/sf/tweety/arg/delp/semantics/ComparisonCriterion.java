@@ -29,6 +29,8 @@ import net.sf.tweety.arg.delp.syntax.*;
  */
 public abstract class ComparisonCriterion {
 
+	// TODO: convert to enum type
+
 	/**
 	 * relation indicator "IS_BETTER", may be returned by the <source>compare</source> method
 	 */

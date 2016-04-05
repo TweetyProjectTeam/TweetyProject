@@ -27,7 +27,7 @@ import net.sf.tweety.arg.delp.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class EmptyCriterion extends ComparisonCriterion {
+public final class EmptyCriterion extends ComparisonCriterion {
 
 	/* (non-Javadoc)
 	 * @see edu.cs.ai.thimm.uacs.defeasiblelogicprogramming.ComparisonCriterion#compare(edu.cs.ai.thimm.uacs.defeasiblelogicprogramming.DeLPArgument, edu.cs.ai.thimm.uacs.defeasiblelogicprogramming.DeLPArgument, edu.cs.ai.thimm.uacs.defeasiblelogicprogramming.DefeasibleLogicProgram)

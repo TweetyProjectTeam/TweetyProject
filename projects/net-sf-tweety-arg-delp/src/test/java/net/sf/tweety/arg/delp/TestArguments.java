@@ -36,22 +36,22 @@ public final class TestArguments {
     private final static FolFormula FOL_NOT_FLIES_TINA = new Negation(FOL_FLIES_TINA);
 
     // some interesting arguments as strings and data structures:
-    private final static String STR_TINA_NOT_FLIES = "<{!Flies(tina) -< Chicken(tina).},!Flies(tina)>";
-    private final static DelpArgument ARG_TINA_NOT_FLIES = new DelpArgument(Stream
+    final static String STR_TINA_NOT_FLIES = "<{!Flies(tina) -< Chicken(tina).},!Flies(tina)>";
+    final static DelpArgument ARG_TINA_NOT_FLIES = new DelpArgument(Stream
             .of(new DefeasibleRule(FOL_NOT_FLIES_TINA, Stream
                     .of(new FOLAtom(new Predicate("Chicken",1), TINA))
                     .collect(Collectors.toSet())))
             .collect(Collectors.toSet()),
             FOL_NOT_FLIES_TINA);
-    private final static String STR_TINA_FLIES1 = "<{Flies(tina) -< Bird(tina).},Flies(tina)>";
-    private final static DelpArgument ARG_TINA_FLIES1 = new DelpArgument(Stream
+    final static String STR_TINA_FLIES1 = "<{Flies(tina) -< Bird(tina).},Flies(tina)>";
+    final static DelpArgument ARG_TINA_FLIES1 = new DelpArgument(Stream
             .of(new DefeasibleRule(FOL_FLIES_TINA, Stream
                     .of(new FOLAtom(new Predicate("Bird",1), TINA))
                     .collect(Collectors.toSet())))
             .collect(Collectors.toSet()),
             FOL_FLIES_TINA);
-    private final static String STR_TINA_FLIES2 = "<{Flies(tina) -< Chicken(tina),Scared(tina).},Flies(tina)>";
-    private final static DelpArgument ARG_TINA_FLIES2 = new DelpArgument(Stream
+    final static String STR_TINA_FLIES2 = "<{Flies(tina) -< Chicken(tina),Scared(tina).},Flies(tina)>";
+    final static DelpArgument ARG_TINA_FLIES2 = new DelpArgument(Stream
             .of(new DefeasibleRule(FOL_FLIES_TINA, Stream
                     .of(
                             new FOLAtom(new Predicate("Chicken",1), TINA),
@@ -59,8 +59,8 @@ public final class TestArguments {
                     .collect(Collectors.toSet())))
             .collect(Collectors.toSet()),
             FOL_FLIES_TINA);
-    private final static String STR_TINA_NESTS = "<{Flies(tina) -< Bird(tina).,Nests_in_trees(tina) -< Flies(tina).},Nests_in_trees(tina)>";
-    private final static DelpArgument ARG_TINA_NESTS = new DelpArgument(Stream
+    final static String STR_TINA_NESTS = "<{Flies(tina) -< Bird(tina).,Nests_in_trees(tina) -< Flies(tina).},Nests_in_trees(tina)>";
+    final static DelpArgument ARG_TINA_NESTS = new DelpArgument(Stream
             .of(
                     new DefeasibleRule(new FOLAtom(new Predicate("Nests_in_trees",1), TINA), Stream
                             .of(FOL_FLIES_TINA)
@@ -76,6 +76,15 @@ public final class TestArguments {
         DELP_BIRDS = new DelpParser().parseBeliefBase(Utilities.getKB("/birds.txt")).ground();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void createWithNullConclusion1() {
+        new DelpArgument(null);
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void createWithNullConclusion2() {
+        new DelpArgument(null,null);
+    }
+
     @Test
     public void argRepresentation() {
         // compare all arguments that have only one supporting rule with only one literal in body
@@ -86,6 +95,8 @@ public final class TestArguments {
         //assertEquals("Tina nests", STR_TINA_NESTS, ARG_TINA_NESTS.toString());
     }
 
+    // TODO: test subarguments...
+    // TODO: test attack opportunities...
     public void countering() {
         System.out.println("Attack opps Flies(tina): "+ARG_TINA_NOT_FLIES.getAttackOpportunities(DELP_BIRDS));
         System.out.println("Attack opps ~Flies(tina): "+ARG_TINA_FLIES1.getAttackOpportunities(DELP_BIRDS));

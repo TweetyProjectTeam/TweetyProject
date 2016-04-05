@@ -216,7 +216,6 @@ FOLAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) :
 	        ")"
 	    )?
 	{
-        // TODO: if terms.size() == 0, return Variable() or Constant() instead?
         // only add predicate to signature if parsing DeLP!
         Predicate predicate = new Predicate(p.image,terms.size());
         if(delp != null && !signature.containsPredicate(p.image))

@@ -49,7 +49,7 @@ public class DelpArgument implements Formula {
 	 * @param conclusion a literal
 	 */
 	public DelpArgument(FolFormula conclusion){
-		this(Collections.emptySet(),conclusion);
+		this(null,conclusion);
 	}
 
 	/**
@@ -58,6 +58,8 @@ public class DelpArgument implements Formula {
 	 * @param conclusion a literal (must not be NULL)
 	 */
 	public DelpArgument(Set<DefeasibleRule> support, FolFormula conclusion){
+        if (conclusion == null)
+            throw new IllegalArgumentException("Cannot instantiate argument with NULL conclusion");
 		if(!conclusion.isLiteral())
 			throw new IllegalArgumentException("The conclusion of an argument must be a literal.");
         if (support == null)

@@ -40,8 +40,9 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class GeneralizedSpecificity extends ComparisonCriterion {
+public final class GeneralizedSpecificity extends ComparisonCriterion {
 
+	// TODO: turn into enum?
 	/**
 	 * Indicates that an activation set is trivial
 	 */

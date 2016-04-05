@@ -106,12 +106,14 @@ public class DelpReasoner extends Reasoner {
 	 */
 	private boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){
 		DefeasibleLogicProgram groundDelp = ((DefeasibleLogicProgram) this.getKnowledgBase()).ground();
+		// TODO: replace this with Java 8 stream API:
 		DialecticalTree dtree = new DialecticalTree(argument);
+
 		Stack<DialecticalTree> stack = new Stack<>();
 		stack.add(dtree);
 		while(!stack.isEmpty()){
 			DialecticalTree dtree2 = stack.pop();
-			stack.addAll(dtree2.getDefeaters(arguments,groundDelp,this.comparisonCriterion));
+			stack.addAll(dtree2.getDefeaters(arguments,groundDelp,comparisonCriterion));
 		}
 		return dtree.getMarking().equals(DialecticalTree.Mark.UNDEFEATED);
 	}
