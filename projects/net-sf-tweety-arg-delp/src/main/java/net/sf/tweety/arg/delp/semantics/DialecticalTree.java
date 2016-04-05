@@ -20,6 +20,7 @@ package net.sf.tweety.arg.delp.semantics;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.arg.delp.syntax.*;
@@ -45,7 +46,7 @@ public class DialecticalTree{
 	/**
      * The argument in this node
 	 */
-    private DelpArgument argument;
+    private final DelpArgument argument;
 
 	/**
 	 * The parent node; <source>null</source> if this node is a root
@@ -65,13 +66,10 @@ public class DialecticalTree{
 		this(null, argument);
 	}
 
-	/**
-	 * constructor; initializes this dialectical node with the given argument and
-	 * given dialectical tree node as parent.
-	 * @param parent
-	 * @param argument
-	 */
+    // for building the linked tree structure
     private DialecticalTree(DialecticalTree parent, DelpArgument argument){
+        if (argument == null)
+            throw new IllegalArgumentException("Cannot instantiate dialectical tree with NULL argument");
 		this.parent = parent;
 		this.argument = argument;
 	}
@@ -81,12 +79,20 @@ public class DialecticalTree{
 	 * the corresponding dialectical tree nodes with these defeaters. For the computation of the defeaters
 	 * the whole argumentation line to this tree node is considered. As a side effect the computed tree nodes
 	 * are added as children of this node
+     *
 	 * @param arguments a set of arguments
 	 * @param delp a defeasible logic program
 	 * @param comparisonCriterion a comparison criterion.
 	 * @return the set of defeater nodes of the argument in this node
 	 */
-	public Set<DialecticalTree> getDefeaters(Set<DelpArgument> arguments, DefeasibleLogicProgram delp, ComparisonCriterion comparisonCriterion){
+	public Set<DialecticalTree> getDefeaters(Set<DelpArgument> arguments,
+                                             DefeasibleLogicProgram delp,
+                                             ComparisonCriterion comparisonCriterion){
+        // test parameters:
+        if (arguments == null)
+            arguments = Collections.emptySet();
+        if (delp == null)
+            throw new IllegalArgumentException("Cannot compute defeaters for NULL DeLP");
 		Set<FolFormula> attackOpportunities = argument.getAttackOpportunities(delp);
 
         //gather attacks of last argument in the line
@@ -118,11 +124,13 @@ public class DialecticalTree{
 	 * @param comparisonCriterion a comparison criterion.
 	 * @return <source>true</source> if the corresponding argumentation line is acceptable
 	 */
-	public boolean isAcceptable(DelpArgument argument, DefeasibleLogicProgram delp, ComparisonCriterion comparisonCriterion){
+	private boolean isAcceptable(DelpArgument argument,
+                                 DefeasibleLogicProgram delp,
+                                 ComparisonCriterion comparisonCriterion){
 		List<DelpArgument> argumentationLine = getArgumentationLine();
 
 		//Subargument test: return FALSE if any subargument found
-        if (argumentationLine.stream().anyMatch(arg -> argument.isSubargumentOf(arg)))
+        if (argumentationLine.stream().anyMatch(argument::isSubargumentOf))
             return false;
 
         // TODO: convert to stream API
@@ -135,6 +143,8 @@ public class DialecticalTree{
 			return false;
 
 		//Blocking attack
+        if (comparisonCriterion == null)
+            comparisonCriterion = new EmptyCriterion();
         DelpArgument disagreementSubargument = argumentationLine.get(argumentationLine.size()-1).getDisagreementSubargument(argument.getConclusion(), delp);
 		if(comparisonCriterion.compare(argument, disagreementSubargument, delp) == ComparisonCriterion.IS_WORSE)
 			return false;
@@ -155,13 +165,14 @@ public class DialecticalTree{
 	 * @return a list of arguments
 	 */
     private List<DelpArgument> getArgumentationLine(){
-        // TODO: convert to stream API
-		List<DelpArgument> argumentationLine = new ArrayList<>();
-		if(parent != null)
-			argumentationLine.addAll(parent.getArgumentationLine());
-		argumentationLine.add(argument);
-		return argumentationLine;
-	}
+        return Stream
+                .concat(
+                        parent==null?
+                                Stream.empty():
+                                parent.getArgumentationLine().stream(), // walk up tree hierarchy
+                        Stream.of(argument))
+                .collect(Collectors.toList());
+    }
 
 	/**
 	 * Computes the marking of this node by considering the marking of all child nodes
