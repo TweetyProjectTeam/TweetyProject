@@ -19,6 +19,7 @@
 package net.sf.tweety.arg.delp.semantics;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.arg.delp.syntax.*;
@@ -32,39 +33,36 @@ import net.sf.tweety.logics.fol.syntax.*;
  */
 public class DialecticalTree{
 
-	/**
-	 * Marking indicator; indicates a defeated node
-	 */
-	public final static String MARK_DEFEATED = "D";
+    public enum Mark {
+        DEFEATED,
+        UNDEFEATED;
+        @Override
+        public String toString() {
+            return name().substring(0,1); // first character as String
+        }
+    }
 
 	/**
-	 * Marking indicator; indicates an undefeated node
+     * The argument in this node
 	 */
-	public final static String MARK_UNDEFEATED = "U";
-
-	/**
-	 * The argument in this node
-	 */
-	protected DelpArgument argument;
+    private DelpArgument argument;
 
 	/**
 	 * The parent node; <source>null</source> if this node is a root
 	 */
-	protected DialecticalTree parent;
+	private final DialecticalTree parent;
 
 	/**
 	 * The children of this node; size=0 indicates a leaf
 	 */
-	protected Set<DialecticalTree> children;
+	private final Set<DialecticalTree> children = new HashSet<>();
 
 	/**
 	 * constructor; initializes this dialectical tree node as a root with given argument
 	 * @param argument a DeLP argument
 	 */
 	public DialecticalTree(DelpArgument argument){
-		this.argument = argument;
-		this.parent = null;
-		this.children = new HashSet<DialecticalTree>();
+		this(null, argument);
 	}
 
 	/**
@@ -73,10 +71,9 @@ public class DialecticalTree{
 	 * @param parent
 	 * @param argument
 	 */
-	public DialecticalTree(DialecticalTree parent, DelpArgument argument){
+    private DialecticalTree(DialecticalTree parent, DelpArgument argument){
 		this.parent = parent;
 		this.argument = argument;
-		this.children = new HashSet<DialecticalTree>();
 	}
 
 	/**
@@ -90,36 +87,27 @@ public class DialecticalTree{
 	 * @return the set of defeater nodes of the argument in this node
 	 */
 	public Set<DialecticalTree> getDefeaters(Set<DelpArgument> arguments, DefeasibleLogicProgram delp, ComparisonCriterion comparisonCriterion){
-		Set<FolFormula> attackOpportunities = ((DelpArgument)argument).getAttackOpportunities(delp);
-		Iterator<FolFormula> it = attackOpportunities.iterator();
-		Set<DelpArgument> attacks = new HashSet<DelpArgument>();
-		//gather attacks of last argument in the line
-		while(it.hasNext()){
-			FolFormula lit = it.next();
-			Iterator<DelpArgument> arg_it = arguments.iterator();
-			while(arg_it.hasNext()){
-				DelpArgument argument = arg_it.next();
-				if(((DelpArgument)argument).getConclusion().equals(lit))
-					attacks.add(argument);
-			}
-		}
+		Set<FolFormula> attackOpportunities = argument.getAttackOpportunities(delp);
+
+        //gather attacks of last argument in the line
+        Set<DelpArgument> attacks = new HashSet<>();
+        for (FolFormula lit : attackOpportunities) {
+            attacks.addAll(arguments.stream()
+                    .filter(argument -> argument.getConclusion().equals(lit))
+                    .collect(Collectors.toList()));
+        }
+
 		//for each attacker check acceptability
-		Set<DelpArgument> defeater = new HashSet<DelpArgument>();
-		Iterator<DelpArgument> attacker_it = attacks.iterator();
-		while(attacker_it.hasNext()){
-			DelpArgument attack = attacker_it.next();
-			if(isAcceptable((DelpArgument)attack,delp,comparisonCriterion))
-				defeater.add(attack);
-		}
+        Set<DelpArgument> defeaters = attacks.stream()
+                .filter(attack -> isAcceptable(attack,delp,comparisonCriterion))
+                .collect(Collectors.toSet());
+
 		//build dialectical tree nodes
-		Iterator<DelpArgument> defeater_it = defeater.iterator();
-		Set<DialecticalTree> defeaterNodes = new HashSet<DialecticalTree>();
-		while(defeater_it.hasNext()){
-			DialecticalTree dtree = new DialecticalTree(this,defeater_it.next());
-			defeaterNodes.add(dtree);
-		}
-		children = defeaterNodes;
-		return defeaterNodes;
+        children.clear();
+        children.addAll(defeaters.stream()
+                .map(defeater -> new DialecticalTree(this, defeater))
+                .collect(Collectors.toSet()));
+		return children;
 	}
 
 	/**
@@ -131,29 +119,30 @@ public class DialecticalTree{
 	 * @return <source>true</source> if the corresponding argumentation line is acceptable
 	 */
 	public boolean isAcceptable(DelpArgument argument, DefeasibleLogicProgram delp, ComparisonCriterion comparisonCriterion){
-		List<DelpArgument> argumentationLine = this.getArgumentationLine();
-		DelpArgument disagreementSubargument = ((DelpArgument)argumentationLine.get(argumentationLine.size()-1)).getDisagreementSubargument(argument.getConclusion(), delp);
-		//Subargument test
-		Iterator<DelpArgument> it = argumentationLine.iterator();
-		while(it.hasNext()){
-			DelpArgument arg = (DelpArgument) it.next();
-			if(argument.isSubargumentOf(arg))
-				return false;
-		}
+		List<DelpArgument> argumentationLine = getArgumentationLine();
+
+		//Subargument test: return FALSE if any subargument found
+        if (argumentationLine.stream().anyMatch(arg -> argument.isSubargumentOf(arg)))
+            return false;
+
+        // TODO: convert to stream API
 		//Concordance
-		Set<DefeasibleRule> rules = new HashSet<DefeasibleRule>();
+		Set<DefeasibleRule> rules = new HashSet<>();
 		for(int i = argumentationLine.size()-2; i >= 0; i -= 2)
-			rules.addAll(((DelpArgument)argumentationLine.get(i)).getSupport());
+			rules.addAll(argumentationLine.get(i).getSupport());
 		rules.addAll(argument.getSupport());
 		if(!delp.isConsistent(rules))
 			return false;
+
 		//Blocking attack
+        DelpArgument disagreementSubargument = argumentationLine.get(argumentationLine.size()-1).getDisagreementSubargument(argument.getConclusion(), delp);
 		if(comparisonCriterion.compare(argument, disagreementSubargument, delp) == ComparisonCriterion.IS_WORSE)
 			return false;
-		//Proper attack
+
+        //Proper attack
 		if(argumentationLine.size()>1){
-			DelpArgument arg1 = ((DelpArgument)argumentationLine.get(argumentationLine.size()-1));
-			DelpArgument arg2 = ((DelpArgument)argumentationLine.get(argumentationLine.size()-2)).getDisagreementSubargument(arg1.getConclusion(), delp);
+			DelpArgument arg1 = argumentationLine.get(argumentationLine.size()-1);
+			DelpArgument arg2 = argumentationLine.get(argumentationLine.size()-2).getDisagreementSubargument(arg1.getConclusion(), delp);
 			if(comparisonCriterion.compare(arg1, arg2, delp) == ComparisonCriterion.NOT_COMPARABLE)
 				if(comparisonCriterion.compare(argument, disagreementSubargument, delp) != ComparisonCriterion.IS_BETTER)
 					return false;
@@ -165,8 +154,9 @@ public class DialecticalTree{
 	 * Returns the argumentation line which is generated by the path from this node to the root (in reverse)
 	 * @return a list of arguments
 	 */
-	public List<DelpArgument> getArgumentationLine(){
-		List<DelpArgument> argumentationLine = new ArrayList<DelpArgument>();
+    private List<DelpArgument> getArgumentationLine(){
+        // TODO: convert to stream API
+		List<DelpArgument> argumentationLine = new ArrayList<>();
 		if(parent != null)
 			argumentationLine.addAll(parent.getArgumentationLine());
 		argumentationLine.add(argument);
@@ -177,28 +167,24 @@ public class DialecticalTree{
 	 * Computes the marking of this node by considering the marking of all child nodes
 	 * @return one of DialecticalTree.MARK_DEFEATED and DialecticalTree.MARK_UNDEFEATED
 	 */
-	public String getMarking(){
-		Iterator<DialecticalTree> it = children.iterator();
-		while(it.hasNext())
-			if(it.next().getMarking().equals(DialecticalTree.MARK_UNDEFEATED))
-				return DialecticalTree.MARK_DEFEATED;
-		return DialecticalTree.MARK_UNDEFEATED;
+	public Mark getMarking(){
+        for (DialecticalTree dtree : children)
+            if(dtree.getMarking().equals(Mark.UNDEFEATED))
+                return Mark.DEFEATED;
+        return Mark.UNDEFEATED;
 	}
 
 	//Misc Methods
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString(){
-		String s = "["+argument;
-		Iterator<DialecticalTree> it = children.iterator();
-		if(it.hasNext())
-			s +=  " - "+it.next();
-		while(it.hasNext())
-			s+= ", "+it.next();
-		s += " ]";
-		return s;
+		StringBuilder s = new StringBuilder("["+argument);
+        if (!children.isEmpty())
+            s.append(" - ");
+        s.append(children.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", ")));
+		s.append("]");
+		return s.toString();
 	}
 
 }

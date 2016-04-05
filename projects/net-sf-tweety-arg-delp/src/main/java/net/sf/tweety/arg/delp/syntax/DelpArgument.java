@@ -37,12 +37,12 @@ public class DelpArgument implements Formula {
 	/**
 	 * The support of this argument
 	 */
-	private Set<DefeasibleRule> support;
+	private final Set<DefeasibleRule> support;
 
 	/**
 	 * The conclusion of this argument (must be a literal)
 	 */
-	private FolFormula conclusion;
+	private final FolFormula conclusion;
 
 	/**
 	 * constructor; initializes the conclusion of this argument with the given literal
@@ -55,12 +55,15 @@ public class DelpArgument implements Formula {
 	/**
 	 * constructor; initializes this argument with the given parameters
 	 * @param support a set of defeasible rules
-	 * @param conclusion a literal
+	 * @param conclusion a literal (must not be NULL)
 	 */
 	public DelpArgument(Set<DefeasibleRule> support, FolFormula conclusion){
 		if(!conclusion.isLiteral())
-			throw new IllegalArgumentException("The conclusion of an argument must be a literal.");		
-		this.support = support;
+			throw new IllegalArgumentException("The conclusion of an argument must be a literal.");
+        if (support == null)
+            this.support = Collections.emptySet();
+        else
+            this.support = support;
 		this.conclusion = conclusion;
 	}
 
@@ -91,7 +94,7 @@ public class DelpArgument implements Formula {
 	 */
 	public Set<FolFormula> getAttackOpportunities(DefeasibleLogicProgram delp){
 		Set<FolFormula> literals = support.stream()
-				.map(f -> f.getConclusion())
+				.map(DelpRule::getConclusion)
 				.collect(Collectors.toSet());
 
 		Set<FolFormula> strictClosure = delp.getStrictClosure();
@@ -155,9 +158,6 @@ public class DelpArgument implements Formula {
 		return support;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString(){
 		return "<{"
 				+ support.stream().map(Object::toString).collect(Collectors.joining(","))
@@ -166,50 +166,31 @@ public class DelpArgument implements Formula {
 				+ ">";
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.Formula#getSignature()
-	 */
+    /**
+     * Always null.
+     * @return <code>null</code>
+     */
 	@Override
 	public Signature getSignature() {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((conclusion == null) ? 0 : conclusion.hashCode());
-		result = prime * result + ((support == null) ? 0 : support.hashCode());
-		return result;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DelpArgument)) return false;
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DelpArgument other = (DelpArgument) obj;
-		if (conclusion == null) {
-			if (other.conclusion != null)
-				return false;
-		} else if (!conclusion.equals(other.conclusion))
-			return false;
-		if (support == null) {
-			if (other.support != null)
-				return false;
-		} else if (!support.equals(other.support))
-			return false;
-		return true;
-	}
+        DelpArgument that = (DelpArgument) o;
 
+        if (!support.equals(that.support)) return false;
+        return conclusion.equals(that.conclusion);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = support.hashCode();
+        result = 31 * result + conclusion.hashCode();
+        return result;
+    }
 }

@@ -113,7 +113,7 @@ public class DelpReasoner extends Reasoner {
 			DialecticalTree dtree2 = stack.pop();
 			stack.addAll(dtree2.getDefeaters(arguments,groundDelp,this.comparisonCriterion));
 		}
-		return dtree.getMarking().equals(DialecticalTree.MARK_UNDEFEATED);
+		return dtree.getMarking().equals(DialecticalTree.Mark.UNDEFEATED);
 	}
 
 }
