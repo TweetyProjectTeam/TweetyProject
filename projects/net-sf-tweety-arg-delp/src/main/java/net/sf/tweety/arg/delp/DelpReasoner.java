@@ -40,6 +40,8 @@ public class DelpReasoner extends Reasoner {
 	 */
 	private ComparisonCriterion comparisonCriterion = new EmptyCriterion();
 
+    private final DefeasibleLogicProgram groundDelp;
+
 	/**
 	 * Creates a new DelpReasoner for the given delp.
 	 * @param beliefBase a delp.
@@ -49,6 +51,7 @@ public class DelpReasoner extends Reasoner {
 		super(beliefBase);
 		if(!(beliefBase instanceof DefeasibleLogicProgram))
 			throw new IllegalArgumentException("Knowledge base of class DefeasibleLogicProgram expected.");
+        groundDelp = ((DefeasibleLogicProgram) beliefBase).ground();
 		this.comparisonCriterion = comparisonCriterion;
 	}
 
@@ -76,13 +79,15 @@ public class DelpReasoner extends Reasoner {
 
         // compute answer:
 		DelpAnswer answer = new DelpAnswer(this.getKnowledgBase(),f);
-		for(DelpArgument arg: getWarrants()){
-			if(arg.getConclusion().equals(f)){
-				answer.setAnswer(0d); // true
-				return answer;
-			}
-		}
-		answer.setAnswer(-1d); // false
+        Set<FolFormula> conclusions = getWarrants().stream()
+                .map(DelpArgument::getConclusion)
+                .collect(Collectors.toSet());
+        if (conclusions.contains(f))
+            answer.setType(DelpAnswer.Type.YES);
+        else if (conclusions.contains(f.complement()))
+            answer.setType(DelpAnswer.Type.NO);
+        else
+            answer.setType(DelpAnswer.Type.UNDECIDED);
 		return answer;
 	}
 
@@ -90,8 +95,7 @@ public class DelpReasoner extends Reasoner {
 	 * Computes the subset of the arguments of this program, that are warrants.
 	 * @return a set of <source>DelpArgument</source> that are warrants
 	 */
-    Set<DelpArgument> getWarrants(){
-		DefeasibleLogicProgram groundDelp = ((DefeasibleLogicProgram) this.getKnowledgBase()).ground();
+    private Set<DelpArgument> getWarrants(){
         Set<DelpArgument> all_arguments = groundDelp.getArguments();
 		return all_arguments.stream()
                 .filter(argument -> isWarrant(argument, all_arguments))
@@ -105,7 +109,6 @@ public class DelpReasoner extends Reasoner {
 	 * @return <source>true</source> iff <source>argument</source> is a warrant given <source>arguments</source>.
 	 */
 	private boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){
-		DefeasibleLogicProgram groundDelp = ((DefeasibleLogicProgram) getKnowledgBase()).ground();
 		DialecticalTree dtree = new DialecticalTree(argument);
 		Deque<DialecticalTree> stack = new ArrayDeque<>();
 		stack.add(dtree);
@@ -115,5 +118,4 @@ public class DelpReasoner extends Reasoner {
 		}
 		return dtree.getMarking().equals(DialecticalTree.Mark.UNDEFEATED);
 	}
-
 }

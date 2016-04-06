@@ -298,12 +298,4 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		}
 		return signature;
 	}
-	
-	public static void main(String[] args) throws ParserException, IOException{
-		DefeasibleLogicProgram delp = new net.sf.tweety.arg.delp.parser.DelpParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/delp");
-		System.out.println(delp);
-
-        new DelpReasoner(delp, new GeneralizedSpecificity()).getWarrants().forEach(System.out::println);
-	}
-
 }

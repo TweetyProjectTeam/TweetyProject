@@ -2,6 +2,7 @@ package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -18,13 +19,41 @@ public final class TestQueries {
 
     private final static Logger LOGGER = Logger.getLogger(TestQueries.class.getName());
 
-    private DelpAnswer query(String KB, String formula) throws IOException {
-        DelpParser parser = new DelpParser();
+    private final static DelpParser PARSER_BIRDS = new DelpParser();
+    private static DelpReasoner REASONER_BIRDS;
+    private final static DelpParser PARSER_NIXON = new DelpParser();
+    private static DelpReasoner REASONER_NIXON;
+    private final static DelpParser PARSER_STOCKS = new DelpParser();
+    private static DelpReasoner REASONER_STOCKS;
+    private final static DelpParser PARSER_COUNTER = new DelpParser();
+    private static DelpReasoner REASONER_COUNTER;
+    private final static DelpParser PARSER_HOBBES = new DelpParser();
+    private static DelpReasoner REASONER_HOBBES;
+    private final static DelpParser PARSER_DTREE = new DelpParser();
+    private static DelpReasoner REASONER_DTREE;
 
-        // set up reasoner
-        DefeasibleLogicProgram delp = parser.parseBeliefBase(KB);
-        DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
+    @BeforeClass
+    public static void initParsers() {
+        DefeasibleLogicProgram delp;
+        try {
+            delp = PARSER_BIRDS.parseBeliefBase(Utilities.getKB("/birds.txt"));
+            REASONER_BIRDS = new DelpReasoner(delp, new GeneralizedSpecificity());
+            delp = PARSER_NIXON.parseBeliefBase(Utilities.getKB("/nixon.txt"));
+            REASONER_NIXON = new DelpReasoner(delp, new GeneralizedSpecificity());
+            delp = PARSER_STOCKS.parseBeliefBase(Utilities.getKB("/stocks.txt"));
+            REASONER_STOCKS = new DelpReasoner(delp, new GeneralizedSpecificity());
+            delp = PARSER_COUNTER.parseBeliefBase(Utilities.getKB("/counterarg.txt"));
+            REASONER_COUNTER = new DelpReasoner(delp, new GeneralizedSpecificity());
+            delp = PARSER_HOBBES.parseBeliefBase(Utilities.getKB("/hobbes.txt"));
+            REASONER_HOBBES = new DelpReasoner(delp, new GeneralizedSpecificity());
+            delp = PARSER_DTREE.parseBeliefBase(Utilities.getKB("/dtree.txt"));
+            REASONER_DTREE = new DelpReasoner(delp, new GeneralizedSpecificity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private DelpAnswer query(DelpReasoner reasoner, DelpParser parser, String formula) throws IOException {
         // perform query
         DelpAnswer answer = (DelpAnswer) reasoner.query(parser.parseFormula(formula));
         LOGGER.info("DeLP answer to query '"+formula+"' = "+answer);
@@ -33,64 +62,60 @@ public final class TestQueries {
 
     @Test
     public void birds() throws IOException {
-        String KB = Utilities.getKB("/birds.txt");
-
         DelpAnswer answer;
         // tina
-        answer = query(KB, "Flies(tina)");
+        answer = query(REASONER_BIRDS, PARSER_BIRDS, "Flies(tina)");
         assertEquals("Tina should fly", DelpAnswer.Type.YES, answer.getType());
-        answer = query(KB, "~Flies(tina)");
+        answer = query(REASONER_BIRDS, PARSER_BIRDS, "~Flies(tina)");
         assertEquals("Tina should fly", DelpAnswer.Type.NO, answer.getType());
         // tweety
-        answer = query(KB, "Flies(tweety)");
+        answer = query(REASONER_BIRDS, PARSER_BIRDS, "Flies(tweety)");
         assertEquals("Tweety does not fly", DelpAnswer.Type.NO, answer.getType());
-        answer = query(KB, "~Flies(tweety)");
+        answer = query(REASONER_BIRDS, PARSER_BIRDS, "~Flies(tweety)");
         assertEquals("Tweety does not fly", DelpAnswer.Type.YES, answer.getType());
     }
 
     @Test
     public void nixon() throws IOException {
-        String KB = Utilities.getKB("/nixon.txt"); // load nixon.txt
-
         DelpAnswer answer;
-        answer = query(KB, "~Pacifist(nixon)"); // TODO: should be UNDECIDED!
-        answer = query(KB, "Pacifist(nixon)"); // TODO: should be UNDECIDED!
-        answer = query(KB, "Has_a_gun(nixon)"); // UNDECIDED
+        answer = query(REASONER_NIXON, PARSER_NIXON, "~Pacifist(nixon)"); // UNDECIDED
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        answer = query(REASONER_NIXON, PARSER_NIXON, "Pacifist(nixon)"); // UNDECIDED
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        answer = query(REASONER_NIXON, PARSER_NIXON, "Has_a_gun(nixon)"); // YES
+        assertEquals(DelpAnswer.Type.YES, answer.getType());
     }
 
     @Test
     public void stocks() throws IOException {
-        String KB = Utilities.getKB("/stocks.txt");
-        DelpAnswer ans = query(KB, "Buy_stock(acme)");
+        DelpAnswer ans = query(REASONER_STOCKS, PARSER_STOCKS, "Buy_stock(acme)");
         assertEquals("Buying stock ACME should be supported",  DelpAnswer.Type.YES, ans.getType());
     }
 
     @Test
     public void counterarguments() throws IOException {
-        String KB = Utilities.getKB("/counterarg.txt");
         DelpAnswer answer;
-        answer = query(KB, "a");
-//        "a" = UNDECIDED
-        answer = query(KB, "c");
-//        "c" = UNDECIDED
+        answer = query(REASONER_COUNTER, PARSER_COUNTER, "a");
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        answer = query(REASONER_COUNTER, PARSER_COUNTER, "c");
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
     }
 
     @Test
     public void hobbes() throws IOException {
-        String KB = Utilities.getKB("/hobbes.txt");
         DelpAnswer answer;
-        answer = query(KB, "~dangerous(hobbes)");
-        // "UNDECIDED"?
+        answer = query(REASONER_HOBBES, PARSER_HOBBES, "~dangerous(hobbes)");
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
     }
 
     @Test
     public void dtree() throws IOException {
-        String KB = Utilities.getKB("/dtree.txt");
         DelpAnswer answer;
-        answer = query(KB, "a"); // TODO: UNDECIDED
-        answer = query(KB, "~b"); // YES
+        answer = query(REASONER_DTREE, PARSER_DTREE, "a"); // UNDECIDED
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        answer = query(REASONER_DTREE, PARSER_DTREE, "~b"); // YES
         assertEquals(DelpAnswer.Type.YES, answer.getType());
-        answer = query(KB, "b"); // NO
+        answer = query(REASONER_DTREE, PARSER_DTREE, "b"); // NO
         assertEquals(DelpAnswer.Type.NO, answer.getType());
     }
 }

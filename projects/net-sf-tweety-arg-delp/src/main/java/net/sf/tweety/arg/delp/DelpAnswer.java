@@ -85,9 +85,14 @@ class DelpAnswer extends Answer {
     /**
      * Obtain current type of this answer.
      *
-     * @return Type of answer as in YES, NO, UNDECIDED, or UNKNOWN (if not yet set)
+     * @return Type of answer as in YES, NO, UNDECIDED, or UNKNOWN
      */
     public Type getType() { return currentType; }
+
+    public void setType(Type type) {
+        currentType = type;
+        super.appendText(currentType.toString());
+    }
 
     @Override
     public void appendText(String text) {
@@ -108,13 +113,13 @@ class DelpAnswer extends Answer {
 
     @Override
     public boolean getAnswerBoolean() {
-        if (currentType == null) return super.getAnswerBoolean();
+        if (currentType == null || Type.UNKNOWN.equals(currentType)) return super.getAnswerBoolean();
         return currentType.getBooleanAnswer();
     }
 
     @Override
     public Double getAnswerDouble() {
-        if (currentType == null) return super.getAnswerDouble();
+        if (currentType == null || Type.UNKNOWN.equals(currentType)) return super.getAnswerDouble();
         return currentType.getDoubleAnswer();
     }
 }
