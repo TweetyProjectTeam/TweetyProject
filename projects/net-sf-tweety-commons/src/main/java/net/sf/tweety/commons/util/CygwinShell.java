@@ -31,7 +31,7 @@ public class CygwinShell extends Shell{
 	
 	String binaryLocation;
 
-	public CygwinShell(String binaryLocation) {
+	CygwinShell(String binaryLocation) {
 		super();
 		this.binaryLocation = binaryLocation;
 	}

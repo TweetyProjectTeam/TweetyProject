@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -63,7 +62,7 @@ public class EProver extends FolTheoremProver {
 	 * @param binaryLocation of the eprover executable on the hard drive
 	 */
 	public EProver(String binaryLocation) {
-		this(binaryLocation,new NativeShell());
+		this(binaryLocation,Shell.getNativeShell());
 	}
 
 	/* (non-Javadoc)
@@ -97,7 +96,10 @@ public class EProver extends FolTheoremProver {
 	}
 	
 	
-
+/*
+ * (non-Javadoc)
+ * @see net.sf.tweety.logics.fol.prover.FolTheoremProver#equivalent(net.sf.tweety.logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula, net.sf.tweety.logics.fol.syntax.FolFormula)
+ */
 	@Override
 	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
 		try{

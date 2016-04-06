@@ -27,14 +27,30 @@ import java.io.IOException;
 public abstract class Shell {
 	private static Shell nat = new NativeShell();
 	
+	/**
+	 * a wrapper for the os' native shell
+	 * @return  a wrapper for the os' native shell
+	 */
 	public static Shell getNativeShell(){
 		return nat;
 	}
 	
+	/**
+	 * a wrapper around the cygwin shell
+	 * @param binary path to bash.exe
+	 * @return  a wrapper for the os' native shell
+	 */
 	public static Shell getCygwinShell(String binary){
 		return new CygwinShell(binary);
 	}
 	
+	/**
+	 * runs command 
+	 * @param cmd the command to be run
+	 * @return the terminal output
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
 	public abstract String run(String cmd) throws InterruptedException, IOException;
 }
 

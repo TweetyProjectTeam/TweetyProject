@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 
 /**
  * This class contains static methods for accessing other executable files.
- * @author Matthias Thimm
+ * @author Matthias Thimm, Nils Geilen
  */
 public class Exec {
 
@@ -39,6 +39,10 @@ public class Exec {
 		return Exec.invokeExecutable(commandline, -1);
 	}
 	
+	public static String invokeExecutable(String commandline, long maxLines) throws IOException, InterruptedException{
+		return Exec.invokeExecutable(commandline, maxLines, false);
+	}
+	
 	/**
 	 * Executes the given command on the commandline and returns the output up to a given number of lines.
 	 * @param commandline some command
@@ -47,7 +51,7 @@ public class Exec {
 	 * @throws IOException of an error was encountered.
 	 * @throws InterruptedException 
 	 */
-	public static String invokeExecutable(String commandline, long maxLines) throws IOException, InterruptedException{
+	public static String invokeExecutable(String commandline, long maxLines, boolean suppressErrors) throws IOException, InterruptedException{
 		Process child = Runtime.getRuntime().exec(commandline);
 		//child.waitFor();
 		String output = "";
@@ -72,7 +76,10 @@ public class Exec {
 			reader.close();
 			child.destroy();
 			error.trim();
-			if(!error.equals(""))
+			if(suppressErrors){
+				System.out.println(error);
+			}
+			else if(!error.equals(""))
 				throw new IOException(error);
 		}
 		return output;

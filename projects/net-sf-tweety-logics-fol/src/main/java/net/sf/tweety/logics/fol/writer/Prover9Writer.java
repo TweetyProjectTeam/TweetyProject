@@ -19,28 +19,39 @@ import net.sf.tweety.logics.fol.syntax.QuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
+/**
+ * Prints single fol formulas and full knowledge bases to Porver9 format
+ * (https://www.cs.unm.edu/~mccune/mace4/manual/2009-11A/)
+ * @author Nils Geilen
+ */
+
 public class Prover9Writer implements FolWriter {
 	
+	/**
+	 * output is redirected to this writer
+	 */
 	Writer writer;
 	
+	/**
+	 *  creates new Prover9Writer
+	 * @param writer output is redirected to this writer
+	 */
 	public Prover9Writer(Writer writer) {
 		super();
 		this.writer = writer;
 	}
 	
+	/**
+	 * creates new Prover9Writer
+	 */
 	public Prover9Writer() {
 		this.writer = new StringWriter();
 	}
 
 
-	/**
-	 * Creates a TPTP conjecture.
-	 * 
-	 * @param name
-	 *            the identifying name of the conjecture
-	 * @param query
-	 *            the formula to be queried
-	 * @return the query as TPTP
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.writer.FolWriter#printQuery(net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	public void printQuery(FolFormula query) throws IOException {
 		writer.write("formulas(goals).\n");
@@ -48,19 +59,19 @@ public class Prover9Writer implements FolWriter {
 		writer.write("end_of_list.\n");
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.writer.FolWriter#printEquivalence(net.sf.tweety.logics.fol.syntax.FolFormula, net.sf.tweety.logics.fol.syntax.FolFormula)
+	 */
 	public void printEquivalence( FolFormula a, FolFormula b) throws IOException {
 		writer.write("formulas(goals).\n");
 		writer.write("\t" + printFormula(a) + " <-> " + printFormula(b) + ".\n");
 		writer.write("end_of_list.\n");
 	}
 
-	/**
-	 * Prints TPTP representation of a knowledge base to w.
-	 * 
-	 * @param w
-	 *            a writer
-	 * @param b
-	 *            a knowledge base
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.writer.FolWriter#printBase(net.sf.tweety.logics.fol.FolBeliefSet)
 	 */
 	public void printBase(FolBeliefSet b)  throws IOException {
 			writer.write("formulas(sos).\n");
@@ -90,16 +101,16 @@ public class Prover9Writer implements FolWriter {
 	}
 
 	/**
-	 * Creates a TPTP representation of a formula.
+	 * Creates a representation of a formula in prover9 format.
 	 * 
 	 * @param f
 	 *            a formula
-	 * @return f in TPTP format
+	 * @return f in prover9 format
 	 */
 	private String printFormula(RelationalFormula f) {
 		if (f instanceof Negation) {
 			Negation n = (Negation) f;
-			return parens("- " + printFormula(n.getFormula()));
+			return parens("- " + parens(printFormula(n.getFormula())));
 		}
 		if (f instanceof QuantifiedFormula) {
 			QuantifiedFormula fqf = (QuantifiedFormula) f;
@@ -147,7 +158,10 @@ public class Prover9Writer implements FolWriter {
 		return "(" + str + ")";
 	}
 
-	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.writer.FolWriter#close()
+	 */
 	public void close() throws IOException {
 		writer.close();
 	}

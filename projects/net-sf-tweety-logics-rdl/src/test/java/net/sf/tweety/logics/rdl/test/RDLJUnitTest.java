@@ -24,8 +24,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.prover.EProver;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
+import net.sf.tweety.logics.fol.prover.Prover9;
 import net.sf.tweety.logics.rdl.NaiveDefaultReasoner;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
 
@@ -39,7 +41,14 @@ public class RDLJUnitTest {
 	
 	@Before
 	public void init(){
-		FolTheoremProver.setDefaultProver(new EProver("/home/nils/app/E/PROVER/eprover"));
+		FolTheoremProver.setDefaultProver(new Prover9("C:\\app\\prover9\\bin\\prover9.exe"));
+	/*	if(System.getProperty("os.name").matches("Win.*")){
+			System.out.println("Initializing Eprover for Windows");
+			FolTheoremProver.setDefaultProver(new EProver("C:/app/E/PROVER/eprover.exe", Shell.getCygwinShell("C:/cygwin64/bin/bash.exe")));
+		} else {
+			System.out.println("Initializing Eprover for Unix");
+			FolTheoremProver.setDefaultProver(new EProver("/home/nils/app/E/PROVER/eprover", Shell.getNativeShell()));
+		}*/
 	}
 	
 	@Test

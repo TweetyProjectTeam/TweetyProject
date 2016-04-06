@@ -26,13 +26,15 @@ import java.io.IOException;
  *
  */
 public class NativeShell extends Shell {
+	
+	NativeShell(){}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.util.Shell#run(java.lang.String)
 	 */
 	@Override
 	public String run(String cmd) throws InterruptedException, IOException {
-		 return Exec.invokeExecutable(cmd);
+		 return Exec.invokeExecutable(cmd, -1, true);
 	}
 	
 }

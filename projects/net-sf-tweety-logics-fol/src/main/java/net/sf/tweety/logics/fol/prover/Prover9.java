@@ -3,129 +3,133 @@ package net.sf.tweety.logics.fol.prover;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.writer.Prover9Writer;
-import net.sf.tweety.logics.fol.writer.TptpWriter;
+
+/**
+ * Invokes Prover9 (https://www.cs.unm.edu/~mccune/mace4/) and returns its
+ * results.
+ * 
+ * @author Nils Geilen
+ *
+ */
 
 public class Prover9 extends FolTheoremProver {
 
 	/**
-	 *  String representation of the E binary path,
-	 *  directory, where the temporary files are stored
+	 * String representation of the prover9 binary path, directory, where the
+	 * temporary files are stored
 	 */
 	private String binaryLocation;
-	
+
 	/**
-	 * Shell to run eprover
+	 * Shell to run prover9
 	 */
 	private Shell bash;
-	
+
 	/**
-	 * Constructs a new instance pointing to a specific eprover 
-	 * @param binaryLocation of the eprover executable on the hard drive
-	 * @param bash shell to run commands
+	 * Constructs a new instance pointing to a specific prover 9
+	 * 
+	 * @param binaryLocation
+	 *            of the prover9 executable on the hard drive
+	 * @param bash
+	 *            shell to run commands
 	 */
 	public Prover9(String binaryLocation, Shell bash) {
 		super();
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
 	}
-	
+
 	/**
-	 * Constructs a new instance pointing to a specific eprover 
-	 * @param binaryLocation of the eprover executable on the hard drive
+	 * Constructs a new instance pointing to a specific prover9
+	 * 
+	 * @param binaryLocation
+	 *            of the prover9 executable on the hard drive
 	 */
 	public Prover9(String binaryLocation) {
-		this(binaryLocation,Shell.getNativeShell());
+		this(binaryLocation, Shell.getNativeShell());
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.fol.prover.FolTheoremProver#query(net.sf.tweety.logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.fol.prover.FolTheoremProver#query(net.sf.tweety.
+	 * logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public boolean query(FolBeliefSet kb, FolFormula query) {
-		try{
-			File file  = File.createTempFile("tmp", ".txt");
-			Prover9Writer printer = new Prover9Writer(new PrintWriter(file));
-			printer.printBase(kb);
-			printer.printQuery(query);
-			printer.close();
-			
-			System.out.println(Files.readAllLines(file.toPath()));
-			
+	public boolean query(FolBeliefSet kb, FolFormula query) throws IOException {
+		File file = File.createTempFile("tmp", ".txt");
+		Prover9Writer printer = new Prover9Writer(new PrintWriter(file));
+		printer.printBase(kb);
+		printer.printQuery(query);
+		printer.close();
+		return eval(file);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.fol.prover.FolTheoremProver#equivalent(net.sf.tweety
+	 * .logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula,
+	 * net.sf.tweety.logics.fol.syntax.FolFormula)
+	 */
+	@Override
+	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) throws IOException {
+		File file = File.createTempFile("tmp", ".txt");
+		Prover9Writer printer = new Prover9Writer(new PrintWriter(file));
+		printer.printBase(kb);
+		printer.printEquivalence(a, b);
+		printer.close();
+		return eval(file);
+	}
+
+	/**
+	 * invokes prover9
+	 * @param file input fle for prover9
+	 * @return query result
+	 */
+	private boolean eval(File file) {
+		try {
 			String cmd = binaryLocation + " -f " + file.getAbsolutePath();
 			System.out.println(cmd);
 			String output = null;
-			try{
-				output = bash.run(cmd);
-				System.out.print(output);
-			}catch(Exception e){
-				e.printStackTrace();
-				System.out.println("a");
-				if(output == null)
-					throw new RuntimeException("Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
-				System.out.println("b");
-			}
-			//String output = Exec.invokeExecutable(cmd);
+			output = bash.run(cmd);
+			// output = Exec.invokeExecutable(cmd, -1, true);
 			System.out.print(output);
-			if(Pattern.compile("proof").matcher(output).find())
+			if (Pattern.compile("Exiting with .+ proof").matcher(output).find())
 				return true;
-			if(Pattern.compile("failure").matcher(output).find())
+			if (Pattern.compile("Exiting with failure").matcher(output).find())
 				return false;
-			throw new RuntimeException("Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
-		}catch(IOException e){
+			throw new RuntimeException(
+					"Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
-		}	
-	}
-	
-	
-
-	@Override
-	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
-		try{
-			File file  = File.createTempFile("tmp", ".txt");
-			TptpWriter printer = new TptpWriter(new PrintWriter(file));
-			printer.printBase(kb);
-			printer.printEquivalence( a,b);
-			printer.close();
-			
-			//System.out.println(Files.readAllLines(file.toPath()));
-			
-			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
-			//System.out.println(cmd);
-			String output = bash.run(cmd);
-			//String output = Exec.invokeExecutable(cmd);
-			//System.out.print(output);
-			if(Pattern.compile("# Proof found!").matcher(output).find())
-				return true;
-			if(Pattern.compile("# No proof found!").matcher(output).find())
-				return false;
-			throw new RuntimeException("Failed to invoke eprover: Eprover returned no result which can be interpreted.");
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}	
+			throw new RuntimeException(
+					"Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
+		}
 	}
 
 	/**
 	 * returns the path of the provers binary
+	 * 
 	 * @return the path of the provers binary
 	 */
 	public String getBinaryLocation() {
 		return binaryLocation;
 	}
 
-
 	/**
 	 * Change path of the binary
-	 * @param binaryLocation the new path of the E binary
+	 * 
+	 * @param binaryLocation
+	 *            the new path of the binary
 	 */
 	public void setBinaryLocation(String binaryLocation) {
 		this.binaryLocation = binaryLocation;

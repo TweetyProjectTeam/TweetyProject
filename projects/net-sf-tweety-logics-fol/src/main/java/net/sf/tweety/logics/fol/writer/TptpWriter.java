@@ -47,43 +47,47 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
 
 public class TptpWriter implements FolWriter {
 
+	/**
+	 * output is redirected to this writer
+	 */
 	final Writer writer;
 	
-
+	/**
+	 * creates new Prover9Writer
+	 * @param writer output is redirected to this writer
+	 */
 	public TptpWriter(Writer writer) {
 		super();
 		this.writer = writer;
 	}
 	
+	/**
+	 * creates new Prover9Writer
+	 */
 	public TptpWriter() {
 		super();
 		this.writer = new StringWriter();
 	}
 
-	/**
-	 * Creates a TPTP conjecture.
-	 * 
-	 * @param name
-	 *            the identifying name of the conjecture
-	 * @param query
-	 *            the formula to be queried
-	 * @return the query as TPTP
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.writer.FolWriter#printQuery(net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	public void printQuery( FolFormula query) throws IOException {
 		writer.write( "fof(" + "query" + ", conjecture, " + printFormula(query) + ").\n");
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.writer.FolWriter#printEquivalence(net.sf.tweety.logics.fol.syntax.FolFormula, net.sf.tweety.logics.fol.syntax.FolFormula)
+	 */
 	public void printEquivalence( FolFormula a, FolFormula b) throws IOException {
 		writer.write( "fof(" + "equation" + ", conjecture, " + printFormula(a) + " <=> "+ printFormula(b) + ").\n");
 	}
 
-	/**
-	 * Prints TPTP representation of a knowledge base to w.
-	 * 
-	 * @param w
-	 *            a writer
-	 * @param b
-	 *            a knowledge base
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.writer.FolWriter#printBase(net.sf.tweety.logics.fol.FolBeliefSet)
 	 */
 	public void printBase(FolBeliefSet b) throws IOException {
 			// print types
@@ -131,7 +135,7 @@ public class TptpWriter implements FolWriter {
 	private String printFormula(RelationalFormula f) {
 		if (f instanceof Negation) {
 			Negation n = (Negation) f;
-			return parens("~ " + printFormula(n.getFormula()));
+			return parens("~ " + parens(printFormula(n.getFormula())));
 		}
 		if (f instanceof QuantifiedFormula) {
 			QuantifiedFormula fqf = (QuantifiedFormula) f;
@@ -198,6 +202,10 @@ public class TptpWriter implements FolWriter {
 		return result;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.writer.FolWriter#close()
+	 */
 	public void close() throws IOException {
 		writer.close();
 	}
