@@ -31,7 +31,8 @@ class DelpAnswer extends Answer {
     enum Type implements AnswerType {
         YES ("The answer is: YES"),
         NO ("The answer is: NO"),
-        UNDECIDED ("The answer is: UNDECIDED");
+        UNDECIDED ("The answer is: UNDECIDED"),
+        UNKNOWN ("The answer is: UNKNOWN");
 
         private final String text;
 
@@ -53,7 +54,6 @@ class DelpAnswer extends Answer {
                 return UNDECIDED;
         }
 
-
         @Override
         public String toString() { return text; }
 
@@ -71,21 +71,21 @@ class DelpAnswer extends Answer {
                 case YES: return 0d;
                 case NO: return -1d;
                 case UNDECIDED: return 1d;
+                case UNKNOWN: return Double.NaN;
                 default:
                     throw new IllegalStateException("Cannot generate Double answer from "+this);
             }
         }
     }
 
-    private Type currentType;
+    private Type currentType = Type.UNKNOWN;
 
     DelpAnswer(BeliefBase beliefBase, Formula query) { super(beliefBase, query); }
 
     /**
      * Obtain current type of this answer.
-     * Note that this method could return NULL if the answer is still empty.
      *
-     * @return Type of answer as in YES, NO, UNDECIDED
+     * @return Type of answer as in YES, NO, UNDECIDED, or UNKNOWN (if not yet set)
      */
     public Type getType() { return currentType; }
 

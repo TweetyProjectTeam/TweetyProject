@@ -22,7 +22,6 @@ import java.util.*;
 
 import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.arg.delp.syntax.*;
-import net.sf.tweety.commons.*;
 import net.sf.tweety.commons.util.*;
 import net.sf.tweety.logics.fol.syntax.*;
 
@@ -42,22 +41,11 @@ import net.sf.tweety.logics.fol.syntax.*;
  */
 public final class GeneralizedSpecificity extends ComparisonCriterion {
 
-	// TODO: turn into enum?
-	/**
-	 * Indicates that an activation set is trivial
-	 */
-	private static final int ACTSET_TYPE_TRIVIAL = 0;
-	/**
-	 * Indicates that an activation set is non-trivial
-	 */
-	private static final int ACTSET_TYPE_NON_TRIVIAL = 1;
+    // indicates whether an activation set is trivial or not
+    private enum ActSetType {TRIVIAL, NON_TRIVIAL}
 
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.delp.ComparisonCriterion#compare(net.sf.tweety.argumentation.delp.DelpArgument, net.sf.tweety.argumentation.delp.DelpArgument, net.sf.tweety.argumentation.delp.DefeasibleLogicProgram)
-	 */
 	@Override
-	public int compare(DelpArgument argument1, DelpArgument argument2, DefeasibleLogicProgram context) {
+	public Result compare(DelpArgument argument1, DelpArgument argument2, DefeasibleLogicProgram context) {
 		//Compute argument completions
 		Set<ArgumentCompletion> argComplete1 = ArgumentCompletion.getCompletions(argument1, context);
 		Set<ArgumentCompletion> argComplete2 = ArgumentCompletion.getCompletions(argument2, context);
@@ -69,58 +57,56 @@ public final class GeneralizedSpecificity extends ComparisonCriterion {
 		boolean actSetTest2 = actSetTest(ntActSets2,argument1,context);
 		//evaluate the activation behaviour
 		if(actSetTest1 && !actSetTest2)
-			return ComparisonCriterion.IS_BETTER;
+			return ComparisonCriterion.Result.IS_BETTER;
 		if(actSetTest2 && !actSetTest1)
-			return ComparisonCriterion.IS_WORSE;
-		return ComparisonCriterion.NOT_COMPARABLE;
+			return ComparisonCriterion.Result.IS_WORSE;
+		return ComparisonCriterion.Result.NOT_COMPARABLE;
 	}
 
 	/**
-	 * Computes the activation sets of the given argument completion. See [1] for an explanation of the algorithm.
+	 * Computes the activation sets of the given argument completion.
+     * See [1] for an explanation of the algorithm.
 	 * @param argument an argument completion
 	 * @return the set of activation sets of <source>argument</source>
 	 */
 	private Set<Set<FolFormula>> ntActSets(ArgumentCompletion argument){
-		Set<Set<FolFormula>> ntActSets = new HashSet<Set<FolFormula>>();
-		Stack<Triple<Set<FolFormula>,List<FolFormula> ,Integer>> stack = new Stack<Triple<Set<FolFormula>,List<FolFormula> ,Integer>>();
-		List<FolFormula> literals = new ArrayList<FolFormula>();
+		Set<Set<FolFormula>> ntActSets = new HashSet<>();
+		Deque<Triple<Set<FolFormula>,List<FolFormula>,ActSetType>> stack = new ArrayDeque<>();
+		List<FolFormula> literals = new ArrayList<>();
 		literals.add(argument.getConclusion());
-		Triple<Set<FolFormula>,List<FolFormula>,Integer> initial = new Triple<Set<FolFormula>,List<FolFormula> ,Integer>
-							(new HashSet<FolFormula>(),literals,new Integer(GeneralizedSpecificity.ACTSET_TYPE_TRIVIAL));
+		Triple<Set<FolFormula>,List<FolFormula>,ActSetType> initial = new Triple<>
+                (new HashSet<>(), literals, ActSetType.TRIVIAL);
 		stack.push(initial);
 		while(!stack.isEmpty()){
-			Triple<Set<FolFormula>,List<FolFormula>,Integer> next = stack.pop();
-			if((next.getThird().intValue() == GeneralizedSpecificity.ACTSET_TYPE_NON_TRIVIAL)&& (next.getSecond().size()==0))
+			Triple<Set<FolFormula>,List<FolFormula>,ActSetType> next = stack.pop();
+			if((next.getThird() == ActSetType.NON_TRIVIAL)&&(next.getSecond().size()==0))
 				ntActSets.add(next.getFirst());
 			if(next.getSecond().size() > 0){
 				FolFormula lit = next.getSecond().get(0);
-				Triple<Set<FolFormula>,List<FolFormula>,Integer> v;
-				literals = new ArrayList<FolFormula>(next.getSecond());
+				Triple<Set<FolFormula>,List<FolFormula>,ActSetType> v;
+				literals = new ArrayList<>(next.getSecond());
 				literals.remove(lit);
-				Set<FolFormula> nLiterals = new HashSet<FolFormula>(next.getFirst());
+				Set<FolFormula> nLiterals = new HashSet<>(next.getFirst());
 				nLiterals.add(lit);
-				if(next.getThird().intValue() == GeneralizedSpecificity.ACTSET_TYPE_NON_TRIVIAL)
-					v = new Triple<Set<FolFormula>,List<FolFormula>,Integer>(nLiterals,literals,new Integer(GeneralizedSpecificity.ACTSET_TYPE_NON_TRIVIAL));
+				if(next.getThird() == ActSetType.NON_TRIVIAL)
+					v = new Triple<>(nLiterals, literals, ActSetType.NON_TRIVIAL);
 				else
-					v = new Triple<Set<FolFormula>,List<FolFormula>,Integer>(nLiterals,literals,new Integer(GeneralizedSpecificity.ACTSET_TYPE_TRIVIAL));
+					v = new Triple<>(nLiterals, literals, ActSetType.TRIVIAL);
 				stack.push(v);
-				Set<DelpRule> rules = argument.getRulesWithHead(lit);
-				Iterator<DelpRule> nested = rules.iterator();
-				while(nested.hasNext()){
-					DelpRule rule = (DelpRule)nested.next();
-					literals = new ArrayList<FolFormula>(literals);
-					nLiterals = new HashSet<FolFormula>(next.getFirst());
-					for(Formula next_e: rule.getPremise()){
-						if(!literals.contains(next_e))
-							literals.add((FolFormula)next_e);
-					}
-					if(next.getThird().intValue() == GeneralizedSpecificity.ACTSET_TYPE_NON_TRIVIAL)
-						v = new Triple<Set<FolFormula>,List<FolFormula>,Integer>(nLiterals,literals,new Integer(GeneralizedSpecificity.ACTSET_TYPE_NON_TRIVIAL));
-					else if(rule instanceof StrictRule)
-						v = new Triple<Set<FolFormula>,List<FolFormula>,Integer>(nLiterals,literals,new Integer(GeneralizedSpecificity.ACTSET_TYPE_TRIVIAL));
-					else v = new Triple<Set<FolFormula>,List<FolFormula>,Integer>(nLiterals,literals,new Integer(GeneralizedSpecificity.ACTSET_TYPE_NON_TRIVIAL));
-					stack.push(v);
-				}
+                for (DelpRule rule : argument.getRulesWithHead(lit)) {
+                    literals = new ArrayList<>(literals);
+                    nLiterals = new HashSet<>(next.getFirst());
+                    for (FolFormula fol : rule.getPremise()) {
+                        if (!literals.contains(fol))
+                            literals.add(fol);
+                    }
+                    if (next.getThird() == ActSetType.NON_TRIVIAL)
+                        v = new Triple<>(nLiterals, literals, ActSetType.NON_TRIVIAL);
+                    else if (rule instanceof StrictRule)
+                        v = new Triple<>(nLiterals, literals, ActSetType.NON_TRIVIAL);
+                    else v = new Triple<>(nLiterals, literals, ActSetType.NON_TRIVIAL);
+                    stack.push(v);
+                }
 			}
 		}
 		return ntActSets;
@@ -132,10 +118,9 @@ public final class GeneralizedSpecificity extends ComparisonCriterion {
 	 * @return the set of all activation sets for all argument completions
 	 */
 	private Set<Set<FolFormula>> ntActSets(Set<ArgumentCompletion> argumentCompletions){
-		Set<Set<FolFormula>> ntActSets = new HashSet<Set<FolFormula>>();
-		Iterator<ArgumentCompletion> it = argumentCompletions.iterator();
-		while(it.hasNext())
-			ntActSets.addAll(ntActSets(it.next()));
+		Set<Set<FolFormula>> ntActSets = new HashSet<>();
+        for (ArgumentCompletion argumentCompletion : argumentCompletions)
+            ntActSets.addAll(ntActSets(argumentCompletion));
 		return ntActSets;
 	}
 
@@ -147,11 +132,9 @@ public final class GeneralizedSpecificity extends ComparisonCriterion {
 	 * @return <source>true</source> iff all activation sets activate the given argument
 	 */
 	private boolean actSetTest(Set<Set<FolFormula>> ntActSets, DelpArgument arg, DefeasibleLogicProgram delp){
-		Iterator<Set<FolFormula>> it = ntActSets.iterator();
-		while(it.hasNext()){
-			if(!this.isActivated(arg,it.next(),delp))
-				return false;
-		}
+        for (Set<FolFormula> ntActSet : ntActSets)
+            if (!this.isActivated(arg, ntActSet, delp))
+                return false;
 		return true;
 	}
 

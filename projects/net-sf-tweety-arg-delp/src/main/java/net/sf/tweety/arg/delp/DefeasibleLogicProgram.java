@@ -18,11 +18,11 @@
  */
 package net.sf.tweety.arg.delp;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
 import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
@@ -34,11 +34,9 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.BeliefSet;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Derivation;
-import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -74,7 +72,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * of constants appearing in this delp.
 	 * @return the grounded version of <source>this</source>
 	 */
-	public DefeasibleLogicProgram ground(){
+	DefeasibleLogicProgram ground(){
 		return this.ground(((FolSignature)this.getSignature()).getConstants());
 	}
 	
@@ -85,12 +83,13 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * @param constants some set of constants. 
 	 * @return the grounded version of <source>this</source>
 	 */
-	public DefeasibleLogicProgram ground(Set<Constant> constants){
+	private DefeasibleLogicProgram ground(Set<Constant> constants){
 		if(this.isGround()) return new DefeasibleLogicProgram(this);
 		DefeasibleLogicProgram groundedDelp = new DefeasibleLogicProgram();
 		for(DelpRule rule: this)
-			for(Formula groundedRule: rule.allGroundInstances(constants))
-				groundedDelp.add((DelpRule)groundedRule);		
+			groundedDelp.addAll(rule.allGroundInstances(constants).stream()
+					.map(groundedRule -> (DelpRule) groundedRule)
+					.collect(Collectors.toList()));
 		return groundedDelp;
 	}
 
@@ -102,23 +101,16 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 */
 	public DungTheory getDungTheory(){
 		DungTheory dungTheory = new DungTheory();
-		//add arguments
-		Iterator<DelpArgument> it = this.getArguments().iterator();
-		while(it.hasNext())
-			dungTheory.add(new Argument(it.next().toString()));
-		//add attacks
-		it = getArguments().iterator();
-		while(it.hasNext()){
-			DelpArgument arg1 = (DelpArgument) it.next();
-			Iterator<DelpArgument> it2 = getArguments().iterator();
-			while(it2.hasNext()){
-				DelpArgument arg2 = (DelpArgument) it2.next();
-				if(arg1.getDisagreementSubargument(arg2.getConclusion(), this) != null){
-					dungTheory.add(new Attack(new Argument(arg2.toString()), new Argument(arg1.toString())));
-				}
-			}
-		}
-
+        for (DelpArgument arg1 : getArguments()) {
+            //add arguments
+            dungTheory.add(new Argument(arg1.toString()));
+            //add attacks
+            for (DelpArgument arg2 : getArguments()) {
+                if (arg1.getDisagreementSubargument(arg2.getConclusion(), this) != null) {
+                    dungTheory.add(new Attack(new Argument(arg2.toString()), new Argument(arg1.toString())));
+                }
+            }
+        }
 		return dungTheory;
 	}
 	
@@ -130,18 +122,18 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		if(!this.isGround())
 			throw new IllegalArgumentException("This program must be grounded first before computing arguments.");
 		Set<Derivation<DelpRule>> derivations = Derivation.allDerivations(this);
-		Set<DelpArgument> arguments = new HashSet<DelpArgument>();
+		Set<DelpArgument> arguments = new HashSet<>();
 		for(Derivation<DelpRule> derivation: derivations){
-			Set<DefeasibleRule> rules = new HashSet<DefeasibleRule>();
-			for(DelpRule rule: derivation)
-				if(rule instanceof DefeasibleRule)
-					rules.add((DefeasibleRule)rule);			
-			// consistency check: rules have to be consistent with strict knowledge part
-			if(this.isConsistent(rules))			
+			Set<DefeasibleRule> rules = derivation.stream()
+                    .filter(rule -> rule instanceof DefeasibleRule)
+                    .map(rule -> (DefeasibleRule) rule)
+                    .collect(Collectors.toSet());
+            // consistency check: rules have to be consistent with strict knowledge part
+			if(isConsistent(rules))
 				arguments.add(new DelpArgument(rules,(FolFormula)derivation.getConclusion()));
 		}
 		// subargument test
-		Set<DelpArgument> result = new HashSet<DelpArgument>();
+		Set<DelpArgument> result = new HashSet<>();
 		for(DelpArgument argument1: arguments){
 			boolean is_minimal = true;
 			for(DelpArgument argument2: arguments){
@@ -159,70 +151,68 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * Computes the strict closure of the program, i.e., the set of all strictly derivable literals. For this computation the program
 	 * may be extended by the given parameters
 	 * @param literals a set of literals
-	 * @param srules a set of defeasible rules
+	 * @param defeasibleRules a set of defeasible rules
 	 * @param usefacts set to <source>true</source> iff the delpFacts of this program shall be used in computing the closure
 	 * @return the closure of this program and the given parameters
 	 */
-	public Set<FolFormula> getStrictClosure(Set<FolFormula> literals, Set<DefeasibleRule> srules, boolean usefacts){
+	public Set<FolFormula> getStrictClosure(Set<FolFormula> literals,
+                                            Set<DefeasibleRule> defeasibleRules,
+                                            boolean usefacts){
 		if(!isGround())
 			throw new IllegalArgumentException("Delp must be grounded first.");
-		Set<FolFormula> strictClosure = new HashSet<FolFormula>();
-		strictClosure.addAll(literals);
+		Set<FolFormula> strictClosure = new HashSet<>(literals);
 		if(usefacts){
-			for(DelpRule rule: this)
-				if(rule instanceof DelpFact)
-					strictClosure.add((FolFormula)rule.getConclusion());
+            strictClosure.addAll(this.stream()
+                    .filter(rule -> rule instanceof DelpFact)
+                    .map(DelpRule::getConclusion)
+                    .collect(Collectors.toList()));
 		}
 		boolean modified = true;
-		Set<StrictRule> rules = new HashSet<StrictRule>();
-		for(DelpRule rule: this)
-			if(rule instanceof StrictRule)
-				rules.add((StrictRule)rule);
-		Iterator<DefeasibleRule> r_it = srules.iterator();
-		while(r_it.hasNext()){
-			Rule<FolFormula, FolFormula> rule = r_it.next();			
-			Set<FolFormula> premise = new HashSet<FolFormula>();
-			for(Formula f: rule.getPremise())
-				premise.add((FolFormula)f);
-			rules.add(new StrictRule((FolFormula)rule.getConclusion(),premise));
-		}
+		Set<StrictRule> rules = this.stream()
+                .filter(rule -> rule instanceof StrictRule)
+                .map(rule -> (StrictRule) rule)
+                .collect(Collectors.toSet());
+        for (DefeasibleRule rule : defeasibleRules) {
+            Set<FolFormula> premise = rule.getPremise().stream()
+                    .map(f -> (FolFormula) f)
+                    .collect(Collectors.toSet());
+            rules.add(new StrictRule(rule.getConclusion(), premise));
+        }
 		while(modified){
 			modified = false;
-			Set<StrictRule> rules2 = new HashSet<StrictRule>();
-			Iterator<StrictRule> rules_it = rules.iterator();
-			while(rules_it.hasNext()){
-				StrictRule rule = rules_it.next();
-				if(rule.isApplicable(strictClosure)){
-					strictClosure.add((FolFormula)rule.getConclusion());
-					modified = true;
-				}
-				else rules2.add(rule);
-			}
+			Set<StrictRule> rules2 = new HashSet<>();
+            for (StrictRule rule : rules) {
+                if (rule.isApplicable(strictClosure)) {
+                    strictClosure.add(rule.getConclusion());
+                    modified = true;
+                } else rules2.add(rule);
+            }
 			rules = rules2;
 		}
 		return strictClosure;
 	}
 
 	/**
-	 * Computes the strict closure of the program, i.e., the set of all strictly derivable literals. The program is extended
-	 * with delpFacts and defeasible rules (which are interpreted as strict rules here) described by the parameters
-	 * <source>literals</source> and <source>srules</source>.
+	 * Computes the strict closure of the program, i.e., the set of all strictly derivable literals.
+     * The program is extended with delpFacts and defeasible rules (which are interpreted as strict rules here)
+     * described by the parameters <source>literals</source> and <source>defeasibleRules</source>.
 	 * @param literals a set of literals
-	 * @param srules a set of defeasible rules
+	 * @param defeasibleRules a set of defeasible rules
 	 * @return the set of all strictly derivable literals.
 	 */
-	public Set<FolFormula> getStrictClosure(Set<FolFormula> literals, Set<DefeasibleRule> srules){
-		return getStrictClosure(literals,srules,true);
+    public Set<FolFormula> getStrictClosure(Set<FolFormula> literals,
+                                             Set<DefeasibleRule> defeasibleRules){
+		return getStrictClosure(literals,defeasibleRules,true);
 	}
 
 	/**
-	 * Computes the strict closure of the program, i.e., the set of all strictly derivable literals. The program is extended
-	 * with delpFacts described by the parameter <source>literals</source>
+	 * Computes the strict closure of the program, i.e., the set of all strictly derivable literals.
+     * The program is extended with delpFacts described by the parameter <source>literals</source>
 	 * @param literals a set of literals
 	 * @return the set of all strictly derivable literals.
 	 */
 	public Set<FolFormula> getStrictClosure(Set<FolFormula> literals){
-		return getStrictClosure(literals, new HashSet<DefeasibleRule>());
+		return getStrictClosure(literals,Collections.emptySet());
 	}
 
 	/**
@@ -230,7 +220,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * @return the set of all strictly derivable literals.
 	 */
 	public Set<FolFormula> getStrictClosure(){
-		return this.getStrictClosure(new HashSet<FolFormula>());
+		return getStrictClosure(Collections.emptySet());
 	}
 
 	/**
@@ -243,17 +233,16 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	public boolean isConsistent(Set<DefeasibleRule> rules){
 		if(!isGround())	
 			throw new IllegalArgumentException("Delp must be ground.");
-		DefeasibleLogicProgram delp = new DefeasibleLogicProgram();
-		for(DelpRule rule: this)
-			if(rule instanceof DelpFact || rule instanceof StrictRule)
-				delp.add(rule);
-		for(DefeasibleRule rule: rules)
-			delp.add(rule.toStrictRule());
+		DefeasibleLogicProgram delp = this.stream()
+                .filter(rule -> rule instanceof DelpFact || rule instanceof StrictRule)
+                .collect(Collectors.toCollection(DefeasibleLogicProgram::new));
+        delp.addAll(rules.stream()
+                .map(DefeasibleRule::toStrictRule)
+                .collect(Collectors.toList()));
 		Set<FolFormula> closure = delp.getStrictClosure();
-		Iterator<FolFormula> lit_it = closure.iterator();
-		while(lit_it.hasNext())
-			if(closure.contains(lit_it.next().complement()))
-				return false;
+        for (FolFormula aClosure : closure)
+            if (closure.contains(aClosure.complement()))
+                return false;
 		return true;
 	}
 
@@ -267,36 +256,22 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		if(!isGround()) 
 			throw new IllegalArgumentException("Delp must be grounded first.");
 		DefeasibleLogicProgram delp = new DefeasibleLogicProgram(this);
-		Iterator<FolFormula> it = literals.iterator();
-		while(it.hasNext()){
-			delp.add(new DelpFact(it.next()));
-		}
+        delp.addAll(literals.stream()
+                .map(DelpFact::new)
+                .collect(Collectors.toList()));
 		Set<FolFormula> closure = delp.getStrictClosure();
-		Iterator<FolFormula> lit_it = closure.iterator();
-		while(lit_it.hasNext())
-			if(closure.contains(lit_it.next().complement()))
-				return true;
+        for (FolFormula aClosure : closure)
+            if (closure.contains(aClosure.complement()))
+                return true;
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.cs.ai.thimm.uacs.RuleBasedArgumentationTheory#isGround()
-	 */
-	public boolean isGround(){
-		for(DelpRule rule: this)
-			if(!rule.isGround())
-				return false;
-		return true;
+    private boolean isGround(){
+        return this.stream().allMatch(DelpRule::isGround);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString(){
-		StringBuilder str = new StringBuilder();
-		for(DelpRule rule: this)
-			str.append(rule.toString()+"\n");
-		return str.toString();
+        return this.stream().map(Object::toString).collect(Collectors.joining("\n"))+"\n";
 	}
 
 	/**
@@ -305,12 +280,10 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * @return a set of strict and defeasible rules
 	 */
 	public Set<DelpRule> getRulesWithHead(FolFormula l){
-		Set<DelpRule> rules = new HashSet<DelpRule>();
-		for(DelpRule rule: this)
-			if(rule instanceof DefeasibleRule || rule instanceof StrictRule)
-				if(rule.getConclusion().equals(l))
-					rules.add(rule);		
-		return rules;
+		return this.stream()
+                .filter(rule -> (rule instanceof DefeasibleRule || rule instanceof StrictRule)
+                        && rule.getConclusion().equals(l))
+                .collect(Collectors.toSet());
 	}
 
 	/* (non-Javadoc)
@@ -327,11 +300,10 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	}
 	
 	public static void main(String[] args) throws ParserException, IOException{
-		DefeasibleLogicProgram delp = (DefeasibleLogicProgram) new net.sf.tweety.arg.delp.parser.DelpParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/delp");
+		DefeasibleLogicProgram delp = new net.sf.tweety.arg.delp.parser.DelpParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/delp");
 		System.out.println(delp);
-				
-		for(DelpArgument arg: new DelpReasoner(delp, new GeneralizedSpecificity()).getWarrants())
-			System.out.println(arg);
+
+        new DelpReasoner(delp, new GeneralizedSpecificity()).getWarrants().forEach(System.out::println);
 	}
 
 }

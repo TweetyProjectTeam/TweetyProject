@@ -2,14 +2,12 @@ package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
-import net.sf.tweety.commons.Answer;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Testing some example KBs with various queries.
@@ -20,7 +18,7 @@ public final class TestQueries {
 
     private final static Logger LOGGER = Logger.getLogger(TestQueries.class.getName());
 
-    private Answer query(String KB, String formula) throws IOException {
+    private DelpAnswer query(String KB, String formula) throws IOException {
         DelpParser parser = new DelpParser();
 
         // set up reasoner
@@ -35,48 +33,64 @@ public final class TestQueries {
 
     @Test
     public void birds() throws IOException {
-        String KB = Utilities.getKB("/birds.txt"); // load birds.txt
+        String KB = Utilities.getKB("/birds.txt");
 
-        Answer answer;
+        DelpAnswer answer;
         // tina
         answer = query(KB, "Flies(tina)");
-        assertTrue("Tina should fly", answer.getAnswerBoolean());
+        assertEquals("Tina should fly", DelpAnswer.Type.YES, answer.getType());
         answer = query(KB, "~Flies(tina)");
-        assertFalse("Tina should fly", answer.getAnswerBoolean());
+        assertEquals("Tina should fly", DelpAnswer.Type.NO, answer.getType());
         // tweety
         answer = query(KB, "Flies(tweety)");
-        assertFalse("Tweety does not fly", answer.getAnswerBoolean());
+        assertEquals("Tweety does not fly", DelpAnswer.Type.NO, answer.getType());
         answer = query(KB, "~Flies(tweety)");
-        assertTrue("Tweety does not fly", answer.getAnswerBoolean());
+        assertEquals("Tweety does not fly", DelpAnswer.Type.YES, answer.getType());
     }
 
     @Test
     public void nixon() throws IOException {
         String KB = Utilities.getKB("/nixon.txt"); // load nixon.txt
 
-        Answer answer;
-        // tina
-        answer = query(KB, "~Pacifist(nixon)");
-        // TODO: should be UNDECIDED!
-        assertFalse("Nixon may or may not be a pacifist", answer.getAnswerBoolean());
-//        "Pacifist(nixon)" = UNDECIDED
-//        "Has_a_gun(nixon)" = UNDECIDED
+        DelpAnswer answer;
+        answer = query(KB, "~Pacifist(nixon)"); // TODO: should be UNDECIDED!
+        answer = query(KB, "Pacifist(nixon)"); // TODO: should be UNDECIDED!
+        answer = query(KB, "Has_a_gun(nixon)"); // UNDECIDED
     }
 
     @Test
     public void stocks() throws IOException {
-        String KB = Utilities.getKB("/stocks.txt"); // load birds.txt
-        Answer ans = query(KB, "Buy_stock(acme)");
-        assertTrue("Buying stock ACME should be supported", ans.getAnswerBoolean());
+        String KB = Utilities.getKB("/stocks.txt");
+        DelpAnswer ans = query(KB, "Buy_stock(acme)");
+        assertEquals("Buying stock ACME should be supported",  DelpAnswer.Type.YES, ans.getType());
     }
 
     @Test
     public void counterarguments() throws IOException {
         String KB = Utilities.getKB("/counterarg.txt");
-        Answer answer;
+        DelpAnswer answer;
         answer = query(KB, "a");
 //        "a" = UNDECIDED
         answer = query(KB, "c");
 //        "c" = UNDECIDED
+    }
+
+    @Test
+    public void hobbes() throws IOException {
+        String KB = Utilities.getKB("/hobbes.txt");
+        DelpAnswer answer;
+        answer = query(KB, "~dangerous(hobbes)");
+        // "UNDECIDED"?
+    }
+
+    @Test
+    public void dtree() throws IOException {
+        String KB = Utilities.getKB("/dtree.txt");
+        DelpAnswer answer;
+        answer = query(KB, "a"); // TODO: UNDECIDED
+        answer = query(KB, "~b"); // YES
+        assertEquals(DelpAnswer.Type.YES, answer.getType());
+        answer = query(KB, "b"); // NO
+        assertEquals(DelpAnswer.Type.NO, answer.getType());
     }
 }

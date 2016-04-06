@@ -34,6 +34,18 @@ public final class TestKBParsing {
         new DelpParser().parseBeliefBase("  bla(X) > foo(Y).");
     }
 
+    @Test
+    public void parseKnownKBs() throws IOException {
+        for (String KB : new String[]{
+                "/birds.txt",
+                "/counterarg.txt",
+                "/dtree.txt",
+                "/hobbes.txt",
+                "/nixon.txt",
+                "/stocks.txt"})
+            new DelpParser().parseBeliefBase(Utilities.getKB(KB));
+    }
+
     // TODO: very long string (> 4096 chars?)
     // TODO: input encoding??
 }

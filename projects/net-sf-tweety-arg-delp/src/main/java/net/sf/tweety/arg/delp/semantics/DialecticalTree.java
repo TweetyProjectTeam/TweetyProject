@@ -146,15 +146,15 @@ public class DialecticalTree{
         if (comparisonCriterion == null)
             comparisonCriterion = new EmptyCriterion();
         DelpArgument disagreementSubargument = argumentationLine.get(argumentationLine.size()-1).getDisagreementSubargument(argument.getConclusion(), delp);
-		if(comparisonCriterion.compare(argument, disagreementSubargument, delp) == ComparisonCriterion.IS_WORSE)
+		if(comparisonCriterion.compare(argument, disagreementSubargument, delp) == ComparisonCriterion.Result.IS_WORSE)
 			return false;
 
         //Proper attack
 		if(argumentationLine.size()>1){
 			DelpArgument arg1 = argumentationLine.get(argumentationLine.size()-1);
 			DelpArgument arg2 = argumentationLine.get(argumentationLine.size()-2).getDisagreementSubargument(arg1.getConclusion(), delp);
-			if(comparisonCriterion.compare(arg1, arg2, delp) == ComparisonCriterion.NOT_COMPARABLE)
-				if(comparisonCriterion.compare(argument, disagreementSubargument, delp) != ComparisonCriterion.IS_BETTER)
+			if(comparisonCriterion.compare(arg1, arg2, delp) == ComparisonCriterion.Result.NOT_COMPARABLE)
+				if(comparisonCriterion.compare(argument, disagreementSubargument, delp) != ComparisonCriterion.Result.IS_BETTER)
 					return false;
 		}
 		return true;

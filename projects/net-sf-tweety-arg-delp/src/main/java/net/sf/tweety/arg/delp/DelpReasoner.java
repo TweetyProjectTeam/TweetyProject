@@ -105,11 +105,9 @@ public class DelpReasoner extends Reasoner {
 	 * @return <source>true</source> iff <source>argument</source> is a warrant given <source>arguments</source>.
 	 */
 	private boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){
-		DefeasibleLogicProgram groundDelp = ((DefeasibleLogicProgram) this.getKnowledgBase()).ground();
-		// TODO: replace this with Java 8 stream API:
+		DefeasibleLogicProgram groundDelp = ((DefeasibleLogicProgram) getKnowledgBase()).ground();
 		DialecticalTree dtree = new DialecticalTree(argument);
-
-		Stack<DialecticalTree> stack = new Stack<>();
+		Deque<DialecticalTree> stack = new ArrayDeque<>();
 		stack.add(dtree);
 		while(!stack.isEmpty()){
 			DialecticalTree dtree2 = stack.pop();
