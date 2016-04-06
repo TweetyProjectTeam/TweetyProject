@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.fol.prover;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.regex.Pattern;
@@ -41,7 +42,7 @@ public class Prover9 extends FolTheoremProver {
 	 * @param binaryLocation of the eprover executable on the hard drive
 	 */
 	public Prover9(String binaryLocation) {
-		this(binaryLocation,new NativeShell());
+		this(binaryLocation,Shell.getNativeShell());
 	}
 
 	/* (non-Javadoc)
@@ -60,17 +61,27 @@ public class Prover9 extends FolTheoremProver {
 			
 			String cmd = binaryLocation + " -f " + file.getAbsolutePath();
 			System.out.println(cmd);
-			String output = bash.run(cmd);
+			String output = null;
+			try{
+				output = bash.run(cmd);
+				System.out.print(output);
+			}catch(Exception e){
+				e.printStackTrace();
+				System.out.println("a");
+				if(output == null)
+					throw new RuntimeException("Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
+				System.out.println("b");
+			}
 			//String output = Exec.invokeExecutable(cmd);
-			//System.out.print(output);
-			if(Pattern.compile("THEOREM PROVED").matcher(output).find())
+			System.out.print(output);
+			if(Pattern.compile("proof").matcher(output).find())
 				return true;
-			if(Pattern.compile("SEARCH FAILED").matcher(output).find())
+			if(Pattern.compile("failure").matcher(output).find())
 				return false;
-			throw new RuntimeException("Failed to invoke eprover: Eprover returned no result which can be interpreted.");
-		}catch(Exception e){
+			throw new RuntimeException("Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
+		}catch(IOException e){
 			e.printStackTrace();
-			return false;
+			throw new RuntimeException("Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
 		}	
 	}
 	
