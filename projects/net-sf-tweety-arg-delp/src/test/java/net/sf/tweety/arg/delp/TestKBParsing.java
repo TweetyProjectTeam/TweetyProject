@@ -35,6 +35,11 @@ public final class TestKBParsing {
     }
 
     @Test
+    public void parseComments() throws IOException {
+        new DelpParser().parseBeliefBase("% a comment\r\nbla(X) <- foo(Y).\n  foo(myself).\r\n\n");
+    }
+
+    @Test
     public void parseKnownKBs() throws IOException {
         for (String KB : new String[]{
                 "/birds.txt",
@@ -42,8 +47,9 @@ public final class TestKBParsing {
                 "/dtree.txt",
                 "/hobbes.txt",
                 "/nixon.txt",
-                "/stocks.txt"})
+                "/stocks.txt"}) {
             new DelpParser().parseBeliefBase(Utilities.getKB(KB));
+        }
     }
 
     // TODO: very long string (> 4096 chars?)

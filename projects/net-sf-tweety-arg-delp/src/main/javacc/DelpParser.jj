@@ -127,7 +127,7 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
 
 PARSER_END(DelpParser)
 
-SKIP:  { " " | "\t" | "\n" | "\r" }
+SKIP:  { " " | "\t" | "\n" | "\r" | <"%" (~["\n","\r"])* ("\n"|"\r")> }
 TOKEN: {
 	<NAME:  ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z","_","-","0"-"9"])*>
 }

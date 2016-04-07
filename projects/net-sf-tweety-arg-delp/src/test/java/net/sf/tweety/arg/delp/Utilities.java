@@ -29,7 +29,7 @@ class Utilities {
         StringBuilder bufferKB = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
-            bufferKB.append(line);
+            bufferKB.append(line+"\n");
         }
         return bufferKB.toString();
     }
