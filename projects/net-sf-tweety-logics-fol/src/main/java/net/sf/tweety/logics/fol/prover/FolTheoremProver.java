@@ -18,8 +18,6 @@
  */
 package net.sf.tweety.logics.fol.prover;
 
-import java.io.IOException;
-
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
@@ -65,8 +63,8 @@ public abstract class FolTheoremProver {
 	 * @param query a query.
 	 * @return the answer to the query.
 	 */
-	public abstract boolean query(FolBeliefSet kb, FolFormula query) throws IOException;
+	public abstract boolean query(FolBeliefSet kb, FolFormula query);
 	
-	public abstract boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) throws IOException;
+	public abstract boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b);
 	
 }

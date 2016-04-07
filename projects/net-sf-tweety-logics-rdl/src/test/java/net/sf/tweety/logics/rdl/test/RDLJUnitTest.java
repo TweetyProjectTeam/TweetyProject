@@ -24,8 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import net.sf.tweety.commons.util.Shell;
-import net.sf.tweety.logics.fol.prover.EProver;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.prover.Prover9;
 import net.sf.tweety.logics.rdl.NaiveDefaultReasoner;

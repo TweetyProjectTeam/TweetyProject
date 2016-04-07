@@ -1,7 +1,6 @@
 package net.sf.tweety.logics.fol.prover;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
@@ -63,13 +62,17 @@ public class Prover9 extends FolTheoremProver {
 	 * logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public boolean query(FolBeliefSet kb, FolFormula query) throws IOException {
-		File file = File.createTempFile("tmp", ".txt");
-		Prover9Writer printer = new Prover9Writer(new PrintWriter(file));
-		printer.printBase(kb);
-		printer.printQuery(query);
-		printer.close();
-		return eval(file);
+	public boolean query(FolBeliefSet kb, FolFormula query) {
+		try {
+			File file = File.createTempFile("tmp", ".txt");
+			Prover9Writer printer = new Prover9Writer(new PrintWriter(file));
+			printer.printBase(kb);
+			printer.printQuery(query);
+			printer.close();
+			return eval(file);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/*
@@ -81,39 +84,38 @@ public class Prover9 extends FolTheoremProver {
 	 * net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) throws IOException {
-		File file = File.createTempFile("tmp", ".txt");
-		Prover9Writer printer = new Prover9Writer(new PrintWriter(file));
-		printer.printBase(kb);
-		printer.printEquivalence(a, b);
-		printer.close();
-		return eval(file);
+	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
+		try {
+			File file = File.createTempFile("tmp", ".txt");
+			Prover9Writer printer = new Prover9Writer(new PrintWriter(file));
+			printer.printBase(kb);
+			printer.printEquivalence(a, b);
+			printer.close();
+			return eval(file);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
 	 * invokes prover9
-	 * @param file input fle for prover9
+	 * 
+	 * @param file
+	 *            input fle for prover9
 	 * @return query result
 	 */
-	private boolean eval(File file) {
-		try {
-			String cmd = binaryLocation + " -f " + file.getAbsolutePath();
-			System.out.println(cmd);
-			String output = null;
-			output = bash.run(cmd);
-			// output = Exec.invokeExecutable(cmd, -1, true);
-			System.out.print(output);
-			if (Pattern.compile("Exiting with .+ proof").matcher(output).find())
-				return true;
-			if (Pattern.compile("Exiting with failure").matcher(output).find())
-				return false;
-			throw new RuntimeException(
-					"Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(
-					"Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
-		}
+	private boolean eval(File file) throws Exception {
+		String cmd = binaryLocation + " -f " + file.getAbsolutePath();
+		//System.out.println(cmd);
+		String output = null;
+		output = bash.run(cmd);
+		// output = Exec.invokeExecutable(cmd, -1, true);
+		//System.out.print(output);
+		if (Pattern.compile("Exiting with .+ proof").matcher(output).find())
+			return true;
+		if (Pattern.compile("Exiting with failure").matcher(output).find())
+			return false;
+		throw new RuntimeException("Failed to invoke prover9: Prover9 returned no result which can be interpreted.");
 	}
 
 	/**
