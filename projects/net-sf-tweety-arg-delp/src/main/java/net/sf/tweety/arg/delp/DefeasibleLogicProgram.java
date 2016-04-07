@@ -18,12 +18,17 @@
  */
 package net.sf.tweety.arg.delp;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.sf.tweety.arg.delp.parser.DelpParser;
+import net.sf.tweety.arg.delp.semantics.ComparisonCriterion;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
 import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
 import net.sf.tweety.arg.delp.syntax.DelpArgument;
@@ -34,12 +39,14 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.BeliefSet;
-import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Derivation;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 /**
  * This class models a defeasible logic program (DeLP).
@@ -72,7 +79,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * of constants appearing in this delp.
 	 * @return the grounded version of <source>this</source>
 	 */
-	DefeasibleLogicProgram ground(){
+	public DefeasibleLogicProgram ground(){
 		return this.ground(((FolSignature)this.getSignature()).getConstants());
 	}
 	
@@ -83,7 +90,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * @param constants some set of constants. 
 	 * @return the grounded version of <source>this</source>
 	 */
-	private DefeasibleLogicProgram ground(Set<Constant> constants){
+	public DefeasibleLogicProgram ground(Set<Constant> constants){
 		if(this.isGround()) return new DefeasibleLogicProgram(this);
 		DefeasibleLogicProgram groundedDelp = new DefeasibleLogicProgram();
 		for(DelpRule rule: this)
@@ -266,7 +273,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		return false;
 	}
 
-    private boolean isGround(){
+    public boolean isGround(){
         return this.stream().allMatch(DelpRule::isGround);
 	}
 
@@ -298,4 +305,60 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		}
 		return signature;
 	}
+
+    /**
+     * Parsing DeLP from given file and performing given query against it.
+     *
+     * @param args Options and arguments (try "-h" to get a help text with details)
+     */
+    public static void main(String[] args) throws IOException {
+        CmdLineParser.registerHandler(ComparisonCriterion.class, CriterionOptionHandler.class);
+        // parse arguments
+        DelpOptions options = new DelpOptions();
+        CmdLineParser cmdLineParser = new CmdLineParser(options);
+        try {
+            cmdLineParser.parseArgument(args);
+            if (options.displayHelp) {
+                cmdLineParser.printUsage(System.out);
+                return;
+            }
+            if (!options.delpFile.canRead())
+                throw new CmdLineException(cmdLineParser,
+                        "Cannot read file with DeLP: "+options.delpFile.getAbsolutePath());
+            if (options.arguments.isEmpty())
+                throw new CmdLineException(cmdLineParser,
+                        "Need a query as remaining argument(s)!");
+        } catch (CmdLineException e) {
+            System.err.println(e.getMessage());
+            cmdLineParser.printUsage(System.err);
+            return;
+        }
+
+        // parse DeLP from given file...
+        DelpParser parser = new DelpParser();
+        DefeasibleLogicProgram delp = parser.parseBeliefBase(new FileReader(options.delpFile));
+        DelpReasoner reasoner = new DelpReasoner(delp, options.criterion);
+
+        // ... and perform query against it
+        String query = options.arguments.stream().collect(Collectors.joining(" "));
+        DelpAnswer answer = (DelpAnswer) reasoner.query(parser.parseFormula(query));
+        System.out.println((options.beVerbose?"DeLP:\n---\n"+delp+"---\n":"")+query+"? "+answer.getText());
+    }
+
+    private static class DelpOptions {
+        @Option(name = "-h", aliases = "--help", usage = "display usage and exit")
+        boolean displayHelp = false;
+
+        @Option(name = "-v", aliases = "--verbose", usage = "also prints DeLP not just query and answer")
+        boolean beVerbose = false;
+
+        @Option(name = "-c", aliases = "--compare", usage = "use given comparison criterion\nEMPTY, GEN_SPEC (default), PRIORITY (not implemented)")
+        ComparisonCriterion criterion = new GeneralizedSpecificity();
+
+        @Option(name = "-f", aliases = "--file", usage = "read DeLP from given FILE")
+        File delpFile;
+
+        @org.kohsuke.args4j.Argument(metaVar = "QUERY",usage = "query to be performed against DeLP")
+        List<String> arguments;
+    }
 }

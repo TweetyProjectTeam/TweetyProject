@@ -29,6 +29,22 @@ import net.sf.tweety.arg.delp.syntax.*;
  */
 public abstract class ComparisonCriterion {
 
+    /**
+     * To select a subclass and create an instance throw a static factory method.
+     */
+    public enum Factory { EMPTY, GEN_SPEC, PRIORITY;
+        public static ComparisonCriterion create(String name) {
+            switch (Factory.valueOf(name)) {
+                case EMPTY:
+                    return new EmptyCriterion();
+                case GEN_SPEC:
+                    return new GeneralizedSpecificity();
+                default:
+                    throw new IllegalArgumentException("Cannot create comparison criterion from "+name);
+            }
+        }
+    }
+
     public enum Result { IS_BETTER, NOT_COMPARABLE, IS_WORSE, IS_EQUAL }
 
 	/**

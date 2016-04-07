@@ -95,7 +95,7 @@ public class DelpReasoner extends Reasoner {
 	 * Computes the subset of the arguments of this program, that are warrants.
 	 * @return a set of <source>DelpArgument</source> that are warrants
 	 */
-    private Set<DelpArgument> getWarrants(){
+    public Set<DelpArgument> getWarrants(){
         Set<DelpArgument> all_arguments = groundDelp.getArguments();
 		return all_arguments.stream()
                 .filter(argument -> isWarrant(argument, all_arguments))
@@ -108,7 +108,7 @@ public class DelpReasoner extends Reasoner {
 	 * @param arguments a set of DeLP arguments
 	 * @return <source>true</source> iff <source>argument</source> is a warrant given <source>arguments</source>.
 	 */
-	private boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){
+	public boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){
 		DialecticalTree dtree = new DialecticalTree(argument);
 		Deque<DialecticalTree> stack = new ArrayDeque<>();
 		stack.add(dtree);

@@ -60,7 +60,7 @@ class ArgumentCompletion extends DelpArgument{
 	 * @param delp a defeasible logic program
 	 * @return a set of argument completions for <source>argument</source>
 	 */
-	static Set<ArgumentCompletion> getCompletions(DelpArgument argument, DefeasibleLogicProgram delp){
+	public static Set<ArgumentCompletion> getCompletions(DelpArgument argument, DefeasibleLogicProgram delp){
 		//initialize the result set
 		final Set<ArgumentCompletion> completions = new HashSet<>();
 

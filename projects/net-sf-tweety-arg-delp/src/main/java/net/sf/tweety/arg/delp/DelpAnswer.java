@@ -23,12 +23,7 @@ import net.sf.tweety.commons.Formula;
  */
 class DelpAnswer extends Answer {
 
-    interface AnswerType {
-        boolean getBooleanAnswer();
-        Double getDoubleAnswer();
-    }
-
-    enum Type implements AnswerType {
+    enum Type {
         YES ("The answer is: YES"),
         NO ("The answer is: NO"),
         UNDECIDED ("The answer is: UNDECIDED"),
@@ -57,7 +52,6 @@ class DelpAnswer extends Answer {
         @Override
         public String toString() { return text; }
 
-        @Override
         public boolean getBooleanAnswer() {
             switch (this) {
                 case YES: return true;
@@ -65,7 +59,6 @@ class DelpAnswer extends Answer {
             }
         }
 
-        @Override
         public Double getDoubleAnswer() {
             switch (this) {
                 case YES: return 0d;
