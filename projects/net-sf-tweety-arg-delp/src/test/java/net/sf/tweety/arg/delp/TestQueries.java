@@ -78,11 +78,11 @@ public final class TestQueries {
     @Test
     public void nixon() throws IOException {
         DelpAnswer answer;
-        answer = query(REASONER_NIXON, PARSER_NIXON, "~Pacifist(nixon)"); // UNDECIDED
+        answer = query(REASONER_NIXON, PARSER_NIXON, "~pacifist(nixon)"); // UNDECIDED
         assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
-        answer = query(REASONER_NIXON, PARSER_NIXON, "Pacifist(nixon)"); // UNDECIDED
+        answer = query(REASONER_NIXON, PARSER_NIXON, "pacifist(nixon)"); // UNDECIDED
         assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
-        answer = query(REASONER_NIXON, PARSER_NIXON, "Has_a_gun(nixon)"); // YES
+        answer = query(REASONER_NIXON, PARSER_NIXON, "has_a_gun(nixon)"); // YES
         assertEquals(DelpAnswer.Type.YES, answer.getType());
     }
 

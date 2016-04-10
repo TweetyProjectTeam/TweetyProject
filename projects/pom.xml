@@ -114,7 +114,19 @@
           <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
         </configuration>
     </plugin>
-      <plugin>
+        <!-- cleaning any generated stuff such as the JavaCC files -->
+        <plugin>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.0.0</version>
+            <configuration>
+                <filesets>
+                    <fileset>
+                        <directory>Users</directory>
+                    </fileset>
+                </filesets>
+            </configuration>
+        </plugin>
+        <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.2</version>
