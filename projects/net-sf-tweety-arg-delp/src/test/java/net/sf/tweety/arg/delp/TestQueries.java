@@ -118,4 +118,19 @@ public final class TestQueries {
         answer = query(REASONER_DTREE, PARSER_DTREE, "b"); // NO
         assertEquals(DelpAnswer.Type.NO, answer.getType());
     }
+
+    @Test
+    public void quoted() throws IOException {
+        DelpAnswer answer;
+        DelpParser parser = new DelpParser();
+        DefeasibleLogicProgram delp = parser.parseBeliefBase(
+                "saw(\"1.2.3.4\",\"foo.png\").\n"+
+                "visited(IP) <- saw(IP,STR).\n"+
+                "src(\"1.2.3.5\").");
+        DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
+        answer = query(reasoner, parser, "visited(\"1.2.3.4\")"); // YES
+        assertEquals(DelpAnswer.Type.YES, answer.getType());
+        answer = query(reasoner, parser, "visited(\"1.2.3.5\")"); // UNDECIDED
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+    }
 }
