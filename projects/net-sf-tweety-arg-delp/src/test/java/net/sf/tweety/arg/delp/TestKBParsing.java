@@ -40,6 +40,11 @@ public final class TestKBParsing {
     }
 
     @Test
+    public void parseQuotedStrings() throws IOException {
+        new DelpParser().parseBeliefBase("% a comment\n bla(X) <- foo(\"1.2.3.4\", X). \n");
+    }
+
+    @Test
     public void parseKnownKBs() throws IOException {
         for (String KB : new String[]{
                 "/birds.txt",

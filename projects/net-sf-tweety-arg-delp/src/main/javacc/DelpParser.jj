@@ -61,11 +61,12 @@ import java.util.Set;
   * LITERAL 		::== "~" + ATOM | ATOM
   * ATOM 			::== PREDICATE | PREDICATE + "(" + TERMLIST + ")"
   * TERMLIST 		::== TERM | TERM + "," + TERMLIST
-  * TERM 			::== VARIABLE | CONSTANT
+  * TERM 			::== VARIABLE | CONSTANT | QUOTED_STRING
   *
   * PREDICATE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with a letter at the beginning.
   * VARIABLE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
   * CONSTANT is  a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an lowercase letter at the beginning.
+  * QUOTED_STRING is all characters between double quotes.
   * </pre>
   */
 public class DelpParser extends Parser<DefeasibleLogicProgram>{
@@ -123,13 +124,34 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
 	public FolSignature getSignature(){
 		return this.signature;
 	}
+
+    private Constant createConstant(String image, DefeasibleLogicProgram delp, FolSignature signature) throws ParseException {
+		// treat constants also as predicates with arity = 0 to be consistent with
+		// parsing queries as formulae:
+
+        // only add constant/predicate to signature if parsing DeLP!
+        Constant constant = new Constant(image);
+        if(delp != null && !signature.containsConstant(image))
+            signature.add(constant);
+        Predicate predicate = new Predicate(image);
+        if(delp != null && !signature.containsPredicate(image))
+            signature.add(predicate);
+        if(signature.containsPredicate(image) && signature.getPredicate(image).getArity() != 0)
+            throw new ParseException("Wrong arity of predicate as constant '" + image + "'");
+        return constant;
+    }
 }
 
 PARSER_END(DelpParser)
 
 SKIP:  { " " | "\t" | "\n" | "\r" | <"%" (~["\n","\r"])* ("\n"|"\r")> }
 TOKEN: {
-	<NAME:  ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z","_","-","0"-"9"])*>
+    <NAME:   ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z","_","-","0"-"9"])*>
+|   <QUOTED: "\"" (
+                "\\" ~[]     //any escaped character
+             |               //or
+                ~["\"","\\"] //any character except quote or backslash
+             )* "\"" >
 }
 
 DefeasibleLogicProgram Theory(FolSignature signature) :
@@ -150,38 +172,20 @@ void Expression(DefeasibleLogicProgram delp,FolSignature signature) :
 	FolFormula b;
 }
 {
-		lit=Literal(delp,signature) ( "."
-				{
-					delp.add(new DelpFact(lit));
-				}
-		|
-		"<-" b=Literal(delp,signature)
-				{
-					body.add(b);
-				}
-
-		( "," b=Literal(delp,signature)
-				{
-					body.add(b);
-				}
-		)* "."
-				{
-					delp.add(new StrictRule(lit,body));
-				}
-		|
-		"-<" b=Literal(delp,signature)
-				{
-					body.add(b);
-				}
-		( "," b=Literal(delp,signature)
-				{
-					body.add(b);
-				}
-		)* "."
-				{
-					delp.add(new DefeasibleRule(lit,body));
-				}
-		)
+    lit=Literal(delp,signature)
+        (
+            "." {delp.add(new DelpFact(lit));}
+        |
+		    "<-" b=Literal(delp,signature) {body.add(b);}
+            (
+                "," b=Literal(delp,signature) {body.add(b);}
+            )* "." {delp.add(new StrictRule(lit,body));}
+        |
+		    "-<" b=Literal(delp,signature) {body.add(b);}
+		    (
+		        "," b=Literal(delp,signature) {body.add(b);}
+		    )* "." {delp.add(new DefeasibleRule(lit,body));}
+        )
 }
 
 FolFormula Formula(FolSignature signature) :
@@ -235,19 +239,13 @@ Term Term(DefeasibleLogicProgram delp,FolSignature signature) :
 	{
 		if(Character.isUpperCase(t.image.charAt(0)))
 			return new Variable(t.image);
-
-		// treat constants also as predicates with arity = 0 to be consistent with
-		// parsing queries as formulae:
-
-		// only add constant/predicate to signature if parsing DeLP!
-		Constant constant = new Constant(t.image);
-	    if(delp != null && !signature.containsConstant(t.image))
-	  		signature.add(constant);
-        Predicate predicate = new Predicate(t.image);
-        if(delp != null && !signature.containsPredicate(t.image))
-            signature.add(predicate);
-        if(signature.containsPredicate(t.image) && signature.getPredicate(t.image).getArity() != 0)
-	        throw new ParseException("Wrong arity of predicate as constant '" + t.image + "'");
-		return constant;
+		return createConstant(t.image, delp, signature);
 	}
+|
+    t=<QUOTED>
+    {
+        // get rid of quotes:
+        String text = t.image.substring(1, t.image.length() - 1);
+        return createConstant(text, delp, signature);
+    }
 }
