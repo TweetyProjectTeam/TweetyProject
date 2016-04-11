@@ -88,7 +88,7 @@ public final class TestQueries {
 
     @Test
     public void stocks() throws IOException {
-        DelpAnswer ans = query(REASONER_STOCKS, PARSER_STOCKS, "Buy_stock(acme)");
+        DelpAnswer ans = query(REASONER_STOCKS, PARSER_STOCKS, "buy_stock(acme)");
         assertEquals("Buying stock ACME should be supported",  DelpAnswer.Type.YES, ans.getType());
     }
 

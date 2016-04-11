@@ -64,12 +64,12 @@ public final class TestFormulaParsing {
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
         assertTrue("Formula '"+fol+"' is negation", fol instanceof Negation);
 
-        fol = (FolFormula) PARSER_STOCKS.parseFormula(" In_fusion (A, B)");
+        fol = (FolFormula) PARSER_STOCKS.parseFormula(" in_fusion (A, B)");
         assertFalse("Formula '"+fol+"' is NOT ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
         assertEquals("First predicate has arity 2", 2, fol.getPredicates().iterator().next().getArity());
 
-        fol = (FolFormula) PARSER_STOCKS.parseFormula(" ~ In_fusion (A, steel)");
+        fol = (FolFormula) PARSER_STOCKS.parseFormula(" ~ in_fusion (A, steel)");
         assertFalse("Formula '"+fol+"' is NOT ground", fol.isGround());
         assertTrue("Formula '"+fol+"' is literal", fol.isLiteral());
     }
@@ -77,15 +77,15 @@ public final class TestFormulaParsing {
     // parsing exceptions: formula too long, unknown predicates or facts, symbols (!%& and -<. in formula)
     @Test(expected = ParserException.class)
     public void parseTooMuch() throws IOException {
-       PARSER_STOCKS.parseFormula(" Strong(acme) , B");
+       PARSER_STOCKS.parseFormula(" strong(acme) , B");
     }
     @Test(expected = ParserException.class)
     public void parseTooMuch2() throws IOException {
-        PARSER_STOCKS.parseFormula(" Strong(acme) . ");
+        PARSER_STOCKS.parseFormula(" strong(acme) . ");
     }
     @Test(expected = ParserException.class)
     public void parseTooMuch3() throws IOException {
-        PARSER_STOCKS.parseFormula(" Strong(acme) <- Foo(B) ");
+        PARSER_STOCKS.parseFormula(" strong(acme) <- Foo(B) ");
     }
     @Test(expected = ParserException.class)
     public void parseUnknownPred() throws IOException {
@@ -101,10 +101,10 @@ public final class TestFormulaParsing {
     }
     @Test(expected = ParserException.class)
     public void parseUnknownConstant() throws IOException {
-        PARSER_STOCKS.parseFormula(" ~In_fusion (A, google)");
+        PARSER_STOCKS.parseFormula(" ~in_fusion (A, google)");
     }
     @Test(expected = ParserException.class)
     public void parseDoubleNegation() throws IOException {
-        PARSER_STOCKS.parseFormula(" ~ ~ Strong (acme)");
+        PARSER_STOCKS.parseFormula(" ~ ~ strong (acme)");
     }
 }
