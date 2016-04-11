@@ -43,6 +43,10 @@ public final class TestKBParsing {
     public void parseQuotedStrings() throws IOException {
         new DelpParser().parseBeliefBase("% a comment\n bla(X) <- foo(\"1.2.3.4\", X). \n");
     }
+    @Test(expected = TokenMgrError.class)
+    public void missingEndQuote() throws IOException {
+        new DelpParser().parseBeliefBase(" bla(X) <- foo(\"1.2.3.4, X). \n");
+    }
 
     @Test
     public void parseKnownKBs() throws IOException {
