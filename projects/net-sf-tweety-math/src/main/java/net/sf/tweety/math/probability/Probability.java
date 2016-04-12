@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.math.probability;
 
+import java.util.Random;
+
 /**
  * This class represents a probability, i.e. a double in the interval [0,1].
  * 
@@ -25,6 +27,14 @@ package net.sf.tweety.math.probability;
  */
 public class Probability extends Number {
 
+	/** Constant for probability 1*/
+	public final static Probability ONE = new Probability(1d);
+	/** Constant for probability 0*/
+	public final static Probability ZERO = new Probability(0d);
+	
+	/**	for sampling probabilities. */
+	private final static Random random = new Random();
+	
 	/**
 	 * The precision for probabilities.
 	 * TODO: that should go somewhere else. 
@@ -135,6 +145,19 @@ public class Probability extends Number {
 	public boolean isWithinTolerance(Probability other){
 		return this.value >= other.value - Probability.PRECISION &&
 			this.value <= other.value + Probability.PRECISION;
+	}
+	
+	/**
+	 * Returns a sample wrt. this probability, i.e. with this
+	 * probability the value returned is "true", otherwise "false"
+	 * @return "true" with this probability.
+	 */
+	public boolean sample(){
+		if(this.isWithinTolerance(Probability.ONE))		
+			return true;
+		if(this.isWithinTolerance(Probability.ZERO))
+			return false;
+		return Probability.random.nextDouble() <= this.doubleValue();
 	}
 	
 	/**
