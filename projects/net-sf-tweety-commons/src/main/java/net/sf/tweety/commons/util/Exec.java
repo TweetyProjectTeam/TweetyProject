@@ -77,9 +77,8 @@ public class Exec {
 			child.destroy();
 			error.trim();
 			if(suppressErrors){
-				System.out.println(error);
-			}
-			else if(!error.equals(""))
+				//System.out.println(error);
+			}else if(!error.equals(""))
 				throw new IOException(error);
 		}
 		return output;
