@@ -47,12 +47,13 @@ public class AprioriMiner<T> extends AbstractAssociationRuleMiner<T> {
 		this.minconf = minconf;		
 	}
 	
+	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.machinelearning.assoc.AssociationRuleMiner#mineRules(java.util.Collection, int)
+	 * @see net.sf.tweety.machinelearning.assoc.AssociationRuleMiner#mineRules(java.util.Collection, int, int)
 	 */
 	@Override
-	public Collection<AssociationRule<T>> mineRules(Collection<Collection<T>> database, int conclusion_limit) {
-		Collection<Collection<T>> sets = this.mineFrequentSets(database);
+	public Collection<AssociationRule<T>> mineRules(Collection<Collection<T>> database, int conclusion_limit, int total_limit) {
+		Collection<Collection<T>> sets = this.mineFrequentSets(database, total_limit);
 		Collection<AssociationRule<T>> rules = new HashSet<AssociationRule<T>>();
 		if(conclusion_limit < 1)
 			return rules;
@@ -84,7 +85,7 @@ public class AprioriMiner<T> extends AbstractAssociationRuleMiner<T> {
 							rule.addToConclusion(item2);
 						else rule.addToPremise(item2);
 					if(rule.confidence(database) >= this.minconf){
-						rules.add(rule);
+						rules.add(rule);						
 						lastLevel_conc.add(rule.getConclusion());
 					}
 				}
@@ -96,11 +97,12 @@ public class AprioriMiner<T> extends AbstractAssociationRuleMiner<T> {
 	/**
 	 * Extracts all sets of items from database with support at least
 	 * <code>minsupport</code>.
-	 * @param database
+	 * @param database some database
+	 * @param maxsize the maximal size of mined item sets
 	 * @return all sets of items from database with support at least
 	 * <code>minsupport</code>.
 	 */
-	private Collection<Collection<T>> mineFrequentSets(Collection<Collection<T>> database){
+	private Collection<Collection<T>> mineFrequentSets(Collection<Collection<T>> database, int maxsize){
 		Collection<Collection<T>> sets = new HashSet<Collection<T>>();
 		Collection<T> items = new HashSet<T>();
 		for(Collection<T> t: database)
@@ -117,7 +119,7 @@ public class AprioriMiner<T> extends AbstractAssociationRuleMiner<T> {
 		lastLevel.addAll(sets);
 		// iterate for larger sets
 		int card = 1;
-		while(!lastLevel.isEmpty()){
+		while(!lastLevel.isEmpty() && card < maxsize){
 			Collection<Collection<T>> nextLevel = this.nextLevel(lastLevel,card);
 			card++;
 			lastLevel.clear();

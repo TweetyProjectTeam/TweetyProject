@@ -34,6 +34,13 @@ public abstract class AbstractAssociationRuleMiner<T> implements AssociationRule
 	 */
 	@Override
 	public Collection<AssociationRule<T>> mineRules(Collection<Collection<T>> database) {
-		return this.mineRules(database, Integer.MAX_VALUE);
+		return this.mineRules(database, Integer.MAX_VALUE, Integer.MAX_VALUE);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.machinelearning.assoc.AssociationRuleMiner#mineRules(java.util.Collection, int)
+	 */
+	public Collection<AssociationRule<T>> mineRules(Collection<Collection<T>> database, int conclusion_limit){
+		return this.mineRules(database, conclusion_limit, Integer.MAX_VALUE);
 	}
 }
