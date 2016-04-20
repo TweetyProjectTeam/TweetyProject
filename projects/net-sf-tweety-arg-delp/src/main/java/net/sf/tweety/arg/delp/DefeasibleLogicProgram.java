@@ -18,13 +18,11 @@
  */
 package net.sf.tweety.arg.delp;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
@@ -306,59 +304,104 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		return signature;
 	}
 
+    private static void printUsage(CmdLineParser parser, PrintStream printStream) {
+        printStream.println("usage:\n java ... "+
+                DefeasibleLogicProgram.class.getName()+
+                " ( -q QUERY | -b BATCH_FILE ) [options] DELP_FILE(S)\nwith options:");
+        parser.printUsage(printStream);
+    }
     /**
      * Parsing DeLP from given file and performing given query against it.
      *
      * @param args Options and arguments (try "-h" to get a help text with details)
      */
-    public static void main(String[] args) throws IOException {
-        CmdLineParser.registerHandler(ComparisonCriterion.class, CriterionOptionHandler.class);
+    public static void main(String[] args) throws IOException, CmdLineException {
+        List<String> queries = new ArrayList<>(); // queries from command line or batch file
+
         // parse arguments
+        CmdLineParser.registerHandler(ComparisonCriterion.class, CriterionOptionHandler.class);
         DelpOptions options = new DelpOptions();
         CmdLineParser cmdLineParser = new CmdLineParser(options);
         try {
             cmdLineParser.parseArgument(args);
             if (options.displayHelp) {
-                cmdLineParser.printUsage(System.out);
+                printUsage(cmdLineParser, System.out);
                 return;
             }
-            if (!options.delpFile.canRead())
+            if (options.query == null || options.query.trim().isEmpty()) {
+                if (options.batchFile == null)
+                    throw new CmdLineException(cmdLineParser,
+                            "Query or batch file is missing!");
+                else {
+                    if (!options.batchFile.canRead())
+                        throw new CmdLineException(cmdLineParser,
+                                "Cannot read given batch file!");
+                    // read queries from batch file: remove any empty lines!
+                    queries = Files.lines(options.batchFile.toPath())
+                            .map(String::trim)
+                            .filter(line -> !line.isEmpty())
+                            .collect(Collectors.toList());
+                    if (queries.isEmpty())
+                        throw new CmdLineException(cmdLineParser,
+                                "Batch file does not contain any queries!");
+                }
+            } else
+                queries.add(options.query.trim());
+            if (options.batchFile != null && !options.batchFile.canRead())
                 throw new CmdLineException(cmdLineParser,
-                        "Cannot read file with DeLP: "+options.delpFile.getAbsolutePath());
-            if (options.arguments.isEmpty())
+                        "Cannot read given batch file!");
+            if (options.arguments == null || options.arguments.isEmpty())
                 throw new CmdLineException(cmdLineParser,
-                        "Need a query as remaining argument(s)!");
+                        "Need at least one DeLP file!");
+            for (File file : options.arguments)
+                if (!file.canRead())
+                    throw new CmdLineException(cmdLineParser,
+                            "Cannot read file: "+file.getAbsolutePath());
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            cmdLineParser.printUsage(System.err);
-            return;
+            printUsage(cmdLineParser, System.err);
+            throw e;
         }
 
-        // parse DeLP from given file...
+        // parse DeLP from given file(s)...
         DelpParser parser = new DelpParser();
-        DefeasibleLogicProgram delp = parser.parseBeliefBase(new FileReader(options.delpFile));
+        StringBuilder delpBuilder = new StringBuilder();
+        // read contents from all given input files:
+        for (File file : options.arguments) {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = reader.readLine()) != null)
+                delpBuilder.append(line+"\n");
+        }
+        DefeasibleLogicProgram delp = parser.parseBeliefBase(delpBuilder.toString());
         DelpReasoner reasoner = new DelpReasoner(delp, options.criterion);
 
-        // ... and perform query against it
-        String query = options.arguments.stream().collect(Collectors.joining(" "));
-        DelpAnswer answer = (DelpAnswer) reasoner.query(parser.parseFormula(query));
-        System.out.println((options.beVerbose?"DeLP:\n---\n"+delp+"---\n":"")+query+"? "+answer.getText());
+        // ... and perform query or queries against it
+        if (options.beVerbose)
+            System.out.println("DeLP:\n---\n"+delp+"---\n");
+        for (String query: queries) {
+            DelpAnswer answer = (DelpAnswer) reasoner.query(parser.parseFormula(query));
+            System.out.println(query + "? " + answer.getText());
+        }
     }
 
     private static class DelpOptions {
         @Option(name = "-h", aliases = "--help", usage = "display usage and exit")
         boolean displayHelp = false;
 
-        @Option(name = "-v", aliases = "--verbose", usage = "also prints DeLP not just query and answer")
+        @Option(name = "-v", aliases = "--verbose", usage = "also prints DeLP, not just query and answer")
         boolean beVerbose = false;
 
         @Option(name = "-c", aliases = "--compare", usage = "use given comparison criterion\nEMPTY, GEN_SPEC (default), PRIORITY (not implemented)")
         ComparisonCriterion criterion = new GeneralizedSpecificity();
 
-        @Option(name = "-f", aliases = "--file", usage = "read DeLP from given FILE")
-        File delpFile;
+        @Option(name = "-q", aliases = "--query", usage = "query to be performed against DeLP", metaVar = "QUERY")
+        String query;
 
-        @org.kohsuke.args4j.Argument(metaVar = "QUERY",usage = "query to be performed against DeLP")
-        List<String> arguments;
+        @Option(name = "-b", aliases = "--batch", usage = "use queries from batch file to be performed against DeLP", metaVar = "BATCH")
+        File batchFile;
+
+        @org.kohsuke.args4j.Argument(metaVar = "DELP_FILE(S)", usage = "read DeLP from given FILE(S)")
+        List<File> arguments;
     }
 }
