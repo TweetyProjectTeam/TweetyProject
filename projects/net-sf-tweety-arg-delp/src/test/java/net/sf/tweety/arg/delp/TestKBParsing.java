@@ -3,9 +3,13 @@ package net.sf.tweety.arg.delp;
 import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.parser.TokenMgrError;
 import net.sf.tweety.commons.ParserException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.util.*;
 
 /**
  * Parsing DeLPs.
@@ -13,6 +17,9 @@ import java.io.IOException;
  * @author Linda.Briesemeister
  */
 public final class TestKBParsing {
+
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test(expected = ParserException.class)
     public void parseEmpty() throws IOException {
@@ -49,6 +56,11 @@ public final class TestKBParsing {
     }
 
     @Test
+    public void parseEmptyPreds() throws IOException {
+        new DelpParser().parseBeliefBase("% a comment\n bla.  foo. \n");
+    }
+
+    @Test
     public void parseKnownKBs() throws IOException {
         for (String KB : new String[]{
                 "/birds.txt",
@@ -61,6 +73,24 @@ public final class TestKBParsing {
         }
     }
 
-    // TODO: very long string (> 4096 chars?)
+    // very long KB (> 4096 chars?)
+    private static String generateString(Random rng, String characters, int length) {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+            text[i] = characters.charAt(rng.nextInt(characters.length()));
+        return new String(text);
+    }
+    @Test
+    public void veryLargeKB() throws IOException {
+        // generate file with about 4096 lines of different facts like "abcd."
+        Set<String> facts = new HashSet<>();  // use a set to avoid duplicate facts
+        Random rng = new Random();
+        for (int i = 0; i < 5000; i++)
+            facts.add(generateString(rng, "abcdefghijklmnopqrstuvwxyz", 10)+".");
+        File tempFile = tempFolder.newFile();
+        Files.write(tempFile.toPath(), facts);
+        new DelpParser().parseBeliefBase(new FileReader(tempFile));
+    }
+
     // TODO: input encoding??
 }
