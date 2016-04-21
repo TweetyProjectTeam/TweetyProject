@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Linda.Briesemeister
  */
-@Ignore
 public final class TestQueries {
 
     private final static Logger LOGGER = Logger.getLogger(TestQueries.class.getName());
@@ -138,7 +137,7 @@ public final class TestQueries {
         assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
     }
 
-    //@Test
+    @Ignore
     public void moreQuoted() throws IOException {
         DelpAnswer answer;
         DelpParser parser = new DelpParser();
@@ -172,7 +171,7 @@ public final class TestQueries {
         assertEquals(DelpAnswer.Type.YES, answer.getType());
     }
 
-    //@Test
+    @Ignore
     public void mehrMist() throws IOException {
         DelpAnswer answer;
         DelpParser parser = new DelpParser();

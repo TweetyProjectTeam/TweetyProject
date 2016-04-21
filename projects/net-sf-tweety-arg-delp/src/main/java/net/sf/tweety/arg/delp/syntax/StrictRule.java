@@ -18,12 +18,12 @@
  */
 package net.sf.tweety.arg.delp.syntax;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class models a strict rule in defeasible logic programming.
@@ -42,11 +42,14 @@ public class StrictRule extends DelpRule {
 		super(head,body);
 	}
 
-    @Override
-    String getSymbol() {
-        return " <- ";
-    }
+	@Override
+	String getSymbol() {
+		return " <- ";
+	}
 
+	/* (non-Javadoc)
+         * @see net.sf.tweety.argumentation.delp.DelpRule#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
+         */
     @Override
     public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
         return new StrictRule(

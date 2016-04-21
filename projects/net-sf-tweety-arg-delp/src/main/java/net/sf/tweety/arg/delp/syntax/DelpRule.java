@@ -18,11 +18,6 @@
  */
 package net.sf.tweety.arg.delp.syntax;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -30,12 +25,13 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.Conjunction;
-import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.math.probability.Probability;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This method is the superclass for both a strict rule and a defeasible rule in defeasible logic programming
@@ -53,11 +49,11 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	protected FolFormula head;
 
 	/**
-	 * The body of the rule (these must be a literals or empty).
+	 * The body of the rule (these must be a literals).
 	 */
 	protected Set<FolFormula> body;
 
-	abstract String getSymbol();
+    abstract String getSymbol();
 
 	/**
 	 * Default constructor; initializes head and body of the rule
@@ -65,7 +61,6 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
      * @param body a set of literals
      */
     DelpRule(FolFormula head, Collection<? extends FolFormula> body){
-        //this.symbol = symbol;
         if(!head.isLiteral())
 			throw new IllegalArgumentException("Heads of DeLP rules need to consist of a single literal.");
 		for(FolFormula f: body)
@@ -76,9 +71,9 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	}
 
 	/**
-	 * Checks whether this rule is applicable in the given context <source>literals</source>,
+	 * Checks whether this rule is applicaple in the given context <source>literals</source>,
 	 * @param literals a set of literals
-	 * @return <source>true</source> iff this rule is applicable, i.e., if the body of the rule is a subset
+	 * @return <source>true</source> iff this rule is applicaple, i.e., if the body of the rule is a subset
 	 * 	of the given set of literals
 	 */
 	public boolean isApplicable(Collection<? extends FolFormula> literals){
@@ -330,7 +325,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DelpRule)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         DelpRule delpRule = (DelpRule) o;
 

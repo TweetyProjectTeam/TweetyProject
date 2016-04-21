@@ -18,11 +18,12 @@
  */
 package net.sf.tweety.arg.delp.syntax;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.*;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class models a defeasible rule in defeasible logic programming.

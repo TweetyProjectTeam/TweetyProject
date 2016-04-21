@@ -18,10 +18,11 @@
  */
 package net.sf.tweety.arg.delp.syntax;
 
-import java.util.*;
-
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.*;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+
+import java.util.Collections;
 
 /**
  * This class implements a fact in defeasible logic programming which encapsulates a literal.
@@ -29,8 +30,8 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Matthias Thimm
  *
  */
-public final class DelpFact extends StrictRule {
-
+public final class DelpFact extends DelpRule {
+	
 	/**
 	 * Default constructor; initializes this fact with the given literal
 	 * @param literal a literal
@@ -39,12 +40,12 @@ public final class DelpFact extends StrictRule {
 		super(literal, Collections.emptySet());
 	}
 
-    @Override
-    String getSymbol() {
-        return "";
-    }
+	@Override
+	String getSymbol() {
+		return "";
+	}
 
-    /* (non-Javadoc)
+	/* (non-Javadoc)
          * @see net.sf.tweety.argumentation.delp.DelpRule#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
          */
 	@Override
