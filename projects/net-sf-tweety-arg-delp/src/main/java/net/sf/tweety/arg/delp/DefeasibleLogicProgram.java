@@ -35,6 +35,7 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Derivation;
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -378,8 +379,11 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
         if (options.beVerbose)
             System.out.println("DeLP:\n---\n"+delp+"---\n");
         for (String query: queries) {
-            DelpAnswer answer = (DelpAnswer) reasoner.query(parser.parseFormula(query));
-            System.out.println(query + "? " + answer.getText());
+            Formula formula = parser.parseFormula(query);
+            System.out.print(formula + "? ");
+            System.out.flush();
+            DelpAnswer answer = (DelpAnswer) reasoner.query(formula);
+            System.out.println(answer.getText());
         }
     }
 

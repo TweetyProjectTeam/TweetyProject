@@ -2,6 +2,7 @@ package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
+import net.sf.tweety.commons.Formula;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -53,9 +54,10 @@ public final class TestQueries {
         }
     }
 
-    private DelpAnswer query(DelpReasoner reasoner, DelpParser parser, String formula) throws IOException {
+    private DelpAnswer query(DelpReasoner reasoner, DelpParser parser, String query) throws IOException {
         // perform query
-        DelpAnswer answer = (DelpAnswer) reasoner.query(parser.parseFormula(formula));
+        Formula formula = parser.parseFormula(query);
+        DelpAnswer answer = (DelpAnswer) reasoner.query(formula);
         LOGGER.info("DeLP answer to query '"+formula+"' = "+answer);
         return answer;
     }
@@ -125,12 +127,83 @@ public final class TestQueries {
         DelpParser parser = new DelpParser();
         DefeasibleLogicProgram delp = parser.parseBeliefBase(
                 "saw(\"1.2.3.4\",\"foo.png\").\n"+
-                "visited(IP) <- saw(IP,STR).\n"+
+                "visited(IP) -< saw(IP,STR).\n"+
                 "src(\"1.2.3.5\").");
         DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
         answer = query(reasoner, parser, "visited(\"1.2.3.4\")"); // YES
         assertEquals(DelpAnswer.Type.YES, answer.getType());
         answer = query(reasoner, parser, "visited(\"1.2.3.5\")"); // UNDECIDED
         assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+    }
+
+    //@Test
+    public void moreQuoted() throws IOException {
+        DelpAnswer answer;
+        DelpParser parser = new DelpParser();
+        DefeasibleLogicProgram delp = parser.parseBeliefBase("% modeling web defacement\n" +
+                "web_defaced(URL,STR,IP1) -< cmd_injection(URL,IP1),\n" +
+                "   saw(URL,IP2,STR),\n" +
+                "   same_realm(IP1,IP2).\n" +
+                "~web_defaced(URL,STR,IP1) -< ~cmd_injection(URL,IP1),\n" +
+                "   visited(URL,IP2),\n" +
+                "   same_realm(IP1,IP2).\n" +
+                "\n" +
+                "cmd_injection(URL,IP) -< HTTP_method(URL,\"POST\",IP),\n" +
+                "   POST_contains(\"?&\",IP,TEXT).\n" +
+                "~cmd_injection(URL,IP) -< HTTP_method(URL,\"GET\",IP).\n"+
+                "~cmd_injection(URL,IP) -< ~POST_contains(\"?\",IP,TEXT).\n" +
+                "~cmd_injection(URL,IP) -< ~POST_contains(\"&\",IP,TEXT).\n"+
+                "\n"+
+                "same_realm(IP1,IP2) <- slash24(IP1,PRE),slash24(IP2,PRE).\n"+
+                "\n"+ // TODO: true?
+                "% operative presumptions:\n" +
+                "visited(\"www.pwned.se\",\"1.2.3.4\") -< true.\n" +
+                "saw(\"www.pwned.se\",\"fr.jpg\",\"1.2.3.4\") -< true.\n" +
+                "HTTP_method(\"www.pwned.se\",\"POST\",\"1.2.3.4\") -< true.\n" +
+                "cmd_injection(\"www.pwned.se\",\"1.2.3.9\") -< true.\n" +
+                "\n" +
+                "% operative facts:\n"+
+                "slash24(\"1.2.3.4\",\"1.2.3\").\n" +
+                "slash24(\"1.2.3.9\",\"1.2.3\").\n");
+        DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
+        answer = query(reasoner, parser, "same_realm(\"1.2.3.4\",\"1.2.3.9\")"); // YES
+        assertEquals(DelpAnswer.Type.YES, answer.getType());
+    }
+
+    //@Test
+    public void mehrMist() throws IOException {
+        DelpAnswer answer;
+        DelpParser parser = new DelpParser();
+        DefeasibleLogicProgram delp = parser.parseBeliefBase("% modeling web defacement\n" +
+                "%web_defaced(URL,STR,IP1) -< cmd_injection(URL,IP1),\n" +
+                "%   saw(URL,IP2,STR),\n" +
+                "%   same_realm(IP1,IP2).\n" +
+                "%~web_defaced(URL,STR,IP1) -< ~cmd_injection(URL,IP1),\n" +
+                "%   visited(URL,IP2),\n" +
+                "%   same_realm(IP1,IP2).\n" +
+                "\n" +
+                "%cmd_injection(URL,IP) -< HTTP_method(URL,p,IP),\n" +
+                "%   saw(URL,IP,\"fr.jpg\"),\n" +
+                "%   POST_contains(frage_amp,IP,TEXT).\n" +
+                "~cmd_injection(URL,IP) -< HTTP_method(URL,g,IP).\n"+
+                "~cmd_injection(URL,IP) -< ~POST_contains(frage,IP,TEXT).\n" +
+                "~cmd_injection(URL,IP) -< ~POST_contains(amp,IP,TEXT).\n"+
+                "\n"+
+                "same_realm(IP1,IP2) <- slash24(IP1,PRE),slash24(IP2,PRE).\n"+
+                "% operative presumptions:\n" +
+                "visited(a,\"1.2.3.4\") -< true.\n" +
+                "saw(a,\"fr.jpg\",\"1.2.3.4\") -< true.\n" +
+                "HTTP_method(a,p,\"1.2.3.4\") -< true.\n" +
+                "cmd_injection(a,\"1.2.3.9\") -< true.\n" +
+                "\n" +
+                "% operative facts:\n"+
+                "slash24(\"1.2.3.4\",\"1.2.3\").\n" +
+                "slash24(\"1.2.3.9\",\"1.2.3\").\n" +
+                "");
+        DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
+        LOGGER.info("before");
+        answer = query(reasoner, parser, "same_realm(\"1.2.3.4\",\"1.2.3.9\")"); // YES
+        assertEquals(DelpAnswer.Type.YES, answer.getType());
+        LOGGER.info("after");
     }
 }
