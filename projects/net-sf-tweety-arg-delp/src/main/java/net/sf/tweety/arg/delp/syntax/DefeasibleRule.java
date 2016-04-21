@@ -38,9 +38,14 @@ public class DefeasibleRule extends DelpRule {
 	 * @param body a set of literals
 	 */
 	public DefeasibleRule(FolFormula head, Set<FolFormula> body){
-		super(head,body," -< ");
+		super(head,body);
 	}
-		
+
+	@Override
+	String getSymbol() {
+		return " -< ";
+	}
+
 	/**
 	 * returns the translation of this rule as a strict rule
 	 * @return the translation of this rule as a strict rule

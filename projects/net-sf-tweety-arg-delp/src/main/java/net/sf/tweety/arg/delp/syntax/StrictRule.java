@@ -39,12 +39,14 @@ public class StrictRule extends DelpRule {
 	 * @param body a set of literals
 	 */
 	public StrictRule(FolFormula head, Set<FolFormula> body){
-		super(head,body," <- ");
+		super(head,body);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.delp.DelpRule#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
-	 */
+    @Override
+    String getSymbol() {
+        return " <- ";
+    }
+
     @Override
     public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
         return new StrictRule(

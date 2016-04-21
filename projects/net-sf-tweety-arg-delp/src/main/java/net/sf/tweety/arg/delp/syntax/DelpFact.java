@@ -29,19 +29,24 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Matthias Thimm
  *
  */
-public final class DelpFact extends DelpRule {
-	
+public final class DelpFact extends StrictRule {
+
 	/**
 	 * Default constructor; initializes this fact with the given literal
 	 * @param literal a literal
 	 */
 	public DelpFact(FolFormula literal){
-		super(literal, Collections.emptySet(), "");
+		super(literal, Collections.emptySet());
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.delp.DelpRule#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
-	 */
+    @Override
+    String getSymbol() {
+        return "";
+    }
+
+    /* (non-Javadoc)
+         * @see net.sf.tweety.argumentation.delp.DelpRule#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
+         */
 	@Override
 	public RelationalFormula substitute(Term<?> v, Term<?> t)	throws IllegalArgumentException {
 		return new DelpFact(this.getConclusion().substitute(v, t));

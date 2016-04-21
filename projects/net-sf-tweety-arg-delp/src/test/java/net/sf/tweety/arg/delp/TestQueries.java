@@ -4,6 +4,7 @@ import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
 import net.sf.tweety.commons.Formula;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Linda.Briesemeister
  */
+@Ignore
 public final class TestQueries {
 
     private final static Logger LOGGER = Logger.getLogger(TestQueries.class.getName());

@@ -53,20 +53,19 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	protected FolFormula head;
 
 	/**
-	 * The body of the rule (these must be a literals).
+	 * The body of the rule (these must be a literals or empty).
 	 */
 	protected Set<FolFormula> body;
 
-    private final String symbol;
+	abstract String getSymbol();
 
 	/**
 	 * Default constructor; initializes head and body of the rule
      * @param head a literal
      * @param body a set of literals
-     * @param symbol
      */
-    DelpRule(FolFormula head, Collection<? extends FolFormula> body, String symbol){
-        this.symbol = symbol;
+    DelpRule(FolFormula head, Collection<? extends FolFormula> body){
+        //this.symbol = symbol;
         if(!head.isLiteral())
 			throw new IllegalArgumentException("Heads of DeLP rules need to consist of a single literal.");
 		for(FolFormula f: body)
@@ -77,9 +76,9 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	}
 
 	/**
-	 * Checks whether this rule is applicaple in the given context <source>literals</source>,
+	 * Checks whether this rule is applicable in the given context <source>literals</source>,
 	 * @param literals a set of literals
-	 * @return <source>true</source> iff this rule is applicaple, i.e., if the body of the rule is a subset
+	 * @return <source>true</source> iff this rule is applicable, i.e., if the body of the rule is a subset
 	 * 	of the given set of literals
 	 */
 	public boolean isApplicable(Collection<? extends FolFormula> literals){
@@ -143,7 +142,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	 */
 	@Override
 	public Set<Predicate> getPredicates() {
-		Set<Predicate> predicates = new HashSet<Predicate>();
+		Set<Predicate> predicates = new HashSet<>();
 		predicates.addAll(this.head.getPredicates());
 		for(FolFormula f: this.body)
 			predicates.addAll(f.getPredicates());
@@ -155,7 +154,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	 */
 	@Override
 	public Set<FOLAtom> getAtoms() {
-		Set<FOLAtom> atoms = new HashSet<FOLAtom>();
+		Set<FOLAtom> atoms = new HashSet<>();
 		atoms.addAll(this.head.getAtoms());
 		for(FolFormula f: this.body)
 			atoms.addAll(f.getAtoms());
@@ -169,7 +168,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 
 	@Override
 	public Set<Term<?>> getTerms() {
-		Set<Term<?>> reval = new HashSet<Term<?>>();
+		Set<Term<?>> reval = new HashSet<>();
 		reval.addAll(head.getTerms());
 		for(FolFormula b : body) {
 			reval.addAll(b.getTerms());
@@ -179,7 +178,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 
 	@Override
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
-		Set<C> reval = new HashSet<C>();
+		Set<C> reval = new HashSet<>();
 		reval.addAll(head.getTerms(cls));
 		for(FolFormula b : body) {
 			reval.addAll(b.getTerms(cls));
@@ -189,7 +188,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 
 	@Override
 	public Set<Variable> getQuantifierVariables() {
-		Set<Variable> reval = new HashSet<Variable>();
+		Set<Variable> reval = new HashSet<>();
 		reval.addAll(head.getQuantifierVariables());
 		for(FolFormula b : body) {
 			reval.addAll(b.getQuantifierVariables());
@@ -225,8 +224,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 
 	@Override
 	public void addPremises(Collection<? extends FolFormula> premises) {
-		for(FolFormula premise : premises) 
-			addPremise(premise);
+        premises.forEach(this::addPremise);
 	}
 	
 	/* (non-Javadoc)
@@ -248,7 +246,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	 */
 	@Override
 	public Set<Variable> getUnboundVariables() {
-		Set<Variable> vars = new HashSet<Variable>();
+		Set<Variable> vars = new HashSet<>();
 		vars.addAll(this.head.getUnboundVariables());
 		for(FolFormula f: this.body)
 			vars.addAll(f.getUnboundVariables());
@@ -302,7 +300,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	 */
 	@Override
 	public Set<Functor> getFunctors() {
-		Set<Functor> functors = new HashSet<Functor>();
+		Set<Functor> functors = new HashSet<>();
 		functors.addAll(this.head.getFunctors());
 		for(FolFormula f: this.body)
 			functors.addAll(f.getFunctors());
@@ -321,7 +319,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	public String toString(){
 		StringBuilder str = new StringBuilder(head.toString());
 		if (!body.isEmpty())
-			str.append(symbol);
+			str.append(getSymbol());
 		str.append(body.stream()
 				.map(Object::toString)
 				.collect(Collectors.joining(",")));
@@ -329,40 +327,22 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 		return str.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((body == null) ? 0 : body.hashCode());
-		result = prime * result + ((head == null) ? 0 : head.hashCode());
-		return result;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DelpRule)) return false;
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DelpRule other = (DelpRule) obj;
-		if (body == null) {
-			if (other.body != null)
-				return false;
-		} else if (!body.equals(other.body))
-			return false;
-		if (head == null) {
-			if (other.head != null)
-				return false;
-		} else if (!head.equals(other.head))
-			return false;
-		return true;
-	}
+        DelpRule delpRule = (DelpRule) o;
+
+        if (!head.equals(delpRule.head)) return false;
+        return body.equals(delpRule.body);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = head.hashCode();
+        result = 31 * result + body.hashCode();
+        return result;
+    }
 }
