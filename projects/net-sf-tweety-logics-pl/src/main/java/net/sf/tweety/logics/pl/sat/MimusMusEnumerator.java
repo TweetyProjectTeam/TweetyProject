@@ -24,7 +24,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.commons.util.Exec;
+import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -62,7 +62,7 @@ public class MimusMusEnumerator extends PlMusEnumerator  {
 				writer.write(f.toString() + "\n");
 			}
 			writer.close();
-			String output = Exec.invokeExecutable(this.pathToMimus + " -i " + file.getAbsolutePath());			
+			String output = NativeShell.invokeExecutable(this.pathToMimus + " -i " + file.getAbsolutePath());			
 			if(output.trim().equals(""))
 				return new HashSet<Collection<PropositionalFormula>>();
 			// each line is a minimal inconsistent subset

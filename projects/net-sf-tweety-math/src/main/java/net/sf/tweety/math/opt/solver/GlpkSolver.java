@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import net.sf.tweety.commons.Parser;
-import net.sf.tweety.commons.util.Exec;
+import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
@@ -54,7 +54,7 @@ public class GlpkSolver extends Solver {
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		try {
-			Exec.invokeExecutable(GlpkSolver.binary + " -h");
+			NativeShell.invokeExecutable(GlpkSolver.binary + " -h");
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -85,7 +85,7 @@ public class GlpkSolver extends Solver {
 			//System.out.println(((OptimizationProblem)problem).convertToCplexLpFormat());
 			out.close();		
 			//execute lp_solve on problem in lp format and retrieve console output					
-			output = Exec.invokeExecutable(GlpkSolver.binary + " --lp " + lpFile.getAbsolutePath() + " -o " + outputFile.getAbsolutePath());
+			output = NativeShell.invokeExecutable(GlpkSolver.binary + " --lp " + lpFile.getAbsolutePath() + " -o " + outputFile.getAbsolutePath());
 			lpFile.delete();
 			//parse output		
 			if(output.indexOf("PROBLEM HAS NO PRIMAL FEASIBLE SOLUTION") != -1)

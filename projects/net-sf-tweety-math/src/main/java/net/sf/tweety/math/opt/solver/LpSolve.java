@@ -18,12 +18,26 @@
  */
 package net.sf.tweety.math.opt.solver;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-import net.sf.tweety.commons.util.Exec;
-import net.sf.tweety.math.opt.*;
-import net.sf.tweety.math.term.*;
+import net.sf.tweety.commons.util.NativeShell;
+import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.term.Constant;
+import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.FloatVariable;
+import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.IntegerVariable;
+import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
 
 
 /**
@@ -44,7 +58,7 @@ public class LpSolve extends Solver {
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		try {
-			Exec.invokeExecutable(LpSolve.binary + " -h");
+			NativeShell.invokeExecutable(LpSolve.binary + " -h");
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -73,7 +87,7 @@ public class LpSolve extends Solver {
 			out.write(((OptimizationProblem)problem).convertToLpFormat());
 			out.close();		
 			//execute lp_solve on problem in lp format and retrieve console output					
-			output = Exec.invokeExecutable(LpSolve.binary + " " + lpFile.getAbsolutePath());
+			output = NativeShell.invokeExecutable(LpSolve.binary + " " + lpFile.getAbsolutePath());
 			lpFile.delete();
 		}catch(IOException e){
 			//TODO add error handling

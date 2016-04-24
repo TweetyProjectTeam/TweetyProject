@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import net.sf.tweety.commons.util.Exec;
+import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -66,7 +66,7 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 			Pair<File,List<PropositionalFormula>> p = SatSolver.createTmpDimacsFile(formulas);
 			// we only read a maximum number of 1000 lines from MARCO (TODO: this should be parameterized) as we bias on MUSes and the rest
 			// of the lines contains the description of the MCSes
-			String output = Exec.invokeExecutable(this.pathToMarco + " -v -b MUSes " + p.getFirst().getAbsolutePath(), 1000);
+			String output = NativeShell.invokeExecutable(this.pathToMarco + " -v -b MUSes " + p.getFirst().getAbsolutePath(), 1000);
 			// delete file
 			p.getFirst().delete();
 			// parse output

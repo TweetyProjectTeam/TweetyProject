@@ -30,7 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.commons.util.Exec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
@@ -43,9 +46,6 @@ import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -310,7 +310,7 @@ public class OpenOptSolver extends Solver {
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		// first check whether Python is installed
 		try {
-			Exec.invokeExecutable("python -h");
+			NativeShell.invokeExecutable("python -h");
 		} catch (Exception e) {
 			return false;
 		}
@@ -331,7 +331,7 @@ public class OpenOptSolver extends Solver {
 			BufferedWriter out = new BufferedWriter(new FileWriter(ooFile));
 			out.write(scr);			
 			out.close();
-			String output = Exec.invokeExecutable("python " + ooFile.getAbsolutePath());
+			String output = NativeShell.invokeExecutable("python " + ooFile.getAbsolutePath());
 			ooFile.delete();
 			return output.trim().equals("yes");
 		} catch (IOException | InterruptedException e) {

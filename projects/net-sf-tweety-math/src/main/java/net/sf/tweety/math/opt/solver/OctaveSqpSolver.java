@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import net.sf.tweety.commons.util.Exec;
+import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
@@ -161,7 +161,7 @@ public class OctaveSqpSolver extends Solver{
 			BufferedWriter out = new BufferedWriter(new FileWriter(ocFile));
 			out.write(octaveCode);
 			out.close();			
-			String result = Exec.invokeExecutable(OctaveSqpSolver.pathToOctave + " " + ocFile.getAbsolutePath());
+			String result = NativeShell.invokeExecutable(OctaveSqpSolver.pathToOctave + " " + ocFile.getAbsolutePath());
 			// parse result
 			Map<Variable, Term> varMap = new HashMap<Variable,Term>();
 			String sub = result.substring(result.indexOf("x =")+3);
@@ -184,7 +184,7 @@ public class OctaveSqpSolver extends Solver{
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		try {
-			Exec.invokeExecutable(OctaveSqpSolver.pathToOctave + " -h");
+			NativeShell.invokeExecutable(OctaveSqpSolver.pathToOctave + " -h");
 			return true;
 		} catch (Exception e) {
 			return false;

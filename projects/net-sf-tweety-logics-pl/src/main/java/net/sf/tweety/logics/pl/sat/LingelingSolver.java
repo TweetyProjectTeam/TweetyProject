@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import net.sf.tweety.commons.Interpretation;
-import net.sf.tweety.commons.util.Exec;
+import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -66,7 +66,7 @@ public class LingelingSolver extends SatSolver {
 			}
 			// create temporary file in Dimacs CNF format.
 			File f = SatSolver.createTmpDimacsFile(formulas,props);
-			String output = Exec.invokeExecutable(this.binaryLocation + " -q --witness " + f.getAbsolutePath());
+			String output = NativeShell.invokeExecutable(this.binaryLocation + " -q --witness " + f.getAbsolutePath());
 			f.delete();
 			if(output.indexOf("UNSATISFIABLE") != -1)
 				return null;
@@ -103,7 +103,7 @@ public class LingelingSolver extends SatSolver {
 			}
 			// create temporary file in Dimacs CNF format.
 			File f = SatSolver.createTmpDimacsFile(formulas,props);
-			String output = Exec.invokeExecutable(this.binaryLocation + " -q " + f.getAbsolutePath());
+			String output = NativeShell.invokeExecutable(this.binaryLocation + " -q " + f.getAbsolutePath());
 			// delete file
 			f.delete();
 			return (output.indexOf("UNSATISFIABLE") == -1);			
