@@ -1,12 +1,12 @@
 buy_stock(C) -< good_price(C).
 ~buy_stock(C) -< good_price(C), risky_company(C).
-risky_company(C) -< in_fusion(C,AC).
+risky_company(C) -< in_fusion(C,D).
 risky_company(C) -< closing(C).
-~risky_company(C) -< in_fusion(C,AC), strong(AC).
+~risky_company(C) -< in_fusion(C,D), strong(D).
 
 good_price(acme).
-in_fusion(acme,steel) <- true.
-strong(steel) -< true.
+in_fusion(acme,steel). % -< true.
+strong(steel). % -< true.
 
 % we could make this a built-in:
-true.
+%true.

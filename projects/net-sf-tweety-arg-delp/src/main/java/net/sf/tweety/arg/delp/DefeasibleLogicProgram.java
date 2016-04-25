@@ -18,19 +18,10 @@
  */
 package net.sf.tweety.arg.delp;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.semantics.ComparisonCriterion;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
-import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
-import net.sf.tweety.arg.delp.syntax.DelpArgument;
-import net.sf.tweety.arg.delp.syntax.DelpFact;
-import net.sf.tweety.arg.delp.syntax.DelpRule;
-import net.sf.tweety.arg.delp.syntax.StrictRule;
+import net.sf.tweety.arg.delp.syntax.*;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
@@ -44,6 +35,11 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class models a defeasible logic program (DeLP).
@@ -69,7 +65,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 		super(delp);		
 	}
 
-	/**
+    /**
 	 * In general, a delp comprises of rule schemes with variables. This methods returns the
 	 * corresponding grounded theory, i.e., all schematic elements are replaced with all their grounded instances, where
 	 * all occurring variables are replaced with constants in every possible way. The set of constants used is the set
@@ -79,7 +75,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	public DefeasibleLogicProgram ground(){
 		return this.ground(((FolSignature)this.getSignature()).getConstants());
 	}
-	
+
 	/**
 	 * In general, a delp comprises of rule schemes with variables. This methods returns the
 	 * corresponding grounded theory, i.e., all schematic elements are replaced with all their grounded instances, where

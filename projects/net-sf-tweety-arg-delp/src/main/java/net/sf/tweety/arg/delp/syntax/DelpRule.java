@@ -331,7 +331,6 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 
         if (!head.equals(delpRule.head)) return false;
         return body.equals(delpRule.body);
-
     }
 
     @Override

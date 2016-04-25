@@ -92,7 +92,7 @@ public final class TestQueries {
     @Test
     public void stocks() throws IOException {
         DelpAnswer ans = query(REASONER_STOCKS, PARSER_STOCKS, "buy_stock(acme)");
-        assertEquals("Buying stock ACME should be supported",  DelpAnswer.Type.YES, ans.getType());
+        assertEquals("Buying stock ACME should be supported", DelpAnswer.Type.YES, ans.getType());
     }
 
     @Test
@@ -137,7 +137,7 @@ public final class TestQueries {
         assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
     }
 
-    @Ignore
+    @Ignore // currently too slow: state-space explosion!
     public void moreQuoted() throws IOException {
         DelpAnswer answer;
         DelpParser parser = new DelpParser();
@@ -169,42 +169,5 @@ public final class TestQueries {
         DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
         answer = query(reasoner, parser, "same_realm(\"1.2.3.4\",\"1.2.3.9\")"); // YES
         assertEquals(DelpAnswer.Type.YES, answer.getType());
-    }
-
-    @Ignore
-    public void mehrMist() throws IOException {
-        DelpAnswer answer;
-        DelpParser parser = new DelpParser();
-        DefeasibleLogicProgram delp = parser.parseBeliefBase("% modeling web defacement\n" +
-                "%web_defaced(URL,STR,IP1) -< cmd_injection(URL,IP1),\n" +
-                "%   saw(URL,IP2,STR),\n" +
-                "%   same_realm(IP1,IP2).\n" +
-                "%~web_defaced(URL,STR,IP1) -< ~cmd_injection(URL,IP1),\n" +
-                "%   visited(URL,IP2),\n" +
-                "%   same_realm(IP1,IP2).\n" +
-                "\n" +
-                "%cmd_injection(URL,IP) -< HTTP_method(URL,p,IP),\n" +
-                "%   saw(URL,IP,\"fr.jpg\"),\n" +
-                "%   POST_contains(frage_amp,IP,TEXT).\n" +
-                "~cmd_injection(URL,IP) -< HTTP_method(URL,g,IP).\n"+
-                "~cmd_injection(URL,IP) -< ~POST_contains(frage,IP,TEXT).\n" +
-                "~cmd_injection(URL,IP) -< ~POST_contains(amp,IP,TEXT).\n"+
-                "\n"+
-                "same_realm(IP1,IP2) <- slash24(IP1,PRE),slash24(IP2,PRE).\n"+
-                "% operative presumptions:\n" +
-                "visited(a,\"1.2.3.4\") -< true.\n" +
-                "saw(a,\"fr.jpg\",\"1.2.3.4\") -< true.\n" +
-                "HTTP_method(a,p,\"1.2.3.4\") -< true.\n" +
-                "cmd_injection(a,\"1.2.3.9\") -< true.\n" +
-                "\n" +
-                "% operative facts:\n"+
-                "slash24(\"1.2.3.4\",\"1.2.3\").\n" +
-                "slash24(\"1.2.3.9\",\"1.2.3\").\n" +
-                "");
-        DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
-        LOGGER.info("before");
-        answer = query(reasoner, parser, "same_realm(\"1.2.3.4\",\"1.2.3.9\")"); // YES
-        assertEquals(DelpAnswer.Type.YES, answer.getType());
-        LOGGER.info("after");
     }
 }

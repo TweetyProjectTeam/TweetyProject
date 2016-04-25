@@ -18,13 +18,20 @@
  */
 package net.sf.tweety.arg.delp;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import net.sf.tweety.arg.delp.semantics.ComparisonCriterion;
+import net.sf.tweety.arg.delp.semantics.DialecticalTree;
+import net.sf.tweety.arg.delp.semantics.EmptyCriterion;
+import net.sf.tweety.arg.delp.syntax.DelpArgument;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
-import net.sf.tweety.arg.delp.semantics.*;
-import net.sf.tweety.arg.delp.syntax.*;
-import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.fol.syntax.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This reasoner performs default dialectical reasoning
