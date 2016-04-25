@@ -137,37 +137,40 @@ public final class TestQueries {
         assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
     }
 
-    @Ignore // currently too slow: state-space explosion!
+    @Test // currently too slow: state-space explosion!
     public void moreQuoted() throws IOException {
         DelpAnswer answer;
         DelpParser parser = new DelpParser();
         DefeasibleLogicProgram delp = parser.parseBeliefBase("% modeling web defacement\n" +
-                "web_defaced(URL,STR,IP1) -< cmd_injection(URL,IP1),\n" +
-                "   saw(URL,IP2,STR),\n" +
+                "web_defaced(STR,IP1) -< cmd_injection(IP1),\n" +
+                "   saw(STR,IP2),\n" +
                 "   same_realm(IP1,IP2).\n" +
-                "~web_defaced(URL,STR,IP1) -< ~cmd_injection(URL,IP1),\n" +
-                "   visited(URL,IP2),\n" +
+                "~web_defaced(STR,IP1) -< ~cmd_injection(IP1),\n" +
+                "   visited(IP2),\n" +
                 "   same_realm(IP1,IP2).\n" +
                 "\n" +
-                "cmd_injection(URL,IP) -< HTTP_method(URL,\"POST\",IP),\n" +
-                "   POST_contains(\"?&\",IP,TEXT).\n" +
-                "~cmd_injection(URL,IP) -< HTTP_method(URL,\"GET\",IP).\n"+
-                "~cmd_injection(URL,IP) -< ~POST_contains(\"?\",IP,TEXT).\n" +
-                "~cmd_injection(URL,IP) -< ~POST_contains(\"&\",IP,TEXT).\n"+
+                "cmd_injection(IP) -< HTTP_POST(IP),\n" +
+                "   POST_contains(IP).\n" +
+                "~cmd_injection(IP) -< HTTP_GET(IP).\n"+
+                "~cmd_injection(IP) -< ~POST_contains(IP).\n" +
+                "~cmd_injection(IP) -< ~POST_contains(IP).\n"+
                 "\n"+
                 "same_realm(IP1,IP2) <- slash24(IP1,PRE),slash24(IP2,PRE).\n"+
-                "\n"+ // TODO: true?
+                "\n"+
                 "% operative presumptions:\n" +
-                "visited(\"www.pwned.se\",\"1.2.3.4\") -< true.\n" +
-                "saw(\"www.pwned.se\",\"fr.jpg\",\"1.2.3.4\") -< true.\n" +
-                "HTTP_method(\"www.pwned.se\",\"POST\",\"1.2.3.4\") -< true.\n" +
-                "cmd_injection(\"www.pwned.se\",\"1.2.3.9\") -< true.\n" +
+                "visited(\"1.2.3.4\") -< true.\n" +
+                "saw(\"fr.jpg\",\"1.2.3.4\") -< true.\n" +
+                "HTTP_POST(\"1.2.3.9\") -< true.\n" +
+                "POST_contains(\"1.2.3.9\") -< true.\n" +
                 "\n" +
                 "% operative facts:\n"+
                 "slash24(\"1.2.3.4\",\"1.2.3\").\n" +
-                "slash24(\"1.2.3.9\",\"1.2.3\").\n");
+                "slash24(\"1.2.3.9\",\"1.2.3\").\n" +
+                "true.");
         DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
         answer = query(reasoner, parser, "same_realm(\"1.2.3.4\",\"1.2.3.9\")"); // YES
+        assertEquals(DelpAnswer.Type.YES, answer.getType());
+        answer = query(reasoner, parser, "web_defaced(\"fr.jpg\",\"1.2.3.9\")"); // YES
         assertEquals(DelpAnswer.Type.YES, answer.getType());
     }
 }
