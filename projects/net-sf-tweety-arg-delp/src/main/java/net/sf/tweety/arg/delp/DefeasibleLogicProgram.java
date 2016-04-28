@@ -38,6 +38,7 @@ import org.kohsuke.args4j.Option;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -376,10 +377,16 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
             System.out.println("DeLP:\n---\n"+delp+"---\n");
         for (String query: queries) {
             Formula formula = parser.parseFormula(query);
+			if (options.showTime)
+				System.out.println("... Starting query at "+ LocalTime.now());
             System.out.print(formula + "? ");
             System.out.flush();
             DelpAnswer answer = (DelpAnswer) reasoner.query(formula);
-            System.out.println(answer.getText());
+            System.out.print(answer.getText());
+			if (options.showTime)
+				System.out.println("... Query done at "+ LocalTime.now() + System.lineSeparator());
+            else
+                System.out.println();
         }
     }
 
@@ -389,6 +396,9 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 
         @Option(name = "-v", aliases = "--verbose", usage = "also prints DeLP, not just query and answer")
         boolean beVerbose = false;
+
+		@Option(name = "-t", aliases = "--time", usage = "show time stamps between queries")
+		boolean showTime = false;
 
         @Option(name = "-c", aliases = "--compare", usage = "use given comparison criterion\nEMPTY, GEN_SPEC (default), PRIORITY (not implemented)")
         ComparisonCriterion criterion = new GeneralizedSpecificity();
