@@ -37,6 +37,36 @@ public class Argument {
 		return "Argument [prems=" + prems + ", conc=" + conc + ", subs=" + subs + ", defrules=" + defrules
 				+ ", toprule=" + toprule + "]";
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result;
+		if (subs.isEmpty())
+			result += conc.hashCode();
+		else for(Argument a:subs)
+			result += a.hashCode();
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Argument other = (Argument) obj;
+		
+		if(subs.isEmpty()){
+			return conc.equals(other.conc);
+		} 
+			for(Argument a: subs)
+				if(!other.subs.contains(a))
+					return false;
+			return true;
+		
+	}
 	
 	
 

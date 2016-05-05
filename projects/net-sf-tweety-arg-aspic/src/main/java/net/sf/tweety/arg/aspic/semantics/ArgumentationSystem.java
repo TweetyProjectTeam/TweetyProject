@@ -18,25 +18,19 @@ public class ArgumentationSystem {
 	}
 	
 	public void expand(Set<Word> kb) {
-		Collection<Argument> new_args = new ArrayList<>(),
-				last_args = new ArrayList<>();
 		for(Word premise: kb) {
 			Argument a = new Argument();
 			a.getPrems().add(premise);
 			a.setConc(premise);
 			//a.getSubs().add(premise);
-			last_args.add(a);
+			args.add(a);
 		}
 		do {
-			System.out.println(last_args);
-			for(Argument arg: last_args) {
-				for (InferenceRule rule: rules) {
+			for (InferenceRule rule: rules) {
 					
-				}
 			}
-			args.addAll(last_args);
-			last_args= new_args;
-		} while(!new_args.isEmpty());
+
+		} while(true);
 			
 	}
 
