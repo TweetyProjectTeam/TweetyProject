@@ -2,11 +2,15 @@ package net.sf.tweety.arg.aspic.syntax;
 
 import java.io.StringWriter;
 
-public class Word {
-	private final String identifier;
-	private boolean axiom = false, negation = false;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Signature;
 
-	public Word(String identifier, boolean negation) {
+public class AspicWord implements Formula {
+	private final String identifier;
+	private boolean //axiom = false, 
+			negation = false;
+
+	public AspicWord(String identifier, boolean negation) {
 		super();
 		this.identifier = identifier;
 		this.negation = negation;
@@ -22,14 +26,14 @@ public class Word {
 	}
 	
 
-	public boolean isAxiom() {
+/*	public boolean isAxiom() {
 		return axiom;
 	}
 
-	public Word asAxiom(boolean axiom) {
+	public AspicWord asAxiom(boolean axiom) {
 		this.axiom = axiom;
 		return this;
-	}
+	}*/
 
 	public boolean isNegation() {
 		return negation;
@@ -43,7 +47,7 @@ public class Word {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Word other = (Word) obj;
+		AspicWord other = (AspicWord) obj;
 		if (identifier == null) {
 			if (other.identifier != null)
 				return false;
@@ -61,9 +65,15 @@ public class Word {
 		if(negation)
 			sw.write("not ");
 		sw.write(identifier);
-		if(axiom)
-			sw.write(" (axiom)");
+	//	if(axiom)
+		//	sw.write(" (axiom)");
 		return sw . toString();
+	}
+
+	@Override
+	public Signature getSignature() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

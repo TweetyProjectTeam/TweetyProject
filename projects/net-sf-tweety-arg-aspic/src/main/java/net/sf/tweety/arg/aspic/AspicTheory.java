@@ -1,9 +1,6 @@
 package net.sf.tweety.arg.aspic;
 
-import java.util.Set;
-
-import net.sf.tweety.arg.aspic.semantics.ArgumentationSystem;
-import net.sf.tweety.arg.aspic.syntax.Word;
+import net.sf.tweety.arg.aspic.semantics.AspicArgumentationSystem;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
 
@@ -17,14 +14,13 @@ import net.sf.tweety.commons.Signature;
  */
 public class AspicTheory implements BeliefBase {
 	
-	ArgumentationSystem as;
-	Set<Word> kb;
+	AspicArgumentationSystem as;
 
-	public AspicTheory(ArgumentationSystem as, Set<Word> premises) {
+	public AspicTheory(AspicArgumentationSystem as) {
 		super();
-		this.as = as;
-		kb = premises;
-		as.expand(kb);
+		this.as = as;		
+		
+		as.expand();
 	}
 
 
@@ -39,7 +35,7 @@ public class AspicTheory implements BeliefBase {
 
 	@Override
 	public String toString() {
-		return "AspicTheory [as=" + as + ",\n premises=" + kb + "]";
+		return as.toString();
 	}
 	
 	
