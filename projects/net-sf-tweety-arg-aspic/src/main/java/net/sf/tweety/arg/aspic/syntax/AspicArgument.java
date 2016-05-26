@@ -6,8 +6,8 @@ import java.util.Collection;
 public class AspicArgument {
 	
 	Collection<AspicInferenceRule> prems = new ArrayList<>();
-	AspicWord conc = null;
-	Collection<AspicArgument> subs = new ArrayList<>();
+	AspicFormula conc = null;
+	//Collection<AspicArgument> subs = new ArrayList<>();
 	Collection<AspicInferenceRule> defrules = new ArrayList<>();
 	AspicInferenceRule toprule = null;
 	
@@ -26,33 +26,45 @@ public class AspicArgument {
 		}
 	}
 	
+	public boolean isDefeasible() {
+		return !defrules.isEmpty();
+	}
+	
 	public Collection<AspicInferenceRule> getPrems() {
 		return prems;
 	}
-	public AspicWord getConc() {
+	
+	public AspicFormula getConc() {
 		return conc;
 	}
+	
 	public void setConc(AspicWord conc) {
 		this.conc = conc;
 	}
-	public Collection<AspicArgument> getSubs() {
+	
+/*	public Collection<AspicArgument> getSubs() {
 		return subs;
-	}
+	}*/
+	
 	public Collection<AspicInferenceRule> getDefRules() {
 		return defrules;
 	}
+	
 	public AspicInferenceRule getTopRule() {
 		return toprule;
 	}
+	
 	public void setTopRule(AspicInferenceRule toprule) {
 		this.toprule = toprule;
 	}
+	
 	@Override
 	public String toString() {
-		return "Argument [prems=" + prems + ", conc=" + conc + ", subs=" + subs + ", defrules=" + defrules
+		return "Argument [prems=" + prems + ", conc=" + conc /*+ ", subs=" + subs*/ + ", defrules=" + defrules
 				+ ", toprule=" + toprule + "]";
 	}
-	@Override
+	
+/*	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -62,8 +74,9 @@ public class AspicArgument {
 		else for(AspicArgument a:subs)
 			result += a.hashCode();
 		return result;
-	}
-	@Override
+	}*/
+	
+/*	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -81,7 +94,7 @@ public class AspicArgument {
 					return false;
 			return true;
 		
-	}
+	}*/
 	
 	
 

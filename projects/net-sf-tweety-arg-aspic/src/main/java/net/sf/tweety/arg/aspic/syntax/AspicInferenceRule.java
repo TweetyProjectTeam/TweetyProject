@@ -8,16 +8,19 @@ import java.util.Iterator;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Rule;
 
-public class AspicInferenceRule implements Rule<AspicWord, AspicWord> {
+public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, AspicFormula> {
 	
 	boolean defeasible;
-	AspicWord conclusion;
-	Collection<AspicWord> premises = new ArrayList<>();
+	AspicFormula conclusion;
+	Collection<AspicFormula> premises = new ArrayList<>();
 	
-	public AspicInferenceRule(){}	
+	public AspicInferenceRule(){
+		super(null);
+		
+	}	
 	
-	public AspicInferenceRule(boolean defeasible, AspicWord conclusion, Collection<AspicWord> premise) {
-		super();
+	public AspicInferenceRule(boolean defeasible, AspicFormula conclusion, Collection<AspicFormula> premise) {
+		super(null);
 		this.defeasible = defeasible;
 		this.conclusion = conclusion;
 		this.premises = premise;
@@ -35,7 +38,9 @@ public class AspicInferenceRule implements Rule<AspicWord, AspicWord> {
 	public String toString() {
 		StringWriter sw =  new StringWriter();
 		sw.write("(");
-		Iterator<AspicWord> i = premises.iterator();
+		if(getID()!=null)
+			sw.write(getID()+": ");
+		Iterator<AspicFormula> i = premises.iterator();
 		if(i.hasNext())
 			sw.write(i.next().toString());
 		while(i.hasNext())
@@ -60,33 +65,74 @@ public class AspicInferenceRule implements Rule<AspicWord, AspicWord> {
 		return false;
 	}
 	@Override
-	public void setConclusion(AspicWord conclusion) {
+	public void setConclusion(AspicFormula conclusion) {
 		this.conclusion = conclusion;
 	}
 	
 	@Override
-	public void addPremise(AspicWord premise) {
+	public void addPremise(AspicFormula premise) {
 		this.premises.add(premise);	
 	}
 	@Override
-	public void addPremises(Collection<? extends AspicWord> premises) {
+	public void addPremises(Collection<? extends AspicFormula> premises) {
 		this.premises.addAll(premises);
 	}
 	
 	@Override
 	public Signature getSignature() {
 		Signature sig = conclusion.getSignature();
-		for (AspicWord w: premises)
+		for (AspicFormula w: premises)
 			sig.addSignature(w.getSignature());
 		return sig;
 	}
 	@Override
-	public Collection<? extends AspicWord> getPremise() {
+	public Collection<? extends AspicFormula> getPremise() {
 		return premises;
 	}
 	@Override
-	public AspicWord getConclusion() {
+	public AspicFormula getConclusion() {
 		return conclusion;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((conclusion == null) ? 0 : conclusion.hashCode());
+		result = prime * result + (defeasible ? 1231 : 1237);
+		result = prime * result + ((premises == null) ? 0 : premises.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		
+		
+		// custom addition
+		if(obj instanceof AspicWord) {
+			return ((AspicWord)obj).equals(this);
+		}
+		
+		if (getClass() != obj.getClass())
+			return false;
+		AspicInferenceRule other = (AspicInferenceRule) obj;
+		if (conclusion == null) {
+			if (other.conclusion != null)
+				return false;
+		} else if (!conclusion.equals(other.conclusion))
+			return false;
+		if (defeasible != other.defeasible)
+			return false;
+		if (premises == null) {
+			if (other.premises != null)
+				return false;
+		} else if (!premises.equals(other.premises))
+			return false;
+		return true;
 	}
 	
 	

@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 
 import net.sf.tweety.arg.aspic.AspicTheory;
 import net.sf.tweety.arg.aspic.semantics.AspicArgumentationSystem;
+import net.sf.tweety.arg.aspic.syntax.AspicFormula;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
+import net.sf.tweety.arg.aspic.syntax.AspicNegation;
 import net.sf.tweety.arg.aspic.syntax.AspicWord;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
@@ -17,10 +19,11 @@ import net.sf.tweety.commons.ParserException;
 public class AspicParser extends Parser<AspicTheory>{
 	
 	final Pattern RULE = Pattern.compile("(.*)([=-]>)(.+)"),
+			RULE_ID = Pattern.compile("(.*):(.*)"),
 			//AXIOMS = Pattern.compile("^\\s*axioms:(.+)"),
 			EMPTY = Pattern.compile("^\\s*$"),
-			NOT = Pattern.compile("^not\\s+(\\w+)"),
-			WORD = Pattern.compile("\\w+");
+			NOT = Pattern.compile("^-\\s*(\\w+)"),
+			WORD = Pattern.compile("\\$?\\w+");
 
 	@Override
 	public AspicTheory parseBeliefBase(Reader reader) throws IOException, ParserException {
@@ -41,7 +44,7 @@ public class AspicParser extends Parser<AspicTheory>{
 		return new AspicTheory(as);
 	}
 	
-	private AspicWord makeWord(String s) throws ParserException {
+	private AspicFormula makeWord(String s) throws ParserException {
 		s = s.trim();
 		boolean negation = false;
 		Matcher m = NOT.matcher(s);
@@ -50,7 +53,10 @@ public class AspicParser extends Parser<AspicTheory>{
 			s = m.group(1);
 		}
 		if(WORD.matcher(s).matches())
-			return new AspicWord(s,negation);
+			if(negation)
+				return new  AspicNegation(new AspicWord(s));
+			else
+				return new AspicWord(s);
 		else throw new ParserException("Non-word char in language");
 	}
 
@@ -65,8 +71,14 @@ public class AspicParser extends Parser<AspicTheory>{
 			AspicInferenceRule rule = new AspicInferenceRule();
 			rule.setDefeasible(m.group(2).equals("=>"));
 			rule.setConclusion(makeWord(m.group(3)));
-			if(!EMPTY.matcher(m.group(1)).matches()){
-				String[] pres = m.group(1).split(",");
+			String str = m.group(1);
+			m = RULE_ID.matcher(str);
+			if(m.matches()) {
+				rule.setID(m.group(1).trim());
+				str = m.group(2);
+			}
+			if(!EMPTY.matcher(str).matches()){
+				String[] pres = str.split(",");
 				for(String pre:pres)
 					rule.addPremise(makeWord(pre));
 			}

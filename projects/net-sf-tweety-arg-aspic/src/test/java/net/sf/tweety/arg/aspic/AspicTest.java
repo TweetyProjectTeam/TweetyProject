@@ -10,7 +10,7 @@ public class AspicTest {
 	public void test() throws Exception {
 
 		AspicParser parser = new AspicParser();
-		String input = "=>s\n=>u \n=>x\n ->p\n->x \n p => q\n p->v \ns=>t\n u =>v\nu,x=>not t\n s=> not  p\np,q->r\nv->not\ts";
+		String input = "=>s\n=>u \n=>x\n ->p\n->x \n d1: p => q\n p->v \ns=>t\n t=> - d1\nu =>v\nu,x=>- t\n s=> -p\np,q->r\nv->-\ts";
 		AspicTheory at = parser.parseBeliefBase(input);
 		System.out.println(at);
 		
