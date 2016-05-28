@@ -1,15 +1,17 @@
 package net.sf.tweety.arg.aspic.semantics;
 
+import java.util.Comparator;
+
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.AspicNegation;
 
 public class AspicAttack {
 	
-	AspicOrdering order = new AspicOrdering() {
+	Comparator<AspicArgument> order = new Comparator<AspicArgument>() {
 		@Override
-		public boolean leq(AspicArgument a, AspicArgument b) {
-			return true;
+		public int compare(AspicArgument o1, AspicArgument o2) {
+			return 0;
 		}
 	};
 	
