@@ -83,22 +83,18 @@ public class Derivation<T extends Rule<?,?>> extends ArrayList<T>{
 	 * @return the set of all possible derivations with the given conclusion
 	 */
 	public static <S extends Rule<?,?>> Set<Derivation<S>> allDerivations(Collection<? extends S> rules, Formula conclusion){
-		RuleSet<S> theRules = new RuleSet<S>(rules);
-		// each element (A,B,C) of this stack describes a (partial) derivation with
+		// each element (A,B,C) of the stack below describes a (partial) derivation with
 		// A - being the current derivation (a list of rules
 		// B - being the set of all formulas that have to be proven
 		// C - being the set of rules that can be used to construct the rest of the derivation
 		Stack<Triple<List<S>,Set<Formula>,RuleSet<S>>> stack = new Stack<Triple<List<S>,Set<Formula>,RuleSet<S>>>();
-		for(S r : theRules.getRulesWithConclusion(conclusion)){
-			Triple<List<S>,Set<Formula>,RuleSet<S>> derivation = new Triple<List<S>,Set<Formula>,RuleSet<S>>();
-			derivation.setFirst(new ArrayList<S>());
-			derivation.getFirst().add(r);
-			derivation.setSecond(new HashSet<Formula>());
-			derivation.getSecond().addAll(r.getPremise());
-			derivation.setThird(new RuleSet<S>(rules));
-			derivation.getThird().removeAll(theRules.getRulesWithConclusion(conclusion));
-			stack.add(derivation);
-		}
+		Triple<List<S>,Set<Formula>,RuleSet<S>> initial = new Triple<List<S>,Set<Formula>,RuleSet<S>>();
+		initial.setFirst(new ArrayList<S>());
+		initial.getFirst();
+		initial.setSecond(new HashSet<Formula>());
+		initial.getSecond().add(conclusion);
+		initial.setThird(new RuleSet<S>(rules));
+		stack.add(initial);		
 		Set<Derivation<S>> derivations = new HashSet<Derivation<S>>();
 		while(!stack.isEmpty()){
 			Triple<List<S>,Set<Formula>,RuleSet<S>> derivation = stack.pop();
@@ -114,8 +110,22 @@ public class Derivation<T extends Rule<?,?>> extends ArrayList<T>{
 						newDerivation.getSecond().remove(f);
 						newDerivation.getSecond().addAll(r.getPremise());
 						newDerivation.setThird(new RuleSet<S>(derivation.getThird()));
-						newDerivation.getThird().removeAll(theRules.getRulesWithConclusion(f));
-						stack.add(newDerivation);
+						newDerivation.getThird().removeAll(derivation.getThird().getRulesWithConclusion(f));
+						// Check whether we added an element to the second
+						// component that is already derived from a rule in the first component.
+						// In that case we have a cycle and the derivation cannot be completed.
+						boolean noder = false;
+						for(Formula g: newDerivation.getSecond()){
+							for(S s: newDerivation.getFirst())
+								if(s.getConclusion().equals(g)){
+									noder = true;
+									break;
+								}
+							if(noder)
+								break;
+						}
+						if(!noder)
+							stack.add(newDerivation);
 					}
 				}
 			}
