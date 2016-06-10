@@ -28,6 +28,12 @@ public class AspicArgumentationSystem {
 	public Collection<AspicArgument> getArguments() {
 		return args;
 	}
+	
+	
+
+	public Collection<AspicInferenceRule> getRules() {
+		return rules;
+	}
 
 	@Override
 	public String toString() {

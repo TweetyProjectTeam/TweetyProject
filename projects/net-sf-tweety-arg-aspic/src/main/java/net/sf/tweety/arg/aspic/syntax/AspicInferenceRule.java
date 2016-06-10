@@ -113,8 +113,10 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 		
 		
 		// custom addition
-		if(obj instanceof AspicWord) {
-			return ((AspicWord)obj).equals(this);
+		if(obj instanceof AspicWord&& !(obj instanceof AspicInferenceRule)) {
+			if(getID()==null)
+				return false;
+			return ((AspicWord)obj).getID().equals(getID());
 		}
 		
 		if (getClass() != obj.getClass())

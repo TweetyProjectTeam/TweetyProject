@@ -12,7 +12,7 @@ public class AspicArgument {
 	AspicInferenceRule toprule = null;
 	
 	public AspicArgument(Collection<AspicInferenceRule> derivation) {
-		System.out.println(derivation);
+		//System.out.println(derivation);
 		for(AspicInferenceRule rule:derivation) {
 			if(toprule == null) {
 				toprule = rule;
