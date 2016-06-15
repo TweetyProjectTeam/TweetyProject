@@ -24,7 +24,7 @@ public class AspicTest {
 		AspicParser parser = new AspicParser();
 		String input = "=>s\n=>u \n=>x\n ->p\n->x \n d1: p => q\n p->v \ns=>t\n t=> - d1\nu =>v\nu,x=>- t\n s=> -p\np,q->r\nv->-\ts";
 		AspicTheory at = parser.parseBeliefBase(input);
-		DerivationGraph<AspicFormula, AspicFormula,AspicInferenceRule> g = new DerivationGraph<>();
+		DerivationGraph<AspicFormula, AspicInferenceRule> g = new DerivationGraph<>();
 		//System.out.println(at.as.getRules());
 		g.allDerivations(at.as.getRules());
 		System.out.println(g.getValues());

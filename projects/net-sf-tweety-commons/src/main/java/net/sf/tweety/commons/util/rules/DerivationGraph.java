@@ -8,7 +8,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Digraph;
 import net.sf.tweety.commons.util.DigraphNode;
 
-public class DerivationGraph<F1 extends Formula, F2 extends Formula, R extends Rule<F1,F2>> extends Digraph<R> {
+public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Digraph<R> {
 	
 	public DerivationGraph() {
 		
@@ -25,14 +25,33 @@ public class DerivationGraph<F1 extends Formula, F2 extends Formula, R extends R
 		
 		while(true) {
 			boolean finished = true;
-			for(R r: open) {
-				Collection<F1> params = (Collection<F1>)r.getPremise();
+			rule_loop: for(R r: open) {
+				List<F> params = new ArrayList<>();
+				params.addAll(r.getPremise());
 				List<List<DigraphNode<R>>> pre = new ArrayList<>();
 				for(int i = 0 ; i < params.size() ; i++) {
-					pre.set(i, new ArrayList<>());
-					
-					// ......
+					pre.add(new ArrayList<>());
+					F param = params.get(i);
+					for(DigraphNode<R> n:this)
+						if(n.getValue().getConclusion().equals(param))
+							pre.get(i).add(n);
 				}
+				
+				for(List<DigraphNode<R>> l:pre) {
+					if(l.isEmpty())
+						continue rule_loop;
+				}
+				
+				
+				
+				/*for(int i = 0 ; i < params.size() ; i++) {
+					System.out.println(params.get(i));
+					List<DigraphNode<R>> l = pre.get(i);
+					for(int j = 0 ; j < l.size() ; j++) {
+						System.out.println(l.get(j).getValue());
+					}
+				}
+				System.out.println("");*/
 			}
 			
 			if(finished)
