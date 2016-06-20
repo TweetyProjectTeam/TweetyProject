@@ -1,10 +1,17 @@
 package net.sf.tweety.arg.aspic;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
+
+import java.util.Collection;
+
 import org.junit.Test;
 
 import net.sf.tweety.arg.aspic.parser.AspicParser;
 import net.sf.tweety.arg.aspic.syntax.AspicFormula;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
+import net.sf.tweety.arg.aspic.syntax.AspicWord;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
 
 public class AspicTest {
@@ -20,14 +27,25 @@ public class AspicTest {
 	}
 	
 	@Test
-	public void GraphTest() throws Exception {
+	public void ParserAndDerivationGraphTest() throws Exception {
 		AspicParser parser = new AspicParser();
-		String input = "=>s\n=>u \n=>x\n ->p\n->x \n d1: p => q\n p->v \ns=>t\n t=> - d1\nu =>v\nu,x=>- t\n s=> -p\np,q->r\nv->-\ts";
+		String input = "=> a \n -> b \n a => c  \n b->c \n d, c ->e \n a,b,c=>f";
 		AspicTheory at = parser.parseBeliefBase(input);
+		Collection<AspicInferenceRule> rules = at.as.getRules();
+		assertTrue(rules.size() == 6);
 		DerivationGraph<AspicFormula, AspicInferenceRule> g = new DerivationGraph<>();
-		//System.out.println(at.as.getRules());
-		g.allDerivations(at.as.getRules());
+		g.allDerivations(rules);
 		System.out.println(g.getValues());
+		assertTrue(g.size()==5);
+		for(AspicInferenceRule r:g.getValues())
+			assertTrue(rules.contains(r));
+		for(AspicInferenceRule r: rules)
+			if(r.getConclusion().equals(new AspicWord("e")))
+				assertFalse(g.getValues().contains(r));
+			else
+				assertTrue(g.getValues().contains(r));
+		assertTrue(g.numberOfEdges() == 6);
+		assertTrue(g.getLeafs().size() == 1);
 	}
 
 }

@@ -21,10 +21,9 @@ public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Dig
 			if (r.isFact())
 				this.addNode(r);
 		open.removeAll(getValues());
-		System.out.println(open);
+		
 		
 		while(true) {
-			//boolean finished = true;
 			int noe = this.numberOfEdges();
 			rule_loop: for(R r: open) {
 				List<F> params = new ArrayList<>();
@@ -43,7 +42,6 @@ public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Dig
 						continue rule_loop;
 				}
 				
-				//finished=false;
 				
 				Digraph<DigraphNode<R>> param_tree = new Digraph<>(false);
 				param_tree.addNode(null);
@@ -55,30 +53,20 @@ public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Dig
 						}
 				}
 				
+				DigraphNode<R> new_node = this.addNode(r);
 				for(DigraphNode<DigraphNode<R>> n: param_tree.getLeafs()) {
-					DigraphNode<R> new_node = this.addNode(r);
 					do {
 						n.getValue().addEdge(new_node);
 						n = n.getParent();
 					} while (! n.isRoot());
 				}
 				
-				//System.out.println(param_tree.size());
-				//param_tree.printTrees(System.out);
-				/*for(int i = 0 ; i < params.size() ; i++) {
-					System.out.println(params.get(i));
-					List<DigraphNode<R>> l = pre.get(i);
-					for(int j = 0 ; j < l.size() ; j++) {
-						System.out.println(l.get(j).getValue());
-					}
-				}
-				System.out.println("");*/
 			}
 			
-			printTrees(System.out);
+			//printTrees(System.out);
 			
-			System.out.println(size());
-			System.out.println(numberOfEdges());
+			//System.out.println(size());
+			//System.out.println(numberOfEdges());
 			if(noe == this.numberOfEdges())
 				break;
 		}
