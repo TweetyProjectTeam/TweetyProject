@@ -29,14 +29,14 @@ public class AspicTest {
 	@Test
 	public void ParserAndDerivationGraphTest() throws Exception {
 		AspicParser parser = new AspicParser();
-		String input = "=> a \n -> b \n a => c  \n b->c \n d, c ->e \n a,b,c=>f";
+		String input = "f->g\n g,a->h\n=> a \n -> b \n a => c  \n b->c \n d, c ->e \n a,b,c=>f";
 		AspicTheory at = parser.parseBeliefBase(input);
 		Collection<AspicInferenceRule> rules = at.as.getRules();
-		assertTrue(rules.size() == 6);
+		assertTrue(rules.size() == 8);
 		DerivationGraph<AspicFormula, AspicInferenceRule> g = new DerivationGraph<>();
 		g.allDerivations(rules);
 		System.out.println(g.getValues());
-		assertTrue(g.size()==5);
+		assertTrue(g.numberOfNodes()==7);
 		for(AspicInferenceRule r:g.getValues())
 			assertTrue(rules.contains(r));
 		for(AspicInferenceRule r: rules)
@@ -44,7 +44,7 @@ public class AspicTest {
 				assertFalse(g.getValues().contains(r));
 			else
 				assertTrue(g.getValues().contains(r));
-		assertTrue(g.numberOfEdges() == 6);
+		assertTrue(g.numberOfEdges() == 9);
 		assertTrue(g.getLeafs().size() == 1);
 	}
 

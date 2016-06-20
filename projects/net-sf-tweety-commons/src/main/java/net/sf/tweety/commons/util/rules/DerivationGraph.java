@@ -8,12 +8,25 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Digraph;
 import net.sf.tweety.commons.util.DigraphNode;
 
+/**
+ * 
+ * @author Nils Geilen
+ * expands a set of formulae to a graph where nodes are formulae and edges show, which forumla can be composed of which formulae
+ * @param <F> a formula type
+ * @param <R> a rule type F^n -> F
+ */
+
+
 public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Digraph<R> {
 	
 	public DerivationGraph() {
 		super(true);
 	}
 	
+	/**
+	 * expands the rule set 
+	 * @param rules a collection of rules
+	 */
 	public void allDerivations (Collection<R> rules) {
 		Collection<R> open = new ArrayList<>();
 		open.addAll(rules);

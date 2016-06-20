@@ -6,9 +6,10 @@ import java.util.Set;
 
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
+import net.sf.tweety.commons.util.Digraph;
 import net.sf.tweety.commons.util.rules.Derivation;
 
-public class AspicArgumentationSystem {
+public class AspicArgumentationSystem extends Digraph<AspicArgument> {
 	
 	Collection<AspicInferenceRule> rules = new ArrayList<>();
 	Collection<AspicArgument> args = new ArrayList<>();
