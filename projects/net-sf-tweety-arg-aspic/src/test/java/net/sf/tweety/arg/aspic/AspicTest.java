@@ -1,8 +1,7 @@
 package net.sf.tweety.arg.aspic;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
@@ -29,23 +28,23 @@ public class AspicTest {
 	@Test
 	public void ParserAndDerivationGraphTest() throws Exception {
 		AspicParser parser = new AspicParser();
-		String input = "f->g\n g,a->h\n=> a \n -> b \n a => c  \n b->c \n d, c ->e \n a,b,c=>f";
+		String input = "-> a \n => b \n b,c =>d \n a=> e \n b -> e \n e, b-> f";
 		AspicTheory at = parser.parseBeliefBase(input);
 		Collection<AspicInferenceRule> rules = at.as.getRules();
-		assertTrue(rules.size() == 8);
+		assertTrue(rules.size() == 6);
 		DerivationGraph<AspicFormula, AspicInferenceRule> g = new DerivationGraph<>();
 		g.allDerivations(rules);
 		System.out.println(g.getValues());
-		assertTrue(g.numberOfNodes()==7);
+		assertTrue(g.numberOfNodes()==6);
 		for(AspicInferenceRule r:g.getValues())
 			assertTrue(rules.contains(r));
 		for(AspicInferenceRule r: rules)
-			if(r.getConclusion().equals(new AspicWord("e")))
+			if(r.getConclusion().equals(new AspicWord("d")))
 				assertFalse(g.getValues().contains(r));
 			else
 				assertTrue(g.getValues().contains(r));
-		assertTrue(g.numberOfEdges() == 9);
-		assertTrue(g.getLeafs().size() == 1);
+		assertTrue(g.numberOfEdges() == 6);
+		assertTrue(g.getLeafs().size() == 2);
 	}
 
 }

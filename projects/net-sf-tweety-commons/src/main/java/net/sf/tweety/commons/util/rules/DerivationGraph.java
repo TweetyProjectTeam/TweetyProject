@@ -20,7 +20,7 @@ import net.sf.tweety.commons.util.DigraphNode;
 public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Digraph<R> {
 	
 	public DerivationGraph() {
-		super(true);
+		super(false);
 	}
 	
 	/**
@@ -66,12 +66,29 @@ public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Dig
 						}
 				}
 				
-				DigraphNode<R> new_node = this.addNode(r);
-				for(DigraphNode<DigraphNode<R>> n: param_tree.getLeafs()) {
+				
+				next_path_in_param_tree: for(DigraphNode<DigraphNode<R>> leaf: param_tree.getLeafs()) {
+					
+					List<DigraphNode<R>> path = new ArrayList<>();
 					do {
-						n.getValue().addEdge(new_node);
-						n = n.getParent();
-					} while (! n.isRoot());
+						path.add(leaf.getValue());
+						leaf = leaf.getParent();
+					} while (! leaf.isRoot());
+					
+					next_node : for(DigraphNode<R> node:this) {
+						if(node.getValue().equals(r)) {
+							for(DigraphNode<R> n:path) {
+								if(!node.getParents().contains(n))
+									continue next_node;
+							}
+							continue next_path_in_param_tree;
+						}
+					}
+					
+					DigraphNode<R> new_node = this.addNode(r);
+					for(DigraphNode<R> node: path)
+						node.addEdge(new_node);
+					
 				}
 				
 			}

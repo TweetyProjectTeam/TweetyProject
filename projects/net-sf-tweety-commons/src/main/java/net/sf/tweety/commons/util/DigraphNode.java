@@ -59,7 +59,7 @@ public class DigraphNode<T> {
 	 * a parent is a node n, that has an edge leading from n to this node
 	 * @return all of this node's parents
 	 */
-	public Iterable<DigraphNode<T>> getParents() {
+	public Collection<DigraphNode<T>> getParents() {
 		return parents;
 	}
 	
@@ -75,7 +75,7 @@ public class DigraphNode<T> {
 	 * a child is a node n, that has an edge leading from this node to n 
 	 * @return all of the nodes children
 	 */
-	public Iterable<DigraphNode<T>> getChildren() {
+	public Collection<DigraphNode<T>> getChildren() {
 		return children;
 	}
 	

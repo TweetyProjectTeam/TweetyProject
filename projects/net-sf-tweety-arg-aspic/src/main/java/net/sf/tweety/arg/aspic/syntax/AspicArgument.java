@@ -3,13 +3,19 @@ package net.sf.tweety.arg.aspic.syntax;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class AspicArgument {
+import net.sf.tweety.graphs.Node;
+
+public class AspicArgument implements Node {
 	
 	Collection<AspicInferenceRule> prems = new ArrayList<>();
 	AspicFormula conc = null;
-	//Collection<AspicArgument> subs = new ArrayList<>();
+	Collection<AspicArgument> subs = new ArrayList<>();
 	Collection<AspicInferenceRule> defrules = new ArrayList<>();
 	AspicInferenceRule toprule = null;
+	
+	public AspicArgument(AspicInferenceRule toprule, Collection<AspicInferenceRule> subrules) {
+		
+	}
 	
 	public AspicArgument(Collection<AspicInferenceRule> derivation) {
 		//System.out.println(derivation);
