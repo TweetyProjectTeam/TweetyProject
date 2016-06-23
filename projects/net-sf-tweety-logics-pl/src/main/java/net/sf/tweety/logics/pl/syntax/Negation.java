@@ -183,6 +183,7 @@ public class Negation extends PropositionalFormula {
 		Set<PropositionalFormula> result = new HashSet<PropositionalFormula>();
 		if(this.isLiteral())			
 			result.add(this);
+		else result.addAll(this.formula.getLiterals());
 		return result;
 	}
 	
