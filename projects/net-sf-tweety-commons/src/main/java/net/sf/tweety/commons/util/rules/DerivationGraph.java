@@ -67,7 +67,7 @@ public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Dig
 				}
 				
 				
-				next_path_in_param_tree: for(DigraphNode<DigraphNode<R>> leaf: param_tree.getLeafs()) {
+				for(DigraphNode<DigraphNode<R>> leaf: param_tree.getLeafs()) {
 					
 					List<DigraphNode<R>> path = new ArrayList<>();
 					do {
@@ -75,15 +75,8 @@ public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Dig
 						leaf = leaf.getParent();
 					} while (! leaf.isRoot());
 					
-					next_node : for(DigraphNode<R> node:this) {
-						if(node.getValue().equals(r)) {
-							for(DigraphNode<R> n:path) {
-								if(!node.getParents().contains(n))
-									continue next_node;
-							}
-							continue next_path_in_param_tree;
-						}
-					}
+					if(containsNode(r, path))
+						continue;
 					
 					DigraphNode<R> new_node = this.addNode(r);
 					for(DigraphNode<R> node: path)
@@ -100,6 +93,19 @@ public class DerivationGraph<F extends Formula, R extends Rule<F,F>> extends Dig
 			if(noe == this.numberOfEdges())
 				break;
 		}
+	}
+	
+	private boolean containsNode(R value, List<DigraphNode<R>> parents) {
+		next_node : for(DigraphNode<R> node:this) {
+			if(node.getValue().equals(value)) {
+				for(DigraphNode<R> n:parents) {
+					if(!node.getParents().contains(n))
+						continue next_node;
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
