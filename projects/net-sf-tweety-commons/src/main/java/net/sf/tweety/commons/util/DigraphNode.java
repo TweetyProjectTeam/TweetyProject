@@ -120,6 +120,8 @@ public class DigraphNode<T> {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
+		if(!this.uniq)
+			return false;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
