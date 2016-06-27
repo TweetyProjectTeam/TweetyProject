@@ -10,9 +10,9 @@ import net.sf.tweety.commons.util.rules.Rule;
 
 public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, AspicFormula> {
 	
-	boolean defeasible;
-	AspicFormula conclusion;
-	Collection<AspicFormula> premises = new ArrayList<>();
+	private boolean defeasible;
+	private AspicFormula conclusion;
+	private Collection<AspicFormula> premises = new ArrayList<>();
 	
 	public AspicInferenceRule(){
 		super(null);

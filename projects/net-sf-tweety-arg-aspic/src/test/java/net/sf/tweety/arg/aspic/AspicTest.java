@@ -8,6 +8,8 @@ import java.util.Collection;
 import org.junit.Test;
 
 import net.sf.tweety.arg.aspic.parser.AspicParser;
+import net.sf.tweety.arg.aspic.semantics.AspicAttack;
+import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.AspicFormula;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.AspicWord;
@@ -46,5 +48,71 @@ public class AspicTest {
 		assertTrue(g.numberOfEdges() == 6);
 		assertTrue(g.getLeafs().size() == 2);
 	}
+	
+	@Test
+	public void ArgSysTest() throws Exception {
+		AspicParser parser = new AspicParser();
+		String input = "-> a \n => b \n b,c =>d \n a-> e \n b -> e \n e, b=> f \n a, f -> g";
+		AspicTheory at = parser.parseBeliefBase(input);
+		Collection<AspicArgument> args = at.as.getArguments();
+		for(AspicArgument a:args)
+			System.out.println(a);
+		assertTrue(args.size() == 8);
+		for(AspicArgument a:args)
+			if(a.getConc() .equals(new AspicWord("f"))
+					|| a.getConc() .equals(new AspicWord("g")))
+				assertTrue(a.isDefeasible());
+			else
+				assertFalse(a.isDefeasible());
 
+		
+	}
+	
+	@Test
+	public void AttackTest() throws Exception {
+		AspicParser parser = new AspicParser();
+		String input = "=> - a \n"
+				+ " => a \n"
+				+ "-> - b \n"
+				+ "-> b \n"
+				+ "a,b->c\n";
+		AspicTheory at = parser.parseBeliefBase(input);
+		Collection<AspicArgument> args = at.as.getArguments();
+		
+		AspicArgument not_a = new AspicArgument((AspicInferenceRule)parser.parseFormula("=> -a"));
+		AspicArgument arg_a = new AspicArgument((AspicInferenceRule)parser.parseFormula("=> a"));
+		AspicArgument not_b = new AspicArgument((AspicInferenceRule)parser.parseFormula("-> - b"));
+		AspicArgument not_c = new AspicArgument((AspicInferenceRule)parser.parseFormula("-> - c"));
+		AspicArgument ab_mapsto_c = new AspicArgument((AspicInferenceRule)parser.parseFormula("a,b->c"));
+		assertTrue(args.contains(not_a));
+		assertTrue(args.contains(not_b));
+		assertFalse(args.contains(not_c));
+		assertFalse(args.contains(ab_mapsto_c));
+		
+		int sum = 0;
+		for (AspicArgument arg: args) {
+			AspicAttack a=new AspicAttack(not_a,arg);
+			a.attack();
+			System.out.println(a.getOutput());
+			if(a.getResult())
+				sum++;
+		}
+		assertTrue(sum==2);
+		for (AspicArgument arg: args) {
+			AspicAttack a=new AspicAttack(not_b,arg);
+			a.attack();
+			System.out.println(a.getOutput());
+			assertFalse(a.getResult());
+		}
+		for (AspicArgument arg: args) {
+			AspicAttack a=new AspicAttack(arg_a,arg);
+			a.attack();
+			System.out.println(a.getOutput());
+			if(arg.equals(not_a))
+				assertTrue(a.getResult());
+			else
+				assertFalse(a.getResult());
+		}
+		
+	}
 }

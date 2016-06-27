@@ -4,7 +4,7 @@ import net.sf.tweety.commons.Signature;
 
 public class AspicNegation implements AspicFormula {
 	
-	AspicFormula formula;
+	private AspicFormula formula;
 
 	public AspicNegation(AspicFormula formula) {
 		super();

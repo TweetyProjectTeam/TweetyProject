@@ -2,42 +2,55 @@ package net.sf.tweety.arg.aspic.syntax;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
+import net.sf.tweety.arg.aspic.semantics.AspicArgumentationSystem;
+import net.sf.tweety.commons.util.DigraphNode;
 import net.sf.tweety.graphs.Node;
 
 public class AspicArgument implements Node {
 	
-	Collection<AspicInferenceRule> prems = new ArrayList<>();
-	AspicFormula conc = null;
-	Collection<AspicArgument> subs = new ArrayList<>();
-	Collection<AspicInferenceRule> defrules = new ArrayList<>();
-	AspicInferenceRule toprule = null;
+	private AspicFormula conc = null;;
+	private Collection<AspicArgument> directsubs = new ArrayList<>();
+	private AspicInferenceRule toprule = null;
 	
-	public AspicArgument(AspicInferenceRule toprule, Collection<AspicInferenceRule> subrules) {
+	public AspicArgument(AspicInferenceRule toprule) {
+		this.toprule = toprule;
+		conc = toprule.getConclusion();	
+	}
+	
+	public AspicArgument(DigraphNode<AspicInferenceRule> node, AspicArgumentationSystem as ) {
+		for(DigraphNode<AspicInferenceRule> parentnode : node.getParents())
+			directsubs.add(as.addArgument(new AspicArgument(parentnode, as)));
+		
+		toprule = node.getValue();
+		conc = toprule.getConclusion();	
 		
 	}
 	
-	public AspicArgument(Collection<AspicInferenceRule> derivation) {
-		//System.out.println(derivation);
-		for(AspicInferenceRule rule:derivation) {
-			if(toprule == null) {
-				toprule = rule;
-				conc = rule.getConclusion();
-			}
-			if(rule.isFact()) {
-				prems.add(rule);
-			} else if (rule.isDefeasible()) {
-				defrules.add(rule);
-			}
-		}
-	}
 	
 	public boolean isDefeasible() {
-		return !defrules.isEmpty();
+		return !getDefRules().isEmpty();
 	}
 	
-	public Collection<AspicInferenceRule> getPrems() {
-		return prems;
+/*	public Collection<AspicInferenceRule> getPrems() {
+		Collection<AspicInferenceRule> result = new HashSet<>();
+		if(toprule.isFact())
+			result.add(toprule);
+		for(AspicArgument arg : directsubs)
+			result.addAll(arg.getPrems());
+		return result;
+	}*/
+	
+	public Collection<AspicArgument> getOrdinaryPremises() {
+		Collection<AspicArgument> result = new HashSet<>();
+		if (toprule.isFact() && toprule.isDefeasible()) {
+			result.add(this);
+			return result;
+		}
+		for(AspicArgument a: directsubs)
+			result.addAll(a.getOrdinaryPremises());
+		return result;
 	}
 	
 	public AspicFormula getConc() {
@@ -48,14 +61,36 @@ public class AspicArgument implements Node {
 		this.conc = conc;
 	}
 	
-/*	public Collection<AspicArgument> getSubs() {
-		return subs;
-	}*/
-	
-	public Collection<AspicInferenceRule> getDefRules() {
-		return defrules;
+	public Collection<AspicArgument> getAllSubs() {
+		Collection<AspicArgument> result = new HashSet<>();
+		result.add(this);
+		for(AspicArgument a : directsubs)
+			result.addAll(a.getAllSubs());
+		return result;
 	}
 	
+	public Collection<AspicArgument> getDefSubs() {
+		Collection<AspicArgument> result = new HashSet<>();
+		if(toprule.isFact())
+			return result;
+		if(toprule.isDefeasible())
+			result.add(this);
+		for(AspicArgument arg : directsubs)
+			result.addAll(arg.getDefSubs());
+		return result;
+	}
+	
+	public Collection<AspicInferenceRule> getDefRules() {
+		Collection<AspicInferenceRule> result = new HashSet<>();
+		for(AspicArgument a : getDefSubs())
+			result.add(a.toprule);
+		return result;
+	}
+	
+	public Collection<AspicArgument> getDirectSubs() {
+		return directsubs;
+	}
+
 	public AspicInferenceRule getTopRule() {
 		return toprule;
 	}
@@ -63,26 +98,22 @@ public class AspicArgument implements Node {
 	public void setTopRule(AspicInferenceRule toprule) {
 		this.toprule = toprule;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Argument [prems=" + prems + ", conc=" + conc /*+ ", subs=" + subs*/ + ", defrules=" + defrules
-				+ ", toprule=" + toprule + "]";
+		return "[" + toprule + (directsubs.isEmpty()  ? "":directsubs )+ "]";
 	}
-	
-/*	@Override
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result;
-		if (subs.isEmpty())
-			result += conc.hashCode();
-		else for(AspicArgument a:subs)
-			result += a.hashCode();
+		result = prime * result + ((directsubs == null) ? 0 : directsubs.hashCode());
+		result = prime * result + ((toprule == null) ? 0 : toprule.hashCode());
 		return result;
-	}*/
-	
-/*	@Override
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -91,16 +122,20 @@ public class AspicArgument implements Node {
 		if (getClass() != obj.getClass())
 			return false;
 		AspicArgument other = (AspicArgument) obj;
-		
-		if(subs.isEmpty()){
-			return conc.equals(other.conc);
-		} 
-			for(AspicArgument a: subs)
-				if(!other.subs.contains(a))
-					return false;
-			return true;
-		
-	}*/
+		if (directsubs == null) {
+			if (other.directsubs != null)
+				return false;
+		} else if (!directsubs.equals(other.directsubs))
+			return false;
+		if (toprule == null) {
+			if (other.toprule != null)
+				return false;
+		} else if (!toprule.equals(other.toprule))
+			return false;
+		return true;
+	}
+	
+	
 	
 	
 
