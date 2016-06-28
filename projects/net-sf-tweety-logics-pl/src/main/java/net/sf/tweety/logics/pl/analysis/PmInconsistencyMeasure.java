@@ -73,7 +73,10 @@ public class PmInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Propos
 		int result = 0;
 		for(Collection<PropositionalFormula> mus: muses){
 			if(mus.contains(negF)) result++;
-			else if(mus.size() == 1 && mus.iterator().next().getLiterals().contains(f)) result++;
+			else
+				if(mus.size() == 1 && mus.iterator().next().getLiterals().contains(f)) result++;
+				else
+					if(mus.size() == 1 && mus.iterator().next().getLiterals().contains(negF)) result++;
 		}
 		return result;
 	}
