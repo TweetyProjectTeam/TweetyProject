@@ -33,6 +33,14 @@ public class AspicAttack {
 		return shortcut;
 	}
 	
+	public boolean getResult() {
+		return result;
+	}
+
+	public String getOutput() {
+		return sw.toString();
+	}
+	
 	private void nl() {
 		sw.write("\n");
 	}
@@ -72,12 +80,6 @@ public class AspicAttack {
 		this.order = order;
 	}
 	
-	public boolean getResult() {
-		return result;
-	}
 
-	public String getOutput() {
-		return sw.toString();
-	}
 
 }
