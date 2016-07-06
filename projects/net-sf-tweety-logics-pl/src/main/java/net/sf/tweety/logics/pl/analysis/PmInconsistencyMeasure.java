@@ -67,7 +67,7 @@ public class PmInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Propos
 		// compute minimal inconsistent subsets of formulas\cup\{\neg f\} in order to extract minimal proofs.
 		AbstractMusEnumerator<PropositionalFormula> musEnum = PlMusEnumerator.getDefaultEnumerator();
 		Collection<PropositionalFormula> extKb = new HashSet<PropositionalFormula>(formulas);
-		PropositionalFormula negF = new Negation(f); 
+		PropositionalFormula negF = (PropositionalFormula) f.complement(); 
 		extKb.add(negF);
 		Collection<Collection<PropositionalFormula>> muses = musEnum.minimalInconsistentSubsets(extKb);
 		int result = 0;
