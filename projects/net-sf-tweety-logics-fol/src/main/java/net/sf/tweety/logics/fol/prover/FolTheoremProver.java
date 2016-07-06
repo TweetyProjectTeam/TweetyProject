@@ -51,7 +51,9 @@ public abstract class FolTheoremProver {
 		} else{
 			System.err.println("No default theorem prover configured, using "
 					+ "'NaiveProver' with default settings as fallback. "
-					+ "It is strongly advised that a default theorem prover is manually configured");			
+					+ "It is strongly advised that a default theorem prover is manually configured, see "
+					+ "'http://tweetyproject.org/doc/fol-provers.html' "
+					+ "for more information.");			
 			return new NaiveProver();
 		}
 	}

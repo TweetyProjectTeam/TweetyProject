@@ -8,14 +8,14 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.6-SNAPSHOT</version>
+  	<version>1.7-SNAPSHOT</version>
   </parent>
   
   <dependencies>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>rpcl</artifactId>
-  		<version>1.6-SNAPSHOT</version>
+  		<version>1.7-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>jspf</groupId>
