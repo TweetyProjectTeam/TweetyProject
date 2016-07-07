@@ -6,8 +6,7 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.arg.aspic.AspicTheory;
-import net.sf.tweety.arg.aspic.semantics.AspicArgumentationSystem;
+import net.sf.tweety.arg.aspic.AspicArgumentationSystem;
 import net.sf.tweety.arg.aspic.syntax.AspicFormula;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.AspicNegation;
@@ -16,7 +15,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
 
-public class AspicParser extends Parser<AspicTheory>{
+public class AspicParser extends Parser<AspicArgumentationSystem>{
 	
 	final Pattern RULE = Pattern.compile("(.*)([=-]>)(.+)"),
 			RULE_ID = Pattern.compile("(.*):(.*)"),
@@ -26,7 +25,7 @@ public class AspicParser extends Parser<AspicTheory>{
 			WORD = Pattern.compile("\\$?\\w+");
 
 	@Override
-	public AspicTheory parseBeliefBase(Reader reader) throws IOException, ParserException {
+	public AspicArgumentationSystem parseBeliefBase(Reader reader) throws IOException, ParserException {
 		// TODO Auto-generated method stub
 		AspicArgumentationSystem as = new AspicArgumentationSystem();
 		
@@ -40,8 +39,8 @@ public class AspicParser extends Parser<AspicTheory>{
 			as.addRule((AspicInferenceRule)rule);
 			
 		}
-
-		return new AspicTheory(as);
+		as.expand();
+		return as;
 	}
 	
 	private AspicFormula makeWord(String s) throws ParserException {

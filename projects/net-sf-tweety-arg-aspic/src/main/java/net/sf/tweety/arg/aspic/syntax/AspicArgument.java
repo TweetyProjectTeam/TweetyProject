@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.arg.aspic.semantics.AspicArgumentationSystem;
+import net.sf.tweety.arg.aspic.AspicArgumentationSystem;
 import net.sf.tweety.commons.util.DigraphNode;
-import net.sf.tweety.graphs.Node;
 
 /**
  * 

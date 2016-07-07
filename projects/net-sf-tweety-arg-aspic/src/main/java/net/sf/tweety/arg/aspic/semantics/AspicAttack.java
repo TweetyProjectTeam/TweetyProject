@@ -9,6 +9,7 @@ import net.sf.tweety.arg.aspic.syntax.AspicNegation;
 
 public class AspicAttack {
 	
+	/** The binary ordring to determine if attacks are successfull **/
 	Comparator<AspicArgument> order = new Comparator<AspicArgument>() {
 		@Override
 		public int compare(AspicArgument o1, AspicArgument o2) {

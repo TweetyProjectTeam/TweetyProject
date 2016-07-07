@@ -1,4 +1,4 @@
-package net.sf.tweety.arg.aspic.semantics;
+package net.sf.tweety.arg.aspic;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,11 +7,13 @@ import java.util.HashSet;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.AspicFormula;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.DigraphNode;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
 
 
-public class AspicArgumentationSystem {
+public class AspicArgumentationSystem implements BeliefBase {
 	
 	private Collection<AspicInferenceRule> rules = new ArrayList<>();
 	private Collection<AspicArgument> args = new HashSet<>();
@@ -51,6 +53,12 @@ public class AspicArgumentationSystem {
 	@Override
 	public String toString() {
 		return "ArgumentationSystem [rules=" + rules + ",\n args=" + args + "]";
+	}
+
+	@Override
+	public Signature getSignature() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
