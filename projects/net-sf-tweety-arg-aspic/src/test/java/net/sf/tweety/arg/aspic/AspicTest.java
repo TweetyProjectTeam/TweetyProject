@@ -94,7 +94,7 @@ public class AspicTest {
 			AspicAttack a=new AspicAttack(not_a,arg);
 			a.attack();
 			System.out.println(a.getOutput());
-			if(a.getResult())
+			if(a.isSuccessfull())
 				sum++;
 		}
 		assertTrue(sum==2);
@@ -102,17 +102,33 @@ public class AspicTest {
 			AspicAttack a=new AspicAttack(not_b,arg);
 			a.attack();
 			System.out.println(a.getOutput());
-			assertFalse(a.getResult());
+			assertFalse(a.isSuccessfull());
 		}
 		for (AspicArgument arg: args) {
 			AspicAttack a=new AspicAttack(arg_a,arg);
 			a.attack();
 			System.out.println(a.getOutput());
 			if(arg.equals(not_a))
-				assertTrue(a.getResult());
+				assertTrue(a.isSuccessfull());
 			else
-				assertFalse(a.getResult());
+				assertFalse(a.isSuccessfull());
 		}
 		
+	}
+	
+	@Test
+	public void AttackTest2() throws Exception {
+		AspicParser parser = new AspicParser();
+		String input = "=> BornInScotland\n"
+				+ " => FitnessLover \n"
+				+ "d1: BornInScotland => Scottish \n"
+				+ "d2: Scottish => LikesWhiskey \n"
+				+ "d3: FitnessLover => - LikesWhiskey\n"
+				+ "d1<d3<d2";
+		AspicArgumentationSystem at = parser.parseBeliefBase(input);
+		Collection<AspicAttack> attacks = AspicAttack.determineAttackRelations(at.getArguments());
+		for(AspicAttack a:attacks)
+			System.out.println(a);
+		System.out.println(at.getOrder());
 	}
 }

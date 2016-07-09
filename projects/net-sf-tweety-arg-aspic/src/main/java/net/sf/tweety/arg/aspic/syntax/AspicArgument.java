@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.aspic.AspicArgumentationSystem;
+import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.util.DigraphNode;
 
 /**
@@ -14,7 +15,7 @@ import net.sf.tweety.commons.util.DigraphNode;
  * An argument according to the ASPIC+ specification
  */
 
-public class AspicArgument {
+public class AspicArgument extends Argument {
 	
 	/** The conclusion of the argument's top rule **/
 	private AspicFormula conc = null;;
@@ -29,8 +30,11 @@ public class AspicArgument {
 	 * @param toprule the argument's TopRule
 	 */
 	public AspicArgument(AspicInferenceRule toprule) {
+		super(null);
 		this.toprule = toprule;
 		conc = toprule.getConclusion();	
+		
+		generateName();
 	}
 	
 	/**
@@ -39,13 +43,21 @@ public class AspicArgument {
 	 * @param as an AspicArgumentationSystem
 	 */
 	public AspicArgument(DigraphNode<AspicInferenceRule> node, AspicArgumentationSystem as ) {
+		super(null);
 		for(DigraphNode<AspicInferenceRule> parentnode : node.getParents())
 			directsubs.add(as.addArgument(new AspicArgument(parentnode, as)));
 		
 		toprule = node.getValue();
 		conc = toprule.getConclusion();	
 		
+		generateName();
 	}
+	
+	private void generateName() {
+		setName(toprule + (directsubs.isEmpty()  ? "": " "+directsubs ));
+	}
+	
+	
 	
 	/**
 	 * @return whether this has a defeasible subrule
@@ -159,48 +171,9 @@ public class AspicArgument {
 	 */
 	@Override
 	public String toString() {
-		return "[" + toprule + (directsubs.isEmpty()  ? "":directsubs )+ "]";
+		return getName();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((directsubs == null) ? 0 : directsubs.hashCode());
-		result = prime * result + ((toprule == null) ? 0 : toprule.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AspicArgument other = (AspicArgument) obj;
-		if (directsubs == null) {
-			if (other.directsubs != null)
-				return false;
-		} else if (!directsubs.equals(other.directsubs))
-			return false;
-		if (toprule == null) {
-			if (other.toprule != null)
-				return false;
-		} else if (!toprule.equals(other.toprule))
-			return false;
-		return true;
-	}
-	
-	
-	
 	
 
 }
