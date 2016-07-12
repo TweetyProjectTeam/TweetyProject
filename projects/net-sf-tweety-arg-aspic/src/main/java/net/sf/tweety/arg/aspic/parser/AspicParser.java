@@ -9,11 +9,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.tweety.arg.aspic.AspicArgumentationSystem;
+import net.sf.tweety.arg.aspic.semantics.SimpleAspicOrder;
 import net.sf.tweety.arg.aspic.syntax.AspicFormula;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.AspicNegation;
 import net.sf.tweety.arg.aspic.syntax.AspicWord;
-import net.sf.tweety.arg.aspic.syntax.SimpleAspicOrder;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;

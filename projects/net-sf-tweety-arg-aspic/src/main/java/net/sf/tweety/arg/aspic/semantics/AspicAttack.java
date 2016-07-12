@@ -9,6 +9,10 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.AspicNegation;
 import net.sf.tweety.arg.dung.syntax.Attack;
 
+/**
+ * @author Nils Geilen
+ * Checks whether an argument defeats another argument
+ */
 public class AspicAttack extends Attack {
 	
 	/** The binary ordring to determine if attacks are successfull **/
@@ -21,17 +25,27 @@ public class AspicAttack extends Attack {
 	};
 	
 	boolean successfull = false, shortcut = false;
+	/**
+	 * Logs attack attempts
+	 */
 	StringWriter sw = new StringWriter();
 	
 	
+	/**
+	 * Creates a new AspicAttack
+	 * @param active	the attacking argument
+	 * @param passive	the attacked argument
+	 */
 	public AspicAttack(AspicArgument active, AspicArgument passive) {
 		super(active, passive);
 	}
-	
-	public static Collection<AspicAttack> determineAttackRelations(Collection<AspicArgument> args) {
-		return determineAttackRelations(args, STD_ORDER);
-	}
-	
+		
+	/**
+	 * Checks for defeats in a list of arguments
+	 * @param args	a list of arguments
+	 * @param order	an comparator which should compare the arguments in args 
+	 * @return a list of all tuples (a,b) with a, b in args where a defeats b
+	 */
 	public static Collection<AspicAttack> determineAttackRelations(Collection<AspicArgument> args, Comparator<AspicArgument> order) {
 		Collection<AspicAttack> successfull = new ArrayList<>();
 		for (AspicArgument active : args) 
@@ -39,36 +53,57 @@ public class AspicAttack extends Attack {
 				if (active != passive) {
 					AspicAttack a = new AspicAttack(active, passive);
 					a.setOrder(order);
-					a.attack(true);
+					a.setShortcut(true);
+					a.attack();
 					if(a.isSuccessfull())
 						successfull.add(a);
 				}
 		return successfull;
 	}
 	
+	/**
+	 * Marks this attack as successfull
+	 * @return whether the attack can stop
+	 */
 	private boolean setResult() {
 		successfull = true;
 		sw.write("\t=> defeat\n");
 		return shortcut;
 	}
 	
+	/**
+	 * @return true iff the attck was successfull
+	 */
 	public boolean isSuccessfull() {
 		return successfull;
 	}
 
+	/**
+	 * @return the log of all attack attempts on all DefSubs of the attacked argument
+	 */
 	public String getOutput() {
 		return sw.toString();
 	}
 	
+	/**
+	 * If shortcut is set the attack will stop after a successfulldefeat on one DefSub
+	 * @param shortcut	the new shortcut value
+	 */
+	public void setShortcut(boolean shortcut) {
+		this.shortcut = shortcut;
+	}
+
+	/**
+	 * Writes a new line to the log
+	 */
 	private void nl() {
 		sw.write("\n");
 	}
 	
-	public void attack(boolean shortcut) {
-		this.shortcut = shortcut;
-		attack();
-	}
 	
+	/**
+	 * Determines whether the attack is successfull
+	 */
 	public void attack() {
 		AspicArgument active = (AspicArgument)getAttacker(),
 				passive = (AspicArgument)getAttacked();
@@ -102,11 +137,18 @@ public class AspicAttack extends Attack {
 		sw.write(active + (successfull? " defeats " : " does not defeat ") + passive);
 	}
 
+	/**
+	 * Set an order for the arguments to determine if an attack ends in an defeat
+	 * @param order	the new order
+	 */
 	public void setOrder(Comparator<AspicArgument> order) {
 		if(order !=null)
 			this.order = order;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.syntax.Attack#toString()
+	 */
 	@Override
 	public String toString() {
 		return getAttacker() + " attacks " + getAttacked();

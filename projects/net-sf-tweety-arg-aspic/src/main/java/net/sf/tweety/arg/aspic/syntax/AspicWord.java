@@ -33,7 +33,8 @@ public class AspicWord implements AspicFormula {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		// generalized from getClass != getClass
+		if (!(obj instanceof AspicWord))
 			return false;
 		AspicWord other = (AspicWord) obj;
 		if (identifier == null) {

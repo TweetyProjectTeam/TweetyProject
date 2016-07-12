@@ -93,7 +93,7 @@ public class AspicTest {
 		for (AspicArgument arg: args) {
 			AspicAttack a=new AspicAttack(not_a,arg);
 			a.attack();
-			System.out.println(a.getOutput());
+			//System.out.println(a.getOutput());
 			if(a.isSuccessfull())
 				sum++;
 		}
@@ -101,13 +101,13 @@ public class AspicTest {
 		for (AspicArgument arg: args) {
 			AspicAttack a=new AspicAttack(not_b,arg);
 			a.attack();
-			System.out.println(a.getOutput());
+			//System.out.println(a.getOutput());
 			assertFalse(a.isSuccessfull());
 		}
 		for (AspicArgument arg: args) {
 			AspicAttack a=new AspicAttack(arg_a,arg);
 			a.attack();
-			System.out.println(a.getOutput());
+			//System.out.println(a.getOutput());
 			if(arg.equals(not_a))
 				assertTrue(a.isSuccessfull());
 			else
@@ -117,7 +117,7 @@ public class AspicTest {
 	}
 	
 	@Test
-	public void AttackTest2() throws Exception {
+	public void SimpleOrderTest() throws Exception {
 		AspicParser parser = new AspicParser();
 		String input = "=> BornInScotland\n"
 				+ " => FitnessLover \n"
@@ -126,9 +126,9 @@ public class AspicTest {
 				+ "d3: FitnessLover => - LikesWhiskey\n"
 				+ "d1<d3<d2";
 		AspicArgumentationSystem at = parser.parseBeliefBase(input);
-		Collection<AspicAttack> attacks = AspicAttack.determineAttackRelations(at.getArguments());
-		for(AspicAttack a:attacks)
-			System.out.println(a);
-		System.out.println(at.getOrder());
+		Collection<AspicAttack> attacks_w_order = AspicAttack.determineAttackRelations(at.getArguments(), at.getOrder());
+		Collection<AspicAttack> attacks_wo_order = AspicAttack.determineAttackRelations(at.getArguments(), null);
+		assertTrue(attacks_w_order.size() == 1);
+		assertTrue(attacks_wo_order.size() == 2);
 	}
 }
