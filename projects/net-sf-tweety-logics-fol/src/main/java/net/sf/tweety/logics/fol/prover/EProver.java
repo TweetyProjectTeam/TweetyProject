@@ -72,6 +72,7 @@ public class EProver extends FolTheoremProver {
 	public boolean query(FolBeliefSet kb, FolFormula query) {
 		try{
 			File file  = File.createTempFile("tmp", ".txt");
+			file.deleteOnExit();
 			FolWriter printer = new TptpWriter(new PrintWriter(file));
 			printer.printBase(kb);
 			printer.printQuery(query);

@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
@@ -95,6 +96,18 @@ public class TptpWriter implements FolWriter {
 			for (Constant c : sig.getConstants())
 				writer.write(makeAxiom(c + "_type", c.getSort() + "(" + c + ")"));
 
+			// print types of functions
+			for(Functor f: sig.getFunctors()){
+				String vars_str = "";
+				boolean isFirst = true;
+				for(int i = 0; i < f.getArity(); i++)
+					if(isFirst){
+						vars_str = "X" + i;
+						isFirst = false;
+					}else vars_str += ",X"+i;
+				writer.write(makeAxiom(f.getName() + "_type", "(! [" + vars_str + "]: (" + f.getTargetSort() + "(" + f.getName() + "(" + vars_str + "))))"));
+			}
+			
 			// print facts
 			int axiom_id = 0;
 			for (FolFormula f : b)
