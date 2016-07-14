@@ -98,7 +98,7 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 			throw new IllegalArgumentException("Formula of class argument expected");
 		Argument arg = (Argument) query;
 		if(this.inferenceType == Semantics.SCEPTICAL_INFERENCE){
-			Answer answer = new Answer(this.getKnowledgBase(),arg);
+			Answer answer = new Answer(this.getKnowledgeBase(),arg);
 			for(Extension e: this.getExtensions()){
 				if(!e.contains(arg)){
 					answer.setAnswer(false);
@@ -111,7 +111,7 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 			return answer;
 		}
 		// so its credulous semantics
-		Answer answer = new Answer(this.getKnowledgBase(),arg);
+		Answer answer = new Answer(this.getKnowledgeBase(),arg);
 		for(Extension e: this.getExtensions()){
 			if(e.contains(arg)){
 				answer.setAnswer(true);
@@ -141,7 +141,7 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 		Map<Argument,Proposition> out = new HashMap<Argument,Proposition>();
 		Map<Argument,Proposition> undec = new HashMap<Argument,Proposition>();
 		PlBeliefSet beliefSet = new PlBeliefSet();
-		for(Argument a: (DungTheory) this.getKnowledgBase()){
+		for(Argument a: (DungTheory) this.getKnowledgeBase()){
 			in.put(a, new Proposition("in_" + a.getName()));
 			out.put(a, new Proposition("out_" + a.getName()));
 			undec.put(a, new Proposition("undec_" + a.getName()));

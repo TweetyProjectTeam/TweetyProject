@@ -155,7 +155,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 	 */
 	private ProbabilityDistribution<PossibleWorld> computeMeDistribution(){
 		// get inconsistency value
-		double iValue = inc.inconsistencyMeasure((PclBeliefSet)this.getKnowledgBase());		
+		double iValue = inc.inconsistencyMeasure((PclBeliefSet)this.getKnowledgeBase());		
 		// construct optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) this.signature);
@@ -175,7 +175,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 		cnt = 0;
 		// violation variables
 		Vector<Term> vioVars = new Vector<Term>(); 
-		for(ProbabilisticConditional pc: (PclBeliefSet)this.getKnowledgBase()){
+		for(ProbabilisticConditional pc: (PclBeliefSet)this.getKnowledgeBase()){
 			Variable vio = new FloatVariable("x" + cnt++,-1,1);
 			vioVars.add(vio);
 			Term leftSide = null;
@@ -249,21 +249,21 @@ public class GeneralizedMeReasoner extends Reasoner {
 			throw new IllegalArgumentException("Reasoning in probabilistic conditional logic is only defined for (probabilistic) conditionals and propositional queries.");
 		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution();
 		if(query instanceof ProbabilisticConditional){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			boolean bAnswer = meDistribution.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			
 		}
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			Probability bAnswer = meDistribution.probability((Conditional)query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;
 		}
 		if(query instanceof PropositionalFormula){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			Probability bAnswer = meDistribution.probability(query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);

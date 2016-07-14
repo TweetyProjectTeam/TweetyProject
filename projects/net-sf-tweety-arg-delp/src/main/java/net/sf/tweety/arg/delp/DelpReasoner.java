@@ -85,7 +85,7 @@ public class DelpReasoner extends Reasoner {
 			throw new IllegalArgumentException("Formula is expected to be ground: "+f);
 
         // compute answer:
-		DelpAnswer answer = new DelpAnswer(this.getKnowledgBase(),f);
+		DelpAnswer answer = new DelpAnswer(this.getKnowledgeBase(),f);
         Set<FolFormula> conclusions = getWarrants().stream()
                 .map(DelpArgument::getConclusion)
                 .collect(Collectors.toSet());

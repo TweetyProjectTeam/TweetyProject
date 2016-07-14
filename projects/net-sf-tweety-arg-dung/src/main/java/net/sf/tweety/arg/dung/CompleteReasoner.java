@@ -88,8 +88,8 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	public Set<Extension> computeExtensions(){
 		if(this.useSatSolver)
 			return this.computeExtensionsBySatSolving();
-		Extension groundedExtension = new GroundReasoner(this.getKnowledgBase(),this.getInferenceType()).getExtensions().iterator().next();
-		Set<Argument> remaining = new HashSet<Argument>((DungTheory)this.getKnowledgBase());
+		Extension groundedExtension = new GroundReasoner(this.getKnowledgeBase(),this.getInferenceType()).getExtensions().iterator().next();
+		Set<Argument> remaining = new HashSet<Argument>((DungTheory)this.getKnowledgeBase());
 		remaining.removeAll(groundedExtension);
 		return this.getCompleteExtensions(groundedExtension,remaining);
 	}
@@ -133,7 +133,7 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	 */
 	private Set<Extension> getCompleteExtensions(Extension ext, Collection<Argument> remaining){
 		Set<Extension> extensions = new HashSet<Extension>();
-		DungTheory dungTheory = (DungTheory) this.getKnowledgBase();
+		DungTheory dungTheory = (DungTheory) this.getKnowledgeBase();
 		if(ext.isConflictFree(dungTheory)){
 			if(dungTheory.faf(ext).equals(ext))
 				extensions.add(ext);
@@ -155,7 +155,7 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	 */
 	@Override
 	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
-		DungTheory theory = (DungTheory) this.getKnowledgBase();
+		DungTheory theory = (DungTheory) this.getKnowledgeBase();
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		// an argument is in iff all attackers are out
 		for(Argument a: theory){

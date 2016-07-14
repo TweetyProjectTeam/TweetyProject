@@ -59,10 +59,10 @@ public class StageReasoner extends AbstractExtensionReasoner {
 	 */
 	public Set<Extension> computeExtensions(){
 		// A stage extension is a conflict-free set with minimal undecided arguments
-		Set<Extension> cfExt = new ConflictFreeReasoner(this.getKnowledgBase(),this.getInferenceType()).getExtensions();
+		Set<Extension> cfExt = new ConflictFreeReasoner(this.getKnowledgeBase(),this.getInferenceType()).getExtensions();
 		Set<Labeling> cfLab = new HashSet<Labeling>();
 		for(Extension e: cfExt)
-			cfLab.add(new Labeling((DungTheory)this.getKnowledgBase(),e));
+			cfLab.add(new Labeling((DungTheory)this.getKnowledgeBase(),e));
 		Set<Extension> result = new HashSet<Extension>();
 		boolean stage;
 		for(Labeling lab: cfLab){

@@ -69,12 +69,12 @@ public class MonteCarloPafReasoner extends Reasoner{
 		Argument arg = (Argument) query;
 		int count = 0;
 		for(int i = 0; i < this.numberOfTrials; i++){
-			DungTheory sub = ((ProbabilisticArgumentationFramework)this.getKnowledgBase()).sample();
+			DungTheory sub = ((ProbabilisticArgumentationFramework)this.getKnowledgeBase()).sample();
 			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(sub, this.semantics, this.inferenceType);
 			if(r.query(arg).getAnswerBoolean())
 				count++;
 		}
-		Answer ans = new Answer(this.getKnowledgBase(),query);
+		Answer ans = new Answer(this.getKnowledgeBase(),query);
 		ans.setAnswer(new Double(count)/this.numberOfTrials);
 		return ans;
 	}
@@ -89,7 +89,7 @@ public class MonteCarloPafReasoner extends Reasoner{
 	public Probability query(Extension ext){
 		int count = 0;
 		for(int i = 0; i < this.numberOfTrials; i++){
-			DungTheory sub = ((ProbabilisticArgumentationFramework)this.getKnowledgBase()).sample();
+			DungTheory sub = ((ProbabilisticArgumentationFramework)this.getKnowledgeBase()).sample();
 			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(sub, this.semantics, this.inferenceType);
 			if(r.getExtensions().contains(ext))
 				count++;

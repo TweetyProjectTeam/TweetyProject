@@ -215,7 +215,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @param ext an extension, ie. a set of arguments
 	 * @return true if some argument of <source>ext</source> is attacked by argument.
 	 */
-	public boolean isAttackedBy(Argument argument, Extension ext){
+	public boolean isAttackedBy(Argument argument, Collection<Argument> ext){
 		Set<Argument> attacked = this.getAttacked(argument);
 		attacked.retainAll(ext);
 		return attacked.size() > 0;

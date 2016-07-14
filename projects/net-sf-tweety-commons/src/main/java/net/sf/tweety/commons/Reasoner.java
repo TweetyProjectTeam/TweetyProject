@@ -52,7 +52,7 @@ public abstract class Reasoner {
 	 * Returns the knowledge base of this reasoner.
 	 * @return the knowledge base of this reasoner.
 	 */
-	public BeliefBase getKnowledgBase(){
+	public BeliefBase getKnowledgeBase(){
 		return this.beliefBase;
 	}
 }

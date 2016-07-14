@@ -79,7 +79,7 @@ public class StratifiedLabelingReasoner extends Reasoner {
 			throw new IllegalArgumentException("Formula of class argument expected");
 		Argument arg = (Argument) query;
 		if(this.inferenceType == Semantics.SCEPTICAL_INFERENCE){
-			Answer answer = new Answer(this.getKnowledgBase(),arg);
+			Answer answer = new Answer(this.getKnowledgeBase(),arg);
 			for(StratifiedLabeling e: this.getLabelings()){
 				if(!e.satisfies(arg)){
 					answer.setAnswer(false);
@@ -92,7 +92,7 @@ public class StratifiedLabelingReasoner extends Reasoner {
 			return answer;
 		}
 		// so its credulous semantics
-		Answer answer = new Answer(this.getKnowledgBase(),arg);
+		Answer answer = new Answer(this.getKnowledgeBase(),arg);
 		for(StratifiedLabeling e: this.getLabelings()){
 			if(e.satisfies(arg)){
 				answer.setAnswer(true);
@@ -129,9 +129,9 @@ public class StratifiedLabelingReasoner extends Reasoner {
 	 */
 	private Set<StratifiedLabeling> computeLabelings(){
 		Set<StratifiedLabeling> labelings = new HashSet<StratifiedLabeling>();
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.getKnowledgBase(), this.semantics, Semantics.CREDULOUS_INFERENCE);
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.getKnowledgeBase(), this.semantics, Semantics.CREDULOUS_INFERENCE);
 		Set<Extension> extensions = reasoner.getExtensions();
-		DungTheory theory = (DungTheory) this.getKnowledgBase();
+		DungTheory theory = (DungTheory) this.getKnowledgeBase();
 		for(Extension extension: extensions){
 			StratifiedLabeling labeling = new StratifiedLabeling();
 			if(extension.isEmpty()){

@@ -137,7 +137,7 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 			throw new IllegalArgumentException("Reasoning in relational conditional logic is only defined for relational conditional and first-order queries.");
 		RelationalRankingFunction crepresentation = this.getCRepresentation();
 		if(query instanceof RelationalConditional){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			boolean bAnswer = crepresentation.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
@@ -147,7 +147,7 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 			if(((FolFormula)query).isClosed())
 				throw new IllegalArgumentException("Reasoning in relational conditional logic is not defined for open first-order queries.");
 			int rank = crepresentation.rank((FolFormula)query);
-			Answer answer = new Answer(this.getKnowledgBase(),query);			
+			Answer answer = new Answer(this.getKnowledgeBase(),query);			
 			answer.setAnswer(new Double(rank));
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
 			return answer;
@@ -160,17 +160,17 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 	 * @return a minimal c-representation for this reasoner's knowledge base.
 	 */
 	private RelationalRankingFunction computeCRepresentation(){		
-		this.numConditionals = ((RclBeliefSet)this.getKnowledgBase()).size();
+		this.numConditionals = ((RclBeliefSet)this.getKnowledgeBase()).size();
 		int i = 0;
 		this.indexToConditional = new HashMap<Integer,RelationalConditional>();
-		for(Formula f: ((RclBeliefSet)this.getKnowledgBase())){
+		for(Formula f: ((RclBeliefSet)this.getKnowledgeBase())){
 			this.indexToConditional.put(i++, (RelationalConditional) f);
 			if(!this.simple)
 				this.indexToConditional.put(i++, (RelationalConditional) f);
 		}
 		Integer[] kappa = null;		
 		RelationalRankingFunction candidate = this.constructRankingFunction(kappa);
-		while(!candidate.satisfies(this.getKnowledgBase())){
+		while(!candidate.satisfies(this.getKnowledgeBase())){
 			kappa = this.increment(kappa);			
 			candidate = this.constructRankingFunction(kappa);
 			String debugMessage = "";

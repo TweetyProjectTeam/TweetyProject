@@ -67,7 +67,7 @@ public class LiteralReasoner extends ArgumentationReasoner {
 			}
 		}
 		
-		Answer answer = new Answer(super.getKnowledgBase(), query);
+		Answer answer = new Answer(super.getKnowledgeBase(), query);
 		answer.setAnswer(answerValue);
 		return answer;		
 	}

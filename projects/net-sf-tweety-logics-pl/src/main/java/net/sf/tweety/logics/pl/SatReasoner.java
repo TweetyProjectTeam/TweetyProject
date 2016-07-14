@@ -52,7 +52,7 @@ public class SatReasoner extends Reasoner {
 	public Answer query(Formula query) {
 		Collection<PropositionalFormula> formulas = new HashSet<PropositionalFormula>();
 		formulas.add(new Negation((PropositionalFormula)query));
-		Answer ans = new Answer(this.getKnowledgBase(), query);
+		Answer ans = new Answer(this.getKnowledgeBase(), query);
 		ans.setAnswer(!SatSolver.getDefaultSolver().isConsistent(formulas));
 		return ans;
 	}

@@ -76,7 +76,7 @@ public class OutputReasoner extends Reasoner {
 	public Answer query(Formula query) {		
 		if(!(query instanceof Proposition))
 			throw new IllegalArgumentException("Reasoning in structured argumentation frameworls is only defined for propositional queries.");
-		Answer answer = new Answer(this.getKnowledgBase(),query);
+		Answer answer = new Answer(this.getKnowledgeBase(),query);
 		boolean bAnswer = this.getOutput().contains(query);
 		answer.setAnswer(bAnswer);
 		answer.appendText("The answer is: " + bAnswer);
@@ -91,7 +91,7 @@ public class OutputReasoner extends Reasoner {
 		if(this.output == null){
 			Set<Extension> extensions = this.reasoner.getExtensions();			
 			this.output = new HashSet<Proposition>();			
-			for(Proposition p: ((StructuredArgumentationFramework)this.getKnowledgBase()).getSignature()){
+			for(Proposition p: ((StructuredArgumentationFramework)this.getKnowledgeBase()).getSignature()){
 				boolean isOutput = true;
 				for(Extension e: extensions){
 					boolean isInExtension = false;

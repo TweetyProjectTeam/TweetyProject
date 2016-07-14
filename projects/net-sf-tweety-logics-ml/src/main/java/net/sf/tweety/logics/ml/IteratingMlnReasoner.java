@@ -46,7 +46,7 @@ public class IteratingMlnReasoner extends AbstractMlnReasoner{
 	 * @param numberOfIterations the number of iterations for the reasoner 
 	 */
 	public IteratingMlnReasoner(AbstractMlnReasoner reasoner, long numberOfIterations){
-		super(reasoner.getKnowledgBase(), reasoner.getSignature());
+		super(reasoner.getKnowledgeBase(), reasoner.getSignature());
 		this.reasoner = reasoner;
 		this.numberOfIterations = numberOfIterations;
 		this.archive = new HashMap<FolFormula,Double>();		

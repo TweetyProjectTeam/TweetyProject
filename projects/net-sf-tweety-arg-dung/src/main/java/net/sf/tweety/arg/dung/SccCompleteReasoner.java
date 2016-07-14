@@ -69,7 +69,7 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 			return result;
 		}
 		// construct theory
-		DungTheory subTheory = (DungTheory) ((DungTheory)this.getKnowledgBase()).getRestriction(sccs.get(idx));
+		DungTheory subTheory = (DungTheory) ((DungTheory)this.getKnowledgeBase()).getRestriction(sccs.get(idx));
 		// remove all out arguments
 		subTheory.removeAll(out);
 		// for all arguments that are attacked by an already undecided argument outside the scc, add attack
@@ -105,7 +105,7 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
 	 */
 	public Set<Extension> computeExtensions(){
-		DungTheory theory = (DungTheory) this.getKnowledgBase();
+		DungTheory theory = (DungTheory) this.getKnowledgeBase();
 		List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(theory.getStronglyConnectedComponents());		
 		// order SCCs in a DAG
 		boolean[][] dag = new boolean[sccs.size()][sccs.size()];
@@ -145,7 +145,7 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 	 */
 	@Override
 	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
-		return new CompleteReasoner(this.getKnowledgBase()).getPropositionalCharacterisationBySemantics(in, out, undec);
+		return new CompleteReasoner(this.getKnowledgeBase()).getPropositionalCharacterisationBySemantics(in, out, undec);
 	}
 	
 }

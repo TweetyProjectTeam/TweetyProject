@@ -68,7 +68,7 @@ public class SimpleReasoner extends AbstractDeductiveArgumentationReasoner {
 	 */
 	private ArgumentTree getArgumentTree(DeductiveArgumentNode argNode, Set<PropositionalFormula> support) {
 		support.addAll(argNode.getSupport());
-		DeductiveKnowledgeBase kb = (DeductiveKnowledgeBase) this.getKnowledgBase();		 
+		DeductiveKnowledgeBase kb = (DeductiveKnowledgeBase) this.getKnowledgeBase();		 
 		// 1.) collect all possible undercuts 
 		PropositionalFormula claim = new Negation(new Conjunction(argNode.getSupport()));
 		Set<DeductiveArgument> possibleUndercuts = kb.getDeductiveArguments(claim);

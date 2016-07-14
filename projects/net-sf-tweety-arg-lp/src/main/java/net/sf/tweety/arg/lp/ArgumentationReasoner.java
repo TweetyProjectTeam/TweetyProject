@@ -82,7 +82,7 @@ public class ArgumentationReasoner extends Reasoner {
 			throw new IllegalArgumentException("Formula of class Argument expected.");
 		}
 		Argument a = (Argument) query;
-		Answer answer = new Answer(this.getKnowledgBase(), query);
+		Answer answer = new Answer(this.getKnowledgeBase(), query);
 		answer.setAnswer(getJustifiedArguments().contains(a));
 		return answer;
 	}
@@ -129,7 +129,7 @@ public class ArgumentationReasoner extends Reasoner {
 	 * @return the set of x/y-justified arguments
 	 */
 	public Set<Argument> getJustifiedArguments() {
-		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgBase();
+		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgeBase();
 		Set<Argument> arguments = kb.getArguments();
 		Set<Argument> result = new HashSet<Argument>();
 		
@@ -155,7 +155,7 @@ public class ArgumentationReasoner extends Reasoner {
 	 * @return the set of overruled arguments.
 	 */
 	public Set<Argument> getOverruledArguments() {
-		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgBase();
+		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgeBase();
 		Set<Argument> arguments = kb.getArguments();
 		Set<Argument> result = new HashSet<Argument>();
 		Set<Argument> justifiedArguments = getJustifiedArguments();
@@ -175,7 +175,7 @@ public class ArgumentationReasoner extends Reasoner {
 	 * @return the set of defensible arguments.
 	 */
 	public Set<Argument> getDefensibleArguments() {
-		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgBase();
+		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgeBase();
 		Set<Argument> result = new HashSet<Argument>();
 		Set<Argument> arguments = kb.getArguments();
 		Set<Argument> justifiedArguments = getJustifiedArguments();

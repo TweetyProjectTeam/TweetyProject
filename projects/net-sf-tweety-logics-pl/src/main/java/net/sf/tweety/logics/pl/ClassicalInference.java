@@ -48,8 +48,8 @@ public class ClassicalInference extends Reasoner {
 	public Answer query(Formula query) {
 		if(!(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Classical inference is only defined for propositional queries.");
-		Answer answer = new Answer(this.getKnowledgBase(),query);
-		if(this.entailment.entails((PlBeliefSet)this.getKnowledgBase(), (PropositionalFormula) query)){
+		Answer answer = new Answer(this.getKnowledgeBase(),query);
+		if(this.entailment.entails((PlBeliefSet)this.getKnowledgeBase(), (PropositionalFormula) query)){
 			answer.setAnswer(true);
 			answer.appendText("The answer is: true");			
 		}else{

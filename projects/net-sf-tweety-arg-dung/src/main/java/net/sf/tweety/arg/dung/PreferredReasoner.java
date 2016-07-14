@@ -56,7 +56,7 @@ public class PreferredReasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
 	 */
 	protected Set<Extension> computeExtensions(){
-		Set<Extension> completeExtensions = new SccCompleteReasoner((DungTheory)this.getKnowledgBase()).getExtensions();
+		Set<Extension> completeExtensions = new SccCompleteReasoner((DungTheory)this.getKnowledgeBase()).getExtensions();
 		Set<Extension> result = new HashSet<Extension>();
 		boolean maximal;
 		for(Extension e1: completeExtensions){

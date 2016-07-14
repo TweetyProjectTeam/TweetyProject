@@ -59,10 +59,10 @@ public class SemiStableReasoner extends AbstractExtensionReasoner {
 	 */
 	public Set<Extension> computeExtensions(){
 		// check all complete extensions and remove those sets with non-mininal set of undecided arguments
-		Set<Extension> exts = new CompleteReasoner(this.getKnowledgBase(),this.getInferenceType()).getExtensions();
+		Set<Extension> exts = new CompleteReasoner(this.getKnowledgeBase(),this.getInferenceType()).getExtensions();
 		Map<Extension,Extension> extUndec = new HashMap<Extension,Extension>();
 		for(Extension ext: exts)
-			extUndec.put(ext, new Labeling((DungTheory) this.getKnowledgBase(),ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+			extUndec.put(ext, new Labeling((DungTheory) this.getKnowledgeBase(),ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
 		boolean b;
 		for(Extension ext: extUndec.keySet()){
 			b = false;

@@ -112,7 +112,7 @@ public class DefaultMeReasoner extends Reasoner {
 		}
 		problem.add(new Equation(normConstraint,new FloatConstant(1)));
 		// add constraint imposed by conditionals
-		for(ProbabilisticConditional pc: (PclBeliefSet)this.getKnowledgBase()){
+		for(ProbabilisticConditional pc: (PclBeliefSet)this.getKnowledgeBase()){
 			Term leftSide = null;
 			Term rightSide = null;			
 			if(pc.isFact()){
@@ -178,21 +178,21 @@ public class DefaultMeReasoner extends Reasoner {
 			throw new IllegalArgumentException("Reasoning in probabilistic conditional logic is only defined for (probabilistic) conditionals and propositional queries.");
 		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution();
 		if(query instanceof ProbabilisticConditional){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			boolean bAnswer = meDistribution.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			
 		}
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			Probability bAnswer = meDistribution.probability((Conditional)query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;
 		}
 		if(query instanceof PropositionalFormula){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			Probability bAnswer = meDistribution.probability(query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);

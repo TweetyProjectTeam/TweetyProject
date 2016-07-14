@@ -84,7 +84,7 @@ public abstract class AbstractMlnReasoner extends Reasoner {
 		if(!(query instanceof FolFormula) && !( ((FolFormula)query).isGround() ))
 			throw new IllegalArgumentException("Reasoning in Markov logic with naive MLN reasoner is only defined for ground FOL formulas.");		
 		double result = this.doQuery((FolFormula)query);
-		Answer ans = new Answer(this.getKnowledgBase(),query);
+		Answer ans = new Answer(this.getKnowledgeBase(),query);
 		ans.setAnswer(result);		
 		return ans;
 	}
@@ -98,7 +98,7 @@ public abstract class AbstractMlnReasoner extends Reasoner {
 	protected double computeWeight(HerbrandInterpretation hInt){
 		int num;
 		double weight = 0;
-		for(MlnFormula f: (MarkovLogicNetwork)this.getKnowledgBase()){
+		for(MlnFormula f: (MarkovLogicNetwork)this.getKnowledgeBase()){
 			num = this.numberOfGroundSatisfactions(f.getFormula(), hInt);
 			if(f.isStrict()){
 				if(num != f.getFormula().allGroundInstances(this.getSignature().getConstants()).size())

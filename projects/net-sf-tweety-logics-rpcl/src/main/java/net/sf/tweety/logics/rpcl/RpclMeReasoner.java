@@ -167,7 +167,7 @@ public class RpclMeReasoner extends Reasoner {
 	 * @return the ME-distribution for this reasoner's knowledge base.
 	 */	
 	private ProbabilityDistribution<?> computeMeDistribution() throws ProblemInconsistentException{		
-		RpclBeliefSet kb = ((RpclBeliefSet)this.getKnowledgBase());
+		RpclBeliefSet kb = ((RpclBeliefSet)this.getKnowledgeBase());
 		log.info("Computing ME-distribution using \"" + this.semantics.toString() + "\" and " + ((this.inferenceType==RpclMeReasoner.LIFTED_INFERENCE)?("lifted"):("standard")) + " inference for the knowledge base " + kb.toString() + ".");
 		// TODO extract common parts from the following if/else
 		log.info("Constructing optimization problem for finding the ME-distribution.");
@@ -308,7 +308,7 @@ public class RpclMeReasoner extends Reasoner {
 				prob = new Probability(0d);
 			else prob = prob2.divide(prob1);
 		}				
-		Answer answer = new Answer(this.getKnowledgBase(),query);			
+		Answer answer = new Answer(this.getKnowledgeBase(),query);			
 		answer.setAnswer(prob.getValue());
 		answer.appendText("The probability of the query is " + prob + ".");
 		return answer;		

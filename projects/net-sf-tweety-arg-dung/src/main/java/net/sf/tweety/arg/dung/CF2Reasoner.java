@@ -70,13 +70,13 @@ public class CF2Reasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
 	 */
 	public Set<Extension> computeExtensions(){
-		Collection<Collection<Argument>> sccs = ((DungTheory)this.getKnowledgBase()).getStronglyConnectedComponents();
+		Collection<Collection<Argument>> sccs = ((DungTheory)this.getKnowledgeBase()).getStronglyConnectedComponents();
 		Set<Extension> extensions = new HashSet<Extension>();
 		if(sccs.size() == 1){
 			// an extension for a single scc is a conflict-free set with maximal arguments
-			extensions = this.singleAFExtensions((DungTheory)this.getKnowledgBase());
+			extensions = this.singleAFExtensions((DungTheory)this.getKnowledgeBase());
 		}else{
-			DungTheory af = (DungTheory) this.getKnowledgBase();
+			DungTheory af = (DungTheory) this.getKnowledgeBase();
 			// for all strongly connected components, restrict the argumentation framework and get the corresponding extensions
 			Map<Collection<Argument>,Set<Extension>> exts = new HashMap<Collection<Argument>,Set<Extension>>();
 			for(Collection<Argument> scc: sccs){

@@ -100,7 +100,7 @@ public class ZReasoner extends Reasoner {
 			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
 		RankingFunction ocf = this.getOCF();
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			boolean bAnswer = ocf.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
@@ -108,7 +108,7 @@ public class ZReasoner extends Reasoner {
 		}
 		if(query instanceof PropositionalFormula){
 			int rank = ocf.rank(query);
-			Answer answer = new Answer(this.getKnowledgBase(),query);			
+			Answer answer = new Answer(this.getKnowledgeBase(),query);			
 			answer.setAnswer(rank==0);
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
 			return answer;
@@ -134,12 +134,12 @@ public class ZReasoner extends Reasoner {
 	 */
 	private RankingFunction computeOCF(){
 		
-		RankingFunction ocf = new RankingFunction((PropositionalSignature) this.getKnowledgBase().getSignature());
+		RankingFunction ocf = new RankingFunction((PropositionalSignature) this.getKnowledgeBase().getSignature());
 		
 		// Compute partitioning of the knowledge base
-		ArrayList<ClBeliefSet> tolerancePartition = partition( this.getKnowledgBase() );
+		ArrayList<ClBeliefSet> tolerancePartition = partition( this.getKnowledgeBase() );
 		if( tolerancePartition.isEmpty() ){
-			System.out.println("The belief base " + this.getKnowledgBase() + " is not consistent.");
+			System.out.println("The belief base " + this.getKnowledgeBase() + " is not consistent.");
 			return null;
 		}
 		
@@ -182,7 +182,7 @@ public class ZReasoner extends Reasoner {
 		ArrayList<ClBeliefSet> tolerancePartition = new ArrayList<ClBeliefSet>();
 		
 		// Copy knowledge base to a second set from which we can remove tolerated conditionals
-		ClBeliefSet knowledgebase = (ClBeliefSet)this.getKnowledgBase();
+		ClBeliefSet knowledgebase = (ClBeliefSet)this.getKnowledgeBase();
 		
 		while( !knowledgebase.isEmpty() ){
 			

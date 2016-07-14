@@ -58,17 +58,17 @@ public class IdealReasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
 	 */
 	public Set<Extension> computeExtensions(){
-		Set<Extension> admExt = new AdmissibleReasoner(this.getKnowledgBase(), this.getInferenceType()).getExtensions();
-		Set<Extension> prefExt = new PreferredReasoner(this.getKnowledgBase(), this.getInferenceType()).getExtensions();
+		Set<Extension> admExt = new AdmissibleReasoner(this.getKnowledgeBase(), this.getInferenceType()).getExtensions();
+		Set<Extension> prefExt = new PreferredReasoner(this.getKnowledgeBase(), this.getInferenceType()).getExtensions();
 		Set<Labeling> potResult = new HashSet<Labeling>();
 		boolean potIdeal; 
 		for(Extension ext: admExt){
-			Labeling extLab = new Labeling((DungTheory) this.getKnowledgBase(), ext);
+			Labeling extLab = new Labeling((DungTheory) this.getKnowledgeBase(), ext);
 			// ext is ideal if
 			// 1. for every preferred labeling L both in and out are subsets of that sets in L
 			potIdeal = true;
 			for(Extension ext2: prefExt){
-				Labeling extLab2 = new Labeling((DungTheory) this.getKnowledgBase(), ext2);
+				Labeling extLab2 = new Labeling((DungTheory) this.getKnowledgeBase(), ext2);
 				if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
 					potIdeal = false;
 					break;

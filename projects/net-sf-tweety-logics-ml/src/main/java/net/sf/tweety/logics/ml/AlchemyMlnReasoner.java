@@ -94,7 +94,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		// of atoms, we need to encode the query in the MLN
 		// by stating it to be equivalent to some new atom
 		try{
-			File mlnFile = this.writeAlchemyMlnFile((MarkovLogicNetwork)this.getKnowledgBase(), this.getSignature(), query);			
+			File mlnFile = this.writeAlchemyMlnFile((MarkovLogicNetwork)this.getKnowledgeBase(), this.getSignature(), query);			
 			//empty evidence file needed
 			File evidenceFile = File.createTempFile("alchemy_ev",null);
 			evidenceFile.deleteOnExit();

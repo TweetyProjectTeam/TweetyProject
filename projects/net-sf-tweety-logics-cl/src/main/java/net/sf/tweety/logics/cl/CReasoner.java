@@ -76,7 +76,7 @@ public class CReasoner extends Reasoner {
 			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
 		RankingFunction crepresentation = this.getCRepresentation();
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgBase(),query);
+			Answer answer = new Answer(this.getKnowledgeBase(),query);
 			boolean bAnswer = crepresentation.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
@@ -84,7 +84,7 @@ public class CReasoner extends Reasoner {
 		}
 		if(query instanceof PropositionalFormula){
 			int rank = crepresentation.rank(query);
-			Answer answer = new Answer(this.getKnowledgBase(),query);			
+			Answer answer = new Answer(this.getKnowledgeBase(),query);			
 			answer.setAnswer(rank==0);
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
 			return answer;
@@ -107,8 +107,8 @@ public class CReasoner extends Reasoner {
 	 * @return a minimal c-representation for this reasoner's knowledge base.
 	 */
 	private RankingFunction computeCRepresentation(){		
-		RankingFunction crep = new RankingFunction((PropositionalSignature)this.getKnowledgBase().getSignature());
-		ClBeliefSet kb = (ClBeliefSet) this.getKnowledgBase();
+		RankingFunction crep = new RankingFunction((PropositionalSignature)this.getKnowledgeBase().getSignature());
+		ClBeliefSet kb = (ClBeliefSet) this.getKnowledgeBase();
 		Set<PossibleWorld> possibleWorlds = crep.getPossibleWorlds();
 		// variables for ranks
 		Map<PossibleWorld,IntegerVariable> ranks = new HashMap<PossibleWorld,IntegerVariable>();

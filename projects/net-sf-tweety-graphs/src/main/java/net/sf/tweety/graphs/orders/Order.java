@@ -79,4 +79,19 @@ public class Order<T> {
 		return this.defaultGraph.existsDirectedPath(node1, node2);
 	}
 	
+	/**
+	 * Returns the elements appearing in this order.
+	 * @return the elements appearing in this order.
+	 */
+	public Collection<T> getElements(){
+		return this.nodes.keySet();
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		return this.defaultGraph.toString();
+	}
+	
 }

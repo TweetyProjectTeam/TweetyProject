@@ -62,20 +62,20 @@ public class ClassicalInference extends Reasoner {
 		if(!formula.isClosed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");		
 		FolSignature sig = new FolSignature();
-		sig.addSignature(this.getKnowledgBase().getSignature());
+		sig.addSignature(this.getKnowledgeBase().getSignature());
 		sig.addSignature(query.getSignature());		
 		HerbrandBase hBase = new HerbrandBase(sig);
 		Set<HerbrandInterpretation> interpretations = hBase.allHerbrandInterpretations();
 		for(HerbrandInterpretation i: interpretations)
-			if(i.satisfies(this.getKnowledgBase()))
+			if(i.satisfies(this.getKnowledgeBase()))
 				if(!i.satisfies(formula)){
-					Answer answer = new Answer(this.getKnowledgBase(),formula);
+					Answer answer = new Answer(this.getKnowledgeBase(),formula);
 					answer.setAnswer(false);
 					answer.appendText("The answer is: false");
 					answer.appendText("Explanation: the interpretation " + i + " is a model of the knowledge base but not of the query.");
 					return answer;
 				}
-		Answer answer = new Answer(this.getKnowledgBase(),formula);
+		Answer answer = new Answer(this.getKnowledgeBase(),formula);
 		answer.setAnswer(true);
 		answer.appendText("The answer is: true");
 		return answer;

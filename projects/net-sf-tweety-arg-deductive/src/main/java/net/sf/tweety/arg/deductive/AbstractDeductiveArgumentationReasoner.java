@@ -82,9 +82,9 @@ public abstract class AbstractDeductiveArgumentationReasoner extends Reasoner {
 	public Answer query(Formula query) {
 		if(!(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Formula of class PropositionalFormula expected.");
-		log.trace("Querying " + this.getKnowledgBase() + " with " + query);
+		log.trace("Querying " + this.getKnowledgeBase() + " with " + query);
 		PropositionalFormula f = (PropositionalFormula) query;
-		DeductiveKnowledgeBase kb = (DeductiveKnowledgeBase) this.getKnowledgBase();
+		DeductiveKnowledgeBase kb = (DeductiveKnowledgeBase) this.getKnowledgeBase();
 		// 1.) get all arguments for the query 
 		Set<DeductiveArgument> proArguments = kb.getDeductiveArguments(f);
 		// 2.) get all arguments for the negation of the query

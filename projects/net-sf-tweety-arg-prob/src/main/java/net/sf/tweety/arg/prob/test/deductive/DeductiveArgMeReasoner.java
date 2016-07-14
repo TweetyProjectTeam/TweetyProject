@@ -99,7 +99,7 @@ public class DeductiveArgMeReasoner extends Reasoner {
 	 * @return the ME-distribution this reasoner bases on.
 	 */
 	private ProbabilityFunction<PossibleWorld> computeMeDistribution(){
-		DeductiveProbabilisticKnowledgebase kb = (DeductiveProbabilisticKnowledgebase) this.getKnowledgBase();
+		DeductiveProbabilisticKnowledgebase kb = (DeductiveProbabilisticKnowledgebase) this.getKnowledgeBase();
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 		Set<PossibleWorld> possibleWorlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)kb.getSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
@@ -155,7 +155,7 @@ public class DeductiveArgMeReasoner extends Reasoner {
 		if(!(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Reasoning in is only defined for propositional queries.");
 		ProbabilityFunction<PossibleWorld> meDistribution = this.getMeDistribution();
-		Answer answer = new Answer(this.getKnowledgBase(),query);
+		Answer answer = new Answer(this.getKnowledgeBase(),query);
 		Probability bAnswer = new Probability(0d);
 		for(PossibleWorld w: meDistribution.keySet())
 			if(w.satisfies(query))

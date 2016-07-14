@@ -60,7 +60,7 @@ public class StableReasoner extends AbstractExtensionReasoner {
 	 */
 	protected Set<Extension> computeExtensions(){	
 		Extension ext = new Extension();
-		for(Formula f: ((DungTheory)this.getKnowledgBase()))
+		for(Formula f: ((DungTheory)this.getKnowledgeBase()))
 			ext.add((Argument) f);
 		return this.getStableExtensions(ext);
 	}
@@ -71,10 +71,10 @@ public class StableReasoner extends AbstractExtensionReasoner {
 	 * @return the set of stable extensions that are a subset of <source>arguments</source>
 	 */
 	private Set<Extension> getStableExtensions(Extension ext){
-		Set<Extension> completeExtensions = new SccCompleteReasoner((DungTheory)this.getKnowledgBase()).getExtensions();
+		Set<Extension> completeExtensions = new SccCompleteReasoner((DungTheory)this.getKnowledgeBase()).getExtensions();
 		Set<Extension> result = new HashSet<Extension>();
 		for(Extension e: completeExtensions)
-			if(((DungTheory)this.getKnowledgBase()).isAttackingAllOtherArguments(e))
+			if(((DungTheory)this.getKnowledgeBase()).isAttackingAllOtherArguments(e))
 				result.add(e);
 		return result;	
 	}
@@ -84,7 +84,7 @@ public class StableReasoner extends AbstractExtensionReasoner {
 	 */
 	@Override
 	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
-		DungTheory theory = (DungTheory) this.getKnowledgBase();
+		DungTheory theory = (DungTheory) this.getKnowledgeBase();
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		// an argument is in iff all attackers are out, and
 		// no argument is undecided
