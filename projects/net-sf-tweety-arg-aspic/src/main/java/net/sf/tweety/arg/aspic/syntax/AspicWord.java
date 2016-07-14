@@ -1,23 +1,46 @@
 package net.sf.tweety.arg.aspic.syntax;
 
+import net.sf.tweety.commons.SetSignature;
 import net.sf.tweety.commons.Signature;
 
+/**
+ * @author Nils Geilen
+ *
+ * An AspicWord represents a variable in a rule or a premise
+ */
 public class AspicWord implements AspicFormula {
+	/**
+	 * The word's identifying name
+	 */
 	private String identifier;
 
+	/**
+	 * Create new  word
+	 * @param identifier	the word's identifying name
+	 */
 	public AspicWord(String identifier) {
 		super();
 		this.identifier = identifier;
 	}
 	
+	/**
+	 * Set the word's identifying name
+	 * @param id	new name
+	 */
 	public void setID(String id) {
 		identifier =id;
 	}
 	
+	/**
+	 * @return	the word's idetifying name
+	 */
 	public String getID(){
 		return identifier;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -27,6 +50,9 @@ public class AspicWord implements AspicFormula {
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -47,15 +73,21 @@ public class AspicWord implements AspicFormula {
 	
 	
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return identifier;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Formula#getSignature()
+	 */
 	@Override
 	public Signature getSignature() {
-		// TODO Auto-generated method stub
-		return null;
+		SetSignature<AspicWord> sig = new SetSignature<>(this);
+		return sig;
 	}
 	
 	

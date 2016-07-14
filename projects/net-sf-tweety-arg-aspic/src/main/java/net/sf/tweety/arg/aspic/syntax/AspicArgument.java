@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.arg.aspic.AspicArgumentationSystem;
+import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.util.DigraphNode;
 
@@ -42,7 +42,7 @@ public class AspicArgument extends Argument {
 	 * @param node contains the TopRule
 	 * @param as an AspicArgumentationSystem
 	 */
-	public AspicArgument(DigraphNode<AspicInferenceRule> node, AspicArgumentationSystem as ) {
+	public AspicArgument(DigraphNode<AspicInferenceRule> node, AspicArgumentationTheory as ) {
 		super(null);
 		for(DigraphNode<AspicInferenceRule> parentnode : node.getParents())
 			directsubs.add(as.addArgument(new AspicArgument(parentnode, as)));

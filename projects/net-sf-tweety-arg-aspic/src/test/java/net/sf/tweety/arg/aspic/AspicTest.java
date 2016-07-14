@@ -22,7 +22,7 @@ public class AspicTest {
 
 		AspicParser parser = new AspicParser();
 		String input = "=>s\n=>u \n=>x\n ->p\n->x \n d1: p => q\n p->v \ns=>t\n t=> - d1\nu =>v\nu,x=>- t\n s=> -p\np,q->r\nv->-\ts";
-		AspicArgumentationSystem at = parser.parseBeliefBase(input);
+		AspicArgumentationTheory at = parser.parseBeliefBase(input);
 		System.out.println(at);
 		
 	}
@@ -31,7 +31,7 @@ public class AspicTest {
 	public void ParserAndDerivationGraphTest() throws Exception {
 		AspicParser parser = new AspicParser();
 		String input = "-> a \n => b \n b,c =>d \n a=> e \n b -> e \n e, b-> f";
-		AspicArgumentationSystem at = parser.parseBeliefBase(input);
+		AspicArgumentationTheory at = parser.parseBeliefBase(input);
 		Collection<AspicInferenceRule> rules = at.getRules();
 		assertTrue(rules.size() == 6);
 		DerivationGraph<AspicFormula, AspicInferenceRule> g = new DerivationGraph<>();
@@ -53,7 +53,7 @@ public class AspicTest {
 	public void ArgSysTest() throws Exception {
 		AspicParser parser = new AspicParser();
 		String input = "-> a \n => b \n b,c =>d \n a-> e \n b -> e \n e, b=> f \n a, f -> g";
-		AspicArgumentationSystem at = parser.parseBeliefBase(input);
+		AspicArgumentationTheory at = parser.parseBeliefBase(input);
 		Collection<AspicArgument> args = at.getArguments();
 		for(AspicArgument a:args)
 			System.out.println(a);
@@ -76,7 +76,7 @@ public class AspicTest {
 				+ "-> - b \n"
 				+ "-> b \n"
 				+ "a,b->c\n";
-		AspicArgumentationSystem at = parser.parseBeliefBase(input);
+		AspicArgumentationTheory at = parser.parseBeliefBase(input);
 		Collection<AspicArgument> args = at.getArguments();
 		
 		AspicArgument not_a = new AspicArgument((AspicInferenceRule)parser.parseFormula("=> -a"));
@@ -125,7 +125,7 @@ public class AspicTest {
 				+ "d2: Scottish => LikesWhiskey \n"
 				+ "d3: FitnessLover => - LikesWhiskey\n"
 				+ "d1<d3<d2";
-		AspicArgumentationSystem at = parser.parseBeliefBase(input);
+		AspicArgumentationTheory at = parser.parseBeliefBase(input);
 		Collection<AspicAttack> attacks_w_order = AspicAttack.determineAttackRelations(at.getArguments(), at.getOrder());
 		Collection<AspicAttack> attacks_wo_order = AspicAttack.determineAttackRelations(at.getArguments(), null);
 		assertTrue(attacks_w_order.size() == 1);

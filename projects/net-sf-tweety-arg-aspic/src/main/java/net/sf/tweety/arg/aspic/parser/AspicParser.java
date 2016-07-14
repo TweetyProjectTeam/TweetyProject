@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.arg.aspic.AspicArgumentationSystem;
+import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.semantics.SimpleAspicOrder;
 import net.sf.tweety.arg.aspic.syntax.AspicFormula;
 import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
@@ -27,7 +27,7 @@ import net.sf.tweety.commons.ParserException;
  *		<defeasible rule>  ::= ( <identifier> ':' )? <identifier> ( ',' <identifier> )* '=>' (-)? <identifier>
  *		<static rule>	   ::= <identifier> ( ',' <identifier> )* '->' (-)? <identifier>
  */
-public class AspicParser extends Parser<AspicArgumentationSystem>{
+public class AspicParser extends Parser<AspicArgumentationTheory>{
 	
 	
 	/**
@@ -45,9 +45,9 @@ public class AspicParser extends Parser<AspicArgumentationSystem>{
 	 * @see net.sf.tweety.commons.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
-	public AspicArgumentationSystem parseBeliefBase(Reader reader) throws IOException, ParserException {
+	public AspicArgumentationTheory parseBeliefBase(Reader reader) throws IOException, ParserException {
 		// TODO Auto-generated method stub
-		AspicArgumentationSystem as = new AspicArgumentationSystem();
+		AspicArgumentationTheory as = new AspicArgumentationTheory();
 		
 		BufferedReader br = new BufferedReader(reader);
 		
