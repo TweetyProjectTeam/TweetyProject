@@ -84,7 +84,12 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	 */
 	@Override
 	public boolean addAll(Collection<? extends T> c){
-		return this.formulas.addAll(c);
+		boolean result = true;
+		for(T t: c){
+			boolean sub = this.add(t);
+			result = result && sub;
+		}
+		return result;
 	}
 	
 	/* (non-Javadoc)
@@ -172,7 +177,12 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	 */
 	@Override
 	public boolean removeAll(Collection<?> c){
-		return this.formulas.removeAll(c);
+		boolean result = true;
+		for(Object t: c){
+			boolean sub = this.remove(t);
+			result = result && sub;
+		}
+		return result;
 	}
 	
 	/* (non-Javadoc)
@@ -180,7 +190,17 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	 */
 	@Override
 	public boolean retainAll(Collection<?> c){
-		return this.formulas.retainAll(c);
+		boolean result = false;
+		Collection<T> newFormulas = new HashSet<T>(this.formulas);
+		for(Object t: this){
+			if(!c.contains(t)){
+				newFormulas.remove(t);
+				result = true;
+			}
+		}
+		this.clear();
+		this.addAll(newFormulas);
+		return result;
 	}
 	
 	/* (non-Javadoc)
