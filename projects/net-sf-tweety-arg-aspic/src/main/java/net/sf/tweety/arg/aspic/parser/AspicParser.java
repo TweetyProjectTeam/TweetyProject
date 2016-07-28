@@ -73,7 +73,6 @@ public class AspicParser extends Parser<AspicArgumentationTheory>{
 				as.addRule((AspicInferenceRule)rule);
 			}
 		}
-		as.expand();
 		return as;
 	}
 	

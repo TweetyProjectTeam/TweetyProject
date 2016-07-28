@@ -42,10 +42,6 @@ public class AspicArgumentationTheory implements BeliefBase {
 	 */
 	private Collection<AspicInferenceRule> rules = new ArrayList<>();
 	/**
-	 * This system's arguments created from the inference rules
-	 */
-	private Collection<AspicArgument> args = new HashSet<>();
-	/**
 	 * An order over this system's arguments, needed for their defeat relation
 	 */
 	private Comparator<AspicArgument> order ;
@@ -59,10 +55,12 @@ public class AspicArgumentationTheory implements BeliefBase {
 	}
 	
 	/**
+	 * This method transfers this Aspic+ theory into a Dung style srhumentation system
 	 * @return	a dung theory constructed out of this system's arguments and their 
 	 * 			defeat relation according to order
 	 */
 	public DungTheory asDungTheory(){
+		Collection<AspicArgument> args = getArguments();
 		DungTheory dung_theory = new DungTheory();
 		dung_theory.addAll(args);
 		dung_theory.addAllAttacks(AspicAttack.determineAttackRelations(args, order));
@@ -70,30 +68,22 @@ public class AspicArgumentationTheory implements BeliefBase {
 	}
 	
 	/**
-	 * Adds arg to this system's arguments if it is not already part of it
-	 * @param arg	a argument to be added
-	 * @return	an argument identical to arg
-	 */
-	public AspicArgument addArgument(AspicArgument arg) {
-		for(AspicArgument a : args)
-			if(a.equals(arg))
-				return a;
-		args.add(arg);
-		return arg;
-	}
-	
-	/**
 	 * Expands this systems's inference rules into a tree arguments
+	 * @return	the arguments constructed from this systems's inference rules
 	 */
-	public void expand() {
+	public Collection<AspicArgument> getArguments() {
+		Collection<AspicArgument> args = new HashSet<>();
 		DerivationGraph<AspicFormula, AspicInferenceRule> rule_graph = new DerivationGraph<>();
 		rule_graph.allDerivations(rules);
 		//rule_graph.printTrees(System.out);
 		
 		for (DigraphNode<AspicInferenceRule> node : rule_graph) {
-			addArgument(new AspicArgument(node, this));
+			args.add(new AspicArgument(node, args));
 		}
+		return args;
 	}
+	
+
 	
 	/**
 	 * Sets a new order over the arguments
@@ -110,12 +100,6 @@ public class AspicArgumentationTheory implements BeliefBase {
 		return order;
 	}
 
-	/**
-	 * @return	the arguments constructed from this systems's inference rules
-	 */
-	public Collection<AspicArgument> getArguments() {
-		return args;
-	}
 
 	/**
 	 * @return	the inference rules
@@ -129,7 +113,7 @@ public class AspicArgumentationTheory implements BeliefBase {
 	 */
 	@Override
 	public String toString() {
-		return "ArgumentationSystem [rules=" + rules + ",\n args=" + args + "]";
+		return "ArgumentationSystem [rules=" + rules + "]";
 	}
 
 	/* (non-Javadoc)
