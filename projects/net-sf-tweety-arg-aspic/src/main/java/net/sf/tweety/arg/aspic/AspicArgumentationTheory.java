@@ -75,7 +75,6 @@ public class AspicArgumentationTheory implements BeliefBase {
 		Collection<AspicArgument> args = new HashSet<>();
 		DerivationGraph<AspicFormula, AspicInferenceRule> rule_graph = new DerivationGraph<>();
 		rule_graph.allDerivations(rules);
-		//rule_graph.printTrees(System.out);
 		
 		for (DigraphNode<AspicInferenceRule> node : rule_graph) {
 			args.add(new AspicArgument(node, args));
