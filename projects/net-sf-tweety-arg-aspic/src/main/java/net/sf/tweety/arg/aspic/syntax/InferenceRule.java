@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Rule;
+import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
@@ -14,28 +15,22 @@ import net.sf.tweety.commons.util.rules.Rule;
  * This stands for an inference rule or for a premise if premises has length 0.
  * If this is a premise and defeasible it is an ordinary premise else it is an axiom.
  */
-public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, AspicFormula> {
+public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> {
 	
-	/**
-	 * This is true if the rule is defeasible.
-	 */
-	private boolean defeasible;
 	/**
 	 * The rule's conclusion
 	 */
-	private AspicFormula conclusion;
+	private T conclusion;
 	/**
 	 * The rule's premises
 	 */
-	private Collection<AspicFormula> premises = new ArrayList<>();
+	private Collection<T> premises = new ArrayList<>();
 	
-	/**
-	 * Constructs an empty inference rule
-	 */
-	public AspicInferenceRule(){
-		super(null);
+	private String name;
+	
+	public InferenceRule(){
 		
-	}	
+	}
 	
 	/**
 	 * Constructs a new infernence rule of rule p -> c if defeasible or p => c else
@@ -43,9 +38,7 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 	 * @param conclusion	^= p
 	 * @param premise	^= c
 	 */
-	public AspicInferenceRule(boolean defeasible, AspicFormula conclusion, Collection<AspicFormula> premise) {
-		super(null);
-		this.defeasible = defeasible;
+	public InferenceRule(T conclusion, Collection<T> premise) {
 		this.conclusion = conclusion;
 		this.premises = premise;
 	}
@@ -53,17 +46,7 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 	/**
 	 * @return	true iff this rule is defeasible
 	 */
-	public boolean isDefeasible() {
-		return defeasible;
-	}
-	
-	/**
-	 * Makes rule defeasible or indefeasible
-	 * @param d	new value for defeasible
-	 */
-	public void setDefeasible(boolean d){
-		this.defeasible=d;
-	}
+	public abstract boolean isDefeasible();
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.aspic.syntax.AspicWord#toString()
@@ -72,23 +55,43 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 	public String toString() {
 		StringWriter sw =  new StringWriter();
 		sw.write("(");
-		if(getID()!=null)
-			sw.write(getID()+": ");
-		Iterator<AspicFormula> i = premises.iterator();
+		if(getName()!=null)
+			sw.write(getName()+": ");
+		Iterator<T> i = premises.iterator();
 		if(i.hasNext())
 			sw.write(i.next().toString());
 		while(i.hasNext())
 			sw.write(", "+i.next());
-		if(defeasible)
+		if(isDefeasible())
 			sw.write(" => ");
 		else
 			sw.write(" -> ");
-		sw.write(conclusion.toString());
+		sw.write(conclusion+"");
 		sw.write(")");
 		return sw.toString();
 		
 	}
+
+	public StrictInferenceRule<T> toStrict() {
+		StrictInferenceRule<T> result = new StrictInferenceRule<>(conclusion, premises);
+		result.setName(name);
+		return result;
+	}
 	
+	public DefeasibleInferenceRule<T> toDefeasiblr() {
+		DefeasibleInferenceRule<T> result = new DefeasibleInferenceRule<>(conclusion, premises);
+		result.setName(name);
+		return result;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.util.rules.Rule#isFact()
 	 */
@@ -96,6 +99,7 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 	public boolean isFact() {
 		return premises.isEmpty() && conclusion != null;
 	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.util.rules.Rule#isConstraint()
 	 */
@@ -103,11 +107,12 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 	public boolean isConstraint() {
 		return false;
 	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.util.rules.Rule#setConclusion(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public void setConclusion(AspicFormula conclusion) {
+	public void setConclusion(T conclusion) {
 		this.conclusion = conclusion;
 	}
 	
@@ -115,14 +120,14 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 	 * @see net.sf.tweety.commons.util.rules.Rule#addPremise(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public void addPremise(AspicFormula premise) {
+	public void addPremise(T premise) {
 		this.premises.add(premise);	
 	}
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.util.rules.Rule#addPremises(java.util.Collection)
 	 */
 	@Override
-	public void addPremises(Collection<? extends AspicFormula> premises) {
+	public void addPremises(Collection<? extends T> premises) {
 		this.premises.addAll(premises);
 	}
 	
@@ -132,7 +137,7 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 	@Override
 	public Signature getSignature() {
 		Signature sig = conclusion.getSignature();
-		for (AspicFormula w: premises)
+		for (T w: premises)
 			sig.addSignature(w.getSignature());
 		return sig;
 	}
@@ -140,65 +145,17 @@ public class AspicInferenceRule extends AspicWord implements Rule<AspicFormula, 
 	 * @see net.sf.tweety.commons.util.rules.Rule#getPremise()
 	 */
 	@Override
-	public Collection<? extends AspicFormula> getPremise() {
+	public Collection<? extends T> getPremise() {
 		return premises;
 	}
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.util.rules.Rule#getConclusion()
 	 */
 	@Override
-	public AspicFormula getConclusion() {
+	public T getConclusion() {
 		return conclusion;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.aspic.syntax.AspicWord#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((conclusion == null) ? 0 : conclusion.hashCode());
-		result = prime * result + (defeasible ? 1231 : 1237);
-		result = prime * result + ((premises == null) ? 0 : premises.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.aspic.syntax.AspicWord#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		
-		
-		// custom addition
-		if(obj instanceof AspicWord&& !(obj instanceof AspicInferenceRule)) {
-			if(getID()==null)
-				return false;
-			return ((AspicWord)obj).getID().equals(getID());
-		}
-		
-		if (getClass() != obj.getClass())
-			return false;
-		AspicInferenceRule other = (AspicInferenceRule) obj;
-		if (conclusion == null) {
-			if (other.conclusion != null)
-				return false;
-		} else if (!conclusion.equals(other.conclusion))
-			return false;
-		if (defeasible != other.defeasible)
-			return false;
-		if (premises == null) {
-			if (other.premises != null)
-				return false;
-		} else if (!premises.equals(other.premises))
-			return false;
-		return true;
-	}
 	
 	
 	

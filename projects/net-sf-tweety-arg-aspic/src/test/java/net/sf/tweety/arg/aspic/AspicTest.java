@@ -1,23 +1,76 @@
 package net.sf.tweety.arg.aspic;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Collection;
 
 import org.junit.Test;
 
 import net.sf.tweety.arg.aspic.parser.AspicParser;
-import net.sf.tweety.arg.aspic.semantics.AspicAttack;
-import net.sf.tweety.arg.aspic.syntax.AspicArgument;
-import net.sf.tweety.arg.aspic.syntax.AspicFormula;
-import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
-import net.sf.tweety.arg.aspic.syntax.AspicWord;
+import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
+import net.sf.tweety.logics.fol.parser.FolParser;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 public class AspicTest {
 
-	//@Test
+	
+	@Test
+	public void ParserTest1() throws Exception {
+		FolParser folparser = new FolParser();
+		String folbsp = "Animal = {horse, cow, lion} \n"
+				+ "type(Tame(Animal)) \n"
+				+ "type(Ridable(Animal)) \n";
+		folparser.parseBeliefBase(folbsp);
+		AspicParser<FolFormula> aspicparser = new AspicParser<>(folparser);
+		aspicparser.setSymbolComma(";");
+		aspicparser.setSymbolDefeasible("==>");
+		aspicparser.setSymbolStrict("-->");
+		String aspicbsp = "d1: Tame(cow) ==> Ridable(cow)\n"
+				+ "s1 : Tame(horse) && Ridable(lion) --> Tame(horse)";
+		AspicArgumentationTheory<FolFormula> aat = aspicparser.parseBeliefBase(aspicbsp);
+		assertTrue(aat.getRules().size() == 2);
+	}
+	
+	@Test
+	public void ParserTest2() throws Exception {
+		PlParser plparser = new PlParser();
+		AspicParser<FolFormula> aspicparser = new AspicParser<>(plparser);
+		aspicparser.setSymbolComma(";");
+		aspicparser.setSymbolDefeasible("==>");
+		aspicparser.setSymbolStrict("-->");
+		String aspicbsp = "d1: a ==> b\n"
+				+ "s1 : c; d ==> e \n"
+				+ "d ; r --> a";
+		AspicArgumentationTheory<FolFormula> aat = aspicparser.parseBeliefBase(aspicbsp);
+		assertTrue(aat.getRules().size() == 3);
+	}
+	
+	@Test
+	public void DerivationGraphTest() throws Exception {
+		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser());
+		String input = "-> a \n => b \n b,c =>d \n a=> e \n b -> e \n e, b-> f";
+		AspicArgumentationTheory<PropositionalFormula> aat = parser.parseBeliefBase(input);
+		Collection<InferenceRule<PropositionalFormula>> rules = aat.getRules();
+		assertTrue(rules.size() == 6);
+		DerivationGraph<PropositionalFormula, InferenceRule<PropositionalFormula>> g = new DerivationGraph<>();
+		g.allDerivations(rules);
+		assertTrue(g.numberOfNodes()==6);
+		for(InferenceRule<PropositionalFormula> r:g.getValues())
+			assertTrue(rules.contains(r));
+		for(InferenceRule<PropositionalFormula> r: rules)
+			if(r.getConclusion().equals(new PlParser().parseFormula("d")))
+				assertFalse(g.getValues().contains(r));
+			else
+				assertTrue(g.getValues().contains(r));
+		assertTrue(g.numberOfEdges() == 6);
+		assertTrue(g.getLeafs().size() == 2);
+	}
+	
+/*	//@Test
 	public void test() throws Exception {
 
 		AspicParser parser = new AspicParser();
@@ -27,27 +80,7 @@ public class AspicTest {
 		
 	}
 	
-	@Test
-	public void ParserAndDerivationGraphTest() throws Exception {
-		AspicParser parser = new AspicParser();
-		String input = "-> a \n => b \n b,c =>d \n a=> e \n b -> e \n e, b-> f";
-		AspicArgumentationTheory at = parser.parseBeliefBase(input);
-		Collection<AspicInferenceRule> rules = at.getRules();
-		assertTrue(rules.size() == 6);
-		DerivationGraph<AspicFormula, AspicInferenceRule> g = new DerivationGraph<>();
-		g.allDerivations(rules);
-		System.out.println(g.getValues());
-		assertTrue(g.numberOfNodes()==6);
-		for(AspicInferenceRule r:g.getValues())
-			assertTrue(rules.contains(r));
-		for(AspicInferenceRule r: rules)
-			if(r.getConclusion().equals(new AspicWord("d")))
-				assertFalse(g.getValues().contains(r));
-			else
-				assertTrue(g.getValues().contains(r));
-		assertTrue(g.numberOfEdges() == 6);
-		assertTrue(g.getLeafs().size() == 2);
-	}
+	
 	
 	@Test
 	public void ArgSysTest() throws Exception {
@@ -79,11 +112,11 @@ public class AspicTest {
 		AspicArgumentationTheory at = parser.parseBeliefBase(input);
 		Collection<AspicArgument> args = at.getArguments();
 		
-		AspicArgument not_a = new AspicArgument((AspicInferenceRule)parser.parseFormula("=> -a"));
-		AspicArgument arg_a = new AspicArgument((AspicInferenceRule)parser.parseFormula("=> a"));
-		AspicArgument not_b = new AspicArgument((AspicInferenceRule)parser.parseFormula("-> - b"));
-		AspicArgument not_c = new AspicArgument((AspicInferenceRule)parser.parseFormula("-> - c"));
-		AspicArgument ab_mapsto_c = new AspicArgument((AspicInferenceRule)parser.parseFormula("a,b->c"));
+		AspicArgument not_a = new AspicArgument((InferenceRule)parser.parseFormula("=> -a"));
+		AspicArgument arg_a = new AspicArgument((InferenceRule)parser.parseFormula("=> a"));
+		AspicArgument not_b = new AspicArgument((InferenceRule)parser.parseFormula("-> - b"));
+		AspicArgument not_c = new AspicArgument((InferenceRule)parser.parseFormula("-> - c"));
+		AspicArgument ab_mapsto_c = new AspicArgument((InferenceRule)parser.parseFormula("a,b->c"));
 		assertTrue(args.contains(not_a));
 		assertTrue(args.contains(not_b));
 		assertFalse(args.contains(not_c));
@@ -130,5 +163,5 @@ public class AspicTest {
 		Collection<AspicAttack> attacks_wo_order = AspicAttack.determineAttackRelations(at.getArguments(), null);
 		assertTrue(attacks_w_order.size() == 1);
 		assertTrue(attacks_wo_order.size() == 2);
-	}
+	}*/
 }

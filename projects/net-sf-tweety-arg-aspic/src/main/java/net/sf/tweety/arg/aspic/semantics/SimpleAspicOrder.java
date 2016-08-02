@@ -6,18 +6,18 @@ import java.util.Comparator;
 import java.util.List;
 
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
-import net.sf.tweety.arg.aspic.syntax.AspicFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
  * A simple comparator for Aspic Arguments, that compares their top rules according to a given list of rules
  */
-public class SimpleAspicOrder implements Comparator<AspicArgument> {
+public class SimpleAspicOrder<T extends Invertable> implements Comparator<AspicArgument<T>> {
 	
 	/**
 	 * The name of the rules ordered by size ascending
 	 */
-	private List<AspicFormula> rules = new ArrayList<>();
+	private List<T> rules = new ArrayList<>();
 	
 	/**
 	 * Creates a comparator for AspicArguments, that always returns 0
@@ -33,7 +33,7 @@ public class SimpleAspicOrder implements Comparator<AspicArgument> {
 	 * argument's top rule
 	 * @param rules	list of rules, ordered by their value ascending
 	 */
-	public SimpleAspicOrder(Collection<AspicFormula> rules) {
+	public SimpleAspicOrder(Collection<T> rules) {
 		this.rules.addAll(rules);
 	}
 
@@ -41,7 +41,7 @@ public class SimpleAspicOrder implements Comparator<AspicArgument> {
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public int compare(AspicArgument a, AspicArgument b) {
+	public int compare(AspicArgument<T> a, AspicArgument<T> b) {
 		int NULL = -1, val_a = NULL, val_b = NULL;
 		for( int i = 0; i< rules.size(); i++) {
 			if(rules.get(i).equals(a.getTopRule()))

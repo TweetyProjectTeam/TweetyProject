@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.util.DigraphNode;
+import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * 
@@ -14,21 +15,21 @@ import net.sf.tweety.commons.util.DigraphNode;
  * An argument according to the ASPIC+ specification
  */
 
-public class AspicArgument extends Argument {
+public class AspicArgument<T extends Invertable> extends Argument {
 	
 	/** The conclusion of the argument's top rule **/
-	private AspicFormula conc = null;;
+	private T conc = null;;
 	/** The argument's direct children, whose conclusions fit its prerequisites **/
-	private Collection<AspicArgument> directsubs = new ArrayList<>();
+	private Collection<AspicArgument<T>> directsubs = new ArrayList<>();
 	/** The srgument's top rule **/
-	private AspicInferenceRule toprule = null;
+	private InferenceRule<T> toprule = null;
 	
 	
 	/**
 	 * Creates an empty Argument 
 	 * @param toprule the argument's TopRule
 	 */
-	public AspicArgument(AspicInferenceRule toprule) {
+	public AspicArgument(InferenceRule<T> toprule) {
 		super(null);
 		this.toprule = toprule;
 		conc = toprule.getConclusion();	
@@ -41,10 +42,10 @@ public class AspicArgument extends Argument {
 	 * @param node contains the TopRule
 	 * @param as a set of AspicArguments, all subarguments will be added to this set
 	 */
-	public AspicArgument(DigraphNode<AspicInferenceRule> node, Collection<AspicArgument> as ) {
+	public AspicArgument(DigraphNode<InferenceRule<T>> node, Collection<AspicArgument<T>> as ) {
 		super(null);
-		for(DigraphNode<AspicInferenceRule> parentnode : node.getParents()) {
-			AspicArgument subarg = new AspicArgument(parentnode, as);
+		for(DigraphNode<InferenceRule<T>> parentnode : node.getParents()) {
+			AspicArgument<T> subarg = new AspicArgument<T>(parentnode, as);
 			directsubs.add(subarg);
 			as.add(subarg);
 		}
@@ -80,13 +81,13 @@ public class AspicArgument extends Argument {
 	/**
 	 * @return all ordinary premises
 	 */
-	public Collection<AspicArgument> getOrdinaryPremises() {
-		Collection<AspicArgument> result = new HashSet<>();
+	public Collection<AspicArgument<T>> getOrdinaryPremises() {
+		Collection<AspicArgument<T>> result = new HashSet<>();
 		if (toprule.isFact() && toprule.isDefeasible()) {
 			result.add(this);
 			return result;
 		}
-		for(AspicArgument a: directsubs)
+		for(AspicArgument<T> a: directsubs)
 			result.addAll(a.getOrdinaryPremises());
 		return result;
 	}
@@ -95,7 +96,7 @@ public class AspicArgument extends Argument {
 	 * Returns Conc according to the ASPIC+ specification
 	 * @return the top rule's conclusion
 	 */
-	public AspicFormula getConc() {
+	public T getConc() {
 		return conc;
 	}
 	
@@ -103,7 +104,7 @@ public class AspicArgument extends Argument {
 	 * Change the conclusion
 	 * @param conc the new conclusion
 	 */
-	public void setConc(AspicWord conc) {
+	public void setConc(T conc) {
 		this.conc = conc;
 	}
 	
@@ -111,10 +112,10 @@ public class AspicArgument extends Argument {
 	 * returns the Subs according to the ASPIC+ specification
 	 * @return all subarguments including this
 	 */
-	public Collection<AspicArgument> getAllSubs() {
-		Collection<AspicArgument> result = new HashSet<>();
+	public Collection<AspicArgument<T>> getAllSubs() {
+		Collection<AspicArgument<T>> result = new HashSet<>();
 		result.add(this);
-		for(AspicArgument a : directsubs)
+		for(AspicArgument<T> a : directsubs)
 			result.addAll(a.getAllSubs());
 		return result;
 	}
@@ -122,13 +123,13 @@ public class AspicArgument extends Argument {
 	/**
 	 * @return all arguments in Subs with defeasible top rules
 	 */
-	public Collection<AspicArgument> getDefSubs() {
-		Collection<AspicArgument> result = new HashSet<>();
+	public Collection<AspicArgument<T>> getDefSubs() {
+		Collection<AspicArgument<T>> result = new HashSet<>();
 		if(toprule.isFact())
 			return result;
 		if(toprule.isDefeasible())
 			result.add(this);
-		for(AspicArgument arg : directsubs)
+		for(AspicArgument<T> arg : directsubs)
 			result.addAll(arg.getDefSubs());
 		return result;
 	}
@@ -137,9 +138,9 @@ public class AspicArgument extends Argument {
 	 * returns the DefRules according to ASPIC+ specification
 	 * @return this argument's defeasible rules
 	 */
-	public Collection<AspicInferenceRule> getDefRules() {
-		Collection<AspicInferenceRule> result = new HashSet<>();
-		for(AspicArgument a : getDefSubs())
+	public Collection<InferenceRule<T>> getDefRules() {
+		Collection<InferenceRule<T>> result = new HashSet<>();
+		for(AspicArgument<T> a : getDefSubs())
 			result.add(a.toprule);
 		return result;
 	}
@@ -148,7 +149,7 @@ public class AspicArgument extends Argument {
 	 * The argument's direct children, whose conclusions fit its prerequisites
 	 * @return  the direct subrules
 	 */
-	public Collection<AspicArgument> getDirectSubs() {
+	public Collection<AspicArgument<T>> getDirectSubs() {
 		return directsubs;
 	}
 
@@ -156,7 +157,7 @@ public class AspicArgument extends Argument {
 	 * Retruns the TopRule according to ASPIC+ specification
 	 * @return the top rule
 	 */
-	public AspicInferenceRule getTopRule() {
+	public InferenceRule<T> getTopRule() {
 		return toprule;
 	}
 	
@@ -164,7 +165,7 @@ public class AspicArgument extends Argument {
 	 * Changes the TopRule
 	 * @param toprule the new TopRule
 	 */
-	public void setTopRule(AspicInferenceRule toprule) {
+	public void setTopRule(InferenceRule<T> toprule) {
 		this.toprule = toprule;
 	}
 

@@ -7,13 +7,13 @@ import java.util.HashSet;
 
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
-import net.sf.tweety.arg.aspic.syntax.AspicFormula;
-import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
+import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.DigraphNode;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
+import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 
 /**
@@ -32,7 +32,7 @@ import net.sf.tweety.commons.util.rules.DerivationGraph;
  *		- A set of arguments
  *		- D defeat relationship
  */
-public class AspicArgumentationTheory implements BeliefBase {
+public class AspicArgumentationTheory<T extends Invertable> implements BeliefBase {
 	
 	/**
 	 * The inference rules this system's arguments will be created from,
@@ -40,17 +40,17 @@ public class AspicArgumentationTheory implements BeliefBase {
 	 *		- AS argumentation system = rules with premises (p -> c)
 	 *		- KB knowledge base = rules without premises (-> c)
 	 */
-	private Collection<AspicInferenceRule> rules = new ArrayList<>();
+	private Collection<InferenceRule<T>> rules = new ArrayList<>();
 	/**
 	 * An order over this system's arguments, needed for their defeat relation
 	 */
-	private Comparator<AspicArgument> order ;
+	private Comparator<AspicArgument<T>> order ;
 	
 	/**
 	 * Adds an additional inference rule
 	 * @param rule	the rule to be added
 	 */
-	public void addRule(AspicInferenceRule rule) {
+	public void addRule(InferenceRule<T> rule) {
 		rules.add(rule);
 	}
 	
@@ -60,7 +60,7 @@ public class AspicArgumentationTheory implements BeliefBase {
 	 * 			defeat relation according to order
 	 */
 	public DungTheory asDungTheory(){
-		Collection<AspicArgument> args = getArguments();
+		Collection<AspicArgument<T>> args = getArguments();
 		DungTheory dung_theory = new DungTheory();
 		dung_theory.addAll(args);
 		dung_theory.addAllAttacks(AspicAttack.determineAttackRelations(args, order));
@@ -71,13 +71,13 @@ public class AspicArgumentationTheory implements BeliefBase {
 	 * Expands this systems's inference rules into a tree arguments
 	 * @return	the arguments constructed from this systems's inference rules
 	 */
-	public Collection<AspicArgument> getArguments() {
-		Collection<AspicArgument> args = new HashSet<>();
-		DerivationGraph<AspicFormula, AspicInferenceRule> rule_graph = new DerivationGraph<>();
+	public Collection<AspicArgument<T>> getArguments() {
+		Collection<AspicArgument<T>> args = new HashSet<>();
+		DerivationGraph<T, InferenceRule<T>> rule_graph = new DerivationGraph<>();
 		rule_graph.allDerivations(rules);
 		
-		for (DigraphNode<AspicInferenceRule> node : rule_graph) {
-			args.add(new AspicArgument(node, args));
+		for (DigraphNode<InferenceRule<T>> node : rule_graph) {
+			args.add(new AspicArgument<T>(node, args));
 		}
 		return args;
 	}
@@ -88,14 +88,14 @@ public class AspicArgumentationTheory implements BeliefBase {
 	 * Sets a new order over the arguments
 	 * @param order	the new order
 	 */
-	public void setOrder(Comparator<AspicArgument> order) {
+	public void setOrder(Comparator<AspicArgument<T>> order) {
 		this.order = order;
 	}
 
 	/**
 	 * @return	the order over the systems's arguments
 	 */
-	public Comparator<AspicArgument> getOrder() {
+	public Comparator<AspicArgument<T>> getOrder() {
 		return order;
 	}
 
@@ -103,7 +103,7 @@ public class AspicArgumentationTheory implements BeliefBase {
 	/**
 	 * @return	the inference rules
 	 */
-	public Collection<AspicInferenceRule> getRules() {
+	public Collection<InferenceRule<T>> getRules() {
 		return rules;
 	}
 

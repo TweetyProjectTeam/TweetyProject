@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
 
 import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.semantics.SimpleAspicOrder;
-import net.sf.tweety.arg.aspic.syntax.AspicFormula;
-import net.sf.tweety.arg.aspic.syntax.AspicInferenceRule;
-import net.sf.tweety.arg.aspic.syntax.AspicNegation;
-import net.sf.tweety.arg.aspic.syntax.AspicWord;
+import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
+import net.sf.tweety.arg.aspic.syntax.InferenceRule;
+import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
@@ -27,27 +27,55 @@ import net.sf.tweety.commons.ParserException;
  *		<defeasible rule>  ::= ( <identifier> ':' )? <identifier> ( ',' <identifier> )* '=>' (-)? <identifier>
  *		<static rule>	   ::= <identifier> ( ',' <identifier> )* '->' (-)? <identifier>
  */
-public class AspicParser extends Parser<AspicArgumentationTheory>{
+public class AspicParser <T extends Invertable> extends Parser<AspicArgumentationTheory<T>>{
+	
+	private final Parser formulaparser;
+	
+	private String symbolStrict = "->", 
+			symbolDefeasible = "=>", 
+			symbolComma = ",";
+	
+	public AspicParser(Parser formulaparser) {
+		super();
+		this.formulaparser = formulaparser;
+	}
 	
 	
-	/**
-	 * static Patterns to parse lines  
-	 */
-	final static Pattern RULE = Pattern.compile("(.*)([=-]>)(.+)"),
-			RULE_ID = Pattern.compile("(.*):(.*)"),
-			//AXIOMS = Pattern.compile("^\\s*axioms:(.+)"),
-			EMPTY = Pattern.compile("^\\s*$"),
-			NOT = Pattern.compile("^-\\s*(\\w+)"),
-			WORD = Pattern.compile("\\$?\\w+"),
-			ORDER = Pattern.compile("^([^<]+)<(.+)");
+	
+
+
+	public void setSymbolStrict(String symbolStrict) {
+		this.symbolStrict = symbolStrict;
+	}
+
+
+
+
+
+	public void setSymbolDefeasible(String symbolDefeasible) {
+		this.symbolDefeasible = symbolDefeasible;
+	}
+
+
+
+
+
+	public void setSymbolComma(String symbolComma) {
+		this.symbolComma = symbolComma;
+	}
+
+
+
+
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
-	public AspicArgumentationTheory parseBeliefBase(Reader reader) throws IOException, ParserException {
-		// TODO Auto-generated method stub
-		AspicArgumentationTheory as = new AspicArgumentationTheory();
+	public AspicArgumentationTheory<T> parseBeliefBase(Reader reader) throws IOException, ParserException {
+		final Pattern ORDER = Pattern.compile("<");
+		
+		AspicArgumentationTheory<T> as = new AspicArgumentationTheory<T>();
 		
 		BufferedReader br = new BufferedReader(reader);
 		
@@ -56,46 +84,17 @@ public class AspicParser extends Parser<AspicArgumentationTheory>{
 			if(line==null)
 				break;
 			if (ORDER.matcher(line).matches()) {
-				Collection<AspicFormula> rules = new ArrayList<>();
-				while(true){
-					Matcher m = ORDER.matcher(line);
-					if(m.matches()) {
-						rules.add(makeWord(m.group(1)));
-						line = m.group(2);
-					}else {
-						rules.add(makeWord(line));
-						break;
-					}
-				}
-				as.setOrder(new SimpleAspicOrder(rules));
+				Collection<T> rules = new ArrayList<>();
+				String[] parts = line.split("<");
+				for(String s:parts)
+					rules.add((T)formulaparser.parseFormula(s));
+				as.setOrder(new SimpleAspicOrder<T>(rules));
 			} else {
 				Formula rule = parseFormula(line);
-				as.addRule((AspicInferenceRule)rule);
+				as.addRule((InferenceRule<T>)rule);
 			}
 		}
 		return as;
-	}
-	
-	/**
-	 * Constructs an Aspic Formula out of s
-	 * @param s input string ::= '-'? <identifier>
-	 * @return an Aspic formuls
-	 * @throws ParserException
-	 */
-	private AspicFormula makeWord(String s) throws ParserException {
-		s = s.trim();
-		boolean negation = false;
-		Matcher m = NOT.matcher(s);
-		if(m.matches()) {
-			negation = true;
-			s = m.group(1);
-		}
-		if(WORD.matcher(s).matches())
-			if(negation)
-				return new  AspicNegation(new AspicWord(s));
-			else
-				return new AspicWord(s);
-		else throw new ParserException("Non-word char in language");
 	}
 
 	/* (non-Javadoc)
@@ -103,25 +102,31 @@ public class AspicParser extends Parser<AspicArgumentationTheory>{
 	 */
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
+		final Pattern RULE = Pattern.compile("(.*)("+symbolStrict +"|"+symbolDefeasible +")(.+)"),
+				RULE_ID = Pattern.compile("^\\s*([A-Za-z0-9]+)\\s*:(.*)"),
+				EMPTY = Pattern.compile("^\\s*$");
+		
 		BufferedReader br = new BufferedReader(reader);
 		String line = br.readLine();
 		if(line==null)
 			return null;
 		Matcher m = RULE.matcher(line);
 		if(m.matches()) {
-			AspicInferenceRule rule = new AspicInferenceRule();
-			rule.setDefeasible(m.group(2).equals("=>"));
-			rule.setConclusion(makeWord(m.group(3)));
+			InferenceRule<T> rule = 
+					m.group(2).equals(symbolDefeasible)
+							? new StrictInferenceRule<>()
+							: new DefeasibleInferenceRule<>();
+			rule.setConclusion((T)formulaparser.parseFormula(m.group(3)));
 			String str = m.group(1);
 			m = RULE_ID.matcher(str);
 			if(m.matches()) {
-				rule.setID(m.group(1).trim());
+				rule.setName(m.group(1));
 				str = m.group(2);
 			}
 			if(!EMPTY.matcher(str).matches()){
-				String[] pres = str.split(",");
+				String[] pres = str.split(symbolComma);
 				for(String pre:pres)
-					rule.addPremise(makeWord(pre));
+					rule.addPremise((T)formulaparser.parseFormula(pre));
 			}
 			return rule;
 		}
