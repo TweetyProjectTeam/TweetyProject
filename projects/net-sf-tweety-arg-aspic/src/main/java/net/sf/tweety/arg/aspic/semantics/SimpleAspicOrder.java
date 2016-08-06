@@ -17,7 +17,7 @@ public class SimpleAspicOrder<T extends Invertable> implements Comparator<AspicA
 	/**
 	 * The name of the rules ordered by size ascending
 	 */
-	private List<T> rules = new ArrayList<>();
+	private List<String> rules = new ArrayList<>();
 	
 	/**
 	 * Creates a comparator for AspicArguments, that always returns 0
@@ -33,7 +33,7 @@ public class SimpleAspicOrder<T extends Invertable> implements Comparator<AspicA
 	 * argument's top rule
 	 * @param rules	list of rules, ordered by their value ascending
 	 */
-	public SimpleAspicOrder(Collection<T> rules) {
+	public SimpleAspicOrder(Collection<String> rules) {
 		this.rules.addAll(rules);
 	}
 
@@ -44,15 +44,15 @@ public class SimpleAspicOrder<T extends Invertable> implements Comparator<AspicA
 	public int compare(AspicArgument<T> a, AspicArgument<T> b) {
 		int NULL = -1, val_a = NULL, val_b = NULL;
 		for( int i = 0; i< rules.size(); i++) {
-			if(rules.get(i).equals(a.getTopRule()))
+			if(rules.get(i).equals(a.getTopRule().getName()))
 				val_a = i;
-			if(rules.get(i).equals(b.getTopRule()))
+			if(rules.get(i).equals(b.getTopRule().getName()))
 				val_b = i;
 		}
 		if(val_a == NULL || val_b == NULL) {
-			System.out.println("www");
 			return 0;
 		}
+		
 			
 		return val_a - val_b;	
 	}

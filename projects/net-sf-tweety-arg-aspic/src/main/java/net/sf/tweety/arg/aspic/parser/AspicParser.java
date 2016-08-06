@@ -13,6 +13,7 @@ import net.sf.tweety.arg.aspic.semantics.SimpleAspicOrder;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
@@ -29,13 +30,13 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  */
 public class AspicParser <T extends Invertable> extends Parser<AspicArgumentationTheory<T>>{
 	
-	private final Parser formulaparser;
+	private final Parser<? extends BeliefBase> formulaparser;
 	
 	private String symbolStrict = "->", 
 			symbolDefeasible = "=>", 
 			symbolComma = ",";
 	
-	public AspicParser(Parser formulaparser) {
+	public AspicParser(Parser<? extends BeliefBase> formulaparser) {
 		super();
 		this.formulaparser = formulaparser;
 	}
@@ -72,8 +73,9 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	 * @see net.sf.tweety.commons.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
+	@SuppressWarnings(value = { "unchecked" })
 	public AspicArgumentationTheory<T> parseBeliefBase(Reader reader) throws IOException, ParserException {
-		final Pattern ORDER = Pattern.compile("<");
+		final Pattern ORDER = Pattern.compile(".*<.*");
 		
 		AspicArgumentationTheory<T> as = new AspicArgumentationTheory<T>();
 		
@@ -84,14 +86,15 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 			if(line==null)
 				break;
 			if (ORDER.matcher(line).matches()) {
-				Collection<T> rules = new ArrayList<>();
+				Collection<String> rules = new ArrayList<>();
 				String[] parts = line.split("<");
 				for(String s:parts)
-					rules.add((T)formulaparser.parseFormula(s));
+					rules.add(s.trim());
 				as.setOrder(new SimpleAspicOrder<T>(rules));
 			} else {
 				Formula rule = parseFormula(line);
-				as.addRule((InferenceRule<T>)rule);
+				if(rule != null)
+					as.addRule((InferenceRule<T>)rule);
 			}
 		}
 		return as;
@@ -100,6 +103,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.Parser#parseFormula(java.io.Reader)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
 		final Pattern RULE = Pattern.compile("(.*)("+symbolStrict +"|"+symbolDefeasible +")(.+)"),
@@ -114,8 +118,8 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 		if(m.matches()) {
 			InferenceRule<T> rule = 
 					m.group(2).equals(symbolDefeasible)
-							? new StrictInferenceRule<>()
-							: new DefeasibleInferenceRule<>();
+							? new DefeasibleInferenceRule<>()
+							: new StrictInferenceRule<>();
 			rule.setConclusion((T)formulaparser.parseFormula(m.group(3)));
 			String str = m.group(1);
 			m = RULE_ID.matcher(str);

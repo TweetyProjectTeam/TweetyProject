@@ -16,10 +16,9 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 public class AspicAttack<T extends Invertable> extends Attack {
 	
 	/** The binary ordring to determine if attacks are successfull **/
-	private Comparator<AspicArgument> order = STD_ORDER;
-	private static final Comparator<AspicArgument> STD_ORDER = new Comparator<AspicArgument>() {
+	private Comparator<AspicArgument<T>> order = new Comparator<AspicArgument<T>>() {
 		@Override
-		public int compare(AspicArgument o1, AspicArgument o2) {
+		public int compare(AspicArgument<T> o1, AspicArgument<T> o2) {
 			return 0;
 		}
 	};
@@ -29,6 +28,8 @@ public class AspicAttack<T extends Invertable> extends Attack {
 	 * Logs attack attempts
 	 */
 	StringWriter sw = new StringWriter();
+	
+	private RuleFormulaGenerator<T> rfgen ;
 	
 	
 	/**
@@ -46,15 +47,16 @@ public class AspicAttack<T extends Invertable> extends Attack {
 	 * @param order	an comparator which should compare the arguments in args 
 	 * @return a list of all tuples (a,b) with a, b in args where a defeats b
 	 */
-	public static <T extends Invertable> Collection<AspicAttack<T>> determineAttackRelations(Collection<AspicArgument<T>> args, Comparator<AspicArgument<T>> order) {
+	public static <T extends Invertable> Collection<AspicAttack<T>> determineAttackRelations(Collection<AspicArgument<T>> args, Comparator<AspicArgument<T>> order, RuleFormulaGenerator<T> rfgen) {
 		Collection<AspicAttack<T>> successfull = new ArrayList<>();
-		for (AspicArgument active : args) 
-			for (AspicArgument passive : args)
+		for (AspicArgument<T> active : args) 
+			for (AspicArgument<T> passive : args)
 				if (active != passive) {
-					AspicAttack a = new AspicAttack(active, passive);
+					AspicAttack<T> a = new AspicAttack<T>(active, passive);
 					a.setOrder(order);
+					a.setRuleFormulaGenerator(rfgen);
 					a.setShortcut(true);
-					//a.attack();
+					a.attack();
 					if(a.isSuccessfull())
 						successfull.add(a);
 				}
@@ -104,18 +106,20 @@ public class AspicAttack<T extends Invertable> extends Attack {
 	/**
 	 * Determines whether the attack is successfull
 	 */
-/*	public void attack() {
-		AspicArgument active = (AspicArgument)getAttacker(),
-				passive = (AspicArgument)getAttacked();
-		Collection<AspicArgument> defargs = passive.getDefSubs();
-		for (AspicArgument a : defargs)
-			if(AspicNegation.negates(active.getConc(), a.getTopRule())) {
+	@SuppressWarnings("unchecked")
+	public void attack() {
+		AspicArgument<T> active = (AspicArgument<T>)getAttacker(),
+				passive = (AspicArgument<T>)getAttacked();
+		Collection<AspicArgument<T>> defargs = passive.getDefSubs();
+		for (AspicArgument<T> a : defargs){
+			if(active.getConc().equals(rfgen.getRuleFormula(a.getTopRule()).complement())) {
 				sw.write(active + " undercuts "+ passive + " on " + a);
 				nl();
 				if (setResult()) return;
 			}
-		for (AspicArgument a : defargs)
-			if(AspicNegation.negates(active.getConc(), a.getConc())) {
+		}
+		for (AspicArgument<T> a : defargs)
+			if(active.getConc().equals(a.getConc().complement())) {
 				boolean successfull = order.compare(active, a) >= 0;
 				sw.write(active + " rebuts "+ passive + " on " + a);
 				if(successfull) {
@@ -124,8 +128,8 @@ public class AspicAttack<T extends Invertable> extends Attack {
 					if (setResult()) return;
 				}
 			}
-		for (AspicArgument a : passive.getOrdinaryPremises())
-				if(AspicNegation.negates(active.getConc(), a.getConc())) {
+		for (AspicArgument<T> a : passive.getOrdinaryPremises())
+				if(active.getConc().equals(a.getConc().complement())) {
 					boolean successfull = order.compare(active, a) >= 0;
 					sw.write(active + " undermines "+ passive + " on " + a);
 					if(successfull) {
@@ -135,15 +139,19 @@ public class AspicAttack<T extends Invertable> extends Attack {
 					}
 				}
 		sw.write(active + (successfull? " defeats " : " does not defeat ") + passive);
-	}*/
+	}
 
 	/**
 	 * Set an order for the arguments to determine if an attack ends in an defeat
 	 * @param order	the new order
 	 */
-	public void setOrder(Comparator<AspicArgument> order) {
+	public void setOrder(Comparator<AspicArgument<T>> order) {
 		if(order !=null)
 			this.order = order;
+	}
+	
+	public void setRuleFormulaGenerator(RuleFormulaGenerator<T> rfg) {
+		rfgen = rfg;
 	}
 
 	/* (non-Javadoc)

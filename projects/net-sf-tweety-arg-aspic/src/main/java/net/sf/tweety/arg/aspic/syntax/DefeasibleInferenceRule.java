@@ -11,7 +11,6 @@ public class DefeasibleInferenceRule<T extends Invertable> extends InferenceRule
 
 	public DefeasibleInferenceRule(T conclusion, Collection<T> premise) {
 		super(conclusion, premise);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

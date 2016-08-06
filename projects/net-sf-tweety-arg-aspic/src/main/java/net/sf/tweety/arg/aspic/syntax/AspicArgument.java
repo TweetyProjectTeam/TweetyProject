@@ -65,7 +65,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	/**
 	 * @return whether this has a defeasible subrule
 	 */
-	public boolean isDefeasible() {
+	public boolean hasDefeasibleSub() {
 		return !getDefRules().isEmpty();
 	}
 	

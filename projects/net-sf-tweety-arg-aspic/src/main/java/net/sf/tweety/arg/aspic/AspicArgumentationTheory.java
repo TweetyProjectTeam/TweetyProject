@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
+import net.sf.tweety.arg.aspic.semantics.RuleFormulaGenerator;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
@@ -45,6 +46,11 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	 * An order over this system's arguments, needed for their defeat relation
 	 */
 	private Comparator<AspicArgument<T>> order ;
+	private RuleFormulaGenerator<T> rfgen ;
+	
+	public void setRuleFormulaGenerator(RuleFormulaGenerator<T> rfg) {
+		rfgen = rfg;
+	}
 	
 	/**
 	 * Adds an additional inference rule
@@ -63,7 +69,7 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 		Collection<AspicArgument<T>> args = getArguments();
 		DungTheory dung_theory = new DungTheory();
 		dung_theory.addAll(args);
-		dung_theory.addAllAttacks(AspicAttack.determineAttackRelations(args, order));
+		dung_theory.addAllAttacks(AspicAttack.determineAttackRelations(args, order, rfgen));
 		return dung_theory;
 	}
 	

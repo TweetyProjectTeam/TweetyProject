@@ -78,11 +78,12 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> 
 		return result;
 	}
 	
-	public DefeasibleInferenceRule<T> toDefeasiblr() {
+	public DefeasibleInferenceRule<T> toDefeasible() {
 		DefeasibleInferenceRule<T> result = new DefeasibleInferenceRule<>(conclusion, premises);
 		result.setName(name);
 		return result;
 	}
+	
 	
 	public String getName() {
 		return name;
