@@ -10,7 +10,10 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
+ * 
  * A simple comparator for Aspic Arguments, that compares their top rules according to a given list of rules
+ * 
+ * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
 public class SimpleAspicOrder<T extends Invertable> implements Comparator<AspicArgument<T>> {
 	
@@ -53,8 +56,11 @@ public class SimpleAspicOrder<T extends Invertable> implements Comparator<AspicA
 			return 0;
 		}
 		
-			
-		return val_a - val_b;	
+		int result = val_a - val_b;
+		
+		//System.out.println(a +" - "+b+" = "+result);
+		
+		return result;
 	}
 
 	/* (non-Javadoc)

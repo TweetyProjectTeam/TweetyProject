@@ -21,12 +21,16 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
+ * 
  * Parses a Aspic Argumentation System out of an input text. Every line contains one of the following: 
  *		<order> 		   ::= <identifier> ( '<' <identifier> )+
  *		<ordinary premise> ::= '=>' '-'? <identifier>
  *		<axiom> 		   ::= '->' '-'? <identifier>
  *		<defeasible rule>  ::= ( <identifier> ':' )? <identifier> ( ',' <identifier> )* '=>' (-)? <identifier>
  *		<static rule>	   ::= <identifier> ( ',' <identifier> )* '->' (-)? <identifier>
+ *
+ * 
+ * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
 public class AspicParser <T extends Invertable> extends Parser<AspicArgumentationTheory<T>>{
 	
@@ -36,15 +40,20 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 			symbolDefeasible = "=>", 
 			symbolComma = ",";
 	
+	/**
+	 * Constructs a new instance
+	 * @param formulaparser	parses the bodies and the heads of the ASPIC argumentation systems rules
+	 */
 	public AspicParser(Parser<? extends BeliefBase> formulaparser) {
 		super();
 		this.formulaparser = formulaparser;
 	}
 	
-	
-	
 
-
+	/**
+	 * Sets a new symbol used for parsing strict function arrows
+	 * @param symbolStrict	is the new symbol
+	 */
 	public void setSymbolStrict(String symbolStrict) {
 		this.symbolStrict = symbolStrict;
 	}
@@ -52,7 +61,10 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 
 
 
-
+	/**
+	 * Sets a new symbol used for parsing defeasible function arrows
+	 * @param symbolStrict	is the new symbol
+	 */
 	public void setSymbolDefeasible(String symbolDefeasible) {
 		this.symbolDefeasible = symbolDefeasible;
 	}
@@ -60,7 +72,10 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 
 
 
-
+	/**
+	 * Sets a new symbol used for parsing parameter separators
+	 * @param symbolStrict	is the new symbol
+	 */
 	public void setSymbolComma(String symbolComma) {
 		this.symbolComma = symbolComma;
 	}

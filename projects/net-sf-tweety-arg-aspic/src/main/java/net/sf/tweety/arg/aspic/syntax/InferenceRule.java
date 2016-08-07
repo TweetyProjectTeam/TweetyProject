@@ -14,6 +14,8 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  * 
  * This stands for an inference rule or for a premise if premises has length 0.
  * If this is a premise and defeasible it is an ordinary premise else it is an axiom.
+ * 
+ * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
 public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> {
 	
@@ -26,15 +28,20 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> 
 	 */
 	private Collection<T> premises = new ArrayList<>();
 	
+	/**
+	 * Identifying name. used e.g. for formula generation
+	 */
 	private String name;
 	
+	/**
+	 * Creates an empty instance
+	 */
 	public InferenceRule(){
 		
 	}
 	
 	/**
-	 * Constructs a new infernence rule of rule p -> c if defeasible or p => c else
-	 * @param defeasible	makes a rule with premises defeasible and makes a premise ordinary
+	 * Constructs a new inference rule of rule p -> c if strict or p => c else
 	 * @param conclusion	^= p
 	 * @param premise	^= c
 	 */
@@ -72,18 +79,30 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> 
 		
 	}
 
+	/**
+	 * @return	a strict instance of this rule
+	 */
 	public StrictInferenceRule<T> toStrict() {
 		StrictInferenceRule<T> result = new StrictInferenceRule<>(conclusion, premises);
 		result.setName(name);
 		return result;
 	}
 	
+	/**
+	 * @return	a defeasible instance of this rule
+	 */
 	public DefeasibleInferenceRule<T> toDefeasible() {
 		DefeasibleInferenceRule<T> result = new DefeasibleInferenceRule<>(conclusion, premises);
 		result.setName(name);
 		return result;
 	}
 	
+	public String getIdentifier() {
+		if (getName() == null)
+			return ""+hashCode();
+		else
+			return getName();
+	}
 	
 	public String getName() {
 		return name;

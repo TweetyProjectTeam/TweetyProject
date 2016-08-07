@@ -8,10 +8,14 @@ import java.util.Comparator;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
+import ruleformulagenerator.RuleFormulaGenerator;
 
 /**
  * @author Nils Geilen
+ * 
  * Checks whether an argument defeats another argument
+ * 
+ * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
 public class AspicAttack<T extends Invertable> extends Attack {
 	
@@ -28,7 +32,9 @@ public class AspicAttack<T extends Invertable> extends Attack {
 	 * Logs attack attempts
 	 */
 	StringWriter sw = new StringWriter();
-	
+	/**
+	 * Used to transform ASPIC inference rules into words of the language they range over
+	 */
 	private RuleFormulaGenerator<T> rfgen ;
 	
 	
@@ -150,6 +156,10 @@ public class AspicAttack<T extends Invertable> extends Attack {
 			this.order = order;
 	}
 	
+	/**
+	 * Set a new generator to transform rules into words of the language they range over
+	 * @param rfg	is the new formula generator
+	 */
 	public void setRuleFormulaGenerator(RuleFormulaGenerator<T> rfg) {
 		rfgen = rfg;
 	}

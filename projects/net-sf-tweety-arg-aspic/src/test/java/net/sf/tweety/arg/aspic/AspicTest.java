@@ -9,16 +9,19 @@ import org.junit.Test;
 
 import net.sf.tweety.arg.aspic.parser.AspicParser;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
-import net.sf.tweety.arg.aspic.semantics.PropositionalFormulaGenerator;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.parser.FolParser;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import ruleformulagenerator.FolFormulaGenerator;
+import ruleformulagenerator.PlFormulaGenerator;
 
 /**
  * @author Nils Geilen
@@ -152,10 +155,11 @@ public class AspicTest {
 		
 	}
 	
-	PropositionalFormulaGenerator pfg = new PropositionalFormulaGenerator();
+	final PlFormulaGenerator pfg = new PlFormulaGenerator();
+	final FolFormulaGenerator folfg = new FolFormulaGenerator();
 	
 	@SuppressWarnings("unchecked")
-	@Test public void FormulaGeneratorTest() throws Exception {
+	@Test public void PropositionalFormulaGeneratorTest() throws Exception {
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser());
 		String input = "-> a \n"
 				+ "d1: a => b \n"
@@ -167,6 +171,27 @@ public class AspicTest {
 		DungTheory dt = at.asDungTheory();
 		assertTrue(dt.getAttacks().size() == 1);
 		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacked()).getConc().equals(new Proposition("b")));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test public void FolFormulaGeneratorTest() throws Exception {
+		FolParser parser = new FolParser();
+		String kb = "Rule = {d1,d2,s1,s2} \n"
+				+ "type(a) \n type(b) \n type(c) \n type(e) \n"
+				+ "type(__rule(Rule)) \n"
+				;
+		parser.parseBeliefBase(kb);
+		AspicParser<FolFormula> aspicparser = new AspicParser<>(parser);
+		String input = "-> a \n"
+				+ "d1: a => b \n"
+				+ "d2: a => !__rule(d1) \n"
+				+ "s1: a -> e \n"
+				+ "s2: a -> !__rule(s1)";
+		AspicArgumentationTheory<FolFormula> at = aspicparser.parseBeliefBase(input);
+		at.setRuleFormulaGenerator(folfg);
+		DungTheory dt = at.asDungTheory();
+		assertTrue(dt.getAttacks().size() == 1);
+		assertTrue(((AspicArgument<FolFormula>)dt.getAttacks().iterator().next().getAttacked()).getConc().equals(new FOLAtom(new Predicate("b"))));
 	}
 	
 	@Test

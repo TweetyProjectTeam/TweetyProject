@@ -13,6 +13,8 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  * @author Nils Geilen
  *
  * An argument according to the ASPIC+ specification
+ * 
+ * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
 
 public class AspicArgument<T extends Invertable> extends Argument {
@@ -63,6 +65,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	
 	
 	/**
+	 * Checks whether this has a defeasible subrule, premises do not count as subrules
 	 * @return whether this has a defeasible subrule
 	 */
 	public boolean hasDefeasibleSub() {
@@ -121,6 +124,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	}
 	
 	/**
+	 * Determines defeasible subrules, premises do not count as subrules
 	 * @return all arguments in Subs with defeasible top rules
 	 */
 	public Collection<AspicArgument<T>> getDefSubs() {
