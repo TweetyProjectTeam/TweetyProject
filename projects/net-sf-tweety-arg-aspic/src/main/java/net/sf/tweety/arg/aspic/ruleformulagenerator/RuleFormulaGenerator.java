@@ -1,4 +1,4 @@
-package ruleformulagenerator;
+package net.sf.tweety.arg.aspic.ruleformulagenerator;
 
 import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;

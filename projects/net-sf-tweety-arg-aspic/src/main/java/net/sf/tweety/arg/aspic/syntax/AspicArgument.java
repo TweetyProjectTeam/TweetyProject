@@ -58,6 +58,10 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		generateName();
 	}
 	
+	/**
+	 * Generates a unique identifying name for this argument, which describes it 
+	 * and is used to determine equality 
+	 */
 	private void generateName() {
 		setName(toprule + (directsubs.isEmpty()  ? "": " "+directsubs ));
 	}
@@ -70,6 +74,20 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 */
 	public boolean hasDefeasibleSub() {
 		return !getDefRules().isEmpty();
+	}
+	
+	/**
+	 * Checks wheter this is a direct or indirect subargument of <code>arg</code>
+	 * @param arg	an ASPIC argument
+	 * @return	true iff this is in Sub(arg)
+	 */
+	public boolean isSubArgumentOf (AspicArgument<T> arg) {
+		if (equals(arg))
+			return true;
+		for (AspicArgument<T> sub : arg.getDirectSubs())
+			if (equals(sub))
+				return true;
+		return false;
 	}
 	
 /*	public Collection<AspicInferenceRule> getPrems() {

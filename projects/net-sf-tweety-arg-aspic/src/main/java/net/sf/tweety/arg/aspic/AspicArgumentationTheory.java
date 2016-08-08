@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 
+import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
@@ -14,7 +15,6 @@ import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.DigraphNode;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
-import ruleformulagenerator.RuleFormulaGenerator;
 
 
 /**

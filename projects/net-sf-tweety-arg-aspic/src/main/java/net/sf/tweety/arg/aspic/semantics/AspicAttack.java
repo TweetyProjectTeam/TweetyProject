@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 
+import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
-import ruleformulagenerator.RuleFormulaGenerator;
 
 /**
  * @author Nils Geilen

@@ -8,6 +8,8 @@ import java.util.Collection;
 import org.junit.Test;
 
 import net.sf.tweety.arg.aspic.parser.AspicParser;
+import net.sf.tweety.arg.aspic.ruleformulagenerator.FolFormulaGenerator;
+import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
@@ -20,8 +22,6 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import ruleformulagenerator.FolFormulaGenerator;
-import ruleformulagenerator.PlFormulaGenerator;
 
 /**
  * @author Nils Geilen
