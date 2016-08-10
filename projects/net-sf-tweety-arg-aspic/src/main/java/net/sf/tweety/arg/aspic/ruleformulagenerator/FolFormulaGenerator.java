@@ -4,7 +4,7 @@ package net.sf.tweety.arg.aspic.ruleformulagenerator;
 
 import java.util.Collections;
 
-import net.sf.tweety.arg.aspic.syntax.InferenceRule;
+import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
@@ -31,7 +31,7 @@ public class FolFormulaGenerator extends RuleFormulaGenerator<FolFormula> {
 	 * @see ruleformulagenerator.RuleFormulaGenerator#getRuleFormula(net.sf.tweety.arg.aspic.syntax.InferenceRule)
 	 */
 	@Override
-	public FolFormula getRuleFormula(InferenceRule<FolFormula> r)  {		
+	public FolFormula getRuleFormula(DefeasibleInferenceRule<FolFormula> r)  {		
 		Constant rcons = new Constant( r.getIdentifier() , sort);
 		return new FOLAtom(RULE_PREDICATE, rcons);
 	}

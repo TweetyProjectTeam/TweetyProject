@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 import org.junit.Test;
 
@@ -11,6 +12,7 @@ import net.sf.tweety.arg.aspic.parser.AspicParser;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.FolFormulaGenerator;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
+import net.sf.tweety.arg.aspic.semantics.SimpleAspicOrder;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
@@ -99,8 +101,8 @@ public class AspicTest {
 			//System.out.println(a);
 		assertTrue(args.size() == 8);
 		for(AspicArgument<PropositionalFormula> a:args)
-			if(a.getConc() .equals(new Proposition("f"))
-					|| a.getConc() .equals(new Proposition("g")))
+			if(a.getConclusion() .equals(new Proposition("f"))
+					|| a.getConclusion() .equals(new Proposition("g")))
 				assertTrue(a.hasDefeasibleSub());
 			else
 				assertFalse(a.hasDefeasibleSub());
@@ -131,7 +133,7 @@ public class AspicTest {
 		int sum = 0;
 		for (AspicArgument<PropositionalFormula> arg: args) {
 			AspicAttack<PropositionalFormula> a=new AspicAttack<PropositionalFormula>(not_a,arg);
-			a.attack();
+			a.resolve();
 			//System.out.println(a.getOutput());
 			if(a.isSuccessfull())
 				sum++;
@@ -139,13 +141,13 @@ public class AspicTest {
 		assertTrue(sum==2);
 		for (AspicArgument<PropositionalFormula> arg: args) {
 			AspicAttack<PropositionalFormula> a=new AspicAttack<PropositionalFormula>(not_b,arg);
-			a.attack();
+			a.resolve();
 			//System.out.println(a.getOutput());
 			assertFalse(a.isSuccessfull());
 		}
 		for (AspicArgument<PropositionalFormula> arg: args) {
 			AspicAttack<PropositionalFormula> a=new AspicAttack<PropositionalFormula>(arg_a,arg);
-			a.attack();
+			a.resolve();
 			//System.out.println(a.getOutput());
 			if(arg.equals(not_a))
 				assertTrue(a.isSuccessfull());
@@ -170,7 +172,7 @@ public class AspicTest {
 		at.setRuleFormulaGenerator(pfg);
 		DungTheory dt = at.asDungTheory();
 		assertTrue(dt.getAttacks().size() == 1);
-		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacked()).getConc().equals(new Proposition("b")));
+		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacked()).getConclusion().equals(new Proposition("b")));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -191,9 +193,10 @@ public class AspicTest {
 		at.setRuleFormulaGenerator(folfg);
 		DungTheory dt = at.asDungTheory();
 		assertTrue(dt.getAttacks().size() == 1);
-		assertTrue(((AspicArgument<FolFormula>)dt.getAttacks().iterator().next().getAttacked()).getConc().equals(new FOLAtom(new Predicate("b"))));
+		assertTrue(((AspicArgument<FolFormula>)dt.getAttacks().iterator().next().getAttacked()).getConclusion().equals(new FOLAtom(new Predicate("b"))));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void SimpleOrderTest() throws Exception {
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser());
@@ -201,14 +204,33 @@ public class AspicTest {
 				+ " => FitnessLover \n"
 				+ "d1: BornInScotland => Scottish \n"
 				+ "d2: Scottish => LikesWhiskey \n"
-				+ "d3: FitnessLover => ! LikesWhiskey\n"
-				+ "d1<d3<d2";
-		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBase(input);
-		assertTrue(at.getRules().size() == 5);
-		Collection<AspicArgument<PropositionalFormula>> args = at.getArguments();
-		Collection<AspicAttack<PropositionalFormula>> attacks_w_order = AspicAttack.determineAttackRelations(args, at.getOrder(), pfg);
-		Collection<AspicAttack<PropositionalFormula>> attacks_wo_order = AspicAttack.determineAttackRelations(args, null, pfg);
-		assertTrue(attacks_w_order.size() == 1);
-		assertTrue(attacks_wo_order.size() == 2);
+				+ "d3: FitnessLover => ! LikesWhiskey\n",
+				order = "d1<d3<d2";
+		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBase(input+order);
+		
+		at.setRuleFormulaGenerator(pfg);
+		
+		DungTheory dt = at.asDungTheory();
+		assertTrue(dt.getNodes().size() == 5);
+		assertTrue(dt.getAttacks().size() == 1);
+		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacker()).getTopRule().getName().equals("d2"));
+		
+		Comparator<AspicArgument<PropositionalFormula>> new_order = parser.parseSimpleOrder("d1<d2<d3");
+		at.setOrder(new_order);
+		dt = at.asDungTheory();
+		assertTrue(dt.getNodes().size() == 5);
+		assertTrue(dt.getAttacks().size() == 1);
+		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacker()).getTopRule().getName().equals("d3"));
+		
+		at.setOrder(new SimpleAspicOrder<>());
+		dt = at.asDungTheory();
+		assertTrue(dt.getNodes().size() == 5);
+		assertTrue(dt.getAttacks().size() == 2);
+		
+		at = parser.parseBeliefBase(input);
+		at.setRuleFormulaGenerator(pfg);
+		dt = at.asDungTheory();
+		assertTrue(dt.getNodes().size() == 5);
+		assertTrue(dt.getAttacks().size() == 2);
 	}
 }

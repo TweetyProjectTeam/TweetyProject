@@ -7,6 +7,7 @@ import java.util.Comparator;
 
 import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
+import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
@@ -62,7 +63,7 @@ public class AspicAttack<T extends Invertable> extends Attack {
 					a.setOrder(order);
 					a.setRuleFormulaGenerator(rfgen);
 					a.setShortcut(true);
-					a.attack();
+					a.resolve();
 					if(a.isSuccessfull())
 						successfull.add(a);
 				}
@@ -89,13 +90,13 @@ public class AspicAttack<T extends Invertable> extends Attack {
 	/**
 	 * @return the log of all attack attempts on all DefSubs of the attacked argument
 	 */
-	public String getOutput() {
+	public String getLoggedOutput() {
 		return sw.toString();
 	}
 	
 	/**
-	 * If shortcut is set the attack will stop after a successfulldefeat on one DefSub
-	 * @param shortcut	the new shortcut value
+	 * If shortcut is set the attack will stop after a successful defeat on one defeasible subargument
+	 * @param shortcut	is the new shortcut value
 	 */
 	public void setShortcut(boolean shortcut) {
 		this.shortcut = shortcut;
@@ -113,19 +114,25 @@ public class AspicAttack<T extends Invertable> extends Attack {
 	 * Determines whether the attack is successfull
 	 */
 	@SuppressWarnings("unchecked")
-	public void attack() {
+	public void resolve() {
 		AspicArgument<T> active = (AspicArgument<T>)getAttacker(),
 				passive = (AspicArgument<T>)getAttacked();
-		Collection<AspicArgument<T>> defargs = passive.getDefSubs();
+		Collection<AspicArgument<T>> defargs = passive.getDefeasibleSubs();
+		/*
+		 * Undercutting
+		 */
 		for (AspicArgument<T> a : defargs){
-			if(active.getConc().equals(rfgen.getRuleFormula(a.getTopRule()).complement())) {
+			if(active.getConclusion().equals(rfgen.getRuleFormula((DefeasibleInferenceRule<T>)a.getTopRule()).complement())) {
 				sw.write(active + " undercuts "+ passive + " on " + a);
 				nl();
 				if (setResult()) return;
 			}
 		}
+		/*
+		 * Rebuttal
+		 */
 		for (AspicArgument<T> a : defargs)
-			if(active.getConc().equals(a.getConc().complement())) {
+			if(active.getConclusion().equals(a.getConclusion().complement())) {
 				boolean successfull = order.compare(active, a) >= 0;
 				sw.write(active + " rebuts "+ passive + " on " + a);
 				if(successfull) {
@@ -134,8 +141,11 @@ public class AspicAttack<T extends Invertable> extends Attack {
 					if (setResult()) return;
 				}
 			}
+		/*
+		 * Undemining
+		 */
 		for (AspicArgument<T> a : passive.getOrdinaryPremises())
-				if(active.getConc().equals(a.getConc().complement())) {
+				if(active.getConclusion().equals(a.getConclusion().complement())) {
 					boolean successfull = order.compare(active, a) >= 0;
 					sw.write(active + " undermines "+ passive + " on " + a);
 					if(successfull) {

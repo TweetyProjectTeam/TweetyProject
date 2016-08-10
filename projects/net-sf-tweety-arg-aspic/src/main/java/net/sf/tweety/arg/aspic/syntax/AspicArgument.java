@@ -73,7 +73,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 * @return whether this has a defeasible subrule
 	 */
 	public boolean hasDefeasibleSub() {
-		return !getDefRules().isEmpty();
+		return !getDefeasibleRules().isEmpty();
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 * Returns Conc according to the ASPIC+ specification
 	 * @return the top rule's conclusion
 	 */
-	public T getConc() {
+	public T getConclusion() {
 		return conc;
 	}
 	
@@ -125,7 +125,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 * Change the conclusion
 	 * @param conc the new conclusion
 	 */
-	public void setConc(T conc) {
+	public void setConclusion(T conc) {
 		this.conc = conc;
 	}
 	
@@ -142,27 +142,28 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	}
 	
 	/**
-	 * Determines defeasible subrules, premises do not count as subrules
+	 * Determines subarguments with defeasible toprules, premises do not count as subrules
 	 * @return all arguments in Subs with defeasible top rules
 	 */
-	public Collection<AspicArgument<T>> getDefSubs() {
+	public Collection<AspicArgument<T>> getDefeasibleSubs() {
 		Collection<AspicArgument<T>> result = new HashSet<>();
 		if(toprule.isFact())
 			return result;
 		if(toprule.isDefeasible())
 			result.add(this);
 		for(AspicArgument<T> arg : directsubs)
-			result.addAll(arg.getDefSubs());
+			result.addAll(arg.getDefeasibleSubs());
 		return result;
 	}
 	
 	/**
-	 * returns the DefRules according to ASPIC+ specification
+	 * Returns the DefRules according to ASPIC+ specification,
+	 * i.e. the defeasible toprules of subarguments 
 	 * @return this argument's defeasible rules
 	 */
-	public Collection<InferenceRule<T>> getDefRules() {
+	public Collection<InferenceRule<T>> getDefeasibleRules() {
 		Collection<InferenceRule<T>> result = new HashSet<>();
-		for(AspicArgument<T> a : getDefSubs())
+		for(AspicArgument<T> a : getDefeasibleSubs())
 			result.add(a.toprule);
 		return result;
 	}

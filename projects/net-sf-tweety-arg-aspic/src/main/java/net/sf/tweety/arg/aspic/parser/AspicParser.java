@@ -34,6 +34,9 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  */
 public class AspicParser <T extends Invertable> extends Parser<AspicArgumentationTheory<T>>{
 	
+	/**
+	 * Used to parse formulae
+	 */
 	private final Parser<? extends BeliefBase> formulaparser;
 	
 	private String symbolStrict = "->", 
@@ -59,8 +62,6 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	}
 
 
-
-
 	/**
 	 * Sets a new symbol used for parsing defeasible function arrows
 	 * @param symbolStrict	is the new symbol
@@ -70,8 +71,6 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	}
 
 
-
-
 	/**
 	 * Sets a new symbol used for parsing parameter separators
 	 * @param symbolStrict	is the new symbol
@@ -79,8 +78,6 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	public void setSymbolComma(String symbolComma) {
 		this.symbolComma = symbolComma;
 	}
-
-
 
 
 
@@ -101,11 +98,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 			if(line==null)
 				break;
 			if (ORDER.matcher(line).matches()) {
-				Collection<String> rules = new ArrayList<>();
-				String[] parts = line.split("<");
-				for(String s:parts)
-					rules.add(s.trim());
-				as.setOrder(new SimpleAspicOrder<T>(rules));
+				as.setOrder(parseSimpleOrder(line));
 			} else {
 				Formula rule = parseFormula(line);
 				if(rule != null)
@@ -152,6 +145,19 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 		return null;
 	}
 	
+	
+	/**
+	 * Extracts and Constructs a <code>SimpleAspicOrder</codeY> out of a string
+	 * @param line	the source string
+	 * @return	the parsed order
+	 */
+	public SimpleAspicOrder<T> parseSimpleOrder(String line) {
+		Collection<String> rules = new ArrayList<>();
+		String[] parts = line.split("<");
+		for(String s:parts)
+			rules.add(s.trim());
+		return new SimpleAspicOrder<T>(rules);
+	}
 	
 
 }
