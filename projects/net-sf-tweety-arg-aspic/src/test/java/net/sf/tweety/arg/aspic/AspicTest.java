@@ -39,7 +39,7 @@ public class AspicTest {
 		Proposition c = new Proposition("c");
 		
 		AspicArgumentationTheory<PropositionalFormula> t = new AspicArgumentationTheory<>();
-		t.setRuleFormulaGenerator(new PlFormulaGenerator());
+		//t.setRuleFormulaGenerator(new PlFormulaGenerator());
 		
 		DefeasibleInferenceRule<PropositionalFormula> r1 = new DefeasibleInferenceRule<>();
 		r1.setConclusion(a);

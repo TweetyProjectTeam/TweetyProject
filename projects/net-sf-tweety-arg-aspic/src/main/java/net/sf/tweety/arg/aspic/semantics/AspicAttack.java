@@ -140,6 +140,8 @@ public class AspicAttack<T extends Invertable> extends Attack {
 		 * Undercutting
 		 */
 		for (AspicArgument<T> a : defargs){
+			if(rfgen == null)
+				throw new NullPointerException("AspicAttack: RuleFormulaGenerator missing");
 			if(active.getConclusion().equals(rfgen.getRuleFormula((DefeasibleInferenceRule<T>)a.getTopRule()).complement())) {
 				sw.write(active + " undercuts "+ passive + " on " + a);
 				nl();
