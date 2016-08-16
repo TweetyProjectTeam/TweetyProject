@@ -27,6 +27,7 @@ import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
+import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
@@ -85,6 +86,16 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	 */
 	public void addRule(InferenceRule<T> rule) {
 		rules.add(rule);
+	}
+	
+	/**
+	 * Adds an additional axiom, i.e. a strict rule without premise
+	 * @param axiom	the axiom's conclusion
+	 */
+	public void addAxiom(T axiom) {
+		InferenceRule<T> r = new StrictInferenceRule<>();
+		r.setConclusion(axiom);
+		rules.add(r);
 	}
 	
 	/**
