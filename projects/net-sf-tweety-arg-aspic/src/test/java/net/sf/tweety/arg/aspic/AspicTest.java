@@ -14,7 +14,9 @@ import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
 import net.sf.tweety.arg.aspic.semantics.SimpleAspicOrder;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
+import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
+import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -30,6 +32,33 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * Several JUnit test for the package arg.aspic
  */
 public class AspicTest {
+	
+	@Test public void ManualTest(){
+		Proposition a = new Proposition("a");
+		Proposition b = new Proposition("b");
+		Proposition c = new Proposition("c");
+		
+		AspicArgumentationTheory<PropositionalFormula> t = new AspicArgumentationTheory<>();
+		t.setRuleFormulaGenerator(new PlFormulaGenerator());
+		
+		DefeasibleInferenceRule<PropositionalFormula> r1 = new DefeasibleInferenceRule<>();
+		r1.setConclusion(a);
+		r1.addPremise(b);
+		r1.addPremise(c);
+		t.addRule(r1);
+		
+		StrictInferenceRule<PropositionalFormula> s1 = new StrictInferenceRule<PropositionalFormula>();
+		s1.setConclusion(b);
+		t.addRule(s1);
+
+		s1 = new StrictInferenceRule<PropositionalFormula>();
+		s1.setConclusion(c);
+		t.addRule(s1);
+		
+		System.out.println(t);
+		
+		System.out.println(t.asDungTheory());
+	}
 	
 	@Test public void ComplementTest() throws Exception {
 		PropositionalFormula f = new Proposition("a");
