@@ -1,0 +1,8 @@
+=> Snores
+=> Professor
+
+d1: Snores => Misbehaves
+d2: Misbehaves => AccessDenied
+d3: Professor => ! AccessDenied
+
+d1 < d3 < d2

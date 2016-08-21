@@ -22,12 +22,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
-import net.sf.tweety.arg.aspic.semantics.SimpleAspicOrder;
+import net.sf.tweety.arg.aspic.order.SimpleAspicOrder;
+import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
@@ -56,6 +57,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	 * Used to parse formulae
 	 */
 	private final Parser<? extends BeliefBase> formulaparser;
+	private RuleFormulaGenerator<T> rfg;
 	
 	private String symbolStrict = "->", 
 			symbolDefeasible = "=>", 
@@ -64,11 +66,14 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	/**
 	 * Constructs a new instance
 	 * @param formulaparser	parses the bodies and the heads of the ASPIC argumentation systems rules
+	 * @param rfg	a generator, that transforms InferenceRule<T> into T
 	 */
-	public AspicParser(Parser<? extends BeliefBase> formulaparser) {
+	public AspicParser(Parser<? extends BeliefBase> formulaparser, RuleFormulaGenerator<T> rfg) {
 		super();
 		this.formulaparser = formulaparser;
+		this.rfg = rfg;
 	}
+	
 	
 
 	/**
@@ -78,6 +83,9 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	public void setSymbolStrict(String symbolStrict) {
 		this.symbolStrict = symbolStrict;
 	}
+
+
+	
 
 
 	/**
@@ -107,7 +115,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	public AspicArgumentationTheory<T> parseBeliefBase(Reader reader) throws IOException, ParserException {
 		final Pattern ORDER = Pattern.compile(".*<.*");
 		
-		AspicArgumentationTheory<T> as = new AspicArgumentationTheory<T>();
+		AspicArgumentationTheory<T> as = new AspicArgumentationTheory<T>( rfg);
 		
 		BufferedReader br = new BufferedReader(reader);
 		
@@ -170,7 +178,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	 * @return	the parsed order
 	 */
 	public SimpleAspicOrder<T> parseSimpleOrder(String line) {
-		Collection<String> rules = new ArrayList<>();
+		List<String> rules = new ArrayList<>();
 		String[] parts = line.split("<");
 		for(String s:parts)
 			rules.add(s.trim());

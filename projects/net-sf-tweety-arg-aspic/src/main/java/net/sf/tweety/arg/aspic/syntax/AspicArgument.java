@@ -20,7 +20,10 @@ package net.sf.tweety.arg.aspic.syntax;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.util.DigraphNode;
@@ -40,7 +43,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	/** The conclusion of the argument's top rule **/
 	private T conc = null;;
 	/** The argument's direct children, whose conclusions fit its prerequisites **/
-	private Collection<AspicArgument<T>> directsubs = new ArrayList<>();
+	private List<AspicArgument<T>> directsubs = new ArrayList<>();
 	/** The srgument's top rule **/
 	private InferenceRule<T> toprule = null;
 	
@@ -81,6 +84,12 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 * and is used to determine equality 
 	 */
 	private void generateName() {
+		Collections.sort(directsubs, new Comparator<AspicArgument<T>>() {
+			@Override
+			public int compare(AspicArgument<T> o1, AspicArgument<T> o2) {
+				return o1.hashCode() - o2.hashCode();
+			}
+		});
 		setName(toprule + (directsubs.isEmpty()  ? "": " "+directsubs ));
 	}
 	
@@ -92,6 +101,14 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 */
 	public boolean hasDefeasibleSub() {
 		return !getDefeasibleRules().isEmpty();
+	}
+	
+	public boolean isStrict() {
+		return !hasDefeasibleSub();
+	}
+	
+	public boolean isFirm() {
+		return getOrdinaryPremises().isEmpty();
 	}
 	
 	/**
@@ -145,6 +162,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 */
 	public void setConclusion(T conc) {
 		this.conc = conc;
+		generateName();
 	}
 	
 	/**
@@ -174,6 +192,28 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		return result;
 	}
 	
+	public Collection<InferenceRule<T>> getListLastDefeasibleRules() {
+		List<AspicArgument<T>> list = new ArrayList<>();
+		list.add(this);
+		while (true) {
+			List<InferenceRule<T>> result = new ArrayList<>();
+			for(AspicArgument<T> arg : list) {
+				if(arg.getTopRule().isDefeasible())
+					result.add(arg.getTopRule());
+			}
+			if(! result.isEmpty())
+				return result;
+			
+			List<AspicArgument<T>> next = new ArrayList<>();
+			for(AspicArgument<T> arg : list) {
+				next.addAll(arg.getDirectSubs());
+			}
+			list = next;
+			if(list.isEmpty())
+				return new ArrayList<>();
+		}
+	}
+	
 	/**
 	 * Returns the DefRules according to ASPIC+ specification,
 	 * i.e. the defeasible toprules of subarguments 
@@ -193,6 +233,15 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	public Collection<AspicArgument<T>> getDirectSubs() {
 		return directsubs;
 	}
+	
+	/**
+	 * Adds a subargument
+	 * @param sub	to be added
+	 */
+	public void addDirectSub(AspicArgument<T> sub) {
+		directsubs.add(sub);
+		generateName();
+	}
 
 	/**
 	 * Retruns the TopRule according to ASPIC+ specification
@@ -208,6 +257,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 */
 	public void setTopRule(InferenceRule<T> toprule) {
 		this.toprule = toprule;
+		generateName();
 	}
 
 	/* (non-Javadoc)

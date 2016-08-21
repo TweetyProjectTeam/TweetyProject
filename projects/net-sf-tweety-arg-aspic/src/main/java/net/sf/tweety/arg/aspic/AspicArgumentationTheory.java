@@ -26,6 +26,7 @@ import java.util.HashSet;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
+import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
@@ -72,6 +73,11 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	 */
 	private RuleFormulaGenerator<T> rfgen ;
 	
+	public AspicArgumentationTheory( RuleFormulaGenerator<T> rfgen) {
+		super();
+		this.rfgen = rfgen;
+	}
+
 	/**
 	 * Set a new generator to transform rules into words of the language they range over
 	 * @param rfg	is the new formula generator
@@ -95,6 +101,16 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	public void addAxiom(T axiom) {
 		InferenceRule<T> r = new StrictInferenceRule<>();
 		r.setConclusion(axiom);
+		rules.add(r);
+	}
+	
+	/**
+	 * Adds an additional ordinary, i.e. a defeasible inference rule without premise
+	 * @param prem	the premise's conclusion
+	 */
+	public void addOrdinaryPremise(T prem) {
+		InferenceRule<T> r = new DefeasibleInferenceRule<>();
+		r.setConclusion(prem);
 		rules.add(r);
 	}
 	
