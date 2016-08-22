@@ -3,6 +3,7 @@ package net.sf.tweety.arg.aspic;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -22,6 +23,7 @@ import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.parser.FolParser;
@@ -88,6 +90,38 @@ public class AspicTest {
 		at.setOrder(new WeakestLinkOrder<>(rule_comp, prem_comp, true));
 		dt = at.asDungTheory();
 		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacker()).getConclusion().equals(access));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test  public void Example3 () throws Exception {
+		PlParser plparser = new PlParser();
+		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile("../../examples/aspic/ex3.aspic");
+
+		Comparator<InferenceRule<PropositionalFormula>> rule_comp = new RuleComparator<>(Arrays.asList("d1","d3","d2"));
+		
+		Collection<AspicArgument<PropositionalFormula>> args = at.getArguments();
+		AspicArgument<PropositionalFormula> B2 = null;
+		PropositionalFormula not = (PropositionalFormula)plparser.parseFormula("! LikesWhisky");
+		for(AspicArgument<PropositionalFormula> arg:args)
+			if(arg.getConclusion().equals(not))
+				B2 =arg;
+		assertTrue(B2 != null);
+		
+		at.setOrder(new WeakestLinkOrder<>(rule_comp, new RuleComparator<>(new ArrayList<>()), true));
+		DungTheory dt = at.asDungTheory();
+		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacker()).getConclusion().equals(not));
+	}
+	
+	@Test public void Example4 () throws Exception {
+		PlParser plparser = new PlParser();
+		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile("../../examples/aspic/ex4.aspic");
+		
+		DungTheory dt = at.asDungTheory();
+		assertTrue(dt.getAttacks().size() == 4);
+		for(Attack a: dt.getAttacks())
+			assertFalse(((AspicArgument<PropositionalFormula>)a.getAttacker()).getTopRule().isDefeasible());
 	}
 	
 	
