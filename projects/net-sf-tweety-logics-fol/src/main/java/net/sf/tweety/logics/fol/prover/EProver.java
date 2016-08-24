@@ -30,7 +30,7 @@ import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 /**
  * Invokes Eprover (http://eprover.org) and returns its results.
- * @author Bastian Wolf, Nils Geilen
+ * @author Bastian Wolf, Nils Geilen, Matthias Thimm
  *
  */
 public class EProver extends FolTheoremProver {
@@ -80,7 +80,7 @@ public class EProver extends FolTheoremProver {
 			
 			//System.out.println(Files.readAllLines(file.toPath()));
 			
-			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
+			String cmd = binaryLocation + " --auto --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
 			//System.out.println(cmd);
 			String output = bash.run(cmd);
 			//String output = Exec.invokeExecutable(cmd);
