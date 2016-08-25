@@ -115,6 +115,10 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> 
 		return result;
 	}
 	
+	/**
+	 * Returns the name if it has one, else it returns the hashcode
+	 * @return	an identifier for this rule
+	 */
 	public String getIdentifier() {
 		if (getName() == null)
 			return ""+hashCode();
@@ -122,10 +126,18 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> 
 			return getName();
 	}
 	
+	/**
+	 * Returns the name
+	 * @return	this rul's name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name
+	 * @param name	new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}

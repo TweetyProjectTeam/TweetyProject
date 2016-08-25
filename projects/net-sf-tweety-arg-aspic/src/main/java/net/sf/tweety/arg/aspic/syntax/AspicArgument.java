@@ -103,10 +103,18 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		return !getDefeasibleRules().isEmpty();
 	}
 	
+	/**
+	 * An argument is strict iff it does not contain defeasible subrules
+	 * @return	true iff this argument is strict
+	 */
 	public boolean isStrict() {
 		return !hasDefeasibleSub();
 	}
 	
+	/**
+	 * An argument is firm iff it does not contain ordinary premises
+	 * @return	iff this is firm
+	 */
 	public boolean isFirm() {
 		return getOrdinaryPremises().isEmpty();
 	}
@@ -192,6 +200,11 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		return result;
 	}
 	
+	/**
+	 * Returns all defeasible subrules of the level where the first defeasible subrule appears,
+	 * i.e. the set of defeasible subrules with the smallest depth
+	 * @return	the last defeasible rules
+	 */
 	public Collection<InferenceRule<T>> getListLastDefeasibleRules() {
 		List<AspicArgument<T>> list = new ArrayList<>();
 		list.add(this);

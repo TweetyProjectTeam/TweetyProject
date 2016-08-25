@@ -39,6 +39,9 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  */
 public class AspicTest {
 	
+	/**
+	 * Implements examples 3.7, 3.9 and 3.11 from Modgil and Prakken
+	 */
 	@SuppressWarnings("unchecked")
 	@Test  public void Example1() throws Exception {
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser(), new PlFormulaGenerator());
@@ -55,12 +58,38 @@ public class AspicTest {
 		A4.addDirectSub(A1);
 		
 		Collection<AspicArgument<PropositionalFormula>> args = at.getArguments();
+		
+		// example 3.7
 		assertTrue(args.contains(A3));
 		assertTrue(args.contains(A4));
+		
+		// example 3.9
+		assertTrue(A1.isStrict());
+		assertTrue(A1.isFirm());
+		assertFalse(A2.isStrict());
+		assertTrue(A2.isFirm());
+		assertFalse(A3.isStrict());
+		assertTrue(A3.isFirm());
+		
+		DungTheory dt = at.asDungTheory();
+		
+		// example 3.11
+		AspicArgument<PropositionalFormula> B1 = new AspicArgument<>((InferenceRule<PropositionalFormula>)parser.parseFormula("=>s"));
+		AspicArgument<PropositionalFormula> B2 = new AspicArgument<>((InferenceRule<PropositionalFormula>)parser.parseFormula("d2: s => t"));
+		B2.addDirectSub(B1);
+		AspicArgument<PropositionalFormula> B3 = new AspicArgument<>((InferenceRule<PropositionalFormula>)parser.parseFormula("d3: t => ! d1"));
+		B3.addDirectSub(B2);
+		for (Attack attack : dt.getAttacks())
+			if ( attack.getAttacked().equals(A3))
+				assertTrue(attack.getAttacker().equals(B3));
 	}
 	
+	/**
+	 * Implements example 3.25 from Modgil and Prakken
+	 */
 	@SuppressWarnings("unchecked")
 	@Test  public void Example2() throws Exception {
+		//example 3.25
 		PlParser plparser = new PlParser();
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
 		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile("../../examples/aspic/ex2.aspic");
@@ -92,8 +121,12 @@ public class AspicTest {
 		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacker()).getConclusion().equals(access));
 	}
 	
+	/**
+	 * Implements example 3.26 from Modgil and Prakken
+	 */
 	@SuppressWarnings("unchecked")
 	@Test  public void Example3 () throws Exception {
+		// example 3.26
 		PlParser plparser = new PlParser();
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
 		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile("../../examples/aspic/ex3.aspic");
@@ -113,7 +146,11 @@ public class AspicTest {
 		assertTrue(((AspicArgument<PropositionalFormula>)dt.getAttacks().iterator().next().getAttacker()).getConclusion().equals(not));
 	}
 	
+	/**
+	 * Implements example 4.1 from Modgil and Prakken
+	 */
 	@Test public void Example4 () throws Exception {
+		// example 4.1
 		PlParser plparser = new PlParser();
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
 		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile("../../examples/aspic/ex4.aspic");

@@ -3,12 +3,31 @@ package net.sf.tweety.arg.aspic.order;
 import java.util.Collection;
 import java.util.Comparator;
 
+/**
+ * @author Nils Geilen
+ * 
+ * A comparator for sets of T according to def.3.19 in Mogdil and Prakken
+ * 
+ * @param <T>	type of the compared sets' elements
+ */
 public class SetComparator<T> implements Comparator<Collection<T>> {
 
+	/**
+	 * A comparator for single elements of type T 
+	 */
 	private Comparator<T> comp;
 
+	/**
+	 * When this is true the comparision will be elitist according to 
+	 * def.3.19 in Mogdil and Prakken
+	 */
 	private boolean elitist;
 
+	/**
+	 * Constructs an new set comparator
+	 * @param comp	comparator for single elements
+	 * @param elitist	elitist or democratic behvaiour
+	 */
 	public SetComparator(Comparator<T> comp, boolean elitist) {
 		super();
 		this.comp = comp;

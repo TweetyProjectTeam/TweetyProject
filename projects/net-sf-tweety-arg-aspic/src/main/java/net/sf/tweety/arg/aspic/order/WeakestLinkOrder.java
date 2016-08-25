@@ -9,13 +9,30 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
+
+/**
+ * @author Nils Geilen
+ * 
+ * A comparator for Aspic Arguments, that compares all deafeasible rules
+ * 
+ * @param <T>	is the type of the language that the ASPIC theory's rules range over 
+ */
 public class WeakestLinkOrder <T extends Invertable> implements Comparator<AspicArgument<T>> {
 	
+	/**
+	 * Comparators for defeasible rules and ordinary premises
+	 */
 	private Comparator<Collection<InferenceRule<T>>> ruleset_comp;
 	private Comparator<Collection<InferenceRule<T>>> premset_comp;
 
 	
 
+	/**
+	 * Constructs a new weakest link ordering
+	 * @param rule_comp	comparator for defeasible rules	
+	 * @param prem_comp	comparator for ordinary premises
+	 * @param elitist	
+	 */
 	public WeakestLinkOrder(Comparator<InferenceRule<T>> rule_comp, Comparator<InferenceRule<T>> prem_comp, boolean elitist) {
 		ruleset_comp = new SetComparator<>(rule_comp, elitist);
 		premset_comp = new SetComparator<>(prem_comp, elitist);
@@ -24,6 +41,9 @@ public class WeakestLinkOrder <T extends Invertable> implements Comparator<Aspic
 
 
 
+	/* (non-Javadoc)
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public int compare(AspicArgument<T> a, AspicArgument<T> b) {
 		List<InferenceRule<T>> a_prems = new ArrayList<>();

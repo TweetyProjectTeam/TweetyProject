@@ -7,6 +7,13 @@ import java.util.List;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
+/**
+ * @author Nils Geilen
+ * 
+ * A simple comparator, that compares inference rules
+ * 
+ * @param <T>	is the type of the language that the ASPIC theory's rules range over 
+ */
 public class RuleComparator <T extends Invertable> implements Comparator<InferenceRule<T>> {
 
 	/**
@@ -16,6 +23,10 @@ public class RuleComparator <T extends Invertable> implements Comparator<Inferen
 	
 	
 
+	/**
+	 * Constructs a new comparator for rules
+	 * @param rules	rules in ascending order
+	 */
 	public RuleComparator(List<String> rules) {
 		super();
 		this.rules = rules;
@@ -23,6 +34,9 @@ public class RuleComparator <T extends Invertable> implements Comparator<Inferen
 
 
 
+	/* (non-Javadoc)
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public int compare(InferenceRule<T> o1, InferenceRule<T> o2) {
 		int NULL = -1, val_a = NULL, val_b = NULL;

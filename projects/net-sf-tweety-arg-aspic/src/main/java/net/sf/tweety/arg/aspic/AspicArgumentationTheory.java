@@ -73,6 +73,10 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	 */
 	private RuleFormulaGenerator<T> rfgen ;
 	
+	/**
+	 * Constructs a new ASPIC argumentation theory
+	 * @param rfgen	function to map defeasible rules to labels
+	 */
 	public AspicArgumentationTheory( RuleFormulaGenerator<T> rfgen) {
 		super();
 		this.rfgen = rfgen;
