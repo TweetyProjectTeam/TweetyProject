@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
@@ -96,6 +97,32 @@ public class FunctionalTerm extends TermAdapter<Pair<Functor, List<Term<?>>>> {
 					getFunctor().getArgumentTypes().get(getArguments().size()) + "\"." );
 		}
 		value.getSecond().add(term);		
+		return this;
+	}
+	
+	@Override
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> reval = super.getTerms();
+		for(Term<?> t: this.getArguments())
+			reval.addAll(t.getTerms());
+		return reval;
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		Set<C> reval = super.getTerms(cls);
+		for(Term<?> t: this.getArguments())
+			reval.addAll(t.getTerms(cls));
+		return reval;
+	}
+
+	@Override
+	public Term<?> substitute(Term<?> v, Term<?> t)
+			throws IllegalArgumentException {
+		if(!v.getSort().equals(t.getSort()))
+			throw new IllegalArgumentException("Cannot replace " + v + " by " + t + " because " + v +
+					" is of sort " + v.getSort() + " while " + t + " is of sort " + t.getSort() + ".");
+		if(v.equals(this)) return t;
 		return this;
 	}
 

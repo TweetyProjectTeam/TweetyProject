@@ -325,6 +325,8 @@ public class FOLAtom extends FolFormula implements Atom {
 				C castArg = (C)arg;
 				reval.add(castArg);
 			}
+			// recursively add terms for all inner functional terms
+			reval.addAll(arg.getTerms(cls));
 		}
 		return reval;
 	}
