@@ -42,6 +42,13 @@ public class EProver extends FolTheoremProver {
 	private String binaryLocation;
 	
 	/**
+	 * Additional arguments for the call to the eprover binary 
+	 * (Default value is "--auto-schedule" which seems to be working
+	 * best in general)
+	 * */
+	private String additionalArguments = "--auto-schedule";
+	
+	/**
 	 * Shell to run eprover
 	 */
 	private Shell bash;
@@ -64,7 +71,24 @@ public class EProver extends FolTheoremProver {
 	public EProver(String binaryLocation) {
 		this(binaryLocation,Shell.getNativeShell());
 	}
+	
+	/**
+	 * Sets the additional arguments given to the call of the
+	 * eprover binary (Default value is "--auto-schedule")
+	 * @param s some string
+	 */
+	public void setAdditionalArguments(String s){
+		this.additionalArguments = s;
+	}
 
+	/**
+	 * Returns the additional arguments given to the call of the
+	 * eprover binary (Default value is "--auto-schedule")
+	 */
+	public String getAdditionalArguments(){
+		return this.additionalArguments;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.fol.prover.FolTheoremProver#query(net.sf.tweety.logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
@@ -80,7 +104,7 @@ public class EProver extends FolTheoremProver {
 			
 			//System.out.println(Files.readAllLines(file.toPath()));
 			
-			String cmd = binaryLocation + " --auto --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
+			String cmd = binaryLocation +" " + this.additionalArguments + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
 			//System.out.println(cmd);
 			String output = bash.run(cmd);
 			//String output = Exec.invokeExecutable(cmd);
