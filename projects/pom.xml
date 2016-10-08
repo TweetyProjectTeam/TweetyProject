@@ -1,21 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
   <name>Tweety (Parent POM)</name>
   <version>1.7-SNAPSHOT</version>
   <packaging>pom</packaging>
-  
+
   <description>Tweety is a collection of various Java libraries that implement approaches to different areas of artificial intelligence. In particular, it provides a general interface layer for doing research and working with different knowledge representation formalisms such as classical logics, conditional logics, probabilistic logics, and argumentation. Furthermore, Tweety contains libraries for dealing with agents, multi-agent systems, and dialog systems for agents, as well as belief revision, preference reasoning, preference aggregation, and action languages. A series of utility libraries that deal with e.g. mathematical optimization complement the collection.</description>
   <url>http://tweetyproject.org</url>
-  
+
   <scm>
   	<url>https://svn.code.sf.net/p/tweety/code/trunk/</url>
   	<connection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</connection>
 	<developerConnection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</developerConnection>
   </scm>
-  
+
   <developers>
     <developer>
       <id>mthimm</id>
@@ -23,7 +23,7 @@
       <email>matthias@mthimm.de</email>
     </developer>
   </developers>
-  
+
   <!-- For third-party jars that are not in the central repository -->
   <repositories>
 	<repository>
@@ -32,7 +32,7 @@
     	<url>http://tweetyproject.org/mvn</url>
 	</repository>
   </repositories>
-  
+
   <licenses>
     <license>
       <name>The General Public License, Version 3.0</name>
@@ -40,20 +40,20 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
   <distributionManagement>
 	<snapshotRepository>
       <id>ossrh</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
-  
+
   <build>
-<!-- 
+<!--
  <resources>
     <resource>
       <directory>src/main/resources</directory>
@@ -65,7 +65,7 @@
       </includes>
     </resource>
   </resources>
-   --> 
+   -->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -118,12 +118,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.2</version>
-        <configuration>         
-          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>                   
+        <configuration>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
           <outputDirectory>../testBuild</outputDirectory>
         </configuration>
       </plugin>
-      <!-- 
+      <!--
      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -133,7 +133,7 @@
           <shadedClassifierName>${project.artifactId}-${project.version}-with-dependencies</shadedClassifierName>
           <createDependencyReducedPom>false</createDependencyReducedPom>
           <outputDirectory>../testBuild</outputDirectory>
-          <finalName>${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</finalName> 
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</finalName>
         </configuration>
         <executions>
           <execution>
@@ -143,8 +143,8 @@
             </goals>
           </execution>
         </executions>
-      </plugin>      
-      --> 
+      </plugin>
+      -->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -172,7 +172,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <modules>
   	<module>net-sf-tweety-commons</module>
   	<module>net-sf-tweety-math</module>
@@ -188,7 +188,7 @@
   	<module>net-sf-tweety-lp-nlp</module>
   	<module>net-sf-tweety-logics-commons</module>
   	<module>net-sf-tweety-logics-cl</module>
-  	<module>net-sf-tweety-logics-fol</module>  	
+  	<module>net-sf-tweety-logics-fol</module>
   	<module>net-sf-tweety-logics-pl</module>
   	<module>net-sf-tweety-logics-ml</module>
   	<module>net-sf-tweety-logics-el</module>
@@ -197,20 +197,21 @@
   	<module>net-sf-tweety-logics-rdl</module>
   	<module>net-sf-tweety-logics-rpcl</module>
   	<module>net-sf-tweety-logics-dl</module>
-  	<module>net-sf-tweety-logics-translators</module>  	
+  	<module>net-sf-tweety-logics-translators</module>
   	<module>net-sf-tweety-arg-adf</module>
-  	<module>net-sf-tweety-arg-aspic</module>  	
+  	<module>net-sf-tweety-arg-aspic</module>
+    <module>net-sf-tweety-arg-aba</module>  	
   	<module>net-sf-tweety-arg-deductive</module>
   	<module>net-sf-tweety-arg-lp</module>
   	<module>net-sf-tweety-arg-delp</module>
   	<module>net-sf-tweety-arg-dung</module>
   	<module>net-sf-tweety-arg-prob</module>
-  	<module>net-sf-tweety-arg-saf</module>  		
-  	<module>net-sf-tweety-arg-social</module>  		
+  	<module>net-sf-tweety-arg-saf</module>
+  	<module>net-sf-tweety-arg-social</module>
   	<module>net-sf-tweety-agents</module>
   	<module>net-sf-tweety-agents-dialogues</module>
   	<module>net-sf-tweety-web</module>
   	<module>net-sf-tweety</module>
   </modules>
-  
+
 </project>
