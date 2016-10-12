@@ -37,6 +37,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This formula represents the head of an disjunctive rule which is a
@@ -101,8 +102,8 @@ public class DLPHead extends DLPElementAdapter
 	}
 
 	@Override
-	public DLPSignature getSignature() {
-		return (DLPSignature)assocSupport.getSignature();
+	public FolSignature getSignature() {
+		return (FolSignature)assocSupport.getSignature();
 	}
 
 	@Override
@@ -140,7 +141,7 @@ public class DLPHead extends DLPElementAdapter
 
 	@Override
 	public Signature createEmptySignature() {
-		return new DLPSignature();
+		return new FolSignature();
 	}
 
 	@Override

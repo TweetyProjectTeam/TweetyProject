@@ -30,6 +30,8 @@ import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * this class models an atom, which is a basic structure for
@@ -37,6 +39,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * 
  * @author Tim Janus
  * @author Thomas Vengels
+ * @author Matthias Thimm
  */
 public class DLPAtom extends DLPElementAdapter implements DLPLiteral {
 
@@ -58,6 +61,16 @@ public class DLPAtom extends DLPElementAdapter implements DLPLiteral {
 		for(Term<?> t : other.getArguments()) {
 			this.arguments.add((Term<?>)t.clone());
 		}
+	}
+	
+	/**
+	 * Copy-Ctor: Generates a deep copy of the given FOL atom
+	 * @param other	The FOL atom acting as source for the deep copy
+	 */
+	public DLPAtom(FOLAtom other) {
+		this.pred = new DLPPredicate(other.getPredicate().getName(), other.getArguments().size());
+		for(Term<?> t: other.getArguments())
+			this.arguments.add((Term<?>) t.clone());
 	}
 	
 	/**
@@ -212,8 +225,8 @@ public class DLPAtom extends DLPElementAdapter implements DLPLiteral {
 	}
 
 	@Override
-	public DLPSignature getSignature() {
-		DLPSignature reval = new DLPSignature();
+	public FolSignature getSignature() {
+		FolSignature reval = new FolSignature();
 		reval.add(this);
 		return reval;
 	}

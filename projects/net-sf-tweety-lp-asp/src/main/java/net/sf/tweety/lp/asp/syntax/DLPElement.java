@@ -23,6 +23,7 @@ import java.util.SortedSet;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This interface defines base methods every element of a
@@ -45,7 +46,7 @@ public interface DLPElement extends ComplexLogicalFormula {
 	DLPElement substitute(Term<?> t, Term<?> v);
 	
 	@Override
-	DLPSignature getSignature();
+	FolSignature getSignature();
 	
 	@Override
 	DLPElement clone();

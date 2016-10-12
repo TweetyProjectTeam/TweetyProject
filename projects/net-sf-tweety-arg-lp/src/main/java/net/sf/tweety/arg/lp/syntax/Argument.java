@@ -26,6 +26,7 @@ import java.util.Set;
 
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.asp.syntax.*;
 
 
@@ -140,7 +141,7 @@ public class Argument extends LinkedList<Rule> implements Formula {
 	 * @see net.sf.tweety.Formula#getSignature()
 	 */
 	public Signature getSignature() {
-		DLPSignature result = new DLPSignature();
+		FolSignature result = new FolSignature();
 		for(Rule r : this) {
 			result.addSignature(r.getSignature());
 		}

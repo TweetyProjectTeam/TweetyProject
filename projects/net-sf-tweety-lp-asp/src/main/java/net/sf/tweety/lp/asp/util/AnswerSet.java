@@ -24,8 +24,8 @@ import java.util.Set;
 
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Signature;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
-import net.sf.tweety.lp.asp.syntax.DLPSignature;
 
 /**
  * A answer set is a belief set which only contains literals
@@ -82,7 +82,7 @@ public class AnswerSet extends BeliefSet<DLPLiteral> {
 
 	@Override
 	public Signature getSignature() {
-		DLPSignature reval = new DLPSignature();
+		FolSignature reval = new FolSignature();
 		for(DLPLiteral lit : this) {
 			reval.addSignature(lit.getSignature());
 		}

@@ -20,6 +20,7 @@ package net.sf.tweety.logics.commons.syntax.interfaces;
 
 import java.util.Map;
 
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Rule;
@@ -27,19 +28,22 @@ import net.sf.tweety.commons.util.rules.Rule;
 /**
  * An interface for a logic program, which is a set of rules.
  * @author Tim Janus
+ * @author Matthias Thimm
  *
  * @param <C>	The type of the formulas used for conclusions
  * @param <P>	The type of the formulas used for the premise
  * @param <T>	The type of the rules used in the program
  */
-public interface LogicProgram<C extends Formula, P extends Formula, T extends Rule<?,?>>{
+public interface LogicProgram<C extends Formula, P extends Formula, T extends Rule<?,?>> extends BeliefBase{
 	/**
 	 * Adds the given fact to the program
 	 * @param fact
 	 */
 	void addFact(C fact);
 	
-	/** @return the signature of the program */
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefBase#getSignature()
+	 */
 	Signature getSignature();
 	
 	/**
@@ -73,4 +77,10 @@ public interface LogicProgram<C extends Formula, P extends Formula, T extends Ru
 	 * @throws IllegalArgumentException if "v" and "t" are of different sorts
 	 */
 	LogicProgram<?,?,?> exchange(Term<?> v, Term<?> t) throws IllegalArgumentException;
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString();
 }

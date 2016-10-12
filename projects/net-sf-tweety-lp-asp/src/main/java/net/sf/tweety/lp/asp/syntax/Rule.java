@@ -30,6 +30,7 @@ import java.util.TreeSet;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 
 /**
@@ -267,8 +268,8 @@ public class Rule
 	}
 
 	@Override
-	public DLPSignature getSignature() {
-		DLPSignature reval = new DLPSignature();
+	public FolSignature getSignature() {
+		FolSignature reval = new FolSignature();
 		reval.addSignature(head.getSignature());
 		for(DLPElement bodyElement : body) {
 			reval.addSignature(bodyElement.getSignature());

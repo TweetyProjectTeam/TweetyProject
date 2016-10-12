@@ -24,6 +24,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * this class represents an aggregate function. aggregates
@@ -185,8 +186,8 @@ public class Aggregate extends DLPElementAdapter implements DLPElement {
 	}
 
 	@Override
-	public DLPSignature getSignature() {
-		DLPSignature reval = new DLPSignature();
+	public FolSignature getSignature() {
+		FolSignature reval = new FolSignature();
 		reval.add(leftGuard);
 		reval.add(rightGuard);
 		return reval;

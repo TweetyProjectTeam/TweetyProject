@@ -27,6 +27,7 @@ import java.util.Map;
 import net.sf.tweety.commons.util.rules.RuleSet;
 import net.sf.tweety.logics.commons.syntax.interfaces.LogicProgram;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * this class models an disjunctive logical program, which is
@@ -41,7 +42,7 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 	/** kill warning */
 	private static final long serialVersionUID = -5078398905222624805L;
 	/** The signature of the logic program */
-	private DLPSignature signature;
+	private FolSignature signature;
 	
 	/** Default Ctor: Does nothing */
 	public Program() {}
@@ -148,22 +149,17 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 	}
 	
 	@Override
-	public DLPSignature getSignature() {
+	public FolSignature getSignature() {
 		if(signature == null)
 			calcSignature();
 		return signature;
 	}
 	
 	private void calcSignature() {
-		signature = new DLPSignature();
+		signature = new FolSignature();
 		for(Rule r : this) {
-			List<DLPElement> literals = new LinkedList<DLPElement>();
-			literals.addAll(r.getPremise());
-			literals.addAll(r.getConclusion());
-			
-			for(DLPElement l : literals) {
-				signature.add(l);
-			}
+			signature.addAll(r.getPredicates());
+			signature.addAll(r.getTerms());
 		}
 	}
 	

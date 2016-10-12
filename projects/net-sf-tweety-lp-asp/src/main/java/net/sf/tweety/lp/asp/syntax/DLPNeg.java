@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class models strict negation for atoms.
@@ -131,7 +132,7 @@ public class DLPNeg extends DLPElementAdapter implements DLPLiteral {
 	}
 
 	@Override
-	public DLPSignature getSignature() {
+	public FolSignature getSignature() {
 		return atom.getSignature();
 	}
 

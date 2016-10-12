@@ -24,6 +24,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class implements comparative predicates as described in
@@ -107,8 +108,8 @@ public class Comparative extends DLPElementAdapter implements DLPElement {
 	}
 
 	@Override
-	public DLPSignature getSignature() {
-		DLPSignature sig = new DLPSignature();
+	public FolSignature getSignature() {
+		FolSignature sig = new FolSignature();
 		sig.add(left);
 		sig.add(right);
 		return sig;

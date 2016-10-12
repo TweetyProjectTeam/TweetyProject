@@ -23,6 +23,7 @@ import java.util.SortedSet;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * this class models a default negated literal. in answer set
@@ -111,7 +112,7 @@ public class DLPNot extends DLPElementAdapter implements DLPElement {
 	}
 
 	@Override
-	public DLPSignature getSignature() {
+	public FolSignature getSignature() {
 		return lit.getSignature();
 	}
 
