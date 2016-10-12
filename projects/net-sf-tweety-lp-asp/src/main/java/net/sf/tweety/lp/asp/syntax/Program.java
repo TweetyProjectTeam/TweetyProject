@@ -20,8 +20,6 @@ package net.sf.tweety.lp.asp.syntax;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.commons.util.rules.RuleSet;
@@ -161,6 +159,47 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 			signature.addAll(r.getPredicates());
 			signature.addAll(r.getTerms());
 		}
+	}
+	
+	/**
+	 * Checks whether this program is ground, i.e. whether it contains no
+	 * variables.
+	 * @return "true" if this program is ground.
+	 */
+	public boolean isGround(){
+		for(Rule r: this)
+			if(!r.isGround()) return false;		
+		return true;
+	}
+	
+	/**
+	 * Returns the reduct of this program wrt. the given state, i.e.
+	 * a program that contains no default negation and only those rules 
+	 * of this program (without all default-negated literals in the body) that
+	 * do not have a default-negated version of a literal in their body.
+	 * @param state some set of literals
+	 * @return the reduct of this program
+	 */
+	public Program reduct(Collection<DLPLiteral> state){
+		Program p = new Program();
+		for(Rule r: this){
+			Rule r2 = new Rule();
+			r2.setConclusion(r.getConclusion());			
+			boolean vio = false;
+			for(DLPElement e: r.getPremise()){
+				if(e instanceof DLPNot){
+					if(state.contains(((DLPNot)e).lit)){
+						vio = true;
+						break;
+					}
+				}else
+					r2.addPremise(e);
+			}
+			if(vio)
+				continue;
+			p.add(r2);
+		}
+		return p;
 	}
 	
 	@Override

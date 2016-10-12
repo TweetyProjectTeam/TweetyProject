@@ -232,4 +232,21 @@ public class SetTools<E> {
 		}
 		return bipartitions;
 	}
+	
+	/**
+	 * Returns the symmetric difference of the two sets s and t, i.e.
+	 * it returns (s \cup t) \setminus (s \cap t).
+	 * @param s some set
+	 * @param t some set
+	 * @return the symmetric difference of the two sets
+	 */
+	public Set<E> symmetricDifference(Collection<E> s, Collection<E> t){
+		Set<E> result = new HashSet<E>();
+		Set<E> isec = new HashSet<E>(s);
+		isec.retainAll(t);
+		result.addAll(s);
+		result.addAll(t);
+		result.removeAll(isec);
+		return result;
+	}
 }

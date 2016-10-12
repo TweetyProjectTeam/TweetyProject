@@ -18,10 +18,12 @@
  */
 package net.sf.tweety.lp.asp.analysis;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.commons.util.IncreasingSubsetIterator;
+import net.sf.tweety.commons.util.DefaultSubsetIterator;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.commons.util.SubsetIterator;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
@@ -30,19 +32,20 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.asp.solver.Solver;
 import net.sf.tweety.lp.asp.solver.SolverException;
 import net.sf.tweety.lp.asp.syntax.DLPAtom;
+import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.sf.tweety.lp.asp.syntax.DLPNeg;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 /**
- * This class implements the inconsistency measure $I_\pm$ from
+ * This class implements the inconsistency measure $I_sd$ from
  * [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]<br/>
  * The implememtation is a straightforward brute-force search approach.
  * 
  * @author Matthias Thimm
  *
  */
-public class PmInconsistencyMeasure implements InconsistencyMeasure<Program>{
+public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 
 	/** The ASP solver used for determining inconsistency */
 	private Solver solver;
@@ -52,8 +55,23 @@ public class PmInconsistencyMeasure implements InconsistencyMeasure<Program>{
 	 * solver. 
 	 * @param solver some ASP solver
 	 */
-	public PmInconsistencyMeasure(Solver solver){
+	public SdInconsistencyMeasure(Solver solver){
 		this.solver = solver;
+	}
+	
+	/**
+	 * Checks whether the given set of literals is consistent, i.e.
+	 * does not contain two complementary literals.
+	 * @param c some set
+	 * @return "true" if the set does not contain two complementary literals
+	 */
+	private boolean isConsistent(Collection<DLPLiteral> c){
+		for(DLPLiteral l: c){
+			if(l instanceof DLPNeg)
+				if(c.contains(((DLPNeg)l).getAtom()))
+					return false;
+		}
+		return true;
 	}
 	
 	/* (non-Javadoc)
@@ -63,39 +81,31 @@ public class PmInconsistencyMeasure implements InconsistencyMeasure<Program>{
 	public Double inconsistencyMeasure(Program beliefBase) {
 		if(!beliefBase.isGround())
 			throw new RuntimeException("Measure only defined for ground programs.");
-		try{
+		try {
 			if(solver.computeModels(beliefBase, 1).size() > 0)
 				return 0d;
-			int min = Integer.MAX_VALUE;
-			SubsetIterator<Rule> it_del = new IncreasingSubsetIterator<Rule>(beliefBase);
-			Set<Rule> allFacts = new HashSet<Rule>();
+			Set<DLPLiteral> allLiterals = new HashSet<DLPLiteral>();
 			FolSignature sig = beliefBase.getSignature();
 			for(FOLAtom a: new HerbrandBase(sig).getAtoms()){
-				allFacts.add(new Rule(new DLPAtom(a)));
-				allFacts.add(new Rule(new DLPNeg(new DLPAtom(a))));
+				allLiterals.add(new DLPAtom(a));
+				allLiterals.add(new DLPNeg(new DLPAtom(a)));
+			}	
+			Double result = Double.POSITIVE_INFINITY;
+			SubsetIterator<DLPLiteral> lit_it = new DefaultSubsetIterator<>(allLiterals);
+			while(lit_it.hasNext()){
+				Set<DLPLiteral> m = lit_it.next();
+				//skip inconsistent m
+				if(!this.isConsistent(m)) continue;
+				Program p = beliefBase.reduct(m);
+				AnswerSetList asl = this.solver.computeModels(p, 1);
+				if(asl.size() == 0) continue;
+				int val = (new SetTools<DLPLiteral>()).symmetricDifference(m, asl.get(0)).size();
+				if(val < result)
+					result = new Double(val);				
 			}			
-			while(it_del.hasNext()){
-				SubsetIterator<Rule> it_add  = new IncreasingSubsetIterator<Rule>(allFacts);
-				Set<Rule> del = it_del.next();
-				// if we already have a result better than what we remove now, we are finished
-				if(del.size() > min)
-					return new Double(min);
-				while(it_add.hasNext()){					
-					Set<Rule> add = it_add.next();					
-					// only test if we can improve a previous change
-					if(del.size() + add.size() < min){
-						Program p = beliefBase.clone();					
-						p.removeAll(del);
-						p.addAll(add);
-						if(solver.computeModels(p, 1).size() > 0)
-							min = del.size() + add.size();
-					}
-				}
-			}
-			return new Double(min);
-		}catch (SolverException e) {
+			return result;
+		} catch (SolverException e) {
 			throw new RuntimeException(e);
 		}
 	}
-
 }

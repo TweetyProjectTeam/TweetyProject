@@ -37,15 +37,17 @@ import net.sf.tweety.lp.asp.syntax.Rule;
  * @author Matthias Thimm 
  *
  */
-public class PmInconsistencyMeasureTest {
+public class AspInconsistencyMeasureTest {
 	
 	public static Solver solver;
-	public static PmInconsistencyMeasure mes;
+	public static PmInconsistencyMeasure mpm;
+	public static SdInconsistencyMeasure msd;
 	
 	@BeforeClass
 	public static void init() {
 		solver = new DLV("/Users/mthimm/Projects/misc_bins/dlv.i386-apple-darwin.bin");
-		mes = new PmInconsistencyMeasure(solver);
+		mpm = new PmInconsistencyMeasure(solver);
+		msd = new SdInconsistencyMeasure(solver);
 	}
 	
 	@Test
@@ -64,7 +66,8 @@ public class PmInconsistencyMeasureTest {
 		p3.add(new Rule(a1,new DLPNot(d)));
 		p3.add(new Rule(new DLPNeg(a1),new DLPNot(d)));
 		
-		assertEquals(new Double(3), mes.inconsistencyMeasure(p3));
+		assertEquals(new Double(3), mpm.inconsistencyMeasure(p3));
+		assertEquals(new Double(3), msd.inconsistencyMeasure(p3));
 		
 		// Ex. 1b of [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]
 		Program p4 = new Program();
@@ -76,6 +79,7 @@ public class PmInconsistencyMeasureTest {
 		p4.add(new Rule(a1,new DLPNot(b)));
 		p4.add(new Rule(new DLPNeg(a1),new DLPNot(b)));
 				
-		assertEquals(new Double(1), mes.inconsistencyMeasure(p4));
+		assertEquals(new Double(1), mpm.inconsistencyMeasure(p4));
+		assertEquals(new Double(1), msd.inconsistencyMeasure(p4));
 	}
 }
