@@ -34,5 +34,10 @@
   		<artifactId>dung</artifactId>
   		<version>1.7-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+  		<groupId>net.sf.tweety.arg</groupId>
+  		<artifactId>aspic</artifactId>
+  		<version>1.7-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>
