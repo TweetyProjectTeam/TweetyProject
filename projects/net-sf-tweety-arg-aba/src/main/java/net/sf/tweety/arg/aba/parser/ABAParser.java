@@ -42,8 +42,7 @@ public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 			String line = br.readLine();
 			if (line == null)
 				break;
-			ABARule<T> rule = (ABARule<T>) this.parseFormula(line);
-			abat.getRules().add(rule);
+			abat.add((ABARule<T>) this.parseFormula(line));
 		}
 		return abat;
 	}
@@ -51,27 +50,25 @@ public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
-		final Pattern RULE = Pattern.compile("(.+)" + symbolArrow + "(.*)"),
-				TRUE = Pattern.compile("^\\s*$");
-		
+		final Pattern RULE = Pattern.compile("(.+)" + symbolArrow + "(.*)"), TRUE = Pattern.compile("^\\s*$");
+
 		BufferedReader br = new BufferedReader(reader);
 		String line = br.readLine();
-		if(line==null)
+		if (line == null)
 			return null;
 		Matcher m = RULE.matcher(line);
-		if(m.matches()) {
+		if (m.matches()) {
 			InferenceRule<T> rule = new InferenceRule<>();
-			String head = m.group(1),
-					tail = m.group(2);
-			rule.setConclusion((T)formulaparser.parseFormula(head));
-			if(! TRUE.matcher(tail).matches()) {
+			String head = m.group(1), tail = m.group(2);
+			rule.setConclusion((T) formulaparser.parseFormula(head));
+			if (!TRUE.matcher(tail).matches()) {
 				String[] pres = tail.split(symbolComma);
 				for (String pre : pres)
-					rule.addPremise((T)formulaparser.parseFormula(pre));
+					rule.addPremise((T) formulaparser.parseFormula(pre));
 			}
 			return rule;
 		} else {
-			return new Assumption<Invertable>((T)formulaparser.parseFormula(line));
+			return new Assumption<Invertable>((T) formulaparser.parseFormula(line));
 		}
 
 	}
