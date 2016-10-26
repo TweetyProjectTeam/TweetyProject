@@ -10,43 +10,65 @@ import net.sf.tweety.arg.aba.ABATheory;
 import net.sf.tweety.arg.aba.syntax.ABARule;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
-import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
+/**
+ * @author Nils Geilen
+ *
+ * @param <T>
+ */
 public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 
 	/**
 	 * Used to parse formulae
 	 */
 	private final Parser<? extends BeliefBase> formulaparser;
-	private RuleFormulaGenerator<T> rfg;
 
 	private String symbolTrue = "true", symbolArrow = "<-", symbolComma = ",";
 
-	public ABAParser(Parser<? extends BeliefBase> formulaparser, RuleFormulaGenerator<T> rfg) {
+	public ABAParser(Parser<? extends BeliefBase> formulaparser	) {
 		super();
 		this.formulaparser = formulaparser;
-		this.rfg = rfg;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.commons.Parser#parseBeliefBase(java.io.Reader)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public ABATheory<T> parseBeliefBase(Reader reader) throws IOException, ParserException {
+		final Pattern COMMENT = Pattern.compile("^%.*"), 
+				EMPTY = Pattern.compile("^\\s*$"),
+				ASSUMPTIONS = Pattern.compile("^\\s*\\{(.*)\\}\\s*$");
 		ABATheory<T> abat = new ABATheory<>();
 		BufferedReader br = new BufferedReader(reader);
 		while (true) {
 			String line = br.readLine();
 			if (line == null)
 				break;
-			abat.add((ABARule<T>) this.parseFormula(line));
+			if (EMPTY.matcher(line).matches() || COMMENT.matcher(line).matches())
+				continue;
+			Matcher matcher = ASSUMPTIONS.matcher(line);
+			if(matcher.matches()) {
+				String[] asss = matcher.group(1).split(symbolComma);
+				for (String ass:asss)
+					abat.add((ABARule<T>) parseFormula(ass));
+			} else abat.add((ABARule<T>) parseFormula(line));
 		}
 		return abat;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.commons.Parser#parseFormula(java.io.Reader)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
