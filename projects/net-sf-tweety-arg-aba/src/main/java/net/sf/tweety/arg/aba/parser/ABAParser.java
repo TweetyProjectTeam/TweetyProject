@@ -18,8 +18,18 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
- *
- * @param <T>
+ * 
+ * Parses a Assumption Based Argumentation System out of an input text. 
+ * With standard symbols, every line contains one of the following:
+ * 	<rule> ::= <head> '<-' <body>?
+ * 			<head> ::= <word>
+ * 			<body> ::= 'true' | <word> (',' <word>)*
+ * 	<assumption> ::= <word>
+ * 	<assumptions> ::= '{' <assumption> (',' <assumption>)* '}'
+ * 	with <word> in the theory's language.
+ *		
+ * 
+ * @param <T>	is the type of the language that the ABA theory ranges over 
  */
 public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 
@@ -28,8 +38,15 @@ public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 	 */
 	private final Parser<? extends BeliefBase> formulaparser;
 
+	/**
+	 * Symbols used for parsing rules
+	 */
 	private String symbolTrue = "true", symbolArrow = "<-", symbolComma = ",";
 
+	/**
+	 * Create a new ABA parser
+	 * @param formulaparser parses formulae of the language 
+	 */
 	public ABAParser(Parser<? extends BeliefBase> formulaparser	) {
 		super();
 		this.formulaparser = formulaparser;
@@ -95,28 +112,49 @@ public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 
 	}
 
+	/**
+	 * @return the symbolTrue
+	 */
 	public String getSymbolTrue() {
 		return symbolTrue;
 	}
 
+	/**
+	 * @param symbolTrue the symbolTrue to set
+	 */
 	public void setSymbolTrue(String symbolTrue) {
 		this.symbolTrue = symbolTrue;
 	}
 
+	/**
+	 * @return the symbolArrow
+	 */
 	public String getSymbolArrow() {
 		return symbolArrow;
 	}
 
+	/**
+	 * @param symbolArrow the symbolArrow to set
+	 */
 	public void setSymbolArrow(String symbolArrow) {
 		this.symbolArrow = symbolArrow;
 	}
 
+	/**
+	 * @return the symbolComma
+	 */
 	public String getSymbolComma() {
 		return symbolComma;
 	}
 
+	/**
+	 * @param symbolComma the symbolComma to set
+	 */
 	public void setSymbolComma(String symbolComma) {
 		this.symbolComma = symbolComma;
 	}
+
+	
+	
 
 }

@@ -15,14 +15,13 @@ public class ABAAttack<T extends Invertable> extends Attack {
 	public ABAAttack(Argument attacker, Argument attacked) {
 		super(attacker, attacked);
 	}
-	
-	public static <T extends Invertable> boolean  attacks (Deduction<T> attacker, Assumption<T> attacked) {
-		return attacked instanceof Assumption
-				&& attacker.getConclusion().equals(attacked.getConclusion().complement());
+
+	public static <T extends Invertable> boolean attacks(Deduction<T> attacker, Assumption<T> attacked) {
+		return attacked instanceof Assumption && attacker.getConclusion().equals(attacked.getConclusion().complement());
 	}
 
-	public static <T extends Invertable>Collection<ABAAttack<T>> allAttacks(Collection<Assumption<T>> from, Collection<Assumption<T>> to,
-			ABATheory<T> abat) {
+	public static <T extends Invertable> Collection<ABAAttack<T>> allAttacks(Collection<Assumption<T>> from,
+			Collection<Assumption<T>> to, ABATheory<T> abat) {
 		Collection<ABAAttack<T>> result = new ArrayList<>();
 		for (Deduction<T> deduction : abat.getAllDeductions(from))
 			for (Assumption<T> assumption : to)
@@ -33,11 +32,9 @@ public class ABAAttack<T extends Invertable> extends Attack {
 				}
 		return result;
 	}
-	
-	public static <T extends Invertable>Collection<ABAAttack<T>> allAttacks(ABATheory<T> abat) {
-		return allAttacks(abat.getAssumptions(),abat.getAssumptions(),abat);		
+
+	public static <T extends Invertable> Collection<ABAAttack<T>> allAttacks(ABATheory<T> abat) {
+		return allAttacks(abat.getAssumptions(), abat.getAssumptions(), abat);
 	}
-	
-	
 
 }

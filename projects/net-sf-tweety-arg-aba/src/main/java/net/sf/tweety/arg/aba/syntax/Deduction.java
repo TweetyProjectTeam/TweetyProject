@@ -7,6 +7,11 @@ import java.util.LinkedList;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
+/**
+ * @author Nils Geilen
+ *
+ * @param <T>
+ */
 public class Deduction <T extends Invertable> extends Argument {
 	
 	ABARule<T> rule;
@@ -31,14 +36,19 @@ public class Deduction <T extends Invertable> extends Argument {
 		return rule.getConclusion();
 	}
 	
-	
-	
+
+	/**
+	 * @return the rule
+	 */
 	public ABARule<T> getRule() {
 		return rule;
 	}
 
 
 
+	/**
+	 * @param rule the rule to set
+	 */
 	public void setRule(ABARule<T> rule) {
 		this.rule = rule;
 	}
@@ -58,6 +68,7 @@ public class Deduction <T extends Invertable> extends Argument {
 		subs.add(sub);
 	}
 	
+
 	public Collection<ABARule<T>> getRules() {
 		Collection<ABARule<T>> result = new LinkedList<>();
 		if (! rule.isAssumption())
@@ -67,6 +78,9 @@ public class Deduction <T extends Invertable> extends Argument {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.syntax.Argument#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -76,6 +90,9 @@ public class Deduction <T extends Invertable> extends Argument {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.syntax.Argument#equals(java.lang.Object)
+	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean equals(Object obj) {
@@ -99,6 +116,9 @@ public class Deduction <T extends Invertable> extends Argument {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.syntax.Argument#toString()
+	 */
 	@Override
 	public String toString() {
 		return "{rule=" + rule + ", subs=" + subs + "}";
