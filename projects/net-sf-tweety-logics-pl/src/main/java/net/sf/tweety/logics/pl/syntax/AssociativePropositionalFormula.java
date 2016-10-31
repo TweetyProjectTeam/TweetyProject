@@ -125,6 +125,16 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	public Signature createEmptySignature() {
 		return new PropositionalSignature();
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(net.sf.tweety.logics.pl.syntax.Proposition)
+	 */
+	public  int numberOfOccurrences(Proposition p){
+		int result = 0;
+		for(PropositionalFormula f: this.support.getFormulas())
+			result += f.numberOfOccurrences(p);		
+		return result;
+	}
 		
 	//-------------------------------------------------------------------------
 	//	UTILITY METHODS

@@ -239,4 +239,18 @@ public class Negation extends PropositionalFormula {
 			models.remove(w);
 		return models;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(net.sf.tweety.logics.pl.syntax.Proposition)
+	 */
+	public int numberOfOccurrences(Proposition p){
+		return this.formula.numberOfOccurrences(p);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
+	 */
+	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){
+		return new Negation(this.formula.replace(p, f, i));
+	}
 }

@@ -58,7 +58,7 @@ public class Contradiction extends SpecialFormula{
 	public Contradiction clone() {
 		return new Contradiction();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
 	 */

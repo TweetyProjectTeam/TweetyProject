@@ -322,6 +322,24 @@ public abstract class PropositionalFormula implements ClassicalFormula {
     	return false;
     }
     
+    /**
+     * Returns the number of occurrences of the given proposition
+     * within this formula
+     * @param p some proposition
+     * @return the number of occurrences of the given proposition
+     * within this formula
+     */
+    public abstract int numberOfOccurrences(Proposition p);
+        
+    /**
+     * Replaces the ith instance of the proposition p by f.
+     * @param p some proposition
+     * @param f some formula
+     * @param i the index of the proposition
+     * @return a new formula with the ith instance of the proposition p replaced by f.
+     */
+    public abstract PropositionalFormula replace(Proposition p, PropositionalFormula f, int i);
+    
 	@Override
 	public boolean isLiteral() {
 		return false;

@@ -160,4 +160,19 @@ public class Conjunction extends AssociativePropositionalFormula {
 				return false;
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
+	 */
+	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){
+		int num = 0;
+		Conjunction n = new Conjunction();
+		for(PropositionalFormula sub: this.support.getFormulas()){
+			if(num < i && num + sub.numberOfOccurrences(p) >= i ){
+				n.add(sub.replace(p, f, i-num));
+			}else n.add(sub.clone());
+			num += sub.numberOfOccurrences(p);
+		}
+		return n;		
+	}
 }

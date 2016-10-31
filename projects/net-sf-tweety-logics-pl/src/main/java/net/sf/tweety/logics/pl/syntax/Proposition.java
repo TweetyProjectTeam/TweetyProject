@@ -198,6 +198,24 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	}
 
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(net.sf.tweety.logics.pl.syntax.Proposition)
+	 */
+	public int numberOfOccurrences(Proposition p){
+		if(this.equals(p))
+			return 1;
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
+	 */
+	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){
+		if(this.equals(p))
+			return f;
+		return this;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
 	 */
 	@Override

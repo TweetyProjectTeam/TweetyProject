@@ -76,9 +76,24 @@ public abstract class SpecialFormula extends PropositionalFormula {
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(net.sf.tweety.logics.pl.syntax.Proposition)
+	 */
+	public int numberOfOccurrences(Proposition p){
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
+	 */
+	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){
+		return this;
+	}	
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
 	 */
 	public PropositionalFormula trim(){
 		return this;
 	}
 }
+
