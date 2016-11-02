@@ -58,7 +58,7 @@ public class ABATest {
 	}
 	
 	@Test
-	public void DeductionTest() throws Exception {
+	public void DeductionTest1() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
 		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example1.aba");
@@ -78,6 +78,37 @@ public class ABATest {
 		assertTrue(deductions.size() == 10);
 	}
 	
+	@Test
+	public void DeductionTest2() throws Exception {
+		PlParser plparser = new PlParser();
+		ABATheory<PropositionalFormula> abat = new ABATheory<>();
+		
+		abat.addAssumption((PropositionalFormula)plparser.parseFormula("a"));
+		Collection<Deduction<PropositionalFormula>> ds = abat.getAllDeductions();
+		assertTrue(ds.size() == 1);
+		Deduction<PropositionalFormula> deduction = ds.iterator().next();
+		assertTrue(deduction.getConclusion().equals((PropositionalFormula)plparser.parseFormula("a")));
+		assertTrue(deduction.getRules().size() == 0);
+		
+		InferenceRule<PropositionalFormula> rule = new InferenceRule<>();
+		rule.setConclusion((PropositionalFormula)plparser.parseFormula("b"));
+		rule.addPremise((PropositionalFormula)plparser.parseFormula("a"));
+		rule.addPremise((PropositionalFormula)plparser.parseFormula("c"));
+		abat.add(rule);
+		rule = new InferenceRule<>();
+		rule.setConclusion((PropositionalFormula)plparser.parseFormula("c"));
+		abat.add(rule);
+		
+		deduction = null;
+		for(Deduction<PropositionalFormula> d : abat.getAllDeductions())
+			if (d.getConclusion().equals((PropositionalFormula)plparser.parseFormula("b")))
+				deduction = d;
+		assertFalse(deduction == null);
+		
+		assertTrue(deduction.getRules().size() == 2);
+		assertTrue(deduction.getAssumptions().size() == 1);
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void AttackTest() throws Exception {
@@ -93,6 +124,11 @@ public class ABATest {
 		
 		abat.add((ABARule<PropositionalFormula>)parser.parseFormula("! c <- a"));
 		assertTrue(ABAAttack.allAttacks(abat).size() == 6);
+	}
+	
+	
+	@Test public void ToDungTheoryMethodTest() throws Exception {
+		
 	}
 
 }

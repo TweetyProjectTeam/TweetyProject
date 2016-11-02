@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.sf.tweety.arg.aba.semantics.ABAAttack;
 import net.sf.tweety.arg.aba.syntax.ABARule;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.Deduction;
@@ -57,14 +58,23 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 		assumptions.add(new Assumption<>(assumption));
 	}
 
+	/**
+	 * @return the rules
+	 */
 	public Collection<InferenceRule<T>> getRules() {
 		return rules;
 	}
 
+	/**
+	 * @return the assumptions
+	 */
 	public Collection<Assumption<T>> getAssumptions() {
 		return assumptions;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefBase#getSignature()
+	 */
 	@Override
 	public Signature getSignature() {
 		// TODO Auto-generated method stub
@@ -72,7 +82,11 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	}
 
 	public DungTheory asDungTheory() {
-		return null;
+		Collection<Deduction<T>> ds = getAllDeductions();
+		DungTheory dt = new DungTheory();
+		dt.addAll(ds);
+		dt.addAllAttacks(ABAAttack.allAttacks(this));
+		return dt;
 	}
 
 }

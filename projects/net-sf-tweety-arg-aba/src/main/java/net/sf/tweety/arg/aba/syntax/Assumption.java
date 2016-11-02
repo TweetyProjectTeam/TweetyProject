@@ -44,8 +44,7 @@ public class Assumption <T extends Invertable> implements ABARule< T> {
 
 	@Override
 	public Signature getSignature() {
-		// TODO Auto-generated method stub
-		return null;
+		return assumption.getSignature();
 	}
 
 	@Override

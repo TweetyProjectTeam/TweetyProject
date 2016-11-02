@@ -47,8 +47,10 @@ public class InferenceRule <T extends Invertable> implements ABARule<T> {
 
 	@Override
 	public Signature getSignature() {
-		// TODO Auto-generated method stub
-		return null;
+		Signature sig = head.getSignature();
+		for (T t : body)
+			sig.addSignature(t.getSignature());
+		return sig;
 	}
 
 	@Override
