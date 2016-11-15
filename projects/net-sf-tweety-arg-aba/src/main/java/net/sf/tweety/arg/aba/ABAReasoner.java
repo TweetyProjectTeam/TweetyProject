@@ -3,22 +3,27 @@
  */
 package net.sf.tweety.arg.aba;
 
+import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
+import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Reasoner;
 
 /**
- * @author nils
+ * @author Nils Geilen
  *
  */
 public class ABAReasoner extends Reasoner {
-	
-	
 
-	public ABAReasoner(BeliefBase beliefBase) {
+	int semantics, inferencetype;
+	
+	public ABAReasoner(BeliefBase beliefBase, int semantics, int inferencetype) {
 		super(beliefBase);
-		// TODO Auto-generated constructor stub
+		this.semantics = semantics;
+		this.inferencetype = inferencetype;
+		if (! (beliefBase instanceof ABATheory))
+			throw new IllegalArgumentException("Knowledge base of type ABATheory<?> expected");
 	}
 
 	/* (non-Javadoc)
@@ -26,8 +31,10 @@ public class ABAReasoner extends Reasoner {
 	 */
 	@Override
 	public Answer query(Formula query) {
-		// TODO Auto-generated method stub
-		return null;
+		ABATheory<?> abat = (ABATheory<?>)getKnowledgeBase();
+		DungTheory dt = abat.asDungTheory();
+		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(dt, semantics, inferencetype);
+		return aer.query(query);
 	}
 
 }

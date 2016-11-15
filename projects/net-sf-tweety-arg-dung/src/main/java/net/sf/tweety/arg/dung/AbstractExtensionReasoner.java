@@ -57,6 +57,7 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 		if(inferenceType != Semantics.CREDULOUS_INFERENCE && inferenceType != Semantics.SCEPTICAL_INFERENCE)
 			throw new IllegalArgumentException("Inference type must be either sceptical or credulous.");
 		this.inferenceType = inferenceType;
+		
 	}
 	
 	/**
