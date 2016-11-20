@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sf.tweety.commons.Signature;
-import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 public class Assumption <T extends Invertable> implements ABARule< T> {

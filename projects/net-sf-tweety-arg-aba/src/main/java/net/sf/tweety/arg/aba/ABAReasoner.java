@@ -12,12 +12,18 @@ import net.sf.tweety.commons.Reasoner;
 
 /**
  * @author Nils Geilen
- *
+ *	This class models a reasoner over ABA formulae
  */
 public class ABAReasoner extends Reasoner {
 
 	int semantics, inferencetype;
 	
+	/**
+	 * Creates a new instance
+	 * @param beliefBase	an ABATheory
+	 * @param semantics	an indicator for the used semantics (c.f. net.sf.tweety.arg.dung.semantics.Semantics)
+	 * @param inferencetype	an indicator for the used inference (c.f. net.sf.tweety.arg.dung.semantics.Semantics)
+	 */
 	public ABAReasoner(BeliefBase beliefBase, int semantics, int inferencetype) {
 		super(beliefBase);
 		this.semantics = semantics;

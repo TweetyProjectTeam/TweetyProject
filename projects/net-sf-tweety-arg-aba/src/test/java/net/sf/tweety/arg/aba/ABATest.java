@@ -155,5 +155,16 @@ public class ABATest {
 		Answer answer = reasoner.query(query);
 		assertTrue(answer.getAnswerBoolean());
 	}
+	
+	@Test
+	public void ClosureTest() throws Exception {
+		PlParser plparser = new PlParser();
+		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example2.aba");
+		assertTrue(abat.isClosed(abat.getAssumptions()));
+		assertTrue(abat.isFlat());
+		abat.addAssumption((PropositionalFormula)plparser.parseFormula("r"));
+		assertFalse(abat.isFlat());
+	}
 
 }
