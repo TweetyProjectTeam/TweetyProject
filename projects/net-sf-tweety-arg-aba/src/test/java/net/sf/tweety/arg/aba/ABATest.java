@@ -4,6 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -13,6 +15,8 @@ import net.sf.tweety.arg.aba.syntax.ABARule;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
+import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
+import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
@@ -165,6 +169,20 @@ public class ABATest {
 		assertTrue(abat.isFlat());
 		abat.addAssumption((PropositionalFormula)plparser.parseFormula("r"));
 		assertFalse(abat.isFlat());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test 
+	public void Example3 () throws Exception {
+		PlParser plparser = new PlParser();
+		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example3.aba");
+		assertFalse(abat.isFlat());
+		
+		Collection<Assumption<PropositionalFormula>> asss_c = new HashSet<>();
+		asss_c.add((Assumption<PropositionalFormula>) parser.parseFormula("c"));
+		assertTrue(abat.isClosed(asss_c));
+		
 	}
 
 }

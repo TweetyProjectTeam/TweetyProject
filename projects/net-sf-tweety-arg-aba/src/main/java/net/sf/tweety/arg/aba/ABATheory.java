@@ -69,7 +69,6 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 
 	public boolean isFlat() {
 		Collection<Collection<Assumption<T>>> powerset = toPowerSet(assumptions);
-		System.out.println(powerset);
 		for (Collection<Assumption<T>> asss : powerset) {
 			if (!isClosed(asss))
 				return false;

@@ -42,5 +42,7 @@ public class ABAReasoner extends Reasoner {
 		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(dt, semantics, inferencetype);
 		return aer.query(query);
 	}
+	
+	
 
 }
