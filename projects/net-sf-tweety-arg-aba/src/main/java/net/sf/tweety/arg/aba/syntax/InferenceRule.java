@@ -7,20 +7,34 @@ import java.util.Iterator;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
+/**
+ * @author Nils Geilen <geilenn@uni-koblenz.de>
+ *	An inference rule from an ABA theory
+ * @param <T>	is the type of the language that the ABA theory's rules range over 
+ */
 public class InferenceRule <T extends Invertable> implements ABARule<T> {
 	
+	/**
+	 * The rule's conclusion
+	 */
 	T head;
+	/**
+	 * The rule's prerequisites
+	 */
 	Collection<T> body = new HashSet<T>();
 
-	public InferenceRule() {
-		// TODO Auto-generated constructor stub
-	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.util.rules.Rule#isFact()
+	 */
 	@Override
 	public boolean isFact() {
 		return body.size() == 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.util.rules.Rule#isConstraint()
+	 */
 	@Override
 	public boolean isConstraint() {
 		// TODO Auto-generated method stub

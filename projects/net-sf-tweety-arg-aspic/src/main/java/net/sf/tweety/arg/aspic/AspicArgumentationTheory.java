@@ -49,7 +49,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  *		- A set of arguments
  *		- C set of attacks
  *		- <= order on the arguments
- *	and/or a correspondong abstract argumentation framework (A, D) with
+ *	and/or a corresponding abstract argumentation framework (A, D) with
  *		- A set of arguments
  *		- D defeat relationship
  *

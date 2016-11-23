@@ -9,8 +9,8 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
- *
- * @param <T>
+ *	An argument derived from an ABA theory
+ * @param <T>	is the type of the language that the ABA theory's rules range over 
  */
 public class Deduction <T extends Invertable> extends Argument {
 	
@@ -18,12 +18,22 @@ public class Deduction <T extends Invertable> extends Argument {
 	Collection<Deduction<T>> subs = new HashSet<>();
 		
 
+	/**
+	 * Constructs a new deduction
+	 * @param name	an identifier
+	 */
 	public Deduction(String name) {
 		super(name);
 	}
 	
 	
 	
+	/**
+	 * Constructs a new deduction
+	 * @param name	an identifier
+	 * @param rule	the toprule
+	 * @param subs	a set of subdeductions
+	 */
 	public Deduction(String name, ABARule<T> rule, Collection<Deduction<T>> subs) {
 		super(name);
 		this.rule = rule;
@@ -32,6 +42,9 @@ public class Deduction <T extends Invertable> extends Argument {
 
 
 
+	/**
+	 * @return	the conclusion of this deduction
+	 */
 	public T getConclusion() {
 		return rule.getConclusion();
 	}
@@ -40,6 +53,7 @@ public class Deduction <T extends Invertable> extends Argument {
 	/**
 	 * @return the rule
 	 */
+
 	public ABARule<T> getRule() {
 		return rule;
 	}
@@ -55,6 +69,9 @@ public class Deduction <T extends Invertable> extends Argument {
 
 
 
+	/**
+	 * @return	all assumptions employed by this deduction
+	 */
 	public Collection<T> getAssumptions() {
 		Collection<T> result = new LinkedList<>();
 		if (rule.isAssumption())
@@ -64,11 +81,18 @@ public class Deduction <T extends Invertable> extends Argument {
 		return result;
 	}
 	
+	/**
+	 * Adds a subdeduction
+	 * @param sub	a deduction
+	 */
 	public void addSubDeduction(Deduction<T> sub) {
 		subs.add(sub);
 	}
 	
 
+	/**
+	 * @return	all rules used in this deduction
+	 */
 	public Collection<ABARule<T>> getRules() {
 		Collection<ABARule<T>> result = new LinkedList<>();
 		if (! rule.isAssumption())
