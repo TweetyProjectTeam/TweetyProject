@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -16,7 +15,9 @@ import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.CompleteReasoner;
+import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.GroundReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
@@ -145,9 +146,10 @@ public class ABATest {
 	public void ReasonerTest() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example1.aba");
-		System.out.println(abat.asDungTheory());
-		ABAReasoner reasoner = new ABAReasoner(abat, Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example2.aba");
+		abat.add((ABARule<PropositionalFormula>)parser.parseFormula("!a<-"));
+		System.out.println(abat.asDungTheory().getAttacks());
+		ABAReasoner reasoner = new ABAReasoner(abat, Semantics.GROUNDED_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
 		Argument query = null;
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("a");
 		for (Deduction<PropositionalFormula> arg : abat.getAllDeductions()) {
@@ -157,7 +159,20 @@ public class ABATest {
 			}
 		}
 		Answer answer = reasoner.query(query);
+		assertFalse(answer.getAnswerBoolean());
+		 pf = (PropositionalFormula)plparser.parseFormula("b");
+		for (Deduction<PropositionalFormula> arg : abat.getAllDeductions()) {
+			if (arg.getConclusion().equals(pf)) {
+				query = arg;
+				break;
+			}
+		}
+		System.out.println(query);
+		answer = reasoner.query(query);
 		assertTrue(answer.getAnswerBoolean());
+		DungTheory dt = abat.asDungTheory();
+		AbstractExtensionReasoner cr = new GroundReasoner(dt, Semantics.CREDULOUS_INFERENCE);
+		System.out.println(cr.getExtensions());
 	}
 	
 	@Test

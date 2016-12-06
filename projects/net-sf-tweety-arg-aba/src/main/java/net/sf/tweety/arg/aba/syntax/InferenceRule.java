@@ -36,29 +36,40 @@ public class InferenceRule <T extends Invertable> implements ABARule<T> {
 	 * @see net.sf.tweety.commons.util.rules.Rule#isConstraint()
 	 */
 	@Override
-	public boolean isConstraint() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isConstraint()  {
+		throw new RuntimeException("arg.aba.InferenceRule.isConstraint not implemented");
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.util.rules.Rule#setConclusion(net.sf.tweety.commons.Formula)
+	 */
 	@Override
 	public void setConclusion(T conclusion) {
 		head = conclusion;
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.util.rules.Rule#addPremise(net.sf.tweety.commons.Formula)
+	 */
 	@Override
 	public void addPremise(T premise) {
 		body.add(premise);
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.util.rules.Rule#addPremises(java.util.Collection)
+	 */
 	@Override
 	public void addPremises(Collection<? extends T> premises) {
 		body.addAll(premises);
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.util.rules.Rule#getSignature()
+	 */
 	@Override
 	public Signature getSignature() {
 		Signature sig = head.getSignature();
@@ -67,21 +78,33 @@ public class InferenceRule <T extends Invertable> implements ABARule<T> {
 		return sig;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.util.rules.Rule#getPremise()
+	 */
 	@Override
 	public Collection<? extends T> getPremise() {
 		return body;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.util.rules.Rule#getConclusion()
+	 */
 	@Override
 	public T getConclusion() {
 		return head;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.aba.syntax.ABARule#isAssumption()
+	 */
 	@Override
 	public boolean isAssumption() {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		String result = "(" + head + " <- ";
@@ -94,6 +117,9 @@ public class InferenceRule <T extends Invertable> implements ABARule<T> {
 		return result + ")";
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -103,6 +129,9 @@ public class InferenceRule <T extends Invertable> implements ABARule<T> {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean equals(Object obj) {

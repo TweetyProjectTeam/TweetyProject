@@ -162,6 +162,16 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	public Collection<Assumption<T>> getAssumptions() {
 		return assumptions;
 	}
+	
+	
+
+	/**
+	 * @param assumptions the assumptions to set
+	 */
+	public void setAssumptions(Collection<Assumption<T>> assumptions) {
+		this.assumptions = assumptions;
+	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -178,10 +188,22 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	 * @return	a Dung Theory derived from this ABA theory
 	 */
 	public DungTheory asDungTheory() {
+		if (!isFlat())
+			throw new RuntimeException("Only flat ABA theories can be transformed into Dung theories.");
 		Collection<Deduction<T>> ds = getAllDeductions();
+		Collection<ABAAttack> atts = new HashSet<>();
+		for (Deduction<T> atter:ds)
+			for (Deduction<T> atted:ds) 
+				for (T ass : atted.getAssumptions()) 
+					if (ABAAttack.attacks(atter, new Assumption<>(ass))) {
+						atts.add(new ABAAttack<>(atter, atted));
+						break;
+					}
+				
 		DungTheory dt = new DungTheory();
 		dt.addAll(ds);
-		dt.addAllAttacks(ABAAttack.allAttacks(this));
+		dt.addAllAttacks(atts);
+		//dt.addAllAttacks(ABAAttack.allAttacks(this));
 		return dt;
 	}
 
