@@ -3,8 +3,16 @@
  */
 package net.sf.tweety.arg.aba;
 
+
+import java.util.Collection;
+import java.util.HashSet;
+
+import net.sf.tweety.arg.aba.syntax.Assumption;
+import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
@@ -43,6 +51,26 @@ public class ABAReasoner extends Reasoner {
 		return aer.query(query);
 	}
 	
+	
+	public Collection<Collection<Assumption<?>>> getExtensions(){
+		ABATheory<?> abat = (ABATheory<?>)getKnowledgeBase();
+		DungTheory dt = abat.asDungTheory();
+		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(dt, semantics, inferencetype);
+		Collection<Collection<Assumption<?>>> result = new HashSet<>();
+		for(Extension ext : aer.getExtensions()) {
+			Collection<Assumption<?>> abaext = new HashSet<>();
+			for (Argument arg : ext) {
+				/*if(! (arg instanceof Deduction<?>))
+					throw new RuntimeException("Expected arg.aba.Deduction<?>, found "+arg.getClass()+" : "+arg.getName());
+				Deduction<?> d = (Deduction<?>)arg;
+				if(d.getRule() instanceof Assumption<?>) {
+					abaext.add((Assumption<?>)d.getRule());
+				}*/
+			}
+			result.add(abaext);
+		}
+		return result;
+	}
 	
 
 }

@@ -70,7 +70,7 @@ public class Argument implements DungEntity, Node{
 	 */
 	public boolean equals(Object o){
 		if(!o.getClass().equals(this.getClass())) return false;
-		if(!((Argument)o).getName().equals(name)) return false;
+		if(!((Argument)o).getName().equals(getName())) return false;
 		return true;
 	}
 	

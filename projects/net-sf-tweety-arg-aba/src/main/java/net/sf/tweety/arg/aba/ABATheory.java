@@ -191,6 +191,13 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 		if (!isFlat())
 			throw new RuntimeException("Only flat ABA theories can be transformed into Dung theories.");
 		Collection<Deduction<T>> ds = getAllDeductions();
+		int id = 0;
+		for(Deduction<T> d:ds){
+			if(d.getRule() instanceof Assumption<?>)
+				d.setName("ass_"+d.getConclusion());
+			else
+				d.setName("arg_"+id++);
+		}
 		Collection<ABAAttack> atts = new HashSet<>();
 		for (Deduction<T> atter:ds)
 			for (Deduction<T> atted:ds) 
