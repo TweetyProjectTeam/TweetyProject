@@ -159,11 +159,11 @@ public class ABATest {
 		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example2.aba");
 		abat.add((ABARule<PropositionalFormula>)parser.parseFormula("!a<-"));
 		assertTrue(abat.getAllDeductions().size()==7);
-		//System.out.println(abat.asDungTheory().getAttacks());
+		System.out.println(abat.asDungTheory());
 		ABAReasoner reasoner = new ABAReasoner(abat, Semantics.COMPLETE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
 		Argument query = new Deduction<>("",(ABARule<PropositionalFormula> )parser.parseFormula("a"),new HashSet<>());
 		Answer answer = reasoner.query(query);
-		//assertFalse(answer.getAnswerBoolean());
+		assertFalse(answer.getAnswerBoolean());
 		System.out.println(reasoner.getExtensions());
 		query = new Deduction<>("",(ABARule<PropositionalFormula> )parser.parseFormula("b"),new HashSet<>());
 		answer = reasoner.query(query);

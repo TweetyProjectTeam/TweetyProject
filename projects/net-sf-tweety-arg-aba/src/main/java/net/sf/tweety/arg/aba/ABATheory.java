@@ -2,8 +2,10 @@ package net.sf.tweety.arg.aba;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.arg.aba.semantics.ABAAttack;
@@ -12,40 +14,43 @@ import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.DigraphNode;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
-
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
  *
- * @param <T>	is the type of the language that the ABA theory's rules range over 
+ * @param <T>
+ *            is the type of the language that the ABA theory's rules range over
  */
 public class ABATheory<T extends Invertable> implements BeliefBase {
 
 	/**
-	 * The inference rules 
+	 * The inference rules
 	 */
 	private Collection<InferenceRule<T>> rules = new HashSet<>();
 	/**
-	 * The assumptions used in this theory wehen no explicit set of assumptions is given
+	 * The assumptions used in this theory wehen no explicit set of assumptions
+	 * is given
 	 */
 	private Collection<Assumption<T>> assumptions = new HashSet<>();
 
 	/**
-	 * @return	all deductions that can be derived from this theory
+	 * @return all deductions that can be derived from this theory
 	 */
 	public Collection<Deduction<T>> getAllDeductions() {
 		return getAllDeductions(assumptions);
 	}
 
-
 	/**
-	 * @param assumptions	the set of assumptions used for the derivation
-	 * @return	all deductions that can be derived from this theory
+	 * @param assumptions
+	 *            the set of assumptions used for the derivation
+	 * @return all deductions that can be derived from this theory
 	 */
 	public Collection<Deduction<T>> getAllDeductions(Collection<Assumption<T>> assumptions) {
 		Set<Deduction<T>> result = new HashSet<>();
@@ -61,9 +66,10 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 
 	/**
 	 * Recursively creates a deduction and all of its subdeductions
+	 * 
 	 * @param node
 	 * @param set
-	 * @return	the created deduction
+	 * @return the created deduction
 	 */
 	private Deduction<T> createDeduction(DigraphNode<ABARule<T>> node, Set<Deduction<T>> set) {
 		Deduction<T> result = new Deduction<>("");
@@ -76,9 +82,12 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	}
 
 	/**
-	 * A closure is the set of assumptions that can be derived from a set of assumptions via inference rules
-	 * @param assumptions	a set of assumptions 
-	 * @return	the closure of assumptions
+	 * A closure is the set of assumptions that can be derived from a set of
+	 * assumptions via inference rules
+	 * 
+	 * @param assumptions
+	 *            a set of assumptions
+	 * @return the closure of assumptions
 	 */
 	public Collection<Assumption<T>> getClosure(Collection<Assumption<T>> assumptions) {
 		Collection<Deduction<T>> deductions = getAllDeductions(assumptions);
@@ -95,8 +104,11 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 
 	/**
 	 * A set of assumptions is closed iff it equals its closure
-	 * @param assumptions	a set of assumptions
-	 * @return	true iff the set of assumptions is closed under this argumentation theory
+	 * 
+	 * @param assumptions
+	 *            a set of assumptions
+	 * @return true iff the set of assumptions is closed under this
+	 *         argumentation theory
 	 */
 	public boolean isClosed(Collection<Assumption<T>> assumptions) {
 		Collection<Assumption<T>> cl = getClosure(assumptions);
@@ -105,7 +117,8 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 
 	/**
 	 * An ABA theory is flat iff all subsets of its argumentation set are closed
-	 * @return	true iff the theory is flat
+	 * 
+	 * @return true iff the theory is flat
 	 */
 	public boolean isFlat() {
 		Collection<Collection<Assumption<T>>> powerset = toPowerSet(assumptions);
@@ -118,8 +131,10 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 
 	/**
 	 * Computes the power set of a collection
-	 * @param set	a collection
-	 * @return	a power set
+	 * 
+	 * @param set
+	 *            a collection
+	 * @return a power set
 	 */
 	private static <S> Collection<Collection<S>> toPowerSet(Collection<S> set) {
 		Collection<Collection<S>> powerset = new HashSet<>();
@@ -133,7 +148,8 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	}
 
 	/**
-	 * @param rule	an assumption or an inference rule that is added to the theory
+	 * @param rule
+	 *            an assumption or an inference rule that is added to the theory
 	 */
 	public void add(ABARule<T> rule) {
 		if (rule instanceof Assumption)
@@ -143,7 +159,8 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	}
 
 	/**
-	 * @param assumption	a formula that is used as an assumption in the theory
+	 * @param assumption
+	 *            a formula that is used as an assumption in the theory
 	 */
 	public void addAssumption(T assumption) {
 		assumptions.add(new Assumption<>(assumption));
@@ -162,16 +179,14 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	public Collection<Assumption<T>> getAssumptions() {
 		return assumptions;
 	}
-	
-	
 
 	/**
-	 * @param assumptions the assumptions to set
+	 * @param assumptions
+	 *            the assumptions to set
 	 */
 	public void setAssumptions(Collection<Assumption<T>> assumptions) {
 		this.assumptions = assumptions;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -185,32 +200,29 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	}
 
 	/**
-	 * @return	a Dung Theory derived from this ABA theory
+	 * @return a Dung Theory derived from this ABA theory
 	 */
 	public DungTheory asDungTheory() {
 		if (!isFlat())
 			throw new RuntimeException("Only flat ABA theories can be transformed into Dung theories.");
 		Collection<Deduction<T>> ds = getAllDeductions();
 		int id = 0;
-		for(Deduction<T> d:ds){
-			if(d.getRule() instanceof Assumption<?>)
-				d.setName("ass_"+d.getConclusion());
-			else
-				d.setName("arg_"+id++);
+		DungTheory dt = new DungTheory();
+		Map<Deduction<T>, Argument> argmap = new HashMap<>();
+		for (Deduction<T> d : ds) {
+			Argument arg = d.getRule() instanceof Assumption<?> ? new Argument(d.getConclusion().toString())
+					: new Argument("arg_" + id++);
+			dt.add(arg);
+			argmap.put(d, arg);
 		}
-		Collection<ABAAttack> atts = new HashSet<>();
-		for (Deduction<T> atter:ds)
-			for (Deduction<T> atted:ds) 
-				for (T ass : atted.getAssumptions()) 
+		for (Deduction<T> atter : ds)
+			for (Deduction<T> atted : ds)
+				for (T ass : atted.getAssumptions())
 					if (ABAAttack.attacks(atter, new Assumption<>(ass))) {
-						atts.add(new ABAAttack<>(atter, atted));
+						dt.add(new Attack(argmap.get(atter), argmap.get(atted)));
 						break;
 					}
-				
-		DungTheory dt = new DungTheory();
-		dt.addAll(ds);
-		dt.addAllAttacks(atts);
-		//dt.addAllAttacks(ABAAttack.allAttacks(this));
+
 		return dt;
 	}
 
