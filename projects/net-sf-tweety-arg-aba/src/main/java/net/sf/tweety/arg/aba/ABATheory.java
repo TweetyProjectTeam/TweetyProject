@@ -40,6 +40,9 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 	 */
 	private Collection<Assumption<T>> assumptions = new HashSet<>();
 	
+	/**
+	 * The negation relation
+	 */
 	private Collection<Negation<T>> negations = new HashSet<>();
 
 	/**
@@ -151,8 +154,9 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * @param rule
-	 *            an assumption or an inference rule that is added to the theory
+	 *            an assumption or an inference rule or a negation that is added to the theory
 	 */
+	@SuppressWarnings("unchecked")
 	public void add(Formula rule) {
 		if (rule instanceof Assumption)
 			assumptions.add((Assumption<T>) rule);
@@ -170,14 +174,29 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 		assumptions.add(new Assumption<>(assumption));
 	}
 	
+	/**
+	 * Adds a  negation of form not formula = negation
+	 * @param formula	a formula
+	 * @param negation	it's complement
+	 */
 	public void addNegation(T formula, T negation){
 		negations.add(new Negation<>(formula, negation));
 	}
 	
+	/**
+	 * @param formula
+	 * @param negation
+	 * @return
+	 */
 	public boolean negates(T formula, T negation){
 		return negations.contains(new Negation<>(formula, negation));
 	}
 	
+	/**
+	 * @param atter	the attacking deduction
+	 * @param atted	the attacked assumption
+	 * @return	true iff atter attacks atted
+	 */
 	public boolean attacks(Deduction<T> atter, T atted){
 		return negates(atted,atter.getConclusion());
 	}

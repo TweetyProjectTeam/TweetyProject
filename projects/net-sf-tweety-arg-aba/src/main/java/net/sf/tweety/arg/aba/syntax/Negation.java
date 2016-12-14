@@ -9,13 +9,22 @@ import net.sf.tweety.commons.Signature;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * This represents a negation relation of form "not <code>formula</code> = <code>negation</code>"
  *
  */
 public class Negation<T extends Formula> implements Formula {
 
+	/**
+	 * not <formula> = <n
+	 */
 	T formula, negation;
 	
 	
+	/**
+	 * Creates a new Negation
+	 * @param formula	a formula
+	 * @param negation	it's complement
+	 */
 	public Negation(T formula, T negation) {
 		super();
 		this.formula = formula;
