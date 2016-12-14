@@ -8,19 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.arg.aba.semantics.ABAAttack;
 import net.sf.tweety.arg.aba.syntax.ABARule;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
+import net.sf.tweety.arg.aba.syntax.Negation;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.DigraphNode;
 import net.sf.tweety.commons.util.rules.DerivationGraph;
-import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
@@ -28,7 +28,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  * @param <T>
  *            is the type of the language that the ABA theory's rules range over
  */
-public class ABATheory<T extends Invertable> implements BeliefBase {
+public class ABATheory<T extends Formula> implements BeliefBase {
 
 	/**
 	 * The inference rules
@@ -39,6 +39,8 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	 * is given
 	 */
 	private Collection<Assumption<T>> assumptions = new HashSet<>();
+	
+	private Collection<Negation<T>> negations = new HashSet<>();
 
 	/**
 	 * @return all deductions that can be derived from this theory
@@ -151,11 +153,13 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	 * @param rule
 	 *            an assumption or an inference rule that is added to the theory
 	 */
-	public void add(ABARule<T> rule) {
+	public void add(Formula rule) {
 		if (rule instanceof Assumption)
 			assumptions.add((Assumption<T>) rule);
 		else if (rule instanceof InferenceRule)
 			rules.add((InferenceRule<T>) rule);
+		else if (rule instanceof Negation)
+			negations.add((Negation<T>) rule);
 	}
 
 	/**
@@ -164,6 +168,18 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	 */
 	public void addAssumption(T assumption) {
 		assumptions.add(new Assumption<>(assumption));
+	}
+	
+	public void addNegation(T formula, T negation){
+		negations.add(new Negation<>(formula, negation));
+	}
+	
+	public boolean negates(T formula, T negation){
+		return negations.contains(new Negation<>(formula, negation));
+	}
+	
+	public boolean attacks(Deduction<T> atter, T atted){
+		return negates(atted,atter.getConclusion());
 	}
 
 	/**
@@ -178,6 +194,13 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 	 */
 	public Collection<Assumption<T>> getAssumptions() {
 		return assumptions;
+	}
+
+	/**
+	 * @return the negations
+	 */
+	public Collection<Negation<T>> getNegations() {
+		return negations;
 	}
 
 	/**
@@ -218,7 +241,7 @@ public class ABATheory<T extends Invertable> implements BeliefBase {
 		for (Deduction<T> atter : ds)
 			for (Deduction<T> atted : ds)
 				for (T ass : atted.getAssumptions())
-					if (ABAAttack.attacks(atter, new Assumption<>(ass))) {
+					if (attacks(atter, ass)) {
 						dt.add(new Attack(argmap.get(atter), argmap.get(atted)));
 						break;
 					}

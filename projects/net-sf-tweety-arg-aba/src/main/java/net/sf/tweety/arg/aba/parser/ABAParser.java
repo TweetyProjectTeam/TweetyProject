@@ -7,14 +7,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.tweety.arg.aba.ABATheory;
-import net.sf.tweety.arg.aba.syntax.ABARule;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
+import net.sf.tweety.arg.aba.syntax.Negation;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen
@@ -31,7 +30,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  * 
  * @param <T>	is the type of the language that the ABA theory ranges over 
  */
-public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
+public class ABAParser<T extends Formula> extends Parser<ABATheory<T>> {
 
 	/**
 	 * Used to parse formulae
@@ -75,8 +74,8 @@ public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 			if(matcher.matches()) {
 				String[] asss = matcher.group(1).split(symbolComma);
 				for (String ass:asss)
-					abat.add((ABARule<T>) parseFormula(ass));
-			} else abat.add((ABARule<T>) parseFormula(line));
+					abat.add( parseFormula(ass));
+			} else abat.add( parseFormula(line));
 		}
 		return abat;
 	}
@@ -89,7 +88,8 @@ public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
-		final Pattern RULE = Pattern.compile("(.+)" + symbolArrow + "(.*)"), TRUE = Pattern.compile("^\\s*$");
+		final Pattern RULE = Pattern.compile("(.+)" + symbolArrow + "(.*)"), TRUE = Pattern.compile("^\\s*$"),
+				NEGATION=Pattern.compile("not(.+)=(.+)");
 
 		BufferedReader br = new BufferedReader(reader);
 		String line = br.readLine();
@@ -106,9 +106,15 @@ public class ABAParser<T extends Invertable> extends Parser<ABATheory<T>> {
 					rule.addPremise((T) formulaparser.parseFormula(pre));
 			}
 			return rule;
-		} else {
-			return new Assumption<Invertable>((T) formulaparser.parseFormula(line));
+		} 
+		
+		m = NEGATION.matcher(line);
+		if (m.matches()) {
+			return new Negation(formulaparser.parseFormula(m.group(1)),formulaparser.parseFormula(m.group(2)));
 		}
+			
+		return new Assumption<>((T) formulaparser.parseFormula(line));
+		
 
 	}
 

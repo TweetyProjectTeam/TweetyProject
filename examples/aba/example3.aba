@@ -1,4 +1,7 @@
-!a <- c
-!c <- b
+x <- c
+z <- b
 a <- b
 {a,b,c}
+not a = x
+not b = y
+not c = z

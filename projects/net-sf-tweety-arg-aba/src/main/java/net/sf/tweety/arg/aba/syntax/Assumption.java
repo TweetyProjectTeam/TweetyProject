@@ -3,16 +3,15 @@ package net.sf.tweety.arg.aba.syntax;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
-import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
  *	An assumption of an ABA theory
  * @param <T>	is the type of the language that the ABA theory's rules range over 
  */
-public class Assumption <T extends Invertable> implements ABARule< T> {
+public class Assumption <T extends Formula> implements ABARule< T> {
 	/**
 	 * The assumed formula
 	 */

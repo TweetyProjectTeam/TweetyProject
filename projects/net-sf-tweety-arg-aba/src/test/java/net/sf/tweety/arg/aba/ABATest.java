@@ -17,6 +17,7 @@ import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.CompleteReasoner;
+import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.GroundReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -135,11 +136,16 @@ public class ABATest {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
 		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example1.aba");
+		abat.add(parser.parseFormula("not a=!a"));
+		abat.add(parser.parseFormula("not !a=a"));
+		abat.add(parser.parseFormula("not c=!c"));
+		abat.add(parser.parseFormula("not !c=c"));
 
 		abat.add((Assumption<PropositionalFormula>) parser.parseFormula(" ! a"));
 		assertTrue(ABAAttack.allAttacks(abat).size() == 3);
 
 		abat.add((ABARule<PropositionalFormula>) parser.parseFormula("! c <- b"));
+		System.out.println(ABAAttack.allAttacks(abat));
 		assertTrue(ABAAttack.allAttacks(abat).size() == 4);
 
 		abat.add((ABARule<PropositionalFormula>) parser.parseFormula("! c <- a"));
@@ -158,6 +164,8 @@ public class ABATest {
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
 		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example2.aba");
 		abat.add((ABARule<PropositionalFormula>)parser.parseFormula("!a<-"));
+		abat.add(parser.parseFormula("not a=!a"));
+		abat.add(parser.parseFormula("not !a=a"));
 		assertTrue(abat.getAllDeductions().size()==7);
 		System.out.println(abat.asDungTheory());
 		ABAReasoner reasoner = new ABAReasoner(abat, Semantics.COMPLETE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
@@ -168,10 +176,7 @@ public class ABATest {
 		query = new Deduction<>("",(ABARule<PropositionalFormula> )parser.parseFormula("b"),new HashSet<>());
 		answer = reasoner.query(query);
 		assertTrue(answer.getAnswerBoolean());
-		AbstractExtensionReasoner ar = new GroundReasoner(abat.asDungTheory());
-		//System.out.println(ar.getExtensions());
-		ar = new CompleteReasoner(abat.asDungTheory());
-		//System.out.println(ar.getExtensions());
+		
 	}
 	
 	@Test
@@ -197,6 +202,32 @@ public class ABATest {
 		asss_c.add((Assumption<PropositionalFormula>) parser.parseFormula("c"));
 		assertTrue(abat.isClosed(asss_c));
 		
+	}
+	
+	@Test 
+	public void Example4 () throws Exception {
+		PlParser plparser = new PlParser();
+		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example4.aba");
+		assertFalse(abat.isFlat());
+		
+		
+	}
+	
+	@Test 
+	public void Example11 () throws Exception {
+		PlParser plparser = new PlParser();
+		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example11.aba");
+		
+		assertTrue(abat.isFlat());
+		
+		DungTheory dt = abat.asDungTheory();
+		assertTrue(dt.getNodes().size()==6);
+		assertTrue(dt.getAttacks().size()==6);
+		
+		ABAReasoner reasoner = new ABAReasoner(abat, Semantics.COMPLETE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+System.out.println(reasoner.getExtensions());
 	}
 
 }

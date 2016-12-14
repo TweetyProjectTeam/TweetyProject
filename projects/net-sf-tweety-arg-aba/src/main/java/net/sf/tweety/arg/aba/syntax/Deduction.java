@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
+import net.sf.tweety.commons.Formula;
 
 /**
  * @author Nils Geilen
  *	An argument derived from an ABA theory
  * @param <T>	is the type of the language that the ABA theory's rules range over 
  */
-public class Deduction <T extends Invertable> extends Argument {
+public class Deduction <T extends Formula> extends Argument {
 	
 	ABARule<T> rule;
 	Collection<Deduction<T>> subs = new HashSet<>();

@@ -4,15 +4,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
-import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
  *	An inference rule from an ABA theory
  * @param <T>	is the type of the language that the ABA theory's rules range over 
  */
-public class InferenceRule <T extends Invertable> implements ABARule<T> {
+public class InferenceRule <T extends Formula> implements ABARule<T> {
 	
 	/**
 	 * The rule's conclusion
