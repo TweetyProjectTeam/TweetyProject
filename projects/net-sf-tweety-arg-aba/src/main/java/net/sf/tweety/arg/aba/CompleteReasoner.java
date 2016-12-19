@@ -6,7 +6,7 @@ import java.util.HashSet;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.commons.Formula;
 
-public class CompleteReasoner<T extends Formula> implements ABAReasoner<T> {
+public class CompleteReasoner<T extends Formula> implements GeneralABAReasoner<T> {
 	ABATheory<T> abat;
 	int inferenceType;
 

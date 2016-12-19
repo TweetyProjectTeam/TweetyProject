@@ -11,7 +11,7 @@ import net.sf.tweety.commons.Formula;
  * @author Nils Geilen
  *
  */
-public class StableReasoner<T extends Formula> implements ABAReasoner<T> {
+public class StableReasoner<T extends Formula> implements GeneralABAReasoner<T> {
 	ABATheory<T> abat;
 	int inferenceType;
 

@@ -195,7 +195,7 @@ public class ABATest {
 		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example3.aba");
 		assertFalse(abat.isFlat());
 		
-		ABAReasoner<PropositionalFormula> abar = new CompleteReasoner<>(abat, Semantics.CREDULOUS_INFERENCE);
+		GeneralABAReasoner<PropositionalFormula> abar = new CompleteReasoner<>(abat, Semantics.CREDULOUS_INFERENCE);
 		Collection<Collection<Assumption<PropositionalFormula>>> complexts = abar.computeExtensions();
 		
 		Collection<Assumption<PropositionalFormula>> asss_c = new HashSet<>();
