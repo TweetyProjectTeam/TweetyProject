@@ -1,6 +1,7 @@
 package net.sf.tweety.arg.aba;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -228,6 +229,63 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 	 */
 	public void setAssumptions(Collection<Assumption<T>> assumptions) {
 		this.assumptions = assumptions;
+	}
+	
+	boolean attacks(Collection<Assumption<T>> atters, Collection<Assumption<T>> atteds) {
+		for(Deduction<T> d : getAllDeductions(atters)) {
+			for (Assumption<T> a : atteds) {
+				if(negates(d.getConclusion(),a.getConclusion()))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	boolean defends(Collection<Assumption<T>> defor, Assumption<T> defed) {
+		Collection<Assumption<T>> defedl = Arrays.asList(defed);
+		for (Collection<Assumption<T>> ext:getAllExtensions()) {
+			if(isClosed(ext)&&attacks(ext,defedl)&&!attacks(defor,ext))
+				return false;
+		}
+		return true;
+	}
+	
+	boolean isConflictFree(Collection<Assumption<T>> ext) {
+		return ! attacks(ext,ext);
+	}
+	
+	Collection<Collection<Assumption<T>>> getAllExtensions() {
+		return toPowerSet(getAssumptions());
+	}
+	
+	Collection<Collection<Assumption<T>>> getAllConflictFreeExtensions() {
+		Collection<Collection<Assumption<T>>>result = new HashSet<>();
+		for(Collection<Assumption<T>> ext : toPowerSet(getAssumptions())){
+			if(isConflictFree(ext))
+				result.add(ext);
+		}
+		return result;
+	}
+	
+	boolean isAdmissible(Collection<Assumption<T>> ext){
+		if(!isConflictFree(ext))
+			return false;
+		if(!isClosed(ext))
+			return false;
+		for(Collection<Assumption<T>> as : toPowerSet(getAssumptions())){
+			if(isClosed(as)&&attacks(as, ext) && ! attacks(ext,as))
+				return false;
+		}
+		return true;
+	}
+	
+	Collection<Collection<Assumption<T>>> getAllAdmissbleExtensions() {
+		Collection<Collection<Assumption<T>>>result = new HashSet<>();
+		for(Collection<Assumption<T>> ext : toPowerSet(getAssumptions())){
+			if(isAdmissible(ext))
+				result.add(ext);
+		}
+		return result;
 	}
 
 	/*

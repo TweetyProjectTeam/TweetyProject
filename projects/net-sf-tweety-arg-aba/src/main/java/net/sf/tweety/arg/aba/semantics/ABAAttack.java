@@ -46,7 +46,8 @@ public class ABAAttack<T extends Formula> extends Attack {
 		Collection<ABAAttack<T>> result = new ArrayList<>();
 		for (Deduction<T> deduction : abat.getAllDeductions(from))
 			for (Assumption<T> assumption : to)
-				if (abat.attacks(deduction, assumption.getConclusion())) {
+				if (abat.attacks(deduction, assumption.getConclusion())) 
+				{
 					Deduction<T> ass = new Deduction<>("");
 					ass.setRule(assumption);
 					result.add(new ABAAttack<>(deduction, ass));
