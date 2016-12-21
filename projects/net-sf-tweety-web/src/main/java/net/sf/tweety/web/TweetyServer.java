@@ -53,7 +53,7 @@ public class TweetyServer {
         // start server    	
         GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), resourceConfig);        
         while(true)
-        	Thread.sleep(1000);        
+        	Thread.sleep(1000);         
     }       
     
     /**
