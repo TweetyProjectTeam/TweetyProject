@@ -19,20 +19,28 @@
 package net.sf.tweety.logics.pl.analysis;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
+import net.sf.tweety.commons.util.IncreasingSubsetIterator;
+import net.sf.tweety.commons.util.SubsetIterator;
+import net.sf.tweety.commons.util.Triple;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.SpecialFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * Implements the forgetting-based inconsistency measure from
  * [Besnard. Forgetting-based Inconsistency Measure. SUM 2016]
  * 
- * The implementation is a depth-first search approach without much optimization. 
+ * The implementation is a brute-force search approach without much optimization. 
  * 
  * @author Matthias Thimm
  *
@@ -45,36 +53,62 @@ public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Propos
 	@Override
 	public Double inconsistencyMeasure(Collection<PropositionalFormula> formulas) {
 		PropositionalFormula f = new Conjunction(formulas);
-		return new Double(this.dfs_im(f, 0, Integer.MAX_VALUE));
+		Set<Triple<Proposition,Integer,SpecialFormula>> subs = new HashSet<Triple<Proposition,Integer,SpecialFormula>>();
+		for(Proposition p: f.getAtoms())
+			for(int i = 1; i <= f.numberOfOccurrences(p); i++){
+				subs.add(new Triple<Proposition,Integer,SpecialFormula>(p,i,new Contradiction()));
+				subs.add(new Triple<Proposition,Integer,SpecialFormula>(p,i,new Tautology()));
+			}
+		SubsetIterator<Triple<Proposition,Integer,SpecialFormula>> it = new IncreasingSubsetIterator<>(subs);
+		while(it.hasNext()){
+			Set<Triple<Proposition,Integer,SpecialFormula>> current = it.next();
+			if(this.hasDuplicate(current))
+				continue;
+			int size = current.size();
+			List<Triple<Proposition,Integer,SpecialFormula>> order = this.order(current);
+			PropositionalFormula r = f;
+			for(Triple<Proposition,Integer,SpecialFormula> sub: order)
+				r = r.replace(sub.getFirst(), sub.getThird(),sub.getSecond());
+			if(SatSolver.getDefaultSolver().isConsistent(r))
+				return new Double(size);	
+		}
+		return new Double(Integer.MAX_VALUE);		
 	}	
 	
 	/**
-	 * Searches for a sequence of substitutions of occurrences of propositions
-	 * with minimal length.
-	 * @param f some formula
-	 * @param depth the current depth
-	 * @param current_min the best value found so far
-	 * @return the minimal length 
+	 * Checks wheter the selection of substitutions is consistent (no proposition to be
+	 * replaced by + and - at the same time).
+	 * @param current
+	 * @return
 	 */
-	private int dfs_im(PropositionalFormula f, int depth, int current_min){
-		if(SatSolver.getDefaultSolver().isConsistent(f))
-			return depth;
-		if(depth+1 >= current_min)
-			return current_min;
-		for(Proposition p: f.getAtoms()){
-			for(int i = 1; i <= f.numberOfOccurrences(p); i++){
-				// test replacing it by tautology
-				PropositionalFormula r = f.replace(p, new Tautology(),i);
-				int depth2 = dfs_im(r,depth+1, current_min);
-				if(depth2 < current_min)
-					current_min = depth2;
-				// test replacing it by contradiction
-				r = f.replace(p, new Contradiction(),i);
-				depth2 = dfs_im(r,depth+1, current_min);
-				if(depth2 < current_min)
-					current_min = depth2;
+	private boolean hasDuplicate(Set<Triple<Proposition,Integer,SpecialFormula>> current){
+		for(Triple<Proposition,Integer,SpecialFormula> elem1: current)
+			for(Triple<Proposition,Integer,SpecialFormula> elem2: current)
+				if(elem1 != elem2 && elem1.getFirst().equals(elem2.getFirst()) && elem1.getSecond().equals(elem2.getSecond()))
+					return true;
+		return false;		
+	}
+	
+	/**
+	 * Orders the substitutions in decreasing order.
+	 * @param current
+	 * @return
+	 */
+	private List<Triple<Proposition,Integer,SpecialFormula>> order(Set<Triple<Proposition,Integer,SpecialFormula>> current){
+		// do selection sort
+		if(current.size() <= 1)
+			return new LinkedList<Triple<Proposition,Integer,SpecialFormula>>(current);
+		int max = 0;
+		Triple<Proposition,Integer,SpecialFormula> maxElem = null;
+		for(Triple<Proposition,Integer,SpecialFormula> elem: current){
+			if(elem.getSecond() > max){
+				max = elem.getSecond();
+				maxElem = elem;
 			}
 		}
-		return current_min;
+		current.remove(maxElem);
+		List<Triple<Proposition,Integer,SpecialFormula>> result = this.order(current);
+		result.add(0, maxElem);		
+		return result;
 	}
 }

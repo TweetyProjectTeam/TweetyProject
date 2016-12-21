@@ -57,6 +57,7 @@ public class FbInconsistencyMeasureTest {
 		bs.add((PropositionalFormula) parser.parseFormula("!a || !a"));
 		
 		assertEquals(inc.inconsistencyMeasure(bs), new Double(1));		
+	
 	}
 	
 	@Test
