@@ -72,6 +72,8 @@ public class Aggregate extends DLPElementAdapter implements DLPElement {
 	
 	public Aggregate(Aggregate other) {
 		this.functor = other.functor;
+		this.leftOp = other.leftOp;
+		this.rightOp = other.rightOp;
 	    if (other.hasLeftGuard())
 	    	this.leftGuard = (Term<?>)other.leftGuard.clone();
 	    if(other.hasRightGuard())
