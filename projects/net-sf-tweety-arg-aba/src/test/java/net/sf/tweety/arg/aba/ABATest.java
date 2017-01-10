@@ -198,6 +198,10 @@ public class ABATest {
 		GeneralABAReasoner<PropositionalFormula> abar = new CompleteReasoner<>(abat, Semantics.CREDULOUS_INFERENCE);
 		Collection<Collection<Assumption<PropositionalFormula>>> complexts = abar.computeExtensions();
 		
+		GeneralABAReasoner<PropositionalFormula> grounded_reasoner = new GroundedReasoner<>(abat, Semantics.CREDULOUS_INFERENCE);
+		Collection<Collection<Assumption<PropositionalFormula>>> groundedexts = grounded_reasoner.computeExtensions();
+		assertTrue(groundedexts.size() == 1);
+		
 		Collection<Assumption<PropositionalFormula>> asss_c = new HashSet<>();
 		asss_c.add((Assumption<PropositionalFormula>) parser.parseFormula("c"));
 		assertTrue(abat.isClosed(asss_c));
@@ -207,6 +211,7 @@ public class ABATest {
 		Collection<Assumption<PropositionalFormula>> asss_0 = new HashSet<>();
 		assertTrue(abat.isAdmissible(asss_0));
 		assertTrue(complexts.contains(asss_0));
+		assertTrue(groundedexts.contains(asss_0));
 		
 		Collection<Assumption<PropositionalFormula>> asss_b = new HashSet<>();
 		asss_b.add((Assumption<PropositionalFormula>) parser.parseFormula("b"));
