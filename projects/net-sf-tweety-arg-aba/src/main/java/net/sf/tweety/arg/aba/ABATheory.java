@@ -190,6 +190,8 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 	 * @return
 	 */
 	public boolean negates(T formula, T negation){
+		System.out.println(formula+" "+negation);
+		System.out.println(negations.contains(new Negation<>(formula, negation)));
 		return negations.contains(new Negation<>(formula, negation));
 	}
 	

@@ -57,10 +57,8 @@ public class FlatABAReasoner extends Reasoner {
 		Argument arg;
 		if (query instanceof Assumption)
 			arg = new Argument(((Assumption<?>) query).getConclusion().toString());
-		else if (query instanceof Deduction) {
-			arg = new Argument(((Deduction) query).getRule().toString());
-		} else
-			throw new RuntimeException("ABAReasoner.query expects input of class Assumption or Deduction");
+		else
+			throw new RuntimeException("ABAReasoner.query expects input of class Assumption");
 		ABATheory<?> abat = (ABATheory<?>) getKnowledgeBase();
 		DungTheory dt = abat.asDungTheory();
 		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(dt, semantics, inferencetype);
