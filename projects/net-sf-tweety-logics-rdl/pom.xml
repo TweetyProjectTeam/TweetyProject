@@ -6,19 +6,19 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.7-SNAPSHOT</version>
+  	<version>1.8-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
   <dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   <dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>fol</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>junit</groupId>

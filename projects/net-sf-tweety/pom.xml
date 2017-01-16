@@ -5,190 +5,190 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.7-SNAPSHOT</version>
+  	<version>1.8-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 <dependencies>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>action</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>agents</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.agents</groupId>
   		<artifactId>dialogues</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>adf</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>aspic</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>deductive</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>delp</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>dung</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>lp</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>prob</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>saf</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>social</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
 
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>beliefdynamics</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>cli</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>graphs</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>cl</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
  	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>dl</artifactId>
- 		<version>1.7-SNAPSHOT</version>
+ 		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>el</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>fol</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>ml</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
  		<artifactId>pcl</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>pl</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>rcl</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>rdl</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>rpcl</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>translators</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.lp</groupId>
   		<artifactId>asp</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.lp.asp</groupId>
   		<artifactId>beliefdynamics</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.lp</groupId>
   		<artifactId>nlp</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
  	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>machinelearning</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>math</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>plugin</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>preferences</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>web</artifactId>
-  		<version>1.7-SNAPSHOT</version>
+  		<version>1.8-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

@@ -22,23 +22,23 @@
     <dependency>
     	<groupId>net.sf.tweety.lp</groupId>
     	<artifactId>asp</artifactId>
-    	<version>1.7-SNAPSHOT</version>
+    	<version>1.8-SNAPSHOT</version>
     </dependency>        
     <dependency>
     	<groupId>net.sf.tweety.lp</groupId>
     	<artifactId>nlp</artifactId>
-    	<version>1.7-SNAPSHOT</version>
+    	<version>1.8-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
     	<artifactId>cl</artifactId>
-    	<version>1.7-SNAPSHOT</version>
+    	<version>1.8-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.7-SNAPSHOT</version>
+  	<version>1.8-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>
