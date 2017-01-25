@@ -189,9 +189,7 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 	 * @param negation
 	 * @return
 	 */
-	public boolean negates(T formula, T negation){
-		System.out.println(formula+" "+negation);
-		System.out.println(negations.contains(new Negation<>(formula, negation)));
+	public boolean negates(T negation,T formula ){
 		return negations.contains(new Negation<>(formula, negation));
 	}
 	
@@ -201,7 +199,7 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 	 * @return	true iff atter attacks atted
 	 */
 	public boolean attacks(Deduction<T> atter, T atted){
-		return negates(atted,atter.getConclusion());
+		return negates(atter.getConclusion(),atted);
 	}
 
 	/**

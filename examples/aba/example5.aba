@@ -1,0 +1,8 @@
+p<-a
+p<-b
+c<-
+{a,b,c,d}
+not a =  b
+not b = a
+not c = d
+not d = p
