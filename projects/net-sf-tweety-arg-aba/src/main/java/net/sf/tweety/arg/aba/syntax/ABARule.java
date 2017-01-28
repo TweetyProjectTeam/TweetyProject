@@ -10,6 +10,9 @@ import net.sf.tweety.commons.util.rules.Rule;
  */
 public interface ABARule<T extends Formula> extends Rule<T, T> {
 
+	/**
+	 * @return	whether this rule is an assumption
+	 */
 	boolean isAssumption();
 
 }

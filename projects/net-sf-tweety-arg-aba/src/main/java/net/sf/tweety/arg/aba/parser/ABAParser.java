@@ -56,7 +56,6 @@ public class ABAParser<T extends Formula> extends Parser<ABATheory<T>> {
 	 * 
 	 * @see net.sf.tweety.commons.Parser#parseBeliefBase(java.io.Reader)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public ABATheory<T> parseBeliefBase(Reader reader) throws IOException, ParserException {
 		final Pattern COMMENT = Pattern.compile("^%.*"), 
@@ -110,7 +109,7 @@ public class ABAParser<T extends Formula> extends Parser<ABATheory<T>> {
 		
 		m = NEGATION.matcher(line);
 		if (m.matches()) {
-			return new Negation(formulaparser.parseFormula(m.group(1)),formulaparser.parseFormula(m.group(2)));
+			return new Negation<Formula>(formulaparser.parseFormula(m.group(1)),formulaparser.parseFormula(m.group(2)));
 		}
 			
 		return new Assumption<>((T) formulaparser.parseFormula(line));

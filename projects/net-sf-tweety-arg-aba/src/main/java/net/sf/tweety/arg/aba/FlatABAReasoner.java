@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.aba.syntax.Assumption;
-import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;

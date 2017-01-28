@@ -9,17 +9,26 @@ import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 
 /**
- * @author Nils Geilen
- *
+ * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * This reasoner for ABA theories performs inference on the stable extensions.
+ * @param <T>	the language of the underlying ABA theory
  */
 public class StableReasoner<T extends Formula> extends GeneralABAReasoner<T> {
 
-
+	/**
+	 * Creates a new stable reasoner for the given knowledge base.
+	 * @param beliefBase a knowledge base.
+	 * @param inferenceType The inference type for this reasoner.
+	 */
 	public StableReasoner(BeliefBase beliefBase, int inferenceType) {
 		super(beliefBase, inferenceType);
 		// TODO Auto-generated constructor stub
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.aba.GeneralABAReasoner#computeExtensions()
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Collection<Assumption<T>>> computeExtensions() {
 		ABATheory<T> abat = (ABATheory<T>)getKnowledgeBase();

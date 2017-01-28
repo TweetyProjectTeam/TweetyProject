@@ -143,7 +143,6 @@ public class ABATest {
 		assertTrue(ABAAttack.allAttacks(abat).size() == 3);
 
 		abat.add((ABARule<PropositionalFormula>) parser.parseFormula("! c <- b"));
-		System.out.println(ABAAttack.allAttacks(abat));
 		assertTrue(ABAAttack.allAttacks(abat).size() == 4);
 
 		abat.add((ABARule<PropositionalFormula>) parser.parseFormula("! c <- a"));
@@ -176,8 +175,6 @@ public class ABATest {
 			answer = reasoner.query(query);
 			assertTrue(answer.getAnswerBoolean());
 		}
-		System.out.println(((FlatABAReasoner)reasoners[0]).getExtensions());
-		System.out.println(((GeneralABAReasoner<?>)reasoners[1]).computeExtensions());
 		assertTrue(((FlatABAReasoner)reasoners[0]).getExtensions().size() == ((GeneralABAReasoner<?>)reasoners[1]).computeExtensions().size());
 
 	}
@@ -200,19 +197,19 @@ public class ABATest {
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
 		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example3.aba");
 		assertFalse(abat.isFlat());
-
+System.out.println("#######");
 		GeneralABAReasoner<PropositionalFormula> abar = new CompleteReasoner<>(abat, Semantics.CREDULOUS_INFERENCE);
 		Collection<Collection<Assumption<PropositionalFormula>>> complexts = abar.computeExtensions();
-		System.out.println("ex:"+complexts);
 		
 		Collection<Collection<Assumption<PropositionalFormula>>> prefexts = new PreferredReasoner<PropositionalFormula>(abat, Semantics.CREDULOUS_INFERENCE).computeExtensions();
 
-		GeneralABAReasoner<PropositionalFormula> grounded_reasoner = new GroundedReasoner<>(abat,
+		GeneralABAReasoner<PropositionalFormula> grounded_reasoner = new WellFoundedReasoner<>(abat,
 				Semantics.CREDULOUS_INFERENCE);
 		Collection<Collection<Assumption<PropositionalFormula>>> groundedexts = grounded_reasoner.computeExtensions();
 		assertTrue(groundedexts.size() == 1);
 		
-		System.out.println("adm"+abat.getAllAdmissbleExtensions());
+		System.out.println(complexts);
+		
 
 		Collection<Assumption<PropositionalFormula>> asss_c = new HashSet<>();
 		asss_c.add((Assumption<PropositionalFormula>) parser.parseFormula("c"));
@@ -246,6 +243,8 @@ public class ABATest {
 		assertTrue(abat.isConflictFree(asss_c));
 		assertTrue(abat.attacks(asss_b, asss_c));
 		assertFalse(abat.isClosed(asss_b));
+		
+		System.out.println("#######");
 
 	}
 
@@ -280,7 +279,7 @@ public class ABATest {
 		
 		Collection<Collection<Assumption<PropositionalFormula>>> complexts = new CompleteReasoner<PropositionalFormula>(abat, Semantics.CREDULOUS_INFERENCE).computeExtensions();
 		assertTrue(complexts.size() ==2);
-		Collection<Collection<Assumption<PropositionalFormula>>> wellfexts = new GroundedReasoner<PropositionalFormula>(abat, Semantics.CREDULOUS_INFERENCE).computeExtensions();
+		Collection<Collection<Assumption<PropositionalFormula>>> wellfexts = new WellFoundedReasoner<PropositionalFormula>(abat, Semantics.CREDULOUS_INFERENCE).computeExtensions();
 		assertTrue(complexts.size() ==2);
 		
 		Collection<Assumption<PropositionalFormula>> asss_ac = new HashSet<>();
@@ -312,10 +311,8 @@ public class ABATest {
 
 		FlatABAReasoner reasoner = new FlatABAReasoner(abat, Semantics.COMPLETE_SEMANTICS,
 				Semantics.CREDULOUS_INFERENCE);
-		System.out.println(reasoner.getExtensions());
 		Collection<Collection<Assumption<PropositionalFormula>>> complexts = new CompleteReasoner<PropositionalFormula>(abat, Semantics.CREDULOUS_INFERENCE).computeExtensions();
 
-		System.out.println(complexts);
 	}
 
 }

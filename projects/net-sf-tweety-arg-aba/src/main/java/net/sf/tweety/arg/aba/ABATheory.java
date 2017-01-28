@@ -25,6 +25,8 @@ import net.sf.tweety.commons.util.rules.DerivationGraph;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * 
+ * An implementation of Assumption Based Argumentation
  *
  * @param <T>
  *            is the type of the language that the ABA theory's rules range over
@@ -241,6 +243,12 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 		return false;
 	}
 	
+	/**
+	 * Checks whether a set of arguments defends an argument
+	 * @param defor	the defending set
+	 * @param defed	the assumption which shall be defended
+	 * @return	true iff defor defends defed
+	 */
 	boolean defends(Collection<Assumption<T>> defor, Assumption<T> defed) {
 		Collection<Assumption<T>> defedl = Arrays.asList(defed);
 		for (Collection<Assumption<T>> ext:getAllExtensions()) {
@@ -250,14 +258,27 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 		return true;
 	}
 	
+	/**
+	 * Checks whether a set of arguments is conflict-free
+	 * @param ext	a set of arguments
+	 * @return	true iff ext is conflict-free
+	 */
 	boolean isConflictFree(Collection<Assumption<T>> ext) {
 		return ! attacks(ext,ext);
 	}
 	
+	/**
+	 * Computes all possible extensions
+	 * @return	the powerset of the assumptions
+	 */
 	Collection<Collection<Assumption<T>>> getAllExtensions() {
 		return toPowerSet(getAssumptions());
 	}
 	
+	/**
+	 * Computes all context-free extensions
+	 * @return	all context-free extensions
+	 */
 	Collection<Collection<Assumption<T>>> getAllConflictFreeExtensions() {
 		Collection<Collection<Assumption<T>>>result = new HashSet<>();
 		for(Collection<Assumption<T>> ext : toPowerSet(getAssumptions())){
@@ -267,6 +288,11 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 		return result;
 	}
 	
+	/**
+	 * Checks whether a set of arguments is admissible
+	 * @param ext	 the set
+	 * @return	true iff ext is admissible
+	 */
 	boolean isAdmissible(Collection<Assumption<T>> ext){
 		if(!isConflictFree(ext))
 			return false;
@@ -279,6 +305,10 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 		return true;
 	}
 	
+	/**
+	 * Computes all admissible extensions
+	 * @return	all admissible extensions
+	 */
 	Collection<Collection<Assumption<T>>> getAllAdmissbleExtensions() {
 		Collection<Collection<Assumption<T>>>result = new HashSet<>();
 		for(Collection<Assumption<T>> ext : toPowerSet(getAssumptions())){

@@ -9,10 +9,20 @@ import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Reasoner;
 
+/**
+ * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * This is an abstract gerneralization over non-flat ABA reasoners
+ * @param <T>	the language of the underlying ABA theory
+ */
 public abstract class GeneralABAReasoner <T extends Formula> extends Reasoner {
 	private int inferenceType;
 
 
+	/**
+	 * Creates a new general reasoner for the given knowledge base.
+	 * @param beliefBase a knowledge base.
+	 * @param inferenceType The inference type for this reasoner.
+	 */
 	public GeneralABAReasoner(BeliefBase beliefBase, int inferenceType) {
 		super(beliefBase);
 		this.inferenceType = inferenceType;
