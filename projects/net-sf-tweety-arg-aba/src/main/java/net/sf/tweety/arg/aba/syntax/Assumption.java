@@ -92,6 +92,14 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 	public T getConclusion() {
 		return assumption;
 	}
+	
+	/**
+	 * Returns the inner formula of this assumption.
+	 * @return the inner formula of this assumption.
+	 */
+	public T getFormula() {
+		return assumption;
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.aba.syntax.ABARule#isAssumption()
