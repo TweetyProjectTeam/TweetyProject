@@ -33,10 +33,10 @@ public class CompleteReasoner<T extends Formula> extends GeneralABAReasoner<T> {
 		Collection<Collection<Assumption<T>>>result = new HashSet<>();
 		Collection<Collection<Assumption<T>>> exts = abat.getAllAdmissbleExtensions();
 		l:for(Collection<Assumption<T>> ext : exts) {
-			System.out.println(ext);
+			//System.out.println(ext);
 			for(Assumption<T> a: abat.getAssumptions()) {
 				if(!ext.contains(a)&&abat.defends(ext, a)){
-					System.out.println(a);
+					//System.out.println(a);
 					continue l;
 				}
 			}
