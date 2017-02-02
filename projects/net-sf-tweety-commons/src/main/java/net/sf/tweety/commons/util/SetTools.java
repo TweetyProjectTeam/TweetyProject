@@ -249,4 +249,38 @@ public class SetTools<E> {
 		result.removeAll(isec);
 		return result;
 	}
+	
+	/**
+	 * Returns all independent sets of the given cardinality of the given set of sets.
+	 * A set M={M1,...,Mk} is an independent set of N={N1,...,Nl} if M\subseteq N and
+	 * for all i,j, i\neq j, Mi\cap Mj=\emptyset.  <br/>
+	 * This method uses a brute force approach to determine these sets.
+	 * 
+	 * @param sets a set of sets
+	 * @return all independent sets of the given cardinality of the given set of sets
+	 */
+	public Set<Set<Set<E>>> independentSets(Set<Set<E>> sets, int cardinality){
+		Set<Set<Set<E>>> result = new HashSet<>();
+		Set<Set<Set<E>>> candidates = new SetTools<Set<E>>().subsets(sets, cardinality);
+		for(Set<Set<E>> candidate: candidates)
+			if(this.isIndependent(candidate))
+				result.add(candidate);
+		return result;
+	}
+	
+	/**
+	 * Checks whether the given set of sets is independent, i.e. whether
+	 * all pairs of sets are disjoint.
+	 * @param set a set of sets
+	 * @return "true" if the given set of sets is independent.
+	 */
+	public boolean isIndependent(Set<Set<E>> set){
+		for(Set<E> s1: set)
+			for(Set<E> s2: set)
+				if(s1 != s2)
+					for(E elem: s1)
+						if(s2.contains(elem))
+							return false;
+		return true;
+	}
 }

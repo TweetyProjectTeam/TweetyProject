@@ -44,7 +44,11 @@ import net.sf.tweety.math.term.Variable;
  * [Said Jabbour, Yue Ma, Badran Raddaoui, Lakhdar Sais, Yakoub Salhi.
  *  On Structure-Based Inconsistency Measures and Their Computations via Closed Set Packing. AAMAS 2015]
  * 
- * The measure is implemented using an integer programming approach sketched in the above paper. 
+ * The measure is implemented using an integer programming approach sketched in the above paper.
+ * 
+ *  Note that this measure is equivalent to I_W from
+ *  [Said Jabbour and Yue Ma and Badran Raddaoui and Lakhdar Sais and Yakoub Salhi.
+ *  A MIS Partition Based Framework for Measuring Inconsistency. KR 2016]
  *  
  * @author Matthias Thimm
  *
