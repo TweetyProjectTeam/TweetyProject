@@ -368,6 +368,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
             String line;
             while ((line = reader.readLine()) != null)
                 delpBuilder.append(line+"\n");
+            reader.close();
         }
         DefeasibleLogicProgram delp = parser.parseBeliefBase(delpBuilder.toString());
         DelpReasoner reasoner = new DelpReasoner(delp, options.criterion);

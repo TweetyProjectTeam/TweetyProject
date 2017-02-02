@@ -169,6 +169,7 @@ public class AspicTest {
 	/**
 	 * Implements example 4.1 from Modgil and Prakken
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void Example4() throws Exception {
 		// example 4.1

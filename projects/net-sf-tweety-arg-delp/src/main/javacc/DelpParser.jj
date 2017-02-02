@@ -69,6 +69,7 @@ import java.util.Set;
   * QUOTED_STRING is all characters between double quotes.
   * </pre>
   */
+@SuppressWarnings("all")
 public class DelpParser extends Parser<DefeasibleLogicProgram>{
 
 	private FolSignature signature = new FolSignature();

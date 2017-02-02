@@ -4,7 +4,6 @@ import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
 import net.sf.tweety.commons.Formula;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;

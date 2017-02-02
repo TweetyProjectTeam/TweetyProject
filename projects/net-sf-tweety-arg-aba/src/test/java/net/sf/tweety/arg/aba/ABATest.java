@@ -17,7 +17,6 @@ import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Semantics;
-import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.logics.pl.parser.PlParser;
@@ -84,6 +83,7 @@ public class ABATest {
 			System.out.println(d.getName());
 		assertTrue(deductions.size() == 7);
 
+		@SuppressWarnings("unchecked")
 		InferenceRule<PropositionalFormula> rule = (InferenceRule<PropositionalFormula>) parser
 				.parseFormula("z <- b,q");
 		abat.add(rule);
@@ -308,10 +308,6 @@ System.out.println("#######");
 		DungTheory dt = abat.asDungTheory();
 		assertTrue(dt.getNodes().size() == 6);
 		assertTrue(dt.getAttacks().size() == 6);
-
-		FlatABAReasoner reasoner = new FlatABAReasoner(abat, Semantics.COMPLETE_SEMANTICS,
-				Semantics.CREDULOUS_INFERENCE);
-		Collection<Collection<Assumption<PropositionalFormula>>> complexts = new CompleteReasoner<PropositionalFormula>(abat, Semantics.CREDULOUS_INFERENCE).computeExtensions();
 
 	}
 

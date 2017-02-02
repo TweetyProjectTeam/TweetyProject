@@ -2,7 +2,6 @@ package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.semantics.DialecticalTree;
-import net.sf.tweety.arg.delp.syntax.DelpArgument;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
