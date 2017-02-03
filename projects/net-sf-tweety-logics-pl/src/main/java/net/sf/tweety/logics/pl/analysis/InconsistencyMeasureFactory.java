@@ -54,7 +54,8 @@ public abstract class InconsistencyMeasureFactory {
 		MCSC ("mcsc", "MCSC Inconsistency Measure"),
 		CC ("cc","CC Inconsistency Measure"),
 		CSP ("csp","CSP Inconsistency Measure"),
-		FB ("fb", "Forgetting-based Inconsistency Measure");
+		FB ("fb", "Forgetting-based Inconsistency Measure"),
+		IS ("is", "Independent set-based Inconsistency Measure");
 		
 		public String id;
 		public String label;
@@ -118,6 +119,8 @@ public abstract class InconsistencyMeasureFactory {
 				return new CspInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator(), Solver.getDefaultIntegerLinearSolver());
 			case FB:
 				return new FbInconsistencyMeasure();
+			case IS:
+				return new IsInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}

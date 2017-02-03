@@ -76,7 +76,7 @@ public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Propos
 	}	
 	
 	/**
-	 * Checks wheter the selection of substitutions is consistent (no proposition to be
+	 * Checks whether the selection of substitutions is consistent (no proposition to be
 	 * replaced by + and - at the same time).
 	 * @param current
 	 * @return

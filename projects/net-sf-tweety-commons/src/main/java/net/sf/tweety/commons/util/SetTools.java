@@ -259,10 +259,10 @@ public class SetTools<E> {
 	 * @param sets a set of sets
 	 * @return all independent sets of the given cardinality of the given set of sets
 	 */
-	public Set<Set<Set<E>>> independentSets(Set<Set<E>> sets, int cardinality){
-		Set<Set<Set<E>>> result = new HashSet<>();
-		Set<Set<Set<E>>> candidates = new SetTools<Set<E>>().subsets(sets, cardinality);
-		for(Set<Set<E>> candidate: candidates)
+	public Set<Set<Collection<E>>> independentSets(Set<Collection<E>> sets, int cardinality){
+		Set<Set<Collection<E>>> result = new HashSet<>();
+		Set<Set<Collection<E>>> candidates = new SetTools<Collection<E>>().subsets(sets, cardinality);
+		for(Set<Collection<E>> candidate: candidates)
 			if(this.isIndependent(candidate))
 				result.add(candidate);
 		return result;
@@ -274,9 +274,9 @@ public class SetTools<E> {
 	 * @param set a set of sets
 	 * @return "true" if the given set of sets is independent.
 	 */
-	public boolean isIndependent(Set<Set<E>> set){
-		for(Set<E> s1: set)
-			for(Set<E> s2: set)
+	public boolean isIndependent(Set<Collection<E>> set){
+		for(Collection<E> s1: set)
+			for(Collection<E> s2: set)
 				if(s1 != s2)
 					for(E elem: s1)
 						if(s2.contains(elem))
