@@ -356,4 +356,14 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 		return dt;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ABATheory [rules=" + rules + ", assumptions=" + assumptions + ", negations=" + negations + "]";
+	}
+	
+	
+
 }

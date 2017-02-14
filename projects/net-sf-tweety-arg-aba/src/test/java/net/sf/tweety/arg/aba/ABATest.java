@@ -72,6 +72,7 @@ public class ABATest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void DeductionTest1() throws Exception {
 		PlParser plparser = new PlParser();
@@ -197,7 +198,7 @@ public class ABATest {
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
 		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example3.aba");
 		assertFalse(abat.isFlat());
-System.out.println("#######");
+
 		GeneralABAReasoner<PropositionalFormula> abar = new CompleteReasoner<>(abat, Semantics.CREDULOUS_INFERENCE);
 		Collection<Collection<Assumption<PropositionalFormula>>> complexts = abar.computeExtensions();
 		
@@ -208,7 +209,7 @@ System.out.println("#######");
 		Collection<Collection<Assumption<PropositionalFormula>>> groundedexts = grounded_reasoner.computeExtensions();
 		assertTrue(groundedexts.size() == 1);
 		
-		System.out.println(complexts);
+		//System.out.println("exts"+complexts);
 		
 
 		Collection<Assumption<PropositionalFormula>> asss_c = new HashSet<>();
@@ -229,7 +230,7 @@ System.out.println("#######");
 		assertFalse(abat.isClosed(asss_b));
 		assertFalse(abat.isAdmissible(asss_b));
 		assertFalse(prefexts.contains(asss_b));
-		//assertFalse(complexts.contains(asss_b));
+		assertFalse(complexts.contains(asss_b));
 
 		Collection<Assumption<PropositionalFormula>> asss_ab = new HashSet<>();
 		asss_ab.add((Assumption<PropositionalFormula>) parser.parseFormula("a"));
@@ -237,14 +238,13 @@ System.out.println("#######");
 		assertTrue(abat.isClosed(asss_ab));
 		assertTrue(abat.isAdmissible(asss_ab));
 		assertTrue(prefexts.contains(asss_ab));
-		//assertTrue(complexts.contains(asss_ab));
+		assertTrue(complexts.contains(asss_ab));
 
 		assertTrue(abat.isClosed(asss_c));
 		assertTrue(abat.isConflictFree(asss_c));
 		assertTrue(abat.attacks(asss_b, asss_c));
 		assertFalse(abat.isClosed(asss_b));
 		
-		System.out.println("#######");
 
 	}
 
