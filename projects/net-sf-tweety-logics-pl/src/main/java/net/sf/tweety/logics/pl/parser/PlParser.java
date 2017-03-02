@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * <br> FORMULASET ::== FORMULA ( "\n" FORMULA )*
  * <br> FORMULA    ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" 
  * <br>
- * <br>PROPOSITION is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_}.
+ * <br>PROPOSITION is a sequence of letters, numbers, and/or "_"
  * 
  *  @author Matthias Thimm
  *  @author Bastian Wolf
@@ -199,7 +199,7 @@ public class PlParser extends Parser<PlBeliefSet> {
 					return new Contradiction();
 				if(s.equals(LogicalSymbols.TAUTOLOGY()))
 					return new Tautology();
-				if(s.matches("[a-z,A-Z,_,0-9]"))
+				if(s.matches("[\\p{L},_,0-9]"))
 					return new Proposition(s);
 			}
 			throw new ParserException("Unknown object " + o);
@@ -211,7 +211,7 @@ public class PlParser extends Parser<PlBeliefSet> {
 					throw new ParserException("Unknown object " + o);
 				s += (String) o;
 			}
-			if(s.matches("([a-z,A-Z,_,0-9])+"))
+			if(s.matches("([\\p{L},_,0-9])+"))
 				return new Proposition(s);
 			throw new ParserException("General parsing error.");
 		}		
