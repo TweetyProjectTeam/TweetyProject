@@ -55,7 +55,7 @@ public class Clingo extends SolverBase {
 	public AnswerSetList computeModels(Program p, int maxModels) throws SolverException {
 		checkSolver(path2clingo);
 		try {
-			ai.executeProgram( path2clingo+" "+maxModels, p.toStringFlat());
+			ai.executeProgram( path2clingo+" "+maxModels+" --verbose=0 ", p.toStringFlat());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,7 +69,7 @@ public class Clingo extends SolverBase {
 	public AnswerSetList computeModels(String s, int maxModels) throws SolverException {
 		checkSolver(path2clingo);
 		try {
-			ai.executeProgram( path2clingo, s );
+			ai.executeProgram( path2clingo+" "+maxModels+" --verbose=0 ", s );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

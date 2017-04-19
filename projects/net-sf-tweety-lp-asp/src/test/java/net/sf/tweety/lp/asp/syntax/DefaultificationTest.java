@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.lp.asp.syntax;
 
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
