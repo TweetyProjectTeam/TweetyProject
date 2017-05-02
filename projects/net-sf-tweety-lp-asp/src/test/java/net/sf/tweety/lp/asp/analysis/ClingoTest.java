@@ -3,8 +3,9 @@
  */
 package net.sf.tweety.lp.asp.analysis;
 
-import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import net.sf.tweety.lp.asp.solver.Clingo;
 import net.sf.tweety.lp.asp.syntax.Program;
