@@ -19,6 +19,7 @@
 package net.sf.tweety.lp.asp.solver;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +28,7 @@ import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.util.AnswerSetList;
+import scala.sys.process.ProcessBuilderImpl.OStreamBuilder;
 
 
 public class Clingo extends SolverBase {
@@ -61,7 +63,10 @@ public class Clingo extends SolverBase {
 		}
 		
 		this.checkErrors();
-		return this.buildASL(ai.getOutput());
+		List<String> output = ai.getOutput(), list = new ArrayList<>();
+		for (String str:output)
+			list.add(str.replaceAll(" ", ", "));
+		return this.buildASL(list);
 	}
 
 	
