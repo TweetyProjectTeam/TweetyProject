@@ -199,7 +199,7 @@ public class PlParser extends Parser<PlBeliefSet> {
 					return new Contradiction();
 				if(s.equals(LogicalSymbols.TAUTOLOGY()))
 					return new Tautology();
-				if(s.matches("[\\p{L},_,0-9]"))
+				if(s.matches("[^|&!\\s\\n\\r\\t\\(\\)]"))
 					return new Proposition(s);
 			}
 			throw new ParserException("Unknown object " + o);
@@ -211,7 +211,7 @@ public class PlParser extends Parser<PlBeliefSet> {
 					throw new ParserException("Unknown object " + o);
 				s += (String) o;
 			}
-			if(s.matches("([\\p{L},_,0-9])+"))
+			if(s.matches("([^|&!\\s\\n\\r\\t\\(\\)])+"))
 				return new Proposition(s);
 			throw new ParserException("General parsing error.");
 		}		
