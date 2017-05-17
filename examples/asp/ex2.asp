@@ -1,3 +1,6 @@
-p(X) :- not q(X).
-q(X) :- r(X), not p(X).
+obj(a).
+obj(b).
+
+p(D) :- obj(D), not q(D).
+q(D) :- r(D), not p(D).
 r(a).

@@ -45,24 +45,23 @@ public class ClingoTest {
 		Program p = visitor.visit(parser.Program(), null);
 		solver.computeModels(p, 1);
 		
-		AnswerSetList asl = solver.computeModels(p, 1);
+		AnswerSetList asl = solver.computeModels(p, 1000);
 
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 3);
 	}
 	
-	//@Test
+	@Test
 	public void Example2() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("../../examples/asp/ex2.asp"));
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		solver.computeModels(p, 1);
 		
-		AnswerSetList asl = solver.computeModels(p, 1);
-		System.out.println(asl.size());
+		AnswerSetList asl = solver.computeModels(p, 1000);
 		assertTrue(asl.size() == 3);
-		assertTrue(asl.get(0).size() == 3);
+		assertTrue(asl.get(0).size() == 5);
+		assertTrue(asl.get(1).size() == 5);
 	}
 	
 	@Test
@@ -73,10 +72,23 @@ public class ClingoTest {
 		Program p = visitor.visit(parser.Program(), null);
 		solver.computeModels(p, 1);
 		
-		AnswerSetList asl = solver.computeModels(p, 1);
-		System.out.println(asl.get(0));
+		AnswerSetList asl = solver.computeModels(p, 1000);
+		assertTrue(asl.size() ==3);
+		assertTrue(asl.get(0).size() == 5);
+		assertTrue(asl.get(1).size() == 5);
+	}
+	
+	@Test
+	public void Example4() throws Exception {
+		FileInputStream fistr = new FileInputStream(new File("../../examples/asp/ex4.asp"));
+		parser.ReInit(fistr);
+			
+		Program p = visitor.visit(parser.Program(), null);
+		solver.computeModels(p, 1);
+			
+		AnswerSetList asl = solver.computeModels(p, 1000);
 		assertTrue(asl.size() ==2);
-		assertTrue(asl.get(0).size() == 1);
+		assertTrue(asl.get(0).size() == 5);
 	}
 
 }

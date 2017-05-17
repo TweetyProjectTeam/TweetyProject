@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import net.sf.tweety.lp.asp.solver.DLV;
+import net.sf.tweety.lp.asp.solver.Clingo;
 import net.sf.tweety.lp.asp.solver.Solver;
 import net.sf.tweety.lp.asp.solver.SolverException;
 import net.sf.tweety.lp.asp.syntax.DLPAtom;
@@ -45,7 +45,7 @@ public class AspInconsistencyMeasureTest {
 	
 	@BeforeClass
 	public static void init() {
-		solver = new DLV("/Users/mthimm/Projects/misc_bins/dlv.i386-apple-darwin.bin");
+		solver = new Clingo("C:/app/clingo/clingo.exe");
 		mpm = new PmInconsistencyMeasure(solver);
 		msd = new SdInconsistencyMeasure(solver);
 	}
