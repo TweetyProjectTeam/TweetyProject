@@ -416,4 +416,21 @@ public class AspicTest {
 		Answer answer = ar.query(query);
 		assertTrue(answer.getAnswerBoolean());
 	}
+	
+	@Test
+	public void ReasonerTest2() throws Exception {
+		PlParser plparser = new PlParser();
+		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		AspicArgumentationTheory<PropositionalFormula> at = parser
+				.parseBeliefBaseFromFile("../../examples/aspic/ex1.aspic");
+		
+		AspicReasoner ar = new AspicReasoner(at, Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+
+
+		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
+
+		System.out.println(pf);
+		Answer answer = ar.query(pf);
+		assertTrue(answer.getAnswerBoolean());
+	}
 }

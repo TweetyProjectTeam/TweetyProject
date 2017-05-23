@@ -1,11 +1,17 @@
 package net.sf.tweety.arg.aspic;
 
+import net.sf.tweety.arg.aspic.syntax.AspicArgument;
+import net.sf.tweety.arg.aspic.syntax.InferenceRule;
+import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * @author Nils Geilen
@@ -37,7 +43,25 @@ public class AspicReasoner extends Reasoner  {
 		AspicArgumentationTheory<?> aat = (AspicArgumentationTheory<?>)getKnowledgeBase();
 		DungTheory dt = aat.asDungTheory();
 		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(dt, semantics, inferencetype);
-		return aer.query(query);
+		
+		if (query instanceof Argument) {
+			return aer.query(query);
+		}
+		
+		for (AspicArgument<?> arg : aat.getArguments()) {
+			if (arg.getConclusion().equals(query)) {
+				Answer answer = aer.query(arg);
+				if (answer.getAnswerBoolean())
+					return answer;
+			}
+		}
+		
+		Answer answer = new Answer(aat, query);
+		answer.setAnswer(false);
+		return answer;
+		
+		
+		
 	}
 	
 	
