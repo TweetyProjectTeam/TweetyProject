@@ -15,7 +15,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * @author Nils Geilen
- *	This class models a reasoner ober Aspic formulae
+ *	This class models a reasoner over Aspic formulae
  */
 public class AspicReasoner extends Reasoner  {
 
