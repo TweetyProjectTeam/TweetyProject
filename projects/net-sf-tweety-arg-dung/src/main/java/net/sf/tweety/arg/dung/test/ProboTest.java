@@ -1,6 +1,7 @@
 package net.sf.tweety.arg.dung.test;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,12 +13,13 @@ import net.sf.tweety.arg.dung.parser.AbstractDungParser;
 import net.sf.tweety.arg.dung.prover.ProboSolver;
 import net.sf.tweety.arg.dung.prover.constants.FileFormat;
 import net.sf.tweety.arg.dung.prover.constants.Problem;
+import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.writer.DungWriter;
 import net.sf.tweety.commons.util.Shell;
 
 public class ProboTest {
 
-	static Shell shell = Shell.getCygwinShell("C:\\Windows\\System32\\bash.exe");
+	static Shell shell = Shell.getNativeShell();//Shell.getCygwinShell("C:\\Windows\\System32\\bash.exe");
 	
 
 	@Test
@@ -42,24 +44,33 @@ public class ProboTest {
 		DungTheory af = parser.parse(new FileReader(new File("../../examples/dung/ex1.tgf")));
 
 		DungWriter writer = DungWriter.getWriter(FileFormat.APX);
-		// System.out.println(writer.writeArguments(af));
+		assertTrue(writer.writeArguments(af).length() == 9);
 
 	}
 
 	@Test
 	public void HeurekaTest() throws Exception {
-		ProboSolver solver = new ProboSolver("/mnt/c/Users/nils/git/MA/bin/heureka", shell);
+		ProboSolver solver = new ProboSolver("C:/Users/me/git/heureka/heureka.exe", shell);
 		assertTrue(solver.versionInfo().charAt(0) == 'h');
 		assertTrue(solver.supportedFormats().size() == 2);
 		assertTrue(solver.supportedProblems().size() == 14);
 		System.out.println(
-				solver.solve(Problem.EE_ST, new File("/mnt/c/Users/nils/svn/tweety/trunk/examples/dung/ex3.tgf"), FileFormat.TGF, ""));
+				solver.solve(Problem.EE_ST, new File("../../examples/dung/ex3.tgf"), FileFormat.TGF, ""));
 		
 		AbstractDungParser parser = AbstractDungParser.getParser(FileFormat.TGF);
-		DungTheory aaf = parser.parseBeliefBaseFromFile("C:/Users/nils/svn/tweety/trunk/examples/dung/ex3.tgf");
+		DungTheory aaf = parser.parseBeliefBaseFromFile("../../examples/dung/ex3.tgf");
 		System.out.println(aaf);
-		System.out.println(
-				solver.solve(Problem.EE_ST, aaf, FileFormat.TGF, ""));
+		System.out.println(solver.solve(Problem.EE_ST, aaf, FileFormat.TGF, ""));
+		
+		assertTrue(solver.justify(Problem.DC_ST, aaf, FileFormat.TGF, new Argument("a")));
+		assertFalse(solver.justify(Problem.DC_ST, aaf, FileFormat.TGF, new Argument("b")));
+		
+		assertTrue(solver.enumerate(Problem.EE_ST, aaf, FileFormat.TGF).size()==1);
+		assertTrue(solver.enumerate(Problem.EE_ST, aaf, FileFormat.TGF).iterator().next().size()==3);
+		
+		aaf = parser.parseBeliefBaseFromFile("../../examples/dung/ex2.tgf");
+		
+		assertTrue(solver.enumerate(Problem.EE_CO, aaf, FileFormat.TGF).size()==2);
 	}
 
 }

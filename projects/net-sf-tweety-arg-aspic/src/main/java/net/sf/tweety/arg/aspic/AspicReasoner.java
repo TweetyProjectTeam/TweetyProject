@@ -1,8 +1,6 @@
 package net.sf.tweety.arg.aspic;
 
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
-import net.sf.tweety.arg.aspic.syntax.InferenceRule;
-import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -10,8 +8,6 @@ import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Reasoner;
-import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * @author Nils Geilen

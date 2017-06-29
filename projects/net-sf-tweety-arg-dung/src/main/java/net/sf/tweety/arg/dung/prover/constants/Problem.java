@@ -126,31 +126,34 @@ public enum Problem {
 	 * @author Matthias Thimm
 	 */
 	public enum SubProblem{
-		DC ("Decide credulously","DC"),
-		DS ("Decide skeptically","DS"),
-		DE ("Decide extension","DE"),
-		DL ("Decide labeling","DL"),
-		DX ("Decide existence","DX"),
-		DN ("Decide non-empty","DN"),
-		EC ("Enumerate credulously","EC"),
-		ES ("Enumerate skeptically","ES"),
-		EE ("Enumerate extension","EE"),
-		EL ("Enumerate labeling","EL"),
-		SE ("Some extension", "SE");
+		DC ("Decide credulously","DC",true),
+		DS ("Decide skeptically","DS",true),
+		DE ("Decide extension","DE",true),
+		DL ("Decide labeling","DL",true),
+		DX ("Decide existence","DX",true),
+		DN ("Decide non-empty","DN",true),
+		EC ("Enumerate credulously","EC",false),
+		ES ("Enumerate skeptically","ES",false),
+		EE ("Enumerate extension","EE",false),
+		EL ("Enumerate labeling","EL",false),
+		SE ("Some extension", "SE",false);
 		
 		/** The description of the sub-problem. */
 		private String description;
 		/** The abbreviation of the sub-problem. */
 		private String abbreviation;
 		
+		private boolean justification;
+		
 		/**
 		 * Creates a new sub-problem
 		 * @param description some description.
 		 * @param abbreviation the abbreviation of the sub-problem.
 		 */
-		private SubProblem(String description, String abbreviation){
+		private SubProblem(String description, String abbreviation, boolean just){
 			this.description = description;
 			this.abbreviation = abbreviation;
+			justification =just;
 		}
 		/**
 		 * Returns the description of the sub-problem.
@@ -166,6 +169,11 @@ public enum Problem {
 		public String abbreviation(){
 			return this.abbreviation;
 		}
+		
+		public boolean isJustificationProblem() {
+			return justification;
+		}
+		
 	};
 	
 	/** The description of the problem. */
@@ -237,4 +245,8 @@ public enum Problem {
 		}
 		return problems;
 	}	
+	
+	public boolean isJustificationProblem() {
+		return subProblem.isJustificationProblem();
+	}
 }
