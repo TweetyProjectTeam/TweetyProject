@@ -50,7 +50,7 @@ public class ProboTest {
 
 	@Test
 	public void HeurekaTest() throws Exception {
-		ProboSolver solver = new ProboSolver("C:/Users/me/git/heureka/heureka.exe", shell);
+		ProboSolver solver = new ProboSolver("C:/Users/nils/git/heureka/heureka.exe", shell);
 		assertTrue(solver.versionInfo().charAt(0) == 'h');
 		assertTrue(solver.supportedFormats().size() == 2);
 		assertTrue(solver.supportedProblems().size() == 14);

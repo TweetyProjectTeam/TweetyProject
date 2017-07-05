@@ -20,12 +20,20 @@ public class ProboSolver extends AbstractSolver {
 	String path_to_exec;
 	private Shell bash;
 
+	/**
+	 * Constructs a new instance of ProboSolver
+	 * @param path_to_exec	the path to the ICMMA-compliant solver
+	 * @param bash	the shell which should be used to run the solver
+	 */
 	public ProboSolver(String path_to_exec, Shell bash) {
 		super();
 		this.path_to_exec = path_to_exec;
 		this.bash = bash;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.prover.AbstractSolver#versionInfo()
+	 */
 	@Override
 	public String versionInfo() {
 		try {
@@ -36,6 +44,9 @@ public class ProboSolver extends AbstractSolver {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.prover.AbstractSolver#supportedFormats()
+	 */
 	@Override
 	public Collection<FileFormat> supportedFormats() {
 		try {
@@ -47,6 +58,9 @@ public class ProboSolver extends AbstractSolver {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.prover.AbstractSolver#supportedProblems()
+	 */
 	@Override
 	public Collection<Problem> supportedProblems() {
 		try {
@@ -58,6 +72,9 @@ public class ProboSolver extends AbstractSolver {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.prover.AbstractSolver#solve(net.sf.tweety.arg.dung.prover.constants.Problem, java.io.File, net.sf.tweety.arg.dung.prover.constants.FileFormat, java.lang.String)
+	 */
 	@Override
 	public String solve(Problem problem, File input, FileFormat format, String additionalParameters)
 			throws IOException, IllegalArgumentException {
@@ -71,6 +88,17 @@ public class ProboSolver extends AbstractSolver {
 		}
 	}
 	
+	/**
+	 * Solves the given problem on the given AAF with possibly
+	 * additional parameters.
+	 * @param problem the problem type to be solved.
+	 * @param aaf the AAF to be solved
+	 * @param format the format of the intermediary files
+	 * @param additionalParameters additional parameters for the problem (maybe "null" if no further parameters are given)
+	 * @return A string representing the solution to the given problem.
+	 * @throws IOException in case of errors in accessing the input file.
+	 * @throws IllegalArgumentException if this solver is not able to solve the given problem or does not understand the format.
+	 */
 	public String solve(Problem problem, DungTheory aaf, FileFormat format, String additionalParameters) 
 			throws IOException, IllegalArgumentException {
 		File temp = File.createTempFile("aaf-", "."+format.extension());
@@ -83,6 +111,16 @@ public class ProboSolver extends AbstractSolver {
 		return solve(problem, temp, format, additionalParameters);
 	}
 	
+	/**
+	 * Solves the given justification problem on the given AAF
+	 * @param problem the justification problem type to be solved.
+	 * @param aaf the AAF to be solved
+	 * @param format the format of the intermediary files
+	 * @param arg the argument to be justified
+	 * @return true iff arg is justified
+	 * @throws IOException in case of errors in accessing the input file.
+	 * @throws IllegalArgumentException if this solver is not able to solve the given problem or does not understand the format.
+	 */
 	public boolean justify(Problem problem, DungTheory aaf, FileFormat format, Argument arg) 
 			throws IOException, IllegalArgumentException {
 		if (!problem.isJustificationProblem())
@@ -97,6 +135,15 @@ public class ProboSolver extends AbstractSolver {
 		}
 	}
 	
+	/**
+	 * Solves the given enumeration problem on the given AAF with
+	 * @param problem the justification problem type to be solved.
+	 * @param aaf the AAF to be solved
+	 * @param format the format of the intermediary files
+	 * @return a set of extensions of aaf under the specified semantics
+	 * @throws IOException in case of errors in accessing the input file.
+	 * @throws IllegalArgumentException if this solver is not able to solve the given problem or does not understand the format.
+	 */
 	public Set<Extension> enumerate(Problem problem, DungTheory aaf, FileFormat format) 
 			throws IOException, IllegalArgumentException {
 		if (problem.isJustificationProblem())
