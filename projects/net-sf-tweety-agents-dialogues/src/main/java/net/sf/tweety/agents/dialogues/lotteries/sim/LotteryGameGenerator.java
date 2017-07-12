@@ -26,6 +26,7 @@ import net.sf.tweety.agents.sim.MultiAgentSystemGenerator;
 import net.sf.tweety.agents.sim.SimulationParameters;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.divisions.Division;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.util.DungTheoryGenerator;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
@@ -55,7 +56,7 @@ public class LotteryGameGenerator implements MultiAgentSystemGenerator<AbstractL
 	private DungTheoryGenerator gen;
 	
 	/** The semantics used. */
-	private int semantics;
+	private Semantics semantics;
 	
 	/** Random numbers generator. */
 	private Random random = new Random();
@@ -69,7 +70,7 @@ public class LotteryGameGenerator implements MultiAgentSystemGenerator<AbstractL
 	 * @param gen for generating Dung theories.
 	 * @param semantics the semantics used.
 	 */
-	public LotteryGameGenerator(DungTheoryGenerator gen, int semantics){
+	public LotteryGameGenerator(DungTheoryGenerator gen, Semantics semantics){
 		this(gen,semantics,true);
 	}
 	
@@ -80,7 +81,7 @@ public class LotteryGameGenerator implements MultiAgentSystemGenerator<AbstractL
 	 * @param ensureArg whether the theories generated should ensure 
 	 * 	one specific argument to be skeptically inferred. 
 	 */
-	public LotteryGameGenerator(DungTheoryGenerator gen, int semantics, boolean ensureArg){
+	public LotteryGameGenerator(DungTheoryGenerator gen, Semantics semantics, boolean ensureArg){
 		this.gen = gen;
 		this.semantics = semantics;
 		this.ensureArg = ensureArg;

@@ -55,7 +55,7 @@ public class LotteryDialogueTest {
 	
 	public static int numberOfRunsEach = 100;
 	
-	public static int semantics = Semantics.GROUNDED_SEMANTICS;
+	public static Semantics semantics = Semantics.GROUNDED_SEMANTICS;
 	
 	//to ensure comparability
 	public static long RANDOM_SEED1 = 435844589l;

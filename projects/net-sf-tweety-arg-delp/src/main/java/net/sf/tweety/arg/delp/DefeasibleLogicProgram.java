@@ -18,10 +18,32 @@
  */
 package net.sf.tweety.arg.delp;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+
 import net.sf.tweety.arg.delp.parser.DelpParser;
 import net.sf.tweety.arg.delp.semantics.ComparisonCriterion;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
-import net.sf.tweety.arg.delp.syntax.*;
+import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
+import net.sf.tweety.arg.delp.syntax.DelpArgument;
+import net.sf.tweety.arg.delp.syntax.DelpFact;
+import net.sf.tweety.arg.delp.syntax.DelpRule;
+import net.sf.tweety.arg.delp.syntax.StrictRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
@@ -32,15 +54,6 @@ import net.sf.tweety.commons.util.rules.Derivation;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.time.LocalTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class models a defeasible logic program (DeLP).
