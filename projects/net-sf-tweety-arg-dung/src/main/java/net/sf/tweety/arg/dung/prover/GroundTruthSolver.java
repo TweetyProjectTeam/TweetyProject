@@ -10,8 +10,8 @@ import java.util.HashSet;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.parser.AbstractDungParser;
 import net.sf.tweety.arg.dung.parser.ApxParser;
-import net.sf.tweety.arg.dung.prover.constants.FileFormat;
-import net.sf.tweety.arg.dung.prover.constants.Problem;
+import net.sf.tweety.arg.dung.parser.FileFormat;
+import net.sf.tweety.arg.dung.semantics.Problem;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.writer.DungWriter;
 

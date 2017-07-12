@@ -58,7 +58,7 @@ public class LdoInterpretation extends AbstractInterpretation {
 	/** the extension */
 	private Extension ext = null;
 	/** The used semantics */
-	private int sem;
+	private Semantics sem;
 	
 	/**
 	 * Creates a new interpretation
@@ -66,7 +66,7 @@ public class LdoInterpretation extends AbstractInterpretation {
 	 * @param ext an extension (possibly null)
 	 * @param semantics the used semantics (see net.sf.tweety.arg.dung.semantics.Semantics)
 	 */
-	public LdoInterpretation(DungTheory theory, Extension ext, int semantics){
+	public LdoInterpretation(DungTheory theory, Extension ext, Semantics semantics){
 		this.theory = theory;
 		this.ext = ext;
 		this.sem = semantics;
@@ -77,7 +77,7 @@ public class LdoInterpretation extends AbstractInterpretation {
 	 * @param theory an abstract argumentation framework 
 	 * @param semantics the used semantics (see net.sf.tweety.arg.dung.semantics.Semantics)
 	 */
-	public LdoInterpretation(DungTheory theory, int semantics){
+	public LdoInterpretation(DungTheory theory, Semantics semantics){
 		this(theory, null, semantics);
 	}
 	

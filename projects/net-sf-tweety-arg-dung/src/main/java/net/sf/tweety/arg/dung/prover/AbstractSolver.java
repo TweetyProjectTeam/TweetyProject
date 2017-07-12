@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
-import net.sf.tweety.arg.dung.prover.constants.FileFormat;
-import net.sf.tweety.arg.dung.prover.constants.Problem;
+import net.sf.tweety.arg.dung.parser.FileFormat;
+import net.sf.tweety.arg.dung.semantics.Problem;
 
 /**
  * An abstract implementation of a solver that provides

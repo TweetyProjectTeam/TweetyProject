@@ -1,7 +1,7 @@
 package net.sf.tweety.arg.dung.test;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileReader;
@@ -10,9 +10,9 @@ import org.junit.Test;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.parser.AbstractDungParser;
+import net.sf.tweety.arg.dung.parser.FileFormat;
 import net.sf.tweety.arg.dung.prover.ProboSolver;
-import net.sf.tweety.arg.dung.prover.constants.FileFormat;
-import net.sf.tweety.arg.dung.prover.constants.Problem;
+import net.sf.tweety.arg.dung.semantics.Problem;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.writer.DungWriter;
 import net.sf.tweety.commons.util.Shell;

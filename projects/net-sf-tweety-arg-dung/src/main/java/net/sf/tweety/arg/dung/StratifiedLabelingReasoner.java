@@ -44,7 +44,7 @@ public class StratifiedLabelingReasoner extends Reasoner {
 	private int inferenceType;
 	
 	/** The semantics used for this reasoner. */
-	private int semantics;
+	private Semantics semantics;
 	
 	/**
 	 * Creates a new reasoner for the given Dung theory, semantics, and inference type.
@@ -52,7 +52,7 @@ public class StratifiedLabelingReasoner extends Reasoner {
 	 * @param semantics a semantics
 	 * @param inferenceType and inference type
 	 */
-	public StratifiedLabelingReasoner(BeliefBase beliefBase, int semantics, int inferenceType) {
+	public StratifiedLabelingReasoner(BeliefBase beliefBase, Semantics semantics, int inferenceType) {
 		super(beliefBase);
 		if(!(beliefBase instanceof DungTheory))
 			throw new IllegalArgumentException("Knowledge base of class DungTheory expected.");

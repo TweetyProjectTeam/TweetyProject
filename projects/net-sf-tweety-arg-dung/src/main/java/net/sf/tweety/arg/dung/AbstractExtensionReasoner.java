@@ -75,18 +75,18 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 	 * @param inferenceType an inference type
 	 * @return a reasoner for the given Dung theory, inference type, and semantics
 	 */
-	public static AbstractExtensionReasoner getReasonerForSemantics(BeliefBase beliefBase, int semantics, int inferenceType){
+	public static AbstractExtensionReasoner getReasonerForSemantics(BeliefBase beliefBase, Semantics semantics, int inferenceType){
 		switch(semantics){
-			case Semantics.COMPLETE_SEMANTICS: return new CompleteReasoner(beliefBase, inferenceType);
-			case Semantics.GROUNDED_SEMANTICS: return new GroundReasoner(beliefBase, inferenceType);
-			case Semantics.PREFERRED_SEMANTICS: return new PreferredReasoner(beliefBase, inferenceType);
-			case Semantics.STABLE_SEMANTICS: return new StableReasoner(beliefBase, inferenceType);
-			case Semantics.ADMISSIBLE_SEMANTICS: return new AdmissibleReasoner(beliefBase, inferenceType);
-			case Semantics.CONFLICTFREE_SEMANTICS: return new ConflictFreeReasoner(beliefBase, inferenceType);
-			case Semantics.SEMISTABLE_SEMANTICS: return new SemiStableReasoner(beliefBase, inferenceType);
-			case Semantics.IDEAL_SEMANTICS: return new IdealReasoner(beliefBase, inferenceType);
-			case Semantics.STAGE_SEMANTICS: return new StageReasoner(beliefBase, inferenceType);
-			case Semantics.CF2_SEMANTICS: return new CF2Reasoner(beliefBase, inferenceType);
+			case CO: return new CompleteReasoner(beliefBase, inferenceType);
+			case GR: return new GroundReasoner(beliefBase, inferenceType);
+			case PR: return new PreferredReasoner(beliefBase, inferenceType);
+			case ST: return new StableReasoner(beliefBase, inferenceType);
+			case ADM: return new AdmissibleReasoner(beliefBase, inferenceType);
+			case CF: return new ConflictFreeReasoner(beliefBase, inferenceType);
+			case SST: return new SemiStableReasoner(beliefBase, inferenceType);
+			case ID: return new IdealReasoner(beliefBase, inferenceType);
+			case STG: return new StageReasoner(beliefBase, inferenceType);
+			case CF2: return new CF2Reasoner(beliefBase, inferenceType);
 		}
 		throw new IllegalArgumentException("Unknown semantics.");
 	}

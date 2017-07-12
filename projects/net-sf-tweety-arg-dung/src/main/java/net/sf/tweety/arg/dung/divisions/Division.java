@@ -87,7 +87,7 @@ public class Division extends Pair<Extension,Extension>{
 	 * @param semantics some semantics
 	 * @return the set of dividers of this devision
 	 */
-	public Collection<DungTheory> getDividers(DungTheory theory, int semantics){
+	public Collection<DungTheory> getDividers(DungTheory theory, Semantics semantics){
 		Collection<DungTheory> result = new HashSet<DungTheory>();
 		Collection<Graph<Argument>> subtheories = theory.getSubgraphs();
 		for(Graph<Argument> g: subtheories){
@@ -143,7 +143,7 @@ public class Division extends Pair<Extension,Extension>{
 	 * @param semantics some semantics
 	 * @return "true" if the given set of divisions is exhaustive.
 	 */
-	public static boolean isExhaustive(Collection<Division> divisions, DungTheory theory, int semantics){
+	public static boolean isExhaustive(Collection<Division> divisions, DungTheory theory, Semantics semantics){
 		Collection<Graph<Argument>> subgraphs = theory.getSubgraphs();
 		// convert to Dung theories
 		Collection<DungTheory> subtheories = new HashSet<DungTheory>();
@@ -162,7 +162,7 @@ public class Division extends Pair<Extension,Extension>{
 	 * @param semantics some semantics
 	 * @return "true" if the given set of divisions is disjoint. 
 	 */
-	public static boolean isDisjoint(Collection<Division> divisions, DungTheory theory, int semantics){
+	public static boolean isDisjoint(Collection<Division> divisions, DungTheory theory, Semantics semantics){
 		for(Division d1: divisions){
 			Collection<DungTheory> dividers1 = d1.getDividers(theory, semantics);
 			for(Division d2: divisions){

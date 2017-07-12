@@ -34,7 +34,7 @@ import net.sf.tweety.commons.ParserException;
  */
 public class StratifiedLabelingsCli {
 	
-	public static int getSemantics(String sem){
+	public static Semantics getSemantics(String sem){
 		if(sem.equals("stable")) return Semantics.STABLE_SEMANTICS;
 		if(sem.equals("grounded")) return Semantics.GROUNDED_SEMANTICS;
 		if(sem.equals("preferred")) return Semantics.PREFERRED_SEMANTICS;

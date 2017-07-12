@@ -6,10 +6,10 @@ import java.util.HashSet;
 
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.prover.constants.Problem;
-import net.sf.tweety.arg.dung.prover.constants.Semantics;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Labeling;
+import net.sf.tweety.arg.dung.semantics.Problem;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
@@ -47,7 +47,7 @@ public class TweetySolver extends AbstractDungSolver {
 	 * @param semantics some semantics
 	 * @return the corresponding integer constant from Tweety.
 	 */
-	private int translateSemantics(Semantics semantics){
+	private Semantics translateSemantics(Semantics semantics){
 		if(semantics.equals(Semantics.CO))
 			return net.sf.tweety.arg.dung.semantics.Semantics.COMPLETE_SEMANTICS;
 		if(semantics.equals(Semantics.GR))
@@ -68,7 +68,7 @@ public class TweetySolver extends AbstractDungSolver {
 			return net.sf.tweety.arg.dung.semantics.Semantics.STAGE_SEMANTICS;
 		if(semantics.equals(Semantics.CF2))
 			return net.sf.tweety.arg.dung.semantics.Semantics.CF2_SEMANTICS;
-		return -1;
+		return null;
 	}
 	
 	/* (non-Javadoc)
