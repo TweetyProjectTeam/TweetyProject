@@ -15,7 +15,7 @@
   	<dependency>
   		<groupId>net.sf.tweety.lp</groupId>
   		<artifactId>asp</artifactId>
-  		<version>1.8-SNAPSHOT</version>
+  		<version>1.9-SNAPSHOT</version>
   	</dependency>
   	<dependency>
       <groupId>junit</groupId>
@@ -27,7 +27,7 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.8-SNAPSHOT</version>
+  	<version>1.9-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>
