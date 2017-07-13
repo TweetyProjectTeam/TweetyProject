@@ -21,6 +21,7 @@ package net.sf.tweety.arg.prob;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
@@ -37,7 +38,7 @@ import net.sf.tweety.math.probability.Probability;
 public class MonteCarloPafReasoner extends Reasoner{
 
 	/** Semantics for plain AAFs. */
-	private int semantics;
+	private Semantics semantics;
 	/** The number of runs of the Monte Carlo simulation. */
 	private int numberOfTrials;
 	/** The inference type used for estimating acceptability probability
@@ -52,7 +53,7 @@ public class MonteCarloPafReasoner extends Reasoner{
 	 * @param inferenceType The inference type used for estimating acceptability probability
 	 * 	of single arguments (credulous or skeptical inference).
 	 */
-	public MonteCarloPafReasoner(ProbabilisticArgumentationFramework aaf, int semantics, int inferenceType, int numberOfTrials) {
+	public MonteCarloPafReasoner(ProbabilisticArgumentationFramework aaf, Semantics semantics, int inferenceType, int numberOfTrials) {
 		super(aaf);
 		this.semantics = semantics;
 		this.numberOfTrials = numberOfTrials;

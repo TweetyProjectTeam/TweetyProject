@@ -43,8 +43,8 @@ public class ProboTest {
 		AbstractDungParser parser = AbstractDungParser.getParser(FileFormat.TGF);
 		DungTheory af = parser.parse(new FileReader(new File("../../examples/dung/ex1.tgf")));
 
-		DungWriter writer = DungWriter.getWriter(FileFormat.APX);
-		assertTrue(writer.writeArguments(af).length() == 9);
+		//DungWriter writer = DungWriter.getWriter(FileFormat.APX);
+		assertTrue(DungWriter.writeArguments(af).length() == 9);
 
 	}
 

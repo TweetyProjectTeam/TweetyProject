@@ -62,7 +62,7 @@ public class UtilityFunction extends HashMap<Division,Double>{
 	 * @param semantics some semantics
 	 * @return the utility of the theory wrt. the given semantics.
 	 */
-	public Double getUtility(DungTheory theory, int semantics){
+	public Double getUtility(DungTheory theory, Semantics semantics){
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(theory, semantics, Semantics.CREDULOUS_INFERENCE);
 		Set<Extension> extensions = reasoner.getExtensions();
 		//average utility across extensions

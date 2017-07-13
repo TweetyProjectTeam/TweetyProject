@@ -26,6 +26,7 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.divisions.Division;
 import net.sf.tweety.arg.dung.ldo.syntax.LdoFormula;
 import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.util.SetTools;
@@ -104,7 +105,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * @param semantics some semantics.
 	 * @return a probability
 	 */
-	public Probability getAcceptanceProbability(LdoFormula f, int semantics){
+	public Probability getAcceptanceProbability(LdoFormula f, Semantics semantics){
 		double p = 0;
 		for(Graph<Argument> divider: f.getDividers(this.theory, semantics)){
 			p += this.probability(new DungTheory(divider)).doubleValue();
@@ -121,7 +122,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * @param semantics some semantics.
 	 * @return a probability
 	 */
-	public Probability getAcceptanceProbability(Division d, int semantics){
+	public Probability getAcceptanceProbability(Division d, Semantics semantics){
 		double p = 0;
 		for(Graph<Argument> divider: d.getDividers(this.theory, semantics)){
 			p += this.probability(new DungTheory(divider)).doubleValue();
@@ -137,7 +138,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * @param semantics some semantics.
 	 * @return a probability
 	 */
-	public Probability getAcceptanceProbability(Argument arg, int semantics){
+	public Probability getAcceptanceProbability(Argument arg, Semantics semantics){
 		Extension a1 = new Extension();
 		a1.add(arg);
 		Division d = new Division(a1,new Extension());
@@ -152,7 +153,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * @param semantics some semantics.
 	 * @return a probability
 	 */
-	public Probability getAcceptanceProbability(Extension ext, int semantics){
+	public Probability getAcceptanceProbability(Extension ext, Semantics semantics){
 		return this.getAcceptanceProbability(new Division(ext,new Extension()), semantics);
 	}
 	

@@ -24,6 +24,7 @@ import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.ExecutableDungTheory;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 
 /**
  * An agent in a game of argumentation lotteries.
@@ -35,7 +36,7 @@ public abstract class AbstractLotteryAgent extends Agent {
 	protected DungTheory theory;
 	
 	/** The used semantics */
-	protected int semantics;
+	protected Semantics semantics;
 		
 	/**
 	 * Creates a new lottery agent
@@ -45,7 +46,7 @@ public abstract class AbstractLotteryAgent extends Agent {
 	 * @param util a utility function
 	 * @param isDummy whether it is a dummy agent.
 	 */
-	public AbstractLotteryAgent(String name, DungTheory theory, int semantics) {
+	public AbstractLotteryAgent(String name, DungTheory theory, Semantics semantics) {
 		super(name);
 		this.theory = theory;		
 		this.semantics = semantics;		
@@ -71,13 +72,13 @@ public abstract class AbstractLotteryAgent extends Agent {
 	 * @param semantics some semantics
 	 * @return the utility of this agent wrt. the given theory.
 	 */
-	public abstract double getUtility(DungTheory theory, int semantics);
+	public abstract double getUtility(DungTheory theory, Semantics semantics);
 	
 	/**
 	 * Returns the semantics.
 	 * @return the semantics.
 	 */
-	public int getSemantics(){
+	public Semantics getSemantics(){
 		return this.semantics;
 	}
 }

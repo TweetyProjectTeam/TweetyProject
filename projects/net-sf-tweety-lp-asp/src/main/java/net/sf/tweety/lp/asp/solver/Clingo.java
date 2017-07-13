@@ -28,8 +28,6 @@ import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.util.AnswerSetList;
-import scala.sys.process.ProcessBuilderImpl.OStreamBuilder;
-
 
 public class Clingo extends SolverBase {
 

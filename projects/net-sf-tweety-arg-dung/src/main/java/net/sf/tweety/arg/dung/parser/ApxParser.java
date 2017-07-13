@@ -1,16 +1,14 @@
 package net.sf.tweety.arg.dung.parser;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.io.Reader;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.ParserException;
+
 
 /**
  * Parses abstract argumentation frameworks in the logic programming

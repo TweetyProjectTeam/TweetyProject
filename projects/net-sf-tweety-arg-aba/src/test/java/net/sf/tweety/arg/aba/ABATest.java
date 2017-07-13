@@ -84,7 +84,6 @@ public class ABATest {
 			System.out.println(d.getName());
 		assertTrue(deductions.size() == 7);
 
-		@SuppressWarnings("unchecked")
 		InferenceRule<PropositionalFormula> rule = (InferenceRule<PropositionalFormula>) parser
 				.parseFormula("z <- b,q");
 		abat.add(rule);

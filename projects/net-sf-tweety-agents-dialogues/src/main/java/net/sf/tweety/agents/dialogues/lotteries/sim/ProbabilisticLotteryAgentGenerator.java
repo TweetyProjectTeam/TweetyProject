@@ -24,6 +24,7 @@ import net.sf.tweety.agents.dialogues.lotteries.LotteryGameSystem;
 import net.sf.tweety.agents.sim.AgentGenerator;
 import net.sf.tweety.agents.sim.SimulationParameters;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.arg.prob.lotteries.UtilityFunction;
 
@@ -58,7 +59,7 @@ public class ProbabilisticLotteryAgentGenerator implements AgentGenerator<Abstra
 	 */
 	@Override
 	public AbstractLotteryAgent generate(LotteryGameSystem mas,	SimulationParameters params) {
-		return new ProbabilisticLotteryAgent(this.name, (DungTheory)params.get(LotteryGameGenerator.PARAM_UNIVERSALTHEORY), (SubgraphProbabilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_PROB), (UtilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_UTIL), (Integer)params.get(LotteryGameGenerator.PARAM_SEM), this.updatestrategy,this.stickynesscoefficient);
+		return new ProbabilisticLotteryAgent(this.name, (DungTheory)params.get(LotteryGameGenerator.PARAM_UNIVERSALTHEORY), (SubgraphProbabilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_PROB), (UtilityFunction)params.get(LotteryGameGenerator.PARAM_LOT_UTIL), (Semantics)params.get(LotteryGameGenerator.PARAM_SEM), this.updatestrategy,this.stickynesscoefficient);
 	}
 
 	/* (non-Javadoc)

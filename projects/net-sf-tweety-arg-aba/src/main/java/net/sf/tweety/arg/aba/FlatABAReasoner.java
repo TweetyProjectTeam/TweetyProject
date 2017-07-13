@@ -10,6 +10,7 @@ import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
@@ -24,7 +25,8 @@ import net.sf.tweety.commons.Reasoner;
  */
 public class FlatABAReasoner extends Reasoner {
 
-	int semantics, inferencetype;
+	Semantics semantics;
+	int inferencetype;
 
 	/**
 	 * Creates a new instance
@@ -38,7 +40,7 @@ public class FlatABAReasoner extends Reasoner {
 	 *            an indicator for the used inference (c.f.
 	 *            net.sf.tweety.arg.dung.semantics.Semantics)
 	 */
-	public FlatABAReasoner(BeliefBase beliefBase, int semantics, int inferencetype) {
+	public FlatABAReasoner(BeliefBase beliefBase, Semantics semantics, int inferencetype) {
 		super(beliefBase);
 		this.semantics = semantics;
 		this.inferencetype = inferencetype;

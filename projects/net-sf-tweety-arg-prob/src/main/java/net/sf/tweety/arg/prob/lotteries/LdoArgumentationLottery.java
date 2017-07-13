@@ -24,6 +24,7 @@ import java.util.Map;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.ldo.syntax.LdoFormula;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -38,7 +39,7 @@ public class LdoArgumentationLottery {
 	private Map<LdoFormula,Probability> prob;
 	
 	/** The semantics used for this lottery*/
-	private int semantics;
+	private Semantics semantics;
 	
 	/** The AAF used. */
 	private DungTheory aaf;
@@ -50,7 +51,7 @@ public class LdoArgumentationLottery {
 	 * @param p some probability function 
 	 * @param semantics some semantics
 	 */
-	public LdoArgumentationLottery(Collection<LdoFormula> formulas, SubgraphProbabilityFunction p, int semantics){
+	public LdoArgumentationLottery(Collection<LdoFormula> formulas, SubgraphProbabilityFunction p, Semantics semantics){
 		// TODO: check whether formulas are exhaustive and disjoint
 		prob = new HashMap<LdoFormula,Probability>();
 		for(LdoFormula f: formulas)
@@ -63,7 +64,7 @@ public class LdoArgumentationLottery {
 	 * Returns the used semantics.
 	 * @return the used semantics.
 	 */
-	public int getSemantics(){
+	public Semantics getSemantics(){
 		return this.semantics;
 	}
 	

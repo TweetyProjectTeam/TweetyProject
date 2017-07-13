@@ -26,6 +26,7 @@ import java.util.Random;
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.ExecutableDungTheory;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.prob.lotteries.UtilityFunction;
 import net.sf.tweety.graphs.Graph;
@@ -48,7 +49,7 @@ public class RandomLotteryAgent extends AbstractLotteryAgent{
 	 * @param theory
 	 * @param semantics
 	 */
-	public RandomLotteryAgent(String name, DungTheory theory, UtilityFunction util, int semantics) {
+	public RandomLotteryAgent(String name, DungTheory theory, UtilityFunction util, Semantics semantics) {
 		super(name, theory, semantics);	
 		this.util = util;		
 	}
@@ -67,7 +68,7 @@ public class RandomLotteryAgent extends AbstractLotteryAgent{
 	 * @see net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent#getUtility(net.sf.tweety.arg.dung.DungTheory, int)
 	 */
 	@Override
-	public double getUtility(DungTheory theory, int semantics) {
+	public double getUtility(DungTheory theory, Semantics semantics) {
 		return this.util.getUtility(theory, semantics);
 	}
 }

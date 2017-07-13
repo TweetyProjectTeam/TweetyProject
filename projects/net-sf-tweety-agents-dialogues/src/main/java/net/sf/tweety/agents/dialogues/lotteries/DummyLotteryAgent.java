@@ -23,6 +23,7 @@ import java.util.Collection;
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.ExecutableDungTheory;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 
 /**
  * Audience agents (do nothing) for argumentation games.
@@ -32,7 +33,7 @@ import net.sf.tweety.arg.dung.DungTheory;
  */
 public class DummyLotteryAgent extends AbstractLotteryAgent{
 
-	public DummyLotteryAgent(String name, DungTheory theory, int semantics) {
+	public DummyLotteryAgent(String name, DungTheory theory, Semantics semantics) {
 		super(name, theory, semantics);
 	}
 	
@@ -48,7 +49,7 @@ public class DummyLotteryAgent extends AbstractLotteryAgent{
 	 * @see net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent#getUtility(net.sf.tweety.arg.dung.DungTheory, int)
 	 */
 	@Override
-	public double getUtility(DungTheory theory, int semantics) {
+	public double getUtility(DungTheory theory, Semantics semantics) {
 		return 0;
 	}
 

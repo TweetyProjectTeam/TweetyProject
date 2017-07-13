@@ -25,6 +25,7 @@ import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.ExecutableDungTheory;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.prob.lotteries.ArgumentationLottery;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
@@ -66,7 +67,7 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 	 * @param prob a probability function
 	 * @param util a utility function
 	 */
-	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, int semantics) {
+	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, Semantics semantics) {
 		this(name,theory, prob,util, semantics, ProbabilisticLotteryAgent.UPDATE_NAIVE);
 	}
 
@@ -78,7 +79,7 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 	 * @param util a utility function
 	 * @param updatestrategy The update strategy used
 	 */
-	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, int semantics, byte updatestrategy) {
+	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, Semantics semantics, byte updatestrategy) {
 		this(name,theory,prob, util,semantics, updatestrategy, 0.5);		
 	} 
 	
@@ -91,7 +92,7 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 	 * @param updatestrategy The update strategy used
 	 * @param Stickyness coefficient for the sticky update (only needed when updatestrategy==UPDATE_STICKY.
 	 */
-	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, int semantics, byte updatestrategy, double stickynesscoefficient) {
+	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, Semantics semantics, byte updatestrategy, double stickynesscoefficient) {
 		super(name,theory,semantics);
 		this.prob = prob;
 		this.util = util;
@@ -156,7 +157,7 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent#getUtility(net.sf.tweety.arg.dung.DungTheory, int)
 	 */
-	public double getUtility(DungTheory theory, int semantics){
+	public double getUtility(DungTheory theory, Semantics semantics){
 		return this.util.getUtility(theory, semantics);
 	}
 }

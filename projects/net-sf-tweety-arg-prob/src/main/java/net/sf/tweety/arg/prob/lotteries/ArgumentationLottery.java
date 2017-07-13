@@ -24,6 +24,7 @@ import java.util.Map;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.divisions.Division;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -38,7 +39,7 @@ public class ArgumentationLottery {
 	private Map<Division,Probability> prob;
 	
 	/** The semantics used for this lottery*/
-	private int semantics;
+	private Semantics semantics;
 	
 	/** The AAF used. */
 	private DungTheory aaf;
@@ -50,7 +51,7 @@ public class ArgumentationLottery {
 	 * @param p some probability function 
 	 * @param semantics some semantics
 	 */
-	public ArgumentationLottery(Collection<Division> divisions, SubgraphProbabilityFunction p, int semantics){
+	public ArgumentationLottery(Collection<Division> divisions, SubgraphProbabilityFunction p, Semantics semantics){
 		// check whether divisions is exhaustive and disjoint (disabled for now)
 		//if(!Division.isDisjoint(divisions, p.getTheory(), semantics) || !Division.isExhaustive(divisions, p.getTheory(), semantics))
 		//	throw new IllegalArgumentException("Given set of divisions is not exhaustive and disjoint.");
@@ -66,7 +67,7 @@ public class ArgumentationLottery {
 	 * Returns the used semantics.
 	 * @return the used semantics.
 	 */
-	public int getSemantics(){
+	public Semantics getSemantics(){
 		return this.semantics;
 	}
 	

@@ -1,8 +1,6 @@
 package net.sf.tweety.arg.dung.parser;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -36,7 +34,6 @@ public class CnfParser extends AbstractDungParser {
 	/* (non-Javadoc)
 	 * @see net.sf.probo.parser.Parser#parse(java.io.File)
 	 */
-	@SuppressWarnings("resource")
 	@Override
 	public DungTheory parse(Reader reader) throws IOException {
 		DungTheory theory = new DungTheory();
