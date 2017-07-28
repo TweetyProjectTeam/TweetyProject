@@ -13,12 +13,12 @@
   <dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.9-SNAPSHOT</version>
+  		<version>1.9</version>
   	</dependency>
   <dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>fol</artifactId>
-  		<version>1.9-SNAPSHOT</version>
+  		<version>1.9</version>
   	</dependency>
   	<dependency>
   		<groupId>junit</groupId>

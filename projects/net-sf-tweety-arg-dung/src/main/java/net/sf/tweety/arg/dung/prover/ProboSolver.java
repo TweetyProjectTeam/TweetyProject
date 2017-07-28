@@ -15,6 +15,11 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.writer.DungWriter;
 import net.sf.tweety.commons.util.Shell;
 
+/**
+ * Calls an external solver to solver AA problems. Uses utilties which were formerly implemeted in probo
+ * @author Nils Geilen
+ *
+ */
 public class ProboSolver extends AbstractSolver {
 	
 	String path_to_exec;

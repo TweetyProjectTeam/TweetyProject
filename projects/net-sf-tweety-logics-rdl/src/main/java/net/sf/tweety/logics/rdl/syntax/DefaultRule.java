@@ -66,18 +66,32 @@ public class DefaultRule extends RelationalFormula {
 		
 	}
 	
-	public DefaultRule(FolFormula pre, FolFormula jus, FolFormula conc) throws ParserException {
+	/**
+	 * Creates a new DefaultRule
+	 * @param pre 	the prerequsite
+	 * @param jus	the justification
+	 * @param conc	the conclusion
+	 * @throws ParserException	when a parameter is missing
+	 */
+	public DefaultRule(FolFormula pre, FolFormula jus, FolFormula conc) throws IllegalArgumentException {
 		this(pre, Arrays.asList(jus), conc);
 	}
 
-	public DefaultRule(FolFormula pre, Collection<FolFormula> jus, FolFormula conc) throws ParserException {
+	/**
+	 * Creates a new DefaultRule
+	 * @param pre 	the prerequsite
+	 * @param jus	the justifications
+	 * @param conc	the conclusion
+	 * @throws ParserException	when a parameter is missing
+	 */
+	public DefaultRule(FolFormula pre, Collection<FolFormula> jus, FolFormula conc) throws IllegalArgumentException {
 		super();
 		if (pre == null)
-			throw new ParserException("Prerequisite needed to form default rule.");
+			throw new IllegalArgumentException("Prerequisite needed to form default rule.");
 		if (conc == null)
-			throw new ParserException("Conclusion needed to form default rule.");
+			throw new IllegalArgumentException("Conclusion needed to form default rule.");
 		if (jus == null)
-			throw new ParserException("Justification needed to form default rule.");
+			throw new IllegalArgumentException("Justification needed to form default rule.");
 		this.pre = pre;
 		this.jus = new LinkedList<>();
 		this.jus.addAll(jus);
@@ -325,6 +339,9 @@ public class DefaultRule extends RelationalFormula {
 		throw new IllegalArgumentException("Not combinable with and");
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#getSignature()
+	 */
 	@Override
 	public FolSignature getSignature() {
 		FolSignature result = pre.getSignature();
@@ -361,6 +378,9 @@ public class DefaultRule extends RelationalFormula {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -371,6 +391,9 @@ public class DefaultRule extends RelationalFormula {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if(this==o)
