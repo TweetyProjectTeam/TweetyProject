@@ -71,7 +71,7 @@
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
-  		<artifactId>simplelogic</artifactId>
+  		<artifactId>simplelogicdeductive</artifactId>
   		<version>1.9-SNAPSHOT</version>
   	</dependency>
   	<dependency>
