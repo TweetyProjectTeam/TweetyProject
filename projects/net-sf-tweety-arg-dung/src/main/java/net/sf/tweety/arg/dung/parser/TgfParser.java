@@ -3,10 +3,11 @@ package net.sf.tweety.arg.dung.parser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.syntax.Attack;
 
 /**
  * Parses abstract argumentation frameworks given in the 
@@ -33,18 +34,20 @@ public class TgfParser extends AbstractDungParser{
 		BufferedReader in = new BufferedReader(reader);
 		String row = null;
 		boolean argumentSection = true;
+		Map<String,Argument> arguments = new HashMap<String,Argument>();
 		while ((row = in.readLine()) != null) {
 			if(row.trim().equals("")) continue;
 			if(row.trim().equals("#")){
 				argumentSection = false;
 				continue;
 			}
-			if(argumentSection)
-				theory.add(new Argument(row.trim()));
+			if(argumentSection) {
+				Argument a = new Argument(row.trim());
+				arguments.put(a.getName(), a);
+				theory.add(a);
+			}				
 			else{
-				Argument attacker = new Argument(row.substring(0, row.indexOf(" ")).trim());
-				Argument attacked = new Argument(row.substring(row.indexOf(" ")+1,row.length()).trim());
-				theory.add(new Attack(attacker,attacked));
+				theory.addAttack(arguments.get(row.substring(0, row.indexOf(" ")).trim()),arguments.get(row.substring(row.indexOf(" ")+1,row.length()).trim()));
 			}
 		}
 		in.close();

@@ -4,10 +4,11 @@ import java.io.BufferedReader;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.syntax.Attack;
 
 
 /**
@@ -31,6 +32,7 @@ public class ApxParser extends AbstractDungParser {
 		DungTheory theory = new DungTheory();
 		BufferedReader in = new BufferedReader(reader);
 		String row = null;
+		Map<String,Argument> arguments = new HashMap<String,Argument>();
 		while ((row = in.readLine()) != null) {
 			row = row.trim();
 			if(row.equals("")) continue;
@@ -45,8 +47,10 @@ public class ApxParser extends AbstractDungParser {
 					in.close();
 					throw new IOException("\"arg(ARGUMENT).\" expected, found " + row);
 				}
-				row = row.substring(1,row.length()-1).trim();							
-				theory.add(new Argument(row));
+				row = row.substring(1,row.length()-1).trim();	
+				Argument a = new Argument(row);
+				arguments.put(row, a);
+				theory.add(a);
 			}else if(row.startsWith("att")){
 				row = row.substring(3).trim();
 				if(!row.endsWith(".")){
@@ -58,12 +62,8 @@ public class ApxParser extends AbstractDungParser {
 					in.close();
 					throw new IOException("\"att(ARGUMENT,ARGUMENT).\" expected, found " + row);
 				}
-				row = row.substring(1,row.length()-1).trim();
-				String attackerString = row.substring(0, row.indexOf(","));
-				String attackedString = row.substring(row.indexOf(",")+1, row.length());
-				Argument a1 = new Argument(attackerString);
-				Argument a2 = new Argument(attackedString);				
-				theory.add(new Attack(a1,a2));
+				row = row.substring(1,row.length()-1).trim();				
+				theory.addAttack(arguments.get(row.substring(0, row.indexOf(","))),arguments.get(row.substring(row.indexOf(",")+1, row.length())));
 			}else{
 				in.close();
 				throw new IOException("Argument or attack declaration expected, found " + row);

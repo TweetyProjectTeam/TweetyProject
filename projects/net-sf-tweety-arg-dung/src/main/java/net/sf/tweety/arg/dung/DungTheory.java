@@ -46,13 +46,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * For archiving sub graphs 
 	 */
 	private static Map<DungTheory, Collection<Graph<Argument>>> archivedSubgraphs = new HashMap<DungTheory, Collection<Graph<Argument>>>();
-		
-	/**
-	 * The set of attacks
-	 */
-	private Set<Attack> attacks = new HashSet<Attack>();;
 
-	
 	/**
 	 * explicit listing of direct attackers and attackees (for efficiency reasons) 
 	 */
@@ -73,7 +67,6 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	public DungTheory(Graph<Argument> graph){
 		super(graph.getNodes());
 		for(Edge<? extends Argument> e: graph.getEdges()) {
-			this.attacks.add(new Attack(e.getNodeA(),e.getNodeB()));
 			if(!parents.containsKey(e.getNodeB()))
 				parents.put(e.getNodeB(), new HashSet<Argument>());
 			parents.get(e.getNodeB()).add(e.getNodeA());
@@ -360,7 +353,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 		while(it.hasNext())
 			output += "argument("+it.next().toString()+").\n";
 		output += "\n";
-		Iterator<Attack> it2 = attacks.iterator();
+		Iterator<Attack> it2 = this.getAttacks().iterator();
 		while(it2.hasNext())
 			output += "attack"+it2.next().toString()+".\n";
 		return output;
@@ -370,7 +363,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){		
-		return "<" + super.toString() + "," + this.attacks + ">";
+		return "<" + super.toString() + "," + this.getAttacks() + ">";
 	}
 	
 	/**
@@ -379,14 +372,23 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return "true" if the set of attacks has been modified.
 	 */
 	public boolean add(Attack attack){
+		return this.addAttack(attack.getAttacker(), attack.getAttacked()); 
+	}
+	
+	/**
+	 * Adds an attack from the first argument to the second to thisDdung theory.
+	 * @param a1 some argument
+	 * @param a2 some argument
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	public boolean addAttack(Argument attacker, Argument attacked){
 		boolean result = false;
-		result |= this.attacks.add(attack);
-		if(!parents.containsKey(attack.getAttacked()))
-			parents.put(attack.getAttacked(), new HashSet<Argument>());
-		result |= parents.get(attack.getAttacked()).add(attack.getAttacker());
-		if(!children.containsKey(attack.getAttacker()))
-			children.put(attack.getAttacker(), new HashSet<Argument>());
-		result |= children.get(attack.getAttacker()).add(attack.getAttacked());		
+		if(!parents.containsKey(attacked))
+			parents.put(attacked, new HashSet<Argument>());
+		result |= parents.get(attacked).add(attacker);
+		if(!children.containsKey(attacker))
+			children.put(attacker, new HashSet<Argument>());
+		result |= children.get(attacker).add(attacked);		
 		return result; 
 	}
 	
@@ -397,7 +399,6 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 */
 	public boolean remove(Attack attack){
 		boolean result = false;
-		result |= this.attacks.remove(attack);
 		if(parents.containsKey(attack.getAttacked()))		
 			result |= parents.get(attack.getAttacked()).remove(attack.getAttacker());
 		if(children.containsKey(attack.getAttacker()))
@@ -411,11 +412,10 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return true if this structure has been changed
 	 */
 	public boolean remove(Argument a){
-		Collection<Attack> toBeRemoved = new HashSet<Attack>();
-		for(Attack att: this.attacks)
-			if(att.contains(a))
-				toBeRemoved.add(att);		
-		this.attacks.removeAll(toBeRemoved);
+		for(Argument b: this.parents.get(a))
+			this.children.get(b).remove(a);
+		for(Argument b: this.children.get(a))
+			this.parents.get(b).remove(a);
 		this.parents.remove(a);
 		this.children.remove(a);
 		return super.remove(a);
@@ -441,7 +441,9 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	public boolean contains(Object o){
 		if(o instanceof Argument)
 			return super.contains(o);
-		return this.attacks.contains(o);
+		if(o instanceof Attack)
+			return this.containsAttack((Attack)o);
+		return false;
 	}
 	
 	/* (non-Javadoc)
@@ -449,12 +451,20 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 */
 	@Override
 	public boolean containsAll(Collection<?> c){
-		if(c instanceof DungTheory){
-			DungTheory other = (DungTheory) c;
-			return super.containsAll(other) && this.attacks.containsAll(other.getAttacks());
-		}
-		return super.containsAll(c);
+		for(Object o: c)
+			if(!this.contains(o))
+				return false;
+		return true;
 	}
+	
+	/**
+	 * Checks whether this theory contains the given attack.
+	 * @param att some attack
+	 * @return "true" iff this theory contains the given attack.
+	 */
+	public boolean containsAttack(Attack att) {
+		return this.parents.get(att.getAttacked()).contains(att.getAttacker());
+	}		
 	
 	/**
 	 * Adds the set of attacks to this Dung theory.
@@ -485,7 +495,14 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return all attacks of this theory.
 	 */
 	public Set<Attack> getAttacks(){
-		return new HashSet<Attack>(this.attacks);
+		Set<Attack> attacks = new HashSet<Attack>();
+		for(Argument a: this) {
+			if(this.children.containsKey(a)) {
+				for(Argument b: this.children.get(a))
+					attacks.add(new Attack(a,b));
+			}
+		}
+		return attacks;
 	}
 	
 	/* (non-Javadoc)
@@ -495,7 +512,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	public Graph<Argument> getRestriction(Collection<Argument> arguments) {
 		DungTheory theory = new DungTheory();
 		theory.addAll(arguments);
-		for (Attack attack: this.attacks)
+		for (Attack attack: this.getAttacks())
 			if(arguments.contains(attack.getAttacked()) && arguments.contains(attack.getAttacker()))
 				theory.add(attack);
 		return theory;
@@ -508,7 +525,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((attacks == null) ? 0 : attacks.hashCode());
+		result = prime * result + ((this.parents == null) ? 0 : this.parents.hashCode());
 		return result;
 	}
 
@@ -524,10 +541,10 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 		if (getClass() != obj.getClass())
 			return false;
 		DungTheory other = (DungTheory) obj;
-		if (attacks == null) {
-			if (other.attacks != null)
+		if (this.parents == null) {
+			if (other.parents != null)
 				return false;
-		} else if (!attacks.equals(other.attacks))
+		} else if (!this.parents.equals(other.parents))
 			return false;
 		return true;
 	}
@@ -569,7 +586,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 */
 	@Override
 	public Collection<? extends Edge<? extends Argument>> getEdges() {
-		return new HashSet<Attack>(this.attacks);		
+		return this.getAttacks();		
 	}
 
 	/* (non-Javadoc)
