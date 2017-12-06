@@ -71,7 +71,8 @@ public class DLPHead extends DLPElementAdapter
 	 * @param other		The DLPHead object which acts as source for the copy operation.
 	 */
 	public DLPHead(DLPHead other) {
-		//@todo copy ctor
+		this();
+		this.assocSupport.addAll(other.assocSupport);
 	}
 	
 	@Override
@@ -135,8 +136,7 @@ public class DLPHead extends DLPElementAdapter
 
 	@Override
 	public <T extends SimpleLogicalFormula> AssociativeFormula<T> createEmptyFormula() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -157,8 +157,7 @@ public class DLPHead extends DLPElementAdapter
 
 	@Override
 	public DLPHead clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DLPHead(this);
 	}
 	
 	@Override
