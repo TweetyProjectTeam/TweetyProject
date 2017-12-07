@@ -134,9 +134,13 @@ public class DLPHead extends DLPElementAdapter
 		return reval;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport.AssociativeSupportBridge#createEmptyFormula()
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SimpleLogicalFormula> AssociativeFormula<T> createEmptyFormula() {
-		throw new UnsupportedOperationException();
+	public DLPHead createEmptyFormula() {
+		return new DLPHead();
 	}
 
 	@Override
