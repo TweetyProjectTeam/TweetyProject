@@ -20,12 +20,12 @@ package net.sf.tweety.logics.commons.syntax;
 
 /**
  * A Variable is a placeholder for Constants in a generic formula of
- * an logic language. Like wife_of(X,Y) represents all wifes X and their 
- * specific husbands Y using the two Variables X,Y for example.
- * It is implemented as a specialized StringTerm which only allows name 
- * with have a upper-case character as first letter.
+ * a logic language. For example, wife_of(X,Y) represents all wifes X and their 
+ * specific husbands Y using the two Variables X,Y.
+ * It is implemented as a specialized StringTerm which only allows names 
+ * which have an upper-case character as first letter.
  * 
- * @author Tim Janus
+ * @author Tim Janus, Anna Gessler
  */
 public class Variable extends StringTerm {
 	
