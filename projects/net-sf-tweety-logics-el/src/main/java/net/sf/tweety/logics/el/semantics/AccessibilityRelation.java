@@ -28,7 +28,7 @@ import net.sf.tweety.commons.util.*;
  * This class models an accessibility relation for Kripke
  * models.
  * 
- * @author Matthias Thimm
+ * @author Matthias Thimm, Anna Gessler
  */
 public class AccessibilityRelation {
 
@@ -38,7 +38,8 @@ public class AccessibilityRelation {
 	private Set<Pair<Interpretation,Interpretation>> tuples;
 	
 	/**
-	 * TODO
+	 * Returns all interpretations of the accessibility relation.
+	 * @return	interpretations	set of all interpretations
 	 */
 	public Set<Interpretation> getNodes(){
 		Set<Interpretation> interpretations = new HashSet<Interpretation>();
@@ -50,8 +51,9 @@ public class AccessibilityRelation {
 	}
 	
 	/**
-	 * TODO
-	 * @param i
+	 * Returns all interpretations that are accessible to a given interpretation i.
+	 * @param	i			an interpretation (possible world)
+	 * @return	successors 	set of successors of i
 	 */
 	public Set<Interpretation> getSuccessors(Interpretation i){
 		Set<Interpretation> successors = new HashSet<Interpretation>();

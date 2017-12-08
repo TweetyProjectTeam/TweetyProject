@@ -21,6 +21,7 @@ package net.sf.tweety.logics.el.semantics;
 import java.util.*;
 
 import net.sf.tweety.commons.*;
+import net.sf.tweety.logics.el.ModalBeliefSet;
 import net.sf.tweety.logics.el.syntax.*;
 import net.sf.tweety.logics.fol.syntax.*;
 
@@ -28,7 +29,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  * This class models a Kripke model, i.e. a set of possible worlds (with evaluation functions) together with an
  * accessibility relation.
  * 
- * @author Matthias Thimm
+ * @author Matthias Thimm, Anna Gessler
  *
  */
 public class KripkeModel extends AbstractInterpretation {
@@ -50,7 +51,7 @@ public class KripkeModel extends AbstractInterpretation {
 	 */
 	public KripkeModel(Set<Interpretation> possibleWorlds, AccessibilityRelation accRelation){		
 		if(!possibleWorlds.containsAll(accRelation.getNodes()))
-			throw new IllegalArgumentException("The accessibility relations mentions unknown interpretations.");
+			throw new IllegalArgumentException("The accessibility relation mentions unknown interpretations.");
 		this.possibleWorlds = possibleWorlds;
 		this.accRelation = accRelation;
 	}
@@ -93,8 +94,12 @@ public class KripkeModel extends AbstractInterpretation {
 	 */
 	@Override
 	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException {
-		// TODO IMPLEMENT ME
-		return false;
+		if(!(beliefBase instanceof ModalBeliefSet))
+			throw new IllegalArgumentException("Modal knowledge base expected.");
+		ModalBeliefSet mkb = (ModalBeliefSet) beliefBase;
+		for(Formula f: mkb)
+			if(!this.satisfies(f)) return false;
+		return true;
 	}
 
 }
