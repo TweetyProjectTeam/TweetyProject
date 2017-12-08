@@ -3,38 +3,25 @@
 -	Summary:	Explains how to start development for Tweety using Eclipse.
 -
 -	Content:
--	1. WHAT IS IN THIS FOLDER
--	2. CAN I START RIGHT NOW?
--	3. PREPARE ECLIPSE FOR MAVEN
--	4. IMPORT MAVEN PROJECTS IN ECLIPSE
--	5. GENERAL TIPS FOR MAVEN IN ECLIPSE
+-	1. WHAT IS IN THIS FOLDER?
+-	2. PREPARING ECLIPSE FOR MAVEN
+-	3. IMPORTING MAVEN PROJECTS INTO ECLIPSE
+-	4. GENERAL TIPS FOR USING MAVEN WITH ECLIPSE
 -	
--	AUTHOR: Tim Janus
+-	AUTHOR: Tim Janus, Anna Gessler
 -------------------------------------------------------------------------------
 
 1. WHAT IS IN THIS FOLDER?
 -------------------------------------------------------------------------------
-This folder contains subfolders for all Tweety libraries. These sub folders 
+This folder contains subfolders for all Tweety libraries. These subfolders 
 contain the source and Maven project files of the Tweety libraries.
 
 
-2. CAN I START RIGHT NOW?
+2. PREPARING ECLIPSE FOR MAVEN
 -------------------------------------------------------------------------------
-No you have to install third party dependencies which are not tracked in the 
-central Maven repository to your local Maven repository. Therefore Maven >= 3.0 
-as a command line tool is needed. If Maven is installed an invocation of the 
-'install_third_party' script for your system installs the dependencies to your 
-local Maven repository.
-
-After this step the Tweety libraries are buildable from the commandline using
-Maven.
-
-
-3. PREPARE ECLIPSE FOR MAVEN
--------------------------------------------------------------------------------
-For the usage of Eclispe a version >= Indigo has to be installed. If the 
-Eclipse package for Java-Developers is used then the Maven plugin m2e is 
-already installed otherwise it has to be installed from the Indigo or Juno 
+For the usage of Eclipse a version >= Indigo has to be installed. If the 
+Eclipse package for Java-Developers is used, then the Maven plugin m2e is 
+already installed. Otherwise it has to be installed from the Indigo or Juno 
 release update site, choose: 
 "Collaboration --> m2e - Maven Integration for Eclipse"
 
@@ -42,19 +29,21 @@ Also check "Maven --> Installations" in the Eclipse preferences dialog and use
 your external Maven installation.
 
 
-4. IMPORT MAVEN PROJECTS IN ECLIPSE
+3. IMPORTING MAVEN PROJECTS INTO ECLIPSE
 -------------------------------------------------------------------------------
-If the Maven integration for Eclipse is installed one can select import 
-existing Maven project from the Eclipse ui. When selecting the project folder 
-of your local working copy of Tweety the listbox shall show every tweety 
-project. Before clicking on finish select advanced and use the name template
+If the Maven integration for Eclipse is installed, one can select 
+"Import -> Existing Maven Projects" from the Eclipse UI. 
+When selecting the project folder of your local working copy of Tweety, 
+the listbox should show every tweety project. 
+Before clicking on "Finish", select "Advanced" and use the name template
 '[groupId].[artifactId]'
 
 
-5. GENERAL TIPS FOR MAVEN IN ECLIPSE
+4. GENERAL TIPS FOR USING MAVEN WITH ECLIPSE
 -------------------------------------------------------------------------------
-If errors occur saying "Project Configuration it not up to date" right click 
-onto a project in your package explorer and choose: 
-"Maven --> Update Project Configuration" to tell the m2e plugin to rebuild the 
-Eclipse project files.
+If errors occur, try right clicking on a project in your package explorer 
+and choosing: "Maven -> Update Project...". 
+
+
+
 
