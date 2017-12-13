@@ -53,7 +53,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
  * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
  * 
- * @author Matthias Thimm
+ * @author Matthias Thimm, Anna Gessler
  */
 public class FolParser extends Parser<FolBeliefSet> {
 
@@ -84,25 +84,26 @@ public class FolParser extends Parser<FolBeliefSet> {
 	public FolBeliefSet parseBeliefBase(Reader reader) throws IOException, ParserException {
 		FolBeliefSet beliefSet = new FolBeliefSet();
 		String s = "";
-		// for keeping track of the section of the file
+		// for keeping track of the section of the file:
 		// 0 means sorts declaration
-		// 1 means functor/predicate declaration
+		// 1 means type declaration, i.e. functor/predicate declaration
 		// 2 means formula section
 		int section = 0; 
-		// read from the reader and separate formulas by "\n"
+		// read from the reader and separate formulas by "\n" (ascii code 10)
 		try{
 			for(int c = reader.read(); c != -1; c = reader.read()){
 				if(c == 10){
 					s = s.trim();
 					if(!s.equals("")){
 						if(s.startsWith("type")) section = 1;
-						else if(section == 1) section = 2;
-						
+						else if(section == 1) section = 2; //A type declaration section has been parsed previously, 
+														   //therefore only the formula section remains.
 						if(section == 2)
 							beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
 						else if(section == 1)
 							this.parseTypeDeclaration(s,this.signature);
-						else this.parseSortDeclaration(s,this.signature);
+						else this.parseSortDeclaration(s,this.signature); //No type declaration or formula section has been parsed previously,
+																		  //therefore this part is treated as the sorts declaration section.
 					}
 					s = "";
 				}else{
@@ -218,7 +219,8 @@ public class FolParser extends Parser<FolBeliefSet> {
 		try{
 			String s = Character.toString((char) c);
 			if(s.equals(" ")){
-				// check if previously a "forall" or "exists" has been read
+				//If the last 6 consumed tokens spell "forall" or "exists", remove them from the stack 
+				//and re-add them as a single string.
 				if(stack.size() >= 6){					
 					if(stack.get(stack.size()-6).equals("f") &&
 							stack.get(stack.size()-5).equals("o") &&
@@ -259,6 +261,8 @@ public class FolParser extends Parser<FolBeliefSet> {
 				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
 					stack.push(this.parseTermlist(l));
 				else stack.push(this.parseQuantification(l));
+			//If two consecutive "|" or two consecutive "&" have been read, 
+			//add them to the stack them as a single string.
 			}else if(s.equals("|")){
 				if(stack.lastElement().equals("|")){
 					stack.pop();
@@ -531,5 +535,13 @@ public class FolParser extends Parser<FolBeliefSet> {
 	 */
 	public FolSignature getSignature(){
 		return this.signature;
+	}
+
+	public Map<String, Variable> getVariables() {
+		return variables;
+	}
+
+	public void setVariables(Map<String, Variable> variables) {
+		this.variables = variables;
 	}
 }
