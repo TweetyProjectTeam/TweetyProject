@@ -50,7 +50,7 @@ public abstract class ModalFormula extends RelationalFormula {
 	
 	public ModalFormula(RelationalFormula formula){
 		if(!(formula instanceof ModalFormula) && !(formula instanceof FolFormula))
-			throw new IllegalArgumentException("Excpecting first-order formula or modal formula for inner formula.");
+			throw new IllegalArgumentException("Expecting first-order formula or modal formula for inner formula.");
 		this.formula = formula;
 	}
 	

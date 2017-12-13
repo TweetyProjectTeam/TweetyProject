@@ -16,7 +16,7 @@ import net.sf.tweety.logics.fol.syntax.RelationalFormula;
  * 
  * @author Anna Gessler
  */
-public class ModalBeliefSet extends BeliefSet<ModalFormula> {
+public class ModalBeliefSet extends BeliefSet<RelationalFormula> {
 	
 	/**
 	 * Creates a new empty modal knowledge base.
@@ -29,7 +29,7 @@ public class ModalBeliefSet extends BeliefSet<ModalFormula> {
 	 * Creates a new modal knowledge base with the given set of formulas.
 	 * @param formulas
 	 */
-	public ModalBeliefSet(Set<ModalFormula> formulas){
+	public ModalBeliefSet(Set<RelationalFormula> formulas){
 		super(formulas);
 	}
 
