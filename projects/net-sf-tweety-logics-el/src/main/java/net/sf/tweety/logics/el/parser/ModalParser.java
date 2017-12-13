@@ -63,10 +63,9 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * @author Matthias Thimm, Anna Gessler
  */
 
-public class ModalParser extends Parser {
+public class ModalParser extends Parser<ModalBeliefSet> {
 
-	//First-order logic parser used for parsing sorts and type declaration 
-	FolParser folparser;
+	FolParser folparser; //First-order logic parser used for parsing sorts and type declaration 
 	
 	public ModalParser() {
 		folparser = new FolParser();
@@ -76,7 +75,7 @@ public class ModalParser extends Parser {
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
-	public BeliefBase parseBeliefBase(Reader reader) throws IOException, ParserException {
+	public ModalBeliefSet parseBeliefBase(Reader reader) throws IOException, ParserException {
 		ModalBeliefSet beliefSet = new ModalBeliefSet();
 		String s = "";
 		// For keeping track of the section of the file:
@@ -98,7 +97,7 @@ public class ModalParser extends Parser {
 						else if(section == 1)
 							this.folparser.parseTypeDeclaration(s,this.folparser.getSignature());
 						else this.folparser.parseSortDeclaration(s,this.folparser.getSignature()); //No type declaration or formula section has been parsed previously,
-																		       			//therefore this part is treated as the sorts declaration section.
+																		       					   //therefore this part is treated as the sorts declaration section.
 					}
 					s = "";
 				}else{
@@ -174,49 +173,46 @@ public class ModalParser extends Parser {
 				}				
 			}
 			else if (s.equals(")")){
-				if (!stack.contains("(")) {
+				if (!stack.contains("(")) 
 					throw new ParserException("Missing opening parentheses.");
-				}
-				
 				//add contents of parentheses to list
 				List<Object> l = new ArrayList<Object>();
-				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() ) {
-					l.add(0, o); }
+				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() ) 
+					l.add(0, o); 
 				// If the preceding token is in {a,...,z,A,...,Z,0,...,9} then treat the 
 				// list as a term list.
 				// If the token is ] or >, treat the list as a modal formula.
 				// Otherwise treat it as a quantification.
-				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]")){
-					stack.push(this.parseTermlist(l));}
-				else if (stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("]|>")) {
-					stack.push(this.parseModalization(l)); }
-				else { stack.push(this.parseQuantification(l)); }
+				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
+					stack.push(this.parseTermlist(l));
+				else if (stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("]|>")) 
+					stack.push(this.parseModalization(l)); 
+				else  stack.push(this.parseQuantification(l)); 
 			//If two consecutive "|" or two consecutive "&" have been read, 
 			//add them to the stack them as a single string.
 			}else if(s.equals("|")){
 				if(stack.lastElement().equals("|")){
 					stack.pop();
 					stack.push("||");
-				}else {stack.push(s);}
+				}else stack.push(s);
 			}else if(s.equals("&")){
 				if(stack.lastElement().equals("&")){
 					stack.pop();
 					stack.push("&&");
-				}else {stack.push(s);}
+				}else stack.push(s);
 			//Same for [] and <>
 			}else if(s.equals("]")){
 				if(stack.lastElement().equals("[")){
 					stack.pop();
 					stack.push("[]");
-				}else {stack.push(s);}
+				}else stack.push(s);
 			}else if(s.equals(">")){
 				if(stack.lastElement().equals("<")){
 					stack.pop();
 					stack.push("<>");
-				}else {stack.push(s);}
+				}else stack.push(s);
 			}
-			else {
-				stack.push(s);}
+			else stack.push(s);
 		} catch(Exception e){
 			throw new ParserException(e);
 		}		
@@ -289,9 +285,9 @@ public class ModalParser extends Parser {
 	private RelationalFormula parseModalization(List<Object> l) throws ParserException {
 		if(l.isEmpty()) {
 			throw new ParserException("Empty parentheses."); }
-		if(! ( l.contains("[]")||l.contains("<>") ) ) {
-			return this.parseDisjunction(l); }
-	
+		if(! ( l.contains("[]")||l.contains("<>") ) ) 
+			return this.parseDisjunction(l); 
+
 		if(!(l.get(1) instanceof RelationalFormula)) {
 			throw new ParserException("Unrecognized formula type '" + l.get(1) + "'."); }
 		RelationalFormula formula = (RelationalFormula) l.get(1);
