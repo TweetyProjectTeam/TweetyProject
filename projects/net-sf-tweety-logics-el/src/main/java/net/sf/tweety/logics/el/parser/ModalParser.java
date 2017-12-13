@@ -41,7 +41,6 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
 
 /**
  * This class implements a parser for modal logic. 
- * TODO: Does not support quantified modal formulas (QuantifiedFormulas can only range over first-order formulas).
  * 
  * The BNF for a modal knowledge base is given by (starting symbol is KB)
  * <br>
@@ -297,13 +296,40 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		else return new Possibility(formula);	
 	}
 	
-	// TODO Problem: QuantifiedFormulas can only range over FolFormulas
 	private RelationalFormula parseQuantification(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if (l.contains(":")) {
-				throw new ParserException("Quantified modal formulas are not currently supported by this parser (TODO)"); }
-		return this.parseModalization(l);
+		if(!(l.contains(":")))
+			return this.parseModalization(l);
+		
+		if(!l.get(0).equals(FolParser.EXISTS_QUANTIFIER) && !l.get(0).equals(FolParser.FORALL_QUANTIFIER))
+			throw new ParserException("Unrecognized quantifier '" + l.get(0) + "'.");
+		String var = "";
+		int idx = 1;
+		while(!l.get(idx).equals(":")){
+			var += (String) l.get(idx);
+			idx++;
+		}
+		if(!(l.get(idx+1) instanceof FolFormula))
+			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
+		FolFormula formula = (FolFormula) l.get(idx+1);
+		Variable bVar = null;
+		for(Variable v: formula.getUnboundVariables()){
+			if(v.get().equals(var)){
+				bVar = v;
+				break;
+			}
+		}
+		if(bVar == null)
+			throw new ParserException("Variable '" + var + "' not found in quantification.");
+		Set<Variable> vars = new HashSet<Variable>();
+		vars.add(bVar);
+		Map<String, Variable> map = this.folparser.getVariables();
+		map.remove(var);;
+		this.folparser.setVariables(map);
+		if(l.get(0).equals(FolParser.EXISTS_QUANTIFIER))
+			return new ExistsQuantifiedFormula(formula,vars);
+		else return new ForallQuantifiedFormula(formula,vars);
 	}
 
 	/**
