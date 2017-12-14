@@ -296,16 +296,10 @@ public abstract class GraphUtil {
 	public static <T extends Node> Collection<List<T>> enumerateChordlessCircuits(Graph<T> g){
 		Collection<List<T>> ccircuits = new HashSet<List<T>>();
 		Collection<UndirectedEdge<T>> visitedLEdges = new HashSet<UndirectedEdge<T>>();
-		Stack<T> toBeVisited = new Stack<T>();
-		toBeVisited.addAll(g.getNodes());
-		Collection<List<T>> ccircuits_tmp = new HashSet<List<T>>(); 
-		while(!toBeVisited.isEmpty()) {
-			T v = toBeVisited.pop();
+		for(T v: g.getNodes()) {
 			List<T> p = new LinkedList<T>();
 			p.add(v);
-			ccircuits_tmp.clear();
-			if(GraphUtil.chordlessCircuits(g, p, v, visitedLEdges,ccircuits_tmp))		
-				ccircuits.addAll(ccircuits_tmp);
+			GraphUtil.chordlessCircuits(g, p, v, visitedLEdges,ccircuits);			
 		}
 		return ccircuits;
 	}
@@ -317,14 +311,12 @@ public abstract class GraphUtil {
 	 * @param v a vertex
 	 * @return
 	 */
-	private static <T extends Node> boolean chordlessCircuits(Graph<T> g, List<T> p, T vk, Collection<UndirectedEdge<T>> visitedLEdges, Collection<List<T>> ccircuits_tmp){
+	private static <T extends Node> void chordlessCircuits(Graph<T> g, List<T> p, T vk, Collection<UndirectedEdge<T>> visitedLEdges, Collection<List<T>> ccircuits){
 		T vkm1 = p.get(p.size()-1);
 		visitedLEdges.add(new UndirectedEdge<T>(vkm1,vk));
-		boolean detectedChordlessCircuit = false;
-		if(g.contains(new DirectedEdge<T>(vkm1,vk)) && !g.contains(new DirectedEdge<T>(vk,vkm1))) {
-			detectedChordlessCircuit = true;
-			ccircuits_tmp.add(p);
-		}else {
+		if(g.contains(new DirectedEdge<T>(vkm1,vk)) && !g.contains(new DirectedEdge<T>(vk,vkm1))) 
+			ccircuits.add(p);
+		else {
 			Stack<T> n = new Stack<T>();
 			for(T w: g.getChildren(vkm1))
 				if(!g.getChildren(w).contains(vkm1))
@@ -351,12 +343,10 @@ public abstract class GraphUtil {
 						}
 					if(noChord) {
 						p_current.add(v);		
-						if(GraphUtil.chordlessCircuits(g, p_current, vk, visitedLEdges,ccircuits_tmp))
-							detectedChordlessCircuit = true;
+						GraphUtil.chordlessCircuits(g, p_current, vk, visitedLEdges,ccircuits);
 					}
 				}
 			}
 		}
-		return detectedChordlessCircuit;
-	}
+	}	
 }
