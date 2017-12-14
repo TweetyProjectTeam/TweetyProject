@@ -22,11 +22,9 @@ import java.util.*;
 
 import Jama.EigenvalueDecomposition;
 import net.sf.tweety.commons.util.MapTools;
-import net.sf.tweety.graphs.DefaultGraph;
 import net.sf.tweety.graphs.DirectedEdge;
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.graphs.Node;
-import net.sf.tweety.graphs.SimpleNode;
 import net.sf.tweety.graphs.UndirectedEdge;
 import net.sf.tweety.math.ComplexNumber;
 import net.sf.tweety.math.matrix.Matrix;
