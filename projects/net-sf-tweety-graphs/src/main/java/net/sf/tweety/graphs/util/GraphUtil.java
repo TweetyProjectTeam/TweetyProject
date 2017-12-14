@@ -22,8 +22,12 @@ import java.util.*;
 
 import Jama.EigenvalueDecomposition;
 import net.sf.tweety.commons.util.MapTools;
+import net.sf.tweety.graphs.DefaultGraph;
+import net.sf.tweety.graphs.DirectedEdge;
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.graphs.Node;
+import net.sf.tweety.graphs.SimpleNode;
+import net.sf.tweety.graphs.UndirectedEdge;
 import net.sf.tweety.math.ComplexNumber;
 import net.sf.tweety.math.matrix.Matrix;
 
@@ -282,5 +286,79 @@ public abstract class GraphUtil {
 			}
 		}
 		return numClosedTriplets/numTriplets;
+	}	
+	
+	/**
+	 * Enumerates all chordless circuits of the given graph, i.e. all circuits a1,...,an
+	 * where there is no edge connecting any ak with aj unless k=j+1 or k=j-1. The algorithm 
+	 * of this method is adapted from [Bisdorff, On enumerating chordless circuits in directed graphs, 2010].
+	 * @param g
+	 * @return
+	 */
+	public static <T extends Node> Collection<List<T>> enumerateChordlessCircuits(Graph<T> g){
+		Collection<List<T>> ccircuits = new HashSet<List<T>>();
+		Collection<UndirectedEdge<T>> visitedLEdges = new HashSet<UndirectedEdge<T>>();
+		Stack<T> toBeVisited = new Stack<T>();
+		toBeVisited.addAll(g.getNodes());
+		Collection<List<T>> ccircuits_tmp = new HashSet<List<T>>(); 
+		while(!toBeVisited.isEmpty()) {
+			T v = toBeVisited.pop();
+			List<T> p = new LinkedList<T>();
+			p.add(v);
+			ccircuits_tmp.clear();
+			if(GraphUtil.chordlessCircuits(g, p, v, visitedLEdges,ccircuits_tmp))		
+				ccircuits.addAll(ccircuits_tmp);
+		}
+		return ccircuits;
+	}
+	
+	/**
+	 * Utility method for <code>enumerateChordlessCircuits</code> 
+	 * @param g a graph
+	 * @param p a path
+	 * @param v a vertex
+	 * @return
+	 */
+	private static <T extends Node> boolean chordlessCircuits(Graph<T> g, List<T> p, T vk, Collection<UndirectedEdge<T>> visitedLEdges, Collection<List<T>> ccircuits_tmp){
+		T vkm1 = p.get(p.size()-1);
+		visitedLEdges.add(new UndirectedEdge<T>(vkm1,vk));
+		boolean detectedChordlessCircuit = false;
+		if(g.contains(new DirectedEdge<T>(vkm1,vk)) && !g.contains(new DirectedEdge<T>(vk,vkm1))) {
+			detectedChordlessCircuit = true;
+			ccircuits_tmp.add(p);
+		}else {
+			Stack<T> n = new Stack<T>();
+			for(T w: g.getChildren(vkm1))
+				if(!g.getChildren(w).contains(vkm1))
+					n.push(w);
+			while(!n.isEmpty()) {
+				T v = n.pop();
+				if(!visitedLEdges.contains(new UndirectedEdge<T>(vkm1,v))) {
+					boolean noChord = true;
+					List<T> p_current = new LinkedList<T>();
+					p_current.addAll(p);
+					for(T x: p_current)
+						if(!x.equals(vkm1)) {
+							if(x.equals(vk)) {
+								if(g.getChildren(x).contains(v)) {
+									noChord = false;
+									break;
+								}
+							}else {
+								if(g.getChildren(x).contains(v) || g.getChildren(v).contains(x)) {
+									noChord = false;
+									break;
+								}
+							}							
+						}
+					if(noChord) {
+						p_current.add(v);		
+						if(GraphUtil.chordlessCircuits(g, p_current, vk, visitedLEdges,ccircuits_tmp))
+							detectedChordlessCircuit = true;
+					}
+				}
+			}
+		}
+		return detectedChordlessCircuit;
 	}
 }
