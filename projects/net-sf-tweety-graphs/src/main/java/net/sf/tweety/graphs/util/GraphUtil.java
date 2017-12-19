@@ -318,24 +318,23 @@ public abstract class GraphUtil {
 					while(!n.isEmpty()) {
 						T v = n.pop();
 						if(!visitedLEdges.contains(new UndirectedEdge<T>(vkm1,v))) {
-							boolean noChord = true;
-							List<T> p_current = new LinkedList<T>();
-							p_current.addAll(p);
-							for(T x: p_current)
+							boolean noChord = true;							
+							for(T x: p)
 								if(!x.equals(vkm1)) {
-									if(x.equals(vk)) {
-										if(g.getChildren(x).contains(v)) {
-											noChord = false;
-											break;
-										}
-									}else {
-										if(g.getChildren(x).contains(v) || g.getChildren(v).contains(x)) {
+									if(g.getChildren(x).contains(v)) {
+										noChord = false;
+										break;
+									}
+									if(!x.equals(vk)) {
+										if(g.getChildren(v).contains(x)) {
 											noChord = false;
 											break;
 										}
 									}							
 								}
 							if(noChord) {
+								List<T> p_current = new LinkedList<T>();
+								p_current.addAll(p);
 								p_current.add(v);
 								stack.push(new Pair<List<T>,T>(p_current,vk));
 							}
