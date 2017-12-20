@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
+ */
 package net.sf.tweety.logics.el.parser;
 
 import java.io.IOException;
@@ -12,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
@@ -137,7 +154,6 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private void consumeToken(Stack<Object> stack, int c) throws ParserException {
 		try {
 			String s = Character.toString((char) c); 
-			//System.out.println(c + "," + s);
 			if(s.equals(" ")){
 				//If a whitespace is read and the last 6 consumed tokens spell "forall" or "exists", 
 				//remove them from the stack and re-add them as a single string.
@@ -180,7 +196,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 					l.add(0, o); 
 				// If the preceding token is in {a,...,z,A,...,Z,0,...,9} then treat the 
 				// list as a term list.
-				// If the token is ] or >, treat the list as a modal formula.
+				// If the token is ] or >, treat the list as a modal operator.
 				// Otherwise treat it as a quantification.
 				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
 					stack.push(this.parseTermlist(l));
@@ -299,8 +315,8 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseQuantification(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(":")))
-			return this.parseModalization(l);
+		if(!(l.contains(":"))) 
+			return this.parseModalization(l); 
 		
 		if(!l.get(0).equals(FolParser.EXISTS_QUANTIFIER) && !l.get(0).equals(FolParser.FORALL_QUANTIFIER))
 			throw new ParserException("Unrecognized quantifier '" + l.get(0) + "'.");
@@ -310,9 +326,18 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			var += (String) l.get(idx);
 			idx++;
 		}
-		if(!(l.get(idx+1) instanceof FolFormula))
+
+		RelationalFormula formula;
+		if (l.get(idx+1) instanceof FolFormula) {
+			formula = (FolFormula) l.get(idx+1);
+		}
+		else if (l.get(idx+1) instanceof ModalFormula) {
+			formula = (ModalFormula) l.get(idx+1);
+		}
+		else {
 			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
-		FolFormula formula = (FolFormula) l.get(idx+1);
+		}
+		
 		Variable bVar = null;
 		for(Variable v: formula.getUnboundVariables()){
 			if(v.get().equals(var)){
