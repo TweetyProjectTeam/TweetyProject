@@ -37,7 +37,7 @@ public class KripkeModel extends AbstractInterpretation {
 	/**
 	 * The possible worlds of this model.
 	 */
-	private Set<Interpretation> possibleWorlds;
+	private Set<? extends Interpretation> possibleWorlds;
 	
 	/**
 	 * The accessibility relation. 
@@ -49,7 +49,7 @@ public class KripkeModel extends AbstractInterpretation {
 	 * @param possibleWorlds a set of interpretations.
 	 * @param accRelation an accessibility relation under the given interpretations.
 	 */
-	public KripkeModel(Set<Interpretation> possibleWorlds, AccessibilityRelation accRelation){		
+	public KripkeModel(Set<? extends Interpretation> possibleWorlds, AccessibilityRelation accRelation){		
 		if(!possibleWorlds.containsAll(accRelation.getNodes()))
 			throw new IllegalArgumentException("The accessibility relation mentions unknown interpretations.");
 		this.possibleWorlds = possibleWorlds;
@@ -101,5 +101,5 @@ public class KripkeModel extends AbstractInterpretation {
 			if(!this.satisfies(f)) return false;
 		return true;
 	}
-
+	
 }
