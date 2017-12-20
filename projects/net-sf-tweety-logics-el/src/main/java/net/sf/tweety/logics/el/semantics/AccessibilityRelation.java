@@ -38,8 +38,16 @@ public class AccessibilityRelation {
 	private Set<Pair<Interpretation,Interpretation>> tuples;
 	
 	/**
+	 * Constructs a new accessibility relation.
+	 * @param tuples	the accessibility relation 	
+	 */
+	public AccessibilityRelation(Set<Pair<Interpretation,Interpretation>> tuples) {
+		this.tuples = tuples;
+	}
+	
+	/**
 	 * Returns all interpretations of the accessibility relation.
-	 * @return	interpretations	set of all interpretations
+	 * @return interpretations	set of all interpretations
 	 */
 	public Set<Interpretation> getNodes(){
 		Set<Interpretation> interpretations = new HashSet<Interpretation>();
@@ -52,8 +60,8 @@ public class AccessibilityRelation {
 	
 	/**
 	 * Returns all interpretations that are accessible to a given interpretation i.
-	 * @param	i			an interpretation (possible world)
-	 * @return	successors 	set of successors of i
+	 * @param  i			an interpretation (possible world)
+	 * @return successors 	set of successors of i
 	 */
 	public Set<Interpretation> getSuccessors(Interpretation i){
 		Set<Interpretation> successors = new HashSet<Interpretation>();
