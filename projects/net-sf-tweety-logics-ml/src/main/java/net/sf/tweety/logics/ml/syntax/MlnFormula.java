@@ -20,6 +20,7 @@ package net.sf.tweety.logics.ml.syntax;
 
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
@@ -30,7 +31,8 @@ import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -111,9 +113,10 @@ public class MlnFormula extends RelationalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getAtoms()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FOLAtom> getAtoms() {
-		return this.formula.getAtoms();
+		return (Set<FOLAtom>) this.formula.getAtoms();
 	}
 
 	/* (non-Javadoc)
@@ -246,5 +249,14 @@ public class MlnFormula extends RelationalFormula {
 	@Override
 	public RelationalFormula clone() {
 		return new MlnFormula(this.formula.clone(), this.weight);
+	}
+
+	@Override
+	public FolSignature getSignature() {
+		FolSignature sig = new FolSignature();
+		sig.addAll(this.getTerms(Constant.class));
+		sig.addAll(this.getFunctors());
+		sig.addAll(this.getPredicates());
+		return sig;
 	}
 }

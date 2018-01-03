@@ -23,6 +23,7 @@ import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
@@ -136,9 +137,10 @@ public abstract class QuantifiedFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FOLAtom> getAtoms(){
-		return this.folFormula.getAtoms();
+		return (Set<FOLAtom>) this.folFormula.getAtoms();
 	}
 	
 	/* (non-Javadoc)

@@ -35,7 +35,7 @@ import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
  * This class implements inference for modal logic.

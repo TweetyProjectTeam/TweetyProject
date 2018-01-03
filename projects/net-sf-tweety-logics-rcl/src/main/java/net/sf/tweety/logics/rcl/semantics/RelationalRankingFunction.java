@@ -21,8 +21,10 @@ package net.sf.tweety.logics.rcl.semantics;
 import java.util.*;
 
 import net.sf.tweety.commons.*;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.semantics.*;
-import net.sf.tweety.logics.fol.syntax.*;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.rcl.*;
 import net.sf.tweety.logics.rcl.syntax.*;
 
@@ -127,7 +129,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 		// if conditional is ground check for classical satisfiability
 		if(rc.isGround()){
 			Integer rankPremiseAndConclusion = this.rank(rc.getConclusion().combineWithAnd(rc.getPremise().iterator().next()));
-			Integer rankPremiseAndNotConclusion = this.rank(rc.getConclusion().complement().combineWithAnd(rc.getPremise().iterator().next()));
+			Integer rankPremiseAndNotConclusion = this.rank((HerbrandInterpretation) rc.getConclusion().complement().combineWithAnd(rc.getPremise().iterator().next()));
 			return rankPremiseAndConclusion < rankPremiseAndNotConclusion;
 		}
 		// following [Kern-Isberner,Thimm, "A Ranking Semantics for Relational Defaults", in preparation],
@@ -143,7 +145,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 		for(RelationalFormula rf: rc.allGroundInstances(this.signature.getConstants())){
 			RelationalConditional instance = (RelationalConditional) rf;
 			int rankPremiseAndConclusion = this.rank(instance.getConclusion().combineWithAnd(instance.getPremise().iterator().next()));
-			int rankPremiseAndNotConclusion = this.rank(instance.getConclusion().complement().combineWithAnd(instance.getPremise().iterator().next()));
+			int rankPremiseAndNotConclusion = this.rank((HerbrandInterpretation) instance.getConclusion().complement().combineWithAnd(instance.getPremise().iterator().next()));
 			if(minPositive == -1) minPositive = rankPremiseAndConclusion;
 			else minPositive = minPositive > rankPremiseAndConclusion ? rankPremiseAndConclusion : minPositive;
 			if(minNegative == -1) minNegative = rankPremiseAndNotConclusion;
@@ -154,7 +156,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 		for(RelationalConditional prot: prototypes){
 			for(RelationalConditional anti: antiPrototypes){
 				int rankPremiseAndConclusion = this.rank(anti.getConclusion().combineWithAnd(anti.getPremise().iterator().next()));
-				int rankPremiseAndNotConclusion = this.rank(prot.getConclusion().complement().combineWithAnd(prot.getPremise().iterator().next()));
+				int rankPremiseAndNotConclusion = this.rank((HerbrandInterpretation) prot.getConclusion().complement().combineWithAnd(prot.getPremise().iterator().next()));
 				if(rankPremiseAndConclusion >= rankPremiseAndNotConclusion)
 					return false;
 			}
@@ -290,8 +292,8 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 				prototypes.add(instance);
 			}else{
 				RelationalConditional previousInstance = prototypes.iterator().next();
-				int instanceRank = this.rank(instance.getConclusion().complement().combineWithAnd(instance.getPremise().iterator().next()));
-				int previousRank = this.rank(previousInstance.getConclusion().complement().combineWithAnd(previousInstance.getPremise().iterator().next()));
+				int instanceRank = this.rank((HerbrandInterpretation) instance.getConclusion().complement().combineWithAnd(instance.getPremise().iterator().next()));
+				int previousRank = this.rank((HerbrandInterpretation) previousInstance.getConclusion().complement().combineWithAnd(previousInstance.getPremise().iterator().next()));
 				if(instanceRank == previousRank)
 					prototypes.add(instance);
 				else if(instanceRank < previousRank){

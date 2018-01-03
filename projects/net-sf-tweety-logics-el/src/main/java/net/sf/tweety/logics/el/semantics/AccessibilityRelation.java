@@ -28,7 +28,8 @@ import net.sf.tweety.commons.util.*;
  * This class models an accessibility relation for Kripke
  * models.
  * 
- * @author Matthias Thimm, Anna Gessler
+ * @author Matthias Thimm
+ * @author Anna Gessler
  */
 public class AccessibilityRelation {
 

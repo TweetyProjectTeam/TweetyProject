@@ -25,7 +25,7 @@ import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.ml.syntax.MlnFormula;
 
 /**

@@ -20,7 +20,7 @@ package net.sf.tweety.logics.el.writer;
 
 import net.sf.tweety.commons.Writer;
 import net.sf.tweety.logics.el.ModalBeliefSet;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 public class ModalWriter extends Writer {
 

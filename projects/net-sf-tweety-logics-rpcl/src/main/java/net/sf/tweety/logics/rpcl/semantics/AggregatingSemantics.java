@@ -23,7 +23,7 @@ import java.util.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.rpcl.syntax.*;

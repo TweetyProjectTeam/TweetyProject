@@ -26,6 +26,7 @@ import java.util.Set;
 
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
@@ -46,8 +47,7 @@ import net.sf.tweety.math.probability.Probability;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public abstract class FolFormula extends RelationalFormula {	
-	
+public abstract class FolFormula extends RelationalFormula {
 
 	@Override
 	public Conjunction combineWithAnd(Conjuctable f){
@@ -56,7 +56,6 @@ public abstract class FolFormula extends RelationalFormula {
 		return new Conjunction(this,(FolFormula)f);
 	}
 	
-
 	@Override
 	public Disjunction combineWithOr(Disjunctable f){
 		if(!(f instanceof FolFormula))
@@ -188,4 +187,16 @@ public abstract class FolFormula extends RelationalFormula {
 	
 	@Override
 	public abstract FolFormula clone();
+	
+	@Override
+	public FolSignature getSignature() {
+		FolSignature sig = new FolSignature();
+		sig.addAll(this.getTerms(Constant.class));
+		sig.addAll(this.getFunctors());
+		sig.addAll(this.getPredicates());
+		return sig;
+	}
+
+	
+
 }

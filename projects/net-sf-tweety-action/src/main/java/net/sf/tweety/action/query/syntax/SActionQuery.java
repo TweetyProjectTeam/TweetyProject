@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.action.query.syntax;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -155,11 +156,12 @@ public class SActionQuery
    * @return all inner atoms, which occur in state formulas and actions in 
    * this action query.
    */
-  public Set< FOLAtom > getInnerAtoms()
+  @SuppressWarnings("unchecked")
+public Set< FOLAtom > getInnerAtoms()
   {
     Set< FOLAtom > result = new HashSet< FOLAtom >();
     for ( Proposition p : formula.getAtoms() ) {
-      result.addAll( ( (QueryProposition) p ).getInnerFormula().getAtoms() );
+      result.addAll( (Collection<? extends FOLAtom>) ( (QueryProposition) p ).getInnerFormula().getAtoms() );
       for ( FolAction action : ( (QueryProposition) p ).getInnerActions() )
         result.addAll( action.getAtoms() );
     }

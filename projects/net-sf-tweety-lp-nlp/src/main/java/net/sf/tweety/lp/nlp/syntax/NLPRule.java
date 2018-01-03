@@ -139,12 +139,13 @@ public class NLPRule
 		return conclusion == null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FOLAtom> getAtoms() {
 		Set<FOLAtom> reval = new HashSet<FOLAtom>();
-		reval.addAll(conclusion.getAtoms());
+		reval.addAll((Collection<? extends FOLAtom>) conclusion.getAtoms());
 		for(FolFormula f : premise) {
-			reval.addAll(f.getAtoms());
+			reval.addAll((Collection<? extends FOLAtom>) f.getAtoms());
 		}
 		return reval;
 	}

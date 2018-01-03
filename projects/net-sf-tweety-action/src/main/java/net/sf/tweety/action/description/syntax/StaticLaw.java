@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.action.description.syntax;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +32,7 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
 /**
@@ -168,12 +169,13 @@ public class StaticLaw
    * (non-Javadoc)
    * @see net.sf.tweety.action.desc.c.syntax.CausalRule#getAtoms()
    */
-  @Override
+  @SuppressWarnings("unchecked")
+@Override
   public Set< FOLAtom > getAtoms()
   {
     Set< FOLAtom > atoms = new HashSet< FOLAtom >();
-    atoms.addAll( headFormula.getAtoms() );
-    atoms.addAll( ifFormula.getAtoms() );
+    atoms.addAll( (Collection<? extends FOLAtom>) headFormula.getAtoms() );
+    atoms.addAll( (Collection<? extends FOLAtom>) ifFormula.getAtoms() );
     return atoms;
   }
   

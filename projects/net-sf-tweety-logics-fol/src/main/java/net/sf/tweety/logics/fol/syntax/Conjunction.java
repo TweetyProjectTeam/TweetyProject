@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**

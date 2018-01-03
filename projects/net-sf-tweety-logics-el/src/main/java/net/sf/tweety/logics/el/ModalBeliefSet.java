@@ -25,7 +25,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.el.syntax.ModalFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
  * This class models a modal knowledge base, i.e. a set of formulas
@@ -55,7 +55,7 @@ public class ModalBeliefSet extends BeliefSet<RelationalFormula> {
 		FolSignature sig = new FolSignature();
 		for(Formula m: this) {
 			while (m instanceof ModalFormula) {
-				m = ((ModalFormula)m).getFormula();
+				m = ((ModalFormula)m).getFormula(); //TODO Make sure this works for all cases of nested modal formulas
 			}
 			sig.add(m);	
 			}	

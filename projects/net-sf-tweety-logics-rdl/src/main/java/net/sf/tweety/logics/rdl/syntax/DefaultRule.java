@@ -39,7 +39,7 @@ import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.math.probability.Probability;
 
@@ -274,12 +274,13 @@ public class DefaultRule extends RelationalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#getAtoms()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FOLAtom> getAtoms() {
-		Set<FOLAtom> atoms = conc.getAtoms();
-		atoms.addAll(pre.getAtoms());
+		Set<FOLAtom> atoms = (Set<FOLAtom>) conc.getAtoms();
+		atoms.addAll((Collection<? extends FOLAtom>) pre.getAtoms());
 		for (FolFormula f : jus)
-			atoms.addAll(f.getAtoms());
+			atoms.addAll((Collection<? extends FOLAtom>) f.getAtoms());
 		return atoms;
 	}
 

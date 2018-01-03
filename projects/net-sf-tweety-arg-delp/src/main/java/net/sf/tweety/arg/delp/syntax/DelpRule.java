@@ -19,8 +19,10 @@
 package net.sf.tweety.arg.delp.syntax;
 
 import net.sf.tweety.commons.util.rules.Rule;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
@@ -147,12 +149,13 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getAtoms()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FOLAtom> getAtoms() {
 		Set<FOLAtom> atoms = new HashSet<>();
-		atoms.addAll(this.head.getAtoms());
+		atoms.addAll((Collection<FOLAtom>) this.head.getAtoms());
 		for(FolFormula f: this.body)
-			atoms.addAll(f.getAtoms());
+			atoms.addAll((Collection<FOLAtom>) f.getAtoms());
 		return atoms;
 	}
 
@@ -339,4 +342,14 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
         result = 31 * result + body.hashCode();
         return result;
     }
+    
+    @Override
+	public FolSignature getSignature() {
+		FolSignature sig = new FolSignature();
+		sig.addAll(this.getTerms(Constant.class));
+		sig.addAll(this.getFunctors());
+		sig.addAll(this.getPredicates());
+		return sig;
+	}
+    
 }

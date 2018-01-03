@@ -19,7 +19,7 @@
 package net.sf.tweety.logics.el.syntax;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
  * This class models the necessity modality.

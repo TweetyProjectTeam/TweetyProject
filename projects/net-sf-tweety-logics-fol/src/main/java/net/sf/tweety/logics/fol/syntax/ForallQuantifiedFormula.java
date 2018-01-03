@@ -21,6 +21,7 @@ package net.sf.tweety.logics.fol.syntax;
 import java.util.*;
 
 import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 

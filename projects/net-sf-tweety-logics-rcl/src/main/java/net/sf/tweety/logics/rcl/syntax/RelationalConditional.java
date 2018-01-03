@@ -24,6 +24,7 @@ import java.util.Set;
 
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Rule;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
@@ -35,7 +36,8 @@ import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.math.probability.Probability;
 
@@ -91,11 +93,12 @@ public class RelationalConditional extends RelationalFormula implements Rule<Fol
 		return this.premise.containsQuantifier() || this.conclusion.containsQuantifier();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FOLAtom> getAtoms() {
 		Set<FOLAtom> result = new HashSet<FOLAtom>();
-		result.addAll(this.premise.getAtoms());
-		result.addAll(this.conclusion.getAtoms());
+		result.addAll((Collection<? extends FOLAtom>) this.premise.getAtoms());
+		result.addAll((Collection<? extends FOLAtom>) this.conclusion.getAtoms());
 		return result;
 	}
 
@@ -327,6 +330,15 @@ public class RelationalConditional extends RelationalFormula implements Rule<Fol
 		for(FolFormula f : premises) {
 			this.premise = this.premise.combineWithAnd(f);
 		}
+	}
+
+	@Override
+	public FolSignature getSignature() {
+		FolSignature sig = new FolSignature();
+		sig.addAll(this.getTerms(Constant.class));
+		sig.addAll(this.getFunctors());
+		sig.addAll(this.getPredicates());
+		return sig;
 	}
 
 }

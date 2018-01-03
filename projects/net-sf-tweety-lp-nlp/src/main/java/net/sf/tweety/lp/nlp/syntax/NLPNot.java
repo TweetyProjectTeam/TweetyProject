@@ -131,9 +131,10 @@ public class NLPNot extends FolFormula {
 		return new NLPNot(inner.clone());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FOLAtom> getAtoms() {
-		return inner.getAtoms();
+		return (Set<FOLAtom>) inner.getAtoms();
 	}
 
 	@Override

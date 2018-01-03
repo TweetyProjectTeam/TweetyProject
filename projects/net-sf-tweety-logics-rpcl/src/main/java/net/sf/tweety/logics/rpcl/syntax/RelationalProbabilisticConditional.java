@@ -20,7 +20,7 @@ package net.sf.tweety.logics.rpcl.syntax;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.logics.rcl.syntax.RelationalConditional;
 import net.sf.tweety.math.probability.Probability;

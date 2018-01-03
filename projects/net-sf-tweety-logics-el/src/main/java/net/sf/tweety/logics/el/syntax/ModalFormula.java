@@ -20,6 +20,7 @@ package net.sf.tweety.logics.el.syntax;
 
 import java.util.Set;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
@@ -32,7 +33,7 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.Negation;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -59,7 +60,11 @@ public abstract class ModalFormula extends RelationalFormula {
 	 */
 	@Override
 	public FolSignature getSignature() {
-		return this.formula.getSignature();
+		FolSignature sig = new FolSignature();
+		sig.addAll(this.getTerms(Constant.class));
+		sig.addAll(this.getFunctors());
+		sig.addAll(this.getPredicates());
+		return sig;
 	}
 	
 	/* (non-Javadoc)
@@ -67,7 +72,7 @@ public abstract class ModalFormula extends RelationalFormula {
 	 */
 	@Override
 	public Probability getUniformProbability() {
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+		throw new UnsupportedOperationException("IMPLEMENT ME"); //TODO return this.formula.getUniformProbability()?
 	}
 	
 	/**
@@ -95,8 +100,9 @@ public abstract class ModalFormula extends RelationalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
+	@SuppressWarnings("unchecked")
 	public Set<FOLAtom> getAtoms(){
-		return this.formula.getAtoms();
+		return (Set<FOLAtom>) this.formula.getAtoms();
 	}
 	
 	/* (non-Javadoc)

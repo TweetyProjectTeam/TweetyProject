@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.action.description.syntax;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,7 @@ import net.sf.tweety.action.grounding.GroundingTools;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.syntax.*;
 
@@ -197,13 +199,14 @@ public class DynamicLaw
    * (non-Javadoc)
    * @see net.sf.tweety.action.desc.c.syntax.CausalRule#getAtoms()
    */
-  @Override
+  @SuppressWarnings("unchecked")
+@Override
   public Set< FOLAtom > getAtoms()
   {
     Set< FOLAtom > result = new HashSet< FOLAtom >();
-    result.addAll( headFormula.getAtoms() );
-    result.addAll( ifFormula.getAtoms() );
-    result.addAll( afterFormula.getAtoms() );
+    result.addAll( (Collection<? extends FOLAtom>) headFormula.getAtoms() );
+    result.addAll( (Collection<? extends FOLAtom>) ifFormula.getAtoms() );
+    result.addAll( (Collection<? extends FOLAtom>) afterFormula.getAtoms() );
     return result;
   }
   

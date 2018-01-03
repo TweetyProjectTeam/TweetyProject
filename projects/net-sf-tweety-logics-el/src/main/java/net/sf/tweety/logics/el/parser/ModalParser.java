@@ -53,7 +53,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
-import net.sf.tweety.logics.fol.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
 /**
@@ -76,7 +76,8 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
  * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
  * 
- * @author Matthias Thimm, Anna Gessler
+ * @author Matthias Thimm
+ * @author Anna Gessler
  */
 
 public class ModalParser extends Parser<ModalBeliefSet> {
