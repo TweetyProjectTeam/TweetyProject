@@ -60,15 +60,14 @@ public class OpenOptSolver extends Solver {
 	 */
 	private Logger log = LoggerFactory.getLogger(OpenOptSolver.class);
 	
-	// TODO make the following private and add getter/setter
-	public double contol = 1e-8;
-	public double ftol = 1e-8;
-	public double gtol = 1e-8;
-	public double xtol = 1e-8;
-	public double maxIter = 1e16;
-	public double maxFunEvals = 1e16;
-	public String solver = "ralg";
-	public boolean ignoreNotFeasibleError = false;
+	private double contol = 1e-8;
+	private double ftol = 1e-8;
+	private double gtol = 1e-8;
+	private double xtol = 1e-8;
+	private double maxIter = 1e16;
+	private double maxFunEvals = 1e16;
+	private String solver = "ralg";
+	protected boolean ignoreNotFeasibleError = false;
 	
 	/**
 	 * A starting point for the optimization.
@@ -337,5 +336,69 @@ public class OpenOptSolver extends Solver {
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException("Unable to create a temporary file for testing whether OpenOpt is installed.");
 		}
+	}
+	
+	public double getContol() {
+		return contol;
+	}
+
+	public void setContol(double contol) {
+		this.contol = contol;
+	}
+
+	public double getFtol() {
+		return ftol;
+	}
+
+	public void setFtol(double ftol) {
+		this.ftol = ftol;
+	}
+
+	public double getGtol() {
+		return gtol;
+	}
+
+	public void setGtol(double gtol) {
+		this.gtol = gtol;
+	}
+
+	public double getXtol() {
+		return xtol;
+	}
+
+	public void setXtol(double xtol) {
+		this.xtol = xtol;
+	}
+
+	public double getMaxIter() {
+		return maxIter;
+	}
+
+	public void setMaxIter(double maxIter) {
+		this.maxIter = maxIter;
+	}
+
+	public double getMaxFunEvals() {
+		return maxFunEvals;
+	}
+
+	public void setMaxFunEvals(double maxFunEvals) {
+		this.maxFunEvals = maxFunEvals;
+	}
+
+	public String getSolver() {
+		return solver;
+	}
+
+	public void setSolver(String solver) {
+		this.solver = solver;
+	}
+
+	public boolean isIgnoreNotFeasibleError() {
+		return ignoreNotFeasibleError;
+	}
+
+	public void setIgnoreNotFeasibleError(boolean ignoreNotFeasibleError) {
+		this.ignoreNotFeasibleError = ignoreNotFeasibleError;
 	}
 }

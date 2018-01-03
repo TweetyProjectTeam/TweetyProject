@@ -33,11 +33,10 @@ import net.sf.tweety.math.term.*;
  */
 public class OpenOptRootFinder extends OptimizationRootFinder {
 
-	// TODO make the following private and add getter/setter
-	public double contol = 1e-15;
-	public double ftol = 1e-15;
-	public double gtol = 1e-15;
-	public double xtol = 1e-15;
+	private double contol = 1e-15;
+	private double ftol = 1e-15;
+	private double gtol = 1e-15;
+	private double xtol = 1e-15;
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
@@ -77,10 +76,10 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 	public Map<Variable, Term> randomRoot() throws GeneralMathException {
 		OpenOptSolver solver = new OpenOptSolver(this.getStartingPoint());
 		// set some parameters
-		solver.contol = this.contol;
-		solver.xtol = this.xtol;
-		solver.ftol = this.ftol;
-		solver.gtol = this.gtol;
+		solver.setContol(this.contol);
+		solver.setXtol(this.xtol);
+		solver.setFtol(this.ftol);
+		solver.setGtol(this.gtol);
 		Map<Variable,Term> solution = solver.solve(this.buildOptimizationProblem());
 		// Check whether the solution is really a root
 		for(Term t: this.getFunctions()){
@@ -89,6 +88,38 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 				throw new GeneralMathException("The given function has no root (minimum found was "+ val + ").");				
 		}
 		return solution;
+	}
+
+	public double getContol() {
+		return contol;
+	}
+
+	public void setContol(double contol) {
+		this.contol = contol;
+	}
+
+	public double getFtol() {
+		return ftol;
+	}
+
+	public void setFtol(double ftol) {
+		this.ftol = ftol;
+	}
+
+	public double getGtol() {
+		return gtol;
+	}
+
+	public void setGtol(double gtol) {
+		this.gtol = gtol;
+	}
+
+	public double getXtol() {
+		return xtol;
+	}
+
+	public void setXtol(double xtol) {
+		this.xtol = xtol;
 	}
 
 }
