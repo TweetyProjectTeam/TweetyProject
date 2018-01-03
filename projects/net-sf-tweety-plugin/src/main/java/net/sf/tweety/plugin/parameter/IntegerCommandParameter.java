@@ -99,7 +99,7 @@ public class IntegerCommandParameter extends CommandParameter {
 	}
 
 	/**
-	 * instantiates a new parameter iff the given value ist valid for this command parameter
+	 * instantiates a new parameter iff the given value is valid for this command parameter
 	 */
 	@Override
 	public CommandParameter instantiate(String s){

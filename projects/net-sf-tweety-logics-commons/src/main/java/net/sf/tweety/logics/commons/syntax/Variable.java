@@ -25,7 +25,8 @@ package net.sf.tweety.logics.commons.syntax;
  * It is implemented as a specialized StringTerm which only allows names 
  * which have an upper-case character as first letter.
  * 
- * @author Tim Janus, Anna Gessler
+ * @author Tim Janus
+ * @author Anna Gessler
  */
 public class Variable extends StringTerm {
 	

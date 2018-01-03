@@ -21,7 +21,7 @@ package net.sf.tweety.logics.commons.syntax;
 /**
  * An individual is a single object similar to objects used in first-order logic.
  * 
- * @author Bastian Wolf, Anna Gessler
+ * @author Bastian Wolf
  *
  */
 

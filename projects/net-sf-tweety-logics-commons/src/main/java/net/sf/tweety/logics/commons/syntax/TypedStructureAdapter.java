@@ -29,7 +29,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.TypedStructure;
  * TypedStructure interface. This class implements their common
  * functionalities.
  * 
- * @todo add property change listener for name, add list observer for arguments
+ * TODO add property change listener for name, add list observer for arguments
  * @author Matthias Thimm, Tim Janus
  */
 public abstract class TypedStructureAdapter implements TypedStructure, Comparable<TypedStructureAdapter> {

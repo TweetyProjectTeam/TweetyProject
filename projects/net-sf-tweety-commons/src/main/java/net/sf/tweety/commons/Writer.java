@@ -24,7 +24,8 @@ import java.io.*;
  * This class represents an abstract writer for
  * writing objects into the file system. 
  * 
- * @author Matthias Thimm, Anna Gessler
+ * @author Matthias Thimm
+ * @author Anna Gessler
  */
 public abstract class Writer {
 

@@ -98,11 +98,13 @@ public class PlParser extends Parser<PlBeliefSet> {
 				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() )
 					l.add(0, o);					
 				stack.push(this.parseDisjunction(l));
+			//If two consecutive "|" or two consecutive "&" have been read, 
+			//remove them from the stack and re-add them as a single string.
 			}else if(s.equals("|")){
 				if(stack.lastElement().equals("|")){
 					stack.pop();
 					stack.push("||");
-				}else stack.push(s);					
+				}else stack.push(s);	
 			}else if(s.equals("&")){
 				if(stack.lastElement().equals("&")){
 					stack.pop();
