@@ -40,6 +40,8 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.el.ModalBeliefSet;
+import net.sf.tweety.logics.el.syntax.ExistsQuantifiedModalFormula;
+import net.sf.tweety.logics.el.syntax.ForallQuantifiedModalFormula;
 import net.sf.tweety.logics.el.syntax.ModalFormula;
 import net.sf.tweety.logics.el.syntax.Necessity;
 import net.sf.tweety.logics.el.syntax.Possibility;
@@ -47,11 +49,9 @@ import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
@@ -197,7 +197,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 					l.add(0, o); 
 				// If the preceding token is in {a,...,z,A,...,Z,0,...,9} then treat the 
 				// list as a term list.
-				// If the token is ] or >, treat the list as a modal operator.
+				// If the token is ] or >, treat the list as a modalization.
 				// Otherwise treat it as a quantification.
 				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
 					stack.push(this.parseTermlist(l));
@@ -318,7 +318,6 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			throw new ParserException("Empty parentheses.");
 		if(!(l.contains(":"))) 
 			return this.parseModalization(l); 
-		
 		if(!l.get(0).equals(FolParser.EXISTS_QUANTIFIER) && !l.get(0).equals(FolParser.FORALL_QUANTIFIER))
 			throw new ParserException("Unrecognized quantifier '" + l.get(0) + "'.");
 		String var = "";
@@ -354,8 +353,8 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		map.remove(var);;
 		this.folparser.setVariables(map);
 		if(l.get(0).equals(FolParser.EXISTS_QUANTIFIER))
-			return new ExistsQuantifiedFormula(formula,vars);
-		else return new ForallQuantifiedFormula(formula,vars);
+			return new ExistsQuantifiedModalFormula(formula,vars);
+		else return new ForallQuantifiedModalFormula(formula,vars);
 	}
 
 	/**
@@ -437,7 +436,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseAtomic(List<Object> l) throws ParserException{
 		if(l.size() == 1){
 			Object o = l.get(0);
-			if(o instanceof FolFormula) return (FolFormula) o;
+			if(o instanceof RelationalFormula) return (RelationalFormula) o;
 			if(o instanceof String){
 				String s = (String) o;
 				if(s.equals(LogicalSymbols.CONTRADICTION()))
