@@ -14,8 +14,8 @@ import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
-import net.sf.tweety.logics.fol.syntax.QuantifiedFormula;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
@@ -112,8 +112,8 @@ public class Prover9Writer implements FolWriter {
 			Negation n = (Negation) f;
 			return parens("- " + parens(printFormula(n.getFormula())));
 		}
-		if (f instanceof QuantifiedFormula) {
-			QuantifiedFormula fqf = (QuantifiedFormula) f;
+		if (f instanceof ForallQuantifiedFormula || f instanceof ExistsQuantifiedFormula) {
+			FolFormula fqf = (FolFormula) f;
 			boolean existential = f instanceof ExistsQuantifiedFormula;
 			String result = "";
 			for(Variable v: fqf.getQuantifierVariables()) {

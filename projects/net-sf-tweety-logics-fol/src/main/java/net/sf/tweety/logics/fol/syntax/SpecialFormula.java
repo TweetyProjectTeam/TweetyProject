@@ -135,8 +135,8 @@ public abstract class SpecialFormula extends FolFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getQuantifiedFormulas()
 	 */
-	public Set<QuantifiedFormula> getQuantifiedFormulas(){
-		return new HashSet<QuantifiedFormula>();
+	public Set<FolFormula> getQuantifiedFormulas(){
+		return new HashSet<FolFormula>();
 	}
 
 	/* (non-Javadoc)
