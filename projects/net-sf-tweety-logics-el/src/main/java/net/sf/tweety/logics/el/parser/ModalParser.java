@@ -43,6 +43,7 @@ import net.sf.tweety.logics.el.ModalBeliefSet;
 import net.sf.tweety.logics.el.syntax.ExistsQuantifiedModalFormula;
 import net.sf.tweety.logics.el.syntax.ForallQuantifiedModalFormula;
 import net.sf.tweety.logics.el.syntax.ModalFormula;
+import net.sf.tweety.logics.el.syntax.ModalNegation;
 import net.sf.tweety.logics.el.syntax.Necessity;
 import net.sf.tweety.logics.el.syntax.Possibility;
 import net.sf.tweety.logics.fol.parser.FolParser;
@@ -110,7 +111,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 						else if(section == 1) section = 2; //A type declaration section has been parsed previously, 
 														   //therefore only the formula section remains.
 						if(section == 2)
-							beliefSet.add((ModalFormula)this.parseFormula(new StringReader(s)));
+							beliefSet.add((RelationalFormula)this.parseFormula(new StringReader(s)));
 						else if(section == 1)
 							this.folparser.parseTypeDeclaration(s,this.folparser.getSignature());
 						else this.folparser.parseSortDeclaration(s,this.folparser.getSignature()); //No type declaration or formula section has been parsed previously,
@@ -418,7 +419,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseNegation(List<Object> l) throws ParserException{
 		if(l.get(0).equals(LogicalSymbols.CLASSICAL_NEGATION())){
 			l.remove(0);
-			return new Negation(this.parseNegation(l));			
+			return new ModalNegation(this.parseNegation(l));			
 		}
 		return this.parseAtomic(l);		
 	}
