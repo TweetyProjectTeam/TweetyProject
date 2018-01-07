@@ -219,4 +219,9 @@ public abstract class ModalFormula extends RelationalFormula {
 		return true;
 	}
 	
+	public boolean containsModalityOperator(){
+		return true;
+	}
+
+	
 }

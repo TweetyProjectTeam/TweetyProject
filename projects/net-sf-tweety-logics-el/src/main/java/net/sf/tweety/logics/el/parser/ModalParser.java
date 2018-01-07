@@ -504,4 +504,12 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		this.folparser.setSignature(signature);
 	}
 	
+	/**
+	 * Returns the signature of this parser.
+	 * @return the signature of this parser.
+	 */
+	public FolSignature getSignature(){
+		return this.folparser.getSignature();
+	}
+	
 }

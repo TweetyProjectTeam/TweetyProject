@@ -1,0 +1,11 @@
+Animal = {duffy, carl, martin}
+Plant = {tuffy}
+
+type(Flies(Animal))
+type(hasWings(Animal))
+type(Knows(Animal,Animal))
+type(test(Plant))
+
+<>(Flies(carl))
+!([](<>(!test(tuffy))))
+[](forall X:(([](Flies(X))) || (<>(!hasWings(X)))))
