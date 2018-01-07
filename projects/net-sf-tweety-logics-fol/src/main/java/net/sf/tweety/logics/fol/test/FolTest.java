@@ -30,36 +30,63 @@ import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
+import net.sf.tweety.logics.fol.prover.NaiveProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
+/**
+ * Some examples for using FolParser and provers.
+ * 
+ */
 public class FolTest {
-
-	public static void test() throws ParserException, IOException{
-		FolParser parser = new FolParser();
-		FolBeliefSet bs = new FolBeliefSet();
-		FolSignature sig = new FolSignature();
-		Sort animal = new Sort("Animal");
-		sig.add(animal);
-		List<Sort> l = new ArrayList<Sort>();
-		l.add(animal);
-		l.add(animal);
-		sig.add(new Predicate("A",l));
-		sig.add(new Constant("b",animal));
-		sig.add(new Constant("c",animal));
-		parser.setSignature(sig);		
-		bs.add((FolFormula)parser.parseFormula("forall X: (forall Y: ((!A(X,Y) || A(Y,X)) && (!A(Y,X) || A(X,Y))))"));
-		bs.add((FolFormula)parser.parseFormula("A(b,c)"));
-		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
-		System.out.println(prover.query(bs, (FolFormula)parser.parseFormula("A(c,b)")));
-	}
 	
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		//test();System.exit(1);
-		FolParser parser = new FolParser();		
-		FolBeliefSet b = parser.parseBeliefBaseFromFile("examplebeliefbase.fologic");
-		System.out.println(b);
+		//Add sorts, constants and predicates to a first-order logic signature
+		FolSignature sig = new FolSignature();
+		
+		Sort s_animal = new Sort("Animal");
+		sig.add(s_animal); 
+		
+		Constant c_penguin = new Constant("penguin",s_animal);
+		Constant c_kiwi = new Constant("kiwi",s_animal);
+		sig.add(c_penguin);
+		sig.add(c_kiwi);
+		
+		List<Sort> predicate_list = new ArrayList<Sort>();
+		predicate_list.add(s_animal);
+		Predicate p = new Predicate("Flies",predicate_list);
+		sig.add(p); //Add Predicate Flies(Animal) 
+		
+		List<Sort> predicate_list2 = new ArrayList<Sort>();
+		predicate_list2.add(s_animal);
+		predicate_list2.add(s_animal);
+		Predicate p2 = new Predicate("Knows",predicate_list2);
+		sig.add(p2); //Add Predicate Knows(Animal,Animal) 
+		
+		// Parse formulas with FolParser
+		FolParser parser = new FolParser();
+		parser.setSignature(sig); //Use the signature defined above
+		FolBeliefSet bs = new FolBeliefSet();
+		FolFormula f1 = (FolFormula)parser.parseFormula("!Flies(kiwi)");
+		FolFormula f2 = (FolFormula)parser.parseFormula("!Flies(penguin)");
+		FolFormula f3 = (FolFormula)parser.parseFormula("!Knows(penguin,kiwi)");
+		bs.add(f1);
+		bs.add(f2);
+		bs.add(f3);
+		System.out.println("Parsed BeliefBase: " + bs);
+		
+		// Prover
+		FolTheoremProver.setDefaultProver(new NaiveProver()); //Set default prover, options are NaiveProver, EProver, Prover9
 		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
-		System.out.println(prover.query(b, (FolFormula)parser.parseFormula("Knows(martin,carl)")));
+		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("Flies(kiwi)")));
+		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("forall X: (Flies(X))")));
+		
+		// Parse a BeliefBase from a file
+		parser = new FolParser();
+		bs = parser.parseBeliefBaseFromFile("examplebeliefbase.fologic");
+		System.out.println("Parsed BeliefBase: " + bs);
+		System.out.println(((FolSignature) bs.getSignature()).getSorts());
+		System.out.println(((FolSignature) bs.getSignature()).getConstants());
+		System.out.println(((FolSignature) bs.getSignature()).getPredicates());
 	}
 }

@@ -32,6 +32,11 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.writer.FolWriter;
 import net.sf.tweety.logics.fol.writer.Prover9Writer;
 
+/**
+ * JUnitTest to test Prover9
+ * @author Nils Geilen
+ *
+ */
 public class Prover9Test {
 
 	static FolTheoremProver e;

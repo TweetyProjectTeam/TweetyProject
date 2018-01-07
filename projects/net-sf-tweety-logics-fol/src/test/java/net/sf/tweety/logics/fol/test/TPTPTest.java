@@ -34,7 +34,7 @@ import net.sf.tweety.logics.fol.writer.FolWriter;
 import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 /**
- * JUnitTest to test TPTP priter and Eprover implemnetation
+ * JUnitTest to test TPTP priter and Eprover implementation
  * @author Nils Geilen
  *
  */
