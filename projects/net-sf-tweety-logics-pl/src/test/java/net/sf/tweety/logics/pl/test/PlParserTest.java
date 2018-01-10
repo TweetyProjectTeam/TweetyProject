@@ -171,6 +171,11 @@ public class PlParserTest {
 	}
 	
 	@Test(expected = ParserException.class) 
+	public void BrokenParenthesesTest3() throws ParserException, IOException {
+		parser.parseFormula(") a (");
+	}
+	
+	@Test(expected = ParserException.class) 
 	public void EmptyParenthesesTest() throws ParserException, IOException {
 		parser.parseFormula("a || () || b");
 	}

@@ -45,6 +45,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 public class FolParserTest {
 
 	FolParser parser;
+	public static final int DEFAULT_TIMEOUT = 5000;
 	
 	@Before
 	public void initParser() {
@@ -68,7 +69,7 @@ public class FolParserTest {
 		parser.setSignature(sig);
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseForallQuantificationTest() throws ParserException, IOException {
 		FolFormula f1 = (FolFormula)parser.parseFormula("forall X:(!Knows(kiwi,X))");
 		FolSignature sig = f1.getSignature();
@@ -82,7 +83,7 @@ public class FolParserTest {
 		assertEquals(f1.getTerms().size(),2);
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseExistsQuantificationTest() throws ParserException, IOException {
 		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:(!Knows(kiwi,X))");
 		FolSignature sig = f1.getSignature();
@@ -96,7 +97,7 @@ public class FolParserTest {
 		assertEquals(f1.getTerms().size(),2);
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedQuantifiedFormulaTest() throws ParserException, IOException {
 		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:((!Knows(kiwi,X)) && (Flies(penguin)))");
 		FolSignature sig = f1.getSignature();
@@ -109,7 +110,7 @@ public class FolParserTest {
 		assertTrue(sig.containsConstant("penguin"));
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseBeliefBaseFromFileTest() throws ParserException, IOException {
 		parser = new FolParser();
 		FolBeliefSet beliefSet = new FolBeliefSet();
@@ -122,7 +123,7 @@ public class FolParserTest {
 		assertEquals(sig.getSorts().size(),2);
 		}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class,timeout = DEFAULT_TIMEOUT) 
 	public void EmptyQuantificationTest() throws ParserException, IOException {
 		parser.parseFormula("forall X:()");
 	}

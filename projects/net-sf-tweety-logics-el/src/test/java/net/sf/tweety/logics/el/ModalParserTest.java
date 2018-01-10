@@ -46,6 +46,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 public class ModalParserTest {
 	
 	ModalParser parser;
+	public static final int DEFAULT_TIMEOUT = 5000;
 	
 	@Before
 	public void initParser() {
@@ -69,7 +70,7 @@ public class ModalParserTest {
 		parser.setSignature(sig);
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseModalOperatorTest() throws ParserException, IOException {
 		ModalFormula f1 = (ModalFormula)parser.parseFormula("[](Flies(penguin))");
 		ModalFormula f2 = (ModalFormula)parser.parseFormula("<>(Flies(penguin))");
@@ -77,7 +78,7 @@ public class ModalParserTest {
 		assertTrue(f2.containsModalityOperator());
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedModalFormulaTest() throws ParserException, IOException {
 		RelationalFormula f1 = (RelationalFormula) parser.parseFormula("forall X: (<>(Flies(X)))");
 		RelationalFormula f2 = (RelationalFormula) parser.parseFormula("[](forall X: ([](Flies(X))))");
@@ -91,24 +92,24 @@ public class ModalParserTest {
 		assertTrue(sig.containsPredicate("Knows"));
 	}
 	
-	@Test 
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseBeliefBaseFromFileTest() throws ParserException, IOException {
 		parser = new ModalParser();
 		ModalBeliefSet b = (ModalBeliefSet) parser.parseBeliefBaseFromFile("examplebeliefbase.mlogic");
 		assertEquals(b.size(),3);
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 
 	public void EmptyPossibilityTest() throws ParserException, IOException {
 		parser.parseFormula("<>()");
 	}	
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 
 	public void EmptyNecessityTest() throws ParserException, IOException {
 		parser.parseFormula("[]()");
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 
 	public void MissingCharacterTest() throws ParserException, IOException {
 		parser.parseFormula("[()");
 	}
