@@ -63,8 +63,8 @@ public class KripkeModel extends AbstractInterpretation {
 	 */
 	@Override
 	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof FolFormula) || !(formula instanceof ModalFormula))
-			throw new IllegalArgumentException("Formula " + formula + " is not a first-order formula nor a modal formula.");
+		if(!((formula instanceof FolFormula) || (formula instanceof ModalFormula))) {
+			throw new IllegalArgumentException("Formula " + formula + " is not a first-order formula nor a modal formula.");}
 		for(Interpretation i: this.possibleWorlds){
 			if(formula instanceof FolFormula){
 				if(!i.satisfies(formula))
