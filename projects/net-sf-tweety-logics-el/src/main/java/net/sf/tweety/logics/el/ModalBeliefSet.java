@@ -55,7 +55,6 @@ public class ModalBeliefSet extends BeliefSet<RelationalFormula> {
 		FolSignature sig = new FolSignature();
 		for(Formula m: this) {
 			while (m instanceof ModalFormula) {
-				System.out.println(m);
 				m = ((ModalFormula)m).getFormula(); 
 			}
 			sig.add(m);	

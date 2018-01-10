@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * <br> FORMULASET ::== FORMULA ( "\n" FORMULA )*
  * <br> FORMULA    ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" 
  * <br>
- * <br>PROPOSITION is a sequence of letters, numbers, and/or "_"
+ * <br>PROPOSITION is a sequence of characters excluding |,&,!,(,),\s (whitespace),\n (newline),\r (carriage-return) and \t (tab).
  * 
  *  @author Matthias Thimm
  *  @author Bastian Wolf
@@ -201,6 +201,7 @@ public class PlParser extends Parser<PlBeliefSet> {
 					return new Contradiction();
 				if(s.equals(LogicalSymbols.TAUTOLOGY()))
 					return new Tautology();
+				//Allow all characters for proposition names except |,%,!,(,),whitespace,newline,carriage-return,tab
 				if(s.matches("[^|&!\\s\\n\\r\\t\\(\\)]"))
 					return new Proposition(s);
 			}
