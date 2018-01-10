@@ -105,7 +105,7 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
   	  		ReInit(reader);
   	  		FolFormula fol = this.Formula(this.signature);
   	  		// check that formula contains only known constants and predicates:
-  	  		FOLAtom atom = fol.getAtoms().iterator().next();
+  	  		FOLAtom atom =  (FOLAtom) fol.getAtoms().iterator().next();
             Predicate p = atom.getPredicate();
             if (signature.getPredicate(p.getName()) == null)
                 throw new ParseException("Formula contains unknown predicate '" + p + "'");
