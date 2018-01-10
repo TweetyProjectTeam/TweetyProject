@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * <br> FORMULASET ::== FORMULA ( "\n" FORMULA )*
  * <br> FORMULA    ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" 
  * <br>
- * <br>PROPOSITION is a sequence of characters excluding |,&,!,(,),\s (whitespace),\n (newline),\r (carriage-return) and \t (tab).
+ * <br>PROPOSITION is a sequence of characters excluding |,&,!,(,) and whitespace characters.
  * 
  *  @author Matthias Thimm
  *  @author Bastian Wolf
@@ -201,8 +201,8 @@ public class PlParser extends Parser<PlBeliefSet> {
 					return new Contradiction();
 				if(s.equals(LogicalSymbols.TAUTOLOGY()))
 					return new Tautology();
-				//Allow all characters for proposition names except |,%,!,(,),whitespace,newline,carriage-return,tab
-				if(s.matches("[^|&!\\s\\n\\r\\t\\(\\)]"))
+				//Allow all characters for proposition names except |,%,!,(,) and whitespace characters.
+				if(s.matches("[^|&!\\s\\(\\)]"))
 					return new Proposition(s);
 			}
 			throw new ParserException("Unknown object " + o);
@@ -214,7 +214,7 @@ public class PlParser extends Parser<PlBeliefSet> {
 					throw new ParserException("Unknown object " + o);
 				s += (String) o;
 			}
-			if(s.matches("([^|&!\\s\\n\\r\\t\\(\\)])+"))
+			if(s.matches("([^|&!\\s\\(\\)])+"))
 				return new Proposition(s);
 			throw new ParserException("General parsing error.");
 		}		
