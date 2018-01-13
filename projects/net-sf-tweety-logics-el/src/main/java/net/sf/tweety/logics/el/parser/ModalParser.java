@@ -40,19 +40,18 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.el.ModalBeliefSet;
-import net.sf.tweety.logics.el.syntax.ExistsQuantifiedModalFormula;
-import net.sf.tweety.logics.el.syntax.ForallQuantifiedModalFormula;
 import net.sf.tweety.logics.el.syntax.ModalFormula;
-import net.sf.tweety.logics.el.syntax.ModalNegation;
 import net.sf.tweety.logics.el.syntax.Necessity;
 import net.sf.tweety.logics.el.syntax.Possibility;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
@@ -354,8 +353,8 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		map.remove(var);;
 		this.folparser.setVariables(map);
 		if(l.get(0).equals(FolParser.EXISTS_QUANTIFIER))
-			return new ExistsQuantifiedModalFormula(formula,vars);
-		else return new ForallQuantifiedModalFormula(formula,vars);
+			return new ExistsQuantifiedFormula(formula,vars);
+		else return new ForallQuantifiedFormula(formula,vars);
 	}
 
 	/**
@@ -419,7 +418,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseNegation(List<Object> l) throws ParserException{
 		if(l.get(0).equals(LogicalSymbols.CLASSICAL_NEGATION())){
 			l.remove(0);
-			return new ModalNegation(this.parseNegation(l));			
+			return new Negation(this.parseNegation(l));			
 		}
 		return this.parseAtomic(l);		
 	}

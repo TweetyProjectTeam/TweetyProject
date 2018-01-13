@@ -19,6 +19,7 @@
 package net.sf.tweety.logics.el.syntax;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
@@ -39,7 +40,7 @@ public class Necessity extends ModalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public RelationalFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
+	public FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
 		return new Necessity(this.getFormula().substitute(v, t));
 	}
 
@@ -52,7 +53,25 @@ public class Necessity extends ModalFormula {
 
 
 	@Override
-	public RelationalFormula clone() {
+	public FolFormula clone() {
 		return new Necessity(this.getFormula().clone());
+	}
+
+	@Override
+	public FolFormula toNnf() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
+
+	@Override
+	public RelationalFormula collapseAssociativeFormulas() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
+
+	@Override
+	public boolean isDnf() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 }

@@ -42,7 +42,7 @@ import net.sf.tweety.math.probability.Probability;
  *  
  * @author Matthias Thimm
  */
-public abstract class ModalFormula extends RelationalFormula {
+public abstract class ModalFormula extends FolFormula {
 
 	/**
 	 * The inner formula of this modal formula 
@@ -182,11 +182,11 @@ public abstract class ModalFormula extends RelationalFormula {
 		return formula.getQuantifierVariables();
 	}
 
-	@Override
-	public RelationalFormula substitute(Term<?> v, Term<?> t)
-			throws IllegalArgumentException {
-		return formula.substitute(v, t);
-	}
+	//@Override
+	//public RelationalFormula substitute(Term<?> v, Term<?> t)
+	//		throws IllegalArgumentException {
+	//	return formula.substitute(v, t);
+	//}
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
