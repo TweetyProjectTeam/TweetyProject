@@ -31,11 +31,13 @@ import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * JUnit Test class for PlParser.
@@ -46,13 +48,14 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 public class PlParserTest {
 	PlParser parser;
-			
+	public static final int DEFAULT_TIMEOUT = 2000;
+	
 	@Before
 	public void initParser() throws ParserException, IOException {
 		parser = new PlParser();	
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void PropositionTest() throws ParserException, IOException {
 		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("a");
 		Proposition p = new Proposition("a");
@@ -67,33 +70,47 @@ public class PlParserTest {
 		assertTrue(f.equals(p));
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NegationTest() throws ParserException, IOException {
 		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("!a");
 		Negation n = new Negation(new Proposition("a"));
 		assertTrue(f.equals(n));
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void DisjunctionTest() throws ParserException, IOException {
 		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("a || b");
 		Disjunction d = new Disjunction(new Proposition("a"), new Proposition("b"));
 		assertTrue(f.equals(d));
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ConjunctionTest() throws ParserException, IOException {
 		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("a && b");
 		Conjunction c = new Conjunction(new Proposition("a"), new Proposition("b"));
 		assertTrue(f.equals(c));
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void TautologyTest() throws ParserException, IOException {
+		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("+");
+		Tautology t = new Tautology();
+		assertTrue(f.equals(t));
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void ContradictionTest() throws ParserException, IOException {
+		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("-");
+		Contradiction c = new Contradiction();
+		assertTrue(f.equals(c));
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedFormulaTest() throws ParserException, IOException {
 		parser.parseFormula("!((a && b) || (c || !d))");
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SpecialCharactersTest() throws ParserException, IOException {
 		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("a && î || !(!@$$f)");
 		PropositionalSignature sig = f.getSignature();
@@ -104,7 +121,7 @@ public class PlParserTest {
 		assertEquals(sig,sig2);
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseBeliefBaseTest() throws ParserException, IOException {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		beliefSet = parser.parseBeliefBase("a || b || c \n !a || b \n !b || c \n !c || (!a && !b && !c && !d)");
@@ -119,7 +136,7 @@ public class PlParserTest {
 		assertEquals(sig,sig2);
 	}
 	
-	@Test
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseBeliefBaseFromFileTest() throws ParserException, IOException {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		beliefSet = parser.parseBeliefBaseFromFile("testbeliefbase.proplogic");
@@ -134,48 +151,47 @@ public class PlParserTest {
 		assertEquals(sig,sig2);
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 
 	public void EmptyDisjunctionTest() throws ParserException, IOException {
 		parser.parseFormula(" || ");
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT)  
 	public void EmptyConjunctionTest() throws ParserException, IOException {
 		parser.parseFormula(" && ");
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT)  
 	public void IncompleteConjunctionTest() throws ParserException, IOException {
 		parser.parseFormula("a && ");
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 
 	public void IncompleteDisjunctionTest() throws ParserException, IOException {
 		parser.parseFormula(" || a");
 	}
 	
-	//Propositions should consist only of letters, numbers and/or "_".
-	@Test(expected = ParserException.class)
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 
 	public void IllegalCharacterTest() throws ParserException, IOException{
 		parser.parseFormula(" ");
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT)  
 	public void BrokenParenthesesTest() throws ParserException, IOException {
 		parser.parseFormula("( a");
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT)  
 	public void BrokenParenthesesTest2() throws ParserException, IOException {
 		parser.parseFormula(" a )");
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT)  
 	public void BrokenParenthesesTest3() throws ParserException, IOException {
 		parser.parseFormula(") a (");
 	}
 	
-	@Test(expected = ParserException.class) 
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT)  
 	public void EmptyParenthesesTest() throws ParserException, IOException {
 		parser.parseFormula("a || () || b");
 	}

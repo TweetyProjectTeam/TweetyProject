@@ -37,7 +37,6 @@ import net.sf.tweety.logics.el.parser.ModalParser;
 import net.sf.tweety.logics.el.syntax.ModalFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
-
 /**
  * JUnit Test class for ModalParser.
  * 
@@ -112,5 +111,9 @@ public class ModalParserTest {
 	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 
 	public void MissingCharacterTest() throws ParserException, IOException {
 		parser.parseFormula("[()");
+	}
+	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 
+	public void WrongCharacterOrderTest() throws ParserException, IOException {
+		parser.parseFormula("><()");
 	}
 }

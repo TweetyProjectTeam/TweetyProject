@@ -37,6 +37,8 @@ import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.fol.syntax.Contradiction;
+import net.sf.tweety.logics.fol.syntax.Tautology;
 /**
  * JUnit Test class for FolParser.
  * 
@@ -95,6 +97,20 @@ public class FolParserTest {
 		assertTrue(sig.containsPredicate("Knows"));
 		assertFalse(sig.containsPredicate("Flies"));
 		assertEquals(f1.getTerms().size(),2);
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void TautologyTest() throws ParserException, IOException {
+		FolFormula f = (FolFormula) parser.parseFormula("+");
+		Tautology t = new Tautology();
+		assertTrue(f.equals(t));
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void ContradictionTest() throws ParserException, IOException {
+		FolFormula f = (FolFormula) parser.parseFormula("-");
+		Contradiction c = new Contradiction();
+		assertTrue(f.equals(c));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

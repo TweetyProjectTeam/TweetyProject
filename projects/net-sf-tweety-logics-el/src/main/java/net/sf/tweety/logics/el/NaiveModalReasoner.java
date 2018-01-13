@@ -38,7 +38,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
- * This class implements inference for modal logic.
+ * This class implements inference for modal logic using a brute-force approach.
  * A query, i.e. a formula in modal logic, can be inferred by a knowledge base, 
  * iff every Kripke model of the knowledge base is also a Kripke model of the query.
  * 
@@ -76,8 +76,8 @@ public class NaiveModalReasoner extends Reasoner {
 		HerbrandBase hBase = new HerbrandBase(sig);
 		Set<HerbrandInterpretation> interpretations = hBase.allHerbrandInterpretations(); //Get all possible worlds for signature
 		
-		//Get all possible binary combinations of interpretations to construct all possible accessibility relations
-		//Note: There will be duplicate pairs
+		//Get all possible binary combinations of worlds to construct all possible accessibility relations
+		//For example, if there are two possible worlds w1 and w2, possible combinations are: [w1,w1],[w1,w2],[w2,w1],[w2,w2]
 		Set<Pair<Interpretation,Interpretation>> setOfPairs = new HashSet<Pair<Interpretation,Interpretation>>();
 		for (Interpretation i: interpretations) {	
 			for (Interpretation i2: interpretations) {
