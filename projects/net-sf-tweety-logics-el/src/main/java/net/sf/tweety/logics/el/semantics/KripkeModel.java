@@ -63,31 +63,34 @@ public class KripkeModel extends AbstractInterpretation {
 	 */
 	@Override
 	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!((formula instanceof FolFormula) || (formula instanceof ModalFormula))) {
-			throw new IllegalArgumentException("Formula " + formula + " is not a first-order formula nor a modal formula.");}
-		for(Interpretation i: this.possibleWorlds){
-			if(formula instanceof FolFormula){
-				if(!i.satisfies(formula))
-					return false;
-			}else{
-				if(formula instanceof Necessity){
-					for(Interpretation j: this.accRelation.getSuccessors(i)){
-						if(!j.satisfies(((ModalFormula)formula).getFormula()))
-								return false;
-						
-					}
-				}else if(formula instanceof Possibility){
-					boolean satisfied = false;
-					for(Interpretation j: this.accRelation.getSuccessors(i)){
-						if(j.satisfies(((ModalFormula)formula).getFormula())){
-							satisfied = true;
-							break;
-						}
-					}
-					if(!satisfied) return false;
+		if (!((formula instanceof FolFormula) || (formula instanceof ModalFormula))) {
+			throw new IllegalArgumentException(
+					"Formula " + formula + " is not a first-order formula nor a modal formula.");
+		}
+		for (Interpretation i : this.possibleWorlds) {
+			if (formula instanceof Necessity) {
+				for (Interpretation j : this.accRelation.getSuccessors(i)) {
+					if (!j.satisfies(((ModalFormula) formula).getFormula()))
+						return false;
+
 				}
+			} else if (formula instanceof Possibility) {
+				boolean satisfied = false;
+				for (Interpretation j : this.accRelation.getSuccessors(i)) {
+					if (j.satisfies(((ModalFormula) formula).getFormula())) {
+						satisfied = true;
+						break;
+					}
+				}
+				if (!satisfied)
+					return false;
 			}
-		}		
+
+			else if (formula instanceof FolFormula) {
+				if (!i.satisfies(formula))
+					return false;
+			}
+		}
 		return true;
 	}
 
