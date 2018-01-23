@@ -16,24 +16,15 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
- package test;
+ package net.sf.tweety.logics.el.test;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
-import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.commons.util.Pair;
-import net.sf.tweety.commons.util.SetTools;
-import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.el.ModalBeliefSet;
 import net.sf.tweety.logics.el.NaiveModalReasoner;
 import net.sf.tweety.logics.el.parser.ModalParser;
 import net.sf.tweety.logics.el.writer.ModalWriter;
-import net.sf.tweety.logics.fol.semantics.HerbrandBase;
-import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
-import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * Some examples for testing ModalParser, ModalWriter and NaiveModalReasoner
