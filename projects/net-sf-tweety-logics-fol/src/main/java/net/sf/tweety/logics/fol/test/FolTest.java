@@ -83,7 +83,7 @@ public class FolTest {
 		
 		// Parse a BeliefBase from a file
 		parser = new FolParser();
-		bs = parser.parseBeliefBaseFromFile("examplebeliefbase.fologic");
+		bs = parser.parseBeliefBaseFromFile("../../examples/fol/examplebeliefbase.fologic");
 		System.out.println("Parsed BeliefBase: " + bs);
 		System.out.println(((FolSignature) bs.getSignature()).getSorts());
 		System.out.println(((FolSignature) bs.getSignature()).getConstants());

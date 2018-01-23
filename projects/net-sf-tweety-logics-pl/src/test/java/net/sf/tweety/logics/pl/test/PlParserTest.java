@@ -139,7 +139,7 @@ public class PlParserTest {
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseBeliefBaseFromFileTest() throws ParserException, IOException {
 		PlBeliefSet beliefSet = new PlBeliefSet();
-		beliefSet = parser.parseBeliefBaseFromFile("testbeliefbase.proplogic");
+		beliefSet = parser.parseBeliefBaseFromFile("../../examples/pl/examplebeliefbase.proplogic");
 		assertEquals(beliefSet.size(),4);
 		
 		Signature sig = beliefSet.getSignature();

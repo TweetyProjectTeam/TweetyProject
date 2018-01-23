@@ -103,7 +103,7 @@ public class ModalParserTest {
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseBeliefBaseFromFileTest() throws ParserException, IOException {
 		parser = new ModalParser();
-		ModalBeliefSet b = (ModalBeliefSet) parser.parseBeliefBaseFromFile("examplebeliefbase.mlogic");
+		ModalBeliefSet b = (ModalBeliefSet) parser.parseBeliefBaseFromFile("../../examples/el/examplebeliefbase.mlogic");
 		assertEquals(b.size(),3);
 	}
 	

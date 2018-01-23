@@ -46,7 +46,7 @@ public class RDLTest {
 	
 	static void defaultRuleTest() throws Exception{
 		RdlParser parser = new RdlParser();
-		DefaultTheory th = parser.parseBeliefBaseFromFile("example_default_theory.txt");
+		DefaultTheory th = parser.parseBeliefBaseFromFile("../../examples/rdl/example_default_theory.txt");
 		
 		System.out.println("\n--equals--");
 
@@ -93,7 +93,7 @@ public class RDLTest {
 	
 	static void parserTest() throws Exception{
 		RdlParser parser = new RdlParser();
-		DefaultTheory th = parser.parseBeliefBaseFromFile("example_default_theory.txt");
+		DefaultTheory th = parser.parseBeliefBaseFromFile("../../examples/rdl/example_default_theory.txt");
 		System.out.println(th);
 		
 		DefaultRule d = (DefaultRule)parser.parseFormula("exists X:(Flies(X))::Flies(B)/Flies(B)");
@@ -102,7 +102,7 @@ public class RDLTest {
 	
 	static void sequenceTest() throws Exception{
 		RdlParser parser = new RdlParser();
-		DefaultTheory t = parser.parseBeliefBaseFromFile("simple_default_theory.txt");
+		DefaultTheory t = parser.parseBeliefBaseFromFile("../../examples/rdl/simple_default_theory.txt");
 		
 		DefaultSequence s = new DefaultSequence(t);
 		System.out.println(s);
@@ -132,7 +132,7 @@ public class RDLTest {
 	
 	static void processTreeTest() throws Exception {
 		RdlParser parser = new RdlParser();
-		DefaultTheory t = parser.parseBeliefBaseFromFile("simple_default_theory.txt");
+		DefaultTheory t = parser.parseBeliefBaseFromFile("../../examples/rdl/simple_default_theory.txt");
 		NaiveDefaultReasoner reasoner = new NaiveDefaultReasoner(t);
 		System.out.println(reasoner.getAllExtensions());
 		System.out.println(reasoner.query(parser.parseFormula("!a")).getAnswerBoolean());
@@ -140,7 +140,7 @@ public class RDLTest {
 	
 	static void extensionTest() throws Exception {
 		RdlParser parser = new RdlParser();
-		DefaultTheory t = parser.parseBeliefBaseFromFile("example_default_theory.txt");
+		DefaultTheory t = parser.parseBeliefBaseFromFile("../../examples/rdl/example_default_theory.txt");
 		
 		t = t.ground();
 		

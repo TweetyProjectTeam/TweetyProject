@@ -137,7 +137,7 @@ public class FolParserTest {
 	public void ParseBeliefBaseFromFileTest() throws ParserException, IOException {
 		parser = new FolParser();
 		FolBeliefSet beliefSet = new FolBeliefSet();
-		beliefSet = parser.parseBeliefBaseFromFile("examplebeliefbase.fologic");
+		beliefSet = parser.parseBeliefBaseFromFile("../../examples/fol/examplebeliefbase.fologic");
 		assertEquals(beliefSet.size(),5);
 		
 		FolSignature sig = (FolSignature) beliefSet.getSignature();
