@@ -308,9 +308,26 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			throw new ParserException("Unrecognized formula type '" + l.get(1) + "'."); }
 		RelationalFormula formula = (RelationalFormula) l.get(1);
 		
-		if(l.get(0).equals("[]")) {
-			return new Necessity(formula); }
-		else return new Possibility(formula);	
+		ModalFormula result;
+		if (l.get(0).equals("[]")) 
+			result = new Necessity(formula);
+		else 
+			result = new Possibility(formula);
+
+		if (l.size() > 2) {
+			l.remove(0);
+			l.remove(0);
+			if (l.get(0) == "&&") {
+				l.remove(0);
+				return new Conjunction(result, parseQuantification(l));
+			} else if (l.get(0) == "||") {
+				l.remove(0);
+				return new Disjunction(result, parseQuantification(l));
+			} else {
+				throw new ParserException("Unrecognized symbol " + l.get(0));
+			}
+		}
+		return result;	
 	}
 	
 	private RelationalFormula parseQuantification(List<Object> l) {

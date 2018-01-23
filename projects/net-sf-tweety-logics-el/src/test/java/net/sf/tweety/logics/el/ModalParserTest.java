@@ -70,21 +70,30 @@ public class ModalParserTest {
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
-	public void ParseModalOperatorTest() throws ParserException, IOException {
+	public void ParseModalFormulaTest() throws ParserException, IOException {
 		ModalFormula f1 = (ModalFormula)parser.parseFormula("[](Flies(penguin))");
 		ModalFormula f2 = (ModalFormula)parser.parseFormula("<>(Flies(penguin))");
 		assertTrue(f1.containsModalityOperator());
 		assertTrue(f2.containsModalityOperator());
+		assertTrue(f1.getSignature().containsPredicate("Flies"));
+		assertTrue(f1.getSignature().containsConstant("penguin"));
+		assertTrue(f2.getSignature().containsPredicate("Flies"));
+		assertTrue(f2.getSignature().containsConstant("penguin"));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedModalFormulaTest() throws ParserException, IOException {
-		RelationalFormula f1 = (RelationalFormula) parser.parseFormula("forall X: (<>(Flies(X)))");
-		RelationalFormula f2 = (RelationalFormula) parser.parseFormula("[](forall X: ([](Flies(X))))");
-		RelationalFormula f3 = (RelationalFormula) parser.parseFormula("[](<>((!Flies(kiwi)) || (Knows(penguin,kiwi))))");
-		FolSignature sig = (FolSignature) f3.getSignature();
+		RelationalFormula f1 = (RelationalFormula) parser.parseFormula("[](forall X: ([](Flies(X))))");
+		RelationalFormula f2 = (RelationalFormula) parser.parseFormula("[](Flies(kiwi)) || Flies(penguin)");
+		RelationalFormula f3 = (RelationalFormula) parser.parseFormula("[](<>(!Flies(kiwi)) && Knows(kiwi,kiwi))");
+		
+		ModalBeliefSet b = new ModalBeliefSet();
+		b.add(f1);
+		b.add(f2);
+		b.add(f3);
+		FolSignature sig = (FolSignature) b.getSignature();
+		
 		assertTrue(f1.containsQuantifier());
-		assertTrue(f2.containsQuantifier());
 		assertTrue(sig.containsConstant("kiwi"));
 		assertTrue(sig.containsConstant("penguin"));
 		assertTrue(sig.containsPredicate("Flies"));
