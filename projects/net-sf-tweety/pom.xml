@@ -117,17 +117,17 @@
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
-  		<artifactId>el</artifactId>
-  		<version>1.10-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>fol</artifactId>
   		<version>1.10-SNAPSHOT</version>
   	</dependency>
-  	<dependency>
+	  	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>ml</artifactId>
+  		<version>1.10-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.sf.tweety.logics</groupId>
+  		<artifactId>mln</artifactId>
   		<version>1.10-SNAPSHOT</version>
   	</dependency>
   	<dependency>

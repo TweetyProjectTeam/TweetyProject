@@ -191,7 +191,7 @@
   	<module>net-sf-tweety-logics-fol</module>
   	<module>net-sf-tweety-logics-pl</module>
   	<module>net-sf-tweety-logics-ml</module>
-  	<module>net-sf-tweety-logics-el</module>
+  	<module>net-sf-tweety-logics-mln</module>
   	<module>net-sf-tweety-logics-pcl</module>
   	<module>net-sf-tweety-logics-rcl</module>
   	<module>net-sf-tweety-logics-rdl</module>
