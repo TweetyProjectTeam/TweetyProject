@@ -25,7 +25,12 @@ import java.util.*;
  * @author Matthias Thimm
  */
 public class SetTools<E> {
-
+	
+	/**
+	 * For randomisation 
+	 */
+	private static Random rand = new Random();
+	
 	/**
 	 * This method computes all subsets of the given set of elements
 	 * of class "E".
@@ -282,5 +287,20 @@ public class SetTools<E> {
 						if(s2.contains(elem))
 							return false;
 		return true;
+	}
+	
+	/**
+	 * Picks one element uniformly at random from the set (not very efficient).
+	 * @param set some set
+	 * @return one element from the set.
+	 */
+	public E randomElement(Collection<E> set) {
+		int idx = SetTools.rand.nextInt(set.size());
+		Iterator<E> it = set.iterator();
+		while(idx > 0) {
+			it.next();
+			idx--;
+		}
+		return it.next();
 	}
 }
