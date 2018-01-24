@@ -159,6 +159,17 @@ public class Disjunction extends AssociativePropositionalFormula {
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#isClause()
+	 */
+	@Override
+	public boolean isClause(){
+		for(PropositionalFormula f: this.getFormulas())
+			if(!f.isLiteral())
+				return false;
+		return true;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
 	 */
 	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){

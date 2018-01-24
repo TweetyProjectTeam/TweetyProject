@@ -314,12 +314,21 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	}
 
     /**
+     * Checks whether this formula is a clause,
+     * i.e. whether it is a disjunction of literals.
+     * @return "true" iff this formula is a clause.
+     */
+    public boolean isClause(){
+    		return false;
+    }
+    
+    /**
      * Checks whether this formula is a conjunctive clause,
      * i.e. whether it is a conjunction of literals.
      * @return "true" iff this formula is a conjunctive clause.
      */
     public boolean isConjunctiveClause(){
-    	return false;
+    		return false;
     }
     
     /**

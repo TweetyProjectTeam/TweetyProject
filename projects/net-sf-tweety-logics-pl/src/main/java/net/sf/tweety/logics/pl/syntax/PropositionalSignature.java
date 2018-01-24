@@ -66,4 +66,16 @@ public class PropositionalSignature extends SetSignature<Proposition> {
 			this.add(p);
 		}
 	}
+	
+	/**
+	 * Returns the set of atoms appearing in the given collection of formulas
+	 * @param formulas a set of propositional formulas
+	 * @return the signature of the formulas.
+	 */
+	public static PropositionalSignature getSignature(Collection<? extends PropositionalFormula> formulas) {
+		PropositionalSignature signature = new PropositionalSignature();
+		for(PropositionalFormula f: formulas)
+			signature.addAll(f.getAtoms());
+		return signature;
+	}
 }
