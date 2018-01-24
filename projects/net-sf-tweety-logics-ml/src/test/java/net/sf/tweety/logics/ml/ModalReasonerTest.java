@@ -23,15 +23,13 @@ import static org.junit.Assert.assertEquals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.parser.ModalParser;
-import net.sf.tweety.logics.ml.prover.NaiveModalReasoner;
+import net.sf.tweety.logics.ml.NaiveModalReasoner;
 
 /**
  * JUnit Test class for modal reasoners, i.e. NaiveModalReasoner and other reasoners to be added in the future.
