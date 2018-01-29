@@ -71,4 +71,8 @@ public class AccessibilityRelation {
 				successors.add(relation.getSecond());
 		return successors;
 	}
+	
+	public String toString() {
+		return tuples.toString();
+	}
 }

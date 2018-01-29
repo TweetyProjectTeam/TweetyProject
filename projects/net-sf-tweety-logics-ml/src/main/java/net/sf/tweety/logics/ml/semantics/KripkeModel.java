@@ -70,8 +70,8 @@ public class KripkeModel extends AbstractInterpretation {
 		for (Interpretation i : this.possibleWorlds) {
 			if (formula instanceof Necessity) {
 				for (Interpretation j : this.accRelation.getSuccessors(i)) {
-					if (!j.satisfies(((ModalFormula) formula).getFormula()))
-						return false;
+					if (!j.satisfies(((ModalFormula) formula).getFormula())) {
+						return false; }
 
 				}
 			} else if (formula instanceof Possibility) {
@@ -82,13 +82,13 @@ public class KripkeModel extends AbstractInterpretation {
 						break;
 					}
 				}
-				if (!satisfied)
-					return false;
+				if (!satisfied) {
+					return false; }
 			}
 
 			else if (formula instanceof FolFormula) {
-				if (!i.satisfies(formula))
-					return false;
+				if (!i.satisfies(formula)) {
+					return false; }
 			}
 		}
 		return true;
@@ -105,6 +105,10 @@ public class KripkeModel extends AbstractInterpretation {
 		for(RelationalFormula f: mkb)
 			if(!this.satisfies(f)) return false;
 		return true;
+	}
+	
+	public String toString() {
+		return "{ " + possibleWorlds + " }, { " + accRelation + " }";
 	}
 	
 }
