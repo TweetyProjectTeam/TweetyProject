@@ -28,6 +28,7 @@ import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.commons.util.SetTools;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -35,7 +36,6 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.semantics.AccessibilityRelation;
 import net.sf.tweety.logics.ml.semantics.KripkeModel;
 import net.sf.tweety.logics.ml.syntax.ModalFormula;
-import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
  * This class implements inference for modal logic using a brute-force approach.
@@ -70,29 +70,34 @@ public class NaiveModalReasoner extends Reasoner {
 		if(!formula.isClosed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");	
 
+		
+		
+		//A Kripke model consists of a set of worlds and an accessibility relation that defines which of those worlds are accessible to each other.
+		//To construct all possible Kripke models for the knowledge base, we need to find all possible sets of worlds for the knowledge base
+		//and all possible accessibility relations for each of those sets.
 		FolSignature sig = new FolSignature();
 		sig.addSignature(this.getKnowledgeBase().getSignature());
 		sig.addSignature(formula.getSignature());
 		HerbrandBase hBase = new HerbrandBase(sig);
-		Set<HerbrandInterpretation> interpretations = hBase.allHerbrandInterpretations(); //Get all possible worlds for signature
-		
-		//Get all possible binary combinations of worlds to construct all possible accessibility relations
-		//For example, if there are two possible worlds w1 and w2, possible combinations are: [w1,w1],[w1,w2],[w2,w1],[w2,w2]
-		Set<Pair<Interpretation,Interpretation>> setOfPairs = new HashSet<Pair<Interpretation,Interpretation>>();
-		for (Interpretation i: interpretations) {	
-			for (Interpretation i2: interpretations) {
-				Pair<Interpretation,Interpretation> p = new Pair<Interpretation,Interpretation>(i,i2);
-				setOfPairs.add(p); 
-			}
-		}
-			
-		//Construct a Kripke model with all possible worlds for all possible accessibility relations
-		Set<Set<Pair<Interpretation, Interpretation>>> setOfPairsSubsets  = new SetTools<Pair<Interpretation,Interpretation>>().subsets(setOfPairs);
+		Set<HerbrandInterpretation> possibleWorlds = hBase.allHerbrandInterpretations(); 
+		Set<Set<HerbrandInterpretation>> possibleWorldsCombinations = new SetTools<HerbrandInterpretation>().subsets(possibleWorlds); 
+
+		//For each set of worlds: Get all possible binary combinations of worlds to construct all possible accessibility relations
 		Set<KripkeModel> kripkeModels = new HashSet<KripkeModel>();
-		for (Set<Pair<Interpretation, Interpretation>> p : setOfPairsSubsets) {
-			AccessibilityRelation ar = new AccessibilityRelation(p);
-			KripkeModel m = new KripkeModel(interpretations, ar);
-			kripkeModels.add(m);
+		for (Set<HerbrandInterpretation> possibleWorldCombination: possibleWorldsCombinations) {
+			Set<Pair<Interpretation,Interpretation>> setOfPairs = new HashSet<Pair<Interpretation,Interpretation>>();
+			for (Interpretation i: possibleWorldCombination) {	
+				for (Interpretation i2: possibleWorldCombination) {
+					Pair<Interpretation,Interpretation> p = new Pair<Interpretation,Interpretation>(i,i2);
+					setOfPairs.add(p); 
+				}
+			}
+			Set<Set<Pair<Interpretation, Interpretation>>> setOfPairsSubsets  = new SetTools<Pair<Interpretation,Interpretation>>().subsets(setOfPairs);
+			for (Set<Pair<Interpretation, Interpretation>> p : setOfPairsSubsets) {
+				AccessibilityRelation ar = new AccessibilityRelation(p);
+				KripkeModel m = new KripkeModel(possibleWorldCombination, ar); //Construct a Kripke model for each possible accessibility relation for each possible set of worlds
+				kripkeModels.add(m);
+			}
 		}
 		
 		//Test if every Kripke model for the knowledge base is also a Kripke model for the formula
