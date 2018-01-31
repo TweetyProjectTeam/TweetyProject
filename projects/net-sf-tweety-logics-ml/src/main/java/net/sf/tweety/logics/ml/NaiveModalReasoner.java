@@ -35,6 +35,8 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.semantics.AccessibilityRelation;
 import net.sf.tweety.logics.ml.semantics.KripkeModel;
+import net.sf.tweety.logics.ml.semantics.ModalHerbrandBase;
+import net.sf.tweety.logics.ml.semantics.ModalHerbrandInterpretation;
 import net.sf.tweety.logics.ml.syntax.ModalFormula;
 
 /**
@@ -78,13 +80,13 @@ public class NaiveModalReasoner extends Reasoner {
 		FolSignature sig = new FolSignature();
 		sig.addSignature(this.getKnowledgeBase().getSignature());
 		sig.addSignature(formula.getSignature());
-		HerbrandBase hBase = new HerbrandBase(sig);
-		Set<HerbrandInterpretation> possibleWorlds = hBase.allHerbrandInterpretations(); 
-		Set<Set<HerbrandInterpretation>> possibleWorldsCombinations = new SetTools<HerbrandInterpretation>().subsets(possibleWorlds); 
+		ModalHerbrandBase hBase = new ModalHerbrandBase(sig);
+		Set<ModalHerbrandInterpretation> possibleWorlds = hBase.allHerbrandInterpretations(); 
+		Set<Set<ModalHerbrandInterpretation>> possibleWorldsCombinations = new SetTools<ModalHerbrandInterpretation>().subsets(possibleWorlds); 
 
 		//For each set of worlds: Get all possible binary combinations of worlds to construct all possible accessibility relations
 		Set<KripkeModel> kripkeModels = new HashSet<KripkeModel>();
-		for (Set<HerbrandInterpretation> possibleWorldCombination: possibleWorldsCombinations) {
+		for (Set<ModalHerbrandInterpretation> possibleWorldCombination: possibleWorldsCombinations) {
 			Set<Pair<Interpretation,Interpretation>> setOfPairs = new HashSet<Pair<Interpretation,Interpretation>>();
 			for (Interpretation i: possibleWorldCombination) {	
 				for (Interpretation i2: possibleWorldCombination) {

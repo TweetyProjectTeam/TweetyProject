@@ -87,7 +87,8 @@ public class KripkeModel extends AbstractInterpretation {
 			}
 
 			else if (formula instanceof FolFormula) {
-				if (!i.satisfies(formula)) {
+				ModalHerbrandInterpretation h = (ModalHerbrandInterpretation) i;
+				if (!h.satisfies(formula,this.accRelation.getSuccessors(i))) {
 					return false; }
 			}
 		}

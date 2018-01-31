@@ -18,7 +18,7 @@
  */
 package net.sf.tweety.logics.ml;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,15 +40,37 @@ public class ModalReasonerTest {
 	
 	public static final int DEFAULT_TIMEOUT = 10000;
 	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void SimpleQueryTest1() throws FileNotFoundException, ParserException, IOException {
+		ModalParser parser = new ModalParser();
+		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n !(<>(p))");
+		NaiveModalReasoner reasoner = new NaiveModalReasoner(b);		
+		Answer a1 = reasoner.query(parser.parseFormula("<>(p)"));
+		Answer a2 = reasoner.query(parser.parseFormula("!(<>(p))"));
+		assertFalse(a1.getAnswerBoolean());
+		assertTrue(a2.getAnswerBoolean());
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void SimpleQueryTest2() throws FileNotFoundException, ParserException, IOException {
+		ModalParser parser = new ModalParser();
+		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n p");
+		NaiveModalReasoner reasoner = new NaiveModalReasoner(b);		
+		Answer a1 = reasoner.query(parser.parseFormula("<>(p)"));
+		Answer a2 = reasoner.query(parser.parseFormula("[](p)"));
+		assertFalse(a1.getAnswerBoolean());
+		assertTrue(a2.getAnswerBoolean());
+	}
+	
 	@Test(timeout = 20000)
-	public void SimpleQueryTest() throws FileNotFoundException, ParserException, IOException {
+	public void SimpleQueryTest3() throws FileNotFoundException, ParserException, IOException {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner(b);
 		Answer a1 = reasoner.query(parser.parseFormula("Flies(duffy)"));
 		Answer a2 = reasoner.query(parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))"));
-		assertEquals(a1.getAnswerBoolean(),false);
-		assertEquals(a2.getAnswerBoolean(),true);
+		assertFalse(a1.getAnswerBoolean());
+		assertTrue(a2.getAnswerBoolean());
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
