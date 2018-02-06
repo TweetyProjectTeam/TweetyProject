@@ -197,12 +197,9 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 					l.add(0, o); 
 				// If the preceding token is in {a,...,z,A,...,Z,0,...,9} then treat the 
 				// list as a term list.
-				// If the token is ] or >, treat the list as a modalization.
-				// Otherwise treat it as a quantification.
+				// Otherwise treat it as a quantification
 				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
 					stack.push(this.parseTermlist(l));
-				else if (stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("]|>")) 
-					stack.push(this.parseModalization(l)); 
 				else  stack.push(this.parseQuantification(l)); 
 			//If two consecutive "|" or two consecutive "&" have been read, 
 			//add them to the stack them as a single string.
@@ -301,31 +298,37 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseModalization(List<Object> l) throws ParserException {
 		if(l.isEmpty()) {
 			throw new ParserException("Empty parentheses."); }
-		if(! ( l.contains("[]")||l.contains("<>") ) ) 
+		if(!( l.contains("[]")||l.contains("<>") ) ) 
 			return this.parseDisjunction(l); 
-
-		if(!(l.get(1) instanceof RelationalFormula)) {
-			throw new ParserException("Unrecognized formula type '" + l.get(1) + "'."); }
-		RelationalFormula formula = (RelationalFormula) l.get(1);
 		
 		ModalFormula result;
 		if (l.get(0).equals("[]")) 
-			result = new Necessity(formula);
-		else 
-			result = new Possibility(formula);
-
-		if (l.size() > 2) {
-			l.remove(0);
-			l.remove(0);
-			if (l.get(0) == "&&") {
-				l.remove(0);
-				return new Conjunction(result, parseQuantification(l));
-			} else if (l.get(0) == "||") {
-				l.remove(0);
-				return new Disjunction(result, parseQuantification(l));
-			} else {
-				throw new ParserException("Unrecognized symbol " + l.get(0));
+			result = new Necessity((RelationalFormula) l.get(1));
+		else if (l.get(0).equals("<>")) 
+			result = new Possibility((RelationalFormula) l.get(1));
+		else {
+			//If the modalization is not the first conjunct/disjunct of
+			//the formula, split list at position of first "&&" or "||"
+			int i1 = l.indexOf("&&");
+			int i2 = l.indexOf("||");
+			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
+				return new Conjunction(	parseQuantification(l.subList(0, i1)), parseQuantification(l.subList(i1+1, l.size())));
 			}
+			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
+				return new Disjunction(	parseQuantification(l.subList(0, i2)), parseQuantification(l.subList(i2+1, l.size())));
+				}
+			else 
+				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
+		}
+
+		//Add additional conjuncts/disjuncts to the right of the modalization (if applicable)
+		if (l.size() > 2) {
+			if (l.get(2) == "&&") 
+				return new Conjunction(result, parseQuantification(l.subList(3, l.size())));
+			else if (l.get(2) == "||") 
+				return new Disjunction(result, parseQuantification(l.subList(3, l.size())));
+			else 
+				throw new ParserException("Unrecognized symbol " + l.get(0));
 		}
 		return result;	
 	}
@@ -333,10 +336,24 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseQuantification(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(":"))) 
+		if(!(l.contains(FolParser.EXISTS_QUANTIFIER) || l.contains(FolParser.FORALL_QUANTIFIER)) || l.get(0).equals("[]") || l.get(0).equals("<>")) 
 			return this.parseModalization(l); 
-		if(!l.get(0).equals(FolParser.EXISTS_QUANTIFIER) && !l.get(0).equals(FolParser.FORALL_QUANTIFIER))
-			throw new ParserException("Unrecognized quantifier '" + l.get(0) + "'.");
+		
+		//If the quantification is not the first conjunct/disjunct of
+		//the formula, split list at position of first "&&" or "||"
+		if (!(l.get(0).equals(FolParser.EXISTS_QUANTIFIER)||l.get(0).equals(FolParser.FORALL_QUANTIFIER))) {
+			int i1 = l.indexOf("&&");
+			int i2 = l.indexOf("||");
+			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
+				return new Conjunction(	parseQuantification(l.subList(0, i1)), parseQuantification(l.subList(i1+1, l.size())));
+			}
+			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
+				return new Disjunction(	parseQuantification(l.subList(0, i2)), parseQuantification(l.subList(i2+1, l.size())));
+				}
+			else 
+				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
+		}
+		
 		String var = "";
 		int idx = 1;
 		while(!l.get(idx).equals(":")){
@@ -344,16 +361,11 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			idx++;
 		}
 
-		RelationalFormula formula;
-		if (l.get(idx+1) instanceof FolFormula) {
+		FolFormula formula;
+		if (l.get(idx+1) instanceof FolFormula) 
 			formula = (FolFormula) l.get(idx+1);
-		}
-		else if (l.get(idx+1) instanceof ModalFormula) {
-			formula = (ModalFormula) l.get(idx+1);
-		}
-		else {
+		else 
 			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
-		}
 		
 		Variable bVar = null;
 		for(Variable v: formula.getUnboundVariables()){
@@ -369,9 +381,23 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		Map<String, Variable> map = this.folparser.getVariables();
 		map.remove(var);;
 		this.folparser.setVariables(map);
-		if(l.get(0).equals(FolParser.EXISTS_QUANTIFIER))
-			return new ExistsQuantifiedFormula(formula,vars);
-		else return new ForallQuantifiedFormula(formula,vars);
+		
+		FolFormula result;
+		if (l.get(0).equals(FolParser.EXISTS_QUANTIFIER)) 
+			result = new ExistsQuantifiedFormula(formula,vars);
+		else 
+			result = new ForallQuantifiedFormula(formula,vars);
+		
+		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
+		if (l.size() > 4) {
+			if (l.get(idx+2) == "&&") 
+				return new Conjunction(result, parseQuantification(l.subList(idx+3, l.size())));
+			else if (l.get(idx+2) == "||") 
+				return new Disjunction(result, parseQuantification(l.subList(idx+3, l.size())));
+			else 
+				throw new ParserException("Unrecognized symbol " + l.get(0));
+		}
+		return result;	
 	}
 
 	/**

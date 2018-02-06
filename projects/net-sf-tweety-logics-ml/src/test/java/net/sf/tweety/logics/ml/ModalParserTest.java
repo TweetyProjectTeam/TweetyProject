@@ -33,6 +33,7 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.parser.ModalParser;
@@ -67,6 +68,8 @@ public class ModalParserTest {
 		predicate_list2.add(s_animal);
 		Predicate p2 = new Predicate("Knows",predicate_list2);
 		sig.add(p2); 
+		Predicate p3 = new Predicate("Abba");
+		sig.add(p3); 
 		parser.setSignature(sig);
 	}
 	
@@ -84,21 +87,25 @@ public class ModalParserTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedModalFormulaTest() throws ParserException, IOException {
-		RelationalFormula f1 = (RelationalFormula) parser.parseFormula("[](forall X: ([](Flies(X))))");
-		RelationalFormula f2 = (RelationalFormula) parser.parseFormula("[](Flies(kiwi)) || Flies(penguin)");
-		RelationalFormula f3 = (RelationalFormula) parser.parseFormula("[](<>(!Flies(kiwi)) && Knows(kiwi,kiwi))");
+		FolFormula f1= (FolFormula) parser.parseFormula("<>(Abba)||[](Abba)&& <>(Knows(kiwi,penguin) || Flies(penguin))");
+		FolFormula f2 = (FolFormula) parser.parseFormula("[](Flies(kiwi)) || forall X:(Knows(penguin,X))");
+		FolFormula f3 = (FolFormula) parser.parseFormula("[](<>(!Flies(kiwi)) && forall X:(Knows(kiwi,X)) || Abba)");
+		FolFormula f4 = (FolFormula) parser.parseFormula("Abba && [](forall Y:(Flies(Y)) || forall X:(Knows(penguin,X)))");
 		
-		ModalBeliefSet b = new ModalBeliefSet();
-		b.add(f1);
-		b.add(f2);
-		b.add(f3);
-		FolSignature sig = (FolSignature) b.getSignature();
-		
-		assertTrue(f1.containsQuantifier());
-		assertTrue(sig.containsConstant("kiwi"));
-		assertTrue(sig.containsConstant("penguin"));
-		assertTrue(sig.containsPredicate("Flies"));
-		assertTrue(sig.containsPredicate("Knows"));
+		assertTrue(f1.getSignature().containsPredicate("Abba"));
+		assertTrue(f1.getSignature().containsPredicate("Flies"));
+		assertTrue(f1.getSignature().containsPredicate("Knows"));
+		assertTrue(f1.getSignature().containsConstant("kiwi"));
+		assertTrue(f1.getSignature().containsConstant("penguin"));
+		assertTrue(f2.containsQuantifier());
+		assertTrue(f2.getSignature().containsPredicate("Flies"));
+		assertTrue(f2.getSignature().containsPredicate("Knows"));                                       
+		assertTrue(f3.getSignature().containsPredicate("Flies"));
+		assertTrue(f3.getSignature().containsPredicate("Knows"));
+		assertTrue(f3.getSignature().containsPredicate("Abba"));
+		assertTrue(f4.getSignature().containsPredicate("Flies"));
+		assertTrue(f4.getSignature().containsPredicate("Knows"));
+		assertTrue(f4.getSignature().containsPredicate("Abba"));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

@@ -120,17 +120,20 @@ public class FolParserTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedQuantifiedFormulaTest() throws ParserException, IOException {
-		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:((!Knows(kiwi,X)) && (Flies(penguin)))");
-		FolFormula f2 = (FolFormula)parser.parseFormula("exists Y: (Knows(penguin,Y) && Abba)"); 
-		//FolFormula f3 = (FolFormula)parser.parseFormula("exists Y: (Knows(penguin,Y)) && Abba"); 
-		FolSignature sig = f1.getSignature();
-		sig.addSignature(f2.getSignature());
-		f1.containsQuantifier();
-		assertTrue(sig.containsSort("Animal"));
-		assertTrue(sig.containsPredicate("Knows"));
-		assertTrue(sig.containsPredicate("Abba"));
-		assertTrue(sig.containsConstant("kiwi"));
-		assertTrue(sig.containsConstant("penguin"));
+		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:(!Knows(kiwi,X)) && Abba");
+		FolFormula f2 = (FolFormula)parser.parseFormula("Abba && forall X:(!Knows(kiwi,X))");
+		FolFormula f3 = (FolFormula)parser.parseFormula("Abba || forall X:(Flies(X)) && Abba || Abba && exists Y:(Knows(Y,kiwi))");
+		
+		assertTrue(f1.containsQuantifier());
+		assertTrue(f2.containsQuantifier());
+		assertTrue(f3.containsQuantifier());
+		assertTrue(f1.getSignature().containsPredicate("Abba"));
+		assertTrue(f1.getSignature().containsPredicate("Knows"));
+		assertTrue(f2.getSignature().containsPredicate("Abba"));
+		assertTrue(f2.getSignature().containsPredicate("Knows"));
+		assertTrue(f3.getSignature().containsPredicate("Abba"));
+		assertTrue(f3.getSignature().containsPredicate("Knows"));
+		assertTrue(f3.getSignature().containsPredicate("Flies"));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

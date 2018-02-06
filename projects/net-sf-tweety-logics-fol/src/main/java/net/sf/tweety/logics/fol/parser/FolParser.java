@@ -355,19 +355,37 @@ public class FolParser extends Parser<FolBeliefSet> {
 	private FolFormula parseQuantification(List<Object> l) throws ParserException{
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(":")))
-			return this.parseDisjunction(l);	
-		if(!l.get(0).equals(EXISTS_QUANTIFIER) && !l.get(0).equals(FORALL_QUANTIFIER))
-			throw new ParserException("Unrecognized quantifier '" + l.get(0) + "'.");
+		if(!(l.contains(FolParser.EXISTS_QUANTIFIER) || l.contains(FolParser.FORALL_QUANTIFIER)) || l.get(0).equals("[]") || l.get(0).equals("<>")) 
+			return this.parseDisjunction(l); 
+		
+		//If the quantification is not the first conjunct/disjunct of
+		//the formula, split list at position of first "&&" or "||"
+		if (!(l.get(0).equals(FolParser.EXISTS_QUANTIFIER)||l.get(0).equals(FolParser.FORALL_QUANTIFIER))) {
+			int i1 = l.indexOf("&&");
+			int i2 = l.indexOf("||");
+			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
+				return new Conjunction(	parseQuantification(l.subList(0, i1)), parseQuantification(l.subList(i1+1, l.size())));
+			}
+			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
+				return new Disjunction(	parseQuantification(l.subList(0, i2)), parseQuantification(l.subList(i2+1, l.size())));
+				}
+			else 
+				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
+		}
+		
 		String var = "";
 		int idx = 1;
 		while(!l.get(idx).equals(":")){
 			var += (String) l.get(idx);
 			idx++;
 		}
-		if(!(l.get(idx+1) instanceof FolFormula))
+
+		FolFormula formula;
+		if (l.get(idx+1) instanceof FolFormula) 
+			formula = (FolFormula) l.get(idx+1);
+		else 
 			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
-		FolFormula formula = (FolFormula) l.get(idx+1);
+		
 		Variable bVar = null;
 		for(Variable v: formula.getUnboundVariables()){
 			if(v.get().equals(var)){
@@ -380,10 +398,25 @@ public class FolParser extends Parser<FolBeliefSet> {
 		Set<Variable> vars = new HashSet<Variable>();
 		vars.add(bVar);
 		this.variables.remove(var);
-		if(l.get(0).equals(EXISTS_QUANTIFIER))
-			return new ExistsQuantifiedFormula(formula,vars);
-		else return new ForallQuantifiedFormula(formula,vars);		
+		
+		FolFormula result;
+		if (l.get(0).equals(FolParser.EXISTS_QUANTIFIER)) 
+			result = new ExistsQuantifiedFormula(formula,vars);
+		else 
+			result = new ForallQuantifiedFormula(formula,vars);
+		
+		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
+		if (l.size() > 4) {
+			if (l.get(idx+2) == "&&") 
+				return new Conjunction(result, parseQuantification(l.subList(idx+3, l.size())));
+			else if (l.get(idx+2) == "||") 
+				return new Disjunction(result, parseQuantification(l.subList(idx+3, l.size())));
+			else 
+				throw new ParserException("Unrecognized symbol " + l.get(0));
+		}
+		return result;	
 	}
+		
 	
 	/**
 	 * Parses a disjunction as a list of String tokens or formulas into a fol formula.
