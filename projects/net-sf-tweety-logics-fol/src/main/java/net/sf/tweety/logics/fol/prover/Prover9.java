@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -38,18 +41,18 @@ import net.sf.tweety.logics.fol.writer.Prover9Writer;
 public class Prover9 extends FolTheoremProver {
 
 	/**
-	 * String representation of the prover9 binary path, directory, where the
-	 * temporary files are stored
+	 *  String representation of the EProver binary path. 
+	 *  Temporary files are stored in this directory.
 	 */
 	private String binaryLocation;
 
 	/**
-	 * Shell to run prover9
+	 * Shell to run Prover9
 	 */
 	private Shell bash;
 
 	/**
-	 * Constructs a new instance pointing to a specific prover 9
+	 * Constructs a new instance pointing to a specific Prover9.
 	 * 
 	 * @param binaryLocation
 	 *            of the prover9 executable on the hard drive
@@ -57,13 +60,29 @@ public class Prover9 extends FolTheoremProver {
 	 *            shell to run commands
 	 */
 	public Prover9(String binaryLocation, Shell bash) {
-		super();
+		super(new FolBeliefSet());
+		this.binaryLocation = binaryLocation;
+		this.bash = bash;
+	}
+	
+	/**
+	 * Constructs a new instance pointing to a specific Prover9.
+	 * 
+	 * @param kb 
+	 * 			  a knowledge base
+	 * @param binaryLocation
+	 *            of the prover9 executable on the hard drive
+	 * @param bash
+	 *            shell to run commands
+	 */
+	public Prover9(BeliefBase kb, String binaryLocation, Shell bash) {
+		super(kb);
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
 	}
 
 	/**
-	 * Constructs a new instance pointing to a specific prover9
+	 * Constructs a new instance pointing to a specific Prover9
 	 * 
 	 * @param binaryLocation
 	 *            of the prover9 executable on the hard drive
@@ -80,14 +99,23 @@ public class Prover9 extends FolTheoremProver {
 	 * logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public boolean query(FolBeliefSet kb, FolFormula query) {
+	public Answer query(Formula query) {
+		FolBeliefSet kb = (FolBeliefSet) this.getKnowledgeBase();
+		Answer answer = new Answer(kb,query);
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			Prover9Writer printer = new Prover9Writer(new PrintWriter(file));
 			printer.printBase(kb);
-			printer.printQuery(query);
+			printer.printQuery((FolFormula) query);
 			printer.close();
-			return eval(file);
+			if (eval(file)) {
+				answer.setAnswer(true);
+				return answer;
+			}
+			else { 
+				answer.setAnswer(false);
+				return answer;
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -116,10 +144,10 @@ public class Prover9 extends FolTheoremProver {
 	}
 
 	/**
-	 * invokes prover9
+	 * Invokes Prover9.
 	 * 
 	 * @param file
-	 *            input fle for prover9
+	 *            input file for Prover9
 	 * @return query result
 	 */
 	private boolean eval(File file) throws Exception {
@@ -137,16 +165,16 @@ public class Prover9 extends FolTheoremProver {
 	}
 
 	/**
-	 * returns the path of the provers binary
+	 * Returns the path of the Prover9 binaries.
 	 * 
-	 * @return the path of the provers binary
+	 * @return binary location of Prover9
 	 */
 	public String getBinaryLocation() {
 		return binaryLocation;
 	}
 
 	/**
-	 * Change path of the binary
+	 * Changes the path of the Prover9 binaries.
 	 * 
 	 * @param binaryLocation
 	 *            the new path of the binary
@@ -154,4 +182,5 @@ public class Prover9 extends FolTheoremProver {
 	public void setBinaryLocation(String binaryLocation) {
 		this.binaryLocation = binaryLocation;
 	}
+
 }

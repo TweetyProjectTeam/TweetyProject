@@ -18,15 +18,22 @@
  */
 package net.sf.tweety.logics.fol.prover;
 
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
  * Abstract FOL Prover to be implemented by concrete solvers
- * @author Bastian Wolf, Nils Geilen
+ * @author Bastian Wolf
+ * @author Nils Geilen
  *
  */
-public abstract class FolTheoremProver {
+public abstract class FolTheoremProver extends Reasoner {
+
+	public FolTheoremProver(BeliefBase beliefBase) {
+		super(beliefBase);
+	}
 
 	/**
 	 * Empty default prover
@@ -59,14 +66,13 @@ public abstract class FolTheoremProver {
 	}
 	
 	/**
-	 * This method determines the answer of the given query
-	 * wrt. to the given knowledge base.
+	 * This method determines whether two formulas are
+	 * equivalent wrt. to the given knowledge base.
 	 * @param kb the knowledge base
-	 * @param query a query.
-	 * @return the answer to the query.
+	 * @param a  the first formula.
+	 * @param b  the second formula.
+	 * @return   the answer to the query.
 	 */
-	public abstract boolean query(FolBeliefSet kb, FolFormula query);
-	
 	public abstract boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b);
 	
 }

@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -30,43 +33,56 @@ import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 /**
  * Invokes Eprover (http://eprover.org) and returns its results.
+ * 
  * @author Bastian Wolf, Nils Geilen, Matthias Thimm
  *
  */
 public class EProver extends FolTheoremProver {
 
 	/**
-	 *  String representation of the E binary path,
-	 *  directory, where the temporary files are stored
+	 *  String representation of the EProver binary path. 
+	 *  Temporary files are stored in this directory.
 	 */
 	private String binaryLocation;
 	
 	/**
-	 * Additional arguments for the call to the eprover binary 
+	 * Additional arguments for the call to the EProver binary 
 	 * (Default value is "--auto-schedule" which seems to be working
 	 * best in general)
 	 * */
 	private String additionalArguments = "--auto-schedule";
 	
 	/**
-	 * Shell to run eprover
+	 * Shell to run EProver
 	 */
 	private Shell bash;
 	
 	/**
-	 * Constructs a new instance pointing to a specific eprover 
-	 * @param binaryLocation of the eprover executable on the hard drive
-	 * @param bash shell to run commands
+	 * Constructs a new instance pointing to a specific EProver.
+	 * @param binaryLocation location of the EProver executable on the hard drive
+	 * @param bash 		     shell to run commands
 	 */
 	public EProver(String binaryLocation, Shell bash) {
-		super();
+		super(new FolBeliefSet());
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
 	}
 	
 	/**
-	 * Constructs a new instance pointing to a specific eprover 
-	 * @param binaryLocation of the eprover executable on the hard drive
+	 * Constructs a new instance pointing to a specific EProver.
+	 * @param kb 			 a knowledge base
+	 * @param binaryLocation location of the EProver executable on the hard drive
+	 * @param bash 			 shell to run commands
+	 */
+	public EProver(BeliefBase kb, String binaryLocation, Shell bash) {
+		super(kb);
+		this.binaryLocation = binaryLocation;
+		this.bash = bash;
+	}
+	
+	/**
+	 * Constructs a new instance pointing to a specific EProver. 
+	 * @param binaryLocation location of the Eprover executable on the hard drive
 	 */
 	public EProver(String binaryLocation) {
 		this(binaryLocation,Shell.getNativeShell());
@@ -74,7 +90,7 @@ public class EProver extends FolTheoremProver {
 	
 	/**
 	 * Sets the additional arguments given to the call of the
-	 * eprover binary (Default value is "--auto-schedule")
+	 * EProver binary (Default value is "--auto-schedule").
 	 * @param s some string
 	 */
 	public void setAdditionalArguments(String s){
@@ -83,7 +99,7 @@ public class EProver extends FolTheoremProver {
 
 	/**
 	 * Returns the additional arguments given to the call of the
-	 * eprover binary (Default value is "--auto-schedule")
+	 * EProver binary (Default value is "--auto-schedule").
 	 */
 	public String getAdditionalArguments(){
 		return this.additionalArguments;
@@ -93,13 +109,15 @@ public class EProver extends FolTheoremProver {
 	 * @see net.sf.tweety.logics.fol.prover.FolTheoremProver#query(net.sf.tweety.logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public boolean query(FolBeliefSet kb, FolFormula query) {
+	public Answer query(Formula query) {
+		FolBeliefSet kb = (FolBeliefSet) this.getKnowledgeBase();
+		Answer answer = new Answer(kb,query);
 		try{
 			File file  = File.createTempFile("tmp", ".txt");
 			file.deleteOnExit();
 			FolWriter printer = new TptpWriter(new PrintWriter(file));
 			printer.printBase(kb);
-			printer.printQuery(query);
+			printer.printQuery((FolFormula) query);
 			printer.close();
 			
 			//System.out.println(Files.readAllLines(file.toPath()));
@@ -109,17 +127,21 @@ public class EProver extends FolTheoremProver {
 			String output = bash.run(cmd);
 			//String output = Exec.invokeExecutable(cmd);
 			//System.out.print(output);
-			if(Pattern.compile("# Proof found!").matcher(output).find())
-				return true;
-			if(Pattern.compile("# No proof found!").matcher(output).find())
-				return false;
+			if(Pattern.compile("# Proof found!").matcher(output).find()) { 
+				answer.setAnswer(true);
+				return answer;
+			}
+			if(Pattern.compile("# No proof found!").matcher(output).find()){ 
+				answer.setAnswer(false);
+				return answer;
+			}
 			throw new RuntimeException("Failed to invoke eprover: Eprover returned no result which can be interpreted.");
 		}catch(Exception e){
 			e.printStackTrace();
-			return false;
+			answer.setAnswer(false);
+			return answer;
 		}	
 	}
-	
 	
 /*
  * (non-Javadoc)
@@ -153,17 +175,16 @@ public class EProver extends FolTheoremProver {
 	}
 
 	/**
-	 * returns the path of the provers binary
-	 * @return the path of the provers binary
+	 * Returns the path of the EProver binary.
+	 * @return the path of the EProver binary
 	 */
 	public String getBinaryLocation() {
 		return binaryLocation;
 	}
 
-
 	/**
-	 * Change path of the binary
-	 * @param binaryLocation the new path of the E binary
+	 * Changes the path of the EProver binary.
+	 * @param binaryLocation the new path of the EProver binary
 	 */
 	public void setBinaryLocation(String binaryLocation) {
 		this.binaryLocation = binaryLocation;
