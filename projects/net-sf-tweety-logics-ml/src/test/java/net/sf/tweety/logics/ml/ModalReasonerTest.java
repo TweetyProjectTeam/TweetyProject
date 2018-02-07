@@ -29,7 +29,7 @@ import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.parser.ModalParser;
-import net.sf.tweety.logics.ml.NaiveModalReasoner;
+import net.sf.tweety.logics.ml.reasoner.NaiveModalReasoner;
 
 /**
  * JUnit Test class for modal reasoners, i.e. NaiveModalReasoner and other reasoners to be added in the future.
@@ -71,6 +71,15 @@ public class ModalReasonerTest {
 		Answer a2 = reasoner.query(parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))"));
 		assertFalse(a1.getAnswerBoolean());
 		assertTrue(a2.getAnswerBoolean());
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void SimpleQueryTest4() throws FileNotFoundException, ParserException, IOException {
+		ModalParser parser = new ModalParser();
+		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n Flies(martin)\n Flies(duffy)");
+		NaiveModalReasoner reasoner = new NaiveModalReasoner(b);
+		Answer a1 = reasoner.query(parser.parseFormula("forall X:(Flies(X))"));
+		assertTrue(a1.getAnswerBoolean());
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

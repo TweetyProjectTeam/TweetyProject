@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.ml;
+package net.sf.tweety.logics.ml.reasoner;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,10 +29,12 @@ import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.semantics.AccessibilityRelation;
 import net.sf.tweety.logics.ml.semantics.KripkeModel;
 import net.sf.tweety.logics.ml.semantics.ModalHerbrandBase;
@@ -47,7 +49,7 @@ import net.sf.tweety.logics.ml.syntax.ModalFormula;
  * @author Anna Gessler
  */
 
-public class NaiveModalReasoner extends Reasoner {
+public class NaiveModalReasoner extends ModalReasoner {
 	
 	/**
 	 * Creates a new inference operator for the given knowledge base.  
@@ -57,6 +59,14 @@ public class NaiveModalReasoner extends Reasoner {
 		super(beliefBase);
 		if(!(beliefBase instanceof ModalBeliefSet))
 			throw new IllegalArgumentException("Error: Expected modal knowledgebase.");
+	}
+	
+	/**
+	 * Creates a new inference operator for an empty knowledge base.  
+	 * @param beliefBase
+	 */
+	public NaiveModalReasoner() {
+		super(new ModalBeliefSet());
 	}
 	
 	/* (non-Javadoc)
@@ -72,7 +82,6 @@ public class NaiveModalReasoner extends Reasoner {
 		if(!formula.isClosed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");	
 
-		
 		
 		//A Kripke model consists of a set of worlds and an accessibility relation that defines which of those worlds are accessible to each other.
 		//To construct all possible Kripke models for the knowledge base, we need to find all possible sets of worlds for the knowledge base
@@ -120,5 +129,4 @@ public class NaiveModalReasoner extends Reasoner {
 		answer.appendText("The answer is: true");
 		return answer;	
 	}
-
 }
