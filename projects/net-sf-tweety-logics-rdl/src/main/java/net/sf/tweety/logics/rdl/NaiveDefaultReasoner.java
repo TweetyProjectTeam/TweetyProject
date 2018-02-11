@@ -60,7 +60,7 @@ public class NaiveDefaultReasoner extends Reasoner{
 		for (Collection<FolFormula> extension: tree.getExtensions()){
 			FolBeliefSet fbs = (FolBeliefSet)extension;
 			FolTheoremProver prover = FolTheoremProver.getDefaultProver();
-			if(prover.query(fbs, (FolFormula)query)){
+			if(prover.query(fbs, (FolFormula)query).getAnswerBoolean()){
 				answer.setAnswer(true);
 				break;
 			}

@@ -103,9 +103,9 @@ public class DefaultSequence {
 	public boolean isApplicable(DefaultRule d){
 		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 		for(FolFormula f: d.getJustification())
-			if(prover.query(in, new Negation(f)))
+			if(prover.query(in, new Negation(f)).getAnswerBoolean())
 				return false;
-		return prover.query(in, d.getPrerequisite());
+		return prover.query(in, d.getPrerequisite()).getAnswerBoolean();
 		
 	}
 	
@@ -139,7 +139,7 @@ public class DefaultSequence {
 	public boolean isSuccessful() {
 		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 			for(FolFormula g: out)
-				if(prover.query(in,g))
+				if(prover.query(in,g).getAnswerBoolean())
 					return false;
 		return true;
 	}
