@@ -364,10 +364,14 @@ public class FolParser extends Parser<FolBeliefSet> {
 			int i1 = l.indexOf("&&");
 			int i2 = l.indexOf("||");
 			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
-				return new Conjunction(	parseQuantification(l.subList(0, i1)), parseQuantification(l.subList(i1+1, l.size())));
+				List<Object> leftl = new ArrayList<Object>(l.subList(0, i1));
+				List<Object> rightl = new ArrayList<Object>(l.subList(i1+1, l.size()));
+				return new Conjunction(	parseQuantification(leftl), parseQuantification(rightl));
 			}
 			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
-				return new Disjunction(	parseQuantification(l.subList(0, i2)), parseQuantification(l.subList(i2+1, l.size())));
+				List<Object> leftl = new ArrayList<Object>(l.subList(0, i2));
+				List<Object> rightl = new ArrayList<Object>(l.subList(i2+1, l.size()));
+				return new Disjunction(	parseQuantification(leftl), parseQuantification(rightl));
 				}
 			else 
 				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
@@ -408,9 +412,9 @@ public class FolParser extends Parser<FolBeliefSet> {
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
 		if (l.size() > 4) {
 			if (l.get(idx+2) == "&&") 
-				return new Conjunction(result, parseQuantification(l.subList(idx+3, l.size())));
+				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else if (l.get(idx+2) == "||") 
-				return new Disjunction(result, parseQuantification(l.subList(idx+3, l.size())));
+				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(0));
 		}

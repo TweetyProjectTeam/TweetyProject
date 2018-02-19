@@ -82,7 +82,10 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
 
 public class ModalParser extends Parser<ModalBeliefSet> {
 
-	FolParser folparser; //First-order logic parser used for parsing sorts and type declaration 
+	/*
+	 * First-order logic parser used for parsing sorts and type declaration.
+	 */
+	FolParser folparser; 
 	
 	public ModalParser() {
 		folparser = new FolParser();
@@ -298,7 +301,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseModalization(List<Object> l) throws ParserException {
 		if(l.isEmpty()) {
 			throw new ParserException("Empty parentheses."); }
-		if(!( l.contains("[]")||l.contains("<>") ) ) 
+		if(!( l.contains("[]") || l.contains("<>") ) )  
 			return this.parseDisjunction(l); 
 		
 		ModalFormula result;
@@ -312,10 +315,14 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			int i1 = l.indexOf("&&");
 			int i2 = l.indexOf("||");
 			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
-				return new Conjunction(	parseQuantification(l.subList(0, i1)), parseQuantification(l.subList(i1+1, l.size())));
+				List<Object> leftl = new ArrayList<Object>(l.subList(0, i1));
+				List<Object> rightl = new ArrayList<Object>(l.subList(i1+1, l.size()));
+				return new Conjunction(	parseQuantification(leftl), parseQuantification(rightl));
 			}
 			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
-				return new Disjunction(	parseQuantification(l.subList(0, i2)), parseQuantification(l.subList(i2+1, l.size())));
+				List<Object> leftl = new ArrayList<Object>(l.subList(0, i2));
+				List<Object> rightl = new ArrayList<Object>(l.subList(i2+1, l.size()));
+				return new Disjunction(	parseQuantification(leftl), parseQuantification(rightl));
 				}
 			else 
 				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
@@ -323,10 +330,10 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 
 		//Add additional conjuncts/disjuncts to the right of the modalization (if applicable)
 		if (l.size() > 2) {
-			if (l.get(2) == "&&") 
-				return new Conjunction(result, parseQuantification(l.subList(3, l.size())));
+			if (l.get(2) == "&&")
+				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
 			else if (l.get(2) == "||") 
-				return new Disjunction(result, parseQuantification(l.subList(3, l.size())));
+				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(0));
 		}
@@ -345,10 +352,14 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			int i1 = l.indexOf("&&");
 			int i2 = l.indexOf("||");
 			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
-				return new Conjunction(	parseQuantification(l.subList(0, i1)), parseQuantification(l.subList(i1+1, l.size())));
+				List<Object> leftl = new ArrayList<Object>(l.subList(0, i1));
+				List<Object> rightl = new ArrayList<Object>(l.subList(i1+1, l.size()));
+				return new Conjunction(	parseQuantification(leftl), parseQuantification(rightl));
 			}
 			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
-				return new Disjunction(	parseQuantification(l.subList(0, i2)), parseQuantification(l.subList(i2+1, l.size())));
+				List<Object> leftl = new ArrayList<Object>(l.subList(0, i2));
+				List<Object> rightl = new ArrayList<Object>(l.subList(i2+1, l.size()));
+				return new Disjunction(	parseQuantification(leftl), parseQuantification(rightl));
 				}
 			else 
 				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
@@ -391,9 +402,9 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
 		if (l.size() > 4) {
 			if (l.get(idx+2) == "&&") 
-				return new Conjunction(result, parseQuantification(l.subList(idx+3, l.size())));
+				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else if (l.get(idx+2) == "||") 
-				return new Disjunction(result, parseQuantification(l.subList(idx+3, l.size())));
+				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(0));
 		}

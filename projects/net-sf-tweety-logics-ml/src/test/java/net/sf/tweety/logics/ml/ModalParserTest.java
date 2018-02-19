@@ -33,6 +33,7 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
@@ -77,12 +78,15 @@ public class ModalParserTest {
 	public void ParseModalFormulaTest() throws ParserException, IOException {
 		ModalFormula f1 = (ModalFormula)parser.parseFormula("[](Flies(penguin))");
 		ModalFormula f2 = (ModalFormula)parser.parseFormula("<>(Flies(penguin))");
+		Conjunction  f3 = (Conjunction) parser.parseFormula("!Abba && <>(Abba)");
 		assertTrue(f1.containsModalityOperator());
 		assertTrue(f2.containsModalityOperator());
 		assertTrue(f1.getSignature().containsPredicate("Flies"));
 		assertTrue(f1.getSignature().containsConstant("penguin"));
 		assertTrue(f2.getSignature().containsPredicate("Flies"));
 		assertTrue(f2.getSignature().containsConstant("penguin"));
+		ModalFormula f5c2 = (ModalFormula)f3.get(1);
+		assertTrue(f5c2.containsModalityOperator());
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
