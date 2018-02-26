@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
-import net.sf.tweety.logics.ml.NaiveModalReasoner;
+import net.sf.tweety.logics.ml.reasoner.NaiveModalReasoner;
 import net.sf.tweety.logics.ml.parser.ModalParser;
 import net.sf.tweety.logics.ml.writer.ModalWriter;
 
