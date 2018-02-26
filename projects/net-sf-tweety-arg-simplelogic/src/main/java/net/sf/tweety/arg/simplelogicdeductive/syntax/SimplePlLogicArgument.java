@@ -24,7 +24,6 @@ import java.util.HashSet;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.util.DigraphNode;
-import net.sf.tweety.commons.util.rules.DerivationGraph;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**

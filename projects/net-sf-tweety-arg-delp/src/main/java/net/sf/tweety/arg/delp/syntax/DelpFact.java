@@ -20,7 +20,6 @@ package net.sf.tweety.arg.delp.syntax;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 import java.util.Collections;
