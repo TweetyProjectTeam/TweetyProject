@@ -76,7 +76,7 @@ public class MonteCarloPafReasoner extends Reasoner{
 				count++;
 		}
 		Answer ans = new Answer(this.getKnowledgeBase(),query);
-		ans.setAnswer(new Double(count)/this.numberOfTrials);
+		ans.setAnswer(new Double(count)/this.numberOfTrials);		
 		return ans;
 	}
 
