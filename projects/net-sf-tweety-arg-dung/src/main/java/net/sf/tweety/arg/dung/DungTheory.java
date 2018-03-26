@@ -412,12 +412,16 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return true if this structure has been changed
 	 */
 	public boolean remove(Argument a){
-		for(Argument b: this.parents.get(a))
-			this.children.get(b).remove(a);
-		for(Argument b: this.children.get(a))
-			this.parents.get(b).remove(a);
-		this.parents.remove(a);
-		this.children.remove(a);
+		if(this.parents.get(a) != null){
+			for(Argument b: this.parents.get(a))
+				this.children.get(b).remove(a);
+			this.parents.remove(a);
+		}
+		if(this.children.get(a) != null){
+			for(Argument b: this.children.get(a))
+				this.parents.get(b).remove(a);
+			this.children.remove(a);
+		}		
 		return super.remove(a);
 	}
 	
