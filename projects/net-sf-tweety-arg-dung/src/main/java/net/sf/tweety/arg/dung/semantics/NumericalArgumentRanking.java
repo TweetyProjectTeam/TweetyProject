@@ -34,6 +34,11 @@ import net.sf.tweety.arg.dung.syntax.Argument;
  */
 public class NumericalArgumentRanking extends ArgumentRanking implements Map<Argument,Double> {
 
+	/**
+	 * Precision for comparing values.
+	 */
+	public static final double PRECISION = 0.00001;
+	
 	/** The actual map used for storing acceptability values */
 	private Map<Argument,Double> theMap;
 	
@@ -59,7 +64,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public boolean isStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
-		return this.theMap.get(a) <= this.theMap.get(b);
+		return this.theMap.get(a) <= this.theMap.get(b) + NumericalArgumentRanking.PRECISION;
 	}
 
 	/* (non-Javadoc)

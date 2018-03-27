@@ -138,6 +138,22 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 	}
 	
 	/**
+	 * Checks whether this ranking is equivalent to the other one wrt. the given set of arguments.
+	 * @param other some ranking
+	 * @param args some arguments
+	 * @return "true" if both rankings are equivalent.
+	 */
+	public boolean isEquivalent(ArgumentRanking other, Collection<Argument> args) {
+		for(Argument a: args)
+			for(Argument b: args) {
+				if(this.isStrictlyLessOrEquallyAcceptableThan(a, b) && !other.isStrictlyLessOrEquallyAcceptableThan(a, b))
+					return false;
+				if(!this.isStrictlyLessOrEquallyAcceptableThan(a, b) && other.isStrictlyLessOrEquallyAcceptableThan(a, b))
+					return false;
+			}
+		return true;
+	}
+	/**
 	 * Returns "true" iff a is strictly less acceptable than b or a is equally
 	 * acceptable as b or a and b are not comparable, i.e. a >= b (or a ~ b)
 	 * (least arguments are maximally acceptable arguments)
