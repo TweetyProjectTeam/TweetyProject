@@ -28,7 +28,7 @@ public class ProbabilisticRankingReasonerTest {
 		System.out.println(theory);
 		
 		// Compute probabilistic ranking wrt. grounded semantics, credoulous reasoning, and p=0.5
-		ProbabilisticRankingReasoner reasoner = new ProbabilisticRankingReasoner(theory,Semantics.GROUNDED_SEMANTICS, Semantics.CREDULOUS_INFERENCE,new Probability(0.5));
+		ProbabilisticRankingReasoner reasoner = new ProbabilisticRankingReasoner(theory,Semantics.GROUNDED_SEMANTICS, Semantics.CREDULOUS_INFERENCE,new Probability(0.5),true);
 		
 		System.out.println(reasoner.getRanking());
 		

@@ -467,6 +467,8 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return "true" iff this theory contains the given attack.
 	 */
 	public boolean containsAttack(Attack att) {
+		if(this.parents.get(att.getAttacked()) == null)
+			return false;
 		return this.parents.get(att.getAttacked()).contains(att.getAttacker());
 	}		
 	

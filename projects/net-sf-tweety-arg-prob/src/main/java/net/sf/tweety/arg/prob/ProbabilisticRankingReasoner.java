@@ -39,7 +39,7 @@ public class ProbabilisticRankingReasoner extends Reasoner{
 	 * multiplied with the number of arguments of the actual framework)
 	 */
 	private static final int NUMBER_OF_TRIALS = 10000;
-	
+		
 	/**
 	 * The probability used for all arguments to instantiate 
 	 * a probabilistic argumentation framework
@@ -55,6 +55,11 @@ public class ProbabilisticRankingReasoner extends Reasoner{
 	 * The inference type (Semantics.CREDULOUS_INFERENCE or Semantics.SCEPTICAL_INFERENCE)
 	 */
 	private int inferenceType;
+		
+	/**
+	 * Whether to use exact inference. 
+	 */
+	private boolean exactInference = false;
 	
 	/**
 	 * Creates a new reasoner for the given Dung theory
@@ -62,12 +67,14 @@ public class ProbabilisticRankingReasoner extends Reasoner{
 	 * @param sem The classical semantics used for evaluating subgraphs
 	 * @param inferenceType The inference type (Semantics.CREDULOUS_INFERENCE or Semantics.SCEPTICAL_INFERENCE)
 	 * @param p The probability used for all arguments to instantiate a probabilistic argumentation framework
+	 * @param exactInference Whether to use exact inference. 
 	 */
-	public ProbabilisticRankingReasoner(DungTheory theory,Semantics sem,int inferenceType,Probability p) {
+	public ProbabilisticRankingReasoner(DungTheory theory,Semantics sem,int inferenceType,Probability p, boolean exactInference) {
 		super(theory);
 		this.sem = sem;
 		this.inferenceType = inferenceType;
 		this.p = p;
+		this.exactInference = exactInference;
 	}
 
 	/**
@@ -82,8 +89,12 @@ public class ProbabilisticRankingReasoner extends Reasoner{
 		// set probabilities
 		for(Argument a: aaf)
 			paf.add(a, this.p);		
-		// Estimate probabilities
-		MonteCarloPafReasoner reasoner = new MonteCarloPafReasoner(paf, this.sem, this.inferenceType, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
+		// Estimate/compute probabilities
+		Reasoner reasoner;
+		if(this.exactInference)
+			reasoner = new NaivePafReasoner(paf, this.sem, this.inferenceType);
+		else
+			reasoner = new MonteCarloPafReasoner(paf, this.sem, this.inferenceType, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		for(Argument a: aaf)
 			ranking.put(a, reasoner.query(a).getAnswerDouble());
