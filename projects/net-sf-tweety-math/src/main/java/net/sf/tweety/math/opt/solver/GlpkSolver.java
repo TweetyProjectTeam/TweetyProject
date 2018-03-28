@@ -37,7 +37,7 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * Provides a Java binding to the Glpk solver (https://www.gnu.org/software/glpk).
+ * Provides a Java binding to the Glpk solver (<a href="https://www.gnu.org/software/glpk">https://www.gnu.org/software/glpk</a>).
  * @author Matthias Thimm
  *
  */

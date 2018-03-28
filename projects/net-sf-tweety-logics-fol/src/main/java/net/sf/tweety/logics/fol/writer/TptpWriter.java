@@ -40,8 +40,9 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
 /**
- * Prints single fol formulas and full knowledge bases to TPTP
+ * Prints single first-order logic formulas and full knowledge bases to TPTP format.
  * 
+ * @see net.sf.tweety.logics.fol.prover.EProver
  * @author Nils Geilen
  *
  */
@@ -49,12 +50,12 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
 public class TptpWriter implements FolWriter {
 
 	/**
-	 * output is redirected to this writer
+	 * Output is redirected to this writer
 	 */
 	final Writer writer;
 	
 	/**
-	 * creates new Prover9Writer
+	 * Creates new Prover9Writer
 	 * @param writer output is redirected to this writer
 	 */
 	public TptpWriter(Writer writer) {
@@ -63,7 +64,7 @@ public class TptpWriter implements FolWriter {
 	}
 	
 	/**
-	 * creates new Prover9Writer
+	 * Creates new Prover9Writer
 	 */
 	public TptpWriter() {
 		super();
@@ -143,7 +144,7 @@ public class TptpWriter implements FolWriter {
 	 * 
 	 * @param f
 	 *            a formula
-	 * @return f in TPTP format
+	 * @return a string that represents the formula in TPTP format
 	 */
 	private String printFormula(RelationalFormula f) {
 		if (f instanceof Negation) {

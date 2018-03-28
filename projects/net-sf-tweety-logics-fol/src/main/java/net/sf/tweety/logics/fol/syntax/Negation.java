@@ -31,7 +31,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * The classical negation of first-order logic.
  * @author Matthias Thimm
  */
-public class Negation extends FolFormula{
+public class Negation extends FolFormula {
 	
 	private FolFormula folFormula;
 	

@@ -31,8 +31,9 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.writer.Prover9Writer;
 
 /**
- * Invokes Prover9 (https://www.cs.unm.edu/~mccune/mace4/) and returns its
- * results.
+ * Invokes Prover9 
+ * (<a href="https://www.cs.unm.edu/~mccune/mace4/"> https://www.cs.unm.edu/~mccune/mace4/</a>),
+ * an automated theorem prover for first-order logic, and returns its results.
  * 
  * @author Nils Geilen
  *

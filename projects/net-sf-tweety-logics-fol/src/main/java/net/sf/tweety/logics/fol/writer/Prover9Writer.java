@@ -38,8 +38,9 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
 /**
- * Prints single fol formulas and full knowledge bases to Porver9 format
- * (https://www.cs.unm.edu/~mccune/mace4/manual/2009-11A/)
+ * Prints single first-order logic formulas and full knowledge bases to Prover9 format
+ * (<a href="https://www.cs.unm.edu/~mccune/mace4/manual/2009-11A/">https://www.cs.unm.edu/~mccune/mace4/manual/2009-11A/</a>).
+ * @see net.sf.tweety.logics.fol.prover.Prover9 
  * @author Nils Geilen
  */
 
@@ -119,11 +120,12 @@ public class Prover9Writer implements FolWriter {
 	}
 
 	/**
-	 * Creates a representation of a formula in prover9 format.
+	 * Creates a representation of a formula in Prover9 format.
 	 * 
-	 * @param f
-	 *            a formula
-	 * @return f in prover9 format
+	 * @param f	
+	 * 			a formula
+	 * @return 
+	 * 			a string that represents the formula in Prover9 format
 	 */
 	private String printFormula(RelationalFormula f) {
 		if (f instanceof Negation) {

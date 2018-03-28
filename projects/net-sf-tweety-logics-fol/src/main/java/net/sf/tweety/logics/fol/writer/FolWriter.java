@@ -24,7 +24,7 @@ import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
- * Prints out single fol formulas and full knowledge bases
+ * Prints out single first-order logic formulas and full knowledge bases.
  * 
  * @author Nils Geilen
  *
@@ -33,16 +33,16 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 public interface FolWriter {
 	
 	/**
-	 * Prints formatted representation of a Query.
+	 * Prints formatted representation of a query.
 	 * @param query
-	 *            the formula to be queried
+	 *              the formula to be queried
 	 */
 	public void printQuery(FolFormula query) throws IOException;
 	
 	/**
-	 * Prints an Equivalence
+	 * Prints an Equivalence.
 	 * @param a formula on one side of the equation
-	 * @param b formula on one side of the equation
+	 * @param b formula on the other side of the equation
 	 * @throws IOException
 	 */
 	public void printEquivalence( FolFormula a, FolFormula b) throws IOException ;
@@ -50,12 +50,12 @@ public interface FolWriter {
 	/**
 	 * Prints formatted representation of a knowledge base.
 	 * @param b
-	 *            a knowledge base
+	 *          a knowledge base
 	 */
 	public void printBase(FolBeliefSet b) throws IOException ;
 	
 	/**
-	 * Closes the Writer
+	 * Closes the Writer.
 	 * @throws IOException
 	 */
 	public void close() throws IOException;

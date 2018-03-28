@@ -32,7 +32,8 @@ import net.sf.tweety.logics.fol.writer.FolWriter;
 import net.sf.tweety.logics.fol.writer.TptpWriter;
 
 /**
- * Invokes Eprover (http://eprover.org) and returns its results.
+ * Invokes E (<a href="http://eprover.org">http://eprover.org</a>), 
+ * an automated theorem prover for first-order logic, and returns its results.
  * 
  * @author Bastian Wolf, Nils Geilen, Matthias Thimm
  *

@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * This class provides a simple reference implementation of  the DPLL (Davis–Putnam–Logemann–Loveland)
- * algorithm for satisfiability testing, see e.g https://en.wikipedia.org/wiki/DPLL_algorithm.
+ * algorithm for satisfiability testing, see e.g <a href="https://en.wikipedia.org/wiki/DPLL_algorithm">https://en.wikipedia.org/wiki/DPLL_algorithm</a>.
  * 
  * The order of the variables is simply taken by the standard iterator of the induced signature. Only
  * unit propagation is used for satisfiability testing.

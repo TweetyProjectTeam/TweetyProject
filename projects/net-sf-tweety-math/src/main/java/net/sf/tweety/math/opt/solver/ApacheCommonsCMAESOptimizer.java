@@ -43,13 +43,14 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class is a wrapper for the Apache Commons Math3 CMAES optimizer.
- * See https://commons.apache.org/proper/commons-math/  
+ * This class is a wrapper for the Apache Commons Math3 CMAES optimizer 
+ * (<a href="https://commons.apache.org/proper/commons-math/">https://commons.apache.org/proper/commons-math/</a>).
+ *   
  * @author Matthias Thimm
  */
 public class ApacheCommonsCMAESOptimizer extends Solver{
 
-	/** population size */
+	/** Population size */
 	private int populationSize;
 	/** Maximal number of iterations.*/
 	private int maxIterations; 
@@ -61,7 +62,7 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 	private int diagonalOnly;
 	/** Determines how often new random objective variables are generated in case they are out of bounds. */
 	private int checkFeasableCount; 
-	/** the precision of the optimization*/
+	/** The precision of the optimization*/
 	private double precision;
 	
 	/**
