@@ -137,7 +137,8 @@ public enum Problem {
 	SE_CO (SubProblem.SE, Semantics.CO),
 	SE_GR (SubProblem.SE, Semantics.GR),
 	SE_PR (SubProblem.SE, Semantics.PR),
-	SE_ST (SubProblem.SE, Semantics.ST);
+	SE_ST (SubProblem.SE, Semantics.ST),
+	D3 (SubProblem.EE, Semantics.diverse);
 	
 	/**
 	 * The actual computational sub-problem.
@@ -229,6 +230,8 @@ public enum Problem {
 	 * @see java.lang.Enum#toString()
 	 */
 	public String toString(){
+		if(this.equals(D3))
+			return "D3";
 		return this.subProblem.abbreviation() + "-" + this.semantics.abbreviation();
 	}
 	

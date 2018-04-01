@@ -32,7 +32,8 @@ public enum Semantics {
 	STG ("stage semantics", "STG"),
 	SST ("semi-stable semantics", "SST"),
 	ID ("ideal semantics", "ID"),
-	CF2 ("CF2 semantics", "CF2");
+	CF2 ("CF2 semantics", "CF2"),
+	diverse ("diverse semantics", "div");
 	
 	public static final Semantics GROUNDED_SEMANTICS = GR,
 		STABLE_SEMANTICS = ST,
