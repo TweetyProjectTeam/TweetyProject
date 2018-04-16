@@ -46,7 +46,8 @@ import net.sf.tweety.logics.fol.syntax.*;
  * <br> FUNCTORDEC	::== "type" "(" SORTNAME "=" FUNCTORNAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n"
  * <br> FORMULAS    ::== ( "\n" FORMULA)*
  * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
- * <br>					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
+ * <br>					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
+ * <br>					 FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
@@ -200,7 +201,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 		Stack<Object> stack = new Stack<Object>();
 		try{
 			this.variables = new HashMap<String,Variable>();
-			for(int c = reader.read(); c != -1; c = reader.read())
+			for(int c = reader.read(); c != -1; c = reader.read()) 
 				this.consumeToken(stack, c);
 			return this.parseQuantification(stack);
 		}catch(Exception e){
@@ -249,7 +250,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 						stack.pop();
 						stack.push("exists");
 					}					
-				}				
+				}
 			}else if(s.equals(")")){
 				if(!stack.contains("("))
 					throw new ParserException("Missing opening parentheses.");				
@@ -271,8 +272,19 @@ public class FolParser extends Parser<FolBeliefSet> {
 			}else if(s.equals("&")){
 				if(stack.lastElement().equals("&")){
 					stack.pop();
-					stack.push("&&");
-				}else stack.push(s);					
+					stack.push("&&"); 
+				}else stack.push(s);
+			}else if(s.equals(">")){
+				if(stack.lastElement().equals("=")){
+					if (stack.size() >=2 && stack.get(stack.size()-2).equals("<")) {
+						stack.pop();
+						stack.pop();
+						stack.push("<=>");
+					}
+					else {
+					stack.pop();
+					stack.push("=>"); } 	
+				}else stack.push(s);
 			}else stack.push(s);
 		}catch(Exception e){
 			throw new ParserException(e);
@@ -355,28 +367,37 @@ public class FolParser extends Parser<FolBeliefSet> {
 	private FolFormula parseQuantification(List<Object> l) throws ParserException{
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(FolParser.EXISTS_QUANTIFIER) || l.contains(FolParser.FORALL_QUANTIFIER)) || l.get(0).equals("[]") || l.get(0).equals("<>")) 
-			return this.parseDisjunction(l); 
+		if(!(l.contains(FolParser.EXISTS_QUANTIFIER) || l.contains(FolParser.FORALL_QUANTIFIER))) 
+			return this.parseEquivalence(l); 
 		
-		//If the quantification is not the first conjunct/disjunct of
-		//the formula, split list at position of first "&&" or "||"
+		//If the quantification is not the first conjunct/disjunct/subformula of
+		//the formula, split list at position of first non-quantor operator
 		if (!(l.get(0).equals(FolParser.EXISTS_QUANTIFIER)||l.get(0).equals(FolParser.FORALL_QUANTIFIER))) {
 			int i1 = l.indexOf("&&");
 			int i2 = l.indexOf("||");
-			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
-				List<Object> leftl = new ArrayList<Object>(l.subList(0, i1));
-				List<Object> rightl = new ArrayList<Object>(l.subList(i1+1, l.size()));
-				return new Conjunction(	parseQuantification(leftl), parseQuantification(rightl));
-			}
-			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
-				List<Object> leftl = new ArrayList<Object>(l.subList(0, i2));
-				List<Object> rightl = new ArrayList<Object>(l.subList(i2+1, l.size()));
-				return new Disjunction(	parseQuantification(leftl), parseQuantification(rightl));
+			int i3 = l.indexOf("<=>");
+			int i4 = l.indexOf("=>");
+			int[] indices = {i1,i2,i3,i4};
+			Arrays.sort(indices);
+			
+			for (int i = 0; i < indices.length; i++) {
+				if (indices[i]!=-1) {
+					List<Object> leftl = new ArrayList<Object>(l.subList(0, indices[i]));
+					List<Object> rightl = new ArrayList<Object>(l.subList(indices[i]+1, l.size()));
+					if (indices[i]==i1) 
+						return new Conjunction(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i2) 
+						return new Disjunction(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i3) 
+						return new Equivalence(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i4) 
+						return new Implication(parseQuantification(leftl), parseQuantification(rightl));
+					else
+						throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
 				}
-			else 
-				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
+			}	
 		}
-		
+	
 		String var = "";
 		int idx = 1;
 		while(!l.get(idx).equals(":")){
@@ -397,6 +418,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 				break;
 			}
 		}
+		
 		if(bVar == null)
 			throw new ParserException("Variable '" + var + "' not found in quantification.");
 		Set<Variable> vars = new HashSet<Variable>();
@@ -415,13 +437,69 @@ public class FolParser extends Parser<FolBeliefSet> {
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else if (l.get(idx+2) == "||") 
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
+			else if (l.get(idx+2) == "<=>") 
+				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
+			else if (l.get(idx+2) == "=>")
+				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(0));
 		}
 		return result;	
 	}
-		
 	
+	/**
+	 * Parses an equivalence as a list of String tokens or formulas into a fol formula.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	private FolFormula parseEquivalence(List<Object> l) {
+		if(l.isEmpty())
+			throw new ParserException("Empty parentheses.");
+		if(!(l.contains(LogicalSymbols.EQUIVALENCE())))
+			return this.parseImplication(l);	
+		
+		List<Object> left = new ArrayList<Object>(); 
+		List<Object> right = new ArrayList<Object>(); 
+		boolean isRightFormula = false;
+		for(Object o: l){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.EQUIVALENCE()) )
+				isRightFormula = true;
+			else if (isRightFormula) 
+				right.add(o);
+			else
+				left.add(o);
+		}	
+		return new Equivalence(parseQuantification(left),parseQuantification(right));	
+	}
+	
+	/**
+	 * Parses an implication as a list of String tokens or formulas into a fol formula.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	private FolFormula parseImplication(List<Object> l) {
+		if(l.isEmpty())
+			throw new ParserException("Empty parentheses.");
+		if(!(l.contains(LogicalSymbols.IMPLICATION())))
+			return this.parseDisjunction(l);	
+	
+		List<Object> left = new ArrayList<Object>(); 
+		List<Object> right = new ArrayList<Object>(); 
+		boolean isRightFormula = false;
+		for(Object o: l){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.IMPLICATION()) )
+				isRightFormula = true;
+			else if (isRightFormula) 
+				right.add(o);
+			else
+				left.add(o);
+		}	
+		return new Implication(parseQuantification(left),parseQuantification(right));	
+	}
+	
+		
 	/**
 	 * Parses a disjunction as a list of String tokens or formulas into a fol formula.
 	 * This method expects no parentheses in the list and as such treats the formula as a disjunction.

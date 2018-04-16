@@ -136,6 +136,27 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom> {
 			}
 			return true;
 		}
+		if (f instanceof Implication) {
+			Implication i = (Implication) f;
+			if (this.satisfies(i.getFormulas().getFirst()) && !this.satisfies(i.getFormulas().getSecond()))
+				return false;
+			return true;
+		}
+		if (f instanceof Equivalence) {
+			Equivalence e = (Equivalence) f;
+			RelationalFormula a = e.getFormulas().getFirst();
+			RelationalFormula b = e.getFormulas().getFirst();
+			
+			if (this.satisfies(a)) {
+				if (!this.satisfies(b))
+					return false;
+			}
+			else {
+				if (this.satisfies(b))
+					return false;
+			}
+			return true;	
+		}
 		if (formula instanceof Necessity) {
 			for (Interpretation j : successors) {
 				if (!j.satisfies(((ModalFormula) formula).getFormula())) {

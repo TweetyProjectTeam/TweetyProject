@@ -32,11 +32,13 @@ import org.junit.Test;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.fol.syntax.Implication;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 /**
@@ -116,6 +118,16 @@ public class FolParserTest {
 		Contradiction c = new Contradiction();
 		assertTrue(f.equals(c));
 	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void ImplicationTest() throws ParserException, IOException {
+		Implication f = (Implication) parser.parseFormula("Abba=>Abba");
+		FolSignature sig = f.getSignature();
+		assertTrue(sig.containsPredicate("Abba"));
+		assertEquals(f.getFormulas().getFirst(),parser.parseFormula("Abba"));
+		assertEquals(f.getFormulas().getSecond(),parser.parseFormula("Abba"));
+	}
+	
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedQuantifiedFormulaTest() throws ParserException, IOException {

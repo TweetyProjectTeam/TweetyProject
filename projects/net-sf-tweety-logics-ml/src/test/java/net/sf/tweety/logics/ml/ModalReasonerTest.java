@@ -32,7 +32,7 @@ import net.sf.tweety.logics.ml.parser.ModalParser;
 import net.sf.tweety.logics.ml.reasoner.NaiveModalReasoner;
 
 /**
- * JUnit Test class for modal reasoners, i.e. NaiveModalReasoner and other reasoners to be added in the future.
+ * JUnit Test class for NaiveModalReasoner.
  * 
  *  @author Anna Gessler
  */
@@ -72,7 +72,7 @@ public class ModalReasonerTest {
 		assertFalse(a1.getAnswerBoolean());
 		assertTrue(a2.getAnswerBoolean());
 	}
-	
+
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleQueryTest4() throws FileNotFoundException, ParserException, IOException {
 		ModalParser parser = new ModalParser();
@@ -80,6 +80,21 @@ public class ModalReasonerTest {
 		NaiveModalReasoner reasoner = new NaiveModalReasoner(b);
 		Answer a1 = reasoner.query(parser.parseFormula("forall X:(Flies(X))"));
 		assertTrue(a1.getAnswerBoolean());
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void ImplicationTest() throws FileNotFoundException, ParserException, IOException {
+		ModalParser parser = new ModalParser();
+		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n type(q) \n p \n !p||q");
+		NaiveModalReasoner reasoner = new NaiveModalReasoner(b);		
+		Answer a1 = reasoner.query(parser.parseFormula("p<=>p"));
+		Answer a2 = reasoner.query(parser.parseFormula("!p=>!p"));
+		Answer a3 = reasoner.query(parser.parseFormula("!p=>p"));
+		Answer a4 = reasoner.query(parser.parseFormula("p=>q"));
+		assertTrue(a1.getAnswerBoolean());
+		assertTrue(a2.getAnswerBoolean());
+		assertTrue(a3.getAnswerBoolean());
+		assertTrue(a4.getAnswerBoolean());
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

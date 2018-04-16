@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -43,11 +44,13 @@ import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
+import net.sf.tweety.logics.fol.syntax.Implication;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
@@ -69,6 +72,7 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * <br> FORMULAS    ::== ( "\n" FORMULA)*
  * <br> FORMULA     ::== ATOM  | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
  * <br> 				"(" FORMULA ")" | "[]" "(" FORMULA ")" | "<>" "(" FORMULA ")" |
+ * <br>					FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA
  * <br>  				FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
@@ -82,7 +86,7 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
 
 public class ModalParser extends Parser<ModalBeliefSet> {
 
-	/*
+	/**
 	 * First-order logic parser used for parsing sorts and type declaration.
 	 */
 	FolParser folparser; 
@@ -204,8 +208,6 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
 					stack.push(this.parseTermlist(l));
 				else  stack.push(this.parseQuantification(l)); 
-			//If two consecutive "|" or two consecutive "&" have been read, 
-			//add them to the stack them as a single string.
 			}else if(s.equals("|")){
 				if(stack.lastElement().equals("|")){
 					stack.pop();
@@ -225,16 +227,29 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			}else if(s.equals(">")){
 				if(stack.lastElement().equals("<")){
 					stack.pop();
-					stack.push("<>");
+					stack.push("<>"); }
+				else if(stack.lastElement().equals("=")){
+					if (stack.size() >=2 && stack.get(stack.size()-2).equals("<")) {
+						stack.pop();
+						stack.pop();
+						stack.push("<=>");
+						}
+					else {
+					stack.pop();
+					stack.push("=>"); } 	
 				}else stack.push(s);
-			}
-			else stack.push(s);
-		} catch(Exception e){
+			}else stack.push(s);
+		}catch(Exception e){
 			throw new ParserException(e);
-		}		
-		
+		}			
 	}
 
+	/**
+	 * Parses a term list as a list of String tokens or terms into a list of terms.
+	 * @param l a list objects, either String tokens or objects of type List.
+	 * @return a list of terms.
+	 * @throws ParserException if the list could not be parsed.
+	 */
 	@SuppressWarnings("unchecked")
 	private List<Term<?>> parseTermlist(List<Object> l) {
 		List<Term<?>> terms = new ArrayList<Term<?>>();
@@ -298,73 +313,47 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		return terms;
 	}
 
-	private RelationalFormula parseModalization(List<Object> l) throws ParserException {
-		if(l.isEmpty()) {
-			throw new ParserException("Empty parentheses."); }
-		if(!( l.contains("[]") || l.contains("<>") ) )  
-			return this.parseDisjunction(l); 
-		
-		ModalFormula result;
-		if (l.get(0).equals("[]")) 
-			result = new Necessity((RelationalFormula) l.get(1));
-		else if (l.get(0).equals("<>")) 
-			result = new Possibility((RelationalFormula) l.get(1));
-		else {
-			//If the modalization is not the first conjunct/disjunct of
-			//the formula, split list at position of first "&&" or "||"
-			int i1 = l.indexOf("&&");
-			int i2 = l.indexOf("||");
-			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
-				List<Object> leftl = new ArrayList<Object>(l.subList(0, i1));
-				List<Object> rightl = new ArrayList<Object>(l.subList(i1+1, l.size()));
-				return new Conjunction(	parseQuantification(leftl), parseQuantification(rightl));
-			}
-			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
-				List<Object> leftl = new ArrayList<Object>(l.subList(0, i2));
-				List<Object> rightl = new ArrayList<Object>(l.subList(i2+1, l.size()));
-				return new Disjunction(	parseQuantification(leftl), parseQuantification(rightl));
-				}
-			else 
-				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
-		}
-
-		//Add additional conjuncts/disjuncts to the right of the modalization (if applicable)
-		if (l.size() > 2) {
-			if (l.get(2) == "&&")
-				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
-			else if (l.get(2) == "||") 
-				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
-			else 
-				throw new ParserException("Unrecognized symbol " + l.get(0));
-		}
-		return result;	
-	}
 	
-	private RelationalFormula parseQuantification(List<Object> l) {
+	/**
+	 * Parses a quantified formula as a list of String tokens or formulas.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	private RelationalFormula parseQuantification(List<Object> l) throws ParserException{
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
 		if(!(l.contains(FolParser.EXISTS_QUANTIFIER) || l.contains(FolParser.FORALL_QUANTIFIER)) || l.get(0).equals("[]") || l.get(0).equals("<>")) 
 			return this.parseModalization(l); 
-		
-		//If the quantification is not the first conjunct/disjunct of
-		//the formula, split list at position of first "&&" or "||"
+
+		//If the quantification is not the first conjunct/disjunct/subformula of
+		//the formula, split the list at position of first non-quantor operator
 		if (!(l.get(0).equals(FolParser.EXISTS_QUANTIFIER)||l.get(0).equals(FolParser.FORALL_QUANTIFIER))) {
 			int i1 = l.indexOf("&&");
 			int i2 = l.indexOf("||");
-			if ((i1<i2 && i1!=-1)||(i1>i2 && i2==-1)) {
-				List<Object> leftl = new ArrayList<Object>(l.subList(0, i1));
-				List<Object> rightl = new ArrayList<Object>(l.subList(i1+1, l.size()));
-				return new Conjunction(	parseQuantification(leftl), parseQuantification(rightl));
-			}
-			else if ((i2<i1 && i2!=-1)||(i2>i1 && i1==-1)) {
-				List<Object> leftl = new ArrayList<Object>(l.subList(0, i2));
-				List<Object> rightl = new ArrayList<Object>(l.subList(i2+1, l.size()));
-				return new Disjunction(	parseQuantification(leftl), parseQuantification(rightl));
+			int i3 = l.indexOf("<=>");
+			int i4 = l.indexOf("=>");
+			int[] indices = {i1,i2,i3,i4};
+			Arrays.sort(indices);
+			
+			for (int i = 0; i < indices.length; i++) {
+				if (indices[i]!=-1) {
+					List<Object> leftl = new ArrayList<Object>(l.subList(0, indices[i]));
+					List<Object> rightl = new ArrayList<Object>(l.subList(indices[i]+1, l.size()));
+					if (indices[i]==i1) 
+						return new Conjunction(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i2) 
+						return new Disjunction(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i3) 
+						return new Equivalence(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i4) 
+						return new Implication(parseQuantification(leftl), parseQuantification(rightl));
+					else
+						throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
 				}
-			else 
-				throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
+			}	
 		}
-		
+	
 		String var = "";
 		int idx = 1;
 		while(!l.get(idx).equals(":")){
@@ -385,13 +374,14 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 				break;
 			}
 		}
+		
 		if(bVar == null)
 			throw new ParserException("Variable '" + var + "' not found in quantification.");
 		Set<Variable> vars = new HashSet<Variable>();
 		vars.add(bVar);
+		vars.add(bVar);
 		Map<String, Variable> map = this.folparser.getVariables();
-		map.remove(var);;
-		this.folparser.setVariables(map);
+		map.remove(var);
 		
 		FolFormula result;
 		if (l.get(0).equals(FolParser.EXISTS_QUANTIFIER)) 
@@ -405,11 +395,129 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else if (l.get(idx+2) == "||") 
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
+			else if (l.get(idx+2) == "<=>") 
+				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
+			else if (l.get(idx+2) == "=>")
+				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(0));
 		}
 		return result;	
 	}
+	
+	/**
+	 * Parses a formula containing at least one modal operator as a list of String tokens or formulas.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	private RelationalFormula parseModalization(List<Object> l) throws ParserException {
+		if(l.isEmpty()) {
+			throw new ParserException("Empty parentheses."); }
+		if(!( l.contains("[]") || l.contains("<>") ) )  
+			return this.parseEquivalence(l); 
+		
+		//If the modalized subformula is not the first conjunct/disjunct/subformula of
+		//the formula, split the list at position of first non-quantor operator
+		if (!(l.get(0).equals("[]")||l.get(0).equals("<>"))) { 
+			int i1 = l.indexOf("&&");
+			int i2 = l.indexOf("||");
+			int i3 = l.indexOf("<=>");
+			int i4 = l.indexOf("=>");
+			int[] indices = {i1,i2,i3,i4};
+			Arrays.sort(indices);
+			
+			for (int i = 0; i < indices.length; i++) {
+				if (indices[i]!=-1) {
+					List<Object> leftl = new ArrayList<Object>(l.subList(0, indices[i]));
+					List<Object> rightl = new ArrayList<Object>(l.subList(indices[i]+1, l.size()));
+					if (indices[i]==i1) 
+						return new Conjunction(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i2) 
+						return new Disjunction(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i3) 
+						return new Equivalence(parseQuantification(leftl), parseQuantification(rightl));
+					else if (indices[i]==i4) 
+						return new Implication(parseQuantification(leftl), parseQuantification(rightl));
+					else
+						throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
+				}
+			}	
+		}
+		
+		ModalFormula result;
+		if (l.get(0).equals("[]")) 
+			result = new Necessity((RelationalFormula) l.get(1));
+		else 
+			result = new Possibility((RelationalFormula) l.get(1));
+		//Add additional conjuncts/disjuncts to the right of the modalization (if applicable)
+		if (l.size() > 2) {
+			if (l.get(2) == "&&") 
+				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
+			else if (l.get(2) == "||") 
+				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
+			else if (l.get(2) == "<=>") 
+				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
+			else if (l.get(2) == "=>")
+				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
+			else 
+				throw new ParserException("Unrecognized symbol " + l.get(0));
+		}
+		return result;	
+	}
+	
+	/**
+	 * Parses an equivalence as a list of String tokens or formulas into a fol formula.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	private RelationalFormula parseEquivalence(List<Object> l) {
+		if(l.isEmpty())
+			throw new ParserException("Empty parentheses.");
+		if(!(l.contains(LogicalSymbols.EQUIVALENCE())))
+			return this.parseImplication(l);	
+		
+		List<Object> left = new ArrayList<Object>(); 
+		List<Object> right = new ArrayList<Object>(); 
+		boolean isRightFormula = false;
+		for(Object o: l){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.EQUIVALENCE()) )
+				isRightFormula = true;
+			else if (isRightFormula) 
+				right.add(o);
+			else
+				left.add(o);
+		}	
+		return new Equivalence(parseQuantification(left),parseQuantification(right));	
+	}
+	
+	/**
+	 * Parses an implication as a list of String tokens or formulas into a fol formula.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	private RelationalFormula parseImplication(List<Object> l) {
+		if(l.isEmpty())
+			throw new ParserException("Empty parentheses.");
+		if(!(l.contains(LogicalSymbols.IMPLICATION())))
+			return this.parseDisjunction(l);	
+	
+		List<Object> left = new ArrayList<Object>(); 
+		List<Object> right = new ArrayList<Object>(); 
+		boolean isRightFormula = false;
+		for(Object o: l){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.IMPLICATION()) )
+				isRightFormula = true;
+			else if (isRightFormula) 
+				right.add(o);
+			else
+				left.add(o);
+		}	
+		return new Implication(parseQuantification(left),parseQuantification(right));	
+	}
+	
 
 	/**
 	 * Parses a disjunction as a list of String tokens or formulas into a fol formula.

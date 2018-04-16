@@ -52,6 +52,12 @@ public class LogicalSymbols {
 	public static String EXISTSQUANTIFIER() {
 		return "EXISTS";
 	}
+	public static String IMPLICATION() {
+		return "=>";
+	}
+	public static String EQUIVALENCE() {
+		return "<=>";
+	}
 	public static String TAUTOLOGY() {
 		return "+";
 	}
