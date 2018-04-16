@@ -132,7 +132,7 @@ public class Conjunction extends AssociativeFOLFormula {
 
 	@Override
 	public String getEmptySymbol() {
-		return LogicalSymbols.CONTRADICTION();
+		return LogicalSymbols.TAUTOLOGY();
 	}
 
 

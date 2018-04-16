@@ -126,6 +126,6 @@ public class Disjunction extends AssociativeFOLFormula{
 
 	@Override
 	public String getEmptySymbol() {
-		return LogicalSymbols.TAUTOLOGY();
+		return LogicalSymbols.CONTRADICTION();
 	}
 }
