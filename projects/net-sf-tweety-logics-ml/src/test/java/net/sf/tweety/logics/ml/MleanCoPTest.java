@@ -28,9 +28,9 @@ public class MleanCoPTest {
 	@Before 
 	public void init() throws ParserException, IOException {
 		parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("type(q) \n type(p) \n p \n q");
+		ModalBeliefSet b = parser.parseBeliefBase("Test={test} \n type(p) \n type(q(Test)) \n p \n q(test)");
 		parser.setSignature((FolSignature) b.getSignature());
-		prover = new MleanCoProver("/home/anna/Desktop/mlProver/mleancop/mleancop.sh");
+		prover = new MleanCoProver("/home/anna/sw/mlProver/mleancop/mleancop.sh");
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -43,8 +43,7 @@ public class MleanCoPTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ComplexQueryTest() throws ParserException, IOException {
-		//TODO: To be added after Implication and Equivalence classes are complete
-		//FolFormula f1 = (FolFormula) parser.parseFormula("[](forall X:(p(X)))=>forall X: [](p(X))");
-		//assertTrue(prover.query(f1));
+		FolFormula f1 = (FolFormula) parser.parseFormula("[](forall X:(q(X)))=>forall X:( [](q(X)))");
+		assertTrue(prover.query(f1));
 	}
 }

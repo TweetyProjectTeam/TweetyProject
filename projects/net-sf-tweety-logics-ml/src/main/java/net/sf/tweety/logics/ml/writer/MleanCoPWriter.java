@@ -27,9 +27,11 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
+import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
+import net.sf.tweety.logics.fol.syntax.Implication;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.ml.syntax.Necessity;
 import net.sf.tweety.logics.ml.syntax.Possibility;
@@ -78,7 +80,6 @@ public class MleanCoPWriter {
 	 * @throws IOException
 	 */
 	public void printQuery(RelationalFormula f) throws IOException {
-		System.out.println(printFormula(f));
 		writer.write("f(" + printFormula(f) + ").");
 	}
 	
@@ -93,15 +94,15 @@ public class MleanCoPWriter {
 			Possibility p = (Possibility) f;
 			return parens("* " + parens(printFormula(p.getFormula())));
 		}
-		if (f instanceof Necessity) {
+		else if (f instanceof Necessity) {
 			Necessity n = (Necessity) f;
 			return parens("# " + parens(printFormula(n.getFormula())));
 		}
-		if (f instanceof Negation) {
+		else if (f instanceof Negation) {
 			Negation n = (Negation) f;
 			return parens("~ " + parens(printFormula(n.getFormula())));
 		}
-		if (f instanceof ForallQuantifiedFormula || f instanceof ExistsQuantifiedFormula) {
+		else if (f instanceof ForallQuantifiedFormula || f instanceof ExistsQuantifiedFormula) {
 			FolFormula fqf = (FolFormula) f;
 			boolean existential = f instanceof ExistsQuantifiedFormula;
 			String result = "";
@@ -111,11 +112,9 @@ public class MleanCoPWriter {
 				result += ": " ;
 			}
 			result += printFormula(fqf.getFormula());
-			for(int i = 0; i < fqf.getQuantifierVariables().size(); i++) 
-				result += "))";
 			return result;
 		}
-		if (f instanceof AssociativeFOLFormula) {
+		else if (f instanceof AssociativeFOLFormula) {
 			AssociativeFOLFormula d = (AssociativeFOLFormula) f;
 			Iterator<RelationalFormula> i = d.getFormulas().iterator();
 			String result = printFormula(i.next());
@@ -124,6 +123,14 @@ public class MleanCoPWriter {
 				result += delimiter + printFormula(i.next());
 			return parens(result);
 		}	
+		else if (f instanceof Implication) {
+			Implication i = (Implication) f;
+			return parens(printFormula(i.getFormulas().getFirst()) + "=>" + parens(printFormula(i.getFormulas().getSecond())));
+		}
+		else if (f instanceof Equivalence) {
+			Equivalence i = (Equivalence) f;
+			return parens(printFormula(i.getFormulas().getFirst()) + "<=>" + parens(printFormula(i.getFormulas().getSecond())));
+		}
 		return f.toString();
 	}
 	

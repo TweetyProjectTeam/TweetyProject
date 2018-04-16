@@ -32,7 +32,7 @@ import net.sf.tweety.logics.ml.writer.MleanCoPWriter;
  * for modal first-order logic based on the clausal connection calculus. It checks whether a given formula is valid.
  * <br>
  * <b>NOTE:</b> Make sure to set the PROVER_PATH variable in the mleancop.sh script to the location
- * of the mleancop files (= the prolog files).
+ * of the mleancop files (= the Prolog files).
  * 
  * @author Anna Gessler
  *
@@ -83,7 +83,7 @@ public class MleanCoProver {
 			MleanCoPWriter writer = new MleanCoPWriter(new PrintWriter(file,"UTF-8"));
 			writer.printQuery((FolFormula) query);
 			writer.close();
-			
+		
 			//Execute query
 			String cmd = scriptLocation + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
 			String output = bash.run(cmd);
