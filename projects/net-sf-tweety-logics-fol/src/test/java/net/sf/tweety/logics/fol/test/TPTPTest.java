@@ -31,10 +31,11 @@ import net.sf.tweety.logics.fol.prover.EProver;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.writer.FolWriter;
-import net.sf.tweety.logics.fol.writer.TptpWriter;
+import net.sf.tweety.logics.fol.writer.TPTPWriter;
 
 /**
- * JUnitTest to test TPTP priter and Eprover implementation
+ * JUnitTest to test TPTP printer and EProver implementation
+ * 
  * @author Nils Geilen
  *
  */
@@ -42,7 +43,7 @@ import net.sf.tweety.logics.fol.writer.TptpWriter;
 public class TPTPTest {
 	
 	static FolTheoremProver e;
-	FolWriter printer = new TptpWriter();
+	FolWriter printer = new TPTPWriter();
 	
 	@BeforeClass public static void init(){
 		if(System.getProperty("os.name").matches("Win.*")){
@@ -50,7 +51,7 @@ public class TPTPTest {
 			 e = new EProver("C:/app/E/PROVER/eprover.exe", Shell.getCygwinShell("C:/cygwin64/bin/bash.exe"));
 		} else {
 			System.out.println("Initializing Eprover Test for Unix");
-			 e = new EProver("/home/nils/app/E/PROVER/eprover", Shell.getNativeShell());
+			 e = new EProver("/home/anna/sw/folProver/E/PROVER/eprover", Shell.getNativeShell());
 			 //e = new EProver("/Users/mthimm/Projects/misc_bins/eprover/eprover");
 		}
 	}

@@ -58,17 +58,18 @@ public class NativeShell extends Shell {
 	 * Executes the given command on the commandline and returns the output up to a given number of lines.
 	 * @param commandline some command
 	 * @param maxLines the maximum number of lines to be read (the process is killed afterwards)
+	 * @param suppressErrors if set to true, possible errors will not be included in the output
 	 * @return the output of the execution
 	 * @throws IOException of an error was encountered.
 	 * @throws InterruptedException 
 	 */
 	public static String invokeExecutable(String commandline, long maxLines, boolean suppressErrors) throws IOException, InterruptedException{
 		Process child = Runtime.getRuntime().exec(commandline);
-		//child.waitFor();
 		String output = "";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
 		String line = "";
 		long lines = 0;
+		
 		while((line = reader.readLine())!= null) {
 			output += line + "\n";
 			lines++;
@@ -76,6 +77,7 @@ public class NativeShell extends Shell {
 				break;
 		}
 		reader.close();
+		
 		// check for errors (only if we did not exhaust max lines)
 		if(maxLines == -1 || lines < maxLines){
 			reader = new BufferedReader(new InputStreamReader(child.getErrorStream())); 
@@ -86,11 +88,10 @@ public class NativeShell extends Shell {
 			}
 			reader.close();
 			child.destroy();
+			child.waitFor();
 			error.trim();
-			if(suppressErrors){
-				//System.out.println(error);
-			}else if(!error.equals(""))
-				throw new IOException(error);
+			if(!suppressErrors && !error.equals("")) 
+				throw new IOException(error); 
 		}
 		return output;
 	}

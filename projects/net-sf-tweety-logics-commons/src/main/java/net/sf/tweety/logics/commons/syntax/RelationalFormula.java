@@ -37,7 +37,6 @@ import net.sf.tweety.math.probability.Probability;
 /**
  * This is the abstract base class for relational formulas, 
  * i.e. formulas that are build on first-order signatures.
- * This interface models a relational formula, i.e. a formula that is build
  *
  * NOTE: "RelationalFormula" and "FolFormula" differ in their meaning as follows:
  *<ul>

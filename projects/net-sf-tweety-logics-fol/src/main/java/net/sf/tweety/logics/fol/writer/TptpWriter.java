@@ -47,7 +47,7 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  *
  */
 
-public class TptpWriter implements FolWriter {
+public class TPTPWriter implements FolWriter {
 
 	/**
 	 * Output is redirected to this writer
@@ -58,7 +58,7 @@ public class TptpWriter implements FolWriter {
 	 * Creates new Prover9Writer
 	 * @param writer output is redirected to this writer
 	 */
-	public TptpWriter(Writer writer) {
+	public TPTPWriter(Writer writer) {
 		super();
 		this.writer = writer;
 	}
@@ -66,7 +66,7 @@ public class TptpWriter implements FolWriter {
 	/**
 	 * Creates new Prover9Writer
 	 */
-	public TptpWriter() {
+	public TPTPWriter() {
 		super();
 		this.writer = new StringWriter();
 	}

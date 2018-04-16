@@ -29,7 +29,7 @@ import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.writer.FolWriter;
-import net.sf.tweety.logics.fol.writer.TptpWriter;
+import net.sf.tweety.logics.fol.writer.TPTPWriter;
 
 /**
  * Invokes E (<a href="http://eprover.org">http://eprover.org</a>), 
@@ -116,7 +116,7 @@ public class EProver extends FolTheoremProver {
 		try{
 			File file  = File.createTempFile("tmp", ".txt");
 			file.deleteOnExit();
-			FolWriter printer = new TptpWriter(new PrintWriter(file));
+			FolWriter printer = new TPTPWriter(new PrintWriter(file));
 			printer.printBase(kb);
 			printer.printQuery((FolFormula) query);
 			printer.close();
@@ -152,7 +152,7 @@ public class EProver extends FolTheoremProver {
 	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
 		try{
 			File file  = File.createTempFile("tmp", ".txt");
-			TptpWriter printer = new TptpWriter(new PrintWriter(file));
+			TPTPWriter printer = new TPTPWriter(new PrintWriter(file));
 			printer.printBase(kb);
 			printer.printEquivalence(a,b);
 			printer.close();
