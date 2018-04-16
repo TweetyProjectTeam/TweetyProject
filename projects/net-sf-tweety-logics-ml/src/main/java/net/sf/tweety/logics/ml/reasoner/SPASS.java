@@ -16,7 +16,7 @@
  *
  *  Copyright 2018 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.fol.prover;
+package net.sf.tweety.logics.ml.reasoner;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,14 +25,14 @@ import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.FolBeliefSet;
-import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.writer.SPASSWriter;
-import net.sf.tweety.logics.fol.writer.TPTPWriter;
+import net.sf.tweety.logics.ml.writer.SPASSWriter;
+import net.sf.tweety.logics.ml.ModalBeliefSet;
 
 /**
  * 
@@ -43,7 +43,7 @@ import net.sf.tweety.logics.fol.writer.TPTPWriter;
  * @author Anna Gessler
  *
  */
-public class SPASS extends FolTheoremProver {
+public class SPASS extends ModalReasoner {
 	/**
 	 * String representation of the SPASS path.
 	 */
@@ -127,7 +127,7 @@ public class SPASS extends FolTheoremProver {
 	
 	@Override
 	public Answer query(Formula query) {
-		FolBeliefSet kb = (FolBeliefSet) this.getKnowledgeBase();
+		ModalBeliefSet kb =  (ModalBeliefSet) this.getKnowledgeBase();
 		Answer answer = new Answer(kb,query);
 		String output = null;
 		try {
@@ -139,6 +139,7 @@ public class SPASS extends FolTheoremProver {
 			
 			String cmd = binaryLocation + " " + cmdOptions + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
 			output = bash.run(cmd);
+			System.out.println("Running " + cmd);
 			if (evaluateResult(output)) 
 				answer.setAnswer(true);
 			else 
@@ -158,7 +159,7 @@ public class SPASS extends FolTheoremProver {
 	 * @return a string containing proof documentation 
 	 */
 	public String queryProof(Formula query) {
-		FolBeliefSet kb = (FolBeliefSet) this.getKnowledgeBase();
+		ModalBeliefSet kb = (ModalBeliefSet) this.getKnowledgeBase();
 		String output = null;
 		try {
 			File file = File.createTempFile("tmp", ".txt");	
@@ -187,6 +188,7 @@ public class SPASS extends FolTheoremProver {
 	 * @return true if a proof was found, false otherwise
 	 */
 	private boolean evaluateResult(String output) {
+		System.out.println("out:"+output);
 		if (Pattern.compile("SPASS beiseite: Proof found").matcher(output).find())
 			return true;
 		if (Pattern.compile("SPASS beiseite: Completion found").matcher(output).find())
@@ -194,25 +196,6 @@ public class SPASS extends FolTheoremProver {
 		if (Pattern.compile("SPASS beiseite: Ran out of time").matcher(output).find())
 			throw new RuntimeException("Failure: SPASS timeout.");
 		throw new RuntimeException("Failure: SPASS returned no result which can be interpreted.");
-	}
-
-	@Override
-	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
-		String output = null;
-		try {
-			File file = File.createTempFile("tmp", ".txt");
-			SPASSWriter writer = new SPASSWriter(new PrintWriter(file));
-			writer.printProblem(kb,new Equivalence(a,b));
-			writer.close();
-			
-			String cmd = binaryLocation + " " + cmdOptions + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
-			output = bash.run(cmd);
-			if (evaluateResult(output)) 
-				return true;
-		} catch (InterruptedException | IOException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 }
