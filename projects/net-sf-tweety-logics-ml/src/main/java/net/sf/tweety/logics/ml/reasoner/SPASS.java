@@ -25,12 +25,10 @@ import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.FolBeliefSet;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.ml.writer.SPASSWriter;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 
@@ -139,7 +137,6 @@ public class SPASS extends ModalReasoner {
 			
 			String cmd = binaryLocation + " " + cmdOptions + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
 			output = bash.run(cmd);
-			System.out.println("Running " + cmd);
 			if (evaluateResult(output)) 
 				answer.setAnswer(true);
 			else 
@@ -169,7 +166,6 @@ public class SPASS extends ModalReasoner {
 			
 			//Run query with option to document proofs
 			String cmd = binaryLocation + " " + cmdOptions + " -DocProof" + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
-			System.out.println("Running " + cmd);
 			output = bash.run(cmd);
 		} catch (InterruptedException | IOException e) {
 			e.printStackTrace();
@@ -188,7 +184,6 @@ public class SPASS extends ModalReasoner {
 	 * @return true if a proof was found, false otherwise
 	 */
 	private boolean evaluateResult(String output) {
-		System.out.println("out:"+output);
 		if (Pattern.compile("SPASS beiseite: Proof found").matcher(output).find())
 			return true;
 		if (Pattern.compile("SPASS beiseite: Completion found").matcher(output).find())

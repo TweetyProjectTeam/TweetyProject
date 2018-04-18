@@ -32,7 +32,6 @@ import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.writer.SPASSWriter;
-import net.sf.tweety.logics.fol.writer.TPTPWriter;
 
 /**
  * 
@@ -168,7 +167,6 @@ public class SPASS extends FolTheoremProver {
 			
 			//Run query with option to document proofs
 			String cmd = binaryLocation + " " + cmdOptions + " -DocProof" + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
-			System.out.println("Running " + cmd);
 			output = bash.run(cmd);
 		} catch (InterruptedException | IOException e) {
 			e.printStackTrace();

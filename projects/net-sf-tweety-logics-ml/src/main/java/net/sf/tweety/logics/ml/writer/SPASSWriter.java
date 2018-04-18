@@ -85,8 +85,6 @@ public class SPASSWriter {
 		problem += printFormulas(kb, formula) + "\n";;
 		problem += "end_problem.";
 		
-		System.out.println(problem);
-		
 		writer.write(problem);
 	}
 	

@@ -32,7 +32,6 @@ import org.junit.Test;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
