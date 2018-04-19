@@ -34,14 +34,14 @@ import net.sf.tweety.arg.dung.syntax.Argument;
  * 
  * @author Matthias Thimm
  */
-public abstract class DungWriter {
+public abstract class AbstractDungWriter {
 	
 	/**
 	 * Retrieves the writer for the given file format.
 	 * @param f some file format
 	 * @return a writer or null if the format is not supported.
 	 */
-	public static DungWriter getWriter(FileFormat f){
+	public static AbstractDungWriter getWriter(FileFormat f){
 		if(f.equals(FileFormat.TGF))
 			return new TgfWriter();
 		if(f.equals(FileFormat.APX))

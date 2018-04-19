@@ -30,7 +30,7 @@ import net.sf.tweety.arg.dung.parser.AbstractDungParser;
 import net.sf.tweety.arg.dung.parser.ApxParser;
 import net.sf.tweety.arg.dung.parser.FileFormat;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.writer.DungWriter;
+import net.sf.tweety.arg.dung.writer.AbstractDungWriter;
 
 /**
  * This class implements a solver for providing the ground truth of problems.
@@ -106,20 +106,20 @@ public class GroundTruthSolver extends AbstractSolver {
 			if(extensions.isEmpty()){
 				// all arguments are skeptically inferred
 				DungTheory theory = new ApxParser().parse(new FileReader(input));
-				return DungWriter.writeArguments(theory);
+				return AbstractDungWriter.writeArguments(theory);
 			}
 			Collection<Argument> result = new HashSet<Argument>(extensions.iterator().next());
 			for(Collection<Argument> ext: extensions){
 				result.retainAll(ext);
 			}
-			return DungWriter.writeArguments(result);
+			return AbstractDungWriter.writeArguments(result);
 		}
 		if(problem.subProblem().equals(Problem.SubProblem.EC)){
 			Collection<Argument> result = new HashSet<Argument>();
 			for(Collection<Argument> ext: extensions){
 				result.addAll(ext);
 			}
-			return DungWriter.writeArguments(result);
+			return AbstractDungWriter.writeArguments(result);
 		}
 		// Not a problem we can solve right now
 		throw new IllegalArgumentException("The given problem cannot be solved by this solver.");

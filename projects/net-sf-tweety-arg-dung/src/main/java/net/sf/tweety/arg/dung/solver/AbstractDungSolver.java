@@ -30,7 +30,7 @@ import net.sf.tweety.arg.dung.parser.FileFormat;
 import net.sf.tweety.arg.dung.semantics.Labeling;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.writer.DungWriter;
+import net.sf.tweety.arg.dung.writer.AbstractDungWriter;
 
 /**
  * This class extends <code>AbstractSolver</code> further by parsing
@@ -207,9 +207,9 @@ public abstract class AbstractDungSolver extends AbstractSolver {
 			boolean first = true;
 			for(Collection<Argument> ext: args){
 				if(first){
-					result += DungWriter.writeArguments(ext);
+					result += AbstractDungWriter.writeArguments(ext);
 					first = false;
-				}else result += "," + DungWriter.writeArguments(ext);
+				}else result += "," + AbstractDungWriter.writeArguments(ext);
 			}
 			result += "]";
 			return result;						
@@ -218,13 +218,13 @@ public abstract class AbstractDungSolver extends AbstractSolver {
 			Collection<Argument> args = this.solveSE(problem.semantics(), theory);
 			if(args == null)
 				return "NO";
-			return DungWriter.writeArguments(args);						
+			return AbstractDungWriter.writeArguments(args);						
 		}
 		if(problem.subProblem().equals(Problem.SubProblem.EL)){
 			Collection<Labeling> labs = this.solveEL(problem.semantics(), theory);
 			String result = "";
 			for(Labeling l: labs){
-				result += DungWriter.writeLabeling(l) + "\n";
+				result += AbstractDungWriter.writeLabeling(l) + "\n";
 			}
 			return result;
 		}		

@@ -35,7 +35,7 @@ import net.sf.tweety.arg.dung.syntax.Argument;;
  * 
  * @author Matthias Thimm
  */
-public class CnfWriter extends DungWriter{
+public class CnfWriter extends AbstractDungWriter{
 
 	/* (non-Javadoc)
 	 * @see net.sf.probo.writer.Writer#write(net.sf.tweety.arg.dung.DungTheory, java.io.File)

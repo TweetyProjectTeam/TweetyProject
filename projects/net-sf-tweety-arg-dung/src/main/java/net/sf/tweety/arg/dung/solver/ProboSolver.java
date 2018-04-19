@@ -29,7 +29,7 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.parser.FileFormat;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.writer.DungWriter;
+import net.sf.tweety.arg.dung.writer.AbstractDungWriter;
 import net.sf.tweety.commons.util.Shell;
 
 /**
@@ -126,7 +126,7 @@ public class ProboSolver extends AbstractSolver {
 		File temp = File.createTempFile("aaf-", "."+format.extension());
 		temp.deleteOnExit();
 		
-		DungWriter writer = DungWriter.getWriter(format);
+		AbstractDungWriter writer = AbstractDungWriter.getWriter(format);
 		writer.write(aaf, temp);
 	
 		

@@ -32,7 +32,7 @@ import net.sf.tweety.arg.dung.parser.FileFormat;
 import net.sf.tweety.arg.dung.solver.Problem;
 import net.sf.tweety.arg.dung.solver.ProboSolver;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.writer.DungWriter;
+import net.sf.tweety.arg.dung.writer.AbstractDungWriter;
 import net.sf.tweety.commons.util.Shell;
 
 public class ProboTest {
@@ -62,7 +62,7 @@ public class ProboTest {
 		DungTheory af = parser.parse(new FileReader(new File("../../examples/dung/ex1.tgf")));
 
 		//DungWriter writer = DungWriter.getWriter(FileFormat.APX);
-		assertTrue(DungWriter.writeArguments(af).length() == 9);
+		assertTrue(AbstractDungWriter.writeArguments(af).length() == 9);
 
 	}
 

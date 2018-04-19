@@ -32,7 +32,7 @@ import net.sf.tweety.arg.dung.syntax.Attack;
  * 
  * @author Matthias Thimm
  */
-public class ApxWriter extends DungWriter{
+public class ApxWriter extends AbstractDungWriter{
 
 	/* (non-Javadoc)
 	 * @see argc.writer.Writer#write(net.sf.tweety.arg.dung.DungTheory, java.io.File)
