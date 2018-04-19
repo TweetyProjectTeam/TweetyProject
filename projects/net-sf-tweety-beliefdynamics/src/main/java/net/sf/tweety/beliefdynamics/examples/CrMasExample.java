@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.beliefdynamics.test;
+package net.sf.tweety.beliefdynamics.examples;
 
 import java.io.*;
 import java.util.*;
@@ -32,7 +32,12 @@ import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.parser.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
-public class CrMasTest {
+/**
+ * Example code on using belief operators in multi-agent settings.
+ * @author Matthias Thimm
+ *
+ */
+public class CrMasExample {
 
 	public static void main(String[] args) throws ParserException, IOException{		
 		//TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;

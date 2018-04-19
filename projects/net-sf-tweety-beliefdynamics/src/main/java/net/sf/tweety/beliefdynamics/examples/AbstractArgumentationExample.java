@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.beliefdynamics.test;
+package net.sf.tweety.beliefdynamics.examples;
 
 import net.sf.tweety.arg.dung.CompleteReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
@@ -35,7 +35,13 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
-public class AbstractArgumentationTest {
+/**
+ * Example code for applying belief dynamics on abstract argumentation frameworks.
+ * 
+ * @author Matthias Thimm
+ *
+ */
+public class AbstractArgumentationExample {
 	public static void main(String[] args){
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("a");
