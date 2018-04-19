@@ -37,7 +37,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	/**
 	 * Precision for comparing values.
 	 */
-	public static final double PRECISION = 0.00001;
+	public static double PRECISION = 0.00001;
 	
 	/** The actual map used for storing acceptability values */
 	private Map<Argument,Double> theMap;

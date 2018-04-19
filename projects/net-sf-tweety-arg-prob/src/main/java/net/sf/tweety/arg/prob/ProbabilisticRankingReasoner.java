@@ -38,7 +38,7 @@ public class ProbabilisticRankingReasoner extends Reasoner{
 	 * Number of trials for the used monte carlo search (this is a factor
 	 * multiplied with the number of arguments of the actual framework)
 	 */
-	private static final int NUMBER_OF_TRIALS = 10000;
+	public static int NUMBER_OF_TRIALS = 10000;
 		
 	/**
 	 * The probability used for all arguments to instantiate 

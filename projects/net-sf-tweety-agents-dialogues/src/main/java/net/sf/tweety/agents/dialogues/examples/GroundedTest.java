@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.agents.dialogues.test;
+package net.sf.tweety.agents.dialogues.examples;
 
 import java.util.*;
 import java.util.concurrent.Callable;
