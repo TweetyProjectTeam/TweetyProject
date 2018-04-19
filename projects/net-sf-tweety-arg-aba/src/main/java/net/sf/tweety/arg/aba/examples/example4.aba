@@ -1,0 +1,6 @@
+d <- c
+{a,b,c,d}
+not a = p
+not b = a
+not c = b
+not d = d

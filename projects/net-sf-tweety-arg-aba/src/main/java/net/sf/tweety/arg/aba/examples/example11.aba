@@ -1,0 +1,9 @@
+{a,b,c}
+
+r <- b,c
+q <-
+p <-q,a
+
+not a = r
+not b = q
+not c = p
