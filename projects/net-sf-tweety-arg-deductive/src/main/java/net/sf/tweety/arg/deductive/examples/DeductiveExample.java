@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.deductive.test;
+package net.sf.tweety.arg.deductive.examples;
 
 import java.io.IOException;
 
@@ -26,6 +26,8 @@ import net.sf.tweety.arg.deductive.accumulator.SimpleAccumulator;
 import net.sf.tweety.arg.deductive.categorizer.ClassicalCategorizer;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.sat.Sat4jSolver;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -35,20 +37,17 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * @author Matthias Thimm
  *
  */
-public class DeductiveTest {
+public class DeductiveExample {
 
 	public static void main(String[] args) throws ParserException, IOException{
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
 		TweetyLogging.initLogging();
+		SatSolver.setDefaultSolver(new Sat4jSolver());
 		DeductiveKnowledgeBase kb = new DeductiveKnowledgeBase();
 		
 		PlParser parser = new PlParser();
 		kb.add((PropositionalFormula)parser.parseFormula("s"));
 		kb.add((PropositionalFormula)parser.parseFormula("!s || h"));
-		kb.add((PropositionalFormula)parser.parseFormula("l"));
-		kb.add((PropositionalFormula)parser.parseFormula("!l || m"));
-		kb.add((PropositionalFormula)parser.parseFormula("!m || h"));
-		kb.add((PropositionalFormula)parser.parseFormula("!m || !f"));
 		kb.add((PropositionalFormula)parser.parseFormula("f"));		
 		kb.add((PropositionalFormula)parser.parseFormula("!f || !h"));
 		kb.add((PropositionalFormula)parser.parseFormula("v"));
@@ -58,7 +57,7 @@ public class DeductiveTest {
 		
 		Reasoner reasoner = new SimpleReasoner(kb, new ClassicalCategorizer(), new SimpleAccumulator());
 		
-		System.out.println(reasoner.query(parser.parseFormula("v && h")).getAnswerDouble());
+		System.out.println(reasoner.query(parser.parseFormula("h")).getAnswerDouble());
 		
 	}
 	
