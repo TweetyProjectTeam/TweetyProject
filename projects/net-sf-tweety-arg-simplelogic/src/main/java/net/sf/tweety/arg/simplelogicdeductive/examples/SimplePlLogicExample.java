@@ -16,7 +16,7 @@
  *
  *  Copyright 2017 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.simplelogicdeductive.test;
+package net.sf.tweety.arg.simplelogicdeductive.examples;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -34,7 +34,7 @@ import net.sf.tweety.commons.ParserException;
  * @author Federico Cerutti <federico.cerutti@acm.org>
  *
  */
-public class SimplePlLogicTest {
+public class SimplePlLogicExample {
 
 	public static void main(String[] args) {
 		
