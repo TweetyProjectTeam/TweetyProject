@@ -1,0 +1,11 @@
+Bird(X) <- Chicken(X).
+Bird(X) <- Penguin(X).
+~Flies(X) <- Penguin(X).
+Chicken(tina).
+Penguin(tweety).
+Scared(tina).
+
+Flies(X) -< Bird(X).
+~Flies(X) -< Chicken(X).
+Flies(X) -< Chicken(X), Scared(X).
+Nests_in_trees(X) -< Flies(X).

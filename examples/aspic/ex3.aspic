@@ -1,8 +1,0 @@
-o1: => BornInScotland
-o2: => FitnessLover
-
-d1: BornInScotland => Scottish
-d2: Scottish => LikesWhisky
-d3: FitnessLover => ! LikesWhisky
-
-d1 < d3 < d2

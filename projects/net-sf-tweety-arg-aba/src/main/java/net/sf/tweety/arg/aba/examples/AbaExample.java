@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.arg.aba.examples;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -45,7 +44,7 @@ public class AbaExample {
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		
 		ABAParser<PropositionalFormula> parser = new ABAParser<PropositionalFormula>(new PlParser());
-		ABATheory<PropositionalFormula> t = parser.parseBeliefBaseFromFile(new File(".").getAbsolutePath() + "/src/main/java/net/sf/tweety/arg/aba/examples/example2.aba");
+		ABATheory<PropositionalFormula> t = parser.parseBeliefBaseFromFile(AbaExample.class.getResource("/example2.aba").getFile());
 		
 		FlatABAReasoner r1 = new FlatABAReasoner(t, Semantics.PREFERRED_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
 		PreferredReasoner<PropositionalFormula> r2 = new PreferredReasoner<PropositionalFormula>(t, Semantics.CREDULOUS_INFERENCE);

@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.arg.aspic.examples;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -43,7 +42,7 @@ public class AspicExample2 {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		PlParser plparser = new PlParser();
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
-		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile(new File(".").getAbsolutePath() + "/src/main/java/net/sf/tweety/arg/aspic/examples/ex1.aspic");		
+		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile(AspicExample2.class.getResource("/ex1.aspic").getFile());		
 		AspicReasoner ar = new AspicReasoner(at, Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
 		Argument query = null;
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");

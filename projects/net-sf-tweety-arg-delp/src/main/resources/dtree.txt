@@ -1,0 +1,7 @@
+% Example 5.1 of (Garcia and Simari 2004)
+
+a -< b.     ~b -< e.    ~b -< c,f.  ~f -< i.
+b -< c.     e.          f -< g.     i.
+c.          ~f -< g,h.  g.          ~h -< k.
+~b -< c,d.  h -< j.     k.
+d.          j.

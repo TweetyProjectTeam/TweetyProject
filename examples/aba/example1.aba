@@ -1,9 +1,0 @@
-% example
-
-{a, b}
-c 
-
-a <- b
-z <- y, b
-y <-
-x <- c

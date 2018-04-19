@@ -1,0 +1,8 @@
+has_a_gun(X) -< lives_in_chicago(X).
+~has_a_gun(X) -< lives_in_chicago(X), pacifist(X).
+pacifist(X) -< quaker(X).
+~pacifist(X) -< republican(X).
+
+lives_in_chicago(nixon).
+quaker(nixon).
+republican(nixon).
