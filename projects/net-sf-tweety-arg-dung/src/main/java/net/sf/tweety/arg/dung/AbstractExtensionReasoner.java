@@ -87,8 +87,9 @@ public abstract class AbstractExtensionReasoner extends Reasoner {
 			case ID: return new IdealReasoner(beliefBase, inferenceType);
 			case STG: return new StageReasoner(beliefBase, inferenceType);
 			case CF2: return new CF2Reasoner(beliefBase, inferenceType);
-		}
-		throw new IllegalArgumentException("Unknown semantics.");
+		default:
+			throw new IllegalArgumentException("Unknown semantics.");			
+		}		
 	}
 	
 	/* (non-Javadoc)

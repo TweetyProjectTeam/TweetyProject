@@ -16,41 +16,51 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung.test;
+ package net.sf.tweety.arg.dung.examples;
 
 import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.StratifiedLabelingReasoner;
-import net.sf.tweety.arg.dung.semantics.Semantics;
-import net.sf.tweety.arg.dung.semantics.StratifiedLabeling;
+import net.sf.tweety.arg.dung.GrossiModgilRankingReasoner;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 
-public class StratifiedLabelingTest {
+/**
+ * Example code for using graded semantics by Grossi/Modgil
+ * 
+ * @author Matthias Thimm
+ *
+ */
+public class GrossiModgilReasonerExample {
 
 	public static void main(String[] args){
-		// create some Dung theory
+		// See [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015]
+		// This is Figure 3
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");
 		Argument c = new Argument("c");
 		Argument d = new Argument("d");
-		//Argument e = new Argument("e");
+		Argument e = new Argument("e");
+		Argument f = new Argument("f");
+		Argument g = new Argument("g");
 		theory.add(a);
 		theory.add(b);
 		theory.add(c);
 		theory.add(d);
-		//theory.add(e);
+		theory.add(e);
+		theory.add(f);
+		theory.add(g);
+		theory.add(new Attack(d,c));
+		theory.add(new Attack(c,a));
 		theory.add(new Attack(a,b));
 		theory.add(new Attack(b,a));
-		theory.add(new Attack(b,c));
-		theory.add(new Attack(c,b));
-		theory.add(new Attack(d,c));
-		theory.add(new Attack(c,d));
+		theory.add(new Attack(e,b));
+		theory.add(new Attack(f,e));
+		theory.add(new Attack(g,e));
 		
-		StratifiedLabelingReasoner reasoner = new StratifiedLabelingReasoner(theory,Semantics.STABLE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		GrossiModgilRankingReasoner reasoner = new GrossiModgilRankingReasoner(theory);
 		
-		for(StratifiedLabeling labeling: reasoner.getLabelings()){
-			System.out.println(labeling);			
-		}
+		for(int m = 1; m < theory.size(); m++)
+			for(int n = 1; n < theory.size(); n++)
+				System.out.println(m + "," + n + " : " + reasoner.getAllMNCompleteExtensions(m, n));
 	}
 }

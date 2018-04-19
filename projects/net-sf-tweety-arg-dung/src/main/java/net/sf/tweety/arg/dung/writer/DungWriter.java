@@ -46,6 +46,8 @@ public abstract class DungWriter {
 			return new TgfWriter();
 		if(f.equals(FileFormat.APX))
 			return new ApxWriter();
+		if(f.equals(FileFormat.CNF))
+			return new CnfWriter();
 		return null;
 	}
 	

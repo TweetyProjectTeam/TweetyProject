@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung.test;
+package net.sf.tweety.arg.dung.examples;
 
 import java.util.Collection;
 
@@ -29,7 +29,11 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 
-public class DivisionTest {
+/**
+ * Example code for working with divisions
+ * @author Matthias Thimm
+ */
+public class DivisionExample {
 
 	public static void main(String[] args){
 		// create some Dung theory
