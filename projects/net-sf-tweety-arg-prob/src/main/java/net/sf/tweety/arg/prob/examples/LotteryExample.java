@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.prob.test;
+package net.sf.tweety.arg.prob.examples;
 
 import java.util.Collection;
 
@@ -32,7 +32,14 @@ import net.sf.tweety.arg.prob.lotteries.ArgumentationLottery;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.arg.prob.lotteries.UtilityFunction;
 
-public class LotteryTest {
+
+/**
+ * Example code for working with lotteries in probabilistic abstract argumentation.
+ * 
+ * @author Matthias Thimm
+ *
+ */
+public class LotteryExample {
 
 	public static void main(String[] args){
 		// create some Dung theory

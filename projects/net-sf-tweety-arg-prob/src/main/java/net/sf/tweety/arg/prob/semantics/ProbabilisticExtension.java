@@ -97,6 +97,7 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	 * i.e. whether l(A)=in <=> P(A)=1, l(A)=out <=> P(A)=0, l(A)=undec <=> P(A)=0.5  
 	 * @param l
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public boolean isCongruent(Labeling l){
 		for(Argument a: l.keySet())
 			if(!((l.get(a).equals(ArgumentStatus.IN) && this.get(a).getValue() >= 1 - Probability.PRECISION) ||
@@ -112,6 +113,7 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	 * l(A)=0 if P(A)=0.
 	 * @return the epistemic labeling of this probabilistic extension
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public Labeling getEpistemicLabeling(){
 		Labeling l = new Labeling();
 		for(Argument a: this.getAllArguments()){

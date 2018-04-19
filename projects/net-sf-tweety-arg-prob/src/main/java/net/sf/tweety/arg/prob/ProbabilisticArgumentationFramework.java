@@ -164,6 +164,7 @@ public class ProbabilisticArgumentationFramework extends DungTheory{
 	 * @param aaf some AAF (supposedly a subgraph of this framework)
 	 * @return the probability of the given AAF.
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public Probability getProbability(DungTheory aaf){
 		if(!this.containsAll(aaf))
 			return Probability.ZERO;

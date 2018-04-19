@@ -43,6 +43,7 @@ public class PartialProbabilityAssignment extends HashMap<Argument,Probability> 
 	 * @param pext some probabilistic extension.
 	 * @return "true" iff the given probabilistic extension is compliant.
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public boolean isCompliant(ProbabilisticExtension pext){
 		for(Argument a: this.keySet())
 			if(pext.get(a).getValue() < this.get(a).getValue() - Probability.PRECISION ||

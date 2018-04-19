@@ -28,7 +28,7 @@ import net.sf.tweety.commons.Reasoner;
 import net.sf.tweety.math.probability.Probability;
 
 /**
- * Implements a graded semantics reasoner based on the ideas from [Thimm, Cerutti, Rienstra; 2018, in preparation].
+ * Implements a graded semantics reasoner based on the ideas from [Thimm, Cerutti, Rienstra; 2018].
  * 
  * @author Matthias Thimm
  */

@@ -16,15 +16,19 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.prob.test;
+package net.sf.tweety.arg.prob.examples;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 
-public class SubgraphProbTest {
-
+/**
+ * Example code for showing how to work with subgraph probability distributions and updates.
+ * @author Matthias Thimm
+ *
+ */
+public class SubgraphProbExample {
 	public static void main(String[] args){
 		// create some Dung theory
 		DungTheory theory = new DungTheory();

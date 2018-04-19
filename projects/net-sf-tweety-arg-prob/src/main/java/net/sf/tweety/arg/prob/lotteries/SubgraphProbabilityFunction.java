@@ -87,6 +87,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * @param arg some argument
 	 * @return a probability
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public Probability getEpistemicProbability(Attack att){
 		double d = 0;
 		for(DungTheory theory: this.keySet()){

@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.prob.test;
+package net.sf.tweety.arg.prob.examples;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
@@ -30,9 +30,13 @@ import net.sf.tweety.math.func.EntropyFunction;
 import net.sf.tweety.math.norm.*;
 import net.sf.tweety.math.probability.Probability;
 
-public class IncProbTest {
+/**
+ * Example code for the PAInconsistencyMeasure.
+ * @author Matthias Thimm
+ *
+ */
+public class PAInconsistencyMeasureExample {
 	public static void main(String[] args){
-
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("A");
 		Argument b = new Argument("B");
@@ -46,8 +50,7 @@ public class IncProbTest {
 		
 		PartialProbabilityAssignment ppa = new PartialProbabilityAssignment();
 		ppa.put(a, new Probability(0.9));
-		
-		
+				
 		PAInconsistencyMeasure mes = new PAInconsistencyMeasure(new PNorm(2), theory, new SemiOptimisticPASemantics());
 		
 		System.out.println(mes.inconsistencyMeasure(ppa));

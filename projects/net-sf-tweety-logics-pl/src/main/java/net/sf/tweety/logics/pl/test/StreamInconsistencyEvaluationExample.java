@@ -53,7 +53,7 @@ import net.sf.tweety.math.opt.Solver;
 //import net.sf.tweety.logics.pl.util.MiSampler;
 import net.sf.tweety.math.opt.solver.LpSolve;
 
-public class StreamInconsistencyEvaluation {
+public class StreamInconsistencyEvaluationExample {
 	
 	public static final int 												SIGNATURE_SIZE				= 60;//30;
 	public static final double 												CNF_RATIO					= 1/8d;

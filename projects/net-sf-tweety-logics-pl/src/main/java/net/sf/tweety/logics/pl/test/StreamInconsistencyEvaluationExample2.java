@@ -54,7 +54,7 @@ import net.sf.tweety.math.func.MaxFunction;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.LpSolve;
 
-public class StreamInconsistencyEvaluation2 {
+public class StreamInconsistencyEvaluationExample2 {
 	
 	public static final int 												SIGNATURE_SIZE				= 60;//30;
 	public static final double 												CNF_RATIO					= 1/8d;
