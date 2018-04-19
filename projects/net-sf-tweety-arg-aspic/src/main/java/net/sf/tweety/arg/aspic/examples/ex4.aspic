@@ -1,0 +1,8 @@
+=> WearsRing
+=> PartyAnimal
+
+d1: WearsRing => Married
+d2: PartyAnimal => Bachelor
+
+s1: Married -> ! Bachelor
+s2: Bachelor -> ! Married
