@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
- package net.sf.tweety.arg.social.test;
+ package net.sf.tweety.arg.social.examples;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
@@ -24,7 +24,12 @@ import net.sf.tweety.arg.social.IssReasoner;
 import net.sf.tweety.arg.social.SocialAbstractArgumentationFramework;
 import net.sf.tweety.arg.social.semantics.SimpleProductSemantics;
 
-public class SafTest {
+/**
+ * Example code for using social abstract argumentation.
+ * @author Matthias Thimm
+ *
+ */
+public class SafExample {
 	public static void main(String[] args){
 		SocialAbstractArgumentationFramework saf = new SocialAbstractArgumentationFramework();
 		Argument a = new Argument("A");
