@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
-import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.BeliefSetSampler;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -43,7 +43,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Matthias Thimm
  */
-public class MiSampler extends BeliefBaseSampler<PlBeliefSet>{
+public class MiSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet>{
 
 	/**
 	 * The inconsistency value of the generated belief sets
@@ -65,11 +65,27 @@ public class MiSampler extends BeliefBaseSampler<PlBeliefSet>{
 		this.incvalue = incvalue;
 	}
 	
+	/**
+	 * Creates a new sample for the given signature
+	 * which generates propositional belief sets with the 
+	 * given inconsistency value (wrt. the MI inconsistency measure)
+	 * @param signature some propositional signature
+	 * @param incvalue some inconsistency value.
+	 * @param minLength the minimum length of knowledge bases
+	 * @param maxLength the maximum length of knowledge bases
+	 */
+	public MiSampler(PropositionalSignature signature, int incvalue, int minLength, int maxLength) {
+		super(signature,minLength,maxLength);
+		if(incvalue > signature.size()/2)
+			throw new IllegalArgumentException("A propositional belief base with inconsistency value " + this.incvalue + " cannot be generated with the given signature."); 
+		this.incvalue = incvalue;
+	}
+	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.BeliefBaseSampler#randomSample(int, int)
+	 * @see net.sf.tweety.commons.BeliefSetSampler#next()
 	 */
 	@Override
-	public PlBeliefSet randomSample(int minLength, int maxLength) {
+	public PlBeliefSet next() {
 		List<PropositionalFormula> formulas = new ArrayList<PropositionalFormula>();
 		// first generate MIs
 		int num = 0;
@@ -87,7 +103,7 @@ public class MiSampler extends BeliefBaseSampler<PlBeliefSet>{
 		}
 		// add remaining formulas
 		Random rand = new Random();
-		while(num < maxLength){
+		while(num < this.getMinLength()){
 			Disjunction d = new Disjunction();
 			for(Proposition p: st){
 				if(rand.nextBoolean())

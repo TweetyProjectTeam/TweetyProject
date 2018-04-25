@@ -14,21 +14,32 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.commons;
 
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.logics.pl.util.SyntacticRandomSampler;
-import net.sf.tweety.math.probability.Probability;
+import java.util.Iterator;
 
-public class SyntacticRandomPlBeliefSetSamplerTest {
+/**
+ * Classes implementing this interface are able to enumerate
+ * belief sets.
+ * 
+ * @author Matthias Thimm
+ *
+ * @param <S> The type of formulas
+ * @param <T> The type of belief sets
+ */
+public interface BeliefSetIterator<S extends Formula,T extends BeliefSet<S>> extends Iterator<T>{
 
-	public static void main(String[] args){
-		PropositionalSignature sig = new PropositionalSignature(4);
-		SyntacticRandomSampler sampler = new SyntacticRandomSampler(sig,new Probability(0.2),new Probability(0.35),new Probability(0.35),0.5,1, 1);
-		for(int i = 0; i< 10; i++)
-			System.out.println(sampler.next());
-		
-	}
+	/* (non-Javadoc)
+	 * @see java.util.Iterator#hasNext()
+	 */
+	@Override
+	public boolean hasNext();
+
+	/* (non-Javadoc)
+	 * @see java.util.Iterator#next()
+	 */
+	@Override
+	public T next();
 }

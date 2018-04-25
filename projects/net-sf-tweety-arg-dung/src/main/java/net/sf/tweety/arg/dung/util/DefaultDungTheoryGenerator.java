@@ -47,10 +47,10 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.util.DungTheoryGenerator#generate()
+	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#next()
 	 */
 	@Override
-	public DungTheory generate() {
+	public DungTheory next() {
 		if(this.params.enforceTreeShape)
 			return this.generateTreeShape(new Argument("a"));
 		DungTheory theory = new DungTheory();
@@ -67,10 +67,10 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.util.DungTheoryGenerator#generate(net.sf.tweety.argumentation.dung.syntax.Argument)
+	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#next(net.sf.tweety.arg.dung.syntax.Argument)
 	 */
 	@Override
-	public DungTheory generate(Argument arg){
+	public DungTheory next(Argument arg){
 		DungTheory theory = new DungTheory();
 		if(this.params.enforceTreeShape){
 			boolean inExtension = false;
@@ -130,6 +130,14 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 	 */
 	public String toString(){
 		return "Def"+this.params.toString();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		return true;
 	}
 
 }

@@ -20,7 +20,7 @@ package net.sf.tweety.logics.pl.util;
 
 import java.util.Random;
 
-import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.BeliefSetSampler;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
@@ -36,7 +36,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Matthias Thimm
  */
-public class CnfSampler extends BeliefBaseSampler<PlBeliefSet>{
+public class CnfSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet>{
 
 	/** The maximum ratio of variables appearing in a single formula. */
 	private double maxVariableRatio;
@@ -54,28 +54,43 @@ public class CnfSampler extends BeliefBaseSampler<PlBeliefSet>{
 		this.maxVariableRatio = maxVariableRatio;
 	}
 
+	/**
+	 * Creates a new sampler for the given signature.
+	 * @param signature
+	 * @param maxVariableRatio the maximum ratio (a value between 0 and 1) of variables
+	 * of the signature appearing in some formula.
+	 * @param minLength the minimum length of knowledge bases
+	 * @param maxLength the maximum length of knowledge bases
+	 */
+	public CnfSampler(Signature signature, double maxVariableRatio, int minLength, int maxLength) {
+		super(signature, minLength, maxLength);
+		if(!(signature instanceof PropositionalSignature))
+			throw new IllegalArgumentException("Signature of type \"PropositionalSignature\" expected. ");
+		this.maxVariableRatio = maxVariableRatio;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.BeliefBaseSampler#randomSample(int, int)
 	 */
 	@Override
-	public PlBeliefSet randomSample(int minLength, int maxLength) {
+	public PlBeliefSet next() {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		Random rand = new Random();
 		int length;
-		if(maxLength - minLength > 0)
-			length = minLength + rand.nextInt(maxLength - minLength);
-		else length = minLength;
+		if(this.getMaxLength() - this.getMinLength() > 0)
+			length = this.getMinLength() + rand.nextInt(this.getMaxLength() - this.getMinLength());
+		else length = this.getMinLength();
 		while(beliefSet.size() < length){
-			beliefSet.add(this.randomFormula());
+			beliefSet.add(this.sampleFormula());
 		}
 		return beliefSet;
 	}
 	
 	/**
-	 * Samples a random formula (a disjunction of literals).
-	 * @return a random formula (a disjunction of literals).
+	 * Returns a random formula
+	 * @return a random formula
 	 */
-	public PropositionalFormula randomFormula(){
+	public PropositionalFormula sampleFormula(){
 		PropositionalSignature sig = (PropositionalSignature)this.getSignature();
 		Disjunction d = new Disjunction();		
 		Random rand = new Random();

@@ -27,7 +27,7 @@ import net.sf.tweety.commons.BeliefBase;
  * @author Matthias Thimm
  * @param <T> The type of belief bases this measure supports.
  */
-public interface InconsistencyMeasure<T extends BeliefBase> {
+public interface InconsistencyMeasure<T extends BeliefBase>{
 
 	/** Tolerance. */
 	public static final double MEASURE_TOLERANCE = 0.005;

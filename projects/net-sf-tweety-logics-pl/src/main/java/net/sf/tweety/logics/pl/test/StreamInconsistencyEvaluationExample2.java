@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.BeliefSetSampler;
 import net.sf.tweety.commons.streams.DefaultFormulaStream;
 import net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.MicInconsistencyMeasure;
@@ -75,7 +75,6 @@ public class StreamInconsistencyEvaluationExample2 {
 		SatSolver.setDefaultSolver(new LingelingSolver("/home/mthimm/strinc/lingeling/lingeling"));
 		PlMusEnumerator.setDefaultEnumerator(new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"));
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
-		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		// -----------------------------------------
 		// the inconsistency measures to be compared
 		// -----------------------------------------
@@ -220,13 +219,14 @@ public class StreamInconsistencyEvaluationExample2 {
 		double ival;
 		long millis;
 		MiInconsistencyMeasure<PropositionalFormula> testmeasure = new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+		BeliefSetSampler<PropositionalFormula,PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		for(int iteration = 0; iteration < NUMBER_OF_ITERATIONS; iteration++){
 			if(iteration % 10 == 0){
 				incvalue--;
 				if(incvalue == 0) System.exit(0);
-				sampler = new MiSampler(signature,incvalue);
+				sampler = new MiSampler(signature,incvalue,SIZE_OF_KNOWLEDGEBASES, SIZE_OF_KNOWLEDGEBASES);
 			}
-			PlBeliefSet bs = sampler.randomSample(SIZE_OF_KNOWLEDGEBASES, SIZE_OF_KNOWLEDGEBASES);
+			PlBeliefSet bs = sampler.next();
 			System.out.println(incvalue + " - " + bs);
 			// try out standard measure
 			millis = System.currentTimeMillis();

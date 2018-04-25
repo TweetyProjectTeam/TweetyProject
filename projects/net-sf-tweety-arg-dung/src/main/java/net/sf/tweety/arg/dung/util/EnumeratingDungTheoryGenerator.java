@@ -90,7 +90,7 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 	 * @see net.sf.tweety.argumentation.util.DungTheoryGenerator#generate()
 	 */
 	@Override
-	public DungTheory generate() {
+	public DungTheory next() {
 		if(this.attacks == null){
 			this.currentSize = 1;
 			this.arguments = new HashSet<Argument>();
@@ -119,7 +119,7 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 	 * @see net.sf.tweety.argumentation.util.DungTheoryGenerator#generate(net.sf.tweety.argumentation.dung.syntax.Argument)
 	 */
 	@Override
-	public DungTheory generate(Argument arg) {
+	public DungTheory next(Argument arg) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -129,6 +129,14 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 	@Override
 	public void setSeed(long seed) {
 		throw new UnsupportedOperationException();		
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		return true;
 	}
 
 }

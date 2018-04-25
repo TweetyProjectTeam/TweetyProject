@@ -18,22 +18,32 @@
  */
 package net.sf.tweety.commons;
 
-import java.util.*;
-
 /**
- * This abstract class models a sampler for belief bases. It comprises
- * of a set of sample methods which generates some random belief bases
+ * This abstract class models a random sampler for belief sets. It comprises
+ * of a set of sample methods which generates some random belief sets
  * wrt. to a given signature.
  * 
  * @author Matthias Thimm 
- * @param <S> The type of belief bases sampled
+ * 
+ * @param <R> The type of formulas belief sets are made of
+ * @param <S> The type of belief sets sampled
  */
-public abstract class BeliefBaseSampler<S extends BeliefBase> {
+public abstract class BeliefSetSampler<R extends Formula, S extends BeliefSet<R>> implements BeliefSetIterator<R,S>{
 
 	/**
 	 * The signature of this sampler.
 	 */
 	private Signature signature;
+	
+	/**
+	 * Min length of samples belief sets 
+	 */
+	private int minLength;
+	
+	/**
+	 * Max length of samples belief sets.
+	 */
+	private int maxLength;
 	
 	/**
 	 * This constant specifies the default maximum length for sampled
@@ -55,42 +65,37 @@ public abstract class BeliefBaseSampler<S extends BeliefBase> {
 	 * Creates a new belief base sampler for the given signature.
 	 * @param signature a signature.
 	 */
-	public BeliefBaseSampler(Signature signature){
+	public BeliefSetSampler(Signature signature){
+		this(signature, BeliefSetSampler.DEFAULT_MINIMUM_BELIEFBASE_LENGTH, BeliefSetSampler.DEFAULT_MAXIMUM_BELIEFBASE_LENGTH);
+	}
+	
+	/**
+	 * Creates a new belief base sampler for the given signature.
+	 * @param signature a signature.
+	 * @param minLength the minimum length of knowledge bases
+	 * @param maxLength the maximum length of knowledge bases
+	 */
+	public BeliefSetSampler(Signature signature, int minLength, int maxLength){
 		this.signature = signature;
+		this.minLength = minLength;
+		this.maxLength = maxLength;
 	}
 	
-	/**
-	 * This method randomly samples a single belief base of the given signature
-	 * with the given belief base length. 
-	 * @param minLength the minimum length of the belief base.
-	 * @param maxLength the maximum length of the belief base.
-	 * @return a single belief base.
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#hasNext()
 	 */
-	public abstract S randomSample(int minLength, int maxLength);
-	
-	/**
-	 * This method randomly samples a single belief base of the given signature
-	 * with the default maximum belief base length. 
-	 * @return a single belief base.
-	 */
-	public S randomSample(){
-		return this.randomSample(BeliefBaseSampler.DEFAULT_MINIMUM_BELIEFBASE_LENGTH,BeliefBaseSampler.DEFAULT_MAXIMUM_BELIEFBASE_LENGTH);		
+	@Override
+	public boolean hasNext() {
+		// as samplers generate random instances there are
+		// always next instances.
+		return true;
 	}
-	
-	/**
-	 * This method randomly samples a total of "numBeliefBases" of the given 
-	 * signature and maximum belief base length.
-	 * @param minLength the minimum length of the belief base.
-	 * @param maxLength the maximum length of the belief base.
-	 * @param numBeliefBases the number of belief bases to be sampled.
-	 * @return a set of belief bases.
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#next()
 	 */
-	public Collection<S> randomSample(int minLength, int maxLength, int numBeliefBases){
-		Collection<S> beliefBases = new HashSet<S>();
-		for(int i = 0; i < numBeliefBases; i++)
-			beliefBases.add(this.randomSample(minLength,maxLength));
-		return beliefBases;
-	}
+	@Override
+	public abstract S next();
 	
 	/**
 	 * Returns the signature of this sampler.
@@ -98,5 +103,21 @@ public abstract class BeliefBaseSampler<S extends BeliefBase> {
 	 */
 	public Signature getSignature(){
 		return this.signature;
+	}
+	
+	/**
+	 * Returns the min length of kbs of this sampler.
+	 * @return the min length of kbs of this sampler.
+	 */
+	public int getMinLength(){
+		return this.minLength;
+	}
+	
+	/**
+	 * Returns the max length of kbs of this sampler.
+	 * @return the max length of kbs of this sampler.
+	 */
+	public int getMaxLength(){
+		return this.maxLength;
 	}
 }

@@ -95,7 +95,7 @@ public class LotteryDialogueTest2 {
 			// AAF generator
 			File[] apxFiles = new File(pathToApxGraphs).listFiles(new ApxFilenameFilter());
 			int numRuns = apxFiles.length * rep;
-			DungTheoryGenerator aaf_gen = new FileDungTheoryGenerator(apxFiles, new ApxParser());
+			DungTheoryGenerator aaf_gen = new FileDungTheoryGenerator(apxFiles, new ApxParser(), true);
 			
 			// MAS generator
 			MultiAgentSystemGenerator<AbstractLotteryAgent,LotteryGameSystem> masGenerator = new LotteryGameGenerator(aaf_gen,semantics,false);

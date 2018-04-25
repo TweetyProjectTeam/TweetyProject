@@ -20,6 +20,7 @@ package net.sf.tweety.arg.dung.util;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.NoSuchElementException;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -39,25 +40,39 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 	private Parser<DungTheory> parser;
 	/** The index of the next theory to be returned. */
 	private int idx;
+	/** Whether to loop the files indefinitely*/
+	private boolean loop;
 	
 	/**
 	 * Creates a new theory generator for the given files, which
 	 * can be parsed by the given parser.
 	 * @param files an array of files.
 	 * @param parser a parser for the files.
+	 * @param loop whether to loop the files indefinitely.
 	 */
-	public FileDungTheoryGenerator(File[] files, Parser<DungTheory> parser){
+	public FileDungTheoryGenerator(File[] files, Parser<DungTheory> parser, boolean loop){
 		this.files = files;
 		this.parser = parser;
 		this.idx = 0;
+		this.loop = loop;
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#generate()
+	 * @see net.sf.tweety.commons.BeliefSetIterator#hasNext()
 	 */
 	@Override
-	public DungTheory generate() {
+	public boolean hasNext() {
+		return this.loop || this.idx < this.files.length;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#next()
+	 */
+	@Override
+	public DungTheory next() {
 		if(this.idx >= this.files.length)
+			if(!this.loop)
+				throw new NoSuchElementException();
 			this.idx = 0;
 		try {
 			return this.parser.parseBeliefBase(new FileReader(this.files[idx++]));
@@ -67,11 +82,10 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#generate(net.sf.tweety.arg.dung.syntax.Argument)
+	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#next(net.sf.tweety.arg.dung.syntax.Argument)
 	 */
 	@Override
-	public DungTheory generate(Argument arg) {
-		// not supported
+	public DungTheory next(Argument arg) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -80,7 +94,6 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 	 */
 	@Override
 	public void setSeed(long seed) {
-		// Nothing to do
+		// nothing to do	
 	}
-
 }

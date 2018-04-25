@@ -95,11 +95,11 @@ public class LotteryGameGenerator implements MultiAgentSystemGenerator<AbstractL
 		DungTheory theory;
 		if(this.ensureArg){
 			Argument arg = new Argument("A");
-			theory = this.gen.generate(arg);				
+			theory = this.gen.next(arg);				
 			params.put(LotteryGameGenerator.PARAM_ARGUMENT, arg);		
 		
 		}else{
-			theory = this.gen.generate();
+			theory = this.gen.next();
 		}
 		params.put(LotteryGameGenerator.PARAM_SEM, this.semantics);
 		params.put(LotteryGameGenerator.PARAM_UNIVERSALTHEORY, theory);

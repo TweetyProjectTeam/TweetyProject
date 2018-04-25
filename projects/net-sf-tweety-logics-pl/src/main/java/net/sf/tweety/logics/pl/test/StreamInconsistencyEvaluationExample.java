@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.BeliefSetSampler;
 import net.sf.tweety.commons.streams.DefaultFormulaStream;
 //import net.sf.tweety.logics.commons.analysis.MiInconsistencyMeasure;
 //import net.sf.tweety.logics.commons.analysis.MicInconsistencyMeasure;
@@ -74,7 +74,6 @@ public class StreamInconsistencyEvaluationExample {
 		SatSolver.setDefaultSolver(new LingelingSolver("/home/mthimm/strinc/lingeling/lingeling"));
 		PlMusEnumerator.setDefaultEnumerator(new MarcoMusEnumerator("/home/mthimm/strinc/marco/marco.py"));
 		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
-		BeliefBaseSampler<PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		// -----------------------------------------
 		// the inconsistency measures to be compared
 		// -----------------------------------------
@@ -218,12 +217,13 @@ public class StreamInconsistencyEvaluationExample {
 		int kbsize = -1;
 		EvaluationInconsistencyListener.TOLERANCE = 1;
 		EvaluationInconsistencyListener.INCDEFAULTVALUE = 200;
+		BeliefSetSampler<PropositionalFormula,PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		for(int iteration = 0; iteration < NUMBER_OF_ITERATIONS; iteration++){
 			if(iteration % 10 == 0){
 				kbsize = kbsizes[iteration / 10];				
-				sampler = new HsSampler(signature,incvalue);
+				sampler = new HsSampler(signature,incvalue,kbsize, kbsize);
 			}
-			PlBeliefSet bs = sampler.randomSample(kbsize, kbsize);
+			PlBeliefSet bs = sampler.next();
 			System.out.println(kbsize + "," + incvalue + " - " + bs);
 			try {
 				FileWriter writer = new FileWriter(new File(BELIEFSET_PATH), true);

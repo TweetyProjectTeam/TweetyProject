@@ -33,7 +33,7 @@ import net.sf.tweety.commons.*;
  * @author Matthias Thimm
  *
  */
-public class SimpleSafSampler extends BeliefBaseSampler<StructuredArgumentationFramework> {
+public class SimpleSafSampler extends BeliefSetSampler<Argument,StructuredArgumentationFramework> {
 
 	/**
 	 * Creates a new SimpleSafSampler for the given signature. 
@@ -42,15 +42,26 @@ public class SimpleSafSampler extends BeliefBaseSampler<StructuredArgumentationF
 	public SimpleSafSampler(Signature signature) {
 		super(signature);
 	}
+	
+
+	/**
+	 * Creates a new SimpleSafSampler for the given signature. 
+	 * @param signature a signature.
+	 * @param minLength the minimum length of knowledge bases
+	 * @param maxLength the maximum length of knowledge bases
+	 */
+	public SimpleSafSampler(Signature signature, int minLength, int maxLength) {
+		super(signature, minLength, maxLength);
+	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.BeliefBaseSampler#randomSample(int)
+	 * @see net.sf.tweety.commons.BeliefSetSampler#next()
 	 */
 	@Override
-	public StructuredArgumentationFramework randomSample(int minLength, int maxLength) {
+	public StructuredArgumentationFramework next() {
 		//bbLength is interpreted as the maximum number of basic arguments
 		Random random = new Random();
-		int thisLength = random.nextInt(maxLength-minLength+1) + minLength;
+		int thisLength = random.nextInt(this.getMaxLength()-this.getMinLength()+1) + this.getMinLength();
 		BasicArgumentSampler argSampler = new BasicArgumentSampler(this.getSignature());
 		StructuredArgumentationFramework saf = new StructuredArgumentationFramework();
 		for(int i = 0; i < thisLength; i++)
@@ -78,5 +89,4 @@ public class SimpleSafSampler extends BeliefBaseSampler<StructuredArgumentationF
 					}
 		return saf;
 	}
-
 }

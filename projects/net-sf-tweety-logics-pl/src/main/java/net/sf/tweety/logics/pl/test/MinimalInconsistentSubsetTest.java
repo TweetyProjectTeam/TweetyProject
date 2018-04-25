@@ -35,8 +35,8 @@ public class MinimalInconsistentSubsetTest {
 		PropositionalSignature sig = new PropositionalSignature();
 		for(int i = 0; i < 5; i++)
 			sig.add(new Proposition("a" + i));
-		CnfSampler sampler = new CnfSampler(sig,0.8);
-		PlBeliefSet kb = sampler.randomSample(30, 30);
+		CnfSampler sampler = new CnfSampler(sig,0.8,30, 30);
+		PlBeliefSet kb = sampler.next();
 		System.out.println(kb);
 		System.out.println();
 		

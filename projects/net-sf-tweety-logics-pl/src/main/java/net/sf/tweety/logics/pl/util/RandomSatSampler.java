@@ -20,7 +20,7 @@ package net.sf.tweety.logics.pl.util;
 
 import java.util.Random;
 
-import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.BeliefSetSampler;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.pl.PlBeliefSet;
@@ -35,7 +35,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class RandomSatSampler extends BeliefBaseSampler<PlBeliefSet> {
+public class RandomSatSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet> {
 	
 	/**
 	 * The length of each clause 
@@ -61,20 +61,31 @@ public class RandomSatSampler extends BeliefBaseSampler<PlBeliefSet> {
 		super(signature);		
 		this.k = k;
 	}
+	
+	/**
+	 * Constructs a new sampler
+	 * @param signature some signature
+	 * @param k the length of each clause
+	 * @param minLength the minimum length of knowledge bases
+	 * @param maxLength the maximum length of knowledge bases
+	 */
+	public RandomSatSampler(Signature signature, int k, int minLength, int maxLength) {
+		super(signature,minLength,maxLength);		
+		this.k = k;
+	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseSampler#randomSample(int, int)
+	 * @see net.sf.tweety.commons.BeliefSetSampler#next()
 	 */
 	@Override
-	public PlBeliefSet randomSample(int minLength, int maxLength) {
+	public PlBeliefSet next() {
 		int length;
-		if(maxLength - minLength > 0)
-			length = minLength + this.rand.nextInt(maxLength - minLength);
-		else length = minLength;
+		if(this.getMaxLength() - this.getMinLength() > 0)
+			length = this.getMinLength() + this.rand.nextInt(this.getMaxLength() - this.getMinLength());
+		else length = this.getMinLength();
 		PlBeliefSet bs = new PlBeliefSet();
 		while(bs.size() < length)
 			bs.add(this.randomClause());		
-		
 		return bs;
 	}
 	
@@ -93,5 +104,4 @@ public class RandomSatSampler extends BeliefBaseSampler<PlBeliefSet> {
 		}
 		return clause;
 	}
-
 }

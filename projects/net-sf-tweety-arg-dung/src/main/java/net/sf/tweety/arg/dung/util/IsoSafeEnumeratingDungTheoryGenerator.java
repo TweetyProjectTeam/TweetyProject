@@ -73,7 +73,7 @@ public class IsoSafeEnumeratingDungTheoryGenerator implements DungTheoryGenerato
 	 * @see net.sf.tweety.argumentation.util.DungTheoryGenerator#generate()
 	 */
 	@Override
-	public DungTheory generate() {
+	public DungTheory next() {
 		if(this.iterator.hasNext())
 			return this.iterator.next();
 		if(this.cntAttacks < this.cntArguments * this.cntArguments){
@@ -112,7 +112,7 @@ public class IsoSafeEnumeratingDungTheoryGenerator implements DungTheoryGenerato
 	 * @see net.sf.tweety.argumentation.util.DungTheoryGenerator#generate(net.sf.tweety.argumentation.dung.syntax.Argument)
 	 */
 	@Override
-	public DungTheory generate(Argument arg) {
+	public DungTheory next(Argument arg) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -122,6 +122,11 @@ public class IsoSafeEnumeratingDungTheoryGenerator implements DungTheoryGenerato
 	@Override
 	public void setSeed(long seed) {
 		throw new UnsupportedOperationException();		
+	}
+
+	@Override
+	public boolean hasNext() {
+		return true;
 	}
 
 }

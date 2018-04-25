@@ -76,7 +76,7 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 	public GroundedGameSystem generate(SimulationParameters params) {
 		log.info("Starting to generate a grounded game system");
 		Argument arg = new Argument("A");
-		DungTheory theory = this.gen.generate(arg);		
+		DungTheory theory = this.gen.next(arg);		
 		log.trace("Generated Dung theory with " + this.gen + ":\n" +
 				"=========\n" + theory.toString() + "\n=========");		
 		log.trace("Central argument of dialog is: " + arg);		

@@ -34,9 +34,8 @@ import net.sf.tweety.commons.InterpretationIterator;
  * @author Matthias Thimm
  *
  * @param <S> some formula type
- * @param <T> some belief set type
  */
-public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
+public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S>{
 
 	/** Used for iterating over interpretations of the underlying language. */
 	private InterpretationIterator<?> it;

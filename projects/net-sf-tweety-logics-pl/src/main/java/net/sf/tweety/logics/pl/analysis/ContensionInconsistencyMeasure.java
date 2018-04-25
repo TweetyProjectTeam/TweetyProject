@@ -45,7 +45,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * the process is repeated with all pairs "p1,p2" of propositions, then triples, etc.  
  * @author Matthias Thimm
  */
-public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula> {
+public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula>{
 
 
 	/* (non-Javadoc)

@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.BeliefSetSampler;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -37,7 +37,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Matthias Thimm
  */
-public class HsSampler extends BeliefBaseSampler<PlBeliefSet>{
+public class HsSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet>{
 
 	/**
 	 * The inconsistency value of the generated belief sets
@@ -56,12 +56,25 @@ public class HsSampler extends BeliefBaseSampler<PlBeliefSet>{
 		super(signature);
 		this.incvalue = incvalue;
 	}
+	
+	/**
+	 * Creates a new sample for the given signature
+	 * which generates propositional belief sets with the 
+	 * given inconsistency value (wrt. the Hs inconsistency measure)
+	 * @param signature some propositional signature
+	 * @param incvalue some inconsistency value.
+	 * @param minLength the minimum length of knowledge bases
+	 * @param maxLength the maximum length of knowledge bases
+	 */
+	public HsSampler(PropositionalSignature signature, int incvalue, int minLength, int maxLength) {
+		super(signature,minLength,maxLength);
+		this.incvalue = incvalue;
+	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.BeliefBaseSampler#randomSample(int, int)
+	 * @see net.sf.tweety.commons.BeliefSetSampler#next()
 	 */
-	@Override
-	public PlBeliefSet randomSample(int minLength, int maxLength) {
+	public PlBeliefSet next() {
 		PropositionalSignature sig = (PropositionalSignature) this.getSignature();
 		if(this.incvalue > Math.pow(2, sig.size()))
 			throw new IllegalArgumentException("A propositional belief base with inconsistency value " + this.incvalue + " cannot be generated with the given signature.");
@@ -71,9 +84,9 @@ public class HsSampler extends BeliefBaseSampler<PlBeliefSet>{
 		Random rand = new Random();
 		PropositionalFormula f1,f2;
 		CnfSampler sampler = new CnfSampler(sig,3d/sig.size());
-		while(bs.size() < minLength){
+		while(bs.size() < this.getMinLength()){
 			f1 = canonical.get(rand.nextInt(canonical.size()));
-			f2 = sampler.randomFormula();
+			f2 = sampler.sampleFormula();
 			bs.add(f1.combineWithOr(f2));
 		}		
 		return bs;

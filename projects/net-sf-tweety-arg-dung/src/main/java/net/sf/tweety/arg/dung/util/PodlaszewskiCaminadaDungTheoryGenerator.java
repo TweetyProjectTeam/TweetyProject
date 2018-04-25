@@ -52,16 +52,16 @@ public class PodlaszewskiCaminadaDungTheoryGenerator implements DungTheoryGenera
 	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#generate()
 	 */
 	@Override
-	public DungTheory generate() {
+	public DungTheory next() {
 		Argument a = new Argument("a");
-		return this.generate(a);
+		return this.next(a);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#generate(net.sf.tweety.arg.dung.syntax.Argument)
 	 */
 	@Override
-	public DungTheory generate(Argument arg) {
+	public DungTheory next(Argument arg) {
 		DungTheory theory = new DungTheory();
 		// the initial argument
 		Argument d = new Argument("d");
@@ -112,5 +112,13 @@ public class PodlaszewskiCaminadaDungTheoryGenerator implements DungTheoryGenera
 	@Override
 	public void setSeed(long seed) {
 		// not needed as the computation is deterministic		
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		return true;
 	}
 }

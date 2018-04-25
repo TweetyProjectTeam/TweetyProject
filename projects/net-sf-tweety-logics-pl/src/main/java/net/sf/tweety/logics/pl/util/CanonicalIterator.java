@@ -22,11 +22,11 @@ import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import net.sf.tweety.commons.BeliefSetIterator;
 import net.sf.tweety.commons.util.ConversionTools;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.PlBeliefSet;
@@ -43,7 +43,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
+public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula,PlBeliefSet>{
 	
 	/** The upper bound used for enumerating knowledge bases.*/
 	private BigInteger upperBoundIndex = null;
@@ -54,7 +54,7 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 	 * Default constructor. Creates an enumerator that enumerates
 	 * knowledge bases starting from index 1.
 	 */
-	public CanonicalEnumerator(){
+	public CanonicalIterator(){
 		this(BigInteger.ONE,null);
 	}
 	
@@ -63,7 +63,7 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 	 * knowledge bases starting from the given index
 	 * @param startIndex some integer value
 	 */
-	public CanonicalEnumerator(Long startIndex){		
+	public CanonicalIterator(Long startIndex){		
 		this(new BigInteger(startIndex.toString()),null);
 	}
 	
@@ -72,7 +72,7 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 	 * knowledge bases starting from the given index
 	 * @param startIndex some integer value
 	 */
-	public CanonicalEnumerator(Integer startIndex){		
+	public CanonicalIterator(Integer startIndex){		
 		this(new BigInteger(startIndex.toString()),null);
 	}
 	
@@ -81,7 +81,7 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 	 * knowledge bases starting from the given index
 	 * @param startIndex some integer value
 	 */
-	public CanonicalEnumerator(BigInteger startIndex){
+	public CanonicalIterator(BigInteger startIndex){
 		this(startIndex, null);
 	}
 	
@@ -92,7 +92,7 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 	 * @param startIndex some integer value
 	 * @param endIndex some integer value
 	 */
-	public CanonicalEnumerator(Long startIndex, Long endIndex){		
+	public CanonicalIterator(Long startIndex, Long endIndex){		
 		this(new BigInteger(startIndex.toString()),new BigInteger(endIndex.toString()));
 	}
 	
@@ -103,7 +103,7 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 	 * @param startIndex some integer value
 	 * @param endIndex some integer value
 	 */
-	public CanonicalEnumerator(Integer startIndex, Integer endIndex){		
+	public CanonicalIterator(Integer startIndex, Integer endIndex){		
 		this(new BigInteger(startIndex.toString()),new BigInteger(endIndex.toString()));
 	}
 	
@@ -114,7 +114,7 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 	 * @param startIndex some integer value
 	 * @param endIndex some integer value
 	 */
-	public CanonicalEnumerator(BigInteger startIndex, BigInteger endIndex){		
+	public CanonicalIterator(BigInteger startIndex, BigInteger endIndex){		
 		this.next = startIndex;
 		this.upperBoundIndex = endIndex;
 		this.gotoNextValidIndex();
@@ -331,11 +331,17 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#hasNext()
+	 */
 	@Override
 	public boolean hasNext() {
 		return this.upperBoundIndex == null || this.next.compareTo(this.upperBoundIndex) <= 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#next()
+	 */
 	@Override
 	public PlBeliefSet next() {
 		if(!this.hasNext())
@@ -396,7 +402,7 @@ public class CanonicalEnumerator implements Iterator<PlBeliefSet>{
 		for(Proposition p: (PropositionalSignature)bs.getSignature())
 			prop.put(p, idx++);
 		for(PropositionalFormula f: bs)
-			s += CanonicalEnumerator.formula2String(f,prop);
+			s += CanonicalIterator.formula2String(f,prop);
 		return ConversionTools.binaryString2BitSet(s);
 	}
 }

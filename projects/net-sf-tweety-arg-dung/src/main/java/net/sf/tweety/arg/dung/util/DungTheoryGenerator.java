@@ -20,19 +20,24 @@ package net.sf.tweety.arg.dung.util;
 
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.commons.BeliefSetIterator;
 
 /**
  * Class implementing this interface provide the capability
  * to generate Dung theories.
  * @author Matthias Thimm
  */
-public interface DungTheoryGenerator {
+public interface DungTheoryGenerator extends BeliefSetIterator<Argument,DungTheory> {
 
-	/**
-	 * Generates a new Dung theory
-	 * @return a Dung theory,
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#hasNext()
 	 */
-	public DungTheory generate();
+	public boolean hasNext();
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#next()
+	 */
+	public DungTheory next();
 	
 	/**
 	 * Generates a new Dung theory where the given argument
@@ -41,7 +46,7 @@ public interface DungTheoryGenerator {
 	 *  to be in the grounded extension of the generated theory.
 	 * @return a Dung theory,
 	 */
-	public DungTheory generate(Argument arg);
+	public DungTheory next(Argument arg);
 	
 	/**
 	 * Set the seed for the generation. Every two

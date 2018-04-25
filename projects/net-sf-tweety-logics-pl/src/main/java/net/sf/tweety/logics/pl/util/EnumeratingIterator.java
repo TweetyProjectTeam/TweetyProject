@@ -21,10 +21,8 @@ package net.sf.tweety.logics.pl.util;
 import java.util.BitSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import net.sf.tweety.commons.BeliefBaseSampler;
-import net.sf.tweety.commons.Signature;
+import net.sf.tweety.commons.BeliefSetIterator;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -40,12 +38,8 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class EnumeratingPlBeliefSetSampler extends BeliefBaseSampler<PlBeliefSet> {
+public class EnumeratingIterator implements BeliefSetIterator<PropositionalFormula,PlBeliefSet> {
 
-	/** The currently used min length. */
-	private int currentMinLength = -1;
-	/** The currently used max length. */
-	private int currentMaxLength = -1;
 	/** The current length */
 	private int currentLength = -1;
 	
@@ -55,40 +49,39 @@ public class EnumeratingPlBeliefSetSampler extends BeliefBaseSampler<PlBeliefSet
 	private BitSet indices;
 	
 	/**
+	 * The used signature.
+	 */
+	private PropositionalSignature signature;
+	
+	/**
 	 * Creates a new sampler for the given signature
 	 * @param signature some signature
 	 */
-	public EnumeratingPlBeliefSetSampler(Signature signature) {
-		super(signature);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseSampler#randomSample(int, int)
-	 */
-	@Override
-	public PlBeliefSet randomSample(int minLength, int maxLength) {
-		if(this.currentMaxLength != maxLength || this.currentMinLength != minLength){
-			this.currentMaxLength = maxLength;
-			this.currentMinLength = minLength;
-			this.currentLength = this.currentMinLength;
-			this.allWorlds = new LinkedList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds((PropositionalSignature)this.getSignature()));
-			this.indices = new BitSet(this.currentLength * this.allWorlds.size());						
-		}		
-		if(this.indices == null){
-			if(this.currentLength < this.currentMaxLength){
-				this.currentLength++;
-				this.indices = new BitSet(this.currentLength * this.allWorlds.size());
-			}else throw new NoSuchElementException("All belief bases have been generated");
-		}
-		return this.next();
+	public EnumeratingIterator(PropositionalSignature signature) {
+		this.signature = signature;
+		this.currentLength = 0;
+		this.allWorlds = new LinkedList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds(this.signature));
+		this.indices = new BitSet(this.currentLength * this.allWorlds.size());
 	}
 	
-	/**
-	 * Returns the next belief set.
-	 * @return the next belief set.
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#hasNext()
 	 */
-	private PlBeliefSet next(){
-		Proposition a = ((PropositionalSignature)this.getSignature()).iterator().next();
+	@Override
+	public boolean hasNext() {
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefSetIterator#next()
+	 */
+	@Override
+	public PlBeliefSet next(){
+		if(this.indices == null){
+			this.currentLength++;
+			this.indices = new BitSet(this.currentLength * this.allWorlds.size());
+		}
+		Proposition a = this.signature.iterator().next();
 		PropositionalFormula contr = a.combineWithAnd(new Negation(a));		
 		PlBeliefSet result = new PlBeliefSet();
 		int size = this.allWorlds.size();		
@@ -97,7 +90,7 @@ public class EnumeratingPlBeliefSetSampler extends BeliefBaseSampler<PlBeliefSet
 			PropositionalFormula p = contr.combineWithAnd(new Proposition("XSA"+i));
 			for(int j = 0; j < size; j++){
 				if(this.indices.get(i*size + j))
-					p = p.combineWithOr(this.allWorlds.get(j).getCompleteConjunction((PropositionalSignature)this.getSignature()));				
+					p = p.combineWithOr(this.allWorlds.get(j).getCompleteConjunction(this.signature));				
 			}
 			result.add(p);
 		}
@@ -111,6 +104,8 @@ public class EnumeratingPlBeliefSetSampler extends BeliefBaseSampler<PlBeliefSet
 	 * @return the incremented bit set
 	 */
 	private BitSet increment(BitSet bitSet){
+		if(bitSet.size() == 0)
+			return null;
 		boolean carry = true, tmp;
 		int i = 0;
 		while(carry){

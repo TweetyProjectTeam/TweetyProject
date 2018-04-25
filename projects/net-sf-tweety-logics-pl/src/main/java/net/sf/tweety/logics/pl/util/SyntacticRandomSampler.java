@@ -21,7 +21,7 @@ package net.sf.tweety.logics.pl.util;
 import java.util.HashSet;
 import java.util.Random;
 
-import net.sf.tweety.commons.BeliefBaseSampler;
+import net.sf.tweety.commons.BeliefSetSampler;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
@@ -55,7 +55,7 @@ import net.sf.tweety.math.probability.ProbabilityFunction;
  * @author Matthias Thimm
  *
  */
-public class SyntacticRandomPlBeliefSetSampler extends BeliefBaseSampler<PlBeliefSet> {
+public class SyntacticRandomSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet> {
 	/** The probability function modeling the random decisions.*/
 	private ProbabilityFunction<Byte> prob;
 	/** The probability function used to sample propositions*/
@@ -80,7 +80,7 @@ public class SyntacticRandomPlBeliefSetSampler extends BeliefBaseSampler<PlBelie
 	 * @param recDecrease a value in (0,1) by which the above probabilities are multiplied in each recursive step to
  *  	increase likelihood of termination.
 	 */
-	public SyntacticRandomPlBeliefSetSampler(Signature signature, Probability probneg, Probability probconj, Probability probdisj, double recDecrease) {
+	public SyntacticRandomSampler(Signature signature, Probability probneg, Probability probconj, Probability probdisj, double recDecrease) {
 		super(signature);
 		if(probneg.doubleValue() + probconj.doubleValue() + probdisj.doubleValue() >= 1)
 			throw new IllegalArgumentException("Sum of probabilities should be strictly less than one, otherwise the sampling algorithm will never terminate.");
@@ -95,6 +95,33 @@ public class SyntacticRandomPlBeliefSetSampler extends BeliefBaseSampler<PlBelie
 		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>((PropositionalSignature)this.getSignature()));
 	}
 
+	/**
+	 * 
+	 * Creates a new sampler.
+	 * @param signature some set of propositions
+	 * @param probneg the probability to generate a negation
+	 * @param probconj the probability to generate a conjunction
+	 * @param probdisj the probability to generate a disjunction
+	 * @param recDecrease a value in (0,1) by which the above probabilities are multiplied in each recursive step to
+ *  	increase likelihood of termination.
+	 * @param minLength the minimum length of knowledge bases
+	 * @param maxLength the maximum length of knowledge bases
+	 */
+	public SyntacticRandomSampler(Signature signature, Probability probneg, Probability probconj, Probability probdisj, double recDecrease, int minLength, int maxLength) {
+		super(signature,minLength,maxLength);
+		if(probneg.doubleValue() + probconj.doubleValue() + probdisj.doubleValue() >= 1)
+			throw new IllegalArgumentException("Sum of probabilities should be strictly less than one, otherwise the sampling algorithm will never terminate.");
+		if(recDecrease <= 0 || recDecrease >= 1)
+			throw new IllegalArgumentException("recDecrease should be in (0,1).");
+		this.prob = new ProbabilityFunction<Byte>();
+		this.prob.put(NEG, probneg);
+		this.prob.put(CONJ, probconj);
+		this.prob.put(DISJ, probdisj);
+		this.prob.put(PROP, new Probability(1-probneg.doubleValue()-probconj.doubleValue() - probdisj.doubleValue()));
+		this.recDecrease = recDecrease;
+		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>((PropositionalSignature)this.getSignature()));
+	}	
+	
 	/**
 	 * Adapts the given probability function by decreasing the probabilities of NEG, CONJ and DISJ.
 	 * @param prob a probability function.
@@ -127,13 +154,13 @@ public class SyntacticRandomPlBeliefSetSampler extends BeliefBaseSampler<PlBelie
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseSampler#randomSample(int, int)
+	/**
+	 * @return
 	 */
 	@Override
-	public PlBeliefSet randomSample(int minLength, int maxLength) {		
+	public PlBeliefSet next() {		
 		PlBeliefSet bs = new PlBeliefSet();
-		int numFormulas = rand.nextInt(maxLength-minLength+1) + minLength;
+		int numFormulas = rand.nextInt(this.getMaxLength()-this.getMinLength()+1) + this.getMinLength();
 		while(numFormulas > 0){
 			bs.add(this.sampleFormula(this.prob));
 			numFormulas--;
