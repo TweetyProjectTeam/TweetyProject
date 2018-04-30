@@ -20,6 +20,7 @@ package net.sf.tweety.beliefdynamics.examples;
 
 import net.sf.tweety.arg.dung.CompleteReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.beliefdynamics.DefaultMultipleBaseExpansionOperator;
@@ -55,12 +56,12 @@ public class AbstractArgumentationExample {
 		theory.add(new Attack(c,b));
 		theory.add(new Attack(c,a));
 		
-		CompleteReasoner reasoner = new CompleteReasoner(theory);
+		CompleteReasoner reasoner = new CompleteReasoner(Semantics.CREDULOUS_INFERENCE);
 		
-		System.out.println(reasoner.getExtensions());
+		System.out.println(reasoner.getExtensions(theory));
 		System.out.println();
 				
-		PlBeliefSet beliefSet = reasoner.getPropositionalCharacterisation(); 
+		PlBeliefSet beliefSet = reasoner.getPropositionalCharacterisation(theory); 
 		System.out.println(beliefSet);
 		System.out.println();
 		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet.getSignature())){

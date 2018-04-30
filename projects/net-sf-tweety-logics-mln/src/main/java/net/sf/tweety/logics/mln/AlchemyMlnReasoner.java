@@ -30,7 +30,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
@@ -58,24 +57,6 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 
 	/** The console command for Alchemy inference. */
 	private String inferCmd = "infer";
-		
-	/**
-	 * Creates a new AlchemyMlnReasoner for the given Markov logic network.
-	 * @param beliefBase a Markov logic network. 
-	 */
-	public AlchemyMlnReasoner(BeliefBase beliefBase){
-		this(beliefBase, (FolSignature) beliefBase.getSignature());
-	}
-	
-	/**
-	 * Creates a new AlchemyMlnReasoner for the given Markov logic network.
-	 * @param beliefBase a Markov logic network. 
-	 * @param signature another signature (if the probability distribution should be defined 
-	 * on that one (that one should subsume the signature of the Markov logic network)
-	 */
-	public AlchemyMlnReasoner(BeliefBase beliefBase, FolSignature signature){
-		super(beliefBase, signature);		
-	}
 
 	/** Sets the console command for Alchemy inference (default is 'infer').
 	 * @param inferCmd the console command for Alchemy inference. 
@@ -85,16 +66,16 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
+	 * @see net.sf.tweety.logics.mln.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.mln.MarkovLogicNetwork, net.sf.tweety.logics.fol.syntax.FolFormula, net.sf.tweety.logics.fol.syntax.FolSignature)
 	 */
 	@Override
-	public double doQuery(FolFormula query) {
+	public double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {
 		// NOTE: as the query formula might be an arbitrary formula
 		// and Alchemy only supports querying the probabilities
 		// of atoms, we need to encode the query in the MLN
 		// by stating it to be equivalent to some new atom
 		try{
-			File mlnFile = this.writeAlchemyMlnFile((MarkovLogicNetwork)this.getKnowledgeBase(), this.getSignature(), query);			
+			File mlnFile = this.writeAlchemyMlnFile(mln, signature, query);			
 			//empty evidence file needed
 			File evidenceFile = File.createTempFile("alchemy_ev",null);
 			evidenceFile.deleteOnExit();
@@ -334,9 +315,4 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		throw new IllegalArgumentException("Functional expressions not supported by Alchemy.");
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#reset()
-	 */
-	@Override
-	public void reset() { }
 }

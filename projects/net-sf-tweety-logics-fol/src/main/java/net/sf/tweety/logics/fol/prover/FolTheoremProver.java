@@ -18,8 +18,9 @@
  */
 package net.sf.tweety.logics.fol.prover;
 
-import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.Answer;
+import net.sf.tweety.commons.BeliefBaseReasoner;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
@@ -29,11 +30,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
  * @author Nils Geilen
  *
  */
-public abstract class FolTheoremProver extends Reasoner {
-
-	public FolTheoremProver(BeliefBase beliefBase) {
-		super(beliefBase);
-	}
+public abstract class FolTheoremProver implements BeliefBaseReasoner<FolBeliefSet> {
 
 	/**
 	 * Empty default prover
@@ -74,5 +71,11 @@ public abstract class FolTheoremProver extends Reasoner {
 	 * @return   the answer to the query.
 	 */
 	public abstract boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b);
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 */
+	@Override
+	public abstract Answer query(FolBeliefSet formulas, Formula query);
 	
 }

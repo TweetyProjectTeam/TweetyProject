@@ -52,9 +52,9 @@ public class CF2Example {
 		theory.add(new Attack(e,a));
 		theory.add(new Attack(e,f));
 		
-		CF2Reasoner reasoner = new CF2Reasoner(theory,Semantics.CREDULOUS_INFERENCE);
+		CF2Reasoner reasoner = new CF2Reasoner(Semantics.CREDULOUS_INFERENCE);
 		
-		for(Extension ext: reasoner.getExtensions()){
+		for(Extension ext: reasoner.getExtensions(theory)){
 			System.out.println(ext);			
 		}
 	}

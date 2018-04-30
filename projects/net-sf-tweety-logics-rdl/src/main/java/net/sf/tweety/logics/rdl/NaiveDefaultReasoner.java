@@ -21,9 +21,8 @@ package net.sf.tweety.logics.rdl;
 import java.util.Collection;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -35,29 +34,20 @@ import net.sf.tweety.logics.rdl.semantics.DefaultProcessTree;
  * 
  * @author Matthias Thimm, Nils Geilen
  */
-public class NaiveDefaultReasoner extends Reasoner{
-	
-	DefaultProcessTree tree ;
-
-	public NaiveDefaultReasoner(BeliefBase beliefBase) {
-		super(beliefBase);
-		if( ! (beliefBase instanceof DefaultTheory))
-			throw new IllegalArgumentException("BeliefBase has to be a DefaultTheory");
-		 tree = new DefaultProcessTree((DefaultTheory)beliefBase);
-	}
+public class NaiveDefaultReasoner implements BeliefBaseReasoner<DefaultTheory>{
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(DefaultTheory theory, Formula query) {
 		if(!(query instanceof FolFormula))
 			throw new IllegalArgumentException("NaiveDefaultReasoner is only defined for first-order queries.");
 		if(!((FolFormula)query).isGround())
 			throw new IllegalArgumentException("Query is not grounded.");
-		Answer answer = new Answer(this.getKnowledgeBase(),query);
+		Answer answer = new Answer(theory,query);
 		answer.setAnswer(false);
-		for (Collection<FolFormula> extension: tree.getExtensions()){
+		for (Collection<FolFormula> extension: this.getAllExtensions(theory)){
 			FolBeliefSet fbs = (FolBeliefSet)extension;
 			FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 			if(prover.query(fbs, (FolFormula)query).getAnswerBoolean()){
@@ -67,13 +57,12 @@ public class NaiveDefaultReasoner extends Reasoner{
 		}
 		return answer;
 	}
-
 	
 	/**
 	 * 	@return all extensions of the default theory
 	 */
-	public Collection<Collection<FolFormula>> getAllExtensions(){
-		return tree.getExtensions();
+	public Collection<Collection<FolFormula>> getAllExtensions(DefaultTheory theory){
+		return new DefaultProcessTree(theory).getExtensions();
 	}
 	
 }

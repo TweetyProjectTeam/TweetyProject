@@ -27,33 +27,31 @@ import java.util.Iterator;
 
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.dung.semantics.Semantics;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Matthias Thimm
  * This reasoner for ABA theories performs inference on the ideal extension.
  * @param <T>	the language of the underlying ABA theory
  */
 public class IdealReasoner<T extends Formula> extends GeneralABAReasoner<T> {
 
 	/**
-	 * Creates a new ideal reasoner for the given knowledge base.
+	 * Creates a new ideal reasoner.
 	 * @param beliefBase a knowledge base.
 	 * @param inferenceType The inference type for this reasoner.
 	 */
-	public IdealReasoner(BeliefBase beliefBase, int inferenceType) {
-		super(beliefBase, inferenceType);
+	public IdealReasoner(int inferenceType) {
+		super(inferenceType);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.aba.GeneralABAReasoner#computeExtensions()
+	 * @see net.sf.tweety.arg.aba.GeneralABAReasoner#computeExtensions(net.sf.tweety.arg.aba.ABATheory)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Collection<Assumption<T>>> computeExtensions() {
-		ABATheory<T> abat = (ABATheory<T>)getKnowledgeBase();
-		Collection<Collection<Assumption<T>>> prefexts = new PreferredReasoner<T>(abat, Semantics.CREDULOUS_INFERENCE).computeExtensions();
+	public Collection<Collection<Assumption<T>>> computeExtensions(ABATheory<T> abat) {
+		Collection<Collection<Assumption<T>>> prefexts = new PreferredReasoner<T>(Semantics.CREDULOUS_INFERENCE).computeExtensions(abat);
 		Iterator<Collection<Assumption<T>>> iter = prefexts.iterator();
 		Collection<Assumption<T>> intersec = iter.hasNext() ? iter.next() : new HashSet<Assumption<T>>();
 		while (iter.hasNext()) {

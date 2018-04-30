@@ -71,11 +71,11 @@ public class ScepticalLiteralTransformationFunction implements
 		Program checkSet = new Program(beliefSet);
 		checkSet.addAll(formulas);
 		ArgumentationKnowledgeBase argkb = new ArgumentationKnowledgeBase(checkSet);
-		LiteralReasoner reasoner = new LiteralReasoner(argkb, attackRelation, defenseRelation);
+		LiteralReasoner reasoner = new LiteralReasoner(attackRelation, defenseRelation);
 		for(Rule r : formulas) {
 			if(r.isFact()) {
 				DLPLiteral head = r.getConclusion().iterator().next();
-				if(reasoner.isJustified(head)) {
+				if(reasoner.isJustified(argkb,head)) {
 					result.add(r);
 				}
 			} else {

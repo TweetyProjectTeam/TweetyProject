@@ -31,17 +31,17 @@ import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 
 /**
  * @author Nils Geilen 
+ * @author Matthias Thimm
  * This class models a reasoner over ABA formulae
  * Can only be used with flat ABA theories because
  * only those can be transformed into Dung frameworks
  */
-public class FlatABAReasoner extends Reasoner {
+public class FlatABAReasoner<T extends Formula> implements BeliefBaseReasoner<ABATheory<T>> {
 
 	Semantics semantics;
 	int inferencetype;
@@ -49,8 +49,6 @@ public class FlatABAReasoner extends Reasoner {
 	/**
 	 * Creates a new instance
 	 * 
-	 * @param beliefBase
-	 *            an ABATheory
 	 * @param semantics
 	 *            an indicator for the used semantics (c.f.
 	 *            net.sf.tweety.arg.dung.semantics.Semantics)
@@ -58,38 +56,31 @@ public class FlatABAReasoner extends Reasoner {
 	 *            an indicator for the used inference (c.f.
 	 *            net.sf.tweety.arg.dung.semantics.Semantics)
 	 */
-	public FlatABAReasoner(BeliefBase beliefBase, Semantics semantics, int inferencetype) {
-		super(beliefBase);
+	public FlatABAReasoner(Semantics semantics, int inferencetype) {
 		this.semantics = semantics;
 		this.inferencetype = inferencetype;
-		if (!(beliefBase instanceof ABATheory))
-			throw new IllegalArgumentException("Knowledge base of type ABATheory<?> expected");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ABATheory<T> abat, Formula query) {
 		Argument arg;
 		if (query instanceof Assumption)
 			arg = new Argument(((Assumption<?>) query).getConclusion().toString());
 		else
 			throw new RuntimeException("ABAReasoner.query expects input of class Assumption");
-		ABATheory<?> abat = (ABATheory<?>) getKnowledgeBase();
 		DungTheory dt = abat.asDungTheory();
-		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(dt, semantics, inferencetype);
-		return aer.query(arg);
+		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(semantics, inferencetype);
+		return aer.query(dt,arg);
 	}
 
-	public Collection<Collection<Assumption<?>>> getExtensions() {
-		ABATheory<?> abat = (ABATheory<?>) getKnowledgeBase();
+	public Collection<Collection<Assumption<?>>> getExtensions(ABATheory<T> abat) {
 		DungTheory dt = abat.asDungTheory();
-		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(dt, semantics, inferencetype);
+		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(semantics, inferencetype);
 		Collection<Collection<Assumption<?>>> result = new HashSet<>();
-		for (Extension ext : aer.getExtensions()) {
+		for (Extension ext : aer.getExtensions(dt)) {
 			Collection<Assumption<?>> abaext = new HashSet<>();
 			for (Argument arg : ext) {
 				for (Assumption<?> ass : abat.getAssumptions()) {

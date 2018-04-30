@@ -26,7 +26,6 @@ import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Labeling;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
@@ -38,31 +37,22 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 public class StageReasoner extends AbstractExtensionReasoner {
 
 	/**
-	 * Creates a new stage reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
+	 * Creates a new stage reasoner.
 	 * @param inferenceType The inference type for this reasoner.
 	 */
-	public StageReasoner(BeliefBase beliefBase, int inferenceType){
-		super(beliefBase, inferenceType);		
-	}
-	
-	/**
-	 * Creates a new stage reasoner for the given knowledge base using sceptical inference.
-	 * @param beliefBase The knowledge base for this reasoner.
-	 */
-	public StageReasoner(BeliefBase beliefBase){
-		super(beliefBase);		
+	public StageReasoner(int inferenceType){
+		super(inferenceType);		
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
+	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
 	 */
-	public Set<Extension> computeExtensions(){
+	public Set<Extension> getExtensions(DungTheory theory){
 		// A stage extension is a conflict-free set with minimal undecided arguments
-		Set<Extension> cfExt = new ConflictFreeReasoner(this.getKnowledgeBase(),this.getInferenceType()).getExtensions();
+		Set<Extension> cfExt = new ConflictFreeReasoner(this.getInferenceType()).getExtensions(theory);
 		Set<Labeling> cfLab = new HashSet<Labeling>();
 		for(Extension e: cfExt)
-			cfLab.add(new Labeling((DungTheory)this.getKnowledgeBase(),e));
+			cfLab.add(new Labeling(theory,e));
 		Set<Extension> result = new HashSet<Extension>();
 		boolean stage;
 		for(Labeling lab: cfLab){
@@ -87,7 +77,7 @@ public class StageReasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
 	 */
 	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out, Map<Argument, Proposition> undec) {
+	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory theory, Map<Argument, Proposition> in, Map<Argument, Proposition> out, Map<Argument, Proposition> undec) {
 		throw new UnsupportedOperationException("Implement me!");
 	}
 }

@@ -76,9 +76,9 @@ public class ArgumentativeTransformationFunction implements MultipleTransformati
 		Collection<PropositionalFormula> transformedSet = new HashSet<PropositionalFormula>();
 		DeductiveKnowledgeBase joinedBeliefSet = new DeductiveKnowledgeBase(this.beliefSet);
 		joinedBeliefSet.addAll(formulas);
-		CompilationReasoner reasoner = new CompilationReasoner(joinedBeliefSet, this.categorizer, this.accumulator);
+		CompilationReasoner reasoner = new CompilationReasoner(this.categorizer, this.accumulator);
 		for(PropositionalFormula f: formulas){
-			Double result = reasoner.query(f).getAnswerDouble();
+			Double result = reasoner.query(joinedBeliefSet,f).getAnswerDouble();
 			if(this.isSkeptical){
 				if(result > 0)
 					transformedSet.add(f);

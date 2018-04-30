@@ -23,9 +23,8 @@ import net.sf.tweety.arg.delp.semantics.DialecticalTree;
 import net.sf.tweety.arg.delp.semantics.EmptyCriterion;
 import net.sf.tweety.arg.delp.syntax.DelpArgument;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 import java.util.ArrayDeque;
@@ -40,25 +39,19 @@ import java.util.stream.Collectors;
  * @author Matthias Thimm
  *
  */
-public class DelpReasoner extends Reasoner {
+public class DelpReasoner implements BeliefBaseReasoner<DefeasibleLogicProgram> {
 
 	/**
 	 * The comparison criterion is initialized with the "empty criterion"
 	 */
 	private ComparisonCriterion comparisonCriterion = new EmptyCriterion();
 
-    private final DefeasibleLogicProgram groundDelp;
-
 	/**
 	 * Creates a new DelpReasoner for the given delp.
 	 * @param beliefBase a delp.
 	 * @param comparisonCriterion a comparison criterion used for inference
 	 */
-	public DelpReasoner(BeliefBase beliefBase, ComparisonCriterion comparisonCriterion) {
-		super(beliefBase);
-		if(!(beliefBase instanceof DefeasibleLogicProgram))
-			throw new IllegalArgumentException("Knowledge base of class DefeasibleLogicProgram expected.");
-        groundDelp = ((DefeasibleLogicProgram) beliefBase).ground();
+	public DelpReasoner(ComparisonCriterion comparisonCriterion) {
 		this.comparisonCriterion = comparisonCriterion;
 	}
 
@@ -71,10 +64,10 @@ public class DelpReasoner extends Reasoner {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(DefeasibleLogicProgram delp, Formula query) {
         // check query:
 		if(!(query instanceof FolFormula))
 			throw new IllegalArgumentException("Formula of class FolFormula expected.");
@@ -85,8 +78,8 @@ public class DelpReasoner extends Reasoner {
 			throw new IllegalArgumentException("Formula is expected to be ground: "+f);
 
         // compute answer:
-		DelpAnswer answer = new DelpAnswer(this.getKnowledgeBase(),f);
-        Set<FolFormula> conclusions = getWarrants().stream()
+		DelpAnswer answer = new DelpAnswer(delp,f);
+        Set<FolFormula> conclusions = getWarrants(delp).stream()
                 .map(DelpArgument::getConclusion)
                 .collect(Collectors.toSet());
         if (conclusions.contains(f))
@@ -102,10 +95,11 @@ public class DelpReasoner extends Reasoner {
 	 * Computes the subset of the arguments of this program, that are warrants.
 	 * @return a set of <source>DelpArgument</source> that are warrants
 	 */
-    public Set<DelpArgument> getWarrants(){
-        Set<DelpArgument> all_arguments = groundDelp.getArguments();
+    public Set<DelpArgument> getWarrants(DefeasibleLogicProgram delp){
+    	DefeasibleLogicProgram groundDelp = delp.ground();
+        Set<DelpArgument> all_arguments = groundDelp.ground().getArguments();
 		return all_arguments.stream()
-                .filter(argument -> isWarrant(argument, all_arguments))
+                .filter(argument -> isWarrant(groundDelp,argument, all_arguments))
                 .collect(Collectors.toSet());
 	}
 
@@ -115,7 +109,7 @@ public class DelpReasoner extends Reasoner {
 	 * @param arguments a set of DeLP arguments
 	 * @return <source>true</source> iff <source>argument</source> is a warrant given <source>arguments</source>.
 	 */
-	public boolean isWarrant(DelpArgument argument, Set<DelpArgument> arguments){
+	public boolean isWarrant(DefeasibleLogicProgram groundDelp, DelpArgument argument, Set<DelpArgument> arguments){
 		DialecticalTree dtree = new DialecticalTree(argument);
 		Deque<DialecticalTree> stack = new ArrayDeque<>();
 		stack.add(dtree);

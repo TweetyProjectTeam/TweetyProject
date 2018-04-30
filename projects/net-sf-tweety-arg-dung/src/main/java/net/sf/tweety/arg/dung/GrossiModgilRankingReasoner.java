@@ -30,7 +30,7 @@ import net.sf.tweety.arg.dung.semantics.LatticeArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.commons.util.SetTools;
 
 /**
@@ -41,26 +41,19 @@ import net.sf.tweety.commons.util.SetTools;
  *  
  * @author Matthias Thimm
  */
-public class GrossiModgilRankingReasoner extends Reasoner{
-
-	/**
-	 * Creates a new reasoner for the given Dung theory
-	 * @param theory
-	 */
-	public GrossiModgilRankingReasoner(DungTheory theory) {
-		super(theory);
-	}
+public class GrossiModgilRankingReasoner implements BeliefBaseReasoner<DungTheory>{
 
 	/**
 	 * Determines the number of attackers from x to y.
+	 * @param theory a Dung theory.
 	 * @param y some argument
 	 * @param x some set of arguments
 	 * @return  the number of attackers from x to y.
 	 */
-	private int numOfAttackers(Argument y, Collection<Argument> x){
+	private int numOfAttackers(DungTheory theory, Argument y, Collection<Argument> x){
 		int num = 0;
 		for(Argument a: x)
-			if(((DungTheory)this.getKnowledgeBase()).isAttackedBy(y, a))
+			if(theory.isAttackedBy(y, a))
 				num++;
 		return num;
 	}
@@ -70,18 +63,18 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	 * gradedDefense_m_n(X) = { x | there are not more than m different y s.t.
 	 * y attacks x and there are not more than n different z s.t. z attacks
 	 * y and z is in X}
+	 * @param theory a Dung theory
 	 * @param args some set of arguments
 	 * @param m some integer (indicating the number of attackers)
 	 * @param n some integer (indicating the number of attackers of attackers)
 	 * @return the set of arguments mn-defended by the given set of arguments
 	 */
-	public Collection<Argument> gradedDefense(Collection<Argument> args, int m, int n){
-		DungTheory theory = ((DungTheory)this.getKnowledgeBase());
+	public Collection<Argument> gradedDefense(DungTheory theory, Collection<Argument> args, int m, int n){
 		Collection<Argument> result = new HashSet<>();
 		for(Argument arg: theory){
 			int num_attackers = 0;
 			for(Argument attacker: theory.getAttackers(arg))
-				if(this.numOfAttackers(attacker, args) < n)
+				if(this.numOfAttackers(theory,attacker, args) < n)
 					num_attackers++;
 			if(num_attackers < m)
 				result.add(arg);
@@ -93,15 +86,15 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	 * Implements the graded neutrality function from Def. 6, i.e.
 	 * gradedNeutrality_m(X) = {x | there are less than m arguments y
 	 * from X that attack x} 
+	 * @param theory a Dung theory
 	 * @param args some set of arguments
 	 * @param m some integer (the number of attackers)
 	 * @return the set of arguments m-neutral to args.
 	 */
-	public Collection<Argument> gradedNeutrality(Collection<Argument> args, int m){
-		DungTheory theory = ((DungTheory)this.getKnowledgeBase());
+	public Collection<Argument> gradedNeutrality(DungTheory theory, Collection<Argument> args, int m){
 		Collection<Argument> result = new HashSet<>();
 		for(Argument arg: theory)
-			if(this.numOfAttackers(arg, args) < m)
+			if(this.numOfAttackers(theory,arg, args) < m)
 				result.add(arg);
 		return result;
 	}
@@ -109,12 +102,13 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	/**
 	 * Checks whether the given set of arguments is m-conflict-free, cf. 
 	 * Def. 9.
+	 * @param theory a Dung theory
 	 * @param args some set of arguments 
 	 * @param m some integer
 	 * @return "true" iff args is m-conflict-free
 	 */
-	public boolean isMConflictFree(Collection<Argument> args, int m){
-		if(!this.gradedNeutrality(args, m).containsAll(args))
+	public boolean isMConflictFree(DungTheory theory, Collection<Argument> args, int m){
+		if(!this.gradedNeutrality(theory, args, m).containsAll(args))
 			return false;
 		return true;
 	}
@@ -122,15 +116,16 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	/**
 	 * Checks whether the given set of arguments is mn-admissible, cf. 
 	 * Def. 9.
+	 * @param theory a Dung theory
 	 * @param args some set of arguments 
 	 * @param m some integer
 	 * @param n some integer 
 	 * @return "true" iff args is mn-admissible
 	 */
-	public boolean isMNAdmissible(Collection<Argument> args, int m, int n){
-		if(!this.gradedNeutrality(args, m).containsAll(args))
+	public boolean isMNAdmissible(DungTheory theory, Collection<Argument> args, int m, int n){
+		if(!this.gradedNeutrality(theory, args, m).containsAll(args))
 			return false;
-		if(!this.gradedDefense(args, m, n).containsAll(args))
+		if(!this.gradedDefense(theory,args, m, n).containsAll(args))
 			return false;
 		return true;
 	}
@@ -138,15 +133,16 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	/**
 	 * Checks whether the given set of arguments is mn-complete, cf. 
 	 * Def. 9.
+	 * @param theory a Dung theory
 	 * @param args some set of arguments 
 	 * @param m some integer
 	 * @param n some integer 
 	 * @return "true" iff args is mn-complete
 	 */
-	public boolean isMNComplete(Collection<Argument> args, int m, int n){
-		if(!this.gradedNeutrality(args, m).containsAll(args))
+	public boolean isMNComplete(DungTheory theory, Collection<Argument> args, int m, int n){
+		if(!this.gradedNeutrality(theory, args, m).containsAll(args))
 			return false;
-		if(!this.gradedDefense(args, m, n).equals(args))
+		if(!this.gradedDefense(theory, args, m, n).equals(args))
 			return false;
 		return true;
 	}
@@ -154,12 +150,13 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	/**
 	 * Checks whether the given set of arguments is m-stable, cf. 
 	 * Def. 9.
+	 * @param theory a Dung theory
 	 * @param args some set of arguments 
 	 * @param m some integer
 	 * @return "true" iff args is m-stable
 	 */
-	public boolean isMStable(Collection<Argument> args, int m){
-		if(!this.gradedNeutrality(args, m).equals(args))
+	public boolean isMStable(DungTheory theory, Collection<Argument> args, int m){
+		if(!this.gradedNeutrality(theory, args, m).equals(args))
 			return false;
 		return true;
 	}
@@ -167,38 +164,40 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	/**
 	 * Checks whether the given set of arguments is mn-grounded, cf. 
 	 * Def. 9.
+	 * @param theory a Dung theory
 	 * @param args some set of arguments 
 	 * @param m some integer
 	 * @param n some integer 
 	 * @return "true" iff args is mn-grounded
 	 */
-	public boolean isMNGrounded(Collection<Argument> args, int m, int n){
-		return this.getAllMNGroundedExtensions(m, n).contains(new Extension(args));
+	public boolean isMNGrounded(DungTheory theory, Collection<Argument> args, int m, int n){
+		return this.getAllMNGroundedExtensions(theory, m, n).contains(new Extension(args));
 	}
 	
 	/**
 	 * Checks whether the given set of arguments is mn-preferred, cf. 
 	 * Def. 9.
+	 * @param theory a Dung theory
 	 * @param args some set of arguments 
 	 * @param m some integer
 	 * @param n some integer 
 	 * @return "true" iff args is mn-preferred
 	 */
-	public boolean isMNPreferred(Collection<Argument> args, int m, int n){
-		return this.getAllMNPreferredExtensions(m, n).contains(new Extension(args));
+	public boolean isMNPreferred(DungTheory theory, Collection<Argument> args, int m, int n){
+		return this.getAllMNPreferredExtensions(theory, m, n).contains(new Extension(args));
 	}
 	
 	/**
 	 * Returns all mn-complete extensions.
+	 * @param theory a Dung theory
 	 * @param m some integer
 	 * @param n some integer
 	 * @return all mn-complete extensions.
 	 */
-	public Collection<Extension> getAllMNCompleteExtensions(int m, int n){
-		DungTheory theory = ((DungTheory)this.getKnowledgeBase());
+	public Collection<Extension> getAllMNCompleteExtensions(DungTheory theory, int m, int n){
 		Collection<Extension> result = new HashSet<>();
 		for(Collection<Argument> set : new SetTools<Argument>().subsets(theory)){
-			if(this.isMNComplete(set, m, n))
+			if(this.isMNComplete(theory, set, m, n))
 				result.add(new Extension(set));
 		}
 		return result;
@@ -206,13 +205,14 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	
 	/**
 	 * Returns all mn-preferred extensions.
+	 * @param theory a Dung theory
 	 * @param m some integer
 	 * @param n some integer
 	 * @return all mn-preferred extensions.
 	 */
-	public Collection<Extension> getAllMNPreferredExtensions(int m, int n){
+	public Collection<Extension> getAllMNPreferredExtensions(DungTheory theory, int m, int n){
 		Collection<Extension> result = new HashSet<>();
-		Collection<Extension> complete_extensions  = this.getAllMNCompleteExtensions(m, n);
+		Collection<Extension> complete_extensions  = this.getAllMNCompleteExtensions(theory, m, n);
 		for(Extension ext1: complete_extensions){
 			boolean isMaximal = true;
 			for(Extension ext2: complete_extensions)
@@ -230,13 +230,14 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	
 	/**
 	 * Returns all mn-grounded extensions.
+	 * @param theory a Dung theory
 	 * @param m some integer
 	 * @param n some integer
 	 * @return all mn-grounded extensions.
 	 */
-	public Collection<Extension> getAllMNGroundedExtensions(int m, int n){
+	public Collection<Extension> getAllMNGroundedExtensions(DungTheory theory, int m, int n){
 		Collection<Extension> result = new HashSet<>();
-		Collection<Extension> complete_extensions  = this.getAllMNCompleteExtensions(m, n);
+		Collection<Extension> complete_extensions  = this.getAllMNCompleteExtensions(theory, m, n);
 		for(Extension ext1: complete_extensions){
 			boolean isMinimal = true;
 			for(Extension ext2: complete_extensions)
@@ -254,15 +255,15 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	
 	/**
 	 * Returns all m-stable extensions.
+	 * @param theory a Dung theory
 	 * @param m some integer
 	 * @param n some integer
 	 * @return all m-stable extensions.
 	 */
-	public Collection<Extension> getAllMStableExtensions(int m){
-		DungTheory theory = ((DungTheory)this.getKnowledgeBase());
+	public Collection<Extension> getAllMStableExtensions(DungTheory theory, int m){
 		Collection<Extension> result = new HashSet<>();
 		for(Collection<Argument> set : new SetTools<Argument>().subsets(theory)){
-			if(this.isMStable(set, m))
+			if(this.isMStable(theory, set, m))
 				result.add(new Extension(set));
 		}
 		return result;
@@ -285,15 +286,15 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	
 	/**
 	 * Returns the ranking wrt. complete semantics, cf. Def. 10 
+	 * @param theory a Dung theory
 	 * @return the ranking wrt. complete semantics, cf. Def. 10
 	 */
-	public ArgumentRanking getCompleteRanking(){
-		DungTheory theory = ((DungTheory)this.getKnowledgeBase());
+	public ArgumentRanking getCompleteRanking(DungTheory theory){
 		// compute all mn-complete extensions for all m,n
 		Map<Point,Collection<Extension>> allExt = new HashMap<>();
 		for(int m = 1; m < theory.size(); m++)
 			for(int n=1; n < theory.size(); n++)
-				allExt.put(new Point(m,n), this.getAllMNCompleteExtensions(m, n));
+				allExt.put(new Point(m,n), this.getAllMNCompleteExtensions(theory, m, n));
 		LatticeArgumentRanking ranking = new LatticeArgumentRanking(theory);
 		for(Argument a: theory)
 			for(Argument b: theory)
@@ -317,10 +318,10 @@ public class GrossiModgilRankingReasoner extends Reasoner{
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(DungTheory theory, Formula query) {
 		throw new UnsupportedOperationException("Implement me");
 	}
 

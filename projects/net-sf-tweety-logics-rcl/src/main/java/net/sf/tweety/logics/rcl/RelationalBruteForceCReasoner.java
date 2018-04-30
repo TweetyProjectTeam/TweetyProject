@@ -26,7 +26,7 @@ import java.util.Map;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -56,39 +56,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class RelationalBruteForceCReasoner extends Reasoner {
+public class RelationalBruteForceCReasoner implements BeliefBaseReasoner<RclBeliefSet> {
 
 	/** Logger. */
 	static private Logger log = LoggerFactory.getLogger(RelationalBruteForceCReasoner.class);
-	
-	/**
-	 * The relational c-representation for the given knowledge base. Once this
-	 * ranking function has been computed it is used for
-	 * subsequent queries in order to avoid unnecessary
-	 * computations.
-	 */
-	private RelationalRankingFunction crepresentation = null;
-	
-	/**
-	 * The current vectors of kappa values.
-	 */
-	private List<Integer[]> kappa;
-	
-	/**
-	 * The number of conditionals in the given knowledge base.
-	 */
-	private int numConditionals;
-	
-	/**
-	 * The signature used for building the c-representation. 
-	 */
-	private FolSignature signature;
-	
-	/**
-	 * Maps the indices of the kappa vector to their corresponding
-	 * conditionals. 
-	 */
-	private Map<Integer,RelationalConditional> indexToConditional;
 	
 	/**
 	 * indicates whether the computed c-representation is simple.
@@ -96,48 +67,26 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 	private boolean simple = false;
 	
 	/**
-	 * Creates a new relational c-representation reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
-	 * @param signature the signature used for building the c-representation.	
+	 * Creates a new relational c-representation reasoner.	
 	 * @param simple whether the computed c-representation is simple. 
 	 */
-	public RelationalBruteForceCReasoner(BeliefBase beliefBase, FolSignature signature, boolean simple){
-		super(beliefBase);		
-		if(!(beliefBase instanceof RclBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class RclBeliefSet expected.");
-		this.signature = signature;
+	public RelationalBruteForceCReasoner(boolean simple){		
 		this.simple = simple;
 	}
 	
 	/**
-	 * Creates a new simple c-representation reasoner for the given knowledge base.
-	 * @param beliefBase  a knowledge base.
-	 * @param signature the signature used for building the c-representation.	
+	 * Queries the given belief set wrt. the given signature.
+	 * @param bs some belief set
+	 * @param query some query
+	 * @param signature some signature
+	 * @return
 	 */
-	public RelationalBruteForceCReasoner(BeliefBase beliefBase, FolSignature signature){
-		this(beliefBase,signature, false);
-	}
-	
-	/**
-	 * Returns the c-representation this reasoner bases on.
-	 * @return the c-representation this reasoner bases on.
-	 */
-	public RelationalRankingFunction getCRepresentation(){
-		if(this.crepresentation == null)
-			this.crepresentation = this.computeCRepresentation();
-		return this.crepresentation;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
-	 */
-	@Override
-	public Answer query(Formula query) {
+	public Answer query(RclBeliefSet bs, Formula query,FolSignature signature) {
 		if(!(query instanceof RelationalConditional) && !(query instanceof FolFormula))
 			throw new IllegalArgumentException("Reasoning in relational conditional logic is only defined for relational conditional and first-order queries.");
-		RelationalRankingFunction crepresentation = this.getCRepresentation();
+		RelationalRankingFunction crepresentation = this.getCRepresentation(bs, signature);
 		if(query instanceof RelationalConditional){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(bs,query);
 			boolean bAnswer = crepresentation.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
@@ -147,7 +96,7 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 			if(((FolFormula)query).isClosed())
 				throw new IllegalArgumentException("Reasoning in relational conditional logic is not defined for open first-order queries.");
 			int rank = crepresentation.rank((FolFormula)query);
-			Answer answer = new Answer(this.getKnowledgeBase(),query);			
+			Answer answer = new Answer(bs,query);			
 			answer.setAnswer(new Double(rank));
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
 			return answer;
@@ -155,34 +104,44 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 */
+	@Override
+	public Answer query(RclBeliefSet bs, Formula query) {
+		return query(bs,query,(FolSignature)bs.getSignature());
+	}
+	
 	/**
-	 * Computes a minimal c-representation for this reasoner's knowledge base. 
+	 * Computes a minimal c-representation for this reasoner's knowledge base.
+	 * @param bs a rcl belief set 
+	 * @param signature some signature
 	 * @return a minimal c-representation for this reasoner's knowledge base.
 	 */
-	private RelationalRankingFunction computeCRepresentation(){		
-		this.numConditionals = ((RclBeliefSet)this.getKnowledgeBase()).size();
+	public RelationalRankingFunction getCRepresentation(RclBeliefSet bs, FolSignature signature){		
 		int i = 0;
-		this.indexToConditional = new HashMap<Integer,RelationalConditional>();
-		for(Formula f: ((RclBeliefSet)this.getKnowledgeBase())){
-			this.indexToConditional.put(i++, (RelationalConditional) f);
+		Map<Integer,RelationalConditional> indexToConditional = new HashMap<Integer,RelationalConditional>();
+		for(Formula f: bs){
+			indexToConditional.put(i++, (RelationalConditional) f);
 			if(!this.simple)
-				this.indexToConditional.put(i++, (RelationalConditional) f);
+				indexToConditional.put(i++, (RelationalConditional) f);
 		}
+		List<Integer[]> kappa_all = new ArrayList<Integer[]>();
 		Integer[] kappa = null;		
-		RelationalRankingFunction candidate = this.constructRankingFunction(kappa);
-		while(!candidate.satisfies(this.getKnowledgeBase())){
-			kappa = this.increment(kappa);			
-			candidate = this.constructRankingFunction(kappa);
+		RelationalRankingFunction candidate = this.constructRankingFunction(kappa,indexToConditional,signature);
+		while(!candidate.satisfies((BeliefBase)bs)){
+			kappa = this.increment(kappa_all, bs.size());			
+			candidate = this.constructRankingFunction(kappa,indexToConditional,signature);
 			String debugMessage = "";
 			if(this.simple){
-				debugMessage = "[ KMINUS "+ this.indexToConditional.get(0) + " : " + kappa[0];
+				debugMessage = "[ KMINUS "+ indexToConditional.get(0) + " : " + kappa[0];
 				for(int j=1; j< kappa.length;j++)
-					debugMessage += ", KMINUS "+ this.indexToConditional.get(j) + " : " + kappa[j];
+					debugMessage += ", KMINUS "+ indexToConditional.get(j) + " : " + kappa[j];
 				debugMessage += "]";
 			}else{
-				debugMessage = "[ KPLUS/KMINUS "+ this.indexToConditional.get(0) + " : " + kappa[0] + "/" + kappa[1];
+				debugMessage = "[ KPLUS/KMINUS "+ indexToConditional.get(0) + " : " + kappa[0] + "/" + kappa[1];
 				for(int j=2; j< kappa.length;j+=2){
-					debugMessage += ", KPLUS/KMINUS "+ this.indexToConditional.get(j/2) + " : " + kappa[j] + "/" + kappa[j+1];
+					debugMessage += ", KPLUS/KMINUS "+ indexToConditional.get(j/2) + " : " + kappa[j] + "/" + kappa[j+1];
 				}
 				debugMessage += "]";
 			}				
@@ -198,8 +157,8 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 	 * k(w)=k0 + \sum_{w verifies ri} ki+ + \sum_{w falsifies ri} kj-
 	 * @param kappa
 	 */
-	private RelationalRankingFunction constructRankingFunction(Integer[] kappa){
-		RelationalRankingFunction candidate = new RelationalRankingFunction(this.signature);
+	private RelationalRankingFunction constructRankingFunction(Integer[] kappa, Map<Integer,RelationalConditional> indexToConditional,  FolSignature signature){
+		RelationalRankingFunction candidate = new RelationalRankingFunction(signature);
 		if(kappa == null) 
 			return candidate;
 		// following [Kern-Isberner,Thimm, "A Ranking Semantics for Relational Defaults", in preparation]
@@ -208,12 +167,12 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 			int sum = 0;
 			if(this.simple){
 				for(int idx = 0; idx < kappa.length; idx++)
-					sum += candidate.numFalsifiedInstances(w, this.indexToConditional.get(idx)) * kappa[idx];					
+					sum += candidate.numFalsifiedInstances(w, indexToConditional.get(idx)) * kappa[idx];					
 			}else{
 				for(int idx = 0; idx < kappa.length; idx+=2)
-					sum += candidate.numVerifiedInstances(w, this.indexToConditional.get(idx)) * kappa[idx];
+					sum += candidate.numVerifiedInstances(w, indexToConditional.get(idx)) * kappa[idx];
 				for(int idx = 1; idx < kappa.length; idx+=2)
-					sum += candidate.numFalsifiedInstances(w, this.indexToConditional.get(idx)) * kappa[idx];
+					sum += candidate.numFalsifiedInstances(w, indexToConditional.get(idx)) * kappa[idx];
 			}
 			candidate.setRank(w, sum);
 		}
@@ -222,50 +181,50 @@ public class RelationalBruteForceCReasoner extends Reasoner {
 	
 	/**
 	 * This method increments the given array by one value.
-	 * @param kappa an array of integers.
+	 * @param kappa_all the values of all kappas
+	 * @param numConditionals the number of conditionals
 	 * @return an array of integers.
 	 */
-	private Integer[] increment(Integer[] kappa){
-		if(this.kappa == null){
+	private Integer[] increment(List<Integer[]> kappa_all, int numConditionals){
+		if(kappa_all.isEmpty()){
 			Integer[] first;
 			if(this.simple)
-				first = new Integer[this.numConditionals];
+				first = new Integer[numConditionals];
 			else
-				first = new Integer[2*this.numConditionals];
+				first = new Integer[2*numConditionals];
 			first[0] = 1;
 			for(int i = 1; i < first.length; i++)
-				first[i] = 0;
-			this.kappa = new ArrayList<Integer[]>();
-			this.kappa.add(first);			
+				first[i] = 0;			
+			kappa_all.add(first);			
 		}else{
 			boolean overflow = true;
 			int j = 0;
-			while(overflow && j < this.kappa.size()){
-				overflow = this.incrementStep(this.kappa.get(j));
+			while(overflow && j < kappa_all.size()){
+				overflow = this.incrementStep(kappa_all.get(j));
 				j++;
 			}
 			if(overflow){
 				//add new vector
 				Integer[] newVec;
 				if(this.simple)
-					newVec= new Integer[this.numConditionals];
+					newVec= new Integer[numConditionals];
 				else
-					newVec= new Integer[2*this.numConditionals];
+					newVec= new Integer[2*numConditionals];
 				newVec[0] = 1;
 				for(int i = 1; i < newVec.length; i++)
 					newVec[i] = 0;
-				this.kappa.add(newVec);	
+				kappa_all.add(newVec);	
 			}
 		}
 		//compute the actual kappa values
 		Integer[] newKappa;
 		if(this.simple)
-			newKappa = new Integer[this.numConditionals];
+			newKappa = new Integer[numConditionals];
 		else
-			newKappa = new Integer[2*this.numConditionals];
+			newKappa = new Integer[2*numConditionals];
 		for(int i = 0; i < newKappa.length; i++){
 			newKappa[i] = 0;
-			for(Integer[] v: this.kappa)
+			for(Integer[] v: kappa_all)
 				newKappa[i] += v[i];
 		}
 		return newKappa;

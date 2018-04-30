@@ -47,36 +47,18 @@ import net.sf.tweety.math.term.*;
  * Lecture Notes in Computer Science, Volume 2087. 2001.
  * @author Matthias Thimm
  */
-public class CReasoner extends Reasoner {
-
-	/**
-	 * The c-representation for this knowledge base. Once this
-	 * ranking function has been computed it is used for
-	 * subsequent queries in order to avoid unnecessary
-	 * computations.
-	 */
-	private RankingFunction crepresentation;
-	
-	/**
-	 * Creates a new c-representation reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
-	 */
-	public CReasoner(BeliefBase beliefBase){
-		super(beliefBase);
-		if(!(beliefBase instanceof ClBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class ClBeliefSet expected."); 
-	}
+public class CReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.logic.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ClBeliefSet beliefset, Formula query) {
 		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
-		RankingFunction crepresentation = this.getCRepresentation();
+		RankingFunction crepresentation = this.getCRepresentation(beliefset);
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(beliefset,query);
 			boolean bAnswer = crepresentation.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
@@ -84,31 +66,22 @@ public class CReasoner extends Reasoner {
 		}
 		if(query instanceof PropositionalFormula){
 			int rank = crepresentation.rank(query);
-			Answer answer = new Answer(this.getKnowledgeBase(),query);			
+			Answer answer = new Answer(beliefset,query);			
 			answer.setAnswer(rank==0);
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
 			return answer;
 		}				
 		return null;
 	}
-	
-	/**
-	 * Returns the c-representation this reasoner bases on.
-	 * @return the c-representation this reasoner bases on.
-	 */
-	public RankingFunction getCRepresentation(){
-		if(this.crepresentation == null)
-			this.crepresentation = this.computeCRepresentation();
-		return this.crepresentation;
-	}
+
 	
 	/**
 	 * Computes a minimal c-representation for this reasoner's knowledge base. 
+	 * @param kb a cl belief set
 	 * @return a minimal c-representation for this reasoner's knowledge base.
 	 */
-	private RankingFunction computeCRepresentation(){		
-		RankingFunction crep = new RankingFunction((PropositionalSignature)this.getKnowledgeBase().getSignature());
-		ClBeliefSet kb = (ClBeliefSet) this.getKnowledgeBase();
+	public RankingFunction getCRepresentation(ClBeliefSet kb){		
+		RankingFunction crep = new RankingFunction(kb.getSignature());		
 		Set<PossibleWorld> possibleWorlds = crep.getPossibleWorlds();
 		// variables for ranks
 		Map<PossibleWorld,IntegerVariable> ranks = new HashMap<PossibleWorld,IntegerVariable>();

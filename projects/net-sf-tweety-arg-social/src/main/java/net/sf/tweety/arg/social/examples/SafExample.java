@@ -55,8 +55,8 @@ public class SafExample {
 		
 		System.out.println(saf);
 		
-		IssReasoner reasoner = new IssReasoner(saf,new SimpleProductSemantics(0.01),0.001);
+		IssReasoner reasoner = new IssReasoner(new SimpleProductSemantics(0.01),0.001);
 		
-		System.out.println(reasoner.getSocialModel());
+		System.out.println(reasoner.getSocialModel(saf));
 	}	
 }

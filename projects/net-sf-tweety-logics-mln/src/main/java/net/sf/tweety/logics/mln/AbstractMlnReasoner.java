@@ -19,9 +19,8 @@
 package net.sf.tweety.logics.mln;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -33,58 +32,30 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractMlnReasoner extends Reasoner {
-
-	/**
-	 * The signature of the reasoner.
-	 */
-	private FolSignature signature = null;
-	
-	/**
-	 * Creates a new reasoner for the given Markov logic network.
-	 * @param beliefBase a Markov logic network. 
-	 */
-	public AbstractMlnReasoner(BeliefBase beliefBase){
-		this(beliefBase, (FolSignature) beliefBase.getSignature());
-	}
-	
-	/**
-	 * Creates a new reasoner for the given Markov logic network.
-	 * @param beliefBase a Markov logic network. 
-	 * @param signature another signature (if the probability distribution should be defined 
-	 * on that one (that one should subsume the signature of the Markov logic network)
-	 */
-	public AbstractMlnReasoner(BeliefBase beliefBase, FolSignature signature){
-		super(beliefBase);		
-		if(!(beliefBase instanceof MarkovLogicNetwork))
-			throw new IllegalArgumentException("Knowledge base of class MarkovLogicNetwork expected.");
-		if(!beliefBase.getSignature().isSubSignature(signature))
-			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
-		this.signature = signature;
-	}
-	
-	/** Returns the signature used for reasoning.
-	 * @return the signature used for reasoning.
-	 */
-	protected FolSignature getSignature(){
-		return this.signature;
-	}
-	
-
-	/**
-	 * Resets this reasoner (removes cached files etc.) 
-	 */
-	public abstract void reset();
+public abstract class AbstractMlnReasoner implements BeliefBaseReasoner<MarkovLogicNetwork> {
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(MarkovLogicNetwork mln, Formula query) {		
+		return this.query(mln, query, (FolSignature) mln.getSignature());
+	}
+	
+	/**
+	 * Queries the given MLN wrt. the given signature 
+	 * @param mln some mln
+	 * @param query some query
+	 * @param signature some signature
+	 * @return the answer to the query
+	 */
+	public Answer query(MarkovLogicNetwork mln, Formula query, FolSignature signature) {
 		if(!(query instanceof FolFormula) && !( ((FolFormula)query).isGround() ))
-			throw new IllegalArgumentException("Reasoning in Markov logic with naive MLN reasoner is only defined for ground FOL formulas.");		
-		double result = this.doQuery((FolFormula)query);
-		Answer ans = new Answer(this.getKnowledgeBase(),query);
+			throw new IllegalArgumentException("Reasoning in Markov logic with naive MLN reasoner is only defined for ground FOL formulas.");
+		if(!mln.getSignature().isSubSignature(signature))
+			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
+		double result = this.doQuery(mln,(FolFormula)query,signature);
+		Answer ans = new Answer(mln,query);
 		ans.setAnswer(result);		
 		return ans;
 	}
@@ -92,16 +63,18 @@ public abstract class AbstractMlnReasoner extends Reasoner {
 	/**
 	 * Computes the (unnormalized) weight of the given Herbrand interpretation
 	 * with respect to the formulas in this reasoner's MLN.
+	 * @param mln an MLN
 	 * @param hInt a Herbrand interpretation
+	 * @param signature the underlying signature
 	 * @return the (unnormalized) weight of the given Herbrand interpretation
 	 */
-	protected double computeWeight(HerbrandInterpretation hInt){
+	protected double computeWeight(MarkovLogicNetwork mln, HerbrandInterpretation hInt, FolSignature signature){
 		int num;
 		double weight = 0;
-		for(MlnFormula f: (MarkovLogicNetwork)this.getKnowledgeBase()){
-			num = this.numberOfGroundSatisfactions(f.getFormula(), hInt);
+		for(MlnFormula f: mln){
+			num = this.numberOfGroundSatisfactions(f.getFormula(), hInt, signature);
 			if(f.isStrict()){
-				if(num != f.getFormula().allGroundInstances(this.getSignature().getConstants()).size())
+				if(num != f.getFormula().allGroundInstances(signature.getConstants()).size())
 					return 0;		
 				else weight += 1;
 			}else 	
@@ -114,19 +87,21 @@ public abstract class AbstractMlnReasoner extends Reasoner {
 	 * signature, that are satisfied in the given Herbrand interpretation. 
 	 * @param formula some fol formula.
 	 * @param hInt a Herbrand interpretation.
+	 * @param signature the underlying signature
 	 * @return the number of instantiations of the formula, wrt. the given
 	 * signature, that are satisfied in the given Herbrand interpretation.
 	 */
-	protected int numberOfGroundSatisfactions(FolFormula formula, HerbrandInterpretation hInt){
+	protected int numberOfGroundSatisfactions(FolFormula formula, HerbrandInterpretation hInt, FolSignature signature){
 		int num = 0;
-		for(RelationalFormula f: formula.allGroundInstances(this.getSignature().getConstants()))
+		for(RelationalFormula f: formula.allGroundInstances(signature.getConstants()))
 			if(hInt.satisfies(f)) num++;		
 		return num;
 	}
 	
 	/** Performs the actual querying. 
+	 * @param mln an MLN
 	 * @param query a fol formula guaranteed to be ground.
 	 * @return the answer of the query.
 	 */
-	protected abstract double doQuery(FolFormula query);
+	protected abstract double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature);
 }

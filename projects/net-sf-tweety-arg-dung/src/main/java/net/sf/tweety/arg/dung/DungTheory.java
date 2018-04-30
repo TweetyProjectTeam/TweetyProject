@@ -149,8 +149,8 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return true if the theory is coherent
 	 */
 	public boolean isCoherent(){
-		Set<Extension> preferredExtensions = new PreferredReasoner(this).getExtensions();;
-		Set<Extension> stableExtensions = new StableReasoner(this).getExtensions();
+		Set<Extension> preferredExtensions = new PreferredReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(this);
+		Set<Extension> stableExtensions = new StableReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(this);
 		stableExtensions.retainAll(preferredExtensions);
 		return preferredExtensions.size() == stableExtensions.size();
 	}
@@ -160,8 +160,8 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return true if the theory is relatively coherent
 	 */
 	public boolean isRelativelyCoherent(){
-		Extension groundedExtension = new GroundReasoner(this).getExtensions().iterator().next();
-		Set<Extension> preferredExtensions = new PreferredReasoner(this).getExtensions();
+		Extension groundedExtension = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(this).iterator().next();
+		Set<Extension> preferredExtensions = new PreferredReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(this);
 		Extension cut = new Extension(preferredExtensions.iterator().next());
 		for(Extension e: preferredExtensions)
 			cut.retainAll(e);

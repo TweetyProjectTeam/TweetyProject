@@ -43,33 +43,16 @@ import net.sf.tweety.logics.ml.syntax.ModalFormula;
  * iff every Kripke model of the knowledge base is also a Kripke model of the query.
  * 
  * @author Anna Gessler
+ * @author Matthias Thimm
  */
 
 public class NaiveModalReasoner extends ModalReasoner {
 	
-	/**
-	 * Creates a new inference operator for the given knowledge base.  
-	 * @param beliefBase
-	 */
-	public NaiveModalReasoner(BeliefBase beliefBase) {
-		super(beliefBase);
-		if(!(beliefBase instanceof ModalBeliefSet))
-			throw new IllegalArgumentException("Error: Expected modal knowledgebase.");
-	}
-	
-	/**
-	 * Creates a new inference operator for an empty knowledge base.  
-	 * @param beliefBase
-	 */
-	public NaiveModalReasoner() {
-		super(new ModalBeliefSet());
-	}
-	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ModalBeliefSet mbs, Formula query) {
 		if(!(query instanceof ModalFormula || query instanceof FolFormula))
 			throw new IllegalArgumentException("Error: Expected modal or first-order formula as query.");
 		RelationalFormula formula = (RelationalFormula) query;
@@ -83,7 +66,7 @@ public class NaiveModalReasoner extends ModalReasoner {
 		//To construct all possible Kripke models for the knowledge base, we need to find all possible sets of worlds for the knowledge base
 		//and all possible accessibility relations for each of those sets.
 		FolSignature sig = new FolSignature();
-		sig.addSignature(this.getKnowledgeBase().getSignature());
+		sig.addSignature(mbs.getSignature());
 		sig.addSignature(formula.getSignature());
 		ModalHerbrandBase hBase = new ModalHerbrandBase(sig);
 		Set<ModalHerbrandInterpretation> possibleWorlds = hBase.allHerbrandInterpretations(); 
@@ -109,9 +92,9 @@ public class NaiveModalReasoner extends ModalReasoner {
 		
 		//Test if every Kripke model for the knowledge base is also a Kripke model for the formula
 		for (KripkeModel k: kripkeModels) {
-			if (k.satisfies(this.getKnowledgeBase())) {
+			if (k.satisfies((BeliefBase)mbs)) {
 				if (!(k.satisfies(formula))) {
-					Answer answer = new Answer(this.getKnowledgeBase(),formula);
+					Answer answer = new Answer(mbs,formula);
 					answer.setAnswer(false);
 					answer.appendText("The answer is: false");
 					answer.appendText("Explanation: the model " + k + " is a model of the knowledge base but not of the query.");
@@ -120,7 +103,7 @@ public class NaiveModalReasoner extends ModalReasoner {
 				}
 			}
 		}
-		Answer answer = new Answer(this.getKnowledgeBase(),formula);
+		Answer answer = new Answer(mbs,formula);
 		answer.setAnswer(true);
 		answer.appendText("The answer is: true");
 		return answer;	

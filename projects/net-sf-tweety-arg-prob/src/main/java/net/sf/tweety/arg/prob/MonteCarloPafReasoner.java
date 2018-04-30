@@ -25,7 +25,7 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -35,7 +35,7 @@ import net.sf.tweety.math.probability.Probability;
  * 
  * @author Matthias Thimm
  */
-public class MonteCarloPafReasoner extends Reasoner{
+public class MonteCarloPafReasoner implements BeliefBaseReasoner<ProbabilisticArgumentationFramework>{
 
 	/** Semantics for plain AAFs. */
 	private Semantics semantics;
@@ -46,15 +46,13 @@ public class MonteCarloPafReasoner extends Reasoner{
 	private int inferenceType;
 	
 	/**
-	 * Creates a new reasoner for the given framework
-	 * @param aaf some probabilistic argumentation framework
+	 * Creates a new reasoner.
 	 * @param semantics semantics used for determining extensions.
 	 * @param numberOfTrials The number of runs of the Monte Carlo simulation
 	 * @param inferenceType The inference type used for estimating acceptability probability
 	 * 	of single arguments (credulous or skeptical inference).
 	 */
-	public MonteCarloPafReasoner(ProbabilisticArgumentationFramework aaf, Semantics semantics, int inferenceType, int numberOfTrials) {
-		super(aaf);
+	public MonteCarloPafReasoner(Semantics semantics, int inferenceType, int numberOfTrials) {
 		this.semantics = semantics;
 		this.numberOfTrials = numberOfTrials;
 		this.inferenceType = inferenceType;
@@ -64,18 +62,18 @@ public class MonteCarloPafReasoner extends Reasoner{
 	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ProbabilisticArgumentationFramework paf, Formula query) {
 		if(!(query instanceof Argument))
 			throw new IllegalArgumentException("Formula of class argument expected");
 		Argument arg = (Argument) query;
 		int count = 0;
+		AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, this.inferenceType);
 		for(int i = 0; i < this.numberOfTrials; i++){
-			DungTheory sub = ((ProbabilisticArgumentationFramework)this.getKnowledgeBase()).sample();
-			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(sub, this.semantics, this.inferenceType);
-			if(r.query(arg).getAnswerBoolean())
+			DungTheory sub = paf.sample();
+			if(r.query(sub,arg).getAnswerBoolean())
 				count++;
 		}
-		Answer ans = new Answer(this.getKnowledgeBase(),query);
+		Answer ans = new Answer(paf,query);
 		ans.setAnswer(new Double(count)/this.numberOfTrials);		
 		return ans;
 	}
@@ -87,12 +85,12 @@ public class MonteCarloPafReasoner extends Reasoner{
 	 * @return the estimated probability of the given set to be 
 	 * an extension
 	 */
-	public Probability query(Extension ext){
+	public Probability query(ProbabilisticArgumentationFramework paf, Extension ext){
 		int count = 0;
+		AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, this.inferenceType);
 		for(int i = 0; i < this.numberOfTrials; i++){
-			DungTheory sub = ((ProbabilisticArgumentationFramework)this.getKnowledgeBase()).sample();
-			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(sub, this.semantics, this.inferenceType);
-			if(r.getExtensions().contains(ext))
+			DungTheory sub = paf.sample();
+			if(r.getExtensions(sub).contains(ext))
 				count++;
 		}
 		return new Probability(new Double(count)/this.numberOfTrials);

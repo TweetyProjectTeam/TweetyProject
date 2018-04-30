@@ -24,19 +24,15 @@ import java.util.Set;
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 
 /**
  * This class implements a stratified labeling reasoner.
  * @author Matthias Thimm
  */
-public class StratifiedLabelingReasoner extends Reasoner {
+public class StratifiedLabelingReasoner implements BeliefBaseReasoner<DungTheory> {
 
-	/** The set of stratified labelings this reasoner is based upon. */
-	private Set<StratifiedLabeling> labelings;
-	
 	/**
 	 * The type of inference for this reasoner, either sceptical or
 	 * credulous.
@@ -52,10 +48,7 @@ public class StratifiedLabelingReasoner extends Reasoner {
 	 * @param semantics a semantics
 	 * @param inferenceType and inference type
 	 */
-	public StratifiedLabelingReasoner(BeliefBase beliefBase, Semantics semantics, int inferenceType) {
-		super(beliefBase);
-		if(!(beliefBase instanceof DungTheory))
-			throw new IllegalArgumentException("Knowledge base of class DungTheory expected.");
+	public StratifiedLabelingReasoner(Semantics semantics, int inferenceType) {
 		if(inferenceType != Semantics.CREDULOUS_INFERENCE && inferenceType != Semantics.SCEPTICAL_INFERENCE)
 			throw new IllegalArgumentException("Inference type must be either sceptical or credulous.");
 		this.inferenceType = inferenceType;
@@ -63,24 +56,24 @@ public class StratifiedLabelingReasoner extends Reasoner {
 	}
 
 	/**
-	 * Creates a new reasoner for the given knowledge base using sceptical inference and grounded semantics.
+	 * Creates a new reasoner using sceptical inference and grounded semantics.
 	 * @param beliefBase The knowledge base for this reasoner.
 	 */
-	public StratifiedLabelingReasoner(BeliefBase beliefBase){
-		this(beliefBase, Semantics.GROUNDED_SEMANTICS, Semantics.SCEPTICAL_INFERENCE);		
+	public StratifiedLabelingReasoner(){
+		this(Semantics.GROUNDED_SEMANTICS, Semantics.SCEPTICAL_INFERENCE);		
 	}	
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(DungTheory theory, Formula query) {
 		if(!(query instanceof Argument))
 			throw new IllegalArgumentException("Formula of class argument expected");
 		Argument arg = (Argument) query;
 		if(this.inferenceType == Semantics.SCEPTICAL_INFERENCE){
-			Answer answer = new Answer(this.getKnowledgeBase(),arg);
-			for(StratifiedLabeling e: this.getLabelings()){
+			Answer answer = new Answer(theory,arg);
+			for(StratifiedLabeling e: this.getLabelings(theory)){
 				if(!e.satisfies(arg)){
 					answer.setAnswer(false);
 					answer.appendText("The answer is: false");
@@ -92,8 +85,8 @@ public class StratifiedLabelingReasoner extends Reasoner {
 			return answer;
 		}
 		// so its credulous semantics
-		Answer answer = new Answer(this.getKnowledgeBase(),arg);
-		for(StratifiedLabeling e: this.getLabelings()){
+		Answer answer = new Answer(theory,arg);
+		for(StratifiedLabeling e: this.getLabelings(theory)){
 			if(e.satisfies(arg)){
 				answer.setAnswer(true);
 				answer.appendText("The answer is: true");
@@ -103,16 +96,6 @@ public class StratifiedLabelingReasoner extends Reasoner {
 		answer.setAnswer(false);
 		answer.appendText("The answer is: false");
 		return answer;
-	}
-
-	/**
-	 * Returns the labelings this reasoner bases upon.
-	 * @return the labelings this reasoner bases upon.
-	 */
-	public Set<StratifiedLabeling> getLabelings(){
-		if(this.labelings == null)
-			this.labelings = this.computeLabelings();
-		return this.labelings;
 	}
 	
 	/**
@@ -124,14 +107,13 @@ public class StratifiedLabelingReasoner extends Reasoner {
 	}
 	
 	/**
-	 * Computes the labelings this reasoner bases upon.
+	 * Computes the labelings.
 	 * @return A set of labelings.
 	 */
-	private Set<StratifiedLabeling> computeLabelings(){
+	public Set<StratifiedLabeling> getLabelings(DungTheory theory){
 		Set<StratifiedLabeling> labelings = new HashSet<StratifiedLabeling>();
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.getKnowledgeBase(), this.semantics, Semantics.CREDULOUS_INFERENCE);
-		Set<Extension> extensions = reasoner.getExtensions();
-		DungTheory theory = (DungTheory) this.getKnowledgeBase();
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, Semantics.CREDULOUS_INFERENCE);
+		Set<Extension> extensions = reasoner.getExtensions(theory);
 		for(Extension extension: extensions){
 			StratifiedLabeling labeling = new StratifiedLabeling();
 			if(extension.isEmpty()){
@@ -144,8 +126,8 @@ public class StratifiedLabelingReasoner extends Reasoner {
 				Extension remainingArguments = new Extension(theory);
 				remainingArguments.removeAll(extension);
 				DungTheory remainingTheory = new DungTheory(theory.getRestriction(remainingArguments));
-				StratifiedLabelingReasoner sReasoner = new StratifiedLabelingReasoner(remainingTheory, this.semantics, this.inferenceType);
-				for(StratifiedLabeling labeling2: sReasoner.getLabelings()){
+				StratifiedLabelingReasoner sReasoner = new StratifiedLabelingReasoner(this.semantics, this.inferenceType);
+				for(StratifiedLabeling labeling2: sReasoner.getLabelings(remainingTheory)){
 					for(Argument arg: labeling2.keySet())
 						labeling2.put(arg, labeling2.get(arg) + 1);
 					labeling2.putAll(labeling);

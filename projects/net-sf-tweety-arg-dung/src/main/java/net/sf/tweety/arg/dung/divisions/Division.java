@@ -92,7 +92,7 @@ public class Division extends Pair<Extension,Extension>{
 		Collection<Graph<Argument>> subtheories = theory.getSubgraphs();
 		for(Graph<Argument> g: subtheories){
 			DungTheory sub = new DungTheory(g);
-			for(Division d: Division.getDivisions(AbstractExtensionReasoner.getReasonerForSemantics(sub, semantics, Semantics.CREDULOUS_INFERENCE).getExtensions(), sub)){
+			for(Division d: Division.getDivisions(AbstractExtensionReasoner.getReasonerForSemantics(semantics, Semantics.CREDULOUS_INFERENCE).getExtensions(sub), sub)){
 				if(d.getFirst().equals(this.getFirst())){
 					Extension e = new Extension(this.getSecond());
 					e.retainAll(sub);

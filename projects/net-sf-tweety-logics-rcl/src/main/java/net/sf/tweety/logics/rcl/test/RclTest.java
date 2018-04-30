@@ -37,7 +37,7 @@ public class RclTest {
 		RclBeliefSet bs = (RclBeliefSet) parser.parseBeliefBaseFromFile(args[0]);
 		System.out.println("Knowledge base:\n " + bs);
 		
-		RelationalRankingFunction kappa = new RelationalBruteForceCReasoner(bs,parser.getSignature(),true).getCRepresentation();
+		RelationalRankingFunction kappa = new RelationalBruteForceCReasoner(true).getCRepresentation(bs,parser.getSignature());
 		System.out.println("Simple c-representation:\n" + kappa);		
 		
 		System.out.println();

@@ -39,7 +39,7 @@ public class RpclMeReasonerTest2 {
 		FolParser folParser = new FolParser();
 		folParser.setSignature((FolSignature)bs.getSignature());
 		FolFormula query = (FolFormula)folParser.parseFormula("cold(anna)");
-		RpclMeReasoner reasoner = new RpclMeReasoner(bs, new AggregatingSemantics(),(FolSignature)bs.getSignature(), RpclMeReasoner.STANDARD_INFERENCE);
-		System.out.println(reasoner.query(query));		
+		RpclMeReasoner reasoner = new RpclMeReasoner(new AggregatingSemantics(), RpclMeReasoner.STANDARD_INFERENCE);
+		System.out.println(reasoner.query(bs,query));		
 	}
 }

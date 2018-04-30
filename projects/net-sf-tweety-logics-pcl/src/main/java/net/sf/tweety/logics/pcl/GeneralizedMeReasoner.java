@@ -24,10 +24,8 @@ import java.util.Set;
 import java.util.Vector;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
-import net.sf.tweety.commons.Signature;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolation2InconsistencyMeasure;
@@ -62,22 +60,12 @@ import net.sf.tweety.math.term.Variable;
  * @author Matthias Thimm
  *
  */
-public class GeneralizedMeReasoner extends Reasoner {
+public class GeneralizedMeReasoner implements BeliefBaseReasoner<PclBeliefSet> {
 
 
 	public final static int MANHATTAN = 1;
 	public final static int EUCLIDEAN = 2;
 	public final static int MAXIMUM = 0;
-	
-	/**
-	 * The ME-distribution this reasoner bases on.
-	 */
-	private ProbabilityDistribution<PossibleWorld> meDistribution = null;
-	
-	/**
-	 * The signature of the reasoner.
-	 */
-	private Signature signature = null;
 	
 	/** The norm. */
 	private RealVectorNorm norm;
@@ -88,35 +76,14 @@ public class GeneralizedMeReasoner extends Reasoner {
 	/** The numerical accuracy. */
 	private double accuracy;
 	
-	/**
-	 * Creates a new generalized ME-reasoner for the given knowledge base.
-	 * @param beliefBase a pcl belief set. 
-	 * @param p determines p-norm for computing minimal violation.
-	 * @param solver the solver used
-	 */
-	public GeneralizedMeReasoner(BeliefBase beliefBase, int p){
-		this(beliefBase, beliefBase.getSignature(), p);
-	}
 	
 	/**
-	 * Creates a new generalized ME-reasoner for the given knowledge base.
-	 * @param beliefBase a pcl belief set. 
-	 * @param signature another signature (if the probability distribution should be defined 
-	 * on that one (that one should subsume the signature of the belief base)
-	 * @param norm the norm used for computing minimal violation.
-	 * @param solver the solver used
+	 * Creates a new generalized ME-reasoner
+	 * @param p the p-norm used
 	 */
-	public GeneralizedMeReasoner(BeliefBase beliefBase, Signature signature, int p){
-		super(beliefBase);	
-		if(!(beliefBase instanceof PclBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class PclBeliefSet expected.");
-		if(!beliefBase.getSignature().isSubSignature(signature))
-			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
-		this.signature = signature;	
-
+	public GeneralizedMeReasoner(int p){
 		this.inc = null;
 		this.accuracy = 0.01;
-		
 		switch(p) {
 			case MANHATTAN:
 				this.norm = new ManhattanNorm();
@@ -135,30 +102,22 @@ public class GeneralizedMeReasoner extends Reasoner {
 				this.norm = new PNorm(p);
 				this.inc = new MinimalViolationInconsistencyMeasure(this.norm, Solver.getDefaultGeneralSolver());
 		}
-			
+	}
 		
-	}
-	
-	/**
-	 * Returns the ME-distribution this reasoner bases on.
-	 * @return the ME-distribution this reasoner bases on.
-	 */
-	public ProbabilityDistribution<PossibleWorld> getMeDistribution(){
-		if(this.meDistribution == null)
-			this.meDistribution = this.computeMeDistribution();
-		return this.meDistribution;
-	}
-	
 	/**
 	 * Computes the ME-distribution this reasoner bases on.
+	 * @param bs the belief set
+	 * @param signature the signature
 	 * @return the ME-distribution this reasoner bases on.
 	 */
-	private ProbabilityDistribution<PossibleWorld> computeMeDistribution(){
+	public ProbabilityDistribution<PossibleWorld> getMeDistribution(PclBeliefSet bs,PropositionalSignature signature){
+		if(!bs.getSignature().isSubSignature(signature))
+			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
 		// get inconsistency value
-		double iValue = inc.inconsistencyMeasure((PclBeliefSet)this.getKnowledgeBase());		
+		double iValue = inc.inconsistencyMeasure(bs);		
 		// construct optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) this.signature);
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds(signature);
 		Map<PossibleWorld,Variable> vars = new HashMap<PossibleWorld,Variable>();		
 		int cnt = 0;
 		Term normConstraint = null;
@@ -175,7 +134,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 		cnt = 0;
 		// violation variables
 		Vector<Term> vioVars = new Vector<Term>(); 
-		for(ProbabilisticConditional pc: (PclBeliefSet)this.getKnowledgeBase()){
+		for(ProbabilisticConditional pc: bs){
 			Variable vio = new FloatVariable("x" + cnt++,-1,1);
 			vioVars.add(vio);
 			Term leftSide = null;
@@ -230,7 +189,7 @@ public class GeneralizedMeReasoner extends Reasoner {
 		try{			
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
-			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(this.signature);
+			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(signature);
 			for(PossibleWorld w: worlds)
 				p.put(w, new Probability(solution.get(vars.get(w)).doubleValue()));
 			return p;					
@@ -241,29 +200,39 @@ public class GeneralizedMeReasoner extends Reasoner {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
-	@Override
-	public Answer query(Formula query) {
+	public Answer query(PclBeliefSet bs,Formula query) {
+		return this.query(bs,query,(PropositionalSignature)bs.getSignature());
+	}
+	
+	/**
+	 * Queries the belief set with the query wrt. the given signature.
+	 * @param bs some belief set
+	 * @param query some query
+	 * @param signature some signature
+	 * @return tha answer to the query
+	 */
+	public Answer query(PclBeliefSet bs,Formula query, PropositionalSignature signature) {
 		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Reasoning in probabilistic conditional logic is only defined for (probabilistic) conditionals and propositional queries.");
-		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution();
+		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution(bs,signature);
 		if(query instanceof ProbabilisticConditional){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(bs,query);
 			boolean bAnswer = meDistribution.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			
 		}
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(bs,query);
 			Probability bAnswer = meDistribution.probability((Conditional)query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;
 		}
 		if(query instanceof PropositionalFormula){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(bs,query);
 			Probability bAnswer = meDistribution.probability(query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);

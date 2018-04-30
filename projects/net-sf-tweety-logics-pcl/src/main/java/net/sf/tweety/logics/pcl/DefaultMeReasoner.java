@@ -42,63 +42,25 @@ import net.sf.tweety.math.probability.*;
  * @author Matthias Thimm
  *
  */
-public class DefaultMeReasoner extends Reasoner {
-
-	/**
-	 * The ME-distribution this reasoner bases on.
-	 */
-	private ProbabilityDistribution<PossibleWorld> meDistribution = null;
+public class DefaultMeReasoner implements BeliefBaseReasoner<PclBeliefSet> {
 	
 	/**
-	 * The signature of the reasoner.
+	 * Computes the ME-distribution
+	 * @param bs a belief set
+	 * @param signature a signature
+	 * @return the ME-distribution
 	 */
-	private Signature signature = null;
-	
-	/**
-	 * Creates a new default ME-reasoner for the given knowledge base.
-	 * @param beliefBase a pcl belief set. 
-	 */
-	public DefaultMeReasoner(BeliefBase beliefBase){
-		this(beliefBase, beliefBase.getSignature());
-	}
-	
-	/**
-	 * Creates a new default ME-reasoner for the given knowledge base.
-	 * @param beliefBase a pcl belief set. 
-	 * @param signature another signature (if the probability distribution should be defined 
-	 * on that one (that one should subsume the signature of the belief base)
-	 */
-	public DefaultMeReasoner(BeliefBase beliefBase, Signature signature){
-		super(beliefBase);		
-		if(!(beliefBase instanceof PclBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class PclBeliefSet expected.");
+	public ProbabilityDistribution<PossibleWorld> getMeDistribution(PclBeliefSet bs, PropositionalSignature signature){
 		// if belief set is inconsistent no reasoning is possible
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
-		if(!tester.isConsistent((PclBeliefSet)beliefBase))
+		if(!tester.isConsistent(bs))
 			throw new IllegalArgumentException("Knowledge base is inconsistent.");
-		if(!beliefBase.getSignature().isSubSignature(signature))
+		if(!bs.getSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
-		this.signature = signature;
-	}
-	
-	/**
-	 * Returns the ME-distribution this reasoner bases on.
-	 * @return the ME-distribution this reasoner bases on.
-	 */
-	public ProbabilityDistribution<PossibleWorld> getMeDistribution(){
-		if(this.meDistribution == null)
-			this.meDistribution = this.computeMeDistribution();
-		return this.meDistribution;
-	}
-	
-	/**
-	 * Computes the ME-distribution this reasoner bases on.
-	 * @return the ME-distribution this reasoner bases on.
-	 */
-	private ProbabilityDistribution<PossibleWorld> computeMeDistribution(){
+				
 		// construct optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) this.signature);
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) signature);
 		Map<PossibleWorld,Variable> vars = new HashMap<PossibleWorld,Variable>();
 		int cnt = 0;
 		Term normConstraint = null;
@@ -112,7 +74,7 @@ public class DefaultMeReasoner extends Reasoner {
 		}
 		problem.add(new Equation(normConstraint,new FloatConstant(1)));
 		// add constraint imposed by conditionals
-		for(ProbabilisticConditional pc: (PclBeliefSet)this.getKnowledgeBase()){
+		for(ProbabilisticConditional pc: bs){
 			Term leftSide = null;
 			Term rightSide = null;			
 			if(pc.isFact()){
@@ -159,7 +121,7 @@ public class DefaultMeReasoner extends Reasoner {
 		try{			
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
-			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(this.signature);
+			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(signature);
 			for(PossibleWorld w: worlds)
 				p.put(w, new Probability(solution.get(vars.get(w)).doubleValue()));
 			return p;					
@@ -170,29 +132,40 @@ public class DefaultMeReasoner extends Reasoner {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(PclBeliefSet bs, Formula query) {
+		return this.query(bs, query, (PropositionalSignature) bs.getSignature());
+	}
+	
+	/**
+	 * Queries the belief set wrt. the given signature
+	 * @param bs some belief set
+	 * @param query some query
+	 * @param sig some signature
+	 * @return the answer to the query.
+	 */
+	public Answer query(PclBeliefSet bs, Formula query, PropositionalSignature signature) {
 		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Reasoning in probabilistic conditional logic is only defined for (probabilistic) conditionals and propositional queries.");
-		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution();
+		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution(bs, signature);
 		if(query instanceof ProbabilisticConditional){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(bs,query);
 			boolean bAnswer = meDistribution.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			
 		}
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(bs,query);
 			Probability bAnswer = meDistribution.probability((Conditional)query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;
 		}
 		if(query instanceof PropositionalFormula){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(bs,query);
 			Probability bAnswer = meDistribution.probability(query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);

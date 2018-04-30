@@ -46,12 +46,12 @@ public class AbaExample {
 		ABAParser<PropositionalFormula> parser = new ABAParser<PropositionalFormula>(new PlParser());
 		ABATheory<PropositionalFormula> t = parser.parseBeliefBaseFromFile(AbaExample.class.getResource("/example2.aba").getFile());
 		
-		FlatABAReasoner r1 = new FlatABAReasoner(t, Semantics.PREFERRED_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
-		PreferredReasoner<PropositionalFormula> r2 = new PreferredReasoner<PropositionalFormula>(t, Semantics.CREDULOUS_INFERENCE);
+		FlatABAReasoner<PropositionalFormula> r1 = new FlatABAReasoner<PropositionalFormula>(Semantics.PREFERRED_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		PreferredReasoner<PropositionalFormula> r2 = new PreferredReasoner<PropositionalFormula>(Semantics.CREDULOUS_INFERENCE);
 		
 		Assumption<PropositionalFormula> a = new Assumption<>(new Proposition("a"));
-		System.out.println("a: " + r1.query(a).getAnswerBoolean());
-		System.out.println("a: " + r2.query(a).getAnswerBoolean());
+		System.out.println("a: " + r1.query(t,a).getAnswerBoolean());
+		System.out.println("a: " + r2.query(t,a).getAnswerBoolean());
 		
 		System.out.println("as graph: " + t.asDungTheory());
 	}

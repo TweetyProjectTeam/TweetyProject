@@ -55,9 +55,9 @@ public class DeductiveExample {
 		
 		System.out.println(kb);
 		
-		Reasoner reasoner = new SimpleReasoner(kb, new ClassicalCategorizer(), new SimpleAccumulator());
+		BeliefBaseReasoner<DeductiveKnowledgeBase> reasoner = new SimpleReasoner(new ClassicalCategorizer(), new SimpleAccumulator());
 		
-		System.out.println(reasoner.query(parser.parseFormula("h")).getAnswerDouble());
+		System.out.println(reasoner.query(kb,parser.parseFormula("h")).getAnswerDouble());
 		
 	}
 	

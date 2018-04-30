@@ -24,9 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
@@ -61,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class RpclMeReasoner extends Reasoner {
+public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 	
 	/**
 	 * Logger.
@@ -82,65 +81,32 @@ public class RpclMeReasoner extends Reasoner {
 	 * The semantics used for this reasoner.
 	 */
 	private RpclSemantics semantics;
-	
-	/**
-	 * The signature for this reasoner.
-	 */
-	private FolSignature signature;
-	
-	/**
-	 * The ME-distribution for this reasoner.
-	 */
-	private  ProbabilityDistribution<?> meDistribution;
-	
+		
 	/**
 	 * Whether this reasoner should use lifted inference for reasoning.
 	 */
 	private int inferenceType;
 	
 	/**
-	 * Creates a new reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
+	 * Creates a new reasoner.
 	 * @param semantics the semantics for this reasoner.
-	 * @param signature the fol signature for this reasoner.
 	 * @param inferenceType one of RpclMeReasoner.STANDARD_INFERENCE or RpclMeReasoner.LIFTED_INFERENCE 
 	 */
-	public RpclMeReasoner(BeliefBase beliefBase, RpclSemantics semantics, FolSignature signature, int inferenceType){
-		super(beliefBase);
-		log.trace("Creating instance of 'RpclMeReasoner'.");
+	public RpclMeReasoner(RpclSemantics semantics, int inferenceType){
 		if(inferenceType != RpclMeReasoner.STANDARD_INFERENCE && inferenceType != RpclMeReasoner.LIFTED_INFERENCE){
 			log.error("The inference type must be either 'standard' or 'lifted'.");
 			throw new IllegalArgumentException("The inference type must be either 'standard' or 'lifted'.");
 		}
-		this.signature = signature;
 		this.semantics = semantics;
-		this.inferenceType = inferenceType;
-		if(!(beliefBase instanceof RpclBeliefSet)){
-			log.error("Knowledge base of class 'RpclBeliefSet' expected but encountered '" + beliefBase.getClass() + "'.");
-			throw new IllegalArgumentException("Knowledge base of class 'RpclBeliefSet' expected but encountered '" + beliefBase.getClass() + "'.");
-		}
-		RpclBeliefSet beliefSet = (RpclBeliefSet) beliefBase;
-		if(!beliefSet.getSignature().isSubSignature(signature)){
-			log.error("Signature must be super-signature of the belief set's signature.");
-			throw new IllegalArgumentException("Signature must be super-signature of the belief set's signature.");
-		}
-		if(inferenceType == RpclMeReasoner.LIFTED_INFERENCE)
-			for(Predicate p: ((FolSignature)beliefSet.getSignature()).getPredicates())
-				if(p.getArity()>1){
-					log.error("Lifted inference only applicable for signatures containing only unary predicates.");
-					throw new IllegalArgumentException("Lifted inference only applicable for signatures containing only unary predicates.");
-				}
-		log.trace("Finished creating instance of 'RpclReasoner'.");
+		this.inferenceType = inferenceType;		
 	}
 	
 	/**
-	 * Creates a new reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
+	 * Creates a new reasoner.
 	 * @param semantics the semantics for this reasoner.
-	 * @param signature the fol signature for this reasoner.
 	 */
-	public RpclMeReasoner(BeliefBase beliefBase, RpclSemantics semantics, FolSignature signature){
-		this(beliefBase,semantics,signature,RpclMeReasoner.STANDARD_INFERENCE);
+	public RpclMeReasoner(RpclSemantics semantics){
+		this(semantics,RpclMeReasoner.STANDARD_INFERENCE);
 	}
 	
 	/**
@@ -153,29 +119,29 @@ public class RpclMeReasoner extends Reasoner {
 	}
 	
 	/**
-	 * Returns the ME-distribution this reasoner bases on.
-	 * @return the ME-distribution this reasoner bases on.
-	 */
-	public ProbabilityDistribution<?> getMeDistribution() throws ProblemInconsistentException{
-		if(this.meDistribution == null)
-			this.meDistribution = this.computeMeDistribution();
-		return this.meDistribution;		
-	}
-
-	/**
 	 * Computes the ME-distribution for this reasoner's knowledge base. 
+	 * @param kb a belief set
 	 * @return the ME-distribution for this reasoner's knowledge base.
 	 */	
-	private ProbabilityDistribution<?> computeMeDistribution() throws ProblemInconsistentException{		
-		RpclBeliefSet kb = ((RpclBeliefSet)this.getKnowledgeBase());
+	public ProbabilityDistribution<?> getMeDistribution(RpclBeliefSet kb, FolSignature signature) throws ProblemInconsistentException{
+		if(!kb.getSignature().isSubSignature(signature)){
+			log.error("Signature must be super-signature of the belief set's signature.");
+			throw new IllegalArgumentException("Signature must be super-signature of the belief set's signature.");
+		}
+		if(inferenceType == RpclMeReasoner.LIFTED_INFERENCE)
+			for(Predicate p: ((FolSignature)kb.getSignature()).getPredicates())
+				if(p.getArity()>1){
+					log.error("Lifted inference only applicable for signatures containing only unary predicates.");
+					throw new IllegalArgumentException("Lifted inference only applicable for signatures containing only unary predicates.");
+				}
 		log.info("Computing ME-distribution using \"" + this.semantics.toString() + "\" and " + ((this.inferenceType==RpclMeReasoner.LIFTED_INFERENCE)?("lifted"):("standard")) + " inference for the knowledge base " + kb.toString() + ".");
 		// TODO extract common parts from the following if/else
 		log.info("Constructing optimization problem for finding the ME-distribution.");
 		if(this.inferenceType == RpclMeReasoner.LIFTED_INFERENCE){
 			// determine equivalence classes of the knowledge base
-			Set<Set<Constant>> equivalenceClasses = kb.getEquivalenceClasses(this.getSignature());
+			Set<Set<Constant>> equivalenceClasses = kb.getEquivalenceClasses(signature);
 			// determine the reference worlds needed to represent a probability distribution on the knowledge base.
-			Set<ReferenceWorld> worlds = ReferenceWorld.enumerateReferenceWorlds(this.getSignature().getPredicates(), equivalenceClasses);
+			Set<ReferenceWorld> worlds = ReferenceWorld.enumerateReferenceWorlds(signature.getPredicates(), equivalenceClasses);
 			
 			/*  int numberOfInterpretations = 0;
 			 
@@ -187,7 +153,7 @@ public class RpclMeReasoner extends Reasoner {
 			Map<ReferenceWorld,FloatVariable> worlds2vars = new HashMap<ReferenceWorld,FloatVariable>();
 			// check for empty kb
 			if(kb.size() == 0)
-				return CondensedProbabilityDistribution.getUniformDistribution(this.semantics, this.getSignature(), equivalenceClasses);
+				return CondensedProbabilityDistribution.getUniformDistribution(this.semantics, signature, equivalenceClasses);
 			int i=0;
 			// We first construct the necessary constraints for the optimization problem
 			Set<Statement> constraints = new HashSet<Statement>();
@@ -208,7 +174,7 @@ public class RpclMeReasoner extends Reasoner {
 			//for each conditional, add the corresponding constraint		
 			// TODO remove conditionals with probability 0 or 1		
 			for(RelationalProbabilisticConditional r: kb)
-				constraints.add(this.semantics.getSatisfactionStatement(r, this.signature, worlds2vars));	
+				constraints.add(this.semantics.getSatisfactionStatement(r, signature, worlds2vars));	
 			// optimize for entropy
 			OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 			problem.addAll(constraints);
@@ -222,7 +188,7 @@ public class RpclMeReasoner extends Reasoner {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);				
-				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,this.getSignature());
+				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,signature);
 				for(ReferenceWorld w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
 					Double value = new Double(c.doubleValue());
@@ -235,13 +201,13 @@ public class RpclMeReasoner extends Reasoner {
 			}
 		}else{
 			// get interpretations
-			Set<HerbrandInterpretation> worlds = new HerbrandBase(this.signature).allHerbrandInterpretations();
+			Set<HerbrandInterpretation> worlds = new HerbrandBase(signature).allHerbrandInterpretations();
 			// Generate Variables for the probability of each world,
 			// range constraints for probabilities, and construct normalization sum
 			Map<HerbrandInterpretation,FloatVariable> worlds2vars = new HashMap<HerbrandInterpretation,FloatVariable>();
 			// check for empty kb
 			if(kb.size() == 0)
-				return RpclProbabilityDistribution.getUniformDistribution(this.semantics, this.getSignature());
+				return RpclProbabilityDistribution.getUniformDistribution(this.semantics, signature);
 			int i=0;
 			// We first construct the necessary constraints for the optimization problem
 			Set<Statement> constraints = new HashSet<Statement>();
@@ -260,7 +226,7 @@ public class RpclMeReasoner extends Reasoner {
 			//for each conditional, add the corresponding constraint		
 			// TODO remove conditionals with probability 0 or 1		
 			for(RelationalProbabilisticConditional r: kb)
-				constraints.add(this.semantics.getSatisfactionStatement(r, this.signature, worlds2vars));	
+				constraints.add(this.semantics.getSatisfactionStatement(r, signature, worlds2vars));	
 			// optimize for entropy
 			OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 			problem.addAll(constraints);
@@ -274,7 +240,7 @@ public class RpclMeReasoner extends Reasoner {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
-				RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics,this.getSignature());
+				RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics,signature);
 				for(HerbrandInterpretation w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
 					Double value = new Double(c.doubleValue());
@@ -288,14 +254,18 @@ public class RpclMeReasoner extends Reasoner {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
+	
+	/**
+	 * Queries the knowledge base wrt. the given signature.
+	 * @param kb some knowledge base
+	 * @param query some query
+	 * @param signature some signature.
+	 * @return the answer to the query
 	 */
-	@Override
-	public Answer query(Formula query) {
+	public Answer query(RpclBeliefSet kb, Formula query, FolSignature signature) {
 		if(!(query instanceof FolFormula) && !(query instanceof RelationalConditional))
 			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for first-order queries or relational conditionals.");
-		ProbabilityDistribution<?> meDistribution = this.getMeDistribution();		
+		ProbabilityDistribution<?> meDistribution = this.getMeDistribution(kb,signature);		
 		Probability prob;
 		if(query instanceof FolFormula){
 			prob = meDistribution.probability(query);
@@ -308,17 +278,18 @@ public class RpclMeReasoner extends Reasoner {
 				prob = new Probability(0d);
 			else prob = prob2.divide(prob1);
 		}				
-		Answer answer = new Answer(this.getKnowledgeBase(),query);			
+		Answer answer = new Answer(kb,query);			
 		answer.setAnswer(prob.getValue());
 		answer.appendText("The probability of the query is " + prob + ".");
 		return answer;		
 	}
 
-	/**
-	 * Returns the signature of this reasoner.
-	 * @return the signature of this reasoner.
-	 */
-	public FolSignature getSignature(){
-		return this.signature;
-	}	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 */	
+	@Override
+	public Answer query(RpclBeliefSet kb,Formula query) {
+		return this.query(kb, query, (FolSignature) kb.getSignature());
+	}
+
 }

@@ -24,9 +24,8 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.social.semantics.SimpleProductSemantics;
 import net.sf.tweety.arg.social.semantics.SocialMapping;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 
 /**
  * This reasoner provides is an implementation of the "Iterative Successive Subsitution Algorithm"
@@ -37,27 +36,20 @@ import net.sf.tweety.commons.Reasoner;
  * @author Matthias Thimm
  *
  */
-public class IssReasoner extends Reasoner{
+public class IssReasoner implements BeliefBaseReasoner<SocialAbstractArgumentationFramework>{
 
 	/** The semantics used by this reasoner. */
 	private SimpleProductSemantics semantics;
-	
-	/** The mapping to be computed by this reasoner. */
-	private SocialMapping<Double> mapping = null;
 	
 	/** The tolerance of the ISS algorithm. */
 	private double tolerance;
 	
 	/**
-	 * Creates a new reasoner for the given social abstract argumentation framework
-	 * @param beliefBase a social abstract argumentation framework
+	 * Creates a new reasoner.
 	 * @param the simple product semantics used
 	 * @param the tolerance of the ISS algorithm. 
 	 */
-	public IssReasoner(BeliefBase beliefBase, SimpleProductSemantics semantics, double tolerance) {
-		super(beliefBase);
-		if(!(beliefBase instanceof SocialAbstractArgumentationFramework))
-			throw new IllegalArgumentException("Belief base of type 'SocialAbstractArgumentationFramework' expected.");
+	public IssReasoner(SimpleProductSemantics semantics, double tolerance) {
 		this.semantics = semantics;
 		this.tolerance = tolerance;
 	}
@@ -82,41 +74,39 @@ public class IssReasoner extends Reasoner{
 	
 	/**
 	 * Returns the social model computed by the ISS algorithm.
+	 * @param saf a social abstract argumentation frameworks
 	 * @return the social model computed by the ISS algorithm.
 	 */
-	public SocialMapping<Double> getSocialModel(){
-		if(this.mapping == null){
-			SocialAbstractArgumentationFramework saf = (SocialAbstractArgumentationFramework) this.getKnowledgeBase();
-			this.mapping = new SocialMapping<Double>(this.semantics);
-			for(Argument a: saf)
-				this.mapping.put(a, 0.5);
-			SocialMapping<Double> newmapping = this.mapping;
-			do{
-				this.mapping = newmapping;
-				newmapping = new SocialMapping<Double>(this.semantics);
-				for(Argument a: saf){
-					double val = this.semantics.supp(saf.getPositive(a), saf.getNegative(a));
-					for(Argument b: saf.getAttackers(a)){
-						if(newmapping.containsKey(b))
-							val *= 1-newmapping.get(b);
-						else
-							val *= 1-this.mapping.get(b);
-					}
-					newmapping.put(a, val);
+	public SocialMapping<Double> getSocialModel(SocialAbstractArgumentationFramework saaf){		
+		SocialMapping<Double> mapping = new SocialMapping<Double>(this.semantics);
+		for(Argument a: saaf)
+			mapping.put(a, 0.5);
+		SocialMapping<Double> newmapping = mapping;
+		do{
+			mapping = newmapping;
+			newmapping = new SocialMapping<Double>(this.semantics);
+			for(Argument a: saaf){
+				double val = this.semantics.supp(saaf.getPositive(a), saaf.getNegative(a));
+				for(Argument b: saaf.getAttackers(a)){
+					if(newmapping.containsKey(b))
+						val *= 1-newmapping.get(b);
+					else
+						val *= 1-mapping.get(b);
 				}
-			}while(this.dist(this.mapping, newmapping,saf) > this.tolerance);
-		}
-		return this.mapping;
+				newmapping.put(a, val);
+			}
+		}while(this.dist(mapping, newmapping,saaf) > this.tolerance);
+		return newmapping;
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
-		Answer answer = new Answer(this.getKnowledgeBase(), query);
-		answer.setAnswer(this.getSocialModel().satisfies(query));
-		answer.setAnswer(this.getSocialModel().get((Argument)query));
+	public Answer query(SocialAbstractArgumentationFramework saaf, Formula query) {
+		Answer answer = new Answer(saaf, query);
+		answer.setAnswer(this.getSocialModel(saaf).satisfies(query));
+		answer.setAnswer(this.getSocialModel(saaf).get((Argument)query));
 		return answer;
 	}
 

@@ -129,9 +129,8 @@ public class ReasonerCompare {
 	private static void test(ClBeliefSet beliefset) {
 		System.out.println("Start Calculation RuleBased:");
 		long begin = System.nanoTime();
-		RuleBasedCReasoner rReasoner = new RuleBasedCReasoner(beliefset);
-		rReasoner.process();
-		RankingFunction cReprRuleBased = rReasoner.getSemantic();
+		RuleBasedCReasoner rReasoner = new RuleBasedCReasoner();
+		RankingFunction cReprRuleBased = rReasoner.getSemantic(beliefset);
 		long end = System.nanoTime();
 		long duration = (end-begin) / (1000*1000);
 		System.out.println("Finished RuleBased in '" + String.valueOf(duration) + "' ms");
@@ -147,8 +146,8 @@ public class ReasonerCompare {
 			
 			System.out.println("Start Calculation BruteForce:");
 			begin = System.nanoTime();
-			BruteForceCReasoner reasoner = new BruteForceCReasoner(beliefset);
-			RankingFunction cReprBruteForce = reasoner.getCRepresentation();
+			BruteForceCReasoner reasoner = new BruteForceCReasoner();
+			RankingFunction cReprBruteForce = reasoner.getCRepresentation(beliefset);
 			end = System.nanoTime();
 			duration = (end-begin) / (1000*1000);
 			System.out.println("Finished Bruteforce in '" + String.valueOf(duration) + "' ms");

@@ -112,15 +112,11 @@ public class MlnTest2 {
 		FolSignature sig2 = ex2.getSecond();
 		MarkovLogicNetwork mln3 = ex3.getFirst();
 		FolSignature sig3 = ex3.getSecond();
-		NaiveMlnReasoner reasoner1 = new NaiveMlnReasoner(mln1,sig1);
-		NaiveMlnReasoner reasoner2 = new NaiveMlnReasoner(mln2,sig2);
-		NaiveMlnReasoner reasoner3 = new NaiveMlnReasoner(mln3,sig3);
-		reasoner1.setTempDirectory("/Users/mthimm/Desktop/tmp");
-		reasoner2.setTempDirectory("/Users/mthimm/Desktop/tmp");
-		reasoner3.setTempDirectory("/Users/mthimm/Desktop/tmp");
-		System.out.println("#1: Measure " + measure.toString() + ", coherence value " + measure.coherence(mln1, reasoner1, sig1));
-		System.out.println("#2: Measure " + measure.toString() + ", coherence value " + measure.coherence(mln2, reasoner2, sig2));
-		System.out.println("#3: Measure " + measure.toString() + ", coherence value " + measure.coherence(mln3, reasoner3, sig3));
+		NaiveMlnReasoner reasoner = new NaiveMlnReasoner();
+		reasoner.setTempDirectory("/Users/mthimm/Desktop/tmp");
+		System.out.println("#1: Measure " + measure.toString() + ", coherence value " + measure.coherence(mln1, reasoner, sig1));
+		System.out.println("#2: Measure " + measure.toString() + ", coherence value " + measure.coherence(mln2, reasoner, sig2));
+		System.out.println("#3: Measure " + measure.toString() + ", coherence value " + measure.coherence(mln3, reasoner, sig3));
 		System.out.println();
 		
 		MarkovLogicNetwork mergedMln = new MarkovLogicNetwork();
@@ -131,8 +127,6 @@ public class MlnTest2 {
 		mergedSig.addSignature(sig1);
 		mergedSig.addSignature(sig2);
 		//mergedSig.addSignature(sig3);
-		NaiveMlnReasoner mergedReasoner = new NaiveMlnReasoner(mergedMln,mergedSig);
-		mergedReasoner.setTempDirectory("/Users/mthimm/Desktop/tmp");
-		System.out.println("Merged: Measure " + measure.toString() + ", coherence value " + measure.coherence(mergedMln, mergedReasoner, mergedSig));
+		System.out.println("Merged: Measure " + measure.toString() + ", coherence value " + measure.coherence(mergedMln, reasoner, mergedSig));
 	}
 }

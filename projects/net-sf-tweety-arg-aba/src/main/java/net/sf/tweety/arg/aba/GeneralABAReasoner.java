@@ -23,41 +23,32 @@ import java.util.Collection;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Matthias Thimm
  * This is an abstract gerneralization over non-flat ABA reasoners
  * @param <T>	the language of the underlying ABA theory
  */
-public abstract class GeneralABAReasoner <T extends Formula> extends Reasoner {
+public abstract class GeneralABAReasoner <T extends Formula> implements BeliefBaseReasoner<ABATheory<T>> {
 	private int inferenceType;
 
-
 	/**
-	 * Creates a new general reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
+	 * Creates a new general reasoner.
 	 * @param inferenceType The inference type for this reasoner.
 	 */
-	public GeneralABAReasoner(BeliefBase beliefBase, int inferenceType) {
-		super(beliefBase);
+	public GeneralABAReasoner(int inferenceType) {
 		this.inferenceType = inferenceType;
 	}
 	
-	
-
-
 	/**
 	 * @return the inferenceType
 	 */
 	public int getInferenceType() {
 		return inferenceType;
 	}
-
-
-
 
 	/**
 	 * @param inferenceType the inferenceType to set
@@ -66,19 +57,15 @@ public abstract class GeneralABAReasoner <T extends Formula> extends Reasoner {
 		this.inferenceType = inferenceType;
 	}
 
-
-
-
-	public abstract Collection<Collection<Assumption<T>>> computeExtensions();
-
+	public abstract Collection<Collection<Assumption<T>>> computeExtensions(ABATheory<T> beliefbase);
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
-		Answer result = new Answer(getKnowledgeBase(),   query);
-		Collection<Collection<Assumption<T>>> exts = computeExtensions();
+	public Answer query(ABATheory<T> beliefbase, Formula query) {
+		Answer result = new Answer(beliefbase,query);
+		Collection<Collection<Assumption<T>>> exts = computeExtensions(beliefbase);
 		if(inferenceType == Semantics.CREDULOUS_INFERENCE) {
 			result.setAnswer(false);
 			for(Collection<Assumption<T>> ext:exts) {
@@ -96,10 +83,7 @@ public abstract class GeneralABAReasoner <T extends Formula> extends Reasoner {
 				}
 			}
 		}
-		return result;
-		
+		return result;	
 	}
 	
-	
-
 }

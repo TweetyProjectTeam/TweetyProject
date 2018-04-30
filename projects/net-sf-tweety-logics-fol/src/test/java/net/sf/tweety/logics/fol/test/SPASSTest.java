@@ -56,7 +56,6 @@ public class SPASSTest {
 		String source = "type(a) \n type(b) \n type(c) \n"
 				+ "a \n !b";
 		FolBeliefSet b = parser.parseBeliefBase(source);
-		spass.setKnowledgeBase(b);
 		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("b")).getAnswerBoolean());
 		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("a")).getAnswerBoolean());
 		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("c")).getAnswerBoolean());
@@ -74,7 +73,6 @@ public class SPASSTest {
 				+ "Ridable(horse) \n"
 				+ "forall X: (!Ridable(X) || Tame(X)) \n";
 		FolBeliefSet b = parser.parseBeliefBase(source);
-		spass.setKnowledgeBase(b);
 		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Tame(cow)")).getAnswerBoolean());
 		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("exists X: (Tame(X))")).getAnswerBoolean());
 		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Tame(horse)")).getAnswerBoolean());

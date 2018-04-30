@@ -28,50 +28,23 @@ import net.sf.tweety.commons.*;
  * @author Matthias Thimm
  *
  */
-public class RelevanceReasoner extends Reasoner {
+public class RelevanceReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 
-	/**
-	 * The extension of the knowledgebase. Once this
-	 * extension has been computed it is used for
-	 * subsequent queries in order to avoid unnecessary
-	 * computations.
-	 */
-	private ClBeliefSet extension;
-	
-	/**
-	 * Creates a new relevance reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.	
-	 */
-	public RelevanceReasoner(BeliefBase beliefBase){
-		super(beliefBase);		
-		if(!(beliefBase instanceof ClBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class ClBeliefSet expected.");
-	}		
-	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ClBeliefSet beliefset, Formula query) {
 		// TODO
 		return null;
 	}
 
 	/**
-	 * Returns the extended knowledge base this reasoner bases on.
-	 * @return the extended knowledge base this reasoner bases on.
-	 */
-	public ClBeliefSet getExtension(){
-		if(this.extension == null)
-			this.extension = this.computeExtension();
-		return this.extension;
-	}
-	
-	/**
 	 * Computes the extended knowledge base this reasoner bases on.
+	 * @param beliefset a beliefset
 	 * @return the extended knowledge base this reasoner bases on.
 	 */
-	private ClBeliefSet computeExtension(){
+	public ClBeliefSet getExtension(ClBeliefSet beliefset){
 		//TODO
 		return null;
 	}

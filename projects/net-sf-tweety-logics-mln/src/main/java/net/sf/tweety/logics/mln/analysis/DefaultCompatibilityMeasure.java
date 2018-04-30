@@ -20,7 +20,7 @@ package net.sf.tweety.logics.mln.analysis;
 
 import java.util.List;
 
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.mln.MarkovLogicNetwork;
 
@@ -46,7 +46,7 @@ public class DefaultCompatibilityMeasure implements CompatibilityMeasure{
 	 * @see net.sf.tweety.logics.markovlogic.analysis.CompatibilityMeasure#compatibility(java.util.List, net.sf.tweety.Reasoner, java.util.List)
 	 */
 	@Override
-	public double compatibility(List<MarkovLogicNetwork> mlns, Reasoner reasoner, List<FolSignature> signatures) {
+	public double compatibility(List<MarkovLogicNetwork> mlns, BeliefBaseReasoner<MarkovLogicNetwork> reasoner, List<FolSignature> signatures) {
 		if(mlns.size() != signatures.size())
 			throw new IllegalArgumentException("For each MLN there has to be exactly one signature");
 		double result = 0;

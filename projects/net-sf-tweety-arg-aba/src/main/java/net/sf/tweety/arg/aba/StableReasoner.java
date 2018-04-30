@@ -23,11 +23,11 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.aba.syntax.Assumption;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Matthias Thimm
  * This reasoner for ABA theories performs inference on the stable extensions.
  * @param <T>	the language of the underlying ABA theory
  */
@@ -38,18 +38,15 @@ public class StableReasoner<T extends Formula> extends GeneralABAReasoner<T> {
 	 * @param beliefBase a knowledge base.
 	 * @param inferenceType The inference type for this reasoner.
 	 */
-	public StableReasoner(BeliefBase beliefBase, int inferenceType) {
-		super(beliefBase, inferenceType);
-		// TODO Auto-generated constructor stub
+	public StableReasoner(int inferenceType) {
+		super(inferenceType);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.aba.GeneralABAReasoner#computeExtensions()
+	 * @see net.sf.tweety.arg.aba.GeneralABAReasoner#computeExtensions(net.sf.tweety.arg.aba.ABATheory)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<Collection<Assumption<T>>> computeExtensions() {
-		ABATheory<T> abat = (ABATheory<T>)getKnowledgeBase();
+	public Collection<Collection<Assumption<T>>> computeExtensions(ABATheory<T> abat) {
 		Collection<Collection<Assumption<T>>>result = new HashSet<>();
 		Collection<Collection<Assumption<T>>> exts = abat.getAllExtensions();
 		for(Collection<Assumption<T>> ext : exts) {

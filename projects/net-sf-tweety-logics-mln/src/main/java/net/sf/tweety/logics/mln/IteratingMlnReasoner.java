@@ -18,10 +18,8 @@
  */
 package net.sf.tweety.logics.mln;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This MLN reasoner takes another MLN reasoner and performs several iterations
@@ -36,9 +34,6 @@ public class IteratingMlnReasoner extends AbstractMlnReasoner{
 	
 	/** The number of iterations. */
 	private long numberOfIterations;
-
-	/** For archiving previous results. */
-	private Map<FolFormula,Double> archive;
 	
 	/**
 	 * Creates a new IteratingMlnReasoner for the given MLN reaasoner.
@@ -46,34 +41,21 @@ public class IteratingMlnReasoner extends AbstractMlnReasoner{
 	 * @param numberOfIterations the number of iterations for the reasoner 
 	 */
 	public IteratingMlnReasoner(AbstractMlnReasoner reasoner, long numberOfIterations){
-		super(reasoner.getKnowledgeBase(), reasoner.getSignature());
 		this.reasoner = reasoner;
 		this.numberOfIterations = numberOfIterations;
-		this.archive = new HashMap<FolFormula,Double>();		
 	}
 	
+
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#reset()
-	 */
-	public void reset(){
-		this.reasoner.reset();
-		this.archive.clear();
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
+	 * @see net.sf.tweety.logics.mln.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.mln.MarkovLogicNetwork, net.sf.tweety.logics.fol.syntax.FolFormula, net.sf.tweety.logics.fol.syntax.FolSignature)
 	 */
 	@Override
-	protected double doQuery(FolFormula query) {
-		if(this.archive.containsKey(query))
-			return this.archive.get(query);
+	protected double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature){
 		double resultSum = 0;
 		for(long i = 0; i < this.numberOfIterations; i++){
-			this.reasoner.reset();
-			resultSum += this.reasoner.doQuery(query);
+			resultSum += this.reasoner.doQuery(mln,query,signature);
 		}
 		double result = resultSum/this.numberOfIterations;
-		this.archive.put(query, result);
 		return result;
 	}
 

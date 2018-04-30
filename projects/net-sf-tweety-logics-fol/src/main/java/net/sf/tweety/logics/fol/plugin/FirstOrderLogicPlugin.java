@@ -138,7 +138,7 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 			if(tempComParam.getIdentifier().equals("-reasoner")){
 				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
 				if(tmp.getValue().equalsIgnoreCase("classic")){
-					reasoner = new ClassicalInference(folbs);
+					reasoner = new ClassicalInference();
 				}
 			} 
 			// if parameter identifier is for a query
@@ -167,7 +167,7 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 		// Test:
 		// apply all queries and print out results
 		for(FolFormula folf : queries){
-			System.out.println(reasoner.query(folf));
+			System.out.println(reasoner.query(folbs, folf));
 		}
 		
 		// TODO: make up and return plugin output

@@ -420,7 +420,7 @@ public class AspicTest {
 		AspicArgumentationTheory<PropositionalFormula> at = parser
 				.parseBeliefBaseFromFile("../../examples/aspic/ex1.aspic");
 		
-		AspicReasoner ar = new AspicReasoner(at, Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		AspicReasoner<PropositionalFormula> ar = new AspicReasoner<PropositionalFormula>(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
 
 		Argument query = null;
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
@@ -431,7 +431,7 @@ public class AspicTest {
 			}
 		}
 		System.out.println(query);
-		Answer answer = ar.query(query);
+		Answer answer = ar.query(at,query);
 		assertTrue(answer.getAnswerBoolean());
 	}
 	
@@ -442,13 +442,13 @@ public class AspicTest {
 		AspicArgumentationTheory<PropositionalFormula> at = parser
 				.parseBeliefBaseFromFile("../../examples/aspic/ex1.aspic");
 		
-		AspicReasoner ar = new AspicReasoner(at, Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		AspicReasoner<PropositionalFormula> ar = new AspicReasoner<PropositionalFormula>(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
 
 
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
 
 		System.out.println(pf);
-		Answer answer = ar.query(pf);
+		Answer answer = ar.query(at,pf);
 		assertTrue(answer.getAnswerBoolean());
 	}
 }

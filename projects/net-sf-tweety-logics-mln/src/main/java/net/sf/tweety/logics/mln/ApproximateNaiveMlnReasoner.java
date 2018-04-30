@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
 import net.sf.tweety.commons.util.RandomSubsetIterator;
 import net.sf.tweety.logics.fol.semantics.*;
@@ -42,10 +41,6 @@ import net.sf.tweety.math.probability.Probability;
  */
 public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 
-	/** The approximated model of the MLN (saved for avoid double
-	 * computation). */
-	private ProbabilityDistribution<HerbrandInterpretation> prob = null;
-	
 	/** The maximum number of interpretations selected from the whole
 	 * set of interpretations. Is -1 if all interpretations are to be selected. */
 	private long maxNumberOfSelectedInterpretations = -1;
@@ -78,47 +73,37 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 	}
 
 	/**
-	 * Creates a new ApproximateNaiveMlnReasoner for the given Markov logic network.
-	 * @param beliefBase a Markov logic network. 
-	 * @param signature another signature (if the probability distribution should be defined 
-	 * on that one (that one should subsume the signature of the Markov logic network)
+	 * Creates a new ApproximateNaiveMlnReasoner.
 	 * @param maxNumberOfSelectedInterpretations the maximum number of interpretations selected from the whole
 	 * set of interpretations. Is -1 if all interpretations are to be selected.
 	 * @param maxNumberOfInterpretationsForModel the maximum number of interpretations used for the model. Those interpretations
 	 * are the subset of the interpretations selected with maximum weight. Is -1
 	 * if all interpretations are used for the model. It has to be maxNumberOfSelectedInterpretations >= maxNumberOfInterpretationsForModel.
 	 */
-	public ApproximateNaiveMlnReasoner(BeliefBase beliefBase, FolSignature signature, long maxNumberOfSelectedInterpretations, long maxNumberOfInterpretationsForModel){
-		super(beliefBase, signature);		
+	public ApproximateNaiveMlnReasoner(long maxNumberOfSelectedInterpretations, long maxNumberOfInterpretationsForModel){
 		this.maxNumberOfSelectedInterpretations = maxNumberOfSelectedInterpretations;
 		this.maxNumberOfInterpretationsForModel = maxNumberOfInterpretationsForModel;
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#reset()
-	 */
-	public void reset(){
-		this.prob = null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
+	 * @see net.sf.tweety.logics.mln.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.mln.MarkovLogicNetwork, net.sf.tweety.logics.fol.syntax.FolFormula, net.sf.tweety.logics.fol.syntax.FolSignature)
 	 */
 	@Override
-	protected double doQuery(FolFormula query) {
-		if(this.prob == null)
-			this.prob = this.computeModel();
-		return this.prob.probability(query).doubleValue();
+	protected double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {
+		return this.computeModel(mln,signature).probability(query).doubleValue();
 	}
 
-	/** Computes the model of the given MLN wrt. the optimization parameters.
-	 * @return the model of the given MLN wrt. the optimization parameters.
+	/** Computes the model of the given MLN wrt. the optimization parameters
+	 * @param mln some mln
+	 * @param query some query
+	 * @param signature some signature
+	 * @return  the model of the given MLN wrt. the optimization parameters.
 	 */
-	private ProbabilityDistribution<HerbrandInterpretation> computeModel(){
+	public ProbabilityDistribution<HerbrandInterpretation> computeModel(MarkovLogicNetwork mln, FolSignature signature){
 		// Queue used for storing the interpretations with maximum weight
 		PriorityQueue<WeightedHerbrandInterpretation> pq = new PriorityQueue<WeightedHerbrandInterpretation>();
 		// The Herbrand base of the signature
-		HerbrandBase hBase = new HerbrandBase(this.getSignature());
+		HerbrandBase hBase = new HerbrandBase(signature);
 		// The iterator for Herbrand interpretations
 		Iterator<Set<FOLAtom>> it;
 		if(this.maxNumberOfSelectedInterpretations == -1 || Math.pow(2, hBase.getAtoms().size()) <= this.maxNumberOfSelectedInterpretations )
@@ -132,7 +117,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 			hInt = new HerbrandInterpretation(it.next());
 			whInt = new WeightedHerbrandInterpretation();
 			whInt.interpretation = hInt;
-			whInt.weight = this.computeWeight(hInt);
+			whInt.weight = this.computeWeight(mln,hInt,signature);
 			pq.add(whInt);
 			sumOfWeights += whInt.weight;			
 			while(pq.size() > this.maxNumberOfInterpretationsForModel){
@@ -143,7 +128,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 			if(this.maxNumberOfSelectedInterpretations != -1 && this.maxNumberOfSelectedInterpretations <= count)
 				break;
 		}
-		ProbabilityDistribution<HerbrandInterpretation> result = new ProbabilityDistribution<HerbrandInterpretation>(this.getSignature());
+		ProbabilityDistribution<HerbrandInterpretation> result = new ProbabilityDistribution<HerbrandInterpretation>(signature);
 		for(WeightedHerbrandInterpretation interpretation: pq){
 			result.put(interpretation.interpretation, new Probability(interpretation.weight/sumOfWeights));
 		}

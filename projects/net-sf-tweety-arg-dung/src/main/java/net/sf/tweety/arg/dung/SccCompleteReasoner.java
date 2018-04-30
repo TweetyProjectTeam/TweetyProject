@@ -22,7 +22,6 @@ import java.util.*;
 
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
-import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
@@ -36,20 +35,11 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 public class SccCompleteReasoner extends AbstractExtensionReasoner {
 
 	/**
-	 * Creates a new complete reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
+	 * Creates a new complete reasoner.
 	 * @param inferenceType The inference type for this reasoner.
 	 */
-	public SccCompleteReasoner(BeliefBase beliefBase, int inferenceType){
-		super(beliefBase, inferenceType);		
-	}
-	
-	/**
-	 * Creates a new complete reasoner for the given knowledge base using sceptical inference.
-	 * @param beliefBase The knowledge base for this reasoner.
-	 */
-	public SccCompleteReasoner(BeliefBase beliefBase){
-		super(beliefBase);		
+	public SccCompleteReasoner(int inferenceType){
+		super(inferenceType);		
 	}
 	
 	/**
@@ -69,7 +59,7 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 			return result;
 		}
 		// construct theory
-		DungTheory subTheory = (DungTheory) ((DungTheory)this.getKnowledgeBase()).getRestriction(sccs.get(idx));
+		DungTheory subTheory = (DungTheory) theory.getRestriction(sccs.get(idx));
 		// remove all out arguments
 		subTheory.removeAll(out);
 		// for all arguments that are attacked by an already undecided argument outside the scc, add attack
@@ -81,7 +71,7 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 			if(theory.isAttacked(a, new Extension(undec)))				
 				subTheory.add(new Attack(aux,a));
 		// compute complete extensions of sub theory
-		Set<Extension> subExt = new CompleteReasoner(subTheory).computeExtensions();
+		Set<Extension> subExt = new CompleteReasoner(this.getInferenceType()).getExtensions(subTheory);
 		Set<Extension> result = new HashSet<Extension>();
 		Collection<Argument> new_in, new_out, new_undec, attacked;
 		for(Extension ext: subExt){
@@ -102,10 +92,9 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
+	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
 	 */
-	public Set<Extension> computeExtensions(){
-		DungTheory theory = (DungTheory) this.getKnowledgeBase();
+	public Set<Extension> getExtensions(DungTheory theory){
 		List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(theory.getStronglyConnectedComponents());		
 		// order SCCs in a DAG
 		boolean[][] dag = new boolean[sccs.size()][sccs.size()];
@@ -144,8 +133,8 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
 	 */
 	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
-		return new CompleteReasoner(this.getKnowledgeBase()).getPropositionalCharacterisationBySemantics(in, out, undec);
+	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory theory, Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
+		return new CompleteReasoner(this.getInferenceType()).getPropositionalCharacterisationBySemantics(theory, in, out, undec);
 	}
 	
 }

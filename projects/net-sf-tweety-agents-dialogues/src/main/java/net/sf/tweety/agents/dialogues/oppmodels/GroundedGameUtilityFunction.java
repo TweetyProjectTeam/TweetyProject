@@ -24,6 +24,7 @@ import net.sf.tweety.agents.dialogues.DialogueTrace;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.GroundReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 
@@ -98,7 +99,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 	@Override
 	public double getUtility(DialogueTrace<Argument,Extension> trace) {		
 		DungTheory theory = new DungTheory(this.theory.getRestriction(trace.getElements()));
-		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();
+		Extension groundedExtension = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(theory).iterator().next();
 		return this.getUtility(groundedExtension, trace);
 	}
 
@@ -110,7 +111,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 		DungTheory theory = new DungTheory(this.theory.getRestriction(trace.getElements()));
 		theory.addAll(additionalArguments);
 		theory.addAllAttacks(additionalAttacks);
-		Extension groundedExtension = new GroundReasoner(theory).getExtensions().iterator().next();
+		Extension groundedExtension = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(theory).iterator().next();
 		return this.getUtility(groundedExtension, trace);
 	}
 	

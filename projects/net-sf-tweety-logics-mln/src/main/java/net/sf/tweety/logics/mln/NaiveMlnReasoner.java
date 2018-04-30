@@ -31,7 +31,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
@@ -54,34 +53,6 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 	/** Directory for temporary files. */
 	private String tempDirectory = null;
 	
-	/** If the model has already been computed this file contains it. */
-	private File archivedFile = null;
-	
-	/**
-	 * Creates a new NaiveMlnReasoner for the given Markov logic network.
-	 * @param beliefBase a Markov logic network. 
-	 */
-	public NaiveMlnReasoner(BeliefBase beliefBase){
-		this(beliefBase, (FolSignature) beliefBase.getSignature());
-	}
-	
-	/**
-	 * Creates a new NaiveMlnReasoner for the given Markov logic network.
-	 * @param beliefBase a Markov logic network. 
-	 * @param signature another signature (if the probability distribution should be defined 
-	 * on that one (that one should subsume the signature of the Markov logic network)
-	 */
-	public NaiveMlnReasoner(BeliefBase beliefBase, FolSignature signature){
-		super(beliefBase, signature);		
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#reset()
-	 */
-	public void reset(){
-		this.archivedFile = null;
-	}
-	
 	/** Sets the path of the directory for temporary files.
 	 * @param str a file path
 	 */
@@ -92,11 +63,11 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 	/** Computes the model of the given MLN.
 	 * @return a file where the model is stored.
 	 */
-	private File computeModel(){
+	private File computeModel(MarkovLogicNetwork mln, FolSignature signature){
 		//1.) write all possible worlds of the signature into a text file
 		// (Note: we avoid doing this in memory due to exponential size)
 		try {
-			HerbrandBase hBase = new HerbrandBase(this.getSignature());			
+			HerbrandBase hBase = new HerbrandBase(signature);			
 			FileWriter fstream;
 			FileInputStream inStream;	
 			boolean isFirst = true;
@@ -150,8 +121,8 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 					if(emptyLine) continue;
 					else emptyLine = true;
 				}
-				HerbrandInterpretation hInt = this.parseInterpretation(strLine);
-				weight = this.computeWeight(hInt);
+				HerbrandInterpretation hInt = this.parseInterpretation(strLine,signature);
+				weight = this.computeWeight(mln,hInt,signature);
 				sum += weight;
 				out.append(strLine + "#" + weight);
 				out.newLine();
@@ -191,19 +162,15 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 		return null;
 	}
 	
-
-	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
+	 * @see net.sf.tweety.logics.mln.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.mln.MarkovLogicNetwork, net.sf.tweety.logics.fol.syntax.FolFormula, net.sf.tweety.logics.fol.syntax.FolSignature)
 	 */
 	@Override
-	public double doQuery(FolFormula query) {		
-		if(this.archivedFile == null)
-			this.archivedFile = this.computeModel();
-		
+	public double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {		
 		FileInputStream inStream;
+		File model = this.computeModel(mln, signature);
 		try {
-			inStream = new FileInputStream(this.archivedFile.getAbsoluteFile());			
+			inStream = new FileInputStream(model.getAbsoluteFile());			
 			DataInputStream in = new DataInputStream(inStream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			double prob = 0;
@@ -214,7 +181,7 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 					HerbrandInterpretation hInt;
 					if(tokenizer.countTokens() == 1)
 						hInt = new HerbrandInterpretation();
-					else hInt = this.parseInterpretation(tokenizer.nextToken());
+					else hInt = this.parseInterpretation(tokenizer.nextToken(),signature);
 					if(hInt.satisfies(query))
 						prob += new Double(tokenizer.nextToken());					
 				}catch(Exception e){
@@ -237,11 +204,11 @@ public class NaiveMlnReasoner extends AbstractMlnReasoner {
 	 * @param str a string.
 	 * @return a Herbrand interpretation
 	 */
-	private HerbrandInterpretation parseInterpretation(String str){
+	private HerbrandInterpretation parseInterpretation(String str,FolSignature signature){
 		StringTokenizer tokenizer = new StringTokenizer(str, ";");
 		Collection<FOLAtom> atoms = new HashSet<FOLAtom>();
 		FolParser parser = new FolParser();
-		parser.setSignature(this.getSignature());
+		parser.setSignature(signature);
 		while(tokenizer.hasMoreTokens()){
 			String token = tokenizer.nextToken();
 			try {

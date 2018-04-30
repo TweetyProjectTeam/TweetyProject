@@ -24,11 +24,9 @@ import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
-import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.ml.writer.SPASSWriter;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 
@@ -39,6 +37,7 @@ import net.sf.tweety.logics.ml.ModalBeliefSet;
  * an automated theorem prover for first-order logic, modal logic and description logics.
  * 
  * @author Anna Gessler
+ * @author Matthias Thimm
  *
  */
 public class SPASS extends ModalReasoner {
@@ -68,41 +67,8 @@ public class SPASS extends ModalReasoner {
 	 *            shell to run commands
 	 */
 	public SPASS(String binaryLocation, Shell bash) {
-		super(new FolBeliefSet());
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
-	}
-	
-	/**
-	 * Constructs a new instance pointing to a specific SPASS.
-	 * 
-	 * @param kb 
-	 * 			  a knowledge base
-	 * @param binaryLocation
-	 *            of the SPASS executable on the hard drive
-	 * @param bash
-	 *            shell to run commands
-	 */
-	public SPASS(BeliefBase kb, String binaryLocation, Shell bash) {
-		super(kb);
-		this.binaryLocation = binaryLocation;
-		this.bash = bash;
-	}
-	
-	/**
-	 * Constructs a new instance pointing to a specific SPASS.
-	 * 
-	 * @param kb 
-	 * 			  a knowledge base
-	 * @param binaryLocation
-	 *            of the SPASS executable on the hard drive
-	 * @param bash
-	 *            shell to run commands
-	 */
-	public SPASS(BeliefBase kb, String binaryLocation) {
-		super(kb);
-		this.binaryLocation = binaryLocation;
-		this.bash = Shell.getNativeShell();
 	}
 	
 	/**
@@ -123,9 +89,11 @@ public class SPASS extends ModalReasoner {
 		this.cmdOptions = s;
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 */
 	@Override
-	public Answer query(Formula query) {
-		ModalBeliefSet kb =  (ModalBeliefSet) this.getKnowledgeBase();
+	public Answer query(ModalBeliefSet kb, Formula query) {
 		Answer answer = new Answer(kb,query);
 		String output = null;
 		try {
@@ -151,12 +119,11 @@ public class SPASS extends ModalReasoner {
 	 * Determines the answer wrt. to the given query and returns the proof (if applicable).
 	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.ml.reasoner.SPASS#query(Formula)}
 	 * if only a yes/no result is needed.
-	 * 
+	 * @param kb a modal belief set
 	 * @param query a formula
 	 * @return a string containing proof documentation 
 	 */
-	public String queryProof(Formula query) {
-		ModalBeliefSet kb = (ModalBeliefSet) this.getKnowledgeBase();
+	public String queryProof(ModalBeliefSet kb, Formula query) {
 		String output = null;
 		try {
 			File file = File.createTempFile("tmp", ".txt");	

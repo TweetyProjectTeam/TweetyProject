@@ -19,22 +19,14 @@
 package net.sf.tweety.logics.cl.kappa;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import net.sf.tweety.logics.cl.BruteForceCReasoner;
-import net.sf.tweety.logics.cl.ClBeliefSet;
-import net.sf.tweety.logics.cl.RuleBasedCReasoner;
 import net.sf.tweety.logics.cl.semantics.ConditionalStructure;
-import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.cl.semantics.ConditionalStructure.Generator;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * This class builds the initial kappa value list for a given conditional 
@@ -133,49 +125,5 @@ public class ConditionalStructureKappaBuilder {
 				break;
 		}
 	}
-	
-	public static void main(String [] args) {
-		Set<Conditional> conds = new HashSet<Conditional>();
-		Proposition b = new Proposition("b");
-		Proposition f = new Proposition("f");
-		Proposition w = new Proposition("w");
-		Proposition p = new Proposition("p");
-		
-		conds.add(new Conditional(b, f));
-		conds.add(new Conditional(p, b));
-		conds.add(new Conditional(p, new Negation(f)));
-		conds.add(new Conditional(b, w));
-		
-		
-		RuleBasedCReasoner reasoner = new RuleBasedCReasoner(conds, true);
-		Long before = System.currentTimeMillis();
-		reasoner.prepare();
-		Long duration = System.currentTimeMillis() - before;
-		System.out.println("Generated in " + duration + "ms:");
-		System.out.println("Conditional Structure:");
-		System.out.println(reasoner.getConditionalStructure());
-		
-		System.out.println("Initial Kappa:");
-		for(KappaValue kv : reasoner.getKappas()) {
-			System.out.println(kv.fullString());
-		}
-		
-		before = System.currentTimeMillis();
-		reasoner.process();
-		duration = System.currentTimeMillis() - before;
-		System.out.println("Evaluated in " + duration + "ms:");
-		for(KappaValue kv : reasoner.getKappas()) {
-			System.out.println(kv.fullString());
-		}
-		System.out.println("Ranking-Function:");
-		System.out.println(reasoner.getSemantic());
-		System.out.println("");
-		
-		BruteForceCReasoner bfReasoner = new BruteForceCReasoner(new ClBeliefSet(conds));
-		before = System.currentTimeMillis();
-		RankingFunction rf = bfReasoner.getCRepresentation();
-		duration = System.currentTimeMillis() - before;
-		System.out.println("Brute-Force Evaluation in " + duration + "ms:");
-		System.out.println(rf);
-	}
+
 }

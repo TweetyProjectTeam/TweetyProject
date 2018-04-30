@@ -25,9 +25,8 @@ import net.sf.tweety.arg.lp.semantics.AttackRelation;
 import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
 import net.sf.tweety.arg.lp.syntax.Argument;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 
 /**
  * This class models a reasoner for extended logic programming based arguments using
@@ -51,25 +50,20 @@ import net.sf.tweety.commons.Reasoner;
  * 
  * @author Sebastian Homann
  */
-public class ArgumentationReasoner extends Reasoner {
-	private AttackRelation attack;
-	private AttackRelation defense;
+public class ArgumentationReasoner implements BeliefBaseReasoner<ArgumentationKnowledgeBase> {
+	
+	protected AttackStrategy attackStrategy;
+	protected AttackStrategy defenceStrategy;
 	
 	/**
-	 * Creates a new ArgumentationReasoner for the given belief base and parameterised
+	 * Creates a new ArgumentationReasoner parameterised
 	 * by a notion of attack for the opponent and another notion of attack for the defense
-	 * @param beliefBase
 	 * @param attack
 	 * @param defence
 	 */
-	public ArgumentationReasoner(BeliefBase beliefBase, AttackStrategy attack, AttackStrategy defence) {
-		super(beliefBase);
-		if(!(beliefBase instanceof ArgumentationKnowledgeBase)) {
-			throw new IllegalArgumentException("Knowledge base of class ArgumentationKnowledgebase expected.");
-		}
-		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) beliefBase;
-		this.attack = new AttackRelation(kb, attack);
-		this.defense = new AttackRelation(kb, defence);
+	public ArgumentationReasoner(AttackStrategy attack, AttackStrategy defence) {
+		this.attackStrategy = attack;
+		this.defenceStrategy = defence;
 	}
 
 	/*
@@ -77,13 +71,13 @@ public class ArgumentationReasoner extends Reasoner {
 	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ArgumentationKnowledgeBase kb, Formula query) {
 		if(! (query instanceof Argument) ) {
 			throw new IllegalArgumentException("Formula of class Argument expected.");
 		}
 		Argument a = (Argument) query;
-		Answer answer = new Answer(this.getKnowledgeBase(), query);
-		answer.setAnswer(getJustifiedArguments().contains(a));
+		Answer answer = new Answer(kb, query);
+		answer.setAnswer(getJustifiedArguments(kb).contains(a));
 		return answer;
 	}
 	
@@ -94,9 +88,9 @@ public class ArgumentationReasoner extends Reasoner {
 	 * @param arg an argument
 	 * @return true iff arg is x-attacked by an x/y-justified argument
 	 */
-	public boolean isOverruled(Argument arg) {
-		for(Argument attacker : getJustifiedArguments()) {
-			if(attack.attacks(attacker, arg)) {
+	public boolean isOverruled(ArgumentationKnowledgeBase kb, Argument arg) {
+		for(Argument attacker : getJustifiedArguments(kb)) {
+			if(new AttackRelation(kb, this.attackStrategy).attacks(attacker, arg)) {
 				return true;
 			}
 		}
@@ -106,12 +100,12 @@ public class ArgumentationReasoner extends Reasoner {
 	/**
 	 * An argument is called x/y-justified if it is contained in J_{P,x/y}.
 	 * See class description for details.
-	 * 
+	 * @param kb a kb
 	 * @param arg an argument
 	 * @return true iff arg is x/y-justified
 	 */
-	public boolean isJustified(Argument arg) {
-		return query(arg).getAnswerBoolean();
+	public boolean isJustified(ArgumentationKnowledgeBase kb, Argument arg) {
+		return query(kb,arg).getAnswerBoolean();
 	}
 	
 	/**
@@ -120,16 +114,15 @@ public class ArgumentationReasoner extends Reasoner {
 	 * @param arg an argument
 	 * @return true iff arg is neither x/y-justified nor x/y-overruled.
 	 */
-	public boolean isDefensible(Argument arg) {
-		return (! isOverruled(arg) ) && (! isJustified(arg) );
+	public boolean isDefensible(ArgumentationKnowledgeBase kb,Argument arg) {
+		return (! isOverruled(kb,arg) ) && (! isJustified(kb,arg) );
 	}
 	
 	/**
 	 * Returns the set of x/y-justified arguments using a bottom-up fixpoint calculation
 	 * @return the set of x/y-justified arguments
 	 */
-	public Set<Argument> getJustifiedArguments() {
-		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgeBase();
+	public Set<Argument> getJustifiedArguments(ArgumentationKnowledgeBase kb) {
 		Set<Argument> arguments = kb.getArguments();
 		Set<Argument> result = new HashSet<Argument>();
 		
@@ -138,7 +131,7 @@ public class ArgumentationReasoner extends Reasoner {
 		while(changes) {
 			changes = false;
 			for(Argument arg : arguments) {
-				if(isAcceptable(arguments, result, arg)) {
+				if(isAcceptable(kb,arguments, result, arg)) {
 					if(!result.contains(arg)) {
 						result.add(arg);
 						changes = true;
@@ -154,14 +147,13 @@ public class ArgumentationReasoner extends Reasoner {
 	 * which are attacked by a justified argument.
 	 * @return the set of overruled arguments.
 	 */
-	public Set<Argument> getOverruledArguments() {
-		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgeBase();
+	public Set<Argument> getOverruledArguments(ArgumentationKnowledgeBase kb) {
 		Set<Argument> arguments = kb.getArguments();
 		Set<Argument> result = new HashSet<Argument>();
-		Set<Argument> justifiedArguments = getJustifiedArguments();
+		Set<Argument> justifiedArguments = getJustifiedArguments(kb);
 		for(Argument candidate : arguments) {
 			for(Argument justified : justifiedArguments) {
-				if(attack.attacks(justified, candidate)) {
+				if(new AttackRelation(kb, this.attackStrategy).attacks(justified, candidate)) {
 					result.add(candidate);
 				}
 			}
@@ -174,12 +166,11 @@ public class ArgumentationReasoner extends Reasoner {
 	 * that are neither justified nor overruled.
 	 * @return the set of defensible arguments.
 	 */
-	public Set<Argument> getDefensibleArguments() {
-		ArgumentationKnowledgeBase kb = (ArgumentationKnowledgeBase) this.getKnowledgeBase();
+	public Set<Argument> getDefensibleArguments(ArgumentationKnowledgeBase kb) {
 		Set<Argument> result = new HashSet<Argument>();
 		Set<Argument> arguments = kb.getArguments();
-		Set<Argument> justifiedArguments = getJustifiedArguments();
-		Set<Argument> overruledArguments = getOverruledArguments();
+		Set<Argument> justifiedArguments = getJustifiedArguments(kb);
+		Set<Argument> overruledArguments = getOverruledArguments(kb);
 		for(Argument candidate : arguments) {
 			if(!justifiedArguments.contains(candidate)) {
 				if(!overruledArguments.contains(candidate)) {
@@ -200,11 +191,11 @@ public class ArgumentationReasoner extends Reasoner {
 	 * @param toCheck
 	 * @return true iff toCheck is x/y-acceptable wrt. defendingArguments
 	 */
-	private boolean isAcceptable(Set<Argument> arguments, Set<Argument> defendingArguments, Argument toCheck) {
-		Set<Argument> attackingArguments = attack.getAttackingArguments(toCheck);
+	private boolean isAcceptable(ArgumentationKnowledgeBase kb, Set<Argument> arguments, Set<Argument> defendingArguments, Argument toCheck) {
+		Set<Argument> attackingArguments = new AttackRelation(kb, this.attackStrategy).getAttackingArguments(toCheck);
 		for(Argument attackingArgument : attackingArguments) {
 			// check if  there is an argument in defendingArguments, that defends against the attacker
-			if(! defense.attacks(defendingArguments, attackingArgument)) {
+			if(! new AttackRelation(kb, this.defenceStrategy).attacks(defendingArguments, attackingArgument)) {
 				// no defense against attacker
 				return false;
 			}

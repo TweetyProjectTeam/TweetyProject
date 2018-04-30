@@ -22,7 +22,6 @@ import java.util.*;
 
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
-import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
@@ -45,62 +44,43 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	private boolean useSatSolver = true;
 	
 	/**
-	 * Creates a new complete reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
+	 * Creates a new complete reasoner.
 	 * @param inferenceType The inference type for this reasoner.
 	 */
-	public CompleteReasoner(BeliefBase beliefBase, int inferenceType){
-		super(beliefBase, inferenceType);		
+	public CompleteReasoner(int inferenceType){
+		super(inferenceType);		
 	}
 	
 	/**
 	 * Creates a new complete reasoner for the given knowledge base using sceptical inference.
-	 * @param beliefBase The knowledge base for this reasoner.
-	 * @param useSatSolver whether to use the standard SAT solver instead of the brute force approach.
-	 */
-	public CompleteReasoner(BeliefBase beliefBase, boolean useSatSolver){
-		super(beliefBase);
-		this.useSatSolver = useSatSolver;
-	}
-	
-	/**
-	 * Creates a new complete reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
 	 * @param inferenceType The inference type for this reasoner.
 	 * @param useSatSolver whether to use the standard SAT solver instead of the brute force approach.
 	 */
-	public CompleteReasoner(BeliefBase beliefBase, int inferenceType, boolean useSatSolver){
-		super(beliefBase, inferenceType);
+	public CompleteReasoner(int inferenceType, boolean useSatSolver){
+		super(inferenceType);
 		this.useSatSolver = useSatSolver;
-	}
-	
-	/**
-	 * Creates a new complete reasoner for the given knowledge base using sceptical inference.
-	 * @param beliefBase The knowledge base for this reasoner.
-	 */
-	public CompleteReasoner(BeliefBase beliefBase){
-		super(beliefBase);		
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
+	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
 	 */
-	public Set<Extension> computeExtensions(){
+	public Set<Extension> getExtensions(DungTheory aaf){
 		if(this.useSatSolver)
-			return this.computeExtensionsBySatSolving();
-		Extension groundedExtension = new GroundReasoner(this.getKnowledgeBase(),this.getInferenceType()).getExtensions().iterator().next();
-		Set<Argument> remaining = new HashSet<Argument>((DungTheory)this.getKnowledgeBase());
+			return this.computeExtensionsBySatSolving(aaf);
+		Extension groundedExtension = new GroundReasoner(this.getInferenceType()).getExtensions(aaf).iterator().next();
+		Set<Argument> remaining = new HashSet<Argument>(aaf);
 		remaining.removeAll(groundedExtension);
-		return this.getCompleteExtensions(groundedExtension,remaining);
+		return this.getCompleteExtensions(aaf,groundedExtension,remaining);
 	}
 
 	/**
 	 * Computes the extensions by reducing the problem to SAT solving
+	 * @param DungTheory an AAF
 	 * @return the extensions of the given Dung theory.
 	 */
-	protected Set<Extension> computeExtensionsBySatSolving(){
+	protected Set<Extension> computeExtensionsBySatSolving(DungTheory aaf){
 		SatSolver solver = SatSolver.getDefaultSolver();
-		PlBeliefSet prop = this.getPropositionalCharacterisation();
+		PlBeliefSet prop = this.getPropositionalCharacterisation(aaf);
 		// get some labeling from the solver, then add the negation of this to the program and repeat
 		// to obtain all labelings
 		Set<Extension> result = new HashSet<Extension>();
@@ -131,9 +111,8 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	 * @param remaining arguments that still have to be considered to be part of an extension
 	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>
 	 */
-	private Set<Extension> getCompleteExtensions(Extension ext, Collection<Argument> remaining){
+	private Set<Extension> getCompleteExtensions(DungTheory dungTheory, Extension ext, Collection<Argument> remaining){
 		Set<Extension> extensions = new HashSet<Extension>();
-		DungTheory dungTheory = (DungTheory) this.getKnowledgeBase();
 		if(ext.isConflictFree(dungTheory)){
 			if(dungTheory.faf(ext).equals(ext))
 				extensions.add(ext);
@@ -141,10 +120,10 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 				Argument arg = remaining.iterator().next();
 				Collection<Argument> remaining2 = new HashSet<Argument>(remaining);
 				remaining2.remove(arg);
-				extensions.addAll(this.getCompleteExtensions(ext, remaining2));
+				extensions.addAll(this.getCompleteExtensions(dungTheory,ext, remaining2));
 				Extension ext2 = new Extension(ext);
 				ext2.add(arg);
-				extensions.addAll(this.getCompleteExtensions(ext2, remaining2));
+				extensions.addAll(this.getCompleteExtensions(dungTheory,ext2, remaining2));
 			}
 		}
 		return extensions;		
@@ -154,8 +133,7 @@ public class CompleteReasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
 	 */
 	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
-		DungTheory theory = (DungTheory) this.getKnowledgeBase();
+	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory theory,Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		// an argument is in iff all attackers are out
 		for(Argument a: theory){

@@ -39,8 +39,8 @@ public class MlTest {
 		System.out.println(b);
 		
 		//NaiveModalReasoner
-		NaiveModalReasoner reasoner = new NaiveModalReasoner(b);
-		System.out.println(reasoner.query(parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))")));
+		NaiveModalReasoner reasoner = new NaiveModalReasoner();
+		System.out.println(reasoner.query(b,parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))")));
 	
 		//Write BeliefBase to file
 		ModalWriter writer = new ModalWriter(b);

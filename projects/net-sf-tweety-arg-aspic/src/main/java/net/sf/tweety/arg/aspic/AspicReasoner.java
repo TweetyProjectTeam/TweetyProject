@@ -24,15 +24,17 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 
 /**
  * @author Nils Geilen, Matthias Thimm
  *	This class models a reasoner over Aspic formulae
+ * 
+ * @param <T> the formula type
  */
-public class AspicReasoner extends Reasoner  {
+public class AspicReasoner<T extends Invertable> implements BeliefBaseReasoner<AspicArgumentationTheory<T>>  {
 
 	int inferencetype;
 
@@ -40,47 +42,35 @@ public class AspicReasoner extends Reasoner  {
 	
 	/**
 	 * Creates a new instance
-	 * @param beliefBase	an AspicArgumentationTheory
 	 * @param semantics	an indicator for the used semantics (c.f. net.sf.tweety.arg.dung.semantics.Semantics)
 	 * @param inferencetype	an indicator for the used inference (c.f. net.sf.tweety.arg.dung.semantics.Semantics)
 	 */
-	public AspicReasoner(BeliefBase beliefBase, Semantics semantics, int inferencetype) {
-		super(beliefBase);
+	public AspicReasoner(Semantics semantics, int inferencetype) {
 		this.semantics = semantics;
 		this.inferencetype = inferencetype;
-		if (! (beliefBase instanceof AspicArgumentationTheory))
-			throw new IllegalArgumentException("Knowledge base of type AspicArgumentationTheory<?> expected");
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
-		AspicArgumentationTheory<?> aat = (AspicArgumentationTheory<?>)getKnowledgeBase();
+	public Answer query(AspicArgumentationTheory<T> aat, Formula query) {
 		DungTheory dt = aat.asDungTheory();
-		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(dt, semantics, inferencetype);
+		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(semantics, inferencetype);
 		
 		if (query instanceof Argument) {
-			return aer.query(query);
+			return aer.query(dt,query);
 		}
 		
 		for (AspicArgument<?> arg : aat.getArguments()) {
 			if (arg.getConclusion().equals(query)) {
-				Answer answer = aer.query(arg);
+				Answer answer = aer.query(dt,arg);
 				if (answer.getAnswerBoolean())
 					return answer;
 			}
 		}
-		
 		Answer answer = new Answer(aat, query);
 		answer.setAnswer(false);
-		return answer;
-		
-		
-		
+		return answer;	
 	}
-	
-	
-
 }

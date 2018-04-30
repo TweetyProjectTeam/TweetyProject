@@ -18,8 +18,8 @@
  */
 package net.sf.tweety.logics.ml.reasoner;
 
-import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
+import net.sf.tweety.logics.ml.ModalBeliefSet;
 
 /**
  * Abstract modal reasoner to be implemented by concrete reasoners. 
@@ -29,16 +29,12 @@ import net.sf.tweety.commons.Reasoner;
  * @author Anna Gessler
  *
  */
-public abstract class ModalReasoner extends Reasoner {
+public abstract class ModalReasoner implements BeliefBaseReasoner<ModalBeliefSet> {
 	
 	/**
 	 * Empty default prover
 	 */
 	public static ModalReasoner defaultReasoner = null;
-	
-	public ModalReasoner(BeliefBase beliefBase) {
-		super(beliefBase);
-	}
 	
 	/**
 	 * Set default modal reasoner with given

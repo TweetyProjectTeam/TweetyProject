@@ -187,7 +187,7 @@ public class MlnTest {
 				FolSignature sig = ex.getSecond();
 				//AlchemyMlnReasoner reasoner = new AlchemyMlnReasoner(mln,sig);
 				//reasoner.setAlchemyInferenceCommand(param);
-				NaiveMlnReasoner reasoner = new NaiveMlnReasoner(mln,sig);
+				NaiveMlnReasoner reasoner = new NaiveMlnReasoner();
 				reasoner.setTempDirectory(param);
 				for(AggregatingCoherenceMeasure measure: cohMeasures){				
 						System.out.println("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + measure.coherence(mln, reasoner, sig));

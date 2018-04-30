@@ -26,7 +26,7 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -37,7 +37,7 @@ import net.sf.tweety.math.probability.Probability;
  * 
  * @author Matthias Thimm
  */
-public class NaivePafReasoner extends Reasoner{
+public class NaivePafReasoner implements BeliefBaseReasoner<ProbabilisticArgumentationFramework>{
 
 	/** Semantics for plain AAFs. */
 	private Semantics semantics;
@@ -46,34 +46,32 @@ public class NaivePafReasoner extends Reasoner{
 	private int inferenceType;
 	
 	/**
-	 * Creates a new reasoner for the given framework
-	 * @param aaf some probabilistic argumentation framework
+	 * Creates a new reasoner.
 	 * @param semantics semantics used for determining extensions.
 	 * @param inferenceType The inference type used for estimating acceptability probability
 	 * 	of single arguments (credulous or skeptical inference).
 	 */
-	public NaivePafReasoner(ProbabilisticArgumentationFramework aaf, Semantics semantics, int inferenceType) {
-		super(aaf);
+	public NaivePafReasoner(Semantics semantics, int inferenceType) {
 		this.semantics = semantics;
 		this.inferenceType = inferenceType;
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ProbabilisticArgumentationFramework paf, Formula query) {
 		if(!(query instanceof Argument))
 			throw new IllegalArgumentException("Formula of class argument expected");
 		Argument arg = (Argument) query;
 		double prob = 0d;
-		SubgraphProbabilityFunction p = ((ProbabilisticArgumentationFramework)this.getKnowledgeBase()).getSubgraphProbabilityFunction(); 
+		SubgraphProbabilityFunction p = paf.getSubgraphProbabilityFunction(); 
 		for(DungTheory sub: p.keySet()){
-			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(sub, this.semantics, this.inferenceType);
-			if(r.query(arg).getAnswerBoolean())
+			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, this.inferenceType);
+			if(r.query(sub,arg).getAnswerBoolean())
 				prob += p.probability(sub).doubleValue();
 		}
-		Answer ans = new Answer(this.getKnowledgeBase(),query);
+		Answer ans = new Answer(paf,query);
 		ans.setAnswer(prob);		
 		return ans;
 	}
@@ -85,12 +83,12 @@ public class NaivePafReasoner extends Reasoner{
 	 * @return the estimated probability of the given set to be 
 	 * an extension
 	 */
-	public Probability query(Extension ext){
+	public Probability query(ProbabilisticArgumentationFramework paf, Extension ext){
 		double prob = 0d;
-		SubgraphProbabilityFunction p = ((ProbabilisticArgumentationFramework)this.getKnowledgeBase()).getSubgraphProbabilityFunction(); 
+		SubgraphProbabilityFunction p = paf.getSubgraphProbabilityFunction(); 
 		for(DungTheory sub: p.keySet()){
-			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(sub, this.semantics, this.inferenceType);
-			if(r.getExtensions().contains(ext))
+			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, this.inferenceType);
+			if(r.getExtensions(sub).contains(ext))
 				prob += p.probability(sub).doubleValue();
 		}		
 		return new Probability(prob);

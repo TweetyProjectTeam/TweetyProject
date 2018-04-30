@@ -70,11 +70,11 @@ public class NaiveLiteralTransformationFunction implements
 		Set<Rule> result = new HashSet<Rule>();
 
 		ArgumentationKnowledgeBase argkb = new ArgumentationKnowledgeBase(beliefSet);
-		LiteralReasoner reasoner = new LiteralReasoner(argkb, attackRelation, defenseRelation);
+		LiteralReasoner reasoner = new LiteralReasoner(attackRelation, defenseRelation);
 		for(Rule r : formulas) {
 			if(r.isFact()) {
 				DLPLiteral head = r.getConclusion().iterator().next();
-				if(reasoner.isOverruled(head.complement())) {
+				if(reasoner.isOverruled(argkb,head.complement())) {
 					result.add(r);
 				}
 			}

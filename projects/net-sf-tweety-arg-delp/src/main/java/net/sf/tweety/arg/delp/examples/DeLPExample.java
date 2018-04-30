@@ -37,12 +37,12 @@ public class DeLPExample {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		DelpParser parser = new DelpParser();
 		DefeasibleLogicProgram delp = parser.parseBeliefBaseFromFile(DeLPExample.class.getResource("/birds2.txt").getFile());
-		DelpReasoner reasoner = new DelpReasoner(delp, new GeneralizedSpecificity());
+		DelpReasoner reasoner = new DelpReasoner(new GeneralizedSpecificity());
 		
 		Formula query = parser.parseFormula("Fly(opus)");
-		System.out.println(query + "\t" + reasoner.query(query));
+		System.out.println(query + "\t" + reasoner.query(delp,query));
 		
 		query = parser.parseFormula("Fly(tweety)");
-		System.out.println(query + "\t" + reasoner.query(query));
+		System.out.println(query + "\t" + reasoner.query(delp,query));
 	}
 }

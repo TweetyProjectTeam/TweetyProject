@@ -86,8 +86,8 @@ public class LdoInterpretation extends AbstractInterpretation {
 		if(!(formula instanceof LdoFormula))
 			throw new IllegalArgumentException("Parameter of type 'LdoFormula' expected.");
 		if(this.ext == null){
-			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.theory, this.sem, Semantics.CREDULOUS_INFERENCE);
-			for(Extension e: reasoner.getExtensions()){
+			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.sem, Semantics.CREDULOUS_INFERENCE);
+			for(Extension e: reasoner.getExtensions(this.theory)){
 				LdoInterpretation i = new LdoInterpretation(this.theory, e, this.sem);
 				if(!i.satisfies(formula))
 					return false;
@@ -147,9 +147,9 @@ public class LdoInterpretation extends AbstractInterpretation {
 				}
 				throw new IllegalArgumentException("Ldo formula " + formula + " is of unknown type.");
 			}
-			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.theory, this.sem, Semantics.CREDULOUS_INFERENCE);
+			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.sem, Semantics.CREDULOUS_INFERENCE);
 			if(formula instanceof LdoBoxModality){
-				for(Extension e: reasoner.getExtensions()){
+				for(Extension e: reasoner.getExtensions(this.theory)){
 					LdoInterpretation i = new LdoInterpretation(this.theory, e, this.sem);
 					if(!i.satisfies(innerFormula))
 						return false;					
@@ -157,7 +157,7 @@ public class LdoInterpretation extends AbstractInterpretation {
 				return true;
 			}
 			if(formula instanceof LdoDiamondModality){
-				for(Extension e: reasoner.getExtensions()){
+				for(Extension e: reasoner.getExtensions(this.theory)){
 					LdoInterpretation i = new LdoInterpretation(this.theory, e, this.sem);
 					if(i.satisfies(innerFormula))
 						return true;					

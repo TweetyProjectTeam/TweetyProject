@@ -132,7 +132,7 @@ public class DelpService{
 					comp = new GeneralizedSpecificity();
 			if(comp == null)
 				throw new JSONException("Malformed JSON: unknown value for attribute \"compcriterion\"");
-			DelpReasoner reasoner = new DelpReasoner(delp,comp);
+			DelpReasoner reasoner = new DelpReasoner(comp);
 			FolParser folParser = new FolParser();
 			folParser.setSignature(parser.getSignature());
 			String qString = query.getString(DelpService.JSON_ATTR_QUERY).trim();
@@ -140,7 +140,7 @@ public class DelpService{
 			if(qString.startsWith("~"))
 				f = new Negation((FolFormula)folParser.parseFormula(qString.substring(1)));
 			else f = folParser.parseFormula(qString);
-			Answer ans = reasoner.query(f);
+			Answer ans = reasoner.query(delp,f);
 			jsonReply.put(DelpService.JSON_ATTR_KB, query.getString(DelpService.JSON_ATTR_KB));
 			jsonReply.put(DelpService.JSON_ATTR_QUERY, query.getString(DelpService.JSON_ATTR_QUERY));
 			jsonReply.put(DelpService.JSON_ATTR_COMP, query.getString(DelpService.JSON_ATTR_COMP));

@@ -23,7 +23,6 @@ import net.sf.tweety.arg.deductive.categorizer.Categorizer;
 import net.sf.tweety.arg.deductive.semantics.ArgumentTree;
 import net.sf.tweety.arg.deductive.semantics.Compilation;
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
-import net.sf.tweety.commons.BeliefBase;
 
 
 /**
@@ -40,25 +39,19 @@ import net.sf.tweety.commons.BeliefBase;
  */
 public class CompilationReasoner extends AbstractDeductiveArgumentationReasoner {
 
-	/** The compilation of the knowledge base. */
-	private Compilation compilation;
-	
 	/** Creates a new compilation reasoner for the given belief base,
 	 * categorizer, and accumulator.
-	 * @param beliefBase some belief base (must be of class DeductiveKnowledgebase).
 	 * @param categorizer some categorizer.
 	 * @param accumulator some accumulator.
 	 */
-	public CompilationReasoner(BeliefBase beliefBase, Categorizer categorizer, Accumulator accumulator) {
-		super(beliefBase, categorizer, accumulator);		
-		this.compilation = new Compilation((DeductiveKnowledgeBase)beliefBase);
+	public CompilationReasoner(Categorizer categorizer, Accumulator accumulator) {
+		super(categorizer, accumulator);		
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.deductive.AbstractDeductiveArgumentationReasoner#getArgumentTree(net.sf.tweety.argumentation.deductive.semantics.DeductiveArgument)
+	 * @see net.sf.tweety.arg.deductive.AbstractDeductiveArgumentationReasoner#getArgumentTree(net.sf.tweety.arg.deductive.DeductiveKnowledgeBase, net.sf.tweety.arg.deductive.semantics.DeductiveArgument)
 	 */
-	protected  ArgumentTree getArgumentTree(DeductiveArgument arg){
-		return this.compilation.getArgumentTree(arg);
-	}
-	
+	protected  ArgumentTree getArgumentTree(DeductiveKnowledgeBase kb, DeductiveArgument arg){
+		return new Compilation(kb).getArgumentTree(arg);
+	}	
 }

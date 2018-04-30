@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.FolBeliefSet;
@@ -64,23 +63,10 @@ public class EProver extends FolTheoremProver {
 	 * @param bash 		     shell to run commands
 	 */
 	public EProver(String binaryLocation, Shell bash) {
-		super(new FolBeliefSet());
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
 	}
-	
-	/**
-	 * Constructs a new instance pointing to a specific EProver.
-	 * @param kb 			 a knowledge base
-	 * @param binaryLocation location of the EProver executable on the hard drive
-	 * @param bash 			 shell to run commands
-	 */
-	public EProver(BeliefBase kb, String binaryLocation, Shell bash) {
-		super(kb);
-		this.binaryLocation = binaryLocation;
-		this.bash = bash;
-	}
-	
+
 	/**
 	 * Constructs a new instance pointing to a specific EProver. 
 	 * @param binaryLocation location of the Eprover executable on the hard drive
@@ -110,8 +96,7 @@ public class EProver extends FolTheoremProver {
 	 * @see net.sf.tweety.logics.fol.prover.FolTheoremProver#query(net.sf.tweety.logics.fol.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public Answer query(Formula query) {
-		FolBeliefSet kb = (FolBeliefSet) this.getKnowledgeBase();
+	public Answer query(FolBeliefSet kb, Formula query) {
 		Answer answer = new Answer(kb,query);
 		try{
 			File file  = File.createTempFile("tmp", ".txt");

@@ -20,7 +20,7 @@ package net.sf.tweety.logics.mln.analysis;
 
 import java.io.Serializable;
 
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.mln.MarkovLogicNetwork;
 
@@ -41,7 +41,7 @@ public abstract class AbstractCoherenceMeasure implements Serializable{
 	 * @param signature a signature
 	 * @return the coherence measure of the MLN.
 	 */
-	public abstract double coherence(MarkovLogicNetwork mln, Reasoner reasoner, FolSignature signature);
+	public abstract double coherence(MarkovLogicNetwork mln, BeliefBaseReasoner<MarkovLogicNetwork> reasoner, FolSignature signature);
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

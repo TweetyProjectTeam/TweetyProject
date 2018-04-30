@@ -23,7 +23,7 @@ import java.util.Set;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -37,23 +37,20 @@ import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
  * model of the knowledge base is also a model of the query.
  * @author Matthias Thimm, Nils Geilen
  */
-public class ClassicalInference extends Reasoner {
+public class ClassicalInference implements BeliefBaseReasoner<FolBeliefSet> {
 	
 	/**
 	 * Creates a new classical inference operator for the given knowledge base.  
 	 * @param beliefBase
 	 */
-	public ClassicalInference(BeliefBase beliefBase){
-		super(beliefBase);
-		if(!(beliefBase instanceof FolBeliefSet))
-			throw new IllegalArgumentException("Classical inference is only defined for first-order knowledgebases.");
+	public ClassicalInference(){
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {		
+	public Answer query(FolBeliefSet kb, Formula query) {		
 		if(!(query instanceof FolFormula))
 			throw new IllegalArgumentException("Classical inference is only defined for first-order queries.");
 		FolFormula formula = (FolFormula) query;
@@ -62,20 +59,20 @@ public class ClassicalInference extends Reasoner {
 		if(!formula.isClosed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");		
 		FolSignature sig = new FolSignature();
-		sig.addSignature(this.getKnowledgeBase().getSignature());
+		sig.addSignature(kb.getSignature());
 		sig.addSignature(query.getSignature());		
 		HerbrandBase hBase = new HerbrandBase(sig);
 		Set<HerbrandInterpretation> interpretations = hBase.allHerbrandInterpretations();
 		for(HerbrandInterpretation i: interpretations)
-			if(i.satisfies(this.getKnowledgeBase()))
+			if(i.satisfies((BeliefBase)kb))
 				if(!i.satisfies(formula)){
-					Answer answer = new Answer(this.getKnowledgeBase(),formula);
+					Answer answer = new Answer(kb,formula);
 					answer.setAnswer(false);
 					answer.appendText("The answer is: false");
 					answer.appendText("Explanation: the interpretation " + i + " is a model of the knowledge base but not of the query.");
 					return answer;
 				}
-		Answer answer = new Answer(this.getKnowledgeBase(),formula);
+		Answer answer = new Answer(kb,formula);
 		answer.setAnswer(true);
 		answer.appendText("The answer is: true");
 		return answer;

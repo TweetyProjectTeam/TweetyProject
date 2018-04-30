@@ -333,8 +333,8 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 			// no input probability distribution file
 			if(probInputFiles == null){
 				
-				RpclMeReasoner reasoner = new RpclMeReasoner(kb,sem, parser.getSignature(), inference);
-				ProbabilityDistribution<?> p = reasoner.getMeDistribution();
+				RpclMeReasoner reasoner = new RpclMeReasoner(sem, inference);
+				ProbabilityDistribution<?> p = reasoner.getMeDistribution(kb,parser.getSignature());
 				
 				// write probability function into prob output file
 				if(probOutFile != null){	
@@ -346,7 +346,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				if(query != null){
 					
 					pout.addField( "Query", query);
-					queryResult = reasoner.query(folParser.parseFormula(query));
+					queryResult = reasoner.query(kb,folParser.parseFormula(query));
 					pout.addField( "Query Result", queryResult.toString());
 					
 					// test output

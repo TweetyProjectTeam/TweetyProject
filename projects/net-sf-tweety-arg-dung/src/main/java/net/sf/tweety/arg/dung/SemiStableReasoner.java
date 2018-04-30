@@ -26,7 +26,6 @@ import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Labeling;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
@@ -38,31 +37,22 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 public class SemiStableReasoner extends AbstractExtensionReasoner {
 
 	/**
-	 * Creates a new semi-stable reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
+	 * Creates a new semi-stable reasoner.
 	 * @param inferenceType The inference type for this reasoner.
 	 */
-	public SemiStableReasoner(BeliefBase beliefBase, int inferenceType){
-		super(beliefBase, inferenceType);		
-	}
-	
-	/**
-	 * Creates a new semi-stable reasoner for the given knowledge base using sceptical inference.
-	 * @param beliefBase The knowledge base for this reasoner.
-	 */
-	public SemiStableReasoner(BeliefBase beliefBase){
-		super(beliefBase);		
+	public SemiStableReasoner(int inferenceType){
+		super(inferenceType);		
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#computeExtensions()
+	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
 	 */
-	public Set<Extension> computeExtensions(){
+	public Set<Extension> getExtensions(DungTheory theory){
 		// check all complete extensions and remove those sets with non-mininal set of undecided arguments
-		Set<Extension> exts = new CompleteReasoner(this.getKnowledgeBase(),this.getInferenceType()).getExtensions();
+		Set<Extension> exts = new CompleteReasoner(this.getInferenceType()).getExtensions(theory);
 		Map<Extension,Extension> extUndec = new HashMap<Extension,Extension>();
 		for(Extension ext: exts)
-			extUndec.put(ext, new Labeling((DungTheory) this.getKnowledgeBase(),ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+			extUndec.put(ext, new Labeling(theory,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
 		boolean b;
 		for(Extension ext: extUndec.keySet()){
 			b = false;
@@ -83,7 +73,7 @@ public class SemiStableReasoner extends AbstractExtensionReasoner {
 	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
 	 */
 	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(Map<Argument, Proposition> in, Map<Argument, Proposition> out, Map<Argument, Proposition> undec) {
+	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory theory, Map<Argument, Proposition> in, Map<Argument, Proposition> out, Map<Argument, Proposition> undec) {
 		throw new UnsupportedOperationException("Implement me!");
 	}
 }

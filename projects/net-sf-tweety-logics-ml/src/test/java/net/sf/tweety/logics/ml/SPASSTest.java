@@ -54,10 +54,9 @@ public class SPASSTest {
 	public void SimpleQueryTest1() throws FileNotFoundException, ParserException, IOException {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n !(<>(p))");
-		spass.setKnowledgeBase(b);
-		
-		Answer a1 = spass.query(parser.parseFormula("<>(p)"));
-		Answer a2 = spass.query(parser.parseFormula("!(<>(p))"));
+				
+		Answer a1 = spass.query(b,parser.parseFormula("<>(p)"));
+		Answer a2 = spass.query(b,parser.parseFormula("!(<>(p))"));
 		assertFalse(a1.getAnswerBoolean());
 		assertTrue(a2.getAnswerBoolean());
 	}
@@ -66,10 +65,9 @@ public class SPASSTest {
 	public void SimpleQueryTest2() throws FileNotFoundException, ParserException, IOException {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n p");
-		spass.setKnowledgeBase(b);
 		
-		Answer a1 = spass.query(parser.parseFormula("<>(p)"));
-		Answer a2 = spass.query(parser.parseFormula("[](p)"));
+		Answer a1 = spass.query(b,parser.parseFormula("<>(p)"));
+		Answer a2 = spass.query(b,parser.parseFormula("[](p)"));
 		assertFalse(a1.getAnswerBoolean());
 		assertTrue(a2.getAnswerBoolean());
 	}
@@ -79,8 +77,7 @@ public class SPASSTest {
 	public void ComplexQueryTest() throws FileNotFoundException, ParserException, IOException {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Sort1={obj1} \n type(p) \n type(q(Sort1)) \n p \n q(obj1)");
-		spass.setKnowledgeBase(b);
-		Answer a1 = spass.query( parser.parseFormula("[](forall X:(q(X)))=>forall X:( [](q(X)))"));
+		Answer a1 = spass.query(b, parser.parseFormula("[](forall X:(q(X)))=>forall X:( [](q(X)))"));
 		assertTrue(a1.getAnswerBoolean());
 	}
 	

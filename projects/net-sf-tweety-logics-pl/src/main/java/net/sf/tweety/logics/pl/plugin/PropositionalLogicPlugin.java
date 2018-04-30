@@ -24,7 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.pl.ClassicalEntailment;
 import net.sf.tweety.logics.pl.ClassicalInference;
 import net.sf.tweety.logics.pl.PlBeliefSet;
@@ -123,7 +123,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 		// new parser
 		PlParser parser = new PlParser();
 		// reasoner
-		Reasoner reasoner = null;
+		BeliefBaseReasoner<PlBeliefSet> reasoner = null;
 		// queries
 		PropositionalFormula[] queries = new PropositionalFormula[1];
 		// try to parse all given input files
@@ -147,10 +147,10 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
 				if (tmp.getValue().equalsIgnoreCase("naive")) {
 					ClassicalEntailment naiveEntail = new ClassicalEntailment();
-					reasoner = new ClassicalInference(plbs, naiveEntail);
+					reasoner = new ClassicalInference(naiveEntail);
 				} else if (tmp.getValue().equalsIgnoreCase("sat4j")) {
 					SatSolver.setDefaultSolver(new Sat4jSolver());
-					reasoner = new SatReasoner(plbs);
+					reasoner = new SatReasoner();
 				} else if(tmp.getValue().equalsIgnoreCase("lingeling")){
 				// TODO: implement lingeling call
 				
@@ -180,7 +180,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 		}
 
 		for(PropositionalFormula pf : queries){
-			System.out.println(reasoner.query(pf));
+			System.out.println(reasoner.query(plbs,pf));
 		}
 		
 		// TODO: handle output and return appropriate representation

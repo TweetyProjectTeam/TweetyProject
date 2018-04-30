@@ -60,10 +60,10 @@ public class ProbTest {
 		
 		mln.add(new MlnFormula(f, w));
 		
-		NaiveMlnReasoner reasoner = new NaiveMlnReasoner(mln,sig);
+		NaiveMlnReasoner reasoner = new NaiveMlnReasoner();
 		reasoner.setTempDirectory("/Users/mthimm/Desktop/tmp");
 		
-		System.out.println(w + "\t\t" + reasoner.query((FolFormula)parser.parseFormula("a(d1) && b(d1) || c(d1) && d(d1)")).getAnswerDouble());
+		System.out.println(w + "\t\t" + reasoner.query(mln,(FolFormula)parser.parseFormula("a(d1) && b(d1) || c(d1) && d(d1)"),sig).getAnswerDouble());
 		
 
 	}

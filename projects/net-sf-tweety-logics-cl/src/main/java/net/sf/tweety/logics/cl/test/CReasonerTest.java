@@ -39,9 +39,9 @@ public class CReasonerTest {
 		
 		System.out.println(bs);
 		
-		BruteForceCReasoner reasoner = new BruteForceCReasoner(bs);
+		BruteForceCReasoner reasoner = new BruteForceCReasoner();
 		
-		System.out.println(reasoner.getCRepresentation());
+		System.out.println(reasoner.getCRepresentation(bs));
 		
 	}
 }

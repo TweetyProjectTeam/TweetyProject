@@ -133,9 +133,9 @@ public class RDLTest {
 	static void processTreeTest() throws Exception {
 		RdlParser parser = new RdlParser();
 		DefaultTheory t = parser.parseBeliefBaseFromFile("../../examples/rdl/simple_default_theory.txt");
-		NaiveDefaultReasoner reasoner = new NaiveDefaultReasoner(t);
-		System.out.println(reasoner.getAllExtensions());
-		System.out.println(reasoner.query(parser.parseFormula("!a")).getAnswerBoolean());
+		NaiveDefaultReasoner reasoner = new NaiveDefaultReasoner();
+		System.out.println(reasoner.getAllExtensions(t));
+		System.out.println(reasoner.query(t,parser.parseFormula("!a")).getAnswerBoolean());
 	}
 	
 	static void extensionTest() throws Exception {

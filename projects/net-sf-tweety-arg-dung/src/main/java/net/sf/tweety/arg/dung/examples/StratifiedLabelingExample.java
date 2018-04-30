@@ -53,9 +53,9 @@ public class StratifiedLabelingExample {
 		theory.add(new Attack(d,c));
 		theory.add(new Attack(c,d));
 		
-		StratifiedLabelingReasoner reasoner = new StratifiedLabelingReasoner(theory,Semantics.STABLE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		StratifiedLabelingReasoner reasoner = new StratifiedLabelingReasoner(Semantics.STABLE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
 		
-		for(StratifiedLabeling labeling: reasoner.getLabelings()){
+		for(StratifiedLabeling labeling: reasoner.getLabelings(theory)){
 			System.out.println(labeling);			
 		}
 	}

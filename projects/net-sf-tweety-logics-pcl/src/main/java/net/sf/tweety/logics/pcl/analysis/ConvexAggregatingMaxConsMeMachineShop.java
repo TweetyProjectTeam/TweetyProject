@@ -27,6 +27,7 @@ import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * This consistency restorer determines the new probabilities of conditionals
@@ -61,7 +62,7 @@ public class ConvexAggregatingMaxConsMeMachineShop implements BeliefBaseMachineS
 				bs.add((ProbabilisticConditional) f);
 			// name the signature explicitly in order to ensure that the distributions
 			// are defined on the same set. 
-			distributions[cnt] = new DefaultMeReasoner(bs,beliefSet.getSignature()).getMeDistribution();			
+			distributions[cnt] = new DefaultMeReasoner().getMeDistribution(bs,(PropositionalSignature) beliefSet.getSignature());			
 			cnt++;
 		}
 		double[] factors = new double[maxCons.size()];

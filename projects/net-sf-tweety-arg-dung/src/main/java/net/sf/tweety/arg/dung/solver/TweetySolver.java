@@ -93,8 +93,8 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public boolean solveDC(Semantics semantics, DungTheory aaf, Argument arg) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.CREDULOUS_INFERENCE);
-		return reasoner.query(arg).getAnswerBoolean();
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.CREDULOUS_INFERENCE);
+		return reasoner.query(aaf,arg).getAnswerBoolean();
 	}
 
 	/* (non-Javadoc)
@@ -102,8 +102,8 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public boolean solveDS(Semantics semantics, DungTheory aaf, Argument arg) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);		
-		return reasoner.query(arg).getAnswerBoolean();
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);		
+		return reasoner.query(aaf,arg).getAnswerBoolean();
 	}
 
 	/* (non-Javadoc)
@@ -111,8 +111,8 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public boolean solveDE(Semantics semantics, DungTheory aaf,	Collection<Argument> args) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
-		for(Extension ext: reasoner.getExtensions()){
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		for(Extension ext: reasoner.getExtensions(aaf)){
 			if(ext.containsAll(args) && args.containsAll(ext))
 				return true;
 		}
@@ -124,8 +124,8 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public boolean solveDL(Semantics semantics, DungTheory aaf, Labeling lab) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
-		for(Extension ext: reasoner.getExtensions())
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		for(Extension ext: reasoner.getExtensions(aaf))
 			if(lab.equals(new Labeling(aaf,ext)))
 				return true;		
 		return false;
@@ -137,8 +137,8 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public boolean solveDX(Semantics semantics, DungTheory aaf) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
-		return !reasoner.getExtensions().isEmpty();
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		return !reasoner.getExtensions(aaf).isEmpty();
 	}
 
 	/* (non-Javadoc)
@@ -146,8 +146,8 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public boolean solveDN(Semantics semantics, DungTheory aaf) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
-		for(Extension ext: reasoner.getExtensions())
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		for(Extension ext: reasoner.getExtensions(aaf))
 			if(!ext.isEmpty())
 				return true;
 		return false;
@@ -158,9 +158,9 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public Collection<Argument> solveEC(Semantics semantics, DungTheory aaf) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
 		Collection<Argument> result = new HashSet<Argument>();
-		for(Extension ext: reasoner.getExtensions())
+		for(Extension ext: reasoner.getExtensions(aaf))
 			result.addAll(ext);
 		return result;
 	}
@@ -170,9 +170,9 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public Collection<Argument> solveES(Semantics semantics, DungTheory aaf) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
 		Collection<Argument> result = new HashSet<Argument>(aaf);		
-		for(Extension ext: reasoner.getExtensions())
+		for(Extension ext: reasoner.getExtensions(aaf))
 			result.retainAll(ext);
 		return result;
 	}
@@ -182,9 +182,9 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public Collection<Collection<Argument>> solveEE(Semantics semantics, DungTheory aaf) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
 		Collection<Collection<Argument>> result = new HashSet<Collection<Argument>>();
-		result.addAll(reasoner.getExtensions());
+		result.addAll(reasoner.getExtensions(aaf));
 		return result;
 	}
 
@@ -193,9 +193,9 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public Collection<Labeling> solveEL(Semantics semantics, DungTheory aaf) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
 		Collection<Labeling> result = new HashSet<Labeling>();
-		for(Extension e: reasoner.getExtensions())
+		for(Extension e: reasoner.getExtensions(aaf))
 			result.add(new Labeling(aaf,e));		
 		return result;
 		
@@ -206,8 +206,8 @@ public class TweetySolver extends AbstractDungSolver {
 	 */
 	@Override
 	public Collection<Argument> solveSE(Semantics semantics, DungTheory aaf) {
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(aaf, this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
-		Collection<Extension> args = reasoner.getExtensions();
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.translateSemantics(semantics), net.sf.tweety.arg.dung.semantics.Semantics.SCEPTICAL_INFERENCE);
+		Collection<Extension> args = reasoner.getExtensions(aaf);
 		if(args.isEmpty()) return null;
 		return args.iterator().next();
 	}

@@ -37,7 +37,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class OutputReasoner extends Reasoner {
+public class OutputReasoner implements BeliefBaseReasoner<StructuredArgumentationFramework> {
 
 	/**
 	 * The output of this reasoner.
@@ -50,34 +50,22 @@ public class OutputReasoner extends Reasoner {
 	private AbstractExtensionReasoner reasoner;
 	
 	/**
-	 * Creates a new reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
+	 * Creates a new reasoner
+	 * @param reasoner and abstract extension reasoner
 	 */
-	public OutputReasoner(BeliefBase beliefBase, Class<? extends AbstractExtensionReasoner> reasonerClass) {
-		super(beliefBase);
-		if(!(beliefBase instanceof StructuredArgumentationFramework))
-			throw new IllegalArgumentException("Knowledge base of class StructuredArgumentationFramework expected.");
-		//instantiate new reasoner
-		Class<?>[] parameterTypes = new Class[1];
-		parameterTypes[0] = BeliefBase.class;		
-		Object[] parameters = new Object[1];
-		parameters[0] = ((StructuredArgumentationFramework)beliefBase).toDungTheory();
-		try{
-			this.reasoner = (AbstractExtensionReasoner) reasonerClass.getConstructor(parameterTypes).newInstance(parameters);
-		}catch(Exception e){
-			throw new IllegalArgumentException("Reasoner class is not valid.");
-		}			
+	public OutputReasoner(AbstractExtensionReasoner reasoner) {
+		this.reasoner = reasoner;					
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {		
+	public Answer query(StructuredArgumentationFramework saf, Formula query) {		
 		if(!(query instanceof Proposition))
 			throw new IllegalArgumentException("Reasoning in structured argumentation frameworls is only defined for propositional queries.");
-		Answer answer = new Answer(this.getKnowledgeBase(),query);
-		boolean bAnswer = this.getOutput().contains(query);
+		Answer answer = new Answer(saf,query);
+		boolean bAnswer = this.getOutput(saf).contains(query);
 		answer.setAnswer(bAnswer);
 		answer.appendText("The answer is: " + bAnswer);
 		return answer;
@@ -87,11 +75,11 @@ public class OutputReasoner extends Reasoner {
 	 * Returns the output this reasoner bases upon.
 	 * @return the output this reasoner bases upon.
 	 */
-	public Set<Proposition> getOutput(){
+	public Set<Proposition> getOutput(StructuredArgumentationFramework saf){
 		if(this.output == null){
-			Set<Extension> extensions = this.reasoner.getExtensions();			
+			Set<Extension> extensions = this.reasoner.getExtensions(saf.toDungTheory());			
 			this.output = new HashSet<Proposition>();			
-			for(Proposition p: ((StructuredArgumentationFramework)this.getKnowledgeBase()).getSignature()){
+			for(Proposition p: saf.getSignature()){
 				boolean isOutput = true;
 				for(Extension e: extensions){
 					boolean isInExtension = false;

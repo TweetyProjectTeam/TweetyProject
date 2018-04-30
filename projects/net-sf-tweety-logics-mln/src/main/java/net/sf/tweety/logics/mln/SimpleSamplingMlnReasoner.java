@@ -21,7 +21,6 @@ package net.sf.tweety.logics.mln;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.util.RandomSubsetIterator;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
@@ -51,26 +50,18 @@ public class SimpleSamplingMlnReasoner extends AbstractMlnReasoner{
 	 * @param precision the precision
 	 * @param numOfPositiveTests the number of positive consecutive tests on precision
 	 */
-	public SimpleSamplingMlnReasoner(BeliefBase beliefBase,	FolSignature signature, double precision, int numOfPositiveTests) {
-		super(beliefBase, signature);
+	public SimpleSamplingMlnReasoner(double precision, int numOfPositiveTests) {
 		this.precision = precision;
 		this.numOfPositiveTests = numOfPositiveTests;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#reset()
-	 */
-	@Override
-	public void reset() {
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.markovlogic.AbstractMlnReasoner#doQuery(net.sf.tweety.logics.firstorderlogic.syntax.FolFormula)
 	 */
 	@Override
-	protected double doQuery(FolFormula query) {
+	protected double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {
 		// The Herbrand base of the signature
-		HerbrandBase hBase = new HerbrandBase(this.getSignature());
+		HerbrandBase hBase = new HerbrandBase(signature);
 		// for sampling
 		Iterator<Set<FOLAtom>> it = new RandomSubsetIterator<FOLAtom>(hBase.getAtoms(),false);		
 		double previousProb = 0;
@@ -80,7 +71,7 @@ public class SimpleSamplingMlnReasoner extends AbstractMlnReasoner{
 		long satisfiedMass = 0;
 		do{
 			HerbrandInterpretation sample = new HerbrandInterpretation(it.next());
-			double weight = this.computeWeight(sample);
+			double weight = this.computeWeight(mln,sample,signature);
 			if(sample.satisfies(query))
 				satisfiedMass += weight;
 			completeMass += weight;

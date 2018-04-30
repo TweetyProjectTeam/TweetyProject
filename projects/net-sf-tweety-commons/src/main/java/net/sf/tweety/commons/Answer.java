@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.commons;
 
+
 /**
  * An abstract answer of a knowledge base to a query. 
  * @author Matthias Thimm
@@ -42,7 +43,7 @@ public class Answer {
 	private Double answerDouble;
 			
 	/**
-	 * The knowledge base of the original query. 
+	 * The belief set of the original query. 
 	 */
 	private BeliefBase beliefBase;
 	
@@ -53,6 +54,7 @@ public class Answer {
 	
 	/**
 	 * Creates an empty answer for the given query.
+	 * @param beliefSet some belief set
 	 * @param query a query.
 	 */
 	public Answer(BeliefBase beliefBase, Formula query){

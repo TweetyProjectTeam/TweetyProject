@@ -49,8 +49,8 @@ public class DivisionExample {
 		theory.add(new Attack(c,b));
 		
 		// Instantiate reasoner
-		AbstractExtensionReasoner r = new GroundReasoner(theory);
-		Collection<Extension> exts = r.getExtensions();
+		AbstractExtensionReasoner r = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE);
+		Collection<Extension> exts = r.getExtensions(theory);
 		
 		// print theory
 		System.out.println("AAF: " + theory);

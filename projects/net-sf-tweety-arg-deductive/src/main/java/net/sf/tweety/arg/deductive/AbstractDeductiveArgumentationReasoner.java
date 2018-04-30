@@ -28,9 +28,8 @@ import net.sf.tweety.arg.deductive.categorizer.Categorizer;
 import net.sf.tweety.arg.deductive.semantics.ArgumentTree;
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -43,7 +42,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractDeductiveArgumentationReasoner extends Reasoner {
+public abstract class AbstractDeductiveArgumentationReasoner implements BeliefBaseReasoner<DeductiveKnowledgeBase> {
 
 	/** Logger. */
 	static private Logger log = LoggerFactory.getLogger(AbstractDeductiveArgumentationReasoner.class);
@@ -56,14 +55,10 @@ public abstract class AbstractDeductiveArgumentationReasoner extends Reasoner {
 	
 	/** Creates a new  reasoner for the given belief base,
 	 * categorizer, and accumulator.
-	 * @param beliefBase some belief base (must be of class DeductiveKnowledgebase).
 	 * @param categorizer some categorizer.
 	 * @param accumulator some accumulator.
 	 */
-	public AbstractDeductiveArgumentationReasoner(BeliefBase beliefBase, Categorizer categorizer, Accumulator accumulator) {
-		super(beliefBase);
-		if(!(beliefBase instanceof DeductiveKnowledgeBase))
-			throw new IllegalArgumentException("Knowledge base of class DeductiveKnowledgebase expected.");
+	public AbstractDeductiveArgumentationReasoner(Categorizer categorizer, Accumulator accumulator) {
 		this.categorizer = categorizer;
 		this.accumulator = accumulator;
 	}
@@ -73,18 +68,17 @@ public abstract class AbstractDeductiveArgumentationReasoner extends Reasoner {
 	 * @param arg some argument.
 	 * @return the argument tree for the argument
 	 */
-	protected abstract ArgumentTree getArgumentTree(DeductiveArgument arg);
+	protected abstract ArgumentTree getArgumentTree(DeductiveKnowledgeBase kb, DeductiveArgument arg);
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.Reasoner#query(net.sf.tweety.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(DeductiveKnowledgeBase kb, Formula query) {
 		if(!(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Formula of class PropositionalFormula expected.");
-		log.trace("Querying " + this.getKnowledgeBase() + " with " + query);
+		log.trace("Querying " + kb + " with " + query);
 		PropositionalFormula f = (PropositionalFormula) query;
-		DeductiveKnowledgeBase kb = (DeductiveKnowledgeBase) this.getKnowledgeBase();
 		// 1.) get all arguments for the query 
 		Set<DeductiveArgument> proArguments = kb.getDeductiveArguments(f);
 		// 2.) get all arguments for the negation of the query
@@ -92,11 +86,11 @@ public abstract class AbstractDeductiveArgumentationReasoner extends Reasoner {
 		// 3.) get all argument trees for all pro arguments
 		Set<ArgumentTree> proTrees = new HashSet<ArgumentTree>();
 		for(DeductiveArgument arg: proArguments)
-			proTrees.add(this.getArgumentTree(arg));
+			proTrees.add(this.getArgumentTree(kb,arg));
 		// 4.) get all argument trees for all pro arguments
 		Set<ArgumentTree> conTrees = new HashSet<ArgumentTree>();
 		for(DeductiveArgument arg: conArguments)
-			conTrees.add(this.getArgumentTree(arg));
+			conTrees.add(this.getArgumentTree(kb,arg));
 		// 5.) categorize each pro tree
 		List<Double> proCategorization = new ArrayList<Double>();
 		for(ArgumentTree argTree: proTrees){

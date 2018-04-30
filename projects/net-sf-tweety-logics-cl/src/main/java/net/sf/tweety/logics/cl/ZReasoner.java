@@ -24,14 +24,12 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 
 /**
@@ -62,45 +60,18 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Katharina Diekmann
  */
-public class ZReasoner extends Reasoner {
+public class ZReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 
-	/**
-	 * The ranking function for this knowledge base based
-	 * on penalty points of System Z. Once this ranking
-	 * function has been computed it is used for subsequent
-	 * queries in order to avoid unnecessary computations.
-	 */
-	private RankingFunction ocf = null;
-	
-	
-	private Set<PossibleWorld> omega = null;
-	
-	
-	
-	/**
-	 * Creates a new System Z reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.
-	 */
-	public ZReasoner(BeliefBase beliefBase){
-		super(beliefBase);
-		
-		this.omega = PossibleWorld.getAllPossibleWorlds( (PropositionalSignature) beliefBase.getSignature() );
-		
-		if(!(beliefBase instanceof ClBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class ClBeliefSet expected."); 
-	}
-
-	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.logic.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ClBeliefSet beliefset, Formula query) {
 		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
-		RankingFunction ocf = this.getOCF();
+		RankingFunction ocf = this.getOCF(beliefset);
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(beliefset,query);
 			boolean bAnswer = ocf.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
@@ -108,38 +79,26 @@ public class ZReasoner extends Reasoner {
 		}
 		if(query instanceof PropositionalFormula){
 			int rank = ocf.rank(query);
-			Answer answer = new Answer(this.getKnowledgeBase(),query);			
+			Answer answer = new Answer(beliefset,query);			
 			answer.setAnswer(rank==0);
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
 			return answer;
 		}				
 		return null;
-	}
-	
-	
-	/**
-	 * Returns the ranking function this reasoner bases on.
-	 * @return the ranking function this reasoner bases on.
-	 */
-	public RankingFunction getOCF(){
-		if(this.ocf == null)
-			this.ocf = this.computeOCF();
-		return this.ocf;
-	}
-	
+	}	
 	
 	/**
 	 * Returns a ranking functions based on penalty points of System Z.
 	 * @return A ranking function for this reasoner's knowledge base.
 	 */
-	private RankingFunction computeOCF(){
-		
-		RankingFunction ocf = new RankingFunction((PropositionalSignature) this.getKnowledgeBase().getSignature());
+	public RankingFunction getOCF(ClBeliefSet beliefset){		
+		Set<PossibleWorld> omega = PossibleWorld.getAllPossibleWorlds(beliefset.getSignature() );		
+		RankingFunction ocf = new RankingFunction(beliefset.getSignature());
 		
 		// Compute partitioning of the knowledge base
-		ArrayList<ClBeliefSet> tolerancePartition = partition( this.getKnowledgeBase() );
+		ArrayList<ClBeliefSet> tolerancePartition = partition( beliefset ,omega);
 		if( tolerancePartition.isEmpty() ){
-			System.out.println("The belief base " + this.getKnowledgeBase() + " is not consistent.");
+			System.out.println("The belief base " + beliefset + " is not consistent.");
 			return null;
 		}
 		
@@ -154,7 +113,7 @@ public class ZReasoner extends Reasoner {
 		
 		// Compute penalty points for each world based on partitioning
 		
-		for( PossibleWorld w : this.omega ){
+		for( PossibleWorld w : omega ){
 			int rank = 0;
 			
 			for( Conditional c : zValue.keySet() ){
@@ -176,13 +135,13 @@ public class ZReasoner extends Reasoner {
 	 * @param Knowledge base that needs to be partitioned
 	 * @return ArrayList containing consistent belief sets
 	 */
-	private ArrayList<ClBeliefSet> partition( BeliefBase kb ){
+	private ArrayList<ClBeliefSet> partition( ClBeliefSet kb , Set<PossibleWorld> omega){
 		
 		// create empty set of belief bases for the partitioning
 		ArrayList<ClBeliefSet> tolerancePartition = new ArrayList<ClBeliefSet>();
 		
 		// Copy knowledge base to a second set from which we can remove tolerated conditionals
-		ClBeliefSet knowledgebase = (ClBeliefSet)this.getKnowledgeBase();
+		ClBeliefSet knowledgebase = new ClBeliefSet(kb);
 		
 		while( !knowledgebase.isEmpty() ){
 			
@@ -191,7 +150,7 @@ public class ZReasoner extends Reasoner {
 			for( Conditional f: knowledgebase ){
 				// if the current conditional is tolerated by the remaining set of conditionals in the
 				// knowledge base, add it to the current partition
-				if( isTolerated(f,knowledgebase) ) {
+				if( isTolerated(f,knowledgebase, omega) ) {
 					partition.add( f );
 				}
 				
@@ -226,13 +185,13 @@ public class ZReasoner extends Reasoner {
 	 * @param ClBeliefSet kb - corresponding knowledge base 
 	 * @return true if the Conditional f is tolerated, false otherwise
 	 */
-	private boolean isTolerated( Conditional f, ClBeliefSet kb ) {
+	private boolean isTolerated( Conditional f, ClBeliefSet kb , Set<PossibleWorld> omega) {
 		
 		boolean tolerated = true;
 		
 		// Test whether or not there is a world that satisfies formula f
 		// and does not falsify the remaining conditionals of the knowledge base
-		for( PossibleWorld world : this.omega ){
+		for( PossibleWorld world : omega ){
 			tolerated = true;
 			
 			// Test whether or not the current world satisfies the formula f.

@@ -198,8 +198,8 @@ public class TweetyCli {
 		try{
 			RpclBeliefSet kb = (RpclBeliefSet)((RpclParser) inputParser[0]).parseBeliefBaseFromFile(inputFiles[0]);
 			if(inputFiles.length == 1){				
-				RpclMeReasoner reasoner = new RpclMeReasoner(kb,semantics,((RpclParser) inputParser[0]).getSignature(),inferenceType);
-				ProbabilityDistribution<?> p = reasoner.getMeDistribution();
+				RpclMeReasoner reasoner = new RpclMeReasoner(semantics,inferenceType);
+				ProbabilityDistribution<?> p = reasoner.getMeDistribution(kb,((RpclParser) inputParser[0]).getSignature());
 				outputWriter.setObject(p);
 				outputWriter.writeToFile(outputFile);
 				System.exit(0);

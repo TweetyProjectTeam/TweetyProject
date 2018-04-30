@@ -21,7 +21,6 @@ package net.sf.tweety.arg.lp;
 import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
 import net.sf.tweety.arg.lp.syntax.Argument;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 
@@ -46,28 +45,27 @@ public class LiteralReasoner extends ArgumentationReasoner {
 	 * @param attack
 	 * @param defence
 	 */
-	public LiteralReasoner(BeliefBase beliefBase, AttackStrategy attack, AttackStrategy defence) {
-		super(beliefBase, attack, defence);
+	public LiteralReasoner(AttackStrategy attack, AttackStrategy defence) {
+		super(attack, defence);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.ArgumentationReasoner#query(net.sf.tweety.Formula)
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.lp.ArgumentationReasoner#query(net.sf.tweety.arg.lp.ArgumentationKnowledgeBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ArgumentationKnowledgeBase kb, Formula query) {
 		if(! (query instanceof DLPLiteral) ) {
 			throw new IllegalArgumentException("Reasoning with parameterised argumentation is only defined for literals.");
 		}
 		DLPLiteral literal = (DLPLiteral) query;
 		boolean answerValue = false;
-		for(Argument arg : super.getJustifiedArguments()) {
+		for(Argument arg : super.getJustifiedArguments(kb)) {
 			if(arg.getConclusions().contains(literal)) {
 				answerValue = true;
 			}
 		}
 		
-		Answer answer = new Answer(super.getKnowledgeBase(), query);
+		Answer answer = new Answer(kb, query);
 		answer.setAnswer(answerValue);
 		return answer;		
 	}
@@ -77,8 +75,8 @@ public class LiteralReasoner extends ArgumentationReasoner {
 	 * @param arg a literal
 	 * @return true iff arg is not x/y-overruled
 	 */
-	public boolean isOverruled(DLPLiteral arg) {
-		return !query(arg).getAnswerBoolean();
+	public boolean isOverruled(ArgumentationKnowledgeBase kb, DLPLiteral arg) {
+		return !query(kb,arg).getAnswerBoolean();
 	}
 	
 	/**
@@ -88,7 +86,7 @@ public class LiteralReasoner extends ArgumentationReasoner {
 	 * @param arg a literal
 	 * @return true iff a x/y-justified argument with conclusion arg can be constructed from p 
 	 */
-	public boolean isJustified(DLPLiteral arg) {
-		return query(arg).getAnswerBoolean();
+	public boolean isJustified(ArgumentationKnowledgeBase kb, DLPLiteral arg) {
+		return query(kb,arg).getAnswerBoolean();
 	}
 }

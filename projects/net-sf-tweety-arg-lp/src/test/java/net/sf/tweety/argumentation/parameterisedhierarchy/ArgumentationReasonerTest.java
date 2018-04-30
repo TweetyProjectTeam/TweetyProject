@@ -96,38 +96,38 @@ public class ArgumentationReasonerTest {
 	
 	@Test
 	public void testArgumentationReasoner() {
-		ArgumentationReasoner reasoner = new ArgumentationReasoner(kb, Undercut.getInstance(), Attack.getInstance());
+		ArgumentationReasoner reasoner = new ArgumentationReasoner(Undercut.getInstance(), Attack.getInstance());
 		
-		assertTrue(reasoner.isJustified(a1));
-		assertTrue(reasoner.isJustified(a3));
-		assertTrue(reasoner.isJustified(a6));
-		assertFalse(reasoner.isOverruled(a1));
-		assertFalse(reasoner.isOverruled(a3));
-		assertFalse(reasoner.isOverruled(a6));
+		assertTrue(reasoner.isJustified(kb,a1));
+		assertTrue(reasoner.isJustified(kb,a3));
+		assertTrue(reasoner.isJustified(kb,a6));
+		assertFalse(reasoner.isOverruled(kb,a1));
+		assertFalse(reasoner.isOverruled(kb,a3));
+		assertFalse(reasoner.isOverruled(kb,a6));
 		
-		assertTrue(reasoner.isOverruled(a2));
-		assertTrue(reasoner.isOverruled(a4));
-		assertTrue(reasoner.isOverruled(a5));
-		assertFalse(reasoner.isJustified(a2));
-		assertFalse(reasoner.isJustified(a4));
-		assertFalse(reasoner.isJustified(a5));
+		assertTrue(reasoner.isOverruled(kb,a2));
+		assertTrue(reasoner.isOverruled(kb,a4));
+		assertTrue(reasoner.isOverruled(kb,a5));
+		assertFalse(reasoner.isJustified(kb,a2));
+		assertFalse(reasoner.isJustified(kb,a4));
+		assertFalse(reasoner.isJustified(kb,a5));
 		
-		assertTrue(reasoner.isDefensible(a7));
-		assertTrue(reasoner.isDefensible(a8));
+		assertTrue(reasoner.isDefensible(kb,a7));
+		assertTrue(reasoner.isDefensible(kb,a8));
 	}
 	
 	@Test
 	public void testLiteralReasoner() {
-		LiteralReasoner reasoner = new LiteralReasoner(kb, Undercut.getInstance(), Attack.getInstance());
+		LiteralReasoner reasoner = new LiteralReasoner(Undercut.getInstance(), Attack.getInstance());
 		
-		assertTrue(reasoner.query(p).getAnswerBoolean());
-		assertTrue(reasoner.query(n_q).getAnswerBoolean());
-		assertTrue(reasoner.query(s).getAnswerBoolean());
-		assertFalse(reasoner.query(q).getAnswerBoolean());
-		assertFalse(reasoner.query(r).getAnswerBoolean());
-		assertFalse(reasoner.query(n_s).getAnswerBoolean());
-		assertFalse(reasoner.query(n).getAnswerBoolean());
-		assertFalse(reasoner.query(m).getAnswerBoolean());
+		assertTrue(reasoner.query(kb,p).getAnswerBoolean());
+		assertTrue(reasoner.query(kb,n_q).getAnswerBoolean());
+		assertTrue(reasoner.query(kb,s).getAnswerBoolean());
+		assertFalse(reasoner.query(kb,q).getAnswerBoolean());
+		assertFalse(reasoner.query(kb,r).getAnswerBoolean());
+		assertFalse(reasoner.query(kb,n_s).getAnswerBoolean());
+		assertFalse(reasoner.query(kb,n).getAnswerBoolean());
+		assertFalse(reasoner.query(kb,m).getAnswerBoolean());
 	}
 	
 }

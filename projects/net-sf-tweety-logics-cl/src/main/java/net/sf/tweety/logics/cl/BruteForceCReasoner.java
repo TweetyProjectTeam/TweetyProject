@@ -26,13 +26,12 @@ import java.util.Map;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * This class models a brute force c-reasoner for conditional logic. Reasoning is performed
@@ -51,19 +50,11 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * Lecture Notes in Computer Science, Volume 2087. 2001.
  * @author Matthias Thimm
  */
-public class BruteForceCReasoner extends Reasoner {
+public class BruteForceCReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 
 	/** Logger. */
 	//static private Logger log = LoggerFactory.getLogger(BruteForceCReasoner.class);	
-	
-	/**
-	 * The c-representation for the given knowledge base. Once this
-	 * ranking function has been computed it is used for
-	 * subsequent queries in order to avoid unnecessary
-	 * computations.
-	 */
-	private RankingFunction crepresentation = null;
-	
+		
 	/**
 	 * The current vectors of kappa values.
 	 */
@@ -86,45 +77,31 @@ public class BruteForceCReasoner extends Reasoner {
 	private boolean simple = false;
 	
 	/**
-	 * Creates a new c-representation reasoner for the given knowledge base.
-	 * @param beliefBase a knowledge base.	
+	 * Creates a new c-representation reasoner 
 	 * @param simple whether the computed c-representation is simple. 
 	 */
-	public BruteForceCReasoner(BeliefBase beliefBase, boolean simple){
-		super(beliefBase);		
-		if(!(beliefBase instanceof ClBeliefSet))
-			throw new IllegalArgumentException("Knowledge base of class ClBeliefSet expected.");
+	public BruteForceCReasoner(boolean simple){
 		this.simple = simple;
 	}
 	
 	/**
-	 * Creates a new simple c-representation reasoner for the given knowledge base.
+	 * Creates a new simple c-representation reasoner.
 	 * @param beliefBase  a knowledge base.	
 	 */
-	public BruteForceCReasoner(BeliefBase beliefBase){
-		this(beliefBase,false);
-	}
-	
-	/**
-	 * Returns the c-representation this reasoner bases on.
-	 * @return the c-representation this reasoner bases on.
-	 */
-	public RankingFunction getCRepresentation(){
-		if(this.crepresentation == null)
-			this.crepresentation = this.computeCRepresentation();
-		return this.crepresentation;
+	public BruteForceCReasoner(){
+		this(false);
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(ClBeliefSet beliefset, Formula query) {
 		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
 			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
-		RankingFunction crepresentation = this.getCRepresentation();
+		RankingFunction crepresentation = this.getCRepresentation(beliefset);
 		if(query instanceof Conditional){
-			Answer answer = new Answer(this.getKnowledgeBase(),query);
+			Answer answer = new Answer(beliefset,query);
 			boolean bAnswer = crepresentation.satisfies(query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
@@ -132,7 +109,7 @@ public class BruteForceCReasoner extends Reasoner {
 		}
 		if(query instanceof PropositionalFormula){
 			int rank = crepresentation.rank(query);
-			Answer answer = new Answer(this.getKnowledgeBase(),query);			
+			Answer answer = new Answer(beliefset,query);			
 			answer.setAnswer(new Double(rank));
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
 			return answer;
@@ -141,12 +118,12 @@ public class BruteForceCReasoner extends Reasoner {
 	}
 	
 	/**
-	 * Computes a minimal c-representation for this reasoner's knowledge base. 
+	 * Computes a minimal c-representation for this reasoner's knowledge base.
+	 * @param beliefset a beliefset 
 	 * @return a minimal c-representation for this reasoner's knowledge base.
 	 */
-	private RankingFunction computeCRepresentation(){	
+	public RankingFunction getCRepresentation(ClBeliefSet beliefset){	
 		ArrayList<PropositionalFormula> list = new ArrayList<PropositionalFormula>();
-		ClBeliefSet beliefset = ((ClBeliefSet)this.getKnowledgeBase()).clone();
 		this.filter(list, beliefset);
 		
 		this.numConditionals = beliefset.size();
@@ -158,10 +135,10 @@ public class BruteForceCReasoner extends Reasoner {
 				this.indexToConditional.put(i++, (Conditional) f);
 		}
 		Integer[] kappa = null;		
-		RankingFunction candidate = this.constructRankingFunction(kappa);
+		RankingFunction candidate = this.constructRankingFunction(beliefset, kappa);
 		while(!candidate.satisfies((BeliefBase)beliefset)){
 			kappa = this.increment(kappa);			
-			candidate = this.constructRankingFunction(kappa);
+			candidate = this.constructRankingFunction(beliefset, kappa);
 //			String debugMessage = "["+kappa[0];
 //			for(int j=1; j< kappa.length;j++)
 //				debugMessage += "," + kappa[j];
@@ -206,8 +183,8 @@ public class BruteForceCReasoner extends Reasoner {
 	 * k(w)=k0 + \sum_{w verifies ri} ki+ + \sum_{w falsifies ri} kj-
 	 * @param kappa
 	 */
-	private RankingFunction constructRankingFunction(Integer[] kappa){
-		RankingFunction candidate = new RankingFunction((PropositionalSignature)this.getKnowledgeBase().getSignature());
+	private RankingFunction constructRankingFunction(ClBeliefSet beliefset, Integer[] kappa){
+		RankingFunction candidate = new RankingFunction(beliefset.getSignature());
 		if(kappa == null) 
 			return candidate;
 		for(PossibleWorld w: candidate.getPossibleWorlds()){

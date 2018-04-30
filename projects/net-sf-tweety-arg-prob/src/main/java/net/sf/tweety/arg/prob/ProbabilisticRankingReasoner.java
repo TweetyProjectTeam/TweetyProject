@@ -24,7 +24,7 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Reasoner;
+import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -32,7 +32,7 @@ import net.sf.tweety.math.probability.Probability;
  * 
  * @author Matthias Thimm
  */
-public class ProbabilisticRankingReasoner extends Reasoner{
+public class ProbabilisticRankingReasoner implements BeliefBaseReasoner<DungTheory>{
 
 	/**
 	 * Number of trials for the used monte carlo search (this is a factor
@@ -62,15 +62,13 @@ public class ProbabilisticRankingReasoner extends Reasoner{
 	private boolean exactInference = false;
 	
 	/**
-	 * Creates a new reasoner for the given Dung theory
-	 * @param theory some Dung theory
+	 * Creates a new reasoner.
 	 * @param sem The classical semantics used for evaluating subgraphs
 	 * @param inferenceType The inference type (Semantics.CREDULOUS_INFERENCE or Semantics.SCEPTICAL_INFERENCE)
 	 * @param p The probability used for all arguments to instantiate a probabilistic argumentation framework
 	 * @param exactInference Whether to use exact inference. 
 	 */
-	public ProbabilisticRankingReasoner(DungTheory theory,Semantics sem,int inferenceType,Probability p, boolean exactInference) {
-		super(theory);
+	public ProbabilisticRankingReasoner(Semantics sem,int inferenceType,Probability p, boolean exactInference) {
 		this.sem = sem;
 		this.inferenceType = inferenceType;
 		this.p = p;
@@ -80,32 +78,32 @@ public class ProbabilisticRankingReasoner extends Reasoner{
 	/**
 	 * Computes the numerical ranking of the arguments of the given
 	 * Dung theory.
+	 * @param aaf an aaf.
 	 * @return a numerical ranking
 	 */
-	public NumericalArgumentRanking getRanking(){
-		DungTheory aaf = (DungTheory) this.getKnowledgeBase();
+	public NumericalArgumentRanking getRanking(DungTheory aaf){
 		// construct PAF
 		ProbabilisticArgumentationFramework paf = new ProbabilisticArgumentationFramework(aaf);
 		// set probabilities
 		for(Argument a: aaf)
 			paf.add(a, this.p);		
 		// Estimate/compute probabilities
-		Reasoner reasoner;
+		BeliefBaseReasoner<ProbabilisticArgumentationFramework> reasoner;
 		if(this.exactInference)
-			reasoner = new NaivePafReasoner(paf, this.sem, this.inferenceType);
+			reasoner = new NaivePafReasoner(this.sem, this.inferenceType);
 		else
-			reasoner = new MonteCarloPafReasoner(paf, this.sem, this.inferenceType, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
+			reasoner = new MonteCarloPafReasoner(this.sem, this.inferenceType, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		for(Argument a: aaf)
-			ranking.put(a, reasoner.query(a).getAnswerDouble());
+			ranking.put(a, reasoner.query(paf,a).getAnswerDouble());
 		return ranking;
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(Formula query) {
+	public Answer query(DungTheory aaf, Formula query) {
 		throw new UnsupportedOperationException("Implement me");
 	}
 

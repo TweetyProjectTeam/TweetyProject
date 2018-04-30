@@ -43,7 +43,7 @@ public class AspicExample2 {
 		PlParser plparser = new PlParser();
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
 		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile(AspicExample2.class.getResource("/ex1.aspic").getFile());		
-		AspicReasoner ar = new AspicReasoner(at, Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		AspicReasoner<PropositionalFormula> ar = new AspicReasoner<PropositionalFormula>(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
 		Argument query = null;
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
 		for (AspicArgument<PropositionalFormula> arg : at.getArguments()) {
@@ -53,6 +53,6 @@ public class AspicExample2 {
 			}
 		}
 		System.out.println(at);
-		System.out.println(query + "\t" + ar.query(query));		
+		System.out.println(query + "\t" + ar.query(at,query));		
 	}
 }
