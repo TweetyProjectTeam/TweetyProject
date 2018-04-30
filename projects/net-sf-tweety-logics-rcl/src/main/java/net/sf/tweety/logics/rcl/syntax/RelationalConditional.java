@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
@@ -31,7 +30,6 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.lang.FolLanguageNoQuantifiersNoFunctions;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
@@ -69,11 +67,9 @@ public class RelationalConditional extends RelationalFormula implements Rule<Fol
 	 * @param conclusion a fol formula.
 	 */
 	public RelationalConditional(FolFormula premise, FolFormula conclusion){
-		Signature sig = premise.getSignature();
-		if(!(new FolLanguageNoQuantifiersNoFunctions(sig)).isRepresentable(premise)) 
+		if(premise.containsQuantifier() || !premise.getFunctors().isEmpty()) 
 			throw new IllegalArgumentException("Premise contains either function symbols or quantification.");
-		sig = conclusion.getSignature();
-		if(!(new FolLanguageNoQuantifiersNoFunctions(sig)).isRepresentable(conclusion)) 
+		if(conclusion.containsQuantifier() || !conclusion.getFunctors().isEmpty()) 
 			throw new IllegalArgumentException("Conclusion contains either function symbols or quantification.");
 		this.premise = premise;
 		this.conclusion = conclusion;		

@@ -29,7 +29,6 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.fol.lang.FolLanguageNoQuantifiersNoFunctions;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -130,7 +129,7 @@ public class ActionSignature
         ( !( a instanceof FolFluentName ) ) )
         return false;
     }
-    return new FolLanguageNoQuantifiersNoFunctions( this ).isRepresentable( f );
+    return !fol.containsQuantifier() && fol.getFunctors().isEmpty();
   }
   
   /*
