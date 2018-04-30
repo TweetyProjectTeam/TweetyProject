@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.cl.test;
+package net.sf.tweety.logics.cl.examples;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
-public class ReasonerCompare {
+public class ReasonerExample {
 
 	private static boolean run = true;
 	

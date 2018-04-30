@@ -16,13 +16,13 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.cl.test;
+package net.sf.tweety.logics.cl.examples;
 
 import net.sf.tweety.logics.cl.*;
 import net.sf.tweety.logics.cl.syntax.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
-public class CReasonerTest {
+public class CReasonerExample {
 	public static void main(String[] args){
 		Proposition f = new Proposition("f");
 		Proposition b = new Proposition("b");

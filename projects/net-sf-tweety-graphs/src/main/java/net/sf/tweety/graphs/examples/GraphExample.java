@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.graphs.test;
+package net.sf.tweety.graphs.examples;
 
 import net.sf.tweety.graphs.DefaultGraph;
 import net.sf.tweety.graphs.DirectedEdge;
@@ -25,7 +25,7 @@ import net.sf.tweety.graphs.SimpleNode;
 import net.sf.tweety.graphs.util.GraphUtil;
 import net.sf.tweety.math.ComplexNumber;
 
-public class GraphTest {
+public class GraphExample {
 	
 	public void run(){
 		Graph<SimpleNode> g = new DefaultGraph<SimpleNode>();
@@ -96,6 +96,6 @@ public class GraphTest {
 	}
 	
 	public static void main(String[] args){
-		new GraphTest().run();		
+		new GraphExample().run();		
 	}	
 }
