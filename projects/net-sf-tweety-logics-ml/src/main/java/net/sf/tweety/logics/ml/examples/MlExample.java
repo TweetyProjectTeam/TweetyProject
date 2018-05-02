@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
- package net.sf.tweety.logics.ml.test;
+ package net.sf.tweety.logics.ml.examples;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ import net.sf.tweety.logics.ml.writer.ModalWriter;
  * Some examples for testing ModalParser, ModalWriter and NaiveModalReasoner
  * @author Anna Gessler
  */
-public class MlTest {
+public class MlExample {
 	
 	public static void main(String[] args) throws ParserException, IOException {
 		//Parse BeliefBase
