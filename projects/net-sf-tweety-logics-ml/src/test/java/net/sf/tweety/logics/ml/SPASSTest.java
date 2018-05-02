@@ -72,7 +72,12 @@ public class SPASSTest {
 		assertTrue(a2.getAnswerBoolean());
 	}
 	
-	//TODO
+	/*
+	 * Queries with predicates of non-zero arities like this example cause
+	 * SPASS to fail with a "Symbol was declared with arity x" error (x being
+	 * the predicate's arity) despite having the correct number of arguments.  
+	 * TODO: Find out why. 
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ComplexQueryTest() throws FileNotFoundException, ParserException, IOException {
 		ModalParser parser = new ModalParser();
