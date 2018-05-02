@@ -61,7 +61,7 @@ public class ModalHerbrandBase {
 	 * @return all possible Herbrand interpretations of this Herbrand
 	 * base, i.e. all possible subsets of this Herbrand base.
 	 */
-	public Set<ModalHerbrandInterpretation> allHerbrandInterpretations(){
+	public Set<ModalHerbrandInterpretation> getAllHerbrandInterpretations(){
 		Set<ModalHerbrandInterpretation> interpretations = new HashSet<ModalHerbrandInterpretation>();
 		Set<Set<FOLAtom>> subsets = new SetTools<FOLAtom>().subsets(this.getAtoms());
 		for(Set<FOLAtom> atoms: subsets)

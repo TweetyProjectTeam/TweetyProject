@@ -69,7 +69,7 @@ public class NaiveModalReasoner extends ModalReasoner {
 		sig.addSignature(mbs.getSignature());
 		sig.addSignature(formula.getSignature());
 		ModalHerbrandBase hBase = new ModalHerbrandBase(sig);
-		Set<ModalHerbrandInterpretation> possibleWorlds = hBase.allHerbrandInterpretations(); 
+		Set<ModalHerbrandInterpretation> possibleWorlds = hBase.getAllHerbrandInterpretations(); 
 		Set<Set<ModalHerbrandInterpretation>> possibleWorldsCombinations = new SetTools<ModalHerbrandInterpretation>().subsets(possibleWorlds); 
 
 		//For each set of worlds: Get all possible binary combinations of worlds to construct all possible accessibility relations

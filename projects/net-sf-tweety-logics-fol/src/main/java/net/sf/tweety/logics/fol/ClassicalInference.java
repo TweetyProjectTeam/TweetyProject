@@ -62,7 +62,7 @@ public class ClassicalInference implements BeliefBaseReasoner<FolBeliefSet> {
 		sig.addSignature(kb.getSignature());
 		sig.addSignature(query.getSignature());		
 		HerbrandBase hBase = new HerbrandBase(sig);
-		Set<HerbrandInterpretation> interpretations = hBase.allHerbrandInterpretations();
+		Set<HerbrandInterpretation> interpretations = hBase.getAllHerbrandInterpretations();
 		for(HerbrandInterpretation i: interpretations)
 			if(i.satisfies((BeliefBase)kb))
 				if(!i.satisfies(formula)){
@@ -93,7 +93,7 @@ public class ClassicalInference implements BeliefBaseReasoner<FolBeliefSet> {
 		FolFormula f = f1.combineWithAnd(f2).combineWithOr(f1.complement().combineWithAnd(f2.complement()));
 		if(!f.getUnboundVariables().isEmpty())
 			f = new ForallQuantifiedFormula(f, f.getUnboundVariables());
-		for(HerbrandInterpretation i: hBase.allHerbrandInterpretations())
+		for(HerbrandInterpretation i: hBase.getAllHerbrandInterpretations())
 			if(!i.satisfies(f))
 				return false;
 		return true;

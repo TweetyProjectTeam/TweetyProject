@@ -143,7 +143,7 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	 */
 	public static RpclProbabilityDistribution getUniformDistribution(RpclSemantics semantics, FolSignature signature){
 		RpclProbabilityDistribution p = new RpclProbabilityDistribution(semantics,signature);
-		Set<HerbrandInterpretation> interpretations = new HerbrandBase(signature).allHerbrandInterpretations(); 
+		Set<HerbrandInterpretation> interpretations = new HerbrandBase(signature).getAllHerbrandInterpretations(); 
 		double size = interpretations.size();
 		for(HerbrandInterpretation i: interpretations)
 			p.put(i, new Probability(1/size));

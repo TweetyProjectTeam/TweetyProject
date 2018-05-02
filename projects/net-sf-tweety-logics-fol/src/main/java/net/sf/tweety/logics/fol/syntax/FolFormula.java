@@ -168,7 +168,7 @@ public abstract class FolFormula extends RelationalFormula {
 		}
 		FolFormula groundFormula = (FolFormula) this.substitute(map);
 		HerbrandBase hBase = new HerbrandBase(sig);
-		Collection<HerbrandInterpretation> allWorlds = hBase.allHerbrandInterpretations();
+		Collection<HerbrandInterpretation> allWorlds = hBase.getAllHerbrandInterpretations();
 		int cnt = 0;
 		for(HerbrandInterpretation hInt: allWorlds)
 			if(hInt.satisfies(groundFormula))

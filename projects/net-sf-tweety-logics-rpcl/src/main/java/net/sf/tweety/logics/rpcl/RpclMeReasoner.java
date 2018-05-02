@@ -201,7 +201,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			}
 		}else{
 			// get interpretations
-			Set<HerbrandInterpretation> worlds = new HerbrandBase(signature).allHerbrandInterpretations();
+			Set<HerbrandInterpretation> worlds = new HerbrandBase(signature).getAllHerbrandInterpretations();
 			// Generate Variables for the probability of each world,
 			// range constraints for probabilities, and construct normalization sum
 			Map<HerbrandInterpretation,FloatVariable> worlds2vars = new HashMap<HerbrandInterpretation,FloatVariable>();

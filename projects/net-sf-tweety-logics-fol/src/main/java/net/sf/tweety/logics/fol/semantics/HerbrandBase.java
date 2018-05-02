@@ -92,7 +92,7 @@ public class HerbrandBase {
 	 * @return all possible Herbrand interpretations of this Herbrand
 	 * base, i.e. all possible subsets of this Herbrand base.
 	 */
-	public Set<HerbrandInterpretation> allHerbrandInterpretations(){
+	public Set<HerbrandInterpretation> getAllHerbrandInterpretations(){
 		Set<HerbrandInterpretation> interpretations = new HashSet<HerbrandInterpretation>();
 		Set<Set<FOLAtom>> subsets = new SetTools<FOLAtom>().subsets(this.getAtoms());
 		for(Set<FOLAtom> atoms: subsets)

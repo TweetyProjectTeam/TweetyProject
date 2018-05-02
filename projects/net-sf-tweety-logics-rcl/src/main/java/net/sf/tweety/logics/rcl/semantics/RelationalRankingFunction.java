@@ -69,7 +69,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 		this.signature = signature;		
 		this.ranks = new HashMap<HerbrandInterpretation,Integer>();
 		HerbrandBase hBase = new HerbrandBase(this.signature);
-		for(HerbrandInterpretation w: hBase.allHerbrandInterpretations())
+		for(HerbrandInterpretation w: hBase.getAllHerbrandInterpretations())
 			this.ranks.put(w, 0);			
 	}
 	
