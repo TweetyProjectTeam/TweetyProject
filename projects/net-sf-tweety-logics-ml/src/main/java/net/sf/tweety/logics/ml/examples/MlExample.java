@@ -24,10 +24,9 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.reasoner.NaiveModalReasoner;
 import net.sf.tweety.logics.ml.parser.ModalParser;
-import net.sf.tweety.logics.ml.writer.ModalWriter;
 
 /**
- * Some examples for testing ModalParser, ModalWriter and NaiveModalReasoner
+ * Some examples for testing ModalParser and NaiveModalReasoner
  * @author Anna Gessler
  */
 public class MlExample {
@@ -41,11 +40,6 @@ public class MlExample {
 		//NaiveModalReasoner
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();
 		System.out.println(reasoner.query(b,parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))")));
-	
-		//Write BeliefBase to file
-		ModalWriter writer = new ModalWriter(b);
-		writer = new ModalWriter(b);
-		//writer.writeToFile("path");
 	}
 
 }
