@@ -42,7 +42,7 @@ import net.sf.tweety.logics.ml.ModalBeliefSet;
  * @author Matthias Thimm
  *
  */
-public class SPASS extends ModalReasoner {
+public class SPASSModalReasoner extends ModalReasoner {
 	/**
 	 * String representation of the SPASS path.
 	 */
@@ -68,7 +68,7 @@ public class SPASS extends ModalReasoner {
 	 * @param bash
 	 *            shell to run commands
 	 */
-	public SPASS(String binaryLocation, Shell bash) {
+	public SPASSModalReasoner(String binaryLocation, Shell bash) {
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
 	}
@@ -79,7 +79,7 @@ public class SPASS extends ModalReasoner {
 	 * @param binaryLocation
 	 *            of the SPASS executable on the hard drive
 	 */
-	public SPASS(String binaryLocation) {
+	public SPASSModalReasoner(String binaryLocation) {
 		this(binaryLocation, Shell.getNativeShell());
 	}
 	
@@ -119,7 +119,7 @@ public class SPASS extends ModalReasoner {
 	
 	/**
 	 * Determines the answer wrt. to the given query and returns the proof (if applicable).
-	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.ml.reasoner.SPASS#query(Formula)}
+	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner#query(Formula)}
 	 * if only a yes/no result is needed.
 	 * @param kb a modal belief set
 	 * @param query a formula

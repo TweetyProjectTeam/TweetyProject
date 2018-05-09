@@ -29,7 +29,7 @@ import org.junit.Test;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.util.Shell;
-import net.sf.tweety.logics.ml.reasoner.SPASS;
+import net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner;
 import net.sf.tweety.logics.ml.writer.SPASSWriter;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.parser.ModalParser;
@@ -42,12 +42,12 @@ import net.sf.tweety.logics.ml.parser.ModalParser;
 public class SPASSTest {
 	
 	public static final int DEFAULT_TIMEOUT = 10000;
-	static SPASS spass;
+	static SPASSModalReasoner spass;
 	SPASSWriter printer = new SPASSWriter();
 	
 	@BeforeClass public static void init(){
 		System.out.println("Initializing SPASS Test for Unix");
-		spass = new SPASS("/home/anna/sw/mlProver/SPASS/SPASS", Shell.getNativeShell());
+		spass = new SPASSModalReasoner("/home/anna/sw/mlProver/SPASS/SPASS", Shell.getNativeShell());
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

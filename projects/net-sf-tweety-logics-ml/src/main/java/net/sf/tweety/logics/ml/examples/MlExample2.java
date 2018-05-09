@@ -27,7 +27,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.parser.ModalParser;
 import net.sf.tweety.logics.ml.reasoner.ModalReasoner;
-import net.sf.tweety.logics.ml.reasoner.SPASS;
+import net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner;
 
 /**
  * More examples for testing ModalParser and ModalReasoner
@@ -48,7 +48,7 @@ public class MlExample2 {
 		bs.add((RelationalFormula) parser.parseFormula("[](r && <>(p || q))"));
 		bs.add((RelationalFormula) parser.parseFormula("!p && !q"));
 		System.out.println("Modal knowledge base: " + bs);		
-		ModalReasoner reasoner = new SPASS("/add/path/to/SPASS");		
+		ModalReasoner reasoner = new SPASSModalReasoner("/add/path/to/SPASS");		
 		System.out.println("[](!p)      " + reasoner.query(bs,parser.parseFormula("[](!p)")).getAnswerBoolean());
 		System.out.println("<>(q || r)  " + reasoner.query(bs,parser.parseFormula("<>(q || r)")).getAnswerBoolean());
 		System.out.println("p           " + reasoner.query(bs,parser.parseFormula("p")).getAnswerBoolean());
