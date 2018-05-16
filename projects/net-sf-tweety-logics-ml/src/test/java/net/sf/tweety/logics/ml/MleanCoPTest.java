@@ -12,7 +12,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.parser.ModalParser;
-import net.sf.tweety.logics.ml.reasoner.MleanCoReasoner;
+import net.sf.tweety.logics.ml.reasoner.MleanCoPReasoner;
 
 /**
  * JUnit Test class for MleanCoP.
@@ -22,7 +22,7 @@ import net.sf.tweety.logics.ml.reasoner.MleanCoReasoner;
 public class MleanCoPTest {
 
 	ModalParser parser;
-	MleanCoReasoner prover;
+	MleanCoPReasoner prover;
 	public static final int DEFAULT_TIMEOUT = 10000;
 	
 	@Before 
@@ -30,7 +30,7 @@ public class MleanCoPTest {
 		parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Test={test} \n type(p) \n type(q(Test)) \n p \n q(test)");
 		parser.setSignature((FolSignature) b.getSignature());
-		prover = new MleanCoReasoner("/home/anna/sw/mlProver/mleancop/mleancop.sh");
+		prover = new MleanCoPReasoner("/home/anna/sw/mlProver/mleancop/mleancop.sh");
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

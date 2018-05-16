@@ -37,7 +37,7 @@ import net.sf.tweety.logics.ml.writer.MleanCoPWriter;
  * @author Anna Gessler
  *
  */
-public class MleanCoReasoner {
+public class MleanCoPReasoner {
 	/**
 	 * String representation of the mleancop.sh path. 
 	 * This shell script specifies the prolog system, prover location and modal logic (D, T, S4 or S5)
@@ -60,7 +60,7 @@ public class MleanCoReasoner {
 	 * @param bash
 	 * 			  shell to run commands
 	 */
-	public MleanCoReasoner(String location, Shell bash) {
+	public MleanCoPReasoner(String location, Shell bash) {
 		this.scriptLocation = location;
 		this.bash = bash;
 	}
@@ -71,7 +71,7 @@ public class MleanCoReasoner {
 	 * @param location
 	 *            mleancop.sh path on the hard drive
 	 */
-	public MleanCoReasoner(String location) {
+	public MleanCoPReasoner(String location) {
 		this(location,Shell.getNativeShell());
 	}
 	
