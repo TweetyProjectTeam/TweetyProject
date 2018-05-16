@@ -54,7 +54,8 @@ import net.sf.tweety.logics.fol.syntax.*;
  * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
  * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
  * 
- * @author Matthias Thimm, Anna Gessler
+ * @author Matthias Thimm
+ * @author Anna Gessler
  */
 public class FolParser extends Parser<FolBeliefSet> {
 
@@ -90,7 +91,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 		// 1 means type declaration, i.e. functor/predicate declaration
 		// 2 means formula section
 		int section = 0; 
-		// read from the reader and separate formulas by "\n" (ascii code 10)
+		// Read formulas and separate them with "\n" (ascii code 10)
 		try{
 			for(int c = reader.read(); c != -1; c = reader.read()){
 				if(c == 10){
@@ -101,15 +102,15 @@ public class FolParser extends Parser<FolBeliefSet> {
 														   //therefore only the formula section remains.
 						if(section == 2)
 							beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
-						else if(section == 1)
+						else if(section == 1) {
 							this.parseTypeDeclaration(s,this.signature);
+							System.out.println("sig currently:" + this.signature); }
 						else this.parseSortDeclaration(s,this.signature); //No type declaration or formula section has been parsed previously,
 																		  //therefore this part is treated as the sorts declaration section.
 					}
 					s = "";
-				}else{
-					s += (char) c;
-				}
+				} else 
+					s += (char) c; 
 			}	
 			s = s.trim();
 			if(!s.equals("")) beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
@@ -130,7 +131,10 @@ public class FolParser extends Parser<FolBeliefSet> {
 		String sortname = s.substring(0, s.indexOf("=")).trim();
 		if(sig.containsSort(sortname)) throw new ParserException("Multiple declarations of sort '" + sortname + "'.");
 		Sort theSort = new Sort(sortname);
-		sig.add(theSort);
+		if(sortname.matches("[a-z,A-Z]([a-z,A-Z,0-9])*"))
+			sig.add(theSort);
+		else throw new ParserException("Illegal characters in sort definition '" + sortname + "'; declaration must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
+		
 		if(!s.contains("{")) throw new ParserException("Missing '{' in sort declaration '" + s + "',");
 		if(!s.contains("}")) throw new ParserException("Missing '}' in sort declaration '" + s + "',");		
 		String constants = s.substring(s.indexOf("{")+1, s.lastIndexOf("}"));
@@ -143,7 +147,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 				throw new ParserException("Constant '" + c + "' has already been defined to be of sort '" + sig.getConstant(c).getSort() + "'.");
 			if(c.matches("[a-z,A-Z]([a-z,A-Z,0-9])*"))
 				sig.add(new Constant(c, theSort));
-			else throw new ParserException("Illegal characters in constant definition '" + c + "'; declartion must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
+			else throw new ParserException("Illegal characters in constant definition '" + c + "'; declaration must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
 		}		
 	}
 	
@@ -168,7 +172,10 @@ public class FolParser extends Parser<FolBeliefSet> {
 		} else if(!dec.contains( "(" )) {
 		  if(dec.contains( ")")) throw new ParserException("Unexpected ')' in type declaration.");
       String name = dec.trim();
-      sig.add( new Predicate(name) );
+      if(name.matches("[a-z,A-Z]([a-z,A-Z,0-9])*"))
+    	  sig.add( new Predicate(name) );
+      else throw new ParserException("Illegal characters in predicate definition '" + name + "'; declaration must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
+      
       return;
 		}
 		if(!dec.contains("(")) throw new ParserException("Missing '(' in type declaration.");
@@ -178,18 +185,23 @@ public class FolParser extends Parser<FolBeliefSet> {
     List<Sort> theSorts = new ArrayList<Sort>();
 		if(!sorts.trim().equals( "" )) {
   		String[] tokens = sorts.split(",");
-  		for(String token: tokens){
-  			String sort = token.trim();
-  			if(!sig.containsSort(sort))
-  				throw new ParserException("Sort '" + sort + "' has not been declared before.");
-  			theSorts.add(sig.getSort(sort));
-  		}
+	  		for(String token: tokens){
+	  			String sort = token.trim();
+	  			if(!sig.containsSort(sort))
+	  				throw new ParserException("Sort '" + sort + "' has not been declared before.");
+	  			theSorts.add(sig.getSort(sort));
+	  		}
 		}
-		if(targetSort == null)
-			sig.add(new Predicate(name,theSorts));
+		if(targetSort == null) { 
+			if(name.matches("[a-z,A-Z]([a-z,A-Z,0-9])*"))
+				sig.add(new Predicate(name,theSorts));
+			else throw new ParserException("Illegal characters in predicate definition '" + name + "'; declaration must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
+		}
 		else{
-			name = name.substring(name.indexOf("=")+1,name.length());
-			sig.add(new Functor(name,theSorts,targetSort));
+			name = name.substring(name.indexOf("=")+1,name.length());	
+			if(name.matches("[a-z,A-Z]([a-z,A-Z,0-9])*"))
+				sig.add(new Functor(name,theSorts,targetSort));
+			else throw new ParserException("Illegal characters in functor definition '" + name + "'; declaration must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
 		}
 	}
 	
@@ -293,7 +305,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 
 	/**
 	 * Parses a term list as a list of String tokens or terms into a list of terms.
-	 * @param l a list objects, either String tokens or objects of type List.
+	 * @param l a list of objects, either String tokens or objects of type List.
 	 * @return a list of terms.
 	 * @throws ParserException if the list could not be parsed.
 	 */
