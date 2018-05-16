@@ -127,7 +127,11 @@ public class Clingo extends SolverBase {
 		// First convert in dlv format:
 		String toParse = "";
 		for(String line : output) {
-			String as = line.replace('.', ',');
+			if(line.trim().toLowerCase().equals("satisfiable"))
+				continue;
+			if(line.trim().toLowerCase().equals("unsatisfiable"))
+				return new AnswerSetList();
+			String as = line.replace(' ', ',');
 			as = "{" + as + "}";
 			as = as.replace(",}", "}");
 			toParse += as;

@@ -75,15 +75,16 @@ public class AspInterface
 	builder.command(cmd);
 	final Process process = builder.start();
 	*/
-    final Process process = Runtime.getRuntime().exec( runcmd );
-	
+	if (input == null)
+		input = "";	
+	final Process process = Runtime.getRuntime().exec( runcmd + " " + input);
+		
     OutputStream stdin = process.getOutputStream();
     StreamFlusher stdoutFlusher = new StreamFlusher( process.getInputStream() );
     StreamFlusher erroutFlusher = new StreamFlusher( process.getErrorStream() );
     
     try {
-    	if (input != null)
-    		stdin.write( input.getBytes() );
+    	
     	stdin.flush();
     	stdin.close();
     } catch(IOException ioexec) {
