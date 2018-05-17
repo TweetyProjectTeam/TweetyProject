@@ -34,7 +34,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * first-order language.
  * @author Matthias Thimm
  */
-public class FolSignature extends Signature{
+public class FolSignature extends Signature {
 	
 	private Set<Constant> constants;
 	private Set<Sort> sorts;
@@ -284,6 +284,27 @@ public class FolSignature extends Signature{
 		this.predicates.addAll(folSig.predicates);
 		this.sorts.addAll(folSig.sorts);
 		
+	}
+	
+	/**
+	 * Returns a string representation of the first-order logic signature.
+	 * 
+	 * @return a string consisting of the sorts with their constants 
+	 * followed by the predicates and functors of the signature.
+	 */
+	public String toString() {
+		String result = "[";
+		java.util.Iterator<Sort> it = this.sorts.iterator();
+		while (it.hasNext()) {
+			Sort s = it.next();
+			String constants = s.getTerms().toString();
+			constants = constants.substring(1, constants.length()-1);
+			result += s.getName() + " = {" + constants + "}";
+			if (it.hasNext()) result+= ", ";
+		}
+		result += "]";
+		
+		return result + ", " + this.predicates.toString() + ", "  + this.functors.toString() ;
 	}
 	
 }

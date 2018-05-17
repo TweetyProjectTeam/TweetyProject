@@ -62,6 +62,7 @@ public class FolExample {
 		predicate_list2.add(s_animal);
 		Predicate p2 = new Predicate("Knows",predicate_list2);
 		sig.add(p2); //Add Predicate Knows(Animal,Animal) 
+		System.out.println("Signature: " + sig);
 		
 		// Parse formulas with FolParser
 		FolParser parser = new FolParser();
@@ -83,10 +84,7 @@ public class FolExample {
 		
 		// Parse a BeliefBase from a file
 		parser = new FolParser();
-		bs = parser.parseBeliefBaseFromFile("../../examples/fol/examplebeliefbase.fologic");
+		bs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.fologic");
 		System.out.println("Parsed BeliefBase: " + bs);
-		System.out.println(((FolSignature) bs.getSignature()).getSorts());
-		System.out.println(((FolSignature) bs.getSignature()).getConstants());
-		System.out.println(((FolSignature) bs.getSignature()).getPredicates());
 	}
 }
