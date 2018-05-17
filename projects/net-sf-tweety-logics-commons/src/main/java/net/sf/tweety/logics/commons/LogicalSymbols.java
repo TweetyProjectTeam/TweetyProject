@@ -47,10 +47,10 @@ public class LogicalSymbols {
 		return "&&";
 	}
 	public static String FORALLQUANTIFIER() {
-		return "FORALL";
+		return "forall";
 	}
 	public static String EXISTSQUANTIFIER() {
-		return "EXISTS";
+		return "exists";
 	}
 	public static String IMPLICATION() {
 		return "=>";
@@ -69,5 +69,11 @@ public class LogicalSymbols {
 	}
 	public static String PARENTHESES_RIGHT() {
 		return ")";
+	}
+	public static String NECESSITY() {
+		return "[]";
+	}
+	public static String POSSIBILITY() {
+		return "<>";
 	}
 }

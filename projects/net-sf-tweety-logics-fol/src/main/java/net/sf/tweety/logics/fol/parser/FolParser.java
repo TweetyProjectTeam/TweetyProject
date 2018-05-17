@@ -58,17 +58,6 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Anna Gessler
  */
 public class FolParser extends Parser<FolBeliefSet> {
-
-	/**
-	 * forall-quantifier used in syntax 
-	 */
-	public static final String FORALL_QUANTIFIER = "forall";
-	
-	/**
-	 * exists-quantifier used in syntax
-	 */
-	public static final String EXISTS_QUANTIFIER = "exists";
-	
 	/**
 	 * Keeps track of the signature.
 	 */
@@ -102,9 +91,8 @@ public class FolParser extends Parser<FolBeliefSet> {
 														   //therefore only the formula section remains.
 						if(section == 2)
 							beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
-						else if(section == 1) {
+						else if(section == 1) 
 							this.parseTypeDeclaration(s,this.signature);
-							System.out.println("sig currently:" + this.signature); }
 						else this.parseSortDeclaration(s,this.signature); //No type declaration or formula section has been parsed previously,
 																		  //therefore this part is treated as the sorts declaration section.
 					}
@@ -145,7 +133,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 			String c = token.trim();
 			if(sig.containsConstant(c))
 				throw new ParserException("Constant '" + c + "' has already been defined to be of sort '" + sig.getConstant(c).getSort() + "'.");
-			if(c.matches("[a-z,A-Z]([a-z,A-Z,0-9])*"))
+			if(c.matches("[a-z,A-Z]([^|&!<=>\\[\\]\\s\\(\\)])*"))
 				sig.add(new Constant(c, theSort));
 			else throw new ParserException("Illegal characters in constant definition '" + c + "'; declaration must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
 		}		
@@ -379,16 +367,16 @@ public class FolParser extends Parser<FolBeliefSet> {
 	private FolFormula parseQuantification(List<Object> l) throws ParserException{
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(FolParser.EXISTS_QUANTIFIER) || l.contains(FolParser.FORALL_QUANTIFIER))) 
+		if(!(l.contains(LogicalSymbols.EXISTSQUANTIFIER()) || l.contains(LogicalSymbols.FORALLQUANTIFIER()))) 
 			return this.parseEquivalence(l); 
 		
 		//If the quantification is not the first conjunct/disjunct/subformula of
 		//the formula, split list at position of first non-quantor operator
-		if (!(l.get(0).equals(FolParser.EXISTS_QUANTIFIER)||l.get(0).equals(FolParser.FORALL_QUANTIFIER))) {
-			int i1 = l.indexOf("&&");
-			int i2 = l.indexOf("||");
-			int i3 = l.indexOf("<=>");
-			int i4 = l.indexOf("=>");
+		if (!(l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER())||l.get(0).equals(LogicalSymbols.FORALLQUANTIFIER()))) {
+			int i1 = l.indexOf(LogicalSymbols.CONJUNCTION());
+			int i2 = l.indexOf(LogicalSymbols.DISJUNCTION());
+			int i3 = l.indexOf(LogicalSymbols.EQUIVALENCE());
+			int i4 = l.indexOf(LogicalSymbols.IMPLICATION());
 			int[] indices = {i1,i2,i3,i4};
 			Arrays.sort(indices);
 			
@@ -438,20 +426,20 @@ public class FolParser extends Parser<FolBeliefSet> {
 		this.variables.remove(var);
 		
 		FolFormula result;
-		if (l.get(0).equals(FolParser.EXISTS_QUANTIFIER)) 
+		if (l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER())) 
 			result = new ExistsQuantifiedFormula(formula,vars);
 		else 
 			result = new ForallQuantifiedFormula(formula,vars);
 		
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
 		if (l.size() > 4) {
-			if (l.get(idx+2) == "&&") 
+			if (l.get(idx+2) == LogicalSymbols.CONJUNCTION()) 
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == "||") 
+			else if (l.get(idx+2) == LogicalSymbols.DISJUNCTION()) 
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == "<=>") 
+			else if (l.get(idx+2) == LogicalSymbols.EQUIVALENCE()) 
 				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == "=>")
+			else if (l.get(idx+2) == LogicalSymbols.IMPLICATION())
 				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(0));

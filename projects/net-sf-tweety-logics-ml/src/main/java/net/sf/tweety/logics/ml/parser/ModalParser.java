@@ -146,8 +146,9 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			this.folparser.setVariables(new HashMap<String,Variable>());
 			for(int c = reader.read(); c != -1; c = reader.read())
 				this.consumeToken(stack, c);
+			System.out.println(this.parseQuantification(stack));
 			return this.parseQuantification(stack);
-		}catch(Exception e){
+					}catch(Exception e){
 			throw new ParserException(e);
 		}
 	}
@@ -323,16 +324,16 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseQuantification(List<Object> l) throws ParserException{
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains(FolParser.EXISTS_QUANTIFIER) || l.contains(FolParser.FORALL_QUANTIFIER)) || l.get(0).equals("[]") || l.get(0).equals("<>")) 
+		if(!(l.contains(LogicalSymbols.EXISTSQUANTIFIER()) || l.contains(LogicalSymbols.FORALLQUANTIFIER())) || l.get(0).equals(LogicalSymbols.NECESSITY()) || l.get(0).equals(LogicalSymbols.POSSIBILITY())) 
 			return this.parseModalization(l); 
 
 		//If the quantification is not the first conjunct/disjunct/subformula of
 		//the formula, split the list at position of first non-quantor operator
-		if (!(l.get(0).equals(FolParser.EXISTS_QUANTIFIER)||l.get(0).equals(FolParser.FORALL_QUANTIFIER))) {
-			int i1 = l.indexOf("&&");
-			int i2 = l.indexOf("||");
-			int i3 = l.indexOf("<=>");
-			int i4 = l.indexOf("=>");
+		if (!(l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER())||l.get(0).equals(LogicalSymbols.FORALLQUANTIFIER()))) {
+			int i1 = l.indexOf(LogicalSymbols.CONJUNCTION());
+			int i2 = l.indexOf(LogicalSymbols.DISJUNCTION());
+			int i3 = l.indexOf(LogicalSymbols.EQUIVALENCE());
+			int i4 = l.indexOf(LogicalSymbols.IMPLICATION());
 			int[] indices = {i1,i2,i3,i4};
 			Arrays.sort(indices);
 			
@@ -384,20 +385,20 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		map.remove(var);
 		
 		FolFormula result;
-		if (l.get(0).equals(FolParser.EXISTS_QUANTIFIER)) 
+		if (l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER())) 
 			result = new ExistsQuantifiedFormula(formula,vars);
 		else 
 			result = new ForallQuantifiedFormula(formula,vars);
 		
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
 		if (l.size() > 4) {
-			if (l.get(idx+2) == "&&") 
+			if (l.get(idx+2) == LogicalSymbols.CONJUNCTION()) 
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == "||") 
+			else if (l.get(idx+2) == LogicalSymbols.DISJUNCTION()) 
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == "<=>") 
+			else if (l.get(idx+2) == LogicalSymbols.EQUIVALENCE()) 
 				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == "=>")
+			else if (l.get(idx+2) == LogicalSymbols.IMPLICATION())
 				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(0));
@@ -414,16 +415,16 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	private RelationalFormula parseModalization(List<Object> l) throws ParserException {
 		if(l.isEmpty()) {
 			throw new ParserException("Empty parentheses."); }
-		if(!( l.contains("[]") || l.contains("<>") ) )  
+		if(!( l.contains(LogicalSymbols.NECESSITY()) || l.contains(LogicalSymbols.POSSIBILITY()) ) )  
 			return this.parseEquivalence(l); 
 		
 		//If the modalized subformula is not the first conjunct/disjunct/subformula of
 		//the formula, split the list at position of first non-quantor operator
-		if (!(l.get(0).equals("[]")||l.get(0).equals("<>"))) { 
-			int i1 = l.indexOf("&&");
-			int i2 = l.indexOf("||");
-			int i3 = l.indexOf("<=>");
-			int i4 = l.indexOf("=>");
+		if (!(l.get(0).equals(LogicalSymbols.POSSIBILITY()) || l.get(0).equals(LogicalSymbols.NECESSITY()))) { 
+			int i1 = l.indexOf(LogicalSymbols.CONJUNCTION());
+			int i2 = l.indexOf(LogicalSymbols.DISJUNCTION());
+			int i3 = l.indexOf(LogicalSymbols.EQUIVALENCE());
+			int i4 = l.indexOf(LogicalSymbols.IMPLICATION());
 			int[] indices = {i1,i2,i3,i4};
 			Arrays.sort(indices);
 			
@@ -452,13 +453,13 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			result = new Possibility((RelationalFormula) l.get(1));
 		//Add additional conjuncts/disjuncts to the right of the modalization (if applicable)
 		if (l.size() > 2) {
-			if (l.get(2) == "&&") 
+			if (l.get(2) == LogicalSymbols.CONJUNCTION()) 
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
-			else if (l.get(2) == "||") 
+			else if (l.get(2) == LogicalSymbols.DISJUNCTION()) 
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
-			else if (l.get(2) == "<=>") 
+			else if (l.get(2) == LogicalSymbols.EQUIVALENCE()) 
 				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
-			else if (l.get(2) == "=>")
+			else if (l.get(2) == LogicalSymbols.IMPLICATION())
 				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(0));
