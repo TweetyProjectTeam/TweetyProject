@@ -201,7 +201,7 @@ public class PlParser extends Parser<PlBeliefSet> {
 					return new Contradiction();
 				if(s.equals(LogicalSymbols.TAUTOLOGY()))
 					return new Tautology();
-				//Allow all characters for proposition names except |,%,!,(,) and whitespace characters.
+				//Allow all characters for proposition names except |,&,!,(,) and whitespace characters.
 				if(s.matches("[^|&!\\s\\(\\)]"))
 					return new Proposition(s);
 			}
