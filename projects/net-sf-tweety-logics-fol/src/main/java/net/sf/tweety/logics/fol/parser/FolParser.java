@@ -393,7 +393,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 					else if (indices[i]==i4) 
 						return new Implication(parseQuantification(leftl), parseQuantification(rightl));
 					else
-						throw new ParserException("Unrecognized formula type '" + l.get(0) + "'."); 
+						throw new ParserException("Unrecognized formula type '" + indices[i] + "'."); 
 				}
 			}	
 		}
@@ -442,7 +442,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 			else if (l.get(idx+2) == LogicalSymbols.IMPLICATION())
 				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
 			else 
-				throw new ParserException("Unrecognized symbol " + l.get(0));
+				throw new ParserException("Unrecognized symbol " + l.get(idx+2));
 		}
 		return result;	
 	}
