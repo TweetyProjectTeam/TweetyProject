@@ -18,8 +18,10 @@
  */
 package net.sf.tweety.logics.fol.parser;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,21 +55,40 @@ import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
 /**
- * This class implements a parser for the TPTP syntax. Parses single first-order
- * logic formulas and (TODO) knowledge bases.
- *
- * <p> Basic Operators:</p>
+ * This class implements a parser for the TPTP syntax that parses single fol formulas and knowledge bases 
+ * (TPTP problem files or axiom files). 
+ * <p> TPTP files consist of any of the following in any order and separated by newlines:
+ *  <ul>
+ *  <li> formulas </li>
+ *  <li> comments, i.e. lines starting with "%" </li>
+ *  <li> includes of other TPTP files, i.e. lines like "include('path/to/file',[optional,formula,names])" </li>
+ *  </ul>
+ * </p>
+ * 
+ * <p> The syntax for first-order logic formulas is 'fof(name,role,formula,source,[useful_info]).':
  * <ul>
- * <li> Negation: ~ formula					</li>
- * <li> Conjunction: formula & formula		</li>
- * <li> Disjunction: formula | formula		</li>
- * <li> Implication: formula => formula		</li>
- * <li> Equivalence: formula <=> formula	</li>
- * <li> Universal quantifier: ! [Variable1,Variable2,...] : formula	</li> (Currently only works if formula is in parentheses)
- * <li> Existential quantifier:	? [Variable1,Variable2,...] : formula	</li> (Currently only works if formula is in parentheses)
- * <li> Tautology: $true					</li>
- * <li> Contradiction: $false 				</li>
+ * <li> name is the name of the formula </li>
+ * <li> role is anything out of {axiom, hypothesis, definition, assumption, lemma, theorem, corollary
+ * conjecture, negated_conjecture} </li>
+ * <li> formula is the actual formula </li>
+ * <li> The other arguments are optional and ignored by this parser. </li>
  * </ul>
+ * </p>
+ * 
+ * <p>Supported operators and pre-defined predicates in formulas:
+ * <br> Negation: ~ formula					
+ * <br> Conjunction: formula & formula		
+ * <br> Disjunction: formula | formula		
+ * <br> Implication: formula => formula <br>formula <= formula   
+ * <br> Equivalence: formula <=> formula	
+ * <br> Universal quantifier: ! [Variable1,Variable2,...] : (formula)	</li> 
+ * <br> Existential quantifier:	? [Variable1,Variable2,...] : (formula)	</li> 
+ * <br> Tautology: $true 
+ * <br> Contradiction: $false 
+ * <br> Equality: = (TODO soon to be added)
+ * <br> Inequality: != (TODO soon to be added)
+ * </ul>
+ * </p>
  * 
  * @author Anna Gessler
  */
@@ -81,26 +102,126 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 	 * Keeps track of variables defined.
 	 */
 	private Map<String,Variable> variables;
+	
+	/**
+	 * Location of included files (optional). 
+	 * This path will be prepended to the path given in the include('included_file') paths.
+	 */
+	private String includePath = "";
+	
+	/**
+	 * Regular expression that restricts which formulas will be parsed. Formulas with
+	 * names that do not match the expression will not be parsed. By default, all formulas 
+	 * are parsed.
+	 */
+	private String formulaNames = ".+";
+	
+	/**
+	 * Regular expression that restricts which formulas will be parsed. Formulas with
+	 * roles that do not match the expression will not be parsed. By default, all formulas 
+	 * are parsed.
+	 */
+	private String formulaRoles = "axiom|hypothesis|definition|assumption|lemma|theorem|corollary|conjecture|negated_conjecture";
 
 	@Override
 	public FolBeliefSet parseBeliefBase(Reader reader) throws IOException, ParserException {
-		// TODO Auto-generated method stub
-		return null;
+		FolBeliefSet beliefSet = new FolBeliefSet();
+		String s = "";
+		boolean lineIsComment = false;
+			
+		//Parse each non-comment line as a formula
+		try {
+			for (int c = reader.read(); c != -1; c = reader.read()) {
+				if (c==37)  //Ignore comments (lines starting with '%')
+					lineIsComment = true;
+				else if (c == 10){	
+					s = s.trim();
+					if (!lineIsComment && !s.equals("")) {
+						if (s.startsWith("include")) 
+							beliefSet.addAll(parseIncludedFiles(s)); //Parse formulas in included files
+						else
+							beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));}
+					s = "";
+					lineIsComment = false;
+				} 
+				else 
+					s += (char) c; 
+			}	
+			s = s.trim();
+			if (!lineIsComment && !s.equals("")) 
+				beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
+		} catch(Exception e){
+			throw new ParserException(e);
+		}
+		beliefSet.remove(null);
+		return beliefSet;
+	}
+
+	/**
+	 * Parses formulas of an included TPTP problem file. If the given string 
+	 * contains a list of formula names in addition to the include path, 
+	 * only formulas of the given names will be parsed.
+	 * 
+	 * @param s String of format "include('path/to/file')." or "include('path/to/file',[formula,names,separated,by,commata])."
+	 * @return a belief set containing the parsed included formulas
+	 * @throws FileNotFoundException
+	 * @throws ParserException
+	 * @throws IOException
+	 */
+	private FolBeliefSet parseIncludedFiles(String s) throws FileNotFoundException, ParserException, IOException {
+		String pathOfIncludedFile = s.substring(s.indexOf("'")+1, s.lastIndexOf("'"));
+		
+		String formulaNames = new String();
+		if (s.length()>s.lastIndexOf("'")+3) { //Check for additional arguments specifying formulas names to be parsed
+			formulaNames = s.substring(s.lastIndexOf("'")+3,s.length()-3);
+			formulaNames = formulaNames.replaceAll(",", "|");
+		}
+		
+		if (formulaNames.isEmpty())
+			return this.parseBeliefBaseFromFile(this.includePath + pathOfIncludedFile);
+		
+		this.setFormulaNames(formulaNames);
+		FolBeliefSet formulas = this.parseBeliefBaseFromFile(this.includePath + pathOfIncludedFile);
+		this.resetFormulaNames();
+		return formulas;
 	}
 
 	@Override
 	public Formula parseFormula(Reader reader) throws IOException, ParserException {
+		String str = "";
+		for(int c = reader.read(); c != -1; c = reader.read()) 
+			str += (char)c;
+		
+		if (!str.matches("fof\\(.+,.+,.+(,.*)*\\)\\.?"))
+			throw new ParserException("Formula "+ str + " does not match fof syntax 'fof(name,role,formula,source,[useful_info])'.");
+		
+		String[] arguments = str.substring(4, str.lastIndexOf(")")).split(","); //Split formula into different arguments
+		String name = arguments[0]; 
+		String role = arguments[1];
+		String theFormula = arguments[2];
+		
+		//Ignore formulas of certain names or roles
+		if (!name.toLowerCase().matches(this.formulaNames) || !role.toLowerCase().matches(this.formulaRoles)) 
+			return null;
+
 		Stack<Object> stack = new Stack<Object>();
 		try{
 			this.variables = new HashMap<String,Variable>();
-			for(int c = reader.read(); c != -1; c = reader.read()) 
-				this.consumeToken(stack, c);
+			for (int i = 0; i < theFormula.length(); i++)
+				this.consumeToken(stack, theFormula.charAt(i));		
 			return this.parseQuantification(stack);
 		}catch(Exception e){
 			throw new ParserException(e);
 		}
 	}
 
+	/**
+	 * This method reads one token from the given reader and appropriately
+	 * constructs a fol formula from the stream.
+	 * @param stack a stack used for monitoring the read items.
+	 * @param c a token from a stream.
+	 * @throws ParserException in case of parser errors.
+	 */
 	private void consumeToken(Stack<Object> stack, int c) {
 		try{
 			String s = Character.toString((char) c);
@@ -116,17 +237,26 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 					stack.push(this.parseTermlist(l));
 				else stack.push(this.parseQuantification(l));
 			} 
-			else if(s.equals(">")){
-				if(stack.lastElement().equals("=")){
+			else if (stack.size() >=1 && stack.lastElement().equals("=")) {
+				if (s.equals(">")) {
 					if (stack.size() >=2 && stack.get(stack.size()-2).equals("<")) {
 						stack.pop();
 						stack.pop();
 						stack.push("<=>");
 					}
 					else {
+						stack.pop();
+						stack.push("=>"); } 
+				}
+				else if (stack.size() >=2 && stack.get(stack.size()-2).equals("<")) {
 					stack.pop();
-					stack.push("=>"); } 	
-				} else stack.push(s);
+					stack.pop();
+					stack.push("<="); }
+				else stack.push(s);
+			}
+			else if (s.equals("=") && stack.size() >= 1 && stack.lastElement().equals("!")) {
+				stack.pop();
+				stack.push("!="); 
 			}
 			else if(s.equals("[") | s.equals("]") | s.equals(" ")){
 			}
@@ -137,6 +267,12 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 		
 	}
 
+	/**
+	 * Parses a term list as a list of String tokens or terms into a list of terms.
+	 * @param l a list of objects, either String tokens or objects of type List.
+	 * @return a list of terms.
+	 * @throws ParserException if the list could not be parsed.
+	 */
 	@SuppressWarnings("unchecked")
 	private List<Term<?>> parseTermlist(List<Object> l) {
 		List<Term<?>> terms = new ArrayList<Term<?>>();
@@ -198,6 +334,12 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 		return terms;
 	}
 
+	/**
+	 * Parses a quantified formula as a list of String tokens or formulas.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
 	private FolFormula parseQuantification(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
@@ -281,6 +423,12 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 		return result;	
 	}
 	
+	/**
+	 * Parses an equivalence as a list of String tokens or formulas into a fol formula.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
 	private FolFormula parseEquivalence(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
@@ -302,27 +450,45 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 
 	}
 	
+	/**
+	 * Parses an implication as a list of String tokens or formulas into a fol formula.
+	 * Reverse implications like 'A <= B' will be parsed as 'B => A'.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
 	private FolFormula parseImplication(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
-		if(!(l.contains("=>")))
+		boolean isReverseImplication = false;
+		if(l.contains("<="))
+			isReverseImplication = true;
+		else if(!(l.contains("=>")))
 			return this.parseDisjunction(l);	
 	
 		List<Object> left = new ArrayList<Object>(); 
 		List<Object> right = new ArrayList<Object>(); 
 		boolean isRightFormula = false;
 		for(Object o: l){
-			if((o instanceof String) && ((String)o).equals("=>") )
+			if((o instanceof String) && ((String)o).equals("=>") | ((String)o).equals("<=") )
 				isRightFormula = true;
 			else if (isRightFormula) 
 				right.add(o);
 			else
 				left.add(o);
 		}	
+		if (isReverseImplication)
+			return new Implication(parseQuantification(right),parseQuantification(left));	
 		return new Implication(parseQuantification(left),parseQuantification(right));	
 	
 	}
 	
+	/**
+	 * Parses a disjunction as a list of String tokens or formulas into a fol formula.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
 	private FolFormula parseDisjunction(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
@@ -343,6 +509,12 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 	
 	}
 	
+	/**
+	 * Parses a conjunction as a list of String tokens or formulas into a fol formula.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
 	private FolFormula parseConjunction(List<Object> l) {
 		if(l.isEmpty())
 			throw new ParserException("General parsing exception.");
@@ -399,7 +571,7 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 			if(s.equals("$false"))
 				return new Contradiction();
 			if(s.equals("$true"))
-				return new Tautology();
+				return new Tautology();	
 			if(this.signature.containsPredicate(s)){
 			  // check for zero-arity predicate
 			  if(terms == null) 
@@ -447,12 +619,46 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 		return this.signature;
 	}
 
-	public Map<String, Variable> getVariables() {
-		return variables;
+	/**
+	 * Set the regular expression that restricts which formulas will be parsed. Formulas with
+	 * names that do not match the expression will not be parsed. 
+	 */
+	public void setFormulaNames(String formulaNames) {
+		this.formulaNames = formulaNames;
 	}
 
-	public void setVariables(Map<String, Variable> variables) {
-		this.variables = variables;
+	/**
+	 * Set the regular expression that restricts which formulas will be parsed. Formulas with
+	 * roles that do not match the expression will not be parsed. 
+	 */
+	public void setFormulaRoles(String formulaRoles) {
+		this.formulaRoles = formulaRoles;
+	}
+	
+	/**
+	 * Reset the regular expression that restricts which formulas will be parsed to the default value,
+	 * meaning formulas of any TPTP roles will be parsed. Possible TPTP roles are
+	 * axiom, hypothesis, definition, assumption, lemma, theorem, corollary, conjecture and negated_conjecture.
+	 */
+	public void resetFormulaRoles() {
+		this.formulaRoles = "axiom|hypothesis|definition|assumption|lemma|theorem|corollary|conjecture|negated_conjecture";
+	}
+	
+	/**
+	 * Reset the regular expression that restricts which formulas will be parsed to the default value,
+	 * meaning formulas of all names will be parsed.
+	 */
+	public void resetFormulaNames() {
+		this.formulaNames = ".+";
+	}
+	
+	
+	/**
+	 * Set the location of included files. 
+	 * @param path that will be prepended to the paths of all included problem files.
+	 */
+	public void setIncludePath(String includePath) {
+		this.includePath = includePath + "/";
 	}
 
 }
