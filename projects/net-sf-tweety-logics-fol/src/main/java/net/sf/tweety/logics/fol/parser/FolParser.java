@@ -637,6 +637,25 @@ public class FolParser extends Parser<FolBeliefSet> {
 	}
 	
 	/**
+	 * This function parses only the sorts declaration and type declaration parts
+	 * of a belief base.
+	 * 
+	 * @return a fol signature
+	 */
+	public FolSignature parseSignature(String s) {
+		this.setSignature(new FolSignature());
+		String[] lines = s.split("\n");
+		for (String l : lines) {
+			l = l.trim();
+			if (l.contains("=")) 
+				parseSortDeclaration(l,this.getSignature());
+			else if (l.startsWith("type"))
+				parseTypeDeclaration(l, this.getSignature());
+		}
+		return this.getSignature();
+	}
+	
+	/**
 	 * Sets the signature for this parser.
 	 * @param signature a fol signature.
 	 */
