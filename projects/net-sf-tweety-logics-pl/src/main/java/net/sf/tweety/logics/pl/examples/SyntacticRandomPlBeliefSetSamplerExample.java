@@ -16,13 +16,13 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.logics.pl.examples;
 
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.logics.pl.util.SyntacticRandomSampler;
 import net.sf.tweety.math.probability.Probability;
 
-public class SyntacticRandomPlBeliefSetSamplerTest {
+public class SyntacticRandomPlBeliefSetSamplerExample {
 
 	public static void main(String[] args){
 		PropositionalSignature sig = new PropositionalSignature(4);

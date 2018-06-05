@@ -19,7 +19,7 @@
 package net.sf.tweety.arg.deductive.semantics.attacks;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
-import net.sf.tweety.logics.pl.ClassicalEntailment;
+import net.sf.tweety.logics.pl.NaiveReasoner;
 import net.sf.tweety.logics.pl.syntax.Negation;
 
 
@@ -48,8 +48,8 @@ public class DefeatingRebuttal implements Attack{
 	 */
 	@Override
 	public boolean isAttackedBy(DeductiveArgument a, DeductiveArgument b) {
-		ClassicalEntailment entailment = new ClassicalEntailment();
-		if(entailment.entails(b.getClaim(), new Negation(a.getClaim())))
+		NaiveReasoner reasoner = new NaiveReasoner();
+		if(reasoner.entails(b.getClaim(), new Negation(a.getClaim())))
 			return true;		
 		return false;
 	}

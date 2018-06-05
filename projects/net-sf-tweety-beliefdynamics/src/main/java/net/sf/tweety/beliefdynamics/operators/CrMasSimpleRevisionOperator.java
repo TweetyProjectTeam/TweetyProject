@@ -23,8 +23,9 @@ import java.util.*;
 import net.sf.tweety.agents.*;
 import net.sf.tweety.beliefdynamics.*;
 import net.sf.tweety.beliefdynamics.mas.*;
+import net.sf.tweety.commons.KernelProvider;
 import net.sf.tweety.graphs.orders.*;
-import net.sf.tweety.logics.pl.ClassicalEntailment;
+import net.sf.tweety.logics.pl.NaiveReasoner;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**
@@ -65,8 +66,8 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 		Collection<InformationObject<PropositionalFormula>> credFormulas = new HashSet<InformationObject<PropositionalFormula>>();
 		for(InformationObject<PropositionalFormula> f: formulas){
 			// get all proofs of the complement of the formula			
-			ClassicalEntailment entailment = new ClassicalEntailment();
-			Collection<Collection<PropositionalFormula>> kernels = entailment.getKernels(allProps, new Negation(f.getFormula()));
+			KernelProvider<PropositionalFormula> kernelProvider = new NaiveReasoner();
+			Collection<Collection<PropositionalFormula>> kernels = kernelProvider.getKernels(allProps, new Negation(f.getFormula()));
 			// if there is one kernel of the complement that is strictly more preferred then don't revise
 			boolean formulaIsPlausible = true;
 			for(Collection<PropositionalFormula> kernel: kernels){

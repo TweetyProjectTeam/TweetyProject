@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.logics.pl.examples;
 
 import java.io.File;
 import java.io.FileWriter;

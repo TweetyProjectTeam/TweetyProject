@@ -16,34 +16,43 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.logics.pl.examples;
 
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.logics.commons.analysis.DfInconsistencyMeasure;
 import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasure;
 import net.sf.tweety.logics.pl.parser.PlParser;
-import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.sat.Sat4jSolver;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.math.func.FracAggrFunction;
 
-public class DfInconsistencyMeasureTest {
-
-	public static void main(String[] args) throws ParserException, IOException{
+/**
+ * Example code illustrating the contension inconsistency measure.
+ * @author Matthias Thimm
+ */
+public class ContensionExample {
+	public static void main(String[] args) throws ParserException, IOException, InterruptedException{
+		// Set SAT solver
+		SatSolver.setDefaultSolver(new Sat4jSolver());
 		// Create some knowledge base
 		PlBeliefSet kb = new PlBeliefSet();
 		PlParser parser = new PlParser();
-			
+	
 		kb.add((PropositionalFormula)parser.parseFormula("a"));
-		kb.add((PropositionalFormula)parser.parseFormula("!a"));
-		kb.add((PropositionalFormula)parser.parseFormula("b && a"));
+		kb.add((PropositionalFormula)parser.parseFormula("!a && b"));
+		kb.add((PropositionalFormula)parser.parseFormula("!b"));
+		kb.add((PropositionalFormula)parser.parseFormula("c || a"));
+		kb.add((PropositionalFormula)parser.parseFormula("!c || a"));
+		kb.add((PropositionalFormula)parser.parseFormula("!c || d"));
+		kb.add((PropositionalFormula)parser.parseFormula("!d"));
+		kb.add((PropositionalFormula)parser.parseFormula("d"));
+		kb.add((PropositionalFormula)parser.parseFormula("c"));
 		
-				
-		// test Df inconsistency measure		
-		BeliefSetInconsistencyMeasure<PropositionalFormula> df = new DfInconsistencyMeasure<PropositionalFormula>(new FracAggrFunction(), new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"));
-		System.out.println("Df: " + df.inconsistencyMeasure(kb));
-		
+		// test contension inconsistency measure		
+		BeliefSetInconsistencyMeasure<PropositionalFormula> cont = new ContensionInconsistencyMeasure();
+		System.out.println("Cont: " + cont.inconsistencyMeasure(kb));
 	}
 }

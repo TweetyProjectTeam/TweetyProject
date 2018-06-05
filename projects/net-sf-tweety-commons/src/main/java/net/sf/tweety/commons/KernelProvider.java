@@ -16,24 +16,24 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.commons;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Collection;
 
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.logics.pl.util.SyntacticEnumeratingIterator;
-
-public class SyntacticEnumeratingPlBeliefSetSamplerTest {
-
-	public static void main(String[] args) throws IOException{
-		// generates all syntactic variations of propositional belief sets 
-		//  each formula has maximal length 4, and 4 propositions		
-		PropositionalSignature sig = new PropositionalSignature(4);
-		SyntacticEnumeratingIterator s = new SyntacticEnumeratingIterator(sig,4, new File("/Users/mthimm/Desktop/plfiles/"), false);
-		int i = 0;
-		while(true){
-			System.out.println(i++ + "\t" + s.next());			
-		}
-	}
+/**
+ * Classes implementing this interface are able to provide kernels (=minimal proofs).
+ * 
+ * @author Matthias Thimm
+ *
+ * @param <T> the type of formulas
+ */
+public interface KernelProvider<T extends Formula> {
+	/**
+	 * Retrieves the set of kernels for the given formula
+	 * from the given set of formulas.
+	 * @param formulas a set of formulas.
+	 * @param formula a formula.
+	 * @return the collection of kernels
+	 */	
+	public Collection<Collection<T>> getKernels(Collection<T> formulas, T formula);
 }

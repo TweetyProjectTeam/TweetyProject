@@ -16,34 +16,34 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.logics.pl.examples;
 
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.commons.analysis.NaiveMusEnumerator;
+import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
+import net.sf.tweety.logics.commons.analysis.MaInconsistencyMeasure;
 import net.sf.tweety.logics.pl.PlBeliefSet;
-import net.sf.tweety.logics.pl.sat.SatSolver;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.logics.pl.util.CnfSampler;
 
-public class MinimalInconsistentSubsetTest {
+public class MaMeasureExample {
 
 	public static void main(String[] args) throws ParserException, IOException{
-		PropositionalSignature sig = new PropositionalSignature();
-		for(int i = 0; i < 5; i++)
-			sig.add(new Proposition("a" + i));
-		CnfSampler sampler = new CnfSampler(sig,0.8,30, 30);
-		PlBeliefSet kb = sampler.next();
-		System.out.println(kb);
-		System.out.println();
+		// Create some knowledge base
+		PlBeliefSet kb = new PlBeliefSet();
+		PlParser parser = new PlParser();
+			
+		kb.add((PropositionalFormula)parser.parseFormula("a"));
+		kb.add((PropositionalFormula)parser.parseFormula("!a"));
+		kb.add((PropositionalFormula)parser.parseFormula("!a && !b"));
+		kb.add((PropositionalFormula)parser.parseFormula("b"));
 		
-		NaiveMusEnumerator<PropositionalFormula> enumerator = new NaiveMusEnumerator<PropositionalFormula>(SatSolver.getDefaultSolver());
+				
+		// test Ma inconsistency measure		
+		BeliefSetInconsistencyMeasure<PropositionalFormula> ma = new MaInconsistencyMeasure<PropositionalFormula>(new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"));
+		System.out.println("Ma: " + ma.inconsistencyMeasure(kb));
 		
-		long millis = System.currentTimeMillis();		
-		System.out.println(enumerator.minimalInconsistentSubsets(kb));
-		System.out.println(System.currentTimeMillis()-millis);		
 	}
 }

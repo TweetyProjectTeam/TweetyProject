@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.logics.pl.examples;
 
 import java.io.IOException;
 
@@ -27,7 +27,7 @@ import net.sf.tweety.logics.pl.sat.LingelingSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
-public class LingelingTest {
+public class LingelingExample {
 public static void main(String[] args) throws ParserException, IOException{
 		
 		

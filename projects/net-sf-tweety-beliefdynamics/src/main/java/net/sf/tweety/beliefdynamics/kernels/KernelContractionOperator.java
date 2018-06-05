@@ -43,16 +43,16 @@ public class KernelContractionOperator<T extends Formula> extends MultipleBaseCo
 	/**
 	 * Used to determine kernels.
 	 */
-	private EntailmentRelation<T> entailmentRelation;
+	private KernelProvider<T> kernelProvider;
 	
 	/**
 	 * Creates a new kernel contraction operator with the given incision function.
 	 * @param incisionFunction some incision function.
 	 * @param entailmentRelation an entailment relation used to determine kernels.
 	 */
-	public KernelContractionOperator(IncisionFunction<T> incisionFunction, EntailmentRelation<T> entailmentRelation){
+	public KernelContractionOperator(IncisionFunction<T> incisionFunction, KernelProvider<T> kernelProvider){
 		this.incisionFunction = incisionFunction;
-		this.entailmentRelation = entailmentRelation;
+		this.kernelProvider = kernelProvider;
 	}
 	
 	/* (non-Javadoc)
@@ -63,7 +63,7 @@ public class KernelContractionOperator<T extends Formula> extends MultipleBaseCo
 		// Determine kernels of base for formulas
 		Collection<Collection<T>> kernels = new HashSet<Collection<T>>();
 		for(T formula: formulas)
-			kernels.addAll(this.entailmentRelation.getKernels(base, formula));
+			kernels.addAll(this.kernelProvider.getKernels(base, formula));
 		// incise each kernel
 		Collection<T> incision = this.incisionFunction.incise(kernels);
 		// remove incision

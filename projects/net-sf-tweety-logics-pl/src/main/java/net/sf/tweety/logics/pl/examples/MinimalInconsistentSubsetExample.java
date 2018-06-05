@@ -16,34 +16,34 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.logics.pl.examples;
 
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.commons.analysis.MusEnumerator;
+import net.sf.tweety.logics.commons.analysis.NaiveMusEnumerator;
 import net.sf.tweety.logics.pl.PlBeliefSet;
-import net.sf.tweety.logics.pl.parser.PlParser;
-import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.util.CnfSampler;
 
-public class MusTest {
+public class MinimalInconsistentSubsetExample {
+
 	public static void main(String[] args) throws ParserException, IOException{
-		PlBeliefSet beliefSet = new PlBeliefSet();
-		PlParser parser = new PlParser();
-		for(int i = 0; i < 7; i++){
-			beliefSet.add((PropositionalFormula)parser.parseFormula("a"+i));
-			beliefSet.add((PropositionalFormula)parser.parseFormula("!a"+i));
-		}
-		beliefSet.add((PropositionalFormula)parser.parseFormula("!a1 && !a2"));
-		beliefSet.add((PropositionalFormula)parser.parseFormula("!a3 || !a4"));
-		beliefSet.add((PropositionalFormula)parser.parseFormula("!a3 || !a4 || a5"));
+		PropositionalSignature sig = new PropositionalSignature();
+		for(int i = 0; i < 5; i++)
+			sig.add(new Proposition("a" + i));
+		CnfSampler sampler = new CnfSampler(sig,0.8,30, 30);
+		PlBeliefSet kb = sampler.next();
+		System.out.println(kb);
+		System.out.println();
 		
+		NaiveMusEnumerator<PropositionalFormula> enumerator = new NaiveMusEnumerator<PropositionalFormula>(SatSolver.getDefaultSolver());
 		
-		System.out.println(beliefSet);
-		
-		MusEnumerator<PropositionalFormula> enumerator = new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");
-		
-		System.out.println(enumerator.minimalInconsistentSubsets(beliefSet));		
+		long millis = System.currentTimeMillis();		
+		System.out.println(enumerator.minimalInconsistentSubsets(kb));
+		System.out.println(System.currentTimeMillis()-millis);		
 	}
 }

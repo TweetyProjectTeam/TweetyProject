@@ -16,28 +16,24 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.beliefdynamics.operators;
+package net.sf.tweety.logics.pl.examples;
 
-import net.sf.tweety.beliefdynamics.kernels.*;
-import net.sf.tweety.logics.pl.NaiveReasoner;
-import net.sf.tweety.logics.pl.syntax.*;
+import java.io.File;
+import java.io.IOException;
 
-/**
- * This class implements a simple kernel base contraction for propositional logic with 
- * an incision function that randomly selects its incisions.
- * <br>
- * NOTE: results of this operator are not deterministic and may not be reproduced (however, each
- * 	 result is a valid kernel contraction)
- * 
- * @author Matthias Thimm
- */
-public class RandomKernelContractionOperator extends KernelContractionOperator<PropositionalFormula> {
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.util.SyntacticEnumeratingIterator;
 
-	/**
-	 * Creates a new contraction operator.
-	 */
-	public RandomKernelContractionOperator() {
-		super(new RandomIncisionFunction<PropositionalFormula>(), new NaiveReasoner());
+public class SyntacticEnumeratingPlBeliefSetSamplerExample {
+
+	public static void main(String[] args) throws IOException{
+		// generates all syntactic variations of propositional belief sets 
+		//  each formula has maximal length 4, and 4 propositions		
+		PropositionalSignature sig = new PropositionalSignature(4);
+		SyntacticEnumeratingIterator s = new SyntacticEnumeratingIterator(sig,4, new File("/Users/mthimm/Desktop/plfiles/"), false);
+		int i = 0;
+		while(true){
+			System.out.println(i++ + "\t" + s.next());			
+		}
 	}
-
 }

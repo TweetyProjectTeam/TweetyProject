@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl.test;
+package net.sf.tweety.logics.pl.examples;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
-public class DSumMeasureTest {
+public class DSumMeasureExample {
 
 	public static void main(String[] args) throws ParserException, IOException{
 		Collection<PropositionalFormula> c = new HashSet<PropositionalFormula>();

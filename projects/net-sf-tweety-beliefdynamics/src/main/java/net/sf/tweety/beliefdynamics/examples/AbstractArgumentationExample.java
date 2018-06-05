@@ -29,7 +29,7 @@ import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.kernels.KernelContractionOperator;
 import net.sf.tweety.beliefdynamics.kernels.RandomIncisionFunction;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.logics.pl.ClassicalEntailment;
+import net.sf.tweety.logics.pl.NaiveReasoner;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -70,7 +70,7 @@ public class AbstractArgumentationExample {
 		}
 		
 		MultipleBaseRevisionOperator<PropositionalFormula> revise = new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
-				new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new ClassicalEntailment()),
+				new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new NaiveReasoner()),
 				new DefaultMultipleBaseExpansionOperator<PropositionalFormula>());
 		
 		PlBeliefSet beliefSet2 = new PlBeliefSet(revise.revise(beliefSet, new Proposition("in_a")));
