@@ -16,33 +16,33 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln.analysis;
+package net.sf.tweety.math.func;
 
 import java.util.List;
 
-/** This aggregation function models the sum function.
+/** This aggregation function models the minimum function.
  * @author Matthias Thimm
  *
  */
-public class SumAggregator implements AggregationFunction {
+public class MinAggregator implements AggregationFunction {
 
-	private static final long serialVersionUID = -8518226177117879461L;
+	private static final long serialVersionUID = -8571729834785975974L;
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.analysis.AggregationFunction#aggregate(java.util.List)
+	 * @see net.sf.tweety.math.func.AggregationFunction#eval(java.util.List)
 	 */
 	@Override
-	public double aggregate(List<Double> elements) {
-		Double sum = new Double(0);
+	public Double eval(List<Double> elements) {
+		Double min = Double.MAX_VALUE;
 		for(Double elem: elements)
-			sum += elem;
-		return sum;
+			if(elem < min) min = elem;
+		return min;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return "sum";
+		return "min";
 	}
 }

@@ -16,16 +16,20 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln.analysis;
+package net.sf.tweety.math.norm;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Vector;
+
+import net.sf.tweety.math.term.Term;
+
 
 /**
  * This class implement the p-norm distance function where distances are normalized
  * corresponding to their distance to 0.5.
  * @author Matthias Thimm
  */
-public class ProbabilisticPNormDistanceFunction implements DistanceFunction {
+public class ProbabilisticPNorm implements RealVectorNorm, Serializable {
 	
 	private static final long serialVersionUID = 3665499615843076323L;
 
@@ -39,7 +43,7 @@ public class ProbabilisticPNormDistanceFunction implements DistanceFunction {
 	 * @param p the parameter for the p-norm.
 	 * @param c the parameter of the normalization.
 	 */
-	public ProbabilisticPNormDistanceFunction(int p, int c){
+	public ProbabilisticPNorm(int p, int c){
 		if(c < 3 || c % 2 != 1)
 			throw new IllegalArgumentException("c has to be greater 2 and odd.");
 		this.p = p;
@@ -50,7 +54,7 @@ public class ProbabilisticPNormDistanceFunction implements DistanceFunction {
 	 * @see net.sf.tweety.logics.markovlogic.analysis.DistanceFunction#distance(java.util.List, java.util.List)
 	 */
 	@Override
-	public double distance(List<Double> l1, List<Double> l2) {
+	public double distance(Vector<Double> l1, Vector<Double> l2) {
 		if(l1.size() != l2.size())
 			throw new IllegalArgumentException("Lengths of lists must match.");
 		Double sum = new Double(0);
@@ -89,11 +93,51 @@ public class ProbabilisticPNormDistanceFunction implements DistanceFunction {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ProbabilisticPNormDistanceFunction other = (ProbabilisticPNormDistanceFunction) obj;
+		ProbabilisticPNorm other = (ProbabilisticPNorm) obj;
 		if (c != other.c)
 			return false;
 		if (p != other.p)
 			return false;
 		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.Norm#norm(java.lang.Object)
+	 */
+	@Override
+	public double norm(Vector<Double> obj) {
+		throw new UnsupportedOperationException("Implement me!");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#normTerm(java.util.Vector)
+	 */
+	@Override
+	public Term normTerm(Vector<Term> obj) {
+		throw new UnsupportedOperationException("Implement me!");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#normTerm(net.sf.tweety.math.term.Term[])
+	 */
+	@Override
+	public Term normTerm(Term[] obj) {
+		throw new UnsupportedOperationException("Implement me!");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#distanceTerm(java.util.Vector, java.util.Vector)
+	 */
+	@Override
+	public Term distanceTerm(Vector<Term> obj1, Vector<Term> obj2) {
+		throw new UnsupportedOperationException("Implement me!");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#distanceTerm(net.sf.tweety.math.term.Term[], net.sf.tweety.math.term.Term[])
+	 */
+	@Override
+	public Term distanceTerm(Term[] obj1, Term[] obj2) {
+		throw new UnsupportedOperationException("Implement me!");
 	}
 }

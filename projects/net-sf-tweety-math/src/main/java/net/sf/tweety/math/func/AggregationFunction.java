@@ -16,24 +16,22 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln.analysis;
+package net.sf.tweety.math.func;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * This interface defines a distance function for two vectors of doubles.
+ * This class aggregates a list of doubles to a single double.
  * 
  * @author Matthias Thimm
  */
-public interface DistanceFunction extends Serializable {
-	
-	/** Measures the distance between the two vectors.
-	 * @param l1 some list of doubles.
-	 * @param l2 some list of doubles.
-	 * @return the distance between the two vectors.
+public interface AggregationFunction extends SimpleFunction<List<Double>, Double>,  Serializable {
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.SimpleFunction#eval(java.lang.Object)
 	 */
-	public double distance(List<Double> l1, List<Double> l2);
+	public Double eval(List<Double> x);
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

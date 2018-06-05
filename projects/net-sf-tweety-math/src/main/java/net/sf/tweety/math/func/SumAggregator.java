@@ -16,26 +16,33 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln.analysis;
+package net.sf.tweety.math.func;
 
-import java.io.Serializable;
 import java.util.List;
 
-/**
- * This class aggregates a list of doubles to a single double.
- * 
+/** This aggregation function models the sum function.
  * @author Matthias Thimm
+ *
  */
-public interface AggregationFunction extends Serializable {
+public class SumAggregator implements AggregationFunction {
 
-	/** Aggregates the elements to a single double.
-	 * @param elements a list of double
-	 * @return a double
+	private static final long serialVersionUID = -8518226177117879461L;
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.func.AggregationFunction#eval(java.util.List)
 	 */
-	public double aggregate(List<Double> elements);
+	@Override
+	public Double eval(List<Double> elements) {
+		Double sum = new Double(0);
+		for(Double elem: elements)
+			sum += elem;
+		return sum;
+	}
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString();
+	public String toString(){
+		return "sum";
+	}
 }

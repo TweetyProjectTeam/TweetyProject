@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pcl.test;
+package net.sf.tweety.logics.pcl.examples;
 
 import java.io.*;
 
@@ -26,21 +26,21 @@ import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.analysis.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 
-public class AnalysisTest {
+public class AnalysisExample {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		//TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
-		//TweetyLogging.initLogging();		
-		
+		//TweetyLogging.initLogging();
+
 		PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.pcl.parser.PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/test.pcl");
-	
+
 		BeliefSetInconsistencyMeasure<ProbabilisticConditional> dist = new DistanceMinimizationInconsistencyMeasure();
 		MeanDistanceCulpabilityMeasure cp = new MeanDistanceCulpabilityMeasure(false);
 		System.out.println(beliefSet);
 		System.out.println(dist.inconsistencyMeasure(beliefSet));
-		
+
 		for(ProbabilisticConditional pc: beliefSet)
 			System.out.println(pc + "\t" + cp.culpabilityMeasure(beliefSet, pc));
-		
+
 		PenalizingCreepingMachineShop ms = new PenalizingCreepingMachineShop();
 		BalancedMachineShop ms2 = new BalancedMachineShop(cp);
 		System.out.print(ms.repair(beliefSet));

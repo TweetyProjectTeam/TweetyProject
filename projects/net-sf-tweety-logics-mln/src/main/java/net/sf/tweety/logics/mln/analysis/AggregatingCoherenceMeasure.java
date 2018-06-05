@@ -20,11 +20,14 @@ package net.sf.tweety.logics.mln.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.mln.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
+import net.sf.tweety.math.func.AggregationFunction;
+import net.sf.tweety.math.norm.RealVectorNorm;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
@@ -41,15 +44,15 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 
 	private static final long serialVersionUID = 4162719595968757160L;
 	
-	/** The distance function used to measure the difference of the probabilities
+	/** The norm used to measure the difference of the probabilities
 	 * of each ground instance for a single formula. */
-	private DistanceFunction distance;
+	private RealVectorNorm norm;
 	/** The aggregation function used to aggregate the distances for each formula. */
 	private AggregationFunction aggregator;
 	
-	public AggregatingCoherenceMeasure(DistanceFunction distance, AggregationFunction aggregator){
+	public AggregatingCoherenceMeasure(RealVectorNorm norm, AggregationFunction aggregator){
 		this.aggregator = aggregator;
-		this.distance = distance;
+		this.norm = norm;
 	}
 	
 	/* (non-Javadoc)
@@ -59,8 +62,8 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 	public double coherence(MarkovLogicNetwork mln, BeliefBaseReasoner<MarkovLogicNetwork> reasoner, FolSignature signature) {
 		List<Double> distances = new ArrayList<Double>();
 		for(MlnFormula f: mln){
-			List<Double> intended = new ArrayList<Double>();
-			List<Double> observed = new ArrayList<Double>();
+			Vector<Double> intended = new Vector<Double>();
+			Vector<Double> observed = new Vector<Double>();
 			Double pObserved;
 			if(f.isStrict())
 				pObserved = 1d;
@@ -69,9 +72,9 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 				observed.add(reasoner.query(mln,groundFormula).getAnswerDouble());
 				intended.add(pObserved);
 			}			
-			distances.add(this.distance.distance(intended, observed));
+			distances.add(this.norm.distance(intended, observed));
 		}
-		return 1-this.aggregator.aggregate(distances);
+		return 1-this.aggregator.eval(distances);
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +82,7 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 	 */
 	@Override
 	public String toString() {		
-		return "C<" + this.distance.toString() + ", " + this.aggregator.toString() + ">";
+		return "C<" + this.norm.toString() + ", " + this.aggregator.toString() + ">";
 	}
 	
 	/* (non-Javadoc)
@@ -92,7 +95,7 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 		result = prime * result
 				+ ((aggregator == null) ? 0 : aggregator.hashCode());
 		result = prime * result
-				+ ((distance == null) ? 0 : distance.hashCode());
+				+ ((norm == null) ? 0 : norm.hashCode());
 		return result;
 	}
 
@@ -113,10 +116,10 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 				return false;
 		} else if (!aggregator.equals(other.aggregator))
 			return false;
-		if (distance == null) {
-			if (other.distance != null)
+		if (norm == null) {
+			if (other.norm != null)
 				return false;
-		} else if (!distance.equals(other.distance))
+		} else if (!norm.equals(other.norm))
 			return false;
 		return true;
 	}

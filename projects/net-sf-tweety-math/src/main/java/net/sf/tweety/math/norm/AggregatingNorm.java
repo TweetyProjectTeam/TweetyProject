@@ -16,18 +16,23 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln.analysis;
+package net.sf.tweety.math.norm;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+
+import net.sf.tweety.math.func.AggregationFunction;
+import net.sf.tweety.math.term.Term;
 
 /**
- * This distance function uses an aggregator on the 1-norm distance of each 
+ * This norm uses an aggregator on the 1-norm distance of each 
  * value.
  * 
  * @author Matthias Thimm
  */
-public class AggregatingDistanceFunction implements DistanceFunction {
+public class AggregatingNorm implements RealVectorNorm, Serializable {
 
 	private static final long serialVersionUID = 7393475547325748126L;
 
@@ -37,21 +42,21 @@ public class AggregatingDistanceFunction implements DistanceFunction {
 	/** Creates a new distance function with the given aggregator.
 	 * @param aggregator some aggregation function.
 	 */
-	public AggregatingDistanceFunction(AggregationFunction aggregator){
+	public AggregatingNorm(AggregationFunction aggregator){
 		this.aggregator = aggregator;
-	}
+	}	
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.analysis.DistanceFunction#distance(java.util.List, java.util.List)
+	 * @see net.sf.tweety.math.norm.Norm#distance(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public double distance(List<Double> l1, List<Double> l2) {
+	public double distance(Vector<Double> l1, Vector<Double> l2) {
 		if(l1.size() != l2.size())
-			throw new IllegalArgumentException("Lengths of lists must match.");
+			throw new IllegalArgumentException("Lengths of vectors must match.");
 		List<Double> diff = new ArrayList<Double>();
 		for(int i = 0; i< l1.size(); i++)
 			diff.add(Math.abs(l1.get(i)-l2.get(i)));
-		return this.aggregator.aggregate(diff);
+		return this.aggregator.eval(diff);
 	}
 
 	/* (non-Javadoc)
@@ -84,12 +89,52 @@ public class AggregatingDistanceFunction implements DistanceFunction {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AggregatingDistanceFunction other = (AggregatingDistanceFunction) obj;
+		AggregatingNorm other = (AggregatingNorm) obj;
 		if (aggregator == null) {
 			if (other.aggregator != null)
 				return false;
 		} else if (!aggregator.equals(other.aggregator))
 			return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.Norm#norm(java.lang.Object)
+	 */
+	@Override
+	public double norm(Vector<Double> obj) {
+		throw new UnsupportedOperationException("Implement me!");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#normTerm(java.util.Vector)
+	 */
+	@Override
+	public Term normTerm(Vector<Term> obj) {
+		throw new UnsupportedOperationException("Implement me!");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#normTerm(net.sf.tweety.math.term.Term[])
+	 */
+	@Override
+	public Term normTerm(Term[] obj) {
+		throw new UnsupportedOperationException("Implement me!");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#distanceTerm(java.util.Vector, java.util.Vector)
+	 */
+	@Override
+	public Term distanceTerm(Vector<Term> obj1, Vector<Term> obj2) {
+		throw new UnsupportedOperationException("Implement me!");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.norm.RealVectorNorm#distanceTerm(net.sf.tweety.math.term.Term[], net.sf.tweety.math.term.Term[])
+	 */
+	@Override
+	public Term distanceTerm(Term[] obj1, Term[] obj2) {
+		throw new UnsupportedOperationException("Implement me!");
 	}
 }

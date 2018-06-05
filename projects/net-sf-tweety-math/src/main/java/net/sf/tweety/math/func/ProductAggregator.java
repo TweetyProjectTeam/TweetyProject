@@ -16,33 +16,33 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln.analysis;
+package net.sf.tweety.math.func;
 
 import java.util.List;
 
-/** This aggregation function models the average function.
+/** This aggregation function models the product function.
  * @author Matthias Thimm
  *
  */
-public class AverageAggregator implements AggregationFunction {
+public class ProductAggregator implements AggregationFunction {
 
-	private static final long serialVersionUID = -3619001311014631332L;
+	private static final long serialVersionUID = -2717855227084369340L;
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.markovlogic.analysis.AggregationFunction#aggregate(java.util.List)
+	 * @see net.sf.tweety.math.func.AggregationFunction#eval(java.util.List)
 	 */
 	@Override
-	public double aggregate(List<Double> elements) {
-		Double sum = new Double(0);
+	public Double eval(List<Double> elements) {
+		Double prod = new Double(1);
 		for(Double elem: elements)
-			sum += elem;
-		return sum/elements.size();
+			prod *= elem;
+		return prod;
 	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return "avg";
+		return "prod";
 	}
 }
