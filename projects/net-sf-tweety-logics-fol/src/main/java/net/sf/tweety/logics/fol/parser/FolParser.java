@@ -47,7 +47,8 @@ import net.sf.tweety.logics.fol.syntax.*;
  * <br> FORMULAS    ::== ( "\n" FORMULA)*
  * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
  * <br>					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
- * <br>					 FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA
+ * <br>					 FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
+ * <br>				::== "==" "(" FORMULA ")" | "/==" "(" FORMULA ")"
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
@@ -255,11 +256,13 @@ public class FolParser extends Parser<FolBeliefSet> {
 				if(!stack.contains("("))
 					throw new ParserException("Missing opening parentheses.");				
 				List<Object> l = new ArrayList<Object>();
+				
+				
 				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() )
 					l.add(0, o);
-				// if the preceding token is in {a,...,z,A,...,Z,0,...,9} then treat the 
+				// if the preceding token is in {a,...,z,A,...,Z,0,...,9,==,/==} then treat the 
 				// list as a term list, otherwise treat it as a quantification
-				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
+				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]|==|/=="))
 					stack.push(this.parseTermlist(l));
 				else stack.push(this.parseQuantification(l));
 			//If two consecutive "|" or two consecutive "&" have been read, 
@@ -282,10 +285,22 @@ public class FolParser extends Parser<FolBeliefSet> {
 						stack.push("<=>");
 					}
 					else {
-					stack.pop();
-					stack.push("=>"); } 	
+						stack.pop();
+						stack.push("=>"); } 	
 				}else stack.push(s);
-			}else stack.push(s);
+			}
+			else if(s.equals("=")){
+				if(stack.size() >=1 && stack.lastElement().equals("=")){
+					if (stack.size() >=2 && stack.get(stack.size()-2).equals("/")) {
+						stack.pop();
+						stack.pop();
+						stack.push("/==");
+					}
+					else {
+						stack.pop();
+						stack.push("=="); } 	
+				}else stack.push(s);
+			} else stack.push(s);
 		}catch(Exception e){
 			throw new ParserException(e);
 		}		
@@ -424,7 +439,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 		Set<Variable> vars = new HashSet<Variable>();
 		vars.add(bVar);
 		this.variables.remove(var);
-		
+	
 		FolFormula result;
 		if (l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER())) 
 			result = new ExistsQuantifiedFormula(formula,vars);
@@ -600,11 +615,32 @@ public class FolParser extends Parser<FolBeliefSet> {
 			List<Term<?>> terms = null;
 			for(Object o : l){
 				if(!(o instanceof String))
-					if(o instanceof List && l.lastIndexOf(o) == l.size()-1)
-						terms = (List<Term<?>>) o;
+					if(o instanceof List && l.lastIndexOf(o) == l.size()-1) 
+						terms = (List<Term<?>>) o; 
+
 					else throw new ParserException("Unknown object " + o);
 				else s += (String) o;
 			}
+			
+			//Check if the formula is an equality predicate or inequality predicate written in the alternate
+			//syntax (a==b) or (a/==b) and parse it accordingly
+			if ((s.contains(LogicalSymbols.EQUALITY()) || s.contains(LogicalSymbols.INEQUALITY())) 
+					&& !(s.substring(0,2).equals((LogicalSymbols.EQUALITY())) || s.substring(0,3).equals((LogicalSymbols.INEQUALITY())) )) {
+				String op = LogicalSymbols.INEQUALITY();
+				if (s.indexOf(LogicalSymbols.INEQUALITY()) == -1)
+					op = LogicalSymbols.EQUALITY();
+				String[] parts = s.split(op);
+				
+				List<Object> newterms = new LinkedList<Object>();
+				for (int i = 0; i < parts[0].length(); i++)  
+				    newterms.add(String.valueOf(parts[0].charAt(i)));
+				newterms.add(",");
+				for (int i = 0; i < parts[1].length(); i++)  
+					 newterms.add(String.valueOf(parts[1].charAt(i)));
+				terms = this.parseTermlist(newterms);
+				s=op;
+			}
+			
 			if(this.signature.containsPredicate(s)){
 			  // check for zero-arity predicate
 			  if(terms == null) 
@@ -618,19 +654,27 @@ public class FolParser extends Parser<FolBeliefSet> {
 					Term<?> t = terms.get(i);
 					if(t instanceof Variable){
 						if(this.variables.containsKey(((Variable)t).get())){
-							if(!this.variables.get(((Variable)t).get()).getSort().equals(p.getArgumentTypes().get(i)))
-								throw new ParserException("Variable '" + t + "' has wrong sort.");
+							Sort sortOfVariable = this.variables.get(((Variable)t).get()).getSort();
+							if(!sortOfVariable.equals(p.getArgumentTypes().get(i)) && !sortOfVariable.equals(Sort.ANY) && !p.getArgumentTypes().get(i).equals(Sort.ANY)) 
+									throw new ParserException("Variable '" + t + "," + t.getSort() + "' has wrong sort."); 
 							args.add(this.variables.get(((Variable)t).get()));
 						}else{
-							Variable v = new Variable(((Variable)t).get(),p.getArgumentTypes().get(i));
+							Variable v;
+							if (!(p instanceof EqualityPredicate || p instanceof InequalityPredicate)) 
+								v = new Variable(((Variable)t).get(),p.getArgumentTypes().get(i));
+							else
+								v = new Variable(((Variable)t).get(),Sort.ANY);
 							args.add(v);
-							this.variables.put(v.get(), v);
-						}								
-					}else if(!t.getSort().equals(p.getArgumentTypes().get(i)))
-						throw new ParserException("Term '" + t + "' has the wrong sort.");
+							this.variables.put(v.get(), v);}						
+					}else if(!(t.getSort().equals(p.getArgumentTypes().get(i))) && !(t.getSort().equals(Sort.ANY)) && !(p.getArgumentTypes().get(i).equals(Sort.ANY))) {
+						throw new ParserException("Term '" + t + "' has the wrong sort."); }
 					else args.add(t);
-				}
-				return new FOLAtom(p,args);
+				}	
+				if (p.getName().equals("==")) 
+					return new FOLAtom(new EqualityPredicate(),args); 
+				else if (p.getName().equals("/==")) 
+					return new FOLAtom(new InequalityPredicate(),args); 
+				return new FOLAtom(p,args); 
 			}
 			throw new ParserException("Predicate '" + s + "' has not been declared.");
 		}		
@@ -640,7 +684,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 	 * This function parses only the sorts declaration and type declaration parts
 	 * of a belief base.
 	 * 
-	 * @return a fol signature
+	 * @return the parsed fol signature
 	 */
 	public FolSignature parseSignature(String s) {
 		this.setSignature(new FolSignature());

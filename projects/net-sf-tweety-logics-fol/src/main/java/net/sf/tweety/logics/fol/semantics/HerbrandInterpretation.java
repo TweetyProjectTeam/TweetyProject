@@ -76,6 +76,21 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 			return false;
 		}			
 		if(f instanceof FOLAtom){
+			Predicate p = ((FOLAtom) f).getPredicate();
+			if (p instanceof EqualityPredicate) {
+				List<Term<?>> terms =((FOLAtom) f).getArguments();
+				if (terms.get(0).equals(terms.get(1)))
+					return true;
+				else
+					return false;
+			}
+			else if (p instanceof InequalityPredicate) {
+				List<Term<?>> terms =((FOLAtom) f).getArguments();
+				if (terms.get(0).equals(terms.get(1)))
+					return false;
+				else
+					return true;
+			}
 			return this.contains(f);
 		}					
 		if(f instanceof Disjunction){

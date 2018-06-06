@@ -42,7 +42,7 @@ public class FolExample {
 	
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		//Add sorts, constants and predicates to a first-order logic signature
-		FolSignature sig = new FolSignature();
+		FolSignature sig = new FolSignature(true);
 		
 		Sort s_animal = new Sort("Animal");
 		sig.add(s_animal); 
@@ -69,18 +69,25 @@ public class FolExample {
 		parser.setSignature(sig); //Use the signature defined above
 		FolBeliefSet bs = new FolBeliefSet();
 		FolFormula f1 = (FolFormula)parser.parseFormula("!Flies(kiwi)");
-		FolFormula f2 = (FolFormula)parser.parseFormula("!Flies(penguin)");
+		FolFormula f2 = (FolFormula)parser.parseFormula("Flies(penguin)");
 		FolFormula f3 = (FolFormula)parser.parseFormula("!Knows(penguin,kiwi)");
+		FolFormula f4 = (FolFormula)parser.parseFormula("/==(penguin,kiwi)");
+		FolFormula f5 = (FolFormula)parser.parseFormula("kiwi == kiwi");
 		bs.add(f1);
 		bs.add(f2);
 		bs.add(f3);
+		bs.add(f4);
+		bs.add(f5);
 		System.out.println("Parsed BeliefBase: " + bs);
-		
+
 		// Prover
 		FolTheoremProver.setDefaultProver(new NaiveProver()); //Set default prover, options are NaiveProver, EProver, Prover9
 		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("Flies(kiwi)")));
-		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("forall X: (Flies(X))")));
+		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("forall X: (exists Y: (Flies(X) && Flies(Y) && X/==Y))")));
+		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi == kiwi")));
+		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi /== kiwi")));
+		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("penguin /== kiwi")));
 		
 		// Parse a BeliefBase from a file
 		parser = new FolParser();

@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
@@ -53,7 +54,7 @@ public class FolParserTest {
 	@Before
 	public void initParser() {
 		parser = new FolParser();
-		FolSignature sig = new FolSignature();
+		FolSignature sig = new FolSignature(true); //Create new signature with equality
 		Sort s_animal = new Sort("Animal");
 		sig.add(s_animal); 
 		Constant c_penguin = new Constant("penguin",s_animal);
@@ -103,6 +104,22 @@ public class FolParserTest {
 		assertFalse(sig.containsPredicate("Flies"));
 		assertEquals(f1.getTerms().size(),2);
 	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT) 
+	public void EqualityPredicateTest() throws ParserException, IOException {
+		FolFormula f1 = (FolFormula) parser.parseFormula("/==(kiwi,penguin)||(kiwi == penguin)");
+		FolFormula f2 = (FolFormula) parser.parseFormula("exists X: (!Flies(X) => (X==kiwi))");
+		
+		assertTrue(f1.getSignature().containsPredicate(LogicalSymbols.EQUALITY()));
+		assertTrue(f1.getSignature().containsPredicate(LogicalSymbols.INEQUALITY()));
+		assertTrue(f1.getSignature().containsConstant("kiwi"));
+		assertTrue(f1.getSignature().containsConstant("penguin"));
+		assertTrue(f2.containsQuantifier());
+		assertTrue(f2.getSignature().containsPredicate(LogicalSymbols.EQUALITY()));
+		assertTrue(f2.getSignature().containsPredicate("Flies"));
+		assertTrue(f2.getSignature().containsConstant("kiwi"));
+	}
+	
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void TautologyTest() throws ParserException, IOException {
@@ -158,11 +175,12 @@ public class FolParserTest {
 		assertEquals(sig.getPredicates().size(),4);
 		assertEquals(sig.getSorts().size(),2);
 		}
-	
+
 	@Test(expected = ParserException.class,timeout = DEFAULT_TIMEOUT) 
 	public void EmptyQuantificationTest() throws ParserException, IOException {
 		parser.parseFormula("forall X:()");
 	}
+	
 	@Test(expected = ParserException.class) 
 	public void WrongArityTest() throws ParserException, IOException {
 		parser.parseFormula("Flies(kiwi,X)");

@@ -31,7 +31,8 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
  * This class captures the signature of a specific
- * first-order language.
+ * first-order language. 
+ * 
  * @author Matthias Thimm
  */
 public class FolSignature extends Signature {
@@ -52,6 +53,21 @@ public class FolSignature extends Signature {
 	}
 	
 	/**
+	 * Creates an empty signature or an otherwise empty signature with equality.
+	 * 
+	 * @param containsEquality if true, the equality predicate is added to the signature
+	 */
+	public FolSignature(boolean containsEquality){
+		this.constants = new HashSet<Constant>();
+		this.sorts = new HashSet<Sort>();
+		this.predicates = new HashSet<Predicate>();
+		this.functors = new HashSet<Functor>();
+		if (containsEquality) {
+			this.predicates.add(new EqualityPredicate());
+			this.predicates.add(new InequalityPredicate()); }
+	}
+	
+	/**
 	 * Creates a signature with the given objects (should be sorts, constants,
 	 * predicates, functors, or formulas).
 	 * @param c a collection of items to be added.
@@ -61,6 +77,23 @@ public class FolSignature extends Signature {
 	public FolSignature(Collection<?> c) throws IllegalArgumentException{
 		this();
 		this.addAll(c);
+	}
+	
+	/**
+	 * Creates a signature with the given objects (should be sorts, constants,
+	 * predicates, functors, or formulas) and, if desired, equality.
+	 * @param c a collection of items to be added.
+	 * @param containsEquality if true, the equality predicate is added to the signature
+	 * @throws IllegalArgumentException if at least one of the given objects is
+	 * 	 neither a constant, a sort, a predicate, a functor, or a formula.
+	 */
+	public FolSignature(Collection<?> c, boolean containsEquality) throws IllegalArgumentException{
+		this();
+		this.addAll(c);
+		if (containsEquality) {
+			this.predicates.add(new EqualityPredicate());
+			this.predicates.add(new InequalityPredicate()); 
+			}
 	}
 	
 	/* (non-Javadoc)
@@ -184,8 +217,13 @@ public class FolSignature extends Signature {
 	
 	public Predicate getPredicate(String s){
 		for(Predicate p: this.predicates)
-			if(p.getName().equals(s))
+			if(p.getName().equals(s)) {
+				if (s.equals("=="))
+					return new EqualityPredicate();
+				else if (s.equals("/=="))
+					return new InequalityPredicate();
 				return p;
+			}
 		return null;
 	}
 	
@@ -208,6 +246,7 @@ public class FolSignature extends Signature {
 	}
 
 	public boolean containsPredicate(String s){
+
 		return this.getPredicate(s) != null;
 	}
 	

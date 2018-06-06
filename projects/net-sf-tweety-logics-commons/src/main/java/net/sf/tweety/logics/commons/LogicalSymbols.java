@@ -76,4 +76,10 @@ public class LogicalSymbols {
 	public static String POSSIBILITY() {
 		return "<>";
 	}
+	public static String EQUALITY() {
+		return "==";
+	}
+	public static String INEQUALITY() {
+		return "/==";
+	}
 }
