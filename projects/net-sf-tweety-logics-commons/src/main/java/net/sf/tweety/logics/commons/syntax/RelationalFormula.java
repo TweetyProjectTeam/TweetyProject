@@ -222,26 +222,29 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 	 */
 	@Override
 	public boolean isWellFormed(){
-		//there are no two variables with the same name but different sort
-		for(Variable v: this.getTerms(Variable.class))
-			for(Variable w: this.getTerms(Variable.class))
+		//there are no two variables with the same name but different sort 
+		//Note: the sort _Any is considered equal to every sort
+		for(Variable v: this.getTerms(Variable.class)) {
+			for(Variable w: this.getTerms(Variable.class)) {
 				if(v.get().equals(w.get()))
-					if(!v.getSort().equals(w.getSort()))
-						return false;
+					if(!v.getSort().equals(w.getSort()) && !v.getSort().equals(Sort.ANY) && !w.getSort().equals(Sort.ANY)) 
+						return false; 	 
+				}
+		}
 		//there are no two constants with the same name but different sort
 		for(Constant c: this.getTerms(Constant.class))
 			for(Constant d: this.getTerms(Constant.class))
 				if(c.get().equals(d.get()))
-					if(!c.getSort().equals(d.getSort()))
+					if(!c.getSort().equals(d.getSort())) 
 						return false;
 		//there are no two predicates with the same name but different arguments
 		for(Predicate p: this.getPredicates())
 			for(Predicate q: this.getPredicates())
 				if(p.getName().equals(q.getName())){
-					if(p.getArity() != q.getArity())
-						return false;
+					if(p.getArity() != q.getArity()) {
+						return false;}
 					for(int i = 0; i < p.getArity(); i++)
-						if(!p.getArgumentTypes().get(i).equals(q.getArgumentTypes().get(i)))
+						if(!p.getArgumentTypes().get(i).equals(q.getArgumentTypes().get(i))) 
 							return false;					
 				}
 		//there are no two functors with the same name but different sort or arguments
@@ -263,8 +266,8 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 			}
 		//every atom is complete, i.e. has a complete list of arguments
 		for(Atom a: this.getAtoms())
-			if(!a.isComplete())
-				return false;
+			if(!a.isComplete()) 
+				return false; 		
 		//every functional term is complete, i.e. has a complete list of arguments
 		for(FunctionalTerm t: this.getTerms(FunctionalTerm.class))
 			if(!t.isComplete())

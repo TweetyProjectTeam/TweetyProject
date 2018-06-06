@@ -31,8 +31,10 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 /**
  * A sort of first-order logic. i.e. a set of constant objects and a set of variables that represent
  * constants of this sort.
+ * Note: The sort names "Thing" and "_Any" are reserved for the default sort and 
+ * for the sort that represents all sorts. They should not be used when creating new sorts.
  * 
- * @author Matthias Thimm, Tim Janus
+ * @author Matthias Thimm, Tim Janus, Anna Gessler
  */
 public class Sort implements LogicStructure {
 	
@@ -55,6 +57,11 @@ public class Sort implements LogicStructure {
 	 * Default sort for unsorted first-order logics
 	 */
 	public static final Sort THING = new Sort("Thing");
+	
+	/**
+	 * Default sort for unsorted first-order logics
+	 */
+	public static final Sort ANY = new Sort("_Any");
 	
 	/**
 	 * Ctor: Creates an empty Sort with the given name.

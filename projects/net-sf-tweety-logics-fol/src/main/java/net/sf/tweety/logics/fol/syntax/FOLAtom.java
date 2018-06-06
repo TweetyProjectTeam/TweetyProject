@@ -28,6 +28,7 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.syntax.FunctionalTerm;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
@@ -96,7 +97,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	public void addArgument(Term<?> term) throws IllegalArgumentException{
 		if(this.arguments.size() == this.predicate.getArity())
 			throw new IllegalArgumentException("No more arguments expected.");
-		if(!this.predicate.getArgumentTypes().get(this.arguments.size()).equals(term.getSort()))
+		if(!this.predicate.getArgumentTypes().get(this.arguments.size()).equals(term.getSort()) && !term.getSort().equals(Sort.ANY) && !this.predicate.getArgumentTypes().get(this.arguments.size()).equals(Sort.ANY))
 			throw new IllegalArgumentException("The sort \"" + term.getSort() + "\" of the given term does not correspond to the expected sort \"" + this.predicate.getArgumentTypes().get(this.arguments.size()) + "\"." );
 		this.arguments.add(term);		
 	}
@@ -243,6 +244,11 @@ public class FOLAtom extends FolFormula implements Atom {
 	@Override
 	public String toString(){
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
+		if (this.getPredicate() instanceof EqualityPredicate) 
+			return "(" + this.arguments.get(0) + "==" + this.arguments.get(1) + ")"; //Prints equality predicate as a==b instead of ==(a,b)
+		if (this.getPredicate() instanceof InequalityPredicate) 
+			return "(" + this.arguments.get(0) + "/==" + this.arguments.get(1) + ")"; 
+		
 		String output = this.predicate.getName();
 		if(this.arguments.size() == 0) return output;
 		output += "(";
