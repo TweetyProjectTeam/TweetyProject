@@ -35,15 +35,19 @@ import java.util.Stack;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.commons.LogicalSymbols;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.FunctionalTerm;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.EqualityPredicate;
 import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
@@ -51,6 +55,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Implication;
+import net.sf.tweety.logics.fol.syntax.InequalityPredicate;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
@@ -96,7 +101,7 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 	/**
 	 * Keeps track of the signature.
 	 */
-	private FolSignature signature = new FolSignature();
+	private FolSignature signature = new FolSignature(true);
 	
 	/**
 	 * Keeps track of variables defined.
@@ -136,6 +141,8 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 					lineIsComment = true;
 				else if (c == 10){	
 					s = s.trim();
+					if (!lineIsComment && !s.isEmpty() && !(s.endsWith(".") || s.endsWith(".\n"))) //If formulas contain linebreaks, concatenate them
+						continue;
 					if (!lineIsComment && !s.equals("")) {
 						if (s.startsWith("include")) 
 							beliefSet.addAll(parseIncludedFiles(s)); //Parse formulas in included files
@@ -148,8 +155,12 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 					s += (char) c; 
 			}	
 			s = s.trim();
-			if (!lineIsComment && !s.equals("")) 
-				beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
+			if (!lineIsComment && !s.equals(""))  {
+				if (s.startsWith("include")) 
+					beliefSet.addAll(parseIncludedFiles(s)); //Parse formulas in included files
+				else
+					beliefSet.add((FolFormula)this.parseFormula(new StringReader(s)));
+				}
 		} catch(Exception e){
 			throw new ParserException(e);
 		}
@@ -191,27 +202,94 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 		String str = "";
 		for(int c = reader.read(); c != -1; c = reader.read()) 
 			str += (char)c;
-		
+			
 		if (!str.matches("fof\\(.+,.+,.+(,.*)*\\)\\.?"))
 			throw new ParserException("Formula "+ str + " does not match fof syntax 'fof(name,role,formula,source,[useful_info])'.");
 		
-		String[] arguments = str.substring(4, str.lastIndexOf(")")).split(","); //Split formula into different arguments
-		String name = arguments[0]; 
-		String role = arguments[1];
-		String theFormula = arguments[2];
+		//Split formula into different parts
+		int index1 = str.indexOf(',');
+		int index2 = 0;
+		for (int i = index1+1; i < str.length(); i++) {
+			if (str.charAt(i) == ',') {
+				index2 = i;
+				break;
+			}
+		}
+
+		//TODO: Additional arguments (source,[useful_info])' will cause errors
+		String name = str.substring(4,index1);
+		String role = str.substring(index1+1,index2);
+		String theFormula = str.substring(index2+1,str.length()-2);
 		
+		parseTypes(theFormula);
+
 		//Ignore formulas of certain names or roles
-		if (!name.toLowerCase().matches(this.formulaNames) || !role.toLowerCase().matches(this.formulaRoles)) 
+		if (!name.matches(this.formulaNames) || !role.toLowerCase().matches(this.formulaRoles)) 
 			return null;
 
 		Stack<Object> stack = new Stack<Object>();
 		try{
 			this.variables = new HashMap<String,Variable>();
 			for (int i = 0; i < theFormula.length(); i++)
-				this.consumeToken(stack, theFormula.charAt(i));		
+				this.consumeToken(stack, theFormula.charAt(i));	
 			return this.parseQuantification(stack);
 		}catch(Exception e){
 			throw new ParserException(e);
+		}
+	}
+	
+	/**
+	 * Parse signature of a problem file. 
+	 * If some or all of the symbols are already part of the signature,
+	 * they will not be overwritten. 
+	 * 
+	 * @param a String of a formula
+	 */
+	private void parseTypes(String formula) {
+		if ((formula.charAt(0)=='(') && (formula.charAt(formula.length()-1) == ')')) 
+			formula = formula.substring(1,formula.length()-2); 
+		
+		String[]tokens = formula.split(",|\\s|\\(|\\)|\\[|\\]|&|\\||\\=\\>|\\<\\=\\>|~|\\<\\=]");
+		List<String> possibleTypes = new LinkedList<String>();
+		for (int i = 0; i < tokens.length; i++) {
+			//In TPTP syntax, predicates and functors start with lowercase and contain alphanumerics
+			//or are in 'single quotes'.
+			if(tokens[i].matches("[a-z](\\w)*") || tokens[i].matches("'([^' ]+)'")) 
+				possibleTypes.add(tokens[i]);
+		}
+		
+		//Decide whether the found types are predicates or functors
+		for (String pt : possibleTypes) {
+			//Check if type has arguments
+			if (formula.matches(".*(" + pt + "\\().*")) { 
+				//Count number of arguments
+				int arity = 1;
+				int additionalOpenParentheses = 0;
+				for (int i = formula.indexOf(pt)+pt.length()+1; i < formula.length(); i++) {
+					if (formula.charAt(i) == '(')
+						additionalOpenParentheses++;
+					else if (formula.charAt(i) == ')') {
+						if (additionalOpenParentheses>0) 
+							additionalOpenParentheses--;
+						else
+							break; 
+					}
+					else if (formula.charAt(i) == ',')
+						arity++;
+				}
+
+				if (formula.matches(".*([a-z](\\w)*\\(([^\\)]*,)*" + pt + ").*"))
+					this.signature.add(new Functor(pt,arity));
+				else 
+					this.signature.add(new Predicate(pt,arity)); 
+			}
+			
+			else {	
+				if (formula.matches(".*([a-z](\\w|')*\\(([^\\)]*,)*" + pt + ").*"))
+					this.signature.add(new Constant(pt));
+				else
+					this.signature.add(new Predicate(pt));
+				}
 		}
 	}
 
@@ -231,9 +309,9 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 				List<Object> l = new ArrayList<Object>();
 				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() )
 					l.add(0, o);
-				// if the preceding token is in {a,...,z,A,...,Z,0,...,9} then treat the 
+				// if the preceding token is in {a,...,z,A,...,Z,0,...,9,_,'} then treat the 
 				// list as a term list, otherwise treat it as a quantification
-				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
+				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[\\w']"))
 					stack.push(this.parseTermlist(l));
 				else stack.push(this.parseQuantification(l));
 			} 
@@ -387,19 +465,30 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 		else 
 			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
 		
-		Variable bVar = null;
+		List<Variable> bVars = new ArrayList<Variable>();
+		String[] variables = var.split(",");
 		for(Variable v: formula.getUnboundVariables()){
-			if(v.get().equals(var)){
-				bVar = v;
-				break;
+			for (String sv : variables) {
+				if(v.get().equals(sv)){
+					bVars.add(v);
+				} 
 			}
 		}
 		
-		if(bVar == null)
-			throw new ParserException("Variable '" + var + "' not found in quantification.");
+		if(bVars.isEmpty())
+			throw new ParserException("Variable(s) '" + var + "' not found in quantification.");
+		
 		Set<Variable> vars = new HashSet<Variable>();
-		vars.add(bVar);
-		this.variables.remove(var);
+		
+		int j = 0; //This index is used later to determine if there are more elements in the list to the right of the quantified formula
+		for (int i = 0; i < bVars.size(); i++) {
+			vars.add(bVars.get(i)); 
+			j += (bVars.get(i).get().length());
+		}
+		j += bVars.size();
+		
+		for (String sv : variables) 
+			this.variables.remove(sv);
 		
 		FolFormula result;
 		if (l.get(0).equals("?")) 
@@ -408,17 +497,17 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 			result = new ForallQuantifiedFormula(formula,vars);
 		
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
-		if (l.size() > 4) {
-			if (l.get(idx+2).equals("&")) 
-				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2).equals("|")) 
-				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2).equals("<=>")) 
-				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2).equals("=>"))
-				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
+		if (l.size() > 2+j) {
+			if (l.get(2+j).equals("&")) 
+				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList((3+j), l.size()))));
+			else if (l.get(2+j).equals("|")) 
+				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
+			else if (l.get(2+j).equals("<=>")) 
+				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
+			else if (l.get(2+j).equals("=>"))
+				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
 			else 
-				throw new ParserException("Unrecognized symbol " + l.get(idx+2));
+				throw new ParserException("Unrecognized symbol " + l.get(2+j));
 		}
 		return result;	
 	}
@@ -568,6 +657,31 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 					else throw new ParserException("Unknown object " + o);
 				else s += (String) o;
 			}
+			
+			//Check if the formula is an equality predicate or inequality predicate written in the alternate
+			//syntax (a==b) or (a/==b) and parse it accordingly
+			if ((s.contains("=") || s.contains("!=")) 
+					&& !(s.substring(0,2).equals(("=")) || s.substring(0,3).equals(("!=")) )) {
+				String op = "!=";
+				if (s.indexOf("!=") == -1) 
+					op = "="; 
+
+				List<String> parts = new ArrayList<String>(Arrays.asList(s.split(op + "|\\s")));
+				parts.removeAll(Arrays.asList("", " ", null));
+				List<Object> newterms = new LinkedList<Object>();
+				for (int i = 0; i < parts.get(0).length(); i++)  
+				    newterms.add(String.valueOf(parts.get(0).charAt(i)));
+				newterms.add(",");
+				for (int i = 0; i < parts.get(1).length(); i++)  
+					 newterms.add(String.valueOf(parts.get(1).charAt(i)));
+				terms = this.parseTermlist(newterms);
+				
+				if (op.equals("="))
+					s = LogicalSymbols.EQUALITY(); 
+				else
+					s = LogicalSymbols.INEQUALITY();
+			}
+			
 			if(s.equals("$false"))
 				return new Contradiction();
 			if(s.equals("$true"))
@@ -585,18 +699,23 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 					Term<?> t = terms.get(i);
 					if(t instanceof Variable){
 						if(this.variables.containsKey(((Variable)t).get())){
-							if(!this.variables.get(((Variable)t).get()).getSort().equals(p.getArgumentTypes().get(i)))
-								throw new ParserException("Variable '" + t + "' has wrong sort.");
+							Sort sortOfVariable = this.variables.get(((Variable)t).get()).getSort();
+							if(!sortOfVariable.equals(p.getArgumentTypes().get(i)) && !sortOfVariable.equals(Sort.ANY) && !p.getArgumentTypes().get(i).equals(Sort.ANY)) 
+								throw new ParserException("Variable '" + t + "," + t.getSort() + "' has wrong sort."); 
 							args.add(this.variables.get(((Variable)t).get()));
 						}else{
 							Variable v = new Variable(((Variable)t).get(),p.getArgumentTypes().get(i));
 							args.add(v);
 							this.variables.put(v.get(), v);
 						}								
-					}else if(!t.getSort().equals(p.getArgumentTypes().get(i)))
+					}else if(!(t.getSort().equals(p.getArgumentTypes().get(i))) && !(t.getSort().equals(Sort.ANY)) && !(p.getArgumentTypes().get(i).equals(Sort.ANY))) 
 						throw new ParserException("Term '" + t + "' has the wrong sort.");
 					else args.add(t);
 				}
+				if (p.getName().equals("==")) 
+					return new FOLAtom(new EqualityPredicate(),args); 
+				else if (p.getName().equals("/==")) 
+					return new FOLAtom(new InequalityPredicate(),args); 
 				return new FOLAtom(p,args);
 			}
 			throw new ParserException("Predicate '" + s + "' has not been declared.");

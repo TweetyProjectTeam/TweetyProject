@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.FolBeliefSet;
-import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.parser.TPTPParser;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.prover.NaiveProver;
@@ -38,31 +37,34 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  */
 public class TPTPParserExample {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		//Set signature for the TPTPParser
-		FolParser folparser = new FolParser();
-		FolSignature sig = folparser.parseSignature("Thing = {a, b}\n"
-				+ "type(p(Thing)) \n type(q(Thing)) \n type(r)");
-		
 		TPTPParser tptp = new TPTPParser();
-		tptp.setSignature(sig);
-		System.out.println("Using signature: " + sig);
 		
-		//Parse belief base in TPTP syntax
+		//Parse a belief base in TPTP syntax
 		FolBeliefSet tptpbs = tptp.parseBeliefBase("%---some comments \n"
 				+ "%----more comments \n"
-				//Include some formulas from another file
-				+ "include('src/main/resources/tptpexample.fologic',[formula2,formula3]).\n" 	
-				+ "fof(myname,axiom,(p(b) & r)).\n"
-				+ "fof(myname,axiom,(~q(a) & r | ~(r))).\n"
-				+ "fof(myname,axiom,(~p(a) & r | r)).\n"
-				+ "fof(myname,axiom,(r <=> ~q(a))).\n"
+				//Include formulas named formula2 and formula3 from another file
+				+ "include('src/main/resources/tptpexample.fologic',[formula2,formula3]).\n" 
+				+ "fof(formula1,axiom,(p(functor(b)) & r)).\n"
+				+ "fof(formula2,axiom,(~'PredicateInSingleQuotes'(a,b) & r | ~(r))).\n"
+				+ "fof(formula3,axiom,(~p(a) & r | r)).\n"
+				+ "fof(formula4,axiom,(r <=> ~q(a))).\n"
 				+ "% random comment \n"
-				+ "fof(myname,axiom,((~p(a) => r) & (~p(b) <= r))).\n"
-				+ "fof(myname,axiom,(? [X] : (q(X)) & r => p(b))).\n"
-				+ "fof(myname,axiom,(r | ! [Y] : (p(Y)))).\n");
-		System.out.println("Parsed belief base: " + tptpbs);
+				+ "fof(formula5,axiom,(predicate_of_arity3(a,b,a) | r)).\n"
+				+ "fof(formula6,axiom,((~p(a) => r) & (~p(b) <= r))).\n"
+				+ "fof(formula7,axiom,(? [X] : (q(X)) & r => p(b))).\n"
+				+ "fof(formula8,axiom,(r | ! [Y] : (p(Y)))).\n");
+		System.out.println("Parsed belief base: ");
+		for (FolFormula f: tptpbs)
+			System.out.println("\t" + f);
+		System.out.println("Parsed signature: " + tptp.getSignature());
+		System.out.println();
 		
-		//Parse belief base in TPTP syntax but only parse axiom type formulas
+		//Parse a single formula in TPTP syntax
+		tptp.resetFormulaRoles();
+		FolFormula tautologyOrContradiction = (FolFormula) tptp.parseFormula("fof(tautology,axiom,$true|$false).");
+		System.out.println("Single formula: " + tautologyOrContradiction);
+		
+		//Parse a belief base in TPTP syntax but only parse axiom type formulas
 		String axiomRoles = "axiom|hypothesis|definition|assumption|lemma|theorem|corollary";
 		tptp.setFormulaRoles(axiomRoles);
 		FolBeliefSet axioms = tptp.parseBeliefBase("fof(f1,axiom,(r=>p(a))).\n"
@@ -70,7 +72,7 @@ public class TPTPParserExample {
 				+ "fof(f2,conjecture,($false)).");
 		System.out.println("Only axioms: " + axioms);
 		
-		//Parse belief base in TPTP syntax but only parse conjecture type formulas
+		//Parse a belief base in TPTP syntax but only parse conjecture type formulas
 		String conjectureRoles = "conjecture";
 		tptp.setFormulaRoles(conjectureRoles);
 		FolBeliefSet conjectures = tptp.parseBeliefBase("fof(f1,axiom,(r=>p(a))).\n"
@@ -83,10 +85,32 @@ public class TPTPParserExample {
 		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 		System.out.println("ANSWER: " + prover.query(axioms,c1));
 		
-		//Parse a single formula in TPTP syntax
+		
+		//Parse TPTP problem COM008+2
+		tptp.setSignature(new FolSignature(true));	
+		tptp.setFormulaRoles(axiomRoles);
+		FolBeliefSet axioms2 = tptp.parseBeliefBaseFromFile("src/main/resources/tptpexample2.fologic");
+		tptp.setFormulaRoles(conjectureRoles);
+		FolBeliefSet conjecture2 = tptp.parseBeliefBaseFromFile("src/main/resources/tptpexample2.fologic");
+		System.out.println("TPTP problem COM008+2:");
+		for (FolFormula f : axioms2)
+			System.out.println("\t" + f);
+		System.out.println("\t" + conjecture2.iterator().next());
+		System.out.println("Parsed signature: " + tptp.getSignature());
+		System.out.println();
+		
+		//Parse TPTP problem NLP080+1 
+		tptp.setSignature(new FolSignature(true));	
 		tptp.resetFormulaRoles();
-		FolFormula tautology = (FolFormula) tptp.parseFormula("fof(tautology,axiom,$true).");
-		System.out.println("Tautology: " + tautology);
+		axioms2 = tptp.parseBeliefBaseFromFile("src/main/resources/tptpexample3.fologic");
+		System.out.println("TPTP problem NLP080+1 :" + axioms2);
+		System.out.println("Parsed signature: " + tptp.getSignature());
+		
+		//Optional: set a signature for TPTPParser before parsing
+				//FolParser folparser = new FolParser();
+				//FolSignature sig = folparser.parseSignature("Thing = {a, b, c}\n"
+				//		+ "type(p(Thing)) \n type(q(Thing)) \n type(r)");
+				//tptp.setSignature(sig); 
 	}
 
 }
