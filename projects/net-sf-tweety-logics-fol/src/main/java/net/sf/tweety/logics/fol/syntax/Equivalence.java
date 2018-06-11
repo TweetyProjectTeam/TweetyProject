@@ -187,7 +187,7 @@ public class Equivalence extends FolFormula  {
 
 	@Override
 	public String toString() {
-		return this.formulas.getFirst().toString() + LogicalSymbols.EQUIVALENCE() + this.formulas.getSecond().toString();
+		return "(" + this.formulas.getFirst().toString() + LogicalSymbols.EQUIVALENCE() + this.formulas.getSecond().toString() + ")";
 	}
 	
 }

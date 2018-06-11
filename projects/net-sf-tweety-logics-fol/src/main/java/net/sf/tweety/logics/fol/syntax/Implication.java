@@ -185,7 +185,7 @@ public class Implication extends FolFormula {
 
 	@Override
 	public String toString() {
-		return this.formulas.getFirst().toString() + LogicalSymbols.IMPLICATION() + this.formulas.getSecond().toString();
+		return "(" + this.formulas.getFirst().toString() + LogicalSymbols.IMPLICATION() + this.formulas.getSecond().toString() + ")";
 	}
 
 }
