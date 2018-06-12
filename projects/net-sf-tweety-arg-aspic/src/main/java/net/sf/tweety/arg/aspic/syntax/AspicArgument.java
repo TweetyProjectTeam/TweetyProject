@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.commons.util.DigraphNode;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
@@ -69,25 +68,6 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	public AspicArgument(InferenceRule<T> toprule) {
 		super(null);
 		this.toprule = toprule;
-		conc = toprule.getConclusion();	
-		
-		generateName();
-	}
-	
-	/**
-	 * Creates an new argument with and all of its subarguments and adds them to as
-	 * @param node contains the TopRule
-	 * @param as a set of AspicArguments, all subarguments will be added to this set
-	 */
-	public AspicArgument(DigraphNode<InferenceRule<T>> node, Collection<AspicArgument<T>> as ) {
-		super(null);
-		for(DigraphNode<InferenceRule<T>> parentnode : node.getParents()) {
-			AspicArgument<T> subarg = new AspicArgument<T>(parentnode, as);
-			directsubs.add(subarg);
-			as.add(subarg);
-		}
-		
-		toprule = node.getValue();
 		conc = toprule.getConclusion();	
 		
 		generateName();

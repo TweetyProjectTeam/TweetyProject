@@ -18,12 +18,11 @@
  */
 package net.sf.tweety.arg.simplelogicdeductive.syntax;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.commons.util.DigraphNode;
+import net.sf.tweety.commons.util.rules.Derivation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -52,28 +51,10 @@ public class SimplePlLogicArgument extends Argument{
 	 * @param 	node of a DigraphNode of a DerivationGraph<PropositionalFormula, SimplePlRule>
 	 * 			@see SimplePlLogicDeductiveKnowledgebase
 	 */
-	public SimplePlLogicArgument(DigraphNode<SimplePlRule> node) {
+	public SimplePlLogicArgument(Derivation<SimplePlRule> derivation) {
 		super(null);
-		this.support = new HashSet<SimplePlRule>();
-		this.support.add(node.getValue());
-
-		ArrayDeque<DigraphNode<SimplePlRule>> ancestor = new ArrayDeque<DigraphNode<SimplePlRule>>();
-		ancestor.add(node);
-		HashSet<DigraphNode<SimplePlRule>> visited = new HashSet<DigraphNode<SimplePlRule>>();
-		while (!ancestor.isEmpty()) {
-			DigraphNode<SimplePlRule> n = ancestor.pop();
-				
-			for (DigraphNode<SimplePlRule> nparent : n.getParents()) {
-				if (!visited.contains(nparent)) {
-					this.support.add(nparent.getValue());
-					ancestor.add(nparent);
-				}
-			}
-			visited.add(n);
-
-		}
-		this.claim = node.getValue().getConclusion();
-
+		this.support = new HashSet<SimplePlRule>(derivation);
+		this.claim = (PropositionalFormula) derivation.getConclusion();
 	}
 
 	public Collection<? extends SimplePlRule> getSupport() {

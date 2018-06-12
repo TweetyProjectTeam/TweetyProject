@@ -27,8 +27,7 @@ import net.sf.tweety.arg.simplelogicdeductive.syntax.SimplePlLogicArgument;
 import net.sf.tweety.arg.simplelogicdeductive.syntax.SimplePlRule;
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Signature;
-import net.sf.tweety.commons.util.DigraphNode;
-import net.sf.tweety.commons.util.rules.DerivationGraph;
+import net.sf.tweety.commons.util.rules.Derivation;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -71,12 +70,9 @@ public class SimplePlLogicDeductiveKnowledgebase extends BeliefSet<SimplePlRule>
 	public DungTheory getAF(){
 		DungTheory af = new DungTheory();
 		
-		DerivationGraph<PropositionalFormula, SimplePlRule> rule_graph = new DerivationGraph<PropositionalFormula, SimplePlRule>();
-		rule_graph.allDerivations(this);
-		
-		for (DigraphNode<SimplePlRule> node : rule_graph) {
-			if (!node.getValue().isFact())
-				af.add(new SimplePlLogicArgument(node));
+		for (Derivation<SimplePlRule> derivation : Derivation.allDerivations(this)) {
+			if (derivation.size() != 1)
+				af.add(new SimplePlLogicArgument(derivation));
 		}
 		
 		for (Argument arga : af.getNodes()){
