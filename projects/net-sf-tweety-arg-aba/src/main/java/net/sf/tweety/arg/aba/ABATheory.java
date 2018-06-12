@@ -38,8 +38,6 @@ import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
-import net.sf.tweety.commons.util.DigraphNode;
-import net.sf.tweety.commons.util.rules.DerivationGraph;
 
 /**
  * @author Nils Geilen <geilenn@uni-koblenz.de>
@@ -78,33 +76,54 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 	 *            the set of assumptions used for the derivation
 	 * @return all deductions that can be derived from this theory
 	 */
-	public Collection<Deduction<T>> getAllDeductions(Collection<Assumption<T>> assumptions) {
-		Set<Deduction<T>> result = new HashSet<>();
-		DerivationGraph<T, ABARule<T>> graph = new DerivationGraph<>();
-		Collection<ABARule<T>> allrules = new HashSet<>();
-		allrules.addAll(rules);
-		allrules.addAll(assumptions);
-		graph.allDerivations(allrules);
-		for (DigraphNode<ABARule<T>> leaf : graph.getLeafs())
-			createDeduction(leaf, result);
-		return result;
-	}
-
-	/**
-	 * Recursively creates a deduction and all of its subdeductions
-	 * 
-	 * @param node
-	 * @param set
-	 * @return the created deduction
-	 */
-	private Deduction<T> createDeduction(DigraphNode<ABARule<T>> node, Set<Deduction<T>> set) {
-		Deduction<T> result = new Deduction<>("");
-		result.setRule(node.getValue());
-		for (DigraphNode<ABARule<T>> parent : node.getParents()) {
-			result.addSubDeduction(createDeduction(parent, set));
-		}
-		set.add(result);
-		return result;
+	public Collection<Deduction<T>> getAllDeductions(Collection<Assumption<T>> assumptions) {		
+		Set<Deduction<T>> args = new HashSet<>();
+		for(ABARule<T> rule: this.rules)
+			if(rule.isFact())
+				args.add(new Deduction<T>("", rule));
+		for(Assumption<T> a: assumptions)			
+			args.add(new Deduction<T>("", a));
+		boolean changed;
+		do {
+			changed = false;
+			for(ABARule<T> rule: this.rules) {
+				Collection<Collection<Deduction<T>>> subs = new HashSet<>();
+				boolean continueWithNextRule = false;
+				for(T prem: rule.getPremise()) {
+					Collection<Deduction<T>> argsForPrem = new HashSet<>();					
+					for(Deduction<T> arg: args)
+						if(arg.getConclusion().equals(prem) && !arg.getAllConclusions().contains(rule.getConclusion())) 
+							argsForPrem.add(arg);
+					if(argsForPrem.isEmpty()) {
+						continueWithNextRule = true;
+						break;
+					}else {
+						if(subs.isEmpty()) {
+							for(Deduction<T> subarg: argsForPrem) {							
+								Collection<Deduction<T>> subargset = new HashSet<Deduction<T>>();
+								subargset.add(subarg);								
+								subs.add(subargset);
+							}							
+						}else {
+							Collection<Collection<Deduction<T>>> new_subs = new HashSet<>();
+							for(Deduction<T> subarg: argsForPrem) {
+								for(Collection<Deduction<T>> s : subs) {
+									Collection<Deduction<T>> newS = new HashSet<>(s);
+									newS.add(subarg);
+									new_subs.add(newS);
+								}								
+							}
+							subs = new_subs;
+						}
+					}
+				}
+				if(continueWithNextRule)
+					continue;
+				for(Collection<Deduction<T>> subargset: subs)				
+					changed = args.add(new Deduction<T>("",rule,subargset)) || changed;				
+			}				
+		}while(changed);
+		return args;
 	}
 
 	/**

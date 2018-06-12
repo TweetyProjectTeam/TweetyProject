@@ -45,7 +45,6 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.util.rules.DerivationGraph;
 //import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.parser.FolParser;
 //import net.sf.tweety.logics.fol.syntax.FOLAtom;

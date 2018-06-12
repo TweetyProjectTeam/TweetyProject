@@ -44,6 +44,15 @@ public class Deduction <T extends Formula> extends Argument {
 		super(name);
 	}
 	
+	/**
+	 * Constructs a new deduction
+	 * @param name	an identifier
+	 * @param rule	the toprule
+	 */
+	public Deduction(String name, ABARule<T> rule) {
+		super(name);
+		this.rule = rule;
+	}
 	
 	
 	/**
@@ -58,7 +67,28 @@ public class Deduction <T extends Formula> extends Argument {
 		this.subs.addAll(subs);
 	}
 
-
+	/**
+	 * Returns all rules appearing in this argument.
+	 * @return all rules appearing in this argument.
+	 */
+	public Collection<ABARule<T>> getAllRules(){
+		Collection<ABARule<T>> result = new HashSet<>();
+		result.add(this.rule);
+		for(Deduction<T> sub: this.subs)
+			result.addAll(sub.getAllRules());
+		return result;
+	}
+	
+	/**
+	 * Returns all conclusions appearing in this argument.
+	 * @return all conclusions appearing in this argument.
+	 */
+	public Collection<T> getAllConclusions(){
+		Collection<T> conc = new HashSet<>();
+		for(ABARule<T> rule : this.getAllRules())
+			conc.add(rule.getConclusion());
+		return conc;
+	}
 
 	/**
 	 * @return	the conclusion of this deduction
