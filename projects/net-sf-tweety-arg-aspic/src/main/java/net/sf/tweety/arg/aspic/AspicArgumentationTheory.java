@@ -32,8 +32,6 @@ import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
-import net.sf.tweety.commons.util.DigraphNode;
-import net.sf.tweety.commons.util.rules.DerivationGraph;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 
@@ -137,12 +135,49 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	 */
 	public Collection<AspicArgument<T>> getArguments() {
 		Collection<AspicArgument<T>> args = new HashSet<>();
-		DerivationGraph<T, InferenceRule<T>> rule_graph = new DerivationGraph<>();
-		rule_graph.allDerivations(rules);
-		
-		for (DigraphNode<InferenceRule<T>> node : rule_graph) {
-			args.add(new AspicArgument<T>(node, args));
-		}
+		for(InferenceRule<T> rule: this.rules)
+			if(rule.isFact())
+				args.add(new AspicArgument<T>(rule));
+		boolean changed;
+		do {
+			changed = false;
+			for(InferenceRule<T> rule: this.rules) {
+				Collection<Collection<AspicArgument<T>>> subs = new HashSet<>();
+				boolean continueWithNextRule = false;
+				for(T prem: rule.getPremise()) {
+					Collection<AspicArgument<T>> argsForPrem = new HashSet<>();					
+					for(AspicArgument<T> arg: args)
+						if(arg.getConclusion().equals(prem) && !arg.getAllConclusions().contains(rule.getConclusion())) 
+							argsForPrem.add(arg);
+					if(argsForPrem.isEmpty()) {
+						continueWithNextRule = true;
+						break;
+					}else {
+						if(subs.isEmpty()) {
+							for(AspicArgument<T> subarg: argsForPrem) {							
+								Collection<AspicArgument<T>> subargset = new HashSet<AspicArgument<T>>();
+								subargset.add(subarg);								
+								subs.add(subargset);
+							}							
+						}else {
+							Collection<Collection<AspicArgument<T>>> new_subs = new HashSet<>();
+							for(AspicArgument<T> subarg: argsForPrem) {
+								for(Collection<AspicArgument<T>> s : subs) {
+									Collection<AspicArgument<T>> newS = new HashSet<>(s);
+									newS.add(subarg);
+									new_subs.add(newS);
+								}								
+							}
+							subs = new_subs;
+						}
+					}
+				}
+				if(continueWithNextRule)
+					continue;
+				for(Collection<AspicArgument<T>> subargset: subs)				
+					changed = args.add(new AspicArgument<T>(rule,subargset)) || changed;				
+			}				
+		}while(changed);
 		return args;
 	}
 	

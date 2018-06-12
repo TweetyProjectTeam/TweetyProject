@@ -66,7 +66,7 @@ public class ABATest {
 		assertTrue(rule_from_true instanceof InferenceRule<?>);
 		assertTrue(two_params_rule.getPremise().size() == 2);
 
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example1.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example1.aba").getFile());
 		assertTrue(abat.getAssumptions().size() == 3);
 		assertTrue(abat.getRules().size() == 4);
 
@@ -97,7 +97,7 @@ public class ABATest {
 	public void DeductionTest1() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example1.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example1.aba").getFile());
 
 		Collection<Deduction<PropositionalFormula>> deductions = abat.getAllDeductions();
 		for (Deduction<?> d : deductions)
@@ -153,7 +153,7 @@ public class ABATest {
 	public void AttackTest() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example1.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example1.aba").getFile());
 		abat.add(parser.parseFormula("not a=!a"));
 		abat.add(parser.parseFormula("not !a=a"));
 		abat.add(parser.parseFormula("not c=!c"));
@@ -179,7 +179,7 @@ public class ABATest {
 	public void ReasonerTest() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example2.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example2.aba").getFile());
 		abat.add((ABARule<PropositionalFormula>) parser.parseFormula("!a<-"));
 		abat.add(parser.parseFormula("not a=!a"));
 		abat.add(parser.parseFormula("not !a=a"));
@@ -204,7 +204,7 @@ public class ABATest {
 	public void ClosureTest() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example2.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example2.aba").getFile());
 		assertTrue(abat.isClosed(abat.getAssumptions()));
 		assertTrue(abat.isFlat());
 		abat.addAssumption((PropositionalFormula) plparser.parseFormula("r"));
@@ -216,7 +216,7 @@ public class ABATest {
 	public void Example3() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example3.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example3.aba").getFile());
 		assertFalse(abat.isFlat());
 
 		GeneralABAReasoner<PropositionalFormula> abar = new CompleteReasoner<>(Semantics.CREDULOUS_INFERENCE);
@@ -272,7 +272,7 @@ public class ABATest {
 	public void Example4() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example4.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example4.aba").getFile());
 		assertFalse(abat.isFlat());
 		
 		Collection<Collection<Assumption<PropositionalFormula>>> complexts = new CompleteReasoner<PropositionalFormula>(Semantics.CREDULOUS_INFERENCE).computeExtensions(abat);
@@ -293,7 +293,7 @@ public class ABATest {
 	public void Example5() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example5.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example5.aba").getFile());
 		assertFalse(abat.isFlat());
 		
 		Collection<Collection<Assumption<PropositionalFormula>>> complexts = new CompleteReasoner<PropositionalFormula>(Semantics.CREDULOUS_INFERENCE).computeExtensions(abat);
@@ -320,7 +320,7 @@ public class ABATest {
 	public void Example11() throws Exception {
 		PlParser plparser = new PlParser();
 		ABAParser<PropositionalFormula> parser = new ABAParser<>(plparser);
-		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile("../../examples/aba/example11.aba");
+		ABATheory<PropositionalFormula> abat = parser.parseBeliefBaseFromFile(ABATest.class.getResource("/example11.aba").getFile());
 
 		assertTrue(abat.isFlat());
 

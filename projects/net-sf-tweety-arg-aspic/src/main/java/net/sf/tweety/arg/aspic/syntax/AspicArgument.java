@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -47,6 +48,19 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	/** The srgument's top rule **/
 	private InferenceRule<T> toprule = null;
 	
+	
+	/**
+	 * Creates an empty Argument 
+	 * @param toprule the argument's TopRule
+	 */
+	public AspicArgument(InferenceRule<T> toprule, Collection<AspicArgument<T>> directsubs) {
+		super(null);
+		this.toprule = toprule;
+		conc = toprule.getConclusion();	
+		this.directsubs = new LinkedList<AspicArgument<T>>(directsubs);
+		
+		generateName();
+	}
 	
 	/**
 	 * Creates an empty Argument 
@@ -240,6 +254,29 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	}
 	
 	/**
+	 * Returns all rules appearing in this argument.
+	 * @return all rules appearing in this argument.
+	 */
+	public Collection<InferenceRule<T>> getAllRules(){
+		Collection<InferenceRule<T>> result = new HashSet<>();
+		result.add(this.toprule);
+		for(AspicArgument<T> sub: this.directsubs)
+			result.addAll(sub.getAllRules());
+		return result;
+	}
+	
+	/**
+	 * Returns all conclusions appearing in this argument.
+	 * @return all conclusions appearing in this argument.
+	 */
+	public Collection<T> getAllConclusions(){
+		Collection<T> conc = new HashSet<>();
+		for(InferenceRule<T> rule : this.getAllRules())
+			conc.add(rule.getConclusion());
+		return conc;
+	}
+	
+	/**
 	 * The argument's direct children, whose conclusions fit its prerequisites
 	 * @return  the direct subrules
 	 */
@@ -247,6 +284,43 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		return directsubs;
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((conc == null) ? 0 : conc.hashCode());
+		result = prime * result + ((directsubs == null) ? 0 : directsubs.hashCode());
+		result = prime * result + ((toprule == null) ? 0 : toprule.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AspicArgument<?> other = (AspicArgument<?>) obj;
+		if (conc == null) {
+			if (other.conc != null)
+				return false;
+		} else if (!conc.equals(other.conc))
+			return false;
+		if (directsubs == null) {
+			if (other.directsubs != null)
+				return false;
+		} else if (!directsubs.equals(other.directsubs))
+			return false;
+		if (toprule == null) {
+			if (other.toprule != null)
+				return false;
+		} else if (!toprule.equals(other.toprule))
+			return false;
+		return true;
+	}
+
 	/**
 	 * Adds a subargument
 	 * @param sub	to be added

@@ -37,6 +37,36 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  */
 public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> {
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((conclusion == null) ? 0 : conclusion.hashCode());
+		result = prime * result + ((premises == null) ? 0 : premises.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		InferenceRule<?> other = (InferenceRule<?>) obj;
+		if (conclusion == null) {
+			if (other.conclusion != null)
+				return false;
+		} else if (!conclusion.equals(other.conclusion))
+			return false;
+		if (premises == null) {
+			if (other.premises != null)
+				return false;
+		} else if (!premises.equals(other.premises))
+			return false;
+		return true;
+	}
 	/**
 	 * The rule's conclusion
 	 */
