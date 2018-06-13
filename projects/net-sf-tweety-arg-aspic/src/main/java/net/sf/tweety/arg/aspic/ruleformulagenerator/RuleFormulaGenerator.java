@@ -57,7 +57,7 @@ public abstract class RuleFormulaGenerator<T extends Invertable> {
 	 * @return the corresponding inference rule
 	 */
 	public DefeasibleInferenceRule<T> getInferenceRule(T formula, AspicArgumentationTheory<T> kb) {
-		for (InferenceRule<T> rule : kb.getRules())
+		for (InferenceRule<T> rule : kb)
 			if (rule.isDefeasible()) {
 				DefeasibleInferenceRule<T> defrule = (DefeasibleInferenceRule<T>) rule;
 				if (getRuleFormula(defrule).equals(formula))

@@ -40,6 +40,7 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
+import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -245,7 +246,7 @@ public class AspicTest {
 		aspicparser.setSymbolStrict("-->");
 		String aspicbsp = "d1: Tame(cow) ==> Ridable(cow)\n" + "s1 : Tame(horse) && Ridable(lion) --> Tame(horse)";
 		AspicArgumentationTheory<FolFormula> aat = aspicparser.parseBeliefBase(aspicbsp);
-		assertTrue(aat.getRules().size() == 2);
+		assertTrue(aat.size() == 2);
 	}
 
 	@Test
@@ -257,7 +258,7 @@ public class AspicTest {
 		aspicparser.setSymbolStrict("-->");
 		String aspicbsp = "d1: a ==> b\n" + "s1 : c; d ==> e \n" + "d ; r --> a";
 		AspicArgumentationTheory<FolFormula> aat = aspicparser.parseBeliefBase(aspicbsp);
-		assertTrue(aat.getRules().size() == 3);
+		assertTrue(aat.size() == 3);
 	}
 
 	@Test
@@ -398,7 +399,7 @@ public class AspicTest {
 		AspicArgumentationTheory<PropositionalFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex1.aspic").getFile());
 		
-		AspicReasoner<PropositionalFormula> ar = new AspicReasoner<PropositionalFormula>(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE));
 
 		Argument query = null;
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
@@ -420,7 +421,7 @@ public class AspicTest {
 		AspicArgumentationTheory<PropositionalFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex1.aspic").getFile());
 		
-		AspicReasoner<PropositionalFormula> ar = new AspicReasoner<PropositionalFormula>(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE));
 
 
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");

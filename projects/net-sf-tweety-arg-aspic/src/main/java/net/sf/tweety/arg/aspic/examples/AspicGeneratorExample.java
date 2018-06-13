@@ -19,25 +19,48 @@
 package net.sf.tweety.arg.aspic.examples;
 
 import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
-import net.sf.tweety.arg.aspic.AspicReasoner;
-import net.sf.tweety.arg.aspic.syntax.AspicArgument;
+import net.sf.tweety.arg.aspic.ModuleBasedAspicReasoner;
+import net.sf.tweety.arg.aspic.NaiveAspicReasoner;
 import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
+import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
+/**
+ * Exemplary code illustrating the use of the ASPIC theory generator.
+ * Furthermore this code show a small performance comparison between
+ * the naive ASPIC reasoner and the module based reasoner.
+ * 
+ * @author Matthias Thimm
+ *
+ */
 public class AspicGeneratorExample {
 	public static void main(String[] args) {		 
-		AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(10, 20, 4, 0.2);
-		System.out.println(theory);
+		int repetitions = 100;
+		int numberAtoms = 20;
+		int numberFormulas = 50;
+		int maxLiteralsInPremises = 4;
+		double percentageStrictRules = 0.2;
+		
+		NaiveAspicReasoner<PropositionalFormula> naiveReasoner = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.GR,Semantics.CREDULOUS_INFERENCE));
+		ModuleBasedAspicReasoner<PropositionalFormula> moduleBasedReasoner = new ModuleBasedAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.GR,Semantics.CREDULOUS_INFERENCE));
+		
+		long totalNaive = 0;
+		long totalModulebased = 0;
+		for(int i = 0; i < repetitions; i++) {
+			AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+			System.out.println(i + "\t" + theory);
+			PropositionalFormula query = new Proposition("A1");
+			long millis = System.currentTimeMillis();
+			naiveReasoner.query(theory,query).getAnswerBoolean();
+			totalNaive += System.currentTimeMillis()-millis;
+			millis = System.currentTimeMillis();
+			moduleBasedReasoner.query(theory,query).getAnswerBoolean();
+			totalModulebased += System.currentTimeMillis()-millis;
+		}	
 		System.out.println();
-		for(AspicArgument<PropositionalFormula> arg: theory.getArguments())
-			System.out.println(arg);
-		System.out.println();	
-		
-		AspicReasoner<PropositionalFormula> reasoner = new AspicReasoner<PropositionalFormula>(Semantics.GR,Semantics.CREDULOUS_INFERENCE);
-		
-		PropositionalFormula query = new Proposition("A1");
-		System.out.println(query + " " + reasoner.query(theory,query).getAnswerBoolean());
+		System.out.println("Naive reasoner: " + totalNaive);
+		System.out.println("Module-based reasoner: " +  totalModulebased);
 	}	
 }

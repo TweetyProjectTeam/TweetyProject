@@ -83,4 +83,29 @@ public class RuleSet<T extends Rule<?,?>> extends HashSet<T>{
 			premises.addAll(((Rule<?,?>)rule).getPremise());
 		return premises;		
 	}
+	
+	/**
+	 * Returns the maximal subset of this rule set that is closed under
+	 * "syntactic" neighbourhood relationship for the given formula. A formula/rule has
+	 * a "syntactic" neighbourhood relationship with a rule iff they share vocabulary
+	 * elements.
+	 * @param f some formula
+	 * @return a rule set.
+	 */
+	public RuleSet<T> getSyntacticModule(Formula f){
+		RuleSet<T> ruleset = new RuleSet<T>();
+		Signature sig = f.getSignature();
+		boolean changed;
+		do {
+			changed = false;
+			for(T rule: this) {
+				if(!ruleset.contains(rule) && rule.getSignature().isOverlappingSignature(sig)) {
+					ruleset.add(rule);
+					changed = true;
+					sig.addSignature(rule.getSignature());
+				}
+			}
+		}while(changed);		
+		return ruleset;
+	}
 }

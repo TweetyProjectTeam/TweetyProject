@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.arg.aspic;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -32,11 +31,13 @@ import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
+import net.sf.tweety.commons.util.rules.RuleSet;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 
 /**
  * @author Nils Geilen
+ * @author Matthias Thimm
  *
  *	According to Modgil and Prakken
  *	(http://www.cs.uu.nl/groups/IS/archive/henry/ASPICtutorial.pdf)
@@ -53,15 +54,10 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  *
  * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
-public class AspicArgumentationTheory<T extends Invertable> implements BeliefBase {
+public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<InferenceRule<T>> implements BeliefBase {
 	
-	/**
-	 * The inference rules this system's arguments will be created from,
-	 * correesponds to an argumentation theory (AS, KB) with
-	 *		- AS argumentation system = rules with premises (p -> c)
-	 *		- KB knowledge base = rules without premises (-> c)
-	 */
-	private Collection<InferenceRule<T>> rules = new ArrayList<>();
+	private static final long serialVersionUID = 6158985937661828210L;
+	
 	/**
 	 * An order over this system's arguments, needed for their defeat relation
 	 */
@@ -89,11 +85,19 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	}
 	
 	/**
+	 * Returns the generator to transform rules into words of the language they range over
+	 * @return the formula generator
+	 */
+	public RuleFormulaGenerator<T> getRuleFormulaGenerator() {
+		return this.rfgen;
+	}
+	
+	/**
 	 * Adds an additional inference rule
 	 * @param rule	the rule to be added
 	 */
 	public void addRule(InferenceRule<T> rule) {
-		rules.add(rule);
+		this.add(rule);
 	}
 	
 	/**
@@ -103,7 +107,7 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	public void addAxiom(T axiom) {
 		InferenceRule<T> r = new StrictInferenceRule<>();
 		r.setConclusion(axiom);
-		rules.add(r);
+		this.add(r);
 	}
 	
 	/**
@@ -113,7 +117,7 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	public void addOrdinaryPremise(T prem) {
 		InferenceRule<T> r = new DefeasibleInferenceRule<>();
 		r.setConclusion(prem);
-		rules.add(r);
+		this.add(r);
 	}
 	
 	/**
@@ -135,13 +139,13 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 	 */
 	public Collection<AspicArgument<T>> getArguments() {
 		Collection<AspicArgument<T>> args = new HashSet<>();
-		for(InferenceRule<T> rule: this.rules)
+		for(InferenceRule<T> rule: this)
 			if(rule.isFact())
 				args.add(new AspicArgument<T>(rule));
 		boolean changed;
 		do {
 			changed = false;
-			for(InferenceRule<T> rule: this.rules) {
+			for(InferenceRule<T> rule: this) {
 				Collection<Collection<AspicArgument<T>>> subs = new HashSet<>();
 				boolean continueWithNextRule = false;
 				for(T prem: rule.getPremise()) {
@@ -198,20 +202,12 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 		return order;
 	}
 
-
-	/**
-	 * @return	the inference rules
-	 */
-	public Collection<InferenceRule<T>> getRules() {
-		return rules;
-	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "ArgumentationSystem [rules=" + rules + "]";
+		return "ArgumentationSystem [rules=" + super.toString() + "]";
 	}
 
 	/* (non-Javadoc)
@@ -222,6 +218,4 @@ public class AspicArgumentationTheory<T extends Invertable> implements BeliefBas
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
 }
