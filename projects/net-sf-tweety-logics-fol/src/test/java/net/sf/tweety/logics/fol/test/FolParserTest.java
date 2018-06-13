@@ -150,6 +150,7 @@ public class FolParserTest {
 		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:(!Knows(kiwi,X)) && Abba");
 		FolFormula f2 = (FolFormula)parser.parseFormula("Abba && forall X:(!Knows(kiwi,X))");
 		FolFormula f3 = (FolFormula)parser.parseFormula("Abba || forall X:(Flies(X)) && Abba || Abba && exists Y:(Knows(Y,kiwi))");
+		FolFormula f4 = (FolFormula)parser.parseFormula("exists BIRD:(forall MyVar :(Knows(BIRD,MyVar)))");
 		
 		assertTrue(f1.containsQuantifier());
 		assertTrue(f2.containsQuantifier());
@@ -161,6 +162,7 @@ public class FolParserTest {
 		assertTrue(f3.getSignature().containsPredicate("Abba"));
 		assertTrue(f3.getSignature().containsPredicate("Knows"));
 		assertTrue(f3.getSignature().containsPredicate("Flies"));
+		assertTrue(f4.getSignature().containsPredicate("Knows"));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

@@ -52,8 +52,9 @@ import net.sf.tweety.logics.fol.syntax.*;
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
- * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
- * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
+ * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME and FUNCTORNAME are sequences of
+ * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning and VARIABLENAME
+ * <br> is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with an uppercase letter at the beginning.
  * 
  * @author Matthias Thimm
  * @author Anna Gessler
@@ -426,18 +427,24 @@ public class FolParser extends Parser<FolBeliefSet> {
 		else 
 			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
 		
-		Variable bVar = null;
+		List<Variable> bVars = new ArrayList<Variable>();;
 		for(Variable v: formula.getUnboundVariables()){
-			if(v.get().equals(var)){
-				bVar = v;
-				break;
-			}
+			if(v.get().equals(var))
+					bVars.add(v);
 		}
 		
-		if(bVar == null)
-			throw new ParserException("Variable '" + var + "' not found in quantification.");
+		if(bVars.isEmpty())
+			throw new ParserException("Variable(s) '" + var + "' not found in quantification.");
+		
 		Set<Variable> vars = new HashSet<Variable>();
-		vars.add(bVar);
+		
+		int j = 0; //This index is used later to determine if there are more elements in the list to the right of the quantified formula
+		for (int i = 0; i < bVars.size(); i++) {
+			vars.add(bVars.get(i)); 
+			j += (bVars.get(i).get().length());
+		}
+		j += bVars.size();
+		
 		this.variables.remove(var);
 	
 		FolFormula result;
@@ -447,15 +454,15 @@ public class FolParser extends Parser<FolBeliefSet> {
 			result = new ForallQuantifiedFormula(formula,vars);
 		
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
-		if (l.size() > 4) {
-			if (l.get(idx+2) == LogicalSymbols.CONJUNCTION()) 
-				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == LogicalSymbols.DISJUNCTION()) 
-				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == LogicalSymbols.EQUIVALENCE()) 
-				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == LogicalSymbols.IMPLICATION())
-				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
+		if (l.size() > 2+j) {
+			if (l.get(2+j) == LogicalSymbols.CONJUNCTION()) 
+				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
+			else if (l.get(2+j) == LogicalSymbols.DISJUNCTION()) 
+				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
+			else if (l.get(2+j) == LogicalSymbols.EQUIVALENCE()) 
+				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
+			else if (l.get(2+j) == LogicalSymbols.IMPLICATION())
+				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(idx+2));
 		}
