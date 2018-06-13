@@ -29,13 +29,13 @@ import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.solver.Solver;
 import net.sf.tweety.lp.asp.solver.SolverException;
 import net.sf.tweety.lp.asp.syntax.DLPAtom;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.sf.tweety.lp.asp.syntax.DLPNeg;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 /**
  * This class implements the inconsistency measure $I_sd$ from

@@ -20,7 +20,7 @@ package net.sf.tweety.lp.asp.solver;
 
 import java.util.*;
 
-import net.sf.tweety.lp.asp.util.*;
+import net.sf.tweety.lp.asp.semantics.*;
 import net.sf.tweety.lp.asp.syntax.*;
 
 /**

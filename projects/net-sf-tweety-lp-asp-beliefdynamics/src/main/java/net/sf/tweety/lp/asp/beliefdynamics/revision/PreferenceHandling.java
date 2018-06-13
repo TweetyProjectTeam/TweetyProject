@@ -32,6 +32,8 @@ import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
+import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.solver.DLV;
 import net.sf.tweety.lp.asp.solver.Solver;
 import net.sf.tweety.lp.asp.solver.SolverException;
@@ -40,8 +42,6 @@ import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.sf.tweety.lp.asp.syntax.DLPNeg;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.Rule;
-import net.sf.tweety.lp.asp.util.AnswerSet;
-import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

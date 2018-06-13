@@ -26,8 +26,8 @@ import java.util.List;
 
 import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
+import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 public class Clingo extends SolverBase {
 

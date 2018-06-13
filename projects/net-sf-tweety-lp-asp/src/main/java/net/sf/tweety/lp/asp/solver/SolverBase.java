@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.tweety.lp.asp.util.AnswerSetList;
+import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 
 /**
  * Base class for solver adds generic error handling code.

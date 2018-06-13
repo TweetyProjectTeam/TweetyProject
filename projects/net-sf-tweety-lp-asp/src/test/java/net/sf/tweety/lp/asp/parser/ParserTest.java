@@ -26,8 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.syntax.*;
-import net.sf.tweety.lp.asp.util.AnswerSet;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.FunctionalTerm;
 import net.sf.tweety.logics.commons.syntax.Functor;

@@ -23,8 +23,8 @@ import java.io.StringReader;
 import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.ASTAnswerSetList;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
+import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.util.AnswerSetList;
 
 /**
  * wrapper class for the dlv answer set solver command line

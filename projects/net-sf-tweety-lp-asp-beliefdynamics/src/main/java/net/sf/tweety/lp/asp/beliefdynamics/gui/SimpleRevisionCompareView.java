@@ -39,8 +39,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
-import net.sf.tweety.lp.asp.util.AnswerSet;
-import net.sf.tweety.lp.asp.util.AnswerSetList;
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
+import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 
 /**
  * The default view for a revision compare. This class is responsible to create the hierarchy of
