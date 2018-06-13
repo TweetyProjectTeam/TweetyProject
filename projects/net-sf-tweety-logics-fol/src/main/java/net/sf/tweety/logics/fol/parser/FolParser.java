@@ -48,13 +48,15 @@ import net.sf.tweety.logics.fol.syntax.*;
  * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
  * <br>					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
  * <br>					 FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
- * <br>				::== "==" "(" FORMULA ")" | "/==" "(" FORMULA ")"
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
  * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME and FUNCTORNAME are sequences of
  * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning and VARIABLENAME
  * <br> is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with an uppercase letter at the beginning.
+ * <br>
+ * <br> Note: Equality/Inequality predicates (== and /==) can only be parsed if the parser is given a FolSignature 
+ * <br> with equality (which is not the case by default).
  * 
  * @author Matthias Thimm
  * @author Anna Gessler
@@ -683,6 +685,8 @@ public class FolParser extends Parser<FolBeliefSet> {
 					return new FOLAtom(new InequalityPredicate(),args); 
 				return new FOLAtom(p,args); 
 			}
+			if (s.equals(LogicalSymbols.EQUALITY()) || s.equals(LogicalSymbols.INEQUALITY()))
+				throw new ParserException("Equality/Inequality predicate " + s + " is not part of this parser's FolSignature.");
 			throw new ParserException("Predicate '" + s + "' has not been declared.");
 		}		
 	}
