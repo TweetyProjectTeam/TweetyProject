@@ -30,6 +30,7 @@ import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.prover.EProver;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.writer.FolWriter;
 import net.sf.tweety.logics.fol.writer.TPTPWriter;
 
@@ -92,11 +93,13 @@ public class TPTPTest {
 	@Test
 	public void test3() throws Exception {
 		FolParser parser = new FolParser();	
+		parser.setSignature(new FolSignature(true));
 		String source = "Animal = {horse, cow, lion} \n"
 				+ "Plant = {grass, tree} \n"
 				+ "type(Eats(Animal, Plant)) \n"
 				+ "forall X: (!Eats(X,tree)) \n"
 				+ "Eats(cow, grass) \n"
+				+ "forall X: (!(exists Y: (Eats(X,Y) && X==Y))) \n"
 				+ "forall X: (!Eats(cow, X) || Eats(horse, X)) \n"
 				+ "exists X: (Eats(lion, X))";
 		FolBeliefSet b = parser.parseBeliefBase(source);
@@ -112,8 +115,8 @@ public class TPTPTest {
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (forall Y: (!Eats(Y, X)))")).getAnswerBoolean());
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(Y, X)))")).getAnswerBoolean());
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!(forall X: (forall Y: (Eats(Y, X))))")).getAnswerBoolean());
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(X, Y) => X/==Y))")).getAnswerBoolean());
 	}
-	
 	
 }
 

@@ -26,17 +26,25 @@ import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
+import net.sf.tweety.logics.fol.syntax.EqualityPredicate;
+import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
+import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
+import net.sf.tweety.logics.fol.syntax.Implication;
+import net.sf.tweety.logics.fol.syntax.InequalityPredicate;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 
 /**
@@ -44,6 +52,7 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * 
  * @see net.sf.tweety.logics.fol.prover.EProver
  * @author Nils Geilen
+ * @author Anna Gessler
  *
  */
 
@@ -55,7 +64,7 @@ public class TPTPWriter implements FolWriter {
 	final Writer writer;
 	
 	/**
-	 * Creates new Prover9Writer
+	 * Creates new TPTPWriter
 	 * @param writer output is redirected to this writer
 	 */
 	public TPTPWriter(Writer writer) {
@@ -64,7 +73,7 @@ public class TPTPWriter implements FolWriter {
 	}
 	
 	/**
-	 * Creates new Prover9Writer
+	 * Creates new TPTPWriter
 	 */
 	public TPTPWriter() {
 		super();
@@ -116,7 +125,7 @@ public class TPTPWriter implements FolWriter {
 	}
 
 	/**
-	 * Creates an TPTP axiom out of body.
+	 * Creates a TPTP axiom out of a given name and formula.
 	 * 
 	 * @param name
 	 *            the identifying name of the axiom
@@ -132,19 +141,20 @@ public class TPTPWriter implements FolWriter {
 	 * Crates a type check or type def for a variable
 	 * 
 	 * @param v
-	 *            a variable
+	 *           a variable
 	 * @return type(var)
 	 */
 	private String printVar(Variable v) {
 		return v.getSort() + parens(v.toString());
 	}
-
+	
 	/**
 	 * Creates a TPTP representation of a formula.
 	 * 
 	 * @param f
 	 *            a formula
-	 * @return a string that represents the formula in TPTP format
+	 * @return a 
+	 * 			  string that represents the formula in TPTP format
 	 */
 	private String printFormula(RelationalFormula f) {
 		if (f instanceof Negation) {
@@ -156,12 +166,31 @@ public class TPTPWriter implements FolWriter {
 			boolean existential = f instanceof ExistsQuantifiedFormula;
 			String result = existential ? "? [" : "! [";
 			result += join(fqf.getQuantifierVariables(), ", ") + "]: (";
-			// check if variables are of correct type
-			Iterator<Variable> i = fqf.getQuantifierVariables().iterator();
-			result += printVar(i.next());
-			while (i.hasNext())
-				result += " & " + printVar(i.next());
-			result += existential ? " & " : " => ";
+			Iterator<Variable> vars = fqf.getQuantifierVariables().iterator();
+			
+			//Do not print the sort "_Any" (which is used by Tweety internally only)
+			//For variables of other sorts, enforce correct sorts by adding an
+			//implication "type(var) => (rest of quantified formula)" for forall quantified formulas 
+			//or a conjunct "type(var) & (rest of quantified formula)" for exists quantified formulas
+			boolean first = true;
+			while (vars.hasNext()) {
+				Variable v = vars.next();
+				if (first) {
+					if (!(v.getSort().equals(Sort.ANY))) {
+						result += "(";
+						first = false;
+						result +=  printVar(v);
+						continue;
+						}
+				}
+				if (!(v.getSort().equals(Sort.ANY))) 
+					result += " & "+ printVar(v);  
+				}
+			if (!first) {
+				result += ")";
+				result += existential ? " & " : " => "; 
+				}
+			
 			return parens(result + printFormula(fqf.getFormula()))+")";
 		}
 		if (f instanceof AssociativeFOLFormula) {
@@ -179,6 +208,26 @@ public class TPTPWriter implements FolWriter {
 		if(f instanceof Contradiction) {
 			return "$false";
 		}	
+		if (f instanceof Implication) {
+			Implication e = (Implication) f;
+			return parens(printFormula(e.getFormulas().getFirst()) + "=>" + printFormula(e.getFormulas().getSecond()));
+		}
+		if (f instanceof Equivalence) {
+			Equivalence e = (Equivalence) f;
+			return parens(printFormula(e.getFormulas().getFirst()) + "<=>" + printFormula(e.getFormulas().getSecond()));
+		}
+		if (f instanceof FOLAtom) {
+			FOLAtom at = (FOLAtom) f;
+			Predicate p = at.getPredicate();
+			if (p instanceof EqualityPredicate) {
+				Iterator<Term<?>> it = at.getArguments().iterator();
+				return parens(it.next().toString() + "=" + it.next().toString());
+			}
+			else if (p instanceof InequalityPredicate) {
+				Iterator<Term<?>> it = at.getArguments().iterator();
+				return parens(it.next().toString() + "!=" + it.next().toString());
+			}
+		}
 		return f.toString();
 	}
 

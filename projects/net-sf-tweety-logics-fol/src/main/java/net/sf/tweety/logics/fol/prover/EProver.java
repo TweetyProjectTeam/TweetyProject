@@ -106,13 +106,9 @@ public class EProver extends FolTheoremProver {
 			printer.printQuery((FolFormula) query);
 			printer.close();
 			
-			//System.out.println(Files.readAllLines(file.toPath()));
-			
 			String cmd = binaryLocation +" " + this.additionalArguments + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
-			//System.out.println(cmd);
 			String output = bash.run(cmd);
-			//String output = Exec.invokeExecutable(cmd);
-			//System.out.print(output);
+
 			if(Pattern.compile("# Proof found!").matcher(output).find()) { 
 				answer.setAnswer(true);
 				return answer;
@@ -142,13 +138,9 @@ public class EProver extends FolTheoremProver {
 			printer.printEquivalence(a,b);
 			printer.close();
 			
-			//System.out.println(Files.readAllLines(file.toPath()));
-			
 			String cmd = binaryLocation + " --tptp3-format " + file.getAbsolutePath().replaceAll("\\\\", "/");
-			//System.out.println(cmd);
 			String output = bash.run(cmd);
-			//String output = Exec.invokeExecutable(cmd);
-			//System.out.print(output);
+
 			if(Pattern.compile("# Proof found!").matcher(output).find())
 				return true;
 			if(Pattern.compile("# No proof found!").matcher(output).find())

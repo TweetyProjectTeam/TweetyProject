@@ -23,6 +23,7 @@ import java.io.IOException;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.TPTPParser;
+import net.sf.tweety.logics.fol.prover.EProver;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.prover.NaiveProver;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -84,8 +85,7 @@ public class TPTPParserExample {
 		FolTheoremProver.setDefaultProver(new NaiveProver());
 		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
 		System.out.println("ANSWER: " + prover.query(axioms,c1));
-		
-		
+			
 		//Parse TPTP problem COM008+2
 		tptp.setSignature(new FolSignature(true));	
 		tptp.setFormulaRoles(axiomRoles);
@@ -98,6 +98,10 @@ public class TPTPParserExample {
 		System.out.println("\t" + conjecture2.iterator().next());
 		System.out.println("Parsed signature: " + tptp.getSignature());
 		System.out.println();
+		
+		FolTheoremProver.setDefaultProver(new EProver("/home/anna/sw/folProver/E/PROVER/eprover"));
+		prover = FolTheoremProver.getDefaultProver();
+		System.out.println("ANSWER: " + prover.query(axioms2,conjecture2.iterator().next()).getAnswerBoolean() + "\n");
 		
 		//Parse TPTP problem NLP080+1 
 		tptp.setSignature(new FolSignature(true));	
