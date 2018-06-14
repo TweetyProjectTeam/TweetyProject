@@ -19,6 +19,7 @@
  package net.sf.tweety.logics.ml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class ModalParserTest {
 	@Before
 	public void initParser() {
 		parser = new ModalParser();
-		FolSignature sig = new FolSignature();
+		FolSignature sig = new FolSignature(true);
 		Sort s_animal = new Sort("Animal");
 		sig.add(s_animal); 
 		Constant c_penguin = new Constant("penguin",s_animal);
@@ -91,9 +92,10 @@ public class ModalParserTest {
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedModalFormulaTest() throws ParserException, IOException {
 		FolFormula f1= (FolFormula) parser.parseFormula("<>(Abba)||[](Abba)&& <>(Knows(kiwi,penguin) || Flies(penguin))");
-		FolFormula f2 = (FolFormula) parser.parseFormula("[](Flies(kiwi)) || forall X:(Knows(penguin,X))");
+		FolFormula f2 = (FolFormula) parser.parseFormula("[](Flies(kiwi)) || forall X:(==(penguin,X))");
 		FolFormula f3 = (FolFormula) parser.parseFormula("[](<>(!Flies(kiwi)) && forall X:(Knows(kiwi,X)) || Abba)");
 		FolFormula f4 = (FolFormula) parser.parseFormula("Abba && [](forall Y:(Flies(Y)) || forall X:(Knows(penguin,X)))");
+		FolFormula f5 = (FolFormula)parser.parseFormula("exists BIRD:(forall MyVar :([](Knows(BIRD,MyVar))))");
 		
 		assertTrue(f1.getSignature().containsPredicate("Abba"));
 		assertTrue(f1.getSignature().containsPredicate("Flies"));
@@ -102,13 +104,15 @@ public class ModalParserTest {
 		assertTrue(f1.getSignature().containsConstant("penguin"));
 		assertTrue(f2.containsQuantifier());
 		assertTrue(f2.getSignature().containsPredicate("Flies"));
-		assertTrue(f2.getSignature().containsPredicate("Knows"));                                       
+		assertFalse(f2.getSignature().containsPredicate("Knows"));   
+		assertTrue(f2.getSignature().containsPredicate("=="));  
 		assertTrue(f3.getSignature().containsPredicate("Flies"));
 		assertTrue(f3.getSignature().containsPredicate("Knows"));
 		assertTrue(f3.getSignature().containsPredicate("Abba"));
 		assertTrue(f4.getSignature().containsPredicate("Flies"));
 		assertTrue(f4.getSignature().containsPredicate("Knows"));
 		assertTrue(f4.getSignature().containsPredicate("Abba"));
+		assertTrue(f5.getSignature().containsPredicate("Knows"));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

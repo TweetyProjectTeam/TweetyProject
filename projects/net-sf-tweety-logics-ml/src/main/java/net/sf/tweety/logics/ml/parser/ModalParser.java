@@ -44,6 +44,7 @@ import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.EqualityPredicate;
 import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
@@ -51,8 +52,10 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Implication;
+import net.sf.tweety.logics.fol.syntax.InequalityPredicate;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.syntax.ModalFormula;
@@ -70,15 +73,19 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * <br> PREDDEC		::== "type" "(" PREDICATENAME ("(" SORTNAME ("," SORTNAME)* ")")? ")" "\n"
  * <br> FUNCTORDEC	::== "type" "(" SORTNAME "=" FUNCTORNAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n"
  * <br> FORMULAS    ::== ( "\n" FORMULA)*
- * <br> FORMULA     ::== ATOM  | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
- * <br> 				"(" FORMULA ")" | "[]" "(" FORMULA ")" | "<>" "(" FORMULA ")" |
- * <br>					FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA
- * <br>  				FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
+ * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
+ * <br>					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
+ * <br>					 FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
+ * <br>                  "[]" "(" FORMULA ")" | "<>" "(" FORMULA ")"
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
- * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
- * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
+ * <br> where SORTNAME, PREDICATENAME, CONSTANTNAME, and FUNCTORNAME are sequences of
+ * <br> symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning and VARIABLENAME
+ * <br> is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with an uppercase letter at the beginning.
+ * <br>
+ * <br> Note: Equality/Inequality predicates ("==" and "/==") can only be parsed if the parser is given a FolSignature 
+ * <br> with equality (which is not the case by default).
  * 
  * @author Matthias Thimm
  * @author Anna Gessler
@@ -146,7 +153,6 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			this.folparser.setVariables(new HashMap<String,Variable>());
 			for(int c = reader.read(); c != -1; c = reader.read())
 				this.consumeToken(stack, c);
-			System.out.println(this.parseQuantification(stack));
 			return this.parseQuantification(stack);
 					}catch(Exception e){
 			throw new ParserException(e);
@@ -161,65 +167,66 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	 * @throws ParserException in case of parser errors.
 	 */
 	private void consumeToken(Stack<Object> stack, int c) throws ParserException {
-		try {
-			String s = Character.toString((char) c); 
-			if(s.equals(" ")){
-				//If a whitespace is read and the last 6 consumed tokens spell "forall" or "exists", 
-				//remove them from the stack and re-add them as a single string.
-				if(stack.size() >= 6){					
-					if(stack.get(stack.size()-6).equals("f") &&
-							stack.get(stack.size()-5).equals("o") &&
-							stack.get(stack.size()-4).equals("r") &&
-							stack.get(stack.size()-3).equals("a") &&
-							stack.get(stack.size()-2).equals("l") &&
-							stack.get(stack.size()-1).equals("l")){
-						stack.pop();
-						stack.pop();
-						stack.pop();
-						stack.pop();
-						stack.pop();
-						stack.pop();
-						stack.push("forall");
-					}else if(stack.get(stack.size()-6).equals("e") &&
-							stack.get(stack.size()-5).equals("x") &&
-							stack.get(stack.size()-4).equals("i") &&
-							stack.get(stack.size()-3).equals("s") &&
-							stack.get(stack.size()-2).equals("t") &&
-							stack.get(stack.size()-1).equals("s")){
-						stack.pop();
-						stack.pop();
-						stack.pop();
-						stack.pop();
-						stack.pop();
-						stack.pop();
-						stack.push("exists");
-					}					
-				}				
-			}
-			else if (s.equals(")")){
-				if (!stack.contains("(")) 
-					throw new ParserException("Missing opening parentheses.");
-				//add contents of parentheses to list
+			try {
+				String s = Character.toString((char) c); 
+				if(s.equals(" ")){
+					//If a whitespace is read and the last 6 consumed tokens spell "forall" or "exists", 
+					//remove them from the stack and re-add them as a single string.
+					if(stack.size() >= 6){					
+						if(stack.get(stack.size()-6).equals("f") &&
+								stack.get(stack.size()-5).equals("o") &&
+								stack.get(stack.size()-4).equals("r") &&
+								stack.get(stack.size()-3).equals("a") &&
+								stack.get(stack.size()-2).equals("l") &&
+								stack.get(stack.size()-1).equals("l")){
+							stack.pop();
+							stack.pop();
+							stack.pop();
+							stack.pop();
+							stack.pop();
+							stack.pop();
+							stack.push("forall");
+						}else if(stack.get(stack.size()-6).equals("e") &&
+								stack.get(stack.size()-5).equals("x") &&
+								stack.get(stack.size()-4).equals("i") &&
+								stack.get(stack.size()-3).equals("s") &&
+								stack.get(stack.size()-2).equals("t") &&
+								stack.get(stack.size()-1).equals("s")){
+							stack.pop();
+							stack.pop();
+							stack.pop();
+							stack.pop();
+							stack.pop();
+							stack.pop();
+							stack.push("exists");
+						}					
+					}				
+				}
+			else if(s.equals(")")){
+				if(!stack.contains("("))
+					throw new ParserException("Missing opening parentheses.");				
 				List<Object> l = new ArrayList<Object>();
-				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() ) 
-					l.add(0, o); 
-				// If the preceding token is in {a,...,z,A,...,Z,0,...,9} then treat the 
-				// list as a term list.
-				// Otherwise treat it as a quantification
-				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]"))
+				
+				
+				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() )
+					l.add(0, o);
+				// if the preceding token is in {a,...,z,A,...,Z,0,...,9,==,/==} then treat the 
+				// list as a term list, otherwise treat it as a quantification
+				if(stack.size()>0 && stack.lastElement() instanceof String && ((String)stack.lastElement()).matches("[a-z,A-Z,0-9]|==|/=="))
 					stack.push(this.parseTermlist(l));
-				else  stack.push(this.parseQuantification(l)); 
+				else stack.push(this.parseQuantification(l));
+			//If two consecutive "|" or two consecutive "&" have been read, 
+			//add them to the stack them as a single string.
 			}else if(s.equals("|")){
 				if(stack.lastElement().equals("|")){
 					stack.pop();
 					stack.push("||");
-				}else stack.push(s);
+				}else stack.push(s);					
 			}else if(s.equals("&")){
 				if(stack.lastElement().equals("&")){
 					stack.pop();
-					stack.push("&&");
+					stack.push("&&"); 
 				}else stack.push(s);
-			//Same for [] and <>
 			}else if(s.equals("]")){
 				if(stack.lastElement().equals("[")){
 					stack.pop();
@@ -234,15 +241,27 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 						stack.pop();
 						stack.pop();
 						stack.push("<=>");
-						}
+					}
 					else {
-					stack.pop();
-					stack.push("=>"); } 	
+						stack.pop();
+						stack.push("=>"); } 	
 				}else stack.push(s);
-			}else stack.push(s);
+			}
+			else if(s.equals("=")){
+				if(stack.size() >=1 && stack.lastElement().equals("=")){
+					if (stack.size() >=2 && stack.get(stack.size()-2).equals("/")) {
+						stack.pop();
+						stack.pop();
+						stack.push("/==");
+					}
+					else {
+						stack.pop();
+						stack.push("=="); } 	
+				}else stack.push(s);
+			} else stack.push(s);
 		}catch(Exception e){
-			throw new ParserException(e);
-		}			
+		throw new ParserException(e);
+		}		
 	}
 
 	/**
@@ -368,41 +387,48 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		else 
 			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
 		
-		Variable bVar = null;
+		List<Variable> bVars = new ArrayList<Variable>();;
 		for(Variable v: formula.getUnboundVariables()){
-			if(v.get().equals(var)){
-				bVar = v;
-				break;
-			}
+			if(v.get().equals(var))
+					bVars.add(v);
 		}
 		
-		if(bVar == null)
-			throw new ParserException("Variable '" + var + "' not found in quantification.");
+		if(bVars.isEmpty())
+			throw new ParserException("Variable(s) '" + var + "' not found in quantification.");
+		
 		Set<Variable> vars = new HashSet<Variable>();
-		vars.add(bVar);
-		vars.add(bVar);
+		
+		int j = 0; //This index is used later to determine if there are more elements in the list to the right of the quantified formula
+		for (int i = 0; i < bVars.size(); i++) {
+			vars.add(bVars.get(i)); 
+			j += (bVars.get(i).get().length());
+		}
+		j += bVars.size();
+		
 		Map<String, Variable> map = this.folparser.getVariables();
 		map.remove(var);
-		
+		this.folparser.setVariables(map);
+	
 		FolFormula result;
 		if (l.get(0).equals(LogicalSymbols.EXISTSQUANTIFIER())) 
 			result = new ExistsQuantifiedFormula(formula,vars);
 		else 
 			result = new ForallQuantifiedFormula(formula,vars);
 		
+		
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
-		if (l.size() > 4) {
-			if (l.get(idx+2) == LogicalSymbols.CONJUNCTION()) 
-				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == LogicalSymbols.DISJUNCTION()) 
-				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == LogicalSymbols.EQUIVALENCE()) 
-				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
-			else if (l.get(idx+2) == LogicalSymbols.IMPLICATION())
-				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(idx+3, l.size()))));
+		if (l.size() > 2+j) {
+			if (l.get(2+j) == LogicalSymbols.CONJUNCTION()) 
+				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
+			else if (l.get(2+j) == LogicalSymbols.DISJUNCTION()) 
+				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
+			else if (l.get(2+j) == LogicalSymbols.EQUIVALENCE()) 
+				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
+			else if (l.get(2+j) == LogicalSymbols.IMPLICATION())
+				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(idx+2));
-		}
+				}
 		return result;	
 	}
 	
@@ -625,37 +651,68 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 					else throw new ParserException("Unknown object " + o);
 				else s += (String) o;
 			}
+			
+			//Check if the formula is an equality predicate or inequality predicate written in the alternate
+			//syntax (a==b) or (a/==b) and parse it accordingly
+			if ((s.contains(LogicalSymbols.EQUALITY()) || s.contains(LogicalSymbols.INEQUALITY())) 
+					&& !(s.substring(0,2).equals((LogicalSymbols.EQUALITY())) || s.substring(0,3).equals((LogicalSymbols.INEQUALITY())) )) {
+				String op = LogicalSymbols.INEQUALITY();
+				if (s.indexOf(LogicalSymbols.INEQUALITY()) == -1)
+					op = LogicalSymbols.EQUALITY();
+				String[] parts = s.split(op);
+				
+				List<Object> newterms = new LinkedList<Object>();
+				for (int i = 0; i < parts[0].length(); i++)  
+				    newterms.add(String.valueOf(parts[0].charAt(i)));
+				newterms.add(",");
+				for (int i = 0; i < parts[1].length(); i++)  
+					 newterms.add(String.valueOf(parts[1].charAt(i)));
+				terms = this.parseTermlist(newterms);
+				s=op;
+			}
+			
 			if(folparser.getSignature().containsPredicate(s)){
-			  // check for zero-arity predicate
-			  if(terms == null) 
-			    terms = new LinkedList<Term<?>>(); 
+				// check for zero-arity predicate
+				if(terms == null)  
+					terms = new LinkedList<Term<?>>(); 
 				// check correct sorts of terms
-				Predicate p = folparser.getSignature().getPredicate(s);
+				Predicate p = this.getSignature().getPredicate(s);
 				List<Term<?>> args = new ArrayList<Term<?>>();
 				if(p.getArity() != terms.size())
 					throw new IllegalArgumentException("Predicate '" + p + "' has arity '" + p.getArity() + "'.");
 				for(int i = 0; i < p.getArity(); i++){
 					Term<?> t = terms.get(i);
 					if(t instanceof Variable){
-						if(folparser.getVariables().containsKey(((Variable)t).get())){
-							if(!folparser.getVariables().get(((Variable)t).get()).getSort().equals(p.getArgumentTypes().get(i)))
-								throw new ParserException("Variable '" + t + "' has wrong sort.");
-							args.add(folparser.getVariables().get(((Variable)t).get()));
+						if(this.folparser.getVariables().containsKey(((Variable)t).get())){
+							Sort sortOfVariable = this.folparser.getVariables().get(((Variable)t).get()).getSort();
+							if(!sortOfVariable.equals(p.getArgumentTypes().get(i)) && !sortOfVariable.equals(Sort.ANY) && !p.getArgumentTypes().get(i).equals(Sort.ANY)) 
+								throw new ParserException("Variable '" + t + "," + t.getSort() + "' has wrong sort."); 
+							args.add(this.folparser.getVariables().get(((Variable)t).get()));
 						}else{
-							Variable v = new Variable(((Variable)t).get(),p.getArgumentTypes().get(i));
-							args.add(v);
-							Map<String, Variable> map = folparser.getVariables();
-							map.put(v.get(), v);
-							folparser.setVariables(map);
-						}								
-					}else if(!t.getSort().equals(p.getArgumentTypes().get(i)))
-						throw new ParserException("Term '" + t + "' has the wrong sort.");
+							Variable v;
+							if (!(p instanceof EqualityPredicate || p instanceof InequalityPredicate)) 
+								v = new Variable(((Variable)t).get(),p.getArgumentTypes().get(i));
+							else
+								v = new Variable(((Variable)t).get(),Sort.ANY);
+									args.add(v);
+									Map<String, Variable> map =this.folparser.getVariables();
+									map.put(v.get(), v);
+									this.folparser.setVariables(map); }						
+					}else if(!(t.getSort().equals(p.getArgumentTypes().get(i))) && !(t.getSort().equals(Sort.ANY)) && !(p.getArgumentTypes().get(i).equals(Sort.ANY))) {
+								throw new ParserException("Term '" + t + "' has the wrong sort."); }
 					else args.add(t);
+				}	
+				if (p.getName().equals("==")) 
+					return new FOLAtom(new EqualityPredicate(),args); 
+				else if (p.getName().equals("/==")) 
+					return new FOLAtom(new InequalityPredicate(),args); 
+				return new FOLAtom(p,args); 
 				}
-				return new FOLAtom(p,args);
-			}
+					
+			if (s.equals(LogicalSymbols.EQUALITY()) || s.equals(LogicalSymbols.INEQUALITY()))
+				throw new ParserException("Equality/Inequality predicate " + s + " is not part of this parser's FolSignature.");
 			throw new ParserException("Predicate '" + s + "' has not been declared.");
-		}		
+			}		
 	}
 	
 	/**
