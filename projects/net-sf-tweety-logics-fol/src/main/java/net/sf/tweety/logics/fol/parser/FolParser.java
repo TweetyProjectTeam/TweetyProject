@@ -426,8 +426,8 @@ public class FolParser extends Parser<FolBeliefSet> {
 		FolFormula formula;
 		if (l.get(idx+1) instanceof FolFormula) 
 			formula = (FolFormula) l.get(idx+1);
-		else 
-			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'.");
+		else  
+			throw new ParserException("Unrecognized formula type '" + l.get(idx+1) + "'."); 
 		
 		List<Variable> bVars = new ArrayList<Variable>();;
 		for(Variable v: formula.getUnboundVariables()){
@@ -457,13 +457,13 @@ public class FolParser extends Parser<FolBeliefSet> {
 		
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
 		if (l.size() > 2+j) {
-			if (l.get(2+j) == LogicalSymbols.CONJUNCTION()) 
+			if (l.get(2+j).equals(LogicalSymbols.CONJUNCTION())) 
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
-			else if (l.get(2+j) == LogicalSymbols.DISJUNCTION()) 
+			else if (l.get(2+j).equals(LogicalSymbols.DISJUNCTION())) 
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
-			else if (l.get(2+j) == LogicalSymbols.EQUIVALENCE()) 
+			else if (l.get(2+j).equals(LogicalSymbols.EQUIVALENCE()))
 				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
-			else if (l.get(2+j) == LogicalSymbols.IMPLICATION())
+			else if (l.get(2+j).equals(LogicalSymbols.IMPLICATION()))
 				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(idx+2));

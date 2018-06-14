@@ -418,13 +418,13 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 		
 		//Add additional conjuncts/disjuncts to the right of the quantification (if applicable)
 		if (l.size() > 2+j) {
-			if (l.get(2+j) == LogicalSymbols.CONJUNCTION()) 
+			if (l.get(2+j).equals(LogicalSymbols.CONJUNCTION())) 
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
-			else if (l.get(2+j) == LogicalSymbols.DISJUNCTION()) 
+			else if (l.get(2+j).equals(LogicalSymbols.DISJUNCTION()))
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
-			else if (l.get(2+j) == LogicalSymbols.EQUIVALENCE()) 
+			else if (l.get(2+j).equals(LogicalSymbols.EQUIVALENCE())) 
 				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
-			else if (l.get(2+j) == LogicalSymbols.IMPLICATION())
+			else if (l.get(2+j).equals(LogicalSymbols.IMPLICATION()))
 				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3+j, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(idx+2));
@@ -479,13 +479,13 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 			result = new Possibility((RelationalFormula) l.get(1));
 		//Add additional conjuncts/disjuncts to the right of the modalization (if applicable)
 		if (l.size() > 2) {
-			if (l.get(2) == LogicalSymbols.CONJUNCTION()) 
+			if (l.get(2).equals(LogicalSymbols.CONJUNCTION()))
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
-			else if (l.get(2) == LogicalSymbols.DISJUNCTION()) 
+			else if (l.get(2).equals(LogicalSymbols.DISJUNCTION()))
 				return new Disjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
-			else if (l.get(2) == LogicalSymbols.EQUIVALENCE()) 
+			else if (l.get(2).equals(LogicalSymbols.EQUIVALENCE())) 
 				return new Equivalence(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
-			else if (l.get(2) == LogicalSymbols.IMPLICATION())
+			else if (l.get(2).equals(LogicalSymbols.IMPLICATION()))
 				return new Implication(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));
 			else 
 				throw new ParserException("Unrecognized symbol " + l.get(2));
