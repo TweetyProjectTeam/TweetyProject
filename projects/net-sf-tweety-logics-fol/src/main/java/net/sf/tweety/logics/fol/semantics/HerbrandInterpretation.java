@@ -107,14 +107,15 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 		}
 		if (f instanceof Implication) {
 			Implication i = (Implication) f;
-			if (this.satisfies(i.getFormulas().getFirst()) && !this.satisfies(i.getFormulas().getSecond()))
-				return false;
+			if (this.satisfies(i.getFormulas().getFirst()))
+				if (!this.satisfies(i.getFormulas().getSecond()))
+						return false;
 			return true;
 		}
 		if (f instanceof Equivalence) {
 			Equivalence e = (Equivalence) f;
 			RelationalFormula a = e.getFormulas().getFirst();
-			RelationalFormula b = e.getFormulas().getFirst();
+			RelationalFormula b = e.getFormulas().getSecond();
 			
 			if (this.satisfies(a)) {
 				if (!this.satisfies(b))
@@ -208,7 +209,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 					Set<Constant> partition1 = it.next();
 					Set<Constant> partition2 = it.next();
 					Set<Map<Term<?>,Term<?>>> maps = new MapTools<Term<?>,Term<?>>().allMaps(partition1, partition2);
-					// remove every map where two different key is assignet the same value
+					// remove every map where two different key is assigned the same value
 					for(Map<Term<?>,Term<?>> map: maps)
 						if(MapTools.isInjective(map))
 							subsubMaps.add(map);
