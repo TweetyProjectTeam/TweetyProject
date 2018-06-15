@@ -23,8 +23,15 @@ import java.util.*;
 
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.commons.syntax.*;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.FunctionalTerm;
+import net.sf.tweety.logics.commons.syntax.Functor;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.*;
+import net.sf.tweety.logics.commons.test.*;
 import net.sf.tweety.logics.fol.FolBeliefSet;
 
 @SuppressWarnings("all")

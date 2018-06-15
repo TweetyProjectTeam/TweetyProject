@@ -16,15 +16,16 @@
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.propositionallogic.semantics;
+package net.sf.tweety.logics.pl.test;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.propositionallogic.syntax.Proposition;
-import net.sf.tweety.util.Pair;
+import net.sf.tweety.commons.util.Pair;
+import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
