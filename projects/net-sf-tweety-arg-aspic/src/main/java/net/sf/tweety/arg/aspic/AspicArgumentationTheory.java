@@ -141,20 +141,22 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 		Collection<AspicArgument<T>> args = new HashSet<>();
 		Collection<Collection<AspicArgument<T>>> subs = new HashSet<>();
 		Collection<Collection<AspicArgument<T>>> new_subs = new HashSet<>();
+		Collection<AspicArgument<T>> argsForPrem = new HashSet<>();	
 		for(InferenceRule<T> rule: this)
 			if(rule.isFact())
 				args.add(new AspicArgument<T>(rule));
-		boolean changed;
+		boolean changed;		
 		do {
 			changed = false;
 			for(InferenceRule<T> rule: this) {
 				subs.clear();
 				boolean continueWithNextRule = false;
-				for(T prem: rule.getPremise()) {
-					Collection<AspicArgument<T>> argsForPrem = new HashSet<>();					
-					for(AspicArgument<T> arg: args)
+				for(T prem: rule.getPremise()) {					
+					argsForPrem.clear();					
+					for(AspicArgument<T> arg: args) {						
 						if(arg.getConclusion().equals(prem) && !arg.getAllConclusions().contains(rule.getConclusion())) 
 							argsForPrem.add(arg);
+					}
 					if(argsForPrem.isEmpty()) {
 						continueWithNextRule = true;
 						break;
@@ -178,7 +180,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 							subs.addAll(new_subs);
 						}
 					}
-				}
+				}				
 				if(continueWithNextRule)
 					continue;
 				for(Collection<AspicArgument<T>> subargset: subs)				

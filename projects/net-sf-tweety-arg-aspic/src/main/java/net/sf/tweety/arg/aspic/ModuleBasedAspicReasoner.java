@@ -18,12 +18,8 @@
  */
 package net.sf.tweety.arg.aspic;
 
-import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
@@ -35,42 +31,23 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  *
  * @param <T> the type of formulas
  */
-public class ModuleBasedAspicReasoner<T extends Invertable> implements BeliefBaseReasoner<AspicArgumentationTheory<T>> {
+public class ModuleBasedAspicReasoner<T extends Invertable> extends AbstractAspicReasoner<T> {
 
-	/**
-	 * Underlying reasoner for AAFs. 
-	 */
-	private AbstractExtensionReasoner aafReasoner;
-	
 	/**
 	 * Creates a new instance
 	 * @param aafReasoner Underlying reasoner for AAFs. 
 	 */
 	public ModuleBasedAspicReasoner(AbstractExtensionReasoner aafReasoner) {
-		this.aafReasoner = aafReasoner;
+		super(aafReasoner);
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.arg.aspic.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.AspicArgumentationTheory, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(AspicArgumentationTheory<T> formulas, Formula query) {
-		AspicArgumentationTheory<T> module = new AspicArgumentationTheory<T>(formulas.getRuleFormulaGenerator());
-		module.addAll(formulas.getSyntacticModule(query));
-		DungTheory dt = module.asDungTheory();		
-		if (query instanceof Argument) {
-			return this.aafReasoner.query(dt,query);
-		}		
-		for (AspicArgument<?> arg : module.getArguments()) {
-			if (arg.getConclusion().equals(query)) {
-				Answer answer = this.aafReasoner.query(dt,arg);
-				if (answer.getAnswerBoolean())
-					return answer;
-			}
-		}
-		Answer answer = new Answer(formulas, query);
-		answer.setAnswer(false);
-		return answer;	
+	protected DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query) {
+		AspicArgumentationTheory<T> module = new AspicArgumentationTheory<T>(aat.getRuleFormulaGenerator());
+		module.addAll(aat.getSyntacticModule(query));
+		return module.asDungTheory();
 	}
-
 }

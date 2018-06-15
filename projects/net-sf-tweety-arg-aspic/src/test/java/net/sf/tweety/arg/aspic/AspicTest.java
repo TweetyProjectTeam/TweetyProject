@@ -302,27 +302,18 @@ public class AspicTest {
 
 		int sum = 0;
 		for (AspicArgument<PropositionalFormula> arg : args) {
-			AspicAttack<PropositionalFormula> a = new AspicAttack<PropositionalFormula>(not_a, arg);
-			a.resolve();
-			// System.out.println(a.getOutput());
-			if (a.isSuccessfull())
+			if (AspicAttack.isAttack(not_a, arg, null, null))
 				sum++;
 		}
 		assertTrue(sum == 2);
 		for (AspicArgument<PropositionalFormula> arg : args) {
-			AspicAttack<PropositionalFormula> a = new AspicAttack<PropositionalFormula>(not_b, arg);
-			a.resolve();
-			// System.out.println(a.getOutput());
-			assertFalse(a.isSuccessfull());
+			assertFalse(AspicAttack.isAttack(not_b, arg, null, null));
 		}
 		for (AspicArgument<PropositionalFormula> arg : args) {
-			AspicAttack<PropositionalFormula> a = new AspicAttack<PropositionalFormula>(arg_a, arg);
-			a.resolve();
-			// System.out.println(a.getOutput());
 			if (arg.equals(not_a))
-				assertTrue(a.isSuccessfull());
+				assertTrue(AspicAttack.isAttack(arg_a, arg, null, null));
 			else
-				assertFalse(a.isSuccessfull());
+				assertFalse(AspicAttack.isAttack(arg_a, arg, null, null));
 		}
 
 	}
