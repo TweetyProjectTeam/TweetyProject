@@ -58,6 +58,8 @@ public class Prover9Test {
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("a")).getAnswerBoolean());
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("c")).getAnswerBoolean());
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!c")).getAnswerBoolean());
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("a&&b <=> b&&a")).getAnswerBoolean());
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("forall X:(X==X && !(X/==X))")).getAnswerBoolean());
 	}
 	
 	@Test
@@ -102,20 +104,5 @@ public class Prover9Test {
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (forall Y: (!Eats(Y, X)))")).getAnswerBoolean());
 		assertFalse(e.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(Y, X)))")).getAnswerBoolean());
 		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!(forall X: (forall Y: (Eats(Y, X))))")).getAnswerBoolean());
-	}
-	
-
-	@Test
-	public void test4() throws Exception {
-		FolParser parser = new FolParser();	
-		String source = "type(a) \n type(b) \n type(c) \n"
-				+ "a \n !b";
-		FolBeliefSet b = parser.parseBeliefBase(source);
-		//printer.printBase(b);
-		System.out.println(printer);
-		assertTrue(e.equivalent(b, (FolFormula)parser.parseFormula("b"), (FolFormula)parser.parseFormula("b")));
-		assertFalse(e.equivalent(b, (FolFormula)parser.parseFormula("a"), (FolFormula)parser.parseFormula("b")));
-		assertTrue(e.equivalent(b, (FolFormula)parser.parseFormula("a && b"), (FolFormula)parser.parseFormula("b && a")));
-
 	}
 }
