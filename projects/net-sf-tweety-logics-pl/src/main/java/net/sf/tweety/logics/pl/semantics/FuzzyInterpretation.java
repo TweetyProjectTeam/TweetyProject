@@ -25,15 +25,15 @@ import java.util.Set;
 
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * A fuzzy interpretation for propositional logic.
  * @author Matthias Thimm
  *
  */
-public class FuzzyInterpretation extends AbstractInterpretation implements Map<Proposition,Double>{
+public class FuzzyInterpretation extends AbstractInterpretation<PropositionalFormula> implements Map<Proposition,Double>{
 
 	/** Maps the propositions to their values. */
 	private Map<Proposition,Double> values;
@@ -49,7 +49,7 @@ public class FuzzyInterpretation extends AbstractInterpretation implements Map<P
 	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
+	public boolean satisfies(PropositionalFormula formula) throws IllegalArgumentException {
 		throw new UnsupportedOperationException("This operation is not implemented yet");
 	}
 

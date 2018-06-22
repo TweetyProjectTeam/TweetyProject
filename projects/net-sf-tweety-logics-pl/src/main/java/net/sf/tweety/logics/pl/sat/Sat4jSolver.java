@@ -127,7 +127,7 @@ public class Sat4jSolver extends SatSolver{
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
 		ISolver solver = SolverFactory.newLight();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		

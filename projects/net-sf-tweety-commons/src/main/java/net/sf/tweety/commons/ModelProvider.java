@@ -14,30 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
 package net.sf.tweety.commons;
 
 import java.util.Collection;
 
 /**
- * An abstract interpretation for some logical language.
+ * Instances of this interface model reasoner that determine the models
+ * for a given set of formulas.
+ * 
  * @author Matthias Thimm
+ *
+ * @param <S> the type of formulas
+ * @param <T> the type of interpretations
  */
-public abstract class AbstractInterpretation<S extends Formula> implements Interpretation<S> {
+public interface ModelProvider<S extends Formula,T extends Interpretation<S>> {
 	
-	/**
-	 * Checks whether this interpretation satisfies all given formulas.
-	 * @param formulas a collection of formulas.
-	 * @return "true" if this interpretation satisfies all given formulas. 
-	 * @throws IllegalArgumentException if at least one formula does not correspond
-	 * 		to the expected language.
+	/** Returns a characterizing model of the given belief base
+	 * @param beliefbase some belief base
+	 * @return the characterizing model of the belief base
 	 */
-	@Override
-	public boolean satisfies(Collection<S> formulas) throws IllegalArgumentException{
-		for(S f: formulas)
-			if(!this.satisfies(f))
-				return false;
-		return true;
-	}
+	public Collection<T> getModels(Collection<S> formulas);
 }

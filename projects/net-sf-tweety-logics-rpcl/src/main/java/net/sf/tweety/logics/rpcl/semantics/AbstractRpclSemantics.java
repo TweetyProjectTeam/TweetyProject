@@ -24,7 +24,6 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.fol.semantics.*;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.rpcl.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
 import net.sf.tweety.math.equation.*;
@@ -37,14 +36,15 @@ import net.sf.tweety.math.probability.*;
  * relational conditional semantics.
  * 
  * @author Matthias Thimm
+ * 
  */
 public abstract class AbstractRpclSemantics implements RpclSemantics {
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclSemantics#satisfies(net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution, net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional)
+	 * @see net.sf.tweety.logics.rpcl.semantics.RpclSemantics#satisfies(net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution, net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional)
 	 */
 	@Override
-	public abstract boolean satisfies(ProbabilityDistribution<?> p, RelationalProbabilisticConditional r);
+	public abstract boolean satisfies(RpclProbabilityDistribution<?> p, RelationalProbabilisticConditional r);
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -53,10 +53,10 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	public abstract String toString();
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclSemantics#getSatisfactionStatement(net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional, net.sf.tweety.logics.firstorderlogic.syntax.FolSignature, java.util.Map)
+	 * @see net.sf.tweety.logics.rpcl.semantics.RpclSemantics#getSatisfactionStatement(net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional, net.sf.tweety.logics.fol.syntax.FolSignature, java.util.Map)
 	 */
 	@Override
-	public abstract Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<? extends Interpretation,FloatVariable> worlds2vars);
+	public abstract Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolFormula>,FloatVariable> worlds2vars);
 	
 	/**
 	 * Checks whether the given ground conditional is satisfied by the given distribution
@@ -67,7 +67,7 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	 * @return "true" iff the given ground conditional is satisfied by the given distribution
 	 * 	wrt. this semantics
 	 */
-	protected boolean satisfiesGroundConditional(ProbabilityDistribution<?> p, RelationalProbabilisticConditional groundConditional){
+	protected boolean satisfiesGroundConditional(RpclProbabilityDistribution<?> p, RelationalProbabilisticConditional groundConditional){
 		if(!groundConditional.isGround())
 			throw new IllegalArgumentException("The conditional " + groundConditional + " is not ground.");
 		return p.probability(groundConditional).getValue() < groundConditional.getProbability().getValue() + Probability.PRECISION &&
@@ -81,9 +81,9 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	 * @param worlds2vars a map mapping reference worlds to variables.
 	 * @return the term expressing the probability of the given formula "f".
 	 */
-	protected Term probabilityTerm(FolFormula f, Map<? extends Interpretation,FloatVariable> worlds2vars){
+	protected Term probabilityTerm(FolFormula f, Map<Interpretation<FolFormula>,FloatVariable> worlds2vars){
 		Term result = null;		
-		for(Interpretation world: worlds2vars.keySet()){
+		for(Interpretation<FolFormula> world: worlds2vars.keySet()){
 			Integer multiplicator;
 			if(world instanceof ReferenceWorld)
 				multiplicator = ((ReferenceWorld)world).getMultiplicator(f);

@@ -46,7 +46,7 @@ public class SimpleDpllSolver extends SatSolver {
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
 		Collection<Disjunction> clauses = new HashSet<Disjunction>();
 		// check if we are working with CNF; if not, convert
 		for(PropositionalFormula f: formulas) {

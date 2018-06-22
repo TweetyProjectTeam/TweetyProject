@@ -38,14 +38,14 @@ import net.sf.tweety.commons.InterpretationIterator;
 public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S>{
 
 	/** Used for iterating over interpretations of the underlying language. */
-	private InterpretationIterator<?> it;
+	private InterpretationIterator<S,? extends Interpretation<S>> it;
 	
 	/** 
 	 * Creates a new inconsistency measure that uses the interpretations given
 	 * by the given iterator.
 	 * @param it some interpretation iterator.
 	 */
-	public HsInconsistencyMeasure(InterpretationIterator<?> it){
+	public HsInconsistencyMeasure(InterpretationIterator<S,? extends Interpretation<S>> it){
 		this.it = it;
 	}
 	
@@ -61,7 +61,7 @@ public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 			return 0d;
 		// this is not very efficient but works
 		for(int card = 1; card <= formulas.size(); card++){
-			Collection<Interpretation> hittingSet = this.getHittingSet(formulas, card, new HashSet<Interpretation>());
+			Collection<Interpretation<S>> hittingSet = this.getHittingSet(formulas, card, new HashSet<Interpretation<S>>());
 			if(hittingSet != null){				
 				return new Double(hittingSet.size()-1);
 			}
@@ -77,14 +77,14 @@ public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 	 * @param interpretations in addition to the card interpretations also use this set for satisfying formulas. 
 	 * @return a hitting set or null.
 	 */
-	private Collection<Interpretation> getHittingSet(Collection<S> formulas, int card, Collection<Interpretation> interpretations){
-		InterpretationIterator<?> it = this.it.reset();
-		Collection<Interpretation> newInts;
-		Collection<Interpretation> cand;
+	private Collection<Interpretation<S>> getHittingSet(Collection<S> formulas, int card, Collection<Interpretation<S>> interpretations){
+		InterpretationIterator<S,? extends Interpretation<S>> it = this.it.reset();
+		Collection<Interpretation<S>> newInts;
+		Collection<Interpretation<S>> cand;
 		while(it.hasNext()){
-			Interpretation i = it.next();
+			Interpretation<S> i = it.next();
 			if(interpretations.contains(i)) continue;
-			newInts = new HashSet<Interpretation>(interpretations);
+			newInts = new HashSet<Interpretation<S>>(interpretations);
 			newInts.add(i);
 			if(card > 1){
 				cand = this.getHittingSet(formulas, card-1, newInts);
@@ -104,11 +104,11 @@ public class HsInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 	 * @param candidate some set of interpretation.
 	 * @return "true" if the candidate is a hitting set.
 	 */
-	private boolean isHittingSet(Collection<S> formulas, Collection<Interpretation> candidate){
+	private boolean isHittingSet(Collection<S> formulas, Collection<Interpretation<S>> candidate){
 		boolean sat;
 		for(S f: formulas){
 			sat = false;
-			for(Interpretation i: candidate){
+			for(Interpretation<S> i: candidate){
 				if(i.satisfies(f)){
 					sat = true;
 					break;

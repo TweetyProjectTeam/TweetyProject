@@ -30,7 +30,6 @@ import net.sf.tweety.commons.TweetyLogging;
 import net.sf.tweety.commons.Writer;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.CondensedProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.RpclBeliefSet;
 import net.sf.tweety.logics.rpcl.RpclMeReasoner;
@@ -39,6 +38,7 @@ import net.sf.tweety.logics.rpcl.parser.rpclcondensedprobabilitydistributionpars
 import net.sf.tweety.logics.rpcl.parser.rpclprobabilitydistributionparser.RpclProbabilityDistributionParser;
 import net.sf.tweety.logics.rpcl.semantics.AggregatingSemantics;
 import net.sf.tweety.logics.rpcl.semantics.AveragingSemantics;
+import net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.semantics.RpclSemantics;
 import net.sf.tweety.logics.rpcl.writers.DefaultCondensedProbabilityDistributionWriter;
 import net.sf.tweety.logics.rpcl.writers.DefaultProbabilityDistributionWriter;
@@ -199,17 +199,17 @@ public class TweetyCli {
 			RpclBeliefSet kb = (RpclBeliefSet)((RpclParser) inputParser[0]).parseBeliefBaseFromFile(inputFiles[0]);
 			if(inputFiles.length == 1){				
 				RpclMeReasoner reasoner = new RpclMeReasoner(semantics,inferenceType);
-				ProbabilityDistribution<?> p = reasoner.getMeDistribution(kb,((RpclParser) inputParser[0]).getSignature());
+				RpclProbabilityDistribution<?> p = reasoner.getMeDistribution(kb,((RpclParser) inputParser[0]).getSignature());
 				outputWriter.setObject(p);
 				outputWriter.writeToFile(outputFile);
 				System.exit(0);
 			}else if(inputParser[1] instanceof RpclProbabilityDistributionParser) {
 				((RpclProbabilityDistributionParser)inputParser[1]).setSemantics(semantics);
 				((RpclProbabilityDistributionParser)inputParser[1]).setSignature(((RpclParser) inputParser[0]).getSignature());
-				ProbabilityDistribution<?> p = ((RpclProbabilityDistributionParser)inputParser[1]).parseProbabilityDistribution(new InputStreamReader(new java.io.FileInputStream(inputFiles[1])));
+				RpclProbabilityDistribution<?> p = ((RpclProbabilityDistributionParser)inputParser[1]).parseProbabilityDistribution(new InputStreamReader(new java.io.FileInputStream(inputFiles[1])));
 				FolParser folParser = new FolParser();
 				folParser.setSignature(((RpclParser) inputParser[0]).getSignature());
-				Probability result = p.probability(folParser.parseFormula(query));
+				Probability result = p.probability((FolFormula) folParser.parseFormula(query));
 				log.info("Probability of '" + query + "' on knowledge base '" + kb + "'  is: " + result.getValue());
 				System.out.println(result.getValue());
 				System.exit(0);

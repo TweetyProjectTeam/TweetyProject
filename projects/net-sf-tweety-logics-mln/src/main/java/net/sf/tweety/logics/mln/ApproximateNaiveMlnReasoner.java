@@ -18,7 +18,9 @@
  */
 package net.sf.tweety.logics.mln;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -28,8 +30,7 @@ import net.sf.tweety.logics.fol.semantics.*;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
-import net.sf.tweety.math.probability.Probability;
+
 
 /**
  * This reasoner performs approximate reasoning with MLNs by considering
@@ -90,7 +91,12 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 	 */
 	@Override
 	protected double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {
-		return this.computeModel(mln,signature).probability(query).doubleValue();
+		Map<HerbrandInterpretation,Double> model = this.computeModel(mln,signature);
+		double prob = 0;
+		for(HerbrandInterpretation hint: model.keySet())
+			if(hint.satisfies(query))
+				prob += model.get(hint);
+		return prob;
 	}
 
 	/** Computes the model of the given MLN wrt. the optimization parameters
@@ -99,7 +105,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 	 * @param signature some signature
 	 * @return  the model of the given MLN wrt. the optimization parameters.
 	 */
-	public ProbabilityDistribution<HerbrandInterpretation> computeModel(MarkovLogicNetwork mln, FolSignature signature){
+	public Map<HerbrandInterpretation,Double> computeModel(MarkovLogicNetwork mln, FolSignature signature){
 		// Queue used for storing the interpretations with maximum weight
 		PriorityQueue<WeightedHerbrandInterpretation> pq = new PriorityQueue<WeightedHerbrandInterpretation>();
 		// The Herbrand base of the signature
@@ -128,9 +134,9 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 			if(this.maxNumberOfSelectedInterpretations != -1 && this.maxNumberOfSelectedInterpretations <= count)
 				break;
 		}
-		ProbabilityDistribution<HerbrandInterpretation> result = new ProbabilityDistribution<HerbrandInterpretation>(signature);
+		Map<HerbrandInterpretation,Double> result = new HashMap<HerbrandInterpretation,Double>();
 		for(WeightedHerbrandInterpretation interpretation: pq){
-			result.put(interpretation.interpretation, new Probability(interpretation.weight/sumOfWeights));
+			result.put(interpretation.interpretation, interpretation.weight/sumOfWeights);
 		}
 		return result;
 	}

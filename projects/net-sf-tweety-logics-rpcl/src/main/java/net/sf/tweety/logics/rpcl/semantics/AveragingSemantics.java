@@ -25,7 +25,6 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
-import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.term.*;
@@ -36,6 +35,7 @@ import net.sf.tweety.math.probability.*;
  * This class implements averaging semantics due to [Kern-Isberner, Thimm, KR'2010].
  * 
  * @author Matthias Thimm
+ *
  */
 public class AveragingSemantics extends AbstractRpclSemantics {
 
@@ -43,7 +43,7 @@ public class AveragingSemantics extends AbstractRpclSemantics {
 	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.AbstractRpclSemantics#satisfies(net.sf.tweety.logics.probabilisticconditionallogic.semantics.ProbabilityDistribution, net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional)
 	 */
 	@Override
-	public boolean satisfies(ProbabilityDistribution<?> p,	RelationalProbabilisticConditional r) {
+	public boolean satisfies(RpclProbabilityDistribution<?> p,	RelationalProbabilisticConditional r) {
 		if(r.isGround())
 			return this.satisfiesGroundConditional(p, r);
 		Set<RelationalFormula> groundInstances = r.allGroundInstances(((FolSignature)p.getSignature()).getConstants());
@@ -63,11 +63,12 @@ public class AveragingSemantics extends AbstractRpclSemantics {
 			leftTerm > (r.getProbability().getValue()*groundInstances.size()) - Probability.PRECISION ;
 	}
 	
+	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.AbstractRpclSemantics#getSatisfactionStatement(net.sf.tweety.logics.relationalprobabilisticconditionallogic.syntax.RelationalProbabilisticConditional, net.sf.tweety.logics.firstorderlogic.syntax.FolSignature, java.util.Map)
+	 * @see net.sf.tweety.logics.rpcl.semantics.AbstractRpclSemantics#getSatisfactionStatement(net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional, net.sf.tweety.logics.fol.syntax.FolSignature, java.util.Map)
 	 */
 	@Override
-	public Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<? extends Interpretation,FloatVariable> worlds2vars){
+	public Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolFormula>,FloatVariable> worlds2vars){
 		Set<RelationalFormula> groundInstances = r.allGroundInstances(signature.getConstants());
 		if(r.isFact()){
 			Term term = null;

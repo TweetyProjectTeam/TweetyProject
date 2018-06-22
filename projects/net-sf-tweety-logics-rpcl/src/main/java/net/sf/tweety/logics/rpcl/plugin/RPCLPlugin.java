@@ -32,6 +32,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.TweetyLogging;
 import net.sf.tweety.commons.Writer;
 import net.sf.tweety.logics.fol.parser.FolParser;
+import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.CondensedProbabilityDistribution;
@@ -42,6 +43,7 @@ import net.sf.tweety.logics.rpcl.parser.rpclcondensedprobabilitydistributionpars
 import net.sf.tweety.logics.rpcl.parser.rpclprobabilitydistributionparser.RpclProbabilityDistributionParser;
 import net.sf.tweety.logics.rpcl.semantics.AggregatingSemantics;
 import net.sf.tweety.logics.rpcl.semantics.AveragingSemantics;
+import net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.semantics.RpclSemantics;
 import net.sf.tweety.logics.rpcl.writers.DefaultCondensedProbabilityDistributionWriter;
 import net.sf.tweety.logics.rpcl.writers.DefaultProbabilityDistributionWriter;
@@ -334,7 +336,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 			if(probInputFiles == null){
 				
 				RpclMeReasoner reasoner = new RpclMeReasoner(sem, inference);
-				ProbabilityDistribution<?> p = reasoner.getMeDistribution(kb,parser.getSignature());
+				RpclProbabilityDistribution<?> p = reasoner.getMeDistribution(kb,parser.getSignature());
 				
 				// write probability function into prob output file
 				if(probOutFile != null){	
@@ -371,12 +373,12 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				((RpclProbabilityDistributionParser) probParser).setSignature(parser.getSignature());
 				
 //				if(probInputFiles.length == 1){
-					ProbabilityDistribution<?> p = ((RpclProbabilityDistributionParser) probParser).parseProbabilityDistribution(new InputStreamReader(new java.io.FileInputStream(probInputFiles[0])));
+					RpclProbabilityDistribution<?> p = ((RpclProbabilityDistributionParser) probParser).parseProbabilityDistribution(new InputStreamReader(new java.io.FileInputStream(probInputFiles[0])));
 //				} else log.error("Invalid probability input files");
 				
 				if (query != null){
 					pout.addField("Query", query);
-					Probability res = p.probability(folParser.parseFormula(query));
+					Probability res = p.probability((FolFormula) folParser.parseFormula(query));
 					pout.addField( "Probability (Standard)", res.toString());
 					// TODO: res and p to file?
 				} else {

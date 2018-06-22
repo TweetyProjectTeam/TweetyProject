@@ -27,10 +27,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.InterpretationSet;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
  * Wrapper for the PossibleWorld providing better representation mechanisms, it knows all
@@ -45,7 +45,7 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * @author Tim Janus
  */
 public class NicePossibleWorld 
-	extends InterpretationSet<Proposition> 
+	extends InterpretationSet<Proposition,PropositionalFormula> 
 	implements Comparator<Pair<Proposition, Boolean>> {
 	
 	/** 
@@ -189,7 +189,7 @@ public class NicePossibleWorld
 	}
 
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
+	public boolean satisfies(PropositionalFormula formula) throws IllegalArgumentException {
 		return world.satisfies(formula);
 	}
 

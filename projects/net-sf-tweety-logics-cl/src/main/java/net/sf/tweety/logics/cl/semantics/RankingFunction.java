@@ -23,7 +23,6 @@ import java.util.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.cl.*;
 import net.sf.tweety.logics.cl.syntax.*;
-import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.pl.semantics.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
@@ -39,7 +38,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class RankingFunction extends AbstractInterpretation {
+public class RankingFunction extends AbstractInterpretation<Conditional> {
 	
 	/**
 	 * Integer used to define infinity.
@@ -98,12 +97,10 @@ public class RankingFunction extends AbstractInterpretation {
 	 * @see net.sf.tweety.logic.Interpretation#satisfies(net.sf.tweety.logic.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException{
-		if(!(formula instanceof Conditional))
-			throw new IllegalArgumentException("Formula " + formula + " is not a conditional expression.");		
+	public boolean satisfies(Conditional formula) throws IllegalArgumentException{
 		Conditional c = (Conditional) formula;
 		Integer rankPremiseAndConclusion = this.rank(c.getConclusion().combineWithAnd(c.getPremise().iterator().next()));
-		Integer rankPremiseAndNotConclusion = this.rank(c.getConclusion().complement().combineWithAnd(c.getPremise().iterator().next()));
+		Integer rankPremiseAndNotConclusion = this.rank((PropositionalFormula)c.getConclusion().complement().combineWithAnd(c.getPremise().iterator().next()));
 		return rankPremiseAndConclusion < rankPremiseAndNotConclusion;		
 	}
 	
@@ -115,7 +112,9 @@ public class RankingFunction extends AbstractInterpretation {
 		if(!(beliefBase instanceof ClBeliefSet))
 			throw new IllegalArgumentException("Knowledge base is not a conditional knowledge base.");
 		for(Formula f: ((ClBeliefSet)beliefBase))
-			if(!this.satisfies(f))
+			if(!(f instanceof Conditional))
+				throw new IllegalArgumentException();
+			else if(!this.satisfies((Conditional)f))
 				return false;
 		return true;
 	}
@@ -141,9 +140,9 @@ public class RankingFunction extends AbstractInterpretation {
 	 * @throws IllegalArgumentException if the languages of the formula does not correspond to the language of the
 	 * 		interpretations this ranking function is defined on.
 	 */
-	public Integer rank(Formula formula) throws IllegalArgumentException{
+	public Integer rank(PropositionalFormula formula) throws IllegalArgumentException{
 		Integer rank = RankingFunction.INFINITY;
-		for(Interpretation i: this.ranks.keySet())
+		for(PossibleWorld i: this.ranks.keySet())
 			if(i.satisfies(formula))
 				if(this.ranks.get(i).compareTo(rank)<0)
 					rank = this.ranks.get(i); 
@@ -214,7 +213,7 @@ public class RankingFunction extends AbstractInterpretation {
 	 * @return "true" if the given possible world verifies the given conditional. 
 	 */
 	public static boolean verifies(PossibleWorld w, Conditional c){
-		SimpleLogicalFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion());
+		PropositionalFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion());
 		return w.satisfies(formula);
 	}
 	
@@ -226,7 +225,7 @@ public class RankingFunction extends AbstractInterpretation {
 	 * @return "true" if the given possible world falsifies the given conditional. 
 	 */
 	public static boolean falsifies(PossibleWorld w, Conditional c){
-		SimpleLogicalFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion().complement());
+		PropositionalFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion().complement());
 		return w.satisfies(formula);
 	}
 	

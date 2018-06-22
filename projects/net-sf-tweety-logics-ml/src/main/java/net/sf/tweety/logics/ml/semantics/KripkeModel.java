@@ -34,12 +34,12 @@ import net.sf.tweety.logics.ml.syntax.*;
  * @author Anna Gessler
  *
  */
-public class KripkeModel extends AbstractInterpretation {
+public class KripkeModel extends AbstractInterpretation<FolFormula> {
 
 	/**
 	 * The possible worlds of this model.
 	 */
-	private Set<? extends Interpretation> possibleWorlds;
+	private Set<? extends Interpretation<FolFormula>> possibleWorlds;
 	
 	/**
 	 * The accessibility relation. 
@@ -51,7 +51,7 @@ public class KripkeModel extends AbstractInterpretation {
 	 * @param possibleWorlds a set of interpretations.
 	 * @param accRelation an accessibility relation under the given interpretations.
 	 */
-	public KripkeModel(Set<? extends Interpretation> possibleWorlds, AccessibilityRelation accRelation){		
+	public KripkeModel(Set<? extends Interpretation<FolFormula>> possibleWorlds, AccessibilityRelation accRelation){		
 		if(!possibleWorlds.containsAll(accRelation.getNodes()))
 			throw new IllegalArgumentException("The accessibility relation mentions unknown interpretations.");
 		this.possibleWorlds = possibleWorlds;
@@ -62,22 +62,18 @@ public class KripkeModel extends AbstractInterpretation {
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if (!((formula instanceof FolFormula) || (formula instanceof ModalFormula))) {
-			throw new IllegalArgumentException(
-					"Formula " + formula + " is not a first-order formula nor a modal formula.");
-		}
-		for (Interpretation i : this.possibleWorlds) {
+	public boolean satisfies(FolFormula formula) throws IllegalArgumentException {
+		for (Interpretation<FolFormula> i : this.possibleWorlds) {
 			if (formula instanceof Necessity) {
-				for (Interpretation j : this.accRelation.getSuccessors(i)) {
-					if (!j.satisfies(((ModalFormula) formula).getFormula())) {
+				for (Interpretation<FolFormula> j : this.accRelation.getSuccessors(i)) {
+					if (!j.satisfies((FolFormula) ((ModalFormula) formula).getFormula())) {
 						return false; }
 
 				}
 			} else if (formula instanceof Possibility) {
 				boolean satisfied = false;
-				for (Interpretation j : this.accRelation.getSuccessors(i)) {
-					if (j.satisfies(((ModalFormula) formula).getFormula())) {
+				for (Interpretation<FolFormula> j : this.accRelation.getSuccessors(i)) {
+					if (j.satisfies((FolFormula) ((ModalFormula) formula).getFormula())) {
 						satisfied = true;
 						break;
 					}
@@ -104,7 +100,7 @@ public class KripkeModel extends AbstractInterpretation {
 			throw new IllegalArgumentException("Modal knowledge base expected.");
 		ModalBeliefSet mkb = (ModalBeliefSet) beliefBase;
 		for(RelationalFormula f: mkb)
-			if(!this.satisfies(f)) return false;
+			if(!this.satisfies((FolFormula) f)) return false;
 		return true;
 	}
 	

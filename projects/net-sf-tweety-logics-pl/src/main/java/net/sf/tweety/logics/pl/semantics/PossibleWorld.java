@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class PossibleWorld extends InterpretationSet<Proposition> implements Comparable<PossibleWorld> {
+public class PossibleWorld extends InterpretationSet<Proposition,PropositionalFormula> implements Comparable<PossibleWorld> {
 	
 	/**
 	 * Creates a new empty possible world.
@@ -53,9 +53,7 @@ public class PossibleWorld extends InterpretationSet<Proposition> implements Com
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof PropositionalFormula))
-			 throw new IllegalArgumentException("Formula " + formula + " is not a propositional formula.");
+	public boolean satisfies(PropositionalFormula formula) throws IllegalArgumentException {		
 		if(formula instanceof Contradiction)
 			return false;
 		if(formula instanceof Tautology)
@@ -90,7 +88,9 @@ public class PossibleWorld extends InterpretationSet<Proposition> implements Com
 			throw new IllegalArgumentException("Propositional knowledge base expected.");
 		PlBeliefSet pKb = (PlBeliefSet) beliefBase;
 		for(Formula f: pKb)
-			if(!this.satisfies(f))
+			if(!(f instanceof PropositionalFormula))
+				throw new IllegalArgumentException();
+			else if(!this.satisfies((PropositionalFormula)f))
 				return false;
 		return true;
 	}

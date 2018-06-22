@@ -87,7 +87,7 @@ public class RelationalBruteForceCReasoner implements BeliefBaseReasoner<RclBeli
 		RelationalRankingFunction crepresentation = this.getCRepresentation(bs, signature);
 		if(query instanceof RelationalConditional){
 			Answer answer = new Answer(bs,query);
-			boolean bAnswer = crepresentation.satisfies(query);
+			boolean bAnswer = crepresentation.satisfies((RelationalConditional) query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			

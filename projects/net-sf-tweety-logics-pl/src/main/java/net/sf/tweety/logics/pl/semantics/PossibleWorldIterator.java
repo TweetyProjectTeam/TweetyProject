@@ -39,7 +39,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class PossibleWorldIterator implements InterpretationIterator<PossibleWorld>{
+public class PossibleWorldIterator implements InterpretationIterator<PropositionalFormula,PossibleWorld>{
 
 	/** The signature used for creating possible worlds. */
 	private PropositionalSignature sig = null;
@@ -95,7 +95,7 @@ public class PossibleWorldIterator implements InterpretationIterator<PossibleWor
 	 * @see net.sf.tweety.InterpretationIterator#reset()
 	 */
 	@Override
-	public InterpretationIterator<PossibleWorld> reset() {
+	public InterpretationIterator<PropositionalFormula,PossibleWorld> reset() {
 		return new PossibleWorldIterator(this.sig);
 	}
 
@@ -103,7 +103,7 @@ public class PossibleWorldIterator implements InterpretationIterator<PossibleWor
 	 * @see net.sf.tweety.commons.InterpretationIterator#reset(net.sf.tweety.commons.Signature)
 	 */
 	@Override
-	public InterpretationIterator<PossibleWorld> reset(Signature sig){
+	public InterpretationIterator<PropositionalFormula,PossibleWorld> reset(Signature sig){
 		if(!(sig instanceof PropositionalSignature))
 			throw new IllegalArgumentException("Signature of type 'PropositionalSignature' expected.");
 		return new PossibleWorldIterator((PropositionalSignature)sig);
@@ -113,7 +113,7 @@ public class PossibleWorldIterator implements InterpretationIterator<PossibleWor
 	 * @see net.sf.tweety.commons.InterpretationIterator#reset(java.util.Collection)
 	 */
 	@Override
-	public InterpretationIterator<PossibleWorld> reset(Collection<? extends Formula> formulas){
+	public InterpretationIterator<PropositionalFormula,PossibleWorld> reset(Collection<? extends Formula> formulas){
 		PropositionalSignature sig = new PropositionalSignature();
 		for(Formula f: formulas){
 			if(!(f instanceof PropositionalFormula))

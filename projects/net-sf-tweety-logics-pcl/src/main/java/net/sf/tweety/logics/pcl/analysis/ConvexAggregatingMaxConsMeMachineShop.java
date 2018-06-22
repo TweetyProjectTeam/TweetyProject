@@ -72,7 +72,7 @@ public class ConvexAggregatingMaxConsMeMachineShop implements BeliefBaseMachineS
 		// prepare result
 		PclBeliefSet result = new PclBeliefSet();
 		for(ProbabilisticConditional pc: beliefSet)
-			result.add(new ProbabilisticConditional(pc, p.probability(pc)));
+			result.add(new ProbabilisticConditional(pc, p.conditionalProbability(pc)));
 		return result;
 	}
 

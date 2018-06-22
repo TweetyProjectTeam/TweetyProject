@@ -29,7 +29,7 @@ import net.sf.tweety.commons.Interpretation;
  *
  * @param <T> The actual type of interpretation used
  */
-public interface InterpretationDistance<T extends Interpretation,S extends Formula> {
+public interface InterpretationDistance<T extends Interpretation<S>,S extends Formula> {
 
 	/**
 	 * Measures the distance between the two given interpretations.

@@ -25,6 +25,7 @@ import java.util.Set;
 
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -33,7 +34,6 @@ import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.rcl.syntax.RelationalConditional;
 import net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.semantics.RpclSemantics;
@@ -123,7 +123,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 	 * @param kb a belief set
 	 * @return the ME-distribution for this reasoner's knowledge base.
 	 */	
-	public ProbabilityDistribution<?> getMeDistribution(RpclBeliefSet kb, FolSignature signature) throws ProblemInconsistentException{
+	public RpclProbabilityDistribution<?> getMeDistribution(RpclBeliefSet kb, FolSignature signature) throws ProblemInconsistentException{
 		if(!kb.getSignature().isSubSignature(signature)){
 			log.error("Signature must be super-signature of the belief set's signature.");
 			throw new IllegalArgumentException("Signature must be super-signature of the belief set's signature.");
@@ -150,7 +150,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			
 			// Generate Variables for the probability of each reference world,
 			// range constraints for probabilities, and construct normalization sum
-			Map<ReferenceWorld,FloatVariable> worlds2vars = new HashMap<ReferenceWorld,FloatVariable>();
+			Map<Interpretation<FolFormula>,FloatVariable> worlds2vars = new HashMap<Interpretation<FolFormula>,FloatVariable>();
 			// check for empty kb
 			if(kb.size() == 0)
 				return CondensedProbabilityDistribution.getUniformDistribution(this.semantics, signature, equivalenceClasses);
@@ -179,8 +179,8 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 			problem.addAll(constraints);
 			Term targetFunction = null;
-			for(ReferenceWorld w: worlds2vars.keySet()){
-				Term t = new IntegerConstant(-w.spanNumber()).mult(worlds2vars.get(w).mult(new Logarithm(worlds2vars.get(w))));
+			for(Interpretation<FolFormula> w: worlds2vars.keySet()){
+				Term t = new IntegerConstant(-((ReferenceWorld)w).spanNumber()).mult(worlds2vars.get(w).mult(new Logarithm(worlds2vars.get(w))));
 				if(targetFunction == null)
 					targetFunction = t;
 				else targetFunction = targetFunction.add(t);
@@ -189,10 +189,10 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			try{
 				Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);				
 				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,signature);
-				for(ReferenceWorld w: worlds2vars.keySet()){
+				for(Interpretation<FolFormula> w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
 					Double value = new Double(c.doubleValue());
-					p.put(w, new Probability(value));			
+					p.put((ReferenceWorld)w, new Probability(value));			
 				}
 				return p;
 			}catch(GeneralMathException e){
@@ -204,7 +204,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			Set<HerbrandInterpretation> worlds = new HerbrandBase(signature).getAllHerbrandInterpretations();
 			// Generate Variables for the probability of each world,
 			// range constraints for probabilities, and construct normalization sum
-			Map<HerbrandInterpretation,FloatVariable> worlds2vars = new HashMap<HerbrandInterpretation,FloatVariable>();
+			Map<Interpretation<FolFormula>,FloatVariable> worlds2vars = new HashMap<Interpretation<FolFormula>,FloatVariable>();
 			// check for empty kb
 			if(kb.size() == 0)
 				return RpclProbabilityDistribution.getUniformDistribution(this.semantics, signature);
@@ -231,7 +231,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 			problem.addAll(constraints);
 			Term targetFunction = null;
-			for(HerbrandInterpretation w: worlds2vars.keySet()){
+			for(Interpretation<FolFormula> w: worlds2vars.keySet()){
 				Term t = new IntegerConstant(-1).mult(worlds2vars.get(w).mult(new Logarithm(worlds2vars.get(w))));
 				if(targetFunction == null)
 					targetFunction = t;
@@ -240,8 +240,8 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
-				RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics,signature);
-				for(HerbrandInterpretation w: worlds2vars.keySet()){
+				RpclProbabilityDistribution<Interpretation<FolFormula>> p = new RpclProbabilityDistribution<Interpretation<FolFormula>>(this.semantics,signature);
+				for(Interpretation<FolFormula> w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
 					Double value = new Double(c.doubleValue());
 					p.put(w, new Probability(value));			
@@ -265,10 +265,10 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 	public Answer query(RpclBeliefSet kb, Formula query, FolSignature signature) {
 		if(!(query instanceof FolFormula) && !(query instanceof RelationalConditional))
 			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for first-order queries or relational conditionals.");
-		ProbabilityDistribution<?> meDistribution = this.getMeDistribution(kb,signature);		
+		RpclProbabilityDistribution<?> meDistribution = this.getMeDistribution(kb,signature);		
 		Probability prob;
 		if(query instanceof FolFormula){
-			prob = meDistribution.probability(query);
+			prob = meDistribution.probability((FolFormula)query);
 		}else{
 			FolFormula premise = new Conjunction(((RelationalConditional)query).getPremise());
 			FolFormula premiseConclusion = premise.combineWithAnd(((RelationalConditional)query).getConclusion());

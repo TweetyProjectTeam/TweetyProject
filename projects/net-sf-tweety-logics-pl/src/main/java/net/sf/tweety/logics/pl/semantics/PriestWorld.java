@@ -25,7 +25,6 @@ import java.util.Map;
 
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
@@ -43,7 +42,7 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * 
  * @author Matthias Thimm
  */
-public class PriestWorld extends AbstractInterpretation{
+public class PriestWorld extends AbstractInterpretation<PropositionalFormula>{
 
 	/** The three truth values. */
 	public enum TruthValue {
@@ -107,7 +106,7 @@ public class PriestWorld extends AbstractInterpretation{
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
+	public boolean satisfies(PropositionalFormula formula) throws IllegalArgumentException {
 		return this.satisfies3VL(formula).getClassical();
 	}
 
@@ -117,9 +116,7 @@ public class PriestWorld extends AbstractInterpretation{
 	 * @return the 3-valued truth value of the formula.
 	 * @throws IllegalArgumentException
 	 */
-	public TruthValue satisfies3VL(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof PropositionalFormula))
-			 throw new IllegalArgumentException("Formula " + formula + " is not a propositional formula.");
+	public TruthValue satisfies3VL(PropositionalFormula formula) throws IllegalArgumentException {
 		if(formula instanceof Contradiction)
 			return TruthValue.FALSE;
 		if(formula instanceof Tautology)
@@ -179,7 +176,7 @@ public class PriestWorld extends AbstractInterpretation{
 		if(!(beliefBase instanceof PlBeliefSet))
 			throw new IllegalArgumentException("Propositional knowledge base expected.");
 		PlBeliefSet pKb = (PlBeliefSet) beliefBase;
-		for(Formula f: pKb)
+		for(PropositionalFormula f: pKb)
 			if(!this.satisfies(f))
 				return false;
 		return true;

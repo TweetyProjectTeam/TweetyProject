@@ -104,8 +104,11 @@ public class IssReasoner implements BeliefBaseReasoner<SocialAbstractArgumentati
 	 */
 	@Override
 	public Answer query(SocialAbstractArgumentationFramework saaf, Formula query) {
+		if(!(query instanceof Argument))
+			throw new IllegalArgumentException();
+		Argument arg = (Argument) query;
 		Answer answer = new Answer(saaf, query);
-		answer.setAnswer(this.getSocialModel(saaf).satisfies(query));
+		answer.setAnswer(this.getSocialModel(saaf).satisfies(arg));
 		answer.setAnswer(this.getSocialModel(saaf).get((Argument)query));
 		return answer;
 	}

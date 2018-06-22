@@ -94,7 +94,7 @@ public abstract class AbstractMlnReasoner implements BeliefBaseReasoner<MarkovLo
 	protected int numberOfGroundSatisfactions(FolFormula formula, HerbrandInterpretation hInt, FolSignature signature){
 		int num = 0;
 		for(RelationalFormula f: formula.allGroundInstances(signature.getConstants()))
-			if(hInt.satisfies(f)) num++;		
+			if(hInt.satisfies((FolFormula) f)) num++;		
 		return num;
 	}
 	

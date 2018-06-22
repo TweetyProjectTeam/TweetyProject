@@ -35,31 +35,23 @@ import net.sf.tweety.math.probability.Probability;
  * @author Matthias Thimm
  *
  */
-public class CondensedProbabilityDistribution extends ProbabilityDistribution<ReferenceWorld> {
+public class CondensedProbabilityDistribution extends RpclProbabilityDistribution<ReferenceWorld> {
 
-	/**
-	 * The semantics used for this probability distribution.
-	 */
-	private RpclSemantics semantics;
-	
 	/**
 	 * Creates a new condensed probability distribution for the given signature.
 	 * @param semantics the semantics used for this distribution.
 	 * @param signature a fol signature.
 	 */
 	public CondensedProbabilityDistribution(RpclSemantics semantics, FolSignature signature){
-		super(signature);
-		this.semantics = semantics;		
+		super(semantics,signature);		
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof RelationalProbabilisticConditional))
-			throw new IllegalArgumentException("Relational probabilistic conditional expected.");
-		return semantics.satisfies(this, (RelationalProbabilisticConditional)formula);
+	public boolean satisfies(RelationalProbabilisticConditional formula) throws IllegalArgumentException {
+		return this.getSemantics().satisfies(this, formula);
 	}
 
 	/* (non-Javadoc)
@@ -70,18 +62,12 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution<Re
 		if(!(beliefBase instanceof RpclBeliefSet))
 			throw new IllegalArgumentException("Relational probabilistic conditional knowledge base expected.");
 		RpclBeliefSet kb = (RpclBeliefSet) beliefBase;
-		for(Formula f: kb)
+		for(RelationalProbabilisticConditional f: kb)
 			if(!this.satisfies(f)) return false;
 		return true;
 	}
 	
-	/**
-	 * Returns the semantics of this distribution.
-	 * @return the semantics of this distribution.
-	 */
-	public RpclSemantics getSemantics(){
-		return this.semantics;
-	}
+	
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclProbabilityDistribution#entropy()
@@ -89,9 +75,9 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution<Re
 	@Override
 	public double entropy(){
 		double entropy = 0;
-		for(Interpretation i : this.keySet())
-			if(this.probability(i).getValue() != 0)
-				entropy -= ((ReferenceWorld)i).spanNumber() * this.probability(i).getValue() * Math.log(this.probability(i).getValue());
+		for(ReferenceWorld i : this.keySet())
+			if(this.get(i).getValue() != 0)
+				entropy -= ((ReferenceWorld)i).spanNumber() * this.get(i).getValue() * Math.log(this.get(i).getValue());
 		return entropy;
 	}
 	
@@ -146,7 +132,7 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution<Re
 	 * probability distribution.
 	 * @return a probability distribution.
 	 */
-	public RpclProbabilityDistribution toProbabilityDistribution(){
+	public RpclProbabilityDistribution<ReferenceWorld> toProbabilityDistribution(){
 		//TODO implement me
 		return null;
 	}
@@ -156,9 +142,9 @@ public class CondensedProbabilityDistribution extends ProbabilityDistribution<Re
 	 */
 	public Probability probability(FolFormula f){
 		Probability p = new Probability(0d);
-		for(Interpretation w: this.keySet()){
+		for(ReferenceWorld w: this.keySet()){
 			ReferenceWorld rw = (ReferenceWorld) w;
-			p = p.add(this.probability(rw).mult(rw.getMultiplicator(f)));
+			p = p.add(this.get(rw).mult(rw.getMultiplicator(f)));
 		}
 		return p;
 	}

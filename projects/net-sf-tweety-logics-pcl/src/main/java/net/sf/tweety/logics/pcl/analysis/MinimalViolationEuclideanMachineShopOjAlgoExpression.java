@@ -113,7 +113,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 		
 		PclBeliefSet repairedSet = new PclBeliefSet();
 		for(ProbabilisticConditional pc: beliefSet) {
-			repairedSet.add(new ProbabilisticConditional(pc,p.probability(pc)));
+			repairedSet.add(new ProbabilisticConditional(pc,p.conditionalProbability(pc)));
 		}
 		
 		return repairedSet;

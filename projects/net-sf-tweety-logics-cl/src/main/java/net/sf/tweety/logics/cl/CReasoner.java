@@ -59,13 +59,13 @@ public class CReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 		RankingFunction crepresentation = this.getCRepresentation(beliefset);
 		if(query instanceof Conditional){
 			Answer answer = new Answer(beliefset,query);
-			boolean bAnswer = crepresentation.satisfies(query);
+			boolean bAnswer = crepresentation.satisfies((Conditional)query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			
 		}
 		if(query instanceof PropositionalFormula){
-			int rank = crepresentation.rank(query);
+			int rank = crepresentation.rank((PropositionalFormula)query);
 			Answer answer = new Answer(beliefset,query);			
 			answer.setAnswer(rank==0);
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");

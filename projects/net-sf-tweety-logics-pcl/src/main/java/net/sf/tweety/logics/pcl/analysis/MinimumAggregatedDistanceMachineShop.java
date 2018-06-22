@@ -143,7 +143,7 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 			// prepare result
 			PclBeliefSet result = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet)
-				result.add(new ProbabilisticConditional(pc,p.probability(pc)));							
+				result.add(new ProbabilisticConditional(pc,p.conditionalProbability(pc)));							
 			return result;					
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible

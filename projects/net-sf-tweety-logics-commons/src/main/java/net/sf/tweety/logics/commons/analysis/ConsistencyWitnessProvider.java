@@ -39,19 +39,19 @@ public interface ConsistencyWitnessProvider<S extends Formula> {
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the formulas or null.
 	 */
-	public Interpretation getWitness(Collection<S> formulas);
+	public Interpretation<S> getWitness(Collection<S> formulas);
 	
 	/**
 	 * If the formula is consistent this method
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the formula or null.
 	 */
-	public Interpretation getWitness(S formula);
+	public Interpretation<S> getWitness(S formula);
 	
 	/**
 	 * If the belief set is consistent this method
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the belief set or null.
 	 */
-	public Interpretation getWitness(BeliefSet<S> bs);
+	public Interpretation<S> getWitness(BeliefSet<S> bs);
 }

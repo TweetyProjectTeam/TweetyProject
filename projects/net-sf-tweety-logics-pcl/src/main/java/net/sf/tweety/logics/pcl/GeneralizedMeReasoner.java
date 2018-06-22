@@ -219,21 +219,21 @@ public class GeneralizedMeReasoner implements BeliefBaseReasoner<PclBeliefSet> {
 		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution(bs,signature);
 		if(query instanceof ProbabilisticConditional){
 			Answer answer = new Answer(bs,query);
-			boolean bAnswer = meDistribution.satisfies(query);
+			boolean bAnswer = meDistribution.satisfies((ProbabilisticConditional)query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			
 		}
 		if(query instanceof Conditional){
 			Answer answer = new Answer(bs,query);
-			Probability bAnswer = meDistribution.probability((Conditional)query);
+			Probability bAnswer = meDistribution.conditionalProbability((Conditional)query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;
 		}
 		if(query instanceof PropositionalFormula){
 			Answer answer = new Answer(bs,query);
-			Probability bAnswer = meDistribution.probability(query);
+			Probability bAnswer = meDistribution.probability((PropositionalFormula)query);
 			answer.setAnswer(bAnswer.doubleValue());
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;

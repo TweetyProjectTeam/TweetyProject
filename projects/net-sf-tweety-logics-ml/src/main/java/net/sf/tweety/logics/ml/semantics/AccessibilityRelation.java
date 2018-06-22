@@ -22,6 +22,7 @@ import java.util.*;
 
 import net.sf.tweety.commons.*;
 import net.sf.tweety.commons.util.*;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 
 /**
@@ -36,13 +37,13 @@ public class AccessibilityRelation {
 	/**
 	 * The actual relation
 	 */
-	private Set<Pair<Interpretation,Interpretation>> tuples;
+	private Set<Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>> tuples;
 	
 	/**
 	 * Constructs a new accessibility relation.
 	 * @param tuples	the accessibility relation 	
 	 */
-	public AccessibilityRelation(Set<Pair<Interpretation,Interpretation>> tuples) {
+	public AccessibilityRelation(Set<Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>> tuples) {
 		this.tuples = tuples;
 	}
 	
@@ -50,9 +51,9 @@ public class AccessibilityRelation {
 	 * Returns all interpretations of the accessibility relation.
 	 * @return interpretations	set of all interpretations
 	 */
-	public Set<Interpretation> getNodes(){
-		Set<Interpretation> interpretations = new HashSet<Interpretation>();
-		for(Pair<Interpretation,Interpretation> p: this.tuples){
+	public Set<Interpretation<FolFormula>> getNodes(){
+		Set<Interpretation<FolFormula>> interpretations = new HashSet<Interpretation<FolFormula>>();
+		for(Pair<Interpretation<FolFormula>,Interpretation<FolFormula>> p: this.tuples){
 			interpretations.add(p.getFirst());
 			interpretations.add(p.getSecond());
 		}
@@ -64,9 +65,9 @@ public class AccessibilityRelation {
 	 * @param  i			an interpretation (possible world)
 	 * @return successors 	set of successors of i
 	 */
-	public Set<Interpretation> getSuccessors(Interpretation i){
-		Set<Interpretation> successors = new HashSet<Interpretation>();
-		for(Pair<Interpretation,Interpretation> relation: this.tuples)
+	public Set<Interpretation<FolFormula>> getSuccessors(Interpretation<FolFormula> i){
+		Set<Interpretation<FolFormula>> successors = new HashSet<Interpretation<FolFormula>>();
+		for(Pair<Interpretation<FolFormula>,Interpretation<FolFormula>> relation: this.tuples)
 			if(relation.getFirst().equals(i))
 				successors.add(relation.getSecond());
 		return successors;

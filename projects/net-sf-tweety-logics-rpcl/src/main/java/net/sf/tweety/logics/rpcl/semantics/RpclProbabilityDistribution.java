@@ -26,7 +26,6 @@ import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.rcl.syntax.*;
 import net.sf.tweety.logics.rpcl.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
-import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.math.probability.*;
 
 
@@ -35,7 +34,12 @@ import net.sf.tweety.math.probability.*;
  * of an underlying first-order signature for a relational probabilistic conditional knowledge base.
  * @author Matthias Thimm
  */
-public class RpclProbabilityDistribution extends ProbabilityDistribution<HerbrandInterpretation> {
+public class RpclProbabilityDistribution<T extends Interpretation<FolFormula>> extends AbstractInterpretation<RelationalProbabilisticConditional> implements Map<T,Probability> {
+	
+	/**
+	 * The probabilities of the interpretations.
+	 */
+	private Map<T,Probability> probabilities;
 	
 	/**
 	 * The semantics used for this probability distribution.
@@ -43,11 +47,17 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	private RpclSemantics semantics;
 	
 	/**
+	 * The used FOL signature 
+	 */
+	private FolSignature signature;
+	
+	/**
 	 * Creates a new probability distribution for the given signature.
 	 * @param signature a fol signature.
 	 */
 	public RpclProbabilityDistribution(RpclSemantics semantics, FolSignature signature){
-		super(signature);
+		this.probabilities = new HashMap<T,Probability>();
+		this.signature = signature;
 		this.semantics = semantics;		
 	}
 	
@@ -61,11 +71,9 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
-	 */
+	 */	
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof RelationalProbabilisticConditional))
-			throw new IllegalArgumentException("Relational probabilistic conditional expected.");
+	public boolean satisfies(RelationalProbabilisticConditional formula) throws IllegalArgumentException {
 		return semantics.satisfies(this, (RelationalProbabilisticConditional)formula);
 	}
 
@@ -77,10 +85,11 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 		if(!(beliefBase instanceof RpclBeliefSet))
 			throw new IllegalArgumentException("Relational probabilistic conditional knowledge base expected.");
 		RpclBeliefSet kb = (RpclBeliefSet) beliefBase;
-		for(Formula f: kb)
+		for(RelationalProbabilisticConditional f: kb)
 			if(!this.satisfies(f)) return false;
 		return true;
 	}
+	
 	
 	/**
 	 * Gets the probability of the given closed formula, i.e. the sum of the
@@ -91,9 +100,9 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	public Probability probability(FolFormula f){
 		if(!f.isClosed()) throw new IllegalArgumentException("Formula '" + f + "' is not closed.");
 		Probability result = new Probability(0d);
-		for(Interpretation i: this.keySet())
+		for(Interpretation<FolFormula> i: this.keySet())
 			if(i.satisfies(f))
-				result = result.add(this.probability(i));
+				result = result.add(this.get(i));
 		return result;
 	}
 	
@@ -113,6 +122,18 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	}
 	
 	/**
+	 * Returns the entropy of this probability distribution.
+	 * @return the entropy of this probability distribution.
+	 */
+	public double entropy(){
+		double entropy = 0;
+		for(T i : this.keySet())
+			if(this.get(i).getValue() != 0)
+				entropy -= this.get(i).getValue() * Math.log(this.get(i).getValue());
+		return entropy;
+	}
+	
+	/**
 	 * Computes the convex combination of this P1 and the
 	 * given probability distribution P2 with parameter d, i.e.
 	 * it returns a P with P(i)=d P1(i) + (1-d) P2(i) for every interpretation i.
@@ -123,15 +144,15 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	 * @throws IllegalArgumentException if either d is not in [0,1] or this and
 	 * the given probability distribution are not defined on the same set of interpretations.
 	 */
-	public RpclProbabilityDistribution convexCombination(double d, RpclProbabilityDistribution other){
+	public RpclProbabilityDistribution<T> convexCombination(double d, RpclProbabilityDistribution<T> other){
 		if(d < 0 || d > 1)
 			throw new IllegalArgumentException("The combination parameter must be between 0 and 1.");
-		Set<HerbrandInterpretation> interpretations = this.keySet();
+		Set<T> interpretations = this.keySet();
 		if(!interpretations.equals(other.keySet())|| !this.getSignature().equals(other.getSignature()))
 			throw new IllegalArgumentException("The distributions cannot be combined as they differ in their definitions.");			
-		RpclProbabilityDistribution p = new RpclProbabilityDistribution(this.semantics, (FolSignature) this.getSignature());
-		for(HerbrandInterpretation i: interpretations)
-			p.put(i, this.probability(i).mult(d).add(other.probability(i).mult(1-d)));
+		RpclProbabilityDistribution<T> p = new RpclProbabilityDistribution<T>(this.semantics, (FolSignature) this.getSignature());
+		for(T i: interpretations)
+			p.put(i, this.get(i).mult(d).add(other.get(i).mult(1-d)));
 		return p;
 	}
 	
@@ -141,12 +162,123 @@ public class RpclProbabilityDistribution extends ProbabilityDistribution<Herbran
 	 * @param signature a fol signature
 	 * @return the uniform distribution on the given signature.
 	 */
-	public static RpclProbabilityDistribution getUniformDistribution(RpclSemantics semantics, FolSignature signature){
-		RpclProbabilityDistribution p = new RpclProbabilityDistribution(semantics,signature);
+	public static RpclProbabilityDistribution<HerbrandInterpretation> getUniformDistribution(RpclSemantics semantics, FolSignature signature){
+		RpclProbabilityDistribution<HerbrandInterpretation> p = new RpclProbabilityDistribution<HerbrandInterpretation>(semantics,signature);
 		Set<HerbrandInterpretation> interpretations = new HerbrandBase(signature).getAllHerbrandInterpretations(); 
 		double size = interpretations.size();
 		for(HerbrandInterpretation i: interpretations)
 			p.put(i, new Probability(1/size));
 		return p;
 	}	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString(){
+		return this.probabilities.toString();
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.util.Map#clear()
+	 */
+	@Override
+	public void clear() {
+		this.probabilities.clear();		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#containsKey(java.lang.Object)
+	 */
+	@Override
+	public boolean containsKey(Object key) {
+		return this.probabilities.containsKey(key);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#containsValue(java.lang.Object)
+	 */
+	@Override
+	public boolean containsValue(Object value) {
+		return this.probabilities.containsValue(value);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#entrySet()
+	 */
+	@Override
+	public Set<java.util.Map.Entry<T, Probability>> entrySet() {
+		return this.probabilities.entrySet();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#get(java.lang.Object)
+	 */
+	@Override
+	public Probability get(Object key) {
+		return this.probabilities.get(key);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#isEmpty()
+	 */
+	@Override
+	public boolean isEmpty() {
+		return this.probabilities.isEmpty();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public Probability put(T key, Probability value) {
+		return this.probabilities.put(key, value);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#putAll(java.util.Map)
+	 */
+	@Override
+	public void putAll(Map<? extends T, ? extends Probability> m) {
+		this.probabilities.putAll(m);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#remove(java.lang.Object)
+	 */
+	@Override
+	public Probability remove(Object key) {
+		return this.probabilities.remove(key);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#size()
+	 */
+	@Override
+	public int size() {
+		return this.probabilities.size();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#values()
+	 */
+	@Override
+	public Collection<Probability> values() {
+		return this.probabilities.values();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.util.Map#keySet()
+	 */
+	@Override
+	public Set<T> keySet() {
+		return this.probabilities.keySet();
+	}
+	
+	/** Returns the signature of the underlying language.
+	 * @return the signature of the underlying language.
+	 */
+	public Signature getSignature(){
+		return this.signature;
+	}
 }

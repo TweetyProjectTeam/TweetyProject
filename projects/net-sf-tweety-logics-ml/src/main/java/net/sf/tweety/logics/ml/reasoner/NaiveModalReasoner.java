@@ -75,15 +75,15 @@ public class NaiveModalReasoner extends ModalReasoner {
 		//For each set of worlds: Get all possible binary combinations of worlds to construct all possible accessibility relations
 		Set<KripkeModel> kripkeModels = new HashSet<KripkeModel>();
 		for (Set<ModalHerbrandInterpretation> possibleWorldCombination: possibleWorldsCombinations) {
-			Set<Pair<Interpretation,Interpretation>> setOfPairs = new HashSet<Pair<Interpretation,Interpretation>>();
-			for (Interpretation i: possibleWorldCombination) {	
-				for (Interpretation i2: possibleWorldCombination) {
-					Pair<Interpretation,Interpretation> p = new Pair<Interpretation,Interpretation>(i,i2);
+			Set<Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>> setOfPairs = new HashSet<Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>>();
+			for (Interpretation<FolFormula> i: possibleWorldCombination) {	
+				for (Interpretation<FolFormula> i2: possibleWorldCombination) {
+					Pair<Interpretation<FolFormula>,Interpretation<FolFormula>> p = new Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>(i,i2);
 					setOfPairs.add(p); 
 				}
 			}
-			Set<Set<Pair<Interpretation, Interpretation>>> setOfPairsSubsets  = new SetTools<Pair<Interpretation,Interpretation>>().subsets(setOfPairs);
-			for (Set<Pair<Interpretation, Interpretation>> p : setOfPairsSubsets) {
+			Set<Set<Pair<Interpretation<FolFormula>, Interpretation<FolFormula>>>> setOfPairsSubsets  = new SetTools<Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>>().subsets(setOfPairs);
+			for (Set<Pair<Interpretation<FolFormula>, Interpretation<FolFormula>>> p : setOfPairsSubsets) {
 				AccessibilityRelation ar = new AccessibilityRelation(p);
 				KripkeModel m = new KripkeModel(possibleWorldCombination, ar); //Construct a Kripke model for each possible accessibility relation for each possible set of worlds
 				kripkeModels.add(m);
@@ -93,7 +93,7 @@ public class NaiveModalReasoner extends ModalReasoner {
 		//Test if every Kripke model for the knowledge base is also a Kripke model for the formula
 		for (KripkeModel k: kripkeModels) {
 			if (k.satisfies((BeliefBase)mbs)) {
-				if (!(k.satisfies(formula))) {
+				if (!(k.satisfies((FolFormula) formula))) {
 					Answer answer = new Answer(mbs,formula);
 					answer.setAnswer(false);
 					answer.appendText("The answer is: false");

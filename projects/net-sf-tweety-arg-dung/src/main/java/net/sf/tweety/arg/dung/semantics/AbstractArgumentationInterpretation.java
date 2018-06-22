@@ -25,7 +25,6 @@ import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
 
 /**
  * This abstract class acts as a common ancestor for interpretations to
@@ -33,14 +32,13 @@ import net.sf.tweety.commons.Formula;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractArgumentationInterpretation extends AbstractInterpretation {
+public abstract class AbstractArgumentationInterpretation extends AbstractInterpretation<Argument> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof Argument)) throw new IllegalArgumentException("Argument expected.");
+	public boolean satisfies(Argument formula) throws IllegalArgumentException {
 		return this.getArgumentsOfStatus(ArgumentStatus.IN).contains(formula);
 	}
 

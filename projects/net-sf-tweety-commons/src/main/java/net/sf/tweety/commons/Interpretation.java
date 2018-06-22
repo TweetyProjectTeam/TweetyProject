@@ -24,7 +24,7 @@ import java.util.*;
  * An interpretation for some logical language.
  * @author Matthias Thimm
  */
-public interface Interpretation {
+public interface Interpretation<S extends Formula> {
 	
 	/**
 	 * Checks whether this interpretation satisfies the given formula.
@@ -33,7 +33,7 @@ public interface Interpretation {
 	 * @throws IllegalArgumentException if the formula does not correspond
 	 * 		to the expected language.
 	 */
-	public boolean satisfies(Formula formula) throws IllegalArgumentException;
+	public boolean satisfies(S formula) throws IllegalArgumentException;
 	
 	/**
 	 * Checks whether this interpretation satisfies all given formulas.
@@ -42,7 +42,7 @@ public interface Interpretation {
 	 * @throws IllegalArgumentException if at least one formula does not correspond
 	 * 		to the expected language.
 	 */
-	public boolean satisfies(Collection<? extends Formula> formulas) throws IllegalArgumentException;
+	public boolean satisfies(Collection<S> formulas) throws IllegalArgumentException;
 	
 	/**
 	 * Checks whether this interpretation satisfies the given knowledge base.

@@ -46,7 +46,7 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * @author Anna Gessler
  * @see net.sf.tweety.logics.fol.semantics.HerbrandInterpretation
  */
-public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom> {
+public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula> {
 	
 	/**
 	 * Creates a new empty Herbrand interpretation
@@ -64,9 +64,12 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom> {
 		super(atoms);
 	}
 	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.Formula)
+	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		return satisfies(formula, new HashSet<Interpretation>());
+	public boolean satisfies(FolFormula formula) throws IllegalArgumentException {
+		return satisfies(formula, new HashSet<Interpretation<FolFormula>>());
 	}
 	
 	/**
@@ -77,7 +80,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom> {
 	 * @throws IllegalArgumentException if "f" is not closed.
 	 */
 	//@Override
-	public boolean satisfies(Formula formula, Set<Interpretation> successors) throws IllegalArgumentException{
+	public boolean satisfies(Formula formula, Set<Interpretation<FolFormula>> successors) throws IllegalArgumentException{
 		if(!(formula instanceof FolFormula)) throw new IllegalArgumentException("Formula " + formula + " is not a first-order formula.");
 		FolFormula f = (FolFormula) formula;
 		if(!f.isClosed()) throw new IllegalArgumentException("FolFormula " + f + " is not closed.");
@@ -93,13 +96,13 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom> {
 		if(f instanceof Disjunction){
 			Disjunction d = (Disjunction) f;
 			for(RelationalFormula rf: d)
-				if(this.satisfies(rf)) return true;
+				if(this.satisfies((FolFormula) rf)) return true;
 			return false;
 		}
 		if(f instanceof Conjunction){
 			Conjunction c = (Conjunction) f;
 			for(RelationalFormula rf: c)
-				if(!this.satisfies(rf)) return false;
+				if(!this.satisfies((FolFormula) rf)) return false;
 			return true;
 		}
 		if(f instanceof Negation){
@@ -138,7 +141,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom> {
 		}
 		if (f instanceof Implication) {
 			Implication i = (Implication) f;
-			if (this.satisfies(i.getFormulas().getFirst()) && !this.satisfies(i.getFormulas().getSecond()))
+			if (this.satisfies((FolFormula) i.getFormulas().getFirst()) && !this.satisfies((FolFormula) i.getFormulas().getSecond()))
 				return false;
 			return true;
 		}
@@ -147,27 +150,27 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom> {
 			RelationalFormula a = e.getFormulas().getFirst();
 			RelationalFormula b = e.getFormulas().getFirst();
 			
-			if (this.satisfies(a)) {
-				if (!this.satisfies(b))
+			if (this.satisfies((FolFormula) a)) {
+				if (!this.satisfies((FolFormula) b))
 					return false;
 			}
 			else {
-				if (this.satisfies(b))
+				if (this.satisfies((FolFormula) b))
 					return false;
 			}
 			return true;	
 		}
 		if (formula instanceof Necessity) {
-			for (Interpretation j : successors) {
-				if (!j.satisfies(((ModalFormula) formula).getFormula())) {
+			for (Interpretation<FolFormula> j : successors) {
+				if (!j.satisfies((FolFormula) ((ModalFormula) formula).getFormula())) {
 					return false; }
 
 			}
 		} 
 		if (formula instanceof Possibility) {
 			boolean satisfied = false;
-			for (Interpretation j : successors) {
-				if (j.satisfies(((ModalFormula) formula).getFormula())) {
+			for (Interpretation<FolFormula> j : successors) {
+				if (j.satisfies((FolFormula) ((ModalFormula) formula).getFormula())) {
 					satisfied = true;
 					break;
 				}
@@ -264,7 +267,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom> {
 		if(!(beliefBase instanceof FolBeliefSet))
 			throw new IllegalArgumentException("First-order knowledge base expected.");
 		FolBeliefSet folkb = (FolBeliefSet) beliefBase;
-		for(Formula f: folkb)
+		for(FolFormula f: folkb)
 			if(!this.satisfies(f)) return false;
 		return true;
 	}

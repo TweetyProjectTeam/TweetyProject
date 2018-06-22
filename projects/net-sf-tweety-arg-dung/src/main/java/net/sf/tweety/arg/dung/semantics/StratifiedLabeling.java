@@ -26,13 +26,12 @@ import java.util.Set;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
 
 /**
  * This class implements stratified labelings as in [Thimm, Kern-Isberner, 2013].
  * @author Matthias Thimm
  */
-public class StratifiedLabeling extends AbstractInterpretation implements Map<Argument,Integer>{
+public class StratifiedLabeling extends AbstractInterpretation<Argument> implements Map<Argument,Integer>{
 
 	/** The actual mapping of arguments to integers. */
 	private HashMap<Argument,Integer> map;
@@ -141,11 +140,10 @@ public class StratifiedLabeling extends AbstractInterpretation implements Map<Ar
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.Formula)
+	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof Argument)) throw new IllegalArgumentException("Argument expected.");
+	public boolean satisfies(Argument formula) throws IllegalArgumentException {
 		if(this.map.containsKey(formula))
 			return this.map.get(formula) == 0;
 		throw new IllegalArgumentException("No stratum defined for the given argument.");

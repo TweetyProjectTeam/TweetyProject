@@ -28,7 +28,6 @@ import java.util.Set;
 
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.MathTools;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -54,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class ReferenceWorld extends AbstractInterpretation implements Map<Predicate,InstanceAssignment>{
+public class ReferenceWorld extends AbstractInterpretation<FolFormula> implements Map<Predicate,InstanceAssignment>{
 
 	/**
 	 * Logger.
@@ -260,11 +259,9 @@ public class ReferenceWorld extends AbstractInterpretation implements Map<Predic
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof FolFormula)) throw new IllegalArgumentException("Formula " + formula + " is not a first-order formula.");
-		FolFormula f = (FolFormula) formula;
-		if(!f.isClosed()) throw new IllegalArgumentException("FolFormula " + f + " is not closed.");
-		Integer multiplicator = this.getMultiplicator(f);
+	public boolean satisfies(FolFormula formula) throws IllegalArgumentException {
+		if(!formula.isClosed()) throw new IllegalArgumentException("FolFormula " + formula + " is not closed.");
+		Integer multiplicator = this.getMultiplicator(formula);
 		return multiplicator > 0;
 	}
 
@@ -276,7 +273,7 @@ public class ReferenceWorld extends AbstractInterpretation implements Map<Predic
 		if(!(beliefBase instanceof FolBeliefSet))
 			throw new IllegalArgumentException("First-order knowledge base expected.");
 		FolBeliefSet folkb = (FolBeliefSet) beliefBase;
-		for(Formula f: folkb)
+		for(FolFormula f: folkb)
 			if(!this.satisfies(f)) return false;
 		return true;
 	}

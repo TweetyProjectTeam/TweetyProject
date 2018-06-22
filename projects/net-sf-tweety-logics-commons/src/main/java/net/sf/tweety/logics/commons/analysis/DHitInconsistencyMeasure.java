@@ -36,12 +36,12 @@ import net.sf.tweety.commons.analysis.InterpretationDistance;
  *
  * @param <S> The type of formulas supported
  */
-public class DHitInconsistencyMeasure<T extends Interpretation,S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
+public class DHitInconsistencyMeasure<T extends Interpretation<S>,S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
 	/** The distance used by this measure. */
 	private InterpretationDistance<T,S> distance;
 	/** For iterating over interpretations. */
-	private InterpretationIterator<T> it;
+	private InterpretationIterator<S,T> it;
 	
 	/**
 	 * Creates a new d-sum inconsistency measure using the given distance and interpretations
@@ -49,7 +49,7 @@ public class DHitInconsistencyMeasure<T extends Interpretation,S extends Formula
 	 * @param distance some distance measure
 	 * @param it some interpretation iterator
 	 */
-	public DHitInconsistencyMeasure(InterpretationDistance<T,S> distance, InterpretationIterator<T> it){
+	public DHitInconsistencyMeasure(InterpretationDistance<T,S> distance, InterpretationIterator<S,T> it){
 		this.distance = distance;
 		this.it = it;
 	}

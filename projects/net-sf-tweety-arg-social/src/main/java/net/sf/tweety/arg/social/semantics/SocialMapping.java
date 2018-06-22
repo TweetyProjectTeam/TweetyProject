@@ -27,7 +27,6 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.social.SocialAbstractArgumentationFramework;
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
 
 /**
  * Implements a mapping from arguments to social value.
@@ -35,7 +34,7 @@ import net.sf.tweety.commons.Formula;
  * @author Matthias Thimm
  * @param <L> The set used for valuations
  */
-public class SocialMapping<L> extends AbstractInterpretation{
+public class SocialMapping<L> extends AbstractInterpretation<Argument>{
 
 	/** The semantics used for this mapping */
 	private AbstractSocialSemantics<L> semantics;
@@ -56,9 +55,7 @@ public class SocialMapping<L> extends AbstractInterpretation{
 	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof Argument))
-			throw new IllegalArgumentException("Formula of type 'Argument' expected.");
+	public boolean satisfies(Argument formula) throws IllegalArgumentException {
 		if(!this.map.containsKey(formula))
 			return false;
 		return this.semantics.compare(this.map.get(formula), this.semantics.topElement()) == 0;

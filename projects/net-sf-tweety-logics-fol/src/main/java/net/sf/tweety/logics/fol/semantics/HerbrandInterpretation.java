@@ -39,7 +39,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  *   function symbols.
  * @author Matthias Thimm
  */
-public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
+public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula> {
 	
 	/**
 	 * Creates a new empty Herbrand interpretation
@@ -65,8 +65,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 	 * @throws IllegalArgumentException if "f" is not closed.
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException{
-		if(!(formula instanceof FolFormula)) throw new IllegalArgumentException("Formula " + formula + " is not a first-order formula.");
+	public boolean satisfies(FolFormula formula) throws IllegalArgumentException{
 		FolFormula f = (FolFormula) formula;
 		if(!f.isClosed()) throw new IllegalArgumentException("FolFormula " + f + " is not closed.");
 		if(f instanceof Tautology){
@@ -96,19 +95,19 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 		if(f instanceof Disjunction){
 			Disjunction d = (Disjunction) f;
 			for(RelationalFormula rf: d)
-				if(this.satisfies(rf)) return true;
+				if(this.satisfies((FolFormula) rf)) return true;
 			return false;
 		}
 		if(f instanceof Conjunction){
 			Conjunction c = (Conjunction) f;
 			for(RelationalFormula rf: c)
-				if(!this.satisfies(rf)) return false;
+				if(!this.satisfies((FolFormula) rf)) return false;
 			return true;
 		}
 		if (f instanceof Implication) {
 			Implication i = (Implication) f;
-			if (this.satisfies(i.getFormulas().getFirst()))
-				if (!this.satisfies(i.getFormulas().getSecond()))
+			if (this.satisfies((FolFormula) i.getFormulas().getFirst()))
+				if (!this.satisfies((FolFormula) i.getFormulas().getSecond()))
 						return false;
 			return true;
 		}
@@ -117,12 +116,12 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 			RelationalFormula a = e.getFormulas().getFirst();
 			RelationalFormula b = e.getFormulas().getSecond();
 			
-			if (this.satisfies(a)) {
-				if (!this.satisfies(b))
+			if (this.satisfies((FolFormula) a)) {
+				if (!this.satisfies((FolFormula) b))
 					return false;
 			}
 			else {
-				if (this.satisfies(b))
+				if (this.satisfies((FolFormula) b))
 					return false;
 			}
 			return true;	
@@ -250,7 +249,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom> {
 		if(!(beliefBase instanceof FolBeliefSet))
 			throw new IllegalArgumentException("First-order knowledge base expected.");
 		FolBeliefSet folkb = (FolBeliefSet) beliefBase;
-		for(Formula f: folkb)
+		for(FolFormula f: folkb)
 			if(!this.satisfies(f)) return false;
 		return true;
 	}

@@ -41,7 +41,6 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.graphs.Graph;
 
 /**
@@ -51,7 +50,7 @@ import net.sf.tweety.graphs.Graph;
  * @author Matthias Thimm
  *
  */
-public class LdoInterpretation extends AbstractInterpretation {
+public class LdoInterpretation extends AbstractInterpretation<LdoFormula> {
 
 	/** The abstract argumentation framework */
 	private DungTheory theory;
@@ -82,9 +81,7 @@ public class LdoInterpretation extends AbstractInterpretation {
 	}
 	
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof LdoFormula))
-			throw new IllegalArgumentException("Parameter of type 'LdoFormula' expected.");
+	public boolean satisfies(LdoFormula formula) throws IllegalArgumentException {
 		if(this.ext == null){
 			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.sem, Semantics.CREDULOUS_INFERENCE);
 			for(Extension e: reasoner.getExtensions(this.theory)){

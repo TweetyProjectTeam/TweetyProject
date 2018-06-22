@@ -145,7 +145,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 			// prepare result
 			PclBeliefSet result = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet)
-				result.add(new ProbabilisticConditional(pc,meDistribution.probability(pc)));							
+				result.add(new ProbabilisticConditional(pc,meDistribution.conditionalProbability(pc)));							
 			return result;			
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible

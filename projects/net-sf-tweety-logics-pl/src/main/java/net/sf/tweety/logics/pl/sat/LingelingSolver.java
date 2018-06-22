@@ -57,7 +57,7 @@ public class LingelingSolver extends SatSolver {
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
 		try {
 			List<Proposition> props = new ArrayList<Proposition>();
 			for(PropositionalFormula f: formulas){

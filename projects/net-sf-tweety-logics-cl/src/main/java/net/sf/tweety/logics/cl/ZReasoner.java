@@ -72,13 +72,13 @@ public class ZReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 		RankingFunction ocf = this.getOCF(beliefset);
 		if(query instanceof Conditional){
 			Answer answer = new Answer(beliefset,query);
-			boolean bAnswer = ocf.satisfies(query);
+			boolean bAnswer = ocf.satisfies((Conditional)query);
 			answer.setAnswer(bAnswer);
 			answer.appendText("The answer is: " + bAnswer);
 			return answer;			
 		}
 		if(query instanceof PropositionalFormula){
-			int rank = ocf.rank(query);
+			int rank = ocf.rank((PropositionalFormula)query);
 			Answer answer = new Answer(beliefset,query);			
 			answer.setAnswer(rank==0);
 			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");

@@ -31,7 +31,7 @@ import net.sf.tweety.commons.Interpretation;
  *
  * @param <T> The actual type of interpretation
  */
-public class DrasticDistance<T extends Interpretation,S extends Formula> implements InterpretationDistance<T,S>{
+public class DrasticDistance<T extends Interpretation<S>,S extends Formula> implements InterpretationDistance<T,S>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.analysis.InterpretationDistance#distance(net.sf.tweety.commons.Interpretation, net.sf.tweety.commons.Interpretation)

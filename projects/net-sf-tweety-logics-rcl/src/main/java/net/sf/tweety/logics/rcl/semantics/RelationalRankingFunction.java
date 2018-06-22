@@ -41,7 +41,7 @@ import net.sf.tweety.logics.rcl.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class RelationalRankingFunction extends AbstractInterpretation {
+public class RelationalRankingFunction extends AbstractInterpretation<RelationalConditional> {
 
 	/**
 	 * Integer used to define infinity.
@@ -111,7 +111,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 		if(!formula.isClosed())
 			throw new IllegalArgumentException("Formula " + formula + " is not closed.");
 		Integer rank = RelationalRankingFunction.INFINITY;
-		for(Interpretation i: this.ranks.keySet())
+		for(HerbrandInterpretation i: this.ranks.keySet())
 			if(i.satisfies(formula))
 				if(this.ranks.get(i).compareTo(rank)<0)
 					rank = this.ranks.get(i); 
@@ -122,9 +122,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.Formula)
 	 */
 	@Override
-	public boolean satisfies(Formula formula) throws IllegalArgumentException {
-		if(!(formula instanceof RelationalConditional))
-			throw new IllegalArgumentException("Formula " + formula + " is not a relational conditional expression.");
+	public boolean satisfies(RelationalConditional formula) throws IllegalArgumentException {
 		RelationalConditional rc = (RelationalConditional) formula;
 		// if conditional is ground check for classical satisfiability
 		if(rc.isGround()){
@@ -312,7 +310,7 @@ public class RelationalRankingFunction extends AbstractInterpretation {
 	public boolean satisfies(BeliefBase beliefBase)	throws IllegalArgumentException {
 		if(!(beliefBase instanceof RclBeliefSet))
 			throw new IllegalArgumentException("Knowledge base is not a relational conditional knowledge base.");
-		for(Formula f: ((RclBeliefSet)beliefBase))
+		for(RelationalConditional f: ((RclBeliefSet)beliefBase))
 			if(!this.satisfies(f))
 				return false;
 		return true;
