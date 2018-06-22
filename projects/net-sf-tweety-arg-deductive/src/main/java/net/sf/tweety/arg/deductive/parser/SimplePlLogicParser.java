@@ -16,7 +16,7 @@
  *
  *  Copyright 2017 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.simplelogicdeductive.parser;
+package net.sf.tweety.arg.deductive.parser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,8 +24,8 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.arg.simplelogicdeductive.SimplePlLogicDeductiveKnowledgebase;
-import net.sf.tweety.arg.simplelogicdeductive.syntax.SimplePlRule;
+import net.sf.tweety.arg.deductive.SimplePlLogicDeductiveKnowledgebase;
+import net.sf.tweety.arg.deductive.syntax.SimplePlRule;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;

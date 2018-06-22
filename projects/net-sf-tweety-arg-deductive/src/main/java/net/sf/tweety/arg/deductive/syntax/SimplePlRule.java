@@ -16,7 +16,7 @@
  *
  *  Copyright 2017 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.simplelogicdeductive.syntax;
+package net.sf.tweety.arg.deductive.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -71,11 +71,6 @@
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
-  		<artifactId>simplelogicdeductive</artifactId>
-  		<version>1.10-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>social</artifactId>
   		<version>1.10-SNAPSHOT</version>
   	</dependency>
