@@ -1,0 +1,27 @@
+Person = {alice, bob}
+Course = {cryptography}
+ID = {id001,id002}
+
+type(hasID(Person,ID))
+type(attends(Person,Course))
+type(isStudent(Person))
+type(isTeacher(Person))
+type(isCourse(Course))
+type(teaches(Person,Course))
+
+isStudent(bob)
+teaches(alice,cryptography)
+attends(bob,cryptography)
+hasID(bob,id001)
+!hasID(bob,id002)
+forall X:(forall Y:(hasID(X,Y) => (!(forall Z:(hasID(X,Z))))))
+forall X:(forall Y:(hasID(X,Y) => (!(exists Z:(hasID(Z,Y) && Z/==X)))))
+forall X:(isStudent(X) || isTeacher(X) => exists Y: (hasID(X,Y)) )
+forall X:(forall Y:(attends(X,Y)=> isStudent(X) && !(teaches(X,Y))))
+forall X:(forall Y:(teaches(X,Y)=> isTeacher(X) ))
+
+
+
+
+
+

@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.logics.fol.examples;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,23 +39,21 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  */
 public class FolExample {
 	
-	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		//Add sorts, constants and predicates to a first-order logic signature
-		FolSignature sig = new FolSignature(true);
-		
+	public static void main(String[] args) throws ParserException, IOException{
+		/*
+		 * Example 1: Add sorts, constants and predicates to a first-order logic signature
+		 */
+		FolSignature sig = new FolSignature(true); //Create new FOLSignature with equality
 		Sort s_animal = new Sort("Animal");
 		sig.add(s_animal); 
-		
 		Constant c_penguin = new Constant("penguin",s_animal);
 		Constant c_kiwi = new Constant("kiwi",s_animal);
 		sig.add(c_penguin);
 		sig.add(c_kiwi);
-		
 		List<Sort> predicate_list = new ArrayList<Sort>();
 		predicate_list.add(s_animal);
 		Predicate p = new Predicate("Flies",predicate_list);
 		sig.add(p); //Add Predicate Flies(Animal) 
-		
 		List<Sort> predicate_list2 = new ArrayList<Sort>();
 		predicate_list2.add(s_animal);
 		predicate_list2.add(s_animal);
@@ -64,7 +61,9 @@ public class FolExample {
 		sig.add(p2); //Add Predicate Knows(Animal,Animal) 
 		System.out.println("Signature: " + sig);
 		
-		// Parse formulas with FolParser
+		/*
+		 * Example 2: Parse formulas with FolParser using the signature defined above
+		 */
 		FolParser parser = new FolParser();
 		parser.setSignature(sig); //Use the signature defined above
 		FolBeliefSet bs = new FolBeliefSet();
@@ -80,18 +79,32 @@ public class FolExample {
 		bs.add(f5);
 		System.out.println("Parsed BeliefBase: " + bs);
 
-		// Prover
+		/*
+		 * Example 3: Use one of the provers to check whether various formulas can be inferred from the knowledge base parsed in Example 2. 
+		 */
 		FolTheoremProver.setDefaultProver(new NaiveProver()); //Set default prover, options are NaiveProver, EProver, Prover9
 		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
-		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("Flies(kiwi)")));
-		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("forall X: (exists Y: (Flies(X) && Flies(Y) && X/==Y))")));
-		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi == kiwi")));
-		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi /== kiwi")));
-		System.out.println("ANSWER: " + prover.query(bs, (FolFormula)parser.parseFormula("penguin /== kiwi")));
+		System.out.println("ANSWER 1: " + prover.query(bs, (FolFormula)parser.parseFormula("Flies(kiwi)")));
+		System.out.println("ANSWER 2: " + prover.query(bs, (FolFormula)parser.parseFormula("forall X: (exists Y: (Flies(X) && Flies(Y) && X/==Y))")));
+		System.out.println("ANSWER 3: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi == kiwi")));
+		System.out.println("ANSWER 4: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi /== kiwi")));
+		System.out.println("ANSWER 5: " + prover.query(bs, (FolFormula)parser.parseFormula("penguin /== kiwi")));
 		
-		// Parse a BeliefBase from a file
+		/*
+		 * Example 4: Parse another BeliefBase from a file. The signature is also parsed from the file.
+		 * Then prove/disprove some queries on the knowledge bases.
+		 */
 		parser = new FolParser();
-		bs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.fologic");
+		parser.setSignature(new FolSignature(true));
+		bs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase2.fologic");
 		System.out.println("Parsed BeliefBase: " + bs);
+		FolFormula query = (FolFormula)parser.parseFormula("isTeacher(alice)");
+		System.out.println("Query: " + query + "\n" + prover.query(bs,query));
+		query = (FolFormula)parser.parseFormula("exists X:(teaches(bob,X))");
+		System.out.println("Query: " + query + "\n" + prover.query(bs,query));
+		query = (FolFormula)parser.parseFormula("isTeacher(bob)");
+		System.out.println("Query: " + query + "\n" + prover.query(bs,query));
+		query = (FolFormula)parser.parseFormula("exists X:(exists Y:(hasID(alice,X) && hasID(alice,Y) && X/==Y))");
+		System.out.println("Query: " + query + "\n" + prover.query(bs,query));			
 	}
 }
