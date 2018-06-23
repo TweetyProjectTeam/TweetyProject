@@ -25,7 +25,9 @@ import net.sf.tweety.commons.util.*;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.*;
 import net.sf.tweety.logics.fol.syntax.*;
@@ -68,6 +70,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula
 	public boolean satisfies(FolFormula formula) throws IllegalArgumentException{
 		FolFormula f = (FolFormula) formula;
 		if(!f.isClosed()) throw new IllegalArgumentException("FolFormula " + f + " is not closed.");
+		
 		if(f instanceof Tautology){
 			return true;
 		}			
@@ -85,10 +88,10 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula
 			}
 			else if (p instanceof InequalityPredicate) {
 				List<Term<?>> terms =((FOLAtom) f).getArguments();
-				if (terms.get(0).equals(terms.get(1)))
-					return false;
-				else
-					return true;
+				if (terms.get(0).equals(terms.get(1))) 
+					return false; 
+				else 
+					return true; 
 			}
 			return this.contains(f);
 		}					
@@ -136,15 +139,36 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula
 			Variable v = e.getQuantifierVariables().iterator().next();
 			Set<Variable> remainingVariables = e.getQuantifierVariables();
 			remainingVariables.remove(v);
-			if(remainingVariables.isEmpty()){
-				for(Constant c: v.getSort().getTerms(Constant.class))
-					if(this.satisfies(e.getFormula().substitute(v, c)))
-						return true;
-			}else{
-				for(Constant c: v.getSort().getTerms(Constant.class)){
-					if(this.satisfies(new ExistsQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables)))
-						return true;
+			
+			Set<Constant> constants = v.getSort().getTerms(Constant.class);
+			//If a variable is of sort _Any, search for other occurrences of the variable
+			//to find the sort and possible constants for this variable
+			if (v.getSort().equals(Sort.ANY)) {
+				for (Atom a : f.getAtoms()) {
+					List<Term<?>> args =((FOLAtom)a).getArguments();
+					for (int i = 0; i < args.size(); i++) {
+						Term<?> t = args.get(i);
+						if (t instanceof Variable && ((Variable)t).get().equals(v.get()) && !a.getPredicate().getArgumentTypes().get(i).equals(Sort.ANY)) { 
+							Sort s = a.getPredicate().getArgumentTypes().get(i);
+							constants = s.getTerms(Constant.class); 
+							break; 
+						}
 					}
+				}
+			} 
+				
+			if(remainingVariables.isEmpty()){
+				for(Constant c: constants) {
+					if(this.satisfies(e.getFormula().substitute(v, c))) 
+						return true; 
+				}
+				
+			}else{
+				for(Constant c: constants){
+					if(this.satisfies(new ExistsQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables))) 
+							return true;
+				}
+				
 			}
 			return false;
 		}
@@ -154,9 +178,27 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula
 			Variable v = e.getQuantifierVariables().iterator().next();
 			Set<Variable> remainingVariables = e.getQuantifierVariables();
 			remainingVariables.remove(v);
-			for(Constant c: v.getSort().getTerms(Constant.class)){
-				if(!this.satisfies(new ForallQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables)))
-					return false;
+			
+			Set<Constant> constants = v.getSort().getTerms(Constant.class);
+			//If a variable is of sort _Any, search for other occurrences of the variable
+			//to find the sort and possible constants for this variable
+			if (v.getSort().equals(Sort.ANY)) {
+				for (Atom a : f.getAtoms()) {
+					List<Term<?>> args =((FOLAtom)a).getArguments();
+					for (int i = 0; i < args.size(); i++) {
+						Term<?> t = args.get(i);
+						if (t instanceof Variable && ((Variable)t).get().equals(v.get()) && !a.getPredicate().getArgumentTypes().get(i).equals(Sort.ANY)) { 
+							Sort s = a.getPredicate().getArgumentTypes().get(i);
+							constants = s.getTerms(Constant.class); 
+							break; 
+						}
+					}
+				}
+			} 
+			
+			for(Constant c: constants){
+				if(!this.satisfies(new ForallQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables))) 
+					return false; 
 			}
 			return true;
 		}		

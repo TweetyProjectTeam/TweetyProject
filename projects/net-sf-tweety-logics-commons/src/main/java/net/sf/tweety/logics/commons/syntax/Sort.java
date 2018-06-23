@@ -59,7 +59,7 @@ public class Sort implements LogicStructure {
 	public static final Sort THING = new Sort("Thing");
 	
 	/**
-	 * Default sort for unsorted first-order logics
+	 * Default sort for terms of equality/inequality predicates
 	 */
 	public static final Sort ANY = new Sort("_Any");
 	
