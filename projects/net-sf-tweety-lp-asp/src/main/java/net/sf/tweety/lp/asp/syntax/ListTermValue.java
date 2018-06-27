@@ -26,11 +26,11 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
- * Encapsulates the possible values for a dlv complex
- * list. A dlv complex list can be represented either as
+ * Encapsulates the possible values for a DLV complex
+ * list. A DLV complex list can be represented either as
  * (head|tail) where head is a single term and tail is a
- * Variable or a List or it can be represented as [v1,...,vn]
- * describing an orderered sequence of n values.
+ * Variable or a List, or it can be represented as [v1,...,vn]
+ * describing an ordered sequence of n values.
  * The method usesHeadTailsSyntax() can be used to determine the
  * representation type of the ListTermValue.
  * 

@@ -27,7 +27,8 @@ import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
- * wrapper class for the dlv answer set solver command line
+ * 
+ * Wrapper class for the DLV answer set solver command line
  * utility.
  * 
  * @author Thomas Vengels, Tim Janus
@@ -42,21 +43,18 @@ public class DLV extends SolverBase {
 	}
 	
 	public AnswerSetList computeModels(Program p, int models) throws SolverException{
-		
 		return runDLV(p,models,null);
-		
 	}
 	
 	protected AnswerSetList runDLV(Program p, int nModels, String otherOptions) throws SolverException {
-	
 		checkSolver(path2dlv);
 		String cmdLine = path2dlv + " -- " + "-N=" + nModels; 
 		
-		// try running dlv
+		// try running DLV
 		try {
 			ai.executeProgram(cmdLine,p.toStringFlat());
 		} catch (Exception e) {
-			System.out.println("dlv error!");
+			System.out.println("DLV error!");
 			e.printStackTrace();
 		}
 		
@@ -87,7 +85,6 @@ public class DLV extends SolverBase {
 	
 	@Override
 	public AnswerSetList computeModels(String s, int maxModels) throws SolverException {
-
 		String cmdLine = path2dlv + " -- " + "-N=" + maxModels; 
 
 		checkSolver(path2dlv);

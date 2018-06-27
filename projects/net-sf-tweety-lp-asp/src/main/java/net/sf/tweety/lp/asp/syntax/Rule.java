@@ -38,7 +38,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * A rule is a collection of literals and more sophisticated rule elements
  * like Aggregate or Arithmetic. It uses separate lists for the
  * head and the body. It also implements the Comparable interface to allow
- * the ordering in collections.
+ * for ordering in collections.
  * 
  * @author Tim Janus
  * @author Thomas Vengels
@@ -53,7 +53,7 @@ public class Rule
 	DLPHead head = new DLPHead();
 	List<DLPElement>	body = new LinkedList<DLPElement>();
 	
-	/** Default-Ctor: Creates an empty rule without any head literals or body elements */
+	/** Default-Ctor: Creates an empty rule withouts any head literals or body elements */
 	public Rule() {}
 	
 	/** Copy-Ctor: Makes a deep copy of the given rule */
@@ -68,8 +68,9 @@ public class Rule
 	}
 	
 	/** 
-	 * Ctor: Create a rule with the given head, cause there are no
-	 * body elements the created rule is a fact.
+	 * Ctor: Create a rule with the given head. 
+	 * Because there are no body elements, 
+	 * the created rule is a fact.
 	 * 
 	 * @param head	The head of the rule as ELPHead
 	 */
@@ -78,8 +79,9 @@ public class Rule
 	}
 	
 	/**
-	 * Ctor: Create a rule with the given head, cause there are no
-	 * body elements the created rule is a fact.
+	 * Ctor: Create a rule with the given head.
+	 * Because there are no body elements, 
+	 * the created rule is a fact.
 	 * 
 	 * @param head	The head of the rule as ELPLiteral
 	 */
@@ -138,15 +140,16 @@ public class Rule
 	}
 	
 	/**
-	 * Proofs if the given rule is safe for use in a solver.
-	 * To get a felling when a rule is safe read the following text
-	 * from the dlv documentation:
-	 * 
-	 * A variable X in an aggregate-free rule is safe if at least one of the following conditions is satisfied:
+	 * Checks if the given rule is safe for use in a solver.
+	 * The following excerpt from the DLV documentation explains when a rule
+	 * is safe:
+	 * <p>
+	 * A variable X in an aggregate-free rule is safe if at least one of the following conditions is satisfied: <br>
 	 * X occurs in a positive standard predicate in the body of the rule;
 	 * X occurs in a true negated standard predicate in the body of the rule;
-	 * X occurs in the last argument of an arithmetic predicate A and all other arguments of A are safe. (*not supported yet)
+	 * X occurs in the last argument of an arithmetic predicate A and all other arguments of A are safe. (TODO: not supported yet).
 	 * A rule is safe if all its variables are safe. However, cyclic dependencies are disallowed, e.g., :- #succ(X,Y), #succ(Y,X) is not safe.
+	 * </p>
 	 * 
 	 * @return true if the rule is safe considering the above conditions, false otherwise.
 	 */

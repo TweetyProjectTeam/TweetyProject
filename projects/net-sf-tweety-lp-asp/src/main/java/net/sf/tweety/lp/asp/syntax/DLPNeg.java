@@ -51,9 +51,9 @@ public class DLPNeg extends DLPElementAdapter implements DLPLiteral {
 	}
 	
 	/**
-	 * default constructor, create an atom from a functor name
-	 * and a list of terms. size of terms determines arity of
-	 * functor.
+	 * Default constructor, creates an atom from a functor name
+	 * and a list of terms. The size of terms determines the 
+	 * arity of the functor.
 	 * 
 	 * @param symbol the functor name
 	 * @param terms the terms (arguments) of the atom

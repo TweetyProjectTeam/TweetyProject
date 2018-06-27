@@ -37,6 +37,8 @@ import net.sf.tweety.lp.asp.solver.Clingo;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
+ * Test class for Clingo.
+ * 
  * @author Nils Geilen <geilenn@uni-koblenz.de>
  *
  */
@@ -52,18 +54,20 @@ public class ClingoTest {
 	public static void init() {
 		visitor = new InstantiateVisitor();
 		parser = new ASPParser(new StringReader(""));
-		solver = new Clingo("/Users/mthimm/Projects/misc_bins/clingo-4.5.4-macos-10.9/clingo");
+		solver = new Clingo("/path/to/clingo");
 	}
 
 	@Test
 	public void Example1() throws Exception {
-		FileInputStream fistr = new FileInputStream(new File("/Users/mthimm/Shared/SVN/sourceforge-tweety/trunk/examples/asp/ex1.asp"));
+		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex1.asp"));
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
 		solver.computeModels(p, 1);
 		
 		AnswerSetList asl = solver.computeModels(p, 1000);
+		
+		System.out.println(asl);
 
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 3);
@@ -71,12 +75,15 @@ public class ClingoTest {
 	
 	@Test
 	public void Example2() throws Exception {
-		FileInputStream fistr = new FileInputStream(new File("/Users/mthimm/Shared/SVN/sourceforge-tweety/trunk/examples/asp/ex2.asp"));
+		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex2.asp"));
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
 		
 		AnswerSetList asl = solver.computeModels(p, 1000);
+		
+		System.out.println(asl);
+		
 		assertTrue(asl.size() == 3);
 		assertTrue(asl.get(0).size() == 5);
 		assertTrue(asl.get(1).size() == 5);
@@ -84,13 +91,16 @@ public class ClingoTest {
 	
 	@Test
 	public void Example3() throws Exception {
-		FileInputStream fistr = new FileInputStream(new File("/Users/mthimm/Shared/SVN/sourceforge-tweety/trunk/examples/asp/ex3.asp"));
+		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex3.asp"));
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
 		solver.computeModels(p, 1);
 		
 		AnswerSetList asl = solver.computeModels(p, 1000);
+		
+		System.out.println(asl);
+		
 		assertTrue(asl.size() ==3);
 		assertTrue(asl.get(0).size() == 5);
 		assertTrue(asl.get(1).size() == 5);
@@ -98,13 +108,16 @@ public class ClingoTest {
 	
 	@Test
 	public void Example4() throws Exception {
-		FileInputStream fistr = new FileInputStream(new File("/Users/mthimm/Shared/SVN/sourceforge-tweety/trunk/examples/asp/ex4.asp"));
+		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex4.asp"));
 		parser.ReInit(fistr);
 			
 		Program p = visitor.visit(parser.Program(), null);
 		solver.computeModels(p, 1);
 			
 		AnswerSetList asl = solver.computeModels(p, 1000);
+		
+		System.out.println(asl);
+		
 		assertTrue(asl.size() ==2);
 		assertTrue(asl.get(0).size() == 5);
 	}

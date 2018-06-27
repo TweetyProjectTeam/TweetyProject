@@ -28,8 +28,8 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * this class models an disjunctive logical program, which is
- * a collection of rules. The rules are ordered alphabetically 
+ * This class models an disjunctive logical program, which is
+ * a collection of rules. The rules are ordered alphabetically.
  * 
  * @author Tim Janus
  * @author Thomas Vengels
@@ -47,7 +47,7 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 	
 	/** Copy Ctor: Used by clone method */
 	public Program(Program other) {
-		// TODO: COpy signature
+		// TODO: Copy signature
 		//this.signature = new ElpSignature(other.signature);
 		this.addAll(other); 
 	}
@@ -61,7 +61,7 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 	}
 
 	/**
-	 * Adds another programs content to the content of this program.
+	 * Adds another program's content to the content of this program.
 	 * @param other	Reference to the other program.
 	 */
 	public void add(Program other) {
@@ -83,9 +83,10 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 	}
 	
 	/**
-	 * Checks if the program is an extended programs, that means the heads of the
-	 * literals have not more than one literal.
-	 * @return	True if the program is an extended program, false otherwise.
+	 * Checks if the program is an extended program, meaning the heads of the
+	 * literals do not have more than one literal.
+	 * 
+	 * @return True if the program is an extended program, false otherwise.
 	 */
 	public boolean isExtendedProgram() {
 		for(Rule r : this) {
@@ -108,9 +109,9 @@ public class Program extends RuleSet<Rule> implements LogicProgram<DLPHead, DLPE
 	}
 	
 	/**
-	 * Creates the defaultifictation p_d of a given program p.
+	 * Creates the defaultification p_d of a given program p.
 	 * A defaultificated program p' of p adds for every Rule r in p a modified rule r_d 
-	 * of the form: H(r) :- B(r), not -H(r). to the program p'. 
+	 * of the form: 'H(r) :- B(r), not -H(r).' to the program p'. 
 	 * @param p	The program which is not defaultificated yet
 	 * @return a program p' which is the defaultificated version of p.
 	 */

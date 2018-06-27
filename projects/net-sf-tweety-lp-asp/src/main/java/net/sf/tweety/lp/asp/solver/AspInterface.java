@@ -39,17 +39,17 @@ import java.util.List;
  */
 public class AspInterface
 {
-	/** these variables holds the (result or error) of an answer set solver */
-	List<String> outputData = null;
-	List<String> errorData = null;
+	/** These variables holds the (result or error) of an answer set solver */
+	private List<String> outputData = null;
+	private List<String> errorData = null;
  
   /**
    * Executes an external application with a given path, a set of parameters and
-   * an input string. Returns a pair of strings where the first element is equal
-   * to the stdout during exection, and the second element is errout which
-   * equals "" when no error occured during execution. This method blocks the
-   * working thread until the execution terminates and all output streams have
-   * been emptied.
+   * an input string. The stdout of the execution is stored in the 
+   * outputData field and the errout is stored in the errorData field.
+   * If no error occured during execution, errorData will be "". 
+   * <br>This method blocks the working thread until the execution terminates 
+   * and all output streams have been emptied.
    * 
    * @param cmd A string array consisting of the path to the executable and a
    *          set of parameters.
@@ -106,9 +106,9 @@ public class AspInterface
     
     if(reval != 0) {
     	if(reval == -1073741515)
-    		this.errorData.add("process did not exit normally: a dll is missing. - To determine which dll try to start '" + cmd.get(0) + "' from the command line and read the error message.");
+    		this.errorData.add("Process did not exit normally: a dll is missing. - To determine which dll try to start '" + cmd.get(0) + "' from the command line and read the error message.");
     	else
-    		this.errorData.add("process did not exit normally: " + reval);
+    		this.errorData.add("Process did not exit normally: " + reval);
     }
     
   }
@@ -122,8 +122,8 @@ public class AspInterface
   }
   
   /**
-   * this method returns the output of a previously called
-   * answer set solver tools. only content from the stdout 
+   * This method returns the output of a previously called
+   * answer set solver tools. Only content from the stdout 
    * stream is collected here.
    * 
    * @return output of answer set solver
@@ -132,13 +132,20 @@ public class AspInterface
 	  return this.outputData;
   }
   
+  /**
+   * This method returns the error output of a previously called
+   * answer set solver tools. Only content from the stderr 
+   * stream is collected here.
+   * 
+   * @return error output of answer set solver
+   */
   public List<String> getError() {
 	  return this.errorData;
   }
   
   /**
-   * auxiliary class for reading output streams concurrently. modified
-   * to return a List<String> instead of a String
+   * Auxiliary class for reading output streams concurrently. Modified
+   * to return a List<String> instead of a String.
    */
   class StreamFlusher
     extends Thread

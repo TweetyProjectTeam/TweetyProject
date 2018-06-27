@@ -27,8 +27,8 @@ import net.sf.tweety.logics.commons.syntax.TermAdapter;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
- * this class models a set term, which can be used
- * for sets in dlv complex programs.
+ * This class models a set term, which can be used
+ * for sets in DLV complex programs.
  * 
  * @author Tim Janus
  * @author Thomas Vengels

@@ -28,7 +28,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 
 /**
- * A answer set is a belief set which only contains literals
+ * An answer set is a belief set which only contains literals
  * and represents the deductive belief set of an extended logic
  * program under the answer set semantic.
  * 

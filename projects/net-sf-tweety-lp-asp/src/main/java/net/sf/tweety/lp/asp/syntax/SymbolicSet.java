@@ -24,10 +24,10 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 
 /**
  * This class is used to store symbolic sets of aggregate functions
- * of dlv rules. A symbolic set contains a non empty set of open
- * variables and a conjunction of elements. Comparative
- * and Arithmetics are allowed in the conjunction and also default 
- * negated and classic literals are allowed but the conjunction
+ * of DLV rules. A symbolic set contains a non-empty set of open
+ * variables and a conjunction of elements. Comparatives
+ * and Arithmetics as well as default negated and classic
+ * literals are allowed in the conjunction, but the conjunction
  * is not allowed to hold another aggregate.
  *  
  * @author Tim Janus

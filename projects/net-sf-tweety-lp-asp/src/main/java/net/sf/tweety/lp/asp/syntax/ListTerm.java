@@ -25,8 +25,8 @@ import net.sf.tweety.logics.commons.syntax.TermAdapter;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
- * this class models a list term that can be used for
- * dlv complex programs.
+ * This class models a list term that can be used for
+ * DLV complex programs.
  * 
  * @author Tim Janus
  * @author Thomas Vengels

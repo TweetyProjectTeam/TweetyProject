@@ -27,12 +27,12 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * this class represents an aggregate function. aggregates
+ * This class represents an aggregate function. Aggregates
  * are functions like sum, times, count over a symbolic set,
  * a set of literals and local variables.
  * 
- * @todo use an enum for relations instead a string
- * @todo implement complement()
+ * @todo use an enum for relations instead a string 
+ * @todo implement complement() 
  * 
  * @author Tim Janus
  * @author Thomas Vengels
@@ -139,7 +139,8 @@ public class Aggregate extends DLPElementAdapter implements DLPElement {
 	}
 
 	@Override
-	/** @todo implement correctly */
+	/** @todo implement correctly */ 	
+	//TODO
 	public SortedSet<DLPLiteral> getLiterals() {
 		return new TreeSet<DLPLiteral>();
 	}

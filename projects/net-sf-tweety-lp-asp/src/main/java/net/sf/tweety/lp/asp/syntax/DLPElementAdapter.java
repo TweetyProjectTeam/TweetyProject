@@ -22,8 +22,9 @@ import net.sf.tweety.logics.commons.syntax.ComplexLogicalFormulaAdapter;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 
 /**
- * This acts as abstract base class for classes implement 
- * the ELPElement interface
+ * This class acts as an abstract base class for classes that implement 
+ * the ELPElement interface.
+ * 
  * @author Tim Janus
  */
 public abstract class DLPElementAdapter 

@@ -29,6 +29,17 @@ import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
 
+/**
+ * 
+ * Invokes Clingo (Part of the  <a href="https://potassco.org/">Potassco project</a>), 
+ * an ASP system that grounds and solves logic programs, and returns computed
+ * answer sets.
+ * 
+ * @author Nils Geilen 
+ * @author Matthias Thimm 
+ * @author Anna Gessler
+ *
+ */
 public class Clingo extends SolverBase {
 
 	protected String path2clingo = null;
@@ -38,8 +49,12 @@ public class Clingo extends SolverBase {
 	}
 	
 	
+	/**
+	 * Uses ASPParser to parse answer sets from string. 
+	 * @param String containing answer set
+	 * @return AnswerSetList containing the parsed answer sets
+	 */
 	private AnswerSetList parseAnswerSets(String s) {		
-		// use parser:
 		try {
 			ASPParser ep = new ASPParser( new StringReader( s ));
 			InstantiateVisitor visitior = new InstantiateVisitor();
@@ -120,7 +135,6 @@ public class Clingo extends SolverBase {
 			}
 		}
 	}
-	
 	
 	protected AnswerSetList buildASL(List<String> output) {
 		// process output and return answer set

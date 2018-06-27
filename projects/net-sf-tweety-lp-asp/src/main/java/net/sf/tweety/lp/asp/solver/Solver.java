@@ -24,7 +24,7 @@ import net.sf.tweety.lp.asp.semantics.*;
 import net.sf.tweety.lp.asp.syntax.*;
 
 /**
- * this interface models common calls to a solver.
+ * This interface models common calls to an ASP solver.
  * 
  * @author Thomas Vengels
  *
@@ -32,7 +32,7 @@ import net.sf.tweety.lp.asp.syntax.*;
 public interface Solver {
 
 	/**
-	 * this method computes at most maxModels answer sets for a given program.
+	 * This method computes at most maxModels answer sets for a given program.
 	 * 
 	 * @param p
 	 * @param maxModels
@@ -42,7 +42,7 @@ public interface Solver {
 	public AnswerSetList	computeModels(Program p, int maxModels) throws SolverException;
 	
 	/**
-	 * this method computes at most maxModels answer sets for a given program as a flat string.
+	 * This method computes at most maxModels answer sets for a given program as a flat string.
 	 * @param s
 	 * @param maxModels
 	 * @return A list of answer sets representing the models of the given program
@@ -51,7 +51,7 @@ public interface Solver {
 	public AnswerSetList	computeModels(String s, int maxModels ) throws SolverException;
 
 	/**
-	 * this method computes at most maxModels for a given program, a collection of facts,
+	 * This method computes at most maxModels for a given program, a collection of facts,
 	 * and an arbitrary number of additional programs as a file resource.
 	 * 
 	 * @param files

@@ -43,7 +43,6 @@ public class DLVComplex extends SolverBase {
 	}
 	
 	protected AnswerSetList runDLV(Program p, int nModels, String otherOptions) throws SolverException {
-	
 		checkSolver(path2dlx);
 		String cmdLine = path2dlx + " -- " + "-nofdcheck " + "N=" + nModels; 
 		List<String> result = null;

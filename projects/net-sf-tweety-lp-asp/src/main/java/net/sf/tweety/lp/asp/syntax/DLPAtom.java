@@ -34,8 +34,8 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * this class models an atom, which is a basic structure for
- * building literals and rules for logic programs
+ * This class models an atom, which is a basic structure for
+ * building literals and rules for logic programs.
  * 
  * @author Tim Janus
  * @author Thomas Vengels

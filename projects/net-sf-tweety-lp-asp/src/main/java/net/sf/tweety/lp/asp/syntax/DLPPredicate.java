@@ -25,7 +25,7 @@ import net.sf.tweety.logics.commons.syntax.Sort;
 
 
 /**
- * A predicate has a name and an arity. 
+ * This class models a predicate with its name and arity. 
  * @author Tim Janus
  */
 public class DLPPredicate extends Predicate {

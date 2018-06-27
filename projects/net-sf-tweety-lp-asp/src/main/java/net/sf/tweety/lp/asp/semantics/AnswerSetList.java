@@ -25,7 +25,7 @@ import java.util.Set;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 
 /**
- * this class represents a collection of answer sets and
+ * This class represents a collection of answer sets and
  * provides some basic reasoning modes.
  * 
  * @author Thomas Vengels
@@ -55,10 +55,10 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	}
 
 	/**
-	 * Returns all the literals in the answer-set which have a given name.
-	 * @param name		the name of the literal 'married' as example.
-	 * @param policy	The used policy might be skeptical or credolous.
-	 * @return			A set of literals which are also in the answerset.
+	 * Returns all the literals in the answer set which have a given name.
+	 * @param name		the name of the literal, e.g. 'married'
+	 * @param policy	The used policy, either credolous (1) or sceptical (2).
+	 * @return			A set of literals which are also in the answer set.
 	 */
 	public Set<DLPLiteral> getFactsByName(String name, int policy) {
 		Set<DLPLiteral> reval = new HashSet<DLPLiteral>();
@@ -75,11 +75,11 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	}
 	
 	/**
-	 * this method returns true if at least one
-	 * answer set support q.
+	 * This method returns true if at least one
+	 * answer set supports q.
 	 * @param q
 	 */
-	public boolean	holdsOne( DLPLiteral q ) {
+	public boolean holdsOne( DLPLiteral q ) {
 		for(AnswerSet as : this) {
 			if(as.contains(q)) {
 				return true;
@@ -89,11 +89,11 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	}
 	
 	/**
-	 * this method returns ture iff all
+	 * This method returns true iff all
 	 * answer sets support q.
 	 * @param q
 	 */
-	public boolean	holdsAll( DLPLiteral q ) {
+	public boolean holdsAll( DLPLiteral q ) {
 		for(AnswerSet as : this) {
 			if(!as.contains(q)) {
 				return false;
