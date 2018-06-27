@@ -18,7 +18,11 @@
  */
 package net.sf.tweety.lp.asp.solver;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.ASTAnswerSetList;
@@ -52,7 +56,14 @@ public class DLV extends SolverBase {
 		
 		// try running DLV
 		try {
-			ai.executeProgram(cmdLine,p.toStringFlat());
+		File file = File.createTempFile("tmp", ".txt");
+		file.deleteOnExit();
+		String path = file.getAbsolutePath().replaceAll("\\\\", "/");
+		PrintWriter writer = new PrintWriter(path);
+		writer.print(p.toStringFlat());
+		writer.close();
+
+		ai.executeProgram(cmdLine,path);
 		} catch (Exception e) {
 			System.out.println("DLV error!");
 			e.printStackTrace();
@@ -68,6 +79,12 @@ public class DLV extends SolverBase {
 		return parseAnswerSets(parseable);
 	}
 	
+	/**
+	 * Processes a string of answer sets and returns an AnswerSetList.
+	 * 
+	 * @param s DLV output
+	 * @return AnswerSetList
+	 */
 	protected AnswerSetList parseAnswerSets(String s) {
 		AnswerSetList ret = null;
 		try {
@@ -90,12 +107,47 @@ public class DLV extends SolverBase {
 		checkSolver(path2dlv);
 		// try running dlv
 		try {
-			ai.executeProgram(cmdLine,s);
+			File file = File.createTempFile("tmp", ".txt");
+			file.deleteOnExit();
+			String path = file.getAbsolutePath().replaceAll("\\\\", "/");
+			PrintWriter writer = new PrintWriter(path);
+			writer.print(s);
+			writer.close();
+			
+			ai.executeProgram(cmdLine,path);
 		} catch (Exception e) {
 			System.out.println("dlv error!");
 			e.printStackTrace();
 		}
 		checkErrors();	
-		return parseAnswerSets(s);
+		
+		String parseable = "";
+		for(String str : ai.getOutput()) {
+			if(str.trim().startsWith("{")) {
+				parseable += str;
+			}
+		}
+		return parseAnswerSets(parseable);
+	}
+
+	@Override
+	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
+		checkSolver(path2dlv);
+		try {			
+			LinkedList<String> f2 = new LinkedList<String>(files);
+			f2.addFirst(path2dlv);
+			ai.executeProgram(f2, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		this.checkErrors();
+		String parseable = "";
+		for(String str : ai.getOutput()) {
+			if(str.trim().startsWith("{")) {
+				parseable += str;
+			}
+		}
+		return parseAnswerSets(parseable);	
 	}
 }

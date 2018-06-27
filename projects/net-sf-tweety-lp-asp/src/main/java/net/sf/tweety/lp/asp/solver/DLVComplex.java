@@ -146,5 +146,11 @@ public class DLVComplex extends SolverBase {
 		}
 		
 		return ret;
-	}	
+	}
+
+	//TODO
+	@Override
+	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
+		throw new UnsupportedOperationException("TODO");
+	}
 }

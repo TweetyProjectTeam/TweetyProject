@@ -20,9 +20,6 @@ package net.sf.tweety.lp.asp.solver;
 
 import java.io.File;
 import java.util.Iterator;
-import java.util.List;
-
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 
 /**
  * Base class for solver adds generic error handling code.
@@ -33,11 +30,11 @@ public abstract class SolverBase implements Solver {
 	protected AspInterface ai = new AspInterface();
 	
 	/**
-	 * proofs if the solver on the given  path is an existing file with
-	 * execute permission. If this is not the case a SolverException is
+	 * Checks if the solver in the given  path is an existing file with
+	 * execute permission. If this is not the case, a SolverException is
 	 * thrown.
 	 * 
-	 * @param path
+	 * @param path a String containing a path to a solver
 	 * @throws SolverException
 	 */
 	protected void checkSolver(String path) throws SolverException {
@@ -52,7 +49,7 @@ public abstract class SolverBase implements Solver {
 	}
 	
 	/**
-	 * default implementation of error checking (should work for dlv package)
+	 * Default implementation of error checking (should work for DLV package)
 	 * @throws SolverException
 	 */
 	protected void checkErrors() throws SolverException {
@@ -73,11 +70,5 @@ public abstract class SolverBase implements Solver {
 			}
 			
 		}
-	}
-	
-	@Override
-	public AnswerSetList computeModels(List<String> files, int maxModels) throws SolverException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
