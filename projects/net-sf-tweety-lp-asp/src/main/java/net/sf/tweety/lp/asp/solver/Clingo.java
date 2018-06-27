@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.lp.asp.solver;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,7 +62,7 @@ public class Clingo extends SolverBase {
 			InstantiateVisitor visitior = new InstantiateVisitor();
 			return visitior.visit(ep.AnswerSetList(), null);
 		} catch (Exception e) {
-			System.err.println("clingo: error parsing answer set!");
+			System.err.println("ERROR: Failed to parse answer sets from clingo output");
 			e.printStackTrace();
 			return null;
 		}
@@ -70,15 +72,24 @@ public class Clingo extends SolverBase {
 	public AnswerSetList computeModels(Program p, int maxModels) throws SolverException {
 		checkSolver(path2clingo);
 		try {
-			ai.executeProgram( path2clingo+" "+maxModels+" --verbose=0 ", p.toStringFlat());
+			File file  = File.createTempFile("tmp", ".txt");
+			file.deleteOnExit();
+			String path = file.getAbsolutePath().replaceAll("\\\\", "/");
+			PrintWriter writer = new PrintWriter(path);
+			writer.print(p.toStringFlat());
+			writer.close();
+		
+			ai.executeProgram( path2clingo+" "+maxModels+" --verbose=0 ", path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		this.checkErrors();
 		List<String> output = ai.getOutput(), list = new ArrayList<>();
+		
 		for (String str:output)
-			list.add(str.replaceAll(" ", ", "));
+			list.add(str);
+		
 		return this.buildASL(list);
 	}
 
@@ -87,7 +98,14 @@ public class Clingo extends SolverBase {
 	public AnswerSetList computeModels(String s, int maxModels) throws SolverException {
 		checkSolver(path2clingo);
 		try {
-			ai.executeProgram( path2clingo+" "+maxModels+" --verbose=0 ", s );
+			File file  = File.createTempFile("tmp", ".txt");
+			file.deleteOnExit();
+			String path = file.getAbsolutePath().replaceAll("\\\\", "/");
+			PrintWriter writer = new PrintWriter(path);
+			writer.print(s);
+			writer.close();
+			
+			ai.executeProgram( path2clingo+" "+maxModels+" --verbose=0 ", path );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -136,8 +154,13 @@ public class Clingo extends SolverBase {
 		}
 	}
 	
+	/**
+	 * Processes clingo output and returns a list of answer sets.
+	 * 
+	 * @param output clingo output lines
+	 * @return an AnswerSetList
+	 */
 	protected AnswerSetList buildASL(List<String> output) {
-		// process output and return answer set
 		// First convert in dlv format:
 		String toParse = "";
 		for(String line : output) {
