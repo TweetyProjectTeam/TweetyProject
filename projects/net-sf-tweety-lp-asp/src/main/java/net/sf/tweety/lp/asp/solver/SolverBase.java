@@ -60,15 +60,14 @@ public abstract class SolverBase implements Solver {
 			while (iter.hasNext()) {
 				msg += iter.next();
 			}
-			if (msg.endsWith("syntax error.")) {
-				throw new SolverException(msg, SolverException.SE_SYNTAX_ERROR);
-			} else if (msg.endsWith("open input.")) {
-				// We are using no input files
-				//throw new SolverException(msg, SolverException.SE_CANNOT_OPEN_INPUT);
-			} else {
-				throw new SolverException(msg, SolverException.SE_ERROR);
-			}
 			
+			if (msg.endsWith("syntax error.")) 
+				throw new SolverException(msg, SolverException.SE_SYNTAX_ERROR);
+			else if (msg.endsWith("open input.")) 
+				throw new SolverException(msg, SolverException.SE_CANNOT_OPEN_INPUT);
+			else 
+				throw new SolverException(msg, SolverException.SE_ERROR);
+
 		}
 	}
 }
