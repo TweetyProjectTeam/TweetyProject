@@ -54,7 +54,7 @@ public class ClingoTest {
 	public static void init() {
 		visitor = new InstantiateVisitor();
 		parser = new ASPParser(new StringReader(""));
-		solver = new Clingo("/path/to/clingo");
+		solver = new Clingo("path/to/clingo");
 	}
 
 	@Test
@@ -63,13 +63,9 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		solver.computeModels(p, 1);
-		
 		AnswerSetList asl = solver.computeModels(p, 1000);
 		
-		System.out.println(asl);
-
-		assertTrue(asl.size() == 2);
+		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 3);
 	}
 	
@@ -79,12 +75,9 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		
 		AnswerSetList asl = solver.computeModels(p, 1000);
 		
-		System.out.println(asl);
-		
-		assertTrue(asl.size() == 3);
+		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
 		assertTrue(asl.get(1).size() == 5);
 	}
@@ -96,12 +89,9 @@ public class ClingoTest {
 		
 		Program p = visitor.visit(parser.Program(), null);
 		solver.computeModels(p, 1);
-		
 		AnswerSetList asl = solver.computeModels(p, 1000);
 		
-		System.out.println(asl);
-		
-		assertTrue(asl.size() ==3);
+		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
 		assertTrue(asl.get(1).size() == 5);
 	}
@@ -113,12 +103,9 @@ public class ClingoTest {
 			
 		Program p = visitor.visit(parser.Program(), null);
 		solver.computeModels(p, 1);
-			
 		AnswerSetList asl = solver.computeModels(p, 1000);
 		
-		System.out.println(asl);
-		
-		assertTrue(asl.size() ==2);
+		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 5);
 	}
 

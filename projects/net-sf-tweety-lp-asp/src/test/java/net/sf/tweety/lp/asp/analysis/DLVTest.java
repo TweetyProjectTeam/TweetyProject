@@ -55,19 +55,17 @@ public class DLVTest {
 	public static void init() {
 		visitor = new InstantiateVisitor();
 		parser = new ASPParser(new StringReader(""));
-		solver = new DLV("/home/anna/sw/asp/dlv/dlv");
+		solver = new DLV("path/to/dlv");
 	}
 
 	@Test
 	public void Example1() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex1.asp"));
 		parser.ReInit(fistr);
-		
 		Program p = visitor.visit(parser.Program(), null);
-		
 		AnswerSetList asl = solver.computeModels(p, 1000);
-
-		assertTrue(asl.size() == 2);
+		
+		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 3);
 	}
 	
@@ -75,12 +73,10 @@ public class DLVTest {
 	public void Example2() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex2.asp"));
 		parser.ReInit(fistr);
-		
 		Program p = visitor.visit(parser.Program(), null);
-		
 		AnswerSetList asl = solver.computeModels(p, 1000);
 		
-		assertTrue(asl.size() == 3);
+		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
 		assertTrue(asl.get(1).size() == 5);
 	}
@@ -89,14 +85,10 @@ public class DLVTest {
 	public void Example3() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex3.asp"));
 		parser.ReInit(fistr);
-		
 		Program p = visitor.visit(parser.Program(), null);
-
-		solver.computeModels(p, 1);
-		
 		AnswerSetList asl = solver.computeModels(p, 1000);
 		
-		assertTrue(asl.size() ==3);
+		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
 		assertTrue(asl.get(1).size() == 5);
 	}
@@ -105,14 +97,10 @@ public class DLVTest {
 	public void Example4() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex4.asp"));
 		parser.ReInit(fistr);
-			
 		Program p = visitor.visit(parser.Program(), null);
-
-		solver.computeModels(p, 1);
-			
 		AnswerSetList asl = solver.computeModels(p, 1000);
 		
-		assertTrue(asl.size() ==2);
+		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 5);
 	}
 	
