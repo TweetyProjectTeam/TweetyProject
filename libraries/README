@@ -1,28 +1,28 @@
 -------------------------------------------------------------------------------
 -  	README
--	Summary:	Explains how to start development for Tweety using Eclipse.
+-	Summary:	Explains how to start development for TweetyProject using Eclipse.
 -
 -	Content:
 -	1. WHAT IS IN THIS FOLDER?
 -	2. PREPARING ECLIPSE FOR MAVEN
 -	3. IMPORTING MAVEN PROJECTS INTO ECLIPSE
 -	4. GENERAL TIPS FOR USING MAVEN WITH ECLIPSE
--	
+-
 -	AUTHOR: Tim Janus, Anna Gessler
 -------------------------------------------------------------------------------
 
 1. WHAT IS IN THIS FOLDER?
 -------------------------------------------------------------------------------
-This folder contains subfolders for all Tweety libraries. These subfolders 
-contain the source and Maven project files of the Tweety libraries.
+This folder contains subfolders for all TweetyProject libraries. These subfolders
+contain the source and Maven project files of the TweetyProject libraries.
 
 
 2. PREPARING ECLIPSE FOR MAVEN
 -------------------------------------------------------------------------------
-For the usage of Eclipse a version >= Indigo has to be installed. If the 
-Eclipse package for Java-Developers is used, then the Maven plugin m2e is 
-already installed. Otherwise it has to be installed from the Indigo or Juno 
-release update site, choose: 
+For the usage of Eclipse a version >= Indigo has to be installed. If the
+Eclipse package for Java-Developers is used, then the Maven plugin m2e is
+already installed. Otherwise it has to be installed from the Indigo or Juno
+release update site, choose:
 "Collaboration --> m2e - Maven Integration for Eclipse"
 
 Also check "Maven --> Installations" in the Eclipse preferences dialog and use
@@ -31,19 +31,15 @@ your external Maven installation.
 
 3. IMPORTING MAVEN PROJECTS INTO ECLIPSE
 -------------------------------------------------------------------------------
-If the Maven integration for Eclipse is installed, one can select 
-"Import -> Existing Maven Projects" from the Eclipse UI. 
-When selecting the project folder of your local working copy of Tweety, 
-the listbox should show every tweety project. 
+If the Maven integration for Eclipse is installed, one can select
+"Import -> Existing Maven Projects" from the Eclipse UI.
+When selecting the project folder of your local working copy of Tweety,
+the listbox should show every TweetyProject library.
 Before clicking on "Finish", select "Advanced" and use the name template
 '[groupId].[artifactId]'
 
 
 4. GENERAL TIPS FOR USING MAVEN WITH ECLIPSE
 -------------------------------------------------------------------------------
-If errors occur, try right clicking on a project in your package explorer 
-and choosing: "Maven -> Update Project...". 
-
-
-
-
+If errors occur, try right clicking on a library in your package explorer
+and choosing: "Maven -> Update Project...".
