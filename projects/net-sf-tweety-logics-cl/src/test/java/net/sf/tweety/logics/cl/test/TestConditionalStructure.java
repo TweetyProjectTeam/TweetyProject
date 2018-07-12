@@ -1,8 +1,8 @@
 /*
- *  This file is part of "Tweety", a collection of Java libraries for
+ *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
- *  Tweety is free software: you can redistribute it and/or modify
+ *  TweetyProject is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License version 3 as
  *  published by the Free Software Foundation.
  *
@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package net.sf.tweety.logics.cl.test;
 
