@@ -118,7 +118,7 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 		int numOfArguments = 1;
 		Queue<Argument> q = new LinkedList<Argument>();
 		q.add(arg);
-		while(numOfArguments <= this.params.numberOfArguments){
+		while(numOfArguments < this.params.numberOfArguments){
 			Argument a = new Argument("a" + numOfArguments++);
 			theory.add(new Attack(a, (Argument)theory.toArray()[this.random.nextInt(numOfArguments-1)]));
 			theory.add(a);
