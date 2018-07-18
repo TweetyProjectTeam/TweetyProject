@@ -21,7 +21,7 @@ package net.sf.tweety.arg.deductive.semantics;
 import java.util.Collection;
 
 import net.sf.tweety.graphs.Node;
-import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**

@@ -19,7 +19,7 @@
 package net.sf.tweety.arg.deductive.semantics.attacks;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
-import net.sf.tweety.logics.pl.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -50,7 +50,7 @@ public class DirectDefeat implements Attack{
 	public boolean isAttackedBy(DeductiveArgument a, DeductiveArgument b) {
 		NaiveReasoner reasoner = new NaiveReasoner();
 		for(PropositionalFormula f: a.getSupport())
-			if(reasoner.entails(b.getClaim(), new Negation(f)))
+			if(reasoner.query(b.getClaim(), new Negation(f)))
 				return true;
 		return false;
 	}

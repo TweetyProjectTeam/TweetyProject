@@ -34,6 +34,7 @@ import net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -41,7 +42,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * Abstract class for specifying SAT solvers.
  * @author Matthias Thimm
  */
-public abstract class SatSolver implements BeliefSetConsistencyTester<PropositionalFormula>, ConsistencyWitnessProvider<PropositionalFormula>{
+public abstract class SatSolver implements BeliefSetConsistencyTester<PropositionalFormula>, ConsistencyWitnessProvider<PlBeliefSet,PropositionalFormula>{
 
 	/** The default SAT solver. */
 	private static SatSolver defaultSatSolver = null;
@@ -205,7 +206,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the formulas or null.
 	 */
-	public abstract Interpretation<PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas);
+	public abstract Interpretation<PlBeliefSet,PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas);
 	
 	/**
 	 * Checks whether the given set of formulas is satisfiable.
@@ -244,7 +245,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Interpretation<PropositionalFormula> getWitness(PropositionalFormula formula) {
+	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(PropositionalFormula formula) {
 		Collection<PropositionalFormula> f = new HashSet<PropositionalFormula>();
 		f.add(formula);
 		return this.getWitness(f);
@@ -254,7 +255,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.commons.BeliefSet)
 	 */
 	@Override
-	public Interpretation<PropositionalFormula> getWitness(BeliefSet<PropositionalFormula> bs) {
+	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(BeliefSet<PropositionalFormula> bs) {
 		return this.getWitness((Collection<PropositionalFormula>) bs);
 	}
 }

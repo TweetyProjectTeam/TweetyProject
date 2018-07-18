@@ -27,6 +27,7 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -46,7 +47,7 @@ public class SimpleDpllSolver extends SatSolver {
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation<PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
 		Collection<Disjunction> clauses = new HashSet<Disjunction>();
 		// check if we are working with CNF; if not, convert
 		for(PropositionalFormula f: formulas) {

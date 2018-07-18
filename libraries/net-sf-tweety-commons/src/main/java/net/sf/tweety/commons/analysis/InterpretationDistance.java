@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.commons.analysis;
 
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
 
@@ -29,7 +30,7 @@ import net.sf.tweety.commons.Interpretation;
  *
  * @param <T> The actual type of interpretation used
  */
-public interface InterpretationDistance<T extends Interpretation<S>,S extends Formula> {
+public interface InterpretationDistance<T extends Interpretation<B,S>,B extends BeliefBase, S extends Formula> {
 
 	/**
 	 * Measures the distance between the two given interpretations.

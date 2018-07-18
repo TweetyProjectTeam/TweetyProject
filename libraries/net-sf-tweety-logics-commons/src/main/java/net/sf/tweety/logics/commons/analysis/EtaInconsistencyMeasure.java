@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.InterpretationIterator;
@@ -42,17 +43,17 @@ import net.sf.tweety.math.term.Variable;
  *
  * @param <S> The type of formula
  */
-public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S>{
+public class EtaInconsistencyMeasure<B extends BeliefBase,S extends Formula> extends BeliefSetInconsistencyMeasure<S>{
 
 	/** Used for enumerating the interpretations of the underlying language. */
-	private InterpretationIterator<S,? extends Interpretation<S>> it;
+	private InterpretationIterator<S,B,? extends Interpretation<B,S>> it;
 	
 	/** 
 	 * Creates a new inconsistency measure that uses the interpretations given
 	 * by the given iterator.
 	 * @param it some interpretation iterator.
 	 */
-	public EtaInconsistencyMeasure(InterpretationIterator<S,? extends Interpretation<S>> it){
+	public EtaInconsistencyMeasure(InterpretationIterator<S,B,? extends Interpretation<B,S>> it){
 		this.it = it;
 	}
 	
@@ -69,12 +70,12 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 		problem.add(new Inequation(eta,new FloatConstant(0),Inequation.GREATER_EQUAL));
 		problem.add(new Inequation(eta,new FloatConstant(1),Inequation.LESS_EQUAL));
 		problem.setTargetFunction(eta);
-		Map<Interpretation<S>,Variable> worlds2vars = new HashMap<Interpretation<S>,Variable>();
+		Map<Interpretation<B,S>,Variable> worlds2vars = new HashMap<Interpretation<B,S>,Variable>();
 		int i = 0;
 		Term normConstraint = null;		
 		this.it = it.reset();
 		while(this.it.hasNext()){
-			Interpretation<S> interpretation = this.it.next();
+			Interpretation<B,S> interpretation = this.it.next();
 			FloatVariable var = new FloatVariable("w" + i++);
 			problem.add(new Inequation(var,new FloatConstant(0),Inequation.GREATER_EQUAL));
 			problem.add(new Inequation(var,new FloatConstant(1),Inequation.LESS_EQUAL));
@@ -89,7 +90,7 @@ public class EtaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 			Term leftTerm = null;
 			this.it = it.reset();
 			while(this.it.hasNext()){
-				Interpretation<S> interpretation = this.it.next();
+				Interpretation<B,S> interpretation = this.it.next();
 				if(interpretation.satisfies(f))
 					if(leftTerm == null)
 						leftTerm = worlds2vars.get(interpretation);

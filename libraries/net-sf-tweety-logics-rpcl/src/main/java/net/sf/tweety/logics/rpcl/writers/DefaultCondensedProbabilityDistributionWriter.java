@@ -53,7 +53,7 @@ public class DefaultCondensedProbabilityDistributionWriter extends Writer {
 		String result = "";
 		CondensedProbabilityDistribution distribution = (CondensedProbabilityDistribution) this.getObject();
 		NumberFormat formatter = new DecimalFormat("#.###################"); 
-		for(Interpretation<?> interpretation: distribution.keySet()){
+		for(Interpretation<?,?> interpretation: distribution.keySet()){
 			result += "{";
 			boolean first = true;
 			for(InstanceAssignment ia: ((ReferenceWorld)interpretation).values()){

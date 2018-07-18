@@ -29,7 +29,6 @@ import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.*;
 import net.sf.tweety.logics.fol.syntax.*;
 
 
@@ -41,7 +40,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  *   function symbols.
  * @author Matthias Thimm
  */
-public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula> {
+public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefSet,FolFormula> {
 	
 	/**
 	 * Creates a new empty Herbrand interpretation
@@ -284,14 +283,11 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
+	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException{
-		if(!(beliefBase instanceof FolBeliefSet))
-			throw new IllegalArgumentException("First-order knowledge base expected.");
-		FolBeliefSet folkb = (FolBeliefSet) beliefBase;
-		for(FolFormula f: folkb)
+	public boolean satisfies(FolBeliefSet beliefBase) throws IllegalArgumentException{
+		for(FolFormula f: beliefBase)
 			if(!this.satisfies(f)) return false;
 		return true;
 	}

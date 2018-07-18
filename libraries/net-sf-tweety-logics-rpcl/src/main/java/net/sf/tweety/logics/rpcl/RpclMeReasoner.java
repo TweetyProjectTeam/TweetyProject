@@ -32,6 +32,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.rcl.syntax.RelationalConditional;
@@ -150,7 +151,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			
 			// Generate Variables for the probability of each reference world,
 			// range constraints for probabilities, and construct normalization sum
-			Map<Interpretation<FolFormula>,FloatVariable> worlds2vars = new HashMap<Interpretation<FolFormula>,FloatVariable>();
+			Map<Interpretation<FolBeliefSet,FolFormula>,FloatVariable> worlds2vars = new HashMap<Interpretation<FolBeliefSet,FolFormula>,FloatVariable>();
 			// check for empty kb
 			if(kb.size() == 0)
 				return CondensedProbabilityDistribution.getUniformDistribution(this.semantics, signature, equivalenceClasses);
@@ -179,7 +180,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 			problem.addAll(constraints);
 			Term targetFunction = null;
-			for(Interpretation<FolFormula> w: worlds2vars.keySet()){
+			for(Interpretation<FolBeliefSet,FolFormula> w: worlds2vars.keySet()){
 				Term t = new IntegerConstant(-((ReferenceWorld)w).spanNumber()).mult(worlds2vars.get(w).mult(new Logarithm(worlds2vars.get(w))));
 				if(targetFunction == null)
 					targetFunction = t;
@@ -189,7 +190,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			try{
 				Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);				
 				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,signature);
-				for(Interpretation<FolFormula> w: worlds2vars.keySet()){
+				for(Interpretation<FolBeliefSet,FolFormula> w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
 					Double value = new Double(c.doubleValue());
 					p.put((ReferenceWorld)w, new Probability(value));			
@@ -204,7 +205,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			Set<HerbrandInterpretation> worlds = new HerbrandBase(signature).getAllHerbrandInterpretations();
 			// Generate Variables for the probability of each world,
 			// range constraints for probabilities, and construct normalization sum
-			Map<Interpretation<FolFormula>,FloatVariable> worlds2vars = new HashMap<Interpretation<FolFormula>,FloatVariable>();
+			Map<Interpretation<FolBeliefSet,FolFormula>,FloatVariable> worlds2vars = new HashMap<Interpretation<FolBeliefSet,FolFormula>,FloatVariable>();
 			// check for empty kb
 			if(kb.size() == 0)
 				return RpclProbabilityDistribution.getUniformDistribution(this.semantics, signature);
@@ -231,7 +232,7 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
 			problem.addAll(constraints);
 			Term targetFunction = null;
-			for(Interpretation<FolFormula> w: worlds2vars.keySet()){
+			for(Interpretation<FolBeliefSet,FolFormula> w: worlds2vars.keySet()){
 				Term t = new IntegerConstant(-1).mult(worlds2vars.get(w).mult(new Logarithm(worlds2vars.get(w))));
 				if(targetFunction == null)
 					targetFunction = t;
@@ -240,8 +241,8 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			problem.setTargetFunction(targetFunction);			
 			try{
 				Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
-				RpclProbabilityDistribution<Interpretation<FolFormula>> p = new RpclProbabilityDistribution<Interpretation<FolFormula>>(this.semantics,signature);
-				for(Interpretation<FolFormula> w: worlds2vars.keySet()){
+				RpclProbabilityDistribution<Interpretation<FolBeliefSet,FolFormula>> p = new RpclProbabilityDistribution<Interpretation<FolBeliefSet,FolFormula>>(this.semantics,signature);
+				for(Interpretation<FolBeliefSet,FolFormula> w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
 					Double value = new Double(c.doubleValue());
 					p.put(w, new Probability(value));			

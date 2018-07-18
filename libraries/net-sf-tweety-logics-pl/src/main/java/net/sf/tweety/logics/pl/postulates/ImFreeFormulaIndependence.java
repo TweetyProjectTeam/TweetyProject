@@ -22,8 +22,8 @@ import java.util.Collection;
 
 import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**

@@ -16,12 +16,11 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pl;
+package net.sf.tweety.logics.pl.syntax;
 
 import java.util.*;
 
 import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.pl.syntax.*;
 
 /**
  * This class represents a knowledge base of propositional formulae.

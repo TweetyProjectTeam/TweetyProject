@@ -24,7 +24,6 @@ import net.sf.tweety.arg.deductive.*;
 import net.sf.tweety.arg.deductive.accumulator.*;
 import net.sf.tweety.arg.deductive.categorizer.*;
 import net.sf.tweety.beliefdynamics.selectiverevision.*;
-import net.sf.tweety.logics.pl.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**

@@ -20,7 +20,6 @@ package net.sf.tweety.logics.rpcl;
 
 import java.util.*;
 
-import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.pcl.semantics.*;
@@ -45,29 +44,24 @@ public class CondensedProbabilityDistribution extends RpclProbabilityDistributio
 	public CondensedProbabilityDistribution(RpclSemantics semantics, FolSignature signature){
 		super(semantics,signature);		
 	}
-	
+		
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
+	 * @see net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution#satisfies(net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional)
 	 */
 	@Override
 	public boolean satisfies(RelationalProbabilisticConditional formula) throws IllegalArgumentException {
 		return this.getSemantics().satisfies(this, formula);
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
+	 * @see net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution#satisfies(net.sf.tweety.logics.rpcl.RpclBeliefSet)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase)	throws IllegalArgumentException {
-		if(!(beliefBase instanceof RpclBeliefSet))
-			throw new IllegalArgumentException("Relational probabilistic conditional knowledge base expected.");
-		RpclBeliefSet kb = (RpclBeliefSet) beliefBase;
-		for(RelationalProbabilisticConditional f: kb)
+	public boolean satisfies(RpclBeliefSet beliefBase)	throws IllegalArgumentException {
+		for(RelationalProbabilisticConditional f: beliefBase)
 			if(!this.satisfies(f)) return false;
 		return true;
-	}
-	
-	
+	}	
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.RpclProbabilityDistribution#entropy()

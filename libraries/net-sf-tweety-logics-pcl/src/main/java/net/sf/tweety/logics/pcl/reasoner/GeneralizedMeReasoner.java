@@ -16,21 +16,20 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pcl;
+package net.sf.tweety.logics.pcl.reasoner;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.BeliefBaseReasoner;
-import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolation2InconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.MinimalViolationInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
+import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -60,7 +59,7 @@ import net.sf.tweety.math.term.Variable;
  * @author Matthias Thimm
  *
  */
-public class GeneralizedMeReasoner implements BeliefBaseReasoner<PclBeliefSet> {
+public class GeneralizedMeReasoner extends AbstractPclReasoner {
 
 
 	public final static int MANHATTAN = 1;
@@ -104,13 +103,39 @@ public class GeneralizedMeReasoner implements BeliefBaseReasoner<PclBeliefSet> {
 		}
 	}
 		
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#query(net.sf.tweety.logics.pcl.syntax.PclBeliefSet, net.sf.tweety.logics.pl.syntax.PropositionalFormula)
+	 */
+	@Override
+	public Double query(PclBeliefSet beliefbase, PropositionalFormula formula) {
+		return this.getModel(beliefbase).probability(formula).getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#getModels(net.sf.tweety.logics.pcl.syntax.PclBeliefSet)
+	 */
+	@Override
+	public Collection<ProbabilityDistribution<PossibleWorld>> getModels(PclBeliefSet bbase) {
+		Collection<ProbabilityDistribution<PossibleWorld>> models = new HashSet<ProbabilityDistribution<PossibleWorld>>();
+		models.add(this.getModel(bbase));
+		return models;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#getModel(net.sf.tweety.logics.pcl.syntax.PclBeliefSet)
+	 */
+	@Override
+	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase) {
+		return this.getModel(beliefbase, (PropositionalSignature) beliefbase.getSignature());
+	}		
+	
 	/**
 	 * Computes the ME-distribution this reasoner bases on.
 	 * @param bs the belief set
 	 * @param signature the signature
 	 * @return the ME-distribution this reasoner bases on.
 	 */
-	public ProbabilityDistribution<PossibleWorld> getMeDistribution(PclBeliefSet bs,PropositionalSignature signature){
+	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet bs,PropositionalSignature signature) {
 		if(!bs.getSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
 		// get inconsistency value
@@ -197,47 +222,6 @@ public class GeneralizedMeReasoner implements BeliefBaseReasoner<PclBeliefSet> {
 			// This should not happen as the optimization problem is guaranteed to be feasible (the knowledge base is consistent)
 			throw new RuntimeException("Fatal error: Optimization problem to compute the ME-distribution is not feasible.");
 		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
-	 */
-	public Answer query(PclBeliefSet bs,Formula query) {
-		return this.query(bs,query,(PropositionalSignature)bs.getSignature());
-	}
-	
-	/**
-	 * Queries the belief set with the query wrt. the given signature.
-	 * @param bs some belief set
-	 * @param query some query
-	 * @param signature some signature
-	 * @return tha answer to the query
-	 */
-	public Answer query(PclBeliefSet bs,Formula query, PropositionalSignature signature) {
-		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
-			throw new IllegalArgumentException("Reasoning in probabilistic conditional logic is only defined for (probabilistic) conditionals and propositional queries.");
-		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution(bs,signature);
-		if(query instanceof ProbabilisticConditional){
-			Answer answer = new Answer(bs,query);
-			boolean bAnswer = meDistribution.satisfies((ProbabilisticConditional)query);
-			answer.setAnswer(bAnswer);
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;			
-		}
-		if(query instanceof Conditional){
-			Answer answer = new Answer(bs,query);
-			Probability bAnswer = meDistribution.conditionalProbability((Conditional)query);
-			answer.setAnswer(bAnswer.doubleValue());
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;
-		}
-		if(query instanceof PropositionalFormula){
-			Answer answer = new Answer(bs,query);
-			Probability bAnswer = meDistribution.probability((PropositionalFormula)query);
-			answer.setAnswer(bAnswer.doubleValue());
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;
-		}			
-		return null;
 	}	
+	
 }

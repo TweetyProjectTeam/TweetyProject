@@ -25,9 +25,9 @@ import java.util.StringTokenizer;
 
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 

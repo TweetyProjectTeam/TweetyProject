@@ -28,6 +28,7 @@ import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -127,7 +128,7 @@ public class Sat4jSolver extends SatSolver{
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation<PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
 		ISolver solver = SolverFactory.newLight();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		

@@ -25,7 +25,7 @@ import net.sf.tweety.beliefdynamics.*;
 import net.sf.tweety.beliefdynamics.mas.*;
 import net.sf.tweety.commons.KernelProvider;
 import net.sf.tweety.graphs.orders.*;
-import net.sf.tweety.logics.pl.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**

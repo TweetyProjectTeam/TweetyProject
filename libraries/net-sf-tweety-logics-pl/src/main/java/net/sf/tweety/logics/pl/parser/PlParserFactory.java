@@ -19,7 +19,7 @@
 package net.sf.tweety.logics.pl.parser;
 
 import net.sf.tweety.commons.Parser;
-import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 
 /**
  * Manages and creates different parsers for propositional logic.

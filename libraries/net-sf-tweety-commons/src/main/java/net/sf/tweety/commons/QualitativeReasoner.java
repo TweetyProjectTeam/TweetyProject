@@ -14,46 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.fol;
-
-import java.util.*;
-
-import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.fol.syntax.*;
-
+package net.sf.tweety.commons;
 
 /**
- * This class models a first-order knowledge base, i.e. a set of formulas
- * in first-order logic.
+ * The general interface for objects that are able to query a belief base
+ * with some formula and return either TRUE or FALSE as answer.
+ * 
  * @author Matthias Thimm
  *
+ * @param <B> the belief base type that can be queried
+ * @param <F> the type of formulas that can be queries
  */
-public class FolBeliefSet extends BeliefSet<FolFormula>{
-	
-	/**
-	 * Creates a new and empty first-order knowledge base.
-	 */
-	public FolBeliefSet(){
-		super();
-	}
-	
-	/**
-	 * Creates a new first-order knowledge base with the given set of formulas.
-	 * @param formulas
-	 */
-	public FolBeliefSet(Set<FolFormula> formulas){
-		super(formulas);
-	}
-	
+public interface QualitativeReasoner<B extends BeliefBase,F extends Formula> extends Reasoner<Boolean,B,F>{
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
+	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
-	@Override
-	public Signature getSignature(){
-		FolSignature sig = new FolSignature();
-		sig.addAll(this);
-		return sig;
-	}
+	public Boolean query(B beliefbase, F formula);
 }

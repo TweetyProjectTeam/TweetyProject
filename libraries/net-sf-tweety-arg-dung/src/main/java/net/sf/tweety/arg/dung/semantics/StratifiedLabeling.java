@@ -23,15 +23,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.commons.AbstractInterpretation;
-import net.sf.tweety.commons.BeliefBase;
 
 /**
  * This class implements stratified labelings as in [Thimm, Kern-Isberner, 2013].
  * @author Matthias Thimm
  */
-public class StratifiedLabeling extends AbstractInterpretation<Argument> implements Map<Argument,Integer>{
+public class StratifiedLabeling extends AbstractInterpretation<DungTheory,Argument> implements Map<Argument,Integer>{
 
 	/** The actual mapping of arguments to integers. */
 	private HashMap<Argument,Integer> map;
@@ -153,7 +153,7 @@ public class StratifiedLabeling extends AbstractInterpretation<Argument> impleme
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException {
+	public boolean satisfies(DungTheory beliefBase) throws IllegalArgumentException {
 		throw new IllegalArgumentException("Satisfaction of belief bases by extensions is undefined.");
 	}
 

@@ -24,12 +24,11 @@ import java.util.HashSet;
 import java.util.Map;
 
 import net.sf.tweety.commons.AbstractInterpretation;
-import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
@@ -42,7 +41,7 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * 
  * @author Matthias Thimm
  */
-public class PriestWorld extends AbstractInterpretation<PropositionalFormula>{
+public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PropositionalFormula>{
 
 	/** The three truth values. */
 	public enum TruthValue {
@@ -172,11 +171,8 @@ public class PriestWorld extends AbstractInterpretation<PropositionalFormula>{
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException {
-		if(!(beliefBase instanceof PlBeliefSet))
-			throw new IllegalArgumentException("Propositional knowledge base expected.");
-		PlBeliefSet pKb = (PlBeliefSet) beliefBase;
-		for(PropositionalFormula f: pKb)
+	public boolean satisfies(PlBeliefSet beliefBase) throws IllegalArgumentException {
+		for(PropositionalFormula f: beliefBase)
 			if(!this.satisfies(f))
 				return false;
 		return true;

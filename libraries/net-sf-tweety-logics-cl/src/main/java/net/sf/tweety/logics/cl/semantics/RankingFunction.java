@@ -38,7 +38,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class RankingFunction extends AbstractInterpretation<Conditional> {
+public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditional> {
 	
 	/**
 	 * Integer used to define infinity.
@@ -108,10 +108,8 @@ public class RankingFunction extends AbstractInterpretation<Conditional> {
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.logic.KnowledgeBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase){
-		if(!(beliefBase instanceof ClBeliefSet))
-			throw new IllegalArgumentException("Knowledge base is not a conditional knowledge base.");
-		for(Formula f: ((ClBeliefSet)beliefBase))
+	public boolean satisfies(ClBeliefSet beliefBase){
+		for(Formula f: beliefBase)
 			if(!(f instanceof Conditional))
 				throw new IllegalArgumentException();
 			else if(!this.satisfies((Conditional)f))

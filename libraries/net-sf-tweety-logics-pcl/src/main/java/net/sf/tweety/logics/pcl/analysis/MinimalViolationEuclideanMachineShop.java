@@ -20,7 +20,7 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.BeliefBaseMachineShop;
-import net.sf.tweety.logics.pcl.PclBeliefSet;
+import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

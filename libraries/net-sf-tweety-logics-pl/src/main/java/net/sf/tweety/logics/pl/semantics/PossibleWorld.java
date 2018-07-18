@@ -22,7 +22,6 @@ import java.util.*;
 
 import net.sf.tweety.commons.*;
 import net.sf.tweety.commons.util.*;
-import net.sf.tweety.logics.pl.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
 
@@ -32,7 +31,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class PossibleWorld extends InterpretationSet<Proposition,PropositionalFormula> implements Comparable<PossibleWorld> {
+public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PropositionalFormula> implements Comparable<PossibleWorld> {
 	
 	/**
 	 * Creates a new empty possible world.
@@ -80,19 +79,24 @@ public class PossibleWorld extends InterpretationSet<Proposition,PropositionalFo
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
+	 * @see net.sf.tweety.commons.AbstractInterpretation#satisfies(java.util.Collection)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException {
-		if(!(beliefBase instanceof PlBeliefSet))
-			throw new IllegalArgumentException("Propositional knowledge base expected.");
-		PlBeliefSet pKb = (PlBeliefSet) beliefBase;
-		for(Formula f: pKb)
+	public boolean satisfies(Collection<PropositionalFormula> formulas) throws IllegalArgumentException {
+		for(Formula f: formulas)
 			if(!(f instanceof PropositionalFormula))
 				throw new IllegalArgumentException();
 			else if(!this.satisfies((PropositionalFormula)f))
 				return false;
 		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.BeliefBase)
+	 */
+	@Override
+	public boolean satisfies(PlBeliefSet beliefBase) throws IllegalArgumentException {
+		return this.satisfies((Collection<PropositionalFormula>) beliefBase);
 	}
 	
 	/**

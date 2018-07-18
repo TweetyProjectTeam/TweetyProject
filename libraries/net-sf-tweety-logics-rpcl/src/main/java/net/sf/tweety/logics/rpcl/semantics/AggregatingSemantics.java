@@ -21,6 +21,7 @@ package net.sf.tweety.logics.rpcl.semantics;
 import java.util.*;
 
 import net.sf.tweety.commons.*;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
@@ -65,7 +66,7 @@ public class AggregatingSemantics extends AbstractRpclSemantics {
 	 * @see net.sf.tweety.logics.rpcl.semantics.AbstractRpclSemantics#getSatisfactionStatement(net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional, net.sf.tweety.logics.fol.syntax.FolSignature, java.util.Map)
 	 */
 	@Override
-	public Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolFormula>,FloatVariable> worlds2vars){
+	public Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolBeliefSet,FolFormula>,FloatVariable> worlds2vars){
 		Set<RelationalFormula> groundInstances = r.allGroundInstances(signature.getConstants());
 		if(r.isFact()){
 			Term term = null;

@@ -29,7 +29,6 @@ import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.*;
 import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.ml.syntax.ModalFormula;
 import net.sf.tweety.logics.ml.syntax.Necessity;
@@ -48,7 +47,7 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * @author Anna Gessler
  * @see net.sf.tweety.logics.fol.semantics.HerbrandInterpretation
  */
-public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolFormula> {
+public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefSet,FolFormula> {
 	
 	/**
 	 * Creates a new empty Herbrand interpretation
@@ -71,7 +70,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolFo
 	 */
 	@Override
 	public boolean satisfies(FolFormula formula) throws IllegalArgumentException {
-		return satisfies(formula, new HashSet<Interpretation<FolFormula>>());
+		return satisfies(formula, new HashSet<Interpretation<FolBeliefSet,FolFormula>>());
 	}
 	
 	/**
@@ -82,7 +81,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolFo
 	 * @throws IllegalArgumentException if "f" is not closed.
 	 */
 	//@Override
-	public boolean satisfies(Formula formula, Set<Interpretation<FolFormula>> successors) throws IllegalArgumentException{
+	public boolean satisfies(Formula formula, Set<Interpretation<FolBeliefSet,FolFormula>> successors) throws IllegalArgumentException{
 		if(!(formula instanceof FolFormula)) throw new IllegalArgumentException("Formula " + formula + " is not a first-order formula.");
 		FolFormula f = (FolFormula) formula;
 		if(!f.isClosed()) throw new IllegalArgumentException("FolFormula " + f + " is not closed.");
@@ -199,7 +198,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolFo
 			return true;	
 		}
 		if (formula instanceof Necessity) {
-			for (Interpretation<FolFormula> j : successors) {
+			for (Interpretation<FolBeliefSet,FolFormula> j : successors) {
 				if (!j.satisfies((FolFormula) ((ModalFormula) formula).getFormula())) {
 					return false; }
 
@@ -207,7 +206,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolFo
 		} 
 		if (formula instanceof Possibility) {
 			boolean satisfied = false;
-			for (Interpretation<FolFormula> j : successors) {
+			for (Interpretation<FolBeliefSet,FolFormula> j : successors) {
 				if (j.satisfies((FolFormula) ((ModalFormula) formula).getFormula())) {
 					satisfied = true;
 					break;
@@ -301,11 +300,8 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolFo
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException{
-		if(!(beliefBase instanceof FolBeliefSet))
-			throw new IllegalArgumentException("First-order knowledge base expected.");
-		FolBeliefSet folkb = (FolBeliefSet) beliefBase;
-		for(FolFormula f: folkb)
+	public boolean satisfies(FolBeliefSet beliefBase) throws IllegalArgumentException{
+		for(FolFormula f: beliefBase)
 			if(!this.satisfies(f)) return false;
 		return true;
 	}

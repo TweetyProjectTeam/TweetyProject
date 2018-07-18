@@ -41,7 +41,7 @@ import net.sf.tweety.logics.rcl.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class RelationalRankingFunction extends AbstractInterpretation<RelationalConditional> {
+public class RelationalRankingFunction extends AbstractInterpretation<RclBeliefSet,RelationalConditional> {
 
 	/**
 	 * Integer used to define infinity.
@@ -307,10 +307,8 @@ public class RelationalRankingFunction extends AbstractInterpretation<Relational
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase)	throws IllegalArgumentException {
-		if(!(beliefBase instanceof RclBeliefSet))
-			throw new IllegalArgumentException("Knowledge base is not a relational conditional knowledge base.");
-		for(RelationalConditional f: ((RclBeliefSet)beliefBase))
+	public boolean satisfies(RclBeliefSet beliefBase)	throws IllegalArgumentException {
+		for(RelationalConditional f: beliefBase)
 			if(!this.satisfies(f))
 				return false;
 		return true;

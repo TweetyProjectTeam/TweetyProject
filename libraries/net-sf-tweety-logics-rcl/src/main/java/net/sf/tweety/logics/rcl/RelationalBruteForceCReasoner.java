@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
@@ -129,7 +128,7 @@ public class RelationalBruteForceCReasoner implements BeliefBaseReasoner<RclBeli
 		List<Integer[]> kappa_all = new ArrayList<Integer[]>();
 		Integer[] kappa = null;		
 		RelationalRankingFunction candidate = this.constructRankingFunction(kappa,indexToConditional,signature);
-		while(!candidate.satisfies((BeliefBase)bs)){
+		while(!candidate.satisfies(bs)){
 			kappa = this.increment(kappa_all, bs.size());			
 			candidate = this.constructRankingFunction(kappa,indexToConditional,signature);
 			String debugMessage = "";

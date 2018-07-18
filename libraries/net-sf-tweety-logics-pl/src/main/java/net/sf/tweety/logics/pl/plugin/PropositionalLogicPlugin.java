@@ -24,13 +24,13 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.commons.BeliefBaseReasoner;
-import net.sf.tweety.logics.pl.NaiveReasoner;
-import net.sf.tweety.logics.pl.PlBeliefSet;
-import net.sf.tweety.logics.pl.SatReasoner;
 import net.sf.tweety.logics.pl.parser.PlParser;
+import net.sf.tweety.logics.pl.reasoner.AbstractPropositionalLogicReasoner;
+import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.SatReasoner;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.plugin.*;
 import net.sf.tweety.plugin.parameter.CommandParameter;
@@ -122,7 +122,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 		// new parser
 		PlParser parser = new PlParser();
 		// reasoner
-		BeliefBaseReasoner<PlBeliefSet> reasoner = null;
+		AbstractPropositionalLogicReasoner reasoner = null;
 		// queries
 		PropositionalFormula[] queries = new PropositionalFormula[1];
 		// try to parse all given input files

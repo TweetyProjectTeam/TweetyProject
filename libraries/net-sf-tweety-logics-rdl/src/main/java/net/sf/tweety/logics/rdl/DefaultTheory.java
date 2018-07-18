@@ -25,7 +25,7 @@ import java.util.Set;
 
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
-import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;

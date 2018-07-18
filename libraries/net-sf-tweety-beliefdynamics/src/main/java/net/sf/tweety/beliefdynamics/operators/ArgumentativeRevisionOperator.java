@@ -28,7 +28,7 @@ import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleSelectiveRevisionOperator;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction;
 import net.sf.tweety.beliefdynamics.selectiverevision.argumentative.ArgumentativeTransformationFunction;
-import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**

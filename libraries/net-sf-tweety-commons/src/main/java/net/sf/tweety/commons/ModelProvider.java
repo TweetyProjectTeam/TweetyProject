@@ -21,19 +21,29 @@ package net.sf.tweety.commons;
 import java.util.Collection;
 
 /**
- * Instances of this interface model reasoner that determine the models
+ * Instances of this interface model reasoner that determine the (selected) models
  * for a given set of formulas.
  * 
  * @author Matthias Thimm
  *
  * @param <S> the type of formulas
+ * @param <B> the type of belief bases
  * @param <T> the type of interpretations
  */
-public interface ModelProvider<S extends Formula,T extends Interpretation<S>> {
+public interface ModelProvider<S extends Formula,B extends BeliefBase, T extends Interpretation<B,S>> {
 	
 	/** Returns a characterizing model of the given belief base
-	 * @param beliefbase some belief base
-	 * @return the characterizing model of the belief base
+	 * @param bbase some belief base
+	 * @return the (selected) models of the belief base
 	 */
-	public Collection<T> getModels(Collection<S> formulas);
+	public Collection<T> getModels(B bbase);
+	
+	/**
+	 * Returns a single (dedicated) model of the given belief base.
+	 * If the implemented method allows for more than one dedicated model,
+	 * the selection may be non-deterministic.
+	 * @param formulas some belief base
+	 * @return a selected model of the belief base.
+	 */
+	public T getModel(B bbase);
 }

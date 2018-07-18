@@ -35,14 +35,13 @@ import net.sf.tweety.logics.commons.analysis.streams.DefaultStreamBasedInconsist
 import net.sf.tweety.logics.commons.analysis.streams.EvaluationInconsistencyListener;
 import net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess;
 import net.sf.tweety.logics.commons.analysis.streams.StreamBasedInconsistencyMeasure;
-//import net.sf.tweety.logics.commons.analysis.streams.WindowInconsistencyMeasurementProcess;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 //import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.analysis.HsInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.sat.LingelingSolver;
 import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 //import net.sf.tweety.logics.pl.analysis.PlWindowInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;

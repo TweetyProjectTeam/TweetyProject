@@ -22,12 +22,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.ModalBeliefSet;
@@ -75,15 +75,15 @@ public class NaiveModalReasoner extends ModalReasoner {
 		//For each set of worlds: Get all possible binary combinations of worlds to construct all possible accessibility relations
 		Set<KripkeModel> kripkeModels = new HashSet<KripkeModel>();
 		for (Set<ModalHerbrandInterpretation> possibleWorldCombination: possibleWorldsCombinations) {
-			Set<Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>> setOfPairs = new HashSet<Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>>();
-			for (Interpretation<FolFormula> i: possibleWorldCombination) {	
-				for (Interpretation<FolFormula> i2: possibleWorldCombination) {
-					Pair<Interpretation<FolFormula>,Interpretation<FolFormula>> p = new Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>(i,i2);
+			Set<Pair<Interpretation<FolBeliefSet,FolFormula>,Interpretation<FolBeliefSet,FolFormula>>> setOfPairs = new HashSet<Pair<Interpretation<FolBeliefSet,FolFormula>,Interpretation<FolBeliefSet,FolFormula>>>();
+			for (Interpretation<FolBeliefSet,FolFormula> i: possibleWorldCombination) {	
+				for (Interpretation<FolBeliefSet,FolFormula> i2: possibleWorldCombination) {
+					Pair<Interpretation<FolBeliefSet,FolFormula>,Interpretation<FolBeliefSet,FolFormula>> p = new Pair<Interpretation<FolBeliefSet,FolFormula>,Interpretation<FolBeliefSet,FolFormula>>(i,i2);
 					setOfPairs.add(p); 
 				}
 			}
-			Set<Set<Pair<Interpretation<FolFormula>, Interpretation<FolFormula>>>> setOfPairsSubsets  = new SetTools<Pair<Interpretation<FolFormula>,Interpretation<FolFormula>>>().subsets(setOfPairs);
-			for (Set<Pair<Interpretation<FolFormula>, Interpretation<FolFormula>>> p : setOfPairsSubsets) {
+			Set<Set<Pair<Interpretation<FolBeliefSet,FolFormula>, Interpretation<FolBeliefSet,FolFormula>>>> setOfPairsSubsets  = new SetTools<Pair<Interpretation<FolBeliefSet,FolFormula>,Interpretation<FolBeliefSet,FolFormula>>>().subsets(setOfPairs);
+			for (Set<Pair<Interpretation<FolBeliefSet,FolFormula>, Interpretation<FolBeliefSet,FolFormula>>> p : setOfPairsSubsets) {
 				AccessibilityRelation ar = new AccessibilityRelation(p);
 				KripkeModel m = new KripkeModel(possibleWorldCombination, ar); //Construct a Kripke model for each possible accessibility relation for each possible set of worlds
 				kripkeModels.add(m);
@@ -92,7 +92,7 @@ public class NaiveModalReasoner extends ModalReasoner {
 		
 		//Test if every Kripke model for the knowledge base is also a Kripke model for the formula
 		for (KripkeModel k: kripkeModels) {
-			if (k.satisfies((BeliefBase)mbs)) {
+			if (k.satisfies(mbs)) {
 				if (!(k.satisfies((FolFormula) formula))) {
 					Answer answer = new Answer(mbs,formula);
 					answer.setAnswer(false);

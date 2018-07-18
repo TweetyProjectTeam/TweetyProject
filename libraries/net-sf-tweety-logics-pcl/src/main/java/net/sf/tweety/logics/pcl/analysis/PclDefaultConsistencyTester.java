@@ -20,7 +20,6 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import java.util.*;
 
-import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
 import net.sf.tweety.logics.pl.syntax.*;

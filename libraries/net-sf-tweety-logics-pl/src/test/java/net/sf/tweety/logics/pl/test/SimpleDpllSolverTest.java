@@ -26,9 +26,9 @@ import java.io.IOException;
 import org.junit.Test;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.parser.DimacsParser;
 import net.sf.tweety.logics.pl.sat.SimpleDpllSolver;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 
 public class SimpleDpllSolverTest {
 	

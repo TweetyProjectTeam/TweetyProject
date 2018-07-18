@@ -16,12 +16,11 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pcl;
+package net.sf.tweety.logics.pcl.syntax;
 
 import java.util.*;
 
 import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
 

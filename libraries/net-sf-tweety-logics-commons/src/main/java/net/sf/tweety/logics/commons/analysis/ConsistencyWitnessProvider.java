@@ -20,6 +20,7 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
@@ -32,26 +33,26 @@ import net.sf.tweety.commons.Interpretation;
  *
  * @param <S> The type of formulas.
  */
-public interface ConsistencyWitnessProvider<S extends Formula> {
+public interface ConsistencyWitnessProvider<B extends BeliefBase, S extends Formula> {
 
 	/**
 	 * If the collection of formulas is consistent this method
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the formulas or null.
 	 */
-	public Interpretation<S> getWitness(Collection<S> formulas);
+	public Interpretation<B,S> getWitness(Collection<S> formulas);
 	
 	/**
 	 * If the formula is consistent this method
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the formula or null.
 	 */
-	public Interpretation<S> getWitness(S formula);
+	public Interpretation<B,S> getWitness(S formula);
 	
 	/**
 	 * If the belief set is consistent this method
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the belief set or null.
 	 */
-	public Interpretation<S> getWitness(BeliefSet<S> bs);
+	public Interpretation<B,S> getWitness(BeliefSet<S> bs);
 }

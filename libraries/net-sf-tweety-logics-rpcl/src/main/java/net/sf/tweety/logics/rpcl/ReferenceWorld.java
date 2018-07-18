@@ -27,17 +27,16 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.commons.AbstractInterpretation;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.util.MathTools;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
@@ -53,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class ReferenceWorld extends AbstractInterpretation<FolFormula> implements Map<Predicate,InstanceAssignment>{
+public class ReferenceWorld extends AbstractInterpretation<FolBeliefSet,FolFormula> implements Map<Predicate,InstanceAssignment>{
 
 	/**
 	 * Logger.
@@ -269,11 +268,8 @@ public class ReferenceWorld extends AbstractInterpretation<FolFormula> implement
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase)	throws IllegalArgumentException {
-		if(!(beliefBase instanceof FolBeliefSet))
-			throw new IllegalArgumentException("First-order knowledge base expected.");
-		FolBeliefSet folkb = (FolBeliefSet) beliefBase;
-		for(FolFormula f: folkb)
+	public boolean satisfies(FolBeliefSet beliefBase)	throws IllegalArgumentException {
+		for(FolFormula f: beliefBase)
 			if(!this.satisfies(f)) return false;
 		return true;
 	}

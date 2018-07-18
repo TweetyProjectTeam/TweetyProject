@@ -54,7 +54,7 @@ public interface RpclSemantics {
 	 * @return the mathematical statement corresponding to the satisfaction
 	 * of the given conditional wrt. this semantics and the given signature.
 	 */
-	public Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolFormula>,FloatVariable> worlds2vars);
+	public Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolBeliefSet,FolFormula>,FloatVariable> worlds2vars);
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

@@ -25,8 +25,8 @@ import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.ClassicalInference;
-import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.FolParser;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.plugin.AbstractTweetyPlugin;
 import net.sf.tweety.plugin.PluginOutput;

@@ -24,7 +24,7 @@ import java.util.*;
  * An interpretation for some logical language.
  * @author Matthias Thimm
  */
-public interface Interpretation<S extends Formula> {
+public interface Interpretation<B extends BeliefBase, S extends Formula> {
 	
 	/**
 	 * Checks whether this interpretation satisfies the given formula.
@@ -51,5 +51,5 @@ public interface Interpretation<S extends Formula> {
 	 * @throws IllegalArgumentException IllegalArgumentException if the knowledgebase does not correspond
 	 * 		to the expected language.
 	 */
-	public abstract boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException;
+	public abstract boolean satisfies(B beliefBase) throws IllegalArgumentException;
 }

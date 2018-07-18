@@ -19,7 +19,7 @@
 package net.sf.tweety.logics.pl.writer;
 
 import net.sf.tweety.commons.Writer;
-import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**

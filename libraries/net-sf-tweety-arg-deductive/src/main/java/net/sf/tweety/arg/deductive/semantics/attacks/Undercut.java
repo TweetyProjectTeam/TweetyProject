@@ -23,7 +23,7 @@ import java.util.Set;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
-import net.sf.tweety.logics.pl.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;

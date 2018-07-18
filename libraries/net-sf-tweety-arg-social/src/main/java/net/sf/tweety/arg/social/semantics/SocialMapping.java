@@ -26,7 +26,6 @@ import java.util.Map;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.social.SocialAbstractArgumentationFramework;
 import net.sf.tweety.commons.AbstractInterpretation;
-import net.sf.tweety.commons.BeliefBase;
 
 /**
  * Implements a mapping from arguments to social value.
@@ -34,7 +33,7 @@ import net.sf.tweety.commons.BeliefBase;
  * @author Matthias Thimm
  * @param <L> The set used for valuations
  */
-public class SocialMapping<L> extends AbstractInterpretation<Argument>{
+public class SocialMapping<L> extends AbstractInterpretation<SocialAbstractArgumentationFramework,Argument>{
 
 	/** The semantics used for this mapping */
 	private AbstractSocialSemantics<L> semantics;
@@ -65,14 +64,11 @@ public class SocialMapping<L> extends AbstractInterpretation<Argument>{
 	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException {
-		if(!(beliefBase instanceof SocialAbstractArgumentationFramework))
-			throw new IllegalArgumentException("Belief base of type 'SocialAbstractArgumentationFramework' expected.");
-		SocialAbstractArgumentationFramework saf = (SocialAbstractArgumentationFramework) beliefBase;
-		for(Argument arg: saf){
-			L arg_value = this.semantics.supp(saf.getPositive(arg), saf.getNegative(arg));
+	public boolean satisfies(SocialAbstractArgumentationFramework beliefBase) throws IllegalArgumentException {		
+		for(Argument arg: beliefBase){
+			L arg_value = this.semantics.supp(beliefBase.getPositive(arg), beliefBase.getNegative(arg));
 			Collection<L> att_values = new LinkedList<L>();
-			for(Argument b: saf.getAttackers(arg))
+			for(Argument b: beliefBase.getAttackers(arg))
 				att_values.add(this.map.get(b));
 			L att_value = this.semantics.neg(this.semantics.or(att_values));
 			if(this.semantics.compare(this.semantics.and(arg_value,att_value), this.map.get(arg)) != 0)

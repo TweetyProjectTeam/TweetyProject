@@ -23,9 +23,9 @@ import java.io.IOException;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.MaInconsistencyMeasure;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 public class MaMeasureExample {

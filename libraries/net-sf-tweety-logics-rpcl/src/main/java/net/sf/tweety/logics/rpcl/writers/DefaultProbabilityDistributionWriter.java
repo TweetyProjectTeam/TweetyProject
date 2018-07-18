@@ -56,7 +56,7 @@ public class DefaultProbabilityDistributionWriter extends Writer {
 		String result = "";
 		RpclProbabilityDistribution<?> distribution = (RpclProbabilityDistribution<?>) this.getObject();
 		NumberFormat formatter = new DecimalFormat("#.###################");
-		for(Interpretation<?> interpretation: distribution.keySet()){
+		for(Interpretation<?,?> interpretation: distribution.keySet()){
 			result += "{";
 			boolean first = true;
 			for(FOLAtom a: (HerbrandInterpretation)interpretation)

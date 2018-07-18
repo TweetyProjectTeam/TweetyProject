@@ -28,8 +28,8 @@ import net.sf.tweety.beliefdynamics.mas.*;
 import net.sf.tweety.beliefdynamics.operators.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.orders.*;
-import net.sf.tweety.logics.pl.NaiveReasoner;
 import net.sf.tweety.logics.pl.parser.*;
+import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**

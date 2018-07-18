@@ -28,6 +28,7 @@ import net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementPro
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.semantics.PriestWorld;
 import net.sf.tweety.logics.pl.semantics.PriestWorld.TruthValue;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -58,7 +59,7 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 	/** The signature of the formulas. */
 	private PropositionalSignature sig;
 	/** The witness provider used. */
-	private ConsistencyWitnessProvider<PropositionalFormula> witnessProvider;
+	private ConsistencyWitnessProvider<PlBeliefSet,PropositionalFormula> witnessProvider;
 	/** For randomization. */
 	private Random rand;
 	/** Whether the inconsistency value should be smoothed: if X1 is the previous
@@ -81,7 +82,7 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 	@Override
 	protected void init(Map<String, Object> config) {
 		this.sig = (PropositionalSignature) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
-		this.witnessProvider = (ConsistencyWitnessProvider<PropositionalFormula>) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER);
+		this.witnessProvider = (ConsistencyWitnessProvider<PlBeliefSet,PropositionalFormula>) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER);
 		this.numberOfPopulations = (int) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS);
 		if(config.containsKey(ContensionInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR))
 			this.smoothingFactor = (double) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR);

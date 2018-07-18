@@ -24,7 +24,7 @@ import java.io.StringReader;
 
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.pcl.PclBeliefSet;
+import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;

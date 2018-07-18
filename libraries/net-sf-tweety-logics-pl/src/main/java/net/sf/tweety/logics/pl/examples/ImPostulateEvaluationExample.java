@@ -22,13 +22,13 @@ import net.sf.tweety.commons.postulates.PostulateEvaluator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.HsInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.NaiveMusEnumerator;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.postulates.ImFreeFormulaIndependence;
 import net.sf.tweety.logics.pl.postulates.ImMonotony;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 import net.sf.tweety.logics.pl.util.RandomSampler;
@@ -42,7 +42,7 @@ public class ImPostulateEvaluationExample {
 	public static void main(String[] args) {
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		PlMusEnumerator.setDefaultEnumerator(new NaiveMusEnumerator<PropositionalFormula>(SatSolver.getDefaultSolver()));
-		BeliefSetInconsistencyMeasure<PropositionalFormula> im = new HsInconsistencyMeasure<PropositionalFormula>(new PossibleWorldIterator());
+		BeliefSetInconsistencyMeasure<PropositionalFormula> im = new HsInconsistencyMeasure<PlBeliefSet,PropositionalFormula>(new PossibleWorldIterator());
 		RandomSampler sampler = new RandomSampler(new PropositionalSignature(4),0.2,2,4);
 		PostulateEvaluator<PropositionalFormula,PlBeliefSet> evaluator = new PostulateEvaluator<PropositionalFormula,PlBeliefSet>(sampler, im);
 		evaluator.addPostulate(new ImMonotony());

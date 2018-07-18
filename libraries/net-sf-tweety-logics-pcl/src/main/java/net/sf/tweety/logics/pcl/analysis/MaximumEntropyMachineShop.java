@@ -22,7 +22,6 @@ import java.io.*;
 import java.util.*;
 
 import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.parser.*;
 import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.pcl.syntax.*;

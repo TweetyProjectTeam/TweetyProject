@@ -27,9 +27,9 @@ import org.junit.Test;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.analysis.CspInconsistencyMeasure;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.math.opt.solver.GlpkSolver;
 

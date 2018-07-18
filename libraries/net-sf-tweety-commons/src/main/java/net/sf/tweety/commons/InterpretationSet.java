@@ -26,11 +26,12 @@ import java.util.*;
  * interpretations.
  * 
  * @param <T> The actual class of the formulas stored in this interpretation
+ * @param <B> The class of belief bases this interpretation can handle
  * @param <S> The actual class of formulas this interpretation can handle
  * 
  * @author Matthias Thimm
  */
-public abstract class InterpretationSet<T extends Formula, S extends Formula> extends AbstractInterpretation<S> implements Collection<T> {
+public abstract class InterpretationSet<T extends Formula, B extends BeliefBase, S extends Formula> extends AbstractInterpretation<B,S> implements Collection<T> {
 
 	/**
 	 * The set of formulas of this interpretation.
@@ -179,7 +180,7 @@ public abstract class InterpretationSet<T extends Formula, S extends Formula> ex
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		InterpretationSet<?,?> other = (InterpretationSet<?,?>) obj;
+		InterpretationSet<?,?,?> other = (InterpretationSet<?,?,?>) obj;
 		if (formulas == null) {
 			if (other.formulas != null)
 				return false;

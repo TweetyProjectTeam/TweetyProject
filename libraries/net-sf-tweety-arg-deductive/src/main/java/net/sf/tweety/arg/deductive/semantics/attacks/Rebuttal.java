@@ -19,7 +19,7 @@
 package net.sf.tweety.arg.deductive.semantics.attacks;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
-import net.sf.tweety.logics.pl.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
 import net.sf.tweety.logics.pl.syntax.Negation;
 
 

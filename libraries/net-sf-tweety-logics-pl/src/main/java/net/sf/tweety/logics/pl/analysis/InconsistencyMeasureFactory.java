@@ -24,6 +24,7 @@ import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.math.func.FracAggrFunction;
 import net.sf.tweety.math.opt.Solver;
@@ -92,17 +93,17 @@ public abstract class InconsistencyMeasureFactory {
 			case MIC:
 				return new MicInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case HS:
-				return new HsInconsistencyMeasure<PropositionalFormula>(new PossibleWorldIterator());
+				return new HsInconsistencyMeasure<PlBeliefSet,PropositionalFormula>(new PossibleWorldIterator());
 			case PR:
 				return new PrInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case ETA:			
-				return new EtaInconsistencyMeasure<PropositionalFormula>(new PossibleWorldIterator());
+				return new EtaInconsistencyMeasure<PlBeliefSet,PropositionalFormula>(new PossibleWorldIterator());
 			case DALALSUM:
-				return new DSumInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
+				return new DSumInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
 			case DALALMAX:
-				return new DMaxInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
+				return new DMaxInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
 			case DALALHIT:
-				return new DHitInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
+				return new DHitInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
 			case DF:
 				return new DfInconsistencyMeasure<PropositionalFormula>(new FracAggrFunction(),PlMusEnumerator.getDefaultEnumerator());
 			case PM:

@@ -24,10 +24,10 @@ import java.util.Set;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.commons.util.SetTools;
-import net.sf.tweety.logics.pl.NaiveReasoner;
-import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
@@ -78,7 +78,7 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 				if(!SatSolver.getDefaultSolver().isConsistent(candidate)) continue;
 				// check for entailment
 				NaiveReasoner reasoner = new NaiveReasoner();
-				if(reasoner.entails(candidate, claim))
+				if(reasoner.query(candidate, claim))
 					arguments.add(new DeductiveArgument(candidate,claim));
 			}
 		}

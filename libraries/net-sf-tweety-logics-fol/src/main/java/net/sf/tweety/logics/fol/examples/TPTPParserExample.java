@@ -21,11 +21,11 @@ package net.sf.tweety.logics.fol.examples;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.fol.FolBeliefSet;
 import net.sf.tweety.logics.fol.parser.TPTPParser;
 import net.sf.tweety.logics.fol.prover.EProver;
 import net.sf.tweety.logics.fol.prover.FolTheoremProver;
 import net.sf.tweety.logics.fol.prover.NaiveProver;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 

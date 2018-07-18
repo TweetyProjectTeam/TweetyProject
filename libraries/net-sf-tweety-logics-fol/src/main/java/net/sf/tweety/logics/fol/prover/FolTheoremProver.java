@@ -21,7 +21,7 @@ package net.sf.tweety.logics.fol.prover;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**

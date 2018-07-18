@@ -28,6 +28,7 @@ import java.util.Random;
 import net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider;
 import net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
@@ -56,7 +57,7 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	/** The signature of the formulas. */
 	private PropositionalSignature sig;
 	/** The witness provider used. */
-	private ConsistencyWitnessProvider<PropositionalFormula> witnessProvider;
+	private ConsistencyWitnessProvider<PlBeliefSet,PropositionalFormula> witnessProvider;
 	/** For randomization. */
 	private Random rand;
 	/** Whether the inconsistency value should be smoothed: if X1 is the previous

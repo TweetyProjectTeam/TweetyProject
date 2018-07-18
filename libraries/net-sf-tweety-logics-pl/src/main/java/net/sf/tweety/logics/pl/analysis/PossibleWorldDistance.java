@@ -22,6 +22,7 @@ import java.util.Set;
 
 import net.sf.tweety.commons.analysis.InterpretationDistance;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -31,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * @author Matthias Thimm
  *
  */
-public abstract class PossibleWorldDistance implements InterpretationDistance<PossibleWorld,PropositionalFormula> {
+public abstract class PossibleWorldDistance implements InterpretationDistance<PossibleWorld,PlBeliefSet,PropositionalFormula> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.analysis.InterpretationDistance#distance(net.sf.tweety.commons.Interpretation, net.sf.tweety.commons.Interpretation)

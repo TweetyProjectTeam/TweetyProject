@@ -30,6 +30,7 @@ import net.sf.tweety.logics.pl.analysis.DalalDistance;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
@@ -44,9 +45,9 @@ public class DSumMeasureExample {
 		PropositionalSignature sig = new PropositionalSignature();
 		for(PropositionalFormula f: c) sig.addAll(f.getSignature());
 		
-		DSumInconsistencyMeasure<PossibleWorld,PropositionalFormula> inc1 = new DSumInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator(sig));
-		DMaxInconsistencyMeasure<PossibleWorld,PropositionalFormula> inc2 = new DMaxInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator(sig));
-		DHitInconsistencyMeasure<PossibleWorld,PropositionalFormula> inc3 = new DHitInconsistencyMeasure<PossibleWorld,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator(sig));
+		DSumInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula> inc1 = new DSumInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator(sig));
+		DMaxInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula> inc2 = new DMaxInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator(sig));
+		DHitInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula> inc3 = new DHitInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator(sig));
 		
 		System.out.println(inc1.inconsistencyMeasure(c));
 		System.out.println(inc2.inconsistencyMeasure(c));

@@ -16,12 +16,10 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.pcl;
+package net.sf.tweety.logics.pcl.reasoner;
 
 import java.util.*;
 
-import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.cl.syntax.*;
 import net.sf.tweety.logics.pcl.analysis.*;
 import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.pcl.syntax.*;
@@ -42,15 +40,41 @@ import net.sf.tweety.math.probability.*;
  * @author Matthias Thimm
  *
  */
-public class DefaultMeReasoner implements BeliefBaseReasoner<PclBeliefSet> {
+public class DefaultMeReasoner extends AbstractPclReasoner {
+		
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#query(net.sf.tweety.logics.pcl.syntax.PclBeliefSet, net.sf.tweety.logics.pl.syntax.PropositionalFormula)
+	 */
+	@Override
+	public Double query(PclBeliefSet beliefbase, PropositionalFormula formula) {
+		return this.getModel(beliefbase).probability(formula).getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#getModels(net.sf.tweety.logics.pcl.syntax.PclBeliefSet)
+	 */
+	@Override
+	public Collection<ProbabilityDistribution<PossibleWorld>> getModels(PclBeliefSet bbase) {
+		Collection<ProbabilityDistribution<PossibleWorld>> models = new HashSet<ProbabilityDistribution<PossibleWorld>>();
+		models.add(this.getModel(bbase));
+		return models;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#getModel(net.sf.tweety.logics.pcl.syntax.PclBeliefSet)
+	 */
+	@Override
+	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase) {
+		return this.getModel(beliefbase, (PropositionalSignature) beliefbase.getSignature());
+	}	
 	
 	/**
-	 * Computes the ME-distribution
-	 * @param bs a belief set
-	 * @param signature a signature
-	 * @return the ME-distribution
+	 * Computes the ME-distribution this reasoner bases on.
+	 * @param bs the belief set
+	 * @param signature the signature
+	 * @return the ME-distribution this reasoner bases on.
 	 */
-	public ProbabilityDistribution<PossibleWorld> getMeDistribution(PclBeliefSet bs, PropositionalSignature signature){
+	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet bs,PropositionalSignature signature) {
 		// if belief set is inconsistent no reasoning is possible
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
 		if(!tester.isConsistent(bs))
@@ -128,49 +152,6 @@ public class DefaultMeReasoner implements BeliefBaseReasoner<PclBeliefSet> {
 		}catch (GeneralMathException e){
 			// This should not happen as the optimization problem is guaranteed to be feasible (the knowledge base is consistent)
 			throw new RuntimeException("Fatal error: Optimization problem to compute the ME-distribution is not feasible although the knowledge base seems to be consistent.");
-		}
+		}		
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
-	 */
-	@Override
-	public Answer query(PclBeliefSet bs, Formula query) {
-		return this.query(bs, query, (PropositionalSignature) bs.getSignature());
-	}
-	
-	/**
-	 * Queries the belief set wrt. the given signature
-	 * @param bs some belief set
-	 * @param query some query
-	 * @param sig some signature
-	 * @return the answer to the query.
-	 */
-	public Answer query(PclBeliefSet bs, Formula query, PropositionalSignature signature) {
-		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
-			throw new IllegalArgumentException("Reasoning in probabilistic conditional logic is only defined for (probabilistic) conditionals and propositional queries.");
-		ProbabilityDistribution<PossibleWorld> meDistribution = this.getMeDistribution(bs, signature);
-		if(query instanceof ProbabilisticConditional){
-			Answer answer = new Answer(bs,query);
-			boolean bAnswer = meDistribution.satisfies((ProbabilisticConditional)query);
-			answer.setAnswer(bAnswer);
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;			
-		}
-		if(query instanceof Conditional){
-			Answer answer = new Answer(bs,query);
-			Probability bAnswer = meDistribution.conditionalProbability((Conditional)query);
-			answer.setAnswer(bAnswer.doubleValue());
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;
-		}
-		if(query instanceof PropositionalFormula){
-			Answer answer = new Answer(bs,query);
-			Probability bAnswer = meDistribution.probability((PropositionalFormula)query);
-			answer.setAnswer(bAnswer.doubleValue());
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;
-		}			
-		return null;
-	}	
 }

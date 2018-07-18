@@ -21,9 +21,9 @@ package net.sf.tweety.logics.pcl.examples;
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.pcl.PclBeliefSet;
 import net.sf.tweety.logics.pcl.analysis.GeneralizedMeMachineShop;
 import net.sf.tweety.logics.pcl.parser.PclParser;
+import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.OpenOptWebSolver;

@@ -40,7 +40,6 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.AbstractInterpretation;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.graphs.Graph;
 
 /**
@@ -50,7 +49,7 @@ import net.sf.tweety.graphs.Graph;
  * @author Matthias Thimm
  *
  */
-public class LdoInterpretation extends AbstractInterpretation<LdoFormula> {
+public class LdoInterpretation extends AbstractInterpretation<DungTheory,LdoFormula> {
 
 	/** The abstract argumentation framework */
 	private DungTheory theory;
@@ -193,7 +192,7 @@ public class LdoInterpretation extends AbstractInterpretation<LdoFormula> {
 	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase)	throws IllegalArgumentException {
+	public boolean satisfies(DungTheory beliefBase)	throws IllegalArgumentException {
 		throw new UnsupportedOperationException("Not supported.");
 	}
 

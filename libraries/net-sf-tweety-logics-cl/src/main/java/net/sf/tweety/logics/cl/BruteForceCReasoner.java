@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
@@ -136,7 +135,7 @@ public class BruteForceCReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 		}
 		Integer[] kappa = null;		
 		RankingFunction candidate = this.constructRankingFunction(beliefset, kappa);
-		while(!candidate.satisfies((BeliefBase)beliefset)){
+		while(!candidate.satisfies(beliefset)){
 			kappa = this.increment(kappa);			
 			candidate = this.constructRankingFunction(beliefset, kappa);
 //			String debugMessage = "["+kappa[0];

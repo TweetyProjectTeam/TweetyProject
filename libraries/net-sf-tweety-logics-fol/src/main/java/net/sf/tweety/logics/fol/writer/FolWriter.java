@@ -20,7 +20,7 @@ package net.sf.tweety.logics.fol.writer;
 
 import java.io.IOException;
 
-import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**

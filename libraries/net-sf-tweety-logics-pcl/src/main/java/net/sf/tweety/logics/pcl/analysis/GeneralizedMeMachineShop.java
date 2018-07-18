@@ -20,9 +20,9 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.BeliefBaseMachineShop;
-import net.sf.tweety.logics.pcl.GeneralizedMeReasoner;
-import net.sf.tweety.logics.pcl.PclBeliefSet;
+import net.sf.tweety.logics.pcl.reasoner.GeneralizedMeReasoner;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
+import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
@@ -59,7 +59,7 @@ public class GeneralizedMeMachineShop implements BeliefBaseMachineShop {
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		// Get generalized ME-model
 		GeneralizedMeReasoner reasoner = new GeneralizedMeReasoner(p);
-		ProbabilityDistribution<PossibleWorld> p =  reasoner.getMeDistribution(beliefSet,(PropositionalSignature) beliefSet.getSignature());
+		ProbabilityDistribution<PossibleWorld> p =  reasoner.getModel(beliefSet,(PropositionalSignature) beliefSet.getSignature());
 		PclBeliefSet result = new PclBeliefSet();
 		for(ProbabilisticConditional pc: beliefSet){
 			if(p.probability(new Conjunction(pc.getPremise())).doubleValue() <= Probability.PRECISION)

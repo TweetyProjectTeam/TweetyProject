@@ -34,7 +34,7 @@ import net.sf.tweety.math.probability.*;
  * of an underlying first-order signature for a relational probabilistic conditional knowledge base.
  * @author Matthias Thimm
  */
-public class RpclProbabilityDistribution<T extends Interpretation<FolFormula>> extends AbstractInterpretation<RelationalProbabilisticConditional> implements Map<T,Probability> {
+public class RpclProbabilityDistribution<T extends Interpretation<FolBeliefSet,FolFormula>> extends AbstractInterpretation<RpclBeliefSet,RelationalProbabilisticConditional> implements Map<T,Probability> {
 	
 	/**
 	 * The probabilities of the interpretations.
@@ -81,10 +81,7 @@ public class RpclProbabilityDistribution<T extends Interpretation<FolFormula>> e
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase)	throws IllegalArgumentException {
-		if(!(beliefBase instanceof RpclBeliefSet))
-			throw new IllegalArgumentException("Relational probabilistic conditional knowledge base expected.");
-		RpclBeliefSet kb = (RpclBeliefSet) beliefBase;
+	public boolean satisfies(RpclBeliefSet kb)	throws IllegalArgumentException {
 		for(RelationalProbabilisticConditional f: kb)
 			if(!this.satisfies(f)) return false;
 		return true;
@@ -100,7 +97,7 @@ public class RpclProbabilityDistribution<T extends Interpretation<FolFormula>> e
 	public Probability probability(FolFormula f){
 		if(!f.isClosed()) throw new IllegalArgumentException("Formula '" + f + "' is not closed.");
 		Probability result = new Probability(0d);
-		for(Interpretation<FolFormula> i: this.keySet())
+		for(Interpretation<FolBeliefSet,FolFormula> i: this.keySet())
 			if(i.satisfies(f))
 				result = result.add(this.get(i));
 		return result;

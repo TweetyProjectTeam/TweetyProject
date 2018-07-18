@@ -24,7 +24,6 @@ import java.util.Set;
 import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.AbstractInterpretation;
-import net.sf.tweety.commons.BeliefBase;
 
 /**
  * This abstract class acts as a common ancestor for interpretations to
@@ -32,7 +31,7 @@ import net.sf.tweety.commons.BeliefBase;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractArgumentationInterpretation extends AbstractInterpretation<Argument> {
+public abstract class AbstractArgumentationInterpretation extends AbstractInterpretation<DungTheory,Argument> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.Formula)
@@ -46,7 +45,7 @@ public abstract class AbstractArgumentationInterpretation extends AbstractInterp
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(BeliefBase beliefBase) throws IllegalArgumentException {
+	public boolean satisfies(DungTheory beliefBase) throws IllegalArgumentException {
 		throw new IllegalArgumentException("Satisfaction of belief bases by extensions is undefined.");
 	}
 

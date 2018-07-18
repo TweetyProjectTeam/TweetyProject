@@ -24,7 +24,7 @@ import java.util.Collection;
  * An abstract interpretation for some logical language.
  * @author Matthias Thimm
  */
-public abstract class AbstractInterpretation<S extends Formula> implements Interpretation<S> {
+public abstract class AbstractInterpretation<B extends BeliefBase, S extends Formula> implements Interpretation<B,S> {
 	
 	/**
 	 * Checks whether this interpretation satisfies all given formulas.

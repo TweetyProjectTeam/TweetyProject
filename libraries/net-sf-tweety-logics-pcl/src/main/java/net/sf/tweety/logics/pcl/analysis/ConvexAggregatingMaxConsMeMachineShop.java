@@ -23,7 +23,7 @@ import java.util.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.analysis.MusEnumerator;
 import net.sf.tweety.logics.commons.analysis.NaiveMusEnumerator;
-import net.sf.tweety.logics.pcl.*;
+import net.sf.tweety.logics.pcl.reasoner.DefaultMeReasoner;
 import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
@@ -62,7 +62,7 @@ public class ConvexAggregatingMaxConsMeMachineShop implements BeliefBaseMachineS
 				bs.add((ProbabilisticConditional) f);
 			// name the signature explicitly in order to ensure that the distributions
 			// are defined on the same set. 
-			distributions[cnt] = new DefaultMeReasoner().getMeDistribution(bs,(PropositionalSignature) beliefSet.getSignature());			
+			distributions[cnt] = new DefaultMeReasoner().getModel(bs,(PropositionalSignature) beliefSet.getSignature());			
 			cnt++;
 		}
 		double[] factors = new double[maxCons.size()];

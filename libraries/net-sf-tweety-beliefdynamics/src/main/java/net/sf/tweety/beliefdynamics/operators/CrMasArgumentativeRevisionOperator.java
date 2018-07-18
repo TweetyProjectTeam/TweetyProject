@@ -25,7 +25,6 @@ import net.sf.tweety.beliefdynamics.*;
 import net.sf.tweety.beliefdynamics.mas.*;
 import net.sf.tweety.beliefdynamics.selectiverevision.*;
 import net.sf.tweety.beliefdynamics.selectiverevision.argumentative.*;
-import net.sf.tweety.logics.pl.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**

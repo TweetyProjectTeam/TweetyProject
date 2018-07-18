@@ -28,7 +28,7 @@ import net.sf.tweety.agents.Executable;
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.DialogueTrace;
 import net.sf.tweety.agents.dialogues.ExecutableFormulaSet;
-import net.sf.tweety.logics.pl.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**

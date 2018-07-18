@@ -20,7 +20,7 @@ package net.sf.tweety.logics.fol.parser;
 
 import java.io.StringReader;
 
-import net.sf.tweety.logics.fol.FolBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 
 /**
  * Functional test for the new javacc parser 'FolParserB'

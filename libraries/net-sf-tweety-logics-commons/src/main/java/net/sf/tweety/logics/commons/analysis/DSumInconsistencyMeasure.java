@@ -20,6 +20,7 @@ package net.sf.tweety.logics.commons.analysis;
 
 import java.util.Collection;
 
+import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.InterpretationIterator;
@@ -36,12 +37,12 @@ import net.sf.tweety.commons.analysis.InterpretationDistance;
  *
  * @param <S> The type of formulas supported
  */
-public class DSumInconsistencyMeasure<T extends Interpretation<S>,S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
+public class DSumInconsistencyMeasure<T extends Interpretation<B,S>,B extends BeliefBase,S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
 	/** The distance used by this measure. */
-	private InterpretationDistance<T,S> distance;
+	private InterpretationDistance<T,B,S> distance;
 	/** For iterating over interpretations. */
-	private InterpretationIterator<S,T> it;
+	private InterpretationIterator<S,B,T> it;
 	
 	/**
 	 * Creates a new d-sum inconsistency measure using the given distance and interpretations
@@ -49,7 +50,7 @@ public class DSumInconsistencyMeasure<T extends Interpretation<S>,S extends Form
 	 * @param distance some distance measure
 	 * @param it some interpretation iterator
 	 */
-	public DSumInconsistencyMeasure(InterpretationDistance<T,S> distance, InterpretationIterator<S,T> it){
+	public DSumInconsistencyMeasure(InterpretationDistance<T,B,S> distance, InterpretationIterator<S,B,T> it){
 		this.distance = distance;
 		this.it = it;
 	}

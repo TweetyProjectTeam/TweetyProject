@@ -26,9 +26,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.InterpretationSet;
 import net.sf.tweety.commons.util.Pair;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -44,9 +44,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * Internally it uses the smaller and therefore faster implementation of PossibleWorld for satisfication test
  * @author Tim Janus
  */
-public class NicePossibleWorld 
-	extends InterpretationSet<Proposition,PropositionalFormula> 
-	implements Comparator<Pair<Proposition, Boolean>> {
+public class NicePossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PropositionalFormula> implements Comparator<Pair<Proposition, Boolean>> {
 	
 	/** 
 	 * Implementation of possible world with a small memory print and 
@@ -194,7 +192,7 @@ public class NicePossibleWorld
 	}
 
 	@Override
-	public boolean satisfies(BeliefBase beliefBase)
+	public boolean satisfies(PlBeliefSet beliefBase)
 			throws IllegalArgumentException {
 		return world.satisfies(beliefBase);
 	}

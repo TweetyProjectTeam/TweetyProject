@@ -24,7 +24,6 @@ import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.commons.syntax.interfaces.*;
 import net.sf.tweety.logics.commons.test.*;
-import net.sf.tweety.logics.fol.FolBeliefSet;
 
 @SuppressWarnings("all")
 /** Token Manager. */

@@ -21,7 +21,6 @@ package net.sf.tweety.logics.pcl.analysis;
 import java.util.*;
 
 import net.sf.tweety.logics.commons.analysis.CulpabilityMeasure;
-import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.math.probability.*;
 

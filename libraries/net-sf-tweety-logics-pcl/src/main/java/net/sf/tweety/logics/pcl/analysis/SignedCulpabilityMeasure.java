@@ -19,7 +19,6 @@
 package net.sf.tweety.logics.pcl.analysis;
 
 import net.sf.tweety.logics.commons.analysis.CulpabilityMeasure;
-import net.sf.tweety.logics.pcl.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 
 /**

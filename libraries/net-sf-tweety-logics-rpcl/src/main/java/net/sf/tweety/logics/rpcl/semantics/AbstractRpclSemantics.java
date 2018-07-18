@@ -22,6 +22,7 @@ import java.util.*;
 
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.fol.semantics.*;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.rpcl.*;
@@ -56,7 +57,7 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	 * @see net.sf.tweety.logics.rpcl.semantics.RpclSemantics#getSatisfactionStatement(net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional, net.sf.tweety.logics.fol.syntax.FolSignature, java.util.Map)
 	 */
 	@Override
-	public abstract Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolFormula>,FloatVariable> worlds2vars);
+	public abstract Statement getSatisfactionStatement(RelationalProbabilisticConditional r, FolSignature signature, Map<Interpretation<FolBeliefSet,FolFormula>,FloatVariable> worlds2vars);
 	
 	/**
 	 * Checks whether the given ground conditional is satisfied by the given distribution
@@ -81,9 +82,9 @@ public abstract class AbstractRpclSemantics implements RpclSemantics {
 	 * @param worlds2vars a map mapping reference worlds to variables.
 	 * @return the term expressing the probability of the given formula "f".
 	 */
-	protected Term probabilityTerm(FolFormula f, Map<Interpretation<FolFormula>,FloatVariable> worlds2vars){
+	protected Term probabilityTerm(FolFormula f, Map<Interpretation<FolBeliefSet,FolFormula>,FloatVariable> worlds2vars){
 		Term result = null;		
-		for(Interpretation<FolFormula> world: worlds2vars.keySet()){
+		for(Interpretation<FolBeliefSet,FolFormula> world: worlds2vars.keySet()){
 			Integer multiplicator;
 			if(world instanceof ReferenceWorld)
 				multiplicator = ((ReferenceWorld)world).getMultiplicator(f);

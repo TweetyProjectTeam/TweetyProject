@@ -28,6 +28,7 @@ import java.util.StringTokenizer;
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -57,7 +58,7 @@ public class LingelingSolver extends SatSolver {
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation<PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
 		try {
 			List<Proposition> props = new ArrayList<Proposition>();
 			for(PropositionalFormula f: formulas){

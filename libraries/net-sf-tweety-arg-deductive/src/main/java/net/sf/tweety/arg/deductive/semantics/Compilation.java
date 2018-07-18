@@ -25,10 +25,10 @@ import java.util.Stack;
 
 import net.sf.tweety.arg.deductive.DeductiveKnowledgeBase;
 import net.sf.tweety.graphs.*;
-import net.sf.tweety.logics.pl.PlBeliefSet;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
