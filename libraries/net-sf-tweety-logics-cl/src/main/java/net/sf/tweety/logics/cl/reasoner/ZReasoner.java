@@ -16,20 +16,17 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.cl;
+package net.sf.tweety.logics.cl.reasoner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
+import net.sf.tweety.logics.cl.syntax.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 
 /**
@@ -59,76 +56,10 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * TARK '90, San Francicso, Morgan Kaufmann Publishers Inc. (1990) 121-135 
  * 
  * @author Katharina Diekmann
+ * @author Matthias Thimm
  */
-public class ZReasoner implements BeliefBaseReasoner<ClBeliefSet> {
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
-	 */
-	@Override
-	public Answer query(ClBeliefSet beliefset, Formula query) {
-		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
-			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
-		RankingFunction ocf = this.getOCF(beliefset);
-		if(query instanceof Conditional){
-			Answer answer = new Answer(beliefset,query);
-			boolean bAnswer = ocf.satisfies((Conditional)query);
-			answer.setAnswer(bAnswer);
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;			
-		}
-		if(query instanceof PropositionalFormula){
-			int rank = ocf.rank((PropositionalFormula)query);
-			Answer answer = new Answer(beliefset,query);			
-			answer.setAnswer(rank==0);
-			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
-			return answer;
-		}				
-		return null;
-	}	
-	
-	/**
-	 * Returns a ranking functions based on penalty points of System Z.
-	 * @return A ranking function for this reasoner's knowledge base.
-	 */
-	public RankingFunction getOCF(ClBeliefSet beliefset){		
-		Set<PossibleWorld> omega = PossibleWorld.getAllPossibleWorlds(beliefset.getSignature() );		
-		RankingFunction ocf = new RankingFunction(beliefset.getSignature());
+public class ZReasoner extends AbstractConditionalLogicReasoner {
 		
-		// Compute partitioning of the knowledge base
-		ArrayList<ClBeliefSet> tolerancePartition = partition( beliefset ,omega);
-		if( tolerancePartition.isEmpty() ){
-			System.out.println("The belief base " + beliefset + " is not consistent.");
-			return null;
-		}
-		
-		// Store Z-value for each conditional of the knowledge base
-		Map<Conditional,Integer> zValue = new HashMap<Conditional,Integer>();
-		
-		for( int index = 0; index < tolerancePartition.size(); index++ ){
-			for( Conditional c : tolerancePartition.get(index) ) {   
-				zValue.put(c, index);
-			}
-		}
-		
-		// Compute penalty points for each world based on partitioning
-		
-		for( PossibleWorld w : omega ){
-			int rank = 0;
-			
-			for( Conditional c : zValue.keySet() ){
-				if( (w.satisfies(c.getPremise()) && !w.satisfies(c.getConclusion())) && rank < (zValue.get(c)+1)){
-					rank = zValue.get(c) + 1;
-				}
-			}
-			
-			ocf.setRank(w, rank);
-		}
-		
-		return ocf;
-	}
-	
-	
 	/**
 	 * Returns a partitioning of a knowledge base into partitions containing all conditionals that 
 	 * tolerate the remaining set of conditionals of a knowledge base.
@@ -220,6 +151,47 @@ public class ZReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 		}
 		
 		return tolerated;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.cl.reasoner.AbstractConditionalLogicReasoner#getModel(net.sf.tweety.logics.cl.syntax.ClBeliefSet)
+	 */
+	@Override
+	public RankingFunction getModel(ClBeliefSet beliefset) {
+		Set<PossibleWorld> omega = PossibleWorld.getAllPossibleWorlds(beliefset.getSignature() );		
+		RankingFunction ocf = new RankingFunction(beliefset.getSignature());
+		
+		// Compute partitioning of the knowledge base
+		ArrayList<ClBeliefSet> tolerancePartition = partition( beliefset ,omega);
+		if( tolerancePartition.isEmpty() ){
+			System.out.println("The belief base " + beliefset + " is not consistent.");
+			return null;
+		}
+		
+		// Store Z-value for each conditional of the knowledge base
+		Map<Conditional,Integer> zValue = new HashMap<Conditional,Integer>();
+		
+		for( int index = 0; index < tolerancePartition.size(); index++ ){
+			for( Conditional c : tolerancePartition.get(index) ) {   
+				zValue.put(c, index);
+			}
+		}
+		
+		// Compute penalty points for each world based on partitioning
+		
+		for( PossibleWorld w : omega ){
+			int rank = 0;
+			
+			for( Conditional c : zValue.keySet() ){
+				if( (w.satisfies(c.getPremise()) && !w.satisfies(c.getConclusion())) && rank < (zValue.get(c)+1)){
+					rank = zValue.get(c) + 1;
+				}
+			}
+			
+			ocf.setRank(w, rank);
+		}
+		
+		return ocf;
 	}
 
 }

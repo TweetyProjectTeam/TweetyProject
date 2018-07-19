@@ -16,17 +16,16 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.cl;
+package net.sf.tweety.logics.cl.reasoner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
+import net.sf.tweety.logics.cl.syntax.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
@@ -49,7 +48,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * Lecture Notes in Computer Science, Volume 2087. 2001.
  * @author Matthias Thimm
  */
-public class BruteForceCReasoner implements BeliefBaseReasoner<ClBeliefSet> {
+public class BruteForceCReasoner extends AbstractConditionalLogicReasoner {
 
 	/** Logger. */
 	//static private Logger log = LoggerFactory.getLogger(BruteForceCReasoner.class);	
@@ -90,75 +89,7 @@ public class BruteForceCReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 	public BruteForceCReasoner(){
 		this(false);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
-	 */
-	@Override
-	public Answer query(ClBeliefSet beliefset, Formula query) {
-		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
-			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
-		RankingFunction crepresentation = this.getCRepresentation(beliefset);
-		if(query instanceof Conditional){
-			Answer answer = new Answer(beliefset,query);
-			boolean bAnswer = crepresentation.satisfies((Conditional)query);
-			answer.setAnswer(bAnswer);
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;			
-		}
-		if(query instanceof PropositionalFormula){
-			int rank = crepresentation.rank((PropositionalFormula)query);
-			Answer answer = new Answer(beliefset,query);			
-			answer.setAnswer(new Double(rank));
-			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
-			return answer;
-		}			
-		return null;
-	}
-	
-	/**
-	 * Computes a minimal c-representation for this reasoner's knowledge base.
-	 * @param beliefset a beliefset 
-	 * @return a minimal c-representation for this reasoner's knowledge base.
-	 */
-	public RankingFunction getCRepresentation(ClBeliefSet beliefset){	
-		ArrayList<PropositionalFormula> list = new ArrayList<PropositionalFormula>();
-		this.filter(list, beliefset);
 		
-		this.numConditionals = beliefset.size();
-		int i = 0;
-		this.indexToConditional = new HashMap<Integer,Conditional>();
-		for(Formula f: beliefset){
-			this.indexToConditional.put(i++, (Conditional) f);
-			if(!this.simple)
-				this.indexToConditional.put(i++, (Conditional) f);
-		}
-		Integer[] kappa = null;		
-		RankingFunction candidate = this.constructRankingFunction(beliefset, kappa);
-		while(!candidate.satisfies(beliefset)){
-			kappa = this.increment(kappa);			
-			candidate = this.constructRankingFunction(beliefset, kappa);
-//			String debugMessage = "["+kappa[0];
-//			for(int j=1; j< kappa.length;j++)
-//				debugMessage += "," + kappa[j];
-//			debugMessage += "]";
-//			BruteForceCReasoner.log.debug(debugMessage);
-		}
-		
-		if(list.size()>0){
-			for(PropositionalFormula pl : list){
-				for(PossibleWorld world : candidate.getPossibleWorlds()){
-					if(world.satisfies(pl)){
-						candidate.setRank(world, RankingFunction.INFINITY);
-						System.out.println("set rank INFINITY for : " + world.toString());
-					}
-				}
-			}
-		}
-		candidate.normalize();
-		return candidate;
-	}
-	
 	private void filter(ArrayList<PropositionalFormula> list, ClBeliefSet beliefset){
 		ClBeliefSet copy = beliefset.clone();
 		for(Formula f: copy){
@@ -286,5 +217,47 @@ public class BruteForceCReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 			}
 		}
 		throw new IllegalArgumentException("Argument must contain at least one value \"1\"");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.cl.reasoner.AbstractConditionalLogicReasoner#getModel(net.sf.tweety.logics.cl.syntax.ClBeliefSet)
+	 */
+	@Override
+	public RankingFunction getModel(ClBeliefSet beliefset) {
+		ArrayList<PropositionalFormula> list = new ArrayList<PropositionalFormula>();
+		this.filter(list, beliefset);
+		
+		this.numConditionals = beliefset.size();
+		int i = 0;
+		this.indexToConditional = new HashMap<Integer,Conditional>();
+		for(Formula f: beliefset){
+			this.indexToConditional.put(i++, (Conditional) f);
+			if(!this.simple)
+				this.indexToConditional.put(i++, (Conditional) f);
+		}
+		Integer[] kappa = null;		
+		RankingFunction candidate = this.constructRankingFunction(beliefset, kappa);
+		while(!candidate.satisfies(beliefset)){
+			kappa = this.increment(kappa);			
+			candidate = this.constructRankingFunction(beliefset, kappa);
+//			String debugMessage = "["+kappa[0];
+//			for(int j=1; j< kappa.length;j++)
+//				debugMessage += "," + kappa[j];
+//			debugMessage += "]";
+//			BruteForceCReasoner.log.debug(debugMessage);
+		}
+		
+		if(list.size()>0){
+			for(PropositionalFormula pl : list){
+				for(PossibleWorld world : candidate.getPossibleWorlds()){
+					if(world.satisfies(pl)){
+						candidate.setRank(world, RankingFunction.INFINITY);
+						System.out.println("set rank INFINITY for : " + world.toString());
+					}
+				}
+			}
+		}
+		candidate.normalize();
+		return candidate;
 	}
 }

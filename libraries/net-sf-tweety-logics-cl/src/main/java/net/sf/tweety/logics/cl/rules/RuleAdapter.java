@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.sf.tweety.logics.cl.RuleBasedCReasoner.Rule;
 import net.sf.tweety.logics.cl.kappa.KappaValue;
+import net.sf.tweety.logics.cl.reasoner.RuleBasedCReasoner.Rule;
 import net.sf.tweety.logics.cl.semantics.ConditionalStructure;
 
 /**

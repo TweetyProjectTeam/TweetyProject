@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.social;
+package net.sf.tweety.arg.social.syntax;
 
 import java.util.HashMap;
 import java.util.Map;

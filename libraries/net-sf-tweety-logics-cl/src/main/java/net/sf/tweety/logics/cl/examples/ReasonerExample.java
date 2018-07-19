@@ -22,10 +22,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.sf.tweety.logics.cl.BruteForceCReasoner;
-import net.sf.tweety.logics.cl.ClBeliefSet;
-import net.sf.tweety.logics.cl.RuleBasedCReasoner;
+import net.sf.tweety.logics.cl.reasoner.BruteForceCReasoner;
+import net.sf.tweety.logics.cl.reasoner.RuleBasedCReasoner;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
+import net.sf.tweety.logics.cl.syntax.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -130,7 +130,7 @@ public class ReasonerExample {
 		System.out.println("Start Calculation RuleBased:");
 		long begin = System.nanoTime();
 		RuleBasedCReasoner rReasoner = new RuleBasedCReasoner();
-		RankingFunction cReprRuleBased = rReasoner.getSemantic(beliefset);
+		RankingFunction cReprRuleBased = rReasoner.getModel(beliefset);
 		long end = System.nanoTime();
 		long duration = (end-begin) / (1000*1000);
 		System.out.println("Finished RuleBased in '" + String.valueOf(duration) + "' ms");
@@ -147,7 +147,7 @@ public class ReasonerExample {
 			System.out.println("Start Calculation BruteForce:");
 			begin = System.nanoTime();
 			BruteForceCReasoner reasoner = new BruteForceCReasoner();
-			RankingFunction cReprBruteForce = reasoner.getCRepresentation(beliefset);
+			RankingFunction cReprBruteForce = reasoner.getModel(beliefset);
 			end = System.nanoTime();
 			duration = (end-begin) / (1000*1000);
 			System.out.println("Finished Bruteforce in '" + String.valueOf(duration) + "' ms");

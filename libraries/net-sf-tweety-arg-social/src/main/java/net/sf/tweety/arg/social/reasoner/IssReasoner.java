@@ -16,16 +16,17 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.social;
+package net.sf.tweety.arg.social.reasoner;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.social.semantics.SimpleProductSemantics;
 import net.sf.tweety.arg.social.semantics.SocialMapping;
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.BeliefBaseReasoner;
+import net.sf.tweety.arg.social.syntax.SocialAbstractArgumentationFramework;
+import net.sf.tweety.commons.ModelProvider;
+import net.sf.tweety.commons.QuantitativeReasoner;
 
 /**
  * This reasoner provides is an implementation of the "Iterative Successive Subsitution Algorithm"
@@ -36,7 +37,7 @@ import net.sf.tweety.commons.BeliefBaseReasoner;
  * @author Matthias Thimm
  *
  */
-public class IssReasoner implements BeliefBaseReasoner<SocialAbstractArgumentationFramework>{
+public class IssReasoner implements QuantitativeReasoner<SocialAbstractArgumentationFramework,Argument>, ModelProvider<Argument,SocialAbstractArgumentationFramework,SocialMapping<Double>> {
 
 	/** The semantics used by this reasoner. */
 	private SimpleProductSemantics semantics;
@@ -72,22 +73,39 @@ public class IssReasoner implements BeliefBaseReasoner<SocialAbstractArgumentati
 		return dist;
 	}
 	
-	/**
-	 * Returns the social model computed by the ISS algorithm.
-	 * @param saf a social abstract argumentation frameworks
-	 * @return the social model computed by the ISS algorithm.
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
-	public SocialMapping<Double> getSocialModel(SocialAbstractArgumentationFramework saaf){		
+	@Override
+	public Double query(SocialAbstractArgumentationFramework beliefbase, Argument formula) {		
+		return this.getModel(beliefbase).get(formula);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.ModelProvider#getModels(net.sf.tweety.commons.BeliefBase)
+	 */
+	@Override
+	public Collection<SocialMapping<Double>> getModels(SocialAbstractArgumentationFramework bbase) {
+		Collection<SocialMapping<Double>> models = new HashSet<SocialMapping<Double>>();
+		models.add(this.getModel(bbase));
+		return models;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.ModelProvider#getModel(net.sf.tweety.commons.BeliefBase)
+	 */
+	@Override
+	public SocialMapping<Double> getModel(SocialAbstractArgumentationFramework bbase) {
 		SocialMapping<Double> mapping = new SocialMapping<Double>(this.semantics);
-		for(Argument a: saaf)
+		for(Argument a: bbase)
 			mapping.put(a, 0.5);
 		SocialMapping<Double> newmapping = mapping;
 		do{
 			mapping = newmapping;
 			newmapping = new SocialMapping<Double>(this.semantics);
-			for(Argument a: saaf){
-				double val = this.semantics.supp(saaf.getPositive(a), saaf.getNegative(a));
-				for(Argument b: saaf.getAttackers(a)){
+			for(Argument a: bbase){
+				double val = this.semantics.supp(bbase.getPositive(a), bbase.getNegative(a));
+				for(Argument b: bbase.getAttackers(a)){
 					if(newmapping.containsKey(b))
 						val *= 1-newmapping.get(b);
 					else
@@ -95,22 +113,7 @@ public class IssReasoner implements BeliefBaseReasoner<SocialAbstractArgumentati
 				}
 				newmapping.put(a, val);
 			}
-		}while(this.dist(mapping, newmapping,saaf) > this.tolerance);
+		}while(this.dist(mapping, newmapping,bbase) > this.tolerance);
 		return newmapping;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
-	 */
-	@Override
-	public Answer query(SocialAbstractArgumentationFramework saaf, Formula query) {
-		if(!(query instanceof Argument))
-			throw new IllegalArgumentException();
-		Argument arg = (Argument) query;
-		Answer answer = new Answer(saaf, query);
-		answer.setAnswer(this.getSocialModel(saaf).satisfies(arg));
-		answer.setAnswer(this.getSocialModel(saaf).get((Argument)query));
-		return answer;
-	}
-
 }

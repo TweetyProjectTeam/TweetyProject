@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.saf;
+package net.sf.tweety.arg.saf.reasoner;
 
 import java.util.*;
 
@@ -37,7 +37,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class OutputReasoner implements BeliefBaseReasoner<StructuredArgumentationFramework> {
+public class OutputReasoner implements QualitativeReasoner<StructuredArgumentationFramework,Proposition> {
 
 	/**
 	 * The output of this reasoner.
@@ -57,19 +57,6 @@ public class OutputReasoner implements BeliefBaseReasoner<StructuredArgumentatio
 		this.reasoner = reasoner;					
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.kr.Formula)
-	 */
-	@Override
-	public Answer query(StructuredArgumentationFramework saf, Formula query) {		
-		if(!(query instanceof Proposition))
-			throw new IllegalArgumentException("Reasoning in structured argumentation frameworls is only defined for propositional queries.");
-		Answer answer = new Answer(saf,query);
-		boolean bAnswer = this.getOutput(saf).contains(query);
-		answer.setAnswer(bAnswer);
-		answer.appendText("The answer is: " + bAnswer);
-		return answer;
-	}
 	
 	/**
 	 * Returns the output this reasoner bases upon.
@@ -101,4 +88,11 @@ public class OutputReasoner implements BeliefBaseReasoner<StructuredArgumentatio
 		return this.output;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 */
+	@Override
+	public Boolean query(StructuredArgumentationFramework beliefbase, Proposition formula) {
+		return this.getOutput(beliefbase).contains(formula);
+	}
 }

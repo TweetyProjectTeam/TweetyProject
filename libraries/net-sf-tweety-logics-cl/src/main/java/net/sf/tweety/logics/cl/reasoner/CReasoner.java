@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.cl;
+package net.sf.tweety.logics.cl.reasoner;
 
 import java.util.*;
 
@@ -24,7 +24,6 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.cl.semantics.*;
 import net.sf.tweety.logics.cl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
-import net.sf.tweety.logics.pl.syntax.*;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.opt.*;
@@ -47,90 +46,7 @@ import net.sf.tweety.math.term.*;
  * Lecture Notes in Computer Science, Volume 2087. 2001.
  * @author Matthias Thimm
  */
-public class CReasoner implements BeliefBaseReasoner<ClBeliefSet> {
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Reasoner#query(net.sf.tweety.logic.Formula)
-	 */
-	@Override
-	public Answer query(ClBeliefSet beliefset, Formula query) {
-		if(!(query instanceof Conditional) && !(query instanceof PropositionalFormula))
-			throw new IllegalArgumentException("Reasoning in conditional logic is only defined for conditional and propositional queries.");
-		RankingFunction crepresentation = this.getCRepresentation(beliefset);
-		if(query instanceof Conditional){
-			Answer answer = new Answer(beliefset,query);
-			boolean bAnswer = crepresentation.satisfies((Conditional)query);
-			answer.setAnswer(bAnswer);
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;			
-		}
-		if(query instanceof PropositionalFormula){
-			int rank = crepresentation.rank((PropositionalFormula)query);
-			Answer answer = new Answer(beliefset,query);			
-			answer.setAnswer(rank==0);
-			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
-			return answer;
-		}				
-		return null;
-	}
-
-	
-	/**
-	 * Computes a minimal c-representation for this reasoner's knowledge base. 
-	 * @param kb a cl belief set
-	 * @return a minimal c-representation for this reasoner's knowledge base.
-	 */
-	public RankingFunction getCRepresentation(ClBeliefSet kb){		
-		RankingFunction crep = new RankingFunction(kb.getSignature());		
-		Set<PossibleWorld> possibleWorlds = crep.getPossibleWorlds();
-		// variables for ranks
-		Map<PossibleWorld,IntegerVariable> ranks = new HashMap<PossibleWorld,IntegerVariable>();
-		int i = 0;
-		for(PossibleWorld w: possibleWorlds){
-			ranks.put(w, new IntegerVariable("i" + i));
-			i++;
-		}
-		// variables for kappas
-		Map<Conditional,IntegerVariable> kappa_pos = new HashMap<Conditional,IntegerVariable>();
-		Map<Conditional,IntegerVariable> kappa_neg = new HashMap<Conditional,IntegerVariable>();
-		i = 1;
-		for(Formula f: kb){
-			kappa_pos.put((Conditional)f, new IntegerVariable("kp"+i));
-			kappa_neg.put((Conditional)f, new IntegerVariable("km"+i));
-			i++;
-		}		
-		// represent optimization problem
-		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		net.sf.tweety.math.term.Term targetFunction = null;
-		for(IntegerVariable v: kappa_pos.values()){
-			if(targetFunction == null)
-				targetFunction = v;
-			else targetFunction = v.add(targetFunction);			
-		}
-		for(IntegerVariable v: kappa_neg.values()){
-			if(targetFunction == null)
-				targetFunction = v;
-			else targetFunction = v.add(targetFunction);			
-		}
-		problem.setTargetFunction(targetFunction);
-		// for every conditional "cond" in "kb", "crep" should accept "cond"
-		for(Formula f: kb)
-			problem.add(this.getAcceptanceConstraint((Conditional)f, ranks));
-		// the ranking function should be indifferent to kb, i.e.
-		// for every possible world "w" the rank of the world should obey the above constraint
-		for(PossibleWorld w: ranks.keySet())
-			problem.add(this.getRankConstraint(w, ranks.get(w), kappa_pos, kappa_neg));
-		try {
-			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(problem);
-			// extract ranking function
-			for(PossibleWorld w: ranks.keySet()){
-				crep.setRank(w, ((IntegerConstant)solution.get(ranks.get(w))).getValue());
-			}		
-			return crep;
-		} catch (GeneralMathException e) {
-			throw new RuntimeException(e);
-		}		
-	}
+public class CReasoner extends AbstractConditionalLogicReasoner{
 	
 	/**
 	 * For the given conditional (B|A) and the given ranks of possible worlds, this
@@ -202,6 +118,62 @@ public class CReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 			rightSide = new net.sf.tweety.math.term.IntegerConstant(0);
 		// return
 		return new Equation(ranki.minus(rightSide),new IntegerConstant(0));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.cl.reasoner.AbstractConditionalLogicReasoner#getModel(net.sf.tweety.logics.cl.syntax.ClBeliefSet)
+	 */
+	@Override
+	public RankingFunction getModel(ClBeliefSet kb) {
+		RankingFunction crep = new RankingFunction(kb.getSignature());		
+		Set<PossibleWorld> possibleWorlds = crep.getPossibleWorlds();
+		// variables for ranks
+		Map<PossibleWorld,IntegerVariable> ranks = new HashMap<PossibleWorld,IntegerVariable>();
+		int i = 0;
+		for(PossibleWorld w: possibleWorlds){
+			ranks.put(w, new IntegerVariable("i" + i));
+			i++;
+		}
+		// variables for kappas
+		Map<Conditional,IntegerVariable> kappa_pos = new HashMap<Conditional,IntegerVariable>();
+		Map<Conditional,IntegerVariable> kappa_neg = new HashMap<Conditional,IntegerVariable>();
+		i = 1;
+		for(Formula f: kb){
+			kappa_pos.put((Conditional)f, new IntegerVariable("kp"+i));
+			kappa_neg.put((Conditional)f, new IntegerVariable("km"+i));
+			i++;
+		}		
+		// represent optimization problem
+		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
+		net.sf.tweety.math.term.Term targetFunction = null;
+		for(IntegerVariable v: kappa_pos.values()){
+			if(targetFunction == null)
+				targetFunction = v;
+			else targetFunction = v.add(targetFunction);			
+		}
+		for(IntegerVariable v: kappa_neg.values()){
+			if(targetFunction == null)
+				targetFunction = v;
+			else targetFunction = v.add(targetFunction);			
+		}
+		problem.setTargetFunction(targetFunction);
+		// for every conditional "cond" in "kb", "crep" should accept "cond"
+		for(Formula f: kb)
+			problem.add(this.getAcceptanceConstraint((Conditional)f, ranks));
+		// the ranking function should be indifferent to kb, i.e.
+		// for every possible world "w" the rank of the world should obey the above constraint
+		for(PossibleWorld w: ranks.keySet())
+			problem.add(this.getRankConstraint(w, ranks.get(w), kappa_pos, kappa_neg));
+		try {
+			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(problem);
+			// extract ranking function
+			for(PossibleWorld w: ranks.keySet()){
+				crep.setRank(w, ((IntegerConstant)solution.get(ranks.get(w))).getValue());
+			}		
+			return crep;
+		} catch (GeneralMathException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

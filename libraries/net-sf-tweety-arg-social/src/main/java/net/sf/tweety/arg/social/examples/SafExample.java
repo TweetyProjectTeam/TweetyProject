@@ -20,9 +20,9 @@
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
-import net.sf.tweety.arg.social.IssReasoner;
-import net.sf.tweety.arg.social.SocialAbstractArgumentationFramework;
+import net.sf.tweety.arg.social.reasoner.IssReasoner;
 import net.sf.tweety.arg.social.semantics.SimpleProductSemantics;
+import net.sf.tweety.arg.social.syntax.SocialAbstractArgumentationFramework;
 
 /**
  * Example code for using social abstract argumentation.
@@ -57,6 +57,6 @@ public class SafExample {
 		
 		IssReasoner reasoner = new IssReasoner(new SimpleProductSemantics(0.01),0.001);
 		
-		System.out.println(reasoner.getSocialModel(saf));
+		System.out.println(reasoner.getModel(saf));
 	}	
 }

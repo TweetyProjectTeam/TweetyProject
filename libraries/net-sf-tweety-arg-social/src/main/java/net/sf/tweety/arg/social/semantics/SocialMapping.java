@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.social.SocialAbstractArgumentationFramework;
+import net.sf.tweety.arg.social.syntax.SocialAbstractArgumentationFramework;
 import net.sf.tweety.commons.AbstractInterpretation;
 
 /**

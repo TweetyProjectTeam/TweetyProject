@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.cl;
+package net.sf.tweety.logics.cl.reasoner;
 
 
 import java.util.ArrayList;
@@ -25,15 +25,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.cl.kappa.ConditionalStructureKappaBuilder;
 import net.sf.tweety.logics.cl.kappa.KappaValue;
 import net.sf.tweety.logics.cl.rules.EvaluateRule;
 import net.sf.tweety.logics.cl.semantics.ConditionalStructure;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.cl.semantics.ConditionalStructure.Generator;
+import net.sf.tweety.logics.cl.syntax.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
 
@@ -43,8 +41,9 @@ import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
  * that means it is applied first. 
  *  
  * @author Tim Janus
+ * @author Matthias Thimm
  */
-public class RuleBasedCReasoner implements BeliefBaseReasoner<ClBeliefSet> {
+public class RuleBasedCReasoner extends AbstractConditionalLogicReasoner{
 	
 	/** 
 	 * A rule that is applicable by the {@link RuleBasedCReasoner} to reason a
@@ -98,11 +97,12 @@ public class RuleBasedCReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 	public RuleBasedCReasoner( boolean humanFriendly) {
 		this.humanFriendly = humanFriendly;
 	}
-		
-	/**
-	 * @return the c-representation of the belief base as a ranking function
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.cl.reasoner.AbstractConditionalLogicReasoner#getModel(net.sf.tweety.logics.cl.syntax.ClBeliefSet)
 	 */
-	public RankingFunction getSemantic(ClBeliefSet beliefset) {
+	@Override
+	public RankingFunction getModel(ClBeliefSet beliefset) {
 		ConditionalStructure cs = new ConditionalStructure(beliefset);
 		ConditionalStructureKappaBuilder builder = new ConditionalStructureKappaBuilder(!humanFriendly);
 		HashMap<Conditional, KappaValue> kappas = new HashMap<Conditional, KappaValue>(builder.build(cs));
@@ -122,17 +122,6 @@ public class RuleBasedCReasoner implements BeliefBaseReasoner<ClBeliefSet> {
 			}
 			rfunc.setRank(npw.getOptimizedWorld(), weight);
 		}
-		return rfunc;		
+		return rfunc;	
 	}
-
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
-	 */
-	@Override
-	public Answer query(ClBeliefSet beliefset, Formula query) {
-		//TODO
-		return null;
-	}
-
 }

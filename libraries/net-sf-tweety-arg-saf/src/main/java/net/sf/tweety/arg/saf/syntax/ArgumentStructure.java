@@ -22,7 +22,6 @@ import java.util.*;
 
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
-import net.sf.tweety.arg.saf.*;
 import net.sf.tweety.commons.util.rules.*;
 import net.sf.tweety.logics.pl.syntax.*;
 

@@ -16,12 +16,11 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.saf;
+package net.sf.tweety.arg.saf.syntax;
 
 import java.util.*;
 
 import net.sf.tweety.arg.dung.syntax.*;
-import net.sf.tweety.arg.saf.syntax.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.commons.util.rules.*;
 import net.sf.tweety.logics.pl.syntax.*;

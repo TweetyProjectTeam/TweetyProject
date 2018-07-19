@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.tweety.commons.util.Pair;
-import net.sf.tweety.logics.cl.ClBeliefSet;
+import net.sf.tweety.logics.cl.syntax.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.error.LanguageException.LanguageExceptionReason;

@@ -21,7 +21,6 @@ package net.sf.tweety.logics.cl.parser;
 import java.io.*;
 
 import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.cl.*;
 import net.sf.tweety.logics.cl.syntax.*;
 import net.sf.tweety.logics.pl.parser.*;
 import net.sf.tweety.logics.pl.syntax.*;
