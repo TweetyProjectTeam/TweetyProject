@@ -28,7 +28,7 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.RuleSet;

@@ -20,7 +20,6 @@ package net.sf.tweety.arg.saf;
 
 import java.util.*;
 
-import net.sf.tweety.arg.dung.*;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.arg.saf.syntax.*;
 import net.sf.tweety.commons.*;

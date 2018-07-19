@@ -18,12 +18,12 @@
  */
 package net.sf.tweety.arg.prob.semantics;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.AbstractArgumentationInterpretation;
 import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Labeling;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.math.probability.*;
 
 /**

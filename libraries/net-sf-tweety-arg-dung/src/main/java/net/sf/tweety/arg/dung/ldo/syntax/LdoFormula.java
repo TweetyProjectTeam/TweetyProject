@@ -22,11 +22,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.ldo.semantics.LdoInterpretation;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungSignature;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;

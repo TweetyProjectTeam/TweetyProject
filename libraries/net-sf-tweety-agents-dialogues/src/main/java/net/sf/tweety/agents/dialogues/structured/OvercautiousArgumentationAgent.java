@@ -22,7 +22,6 @@ import java.util.*;
 
 import net.sf.tweety.agents.*;
 import net.sf.tweety.agents.dialogues.ExecutableExtension;
-import net.sf.tweety.arg.dung.*;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.arg.saf.*;
 import net.sf.tweety.arg.saf.syntax.*;

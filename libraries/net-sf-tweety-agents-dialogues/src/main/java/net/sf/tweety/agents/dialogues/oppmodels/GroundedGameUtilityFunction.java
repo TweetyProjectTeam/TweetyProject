@@ -21,12 +21,11 @@ package net.sf.tweety.agents.dialogues.oppmodels;
 import java.util.Set;
 
 import net.sf.tweety.agents.dialogues.DialogueTrace;
-import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.GroundReasoner;
+import net.sf.tweety.arg.dung.reasoner.SimpleGroundedReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +98,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 	@Override
 	public double getUtility(DialogueTrace<Argument,Extension> trace) {		
 		DungTheory theory = new DungTheory(this.theory.getRestriction(trace.getElements()));
-		Extension groundedExtension = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(theory).iterator().next();
+		Extension groundedExtension = new SimpleGroundedReasoner().getModel(theory);
 		return this.getUtility(groundedExtension, trace);
 	}
 
@@ -111,7 +110,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 		DungTheory theory = new DungTheory(this.theory.getRestriction(trace.getElements()));
 		theory.addAll(additionalArguments);
 		theory.addAllAttacks(additionalAttacks);
-		Extension groundedExtension = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(theory).iterator().next();
+		Extension groundedExtension = new SimpleGroundedReasoner().getModel(theory);
 		return this.getUtility(groundedExtension, trace);
 	}
 	

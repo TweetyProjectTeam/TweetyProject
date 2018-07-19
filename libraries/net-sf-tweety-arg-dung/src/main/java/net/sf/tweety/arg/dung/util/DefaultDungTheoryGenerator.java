@@ -22,10 +22,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-import net.sf.tweety.arg.dung.*;
-import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.arg.dung.reasoner.SimpleGroundedReasoner;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Implements a customizable Dung theory generator.
@@ -77,7 +77,7 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 			boolean inExtension = false;
 			do{
 				theory = this.generateTreeShape(arg);
-				inExtension = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(theory).iterator().next().contains(arg);
+				inExtension = new SimpleGroundedReasoner().query(theory,arg);
 			}while(!inExtension);
 			return theory;
 		}		
@@ -92,7 +92,7 @@ public class DefaultDungTheoryGenerator implements DungTheoryGenerator {
 					Attack att = new Attack(a,b);
 					theory.add(att);
 					//Check whether this makes the argument out
-					if(!new GroundReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(theory).iterator().next().contains(arg))
+					if(!new SimpleGroundedReasoner().query(theory,arg))
 						theory.remove(att);
 				}
 			}

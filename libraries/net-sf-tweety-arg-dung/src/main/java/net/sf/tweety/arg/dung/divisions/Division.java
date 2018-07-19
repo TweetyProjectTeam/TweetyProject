@@ -24,11 +24,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.graphs.Graph;
@@ -92,7 +92,7 @@ public class Division extends Pair<Extension,Extension>{
 		Collection<Graph<Argument>> subtheories = theory.getSubgraphs();
 		for(Graph<Argument> g: subtheories){
 			DungTheory sub = new DungTheory(g);
-			for(Division d: Division.getDivisions(AbstractExtensionReasoner.getReasonerForSemantics(semantics, Semantics.CREDULOUS_INFERENCE).getExtensions(sub), sub)){
+			for(Division d: Division.getDivisions(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics).getModels(sub), sub)){
 				if(d.getFirst().equals(this.getFirst())){
 					Extension e = new Extension(this.getSecond());
 					e.retainAll(sub);

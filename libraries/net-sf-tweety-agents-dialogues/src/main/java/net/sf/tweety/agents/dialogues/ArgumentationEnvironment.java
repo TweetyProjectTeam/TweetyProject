@@ -26,9 +26,9 @@ import net.sf.tweety.agents.Agent;
 import net.sf.tweety.agents.Environment;
 import net.sf.tweety.agents.Executable;
 import net.sf.tweety.agents.Perceivable;
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * This class models the environment for agents in argumentation games.

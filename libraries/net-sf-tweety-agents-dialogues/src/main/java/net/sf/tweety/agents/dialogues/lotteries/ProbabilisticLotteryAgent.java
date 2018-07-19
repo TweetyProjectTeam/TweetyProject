@@ -23,10 +23,10 @@ import java.util.Set;
 
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.ExecutableDungTheory;
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.prob.lotteries.ArgumentationLottery;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.arg.prob.lotteries.UtilityFunction;

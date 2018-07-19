@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
- package net.sf.tweety.arg.dung.solver;
+ package net.sf.tweety.arg.dung.reasoner;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,11 +25,11 @@ import java.util.StringTokenizer;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 
 /**
- * This enum contains all supported problems.
+ * This enum contains all supported problems for probo-based reasoner.
  * 
  * @author Matthias Thimm
  */
-public enum Problem {
+public enum ProboProblem {
 	DC_CF (SubProblem.DC, Semantics.CF),
 	DC_ADM (SubProblem.DC, Semantics.ADM),
 	DC_CO (SubProblem.DC, Semantics.CO),
@@ -207,7 +207,7 @@ public enum Problem {
 	 * @param subProblem the sub-problem
 	 * @param semantics the semantics.
 	 */
-	private Problem(SubProblem subProblem, Semantics semantics){
+	private ProboProblem(SubProblem subProblem, Semantics semantics){
 		this.subProblem = subProblem;
 		this.semantics = semantics;
 	}
@@ -242,9 +242,9 @@ public enum Problem {
 	 * @param s some string representing a problem instance
 	 * @return the actual problem
 	 */
-	public static Problem getProblem(String s){
+	public static ProboProblem getProblem(String s){
 		s = s.trim();
-		for(Problem p: Problem.values())
+		for(ProboProblem p: ProboProblem.values())
 			if(s.equals(p.toString()))
 				return p;		
 		return null;		
@@ -256,15 +256,15 @@ public enum Problem {
 	 * @param s some string
 	 * @return a collection of problems
 	 */
-	public static Collection<Problem> getProblems(String s){
+	public static Collection<ProboProblem> getProblems(String s){
 		s = s.trim();
 		if(!s.startsWith("[") || !s.endsWith("]"))
 			throw new IllegalArgumentException("Malformed problem specification: " + s);
 		s = s.substring(1, s.length()-1);
 		StringTokenizer tokenizer = new StringTokenizer(s, ",");
-		Collection<Problem> problems = new HashSet<Problem>();
+		Collection<ProboProblem> problems = new HashSet<ProboProblem>();
 		while(tokenizer.hasMoreTokens()){
-			 problems.add(Problem.getProblem(tokenizer.nextToken()));
+			 problems.add(ProboProblem.getProblem(tokenizer.nextToken()));
 		}
 		return problems;
 	}	

@@ -16,14 +16,12 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.reasoner;
 
 import java.util.*;
 
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * This reasoner for Dung theories performs inference on the complete extensions.
@@ -32,16 +30,59 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * @author Matthias Thimm
  *
  */
-public class SccCompleteReasoner extends AbstractExtensionReasoner {
+public class SimpleSccCompleteReasoner extends AbstractExtensionReasoner {
 
-	/**
-	 * Creates a new complete reasoner.
-	 * @param inferenceType The inference type for this reasoner.
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModels(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
-	public SccCompleteReasoner(int inferenceType){
-		super(inferenceType);		
+	@Override
+	public Collection<Extension> getModels(DungTheory bbase) {
+		List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(bbase.getStronglyConnectedComponents());		
+		// order SCCs in a DAG
+		boolean[][] dag = new boolean[sccs.size()][sccs.size()];
+		for(int i = 0; i < sccs.size(); i++){
+			dag[i] = new boolean[sccs.size()];
+			Arrays.fill(dag[i], false);
+		}		
+		for(int i = 0; i < sccs.size(); i++)
+			for(int j = 0; j < sccs.size(); j++)
+				if(i != j)
+					if(bbase.isAttacked(new Extension(sccs.get(i)), new Extension(sccs.get(j))))
+						dag[i][j] = true;						
+		// order SCCs topologically
+		List<Collection<Argument>> sccs_ordered = new ArrayList<Collection<Argument>>();
+		while(sccs_ordered.size() < sccs.size()){
+			for(int i = 0; i < sccs.size();i++){
+				if(sccs_ordered.contains(sccs.get(i)))
+					continue;
+				boolean isNull = true;
+				for(int j = 0; j < sccs.size(); j++)
+					if(dag[i][j]){
+						isNull = false;
+						break;
+					}
+				if(isNull){
+					sccs_ordered.add(sccs.get(i));
+					for(int j = 0; j < sccs.size(); j++)
+						dag[j][i] = false;
+				}
+			}
+		}		
+		return this.computeExtensionsViaSccs(bbase, sccs_ordered, 0, new HashSet<Argument>(), new HashSet<Argument>(), new HashSet<Argument>());
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModel(net.sf.tweety.arg.dung.syntax.DungTheory)
+	 */
+	@Override
+	public Extension getModel(DungTheory bbase) {
+		// Returns the first found complete extension
+		Collection<Extension> exts = this.getModels(bbase);
+		if(exts.isEmpty())
+			return null;
+		return exts.iterator().next();
+	}
+
 	/**
 	 * Computes extensions recursively following the SCC structure.
 	 * @param theory the theory
@@ -71,7 +112,7 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 			if(theory.isAttacked(a, new Extension(undec)))				
 				subTheory.add(new Attack(aux,a));
 		// compute complete extensions of sub theory
-		Set<Extension> subExt = new CompleteReasoner(this.getInferenceType()).getExtensions(subTheory);
+		Collection<Extension> subExt = new SimpleCompleteReasoner().getModels(subTheory);
 		Set<Extension> result = new HashSet<Extension>();
 		Collection<Argument> new_in, new_out, new_undec, attacked;
 		for(Extension ext: subExt){
@@ -89,52 +130,5 @@ public class SccCompleteReasoner extends AbstractExtensionReasoner {
 			result.addAll(this.computeExtensionsViaSccs(theory, sccs, idx+1, new_in, new_out, new_undec));
 		}		
 		return result;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
-	 */
-	public Set<Extension> getExtensions(DungTheory theory){
-		List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(theory.getStronglyConnectedComponents());		
-		// order SCCs in a DAG
-		boolean[][] dag = new boolean[sccs.size()][sccs.size()];
-		for(int i = 0; i < sccs.size(); i++){
-			dag[i] = new boolean[sccs.size()];
-			Arrays.fill(dag[i], false);
-		}		
-		for(int i = 0; i < sccs.size(); i++)
-			for(int j = 0; j < sccs.size(); j++)
-				if(i != j)
-					if(theory.isAttacked(new Extension(sccs.get(i)), new Extension(sccs.get(j))))
-						dag[i][j] = true;						
-		// order SCCs topologically
-		List<Collection<Argument>> sccs_ordered = new ArrayList<Collection<Argument>>();
-		while(sccs_ordered.size() < sccs.size()){
-			for(int i = 0; i < sccs.size();i++){
-				if(sccs_ordered.contains(sccs.get(i)))
-					continue;
-				boolean isNull = true;
-				for(int j = 0; j < sccs.size(); j++)
-					if(dag[i][j]){
-						isNull = false;
-						break;
-					}
-				if(isNull){
-					sccs_ordered.add(sccs.get(i));
-					for(int j = 0; j < sccs.size(); j++)
-						dag[j][i] = false;
-				}
-			}
-		}		
-		return this.computeExtensionsViaSccs(theory, sccs_ordered, 0, new HashSet<Argument>(), new HashSet<Argument>(), new HashSet<Argument>());
-	}
-		
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.argumentation.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
-	 */
-	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory theory, Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
-		return new CompleteReasoner(this.getInferenceType()).getPropositionalCharacterisationBySemantics(theory, in, out, undec);
-	}
-	
+	}	
 }

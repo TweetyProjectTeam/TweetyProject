@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.reasoner;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,53 +26,33 @@ import java.util.Set;
 
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
-
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.util.MapTools;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * This reasoner for Dung theories performs inference on the CF2 extensions.
  * @author Matthias Thimm
  *
  */
-public class CF2Reasoner extends AbstractExtensionReasoner {
+public class SimpleCF2Reasoner extends AbstractExtensionReasoner {
 
-	/**
-	 * Creates a new CF2 reasoner.
-	 * @param inferenceType The inference type for this reasoner.
-	 */
-	public CF2Reasoner(int inferenceType){
-		super(inferenceType);		
-	}
-	
-	/**
-	 * Computes the extensions for the single af case.
-	 * @param theory
-	 * @return
-	 */
-	private Set<Extension> singleAFExtensions(DungTheory theory){
-		// an extension for a single scc is a conflict-free set with maximal arguments (minimality check is performed later)
-		ConflictFreeReasoner reasoner = new ConflictFreeReasoner(this.getInferenceType());
-		return reasoner.getExtensions(theory);
-	}
-	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModels(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
-	public Set<Extension> getExtensions(DungTheory aaf){
-		Collection<Collection<Argument>> sccs = aaf.getStronglyConnectedComponents();
+	@Override
+	public Collection<Extension> getModels(DungTheory bbase) {
+		Collection<Collection<Argument>> sccs = bbase.getStronglyConnectedComponents();
 		Set<Extension> extensions = new HashSet<Extension>();
 		if(sccs.size() == 1){
 			// an extension for a single scc is a conflict-free set with maximal arguments
-			extensions = this.singleAFExtensions(aaf);
+			extensions = this.singleAFExtensions(bbase);
 		}else{
 			// for all strongly connected components, restrict the argumentation framework and get the corresponding extensions
 			Map<Collection<Argument>,Set<Extension>> exts = new HashMap<Collection<Argument>,Set<Extension>>();
 			for(Collection<Argument> scc: sccs){
 				Collection<Argument> t = new HashSet<Argument>(scc);
-				t.addAll(this.getOutparents(aaf, scc));
-				DungTheory restTheory = new DungTheory(aaf.getRestriction(t));//this.getUP(af, scc, af));
+				t.addAll(this.getOutparents(bbase, scc));
+				DungTheory restTheory = new DungTheory(bbase.getRestriction(t));//this.getUP(af, scc, af));
 				Set<Extension> e = this.singleAFExtensions(restTheory);
 				exts.put(restTheory, e);
 			}
@@ -123,6 +103,26 @@ public class CF2Reasoner extends AbstractExtensionReasoner {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModel(net.sf.tweety.arg.dung.syntax.DungTheory)
+	 */
+	@Override
+	public Extension getModel(DungTheory bbase) {
+		// just return the first found extension
+		return this.getModels(bbase).iterator().next();
+	}
+
+	/**
+	 * Computes the extensions for the single af case.
+	 * @param theory
+	 * @return
+	 */
+	private Set<Extension> singleAFExtensions(DungTheory theory){
+		// an extension for a single scc is a conflict-free set with maximal arguments (minimality check is performed later)
+		SimpleConflictFreeReasoner reasoner = new SimpleConflictFreeReasoner();
+		return new HashSet<Extension>(reasoner.getModels(theory));
+	}
+	
 	/**
 	 * Returns the set { a in A | a nicht in S und a -> S }
 	 * @param af some Dung theory
@@ -138,12 +138,5 @@ public class CF2Reasoner extends AbstractExtensionReasoner {
 			}
 		return result;
 	}	
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(net.sf.tweety.arg.dung.DungTheory, java.util.Map, java.util.Map, java.util.Map)
-	 */
-	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory aaf, Map<Argument, Proposition> in, Map<Argument, Proposition> out, Map<Argument, Proposition> undec) {
-		throw new UnsupportedOperationException("Implement me!");
-	}
+
 }

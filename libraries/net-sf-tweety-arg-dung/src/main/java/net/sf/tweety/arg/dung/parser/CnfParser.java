@@ -22,9 +22,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Parses abstract argumentation frameworks in the CNF/Dimacs Format used for the

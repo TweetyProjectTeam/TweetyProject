@@ -18,10 +18,10 @@
  */
 package net.sf.tweety.arg.prob;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.BeliefBaseReasoner;

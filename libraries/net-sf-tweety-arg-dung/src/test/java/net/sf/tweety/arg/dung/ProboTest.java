@@ -24,9 +24,9 @@ import java.io.FileReader;
 
 import org.junit.Test;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.parser.AbstractDungParser;
 import net.sf.tweety.arg.dung.parser.FileFormat;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.dung.writer.AbstractDungWriter;
 import net.sf.tweety.commons.util.Shell;
 

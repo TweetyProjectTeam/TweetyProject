@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
 import net.sf.tweety.arg.prob.semantics.*;
 import net.sf.tweety.commons.util.SetTools;

@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.reasoner;
 
 import java.awt.Point;
 import java.util.Collection;
@@ -28,9 +28,8 @@ import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.LatticeArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.BeliefBaseReasoner;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.util.SetTools;
 
 /**
@@ -41,7 +40,7 @@ import net.sf.tweety.commons.util.SetTools;
  *  
  * @author Matthias Thimm
  */
-public class GrossiModgilRankingReasoner implements BeliefBaseReasoner<DungTheory>{
+public class GrossiModgilRankingReasoner extends AbstractDungReasoner implements ModelProvider<Argument,DungTheory,ArgumentRanking>{
 
 	/**
 	 * Determines the number of attackers from x to y.
@@ -283,21 +282,30 @@ public class GrossiModgilRankingReasoner implements BeliefBaseReasoner<DungTheor
 				return false;
 		return true;
 	}
-	
-	/**
-	 * Returns the ranking wrt. complete semantics, cf. Def. 10 
-	 * @param theory a Dung theory
-	 * @return the ranking wrt. complete semantics, cf. Def. 10
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.ModelProvider#getModels(net.sf.tweety.commons.BeliefBase)
 	 */
-	public ArgumentRanking getCompleteRanking(DungTheory theory){
+	@Override
+	public Collection<ArgumentRanking> getModels(DungTheory bbase) {
+		Collection<ArgumentRanking> ranks = new HashSet<ArgumentRanking>();
+		ranks.add(this.getModel(bbase));
+		return ranks;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.ModelProvider#getModel(net.sf.tweety.commons.BeliefBase)
+	 */
+	@Override
+	public ArgumentRanking getModel(DungTheory bbase) {
 		// compute all mn-complete extensions for all m,n
 		Map<Point,Collection<Extension>> allExt = new HashMap<>();
-		for(int m = 1; m < theory.size(); m++)
-			for(int n=1; n < theory.size(); n++)
-				allExt.put(new Point(m,n), this.getAllMNCompleteExtensions(theory, m, n));
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(theory);
-		for(Argument a: theory)
-			for(Argument b: theory)
+		for(int m = 1; m < bbase.size(); m++)
+			for(int n=1; n < bbase.size(); n++)
+				allExt.put(new Point(m,n), this.getAllMNCompleteExtensions(bbase, m, n));
+		LatticeArgumentRanking ranking = new LatticeArgumentRanking(bbase);
+		for(Argument a: bbase)
+			for(Argument b: bbase)
 				if(a != b){
 					boolean a_implies_b = true;
 					boolean b_implies_a = true;
@@ -316,12 +324,12 @@ public class GrossiModgilRankingReasoner implements BeliefBaseReasoner<DungTheor
 				}
 		return ranking;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractDungReasoner#query(net.sf.tweety.arg.dung.syntax.DungTheory, net.sf.tweety.arg.dung.syntax.Argument)
 	 */
 	@Override
-	public Answer query(DungTheory theory, Formula query) {
+	public Boolean query(DungTheory beliefbase, Argument formula) {
 		throw new UnsupportedOperationException("Implement me");
 	}
 

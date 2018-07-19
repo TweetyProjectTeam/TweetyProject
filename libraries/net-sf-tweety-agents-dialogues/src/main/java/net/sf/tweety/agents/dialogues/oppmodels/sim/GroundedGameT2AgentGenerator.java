@@ -26,9 +26,9 @@ import net.sf.tweety.agents.dialogues.oppmodels.GroundedGameSystem;
 import net.sf.tweety.agents.dialogues.oppmodels.GroundedGameUtilityFunction;
 import net.sf.tweety.agents.dialogues.oppmodels.T2BeliefState;
 import net.sf.tweety.agents.sim.SimulationParameters;
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.probability.ProbabilityFunction;
 

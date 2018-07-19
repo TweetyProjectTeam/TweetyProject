@@ -40,11 +40,11 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.Answer;
 //import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.parser.FolParser;
@@ -390,7 +390,7 @@ public class AspicTest {
 		AspicArgumentationTheory<PropositionalFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex1.aspic").getFile());
 		
-		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE));
+		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
 
 		Argument query = null;
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
@@ -401,7 +401,7 @@ public class AspicTest {
 			}
 		}
 		System.out.println(query);
-		Answer answer = ar.query(at,query);
+		Answer answer = ar.query(at,query,Semantics.CREDULOUS_INFERENCE);
 		assertTrue(answer.getAnswerBoolean());
 	}
 	
@@ -412,13 +412,13 @@ public class AspicTest {
 		AspicArgumentationTheory<PropositionalFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex1.aspic").getFile());
 		
-		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS, Semantics.CREDULOUS_INFERENCE));
+		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
 
 
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
 
 		System.out.println(pf);
-		Answer answer = ar.query(at,pf);
+		Answer answer = ar.query(at,pf,Semantics.CREDULOUS_INFERENCE);
 		assertTrue(answer.getAnswerBoolean());
 	}
 }

@@ -18,14 +18,14 @@
  */
 package net.sf.tweety.arg.prob.lotteries;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.divisions.Division;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * A utility function that maps divisions to utilities
@@ -63,8 +63,8 @@ public class UtilityFunction extends HashMap<Division,Double>{
 	 * @return the utility of the theory wrt. the given semantics.
 	 */
 	public Double getUtility(DungTheory theory, Semantics semantics){
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(semantics, Semantics.CREDULOUS_INFERENCE);
-		Set<Extension> extensions = reasoner.getExtensions(theory);
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
+		Collection<Extension> extensions = reasoner.getModels(theory);
 		//average utility across extensions
 		double util = 0;
 		for(Extension e: extensions){

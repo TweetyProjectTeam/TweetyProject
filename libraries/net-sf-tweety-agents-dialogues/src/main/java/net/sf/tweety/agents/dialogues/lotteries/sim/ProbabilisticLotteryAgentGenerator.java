@@ -23,8 +23,8 @@ import net.sf.tweety.agents.dialogues.lotteries.ProbabilisticLotteryAgent;
 import net.sf.tweety.agents.dialogues.lotteries.LotteryGameSystem;
 import net.sf.tweety.agents.sim.AgentGenerator;
 import net.sf.tweety.agents.sim.SimulationParameters;
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.arg.prob.lotteries.UtilityFunction;
 

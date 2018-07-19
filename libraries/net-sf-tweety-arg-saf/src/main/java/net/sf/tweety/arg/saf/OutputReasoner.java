@@ -20,7 +20,7 @@ package net.sf.tweety.arg.saf;
 
 import java.util.*;
 
-import net.sf.tweety.arg.dung.*;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.arg.saf.syntax.*;
@@ -77,7 +77,7 @@ public class OutputReasoner implements BeliefBaseReasoner<StructuredArgumentatio
 	 */
 	public Set<Proposition> getOutput(StructuredArgumentationFramework saf){
 		if(this.output == null){
-			Set<Extension> extensions = this.reasoner.getExtensions(saf.toDungTheory());			
+			Collection<Extension> extensions = this.reasoner.getModels(saf.toDungTheory());			
 			this.output = new HashSet<Proposition>();			
 			for(Proposition p: saf.getSignature()){
 				boolean isOutput = true;

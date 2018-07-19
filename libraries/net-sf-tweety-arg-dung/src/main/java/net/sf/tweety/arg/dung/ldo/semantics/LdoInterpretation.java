@@ -21,8 +21,7 @@ package net.sf.tweety.arg.dung.ldo.semantics;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.ldo.syntax.AbstractGraphLdoModality;
 import net.sf.tweety.arg.dung.ldo.syntax.AbstractLdoModality;
 import net.sf.tweety.arg.dung.ldo.syntax.LdoArgument;
@@ -39,6 +38,7 @@ import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.graphs.Graph;
 
@@ -82,8 +82,8 @@ public class LdoInterpretation extends AbstractInterpretation<DungTheory,LdoForm
 	@Override
 	public boolean satisfies(LdoFormula formula) throws IllegalArgumentException {
 		if(this.ext == null){
-			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.sem, Semantics.CREDULOUS_INFERENCE);
-			for(Extension e: reasoner.getExtensions(this.theory)){
+			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.sem);
+			for(Extension e: reasoner.getModels(this.theory)){
 				LdoInterpretation i = new LdoInterpretation(this.theory, e, this.sem);
 				if(!i.satisfies(formula))
 					return false;
@@ -143,9 +143,9 @@ public class LdoInterpretation extends AbstractInterpretation<DungTheory,LdoForm
 				}
 				throw new IllegalArgumentException("Ldo formula " + formula + " is of unknown type.");
 			}
-			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(this.sem, Semantics.CREDULOUS_INFERENCE);
+			AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.sem);
 			if(formula instanceof LdoBoxModality){
-				for(Extension e: reasoner.getExtensions(this.theory)){
+				for(Extension e: reasoner.getModels(this.theory)){
 					LdoInterpretation i = new LdoInterpretation(this.theory, e, this.sem);
 					if(!i.satisfies(innerFormula))
 						return false;					
@@ -153,7 +153,7 @@ public class LdoInterpretation extends AbstractInterpretation<DungTheory,LdoForm
 				return true;
 			}
 			if(formula instanceof LdoDiamondModality){
-				for(Extension e: reasoner.getExtensions(this.theory)){
+				for(Extension e: reasoner.getModels(this.theory)){
 					LdoInterpretation i = new LdoInterpretation(this.theory, e, this.sem);
 					if(i.satisfies(innerFormula))
 						return true;					

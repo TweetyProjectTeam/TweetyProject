@@ -16,50 +16,43 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.reasoner;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.util.SetTools;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
- * This reasoner for Dung theories performs inference on the admissible extensions.
+ * This reasoner for Dung theories performs inference on the conflict-free extensions.
  * @author Matthias Thimm
  *
  */
-public class AdmissibleReasoner extends AbstractExtensionReasoner {
+public class SimpleConflictFreeReasoner extends AbstractExtensionReasoner {
 
-	/**
-	 * Creates a new admissible reasoner.
-	 * @param inferenceType The inference type for this reasoner.
-	 */
-	public AdmissibleReasoner(int inferenceType){
-		super(inferenceType);		
-	}
-	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModels(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
-	public Set<Extension> getExtensions(DungTheory theory){
+	@Override
+	public Collection<Extension> getModels(DungTheory bbase) {
 		Set<Extension> extensions = new HashSet<Extension>();
 		// Check all subsets
-		for(Set<Argument> ext: new SetTools<Argument>().subsets(theory))
-			if(new Extension(ext).isAdmissable(theory))
+		for(Set<Argument> ext: new SetTools<Argument>().subsets(bbase))
+			if(new Extension(ext).isConflictFree(bbase))
 				extensions.add(new Extension(ext));
 		return extensions;
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModel(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory aaf,Map<Argument, Proposition> in, Map<Argument, Proposition> out, Map<Argument, Proposition> undec) {
-		throw new UnsupportedOperationException("Implement me!");
+	public Extension getModel(DungTheory bbase) {
+		// as the empty set is always conflict-free we return that one.
+		return new Extension();
 	}
 }

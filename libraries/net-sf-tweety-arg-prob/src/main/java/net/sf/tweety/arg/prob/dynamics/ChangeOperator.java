@@ -18,7 +18,7 @@
  */
 package net.sf.tweety.arg.prob.dynamics;
 
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
 import net.sf.tweety.arg.prob.semantics.ProbabilisticExtension;
 

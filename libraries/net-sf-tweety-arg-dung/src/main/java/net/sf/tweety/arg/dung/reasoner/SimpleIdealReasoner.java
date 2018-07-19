@@ -16,49 +16,51 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.reasoner;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Labeling;
-import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * This reasoner for Dung theories performs inference on the ideal extension.
  * @author Matthias Thimm
  *
  */
-public class IdealReasoner extends AbstractExtensionReasoner {
+public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 
-	/**
-	 * Creates a new ideal reasoner.
-	 * @param inferenceType The inference type for this reasoner.
-	 */
-	public IdealReasoner(int inferenceType){
-		super(inferenceType);		
-	}
-	
+
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModels(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
-	public Set<Extension> getExtensions(DungTheory theory){
-		Set<Extension> admExt = new AdmissibleReasoner(this.getInferenceType()).getExtensions(theory);
-		Set<Extension> prefExt = new PreferredReasoner(this.getInferenceType()).getExtensions(theory);
+	@Override
+	public Collection<Extension> getModels(DungTheory bbase) {
+		Collection<Extension> exts = new HashSet<Extension>();
+		exts.add(this.getModel(bbase));
+		return exts;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModel(net.sf.tweety.arg.dung.syntax.DungTheory)
+	 */
+	@Override
+	public Extension getModel(DungTheory bbase) {
+		Collection<Extension> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
+		Collection<Extension> prefExt = new SimplePreferredReasoner().getModels(bbase);
 		Set<Labeling> potResult = new HashSet<Labeling>();
 		boolean potIdeal; 
 		for(Extension ext: admExt){
-			Labeling extLab = new Labeling(theory, ext);
+			Labeling extLab = new Labeling(bbase,ext);
 			// ext is ideal if
 			// 1. for every preferred labeling L both in and out are subsets of that sets in L
 			potIdeal = true;
 			for(Extension ext2: prefExt){
-				Labeling extLab2 = new Labeling(theory, ext2);
+				Labeling extLab2 = new Labeling(bbase, ext2);
 				if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
 					potIdeal = false;
 					break;
@@ -73,7 +75,6 @@ public class IdealReasoner extends AbstractExtensionReasoner {
 		}		
 		// get the one which maximizes in and out
 		// Note that there is only one ideal extension
-		Set<Extension> result = new HashSet<Extension>();
 		boolean ideal;
 		for(Labeling lab: potResult){
 			ideal = true;
@@ -84,20 +85,10 @@ public class IdealReasoner extends AbstractExtensionReasoner {
 						break;
 					}
 			}
-			if(ideal){
-				result.add(lab.getArgumentsOfStatus(ArgumentStatus.IN));
-				return result;
-			}
-			
+			if(ideal)
+				lab.getArgumentsOfStatus(ArgumentStatus.IN);			
 		}		
-		return new HashSet<Extension>();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
-	 */
-	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory theory, Map<Argument, Proposition> in, Map<Argument, Proposition> out, Map<Argument, Proposition> undec) {
-		throw new UnsupportedOperationException("Implement me!");
+		// this should not happen as there is always an ideal extension;
+		throw new RuntimeException("Ideal extension seems to be undefined.");
 	}
 }

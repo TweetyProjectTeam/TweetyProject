@@ -20,9 +20,9 @@ package net.sf.tweety.arg.deductive;
 
 import java.util.Collection;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.deductive.syntax.SimplePlLogicArgument;
 import net.sf.tweety.arg.deductive.syntax.SimplePlRule;
 import net.sf.tweety.commons.BeliefSet;

@@ -18,15 +18,15 @@
  */
 package net.sf.tweety.arg.prob.lotteries;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.ldo.semantics.LdoInterpretation;
 import net.sf.tweety.arg.dung.ldo.syntax.LdoFormula;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * A utility function that maps LDO formulas to utilities
@@ -64,8 +64,8 @@ public class LdoUtilityFunction extends HashMap<LdoFormula,Double>{
 	 * @return the utility of the theory wrt. the given semantics.
 	 */
 	public Double getUtility(DungTheory theory, Semantics semantics){
-		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getReasonerForSemantics(semantics, Semantics.CREDULOUS_INFERENCE);
-		Set<Extension> extensions = reasoner.getExtensions(theory);
+		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
+		Collection<Extension> extensions = reasoner.getModels(theory);
 		//average utility across extensions
 		double util = 0;
 		for(Extension e: extensions){

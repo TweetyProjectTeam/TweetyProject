@@ -22,9 +22,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.divisions.Division;
 import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.math.probability.Probability;
 
 /**

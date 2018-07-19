@@ -24,9 +24,9 @@ import net.sf.tweety.agents.dialogues.oppmodels.ArguingAgent;
 import net.sf.tweety.agents.dialogues.oppmodels.GroundedGameSystem;
 import net.sf.tweety.agents.sim.MultiAgentSystemGenerator;
 import net.sf.tweety.agents.sim.SimulationParameters;
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.dung.util.DungTheoryGenerator;
 
 import org.slf4j.Logger;

@@ -26,7 +26,7 @@ import net.sf.tweety.agents.dialogues.LotteryArgumentationEnvironment;
 import net.sf.tweety.agents.dialogues.lotteries.AbstractLotteryAgent;
 import net.sf.tweety.agents.dialogues.lotteries.DummyLotteryAgent;
 import net.sf.tweety.agents.sim.GameProtocol;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * This class implements a direct protocol for argumentation games.

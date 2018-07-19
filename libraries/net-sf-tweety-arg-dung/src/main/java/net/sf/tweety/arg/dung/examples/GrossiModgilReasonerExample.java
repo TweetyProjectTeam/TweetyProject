@@ -18,10 +18,10 @@
  */
  package net.sf.tweety.arg.dung.examples;
 
-import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.GrossiModgilRankingReasoner;
+import net.sf.tweety.arg.dung.reasoner.GrossiModgilRankingReasoner;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Example code for using graded semantics by Grossi/Modgil

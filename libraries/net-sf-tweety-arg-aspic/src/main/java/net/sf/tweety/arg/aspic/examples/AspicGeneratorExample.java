@@ -23,7 +23,7 @@ import net.sf.tweety.arg.aspic.ModuleBasedAspicReasoner;
 import net.sf.tweety.arg.aspic.NaiveAspicReasoner;
 import net.sf.tweety.arg.aspic.RandomAspicReasoner;
 import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -44,9 +44,9 @@ public class AspicGeneratorExample {
 		int maxLiteralsInPremises = 2;
 		double percentageStrictRules = 0.2;
 		
-		NaiveAspicReasoner<PropositionalFormula> naiveReasoner = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.GR,Semantics.CREDULOUS_INFERENCE));
-		ModuleBasedAspicReasoner<PropositionalFormula> moduleBasedReasoner = new ModuleBasedAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.GR,Semantics.CREDULOUS_INFERENCE));
-		RandomAspicReasoner<PropositionalFormula> randomReasoner = new RandomAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getReasonerForSemantics(Semantics.GR,Semantics.CREDULOUS_INFERENCE),600,100);
+		NaiveAspicReasoner<PropositionalFormula> naiveReasoner = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		ModuleBasedAspicReasoner<PropositionalFormula> moduleBasedReasoner = new ModuleBasedAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		RandomAspicReasoner<PropositionalFormula> randomReasoner = new RandomAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR),600,100);
 		
 		long totalNaive = 0;
 		long totalModulebased = 0;
@@ -57,13 +57,13 @@ public class AspicGeneratorExample {
 			System.out.println(i + "\t" + theory);
 			PropositionalFormula query = new Proposition("A1");
 			long millis = System.currentTimeMillis();
-			boolean answer = naiveReasoner.query(theory,query).getAnswerBoolean();
+			boolean answer = naiveReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE).getAnswerBoolean();
 			totalNaive += System.currentTimeMillis()-millis;
 			millis = System.currentTimeMillis();
-			moduleBasedReasoner.query(theory,query).getAnswerBoolean();
+			moduleBasedReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE).getAnswerBoolean();
 			totalModulebased += System.currentTimeMillis()-millis;
 			millis = System.currentTimeMillis();
-			if(randomReasoner.query(theory,query).getAnswerBoolean() == answer)
+			if(randomReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE).getAnswerBoolean() == answer)
 				correctRandom++;
 			totalRandom += System.currentTimeMillis()-millis;
 		}	

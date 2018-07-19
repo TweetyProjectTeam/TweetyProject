@@ -22,9 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Writes an abstract argumentation framework into a file of the

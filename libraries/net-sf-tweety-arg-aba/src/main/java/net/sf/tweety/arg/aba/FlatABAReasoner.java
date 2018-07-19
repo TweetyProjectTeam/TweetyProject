@@ -25,11 +25,11 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.aba.syntax.Assumption;
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.BeliefBaseReasoner;
@@ -72,15 +72,17 @@ public class FlatABAReasoner<T extends Formula> implements BeliefBaseReasoner<AB
 		else
 			throw new RuntimeException("ABAReasoner.query expects input of class Assumption");
 		DungTheory dt = abat.asDungTheory();
-		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(semantics, inferencetype);
-		return aer.query(dt,arg);
+		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
+		Answer answer = new Answer(abat,query);
+		answer.setAnswer(aer.query(dt,arg,inferencetype));
+		return answer;
 	}
 
 	public Collection<Collection<Assumption<?>>> getExtensions(ABATheory<T> abat) {
 		DungTheory dt = abat.asDungTheory();
-		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getReasonerForSemantics(semantics, inferencetype);
+		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
 		Collection<Collection<Assumption<?>>> result = new HashSet<>();
-		for (Extension ext : aer.getExtensions(dt)) {
+		for (Extension ext : aer.getModels(dt)) {
 			Collection<Assumption<?>> abaext = new HashSet<>();
 			for (Argument arg : ext) {
 				for (Assumption<?> ass : abat.getAssumptions()) {

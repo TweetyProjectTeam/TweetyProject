@@ -21,8 +21,8 @@ package net.sf.tweety.arg.dung.semantics;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.AbstractInterpretation;
 
 /**

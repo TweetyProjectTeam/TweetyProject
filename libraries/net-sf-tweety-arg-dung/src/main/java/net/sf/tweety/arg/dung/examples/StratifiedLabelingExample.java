@@ -18,12 +18,12 @@
  */
 package net.sf.tweety.arg.dung.examples;
 
-import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.StratifiedLabelingReasoner;
+import net.sf.tweety.arg.dung.reasoner.StratifiedLabelingReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.semantics.StratifiedLabeling;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Example code for using stratified labelings by Thimm/Kern-Isberner
@@ -53,9 +53,9 @@ public class StratifiedLabelingExample {
 		theory.add(new Attack(d,c));
 		theory.add(new Attack(c,d));
 		
-		StratifiedLabelingReasoner reasoner = new StratifiedLabelingReasoner(Semantics.STABLE_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
+		StratifiedLabelingReasoner reasoner = new StratifiedLabelingReasoner(Semantics.STABLE_SEMANTICS);
 		
-		for(StratifiedLabeling labeling: reasoner.getLabelings(theory)){
+		for(StratifiedLabeling labeling: reasoner.getModels(theory)){
 			System.out.println(labeling);			
 		}
 	}

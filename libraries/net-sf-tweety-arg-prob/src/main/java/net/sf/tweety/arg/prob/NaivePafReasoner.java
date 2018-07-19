@@ -18,11 +18,11 @@
  */
 package net.sf.tweety.arg.prob;
 
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
@@ -67,8 +67,8 @@ public class NaivePafReasoner implements BeliefBaseReasoner<ProbabilisticArgumen
 		double prob = 0d;
 		SubgraphProbabilityFunction p = paf.getSubgraphProbabilityFunction(); 
 		for(DungTheory sub: p.keySet()){
-			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, this.inferenceType);
-			if(r.query(sub,arg).getAnswerBoolean())
+			AbstractExtensionReasoner r = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.semantics);
+			if(r.query(sub,arg, this.inferenceType))
 				prob += p.probability(sub).doubleValue();
 		}
 		Answer ans = new Answer(paf,query);
@@ -87,8 +87,8 @@ public class NaivePafReasoner implements BeliefBaseReasoner<ProbabilisticArgumen
 		double prob = 0d;
 		SubgraphProbabilityFunction p = paf.getSubgraphProbabilityFunction(); 
 		for(DungTheory sub: p.keySet()){
-			AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, this.inferenceType);
-			if(r.getExtensions(sub).contains(ext))
+			AbstractExtensionReasoner r = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.semantics);
+			if(r.getModels(sub).contains(ext))
 				prob += p.probability(sub).doubleValue();
 		}		
 		return new Probability(prob);

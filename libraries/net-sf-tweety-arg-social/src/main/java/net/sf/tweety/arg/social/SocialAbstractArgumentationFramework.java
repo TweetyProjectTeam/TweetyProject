@@ -21,8 +21,8 @@ package net.sf.tweety.arg.social;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.graphs.Graph;
 
 /**

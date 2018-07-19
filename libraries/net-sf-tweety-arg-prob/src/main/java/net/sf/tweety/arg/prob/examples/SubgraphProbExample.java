@@ -18,9 +18,9 @@
  */
 package net.sf.tweety.arg.prob.examples;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 
 /**

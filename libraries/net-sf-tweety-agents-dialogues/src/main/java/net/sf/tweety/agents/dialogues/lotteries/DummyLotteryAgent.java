@@ -22,8 +22,8 @@ import java.util.Collection;
 
 import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.ExecutableDungTheory;
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Audience agents (do nothing) for argumentation games.

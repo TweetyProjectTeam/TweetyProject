@@ -22,9 +22,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.graphs.util.GraphUtil;
 
 /**

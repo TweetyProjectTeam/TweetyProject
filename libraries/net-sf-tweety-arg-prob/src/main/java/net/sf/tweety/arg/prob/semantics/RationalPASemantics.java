@@ -21,9 +21,9 @@ package net.sf.tweety.arg.prob.semantics;
 import java.util.Collection;
 import java.util.Map;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatVariable;

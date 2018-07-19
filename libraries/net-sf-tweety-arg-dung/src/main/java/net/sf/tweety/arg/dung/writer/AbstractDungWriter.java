@@ -22,11 +22,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.parser.FileFormat;
 import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
 import net.sf.tweety.arg.dung.semantics.Labeling;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Writes an abstract argumentation framework into a file

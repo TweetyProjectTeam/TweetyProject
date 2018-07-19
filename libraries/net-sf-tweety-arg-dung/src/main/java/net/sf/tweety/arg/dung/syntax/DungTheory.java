@@ -16,12 +16,14 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.syntax;
 
 import java.util.*;
 
+import net.sf.tweety.arg.dung.reasoner.SimplePreferredReasoner;
+import net.sf.tweety.arg.dung.reasoner.SimpleGroundedReasoner;
+import net.sf.tweety.arg.dung.reasoner.SimpleStableReasoner;
 import net.sf.tweety.arg.dung.semantics.*;
-import net.sf.tweety.arg.dung.syntax.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.*;
 import net.sf.tweety.math.matrix.Matrix;
@@ -149,8 +151,8 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return true if the theory is coherent
 	 */
 	public boolean isCoherent(){
-		Set<Extension> preferredExtensions = new PreferredReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(this);
-		Set<Extension> stableExtensions = new StableReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(this);
+		Collection<Extension> preferredExtensions = new SimplePreferredReasoner().getModels(this);
+		Collection<Extension> stableExtensions = new SimpleStableReasoner().getModels(this);
 		stableExtensions.retainAll(preferredExtensions);
 		return preferredExtensions.size() == stableExtensions.size();
 	}
@@ -160,8 +162,8 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	 * @return true if the theory is relatively coherent
 	 */
 	public boolean isRelativelyCoherent(){
-		Extension groundedExtension = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(this).iterator().next();
-		Set<Extension> preferredExtensions = new PreferredReasoner(Semantics.SCEPTICAL_INFERENCE).getExtensions(this);
+		Extension groundedExtension = new SimpleGroundedReasoner().getModel(this);
+		Collection<Extension> preferredExtensions = new SimplePreferredReasoner().getModels(this);
 		Extension cut = new Extension(preferredExtensions.iterator().next());
 		for(Extension e: preferredExtensions)
 			cut.retainAll(e);

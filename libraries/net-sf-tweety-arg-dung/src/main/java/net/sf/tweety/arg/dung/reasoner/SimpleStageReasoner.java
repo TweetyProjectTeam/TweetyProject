@@ -16,43 +16,34 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.reasoner;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Labeling;
-import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * This reasoner for Dung theories performs inference on the stage extensions.
  * @author Matthias Thimm
  *
  */
-public class StageReasoner extends AbstractExtensionReasoner {
+public class SimpleStageReasoner extends AbstractExtensionReasoner {
 
-	/**
-	 * Creates a new stage reasoner.
-	 * @param inferenceType The inference type for this reasoner.
-	 */
-	public StageReasoner(int inferenceType){
-		super(inferenceType);		
-	}
-	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModels(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
-	public Set<Extension> getExtensions(DungTheory theory){
+	@Override
+	public Collection<Extension> getModels(DungTheory bbase) {
 		// A stage extension is a conflict-free set with minimal undecided arguments
-		Set<Extension> cfExt = new ConflictFreeReasoner(this.getInferenceType()).getExtensions(theory);
+		Collection<Extension> cfExt = new SimpleConflictFreeReasoner().getModels(bbase);
 		Set<Labeling> cfLab = new HashSet<Labeling>();
 		for(Extension e: cfExt)
-			cfLab.add(new Labeling(theory,e));
+			cfLab.add(new Labeling(bbase,e));
 		Set<Extension> result = new HashSet<Extension>();
 		boolean stage;
 		for(Labeling lab: cfLab){
@@ -74,10 +65,11 @@ public class StageReasoner extends AbstractExtensionReasoner {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(java.util.Map, java.util.Map, java.util.Map)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModel(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory theory, Map<Argument, Proposition> in, Map<Argument, Proposition> out, Map<Argument, Proposition> undec) {
-		throw new UnsupportedOperationException("Implement me!");
+	public Extension getModel(DungTheory bbase) {
+		// just return the first one
+		return this.getModels(bbase).iterator().next();
 	}
 }

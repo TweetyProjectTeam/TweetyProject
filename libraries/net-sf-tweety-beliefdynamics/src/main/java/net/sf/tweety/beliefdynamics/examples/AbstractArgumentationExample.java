@@ -18,17 +18,17 @@
  */
 package net.sf.tweety.beliefdynamics.examples;
 
-import net.sf.tweety.arg.dung.CompleteReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.arg.dung.reasoner.SatCompleteReasoner;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.beliefdynamics.DefaultMultipleBaseExpansionOperator;
 import net.sf.tweety.beliefdynamics.LeviMultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.kernels.KernelContractionOperator;
 import net.sf.tweety.beliefdynamics.kernels.RandomIncisionFunction;
 import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -55,9 +55,9 @@ public class AbstractArgumentationExample {
 		theory.add(new Attack(c,b));
 		theory.add(new Attack(c,a));
 		
-		CompleteReasoner reasoner = new CompleteReasoner(Semantics.CREDULOUS_INFERENCE);
+		SatCompleteReasoner reasoner = new SatCompleteReasoner(SatSolver.getDefaultSolver());
 		
-		System.out.println(reasoner.getExtensions(theory));
+		System.out.println(reasoner.getModels(theory));
 		System.out.println();
 				
 		PlBeliefSet beliefSet = reasoner.getPropositionalCharacterisation(theory); 

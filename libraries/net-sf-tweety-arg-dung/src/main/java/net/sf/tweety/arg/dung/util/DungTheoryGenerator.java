@@ -18,8 +18,8 @@
  */
 package net.sf.tweety.arg.dung.util;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.BeliefSetIterator;
 
 /**

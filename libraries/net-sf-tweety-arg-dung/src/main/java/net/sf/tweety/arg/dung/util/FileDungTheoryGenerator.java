@@ -22,8 +22,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.NoSuchElementException;
 
-import net.sf.tweety.arg.dung.DungTheory;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.Parser;
 
 /**

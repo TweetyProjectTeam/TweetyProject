@@ -18,12 +18,11 @@
  */
 package net.sf.tweety.arg.dung.examples;
 
-import net.sf.tweety.arg.dung.CF2Reasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.SimpleCF2Reasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Example code for CF2 semantics
@@ -52,9 +51,9 @@ public class CF2Example {
 		theory.add(new Attack(e,a));
 		theory.add(new Attack(e,f));
 		
-		CF2Reasoner reasoner = new CF2Reasoner(Semantics.CREDULOUS_INFERENCE);
+		SimpleCF2Reasoner reasoner = new SimpleCF2Reasoner();
 		
-		for(Extension ext: reasoner.getExtensions(theory)){
+		for(Extension ext: reasoner.getModels(theory)){
 			System.out.println(ext);			
 		}
 	}

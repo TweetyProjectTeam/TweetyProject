@@ -30,8 +30,8 @@ import java.util.Set;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 

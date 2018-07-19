@@ -14,102 +14,76 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.reasoner;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import net.sf.tweety.arg.dung.semantics.*;
-import net.sf.tweety.arg.dung.syntax.*;
-import net.sf.tweety.commons.*;
+import net.sf.tweety.arg.dung.semantics.Extension;
+import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
-
 /**
- * This class models an abstract extension reasoner used for Dung theories.
+ * Uses a provided SAT solver to solve reasoning problems in AAFs.
  * @author Matthias Thimm
  */
-public abstract class AbstractExtensionReasoner implements BeliefBaseReasoner<DungTheory> {
+public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReasoner{
 	
 	/**
-	 * The type of inference for this reasoner, either sceptical or
-	 * credulous.
+	 * A SAT solver 
 	 */
-	private int inferenceType;
+	private SatSolver solver;
 	
 	/**
-	 * Creates a new reasoner for the given knowledge base.
-	 * @param beliefBase The knowledge base for this reasoner.
-	 * @param inferenceType The inference type for this reasoner.
+	 * Instantiates a new reasoner that uses the given SAT solver
+	 * @param solver some AT solver
 	 */
-	public AbstractExtensionReasoner(int inferenceType){
-		if(inferenceType != Semantics.CREDULOUS_INFERENCE && inferenceType != Semantics.SCEPTICAL_INFERENCE)
-			throw new IllegalArgumentException("Inference type must be either sceptical or credulous.");
-		this.inferenceType = inferenceType;
+	public AbstractSatExtensionReasoner(SatSolver solver) {
+		this.solver = solver;
+	}
 		
-	}
-	
-	/**
-	 * Creates a reasoner for the given semantics.
-	 * @param semantics a semantics
-	 * @param inferenceType an inference type
-	 * @return a reasoner for the given Dung theory, inference type, and semantics
-	 */
-	public static AbstractExtensionReasoner getReasonerForSemantics(Semantics semantics, int inferenceType){
-		switch(semantics){
-			case CO: return new CompleteReasoner(inferenceType);
-			case GR: return new GroundReasoner(inferenceType);
-			case PR: return new PreferredReasoner(inferenceType);
-			case ST: return new StableReasoner(inferenceType);
-			case ADM: return new AdmissibleReasoner(inferenceType);
-			case CF: return new ConflictFreeReasoner(inferenceType);
-			case SST: return new SemiStableReasoner(inferenceType);
-			case ID: return new IdealReasoner(inferenceType);
-			case STG: return new StageReasoner(inferenceType);
-			case CF2: return new CF2Reasoner(inferenceType);
-		default:
-			throw new IllegalArgumentException("Unknown semantics.");			
-		}		
-	}
-	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModels(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
-	public Answer query(DungTheory aaf, Formula query){
-		if(!(query instanceof Argument))
-			throw new IllegalArgumentException("Formula of class argument expected");
-		Argument arg = (Argument) query;
-		if(this.inferenceType == Semantics.SCEPTICAL_INFERENCE){
-			Answer answer = new Answer(aaf,arg);
-			for(Extension e: this.getExtensions(aaf)){
-				if(!e.contains(arg)){
-					answer.setAnswer(false);
-					answer.appendText("The answer is: false");
-					return answer;
-				}
-			}			
-			answer.setAnswer(true);
-			answer.appendText("The answer is: true");
-			return answer;
-		}
-		// so its credulous semantics
-		Answer answer = new Answer(aaf,arg);
-		for(Extension e: this.getExtensions(aaf)){
-			if(e.contains(arg)){
-				answer.setAnswer(true);
-				answer.appendText("The answer is: true");
-				return answer;
+	@Override
+	public Collection<Extension> getModels(DungTheory bbase) {		
+		PlBeliefSet prop = this.getPropositionalCharacterisation(bbase);
+		// get some labeling from the solver, then add the negation of this to the program and repeat
+		// to obtain all labelings
+		Set<Extension> result = new HashSet<Extension>();
+		Extension ext;
+		do{
+			PossibleWorld w = (PossibleWorld) this.solver.getWitness(prop);
+			if(w == null)
+				break;
+			ext = new Extension();
+			for(Proposition p: w){
+				if(p.getName().startsWith("in_"))
+					ext.add(new Argument(p.getName().substring(3)));				
 			}
-		}			
-		answer.setAnswer(false);
-		answer.appendText("The answer is: false");
-		return answer;
+			result.add(ext);
+			// add the newly found extension in negative form to prop
+			// so the next witness cannot be the same
+			Collection<PropositionalFormula> f = new HashSet<PropositionalFormula>();
+			for(Proposition p: w)
+				f.add(p);
+			prop.add(new Negation(new Conjunction(f)));
+		}while(true);
+		return result;
 	}
 	
-
 	/**
 	 * Creates a propositional representation of the set of labelings of the given
 	 * Dung theory that are consistent with the given semantics. This means that
@@ -152,18 +126,22 @@ public abstract class AbstractExtensionReasoner implements BeliefBaseReasoner<Du
 	 * theory, see <code>getPropositionalCharacterisation</code>.
 	 */
 	protected abstract PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory aaf, Map<Argument,Proposition> in, Map<Argument,Proposition> out, Map<Argument,Proposition> undec);
-	
-	/**
-	 * Returns the inference type of this reasoner.
-	 * @return the inference type of this reasoner.
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModel(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
-	public int getInferenceType(){
-		return this.inferenceType;
+	@Override
+	public Extension getModel(DungTheory bbase) {
+		// returns the first found model
+		PlBeliefSet prop = this.getPropositionalCharacterisation(bbase);
+		PossibleWorld w = (PossibleWorld) this.solver.getWitness(prop);
+		if(w == null)
+			return null;
+		Extension ext = new Extension();
+		for(Proposition p: w){
+			if(p.getName().startsWith("in_"))
+				ext.add(new Argument(p.getName().substring(3)));				
+		}
+		return ext;
 	}
-	
-	/**
-	 * Computes the extensions of the given Dung theory.
-	 * @return A set of extensions.
-	 */
-	public abstract Set<Extension> getExtensions(DungTheory aaf);
 }

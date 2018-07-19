@@ -14,40 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.agents.dialogues;
+package net.sf.tweety.arg.dung.reasoner;
 
-import net.sf.tweety.agents.Executable;
+import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.commons.QualitativeReasoner;
 
 /**
- * This class packs a Dung theory into an executable object.
+ * Ancestor class for all AAF reasoner.
  * 
  * @author Matthias Thimm
+ *
  */
-public class ExecutableDungTheory extends DungTheory implements Executable {
-
-	/**
-	 * Creates a new empty theory.
-	 */
-	public ExecutableDungTheory() {
-		super();
-	}
-	
-	/**
-	 * Creates a new dung theory for the given Dung theory.
-	 * @param arguments a Dung theory.
-	 */
-	public ExecutableDungTheory(DungTheory theory) {
-		super(theory);
-	}
+public abstract class AbstractDungReasoner implements QualitativeReasoner<DungTheory,Argument>{
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.agents.Executable#isNoOperation()
+	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public boolean isNoOperation() {
-		return this.isEmpty() && this.getAttacks().isEmpty();
-	}
+	public abstract Boolean query(DungTheory beliefbase, Argument formula);
+
 }

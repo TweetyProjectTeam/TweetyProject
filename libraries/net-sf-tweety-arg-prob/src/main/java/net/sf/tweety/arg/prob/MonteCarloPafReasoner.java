@@ -18,11 +18,11 @@
  */
 package net.sf.tweety.arg.prob;
 
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.BeliefBaseReasoner;
@@ -67,10 +67,10 @@ public class MonteCarloPafReasoner implements BeliefBaseReasoner<ProbabilisticAr
 			throw new IllegalArgumentException("Formula of class argument expected");
 		Argument arg = (Argument) query;
 		int count = 0;
-		AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, this.inferenceType);
+		AbstractExtensionReasoner r = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.semantics);
 		for(int i = 0; i < this.numberOfTrials; i++){
 			DungTheory sub = paf.sample();
-			if(r.query(sub,arg).getAnswerBoolean())
+			if(r.query(sub,arg,this.inferenceType))
 				count++;
 		}
 		Answer ans = new Answer(paf,query);
@@ -87,10 +87,10 @@ public class MonteCarloPafReasoner implements BeliefBaseReasoner<ProbabilisticAr
 	 */
 	public Probability query(ProbabilisticArgumentationFramework paf, Extension ext){
 		int count = 0;
-		AbstractExtensionReasoner r = AbstractExtensionReasoner.getReasonerForSemantics(this.semantics, this.inferenceType);
+		AbstractExtensionReasoner r = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.semantics);
 		for(int i = 0; i < this.numberOfTrials; i++){
 			DungTheory sub = paf.sample();
-			if(r.getExtensions(sub).contains(ext))
+			if(r.getModels(sub).contains(ext))
 				count++;
 		}
 		return new Probability(new Double(count)/this.numberOfTrials);

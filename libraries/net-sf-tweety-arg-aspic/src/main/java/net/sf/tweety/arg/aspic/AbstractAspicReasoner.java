@@ -19,11 +19,10 @@
 package net.sf.tweety.arg.aspic;
 
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
@@ -33,7 +32,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  *
  * @param <T> The type of formulas
  */
-public abstract class AbstractAspicReasoner<T extends Invertable> implements BeliefBaseReasoner<AspicArgumentationTheory<T>> {
+public abstract class AbstractAspicReasoner<T extends Invertable>  {
 	
 	/**
 	 * Underlying reasoner for AAFs. 
@@ -48,20 +47,21 @@ public abstract class AbstractAspicReasoner<T extends Invertable> implements Bel
 		this.aafReasoner = aafReasoner;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.Formula)
-	 */
-	@Override
-	public Answer query(AspicArgumentationTheory<T> aat, Formula query) {
+	
+	public Answer query(AspicArgumentationTheory<T> aat, Formula query, int inferenceType) {
 		DungTheory dt = this.getDungTheory(aat, query);		
 		if (query instanceof Argument) {
-			return this.aafReasoner.query(dt,query);
+			Answer answer = new Answer(aat,query);
+			answer.setAnswer(this.aafReasoner.query(dt, (Argument)query,inferenceType));
+			return answer;
 		}		
 		for (Argument arg : dt) {
 			if (((AspicArgument<?>)arg).getConclusion().equals(query)) {
-				Answer answer = this.aafReasoner.query(dt,arg);
-				if (answer.getAnswerBoolean())
+				if (this.aafReasoner.query(dt,arg,inferenceType)) {
+					Answer answer = new Answer(aat,query);
+					answer.setAnswer(true);
 					return answer;
+				}
 			}
 		}
 		Answer answer = new Answer(aat, query);

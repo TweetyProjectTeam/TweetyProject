@@ -16,37 +16,31 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung;
+package net.sf.tweety.arg.dung.reasoner;
 
 import java.util.*;
 
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 
 /**
  * This reasoner for Dung theories performs inference on the preferred extensions.
  * Computes the set of all preferred extensions, i.e., all maximal admissable sets.
+ * It does so by first computing all complete extensions and then check for
+ * set maximality.
+ * 
  * @author Matthias Thimm
  *
  */
-public class PreferredReasoner extends AbstractExtensionReasoner {
-
-	/**
-	 * Creates a new preferred reasoner.
-	 * @param inferenceType The inference type for this reasoner.
-	 */
-	public PreferredReasoner(int inferenceType){
-		super(inferenceType);		
-	}
+public class SimplePreferredReasoner extends AbstractExtensionReasoner {	
 
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getExtensions(net.sf.tweety.arg.dung.DungTheory)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModels(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
-	public Set<Extension> getExtensions(DungTheory theory){
-		Set<Extension> completeExtensions = new SccCompleteReasoner(this.getInferenceType()).getExtensions(theory);
+	@Override
+	public Collection<Extension> getModels(DungTheory bbase) {
+		Collection<Extension> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
 		Set<Extension> result = new HashSet<Extension>();
 		boolean maximal;
 		for(Extension e1: completeExtensions){
@@ -59,14 +53,28 @@ public class PreferredReasoner extends AbstractExtensionReasoner {
 			if(maximal)
 				result.add(e1);			
 		}		
-		return result;		
+		return result;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.AbstractExtensionReasoner#getPropositionalCharacterisationBySemantics(net.sf.tweety.arg.dung.DungTheory, java.util.Map, java.util.Map, java.util.Map)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModel(net.sf.tweety.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	protected PlBeliefSet getPropositionalCharacterisationBySemantics(DungTheory theory, Map<Argument, Proposition> in, Map<Argument, Proposition> out,Map<Argument, Proposition> undec) {
-		throw new UnsupportedOperationException("not defined for preferred semantics");
+	public Extension getModel(DungTheory bbase) {
+		// just return the first found preferred extension
+		Collection<Extension> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
+		boolean maximal;
+		for(Extension e1: completeExtensions){
+			maximal = true;
+			for(Extension e2: completeExtensions)
+				if(e1 != e2 && e2.containsAll(e1)){
+					maximal = false;
+					break;
+				}
+			if(maximal)
+				return e1;			
+		}		
+		// this should not happen
+		throw new RuntimeException("Hmm, did not find a maximal set in a finite number of sets. Should not happen.");
 	}
 }

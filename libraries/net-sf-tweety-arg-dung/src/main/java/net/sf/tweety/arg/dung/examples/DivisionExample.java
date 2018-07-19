@@ -20,14 +20,14 @@ package net.sf.tweety.arg.dung.examples;
 
 import java.util.Collection;
 
-import net.sf.tweety.arg.dung.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.DungTheory;
-import net.sf.tweety.arg.dung.GroundReasoner;
+import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.divisions.Division;
+import net.sf.tweety.arg.dung.reasoner.SimpleGroundedReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
+import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * Example code for working with divisions
@@ -49,8 +49,8 @@ public class DivisionExample {
 		theory.add(new Attack(c,b));
 		
 		// Instantiate reasoner
-		AbstractExtensionReasoner r = new GroundReasoner(Semantics.SCEPTICAL_INFERENCE);
-		Collection<Extension> exts = r.getExtensions(theory);
+		AbstractExtensionReasoner r = new SimpleGroundedReasoner();
+		Collection<Extension> exts = r.getModels(theory);
 		
 		// print theory
 		System.out.println("AAF: " + theory);
