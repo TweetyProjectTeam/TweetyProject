@@ -28,8 +28,8 @@ import net.sf.tweety.logics.fol.reasoner.FolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
-import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
+import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
 
 /**
  * sequence of defaults

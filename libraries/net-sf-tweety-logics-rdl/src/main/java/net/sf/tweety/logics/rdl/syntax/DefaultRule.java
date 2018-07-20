@@ -40,7 +40,6 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
-import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.math.probability.Probability;
 
 /**

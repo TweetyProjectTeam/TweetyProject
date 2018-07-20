@@ -32,8 +32,8 @@ import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
-import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
+import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
 
 /**
  * This class implements a parser for default logic. 

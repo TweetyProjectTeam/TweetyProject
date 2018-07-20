@@ -23,11 +23,12 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.rdl.DefaultTheory;
-import net.sf.tweety.logics.rdl.NaiveDefaultReasoner;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
+import net.sf.tweety.logics.rdl.reasoner.NaiveDefaultReasoner;
 import net.sf.tweety.logics.rdl.semantics.DefaultSequence;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
+import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
 
 /**
  * RDL Test
@@ -134,8 +135,8 @@ public class RdlExample {
 		RdlParser parser = new RdlParser();
 		DefaultTheory t = parser.parseBeliefBaseFromFile(RdlExample.class.getResource("/simple_default_theory.txt").getFile());
 		NaiveDefaultReasoner reasoner = new NaiveDefaultReasoner();
-		System.out.println(reasoner.getAllExtensions(t));
-		System.out.println(reasoner.query(t,parser.parseFormula("!a")).getAnswerBoolean());
+		System.out.println(reasoner.getModels(t));
+		System.out.println(reasoner.query(t,(FolFormula) parser.parseFormula("!a")));
 	}
 	
 	static void extensionTest() throws Exception {

@@ -26,9 +26,10 @@ import org.junit.Test;
 
 import net.sf.tweety.logics.fol.reasoner.FolReasoner;
 import net.sf.tweety.logics.fol.reasoner.NaiveFolReasoner;
-import net.sf.tweety.logics.rdl.DefaultTheory;
-import net.sf.tweety.logics.rdl.NaiveDefaultReasoner;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
+import net.sf.tweety.logics.rdl.reasoner.NaiveDefaultReasoner;
+import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
 
 /**
  * 
@@ -61,11 +62,11 @@ public class RDLJUnitTest {
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
 		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
-		assertTrue(ndr.query(theory,parser.parseFormula("Flies(tweety)")).getAnswerBoolean());
-		assertFalse(ndr.query(theory,parser.parseFormula("Flies(penguin)")).getAnswerBoolean());
-		assertFalse(ndr.query(theory,parser.parseFormula("!Flies(tweety)")).getAnswerBoolean());
-		assertTrue(ndr.query(theory,parser.parseFormula("!Flies(penguin)")).getAnswerBoolean());
-		assertTrue(ndr.getAllExtensions(theory).size()==1);
+		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("Flies(tweety)")));
+		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("Flies(penguin)")));
+		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("!Flies(tweety)")));
+		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("!Flies(penguin)")));
+		assertTrue(ndr.getModels(theory).size()==1);
 	}
 	
 	@Test
@@ -77,10 +78,10 @@ public class RDLJUnitTest {
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
 		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
-		assertTrue(ndr.query(theory,parser.parseFormula("a")).getAnswerBoolean());
-		assertTrue(ndr.query(theory,parser.parseFormula("b")).getAnswerBoolean());
-		assertFalse(ndr.query(theory,parser.parseFormula("!b")).getAnswerBoolean());
-		assertTrue(ndr.getAllExtensions(theory).size()==1);
+		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("a")));
+		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("b")));
+		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("!b")));
+		assertTrue(ndr.getModels(theory).size()==1);
 	}
 	
 	@Test
@@ -92,7 +93,7 @@ public class RDLJUnitTest {
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
 		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
-		assertTrue(ndr.getAllExtensions(theory).isEmpty());
+		assertTrue(ndr.getModels(theory).isEmpty());
 	}
 	
 	@Test
@@ -104,7 +105,7 @@ public class RDLJUnitTest {
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
 		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
-		assertTrue(ndr.getAllExtensions(theory).size() == 2);
+		assertTrue(ndr.getModels(theory).size() == 2);
 	}
 	
 	
@@ -117,12 +118,12 @@ public class RDLJUnitTest {
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
 		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
-		assertTrue(ndr.query(theory,parser.parseFormula("a")).getAnswerBoolean());
-		assertTrue(ndr.query(theory,parser.parseFormula("c")).getAnswerBoolean());
-		assertTrue(ndr.query(theory,parser.parseFormula("d")).getAnswerBoolean());
-		assertFalse(ndr.query(theory,parser.parseFormula("b")).getAnswerBoolean());
-		assertFalse(ndr.query(theory,parser.parseFormula("!b")).getAnswerBoolean());
-		assertTrue(ndr.getAllExtensions(theory).size()==2);
+		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("a")));
+		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("c")));
+		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("d")));
+		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("b")));
+		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("!b")));
+		assertTrue(ndr.getModels(theory).size()==2);
 	}
 
 }

@@ -42,7 +42,7 @@ public class FolBeliefSet extends BeliefSet<FolFormula>{
 	 * Creates a new first-order knowledge base with the given set of formulas.
 	 * @param formulas
 	 */
-	public FolBeliefSet(Set<FolFormula> formulas){
+	public FolBeliefSet(Collection<FolFormula> formulas){
 		super(formulas);
 	}
 	

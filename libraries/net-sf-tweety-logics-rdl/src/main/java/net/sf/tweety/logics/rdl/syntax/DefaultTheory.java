@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.rdl;
+package net.sf.tweety.logics.rdl.syntax;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +28,6 @@ import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 
 /**
  * Models a default theory in Reiter's default logic, see [R. Reiter. A logic for default reasoning. Artificial Intelligence, 13:81–132, 1980].

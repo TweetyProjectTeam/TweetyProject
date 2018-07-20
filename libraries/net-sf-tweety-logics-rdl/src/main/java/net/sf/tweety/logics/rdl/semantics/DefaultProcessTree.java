@@ -23,15 +23,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.rdl.DefaultTheory;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
+import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
 
 /**
  * Computes the extensions of a default theory
  * 
  * @author Nils Geilen
- *
+ * @author Matthias Thimm
  */
 public class DefaultProcessTree {
 	
@@ -43,7 +42,7 @@ public class DefaultProcessTree {
 	/**
 	 * all extensions of the process tree
 	 */
-	Collection<Collection<FolFormula>> extensions = new HashSet<>();
+	Collection<Extension> extensions = new HashSet<>();
 	
 	/**
 	 * constructs a default process tree out of the default theory t
@@ -70,7 +69,7 @@ public class DefaultProcessTree {
 			seqs_new  = new ArrayList<>();
 		}
 		for(DefaultSequence seq: processes)
-			extensions.add(seq.getIn());
+			extensions.add(new Extension(seq.getIn()));
 		
 	}
 
@@ -84,7 +83,7 @@ public class DefaultProcessTree {
 	/**
 	 * @return all extensions (possible sets of facts)
 	 */
-	public Collection<Collection<FolFormula>> getExtensions() {
+	public Collection<Extension> getExtensions() {
 		return extensions;
 	}
 
