@@ -25,11 +25,11 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.ml.ModalBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.ml.parser.ModalParser;
 import net.sf.tweety.logics.ml.reasoner.NaiveModalReasoner;
+import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
 
 /**
  * JUnit Test class for NaiveModalReasoner.
@@ -45,10 +45,10 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n !(<>(p))");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();		
-		Answer a1 = reasoner.query(b,parser.parseFormula("<>(p)"));
-		Answer a2 = reasoner.query(b,parser.parseFormula("!(<>(p))"));
-		assertFalse(a1.getAnswerBoolean());
-		assertTrue(a2.getAnswerBoolean());
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("<>(p)"));
+		Boolean a2 = reasoner.query(b,(FolFormula) parser.parseFormula("!(<>(p))"));
+		assertFalse(a1);
+		assertTrue(a2);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -56,10 +56,10 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n p");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();		
-		Answer a1 = reasoner.query(b,parser.parseFormula("<>(p)"));
-		Answer a2 = reasoner.query(b,parser.parseFormula("[](p)"));
-		assertFalse(a1.getAnswerBoolean());
-		assertTrue(a2.getAnswerBoolean());
+		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("<>(p)"));
+		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("[](p)"));
+		assertFalse(a1);
+		assertTrue(a2);
 	}
 	
 	@Test(timeout = 20000)
@@ -67,10 +67,10 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();
-		Answer a1 = reasoner.query(b,parser.parseFormula("Flies(duffy)"));
-		Answer a2 = reasoner.query(b,parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))"));
-		assertFalse(a1.getAnswerBoolean());
-		assertTrue(a2.getAnswerBoolean());
+		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("Flies(duffy)"));
+		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))"));
+		assertFalse(a1);
+		assertTrue(a2);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -78,8 +78,8 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n Flies(martin)\n Flies(duffy)");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();
-		Answer a1 = reasoner.query(b,parser.parseFormula("forall X:(Flies(X))"));
-		assertTrue(a1.getAnswerBoolean());
+		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("forall X:(Flies(X))"));
+		assertTrue(a1);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -87,14 +87,14 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n type(q) \n p \n !p||q");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();		
-		Answer a1 = reasoner.query(b,parser.parseFormula("p<=>p"));
-		Answer a2 = reasoner.query(b,parser.parseFormula("!p=>!p"));
-		Answer a3 = reasoner.query(b,parser.parseFormula("!p=>p"));
-		Answer a4 = reasoner.query(b,parser.parseFormula("p=>q"));
-		assertTrue(a1.getAnswerBoolean());
-		assertTrue(a2.getAnswerBoolean());
-		assertTrue(a3.getAnswerBoolean());
-		assertTrue(a4.getAnswerBoolean());
+		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("p<=>p"));
+		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("!p=>!p"));
+		Boolean  a3 = reasoner.query(b,(FolFormula) parser.parseFormula("!p=>p"));
+		Boolean  a4 = reasoner.query(b,(FolFormula) parser.parseFormula("p=>q"));
+		assertTrue(a1);
+		assertTrue(a2);
+		assertTrue(a3);
+		assertTrue(a4);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -102,8 +102,8 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();
-		Answer a1 = reasoner.query(b,parser.parseFormula("+"));
-		assertEquals(a1.getAnswerBoolean(),true);
+		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("+"));
+		assertEquals(a1,true);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -111,8 +111,8 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();
-		Answer a1 = reasoner.query(b,parser.parseFormula("-"));
-		assertEquals(a1.getAnswerBoolean(),false);
+		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("-"));
+		assertEquals(a1,false);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -120,8 +120,8 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();
-		Answer a1 = reasoner.query(b,parser.parseFormula("+"));
-		assertEquals(a1.getAnswerBoolean(),true);
+		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("+"));
+		assertEquals(a1,true);
 	}
 	
 	@Test(expected=ParserException.class, timeout = DEFAULT_TIMEOUT)
@@ -129,8 +129,8 @@ public class ModalReasonerTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		NaiveModalReasoner reasoner = new NaiveModalReasoner();
-		Answer a1 = reasoner.query(b,parser.parseFormula("Knows(duffy,martin)"));
-		assertEquals(a1.getAnswerBoolean(),true);
+		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("Knows(duffy,martin)"));
+		assertEquals(a1,true);
 	}
 	
 	

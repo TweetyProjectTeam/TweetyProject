@@ -50,7 +50,7 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
 /**
  * Prints single first-order logic formulas and full knowledge bases to TPTP format.
  * 
- * @see net.sf.tweety.logics.fol.prover.EProver
+ * @see net.sf.tweety.logics.fol.reasoner.EFOLReasoner
  * @author Nils Geilen
  * @author Anna Gessler
  *

@@ -57,7 +57,7 @@ import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.syntax.Tautology;
-import net.sf.tweety.logics.ml.ModalBeliefSet;
+import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
 import net.sf.tweety.logics.ml.syntax.ModalFormula;
 import net.sf.tweety.logics.ml.syntax.Necessity;
 import net.sf.tweety.logics.ml.syntax.Possibility;

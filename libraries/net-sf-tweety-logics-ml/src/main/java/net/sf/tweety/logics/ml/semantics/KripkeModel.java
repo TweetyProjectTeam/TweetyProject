@@ -23,7 +23,6 @@ import java.util.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.syntax.*;
 
 /**

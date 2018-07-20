@@ -23,7 +23,7 @@ import java.util.Collection;
 import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.BeliefBaseReasoner;
-import net.sf.tweety.logics.fol.prover.FolTheoremProver;
+import net.sf.tweety.logics.fol.reasoner.FolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.semantics.DefaultProcessTree;
@@ -49,8 +49,8 @@ public class NaiveDefaultReasoner implements BeliefBaseReasoner<DefaultTheory>{
 		answer.setAnswer(false);
 		for (Collection<FolFormula> extension: this.getAllExtensions(theory)){
 			FolBeliefSet fbs = (FolBeliefSet)extension;
-			FolTheoremProver prover = FolTheoremProver.getDefaultProver();
-			if(prover.query(fbs, (FolFormula)query).getAnswerBoolean()){
+			FolReasoner prover = FolReasoner.getDefaultReasoner();
+			if(prover.query(fbs, (FolFormula)query)){
 				answer.setAnswer(true);
 				break;
 			}

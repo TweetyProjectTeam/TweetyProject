@@ -22,8 +22,11 @@ import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.util.Pair;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.mln.*;
+import net.sf.tweety.logics.mln.reasoner.NaiveMlnReasoner;
+import net.sf.tweety.logics.mln.reasoner.SimpleSamplingMlnReasoner;
+import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
@@ -41,7 +44,7 @@ public class ApproximationExample {
 		naiReasoner.setTempDirectory("/Users/mthimm/Desktop/tmp/");
 		for(MlnFormula f: ex.getFirst()){
 			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(ex.getSecond().getConstants())){
-				System.out.println(appReasoner.query(ex.getFirst(),groundFormula,ex.getSecond()).getAnswerDouble() + "\t" + naiReasoner.query(ex.getFirst(),groundFormula,ex.getSecond()).getAnswerDouble());
+				System.out.println(appReasoner.query(ex.getFirst(),(FolFormula) groundFormula,ex.getSecond()) + "\t" + naiReasoner.query(ex.getFirst(),(FolFormula) groundFormula,ex.getSecond()));
 				Thread.sleep(10000);
 				//break;
 			}

@@ -40,7 +40,7 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
 /**
  * Prints single first-order logic formulas and full knowledge bases to Prover9 format
  * (<a href="https://www.cs.unm.edu/~mccune/mace4/manual/2009-11A/">https://www.cs.unm.edu/~mccune/mace4/manual/2009-11A/</a>).
- * @see net.sf.tweety.logics.fol.prover.Prover9 
+ * @see net.sf.tweety.logics.fol.reasoner.Prover9FolReasoner 
  * @author Nils Geilen
  */
 

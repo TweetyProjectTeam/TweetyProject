@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln;
+package net.sf.tweety.logics.mln.reasoner;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,6 +30,7 @@ import net.sf.tweety.logics.fol.semantics.*;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 
 
 /**

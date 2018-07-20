@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln;
+package net.sf.tweety.logics.mln.reasoner;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -43,6 +43,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 

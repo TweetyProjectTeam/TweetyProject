@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.tweety.logics.fol.prover.FolTheoremProver;
+import net.sf.tweety.logics.fol.reasoner.FolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
@@ -101,11 +101,11 @@ public class DefaultSequence {
 	 * @return true iff d is applicable to In
 	 */
 	public boolean isApplicable(DefaultRule d){
-		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
+		FolReasoner prover = FolReasoner.getDefaultReasoner();
 		for(FolFormula f: d.getJustification())
-			if(prover.query(in, new Negation(f)).getAnswerBoolean())
+			if(prover.query(in, new Negation(f)))
 				return false;
-		return prover.query(in, d.getPrerequisite()).getAnswerBoolean();
+		return prover.query(in, d.getPrerequisite());
 		
 	}
 	
@@ -137,9 +137,9 @@ public class DefaultSequence {
 	 * @return true iff successfull
 	 */
 	public boolean isSuccessful() {
-		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
+		FolReasoner prover = FolReasoner.getDefaultReasoner();
 			for(FolFormula g: out)
-				if(prover.query(in,g).getAnswerBoolean())
+				if(prover.query(in,g))
 					return false;
 		return true;
 	}

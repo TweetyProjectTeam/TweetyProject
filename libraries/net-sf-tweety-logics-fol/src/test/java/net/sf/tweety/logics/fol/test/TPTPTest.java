@@ -26,8 +26,8 @@ import org.junit.Test;
 
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.parser.FolParser;
-import net.sf.tweety.logics.fol.prover.EProver;
-import net.sf.tweety.logics.fol.prover.FolTheoremProver;
+import net.sf.tweety.logics.fol.reasoner.EFOLReasoner;
+import net.sf.tweety.logics.fol.reasoner.FolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -43,16 +43,16 @@ import net.sf.tweety.logics.fol.writer.TPTPWriter;
 
 public class TPTPTest {
 	
-	static FolTheoremProver e;
+	static FolReasoner e;
 	FolWriter printer = new TPTPWriter();
 	
 	@BeforeClass public static void init(){
 		if(System.getProperty("os.name").matches("Win.*")){
 			System.out.println("Initializing Eprover Test for Windows");
-			 e = new EProver("C:/app/E/PROVER/eprover.exe", Shell.getCygwinShell("C:/cygwin64/bin/bash.exe"));
+			 e = new EFOLReasoner("C:/app/E/PROVER/eprover.exe", Shell.getCygwinShell("C:/cygwin64/bin/bash.exe"));
 		} else {
 			System.out.println("Initializing Eprover Test for Unix");
-			 e = new EProver("/home/anna/sw/folProver/E/PROVER/eprover", Shell.getNativeShell());
+			 e = new EFOLReasoner("/home/anna/sw/folProver/E/PROVER/eprover", Shell.getNativeShell());
 			 //e = new EProver("/Users/mthimm/Projects/misc_bins/eprover/eprover");
 		}
 	}
@@ -65,10 +65,10 @@ public class TPTPTest {
 		FolBeliefSet b = parser.parseBeliefBase(source);
 		printer.printBase(b);
 		System.out.println(printer);
-		assertFalse(e.query(b, (FolFormula)parser.parseFormula("b")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("a")).getAnswerBoolean());
-		assertFalse(e.query(b, (FolFormula)parser.parseFormula("c")).getAnswerBoolean());
-		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!c")).getAnswerBoolean());
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("b")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("a")));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("c")));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!c")));
 	}
 	
 	@Test
@@ -84,10 +84,10 @@ public class TPTPTest {
 		FolBeliefSet b = parser.parseBeliefBase(source);
 		printer.printBase(b);
 		System.out.println(printer);
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(cow)")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (Tame(X))")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(horse)")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!Ridable(lion)")).getAnswerBoolean());
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(cow)")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (Tame(X))")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Tame(horse)")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!Ridable(lion)")));
 	}
 	
 	@Test
@@ -105,17 +105,17 @@ public class TPTPTest {
 		FolBeliefSet b = parser.parseBeliefBase(source);
 		printer.printBase(b);
 		System.out.println(printer);
-		assertFalse(e.query(b, (FolFormula)parser.parseFormula("Eats(lion, tree)")).getAnswerBoolean());
-		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!Eats(lion, grass)")).getAnswerBoolean());
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("Eats(lion, tree)")));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("!Eats(lion, grass)")));
 		//is not true according to the solver
-		//assertTrue(e.query(b, (FolFormula)parser.parseFormula("Eats(lion, grass)")).getAnswerBoolean());
-		assertFalse(e.query(b, (FolFormula)parser.parseFormula("Eats(horse, tree)")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!Eats(horse, tree)")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Eats(horse, grass)")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (forall Y: (!Eats(Y, X)))")).getAnswerBoolean());
-		assertFalse(e.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(Y, X)))")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!(forall X: (forall Y: (Eats(Y, X))))")).getAnswerBoolean());
-		assertTrue(e.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(X, Y) => X/==Y))")).getAnswerBoolean());
+		//assertTrue(e.query(b, (FolFormula)parser.parseFormula("Eats(lion, grass)")));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("Eats(horse, tree)")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!Eats(horse, tree)")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("Eats(horse, grass)")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("exists X: (forall Y: (!Eats(Y, X)))")));
+		assertFalse(e.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(Y, X)))")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("!(forall X: (forall Y: (Eats(Y, X))))")));
+		assertTrue(e.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(X, Y) => X/==Y))")));
 	}
 	
 }

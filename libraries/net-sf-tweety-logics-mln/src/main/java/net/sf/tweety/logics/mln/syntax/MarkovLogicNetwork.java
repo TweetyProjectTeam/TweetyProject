@@ -16,50 +16,51 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.rcl;
+package net.sf.tweety.logics.mln.syntax;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.Collection;
 
-import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.rcl.syntax.*;
+import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.fol.syntax.*;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * This class models a belief set on relational conditional logic, i.e. a set of relational conditionals.
+ * Instances of this class represent Markov Logic Networks [Domingos et. al.].
  * 
  * @author Matthias Thimm
- *
  */
-public class RclBeliefSet extends BeliefSet<RelationalConditional> {
-	
+public class MarkovLogicNetwork extends BeliefSet<MlnFormula> implements Serializable {
+
+	private static final long serialVersionUID = 3313039501304912746L;
+
 	/**
-	 * Creates a new (empty) conditional belief set.
+	 * Creates a new (empty) MLN.
 	 */
-	public RclBeliefSet(){
+	public MarkovLogicNetwork(){
 		super();
 	}
 	
 	/**
-	 * Creates a new relational conditional belief set with the given collection of
-	 * relational conditionals.
-	 * @param conditionals a collection of relational conditionals.
+	 * Creates a new conditional MLN with the given collection of
+	 * MLN formulas.
+	 * @param formulas a collection of MLN formulas.
 	 */
-	public RclBeliefSet(Collection<? extends RelationalConditional> conditionals){
-		super(conditionals);
+	public MarkovLogicNetwork(Collection<? extends MlnFormula> formulas){
+		super(formulas);
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
+	 * @see net.sf.tweety.BeliefSet#getSignature()
 	 */
 	@Override
-	public Signature getSignature(){
+	public Signature getSignature() {
 		FolSignature sig = new FolSignature();
-		for(Formula f: this){
-			RelationalConditional c = (RelationalConditional) f;
-			sig.addAll(c.getTerms(Constant.class));
-			sig.addAll(c.getFunctors());
-			sig.addAll(c.getPredicates());			
+		for(MlnFormula formula: this){
+			sig.addAll(formula.getPredicates());
+			sig.addAll(formula.getTerms(Constant.class));
+			sig.addAll(formula.getFunctors());
 		}
 		return sig;
 	}

@@ -23,7 +23,6 @@ import java.io.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.fol.parser.*;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.rcl.*;
 import net.sf.tweety.logics.rcl.syntax.*;
 
 /**

@@ -16,14 +16,13 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln;
+package net.sf.tweety.logics.mln.reasoner;
 
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.BeliefBaseReasoner;
+import net.sf.tweety.commons.QuantitativeReasoner;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
@@ -32,13 +31,13 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractMlnReasoner implements BeliefBaseReasoner<MarkovLogicNetwork> {
+public abstract class AbstractMlnReasoner implements QuantitativeReasoner<MarkovLogicNetwork,FolFormula> {
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(MarkovLogicNetwork mln, Formula query) {		
+	public Double query(MarkovLogicNetwork mln, FolFormula query) {		
 		return this.query(mln, query, (FolSignature) mln.getSignature());
 	}
 	
@@ -49,15 +48,12 @@ public abstract class AbstractMlnReasoner implements BeliefBaseReasoner<MarkovLo
 	 * @param signature some signature
 	 * @return the answer to the query
 	 */
-	public Answer query(MarkovLogicNetwork mln, Formula query, FolSignature signature) {
-		if(!(query instanceof FolFormula) && !( ((FolFormula)query).isGround() ))
+	public Double query(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {
+		if(!( ((FolFormula)query).isGround() ))
 			throw new IllegalArgumentException("Reasoning in Markov logic with naive MLN reasoner is only defined for ground FOL formulas.");
 		if(!mln.getSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
-		double result = this.doQuery(mln,(FolFormula)query,signature);
-		Answer ans = new Answer(mln,query);
-		ans.setAnswer(result);		
-		return ans;
+		return this.doQuery(mln,(FolFormula)query,signature);		
 	}
 	
 	/**

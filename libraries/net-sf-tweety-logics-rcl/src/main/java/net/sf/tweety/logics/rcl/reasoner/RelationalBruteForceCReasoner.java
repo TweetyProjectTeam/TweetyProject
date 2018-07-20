@@ -16,20 +16,23 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.rcl;
+package net.sf.tweety.logics.rcl.reasoner;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.BeliefBaseReasoner;
+import net.sf.tweety.commons.ModelProvider;
+import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.rcl.semantics.RelationalRankingFunction;
+import net.sf.tweety.logics.rcl.syntax.RclBeliefSet;
 import net.sf.tweety.logics.rcl.syntax.RelationalConditional;
 
 import org.slf4j.Logger;
@@ -55,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class RelationalBruteForceCReasoner implements BeliefBaseReasoner<RclBeliefSet> {
+public class RelationalBruteForceCReasoner implements QualitativeReasoner<RclBeliefSet,FolFormula>,ModelProvider<RelationalConditional,RclBeliefSet,RelationalRankingFunction> {
 
 	/** Logger. */
 	static private Logger log = LoggerFactory.getLogger(RelationalBruteForceCReasoner.class);
@@ -80,76 +83,18 @@ public class RelationalBruteForceCReasoner implements BeliefBaseReasoner<RclBeli
 	 * @param signature some signature
 	 * @return
 	 */
-	public Answer query(RclBeliefSet bs, Formula query,FolSignature signature) {
-		if(!(query instanceof RelationalConditional) && !(query instanceof FolFormula))
-			throw new IllegalArgumentException("Reasoning in relational conditional logic is only defined for relational conditional and first-order queries.");
-		RelationalRankingFunction crepresentation = this.getCRepresentation(bs, signature);
-		if(query instanceof RelationalConditional){
-			Answer answer = new Answer(bs,query);
-			boolean bAnswer = crepresentation.satisfies((RelationalConditional) query);
-			answer.setAnswer(bAnswer);
-			answer.appendText("The answer is: " + bAnswer);
-			return answer;			
-		}
-		if(query instanceof FolFormula){
-			if(((FolFormula)query).isClosed())
-				throw new IllegalArgumentException("Reasoning in relational conditional logic is not defined for open first-order queries.");
-			int rank = crepresentation.rank((FolFormula)query);
-			Answer answer = new Answer(bs,query);			
-			answer.setAnswer(new Double(rank));
-			answer.appendText("The rank of the query is " + rank + " (the query is " + ((rank==0)?(""):("not ")) + "believed)");
-			return answer;
-		}			
-		return null;
+	public Boolean query(RclBeliefSet bs, FolFormula query,FolSignature signature) {
+		return this.getModel(bs,signature).rank(query) == 0;		
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Answer query(RclBeliefSet bs, Formula query) {
+	public Boolean query(RclBeliefSet bs, FolFormula query) {
 		return query(bs,query,(FolSignature)bs.getSignature());
 	}
-	
-	/**
-	 * Computes a minimal c-representation for this reasoner's knowledge base.
-	 * @param bs a rcl belief set 
-	 * @param signature some signature
-	 * @return a minimal c-representation for this reasoner's knowledge base.
-	 */
-	public RelationalRankingFunction getCRepresentation(RclBeliefSet bs, FolSignature signature){		
-		int i = 0;
-		Map<Integer,RelationalConditional> indexToConditional = new HashMap<Integer,RelationalConditional>();
-		for(Formula f: bs){
-			indexToConditional.put(i++, (RelationalConditional) f);
-			if(!this.simple)
-				indexToConditional.put(i++, (RelationalConditional) f);
-		}
-		List<Integer[]> kappa_all = new ArrayList<Integer[]>();
-		Integer[] kappa = null;		
-		RelationalRankingFunction candidate = this.constructRankingFunction(kappa,indexToConditional,signature);
-		while(!candidate.satisfies(bs)){
-			kappa = this.increment(kappa_all, bs.size());			
-			candidate = this.constructRankingFunction(kappa,indexToConditional,signature);
-			String debugMessage = "";
-			if(this.simple){
-				debugMessage = "[ KMINUS "+ indexToConditional.get(0) + " : " + kappa[0];
-				for(int j=1; j< kappa.length;j++)
-					debugMessage += ", KMINUS "+ indexToConditional.get(j) + " : " + kappa[j];
-				debugMessage += "]";
-			}else{
-				debugMessage = "[ KPLUS/KMINUS "+ indexToConditional.get(0) + " : " + kappa[0] + "/" + kappa[1];
-				for(int j=2; j< kappa.length;j+=2){
-					debugMessage += ", KPLUS/KMINUS "+ indexToConditional.get(j/2) + " : " + kappa[j] + "/" + kappa[j+1];
-				}
-				debugMessage += "]";
-			}				
-			log.debug(debugMessage);
-		}		
-		candidate.normalize();
-		return candidate;
-	}
-	
+		
 	/**
 	 * Constructs a ranking function with the given kappa values [k1+,k1-,...,kn+,kn-], i.e.
 	 * for every possible world w set<br>
@@ -253,5 +198,62 @@ public class RelationalBruteForceCReasoner implements BeliefBaseReasoner<RclBeli
 			}
 		}
 		throw new IllegalArgumentException("Argument must contain at least one value \"1\"");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.ModelProvider#getModels(net.sf.tweety.commons.BeliefBase)
+	 */
+	@Override
+	public Collection<RelationalRankingFunction> getModels(RclBeliefSet bbase) {
+		Collection<RelationalRankingFunction> models = new HashSet<>();
+		models.add(this.getModel(bbase));
+		return models;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.ModelProvider#getModel(net.sf.tweety.commons.BeliefBase)
+	 */
+	@Override
+	public RelationalRankingFunction getModel(RclBeliefSet bbase) {
+		return this.getModel(bbase, (FolSignature) bbase.getSignature());
+	}
+
+	/**
+	 * Retrieves the C representation of the given belief set wrt. the given signature
+	 * @param bs some belief set
+	 * @param signature some signature
+	 * @return the c representation (a ranking function)
+	 */
+	public RelationalRankingFunction getModel(RclBeliefSet bs, FolSignature signature) {
+		int i = 0;
+		Map<Integer,RelationalConditional> indexToConditional = new HashMap<Integer,RelationalConditional>();
+		for(Formula f: bs){
+			indexToConditional.put(i++, (RelationalConditional) f);
+			if(!this.simple)
+				indexToConditional.put(i++, (RelationalConditional) f);
+		}
+		List<Integer[]> kappa_all = new ArrayList<Integer[]>();
+		Integer[] kappa = null;		
+		RelationalRankingFunction candidate = this.constructRankingFunction(kappa,indexToConditional,signature);
+		while(!candidate.satisfies(bs)){
+			kappa = this.increment(kappa_all, bs.size());			
+			candidate = this.constructRankingFunction(kappa,indexToConditional,signature);
+			String debugMessage = "";
+			if(this.simple){
+				debugMessage = "[ KMINUS "+ indexToConditional.get(0) + " : " + kappa[0];
+				for(int j=1; j< kappa.length;j++)
+					debugMessage += ", KMINUS "+ indexToConditional.get(j) + " : " + kappa[j];
+				debugMessage += "]";
+			}else{
+				debugMessage = "[ KPLUS/KMINUS "+ indexToConditional.get(0) + " : " + kappa[0] + "/" + kappa[1];
+				for(int j=2; j< kappa.length;j+=2){
+					debugMessage += ", KPLUS/KMINUS "+ indexToConditional.get(j/2) + " : " + kappa[j] + "/" + kappa[j+1];
+				}
+				debugMessage += "]";
+			}				
+			log.debug(debugMessage);
+		}		
+		candidate.normalize();
+		return candidate;
 	}
 }

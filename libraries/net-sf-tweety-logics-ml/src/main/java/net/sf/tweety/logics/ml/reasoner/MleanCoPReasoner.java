@@ -22,9 +22,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
 import net.sf.tweety.logics.ml.writer.MleanCoPWriter;
 
 /**
@@ -35,9 +38,9 @@ import net.sf.tweety.logics.ml.writer.MleanCoPWriter;
  * of the mleancop files (= the Prolog files).
  * 
  * @author Anna Gessler
- *
+ * @author Matthias Thimm
  */
-public class MleanCoPReasoner {
+public class MleanCoPReasoner extends AbstractModalReasoner {
 	/**
 	 * String representation of the mleancop.sh path. 
 	 * This shell script specifies the prolog system, prover location and modal logic (D, T, S4 or S5)
@@ -74,30 +77,7 @@ public class MleanCoPReasoner {
 	public MleanCoPReasoner(String location) {
 		this(location,Shell.getNativeShell());
 	}
-	
-	public boolean query(Formula query) {
-		try {
-			//Create input file
-			File file  = File.createTempFile("tmp", "");
-			file.deleteOnExit();
-			MleanCoPWriter writer = new MleanCoPWriter(new PrintWriter(file,"UTF-8"));
-			writer.printQuery((FolFormula) query);
-			writer.close();
-		
-			//Execute query
-			String cmd = scriptLocation + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
-			String output = bash.run(cmd);
-			if(Pattern.compile("is a modal [(].*[)] Theorem").matcher(output).find()) 
-				return true;
-			if(Pattern.compile("is a modal [(].*[)] Non-Theorem").matcher(output).find())
-				return false;
-			throw new RuntimeException("MleanCoP returned no result which can be interpreted.");
-		} catch(Exception e){
-		e.printStackTrace();
-		return false; 
-		}
-	}
-	
+
 	/**
 	 * Get the mleancop.sh path.
 	 * @return location of MleanCOP shell script
@@ -112,6 +92,39 @@ public class MleanCoPReasoner {
 	 */
 	public void setScriptLocation(String location) {
 		this.scriptLocation = location;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.ml.reasoner.ModalReasoner#query(net.sf.tweety.logics.ml.syntax.ModalBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
+	 */
+	@Override
+	public Boolean query(ModalBeliefSet beliefbase, FolFormula formula) {
+		// check whether beliefbase joined with the negated query is _not_
+		// a theorem
+		Conjunction complete = new Conjunction();
+		complete.add(new Negation(formula));
+		for(RelationalFormula f: beliefbase)
+			complete.add(f);
+		try {
+			//Create input file
+			File file  = File.createTempFile("tmp", "");
+			file.deleteOnExit();
+			MleanCoPWriter writer = new MleanCoPWriter(new PrintWriter(file,"UTF-8"));
+			writer.printQuery((FolFormula) complete);
+			writer.close();
+		
+			//Execute query
+			String cmd = scriptLocation + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
+			String output = bash.run(cmd);
+			if(Pattern.compile("is a modal [(].*[)] Theorem").matcher(output).find()) 
+				return false;
+			if(Pattern.compile("is a modal [(].*[)] Non-Theorem").matcher(output).find())
+				return true;
+			throw new RuntimeException("MleanCoP returned no result which can be interpreted.");
+		} catch(Exception e){
+		e.printStackTrace();
+		return false; 
+		}
 	}
 
 }

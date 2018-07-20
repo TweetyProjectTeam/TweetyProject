@@ -24,7 +24,7 @@ import java.util.Vector;
 
 import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.mln.MarkovLogicNetwork;
+import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
 import net.sf.tweety.math.func.AggregationFunction;
 import net.sf.tweety.math.norm.RealVectorNorm;

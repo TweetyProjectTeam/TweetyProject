@@ -16,10 +16,11 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln;
+package net.sf.tweety.logics.mln.reasoner;
 
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 
 /**
  * This MLN reasoner takes another MLN reasoner and performs several iterations

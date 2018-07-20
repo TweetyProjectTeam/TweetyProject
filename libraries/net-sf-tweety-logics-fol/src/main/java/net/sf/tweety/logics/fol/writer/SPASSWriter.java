@@ -42,7 +42,7 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * SPASS attempts to prove that the conjunction of all axioms implies the
  * disjunction of all conjectures.
  * 
- * @see net.sf.tweety.logics.ml.reasoner.SPASS 
+ * @see net.sf.tweety.logics.SpassFolReasoner.reasoner.SPASS 
  * @author Anna Gessler
  */
 

@@ -33,7 +33,7 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.prover.FolTheoremProver;
+import net.sf.tweety.logics.fol.reasoner.FolReasoner;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
@@ -105,7 +105,7 @@ public class DefaultRule extends RelationalFormula {
 	public boolean isNormal(DefaultTheory dt) {
 		if(jus.size()!=1)
 			return false;
-		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
+		FolReasoner prover = FolReasoner.getDefaultReasoner();
 		return prover.equivalent(dt.getFacts(), jus.iterator().next(), conc);
 	}
 

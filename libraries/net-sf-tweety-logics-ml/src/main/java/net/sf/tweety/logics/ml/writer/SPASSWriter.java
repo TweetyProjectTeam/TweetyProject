@@ -25,7 +25,7 @@ import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Implication;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.fol.syntax.Tautology;
-import net.sf.tweety.logics.ml.ModalBeliefSet;
+import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
 import net.sf.tweety.logics.ml.syntax.Necessity;
 import net.sf.tweety.logics.ml.syntax.Possibility;
 

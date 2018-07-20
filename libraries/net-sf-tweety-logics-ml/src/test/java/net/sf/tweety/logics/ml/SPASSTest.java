@@ -26,12 +26,12 @@ import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner;
+import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
 import net.sf.tweety.logics.ml.writer.SPASSWriter;
-import net.sf.tweety.logics.ml.ModalBeliefSet;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.ml.parser.ModalParser;
 
 /**
@@ -55,10 +55,10 @@ public class SPASSTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n !(<>(p))");
 				
-		Answer a1 = spass.query(b,parser.parseFormula("<>(p)"));
-		Answer a2 = spass.query(b,parser.parseFormula("!(<>(p))"));
-		assertFalse(a1.getAnswerBoolean());
-		assertTrue(a2.getAnswerBoolean());
+		Boolean a1 = spass.query(b,(FolFormula) parser.parseFormula("<>(p)"));
+		Boolean a2 = spass.query(b,(FolFormula) parser.parseFormula("!(<>(p))"));
+		assertFalse(a1);
+		assertTrue(a2);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -66,10 +66,10 @@ public class SPASSTest {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n p");
 		
-		Answer a1 = spass.query(b,parser.parseFormula("<>(p)"));
-		Answer a2 = spass.query(b,parser.parseFormula("[](p)"));
-		assertFalse(a1.getAnswerBoolean());
-		assertTrue(a2.getAnswerBoolean());
+		Boolean a1 = spass.query(b,(FolFormula) parser.parseFormula("<>(p)"));
+		Boolean a2 = spass.query(b,(FolFormula) parser.parseFormula("[](p)"));
+		assertFalse(a1);
+		assertTrue(a2);
 	}
 	
 	/*
@@ -82,8 +82,8 @@ public class SPASSTest {
 	public void ComplexQueryTest() throws FileNotFoundException, ParserException, IOException {
 		ModalParser parser = new ModalParser();
 		ModalBeliefSet b = parser.parseBeliefBase("Sort1={obj1} \n type(p) \n type(q(Sort1)) \n p \n q(obj1)");
-		Answer a1 = spass.query(b, parser.parseFormula("[](forall X:(q(X)))=>forall X:( [](q(X)))"));
-		assertTrue(a1.getAnswerBoolean());
+		Boolean a1 = spass.query(b, (FolFormula) parser.parseFormula("[](forall X:(q(X)))=>forall X:( [](q(X)))"));
+		assertTrue(a1);
 	}
 	
 }

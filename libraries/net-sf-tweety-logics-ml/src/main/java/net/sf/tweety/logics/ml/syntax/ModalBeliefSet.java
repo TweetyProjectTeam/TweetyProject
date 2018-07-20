@@ -16,53 +16,48 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.mln;
+package net.sf.tweety.logics.ml.syntax;
 
-import java.io.Serializable;
-import java.util.Collection;
+import java.util.Set;
 
 import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
-import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.mln.syntax.MlnFormula;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
- * Instances of this class represent Markov Logic Networks [Domingos et. al.].
+ * This class models a modal knowledge base, i.e. a set of formulas
+ * in modal logic.
  * 
- * @author Matthias Thimm
+ * @author Anna Gessler
  */
-public class MarkovLogicNetwork extends BeliefSet<MlnFormula> implements Serializable {
-
-	private static final long serialVersionUID = 3313039501304912746L;
-
+public class ModalBeliefSet extends BeliefSet<RelationalFormula> {
+	
 	/**
-	 * Creates a new (empty) MLN.
+	 * Creates a new empty modal knowledge base.
 	 */
-	public MarkovLogicNetwork(){
+	public ModalBeliefSet(){
 		super();
 	}
 	
 	/**
-	 * Creates a new conditional MLN with the given collection of
-	 * MLN formulas.
-	 * @param formulas a collection of MLN formulas.
+	 * Creates a new modal knowledge base with the given set of formulas.
+	 * @param formulas
 	 */
-	public MarkovLogicNetwork(Collection<? extends MlnFormula> formulas){
+	public ModalBeliefSet(Set<RelationalFormula> formulas){
 		super(formulas);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.BeliefSet#getSignature()
-	 */
+
 	@Override
 	public Signature getSignature() {
 		FolSignature sig = new FolSignature();
-		for(MlnFormula formula: this){
-			sig.addAll(formula.getPredicates());
-			sig.addAll(formula.getTerms(Constant.class));
-			sig.addAll(formula.getFunctors());
-		}
+		for(Formula m: this) {
+			while (m instanceof ModalFormula) {
+				m = ((ModalFormula)m).getFormula(); 
+			}
+			sig.add(m);	
+			}	
 		return sig;
 	}
 

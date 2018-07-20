@@ -25,8 +25,8 @@ import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.mln.AlchemyMlnReasoner;
-import net.sf.tweety.logics.mln.MarkovLogicNetwork;
+import net.sf.tweety.logics.mln.reasoner.AlchemyMlnReasoner;
+import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 
 /**
  * Example code illustrating the use of the Alchemy reasoner.
@@ -41,6 +41,6 @@ public class AlchemyExample {
 		parser.setSignature(exp1.getSecond());
 		FolFormula query = (FolFormula) parser.parseFormula("cancer(d0)");
 		reasoner.setAlchemyInferenceCommand("/Users/mthimm/Projects/misc_bins/alchemy/infer");
-		System.out.println(reasoner.query(exp1.getFirst(),query,exp1.getSecond()).getAnswerDouble());
+		System.out.println(reasoner.query(exp1.getFirst(),query,exp1.getSecond()));
 	}
 }

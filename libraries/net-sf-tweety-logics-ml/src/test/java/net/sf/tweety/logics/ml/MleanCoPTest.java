@@ -13,6 +13,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.parser.ModalParser;
 import net.sf.tweety.logics.ml.reasoner.MleanCoPReasoner;
+import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
 
 /**
  * JUnit Test class for MleanCoP.
@@ -37,13 +38,13 @@ public class MleanCoPTest {
 	public void SimpleQueryTest() throws ParserException, IOException {
 		FolFormula f1 = (FolFormula) parser.parseFormula("p||!p");
 		FolFormula f2 = (FolFormula) parser.parseFormula("p&&!p");
-		assertTrue(prover.query(f1));
-		assertFalse(prover.query(f2));
+		assertTrue(prover.query(new ModalBeliefSet(),f1));
+		assertFalse(prover.query(new ModalBeliefSet(),f2));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ComplexQueryTest() throws ParserException, IOException {
 		FolFormula f1 = (FolFormula) parser.parseFormula("[](forall X:(q(X)))=>forall X:( [](q(X)))");
-		assertTrue(prover.query(f1));
+		assertTrue(prover.query(new ModalBeliefSet(),f1));
 	}
 }

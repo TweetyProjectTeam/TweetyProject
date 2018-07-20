@@ -21,21 +21,17 @@ package net.sf.tweety.logics.ml.reasoner;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.commons.util.SetTools;
-import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.ml.ModalBeliefSet;
 import net.sf.tweety.logics.ml.semantics.AccessibilityRelation;
 import net.sf.tweety.logics.ml.semantics.KripkeModel;
 import net.sf.tweety.logics.ml.semantics.ModalHerbrandBase;
 import net.sf.tweety.logics.ml.semantics.ModalHerbrandInterpretation;
-import net.sf.tweety.logics.ml.syntax.ModalFormula;
+import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
 
 /**
  * This class implements inference for modal logic using a brute-force approach.
@@ -46,16 +42,13 @@ import net.sf.tweety.logics.ml.syntax.ModalFormula;
  * @author Matthias Thimm
  */
 
-public class NaiveModalReasoner extends ModalReasoner {
+public class NaiveModalReasoner extends AbstractModalReasoner {
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.logics.ml.reasoner.ModalReasoner#query(net.sf.tweety.logics.ml.syntax.ModalBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public Answer query(ModalBeliefSet mbs, Formula query) {
-		if(!(query instanceof ModalFormula || query instanceof FolFormula))
-			throw new IllegalArgumentException("Error: Expected modal or first-order formula as query.");
-		RelationalFormula formula = (RelationalFormula) query;
+	public Boolean query(ModalBeliefSet mbs, FolFormula formula) {
 		if(!formula.isWellFormed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not well-formed.");
 		if(!formula.isClosed())
@@ -91,21 +84,10 @@ public class NaiveModalReasoner extends ModalReasoner {
 		}
 		
 		//Test if every Kripke model for the knowledge base is also a Kripke model for the formula
-		for (KripkeModel k: kripkeModels) {
-			if (k.satisfies(mbs)) {
-				if (!(k.satisfies((FolFormula) formula))) {
-					Answer answer = new Answer(mbs,formula);
-					answer.setAnswer(false);
-					answer.appendText("The answer is: false");
-					answer.appendText("Explanation: the model " + k + " is a model of the knowledge base but not of the query.");
-					return answer;
-				
-				}
-			}
-		}
-		Answer answer = new Answer(mbs,formula);
-		answer.setAnswer(true);
-		answer.appendText("The answer is: true");
-		return answer;	
+		for (KripkeModel k: kripkeModels)
+			if (k.satisfies(mbs))
+				if (!(k.satisfies((FolFormula) formula)))
+					return false;
+		return true;	
 	}
 }

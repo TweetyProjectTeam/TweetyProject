@@ -16,7 +16,7 @@
  *
  *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.ml.reasoner;
+package net.sf.tweety.logics.fol.reasoner;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,9 +26,10 @@ import java.util.regex.Pattern;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.fol.syntax.Equivalence;
+import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
-import net.sf.tweety.logics.ml.writer.SPASSWriter;
+import net.sf.tweety.logics.fol.writer.SPASSWriter;
 
 /**
  * 
@@ -36,13 +37,10 @@ import net.sf.tweety.logics.ml.writer.SPASSWriter;
  * >http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/</a>), 
  * an automated theorem prover for first-order logic, modal logic and description logics.
  * 
- * <br> Note: There are unresolved errors for some cases, see {@link net.sf.tweety.logics.ml.SPASSTest#ComplexQueryTest()} for examples.
- * 
  * @author Anna Gessler
- * @author Matthias Thimm
  *
  */
-public class SPASSModalReasoner extends AbstractModalReasoner {
+public class SpassFolReasoner extends FolReasoner {
 	/**
 	 * String representation of the SPASS path.
 	 */
@@ -68,7 +66,7 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 	 * @param bash
 	 *            shell to run commands
 	 */
-	public SPASSModalReasoner(String binaryLocation, Shell bash) {
+	public SpassFolReasoner(String binaryLocation, Shell bash) {
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
 	}
@@ -79,7 +77,7 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 	 * @param binaryLocation
 	 *            of the SPASS executable on the hard drive
 	 */
-	public SPASSModalReasoner(String binaryLocation) {
+	public SpassFolReasoner(String binaryLocation) {
 		this(binaryLocation, Shell.getNativeShell());
 	}
 	
@@ -92,10 +90,10 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.ml.reasoner.AbstractModalReasoner#query(net.sf.tweety.logics.ml.syntax.ModalBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
+	 * @see net.sf.tweety.logics.fol.reasoner.FolReasoner#query(net.sf.tweety.logics.fol.syntax.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public Boolean query(ModalBeliefSet kb, FolFormula query) {
+	public Boolean query(FolBeliefSet kb, FolFormula query) {
 		String output = null;
 		try {
 			File file = File.createTempFile("tmp", ".txt");
@@ -117,13 +115,13 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 	
 	/**
 	 * Determines the answer wrt. to the given query and returns the proof (if applicable).
-	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner#query(Formula)}
+	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.SpassFolReasoner.reasoner.SPASS#query(Formula)}
 	 * if only a yes/no result is needed.
-	 * @param kb a modal belief set
+	 * 
 	 * @param query a formula
 	 * @return a string containing proof documentation 
 	 */
-	public String queryProof(ModalBeliefSet kb, Formula query) {
+	public String queryProof(FolBeliefSet kb, Formula query) {
 		String output = null;
 		try {
 			File file = File.createTempFile("tmp", ".txt");	
@@ -158,6 +156,25 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 		if (Pattern.compile("SPASS beiseite: Ran out of time").matcher(output).find())
 			throw new RuntimeException("Failure: SPASS timeout.");
 		throw new RuntimeException("Failure: SPASS returned no result which can be interpreted.");
+	}
+
+	@Override
+	public boolean equivalent(FolBeliefSet kb, FolFormula a, FolFormula b) {
+		String output = null;
+		try {
+			File file = File.createTempFile("tmp", ".txt");
+			SPASSWriter writer = new SPASSWriter(new PrintWriter(file));
+			writer.printProblem(kb,new Equivalence(a,b));
+			writer.close();
+			
+			String cmd = binaryLocation + " " + cmdOptions + " " + file.getAbsolutePath().replaceAll("\\\\", "/");
+			output = bash.run(cmd);
+			if (evaluateResult(output)) 
+				return true;
+		} catch (InterruptedException | IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

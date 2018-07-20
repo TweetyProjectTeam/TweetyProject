@@ -27,8 +27,8 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.parser.FolParser;
-import net.sf.tweety.logics.fol.prover.FolTheoremProver;
-import net.sf.tweety.logics.fol.prover.NaiveProver;
+import net.sf.tweety.logics.fol.reasoner.FolReasoner;
+import net.sf.tweety.logics.fol.reasoner.NaiveFolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -82,8 +82,8 @@ public class FolExample {
 		/*
 		 * Example 3: Use one of the provers to check whether various formulas can be inferred from the knowledge base parsed in Example 2. 
 		 */
-		FolTheoremProver.setDefaultProver(new NaiveProver()); //Set default prover, options are NaiveProver, EProver, Prover9
-		FolTheoremProver prover = FolTheoremProver.getDefaultProver();
+		FolReasoner.setDefaultReasoner(new NaiveFolReasoner()); //Set default prover, options are NaiveProver, EProver, Prover9
+		FolReasoner prover = FolReasoner.getDefaultReasoner();
 		System.out.println("ANSWER 1: " + prover.query(bs, (FolFormula)parser.parseFormula("Flies(kiwi)")));
 		System.out.println("ANSWER 2: " + prover.query(bs, (FolFormula)parser.parseFormula("forall X: (exists Y: (Flies(X) && Flies(Y) && X/==Y))")));
 		System.out.println("ANSWER 3: " + prover.query(bs, (FolFormula)parser.parseFormula("kiwi == kiwi")));

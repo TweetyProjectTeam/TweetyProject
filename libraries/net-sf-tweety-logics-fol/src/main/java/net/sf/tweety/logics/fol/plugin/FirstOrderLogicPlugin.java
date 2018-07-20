@@ -24,8 +24,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.fol.ClassicalInference;
 import net.sf.tweety.logics.fol.parser.FolParser;
+import net.sf.tweety.logics.fol.reasoner.NaiveFolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.plugin.AbstractTweetyPlugin;
@@ -111,7 +111,7 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 		
 		FolParser parser = new FolParser();
 		
-		ClassicalInference reasoner = null;
+		NaiveFolReasoner reasoner = null;
 		
 		FolFormula[] queries = new FolFormula[1];
 		
@@ -138,7 +138,7 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 			if(tempComParam.getIdentifier().equals("-reasoner")){
 				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
 				if(tmp.getValue().equalsIgnoreCase("classic")){
-					reasoner = new ClassicalInference();
+					reasoner = new NaiveFolReasoner();
 				}
 			} 
 			// if parameter identifier is for a query

@@ -26,8 +26,8 @@ import org.junit.Test;
 
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.fol.parser.FolParser;
-import net.sf.tweety.logics.fol.prover.FolTheoremProver;
-import net.sf.tweety.logics.fol.prover.SPASS;
+import net.sf.tweety.logics.fol.reasoner.FolReasoner;
+import net.sf.tweety.logics.fol.reasoner.SpassFolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.writer.SPASSWriter;
@@ -42,12 +42,12 @@ import net.sf.tweety.logics.fol.writer.SPASSWriter;
 
 public class SPASSTest {
 	
-	static FolTheoremProver spass;
+	static FolReasoner spass;
 	SPASSWriter printer = new SPASSWriter();
 	
 	@BeforeClass public static void init(){
 		System.out.println("Initializing SPASS Test for Unix");
-		 spass = new SPASS("/home/anna/sw/mlProver/SPASS/SPASS", Shell.getNativeShell());
+		 spass = new SpassFolReasoner("/home/anna/sw/mlProver/SPASS/SPASS", Shell.getNativeShell());
 	}
 
 	@Test
@@ -56,10 +56,10 @@ public class SPASSTest {
 		String source = "type(a) \n type(b) \n type(c) \n"
 				+ "a \n !b";
 		FolBeliefSet b = parser.parseBeliefBase(source);
-		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("b")).getAnswerBoolean());
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("a")).getAnswerBoolean());
-		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("c")).getAnswerBoolean());
-		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("!c")).getAnswerBoolean());
+		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("b")));
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("a")));
+		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("c")));
+		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("!c")));
 	}
 	
 	@Test
@@ -73,10 +73,10 @@ public class SPASSTest {
 				+ "Ridable(horse) \n"
 				+ "forall X: (!Ridable(X) || Tame(X)) \n";
 		FolBeliefSet b = parser.parseBeliefBase(source);
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Tame(cow)")).getAnswerBoolean());
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("exists X: (Tame(X))")).getAnswerBoolean());
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Tame(horse)")).getAnswerBoolean());
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("!Ridable(lion)")).getAnswerBoolean());
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Tame(cow)")));
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("exists X: (Tame(X))")));
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Tame(horse)")));
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("!Ridable(lion)")));
 	}
 	
 	@Test
@@ -90,14 +90,14 @@ public class SPASSTest {
 				+ "forall X: (!Eats(cow, X) || Eats(horse, X)) \n"
 				+ "exists X: (Eats(lion, X))";
 		FolBeliefSet b = parser.parseBeliefBase(source);
-		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("Eats(lion, tree)")).getAnswerBoolean());
-		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("!Eats(lion, grass)")).getAnswerBoolean());
-		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("Eats(horse, tree)")).getAnswerBoolean());
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("!Eats(horse, tree)")).getAnswerBoolean());
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Eats(horse, grass)")).getAnswerBoolean());
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("exists X: (forall Y: (!Eats(Y, X)))")).getAnswerBoolean());
-		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(Y, X)))")).getAnswerBoolean());
-		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("!(forall X: (forall Y: (Eats(Y, X))))")).getAnswerBoolean());
+		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("Eats(lion, tree)")));
+		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("!Eats(lion, grass)")));
+		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("Eats(horse, tree)")));
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("!Eats(horse, tree)")));
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("Eats(horse, grass)")));
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("exists X: (forall Y: (!Eats(Y, X)))")));
+		assertFalse(spass.query(b, (FolFormula)parser.parseFormula("forall X: (forall Y: (Eats(Y, X)))")));
+		assertTrue(spass.query(b, (FolFormula)parser.parseFormula("!(forall X: (forall Y: (Eats(Y, X))))")));
 	}
 	
 	

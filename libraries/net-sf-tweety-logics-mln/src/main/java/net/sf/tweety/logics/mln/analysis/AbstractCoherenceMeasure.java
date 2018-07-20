@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.mln.MarkovLogicNetwork;
+import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 
 /**
  * This class represents an abstract coherence measure, i.e. a function
