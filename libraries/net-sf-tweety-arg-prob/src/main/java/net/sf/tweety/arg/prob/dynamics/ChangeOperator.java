@@ -19,8 +19,8 @@
 package net.sf.tweety.arg.prob.dynamics;
 
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
 import net.sf.tweety.arg.prob.semantics.ProbabilisticExtension;
+import net.sf.tweety.arg.prob.syntax.PartialProbabilityAssignment;
 
 /**
  * This interface provides common methods for change operators

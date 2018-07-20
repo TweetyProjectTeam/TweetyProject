@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.arg.delp.semantics;
 
-import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.arg.delp.syntax.*;
 
 /**

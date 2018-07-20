@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.arg.deductive.DeductiveKnowledgeBase;
+import net.sf.tweety.arg.deductive.syntax.DeductiveKnowledgeBase;
 import net.sf.tweety.graphs.*;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.Conjunction;

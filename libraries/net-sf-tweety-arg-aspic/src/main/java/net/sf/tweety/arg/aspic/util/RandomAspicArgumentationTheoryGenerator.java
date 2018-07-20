@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
+import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;

@@ -24,7 +24,7 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.arg.deductive.SimplePlLogicDeductiveKnowledgebase;
+import net.sf.tweety.arg.deductive.syntax.SimplePlLogicDeductiveKnowledgebase;
 import net.sf.tweety.arg.deductive.syntax.SimplePlRule;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Formula;

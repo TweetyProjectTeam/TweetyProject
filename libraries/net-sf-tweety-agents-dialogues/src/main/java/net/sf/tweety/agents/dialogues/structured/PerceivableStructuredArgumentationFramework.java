@@ -19,7 +19,6 @@
 package net.sf.tweety.agents.dialogues.structured;
 
 import net.sf.tweety.agents.*;
-import net.sf.tweety.arg.saf.*;
 import net.sf.tweety.arg.saf.syntax.StructuredArgumentationFramework;
 
 /**

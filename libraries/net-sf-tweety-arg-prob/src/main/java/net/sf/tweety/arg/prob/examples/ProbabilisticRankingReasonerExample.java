@@ -22,7 +22,7 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.arg.prob.ProbabilisticRankingReasoner;
+import net.sf.tweety.arg.prob.reasoner.ProbabilisticRankingReasoner;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -51,8 +51,8 @@ public class ProbabilisticRankingReasonerExample {
 		System.out.println(theory);
 		
 		// Compute probabilistic ranking wrt. grounded semantics, credoulous reasoning, and p=0.5
-		ProbabilisticRankingReasoner reasoner = new ProbabilisticRankingReasoner(Semantics.GROUNDED_SEMANTICS, Semantics.CREDULOUS_INFERENCE,new Probability(0.5),true);
+		ProbabilisticRankingReasoner reasoner = new ProbabilisticRankingReasoner(Semantics.GROUNDED_SEMANTICS,new Probability(0.5),true);
 		
-		System.out.println(reasoner.getRanking(theory));		
+		System.out.println(reasoner.getModel(theory));		
 	}
 }

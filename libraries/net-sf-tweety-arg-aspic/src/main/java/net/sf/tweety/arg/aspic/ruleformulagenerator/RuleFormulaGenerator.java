@@ -18,7 +18,7 @@
  */
 package net.sf.tweety.arg.aspic.ruleformulagenerator;
 
-import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
+import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;

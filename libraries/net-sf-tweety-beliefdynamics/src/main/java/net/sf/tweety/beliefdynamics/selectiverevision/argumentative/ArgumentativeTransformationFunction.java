@@ -20,9 +20,10 @@ package net.sf.tweety.beliefdynamics.selectiverevision.argumentative;
 
 import java.util.*;
 
-import net.sf.tweety.arg.deductive.*;
 import net.sf.tweety.arg.deductive.accumulator.*;
 import net.sf.tweety.arg.deductive.categorizer.*;
+import net.sf.tweety.arg.deductive.reasoner.CompilationReasoner;
+import net.sf.tweety.arg.deductive.syntax.DeductiveKnowledgeBase;
 import net.sf.tweety.beliefdynamics.selectiverevision.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
@@ -77,7 +78,7 @@ public class ArgumentativeTransformationFunction implements MultipleTransformati
 		joinedBeliefSet.addAll(formulas);
 		CompilationReasoner reasoner = new CompilationReasoner(this.categorizer, this.accumulator);
 		for(PropositionalFormula f: formulas){
-			Double result = reasoner.query(joinedBeliefSet,f).getAnswerDouble();
+			Double result = reasoner.query(joinedBeliefSet,f);
 			if(this.isSkeptical){
 				if(result > 0)
 					transformedSet.add(f);

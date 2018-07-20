@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.arg.delp.syntax.*;
 import net.sf.tweety.logics.fol.syntax.*;
 

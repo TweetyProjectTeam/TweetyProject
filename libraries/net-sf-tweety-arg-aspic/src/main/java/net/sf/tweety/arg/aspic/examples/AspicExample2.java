@@ -21,14 +21,12 @@ package net.sf.tweety.arg.aspic.examples;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
-import net.sf.tweety.arg.aspic.NaiveAspicReasoner;
 import net.sf.tweety.arg.aspic.parser.AspicParser;
+import net.sf.tweety.arg.aspic.reasoner.NaiveAspicReasoner;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
-import net.sf.tweety.arg.aspic.syntax.AspicArgument;
+import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
-import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -45,15 +43,8 @@ public class AspicExample2 {
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
 		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile(AspicExample2.class.getResource("/ex1.aspic").getFile());		
 		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
-		Argument query = null;
-		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
-		for (AspicArgument<PropositionalFormula> arg : at.getArguments()) {
-			if (arg.getConclusion().equals(pf)) {
-				query = arg;
-				break;
-			}
-		}
+		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");		
 		System.out.println(at);
-		System.out.println(query + "\t" + ar.query(at,query,Semantics.CREDULOUS_INFERENCE));		
+		System.out.println(pf + "\t" + ar.query(at,pf,Semantics.CREDULOUS_INFERENCE));		
 	}
 }

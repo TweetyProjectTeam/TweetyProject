@@ -23,6 +23,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.kohsuke.args4j.CmdLineException;
 
+import net.sf.tweety.arg.delp.syntax.DefeasibleLogicProgram;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;

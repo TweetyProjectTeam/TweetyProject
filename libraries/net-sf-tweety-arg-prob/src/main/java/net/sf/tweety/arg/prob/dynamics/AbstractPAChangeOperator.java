@@ -25,8 +25,8 @@ import java.util.Vector;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.arg.prob.PartialProbabilityAssignment;
 import net.sf.tweety.arg.prob.semantics.*;
+import net.sf.tweety.arg.prob.syntax.PartialProbabilityAssignment;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.func.SimpleRealValuedFunction;

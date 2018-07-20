@@ -20,7 +20,6 @@ package net.sf.tweety.arg.delp.semantics;
 
 import java.util.*;
 
-import net.sf.tweety.arg.delp.*;
 import net.sf.tweety.arg.delp.syntax.*;
 import net.sf.tweety.commons.util.*;
 import net.sf.tweety.logics.fol.syntax.*;

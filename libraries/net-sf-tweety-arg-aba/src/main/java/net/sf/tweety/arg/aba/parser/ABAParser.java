@@ -24,7 +24,7 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.arg.aba.ABATheory;
+import net.sf.tweety.arg.aba.syntax.ABATheory;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
 import net.sf.tweety.arg.aba.syntax.Negation;

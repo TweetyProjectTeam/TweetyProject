@@ -19,7 +19,12 @@
  package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
-import net.sf.tweety.commons.Formula;
+import net.sf.tweety.arg.delp.reasoner.DelpReasoner;
+import net.sf.tweety.arg.delp.semantics.DelpAnswer;
+import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
+import net.sf.tweety.arg.delp.syntax.DefeasibleLogicProgram;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,101 +41,101 @@ public final class TestQueries {
 
     private final static Logger LOGGER = Logger.getLogger(TestQueries.class.getName());
 
-    private static DelpReasoner REASONER;
+    private static DelpReasoner REASONER = new DelpReasoner(new GeneralizedSpecificity());
 
-    private DelpAnswer query(String filepath, String query) throws IOException {
+    private DelpAnswer.Type query(String filepath, String query) throws IOException {
         // perform query
     	DelpParser parser = new DelpParser();
-    	DefeasibleLogicProgram delp = parser.parseBeliefBaseFromFile(filepath);
-        Formula formula = parser.parseFormula(query);
-        DelpAnswer answer = (DelpAnswer) REASONER.query(delp,formula);
+    	DefeasibleLogicProgram delp = parser.parseBeliefBaseFromFile(TestQueries.class.getResource(filepath).getFile());
+        FolFormula formula = (FolFormula) parser.parseFormula(query);
+        DelpAnswer.Type answer = REASONER.query(delp,formula);
         LOGGER.info("DeLP answer to query '"+formula+"' = "+answer);
         return answer;
     }
 
-    private DelpAnswer query(DefeasibleLogicProgram delp, Formula formula) throws IOException {
+    private DelpAnswer.Type query(DefeasibleLogicProgram delp, FolFormula formula) throws IOException {
         // perform query
-        DelpAnswer answer = (DelpAnswer) REASONER.query(delp,formula);
+        DelpAnswer.Type answer = REASONER.query(delp,formula);
         LOGGER.info("DeLP answer to query '"+formula+"' = "+answer);
         return answer;
     }
     
     @Test
     public void birds() throws IOException {
-        DelpAnswer answer;
+        DelpAnswer.Type answer;
         // tina
         answer = query("/birds.txt", "Flies(tina)");
-        assertEquals("Tina should fly", DelpAnswer.Type.YES, answer.getType());
+        assertEquals("Tina should fly", DelpAnswer.Type.YES, answer);
         answer = query("/birds.txt","~Flies(tina)");
-        assertEquals("Tina should fly", DelpAnswer.Type.NO, answer.getType());
+        assertEquals("Tina should fly", DelpAnswer.Type.NO, answer);
         // tweety
         answer = query("/birds.txt", "Flies(tweety)");
-        assertEquals("Tweety does not fly", DelpAnswer.Type.NO, answer.getType());
+        assertEquals("Tweety does not fly", DelpAnswer.Type.NO, answer);
         answer = query("/birds.txt", "~Flies(tweety)");
-        assertEquals("Tweety does not fly", DelpAnswer.Type.YES, answer.getType());
+        assertEquals("Tweety does not fly", DelpAnswer.Type.YES, answer);
     }
 
     @Test
     public void nixon() throws IOException {
-        DelpAnswer answer;
+        DelpAnswer.Type answer;
         answer = query("/nixon.txt", "~pacifist(nixon)"); // UNDECIDED
-        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer);
         answer = query("/nixon.txt", "pacifist(nixon)"); // UNDECIDED
-        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer);
         answer = query("/nixon.txt", "has_a_gun(nixon)"); // YES
-        assertEquals(DelpAnswer.Type.YES, answer.getType());
+        assertEquals(DelpAnswer.Type.YES, answer);
     }
 
     @Test
     public void stocks() throws IOException {
-        DelpAnswer ans = query("/stocks.txt", "buy_stock(acme)");
-        assertEquals("Buying stock ACME should be supported", DelpAnswer.Type.YES, ans.getType());
+        DelpAnswer.Type ans = query("/stocks.txt", "buy_stock(acme)");
+        assertEquals("Buying stock ACME should be supported", DelpAnswer.Type.YES, ans);
     }
 
     @Test
     public void counterarguments() throws IOException {
-        DelpAnswer answer;
+        DelpAnswer.Type answer;
         answer = query("/counterarg.txt", "a");
-        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer);
         answer = query("/counterarg.txt", "c");
-        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer);
     }
 
     @Test
     public void hobbes() throws IOException {
-        DelpAnswer answer;
+        DelpAnswer.Type answer;
         answer = query("/hobbes.txt", "~dangerous(hobbes)");
-        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer);
     }
 
     @Test
     public void dtree() throws IOException {
-        DelpAnswer answer;
+        DelpAnswer.Type answer;
         answer = query("/dtree.txt", "a"); // UNDECIDED
-        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer);
         answer = query("/dtree.txt", "~b"); // YES
-        assertEquals(DelpAnswer.Type.YES, answer.getType());
+        assertEquals(DelpAnswer.Type.YES, answer);
         answer = query("/dtree.txt", "b"); // NO
-        assertEquals(DelpAnswer.Type.NO, answer.getType());
+        assertEquals(DelpAnswer.Type.NO, answer);
     }
 
     @Test
     public void quoted() throws IOException {
-        DelpAnswer answer;
+        DelpAnswer.Type answer;
         DelpParser parser = new DelpParser();
         DefeasibleLogicProgram delp = parser.parseBeliefBase(
                 "saw(\"1.2.3.4\",\"foo.png\").\n"+
                 "visited(IP) -< saw(IP,STR).\n"+
                 "src(\"1.2.3.5\").");
-        answer = query(delp, parser.parseFormula("visited(\"1.2.3.4\")")); // YES
-        assertEquals(DelpAnswer.Type.YES, answer.getType());
-        answer = query(delp, parser.parseFormula("visited(\"1.2.3.5\")")); // UNDECIDED
-        assertEquals(DelpAnswer.Type.UNDECIDED, answer.getType());
+        answer = query(delp, (FolFormula)parser.parseFormula("visited(\"1.2.3.4\")")); // YES
+        assertEquals(DelpAnswer.Type.YES, answer);
+        answer = query(delp, (FolFormula)parser.parseFormula("visited(\"1.2.3.5\")")); // UNDECIDED
+        assertEquals(DelpAnswer.Type.UNDECIDED, answer);
     }
 
     @Test // currently too slow: state-space explosion!
     public void moreQuoted() throws IOException {
-        DelpAnswer answer;
+        DelpAnswer.Type answer;
         DelpParser parser = new DelpParser();
         DefeasibleLogicProgram delp = parser.parseBeliefBase("% modeling web defacement\n" +
                 "web_defaced(STR,IP1) -< cmd_injection(IP1),\n" +
@@ -159,9 +164,9 @@ public final class TestQueries {
                 "slash24(\"1.2.3.9\",\"1.2.3\").\n" +
                 "true.");
      
-        answer = query(delp, parser.parseFormula("same_realm(\"1.2.3.4\",\"1.2.3.9\")")); // YES
-        assertEquals(DelpAnswer.Type.YES, answer.getType());
-        answer = query(delp, parser.parseFormula("web_defaced(\"fr.jpg\",\"1.2.3.9\")")); // YES
-        assertEquals(DelpAnswer.Type.YES, answer.getType());
+        answer = query(delp, (FolFormula)parser.parseFormula("same_realm(\"1.2.3.4\",\"1.2.3.9\")")); // YES
+        assertEquals(DelpAnswer.Type.YES, answer);
+        answer = query(delp, (FolFormula)parser.parseFormula("web_defaced(\"fr.jpg\",\"1.2.3.9\")")); // YES
+        assertEquals(DelpAnswer.Type.YES, answer);
     }
 }

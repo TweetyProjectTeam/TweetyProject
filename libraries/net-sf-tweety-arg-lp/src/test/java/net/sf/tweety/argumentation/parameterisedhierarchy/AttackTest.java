@@ -20,7 +20,6 @@ package net.sf.tweety.argumentation.parameterisedhierarchy;
 
 import static org.junit.Assert.*;
 
-import net.sf.tweety.arg.lp.ArgumentationKnowledgeBase;
 import net.sf.tweety.arg.lp.semantics.AttackRelation;
 import net.sf.tweety.arg.lp.semantics.attack.Attack;
 import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
@@ -29,6 +28,7 @@ import net.sf.tweety.arg.lp.semantics.attack.Rebut;
 import net.sf.tweety.arg.lp.semantics.attack.StrongAttack;
 import net.sf.tweety.arg.lp.semantics.attack.Undercut;
 import net.sf.tweety.arg.lp.syntax.Argument;
+import net.sf.tweety.arg.lp.syntax.ArgumentationKnowledgeBase;
 import net.sf.tweety.lp.asp.syntax.*;
 
 import org.junit.Test;

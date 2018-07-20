@@ -23,9 +23,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-import net.sf.tweety.arg.lp.ArgumentationKnowledgeBase;
-import net.sf.tweety.arg.lp.LiteralReasoner;
+import net.sf.tweety.arg.lp.reasoner.LiteralReasoner;
 import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
+import net.sf.tweety.arg.lp.syntax.ArgumentationKnowledgeBase;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction;
 import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.sf.tweety.lp.asp.syntax.Program;

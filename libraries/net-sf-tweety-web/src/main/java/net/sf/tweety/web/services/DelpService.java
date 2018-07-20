@@ -26,13 +26,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import net.sf.tweety.arg.delp.DefeasibleLogicProgram;
-import net.sf.tweety.arg.delp.DelpReasoner;
 import net.sf.tweety.arg.delp.parser.DelpParser;
+import net.sf.tweety.arg.delp.reasoner.DelpReasoner;
 import net.sf.tweety.arg.delp.semantics.ComparisonCriterion;
+import net.sf.tweety.arg.delp.semantics.DelpAnswer;
 import net.sf.tweety.arg.delp.semantics.EmptyCriterion;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
-import net.sf.tweety.commons.Answer;
+import net.sf.tweety.arg.delp.syntax.DefeasibleLogicProgram;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.FolParser;
@@ -140,11 +140,11 @@ public class DelpService{
 			if(qString.startsWith("~"))
 				f = new Negation((FolFormula)folParser.parseFormula(qString.substring(1)));
 			else f = folParser.parseFormula(qString);
-			Answer ans = reasoner.query(delp,f);
+			DelpAnswer.Type ans = reasoner.query(delp,(FolFormula) f);
 			jsonReply.put(DelpService.JSON_ATTR_KB, query.getString(DelpService.JSON_ATTR_KB));
 			jsonReply.put(DelpService.JSON_ATTR_QUERY, query.getString(DelpService.JSON_ATTR_QUERY));
 			jsonReply.put(DelpService.JSON_ATTR_COMP, query.getString(DelpService.JSON_ATTR_COMP));
-			jsonReply.put(DelpService.JSON_ATTR_ANSWER, ans.getAnswerBoolean());
+			jsonReply.put(DelpService.JSON_ATTR_ANSWER, ans);
 			return jsonReply;
 		} catch (ParserException e) {			
 			throw new JSONException("Malformed JSON: syntax of knowledge base and/or query does not conform to the given format.");

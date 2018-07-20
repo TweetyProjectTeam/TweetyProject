@@ -21,12 +21,12 @@ package net.sf.tweety.arg.delp.examples;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import net.sf.tweety.arg.delp.DefeasibleLogicProgram;
-import net.sf.tweety.arg.delp.DelpReasoner;
 import net.sf.tweety.arg.delp.parser.DelpParser;
+import net.sf.tweety.arg.delp.reasoner.DelpReasoner;
 import net.sf.tweety.arg.delp.semantics.GeneralizedSpecificity;
-import net.sf.tweety.commons.Formula;
+import net.sf.tweety.arg.delp.syntax.DefeasibleLogicProgram;
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
  * DeLP example code
@@ -39,10 +39,10 @@ public class DeLPExample {
 		DefeasibleLogicProgram delp = parser.parseBeliefBaseFromFile(DeLPExample.class.getResource("/birds2.txt").getFile());
 		DelpReasoner reasoner = new DelpReasoner(new GeneralizedSpecificity());
 		
-		Formula query = parser.parseFormula("Fly(opus)");
+		FolFormula query = (FolFormula) parser.parseFormula("Fly(opus)");
 		System.out.println(query + "\t" + reasoner.query(delp,query));
 		
-		query = parser.parseFormula("Fly(tweety)");
+		query = (FolFormula) parser.parseFormula("Fly(tweety)");
 		System.out.println(query + "\t" + reasoner.query(delp,query));
 	}
 }

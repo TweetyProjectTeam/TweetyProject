@@ -20,10 +20,11 @@ package net.sf.tweety.arg.deductive.examples;
 
 import java.io.IOException;
 
-import net.sf.tweety.arg.deductive.DeductiveKnowledgeBase;
-import net.sf.tweety.arg.deductive.SimpleReasoner;
 import net.sf.tweety.arg.deductive.accumulator.SimpleAccumulator;
 import net.sf.tweety.arg.deductive.categorizer.ClassicalCategorizer;
+import net.sf.tweety.arg.deductive.reasoner.AbstractDeductiveArgumentationReasoner;
+import net.sf.tweety.arg.deductive.reasoner.SimpleReasoner;
+import net.sf.tweety.arg.deductive.syntax.DeductiveKnowledgeBase;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
@@ -55,9 +56,9 @@ public class DeductiveExample {
 		
 		System.out.println(kb);
 		
-		BeliefBaseReasoner<DeductiveKnowledgeBase> reasoner = new SimpleReasoner(new ClassicalCategorizer(), new SimpleAccumulator());
+		AbstractDeductiveArgumentationReasoner reasoner = new SimpleReasoner(new ClassicalCategorizer(), new SimpleAccumulator());
 		
-		System.out.println(reasoner.query(kb,parser.parseFormula("h")).getAnswerDouble());
+		System.out.println(reasoner.query(kb,(PropositionalFormula) parser.parseFormula("h")));
 		
 	}
 	

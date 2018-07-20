@@ -21,7 +21,7 @@
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.sf.tweety.arg.aba.ABATheory;
+import net.sf.tweety.arg.aba.syntax.ABATheory;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.dung.syntax.Argument;

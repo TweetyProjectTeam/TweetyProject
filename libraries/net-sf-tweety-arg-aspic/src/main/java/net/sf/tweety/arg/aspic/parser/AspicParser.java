@@ -26,9 +26,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.order.SimpleAspicOrder;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
+import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;

@@ -21,10 +21,10 @@ package net.sf.tweety.arg.aba.examples;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import net.sf.tweety.arg.aba.ABATheory;
-import net.sf.tweety.arg.aba.FlatABAReasoner;
-import net.sf.tweety.arg.aba.PreferredReasoner;
 import net.sf.tweety.arg.aba.parser.ABAParser;
+import net.sf.tweety.arg.aba.reasoner.FlatABAReasoner;
+import net.sf.tweety.arg.aba.reasoner.PreferredReasoner;
+import net.sf.tweety.arg.aba.syntax.ABATheory;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.commons.ParserException;
@@ -46,12 +46,12 @@ public class AbaExample {
 		ABAParser<PropositionalFormula> parser = new ABAParser<PropositionalFormula>(new PlParser());
 		ABATheory<PropositionalFormula> t = parser.parseBeliefBaseFromFile(AbaExample.class.getResource("/example2.aba").getFile());
 		
-		FlatABAReasoner<PropositionalFormula> r1 = new FlatABAReasoner<PropositionalFormula>(Semantics.PREFERRED_SEMANTICS, Semantics.CREDULOUS_INFERENCE);
-		PreferredReasoner<PropositionalFormula> r2 = new PreferredReasoner<PropositionalFormula>(Semantics.CREDULOUS_INFERENCE);
+		FlatABAReasoner<PropositionalFormula> r1 = new FlatABAReasoner<PropositionalFormula>(Semantics.PREFERRED_SEMANTICS);
+		PreferredReasoner<PropositionalFormula> r2 = new PreferredReasoner<PropositionalFormula>();
 		
 		Assumption<PropositionalFormula> a = new Assumption<>(new Proposition("a"));
-		System.out.println("a: " + r1.query(t,a).getAnswerBoolean());
-		System.out.println("a: " + r2.query(t,a).getAnswerBoolean());
+		System.out.println("a: " + r1.query(t,a));
+		System.out.println("a: " + r2.query(t,a));
 		
 		System.out.println("as graph: " + t.asDungTheory());
 	}

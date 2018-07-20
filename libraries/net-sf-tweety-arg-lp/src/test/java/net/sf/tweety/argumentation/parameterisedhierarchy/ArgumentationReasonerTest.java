@@ -20,12 +20,12 @@ package net.sf.tweety.argumentation.parameterisedhierarchy;
 
 import static org.junit.Assert.*;
 
-import net.sf.tweety.arg.lp.ArgumentationKnowledgeBase;
-import net.sf.tweety.arg.lp.ArgumentationReasoner;
-import net.sf.tweety.arg.lp.LiteralReasoner;
+import net.sf.tweety.arg.lp.reasoner.ArgumentationReasoner;
+import net.sf.tweety.arg.lp.reasoner.LiteralReasoner;
 import net.sf.tweety.arg.lp.semantics.attack.Attack;
 import net.sf.tweety.arg.lp.semantics.attack.Undercut;
 import net.sf.tweety.arg.lp.syntax.Argument;
+import net.sf.tweety.arg.lp.syntax.ArgumentationKnowledgeBase;
 import net.sf.tweety.lp.asp.syntax.*;
 
 import org.junit.Before;
@@ -98,9 +98,9 @@ public class ArgumentationReasonerTest {
 	public void testArgumentationReasoner() {
 		ArgumentationReasoner reasoner = new ArgumentationReasoner(Undercut.getInstance(), Attack.getInstance());
 		
-		assertTrue(reasoner.isJustified(kb,a1));
-		assertTrue(reasoner.isJustified(kb,a3));
-		assertTrue(reasoner.isJustified(kb,a6));
+		assertTrue(reasoner.query(kb,a1));
+		assertTrue(reasoner.query(kb,a3));
+		assertTrue(reasoner.query(kb,a6));
 		assertFalse(reasoner.isOverruled(kb,a1));
 		assertFalse(reasoner.isOverruled(kb,a3));
 		assertFalse(reasoner.isOverruled(kb,a6));
@@ -108,9 +108,9 @@ public class ArgumentationReasonerTest {
 		assertTrue(reasoner.isOverruled(kb,a2));
 		assertTrue(reasoner.isOverruled(kb,a4));
 		assertTrue(reasoner.isOverruled(kb,a5));
-		assertFalse(reasoner.isJustified(kb,a2));
-		assertFalse(reasoner.isJustified(kb,a4));
-		assertFalse(reasoner.isJustified(kb,a5));
+		assertFalse(reasoner.query(kb,a2));
+		assertFalse(reasoner.query(kb,a4));
+		assertFalse(reasoner.query(kb,a5));
 		
 		assertTrue(reasoner.isDefensible(kb,a7));
 		assertTrue(reasoner.isDefensible(kb,a8));
@@ -120,14 +120,14 @@ public class ArgumentationReasonerTest {
 	public void testLiteralReasoner() {
 		LiteralReasoner reasoner = new LiteralReasoner(Undercut.getInstance(), Attack.getInstance());
 		
-		assertTrue(reasoner.query(kb,p).getAnswerBoolean());
-		assertTrue(reasoner.query(kb,n_q).getAnswerBoolean());
-		assertTrue(reasoner.query(kb,s).getAnswerBoolean());
-		assertFalse(reasoner.query(kb,q).getAnswerBoolean());
-		assertFalse(reasoner.query(kb,r).getAnswerBoolean());
-		assertFalse(reasoner.query(kb,n_s).getAnswerBoolean());
-		assertFalse(reasoner.query(kb,n).getAnswerBoolean());
-		assertFalse(reasoner.query(kb,m).getAnswerBoolean());
+		assertTrue(reasoner.query(kb,p));
+		assertTrue(reasoner.query(kb,n_q));
+		assertTrue(reasoner.query(kb,s));
+		assertFalse(reasoner.query(kb,q));
+		assertFalse(reasoner.query(kb,r));
+		assertFalse(reasoner.query(kb,n_s));
+		assertFalse(reasoner.query(kb,n));
+		assertFalse(reasoner.query(kb,m));
 	}
 	
 }

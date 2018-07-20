@@ -19,6 +19,7 @@
  package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.parser.DelpParser;
+import net.sf.tweety.arg.delp.syntax.DefeasibleLogicProgram;
 import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
 import net.sf.tweety.arg.delp.syntax.DelpArgument;
 import net.sf.tweety.logics.commons.syntax.Constant;

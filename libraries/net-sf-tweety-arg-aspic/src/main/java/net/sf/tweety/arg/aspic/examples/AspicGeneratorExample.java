@@ -18,10 +18,10 @@
  */
 package net.sf.tweety.arg.aspic.examples;
 
-import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
-import net.sf.tweety.arg.aspic.ModuleBasedAspicReasoner;
-import net.sf.tweety.arg.aspic.NaiveAspicReasoner;
-import net.sf.tweety.arg.aspic.RandomAspicReasoner;
+import net.sf.tweety.arg.aspic.reasoner.ModuleBasedAspicReasoner;
+import net.sf.tweety.arg.aspic.reasoner.NaiveAspicReasoner;
+import net.sf.tweety.arg.aspic.reasoner.RandomAspicReasoner;
+import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
@@ -57,13 +57,13 @@ public class AspicGeneratorExample {
 			System.out.println(i + "\t" + theory);
 			PropositionalFormula query = new Proposition("A1");
 			long millis = System.currentTimeMillis();
-			boolean answer = naiveReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE).getAnswerBoolean();
+			boolean answer = naiveReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE);
 			totalNaive += System.currentTimeMillis()-millis;
 			millis = System.currentTimeMillis();
-			moduleBasedReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE).getAnswerBoolean();
+			moduleBasedReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE);
 			totalModulebased += System.currentTimeMillis()-millis;
 			millis = System.currentTimeMillis();
-			if(randomReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE).getAnswerBoolean() == answer)
+			if(randomReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE) == answer)
 				correctRandom++;
 			totalRandom += System.currentTimeMillis()-millis;
 		}	

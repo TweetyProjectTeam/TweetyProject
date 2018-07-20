@@ -18,8 +18,8 @@
  */
 package net.sf.tweety.arg.aspic.examples;
 
-import net.sf.tweety.arg.aspic.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
+import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;

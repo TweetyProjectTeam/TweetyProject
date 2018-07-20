@@ -21,11 +21,11 @@ package net.sf.tweety.arg.deductive.examples;
 import java.io.IOException;
 import java.io.StringReader;
 
-import net.sf.tweety.arg.deductive.SimplePlLogicDeductiveKnowledgebase;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.deductive.parser.SimplePlLogicParser;
+import net.sf.tweety.arg.deductive.syntax.SimplePlLogicDeductiveKnowledgebase;
 import net.sf.tweety.commons.ParserException;
 
 /**
