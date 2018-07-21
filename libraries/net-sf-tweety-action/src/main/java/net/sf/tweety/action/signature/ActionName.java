@@ -16,24 +16,19 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action;
-
-import net.sf.tweety.logics.commons.analysis.ConsistencyTester;
+package net.sf.tweety.action.signature;
 
 /**
- * Classes implementing this interface are capable of checking whether a given
- * action description is consistent according to some consistency measurements.
+ * A basic interface representing an action name.
  * 
  * @author Sebastian Homann
- * @author Tim Janus
  */
-public interface ActionDescriptionConsistencyTester<T extends CausalLaw> extends ConsistencyTester<ActionDescription<T>>{
-  
+public interface ActionName
+{
   /**
-   * Checks whether the given set of causal rules is consistent.
+   * Returns the name of this action.
    * 
-   * @param causalRules a set of causal rules.
-   * @return true iff the given set of causal rules is consistent.
+   * @return the name of this action.
    */
-  boolean isConsistent(ActionDescription<T> causalRules );
+  public String getName();
 }

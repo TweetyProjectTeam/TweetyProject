@@ -23,7 +23,7 @@ import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.action.description.CActionDescription;
+import net.sf.tweety.action.description.syntax.CActionDescription;
 import net.sf.tweety.action.description.syntax.CLaw;
 import net.sf.tweety.action.description.syntax.DynamicLaw;
 import net.sf.tweety.action.description.syntax.StaticLaw;

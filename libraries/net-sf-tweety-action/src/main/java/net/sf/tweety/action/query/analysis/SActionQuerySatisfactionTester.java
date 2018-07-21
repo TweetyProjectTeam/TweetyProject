@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action.query;
+package net.sf.tweety.action.query.analysis;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.action.ActionQuery;
-import net.sf.tweety.action.ActionQuerySatisfactionTester;
+import net.sf.tweety.action.query.syntax.ActionQuery;
 import net.sf.tweety.action.query.syntax.AlwaysQuery;
 import net.sf.tweety.action.query.syntax.HoldsQuery;
 import net.sf.tweety.action.query.syntax.NecessarilyQuery;
 import net.sf.tweety.action.query.syntax.QueryProposition;
 import net.sf.tweety.action.query.syntax.SActionQuery;
+import net.sf.tweety.action.query.syntax.SActionQuerySet;
 import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.action.transitionsystem.Transition;

@@ -21,7 +21,6 @@ package net.sf.tweety.action.description.syntax;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.action.CausalLaw;
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolFluentName;

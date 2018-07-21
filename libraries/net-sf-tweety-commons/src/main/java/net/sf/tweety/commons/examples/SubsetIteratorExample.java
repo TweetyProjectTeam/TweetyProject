@@ -16,39 +16,22 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action;
+package net.sf.tweety.commons.examples;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.commons.util.IncreasingSubsetIterator;
+import net.sf.tweety.commons.util.SubsetIterator;
 
-/**
- * This class represents an action description as a set of causal laws.
- * 
- * @author Sebastian Homann
- * @param <T> Type of causal law to be kept in this action description.
- */
-public abstract class ActionDescription< T extends CausalLaw >
-  extends BeliefSet< T >
-{
-  
-  /**
-   * Creates a new empty action description.
-   */
-  public ActionDescription()
-  {
-    super();
-  }
-  
-  /**
-   * Creates a new action description containing all elements in the collection
-   * given.
-   * 
-   * @param c a collection of causal laws.
-   */
-  public ActionDescription( Collection< ? extends T > c )
-  {
-    super( c );
-  }
-  
+public class SubsetIteratorExample {
+	public static void main(String[] args){
+		Set<Integer> set = new HashSet<Integer>();
+		for(int i = 0; i < 5; i++) set.add(i);
+		
+		SubsetIterator<Integer> it = new IncreasingSubsetIterator<Integer>(set);
+		
+		while(it.hasNext())
+			System.out.println(it.next());
+	}
 }

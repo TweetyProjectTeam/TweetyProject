@@ -31,12 +31,12 @@ import java.util.Stack;
 
 import net.sf.tweety.action.grounding.GroundingRequirement;
 import net.sf.tweety.action.grounding.parser.GroundingRequirementsParser;
-import net.sf.tweety.action.query.SActionQuerySet;
 import net.sf.tweety.action.query.syntax.AlwaysQuery;
 import net.sf.tweety.action.query.syntax.HoldsQuery;
 import net.sf.tweety.action.query.syntax.NecessarilyQuery;
 import net.sf.tweety.action.query.syntax.QueryProposition;
 import net.sf.tweety.action.query.syntax.SActionQuery;
+import net.sf.tweety.action.query.syntax.SActionQuerySet;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.action.signature.FolActionName;

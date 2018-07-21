@@ -16,10 +16,11 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action;
+package net.sf.tweety.action.query.analysis;
 
 import java.util.Set;
 
+import net.sf.tweety.action.query.syntax.ActionQuery;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
 import net.sf.tweety.commons.BeliefBase;
 

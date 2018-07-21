@@ -16,19 +16,39 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action;
+package net.sf.tweety.action.query.syntax;
+
+import java.util.Collection;
+
+import net.sf.tweety.commons.BeliefSet;
 
 /**
- * A basic interface representing an action name.
+ * An Action Query Set consists of action queries in a specific query language
+ * and provides some common functionalities for such queries.
  * 
  * @author Sebastian Homann
+ * @param <T>
  */
-public interface ActionName
+public abstract class ActionQuerySet< T extends ActionQuery >
+  extends BeliefSet< T >
 {
+  
   /**
-   * Returns the name of this action.
+   * Creates a new ActionQuerySet initialized with the given collection of
+   * action queries.
    * 
-   * @return the name of this action.
+   * @param c
    */
-  public String getName();
+  public ActionQuerySet( Collection< ? extends T > c )
+  {
+    super( c );
+  }
+  
+  /**
+   * Creates an empty ActionQuerySet
+   */
+  public ActionQuerySet()
+  {
+    super();
+  }
 }

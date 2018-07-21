@@ -20,7 +20,6 @@ package net.sf.tweety.action.signature;
 
 import java.util.List;
 
-import net.sf.tweety.action.ActionName;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
 

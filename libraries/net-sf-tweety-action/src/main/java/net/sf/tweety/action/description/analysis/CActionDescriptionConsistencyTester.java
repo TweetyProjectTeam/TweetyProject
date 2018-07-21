@@ -16,13 +16,14 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action.description;
+package net.sf.tweety.action.description.analysis;
 
 import java.io.IOException;
 import java.util.Set;
 
-import net.sf.tweety.action.ActionDescription;
-import net.sf.tweety.action.ActionDescriptionConsistencyTester;
+import net.sf.tweety.action.description.reasoner.CTransitionSystemCalculator;
+import net.sf.tweety.action.description.syntax.ActionDescription;
+import net.sf.tweety.action.description.syntax.CActionDescription;
 import net.sf.tweety.action.description.syntax.CLaw;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.transitionsystem.State;

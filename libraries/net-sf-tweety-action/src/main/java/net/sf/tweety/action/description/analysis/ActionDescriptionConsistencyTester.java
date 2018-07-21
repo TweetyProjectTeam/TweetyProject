@@ -16,40 +16,26 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action;
+package net.sf.tweety.action.description.analysis;
 
-import java.util.Collection;
-
-import net.sf.tweety.action.ActionQuery;
-import net.sf.tweety.commons.BeliefSet;
+import net.sf.tweety.action.description.syntax.ActionDescription;
+import net.sf.tweety.action.description.syntax.CausalLaw;
+import net.sf.tweety.logics.commons.analysis.ConsistencyTester;
 
 /**
- * An Action Query Set consists of action queries in a specific query language
- * and provides some common functionalities for such queries.
- * 
+ * Classes implementing this interface are capable of checking whether a given
+ * action description is consistent according to some consistency measurements.
+ *
  * @author Sebastian Homann
- * @param <T>
+ * @author Tim Janus
  */
-public abstract class ActionQuerySet< T extends ActionQuery >
-  extends BeliefSet< T >
-{
-  
+public interface ActionDescriptionConsistencyTester<T extends CausalLaw> extends ConsistencyTester<ActionDescription<T>>{
+
   /**
-   * Creates a new ActionQuerySet initialized with the given collection of
-   * action queries.
-   * 
-   * @param c
+   * Checks whether the given set of causal rules is consistent.
+   *
+   * @param causalRules a set of causal rules.
+   * @return true iff the given set of causal rules is consistent.
    */
-  public ActionQuerySet( Collection< ? extends T > c )
-  {
-    super( c );
-  }
-  
-  /**
-   * Creates an empty ActionQuerySet
-   */
-  public ActionQuerySet()
-  {
-    super();
-  }
+  boolean isConsistent(ActionDescription<T> causalRules );
 }

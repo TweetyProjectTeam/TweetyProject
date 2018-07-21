@@ -16,19 +16,14 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action;
+package net.sf.tweety.arg.adf.syntax;
 
 /**
- * A basic interface representing a fluent name.
+ * This class implements abstract dialectical frameworks, cf.
+ * [Brewka, Ellmauthaler, Strass, Wallner, Woltran. Abstract Dialectical Frameworks Revisited. IJCAI'13]
  * 
- * @author Sebastian Homann
+ * @author Matthias Thimm
  */
-public interface FluentName
-{
-  /**
-   * Returns the name of this fluent.
-   * 
-   * @return the name of this fluent.
-   */
-  public String getName();
+public class AbstractDialecticalFramework {
+
 }

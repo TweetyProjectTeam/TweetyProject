@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action.description;
+package net.sf.tweety.action.description.reasoner;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.action.description.syntax.CActionDescription;
 import net.sf.tweety.action.description.syntax.DynamicLaw;
 import net.sf.tweety.action.description.syntax.StaticLaw;
 import net.sf.tweety.action.signature.ActionSignature;

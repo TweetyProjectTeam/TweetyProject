@@ -16,16 +16,16 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.action;
+package net.sf.tweety.action.description.syntax;
 
 import net.sf.tweety.commons.Formula;
 
 /**
- * This is a basic interface for action queries.
+ * A basic interface representing a causal law.
  * 
  * @author Sebastian Homann
  */
-public interface ActionQuery
+public interface CausalLaw
   extends Formula
 {
   

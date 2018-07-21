@@ -21,7 +21,7 @@ package net.sf.tweety.action.description.parser;
 import java.io.IOException;
 import java.io.Reader;
 
-import net.sf.tweety.action.description.CActionDescription;
+import net.sf.tweety.action.description.syntax.CActionDescription;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.parser.ActionSignatureParser;
 import net.sf.tweety.commons.Formula;
