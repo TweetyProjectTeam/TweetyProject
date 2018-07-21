@@ -32,8 +32,8 @@ import org.junit.Test;
 
 import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
+import net.sf.tweety.lp.asp.reasoner.Clingo;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
-import net.sf.tweety.lp.asp.solver.Clingo;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**

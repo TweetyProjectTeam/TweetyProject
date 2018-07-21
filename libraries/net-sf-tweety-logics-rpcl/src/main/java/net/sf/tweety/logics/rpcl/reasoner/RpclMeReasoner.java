@@ -16,29 +16,30 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.rpcl;
+package net.sf.tweety.logics.rpcl.reasoner;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Interpretation;
-import net.sf.tweety.commons.BeliefBaseReasoner;
+import net.sf.tweety.commons.ModelProvider;
+import net.sf.tweety.commons.QuantitativeReasoner;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
-import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.rcl.syntax.RelationalConditional;
+import net.sf.tweety.logics.rpcl.semantics.CondensedProbabilityDistribution;
+import net.sf.tweety.logics.rpcl.semantics.ReferenceWorld;
 import net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.semantics.RpclSemantics;
 import net.sf.tweety.logics.rpcl.syntax.RelationalProbabilisticConditional;
+import net.sf.tweety.logics.rpcl.syntax.RpclBeliefSet;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Statement;
@@ -61,7 +62,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
+public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFormula>, ModelProvider<RelationalProbabilisticConditional,RpclBeliefSet,RpclProbabilityDistribution<?>> {
 	
 	/**
 	 * Logger.
@@ -120,11 +121,50 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 	}
 	
 	/**
-	 * Computes the ME-distribution for this reasoner's knowledge base. 
-	 * @param kb a belief set
-	 * @return the ME-distribution for this reasoner's knowledge base.
-	 */	
-	public RpclProbabilityDistribution<?> getMeDistribution(RpclBeliefSet kb, FolSignature signature) throws ProblemInconsistentException{
+	 * Queries the knowledge base wrt. the given signature.
+	 * @param kb some knowledge base
+	 * @param query some query
+	 * @param signature some signature.
+	 * @return the answer to the query
+	 */
+	public Double query(RpclBeliefSet beliefbase, FolFormula query, FolSignature signature) {		
+		return this.getModel(beliefbase,signature).probability((FolFormula)query).getValue();				
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
+	 */
+	@Override
+	public Double query(RpclBeliefSet beliefbase, FolFormula formula) {
+		return this.query(beliefbase, formula, (FolSignature) beliefbase.getSignature());
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.ModelProvider#getModels(net.sf.tweety.commons.BeliefBase)
+	 */
+	@Override
+	public Collection<RpclProbabilityDistribution<?>> getModels(RpclBeliefSet bbase) {
+		Collection<RpclProbabilityDistribution<?>> models = new HashSet<>();
+		models.add(this.getModel(bbase));
+		return models;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.ModelProvider#getModel(net.sf.tweety.commons.BeliefBase)
+	 */
+	@Override
+	public RpclProbabilityDistribution<?> getModel(RpclBeliefSet bbase) {
+		return this.getModel(bbase, (FolSignature) bbase.getSignature());
+	}
+		
+	/**
+	 * Determines the ME distribution of the given knowlege base
+	 * wrt. the given signature.
+	 * @param kb an RPCL knowledge base
+	 * @param signature some signature
+	 * @return the ME distribution of the knowledge base
+	 */
+	public RpclProbabilityDistribution<?> getModel(RpclBeliefSet kb, FolSignature signature) {
 		if(!kb.getSignature().isSubSignature(signature)){
 			log.error("Signature must be super-signature of the belief set's signature.");
 			throw new IllegalArgumentException("Signature must be super-signature of the belief set's signature.");
@@ -254,43 +294,4 @@ public class RpclMeReasoner implements BeliefBaseReasoner<RpclBeliefSet> {
 			}
 		}
 	}
-	
-	
-	/**
-	 * Queries the knowledge base wrt. the given signature.
-	 * @param kb some knowledge base
-	 * @param query some query
-	 * @param signature some signature.
-	 * @return the answer to the query
-	 */
-	public Answer query(RpclBeliefSet kb, Formula query, FolSignature signature) {
-		if(!(query instanceof FolFormula) && !(query instanceof RelationalConditional))
-			throw new IllegalArgumentException("Reasoning in relational probabilistic conditional logic is only defined for first-order queries or relational conditionals.");
-		RpclProbabilityDistribution<?> meDistribution = this.getMeDistribution(kb,signature);		
-		Probability prob;
-		if(query instanceof FolFormula){
-			prob = meDistribution.probability((FolFormula)query);
-		}else{
-			FolFormula premise = new Conjunction(((RelationalConditional)query).getPremise());
-			FolFormula premiseConclusion = premise.combineWithAnd(((RelationalConditional)query).getConclusion());
-			Probability prob1 = meDistribution.probability(premise);
-			Probability prob2 = meDistribution.probability(premiseConclusion);
-			if(prob1.doubleValue() == 0)
-				prob = new Probability(0d);
-			else prob = prob2.divide(prob1);
-		}				
-		Answer answer = new Answer(kb,query);			
-		answer.setAnswer(prob.getValue());
-		answer.appendText("The probability of the query is " + prob + ".");
-		return answer;		
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.BeliefBaseReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
-	 */	
-	@Override
-	public Answer query(RpclBeliefSet kb,Formula query) {
-		return this.query(kb, query, (FolSignature) kb.getSignature());
-	}
-
 }

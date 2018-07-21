@@ -21,7 +21,9 @@ package net.sf.tweety.logics.rpcl.writers;
 import java.text.*;
 
 import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.rpcl.*;
+import net.sf.tweety.logics.rpcl.semantics.CondensedProbabilityDistribution;
+import net.sf.tweety.logics.rpcl.semantics.InstanceAssignment;
+import net.sf.tweety.logics.rpcl.semantics.ReferenceWorld;
 
 /**
  * This class implements a simple writer for writing condensed probability distributions.

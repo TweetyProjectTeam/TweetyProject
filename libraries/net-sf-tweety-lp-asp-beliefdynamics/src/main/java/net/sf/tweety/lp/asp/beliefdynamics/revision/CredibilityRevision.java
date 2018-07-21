@@ -28,10 +28,10 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.beliefdynamics.CredibilityRevisionNonIterative;
+import net.sf.tweety.lp.asp.reasoner.Solver;
+import net.sf.tweety.lp.asp.reasoner.SolverException;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
-import net.sf.tweety.lp.asp.solver.Solver;
-import net.sf.tweety.lp.asp.solver.SolverException;
 import net.sf.tweety.lp.asp.syntax.Comparative;
 import net.sf.tweety.lp.asp.syntax.DLPAtom;
 import net.sf.tweety.lp.asp.syntax.DLPElement;

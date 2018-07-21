@@ -24,9 +24,9 @@ import java.util.Set;
 
 import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.ParseException;
-import net.sf.tweety.lp.asp.solver.DLV;
-import net.sf.tweety.lp.asp.solver.Solver;
-import net.sf.tweety.lp.asp.solver.SolverException;
+import net.sf.tweety.lp.asp.reasoner.DLV;
+import net.sf.tweety.lp.asp.reasoner.Solver;
+import net.sf.tweety.lp.asp.reasoner.SolverException;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.Rule;
 

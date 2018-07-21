@@ -20,8 +20,8 @@ package net.sf.tweety.lp.asp.beliefdynamics.baserevision;
 
 import java.util.Collection;
 
-import net.sf.tweety.lp.asp.solver.Solver;
-import net.sf.tweety.lp.asp.solver.SolverException;
+import net.sf.tweety.lp.asp.reasoner.Solver;
+import net.sf.tweety.lp.asp.reasoner.SolverException;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.Rule;
 

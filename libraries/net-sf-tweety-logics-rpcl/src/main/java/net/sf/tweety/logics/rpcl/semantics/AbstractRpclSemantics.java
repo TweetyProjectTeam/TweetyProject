@@ -25,7 +25,6 @@ import net.sf.tweety.logics.fol.semantics.*;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.rpcl.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.term.*;

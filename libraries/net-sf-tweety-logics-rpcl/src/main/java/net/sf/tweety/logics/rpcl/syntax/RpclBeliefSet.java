@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.rpcl;
+package net.sf.tweety.logics.rpcl.syntax;
 
 import java.util.*;
 
@@ -24,7 +24,6 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.rpcl.syntax.*;
 
 
 /**

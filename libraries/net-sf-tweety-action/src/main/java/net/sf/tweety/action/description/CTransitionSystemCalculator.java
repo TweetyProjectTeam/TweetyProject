@@ -34,7 +34,6 @@ import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.action.transitionsystem.Transition;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.lp.asp.solver.AspInterface;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
@@ -43,6 +42,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
+import net.sf.tweety.lp.asp.reasoner.AspInterface;
 
 /**
  * This class calculates the transition system as it is described by an action

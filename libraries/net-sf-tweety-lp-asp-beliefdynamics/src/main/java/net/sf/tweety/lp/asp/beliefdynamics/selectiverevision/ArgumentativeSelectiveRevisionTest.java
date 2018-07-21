@@ -35,12 +35,12 @@ import net.sf.tweety.arg.lp.semantics.attack.ConfidentRebut;
 import net.sf.tweety.arg.lp.semantics.attack.Defeat;
 import net.sf.tweety.arg.lp.semantics.attack.StrongAttack;
 import net.sf.tweety.arg.lp.semantics.attack.StrongConfidentAttack;
-import net.sf.tweety.lp.asp.solver.DLV;
 import net.sf.tweety.lp.asp.beliefdynamics.gui.SimpleRevisionCompareModel;
 import net.sf.tweety.lp.asp.beliefdynamics.gui.SimpleRevisionComparePresenter;
 import net.sf.tweety.lp.asp.beliefdynamics.gui.SimpleRevisionCompareView;
 import net.sf.tweety.lp.asp.beliefdynamics.gui.SimpleRevisionComparePresenter.FileHandler;
 import net.sf.tweety.lp.asp.beliefdynamics.selectiverevision.ParameterisedArgumentativeSelectiveRevisionOperator.TransformationType;
+import net.sf.tweety.lp.asp.reasoner.DLV;
 
 /**
  * This class implements a comparison application for selective revision

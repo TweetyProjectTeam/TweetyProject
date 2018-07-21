@@ -27,7 +27,6 @@ import java.io.InputStreamReader;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-import net.sf.tweety.commons.Answer;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.TweetyLogging;
 import net.sf.tweety.commons.Writer;
@@ -35,16 +34,16 @@ import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
-import net.sf.tweety.logics.rpcl.CondensedProbabilityDistribution;
-import net.sf.tweety.logics.rpcl.RpclBeliefSet;
-import net.sf.tweety.logics.rpcl.RpclMeReasoner;
 import net.sf.tweety.logics.rpcl.parser.RpclParser;
 import net.sf.tweety.logics.rpcl.parser.rpclcondensedprobabilitydistributionparser.RpclCondensedProbabilityDistributionParser;
 import net.sf.tweety.logics.rpcl.parser.rpclprobabilitydistributionparser.RpclProbabilityDistributionParser;
+import net.sf.tweety.logics.rpcl.reasoner.RpclMeReasoner;
 import net.sf.tweety.logics.rpcl.semantics.AggregatingSemantics;
 import net.sf.tweety.logics.rpcl.semantics.AveragingSemantics;
+import net.sf.tweety.logics.rpcl.semantics.CondensedProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.semantics.RpclProbabilityDistribution;
 import net.sf.tweety.logics.rpcl.semantics.RpclSemantics;
+import net.sf.tweety.logics.rpcl.syntax.RpclBeliefSet;
 import net.sf.tweety.logics.rpcl.writers.DefaultCondensedProbabilityDistributionWriter;
 import net.sf.tweety.logics.rpcl.writers.DefaultProbabilityDistributionWriter;
 import net.sf.tweety.math.probability.Probability;
@@ -158,7 +157,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
  	// query string
  	private static String query = null;
  	// query result
- 	private static Answer queryResult = null;
+ 	private static Double queryResult = null;
  	// semantics
  	private static int semantics = -1;
  	// inference
@@ -336,7 +335,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 			if(probInputFiles == null){
 				
 				RpclMeReasoner reasoner = new RpclMeReasoner(sem, inference);
-				RpclProbabilityDistribution<?> p = reasoner.getMeDistribution(kb,parser.getSignature());
+				RpclProbabilityDistribution<?> p = reasoner.getModel(kb,parser.getSignature());
 				
 				// write probability function into prob output file
 				if(probOutFile != null){	
@@ -348,7 +347,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				if(query != null){
 					
 					pout.addField( "Query", query);
-					queryResult = reasoner.query(kb,folParser.parseFormula(query));
+					queryResult = reasoner.query(kb,(FolFormula) folParser.parseFormula(query));
 					pout.addField( "Query Result", queryResult.toString());
 					
 					// test output

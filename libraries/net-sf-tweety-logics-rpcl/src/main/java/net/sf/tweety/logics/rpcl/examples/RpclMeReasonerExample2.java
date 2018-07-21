@@ -25,10 +25,10 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.rpcl.RpclBeliefSet;
-import net.sf.tweety.logics.rpcl.RpclMeReasoner;
 import net.sf.tweety.logics.rpcl.parser.RpclParser;
+import net.sf.tweety.logics.rpcl.reasoner.RpclMeReasoner;
 import net.sf.tweety.logics.rpcl.semantics.AggregatingSemantics;
+import net.sf.tweety.logics.rpcl.syntax.RpclBeliefSet;
 
 public class RpclMeReasonerExample2 {
 

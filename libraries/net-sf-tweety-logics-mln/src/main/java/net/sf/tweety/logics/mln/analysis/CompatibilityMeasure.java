@@ -20,8 +20,8 @@ package net.sf.tweety.logics.mln.analysis;
 
 import java.util.List;
 
-import net.sf.tweety.commons.BeliefBaseReasoner;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.mln.reasoner.AbstractMlnReasoner;
 import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 
 /**
@@ -41,7 +41,7 @@ public interface CompatibilityMeasure {
 	 * @param reasoner some reasoner.
 	 * @param signatures a set of signatures, one for each MLN.
 	 */
-	public abstract double compatibility(List<MarkovLogicNetwork> mlns, BeliefBaseReasoner<MarkovLogicNetwork> reasoner, List<FolSignature> signatures);
+	public abstract double compatibility(List<MarkovLogicNetwork> mlns, AbstractMlnReasoner reasoner, List<FolSignature> signatures);
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

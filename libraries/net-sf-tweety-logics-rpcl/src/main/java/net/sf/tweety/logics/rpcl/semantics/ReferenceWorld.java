@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.rpcl;
+package net.sf.tweety.logics.rpcl.semantics;
 
 import java.util.ArrayList;
 import java.util.Collection;

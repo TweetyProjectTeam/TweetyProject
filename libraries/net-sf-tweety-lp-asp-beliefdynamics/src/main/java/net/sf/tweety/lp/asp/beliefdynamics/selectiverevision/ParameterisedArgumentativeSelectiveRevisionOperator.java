@@ -24,11 +24,11 @@ import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleSelectiveRevisionOperator;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction;
-import net.sf.tweety.lp.asp.solver.Solver;
 import net.sf.tweety.lp.asp.syntax.Rule;
 import net.sf.tweety.lp.asp.beliefdynamics.baserevision.ELPBaseRevisionOperator;
 import net.sf.tweety.lp.asp.beliefdynamics.baserevision.MonotoneGlobalMaxichoiceSelectionFunction;
 import net.sf.tweety.lp.asp.beliefdynamics.baserevision.SelectionFunction;
+import net.sf.tweety.lp.asp.reasoner.Solver;
 
 
 /**

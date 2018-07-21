@@ -36,7 +36,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.lp.asp.parser.ASPParser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
-import net.sf.tweety.lp.asp.solver.DLVComplex;
+import net.sf.tweety.lp.asp.reasoner.DLVComplex;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**

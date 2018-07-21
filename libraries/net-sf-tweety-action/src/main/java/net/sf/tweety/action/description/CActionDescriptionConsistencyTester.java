@@ -26,7 +26,7 @@ import net.sf.tweety.action.ActionDescriptionConsistencyTester;
 import net.sf.tweety.action.description.syntax.CLaw;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.transitionsystem.State;
-import net.sf.tweety.lp.asp.solver.AspInterface;
+import net.sf.tweety.lp.asp.reasoner.AspInterface;
 
 /**
  * This class is able to check, whether a given action description in the action

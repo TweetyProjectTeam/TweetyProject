@@ -23,9 +23,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import net.sf.tweety.lp.asp.solver.Clingo;
-import net.sf.tweety.lp.asp.solver.Solver;
-import net.sf.tweety.lp.asp.solver.SolverException;
+import net.sf.tweety.lp.asp.reasoner.Clingo;
+import net.sf.tweety.lp.asp.reasoner.Solver;
+import net.sf.tweety.lp.asp.reasoner.SolverException;
 import net.sf.tweety.lp.asp.syntax.DLPAtom;
 import net.sf.tweety.lp.asp.syntax.DLPNeg;
 import net.sf.tweety.lp.asp.syntax.DLPNot;

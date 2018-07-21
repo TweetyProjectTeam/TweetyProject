@@ -18,10 +18,6 @@
  */
  package net.sf.tweety.arg.delp.semantics;
 
-import net.sf.tweety.commons.Answer;
-import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.Formula;
-
 /**
  * Wrapping a generic answer from a reasoner in order to allow UNDECIDED
  * in addition to the traditional YES and NO.
@@ -39,7 +35,7 @@ import net.sf.tweety.commons.Formula;
  *
  * @author Linda.Briesemeister
  */
-public class DelpAnswer extends Answer {
+public class DelpAnswer {
 
     public enum Type {
         YES ("The answer is: YES"),
@@ -89,48 +85,5 @@ public class DelpAnswer extends Answer {
         }
     }
 
-    private Type currentType = Type.UNKNOWN;
-
-    public DelpAnswer(BeliefBase beliefBase, Formula query) { super(beliefBase, query); }
-
-    /**
-     * Obtain current type of this answer.
-     *
-     * @return Type of answer as in YES, NO, UNDECIDED, or UNKNOWN
-     */
-    public Type getType() { return currentType; }
-
-    public void setType(Type type) {
-        currentType = type;
-        super.appendText(currentType.toString());
-    }
-
-    @Override
-    public void appendText(String text) {
-        // NO OP! Text is only set from the assignment of Type!
-    }
-
-    @Override
-    public void setAnswer(boolean answer) {
-        currentType = Type.typeForBoolean(answer);
-        super.appendText(currentType.toString());
-    }
-
-    @Override
-    public void setAnswer(Double answer) {
-        currentType = Type.typeForDouble(answer);
-        super.appendText(currentType.toString());
-    }
-
-    @Override
-    public boolean getAnswerBoolean() {
-        if (currentType == null || Type.UNKNOWN.equals(currentType)) return super.getAnswerBoolean();
-        return currentType.getBooleanAnswer();
-    }
-
-    @Override
-    public Double getAnswerDouble() {
-        if (currentType == null || Type.UNKNOWN.equals(currentType)) return super.getAnswerDouble();
-        return currentType.getDoubleAnswer();
-    }
+   
 }

@@ -23,7 +23,7 @@ import net.sf.tweety.commons.TweetyLogging;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.rpcl.*;
+import net.sf.tweety.logics.rpcl.reasoner.RpclMeReasoner;
 import net.sf.tweety.logics.rpcl.semantics.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
 import net.sf.tweety.math.opt.Solver;
@@ -61,7 +61,7 @@ public class RpclMeReasonerExample {
 		RpclMeReasoner reasoner = new RpclMeReasoner(new AggregatingSemantics());
 		
 		
-		System.out.println(reasoner.getMeDistribution(bs,sig));
+		System.out.println(reasoner.getModel(bs,sig));
 		
 		net.sf.tweety.logics.fol.syntax.FOLAtom atomAC = new net.sf.tweety.logics.fol.syntax.FOLAtom(a);
 		atomAC.addArgument(c1);

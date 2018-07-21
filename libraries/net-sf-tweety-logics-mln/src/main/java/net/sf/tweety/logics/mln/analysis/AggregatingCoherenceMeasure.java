@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import net.sf.tweety.commons.BeliefBaseReasoner;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.mln.reasoner.AbstractMlnReasoner;
 import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
 import net.sf.tweety.math.func.AggregationFunction;
@@ -59,7 +60,7 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 	 * @see net.sf.tweety.logics.markovlogic.analysis.AbstractCoherenceMeasure#coherence(net.sf.tweety.logics.markovlogic.MarkovLogicNetwork, net.sf.tweety.Reasoner, net.sf.tweety.logics.firstorderlogic.syntax.FolSignature)
 	 */
 	@Override
-	public double coherence(MarkovLogicNetwork mln, BeliefBaseReasoner<MarkovLogicNetwork> reasoner, FolSignature signature) {
+	public double coherence(MarkovLogicNetwork mln, AbstractMlnReasoner reasoner, FolSignature signature) {
 		List<Double> distances = new ArrayList<Double>();
 		for(MlnFormula f: mln){
 			Vector<Double> intended = new Vector<Double>();
@@ -69,7 +70,7 @@ public class AggregatingCoherenceMeasure extends AbstractCoherenceMeasure {
 				pObserved = 1d;
 			else pObserved = (Math.exp(f.getWeight())/(f.getFormula().getSatisfactionRatio()+Math.exp(f.getWeight())));
 			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(signature.getConstants())){
-				observed.add(reasoner.query(mln,groundFormula).getAnswerDouble());
+				observed.add(reasoner.query(mln,(FolFormula) groundFormula));
 				intended.add(pObserved);
 			}			
 			distances.add(this.norm.distance(intended, observed));

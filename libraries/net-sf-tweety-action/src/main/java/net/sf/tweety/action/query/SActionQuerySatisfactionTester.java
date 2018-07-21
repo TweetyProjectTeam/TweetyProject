@@ -37,7 +37,6 @@ import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.action.transitionsystem.Transition;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.lp.asp.solver.AspInterface;
 import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
@@ -48,6 +47,7 @@ import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.lp.asp.reasoner.AspInterface;
 
 /**
  * This class provides methods capable of checking if a given transition system
