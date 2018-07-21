@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
-import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
@@ -99,12 +98,10 @@ public class MleanCoPReasoner extends AbstractModalReasoner {
 	 */
 	@Override
 	public Boolean query(ModalBeliefSet beliefbase, FolFormula formula) {
-		// check whether beliefbase joined with the negated query is _not_
-		// a theorem
-		Conjunction complete = new Conjunction();
-		complete.add(new Negation(formula));
+		// check whether beliefbase => query is a theorem
+		FolFormula complete = formula;
 		for(RelationalFormula f: beliefbase)
-			complete.add(f);
+			complete = complete.combineWithOr(new Negation(f));
 		try {
 			//Create input file
 			File file  = File.createTempFile("tmp", "");
