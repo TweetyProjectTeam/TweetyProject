@@ -1,0 +1,24 @@
+24.07.2018 - TweetyProject 1.11
+  New libraries:  <none>
+  New functionalities:
+    - Approximative reasoning for ASPIC+ (arg.aspic.reasoner.RandomAspicReasoner)
+    - TPTP format support in logics.fol; added support for equality
+    - Added classes for automatic postulate evaluation (see commons.postulates
+      for the framework and logics.pl.postulates for an example)
+    - Added a new graded semantics for abstract argumentation (see
+      arg.prob.reasoner.ProbabilisticRankingReasoner)
+    - Added a simple DPLL implementation in Java in logics.pl
+    - Added Dimacs parser in logics.pl
+  Minor changes:
+    - commons.Reasoner interface refactored; added additional interfaces
+      commons.QualitativeReasoner and commons.QuantativeReasoner;
+      removed obsolete commons.BeliefBaseReasoner, commons.Answer
+      and others
+    - folder "projects" is now folder "libraries"
+    - logics.lp.asp bugfixes and stream-lining
+    - logics.fol bugfixes and stream-lining
+    - removed arg.simpledeductive library, integrated functionalities into
+      net.sf.tweety.arg.deductive
+    - almost every library comes now with an "examples" package containing
+      example code
+    - general bugfixing

@@ -15,7 +15,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
- */ 
+ */
 options {
   JDK_VERSION = "1.8";
   STATIC=false;
@@ -24,7 +24,7 @@ options {
 PARSER_BEGIN(DelpParser)
 package net.sf.tweety.arg.delp.parser;
 
-import net.sf.tweety.arg.delp.DefeasibleLogicProgram;
+import net.sf.tweety.arg.delp.syntax.DefeasibleLogicProgram;
 import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
 import net.sf.tweety.arg.delp.syntax.DelpFact;
 import net.sf.tweety.arg.delp.syntax.StrictRule;
@@ -82,7 +82,7 @@ public class DelpParser extends Parser<DefeasibleLogicProgram>{
   	  		return this.Theory(this.signature);
   	 	} catch(ParseException e) {
 			throw new ParserException(e);
-  	 	}  	 	  
+  	 	}
   	}
 
     /**

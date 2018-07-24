@@ -1,506 +1,0 @@
-/*
- *  This file is part of "Tweety", a collection of Java libraries for
- *  logical aspects of artificial intelligence and knowledge representation.
- *
- *  Tweety is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License version 3 as
- *  published by the Free Software Foundation.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
- */
-options
-{
-  JDK_VERSION = "1.5";
-  static = false;
-}
-
-PARSER_BEGIN(FolParserB)
-package net.sf.tweety.logics.fol.parser;
-
-import java.util.*;
-import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.commons.syntax.*;
-import net.sf.tweety.logics.commons.syntax.interfaces.*;
-import net.sf.tweety.util.Pair;
-
-import net.sf.tweety.logics.fol.FolBeliefSet;
-
-@SuppressWarnings("all")
-/**
- *	A parser for first-order logical knowledge-bases and formulas.
- *	It supports the 'forceDefinition' flag which turns the before-hand
- *	definition of sorts, predicates and functors on/off.
- */
-public class FolParserB
-{ 
-  public void setForce(boolean forceDefinitions)  {
-    this.forceDefinitions = forceDefinitions;  }
-  private boolean forceDefinitions = false;
-
-  private FolFormula helper(FolFormula form, Pair<Integer, FolFormula > exform)	throws ParseException
-  {
-    FolFormula reval = null;
-    if(exform.getFirst() == 0)    {
-      return form;    }
-    if(exform.getFirst() == 1)    {
-      return new Conjunction(form, exform.getSecond());    }
-    if(exform.getFirst() == 2)
-    {      return new Disjunction(form, exform.getSecond());    }    throw new ParseException("Error");  }
-
-  /**
-   *
-   */
-  private List<Sort > getSorts(FolSignature sig, List<String > names)
-	throws ParseException
-  {
-    List<Sort >reval = new LinkedList<Sort >();
-    for(String name : names)
-    {
-      Sort s = sig.getSort(name);
-      if(s == null)      {
-        if(forceDefinitions)
-        {
-          throw new ParseException("Sort with name '" + name + "' was not defined.");        }
-        else
-        {
-          s = new Sort(name);          
-      	  sig.add(s);
-        }      }
-      reval.add(s);    }
-    return reval;  }
-
-  private Functor getFunctor(String name, FolSignature signature)
-  {
-    return signature.getFunctor(name);  }
-
-  private Functor getOrCreateFunctor(String name, List<Term<?>> args, Sort targetSort, FolSignature signature)
-  	throws ParseException  {
-    Functor reval = signature.getFunctor(name);
-    if(reval == null)    {
-      if(forceDefinitions)      {
-        throw new ParseException("Functor with name '" + name + "' was not defined.");      }
-      else
-      {
-        List<Sort >sorts = new LinkedList<Sort >();
-        for(Term t : args)        {
-          sorts.add(t.getSort());        }
-        reval = new Functor(name, sorts, targetSort);      }    }
-    return reval;  }
-
-  private Predicate getPredicate(String name, FolSignature sig)
-  {
-    return sig.getPredicate(name);  }
-  
-  private Sort getArgumentType(TypedStructure fbs, int count)
-    throws ParseException
-  {
-    if(fbs == null)
-    {
-      return Sort.THING;    }
-    if(count >= fbs.getArgumentTypes().size())
-    {
-	  return null;    }
-
-    return fbs.getArgumentTypes().get(count);  }
-
-  private Constant getOrCreateConstant(String name, Sort type, FolSignature sig)
-    throws ParseException  {
-    Constant reval = sig.getConstant(name);
-    if(reval == null)
-    {
-      reval = new Constant(name, type);
-      sig.add(reval);    }
-    else if(!reval.getSort().equals(type))
-    {
-      throw new ParseException("It exists a constant '" + name + "' with type '" + reval.getSort() + "' but asked for type '" + type + "'. Do not try to mix before-hand declarations without the force-delcaration flag, because every constant defined before hand will be in THING sort and this might generate errors.");    }
-    return reval;    }
-}
-
-PARSER_END(FolParserB)
-
-/* BNF: adapt old BNF of fol-tweety to have optional signatures and change negation symbol
- * from '!' to '-'. Because '-' was used for contradition we use '!' for contradictions now.
- * knowledge base is given by (starting symbol is KB)
- *
- * KB 			::== (SORTSDEC DECLAR)? FORMULAS
- * DECLAR		::== (FUNCTORDEC | PREDDEC)*
- * SORTSDEC     ::== ( SORTNAME "=" "{" (CONSTANTNAME ("," CONSTANTNAME)*)? "}" "\n" )*
- * PREDDEC		::== "type" "(" PREDICATENAME ("(" SORTNAME ("," SORTNAME)* ")")? ")" "\n"
- * FUNCTORDEC	::== "type" "(" SORTNAME "=" FUNCTORNAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n"
- * FORMULAS     ::== (FORMULA)*
- * FORMULA      ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" FORMULA |
- * 					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "-" FORMULA | "+" | "!"
- * ATOM			::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
- * TERM			::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
- *  
- * where SORTNAME, PREDICATENAME, CONSTANTNAME, VARIABLENAME, and FUNCTORNAME are sequences of
- * symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning.
- *
- * javacc forbids left recursion therefore we will make FORMULA a non left-recursiv rule
- * and add the rule FORMULAEX:
- * FORMULA		::== ATOM FORMULAEX | "forall" VARIABLENAME ":" "(" FORMULA FORMULAEX ")" | "exists VARIABLENAME ":" "(" FORMULA FORMULAEX ")" |
- *					 "(" FORMULA FORMULAEX ")" | "-" FORMULA FORMULAEX | "+" | "!"
- * FORMULAEX	::== "&&" FORMULA | "||" FORMULA
- */
-
-SKIP :
-{
-  " "
-| "\n"
-| "\r"
-| "\t"
-| <"%" (~["\n"])*>
-}
-
-TOKEN : /* OPERATORS */
-{
-  < FORALL : "forall" >
-| < EXISTS : "exist" >
-| < TYPE : "type" >
-| < DDOT : ":"  >
-| < EQUAL : "=" >
-| < OR : "||" >
-| < AND : "&&" >
-| < NOT: "-" >
-| < TAUTOLOGY: "+" >
-| < CONTRADICTION: "!" >
-| < LBRA : "(" >
-| < RBRA : ")" >
-| < SQLBRA : "[" >
-| < SQRBRA : "]" >
-| < CURLBRA : "{" >
-| < CURRBRA : "}" >
-}
-
-TOKEN :
-{
-  < NUMBER : (< DIGIT >)+ >
-| < CONSTANT: < LCHAR >(< SYMBOL >)* >
-| < VARIABLE: < UCHAR >(< SYMBOL >)* >
-| < SYMBOL: (< LCHAR >|< UCHAR >|< DIGIT >|"_") >
-| < LCHAR : ["a"-"z"]>
-| < UCHAR : ["A"-"Z"]>
-| < COMMA : "," >
-| < DIGIT : [ "0"-"9" ] >
-}
-
-FolBeliefSet KB() :{
-  List<Sort > sorts;
-  FolFormula ff;
-  FolBeliefSet bb = new FolBeliefSet();
-  FolSignature signature = (FolSignature)bb.getSignature();
-}
-{
- (
-   LOOKAHEAD(2)
-   sorts = sortdecl()
-   {
-     for(Sort s : sorts)     {
-       signature.add(s);     }
-   }
-   (     declar(signature)
-   )* )?
- (
-   ff = formula(signature)   {
-     bb.add(ff);    }
- )*
-
- {
-   return bb; }
-}
-
-FolFormula formula(FolSignature signature) :
-{
-  Token t;
-  FolFormula temp;
-  Pair<Integer, FolFormula > ex;
-  FolFormula reval;
-  Variable v = null;
-}
-{
-  (
-	  (
-	    temp = atom(signature) ex = formulaex(signature)
-	    {
-	      reval = helper(temp, ex);	    }	  )
-	  |
-	  (
-      	< LBRA > temp = formula(signature) < RBRA > ex = formulaex(signature)
-      	{
-      	  reval = helper(temp, ex);      	}
-      )
-      |  
-	  (
-	    < FORALL > t = < VARIABLE > < DDOT > temp = formula(signature) ex = formulaex(signature)	    {
-	      v = new Variable(t.image);
-	      reval = new ForallQuantifiedFormula(helper(temp, ex), v);	    } 	  )
-	  |
-	  (
-	    < EXISTS > t = < VARIABLE > < DDOT > temp = formula(signature) ex = formulaex(signature)
-	    {
-	      v = new Variable(t.image);
-	      reval = new ExistsQuantifiedFormula(helper(temp, ex), v);	    }	  )
-	  |
-	  (
-	    < NOT > temp = formula(signature) ex = formulaex(signature)
-	    {
-	      reval = new Negation(helper(temp, ex));	    }	  )
-	  |
-	  (
-	    < CONTRADICTION >
-	    {
-	      reval = new Contradiction();	    }	  )
-	  |
-	  (
-	    < TAUTOLOGY >
-	    {
-	      reval = new Tautology();	    }	  )
-  )    
-  {
-    return reval;  } }
-
-Pair<Integer, FolFormula> formulaex(FolSignature signature) :
-{
-  Integer status = 0; // 0 nothing, 1 and, 2 or
-  FolFormula form = null;
-  Pair<Integer, FolFormula> reval = new Pair<Integer, FolFormula>();}
-{
-  (LOOKAHEAD(1)
-    ( < AND > { status = 1;} | < OR > {status = 2;} )
-    form = formula(signature)  
-  )?
-  {
-    reval.setFirst(status);
-    reval.setSecond(form);
-    return reval;  }}
-
-FOLAtom atom(FolSignature signature) :
-{
-  String identifier;
-  Term t;
-  FOLAtom reval;
-  Predicate p;
-  int count = 0;
-  Sort type;
-  List<Term<?>> terms = new LinkedList<Term<?>>();}
-{
-  identifier = identifier()
-  {
-    p = getPredicate(identifier, signature);
-    type = getArgumentType(p, count++);
-    if(p==null && this.forceDefinitions)    {
-      throw new ParseException("Predicate '" + identifier + "' was not defined. Do not set the force flag for definitions or define the predicate beforehand.");    }  }
-  ( LOOKAHEAD(1)
-    < LBRA >
-  	t = term(signature, type)  	{
-  	  terms.add(t);
-  	  type = getArgumentType(p, count++);  	}
-  	(
-  	  < COMMA >
-  	  t = term(signature, type)
-  	  {
-  	    terms.add(t);
-  	    type = getArgumentType(p, count++);  	  }  	)*
-    < RBRA >
-  )?
-  {
-    if(p == null)
-    {
-      p = new Predicate(identifier, terms.size());
-      signature.add(p);
-	}
-	reval = new FOLAtom(p, terms);    return reval;
-  }}
-
-Term<?> term(FolSignature signature, Sort type) :
-{
-  Term temp;
-  String fname;
-  int count = 0;
-  Sort subtype;
-  Functor f;
-  List<Term<?>> terms = new LinkedList<Term<?>>();
-  Token t;}
-{
-  (    
-  	fname = identifier()
-	( 
-	  < LBRA >
-	  {
-	    f = getFunctor(fname, signature);
-	    if(f == null && this.forceDefinitions)
-	    {
-	      throw new ParseException("Functor with name '" + fname + "' was not definied. Define it beforehand or did not use the force-delaration flag.");	    }
-	    subtype = getArgumentType(f, count++);
-	  }
-	  temp = term(signature, subtype)
-	  {
-		terms.add(temp);
-		subtype = getArgumentType(f, count++);
-	  }
-	  (
-	    < COMMA >
-	    temp = term(signature, subtype)
-	    {
-	      terms.add(temp);
-	      subtype = getArgumentType(f, count++);	    }	  )*  
-	  < RBRA >
-	  {
-	    return new FunctionalTerm(getOrCreateFunctor(fname, terms, type, signature), terms);	  }	)?  
-	{
-	  if(fname.charAt(0) >= 65 && fname.charAt(0) <= 90)
-	  {
-	    return new Variable(fname);	  }
-	  else
-	  {
-	    return getOrCreateConstant(fname, type, signature);	  }	}
-  )
-|
-  (
-    t = < NUMBER >
-    {
-      return new NumberTerm(Integer.parseInt(t.image));    }
-  )}
-String identifier() :
-{
-  Token t;}
-{
-  (    
-    (      t = < CONSTANT >
-    )
-    |
-    (
-      t = < VARIABLE >    )
-  )
-  {
-    return t.image;  }}
-
-List<Sort > sortdecl() :
-{
-  Set<Constant > temp;
-  Sort act;
-  List<Sort > reval = new LinkedList<Sort >();
-  String name;}
-{
-  (
-    LOOKAHEAD(2)
-  	(  	  name = identifier()
-  	  {
-  	    act = new Sort(name);
-  	    reval.add(act);  	  }
-  	  < EQUAL >
-  	  < CURLBRA >
-  	  temp = constants(act)
-  	  < CURRBRA >
-  	)
-  	{
-  	  for(Constant c : temp)  	  {
-  	    act.add(c);  	  }
-  	}
-  )+
-  {
-    return reval;  }
-}
-
-Set<Constant > constants(Sort type) :
-{
-  Token t;
-  Set<Constant > reval = new HashSet<Constant >();
-}
-{
-  t = < CONSTANT >
-  {
-    reval.add(new Constant(t.image, type));  }
-  (
-    < COMMA >
-    t = < CONSTANT >
-    {
-      reval.add(new Constant(t.image, type));    }  )*
-  {
-    return reval;  }}
-
-void declar(FolSignature signature) :
-{
-  String name;
-  TypedStructure fbs = null;}
-{
-  < TYPE > < LBRA > name = identifier()
-  (
-    fbs = endPredicateDeclar(signature, name)
-  | fbs = endFunctorDeclar(signature, name)  )
-  // < RBRA > needs to be in the end-rules because < RBRA > might the first and only token for a predicate.
-  { 
-    /*
-    if(ftor)    {
-      List<String > one_elem = new LinkedList<String >();
-      one_elem.add(name);
-      fbs = new Functor(name2,
-      	getSorts(signature, sorts),
-      	getSorts(signature, one_elem).get(0));    }
-    else
-    {
-      fbs = new Predicate(name, getSorts(signature, sorts));    }
-    */
-    signature.add(fbs);  }}
-
-TypedStructure endPredicateDeclar(FolSignature signature, String name) :
-{
-  String sort;
-  Predicate reval = null;
-  List<String > sorts = new LinkedList<String >();
-  }
-{
-  (
-    < LBRA >
-    sort = identifier()
-    {
-      sorts.add(sort);    }
-    (
-      < COMMA >
-      sort = identifier()
-      {
-        sorts.add(sort);      }    )*
-    < RBRA >  )?
-  < RBRA >
-  {
-    reval = signature.getPredicate(name);
-    if(reval != null)
-    {
-      throw new ParseException("Predicate with name '" + name + "' already exists. Proof your kb for duplicate declarations.");    }
-    reval = new Predicate(name, getSorts(signature, sorts));
-    return reval;  }}
-
-TypedStructure endFunctorDeclar(FolSignature signature, String sortName) :
-{
-  String name;
-  String tempType;
-  List<String >sorts = new LinkedList<String >();
-  TypedStructure fbs;}
-{
-  < EQUAL > name = identifier()
-  < LBRA >
-  	tempType = identifier()
-  	{
-  	  sorts.add(tempType);  	}
-  	(
-  	  < COMMA >
-  	  tempType = identifier()
-  	  {
-  	    sorts.add(tempType);  	  }  	)*
-  < RBRA >
-  < RBRA >
-  {
-    List<String > one_elem = new LinkedList<String >();
-    one_elem.add(sortName);
-    fbs = new Functor(name,
-      	getSorts(signature, sorts),
-      	getSorts(signature, one_elem).get(0));
-    return fbs;  }}
