@@ -8,7 +8,7 @@
     <parent>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>parent-pom</artifactId>
-  		<version>1.10-SNAPSHOT</version>
+  		<version>1.11-SNAPSHOT</version>
   	</parent>
   
     <dependencyManagement>
@@ -41,17 +41,17 @@
         <dependency>
     		<groupId>net.sf.tweety.logics</groupId>
     		<artifactId>commons</artifactId>
-    		<version>1.10-SNAPSHOT</version>
+    		<version>1.11-SNAPSHOT</version>
 	    </dependency>
         <dependency>
     		<groupId>net.sf.tweety.logics</groupId>
     		<artifactId>pl</artifactId>
-    		<version>1.10-SNAPSHOT</version>
+    		<version>1.11-SNAPSHOT</version>
 	    </dependency>
 	    <dependency>
     		<groupId>net.sf.tweety.arg</groupId>
     		<artifactId>delp</artifactId>
-    		<version>1.10-SNAPSHOT</version>
+    		<version>1.11-SNAPSHOT</version>
 	    </dependency>
     </dependencies>
 

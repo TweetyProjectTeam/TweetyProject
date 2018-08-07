@@ -9,24 +9,24 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.10-SNAPSHOT</version>
+  	<version>1.11-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>pl</artifactId>
-  		<version>1.10-SNAPSHOT</version>
+  		<version>1.11-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>graphs</artifactId>
-  		<version>1.10-SNAPSHOT</version>
+  		<version>1.11-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>dung</artifactId>
-  		<version>1.10-SNAPSHOT</version>
+  		<version>1.11-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>
