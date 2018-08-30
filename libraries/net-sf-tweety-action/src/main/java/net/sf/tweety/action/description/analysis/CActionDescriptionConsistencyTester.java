@@ -27,7 +27,7 @@ import net.sf.tweety.action.description.syntax.CActionDescription;
 import net.sf.tweety.action.description.syntax.CLaw;
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.transitionsystem.State;
-import net.sf.tweety.lp.asp.reasoner.AspInterface;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 
 /**
  * This class is able to check, whether a given action description in the action
@@ -42,7 +42,7 @@ import net.sf.tweety.lp.asp.reasoner.AspInterface;
 public class CActionDescriptionConsistencyTester
   implements ActionDescriptionConsistencyTester<CLaw>
 {
-  private AspInterface aspsolver;
+  private ASPSolver aspsolver;
   
   /**
    * Creates a new consistency tester which will use the given answer set
@@ -50,7 +50,7 @@ public class CActionDescriptionConsistencyTester
    * 
    * @param aspsolver
    */
-  public CActionDescriptionConsistencyTester( AspInterface aspsolver )
+  public CActionDescriptionConsistencyTester( ASPSolver aspsolver )
   {
     this.aspsolver = aspsolver;
   }

@@ -43,7 +43,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
-import net.sf.tweety.lp.asp.reasoner.AspInterface;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 
 /**
  * This class calculates the transition system as it is described by an action
@@ -58,7 +58,7 @@ import net.sf.tweety.lp.asp.reasoner.AspInterface;
  */
 public class CTransitionSystemCalculator
 {
-  private AspInterface aspsolver;
+  private ASPSolver aspsolver;
   
   /**
    * Creates a new transition system calculator with the given interface to an
@@ -66,7 +66,7 @@ public class CTransitionSystemCalculator
    * 
    * @param aspsolver
    */
-  public CTransitionSystemCalculator( AspInterface aspsolver )
+  public CTransitionSystemCalculator( ASPSolver aspsolver )
   {
     this.aspsolver = aspsolver;
   }

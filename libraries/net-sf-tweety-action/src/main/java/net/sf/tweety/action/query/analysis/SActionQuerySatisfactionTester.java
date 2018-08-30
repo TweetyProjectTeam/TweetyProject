@@ -47,8 +47,7 @@ import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.lp.asp.reasoner.AspInterface;
-
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 /**
  * This class provides methods capable of checking if a given transition system
  * satisfies a set of action queries in the action query language s. This is
@@ -70,7 +69,7 @@ public class SActionQuerySatisfactionTester
    * 
    * @param aspsolver
    */
-  public SActionQuerySatisfactionTester( AspInterface aspsolver )
+  public SActionQuerySatisfactionTester( ASPSolver aspsolver )
   {
    // this.aspsolver = aspsolver;
   }
