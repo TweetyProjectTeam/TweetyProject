@@ -22,13 +22,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.ParseException;
-import net.sf.tweety.lp.asp.reasoner.DLV;
-import net.sf.tweety.lp.asp.reasoner.Solver;
-import net.sf.tweety.lp.asp.reasoner.SolverException;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
+import net.sf.tweety.lp.asp.reasoner.DLVSolver;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 
 /**
@@ -49,12 +48,12 @@ import net.sf.tweety.lp.asp.syntax.Rule;
  * @author Sebastian Homann
  *
  */
-public class ScreenedRemainderSets extends RemainderSets<Rule> {
+public class ScreenedRemainderSets extends RemainderSets<ASPRule> {
 	private static final long serialVersionUID = -9146903242327808522L;
 	
 	private Program program;
 	private Program screen;
-	private Solver solver;
+	private ASPSolver solver;
 	
 	/**
 	 * Creates a new set of screened remainder sets of program p that all contain
@@ -66,7 +65,7 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 	 * @param solver an asp-solver
 	 * @throws SolverException
 	 */
-	public ScreenedRemainderSets(Program p, Program r, Solver solver) throws SolverException {
+	public ScreenedRemainderSets(Program p, Program r, ASPSolver solver) {
 		if(!p.containsAll(r)) {
 			throw new IllegalArgumentException("r has to be a subset of p");
 		}
@@ -128,7 +127,7 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 	 * @param p
 	 * @throws SolverException
 	 */
-	private Set<Program> calculateRemainderSetCandidates(Program p) throws SolverException {
+	private Set<Program> calculateRemainderSetCandidates(Program p) {
 		Set<Program> result = new HashSet<Program>();
 		if(isConsistent(p)) {
 			result.add(p);
@@ -137,7 +136,7 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 		
 		Program toRemove = p.clone();
 		toRemove.removeAll(screen);
-		for(Rule remove : toRemove) {
+		for(ASPRule remove : toRemove) {
 			Program candidate = p.clone();
 			candidate.remove(remove);
 			result.addAll(calculateRemainderSetCandidates(candidate));
@@ -145,8 +144,8 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 		return result;
 	}
 	
-	private boolean isConsistent(Program p) throws SolverException {
-		return !solver.computeModels(p, 1).isEmpty();
+	private boolean isConsistent(Program p) {
+		return !solver.computeAnswerSets(p, 1).isEmpty();
 	}
 	
 	/**
@@ -157,7 +156,7 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 	 */
 	public Collection<Program> asPrograms() {
 		Set<Program> result = new HashSet<Program>();
-		for(Collection<Rule> remainder : this) {
+		for(Collection<ASPRule> remainder : this) {
 			result.add(new Program(remainder));
 		}
 		return result;
@@ -169,18 +168,18 @@ public class ScreenedRemainderSets extends RemainderSets<Rule> {
 	 * @throws ParseException
 	 * @throws SolverException
 	 */
-	public static void main(String[] args) throws ParseException, SolverException {
+	public static void main(String[] args) throws ParseException {
 		String input = "a :- b.\n -a. \n b. \n :- not -a, not b.";
 		
 		//TODO: replace
 		String pathToSolver = "";
-		Solver solver = new DLV(pathToSolver);
+		ASPSolver solver = new DLVSolver(pathToSolver);
 		
-		Program p = ASPParser.parseProgram(input);
+		Program p = ASPCore2Parser.parseProgram(input); //TODO test with new parser
 		ScreenedRemainderSets srs = new ScreenedRemainderSets(p, new Program(), solver);
 		System.out.println("P = " + p + "\n\nScreened Remainder Sets: " + srs.size());
 		int i = 1;
-		for(Collection<Rule> remainder : srs) {
+		for(Collection<ASPRule> remainder : srs) {
 			System.out.println("\n" + i++ + ". Remainder Set:\n" + new Program(remainder));
 		}
 	}

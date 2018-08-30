@@ -28,18 +28,18 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.beliefdynamics.CredibilityRevisionNonIterative;
-import net.sf.tweety.lp.asp.reasoner.Solver;
-import net.sf.tweety.lp.asp.reasoner.SolverException;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
-import net.sf.tweety.lp.asp.syntax.Comparative;
-import net.sf.tweety.lp.asp.syntax.DLPAtom;
-import net.sf.tweety.lp.asp.syntax.DLPElement;
-import net.sf.tweety.lp.asp.syntax.DLPLiteral;
-import net.sf.tweety.lp.asp.syntax.DLPNeg;
-import net.sf.tweety.lp.asp.syntax.DLPNot;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPAtom;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
+import net.sf.tweety.lp.asp.syntax.StrictNegation;
+import net.sf.tweety.lp.asp.syntax.ASPOperator;
+import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.ComparativeAtom;
+import net.sf.tweety.lp.asp.syntax.DefaultNegation;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Variable;
@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Tim Janus
  */
-public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
+public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule> {
 
 	/**
 	 * interface defines a method to process the extended answer sets of the 
@@ -97,9 +97,9 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 			
 			// gather indicies of rule which are rejected:
 			List<Integer> indicies = new LinkedList<Integer>();
-			Set<DLPLiteral> literals = as.getLiteralsWithName("p__rej");
-			for(DLPLiteral l : literals) {
-				DLPAtom atom = (DLPAtom)l;
+			Set<ASPLiteral> literals = as.getLiteralsWithName("p__rej");
+			for(ASPLiteral l : literals) {
+				ASPAtom atom = (ASPAtom)l;
 				NumberTerm nt = (NumberTerm)atom.getTerm(1);
 				indicies.add(nt.get());
 			}
@@ -111,9 +111,9 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 			int removeRuleIndex = indexIndex < indicies.size() ? indicies.get(indexIndex) : -1;
 			Program reval = new Program();
 			for(Program p : orderedPrograms) {
-				for(Rule r : p) {
+				for(ASPRule r : p) {
 					if(countIndex != removeRuleIndex) {
-						reval.add(new Rule(r));
+						reval.add(new ASPRule(r));
 					} else {
 						++indexIndex;
 						removeRuleIndex = indexIndex < indicies.size() ? indicies.get(indexIndex) : -1;
@@ -130,7 +130,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	private AnswersetProcessing processing = new DefaultBehavior();
 	
 	/** a map used during the creation of the credibility logic program */
-	private Map<DLPLiteral, String> literalMap = new HashMap<DLPLiteral, String>();
+	private Map<ASPLiteral, String> literalMap = new HashMap<ASPLiteral, String>();
 	
 	/** a prefix used to mark constants which represent the id of negative literals. */
 	private String negConstantPrefix = "nc__";
@@ -145,7 +145,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	private int ruleIndex = 0;
 	
 	/** reference to the solver used for the answer set generation */
-	private Solver solver = null;
+	private ASPSolver solver = null;
 	
 	private AnswerSetList lastAnswersets;
 	
@@ -160,11 +160,11 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	 * Ctor: setting the solver at construction time
 	 * @param solver	Reference to the solver used for answer set generation.
 	 */
-	public CredibilityRevision(Solver solver) {
+	public CredibilityRevision(ASPSolver solver) {
 		this(solver, 10);
 	}
 	
-	public CredibilityRevision(Solver solver, int maxInt) {
+	public CredibilityRevision(ASPSolver solver, int maxInt) {
 		this.solver = solver;
 		this.maxInt = maxInt;
 	}
@@ -184,10 +184,10 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	}
 	
 	@Override
-	public Program revise(List<Collection<Rule>> ol) {
+	public Program revise(List<Collection<ASPRule>> ol) {
 		// cast to program:
 		List<Program> orderedList = new LinkedList<Program>();
-		for(Collection<Rule> c : ol) {
+		for(Collection<ASPRule> c : ol) {
 			if(c instanceof Program) {
 				orderedList.add((Program)c);
 			} else {
@@ -208,8 +208,8 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		
 		// compute the answer set of the extended alphabet
 		try {
-			lastAnswersets = solver.computeModels(credProgram, maxInt);
-		} catch (SolverException e) {
+			lastAnswersets = solver.computeAnswerSets(credProgram, maxInt);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -225,8 +225,8 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	private void projectAnswerSet() {
 		lastProjectedAnswersets = (AnswerSetList)lastAnswersets.clone();
 		for(AnswerSet as : lastProjectedAnswersets) {
-			Set<DLPLiteral> toRemove = new HashSet<DLPLiteral>();
-			for(DLPLiteral literal : as) {
+			Set<ASPLiteral> toRemove = new HashSet<ASPLiteral>();
+			for(ASPLiteral literal : as) {
 				if(literal.getName().startsWith(predCredibilityPrefix)) {
 					toRemove.add(literal);
 				}
@@ -266,80 +266,80 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		Program reval = new Program();
 		String pcp = predCredibilityPrefix;
 		
-		for(Rule r : p) {
+		for(ASPRule r : p) {
 			Variable cred = new Variable("Cred");
 			NumberTerm indexTerm = new NumberTerm(ruleIndex);
 			
-			DLPLiteral originalHead = r.getConclusion().iterator().next();
-			List<DLPElement> originalBody = new LinkedList<DLPElement>();
-			for(DLPElement pe : r.getPremise()) {
-				DLPElement newBodyElement = (DLPElement)pe.clone();
+			ASPLiteral originalHead = r.getConclusion().iterator().next();
+			List<ASPBodyElement> originalBody = new LinkedList<ASPBodyElement>();
+			for(ASPBodyElement pe : r.getPremise()) {
+				ASPBodyElement newBodyElement = (ASPBodyElement)pe.clone();
 				originalBody.add(newBodyElement);
 			}
 			
 			String id = translateLiteral(originalHead);
 			Constant headId = new Constant(id);
-			DLPLiteral tHead = new DLPAtom(pcp+"lit", headId);
+			ASPLiteral tHead = new ASPAtom(pcp+"lit", headId);
 			
-			String negId = translateLiteral((DLPLiteral)originalHead.complement());
+			String negId = translateLiteral((ASPLiteral)originalHead.complement());
 			Constant negHeadId = new Constant(negId);
-			DLPLiteral tHeadNeg = new DLPAtom(pcp+"lit", negHeadId);
+			ASPLiteral tHeadNeg = new ASPAtom(pcp+"lit", negHeadId);
 			
 			Variable credLow = new Variable("CredLow");
 			Variable credHigh = new Variable("CredHigh");
-			List<DLPElement> newBody = new LinkedList<DLPElement>();
+			List<ASPBodyElement> newBody = new LinkedList<ASPBodyElement>();
 			
 			// add H(u) :- B, minr(j, Cred), not exLowerMinr(j, Cred).
 			newBody.addAll(originalBody);
-			newBody.add(new DLPAtom(pcp+"minr", indexTerm, cred));
-			newBody.add(new DLPNot(new DLPAtom(pcp+"exLowerMinr", indexTerm, cred)));
-			reval.add(new Rule(tHead.cloneWithAddedTerm(cred), newBody));
+			newBody.add(new ASPAtom(pcp+"minr", indexTerm, cred));
+			newBody.add(new DefaultNegation(new ASPAtom(pcp+"exLowerMinr", indexTerm, cred)));
+			reval.add(new ASPRule(tHead.cloneWithAddedTerm(cred), newBody));
 			
 			// add exLowerMin(j, Cred) :- minr(j, Cred), minr(j, CredLower), Prec(CredLower, Cred).
-			newBody = new LinkedList<DLPElement>();
-			newBody.add(new DLPAtom(pcp+"minr", indexTerm, cred));
-			newBody.add(new DLPAtom(pcp+"minr", indexTerm, credLow));
-			newBody.add(new Comparative("<", credLow, cred));
-			reval.add(new Rule(new DLPAtom(pcp+"exLowerMinr", indexTerm, cred), newBody));
+			newBody = new LinkedList<ASPBodyElement>();
+			newBody.add(new ASPAtom(pcp+"minr", indexTerm, cred));
+			newBody.add(new ASPAtom(pcp+"minr", indexTerm, credLow));
+			newBody.add(new ComparativeAtom(ASPOperator.BinaryOperator.LT, credLow, cred));
+			reval.add(new ASPRule(new ASPAtom(pcp+"exLowerMinr", indexTerm, cred), newBody));
 			
 			// add H :- H(u), not rej(name).
-			newBody = new LinkedList<DLPElement>();
+			newBody = new LinkedList<ASPBodyElement>();
 			newBody.add(tHead.cloneWithAddedTerm(cred));
-			newBody.add(new DLPNot(new DLPAtom(pcp+"rej", headId, indexTerm, cred)));
-			reval.add(new Rule(originalHead, newBody));
+			newBody.add(new DefaultNegation(new ASPAtom(pcp+"rej", headId, indexTerm, cred)));
+			reval.add(new ASPRule(originalHead, newBody));
 			
 			
 			// add minr(index, programCredibility) :- .
-			reval.addFact(new DLPAtom(pcp+"minr", indexTerm, new NumberTerm(programCredibility)));
+			reval.addFact(new ASPAtom(pcp+"minr", indexTerm, new NumberTerm(programCredibility)));
 			
 			// add minr(index, Cred) :- B(r), L(name, Cred), not exHigherL(Cred).
-			for(DLPElement re : originalBody) {
-				if(re instanceof DLPLiteral) {
-					String bodyLitId = translateLiteral((DLPLiteral)re);
-					DLPAtom translated = new DLPAtom(pcp + "lit", new Constant(bodyLitId));
-					newBody = new LinkedList<DLPElement>();
+			for(ASPBodyElement re : originalBody) {
+				if(re instanceof ASPLiteral) {
+					String bodyLitId = translateLiteral((ASPLiteral)re);
+					ASPAtom translated = new ASPAtom(pcp + "lit", new Constant(bodyLitId));
+					newBody = new LinkedList<ASPBodyElement>();
 					newBody.addAll(originalBody);
 					newBody.add(translated.cloneWithAddedTerm(cred));
-					newBody.add(new DLPNot(new DLPAtom(pcp+"exHigher", headId, indexTerm, cred)));
-					reval.add(new Rule(new DLPAtom(pcp+"minr", indexTerm, cred), newBody));
+					newBody.add(new DefaultNegation(new ASPAtom(pcp+"exHigher", headId, indexTerm, cred)));
+					reval.add(new ASPRule(new ASPAtom(pcp+"minr", indexTerm, cred), newBody));
 				}
 			}
 			
 			
 			// add exHigher(name, index, Cred) :- lit(name, Cred), lit(name, CredHigh), Prec(Cred, CredHigh).
-			newBody = new LinkedList<DLPElement>();
+			newBody = new LinkedList<ASPBodyElement>();
 			newBody.add(tHead.cloneWithAddedTerm(cred));
 			newBody.add(tHead.cloneWithAddedTerm(credHigh));
-			newBody.add(new Comparative("<", cred, credHigh));
-			reval.add(new Rule( new DLPAtom(pcp+"exHigher", headId, indexTerm, cred), newBody));
+			newBody.add(new ComparativeAtom(ASPOperator.BinaryOperator.LT, cred, credHigh));
+			reval.add(new ASPRule( new ASPAtom(pcp+"exHigher", headId, indexTerm, cred), newBody));
 			
 			// add rej(name, index, Cred) :- lit(name, Cred), -lit(name, CredHigh), Preceq(Cred, CredHigh).
-			newBody = new LinkedList<DLPElement>();
+			newBody = new LinkedList<ASPBodyElement>();
 			newBody.add(tHead.cloneWithAddedTerm(cred));
 			newBody.add(tHeadNeg.cloneWithAddedTerm(credHigh));
-			newBody.add(new Comparative("<=", cred, credHigh));
+			newBody.add(new ComparativeAtom(ASPOperator.BinaryOperator.LEQ, cred, credHigh));
 			newBody.add(originalHead.complement());
-			reval.add(new Rule( new DLPAtom(pcp+"rej", headId, indexTerm, cred), newBody));
+			reval.add(new ASPRule( new ASPAtom(pcp+"rej", headId, indexTerm, cred), newBody));
 			
 			++ruleIndex;
 		}
@@ -353,7 +353,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	 * @param lit	The unprioritzed version of the literal.
 	 * @return	A pair containing the string id representing the prioritzed literal and the prioritzed literal.
 	 */
-	private String translateLiteral(DLPLiteral lit) {
+	private String translateLiteral(ASPLiteral lit) {
 		if(literalMap.containsKey(lit)) {
 			return literalMap.get(lit);
 		}
@@ -361,11 +361,11 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		String litId = lit.toString();
 		litId = litId.replaceAll(" ", "").replaceAll("-", "").replaceAll(",", "_");
 		
-		if (lit instanceof DLPAtom) {
+		if (lit instanceof ASPAtom) {
 			litId = constantPrefix + litId;
-		} else if (lit instanceof DLPNeg) {
+		} else if (lit instanceof StrictNegation) {
 			litId = negConstantPrefix + litId;
-		} else if(! (lit instanceof DLPAtom)){
+		} else if(! (lit instanceof ASPAtom)){
 			throw new IllegalArgumentException("Parameter 'lit' has to be an Atom or a Neg.");
 		}
 		literalMap.put(lit, litId);
@@ -374,17 +374,17 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 	
 	public static void main(String [] args) {
 		Program p1 = new Program();
-		p1.addFact(new DLPAtom("b"));
+		p1.addFact(new ASPAtom("b"));
 		
 		Program p2 = new Program();
-		Rule r = new Rule();
-		r.setConclusion(new DLPNeg(new DLPAtom("a")));
-		p2.add(new Rule(new DLPNeg("a")));
+		ASPRule r = new ASPRule();
+		r.setConclusion(new StrictNegation(new ASPAtom("a")));
+		p2.add(new ASPRule(new StrictNegation("a")));
 		
 		Program p3 = new Program();
-		r = new Rule();
-		r.setConclusion(new DLPAtom("a"));
-		r.addPremise(new DLPAtom("b"));
+		r = new ASPRule();
+		r.setConclusion(new ASPAtom("a"));
+		r.addPremise(new ASPAtom("b"));
 		p3.add(r);
 		
 		List<Program> programs = new LinkedList<Program>();
@@ -398,12 +398,12 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<Rule> {
 		System.out.println(cp);
 		
 		p1 = new Program();
-		p1.addFact(new DLPAtom("b"));
-		p1.addFact(new DLPAtom("c"));
+		p1.addFact(new ASPAtom("b"));
+		p1.addFact(new ASPAtom("c"));
 		
 		p2 = new Program();
-		p2.add(new Rule(new DLPNeg("a"), new DLPAtom("b")));
-		p2.add(new Rule(new DLPAtom("a"), new DLPAtom("c")));
+		p2.add(new ASPRule(new StrictNegation("a"), new ASPAtom("b")));
+		p2.add(new ASPRule(new ASPAtom("a"), new ASPAtom("c")));
 		
 		programs.clear();
 		programs.add(p1);

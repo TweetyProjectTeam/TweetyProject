@@ -26,16 +26,16 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
-import net.sf.tweety.lp.asp.reasoner.DLVComplex;
+import net.sf.tweety.lp.asp.reasoner.DLVSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
-import net.sf.tweety.lp.asp.syntax.DLPAtom;
-import net.sf.tweety.lp.asp.syntax.DLPNeg;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPAtom;
+import net.sf.tweety.lp.asp.syntax.StrictNegation;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 import net.sf.tweety.lp.asp.beliefdynamics.revision.CredibilityRevision;
 
 import org.junit.Before;
@@ -63,7 +63,7 @@ public class CredibilityTest {
 		if(path != null) {
 			if(new File(path).exists()) {
 				revision = new CredibilityRevision(
-						new DLVComplex(path));
+						new DLVSolver(path)); //TODO should be DLVComplex
 			}
 		} else {
 			LOG.error("Cannot initalize ASP unit tests, missing environment variable 'DLVCOMPLEX_PATH', skipping tests");
@@ -79,7 +79,7 @@ public class CredibilityTest {
 		}
 		
 		
-		ASPParser parser = new ASPParser(stream);
+		ASPCore2Parser parser = new ASPCore2Parser(stream); //TODO test with new parser
 		InstantiateVisitor visitor = new InstantiateVisitor();
 		Program reval = new Program();
 		try {
@@ -101,7 +101,7 @@ public class CredibilityTest {
 			if(p1 == null || p2 == null || p3 == null || res == null)
 				return; // skip tests cause missing data
 			
-			List<Collection<Rule>> programs = new LinkedList<Collection<Rule>>();
+			List<Collection<ASPRule>> programs = new LinkedList<Collection<ASPRule>>();
 			programs.add(p1);
 			programs.add(p2);
 			programs.add(p3);
@@ -113,9 +113,9 @@ public class CredibilityTest {
 			assertEquals(1, asl.size());
 			AnswerSet as = asl.get(0);
 			assertEquals(2, as.size());
-			assertEquals(true, as.contains(new DLPAtom("b")));
-			assertEquals(true, as.contains(new DLPNeg("a")));
-			assertEquals(false, as.contains(new DLPAtom("a")));
+			assertEquals(true, as.contains(new ASPAtom("b")));
+			assertEquals(true, as.contains(new StrictNegation("a")));
+			assertEquals(false, as.contains(new ASPAtom("a")));
 		}
 	}
 	
@@ -128,7 +128,7 @@ public class CredibilityTest {
 			if(p1 == null || p2 == null)
 				return; // skip tests cause missing data
 			
-			List<Collection<Rule>> programs = new LinkedList<Collection<Rule>>();
+			List<Collection<ASPRule>> programs = new LinkedList<Collection<ASPRule>>();
 			programs.add(p1);
 			programs.add(p2);
 			
@@ -139,14 +139,14 @@ public class CredibilityTest {
 			
 			for(AnswerSet as : asl) {
 				assertEquals(3, as.size());
-				assertEquals(true, as.contains(new DLPAtom("b")));
-				assertEquals(true, as.contains(new DLPAtom("c")));
+				assertEquals(true, as.contains(new ASPAtom("b")));
+				assertEquals(true, as.contains(new ASPAtom("c")));
 			}
 			
-			if(asl.get(0).contains(new DLPAtom("a"))) {
-				assertEquals(true, asl.get(1).contains(new DLPNeg("a")));
+			if(asl.get(0).contains(new ASPAtom("a"))) {
+				assertEquals(true, asl.get(1).contains(new StrictNegation("a")));
 			} else {
-				assertEquals(true, asl.get(1).contains(new DLPAtom("a")));
+				assertEquals(true, asl.get(1).contains(new ASPAtom("a")));
 			}
 		}
 	}

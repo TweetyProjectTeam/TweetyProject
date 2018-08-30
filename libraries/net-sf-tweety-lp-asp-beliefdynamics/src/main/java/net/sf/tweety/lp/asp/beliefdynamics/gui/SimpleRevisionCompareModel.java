@@ -28,13 +28,12 @@ import java.util.Set;
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.ParseException;
-import net.sf.tweety.lp.asp.reasoner.Solver;
-import net.sf.tweety.lp.asp.reasoner.SolverException;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 /**
  * The data-model used to compare two different revision approaches.
@@ -63,18 +62,18 @@ public class SimpleRevisionCompareModel {
 	protected Collection<?> leftResult;
 	protected Collection<?> rightResult;
 	
-	protected Solver solver;
+	protected ASPSolver solver;
 	
 	
 	public SimpleRevisionCompareModel() {
 		
 	}
 	
-	public SimpleRevisionCompareModel(Solver solver) {
+	public SimpleRevisionCompareModel(ASPSolver solver) {
 		this.solver = solver;
 	}
 	
-	public void setSolver(Solver solver) {
+	public void setSolver(ASPSolver solver) {
 		this.solver = solver;
 	}
 	
@@ -125,25 +124,25 @@ public class SimpleRevisionCompareModel {
 	 */
 	public void setBeliefbase(String beliefBase) throws ParseException {
 		Program old = this.beliefBase;
-		this.beliefBase = ASPParser.parseProgram(beliefBase);
+		this.beliefBase = ASPCore2Parser.parseProgram(beliefBase); //TODO test with new parser
 		change.firePropertyChange("beliefBase", old, beliefBase);
 	}
 	
 	public void setBeliefbase(Reader beliefBase) throws ParseException {
 		Program old = this.beliefBase;
-		this.beliefBase = ASPParser.parseProgram(beliefBase);
+		this.beliefBase = ASPCore2Parser.parseProgram(beliefBase);
 		change.firePropertyChange("beliefBase", old, this.beliefBase.toString());
 	}
 
 	public void setNewBeliefs(String newBeliefs) throws ParseException {
 		Program old = this.newBeliefs;
-		this.newBeliefs =  ASPParser.parseProgram(newBeliefs);
+		this.newBeliefs =  ASPCore2Parser.parseProgram(newBeliefs);
 		change.firePropertyChange("newbeliefs", old, newBeliefs);
 	}
 	
 	public void setNewBeliefs(Reader newBeliefs) throws ParseException {
 		Program old = this.newBeliefs;
-		this.newBeliefs =  ASPParser.parseProgram(newBeliefs);
+		this.newBeliefs =  ASPCore2Parser.parseProgram(newBeliefs);
 		change.firePropertyChange("newbeliefs", old, this.newBeliefs.toString());
 	}
 	
@@ -207,11 +206,11 @@ public class SimpleRevisionCompareModel {
 			return;
 		if(leftResult != null) {
 			try {
-				AnswerSetList leftasl = solver.computeModels(new Program((Collection<Rule>)leftResult), 10);
+				AnswerSetList leftasl = solver.computeAnswerSets(new Program((Collection<ASPRule>)leftResult), 10);
 				change.firePropertyChange("leftASL", null, leftasl);
-				AnswerSetList rightasl = solver.computeModels(new Program((Collection<Rule>)rightResult), 10);
+				AnswerSetList rightasl = solver.computeAnswerSets(new Program((Collection<ASPRule>)rightResult), 10);
 				change.firePropertyChange("rightASL", null, rightasl);
-			} catch (SolverException e) {
+			} catch (Exception e) {
 				change.firePropertyChange("error", "Parser Error", e.getMessage());
 				e.printStackTrace();
 			}

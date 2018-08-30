@@ -24,11 +24,11 @@ import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleSelectiveRevisionOperator;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 import net.sf.tweety.lp.asp.beliefdynamics.baserevision.ELPBaseRevisionOperator;
 import net.sf.tweety.lp.asp.beliefdynamics.baserevision.MonotoneGlobalMaxichoiceSelectionFunction;
 import net.sf.tweety.lp.asp.beliefdynamics.baserevision.SelectionFunction;
-import net.sf.tweety.lp.asp.reasoner.Solver;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 
 
 /**
@@ -56,7 +56,7 @@ import net.sf.tweety.lp.asp.reasoner.Solver;
  *
  */
 public class ParameterisedArgumentativeSelectiveRevisionOperator extends
-		MultipleBaseRevisionOperator<Rule> {
+		MultipleBaseRevisionOperator<ASPRule> {
 	
 	public enum TransformationType {
 		SCEPTICAL, NAIVE;
@@ -69,7 +69,7 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 			 }
 	}
 	
-	private Solver solver;
+	private ASPSolver solver;
 	private AttackStrategy attackRelation;
 	private AttackStrategy defenseRelation;
 	private TransformationType transformationType;
@@ -81,7 +81,7 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 	 * @param attackRelation a notion of attack
 	 * @param defenseRelation a notion of attack
 	 */
-	public ParameterisedArgumentativeSelectiveRevisionOperator(Solver solver, AttackStrategy attackRelation, AttackStrategy defenseRelation, TransformationType type) {
+	public ParameterisedArgumentativeSelectiveRevisionOperator(ASPSolver solver, AttackStrategy attackRelation, AttackStrategy defenseRelation, TransformationType type) {
 		this.solver = solver;
 		this.attackRelation = attackRelation;
 		this.defenseRelation = defenseRelation;
@@ -93,16 +93,16 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 	 * @see net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
 	 */
 	@Override
-	public Collection<Rule> revise(Collection<Rule> base,
-			Collection<Rule> formulas) {
+	public Collection<ASPRule> revise(Collection<ASPRule> base,
+			Collection<ASPRule> formulas) {
 		
 		// inner revision operator: base revision
-		SelectionFunction<Rule> selection = new MonotoneGlobalMaxichoiceSelectionFunction();		
-		MultipleBaseRevisionOperator<Rule> innerRevision;
+		SelectionFunction<ASPRule> selection = new MonotoneGlobalMaxichoiceSelectionFunction();		
+		MultipleBaseRevisionOperator<ASPRule> innerRevision;
 		innerRevision = new ELPBaseRevisionOperator(solver, selection);
 		
 		// transformation function
-		MultipleTransformationFunction<Rule> transformationFunction;
+		MultipleTransformationFunction<ASPRule> transformationFunction;
 		switch(transformationType) {
 			case NAIVE:
 				transformationFunction = new NaiveLiteralTransformationFunction(base, attackRelation, defenseRelation);
@@ -113,8 +113,8 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 				break;
 		}
 
-		MultipleSelectiveRevisionOperator<Rule> revisionOperator;
-		revisionOperator = new MultipleSelectiveRevisionOperator<Rule>(transformationFunction, innerRevision);
+		MultipleSelectiveRevisionOperator<ASPRule> revisionOperator;
+		revisionOperator = new MultipleSelectiveRevisionOperator<ASPRule>(transformationFunction, innerRevision);
 		
 		return revisionOperator.revise(base, formulas);
 	}

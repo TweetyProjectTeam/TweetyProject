@@ -40,7 +40,7 @@ import net.sf.tweety.lp.asp.beliefdynamics.gui.SimpleRevisionComparePresenter;
 import net.sf.tweety.lp.asp.beliefdynamics.gui.SimpleRevisionCompareView;
 import net.sf.tweety.lp.asp.beliefdynamics.gui.SimpleRevisionComparePresenter.FileHandler;
 import net.sf.tweety.lp.asp.beliefdynamics.selectiverevision.ParameterisedArgumentativeSelectiveRevisionOperator.TransformationType;
-import net.sf.tweety.lp.asp.reasoner.DLV;
+import net.sf.tweety.lp.asp.reasoner.DLVSolver;
 
 /**
  * This class implements a comparison application for selective revision
@@ -124,7 +124,7 @@ public class ArgumentativeSelectiveRevisionTest {
 			}
 		}
 		
-		DLV solver = new DLV(path);
+		DLVSolver solver = new DLVSolver(path);
 		model.setSolver(solver);
 		
 		// add revision operators

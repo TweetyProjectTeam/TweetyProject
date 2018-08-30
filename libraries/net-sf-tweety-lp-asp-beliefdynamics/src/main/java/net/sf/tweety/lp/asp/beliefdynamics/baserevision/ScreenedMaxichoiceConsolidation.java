@@ -20,10 +20,9 @@ package net.sf.tweety.lp.asp.beliefdynamics.baserevision;
 
 import java.util.Collection;
 
-import net.sf.tweety.lp.asp.reasoner.Solver;
-import net.sf.tweety.lp.asp.reasoner.SolverException;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 /**
  * This class implements the screened maxi-choice consolidation operator from [1].
@@ -38,10 +37,10 @@ import net.sf.tweety.lp.asp.syntax.Rule;
  * @author Sebastian Homann
  *
  */
-public class ScreenedMaxichoiceConsolidation implements ConsolidationOperator<Rule> {
+public class ScreenedMaxichoiceConsolidation implements ConsolidationOperator<ASPRule> {
 	private Program screen;
-	private SelectionFunction<Rule> selection;
-	private Solver solver;
+	private SelectionFunction<ASPRule> selection;
+	private ASPSolver solver;
 	
 	/**
 	 * Creates a new screened maxi-choice consolidation operator with the given screen,
@@ -50,7 +49,7 @@ public class ScreenedMaxichoiceConsolidation implements ConsolidationOperator<Ru
 	 * @param selection a selection function
 	 * @param solver an asp-solver
 	 */
-	public ScreenedMaxichoiceConsolidation(Program screen, SelectionFunction<Rule> selection, Solver solver) {
+	public ScreenedMaxichoiceConsolidation(Program screen, SelectionFunction<ASPRule> selection, ASPSolver solver) {
 		this.screen = screen;
 		this.selection = selection;
 		this.solver = solver;
@@ -65,7 +64,7 @@ public class ScreenedMaxichoiceConsolidation implements ConsolidationOperator<Ru
 	 * @return consolidation of program p
 	 * @throws SolverException
 	 */
-	public Program consolidate(Program p) throws SolverException {
+	public Program consolidate(Program p) {
 		return new Program(selection.select(new ScreenedRemainderSets(p, screen, solver)));
 	}
 
@@ -74,11 +73,11 @@ public class ScreenedMaxichoiceConsolidation implements ConsolidationOperator<Ru
 	 * @see net.sf.tweety.lp.asp.beliefdynamics.baserevision.ConsolidationOperator#consolidate(java.util.Collection)
 	 */
 	@Override
-	public Collection<Rule> consolidate(Collection<Rule> p) {
+	public Collection<ASPRule> consolidate(Collection<ASPRule> p) {
 		if(p instanceof Program) {
 			try {
 				return consolidate((Program) p);
-			} catch (SolverException e) {
+			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -86,7 +85,7 @@ public class ScreenedMaxichoiceConsolidation implements ConsolidationOperator<Ru
 		program.addAll(p);
 		try {
 			return consolidate(program);
-		} catch (SolverException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}

@@ -34,7 +34,7 @@ import javax.swing.filechooser.FileFilter;
 
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
 import net.sf.tweety.lp.asp.parser.ParseException;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 //import javax.swing.JOptionPane;
 
 /**
@@ -255,7 +255,7 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 	 * Mock revision operator for functional test.
 	 * @author Tim Janus
 	 */
-	private static class MockOperator implements BaseRevisionOperator<Rule> {
+	private static class MockOperator implements BaseRevisionOperator<ASPRule> {
 
 		private String name;
 		
@@ -264,8 +264,8 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 		}
 		
 		@Override
-		public Collection<Rule> revise(Collection<Rule> base,
-				Rule formula) {
+		public Collection<ASPRule> revise(Collection<ASPRule> base,
+				ASPRule formula) {
 			base.add(formula);
 			return base;
 		}

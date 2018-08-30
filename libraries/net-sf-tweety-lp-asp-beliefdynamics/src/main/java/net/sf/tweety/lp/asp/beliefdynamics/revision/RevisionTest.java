@@ -33,10 +33,10 @@ import net.sf.tweety.beliefdynamics.gui.RevisionComparePresenter;
 import net.sf.tweety.beliefdynamics.gui.RevisionComparePresenter.FileHandler;
 import net.sf.tweety.beliefdynamics.gui.RevisionCompareView;
 import net.sf.tweety.commons.Formula;
-import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
-import net.sf.tweety.lp.asp.reasoner.DLVComplex;
+import net.sf.tweety.lp.asp.reasoner.DLVSolver;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
@@ -59,7 +59,7 @@ public class RevisionTest {
 				if(file == null)
 					return null;
 				try {
-					ASPParser parser = new ASPParser(new FileInputStream(file));
+					ASPCore2Parser parser = new ASPCore2Parser(new FileInputStream(file)); //TODO test with new parser
 					InstantiateVisitor visitor = new InstantiateVisitor();
 					return (Program)parser.Program().jjtAccept(visitor, null);
 				} catch (FileNotFoundException e) {
@@ -122,7 +122,7 @@ public class RevisionTest {
 			path = chooser.getSelectedFile().getPath();
 		}
 		
-		DLVComplex solver = new DLVComplex(path);
+		DLVSolver solver = new DLVSolver(path); //TODO should be DLVComplex
 		model.addOperator(new PreferenceHandling(solver));
 		model.addOperator(new CredibilityRevision(solver));
 		

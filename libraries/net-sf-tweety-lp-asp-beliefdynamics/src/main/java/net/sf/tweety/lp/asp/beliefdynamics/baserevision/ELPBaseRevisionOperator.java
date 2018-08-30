@@ -21,10 +21,9 @@ package net.sf.tweety.lp.asp.beliefdynamics.baserevision;
 import java.util.Collection;
 
 import net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator;
-import net.sf.tweety.lp.asp.reasoner.Solver;
-import net.sf.tweety.lp.asp.reasoner.SolverException;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 /**
  * This class implements the base revision operator for extended
@@ -41,11 +40,11 @@ import net.sf.tweety.lp.asp.syntax.Rule;
  *  
  * @author Sebastian Homann
  */
-public class ELPBaseRevisionOperator extends MultipleBaseRevisionOperator<Rule> {
-	private Solver solver;
-	private SelectionFunction<Rule> selection;
+public class ELPBaseRevisionOperator extends MultipleBaseRevisionOperator<ASPRule> {
+	private ASPSolver solver;
+	private SelectionFunction<ASPRule> selection;
 	
-	public ELPBaseRevisionOperator(Solver solver, SelectionFunction<Rule> selection) {
+	public ELPBaseRevisionOperator(ASPSolver solver, SelectionFunction<ASPRule> selection) {
 		this.solver = solver;
 		this.selection = selection;
 	}
@@ -55,8 +54,8 @@ public class ELPBaseRevisionOperator extends MultipleBaseRevisionOperator<Rule> 
 	 * @see net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
 	 */
 	@Override
-	public Collection<Rule> revise(Collection<Rule> base,
-			Collection<Rule> formulas) {
+	public Collection<ASPRule> revise(Collection<ASPRule> base,
+			Collection<ASPRule> formulas) {
 		Program newKnowledge = new Program(formulas);		
 		
 		ScreenedMaxichoiceConsolidation consolidationOperator = new ScreenedMaxichoiceConsolidation(newKnowledge, selection, solver);
@@ -66,7 +65,7 @@ public class ELPBaseRevisionOperator extends MultipleBaseRevisionOperator<Rule> 
 		Program result;
 		try {
 			result = consolidationOperator.consolidate(union);
-		} catch (SolverException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		return result;

@@ -21,7 +21,7 @@ package net.sf.tweety.lp.asp.beliefdynamics.baserevision;
 import java.util.Collection;
 import java.util.Collections;
 
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 /**
  * This class implements a monotone global maxichoise selection function
@@ -36,7 +36,7 @@ import net.sf.tweety.lp.asp.syntax.Rule;
  *  
  * @author Sebastian Homann
  */
-public class MonotoneGlobalMaxichoiceSelectionFunction implements SelectionFunction<Rule> {
+public class MonotoneGlobalMaxichoiceSelectionFunction implements SelectionFunction<ASPRule> {
 
 	/**
 	 * Selects the maximal remainder set from the set of all remainder sets according to
@@ -45,7 +45,7 @@ public class MonotoneGlobalMaxichoiceSelectionFunction implements SelectionFunct
 	 * @param remainderSets set of all remainder sets
 	 * @return a single remainder set or P, if there is no remainder set of P with screen R
 	 */
-	public Collection<Rule> select(ScreenedRemainderSets remainderSets) {
+	public Collection<ASPRule> select(ScreenedRemainderSets remainderSets) {
 		if(remainderSets.isEmpty()) {
 			return remainderSets.getSourceBeliefBase();
 		}
@@ -58,7 +58,7 @@ public class MonotoneGlobalMaxichoiceSelectionFunction implements SelectionFunct
 	 * @see net.sf.tweety.logicprogramming.asplibrary.beliefdynamics.baserevision.SelectionFunction#select(net.sf.tweety.logicprogramming.asplibrary.beliefdynamics.baserevision.RemainderSets)
 	 */
 	@Override
-	public Collection<Rule> select(RemainderSets<Rule> remainderSets) {
+	public Collection<ASPRule> select(RemainderSets<ASPRule> remainderSets) {
 		if(remainderSets instanceof ScreenedRemainderSets) {
 			return select((ScreenedRemainderSets) remainderSets);
 		}

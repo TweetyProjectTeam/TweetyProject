@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 /**
  * This comparator imposes a total order on the set of extended logic programs by use
@@ -43,14 +43,14 @@ public class ELPLexicographicalComparator implements Comparator<Program> {
 	 */
 	@Override
 	public int compare(Program arg0, Program arg1) {
-		ArrayList<Rule> lhs = new ArrayList<Rule>(arg0);
+		ArrayList<ASPRule> lhs = new ArrayList<ASPRule>(arg0);
 		Collections.sort(lhs);
-		ArrayList<Rule> rhs = new ArrayList<Rule>(arg1);
+		ArrayList<ASPRule> rhs = new ArrayList<ASPRule>(arg1);
 		Collections.sort(rhs);
 		
 		// compare element-wise and return first comparator value != 0
-		Iterator<Rule> lhsiter = lhs.iterator();
-		Iterator<Rule> rhsiter = rhs.iterator();
+		Iterator<ASPRule> lhsiter = lhs.iterator();
+		Iterator<ASPRule> rhsiter = rhs.iterator();
 		while(lhsiter.hasNext() && rhsiter.hasNext()) {
 			int cmp = lhsiter.next().compareTo(rhsiter.next());
 			if(cmp != 0) {

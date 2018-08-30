@@ -29,19 +29,18 @@ import java.util.Set;
 
 import net.sf.tweety.beliefdynamics.CredibilityRevisionIterative;
 import net.sf.tweety.commons.util.Pair;
-import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
-import net.sf.tweety.lp.asp.reasoner.DLV;
-import net.sf.tweety.lp.asp.reasoner.Solver;
-import net.sf.tweety.lp.asp.reasoner.SolverException;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
+import net.sf.tweety.lp.asp.reasoner.DLVSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
-import net.sf.tweety.lp.asp.syntax.DLPAtom;
-import net.sf.tweety.lp.asp.syntax.DLPLiteral;
-import net.sf.tweety.lp.asp.syntax.DLPNeg;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPAtom;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
+import net.sf.tweety.lp.asp.syntax.StrictNegation;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,30 +62,30 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Tim Janus
  **/
-public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
+public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 	
 	/** reference to the logback logger instance */
 	private Logger LOG = LoggerFactory.getLogger(PreferenceHandling.class);
 	
 	private int maxInt;
 	
-	private Solver solver;
+	private ASPSolver solver;
 	
-	public PreferenceHandling(Solver solver) {
+	public PreferenceHandling(ASPSolver solver) {
 		this(solver, 5);
 	}
 	
-	public PreferenceHandling(Solver solver, int maxInt)  {
+	public PreferenceHandling(ASPSolver solver, int maxInt)  {
 		this.solver = solver;
 		this.maxInt = maxInt;
 	}
 	
-	public void setSolver(Solver solver) {
+	public void setSolver(ASPSolver solver) {
 		this.solver = solver;
 	}
 	
 	@Override
-	public Program revise(Collection<Rule> base, Collection<Rule> formulas) {
+	public Program revise(Collection<ASPRule> base, Collection<ASPRule> formulas) {
 		Program p1 = null;
 		Program p2 = null;
 		if(base instanceof Program) {
@@ -111,25 +110,25 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		Program pd2 = Program.defaultification(p2);
 		
 		// list of conflicting rules of the defaultificated programs
-		List<Pair<Rule, Rule>> conflictsDef = getConflictingRules(pd1, pd2);
+		List<Pair<ASPRule, ASPRule>> conflictsDef = getConflictingRules(pd1, pd2);
 
 		// Assumption: Index of rules in p equals index of rules pd.
 		// TODO: Proof if this assumption is really true.
-		List<Rule> pdr1 = new LinkedList<Rule>(pd1);
-		List<Rule> pdr2 = new LinkedList<Rule>(pd2);
-		List<Rule> pr1 = new LinkedList<Rule>(p1);
-		List<Rule> pr2 = new LinkedList<Rule>(p2);
+		List<ASPRule> pdr1 = new LinkedList<ASPRule>(pd1);
+		List<ASPRule> pdr2 = new LinkedList<ASPRule>(pd2);
+		List<ASPRule> pr1 = new LinkedList<ASPRule>(p1);
+		List<ASPRule> pr2 = new LinkedList<ASPRule>(p2);
 		Collections.sort(pdr1);
 		Collections.sort(pdr2);
 		Collections.sort(pr1);
 		Collections.sort(pr2);
 		
-		List<Pair<Rule, Rule>> conflicts = new LinkedList<Pair<Rule,Rule>>();
-		for(Pair<Rule, Rule> defConf : conflictsDef) {
+		List<Pair<ASPRule, ASPRule>> conflicts = new LinkedList<Pair<ASPRule,ASPRule>>();
+		for(Pair<ASPRule, ASPRule> defConf : conflictsDef) {
 			int index1 = pdr1.indexOf(defConf.getFirst());
 			int index2 = pdr2.indexOf(defConf.getSecond());
 			
-			conflicts.add(new Pair<Rule, Rule>(pr1.get(index1), pr2.get(index2)));
+			conflicts.add(new Pair<ASPRule, ASPRule>(pr1.get(index1), pr2.get(index2)));
 		}
 		
 		// get answer sets of combined defaultificated programs.
@@ -137,8 +136,8 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		concat.add(pd2);
 		AnswerSetList asDefault;
 		try {
-			asDefault = solver.computeModels(concat, maxInt);
-		} catch (SolverException e) {
+			asDefault = solver.computeAnswerSets(concat, maxInt);
+		} catch (Exception e) {
 			LOG.error("Cannot solve combined program:\n{}", concat.toString());
 			e.printStackTrace();
 			return null;
@@ -154,10 +153,10 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		// Let the rule R be the higher prioritized Rule in a conflict pair.
 		// First test if the body of R is in the answer set but the head is not in the answer set.
 		// If this is true mark the lower prioritized rule for remove.
-		Set<Rule> toRemoveCollection = new HashSet<Rule>();
-		for(Pair<Rule, Rule> conflict : conflicts) {
+		Set<ASPRule> toRemoveCollection = new HashSet<ASPRule>();
+		for(Pair<ASPRule, ASPRule> conflict : conflicts) {
 			for(AnswerSet as : asDefault) {
-				Set<DLPLiteral> literals = new HashSet<DLPLiteral>();
+				Set<ASPLiteral> literals = new HashSet<ASPLiteral>();
 				literals.addAll(conflict.getSecond().getLiterals());
 				literals.removeAll(conflict.getSecond().getConclusion());
 				
@@ -185,34 +184,34 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 	 * @param p2	The second program
 	 * @return		A list of all pairs representing the conflicting rules in p1 and p2.
 	 */
-	protected static List<Pair<Rule, Rule>> getConflictingRules(Program p1, Program p2) {
-		List<Pair<Rule, Rule>> reval = new LinkedList<Pair<Rule,Rule>>();
+	protected static List<Pair<ASPRule, ASPRule>> getConflictingRules(Program p1, Program p2) {
+		List<Pair<ASPRule, ASPRule>> reval = new LinkedList<Pair<ASPRule,ASPRule>>();
 		
-		Iterator<Rule> p1It = p1.iterator();
+		Iterator<ASPRule> p1It = p1.iterator();
 		while(p1It.hasNext()) {
-			Rule r1 = p1It.next();
+			ASPRule r1 = p1It.next();
 			if(r1.isConstraint())
 				continue;
 			
 			// Create negated head of rule 1.
-			DLPLiteral head1 = r1.getConclusion().iterator().next();
-			DLPLiteral negHead1 = null;
-			if(head1 instanceof DLPAtom) {
-				negHead1 = new DLPNeg(head1.getAtom());
-			} else if(head1 instanceof DLPNeg) {
+			ASPLiteral head1 = r1.getConclusion().iterator().next();
+			ASPLiteral negHead1 = null;
+			if(head1 instanceof ASPAtom) {
+				negHead1 = new StrictNegation(head1.getAtom());
+			} else if(head1 instanceof StrictNegation) {
 				negHead1 = head1.getAtom();
 			} else {
 				throw new RuntimeException("Head Atom must be normal or strict negated.");
 			}
 			
 			// try to find the negated head in the rules of the other program.
-			Iterator<Rule> p2it = p2.iterator();
+			Iterator<ASPRule> p2it = p2.iterator();
 			while(p2it.hasNext()) {
-				Rule r2 = p2it.next();
+				ASPRule r2 = p2it.next();
 				if(r2.isConstraint())
 					continue;
 				if(r2.getConclusion().iterator().next().equals(negHead1)) {
-					reval.add(new Pair<Rule, Rule>(r1, r2));
+					reval.add(new Pair<ASPRule, ASPRule>(r1, r2));
 				}
 			}
 		}
@@ -223,26 +222,26 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 	/*
 	 * Temporary functional test method.
 	 */
-	public static void main(String [] args) throws SolverException, ParseException {
+	public static void main(String [] args) throws ParseException {
 		// Example from Mirja diplom thesis.
 		String program1 = "a.\nb:-not c.";
 		String program2 = "-a:-not b.";
 		program1 = "sleep:-not tv_on.\nnight.\ntv_on.\nwatch_tv:-tv_on.";
 		program2 = "-tv_on:-power_failure.\npower_failure.";
 		
-		DLV clingo = new DLV("/home/janus/workspace/angerona/software/test/src/main/tools/solver/asp/dlv/dlv.bin");
+		DLVSolver clingo = new DLVSolver("/home/janus/workspace/angerona/software/test/src/main/tools/solver/asp/dlv/dlv.bin");
 		
 		InstantiateVisitor visitor = new InstantiateVisitor();
-		ASPParser parser = new ASPParser(new StringReader(program1));
+		ASPCore2Parser parser = new ASPCore2Parser(new StringReader(program1)); //TODO test with new parser
 		Program p1 = visitor.visit(parser.Program(), null);
 		parser.ReInit(new StringReader(program2));
 		Program p2 = visitor.visit(parser.Program(), null);
 		
 		System.out.println("P1:");
-		System.out.println(p1.toString()+"\n" + clingo.computeModels(p1, 5) + "\n");
+		System.out.println(p1.toString()+"\n" + clingo.computeAnswerSets(p1, 5) + "\n");
 		
 		System.out.println("P2:");
-		System.out.println(p2.toString()+"\n" + clingo.computeModels(p2, 5) + "\n");
+		System.out.println(p2.toString()+"\n" + clingo.computeAnswerSets(p2, 5) + "\n");
 		
 		PreferenceHandling ph = new PreferenceHandling(clingo);
 		Program r = ph.revise(p1, p2);		
@@ -250,6 +249,6 @@ public class PreferenceHandling extends CredibilityRevisionIterative<Rule> {
 		System.out.println("Revised:");
 		System.out.println(r.toString()+"\n\n");
 		
-		System.out.println(clingo.computeModels(r, 5));
+		System.out.println(clingo.computeAnswerSets(r, 5));
 	}
 }

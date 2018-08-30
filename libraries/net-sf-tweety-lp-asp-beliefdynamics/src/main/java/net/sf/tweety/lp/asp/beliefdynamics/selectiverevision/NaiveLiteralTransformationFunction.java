@@ -27,9 +27,9 @@ import net.sf.tweety.arg.lp.reasoner.LiteralReasoner;
 import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
 import net.sf.tweety.arg.lp.syntax.ArgumentationKnowledgeBase;
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction;
-import net.sf.tweety.lp.asp.syntax.DLPLiteral;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 /**
  * This class represents the naive transformation function
@@ -43,7 +43,7 @@ import net.sf.tweety.lp.asp.syntax.Rule;
  *
  */
 public class NaiveLiteralTransformationFunction implements
-		MultipleTransformationFunction<Rule> {
+		MultipleTransformationFunction<ASPRule> {
 	
 	private Program beliefSet;
 	private AttackStrategy attackRelation;
@@ -55,7 +55,7 @@ public class NaiveLiteralTransformationFunction implements
 	 * @param attackRelation the notion of attack used for attacking arguments
 	 * @param defenseRelation the notion of attack used to attack attacking arguments
 	 */
-	public NaiveLiteralTransformationFunction(Collection<Rule> beliefSet, AttackStrategy attackRelation, AttackStrategy defenseRelation) {
+	public NaiveLiteralTransformationFunction(Collection<ASPRule> beliefSet, AttackStrategy attackRelation, AttackStrategy defenseRelation) {
 		this.beliefSet = new Program(beliefSet);
 		this.attackRelation = attackRelation;
 		this.defenseRelation = defenseRelation;
@@ -66,14 +66,14 @@ public class NaiveLiteralTransformationFunction implements
 	 * @see net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction#transform(java.util.Collection)
 	 */
 	@Override
-	public Collection<Rule> transform(Collection<Rule> formulas) {
-		Set<Rule> result = new HashSet<Rule>();
+	public Collection<ASPRule> transform(Collection<ASPRule> formulas) {
+		Set<ASPRule> result = new HashSet<ASPRule>();
 
 		ArgumentationKnowledgeBase argkb = new ArgumentationKnowledgeBase(beliefSet);
 		LiteralReasoner reasoner = new LiteralReasoner(attackRelation, defenseRelation);
-		for(Rule r : formulas) {
+		for(ASPRule r : formulas) {
 			if(r.isFact()) {
-				DLPLiteral head = r.getConclusion().iterator().next();
+				ASPLiteral head = r.getConclusion().iterator().next();
 				if(reasoner.isOverruled(argkb,head.complement())) {
 					result.add(r);
 				}
@@ -87,8 +87,8 @@ public class NaiveLiteralTransformationFunction implements
 	 * @param rule a single fact
 	 * @return the fact if its negation is not acceptable for the given attack-relations and belief base, an empty collection otherwise
 	 */
-	public Collection<Rule> transform(Rule rule) {
-		LinkedList<Rule> in = new LinkedList<Rule>();
+	public Collection<ASPRule> transform(ASPRule rule) {
+		LinkedList<ASPRule> in = new LinkedList<ASPRule>();
 		in.add(rule);
 		return transform(in);
 	}
