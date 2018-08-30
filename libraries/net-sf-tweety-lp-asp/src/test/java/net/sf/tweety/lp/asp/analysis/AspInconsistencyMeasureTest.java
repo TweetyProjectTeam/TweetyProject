@@ -23,14 +23,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import net.sf.tweety.lp.asp.reasoner.Clingo;
-import net.sf.tweety.lp.asp.reasoner.Solver;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
+import net.sf.tweety.lp.asp.reasoner.ClingoSolver;
 import net.sf.tweety.lp.asp.reasoner.SolverException;
-import net.sf.tweety.lp.asp.syntax.DLPAtom;
-import net.sf.tweety.lp.asp.syntax.DLPNeg;
-import net.sf.tweety.lp.asp.syntax.DLPNot;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPAtom;
+import net.sf.tweety.lp.asp.syntax.StrictNegation;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.DefaultNegation;
 
 /**
  * Tests the functionality of PmInconsistencyMeasure 
@@ -39,13 +39,13 @@ import net.sf.tweety.lp.asp.syntax.Rule;
  */
 public class AspInconsistencyMeasureTest {
 	
-	public static Solver solver;
+	public static ASPSolver solver;
 	public static PmInconsistencyMeasure mpm;
 	public static SdInconsistencyMeasure msd;
 	
 	@BeforeClass
 	public static void init() {
-		solver = new Clingo("C:/app/clingo/clingo.exe");
+		solver = new ClingoSolver("C:/app/clingo/clingo.exe");
 		mpm = new PmInconsistencyMeasure(solver);
 		msd = new SdInconsistencyMeasure(solver);
 	}
@@ -54,17 +54,17 @@ public class AspInconsistencyMeasureTest {
 	public void test1() throws SolverException{
 		// Ex. 1a of [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]
 		Program p3 = new Program();
-		DLPAtom a1 = new DLPAtom("a1");
-		DLPAtom b = new DLPAtom("b");
-		DLPAtom c = new DLPAtom("c");
-		DLPAtom d = new DLPAtom("d");
+		ASPAtom a1 = new ASPAtom("a1");
+		ASPAtom b = new ASPAtom("b");
+		ASPAtom c = new ASPAtom("c");
+		ASPAtom d = new ASPAtom("d");
 		
-		p3.add(new Rule(a1,new DLPNot(b)));
-		p3.add(new Rule(new DLPNeg(a1),new DLPNot(b)));
-		p3.add(new Rule(a1,new DLPNot(c)));
-		p3.add(new Rule(new DLPNeg(a1),new DLPNot(c)));
-		p3.add(new Rule(a1,new DLPNot(d)));
-		p3.add(new Rule(new DLPNeg(a1),new DLPNot(d)));
+		p3.add(new ASPRule(a1,new DefaultNegation(b)));
+		p3.add(new ASPRule(new StrictNegation(a1),new DefaultNegation(b)));
+		p3.add(new ASPRule(a1,new DefaultNegation(c)));
+		p3.add(new ASPRule(new StrictNegation(a1),new DefaultNegation(c)));
+		p3.add(new ASPRule(a1,new DefaultNegation(d)));
+		p3.add(new ASPRule(new StrictNegation(a1),new DefaultNegation(d)));
 		
 		assertEquals(new Double(3), mpm.inconsistencyMeasure(p3));
 		assertEquals(new Double(3), msd.inconsistencyMeasure(p3));
@@ -72,12 +72,12 @@ public class AspInconsistencyMeasureTest {
 		// Ex. 1b of [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]
 		Program p4 = new Program();
 		
-		p4.add(new Rule(a1,new DLPNot(b)));
-		p4.add(new Rule(new DLPNeg(a1),new DLPNot(b)));
-		p4.add(new Rule(a1,new DLPNot(b)));
-		p4.add(new Rule(new DLPNeg(a1),new DLPNot(b)));
-		p4.add(new Rule(a1,new DLPNot(b)));
-		p4.add(new Rule(new DLPNeg(a1),new DLPNot(b)));
+		p4.add(new ASPRule(a1,new DefaultNegation(b)));
+		p4.add(new ASPRule(new StrictNegation(a1),new DefaultNegation(b)));
+		p4.add(new ASPRule(a1,new DefaultNegation(b)));
+		p4.add(new ASPRule(new StrictNegation(a1),new DefaultNegation(b)));
+		p4.add(new ASPRule(a1,new DefaultNegation(b)));
+		p4.add(new ASPRule(new StrictNegation(a1),new DefaultNegation(b)));
 				
 		assertEquals(new Double(1), mpm.inconsistencyMeasure(p4));
 		assertEquals(new Double(1), msd.inconsistencyMeasure(p4));

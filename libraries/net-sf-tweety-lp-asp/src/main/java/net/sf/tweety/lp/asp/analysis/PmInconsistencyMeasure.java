@@ -27,75 +27,75 @@ import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.lp.asp.reasoner.Solver;
-import net.sf.tweety.lp.asp.reasoner.SolverException;
-import net.sf.tweety.lp.asp.syntax.DLPAtom;
-import net.sf.tweety.lp.asp.syntax.DLPNeg;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 import net.sf.tweety.lp.asp.syntax.Program;
-import net.sf.tweety.lp.asp.syntax.Rule;
+import net.sf.tweety.lp.asp.syntax.ASPAtom;
+import net.sf.tweety.lp.asp.syntax.StrictNegation;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
 
 /**
- * This class implements the inconsistency measure $I_\pm$ from
- * [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]<br/>
+ * This class implements the inconsistency measure $I_\pm$ from [Ulbricht,
+ * Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA
+ * 2016]<br/>
  * The implememtation is a straightforward brute-force search approach.
  * 
  * @author Matthias Thimm
  *
  */
-public class PmInconsistencyMeasure implements InconsistencyMeasure<Program>{
+public class PmInconsistencyMeasure implements InconsistencyMeasure<Program> {
 
 	/** The ASP solver used for determining inconsistency */
-	private Solver solver;
-		
+	private ASPSolver solver;
+
 	/**
-	 * Creates a new inconsistency measure based on the given
-	 * solver. 
-	 * @param solver some ASP solver
+	 * Creates a new inconsistency measure based on the given solver.
+	 * 
+	 * @param solver
+	 *            some ASP solver
 	 */
-	public PmInconsistencyMeasure(Solver solver){
+	public PmInconsistencyMeasure(ASPSolver solver) {
 		this.solver = solver;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.commons.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.commons.BeliefBase)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.logics.commons.analysis.InconsistencyMeasure#
+	 * inconsistencyMeasure(net.sf.tweety.commons.BeliefBase)
 	 */
 	@Override
 	public Double inconsistencyMeasure(Program beliefBase) {
-		if(!beliefBase.isGround())
+		if (!beliefBase.isGround())
 			throw new RuntimeException("Measure only defined for ground programs.");
-		try{
-			if(solver.computeModels(beliefBase, 1).size() > 0)
-				return 0d;
-			int min = Integer.MAX_VALUE;
-			SubsetIterator<Rule> it_del = new IncreasingSubsetIterator<Rule>(beliefBase);
-			Set<Rule> allFacts = new HashSet<Rule>();
-			FolSignature sig = beliefBase.getSignature();
-			for(FOLAtom a: new HerbrandBase(sig).getAtoms()){
-				allFacts.add(new Rule(new DLPAtom(a)));
-				allFacts.add(new Rule(new DLPNeg(new DLPAtom(a))));
-			}			
-			while(it_del.hasNext()){
-				SubsetIterator<Rule> it_add  = new IncreasingSubsetIterator<Rule>(allFacts);
-				Set<Rule> del = it_del.next();
-				// if we already have a result better than what we remove now, we are finished
-				if(del.size() > min)
-					return new Double(min);
-				while(it_add.hasNext()){					
-					Set<Rule> add = it_add.next();					
-					// only test if we can improve a previous change
-					if(del.size() + add.size() < min){
-						Program p = beliefBase.clone();					
-						p.removeAll(del);
-						p.addAll(add);
-						if(solver.computeModels(p, 1).size() > 0)
-							min = del.size() + add.size();
-					}
+
+		if (solver.computeAnswerSets(beliefBase, 1).size() > 0)
+			return 0d;
+		int min = Integer.MAX_VALUE;
+		SubsetIterator<ASPRule> it_del = new IncreasingSubsetIterator<ASPRule>(beliefBase);
+		Set<ASPRule> allFacts = new HashSet<ASPRule>();
+		FolSignature sig = beliefBase.getSignature();
+		for (FOLAtom a : new HerbrandBase(sig).getAtoms()) {
+			allFacts.add(new ASPRule(new ASPAtom(a)));
+			allFacts.add(new ASPRule(new StrictNegation(new ASPAtom(a))));
+		}
+		while (it_del.hasNext()) {
+			SubsetIterator<ASPRule> it_add = new IncreasingSubsetIterator<ASPRule>(allFacts);
+			Set<ASPRule> del = it_del.next();
+			// if we already have a result better than what we remove now, we are finished
+			if (del.size() > min)
+				return new Double(min);
+			while (it_add.hasNext()) {
+				Set<ASPRule> add = it_add.next();
+				// only test if we can improve a previous change
+				if (del.size() + add.size() < min) {
+					Program p = beliefBase.clone();
+					p.removeAll(del);
+					p.addAll(add);
+					if (solver.computeAnswerSets(p, 1).size() > 0)
+						min = del.size() + add.size();
 				}
 			}
-			return new Double(min);
-		}catch (SolverException e) {
-			throw new RuntimeException(e);
 		}
+		return new Double(min);
 	}
-
 }

@@ -14,212 +14,250 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package net.sf.tweety.lp.asp.syntax;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class represents an aggregate function. Aggregates
- * are functions like sum, times, count over a symbolic set,
- * a set of literals and local variables.
- * 
- * @todo use an enum for relations instead a string 
- * @todo implement complement() 
+ * are functions like count, sum, max and min that
+ * range over a set of terms and literals.
  * 
  * @author Tim Janus
  * @author Thomas Vengels
+ * @author Anna Gessler
  */
-public class Aggregate extends DLPElementAdapter implements DLPElement {
-
-	protected SymbolicSet	symSet = null;
-	protected Term<?> leftGuard = null, rightGuard = null;
-	protected String leftOp = null, rightOp = null;
-	protected String functor;
+public class Aggregate implements ASPBodyElement {
 	
-	public Aggregate(Term<?> leftGuard, 
-			String leftOp, String functor, SymbolicSet ss) {
-		this(leftGuard, leftOp, functor, ss, null, null);
+	/**
+	 * The aggregate function.
+	 */
+	private ASPOperator.AggregateFunction function;
+	
+	/**
+	 * The elements of the Aggregate.
+	 */
+	private List<AggregateElement> aggregateElements; 
+	
+	/** 
+	 * Aggregate relation
+	 */
+	private ASPOperator.BinaryOperator relation;
+	private Term<?> relationTerm; 
+	
+	/**
+	 * Creates a new Aggregate with the given aggregate function
+	 * and the given aggregate elements.
+	 * @param func an aggregate function
+	 * @param elements list of aggregate elements
+	 */
+	public Aggregate(ASPOperator.AggregateFunction func, List<AggregateElement> elements) {
+		this();
+		this.aggregateElements = elements;
+		this.function = func;
 	}
 	
-	public Aggregate(String functor, SymbolicSet ss,
-			String rightOp, Term<?> rightGuard) {
-		this(null, null, functor, ss, rightOp, rightGuard);
+	/**
+	 * Creates a new Aggregate with the given aggregate function, 
+	 * the given aggregate elements, and the given 
+	 * aggregate relation and term.
+	 * 
+	 * @param func an aggregate function
+	 * @param elements list of aggregate elements
+	 */
+	public Aggregate(ASPOperator.AggregateFunction func, List<AggregateElement> elements, ASPOperator.BinaryOperator relation, Term<?> t) {
+		this.aggregateElements = elements;
+		this.function = func;
+		this.relation = relation;
+		this.relationTerm = t;
 	}
 	
-	public Aggregate(Term<?> leftGuard, 
-			String leftOp, String functor, SymbolicSet ss,
-			String rightOp, Term<?> rightGuard) {
-		this.functor = functor;
-		this.leftOp = leftOp;
-		this.leftGuard = leftGuard;
-		this.rightOp = rightOp;
-		this.rightGuard = rightGuard;
-		this.symSet = ss;
-	}
-	
-	public Aggregate(String functor, SymbolicSet symSet) {
-		this.functor = (functor);
-		this.symSet = symSet;
-	}
-	
+	/**
+	 * Copy-Constructor
+	 * @param other
+	 */
 	public Aggregate(Aggregate other) {
-		this.functor = other.functor;
-		this.leftOp = other.leftOp;
-		this.rightOp = other.rightOp;
-	    if (other.hasLeftGuard())
-	    	this.leftGuard = (Term<?>)other.leftGuard.clone();
-	    if(other.hasRightGuard())
-	    	this.rightGuard = (Term<?>)other.rightGuard.clone();
-	    if(other.symSet!=null)
-	    	this.symSet = (SymbolicSet)other.symSet.clone();
+		this(other.getFunction(),other.getAggregateElements(),other.getRelation(),other.getRelationTerm());
 	}
 	
-	
-	public boolean	hasLeftGuard() {
-		return	leftGuard != null;
+	/**
+	 * Default constructor.
+	 */
+	public Aggregate() {
+		this.relation = null;
+		this.function = null;
+		this.aggregateElements = new LinkedList<AggregateElement>();
+		this.relationTerm = null;
 	}
-	
-	public boolean hasRightGuard() {
-		return	rightGuard != null;
-	}
-	
-	public Term<?>	getLeftGuard() {
-		return leftGuard;
-	}
-	
-	public String getLeftOperator() {
-		return leftOp;
-	}
-	
-	public Term<?> getRightGuard() {
-		return rightGuard;
-	}
-	
-	public String getRightOperator() {
-		return rightOp;
-	}
-	
-	public void setLeftGuard(Term<?> guard, String rel) {
-		this.leftGuard = guard;
-		this.leftOp = rel;
-	}
-	
-	public void setRightGuard(Term<?> guard, String rel) {
-		this.rightGuard = guard;
-		this.rightOp = rel;
-	}
-	
-	public String getFunctor() {
-		return this.functor;
-	}
-	
-	public SymbolicSet getSymbolicSet() {
-		return this.symSet;
-	}
-	
-	@Override
+
+	@Override 
 	public String toString() {
-		String ret = "";
-		if (this.leftGuard != null) {
-			ret += this.leftGuard + " " + this.leftOp + " ";
+		String res = function.toString() + "{";
+		
+		for (int i = 0; i < aggregateElements.size()-1; i++) {
+			res += aggregateElements.get(i) + " ; ";
 		}
-		ret += functor + this.symSet;
-		if (this.rightGuard != null) {
-			ret += " " + this.rightOp + " " + this.rightGuard;
-		}
-		return ret;
+		res += aggregateElements.get(aggregateElements.size()-1) + "}";	
+		
+		if (this.relation != null && relationTerm != null)
+			res += relation.toString() + relationTerm.toString();	
+		
+		return res;
 	}
 
 	@Override
-	/** @todo implement correctly */ 	
-	//TODO
-	public SortedSet<DLPLiteral> getLiterals() {
-		return new TreeSet<DLPLiteral>();
+	public SortedSet<ASPLiteral> getLiterals() {
+		//TODO
+		throw new UnsupportedOperationException("TODO");
 	}
 
 	@Override
-	public boolean isGround() {
-		return false;
+	public Set<Predicate> getPredicates() {
+		Set<Predicate> predicates = new HashSet<Predicate>();
+		for (AggregateElement e : aggregateElements)
+			predicates.addAll(e.getPredicates());
+		return predicates;
 	}
-	
+
+	@Override
+	public Set<ASPAtom> getAtoms() {
+		Set<ASPAtom> atoms = new HashSet<ASPAtom>();
+		for (AggregateElement e : aggregateElements)
+			atoms.addAll(e.getAtoms());
+		return atoms;
+	}
+
+	@Override
+	public ASPElement substitute(Term<?> t, Term<?> v) {
+		//TODO
+		throw new UnsupportedOperationException("TODO");
+	}
+
+	@Override
+	public FolSignature getSignature() {
+		FolSignature sig = new FolSignature();
+		for (AggregateElement e : aggregateElements)
+			sig.add(e.getSignature());
+		if (relationTerm != null)
+			sig.add(relationTerm);
+		return sig;
+	}
+
 	@Override
 	public Aggregate clone() {
 		return new Aggregate(this);
 	}
 
 	@Override
-	public Set<DLPPredicate> getPredicates() {
-		// TODO Auto-generated method stub
-		return null;
+	public ComplexLogicalFormula substitute(Map<? extends Term<?>, ? extends Term<?>> map)
+			throws IllegalArgumentException {
+		//TODO
+		throw new UnsupportedOperationException("TODO");
+	}
+
+	@Override
+	public ComplexLogicalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		//TODO
+		throw new UnsupportedOperationException("TODO");
+	}
+
+	@Override
+	public boolean isGround() {
+		for (AggregateElement e : aggregateElements)
+			if (!e.isGround())
+				return false;
+		if (relationTerm != null && relationTerm.containsTermsOfType(Variable.class))
+			return false;
+		return true;
+	}
+
+	@Override
+	public boolean isWellFormed() {
+		//TODO
+		throw new UnsupportedOperationException("TODO");
+	}
+
+	@Override
+	public Class<? extends Predicate> getPredicateCls() {
+		return Predicate.class;
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return false;
 	}
 
 	@Override
 	public Set<Term<?>> getTerms() {
-		Set<Term<?>> reval = new HashSet<Term<?>>();
-		if(leftGuard != null)
-			reval.add(leftGuard);
-		if(rightGuard != null)
-			reval.add(rightGuard);
-		return reval;
+		Set<Term<?>> terms = new HashSet<Term<?>>();
+		for (AggregateElement e : aggregateElements)
+			terms.addAll(e.getTerms());
+		if (relationTerm != null)
+			terms.add(relationTerm);
+		return terms;
 	}
 
 	@Override
-	public Set<DLPAtom> getAtoms() {
-		return new HashSet<DLPAtom>();
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		Set<C> terms = new HashSet<C>();
+		for (AggregateElement e : aggregateElements)
+			terms.addAll(e.getTerms(cls));
+		return terms;
 	}
 
 	@Override
-	public Aggregate substitute(Term<?> t, Term<?> v) {
-		Aggregate reval = new Aggregate(this);
-		if(t.equals(leftGuard)) {
-			reval.leftGuard = v;
-		}
-		if(t.equals(rightGuard)) {
-			reval.rightGuard = v;
-		}
-		return reval;
-	}
-
-	@Override
-	public FolSignature getSignature() {
-		FolSignature reval = new FolSignature();
-		reval.add(leftGuard);
-		reval.add(rightGuard);
-		return reval;
+	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
+		for (AggregateElement e : aggregateElements)
+			if (e.containsTermsOfType(cls))
+				return true;
+		if (relationTerm != null && relationTerm.containsTermsOfType(cls))
+			return true;
+		return false;
 	}
 	
-	@Override
-	public int hashCode() {
-		int sum = symSet.hashCode() + functor.hashCode();
-		sum += leftGuard != null ? leftGuard.hashCode() : 0;
-		sum += leftOp != null ? leftOp.hashCode() : 0;
-		sum += rightGuard != null ? rightGuard.hashCode() : 0;
-		sum += rightOp != null ? rightOp.hashCode() : 0;
-		return sum * 13;
+	public List<AggregateElement> getAggregateElements() {
+		return aggregateElements;
+	}
+
+	public void setAggregateElements(List<AggregateElement> aggregateElements) {
+		this.aggregateElements = aggregateElements;
+	}
+
+	public ASPOperator.AggregateFunction getFunction() {
+		return function;
+	}
+
+	public void setFunction(ASPOperator.AggregateFunction function) {
+		this.function = function;
 	}
 	
-	@Override
-	public boolean equals(Object other) {
-		if(!(other instanceof Aggregate)) {
-			return false;
-		}
-		Aggregate o = (Aggregate)other;
-		if(!functor.equals(o.functor) ||
-			!symSet.equals(o.symSet)) {
-			return false;
-		}
-		
-		return leftGuard == null ? o.leftGuard == null : leftGuard.equals(o.leftGuard) &&
-				rightGuard == null ? o.rightGuard == null : rightGuard.equals(o.rightGuard) &&
-				leftOp == null ? o.leftOp == null : leftOp.equals(o.leftOp) &&
-				rightOp == null ? o.rightOp == null : rightOp.equals(o.rightOp);
+	public ASPOperator.BinaryOperator getRelation() {
+		return relation;
 	}
+
+	public void setRelation(ASPOperator.BinaryOperator relation) {
+		this.relation = relation;
+	}
+
+	public Term<?> getRelationTerm() {
+		return relationTerm;
+	}
+
+	public void setRelationTerm(Term<?> relationTerm) {
+		this.relationTerm = relationTerm;
+	}
+
 }

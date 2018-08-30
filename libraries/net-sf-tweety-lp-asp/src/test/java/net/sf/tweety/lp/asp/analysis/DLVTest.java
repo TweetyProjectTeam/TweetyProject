@@ -30,9 +30,9 @@ import java.io.StringReader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
-import net.sf.tweety.lp.asp.reasoner.DLV;
+import net.sf.tweety.lp.asp.reasoner.DLVSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
 
@@ -45,17 +45,17 @@ import net.sf.tweety.lp.asp.syntax.Program;
  */
 public class DLVTest {
 	
-	static ASPParser parser;
+	static ASPCore2Parser parser;
 	
 	static InstantiateVisitor visitor;
 	
-	static DLV solver;
+	static DLVSolver solver;
 	
 	@BeforeClass
 	public static void init() {
 		visitor = new InstantiateVisitor();
-		parser = new ASPParser(new StringReader(""));
-		solver = new DLV("path/to/dlv");
+		parser = new ASPCore2Parser(new StringReader(""));
+		solver = new DLVSolver("path/to/dlv");
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class DLVTest {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex1.asp"));
 		parser.ReInit(fistr);
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.computeModels(p, 1000);
+		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 3);
@@ -74,7 +74,7 @@ public class DLVTest {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex2.asp"));
 		parser.ReInit(fistr);
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.computeModels(p, 1000);
+		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
 		
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
@@ -86,7 +86,7 @@ public class DLVTest {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex3.asp"));
 		parser.ReInit(fistr);
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.computeModels(p, 1000);
+		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
 		
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
@@ -98,7 +98,7 @@ public class DLVTest {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex4.asp"));
 		parser.ReInit(fistr);
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.computeModels(p, 1000);
+		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 5);

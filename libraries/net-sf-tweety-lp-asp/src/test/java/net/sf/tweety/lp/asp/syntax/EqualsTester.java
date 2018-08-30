@@ -34,27 +34,27 @@ import org.junit.Test;
 public class EqualsTester {
 	@Test
 	public void testELPAtom() {
-		DLPAtom a1 = new DLPAtom("test", new NumberTerm(1));
-		DLPAtom a2 = new DLPAtom("test", new NumberTerm(1), new NumberTerm(2));
+		ASPAtom a1 = new ASPAtom("test", new NumberTerm(1));
+		ASPAtom a2 = new ASPAtom("test", new NumberTerm(1), new NumberTerm(2));
 		
 		assertEquals(false, a1.equals(a2));
-		assertEquals(true, a1.equals(new DLPAtom("test", new NumberTerm(1))));
-		assertEquals(false, a1.equals(new DLPAtom("test", new NumberTerm(2))));
+		assertEquals(true, a1.equals(new ASPAtom("test", new NumberTerm(1))));
+		assertEquals(false, a1.equals(new ASPAtom("test", new NumberTerm(2))));
 	}
 	
 	@Test
 	public void testCloneEqualAtom() {
-		DLPAtom atom = new DLPAtom("blub", new Variable("X"), new Constant("y"), 
+		ASPAtom atom = new ASPAtom("blub", new Variable("X"), new Constant("y"), 
 				new FunctionalTerm(new Functor("test"), new NumberTerm(1), new Variable("X"), new Constant("x")));
 		assertEquals(true, atom.equals(atom.clone())); 
 	}
 	
 	@Test
 	public void testRule() {
-		Rule r1 = new Rule();
-		r1.setConclusion(new DLPAtom("test"));
+		ASPRule r1 = new ASPRule();
+		r1.setConclusion(new ASPAtom("test"));
 		
-		Rule r2 = new Rule(new DLPAtom("test"), new DLPAtom("not_released"));
+		ASPRule r2 = new ASPRule(new ASPAtom("test"), new ASPAtom("not_released"));
 		assertEquals(false, r1.equals(r2));
 	}
 	
@@ -64,17 +64,17 @@ public class EqualsTester {
 		Program p2 = new Program();
 		
 		assertEquals(true, p1.equals(p2));
-		p1.add(new Rule(new DLPAtom("test")));
+		p1.add(new ASPRule(new ASPAtom("test")));
 		assertEquals(false, p1.equals(p2));
 	}
 	
 	@Test
 	public void testAddAll() {
-		Rule r1 = new Rule(new DLPAtom("a1"));
-		Rule r2 = new Rule(new DLPAtom("a2"));
-		Rule r3 = new Rule(new DLPAtom("a3"));
+		ASPRule r1 = new ASPRule(new ASPAtom("a1"));
+		ASPRule r2 = new ASPRule(new ASPAtom("a2"));
+		ASPRule r3 = new ASPRule(new ASPAtom("a3"));
 		
-		List<Rule> rules = new LinkedList<Rule>();
+		List<ASPRule> rules = new LinkedList<ASPRule>();
 		rules.add(r1);
 		rules.add(r2);
 		rules.add(r3);

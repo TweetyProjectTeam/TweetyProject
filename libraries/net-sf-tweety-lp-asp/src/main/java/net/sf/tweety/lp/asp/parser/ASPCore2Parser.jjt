@@ -1,0 +1,423 @@
+options {
+  MULTI=true;
+  VISITOR=true;
+  NODE_DEFAULT_VOID=true;
+  STATIC=false;
+}
+
+PARSER_BEGIN(ASPCore2Parser)
+
+import java.io.*;
+import net.sf.tweety.lp.asp.syntax.*;
+import net.sf.tweety.lp.asp.semantics.*;
+
+public class ASPCore2Parser {
+ private static ASPCore2Parser oneThreadParser = new ASPCore2Parser(new StringReader(""));
+
+ private static InstantiateVisitor visitor = new InstantiateVisitor();
+
+ public static Program parseProgram(String program) throws ParseException
+  {
+    return parseProgram(new StringReader(program));
+  }
+  
+ public static Program parseProgram(Reader reader) throws ParseException
+  {
+    oneThreadParser.ReInit(reader);
+    return visitor.visit(oneThreadParser.Program(), null);
+  }
+  
+    public static AnswerSet parseAnswerSet(String answerSet) throws ParseException
+  {
+    return parseAnswerSet(new StringReader(answerSet));
+  }
+
+  public static AnswerSet parseAnswerSet(Reader reader) throws ParseException
+  {
+    oneThreadParser.ReInit(reader);
+    return visitor.visit(oneThreadParser.AnswerSet(), null);
+  }
+}
+  
+PARSER_END(ASPCore2Parser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| <COMMENT: "%" ( (~["*","\n"] ~["\n"])* )?"\n" >
+| <MULTI_LINE_COMMENT: "%" (~["*"] | "*" ~["%"])*"*%" >
+}
+
+TOKEN :
+{
+   <NAF:                 "not">
+|   <ID:                  ["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* >
+|  <VARIABLE:            ["A"-"Z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* >
+|  <STRING:              "\"" ( (~["\\", "\""]) | "\\\"" )* "\"" >
+|  <NUMBER:              "0" | ["1"-"9"](["0"-"9"])* >
+|  <ANONYMOUS_VARIABLE:  "_">
+|  <DOT:                 ".">
+|  <COMMA:               ",">
+|  <QUERY_MARK:          "?">
+|  <COLON:               ":">
+|  <SEMICOLON:           ";">
+|  <OR:                  "|">
+|  <CONS:                ":-">
+|  <WCONS:               ":~">
+|  <PLUS:                "+">
+|  <MINUS:               "-">
+|  <TIMES:               "*">
+|  <DIV:                 "/">
+|  <AT:                  "@">
+|  <PAREN_OPEN:          "(">
+|  <PAREN_CLOSE:         ")">
+|  <SQUARE_OPEN:         "[">
+|  <SQUARE_CLOSE:        "]">
+|  <CURLY_OPEN:          "{">
+|  <CURLY_CLOSE:         "}">
+|  <EQUAL:               "=">
+|  <UNEQUAL:             "<>" | "!=">
+|  <LESS:                "<">
+|  <GREATER:             ">">
+|  <LESS_OR_EQ:          "<=">
+|  <GREATER_OR_EQ:       ">=">
+|  <AGGREGATE_COUNT:     "#count">
+|  <AGGREGATE_MAX:       "#max">
+|  <AGGREGATE_MIN:       "#min">
+|  <AGGREGATE_SUM:       "#sum">
+|  <MINIMIZE:            "#minimi[zs]e">
+|  <MAXIMIZE:            "#maximi[zs]e">
+}
+
+ASTAnswerSet AnswerSet() #AnswerSet:
+{}
+  {
+     (ClassicalLiteral())*
+     { return jjtThis; }
+  }
+  
+ASTProgram Program() #Program:
+{}
+  {
+     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT>) Statements()] 
+     [Query()] 
+     <EOF>)
+     { return jjtThis; }
+  }
+
+ASTRuleList Statements() #RuleList:
+{}
+{
+  (LOOKAHEAD(Statement()) Statement())+ 
+   { return jjtThis; }
+}
+
+ASTQuery Query() #Query:
+{}
+{
+  ( ClassicalLiteral() <QUERY_MARK> )
+  { return jjtThis; }
+}
+
+ASTRule Statement() #Rule:
+{}
+{
+  (
+  (<CONS> [Body()] <DOT>)
+  | (Head() [<CONS> [Body()]] <DOT>)
+  | (<WCONS> [Body()] <DOT> <SQUARE_OPEN> WeightAtLevel() <SQUARE_CLOSE>)
+  | (Optimize() <DOT>)
+  )
+  
+  { return jjtThis; }
+}
+
+ASTHead Head() #Head:
+{}
+{
+  (
+  LOOKAHEAD([Term() Binop()] <CURLY_OPEN>) (Choice())
+  | (Disjunction())
+  )
+  
+  { return jjtThis; }
+}
+
+ASTBodyList Body() #BodyList:
+{}
+{
+  (
+  (LOOKAHEAD(Body1() <COMMA>) Body1() <COMMA>)* Body1()
+  )
+  { return jjtThis; }
+}
+
+ASTBody Body1() #Body: {}
+{
+  (
+  LOOKAHEAD([<NAF>] [Term() Binop()] AggregateFunction()) [<NAF>] Aggregate()
+  | NAFLiteral()
+  )
+  
+  { return jjtThis; }
+}
+
+ASTHeadElementsList Disjunction() #HeadElementsList:
+{}
+{
+  (
+  (LOOKAHEAD(ClassicalLiteral() <OR>) ClassicalLiteral() <OR>)* ClassicalLiteral()
+  )
+  { return jjtThis; }
+}
+
+ASTChoice Choice() #Choice:
+{}
+{
+  (
+  [Term() Binop()] <CURLY_OPEN> [ChoiceElements()] <CURLY_CLOSE> [Binop() Term()]
+  )
+  { return jjtThis; }
+}
+
+ASTChoiceElementList ChoiceElements() #ChoiceElementList:
+{}
+{
+  (
+  (LOOKAHEAD(ChoiceElement() <SEMICOLON>) ChoiceElement() <SEMICOLON>)* ChoiceElement()
+  )
+  { return jjtThis; }
+}
+
+ASTChoiceElement ChoiceElement() #ChoiceElement:
+{}
+{
+  ( ClassicalLiteral() [<COLON> [NAFLiterals()]] )
+  { return jjtThis; }
+}
+
+ASTAggregate Aggregate() #Aggregate:
+{}
+{
+  (
+  [Term() Binop()] AggregateFunction() <CURLY_OPEN> AggregateElements()
+  <CURLY_CLOSE> [Binop() Term()]
+  )
+  { return jjtThis; }
+}
+
+ASTAggrElementList AggregateElements() #AggrElementList:
+{}
+{
+  (
+  (LOOKAHEAD(AggregateElement() <SEMICOLON>) AggregateElement() <SEMICOLON>)* AggregateElement()
+  )
+  { return jjtThis; }
+}
+
+ASTAggrElement AggregateElement() #AggrElement:
+{}
+{
+  (
+  [Terms()] [<COLON> [NAFLiterals()]]
+  )
+  { return jjtThis; }
+}
+
+String AggregateFunction() #AggrFunc:
+{}
+{
+  ( <AGGREGATE_COUNT>
+  | <AGGREGATE_MAX>
+  | <AGGREGATE_MIN>
+  | <AGGREGATE_SUM> )
+ 
+  { 
+  	jjtThis.func(this.token.image);
+  	return this.token.image; }
+}
+
+ASTOpt Optimize() #Opt:
+{}
+{
+  (
+  OptimizeFunction() <CURLY_OPEN> [OptimizeElements()] <CURLY_CLOSE>
+  )
+   { return jjtThis; }
+}
+
+ASTOptElementList OptimizeElements() #OptElementList :
+{}
+{
+  (
+  (LOOKAHEAD(OptimizeElement() <SEMICOLON>) OptimizeElement() <SEMICOLON>)* OptimizeElement() 
+  )
+  { return jjtThis; }
+}
+
+ASTOptElement OptimizeElement() #OptElement:
+{}
+{
+  (WeightAtLevel() [<COLON> [NAFLiterals()]])
+   { return jjtThis; }
+}
+
+String OptimizeFunction() #OptFunc:
+{}
+{
+  ( (<MAXIMIZE> {jjtThis.maximize(true);}) | (<MINIMIZE>) )
+  
+  { 
+  	jjtThis.func(this.token.image);
+  	return this.token.image; }
+}
+
+ASTWeight WeightAtLevel() #Weight:
+{}
+{
+   ( Term() [<AT> Term() {jjtThis.hasLevel(true);}] [<COMMA> Terms()] )
+   { return jjtThis; }
+}
+
+ASTNAFLiteralList NAFLiterals() #NAFLiteralList:
+{}
+{
+  (
+  (LOOKAHEAD(NAFLiteral() <COMMA>) NAFLiteral() <COMMA>)* NAFLiteral()
+  )
+  
+   { return jjtThis; }
+}
+
+ASTNAFLiteral NAFLiteral() #NAFLiteral:
+{}
+{
+ ( 
+ LOOKAHEAD(Term() Binop()) BuiltinAtom()
+ | [<NAF>{jjtThis.nafneg(true);}] ClassicalLiteral()
+ )
+ 
+  { return jjtThis; }
+}
+ASTAtom ClassicalLiteral() #Atom:
+{}
+{
+  ( 
+  [(<MINUS>{jjtThis.neg(true);})] Identifier() [<PAREN_OPEN> [Terms()] <PAREN_CLOSE>] 
+  )
+  { return jjtThis; }
+}
+
+ASTBuiltInAtom BuiltinAtom() #BuiltInAtom :
+{}
+{
+  (
+  Term() Binop() Term()
+  )
+  { return jjtThis; }
+}
+
+String Binop() #Binop:
+{}
+{
+  (
+  <EQUAL>
+  | <UNEQUAL>
+  | <LESS>
+  | <GREATER>
+  | <LESS_OR_EQ>
+  | <GREATER_OR_EQ>
+  )
+  { 
+  	jjtThis.op(this.token.image);
+  	return this.token.image; }
+}
+
+ASTTermList Terms() #TermList:
+{}
+{
+  (
+  (LOOKAHEAD(Term() <COMMA>) Term() <COMMA>)* Term()
+  )
+  { return jjtThis; }
+}
+
+ASTTerm Term() #Term:
+{ Token t; }
+{
+  ( (Identifier() [<PAREN_OPEN> [Terms()] <PAREN_CLOSE>] AriTerm() )
+  | (Number() AriTerm())
+  | (String() AriTerm())
+  | (Variable() AriTerm())
+  | (<PAREN_OPEN> Term() <PAREN_CLOSE> AriTerm())
+  | ((<MINUS>{jjtThis.neg(true);}) Term() AriTerm())  )
+  
+  { return jjtThis; }
+}
+
+ASTAriTerm AriTerm() #AriTerm : 
+{ String t = "";}
+{
+  ([LOOKAHEAD(2)(t =Arithop()) Term()])
+  { 
+  jjtThis.op(t);
+  return jjtThis; 
+  }
+}
+
+String Arithop() #Arithop:
+{
+Token t;}
+{
+  (
+  t=<PLUS>
+  | t=<MINUS>
+  | t=<TIMES>
+  | t=<DIV>
+  )
+  { 
+  	return this.token.image; }
+}
+
+void Number() #Number :
+{ 
+	Token t;
+}
+{
+	(t=<NUMBER>)
+	{ jjtThis.number(t.image); }
+}
+
+void Variable() #Var :
+{ Token t; }
+{
+ (t=<VARIABLE> | t=<ANONYMOUS_VARIABLE>)
+ 	{
+		jjtThis.name(t.image);
+	}
+}
+
+void Identifier() #ID : 
+{
+	Token t;
+} 
+{
+	(t=<ID>)
+	{
+		jjtThis.name(t.image);
+	}
+}
+
+void String() #String : 
+{
+	Token t;
+} 
+{
+	(t= <STRING>)
+	{
+		jjtThis.name(t.image);
+	}
+}

@@ -29,12 +29,11 @@ import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.lp.asp.reasoner.Solver;
-import net.sf.tweety.lp.asp.reasoner.SolverException;
+import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
-import net.sf.tweety.lp.asp.syntax.DLPAtom;
-import net.sf.tweety.lp.asp.syntax.DLPLiteral;
-import net.sf.tweety.lp.asp.syntax.DLPNeg;
+import net.sf.tweety.lp.asp.syntax.ASPAtom;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
+import net.sf.tweety.lp.asp.syntax.StrictNegation;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
@@ -48,14 +47,14 @@ import net.sf.tweety.lp.asp.syntax.Program;
 public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 
 	/** The ASP solver used for determining inconsistency */
-	private Solver solver;
+	private ASPSolver solver;
 		
 	/**
 	 * Creates a new inconsistency measure based on the given
 	 * solver. 
 	 * @param solver some ASP solver
 	 */
-	public SdInconsistencyMeasure(Solver solver){
+	public SdInconsistencyMeasure(ASPSolver solver){
 		this.solver = solver;
 	}
 	
@@ -65,10 +64,10 @@ public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 	 * @param c some set
 	 * @return "true" if the set does not contain two complementary literals
 	 */
-	private boolean isConsistent(Collection<DLPLiteral> c){
-		for(DLPLiteral l: c){
-			if(l instanceof DLPNeg)
-				if(c.contains(((DLPNeg)l).getAtom()))
+	private boolean isConsistent(Collection<ASPLiteral> c){
+		for(ASPLiteral l: c){
+			if(l instanceof StrictNegation)
+				if(c.contains(((StrictNegation)l).getAtom()))
 					return false;
 		}
 		return true;
@@ -82,29 +81,29 @@ public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 		if(!beliefBase.isGround())
 			throw new RuntimeException("Measure only defined for ground programs.");
 		try {
-			if(solver.computeModels(beliefBase, 1).size() > 0)
+			if(solver.computeAnswerSets(beliefBase, 1).size() > 0)
 				return 0d;
-			Set<DLPLiteral> allLiterals = new HashSet<DLPLiteral>();
+			Set<ASPLiteral> allLiterals = new HashSet<ASPLiteral>();
 			FolSignature sig = beliefBase.getSignature();
 			for(FOLAtom a: new HerbrandBase(sig).getAtoms()){
-				allLiterals.add(new DLPAtom(a));
-				allLiterals.add(new DLPNeg(new DLPAtom(a)));
+				allLiterals.add(new ASPAtom(a));
+				allLiterals.add(new StrictNegation(new ASPAtom(a)));
 			}	
 			Double result = Double.POSITIVE_INFINITY;
-			SubsetIterator<DLPLiteral> lit_it = new DefaultSubsetIterator<>(allLiterals);
+			SubsetIterator<ASPLiteral> lit_it = new DefaultSubsetIterator<>(allLiterals);
 			while(lit_it.hasNext()){
-				Set<DLPLiteral> m = lit_it.next();
+				Set<ASPLiteral> m = lit_it.next();
 				//skip inconsistent m
 				if(!this.isConsistent(m)) continue;
 				Program p = beliefBase.reduct(m);
-				AnswerSetList asl = this.solver.computeModels(p, 1);
+				AnswerSetList asl = this.solver.computeAnswerSets(p, 1);
 				if(asl.size() == 0) continue;
-				int val = (new SetTools<DLPLiteral>()).symmetricDifference(m, asl.get(0)).size();
+				int val = (new SetTools<ASPLiteral>()).symmetricDifference(m, asl.get(0)).size();
 				if(val < result)
 					result = new Double(val);				
 			}			
 			return result;
-		} catch (SolverException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

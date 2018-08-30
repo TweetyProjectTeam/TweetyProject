@@ -22,49 +22,63 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 
 /**
- * This class represents a collection of answer sets and
- * provides some basic reasoning modes.
+ * This class represents a collection of answer sets and provides some basic
+ * reasoning modes. TODO old description
  * 
  * @author Thomas Vengels
  * @author Tim Janus
+ * @author Anna Gessler
  */
 public class AnswerSetList extends ArrayList<AnswerSet> {
-	
+
 	/** kill warning */
 	private static final long serialVersionUID = 1130680162671151620L;
 
-	/** constant id for the credolous policy for operations of the AnswerSetList object. */
+	/**
+	 * constant id for the credolous policy for operations of the AnswerSetList
+	 * object.
+	 */
 	static public final int POLICY_CREDOLOUS = 1;
-	
-	/** constant id for the skeptical policy for operations of the AnswerSetList object. */
+
+	/**
+	 * constant id for the skeptical policy for operations of the AnswerSetList
+	 * object.
+	 */
 	static public final int POLICY_SKEPTICAL = 2;
-	
-	public AnswerSetList() {}
-	
+
+	/**
+	 * Empty constructor.
+	 */
+	public AnswerSetList() {
+	}
+
 	public AnswerSetList(AnswerSetList other) {
-		for(AnswerSet as : other) {
+		for (AnswerSet as : other) {
 			add(new AnswerSet(as));
 		}
 	}
 
-	public Set<DLPLiteral> getFactsByName(String name) {
+	public Set<ASPLiteral> getFactsByName(String name) {
 		return getFactsByName(name, POLICY_SKEPTICAL);
 	}
 
 	/**
 	 * Returns all the literals in the answer set which have a given name.
-	 * @param name		the name of the literal, e.g. 'married'
-	 * @param policy	The used policy, either credolous (1) or sceptical (2).
-	 * @return			A set of literals which are also in the answer set.
+	 * 
+	 * @param name
+	 *            the name of the literal, e.g. 'married'
+	 * @param policy
+	 *            The used policy, either credolous (1) or sceptical (2).
+	 * @return A set of literals which are also in the answer set.
 	 */
-	public Set<DLPLiteral> getFactsByName(String name, int policy) {
-		Set<DLPLiteral> reval = new HashSet<DLPLiteral>();
+	public Set<ASPLiteral> getFactsByName(String name, int policy) {
+		Set<ASPLiteral> reval = new HashSet<ASPLiteral>();
 		boolean first = true;
-		for(AnswerSet as : this) {
-			if(first == false && policy == POLICY_SKEPTICAL) {
+		for (AnswerSet as : this) {
+			if (first == false && policy == POLICY_SKEPTICAL) {
 				reval.retainAll(as.getLiteralsWithName(name));
 			} else {
 				reval.addAll(as.getLiteralsWithName(name));
@@ -73,39 +87,39 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 		}
 		return reval;
 	}
-	
+
 	/**
-	 * This method returns true if at least one
-	 * answer set supports q.
+	 * This method returns true if at least one answer set supports q.
+	 * 
 	 * @param q
 	 */
-	public boolean holdsOne( DLPLiteral q ) {
-		for(AnswerSet as : this) {
-			if(as.contains(q)) {
+	public boolean holdsOne(ASPLiteral q) {
+		for (AnswerSet as : this) {
+			if (as.contains(q)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
-	 * This method returns true iff all
-	 * answer sets support q.
+	 * This method returns true iff all answer sets support q.
+	 * 
 	 * @param q
 	 */
-	public boolean holdsAll( DLPLiteral q ) {
-		for(AnswerSet as : this) {
-			if(!as.contains(q)) {
+	public boolean holdsAll(ASPLiteral q) {
+		for (AnswerSet as : this) {
+			if (!as.contains(q)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Answer Sets: "+this.size());
+		sb.append("Answer Sets: " + this.size());
 		sb.append("\n--------------");
 		for (AnswerSet s : this) {
 			sb.append("\n");
@@ -113,12 +127,13 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 			sb.append("\n--------------");
 		}
 		sb.append("\n");
-		
+
 		return sb.toString();
 	}
-	
+
 	@Override
 	public Object clone() {
 		return new AnswerSetList(this);
 	}
+
 }

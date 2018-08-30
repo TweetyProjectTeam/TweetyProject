@@ -30,9 +30,9 @@ import java.io.StringReader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import net.sf.tweety.lp.asp.parser.ASPParser;
+import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
-import net.sf.tweety.lp.asp.reasoner.Clingo;
+import net.sf.tweety.lp.asp.reasoner.ClingoSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
 
@@ -44,17 +44,17 @@ import net.sf.tweety.lp.asp.syntax.Program;
  */
 public class ClingoTest {
 	
-	static ASPParser parser;
+	static ASPCore2Parser parser;
 	
 	static InstantiateVisitor visitor;
 	
-	static Clingo solver;
+	static ClingoSolver solver;
 	
 	@BeforeClass
 	public static void init() {
 		visitor = new InstantiateVisitor();
-		parser = new ASPParser(new StringReader(""));
-		solver = new Clingo("path/to/clingo");
+		parser = new ASPCore2Parser(new StringReader(""));
+		solver = new ClingoSolver("path/to/clingo");
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.computeModels(p, 1000);
+		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 3);
@@ -75,7 +75,7 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.computeModels(p, 1000);
+		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
 		
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
@@ -88,8 +88,8 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		solver.computeModels(p, 1);
-		AnswerSetList asl = solver.computeModels(p, 1000);
+		solver.computeAnswerSets(p, 1);
+		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
 		
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
@@ -102,8 +102,8 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 			
 		Program p = visitor.visit(parser.Program(), null);
-		solver.computeModels(p, 1);
-		AnswerSetList asl = solver.computeModels(p, 1000);
+		solver.computeAnswerSets(p, 1);
+		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 5);
