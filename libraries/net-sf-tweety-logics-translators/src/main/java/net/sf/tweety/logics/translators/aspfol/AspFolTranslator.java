@@ -43,15 +43,15 @@ public class AspFolTranslator extends Translator
 	/** Default-Ctor */
 	public AspFolTranslator() {}
 	
-	public FOLAtom toFOL(DLPAtom source) {
+	public FOLAtom toFOL(ASPAtom source) {
 		return (FOLAtom) this.translateAtom(source, FOLAtom.class);
 	}
 	
-	public DLPAtom toASP(FOLAtom source) {
-		return (DLPAtom) this.translateAtom(source, DLPAtom.class);
+	public ASPAtom toASP(FOLAtom source) {
+		return (ASPAtom) this.translateAtom(source, ASPAtom.class);
 	}
 
-	public DLPElement toASP(FolFormula source) {
+	public ASPElement toASP(FolFormula source) {
 		if(source instanceof FOLAtom) {
 			return toASP((FOLAtom)source);
 		} else if(source instanceof Negation) {
@@ -60,31 +60,31 @@ public class AspFolTranslator extends Translator
 		return null;
 	}
 	
-	public Negation toFOL(DLPNeg source) {
+	public Negation toFOL(StrictNegation source) {
 		return new Negation((FOLAtom) 
 				this.translateAtom(source.getAtom(), FOLAtom.class));
 	}
 
-	public DLPNeg toASP(Negation source) {
-		return new DLPNeg((DLPAtom) this.translateAtom(
-				source.getAtoms().iterator().next(), DLPAtom.class));
+	public StrictNegation toASP(Negation source) {
+		return new StrictNegation((ASPAtom) this.translateAtom(
+				source.getAtoms().iterator().next(), ASPAtom.class));
 	}
 	
-	public FolFormula toFOL(DLPLiteral source) {
-		if(source instanceof DLPAtom) {
-			return toFOL((DLPAtom)source);
-		} else if(source instanceof DLPNeg) {
-			return toFOL((DLPNeg)source);
+	public FolFormula toFOL(ASPLiteral source) {
+		if(source instanceof ASPAtom) {
+			return toFOL((ASPAtom)source);
+		} else if(source instanceof StrictNegation) {
+			return toFOL((StrictNegation)source);
 		}
 		return null;
 	}
 	
-	public Disjunction toFOL(DLPHead source) {
+	public Disjunction toFOL(ASPHead source) {
 		return (Disjunction) this.translateAssociative(source, Disjunction.class);
 	}
 	
-	public DLPHead toASP(Disjunction source) {
-		return (DLPHead) this.translateAssociative(source, DLPHead.class);
+	public ASPHead toASP(Disjunction source) {
+		return (ASPHead) this.translateAssociative(source, ASPHead.class);
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class AspFolTranslator extends Translator
 			switch(translateInfo.getFirst()) {
 			case TT_NEGATION:
 				return translateInfo.getSecond() == Negation.class ? 
-						toFOL((DLPNeg)source) : 
+						toFOL((StrictNegation)source) : 
 						toASP((FOLAtom)source);
 			}
 		}
@@ -106,11 +106,11 @@ public class AspFolTranslator extends Translator
 	protected Map<Class<?>, Pair<Integer, Class<?>>> createTranslateMap() {
 		Map<Class<?>, Pair<Integer, Class<?>>> tmap = new HashMap<Class<?>, Pair<Integer, Class<?>>>();
 
-		tmap.put(DLPAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, FOLAtom.class));
-		tmap.put(FOLAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, DLPAtom.class));
+		tmap.put(ASPAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, FOLAtom.class));
+		tmap.put(FOLAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, ASPAtom.class));
 		
-		tmap.put(DLPHead.class, new Pair<Integer, Class<?>>(TT_ASSOC, Disjunction.class));
-		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(TT_ASSOC, DLPHead.class));
+		tmap.put(ASPHead.class, new Pair<Integer, Class<?>>(TT_ASSOC, Disjunction.class));
+		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(TT_ASSOC, ASPHead.class));
 		
 		return tmap;
 	}

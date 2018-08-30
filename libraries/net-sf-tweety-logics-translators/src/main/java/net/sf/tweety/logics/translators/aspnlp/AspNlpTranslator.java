@@ -48,7 +48,7 @@ public class AspNlpTranslator extends AspFolTranslator
 	 * @param rule	The ASP rule that is going to be translated.
 	 * @return		The translated NLP rule
 	 */
-	NLPRule toNLP(Rule rule) {
+	NLPRule toNLP(ASPRule rule) {
 		NLPRule reval = new NLPRule();
 		if(rule.getConclusion().size() == 1) {
 			FolFormula conclusion = this.toFOL(rule.getConclusion().get(0));
@@ -58,9 +58,9 @@ public class AspNlpTranslator extends AspFolTranslator
 			reval.setConclusion(conclusion);
 		}
 		
-		for(DLPElement element : rule.getPremise()) {
-			if(element instanceof DLPLiteral) {
-				FolFormula trans = this.toFOL((DLPLiteral)element);
+		for(ASPBodyElement element : rule.getPremise()) {
+			if(element instanceof ASPLiteral) {
+				FolFormula trans = this.toFOL((ASPLiteral)element);
 				reval.addPremise(trans);
 			}
 		}
@@ -69,7 +69,7 @@ public class AspNlpTranslator extends AspFolTranslator
 	
 	public NLPProgram toNLP(Program program) {
 		NLPProgram reval = new NLPProgram();
-		for(Rule rule : program) {
+		for(ASPRule rule : program) {
 			reval.add(toNLP(rule));
 		}
 		return reval;
@@ -87,12 +87,12 @@ public class AspNlpTranslator extends AspFolTranslator
 	 */
 	public Program toASP(NLPRule rule) {
 		Program reval = new Program();
-		List<DLPHead> heads = new LinkedList<DLPHead>();
+		List<ASPHead> heads = new LinkedList<ASPHead>();
 		
 		// 1. create all possible heads
 		FolFormula head = rule.getConclusion();
 		if(head.isLiteral()) {
-			heads.add(new DLPHead((DLPLiteral) this.toASP(head)));
+			heads.add(new ASPHead((ASPLiteral) this.toASP(head)));
 		} else if(head instanceof Disjunction) {
 			heads.add(this.toASP((Disjunction)head));
 		} else if(head instanceof Conjunction) {
@@ -100,16 +100,16 @@ public class AspNlpTranslator extends AspFolTranslator
 		}
 		
 		// 2. create all possible bodies.
-		List<List<DLPElement>> bodies = new LinkedList<List<DLPElement>>();
-		bodies.add(new LinkedList<DLPElement>());
+		List<List<ASPBodyElement>> bodies = new LinkedList<List<ASPBodyElement>>();
+		bodies.add(new LinkedList<ASPBodyElement>());
 		for(FolFormula premise : rule.getPremise()) {
 			bodiesFromFormula(premise, bodies);
 		}
 		
 		// 3. create rules form heads and bodies:
-		for(DLPHead h : heads) {
-			for(List<DLPElement> body : bodies) {
-				reval.add(new Rule(h, body));
+		for(ASPHead h : heads) {
+			for(List<ASPBodyElement> body : bodies) {
+				reval.add(new ASPRule(h, body));
 			}
 		}
 		
@@ -138,9 +138,9 @@ public class AspNlpTranslator extends AspFolTranslator
 	 * @param source	The FOL formula that is used to generate the bodies
 	 * @param bodies	A list of bodies which is used as input and output parameter.
 	 */
-	private void bodiesFromFormula(FolFormula source, List<List<DLPElement>> bodies) {
+	private void bodiesFromFormula(FolFormula source, List<List<ASPBodyElement>> bodies) {
 		if(source.isLiteral()) {
-			DLPLiteral trans = (DLPLiteral) this.toASP(source);
+			ASPLiteral trans = (ASPLiteral) this.toASP(source);
 			for(int i=0; i<bodies.size(); ++i) {
 				bodies.get(i).add(trans);
 			}
@@ -158,17 +158,17 @@ public class AspNlpTranslator extends AspFolTranslator
 	 * @param source
 	 * @param bodies
 	 */
-	private void bodiesFromDisjunction(Disjunction source, List<List<DLPElement>> bodies) {
-		List<List<DLPElement>> reval = new LinkedList<List<DLPElement>>();
+	private void bodiesFromDisjunction(Disjunction source, List<List<ASPBodyElement>> bodies) {
+		List<List<ASPBodyElement>> reval = new LinkedList<List<ASPBodyElement>>();
 		
 		// For every body so far a permutation per element of the
 		// disjunction is created.
-		for(List<DLPElement> basis : bodies) {
-			List<DLPElement> curBody = new LinkedList<DLPElement>(basis);
+		for(List<ASPBodyElement> basis : bodies) {
+			List<ASPBodyElement> curBody = new LinkedList<ASPBodyElement>(basis);
 			
 			for(RelationalFormula f : source) {
 				FolFormula fol = (FolFormula)f;
-				List<List<DLPElement>> temporary = new LinkedList<List<DLPElement>>();
+				List<List<ASPBodyElement>> temporary = new LinkedList<List<ASPBodyElement>>();
 				temporary.add(curBody);
 				bodiesFromFormula(fol, temporary);
 				reval.addAll(temporary);
@@ -179,13 +179,13 @@ public class AspNlpTranslator extends AspFolTranslator
 		bodies.addAll(reval);
 	}
 	
-	private List<DLPHead> headsFromConjunction(Conjunction c) {
-		List<DLPHead> reval = new LinkedList<DLPHead>();
+	private List<ASPHead> headsFromConjunction(Conjunction c) {
+		List<ASPHead> reval = new LinkedList<ASPHead>();
 		for(RelationalFormula formula : c){
 			FolFormula fol = (FolFormula)formula;
 			if(fol.isLiteral()) {
-				DLPLiteral trans = (DLPLiteral)this.toASP(fol);
-				reval.add(new DLPHead(trans));
+				ASPLiteral trans = (ASPLiteral)this.toASP(fol);
+				reval.add(new ASPHead(trans));
 			} else if(fol instanceof Disjunction) {
 				reval.add(this.toASP((Disjunction)fol));
 			} else if(fol instanceof Conjunction) {
