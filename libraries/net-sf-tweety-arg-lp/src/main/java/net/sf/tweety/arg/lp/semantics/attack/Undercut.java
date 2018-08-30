@@ -19,7 +19,7 @@
 package net.sf.tweety.arg.lp.semantics.attack;
 
 import net.sf.tweety.arg.lp.syntax.Argument;
-import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 
 
 /**
@@ -51,7 +51,7 @@ public class Undercut implements AttackStrategy {
 	 * @see net.sf.tweety.argumentation.parameterisedhierarchy.semantics.attack.NotionOfAttack#attacks(net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument, net.sf.tweety.argumentation.parameterisedhierarchy.syntax.Argument)
 	 */
 	public boolean attacks(Argument a, Argument b) {
-		for(DLPLiteral literal : a.getConclusions()) {
+		for(ASPLiteral literal : a.getConclusions()) {
 			if(b.getAssumptions().contains(literal)) {
 				return true;
 			}

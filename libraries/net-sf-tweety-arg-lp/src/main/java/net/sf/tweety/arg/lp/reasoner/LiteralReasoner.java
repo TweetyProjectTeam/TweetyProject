@@ -21,8 +21,7 @@ package net.sf.tweety.arg.lp.reasoner;
 import net.sf.tweety.arg.lp.semantics.attack.AttackStrategy;
 import net.sf.tweety.arg.lp.syntax.Argument;
 import net.sf.tweety.arg.lp.syntax.ArgumentationKnowledgeBase;
-
-import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 
 /**
  * This class extends the default argumentation reasoner to the reasoning
@@ -49,7 +48,7 @@ public class LiteralReasoner extends ArgumentationReasoner {
 		super(attack, defence);
 	}
 
-	public Boolean query(ArgumentationKnowledgeBase kb, DLPLiteral query) {
+	public Boolean query(ArgumentationKnowledgeBase kb, ASPLiteral query) {
 		for(Argument arg : super.getJustifiedArguments(kb)) {
 			if(arg.getConclusions().contains(query)) {
 				return true;
@@ -63,7 +62,7 @@ public class LiteralReasoner extends ArgumentationReasoner {
 	 * @param arg a literal
 	 * @return true iff arg is not x/y-overruled
 	 */
-	public boolean isOverruled(ArgumentationKnowledgeBase kb, DLPLiteral arg) {
+	public boolean isOverruled(ArgumentationKnowledgeBase kb, ASPLiteral arg) {
 		return !query(kb,arg);
 	}
 	
@@ -74,7 +73,7 @@ public class LiteralReasoner extends ArgumentationReasoner {
 	 * @param arg a literal
 	 * @return true iff a x/y-justified argument with conclusion arg can be constructed from p 
 	 */
-	public boolean isJustified(ArgumentationKnowledgeBase kb, DLPLiteral arg) {
+	public boolean isJustified(ArgumentationKnowledgeBase kb, ASPLiteral arg) {
 		return query(kb,arg);
 	}
 }

@@ -41,15 +41,15 @@ import net.sf.tweety.lp.asp.syntax.*;
  * 
  * @author Sebastian Homann
  */
-public class Argument extends LinkedList<Rule> implements Formula {
+public class Argument extends LinkedList<ASPRule> implements Formula {
 	
 	private static final long serialVersionUID = 6017406379850600902L;
 
-	public Argument(Rule rule) {
+	public Argument(ASPRule rule) {
 		this.add(rule);
 	}
 	
-	public Argument(List<Rule> rules) {
+	public Argument(List<ASPRule> rules) {
 		this.addAll(rules);
 	}
 	
@@ -58,9 +58,9 @@ public class Argument extends LinkedList<Rule> implements Formula {
 	 * the heads of all rules contained in this argument.
 	 * @return the set of conclusions
 	 */
-	public Set<DLPLiteral> getConclusions() {
-		Set<DLPLiteral> result = new HashSet<DLPLiteral>();
-		for(Rule r : this) {
+	public Set<ASPLiteral> getConclusions() {
+		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
+		for(ASPRule r : this) {
 			result.add(r.getConclusion().iterator().next());
 		}
 		return result;
@@ -74,12 +74,12 @@ public class Argument extends LinkedList<Rule> implements Formula {
 	 * 
 	 * @return a set of literals which this argument assumes not to be true
 	 */
-	public Set<DLPLiteral> getAssumptions() {
-		Set<DLPLiteral> result = new HashSet<DLPLiteral>();
-		for(Rule r : this) {
-			for(DLPElement elem : r.getPremise()) {
-				if(elem instanceof DLPNot) {
-					DLPLiteral assumption = elem.getLiterals().iterator().next();
+	public Set<ASPLiteral> getAssumptions() {
+		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
+		for(ASPRule r : this) {
+			for(ASPElement elem : r.getPremise()) {
+				if(elem instanceof DefaultNegation) {
+					ASPLiteral assumption = elem.getLiterals().iterator().next();
 					result.add(assumption);
 				}
 			}
@@ -94,11 +94,11 @@ public class Argument extends LinkedList<Rule> implements Formula {
 	 * of a rule ri there has to be a rule rk with k>i with head(rk) = Lj.  
 	 */
 	public boolean checkValid() {
-		Set<DLPLiteral> foundLiterals = new HashSet<DLPLiteral>();
+		Set<ASPLiteral> foundLiterals = new HashSet<ASPLiteral>();
 		@SuppressWarnings("unchecked")
-		LinkedList<Rule> reversed = (LinkedList<Rule>)this.clone();
+		LinkedList<ASPRule> reversed = (LinkedList<ASPRule>)this.clone();
 		Collections.reverse(reversed);
-		for(Rule r : reversed) {
+		for(ASPRule r : reversed) {
 			if(!r.isGround()) {
 				return false;
 			}
@@ -108,8 +108,8 @@ public class Argument extends LinkedList<Rule> implements Formula {
 			if(r.isFact()) {
 				foundLiterals.add(r.getConclusion().getFormulas().iterator().next());
 			}
-			for(DLPElement element : r.getPremise()) {
-				if(element instanceof DLPNot) {
+			for(ASPElement element : r.getPremise()) {
+				if(element instanceof DefaultNegation) {
 					continue;
 				}
 				if(! foundLiterals.containsAll(element.getLiterals())) {
@@ -128,7 +128,7 @@ public class Argument extends LinkedList<Rule> implements Formula {
 		String result = new String();
 		
 		String delimiter = "";
-		for(Rule r : this) {
+		for(ASPRule r : this) {
 			result += delimiter + r.toString();
 			delimiter = ",";
 		}
@@ -142,7 +142,7 @@ public class Argument extends LinkedList<Rule> implements Formula {
 	 */
 	public Signature getSignature() {
 		FolSignature result = new FolSignature();
-		for(Rule r : this) {
+		for(ASPRule r : this) {
 			result.addSignature(r.getSignature());
 		}
 		return result;

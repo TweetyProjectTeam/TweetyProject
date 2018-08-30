@@ -39,8 +39,8 @@ public class AttackTest {
 	public void testUndercut() {
 		AttackStrategy strategy = Undercut.getInstance();
 		
-		Rule r1 = new Rule( new DLPAtom("b") );
-		Rule r2 = new Rule( new DLPAtom("a"), new DLPNot( new DLPAtom("b") ) ); 
+		ASPRule r1 = new ASPRule( new ASPAtom("b") );
+		ASPRule r2 = new ASPRule( new ASPAtom("a"), new DefaultNegation( new ASPAtom("b") ) ); 
 		Program p = new Program();
 		p.add(r1); p.add(r2);
 		
@@ -58,8 +58,8 @@ public class AttackTest {
 	public void testRebut() {
 		AttackStrategy strategy = Rebut.getInstance();
 		
-		Rule r1 = new Rule( new DLPAtom("b") );
-		Rule r2 = new Rule( new DLPNeg( new DLPAtom("b") ) ); 
+		ASPRule r1 = new ASPRule( new ASPAtom("b") );
+		ASPRule r2 = new ASPRule( new StrictNegation( new ASPAtom("b") ) ); 
 		Program p = new Program();
 		p.add(r1); p.add(r2);
 		
@@ -80,9 +80,9 @@ public class AttackTest {
 	public void testAttack() {
 		AttackStrategy strategy = Attack.getInstance();
 		
-		Rule r1 = new Rule( new DLPAtom("b") );
-		Rule r2 = new Rule( new DLPNeg( new DLPAtom("b") ) );
-		Rule r3 = new Rule( new DLPAtom("a"), new DLPNot( new DLPAtom("b") ) ); 
+		ASPRule r1 = new ASPRule( new ASPAtom("b") );
+		ASPRule r2 = new ASPRule( new StrictNegation( new ASPAtom("b") ) );
+		ASPRule r3 = new ASPRule( new ASPAtom("a"), new DefaultNegation( new ASPAtom("b") ) ); 
 		Program p = new Program();
 		p.add(r1); p.add(r2); p.add(r3);
 		
@@ -110,10 +110,10 @@ public class AttackTest {
 	public void testDefeat() {
 		AttackStrategy strategy = Defeat.getInstance();
 		
-		Rule r1 = new Rule( new DLPAtom("a") );
-		Rule r2 = new Rule( new DLPAtom("b"), new DLPNot(new DLPAtom("a")) );
-		Rule r3 = new Rule( new DLPAtom("c"), new DLPNot(new DLPAtom("d")) );
-		Rule r4 = new Rule( new DLPNeg(new DLPAtom("c")), new DLPNot(new DLPAtom("c")) );
+		ASPRule r1 = new ASPRule( new ASPAtom("a") );
+		ASPRule r2 = new ASPRule( new ASPAtom("b"), new DefaultNegation(new ASPAtom("a")) );
+		ASPRule r3 = new ASPRule( new ASPAtom("c"), new DefaultNegation(new ASPAtom("d")) );
+		ASPRule r4 = new ASPRule( new StrictNegation(new ASPAtom("c")), new DefaultNegation(new ASPAtom("c")) );
 		Program p = new Program();
 		p.add(r1); p.add(r2); p.add(r3); p.add(r4);
 		
@@ -131,9 +131,9 @@ public class AttackTest {
 	public void testStrongAttack() {
 		AttackStrategy strategy = StrongAttack.getInstance();
 		
-		Rule r1 = new Rule( new DLPAtom("a") );
-		Rule r2 = new Rule( new DLPAtom("b"), new DLPNot(new DLPAtom("a")) );
-		Rule r3 = new Rule( new DLPNeg(new DLPAtom("a")), new DLPNot(new DLPAtom("a")) );
+		ASPRule r1 = new ASPRule( new ASPAtom("a") );
+		ASPRule r2 = new ASPRule( new ASPAtom("b"), new DefaultNegation(new ASPAtom("a")) );
+		ASPRule r3 = new ASPRule( new StrictNegation(new ASPAtom("a")), new DefaultNegation(new ASPAtom("a")) );
 		Program p = new Program();
 		p.add(r1); p.add(r2); p.add(r3);
 		
@@ -151,8 +151,8 @@ public class AttackTest {
 	public void testStrongUndercut() {
 		AttackStrategy strategy = StrongAttack.getInstance();
 
-		Rule r1 = new Rule( new DLPAtom("b"), new DLPNot(new DLPAtom("c")) );
-		Rule r2 = new Rule( new DLPAtom("a"), new DLPNot(new DLPAtom("b")) );
+		ASPRule r1 = new ASPRule( new ASPAtom("b"), new DefaultNegation(new ASPAtom("c")) );
+		ASPRule r2 = new ASPRule( new ASPAtom("a"), new DefaultNegation(new ASPAtom("b")) );
 		Program p = new Program();
 		p.add(r1); p.add(r2);
 		

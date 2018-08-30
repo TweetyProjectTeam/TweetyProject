@@ -19,7 +19,7 @@
 package net.sf.tweety.arg.lp.semantics.attack;
 
 import net.sf.tweety.arg.lp.syntax.Argument;
-import net.sf.tweety.lp.asp.syntax.DLPLiteral;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 
 
 /**
@@ -54,8 +54,8 @@ public class ConfidentRebut implements AttackStrategy {
 		if(!a.getAssumptions().isEmpty()) {
 			return false;
 		}
-		for(DLPLiteral literalA : a.getConclusions()) {
-			for(DLPLiteral literalB : b.getConclusions()) {
+		for(ASPLiteral literalA : a.getConclusions()) {
+			for(ASPLiteral literalB : b.getConclusions()) {
 				if(literalA.complement().equals(literalB)) {
 					return true;
 				}

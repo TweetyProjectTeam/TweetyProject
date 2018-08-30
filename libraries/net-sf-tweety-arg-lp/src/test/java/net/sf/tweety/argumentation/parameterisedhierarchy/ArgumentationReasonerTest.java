@@ -34,24 +34,24 @@ import org.junit.Test;
 public class ArgumentationReasonerTest {
 	
 	// Literals
-	DLPAtom p = new DLPAtom("p");
-	DLPAtom q = new DLPAtom("q");
-	DLPAtom r = new DLPAtom("r");
-	DLPAtom s = new DLPAtom("s");
-	DLPAtom m = new DLPAtom("m");
-	DLPAtom n = new DLPAtom("n");
-	DLPNeg n_q = new DLPNeg(q);
-	DLPNeg n_s = new DLPNeg(s);
+	ASPAtom p = new ASPAtom("p");
+	ASPAtom q = new ASPAtom("q");
+	ASPAtom r = new ASPAtom("r");
+	ASPAtom s = new ASPAtom("s");
+	ASPAtom m = new ASPAtom("m");
+	ASPAtom n = new ASPAtom("n");
+	StrictNegation n_q = new StrictNegation(q);
+	StrictNegation n_s = new StrictNegation(s);
 	
 	// Rules
-	Rule r1 = new Rule(p, new DLPNot(q));
-	Rule r2 = new Rule(q, new DLPNot(p));
-	Rule r3 = new Rule(n_q, new DLPNot(r));
-	Rule r4 = new Rule(r, new DLPNot(s));
-	Rule r5 = new Rule(n_s, new DLPNot(s));
-	Rule r6 = new Rule(s);
-	Rule r7 = new Rule(m, new DLPNot(n));
-	Rule r8 = new Rule(n, new DLPNot(m));
+	ASPRule r1 = new ASPRule(p, new DefaultNegation(q));
+	ASPRule r2 = new ASPRule(q, new DefaultNegation(p));
+	ASPRule r3 = new ASPRule(n_q, new DefaultNegation(r));
+	ASPRule r4 = new ASPRule(r, new DefaultNegation(s));
+	ASPRule r5 = new ASPRule(n_s, new DefaultNegation(s));
+	ASPRule r6 = new ASPRule(s);
+	ASPRule r7 = new ASPRule(m, new DefaultNegation(n));
+	ASPRule r8 = new ASPRule(n, new DefaultNegation(m));
 	
 	// Arguments
 	Argument a1 = new Argument(r1);
@@ -91,7 +91,7 @@ public class ArgumentationReasonerTest {
 		assertTrue(kb.getArguments().contains(a6));
 		assertTrue(kb.getArguments().contains(a7));
 		assertTrue(kb.getArguments().contains(a8));
-		assertFalse(kb.getArguments().contains(new Argument(new Rule())));
+		assertFalse(kb.getArguments().contains(new Argument(new ASPRule())));
 	}
 	
 	@Test

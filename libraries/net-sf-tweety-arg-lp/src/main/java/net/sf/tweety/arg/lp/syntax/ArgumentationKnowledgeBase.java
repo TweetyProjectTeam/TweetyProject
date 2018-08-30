@@ -42,8 +42,8 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 		this.program = (Program)program.clone();
 		
 		// preprocessing: remove unnecessary rules, i.e. a <- a.
-		for(Rule r : program) {
-			DLPLiteral head = r.getConclusion().iterator().next();
+		for(ASPRule r : program) {
+			ASPLiteral head = r.getConclusion().iterator().next();
 			if(r.getPremise().contains(head)) {
 				this.program.remove(r);
 			}
@@ -56,8 +56,8 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	public Set<Argument> getArguments() {
 		Set<Argument> result = new HashSet<Argument>();
 		
-		for(Rule r : program) {			
-			LinkedList<Rule> rules = new LinkedList<Rule>();
+		for(ASPRule r : program) {			
+			LinkedList<ASPRule> rules = new LinkedList<ASPRule>();
 			rules.add(r);
 			result.addAll(getArguments(rules));
 		}
@@ -72,10 +72,10 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	 * @return a set of minimal arguments containing the given set of rules
 	 */
 	@SuppressWarnings("unchecked")
-	private Set<Argument> getArguments(LinkedList<Rule> rules) {
+	private Set<Argument> getArguments(LinkedList<ASPRule> rules) {
 		Set<Argument> result = new HashSet<Argument>();
 		
-		Set<DLPLiteral> openLiterals = getOpenLiterals(rules);
+		Set<ASPLiteral> openLiterals = getOpenLiterals(rules);
 		
 		if(openLiterals.isEmpty()) {
 			// argument is complete
@@ -84,10 +84,10 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 		}
 		
 		// there is at least one unaccounted literal l, find a rule with head l
-		for(Rule r : program) {
-			DLPLiteral head = r.getConclusion().iterator().next();
+		for(ASPRule r : program) {
+			ASPLiteral head = r.getConclusion().iterator().next();
 			if(openLiterals.contains(head)) {
-				LinkedList<Rule> newRules = (LinkedList<Rule>)rules.clone();
+				LinkedList<ASPRule> newRules = (LinkedList<ASPRule>)rules.clone();
 				newRules.addLast(r);
 				result.addAll(getArguments(newRules));
 			}
@@ -101,19 +101,19 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	 * of some rule but not the conclusion of some other rule
 	 * @param rules a set of rules
 	 */
-	private Set<DLPLiteral> getOpenLiterals(Collection<Rule> rules) {
-		Set<DLPLiteral> result = new HashSet<DLPLiteral>();
+	private Set<ASPLiteral> getOpenLiterals(Collection<ASPRule> rules) {
+		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
 		// add all non-default-negated premise literals
-		for(Rule r : rules) {
-			for(DLPElement element : r.getPremise()) {
-				if(element instanceof DLPLiteral) {
-					result.add((DLPLiteral) element);
+		for(ASPRule r : rules) {
+			for(ASPElement element : r.getPremise()) {
+				if(element instanceof ASPLiteral) {
+					result.add((ASPLiteral) element);
 				}
 			}
 		}
 		// remove all conclusions as they must have been accounted for
-		for(Rule r : rules) {
-			DLPLiteral head = r.getConclusion().iterator().next();
+		for(ASPRule r : rules) {
+			ASPLiteral head = r.getConclusion().iterator().next();
 			result.remove(head);
 		}
 		return result;
@@ -126,14 +126,14 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	 * @return the set of conclusions of said rules 
 	 */
 	@SuppressWarnings("unused")
-	private Set<DLPLiteral> getDerivableLiterals(Collection<Rule> rules) {
-		Set<DLPLiteral> result = new HashSet<DLPLiteral>();
+	private Set<ASPLiteral> getDerivableLiterals(Collection<ASPRule> rules) {
+		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
 		boolean changed = true;
 		while(changed) {
 			changed = false;
-			for(Rule r : rules) {
+			for(ASPRule r : rules) {
 				if(isTrue(r,result)) {
-					DLPLiteral head = r.getConclusion().iterator().next();
+					ASPLiteral head = r.getConclusion().iterator().next();
 					result.add(head);
 					changed = true;
 				}
@@ -148,9 +148,9 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	 * @param rule an elp rule
 	 * @param literals a set of literals
 	 */
-	private boolean isTrue(Rule rule, Set<DLPLiteral> literals) {
-		for(DLPElement element : rule.getPremise()) {
-			if(element instanceof DLPLiteral) {
+	private boolean isTrue(ASPRule rule, Set<ASPLiteral> literals) {
+		for(ASPElement element : rule.getPremise()) {
+			if(element instanceof ASPLiteral) {
 				if(!literals.contains(element)) {
 					return false;
 				}
