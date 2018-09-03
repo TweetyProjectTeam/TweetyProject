@@ -18,17 +18,28 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
 /*@egen*/
  private static ASPCore2Parser oneThreadParser = new ASPCore2Parser(new StringReader(""));
 
- private static ASPCore2ParserInstantiateVisitor visitor = new InstantiateVisitor();
+ private static InstantiateVisitor visitor = new InstantiateVisitor();
 
  public static Program parseProgram(String program) throws ParseException
   {
     return parseProgram(new StringReader(program));
   }
   
- public static Program parseProgram(Reader reader) throws ParseException
+ public static Program parseRule(Reader reader) throws ParseException
   {
     oneThreadParser.ReInit(reader);
     return visitor.visit(oneThreadParser.Program(), null);
+  }
+  
+   public static ASPRule parseRule(String rule) throws ParseException
+  {
+    return parseRule(new StringReader(rule));
+  }
+  
+ public static ASPRule parseRule(Reader reader) throws ParseException
+  {
+    oneThreadParser.ReInit(reader);
+    return visitor.visit(oneThreadParser.Statement(), null);
   }
   
     public static AnswerSet parseAnswerSet(String answerSet) throws ParseException
@@ -89,11 +100,11 @@ TOKEN :
 |  <LESS_OR_EQ:          "<=">
 |  <GREATER_OR_EQ:       ">=">
 |  <AGGREGATE_COUNT:     "#count">
+|  <MINIMIZE:            "#minimi[zs]e">
+|  <MAXIMIZE:            "#maximi[zs]e">
 |  <AGGREGATE_MAX:       "#max">
 |  <AGGREGATE_MIN:       "#min">
 |  <AGGREGATE_SUM:       "#sum">
-|  <MINIMIZE:            "#minimi[zs]e">
-|  <MAXIMIZE:            "#maximi[zs]e">
 }
 
 ASTAnswerSet AnswerSet()           :

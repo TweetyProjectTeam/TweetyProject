@@ -27,6 +27,17 @@ public class ASPCore2Parser {
     return visitor.visit(oneThreadParser.Program(), null);
   }
   
+   public static ASPRule parseRule(String rule) throws ParseException
+  {
+    return parseRule(new StringReader(rule));
+  }
+  
+ public static ASPRule parseRule(Reader reader) throws ParseException
+  {
+    oneThreadParser.ReInit(reader);
+    return visitor.visit(oneThreadParser.Statement(), null);
+  }
+  
     public static AnswerSet parseAnswerSet(String answerSet) throws ParseException
   {
     return parseAnswerSet(new StringReader(answerSet));
@@ -85,11 +96,11 @@ TOKEN :
 |  <LESS_OR_EQ:          "<=">
 |  <GREATER_OR_EQ:       ">=">
 |  <AGGREGATE_COUNT:     "#count">
+|  <MINIMIZE:            "#minimi[zs]e">
+|  <MAXIMIZE:            "#maximi[zs]e">
 |  <AGGREGATE_MAX:       "#max">
 |  <AGGREGATE_MIN:       "#min">
 |  <AGGREGATE_SUM:       "#sum">
-|  <MINIMIZE:            "#minimi[zs]e">
-|  <MAXIMIZE:            "#maximi[zs]e">
 }
 
 ASTAnswerSet AnswerSet() #AnswerSet:
