@@ -282,5 +282,9 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	public void addAll(List<ASPRule> rules) {
 		this.rules.addAll(rules);
 	}
+	
+	public boolean contains(ASPRule r) {
+		return rules.contains(r);
+	}
 
 }

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
@@ -40,7 +41,6 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Anna Gessler
  */
 public class AggregateElement implements ASPElement {
-
 	private List<Term<?>> left;
 	private List<ASPBodyElement> right;
 
@@ -143,8 +143,10 @@ public class AggregateElement implements ASPElement {
 
 	@Override
 	public SortedSet<ASPLiteral> getLiterals() {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
+		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
+		for (ASPBodyElement t : right)
+			literals.addAll(t.getLiterals());
+		return literals;
 	}
 
 	@Override
@@ -196,5 +198,22 @@ public class AggregateElement implements ASPElement {
 		// TODO
 		throw new UnsupportedOperationException("TODO");
 	}
+	
+	/**
+	 * Get the left part of the Aggregate element
+	 * @return list of terms
+	 */
+	public List<Term<?>> getLeft() {
+		return left;
+	}
+
+	/**
+	 * Get the right part of the Aggregate element
+	 * @return list of naf literals
+	 */
+	public List<ASPBodyElement> getRight() {
+		return right;
+	}
+
 
 }

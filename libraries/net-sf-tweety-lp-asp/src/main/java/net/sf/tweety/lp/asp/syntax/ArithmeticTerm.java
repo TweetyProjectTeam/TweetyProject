@@ -79,12 +79,37 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 		return new ArithmeticTerm(this);
 	}
 	
+	/**
+	 * Returns the operator of this arithmetic term.
+	 * @return an arithmetic operator
+	 */
 	public ASPOperator.ArithmeticOperator getOperator() {
 		return op;
 	}
 
+	/**
+	 * Sets the operator of this arithmetic term.
+	 * @param an arithmetic operator
+	 */
 	public void setOperator(ASPOperator.ArithmeticOperator op) {
+		this.set(new Triple<ArithmeticOperator, Term<?>, Term<?>>(op,this.getLeft(),this.getRight()));
 		this.op = op;
+	}
+	
+	/**
+	 * Returns the left subterm of this arithmetic term.
+	 * @return left term
+	 */
+	public Term<?> getLeft() {
+		return this.get().getSecond();
+	}
+	
+	/**
+	 * Returns the right subterm of this arithmetic term.
+	 * @return right term
+	 */
+	public Term<?> getRight() {
+		return this.get().getThird();
 	}
 
 }

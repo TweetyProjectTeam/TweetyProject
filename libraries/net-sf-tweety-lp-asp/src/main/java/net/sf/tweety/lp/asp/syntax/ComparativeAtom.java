@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
@@ -30,7 +31,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * This class represents a comparative, meaning an expression of the form t x u
+ * This class represents a comparative atom, meaning an expression of the form t x u
  * where t,u are terms and x is in {<, <=, ==, !=, >, >=}. Comparatives are
  * called "Built-in atoms" in the ASP-Core-2 standard.
  * 
@@ -38,8 +39,19 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  */
 public class ComparativeAtom implements ASPBodyElement {
 
+	/** 
+	 * The comparative operator of the atom.
+	 */
 	private ASPOperator.BinaryOperator op;
+	
+	/** 
+	 * The left term of the comparative atom.
+	 */
 	private Term<?> left;
+	
+	/** 
+	 * The right term of the comparative atom.
+	 */
 	private Term<?> right;
 
 	public ComparativeAtom(ASPOperator.BinaryOperator op, Term<?> left, Term<?> right) {
@@ -64,8 +76,7 @@ public class ComparativeAtom implements ASPBodyElement {
 
 	@Override
 	public SortedSet<ASPLiteral> getLiterals() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TreeSet<ASPLiteral>();
 	}
 
 	@Override
@@ -145,13 +156,37 @@ public class ComparativeAtom implements ASPBodyElement {
 
 	@Override
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
-		//TODO
+		// TODO
 		throw new UnsupportedOperationException("TODO");
 	}
 
 	@Override
 	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
 		return left.containsTermsOfType(cls) || right.containsTermsOfType(cls);
+	}
+
+	/**	
+	 * Returns the comparative operator of the atom.
+	 * @return
+	 */
+	public ASPOperator.BinaryOperator getOperator() {
+		return op;
+	}
+
+	/**
+	 * Returns the left (first) term of the comparative atom.
+	 * @return
+	 */
+	public Term<?> getLeft() {
+		return left;
+	}
+
+	/**
+	 * Returns the right (second) term of the comparative atom.
+	 * @return
+	 */
+	public Term<?> getRight() {
+		return right;
 	}
 
 }

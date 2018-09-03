@@ -169,6 +169,7 @@ public class ASPRule implements Rule<ASPHead, ASPBodyElement>, Comparable<ASPRul
 	 * @param wal
 	 */
 	public ASPRule(List<ASPBodyElement> body, Term<?> weight, Term<?> level, List<Term<?>> terms) {
+		this.head = new ASPHead();
 		this.body = body;
 		this.weight = weight;
 		this.level = level;
@@ -181,7 +182,8 @@ public class ASPRule implements Rule<ASPHead, ASPBodyElement>, Comparable<ASPRul
 	 * @param other
 	 */
 	public ASPRule(ASPRule other) {
-		this(other.head, other.body);
+		this(other.body, other.weight, other.level, other.constraint_terms);
+		this.head = other.head;
 	}
 
 	public Boolean isSafe() {
@@ -240,6 +242,7 @@ public class ASPRule implements Rule<ASPHead, ASPBodyElement>, Comparable<ASPRul
 	@Override
 	public String toString() {
 		String ret = "";
+		
 		if (!head.isEmpty()) {
 			for (int i = 0; i < head.size() - 1; i++)
 				ret += head.get(i).toString() + ",";
@@ -254,7 +257,7 @@ public class ASPRule implements Rule<ASPHead, ASPBodyElement>, Comparable<ASPRul
 		ret += ".";
 
 		if (weight != null) {
-			ret += "[" + weight.toString();
+			ret += " [" + weight.toString();
 			if (level != null)
 				ret += "@" + level.toString();
 			if (!this.constraint_terms.isEmpty()) {
@@ -303,6 +306,10 @@ public class ASPRule implements Rule<ASPHead, ASPBodyElement>, Comparable<ASPRul
 
 	public void setBody(List<ASPBodyElement> body) {
 		this.body = body;
+	}
+	
+	public List<Term<?>> getConstraintTerms() {
+		return constraint_terms;
 	}
 
 	public boolean isGround() {

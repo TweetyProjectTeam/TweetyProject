@@ -139,14 +139,12 @@ public class StrictNegation implements ASPLiteral {
 
 	@Override
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
-		// TODO Auto-generated method stub
-		return null;
+		return atom.getTerms(cls);
 	}
 
 	@Override
 	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
-		// TODO Auto-generated method stub
-		return false;
+		return atom.containsTermsOfType(cls);
 	}
 
 	@Override
