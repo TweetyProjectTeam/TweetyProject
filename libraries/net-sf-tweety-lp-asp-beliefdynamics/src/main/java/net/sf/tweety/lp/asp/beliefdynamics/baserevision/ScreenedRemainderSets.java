@@ -145,7 +145,7 @@ public class ScreenedRemainderSets extends RemainderSets<ASPRule> {
 	}
 	
 	private boolean isConsistent(Program p) {
-		return !solver.computeAnswerSets(p, 1).isEmpty();
+		return !solver.getModels(p).isEmpty();
 	}
 	
 	/**

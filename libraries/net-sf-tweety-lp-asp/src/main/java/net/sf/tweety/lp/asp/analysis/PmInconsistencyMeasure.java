@@ -68,7 +68,7 @@ public class PmInconsistencyMeasure implements InconsistencyMeasure<Program> {
 		if (!beliefBase.isGround())
 			throw new RuntimeException("Measure only defined for ground programs.");
 
-		if (solver.computeAnswerSets(beliefBase, 1).size() > 0)
+		if (solver.getModel(beliefBase).size() > 0)
 			return 0d;
 		int min = Integer.MAX_VALUE;
 		SubsetIterator<ASPRule> it_del = new IncreasingSubsetIterator<ASPRule>(beliefBase);
@@ -91,7 +91,7 @@ public class PmInconsistencyMeasure implements InconsistencyMeasure<Program> {
 					Program p = beliefBase.clone();
 					p.removeAll(del);
 					p.addAll(add);
-					if (solver.computeAnswerSets(p, 1).size() > 0)
+					if (solver.getModel(p).size() > 0)
 						min = del.size() + add.size();
 				}
 			}

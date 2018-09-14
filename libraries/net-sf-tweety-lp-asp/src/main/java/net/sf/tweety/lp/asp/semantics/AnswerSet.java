@@ -22,41 +22,62 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.commons.BeliefSet;
-import net.sf.tweety.commons.Signature;
-import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.commons.InterpretationSet;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
  * An answer set is a belief set which only contains literals and represents the
  * deductive belief set of an extended logic program under the answer set
- * semantic. (TODO this is the old description, is it accurate for asp core 2?
+ * semantic. 
  * 
  * @author Thomas Vengels
  * @author Tim Janus
  * @author Anna Gessler
  */
-public class AnswerSet extends BeliefSet<ASPLiteral> {
+public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
 	public final int level;
 	public final int weight;
 
+	/**
+	 * Creates a new empty AnswerSet.
+	 */
 	public AnswerSet() {
 		level = 0;
 		weight = 1;
 	}
 
+	/**
+	 * Creates a new empty AnswerSet with the given level and weight.
+	 * 
+	 * @param level 
+	 * @param weight
+	 */
 	public AnswerSet(Collection<ASPLiteral> lits, int level, int weight) {
 		super(lits);
 		this.level = level;
 		this.weight = weight;
 	}
 
+	/**
+	 * Copy-Constructor
+	 * 
+	 * @param level 
+	 * @param weight
+	 */
 	public AnswerSet(AnswerSet other) {
 		super(other);
 		this.level = other.level;
 		this.weight = other.weight;
 	}
 
+	/**
+	 * Returns all literals of a given name in the AnswerSet.
+	 * 
+	 * @param name
+	 * @return set of literals
+	 */
 	public Set<ASPLiteral> getLiteralsWithName(String name) {
 		Set<ASPLiteral> reval = new HashSet<ASPLiteral>();
 		for (ASPLiteral lit : this) {
@@ -64,11 +85,6 @@ public class AnswerSet extends BeliefSet<ASPLiteral> {
 				reval.add(lit);
 			}
 		}
-		return reval;
-	}
-
-	public Set<String> getFunctors() {
-		Set<String> reval = new HashSet<String>();
 		return reval;
 	}
 
@@ -82,11 +98,16 @@ public class AnswerSet extends BeliefSet<ASPLiteral> {
 		return new AnswerSet(this);
 	}
 
+
 	@Override
-	public Signature getSignature() {
-		FolSignature sig = new FolSignature();
-		for (ASPLiteral lit : this) 
-			sig.addSignature(lit.getSignature());
-		return sig;
+	public boolean satisfies(Program beliefBase) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean satisfies(ASPRule formula) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

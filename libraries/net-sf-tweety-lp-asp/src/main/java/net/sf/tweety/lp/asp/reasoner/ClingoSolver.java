@@ -20,13 +20,12 @@ package net.sf.tweety.lp.asp.reasoner;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.List;
-
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.writer.ClingoWriter;
 
@@ -56,11 +55,10 @@ public class ClingoSolver extends ASPSolver {
 	
 	/**
 	 * Additional command line options for Clingo. 
-	 * Default value is the maximum number of answer sets that
-	 * are generated.
+	 * Default value is empty.
 	 */
-	private String options = Integer.toString(this.maxModels);
-
+	private String options = "";
+	
 	/**
 	 * Constructs a new instance pointing to a specific Clingo solver.
 	 * @param path2clingo binary location of Clingo on the hard drive
@@ -81,7 +79,7 @@ public class ClingoSolver extends ASPSolver {
 	}
 	
 	@Override
-	public AnswerSetList computeAnswerSets(Program p) {
+	public AnswerSetList getModels(Program p) {
 		AnswerSetList result = new AnswerSetList();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
@@ -126,7 +124,7 @@ public class ClingoSolver extends ASPSolver {
 	}
 
 	@Override
-	public AnswerSetList computeAnswerSets(String s) {
+	public AnswerSetList getModels(String s) {
 		AnswerSetList result = new AnswerSetList();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
@@ -135,28 +133,37 @@ public class ClingoSolver extends ASPSolver {
 			writer.close();
 			
 			String cmd = pathToSolver + "/clingo " + options + " " + file.getAbsolutePath();
-			result = parseResult( bash.run(cmd));	
+			this.outputData =( bash.run(cmd));	
+			result = parseResult(outputData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return result;
 	}
-	
+
 	@Override
-	public AnswerSetList computeAnswerSets(List<String> files) {
-		AnswerSetList result = new AnswerSetList();
+	public Boolean query(Program beliefbase, ASPLiteral formula) {
+		//TODO 
+		return null;
+	}
+
+	@Override
+	public AnswerSet getModel(Program p) {
+		AnswerSet result = new AnswerSet();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
-			PrintWriter writer = new PrintWriter(file);
-			for (String s : files)
-				writer.write(s);
+			ClingoWriter writer = new ClingoWriter(new PrintWriter(file));
+			writer.printProgram(p);
 			writer.close();
 			
-			String cmd = pathToSolver + "/clingo " + options + " " + file.getAbsolutePath();
-			result = parseResult(bash.run(cmd));
+			String cmd = pathToSolver + "/clingo " + options + " " + " 1 " + file.getAbsolutePath();
+			this.outputData =( bash.run(cmd));	
+			result = parseResult(outputData).get(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return result;
 	}
 	

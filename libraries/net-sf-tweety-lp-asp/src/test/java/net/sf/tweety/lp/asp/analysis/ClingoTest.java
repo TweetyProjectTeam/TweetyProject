@@ -54,7 +54,7 @@ public class ClingoTest {
 	public static void init() {
 		visitor = new InstantiateVisitor();
 		parser = new ASPCore2Parser(new StringReader(""));
-		solver = new ClingoSolver("path/to/clingo");
+		solver = new ClingoSolver("/home/anna/sw/asp/clingo");
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
+		AnswerSetList asl = solver.getModels(p);
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 3);
@@ -75,7 +75,7 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
+		AnswerSetList asl = solver.getModels(p);
 		
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
@@ -88,8 +88,7 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 		
 		Program p = visitor.visit(parser.Program(), null);
-		solver.computeAnswerSets(p, 1);
-		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
+		AnswerSetList asl = solver.getModels(p);
 		
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
@@ -102,8 +101,7 @@ public class ClingoTest {
 		parser.ReInit(fistr);
 			
 		Program p = visitor.visit(parser.Program(), null);
-		solver.computeAnswerSets(p, 1);
-		AnswerSetList asl = solver.computeAnswerSets(p, 1000);
+		AnswerSetList asl = solver.getModels(p);
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 5);

@@ -81,7 +81,7 @@ public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 		if(!beliefBase.isGround())
 			throw new RuntimeException("Measure only defined for ground programs.");
 		try {
-			if(solver.computeAnswerSets(beliefBase, 1).size() > 0)
+			if(solver.getModel(beliefBase).size() > 0)
 				return 0d;
 			Set<ASPLiteral> allLiterals = new HashSet<ASPLiteral>();
 			FolSignature sig = beliefBase.getSignature();
@@ -96,7 +96,7 @@ public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 				//skip inconsistent m
 				if(!this.isConsistent(m)) continue;
 				Program p = beliefBase.reduct(m);
-				AnswerSetList asl = this.solver.computeAnswerSets(p, 1);
+				AnswerSetList asl = this.solver.getModels(p);
 				if(asl.size() == 0) continue;
 				int val = (new SetTools<ASPLiteral>()).symmetricDifference(m, asl.get(0)).size();
 				if(val < result)

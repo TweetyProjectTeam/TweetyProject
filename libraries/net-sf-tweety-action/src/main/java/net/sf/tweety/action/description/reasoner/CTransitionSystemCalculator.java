@@ -98,9 +98,9 @@ public class CTransitionSystemCalculator
       new TransitionSystem( states, signature );
     
     String rules = getLpT( actionDescription, signature, 1 );
-    // TODO: Test the following code
-    aspsolver.executeProgram(rules);
-    String[] claspResult = (String [])aspsolver.getOutput().toArray();
+  
+    aspsolver.getModels(rules);
+    String[] claspResult =  aspsolver.getOutput().split("\\R+");
     /*
     String[] claspResult = aspsolver.calculateAnswerSets( rules );
     */
@@ -154,9 +154,8 @@ public class CTransitionSystemCalculator
     Set< State > result = new HashSet< State >();
     String rules = getLpT( actionDescription, signature, 0 );
     
-    // TODO: Test the following code
-    aspsolver.executeProgram(rules);
-    String[] claspResult = (String [])aspsolver.getOutput().toArray();
+    aspsolver.getModels(rules);
+    String[] claspResult =  aspsolver.getOutput().split("\\R+");
     /*
     String[] claspResult = aspsolver.calculateAnswerSets( rules );
     */

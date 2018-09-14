@@ -18,9 +18,13 @@
  */
 package net.sf.tweety.lp.asp.reasoner;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
@@ -40,30 +44,52 @@ public class DLVSolver extends ASPSolver {
 		this.setPathToDLV(pathToDLV);
 	}
 
-	@Override
-	public AnswerSetList computeAnswerSets(Program p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AnswerSetList computeAnswerSets(String s) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AnswerSetList computeAnswerSets(List<String> files) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public String getPathToDLV() {
 		return pathToDLV;
 	}
 
 	public void setPathToDLV(String pathToDLV) {
 		this.pathToDLV = pathToDLV;
+	}
+	
+	/**
+	 * Additional command line options for DLV. 
+	 * Default value is empty.
+	 */
+	private String options = "";
+
+
+
+	@Override
+	public Boolean query(Program beliefbase, ASPLiteral formula) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public AnswerSetList getModels(Program bbase) {
+		// TODO Auto-generated method stub
+		// TODO use Integer.toString(this.integerMaximum) in cmd string
+		return null;
+	}
+
+
+
+	@Override
+	public AnswerSet getModel(Program bbase) {
+		// TODO Auto-generated method stub
+		// TODO use Integer.toString(this.integerMaximum) in cmd string
+		return null;
+	}
+
+
+
+	@Override
+	public AnswerSetList getModels(String p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -27,7 +27,7 @@ import net.sf.tweety.lp.asp.syntax.Program;
 /**
  * Examples for parsing simple ELP programs and for using Clingo to solve them.
  * 
- * @author anna
+ * @author Anna Gessler
  *
  */
 public class ASPCore2ParserExample {
@@ -57,13 +57,13 @@ public class ASPCore2ParserExample {
 		System.out.println("----------------\nParsed program:\n" + pr2);
 		
 		ClingoSolver solver = new ClingoSolver("/home/anna/sw/asp/clingo");
-		AnswerSetList as = solver.computeAnswerSets(pr2);
+		AnswerSetList as = solver.getModels(pr2);
 		System.out.println(as);
 		
 		String es = "p(a). \n" + 
 				"p(b).\n" + 
 				"{q(X) : p(X)}. ";
-		AnswerSetList as2 = solver.computeAnswerSets(es);
+		AnswerSetList as2 = solver.getModels(es);
 		System.out.println(as2);
 	}
 

@@ -136,7 +136,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		concat.add(pd2);
 		AnswerSetList asDefault;
 		try {
-			asDefault = solver.computeAnswerSets(concat, maxInt);
+			asDefault = solver.getModels(concat, maxInt);
 		} catch (Exception e) {
 			LOG.error("Cannot solve combined program:\n{}", concat.toString());
 			e.printStackTrace();
@@ -229,7 +229,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		program1 = "sleep:-not tv_on.\nnight.\ntv_on.\nwatch_tv:-tv_on.";
 		program2 = "-tv_on:-power_failure.\npower_failure.";
 		
-		DLVSolver clingo = new DLVSolver("/home/janus/workspace/angerona/software/test/src/main/tools/solver/asp/dlv/dlv.bin");
+		DLVSolver dlv = new DLVSolver("/home/janus/workspace/angerona/software/test/src/main/tools/solver/asp/dlv/dlv.bin");
 		
 		InstantiateVisitor visitor = new InstantiateVisitor();
 		ASPCore2Parser parser = new ASPCore2Parser(new StringReader(program1)); //TODO test with new parser
@@ -238,17 +238,17 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		Program p2 = visitor.visit(parser.Program(), null);
 		
 		System.out.println("P1:");
-		System.out.println(p1.toString()+"\n" + clingo.computeAnswerSets(p1, 5) + "\n");
+		System.out.println(p1.toString()+"\n" + dlv.getModels(p1, 5) + "\n");
 		
 		System.out.println("P2:");
-		System.out.println(p2.toString()+"\n" + clingo.computeAnswerSets(p2, 5) + "\n");
+		System.out.println(p2.toString()+"\n" + dlv.getModels(p2, 5) + "\n");
 		
-		PreferenceHandling ph = new PreferenceHandling(clingo);
+		PreferenceHandling ph = new PreferenceHandling(dlv);
 		Program r = ph.revise(p1, p2);		
 
 		System.out.println("Revised:");
 		System.out.println(r.toString()+"\n\n");
 		
-		System.out.println(clingo.computeAnswerSets(r, 5));
+		System.out.println(dlv.getModels(r, 5));
 	}
 }

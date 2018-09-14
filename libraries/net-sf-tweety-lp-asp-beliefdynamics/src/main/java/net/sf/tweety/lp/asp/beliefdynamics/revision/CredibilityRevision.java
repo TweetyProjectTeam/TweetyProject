@@ -208,7 +208,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 		
 		// compute the answer set of the extended alphabet
 		try {
-			lastAnswersets = solver.computeAnswerSets(credProgram, maxInt);
+			lastAnswersets = solver.getModels(credProgram, maxInt);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

@@ -206,9 +206,9 @@ public class SimpleRevisionCompareModel {
 			return;
 		if(leftResult != null) {
 			try {
-				AnswerSetList leftasl = solver.computeAnswerSets(new Program((Collection<ASPRule>)leftResult), 10);
+				AnswerSetList leftasl = solver.getModels(new Program((Collection<ASPRule>)leftResult));
 				change.firePropertyChange("leftASL", null, leftasl);
-				AnswerSetList rightasl = solver.computeAnswerSets(new Program((Collection<ASPRule>)rightResult), 10);
+				AnswerSetList rightasl = solver.getModels(new Program((Collection<ASPRule>)rightResult));
 				change.firePropertyChange("rightASL", null, rightasl);
 			} catch (Exception e) {
 				change.firePropertyChange("error", "Parser Error", e.getMessage());
