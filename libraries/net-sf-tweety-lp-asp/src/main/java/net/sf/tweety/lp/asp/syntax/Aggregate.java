@@ -33,11 +33,17 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * This class represents an aggregate function. Aggregates are functions like
- * count, sum, max and min that range over a set of terms and literals and that
- * evaluate to some value. This value can then be compared to another value with
- * a comparative operator like "=" to produce a truth value.
+ * This class represents an aggregate. Aggregates are functions that range over
+ * sets of terms and literals and evaluate to some value. For example, using the
+ * aggregate function #count one could obtain the number of employees of one
+ * department. This value can be compared to another value with a comparative
+ * operator like "=" to produce a truth value (also known as
+ * 'aggregate relation'). For example, this could be used to express the condition
+ * that the number of employees in one department has to be greater than 0.
  * 
+ * <br>An aggregate that contains such a comparison is also referred to as an
+ * aggregate atom and can appear in the body of a rule.
+ *
  * @author Tim Janus
  * @author Thomas Vengels
  * @author Anna Gessler
@@ -45,24 +51,54 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 public class Aggregate implements ASPBodyElement {
 
 	/**
-	 * The aggregate function.
+	 * The aggregate function of this aggregate.
+	 * 
+	 * @see net.sf.tweety.lp.asp.syntax.ASPOperator.AggregateFunction
 	 */
 	private ASPOperator.AggregateFunction function;
 
 	/**
-	 * The elements of the Aggregate.
+	 * The elements that the aggregate ranges over.
+	 * 
+	 * @see net.sf.tweety.lp.asp.syntax.AggregateElement
 	 */
 	private List<AggregateElement> aggregateElements;
 
 	/**
-	 * Aggregate relation. The resulting value of the aggregate will be compared to
-	 * relationTerm using the operator (aggregate relation).
+	 * A comparative operator that will be used to compare the aggregate's resulting
+	 * value with the another value (rightGuard) to produce a truth value.
 	 */
 	private ASPOperator.BinaryOperator rightOp;
-	private Term<?> rightRelationTerm;
 
+	/**
+	 * A term that the aggregate's resulting value will be compared to using the
+	 * comparative operator.
+	 */
+	private Term<?> rightGuard;
+
+	/**
+	 * A comparative operator that will be used to compare the aggregate's resulting
+	 * value with the another value (leftGuard) to produce a truth value.
+	 */
 	private ASPOperator.BinaryOperator leftOp;
-	private Term<?> leftRelationTerm;
+
+	/**
+	 * A term that the aggregate's resulting value will be compared to using the
+	 * comparative operator.
+	 */
+	private Term<?> leftGuard;
+
+	/**
+	 * Empty default constructor.
+	 */
+	public Aggregate() {
+		this.rightOp = null;
+		this.function = null;
+		this.aggregateElements = new LinkedList<AggregateElement>();
+		this.rightGuard = null;
+		this.leftOp = null;
+		this.leftGuard = null;
+	}
 
 	/**
 	 * Creates a new Aggregate with the given aggregate function and the given
@@ -81,7 +117,7 @@ public class Aggregate implements ASPBodyElement {
 
 	/**
 	 * Creates a new Aggregate with the given aggregate function, the given
-	 * aggregate elements, and the given aggregate relation and term.
+	 * aggregate elements, and the given aggregate relation.
 	 * 
 	 * @param func
 	 *            an aggregate function
@@ -93,14 +129,12 @@ public class Aggregate implements ASPBodyElement {
 		this.aggregateElements = elements;
 		this.function = func;
 		this.rightOp = relation;
-		this.rightRelationTerm = t;
+		this.rightGuard = t;
 	}
 
 	/**
 	 * Creates a new Aggregate with the given aggregate function, the given
-	 * aggregate elements, and the given left and right aggregate relations and
-	 * terms.
-	 * 
+	 * aggregate elements, and the given left and right aggregate relations.
 	 * @param func
 	 *            an aggregate function
 	 * @param elements
@@ -111,9 +145,9 @@ public class Aggregate implements ASPBodyElement {
 		this.aggregateElements = elements;
 		this.function = func;
 		this.rightOp = relation;
-		this.rightRelationTerm = t;
+		this.rightGuard = t;
 		this.leftOp = relation2;
-		this.leftRelationTerm = t2;
+		this.leftGuard = t2;
 	}
 
 	/**
@@ -122,36 +156,24 @@ public class Aggregate implements ASPBodyElement {
 	 * @param other
 	 */
 	public Aggregate(Aggregate other) {
-		this(other.getFunction(), other.getAggregateElements(), other.getRightRelation(), other.getRightRelationTerm(),
-				other.getLeftRelation(), other.getLeftRelationTerm());
-	}
-
-	/**
-	 * Default constructor.
-	 */
-	public Aggregate() {
-		this.rightOp = null;
-		this.function = null;
-		this.aggregateElements = new LinkedList<AggregateElement>();
-		this.rightRelationTerm = null;
-		this.leftOp = null;
-		this.leftRelationTerm = null;
+		this(other.getFunction(), other.getAggregateElements(), other.getRightOperator(), other.getRightGuard(),
+				other.getLeftOperator(), other.getLeftGuard());
 	}
 
 	@Override
 	public String toString() {
 		String res = "";
-		if (leftOp != null)
-			res += leftRelationTerm.toString() + leftOp.toString();
-			
+		if (this.hasLeftRelation())
+			res += leftGuard.toString() + leftOp.toString();
+
 		res += function.toString() + "{";
 
-		for (int i = 0; i < aggregateElements.size() - 1; i++) 
+		for (int i = 0; i < aggregateElements.size() - 1; i++)
 			res += aggregateElements.get(i) + " ; ";
 		res += aggregateElements.get(aggregateElements.size() - 1) + "}";
 
-		if (this.rightOp != null && rightRelationTerm != null)
-			res += rightOp.toString() + rightRelationTerm.toString();
+		if (this.hasRightRelation())
+			res += rightOp.toString() + rightGuard.toString();
 
 		return res;
 	}
@@ -191,10 +213,10 @@ public class Aggregate implements ASPBodyElement {
 		FolSignature sig = new FolSignature();
 		for (AggregateElement e : aggregateElements)
 			sig.add(e.getSignature());
-		if (rightRelationTerm != null)
-			sig.add(rightRelationTerm);
-		if (leftRelationTerm != null)
-			sig.add(leftRelationTerm);
+		if (rightGuard != null)
+			sig.add(rightGuard);
+		if (leftGuard != null)
+			sig.add(leftGuard);
 		return sig;
 	}
 
@@ -218,13 +240,13 @@ public class Aggregate implements ASPBodyElement {
 
 	@Override
 	public boolean isGround() {
+		if (this.hasRightRelation() && rightGuard.containsTermsOfType(Variable.class))
+			return false;
+		if (this.hasLeftRelation() && leftGuard.containsTermsOfType(Variable.class))
+			return false;
 		for (AggregateElement e : aggregateElements)
 			if (!e.isGround())
 				return false;
-		if (rightRelationTerm != null && rightRelationTerm.containsTermsOfType(Variable.class))
-			return false;
-		if (leftRelationTerm != null && leftRelationTerm.containsTermsOfType(Variable.class))
-			return false;
 		return true;
 	}
 
@@ -249,10 +271,10 @@ public class Aggregate implements ASPBodyElement {
 		Set<Term<?>> terms = new HashSet<Term<?>>();
 		for (AggregateElement e : aggregateElements)
 			terms.addAll(e.getTerms());
-		if (rightRelationTerm != null)
-			terms.add(rightRelationTerm);
-		if (leftRelationTerm != null)
-			terms.add(rightRelationTerm);
+		if (this.hasRightRelation())
+			terms.addAll(rightGuard.getTerms());
+		if (this.hasLeftRelation())
+			terms.addAll(leftGuard.getTerms());
 		return terms;
 	}
 
@@ -261,6 +283,10 @@ public class Aggregate implements ASPBodyElement {
 		Set<C> terms = new HashSet<C>();
 		for (AggregateElement e : aggregateElements)
 			terms.addAll(e.getTerms(cls));
+		if (this.hasRightRelation())
+			terms.addAll(rightGuard.getTerms(cls));
+		if (this.hasLeftRelation())
+			terms.addAll(leftGuard.getTerms(cls));
 		return terms;
 	}
 
@@ -269,9 +295,9 @@ public class Aggregate implements ASPBodyElement {
 		for (AggregateElement e : aggregateElements)
 			if (e.containsTermsOfType(cls))
 				return true;
-		if (rightRelationTerm != null && rightRelationTerm.containsTermsOfType(cls))
+		if (this.hasRightRelation() && rightGuard.containsTermsOfType(cls))
 			return true;
-		if (leftRelationTerm != null && leftRelationTerm.containsTermsOfType(cls))
+		if (this.hasLeftRelation() && leftGuard.containsTermsOfType(cls))
 			return true;
 		return false;
 	}
@@ -281,7 +307,29 @@ public class Aggregate implements ASPBodyElement {
 	}
 
 	/**
-	 * Get the aggregate function.
+	 * Returns true if the aggregate has a left 
+	 * aggregate relation (meaning a term
+	 * that the aggregate's resulting value will
+	 * be compared to using a comparative operator).
+	 * @return true if aggregate has left aggregate relation
+	 */
+	public boolean hasLeftRelation() {
+		return leftGuard != null && leftOp != null;
+	}
+
+	/**
+	 * Returns true if the aggregate has a right 
+	 * aggregate relation (meaning a term
+	 * that the aggregate's resulting value will
+	 * be compared to using a comparative operator).
+	 * @return true if aggregate has right aggregate relation
+	 */
+	public boolean hasRightRelation() {
+		return rightGuard != null && rightOp != null;
+	}
+
+	/**
+	 * Returns the aggregate function.
 	 * 
 	 * @return an aggregate function
 	 */
@@ -290,7 +338,7 @@ public class Aggregate implements ASPBodyElement {
 	}
 
 	/**
-	 * Set the aggregate function.
+	 * Sets the aggregate function.
 	 * 
 	 * @param an
 	 *            aggregate function
@@ -300,81 +348,77 @@ public class Aggregate implements ASPBodyElement {
 	}
 
 	/**
-	 * Get the right relation (comparative operator or guard) of the aggregate.
+	 * Returns the operator of the right aggregate relation.
 	 * 
 	 * @return comparative operator
 	 */
-	public ASPOperator.BinaryOperator getRightRelation() {
+	public ASPOperator.BinaryOperator getRightOperator() {
 		return rightOp;
 	}
 
 	/**
-	 * Set right relation (comparative operator or guard) of the aggregate.
+	 * Sets the operator of the right aggregate relation.
 	 * 
 	 * @param comparative
 	 *            operator
 	 */
-	public void setRightRelation(ASPOperator.BinaryOperator relation) {
-		this.rightOp = relation;
+	public void setRightOperator(ASPOperator.BinaryOperator op) {
+		this.rightOp = op;
 	}
 
 	/**
-	 * Get term that the resulting value of the aggregate will be compared to using
-	 * the right relation.
+	 * Returns the right relation term (right guard).
 	 * 
 	 * @return Term
 	 */
-	public Term<?> getRightRelationTerm() {
-		return rightRelationTerm;
+	public Term<?> getRightGuard() {
+		return rightGuard;
 	}
 
 	/**
-	 * Set the term that the resulting value of the aggregate will be compared to
-	 * using the right relation.
+	 * Set the right relation term (right guard).
 	 * 
 	 * @param Term
 	 */
-	public void setRightRelationTerm(Term<?> relationTerm) {
-		this.rightRelationTerm = relationTerm;
+	public void setRightGuard(Term<?> relationTerm) {
+		this.rightGuard = relationTerm;
 	}
 
 	/**
-	 * Get the left relation (comparative operator or guard) of the aggregate.
+	 * Returns the operator of the left aggregate relation.
 	 * 
 	 * @return comparative operator
 	 */
-	public ASPOperator.BinaryOperator getLeftRelation() {
+	public ASPOperator.BinaryOperator getLeftOperator() {
 		return leftOp;
 	}
 
 	/**
-	 * Set left relation (comparative operator or guard) of the aggregate.
+	 * Sets the operator of the left aggregate relation.
 	 * 
 	 * @param comparative
 	 *            operator
 	 */
-	public void setLeftRelation(ASPOperator.BinaryOperator relation) {
-		this.leftOp = relation;
+	public void setLeftOperator(ASPOperator.BinaryOperator op) {
+		this.leftOp = op;
 	}
 
 	/**
-	 * Get term that the resulting value of the aggregate will be compared to using
-	 * the left relation.
+	 * Get the left relation term (right guard).
 	 * 
 	 * @return Term
 	 */
-	public Term<?> getLeftRelationTerm() {
-		return leftRelationTerm;
+	public Term<?> getLeftGuard() {
+		return leftGuard;
 	}
 
 	/**
-	 * Set the term that the resulting value of the aggregate will be compared to
-	 * using the left relation.
+	 * Set the left relation term (right guard).
 	 * 
 	 * @param Term
 	 */
-	public void setLeftRelationTerm(Term<?> relationTerm) {
-		this.leftRelationTerm = relationTerm;
+	public void setLeftGuard(Term<?> relationTerm) {
+		this.leftGuard = relationTerm;
 	}
 
 }

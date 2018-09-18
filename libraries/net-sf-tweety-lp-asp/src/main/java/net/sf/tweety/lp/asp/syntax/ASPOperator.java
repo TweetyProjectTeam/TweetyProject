@@ -20,13 +20,19 @@ package net.sf.tweety.lp.asp.syntax;
 
 /**
  * This class collects some common operators used in ASP terms
- * as well as the possible function names for Aggregates.
+ * as well as the possible function names for aggregates.
  * 
  * @author Anna Gessler
  *
  */
 public class ASPOperator {
 	
+	/**
+	 * The arithmetic operators that are supported by the ASP-Core-2 standard
+	 * and by Tweety.
+	 * 
+	 * @author Anna Gessler
+	 */
 	public enum ArithmeticOperator {
 		 PLUS,MINUS,TIMES,DIV;  
 		
@@ -43,6 +49,12 @@ public class ASPOperator {
 		}
 	}
 	
+	/**
+	 * The binary comparative operators that are supported by the ASP-Core-2 standard
+	 * and by Tweety.
+	 * 
+	 * @author Anna Gessler
+	 */
 	public enum BinaryOperator {
 		LT,LEQ,EQ,NEQ,GT,GEQ;  
 		
@@ -63,6 +75,12 @@ public class ASPOperator {
 		}
 	}
 	
+	/**
+	 * The aggregate functions that are supported by the ASP-Core-2 standard
+	 * and by Tweety.
+	 * 
+	 * @author Anna Gessler
+	 */
 	public enum AggregateFunction {
 		COUNT,MAX,MIN,SUM;
 		

@@ -33,8 +33,8 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class models an aggregate element, meaning a set of terms and a set of
- * naf literals (i.e. literals and default negated literals). One or more
- * Aggregate Elements form an Aggregate.
+ * naf literals (= literals or default negated literals). One or more
+ * aggregate elements form an aggregate or aggregate atom.
  * 
  * @see net.sf.tweety.lp.asp.syntax.Aggregate
  * 
@@ -45,8 +45,8 @@ public class AggregateElement implements ASPElement {
 	private List<ASPBodyElement> right;
 
 	/**
-	 * Creates new Aggregate Element with given list of terms and list of naf
-	 * literals.
+	 * Creates a new Aggregate Element with the given list of terms and 
+	 * the given list of naf literals.
 	 * 
 	 * @param l
 	 * @param r
@@ -200,16 +200,16 @@ public class AggregateElement implements ASPElement {
 	}
 	
 	/**
-	 * Get the left part of the Aggregate element
-	 * @return list of terms
+	 * Returns the left part of the Aggregate element.
+	 * @return list of terms 
 	 */
 	public List<Term<?>> getLeft() {
 		return left;
 	}
 
 	/**
-	 * Get the right part of the Aggregate element
-	 * @return list of naf literals
+	 * Returns the right part of the Aggregate element.
+	 * @return list of naf literals (= literals or default negated literals)
 	 */
 	public List<ASPBodyElement> getRight() {
 		return right;
