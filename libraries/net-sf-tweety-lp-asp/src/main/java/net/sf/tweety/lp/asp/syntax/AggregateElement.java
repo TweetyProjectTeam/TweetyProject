@@ -19,15 +19,16 @@
 package net.sf.tweety.lp.asp.syntax;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -36,11 +37,11 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * naf literals (= literals or default negated literals). One or more
  * aggregate elements form an aggregate or aggregate atom.
  * 
- * @see net.sf.tweety.lp.asp.syntax.Aggregate
+ * @see net.sf.tweety.lp.asp.syntax.AggregateAtom
  * 
  * @author Anna Gessler
  */
-public class AggregateElement implements ASPElement {
+public class AggregateElement extends ASPElement {
 	private List<Term<?>> left;
 	private List<ASPBodyElement> right;
 
@@ -83,29 +84,6 @@ public class AggregateElement implements ASPElement {
 	}
 
 	@Override
-	public boolean isGround() {
-		for (Term<?> a : this.left)
-			if (a.containsTermsOfType(Variable.class))
-				return false;
-		for (ASPBodyElement a : this.right)
-			if (a.containsTermsOfType(Variable.class))
-				return false;
-		return true;
-	}
-
-	@Override
-	public boolean isWellFormed() {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public Class<? extends Predicate> getPredicateCls() {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
 	public boolean isLiteral() {
 		return false;
 	}
@@ -131,25 +109,6 @@ public class AggregateElement implements ASPElement {
 	}
 
 	@Override
-	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
-		for (Term<?> t : left)
-			if (t.containsTermsOfType(cls))
-				return true;
-		for (ASPBodyElement t : right)
-			if (t.containsTermsOfType(cls))
-				return true;
-		return false;
-	}
-
-	@Override
-	public SortedSet<ASPLiteral> getLiterals() {
-		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
-		for (ASPBodyElement t : right)
-			literals.addAll(t.getLiterals());
-		return literals;
-	}
-
-	@Override
 	public Set<Predicate> getPredicates() {
 		Set<Predicate> predicates = new HashSet<Predicate>();
 		for (ASPBodyElement t : right)
@@ -166,11 +125,19 @@ public class AggregateElement implements ASPElement {
 	}
 
 	@Override
-	public ASPElement substitute(Term<?> t, Term<?> v) {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
+	public AggregateElement substitute(Term<?> t, Term<?> v) {
+		List<Term<?>> terms = new LinkedList<Term<?>>();
+		List<ASPBodyElement> elements = new LinkedList<ASPBodyElement>();
+		AggregateElement a = this;
+		
+		for (Term<?> x : a.left) 
+			terms.add(x.substitute(t, v));
+		for (ASPBodyElement x : a.right) 
+			elements.add(x.substitute(t, v));
+		
+		return new AggregateElement(terms,elements);
 	}
-
+	
 	@Override
 	public FolSignature getSignature() {
 		FolSignature sig = new FolSignature();
@@ -184,19 +151,6 @@ public class AggregateElement implements ASPElement {
 	@Override
 	public AggregateElement clone() {
 		return new AggregateElement(this);
-	}
-
-	@Override
-	public ComplexLogicalFormula substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public ComplexLogicalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
 	}
 	
 	/**
@@ -213,6 +167,57 @@ public class AggregateElement implements ASPElement {
 	 */
 	public List<ASPBodyElement> getRight() {
 		return right;
+	}
+
+	@Override
+	public Class<? extends Predicate> getPredicateCls() {
+		return Predicate.class;
+	}
+
+	@Override
+	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
+		return !getTerms(cls).isEmpty();
+	}
+
+	@Override
+	public AggregateElement substitute(Map<? extends Term<?>, ? extends Term<?>> map)
+			throws IllegalArgumentException {
+		AggregateElement e = this;
+		for(Term<?> v: map.keySet())
+			e = e.substitute(v,map.get(v));
+		return e;
+	}
+
+	@Override
+	public AggregateElement exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		if(!v.getSort().equals(t.getSort()))
+			throw new IllegalArgumentException("Terms '" + v + "' and '" + t + "' are of different sorts.");
+		Constant temp = new Constant("$TEMP$", v.getSort());
+		AggregateElement rf = this.substitute(v, temp);
+		rf = rf.substitute(t, v);
+		rf = rf.substitute(temp, t);
+		// remove temporary constant from signature
+		v.getSort().remove(temp);	
+		return rf;
+	}
+
+	@Override
+	public boolean isGround() {
+		return this.getTerms(Variable.class).isEmpty();
+	}
+
+	@Override
+	public boolean isWellFormed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+
+	public SortedSet<ASPLiteral> getLiterals() {
+		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
+		for (ASPBodyElement t : right)
+			literals.addAll(t.getLiterals());
+		return literals;
 	}
 
 

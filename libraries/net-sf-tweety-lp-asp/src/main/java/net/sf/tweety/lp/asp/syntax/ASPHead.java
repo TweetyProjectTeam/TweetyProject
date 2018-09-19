@@ -29,11 +29,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport.AssociativeSupportBridge;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.AssociativeFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
-import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
@@ -47,7 +48,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Anna Gessler
  *
  */
-public class ASPHead implements ASPElement, AssociativeFormula<ASPLiteral>, Disjunctable, AssociativeSupportBridge {
+public class ASPHead extends ASPElement implements AssociativeFormula<ASPLiteral>, Disjunctable, AssociativeSupportBridge {
 
 	private AssociativeFormulaSupport<ASPLiteral> assocSupport = new AssociativeFormulaSupport<ASPLiteral>(this);
 
@@ -86,22 +87,8 @@ public class ASPHead implements ASPElement, AssociativeFormula<ASPLiteral>, Disj
 	}
 
 	@Override
-	public ComplexLogicalFormula substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
-		return assocSupport.substitute(map);
-	}
-
-	@Override
-	public ComplexLogicalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		return assocSupport.exchange(v, t);
-	}
-
-	@Override
 	public boolean isGround() {
-		for (ASPLiteral l : this.getFormulas())
-			if (!l.isGround())
-				return false;
-		return true;
+		return this.getTerms(Variable.class).isEmpty();
 	}
 
 	@Override
@@ -138,15 +125,6 @@ public class ASPHead implements ASPElement, AssociativeFormula<ASPLiteral>, Disj
 	@Override
 	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
 		return assocSupport.containsTermsOfType(cls);
-	}
-
-	@Override
-	public SortedSet<ASPLiteral> getLiterals() {
-		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
-		for (ASPLiteral element : this) {
-			literals.addAll(element.getLiterals());
-		}
-		return literals;
 	}
 
 	@Override
@@ -345,6 +323,41 @@ public class ASPHead implements ASPElement, AssociativeFormula<ASPLiteral>, Disj
 	@Override
 	public String toString() {
 		return assocSupport.toString();
+	}
+
+	@Override
+	public ASPHead substitute(Map<? extends Term<?>, ? extends Term<?>> map)
+			throws IllegalArgumentException {
+		ASPHead f = this;
+		for(Term<?> v: map.keySet())
+			f = f.substitute(v,map.get(v));
+		return f;
+	}
+
+	@Override
+	public ASPHead exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		if(!v.getSort().equals(t.getSort()))
+			throw new IllegalArgumentException("Terms '" + v + "' and '" + t + "' are of different sorts.");
+		Constant temp = new Constant("$TEMP$", v.getSort());
+		ASPHead rf = this.substitute(v, temp);
+		rf = rf.substitute(t, v);
+		rf = rf.substitute(temp, t);
+		// remove temporary constant from signature
+		v.getSort().remove(temp);	
+		return rf;
+	}
+	
+	/**
+	 * Returns all literals in this element in form of a SortedSet. 
+	 * Literals are atoms or strict negations of atoms.
+	 * @return all the literals used in the rule element 
+	 */
+	public SortedSet<ASPLiteral> getLiterals() {
+		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
+		for (ASPLiteral element : this) {
+			literals.addAll(element.getLiterals());
+		}
+		return literals;
 	}
 
 }

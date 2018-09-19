@@ -18,39 +18,76 @@
  */
 package net.sf.tweety.lp.asp.syntax;
 
+import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
-
 /**
- * This class is a common interface for all ASP formulas. It
- * defines base methods every element of a program has to provide.
+ * This class acts as an abstract base class for elements
+ * of ASP rules.
  * 
- * @author Tim Janus
  * @author Anna Gessler
+ *
  */
-public abstract interface ASPElement extends ComplexLogicalFormula {
-	
-	/** @return all the literals used in the rule element */
-	SortedSet<ASPLiteral> getLiterals();
+public abstract class ASPElement implements ComplexLogicalFormula {
+	@Override
+	public abstract Set<Predicate> getPredicates();
 	
 	@Override
-	Set<Predicate> getPredicates();
-	
-	@Override 
-	Set<ASPAtom> getAtoms(); 
+	public abstract ASPElement substitute(Term<?> t, Term<?> v);
 	
 	@Override
-	ASPElement substitute(Term<?> t, Term<?> v);
+	public abstract FolSignature getSignature();
 	
 	@Override
-	FolSignature getSignature();
+	public abstract Set<ASPAtom> getAtoms();
 	
 	@Override
-	ASPElement clone();
+	public abstract ASPElement clone();
+	
+	public ASPElement substitute(Map<? extends Term<?>, ? extends Term<?>> map) throws IllegalArgumentException {
+		ASPElement f = this;
+		for(Term<?> v: map.keySet())
+			f = f.substitute(v,map.get(v));
+		return f;
+	}
+
+	public ASPElement exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		if(!v.getSort().equals(t.getSort()))
+			throw new IllegalArgumentException("Terms '" + v + "' and '" + t + "' are of different sorts.");
+		Constant temp = new Constant("$TEMP$", v.getSort());
+		ASPElement rf = this.substitute(v, temp);
+		rf = rf.substitute(t, v);
+		rf = rf.substitute(temp, t);
+		// remove temporary constant from signature
+		v.getSort().remove(temp);	
+		return rf;
+	}
+
+	@Override
+	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
+		return !getTerms(cls).isEmpty();
+	}
+
+	@Override
+	public boolean isGround() {
+		return this.getTerms(Variable.class).isEmpty();
+	}
+
+	@Override
+	public boolean isWellFormed() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public Class<? extends Predicate> getPredicateCls() {
+		return Predicate.class;
+	}
+
 }

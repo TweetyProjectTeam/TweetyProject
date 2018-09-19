@@ -18,24 +18,37 @@
  */
 package net.sf.tweety.lp.asp.syntax;
 
+import java.util.SortedSet;
+
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+
 /**
- * This class is a common superclass for ASP formulas that can be
- * part of an ASP rule body (premise of a rule): 
+ * This class is a common base class for ASP formulas
+ * that can be part of an ASP rule body (premise of a rule): 
  * 
  * <ul>
  * <li> Literals (i.e. atoms or strictly negated atoms) </li>
  * <li> Built-in atoms (i.e. terms connected by comparative operators like == and !=) </li>
- * <li> Aggregates </li>
- * <li> NAF negations of literals or aggregates (i.e. 'not a' a for a literal or aggregate a)</li>
+ * <li> Aggregate atoms </li>
+ * <li> Default negations of literals or aggregates (i.e. 'not a' a for a literal or aggregate a)</li>
  * </ul>
  * 
  * Note: In the ASP-Core-2 standard, the formulas represented by this
  * class are also referred to as 'Literals'. In the Tweety ASP library,
- * Literals are always atoms or the strict negations of atoms. 
- * 
+ * literals are only atoms or the strict negations of atoms. 
+ *
+ * @author Tim Janus
  * @author Anna Gessler
  */
-public interface ASPBodyElement extends ASPElement {
+public abstract class ASPBodyElement extends ASPElement {
 	
-
+	/**
+	 * Returns all literals in this element in form of a SortedSet. 
+	 * Literals are atoms or strict negations of atoms.
+	 * @return all the literals used in the rule element 
+	 */
+	public abstract SortedSet<ASPLiteral> getLiterals();
+	
+	@Override
+	public abstract ASPBodyElement substitute(Term<?> t, Term<?> v);
 }

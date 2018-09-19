@@ -19,12 +19,15 @@
 package net.sf.tweety.lp.asp.syntax;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.commons.util.rules.Rule;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -39,7 +42,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Tim Janus
  * @author Thomas Vengels
  */
-public class ASPRule implements Rule<ASPHead, ASPBodyElement>, Comparable<ASPRule> {
+public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>, Comparable<ASPRule> {
 
 	/**
 	 * The head (conclusion) of a rule. Consists of a disjunction of atoms.
@@ -360,4 +363,74 @@ public class ASPRule implements Rule<ASPHead, ASPBodyElement>, Comparable<ASPRul
 		return literals;
 	}
 
+	public ASPRule substitute(Term<?> v, Term<?> t) {
+		ASPRule reval = new ASPRule();
+		reval.head = head.substitute(v, t);
+		for(ASPBodyElement bodyElement : body) 
+			reval.body.add(bodyElement.substitute(v,t));
+		return reval;
+	}
+	
+	public ASPRule exchange(Term<?> v, Term<?> t) {
+		ASPRule reval = new ASPRule();
+		reval.head = head.exchange(v, t);
+		for(ASPBodyElement bodyElement : body) 
+			reval.body.add((ASPBodyElement) bodyElement.exchange(v,t));
+		return reval;
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return false;
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> terms = new HashSet<Term<?>>();
+		terms.addAll(head.getTerms());
+		for (ASPBodyElement be : body)
+			terms.addAll(be.getTerms());
+		terms.addAll(level.getTerms());
+		terms.addAll(weight.getTerms());
+		terms.addAll(constraint_terms);
+		return terms;
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		Set<C> terms = new HashSet<C>();
+		terms.addAll(head.getTerms(cls));
+		for (ASPBodyElement be : body)
+			terms.addAll(be.getTerms(cls));
+		terms.addAll(level.getTerms(cls));
+		terms.addAll(weight.getTerms(cls));
+		for (Term<?> t : constraint_terms)
+			terms.addAll(t.getTerms(cls));
+		return terms;
+	}
+
+	@Override
+	public Set<Predicate> getPredicates() {
+		Set<Predicate> predicates = new HashSet<Predicate>();
+		predicates.addAll(head.getPredicates());
+		for (ASPBodyElement be : body)
+			predicates.addAll(be.getPredicates());
+		return predicates;
+	}
+
+	@Override
+	public Set<ASPAtom> getAtoms() {
+		Set<ASPAtom> atoms = new HashSet<ASPAtom>();
+		atoms.addAll(head.getAtoms());
+		for (ASPBodyElement be : body)
+			atoms.addAll(be.getAtoms());
+		return atoms;
+	}
+
+	@Override
+	public ASPRule clone() {
+		return new ASPRule(this);
+	}
+	
+	
 }

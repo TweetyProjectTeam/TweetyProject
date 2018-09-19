@@ -21,14 +21,11 @@ package net.sf.tweety.lp.asp.syntax;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -48,7 +45,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Thomas Vengels
  * @author Anna Gessler
  */
-public class Aggregate implements ASPBodyElement {
+public class AggregateAtom extends ASPBodyElement {
 
 	/**
 	 * The aggregate function of this aggregate.
@@ -91,7 +88,7 @@ public class Aggregate implements ASPBodyElement {
 	/**
 	 * Empty default constructor.
 	 */
-	public Aggregate() {
+	public AggregateAtom() {
 		this.rightOp = null;
 		this.function = null;
 		this.aggregateElements = new LinkedList<AggregateElement>();
@@ -109,7 +106,7 @@ public class Aggregate implements ASPBodyElement {
 	 * @param elements
 	 *            list of aggregate elements
 	 */
-	public Aggregate(ASPOperator.AggregateFunction func, List<AggregateElement> elements) {
+	public AggregateAtom(ASPOperator.AggregateFunction func, List<AggregateElement> elements) {
 		this();
 		this.aggregateElements = elements;
 		this.function = func;
@@ -124,7 +121,7 @@ public class Aggregate implements ASPBodyElement {
 	 * @param elements
 	 *            list of aggregate elements
 	 */
-	public Aggregate(ASPOperator.AggregateFunction func, List<AggregateElement> elements,
+	public AggregateAtom(ASPOperator.AggregateFunction func, List<AggregateElement> elements,
 			ASPOperator.BinaryOperator relation, Term<?> t) {
 		this.aggregateElements = elements;
 		this.function = func;
@@ -140,7 +137,7 @@ public class Aggregate implements ASPBodyElement {
 	 * @param elements
 	 *            list of aggregate elements
 	 */
-	public Aggregate(ASPOperator.AggregateFunction func, List<AggregateElement> elements,
+	public AggregateAtom(ASPOperator.AggregateFunction func, List<AggregateElement> elements,
 			ASPOperator.BinaryOperator relation, Term<?> t, ASPOperator.BinaryOperator relation2, Term<?> t2) {
 		this.aggregateElements = elements;
 		this.function = func;
@@ -155,7 +152,7 @@ public class Aggregate implements ASPBodyElement {
 	 * 
 	 * @param other
 	 */
-	public Aggregate(Aggregate other) {
+	public AggregateAtom(AggregateAtom other) {
 		this(other.getFunction(), other.getAggregateElements(), other.getRightOperator(), other.getRightGuard(),
 				other.getLeftOperator(), other.getLeftGuard());
 	}
@@ -203,9 +200,13 @@ public class Aggregate implements ASPBodyElement {
 	}
 
 	@Override
-	public ASPElement substitute(Term<?> t, Term<?> v) {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
+	public AggregateAtom substitute(Term<?> t, Term<?> v) {
+		AggregateAtom reval = new AggregateAtom(this);
+		if(t.equals(leftGuard)) 
+			reval.leftGuard = v;
+		if(t.equals(rightGuard)) 
+			reval.rightGuard = v;
+		return reval;
 	}
 
 	@Override
@@ -221,44 +222,8 @@ public class Aggregate implements ASPBodyElement {
 	}
 
 	@Override
-	public Aggregate clone() {
-		return new Aggregate(this);
-	}
-
-	@Override
-	public ComplexLogicalFormula substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public ComplexLogicalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public boolean isGround() {
-		if (this.hasRightRelation() && rightGuard.containsTermsOfType(Variable.class))
-			return false;
-		if (this.hasLeftRelation() && leftGuard.containsTermsOfType(Variable.class))
-			return false;
-		for (AggregateElement e : aggregateElements)
-			if (!e.isGround())
-				return false;
-		return true;
-	}
-
-	@Override
-	public boolean isWellFormed() {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public Class<? extends Predicate> getPredicateCls() {
-		return Predicate.class;
+	public AggregateAtom clone() {
+		return new AggregateAtom(this);
 	}
 
 	@Override
@@ -288,18 +253,6 @@ public class Aggregate implements ASPBodyElement {
 		if (this.hasLeftRelation())
 			terms.addAll(leftGuard.getTerms(cls));
 		return terms;
-	}
-
-	@Override
-	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
-		for (AggregateElement e : aggregateElements)
-			if (e.containsTermsOfType(cls))
-				return true;
-		if (this.hasRightRelation() && rightGuard.containsTermsOfType(cls))
-			return true;
-		if (this.hasLeftRelation() && leftGuard.containsTermsOfType(cls))
-			return true;
-		return false;
 	}
 
 	public List<AggregateElement> getAggregateElements() {

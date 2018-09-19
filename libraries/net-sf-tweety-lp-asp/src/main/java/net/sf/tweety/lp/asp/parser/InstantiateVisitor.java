@@ -20,7 +20,7 @@ import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
 import net.sf.tweety.lp.asp.syntax.StrictNegation;
 import net.sf.tweety.lp.asp.syntax.ASPOperator;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
-import net.sf.tweety.lp.asp.syntax.Aggregate;
+import net.sf.tweety.lp.asp.syntax.AggregateAtom;
 import net.sf.tweety.lp.asp.syntax.AggregateElement;
 import net.sf.tweety.lp.asp.syntax.ArithmeticTerm;
 import net.sf.tweety.lp.asp.syntax.ComparativeAtom;
@@ -214,7 +214,7 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 				ASPBodyElement l = visit((ASTNAFLiteral) node.jjtGetChild(i), null);
 				rule_body.add(l);
 			} else if (node.jjtGetChild(i) instanceof ASTAggregate) {
-				Aggregate l = visit((ASTAggregate) node.jjtGetChild(i), null);
+				AggregateAtom l = visit((ASTAggregate) node.jjtGetChild(i), null);
 				rule_body.add(l);
 			}
 		}
@@ -240,7 +240,7 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 	}
 
 	@Override
-	public Aggregate visit(ASTAggregate node, Object data) {
+	public AggregateAtom visit(ASTAggregate node, Object data) {
 		List<AggregateElement> agg_elements = new LinkedList<AggregateElement>();
 		ASPOperator.BinaryOperator right_op = null;
 		ASPOperator.BinaryOperator left_op = null;
@@ -270,7 +270,7 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 			rightTerm = visit((ASTTerm) node.jjtGetChild(i + 1), null);
 		}
 
-		return new Aggregate(result_func, agg_elements, right_op, rightTerm, left_op, leftTerm);
+		return new AggregateAtom(result_func, agg_elements, right_op, rightTerm, left_op, leftTerm);
 	}
 
 	public static ASPOperator.AggregateFunction evaluateAggrFunc(String func) {

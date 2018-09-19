@@ -32,8 +32,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * @author Tim Janus
  *
  */
-public interface ASPLiteral extends ASPBodyElement, Atom, Invertable, Comparable<ASPLiteral> {
-	
+public abstract class ASPLiteral extends ASPBodyElement implements Atom, Invertable, Comparable<ASPLiteral> {
 	/**
 	 * Creates a copy of the literal and adds the
 	 * given term as argument to the end of the argument
@@ -41,22 +40,18 @@ public interface ASPLiteral extends ASPBodyElement, Atom, Invertable, Comparable
 	 * @param term	the new argument.
 	 * @return A copy of the literal containing the given term as new argument.
 	 */
-	ASPLiteral cloneWithAddedTerm(Term<?> term);
+	public abstract ASPLiteral cloneWithAddedTerm(Term<?> term);
 	
 	/**
 	 * @return The atom representing the literal.
 	 */
-	ASPAtom getAtom();
+	public abstract ASPAtom getAtom();
 	
 	@Override
-	default
-	boolean isLiteral() {
+	public boolean isLiteral() {
 		return true;
 	}
 	
 	@Override
-	ASPLiteral complement();
-	
-	@Override
-	ASPLiteral substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
+	public abstract ASPLiteral complement();
 }

@@ -105,7 +105,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
 		// add all non-default-negated premise literals
 		for(ASPRule r : rules) {
-			for(ASPElement element : r.getPremise()) {
+			for(ASPBodyElement element : r.getPremise()) {
 				if(element instanceof ASPLiteral) {
 					result.add((ASPLiteral) element);
 				}
@@ -149,7 +149,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	 * @param literals a set of literals
 	 */
 	private boolean isTrue(ASPRule rule, Set<ASPLiteral> literals) {
-		for(ASPElement element : rule.getPremise()) {
+		for(ASPBodyElement element : rule.getPremise()) {
 			if(element instanceof ASPLiteral) {
 				if(!literals.contains(element)) {
 					return false;

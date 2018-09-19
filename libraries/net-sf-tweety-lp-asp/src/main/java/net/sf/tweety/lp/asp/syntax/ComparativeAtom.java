@@ -19,14 +19,11 @@
 package net.sf.tweety.lp.asp.syntax;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -37,7 +34,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * 
  * @author Anna Gessler
  */
-public class ComparativeAtom implements ASPBodyElement {
+public class ComparativeAtom extends ASPBodyElement {
 
 	/** 
 	 * The comparative operator of the atom.
@@ -108,32 +105,8 @@ public class ComparativeAtom implements ASPBodyElement {
 	}
 
 	@Override
-	public ASPElement clone() {
+	public ASPBodyElement clone() {
 		return new ComparativeAtom(this);
-	}
-
-	@Override
-	public ComplexLogicalFormula substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public ComplexLogicalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public boolean isGround() {
-		return (!(left instanceof Variable) && !(right instanceof Variable));
-	}
-
-	@Override
-	public boolean isWellFormed() {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
 	}
 
 	@Override
@@ -152,17 +125,6 @@ public class ComparativeAtom implements ASPBodyElement {
 		reval.add(left);
 		reval.add(right);
 		return reval;
-	}
-
-	@Override
-	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
-		return left.containsTermsOfType(cls) || right.containsTermsOfType(cls);
 	}
 
 	/**	
@@ -187,6 +149,14 @@ public class ComparativeAtom implements ASPBodyElement {
 	 */
 	public Term<?> getRight() {
 		return right;
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		Set<C> reval = new HashSet<C>();
+		reval.addAll(left.getTerms(cls));
+		reval.addAll(right.getTerms(cls));
+		return reval;
 	}
 
 }

@@ -117,22 +117,34 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	}
 
 	@Override
-	public LogicProgram<?, ?, ?> substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
+	public Program substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		Program reval = new Program();
+		for(ASPRule r : rules) 
+			reval.add(r.substitute(t, v));
+		if (this.hasQuery())
+			reval.setQuery((ASPLiteral) this.query.substitute(t, v));
+		return reval;
 	}
 
+
 	@Override
-	public LogicProgram<?, ?, ?> substitute(Map<? extends Term<?>, ? extends Term<?>> map)
+	public Program substitute(Map<? extends Term<?>, ? extends Term<?>> map)
 			throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
+		Program reval = this;
+		for(Term<?> t : map.keySet()) {
+			reval = reval.substitute(t, map.get(t));
+		}
+		return reval;
 	}
 
 	@Override
-	public LogicProgram<?, ?, ?> exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
+	public Program exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		Program reval = new Program();
+		for(ASPRule r : this.rules) 
+			reval.add(r.exchange(v, t));
+		if (this.hasQuery())
+			reval.setQuery((ASPLiteral) this.query.exchange(t, v));
+		return reval;
 	}
 
 	@Override
@@ -283,6 +295,11 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 		this.rules.addAll(rules);
 	}
 	
+	/**
+	 * Returns true if the program contains a given rule.
+	 * @param r an ASP rule
+	 * @return true if program contains r
+	 */
 	public boolean contains(ASPRule r) {
 		return rules.contains(r);
 	}

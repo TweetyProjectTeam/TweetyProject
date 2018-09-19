@@ -23,15 +23,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -46,7 +43,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Anna Gessler
  *
  */
-public class ASPAtom implements ASPLiteral {
+public class ASPAtom extends ASPLiteral {
 
 	/** The predicate identifying the atom */
 	protected Predicate predicate;
@@ -182,45 +179,6 @@ public class ASPAtom implements ASPLiteral {
 	}
 
 	@Override
-	public ComplexLogicalFormula substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public ComplexLogicalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public boolean isGround() {
-		if (arguments == null)
-			return true;
-
-		for (Term<?> t : arguments) {
-			if (t instanceof Variable)
-				return false;
-			else if (t instanceof ASPAtom) {
-				return ((ASPAtom) t).isGround();
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public boolean isWellFormed() {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
-	}
-
-	@Override
-	public Class<? extends Predicate> getPredicateCls() {
-		return this.predicate.getClass();
-	}
-
-	@Override
 	public Set<Term<?>> getTerms() {
 		Set<Term<?>> terms = new HashSet<Term<?>>();
 		terms.addAll(arguments);
@@ -240,14 +198,6 @@ public class ASPAtom implements ASPLiteral {
 			reval.addAll(arg.getTerms(cls));
 		}
 		return reval;
-	}
-
-	@Override
-	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
-		for (Term<?> t : arguments)
-			if (t.containsTermsOfType(cls))
-				return true;
-		return false;
 	}
 
 	@Override

@@ -37,7 +37,7 @@ import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.ASPOperator;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
-import net.sf.tweety.lp.asp.syntax.Aggregate;
+import net.sf.tweety.lp.asp.syntax.AggregateAtom;
 import net.sf.tweety.lp.asp.syntax.AggregateElement;
 import net.sf.tweety.lp.asp.syntax.ArithmeticTerm;
 import net.sf.tweety.lp.asp.syntax.ComparativeAtom;
@@ -50,7 +50,7 @@ import net.sf.tweety.lp.asp.syntax.StrictNegation;
  * combination with InstantiateVisitor, which is responsible for walking through
  * the parse-tree and generating in-memory classes of the parsed ASP program.
  *
- * TODO: Add choice rules and optimize statements (as they are completed in the
+ * TODO: Add choice ASPRules and optimize statements (as they are completed in the
  * parser)
  * 
  * @author Anna Gessler
@@ -84,11 +84,11 @@ public class ASPCore2ParserTest {
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
-	public void SimpleRulesTest() throws ParseException {
+	public void SimpleASPRulesTest() throws ParseException {
 		ASPRule fact = ASPCore2Parser.parseRule("motive(harry).");
 		ASPRule negFact = ASPCore2Parser.parseRule("-guilty(sally).");
 		ASPRule nafConstraint = ASPCore2Parser.parseRule(":- not guilty(sally), guilty(harry).");
-		ASPRule simpleRule = ASPCore2Parser.parseRule("innocent(Suspect) :- motive(Suspect), not guilty(Suspect).");
+		ASPRule simpleASPRule = ASPCore2Parser.parseRule("innocent(Suspect) :- motive(Suspect), not guilty(Suspect).");
 
 		ASPLiteral l1 = fact.getLiterals().iterator().next();
 		Constant c = (Constant) l1.getArguments().iterator().next();
@@ -99,15 +99,15 @@ public class ASPCore2ParserTest {
 		assertTrue((negFact.getLiterals().iterator().next()) instanceof StrictNegation);
 		assertTrue(nafConstraint.isConstraint());
 		assertTrue((nafConstraint.getBody().iterator().next()) instanceof DefaultNegation);
-		assertFalse(simpleRule.isFact());
-		assertEquals(simpleRule.getHead().size(), 1);
-		assertEquals(simpleRule.getBody().size(), 2);
+		assertFalse(simpleASPRule.isFact());
+		assertEquals(simpleASPRule.getHead().size(), 1);
+		assertEquals(simpleASPRule.getBody().size(), 2);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void AggregateTest() throws ParseException {
 		parser.ReInit(new StringReader("#sum{ I : brotherOf(harry,X)}"));
-		Aggregate a = (Aggregate) parser.Aggregate().jjtAccept(visitor, null);
+		AggregateAtom a = (AggregateAtom) parser.Aggregate().jjtAccept(visitor, null);
 		assertEquals(a.getFunction(), ASPOperator.AggregateFunction.SUM);
 		List<AggregateElement> elems = a.getAggregateElements();
 		ASPLiteral lit = elems.get(0).getLiterals().first();
@@ -116,10 +116,10 @@ public class ASPCore2ParserTest {
 		assertEquals(elems.get(0).getLeft().size(), 1);
 
 		parser.ReInit(new StringReader("X = #min{ I : age(harry) ; I : wealth(harry)} != 20"));
-		a = (Aggregate) parser.Aggregate().jjtAccept(visitor, null);
-		assertEquals(a.getRightRelation(), ASPOperator.BinaryOperator.NEQ);
-		assertEquals(a.getRightRelationTerm(), new NumberTerm(20));
-		assertEquals(a.getLeftRelationTerm(), new Variable("X"));
+		a = (AggregateAtom) parser.Aggregate().jjtAccept(visitor, null);
+		assertEquals(a.getRightOperator(), ASPOperator.BinaryOperator.NEQ);
+		assertEquals(a.getRightGuard(), new NumberTerm(20));
+		assertEquals(a.getLeftGuard(), new Variable("X"));
 		assertEquals(a.getAggregateElements().size(), 2);
 	}
 

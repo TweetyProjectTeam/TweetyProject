@@ -77,7 +77,7 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 	public Set<ASPLiteral> getAssumptions() {
 		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
 		for(ASPRule r : this) {
-			for(ASPElement elem : r.getPremise()) {
+			for(ASPBodyElement elem : r.getPremise()) {
 				if(elem instanceof DefaultNegation) {
 					ASPLiteral assumption = elem.getLiterals().iterator().next();
 					result.add(assumption);
@@ -108,7 +108,7 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 			if(r.isFact()) {
 				foundLiterals.add(r.getConclusion().getFormulas().iterator().next());
 			}
-			for(ASPElement element : r.getPremise()) {
+			for(ASPBodyElement element : r.getPremise()) {
 				if(element instanceof DefaultNegation) {
 					continue;
 				}

@@ -18,12 +18,10 @@
  */
 package net.sf.tweety.lp.asp.syntax;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -52,7 +50,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Thomas Vengels
  * @author Anna Gessler
  */
-public class DefaultNegation implements ASPBodyElement {
+public class DefaultNegation extends ASPBodyElement {
 	
 	/**
 	 * The default negated element.
@@ -88,7 +86,7 @@ public class DefaultNegation implements ASPBodyElement {
 	}
 
 	@Override
-	public ASPElement substitute(Term<?> t, Term<?> v) {
+	public ASPBodyElement substitute(Term<?> t, Term<?> v) {
 		return literal.substitute(t, v);
 	}
 
@@ -98,29 +96,8 @@ public class DefaultNegation implements ASPBodyElement {
 	}
 
 	@Override
-	public ComplexLogicalFormula substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
-		return literal.substitute(map);
-	}
-
-	@Override
-	public ComplexLogicalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		return literal.exchange(v, t);
-	}
-
-	@Override
-	public boolean isGround() {
-		return literal.isGround();
-	}
-
-	@Override
 	public boolean isWellFormed() {
 		return literal.isWellFormed();
-	}
-
-	@Override
-	public Class<? extends Predicate> getPredicateCls() {
-		return literal.getPredicateCls();
 	}
 
 	@Override
@@ -137,12 +114,7 @@ public class DefaultNegation implements ASPBodyElement {
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
 		return literal.getTerms(cls);
 	}
-
-	@Override
-	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
-		return literal.containsTermsOfType(cls);
-	}
-
+	
 	@Override
 	public DefaultNegation clone() {
 		return new DefaultNegation(this);

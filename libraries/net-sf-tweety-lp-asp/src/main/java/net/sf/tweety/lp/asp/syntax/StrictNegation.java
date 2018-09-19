@@ -19,14 +19,12 @@
 package net.sf.tweety.lp.asp.syntax;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -39,7 +37,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Anna Gessler
  *
  */
-public class StrictNegation implements ASPLiteral {
+public class StrictNegation extends ASPLiteral {
 	
 	/**
 	 * The atom of this strict negation.
@@ -56,6 +54,7 @@ public class StrictNegation implements ASPLiteral {
 
 	/**
 	 * Creates a new negation with the given predicate and terms.
+	 * 
 	 * @param p predicate of the negated atom
 	 * @param terms terms of the negated atom
 	 */
@@ -63,10 +62,18 @@ public class StrictNegation implements ASPLiteral {
 		this(new ASPAtom(p,terms));
 	}
 
+	/**
+	 * Copy-Constructor
+	 * @param other
+	 */
 	public StrictNegation(StrictNegation other) {
 		this.atom = (ASPAtom)other.getAtom().clone();
 	}
 
+	/**
+	 * Creates a new negation with the given name.
+	 * @param name of the negated atom's predicate
+	 */
 	public StrictNegation(String name) {
 		this.atom = new ASPAtom(name);
 	}
@@ -104,35 +111,6 @@ public class StrictNegation implements ASPLiteral {
 	}
 
 	@Override
-	public ComplexLogicalFormula substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ComplexLogicalFormula exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isGround() {
-		return atom.isGround();
-	}
-
-	@Override
-	public boolean isWellFormed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Class<? extends Predicate> getPredicateCls() {
-		return atom.getPredicateCls();
-	}
-
-	@Override
 	public Set<Term<?>> getTerms() {
 		return this.atom.getTerms();
 	}
@@ -140,11 +118,6 @@ public class StrictNegation implements ASPLiteral {
 	@Override
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
 		return atom.getTerms(cls);
-	}
-
-	@Override
-	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
-		return atom.containsTermsOfType(cls);
 	}
 
 	@Override

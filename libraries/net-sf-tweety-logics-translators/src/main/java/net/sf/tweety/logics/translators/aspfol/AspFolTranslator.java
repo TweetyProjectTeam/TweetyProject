@@ -51,7 +51,7 @@ public class AspFolTranslator extends Translator
 		return (ASPAtom) this.translateAtom(source, ASPAtom.class);
 	}
 
-	public ASPElement toASP(FolFormula source) {
+	public ASPLiteral toASP(FolFormula source) {
 		if(source instanceof FOLAtom) {
 			return toASP((FOLAtom)source);
 		} else if(source instanceof Negation) {
