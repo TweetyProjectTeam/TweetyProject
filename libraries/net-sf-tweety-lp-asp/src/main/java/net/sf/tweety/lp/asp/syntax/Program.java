@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import net.sf.tweety.commons.util.rules.RuleSet;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.LogicProgram;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -52,6 +52,16 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * A single query.
 	 */
 	private ASPLiteral query;
+	
+	/**
+	 * Optional field that can be used by some solvers.
+	 * If used, all atoms will be hidden 
+	 * from the output of the solver except for those with
+	 * whitelisted predicates.
+	 * This corresponds to the #show statement
+	 * of the clingo input language.
+	 */
+	private Set<Predicate> output_predicate_whitelist;
 
 	/**
 	 * Creates a new empty program.
@@ -59,6 +69,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	public Program() {
 		this.rules = new HashSet<ASPRule>();
 		this.query = null;
+		this.output_predicate_whitelist = new HashSet<Predicate>();
 	}
 
 	/**
@@ -68,7 +79,9 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * @param rules
 	 */
 	public Program(Collection<ASPRule> rules) {
+		this.query = null;
 		this.rules = (Set<ASPRule>) rules;
+		this.output_predicate_whitelist = this.getPredicates();
 	}
 
 	/**
@@ -80,6 +93,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	public Program(ASPLiteral query, Set<ASPRule> rules) {
 		this.rules = rules;
 		this.query = query;
+		this.output_predicate_whitelist = this.getPredicates();
 	}
 
 	/**
@@ -171,6 +185,43 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	public Program clone() {
 		return new Program(this);
 	}
+	
+	/**
+	 * Sets the whitelist of predicates.
+	 * Solvers that use this option will
+	 * only show atoms over predicates 
+	 * in this set in their output.
+	 * 
+	 * @param ps set of predicates
+	 */
+	public void setOutputWhitelist(Collection<Predicate> ps) {
+		this.output_predicate_whitelist = (Set<Predicate>) ps;
+	}
+	
+	/**
+	 * Returns the whitelist of predicates. 
+	 * Solvers that use this option will
+	 * only show atoms over predicates 
+	 * in this set in their output.
+	 * 
+	 * @return set of whitelisted predicates
+	 */
+	public Set<Predicate> getOutputWhitelist() {
+		return this.output_predicate_whitelist;
+	}
+
+	/**
+	 * Processes the set of all predicates which appear in this program.
+	 * @return set of predicates
+	 */
+	private Set<Predicate> getPredicates() {
+		Set<Predicate> prs = new HashSet<Predicate>();
+		for (ASPRule r : rules)
+			prs.addAll(r.getPredicates());
+		if (this.hasQuery())
+			prs.add(query.getPredicate());
+		return prs;
+	}
 
 	/**
 	 * Returns true if the program contains a query.
@@ -181,10 +232,19 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 		return (this.query != null);
 	}
 
+	/**
+	 * Returns the query of the program, if there is one.
+	 * 
+	 * @return a literal, or null if the program has no query
+	 */
 	public ASPLiteral getQuery() {
 		return query;
 	}
 
+	/**
+	 * Returns all rules of the program.
+	 * @return set of rules
+	 */
 	public Set<ASPRule> getRules() {
 		return rules;
 	}

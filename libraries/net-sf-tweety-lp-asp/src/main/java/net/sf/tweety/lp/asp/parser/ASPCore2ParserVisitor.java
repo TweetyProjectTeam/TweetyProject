@@ -37,6 +37,7 @@ public interface ASPCore2ParserVisitor
   public Object visit(ASTAggrElementList node, Object data);
   public Object visit(ASTAggrElement node, Object data);
   public Object visit(ASTAggrFunc node, Object data);
+  public Object visit(ASTClingoMeta node, Object data);
   public Object visit(ASTOpt node, Object data);
   public Object visit(ASTOptElementList node, Object data);
   public Object visit(ASTOptElement node, Object data);
@@ -56,4 +57,4 @@ public interface ASPCore2ParserVisitor
   public Object visit(ASTID node, Object data);
   public Object visit(ASTString node, Object data);
 }
-/* JavaCC - OriginalChecksum=ffbcf8483d616feef5095b14c5aa1993 (do not edit this line) */
+/* JavaCC - OriginalChecksum=7f2880f3cc3d29f6a9be85dc9d067ed6 (do not edit this line) */

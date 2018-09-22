@@ -65,7 +65,7 @@ SKIP :
 TOKEN :
 {
    <NAF:                 "not">
-|   <ID:                  ["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* >
+|  <ID:                  ["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* >
 |  <VARIABLE:            ["A"-"Z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* >
 |  <STRING:              "\"" ( (~["\\", "\""]) | "\\\"" )* "\"" >
 |  <NUMBER:              "0" | ["1"-"9"](["0"-"9"])* >
@@ -101,6 +101,7 @@ TOKEN :
 |  <AGGREGATE_MAX:       "#max">
 |  <AGGREGATE_MIN:       "#min">
 |  <AGGREGATE_SUM:       "#sum">
+|  <CLINGO_SHOW: 	     "#show " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )*) "/" ("0" | ["1"-"9"](["0"-"9"])*) ".">
 }
 
 ASTAnswerSet AnswerSet() #AnswerSet:
@@ -141,6 +142,7 @@ ASTRule Statement() #Rule:
   | (Head() [<CONS> [Body()]] <DOT>)
   | (<WCONS> [Body()] <DOT> <SQUARE_OPEN> WeightAtLevel() <SQUARE_CLOSE>)
   | (Optimize() <DOT>)
+  | (ClingoMetaStatement())
   )
   
   { return jjtThis; }
@@ -249,6 +251,14 @@ String AggregateFunction() #AggrFunc:
   { 
   	jjtThis.func(this.token.image);
   	return this.token.image; }
+}
+
+void ClingoMetaStatement() #ClingoMeta:
+{Token t;}
+{
+  ( t=<CLINGO_SHOW> )
+  { 
+  	 jjtThis.statement(t.image); }
 }
 
 ASTOpt Optimize() #Opt:
@@ -380,14 +390,13 @@ ASTAriTerm AriTerm() #AriTerm :
 }
 
 String Arithop() #Arithop:
-{
-Token t;}
+{}
 {
   (
-  t=<PLUS>
-  | t=<MINUS>
-  | t=<TIMES>
-  | t=<DIV>
+  <PLUS>
+  | <MINUS>
+  | <TIMES>
+  | <DIV>
   )
   { 
   	return this.token.image; }

@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
 import net.sf.tweety.lp.asp.syntax.Program;
@@ -30,7 +31,7 @@ import net.sf.tweety.lp.asp.syntax.Program;
 /**
  * Prints ASP programs and single rules to the Clingo input format
  * (<a href="https://potassco.org/clingo/">https://potassco.org/clingo/</a>).
- * The Clingo input format adheres to the ASP-Core-2 language standard.
+ * The Clingo input format adheres (mostly) to the ASP-Core-2 language standard.
  * 
  * @see net.sf.tweety.lp.asp.reasoner.ClingoSolver
  * 
@@ -40,26 +41,42 @@ import net.sf.tweety.lp.asp.syntax.Program;
 public class ClingoWriter {
 
 	Writer writer;
+	private boolean usePredicateWhitelist = false;
 
+	/**
+	 * Create a new ClingoWriter with the given writer.
+	 * @param writer
+	 */
 	public ClingoWriter(Writer writer) {
 		this.writer = writer;
 	}
-
+	
 	public ClingoWriter() {
 		this.writer = new StringWriter();
+	}
+	
+	public ClingoWriter(Writer writer, boolean b) {
+		this.writer = writer;
+		usePredicateWhitelist = b;
 	}
 
 	/**
 	 * Prints program
 	 * 
-	 * @param p
-	 *            a program
+	 * @param p a program
 	 * @throws IOException
 	 */
 	public void printProgram(Program p) throws IOException {
 		for (ASPRule r : p.getRules())
 			writer.write(printRule(r) + ".\n");
-
+	
+		//Optionally suppress irrelevant atoms from output.
+		if (usePredicateWhitelist) {
+			for (Predicate pr: p.getOutputWhitelist())
+				writer.write("\n #show " + pr.getName() + "/" + pr.getArity() + ".\n");
+		}
+		
+		//Optionally print a single query.
 		if (p.hasQuery())
 			writer.write("\n" + p.getQuery().toString() + "?");
 	}
@@ -67,25 +84,22 @@ public class ClingoWriter {
 	/**
 	 * Creates string representation of a single rule in Clingo format.
 	 * 
-	 * @param r
-	 *            an ASP rule
-	 * @return
+	 * @param r an ASP rule
+	 * @return String representation of the rule
 	 */
 	private String printRule(ASPRule r) {
 		String result = "";
-
+		
 		if (!r.isConstraint())
 			result += r.getHead().toString();
+		
 		if (!r.isFact()) {
 			result += " :- ";
-
 			List<ASPBodyElement> body = r.getBody();
-
 			for (int i = 0; i < body.size() - 1; i++) {
-				result += body.get(i).toString() + ","; // TODO make sure this works for all stuff
+				result += body.get(i).toString() + ","; 
 			}
 			result += body.get(body.size() - 1).toString();
-
 		}
 
 		// TODO add other elements
@@ -95,6 +109,10 @@ public class ClingoWriter {
 
 	public void close() throws IOException {
 		this.writer.close();
+	}
+
+	public void usePredicateWhitelist(boolean b) {
+		this.usePredicateWhitelist = b;
 	}
 
 }

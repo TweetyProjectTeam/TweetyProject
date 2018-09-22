@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.StringReader;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.FunctionalTerm;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
@@ -81,6 +83,23 @@ public class ASPCore2ParserTest {
 				+ "innocent(Suspect) :- motive(Suspect), not guilty(Suspect). \n guilty(sally)?";
 		Program p2 = ASPCore2Parser.parseProgram(pstr2);
 		assertTrue(p2.hasQuery());
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void ClingoTest() throws ParseException {
+		String pstr = "motive(harry). \n" + "motive(sally). \n" + "guilty(harry). \n"
+				+ "innocent(Suspect) :- motive(Suspect), not guilty(Suspect)."
+				+ "#show innocent/1."
+				+ "#show test/2.";
+		Program p = ASPCore2Parser.parseProgram(pstr);
+		Set<Predicate> pwl = p.getOutputWhitelist();
+		assertEquals(pwl.size(),2);
+		
+		String pstr2 = "motive(harry)."
+				+ "#show test/3.";
+		Program p2 = ASPCore2Parser.parseProgram(pstr2);
+		Predicate wp = p2.getOutputWhitelist().iterator().next();
+		assertEquals(wp.getArity(),3);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)

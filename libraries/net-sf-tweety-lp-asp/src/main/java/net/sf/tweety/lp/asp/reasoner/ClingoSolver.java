@@ -54,6 +54,49 @@ public class ClingoSolver extends ASPSolver {
 	private Shell bash;
 	
 	/**
+	 * If activated ({@link #toggleOutputWhitelist(boolean)}),
+	 * output answer sets will only
+	 * contain atoms over predicates
+	 * in the program's predicate whitelist.
+	 * This corresponds to the #show statement
+	 * of the clingo input language.
+	 */
+	private boolean usePredicateWhitelist = false;
+	
+	/**
+	 * Activates or deactivates the option
+	 * to use a whitelist of predicates. If activated,
+	 * answer sets will only contain atoms over
+	 * predicates that are part of the whitelist.
+	 * This corresponds to the #show statement
+	 * of the clingo input language.
+	 */
+	public void toggleOutputWhitelist(boolean b) {
+		usePredicateWhitelist = b;
+	}
+	
+	/**
+	 * The maximum number of models to be generated.
+	 */
+	private int maxNumOfModels = 100;
+	
+	/**
+	 * Get the maximum number of models to be generated.
+	 * @return maximum number
+	 */
+	public int getMaxNumOfModels() {
+		return maxNumOfModels;
+	}
+
+	/**
+	 * Set the maximum number of models to be generated.
+	 * @return maximum number
+	 */
+	public void setMaxNumOfModels(int maxNumOfModels) {
+		this.maxNumOfModels = maxNumOfModels;
+	}
+
+	/**
 	 * Additional command line options for Clingo. 
 	 * Default value is empty.
 	 */
@@ -83,11 +126,11 @@ public class ClingoSolver extends ASPSolver {
 		AnswerSetList result = new AnswerSetList();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
-			ClingoWriter writer = new ClingoWriter(new PrintWriter(file));
+			ClingoWriter writer = new ClingoWriter(new PrintWriter(file),usePredicateWhitelist);
 			writer.printProgram(p);
 			writer.close();
 			
-			String cmd = pathToSolver + "/clingo " + options + " " + file.getAbsolutePath();
+			String cmd = pathToSolver + "/clingo " + "-n " + maxNumOfModels + " " + options + " " + file.getAbsolutePath();
 			result = parseResult(bash.run(cmd));	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -132,7 +175,7 @@ public class ClingoSolver extends ASPSolver {
 			writer.write(s);
 			writer.close();
 			
-			String cmd = pathToSolver + "/clingo " + options + " " + file.getAbsolutePath();
+			String cmd = pathToSolver + "/clingo " + "-n " + maxNumOfModels + " " + options + " " + file.getAbsolutePath();
 			this.outputData =( bash.run(cmd));	
 			result = parseResult(outputData);
 		} catch (Exception e) {
@@ -145,7 +188,7 @@ public class ClingoSolver extends ASPSolver {
 	@Override
 	public Boolean query(Program beliefbase, ASPLiteral formula) {
 		//TODO 
-		return null;
+		throw new UnsupportedOperationException("TODO");
 	}
 
 	@Override
@@ -153,11 +196,11 @@ public class ClingoSolver extends ASPSolver {
 		AnswerSet result = new AnswerSet();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
-			ClingoWriter writer = new ClingoWriter(new PrintWriter(file));
+			ClingoWriter writer = new ClingoWriter(new PrintWriter(file),usePredicateWhitelist);
 			writer.printProgram(p);
 			writer.close();
 			
-			String cmd = pathToSolver + "/clingo " + options + " " + " 1 " + file.getAbsolutePath();
+			String cmd = pathToSolver + "/clingo " + "-n " + maxNumOfModels + " " + options + " " + " 1 " + file.getAbsolutePath();
 			this.outputData =( bash.run(cmd));	
 			result = parseResult(outputData).get(0);
 		} catch (Exception e) {

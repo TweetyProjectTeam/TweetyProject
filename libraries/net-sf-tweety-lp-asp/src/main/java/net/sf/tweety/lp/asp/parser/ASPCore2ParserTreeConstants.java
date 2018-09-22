@@ -36,24 +36,25 @@ public interface ASPCore2ParserTreeConstants
   public int JJTAGGRELEMENTLIST = 13;
   public int JJTAGGRELEMENT = 14;
   public int JJTAGGRFUNC = 15;
-  public int JJTOPT = 16;
-  public int JJTOPTELEMENTLIST = 17;
-  public int JJTOPTELEMENT = 18;
-  public int JJTOPTFUNC = 19;
-  public int JJTWEIGHT = 20;
-  public int JJTNAFLITERALLIST = 21;
-  public int JJTNAFLITERAL = 22;
-  public int JJTATOM = 23;
-  public int JJTBUILTINATOM = 24;
-  public int JJTBINOP = 25;
-  public int JJTTERMLIST = 26;
-  public int JJTTERM = 27;
-  public int JJTARITERM = 28;
-  public int JJTARITHOP = 29;
-  public int JJTNUMBER = 30;
-  public int JJTVAR = 31;
-  public int JJTID = 32;
-  public int JJTSTRING = 33;
+  public int JJTCLINGOMETA = 16;
+  public int JJTOPT = 17;
+  public int JJTOPTELEMENTLIST = 18;
+  public int JJTOPTELEMENT = 19;
+  public int JJTOPTFUNC = 20;
+  public int JJTWEIGHT = 21;
+  public int JJTNAFLITERALLIST = 22;
+  public int JJTNAFLITERAL = 23;
+  public int JJTATOM = 24;
+  public int JJTBUILTINATOM = 25;
+  public int JJTBINOP = 26;
+  public int JJTTERMLIST = 27;
+  public int JJTTERM = 28;
+  public int JJTARITERM = 29;
+  public int JJTARITHOP = 30;
+  public int JJTNUMBER = 31;
+  public int JJTVAR = 32;
+  public int JJTID = 33;
+  public int JJTSTRING = 34;
 
 
   public String[] jjtNodeName = {
@@ -73,6 +74,7 @@ public interface ASPCore2ParserTreeConstants
     "AggrElementList",
     "AggrElement",
     "AggrFunc",
+    "ClingoMeta",
     "Opt",
     "OptElementList",
     "OptElement",
@@ -93,4 +95,4 @@ public interface ASPCore2ParserTreeConstants
     "String",
   };
 }
-/* JavaCC - OriginalChecksum=4d09cb3675c659db72710b3590fdbd7a (do not edit this line) */
+/* JavaCC - OriginalChecksum=77293ec2af9f0c1a13e04aeab4697044 (do not edit this line) */

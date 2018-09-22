@@ -25,7 +25,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return parseProgram(new StringReader(program));
   }
   
- public static Program parseRule(Reader reader) throws ParseException
+ public static Program parseProgram(Reader reader) throws ParseException
   {
     oneThreadParser.ReInit(reader);
     return visitor.visit(oneThreadParser.Program(), null);
@@ -69,7 +69,7 @@ SKIP :
 TOKEN :
 {
    <NAF:                 "not">
-|   <ID:                  ["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* >
+|  <ID:                  ["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* >
 |  <VARIABLE:            ["A"-"Z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* >
 |  <STRING:              "\"" ( (~["\\", "\""]) | "\\\"" )* "\"" >
 |  <NUMBER:              "0" | ["1"-"9"](["0"-"9"])* >
@@ -105,6 +105,7 @@ TOKEN :
 |  <AGGREGATE_MAX:       "#max">
 |  <AGGREGATE_MIN:       "#min">
 |  <AGGREGATE_SUM:       "#sum">
+|  <CLINGO_SHOW: 	     "#show " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )*) "/" ("0" | ["1"-"9"](["0"-"9"])*) ".">
 }
 
 ASTAnswerSet AnswerSet()           :
@@ -275,6 +276,7 @@ ASTRule Statement()      :
   | (Head() [<CONS> [Body()]] <DOT>)
   | (<WCONS> [Body()] <DOT> <SQUARE_OPEN> WeightAtLevel() <SQUARE_CLOSE>)
   | (Optimize() <DOT>)
+  | (LOOKAHEAD(ClingoMetaStatement()) ClingoMetaStatement())+ 
   )/*@bgen(jjtree)*/
   {
     jjtree.closeNodeScope(jjtn000, true);
@@ -729,6 +731,31 @@ String AggregateFunction()          :
   { 
   	jjtn000.func(this.token.image);
   	return this.token.image; }/*@bgen(jjtree)*/
+  } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+  }
+/*@egen*/
+}
+
+void ClingoMetaStatement()            :
+{/*@bgen(jjtree) ClingoMeta */
+ ASTClingoMeta jjtn000 = new ASTClingoMeta(JJTCLINGOMETA);
+ boolean jjtc000 = true;
+ jjtree.openNodeScope(jjtn000);
+/*@egen*/Token t;}
+{/*@bgen(jjtree) ClingoMeta */
+  try {
+/*@egen*/
+  ( t=<CLINGO_SHOW> )/*@bgen(jjtree)*/
+  {
+    jjtree.closeNodeScope(jjtn000, true);
+    jjtc000 = false;
+  }
+/*@egen*/
+  { 
+  	 jjtn000.statement(t.image); }/*@bgen(jjtree)*/
   } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -1242,19 +1269,18 @@ ASTAriTerm AriTerm()          :
 
 String Arithop()         :
 {/*@bgen(jjtree) Arithop */
-ASTArithop jjtn000 = new ASTArithop(JJTARITHOP);
-boolean jjtc000 = true;
-jjtree.openNodeScope(jjtn000);
-/*@egen*/
-Token t;}
+  ASTArithop jjtn000 = new ASTArithop(JJTARITHOP);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
 {/*@bgen(jjtree) Arithop */
   try {
 /*@egen*/
   (
-  t=<PLUS>
-  | t=<MINUS>
-  | t=<TIMES>
-  | t=<DIV>
+  <PLUS>
+  | <MINUS>
+  | <TIMES>
+  | <DIV>
   )/*@bgen(jjtree)*/
   {
     jjtree.closeNodeScope(jjtn000, true);

@@ -73,13 +73,12 @@ public class ClingoTest {
 	public void Example2() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex2.asp"));
 		parser.ReInit(fistr);
-		
+
 		Program p = visitor.visit(parser.Program(), null);
 		AnswerSetList asl = solver.getModels(p);
 		
 		assertTrue(asl.size() == 2);
 		assertTrue(asl.get(0).size() == 5);
-		assertTrue(asl.get(1).size() == 5);
 	}
 	
 	@Test
