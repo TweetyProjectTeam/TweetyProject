@@ -18,10 +18,16 @@
  */
 package net.sf.tweety.lp.asp.examples;
 
+import java.util.Set;
+
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.reasoner.ClingoSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
+import net.sf.tweety.lp.asp.syntax.ASPOperator;
+import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.ArithmeticTerm;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
@@ -41,12 +47,14 @@ public class ASPCore2ParserExample {
 				"\n" + 
 				"% this is a comment\n" + 
 				"\n" + 
-				":- #min { 4 : isDead(cat), isAlive(cat); isAlive(cat)}.\n" + 
+				":- #min { 4 : isDead(cat), isAlive(cat); isAlive(cat)}.\n"
+				+ "#show isAlive/1." + 
 				"\n"
 				+ "isAlive(cat)?";
 		
 		Program pr1 = ASPCore2Parser.parseProgram(str1);
 		System.out.println("----------------\nParsed program:\n" + pr1);
+		System.out.println("#show list:" + pr1.getOutputWhitelist());
 		
 		String str2 = "motive(harry). \n" + 
 				"motive(sally). \n" + 
@@ -65,6 +73,11 @@ public class ASPCore2ParserExample {
 				"{q(X) : p(X)}. ";
 		AnswerSetList as2 = solver.getModels(es);
 		System.out.println(as2);
+		
+		System.out.println("-------------");
+		Set<ASPRule> rules = pr1.getRules();
+		for (ASPRule r : rules)
+			System.out.println("Sorted literals:" + r.getLiterals());
 	}
 
 }

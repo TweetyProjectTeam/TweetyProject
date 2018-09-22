@@ -432,5 +432,19 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		return new ASPRule(this);
 	}
 	
+	@Override 
+	public boolean equals(Object other) {
+		if(!(other instanceof Rule)) 	return false;
+		ASPRule or = (ASPRule)other;
+		
+		boolean reval = this.head.equals(or.head) && this.body.equals(or.body);
+		return reval;
+	}
+	
+	@Override
+	public int hashCode() {
+		return head.hashCode() + body.hashCode();
+	}
+	
 	
 }

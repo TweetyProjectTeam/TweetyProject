@@ -33,8 +33,8 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * This class represents an aggregate. Aggregates are functions that range over
  * sets of terms and literals and evaluate to some value. For example, using the
  * aggregate function #count one could obtain the number of employees of one
- * department. This value can be compared to another value with a comparative
- * operator like "=" to produce a truth value (also known as
+ * department. Normally, this value is then compared to another value 
+ * with a comparative operator like "=" to produce a truth value (also known as
  * 'aggregate relation'). For example, this could be used to express the condition
  * that the number of employees in one department has to be greater than 0.
  * 

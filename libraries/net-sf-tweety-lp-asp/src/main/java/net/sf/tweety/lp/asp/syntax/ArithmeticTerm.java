@@ -111,5 +111,4 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 	public Term<?> getRight() {
 		return this.get().getThird();
 	}
-
 }

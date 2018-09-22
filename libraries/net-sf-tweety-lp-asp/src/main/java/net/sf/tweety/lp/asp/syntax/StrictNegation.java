@@ -34,6 +34,8 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * atom (as apposed to a NAF negation: 
  * {@link net.sf.tweety.lp.asp.syntax.DefaultNegation}). 
  * 
+ * @author Tim Janus
+ * @author Thomas Vengels
  * @author Anna Gessler
  *
  */
@@ -178,6 +180,22 @@ public class StrictNegation extends ASPLiteral {
 	@Override
 	public StrictNegation substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		return new StrictNegation(this.atom.substitute(v,t));
+	}
+	
+	@Override 
+	public int hashCode() {
+		return 7 + atom.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof StrictNegation) {
+			StrictNegation on = (StrictNegation) o;
+			// compare atom
+			return on.getAtom().equals( this.getAtom() );
+		} else {
+			return false;
+		}
 	}
 
 }

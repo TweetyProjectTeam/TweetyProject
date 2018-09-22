@@ -28,7 +28,6 @@ import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -42,7 +41,17 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Anna Gessler
  */
 public class AggregateElement extends ASPElement {
+	/**
+	 * The term tuple of the aggregate element.
+	 */
 	private List<Term<?>> left;
+	
+	/**
+	 * The literal tuple of this aggregate element.
+	 * 
+	 * TODO: Remove possibility of having AggregateAtoms
+	 * in this list.
+	 */
 	private List<ASPBodyElement> right;
 
 	/**
@@ -170,16 +179,6 @@ public class AggregateElement extends ASPElement {
 	}
 
 	@Override
-	public Class<? extends Predicate> getPredicateCls() {
-		return Predicate.class;
-	}
-
-	@Override
-	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
-		return !getTerms(cls).isEmpty();
-	}
-
-	@Override
 	public AggregateElement substitute(Map<? extends Term<?>, ? extends Term<?>> map)
 			throws IllegalArgumentException {
 		AggregateElement e = this;
@@ -200,18 +199,6 @@ public class AggregateElement extends ASPElement {
 		v.getSort().remove(temp);	
 		return rf;
 	}
-
-	@Override
-	public boolean isGround() {
-		return this.getTerms(Variable.class).isEmpty();
-	}
-
-	@Override
-	public boolean isWellFormed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
 
 	public SortedSet<ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();

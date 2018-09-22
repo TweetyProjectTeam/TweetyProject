@@ -32,6 +32,8 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * where t,u are terms and x is in {<, <=, ==, !=, >, >=}. Comparatives are
  * called "Built-in atoms" in the ASP-Core-2 standard.
  * 
+ * @author Tim Janus
+ * @author Thomas Vengels
  * @author Anna Gessler
  */
 public class ComparativeAtom extends ASPBodyElement {
@@ -157,6 +159,44 @@ public class ComparativeAtom extends ASPBodyElement {
 		reval.addAll(left.getTerms(cls));
 		reval.addAll(right.getTerms(cls));
 		return reval;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((left == null) ? 0 : left.hashCode());
+		result = prime * result
+				+ ((op == null) ? 0 : op.hashCode());
+		result = prime * result + ((right == null) ? 0 : right.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ComparativeAtom other = (ComparativeAtom) obj;
+		if (left == null) {
+			if (other.left != null)
+				return false;
+		} else if (!left.equals(other.left))
+			return false;
+		if (op == null) {
+			if (other.op != null)
+				return false;
+		} else if (!op.equals(other.op))
+			return false;
+		if (right == null) {
+			if (other.right != null)
+				return false;
+		} else if (!right.equals(other.right))
+			return false;
+		return true;
 	}
 
 }

@@ -137,10 +137,10 @@ public class ASPAtom extends ASPLiteral {
 		String res = this.predicate.getName();
 		if (this.predicate.getArity() > 0) {
 			res += "(";
-			for (int i = 0; i < arguments.size()-1; i++) {
+			for (int i = 0; i < arguments.size() - 1; i++) {
 				res += arguments.get(i).toString() + ",";
 			}
-			res += arguments.get(arguments.size()-1).toString() + ")";
+			res += arguments.get(arguments.size() - 1).toString() + ")";
 		}
 		return res;
 	}
@@ -269,6 +269,34 @@ public class ASPAtom extends ASPLiteral {
 
 	public Term<?> getTerm(int i) {
 		return this.arguments.get(i);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof ASPAtom) {
+			ASPAtom oa = (ASPAtom) o;
+
+			if (oa.predicate != null) {
+				if (!oa.predicate.equals(this.predicate)) {
+					return false;
+				}
+			} else if (this.predicate != null) {
+				return false;
+			}
+
+			if (!oa.arguments.equals(arguments))
+				return false;
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return (predicate == null ? 0 : predicate.hashCode()) + 
+				arguments.hashCode();
 	}
 
 }

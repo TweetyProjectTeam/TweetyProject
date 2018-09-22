@@ -76,13 +76,22 @@ public class ASPOperator {
 	}
 	
 	/**
-	 * The aggregate functions that are supported by the ASP-Core-2 standard
-	 * and by Tweety.
+	 * The following aggregate functions are supported by the ASP-Core-2 standard
+	 * and by Tweety. 'weight' in this context is the first element of an aggregate
+	 * element (term tuple).
+	 * 
+	 * <br> - #count: Number of elements
+	 * <br> - #sum: Sum of weights, used to represent weight constraints. 
+	 * <br> - #max: Maximum weight
+	 * <br> - #min: Minimum weight
+	 * 
+	 * Clingo additionally includes the #sum+ aggregate function, which represents
+	 * the sum of positive weights.
 	 * 
 	 * @author Anna Gessler
 	 */
 	public enum AggregateFunction {
-		COUNT,MAX,MIN,SUM;
+		COUNT,MAX,MIN,SUM,SUM_PLUS;
 		
 		@Override
 		public String toString() {
@@ -92,8 +101,10 @@ public class ASPOperator {
 				return "#min";
 			if (this.equals(AggregateFunction.COUNT)) 
 				return "#count";
-			else
+			if (this.equals(AggregateFunction.SUM)) 
 				return "#sum";
+			else
+				return "#sum+";
 		}
 	}
 	

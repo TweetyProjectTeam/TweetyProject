@@ -360,4 +360,17 @@ public class ASPHead extends ASPElement implements AssociativeFormula<ASPLiteral
 		return literals;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if(other instanceof AssociativeFormula<?>) {
+			AssociativeFormula<?> cast = (AssociativeFormula<?>)other;
+			return assocSupport.equals(cast.getFormulas()) && this.getClass().equals(other.getClass());
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return assocSupport.hashCode() + this.getClass().hashCode();
+	}
 }
