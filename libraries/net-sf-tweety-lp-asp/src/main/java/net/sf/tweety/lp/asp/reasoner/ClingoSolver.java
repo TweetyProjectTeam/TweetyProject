@@ -64,39 +64,6 @@ public class ClingoSolver extends ASPSolver {
 	private boolean usePredicateWhitelist = false;
 	
 	/**
-	 * Activates or deactivates the option
-	 * to use a whitelist of predicates. If activated,
-	 * answer sets will only contain atoms over
-	 * predicates that are part of the whitelist.
-	 * This corresponds to the #show statement
-	 * of the clingo input language.
-	 */
-	public void toggleOutputWhitelist(boolean b) {
-		usePredicateWhitelist = b;
-	}
-	
-	/**
-	 * The maximum number of models to be generated.
-	 */
-	private int maxNumOfModels = 100;
-	
-	/**
-	 * Get the maximum number of models to be generated.
-	 * @return maximum number
-	 */
-	public int getMaxNumOfModels() {
-		return maxNumOfModels;
-	}
-
-	/**
-	 * Set the maximum number of models to be generated.
-	 * @return maximum number
-	 */
-	public void setMaxNumOfModels(int maxNumOfModels) {
-		this.maxNumOfModels = maxNumOfModels;
-	}
-
-	/**
 	 * Additional command line options for Clingo. 
 	 * Default value is empty.
 	 */
@@ -208,6 +175,34 @@ public class ClingoSolver extends ASPSolver {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Activates or deactivates the option
+	 * to use a whitelist of predicates. If activated,
+	 * answer sets will only contain atoms over
+	 * predicates that are part of the whitelist.
+	 * This corresponds to the #show statement
+	 * of the clingo input language.
+	 */
+	public void toggleOutputWhitelist(boolean b) {
+		usePredicateWhitelist = b;
+	}
+	
+	/**
+	 * Set additional command line options for Clingo.
+	 * @param options
+	 */
+	public void setOptions(String options) {
+		this.options = options;
+	}
+
+	/**
+	 * Sets the location of the Clingo solver on the hard drive.
+	 * @param pathToDLV
+	 */
+	public void setPathToDLV(String path) {
+		this.pathToSolver = path;
 	}
 	
 }

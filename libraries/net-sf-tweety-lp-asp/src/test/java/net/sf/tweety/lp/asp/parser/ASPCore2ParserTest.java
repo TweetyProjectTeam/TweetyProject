@@ -101,6 +101,18 @@ public class ASPCore2ParserTest {
 		Predicate wp = p2.getOutputWhitelist().iterator().next();
 		assertEquals(wp.getArity(),3);
 	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void DLVTest() throws ParseException {
+		String pstr = ":- <=(harry,sally).";
+		Program p = ASPCore2Parser.parseProgram(pstr);
+		ASPRule r = p.getRules().iterator().next();
+		assertTrue(r.getBody().get(0) instanceof ComparativeAtom);	
+		
+		parser.ReInit(new StringReader("23==23"));
+		ComparativeAtom at = (ComparativeAtom) parser.BuiltinAtom().jjtAccept(visitor, null);
+		assertEquals(at.getOperator(), ASPOperator.BinaryOperator.EQ);
+	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleASPRulesTest() throws ParseException {
@@ -216,7 +228,7 @@ public class ASPCore2ParserTest {
 		parser.ReInit(new StringReader("23=23"));
 		ComparativeAtom at = (ComparativeAtom) parser.BuiltinAtom().jjtAccept(visitor, null);
 		assertEquals(at.getOperator(), ASPOperator.BinaryOperator.EQ);
-
+		
 		parser.ReInit(new StringReader("2<>23"));
 		at = (ComparativeAtom) parser.BuiltinAtom().jjtAccept(visitor, null);
 		assertEquals(at.getOperator(), ASPOperator.BinaryOperator.NEQ);

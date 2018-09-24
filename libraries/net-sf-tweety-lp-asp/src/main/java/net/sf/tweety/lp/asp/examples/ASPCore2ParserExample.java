@@ -20,14 +20,11 @@ package net.sf.tweety.lp.asp.examples;
 
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.reasoner.ClingoSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
-import net.sf.tweety.lp.asp.syntax.ASPOperator;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
-import net.sf.tweety.lp.asp.syntax.ArithmeticTerm;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**

@@ -18,78 +18,146 @@
  */
 package net.sf.tweety.lp.asp.reasoner;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.io.PrintWriter;
 
+import net.sf.tweety.commons.util.Shell;
+import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.Program;
+import net.sf.tweety.lp.asp.writer.ClingoWriter;
 
 /**
  * Wrapper class for the DLV answer set solver command line
  * utility.
  * 
- * TODO
- * 
  * @author Thomas Vengels, Tim Janus, Anna Gessler
  *
  */
 public class DLVSolver extends ASPSolver {
+	/**
+	 * String representation of DLV binary path.
+	 */
+	private String pathToSolver;
 	
-	private String pathToDLV;
+	/** 
+	 * Shell to run DLV
+	 */
+	private Shell bash;
 
+	/**
+	 * Constructs a new instance pointing to a specific DLV solver.
+	 * @param path2dlv binary location of DLV on the hard drive
+	 */
 	public DLVSolver(String pathToDLV) {
-		this.setPathToDLV(pathToDLV);
-	}
-
-	public String getPathToDLV() {
-		return pathToDLV;
-	}
-
-	public void setPathToDLV(String pathToDLV) {
-		this.pathToDLV = pathToDLV;
+		this.pathToSolver = pathToDLV;
+		this.bash = Shell.getNativeShell();
 	}
 	
+	/**
+	 * Constructs a new instance pointing to a specific DLV solver.
+	 * @param path2dlv binary location of DLV on the hard drive
+	 * @param bash shell to run commands
+	 */
+	public DLVSolver(String pathToDLV, Shell bash) {
+		this.pathToSolver = pathToDLV;
+		this.bash = bash;
+	}
+
 	/**
 	 * Additional command line options for DLV. 
 	 * Default value is empty.
 	 */
 	private String options = "";
 
+	@Override
+	public AnswerSetList getModels(Program p) {
+		AnswerSetList result = new AnswerSetList();
+		try {
+			File file = File.createTempFile("tmp", ".txt");
+			ClingoWriter writer = new ClingoWriter(new PrintWriter(file));
+			writer.printProgram(p);
+			writer.close();
+			
+			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
+			this.outputData =( bash.run(cmd));	
+			result = parseResult(outputData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 
+	@Override
+	public AnswerSetList getModels(String p) {
+		AnswerSetList result = new AnswerSetList();
+		try {
+			File file = File.createTempFile("tmp", ".txt");
+			PrintWriter writer = new PrintWriter(file);
+			writer.write(p);
+			writer.close();
+			
+			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
+			this.outputData =( bash.run(cmd));
+			result = parseResult(outputData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public AnswerSet getModel(Program p) {
+		return this.getModels(p).get(0);
+	}
 
+	/**
+	 * Processes a string containing answer sets and returns an AnswerSetList.
+	 * 
+	 * @param String containing DLV output
+	 * @return AnswerSet
+	 */
+	protected AnswerSetList parseResult(String s) {
+		AnswerSetList result = new AnswerSetList();
+		String[] temp = s.split("}");
+		
+		try {
+			for (int i = 0; i < temp.length-1; i++)	{
+				String toParse = temp[i].trim().substring(1).replaceAll(",", "");
+				AnswerSet as = ASPCore2Parser.parseAnswerSet(toParse);
+				result.add(as);
+			}
+			
+		} catch (Exception e) {
+			System.err.println("DLV error: Failed to parse answer sets from DLV output");
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
+	 * Set additional command line options for DLV.
+	 * @param options
+	 */
+	public void setOptions(String options) {
+		this.options = options;
+	}
+
+	/**
+	 * Sets the location of the DLV solver on the hard drive.
+	 * @param pathToDLV
+	 */
+	public void setPathToDLV(String pathToDLV) {
+		this.pathToSolver = pathToDLV;
+	}
+	
 	@Override
 	public Boolean query(Program beliefbase, ASPLiteral formula) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-
-	@Override
-	public AnswerSetList getModels(Program bbase) {
-		// TODO Auto-generated method stub
-		// TODO use Integer.toString(this.integerMaximum) in cmd string
-		return null;
-	}
-
-
-
-	@Override
-	public AnswerSet getModel(Program bbase) {
-		// TODO Auto-generated method stub
-		// TODO use Integer.toString(this.integerMaximum) in cmd string
-		return null;
-	}
-
-
-
-	@Override
-	public AnswerSetList getModels(String p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

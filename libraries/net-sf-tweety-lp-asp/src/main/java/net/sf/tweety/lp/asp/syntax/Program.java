@@ -363,5 +363,18 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	public boolean contains(ASPRule r) {
 		return rules.contains(r);
 	}
+	
+	/**
+	 * Returns true if the program is safe, 
+	 * i.e. if all of its rules and its
+	 * query are safe.
+	 * @return true if the program is safe, false otherwise
+	 */
+	public boolean isSafe() {
+		for (ASPRule r: rules)
+			if (!r.isSafe())
+				return false;
+		return true;
+	}
 
 }

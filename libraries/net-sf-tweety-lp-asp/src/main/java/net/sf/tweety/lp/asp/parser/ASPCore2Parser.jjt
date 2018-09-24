@@ -1,3 +1,22 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2018 The Tweety Project Team <http://tweetyproject.org/contact/>
+ */
+
 options {
   MULTI=true;
   VISITOR=true;
@@ -7,10 +26,69 @@ options {
 
 PARSER_BEGIN(ASPCore2Parser)
 
+package net.sf.tweety.lp.asp.parser;
 import java.io.*;
 import net.sf.tweety.lp.asp.syntax.*;
 import net.sf.tweety.lp.asp.semantics.*;
 
+/**
+ * 
+ * Parser for ASP programs in the ASP-Core-2 syntax 
+ * <a href="https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf">https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf</a>.
+ * This parser also supports most of the (<a href=" https://potassco.org/clingo/">Clingo</a>) 
+ * and <a href="http://www.dlvsystem.com/html/DLV_User_Manual.html">DLV</a>
+ * input syntaxes and provides additional methods for parsing answer sets given by the DLV and Clingo solvers.
+ *
+ * <br>
+ * <br>
+ * The EBNF grammar for ASP-Core-2 is given as follows: <br>
+ * PROGRAM ::== (STATEMENT)* (QUERY)? <br>
+ * QUERY ::== LITERAL "?" <br>
+ * STATEMENT ::== ":-" BODY_ELEMENTS "." | HEAD (":-" BODY_ELEMENTS)? "." | ":~"
+ * BODY_ELEMENTS "." | OPTIMIZE "." <br>
+ * HEAD ::== (LITERAL "|")* LITERAL | CHOICE <br>
+ * BODY_ELEMENTS ::== (BODY_ELEMENTS ",")? BODY_ELEMENT <br>
+ * BODY_ELEMENT ::== NAF_LITERAL | ("not")? AGGREGATE <br>
+ * CHOICE ::== (TERM BINOP)? "{" CHOICE_ELEMENTS "}" (BINOP TERM)? <br>
+ * CHOICE_ELEMENTS ::== (CHOICE_ELEMENTS ";")? CHOICE_ELEMENT <br>
+ * CHOICE_ELEMENT ::== LITERAL (":" NAF_LITERALS)? <br>
+ * AGGREGATE ::== (TERM BINOP)? AGGREGATE_FUNCTION "{" AGGREGATE_ELEMENTS "}"
+ * (BINOP TERM)? <br>
+ * AGGREGATE_ELEMENTS ::== (AGGREGATE_ELEMENTS ";")? AGGREGATE_ELEMENT <br>
+ * AGGREGATE_ELEMENT ::== (Terms)? (":" NAF_LITERALS)? <br>
+ * AGGREGATE_FUNCTION ::== "#max" | "#min" | "#count" | "#sum" <br>
+ * OPTIMIZE ::== OPTIMIZE_FUNCTION "{" (OPTIMIZE_ELEMENTS)? "}" <br>
+ * OPTIMIZE_ELEMENTS ::== (OPTIMIZE_ELEMENTS ";")? OPTIMIZE_ELEMENT <br>
+ * OPTIMIZE_ELEMENT ::== WEIGHT_AT_LEVEL (":" NAF_LITERALS)? <br>
+ * OPTIMIZE_FUNCTION ::== "#maximize" | "#maximise" | "#minimize"| "#minimise"
+ * <br>
+ * WEIGHT_AT_LEVEL ::== TERM ("@" TERM)? ("," TERMS)? <br>
+ * NAF_LITERALS ::== (NAF_LITERALS ",")? NAF_LITERAL <br>
+ * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
+ * LITERAL ::== ("-")? ID ("(" Terms ")")? <br>
+ * BUILTIN_ATOM ::== TERM BINOP TERM <br>
+ * BINOP ::== "=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" <br>
+ * TERMS ::== (TERMS ",")? TERM <br>
+ * TERM ::== ID ("(" TERMS ")")? | NUMBER | STRING | VARIABLE | "_" | "(" TERM
+ * ")" | "-" TERM | TERM ARITHOP TERM <br>
+ * ARITHOP ::== "+" | "-" | "*" | "/" <br>
+ * 
+ * where ID is a sequence of letters, numbers, and "_" that starts with a
+ * lowercase letter, VARIABLE is a sequence of letters, numbers, and "_" that
+ * starts with an uppercase letter, STRING is a sequence of arbitrary characters
+ * surrounded by quotation marks ("...") and NUMBER is a sequence of numbers.
+ * <br>
+ * <br> The following 
+ * constructs from Clingo are supported additionally to the ASP-Core-2 syntax:
+ * <br> - show statements: "#show " ID "/" NUMBER 
+ * <br> Other Clingo meta-statements (#include, #external, #program, #script and #const)
+ * are currently not supported.
+ * <br>
+ * <br>The following constructs from DLV are supported additionally to the ASP-Core-2 syntax:
+ * <br> -  TODO
+ * @author Anna Gessler
+ * 
+ */
 public class ASPCore2Parser {
  private static ASPCore2Parser oneThreadParser = new ASPCore2Parser(new StringReader(""));
 
@@ -89,7 +167,7 @@ TOKEN :
 |  <SQUARE_CLOSE:        "]">
 |  <CURLY_OPEN:          "{">
 |  <CURLY_CLOSE:         "}">
-|  <EQUAL:               "=">
+|  <EQUAL:               "=" | "==">
 |  <UNEQUAL:             "<>" | "!=">
 |  <LESS:                "<">
 |  <GREATER:             ">">
@@ -107,7 +185,9 @@ TOKEN :
 ASTAnswerSet AnswerSet() #AnswerSet:
 {}
   {
-     (ClassicalLiteral())*
+     (
+     (ClassicalLiteral())* 
+     )
      { return jjtThis; }
   }
   
@@ -116,6 +196,7 @@ ASTProgram Program() #Program:
   {
      ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT>) Statements()] 
      [Query()] 
+     (ClingoMetaStatement())*
      <EOF>)
      { return jjtThis; }
   }
@@ -317,7 +398,7 @@ ASTNAFLiteral NAFLiteral() #NAFLiteral:
 {}
 {
  ( 
- LOOKAHEAD(Term() Binop()) BuiltinAtom()
+ LOOKAHEAD((Term() Binop() Term()) | (Binop())) BuiltinAtom()
  | [<NAF>{jjtThis.nafneg(true);}] ClassicalLiteral()
  )
  
@@ -336,7 +417,8 @@ ASTBuiltInAtom BuiltinAtom() #BuiltInAtom :
 {}
 {
   (
-  Term() Binop() Term()
+  (Term() Binop() Term())
+  | (Binop() <PAREN_OPEN> Term() <COMMA> Term() <PAREN_CLOSE>)
   )
   { return jjtThis; }
 }

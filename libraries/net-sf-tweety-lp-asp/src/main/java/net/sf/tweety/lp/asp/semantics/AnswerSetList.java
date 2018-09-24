@@ -119,12 +119,11 @@ public class AnswerSetList extends ArrayList<AnswerSet> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Answer Sets: " + this.size());
-		sb.append("\n--------------");
+		sb.append("# of answer sets: " + this.size());
+		
 		for (AnswerSet s : this) {
 			sb.append("\n");
 			sb.append(s);
-			sb.append("\n--------------");
 		}
 		sb.append("\n");
 

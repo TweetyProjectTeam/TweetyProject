@@ -32,8 +32,10 @@ import net.sf.tweety.lp.asp.syntax.Program;
  * Prints ASP programs and single rules to the Clingo input format
  * (<a href="https://potassco.org/clingo/">https://potassco.org/clingo/</a>).
  * The Clingo input format adheres (mostly) to the ASP-Core-2 language standard.
+ * Also works for the basic elements of the DLV input format.
  * 
  * @see net.sf.tweety.lp.asp.reasoner.ClingoSolver
+ * @see net.sf.tweety.lp.asp.reasoner.DLVSolver
  * 
  * @author Anna Gessler
  */
@@ -102,7 +104,7 @@ public class ClingoWriter {
 			result += body.get(body.size() - 1).toString();
 		}
 
-		// TODO add other elements
+		// TODO add special elements
 		
 		return result; 
 	}

@@ -28,6 +28,7 @@ import java.util.TreeSet;
 
 import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -189,7 +190,14 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.head = other.head;
 	}
 
+	/**
+	 * This methods tests a rule for safety. 
+	 * @return true if the rule is safe, false otherwise
+	 */
 	public Boolean isSafe() {
+		//Get all variables in the rule
+		Set<Variable> vars = this.getTerms(Variable.class);
+
 		// TODO
 		throw new UnsupportedOperationException("WIP");
 	}
