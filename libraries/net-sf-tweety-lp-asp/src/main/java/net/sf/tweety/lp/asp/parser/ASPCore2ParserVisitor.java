@@ -28,7 +28,7 @@ public interface ASPCore2ParserVisitor
   public Object visit(ASTWeight node, Object data);
   public Object visit(ASTNAFLiteralList node, Object data);
   public Object visit(ASTNAFLiteral node, Object data);
-  public Object visit(ASTAtom node, Object data);
+  public Object visit(ASTLiteral node, Object data);
   public Object visit(ASTBuiltInAtom node, Object data);
   public Object visit(ASTBinop node, Object data);
   public Object visit(ASTTermList node, Object data);
@@ -40,4 +40,4 @@ public interface ASPCore2ParserVisitor
   public Object visit(ASTID node, Object data);
   public Object visit(ASTString node, Object data);
 }
-/* JavaCC - OriginalChecksum=9449790512addb428cfec6f0e7263083 (do not edit this line) */
+/* JavaCC - OriginalChecksum=a969f9341d22b4b733e2ee1d3f729b44 (do not edit this line) */

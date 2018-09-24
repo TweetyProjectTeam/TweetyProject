@@ -1356,9 +1356,9 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     throw new Error("Missing return statement in function");
   }
 
-  final public ASTAtom ClassicalLiteral() throws ParseException {
- /*@bgen(jjtree) Atom */
-  ASTAtom jjtn000 = new ASTAtom(JJTATOM);
+  final public ASTLiteral ClassicalLiteral() throws ParseException {
+ /*@bgen(jjtree) Literal */
+  ASTLiteral jjtn000 = new ASTLiteral(JJTLITERAL);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {

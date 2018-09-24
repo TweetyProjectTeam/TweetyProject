@@ -71,8 +71,8 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 	public AnswerSet visit(ASTAnswerSet node, Object data) {
 		AnswerSet as = new AnswerSet();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
-			if (node.jjtGetChild(i) instanceof ASTAtom) {
-				ASPLiteral a = visit((ASTAtom) node.jjtGetChild(i), null);
+			if (node.jjtGetChild(i) instanceof ASTLiteral) {
+				ASPLiteral a = visit((ASTLiteral) node.jjtGetChild(i), null);
 				as.add(a);
 			}
 		}
@@ -110,8 +110,8 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 	public ASPLiteral visit(ASTQuery node, Object data) {
 		ASPLiteral atom = null;
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
-			if (node.jjtGetChild(i) instanceof ASTAtom)
-				atom = visit((ASTAtom) node.jjtGetChild(i), null);
+			if (node.jjtGetChild(i) instanceof ASTLiteral)
+				atom = visit((ASTLiteral) node.jjtGetChild(i), null);
 		}
 		return atom;
 	}
@@ -179,8 +179,8 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 	public List<ASPLiteral> visit(ASTHeadElementsList node, Object data) {
 		List<ASPLiteral> elements = new ArrayList<ASPLiteral>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
-			if (node.jjtGetChild(i) instanceof ASTAtom) {
-				ASPLiteral a = visit((ASTAtom) node.jjtGetChild(i), null);
+			if (node.jjtGetChild(i) instanceof ASTLiteral) {
+				ASPLiteral a = visit((ASTLiteral) node.jjtGetChild(i), null);
 				elements.add(a);
 			}
 		}
@@ -405,8 +405,8 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTBuiltInAtom)
 				at = visit((ASTBuiltInAtom) node.jjtGetChild(i), null);
-			else if (node.jjtGetChild(i) instanceof ASTAtom) {
-				at = visit((ASTAtom) node.jjtGetChild(i), null);
+			else if (node.jjtGetChild(i) instanceof ASTLiteral) {
+				at = visit((ASTLiteral) node.jjtGetChild(i), null);
 				if (node.nafneg)
 					return new DefaultNegation(at);
 			}
@@ -415,7 +415,7 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 	}
 
 	@Override
-	public ASPLiteral visit(ASTAtom node, Object data) {
+	public ASPLiteral visit(ASTLiteral node, Object data) {
 		String name = "";
 		List<Term<?>> terms = new ArrayList<Term<?>>();
 

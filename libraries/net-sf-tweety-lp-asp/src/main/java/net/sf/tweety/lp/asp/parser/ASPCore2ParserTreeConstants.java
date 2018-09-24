@@ -27,7 +27,7 @@ public interface ASPCore2ParserTreeConstants
   public int JJTWEIGHT = 21;
   public int JJTNAFLITERALLIST = 22;
   public int JJTNAFLITERAL = 23;
-  public int JJTATOM = 24;
+  public int JJTLITERAL = 24;
   public int JJTBUILTINATOM = 25;
   public int JJTBINOP = 26;
   public int JJTTERMLIST = 27;
@@ -65,7 +65,7 @@ public interface ASPCore2ParserTreeConstants
     "Weight",
     "NAFLiteralList",
     "NAFLiteral",
-    "Atom",
+    "Literal",
     "BuiltInAtom",
     "Binop",
     "TermList",
@@ -78,4 +78,4 @@ public interface ASPCore2ParserTreeConstants
     "String",
   };
 }
-/* JavaCC - OriginalChecksum=9aa06cf03baa733421be46e5a6114656 (do not edit this line) */
+/* JavaCC - OriginalChecksum=9c807acbeda15247e24e0443c159ad12 (do not edit this line) */

@@ -404,7 +404,7 @@ ASTNAFLiteral NAFLiteral() #NAFLiteral:
  
   { return jjtThis; }
 }
-ASTAtom ClassicalLiteral() #Atom:
+ASTLiteral ClassicalLiteral() #Literal:
 {}
 {
   ( 
