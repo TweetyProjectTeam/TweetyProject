@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logicprogramming.nlp.syntax;
+package net.sf.tweety.lp.nlp.syntax;
 
 import org.junit.Test;
 
