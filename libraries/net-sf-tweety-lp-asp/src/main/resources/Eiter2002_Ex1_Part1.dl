@@ -1,4 +1,0 @@
-sleep :- not tv_on.
-night.
-tv_on.
-watch_tv :- tv_on.

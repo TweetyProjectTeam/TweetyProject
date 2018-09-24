@@ -1,4 +1,0 @@
-switched_off :- not tv_on, not power_failure.
-tv_on :- not switched_off, not power_failure.
--tv_on :- switched_off.
--switched_off :- tv_on.

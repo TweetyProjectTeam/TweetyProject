@@ -58,7 +58,7 @@ public class ClingoTest {
 	}
 
 	@Test
-	public void Example1() throws Exception {
+	public void BasicExampleTest1() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex1.asp"));
 		parser.ReInit(fistr);
 		
@@ -70,7 +70,7 @@ public class ClingoTest {
 	}
 	
 	@Test
-	public void Example2() throws Exception {
+	public void BasicExampleTest2() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex2.asp"));
 		parser.ReInit(fistr);
 
@@ -82,7 +82,7 @@ public class ClingoTest {
 	}
 	
 	@Test
-	public void Example4() throws Exception {
+	public void BasicExampleTest3() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex4.asp"));
 		parser.ReInit(fistr);
 			
@@ -91,6 +91,18 @@ public class ClingoTest {
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 5);
+	}
+	
+	@Test
+	public void BasicExampleTest4() throws Exception {
+		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex5.asp"));
+		parser.ReInit(fistr);
+			
+		Program p = visitor.visit(parser.Program(), null);
+		AnswerSetList asl = solver.getModels(p);
+		
+		assertTrue(asl.size() == 1);
+		assertTrue(asl.get(0).size() == 6);
 	}
 
 }

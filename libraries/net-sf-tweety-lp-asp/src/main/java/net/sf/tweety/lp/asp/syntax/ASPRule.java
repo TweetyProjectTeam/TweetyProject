@@ -192,6 +192,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	/**
 	 * This methods tests a rule for safety. 
+	 * Safety is defined as follows in the ASP-Core-2 standard:
+	 * A rule, weak constraint or query is safe, if the  set V of global variables
+	 * 
 	 * @return true if the rule is safe, false otherwise
 	 */
 	public Boolean isSafe() {

@@ -1,2 +1,0 @@
--tv_on :- power_failure.
-power_failure.
