@@ -20,10 +20,14 @@ package net.sf.tweety.arg.aspic.syntax;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
+import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
@@ -117,16 +121,41 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	}
 	
 	/**
-	 * This method transfers this Aspic+ theory into a Dung style srhumentation system
+	 * This method transfers this Aspic+ theory into a Dung style argumentation system
 	 * @return	a dung theory constructed out of this system's arguments and their 
 	 * 			defeat relation according to order
 	 */
 	public DungTheory asDungTheory(){
+		return this.asDungTheory(false);
+	}
+	
+	/**
+	 * This method transfers this Aspic+ theory into a Dung style argumentation system
+	 * @param simplifyArgumentStructure whether the argument class should be simplified; if "false" then 
+	 * 	<code>AspicArgument</code> is used as the argument class. If "true" then arguments are simplified
+	 *  by assigning names to each argument (the structure of the arguments is therefore lost).
+	 * @return a dung theory constructed out of this system's arguments and their 
+	 * 			defeat relation according to order
+	 */
+	public DungTheory asDungTheory(boolean simplifyArgumentStructure) {
 		Collection<AspicArgument<T>> args = getArguments();
 		DungTheory dung_theory = new DungTheory();
 		dung_theory.addAll(args);
 		dung_theory.addAllAttacks(AspicAttack.determineAttackRelations(args, order, rfgen));
-		return dung_theory;
+		if(!simplifyArgumentStructure)
+			return dung_theory;
+		DungTheory dung_theory2 = new DungTheory();
+		Map<Argument,Argument> old2new = new HashMap<>();
+		int idx = 0;
+		for(Argument a: dung_theory) {
+			Argument b = new Argument("A"+idx++);
+			old2new.put(a, b);
+			dung_theory2.add(b);
+		}
+		for(Attack att: dung_theory.getAttacks()) {
+			dung_theory2.add(new Attack(old2new.get(att.getAttacker()),old2new.get(att.getAttacked())));
+		}		
+		return dung_theory2;
 	}
 	
 	/**
