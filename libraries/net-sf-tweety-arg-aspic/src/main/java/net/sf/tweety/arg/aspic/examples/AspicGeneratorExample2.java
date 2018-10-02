@@ -36,11 +36,11 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  */
 public class AspicGeneratorExample2 {
 	public static void main(String[] args) throws IOException {
-		int numberAtoms = 20;
-		int numberFormulas = 100;
+		int numberAtoms = 18;
+		int numberFormulas = 80;
 		int maxLiteralsInPremises = 2;
-		double percentageStrictRules = 0.2;
-		int numberOfAFs = 500;
+		double percentageStrictRules = 1;
+		int numberOfAFs = 100;
 		String pathToExportFolder = "/Users/mthimm/Desktop/aspic";
 		ApxWriter apx = new ApxWriter();
 		TgfWriter tgf = new TgfWriter();
@@ -49,8 +49,8 @@ public class AspicGeneratorExample2 {
 			AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
 			DungTheory aaf = theory.asDungTheory(true);
 			System.out.println(aaf);
-			apx.write(aaf, new File(pathToExportFolder + "/aspic_" + i + ".apx" ));
-			tgf.write(aaf, new File(pathToExportFolder + "/aspic_" + i + ".tgf" ));			
+			apx.write(aaf, new File(pathToExportFolder + "/aspic_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".apx" ));
+			tgf.write(aaf, new File(pathToExportFolder + "/aspic_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".tgf" ));			
 		}		
 	}
 }

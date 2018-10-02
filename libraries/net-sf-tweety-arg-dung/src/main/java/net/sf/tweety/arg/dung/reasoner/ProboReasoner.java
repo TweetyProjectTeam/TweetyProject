@@ -118,7 +118,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 			inf = "DC";
 		else inf = "DS";
 		ProboProblem problem = ProboProblem.getProblem(inf + "-" + this.semantics.abbreviation());
-		if(this.supportedProblems().contains(problem))
+		if(!this.supportedProblems().contains(problem))
 			throw new UnsupportedOperationException("Problem not supported by this probo solver.");
 		FileFormat format = this.supportedFormats().iterator().next();
 		try {
@@ -140,7 +140,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 	public Collection<Extension> getModels(DungTheory bbase) {
 		// first check whether the solver supports the problem
 		ProboProblem problem = ProboProblem.getProblem("EE-" + this.semantics.abbreviation());
-		if(this.supportedProblems().contains(problem))
+		if(!this.supportedProblems().contains(problem))
 			throw new UnsupportedOperationException("Problem not supported by this probo solver.");
 		FileFormat format = this.supportedFormats().iterator().next();
 		try {
@@ -164,7 +164,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 	public Extension getModel(DungTheory bbase) {
 		// first check whether the solver supports the problem
 		ProboProblem problem = ProboProblem.getProblem("SE-" + this.semantics.abbreviation());
-		if(this.supportedProblems().contains(problem))
+		if(!this.supportedProblems().contains(problem))
 			throw new UnsupportedOperationException("Problem not supported by this probo solver.");
 		FileFormat format = this.supportedFormats().iterator().next();
 		try {
