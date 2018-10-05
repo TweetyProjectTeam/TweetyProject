@@ -260,7 +260,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		if (!head.isEmpty()) {
 			for (int i = 0; i < head.size() - 1; i++)
 				ret += head.get(i).toString() + ",";
-			ret += head.get(head.size() - 1).toString() + " ";
+			ret += head.get(head.size() - 1).toString();
 		}
 		if (!body.isEmpty()) {
 			ret += ":- " + body.get(0);
@@ -455,6 +455,14 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	@Override
 	public int hashCode() {
 		return head.hashCode() + body.hashCode();
+	}
+
+	/**
+	 * @return true if the rule's head and body are both empty, 
+	 * false otherwise.
+	 */
+	public boolean isEmpty() {
+		return this.head.isEmpty() && this.body.isEmpty();
 	}
 	
 	

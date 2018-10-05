@@ -77,10 +77,6 @@ public class ClingoWriter {
 			for (Predicate pr: p.getOutputWhitelist())
 				writer.write("\n #show " + pr.getName() + "/" + pr.getArity() + ".\n");
 		}
-		
-		//Optionally print a single query.
-		if (p.hasQuery())
-			writer.write("\n" + p.getQuery().toString() + "?");
 	}
 
 	/**

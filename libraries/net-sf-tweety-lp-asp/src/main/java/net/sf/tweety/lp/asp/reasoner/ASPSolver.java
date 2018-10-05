@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.lp.asp.reasoner;
 
+import java.io.File;
+
 import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
@@ -132,10 +134,18 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * Returns a characterizing model (answer set) 
 	 * of the given belief base.
 	 * 
-	 * @param p
-	 * @param maxInt
+	 * @param string containing belief base
 	 * @return AnswerSet
 	 */
 	public abstract AnswerSetList getModels(String p);
+	
+	/**
+	 * Returns a characterizing model (answer set) 
+	 * of the given belief base.
+	 * 
+	 * @param file containing belief base
+	 * @return AnswerSet
+	 */
+	public abstract AnswerSetList getModels(File f);
 
 }

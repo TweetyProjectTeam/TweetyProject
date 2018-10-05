@@ -111,6 +111,20 @@ public class DLVSolver extends ASPSolver {
 	}
 	
 	@Override
+	public AnswerSetList getModels(File file) {
+		AnswerSetList result = new AnswerSetList();
+		try {
+			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
+			this.outputData =( bash.run(cmd));
+			result = parseResult(outputData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	@Override
 	public AnswerSet getModel(Program p) {
 		return this.getModels(p).get(0);
 	}

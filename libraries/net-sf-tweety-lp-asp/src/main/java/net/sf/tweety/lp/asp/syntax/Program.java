@@ -168,7 +168,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 			r += a.toString() + "\n"; 
 		}
 		if (this.hasQuery())
-			r += "\nQuery: " + query.toString();
+			r += "Query: " + query.toString();
 		return r;
 	}
 

@@ -81,7 +81,7 @@ import net.sf.tweety.lp.asp.semantics.*;
  * <br>
  * <br> The following 
  * constructs from Clingo are supported additionally to the ASP-Core-2 syntax:
- * <br> - show statements: "#show " ID "/" NUMBER 
+ * <br> - show statements : "#show " ID "/" NUMBER 
  * <br> Other Clingo meta-statements (#include, #external, #program, #script and #const)
  * are currently not supported.
  * <br>
@@ -140,8 +140,8 @@ SKIP :
 | "\t"
 | "\n"
 | "\r"
-| <COMMENT: "%" ( (~["*","\n"] ~["\n"])* )?"\n" >
-| <MULTI_LINE_COMMENT: "%" (~["*"] | "*" ~["%"])*"*%" >
+| <COMMENT: "%" (~["\n"])* "\n">
+| <MULTI_LINE_COMMENT: "%*" (~["%"])* "*%">
 }
 
 TOKEN :
@@ -183,7 +183,7 @@ TOKEN :
 |  <AGGREGATE_MAX:       "#max">
 |  <AGGREGATE_MIN:       "#min">
 |  <AGGREGATE_SUM:       "#sum">
-|  <CLINGO_SHOW: 	     "#show " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )*) "/" ("0" | ["1"-"9"](["0"-"9"])*) ".">
+|  <CLINGO_SHOW: 	     "#show " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )*) "/" ("0" | ["1"-"9"](["0"-"9"])* ".")>
 }
 
 ASTAnswerSet AnswerSet()           :
@@ -235,9 +235,8 @@ ASTProgram Program()         :
   {/*@bgen(jjtree) Program */
      try {
 /*@egen*/
-     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT>) Statements()] 
-     [Query()] 
-     (ClingoMetaStatement())*
+     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT> | <CLINGO_SHOW>) Statements()] 
+     [Query()]
      <EOF>)/*@bgen(jjtree)*/
      {
        jjtree.closeNodeScope(jjtn000, true);
@@ -353,11 +352,11 @@ ASTRule Statement()      :
   try {
 /*@egen*/
   (
-  (<CONS> [Body()] <DOT>)
+  (ClingoMetaStatement())
+  | (<CONS> [Body()] <DOT>)
   | (Head() [<CONS> [Body()]] <DOT>)
   | (<WCONS> [Body()] <DOT> <SQUARE_OPEN> WeightAtLevel() <SQUARE_CLOSE>)
   | (Optimize() <DOT>)
-  | (ClingoMetaStatement())
   )/*@bgen(jjtree)*/
   {
     jjtree.closeNodeScope(jjtn000, true);

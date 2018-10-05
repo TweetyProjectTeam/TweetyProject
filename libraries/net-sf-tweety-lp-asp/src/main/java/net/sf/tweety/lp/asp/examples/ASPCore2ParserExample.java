@@ -18,9 +18,14 @@
  */
 package net.sf.tweety.lp.asp.examples;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.StringReader;
 import java.util.Set;
 
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
+import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.reasoner.ClingoSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSetList;
@@ -35,41 +40,22 @@ import net.sf.tweety.lp.asp.syntax.Program;
  */
 public class ASPCore2ParserExample {
 
-	public static void main(String[] args) throws ParseException {
-		String str1 = ":- not isDead(walter), -isDead(petra).\n" + 
-				"\n" + 
-				"isAlive(schroedinger).\n" + 
-				"\n" + 
-				"isAlive(cat) :- -isDead(cat).\n" + 
-				"\n" + 
-				"% this is a comment\n" + 
-				"\n" + 
-				":- #min { 4 : isDead(cat), isAlive(cat); isAlive(cat)}.\n"
-				+ "#show isAlive/1." + 
-				"\n"
-				+ "isAlive(cat)?";
+	public static void main(String[] args) throws ParseException, FileNotFoundException {
+		ASPCore2Parser parser = new ASPCore2Parser(new StringReader(""));;
 		
-		Program pr1 = ASPCore2Parser.parseProgram(str1);
-		System.out.println("----------------\nParsed program:\n" + pr1);
+		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex5.asp"));
+		parser.ReInit(fistr);
+		InstantiateVisitor visitor = new InstantiateVisitor();
+		Program pr1 = visitor.visit(parser.Program(), null);
+		System.out.println("Parsed program:\n" + pr1);
 		System.out.println("#show list:" + pr1.getOutputWhitelist());
 		
-		String str2 = "motive(harry). \n" + 
-				"motive(sally). \n" + 
-				"guilty(harry). \n" + 
-				"innocent(Suspect) :- motive(Suspect), not guilty(Suspect). \n";
-		
-		Program pr2 = ASPCore2Parser.parseProgram(str2);
-		System.out.println("----------------\nParsed program:\n" + pr2);
-		
 		ClingoSolver solver = new ClingoSolver("/home/anna/sw/asp/clingo");
-		AnswerSetList as = solver.getModels(pr2);
-		System.out.println(as);
+		AnswerSetList as = solver.getModels(pr1);
+		System.out.println("\nClingo output:\n" + as);
 		
-		String es = "p(a). \n" + 
-				"p(b).\n" + 
-				"{q(X) : p(X)}. ";
-		AnswerSetList as2 = solver.getModels(es);
-		System.out.println(as2);
+		AnswerSetList as2 = solver.getModels(new File("src/main/resources/ex6.asp"));
+		System.out.println("--------------\nClingo output:\n" +as2);
 		
 		System.out.println("-------------");
 		Set<ASPRule> rules = pr1.getRules();

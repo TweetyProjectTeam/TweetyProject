@@ -122,7 +122,8 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTRule) {
 				ASPRule a = visit((ASTRule) node.jjtGetChild(i), null);
-				elements.add(a);
+				if (!a.isEmpty())
+					elements.add(a);
 			}
 		}
 		return elements;

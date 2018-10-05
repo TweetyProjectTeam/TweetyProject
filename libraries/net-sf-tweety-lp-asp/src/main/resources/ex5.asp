@@ -1,7 +1,15 @@
-eagle(eddy).
-penguin(tux).
+% Single-line comment
+motive(harry).
+motive(sally).
+guilty(harry).
 
- fly(X) :- bird(X), not -fly(X).
--fly(X) :- penguin(X).
-bird(X) :- penguin(X).
-bird(X) :- eagle(X).
+%* Multi-
+line 
+comment
+*% 
+innocent(Suspect) :- motive(Suspect), not guilty(Suspect).
+#show guilty/1.
+innocent(harry)?
+
+
+
