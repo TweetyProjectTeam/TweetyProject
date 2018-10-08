@@ -325,6 +325,7 @@ public class FolSignature extends Signature {
 		
 	}
 	
+	
 	/**
 	 * Returns a string representation of the first-order logic signature.
 	 * 
@@ -336,7 +337,11 @@ public class FolSignature extends Signature {
 		java.util.Iterator<Sort> it = this.sorts.iterator();
 		while (it.hasNext()) {
 			Sort s = it.next();
-			String constants = s.getTerms().toString();
+			Set<Term<?>> containedConstants = new HashSet<Term<?>>();
+			for (Term<?> c : s.getTerms())
+				if (this.containsConstant(c.toString()))
+					containedConstants.add(c); //Print only those constants of the sort that are part of the signature's constants 
+			String constants = containedConstants.toString();
 			constants = constants.substring(1, constants.length()-1);
 			result += s.getName() + " = {" + constants + "}";
 			if (it.hasNext()) result+= ", ";
