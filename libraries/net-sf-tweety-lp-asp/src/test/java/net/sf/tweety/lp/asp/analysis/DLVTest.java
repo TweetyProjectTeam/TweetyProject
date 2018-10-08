@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringReader;
+import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,7 +34,7 @@ import org.junit.Test;
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.reasoner.DLVSolver;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
@@ -63,7 +64,7 @@ public class DLVTest {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex1.asp"));
 		parser.ReInit(fistr);
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.getModels(p);
+		List<AnswerSet> asl = solver.getModels(p);
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 3);
@@ -74,7 +75,7 @@ public class DLVTest {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex2.asp"));
 		parser.ReInit(fistr);
 		Program p = visitor.visit(parser.Program(), null);
-		AnswerSetList asl = solver.getModels(p);
+		List<AnswerSet> asl = solver.getModels(p);
 		
 		System.out.println(asl);
 		
@@ -89,7 +90,7 @@ public class DLVTest {
 		parser.ReInit(fistr);
 		Program p = visitor.visit(parser.Program(), null);
 		
-		AnswerSetList asl = solver.getModels(p);
+		List<AnswerSet> asl = solver.getModels(p);
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 5);
 	}

@@ -4,8 +4,8 @@ motive(sally).
 guilty(harry).
 
 %* Multi-
-line 
-comment
+*line 
+*comment
 *% 
 innocent(Suspect) :- motive(Suspect), not guilty(Suspect).
 #show guilty/1.

@@ -30,7 +30,6 @@ import java.util.Set;
 import net.sf.tweety.beliefdynamics.CredibilityRevisionNonIterative;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
@@ -73,7 +72,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 		 * @param answersets		The answer sets processed by the credibility version of the program
 		 * @return					The revided program
 		 */
-		Program process(List<Program> orderedPrograms, AnswerSetList answersets);
+		Program process(List<Program> orderedPrograms, Collection<AnswerSet> answersets);
 	}
 	
 	/**
@@ -89,11 +88,11 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 		private static Logger LOG = LoggerFactory.getLogger(DefaultBehavior.class);
 		
 		@Override
-		public Program process(List<Program> orderedPrograms, AnswerSetList answersets) {
+		public Program process(List<Program> orderedPrograms, Collection<AnswerSet> answersets) {
 			if(answersets.size() > 1) {
 				LOG.warn("The actual version of credibility revision for ASP does not support multiple program versions and uses the first answer set.");
 			}
-			AnswerSet as = answersets.get(0);
+			AnswerSet as = answersets.iterator().next();
 			
 			// gather indicies of rule which are rejected:
 			List<Integer> indicies = new LinkedList<Integer>();
@@ -147,9 +146,9 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 	/** reference to the solver used for the answer set generation */
 	private ASPSolver solver = null;
 	
-	private AnswerSetList lastAnswersets;
+	private Collection<AnswerSet> lastAnswersets;
 	
-	private AnswerSetList lastProjectedAnswersets;
+	private Collection<AnswerSet> lastProjectedAnswersets;
 	
 	private int maxInt;
 	
@@ -169,11 +168,11 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 		this.maxInt = maxInt;
 	}
 	
-	public AnswerSetList getLastAnswerset() {
+	public Collection<AnswerSet> getLastAnswerset() {
 		return lastAnswersets;
 	}
 	
-	public AnswerSetList getLastProjectedAnswerSet() {
+	public Collection<AnswerSet> getLastProjectedAnswerSet() {
 		return lastProjectedAnswersets;
 	}
 	
@@ -223,7 +222,9 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 	 * Projects the answer set of the credibility program to the original alphabet
 	 */
 	private void projectAnswerSet() {
-		lastProjectedAnswersets = (AnswerSetList)lastAnswersets.clone();
+		lastProjectedAnswersets.clear();
+		for (AnswerSet as : lastAnswersets)
+			lastProjectedAnswersets.add(as);
 		for(AnswerSet as : lastProjectedAnswersets) {
 			Set<ASPLiteral> toRemove = new HashSet<ASPLiteral>();
 			for(ASPLiteral literal : as) {

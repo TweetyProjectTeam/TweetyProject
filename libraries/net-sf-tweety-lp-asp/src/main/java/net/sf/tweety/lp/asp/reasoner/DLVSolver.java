@@ -20,11 +20,12 @@ package net.sf.tweety.lp.asp.reasoner;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.writer.ClingoWriter;
@@ -73,8 +74,8 @@ public class DLVSolver extends ASPSolver {
 	private String options = "";
 
 	@Override
-	public AnswerSetList getModels(Program p) {
-		AnswerSetList result = new AnswerSetList();
+	public List<AnswerSet> getModels(Program p) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			ClingoWriter writer = new ClingoWriter(new PrintWriter(file));
@@ -92,8 +93,8 @@ public class DLVSolver extends ASPSolver {
 	}
 
 	@Override
-	public AnswerSetList getModels(String p) {
-		AnswerSetList result = new AnswerSetList();
+	public List<AnswerSet> getModels(String p) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			PrintWriter writer = new PrintWriter(file);
@@ -111,8 +112,8 @@ public class DLVSolver extends ASPSolver {
 	}
 	
 	@Override
-	public AnswerSetList getModels(File file) {
-		AnswerSetList result = new AnswerSetList();
+	public List<AnswerSet> getModels(File file) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
 			this.outputData =( bash.run(cmd));
@@ -126,7 +127,7 @@ public class DLVSolver extends ASPSolver {
 	
 	@Override
 	public AnswerSet getModel(Program p) {
-		return this.getModels(p).get(0);
+		return this.getModels(p).iterator().next();
 	}
 
 	/**
@@ -135,8 +136,8 @@ public class DLVSolver extends ASPSolver {
 	 * @param String containing DLV output
 	 * @return AnswerSet
 	 */
-	protected AnswerSetList parseResult(String s) {
-		AnswerSetList result = new AnswerSetList();
+	protected List<AnswerSet> parseResult(String s) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		String[] temp = s.split("}");
 		
 		try {

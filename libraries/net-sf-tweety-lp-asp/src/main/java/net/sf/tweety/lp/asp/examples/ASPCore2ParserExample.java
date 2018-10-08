@@ -22,13 +22,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.StringReader;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.reasoner.ClingoSolver;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
 import net.sf.tweety.lp.asp.syntax.Program;
 
@@ -51,10 +52,10 @@ public class ASPCore2ParserExample {
 		System.out.println("#show list:" + pr1.getOutputWhitelist());
 		
 		ClingoSolver solver = new ClingoSolver("/home/anna/sw/asp/clingo");
-		AnswerSetList as = solver.getModels(pr1);
+		List<AnswerSet> as = solver.getModels(pr1);
 		System.out.println("\nClingo output:\n" + as);
 		
-		AnswerSetList as2 = solver.getModels(new File("src/main/resources/ex6.asp"));
+		List<AnswerSet> as2 = solver.getModels(new File("src/main/resources/ex6.asp"));
 		System.out.println("--------------\nClingo output:\n" +as2);
 		
 		System.out.println("-------------");

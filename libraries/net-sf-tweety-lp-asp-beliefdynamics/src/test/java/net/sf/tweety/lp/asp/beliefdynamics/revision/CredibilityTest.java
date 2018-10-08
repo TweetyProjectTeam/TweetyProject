@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,7 +32,6 @@ import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.reasoner.DLVSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.StrictNegation;
@@ -109,9 +109,9 @@ public class CredibilityTest {
 			Program reval = revision.revise(programs);
 			assertEquals(res, reval);
 			
-			AnswerSetList asl = revision.getLastProjectedAnswerSet();
+			Collection<AnswerSet> asl = revision.getLastProjectedAnswerSet();
 			assertEquals(1, asl.size());
-			AnswerSet as = asl.get(0);
+			AnswerSet as = asl.iterator().next();
 			assertEquals(2, as.size());
 			assertEquals(true, as.contains(new ASPAtom("b")));
 			assertEquals(true, as.contains(new StrictNegation("a")));
@@ -134,7 +134,7 @@ public class CredibilityTest {
 			
 			revision.revise(programs);
 			
-			AnswerSetList asl = revision.getLastProjectedAnswerSet();
+			Collection<AnswerSet> asl = revision.getLastProjectedAnswerSet();
 			assertEquals(2, asl.size());
 			
 			for(AnswerSet as : asl) {
@@ -143,10 +143,14 @@ public class CredibilityTest {
 				assertEquals(true, as.contains(new ASPAtom("c")));
 			}
 			
-			if(asl.get(0).contains(new ASPAtom("a"))) {
-				assertEquals(true, asl.get(1).contains(new StrictNegation("a")));
+			Iterator<AnswerSet> aslit = asl.iterator();
+			AnswerSet asl1 = aslit.next();
+			AnswerSet asl2 = aslit.next();
+			
+			if(asl1.contains(new ASPAtom("a"))) {
+				assertEquals(true, asl2.contains(new StrictNegation("a")));
 			} else {
-				assertEquals(true, asl.get(1).contains(new ASPAtom("a")));
+				assertEquals(true, asl2.contains(new ASPAtom("a")));
 			}
 		}
 	}

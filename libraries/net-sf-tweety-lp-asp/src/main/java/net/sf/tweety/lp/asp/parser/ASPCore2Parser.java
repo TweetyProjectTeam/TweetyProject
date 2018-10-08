@@ -49,11 +49,12 @@ import net.sf.tweety.lp.asp.semantics.*;
  * where ID is a sequence of letters, numbers, and "_" that starts with a
  * lowercase letter, VARIABLE is a sequence of letters, numbers, and "_" that
  * starts with an uppercase letter, STRING is a sequence of arbitrary characters
- * surrounded by quotation marks ("...") and NUMBER is a sequence of numbers.
+ * surrounded by quotation marks ("...") and NUMBER is a sequence of numbers. <br>
+ * Single-line comments (starting with "%") and multi-line-comments (starting with "%*", ending with "*%") are ignored by the parser.
  * <br>
  * <br> The following 
  * constructs from Clingo are supported additionally to the ASP-Core-2 syntax:
- * <br> - show statements : "#show " ID "/" NUMBER 
+ * <br> - show statements: "#show " ID "/" NUMBER 
  * <br> Other Clingo meta-statements (#include, #external, #program, #script and #const)
  * are currently not supported.
  * <br>
@@ -270,9 +271,6 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
   jjtree.openNodeScope(jjtn000);
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case CLINGO_SHOW:
-        ClingoMetaStatement();
-        break;
       case CONS:
         jj_consume_token(CONS);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -382,6 +380,9 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
       case MAXIMIZE:
         Optimize();
         jj_consume_token(DOT);
+        break;
+      case CLINGO_SHOW:
+        ClingoMetaStatement();
         break;
       default:
         jj_la1[6] = jj_gen;
@@ -1940,7 +1941,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_56() {
+  private boolean jj_3R_59() {
     if (jj_scan_token(CLINGO_SHOW)) return true;
     return false;
   }
@@ -2378,14 +2379,14 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_80() {
-    if (jj_3R_79()) return true;
-    return false;
-  }
-
   private boolean jj_3R_66() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_63()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_80() {
+    if (jj_3R_79()) return true;
     return false;
   }
 
@@ -2422,13 +2423,13 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_59() {
-    if (jj_3R_79()) return true;
+  private boolean jj_3R_52() {
+    if (jj_3R_75()) return true;
     return false;
   }
 
-  private boolean jj_3R_52() {
-    if (jj_3R_75()) return true;
+  private boolean jj_3R_58() {
+    if (jj_3R_79()) return true;
     return false;
   }
 
@@ -2442,16 +2443,11 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_58() {
+  private boolean jj_3R_57() {
     if (jj_scan_token(CONS)) return true;
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_80()) jj_scanpos = xsp;
-    return false;
-  }
-
-  private boolean jj_3R_57() {
-    if (jj_3R_79()) return true;
     return false;
   }
 
@@ -2467,6 +2463,11 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
 
   private boolean jj_3R_10() {
     if (jj_3R_26()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_56() {
+    if (jj_3R_79()) return true;
     return false;
   }
 
@@ -2488,16 +2489,21 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
   }
 
   private boolean jj_3R_32() {
+    if (jj_3R_59()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_31() {
     if (jj_3R_27()) return true;
     if (jj_scan_token(DOT)) return true;
     return false;
   }
 
-  private boolean jj_3R_31() {
+  private boolean jj_3R_30() {
     if (jj_scan_token(WCONS)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_59()) jj_scanpos = xsp;
+    if (jj_3R_58()) jj_scanpos = xsp;
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(SQUARE_OPEN)) return true;
     if (jj_3R_42()) return true;
@@ -2505,17 +2511,8 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_30() {
-    if (jj_3R_26()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_58()) jj_scanpos = xsp;
-    if (jj_scan_token(DOT)) return true;
-    return false;
-  }
-
   private boolean jj_3R_29() {
-    if (jj_scan_token(CONS)) return true;
+    if (jj_3R_26()) return true;
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_57()) jj_scanpos = xsp;
@@ -2524,7 +2521,11 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
   }
 
   private boolean jj_3R_28() {
-    if (jj_3R_56()) return true;
+    if (jj_scan_token(CONS)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_56()) jj_scanpos = xsp;
+    if (jj_scan_token(DOT)) return true;
     return false;
   }
 

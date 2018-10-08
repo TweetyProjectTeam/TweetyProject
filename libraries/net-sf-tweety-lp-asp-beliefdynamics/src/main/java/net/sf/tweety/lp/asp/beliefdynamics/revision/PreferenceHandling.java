@@ -35,7 +35,6 @@ import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 import net.sf.tweety.lp.asp.reasoner.DLVSolver;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
@@ -134,7 +133,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		// get answer sets of combined defaultificated programs.
 		concat.add(pd1);
 		concat.add(pd2);
-		AnswerSetList asDefault;
+		Collection<AnswerSet> asDefault;
 		try {
 			asDefault = solver.getModels(concat, maxInt);
 		} catch (Exception e) {

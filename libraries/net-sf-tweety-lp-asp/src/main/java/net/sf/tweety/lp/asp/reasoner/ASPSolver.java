@@ -19,11 +19,11 @@
 package net.sf.tweety.lp.asp.reasoner;
 
 import java.io.File;
+import java.util.Collection;
 
 import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
 import net.sf.tweety.lp.asp.syntax.Program;
@@ -100,7 +100,7 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	}
 
 	@Override
-	public abstract AnswerSetList getModels(Program bbase);
+	public abstract Collection<AnswerSet> getModels(Program p);
 	
 	/**
 	 * Returns a characterizing model (answer set) 
@@ -111,7 +111,7 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * @param maxInt
 	 * @return AnswerSet
 	 */
-	public AnswerSetList getModels(Program p, int maxInt) {
+	public Collection<AnswerSet> getModels(Program p, int maxInt) {
 		this.integerMaximum = maxInt;
 		return getModels(p);
 	}
@@ -137,7 +137,7 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * @param string containing belief base
 	 * @return AnswerSet
 	 */
-	public abstract AnswerSetList getModels(String p);
+	public abstract Collection<AnswerSet> getModels(String p);
 	
 	/**
 	 * Returns a characterizing model (answer set) 
@@ -146,6 +146,6 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * @param file containing belief base
 	 * @return AnswerSet
 	 */
-	public abstract AnswerSetList getModels(File f);
+	public abstract Collection<AnswerSet> getModels(File f);
 
 }

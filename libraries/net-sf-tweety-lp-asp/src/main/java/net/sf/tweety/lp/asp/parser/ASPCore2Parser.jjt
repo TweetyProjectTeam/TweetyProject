@@ -76,11 +76,12 @@ import net.sf.tweety.lp.asp.semantics.*;
  * where ID is a sequence of letters, numbers, and "_" that starts with a
  * lowercase letter, VARIABLE is a sequence of letters, numbers, and "_" that
  * starts with an uppercase letter, STRING is a sequence of arbitrary characters
- * surrounded by quotation marks ("...") and NUMBER is a sequence of numbers.
+ * surrounded by quotation marks ("...") and NUMBER is a sequence of numbers. <br>
+ * Single-line comments (starting with "%") and multi-line-comments (starting with "%*", ending with "*%") are ignored by the parser.
  * <br>
  * <br> The following 
  * constructs from Clingo are supported additionally to the ASP-Core-2 syntax:
- * <br> - show statements : "#show " ID "/" NUMBER 
+ * <br> - show statements: "#show " ID "/" NUMBER 
  * <br> Other Clingo meta-statements (#include, #external, #program, #script and #const)
  * are currently not supported.
  * <br>

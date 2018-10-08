@@ -40,7 +40,6 @@ import javax.swing.JTextArea;
 
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 
 /**
  * The default view for a revision compare. This class is responsible to create the hierarchy of
@@ -256,14 +255,14 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 		} else if(evt.getPropertyName() == "error") {
 			JOptionPane.showMessageDialog(this, evt.getNewValue(), "Error", JOptionPane.ERROR_MESSAGE);
 		} else if(evt.getPropertyName() == "leftASL") {
-			AnswerSetList asl = (AnswerSetList) evt.getNewValue();
+			Collection<AnswerSet> asl = (Collection<AnswerSet>) evt.getNewValue();
 			DefaultListModel<AnswerSet> model = new DefaultListModel<AnswerSet>();
 			for(AnswerSet as : asl) {
 				model.addElement(as);
 			}
 			lstLeftAnswerSets.setModel(model);
 		} else if(evt.getPropertyName() == "rightASL") {
-			AnswerSetList asl = (AnswerSetList) evt.getNewValue();
+			Collection<AnswerSet> asl = (Collection<AnswerSet>) evt.getNewValue();
 			DefaultListModel<AnswerSet> model = new DefaultListModel<AnswerSet>();
 			for(AnswerSet as : asl) {
 				model.addElement(as);

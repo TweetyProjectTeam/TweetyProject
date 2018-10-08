@@ -23,6 +23,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
@@ -31,7 +32,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
 
@@ -206,9 +207,9 @@ public class SimpleRevisionCompareModel {
 			return;
 		if(leftResult != null) {
 			try {
-				AnswerSetList leftasl = solver.getModels(new Program((Collection<ASPRule>)leftResult));
+				Collection<AnswerSet> leftasl = solver.getModels(new Program((Collection<ASPRule>)leftResult));
 				change.firePropertyChange("leftASL", null, leftasl);
-				AnswerSetList rightasl = solver.getModels(new Program((Collection<ASPRule>)rightResult));
+				Collection<AnswerSet> rightasl = solver.getModels(new Program((Collection<ASPRule>)rightResult));
 				change.firePropertyChange("rightASL", null, rightasl);
 			} catch (Exception e) {
 				change.firePropertyChange("error", "Parser Error", e.getMessage());

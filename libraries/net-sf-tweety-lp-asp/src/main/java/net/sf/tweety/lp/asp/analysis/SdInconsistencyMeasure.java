@@ -30,7 +30,7 @@ import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.syntax.FOLAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.StrictNegation;
@@ -96,9 +96,9 @@ public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 				//skip inconsistent m
 				if(!this.isConsistent(m)) continue;
 				Program p = beliefBase.reduct(m);
-				AnswerSetList asl = this.solver.getModels(p);
+				Collection<AnswerSet> asl = this.solver.getModels(p);
 				if(asl.size() == 0) continue;
-				int val = (new SetTools<ASPLiteral>()).symmetricDifference(m, asl.get(0)).size();
+				int val = (new SetTools<ASPLiteral>()).symmetricDifference(m, asl.iterator().next()).size();
 				if(val < result)
 					result = new Double(val);				
 			}			

@@ -19,13 +19,15 @@
 package net.sf.tweety.lp.asp.reasoner;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import java.util.List;
+
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
-import net.sf.tweety.lp.asp.semantics.AnswerSetList;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.writer.ClingoWriter;
@@ -90,8 +92,8 @@ public class ClingoSolver extends ASPSolver {
 	}
 
 	@Override
-	public AnswerSetList getModels(Program p) {
-		AnswerSetList result = new AnswerSetList();
+	public List<AnswerSet> getModels(Program p) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			ClingoWriter writer = new ClingoWriter(new PrintWriter(file), usePredicateWhitelist);
@@ -115,8 +117,8 @@ public class ClingoSolver extends ASPSolver {
 	 * @throws SolverException
 	 * @throws ParseException
 	 */
-	private AnswerSetList parseResult(String output) throws SolverException, ParseException {
-		AnswerSetList result = new AnswerSetList();
+	private List<AnswerSet> parseResult(String output) throws SolverException, ParseException {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		if (output.contains("UNSATISFIABLE"))
 			return result;
 		else if (!output.contains("SATISFIABLE"))
@@ -137,8 +139,8 @@ public class ClingoSolver extends ASPSolver {
 	}
 
 	@Override
-	public AnswerSetList getModels(String s) {
-		AnswerSetList result = new AnswerSetList();
+	public List<AnswerSet> getModels(String s) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			PrintWriter writer = new PrintWriter(file);
@@ -152,13 +154,12 @@ public class ClingoSolver extends ASPSolver {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return result;
 	}
 
 	@Override
-	public AnswerSetList getModels(File file) {
-		AnswerSetList result = new AnswerSetList();
+	public List<AnswerSet> getModels(File file) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			String cmd = pathToSolver + "/clingo " + "-n " + maxNumOfModels + " " + options + " "
 					+ file.getAbsolutePath();
@@ -167,7 +168,6 @@ public class ClingoSolver extends ASPSolver {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return result;
 	}
 
