@@ -2,6 +2,7 @@ Animal = {duffy, carl, martin}
 Plant = {tuffy}
 
 type(Flies(Animal))
+type(GreaterThan(Animal))
 type(hasWings(Animal))
 type(Knows(Animal,Animal))
 type(test(Plant))
@@ -11,3 +12,4 @@ forall X: (forall Y: (!Knows(X,Y) || Knows(Y,X)))
 !Flies(duffy)
 Knows(carl, martin)
 test(tuffy)
+
