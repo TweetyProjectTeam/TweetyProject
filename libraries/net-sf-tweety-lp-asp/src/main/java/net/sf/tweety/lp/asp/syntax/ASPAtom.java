@@ -237,9 +237,10 @@ public class ASPAtom extends ASPLiteral {
 
 	@Override
 	public ASPAtom cloneWithAddedTerm(Term<?> term) {
-		ASPAtom reval = (ASPAtom) this.clone();
-		reval.predicate.setArity(reval.predicate.getArity() + 1);
-		reval.arguments.add(term);
+		Predicate new_predicate = new Predicate(this.predicate.getName(),this.predicate.getArity() + 1);
+		List<Term<?>> args = new ArrayList<Term<?>>(this.arguments);
+		args.add(term);
+		ASPAtom reval = new ASPAtom(new_predicate,args);
 		return reval;
 	}
 

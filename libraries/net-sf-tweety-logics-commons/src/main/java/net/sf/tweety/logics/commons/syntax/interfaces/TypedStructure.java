@@ -45,13 +45,6 @@ public interface TypedStructure {
 	/** @return the arity of this structure */
 	int getArity();
 	
-	/**
-	 * Sets the arity of this structure
-	 * @param arity	the new arity
-	 * @throws LanguageException if the new arity has an illegal value in the language
-	 */
-	void setArity(int arity) throws LanguageException;
-	
 	/** 
 	 * @return 	An unmodifiable list which length equals the 
 	 * 			arity of the predicate if the structure isComplete().
