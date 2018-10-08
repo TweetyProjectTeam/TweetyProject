@@ -46,14 +46,6 @@ public class PropositionalPredicate extends Predicate {
 	}
 	
 	@Override
-	public void setArity(int arity) {
-		if(arity != 0) {
-			throw new PropositionalException(LanguageExceptionReason.LER_ILLEGAL_PREDICATE,
-					"The arity must be zero.");
-		}
-	}
-	
-	@Override
 	public void addArgumentType(Sort argType) {
 		throw new PropositionalException(LanguageExceptionReason.LER_ILLEGAL_PREDICATE,
 				"The predicates must not have any arguments.");
