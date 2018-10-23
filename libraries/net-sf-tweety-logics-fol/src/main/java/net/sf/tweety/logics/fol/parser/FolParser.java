@@ -71,6 +71,26 @@ public class FolParser extends Parser<FolBeliefSet> {
 	 */
 	private Map<String,Variable> variables;
 	
+	/** Do not raise exceptions when encountering new constants, all new constants are treated
+	 * as THING	 */
+	private boolean ignoreUndeclaredConstants;
+	
+	/**
+	 * Creates a new FolParser
+	 */
+	public FolParser() {
+		this(false);
+	}
+	
+	/**
+	 * Creates a new FolParser
+	 * @param ignoreUndeclaredConstants Do not raise exceptions when encountering new constants, all new constants are treated
+	 * as THING
+	 */
+	public FolParser(boolean ignoreUndeclaredConstants) {
+		this.ignoreUndeclaredConstants = ignoreUndeclaredConstants;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)
 	 */
@@ -347,8 +367,13 @@ public class FolParser extends Parser<FolBeliefSet> {
 						}
 						terms.add(new FunctionalTerm(f,args));
 					}else if(!current.equals("") && current.substring(0, 1).matches("[a-z]"))
-						if(!signature.containsConstant(current)) throw new ParserException("Constant '" + current + "' has not been declared.");
-						else terms.add(this.signature.getConstant(current));
+						if(!signature.containsConstant(current) && !ignoreUndeclaredConstants)
+							throw new ParserException("Constant '" + current + "' has not been declared.");
+						else if(!signature.containsConstant(current) && ignoreUndeclaredConstants) {							
+							Constant c = new Constant(current);
+							this.signature.add(c);
+							terms.add(c);
+						}else terms.add(this.signature.getConstant(current));
 					else if(!current.equals("") && current.substring(0, 1).matches("[A-Z]"))
 						terms.add(new Variable(current));
 					else if(!current.equals(""))
@@ -365,8 +390,13 @@ public class FolParser extends Parser<FolBeliefSet> {
 		//parse the last element
 		if(!current.equals("")){
 			if(current.substring(0, 1).matches("[a-z]"))
-				if(!signature.containsConstant(current)) throw new ParserException("Constant '" + current + "' has not been declared.");
-				else terms.add(this.signature.getConstant(current));
+				if(!signature.containsConstant(current) && !ignoreUndeclaredConstants)
+					throw new ParserException("Constant '" + current + "' has not been declared.");
+				else if(!signature.containsConstant(current) && ignoreUndeclaredConstants) {							
+					Constant c = new Constant(current);
+					this.signature.add(c);
+					terms.add(c);
+				}else terms.add(this.signature.getConstant(current));
 			else if(current.substring(0, 1).matches("[A-Z]"))
 				terms.add(new Variable(current));
 			else if(!current.equals(""))

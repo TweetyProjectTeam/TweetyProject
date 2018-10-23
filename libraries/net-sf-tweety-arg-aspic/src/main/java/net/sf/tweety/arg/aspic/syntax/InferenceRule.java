@@ -109,20 +109,20 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> 
 	@Override
 	public String toString() {
 		StringWriter sw =  new StringWriter();
-		sw.write("(");
+		//sw.write("(");
 		if(getName()!=null)
 			sw.write(getName()+": ");
 		Iterator<T> i = premises.iterator();
 		if(i.hasNext())
-			sw.write(i.next().toString());
+			sw.write(i.next().toString());		
 		while(i.hasNext())
-			sw.write(", "+i.next());
+			sw.write(", "+i.next());		
 		if(isDefeasible())
 			sw.write(" => ");
 		else
 			sw.write(" -> ");
 		sw.write(conclusion+"");
-		sw.write(")");
+		//	sw.write(")");
 		return sw.toString();
 		
 	}
