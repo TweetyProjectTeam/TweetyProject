@@ -121,9 +121,9 @@ public abstract class TypedStructureAdapter implements TypedStructure, Comparabl
 	public boolean isTyped() {
 		for(Sort s : arguments) {
 			if(s != Sort.THING)
-				return false;
+				return true;
 		}
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -191,4 +191,5 @@ public abstract class TypedStructureAdapter implements TypedStructure, Comparabl
 	public int compareTo(TypedStructureAdapter o) {
 		return Collator.getInstance().compare(name, o.name);
 	}
+	
 }
