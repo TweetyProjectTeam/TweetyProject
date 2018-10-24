@@ -68,6 +68,8 @@ public class ASPAtom extends ASPLiteral {
 	 *            arguments of the atom
 	 */
 	public ASPAtom(Predicate p, List<Term<?>> terms) {
+		if (p.isTyped())
+			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given predicate " + p + " is not.");
 		this.predicate = p;
 		this.arguments = terms;
 	}
@@ -88,13 +90,15 @@ public class ASPAtom extends ASPLiteral {
 	 *            The FOL atom acting as source for the deep copy
 	 */
 	public ASPAtom(FOLAtom other) {
+		if (other.getPredicate().isTyped())
+			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given atom's predicate " + other.getPredicate() + " is not.");
 		this.predicate = new Predicate(other.getPredicate().getName(), other.getArguments().size());
 		for (Term<?> t : other.getArguments())
 			this.arguments.add((Term<?>) t.clone());
 	}
 
 	/**
-	 * Copy-Constructor: Generates a deep copy of the given atom.
+	 * Copy-Constructor: Generates a deep copy of the given ASP atom.
 	 * 
 	 * @param other
 	 *            The atom acting as source for the deep copy
@@ -122,8 +126,14 @@ public class ASPAtom extends ASPLiteral {
 		}
 	}
 
+	/**
+	 * Creates a new ASPAtom with the given predicate.
+	 * @param p
+	 */
 	public ASPAtom(Predicate p) {
 		this();
+		if (p.isTyped())
+			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given predicate " + p + " is not.");
 		this.predicate = p;
 	}
 
