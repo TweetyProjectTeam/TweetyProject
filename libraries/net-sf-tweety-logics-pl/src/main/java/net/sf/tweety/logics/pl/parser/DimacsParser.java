@@ -117,7 +117,7 @@ public class DimacsParser extends Parser<PlBeliefSet> {
 		Disjunction clause = new Disjunction();
 		String s = "";
 		for(int c = reader.read(); c != -1; c = reader.read()){
-			if(c == '0' || c == 10){
+			if((c == '0' && s == "") || c == 10){
 				return clause;
 			}else if(c == ' ' || c == '\t'){
 				s = s.trim();
