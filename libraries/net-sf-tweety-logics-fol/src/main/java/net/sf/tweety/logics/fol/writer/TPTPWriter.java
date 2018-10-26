@@ -176,14 +176,14 @@ public class TPTPWriter implements FolWriter {
 			while (vars.hasNext()) {
 				Variable v = vars.next();
 				if (first) {
-					if (!(v.getSort().equals(Sort.ANY))) {
+					if (!(v.getSort().toString().equals("_Any"))) {
 						result += "(";
 						first = false;
 						result +=  printVar(v);
 						continue;
 						}
 				}
-				if (!(v.getSort().equals(Sort.ANY))) 
+				if (!(v.getSort().toString().equals("_Any"))) 
 					result += " & "+ printVar(v);  
 				}
 			if (!first) {

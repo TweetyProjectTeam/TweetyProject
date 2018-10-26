@@ -97,7 +97,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	public void addArgument(Term<?> term) throws IllegalArgumentException{
 		if(this.arguments.size() == this.predicate.getArity())
 			throw new IllegalArgumentException("No more arguments expected.");
-		if(!this.predicate.getArgumentTypes().get(this.arguments.size()).equals(term.getSort()) && !term.getSort().equals(Sort.ANY) && !this.predicate.getArgumentTypes().get(this.arguments.size()).equals(Sort.ANY))
+		if(!this.predicate.getArgumentTypes().get(this.arguments.size()).equals(term.getSort()))
 			throw new IllegalArgumentException("The sort \"" + term.getSort() + "\" of the given term does not correspond to the expected sort \"" + this.predicate.getArgumentTypes().get(this.arguments.size()) + "\"." );
 		this.arguments.add(term);		
 	}

@@ -77,7 +77,7 @@ public class FolExample {
 		bs.add(f3);
 		bs.add(f4);
 		bs.add(f5);
-		System.out.println("Parsed BeliefBase: " + bs);
+		System.out.println("\nParsed BeliefBase: " + bs);
 
 		/*
 		 * Example 3: Use one of the provers to check whether various formulas can be inferred from the knowledge base parsed in Example 2. 
@@ -93,18 +93,15 @@ public class FolExample {
 		/*
 		 * Example 4: Parse another BeliefBase from a file. The signature is also parsed from the file.
 		 * Then prove/disprove some queries on the knowledge bases.
+		 * Note: This may take a long time to compute.
 		 */
 		parser = new FolParser();
 		parser.setSignature(new FolSignature(true));
 		bs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase2.fologic");
-		System.out.println("Parsed BeliefBase: " + bs);
-		FolFormula query = (FolFormula)parser.parseFormula("isTeacher(alice)");
-		System.out.println("Query: " + query + "\n" + prover.query(bs,query));
-		query = (FolFormula)parser.parseFormula("exists X:(teaches(bob,X))");
-		System.out.println("Query: " + query + "\n" + prover.query(bs,query));
-		query = (FolFormula)parser.parseFormula("isTeacher(bob)");
-		System.out.println("Query: " + query + "\n" + prover.query(bs,query));
+		System.out.println("\nParsed BeliefBase: " + bs);
+		FolFormula query = (FolFormula)parser.parseFormula("exists X:(teaches(alice,X))");
+		System.out.println("Query: " + query + "\nANSWER 1: " + prover.query(bs,query));
 		query = (FolFormula)parser.parseFormula("exists X:(exists Y:(hasID(alice,X) && hasID(alice,Y) && X/==Y))");
-		System.out.println("Query: " + query + "\n" + prover.query(bs,query));			
+		System.out.println("Query: " + query + "\nANSWER 2: " + prover.query(bs,query));
 	}
 }

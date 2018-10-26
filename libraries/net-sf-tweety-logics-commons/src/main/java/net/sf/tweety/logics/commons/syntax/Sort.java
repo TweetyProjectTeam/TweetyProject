@@ -59,7 +59,8 @@ public class Sort implements LogicStructure {
 	public static final Sort THING = new Sort("Thing");
 	
 	/**
-	 * Default sort for terms of equality/inequality predicates
+	 * Default sort for terms of equality/inequality predicates.
+	 * Note: This sort is always equal to any other sort.
 	 */
 	public static final Sort ANY = new Sort("_Any");
 	
@@ -160,6 +161,9 @@ public class Sort implements LogicStructure {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		if (this == Sort.ANY || obj == Sort.ANY)
+			return true;		//The sort ANY represents all possible sorts and is 
+								//therefore considered equal to any given sort.
 		Sort other = (Sort) obj;
 		if (name == null) {
 			if (other.name != null)

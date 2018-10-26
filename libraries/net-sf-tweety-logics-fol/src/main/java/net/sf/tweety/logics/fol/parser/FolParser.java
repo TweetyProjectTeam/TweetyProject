@@ -693,7 +693,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 					if(t instanceof Variable){
 						if(this.variables.containsKey(((Variable)t).get())){
 							Sort sortOfVariable = this.variables.get(((Variable)t).get()).getSort();
-							if(!sortOfVariable.equals(p.getArgumentTypes().get(i)) && !sortOfVariable.equals(Sort.ANY) && !p.getArgumentTypes().get(i).equals(Sort.ANY)) 
+							if(!sortOfVariable.equals(p.getArgumentTypes().get(i))) 
 									throw new ParserException("Variable '" + t + "," + t.getSort() + "' has wrong sort."); 
 							args.add(this.variables.get(((Variable)t).get()));
 						}else{
@@ -704,7 +704,7 @@ public class FolParser extends Parser<FolBeliefSet> {
 								v = new Variable(((Variable)t).get(),Sort.ANY);
 							args.add(v);
 							this.variables.put(v.get(), v);}						
-					}else if(!(t.getSort().equals(p.getArgumentTypes().get(i))) && !(t.getSort().equals(Sort.ANY)) && !(p.getArgumentTypes().get(i).equals(Sort.ANY))) {
+					}else if(!(t.getSort().equals(p.getArgumentTypes().get(i)))) {
 						throw new ParserException("Term '" + t + "' has the wrong sort."); }
 					else args.add(t);
 				}	

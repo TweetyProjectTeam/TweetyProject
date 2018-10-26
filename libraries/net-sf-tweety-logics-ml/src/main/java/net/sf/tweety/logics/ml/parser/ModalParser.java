@@ -685,7 +685,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 					if(t instanceof Variable){
 						if(this.folparser.getVariables().containsKey(((Variable)t).get())){
 							Sort sortOfVariable = this.folparser.getVariables().get(((Variable)t).get()).getSort();
-							if(!sortOfVariable.equals(p.getArgumentTypes().get(i)) && !sortOfVariable.equals(Sort.ANY) && !p.getArgumentTypes().get(i).equals(Sort.ANY)) 
+							if(!sortOfVariable.equals(p.getArgumentTypes().get(i))) 
 								throw new ParserException("Variable '" + t + "," + t.getSort() + "' has wrong sort."); 
 							args.add(this.folparser.getVariables().get(((Variable)t).get()));
 						}else{
@@ -698,7 +698,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 									Map<String, Variable> map =this.folparser.getVariables();
 									map.put(v.get(), v);
 									this.folparser.setVariables(map); }						
-					}else if(!(t.getSort().equals(p.getArgumentTypes().get(i))) && !(t.getSort().equals(Sort.ANY)) && !(p.getArgumentTypes().get(i).equals(Sort.ANY))) {
+					}else if(!(t.getSort().equals(p.getArgumentTypes().get(i)))) {
 								throw new ParserException("Term '" + t + "' has the wrong sort."); }
 					else args.add(t);
 				}	

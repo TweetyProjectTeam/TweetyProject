@@ -140,22 +140,6 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefS
 			remainingVariables.remove(v);
 			
 			Set<Constant> constants = v.getSort().getTerms(Constant.class);
-			//If a variable is of sort _Any, search for other occurrences of the variable
-			//to find the sort and possible constants for this variable
-			if (v.getSort().equals(Sort.ANY)) {
-				for (Atom a : f.getAtoms()) {
-					List<Term<?>> args =((FOLAtom)a).getArguments();
-					for (int i = 0; i < args.size(); i++) {
-						Term<?> t = args.get(i);
-						if (t instanceof Variable && ((Variable)t).get().equals(v.get()) && !a.getPredicate().getArgumentTypes().get(i).equals(Sort.ANY)) { 
-							Sort s = a.getPredicate().getArgumentTypes().get(i);
-							constants = s.getTerms(Constant.class); 
-							break; 
-						}
-					}
-				}
-			} 
-				
 			if(remainingVariables.isEmpty()){
 				for(Constant c: constants) {
 					if(this.satisfies(e.getFormula().substitute(v, c))) 
@@ -179,22 +163,6 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefS
 			remainingVariables.remove(v);
 			
 			Set<Constant> constants = v.getSort().getTerms(Constant.class);
-			//If a variable is of sort _Any, search for other occurrences of the variable
-			//to find the sort and possible constants for this variable
-			if (v.getSort().equals(Sort.ANY)) {
-				for (Atom a : f.getAtoms()) {
-					List<Term<?>> args =((FOLAtom)a).getArguments();
-					for (int i = 0; i < args.size(); i++) {
-						Term<?> t = args.get(i);
-						if (t instanceof Variable && ((Variable)t).get().equals(v.get()) && !a.getPredicate().getArgumentTypes().get(i).equals(Sort.ANY)) { 
-							Sort s = a.getPredicate().getArgumentTypes().get(i);
-							constants = s.getTerms(Constant.class); 
-							break; 
-						}
-					}
-				}
-			} 
-			
 			for(Constant c: constants){
 				if(!this.satisfies(new ForallQuantifiedFormula(e.getFormula().substitute(v, c),remainingVariables))) 
 					return false; 
