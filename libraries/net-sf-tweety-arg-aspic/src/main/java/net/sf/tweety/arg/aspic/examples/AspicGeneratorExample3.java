@@ -1,0 +1,57 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+package net.sf.tweety.arg.aspic.examples;
+
+import java.io.File;
+import java.io.IOException;
+
+import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
+import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
+import net.sf.tweety.arg.aspic.writer.AspicWriter;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+
+/**
+ * This code shows the use of the ASPIC theory generator. It generates some random ASPIC
+ * theories with some parameter combinations and writes them to disk.
+ * 
+ * @author Matthias Thimm
+ */
+public class AspicGeneratorExample3 {
+	public static void main(String[] args) throws IOException {
+		int numberOfAFs = 100;
+		int[] l_numberAtoms = {10,15,20,25,30};
+		int[] l_numberFormulas = {100,200,300};
+		int[] l_maxLiteralsInPremises = {2,3,4};
+		double[] l_percentageStrictRules = {0.2,0.4,0.6};
+		
+		String pathToFolder = "/Users/mthimm/Desktop/random_aspic_instances";
+		
+		AspicWriter<PropositionalFormula> writer = new AspicWriter<PropositionalFormula>();
+		
+		for(int numberAtoms: l_numberAtoms)
+			for(int numberFormulas: l_numberFormulas)
+				for(int maxLiteralsInPremises: l_maxLiteralsInPremises)
+					for(double percentageStrictRules: l_percentageStrictRules)
+						for(int i = 0; i < numberOfAFs; i++) {
+							System.out.println(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic");
+							AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+							writer.write(theory, new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic" ));							
+						}		
+	}
+}
