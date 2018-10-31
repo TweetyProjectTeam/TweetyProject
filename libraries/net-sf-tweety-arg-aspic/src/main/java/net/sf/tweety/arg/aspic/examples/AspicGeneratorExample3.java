@@ -18,13 +18,20 @@
  */
 package net.sf.tweety.arg.aspic.examples;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
 import net.sf.tweety.arg.aspic.writer.AspicWriter;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
  * This code shows the use of the ASPIC theory generator. It generates some random ASPIC
@@ -36,7 +43,7 @@ public class AspicGeneratorExample3 {
 	public static void main(String[] args) throws IOException {
 		int numberOfAFs = 100;
 		int[] l_numberAtoms = {10,15,20,25,30};
-		int[] l_numberFormulas = {100,200,300};
+		int[] l_numberFormulas = {100,200,300,400};
 		int[] l_maxLiteralsInPremises = {2,3,4};
 		double[] l_percentageStrictRules = {0.2,0.4,0.6};
 		
@@ -44,6 +51,7 @@ public class AspicGeneratorExample3 {
 		
 		AspicWriter<PropositionalFormula> writer = new AspicWriter<PropositionalFormula>();
 		
+		Random rand = new Random();
 		for(int numberAtoms: l_numberAtoms)
 			for(int numberFormulas: l_numberFormulas)
 				for(int maxLiteralsInPremises: l_maxLiteralsInPremises)
@@ -52,6 +60,11 @@ public class AspicGeneratorExample3 {
 							System.out.println(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic");
 							AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
 							writer.write(theory, new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic" ));							
+							//write example query							
+							BufferedWriter writer1 = new BufferedWriter(new FileWriter(new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".query" )));
+							List<Proposition> sig = new ArrayList<>((PropositionalSignature) theory.getSignature());							
+						    writer1.write(sig.get(rand.nextInt(sig.size())).toString());
+						    writer1.close();
 						}		
 	}
 }

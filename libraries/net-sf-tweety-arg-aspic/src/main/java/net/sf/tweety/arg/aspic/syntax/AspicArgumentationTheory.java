@@ -245,7 +245,11 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	 */
 	@Override
 	public Signature getSignature() {
-		// TODO Auto-generated method stub
-		return null;
+		if(this.isEmpty())
+			return null;
+		Signature sig = this.iterator().next().getSignature();
+		for(InferenceRule<T> rule: this)
+			sig.addSignature(rule.getSignature());
+		return sig;
 	}
 }
