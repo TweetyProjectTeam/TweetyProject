@@ -156,4 +156,11 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 		}		
 		return arg;
 	}	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "rand-" + this.maxArguments +"-"+this.maxDuplicates;
+	}
 }
