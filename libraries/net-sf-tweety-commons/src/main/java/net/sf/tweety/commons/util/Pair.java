@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.commons.util;
 
+import java.io.Serializable;
+
 /**
  * This class implements a simple pair of elements.
  *
@@ -27,7 +29,9 @@ package net.sf.tweety.commons.util;
  * @param <E> the type of the first element
  * @param <F> the type of the second element
  */
-public class Pair<E,F> {
+public class Pair<E,F> implements Serializable {
+	private static final long serialVersionUID = -2808138987767965801L;
+
 	/**
 	 * The first element of this pair
 	 */
