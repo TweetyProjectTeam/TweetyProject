@@ -83,7 +83,17 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 	 */
 	@Override
 	protected DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query) {
-		//determine part of the theory needed for the query
+		// special case: there are no rules with empty body, so no argument can be constructed
+		boolean premiseFound = false;
+		for(InferenceRule<T> rule: aat) {
+			if(rule.getPremise().isEmpty()) {
+				premiseFound = true;
+				break;
+			}				
+		}
+		if(!premiseFound)
+			return new DungTheory();
+		// determine part of the theory needed for the query
 		AspicArgumentationTheory<T> module = new AspicArgumentationTheory<T>(aat.getRuleFormulaGenerator());
 		module.addAll(aat.getSyntacticModule(query));
 		Collection<AspicArgument<T>> args = new HashSet<AspicArgument<T>>();
