@@ -25,6 +25,7 @@ import java.util.Set;
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.ModelProvider;
 
 /**
@@ -103,19 +104,19 @@ public class StratifiedLabelingReasoner extends AbstractDungReasoner implements 
 	 */
 	@Override
 	public Boolean query(DungTheory beliefbase, Argument formula) {		
-		return this.query(beliefbase, formula, Semantics.SCEPTICAL_INFERENCE);
+		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}	
 	
 	/** Queries the given AAF for the given argument using the given 
 	 * inference type.
 	 * @param beliefbase an AAF
 	 * @param formula a single argument
-	 * @param inferenceType either Semantics.SCEPTICAL_INFERENCE or Semantics.CREDULOUS_INFERENCE
+	 * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return "true" if the argument is accepted
 	 */
-	public Boolean query(DungTheory beliefbase, Argument formula, int inferenceType) {
+	public Boolean query(DungTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
 		Collection<StratifiedLabeling> labelings = this.getModels(beliefbase);
-		if(inferenceType == Semantics.SCEPTICAL_INFERENCE){
+		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
 			for(StratifiedLabeling e: labelings)
 				if(!e.satisfies(formula))
 					return false;

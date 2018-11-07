@@ -46,6 +46,7 @@ import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.parser.PlParser;
@@ -395,6 +396,6 @@ public class AspicTest {
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
 
 		System.out.println(pf);
-		assertTrue(ar.query(at,pf,Semantics.CREDULOUS_INFERENCE));
+		assertTrue(ar.query(at,pf,InferenceMode.CREDOLOUS));
 	}
 }

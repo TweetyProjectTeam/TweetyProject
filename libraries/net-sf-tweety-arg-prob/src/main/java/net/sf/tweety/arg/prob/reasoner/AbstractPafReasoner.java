@@ -22,6 +22,7 @@ import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.QuantitativeReasoner;
 
 /**
@@ -56,7 +57,7 @@ public abstract class AbstractPafReasoner implements QuantitativeReasoner<Probab
 	 */
 	@Override
 	public Double query(ProbabilisticArgumentationFramework beliefbase, Argument formula) {
-		return this.query(beliefbase, formula, Semantics.SCEPTICAL_INFERENCE);
+		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
 	
 	/**
@@ -64,10 +65,10 @@ public abstract class AbstractPafReasoner implements QuantitativeReasoner<Probab
 	 * inference type.
 	 * @param beliefbase an PAF
 	 * @param formula a single argument
-	 * @param inferenceType either Semantics.SCEPTICAL_INFERENCE or Semantics.CREDULOUS_INFERENCE
+	 * @param InferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return probability of the argument
 	 */
-	public abstract Double query(ProbabilisticArgumentationFramework beliefbase, Argument formula, int inferencetype);
+	public abstract Double query(ProbabilisticArgumentationFramework beliefbase, Argument formula, InferenceMode inferenceMode);
 	
 	/**
 	 * Estimates the probability that the given set of

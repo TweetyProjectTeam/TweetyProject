@@ -25,6 +25,7 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
@@ -57,13 +58,13 @@ public class AspicGeneratorExample {
 			System.out.println(i + "\t" + theory);
 			PropositionalFormula query = new Proposition("A1");
 			long millis = System.currentTimeMillis();
-			boolean answer = naiveReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE);
+			boolean answer = naiveReasoner.query(theory,query,InferenceMode.CREDOLOUS);
 			totalNaive += System.currentTimeMillis()-millis;
 			millis = System.currentTimeMillis();
-			moduleBasedReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE);
+			moduleBasedReasoner.query(theory,query,InferenceMode.CREDOLOUS);
 			totalModulebased += System.currentTimeMillis()-millis;
 			millis = System.currentTimeMillis();
-			if(randomReasoner.query(theory,query,Semantics.CREDULOUS_INFERENCE) == answer)
+			if(randomReasoner.query(theory,query,InferenceMode.CREDOLOUS) == answer)
 				correctRandom++;
 			totalRandom += System.currentTimeMillis()-millis;
 		}	

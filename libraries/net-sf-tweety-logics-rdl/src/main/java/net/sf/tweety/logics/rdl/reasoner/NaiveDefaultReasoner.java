@@ -20,6 +20,7 @@ package net.sf.tweety.logics.rdl.reasoner;
 
 import java.util.Collection;
 
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -57,13 +58,32 @@ public class NaiveDefaultReasoner implements QualitativeReasoner<DefaultTheory,F
 	 */
 	@Override
 	public Boolean query(DefaultTheory theory, FolFormula query) {
+		return this.query(theory, query, InferenceMode.SKEPTICAL);
+	}
+	
+	/**
+	 * Queries the given default theory for the given query using the given 
+	 * inference mode.
+	 * @param theory a default theory
+	 * @param query a formula
+	 * @param InferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
+	 * @return "true" if the formula is accepted
+	 */
+	public Boolean query(DefaultTheory theory, FolFormula query, InferenceMode inferenceMode) {
 		if(!query.isGround())
 			throw new IllegalArgumentException("Query is not grounded.");
+		if(inferenceMode.equals(InferenceMode.SKEPTICAL)) {
+			for (Extension extension: this.getModels(theory)){			
+				if(!extension.satisfies(query))
+					return false;
+			}
+			return true;
+		}
 		for (Extension extension: this.getModels(theory)){			
 			if(extension.satisfies(query))
 				return true;
 		}
-		return false;
+		return false;		
 	}
 	
 }

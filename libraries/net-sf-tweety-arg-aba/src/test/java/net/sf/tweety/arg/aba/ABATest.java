@@ -43,6 +43,7 @@ import net.sf.tweety.arg.aba.syntax.Deduction;
 import net.sf.tweety.arg.aba.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
@@ -194,9 +195,9 @@ public class ABATest {
 		reasoners.add(new CompleteReasoner<PropositionalFormula>());
 		for (GeneralABAReasoner<PropositionalFormula> reasoner : reasoners) {
 			Assumption<PropositionalFormula> query = (Assumption<PropositionalFormula>) parser.parseFormula("a");
-			assertFalse(reasoner.query(abat, query, Semantics.CREDULOUS_INFERENCE));
+			assertFalse(reasoner.query(abat, query, InferenceMode.CREDOLOUS));
 			query = (Assumption<PropositionalFormula>) parser.parseFormula("b");
-			assertTrue(reasoner.query(abat, query, Semantics.CREDULOUS_INFERENCE));
+			assertTrue(reasoner.query(abat, query, InferenceMode.CREDOLOUS));
 		}
 		assertTrue(((FlatABAReasoner<PropositionalFormula>)reasoners.get(0)).getModels(abat).size() == ((GeneralABAReasoner<PropositionalFormula>)reasoners.get(1)).getModels(abat).size());
 

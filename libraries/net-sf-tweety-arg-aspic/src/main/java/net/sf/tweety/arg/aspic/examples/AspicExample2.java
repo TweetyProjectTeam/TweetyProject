@@ -27,6 +27,7 @@ import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
 import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -45,6 +46,6 @@ public class AspicExample2 {
 		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");		
 		System.out.println(at);
-		System.out.println(pf + "\t" + ar.query(at,pf,Semantics.CREDULOUS_INFERENCE));		
+		System.out.println(pf + "\t" + ar.query(at,pf,InferenceMode.CREDOLOUS));		
 	}
 }

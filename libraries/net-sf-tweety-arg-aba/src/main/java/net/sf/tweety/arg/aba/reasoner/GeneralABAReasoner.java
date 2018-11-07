@@ -23,8 +23,8 @@ import java.util.Collection;
 import net.sf.tweety.arg.aba.semantics.AbaExtension;
 import net.sf.tweety.arg.aba.syntax.ABATheory;
 import net.sf.tweety.arg.aba.syntax.Assumption;
-import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.QualitativeReasoner;
 
@@ -41,7 +41,7 @@ public abstract class GeneralABAReasoner<T extends Formula> implements Qualitati
 	 */
 	@Override
 	public Boolean query(ABATheory<T> beliefbase, Assumption<T> query) {
-		return this.query(beliefbase, query, Semantics.SCEPTICAL_INFERENCE);	
+		return this.query(beliefbase, query, InferenceMode.SKEPTICAL);	
 	}
 
 	/**
@@ -49,12 +49,12 @@ public abstract class GeneralABAReasoner<T extends Formula> implements Qualitati
 	 * inference type.
 	 * @param beliefbase an ABA theory
 	 * @param query some assumption
-	 * @param inferenceType either Semantics.SCEPTICAL_INFERENCE or Semantics.CREDULOUS_INFERENCE
+	 * @param InferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return "true" if the query is accepted
 	 */
-	public Boolean query(ABATheory<T> beliefbase, Assumption<T> query, int inferenceType) {
+	public Boolean query(ABATheory<T> beliefbase, Assumption<T> query, InferenceMode inferenceMode) {
 		Collection<AbaExtension<T>> extensions = this.getModels(beliefbase);
-		if(inferenceType == Semantics.SCEPTICAL_INFERENCE){
+		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
 			for(AbaExtension<T> e: extensions)
 				if(!e.contains(query))
 					return false;

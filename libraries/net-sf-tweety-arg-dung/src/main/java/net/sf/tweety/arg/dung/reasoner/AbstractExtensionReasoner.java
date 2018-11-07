@@ -24,6 +24,7 @@ import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.ModelProvider;
 
 /**
@@ -38,7 +39,7 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 	 */
 	@Override
 	public Boolean query(DungTheory beliefbase, Argument formula) {		
-		return this.query(beliefbase, formula, Semantics.SCEPTICAL_INFERENCE);
+		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
 
 	/**
@@ -46,12 +47,12 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 	 * inference type.
 	 * @param beliefbase an AAF
 	 * @param formula a single argument
-	 * @param inferenceType either Semantics.SCEPTICAL_INFERENCE or Semantics.CREDULOUS_INFERENCE
+	 * @param InferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return "true" if the argument is accepted
 	 */
-	public Boolean query(DungTheory beliefbase, Argument formula, int inferenceType) {
+	public Boolean query(DungTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
 		Collection<Extension> extensions = this.getModels(beliefbase);
-		if(inferenceType == Semantics.SCEPTICAL_INFERENCE){
+		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
 			for(Extension e: extensions)
 				if(!e.contains(formula))
 					return false;

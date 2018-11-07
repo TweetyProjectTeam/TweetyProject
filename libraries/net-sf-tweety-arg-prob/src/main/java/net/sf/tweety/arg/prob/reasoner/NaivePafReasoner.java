@@ -25,6 +25,7 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.prob.lotteries.SubgraphProbabilityFunction;
 import net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework;
+import net.sf.tweety.commons.InferenceMode;
 
 /**
  * This class implements naive algorithm for computing
@@ -67,13 +68,16 @@ public class NaivePafReasoner extends AbstractPafReasoner{
 		return prob;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.prob.reasoner.AbstractPafReasoner#query(net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework, net.sf.tweety.arg.dung.syntax.Argument, net.sf.tweety.commons.InferenceMode)
+	 */
 	@Override
-	public Double query(ProbabilisticArgumentationFramework beliefbase, Argument formula, int inferencetype) {
+	public Double query(ProbabilisticArgumentationFramework beliefbase, Argument formula, InferenceMode inferenceMode) {
 		double prob = 0d;
 		SubgraphProbabilityFunction p = beliefbase.getSubgraphProbabilityFunction(); 
 		for(DungTheory sub: p.keySet()){
 			AbstractExtensionReasoner r = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.getSemantics());
-			if(r.query(sub,formula, inferencetype))
+			if(r.query(sub,formula, inferenceMode))
 				prob += p.probability(sub).doubleValue();
 		}
 		return prob;

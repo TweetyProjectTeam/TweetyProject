@@ -45,14 +45,6 @@ public enum Semantics {
 		IDEAL_SEMANTICS = ID,
 		STAGE_SEMANTICS = STG,
 		CF2_SEMANTICS = CF2;
-	
-	/**
-	 * inference types to be used wtih different semantics
-	 */
-	public static final int SCEPTICAL_INFERENCE = 0x1,
-		CREDULOUS_INFERENCE = 0x2;
-
-
 		
 	/** The description of the semantics. */
 	private String description;

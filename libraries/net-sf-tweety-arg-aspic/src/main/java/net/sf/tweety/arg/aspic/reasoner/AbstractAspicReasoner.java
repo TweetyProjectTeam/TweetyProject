@@ -21,10 +21,10 @@ package net.sf.tweety.arg.aspic.reasoner;
 import net.sf.tweety.arg.aspic.syntax.AspicArgument;
 import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
-import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
@@ -62,7 +62,7 @@ public abstract class AbstractAspicReasoner<T extends Invertable> implements Qua
 	 */
 	@Override
 	public Boolean query(AspicArgumentationTheory<T> aat, T query) {
-		return this.query(aat, query, Semantics.SCEPTICAL_INFERENCE);	
+		return this.query(aat, query, InferenceMode.SKEPTICAL);	
 	}
 	
 	/**
@@ -73,11 +73,11 @@ public abstract class AbstractAspicReasoner<T extends Invertable> implements Qua
 	 * @param inferenceType either Semantics.SCEPTICAL_INFERENCE or Semantics.CREDULOUS_INFERENCE
 	 * @return "true" if the formula is accepted
 	 */
-	public Boolean query(AspicArgumentationTheory<T> aat, T query, int inferenceType) {
+	public Boolean query(AspicArgumentationTheory<T> aat, T query, InferenceMode inferenceMode) {
 		DungTheory dt = this.getDungTheory(aat, query);				
 		for (Argument arg : dt) 
 			if (((AspicArgument<?>)arg).getConclusion().equals(query)) 
-				if (this.aafReasoner.query(dt,arg,inferenceType)) 
+				if (this.aafReasoner.query(dt,arg,inferenceMode)) 
 					return true;
 		return false;	
 	}

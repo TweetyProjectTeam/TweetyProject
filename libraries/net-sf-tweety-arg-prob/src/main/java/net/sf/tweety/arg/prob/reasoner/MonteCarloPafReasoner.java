@@ -24,6 +24,7 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework;
+import net.sf.tweety.commons.InferenceMode;
 
 /**
  * This class implements the Monte Carlo algorithm for estimating
@@ -64,14 +65,14 @@ public class MonteCarloPafReasoner extends AbstractPafReasoner{
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.prob.reasoner.AbstractPafReasoner#query(net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework, net.sf.tweety.arg.dung.syntax.Argument, int)
+	 * @see net.sf.tweety.arg.prob.reasoner.AbstractPafReasoner#query(net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework, net.sf.tweety.arg.dung.syntax.Argument, net.sf.tweety.commons.InferenceMode)
 	 */
-	public Double query(ProbabilisticArgumentationFramework beliefbase, Argument formula, int inferencetype) {
+	public Double query(ProbabilisticArgumentationFramework beliefbase, Argument formula, InferenceMode inferenceMode) {
 		int count = 0;
 		AbstractExtensionReasoner r = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.getSemantics());
 		for(int i = 0; i < this.numberOfTrials; i++){
 			DungTheory sub = beliefbase.sample();
-			if(r.query(sub,formula,inferencetype))
+			if(r.query(sub,formula,inferenceMode))
 				count++;
 		}
 		return new Double(count)/this.numberOfTrials;

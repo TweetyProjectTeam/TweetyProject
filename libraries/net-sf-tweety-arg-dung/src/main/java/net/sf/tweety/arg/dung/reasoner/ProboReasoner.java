@@ -29,6 +29,7 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.dung.writer.AbstractDungWriter;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.util.Shell;
 
 /**
@@ -108,13 +109,13 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#query(net.sf.tweety.arg.dung.syntax.DungTheory, net.sf.tweety.arg.dung.syntax.Argument, int)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#query(net.sf.tweety.arg.dung.syntax.DungTheory, net.sf.tweety.arg.dung.syntax.Argument, net.sf.tweety.commons.InferenceMode)
 	 */
 	@Override
-	public Boolean query(DungTheory beliefbase, Argument formula, int inferenceType) {
+	public Boolean query(DungTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
 		// first check whether the solver supports the problem
 		String inf;
-		if(inferenceType == Semantics.CREDULOUS_INFERENCE)
+		if(inferenceMode.equals(InferenceMode.SKEPTICAL))
 			inf = "DC";
 		else inf = "DS";
 		ProboProblem problem = ProboProblem.getProblem(inf + "-" + this.semantics.abbreviation());
