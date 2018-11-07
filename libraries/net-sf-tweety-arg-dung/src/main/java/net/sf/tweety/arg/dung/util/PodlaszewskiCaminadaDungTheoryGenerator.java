@@ -24,7 +24,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * This generator generates abstract argumentation frameworks following the schema
- * described in "String Admissibility Revisited" (COMMA2014) by Martin Caminda, following
+ * described in "Strong Admissibility Revisited" (COMMA2014) by Martin Caminda, following
  * and idea by Mikolay Podlaszewski. These frameworks are supposedly hard for computing grounded
  * semantics.
  * 
