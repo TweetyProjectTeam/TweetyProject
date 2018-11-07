@@ -26,7 +26,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Set;
 
 import static net.sf.tweety.arg.delp.TestArguments.*;
@@ -75,27 +74,20 @@ public final class TestDTree {
 
     @Test(expected = IllegalArgumentException.class)
     public void defeatersWhenNull1() {
-        new DialecticalTree(ARG_TINA_NOT_FLIES).getDefeaters(null, null, null);
+        new DialecticalTree(ARG_TINA_NOT_FLIES).getDefeaters(null, null);
     }
 
     @Test
     public void defeatersWhenNull2() {
         Set<DialecticalTree> trees = new DialecticalTree(ARG_TINA_NOT_FLIES)
-                .getDefeaters(null, new DefeasibleLogicProgram(), null);
-        assertTrue("no defeaters for empty arguments", trees.isEmpty());
-    }
-
-    @Test
-    public void defeatersWhenNull3() {
-        Set<DialecticalTree> trees = new DialecticalTree(ARG_TINA_NESTS)
-                .getDefeaters(null, DELP_BIRDS, null);
+                .getDefeaters(new DefeasibleLogicProgram(), null);
         assertTrue("no defeaters for empty arguments", trees.isEmpty());
     }
 
     @Test
     public void properDefeater() {
         Set<DialecticalTree> trees = new DialecticalTree(ARG_TINA_NESTS)
-                .getDefeaters(Collections.singleton(ARG_TINA_NOT_FLIES), DELP_BIRDS, null);
+                .getDefeaters(DELP_BIRDS, null);
         assertEquals("one defeater", 1, trees.size());
     }
 }

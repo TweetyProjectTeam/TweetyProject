@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.sf.tweety.arg.delp.reasoner.DelpReasoner;
 import net.sf.tweety.arg.delp.syntax.*;
 import net.sf.tweety.logics.fol.syntax.*;
 
@@ -33,7 +34,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  */
 public class DialecticalTree{
 
-    public enum Mark {
+	public enum Mark {
         DEFEATED,
         UNDEFEATED;
         @Override
@@ -84,12 +85,9 @@ public class DialecticalTree{
 	 * @param comparisonCriterion a comparison criterion.
 	 * @return the set of defeater nodes of the argument in this node
 	 */
-	public Set<DialecticalTree> getDefeaters(Set<DelpArgument> arguments,
-                                             DefeasibleLogicProgram delp,
+	public Set<DialecticalTree> getDefeaters(DefeasibleLogicProgram delp,
                                              ComparisonCriterion comparisonCriterion){
         // test parameters:
-        if (arguments == null)
-            arguments = Collections.emptySet();
         if (delp == null)
             throw new IllegalArgumentException("Cannot compute defeaters for NULL DeLP");
 		Set<FolFormula> attackOpportunities = argument.getAttackOpportunities(delp);
@@ -97,9 +95,7 @@ public class DialecticalTree{
         //gather attacks of last argument in the line
         Set<DelpArgument> attacks = new HashSet<>();
         for (FolFormula lit : attackOpportunities) {
-            attacks.addAll(arguments.stream()
-                    .filter(argument -> argument.getConclusion().equals(lit))
-                    .collect(Collectors.toList()));
+        	attacks.addAll(DelpReasoner.getArgumentsWithConclusion(delp, lit));            
         }
 
 		//for each attacker check acceptability
