@@ -94,7 +94,7 @@ public class ProbabilisticRankingReasoner implements ModelProvider<Argument,Dung
 		// Estimate/compute probabilities
 		AbstractPafReasoner reasoner;
 		if(this.exactInference)
-			reasoner = new NaivePafReasoner(this.sem);
+			reasoner = new SimplePafReasoner(this.sem);
 		else
 			reasoner = new MonteCarloPafReasoner(this.sem, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();

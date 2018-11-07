@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import net.sf.tweety.arg.aspic.parser.AspicParser;
-import net.sf.tweety.arg.aspic.reasoner.NaiveAspicReasoner;
+import net.sf.tweety.arg.aspic.reasoner.SimpleAspicReasoner;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
 import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
@@ -43,7 +43,7 @@ public class AspicExample2 {
 		PlParser plparser = new PlParser();
 		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
 		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile(AspicExample2.class.getResource("/ex1.aspic").getFile());		
-		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
+		SimpleAspicReasoner<PropositionalFormula> ar = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");		
 		System.out.println(at);
 		System.out.println(pf + "\t" + ar.query(at,pf,InferenceMode.CREDOLOUS));		

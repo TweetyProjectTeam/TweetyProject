@@ -30,13 +30,13 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  * 
  * @param <T> the formula type
  */
-public class NaiveAspicReasoner<T extends Invertable> extends AbstractAspicReasoner<T>  {
+public class SimpleAspicReasoner<T extends Invertable> extends AbstractAspicReasoner<T>  {
 
 	/**
 	 * Creates a new instance
 	 * @param aafReasoner Underlying reasoner for AAFs. 
 	 */
-	public NaiveAspicReasoner(AbstractExtensionReasoner aafReasoner) {
+	public SimpleAspicReasoner(AbstractExtensionReasoner aafReasoner) {
 		super(aafReasoner);
 	}
 

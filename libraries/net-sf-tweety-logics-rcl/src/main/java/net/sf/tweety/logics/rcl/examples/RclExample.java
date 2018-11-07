@@ -24,7 +24,7 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.fol.parser.*;
 import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.rcl.parser.*;
-import net.sf.tweety.logics.rcl.reasoner.RelationalBruteForceCReasoner;
+import net.sf.tweety.logics.rcl.reasoner.SimpleRelationalCReasoner;
 import net.sf.tweety.logics.rcl.semantics.*;
 import net.sf.tweety.logics.rcl.syntax.RclBeliefSet;
 
@@ -44,7 +44,7 @@ public class RclExample {
 		RclBeliefSet bs = (RclBeliefSet) parser.parseBeliefBaseFromFile(args[0]);
 		System.out.println("Knowledge base:\n " + bs);
 		
-		RelationalRankingFunction kappa = new RelationalBruteForceCReasoner(true).getModel(bs,parser.getSignature());
+		RelationalRankingFunction kappa = new SimpleRelationalCReasoner(true).getModel(bs,parser.getSignature());
 		System.out.println("Simple c-representation:\n" + kappa);		
 		
 		System.out.println();

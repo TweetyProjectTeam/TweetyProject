@@ -25,10 +25,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import net.sf.tweety.logics.fol.reasoner.FolReasoner;
-import net.sf.tweety.logics.fol.reasoner.NaiveFolReasoner;
+import net.sf.tweety.logics.fol.reasoner.SimpleFolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
-import net.sf.tweety.logics.rdl.reasoner.NaiveDefaultReasoner;
+import net.sf.tweety.logics.rdl.reasoner.SimpleDefaultReasoner;
 import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
 
 /**
@@ -42,7 +42,7 @@ public class RDLJUnitTest {
 	@Before
 	public void init(){
 		//FolTheoremProver.setDefaultProver(new Prover9("C:\\app\\prover9\\bin\\prover9.exe"));
-		FolReasoner.setDefaultReasoner(new NaiveFolReasoner());
+		FolReasoner.setDefaultReasoner(new SimpleFolReasoner());
 	/*	if(System.getProperty("os.name").matches("Win.*")){
 			System.out.println("Initializing Eprover for Windows");
 			FolTheoremProver.setDefaultProver(new EProver("C:/app/E/PROVER/eprover.exe", Shell.getCygwinShell("C:/cygwin64/bin/bash.exe")));
@@ -61,7 +61,7 @@ public class RDLJUnitTest {
 
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
-		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
+		SimpleDefaultReasoner ndr = new SimpleDefaultReasoner();
 		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("Flies(tweety)")));
 		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("Flies(penguin)")));
 		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("!Flies(tweety)")));
@@ -77,7 +77,7 @@ public class RDLJUnitTest {
 
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
-		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
+		SimpleDefaultReasoner ndr = new SimpleDefaultReasoner();
 		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("a")));
 		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("b")));
 		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("!b")));
@@ -92,7 +92,7 @@ public class RDLJUnitTest {
 
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
-		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
+		SimpleDefaultReasoner ndr = new SimpleDefaultReasoner();
 		assertTrue(ndr.getModels(theory).isEmpty());
 	}
 	
@@ -104,7 +104,7 @@ public class RDLJUnitTest {
 
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
-		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
+		SimpleDefaultReasoner ndr = new SimpleDefaultReasoner();
 		assertTrue(ndr.getModels(theory).size() == 2);
 	}
 	
@@ -117,7 +117,7 @@ public class RDLJUnitTest {
 
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
-		NaiveDefaultReasoner ndr = new NaiveDefaultReasoner();
+		SimpleDefaultReasoner ndr = new SimpleDefaultReasoner();
 		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("a")));
 		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("c")));
 		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("d")));

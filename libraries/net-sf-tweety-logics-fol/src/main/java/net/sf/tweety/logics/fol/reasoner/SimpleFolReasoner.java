@@ -32,7 +32,7 @@ import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
  * @author Matthias Thimm
  *
  */
-public class NaiveFolReasoner extends FolReasoner {
+public class SimpleFolReasoner extends FolReasoner {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.fol.reasoner.FolReasoner#query(net.sf.tweety.logics.fol.syntax.FolBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)

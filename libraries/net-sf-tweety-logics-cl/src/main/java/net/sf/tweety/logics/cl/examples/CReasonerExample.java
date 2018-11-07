@@ -18,7 +18,7 @@
  */
 package net.sf.tweety.logics.cl.examples;
 
-import net.sf.tweety.logics.cl.reasoner.BruteForceCReasoner;
+import net.sf.tweety.logics.cl.reasoner.SimpleCReasoner;
 import net.sf.tweety.logics.cl.syntax.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
@@ -39,7 +39,7 @@ public class CReasonerExample {
 		
 		System.out.println(bs);
 		
-		BruteForceCReasoner reasoner = new BruteForceCReasoner();
+		SimpleCReasoner reasoner = new SimpleCReasoner();
 		
 		System.out.println(reasoner.getModel(bs));
 		

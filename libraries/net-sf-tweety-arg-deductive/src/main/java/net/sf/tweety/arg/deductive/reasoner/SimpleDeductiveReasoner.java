@@ -40,14 +40,14 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public class SimpleReasoner extends AbstractDeductiveArgumentationReasoner {
+public class SimpleDeductiveReasoner extends AbstractDeductiveArgumentationReasoner {
 
 	/** Creates a new reasoner for the given belief base,
 	 * categorizer, and accumulator.
 	 * @param categorizer some categorizer.
 	 * @param accumulator some accumulator.
 	 */
-	public SimpleReasoner(Categorizer categorizer, Accumulator accumulator) {
+	public SimpleDeductiveReasoner(Categorizer categorizer, Accumulator accumulator) {
 		super(categorizer, accumulator);		
 	}
 

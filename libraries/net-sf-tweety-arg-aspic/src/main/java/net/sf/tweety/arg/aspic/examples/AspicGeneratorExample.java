@@ -19,7 +19,7 @@
 package net.sf.tweety.arg.aspic.examples;
 
 import net.sf.tweety.arg.aspic.reasoner.ModuleBasedAspicReasoner;
-import net.sf.tweety.arg.aspic.reasoner.NaiveAspicReasoner;
+import net.sf.tweety.arg.aspic.reasoner.SimpleAspicReasoner;
 import net.sf.tweety.arg.aspic.reasoner.RandomAspicReasoner;
 import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
@@ -45,7 +45,7 @@ public class AspicGeneratorExample {
 		int maxLiteralsInPremises = 2;
 		double percentageStrictRules = 0.2;
 		
-		NaiveAspicReasoner<PropositionalFormula> naiveReasoner = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		SimpleAspicReasoner<PropositionalFormula> naiveReasoner = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
 		ModuleBasedAspicReasoner<PropositionalFormula> moduleBasedReasoner = new ModuleBasedAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
 		RandomAspicReasoner<PropositionalFormula> randomReasoner = new RandomAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR),600,100);
 		

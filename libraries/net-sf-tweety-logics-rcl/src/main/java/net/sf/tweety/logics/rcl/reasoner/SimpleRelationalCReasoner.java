@@ -58,10 +58,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public class RelationalBruteForceCReasoner implements QualitativeReasoner<RclBeliefSet,FolFormula>,ModelProvider<RelationalConditional,RclBeliefSet,RelationalRankingFunction> {
+public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefSet,FolFormula>,ModelProvider<RelationalConditional,RclBeliefSet,RelationalRankingFunction> {
 
 	/** Logger. */
-	static private Logger log = LoggerFactory.getLogger(RelationalBruteForceCReasoner.class);
+	static private Logger log = LoggerFactory.getLogger(SimpleRelationalCReasoner.class);
 	
 	/**
 	 * indicates whether the computed c-representation is simple.
@@ -72,7 +72,7 @@ public class RelationalBruteForceCReasoner implements QualitativeReasoner<RclBel
 	 * Creates a new relational c-representation reasoner.	
 	 * @param simple whether the computed c-representation is simple. 
 	 */
-	public RelationalBruteForceCReasoner(boolean simple){		
+	public SimpleRelationalCReasoner(boolean simple){		
 		this.simple = simple;
 	}
 	

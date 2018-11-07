@@ -28,7 +28,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.mln.analysis.*;
-import net.sf.tweety.logics.mln.reasoner.NaiveMlnReasoner;
+import net.sf.tweety.logics.mln.reasoner.SimpleMlnReasoner;
 import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
 import net.sf.tweety.math.func.AverageAggregator;
@@ -198,7 +198,7 @@ public class MlnExample {
 				FolSignature sig = ex.getSecond();
 				//AlchemyMlnReasoner reasoner = new AlchemyMlnReasoner(mln,sig);
 				//reasoner.setAlchemyInferenceCommand(param);
-				NaiveMlnReasoner reasoner = new NaiveMlnReasoner();
+				SimpleMlnReasoner reasoner = new SimpleMlnReasoner();
 				reasoner.setTempDirectory(param);
 				for(AggregatingCoherenceMeasure measure: cohMeasures){				
 						System.out.println("Example " + i + ", domain size " + dsize + ", measure " + measure.toString() + ", coherence value " + measure.coherence(mln, reasoner, sig));

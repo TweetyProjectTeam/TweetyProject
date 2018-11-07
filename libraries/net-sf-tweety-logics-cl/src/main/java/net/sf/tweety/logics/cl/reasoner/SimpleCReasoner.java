@@ -48,7 +48,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * Lecture Notes in Computer Science, Volume 2087. 2001.
  * @author Matthias Thimm
  */
-public class BruteForceCReasoner extends AbstractConditionalLogicReasoner {
+public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 
 	/** Logger. */
 	//static private Logger log = LoggerFactory.getLogger(BruteForceCReasoner.class);	
@@ -78,7 +78,7 @@ public class BruteForceCReasoner extends AbstractConditionalLogicReasoner {
 	 * Creates a new c-representation reasoner 
 	 * @param simple whether the computed c-representation is simple. 
 	 */
-	public BruteForceCReasoner(boolean simple){
+	public SimpleCReasoner(boolean simple){
 		this.simple = simple;
 	}
 	
@@ -86,7 +86,7 @@ public class BruteForceCReasoner extends AbstractConditionalLogicReasoner {
 	 * Creates a new simple c-representation reasoner.
 	 * @param beliefBase  a knowledge base.	
 	 */
-	public BruteForceCReasoner(){
+	public SimpleCReasoner(){
 		this(false);
 	}
 		

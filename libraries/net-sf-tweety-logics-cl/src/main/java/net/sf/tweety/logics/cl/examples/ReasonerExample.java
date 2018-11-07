@@ -22,7 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.sf.tweety.logics.cl.reasoner.BruteForceCReasoner;
+import net.sf.tweety.logics.cl.reasoner.SimpleCReasoner;
 import net.sf.tweety.logics.cl.reasoner.RuleBasedCReasoner;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.cl.syntax.ClBeliefSet;
@@ -146,7 +146,7 @@ public class ReasonerExample {
 			
 			System.out.println("Start Calculation BruteForce:");
 			begin = System.nanoTime();
-			BruteForceCReasoner reasoner = new BruteForceCReasoner();
+			SimpleCReasoner reasoner = new SimpleCReasoner();
 			RankingFunction cReprBruteForce = reasoner.getModel(beliefset);
 			end = System.nanoTime();
 			duration = (end-begin) / (1000*1000);

@@ -23,7 +23,7 @@ import java.io.IOException;
 import net.sf.tweety.arg.deductive.accumulator.SimpleAccumulator;
 import net.sf.tweety.arg.deductive.categorizer.ClassicalCategorizer;
 import net.sf.tweety.arg.deductive.reasoner.AbstractDeductiveArgumentationReasoner;
-import net.sf.tweety.arg.deductive.reasoner.SimpleReasoner;
+import net.sf.tweety.arg.deductive.reasoner.SimpleDeductiveReasoner;
 import net.sf.tweety.arg.deductive.syntax.DeductiveKnowledgeBase;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.parser.PlParser;
@@ -56,7 +56,7 @@ public class DeductiveExample {
 		
 		System.out.println(kb);
 		
-		AbstractDeductiveArgumentationReasoner reasoner = new SimpleReasoner(new ClassicalCategorizer(), new SimpleAccumulator());
+		AbstractDeductiveArgumentationReasoner reasoner = new SimpleDeductiveReasoner(new ClassicalCategorizer(), new SimpleAccumulator());
 		
 		System.out.println(reasoner.query(kb,(PropositionalFormula) parser.parseFormula("h")));
 		

@@ -28,14 +28,14 @@ import net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework;
 import net.sf.tweety.commons.InferenceMode;
 
 /**
- * This class implements naive algorithm for computing
+ * This class implements a naive algorithm for computing
  * probabilities of extensions in probabilistic argumentation frameworks
  * from [Li, Oren, Norman. Probabilistic Argumentation Frameworks. TAFA'2011].
  * It considers all subgraphs and computes therefore exact probabilities
  * 
  * @author Matthias Thimm
  */
-public class NaivePafReasoner extends AbstractPafReasoner{
+public class SimplePafReasoner extends AbstractPafReasoner{
 	
 	/**
 	 * Creates a new reasoner.
@@ -43,7 +43,7 @@ public class NaivePafReasoner extends AbstractPafReasoner{
 	 * @param inferenceType The inference type used for estimating acceptability probability
 	 * 	of single arguments (credulous or skeptical inference).
 	 */
-	public NaivePafReasoner(Semantics semantics) {
+	public SimplePafReasoner(Semantics semantics) {
 		super(semantics);
 	}	
 

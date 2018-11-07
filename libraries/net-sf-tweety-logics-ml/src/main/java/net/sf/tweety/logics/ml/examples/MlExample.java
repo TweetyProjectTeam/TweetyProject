@@ -21,7 +21,7 @@
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.ml.reasoner.NaiveModalReasoner;
+import net.sf.tweety.logics.ml.reasoner.SimpleModalReasoner;
 import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.ml.parser.ModalParser;
@@ -39,7 +39,7 @@ public class MlExample {
 		System.out.println(b);
 		
 		//NaiveModalReasoner
-		NaiveModalReasoner reasoner = new NaiveModalReasoner();
+		SimpleModalReasoner reasoner = new SimpleModalReasoner();
 		System.out.println(reasoner.query(b,(FolFormula) parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))")));
 	}
 

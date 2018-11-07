@@ -33,7 +33,7 @@ import net.sf.tweety.arg.aspic.order.RuleComparator;
 import net.sf.tweety.arg.aspic.order.SimpleAspicOrder;
 import net.sf.tweety.arg.aspic.order.WeakestLinkOrder;
 import net.sf.tweety.arg.aspic.parser.AspicParser;
-import net.sf.tweety.arg.aspic.reasoner.NaiveAspicReasoner;
+import net.sf.tweety.arg.aspic.reasoner.SimpleAspicReasoner;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.FolFormulaGenerator;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
 import net.sf.tweety.arg.aspic.semantics.AspicAttack;
@@ -390,7 +390,7 @@ public class AspicTest {
 		AspicArgumentationTheory<PropositionalFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex1.aspic").getFile());
 		
-		NaiveAspicReasoner<PropositionalFormula> ar = new NaiveAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
+		SimpleAspicReasoner<PropositionalFormula> ar = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
 
 
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");

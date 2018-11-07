@@ -24,7 +24,7 @@ import java.util.Set;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.commons.util.SetTools;
-import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
@@ -77,7 +77,7 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 				PlBeliefSet candidate = new PlBeliefSet(set);				
 				if(!SatSolver.getDefaultSolver().isConsistent(candidate)) continue;
 				// check for entailment
-				NaiveReasoner reasoner = new NaiveReasoner();
+				SimpleReasoner reasoner = new SimpleReasoner();
 				if(reasoner.query(candidate, claim))
 					arguments.add(new DeductiveArgument(candidate,claim));
 			}
@@ -101,7 +101,7 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 					continue;
 				// test if we already have a subset in arguments with equivalent claim
 				for(DeductiveArgument arg: arguments){
-					NaiveReasoner reasoner = new NaiveReasoner();					
+					SimpleReasoner reasoner = new SimpleReasoner();					
 					if(reasoner.isEquivalent(arg.getClaim(),new Conjunction(set)))
 						continue;
 				}

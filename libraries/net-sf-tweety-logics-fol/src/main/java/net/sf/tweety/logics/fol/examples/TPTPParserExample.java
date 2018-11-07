@@ -24,7 +24,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.TPTPParser;
 import net.sf.tweety.logics.fol.reasoner.EFOLReasoner;
 import net.sf.tweety.logics.fol.reasoner.FolReasoner;
-import net.sf.tweety.logics.fol.reasoner.NaiveFolReasoner;
+import net.sf.tweety.logics.fol.reasoner.SimpleFolReasoner;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -82,7 +82,7 @@ public class TPTPParserExample {
 		FolFormula c1 = conjectures.iterator().next();
 			
 		//Prove that the conjecture follows from the axioms
-		FolReasoner.setDefaultReasoner(new NaiveFolReasoner());
+		FolReasoner.setDefaultReasoner(new SimpleFolReasoner());
 		FolReasoner prover = FolReasoner.getDefaultReasoner();
 		System.out.println("ANSWER: " + prover.query(axioms,c1));
 			

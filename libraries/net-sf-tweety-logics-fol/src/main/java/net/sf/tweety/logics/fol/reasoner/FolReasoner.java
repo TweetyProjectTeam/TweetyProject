@@ -57,7 +57,7 @@ public abstract class FolReasoner implements QualitativeReasoner<FolBeliefSet,Fo
 					+ "It is strongly advised that a default FOL Reasoner is manually configured, see "
 					+ "'http://tweetyproject.org/doc/fol-provers.html' "
 					+ "for more information.");			
-			return new NaiveFolReasoner();
+			return new SimpleFolReasoner();
 		}
 	}
 	

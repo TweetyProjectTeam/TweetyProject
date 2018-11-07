@@ -24,7 +24,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.mln.reasoner.NaiveMlnReasoner;
+import net.sf.tweety.logics.mln.reasoner.SimpleMlnReasoner;
 import net.sf.tweety.logics.mln.reasoner.SimpleSamplingMlnReasoner;
 import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
@@ -40,7 +40,7 @@ public class ApproximationExample {
 		
 		Pair<MarkovLogicNetwork,FolSignature> ex = MlnExample.iterateExamples(1, 3);
 		SimpleSamplingMlnReasoner appReasoner = new SimpleSamplingMlnReasoner(0.0001, 1000);
-		NaiveMlnReasoner naiReasoner = new NaiveMlnReasoner();
+		SimpleMlnReasoner naiReasoner = new SimpleMlnReasoner();
 		naiReasoner.setTempDirectory("/Users/mthimm/Desktop/tmp/");
 		for(MlnFormula f: ex.getFirst()){
 			for(RelationalFormula groundFormula: f.getFormula().allGroundInstances(ex.getSecond().getConstants())){

@@ -25,7 +25,7 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.rdl.parser.RdlParser;
-import net.sf.tweety.logics.rdl.reasoner.NaiveDefaultReasoner;
+import net.sf.tweety.logics.rdl.reasoner.SimpleDefaultReasoner;
 import net.sf.tweety.logics.rdl.semantics.DefaultSequence;
 import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
@@ -134,7 +134,7 @@ public class RdlExample {
 	static void processTreeTest() throws Exception {
 		RdlParser parser = new RdlParser();
 		DefaultTheory t = parser.parseBeliefBaseFromFile(RdlExample.class.getResource("/simple_default_theory.txt").getFile());
-		NaiveDefaultReasoner reasoner = new NaiveDefaultReasoner();
+		SimpleDefaultReasoner reasoner = new SimpleDefaultReasoner();
 		System.out.println(reasoner.getModels(t));
 		System.out.println(reasoner.query(t,(FolFormula) parser.parseFormula("!a")));
 	}

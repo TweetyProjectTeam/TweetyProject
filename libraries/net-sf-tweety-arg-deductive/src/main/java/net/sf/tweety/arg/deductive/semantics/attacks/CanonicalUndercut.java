@@ -19,7 +19,7 @@
 package net.sf.tweety.arg.deductive.semantics.attacks;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
-import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 
@@ -48,7 +48,7 @@ public class CanonicalUndercut implements Attack{
 	 */
 	@Override
 	public boolean isAttackedBy(DeductiveArgument a, DeductiveArgument b) {
-		NaiveReasoner reasoner = new NaiveReasoner();
+		SimpleReasoner reasoner = new SimpleReasoner();
 		if(reasoner.isEquivalent(b.getClaim(), new Negation(new Conjunction(a.getSupport()))))
 			return true;
 		return false;

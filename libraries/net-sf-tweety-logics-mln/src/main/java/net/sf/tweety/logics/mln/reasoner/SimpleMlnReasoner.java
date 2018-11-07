@@ -41,7 +41,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 
 /**
- * This class implements a naive reasoner for MLNs.
+ * This class implements a simple reasoner for MLNs.
  * 
  * @author Matthias Thimm
  */
@@ -49,7 +49,7 @@ import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
  * @author mthimm
  *
  */
-public class NaiveMlnReasoner extends AbstractMlnReasoner {
+public class SimpleMlnReasoner extends AbstractMlnReasoner {
 
 	/** Directory for temporary files. */
 	private String tempDirectory = null;

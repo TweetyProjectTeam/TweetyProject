@@ -29,7 +29,7 @@ import net.sf.tweety.beliefdynamics.operators.*;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.orders.*;
 import net.sf.tweety.logics.pl.parser.*;
-import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**
@@ -72,7 +72,7 @@ public class CrMasExample {
 		// simple prioritized revision (without considering credibilities)
 		CrMasRevisionWrapper<PropositionalFormula> rev = new CrMasRevisionWrapper<PropositionalFormula>(
 				new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
-						new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new NaiveReasoner()),
+						new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new SimpleReasoner()),
 						new DefaultMultipleBaseExpansionOperator<PropositionalFormula>()
 						));
 		System.out.println("PRIO       :\t " + rev.revise(bs, newInformation));

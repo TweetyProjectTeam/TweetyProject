@@ -27,7 +27,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.mln.analysis.*;
-import net.sf.tweety.logics.mln.reasoner.NaiveMlnReasoner;
+import net.sf.tweety.logics.mln.reasoner.SimpleMlnReasoner;
 import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
 import net.sf.tweety.logics.mln.syntax.MlnFormula;
 import net.sf.tweety.math.func.MaxAggregator;
@@ -119,7 +119,7 @@ public class MlnExample2 {
 		FolSignature sig2 = ex2.getSecond();
 		MarkovLogicNetwork mln3 = ex3.getFirst();
 		FolSignature sig3 = ex3.getSecond();
-		NaiveMlnReasoner reasoner = new NaiveMlnReasoner();
+		SimpleMlnReasoner reasoner = new SimpleMlnReasoner();
 		reasoner.setTempDirectory("/Users/mthimm/Desktop/tmp");
 		System.out.println("#1: Measure " + measure.toString() + ", coherence value " + measure.coherence(mln1, reasoner, sig1));
 		System.out.println("#2: Measure " + measure.toString() + ", coherence value " + measure.coherence(mln2, reasoner, sig2));

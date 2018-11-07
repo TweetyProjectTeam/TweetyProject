@@ -34,7 +34,7 @@ import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
  * 
  * @author Matthias Thimm, Nils Geilen
  */
-public class NaiveDefaultReasoner implements QualitativeReasoner<DefaultTheory,FolFormula>, ModelProvider<FolFormula,DefaultTheory,Extension>{
+public class SimpleDefaultReasoner implements QualitativeReasoner<DefaultTheory,FolFormula>, ModelProvider<FolFormula,DefaultTheory,Extension>{
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.ModelProvider#getModels(net.sf.tweety.commons.BeliefBase)

@@ -19,7 +19,7 @@
 package net.sf.tweety.beliefdynamics.operators;
 
 import net.sf.tweety.beliefdynamics.kernels.*;
-import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.syntax.*;
 
 /**
@@ -37,7 +37,7 @@ public class RandomKernelContractionOperator extends KernelContractionOperator<P
 	 * Creates a new contraction operator.
 	 */
 	public RandomKernelContractionOperator() {
-		super(new RandomIncisionFunction<PropositionalFormula>(), new NaiveReasoner());
+		super(new RandomIncisionFunction<PropositionalFormula>(), new SimpleReasoner());
 	}
 
 }

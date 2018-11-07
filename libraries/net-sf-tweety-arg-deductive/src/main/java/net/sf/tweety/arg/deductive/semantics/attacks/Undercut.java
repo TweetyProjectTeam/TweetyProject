@@ -23,7 +23,7 @@ import java.util.Set;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
-import net.sf.tweety.logics.pl.reasoner.NaiveReasoner;
+import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
@@ -53,7 +53,7 @@ public class Undercut implements Attack{
 	 */
 	@Override
 	public boolean isAttackedBy(DeductiveArgument a, DeductiveArgument b) {
-		NaiveReasoner reasoner = new NaiveReasoner();
+		SimpleReasoner reasoner = new SimpleReasoner();
 		DefaultSubsetIterator<PropositionalFormula> it = new DefaultSubsetIterator<PropositionalFormula>(new HashSet<PropositionalFormula>(a.getSupport()));
 		Set<PropositionalFormula> set = null;
 		while(it.hasNext()){

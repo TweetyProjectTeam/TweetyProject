@@ -56,7 +56,7 @@ public abstract class AbstractModalReasoner implements QualitativeReasoner<Modal
 		} else{
 			System.err.println("No default modal reasoner configured, using "
 					+ "'NaiveModalReasoner' with default settings as fallback.");			
-			return new NaiveModalReasoner();
+			return new SimpleModalReasoner();
 		}
 	}
 
