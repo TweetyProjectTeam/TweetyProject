@@ -22,8 +22,7 @@ import net.sf.tweety.commons.postulates.PostulateEvaluator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.HsInconsistencyMeasure;
 import net.sf.tweety.logics.commons.analysis.NaiveMusEnumerator;
-import net.sf.tweety.logics.pl.postulates.ImFreeFormulaIndependence;
-import net.sf.tweety.logics.pl.postulates.ImMonotony;
+import net.sf.tweety.logics.pl.postulates.ImPostulate;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
@@ -45,8 +44,8 @@ public class ImPostulateEvaluationExample {
 		BeliefSetInconsistencyMeasure<PropositionalFormula> im = new HsInconsistencyMeasure<PlBeliefSet,PropositionalFormula>(new PossibleWorldIterator());
 		RandomSampler sampler = new RandomSampler(new PropositionalSignature(4),0.2,2,4);
 		PostulateEvaluator<PropositionalFormula,PlBeliefSet> evaluator = new PostulateEvaluator<PropositionalFormula,PlBeliefSet>(sampler, im);
-		evaluator.addPostulate(new ImMonotony());
-		evaluator.addPostulate(new ImFreeFormulaIndependence());
+		evaluator.addPostulate(ImPostulate.MONOTONY);
+		evaluator.addPostulate(ImPostulate.FREEFORMULAINDEPENDENCE);
 		System.out.println(evaluator.evaluate(10, false));
 	}
 }

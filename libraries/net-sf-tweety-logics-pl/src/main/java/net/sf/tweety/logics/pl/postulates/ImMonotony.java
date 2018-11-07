@@ -30,8 +30,14 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public class ImMonotony extends AbstractImPostulate{
+public class ImMonotony extends ImPostulate{
 
+	/**
+	 * Protected constructor so one uses only the single instance ImPostulate.MONOTONY
+	 */
+	protected ImMonotony() {		
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
@@ -41,6 +47,9 @@ public class ImMonotony extends AbstractImPostulate{
 	}
 
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.logics.pl.postulates.ImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
+	 */
 	@Override
 	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
 		if(!this.isApplicable(kb))

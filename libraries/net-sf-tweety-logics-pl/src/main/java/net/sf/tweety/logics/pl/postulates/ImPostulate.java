@@ -32,8 +32,15 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * @author Matthias Thimm
  *
  */
-public abstract class AbstractImPostulate implements Postulate<PropositionalFormula>{
+public abstract class ImPostulate implements Postulate<PropositionalFormula>{
 
+	
+	/** The MONOTONY postulate **/
+	public static final ImPostulate MONOTONY = new ImMonotony();
+	/** The FREEFORMULAINDEPENDENCE postulate **/
+	public static final ImPostulate FREEFORMULAINDEPENDENCE = new ImFreeFormulaIndependence();
+	
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)
 	 */

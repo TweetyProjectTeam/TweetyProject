@@ -33,8 +33,14 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public class ImFreeFormulaIndependence extends AbstractImPostulate{
+public class ImFreeFormulaIndependence extends ImPostulate{
 
+	/**
+	 * Protected constructor so one uses only the single instance ImPostulate.FREEFORMULAINDEPENDENCE
+	 */
+	protected ImFreeFormulaIndependence() {		
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
