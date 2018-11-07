@@ -37,7 +37,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  *  @author Matthias Thimm
  */
-public class ClParser extends Parser<ClBeliefSet> {
+public class ClParser extends Parser<ClBeliefSet,Conditional> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)

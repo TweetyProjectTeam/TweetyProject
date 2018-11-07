@@ -37,7 +37,7 @@ import net.sf.tweety.commons.ParserException;
  * @author Sebastian Homann
  */
 public class CParser
-  extends Parser<CActionDescription> {
+  extends Parser<CActionDescription,Formula> {
   protected ActionSignature signature;
   
   /*

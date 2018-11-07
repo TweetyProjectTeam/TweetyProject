@@ -48,12 +48,12 @@ import net.sf.tweety.commons.ParserException;
  * 
  * @param <T>	is the type of the language that the ABA theory ranges over 
  */
-public class ABAParser<T extends Formula> extends Parser<ABATheory<T>> {
+public class ABAParser<T extends Formula> extends Parser<ABATheory<T>,Formula> {
 
 	/**
 	 * Used to parse formulae
 	 */
-	private final Parser<? extends BeliefBase> formulaparser;
+	private final Parser<? extends BeliefBase,? extends Formula> formulaparser;
 
 	/**
 	 * Symbols used for parsing rules
@@ -64,7 +64,7 @@ public class ABAParser<T extends Formula> extends Parser<ABATheory<T>> {
 	 * Create a new ABA parser
 	 * @param formulaparser parses formulae of the language 
 	 */
-	public ABAParser(Parser<? extends BeliefBase> formulaparser	) {
+	public ABAParser(Parser<? extends BeliefBase,? extends Formula> formulaparser	) {
 		super();
 		this.formulaparser = formulaparser;
 	}

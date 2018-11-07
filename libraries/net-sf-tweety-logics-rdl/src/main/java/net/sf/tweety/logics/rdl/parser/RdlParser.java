@@ -40,7 +40,7 @@ import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
  * @author Nils Geilen
  *
  */
-public class RdlParser extends Parser<DefaultTheory> {
+public class RdlParser extends Parser<DefaultTheory,Formula> {
 
 	/**
 	 * parser to parse knowledge base

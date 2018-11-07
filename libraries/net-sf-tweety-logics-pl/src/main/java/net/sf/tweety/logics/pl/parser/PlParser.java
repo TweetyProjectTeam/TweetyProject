@@ -37,7 +37,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  *  @author Matthias Thimm
  *  @author Bastian Wolf
  */
-public class PlParser extends Parser<PlBeliefSet> {
+public class PlParser extends Parser<PlBeliefSet,PropositionalFormula> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)

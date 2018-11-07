@@ -43,10 +43,10 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  */
 public class SimplePlLogicParser
 		extends
-			Parser<SimplePlLogicDeductiveKnowledgebase> {
+			Parser<SimplePlLogicDeductiveKnowledgebase,SimplePlRule> {
 
 	private String symbolInf = "->", symbolComma = ",";
-	private final Parser<? extends BeliefBase> formulaparser;
+	private final Parser<? extends BeliefBase,?> formulaparser;
 
 	public SimplePlLogicParser() {
 		super();
@@ -81,7 +81,7 @@ public class SimplePlLogicParser
 	 * @see net.sf.tweety.commons.Parser#parseFormula(java.io.Reader)
 	 */
 	@Override
-	public Formula parseFormula(Reader reader)
+	public SimplePlRule parseFormula(Reader reader)
 			throws IOException, ParserException {
 		final Pattern RULE = Pattern.compile("(.*)(" + symbolInf + ")(.+)"),
 				LITERAL = Pattern.compile("(.*)"),

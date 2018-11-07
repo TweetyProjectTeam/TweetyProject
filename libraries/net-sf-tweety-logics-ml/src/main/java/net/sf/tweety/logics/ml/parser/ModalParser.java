@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.LogicalSymbols;
@@ -91,7 +90,7 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * @author Anna Gessler
  */
 
-public class ModalParser extends Parser<ModalBeliefSet> {
+public class ModalParser extends Parser<ModalBeliefSet,RelationalFormula> {
 
 	/**
 	 * First-order logic parser used for parsing sorts and type declaration.
@@ -147,7 +146,7 @@ public class ModalParser extends Parser<ModalBeliefSet> {
 	 * @see net.sf.tweety.kr.Parser#parseFormula(java.io.Reader)
 	 */
 	@Override
-	public Formula parseFormula(Reader reader) throws IOException, ParserException {
+	public RelationalFormula parseFormula(Reader reader) throws IOException, ParserException {
 		Stack<Object> stack = new Stack<Object>();
 		try{
 			this.folparser.setVariables(new HashMap<String,Variable>());

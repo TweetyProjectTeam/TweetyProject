@@ -58,7 +58,7 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * 
  * @author Sebastian Homann
  */
-public class CLawParser extends Parser<CActionDescription> {
+public class CLawParser extends Parser<CActionDescription,Formula> {
 
   protected ActionSignature signature;
 

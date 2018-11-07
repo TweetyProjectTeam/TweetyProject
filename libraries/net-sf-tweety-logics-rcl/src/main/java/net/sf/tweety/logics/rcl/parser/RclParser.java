@@ -42,7 +42,7 @@ import net.sf.tweety.logics.rcl.syntax.*;
  * 
  *  @author Matthias Thimm
  */
-public class RclParser extends Parser<RclBeliefSet> {
+public class RclParser extends Parser<RclBeliefSet,RelationalConditional> {
 
 	/** For parsing FOL fragments. */
 	private FolParser folParser;

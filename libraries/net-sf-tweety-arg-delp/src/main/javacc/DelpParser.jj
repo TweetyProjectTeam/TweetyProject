@@ -70,7 +70,7 @@ import java.util.Set;
   * </pre>
   */
 @SuppressWarnings("all")
-public class DelpParser extends Parser<DefeasibleLogicProgram>{
+public class DelpParser extends Parser<DefeasibleLogicProgram,Formula>{
 
 	private FolSignature signature = new FolSignature();
 

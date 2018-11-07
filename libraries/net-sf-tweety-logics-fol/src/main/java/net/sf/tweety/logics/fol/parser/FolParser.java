@@ -60,7 +60,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Matthias Thimm
  * @author Anna Gessler
  */
-public class FolParser extends Parser<FolBeliefSet> {
+public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 	/**
 	 * Keeps track of the signature.
 	 */
@@ -217,10 +217,10 @@ public class FolParser extends Parser<FolBeliefSet> {
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Parser#parseFormula(java.io.Reader)
+	 * @see net.sf.tweety.commons.Parser#parseFormula(java.io.Reader)
 	 */
 	@Override
-	public Formula parseFormula(Reader reader) throws IOException, ParserException {
+	public FolFormula parseFormula(Reader reader) throws IOException, ParserException {
 		Stack<Object> stack = new Stack<Object>();
 		try{
 			this.variables = new HashMap<String,Variable>();

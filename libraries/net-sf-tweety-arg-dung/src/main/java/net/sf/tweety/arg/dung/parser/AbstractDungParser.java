@@ -42,7 +42,7 @@ import net.sf.tweety.commons.ParserException;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractDungParser extends Parser<DungTheory> {
+public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 
 	/**
 	 * Retrieves the parser for the given file format.

@@ -37,7 +37,7 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 	/** The files containing Dung theories. */
 	private File[] files;
 	/** A parser for parsing the files. */
-	private Parser<DungTheory> parser;
+	private Parser<DungTheory,?> parser;
 	/** The index of the next theory to be returned. */
 	private int idx;
 	/** Whether to loop the files indefinitely*/
@@ -50,7 +50,7 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 	 * @param parser a parser for the files.
 	 * @param loop whether to loop the files indefinitely.
 	 */
-	public FileDungTheoryGenerator(File[] files, Parser<DungTheory> parser, boolean loop){
+	public FileDungTheoryGenerator(File[] files, Parser<DungTheory,?> parser, boolean loop){
 		this.files = files;
 		this.parser = parser;
 		this.idx = 0;

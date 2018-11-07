@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * 
  *  @author Matthias Thimm
  */
-public class PclParser extends Parser<PclBeliefSet>{
+public class PclParser extends Parser<PclBeliefSet,ProbabilisticConditional>{
 
 	/**
 	 * Logger.

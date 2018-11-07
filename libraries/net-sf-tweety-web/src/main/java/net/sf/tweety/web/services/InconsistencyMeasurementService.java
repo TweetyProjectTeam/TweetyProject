@@ -187,7 +187,7 @@ public class InconsistencyMeasurementService{
 			throw new JSONException("Malformed JSON: unknown value for attribute \"measure\"");
 		if(!query.has(InconsistencyMeasurementService.JSON_ATTR_FORMAT))
 			throw new JSONException("Malformed JSON: no \"format\" attribute given");
-		Parser<PlBeliefSet> parser = PlParserFactory.getParserForFormat(
+		Parser<PlBeliefSet,PropositionalFormula> parser = PlParserFactory.getParserForFormat(
 						Format.getFormat(query.getString(InconsistencyMeasurementService.JSON_ATTR_FORMAT)));
 		if(parser == null)
 			throw new JSONException("Malformed JSON: unknown value for attribute \"format\"");

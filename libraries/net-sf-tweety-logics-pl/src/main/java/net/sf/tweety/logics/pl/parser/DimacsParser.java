@@ -29,6 +29,7 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 
 /**
@@ -37,7 +38,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class DimacsParser extends Parser<PlBeliefSet> {
+public class DimacsParser extends Parser<PlBeliefSet,PropositionalFormula> {
 	
 	/**
 	 * The signature used for parsing (is automatically set if a file is parsed, but

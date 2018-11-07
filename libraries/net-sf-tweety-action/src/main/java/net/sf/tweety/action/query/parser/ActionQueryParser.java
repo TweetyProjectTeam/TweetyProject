@@ -77,7 +77,7 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * @author Tim Janus (change constant LogicalSymbols to dynamic)
  */
 public class ActionQueryParser
-  extends Parser<SActionQuerySet> {
+  extends Parser<SActionQuerySet,SActionQuery> {
   private ActionSignature signature;
   
   public ActionQueryParser(ActionSignature signature) {

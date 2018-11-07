@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.LogicalSymbols;
@@ -97,7 +96,7 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * 
  * @author Anna Gessler
  */
-public class TPTPParser extends Parser<FolBeliefSet> {
+public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 	/**
 	 * Keeps track of the signature.
 	 */
@@ -197,8 +196,11 @@ public class TPTPParser extends Parser<FolBeliefSet> {
 		return formulas;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.commons.Parser#parseFormula(java.io.Reader)
+	 */
 	@Override
-	public Formula parseFormula(Reader reader) throws IOException, ParserException {
+	public FolFormula parseFormula(Reader reader) throws IOException, ParserException {
 		String str = "";
 		for(int c = reader.read(); c != -1; c = reader.read()) 
 			str += (char)c;

@@ -51,12 +51,12 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  * 
  * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
-public class AspicParser <T extends Invertable> extends Parser<AspicArgumentationTheory<T>>{
+public class AspicParser <T extends Invertable> extends Parser<AspicArgumentationTheory<T>,Formula>{
 	
 	/**
 	 * Used to parse formulae
 	 */
-	private final Parser<? extends BeliefBase> formulaparser;
+	private final Parser<? extends BeliefBase,? extends Formula> formulaparser;
 	private RuleFormulaGenerator<T> rfg;
 	
 	private String symbolStrict = "->", 
@@ -68,7 +68,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	 * @param formulaparser	parses the bodies and the heads of the ASPIC argumentation systems rules
 	 * @param rfg	a generator, that transforms InferenceRule<T> into T
 	 */
-	public AspicParser(Parser<? extends BeliefBase> formulaparser, RuleFormulaGenerator<T> rfg) {
+	public AspicParser(Parser<? extends BeliefBase,? extends Formula> formulaparser, RuleFormulaGenerator<T> rfg) {
 		super();
 		this.formulaparser = formulaparser;
 		this.rfg = rfg;

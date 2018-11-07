@@ -44,7 +44,7 @@ import net.sf.tweety.math.probability.*;
  * 
  *  @author Matthias Thimm
  */
-public class RpclParser extends Parser<RpclBeliefSet> {
+public class RpclParser extends Parser<RpclBeliefSet,RelationalProbabilisticConditional> {
 
 	/** For parsing FOL fragments. */
 	private FolParser folParser;

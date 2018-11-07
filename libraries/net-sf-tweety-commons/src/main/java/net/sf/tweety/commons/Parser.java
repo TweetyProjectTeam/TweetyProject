@@ -25,7 +25,7 @@ import java.io.*;
  * 
  * @author Matthias Thimm
  */
-public abstract class Parser<T extends BeliefBase> {
+public abstract class Parser<T extends BeliefBase,S extends Formula> {
 
 	/**
 	 * Parses the file of the given filename into a belief base of the given type.
@@ -66,9 +66,9 @@ public abstract class Parser<T extends BeliefBase> {
 	 * @throws FileNotFoundException if the file is not found 
 	 * @throws Exception some parsing exceptions may be added here.
 	 */
-	public Formula parseFormulaFromFile(String filename) throws FileNotFoundException, IOException, ParserException{
+	public S parseFormulaFromFile(String filename) throws FileNotFoundException, IOException, ParserException{
 		InputStreamReader reader = new InputStreamReader(new java.io.FileInputStream(filename));
-		Formula f = this.parseFormula(reader);
+		S f = this.parseFormula(reader);
 		reader.close();
 		return f;
 	}
@@ -79,7 +79,7 @@ public abstract class Parser<T extends BeliefBase> {
 	 * @return a formula
 	 * @throws Exception some parsing exceptions may be added here.
 	 */
-	public Formula parseFormula(String text) throws IOException, ParserException{
+	public S parseFormula(String text) throws IOException, ParserException{
 		return this.parseFormula(new StringReader(text));
 	}
 	
@@ -89,7 +89,7 @@ public abstract class Parser<T extends BeliefBase> {
 	 * @return a formula
 	 * @throws Exception some parsing exceptions may be added here.
 	 */
-	public abstract Formula parseFormula(Reader reader) throws IOException, ParserException;
+	public abstract S parseFormula(Reader reader) throws IOException, ParserException;
 	
 	/**
 	 * Checks whether the given string is a number.
