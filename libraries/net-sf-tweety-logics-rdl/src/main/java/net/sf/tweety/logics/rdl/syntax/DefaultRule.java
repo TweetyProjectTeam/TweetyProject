@@ -30,7 +30,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.reasoner.FolReasoner;
@@ -335,7 +335,7 @@ public class DefaultRule extends RelationalFormula {
 	 * @see net.sf.tweety.logics.fol.syntax.RelationalFormula#combineWithAnd(net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable)
 	 */
 	@Override
-	public Conjunction combineWithAnd(Conjuctable formula) {
+	public Conjunction combineWithAnd(Conjunctable formula) {
 		throw new IllegalArgumentException("Not combinable with and");
 	}
 	

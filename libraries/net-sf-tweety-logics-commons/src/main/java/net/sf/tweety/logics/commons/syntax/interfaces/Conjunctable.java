@@ -24,12 +24,12 @@ package net.sf.tweety.logics.commons.syntax.interfaces;
  * 
  * @author Tim Janus
  */
-public interface Conjuctable extends SimpleLogicalFormula {
+public interface Conjunctable extends SimpleLogicalFormula {
 	
 	/**
 	 * Returns a conjunction of this and the given formula.
 	 * @param f a formula to be combined with AND and this.
 	 * @return a conjunction of this and the given formula.
 	 */
-	public SimpleLogicalFormula combineWithAnd(Conjuctable f);
+	public SimpleLogicalFormula combineWithAnd(Conjunctable f);
 }

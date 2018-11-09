@@ -24,7 +24,7 @@ import java.util.Set;
 
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
-import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.math.probability.Probability;
@@ -58,7 +58,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	public abstract Set<PropositionalFormula> getLiterals();
 	
 	@Override
-	public Conjunction combineWithAnd(Conjuctable f){
+	public Conjunction combineWithAnd(Conjunctable f){
 		if(!(f instanceof PropositionalFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a propositional formula.");
 		return new Conjunction(this,(PropositionalFormula)f);

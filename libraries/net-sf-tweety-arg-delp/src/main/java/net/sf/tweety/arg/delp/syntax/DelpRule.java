@@ -24,7 +24,7 @@ import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.*;
@@ -117,7 +117,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	 * @see net.sf.tweety.ClassicalFormula#combineWithAnd(net.sf.tweety.ClassicalFormula)
 	 */
 	@Override
-	public Conjunction combineWithAnd(Conjuctable f) {
+	public Conjunction combineWithAnd(Conjunctable f) {
 		throw new UnsupportedOperationException("Combination using AND not permitted for rules.");
 	}
 

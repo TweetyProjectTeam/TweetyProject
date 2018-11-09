@@ -30,7 +30,7 @@ package net.sf.tweety.logics.commons.syntax.interfaces;
  */
 public interface ClassicalFormula extends 
 	Disjunctable, 
-	Conjuctable, 
+	Conjunctable, 
 	Invertable,
 	ProbabilityAware {
 }

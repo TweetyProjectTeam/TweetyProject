@@ -25,7 +25,7 @@ import java.util.Set;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
@@ -114,7 +114,7 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithAnd(net.sf.tweety.kr.Formula)
 	 */
-	public Conjunction combineWithAnd(Conjuctable f){		
+	public Conjunction combineWithAnd(Conjunctable f){		
 		throw new UnsupportedOperationException("Conditionals cannot be combined by 'AND'");		
 	}
 	

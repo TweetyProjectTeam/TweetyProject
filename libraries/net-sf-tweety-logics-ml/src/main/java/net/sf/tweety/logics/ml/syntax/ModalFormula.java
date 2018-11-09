@@ -24,7 +24,7 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
@@ -144,7 +144,7 @@ public abstract class ModalFormula extends FolFormula {
 	}
 	
 	@Override
-	public Conjunction combineWithAnd(Conjuctable f){
+	public Conjunction combineWithAnd(Conjunctable f){
 		if(!(f instanceof ModalFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a modal formula.");
 		return new Conjunction(this,(ModalFormula)f);

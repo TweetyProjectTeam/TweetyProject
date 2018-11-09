@@ -27,7 +27,7 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
@@ -211,7 +211,7 @@ public class RelationalConditional extends RelationalFormula implements Rule<Fol
 	 * @see net.sf.tweety.kr.ClassicalFormula#combineWithAnd(net.sf.tweety.kr.ClassicalFormula)
 	 */
 	@Override
-	public Conjunction combineWithAnd(Conjuctable f) {
+	public Conjunction combineWithAnd(Conjunctable f) {
 		throw new UnsupportedOperationException("Conditionals cannot be combined by 'AND'");
 	}
 

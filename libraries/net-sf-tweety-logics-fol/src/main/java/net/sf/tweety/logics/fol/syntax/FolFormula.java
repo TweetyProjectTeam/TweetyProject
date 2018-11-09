@@ -28,7 +28,7 @@ import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
@@ -50,7 +50,7 @@ import net.sf.tweety.math.probability.Probability;
 public abstract class FolFormula extends RelationalFormula {
 
 	@Override
-	public Conjunction combineWithAnd(Conjuctable f){
+	public Conjunction combineWithAnd(Conjunctable f){
 		if(!(f instanceof FolFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a first-order formula.");
 		return new Conjunction(this,(FolFormula)f);

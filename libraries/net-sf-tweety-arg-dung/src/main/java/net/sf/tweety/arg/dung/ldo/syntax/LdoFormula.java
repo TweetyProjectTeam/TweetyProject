@@ -29,7 +29,7 @@ import net.sf.tweety.arg.dung.syntax.DungSignature;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
-import net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
 import net.sf.tweety.math.probability.Probability;
@@ -53,7 +53,7 @@ public abstract class LdoFormula implements ClassicalFormula{
 	 * @see net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable#combineWithAnd(net.sf.tweety.logics.commons.syntax.interfaces.Conjuctable)
 	 */
 	@Override
-	public LdoConjunction combineWithAnd(Conjuctable f){
+	public LdoConjunction combineWithAnd(Conjunctable f){
 		if(!(f instanceof LdoFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a ldo formula.");
 		return new LdoConjunction(this,(LdoFormula)f);
