@@ -147,5 +147,8 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * @return AnswerSet
 	 */
 	public abstract Collection<AnswerSet> getModels(File f);
+	
+	@Override
+	public abstract Boolean query(Program beliefbase, ASPLiteral formula);
 
 }

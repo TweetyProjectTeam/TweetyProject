@@ -21,9 +21,10 @@ package net.sf.tweety.lp.asp.reasoner;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-
+import java.util.Collection;
 import java.util.List;
 
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.ParseException;
@@ -170,11 +171,26 @@ public class ClingoSolver extends ASPSolver {
 		}
 		return result;
 	}
-
+	
 	@Override
-	public Boolean query(Program beliefbase, ASPLiteral formula) {
-		// TODO
-		throw new UnsupportedOperationException("TODO");
+	public Boolean query(Program beliefbase, ASPLiteral formula) {		
+		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
+	}
+
+	public Boolean query(Program beliefbase, ASPLiteral formula, InferenceMode inferenceMode) {
+		Collection<AnswerSet> answerSets = this.getModels(beliefbase);
+		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
+			for(AnswerSet e: answerSets)
+				if(!e.contains(formula))
+					return false;
+			return true;
+		}
+		//credulous semantics
+		for(AnswerSet e: answerSets){
+			if(e.contains(formula))
+				return true;			
+		}			
+		return false;
 	}
 
 	@Override
