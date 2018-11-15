@@ -86,7 +86,7 @@ public class AtomicRole extends DlFormula {
 
 	@Override
 	public boolean isLiteral() {
-		return true;
+		return false;
 	}
 
 	@Override

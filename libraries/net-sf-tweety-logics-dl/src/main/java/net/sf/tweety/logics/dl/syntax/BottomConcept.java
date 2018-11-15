@@ -61,7 +61,9 @@ public class BottomConcept extends DlFormula  {
 	
 	@Override
 	public boolean isLiteral() {
-		return true;
+		//Note: In the DL library (here), TopConcept and BottomConcept are not seen as literals.
+		//However, in the FOL library, Tautology and Contradiction are seen as literals (see net.sf.tweety.logics.fol.syntax.SpecialFormula).
+		return false;
 	}
 	
 	@Override
