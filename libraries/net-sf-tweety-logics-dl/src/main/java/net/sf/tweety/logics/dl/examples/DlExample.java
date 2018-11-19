@@ -19,18 +19,15 @@
 package net.sf.tweety.logics.dl.examples;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.dl.syntax.DlSignature;
 import net.sf.tweety.logics.dl.syntax.EquivalenceAxiom;
 import net.sf.tweety.logics.dl.syntax.Individual;
+import net.sf.tweety.logics.dl.syntax.RoleAssertion;
 import net.sf.tweety.logics.dl.syntax.Union;
 import net.sf.tweety.logics.dl.syntax.AtomicConcept;
 import net.sf.tweety.logics.dl.syntax.AtomicRole;
 import net.sf.tweety.logics.dl.syntax.Complement;
-import net.sf.tweety.logics.dl.syntax.AssertionalAxiom;
+import net.sf.tweety.logics.dl.syntax.ConceptAssertion;
 import net.sf.tweety.logics.dl.syntax.DlBeliefSet;
 /**
  * 
@@ -50,26 +47,22 @@ public class DlExample {
 		AtomicConcept house = new AtomicConcept("House");
 		AtomicConcept father = new AtomicConcept("Father");
 		AtomicRole fatherOf = new AtomicRole("fatherOf");
-		AtomicRole owns = new AtomicRole("owns");
 		Individual bob = new Individual("Bob");
 		Individual alice = new Individual("Alice");
-		Set<AtomicConcept> concepts = new HashSet<AtomicConcept>();
-		Set<AtomicRole> roles = new HashSet<AtomicRole>();
-		Set<Individual> individuals = new HashSet<Individual>();
-		DlSignature dsig = new DlSignature(concepts,roles,individuals);
 
 		//Create some terminological axioms
 		EquivalenceAxiom femaleHuman = new EquivalenceAxiom(female,human);
 		EquivalenceAxiom maleHuman = new EquivalenceAxiom(male,human);
-		EquivalenceAxiom fatherEq = new EquivalenceAxiom(father, new Union(male,fatherOf));
-		EquivalenceAxiom houseNotHuman = new EquivalenceAxiom(house,new Complement(house));
+		
+		EquivalenceAxiom fatherEq = new EquivalenceAxiom(father, new Union(male,fatherOf)); //TODO replace union
+		EquivalenceAxiom houseNotHuman = new EquivalenceAxiom(house,new Complement(human));
 		
 		//Create some assertional axioms
-		AssertionalAxiom aliceHuman = new AssertionalAxiom(human,alice);
-		AssertionalAxiom bobHuman = new AssertionalAxiom(human,bob);
-		AssertionalAxiom aliceFemale = new AssertionalAxiom(female,alice);
-		AssertionalAxiom bobMale = new AssertionalAxiom(male,bob);
-		AssertionalAxiom bobFatherOfAlice = new AssertionalAxiom(fatherOf,bob,alice);
+		ConceptAssertion aliceHuman = new ConceptAssertion(alice,human);
+		ConceptAssertion bobHuman = new ConceptAssertion(bob,human);
+		ConceptAssertion aliceFemale = new ConceptAssertion(alice,female);
+		ConceptAssertion bobMale = new ConceptAssertion(bob,male);
+		RoleAssertion bobFatherOfAlice = new RoleAssertion(bob,alice,fatherOf);
 		
 		//Add axioms to knowledge base
 		DlBeliefSet dbs = new DlBeliefSet();
@@ -88,11 +81,7 @@ public class DlExample {
 		System.out.println("Only the ABox: " + dbs.getABox());
 		System.out.println("Only the TBox: " + dbs.getTBox());	
 		
-		/**
-		 * Parser
-		 * To be completed soon
-		 */
-		//Parse knowledge base
+		//Parse knowledge base (to be added soon)
 //		DlParser parser = new DlParser();
 //		DlBeliefSet parseddbs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.dlogic");
 //		DlSignature parsedsig = (DlSignature) parseddbs.getSignature();

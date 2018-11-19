@@ -22,23 +22,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.commons.util.Pair;
-import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 
 /**
  * This class models an universal restriction in description logics,
  * i.e. an expression of the form "forall R.C" for a role R and a Concept C.
- * This can be translated to "forall X,Y:(R(X,Y)=>C(Y))" in first-order logic.
  * 
  * @author Anna Gessler
  *
  */
-public class UniversalRestriction extends DlFormula {
+public class UniversalRestriction extends ComplexConcept {
 	
 	/**
 	 * The role and the concept that is being restricted by it.
 	 */
-	private Pair<AtomicRole,DlFormula> formulas;
+	private Pair<ComplexConcept,AtomicRole> formulas;
 	
 	/**
 	 * Creates a new ALC universal restriction with the given role
@@ -47,16 +45,16 @@ public class UniversalRestriction extends DlFormula {
 	 * @param r the role
 	 * @param c the concept that is being restricted by the role
 	 */
-	public UniversalRestriction(AtomicRole r, DlFormula c) {
-		formulas.setFirst(r);
-		formulas.setSecond(c);
+	public UniversalRestriction(ComplexConcept c, AtomicRole r) {
+		formulas.setFirst(c);
+		formulas.setSecond(r);
 	}
 	
 	/**
 	 * Get the role and concept that are part of the universal restriction.
 	 * @return an atomic role and a concept
 	 */
-	public Pair<AtomicRole,DlFormula> getFormulas() {
+	public Pair<ComplexConcept,AtomicRole> getFormulas() {
 	 return this.formulas;	
 	}
 
@@ -69,7 +67,7 @@ public class UniversalRestriction extends DlFormula {
 	}
 	
 	public String toString() {
-		return LogicalSymbols.FORALLQUANTIFIER() + " " + this.formulas.getFirst().toString() + "." + this.getFormulas().getSecond().toString();
+		return "(forall " + " " + this.formulas.getFirst().toString() + " " + this.getFormulas().getSecond().toString() + ")";
 	}
 
 	@Override
@@ -86,12 +84,12 @@ public class UniversalRestriction extends DlFormula {
 	}
 
 	@Override
-	public DlFormula clone() {
+	public ComplexConcept clone() {
 		return new UniversalRestriction(this.formulas.getFirst(),this.formulas.getSecond());
 	}
 
 	@Override
-	public DlFormula collapseAssociativeFormulas() {
+	public ComplexConcept collapseAssociativeFormulas() {
 		 return new UniversalRestriction(formulas.getFirst().collapseAssociativeFormulas(),formulas.getSecond().collapseAssociativeFormulas());
 			
 	}

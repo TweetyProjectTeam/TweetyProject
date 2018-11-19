@@ -1,33 +1,26 @@
-{philip_iv_of_spain, maria_of_spain, ferdinand_iii_hre, mariana_of_austria, charles_ii_of_spain}
+signature(:atomic-concepts(Person Female Male Parent)
+		  :roles(motherOf fatherOf siblingOf marriedTo)
+		  :individuals(philip_iv_of_spain maria_of_spain ferdinand_iii_hre mariana_of_austria charles_ii_of_spain))
 
-concept(Person)
-concept(Female)
-concept(Male)
-concept(Parent)
-role(motherOf) 
-role(fatherOf)
-role(siblingOf)
-role(marriedTo) 
+implies Female Person
+implies Male Person 
+implies Parent (and Person (exists (Person motherOf))
 
-Female => Person
-Male => Person
-Parent => Person && exists (motherOf.Person)
+instance philip_iv_of_spain Person
+instance maria_of_spain Person
+instance ferdinand_iii_hre Person
+instance mariana_of_austria Person
+((instance charles_ii_of_spain Person))
+(instance philip_iv_of_spain Male)
+instance maria_of_spain Female
+instance ferdinand_iii_hre Male
+instance mariana_of_austria Female
+instance charles_ii_of_spain Male
 
-Person(philip_iv_of_spain)
-Person(maria_of_spain)
-Person(ferdinand_iii_hre)
-Person(mariana_of_austria)
-Person(charles_ii_of_spain)
-Female(philip_iv_of_spain)
-Female(maria_of_spain) 
-Male(ferdinand_iii_hre)
-Female(mariana_of_austria)
-Male(charles_ii_of_spain)
-
-siblingOf(philip_iv_of_spain,maria_of_spain)
-marriedTo(ferdinand_iii_hre,maria_of_spain)
-motherOf(maria_of_spain,mariana_of_austria)
-fatherOf(ferdinand_iii_hre,mariana_of_austria)
-marriedTo(philip_iv_of_spain,mariana_of_austria)
-motherOf(mariana_of_austria,charles_ii_of_spain)
-fatherOf(philip_iv_of_spain,charles_ii_of_spain)
+related philip_iv_of_spain maria_of_spain siblingOf
+related ferdinand_iii_hre maria_of_spain marriedTo
+related maria_of_spain mariana_of_austria motherOf
+related ferdinand_iii_hre mariana_of_austria fatherOf
+related philip_iv_of_spain mariana_of_austria marriedTo
+related mariana_of_austria charles_ii_of_spain motherOf
+related philip_iv_of_spain charles_ii_of_spain fatherOf

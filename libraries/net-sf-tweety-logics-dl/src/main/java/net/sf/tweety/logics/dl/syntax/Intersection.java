@@ -21,8 +21,6 @@ package net.sf.tweety.logics.dl.syntax;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.logics.commons.LogicalSymbols;
-
 /**
  * This class models an intersection in description logics. This can be
  * translated to a conjunction in first-order logic.
@@ -37,7 +35,7 @@ public class Intersection extends AssociativeDLFormula {
 	 * @param formulas
 	 *            a collection of formulas.
 	 */
-	public Intersection(Collection<? extends DlFormula> formulas) {
+	public Intersection(Collection<? extends ComplexConcept> formulas) {
 		super(formulas);
 	}
 
@@ -45,7 +43,7 @@ public class Intersection extends AssociativeDLFormula {
 	 * Creates a new (empty) intersection.
 	 */
 	public Intersection() {
-		this(new HashSet<DlFormula>());
+		this(new HashSet<ComplexConcept>());
 	}
 
 	/**
@@ -56,7 +54,7 @@ public class Intersection extends AssociativeDLFormula {
 	 * @param second
 	 *            a relational formula.
 	 */
-	public Intersection(DlFormula first, DlFormula second) {
+	public Intersection(ComplexConcept first, ComplexConcept second) {
 		this();
 		this.add(first);
 		this.add(second);
@@ -70,30 +68,30 @@ public class Intersection extends AssociativeDLFormula {
 
 	@Override
 	public String getOperatorSymbol() {
-		return LogicalSymbols.CONJUNCTION();
+		return "and";
 	}
 
 	@Override
 	public String getEmptySymbol() {
-		return LogicalSymbols.TAUTOLOGY();
+		return "*top*";
 	}
 
 	@Override
-	public DlFormula clone() {
+	public ComplexConcept clone() {
 		return new Intersection(support.copyHelper(this));
 	}
 
 	@Override
-	public DlFormula collapseAssociativeFormulas() {
+	public ComplexConcept collapseAssociativeFormulas() {
 		if (this.isEmpty())
 			return new TopConcept();
 		if (this.size() == 1)
 			return (this.iterator().next()).collapseAssociativeFormulas();
 		Intersection newMe = new Intersection();
-		for (DlFormula f : this) {
-			if (!(f instanceof DlFormula))
+		for (ComplexConcept f : this) {
+			if (!(f instanceof ComplexConcept))
 				throw new IllegalStateException("Can not collapse conjunctions containing non-description logic formulae.");
-			DlFormula newF = ((DlFormula) f).collapseAssociativeFormulas();
+			ComplexConcept newF = ((ComplexConcept) f).collapseAssociativeFormulas();
 			if (newF instanceof Intersection)
 				newMe.addAll((Intersection) newF);
 			else

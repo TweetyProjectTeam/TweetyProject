@@ -30,19 +30,14 @@ import net.sf.tweety.commons.Signature;
  * 
  * <br> A knowledge base for description logic distinguishes between:
  * <ul>
- * <li>the TBox (terminological axioms, i.e. properties of and relations between concepts) 
+ * <li>the TBox (terminological axioms, i.e. properties of and relations between concepts). 
+ * In the description logic ALC, the TBox consists of equivalence axioms (GCUs). 
  * <li>and the ABox (assertional axioms, i.e. ground assertions about individuals and what concepts and roles they belong to).
  * </ul>
- * TBox and Abox together are called an ontology.
- * 
- * In the description logic ALC, the TBox consists of equivalence axioms (GCUs). 
- * The ABox consists of axioms like C(a) and R(a,b) where C ist a concept, R a role
- * and a,b are individuals.
  * 
  * @author Anna Gessler
- *
  */
-public class DlBeliefSet extends BeliefSet<DlFormula> {
+public class DlBeliefSet extends BeliefSet<DlAxiom> {
 	/**
 	 * Creates a new and empty description logics knowledge base.
 	 */
@@ -51,10 +46,10 @@ public class DlBeliefSet extends BeliefSet<DlFormula> {
 	}
 	
 	/**
-	 * Creates a new description logics knowledge base with the given set of formulas.
+	 * Creates a new description logics knowledge base with the given set of axioms.
 	 * @param formulas
 	 */
-	public DlBeliefSet(Set<DlFormula> formulas){
+	public DlBeliefSet(Set<DlAxiom> formulas){
 		super(formulas);
 	}
 
@@ -70,9 +65,9 @@ public class DlBeliefSet extends BeliefSet<DlFormula> {
 	 * 
 	 * @return a set of TBox formulas
 	 */
-	public Set<DlFormula> getTBox() {
-		Set<DlFormula> TBox = new HashSet<DlFormula>();
-		for (DlFormula f : this) {
+	public Set<DlAxiom> getTBox() {
+		Set<DlAxiom> TBox = new HashSet<DlAxiom>();
+		for (DlAxiom f : this) {
 			if (f instanceof EquivalenceAxiom) 
 				TBox.add(f);
 		}
@@ -84,10 +79,10 @@ public class DlBeliefSet extends BeliefSet<DlFormula> {
 	 * 
 	 * @return a set of ABox formulas
 	 */
-	public Set<DlFormula> getABox() {
-		Set<DlFormula> ABox = new HashSet<DlFormula>();
-		for (DlFormula f : this) {
-			if (f instanceof AssertionalAxiom) 
+	public Set<DlAxiom> getABox() {
+		Set<DlAxiom> ABox = new HashSet<DlAxiom>();
+		for (DlAxiom f : this) {
+			if (f instanceof ConceptAssertion || f instanceof RoleAssertion) 
 				ABox.add(f);
 		}
 		return ABox;	

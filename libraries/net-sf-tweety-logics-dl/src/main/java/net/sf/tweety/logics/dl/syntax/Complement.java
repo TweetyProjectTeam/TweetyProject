@@ -20,7 +20,6 @@ package net.sf.tweety.logics.dl.syntax;
 
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 
 /**
@@ -29,17 +28,17 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
  * @author Anna Gessler
  *
  */
-public class Complement extends DlFormula  {
+public class Complement extends ComplexConcept  {
 	/**
 	 * The negated formula.
 	 */
-	private DlFormula formula;
+	private ComplexConcept formula;
 
 	/**
 	 * Create a new complement with the given DLFormula.
 	 * @param formula
 	 */
-	public Complement(DlFormula formula) {	
+	public Complement(ComplexConcept formula) {	
 		this.formula = formula;	
 	}
 
@@ -49,18 +48,18 @@ public class Complement extends DlFormula  {
 	}
 
 	@Override
-	public DlFormula clone() {
+	public ComplexConcept clone() {
 		return new Complement(this);
 	}
 	
 	@Override
-	public DlFormula collapseAssociativeFormulas() {
+	public ComplexConcept collapseAssociativeFormulas() {
 		 return new Complement(formula.collapseAssociativeFormulas());
 	}
 
 	@Override
 	public String toString() {
-		return LogicalSymbols.CLASSICAL_NEGATION() + this.formula;
+		return "(not " + this.formula + ")";
 	}
 	
 	@Override
@@ -76,7 +75,7 @@ public class Complement extends DlFormula  {
 		return formula.isLiteral();
 	}
 	
-	public DlFormula getFormula() {
+	public ComplexConcept getFormula() {
 		return this.formula;
 	}
 

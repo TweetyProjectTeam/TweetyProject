@@ -27,12 +27,12 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
  * This class models a role in description logics.
  * 
  * <br> Note: Role assertions like (a,b):r ("the Individuals a,b are in the extension of the role r") are
- * modeled with a different class: {@link net.sf.tweety.logics.dl.AssertionalAxiom.DlAtom}.
+ * modeled with a different class: {@link net.sf.tweety.logics.dl.ConceptAssertion.DlAtom}.
  * 
  * @author Anna Gessler
  *
  */
-public class AtomicRole extends DlFormula {
+public class AtomicRole extends ComplexConcept {
 	/**
 	 * The predicate that represents this atomic role.
 	 */
@@ -70,7 +70,7 @@ public class AtomicRole extends DlFormula {
 	}
 
 	@Override
-	public DlFormula clone() {
+	public ComplexConcept clone() {
 		return new AtomicConcept(this.getName());
 	}
 	

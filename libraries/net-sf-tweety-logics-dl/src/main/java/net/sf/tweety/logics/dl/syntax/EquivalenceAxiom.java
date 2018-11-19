@@ -33,15 +33,13 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
  * 
  * <br> Equivalence axioms are used in the TBox of a DL knowledge base to model relationships 
  * between concepts, e.g. "MaleHuman is a subset or equal to Human". 
- * This can be translated to first-order logic as "forall X: (MaleHuman(X) => Human(X))"
- * <br> In the description language ALC, the TBox consists of equivalence axioms.
  * 
  * @author Anna Gessler
  *
  */
-public class EquivalenceAxiom extends DlFormula {
+public class EquivalenceAxiom extends DlAxiom {
 	
-	private Pair<DlFormula,DlFormula> axiom;
+	private Pair<ComplexConcept,ComplexConcept> axiom;
 	
 	/**
 	 * Creates a new equivalence axiom with the given formulas
@@ -49,8 +47,8 @@ public class EquivalenceAxiom extends DlFormula {
 	 * @param c
 	 * @param d
 	 */
-	public EquivalenceAxiom(DlFormula c, DlFormula d) {
-		this.axiom = new Pair<DlFormula,DlFormula>(c,d);
+	public EquivalenceAxiom(ComplexConcept c, ComplexConcept d) {
+		this.axiom = new Pair<ComplexConcept,ComplexConcept>(c,d);
 	}
 
 	@Override
@@ -62,10 +60,10 @@ public class EquivalenceAxiom extends DlFormula {
 	}
 
 	public String toString() {
-		return this.axiom.getFirst().toString() + "=>" + this.axiom.getSecond().toString();
+		return "(implies " + this.axiom.getFirst().toString() + " " + this.axiom.getSecond().toString()+")";
 	}
 	
-	public Pair<DlFormula,DlFormula> getFormulas() {
+	public Pair<ComplexConcept,ComplexConcept> getFormulas() {
 		return this.axiom;
 	}
 
@@ -83,15 +81,8 @@ public class EquivalenceAxiom extends DlFormula {
 	}
 
 	@Override
-	public DlFormula clone() {
+	public EquivalenceAxiom clone() {
 		return new EquivalenceAxiom(axiom.getFirst(),axiom.getSecond());
-	}
-
-	@Override
-	public DlFormula collapseAssociativeFormulas() {
-		DlFormula f = axiom.getFirst().collapseAssociativeFormulas();
-		DlFormula s = axiom.getSecond().collapseAssociativeFormulas();
-		return new EquivalenceAxiom(f,s);
 	}
 
 	@Override
@@ -118,5 +109,5 @@ public class EquivalenceAxiom extends DlFormula {
 			return false;
 		return true;
 	}
-
+	
 }

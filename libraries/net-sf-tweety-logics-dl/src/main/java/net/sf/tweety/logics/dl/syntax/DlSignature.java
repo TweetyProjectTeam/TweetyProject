@@ -145,22 +145,24 @@ public class DlSignature extends Signature {
 			Predicate p = (Predicate) obj;
 			if (p.getArity() == 1)
 				this.conceptNames.add(new AtomicConcept(p));
-			else 
+			else if (p.getArity() == 2)
 				this.roleNames.add(new AtomicRole(p));
+			else
+				throw new IllegalArgumentException("Illegal arity of " + p.getArity() +", has to be 1 (concept name) or 2 (role name).");
 		}
 		else if (obj instanceof Constant) {
 			this.individuals.add(new Individual((Constant)obj));
 		}
-		else if (obj instanceof AssertionalAxiom) {
-			AssertionalAxiom d = (AssertionalAxiom) obj;
-			Predicate p = d.getPredicate();
-			if (p.getArity()==1) 
-				this.conceptNames.add(new AtomicConcept(p.getName()));
-			else if (p.getArity()==2) 
-				this.roleNames.add(new AtomicRole(p.getName()));
-			else
-				throw new IllegalArgumentException("Predicate has illegal arity " + p.getArity() + ", expected arity 1 or 2.");
-			
+		else if (obj instanceof ConceptAssertion) {
+			ConceptAssertion d = (ConceptAssertion) obj;
+			this.add(d.getComplexConcept());
+			this.add(d.getIndividual());
+		}
+		else if (obj instanceof RoleAssertion) {
+			RoleAssertion d = (RoleAssertion) obj;
+			this.add(d.getRole());
+			this.add(d.getIndividuals().getFirst());
+			this.add(d.getIndividuals().getSecond());
 		}
 		else if (obj instanceof Complement) {
 			Complement c = (Complement) obj;
@@ -168,14 +170,14 @@ public class DlSignature extends Signature {
 		}
 		else if (obj instanceof Union) {
 			Union u = (Union) obj;
-			List<DlFormula> formulas = u.getFormulas();
-			for (DlFormula f : formulas)
+			List<ComplexConcept> formulas = u.getFormulas();
+			for (ComplexConcept f : formulas)
 				this.add(f);
 		}
 		else if (obj instanceof Intersection) {
 			Intersection u = (Intersection) obj;
-			List<DlFormula> formulas = u.getFormulas();
-			for (DlFormula f : formulas)
+			List<ComplexConcept> formulas = u.getFormulas();
+			for (ComplexConcept f : formulas)
 				this.add(f);
 		}
 		else if (obj instanceof ExistentialRestriction) {
@@ -342,7 +344,7 @@ public class DlSignature extends Signature {
 	 * @return a String
 	 */
 	public String toString() {
-		return individuals.toString() + conceptNames.toString() + roleNames.toString();
+		return "Signature = (" + conceptNames.toString() + ",\n" + roleNames.toString() + ",\n" +individuals.toString() + ")";
 	}
 	
 	/**

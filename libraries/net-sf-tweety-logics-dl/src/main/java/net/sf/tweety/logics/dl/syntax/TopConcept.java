@@ -21,7 +21,6 @@ package net.sf.tweety.logics.dl.syntax;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 
 /**
@@ -31,7 +30,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
  * @author Anna Gessler
  *
  */
-public class TopConcept extends DlFormula  {
+public class TopConcept extends ComplexConcept  {
 	
 	/**
 	 * Creates a new TopConcept.
@@ -40,7 +39,7 @@ public class TopConcept extends DlFormula  {
 	}
 	
 	@Override
-	public DlFormula collapseAssociativeFormulas() {
+	public ComplexConcept collapseAssociativeFormulas() {
 		return this;
 	}
 
@@ -56,7 +55,7 @@ public class TopConcept extends DlFormula  {
 
 	@Override
 	public String toString() {
-		return LogicalSymbols.TAUTOLOGY();
+		return "*top*";
 	}
 	
 	@Override

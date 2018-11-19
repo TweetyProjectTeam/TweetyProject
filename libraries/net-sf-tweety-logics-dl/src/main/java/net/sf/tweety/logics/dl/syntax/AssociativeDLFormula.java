@@ -22,21 +22,21 @@ import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public abstract class AssociativeDLFormula extends DlFormula
-		implements AssociativeFormula<DlFormula>, AssociativeSupportBridge {
+public abstract class AssociativeDLFormula extends ComplexConcept
+		implements AssociativeFormula<ComplexConcept>, AssociativeSupportBridge {
 
 	/**
 	 * This helper class implements most of the common functionality of an associative
 	 * formula, so the implementation can delegate the method calls to the support
 	 * class. 
 	 */
-	protected AssociativeFormulaSupport<DlFormula> support;
+	protected AssociativeFormulaSupport<ComplexConcept> support;
 	
 	/**
 	 * Creates a new (empty) associative formula.
 	 */
 	public AssociativeDLFormula(){
-		this.support = new AssociativeFormulaSupport<DlFormula>(this);
+		this.support = new AssociativeFormulaSupport<ComplexConcept>(this);
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public abstract class AssociativeDLFormula extends DlFormula
 	 * @param first a relational formula.
 	 * @param second a relational formula.
 	 */
-	public AssociativeDLFormula(DlFormula first, DlFormula second){
+	public AssociativeDLFormula(ComplexConcept first, ComplexConcept second){
 		this();
 		this.add(first);
 		this.add(second);
@@ -54,7 +54,7 @@ public abstract class AssociativeDLFormula extends DlFormula
 	 * Creates a new associative formula with the given inner formulas. 
 	 * @param formulas a collection of formulas.
 	 */
-	public AssociativeDLFormula(Collection<? extends DlFormula> formulas) {
+	public AssociativeDLFormula(Collection<? extends ComplexConcept> formulas) {
 		this();
 		this.addAll(formulas);
 	}
@@ -74,7 +74,7 @@ public abstract class AssociativeDLFormula extends DlFormula
 	@Override
 	public Set<Predicate> getPredicates() {
 		Set<Predicate> ps = new HashSet<Predicate>();
-		for (DlFormula d : this.getFormulas())
+		for (ComplexConcept d : this.getFormulas())
 			ps.addAll(d.getPredicates());
 		return ps;
 	}
@@ -115,14 +115,14 @@ public abstract class AssociativeDLFormula extends DlFormula
 	//-------------------------------------------------------------------------
 		
 	@Override
-	public List<DlFormula> getFormulas() {
+	public List<ComplexConcept> getFormulas() {
 		return support.getFormulas();
 	}
 	
 	@Override
 	public <C extends SimpleLogicalFormula> Set<C> getFormulas(Class<C> cls) {
 		Set<C> reval = new HashSet<C>();
-		for(DlFormula rf : support) {
+		for(ComplexConcept rf : support) {
 			if(rf.getClass().equals(cls)) {
 				@SuppressWarnings("unchecked")
 				C cast = (C)rf;
@@ -134,16 +134,19 @@ public abstract class AssociativeDLFormula extends DlFormula
 	
 	@Override
 	public String toString() {
-		return support.toString();
+		String output = "("+this.getOperatorSymbol();
+		for (ComplexConcept d : this)
+			output += " " + d.toString();
+		return output+")";
 	}
 	
 	@Override
-	public boolean add(DlFormula e) {
+	public boolean add(ComplexConcept e) {
 		return this.support.add(e);
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends DlFormula> c) {
+	public boolean addAll(Collection<? extends ComplexConcept> c) {
 		return this.support.addAll(c);
 	}
 
@@ -168,7 +171,7 @@ public abstract class AssociativeDLFormula extends DlFormula
 	}
 
 	@Override
-	public Iterator<DlFormula> iterator() {
+	public Iterator<ComplexConcept> iterator() {
 		return this.support.iterator();
 	}
 
@@ -203,17 +206,17 @@ public abstract class AssociativeDLFormula extends DlFormula
 	}
 	
 	@Override
-	public void add(int index, DlFormula element) {
+	public void add(int index, ComplexConcept element) {
 		this.support.add(index, element);
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends DlFormula> c) {
+	public boolean addAll(int index, Collection<? extends ComplexConcept> c) {
 		return this.support.addAll(index, c);
 	}
 
 	@Override
-	public DlFormula get(int index) {
+	public ComplexConcept get(int index) {
 		return this.support.get(index);
 	}
 
@@ -228,27 +231,27 @@ public abstract class AssociativeDLFormula extends DlFormula
 	}
 
 	@Override
-	public ListIterator<DlFormula> listIterator() {
+	public ListIterator<ComplexConcept> listIterator() {
 		return this.support.listIterator();
 	}
 
 	@Override
-	public ListIterator<DlFormula> listIterator(int index) {
+	public ListIterator<ComplexConcept> listIterator(int index) {
 		return this.support.listIterator(index);
 	}
 
 	@Override
-	public DlFormula remove(int index) {
+	public ComplexConcept remove(int index) {
 		return this.support.remove(index);
 	}
 
 	@Override
-	public DlFormula set(int index, DlFormula element) {
+	public ComplexConcept set(int index, ComplexConcept element) {
 		return this.support.set(index, element);
 	}
 
 	@Override
-	public List<DlFormula> subList(int fromIndex, int toIndex) {
+	public List<ComplexConcept> subList(int fromIndex, int toIndex) {
 		return this.support.subList(fromIndex, toIndex);
 	}
 	

@@ -22,23 +22,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.commons.util.Pair;
-import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 
 /**
  * This class models an existential restriction in description logics, 
  * i.e. an expression of the form "exists R.C" for a role R and a Concept C.
- * This can be translated to "forall X:(exists Y: (R(X,Y) && C(Y)))" in first-order logic.
  * 
  * @author Anna Gessler
  *
  */
-public class ExistentialRestriction extends DlFormula  {
+public class ExistentialRestriction extends ComplexConcept  {
 	
 	/**
 	 * The role and the concept that is being restricted by it.
 	 */
-	private Pair<AtomicRole,DlFormula> formulas;
+	private Pair<ComplexConcept,AtomicRole> formulas;
 
 	/**
 	 * Creates a new ALC existential restriction with the given role
@@ -47,21 +45,21 @@ public class ExistentialRestriction extends DlFormula  {
 	 * @param r the role
 	 * @param c the concept that is being restricted by the role
 	 */
-	public ExistentialRestriction(AtomicRole r, DlFormula c) {
-		formulas.setFirst(r);
-		formulas.setSecond(c);
+	public ExistentialRestriction(ComplexConcept c, AtomicRole r) {
+		formulas.setSecond(r);
+		formulas.setFirst(c);
 	}
 
-	public ExistentialRestriction(Pair<AtomicRole, DlFormula> f) {
-		formulas.setFirst(f.getFirst());
+	public ExistentialRestriction(Pair<ComplexConcept, AtomicRole> f) {
 		formulas.setSecond(f.getSecond());
+		formulas.setFirst(f.getFirst());
 	}
 
 	/**
 	 * Get the role and concept that are part of the existential restriction.
 	 * @return an atomic role and a concept
 	 */
-	public Pair<AtomicRole,DlFormula> getFormulas() {
+	public Pair<ComplexConcept,AtomicRole> getFormulas() {
 	 return this.formulas;	
 	}
 
@@ -74,7 +72,7 @@ public class ExistentialRestriction extends DlFormula  {
 	}
 	
 	public String toString() {
-		return LogicalSymbols.EXISTSQUANTIFIER() + " " + this.formulas.getFirst().toString() + "." + this.getFormulas().getSecond().toString();
+		return "(exists " + " " + this.formulas.getFirst().toString() + " " + this.getFormulas().getSecond().toString() +")";
 	}
 
 	@Override
@@ -91,12 +89,12 @@ public class ExistentialRestriction extends DlFormula  {
 	}
 
 	@Override
-	public DlFormula clone() {
+	public ComplexConcept clone() {
 		return new ExistentialRestriction(this.getFormulas());
 	}
 
 	@Override
-	public DlFormula collapseAssociativeFormulas() {
+	public ComplexConcept collapseAssociativeFormulas() {
 		 return new ExistentialRestriction(formulas.getFirst().collapseAssociativeFormulas(),formulas.getSecond().collapseAssociativeFormulas());
 	}
 

@@ -21,8 +21,6 @@ package net.sf.tweety.logics.dl.syntax;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.logics.commons.LogicalSymbols;
-
 /**
  * This class models an union in description logics. This can be translated to a
  * disjunction in first-order logic.
@@ -37,15 +35,15 @@ public class Union extends AssociativeDLFormula {
 	 * @param formulas
 	 *            a collection of formulas.
 	 */
-	public Union(Collection<? extends DlFormula> formulas) {
+	public Union(Collection<? extends ComplexConcept> formulas) {
 		super(formulas);
 	}
 
 	/**
-	 * Creates a new (empty) union.
+	 * Creates a new (empty) union.true
 	 */
 	public Union() {
-		this(new HashSet<DlFormula>());
+		this(new HashSet<ComplexConcept>());
 	}
 
 	/**
@@ -56,7 +54,7 @@ public class Union extends AssociativeDLFormula {
 	 * @param second
 	 *            a relational formula.
 	 */
-	public Union(DlFormula first, DlFormula second) {
+	public Union(ComplexConcept first, ComplexConcept second) {
 		this();
 		this.add(first);
 		this.add(second);
@@ -68,23 +66,23 @@ public class Union extends AssociativeDLFormula {
 	 * @param formula
 	 *            a DlFormula
 	 */
-	public Union(DlFormula formula) {
+	public Union(ComplexConcept formula) {
 		this();
 		this.add(formula);
 	}
 
 	@Override
 	public String getOperatorSymbol() {
-		return LogicalSymbols.DISJUNCTION();
+		return "or";
 	}
 
 	@Override
 	public String getEmptySymbol() {
-		return LogicalSymbols.CONTRADICTION();
+		return "*bottom*";
 	}
 
 	@Override
-	public DlFormula clone() {
+	public ComplexConcept clone() {
 		return new Union(support.copyHelper(this));
 	}
 	
@@ -95,16 +93,16 @@ public class Union extends AssociativeDLFormula {
 	}
 
 	@Override
-	public DlFormula collapseAssociativeFormulas() {
+	public ComplexConcept collapseAssociativeFormulas() {
 		if (this.isEmpty())
 			return new BottomConcept();
 		if (this.size() == 1)
 			return (this.iterator().next()).collapseAssociativeFormulas();
 		Union newMe = new Union();
-		for (DlFormula f : this) {
-			if (!(f instanceof DlFormula))
+		for (ComplexConcept f : this) {
+			if (!(f instanceof ComplexConcept))
 				throw new IllegalStateException("Can not collapse disjunctions containing non-description formulae.");
-			DlFormula newF = ((DlFormula) f).collapseAssociativeFormulas();
+			ComplexConcept newF = ((ComplexConcept) f).collapseAssociativeFormulas();
 			if (newF instanceof Union)
 				newMe.addAll((Union) newF);
 			else

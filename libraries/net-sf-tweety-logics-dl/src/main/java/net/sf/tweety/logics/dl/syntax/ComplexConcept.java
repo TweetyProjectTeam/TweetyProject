@@ -28,12 +28,11 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.math.probability.Probability;
 
 /**
- * 
- * The common abstract class for formulas (also called concepts or concept descriptions) 
+ * The common abstract class for concepts (also called concepts, complex concepts or concept descriptions) 
  * of description logics. 
  * <br>Specifically, this library supports formulas of 
  * the description logic ALC (attributive concept language with complements). 
- * In an ALC language for a given signature, formulas  are:
+ * In an ALC language for a given signature, concepts are:
  * 
  * <ul>
  * <li> All atomic concepts of the signature </li>
@@ -52,26 +51,26 @@ import net.sf.tweety.math.probability.Probability;
  * @author Anna Gessler
  *
  */
-public abstract class DlFormula implements ClassicalFormula {
+public abstract class ComplexConcept implements ClassicalFormula {
 
 	@Override
-	public DlFormula complement() {
+	public ComplexConcept complement() {
 		if(this instanceof Complement) return ((Complement)this).getFormula();
 		return new Complement(this);
 	}
 
 	@Override
 	public Union combineWithOr(Disjunctable f) {
-		if(!(f instanceof DlFormula))
+		if(!(f instanceof ComplexConcept))
 			throw new IllegalArgumentException("The given formula " + f + " is not a description logic formula.");
-		return new Union(this,(DlFormula)f);
+		return new Union(this,(ComplexConcept)f);
 	}
 
 	@Override
 	public Intersection combineWithAnd(Conjunctable f) {
-		if(!(f instanceof DlFormula))
+		if(!(f instanceof ComplexConcept))
 			throw new IllegalArgumentException("The given formula " + f + " is not a description logic formula.");
-		return new Intersection(this,(DlFormula)f);
+		return new Intersection(this,(ComplexConcept)f);
 	}
 	
 	/**
@@ -79,10 +78,10 @@ public abstract class DlFormula implements ClassicalFormula {
      * in this term, e.g. every a||(b||c) becomes a||b||c.
      * @return the collapsed formula.
      */
-	public abstract DlFormula collapseAssociativeFormulas();
+	public abstract ComplexConcept collapseAssociativeFormulas();
 	
 	/** Creates a deep copy of this formula */
-	public abstract DlFormula clone();
+	public abstract ComplexConcept clone();
 
 	@Override
 	public Set<? extends Atom> getAtoms() {
