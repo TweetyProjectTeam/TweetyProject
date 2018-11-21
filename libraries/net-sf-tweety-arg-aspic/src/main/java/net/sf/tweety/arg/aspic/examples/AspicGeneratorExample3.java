@@ -42,12 +42,12 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
 public class AspicGeneratorExample3 {
 	public static void main(String[] args) throws IOException {
 		int numberOfAFs = 100;
-		int[] l_numberAtoms = {10,15,20,25,30};
-		int[] l_numberFormulas = {100,200,300,400};
-		int[] l_maxLiteralsInPremises = {2,3,4};
+		int[] l_numberAtoms = {5,10,15};//{10,15,20,25,30};
+		int[] l_numberFormulas = {10,20,30};//{100,200,300,400};
+		int[] l_maxLiteralsInPremises = {2,3};//4
 		double[] l_percentageStrictRules = {0.2,0.4,0.6};
 		
-		String pathToFolder = "/Users/mthimm/Desktop/random_aspic_instances";
+		String pathToFolder = "/Users/mthimm/Desktop/random_small_aspic_instances";
 		
 		AspicWriter<PropositionalFormula> writer = new AspicWriter<PropositionalFormula>();
 		

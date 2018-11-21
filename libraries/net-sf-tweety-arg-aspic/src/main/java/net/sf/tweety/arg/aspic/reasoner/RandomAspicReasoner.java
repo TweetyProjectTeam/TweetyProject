@@ -96,12 +96,15 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 		// determine part of the theory needed for the query
 		AspicArgumentationTheory<T> module = new AspicArgumentationTheory<T>(aat.getRuleFormulaGenerator());
 		module.addAll(aat.getSyntacticModule(query));
+		// special case: empty module
+		if(module.isEmpty())
+			return new DungTheory();
 		Collection<AspicArgument<T>> args = new HashSet<AspicArgument<T>>();
 		DungTheory aaf = new DungTheory();
 		int duplicates = 0;
 		// prepare rules by indexing them by the head
 		Map<T,List<InferenceRule<T>>> rules = new HashMap<>();
-		for(InferenceRule<T> rule: aat) {
+		for(InferenceRule<T> rule: module) {
 			if(!rules.containsKey(rule.getConclusion()))
 				rules.put(rule.getConclusion(), new ArrayList<InferenceRule<T>>());
 			rules.get(rule.getConclusion()).add(rule);
