@@ -27,5 +27,5 @@ package net.sf.tweety.commons;
  *
  */
 public enum InferenceMode {
-	SKEPTICAL, CREDOLOUS
+	SKEPTICAL, CREDULOUS
 }

@@ -58,13 +58,13 @@ public class AspicGeneratorExample {
 			System.out.println(i + "\t" + theory);
 			PropositionalFormula query = new Proposition("A1");
 			long millis = System.currentTimeMillis();
-			boolean answer = naiveReasoner.query(theory,query,InferenceMode.CREDOLOUS);
+			boolean answer = naiveReasoner.query(theory,query,InferenceMode.CREDULOUS);
 			totalNaive += System.currentTimeMillis()-millis;
 			millis = System.currentTimeMillis();
-			moduleBasedReasoner.query(theory,query,InferenceMode.CREDOLOUS);
+			moduleBasedReasoner.query(theory,query,InferenceMode.CREDULOUS);
 			totalModulebased += System.currentTimeMillis()-millis;
 			millis = System.currentTimeMillis();
-			if(randomReasoner.query(theory,query,InferenceMode.CREDOLOUS) == answer)
+			if(randomReasoner.query(theory,query,InferenceMode.CREDULOUS) == answer)
 				correctRandom++;
 			totalRandom += System.currentTimeMillis()-millis;
 		}	

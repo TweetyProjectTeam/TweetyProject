@@ -116,8 +116,8 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 		// first check whether the solver supports the problem
 		String inf;
 		if(inferenceMode.equals(InferenceMode.SKEPTICAL))
-			inf = "DC";
-		else inf = "DS";
+			inf = "DS";
+		else inf = "DC";
 		ProboProblem problem = ProboProblem.getProblem(inf + "-" + this.semantics.abbreviation());
 		if(!this.supportedProblems().contains(problem))
 			throw new UnsupportedOperationException("Problem not supported by this probo solver.");
@@ -148,7 +148,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 			File temp = File.createTempFile("aaf-", "." + format.extension());
 			AbstractDungWriter writer = AbstractDungWriter.getWriter(format);
 			writer.write(bbase, temp);
-			Collection<Extension> result = new HashSet<Extension>();
+			Collection<Extension> result = new HashSet<Extension>();			
 			for(Collection<Argument> ext: AbstractDungParser.parseExtensionList(this.bash.run(this.path_to_exec + " -p " + problem.toString() + " -fo " + format.toString() + " -f " + temp.getAbsolutePath())))
 				result.add(new Extension(ext));
 			temp.delete();

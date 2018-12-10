@@ -396,6 +396,6 @@ public class AspicTest {
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
 
 		System.out.println(pf);
-		assertTrue(ar.query(at,pf,InferenceMode.CREDOLOUS));
+		assertTrue(ar.query(at,pf,InferenceMode.CREDULOUS));
 	}
 }

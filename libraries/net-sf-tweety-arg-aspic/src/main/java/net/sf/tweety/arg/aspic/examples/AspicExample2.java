@@ -46,6 +46,6 @@ public class AspicExample2 {
 		SimpleAspicReasoner<PropositionalFormula> ar = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");		
 		System.out.println(at);
-		System.out.println(pf + "\t" + ar.query(at,pf,InferenceMode.CREDOLOUS));		
+		System.out.println(pf + "\t" + ar.query(at,pf,InferenceMode.CREDULOUS));		
 	}
 }

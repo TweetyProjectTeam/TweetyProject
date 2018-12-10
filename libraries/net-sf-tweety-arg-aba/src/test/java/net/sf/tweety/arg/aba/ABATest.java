@@ -195,9 +195,9 @@ public class ABATest {
 		reasoners.add(new CompleteReasoner<PropositionalFormula>());
 		for (GeneralABAReasoner<PropositionalFormula> reasoner : reasoners) {
 			Assumption<PropositionalFormula> query = (Assumption<PropositionalFormula>) parser.parseFormula("a");
-			assertFalse(reasoner.query(abat, query, InferenceMode.CREDOLOUS));
+			assertFalse(reasoner.query(abat, query, InferenceMode.CREDULOUS));
 			query = (Assumption<PropositionalFormula>) parser.parseFormula("b");
-			assertTrue(reasoner.query(abat, query, InferenceMode.CREDOLOUS));
+			assertTrue(reasoner.query(abat, query, InferenceMode.CREDULOUS));
 		}
 		assertTrue(((FlatABAReasoner<PropositionalFormula>)reasoners.get(0)).getModels(abat).size() == ((GeneralABAReasoner<PropositionalFormula>)reasoners.get(1)).getModels(abat).size());
 
