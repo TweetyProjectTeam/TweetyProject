@@ -174,7 +174,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 			writer.write(bbase, temp);
 			String result = this.bash.run(this.path_to_exec + " -p " + problem.toString() + " -fo " + format.toString() + " -f " + temp.getAbsolutePath());			
 			temp.delete();
-			if(result.trim().toLowerCase().equals("NO"))
+			if(result.trim().toLowerCase().equals("no"))
 				return null;			
 			return AbstractDungParser.parseArgumentList(result);
 		} catch (Exception e) {
