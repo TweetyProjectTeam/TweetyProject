@@ -21,6 +21,7 @@
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,6 +34,7 @@ import net.sf.tweety.arg.aspic.order.RuleComparator;
 import net.sf.tweety.arg.aspic.order.SimpleAspicOrder;
 import net.sf.tweety.arg.aspic.order.WeakestLinkOrder;
 import net.sf.tweety.arg.aspic.parser.AspicParser;
+import net.sf.tweety.arg.aspic.reasoner.DirectionalAspicReasoner;
 import net.sf.tweety.arg.aspic.reasoner.SimpleAspicReasoner;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.FolFormulaGenerator;
 import net.sf.tweety.arg.aspic.ruleformulagenerator.PlFormulaGenerator;
@@ -44,9 +46,11 @@ import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
+import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.InferenceMode;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.parser.PlParser;
@@ -332,6 +336,7 @@ public class AspicTest {
 				.getConclusion().equals(new Proposition("b")));
 	}
 
+	
 //	@SuppressWarnings("unchecked")
 //	@Test
 //	public void FolFormulaGeneratorTest() throws Exception {
@@ -392,10 +397,68 @@ public class AspicTest {
 		
 		SimpleAspicReasoner<PropositionalFormula> ar = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
 
-
 		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
 
 		System.out.println(pf);
 		assertTrue(ar.query(at,pf,InferenceMode.CREDULOUS));
 	}
+	
+	@Test
+	public void directionalReasonerTest() throws Exception {
+
+		String full, partial;
+		
+		full    = "=> a \n d1: a => b \n -> c \n s1: c -> ! d1 \n => !c \n => !a";
+		partial = "=> a \n d1: a => b \n -> c \n s1: c -> ! d1          \n => !a";
+		assertTrue(testDirectionalEquality("b", full, partial));
+
+		full    = "=> a \n d1: a => b \n -> c \n s1: c -> ! d1 \n => !c \n => !a";
+		partial = "=> a \n d1: a => b \n -> c \n s1: c -> ! d1                  ";
+		assertFalse(testDirectionalEquality("b", full, partial));
+
+		full    = "=> a \n d1: a => b \n -> c \n s1: c -> ! d1 \n => !c \n => !a";
+		partial = "=> a \n d1: a => b         \n s1: c -> ! d1 \n => !a";
+		assertFalse(testDirectionalEquality("b", full, partial));
+
+		full    = "=> a \n d1: a => b \n -> c \n s1: c -> ! d1 \n => !c \n => !a";
+		partial = "                      -> c                  ";
+		assertTrue(testDirectionalEquality("c", full, partial));
+
+		full    = "=> a \n d1: a => b \n -> c \n s1: c -> ! d1 \n => !c \n => !a";
+		partial = "                      -> c                  \n => !c";
+		assertTrue(testDirectionalEquality("!c", full, partial));
+		
+		full    = "=> a \n d1: a => b \n -> c \n s1: c -> ! d1 \n => !c \n => !a";
+		partial = "                                            \n => !c";
+		assertFalse(testDirectionalEquality("!c", full, partial));
+		
+		full    = "-> a \n d1: a => b \n => ! b \n => ! a";
+		partial = "-> a \n d1: a => b \n => ! b";
+		assertTrue(testDirectionalEquality("b", full, partial));
+
+	}
+	
+	private boolean testDirectionalEquality(String query, String full, String partial) throws ParserException, IOException {
+
+		PlParser plparser = new PlParser();
+		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		DirectionalAspicReasoner<PropositionalFormula> directionalReasoner = new DirectionalAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		PropositionalFormula queryFormula = (PropositionalFormula)plparser.parseFormula(query);
+		
+		// Generate full
+		AspicArgumentationTheory<PropositionalFormula> fullAt = parser.parseBeliefBase(full);
+		DungTheory dt = directionalReasoner.asRestrictedDungTheory(fullAt, false, queryFormula);
+		Collection<Argument> fullArgs = new ArrayList<Argument>();
+		fullArgs.addAll(dt);
+
+		// Generate partial
+		AspicArgumentationTheory<PropositionalFormula> partialAt = parser.parseBeliefBase(partial);
+		dt = directionalReasoner.asRestrictedDungTheory(partialAt, false, queryFormula);
+		Collection<Argument> partialArgs = new ArrayList<Argument>();
+		partialArgs.addAll(dt);
+		
+		return fullArgs.equals(partialArgs);
+
+	}
+
 }

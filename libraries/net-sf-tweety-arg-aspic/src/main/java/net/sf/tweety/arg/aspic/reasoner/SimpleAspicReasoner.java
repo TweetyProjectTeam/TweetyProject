@@ -44,7 +44,8 @@ public class SimpleAspicReasoner<T extends Invertable> extends AbstractAspicReas
 	 * @see net.sf.tweety.arg.aspic.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.AspicArgumentationTheory, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	protected DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query) {		
+	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query) {		
 		return aat.asDungTheory();
 	}
+	
 }

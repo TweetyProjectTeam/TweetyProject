@@ -55,7 +55,7 @@ public abstract class AbstractAspicReasoner<T extends Invertable> implements Qua
 	 * @param query some query 
 	 * @return a Dung theory
 	 */
-	protected abstract DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query);
+	public abstract DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query);
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
@@ -73,8 +73,11 @@ public abstract class AbstractAspicReasoner<T extends Invertable> implements Qua
 	 * @param inferenceType either Semantics.SCEPTICAL_INFERENCE or Semantics.CREDULOUS_INFERENCE
 	 * @return "true" if the formula is accepted
 	 */
-	public Boolean query(AspicArgumentationTheory<T> aat, T query, InferenceMode inferenceMode) {
-		DungTheory dt = this.getDungTheory(aat, query);				
+	public final Boolean query(AspicArgumentationTheory<T> aat, T query, InferenceMode inferenceMode) {
+		return query(getDungTheory(aat, query), query, inferenceMode);
+	}
+
+	public final Boolean query(DungTheory dt, T query, InferenceMode inferenceMode) {
 		for (Argument arg : dt) 
 			if (((AspicArgument<?>)arg).getConclusion().equals(query)) 
 				if (this.aafReasoner.query(dt,arg,inferenceMode)) 

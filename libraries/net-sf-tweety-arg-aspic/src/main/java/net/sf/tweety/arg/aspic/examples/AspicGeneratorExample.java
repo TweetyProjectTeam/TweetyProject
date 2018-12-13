@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.arg.aspic.examples;
 
+import net.sf.tweety.arg.aspic.reasoner.DirectionalAspicReasoner;
 import net.sf.tweety.arg.aspic.reasoner.ModuleBasedAspicReasoner;
 import net.sf.tweety.arg.aspic.reasoner.SimpleAspicReasoner;
 import net.sf.tweety.arg.aspic.reasoner.RandomAspicReasoner;
@@ -40,38 +41,52 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 public class AspicGeneratorExample {
 	public static void main(String[] args) {		 
 		int repetitions = 50;
-		int numberAtoms = 20;
-		int numberFormulas = 70;
+		int numberAtoms = 35;
+		int numberFormulas = 100;
 		int maxLiteralsInPremises = 2;
 		double percentageStrictRules = 0.2;
 		
 		SimpleAspicReasoner<PropositionalFormula> naiveReasoner = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
 		ModuleBasedAspicReasoner<PropositionalFormula> moduleBasedReasoner = new ModuleBasedAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		DirectionalAspicReasoner<PropositionalFormula> dirReasoner = new DirectionalAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
 		RandomAspicReasoner<PropositionalFormula> randomReasoner = new RandomAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR),600,100);
 		
 		long totalNaive = 0;
 		long totalModulebased = 0;
+		long totalDirectional = 0;
 		long totalRandom = 0;
 		long correctRandom = 0;
+		long correctDirectional = 0;
 		for(int i = 0; i < repetitions; i++) {
 			AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
 			System.out.println(i + "\t" + theory);
 			PropositionalFormula query = new Proposition("A1");
+			// Naive
 			long millis = System.currentTimeMillis();
-			boolean answer = naiveReasoner.query(theory,query,InferenceMode.CREDULOUS);
+			boolean answer = naiveReasoner.query(theory,query,InferenceMode.CREDOLOUS);
 			totalNaive += System.currentTimeMillis()-millis;
+			// Module
 			millis = System.currentTimeMillis();
-			moduleBasedReasoner.query(theory,query,InferenceMode.CREDULOUS);
+			moduleBasedReasoner.query(theory,query,InferenceMode.CREDOLOUS);
 			totalModulebased += System.currentTimeMillis()-millis;
+			// Directional
 			millis = System.currentTimeMillis();
-			if(randomReasoner.query(theory,query,InferenceMode.CREDULOUS) == answer)
+			if(dirReasoner.query(theory,query,InferenceMode.CREDOLOUS) == answer)
+				correctDirectional++;
+			totalDirectional += System.currentTimeMillis()-millis;
+			// Random
+			millis = System.currentTimeMillis();
+			if(randomReasoner.query(theory,query,InferenceMode.CREDOLOUS) == answer)
 				correctRandom++;
 			totalRandom += System.currentTimeMillis()-millis;
 		}	
 		System.out.println();
 		System.out.println("Runtime naive reasoner: " + totalNaive + "ms");
 		System.out.println("Runtime module-based reasoner: " +  totalModulebased+ "ms");
+		System.out.println("Runtime directional reasoner: " +  totalDirectional+ "ms");
 		System.out.println("Runtime random reasoner: " +  totalRandom + "ms");
-		System.out.println("Accuracy random reasoner: " +(new Double(correctRandom)/(repetitions+1)));
+		System.out.println("Accuracy directional reasoner: " +(new Double(correctDirectional)/(repetitions)));
+		System.out.println("Accuracy random reasoner: " +(new Double(correctRandom)/(repetitions)));
 	}	
+	
 }

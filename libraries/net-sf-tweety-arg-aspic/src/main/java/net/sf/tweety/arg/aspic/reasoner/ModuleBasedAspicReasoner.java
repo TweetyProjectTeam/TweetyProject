@@ -46,7 +46,7 @@ public class ModuleBasedAspicReasoner<T extends Invertable> extends AbstractAspi
 	 * @see net.sf.tweety.arg.aspic.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.AspicArgumentationTheory, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	protected DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query) {
+	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query) {
 		AspicArgumentationTheory<T> module = new AspicArgumentationTheory<T>(aat.getRuleFormulaGenerator());
 		module.addAll(aat.getSyntacticModule(query));
 		return module.asDungTheory();

@@ -25,7 +25,10 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
+import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
@@ -86,9 +89,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		});
 		setName(toprule + (directsubs.isEmpty()  ? "": " "+directsubs ));
 	}
-	
-	
-	
+		
 	/**
 	 * Checks whether this has a defeasible subrule, premises do not count as subrules
 	 * @return whether this has a defeasible subrule
@@ -336,5 +337,53 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	}
 
 	
+	
+	/**
+	 * Determines whether the attack is successfull
+	 */
+	public static <T extends Invertable> boolean isAttack(AspicArgument<T> active, AspicArgument<T> passive, RuleFormulaGenerator<T> rfgen,Comparator<AspicArgument<T>> order) {
+		Collection<AspicArgument<T>> defargs = passive.getDefeasibleSubs();		
+		// default order
+		if(order == null)
+			order = new Comparator<AspicArgument<T>>() {
+				@Override
+				public int compare(AspicArgument<T> o1, AspicArgument<T> o2) {
+					return 0;
+				}
+			};		
+		/*
+		 * Undercutting
+		 */
+		for (AspicArgument<T> a : defargs){
+			if(rfgen == null)
+				throw new NullPointerException("AspicAttack: RuleFormulaGenerator missing");
+			if(active.getConclusion().equals(rfgen.getRuleFormula((DefeasibleInferenceRule<T>)a.getTopRule()).complement())) {
+				return true;
+			}
+		}
+		/*
+		 * Rebuttal
+		 */
+		for (AspicArgument<T> a : defargs)
+			if(active.getConclusion().equals(a.getConclusion().complement())) {
+				if(order.compare(active, a) >= 0) 
+					return true;				
+			}
+		/*
+		 * Undemining
+		 */
+		for (AspicArgument<T> a : passive.getOrdinaryPremises())
+				if(active.getConclusion().equals(a.getConclusion().complement())) {
+					if(order.compare(active, a) >= 0)
+						return true;					
+				}
+		return false;
+	}
+	
+	public AspicArgument<T> shallowCopy() {
+		AspicArgument<T> copy = new AspicArgument<T>(toprule);
+		directsubs.forEach(sub -> copy.addDirectSub(sub));
+		return copy;
+	}
 
 }
