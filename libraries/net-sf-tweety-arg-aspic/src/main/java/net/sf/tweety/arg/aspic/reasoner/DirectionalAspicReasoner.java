@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 
 import net.sf.tweety.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
@@ -50,6 +51,8 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  */
 public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspicReasoner<T> {
 
+	private double prob = 1.0d;
+	
 	/**
 	 * Creates a new instance
 	 * @param aafReasoner Underlying reasoner for AAFs. 
@@ -148,33 +151,41 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 	 * @return	arguments with given conclusion plus recursively all attackers 
 	 */
 	private Collection<AspicArgument<T>> getArgsRec(AspicArgumentationTheory<T> aat, T conc) {
-				
-		Set<AspicArgument<T>> newArgs = new LinkedHashSet<AspicArgument<T>>();
-		Set<AspicArgument<T>> acc = new LinkedHashSet<AspicArgument<T>>();
-		Set<AspicArgument<T>> attackersAdded = new HashSet<AspicArgument<T>>();
-		Set<T> conclusionsAdded = new HashSet<T>();
-
-		acc.addAll(constructArgsWithConclusion(aat, conc, new HashSet<T>()));
-		conclusionsAdded.add(conc);
+			
 		
-		boolean changed = true;
-		while (changed) {
-			changed = false;
+		Random r = new Random();
+		
+		Set<AspicArgument<T>> newArgs = new LinkedHashSet<AspicArgument<T>>();
+		Set<AspicArgument<T>> args = new LinkedHashSet<AspicArgument<T>>();
+		Set<AspicArgument<T>> argsDone = new HashSet<AspicArgument<T>>();
+		Set<T> conclusionsDone = new HashSet<T>();
+
+		args.addAll(constructArgsWithConclusion(aat, conc, new HashSet<T>()));
+		conclusionsDone.add(conc);
+		
+		boolean repeat = true;
+		while (repeat) {
+			repeat = false;
 			newArgs.clear();
-			for (AspicArgument<T> arg: acc) {
-				if (attackersAdded.contains(arg)) continue;
-				attackersAdded.add(arg);
-				for (T attConc: getAttackingConclusions(arg, aat.getRuleFormulaGenerator())) {
-					if (!conclusionsAdded.contains(attConc)) {
-						newArgs.addAll(constructArgsWithConclusion(aat, attConc, new HashSet<T>()));
-						conclusionsAdded.add(attConc);
+			for (AspicArgument<T> argument: args) {
+				if (argsDone.contains(argument)) continue;
+				argsDone.add(argument);
+				if (r.nextFloat() < prob) {
+					for (T conclusion: getAttackingConclusions(argument, aat.getRuleFormulaGenerator())) {
+						if (!conclusionsDone.contains(conclusion)) {
+							conclusionsDone.add(conclusion);
+							newArgs.addAll(constructArgsWithConclusion(aat, conclusion, new HashSet<T>()));
+						}
 					}
 				}
 			}
-			changed = acc.addAll(newArgs);
+			if (!newArgs.isEmpty()) {
+				args.addAll(newArgs);
+				repeat = true;
+			}
 		}
 		
-		return acc;
+		return args;
 	}
 	
 	/**
@@ -203,6 +214,11 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 			cs.add((T)a.getTopRule().getConclusion().complement());
 		}
 		return cs;
+	}
+
+	public void setInclusionProbability(double prob) {
+		this.prob = prob;
+
 	}
 
 }
