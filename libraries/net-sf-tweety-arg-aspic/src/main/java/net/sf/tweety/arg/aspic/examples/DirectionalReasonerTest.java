@@ -80,7 +80,7 @@ public class DirectionalReasonerTest {
 					public Pair<Long, Pair<Integer, Boolean>> call() throws Exception {
 						long millis = System.currentTimeMillis();
 						DungTheory af1 = moduleReasoner.getDungTheory(theory, query);
-						boolean answer1 = moduleReasoner.query(af1, query, InferenceMode.CREDOLOUS);
+						boolean answer1 = moduleReasoner.query(af1, query, InferenceMode.CREDULOUS);
 						return new Pair<Long, Pair<Integer, Boolean>>(millis, new Pair<Integer, Boolean>(af1.getNumberOfNodes(), answer1));
 					}
 				}, 10, TimeUnit.SECONDS);
@@ -96,7 +96,7 @@ public class DirectionalReasonerTest {
 			System.out.println("Directional...");
 			long millis = System.currentTimeMillis();
 			DungTheory af2 = directionalReasoner.getDungTheory(theory, query);
-			boolean answer2 = directionalReasoner.query(af2, query, InferenceMode.CREDOLOUS);
+			boolean answer2 = directionalReasoner.query(af2, query, InferenceMode.CREDULOUS);
 			totalTimeDirectional += System.currentTimeMillis()-millis;
 			totalArgsDirectional += af2.getNumberOfNodes();
 			
