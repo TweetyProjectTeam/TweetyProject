@@ -117,7 +117,7 @@ public class RoleAssertion extends DlAxiom {
 	
 	@Override
 	public String toString() {
-		return "(related " + individuals.getFirst().toString() + " " + individuals.getSecond().toString() + " "+ this.role.toString() + ")";
+		return "related " + individuals.getFirst().toString() + " " + individuals.getSecond().toString() + " "+ this.role.toString();
 	}
 	
 	@Override

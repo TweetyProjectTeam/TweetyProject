@@ -4,14 +4,14 @@ signature(:atomic-concepts(Person Female Male Parent)
 
 implies Female Person
 implies Male Person 
-implies Parent (and Person (exists (Person motherOf))
+implies Parent (and Person (exists motherOf Person))
 
 instance philip_iv_of_spain Person
 instance maria_of_spain Person
 instance ferdinand_iii_hre Person
 instance mariana_of_austria Person
-((instance charles_ii_of_spain Person))
-(instance philip_iv_of_spain Male)
+instance charles_ii_of_spain Person
+instance philip_iv_of_spain Male
 instance maria_of_spain Female
 instance ferdinand_iii_hre Male
 instance mariana_of_austria Female

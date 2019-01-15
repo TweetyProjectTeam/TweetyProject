@@ -36,7 +36,7 @@ public class UniversalRestriction extends ComplexConcept {
 	/**
 	 * The role and the concept that is being restricted by it.
 	 */
-	private Pair<ComplexConcept,AtomicRole> formulas;
+	private Pair<AtomicRole,ComplexConcept> formulas;
 	
 	/**
 	 * Creates a new ALC universal restriction with the given role
@@ -45,17 +45,18 @@ public class UniversalRestriction extends ComplexConcept {
 	 * @param r the role
 	 * @param c the concept that is being restricted by the role
 	 */
-	public UniversalRestriction(ComplexConcept c, AtomicRole r) {
-		formulas.setFirst(c);
-		formulas.setSecond(r);
+	public UniversalRestriction(AtomicRole r, ComplexConcept c) {
+		formulas = new Pair<AtomicRole,ComplexConcept>();
+		formulas.setFirst(r);
+		formulas.setSecond(c);
 	}
 	
 	/**
 	 * Get the role and concept that are part of the universal restriction.
 	 * @return an atomic role and a concept
 	 */
-	public Pair<ComplexConcept,AtomicRole> getFormulas() {
-	 return this.formulas;	
+	public Pair<AtomicRole,ComplexConcept> getFormulas() {
+		return this.formulas;	
 	}
 
 	@Override

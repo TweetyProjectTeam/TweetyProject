@@ -36,7 +36,7 @@ public class ExistentialRestriction extends ComplexConcept  {
 	/**
 	 * The role and the concept that is being restricted by it.
 	 */
-	private Pair<ComplexConcept,AtomicRole> formulas;
+	private Pair<AtomicRole,ComplexConcept> formulas;
 
 	/**
 	 * Creates a new ALC existential restriction with the given role
@@ -45,12 +45,14 @@ public class ExistentialRestriction extends ComplexConcept  {
 	 * @param r the role
 	 * @param c the concept that is being restricted by the role
 	 */
-	public ExistentialRestriction(ComplexConcept c, AtomicRole r) {
-		formulas.setSecond(r);
-		formulas.setFirst(c);
+	public ExistentialRestriction(AtomicRole r, ComplexConcept c) {
+		formulas = new Pair<AtomicRole,ComplexConcept>();
+		formulas.setFirst(r);
+		formulas.setSecond(c);
 	}
 
-	public ExistentialRestriction(Pair<ComplexConcept, AtomicRole> f) {
+	public ExistentialRestriction(Pair<AtomicRole, ComplexConcept> f) {
+		formulas = new Pair<AtomicRole,ComplexConcept>();
 		formulas.setSecond(f.getSecond());
 		formulas.setFirst(f.getFirst());
 	}
@@ -59,7 +61,7 @@ public class ExistentialRestriction extends ComplexConcept  {
 	 * Get the role and concept that are part of the existential restriction.
 	 * @return an atomic role and a concept
 	 */
-	public Pair<ComplexConcept,AtomicRole> getFormulas() {
+	public Pair<AtomicRole,ComplexConcept> getFormulas() {
 	 return this.formulas;	
 	}
 

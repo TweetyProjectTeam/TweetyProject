@@ -95,7 +95,7 @@ public class ConceptAssertion extends DlAxiom {
 	
 	@Override
 	public String toString() {
-		return "(instance " + this.individual.toString()+ " " + this.concept.toString() + ")";
+		return "instance " + this.individual.toString()+ " " + this.concept.toString();
 	}
 	
 	@Override

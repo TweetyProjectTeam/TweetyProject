@@ -60,7 +60,7 @@ public class EquivalenceAxiom extends DlAxiom {
 	}
 
 	public String toString() {
-		return "(implies " + this.axiom.getFirst().toString() + " " + this.axiom.getSecond().toString()+")";
+		return "implies " + this.axiom.getFirst().toString() + " " + this.axiom.getSecond().toString();
 	}
 	
 	public Pair<ComplexConcept,ComplexConcept> getFormulas() {
