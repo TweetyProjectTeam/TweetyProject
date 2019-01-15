@@ -223,11 +223,10 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 	@Override
 	public boolean isWellFormed(){
 		//there are no two variables with the same name but different sort 
-		//Note: the sort _Any is considered equal to every sort
 		for(Variable v: this.getTerms(Variable.class)) {
 			for(Variable w: this.getTerms(Variable.class)) {
 				if(v.get().equals(w.get()))
-					if(!v.getSort().equals(w.getSort()) && !v.getSort().equals(Sort.ANY) && !w.getSort().equals(Sort.ANY)) 
+					if(!v.getSort().equals(w.getSort())) 
 						return false; 	 
 				}
 		}

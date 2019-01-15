@@ -33,11 +33,11 @@ import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 public class SimpleDpllSolverTest {
 	
 	private String[] files = {
-			"../../examples/pl/dimacs_ex1.cnf",
-			"../../examples/pl/dimacs_ex2.cnf",
-			"../../examples/pl/dimacs_ex3.cnf",
-			"../../examples/pl/dimacs_ex4.cnf",
-			"../../examples/pl/dimacs_ex5.cnf"
+			"src/main/resources/dimacs_ex1.cnf",
+			"src/main/resources/dimacs_ex2.cnf",
+			"src/main/resources/dimacs_ex3.cnf",
+			"src/main/resources/dimacs_ex4.cnf",
+			"src/main/resources/dimacs_ex5.cnf"
 	};
 	
 	private boolean[] sat = {
