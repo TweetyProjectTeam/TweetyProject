@@ -38,7 +38,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
@@ -106,20 +106,20 @@ public class CTransitionSystemCalculator
     */
     if ( claspResult == null )
       return transitionSystem;
-    Set< Map< Integer, Set< FOLAtom >>> answerSets =
+    Set< Map< Integer, Set< FolAtom >>> answerSets =
       parseLpT( claspResult, signature );
     
-    for ( Map< Integer, Set< FOLAtom >> answerSet : answerSets ) {
-      Set< FOLAtom > sourceStateFluents = new HashSet< FOLAtom >();
-      Set< FOLAtom > targetStateFluents = new HashSet< FOLAtom >();
-      Set< FOLAtom > actionNames = new HashSet< FOLAtom >();
-      for ( FOLAtom a : answerSet.get( new Integer( 0 ) ) ) {
+    for ( Map< Integer, Set< FolAtom >> answerSet : answerSets ) {
+      Set< FolAtom > sourceStateFluents = new HashSet< FolAtom >();
+      Set< FolAtom > targetStateFluents = new HashSet< FolAtom >();
+      Set< FolAtom > actionNames = new HashSet< FolAtom >();
+      for ( FolAtom a : answerSet.get( new Integer( 0 ) ) ) {
         if ( a.getPredicate() instanceof FolFluentName )
           sourceStateFluents.add( a );
         else if ( a.getPredicate() instanceof FolActionName )
           actionNames.add( a );
       }
-      for ( FOLAtom a : answerSet.get( new Integer( 1 ) ) )
+      for ( FolAtom a : answerSet.get( new Integer( 1 ) ) )
         targetStateFluents.add( a );
       
       State sourceState = transitionSystem.getState( sourceStateFluents );
@@ -161,8 +161,8 @@ public class CTransitionSystemCalculator
     */
     if ( claspResult == null )
       return null;
-    Set< Map< Integer, Set< FOLAtom >>> states = parseLpT( claspResult, signature );
-    for ( Map< Integer, Set< FOLAtom >> state : states ) {
+    Set< Map< Integer, Set< FolAtom >>> states = parseLpT( claspResult, signature );
+    for ( Map< Integer, Set< FolAtom >> state : states ) {
       State s = new State( state.get( new Integer( 0 ) ) );
       result.add( s );
     }
@@ -190,7 +190,7 @@ public class CTransitionSystemCalculator
       throw new IllegalArgumentException(
         "Cannot calculate transition system of non-definite action description." );
     String result = "";
-    Set< FOLAtom > groundedFluentAtoms = signature.getAllGroundedFluentAtoms();
+    Set< FolAtom > groundedFluentAtoms = signature.getAllGroundedFluentAtoms();
     
     for ( StaticLaw r : d.getStaticLaws() ) {
       for ( int t = 0; t <= T; t++ ) {
@@ -219,7 +219,7 @@ public class CTransitionSystemCalculator
         }
       }
       // -B :- not B. B :- not -B. rules for all actionnames.
-      Set< FOLAtom > groundedActionNames =
+      Set< FolAtom > groundedActionNames =
         signature.getAllGroundedActionNameAtoms();
       for ( int t = 0; t < T; t++ ) {
         result += getDefaultNegationRules( groundedActionNames, t );
@@ -243,10 +243,10 @@ public class CTransitionSystemCalculator
    * @param t parameter t.
    * @return rules.
    */
-  private String getDefaultNegationRules( Set< FOLAtom > atoms, int t )
+  private String getDefaultNegationRules( Set< FolAtom > atoms, int t )
   {
     String rules = "";
-    for ( FOLAtom a : atoms ) {
+    for ( FolAtom a : atoms ) {
       String atomName = getAtomString( a, t );
       rules += "-" + atomName + " :- not " + atomName + ".\n";
       rules += atomName + " :- not -" + atomName + ".\n";
@@ -262,10 +262,10 @@ public class CTransitionSystemCalculator
    * @param t parameter to be added to each atom.
    * @return rules of an extended logic program.
    */
-  private String getCompletenessEnforcementRules( Set< FOLAtom > atoms, int t )
+  private String getCompletenessEnforcementRules( Set< FolAtom > atoms, int t )
   {
     String rules = "";
-    for ( FOLAtom a : atoms ) {
+    for ( FolAtom a : atoms ) {
       String atomName = getAtomString( a, t );
       rules += ":- not " + atomName + ", not -" + atomName + ".\n";
     }
@@ -305,11 +305,11 @@ public class CTransitionSystemCalculator
    * @param signature the action signature of the original description.
    * @return a set of maps each mapping timestamps to sets of atoms.
    */
-  private Set< Map< Integer, Set< FOLAtom >>> parseLpT( String[] lines,
+  private Set< Map< Integer, Set< FolAtom >>> parseLpT( String[] lines,
     ActionSignature signature )
   {
-    Set< Map< Integer, Set< FOLAtom >>> result =
-      new HashSet< Map< Integer, Set< FOLAtom >>>();
+    Set< Map< Integer, Set< FolAtom >>> result =
+      new HashSet< Map< Integer, Set< FolAtom >>>();
     
     for ( String line : lines ) {
       result.add( parseLpTSingleLine( line, signature ) );
@@ -326,11 +326,11 @@ public class CTransitionSystemCalculator
    * @return a map from timestamps to sets of atoms.
    * @throws ParserException
    */
-  private Map< Integer, Set< FOLAtom >> parseLpTSingleLine( String s,
+  private Map< Integer, Set< FolAtom >> parseLpTSingleLine( String s,
     ActionSignature signature )
     throws ParserException
   {
-    Map< Integer, Set< FOLAtom >> map = new HashMap< Integer, Set< FOLAtom >>();
+    Map< Integer, Set< FolAtom >> map = new HashMap< Integer, Set< FolAtom >>();
     
     String[] tokens = s.split( " " );
     for ( String token : tokens ) {
@@ -339,14 +339,14 @@ public class CTransitionSystemCalculator
         Integer.parseInt( token.substring( token.indexOf( "(" ) + 1, token
           .indexOf( ")" ) ) );
       if ( map.get( new Integer( i ) ) == null )
-        map.put( new Integer( i ), new HashSet< FOLAtom >() );
+        map.put( new Integer( i ), new HashSet< FolAtom >() );
       if ( !token.startsWith( "-" ) ) {
         FolParser p = new FolParser();
         p.setSignature( signature );
-        FOLAtom a = null;
+        FolAtom a = null;
         try {
           a =
-            (FOLAtom) p.parseFormula( regainIllegalChars( token.substring( 0,
+            (FolAtom) p.parseFormula( regainIllegalChars( token.substring( 0,
               token.indexOf( "(" ) ) ) );
         }
         catch ( IOException e ) {
@@ -407,7 +407,7 @@ public class CTransitionSystemCalculator
       result += negated ? "" : "-";
       result += getAtomString( ( (Negation) f ).getFormula(), t );
     }
-    else if ( f instanceof FOLAtom ) {
+    else if ( f instanceof FolAtom ) {
       result += negated ? "-" : "";
       result += getAtomString( f, t );
     }
@@ -434,7 +434,7 @@ public class CTransitionSystemCalculator
    */
   private String getAtomString( RelationalFormula f, int t )
   {
-    if ( !( f instanceof FOLAtom ) )
+    if ( !( f instanceof FolAtom ) )
       throw new IllegalArgumentException(
         "Cannot calculate transition system. Causal rule is not definite." );
     return removeIllegalChars( f.toString() ) + "(" + Integer.toString( t ) +

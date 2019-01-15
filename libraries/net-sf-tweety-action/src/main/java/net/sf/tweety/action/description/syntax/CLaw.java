@@ -28,7 +28,7 @@ import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
@@ -81,7 +81,7 @@ public abstract class CLaw
    * 
    * @return the set of propositions in all formulas in this law.
    */
-  public abstract Set< FOLAtom > getAtoms();
+  public abstract Set< FolAtom > getAtoms();
   
   /**
    * Returns the set of formulas contained in this causal law, e.g. in a static
@@ -217,7 +217,7 @@ public abstract class CLaw
   
   public boolean isGround()
   {
-    for ( FOLAtom a : getAtoms() )
+    for ( FolAtom a : getAtoms() )
       if ( !a.isGround() )
         return false;
     return true;
@@ -245,8 +245,8 @@ public abstract class CLaw
       return true;
     if ( pl instanceof Negation )
       pl = ( (Negation) pl ).getFormula();
-    if ( pl instanceof FOLAtom )
-      return ( (FOLAtom) pl ).getPredicate() instanceof FolFluentName;
+    if ( pl instanceof FolAtom )
+      return ( (FolAtom) pl ).getPredicate() instanceof FolFluentName;
     return false;
   }
   

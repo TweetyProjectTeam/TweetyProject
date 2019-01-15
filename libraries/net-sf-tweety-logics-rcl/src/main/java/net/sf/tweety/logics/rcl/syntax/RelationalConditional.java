@@ -32,7 +32,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
@@ -91,10 +91,10 @@ public class RelationalConditional extends RelationalFormula implements Rule<Fol
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<FOLAtom> getAtoms() {
-		Set<FOLAtom> result = new HashSet<FOLAtom>();
-		result.addAll((Collection<? extends FOLAtom>) this.premise.getAtoms());
-		result.addAll((Collection<? extends FOLAtom>) this.conclusion.getAtoms());
+	public Set<FolAtom> getAtoms() {
+		Set<FolAtom> result = new HashSet<FolAtom>();
+		result.addAll((Collection<? extends FolAtom>) this.premise.getAtoms());
+		result.addAll((Collection<? extends FolAtom>) this.conclusion.getAtoms());
 		return result;
 	}
 

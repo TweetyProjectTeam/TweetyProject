@@ -26,7 +26,7 @@ import net.sf.tweety.lp.asp.syntax.*;
 import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.translators.Translator;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 
@@ -43,17 +43,17 @@ public class AspFolTranslator extends Translator
 	/** Default-Ctor */
 	public AspFolTranslator() {}
 	
-	public FOLAtom toFOL(ASPAtom source) {
-		return (FOLAtom) this.translateAtom(source, FOLAtom.class);
+	public FolAtom toFOL(ASPAtom source) {
+		return (FolAtom) this.translateAtom(source, FolAtom.class);
 	}
 	
-	public ASPAtom toASP(FOLAtom source) {
+	public ASPAtom toASP(FolAtom source) {
 		return (ASPAtom) this.translateAtom(source, ASPAtom.class);
 	}
 
 	public ASPLiteral toASP(FolFormula source) {
-		if(source instanceof FOLAtom) {
-			return toASP((FOLAtom)source);
+		if(source instanceof FolAtom) {
+			return toASP((FolAtom)source);
 		} else if(source instanceof Negation) {
 			return toASP((Negation)source);
 		} 
@@ -61,8 +61,8 @@ public class AspFolTranslator extends Translator
 	}
 	
 	public Negation toFOL(StrictNegation source) {
-		return new Negation((FOLAtom) 
-				this.translateAtom(source.getAtom(), FOLAtom.class));
+		return new Negation((FolAtom) 
+				this.translateAtom(source.getAtom(), FolAtom.class));
 	}
 
 	public StrictNegation toASP(Negation source) {
@@ -96,7 +96,7 @@ public class AspFolTranslator extends Translator
 			case TT_NEGATION:
 				return translateInfo.getSecond() == Negation.class ? 
 						toFOL((StrictNegation)source) : 
-						toASP((FOLAtom)source);
+						toASP((FolAtom)source);
 			}
 		}
 		return reval;
@@ -106,8 +106,8 @@ public class AspFolTranslator extends Translator
 	protected Map<Class<?>, Pair<Integer, Class<?>>> createTranslateMap() {
 		Map<Class<?>, Pair<Integer, Class<?>>> tmap = new HashMap<Class<?>, Pair<Integer, Class<?>>>();
 
-		tmap.put(ASPAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, FOLAtom.class));
-		tmap.put(FOLAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, ASPAtom.class));
+		tmap.put(ASPAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, FolAtom.class));
+		tmap.put(FolAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, ASPAtom.class));
 		
 		tmap.put(ASPHead.class, new Pair<Integer, Class<?>>(TT_ASSOC, Disjunction.class));
 		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(TT_ASSOC, ASPHead.class));

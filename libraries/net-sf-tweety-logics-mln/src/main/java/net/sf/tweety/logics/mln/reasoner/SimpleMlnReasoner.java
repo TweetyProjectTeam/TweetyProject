@@ -35,7 +35,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
 import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
@@ -74,7 +74,7 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 			boolean isFirst = true;
 			File currentFile = File.createTempFile("naive_mln",null,new File(this.tempDirectory));
 			currentFile.deleteOnExit();
-			for(FOLAtom a: hBase.getAtoms()){
+			for(FolAtom a: hBase.getAtoms()){
 				if(isFirst){					
 					fstream = new FileWriter(currentFile.getAbsoluteFile());
 					BufferedWriter out = new BufferedWriter(fstream);
@@ -207,13 +207,13 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 	 */
 	private HerbrandInterpretation parseInterpretation(String str,FolSignature signature){
 		StringTokenizer tokenizer = new StringTokenizer(str, ";");
-		Collection<FOLAtom> atoms = new HashSet<FOLAtom>();
+		Collection<FolAtom> atoms = new HashSet<FolAtom>();
 		FolParser parser = new FolParser();
 		parser.setSignature(signature);
 		while(tokenizer.hasMoreTokens()){
 			String token = tokenizer.nextToken();
 			try {
-				atoms.add( (FOLAtom)parser.parseFormula(token));
+				atoms.add( (FolAtom)parser.parseFormula(token));
 			} catch (ParserException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

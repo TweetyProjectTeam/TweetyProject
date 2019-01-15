@@ -26,7 +26,7 @@ import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
@@ -51,7 +51,7 @@ public class FolFormulaGenerator extends RuleFormulaGenerator<FolFormula> {
 	@Override
 	public FolFormula getRuleFormula(DefeasibleInferenceRule<FolFormula> r)  {		
 		Constant rcons = new Constant( r.getIdentifier() , sort);
-		return new FOLAtom(RULE_PREDICATE, rcons);
+		return new FolAtom(RULE_PREDICATE, rcons);
 	}
 
 

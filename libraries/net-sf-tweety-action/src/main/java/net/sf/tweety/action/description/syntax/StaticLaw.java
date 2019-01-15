@@ -30,7 +30,7 @@ import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.Tautology;
@@ -171,11 +171,11 @@ public class StaticLaw
    */
   @SuppressWarnings("unchecked")
 @Override
-  public Set< FOLAtom > getAtoms()
+  public Set< FolAtom > getAtoms()
   {
-    Set< FOLAtom > atoms = new HashSet< FOLAtom >();
-    atoms.addAll( (Collection<? extends FOLAtom>) headFormula.getAtoms() );
-    atoms.addAll( (Collection<? extends FOLAtom>) ifFormula.getAtoms() );
+    Set< FolAtom > atoms = new HashSet< FolAtom >();
+    atoms.addAll( (Collection<? extends FolAtom>) headFormula.getAtoms() );
+    atoms.addAll( (Collection<? extends FolAtom>) ifFormula.getAtoms() );
     return atoms;
   }
   
@@ -189,7 +189,7 @@ public class StaticLaw
     Set< CLaw > result = new HashSet< CLaw >();
     Set< Variable > variables = new HashSet< Variable >();
     
-    for ( FOLAtom a : getAtoms() ) {
+    for ( FolAtom a : getAtoms() ) {
       variables.addAll( a.getUnboundVariables() );
     }
     Set< Map< Variable, Constant >> substitutions =

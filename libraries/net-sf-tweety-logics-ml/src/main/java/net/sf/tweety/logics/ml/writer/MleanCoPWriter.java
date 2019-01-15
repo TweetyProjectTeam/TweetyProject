@@ -25,7 +25,7 @@ import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
+import net.sf.tweety.logics.fol.syntax.AssociativeFolFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
@@ -114,8 +114,8 @@ public class MleanCoPWriter {
 			result += printFormula(fqf.getFormula());
 			return result;
 		}
-		else if (f instanceof AssociativeFOLFormula) {
-			AssociativeFOLFormula d = (AssociativeFOLFormula) f;
+		else if (f instanceof AssociativeFolFormula) {
+			AssociativeFolFormula d = (AssociativeFolFormula) f;
 			Iterator<RelationalFormula> i = d.getFormulas().iterator();
 			String result = printFormula(i.next());
 			String delimiter = (f instanceof Conjunction) ? " , " : " ; ";

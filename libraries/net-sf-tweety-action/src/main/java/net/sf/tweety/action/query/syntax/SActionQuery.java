@@ -30,7 +30,7 @@ import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
@@ -156,11 +156,11 @@ public class SActionQuery
    * this action query.
    */
   @SuppressWarnings("unchecked")
-public Set< FOLAtom > getInnerAtoms()
+public Set< FolAtom > getInnerAtoms()
   {
-    Set< FOLAtom > result = new HashSet< FOLAtom >();
+    Set< FolAtom > result = new HashSet< FolAtom >();
     for ( Proposition p : formula.getAtoms() ) {
-      result.addAll( (Collection<? extends FOLAtom>) ( (QueryProposition) p ).getInnerFormula().getAtoms() );
+      result.addAll( (Collection<? extends FolAtom>) ( (QueryProposition) p ).getInnerFormula().getAtoms() );
       for ( FolAction action : ( (QueryProposition) p ).getInnerActions() )
         result.addAll( action.getAtoms() );
     }
@@ -176,7 +176,7 @@ public Set< FOLAtom > getInnerAtoms()
   public Set< Variable > getInnerVariables()
   {
     Set< Variable > variables = new HashSet< Variable >();
-    for ( FOLAtom a : getInnerAtoms() )
+    for ( FolAtom a : getInnerAtoms() )
       variables.addAll( a.getUnboundVariables() );
     return variables;
   }
@@ -201,7 +201,7 @@ public Set< FOLAtom > getInnerAtoms()
     Set< SActionQuery > result = new HashSet< SActionQuery >();
     Set< Variable > variables = new HashSet< Variable >();
     
-    for ( FOLAtom a : getInnerAtoms() )
+    for ( FolAtom a : getInnerAtoms() )
       variables.addAll( a.getUnboundVariables() );
     
     Set< Map< Variable, Constant >> substitutions =

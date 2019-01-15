@@ -32,7 +32,7 @@ import net.sf.tweety.logics.commons.syntax.ComplexLogicalFormulaAdapter;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.nlp.error.NestedLogicProgramException;
@@ -141,11 +141,11 @@ public class NLPRule
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<FOLAtom> getAtoms() {
-		Set<FOLAtom> reval = new HashSet<FOLAtom>();
-		reval.addAll((Collection<? extends FOLAtom>) conclusion.getAtoms());
+	public Set<FolAtom> getAtoms() {
+		Set<FolAtom> reval = new HashSet<FolAtom>();
+		reval.addAll((Collection<? extends FolAtom>) conclusion.getAtoms());
 		for(FolFormula f : premise) {
-			reval.addAll((Collection<? extends FOLAtom>) f.getAtoms());
+			reval.addAll((Collection<? extends FolAtom>) f.getAtoms());
 		}
 		return reval;
 	}

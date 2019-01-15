@@ -25,7 +25,7 @@ import net.sf.tweety.arg.delp.syntax.DelpArgument;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import org.junit.BeforeClass;
@@ -51,21 +51,21 @@ public final class TestArguments {
     private final static List<Term<?>> TINA = Stream
             .of(new Constant("tina"))
             .collect(Collectors.toList());
-    private final static FolFormula FOL_FLIES_TINA = new FOLAtom(new Predicate("Flies",1), TINA);
+    private final static FolFormula FOL_FLIES_TINA = new FolAtom(new Predicate("Flies",1), TINA);
     private final static FolFormula FOL_NOT_FLIES_TINA = new Negation(FOL_FLIES_TINA);
 
     // some interesting arguments as strings and data structures:
     final static String STR_TINA_NOT_FLIES = "<{!Flies(tina) -< Chicken(tina).},!Flies(tina)>";
     final static DelpArgument ARG_TINA_NOT_FLIES = new DelpArgument(Stream
             .of(new DefeasibleRule(FOL_NOT_FLIES_TINA, Stream
-                    .of(new FOLAtom(new Predicate("Chicken",1), TINA))
+                    .of(new FolAtom(new Predicate("Chicken",1), TINA))
                     .collect(Collectors.toSet())))
             .collect(Collectors.toSet()),
             FOL_NOT_FLIES_TINA);
     final static String STR_TINA_FLIES1 = "<{Flies(tina) -< Bird(tina).},Flies(tina)>";
     final static DelpArgument ARG_TINA_FLIES1 = new DelpArgument(Stream
             .of(new DefeasibleRule(FOL_FLIES_TINA, Stream
-                    .of(new FOLAtom(new Predicate("Bird",1), TINA))
+                    .of(new FolAtom(new Predicate("Bird",1), TINA))
                     .collect(Collectors.toSet())))
             .collect(Collectors.toSet()),
             FOL_FLIES_TINA);
@@ -73,22 +73,22 @@ public final class TestArguments {
     final static DelpArgument ARG_TINA_FLIES2 = new DelpArgument(Stream
             .of(new DefeasibleRule(FOL_FLIES_TINA, Stream
                     .of(
-                            new FOLAtom(new Predicate("Chicken",1), TINA),
-                            new FOLAtom(new Predicate("Scared",1), TINA))
+                            new FolAtom(new Predicate("Chicken",1), TINA),
+                            new FolAtom(new Predicate("Scared",1), TINA))
                     .collect(Collectors.toSet())))
             .collect(Collectors.toSet()),
             FOL_FLIES_TINA);
     final static String STR_TINA_NESTS = "<{Flies(tina) -< Bird(tina).,Nests_in_trees(tina) -< Flies(tina).},Nests_in_trees(tina)>";
     final static DelpArgument ARG_TINA_NESTS = new DelpArgument(Stream
             .of(
-                    new DefeasibleRule(new FOLAtom(new Predicate("Nests_in_trees",1), TINA), Stream
+                    new DefeasibleRule(new FolAtom(new Predicate("Nests_in_trees",1), TINA), Stream
                             .of(FOL_FLIES_TINA)
                             .collect(Collectors.toSet())),
                     new DefeasibleRule(FOL_FLIES_TINA, Stream
-                        .of(new FOLAtom(new Predicate("Bird",1), TINA))
+                        .of(new FolAtom(new Predicate("Bird",1), TINA))
                         .collect(Collectors.toSet())))
             .collect(Collectors.toSet()),
-            new FOLAtom(new Predicate("Nests_in_trees",1), TINA));
+            new FolAtom(new Predicate("Nests_in_trees",1), TINA));
 
     @BeforeClass
     public static void init() throws IOException {

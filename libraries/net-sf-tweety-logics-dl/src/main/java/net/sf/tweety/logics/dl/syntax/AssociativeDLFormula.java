@@ -22,7 +22,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public abstract class AssociativeDLFormula extends ComplexConcept
+public abstract class AssociativeDlFormula extends ComplexConcept
 		implements AssociativeFormula<ComplexConcept>, AssociativeSupportBridge {
 
 	/**
@@ -35,7 +35,7 @@ public abstract class AssociativeDLFormula extends ComplexConcept
 	/**
 	 * Creates a new (empty) associative formula.
 	 */
-	public AssociativeDLFormula(){
+	public AssociativeDlFormula(){
 		this.support = new AssociativeFormulaSupport<ComplexConcept>(this);
 	}
 	
@@ -44,7 +44,7 @@ public abstract class AssociativeDLFormula extends ComplexConcept
 	 * @param first a relational formula.
 	 * @param second a relational formula.
 	 */
-	public AssociativeDLFormula(ComplexConcept first, ComplexConcept second){
+	public AssociativeDlFormula(ComplexConcept first, ComplexConcept second){
 		this();
 		this.add(first);
 		this.add(second);
@@ -54,7 +54,7 @@ public abstract class AssociativeDLFormula extends ComplexConcept
 	 * Creates a new associative formula with the given inner formulas. 
 	 * @param formulas a collection of formulas.
 	 */
-	public AssociativeDLFormula(Collection<? extends ComplexConcept> formulas) {
+	public AssociativeDlFormula(Collection<? extends ComplexConcept> formulas) {
 		this();
 		this.addAll(formulas);
 	}
@@ -101,7 +101,7 @@ public abstract class AssociativeDLFormula extends ComplexConcept
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AssociativeDLFormula other = (AssociativeDLFormula) obj;
+		AssociativeDlFormula other = (AssociativeDlFormula) obj;
 		if (support == null) {
 			if (other.support != null)
 				return false;

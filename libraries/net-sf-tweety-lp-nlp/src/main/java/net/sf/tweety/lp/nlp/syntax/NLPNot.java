@@ -26,7 +26,7 @@ import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.lp.nlp.error.NestedLogicProgramException;
 
@@ -133,8 +133,8 @@ public class NLPNot extends FolFormula {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<FOLAtom> getAtoms() {
-		return (Set<FOLAtom>) inner.getAtoms();
+	public Set<FolAtom> getAtoms() {
+		return (Set<FolAtom>) inner.getAtoms();
 	}
 
 	@Override

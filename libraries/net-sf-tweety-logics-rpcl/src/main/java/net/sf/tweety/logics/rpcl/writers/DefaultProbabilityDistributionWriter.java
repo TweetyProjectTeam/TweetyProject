@@ -59,7 +59,7 @@ public class DefaultProbabilityDistributionWriter extends Writer {
 		for(Interpretation<?,?> interpretation: distribution.keySet()){
 			result += "{";
 			boolean first = true;
-			for(FOLAtom a: (HerbrandInterpretation)interpretation)
+			for(FolAtom a: (HerbrandInterpretation)interpretation)
 				if(first){
 					result += a.toString();
 					first = false;

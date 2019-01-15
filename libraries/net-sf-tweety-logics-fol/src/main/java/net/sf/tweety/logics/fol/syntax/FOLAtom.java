@@ -28,7 +28,6 @@ import java.util.Set;
 import net.sf.tweety.logics.commons.syntax.FunctionalTerm;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
@@ -37,7 +36,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * An atom in first-order logic, i.e. a predicate and a list of argument terms.
  * @author Matthias Thimm
  */
-public class FOLAtom extends FolFormula implements Atom {
+public class FolAtom extends FolFormula implements Atom {
 
 	/**
 	 * The predicate of this atom
@@ -50,7 +49,7 @@ public class FOLAtom extends FolFormula implements Atom {
 	private List<Term<?>> arguments = new ArrayList<Term<?>>();
 	
 	/** Default-Ctor: Creates new empty FOL-Atom */
-	public FOLAtom() {
+	public FolAtom() {
 		
 	}
 	
@@ -59,11 +58,11 @@ public class FOLAtom extends FolFormula implements Atom {
 	 * an empty argument list.
 	 * @param predicate the predicate of the atom.
 	 */
-	public FOLAtom(Predicate predicate){
+	public FolAtom(Predicate predicate){
 		this(predicate,new ArrayList<Term<?>>());
 	}
 	
-	public FOLAtom(Predicate predicate, Term<?>... terms) {
+	public FolAtom(Predicate predicate, Term<?>... terms) {
 		this(predicate, Arrays.asList(terms));
 	}
 	
@@ -73,13 +72,13 @@ public class FOLAtom extends FolFormula implements Atom {
 	 * @param predicate the predicate of the atom
 	 * @param arguments the arguments (terms) of the atom
 	 */
-	public FOLAtom(Predicate predicate, List<? extends Term<?>> arguments){
+	public FolAtom(Predicate predicate, List<? extends Term<?>> arguments){
 		this.predicate = predicate;
 		for(Term<?> t: arguments)
 			this.addArgument(t);		
 	}
 	
-	public FOLAtom(FOLAtom other) {
+	public FolAtom(FolAtom other) {
 		this.predicate = other.predicate;
 		for(Term<?> term : other.getArguments()) {
 			this.arguments.add(term.clone());
@@ -106,16 +105,16 @@ public class FOLAtom extends FolFormula implements Atom {
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
 	@Override
-	public FOLAtom substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
-		FOLAtom atom = new FOLAtom(this.predicate);
+	public FolAtom substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
+		FolAtom atom = new FolAtom(this.predicate);
 		for(Term<?> term: this.arguments)
 			atom.addArgument(term.substitute(v, t));
 		return atom;		
 	}
 	
 	@Override
-	public Set<FOLAtom> getAtoms(){
-		HashSet<FOLAtom> atoms = new HashSet<FOLAtom>();
+	public Set<FolAtom> getAtoms(){
+		HashSet<FolAtom> atoms = new HashSet<FolAtom>();
 		atoms.add(this);
 		return atoms;		
 	}
@@ -300,7 +299,7 @@ public class FOLAtom extends FolFormula implements Atom {
 			return true;		
 		if (obj == null || getClass() != obj.getClass())
 			return false;
-		FOLAtom other = (FOLAtom) obj;
+		FolAtom other = (FolAtom) obj;
 		if(!other.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 		if (arguments == null) {
 			if (other.arguments != null)
@@ -338,8 +337,8 @@ public class FOLAtom extends FolFormula implements Atom {
 	}
 
 	@Override
-	public FOLAtom clone() {
-		return new FOLAtom(this);
+	public FolAtom clone() {
+		return new FolAtom(this);
 	}
 
 	@Override

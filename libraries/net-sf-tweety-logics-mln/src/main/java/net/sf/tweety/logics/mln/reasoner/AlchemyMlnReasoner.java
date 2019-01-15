@@ -38,7 +38,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
@@ -282,8 +282,8 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 			}
 			return result + " (" + this.alchemyStringForFormula(((ExistsQuantifiedFormula)formula).getFormula()) + ")";
 		}
-		if(formula instanceof FOLAtom){
-			FOLAtom a = (FOLAtom) formula;
+		if(formula instanceof FolAtom){
+			FolAtom a = (FolAtom) formula;
 			String result = a.getPredicate().getName().toLowerCase();
 			if(a.getArguments().size()>0)
 				result += "(";

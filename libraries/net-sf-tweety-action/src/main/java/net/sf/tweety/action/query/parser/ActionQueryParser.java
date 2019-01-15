@@ -45,7 +45,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.fol.parser.FolParser;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
@@ -272,7 +272,7 @@ public class ActionQueryParser
   private FolAction parseAction(List<Object> l) throws ParserException, IOException {
     if(l.get(0) instanceof String) {
       //Parse a list of action names into an action
-      Set<FOLAtom> actionNames = new HashSet<FOLAtom>();
+      Set<FolAtom> actionNames = new HashSet<FolAtom>();
       String tmp = "";
       for(Object o: l){
         if((o instanceof String) && ((String)o).equals(",") ){
@@ -285,12 +285,12 @@ public class ActionQueryParser
     } else throw new ParserException("Unexpected token in action string.");
   }
 
-  private FOLAtom parseActionName(String s) throws ParserException, IOException {
+  private FolAtom parseActionName(String s) throws ParserException, IOException {
     FolParser p = new FolParser();
     p.setSignature( signature );
     FolFormula f = (FolFormula) p.parseFormula( s );
-    if(! (f instanceof FOLAtom)) throw new ParserException("Illegal type of action name.");
-    FOLAtom a = (FOLAtom) f;
+    if(! (f instanceof FolAtom)) throw new ParserException("Illegal type of action name.");
+    FolAtom a = (FolAtom) f;
     if(!(a.getPredicate() instanceof FolActionName) ) throw new ParserException("Illegal signature of action name.");
     return a;
   }

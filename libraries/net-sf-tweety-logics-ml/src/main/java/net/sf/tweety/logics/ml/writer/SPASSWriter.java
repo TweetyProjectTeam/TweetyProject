@@ -14,7 +14,7 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
+import net.sf.tweety.logics.fol.syntax.AssociativeFolFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Equivalence;
@@ -44,7 +44,7 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * SPASS attempts to prove that the conjunction of all axioms implies the
  * disjunction of all conjectures.
  * 
- * @see net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner 
+ * @see net.sf.tweety.logics.ml.reasoner.SPASSMlReasoner 
  * @author Anna Gessler
  */
 
@@ -235,8 +235,8 @@ public class SPASSWriter {
 			result += "," + printFormula(fqf.getFormula()) + ")";
 			return result;
 		}
-		if (f instanceof AssociativeFOLFormula) {
-			AssociativeFOLFormula d = (AssociativeFOLFormula) f;
+		if (f instanceof AssociativeFolFormula) {
+			AssociativeFolFormula d = (AssociativeFolFormula) f;
 			Iterator<RelationalFormula> i = d.getFormulas().iterator();
 			String result = (f instanceof Conjunction) ? "and(" : "or(";
 			while (i.hasNext())

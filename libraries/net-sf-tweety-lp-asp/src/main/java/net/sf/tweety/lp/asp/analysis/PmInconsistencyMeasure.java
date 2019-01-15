@@ -25,7 +25,7 @@ import net.sf.tweety.commons.util.IncreasingSubsetIterator;
 import net.sf.tweety.commons.util.SubsetIterator;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 import net.sf.tweety.logics.fol.semantics.HerbrandBase;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 import net.sf.tweety.lp.asp.syntax.Program;
@@ -74,7 +74,7 @@ public class PmInconsistencyMeasure implements InconsistencyMeasure<Program> {
 		SubsetIterator<ASPRule> it_del = new IncreasingSubsetIterator<ASPRule>(beliefBase);
 		Set<ASPRule> allFacts = new HashSet<ASPRule>();
 		FolSignature sig = beliefBase.getSignature();
-		for (FOLAtom a : new HerbrandBase(sig).getAtoms()) {
+		for (FolAtom a : new HerbrandBase(sig).getAtoms()) {
 			allFacts.add(new ASPRule(new ASPAtom(a)));
 			allFacts.add(new ASPRule(new StrictNegation(new ASPAtom(a))));
 		}

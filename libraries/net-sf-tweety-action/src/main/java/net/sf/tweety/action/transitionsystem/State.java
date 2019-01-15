@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.tweety.action.signature.FolFluentName;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 
 /**
  * Represents a state in an action transition system, which is a representation
@@ -32,14 +32,14 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
  */
 public class State
 {
-  private Set< FOLAtom > fluents = new HashSet< FOLAtom >();
+  private Set< FolAtom > fluents = new HashSet< FolAtom >();
   
   /**
    * Creates a new State with a set of fluents that are mapped to true.
    * 
    * @param fluents The fluents which are mapped to true by this state.
    */
-  public State( Set< FOLAtom > fluents )
+  public State( Set< FolAtom > fluents )
   {
     this.fluents.addAll( fluents );
   }
@@ -50,7 +50,7 @@ public class State
    * @param fluent
    * @return true iff the fluent given is mapped to true by this state.
    */
-  public boolean isMappedToTrue( FOLAtom fluent )
+  public boolean isMappedToTrue( FolAtom fluent )
   {
     if ( fluent.getPredicate() instanceof FolFluentName )
       return fluents.contains( fluent );
@@ -60,9 +60,9 @@ public class State
   /**
    * Returns the set of fluent atoms that are mapped to true by this state.
    */
-  public Set< FOLAtom > getPositiveFluents()
+  public Set< FolAtom > getPositiveFluents()
   {
-    return new HashSet< FOLAtom >( fluents );
+    return new HashSet< FolAtom >( fluents );
   }
   
   /*

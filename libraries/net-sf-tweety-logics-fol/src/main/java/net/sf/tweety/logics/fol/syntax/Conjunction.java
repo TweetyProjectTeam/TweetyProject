@@ -29,7 +29,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * The classical conjunction of first-order logic.
  * @author Matthias Thimm
  */
-public class Conjunction extends AssociativeFOLFormula {
+public class Conjunction extends AssociativeFolFormula {
 	
 	/**
 	 * Creates a new conjunction with the given inner formulas. 

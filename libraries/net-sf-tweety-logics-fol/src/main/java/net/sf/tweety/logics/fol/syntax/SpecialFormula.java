@@ -55,8 +55,8 @@ public abstract class SpecialFormula extends FolFormula {
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
 	@Override
-	public Set<FOLAtom> getAtoms() {
-		return new HashSet<FOLAtom>();
+	public Set<FolAtom> getAtoms() {
+		return new HashSet<FolAtom>();
 	}
 
 	/* (non-Javadoc)

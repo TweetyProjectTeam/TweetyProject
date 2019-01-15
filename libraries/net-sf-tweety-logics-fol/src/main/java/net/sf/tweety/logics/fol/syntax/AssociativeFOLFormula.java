@@ -45,7 +45,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public abstract class AssociativeFOLFormula extends FolFormula implements 
+public abstract class AssociativeFolFormula extends FolFormula implements 
 	AssociativeFormula<RelationalFormula>,
 	AssociativeSupportBridge {
 	
@@ -63,7 +63,7 @@ public abstract class AssociativeFOLFormula extends FolFormula implements
 	/**
 	 * Creates a new (empty) associative formula.
 	 */
-	public AssociativeFOLFormula(){
+	public AssociativeFolFormula(){
 		this.support = new AssociativeFormulaSupport<RelationalFormula>(this);
 	}
 	
@@ -72,7 +72,7 @@ public abstract class AssociativeFOLFormula extends FolFormula implements
 	 * @param first a relational formula.
 	 * @param second a relational formula.
 	 */
-	public AssociativeFOLFormula(RelationalFormula first, RelationalFormula second){
+	public AssociativeFolFormula(RelationalFormula first, RelationalFormula second){
 		this();
 		this.add(first);
 		this.add(second);
@@ -82,7 +82,7 @@ public abstract class AssociativeFOLFormula extends FolFormula implements
 	 * Creates a new associative formula with the given inner formulas. 
 	 * @param formulas a collection of formulas.
 	 */
-	public AssociativeFOLFormula(Collection<? extends RelationalFormula> formulas) {
+	public AssociativeFolFormula(Collection<? extends RelationalFormula> formulas) {
 		this();
 		this.addAll(formulas);
 	}
@@ -185,8 +185,8 @@ public abstract class AssociativeFOLFormula extends FolFormula implements
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<FOLAtom> getAtoms(){
-		return (Set<FOLAtom>) support.getAtoms();
+	public Set<FolAtom> getAtoms(){
+		return (Set<FolAtom>) support.getAtoms();
 	}
 	
 	@Override
@@ -205,13 +205,13 @@ public abstract class AssociativeFOLFormula extends FolFormula implements
 	}
 	
 	@Override
-	public AssociativeFOLFormula substitute(Term<?> v, Term<?> t) {
-		return (AssociativeFOLFormula)support.substitute(v,  t);
+	public AssociativeFolFormula substitute(Term<?> v, Term<?> t) {
+		return (AssociativeFolFormula)support.substitute(v,  t);
 	}
 
 	@Override
-	public AssociativeFOLFormula substitute(Map<? extends Term<?>, ? extends Term<?>> termMap) {
-		return (AssociativeFOLFormula)support.substitute(termMap);
+	public AssociativeFolFormula substitute(Map<? extends Term<?>, ? extends Term<?>> termMap) {
+		return (AssociativeFolFormula)support.substitute(termMap);
 	}
 	
 	@Override
@@ -240,7 +240,7 @@ public abstract class AssociativeFOLFormula extends FolFormula implements
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AssociativeFOLFormula other = (AssociativeFOLFormula) obj;
+		AssociativeFolFormula other = (AssociativeFolFormula) obj;
 		if (support == null) {
 			if (other.support != null)
 				return false;

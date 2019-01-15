@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 
 /**
  * An action is a truth-valued function on the set of action names, which is
@@ -34,9 +34,9 @@ import net.sf.tweety.logics.fol.syntax.FOLAtom;
  * @author Sebastian Homann
  */
 public class FolAction
-  implements Iterable< FOLAtom >, ActionName
+  implements Iterable< FolAtom >, ActionName
 {
-  private Set< FOLAtom > actionNames = new HashSet< FOLAtom >();
+  private Set< FolAtom > actionNames = new HashSet< FolAtom >();
   
   /**
    * Creates a new action, which maps all action names to false.
@@ -52,9 +52,9 @@ public class FolAction
    * @param actionNames a set of action names which are mapped to true by this
    *          action.
    */
-  public FolAction( Set< FOLAtom > actionNames )
+  public FolAction( Set< FolAtom > actionNames )
   {
-    for ( FOLAtom a : actionNames ) {
+    for ( FolAtom a : actionNames ) {
       if ( !( a.getPredicate() instanceof FolActionName ) )
         throw new IllegalArgumentException(
           "actionNames has to be a set of atoms with an ActionName predicate." );
@@ -68,9 +68,9 @@ public class FolAction
    * 
    * @return the set of atoms, that are contained in this action.
    */
-  public Set< FOLAtom > getAtoms()
+  public Set< FolAtom > getAtoms()
   {
-    Set< FOLAtom > result = new HashSet< FOLAtom >();
+    Set< FolAtom > result = new HashSet< FolAtom >();
     result.addAll( actionNames );
     return result;
   }
@@ -96,9 +96,9 @@ public class FolAction
    */
   public FolAction substitute( Map< ? extends Term<?>, ? extends Term<?> > map )
   {
-    Set< FOLAtom > result = new HashSet< FOLAtom >();
-    for ( FOLAtom a : actionNames )
-      result.add( (FOLAtom) a.substitute( map ) );
+    Set< FolAtom > result = new HashSet< FolAtom >();
+    for ( FolAtom a : actionNames )
+      result.add( (FolAtom) a.substitute( map ) );
     return new FolAction( result );
   }
   
@@ -110,7 +110,7 @@ public class FolAction
    */
   public boolean isGround()
   {
-    for ( FOLAtom a : actionNames )
+    for ( FolAtom a : actionNames )
       if ( !a.isGround() )
         return false;
     return true;
@@ -121,7 +121,7 @@ public class FolAction
    * @see java.lang.Iterable#iteratOor()
    */
   @Override
-  public Iterator< FOLAtom > iterator()
+  public Iterator< FolAtom > iterator()
   {
     return Collections.unmodifiableCollection( actionNames ).iterator();
   }

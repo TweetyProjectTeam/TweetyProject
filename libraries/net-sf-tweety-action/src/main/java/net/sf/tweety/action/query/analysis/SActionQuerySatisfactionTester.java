@@ -37,11 +37,11 @@ import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.action.transitionsystem.Transition;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
 import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
+import net.sf.tweety.logics.fol.syntax.AssociativeFolFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
@@ -340,8 +340,8 @@ public class SActionQuerySatisfactionTester
   {
     Set< FolFormula > result = new HashSet< FolFormula >();
     result.add( formula );
-    if ( formula instanceof AssociativeFOLFormula ) {
-      for ( RelationalFormula rel : (AssociativeFOLFormula) formula ) {
+    if ( formula instanceof AssociativeFolFormula ) {
+      for ( RelationalFormula rel : (AssociativeFolFormula) formula ) {
         result.addAll( getStateParts( (FolFormula) rel ) );
       }
     }
@@ -422,7 +422,7 @@ public class SActionQuerySatisfactionTester
       String statename = "s" + Integer.toString( statecounter );
       statemap.put( s, statename );
       statefacts += "state(" + statename + ").\n";
-      for ( FOLAtom a : s.getPositiveFluents() ) {
+      for ( FolAtom a : s.getPositiveFluents() ) {
         fluentfacts += removeIllegalCharacters( a.toString() );
         fluentfacts += "(" + statename + ").\n";
       }

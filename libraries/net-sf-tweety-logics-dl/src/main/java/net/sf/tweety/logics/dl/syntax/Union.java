@@ -28,7 +28,7 @@ import java.util.HashSet;
  * @author Anna Gessler
  *
  */
-public class Union extends AssociativeDLFormula {
+public class Union extends AssociativeDlFormula {
 	/**
 	 * Creates a new union with the given inner formulas.
 	 * 

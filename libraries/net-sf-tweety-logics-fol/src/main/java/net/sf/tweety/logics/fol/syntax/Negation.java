@@ -67,8 +67,8 @@ public class Negation extends FolFormula {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<FOLAtom> getAtoms(){
-		return (Set<FOLAtom>) this.folFormula.getAtoms();
+	public Set<FolAtom> getAtoms(){
+		return (Set<FolAtom>) this.folFormula.getAtoms();
 	}
 	
 	/* (non-Javadoc)
@@ -133,7 +133,7 @@ public class Negation extends FolFormula {
 	 */
 	@Override
 	public boolean isLiteral(){
-		return (this.folFormula instanceof FOLAtom);
+		return (this.folFormula instanceof FolAtom);
 	}
 	
 	/* (non-Javadoc)
@@ -182,7 +182,7 @@ public class Negation extends FolFormula {
 	 */
 	@Override
 	public boolean isDnf() {
-		return (this.folFormula instanceof FOLAtom);
+		return (this.folFormula instanceof FolAtom);
 	}
 	
 	/*

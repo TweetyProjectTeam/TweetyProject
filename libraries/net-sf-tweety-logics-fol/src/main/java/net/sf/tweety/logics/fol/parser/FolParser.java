@@ -643,7 +643,7 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 				  Predicate p = this.signature.getPredicate( s );
 				  if(p.getArity() > 0)
 				    throw new IllegalArgumentException("Predicate '" + p + "' has arity '" + p.getArity() + "'.");
-				  return new FOLAtom(p);
+				  return new FolAtom(p);
 				}
 			}
 			throw new ParserException("Unknown object " + o);
@@ -709,10 +709,10 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 					else args.add(t);
 				}	
 				if (p.getName().equals("==")) 
-					return new FOLAtom(new EqualityPredicate(),args); 
+					return new FolAtom(new EqualityPredicate(),args); 
 				else if (p.getName().equals("/==")) 
-					return new FOLAtom(new InequalityPredicate(),args); 
-				return new FOLAtom(p,args); 
+					return new FolAtom(new InequalityPredicate(),args); 
+				return new FolAtom(p,args); 
 			}
 			if (s.equals(LogicalSymbols.EQUALITY()) || s.equals(LogicalSymbols.INEQUALITY()))
 				throw new ParserException("Equality/Inequality predicate " + s + " is not part of this parser's FolSignature.");

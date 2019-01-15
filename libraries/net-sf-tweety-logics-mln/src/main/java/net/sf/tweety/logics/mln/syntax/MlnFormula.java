@@ -29,7 +29,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
@@ -115,8 +115,8 @@ public class MlnFormula extends RelationalFormula {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<FOLAtom> getAtoms() {
-		return (Set<FOLAtom>) this.formula.getAtoms();
+	public Set<FolAtom> getAtoms() {
+		return (Set<FolAtom>) this.formula.getAtoms();
 	}
 
 	/* (non-Javadoc)

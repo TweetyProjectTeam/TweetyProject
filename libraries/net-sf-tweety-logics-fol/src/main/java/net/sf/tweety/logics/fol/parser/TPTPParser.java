@@ -48,7 +48,7 @@ import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.EqualityPredicate;
 import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -644,7 +644,7 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 				  Predicate p = this.signature.getPredicate( s );
 				  if(p.getArity() > 0)
 				    throw new IllegalArgumentException("Predicate '" + p + "' has arity '" + p.getArity() + "'.");
-				  return new FOLAtom(p);
+				  return new FolAtom(p);
 				}
 			}
 			throw new ParserException("Unknown object " + o);
@@ -715,10 +715,10 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 					else args.add(t);
 				}
 				if (p.getName().equals("==")) 
-					return new FOLAtom(new EqualityPredicate(),args); 
+					return new FolAtom(new EqualityPredicate(),args); 
 				else if (p.getName().equals("/==")) 
-					return new FOLAtom(new InequalityPredicate(),args); 
-				return new FOLAtom(p,args);
+					return new FolAtom(new InequalityPredicate(),args); 
+				return new FolAtom(p,args);
 			}
 			throw new ParserException("Predicate '" + s + "' has not been declared.");
 		}	

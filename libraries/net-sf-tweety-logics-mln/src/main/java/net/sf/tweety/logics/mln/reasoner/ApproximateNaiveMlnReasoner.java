@@ -27,7 +27,7 @@ import java.util.Set;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
 import net.sf.tweety.commons.util.RandomSubsetIterator;
 import net.sf.tweety.logics.fol.semantics.*;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.mln.syntax.MarkovLogicNetwork;
@@ -112,10 +112,10 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 		// The Herbrand base of the signature
 		HerbrandBase hBase = new HerbrandBase(signature);
 		// The iterator for Herbrand interpretations
-		Iterator<Set<FOLAtom>> it;
+		Iterator<Set<FolAtom>> it;
 		if(this.maxNumberOfSelectedInterpretations == -1 || Math.pow(2, hBase.getAtoms().size()) <= this.maxNumberOfSelectedInterpretations )
-			it = new DefaultSubsetIterator<FOLAtom>(hBase.getAtoms());
-		else it = new RandomSubsetIterator<FOLAtom>(hBase.getAtoms(),false);
+			it = new DefaultSubsetIterator<FolAtom>(hBase.getAtoms());
+		else it = new RandomSubsetIterator<FolAtom>(hBase.getAtoms(),false);
 		long count = 0;
 		HerbrandInterpretation hInt;
 		WeightedHerbrandInterpretation whInt;

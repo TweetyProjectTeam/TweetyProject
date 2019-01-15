@@ -24,7 +24,7 @@ import net.sf.tweety.arg.delp.syntax.StrictRule;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import org.junit.Test;
 
@@ -47,13 +47,13 @@ public final class TestRules {
         String factAsString;
 
         factAsString = "Scared(tina).";
-        fact = new DelpFact(new FOLAtom(new Predicate("Scared", 1), Stream
+        fact = new DelpFact(new FolAtom(new Predicate("Scared", 1), Stream
                         .of(new Constant("tina"))
                         .collect(Collectors.toList())));
         assertEquals("Fact representation matches", factAsString, fact.toString());
 
         factAsString = "!Scared(tweety).";
-        fact = new DelpFact(new Negation(new FOLAtom(new Predicate("Scared", 1), Stream
+        fact = new DelpFact(new Negation(new FolAtom(new Predicate("Scared", 1), Stream
                 .of(new Constant("tweety"))
                 .collect(Collectors.toList()))));
         assertEquals("Fact representation matches", factAsString, fact.toString());
@@ -70,11 +70,11 @@ public final class TestRules {
 
         ruleAsString = "!Has_a_gun(X) <- Pacifist(X).";
         strict = new StrictRule(
-                new Negation(new FOLAtom(new Predicate("Has_a_gun", 1), Stream
+                new Negation(new FolAtom(new Predicate("Has_a_gun", 1), Stream
                         .of(new Variable("X"))
                         .collect(Collectors.toList()))),
                 Stream
-                        .of(new FOLAtom(new Predicate("Pacifist", 1), Stream
+                        .of(new FolAtom(new Predicate("Pacifist", 1), Stream
                                 .of(new Variable("X"))
                                 .collect(Collectors.toList())))
                         .collect(Collectors.toSet()));
@@ -88,15 +88,15 @@ public final class TestRules {
 
         ruleAsString = "Has_a_gun(X) <- Lives_in_chicago(Y),Republican(X).";
         strict = new StrictRule(
-                new FOLAtom(new Predicate("Has_a_gun", 1), Stream
+                new FolAtom(new Predicate("Has_a_gun", 1), Stream
                         .of(new Variable("X"))
                         .collect(Collectors.toList())),
                 Stream
                         .of(
-                                new FOLAtom(new Predicate("Republican", 1), Stream
+                                new FolAtom(new Predicate("Republican", 1), Stream
                                         .of(new Variable("X"))
                                         .collect(Collectors.toList())),
-                                new FOLAtom(new Predicate("Lives_in_chicago", 1), Stream
+                                new FolAtom(new Predicate("Lives_in_chicago", 1), Stream
                                         .of(new Variable("Y"))
                                         .collect(Collectors.toList())))
                         .collect(Collectors.toSet()));
@@ -118,15 +118,15 @@ public final class TestRules {
 
         ruleAsString = "!Has_a_gun(X) -< Lives_in_chicago(X),Pacifist(X).";
         rule = new DefeasibleRule(
-                new Negation(new FOLAtom(new Predicate("Has_a_gun", 1), Stream
+                new Negation(new FolAtom(new Predicate("Has_a_gun", 1), Stream
                         .of(new Variable("X"))
                         .collect(Collectors.toList()))),
                 Stream
                         .of(
-                                new FOLAtom(new Predicate("Lives_in_chicago", 1), Stream
+                                new FolAtom(new Predicate("Lives_in_chicago", 1), Stream
                                         .of(new Variable("X"))
                                         .collect(Collectors.toList())),
-                                new FOLAtom(new Predicate("Pacifist", 1), Stream
+                                new FolAtom(new Predicate("Pacifist", 1), Stream
                                         .of(new Variable("X"))
                                         .collect(Collectors.toList())))
                         .collect(Collectors.toSet()));
@@ -141,12 +141,12 @@ public final class TestRules {
 
         ruleAsString = "!Nests_in_trees(X) -< !Flies(X).";
         rule = new DefeasibleRule(
-                new Negation(new FOLAtom(new Predicate("Nests_in_trees", 1), Stream
+                new Negation(new FolAtom(new Predicate("Nests_in_trees", 1), Stream
                         .of(new Variable("X"))
                         .collect(Collectors.toList()))),
                 Stream
                         .of(new Negation(
-                                new FOLAtom(new Predicate("Flies", 1), Stream
+                                new FolAtom(new Predicate("Flies", 1), Stream
                                         .of(new Variable("X"))
                                         .collect(Collectors.toList()))))
                         .collect(Collectors.toSet()));
@@ -162,11 +162,11 @@ public final class TestRules {
     @Test(expected = UnsupportedOperationException.class)
     public void strictNotClonable() {
         StrictRule strict = new StrictRule(
-                new Negation(new FOLAtom(new Predicate("Has_a_gun", 1), Stream
+                new Negation(new FolAtom(new Predicate("Has_a_gun", 1), Stream
                         .of(new Variable("X"))
                         .collect(Collectors.toList()))),
                 Stream
-                        .of(new FOLAtom(new Predicate("Pacifist", 1), Stream
+                        .of(new FolAtom(new Predicate("Pacifist", 1), Stream
                                 .of(new Variable("X"))
                                 .collect(Collectors.toList())))
                         .collect(Collectors.toSet()));
@@ -176,12 +176,12 @@ public final class TestRules {
     @Test(expected = UnsupportedOperationException.class)
     public void defeasibleNotClonable() {
         DefeasibleRule rule = new DefeasibleRule(
-                new Negation(new FOLAtom(new Predicate("Nests_in_trees", 1), Stream
+                new Negation(new FolAtom(new Predicate("Nests_in_trees", 1), Stream
                         .of(new Variable("X"))
                         .collect(Collectors.toList()))),
                 Stream
                         .of(new Negation(
-                                new FOLAtom(new Predicate("Flies", 1), Stream
+                                new FolAtom(new Predicate("Flies", 1), Stream
                                         .of(new Variable("X"))
                                         .collect(Collectors.toList()))))
                         .collect(Collectors.toSet()));

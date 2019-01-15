@@ -25,7 +25,7 @@ import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
+import net.sf.tweety.logics.fol.syntax.AssociativeFolFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
@@ -149,8 +149,8 @@ public class Prover9Writer implements FolWriter {
 				result += "))";
 			return result;
 		}
-		if (f instanceof AssociativeFOLFormula) {
-			AssociativeFOLFormula d = (AssociativeFOLFormula) f;
+		if (f instanceof AssociativeFolFormula) {
+			AssociativeFolFormula d = (AssociativeFolFormula) f;
 			Iterator<RelationalFormula> i = d.getFormulas().iterator();
 			String result = printFormula(i.next());
 			String delimiter = (f instanceof Conjunction) ? " & " : " | ";

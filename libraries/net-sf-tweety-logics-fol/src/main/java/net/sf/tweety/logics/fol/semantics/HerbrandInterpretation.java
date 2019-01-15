@@ -40,13 +40,13 @@ import net.sf.tweety.logics.fol.syntax.*;
  *   function symbols.
  * @author Matthias Thimm
  */
-public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefSet,FolFormula> {
+public class HerbrandInterpretation extends InterpretationSet<FolAtom,FolBeliefSet,FolFormula> {
 	
 	/**
 	 * Creates a new empty Herbrand interpretation
 	 */
 	public HerbrandInterpretation(){
-		this(new HashSet<FOLAtom>());
+		this(new HashSet<FolAtom>());
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefS
 	 * set of atoms
 	 * @param atoms the set of true atoms in this Herbrand interpretation.
 	 */
-	public HerbrandInterpretation(Collection<? extends FOLAtom> atoms){
+	public HerbrandInterpretation(Collection<? extends FolAtom> atoms){
 		super(atoms);
 	}
 	
@@ -76,17 +76,17 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefS
 		if(f instanceof Contradiction){
 			return false;
 		}			
-		if(f instanceof FOLAtom){
-			Predicate p = ((FOLAtom) f).getPredicate();
+		if(f instanceof FolAtom){
+			Predicate p = ((FolAtom) f).getPredicate();
 			if (p instanceof EqualityPredicate) {
-				List<Term<?>> terms =((FOLAtom) f).getArguments();
+				List<Term<?>> terms =((FolAtom) f).getArguments();
 				if (terms.get(0).equals(terms.get(1)))
 					return true;
 				else
 					return false;
 			}
 			else if (p instanceof InequalityPredicate) {
-				List<Term<?>> terms =((FOLAtom) f).getArguments();
+				List<Term<?>> terms =((FolAtom) f).getArguments();
 				if (terms.get(0).equals(terms.get(1))) 
 					return false; 
 				else 
@@ -192,11 +192,11 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefS
 		Set<Constant> constants = new HashSet<Constant>();
 		Set<Predicate> predicates1 = new HashSet<Predicate>();
 		Set<Predicate> predicates2 = new HashSet<Predicate>();
-		for(FOLAtom a: this){
+		for(FolAtom a: this){
 			constants.addAll(a.getTerms(Constant.class));
 			predicates1.add(a.getPredicate());
 		}
-		for(FOLAtom a: other){
+		for(FolAtom a: other){
 			constants.addAll(a.getTerms(Constant.class));
 			predicates2.add(a.getPredicate());
 		}
@@ -268,10 +268,10 @@ public class HerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefS
 	 * @return a Herbrand interpretation
 	 */
 	public HerbrandInterpretation exchange(Term<?> t1, Term<?> t2){
-		Set<FOLAtom> atoms = new HashSet<FOLAtom>();
+		Set<FolAtom> atoms = new HashSet<FolAtom>();
 		Constant tempConstant = new Constant("__TEMP__");
 		for(Formula f: this){
-			FOLAtom a = ((FOLAtom) f).substitute(t1, tempConstant);
+			FolAtom a = ((FolAtom) f).substitute(t1, tempConstant);
 			a = a.substitute(t2, t1);
 			a = a.substitute(tempConstant, t2);
 			atoms.add(a);

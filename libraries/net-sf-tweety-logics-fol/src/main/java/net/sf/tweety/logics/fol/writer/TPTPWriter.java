@@ -29,13 +29,13 @@ import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.AssociativeFOLFormula;
+import net.sf.tweety.logics.fol.syntax.AssociativeFolFormula;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.EqualityPredicate;
 import net.sf.tweety.logics.fol.syntax.Equivalence;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -193,8 +193,8 @@ public class TPTPWriter implements FolWriter {
 			
 			return parens(result + printFormula(fqf.getFormula()))+")";
 		}
-		if (f instanceof AssociativeFOLFormula) {
-			AssociativeFOLFormula d = (AssociativeFOLFormula) f;
+		if (f instanceof AssociativeFolFormula) {
+			AssociativeFolFormula d = (AssociativeFolFormula) f;
 			Iterator<RelationalFormula> i = d.getFormulas().iterator();
 			String result = printFormula(i.next());
 			String delimiter = (f instanceof Conjunction) ? " & " : " | ";
@@ -216,8 +216,8 @@ public class TPTPWriter implements FolWriter {
 			Equivalence e = (Equivalence) f;
 			return parens(printFormula(e.getFormulas().getFirst()) + "<=>" + printFormula(e.getFormulas().getSecond()));
 		}
-		if (f instanceof FOLAtom) {
-			FOLAtom at = (FOLAtom) f;
+		if (f instanceof FolAtom) {
+			FolAtom at = (FolAtom) f;
 			Predicate p = at.getPredicate();
 			if (p instanceof EqualityPredicate) {
 				Iterator<Term<?>> it = at.getArguments().iterator();

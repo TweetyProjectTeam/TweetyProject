@@ -28,7 +28,7 @@ import java.util.HashSet;
  * @author Anna Gessler
  *
  */
-public class Intersection extends AssociativeDLFormula {
+public class Intersection extends AssociativeDlFormula {
 	/**
 	 * Creates a new intersection with the given inner formulas.
 	 * 

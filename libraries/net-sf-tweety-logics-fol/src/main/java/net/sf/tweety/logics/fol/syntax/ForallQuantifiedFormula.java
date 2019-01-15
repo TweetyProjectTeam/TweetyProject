@@ -79,8 +79,8 @@ public class ForallQuantifiedFormula extends FolFormula {
 	
 	public Set<FolFormula> getQuantifiedFormulas(){
 		Set<FolFormula> qf = new HashSet<FolFormula>();
-		if(this.getFormula() instanceof AssociativeFOLFormula) {
-			AssociativeFOLFormula af = ((AssociativeFOLFormula) this.getFormula());
+		if(this.getFormula() instanceof AssociativeFolFormula) {
+			AssociativeFolFormula af = ((AssociativeFolFormula) this.getFormula());
 			qf.addAll(af.getFormulas(ForallQuantifiedFormula.class));
 			qf.addAll(af.getFormulas(ExistsQuantifiedFormula.class));
 		}
@@ -186,8 +186,8 @@ public class ForallQuantifiedFormula extends FolFormula {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public Set<FOLAtom> getAtoms() {
-			return (Set<FOLAtom>) support.getAtoms();
+		public Set<FolAtom> getAtoms() {
+			return (Set<FolAtom>) support.getAtoms();
 		}
 
 		@Override

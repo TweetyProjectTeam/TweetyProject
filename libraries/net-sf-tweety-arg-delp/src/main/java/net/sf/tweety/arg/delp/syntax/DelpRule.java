@@ -151,11 +151,11 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<FOLAtom> getAtoms() {
-		Set<FOLAtom> atoms = new HashSet<>();
-		atoms.addAll((Collection<FOLAtom>) this.head.getAtoms());
+	public Set<FolAtom> getAtoms() {
+		Set<FolAtom> atoms = new HashSet<>();
+		atoms.addAll((Collection<FolAtom>) this.head.getAtoms());
 		for(FolFormula f: this.body)
-			atoms.addAll((Collection<FOLAtom>) f.getAtoms());
+			atoms.addAll((Collection<FolAtom>) f.getAtoms());
 		return atoms;
 	}
 

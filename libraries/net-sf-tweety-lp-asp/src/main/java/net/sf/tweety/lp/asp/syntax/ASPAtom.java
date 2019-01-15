@@ -30,7 +30,7 @@ import java.util.TreeSet;
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
@@ -89,7 +89,7 @@ public class ASPAtom extends ASPLiteral {
 	 * @param other
 	 *            The FOL atom acting as source for the deep copy
 	 */
-	public ASPAtom(FOLAtom other) {
+	public ASPAtom(FolAtom other) {
 		if (other.getPredicate().isTyped())
 			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given atom's predicate " + other.getPredicate() + " is not.");
 		this.predicate = new Predicate(other.getPredicate().getName(), other.getArguments().size());

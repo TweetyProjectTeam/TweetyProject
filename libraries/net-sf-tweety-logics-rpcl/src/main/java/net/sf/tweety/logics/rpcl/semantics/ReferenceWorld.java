@@ -35,7 +35,7 @@ import net.sf.tweety.logics.fol.semantics.HerbrandInterpretation;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
@@ -186,8 +186,8 @@ public class ReferenceWorld extends AbstractInterpretation<FolBeliefSet,FolFormu
 			result = this.spanNumber;
 		else if(f instanceof Contradiction)
 			result = 0;
-		else if(f instanceof FOLAtom){
-			FOLAtom a = (FOLAtom) f;
+		else if(f instanceof FolAtom){
+			FolAtom a = (FolAtom) f;
 			result = (a.getPredicate().equals(p) && constants.contains(a.getArguments().get(0)) && positive)?(1):(0);
 		}else if(f instanceof Negation){
 			result = this.getNumberOfOccurences(((Negation)f).getFormula(), p, constants, !positive);
@@ -218,7 +218,7 @@ public class ReferenceWorld extends AbstractInterpretation<FolBeliefSet,FolFormu
 			InstanceAssignment ia = new InstanceAssignment(p);
 			for(Set<Constant> c: constants){
 				Integer value = 0;				
-				for(FOLAtom a: i)
+				for(FolAtom a: i)
 					if(a.getPredicate().equals(p))
 						if(c.contains(a.getArguments().get(0)))
 							value++;				

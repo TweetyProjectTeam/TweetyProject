@@ -25,7 +25,7 @@ import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.translators.Translator;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -48,7 +48,7 @@ public class FOLPropTranslator extends Translator {
 	 * arguments an exception is thrown.
 	 * @return		Propositional form of the given Atom
 	 */
-	public Proposition toPropositional(FOLAtom atom) {
+	public Proposition toPropositional(FolAtom atom) {
 		return (Proposition) this.translateAtom(atom, Proposition.class);
 	}
 	
@@ -57,8 +57,8 @@ public class FOLPropTranslator extends Translator {
 	 * @param proposition The Proposition
 	 * @return	A FOL-Atom representing the given Proposition in first order logic.
 	 */
-	public FOLAtom toFOL(Proposition proposition) {
-		return (FOLAtom) this.translateAtom(proposition, FOLAtom.class);
+	public FolAtom toFOL(Proposition proposition) {
+		return (FolAtom) this.translateAtom(proposition, FolAtom.class);
 	}
 
 	/**
@@ -140,8 +140,8 @@ public class FOLPropTranslator extends Translator {
 			net.sf.tweety.logics.fol.syntax.Negation neg = (net.sf.tweety.logics.fol.syntax.Negation) folFormula;
 			return new Negation(toPropositional(neg.getFormula()));
 		}
-		if(folFormula instanceof FOLAtom) {
-			return toPropositional(((FOLAtom) folFormula));
+		if(folFormula instanceof FolAtom) {
+			return toPropositional(((FolAtom) folFormula));
 		}
 		if(folFormula instanceof Conjunction) {
 			Conjunction conj = (Conjunction) folFormula;
@@ -157,8 +157,8 @@ public class FOLPropTranslator extends Translator {
 	@Override
 	protected Map<Class<?>, Pair<Integer, Class<?>>> createTranslateMap() {
 		Map<Class<?>, Pair<Integer, Class<?>>> tmap = new HashMap<Class<?>, Pair<Integer,Class<?>>>();
-		tmap.put(FOLAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, Proposition.class));
-		tmap.put(Proposition.class, new Pair<Integer, Class<?>>(TT_ATOM, FOLAtom.class));
+		tmap.put(FolAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, Proposition.class));
+		tmap.put(Proposition.class, new Pair<Integer, Class<?>>(TT_ATOM, FolAtom.class));
 		
 		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(
 				TT_ASSOC, net.sf.tweety.logics.pl.syntax.Disjunction.class));

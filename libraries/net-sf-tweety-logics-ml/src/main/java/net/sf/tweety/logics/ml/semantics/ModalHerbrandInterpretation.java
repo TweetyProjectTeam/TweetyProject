@@ -45,13 +45,13 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * @author Anna Gessler
  * @see net.sf.tweety.logics.fol.semantics.HerbrandInterpretation
  */
-public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolBeliefSet,FolFormula> {
+public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBeliefSet,FolFormula> {
 	
 	/**
 	 * Creates a new empty Herbrand interpretation
 	 */
 	public ModalHerbrandInterpretation(){
-		this(new HashSet<FOLAtom>());
+		this(new HashSet<FolAtom>());
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolBe
 	 * set of atoms
 	 * @param atoms the set of true atoms in this Herbrand interpretation.
 	 */
-	public ModalHerbrandInterpretation(Collection<? extends FOLAtom> atoms){
+	public ModalHerbrandInterpretation(Collection<? extends FolAtom> atoms){
 		super(atoms);
 	}
 	
@@ -89,7 +89,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolBe
 		if(f instanceof Contradiction){
 			return false;
 		}			
-		if(f instanceof FOLAtom){
+		if(f instanceof FolAtom){
 			return this.contains(f);
 		}					
 		if(f instanceof Disjunction){
@@ -204,11 +204,11 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolBe
 		Set<Constant> constants = new HashSet<Constant>();
 		Set<Predicate> predicates1 = new HashSet<Predicate>();
 		Set<Predicate> predicates2 = new HashSet<Predicate>();
-		for(FOLAtom a: this){
+		for(FolAtom a: this){
 			constants.addAll(a.getTerms(Constant.class));
 			predicates1.add(a.getPredicate());
 		}
-		for(FOLAtom a: other){
+		for(FolAtom a: other){
 			constants.addAll(a.getTerms(Constant.class));
 			predicates2.add(a.getPredicate());
 		}
@@ -280,10 +280,10 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FOLAtom,FolBe
 	 * @return a Herbrand interpretation
 	 */
 	public ModalHerbrandInterpretation exchange(Term<?> t1, Term<?> t2){
-		Set<FOLAtom> atoms = new HashSet<FOLAtom>();
+		Set<FolAtom> atoms = new HashSet<FolAtom>();
 		Constant tempConstant = new Constant("__TEMP__");
 		for(Formula f: this){
-			FOLAtom a = ((FOLAtom) f).substitute(t1, tempConstant);
+			FolAtom a = ((FolAtom) f).substitute(t1, tempConstant);
 			a = a.substitute(t2, t1);
 			a = a.substitute(tempConstant, t2);
 			atoms.add(a);

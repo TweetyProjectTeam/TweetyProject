@@ -28,7 +28,7 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
  * The classical disjunction of first-order logic.
  * @author Matthias Thimm
  */
-public class Disjunction extends AssociativeFOLFormula{
+public class Disjunction extends AssociativeFolFormula{
 	
 	/**
 	 * Creates a new disjunction with the given inner formulas. 

@@ -201,12 +201,12 @@ public class DynamicLaw
    */
   @SuppressWarnings("unchecked")
 @Override
-  public Set< FOLAtom > getAtoms()
+  public Set< FolAtom > getAtoms()
   {
-    Set< FOLAtom > result = new HashSet< FOLAtom >();
-    result.addAll( (Collection<? extends FOLAtom>) headFormula.getAtoms() );
-    result.addAll( (Collection<? extends FOLAtom>) ifFormula.getAtoms() );
-    result.addAll( (Collection<? extends FOLAtom>) afterFormula.getAtoms() );
+    Set< FolAtom > result = new HashSet< FolAtom >();
+    result.addAll( (Collection<? extends FolAtom>) headFormula.getAtoms() );
+    result.addAll( (Collection<? extends FolAtom>) ifFormula.getAtoms() );
+    result.addAll( (Collection<? extends FolAtom>) afterFormula.getAtoms() );
     return result;
   }
   
@@ -265,7 +265,7 @@ public class DynamicLaw
     Set< CLaw > result = new HashSet< CLaw >();
     Set< Variable > variables = new HashSet< Variable >();
     
-    for ( FOLAtom a : getAtoms() ) {
+    for ( FolAtom a : getAtoms() ) {
       variables.addAll( a.getUnboundVariables() );
     }
     Set< Map< Variable, Constant >> substitutions =

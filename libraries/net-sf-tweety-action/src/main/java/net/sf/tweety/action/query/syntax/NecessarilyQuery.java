@@ -28,7 +28,7 @@ import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.action.signature.FolAction;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
@@ -156,7 +156,7 @@ public class NecessarilyQuery
   {
     Set< Variable > result = formula.getUnboundVariables();
     for ( FolAction fa : actions ) {
-      for ( FOLAtom a : fa.getAtoms() ) {
+      for ( FolAtom a : fa.getAtoms() ) {
         result.addAll( a.getUnboundVariables() );
       }
     }

@@ -19,7 +19,7 @@
  package net.sf.tweety.arg.delp;
 
 import net.sf.tweety.arg.delp.syntax.DelpRule;
-import net.sf.tweety.logics.fol.syntax.FOLAtom;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 
@@ -62,9 +62,9 @@ class Utilities {
     static Comparator<FolFormula> compareLiterals = (Comparator<FolFormula>) (fol1, fol2) -> {
         if (fol1 instanceof Negation && !(fol2 instanceof Negation)) return -1;
         if (fol2 instanceof Negation && !(fol1 instanceof Negation)) return 1;
-        FOLAtom atom1, atom2;
-        atom1 = (FOLAtom) fol1.getAtoms().iterator().next();
-        atom2 = (FOLAtom) fol2.getAtoms().iterator().next();
+        FolAtom atom1, atom2;
+        atom1 = (FolAtom) fol1.getAtoms().iterator().next();
+        atom2 = (FolAtom) fol2.getAtoms().iterator().next();
         int result = atom1.getPredicate().getName().compareTo(atom2.getPredicate().getName());
         if (result != 0) return result; // predicate names differ
         // predicate names are equal: look at arity

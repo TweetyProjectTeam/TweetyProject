@@ -63,8 +63,8 @@ public class ModalHerbrandBase {
 	 */
 	public Set<ModalHerbrandInterpretation> getAllHerbrandInterpretations(){
 		Set<ModalHerbrandInterpretation> interpretations = new HashSet<ModalHerbrandInterpretation>();
-		Set<Set<FOLAtom>> subsets = new SetTools<FOLAtom>().subsets(this.getAtoms());
-		for(Set<FOLAtom> atoms: subsets)
+		Set<Set<FolAtom>> subsets = new SetTools<FolAtom>().subsets(this.getAtoms());
+		for(Set<FolAtom> atoms: subsets)
 			interpretations.add(new ModalHerbrandInterpretation(atoms));		
 		return interpretations;
 	}
@@ -74,7 +74,7 @@ public class ModalHerbrandBase {
 	 * @return all atoms of this Herbrand base.
 	 * @see net.sf.tweety.logics.fol.semantics.HerbrandBase#getAtoms()
 	 */
-	public Set<FOLAtom> getAtoms(){
+	public Set<FolAtom> getAtoms(){
 		return hBase.getAtoms();
 	}
 }

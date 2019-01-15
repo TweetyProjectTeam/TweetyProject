@@ -115,8 +115,8 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
   }
 
   static final public Pair<HerbrandInterpretation,Probability> ProbabilityAssignment(FolSignature signature) throws ParseException {
-        Set<FOLAtom> atoms = new HashSet<FOLAtom>();
-        FOLAtom atom;
+        Set<FolAtom> atoms = new HashSet<FolAtom>();
+        FolAtom atom;
         Token probability;
     jj_consume_token(7);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -149,7 +149,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     throw new Error("Missing return statement in function");
   }
 
-  static final public FOLAtom GroundAtom(FolSignature signature) throws ParseException {
+  static final public FolAtom GroundAtom(FolSignature signature) throws ParseException {
         Token predicate;
         Token constant;
         List<Constant> parameters = new ArrayList<Constant>();
@@ -201,7 +201,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
                         p = new Predicate(predicate.image, parameters.size());
                         signature.add(p);
                 }
-                {if (true) return new FOLAtom(p,parameters);}
+                {if (true) return new FolAtom(p,parameters);}
     throw new Error("Missing return statement in function");
   }
 
