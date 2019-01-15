@@ -38,14 +38,14 @@ import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
- * Slightly optimised reasoner for ASPIC. It first computes the syntactic module of the ASPIC theory and then
- * constructs an AAF from that module (instead of the whole ASPIC theory).
+ * Computes a restricted AF by only considering relevant arguments to a query. An optional 
+ * probability value for including only a certain subset of relevant arguments turns this
+ * reasoner into an approximative reasoner
  *  
- * @author Matthias Thimm
+ * @author Tjitze Rienstra, Matthias Thimm
  *
  * @param <T> the type of formulas
  */
@@ -58,15 +58,25 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 	 * @param aafReasoner Underlying reasoner for AAFs. 
 	 */
 	public DirectionalAspicReasoner(AbstractExtensionReasoner aafReasoner) {
+		this(aafReasoner,1d);
+	}
+	
+	/**
+	 * Creates a new instance
+	 * @param aafReasoner Underlying reasoner for AAFs. 
+	 * @param prob the probability of including a certain relevant argument
+	 */
+	public DirectionalAspicReasoner(AbstractExtensionReasoner aafReasoner, double prob) {
 		super(aafReasoner);
+		this.prob = prob;
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.aspic.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.AspicArgumentationTheory, net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.arg.aspic.reasoner.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory, net.sf.tweety.logics.commons.syntax.interfaces.Invertable)
 	 */
 	@Override
-	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query) {
-		return asRestrictedDungTheory(aat, false, (T)query);
+	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, T query) {
+		return asRestrictedDungTheory(aat, false, query);
 	}
 	
 	/**
@@ -198,6 +208,7 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 	 * @param rfgen Rule formula generator in use.
 	 * @return Attacking conclusions of argument.
 	 */
+	@SuppressWarnings("unchecked")
 	public Collection<T> getAttackingConclusions(AspicArgument<T> arg, RuleFormulaGenerator<T> rfgen) {
 		Collection<T> cs = new ArrayList<T>();
 		Objects.requireNonNull(rfgen);
@@ -215,10 +226,11 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 		}
 		return cs;
 	}
-
-	public void setInclusionProbability(double prob) {
-		this.prob = prob;
-
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "dirRand-" + this.prob;
 	}
-
 }

@@ -23,7 +23,6 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
@@ -55,7 +54,7 @@ public abstract class AbstractAspicReasoner<T extends Invertable> implements Qua
 	 * @param query some query 
 	 * @return a Dung theory
 	 */
-	public abstract DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query);
+	public abstract DungTheory getDungTheory(AspicArgumentationTheory<T> aat, T query);
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)

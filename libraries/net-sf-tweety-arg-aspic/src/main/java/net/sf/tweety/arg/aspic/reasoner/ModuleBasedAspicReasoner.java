@@ -21,7 +21,6 @@ package net.sf.tweety.arg.aspic.reasoner;
 import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.commons.Formula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
@@ -43,10 +42,10 @@ public class ModuleBasedAspicReasoner<T extends Invertable> extends AbstractAspi
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.aspic.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.AspicArgumentationTheory, net.sf.tweety.commons.Formula)
+	 * @see net.sf.tweety.arg.aspic.reasoner.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory, net.sf.tweety.logics.commons.syntax.interfaces.Invertable)
 	 */
 	@Override
-	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, Formula query) {
+	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, T query) {
 		AspicArgumentationTheory<T> module = new AspicArgumentationTheory<T>(aat.getRuleFormulaGenerator());
 		module.addAll(aat.getSyntacticModule(query));
 		return module.asDungTheory();
