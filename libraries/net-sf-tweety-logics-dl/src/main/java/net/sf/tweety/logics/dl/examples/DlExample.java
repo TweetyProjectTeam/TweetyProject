@@ -24,11 +24,14 @@ import net.sf.tweety.logics.dl.syntax.EquivalenceAxiom;
 import net.sf.tweety.logics.dl.syntax.Individual;
 import net.sf.tweety.logics.dl.syntax.RoleAssertion;
 import net.sf.tweety.logics.dl.syntax.Union;
+import net.sf.tweety.logics.dl.parser.DlParser;
 import net.sf.tweety.logics.dl.syntax.AtomicConcept;
 import net.sf.tweety.logics.dl.syntax.AtomicRole;
 import net.sf.tweety.logics.dl.syntax.Complement;
 import net.sf.tweety.logics.dl.syntax.ConceptAssertion;
+import net.sf.tweety.logics.dl.syntax.DlAxiom;
 import net.sf.tweety.logics.dl.syntax.DlBeliefSet;
+import net.sf.tweety.logics.dl.syntax.DlSignature;
 /**
  * 
  * Examples for using the description logic syntax classes, parser and NaiveReasoner (WIP).
@@ -82,11 +85,12 @@ public class DlExample {
 		System.out.println("Only the TBox: " + dbs.getTBox());	
 		
 		//Parse knowledge base (to be added soon)
-//		DlParser parser = new DlParser();
-//		DlBeliefSet parseddbs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.dlogic");
-//		DlSignature parsedsig = (DlSignature) parseddbs.getSignature();
-//		System.out.println("\nParsed knowledge base: " + parseddbs);
-//		System.out.println("\nParsed signature: " + parsedsig.getIndividuals() + ","+ parsedsig.getConcepts() + "," + parsedsig.getRoles());
-		
+		DlParser parser = new DlParser();
+		DlBeliefSet parseddbs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.dlogic");
+		DlSignature parsedsig = (DlSignature) parseddbs.getSignature();
+		System.out.println("\nParsed signature: " + parsedsig.getIndividuals() + ","+ parsedsig.getConcepts() + "," + parsedsig.getRoles());
+		System.out.println("\nParsed knowledge base: ");
+		for (DlAxiom dax : parseddbs)
+			System.out.println(dax);	
 	}
 }
