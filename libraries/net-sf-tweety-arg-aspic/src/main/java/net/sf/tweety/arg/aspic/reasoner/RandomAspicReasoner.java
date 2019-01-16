@@ -81,22 +81,22 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 	 * @see net.sf.tweety.arg.aspic.reasoner.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory, net.sf.tweety.logics.commons.syntax.interfaces.Invertable)
 	 */
 	@Override
-	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, T query) {
-		// special case: there are no rules with empty body, so no argument can be constructed
+	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, T query) {		
+		// determine part of the theory needed for the query
+		AspicArgumentationTheory<T> module = new AspicArgumentationTheory<T>(aat.getRuleFormulaGenerator());
+		module.addAll(aat.getSyntacticModule(query));
+		// special case: empty module
+		if(module.isEmpty())
+			return new DungTheory();
+		// special case: there are no rules with empty body in the module, so no argument can be constructed
 		boolean premiseFound = false;
-		for(InferenceRule<T> rule: aat) {
+		for(InferenceRule<T> rule: module) {
 			if(rule.getPremise().isEmpty()) {
 				premiseFound = true;
 				break;
 			}				
 		}
 		if(!premiseFound)
-			return new DungTheory();
-		// determine part of the theory needed for the query
-		AspicArgumentationTheory<T> module = new AspicArgumentationTheory<T>(aat.getRuleFormulaGenerator());
-		module.addAll(aat.getSyntacticModule(query));
-		// special case: empty module
-		if(module.isEmpty())
 			return new DungTheory();
 		Collection<AspicArgument<T>> args = new HashSet<AspicArgument<T>>();
 		DungTheory aaf = new DungTheory();
