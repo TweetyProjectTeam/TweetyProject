@@ -121,13 +121,18 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 		ProboProblem problem = ProboProblem.getProblem(inf + "-" + this.semantics.abbreviation());
 		if(!this.supportedProblems().contains(problem))
 			throw new UnsupportedOperationException("Problem not supported by this probo solver.");
-		FileFormat format = this.supportedFormats().iterator().next();
+		FileFormat format;
+		if(this.supportedFormats().contains(FileFormat.TGF))
+			format = FileFormat.TGF;
+		else if(this.supportedFormats().contains(FileFormat.APX))
+			format = FileFormat.APX;
+		else format = this.supportedFormats().iterator().next();
 		try {
 			File temp = File.createTempFile("aaf-", "." + format.extension());
 			AbstractDungWriter writer = AbstractDungWriter.getWriter(format);
 			writer.write(beliefbase, temp);
-			String result = this.bash.run(this.path_to_exec + " -p " + problem.toString() + " -fo " + format.toString() + " -f " + temp.getAbsolutePath() + " -a " + formula.getName());			
-			temp.delete();			
+			String result = this.bash.run(this.path_to_exec + " -p " + problem.toString() + " -fo " + format.toString() + " -f " + temp.getAbsolutePath() + " -a " + formula.getName());
+			temp.delete();
 			return AbstractDungParser.parseBoolean(result);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -143,7 +148,12 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 		ProboProblem problem = ProboProblem.getProblem("EE-" + this.semantics.abbreviation());
 		if(!this.supportedProblems().contains(problem))
 			throw new UnsupportedOperationException("Problem not supported by this probo solver.");
-		FileFormat format = this.supportedFormats().iterator().next();
+		FileFormat format;
+		if(this.supportedFormats().contains(FileFormat.TGF))
+			format = FileFormat.TGF;
+		else if(this.supportedFormats().contains(FileFormat.APX))
+			format = FileFormat.APX;
+		else format = this.supportedFormats().iterator().next();
 		try {
 			File temp = File.createTempFile("aaf-", "." + format.extension());
 			AbstractDungWriter writer = AbstractDungWriter.getWriter(format);
@@ -167,13 +177,18 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 		ProboProblem problem = ProboProblem.getProblem("SE-" + this.semantics.abbreviation());
 		if(!this.supportedProblems().contains(problem))
 			throw new UnsupportedOperationException("Problem not supported by this probo solver.");
-		FileFormat format = this.supportedFormats().iterator().next();
+		FileFormat format;
+		if(this.supportedFormats().contains(FileFormat.TGF))
+			format = FileFormat.TGF;
+		else if(this.supportedFormats().contains(FileFormat.APX))
+			format = FileFormat.APX;
+		else format = this.supportedFormats().iterator().next();
 		try {
 			File temp = File.createTempFile("aaf-", "." + format.extension());
 			AbstractDungWriter writer = AbstractDungWriter.getWriter(format);
-			writer.write(bbase, temp);
+			writer.write(bbase, temp);			
 			String result = this.bash.run(this.path_to_exec + " -p " + problem.toString() + " -fo " + format.toString() + " -f " + temp.getAbsolutePath());			
-			temp.delete();
+			temp.delete();			
 			if(result.trim().toLowerCase().equals("no"))
 				return null;			
 			return AbstractDungParser.parseArgumentList(result);
