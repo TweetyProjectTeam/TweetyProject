@@ -413,6 +413,9 @@ public abstract class GraphUtil {
 			if(result.get(node) > max)
 				max = result.get(node);
 		}
+		//special case max=min
+		if(max == min)
+			return result;
 		for(T node: result.keySet()) 
 			result.put(node, (result.get(node)-min)/(max-min));
 		return result;
