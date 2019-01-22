@@ -346,4 +346,75 @@ public abstract class GraphUtil {
 		}
 		return ccircuits;
 	}		
+	
+	/**
+	 * Computes the normalised betweenness centrality of all nodes, i.e. the number of shortest paths
+	 * going through each node. The value is normalised by subtracting the minimum number (min) of such shortest
+	 * paths and dividing by (max-min).
+	 *  
+	 * @param graph some graph
+	 * @return a map mapping each node to its betweenness centrality.
+	 */
+	public static <T extends Node> Map<T,Double> betweennessCentralityNormalised(Graph<T> graph){
+		// we use iterated modified BFS (in the end O(n^4) runtime), this could be optimised
+		Map<T,Double> result = new HashMap<T,Double>();
+		for(T node: graph)
+			result.put(node, 0d);
+		Queue<T> q = new LinkedList<T>();
+		Map<T,Set<T>> pred = new HashMap<T,Set<T>>();
+		Map<T,Integer> dist = new HashMap<T,Integer>();
+		Queue<List<T>> paths = new LinkedList<List<T>>();
+		for(T node: graph) {
+			pred.clear();
+			dist.clear();
+			q.add(node);
+			dist.put(node, 0);
+			while(!q.isEmpty()) {
+				T node2 = q.poll();
+				for(T node3: graph.getChildren(node2)) {
+					if(dist.containsKey(node3)) {
+						if(dist.get(node3) == dist.get(node2) +1) {
+							pred.get(node3).add(node2);
+						}
+					}else {
+						dist.put(node3, dist.get(node2)+1);
+						pred.put(node3, new HashSet<T>());
+						pred.get(node3).add(node2);
+						q.add(node3);
+					}
+				}
+			}			
+			for(T node2: pred.keySet()) {
+				List<T> path = new LinkedList<T>();
+				path.add(node2);
+				paths.add(path);
+				while(!paths.isEmpty()) {
+					path = paths.poll();
+					if(path.get(0) == node) {
+						for(T node3: path)
+							if(node3 != node && node3 != node2) {
+								result.put(node3, result.get(node3)+1);
+							}
+					}else {
+						for(T node3: pred.get(path.get(0))) {
+							List<T> newPath = new LinkedList<T>(path);
+							newPath.add(0, node3);
+							paths.add(newPath);
+						}
+					}
+				}
+			}
+		}
+		// normalise
+		double min = Double.MAX_VALUE, max = 0;
+		for(T node: result.keySet()) {
+			if(result.get(node) < min)
+				min = result.get(node);
+			if(result.get(node) > max)
+				max = result.get(node);
+		}
+		for(T node: result.keySet()) 
+			result.put(node, (result.get(node)-min)/(max-min));
+		return result;
+	}
 }
