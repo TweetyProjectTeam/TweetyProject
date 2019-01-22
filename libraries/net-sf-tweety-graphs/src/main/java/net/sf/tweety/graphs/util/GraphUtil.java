@@ -363,7 +363,7 @@ public abstract class GraphUtil {
 		Queue<T> q = new LinkedList<T>();
 		Map<T,Set<T>> pred = new HashMap<T,Set<T>>();
 		Map<T,Integer> dist = new HashMap<T,Integer>();
-		Queue<List<T>> paths = new LinkedList<List<T>>();
+		LinkedList<List<T>> paths = new LinkedList<List<T>>();
 		for(T node: graph) {
 			pred.clear();
 			dist.clear();
@@ -399,7 +399,7 @@ public abstract class GraphUtil {
 						for(T node3: pred.get(path.get(0))) {
 							List<T> newPath = new LinkedList<T>(path);
 							newPath.add(0, node3);
-							paths.add(newPath);
+							paths.add(0,newPath);
 						}
 					}
 				}
