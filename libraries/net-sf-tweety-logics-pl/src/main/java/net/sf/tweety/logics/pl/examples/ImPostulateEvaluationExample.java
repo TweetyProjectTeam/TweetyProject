@@ -46,6 +46,8 @@ public class ImPostulateEvaluationExample {
 		PostulateEvaluator<PropositionalFormula,PlBeliefSet> evaluator = new PostulateEvaluator<PropositionalFormula,PlBeliefSet>(sampler, im);
 		evaluator.addPostulate(ImPostulate.MONOTONY);
 		evaluator.addPostulate(ImPostulate.FREEFORMULAINDEPENDENCE);
-		System.out.println(evaluator.evaluate(10, false));
+		evaluator.addPostulate(ImPostulate.CONSISTENCY);
+		evaluator.addPostulate(ImPostulate.NORMALIZATION);
+		System.out.println(evaluator.evaluate(20, false));
 	}
 }
