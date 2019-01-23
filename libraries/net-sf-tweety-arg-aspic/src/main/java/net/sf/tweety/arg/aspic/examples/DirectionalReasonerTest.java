@@ -28,14 +28,10 @@ import java.util.concurrent.TimeoutException;
 
 import net.sf.tweety.arg.aspic.reasoner.DirectionalAspicReasoner;
 import net.sf.tweety.arg.aspic.reasoner.ModuleBasedAspicReasoner;
-import net.sf.tweety.arg.aspic.reasoner.SimpleAspicReasoner;
-import net.sf.tweety.arg.aspic.reasoner.RandomAspicReasoner;
 import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
-import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.util.Pair;
@@ -117,14 +113,14 @@ public class DirectionalReasonerTest {
 		System.out.println("Queries returning accepted  : " + totalTrue + "/" + repetitions);
 	}
 
-	private static void printAF(DungTheory af) {
-		for (Argument a: af) {
-			System.out.println("arg: " + a);
-		}
-		for (Attack a: af.getAttacks()) {
-			System.out.println("att: " + a);
-		}
-	}
+//	private static void printAF(DungTheory af) {
+//		for (Argument a: af) {
+//			System.out.println("arg: " + a);
+//		}
+//		for (Attack a: af.getAttacks()) {
+//			System.out.println("att: " + a);
+//		}
+//	}
 	
   public static <T> T runWithTimeout(Callable<T> callable, long timeout, TimeUnit timeUnit) throws Exception {
     final ExecutorService executor = Executors.newSingleThreadExecutor();

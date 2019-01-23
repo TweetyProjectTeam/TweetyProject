@@ -204,6 +204,7 @@ public class SimpleRevisionCompareView extends JPanel implements PropertyChangeL
 	 * Reacts to property change events to keep the view up to date. The presenter is
 	 * responsible to register the view at the correct data-model.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals("leftOperator")) {

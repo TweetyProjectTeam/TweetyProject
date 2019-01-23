@@ -23,7 +23,6 @@ import java.beans.PropertyChangeSupport;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.beliefdynamics.BaseRevisionOperator;
