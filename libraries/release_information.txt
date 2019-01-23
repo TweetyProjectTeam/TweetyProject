@@ -1,3 +1,27 @@
+23.01.2019 - TweetyProject 1.12
+  New libraries:  <none>
+  New functionalities:
+    - Complete ASP library overhaul (net.sf.tweety.lp.asp); added support for
+      ASPCore2 input syntax; added more solvers and tests
+    - Complete DL library overhaul (net.sf.tweety.logics.dl); added syntax and
+      semantic classes, and parser
+    - Added writer for ASPIC files (net.sf.tweety.arg.aspic.writer.AspicWriter)
+    - Added new reasoner for ASPIC
+      (net.sf.tweety.arg.aspic.reasoner.DirectionalReasoner)
+    - Added (naive) algorithm to compute betweenness centrality in graphs
+  Minor changes:
+    - Added further postulates for automatic postulate evaluation of
+      inconsistency measures (net.sf.tweety.logics.pl.postulates)
+    - Refactored inference modes for all reasoners (see
+      net.sf.tweety.commons.InferenceMode)
+    - Performance improvements for DeLP reasoner
+      (net.sf.tweety.arg.delp.reasoner.DelpReasoner)
+    - Overhauled examples for ASPIC (net.sf.tweety.arg.aspic.examples)
+    - Bugfixes probo reasoner (net.sf.tweety.arg.dung.reasoner.ProboReasoner)
+    - Unified naming of brute-force/naive reasoners (all are now prefixed by
+      "Simple")
+    - general bugfixing
+
 24.07.2018 - TweetyProject 1.11
   New libraries:  <none>
   New functionalities:

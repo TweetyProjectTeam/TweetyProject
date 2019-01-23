@@ -15,12 +15,12 @@
     <dependency>
     	<groupId>net.sf.tweety.arg</groupId>
     	<artifactId>lp</artifactId>
-    	<version>1.11-SNAPSHOT</version>
+    	<version>1.12-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>net.sf.tweety.lp</groupId>
     	<artifactId>asp</artifactId>
-    	<version>1.11-SNAPSHOT</version>
+    	<version>1.12-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>junit</groupId>
@@ -31,7 +31,7 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.11-SNAPSHOT</version>
+  	<version>1.12-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>

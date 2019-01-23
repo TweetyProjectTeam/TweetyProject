@@ -34,7 +34,7 @@ import net.sf.tweety.logics.dl.syntax.DlBeliefSet;
 import net.sf.tweety.logics.dl.syntax.DlSignature;
 /**
  * 
- * Examples for using the description logic syntax classes, parser and NaiveReasoner (WIP).
+ * Examples for using the description logic syntax classes and parser.
  * 
  * @author Anna Gessler
  *
