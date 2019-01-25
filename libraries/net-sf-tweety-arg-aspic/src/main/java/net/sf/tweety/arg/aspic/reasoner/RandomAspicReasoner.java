@@ -18,10 +18,10 @@
  */
 package net.sf.tweety.arg.aspic.reasoner;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -33,6 +33,7 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
@@ -61,6 +62,11 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 	 * not yet reached).
 	 */
 	private int maxDuplicates;
+	
+	/**
+	 * For convenience methods on sets. 
+	 */
+	private SetTools<T> setTools = new SetTools<T>();
 	
 	/**
 	 * Creates a new instance.
@@ -98,14 +104,13 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 		}
 		if(!premiseFound)
 			return new DungTheory();
-		Collection<AspicArgument<T>> args = new HashSet<AspicArgument<T>>();
-		DungTheory aaf = new DungTheory();
+		Collection<AspicArgument<T>> args = new HashSet<AspicArgument<T>>();		
 		int duplicates = 0;
 		// prepare rules by indexing them by the head
 		Map<T,List<InferenceRule<T>>> rules = new HashMap<>();
 		for(InferenceRule<T> rule: module) {
 			if(!rules.containsKey(rule.getConclusion()))
-				rules.put(rule.getConclusion(), new ArrayList<InferenceRule<T>>());
+				rules.put(rule.getConclusion(), new LinkedList<InferenceRule<T>>());
 			rules.get(rule.getConclusion()).add(rule);
 		}
 		// sample arguments
@@ -115,6 +120,7 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 			if(duplicates > this.maxDuplicates)
 				break;
 		}
+		DungTheory aaf = new DungTheory();
 		aaf.addAll(args);
 		aaf.addAllAttacks(AspicAttack.determineAttackRelations(args, aat.getOrder(), aat.getRuleFormulaGenerator()));
 		return aaf;
@@ -128,7 +134,7 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 	private AspicArgument<T> sampleArgument(Map<T,List<InferenceRule<T>>> rules){
 		AspicArgument<T> arg = null;
 		do {
-			T conclusion = new ArrayList<T>(rules.keySet()).get(this.rand.nextInt(rules.keySet().size()));
+			T conclusion = this.setTools.randomElement(rules.keySet());
 			Set<T> conclusions = new HashSet<T>();
 			conclusions.add(conclusion);
 			arg = this.sampleArgument(rules,conclusion,conclusions);
@@ -148,7 +154,7 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 		if(!rules.containsKey(conclusion))
 			return null;
 		// candidate rules for the top rule
-		List<InferenceRule<T>> candidates = new ArrayList<InferenceRule<T>>();		
+		List<InferenceRule<T>> candidates = new LinkedList<InferenceRule<T>>();		
 		for(InferenceRule<T> rule: rules.get(conclusion)) {
 			Set<T> premise = new HashSet<>(rule.getPremise());
 			premise.retainAll(conclusions);
