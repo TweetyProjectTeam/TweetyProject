@@ -20,22 +20,23 @@ package net.sf.tweety.logics.pl.postulates;
 
 import java.util.Collection;
 
+import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
+import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
- * The "monotony" postulate for inconsistency measures: Adding information
- * to a belief base cannot decrease the inconsistency value.
+ * The "MI-normalization" postulate for inconsistency measures: The inconsistency
+ * value of any minimal inconsistent subset is 1.
  * 
- * @author Matthias Thimm
+ * @author Anna Gessler
  */
-public class ImMonotony extends ImPostulate{
+public class ImMINormalization extends ImPostulate{
 
 	/**
-	 * Protected constructor so one uses only the single instance ImPostulate.MONOTONY
+	 * Protected constructor so one uses only the single instance ImPostulate.MINORMALIZATION
 	 */
-	protected ImMonotony() {		
+	protected ImMINormalization() {		
 	}
 	
 	/* (non-Javadoc)
@@ -43,28 +44,29 @@ public class ImMonotony extends ImPostulate{
 	 */
 	@Override
 	public boolean isApplicable(Collection<PropositionalFormula> kb) {
-		return !kb.isEmpty();
+		if(kb.isEmpty())
+			return false;
+		if (PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb).isEmpty())
+			return false;
+		return true;
 	}
 
-
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.postulates.ImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
+	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
 	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		double inconsistency1 = ev.inconsistencyMeasure(kb);
-		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		kb2.remove(kb.iterator().next());
-		double inconsistency2 = ev.inconsistencyMeasure(kb2);
-		return inconsistency2 <= inconsistency1;
+		AbstractMusEnumerator<PropositionalFormula> e = PlMusEnumerator.getDefaultEnumerator();
+		double inconsistency = ev.inconsistencyMeasure(e.minimalInconsistentSubsets(kb).iterator().next());
+		return (inconsistency == 1);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#getName()
 	 */
 	public String getName() {
-		return "Monotony";
+		return "MI-Normalization";
 	}
 }

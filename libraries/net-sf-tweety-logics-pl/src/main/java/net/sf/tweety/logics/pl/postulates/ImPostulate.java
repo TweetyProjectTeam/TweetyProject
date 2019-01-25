@@ -39,10 +39,20 @@ public abstract class ImPostulate implements Postulate<PropositionalFormula>{
 	public static final ImPostulate MONOTONY = new ImMonotony();
 	/** The FREEFORMULAINDEPENDENCE postulate **/
 	public static final ImPostulate FREEFORMULAINDEPENDENCE = new ImFreeFormulaIndependence();
+	/** The FREEFORMULADILUTION postulate **/
+	public static final ImPostulate FREEFORMULADILUTION = new ImFreeFormulaDilution();
 	/** The CONSISTENCY postulate **/
 	public static final ImPostulate CONSISTENCY = new ImConsistency();
 	/** The NORMALIZATION postulate **/
 	public static final ImPostulate NORMALIZATION = new ImNormalization();
+	/** The SUPERADDITIVITY postulate **/
+	public static final ImPostulate SUPERADDITIVITY = new ImSuperAdditivity();
+	/** The PENALTY postulate **/
+	public static final ImPostulate PENALTY = new ImPenalty();
+	/** The MINORMALIZATION postulate **/
+	public static final ImPostulate MINORMALIZATION = new ImMINormalization();
+	/** The ADJUNCTIONINVARIANCE postulate **/
+	public static final ImPostulate ADJUNCTIONINVARIANCE = new ImAdjunctionInvariance();
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)

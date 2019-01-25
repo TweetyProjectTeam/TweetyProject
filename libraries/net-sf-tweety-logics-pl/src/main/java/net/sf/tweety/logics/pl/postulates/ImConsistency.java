@@ -54,11 +54,11 @@ public class ImConsistency extends ImPostulate {
 			BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		double measure = ev.inconsistencyMeasure(kb);
+		double inconsistency = ev.inconsistencyMeasure(kb);
 		SatSolver solver = SatSolver.getDefaultSolver();
 		if (solver.isConsistent(kb)) 
-			return (measure==0);
-		return (measure>0);
+			return (inconsistency==0);
+		return (inconsistency>0);
 	}
 
 }

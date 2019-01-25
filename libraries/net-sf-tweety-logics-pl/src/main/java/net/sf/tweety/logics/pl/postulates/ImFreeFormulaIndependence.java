@@ -27,9 +27,9 @@ import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
- * The "free-formula independence" postulate for inconsistency measures: removing a 
- * formula not participating in any minimal inconsistent set does not change the inconsistency 
- * value.
+ * The "free-formula independence" postulate for inconsistency measures: Removing a 
+ * formula not participating in any minimal inconsistent set (= a free formula) 
+ * does not change the inconsistency value.
  * 
  * @author Matthias Thimm
  */
@@ -63,11 +63,11 @@ public class ImFreeFormulaIndependence extends ImPostulate{
 	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		double val1 = ev.inconsistencyMeasure(kb);
+		double inconsistency1 = ev.inconsistencyMeasure(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
 		kb2.remove(kb.iterator().next());
-		double val2 = ev.inconsistencyMeasure(kb2);
-		return val1 == val2;
+		double inconsistency2 = ev.inconsistencyMeasure(kb2);
+		return inconsistency1 == inconsistency2;
 	}
 
 	/* (non-Javadoc)

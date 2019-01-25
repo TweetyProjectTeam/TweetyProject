@@ -54,8 +54,8 @@ public class ImNormalization extends ImPostulate {
 			BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		double measure = ev.inconsistencyMeasure(kb);
-		return (measure >= 0 && measure <= 1);
+		double inconsistency = ev.inconsistencyMeasure(kb);
+		return (inconsistency >= 0 && inconsistency <= 1);
 	}
 
 }

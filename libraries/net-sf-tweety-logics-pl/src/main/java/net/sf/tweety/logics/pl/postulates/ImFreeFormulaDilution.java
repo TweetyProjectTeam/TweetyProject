@@ -20,22 +20,29 @@ package net.sf.tweety.logics.pl.postulates;
 
 import java.util.Collection;
 
+import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
+import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
- * The "monotony" postulate for inconsistency measures: Adding information
- * to a belief base cannot decrease the inconsistency value.
+ * The "free-formula dilution" postulate for inconsistency measures: Removing a 
+ * formula not participating in any minimal inconsistent set does not make the inconsistency 
+ * value larger. 
+ * <br> This postulate is a weaker version of "free formula independence"
+ * and is intended to be used with normalized inconsistency measures 
+ * (which may not fulfill free-formula independence in some cases).
  * 
- * @author Matthias Thimm
+ * @see net.sf.tweety.logics.pl.postulates.ImFreeFormulaIndependence
+ * @author Anna Gessler
  */
-public class ImMonotony extends ImPostulate{
+public class ImFreeFormulaDilution extends ImPostulate{
 
 	/**
-	 * Protected constructor so one uses only the single instance ImPostulate.MONOTONY
+	 * Protected constructor so one uses only the single instance ImPostulate.FREEFORMULADILUTION
 	 */
-	protected ImMonotony() {		
+	protected ImFreeFormulaDilution() {		
 	}
 	
 	/* (non-Javadoc)
@@ -43,12 +50,18 @@ public class ImMonotony extends ImPostulate{
 	 */
 	@Override
 	public boolean isApplicable(Collection<PropositionalFormula> kb) {
-		return !kb.isEmpty();
+		if(kb.isEmpty())
+			return false;
+		PropositionalFormula f = kb.iterator().next();
+		AbstractMusEnumerator<PropositionalFormula> e = PlMusEnumerator.getDefaultEnumerator();
+		for(Collection<PropositionalFormula> mus: e.minimalInconsistentSubsets(kb))
+			if(mus.contains(f))
+				return false;
+		return true;
 	}
 
-
 	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.postulates.ImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
+	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
 	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
@@ -58,13 +71,13 @@ public class ImMonotony extends ImPostulate{
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
 		kb2.remove(kb.iterator().next());
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
-		return inconsistency2 <= inconsistency1;
+		return inconsistency1 >= inconsistency2;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#getName()
 	 */
 	public String getName() {
-		return "Monotony";
+		return "Free-formula dilution";
 	}
 }

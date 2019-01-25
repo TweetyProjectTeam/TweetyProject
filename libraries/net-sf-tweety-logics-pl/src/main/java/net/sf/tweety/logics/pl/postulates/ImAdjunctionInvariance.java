@@ -19,23 +19,26 @@
 package net.sf.tweety.logics.pl.postulates;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
- * The "monotony" postulate for inconsistency measures: Adding information
- * to a belief base cannot decrease the inconsistency value.
+ * The "adjunction invariance" postulate for inconsistency measures: The
+ * set notation of knowledge bases should be equivalent
+ * to the conjunction of its formulas in terms of inconsistency values.
  * 
- * @author Matthias Thimm
+ * @author Anna Gessler
  */
-public class ImMonotony extends ImPostulate{
+public class ImAdjunctionInvariance extends ImPostulate{
 
 	/**
-	 * Protected constructor so one uses only the single instance ImPostulate.MONOTONY
+	 * Protected constructor so one uses only the single instance ImPostulate.ADJUNCTIONINVARIANCE
 	 */
-	protected ImMonotony() {		
+	protected ImAdjunctionInvariance() {		
 	}
 	
 	/* (non-Javadoc)
@@ -43,7 +46,7 @@ public class ImMonotony extends ImPostulate{
 	 */
 	@Override
 	public boolean isApplicable(Collection<PropositionalFormula> kb) {
-		return !kb.isEmpty();
+		return (!(kb.size()<2));
 	}
 
 
@@ -55,16 +58,21 @@ public class ImMonotony extends ImPostulate{
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
+		Iterator<PropositionalFormula> it = kb.iterator();
+		PropositionalFormula f1 = it.next();
+		PropositionalFormula f2 = it.next();
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		kb2.remove(kb.iterator().next());
+		kb2.remove(f1);
+		kb2.remove(f2);
+		kb2.add(new Conjunction(f1,f2));
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
-		return inconsistency2 <= inconsistency1;
+		return (inconsistency1 == inconsistency2);
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#getName()
 	 */
 	public String getName() {
-		return "Monotony";
+		return "Adjunction-Invariance";
 	}
 }

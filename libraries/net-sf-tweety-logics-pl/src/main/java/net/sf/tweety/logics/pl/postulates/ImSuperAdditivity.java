@@ -23,19 +23,21 @@ import java.util.Collection;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.util.RandomSampler;
 
 /**
- * The "monotony" postulate for inconsistency measures: Adding information
- * to a belief base cannot decrease the inconsistency value.
+ * The "super-additivity" postulate for inconsistency measures: The sum of the 
+ * inconsistency values of two disjoint knowledge bases is not larger
+ * than the inconsistency value of the joint knowledge base.
  * 
- * @author Matthias Thimm
+ * @author Anna Gessler
  */
-public class ImMonotony extends ImPostulate{
+public class ImSuperAdditivity extends ImPostulate{
 
 	/**
-	 * Protected constructor so one uses only the single instance ImPostulate.MONOTONY
+	 * Protected constructor so one uses only the single instance ImPostulate.ADDITIVITY
 	 */
-	protected ImMonotony() {		
+	protected ImSuperAdditivity() {		
 	}
 	
 	/* (non-Javadoc)
@@ -55,16 +57,18 @@ public class ImMonotony extends ImPostulate{
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
-		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		kb2.remove(kb.iterator().next());
+		RandomSampler sampler = new RandomSampler(((PlBeliefSet)kb).getSignature(),0.2,2,4);
+		PlBeliefSet kb2 = sampler.next();
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
-		return inconsistency2 <= inconsistency1;
+		kb.addAll(kb2);
+		double inconsistency12 = ev.inconsistencyMeasure(kb);
+		return (inconsistency12 >= (inconsistency1+inconsistency2));
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#getName()
 	 */
 	public String getName() {
-		return "Monotony";
+		return "Super-Additivity";
 	}
 }
