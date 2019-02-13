@@ -39,6 +39,8 @@ public abstract class ImPostulate implements Postulate<PropositionalFormula>{
 	public static final ImPostulate MONOTONY = new ImMonotony();
 	/** The FREEFORMULAINDEPENDENCE postulate **/
 	public static final ImPostulate FREEFORMULAINDEPENDENCE = new ImFreeFormulaIndependence();
+	/** The SAFEFORMULAINDEPENDENCE postulate **/
+	public static final ImPostulate SAFEFORMULAINDEPENDENCE = new ImSafeFormulaIndependence();
 	/** The FREEFORMULADILUTION postulate **/
 	public static final ImPostulate FREEFORMULADILUTION = new ImFreeFormulaDilution();
 	/** The CONSISTENCY postulate **/
