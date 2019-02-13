@@ -88,8 +88,9 @@ public class RandomSampler extends BeliefSetSampler<PropositionalFormula,PlBelie
 		int idx = 0;
 		// ensure that no two formulas are syntactically equivalent
 		// by adding another proposition.
+		String c = Character.toString((char) (new Random().nextInt(26) + 'A')); //random letter to prevent generated belief sets from always having overlapping signatures
 		while(beliefSet.size() < length){
-			beliefSet.add(this.randomFormula().combineWithAnd(new Proposition("XSA"+idx++)));
+			beliefSet.add(this.randomFormula().combineWithAnd(new Proposition(c+"SA"+idx++)));
 		}
 		return beliefSet;
 	}
