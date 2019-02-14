@@ -37,6 +37,8 @@ public abstract class ImPostulate implements Postulate<PropositionalFormula>{
 	
 	/** The MONOTONY postulate **/
 	public static final ImPostulate MONOTONY = new ImMonotony();
+	/** The DOMINANCE postulate **/
+	public static final ImPostulate DOMINANCE = new ImDominance();
 	/** The FREEFORMULAINDEPENDENCE postulate **/
 	public static final ImPostulate FREEFORMULAINDEPENDENCE = new ImFreeFormulaIndependence();
 	/** The SAFEFORMULAINDEPENDENCE postulate **/
@@ -53,6 +55,8 @@ public abstract class ImPostulate implements Postulate<PropositionalFormula>{
 	public static final ImPostulate PENALTY = new ImPenalty();
 	/** The MINORMALIZATION postulate **/
 	public static final ImPostulate MINORMALIZATION = new ImMINormalization();
+	/** The ATTENUATION postulate **/
+	public static final ImPostulate ATTENUATION = new ImAttenuation();
 	/** The ADJUNCTIONINVARIANCE postulate **/
 	public static final ImPostulate ADJUNCTIONINVARIANCE = new ImAdjunctionInvariance();
 	
