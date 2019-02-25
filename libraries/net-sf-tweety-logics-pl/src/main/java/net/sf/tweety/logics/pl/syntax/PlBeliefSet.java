@@ -33,70 +33,98 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	/**
 	 * Creates a new (empty) knowledge base.
 	 */
-	public PlBeliefSet(){
+	public PlBeliefSet() {
 		super();
 	}
-	
+
 	/**
-	 * Creates a new knowledge base with the given
-	 * set of formulas.
+	 * Creates a new knowledge base with the given set of formulas.
+	 * 
 	 * @param formulas a set of formulas.
 	 */
-	public PlBeliefSet(Collection<? extends PropositionalFormula> formulas){
+	public PlBeliefSet(Collection<? extends PropositionalFormula> formulas) {
 		super(formulas);
 	}
-		
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
 	@Override
 	public Signature getSignature() {
 		PropositionalSignature signature = new PropositionalSignature();
-		for(Formula f: this)
-			signature.addAll(((PropositionalFormula)f).getAtoms());
+		for (Formula f : this)
+			signature.addAll(((PropositionalFormula) f).getAtoms());
 		return signature;
 	}
-	
+
 	/**
-     * This method returns this belief set in conjunctive normal form (CNF).
-     * A formula is in CNF iff it is a conjunction of disjunctions and in NNF.
-     * @return the formula in CNF.
-     */
-	public Conjunction toCnf(){
+	 * This method returns this belief set in conjunctive normal form (CNF). A
+	 * formula is in CNF iff it is a conjunction of disjunctions and in NNF.
+	 * 
+	 * @return the formula in CNF.
+	 */
+	public Conjunction toCnf() {
 		Conjunction conj = new Conjunction();
-		for(PropositionalFormula f: this)
+		for (PropositionalFormula f : this)
 			conj.add(f);
 		return conj.toCnf();
 	}
-	
+
 	/**
-	 * Returns the set of syntax components of this belief set, i.e.
-	 * a partitioning {K1,...,Kn} of K (a disjoint union K1u...uKn=K) such
-	 * that the signatures of K1,...,Kn are pairwise disjoint.
+	 * Returns the set of syntax components of this belief set, i.e. a partitioning
+	 * {K1,...,Kn} of K (a disjoint union K1u...uKn=K) such that the signatures of
+	 * K1,...,Kn are pairwise disjoint.
+	 * 
 	 * @return the set of syntax components of this belief set
 	 */
-	public Collection<PlBeliefSet> getSyntaxComponents(){
+	public Collection<PlBeliefSet> getSyntaxComponents() {
 		List<PlBeliefSet> sets = new LinkedList<PlBeliefSet>();
-		for(PropositionalFormula f: this){
+		for (PropositionalFormula f : this) {
 			PlBeliefSet s = new PlBeliefSet();
 			s.add(f);
 			sets.add(s);
 		}
 		boolean changed;
-		do{
+		do {
 			changed = false;
-			for(int i = 0; i < sets.size(); i++){
-				for(int j = i+1; j< sets.size(); j++){
-					if(sets.get(i).getSignature().isOverlappingSignature(sets.get(j).getSignature())){
+			for (int i = 0; i < sets.size(); i++) {
+				for (int j = i + 1; j < sets.size(); j++) {
+					if (sets.get(i).getSignature().isOverlappingSignature(sets.get(j).getSignature())) {
 						changed = true;
 						sets.get(i).addAll(sets.get(j));
 						sets.remove(j);
 						break;
-					}					
+					}
 				}
-				if(changed) break;
+				if (changed)
+					break;
 			}
-		}while(changed);
+		} while (changed);
 		return sets;
+	}
+
+	/**
+	 * Force ordering on belief set based on comparison of hash codes.
+	 * 
+	 * @return list of "canonically" ordered formulas
+	 * @see net.sf.tweety.logics.pl.syntax.PlBeliefSet.PlFormulaHashCodeComparator
+	 */
+	public List<PropositionalFormula> getCanonicalOrdering() {
+		List<PropositionalFormula> orderedKB = new ArrayList<PropositionalFormula>(this);
+		orderedKB.sort(new PlFormulaHashCodeComparator());
+		return orderedKB;
+	}
+
+	/**
+	 * Comparator for sorting propositional formulas by comparing hash codes.
+	 * 
+	 * @see net.sf.tweety.logics.pl.syntax.PlBeliefSet#getCanonicalOrdering()
+	 */
+	class PlFormulaHashCodeComparator implements Comparator<PropositionalFormula> {
+		public int compare(PropositionalFormula p1, PropositionalFormula p2) {
+			return p1.hashCode() - p2.hashCode();
+		}
 	}
 }
