@@ -19,6 +19,7 @@
 package net.sf.tweety.logics.pl.postulates;
 
 import java.util.Collection;
+import java.util.List;
 
 import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
@@ -49,7 +50,8 @@ public class ImPenalty extends ImPostulate{
 	public boolean isApplicable(Collection<PropositionalFormula> kb) {
 		if(kb.isEmpty())
 			return false;
-		PropositionalFormula f = kb.iterator().next();
+		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PropositionalFormula f = orderedKB.get(0);
 		AbstractMusEnumerator<PropositionalFormula> e = PlMusEnumerator.getDefaultEnumerator();
 		for(Collection<PropositionalFormula> mus: e.minimalInconsistentSubsets(kb))
 			if(mus.contains(f))
@@ -66,7 +68,9 @@ public class ImPenalty extends ImPostulate{
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		kb2.remove(kb.iterator().next());
+		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PropositionalFormula f = orderedKB.get(0);
+		kb2.remove(f);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		return (inconsistency1 > inconsistency2);
 	}

@@ -18,12 +18,13 @@
  */
 package net.sf.tweety.logics.pl.postulates;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.util.RandomSampler;
 
 /**
  * The "super-additivity" postulate for inconsistency measures: The sum of the 
@@ -45,7 +46,15 @@ public class ImSuperAdditivity extends ImPostulate{
 	 */
 	@Override
 	public boolean isApplicable(Collection<PropositionalFormula> kb) {
-		return !kb.isEmpty();
+		if (kb.isEmpty())
+			return false;
+		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		List<PropositionalFormula> left = new ArrayList<PropositionalFormula>(orderedKB.subList(0,orderedKB.size()/2));
+		List<PropositionalFormula> right = new ArrayList<PropositionalFormula>(orderedKB.subList(orderedKB.size()/2,orderedKB.size()));
+		for (PropositionalFormula f : left)
+			if (right.contains(f))
+				return false;
+		return true;
 	}
 
 
@@ -56,12 +65,13 @@ public class ImSuperAdditivity extends ImPostulate{
 	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		double inconsistency1 = ev.inconsistencyMeasure(kb);
-		RandomSampler sampler = new RandomSampler(((PlBeliefSet)kb).getSignature(),0.2,2,4);
-		PlBeliefSet kb2 = sampler.next();
+		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		List<PropositionalFormula> kb1 = new ArrayList<PropositionalFormula>(orderedKB.subList(0,orderedKB.size()/2));
+		List<PropositionalFormula> kb2 = new ArrayList<PropositionalFormula>(orderedKB.subList(orderedKB.size()/2,orderedKB.size()));
+		double inconsistency1 = ev.inconsistencyMeasure(kb1);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
-		kb.addAll(kb2);
-		double inconsistency12 = ev.inconsistencyMeasure(kb);
+		kb1.addAll(kb2);
+		double inconsistency12 = ev.inconsistencyMeasure(kb1);
 		return (inconsistency12 >= (inconsistency1+inconsistency2));
 	}
 	

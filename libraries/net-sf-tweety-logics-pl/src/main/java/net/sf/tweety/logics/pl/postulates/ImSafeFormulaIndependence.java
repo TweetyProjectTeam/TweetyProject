@@ -19,14 +19,12 @@
 package net.sf.tweety.logics.pl.postulates;
 
 import java.util.Collection;
+import java.util.List;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
-import net.sf.tweety.logics.pl.util.RandomSampler;
 
 /**
  * The "safe-formula independence" postulate for inconsistency measures: Removing a safe
@@ -44,8 +42,6 @@ public class ImSafeFormulaIndependence extends ImPostulate{
 	protected ImSafeFormulaIndependence() {	
 	}
 	
-	private PropositionalFormula safeFormula;
-	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
@@ -53,10 +49,8 @@ public class ImSafeFormulaIndependence extends ImPostulate{
 	public boolean isApplicable(Collection<PropositionalFormula> kb) {
 		if(kb.isEmpty())
 			return false;
-		PropositionalSignature newSig = new PropositionalSignature();
-		newSig.add(new Proposition("U0"));
-		//Get random formula and check if it is safe
-		this.safeFormula = (new RandomSampler(newSig,0.9,1,1)).next().iterator().next(); 
+		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PropositionalFormula safeFormula = orderedKB.get(0);
 		if (!SatSolver.getDefaultSolver().isConsistent(safeFormula)) 
 			return false;
 		if (safeFormula.getSignature().isOverlappingSignature(((PlBeliefSet)kb).getSignature()))
@@ -73,6 +67,8 @@ public class ImSafeFormulaIndependence extends ImPostulate{
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
+		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PropositionalFormula safeFormula = orderedKB.get(0);
 		kb2.add(safeFormula);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		return (inconsistency1 == inconsistency2);

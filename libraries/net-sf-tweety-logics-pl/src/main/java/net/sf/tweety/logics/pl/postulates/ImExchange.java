@@ -21,25 +21,24 @@ package net.sf.tweety.logics.pl.postulates;
 import java.util.Collection;
 import java.util.List;
 
-import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
+import net.sf.tweety.logics.pl.reasoner.SatReasoner;
+import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 /**
- * The "free-formula independence" postulate for inconsistency measures: Removing a 
- * formula not participating in any minimal inconsistent set (= a free formula) 
- * does not change the inconsistency value.
+ * The "exchange" postulate for inconsistency measures: Exchanging consistent parts
+ * of a knowledge base with equivalent ones should not change the inconsistency value.
  * 
- * @author Matthias Thimm
+ * @author Anna Gessler
  */
-public class ImFreeFormulaIndependence extends ImPostulate{
+public class ImExchange extends ImPostulate{
 
 	/**
-	 * Protected constructor so one uses only the single instance ImPostulate.FREEFORMULAINDEPENDENCE
+	 * Protected constructor so one uses only the single instance ImPostulate.EXCHANGE
 	 */
-	protected ImFreeFormulaIndependence() {		
+	protected ImExchange() {		
 	}
 	
 	/* (non-Javadoc)
@@ -51,10 +50,12 @@ public class ImFreeFormulaIndependence extends ImPostulate{
 			return false;
 		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
 		PropositionalFormula f = orderedKB.get(0);
-		AbstractMusEnumerator<PropositionalFormula> e = PlMusEnumerator.getDefaultEnumerator();
-		for(Collection<PropositionalFormula> mus: e.minimalInconsistentSubsets(kb))
-			if(mus.contains(f))
-				return false;
+		PropositionalFormula f2 = orderedKB.get(1);
+		SatReasoner reasoner = new SatReasoner();
+		if (!SatSolver.getDefaultSolver().isConsistent(f)) 
+			return false;
+		if (!reasoner.isEquivalent(f,f2)) 
+			return false;
 		return true;
 	}
 
@@ -65,19 +66,22 @@ public class ImFreeFormulaIndependence extends ImPostulate{
 	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		double inconsistency1 = ev.inconsistencyMeasure(kb);
-		PlBeliefSet kb2 = new PlBeliefSet(kb);
 		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
 		PropositionalFormula f = orderedKB.get(0);
+		PropositionalFormula f2 = orderedKB.get(1);
+		PlBeliefSet kb1 = new PlBeliefSet(kb);
+		PlBeliefSet kb2 = new PlBeliefSet(kb);
+		kb1.remove(f2);
 		kb2.remove(f);
+		double inconsistency1 = ev.inconsistencyMeasure(kb1);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
-		return inconsistency1 == inconsistency2;
+		return (inconsistency1 == inconsistency2);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#getName()
 	 */
 	public String getName() {
-		return "Free-formula independence";
+		return "Exchange";
 	}
 }
