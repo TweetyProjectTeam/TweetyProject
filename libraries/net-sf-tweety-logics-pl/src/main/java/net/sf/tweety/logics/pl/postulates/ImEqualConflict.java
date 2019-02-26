@@ -18,8 +18,8 @@
  */
 package net.sf.tweety.logics.pl.postulates;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
@@ -41,12 +41,10 @@ public class ImEqualConflict extends ImPostulate{
 	protected ImEqualConflict() {		
 	}
 	
-	private PlBeliefSet mus1;
-	private PlBeliefSet mus2;
-	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean isApplicable(Collection<PlFormula> kb) {
 		if(kb.isEmpty())
@@ -54,26 +52,28 @@ public class ImEqualConflict extends ImPostulate{
 		Collection<Collection<PlFormula>> muses = PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb);
 		if (muses.size()<2) 
 			return false;
-		Iterator<Collection<PlFormula>> it = muses.iterator();
-		mus1 = new PlBeliefSet(it.next());
-		mus2 = new PlBeliefSet(it.next());
+		Object[] test = muses.toArray();
+		Arrays.sort(test, new SimpleMUSComparator());
+		PlBeliefSet mus1 = new PlBeliefSet((Collection<PlFormula>) test[0]);
+		PlBeliefSet mus2 = new PlBeliefSet((Collection<PlFormula>) test[1]);
 		if (mus1.size() == mus2.size()) 
 				return true;
-		while (it.hasNext()) {
-			mus2 = new PlBeliefSet(it.next());
-			if (mus1.size() == mus2.size()) 
-				return true; 
-		}
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
+		Collection<Collection<PlFormula>> muses = PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb);
+		Object[] test = muses.toArray();
+		Arrays.sort(test, new SimpleMUSComparator());
+		PlBeliefSet mus1 = new PlBeliefSet((Collection<PlFormula>) test[0]);
+		PlBeliefSet mus2 = new PlBeliefSet((Collection<PlFormula>) test[1]);
 		double inconsistency1 = ev.inconsistencyMeasure(mus1);
 		double inconsistency2 = ev.inconsistencyMeasure(mus2);
 		return (inconsistency1 == inconsistency2);

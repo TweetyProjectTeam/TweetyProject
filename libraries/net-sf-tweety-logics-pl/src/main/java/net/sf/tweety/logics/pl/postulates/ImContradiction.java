@@ -43,7 +43,6 @@ public class ImContradiction extends ImPostulate {
 	protected ImContradiction() {		
 	}
 	
-
 	@Override
 	public String getName() {
 		return "Contradiction";

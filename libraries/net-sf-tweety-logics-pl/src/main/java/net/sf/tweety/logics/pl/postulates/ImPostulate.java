@@ -19,6 +19,7 @@
 package net.sf.tweety.logics.pl.postulates;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 import net.sf.tweety.commons.postulates.Postulate;
 import net.sf.tweety.commons.postulates.PostulateEvaluatable;
@@ -88,4 +89,13 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 	 * @see net.sf.tweety.commons.postulates.Postulate#isSatisfied(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.postulates.PostulateEvaluatable)
 	 */
 	public abstract boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev);
+	
+	/**
+	 * Comparator for sorting MUS by comparing hash codes.
+	 */
+	class SimpleMUSComparator implements Comparator<Object> {
+		public int compare(Object mus1, Object mus2) {
+			return mus1.hashCode() - mus2.hashCode();
+		}
+	}
 }

@@ -18,8 +18,8 @@
  */
 package net.sf.tweety.logics.pl.postulates;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
@@ -27,68 +27,82 @@ import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
- * The "attenuation" postulate for inconsistency measures: Minimal inconsistent sets 
- * of smaller size should have a larger inconsistency value.
+ * The "attenuation" postulate for inconsistency measures: Minimal inconsistent
+ * sets of smaller size should have a larger inconsistency value.
  * 
  * @author Anna Gessler
  */
-public class ImAttenuation extends ImPostulate{
+public class ImAttenuation extends ImPostulate {
 
 	/**
-	 * Protected constructor so one uses only the single instance ImPostulate.ATTENUATION
+	 * Protected constructor so one uses only the single instance
+	 * ImPostulate.ATTENUATION
 	 */
-	protected ImAttenuation() {		
+	protected ImAttenuation() {
 	}
-	
-	private PlBeliefSet mus1;
-	private PlBeliefSet mus2;
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util
+	 * .Collection)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean isApplicable(Collection<PlFormula> kb) {
-		if(kb.isEmpty())
+		if (kb.isEmpty())
 			return false;
 		Collection<Collection<PlFormula>> muses = PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb);
-		if (muses.size()<2) 
+		if (muses.size() < 2)
 			return false;
-		Iterator<Collection<PlFormula>> it = muses.iterator();
-		mus1 = new PlBeliefSet(it.next());
-		mus2 = new PlBeliefSet(it.next());
-		if (mus1.size() != mus2.size()) 
-				return true;
-		while (it.hasNext()) {
-			mus2 = new PlBeliefSet(it.next());
-			if (mus1.size() != mus2.size()) 
-				return true; 
-		}
+		Object[] test = muses.toArray();
+		Arrays.sort(test, new SimpleMUSComparator());
+		PlBeliefSet mus1 = new PlBeliefSet((Collection<PlFormula>) test[0]);
+		PlBeliefSet mus2 = new PlBeliefSet((Collection<PlFormula>) test[1]);
+		if (mus1.size() != mus2.size())
+			return true;
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.
+	 * Collection,
+	 * net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
-		if(!this.isApplicable(kb))
+		if (!this.isApplicable(kb))
 			return true;
 		double inconsistency1, inconsistency2;
-		if (mus1.size()>mus2.size()) {
+		Collection<Collection<PlFormula>> muses = PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb);
+		Object[] test = muses.toArray();
+		Arrays.sort(test, new SimpleMUSComparator());
+		PlBeliefSet mus1 = new PlBeliefSet((Collection<PlFormula>) test[0]);
+		PlBeliefSet mus2 = new PlBeliefSet((Collection<PlFormula>) test[1]);
+		if (mus1.size() > mus2.size()) {
 			inconsistency1 = ev.inconsistencyMeasure(mus1);
 			inconsistency2 = ev.inconsistencyMeasure(mus2);
-		}
-		else {
+		} else {
 			inconsistency1 = ev.inconsistencyMeasure(mus2);
 			inconsistency2 = ev.inconsistencyMeasure(mus1);
 		}
 		return (inconsistency1 < inconsistency2);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.commons.postulates.Postulate#getName()
 	 */
 	public String getName() {
 		return "Attenuation";
 	}
+	
+	
+
 }

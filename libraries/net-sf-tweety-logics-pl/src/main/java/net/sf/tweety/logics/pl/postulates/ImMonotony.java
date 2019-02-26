@@ -46,7 +46,6 @@ public class ImMonotony extends ImPostulate{
 		return !kb.isEmpty();
 	}
 
-
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.postulates.ImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */

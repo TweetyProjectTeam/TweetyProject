@@ -49,7 +49,6 @@ public class ImAdjunctionInvariance extends ImPostulate{
 		return (!(kb.size()<2));
 	}
 
-
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.postulates.ImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
