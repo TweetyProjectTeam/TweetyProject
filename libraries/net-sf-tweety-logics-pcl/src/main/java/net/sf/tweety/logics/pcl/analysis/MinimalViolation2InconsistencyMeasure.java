@@ -34,7 +34,7 @@ import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pcl.util.OjAlgoPclUtils;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 
 /**
@@ -55,7 +55,7 @@ public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistenc
 	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {
 
 		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getSignature());
 		int noWorlds = worlds.size();
 		
 		

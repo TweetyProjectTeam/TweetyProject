@@ -35,8 +35,8 @@ import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.NicePossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Represents a conditional structure as introduced in Section 3.5
@@ -128,7 +128,7 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 	private Comparator<Pair<Proposition, Boolean>> worldRepresentation;
 	
 	/** the signature of the conditional structure */
-	private PropositionalSignature signature = new PropositionalSignature();
+	private PlSignature signature = new PlSignature();
 	
 	/** Default-Ctor generates empty Conditional structure */
 	public ConditionalStructure() {
@@ -385,7 +385,7 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 		Conjunction conjunction = new Conjunction();
 		conjunction.addAll(cond.getPremise());
 		boolean head = npw.satisfies(cond.getConclusion());
-		boolean body = npw.satisfies((PropositionalFormula)conjunction);
+		boolean body = npw.satisfies((PlFormula)conjunction);
 		
 		// process the generator for the given world and conditional:
 		Generator gen = null;

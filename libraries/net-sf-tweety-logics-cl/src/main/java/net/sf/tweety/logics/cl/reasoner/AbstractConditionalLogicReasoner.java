@@ -26,7 +26,7 @@ import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.logics.cl.semantics.RankingFunction;
 import net.sf.tweety.logics.cl.syntax.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Abstract ancestor for all reasoner for conditional logic.
@@ -34,13 +34,13 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * @author Matthias Thimm
  *
  */
-public abstract class AbstractConditionalLogicReasoner implements QualitativeReasoner<ClBeliefSet,PropositionalFormula>, ModelProvider<Conditional,ClBeliefSet,RankingFunction>{
+public abstract class AbstractConditionalLogicReasoner implements QualitativeReasoner<ClBeliefSet,PlFormula>, ModelProvider<Conditional,ClBeliefSet,RankingFunction>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Boolean query(ClBeliefSet beliefbase, PropositionalFormula formula) {		
+	public Boolean query(ClBeliefSet beliefbase, PlFormula formula) {		
 		return this.getModel(beliefbase).rank(formula) == 0;
 	}
 	

@@ -23,7 +23,7 @@ import java.util.Collection;
 import net.sf.tweety.commons.postulates.Postulate;
 import net.sf.tweety.commons.postulates.PostulateEvaluatable;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * An abstract postulate for inconsistency measures in propositional
@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * @author Matthias Thimm
  *
  */
-public abstract class ImPostulate implements Postulate<PropositionalFormula>{
+public abstract class ImPostulate implements Postulate<PlFormula>{
 
 	
 	/** The MONOTONY postulate **/
@@ -72,20 +72,20 @@ public abstract class ImPostulate implements Postulate<PropositionalFormula>{
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)
 	 */
 	@Override
-	public abstract boolean isApplicable(Collection<PropositionalFormula> kb);
+	public abstract boolean isApplicable(Collection<PlFormula> kb);
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isSatisfied(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.postulates.PostulateEvaluatable)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb, PostulateEvaluatable<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb, PostulateEvaluatable<PlFormula> ev) {
 		if(ev instanceof BeliefSetInconsistencyMeasure<?>)
-			return this.isSatisfied(kb, (BeliefSetInconsistencyMeasure<PropositionalFormula>) ev);
+			return this.isSatisfied(kb, (BeliefSetInconsistencyMeasure<PlFormula>) ev);
 		throw new RuntimeException("PostulateEvaluatable of type InconsistencyMeasure<PlBeliefSet> expected.");
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isSatisfied(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.postulates.PostulateEvaluatable)
 	 */
-	public abstract boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev);
+	public abstract boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev);
 }

@@ -21,7 +21,7 @@ package net.sf.tweety.logics.pl.postulates;
 import java.util.Collection;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "normalization" postulate for inconsistency measures: The inconsistency
@@ -45,13 +45,13 @@ public class ImNormalization extends ImPostulate {
 	}
 
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		return true;
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb,
-			BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb,
+			BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency = ev.inconsistencyMeasure(kb);

@@ -23,7 +23,7 @@ import java.util.HashSet;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.util.rules.Derivation;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * 
@@ -36,10 +36,10 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 public class SimplePlLogicArgument extends Argument{
 
 	private Collection<SimplePlRule> support = null;
-	private PropositionalFormula claim = null;
+	private PlFormula claim = null;
 
 	public SimplePlLogicArgument(Collection<SimplePlRule> _support,
-			PropositionalFormula _claim) {
+			PlFormula _claim) {
 		super(null);
 		this.support = _support;
 		this.claim = _claim;
@@ -54,14 +54,14 @@ public class SimplePlLogicArgument extends Argument{
 	public SimplePlLogicArgument(Derivation<SimplePlRule> derivation) {
 		super(null);
 		this.support = new HashSet<SimplePlRule>(derivation);
-		this.claim = (PropositionalFormula) derivation.getConclusion();
+		this.claim = (PlFormula) derivation.getConclusion();
 	}
 
 	public Collection<? extends SimplePlRule> getSupport() {
 		return this.support;
 	}
 
-	public PropositionalFormula getClaim() {
+	public PlFormula getClaim() {
 		return this.claim;
 	}
 

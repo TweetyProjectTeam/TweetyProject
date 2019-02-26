@@ -29,7 +29,7 @@ import java.util.StringTokenizer;
 import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Implements a MUs enumerator based on MARCO (http://sun.iwu.edu/~mliffito/marco/). Tested
@@ -55,29 +55,29 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 	 * @see net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator#minimalInconsistentSubsets(java.util.Collection)
 	 */
 	@Override
-	public Collection<Collection<PropositionalFormula>> minimalInconsistentSubsets(Collection<PropositionalFormula> formulas) {
+	public Collection<Collection<PlFormula>> minimalInconsistentSubsets(Collection<PlFormula> formulas) {
 		if(formulas.isEmpty())
-			return new HashSet<Collection<PropositionalFormula>>();  
+			return new HashSet<Collection<PlFormula>>();  
 		try {
 			List<Proposition> props = new ArrayList<Proposition>();
-			for(PropositionalFormula f: formulas)
+			for(PlFormula f: formulas)
 				props.addAll(f.getAtoms());			
 			// create temporary file in Dimacs CNF format.
-			Pair<File,List<PropositionalFormula>> p = SatSolver.createTmpDimacsFile(formulas);
+			Pair<File,List<PlFormula>> p = SatSolver.createTmpDimacsFile(formulas);
 			// we only read a maximum number of 1000 lines from MARCO (TODO: this should be parameterized) as we bias on MUSes and the rest
 			// of the lines contains the description of the MCSes
 			String output = NativeShell.invokeExecutable(this.pathToMarco + " -v -b MUSes " + p.getFirst().getAbsolutePath(), 1000);
 			// delete file
 			p.getFirst().delete();
 			// parse output
-			Collection<Collection<PropositionalFormula>> preResult = new HashSet<Collection<PropositionalFormula>>();
+			Collection<Collection<PlFormula>> preResult = new HashSet<Collection<PlFormula>>();
 			StringTokenizer tokenizer = new StringTokenizer(output, "\n");
 			Integer idx;
 			while(tokenizer.hasMoreTokens()){
 				String line = tokenizer.nextToken().trim();
 				if(line.startsWith("U")){
 					StringTokenizer tokenizer2 = new StringTokenizer(line.substring(2), " ");
-					Collection<PropositionalFormula> mus = new HashSet<PropositionalFormula>();
+					Collection<PlFormula> mus = new HashSet<PlFormula>();
 					while(tokenizer2.hasMoreTokens()){
 						idx = new Integer(tokenizer2.nextToken().trim()) - 1;
 						mus.add(p.getSecond().get(idx));
@@ -87,11 +87,11 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 			}
 			// it may have happened that non-minimal sets have been added, 
 			// so we have to check that
-			Collection<Collection<PropositionalFormula>> result = new HashSet<Collection<PropositionalFormula>>();
+			Collection<Collection<PlFormula>> result = new HashSet<Collection<PlFormula>>();
 			boolean subTest;
-			for(Collection<PropositionalFormula> c: preResult){
+			for(Collection<PlFormula> c: preResult){
 				subTest = true;
-				for(Collection<PropositionalFormula> c2: preResult){
+				for(Collection<PlFormula> c2: preResult){
 					if(c != c2 && c.containsAll(c2)){
 						subTest = false;
 						break;

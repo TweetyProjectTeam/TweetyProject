@@ -30,8 +30,8 @@ import net.sf.tweety.arg.aspic.syntax.AspicArgumentationTheory;
 import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
 import net.sf.tweety.arg.aspic.writer.AspicWriter;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This code shows the use of the ASPIC theory generator. It generates some random ASPIC
@@ -49,7 +49,7 @@ public class AspicGeneratorExample3 {
 		
 		String pathToFolder = "/Users/mthimm/Desktop/random_small_aspic_instances";
 		
-		AspicWriter<PropositionalFormula> writer = new AspicWriter<PropositionalFormula>();
+		AspicWriter<PlFormula> writer = new AspicWriter<PlFormula>();
 		
 		Random rand = new Random();
 		for(int numberAtoms: l_numberAtoms)
@@ -58,11 +58,11 @@ public class AspicGeneratorExample3 {
 					for(double percentageStrictRules: l_percentageStrictRules)
 						for(int i = 0; i < numberOfAFs; i++) {
 							System.out.println(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic");
-							AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+							AspicArgumentationTheory<PlFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
 							writer.write(theory, new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic" ));							
 							//write example query							
 							BufferedWriter writer1 = new BufferedWriter(new FileWriter(new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".query" )));
-							List<Proposition> sig = new ArrayList<>((PropositionalSignature) theory.getSignature());							
+							List<Proposition> sig = new ArrayList<>((PlSignature) theory.getSignature());							
 						    writer1.write(sig.get(rand.nextInt(sig.size())).toString());
 						    writer1.close();
 						}		

@@ -28,8 +28,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.probability.ProbabilityFunction;
 
@@ -55,7 +55,7 @@ import net.sf.tweety.math.probability.ProbabilityFunction;
  * @author Matthias Thimm
  *
  */
-public class SyntacticRandomSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet> {
+public class SyntacticRandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 	/** The probability function modeling the random decisions.*/
 	private ProbabilityFunction<Byte> prob;
 	/** The probability function used to sample propositions*/
@@ -92,7 +92,7 @@ public class SyntacticRandomSampler extends BeliefSetSampler<PropositionalFormul
 		this.prob.put(DISJ, probdisj);
 		this.prob.put(PROP, new Probability(1-probneg.doubleValue()-probconj.doubleValue() - probdisj.doubleValue()));
 		this.recDecrease = recDecrease;
-		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>((PropositionalSignature)this.getSignature()));
+		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>((PlSignature)this.getSignature()));
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class SyntacticRandomSampler extends BeliefSetSampler<PropositionalFormul
 		this.prob.put(DISJ, probdisj);
 		this.prob.put(PROP, new Probability(1-probneg.doubleValue()-probconj.doubleValue() - probdisj.doubleValue()));
 		this.recDecrease = recDecrease;
-		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>((PropositionalSignature)this.getSignature()));
+		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>((PlSignature)this.getSignature()));
 	}	
 	
 	/**
@@ -141,7 +141,7 @@ public class SyntacticRandomSampler extends BeliefSetSampler<PropositionalFormul
 	 * Samples a single formula.
 	 * @return a single formula.
 	 */
-	public PropositionalFormula sampleFormula(ProbabilityFunction<Byte> prob){
+	public PlFormula sampleFormula(ProbabilityFunction<Byte> prob){
 		switch(prob.sample(rand)){
 		case NEG:
 			return new Negation(this.sampleFormula(this.decrease(prob, this.recDecrease)));

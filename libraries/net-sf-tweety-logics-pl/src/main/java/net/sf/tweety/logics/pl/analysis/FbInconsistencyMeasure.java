@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.SpecialFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
@@ -45,14 +45,14 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * @author Matthias Thimm
  *
  */
-public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula>{
+public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlFormula>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(Collection<PropositionalFormula> formulas) {
-		PropositionalFormula f = new Conjunction(formulas);
+	public Double inconsistencyMeasure(Collection<PlFormula> formulas) {
+		PlFormula f = new Conjunction(formulas);
 		Set<Triple<Proposition,Integer,SpecialFormula>> subs = new HashSet<Triple<Proposition,Integer,SpecialFormula>>();
 		for(Proposition p: f.getAtoms())
 			for(int i = 1; i <= f.numberOfOccurrences(p); i++){
@@ -66,7 +66,7 @@ public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Propos
 				continue;
 			int size = current.size();
 			List<Triple<Proposition,Integer,SpecialFormula>> order = this.order(current);
-			PropositionalFormula r = f;
+			PlFormula r = f;
 			for(Triple<Proposition,Integer,SpecialFormula> sub: order)
 				r = r.replace(sub.getFirst(), sub.getThird(),sub.getSecond());
 			if(SatSolver.getDefaultSolver().isConsistent(r))

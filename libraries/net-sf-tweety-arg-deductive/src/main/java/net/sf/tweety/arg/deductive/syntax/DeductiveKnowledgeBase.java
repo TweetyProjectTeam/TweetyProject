@@ -28,7 +28,7 @@ import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Instances of this class represent deductive knowledge bases,
@@ -50,7 +50,7 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 	 * set of formulas.
 	 * @param formulas a set of formulas.
 	 */
-	public DeductiveKnowledgeBase(Collection<? extends PropositionalFormula> formulas){
+	public DeductiveKnowledgeBase(Collection<? extends PlFormula> formulas){
 		super(formulas);
 	}
 	
@@ -59,12 +59,12 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 	 * @param claim a propositional formula.
 	 * @return the set of all deductive arguments for the given claim.
 	 */
-	public Set<DeductiveArgument> getDeductiveArguments(PropositionalFormula claim){
+	public Set<DeductiveArgument> getDeductiveArguments(PlFormula claim){
 		Set<DeductiveArgument> arguments = new HashSet<DeductiveArgument>();
-		SetTools<PropositionalFormula> setTools = new SetTools<PropositionalFormula>();
+		SetTools<PlFormula> setTools = new SetTools<PlFormula>();
 		for(int card = 1; card <= this.size(); card++){
-			Set<Set<PropositionalFormula>> sets = setTools.subsets(this, card);
-			for(Set<PropositionalFormula> set: sets){
+			Set<Set<PlFormula>> sets = setTools.subsets(this, card);
+			for(Set<PlFormula> set: sets){
 				// test if we already have a subset in arguments
 				boolean properSet = true;
 				for(DeductiveArgument arg: arguments)
@@ -91,10 +91,10 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 	 */
 	public Set<DeductiveArgument> getDeductiveArguments(){
 		Set<DeductiveArgument> arguments = new HashSet<DeductiveArgument>();
-		SetTools<PropositionalFormula> setTools = new SetTools<PropositionalFormula>();
+		SetTools<PlFormula> setTools = new SetTools<PlFormula>();
 		for(int card = 1; card <= this.size(); card++){
-			Set<Set<PropositionalFormula>> sets = setTools.subsets(this, card);
-			for(Set<PropositionalFormula> set: sets){				
+			Set<Set<PlFormula>> sets = setTools.subsets(this, card);
+			for(Set<PlFormula> set: sets){				
 				// check for consistency
 				PlBeliefSet candidate = new PlBeliefSet(set);
 				if(!SatSolver.getDefaultSolver().isConsistent(candidate))

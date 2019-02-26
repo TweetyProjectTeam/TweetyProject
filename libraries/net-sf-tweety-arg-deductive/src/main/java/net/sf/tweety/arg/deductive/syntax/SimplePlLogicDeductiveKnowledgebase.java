@@ -27,8 +27,8 @@ import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Derivation;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * 
@@ -52,7 +52,7 @@ public class SimplePlLogicDeductiveKnowledgebase extends BeliefSet<SimplePlRule>
 	}
 	
 	public Signature getSignature() {
-		PropositionalSignature signature = new PropositionalSignature();
+		PlSignature signature = new PlSignature();
 		for(SimplePlRule f: this)
 			signature.addSignature(f.getSignature());
 		return signature;
@@ -79,15 +79,15 @@ public class SimplePlLogicDeductiveKnowledgebase extends BeliefSet<SimplePlRule>
 				SimplePlLogicArgument largb = (SimplePlLogicArgument)argb;
 				
 				Sat4jSolver solver = new Sat4jSolver();
-				solver.getWitness((PropositionalFormula)(larga.getClaim()).combineWithAnd(largb.getClaim()));
+				solver.getWitness((PlFormula)(larga.getClaim()).combineWithAnd(largb.getClaim()));
 				
-				if (!solver.isConsistent((PropositionalFormula)(larga.getClaim()).combineWithAnd(largb.getClaim()))){
+				if (!solver.isConsistent((PlFormula)(larga.getClaim()).combineWithAnd(largb.getClaim()))){
 					af.add(new Attack(arga, argb));
 				}
 				
 				for (SimplePlRule r : largb.getSupport()){
-					for (PropositionalFormula p : r.getPremise()){
-						if (!solver.isConsistent((PropositionalFormula)(larga.getClaim()).combineWithAnd(p))){
+					for (PlFormula p : r.getPremise()){
+						if (!solver.isConsistent((PlFormula)(larga.getClaim()).combineWithAnd(p))){
 							af.add(new Attack(arga, argb));
 						}
 					}

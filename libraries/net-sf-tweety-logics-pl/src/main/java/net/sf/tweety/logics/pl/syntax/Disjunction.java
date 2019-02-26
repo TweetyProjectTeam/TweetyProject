@@ -39,7 +39,7 @@ public class Disjunction extends AssociativePropositionalFormula {
 	 * Creates a new disjunction with the given inner formulas. 
 	 * @param formulas a collection of formulas.
 	 */
-	public Disjunction(Collection<? extends PropositionalFormula> formulas){
+	public Disjunction(Collection<? extends PlFormula> formulas){
 		super(formulas);
 	}
 	
@@ -47,21 +47,21 @@ public class Disjunction extends AssociativePropositionalFormula {
 	 * Creates a new (empty) disjunction.
 	 */
 	public Disjunction(){
-		this(new HashSet<PropositionalFormula>());
+		this(new HashSet<PlFormula>());
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */
 	@Override
-	public PropositionalFormula collapseAssociativeFormulas(){
+	public PlFormula collapseAssociativeFormulas(){
 		if(this.isEmpty())
 			return new Contradiction();
 		if(this.size() == 1)
 			return this.iterator().next().collapseAssociativeFormulas();
 		Disjunction newMe = new Disjunction();
-		for(PropositionalFormula f: this){
-			PropositionalFormula newF = f.collapseAssociativeFormulas();
+		for(PlFormula f: this){
+			PlFormula newF = f.collapseAssociativeFormulas();
 			if(newF instanceof Disjunction)
 				newMe.addAll((Disjunction) newF);
 			else newMe.add(newF);
@@ -74,7 +74,7 @@ public class Disjunction extends AssociativePropositionalFormula {
 	 * @param first a propositional formula.
 	 * @param second a propositional formula.
 	 */
-	public Disjunction(PropositionalFormula first, PropositionalFormula second){
+	public Disjunction(PlFormula first, PlFormula second){
 		this();
 		this.add(first);
 		this.add(second);
@@ -84,16 +84,16 @@ public class Disjunction extends AssociativePropositionalFormula {
    * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
    */
 	@Override
-	public PropositionalFormula toNnf() {
+	public PlFormula toNnf() {
 	  Disjunction d = new Disjunction();
-    for(PropositionalFormula p : this) {
+    for(PlFormula p : this) {
       d.add( p.toNnf() );
     }
     return d;
 	}
 
 	@Override
-	public PropositionalFormula clone() {
+	public PlFormula clone() {
 		return new Disjunction(support.copyHelper(this));
 	}
 
@@ -119,14 +119,14 @@ public class Disjunction extends AssociativePropositionalFormula {
 	 */
 	@Override
 	public Conjunction toCnf() {	
-		Set<Set<PropositionalFormula>> conjs = new HashSet<Set<PropositionalFormula>>();
-		for(PropositionalFormula f: this)
-			conjs.add(new HashSet<PropositionalFormula>(f.toCnf()));				
-		Collection<PropositionalFormula> newConjs = new HashSet<PropositionalFormula>();
-		SetTools<PropositionalFormula> setTools = new SetTools<PropositionalFormula>();		
-		for(Set<PropositionalFormula> permut: setTools.permutations(conjs)){
+		Set<Set<PlFormula>> conjs = new HashSet<Set<PlFormula>>();
+		for(PlFormula f: this)
+			conjs.add(new HashSet<PlFormula>(f.toCnf()));				
+		Collection<PlFormula> newConjs = new HashSet<PlFormula>();
+		SetTools<PlFormula> setTools = new SetTools<PlFormula>();		
+		for(Set<PlFormula> permut: setTools.permutations(conjs)){
 			Disjunction disj = new Disjunction();
-			for(PropositionalFormula f: permut)
+			for(PlFormula f: permut)
 				disj.addAll(((Disjunction)f));
 			newConjs.add(disj);
 		}		
@@ -136,9 +136,9 @@ public class Disjunction extends AssociativePropositionalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
 	 */
-	public PropositionalFormula trim(){
-		Set<PropositionalFormula> disj = new HashSet<PropositionalFormula>();
-		for(PropositionalFormula f: this.support)
+	public PlFormula trim(){
+		Set<PlFormula> disj = new HashSet<PlFormula>();
+		for(PlFormula f: this.support)
 			disj.add(f.trim());
 		return new Disjunction(disj);
 	}
@@ -147,9 +147,9 @@ public class Disjunction extends AssociativePropositionalFormula {
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
 	 */
 	@Override
-	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
-		Iterator<PropositionalFormula> it = this.support.iterator();
+		Iterator<PlFormula> it = this.support.iterator();
 		if(!it.hasNext())
 			return PossibleWorld.getAllPossibleWorlds(sig);
 		models.addAll(it.next().getModels(sig));
@@ -163,7 +163,7 @@ public class Disjunction extends AssociativePropositionalFormula {
 	 */
 	@Override
 	public boolean isClause(){
-		for(PropositionalFormula f: this.getFormulas())
+		for(PlFormula f: this.getFormulas())
 			if(!f.isLiteral())
 				return false;
 		return true;
@@ -172,10 +172,10 @@ public class Disjunction extends AssociativePropositionalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
 	 */
-	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){
+	public PlFormula replace(Proposition p, PlFormula f, int i){
 		int num = 0;
 		Disjunction n = new Disjunction();
-		for(PropositionalFormula sub: this.support.getFormulas()){
+		for(PlFormula sub: this.support.getFormulas()){
 			if(num < i && num + sub.numberOfOccurrences(p) >= i ){
 				n.add(sub.replace(p, f, i-num));
 			}else n.add(sub.clone());

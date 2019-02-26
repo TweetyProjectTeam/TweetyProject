@@ -29,8 +29,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Parser a file in Dimacs format into a PlBeliefSet.
@@ -38,13 +38,13 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class DimacsParser extends Parser<PlBeliefSet,PropositionalFormula> {
+public class DimacsParser extends Parser<PlBeliefSet,PlFormula> {
 	
 	/**
 	 * The signature used for parsing (is automatically set if a file is parsed, but
 	 * must be set explicitly if only a single formula is parsed). 
 	 */
-	private PropositionalSignature signature = null;
+	private PlSignature signature = null;
 	
 	/**
 	 * An array representation of the propositions (for index mapping) 
@@ -57,7 +57,7 @@ public class DimacsParser extends Parser<PlBeliefSet,PropositionalFormula> {
 	 * clauses.
 	 * @param sig some signature
 	 */
-	public void setSignature(PropositionalSignature sig) {
+	public void setSignature(PlSignature sig) {
 		this.signature = sig;
 		this.prop_idx = new Proposition[sig.size()];
 		int idx = 0;
@@ -85,7 +85,7 @@ public class DimacsParser extends Parser<PlBeliefSet,PropositionalFormula> {
 						tokenizer.nextToken();
 						tokenizer.nextToken();
 						int numberVars = new Integer(tokenizer.nextToken());
-						this.signature = new PropositionalSignature();
+						this.signature = new PlSignature();
 						this.prop_idx = new Proposition[numberVars];
 						for(Integer i = 1; i <= numberVars; i++) {
 							Proposition p = new Proposition(i.toString());						

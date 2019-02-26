@@ -43,8 +43,8 @@ import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 //import net.sf.tweety.logics.pl.analysis.PlWindowInconsistencyMeasurementProcess;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.CnfSampler;
 //import net.sf.tweety.logics.pl.util.ContensionSampler;
 import net.sf.tweety.logics.pl.util.HsSampler;
@@ -72,11 +72,11 @@ public class StreamInconsistencyEvaluationExample {
 		SatSolver.setTempFolder(new File(TMP_FILE_FOLDER));
 		SatSolver.setDefaultSolver(new LingelingSolver("/home/mthimm/strinc/lingeling/lingeling"));
 		PlMusEnumerator.setDefaultEnumerator(new MarcoMusEnumerator("/home/mthimm/strinc/marco/marco.py"));
-		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
+		PlSignature signature = new PlSignature(SIGNATURE_SIZE);
 		// -----------------------------------------
 		// the inconsistency measures to be compared
 		// -----------------------------------------
-		Collection<StreamBasedInconsistencyMeasure<PropositionalFormula>> measures = new HashSet<StreamBasedInconsistencyMeasure<PropositionalFormula>>(); 
+		Collection<StreamBasedInconsistencyMeasure<PlFormula>> measures = new HashSet<StreamBasedInconsistencyMeasure<PlFormula>>(); 
 //		// Stream contension measure (population size = 10)
 //		Map<String,Object>  config = new HashMap<String,Object>();
 //		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
@@ -182,7 +182,7 @@ public class StreamInconsistencyEvaluationExample {
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 10);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
-		StreamBasedInconsistencyMeasure<PropositionalFormula> hs_stream_1 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(HsInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> hs_stream_1 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(HsInconsistencyMeasurementProcess.class,config);
 		//hs_stream_1.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-hs-1.txt",STANDARD_EVENTS));
 		hs_stream_1.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-hs-1.txt",STANDARD_EVENTS));
 		hs_stream_1.addInconsistencyListener(new DefaultInconsistencyListener());
@@ -193,7 +193,7 @@ public class StreamInconsistencyEvaluationExample {
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 100);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
-		StreamBasedInconsistencyMeasure<PropositionalFormula> hs_stream_2 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(HsInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> hs_stream_2 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(HsInconsistencyMeasurementProcess.class,config);
 		hs_stream_2.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-hs-2.txt",STANDARD_EVENTS));
 		hs_stream_2.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(hs_stream_2);
@@ -203,7 +203,7 @@ public class StreamInconsistencyEvaluationExample {
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS, 500);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE, signature);
 		config.put(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR, STANDARD_SMOOTHING_FACTOR);
-		StreamBasedInconsistencyMeasure<PropositionalFormula> hs_stream_3 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(HsInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> hs_stream_3 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(HsInconsistencyMeasurementProcess.class,config);
 		hs_stream_3.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/stream-hs-3.txt",STANDARD_EVENTS));
 		hs_stream_3.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(hs_stream_3);
@@ -216,7 +216,7 @@ public class StreamInconsistencyEvaluationExample {
 		int kbsize = -1;
 		EvaluationInconsistencyListener.TOLERANCE = 1;
 		EvaluationInconsistencyListener.INCDEFAULTVALUE = 200;
-		BeliefSetSampler<PropositionalFormula,PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
+		BeliefSetSampler<PlFormula,PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		for(int iteration = 0; iteration < NUMBER_OF_ITERATIONS; iteration++){
 			if(iteration % 10 == 0){
 				kbsize = kbsizes[iteration / 10];				
@@ -232,8 +232,8 @@ public class StreamInconsistencyEvaluationExample {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}	
-			for(StreamBasedInconsistencyMeasure<PropositionalFormula> sbim: measures){
-				InconsistencyMeasurementProcess<PropositionalFormula> imp = sbim.getInconsistencyMeasureProcess(new DefaultFormulaStream<PropositionalFormula>(bs,true));
+			for(StreamBasedInconsistencyMeasure<PlFormula> sbim: measures){
+				InconsistencyMeasurementProcess<PlFormula> imp = sbim.getInconsistencyMeasureProcess(new DefaultFormulaStream<PlFormula>(bs,true));
 				imp.start();
 				Thread.sleep(2000);
 				while(imp.isAlive()){

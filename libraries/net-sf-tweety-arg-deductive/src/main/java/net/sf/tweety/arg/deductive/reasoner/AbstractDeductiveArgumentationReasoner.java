@@ -30,7 +30,7 @@ import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.arg.deductive.syntax.DeductiveKnowledgeBase;
 import net.sf.tweety.commons.QuantitativeReasoner;
 import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractDeductiveArgumentationReasoner implements QuantitativeReasoner<DeductiveKnowledgeBase,PropositionalFormula> {
+public abstract class AbstractDeductiveArgumentationReasoner implements QuantitativeReasoner<DeductiveKnowledgeBase,PlFormula> {
 
 	/** Logger. */
 	static private Logger log = LoggerFactory.getLogger(AbstractDeductiveArgumentationReasoner.class);
@@ -73,7 +73,7 @@ public abstract class AbstractDeductiveArgumentationReasoner implements Quantita
 	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Double query(DeductiveKnowledgeBase kb, PropositionalFormula f) {
+	public Double query(DeductiveKnowledgeBase kb, PlFormula f) {
 		// 1.) get all arguments for the query 
 		Set<DeductiveArgument> proArguments = kb.getDeductiveArguments(f);
 		// 2.) get all arguments for the negation of the query

@@ -51,8 +51,8 @@ public class ClBeliefSet extends BeliefSet<Conditional> {
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
 	@Override
-	public PropositionalSignature getSignature(){
-		PropositionalSignature sig = new PropositionalSignature();
+	public PlSignature getSignature(){
+		PlSignature sig = new PlSignature();
 		for(Formula f: this){
 			Conditional c = (Conditional) f;
 			sig.addAll(c.getPremise().iterator().next().getAtoms());

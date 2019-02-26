@@ -54,9 +54,9 @@ public class PclBeliefSet extends BeliefSet<ProbabilisticConditional> {
 	 */
 	@Override
 	public Signature getSignature() {
-		PropositionalSignature sig = new PropositionalSignature();
+		PlSignature sig = new PlSignature();
 		for(ProbabilisticConditional c: this)
-			sig.addAll(((PropositionalSignature)c.getSignature()));			
+			sig.addAll(((PlSignature)c.getSignature()));			
 		return sig;
 	}	
 	

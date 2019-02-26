@@ -24,7 +24,7 @@ import net.sf.tweety.commons.analysis.InterpretationDistance;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class refines interpretation distances to distance on possible worlds. It add
@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * @author Matthias Thimm
  *
  */
-public abstract class PossibleWorldDistance implements InterpretationDistance<PossibleWorld,PlBeliefSet,PropositionalFormula> {
+public abstract class PossibleWorldDistance implements InterpretationDistance<PossibleWorld,PlBeliefSet,PlFormula> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.analysis.InterpretationDistance#distance(net.sf.tweety.commons.Interpretation, net.sf.tweety.commons.Interpretation)
@@ -44,7 +44,7 @@ public abstract class PossibleWorldDistance implements InterpretationDistance<Po
 	 * @see net.sf.tweety.commons.analysis.InterpretationDistance#distance(net.sf.tweety.commons.Formula, net.sf.tweety.commons.Interpretation)
 	 */
 	@Override
-	public double distance(PropositionalFormula f, PossibleWorld b){
+	public double distance(PlFormula f, PossibleWorld b){
 		// remove all propositions from b not appearing in f, they have no influence on the distance
 		// NOTE: this may not be true for every imaginable distance between possible worlds, but it
 		//	is true for e.g. the Dalal distance 

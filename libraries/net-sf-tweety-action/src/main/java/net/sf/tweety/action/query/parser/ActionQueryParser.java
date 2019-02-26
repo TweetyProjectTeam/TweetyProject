@@ -52,7 +52,7 @@ import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
@@ -311,7 +311,7 @@ public class ActionQueryParser
     for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("requires")); o = stack.pop() )
       requires = ((String)o) + requires;
     
-    PropositionalFormula disjunction = parseDisjunction( stack );
+    PlFormula disjunction = parseDisjunction( stack );
     Set<Variable> variables = new HashSet<Variable>();
     for(Proposition p : disjunction.getAtoms()) {
       QueryProposition qp = (QueryProposition) p;
@@ -328,7 +328,7 @@ public class ActionQueryParser
    * @return a propositional formula.
    * @throws ParserException if the list could not be parsed.
    */
-  private PropositionalFormula parseDisjunction(List<Object> l) throws ParserException{
+  private PlFormula parseDisjunction(List<Object> l) throws ParserException{
     if(l.isEmpty())
       throw new ParserException("Empty parentheses.");
     if(!(l.contains(LogicalSymbols.DISJUNCTION())))
@@ -354,7 +354,7 @@ public class ActionQueryParser
    * @return a propositional formula.
    * @throws ParserException if the list could not be parsed.
    */
-  private PropositionalFormula parseConjunction(List<Object> l) throws ParserException{
+  private PlFormula parseConjunction(List<Object> l) throws ParserException{
     if(l.isEmpty())
       throw new ParserException("General parsing exception.");
     if(!(l.contains(LogicalSymbols.CONJUNCTION())))
@@ -380,7 +380,7 @@ public class ActionQueryParser
    * @return a propositional formula.
    * @throws ParserException if the list could not be parsed.
    */
-  private PropositionalFormula parseNegation(List<Object> l) throws ParserException{
+  private PlFormula parseNegation(List<Object> l) throws ParserException{
     if(l.get(0).equals(LogicalSymbols.CLASSICAL_NEGATION())){
       l.remove(0);
       return new Negation(this.parseAtomic(l));     
@@ -396,10 +396,10 @@ public class ActionQueryParser
    * @return a propositional formula.
    * @throws ParserException
    */
-  private PropositionalFormula parseAtomic(List<Object> l) throws ParserException{
+  private PlFormula parseAtomic(List<Object> l) throws ParserException{
     if(l.size() == 1){
       Object o = l.get(0);
-      if(o instanceof PropositionalFormula) return (PropositionalFormula) o;
+      if(o instanceof PlFormula) return (PlFormula) o;
       if(o instanceof String){
         String s = (String) o;
         if(s.equals(LogicalSymbols.CONTRADICTION()))

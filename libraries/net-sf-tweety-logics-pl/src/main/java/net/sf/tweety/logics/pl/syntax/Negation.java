@@ -30,18 +30,18 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public class Negation extends PropositionalFormula {
+public class Negation extends PlFormula {
 
 	/**
 	 * The formula within this negation.
 	 */
-	private PropositionalFormula formula;
+	private PlFormula formula;
 	
 	/**
 	 * Creates a new negation with the given formula.
 	 * @param formula the formula within the negation.
 	 */
-	public Negation(PropositionalFormula formula){
+	public Negation(PlFormula formula){
 		this.formula = formula;	
 	}
 	
@@ -49,7 +49,7 @@ public class Negation extends PropositionalFormula {
 	 * Returns the formula within this negation.
 	 * @return the formula within this negation.
 	 */
-	public PropositionalFormula getFormula(){
+	public PlFormula getFormula(){
 		return this.formula;
 	}
 	
@@ -57,14 +57,14 @@ public class Negation extends PropositionalFormula {
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */
 	@Override
-	public PropositionalFormula collapseAssociativeFormulas(){
+	public PlFormula collapseAssociativeFormulas(){
 		return new Negation(this.formula.collapseAssociativeFormulas());
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#hasLowerBindingPriority(net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula)
 	 */
-	public boolean hasLowerBindingPriority(PropositionalFormula other){
+	public boolean hasLowerBindingPriority(PlFormula other){
 		// negations have the highest binding priority
 		return false;
 	}
@@ -84,7 +84,7 @@ public class Negation extends PropositionalFormula {
    * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
    */
 	@Override
-	public PropositionalFormula toNnf() {
+	public PlFormula toNnf() {
     // remove double negation    
     if(formula instanceof Negation)
       return ((Negation)formula).formula.toNnf();
@@ -96,7 +96,7 @@ public class Negation extends PropositionalFormula {
       Conjunction c = (Conjunction)formula;
       Disjunction d = new Disjunction();
       
-      for(PropositionalFormula p : c) {
+      for(PlFormula p : c) {
         d.add( new Negation( p ).toNnf() );
       }
       return d;
@@ -106,7 +106,7 @@ public class Negation extends PropositionalFormula {
        Disjunction d = (Disjunction)formula;
        Conjunction c = new Conjunction();
        
-       for(PropositionalFormula p : d) {
+       for(PlFormula p : d) {
          c.add( new Negation( p ).toNnf() );
        }
        return c;
@@ -117,8 +117,8 @@ public class Negation extends PropositionalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
 	 */
-	public PropositionalFormula trim(){
-		PropositionalFormula f = this.formula.trim();
+	public PlFormula trim(){
+		PlFormula f = this.formula.trim();
 		if(f instanceof Negation)
 			return ((Negation)f).formula;
 		return new Negation(f);
@@ -156,12 +156,12 @@ public class Negation extends PropositionalFormula {
 	}
 
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
+	public Set<PlPredicate> getPredicates() {
 		return formula.getPredicates();
 	}
 
 	@Override
-	public PropositionalFormula clone() {
+	public PlFormula clone() {
 		return new Negation(formula.clone());
 	}
 
@@ -179,8 +179,8 @@ public class Negation extends PropositionalFormula {
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
 	@Override
-	public Set<PropositionalFormula> getLiterals(){
-		Set<PropositionalFormula> result = new HashSet<PropositionalFormula>();
+	public Set<PlFormula> getLiterals(){
+		Set<PlFormula> result = new HashSet<PlFormula>();
 		if(this.isLiteral())			
 			result.add(this);
 		else result.addAll(this.formula.getLiterals());
@@ -188,7 +188,7 @@ public class Negation extends PropositionalFormula {
 	}
 	
 	@Override
-	public PropositionalSignature getSignature() {
+	public PlSignature getSignature() {
 		return formula.getSignature();
 	}
 	
@@ -201,13 +201,13 @@ public class Negation extends PropositionalFormula {
 			return ((Negation)this.formula).getFormula().toCnf();
 		}else if(this.formula instanceof Conjunction){
 			Disjunction disj = new Disjunction();
-			for(PropositionalFormula f: (Conjunction) this.formula)
-				disj.add((PropositionalFormula)f.complement());
+			for(PlFormula f: (Conjunction) this.formula)
+				disj.add((PlFormula)f.complement());
 			return disj.toCnf();
 		}else if(this.formula instanceof Disjunction){
 			Conjunction conj = new Conjunction();
-			for(PropositionalFormula f: (Disjunction) this.formula)
-				conj.add((PropositionalFormula)f.complement());
+			for(PlFormula f: (Disjunction) this.formula)
+				conj.add((PlFormula)f.complement());
 			return conj.toCnf();
 		}else if(this.formula instanceof Contradiction){
 			Conjunction conj = new Conjunction();
@@ -233,7 +233,7 @@ public class Negation extends PropositionalFormula {
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
 	 */
 	@Override
-	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Set<PossibleWorld> models = PossibleWorld.getAllPossibleWorlds(sig);
 		for(PossibleWorld w: this.formula.getModels(sig))
 			models.remove(w);
@@ -250,7 +250,7 @@ public class Negation extends PropositionalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
 	 */
-	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){
+	public PlFormula replace(Proposition p, PlFormula f, int i){
 		return new Negation(this.formula.replace(p, f, i));
 	}
 }

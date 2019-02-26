@@ -25,7 +25,7 @@ import java.util.List;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.reasoner.SatReasoner;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "irrelevance of syntax" postulate for inconsistency measures: Knowledge
@@ -51,18 +51,18 @@ public class ImIrrelevanceOfSyntax extends ImPostulate {
 	 * .Collection)
 	 */
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		if (kb.isEmpty())
 			return false;
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet) kb).getCanonicalOrdering();
-		List<PropositionalFormula> left = new ArrayList<PropositionalFormula>(
+		List<PlFormula> orderedKB = ((PlBeliefSet) kb).getCanonicalOrdering();
+		List<PlFormula> left = new ArrayList<PlFormula>(
 				orderedKB.subList(0, orderedKB.size() / 2));
-		List<PropositionalFormula> right = new ArrayList<PropositionalFormula>(
+		List<PlFormula> right = new ArrayList<PlFormula>(
 				orderedKB.subList(orderedKB.size() / 2, orderedKB.size()));
 		SatReasoner reasoner = new SatReasoner();
-		for (PropositionalFormula l : left) {
+		for (PlFormula l : left) {
 			Boolean found = false;
-			for (PropositionalFormula r : right) {
+			for (PlFormula r : right) {
 				if (reasoner.isEquivalent(l, r)) {
 					found = true;
 					right.remove(r);
@@ -87,14 +87,14 @@ public class ImIrrelevanceOfSyntax extends ImPostulate {
 	 * net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb,
-			BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb,
+			BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if (!this.isApplicable(kb))
 			return true;
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet) kb).getCanonicalOrdering();
-		List<PropositionalFormula> left = new ArrayList<PropositionalFormula>(
+		List<PlFormula> orderedKB = ((PlBeliefSet) kb).getCanonicalOrdering();
+		List<PlFormula> left = new ArrayList<PlFormula>(
 				orderedKB.subList(0, orderedKB.size() / 2));
-		List<PropositionalFormula> right = new ArrayList<PropositionalFormula>(
+		List<PlFormula> right = new ArrayList<PlFormula>(
 				orderedKB.subList(orderedKB.size() / 2, orderedKB.size()));
 		double inconsistency1 = ev.inconsistencyMeasure(left);
 		double inconsistency2 = ev.inconsistencyMeasure(right);

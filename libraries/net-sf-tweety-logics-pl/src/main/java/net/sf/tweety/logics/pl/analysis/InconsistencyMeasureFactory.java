@@ -25,7 +25,7 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.func.FracAggrFunction;
 import net.sf.tweety.math.opt.Solver;
 
@@ -80,48 +80,48 @@ public abstract class InconsistencyMeasureFactory {
 	 * @param im some identifier of an inconsistency measure.
 	 * @return the requested inconsistency measure.
 	 */
-	public static InconsistencyMeasure<BeliefSet<PropositionalFormula>> getInconsistencyMeasure(Measure im){
+	public static InconsistencyMeasure<BeliefSet<PlFormula>> getInconsistencyMeasure(Measure im){
 		switch(im){
 			case DRASTIC:
-				return new DrasticInconsistencyMeasure<PropositionalFormula>(SatSolver.getDefaultSolver());
+				return new DrasticInconsistencyMeasure<PlFormula>(SatSolver.getDefaultSolver());
 			case CONTENSION:
 				return new ContensionInconsistencyMeasure();
 			case MC:
-				return new MaInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+				return new MaInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case MI:
-				return new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+				return new MiInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case MIC:
-				return new MicInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+				return new MicInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case HS:
-				return new HsInconsistencyMeasure<PlBeliefSet,PropositionalFormula>(new PossibleWorldIterator());
+				return new HsInconsistencyMeasure<PlBeliefSet,PlFormula>(new PossibleWorldIterator());
 			case PR:
-				return new PrInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+				return new PrInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case ETA:			
-				return new EtaInconsistencyMeasure<PlBeliefSet,PropositionalFormula>(new PossibleWorldIterator());
+				return new EtaInconsistencyMeasure<PlBeliefSet,PlFormula>(new PossibleWorldIterator());
 			case DALALSUM:
-				return new DSumInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
+				return new DSumInconsistencyMeasure<PossibleWorld,PlBeliefSet,PlFormula>(new DalalDistance(),new PossibleWorldIterator());
 			case DALALMAX:
-				return new DMaxInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
+				return new DMaxInconsistencyMeasure<PossibleWorld,PlBeliefSet,PlFormula>(new DalalDistance(),new PossibleWorldIterator());
 			case DALALHIT:
-				return new DHitInconsistencyMeasure<PossibleWorld,PlBeliefSet,PropositionalFormula>(new DalalDistance(),new PossibleWorldIterator());
+				return new DHitInconsistencyMeasure<PossibleWorld,PlBeliefSet,PlFormula>(new DalalDistance(),new PossibleWorldIterator());
 			case DF:
-				return new DfInconsistencyMeasure<PropositionalFormula>(new FracAggrFunction(),PlMusEnumerator.getDefaultEnumerator());
+				return new DfInconsistencyMeasure<PlFormula>(new FracAggrFunction(),PlMusEnumerator.getDefaultEnumerator());
 			case PM:
 				return new PmInconsistencyMeasure();
 			case MV:
 				return new MusVarInconsistencyMeasure();
 			case NC:
-				return new NConsInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+				return new NConsInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case MCSC:
-				return new McscInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+				return new McscInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
 			case CC:
-				return new CcInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator(), Solver.getDefaultIntegerLinearSolver());
+				return new CcInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator(), Solver.getDefaultIntegerLinearSolver());
 			case CSP:
-				return new CspInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator(), Solver.getDefaultIntegerLinearSolver());
+				return new CspInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator(), Solver.getDefaultIntegerLinearSolver());
 			case FB:
 				return new FbInconsistencyMeasure();
 			case IS:
-				return new IsInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
+				return new IsInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
 			default:
 				throw new RuntimeException("No measure found for " + im.toString());
 		}

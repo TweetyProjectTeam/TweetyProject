@@ -26,7 +26,7 @@ import net.sf.tweety.commons.util.DefaultSubsetIterator;
 import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This attack notion models the undercut relation; A is defeated by B iff there is C subset of support(A) with claim(B) == \neg C.
@@ -54,8 +54,8 @@ public class Undercut implements Attack{
 	@Override
 	public boolean isAttackedBy(DeductiveArgument a, DeductiveArgument b) {
 		SimpleReasoner reasoner = new SimpleReasoner();
-		DefaultSubsetIterator<PropositionalFormula> it = new DefaultSubsetIterator<PropositionalFormula>(new HashSet<PropositionalFormula>(a.getSupport()));
-		Set<PropositionalFormula> set = null;
+		DefaultSubsetIterator<PlFormula> it = new DefaultSubsetIterator<PlFormula>(new HashSet<PlFormula>(a.getSupport()));
+		Set<PlFormula> set = null;
 		while(it.hasNext()){
 			set = it.next();
 			if(reasoner.isEquivalent(b.getClaim(), new Negation(new Conjunction(set))))

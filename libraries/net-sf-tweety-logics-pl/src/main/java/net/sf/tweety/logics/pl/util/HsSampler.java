@@ -27,8 +27,8 @@ import net.sf.tweety.commons.BeliefSetSampler;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Generates random propositional belief base with a given
@@ -37,7 +37,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Matthias Thimm
  */
-public class HsSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet>{
+public class HsSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 
 	/**
 	 * The inconsistency value of the generated belief sets
@@ -52,7 +52,7 @@ public class HsSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet
 	 * @param signature some propositional signature
 	 * @param incvalue some inconsistency value.
 	 */
-	public HsSampler(PropositionalSignature signature, int incvalue) {
+	public HsSampler(PlSignature signature, int incvalue) {
 		super(signature);
 		this.incvalue = incvalue;
 	}
@@ -66,7 +66,7 @@ public class HsSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet
 	 * @param minLength the minimum length of knowledge bases
 	 * @param maxLength the maximum length of knowledge bases
 	 */
-	public HsSampler(PropositionalSignature signature, int incvalue, int minLength, int maxLength) {
+	public HsSampler(PlSignature signature, int incvalue, int minLength, int maxLength) {
 		super(signature,minLength,maxLength);
 		this.incvalue = incvalue;
 	}
@@ -75,14 +75,14 @@ public class HsSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet
 	 * @see net.sf.tweety.commons.BeliefSetSampler#next()
 	 */
 	public PlBeliefSet next() {
-		PropositionalSignature sig = (PropositionalSignature) this.getSignature();
+		PlSignature sig = (PlSignature) this.getSignature();
 		if(this.incvalue > Math.pow(2, sig.size()))
 			throw new IllegalArgumentException("A propositional belief base with inconsistency value " + this.incvalue + " cannot be generated with the given signature.");
-		List<PropositionalFormula> canonical = this.getCanonicalFormulas(this.incvalue+1, sig);
+		List<PlFormula> canonical = this.getCanonicalFormulas(this.incvalue+1, sig);
 		PlBeliefSet bs = new PlBeliefSet();
 		bs.addAll(canonical);
 		Random rand = new Random();
-		PropositionalFormula f1,f2;
+		PlFormula f1,f2;
 		CnfSampler sampler = new CnfSampler(sig,3d/sig.size());
 		while(bs.size() < this.getMinLength()){
 			f1 = canonical.get(rand.nextInt(canonical.size()));
@@ -99,18 +99,18 @@ public class HsSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet
 	 * @param sig the signature (guaranteed to be large enough)
 	 * @return a list of canonical formulas.
 	 */
-	private List<PropositionalFormula> getCanonicalFormulas(int num, PropositionalSignature sig){
-		List<PropositionalFormula> canonical = new ArrayList<PropositionalFormula>();
+	private List<PlFormula> getCanonicalFormulas(int num, PlSignature sig){
+		List<PlFormula> canonical = new ArrayList<PlFormula>();
 		Iterator<Proposition> it = sig.iterator();
 		if(num == 1){
 			canonical.add(it.next());
 		}else if(num % 2 == 1){
-			PropositionalSignature sig2 = new PropositionalSignature(sig);
+			PlSignature sig2 = new PlSignature(sig);
 			Proposition p = it.next();
 			sig2.remove(p);
-			List<PropositionalFormula> tmp = this.getCanonicalFormulas(num-1, sig2);			
+			List<PlFormula> tmp = this.getCanonicalFormulas(num-1, sig2);			
 			canonical.add(tmp.iterator().next().combineWithAnd(new Negation(p)));
-			for(PropositionalFormula t: tmp){
+			for(PlFormula t: tmp){
 				canonical.add(t.combineWithAnd(p));
 			}		
 		}else if(num == 2){
@@ -118,11 +118,11 @@ public class HsSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet
 			canonical.add(p);
 			canonical.add(new Negation(p));
 		}else{
-			PropositionalSignature sig2 = new PropositionalSignature(sig);
+			PlSignature sig2 = new PlSignature(sig);
 			Proposition p = it.next();
 			sig2.remove(p);
-			List<PropositionalFormula> tmp = this.getCanonicalFormulas(num/2, sig2);
-			for(PropositionalFormula t: tmp){
+			List<PlFormula> tmp = this.getCanonicalFormulas(num/2, sig2);
+			for(PlFormula t: tmp){
 				canonical.add(t.combineWithAnd(p));
 				canonical.add(t.combineWithAnd(new Negation(p)));
 			}

@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Shows some simple code for working with ABA
@@ -43,13 +43,13 @@ public class AbaExample {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		
-		ABAParser<PropositionalFormula> parser = new ABAParser<PropositionalFormula>(new PlParser());
-		ABATheory<PropositionalFormula> t = parser.parseBeliefBaseFromFile(AbaExample.class.getResource("/example2.aba").getFile());
+		ABAParser<PlFormula> parser = new ABAParser<PlFormula>(new PlParser());
+		ABATheory<PlFormula> t = parser.parseBeliefBaseFromFile(AbaExample.class.getResource("/example2.aba").getFile());
 		
-		FlatABAReasoner<PropositionalFormula> r1 = new FlatABAReasoner<PropositionalFormula>(Semantics.PREFERRED_SEMANTICS);
-		PreferredReasoner<PropositionalFormula> r2 = new PreferredReasoner<PropositionalFormula>();
+		FlatABAReasoner<PlFormula> r1 = new FlatABAReasoner<PlFormula>(Semantics.PREFERRED_SEMANTICS);
+		PreferredReasoner<PlFormula> r2 = new PreferredReasoner<PlFormula>();
 		
-		Assumption<PropositionalFormula> a = new Assumption<>(new Proposition("a"));
+		Assumption<PlFormula> a = new Assumption<>(new Proposition("a"));
 		System.out.println("a: " + r1.query(t,a));
 		System.out.println("a: " + r2.query(t,a));
 		

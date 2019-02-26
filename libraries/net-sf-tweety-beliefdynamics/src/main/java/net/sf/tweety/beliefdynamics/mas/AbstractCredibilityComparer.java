@@ -42,7 +42,7 @@ public abstract class AbstractCredibilityComparer {
 	 * The information objects that hold the information which agents
 	 * uttered the formulas.
 	 */
-	private Collection<InformationObject<PropositionalFormula>> formulas;
+	private Collection<InformationObject<PlFormula>> formulas;
 	
 	/**
 	 * Creates a new credibility comparer that is guided by the giving information which
@@ -51,7 +51,7 @@ public abstract class AbstractCredibilityComparer {
 	 * 		uttered the formulas.
 	 * @param credOrder The credibility order used to guide the comparison.
 	 */
-	public AbstractCredibilityComparer(Collection<InformationObject<PropositionalFormula>> formulas, Order<Agent> credOrder){
+	public AbstractCredibilityComparer(Collection<InformationObject<PlFormula>> formulas, Order<Agent> credOrder){
 		this.formulas = formulas;
 		this.credOrder = credOrder;
 	}
@@ -62,8 +62,8 @@ public abstract class AbstractCredibilityComparer {
 	 * @param col2 a set of formulas
 	 * @return "true" iff col1 is at least as preferred as cl2 wrt. the credibility order. 
 	 */
-	protected boolean isAtLeastAsPreferredAs(Collection<? extends PropositionalFormula> col1, Collection<? extends PropositionalFormula> col2){
-		for(PropositionalFormula f: col1){
+	protected boolean isAtLeastAsPreferredAs(Collection<? extends PlFormula> col1, Collection<? extends PlFormula> col2){
+		for(PlFormula f: col1){
 			if(!this.isAtLeastAsPreferredAs(f, col2))
 				return false;
 		}		
@@ -76,8 +76,8 @@ public abstract class AbstractCredibilityComparer {
 	 * @param formulas a set of formulas
 	 * @return "true" iff f is at least as preferred as each formula in "formulas"
 	 */
-	protected boolean isAtLeastAsPreferredAs(PropositionalFormula f, Collection<? extends PropositionalFormula> formulas){
-		for(PropositionalFormula f2: formulas){
+	protected boolean isAtLeastAsPreferredAs(PlFormula f, Collection<? extends PlFormula> formulas){
+		for(PlFormula f2: formulas){
 			if(this.isAtLeastAsPreferredAs(f, f2))
 				return true;
 		}		
@@ -90,15 +90,15 @@ public abstract class AbstractCredibilityComparer {
 	 * @param f2 some formula
 	 * @return "true" iff f is at least as preferred as f2
 	 */
-	protected boolean isAtLeastAsPreferredAs(PropositionalFormula f, PropositionalFormula f2){
+	protected boolean isAtLeastAsPreferredAs(PlFormula f, PlFormula f2){
 		// Retrieve all agents that uttered f
 		Set<Agent> agents1 = new HashSet<Agent>();
-		for(InformationObject<PropositionalFormula> i: this.formulas)
+		for(InformationObject<PlFormula> i: this.formulas)
 			if(i.getFormula().equals(f))
 				agents1.add(i.getSource());
 		// Retrieve all agents that uttered f2
 		Set<Agent> agents2 = new HashSet<Agent>();
-		for(InformationObject<PropositionalFormula> i: this.formulas)
+		for(InformationObject<PlFormula> i: this.formulas)
 			if(i.getFormula().equals(f2))
 				agents2.add(i.getSource());
 		// f is at least as preferred as f2 if there is one agent in agents1 such that no agent in

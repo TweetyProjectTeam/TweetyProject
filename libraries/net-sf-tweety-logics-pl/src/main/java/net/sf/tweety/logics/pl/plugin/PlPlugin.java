@@ -25,13 +25,13 @@ import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.parser.PlParser;
-import net.sf.tweety.logics.pl.reasoner.AbstractPropositionalLogicReasoner;
+import net.sf.tweety.logics.pl.reasoner.AbstractPlReasoner;
 import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.reasoner.SatReasoner;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.plugin.*;
 import net.sf.tweety.plugin.parameter.CommandParameter;
 import net.sf.tweety.plugin.parameter.SelectionCommandParameter;
@@ -47,7 +47,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
  */
 
 @PluginImplementation
-public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
+public class PlPlugin extends AbstractTweetyPlugin {
 
 	// <---- STATIC DELCARATION ----->	
 	
@@ -95,14 +95,14 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 	 * non-empty constructor in case of problems concerning jspf
 	 * @param args never observed
 	 */
-	public PropositionalLogicPlugin(String[] args) {
+	public PlPlugin(String[] args) {
 		this();
 	}
 	
 	/**
 	 * actually used constructor, initializing start parameters for this plugin
 	 */
-	public PropositionalLogicPlugin() {
+	public PlPlugin() {
 		super();
 		this.addParameter(new SelectionCommandParameter(
 				PROPLOGIC__REASONER_IDENTIFIER, PROPLOGIC__REASONER_DESCRIPTION,
@@ -122,9 +122,9 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 		// new parser
 		PlParser parser = new PlParser();
 		// reasoner
-		AbstractPropositionalLogicReasoner reasoner = null;
+		AbstractPlReasoner reasoner = null;
 		// queries
-		PropositionalFormula[] queries = new PropositionalFormula[1];
+		PlFormula[] queries = new PlFormula[1];
 		// try to parse all given input files
 		
 		// TODO: check for multiple input files (kb is overwritten)!
@@ -161,10 +161,10 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 			if (tempComParam.getIdentifier().equals("-query")) {
 
 				StringListCommandParameter tmp = (StringListCommandParameter) tempComParam;
-				queries = new PropositionalFormula[tmp.getValue().length];
+				queries = new PlFormula[tmp.getValue().length];
 				for(int i = 0; i < tmp.getValue().length; i++){
 					try {
-						queries[i] = (PropositionalFormula) parser.parseFormula(tmp.getValue()[i]);
+						queries[i] = (PlFormula) parser.parseFormula(tmp.getValue()[i]);
 					} catch (ParserException e) {
 						
 						e.printStackTrace();
@@ -177,7 +177,7 @@ public class PropositionalLogicPlugin extends AbstractTweetyPlugin {
 			}
 		}
 
-		for(PropositionalFormula pf : queries){
+		for(PlFormula pf : queries){
 			System.out.println(reasoner.query(plbs,pf));
 		}
 		

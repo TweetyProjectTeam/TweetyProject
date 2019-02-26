@@ -35,17 +35,17 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<InformationObject<PropositionalFormula>>{
+public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<InformationObject<PlFormula>>{
 
 	/**
 	 * Private extension of credibility comparer
 	 * @author Matthias Thimm
 	 */
 	private class CredibilityComparer extends AbstractCredibilityComparer{
-		public CredibilityComparer(Collection<InformationObject<PropositionalFormula>> formulas, Order<Agent> credOrder) {
+		public CredibilityComparer(Collection<InformationObject<PlFormula>> formulas, Order<Agent> credOrder) {
 			super(formulas, credOrder);
 		}		
-		public boolean isFormerAtLeastAsPreferredAsLatter(PropositionalFormula f, Collection<PropositionalFormula> formulas){
+		public boolean isFormerAtLeastAsPreferredAsLatter(PlFormula f, Collection<PlFormula> formulas){
 			return this.isAtLeastAsPreferredAs(f, formulas);
 		}
 	};
@@ -54,23 +54,23 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 	 * @see net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
 	 */
 	@Override
-	public Collection<InformationObject<PropositionalFormula>> revise(Collection<InformationObject<PropositionalFormula>> base,	Collection<InformationObject<PropositionalFormula>> formulas) {
+	public Collection<InformationObject<PlFormula>> revise(Collection<InformationObject<PlFormula>> base,	Collection<InformationObject<PlFormula>> formulas) {
 		if(!(base instanceof CrMasBeliefSet))
 			throw new IllegalArgumentException("Argument 'base' has to be of type CrMasBeliefSet.");		
-		Collection<InformationObject<PropositionalFormula>> allInformation = new HashSet<InformationObject<PropositionalFormula>>(base);
+		Collection<InformationObject<PlFormula>> allInformation = new HashSet<InformationObject<PlFormula>>(base);
 		allInformation.addAll(formulas);
-		CredibilityComparer comparer = new CredibilityComparer(allInformation,((CrMasBeliefSet<PropositionalFormula>)base).getCredibilityOrder());
-		Collection<PropositionalFormula> allProps = new HashSet<PropositionalFormula>();
-		for(InformationObject<PropositionalFormula> f: allInformation)
+		CredibilityComparer comparer = new CredibilityComparer(allInformation,((CrMasBeliefSet<PlFormula>)base).getCredibilityOrder());
+		Collection<PlFormula> allProps = new HashSet<PlFormula>();
+		for(InformationObject<PlFormula> f: allInformation)
 			allProps.add(f.getFormula());
-		Collection<InformationObject<PropositionalFormula>> credFormulas = new HashSet<InformationObject<PropositionalFormula>>();
-		for(InformationObject<PropositionalFormula> f: formulas){
+		Collection<InformationObject<PlFormula>> credFormulas = new HashSet<InformationObject<PlFormula>>();
+		for(InformationObject<PlFormula> f: formulas){
 			// get all proofs of the complement of the formula			
-			KernelProvider<PropositionalFormula> kernelProvider = new SimpleReasoner();
-			Collection<Collection<PropositionalFormula>> kernels = kernelProvider.getKernels(allProps, new Negation(f.getFormula()));
+			KernelProvider<PlFormula> kernelProvider = new SimpleReasoner();
+			Collection<Collection<PlFormula>> kernels = kernelProvider.getKernels(allProps, new Negation(f.getFormula()));
 			// if there is one kernel of the complement that is strictly more preferred then don't revise
 			boolean formulaIsPlausible = true;
-			for(Collection<PropositionalFormula> kernel: kernels){
+			for(Collection<PlFormula> kernel: kernels){
 				if(!comparer.isFormerAtLeastAsPreferredAsLatter(f.getFormula(), kernel)){
 					formulaIsPlausible = false;
 					break;
@@ -79,10 +79,10 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 			if(formulaIsPlausible)
 				credFormulas.add(f);		
 		}
-		CrMasRevisionWrapper<PropositionalFormula> rev = new CrMasRevisionWrapper<PropositionalFormula>(
-					new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
+		CrMasRevisionWrapper<PlFormula> rev = new CrMasRevisionWrapper<PlFormula>(
+					new LeviMultipleBaseRevisionOperator<PlFormula>(
 							new RandomKernelContractionOperator(),
-							new DefaultMultipleBaseExpansionOperator<PropositionalFormula>()
+							new DefaultMultipleBaseExpansionOperator<PlFormula>()
 				));		
 		return rev.revise(base, credFormulas);		
 	}

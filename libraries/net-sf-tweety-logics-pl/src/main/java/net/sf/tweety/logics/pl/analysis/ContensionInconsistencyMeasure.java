@@ -28,8 +28,8 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This class implements the contension inconsistency measure, cf. [Grant, Hunter, 2011].<br/>
@@ -45,26 +45,26 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * the process is repeated with all pairs "p1,p2" of propositions, then triples, etc.  
  * @author Matthias Thimm
  */
-public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula>{
+public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlFormula>{
 
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(Collection<PropositionalFormula> formulas) {
+	public Double inconsistencyMeasure(Collection<PlFormula> formulas) {
 		PlBeliefSet bs = new PlBeliefSet(formulas);
 		Conjunction cnf = bs.toCnf();
-		SubsetIterator<Proposition> it = new IncreasingSubsetIterator<Proposition>(new HashSet<Proposition>((PropositionalSignature)bs.getSignature()));
+		SubsetIterator<Proposition> it = new IncreasingSubsetIterator<Proposition>(new HashSet<Proposition>((PlSignature)bs.getSignature()));
 		while(it.hasNext()){
 			Collection<Proposition> props = it.next();
 			Conjunction newCnf = new Conjunction(cnf);
 			for(Proposition p: props){
-				for(PropositionalFormula f: cnf)
+				for(PlFormula f: cnf)
 					if(f.getAtoms().contains(p))
 						newCnf.remove(f);
 			}
-			if(SatSolver.getDefaultSolver().isConsistent((PropositionalFormula)newCnf))
+			if(SatSolver.getDefaultSolver().isConsistent((PlFormula)newCnf))
 				return new Double(props.size());
 		}
 		// this should not happen as at least the paraconsistent interpretation which assigns

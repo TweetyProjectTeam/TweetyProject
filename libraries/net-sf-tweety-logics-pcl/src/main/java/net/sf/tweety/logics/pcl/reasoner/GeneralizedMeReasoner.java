@@ -32,8 +32,8 @@ import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
@@ -107,7 +107,7 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#query(net.sf.tweety.logics.pcl.syntax.PclBeliefSet, net.sf.tweety.logics.pl.syntax.PropositionalFormula)
 	 */
 	@Override
-	public Double query(PclBeliefSet beliefbase, PropositionalFormula formula) {
+	public Double query(PclBeliefSet beliefbase, PlFormula formula) {
 		return this.getModel(beliefbase).probability(formula).getValue();
 	}
 
@@ -126,7 +126,7 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 	 */
 	@Override
 	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase) {
-		return this.getModel(beliefbase, (PropositionalSignature) beliefbase.getSignature());
+		return this.getModel(beliefbase, (PlSignature) beliefbase.getSignature());
 	}		
 	
 	/**
@@ -135,7 +135,7 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 	 * @param signature the signature
 	 * @return the ME-distribution this reasoner bases on.
 	 */
-	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet bs,PropositionalSignature signature) {
+	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet bs,PlSignature signature) {
 		if(!bs.getSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
 		// get inconsistency value
@@ -173,8 +173,8 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 					}
 				rightSide = new FloatConstant(pc.getProbability().getValue());
 			}else{				
-				PropositionalFormula body = pc.getPremise().iterator().next();
-				PropositionalFormula head_and_body = pc.getConclusion().combineWithAnd(body);
+				PlFormula body = pc.getPremise().iterator().next();
+				PlFormula head_and_body = pc.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

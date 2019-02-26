@@ -30,15 +30,15 @@ import net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementPro
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Implements an approximation algorithm for the Hs inconsistency measure on streams.
  * 
  * @author Matthias Thimm
  */
-public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementProcess<PropositionalFormula>{
+public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementProcess<PlFormula>{
 	
 	/** Configuration key for the signature. */
 	public static final String CONFIG_KEY_SIGNATURE = "signature";
@@ -55,9 +55,9 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	private Collection<List<PossibleWorld>> hittingSets;
 	
 	/** The signature of the formulas. */
-	private PropositionalSignature sig;
+	private PlSignature sig;
 	/** The witness provider used. */
-	private ConsistencyWitnessProvider<PlBeliefSet,PropositionalFormula> witnessProvider;
+	private ConsistencyWitnessProvider<PlBeliefSet,PlFormula> witnessProvider;
 	/** For randomization. */
 	private Random rand;
 	/** Whether the inconsistency value should be smoothed: if X1 is the previous
@@ -78,7 +78,7 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	 */
 	@Override
 	protected void init(Map<String, Object> config) {
-		this.sig = (PropositionalSignature) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
+		this.sig = (PlSignature) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
 		this.numberOfPopulations = (int) config.get(HsInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS);
 		if(config.containsKey(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR))
 			this.smoothingFactor = (double) config.get(HsInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR);
@@ -95,7 +95,7 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 	 * @see net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess#update(net.sf.tweety.Formula)
 	 */
 	@Override
-	protected double update(PropositionalFormula formula) {
+	protected double update(PlFormula formula) {
 		int newValue = 0;// Integer.MAX_VALUE;
 		//for every population
 		for(List<PossibleWorld> hs: this.hittingSets){
@@ -115,7 +115,7 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 			if(!satisfied){		
 				PossibleWorld w = (PossibleWorld)this.witnessProvider.getWitness(formula);
 				// arbitrarily set remaining propositions
-				PropositionalSignature sig = new PropositionalSignature(this.sig);
+				PlSignature sig = new PlSignature(this.sig);
 				sig.removeAll(formula.getSignature());
 				for(Proposition p: sig)
 					if(this.rand.nextDouble() < 0.5)

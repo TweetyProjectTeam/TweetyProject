@@ -21,7 +21,7 @@ package net.sf.tweety.arg.dung.ldo.syntax;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
+import net.sf.tweety.logics.pl.syntax.PlPredicate;
 
 /**
  * Creates a relational formula, i.e. "A -> B" that can be used to model attacks in LDO.
@@ -62,8 +62,8 @@ public class LdoRelation extends LdoFormula {
 	 * @see net.sf.tweety.arg.dung.ldo.syntax.LdoFormula#getPredicates()
 	 */
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
-		Set<PropositionalPredicate> result = new HashSet<PropositionalPredicate>();
+	public Set<PlPredicate> getPredicates() {
+		Set<PlPredicate> result = new HashSet<PlPredicate>();
 		result.addAll(this.left.getPredicates());
 		result.addAll(this.right.getPredicates());
 		return result;

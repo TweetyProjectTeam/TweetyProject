@@ -29,7 +29,7 @@ import net.sf.tweety.beliefdynamics.selectiverevision.MultipleSelectiveRevisionO
 import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction;
 import net.sf.tweety.beliefdynamics.selectiverevision.argumentative.ArgumentativeTransformationFunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class is an exemplary instantiation of a revision operator based on deductive argumentation [Kruempelmann:2011] where
@@ -41,22 +41,22 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public class ArgumentativeRevisionOperator extends MultipleBaseRevisionOperator<PropositionalFormula>{
+public class ArgumentativeRevisionOperator extends MultipleBaseRevisionOperator<PlFormula>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
 	 */
 	@Override
-	public Collection<PropositionalFormula> revise(Collection<PropositionalFormula> base, Collection<PropositionalFormula> formulas) {		
-		MultipleBaseRevisionOperator<PropositionalFormula> kernelRevision = new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
+	public Collection<PlFormula> revise(Collection<PlFormula> base, Collection<PlFormula> formulas) {		
+		MultipleBaseRevisionOperator<PlFormula> kernelRevision = new LeviMultipleBaseRevisionOperator<PlFormula>(
 				new RandomKernelContractionOperator(),
-				new DefaultMultipleBaseExpansionOperator<PropositionalFormula>());		
-		MultipleTransformationFunction<PropositionalFormula> transFunc = new ArgumentativeTransformationFunction(
+				new DefaultMultipleBaseExpansionOperator<PlFormula>());		
+		MultipleTransformationFunction<PlFormula> transFunc = new ArgumentativeTransformationFunction(
 				new ClassicalCategorizer(),
 				new SimpleAccumulator(),
 				new PlBeliefSet(base),
 				false);		
-		MultipleSelectiveRevisionOperator<PropositionalFormula> rev = new MultipleSelectiveRevisionOperator<PropositionalFormula>(transFunc, kernelRevision);		
+		MultipleSelectiveRevisionOperator<PlFormula> rev = new MultipleSelectiveRevisionOperator<PlFormula>(transFunc, kernelRevision);		
 		return rev.revise(base, formulas);
 	}
 

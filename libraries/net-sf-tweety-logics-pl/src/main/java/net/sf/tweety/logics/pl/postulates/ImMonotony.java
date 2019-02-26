@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "monotony" postulate for inconsistency measures: Adding information
@@ -42,7 +42,7 @@ public class ImMonotony extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		return !kb.isEmpty();
 	}
 
@@ -51,7 +51,7 @@ public class ImMonotony extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.ImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);

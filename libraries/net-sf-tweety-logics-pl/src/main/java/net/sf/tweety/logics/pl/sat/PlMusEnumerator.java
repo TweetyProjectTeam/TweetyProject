@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.NaiveMusEnumerator;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This abstract class models a MUS enumerator for propositional logic, i.e. an approach
@@ -32,16 +32,16 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public abstract class PlMusEnumerator extends AbstractMusEnumerator<PropositionalFormula>{
+public abstract class PlMusEnumerator extends AbstractMusEnumerator<PlFormula>{
 
 	/** The default MUS enumerator. */
-	private static AbstractMusEnumerator<PropositionalFormula> defaultEnumerator = null;
+	private static AbstractMusEnumerator<PlFormula> defaultEnumerator = null;
 	
 	/**
 	 * Sets the default MUS enumerator.
 	 * @param solver some MUS enumerator
 	 */
-	public static void setDefaultEnumerator(AbstractMusEnumerator<PropositionalFormula> enumerator){
+	public static void setDefaultEnumerator(AbstractMusEnumerator<PlFormula> enumerator){
 		PlMusEnumerator.defaultEnumerator = enumerator;
 	}
 	
@@ -62,7 +62,7 @@ public abstract class PlMusEnumerator extends AbstractMusEnumerator<Propositiona
 	 * printed to stderr pointing out that no default MUS enumerator is configured.
 	 * @return the default MUS enumerator.
 	 */
-	public static AbstractMusEnumerator<PropositionalFormula> getDefaultEnumerator(){
+	public static AbstractMusEnumerator<PlFormula> getDefaultEnumerator(){
 		if(PlMusEnumerator.defaultEnumerator != null)
 			return PlMusEnumerator.defaultEnumerator;
 		System.err.println("No default MUS enumerator configured, using "
@@ -70,12 +70,12 @@ public abstract class PlMusEnumerator extends AbstractMusEnumerator<Propositiona
 				+ "It is strongly advised that a default MUS enumerator is manually configured, see "
 				+ "'http://tweetyproject.org/doc/mus-enumerators.html' "
 				+ "for more information.");
-		return new NaiveMusEnumerator<PropositionalFormula>(SatSolver.getDefaultSolver());
+		return new NaiveMusEnumerator<PlFormula>(SatSolver.getDefaultSolver());
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator#minimalInconsistentSubsets(java.util.Collection)
 	 */
 	@Override
-	public abstract Collection<Collection<PropositionalFormula>> minimalInconsistentSubsets(Collection<PropositionalFormula> formulas);
+	public abstract Collection<Collection<PlFormula>> minimalInconsistentSubsets(Collection<PlFormula> formulas);
 }

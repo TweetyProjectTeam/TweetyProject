@@ -31,7 +31,7 @@ import net.sf.tweety.math.probability.Probability;
  * @author Matthias Thimm
  * @param <T> The actual interpretation class used for this distribution.
  */
-public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,PropositionalFormula>> extends AbstractInterpretation<PclBeliefSet,ProbabilisticConditional> implements Map<T,Probability>{
+public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,PlFormula>> extends AbstractInterpretation<PclBeliefSet,ProbabilisticConditional> implements Map<T,Probability>{
 
 	/**
 	 * The probabilities of the interpretations.
@@ -82,7 +82,7 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,Propos
 	 * @param w a Herbrand interpretation.
 	 * @return the probability of the given Herbrand interpretation.
 	 */
-	public Probability probability(Interpretation<PlBeliefSet,PropositionalFormula> w) throws IllegalArgumentException{
+	public Probability probability(Interpretation<PlBeliefSet,PlFormula> w) throws IllegalArgumentException{
 		return this.get(w);
 	}
 	
@@ -90,7 +90,7 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,Propos
 	 * @param f a formula
 	 * @return a probability.
 	 */
-	public Probability probability(PropositionalFormula f){
+	public Probability probability(PlFormula f){
 		double p = 0;
 		for(T i: this.probabilities.keySet())
 			if(i.satisfies(f))
@@ -103,10 +103,10 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,Propos
 	 * @return a probability.
 	 */
 	public Probability conditionalProbability(Conditional c){
-		PropositionalFormula head = c.getConclusion();
+		PlFormula head = c.getConclusion();
 		if(c.isFact())
 			return this.probability(head);
-		PropositionalFormula body = c.getPremise().iterator().next();		
+		PlFormula body = c.getPremise().iterator().next();		
 		return this.probability(head.combineWithAnd(body)).divide(this.probability(body));
 		
 	}
@@ -129,7 +129,7 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,Propos
 	 */
 	public double entropy(){
 		double entropy = 0;
-		for(Interpretation<PlBeliefSet,PropositionalFormula> i : this.probabilities.keySet())
+		for(Interpretation<PlBeliefSet,PlFormula> i : this.probabilities.keySet())
 			if(this.probability(i).getValue() != 0)
 				entropy -= this.probability(i).getValue() * Math.log(this.probability(i).getValue());
 		return entropy;
@@ -195,7 +195,7 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,Propos
 	 * the given probability distributions are not defined on the same set of interpretations, or
 	 * the lengths of creators and factors differ.
 	 */
-	public static <S extends Interpretation<PlBeliefSet,PropositionalFormula>> ProbabilityDistribution<S> convexCombination(double[] factors, ProbabilityDistribution<S>[] creators) throws IllegalArgumentException{
+	public static <S extends Interpretation<PlBeliefSet,PlFormula>> ProbabilityDistribution<S> convexCombination(double[] factors, ProbabilityDistribution<S>[] creators) throws IllegalArgumentException{
 		if(factors.length != creators.length)
 			throw new IllegalArgumentException("Length of factors and creators does not coincide.");
 		double sum = 0;
@@ -226,7 +226,7 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,Propos
 	 * @param sig a signature
 	 * @return the uniform distribution on the given interpretations.
 	 */
-	public static <S extends Interpretation<PlBeliefSet,PropositionalFormula>> ProbabilityDistribution<S> getUniformDistribution(Set<S> interpretations, Signature sig){
+	public static <S extends Interpretation<PlBeliefSet,PlFormula>> ProbabilityDistribution<S> getUniformDistribution(Set<S> interpretations, Signature sig){
 		ProbabilityDistribution<S> p = new ProbabilityDistribution<S>(sig);
 		double size = interpretations.size();
 		for(S i: interpretations)

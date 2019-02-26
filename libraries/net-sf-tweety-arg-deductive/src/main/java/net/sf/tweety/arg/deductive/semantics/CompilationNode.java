@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import net.sf.tweety.graphs.Node;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Instances of this class represent nodes in the compilation of
@@ -38,7 +38,7 @@ public class CompilationNode extends PlBeliefSet implements Node {
 	 * set of formulas.
 	 * @param formulas a set of formulas.
 	 */
-	public CompilationNode(Collection<? extends PropositionalFormula> formulas){
+	public CompilationNode(Collection<? extends PlFormula> formulas){
 		super(formulas);
 	}
 }

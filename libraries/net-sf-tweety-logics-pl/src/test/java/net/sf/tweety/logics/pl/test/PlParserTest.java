@@ -35,8 +35,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
@@ -57,50 +57,50 @@ public class PlParserTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void PropositionTest() throws ParserException, IOException {
-		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("a");
+		PlFormula f = (PlFormula) parser.parseFormula("a");
 		Proposition p = new Proposition("a");
 		assertTrue(f.equals(p));
 		
-		f = (PropositionalFormula) parser.parseFormula("abba");
+		f = (PlFormula) parser.parseFormula("abba");
 		p = new Proposition("abba");
 		assertTrue(f.equals(p));
 		
-		f = (PropositionalFormula) parser.parseFormula("(a)");
+		f = (PlFormula) parser.parseFormula("(a)");
 		p = new Proposition("a");
 		assertTrue(f.equals(p));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NegationTest() throws ParserException, IOException {
-		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("!a");
+		PlFormula f = (PlFormula) parser.parseFormula("!a");
 		Negation n = new Negation(new Proposition("a"));
 		assertTrue(f.equals(n));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void DisjunctionTest() throws ParserException, IOException {
-		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("a || b");
+		PlFormula f = (PlFormula) parser.parseFormula("a || b");
 		Disjunction d = new Disjunction(new Proposition("a"), new Proposition("b"));
 		assertTrue(f.equals(d));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ConjunctionTest() throws ParserException, IOException {
-		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("a && b");
+		PlFormula f = (PlFormula) parser.parseFormula("a && b");
 		Conjunction c = new Conjunction(new Proposition("a"), new Proposition("b"));
 		assertTrue(f.equals(c));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void TautologyTest() throws ParserException, IOException {
-		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("+");
+		PlFormula f = (PlFormula) parser.parseFormula("+");
 		Tautology t = new Tautology();
 		assertTrue(f.equals(t));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ContradictionTest() throws ParserException, IOException {
-		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("-");
+		PlFormula f = (PlFormula) parser.parseFormula("-");
 		Contradiction c = new Contradiction();
 		assertTrue(f.equals(c));
 	}
@@ -112,9 +112,9 @@ public class PlParserTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SpecialCharactersTest() throws ParserException, IOException {
-		PropositionalFormula f = (PropositionalFormula) parser.parseFormula("a && î || !(!@$$f)");
-		PropositionalSignature sig = f.getSignature();
-		PropositionalSignature sig2 = new PropositionalSignature();
+		PlFormula f = (PlFormula) parser.parseFormula("a && î || !(!@$$f)");
+		PlSignature sig = f.getSignature();
+		PlSignature sig2 = new PlSignature();
 		sig2.add(new Proposition("a"));
 		sig2.add(new Proposition("î"));
 		sig2.add(new Proposition("@$$f"));
@@ -128,7 +128,7 @@ public class PlParserTest {
 		assertEquals(beliefSet.size(),4);
 		
 		Signature sig = beliefSet.getSignature();
-		PropositionalSignature sig2 = new PropositionalSignature();
+		PlSignature sig2 = new PlSignature();
 		sig2.add(new Proposition("a"));
 		sig2.add(new Proposition("b"));
 		sig2.add(new Proposition("c"));
@@ -143,7 +143,7 @@ public class PlParserTest {
 		assertEquals(beliefSet.size(),4);
 		
 		Signature sig = beliefSet.getSignature();
-		PropositionalSignature sig2 = new PropositionalSignature();
+		PlSignature sig2 = new PlSignature();
 		sig2.add(new Proposition("a"));
 		sig2.add(new Proposition("b"));
 		sig2.add(new Proposition("c"));

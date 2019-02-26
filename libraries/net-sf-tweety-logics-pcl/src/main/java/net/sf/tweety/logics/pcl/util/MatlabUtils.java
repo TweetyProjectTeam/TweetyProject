@@ -28,8 +28,8 @@ import net.sf.tweety.logics.pcl.parser.PclParser;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 public class MatlabUtils {
 
@@ -49,7 +49,7 @@ public class MatlabUtils {
 			out.print("  ");
 			
 			double p = c.getProbability().doubleValue();
-			PropositionalFormula conclusion = c.getConclusion();
+			PlFormula conclusion = c.getConclusion();
 			
 			if(c.isFact()) {
 				
@@ -65,7 +65,7 @@ public class MatlabUtils {
 			}
 			else {
 				
-				PropositionalFormula premise = c.getPremise().iterator().next();
+				PlFormula premise = c.getPremise().iterator().next();
 				
 				for(PossibleWorld w: worlds) {
 					
@@ -108,7 +108,7 @@ public class MatlabUtils {
 			
 			out.print("  ");
 			
-			PropositionalFormula conclusion = c.getConclusion();
+			PlFormula conclusion = c.getConclusion();
 			
 			if(c.isFact()) {
 				
@@ -124,7 +124,7 @@ public class MatlabUtils {
 			}
 			else {
 				
-				PropositionalFormula premise = c.getPremise().iterator().next();
+				PlFormula premise = c.getPremise().iterator().next();
 				
 				for(PossibleWorld w: worlds) {
 					
@@ -169,7 +169,7 @@ public class MatlabUtils {
 			}
 			else {
 				
-				PropositionalFormula premise = c.getPremise().iterator().next();
+				PlFormula premise = c.getPremise().iterator().next();
 				
 				for(PossibleWorld w: worlds) {
 					
@@ -267,7 +267,7 @@ public class MatlabUtils {
                 + "(sp|ss)[0.8]\n"
                 );
 		
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) kb.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) kb.getSignature());
 		 
 		System.out.println("% "+kb+"\n\n");
 		

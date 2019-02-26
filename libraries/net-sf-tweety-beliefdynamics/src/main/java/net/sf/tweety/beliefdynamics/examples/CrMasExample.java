@@ -56,24 +56,24 @@ public class CrMasExample {
 		credOrder.setOrderedBefore(agents.get(1), agents.get(2));
 		
 		// a belief base (we use propositional logic)
-		CrMasBeliefSet<PropositionalFormula> bs = new CrMasBeliefSet<PropositionalFormula>(credOrder);
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!c"), agents.get(1)));
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("b"), agents.get(2)));
-		bs.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!b||!a"), agents.get(2)));
+		CrMasBeliefSet<PlFormula> bs = new CrMasBeliefSet<PlFormula>(credOrder);
+		bs.add(new InformationObject<PlFormula>((PlFormula) parser.parseFormula("!c"), agents.get(1)));
+		bs.add(new InformationObject<PlFormula>((PlFormula) parser.parseFormula("b"), agents.get(2)));
+		bs.add(new InformationObject<PlFormula>((PlFormula) parser.parseFormula("!b||!a"), agents.get(2)));
 		
 		// some new information
-		Collection<InformationObject<PropositionalFormula>> newInformation = new HashSet<InformationObject<PropositionalFormula>>();
-		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("a"), agents.get(2)));
-		newInformation.add(new InformationObject<PropositionalFormula>((PropositionalFormula) parser.parseFormula("!a||c"), agents.get(2)));		
+		Collection<InformationObject<PlFormula>> newInformation = new HashSet<InformationObject<PlFormula>>();
+		newInformation.add(new InformationObject<PlFormula>((PlFormula) parser.parseFormula("a"), agents.get(2)));
+		newInformation.add(new InformationObject<PlFormula>((PlFormula) parser.parseFormula("!a||c"), agents.get(2)));		
 		
 		System.out.println(bs + " * " + newInformation);
 		System.out.println();
 				
 		// simple prioritized revision (without considering credibilities)
-		CrMasRevisionWrapper<PropositionalFormula> rev = new CrMasRevisionWrapper<PropositionalFormula>(
-				new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
-						new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new SimpleReasoner()),
-						new DefaultMultipleBaseExpansionOperator<PropositionalFormula>()
+		CrMasRevisionWrapper<PlFormula> rev = new CrMasRevisionWrapper<PlFormula>(
+				new LeviMultipleBaseRevisionOperator<PlFormula>(
+						new KernelContractionOperator<PlFormula>(new RandomIncisionFunction<PlFormula>(), new SimpleReasoner()),
+						new DefaultMultipleBaseExpansionOperator<PlFormula>()
 						));
 		System.out.println("PRIO       :\t " + rev.revise(bs, newInformation));
 		

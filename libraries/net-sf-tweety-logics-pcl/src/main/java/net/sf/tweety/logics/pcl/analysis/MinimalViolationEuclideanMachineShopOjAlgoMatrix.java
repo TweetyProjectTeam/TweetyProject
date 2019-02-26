@@ -26,7 +26,7 @@ import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pcl.util.OjAlgoPclUtils;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.util.OjAlgoMathUtils;
 
@@ -58,7 +58,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 	protected BeliefBase repair(PclBeliefSet beliefSet) {
 
 		
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getSignature());
 		int noWorlds = worlds.size();
 		
 		

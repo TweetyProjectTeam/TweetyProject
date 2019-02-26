@@ -27,7 +27,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.parser.PlParser;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.probability.Probability;
 
 import org.slf4j.Logger;
@@ -116,10 +116,10 @@ public class PclParser extends Parser<PclBeliefSet,ProbabilisticConditional>{
 		PlParser parser = new PlParser();
 		
 		if(idx == -1){
-			ProbabilisticConditional r = new ProbabilisticConditional((PropositionalFormula)parser.parseFormula(condString.substring(0, condString.length())),prob);			
+			ProbabilisticConditional r = new ProbabilisticConditional((PlFormula)parser.parseFormula(condString.substring(0, condString.length())),prob);			
 			return r;
 		}
-		return new ProbabilisticConditional((PropositionalFormula)parser.parseFormula(condString.substring(idx+1, condString.length())),(PropositionalFormula)parser.parseFormula(condString.substring(0, idx)),prob);		
+		return new ProbabilisticConditional((PlFormula)parser.parseFormula(condString.substring(idx+1, condString.length())),(PlFormula)parser.parseFormula(condString.substring(0, idx)),prob);		
 	}
 	
 }

@@ -55,7 +55,7 @@ import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * @author Nils Geilen Several JUnit test for the package arg.aspic
@@ -68,25 +68,25 @@ public class AspicTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void Example1() throws Exception {
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser(), new PlFormulaGenerator());
-		AspicArgumentationTheory<PropositionalFormula> at = parser
+		AspicParser<PlFormula> parser = new AspicParser<>(new PlParser(), new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex1.aspic").getFile());
 
-		AspicArgument<PropositionalFormula> A1 = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("->p"));
-		AspicArgument<PropositionalFormula> A2 = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("d1: p => q"));
+		AspicArgument<PlFormula> A1 = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("->p"));
+		AspicArgument<PlFormula> A2 = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("d1: p => q"));
 		A2.addDirectSub(A1);
-		AspicArgument<PropositionalFormula> A3 = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("s1: p, q -> r"));
+		AspicArgument<PlFormula> A3 = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("s1: p, q -> r"));
 		A3.addDirectSub(A1);
 		A3.addDirectSub(A2);
-		AspicArgument<PropositionalFormula> A4 = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("s1: p, q -> r"));
+		AspicArgument<PlFormula> A4 = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("s1: p, q -> r"));
 		A4.addDirectSub(A2);
 		A4.addDirectSub(A1);
 
-		Collection<AspicArgument<PropositionalFormula>> args = at.getArguments();
+		Collection<AspicArgument<PlFormula>> args = at.getArguments();
 
 		// example 3.7
 		assertTrue(args.contains(A3));
@@ -103,13 +103,13 @@ public class AspicTest {
 		DungTheory dt = at.asDungTheory();
 
 		// example 3.11
-		AspicArgument<PropositionalFormula> B1 = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("=>s"));
-		AspicArgument<PropositionalFormula> B2 = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("d2: s => t"));
+		AspicArgument<PlFormula> B1 = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("=>s"));
+		AspicArgument<PlFormula> B2 = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("d2: s => t"));
 		B2.addDirectSub(B1);
-		AspicArgument<PropositionalFormula> B3 = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("d3: t => ! d1"));
+		AspicArgument<PlFormula> B3 = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("d3: t => ! d1"));
 		B3.addDirectSub(B2);
 		for (Attack attack : dt.getAttacks())
 			if (attack.getAttacked().equals(A3))
@@ -124,22 +124,22 @@ public class AspicTest {
 	public void Example2() throws Exception {
 		// example 3.25
 		PlParser plparser = new PlParser();
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
-		AspicArgumentationTheory<PropositionalFormula> at = parser
+		AspicParser<PlFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex2.aspic").getFile());
 
-		InferenceRule<PropositionalFormula> snores = (InferenceRule<PropositionalFormula>) parser
+		InferenceRule<PlFormula> snores = (InferenceRule<PlFormula>) parser
 				.parseFormula("p1: => Snores"),
-				professor = (InferenceRule<PropositionalFormula>) parser.parseFormula("p2: => Professor");
-		Comparator<InferenceRule<PropositionalFormula>> prem_comp = new RuleComparator<>(Arrays.asList("p1", "p2")),
+				professor = (InferenceRule<PlFormula>) parser.parseFormula("p2: => Professor");
+		Comparator<InferenceRule<PlFormula>> prem_comp = new RuleComparator<>(Arrays.asList("p1", "p2")),
 				rule_comp = new RuleComparator<>(Arrays.asList("d1", "d3", "d2"));
 		assertTrue(prem_comp.compare(snores, professor) < 0);
 
-		Collection<AspicArgument<PropositionalFormula>> args = at.getArguments();
-		AspicArgument<PropositionalFormula> A3 = null, B1 = null;
-		PropositionalFormula access = (PropositionalFormula) plparser.parseFormula("!AccessDenied"),
-				no_access = (PropositionalFormula) plparser.parseFormula("AccessDenied");
-		for (AspicArgument<PropositionalFormula> arg : args)
+		Collection<AspicArgument<PlFormula>> args = at.getArguments();
+		AspicArgument<PlFormula> A3 = null, B1 = null;
+		PlFormula access = (PlFormula) plparser.parseFormula("!AccessDenied"),
+				no_access = (PlFormula) plparser.parseFormula("AccessDenied");
+		for (AspicArgument<PlFormula> arg : args)
 			if (arg.getConclusion().equals(access))
 				B1 = arg;
 			else if (arg.getConclusion().equals(no_access))
@@ -149,12 +149,12 @@ public class AspicTest {
 
 		at.setOrder(new LastLinkOrder<>(rule_comp, prem_comp, true));
 		DungTheory dt = at.asDungTheory();
-		assertTrue(((AspicArgument<PropositionalFormula>) dt.getAttacks().iterator().next().getAttacker())
+		assertTrue(((AspicArgument<PlFormula>) dt.getAttacks().iterator().next().getAttacker())
 				.getConclusion().equals(no_access));
 
 		at.setOrder(new WeakestLinkOrder<>(rule_comp, prem_comp, true));
 		dt = at.asDungTheory();
-		assertTrue(((AspicArgument<PropositionalFormula>) dt.getAttacks().iterator().next().getAttacker())
+		assertTrue(((AspicArgument<PlFormula>) dt.getAttacks().iterator().next().getAttacker())
 				.getConclusion().equals(access));
 	}
 
@@ -166,24 +166,24 @@ public class AspicTest {
 	public void Example3() throws Exception {
 		// example 3.26
 		PlParser plparser = new PlParser();
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
-		AspicArgumentationTheory<PropositionalFormula> at = parser
+		AspicParser<PlFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex3.aspic").getFile());
 
-		Comparator<InferenceRule<PropositionalFormula>> rule_comp = new RuleComparator<>(
+		Comparator<InferenceRule<PlFormula>> rule_comp = new RuleComparator<>(
 				Arrays.asList("d1", "d3", "d2"));
 
-		Collection<AspicArgument<PropositionalFormula>> args = at.getArguments();
-		AspicArgument<PropositionalFormula> B2 = null;
-		PropositionalFormula not = (PropositionalFormula) plparser.parseFormula("! LikesWhisky");
-		for (AspicArgument<PropositionalFormula> arg : args)
+		Collection<AspicArgument<PlFormula>> args = at.getArguments();
+		AspicArgument<PlFormula> B2 = null;
+		PlFormula not = (PlFormula) plparser.parseFormula("! LikesWhisky");
+		for (AspicArgument<PlFormula> arg : args)
 			if (arg.getConclusion().equals(not))
 				B2 = arg;
 		assertTrue(B2 != null);
 
 		at.setOrder(new WeakestLinkOrder<>(rule_comp, new RuleComparator<>(new ArrayList<>()), true));
 		DungTheory dt = at.asDungTheory();
-		assertTrue(((AspicArgument<PropositionalFormula>) dt.getAttacks().iterator().next().getAttacker())
+		assertTrue(((AspicArgument<PlFormula>) dt.getAttacks().iterator().next().getAttacker())
 				.getConclusion().equals(not));
 	}
 
@@ -195,14 +195,14 @@ public class AspicTest {
 	public void Example4() throws Exception {
 		// example 4.1
 		PlParser plparser = new PlParser();
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
-		AspicArgumentationTheory<PropositionalFormula> at = parser
+		AspicParser<PlFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex4.aspic").getFile());
 
 		DungTheory dt = at.asDungTheory();
 		assertTrue(dt.getAttacks().size() == 4);
 		for (Attack a : dt.getAttacks())
-			assertFalse(((AspicArgument<PropositionalFormula>) a.getAttacker()).getTopRule().isDefeasible());
+			assertFalse(((AspicArgument<PlFormula>) a.getAttacker()).getTopRule().isDefeasible());
 	}
 
 	@Test
@@ -211,19 +211,19 @@ public class AspicTest {
 		Proposition b = new Proposition("b");
 		Proposition c = new Proposition("c");
 
-		AspicArgumentationTheory<PropositionalFormula> t = new AspicArgumentationTheory<>(new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> t = new AspicArgumentationTheory<>(new PlFormulaGenerator());
 
-		DefeasibleInferenceRule<PropositionalFormula> r1 = new DefeasibleInferenceRule<>();
+		DefeasibleInferenceRule<PlFormula> r1 = new DefeasibleInferenceRule<>();
 		r1.setConclusion(a);
 		r1.addPremise(b);
 		r1.addPremise(c);
 		t.addRule(r1);
 
-		StrictInferenceRule<PropositionalFormula> s1 = new StrictInferenceRule<PropositionalFormula>();
+		StrictInferenceRule<PlFormula> s1 = new StrictInferenceRule<PlFormula>();
 		s1.setConclusion(b);
 		t.addRule(s1);
 
-		s1 = new StrictInferenceRule<PropositionalFormula>();
+		s1 = new StrictInferenceRule<PlFormula>();
 		s1.setConclusion(c);
 		t.addRule(s1);
 
@@ -234,7 +234,7 @@ public class AspicTest {
 
 	@Test
 	public void ComplementTest() throws Exception {
-		PropositionalFormula f = new Proposition("a");
+		PlFormula f = new Proposition("a");
 		assertTrue(f.equals(f.complement().complement()));
 	}
 
@@ -266,14 +266,14 @@ public class AspicTest {
 
 	@Test
 	public void ArgSysTest() throws Exception {
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser(), pfg);
+		AspicParser<PlFormula> parser = new AspicParser<>(new PlParser(), pfg);
 		String input = "-> a \n => b \n b,c =>d \n a-> e \n b -> e \n e, b=> f \n a, f -> g";
-		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBase(input);
-		Collection<AspicArgument<PropositionalFormula>> args = at.getArguments();
+		AspicArgumentationTheory<PlFormula> at = parser.parseBeliefBase(input);
+		Collection<AspicArgument<PlFormula>> args = at.getArguments();
 		// for(AspicArgument<PropositionalFormula> a:args)
 		// System.out.println(a);
 		assertTrue(args.size() == 8);
-		for (AspicArgument<PropositionalFormula> a : args)
+		for (AspicArgument<PlFormula> a : args)
 			if (a.getConclusion().equals(new Proposition("f")) || a.getConclusion().equals(new Proposition("g")))
 				assertTrue(a.hasDefeasibleSub());
 			else
@@ -283,36 +283,36 @@ public class AspicTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void AttackTest() throws Exception {
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser(), pfg);
+		AspicParser<PlFormula> parser = new AspicParser<>(new PlParser(), pfg);
 		String input = "=> ! a \n" + " => a \n" + "-> ! b \n" + "-> b \n" + "a,b->c\n";
-		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBase(input);
-		Collection<AspicArgument<PropositionalFormula>> args = at.getArguments();
+		AspicArgumentationTheory<PlFormula> at = parser.parseBeliefBase(input);
+		Collection<AspicArgument<PlFormula>> args = at.getArguments();
 
-		AspicArgument<PropositionalFormula> not_a = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("=> ! a"));
-		AspicArgument<PropositionalFormula> arg_a = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("=> a"));
-		AspicArgument<PropositionalFormula> not_b = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("-> ! b"));
-		AspicArgument<PropositionalFormula> not_c = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("-> ! c"));
-		AspicArgument<PropositionalFormula> ab_mapsto_c = new AspicArgument<>(
-				(InferenceRule<PropositionalFormula>) parser.parseFormula("a,b->c"));
+		AspicArgument<PlFormula> not_a = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("=> ! a"));
+		AspicArgument<PlFormula> arg_a = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("=> a"));
+		AspicArgument<PlFormula> not_b = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("-> ! b"));
+		AspicArgument<PlFormula> not_c = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("-> ! c"));
+		AspicArgument<PlFormula> ab_mapsto_c = new AspicArgument<>(
+				(InferenceRule<PlFormula>) parser.parseFormula("a,b->c"));
 		assertTrue(args.contains(not_a));
 		assertTrue(args.contains(not_b));
 		assertFalse(args.contains(not_c));
 		assertFalse(args.contains(ab_mapsto_c));
 
 		int sum = 0;
-		for (AspicArgument<PropositionalFormula> arg : args) {
+		for (AspicArgument<PlFormula> arg : args) {
 			if (AspicAttack.isAttack(not_a, arg, null, null))
 				sum++;
 		}
 		assertTrue(sum == 2);
-		for (AspicArgument<PropositionalFormula> arg : args) {
+		for (AspicArgument<PlFormula> arg : args) {
 			assertFalse(AspicAttack.isAttack(not_b, arg, null, null));
 		}
-		for (AspicArgument<PropositionalFormula> arg : args) {
+		for (AspicArgument<PlFormula> arg : args) {
 			if (arg.equals(not_a))
 				assertTrue(AspicAttack.isAttack(arg_a, arg, null, null));
 			else
@@ -327,12 +327,12 @@ public class AspicTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void PropositionalFormulaGeneratorTest() throws Exception {
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser(), pfg);
+		AspicParser<PlFormula> parser = new AspicParser<>(new PlParser(), pfg);
 		String input = "-> a \n" + "d1: a => b \n" + "d2: a => !d1 \n" + "s1: a -> e \n" + "s2: a -> !s1";
-		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBase(input);
+		AspicArgumentationTheory<PlFormula> at = parser.parseBeliefBase(input);
 		DungTheory dt = at.asDungTheory();
 		assertTrue(dt.getAttacks().size() == 1);
-		assertTrue(((AspicArgument<PropositionalFormula>) dt.getAttacks().iterator().next().getAttacked())
+		assertTrue(((AspicArgument<PlFormula>) dt.getAttacks().iterator().next().getAttacked())
 				.getConclusion().equals(new Proposition("b")));
 	}
 
@@ -356,23 +356,23 @@ public class AspicTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void SimpleOrderTest() throws Exception {
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(new PlParser(), pfg);
+		AspicParser<PlFormula> parser = new AspicParser<>(new PlParser(), pfg);
 		String input = "=> BornInScotland\n" + " => FitnessLover \n" + "d1: BornInScotland => Scottish \n"
 				+ "d2: Scottish => LikesWhiskey \n" + "d3: FitnessLover => ! LikesWhiskey\n", order = "d1<d3<d2";
-		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBase(input + order);
+		AspicArgumentationTheory<PlFormula> at = parser.parseBeliefBase(input + order);
 
 		DungTheory dt = at.asDungTheory();
 		assertTrue(dt.getNodes().size() == 5);
 		assertTrue(dt.getAttacks().size() == 1);
-		assertTrue(((AspicArgument<PropositionalFormula>) dt.getAttacks().iterator().next().getAttacker()).getTopRule()
+		assertTrue(((AspicArgument<PlFormula>) dt.getAttacks().iterator().next().getAttacker()).getTopRule()
 				.getName().equals("d2"));
 
-		Comparator<AspicArgument<PropositionalFormula>> new_order = parser.parseSimpleOrder("d1<d2<d3");
+		Comparator<AspicArgument<PlFormula>> new_order = parser.parseSimpleOrder("d1<d2<d3");
 		at.setOrder(new_order);
 		dt = at.asDungTheory();
 		assertTrue(dt.getNodes().size() == 5);
 		assertTrue(dt.getAttacks().size() == 1);
-		assertTrue(((AspicArgument<PropositionalFormula>) dt.getAttacks().iterator().next().getAttacker()).getTopRule()
+		assertTrue(((AspicArgument<PlFormula>) dt.getAttacks().iterator().next().getAttacker()).getTopRule()
 				.getName().equals("d3"));
 
 		at.setOrder(new SimpleAspicOrder<>());
@@ -391,13 +391,13 @@ public class AspicTest {
 	@Test
 	public void ReasonerTest2() throws Exception {
 		PlParser plparser = new PlParser();
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
-		AspicArgumentationTheory<PropositionalFormula> at = parser
+		AspicParser<PlFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> at = parser
 				.parseBeliefBaseFromFile(AspicTest.class.getResource("/ex1.aspic").getFile());
 		
-		SimpleAspicReasoner<PropositionalFormula> ar = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
+		SimpleAspicReasoner<PlFormula> ar = new SimpleAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
 
-		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");
+		PlFormula pf = (PlFormula)plparser.parseFormula("p");
 
 		System.out.println(pf);
 		assertTrue(ar.query(at,pf,InferenceMode.CREDULOUS));
@@ -441,18 +441,18 @@ public class AspicTest {
 	private boolean testDirectionalEquality(String query, String full, String partial) throws ParserException, IOException {
 
 		PlParser plparser = new PlParser();
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
-		DirectionalAspicReasoner<PropositionalFormula> directionalReasoner = new DirectionalAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
-		PropositionalFormula queryFormula = (PropositionalFormula)plparser.parseFormula(query);
+		AspicParser<PlFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		DirectionalAspicReasoner<PlFormula> directionalReasoner = new DirectionalAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		PlFormula queryFormula = (PlFormula)plparser.parseFormula(query);
 		
 		// Generate full
-		AspicArgumentationTheory<PropositionalFormula> fullAt = parser.parseBeliefBase(full);
+		AspicArgumentationTheory<PlFormula> fullAt = parser.parseBeliefBase(full);
 		DungTheory dt = directionalReasoner.asRestrictedDungTheory(fullAt, false, queryFormula);
 		Collection<Argument> fullArgs = new ArrayList<Argument>();
 		fullArgs.addAll(dt);
 
 		// Generate partial
-		AspicArgumentationTheory<PropositionalFormula> partialAt = parser.parseBeliefBase(partial);
+		AspicArgumentationTheory<PlFormula> partialAt = parser.parseBeliefBase(partial);
 		dt = directionalReasoner.asRestrictedDungTheory(partialAt, false, queryFormula);
 		Collection<Argument> partialArgs = new ArrayList<Argument>();
 		partialArgs.addAll(dt);

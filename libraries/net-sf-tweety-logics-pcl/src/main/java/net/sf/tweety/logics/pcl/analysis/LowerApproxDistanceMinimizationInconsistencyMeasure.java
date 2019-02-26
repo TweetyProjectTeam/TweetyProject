@@ -27,8 +27,8 @@ import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.opt.OptimizationProblem;
@@ -81,7 +81,7 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		// set up the optimization problem for computing the minimal
 		// distance to a consistent belief set.
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
 		int i = 0;
 		Term normConstraint = null;
@@ -118,8 +118,8 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(mu).minus(nu);
 			}else{				
-				PropositionalFormula body = c.getPremise().iterator().next();
-				PropositionalFormula head_and_body = c.getConclusion().combineWithAnd(body);
+				PlFormula body = c.getPremise().iterator().next();
+				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

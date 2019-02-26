@@ -34,8 +34,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Provides an iterator on all syntactically equivalent knowledge bases.
@@ -43,7 +43,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula,PlBeliefSet>{
+public class CanonicalIterator implements BeliefSetIterator<PlFormula,PlBeliefSet>{
 	
 	/** The upper bound used for enumerating knowledge bases.*/
 	private BigInteger upperBoundIndex = null;
@@ -178,13 +178,13 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 	 * @param sig the current signature
 	 * @return the set of parsed terms and the index position in s after this formula
 	 */
-	private Pair<Collection<PropositionalFormula>,Integer> parseAssociativeFormula(BitSet s, int idx, int numOfTerms, PropositionalSignature sig){
-		Collection<PropositionalFormula> forms = new LinkedList<PropositionalFormula>();
+	private Pair<Collection<PlFormula>,Integer> parseAssociativeFormula(BitSet s, int idx, int numOfTerms, PlSignature sig){
+		Collection<PlFormula> forms = new LinkedList<PlFormula>();
 		int prev_start = 0, prev_end = 0;
 		int current_start, current_end;
 		for(int i = 0; i < numOfTerms; i++){
 			current_start = idx;
-			Pair<PropositionalFormula,Integer> p = this.parseFormula(s,idx,sig);
+			Pair<PlFormula,Integer> p = this.parseFormula(s,idx,sig);
 			if(p == null)
 				return null;
 			current_end = p.getSecond()-1;
@@ -199,7 +199,7 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 				return null;
 			forms.add(p.getFirst());
 		}
-		return new Pair<Collection<PropositionalFormula>,Integer>(forms,idx);
+		return new Pair<Collection<PlFormula>,Integer>(forms,idx);
 	}
 	
 	/**
@@ -209,7 +209,7 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 	 * @param sig the current signature
 	 * @return the formula parsed and the index in s after this formula
 	 */
-	private Pair<PropositionalFormula,Integer> parseProposition(BitSet s, int idx, PropositionalSignature sig){
+	private Pair<PlFormula,Integer> parseProposition(BitSet s, int idx, PlSignature sig){
 		int i = 0;
 		while(s.get(idx) && idx < s.size()){
 			i++;
@@ -225,7 +225,7 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 				return null;
 			sig.add(prop);
 		}				
-		return new Pair<PropositionalFormula,Integer>(prop,idx);
+		return new Pair<PlFormula,Integer>(prop,idx);
 	}	
 	
 	/**
@@ -236,7 +236,7 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 	 * @return the formula that has been read and the index right in the bitset right
 	 * 	after this formula; if the bitset if invalid, "null" is returned
 	 */
-	private Pair<PropositionalFormula,Integer> parseFormula(BitSet s, int idx, PropositionalSignature sig){
+	private Pair<PlFormula,Integer> parseFormula(BitSet s, int idx, PlSignature sig){
 		// next two bits encode type of formula
 		// 00 - proposition
 		// 01 - negation
@@ -258,35 +258,35 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 		// case differentiation by formula type			
 		if(first && second){
 			// 11 - disjunction
-			Pair<Collection<PropositionalFormula>,Integer> p = this.parseAssociativeFormula(s,idx,numOfTerms,sig);
+			Pair<Collection<PlFormula>,Integer> p = this.parseAssociativeFormula(s,idx,numOfTerms,sig);
 			if(p == null)
 				return null;
 			// no nested disjunctions
-			for(PropositionalFormula f: p.getFirst())
+			for(PlFormula f: p.getFirst())
 				if(f instanceof Disjunction)
 					return null;
 			idx = p.getSecond();
-			return new Pair<PropositionalFormula,Integer>(new Disjunction(p.getFirst()),idx);
+			return new Pair<PlFormula,Integer>(new Disjunction(p.getFirst()),idx);
 		}else if(first){
 			// 10 - conjunction
-			Pair<Collection<PropositionalFormula>,Integer> p = this.parseAssociativeFormula(s,idx,numOfTerms,sig);
+			Pair<Collection<PlFormula>,Integer> p = this.parseAssociativeFormula(s,idx,numOfTerms,sig);
 			if(p == null)
 				return null;
 			// no nested conjunctions
-			for(PropositionalFormula f: p.getFirst())
+			for(PlFormula f: p.getFirst())
 				if(f instanceof Conjunction)
 					return null;
 			idx = p.getSecond();
-			return new Pair<PropositionalFormula,Integer>(new Conjunction(p.getFirst()),idx);
+			return new Pair<PlFormula,Integer>(new Conjunction(p.getFirst()),idx);
 		}else if(second){
 			// 01 - negation
-			Pair<PropositionalFormula,Integer> p = this.parseFormula(s,idx,sig);
+			Pair<PlFormula,Integer> p = this.parseFormula(s,idx,sig);
 			if(p == null)
 				return null;
 			idx = p.getSecond();
 			if(idx> s.size())
 				return null;
-			return new Pair<PropositionalFormula,Integer>(new Negation(p.getFirst()),idx);
+			return new Pair<PlFormula,Integer>(new Negation(p.getFirst()),idx);
 		}else{
 			// 00 - proposition
 			return this.parseProposition(s,idx,sig);
@@ -305,13 +305,13 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 		if(idx == -1)
 			return null;
 		PlBeliefSet result = new PlBeliefSet();
-		PropositionalSignature sig = new PropositionalSignature();
+		PlSignature sig = new PlSignature();
 		idx++;
 		int prev_start = 0, prev_end = 0;
 		int current_start, current_end;
 		while(idx < s.size()){
 			current_start = idx;
-			Pair<PropositionalFormula,Integer> p = parseFormula(s,idx,sig);
+			Pair<PlFormula,Integer> p = parseFormula(s,idx,sig);
 			if(p == null)
 				return null;
 			if(result.contains(p.getFirst()))
@@ -366,7 +366,7 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 	 * @param prop map of propositions to their indices
 	 * @return a bitstring representing the formula
 	 */
-	private static String formula2String(PropositionalFormula f, Map<Proposition,Integer> prop){
+	private static String formula2String(PlFormula f, Map<Proposition,Integer> prop){
 		String result = "";
 		if(f instanceof Proposition){
 			int idx = prop.get(f);
@@ -378,11 +378,11 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 			result += "01" + formula2String(((Negation)f).getFormula(),prop);			
 		}else if(f instanceof Conjunction){
 			result += "10";
-			for(PropositionalFormula f2: (Conjunction)f)
+			for(PlFormula f2: (Conjunction)f)
 				result += formula2String(f2,prop);
 		}else if(f instanceof Disjunction){
 			result += "11";
-			for(PropositionalFormula f2: (Disjunction)f)
+			for(PlFormula f2: (Disjunction)f)
 				result += formula2String(f2,prop);
 		}else{
 			throw new IllegalArgumentException("Only formulas of type proposition, negation, conjunction, and disjunction allowed.");
@@ -399,9 +399,9 @@ public class CanonicalIterator implements BeliefSetIterator<PropositionalFormula
 		String s = "1";
 		Map<Proposition,Integer> prop = new HashMap<Proposition,Integer>();
 		int idx = 1;
-		for(Proposition p: (PropositionalSignature)bs.getSignature())
+		for(Proposition p: (PlSignature)bs.getSignature())
 			prop.put(p, idx++);
-		for(PropositionalFormula f: bs)
+		for(PlFormula f: bs)
 			s += CanonicalIterator.formula2String(f,prop);
 		return ConversionTools.binaryString2BitSet(s);
 	}

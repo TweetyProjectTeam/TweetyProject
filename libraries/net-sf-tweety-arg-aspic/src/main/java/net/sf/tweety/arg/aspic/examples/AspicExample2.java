@@ -30,7 +30,7 @@ import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.parser.PlParser;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * ASPIC example code.
@@ -41,10 +41,10 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 public class AspicExample2 {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		PlParser plparser = new PlParser();
-		AspicParser<PropositionalFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
-		AspicArgumentationTheory<PropositionalFormula> at = parser.parseBeliefBaseFromFile(AspicExample2.class.getResource("/ex1.aspic").getFile());		
-		SimpleAspicReasoner<PropositionalFormula> ar = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
-		PropositionalFormula pf = (PropositionalFormula)plparser.parseFormula("p");		
+		AspicParser<PlFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> at = parser.parseBeliefBaseFromFile(AspicExample2.class.getResource("/ex1.aspic").getFile());		
+		SimpleAspicReasoner<PlFormula> ar = new SimpleAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.CONFLICTFREE_SEMANTICS));
+		PlFormula pf = (PlFormula)plparser.parseFormula("p");		
 		System.out.println(at);
 		System.out.println(pf + "\t" + ar.query(at,pf,InferenceMode.CREDULOUS));		
 	}

@@ -26,19 +26,19 @@ import net.sf.tweety.logics.pcl.semantics.ProbabilityDistribution;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Abstract class for all PCL reasoners.
  * @author Matthias Thimm
  */
-public abstract class AbstractPclReasoner implements QuantitativeReasoner<PclBeliefSet,PropositionalFormula>, ModelProvider<ProbabilisticConditional,PclBeliefSet,ProbabilityDistribution<PossibleWorld>>{
+public abstract class AbstractPclReasoner implements QuantitativeReasoner<PclBeliefSet,PlFormula>, ModelProvider<ProbabilisticConditional,PclBeliefSet,ProbabilityDistribution<PossibleWorld>>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.Reasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public abstract Double query(PclBeliefSet beliefbase, PropositionalFormula formula);
+	public abstract Double query(PclBeliefSet beliefbase, PlFormula formula);
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.ModelProvider#getModels(net.sf.tweety.commons.BeliefBase)

@@ -26,7 +26,7 @@ import java.util.HashSet;
 
 import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.logics.pl.parser.PlParser;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Implements a MUs enumerator based on MIMUS (http://www.cs.qub.ac.uk/~kmcareavey01/mimus.html).
@@ -52,30 +52,30 @@ public class MimusMusEnumerator extends PlMusEnumerator  {
 	 * @see net.sf.tweety.logics.pl.sat.PlMusEnumerator#minimalInconsistentSubsets(java.util.Collection)
 	 */
 	@Override
-	public Collection<Collection<PropositionalFormula>> minimalInconsistentSubsets(Collection<PropositionalFormula> formulas) {
+	public Collection<Collection<PlFormula>> minimalInconsistentSubsets(Collection<PlFormula> formulas) {
 		try {
 			File file = File.createTempFile("tweety-mimus", ".mim");
 			file.deleteOnExit();
 			PrintWriter writer = new PrintWriter(file, "UTF-8");
-			for(PropositionalFormula f: formulas){
+			for(PlFormula f: formulas){
 				// fortunately, the syntax of mimus is the same as for Tweety
 				writer.write(f.toString() + "\n");
 			}
 			writer.close();
 			String output = NativeShell.invokeExecutable(this.pathToMimus + " -i " + file.getAbsolutePath());			
 			if(output.trim().equals(""))
-				return new HashSet<Collection<PropositionalFormula>>();
+				return new HashSet<Collection<PlFormula>>();
 			// each line is a minimal inconsistent subset
 			String[] lines = output.split("\n");
 			String[] elems;
-			Collection<Collection<PropositionalFormula>> result = new HashSet<Collection<PropositionalFormula>>();
-			Collection<PropositionalFormula> mus;
+			Collection<Collection<PlFormula>> result = new HashSet<Collection<PlFormula>>();
+			Collection<PlFormula> mus;
 			PlParser parser = new PlParser();
 			for(String line: lines){
-				mus = new HashSet<PropositionalFormula>();
+				mus = new HashSet<PlFormula>();
 				elems = line.split(",");
 				for(String elem: elems)
-					mus.add((PropositionalFormula) parser.parseFormula(elem.trim()));
+					mus.add((PlFormula) parser.parseFormula(elem.trim()));
 				result.add(mus);
 			}
 			

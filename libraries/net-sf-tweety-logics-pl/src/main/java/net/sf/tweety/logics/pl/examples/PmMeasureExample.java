@@ -27,7 +27,7 @@ import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 
 public class PmMeasureExample {
@@ -37,15 +37,15 @@ public class PmMeasureExample {
 		PlBeliefSet kb = new PlBeliefSet();
 		PlParser parser = new PlParser();
 			
-		kb.add((PropositionalFormula)parser.parseFormula("a"));
-		kb.add((PropositionalFormula)parser.parseFormula("a && d"));
-		kb.add((PropositionalFormula)parser.parseFormula("!a && b"));
-		kb.add((PropositionalFormula)parser.parseFormula("!a && c"));
-		kb.add((PropositionalFormula)parser.parseFormula("!c"));
+		kb.add((PlFormula)parser.parseFormula("a"));
+		kb.add((PlFormula)parser.parseFormula("a && d"));
+		kb.add((PlFormula)parser.parseFormula("!a && b"));
+		kb.add((PlFormula)parser.parseFormula("!a && c"));
+		kb.add((PlFormula)parser.parseFormula("!c"));
 		
 				
 		// test Pm inconsistency measure		
-		BeliefSetInconsistencyMeasure<PropositionalFormula> pm = new PmInconsistencyMeasure();
+		BeliefSetInconsistencyMeasure<PlFormula> pm = new PmInconsistencyMeasure();
 		System.out.println("Pm: " + pm.inconsistencyMeasure(kb));
 		
 	}

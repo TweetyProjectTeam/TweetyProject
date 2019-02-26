@@ -24,7 +24,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.analysis.FuzzyInconsistencyMeasure;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.func.fuzzy.ProductNorm;
 
 public class FuzzyMeasureExample {
@@ -32,12 +32,12 @@ public class FuzzyMeasureExample {
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
 		
-		bs.add((PropositionalFormula) parser.parseFormula("a && !a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!(!(a && !a))"));
-		bs.add((PropositionalFormula) parser.parseFormula("!(!(!(!(a && !a))))"));
-		bs.add((PropositionalFormula) parser.parseFormula("!(!(!(!(!(!(a && !a))))))"));
-		bs.add((PropositionalFormula) parser.parseFormula("!(!(!(!(!(!(!(!(a && !a))))))))"));
-		bs.add((PropositionalFormula) parser.parseFormula("a && a"));
+		bs.add((PlFormula) parser.parseFormula("a && !a"));
+		bs.add((PlFormula) parser.parseFormula("!(!(a && !a))"));
+		bs.add((PlFormula) parser.parseFormula("!(!(!(!(a && !a))))"));
+		bs.add((PlFormula) parser.parseFormula("!(!(!(!(!(!(a && !a))))))"));
+		bs.add((PlFormula) parser.parseFormula("!(!(!(!(!(!(!(!(a && !a))))))))"));
+		bs.add((PlFormula) parser.parseFormula("a && a"));
 		
 		System.out.println(bs);
 		

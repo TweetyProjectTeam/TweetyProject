@@ -53,7 +53,7 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 			return beliefSet;
 		// construct convex optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature());
 		// for each conditional we need a probability function; and an extra one for distance minimization
 		// and add constraints to ensure those are actual probability functions that satisfy their given conditional
 		Map<ProbabilisticConditional,Map<PossibleWorld,Variable>> pc2vars = new HashMap<ProbabilisticConditional,Map<PossibleWorld,Variable>>();
@@ -82,8 +82,8 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 					}
 				rightSide = new FloatConstant(pc.getProbability().getValue());
 			}else{				
-				PropositionalFormula body = pc.getPremise().iterator().next();
-				PropositionalFormula head_and_body = pc.getConclusion().combineWithAnd(body);
+				PlFormula body = pc.getPremise().iterator().next();
+				PlFormula head_and_body = pc.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

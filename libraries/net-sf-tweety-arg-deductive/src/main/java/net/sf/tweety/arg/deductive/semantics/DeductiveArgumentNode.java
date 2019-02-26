@@ -21,7 +21,7 @@ package net.sf.tweety.arg.deductive.semantics;
 import java.util.Collection;
 
 import net.sf.tweety.graphs.Node;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Extends a deductive argument by a unique identifier.
@@ -42,7 +42,7 @@ public class DeductiveArgumentNode extends DeductiveArgument implements Node{
 	 * @param support a set of formulas.
 	 * @param claim a formula.
 	 */
-	public DeductiveArgumentNode(Collection<? extends PropositionalFormula> support, PropositionalFormula claim) {
+	public DeductiveArgumentNode(Collection<? extends PlFormula> support, PlFormula claim) {
 		super(support, claim);
 		DeductiveArgumentNode.counter++;
 		this.id = DeductiveArgumentNode.counter;		

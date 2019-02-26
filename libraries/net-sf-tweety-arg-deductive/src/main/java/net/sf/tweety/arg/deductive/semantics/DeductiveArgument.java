@@ -20,7 +20,7 @@ package net.sf.tweety.arg.deductive.semantics;
 
 import java.util.Collection;
 
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Instances of this class represent arguments in the sense
@@ -34,9 +34,9 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 public class DeductiveArgument {
 
 	/** The support of this argument. */
-	private Collection<? extends PropositionalFormula> support;
+	private Collection<? extends PlFormula> support;
 	/** The claim of this argument. */
-	private PropositionalFormula claim;
+	private PlFormula claim;
 	
 	/** 
 	 * Creates a new deductive argument with the given support
@@ -44,7 +44,7 @@ public class DeductiveArgument {
 	 * @param support a set of formulas.
 	 * @param claim a formula.
 	 */
-	public DeductiveArgument(Collection<? extends PropositionalFormula> support, PropositionalFormula claim){
+	public DeductiveArgument(Collection<? extends PlFormula> support, PlFormula claim){
 		this.support = support;
 		this.claim = claim;
 	}
@@ -53,7 +53,7 @@ public class DeductiveArgument {
 	 * Returns the support of this argument.
 	 * @return the support of this argument.
 	 */
-	public Collection<? extends PropositionalFormula> getSupport(){
+	public Collection<? extends PlFormula> getSupport(){
 		return this.support;
 	}
 	
@@ -61,7 +61,7 @@ public class DeductiveArgument {
 	 * Returns the claim of this argument.
 	 * @return the claim of this argument.
 	 */
-	public PropositionalFormula getClaim(){
+	public PlFormula getClaim(){
 		return this.claim;
 	}
 	

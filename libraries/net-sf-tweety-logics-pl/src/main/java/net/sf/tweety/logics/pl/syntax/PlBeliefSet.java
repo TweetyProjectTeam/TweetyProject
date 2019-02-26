@@ -28,7 +28,7 @@ import net.sf.tweety.commons.*;
  * @author Matthias Thimm
  *
  */
-public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
+public class PlBeliefSet extends BeliefSet<PlFormula> {
 
 	/**
 	 * Creates a new (empty) knowledge base.
@@ -42,7 +42,7 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	 * 
 	 * @param formulas a set of formulas.
 	 */
-	public PlBeliefSet(Collection<? extends PropositionalFormula> formulas) {
+	public PlBeliefSet(Collection<? extends PlFormula> formulas) {
 		super(formulas);
 	}
 
@@ -53,9 +53,9 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	 */
 	@Override
 	public Signature getSignature() {
-		PropositionalSignature signature = new PropositionalSignature();
+		PlSignature signature = new PlSignature();
 		for (Formula f : this)
-			signature.addAll(((PropositionalFormula) f).getAtoms());
+			signature.addAll(((PlFormula) f).getAtoms());
 		return signature;
 	}
 
@@ -67,7 +67,7 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	 */
 	public Conjunction toCnf() {
 		Conjunction conj = new Conjunction();
-		for (PropositionalFormula f : this)
+		for (PlFormula f : this)
 			conj.add(f);
 		return conj.toCnf();
 	}
@@ -81,7 +81,7 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	 */
 	public Collection<PlBeliefSet> getSyntaxComponents() {
 		List<PlBeliefSet> sets = new LinkedList<PlBeliefSet>();
-		for (PropositionalFormula f : this) {
+		for (PlFormula f : this) {
 			PlBeliefSet s = new PlBeliefSet();
 			s.add(f);
 			sets.add(s);
@@ -111,8 +111,8 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	 * @return list of "canonically" ordered formulas
 	 * @see net.sf.tweety.logics.pl.syntax.PlBeliefSet.PlFormulaHashCodeComparator
 	 */
-	public List<PropositionalFormula> getCanonicalOrdering() {
-		List<PropositionalFormula> orderedKB = new ArrayList<PropositionalFormula>(this);
+	public List<PlFormula> getCanonicalOrdering() {
+		List<PlFormula> orderedKB = new ArrayList<PlFormula>(this);
 		orderedKB.sort(new PlFormulaHashCodeComparator());
 		return orderedKB;
 	}
@@ -122,8 +122,8 @@ public class PlBeliefSet extends BeliefSet<PropositionalFormula> {
 	 * 
 	 * @see net.sf.tweety.logics.pl.syntax.PlBeliefSet#getCanonicalOrdering()
 	 */
-	class PlFormulaHashCodeComparator implements Comparator<PropositionalFormula> {
-		public int compare(PropositionalFormula p1, PropositionalFormula p2) {
+	class PlFormulaHashCodeComparator implements Comparator<PlFormula> {
+		public int compare(PlFormula p1, PlFormula p2) {
 			return p1.hashCode() - p2.hashCode();
 		}
 	}

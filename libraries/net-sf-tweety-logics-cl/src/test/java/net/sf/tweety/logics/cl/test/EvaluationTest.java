@@ -26,7 +26,7 @@ import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -42,7 +42,7 @@ public class EvaluationTest {
 		
 		Disjunction dis = new Disjunction();
 		dis.add(b);
-		dis.add((PropositionalFormula) a.complement());
+		dis.add((PlFormula) a.complement());
 		
 		PossibleWorld world = new PossibleWorld(lst);
 		Conditional c = new Conditional(dis);

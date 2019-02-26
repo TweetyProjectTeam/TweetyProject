@@ -31,7 +31,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.parser.PlParser;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * 
@@ -94,13 +94,13 @@ public class SimplePlLogicParser
 		Matcher m = RULE.matcher(line);
 		if (m.matches()) {
 			SimplePlRule rule = new SimplePlRule();
-			rule.setConclusion((PropositionalFormula) formulaparser
+			rule.setConclusion((PlFormula) formulaparser
 					.parseFormula(m.group(3)));
 			String str = m.group(1);
 			if (!EMPTY.matcher(str).matches()) {
 				String[] pres = str.split(symbolComma);
 				for (String pre : pres)
-					rule.addPremise((PropositionalFormula) formulaparser
+					rule.addPremise((PlFormula) formulaparser
 							.parseFormula(pre));
 			}
 			return rule;
@@ -110,7 +110,7 @@ public class SimplePlLogicParser
 			String str = m.group(1);
 			if (!EMPTY.matcher(str).matches()){
 				SimplePlRule rule = new SimplePlRule();
-				rule.setConclusion((PropositionalFormula) formulaparser.parseFormula(str));
+				rule.setConclusion((PlFormula) formulaparser.parseFormula(str));
 				return rule;
 			}
 		}

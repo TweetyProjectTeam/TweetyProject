@@ -28,8 +28,8 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This sampler generates random belief sets by selecting,
@@ -42,7 +42,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author mthimm
  *
  */
-public class RandomSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet> {
+public class RandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 
 	/** All possible worlds */
 	private List<PossibleWorld> allWorlds;
@@ -58,7 +58,7 @@ public class RandomSampler extends BeliefSetSampler<PropositionalFormula,PlBelie
 	 */
 	public RandomSampler(Signature signature, double worldProb) {
 		super(signature);
-		this.allWorlds = new ArrayList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds((PropositionalSignature)signature));
+		this.allWorlds = new ArrayList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds((PlSignature)signature));
 		this.worldProb = worldProb;
 	}
 	
@@ -71,7 +71,7 @@ public class RandomSampler extends BeliefSetSampler<PropositionalFormula,PlBelie
 	 */
 	public RandomSampler(Signature signature, double worldProb, int minLength, int maxLength) {
 		super(signature,minLength,maxLength);
-		this.allWorlds = new ArrayList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds((PropositionalSignature)signature));
+		this.allWorlds = new ArrayList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds((PlSignature)signature));
 		this.worldProb = worldProb;
 	}
 
@@ -99,12 +99,12 @@ public class RandomSampler extends BeliefSetSampler<PropositionalFormula,PlBelie
 	 * Returns a random formula.
 	 * @return a random formula.
 	 */
-	private PropositionalFormula randomFormula(){
-		Proposition a = ((PropositionalSignature)this.getSignature()).iterator().next();
-		PropositionalFormula p = a.combineWithAnd(new Negation(a));
+	private PlFormula randomFormula(){
+		Proposition a = ((PlSignature)this.getSignature()).iterator().next();
+		PlFormula p = a.combineWithAnd(new Negation(a));
 		for(int i = 0; i < this.allWorlds.size(); i++)
 			if(this.rand.nextDouble()<this.worldProb)
-				p = p.combineWithOr(this.allWorlds.get(i).getCompleteConjunction((PropositionalSignature)this.getSignature()));		
+				p = p.combineWithOr(this.allWorlds.get(i).getCompleteConjunction((PlSignature)this.getSignature()));		
 		return p;
 	}
 }

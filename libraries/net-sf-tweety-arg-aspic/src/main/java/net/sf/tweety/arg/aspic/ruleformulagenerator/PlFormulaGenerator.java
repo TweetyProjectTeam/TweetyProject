@@ -20,7 +20,7 @@ package net.sf.tweety.arg.aspic.ruleformulagenerator;
 
 import net.sf.tweety.arg.aspic.syntax.DefeasibleInferenceRule;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * @author Nils Geilen
@@ -28,13 +28,13 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * Implements <code>RuleFormulaGenerator</code> for propositional logic.
  * If a rule has been given a name, it is employed as an identifier.
  */
-public class PlFormulaGenerator extends RuleFormulaGenerator<PropositionalFormula> {
+public class PlFormulaGenerator extends RuleFormulaGenerator<PlFormula> {
 
 	/* (non-Javadoc)
 	 * @see ruleformulagenerator.RuleFormulaGenerator#getRuleFormula(net.sf.tweety.arg.aspic.syntax.InferenceRule)
 	 */
 	@Override
-	public PropositionalFormula getRuleFormula(DefeasibleInferenceRule<PropositionalFormula> r) {
+	public PlFormula getRuleFormula(DefeasibleInferenceRule<PlFormula> r) {
 		if(r.getName() == null)
 			return new Proposition("rule_" + r.hashCode());
 		else

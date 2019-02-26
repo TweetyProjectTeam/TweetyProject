@@ -35,12 +35,12 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public class Proposition extends PropositionalFormula implements Atom, Comparable<Proposition> {
+public class Proposition extends PlFormula implements Atom, Comparable<Proposition> {
 	
 	/**
 	 * The name of the proposition
 	 */
-	private PropositionalPredicate predicate;
+	private PlPredicate predicate;
 
 	/** Default-Ctor for dynamic instantiation */
 	public Proposition() {}
@@ -50,11 +50,11 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	 * @param name the name of the proposition.
 	 */
 	public Proposition(String name){
-		this.predicate = new PropositionalPredicate(name);
+		this.predicate = new PlPredicate(name);
 	}
 	
 	public Proposition(Proposition other) {
-		this.predicate = new PropositionalPredicate(other.getName());
+		this.predicate = new PlPredicate(other.getName());
 	}
 	
 	/**
@@ -66,13 +66,13 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	}
 	
 	@Override
-	public PropositionalPredicate getPredicate() {
+	public PlPredicate getPredicate() {
 		return this.predicate;
 	}
 	
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
-		Set<PropositionalPredicate> reval = new HashSet<PropositionalPredicate>();
+	public Set<PlPredicate> getPredicates() {
+		Set<PlPredicate> reval = new HashSet<PlPredicate>();
 		reval.add(predicate);
 		return reval;
 	}
@@ -83,13 +83,13 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	}
 	
 	@Override
-	public PropositionalFormula collapseAssociativeFormulas(){
+	public PlFormula collapseAssociativeFormulas(){
 		return this;
 	}
 	
 	@Override
-	public PropositionalSignature getSignature() {
-		PropositionalSignature reval = new PropositionalSignature();
+	public PlSignature getSignature() {
+		PlSignature reval = new PlSignature();
 		reval.add(this);
 		return reval;
 	}
@@ -120,7 +120,7 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	}
 	
 	@Override
-	public PropositionalFormula toNnf() {
+	public PlFormula toNnf() {
 		return this;
 	}
 
@@ -132,7 +132,7 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
 	 */
-	public PropositionalFormula trim(){
+	public PlFormula trim(){
 		return this;
 	}
 	
@@ -167,8 +167,8 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
 	@Override
-	public Set<PropositionalFormula> getLiterals(){
-		Set<PropositionalFormula> result = new HashSet<PropositionalFormula>();
+	public Set<PlFormula> getLiterals(){
+		Set<PlFormula> result = new HashSet<PlFormula>();
 		result.add(this);
 		return result;
 	}
@@ -176,7 +176,7 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	@Override
 	public RETURN_SET_PREDICATE setPredicate(Predicate predicate) {
 		Predicate old = this.predicate;
-		this.predicate = (PropositionalPredicate)predicate;
+		this.predicate = (PlPredicate)predicate;
 		return AtomImpl.implSetPredicate(old, this.predicate, new LinkedList<Term<?>>());
 	}
 	
@@ -209,7 +209,7 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
 	 */
-	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){
+	public PlFormula replace(Proposition p, PlFormula f, int i){
 		if(this.equals(p))
 			return f;
 		return this;
@@ -219,9 +219,9 @@ public class Proposition extends PropositionalFormula implements Atom, Comparabl
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
 	 */
 	@Override
-	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
-		PropositionalSignature sig2 = new PropositionalSignature(sig);
+		PlSignature sig2 = new PlSignature(sig);
 		sig2.remove(this);
 		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds(sig2)){
 			w.add(this);

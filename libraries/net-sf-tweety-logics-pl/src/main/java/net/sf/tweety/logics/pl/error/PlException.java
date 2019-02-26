@@ -27,16 +27,16 @@ import net.sf.tweety.logics.commons.error.LanguageException;
  * 
  * @author Tim Janus
  */
-public class PropositionalException extends LanguageException {
+public class PlException extends LanguageException {
 	
 	/** kill warning */
 	private static final long serialVersionUID = 843894579984076905L;
 
-	public PropositionalException(LanguageExceptionReason reason) {
+	public PlException(LanguageExceptionReason reason) {
 		this(reason, "");
 	}
 	
-	public PropositionalException(LanguageExceptionReason reason, String info) {
+	public PlException(LanguageExceptionReason reason, String info) {
 		super("Propositional-Logic", reason, info);
 	}
 }

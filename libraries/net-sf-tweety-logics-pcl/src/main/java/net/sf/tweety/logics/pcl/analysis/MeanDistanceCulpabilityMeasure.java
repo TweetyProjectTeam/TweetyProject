@@ -120,7 +120,7 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 		// set up the optimization problem for computing the minimal
 		// distance to a consistent belief set.
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
 		int i = 0;
 		Term normConstraint = null;
@@ -153,8 +153,8 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(eta).minus(tau);
 			}else{				
-				PropositionalFormula body = c.getPremise().iterator().next();
-				PropositionalFormula head_and_body = c.getConclusion().combineWithAnd(body);
+				PlFormula body = c.getPremise().iterator().next();
+				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

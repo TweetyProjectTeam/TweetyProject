@@ -25,7 +25,7 @@ import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.LingelingSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 public class LingelingExample {
 public static void main(String[] args) throws ParserException, IOException{
@@ -33,10 +33,10 @@ public static void main(String[] args) throws ParserException, IOException{
 		
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		beliefSet.add((PropositionalFormula)parser.parseFormula("a || b || c"));
-		beliefSet.add((PropositionalFormula)parser.parseFormula("!a || b && d"));
-		beliefSet.add((PropositionalFormula)parser.parseFormula("a"));
-		beliefSet.add((PropositionalFormula)parser.parseFormula("!c"));
+		beliefSet.add((PlFormula)parser.parseFormula("a || b || c"));
+		beliefSet.add((PlFormula)parser.parseFormula("!a || b && d"));
+		beliefSet.add((PlFormula)parser.parseFormula("a"));
+		beliefSet.add((PlFormula)parser.parseFormula("!c"));
 		
 		System.out.println(beliefSet);
 		

@@ -44,7 +44,7 @@ public class CredibilityCategorizer extends AbstractCredibilityComparer implemen
 	 * 		uttered the formulas.
 	 * @param credOrder The credibility order used to guide the categorizing.
 	 */
-	public CredibilityCategorizer(Collection<InformationObject<PropositionalFormula>> formulas, Order<Agent> credOrder){
+	public CredibilityCategorizer(Collection<InformationObject<PlFormula>> formulas, Order<Agent> credOrder){
 		super(formulas,credOrder);		
 	}
 	

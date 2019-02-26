@@ -25,7 +25,7 @@ import java.util.Set;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This class models a basic argument in structured argumentation frameworks, i.e.
@@ -98,8 +98,8 @@ public class BasicArgument extends Argument implements Rule<Proposition, Proposi
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.argumentation.dung.syntax.Argument#getSignature()
 	 */
-	public PropositionalSignature getSignature() {
-		PropositionalSignature sig = new PropositionalSignature();
+	public PlSignature getSignature() {
+		PlSignature sig = new PlSignature();
 		sig.add(this.claim);
 		for(Proposition p: this.support)
 			sig.add(p);

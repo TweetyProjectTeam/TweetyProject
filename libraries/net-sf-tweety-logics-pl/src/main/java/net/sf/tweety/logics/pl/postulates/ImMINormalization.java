@@ -23,7 +23,7 @@ import java.util.Collection;
 import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "MI-normalization" postulate for inconsistency measures: The inconsistency
@@ -43,7 +43,7 @@ public class ImMINormalization extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		if(kb.isEmpty())
 			return false;
 		if (PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb).isEmpty())
@@ -55,10 +55,10 @@ public class ImMINormalization extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		AbstractMusEnumerator<PropositionalFormula> e = PlMusEnumerator.getDefaultEnumerator();
+		AbstractMusEnumerator<PlFormula> e = PlMusEnumerator.getDefaultEnumerator();
 		double inconsistency = ev.inconsistencyMeasure(e.minimalInconsistentSubsets(kb).iterator().next());
 		return (inconsistency == 1);
 	}

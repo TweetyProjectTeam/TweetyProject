@@ -31,7 +31,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PropositionalFormula> implements Comparable<PossibleWorld> {
+public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PlFormula> implements Comparable<PossibleWorld> {
 	
 	/**
 	 * Creates a new empty possible world.
@@ -52,7 +52,7 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,Pro
 	 * @see net.sf.tweety.kr.Interpretation#satisfies(net.sf.tweety.kr.Formula)
 	 */
 	@Override
-	public boolean satisfies(PropositionalFormula formula) throws IllegalArgumentException {		
+	public boolean satisfies(PlFormula formula) throws IllegalArgumentException {		
 		if(formula instanceof Contradiction)
 			return false;
 		if(formula instanceof Tautology)
@@ -63,14 +63,14 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,Pro
 			return !this.satisfies(((Negation)formula).getFormula());
 		if(formula instanceof Conjunction){
 			Conjunction c = (Conjunction) formula;
-			for(PropositionalFormula f : c)
+			for(PlFormula f : c)
 				if(!this.satisfies(f))
 					return false;
 			return true;
 		}
 		if(formula instanceof Disjunction){
 			Disjunction d = (Disjunction) formula;
-			for(PropositionalFormula f: d)
+			for(PlFormula f: d)
 				if(this.satisfies(f))
 					return true;
 			return false;
@@ -82,11 +82,11 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,Pro
 	 * @see net.sf.tweety.commons.AbstractInterpretation#satisfies(java.util.Collection)
 	 */
 	@Override
-	public boolean satisfies(Collection<PropositionalFormula> formulas) throws IllegalArgumentException {
+	public boolean satisfies(Collection<PlFormula> formulas) throws IllegalArgumentException {
 		for(Formula f: formulas)
-			if(!(f instanceof PropositionalFormula))
+			if(!(f instanceof PlFormula))
 				throw new IllegalArgumentException();
-			else if(!this.satisfies((PropositionalFormula)f))
+			else if(!this.satisfies((PlFormula)f))
 				return false;
 		return true;
 	}
@@ -96,7 +96,7 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,Pro
 	 */
 	@Override
 	public boolean satisfies(PlBeliefSet beliefBase) throws IllegalArgumentException {
-		return this.satisfies((Collection<PropositionalFormula>) beliefBase);
+		return this.satisfies((Collection<PlFormula>) beliefBase);
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,Pro
 	 * @return the complete conjunction representing this possible world wrt.
 	 * 	the give signature
 	 */
-	public PropositionalFormula getCompleteConjunction(PropositionalSignature sig){
+	public PlFormula getCompleteConjunction(PlSignature sig){
 		Conjunction c = new Conjunction();
 		for(Proposition p: this)
 			c.add(p);

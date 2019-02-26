@@ -35,16 +35,16 @@ import net.sf.tweety.math.probability.Probability;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public abstract class PropositionalFormula implements ClassicalFormula {
+public abstract class PlFormula implements ClassicalFormula {
 
 	@Override
-	public Class<PropositionalPredicate> getPredicateCls() {
-		return PropositionalPredicate.class;
+	public Class<PlPredicate> getPredicateCls() {
+		return PlPredicate.class;
 	}
 	
 	@Override
-	public PropositionalSignature getSignature() {
-		return new PropositionalSignature();
+	public PlSignature getSignature() {
+		return new PlSignature();
 	}
 
 	@Override
@@ -55,20 +55,20 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * where "a" is a proposition, that appear in this formula.
 	 * @return all literals appearing in this formula.
 	 */
-	public abstract Set<PropositionalFormula> getLiterals();
+	public abstract Set<PlFormula> getLiterals();
 	
 	@Override
 	public Conjunction combineWithAnd(Conjunctable f){
-		if(!(f instanceof PropositionalFormula))
+		if(!(f instanceof PlFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a propositional formula.");
-		return new Conjunction(this,(PropositionalFormula)f);
+		return new Conjunction(this,(PlFormula)f);
 	}
 	
 	@Override
 	public Disjunction combineWithOr(Disjunctable f){
-		if(!(f instanceof PropositionalFormula))
+		if(!(f instanceof PlFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a propositional formula.");
-		return new Disjunction(this,(PropositionalFormula)f);
+		return new Disjunction(this,(PlFormula)f);
 	}
 	
 	/**
@@ -76,17 +76,17 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * in this term, e.g. every a||(b||c) becomes a||b||c.
 	 * @return the collapsed formula.
 	 */
-	public abstract PropositionalFormula collapseAssociativeFormulas();
+	public abstract PlFormula collapseAssociativeFormulas();
 	
 	@Override
-	public abstract Set<PropositionalPredicate> getPredicates();
+	public abstract Set<PlPredicate> getPredicates();
 	
 	/**
 	 * Removes duplicates (identical formulas) from conjunctions and disjunctions and
 	 * duplicate negations.
 	 * @return an equivalent formula without duplicates.
 	 */
-	public abstract PropositionalFormula trim();
+	public abstract PlFormula trim();
 	
 	/**
 	 * Returns this formula's probability in the uniform distribution. 
@@ -107,7 +107,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
      * A formula is in NNF iff negations occur only directly in front of a proposition.
      * @return the formula in NNF.
      */
-	public abstract PropositionalFormula toNnf();
+	public abstract PlFormula toNnf();
 	
 	/**
      * This method returns this formula in conjunctive normal form (CNF).
@@ -121,13 +121,13 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 		 * A formula is in DNF iff it is a disjunction of conjunctive clauses.
 		 * @return the formula in DNF.
 		 */
-		public PropositionalFormula toDnf(){
-			PropositionalFormula nnf = this.toNnf();
+		public PlFormula toDnf(){
+			PlFormula nnf = this.toNnf();
 		    // DNF( P || Q) = DNF(P) || DNF(Q)
 		    if(nnf instanceof Disjunction) {
 		      Disjunction d = (Disjunction) nnf;
 		      Disjunction dnf = new Disjunction();
-		      for(PropositionalFormula f : d) {
+		      for(PlFormula f : d) {
 		        dnf.add( f.toDnf() );
 		      }
 		    return dnf.collapseAssociativeFormulas();
@@ -149,10 +149,10 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	     */
 	    if(nnf instanceof Conjunction) {
 	      Conjunction c = (Conjunction) nnf;
-	      Set<Set<PropositionalFormula>> disjunctions = new HashSet<Set<PropositionalFormula>>();
-	      for(PropositionalFormula f : c) {
-	        PropositionalFormula fdnf = f.toDnf().collapseAssociativeFormulas();
-	        Set<PropositionalFormula> elems = new HashSet<PropositionalFormula>();
+	      Set<Set<PlFormula>> disjunctions = new HashSet<Set<PlFormula>>();
+	      for(PlFormula f : c) {
+	        PlFormula fdnf = f.toDnf().collapseAssociativeFormulas();
+	        Set<PlFormula> elems = new HashSet<PlFormula>();
 	        disjunctions.add( elems );
 	        if(fdnf instanceof Disjunction) {
 	          elems.addAll( (Disjunction)fdnf );
@@ -162,9 +162,9 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	      }
 	      
 	     // the dnf is the disjunction of all possible combinations of distributed conjunctions
-	      Set<Set<PropositionalFormula>> permutations = new SetTools< PropositionalFormula >().permutations( disjunctions );
+	      Set<Set<PlFormula>> permutations = new SetTools< PlFormula >().permutations( disjunctions );
 	      Disjunction dnf = new Disjunction();
-	      for(Set<PropositionalFormula> elems : permutations) {
+	      for(Set<PlFormula> elems : permutations) {
 	        dnf.add( new Conjunction( elems ) );
 	      }
 	      return dnf.collapseAssociativeFormulas();
@@ -179,14 +179,14 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * @param other a conjunction of literals
 	 * @return "true" iff this formula is resolvable with the other formula.
 	 */
-	public boolean resolvableWith(PropositionalFormula other){
+	public boolean resolvableWith(PlFormula other){
 		if(!this.isConjunctiveClause() || !other.isConjunctiveClause())
 			throw new IllegalArgumentException("Formula must be a conjunctive clause");
 		Conjunction c1 = (Conjunction) this;
 		Conjunction c2 = (Conjunction) other;
 		int numOfComplementaryLiterals = 0;
-		for(PropositionalFormula p1: c1.getFormulas())
-			for(PropositionalFormula p2: c2.getFormulas())
+		for(PlFormula p1: c1.getFormulas())
+			for(PlFormula p2: c2.getFormulas())
 				if(p2.equals(p1.complement()))
 					numOfComplementaryLiterals++;
 		return numOfComplementaryLiterals == 1;
@@ -198,18 +198,18 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * @param other a conjunction of formulas
 	 * @return some resolvent.
 	 */
-	public Conjunction resolveWith(PropositionalFormula other){
+	public Conjunction resolveWith(PlFormula other){
 		if(!this.resolvableWith(other))
 			throw new IllegalArgumentException("Formulas cannot be resolved");
 		
 		Conjunction c1 = (Conjunction) this;
 		Conjunction c2 = (Conjunction) other;
 		
-		Set<PropositionalFormula> result = new HashSet<PropositionalFormula>();
+		Set<PlFormula> result = new HashSet<PlFormula>();
 		result.addAll(c1.getFormulas());
 		result.addAll(c2.getFormulas());
-		for(PropositionalFormula p1: c1.getFormulas())
-			for(PropositionalFormula p2: c2.getFormulas())
+		for(PlFormula p1: c1.getFormulas())
+			for(PlFormula p2: c2.getFormulas())
 				if(p2.equals(p1.complement())){
 					result.remove(p2);
 					result.remove(p1);
@@ -225,18 +225,18 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * implicants.
 	 * @return the formula in Blake canonical form
 	 */
-	public PropositionalFormula toBlakeCanonicalForm(){
+	public PlFormula toBlakeCanonicalForm(){
 		// first we obtain the DNF
-		PropositionalFormula f = this.toDnf();
+		PlFormula f = this.toDnf();
 		// special case: only one conjunctive clause
 		if(!(f instanceof Disjunction))
 			return f;
-		Set<PropositionalFormula> implicants = new HashSet<PropositionalFormula>(((Disjunction)f).getFormulas());
+		Set<PlFormula> implicants = new HashSet<PlFormula>(((Disjunction)f).getFormulas());
 		// check that every implicant is represented as a conjunction
-		Set<PropositionalFormula> tmp = new HashSet<PropositionalFormula>();
-		for(PropositionalFormula i: implicants)
+		Set<PlFormula> tmp = new HashSet<PlFormula>();
+		for(PlFormula i: implicants)
 			if(!(i instanceof Conjunction)){
-				Set<PropositionalFormula> k = new HashSet<PropositionalFormula>();
+				Set<PlFormula> k = new HashSet<PlFormula>();
 				k.add(i);
 				tmp.add(new Conjunction(k));
 			}else tmp.add(i);
@@ -247,8 +247,8 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 		boolean changed;
 		do{
 			changed = false;
-			for(PropositionalFormula p1: implicants){
-				for(PropositionalFormula p2: implicants){
+			for(PlFormula p1: implicants){
+				for(PlFormula p2: implicants){
 					if(p1 != p2){
 						if(p1.resolvableWith(p2) && !implicants.contains(p1.resolveWith(p2))){
 							//implicants.remove(p1);
@@ -265,8 +265,8 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 		//remove non-minimal implicants
 		do{
 			changed = false;
-			for(PropositionalFormula p1: implicants){
-				for(PropositionalFormula p2: implicants){
+			for(PlFormula p1: implicants){
+				for(PlFormula p2: implicants){
 					if(p1 != p2){
 						if(((Conjunction)p1).getFormulas().containsAll( ((Conjunction)p2).getFormulas())){
 							implicants.remove(p1);
@@ -285,7 +285,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * Returns the set of prime implicants of this formula.
 	 * @return the set of prime implicants of this formula.
 	 */
-	public Collection<PropositionalFormula> getPrimeImplicants(){
+	public Collection<PlFormula> getPrimeImplicants(){
 		return ((Disjunction)this.toBlakeCanonicalForm()).getFormulas();
 	}
 	
@@ -304,7 +304,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	 * @param sig some propositional signature
 	 * @return the set of models of this formula wrt. the given signature.
 	 */
-	public abstract Set<PossibleWorld> getModels(PropositionalSignature sig);
+	public abstract Set<PossibleWorld> getModels(PlSignature sig);
 	
     @Override
 	public ClassicalFormula complement(){
@@ -347,7 +347,7 @@ public abstract class PropositionalFormula implements ClassicalFormula {
      * @param i the index of the proposition
      * @return a new formula with the ith instance of the proposition p replaced by f.
      */
-    public abstract PropositionalFormula replace(Proposition p, PropositionalFormula f, int i);
+    public abstract PlFormula replace(Proposition p, PlFormula f, int i);
     
 	@Override
 	public boolean isLiteral() {
@@ -361,5 +361,5 @@ public abstract class PropositionalFormula implements ClassicalFormula {
 	public abstract int hashCode();
 	
 	@Override
-	public abstract PropositionalFormula clone();
+	public abstract PlFormula clone();
 }

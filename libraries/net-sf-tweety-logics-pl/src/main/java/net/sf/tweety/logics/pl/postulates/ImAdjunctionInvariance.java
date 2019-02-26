@@ -24,7 +24,7 @@ import java.util.Iterator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "adjunction invariance" postulate for inconsistency measures: The
@@ -45,7 +45,7 @@ public class ImAdjunctionInvariance extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		return (!(kb.size()<2));
 	}
 
@@ -54,13 +54,13 @@ public class ImAdjunctionInvariance extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.ImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
-		Iterator<PropositionalFormula> it = ((PlBeliefSet)kb).getCanonicalOrdering().iterator();
-		PropositionalFormula f1 = it.next();
-		PropositionalFormula f2 = it.next();
+		Iterator<PlFormula> it = ((PlBeliefSet)kb).getCanonicalOrdering().iterator();
+		PlFormula f1 = it.next();
+		PlFormula f2 = it.next();
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
 		kb2.remove(f1);
 		kb2.remove(f2);

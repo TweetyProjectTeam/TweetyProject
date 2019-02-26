@@ -46,7 +46,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 /**
  * This class provides methods capable of checking if a given transition system
@@ -154,8 +154,8 @@ public class SActionQuerySatisfactionTester
   private String getRules( Collection< SActionQuery > queries )
   {
     Set< FolFormula > stateParts = new HashSet< FolFormula >();
-    Set< PropositionalFormula > queryParts =
-      new HashSet< PropositionalFormula >();
+    Set< PlFormula > queryParts =
+      new HashSet< PlFormula >();
     Set< QueryProposition > queryPropositions =
       new HashSet< QueryProposition >();
     for ( SActionQuery q : queries ) {
@@ -169,7 +169,7 @@ public class SActionQuerySatisfactionTester
     for ( FolFormula f : stateParts ) {
       result += getStatePartRules( f );
     }
-    for ( PropositionalFormula p : queryParts ) {
+    for ( PlFormula p : queryParts ) {
       result += getQueryPartRules( p );
     }
     for ( QueryProposition q : queryPropositions ) {
@@ -228,7 +228,7 @@ public class SActionQuerySatisfactionTester
    * @return a String containing normal logic rules that represent the given
    *         action query.
    */
-  private String getQueryPartRules( PropositionalFormula queryPart )
+  private String getQueryPartRules( PlFormula queryPart )
   {
     String result = "";
     if ( queryPart instanceof net.sf.tweety.logics.pl.syntax.Negation ) {
@@ -244,7 +244,7 @@ public class SActionQuerySatisfactionTester
         (net.sf.tweety.logics.pl.syntax.Conjunction) queryPart;
       result += removeIllegalCharacters( conj.toString() );
       result += "(S) :- ";
-      for ( PropositionalFormula f : conj ) {
+      for ( PlFormula f : conj ) {
         result += removeIllegalCharacters( f.toString() );
         result += "(S), ";
       }
@@ -253,7 +253,7 @@ public class SActionQuerySatisfactionTester
     else if ( queryPart instanceof net.sf.tweety.logics.pl.syntax.Disjunction ) {
       net.sf.tweety.logics.pl.syntax.Disjunction disj =
         (net.sf.tweety.logics.pl.syntax.Disjunction) queryPart;
-      for ( PropositionalFormula p : disj ) {
+      for ( PlFormula p : disj ) {
         result += removeIllegalCharacters( disj.toString() );
         result += "(S) :- ";
         result += removeIllegalCharacters( p.toString() );
@@ -360,13 +360,13 @@ public class SActionQuerySatisfactionTester
    * @param formula an action query in the form of a propositional formula
    * @return the set of all subformulas of formula.
    */
-  private Set< PropositionalFormula > getQueryParts(
-    PropositionalFormula formula )
+  private Set< PlFormula > getQueryParts(
+    PlFormula formula )
   {
-    Set< PropositionalFormula > result = new HashSet< PropositionalFormula >();
+    Set< PlFormula > result = new HashSet< PlFormula >();
     result.add( formula );
     if ( formula instanceof net.sf.tweety.logics.pl.syntax.AssociativePropositionalFormula ) {
-      for ( PropositionalFormula f : (net.sf.tweety.logics.pl.syntax.AssociativePropositionalFormula) formula ) {
+      for ( PlFormula f : (net.sf.tweety.logics.pl.syntax.AssociativePropositionalFormula) formula ) {
         result.addAll( getQueryParts( f ) );
       }
     }

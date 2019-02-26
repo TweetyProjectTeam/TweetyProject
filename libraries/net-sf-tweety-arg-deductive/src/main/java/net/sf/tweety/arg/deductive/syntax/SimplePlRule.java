@@ -25,8 +25,8 @@ import java.util.Set;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.rules.Rule;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Basic data structure for handling simple rule
@@ -34,48 +34,48 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Federico Cerutti <federico.cerutti@acm.org>
  *
  */
-public class SimplePlRule implements Rule<PropositionalFormula, PropositionalFormula> {
+public class SimplePlRule implements Rule<PlFormula, PlFormula> {
 	
-	private PropositionalFormula claim = null;
-	private Set<PropositionalFormula> support = null;
+	private PlFormula claim = null;
+	private Set<PlFormula> support = null;
 
 	public SimplePlRule(){
-		support = new HashSet<PropositionalFormula>();
+		support = new HashSet<PlFormula>();
 	}
 	
-	public SimplePlRule(PropositionalFormula _claim){
+	public SimplePlRule(PlFormula _claim){
 		claim = _claim;
-		support = new HashSet<PropositionalFormula>();
+		support = new HashSet<PlFormula>();
 	}
 	
-	public SimplePlRule(PropositionalFormula _claim, Set<PropositionalFormula> _support){
+	public SimplePlRule(PlFormula _claim, Set<PlFormula> _support){
 		claim = _claim;
 		support = _support;
 	}
 
-	public void addPremise(PropositionalFormula arg0) {
+	public void addPremise(PlFormula arg0) {
 		this.support.add(arg0);
 		
 	}
 
-	public void addPremises(Collection<? extends PropositionalFormula> arg0) {
+	public void addPremises(Collection<? extends PlFormula> arg0) {
 		this.support.addAll(arg0);
 		
 	}
 
-	public PropositionalFormula getConclusion() {
+	public PlFormula getConclusion() {
 		return this.claim;
 	}
 
-	public Collection<? extends PropositionalFormula> getPremise() {
+	public Collection<? extends PlFormula> getPremise() {
 		return this.support;
 	}
 
 	public Signature getSignature() {
-		PropositionalSignature sig = new PropositionalSignature();
+		PlSignature sig = new PlSignature();
 		sig.add(this.claim.getSignature());
 		for(Formula p: this.support)
-			sig.add((PropositionalSignature) p.getSignature());
+			sig.add((PlSignature) p.getSignature());
 		return sig;
 	}
 
@@ -87,7 +87,7 @@ public class SimplePlRule implements Rule<PropositionalFormula, PropositionalFor
 		return this.support.isEmpty();
 	}
 
-	public void setConclusion(PropositionalFormula arg0) {
+	public void setConclusion(PlFormula arg0) {
 		this.claim = arg0;
 	}
 	

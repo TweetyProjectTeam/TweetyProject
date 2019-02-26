@@ -23,7 +23,7 @@ import java.util.Set;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 import org.ojalgo.access.Access2D;
 import org.ojalgo.constant.BigMath;
@@ -89,7 +89,7 @@ public class OjAlgoPclUtils {
 			
 			int j = 0; 
 			double p = c.getProbability().doubleValue();
-			PropositionalFormula conclusion = c.getConclusion();
+			PlFormula conclusion = c.getConclusion();
 			
 			if(c.isFact()) {
 				
@@ -107,7 +107,7 @@ public class OjAlgoPclUtils {
 			}
 			else {
 				
-				PropositionalFormula premise = c.getPremise().iterator().next();
+				PlFormula premise = c.getPremise().iterator().next();
 				
 				for(PossibleWorld w: worlds) {
 					

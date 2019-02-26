@@ -29,8 +29,8 @@ import net.sf.tweety.arg.aspic.syntax.InferenceRule;
 import net.sf.tweety.arg.aspic.syntax.StrictInferenceRule;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Generates random ASPIC argumentation theories.
@@ -49,17 +49,17 @@ public class RandomAspicArgumentationTheoryGenerator{
 	 * @param probStrict the probability of each rule being strict.
 	 * @return an ASPIC argumentation theory
 	 */
-	public static AspicArgumentationTheory<PropositionalFormula> next(int numPropositions, int numFormulas, int maxBodyLiterals, double probStrict){
+	public static AspicArgumentationTheory<PlFormula> next(int numPropositions, int numFormulas, int maxBodyLiterals, double probStrict){
 		Random rand = new Random();
-		PropositionalSignature sig = new PropositionalSignature(numPropositions);
+		PlSignature sig = new PlSignature(numPropositions);
 		List<Proposition> atoms = new ArrayList<Proposition>(sig);
-		AspicArgumentationTheory<PropositionalFormula> theory = new AspicArgumentationTheory<PropositionalFormula>(new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> theory = new AspicArgumentationTheory<PlFormula>(new PlFormulaGenerator());
 		for(int i = 0; i < numFormulas; i++) {
-			InferenceRule<PropositionalFormula> rule;
+			InferenceRule<PlFormula> rule;
 			if(rand.nextFloat() < probStrict) 
-				rule = new StrictInferenceRule<PropositionalFormula>();
+				rule = new StrictInferenceRule<PlFormula>();
 			else
-				rule = new DefeasibleInferenceRule<PropositionalFormula>();
+				rule = new DefeasibleInferenceRule<PlFormula>();
 			if(rand.nextBoolean())
 				rule.setConclusion(atoms.get(rand.nextInt(atoms.size())));
 			else

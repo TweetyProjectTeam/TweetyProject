@@ -29,7 +29,7 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * 
@@ -47,18 +47,18 @@ public class DeductiveExample {
 		DeductiveKnowledgeBase kb = new DeductiveKnowledgeBase();
 		
 		PlParser parser = new PlParser();
-		kb.add((PropositionalFormula)parser.parseFormula("s"));
-		kb.add((PropositionalFormula)parser.parseFormula("!s || h"));
-		kb.add((PropositionalFormula)parser.parseFormula("f"));		
-		kb.add((PropositionalFormula)parser.parseFormula("!f || !h"));
-		kb.add((PropositionalFormula)parser.parseFormula("v"));
-		kb.add((PropositionalFormula)parser.parseFormula("!v || !h"));
+		kb.add((PlFormula)parser.parseFormula("s"));
+		kb.add((PlFormula)parser.parseFormula("!s || h"));
+		kb.add((PlFormula)parser.parseFormula("f"));		
+		kb.add((PlFormula)parser.parseFormula("!f || !h"));
+		kb.add((PlFormula)parser.parseFormula("v"));
+		kb.add((PlFormula)parser.parseFormula("!v || !h"));
 		
 		System.out.println(kb);
 		
 		AbstractDeductiveArgumentationReasoner reasoner = new SimpleDeductiveReasoner(new ClassicalCategorizer(), new SimpleAccumulator());
 		
-		System.out.println(reasoner.query(kb,(PropositionalFormula) parser.parseFormula("h")));
+		System.out.println(reasoner.query(kb,(PlFormula) parser.parseFormula("h")));
 		
 	}
 	

@@ -29,7 +29,7 @@ import net.sf.tweety.logics.cl.syntax.ClBeliefSet;
 import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class models a brute force c-reasoner for conditional logic. Reasoning is performed
@@ -90,7 +90,7 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 		this(false);
 	}
 		
-	private void filter(ArrayList<PropositionalFormula> list, ClBeliefSet beliefset){
+	private void filter(ArrayList<PlFormula> list, ClBeliefSet beliefset){
 		ClBeliefSet copy = beliefset.clone();
 		for(Formula f: copy){
 			Conditional c = (Conditional) f;
@@ -99,7 +99,7 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 				list.addAll(c.getPremise());
 				beliefset.remove(f);
 				for( int i = 0 ; i < c.getPremise().toArray().length ; i++){
-					Conditional c1 = new Conditional((PropositionalFormula) c.getPremise().toArray()[i]);
+					Conditional c1 = new Conditional((PlFormula) c.getPremise().toArray()[i]);
 					System.out.println("Add to beliefset: " + c1.toString());
 					beliefset.add(c1);
 				}
@@ -224,7 +224,7 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 	 */
 	@Override
 	public RankingFunction getModel(ClBeliefSet beliefset) {
-		ArrayList<PropositionalFormula> list = new ArrayList<PropositionalFormula>();
+		ArrayList<PlFormula> list = new ArrayList<PlFormula>();
 		this.filter(list, beliefset);
 		
 		this.numConditionals = beliefset.size();
@@ -248,7 +248,7 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 		}
 		
 		if(list.size()>0){
-			for(PropositionalFormula pl : list){
+			for(PlFormula pl : list){
 				for(PossibleWorld world : candidate.getPossibleWorlds()){
 					if(world.satisfies(pl)){
 						candidate.setRank(world, RankingFunction.INFINITY);

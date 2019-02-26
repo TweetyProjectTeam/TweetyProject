@@ -28,7 +28,7 @@ import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Exemplary code illustrating the use of the ASPIC theory generator.
@@ -46,10 +46,10 @@ public class AspicGeneratorExample {
 		int maxLiteralsInPremises = 2;
 		double percentageStrictRules = 0.2;
 		
-		SimpleAspicReasoner<PropositionalFormula> naiveReasoner = new SimpleAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
-		ModuleBasedAspicReasoner<PropositionalFormula> moduleBasedReasoner = new ModuleBasedAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
-		DirectionalAspicReasoner<PropositionalFormula> dirReasoner = new DirectionalAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
-		RandomAspicReasoner<PropositionalFormula> randomReasoner = new RandomAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR),600,100);
+		SimpleAspicReasoner<PlFormula> naiveReasoner = new SimpleAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		ModuleBasedAspicReasoner<PlFormula> moduleBasedReasoner = new ModuleBasedAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		DirectionalAspicReasoner<PlFormula> dirReasoner = new DirectionalAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		RandomAspicReasoner<PlFormula> randomReasoner = new RandomAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR),600,100);
 		
 		long totalNaive = 0;
 		long totalModulebased = 0;
@@ -58,9 +58,9 @@ public class AspicGeneratorExample {
 		long correctRandom = 0;
 		long correctDirectional = 0;
 		for(int i = 0; i < repetitions; i++) {
-			AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+			AspicArgumentationTheory<PlFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
 			System.out.println(i + "\t" + theory);
-			PropositionalFormula query = new Proposition("A1");
+			PlFormula query = new Proposition("A1");
 			// Naive
 			long millis = System.currentTimeMillis();
 			boolean answer = naiveReasoner.query(theory,query,InferenceMode.CREDULOUS);

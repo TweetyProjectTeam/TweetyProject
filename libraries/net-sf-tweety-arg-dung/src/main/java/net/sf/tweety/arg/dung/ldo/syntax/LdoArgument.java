@@ -29,7 +29,7 @@ import net.sf.tweety.arg.dung.syntax.DungSignature;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
+import net.sf.tweety.logics.pl.syntax.PlPredicate;
 
 /**
  * This class represents an argument in ldo. 
@@ -42,7 +42,7 @@ public class LdoArgument extends LdoFormula implements Atom, Comparable<LdoArgum
 	/**
 	 * The name of the proposition
 	 */
-	private PropositionalPredicate predicate;
+	private PlPredicate predicate;
 
 	/** Default-Ctor for dynamic instantiation */
 	public LdoArgument() {}
@@ -52,11 +52,11 @@ public class LdoArgument extends LdoFormula implements Atom, Comparable<LdoArgum
 	 * @param name the name of the proposition.
 	 */
 	public LdoArgument(String name){
-		this.predicate = new PropositionalPredicate(name);
+		this.predicate = new PlPredicate(name);
 	}
 	
 	public LdoArgument(LdoArgument other) {
-		this.predicate = new PropositionalPredicate(other.getName());
+		this.predicate = new PlPredicate(other.getName());
 	}
 	
 	/**
@@ -78,13 +78,13 @@ public class LdoArgument extends LdoFormula implements Atom, Comparable<LdoArgum
 	}
 	
 	@Override
-	public PropositionalPredicate getPredicate() {
+	public PlPredicate getPredicate() {
 		return this.predicate;
 	}
 	
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
-		Set<PropositionalPredicate> reval = new HashSet<PropositionalPredicate>();
+	public Set<PlPredicate> getPredicates() {
+		Set<PlPredicate> reval = new HashSet<PlPredicate>();
 		reval.add(predicate);
 		return reval;
 	}
@@ -172,7 +172,7 @@ public class LdoArgument extends LdoFormula implements Atom, Comparable<LdoArgum
 	@Override
 	public RETURN_SET_PREDICATE setPredicate(Predicate predicate) {
 		Predicate old = this.predicate;
-		this.predicate = (PropositionalPredicate)predicate;
+		this.predicate = (PlPredicate)predicate;
 		return AtomImpl.implSetPredicate(old, this.predicate, new LinkedList<Term<?>>());
 	}
 	

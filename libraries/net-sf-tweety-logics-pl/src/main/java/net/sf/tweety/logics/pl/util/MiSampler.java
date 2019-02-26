@@ -29,8 +29,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Generates random propositional belief base with a given
@@ -43,7 +43,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Matthias Thimm
  */
-public class MiSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet>{
+public class MiSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 
 	/**
 	 * The inconsistency value of the generated belief sets
@@ -58,7 +58,7 @@ public class MiSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet
 	 * @param signature some propositional signature
 	 * @param incvalue some inconsistency value.
 	 */
-	public MiSampler(PropositionalSignature signature, int incvalue) {
+	public MiSampler(PlSignature signature, int incvalue) {
 		super(signature);
 		if(incvalue > signature.size()/2)
 			throw new IllegalArgumentException("A propositional belief base with inconsistency value " + this.incvalue + " cannot be generated with the given signature."); 
@@ -74,7 +74,7 @@ public class MiSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet
 	 * @param minLength the minimum length of knowledge bases
 	 * @param maxLength the maximum length of knowledge bases
 	 */
-	public MiSampler(PropositionalSignature signature, int incvalue, int minLength, int maxLength) {
+	public MiSampler(PlSignature signature, int incvalue, int minLength, int maxLength) {
 		super(signature,minLength,maxLength);
 		if(incvalue > signature.size()/2)
 			throw new IllegalArgumentException("A propositional belief base with inconsistency value " + this.incvalue + " cannot be generated with the given signature."); 
@@ -86,11 +86,11 @@ public class MiSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet
 	 */
 	@Override
 	public PlBeliefSet next() {
-		List<PropositionalFormula> formulas = new ArrayList<PropositionalFormula>();
+		List<PlFormula> formulas = new ArrayList<PlFormula>();
 		// first generate MIs
 		int num = 0;
 		Stack<Proposition> st = new Stack<Proposition>();
-		st.addAll((PropositionalSignature)this.getSignature());
+		st.addAll((PlSignature)this.getSignature());
 		Proposition a,b;
 		while(num < this.incvalue){
 			a = st.pop();

@@ -20,7 +20,7 @@ package net.sf.tweety.arg.dung.ldo.syntax;
 
 import java.util.Set;
 
-import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
+import net.sf.tweety.logics.pl.syntax.PlPredicate;
 
 /**
  * Provides common functionalities for the graph-based modalities in LDO.
@@ -63,8 +63,8 @@ public abstract class AbstractGraphLdoModality extends AbstractLdoModality {
 	}
 	
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
-		Set<PropositionalPredicate> result = super.getPredicates();
+	public Set<PlPredicate> getPredicates() {
+		Set<PlPredicate> result = super.getPredicates();
 		for(LdoArgument a: this.lowerReferenceArguments)
 			result.add(a.getPredicate());
 		for(LdoArgument a: this.upperReferenceArguments)

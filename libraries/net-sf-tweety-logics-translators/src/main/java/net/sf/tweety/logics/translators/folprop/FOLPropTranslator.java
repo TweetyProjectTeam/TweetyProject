@@ -30,7 +30,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
@@ -103,7 +103,7 @@ public class FOLPropTranslator extends Translator {
 				this.translateAssociative(conjunction, net.sf.tweety.logics.pl.syntax.Conjunction.class);
 	}
 	
-	public FolFormula toFOL(PropositionalFormula propFormula) {
+	public FolFormula toFOL(PlFormula propFormula) {
 		if(propFormula instanceof Tautology) {
 			return new net.sf.tweety.logics.fol.syntax.Tautology();
 		}
@@ -129,7 +129,7 @@ public class FOLPropTranslator extends Translator {
 		return null;
 	}
 	
-	public PropositionalFormula toPropositional(FolFormula folFormula) {
+	public PlFormula toPropositional(FolFormula folFormula) {
 		if(folFormula instanceof net.sf.tweety.logics.fol.syntax.Contradiction) {
 			return new Contradiction();
 		}

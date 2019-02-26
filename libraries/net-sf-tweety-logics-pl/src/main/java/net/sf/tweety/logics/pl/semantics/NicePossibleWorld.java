@@ -30,7 +30,7 @@ import net.sf.tweety.commons.InterpretationSet;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Wrapper for the PossibleWorld providing better representation mechanisms, it knows all
@@ -44,7 +44,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * Internally it uses the smaller and therefore faster implementation of PossibleWorld for satisfication test
  * @author Tim Janus
  */
-public class NicePossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PropositionalFormula> implements Comparator<Pair<Proposition, Boolean>> {
+public class NicePossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PlFormula> implements Comparator<Pair<Proposition, Boolean>> {
 	
 	/** 
 	 * Implementation of possible world with a small memory print and 
@@ -187,7 +187,7 @@ public class NicePossibleWorld extends InterpretationSet<Proposition,PlBeliefSet
 	}
 
 	@Override
-	public boolean satisfies(PropositionalFormula formula) throws IllegalArgumentException {
+	public boolean satisfies(PlFormula formula) throws IllegalArgumentException {
 		return world.satisfies(formula);
 	}
 

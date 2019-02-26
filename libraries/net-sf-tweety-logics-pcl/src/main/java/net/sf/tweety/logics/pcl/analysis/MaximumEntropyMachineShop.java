@@ -55,7 +55,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 		// Determine unique values mu/nu that represent minimal adjustments for
 		// restoring consistency
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
 		int i = 0;
 		Term normConstraint = null;
@@ -92,8 +92,8 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 					}
 				rightSide = new FloatConstant(c.getProbability().getValue()).add(mu).minus(nu);
 			}else{				
-				PropositionalFormula body = c.getPremise().iterator().next();
-				PropositionalFormula head_and_body = c.getConclusion().combineWithAnd(body);
+				PlFormula body = c.getPremise().iterator().next();
+				PlFormula head_and_body = c.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

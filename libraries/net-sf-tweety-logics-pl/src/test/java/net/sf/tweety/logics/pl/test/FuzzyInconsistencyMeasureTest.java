@@ -29,7 +29,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.analysis.FuzzyInconsistencyMeasure;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.func.fuzzy.MinimumNorm;
 import net.sf.tweety.math.func.fuzzy.ProductNorm;
 import net.sf.tweety.math.opt.Solver;
@@ -48,8 +48,8 @@ public class FuzzyInconsistencyMeasureTest {
 				
 		PlParser parser = new PlParser();
 		PlBeliefSet bs = new PlBeliefSet();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
 		
 		FuzzyInconsistencyMeasure mes_min = new FuzzyInconsistencyMeasure(new MinimumNorm());
 		FuzzyInconsistencyMeasure mes_prod = new FuzzyInconsistencyMeasure(new ProductNorm());

@@ -29,7 +29,7 @@ import net.sf.tweety.agents.Perceivable;
 import net.sf.tweety.agents.dialogues.DialogueTrace;
 import net.sf.tweety.agents.dialogues.ExecutableFormulaSet;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class models the environment for agents in a game of deductive
@@ -42,7 +42,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 public class DeductiveEnvironment implements Environment, Perceivable {
 
 	/** The current dialogue trace. */
-	private DialogueTrace<PropositionalFormula,Collection<PropositionalFormula>> trace;
+	private DialogueTrace<PlFormula,Collection<PlFormula>> trace;
 	/** The universal propositional theory used for argumentation. */
 	//private PlBeliefSet universalTheory;
 	
@@ -51,7 +51,7 @@ public class DeductiveEnvironment implements Environment, Perceivable {
 	 * @param universalTheory the universal propositional theory used for argumentation.
 	 */
 	public DeductiveEnvironment(PlBeliefSet universalTheory){
-		this.trace = new DialogueTrace<PropositionalFormula,Collection<PropositionalFormula>>();
+		this.trace = new DialogueTrace<PlFormula,Collection<PlFormula>>();
 		//this.universalTheory = universalTheory;
 	}
 	
@@ -96,7 +96,7 @@ public class DeductiveEnvironment implements Environment, Perceivable {
 	 * Returns the current dialogue trace.
 	 * @return the current dialogue trace.
 	 */
-	public DialogueTrace<PropositionalFormula,Collection<PropositionalFormula>> getDialogueTrace(){
+	public DialogueTrace<PlFormula,Collection<PlFormula>> getDialogueTrace(){
 		return this.trace;
 	}
 	
@@ -104,7 +104,7 @@ public class DeductiveEnvironment implements Environment, Perceivable {
 	 * @see net.sf.tweety.agents.Environment#reset()
 	 */
 	public boolean reset(){
-		this.trace = new DialogueTrace<PropositionalFormula,Collection<PropositionalFormula>>();
+		this.trace = new DialogueTrace<PlFormula,Collection<PlFormula>>();
 		return true;
 	}
 }

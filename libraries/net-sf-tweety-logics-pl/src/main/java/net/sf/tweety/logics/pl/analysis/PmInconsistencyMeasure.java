@@ -26,8 +26,8 @@ import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This class implements the inconsistency measure I_{P_m} proposed in 
@@ -39,15 +39,15 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class PmInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula>{
+public class PmInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlFormula>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(Collection<PropositionalFormula> formulas) {
-		PropositionalSignature sig = new PropositionalSignature();
-		for(PropositionalFormula f: formulas)
+	public Double inconsistencyMeasure(Collection<PlFormula> formulas) {
+		PlSignature sig = new PlSignature();
+		for(PlFormula f: formulas)
 			sig.addSignature(f.getSignature());
 		double result = 0;
 		for(Proposition x: sig){
@@ -62,16 +62,16 @@ public class PmInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Propos
 	 * @param formulas a set of formulas (the knowledge base)
 	 * @return the number of minimal proofs of f in formulas.
 	 */
-	private int getNumOfMinmalProofs(PropositionalFormula f, Collection<PropositionalFormula> formulas){
+	private int getNumOfMinmalProofs(PlFormula f, Collection<PlFormula> formulas){
 		// we use Proposition 1 of [Jabbour, Raddaoui. Measuring Inconsistency Through Minimal Proofs. ECSQARU 2013] and
 		// compute minimal inconsistent subsets of formulas\cup\{\neg f\} in order to extract minimal proofs.
-		AbstractMusEnumerator<PropositionalFormula> musEnum = PlMusEnumerator.getDefaultEnumerator();
-		Collection<PropositionalFormula> extKb = new HashSet<PropositionalFormula>(formulas);
-		PropositionalFormula negF = (PropositionalFormula) f.complement(); 
+		AbstractMusEnumerator<PlFormula> musEnum = PlMusEnumerator.getDefaultEnumerator();
+		Collection<PlFormula> extKb = new HashSet<PlFormula>(formulas);
+		PlFormula negF = (PlFormula) f.complement(); 
 		extKb.add(negF);
-		Collection<Collection<PropositionalFormula>> muses = musEnum.minimalInconsistentSubsets(extKb);
+		Collection<Collection<PlFormula>> muses = musEnum.minimalInconsistentSubsets(extKb);
 		int result = 0;
-		for(Collection<PropositionalFormula> mus: muses){
+		for(Collection<PlFormula> mus: muses){
 			if(mus.contains(negF)) result++;
 			else
 				if(mus.size() == 1 && mus.iterator().next().getLiterals().contains(f)) result++;

@@ -30,7 +30,7 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
@@ -41,7 +41,7 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * 
  * @author Matthias Thimm
  */
-public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PropositionalFormula>{
+public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 
 	/** The three truth values. */
 	public enum TruthValue {
@@ -105,7 +105,7 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,Propositiona
 	 * @see net.sf.tweety.Interpretation#satisfies(net.sf.tweety.Formula)
 	 */
 	@Override
-	public boolean satisfies(PropositionalFormula formula) throws IllegalArgumentException {
+	public boolean satisfies(PlFormula formula) throws IllegalArgumentException {
 		return this.satisfies3VL(formula).getClassical();
 	}
 
@@ -115,7 +115,7 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,Propositiona
 	 * @return the 3-valued truth value of the formula.
 	 * @throws IllegalArgumentException
 	 */
-	public TruthValue satisfies3VL(PropositionalFormula formula) throws IllegalArgumentException {
+	public TruthValue satisfies3VL(PlFormula formula) throws IllegalArgumentException {
 		if(formula instanceof Contradiction)
 			return TruthValue.FALSE;
 		if(formula instanceof Tautology)
@@ -127,14 +127,14 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,Propositiona
 		if(formula instanceof Conjunction){
 			Conjunction c = (Conjunction) formula;
 			TruthValue val = TruthValue.TRUE;
-			for(PropositionalFormula f : c)
+			for(PlFormula f : c)
 				val = val.and(this.satisfies3VL(f));
 			return val;
 		}
 		if(formula instanceof Disjunction){
 			Disjunction d = (Disjunction) formula;
 			TruthValue val = TruthValue.FALSE;
-			for(PropositionalFormula f: d)
+			for(PlFormula f: d)
 				val = val.or(this.satisfies3VL(f));
 			return val;
 		}
@@ -172,7 +172,7 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,Propositiona
 	 */
 	@Override
 	public boolean satisfies(PlBeliefSet beliefBase) throws IllegalArgumentException {
-		for(PropositionalFormula f: beliefBase)
+		for(PlFormula f: beliefBase)
 			if(!this.satisfies(f))
 				return false;
 		return true;

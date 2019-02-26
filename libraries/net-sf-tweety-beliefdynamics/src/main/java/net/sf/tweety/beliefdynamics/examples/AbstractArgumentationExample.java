@@ -32,8 +32,8 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Example code for applying belief dynamics on abstract argumentation frameworks.
@@ -63,20 +63,20 @@ public class AbstractArgumentationExample {
 		PlBeliefSet beliefSet = reasoner.getPropositionalCharacterisation(theory); 
 		System.out.println(beliefSet);
 		System.out.println();
-		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet.getSignature())){
+		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature())){
 			if(w.satisfies(beliefSet))
 				System.out.println(w);
 		}
 		
-		MultipleBaseRevisionOperator<PropositionalFormula> revise = new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
-				new KernelContractionOperator<PropositionalFormula>(new RandomIncisionFunction<PropositionalFormula>(), new SimpleReasoner()),
-				new DefaultMultipleBaseExpansionOperator<PropositionalFormula>());
+		MultipleBaseRevisionOperator<PlFormula> revise = new LeviMultipleBaseRevisionOperator<PlFormula>(
+				new KernelContractionOperator<PlFormula>(new RandomIncisionFunction<PlFormula>(), new SimpleReasoner()),
+				new DefaultMultipleBaseExpansionOperator<PlFormula>());
 		
 		PlBeliefSet beliefSet2 = new PlBeliefSet(revise.revise(beliefSet, new Proposition("in_a")));
 		
 		System.out.println(beliefSet2);
 		System.out.println();
-		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet2.getSignature())){
+		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet2.getSignature())){
 			if(w.satisfies(beliefSet2))
 				System.out.println(w);
 		}

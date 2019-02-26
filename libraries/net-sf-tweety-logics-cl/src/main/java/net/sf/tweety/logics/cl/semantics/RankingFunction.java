@@ -53,7 +53,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	 * The signature of the language this ranking function
 	 * is defined on.
 	 */
-	private PropositionalSignature signature;
+	private PlSignature signature;
 	
 	/**
 	 * Creates a new ranking function mapping each
@@ -61,7 +61,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	 * @param signature the signature of the language this ranking function
 	 * is defined on.
 	 */
-	public RankingFunction(PropositionalSignature signature){
+	public RankingFunction(PlSignature signature){
 		this.signature = signature;		
 		this.ranks = new HashMap<PossibleWorld,Integer>();
 		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds(signature))
@@ -99,7 +99,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	public boolean satisfies(Conditional formula) throws IllegalArgumentException{
 		Conditional c = (Conditional) formula;
 		Integer rankPremiseAndConclusion = this.rank(c.getConclusion().combineWithAnd(c.getPremise().iterator().next()));
-		Integer rankPremiseAndNotConclusion = this.rank((PropositionalFormula)c.getConclusion().complement().combineWithAnd(c.getPremise().iterator().next()));
+		Integer rankPremiseAndNotConclusion = this.rank((PlFormula)c.getConclusion().complement().combineWithAnd(c.getPremise().iterator().next()));
 		return rankPremiseAndConclusion < rankPremiseAndNotConclusion;		
 	}
 	
@@ -121,7 +121,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	 * the given set of formulas to RankingFunction.INFINITY.
 	 * @param formulas a set of first-order formulas.
 	 */
-	public void forceStrictness(Set<PropositionalFormula> formulas){
+	public void forceStrictness(Set<PlFormula> formulas){
 		for(PossibleWorld w: this.ranks.keySet())
 			if(!w.satisfies(formulas))
 				this.setRank(w, RankingFunction.INFINITY);
@@ -137,7 +137,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	 * @throws IllegalArgumentException if the languages of the formula does not correspond to the language of the
 	 * 		interpretations this ranking function is defined on.
 	 */
-	public Integer rank(PropositionalFormula formula) throws IllegalArgumentException{
+	public Integer rank(PlFormula formula) throws IllegalArgumentException{
 		Integer rank = RankingFunction.INFINITY;
 		for(PossibleWorld i: this.ranks.keySet())
 			if(i.satisfies(formula))
@@ -198,7 +198,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	 * Returns the signature of the first-order language this ranking function
 	 * is defined on.
 	 */
-	public PropositionalSignature getSignature(){
+	public PlSignature getSignature(){
 		return this.signature;
 	}
 	
@@ -210,7 +210,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	 * @return "true" if the given possible world verifies the given conditional. 
 	 */
 	public static boolean verifies(PossibleWorld w, Conditional c){
-		PropositionalFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion());
+		PlFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion());
 		return w.satisfies(formula);
 	}
 	
@@ -222,7 +222,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	 * @return "true" if the given possible world falsifies the given conditional. 
 	 */
 	public static boolean falsifies(PossibleWorld w, Conditional c){
-		PropositionalFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion().complement());
+		PlFormula formula = c.getPremise().iterator().next().combineWithAnd(c.getConclusion().complement());
 		return w.satisfies(formula);
 	}
 	

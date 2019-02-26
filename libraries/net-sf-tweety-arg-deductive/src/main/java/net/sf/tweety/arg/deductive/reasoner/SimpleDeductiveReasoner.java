@@ -31,7 +31,7 @@ import net.sf.tweety.graphs.DirectedEdge;
 import net.sf.tweety.graphs.Edge;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class implements a brute force approach to deductive argumentation.
@@ -56,7 +56,7 @@ public class SimpleDeductiveReasoner extends AbstractDeductiveArgumentationReaso
 	 */
 	@Override
 	protected ArgumentTree getArgumentTree(DeductiveKnowledgeBase kb, DeductiveArgument arg) {
-		return this.getArgumentTree(kb, new DeductiveArgumentNode(arg), new HashSet<PropositionalFormula>());
+		return this.getArgumentTree(kb, new DeductiveArgumentNode(arg), new HashSet<PlFormula>());
 	}
 	
 	/**
@@ -67,15 +67,15 @@ public class SimpleDeductiveReasoner extends AbstractDeductiveArgumentationReaso
 	 * @param support the union of the supports of all previously encountered arguments
 	 * @return the argument tree for the argument
 	 */
-	private ArgumentTree getArgumentTree(DeductiveKnowledgeBase kb, DeductiveArgumentNode argNode, Set<PropositionalFormula> support) {
+	private ArgumentTree getArgumentTree(DeductiveKnowledgeBase kb, DeductiveArgumentNode argNode, Set<PlFormula> support) {
 		support.addAll(argNode.getSupport());	 
 		// 1.) collect all possible undercuts 
-		PropositionalFormula claim = new Negation(new Conjunction(argNode.getSupport()));
+		PlFormula claim = new Negation(new Conjunction(argNode.getSupport()));
 		Set<DeductiveArgument> possibleUndercuts = kb.getDeductiveArguments(claim);
 		// 2.) remove all undercuts that violate non-inclusion in previous supports
 		Set<DeductiveArgument> undercuts = new HashSet<DeductiveArgument>();
 		for(DeductiveArgument undercut: possibleUndercuts){
-			Set<PropositionalFormula> sup = new HashSet<PropositionalFormula>(undercut.getSupport());
+			Set<PlFormula> sup = new HashSet<PlFormula>(undercut.getSupport());
 			sup.removeAll(support);
 			if(!sup.isEmpty())
 				undercuts.add(undercut);
@@ -85,7 +85,7 @@ public class SimpleDeductiveReasoner extends AbstractDeductiveArgumentationReaso
 		argTree.add(argNode);
 		for(DeductiveArgument undercut: undercuts){
 			DeductiveArgumentNode undercutNode = new DeductiveArgumentNode(undercut);
-			ArgumentTree subTree = this.getArgumentTree(kb, undercutNode, new HashSet<PropositionalFormula>(support));
+			ArgumentTree subTree = this.getArgumentTree(kb, undercutNode, new HashSet<PlFormula>(support));
 			for(DeductiveArgumentNode node: subTree)
 				argTree.add(node);
 			for(Edge<DeductiveArgumentNode> edge: subTree.getEdges())

@@ -24,7 +24,7 @@ import java.util.List;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "safe-formula independence" postulate for inconsistency measures: Removing a safe
@@ -46,11 +46,11 @@ public class ImSafeFormulaIndependence extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		if(kb.isEmpty())
 			return false;
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PropositionalFormula safeFormula = orderedKB.get(0);
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PlFormula safeFormula = orderedKB.get(0);
 		if (!SatSolver.getDefaultSolver().isConsistent(safeFormula)) 
 			return false;
 		if (safeFormula.getSignature().isOverlappingSignature(((PlBeliefSet)kb).getSignature()))
@@ -62,13 +62,13 @@ public class ImSafeFormulaIndependence extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PropositionalFormula safeFormula = orderedKB.get(0);
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PlFormula safeFormula = orderedKB.get(0);
 		kb2.add(safeFormula);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		return (inconsistency1 == inconsistency2);

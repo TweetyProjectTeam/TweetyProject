@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class ArgumentativeTransformationFunction implements MultipleTransformationFunction<PropositionalFormula> {
+public class ArgumentativeTransformationFunction implements MultipleTransformationFunction<PlFormula> {
 
 	/**
 	 * The categorizer used by this transformation function.
@@ -72,12 +72,12 @@ public class ArgumentativeTransformationFunction implements MultipleTransformati
 	 * @see net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunction#transform(java.util.Collection)
 	 */
 	@Override
-	public Collection<PropositionalFormula> transform(Collection<PropositionalFormula> formulas) {
-		Collection<PropositionalFormula> transformedSet = new HashSet<PropositionalFormula>();
+	public Collection<PlFormula> transform(Collection<PlFormula> formulas) {
+		Collection<PlFormula> transformedSet = new HashSet<PlFormula>();
 		DeductiveKnowledgeBase joinedBeliefSet = new DeductiveKnowledgeBase(this.beliefSet);
 		joinedBeliefSet.addAll(formulas);
 		CompilationReasoner reasoner = new CompilationReasoner(this.categorizer, this.accumulator);
-		for(PropositionalFormula f: formulas){
+		for(PlFormula f: formulas){
 			Double result = reasoner.query(joinedBeliefSet,f);
 			if(this.isSkeptical){
 				if(result > 0)

@@ -46,7 +46,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#query(net.sf.tweety.logics.pcl.syntax.PclBeliefSet, net.sf.tweety.logics.pl.syntax.PropositionalFormula)
 	 */
 	@Override
-	public Double query(PclBeliefSet beliefbase, PropositionalFormula formula) {
+	public Double query(PclBeliefSet beliefbase, PlFormula formula) {
 		return this.getModel(beliefbase).probability(formula).getValue();
 	}
 
@@ -65,7 +65,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 	 */
 	@Override
 	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase) {
-		return this.getModel(beliefbase, (PropositionalSignature) beliefbase.getSignature());
+		return this.getModel(beliefbase, (PlSignature) beliefbase.getSignature());
 	}	
 	
 	/**
@@ -74,7 +74,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 	 * @param signature the signature
 	 * @return the ME-distribution this reasoner bases on.
 	 */
-	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet bs,PropositionalSignature signature) {
+	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet bs,PlSignature signature) {
 		// if belief set is inconsistent no reasoning is possible
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
 		if(!tester.isConsistent(bs))
@@ -84,7 +84,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 				
 		// construct optimization problem
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature) signature);
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) signature);
 		Map<PossibleWorld,Variable> vars = new HashMap<PossibleWorld,Variable>();
 		int cnt = 0;
 		Term normConstraint = null;
@@ -110,8 +110,8 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 					}
 				rightSide = new FloatConstant(pc.getProbability().getValue());
 			}else{				
-				PropositionalFormula body = pc.getPremise().iterator().next();
-				PropositionalFormula head_and_body = pc.getConclusion().combineWithAnd(body);
+				PlFormula body = pc.getPremise().iterator().next();
+				PlFormula head_and_body = pc.getConclusion().combineWithAnd(body);
 				for(PossibleWorld w: worlds){
 					if(w.satisfies(head_and_body)){
 						if(leftSide == null)

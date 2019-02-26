@@ -24,7 +24,7 @@ import java.util.List;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "super-additivity" postulate for inconsistency measures: The sum of the 
@@ -45,13 +45,13 @@ public class ImSuperAdditivity extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		if (kb.isEmpty())
 			return false;
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		List<PropositionalFormula> left = new ArrayList<PropositionalFormula>(orderedKB.subList(0,orderedKB.size()/2));
-		List<PropositionalFormula> right = new ArrayList<PropositionalFormula>(orderedKB.subList(orderedKB.size()/2,orderedKB.size()));
-		for (PropositionalFormula f : left)
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		List<PlFormula> left = new ArrayList<PlFormula>(orderedKB.subList(0,orderedKB.size()/2));
+		List<PlFormula> right = new ArrayList<PlFormula>(orderedKB.subList(orderedKB.size()/2,orderedKB.size()));
+		for (PlFormula f : left)
 			if (right.contains(f))
 				return false;
 		return true;
@@ -62,12 +62,12 @@ public class ImSuperAdditivity extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.ImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		List<PropositionalFormula> kb1 = new ArrayList<PropositionalFormula>(orderedKB.subList(0,orderedKB.size()/2));
-		List<PropositionalFormula> kb2 = new ArrayList<PropositionalFormula>(orderedKB.subList(orderedKB.size()/2,orderedKB.size()));
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		List<PlFormula> kb1 = new ArrayList<PlFormula>(orderedKB.subList(0,orderedKB.size()/2));
+		List<PlFormula> kb2 = new ArrayList<PlFormula>(orderedKB.subList(orderedKB.size()/2,orderedKB.size()));
 		double inconsistency1 = ev.inconsistencyMeasure(kb1);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		kb1.addAll(kb2);

@@ -21,7 +21,7 @@ package net.sf.tweety.logics.pl.syntax;
 import net.sf.tweety.logics.commons.error.LanguageException.LanguageExceptionReason;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.Sort;
-import net.sf.tweety.logics.pl.error.PropositionalException;
+import net.sf.tweety.logics.pl.error.PlException;
 
 /**
  * A specialized predicate for propositional logic that only allows an identifier
@@ -29,10 +29,10 @@ import net.sf.tweety.logics.pl.error.PropositionalException;
  * 
  * @author Tim Janus
  */
-public class PropositionalPredicate extends Predicate {
+public class PlPredicate extends Predicate {
 	
 	/** Default-Ctor for dynamic instantiation */
-	public PropositionalPredicate() {
+	public PlPredicate() {
 		this("");
 	}
 	
@@ -41,18 +41,18 @@ public class PropositionalPredicate extends Predicate {
 	 * name.
 	 * @param name	The name of the predicate
 	 */
-	public PropositionalPredicate(String name) {
+	public PlPredicate(String name) {
 		super(name, 0);
 	}
 	
 	@Override
 	public void addArgumentType(Sort argType) {
-		throw new PropositionalException(LanguageExceptionReason.LER_ILLEGAL_PREDICATE,
+		throw new PlException(LanguageExceptionReason.LER_ILLEGAL_PREDICATE,
 				"The predicates must not have any arguments.");
 	}
 	
 	@Override
-	public PropositionalPredicate clone() {
-		return new PropositionalPredicate(this.getName());
+	public PlPredicate clone() {
+		return new PlPredicate(this.getName());
 	}
 }

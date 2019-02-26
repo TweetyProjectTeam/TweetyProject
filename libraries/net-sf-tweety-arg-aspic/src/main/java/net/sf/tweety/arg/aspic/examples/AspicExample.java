@@ -26,7 +26,7 @@ import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * ASPIC example code.
@@ -41,10 +41,10 @@ public class AspicExample {
 		Proposition c = new Proposition("c");
 		Proposition d = new Proposition("d");
 		
-		AspicArgumentationTheory<PropositionalFormula> t = new AspicArgumentationTheory<>(new PlFormulaGenerator());
+		AspicArgumentationTheory<PlFormula> t = new AspicArgumentationTheory<>(new PlFormulaGenerator());
 		t.setRuleFormulaGenerator(new PlFormulaGenerator());
 		
-		DefeasibleInferenceRule<PropositionalFormula> r1 = new DefeasibleInferenceRule<>();
+		DefeasibleInferenceRule<PlFormula> r1 = new DefeasibleInferenceRule<>();
 		r1.setConclusion(a);
 		r1.addPremise(b);
 		r1.addPremise(c);

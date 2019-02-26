@@ -27,19 +27,19 @@ import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.commons.util.IncreasingSubsetIterator;
 import net.sf.tweety.commons.util.SubsetIterator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Abstract class for propositional logic reasoners.
  * @author Matthias Thimm
  */
-public abstract class AbstractPropositionalLogicReasoner implements QualitativeReasoner<PlBeliefSet,PropositionalFormula>, KernelProvider<PropositionalFormula>{
+public abstract class AbstractPlReasoner implements QualitativeReasoner<PlBeliefSet,PlFormula>, KernelProvider<PlFormula>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public abstract Boolean query(PlBeliefSet beliefbase, PropositionalFormula formula);
+	public abstract Boolean query(PlBeliefSet beliefbase, PlFormula formula);
 
 	/**
 	 * Checks whether the first formula entails the second.
@@ -47,7 +47,7 @@ public abstract class AbstractPropositionalLogicReasoner implements QualitativeR
 	 * @param formula a formula
 	 * @return true if the second formula is entailed be the first formula.
 	 */
-	public boolean query(PropositionalFormula formula, PropositionalFormula formula2) {
+	public boolean query(PlFormula formula, PlFormula formula2) {
 		PlBeliefSet s = new PlBeliefSet();
 		s.add(formula);
 		return this.query(s,formula2);
@@ -59,7 +59,7 @@ public abstract class AbstractPropositionalLogicReasoner implements QualitativeR
 	 * @param p2
 	 * @return
 	 */
-	public boolean isEquivalent(PropositionalFormula p1, PropositionalFormula p2) {
+	public boolean isEquivalent(PlFormula p1, PlFormula p2) {
 		PlBeliefSet s1 = new PlBeliefSet();
 		s1.add(p1);
 		PlBeliefSet s2 = new PlBeliefSet();
@@ -70,18 +70,18 @@ public abstract class AbstractPropositionalLogicReasoner implements QualitativeR
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.KernelProvider#getKernels(java.util.Collection, net.sf.tweety.commons.Formula)
 	 */
-	public Collection<Collection<PropositionalFormula>> getKernels(Collection<PropositionalFormula> formulas, PropositionalFormula formula){
-		Collection<Collection<PropositionalFormula>> kernels = new HashSet<Collection<PropositionalFormula>>();
+	public Collection<Collection<PlFormula>> getKernels(Collection<PlFormula> formulas, PlFormula formula){
+		Collection<Collection<PlFormula>> kernels = new HashSet<Collection<PlFormula>>();
 		if(!this.query(new PlBeliefSet(formulas), formula)) return kernels;
-		SubsetIterator<PropositionalFormula> it = new IncreasingSubsetIterator<PropositionalFormula>(new HashSet<PropositionalFormula>(formulas));
+		SubsetIterator<PlFormula> it = new IncreasingSubsetIterator<PlFormula>(new HashSet<PlFormula>(formulas));
 		boolean superSetOfKernel;
 		//double i=0;
 		//double pow = Math.pow(2, formulas.size());
 		while(it.hasNext()){			
-			Set<PropositionalFormula> candidate = it.next();
+			Set<PlFormula> candidate = it.next();
 			//System.out.println(++i + " - " + (i/pow * 100) + "% - " + kernels + " - " + candidate.size());
 			superSetOfKernel = false;
-			for(Collection<PropositionalFormula> kernel: kernels){
+			for(Collection<PlFormula> kernel: kernels){
 				if(candidate.containsAll(kernel)){
 					superSetOfKernel = true;
 					break;

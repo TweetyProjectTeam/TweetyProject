@@ -31,8 +31,8 @@ import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlPredicate;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
@@ -40,24 +40,24 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public class Conditional implements SimpleLogicalFormula, Rule<PropositionalFormula, PropositionalFormula> {
+public class Conditional implements SimpleLogicalFormula, Rule<PlFormula, PlFormula> {
 	
 	/**
 	 * The premise of this conditional. 
 	 */
-	private PropositionalFormula premise;
+	private PlFormula premise;
 	
 	/**
 	 * The conclusion of this conditional.
 	 */
-	private PropositionalFormula conclusion;
+	private PlFormula conclusion;
 	
 	/**
 	 * Creates a new conditional with a tautological premise
 	 * and given conclusion.
 	 * @param conclusion the conclusion (a formula) of this conditional.
 	 */
-	public Conditional(PropositionalFormula conclusion){
+	public Conditional(PlFormula conclusion){
 		this.premise = new Tautology();
 		this.conclusion = conclusion;
 	}
@@ -68,20 +68,20 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 	 * @param premise the premise (a formula) of this conditional.
 	 * @param conclusion the conclusion (a formula) of this conditional.
 	 */
-	public Conditional(PropositionalFormula premise, PropositionalFormula conclusion){
+	public Conditional(PlFormula premise, PlFormula conclusion){
 		this.premise = premise;
 		this.conclusion = conclusion;
 	}
 	
 	@Override
-	public Collection<PropositionalFormula> getPremise(){
-		HashSet<PropositionalFormula> premiseSet = new HashSet<PropositionalFormula>();
+	public Collection<PlFormula> getPremise(){
+		HashSet<PlFormula> premiseSet = new HashSet<PlFormula>();
 		premiseSet.add(this.premise);
 		return premiseSet;
 	}
 	
 	@Override
-	public PropositionalFormula getConclusion(){
+	public PlFormula getConclusion(){
 		return this.conclusion;
 	}
 		
@@ -129,7 +129,7 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 	 * @see net.sf.tweety.kr.ClassicalFormula#complement()
 	 */
 	public Conditional complement(){
-		return new Conditional(this.premise,(PropositionalFormula)this.conclusion.complement());
+		return new Conditional(this.premise,(PlFormula)this.conclusion.complement());
 	}
 
 	/* (non-Javadoc)
@@ -180,7 +180,7 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 
 	@Override
 	public Set<? extends Predicate> getPredicates() {
-		Set<PropositionalPredicate> reval = new HashSet<PropositionalPredicate>();
+		Set<PlPredicate> reval = new HashSet<PlPredicate>();
 		reval.addAll(premise.getPredicates());
 		reval.addAll(conclusion.getPredicates());
 		return reval;
@@ -198,7 +198,7 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 
 	@Override
 	public Class<? extends Predicate> getPredicateCls() {
-		return PropositionalPredicate.class;
+		return PlPredicate.class;
 	}
 
 	@Override
@@ -207,20 +207,20 @@ public class Conditional implements SimpleLogicalFormula, Rule<PropositionalForm
 	}
 
 	@Override
-	public void setConclusion(PropositionalFormula conclusion) {
+	public void setConclusion(PlFormula conclusion) {
 		if(conclusion == null)
 			throw new IllegalArgumentException();
 		this.conclusion = conclusion;
 	}
 
 	@Override
-	public void addPremise(PropositionalFormula premise) {
+	public void addPremise(PlFormula premise) {
 		this.premise = premise.combineWithAnd(premise);
 	}
 
 	@Override
-	public void addPremises(Collection<? extends PropositionalFormula> premises) {
-		for(PropositionalFormula pf : premises) {
+	public void addPremises(Collection<? extends PlFormula> premises) {
+		for(PlFormula pf : premises) {
 			this.premise = premise.combineWithAnd(pf);
 		}
 	}

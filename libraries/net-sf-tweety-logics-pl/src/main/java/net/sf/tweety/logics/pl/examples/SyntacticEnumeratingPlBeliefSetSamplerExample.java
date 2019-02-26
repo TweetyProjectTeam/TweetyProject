@@ -21,7 +21,7 @@ package net.sf.tweety.logics.pl.examples;
 import java.io.File;
 import java.io.IOException;
 
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.SyntacticEnumeratingIterator;
 
 public class SyntacticEnumeratingPlBeliefSetSamplerExample {
@@ -29,7 +29,7 @@ public class SyntacticEnumeratingPlBeliefSetSamplerExample {
 	public static void main(String[] args) throws IOException{
 		// generates all syntactic variations of propositional belief sets 
 		//  each formula has maximal length 4, and 4 propositions		
-		PropositionalSignature sig = new PropositionalSignature(4);
+		PlSignature sig = new PlSignature(4);
 		SyntacticEnumeratingIterator s = new SyntacticEnumeratingIterator(sig,4, new File("/Users/mthimm/Desktop/plfiles/"), false);
 		int i = 0;
 		while(true){

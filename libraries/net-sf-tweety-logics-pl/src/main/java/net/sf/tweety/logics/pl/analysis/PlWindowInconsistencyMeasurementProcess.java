@@ -19,7 +19,7 @@
 package net.sf.tweety.logics.pl.analysis;
 
 import net.sf.tweety.logics.commons.analysis.streams.WindowInconsistencyMeasurementProcess;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * A window inconsistency measurement process for propositional logic 
@@ -28,5 +28,5 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  * 
  * @author Matthias Thimm
  */
-public class PlWindowInconsistencyMeasurementProcess extends WindowInconsistencyMeasurementProcess<PropositionalFormula>{
+public class PlWindowInconsistencyMeasurementProcess extends WindowInconsistencyMeasurementProcess<PlFormula>{
 }

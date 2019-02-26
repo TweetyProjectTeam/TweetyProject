@@ -28,21 +28,21 @@ import net.sf.tweety.commons.SetSignature;
  * propositional language.
  * @author Matthias Thimm, Sebastian Homann
  */
-public class PropositionalSignature extends SetSignature<Proposition> {
+public class PlSignature extends SetSignature<Proposition> {
 	
 	/**
 	 * Creates a new propositional signature with the given set
 	 * of propositions.
 	 * @param propositions a set of propositions.
 	 */
-	public PropositionalSignature(Collection<? extends Proposition> propositions){
+	public PlSignature(Collection<? extends Proposition> propositions){
 		super(propositions);
 	}
 	
 	/**
 	 * Creates a new (empty) propositional signature.
 	 */
-	public PropositionalSignature(){
+	public PlSignature(){
 		super();
 	}
 	
@@ -51,7 +51,7 @@ public class PropositionalSignature extends SetSignature<Proposition> {
 	 * of propositions (named "A0"..."Anumvars".
 	 * @param numvars the number of variables.
 	 */
-	public PropositionalSignature(int numvars){
+	public PlSignature(int numvars){
 		super();
 		for(int i = 0; i < numvars; i++)
 			this.add(new Proposition("A" + i));
@@ -61,7 +61,7 @@ public class PropositionalSignature extends SetSignature<Proposition> {
 	 * Adds the elements of another signature to the current one.
 	 * @param other a propositional signature.
 	 */
-	public void add(PropositionalSignature other) {
+	public void add(PlSignature other) {
 		for(Proposition p : other) {
 			this.add(p);
 		}
@@ -72,9 +72,9 @@ public class PropositionalSignature extends SetSignature<Proposition> {
 	 * @param formulas a set of propositional formulas
 	 * @return the signature of the formulas.
 	 */
-	public static PropositionalSignature getSignature(Collection<? extends PropositionalFormula> formulas) {
-		PropositionalSignature signature = new PropositionalSignature();
-		for(PropositionalFormula f: formulas)
+	public static PlSignature getSignature(Collection<? extends PlFormula> formulas) {
+		PlSignature signature = new PlSignature();
+		for(PlFormula f: formulas)
 			signature.addAll(f.getAtoms());
 		return signature;
 	}

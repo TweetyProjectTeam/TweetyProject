@@ -25,7 +25,7 @@ import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.reasoner.SatReasoner;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "dominance" postulate for inconsistency measures: Substituting a
@@ -49,12 +49,12 @@ public class ImDominance extends ImPostulate {
 	}
 
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		if (kb.isEmpty()) 
 			return false;
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PropositionalFormula strongerFormula = orderedKB.get(0);
-		PropositionalFormula weakerFormula = orderedKB.get(1);
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PlFormula strongerFormula = orderedKB.get(0);
+		PlFormula weakerFormula = orderedKB.get(1);
 		if (!SatSolver.getDefaultSolver().isConsistent(strongerFormula)) 
 			return false;
 		if (!new SatReasoner().query(strongerFormula, weakerFormula)) 
@@ -63,15 +63,15 @@ public class ImDominance extends ImPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb,
-			BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb,
+			BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PropositionalFormula strongerFormula = orderedKB.get(0);
-		PropositionalFormula weakerFormula = orderedKB.get(1);
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PlFormula strongerFormula = orderedKB.get(0);
+		PlFormula weakerFormula = orderedKB.get(1);
 		kb2.remove(strongerFormula);
 		kb2.add(weakerFormula);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);

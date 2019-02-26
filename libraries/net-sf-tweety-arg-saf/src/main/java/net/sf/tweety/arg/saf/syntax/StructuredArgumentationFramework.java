@@ -44,8 +44,8 @@ public class StructuredArgumentationFramework extends DungTheory{
 	 * @see net.sf.tweety.argumentation.dung.DungTheory#getSignature()
 	 */
 	@Override
-	public PropositionalSignature getSignature() {
-		PropositionalSignature sig = new PropositionalSignature();
+	public PlSignature getSignature() {
+		PlSignature sig = new PlSignature();
 		for(Formula a: this){
 			if(!(a instanceof BasicArgument))
 				throw new IllegalArgumentException("Unexpected type of class.");

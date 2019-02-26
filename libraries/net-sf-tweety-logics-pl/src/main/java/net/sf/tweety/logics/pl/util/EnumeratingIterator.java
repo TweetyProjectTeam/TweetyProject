@@ -27,8 +27,8 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This sampler enumerates all possible propositional belief bases of the given signature.
@@ -38,7 +38,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class EnumeratingIterator implements BeliefSetIterator<PropositionalFormula,PlBeliefSet> {
+public class EnumeratingIterator implements BeliefSetIterator<PlFormula,PlBeliefSet> {
 
 	/** The current length */
 	private int currentLength = -1;
@@ -51,13 +51,13 @@ public class EnumeratingIterator implements BeliefSetIterator<PropositionalFormu
 	/**
 	 * The used signature.
 	 */
-	private PropositionalSignature signature;
+	private PlSignature signature;
 	
 	/**
 	 * Creates a new sampler for the given signature
 	 * @param signature some signature
 	 */
-	public EnumeratingIterator(PropositionalSignature signature) {
+	public EnumeratingIterator(PlSignature signature) {
 		this.signature = signature;
 		this.currentLength = 0;
 		this.allWorlds = new LinkedList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds(this.signature));
@@ -82,12 +82,12 @@ public class EnumeratingIterator implements BeliefSetIterator<PropositionalFormu
 			this.indices = new BitSet(this.currentLength * this.allWorlds.size());
 		}
 		Proposition a = this.signature.iterator().next();
-		PropositionalFormula contr = a.combineWithAnd(new Negation(a));		
+		PlFormula contr = a.combineWithAnd(new Negation(a));		
 		PlBeliefSet result = new PlBeliefSet();
 		int size = this.allWorlds.size();		
 		for(int i = 0; i < this.currentLength; i++){
 			// we have to ensure that appearing formulas are not syntactically equivalent.
-			PropositionalFormula p = contr.combineWithAnd(new Proposition("XSA"+i));
+			PlFormula p = contr.combineWithAnd(new Proposition("XSA"+i));
 			for(int j = 0; j < size; j++){
 				if(this.indices.get(i*size + j))
 					p = p.combineWithOr(this.allWorlds.get(j).getCompleteConjunction(this.signature));				

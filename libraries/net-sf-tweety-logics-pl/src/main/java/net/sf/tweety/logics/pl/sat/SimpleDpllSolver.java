@@ -29,8 +29,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This class provides a simple reference implementation of  the DPLL (Davis–Putnam–Logemann–Loveland)
@@ -47,24 +47,24 @@ public class SimpleDpllSolver extends SatSolver {
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas) {
 		Collection<Disjunction> clauses = new HashSet<Disjunction>();
 		// check if we are working with CNF; if not, convert
-		for(PropositionalFormula f: formulas) {
+		for(PlFormula f: formulas) {
 			if(f.isClause())
 				clauses.add((Disjunction)f);
 			else {
 				f = f.toCnf();
-				for(PropositionalFormula c: ((Conjunction)f)) 
+				for(PlFormula c: ((Conjunction)f)) 
 					clauses.add((Disjunction)c);				
 			}
 		}
 		// we need some data structures
 		// keeps track of the literals which are already assigned a truth value
-		Stack<PropositionalFormula> sel_literals = new Stack<PropositionalFormula>();
+		Stack<PlFormula> sel_literals = new Stack<PlFormula>();
 		// keeps track of the atoms which have not assigned a truth value yet
 		Stack<Proposition> remaining_atoms = new Stack<Proposition>();
-		remaining_atoms.addAll(PropositionalSignature.getSignature(clauses));
+		remaining_atoms.addAll(PlSignature.getSignature(clauses));
 		// for each literal on the "sel_literals" stack, the next stack says whether
 		// this literal was selected to have its truth value (true),
 		// or derived using unit propagation (false)
@@ -81,8 +81,8 @@ public class SimpleDpllSolver extends SatSolver {
 					boolean isSatisfied = false;
 					boolean isContradiction = true;
 					boolean isUnit = false;
-					PropositionalFormula unitLiteral = null;
-					for(PropositionalFormula lit: clause) {
+					PlFormula unitLiteral = null;
+					for(PlFormula lit: clause) {
 						if(sel_literals.contains(lit)) {
 							isSatisfied = true;
 							isContradiction = false;
@@ -110,7 +110,7 @@ public class SimpleDpllSolver extends SatSolver {
 					if(isContradiction) {
 						// do backtracking
 						while(!sel_literals.isEmpty()) {
-							PropositionalFormula p = sel_literals.pop();
+							PlFormula p = sel_literals.pop();
 							if(p instanceof Negation) {
 								remaining_atoms.push((Proposition) ((Negation)p).getFormula());
 								sel_literals_selected.pop();
@@ -135,7 +135,7 @@ public class SimpleDpllSolver extends SatSolver {
 		}
 		// we found a witness
 		PossibleWorld w = new PossibleWorld();
-		for(PropositionalFormula p: sel_literals)
+		for(PlFormula p: sel_literals)
 			if(p instanceof Proposition)
 				w.add((Proposition)p);
 		return w;
@@ -145,7 +145,7 @@ public class SimpleDpllSolver extends SatSolver {
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#isSatisfiable(java.util.Collection)
 	 */
 	@Override
-	public boolean isSatisfiable(Collection<PropositionalFormula> formulas) {
+	public boolean isSatisfiable(Collection<PlFormula> formulas) {
 		return this.getWitness(formulas) != null;
 	}
 

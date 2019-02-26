@@ -63,7 +63,7 @@ public class Contradiction extends SpecialFormula{
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
 	 */
 	@Override
-	public Set<PossibleWorld> getModels(PropositionalSignature sig) {
+	public Set<PossibleWorld> getModels(PlSignature sig) {
 		return new HashSet<PossibleWorld>();
 	}
 }

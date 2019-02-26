@@ -24,7 +24,7 @@ import java.util.Iterator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "attenuation" postulate for inconsistency measures: Minimal inconsistent sets 
@@ -47,13 +47,13 @@ public class ImAttenuation extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		if(kb.isEmpty())
 			return false;
-		Collection<Collection<PropositionalFormula>> muses = PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb);
+		Collection<Collection<PlFormula>> muses = PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(kb);
 		if (muses.size()<2) 
 			return false;
-		Iterator<Collection<PropositionalFormula>> it = muses.iterator();
+		Iterator<Collection<PlFormula>> it = muses.iterator();
 		mus1 = new PlBeliefSet(it.next());
 		mus2 = new PlBeliefSet(it.next());
 		if (mus1.size() != mus2.size()) 
@@ -70,7 +70,7 @@ public class ImAttenuation extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency1, inconsistency2;

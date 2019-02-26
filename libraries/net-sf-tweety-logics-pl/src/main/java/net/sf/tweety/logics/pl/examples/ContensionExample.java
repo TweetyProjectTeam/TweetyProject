@@ -27,7 +27,7 @@ import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Example code illustrating the contension inconsistency measure.
@@ -41,18 +41,18 @@ public class ContensionExample {
 		PlBeliefSet kb = new PlBeliefSet();
 		PlParser parser = new PlParser();
 	
-		kb.add((PropositionalFormula)parser.parseFormula("a"));
-		kb.add((PropositionalFormula)parser.parseFormula("!a && b"));
-		kb.add((PropositionalFormula)parser.parseFormula("!b"));
-		kb.add((PropositionalFormula)parser.parseFormula("c || a"));
-		kb.add((PropositionalFormula)parser.parseFormula("!c || a"));
-		kb.add((PropositionalFormula)parser.parseFormula("!c || d"));
-		kb.add((PropositionalFormula)parser.parseFormula("!d"));
-		kb.add((PropositionalFormula)parser.parseFormula("d"));
-		kb.add((PropositionalFormula)parser.parseFormula("c"));
+		kb.add((PlFormula)parser.parseFormula("a"));
+		kb.add((PlFormula)parser.parseFormula("!a && b"));
+		kb.add((PlFormula)parser.parseFormula("!b"));
+		kb.add((PlFormula)parser.parseFormula("c || a"));
+		kb.add((PlFormula)parser.parseFormula("!c || a"));
+		kb.add((PlFormula)parser.parseFormula("!c || d"));
+		kb.add((PlFormula)parser.parseFormula("!d"));
+		kb.add((PlFormula)parser.parseFormula("d"));
+		kb.add((PlFormula)parser.parseFormula("c"));
 		
 		// test contension inconsistency measure		
-		BeliefSetInconsistencyMeasure<PropositionalFormula> cont = new ContensionInconsistencyMeasure();
+		BeliefSetInconsistencyMeasure<PlFormula> cont = new ContensionInconsistencyMeasure();
 		System.out.println("Cont: " + cont.inconsistencyMeasure(kb));
 	}
 }

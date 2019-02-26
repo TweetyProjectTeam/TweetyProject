@@ -24,21 +24,21 @@ import java.util.HashSet;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Uses the default SAT reasoner to perform reasoning in propositional logic
  * @author Matthias Thimm
  */
-public class SatReasoner extends AbstractPropositionalLogicReasoner {
+public class SatReasoner extends AbstractPlReasoner {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.reasoner.AbstractPropositionalLogicReasoner#query(net.sf.tweety.logics.pl.syntax.PlBeliefSet, net.sf.tweety.logics.pl.syntax.PropositionalFormula)
 	 */
 	@Override
-	public Boolean query(PlBeliefSet beliefbase, PropositionalFormula formula) {
-		Collection<PropositionalFormula> formulas = new HashSet<PropositionalFormula>();
-		formulas.add(new Negation((PropositionalFormula)formula));
+	public Boolean query(PlBeliefSet beliefbase, PlFormula formula) {
+		Collection<PlFormula> formulas = new HashSet<PlFormula>();
+		formulas.add(new Negation((PlFormula)formula));
 		formulas.addAll(beliefbase);
 		return !SatSolver.getDefaultSolver().isConsistent(formulas);
 	}

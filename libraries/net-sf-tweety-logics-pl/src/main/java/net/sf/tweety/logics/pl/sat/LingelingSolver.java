@@ -30,7 +30,7 @@ import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * A wrapper for the Lingeling SAT solver 
@@ -58,10 +58,10 @@ public class LingelingSolver extends SatSolver {
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas) {
 		try {
 			List<Proposition> props = new ArrayList<Proposition>();
-			for(PropositionalFormula f: formulas){
+			for(PlFormula f: formulas){
 				props.removeAll(f.getAtoms());
 				props.addAll(f.getAtoms());	
 			}
@@ -95,10 +95,10 @@ public class LingelingSolver extends SatSolver {
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#isSatisfiable(java.util.Collection)
 	 */
 	@Override
-	public boolean isSatisfiable(Collection<PropositionalFormula> formulas) {
+	public boolean isSatisfiable(Collection<PlFormula> formulas) {
 		try {			
 			List<Proposition> props = new ArrayList<Proposition>();
-			for(PropositionalFormula f: formulas){
+			for(PlFormula f: formulas){
 				props.removeAll(f.getAtoms());
 				props.addAll(f.getAtoms());			
 			}

@@ -26,7 +26,7 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
@@ -54,19 +54,19 @@ public class SatStableReasoner extends AbstractSatExtensionReasoner{
 		// an argument is in iff all attackers are out, and
 		// no argument is undecided
 		for(Argument a: aaf){
-			PropositionalFormula attackersAnd = new Tautology();
-			PropositionalFormula attackersOr = new Contradiction();
-			PropositionalFormula attackersNotAnd = new Tautology();
-			PropositionalFormula attackersNotOr = new Contradiction();
+			PlFormula attackersAnd = new Tautology();
+			PlFormula attackersOr = new Contradiction();
+			PlFormula attackersNotAnd = new Tautology();
+			PlFormula attackersNotOr = new Contradiction();
 			for(Argument b: aaf.getAttackers(a)){
 				attackersAnd = attackersAnd.combineWithAnd(out.get(b));
 				attackersOr = attackersOr.combineWithOr(in.get(b));
 				attackersNotAnd = attackersNotAnd.combineWithAnd(in.get(b).complement());
 				attackersNotOr = attackersNotOr.combineWithOr(out.get(b).complement());
 			}
-			beliefSet.add(((PropositionalFormula)out.get(a).complement()).combineWithOr(attackersOr));
-			beliefSet.add(((PropositionalFormula)in.get(a).complement()).combineWithOr(attackersAnd));
-			beliefSet.add((PropositionalFormula)undec.get(a).complement());
+			beliefSet.add(((PlFormula)out.get(a).complement()).combineWithOr(attackersOr));
+			beliefSet.add(((PlFormula)in.get(a).complement()).combineWithOr(attackersAnd));
+			beliefSet.add((PlFormula)undec.get(a).complement());
 			
 		}
 		return beliefSet;

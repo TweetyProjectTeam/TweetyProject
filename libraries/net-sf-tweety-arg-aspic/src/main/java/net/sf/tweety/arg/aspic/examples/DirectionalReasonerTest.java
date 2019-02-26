@@ -36,7 +36,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Test runtime of module-based vs. directional reasoners.
@@ -54,8 +54,8 @@ public class DirectionalReasonerTest {
 		int maxLiteralsInPremises = 3;
 		double percentageStrictRules = 0.2;
 		
-		ModuleBasedAspicReasoner<PropositionalFormula> moduleReasoner = new ModuleBasedAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
-		DirectionalAspicReasoner<PropositionalFormula> directionalReasoner = new DirectionalAspicReasoner<PropositionalFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		ModuleBasedAspicReasoner<PlFormula> moduleReasoner = new ModuleBasedAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
+		DirectionalAspicReasoner<PlFormula> directionalReasoner = new DirectionalAspicReasoner<PlFormula>(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.GR));
 		
 		long totalTimeModuleBased = 0;
 		long totalTimeDirectional = 0;
@@ -63,9 +63,9 @@ public class DirectionalReasonerTest {
 		long totalArgsDirectional = 0;
 		long totalTrue = 0;
 		for(int i = 0; i < repetitions; i++) {
-			AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+			AspicArgumentationTheory<PlFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
 			System.out.println(i + "\t" + theory);
-			PropositionalFormula query = new Proposition("A1");
+			PlFormula query = new Proposition("A1");
 			
 			// Skip instances taking longer than 10sec
 			System.out.println("Module-based...");

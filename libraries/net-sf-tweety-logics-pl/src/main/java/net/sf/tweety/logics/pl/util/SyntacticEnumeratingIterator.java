@@ -32,15 +32,15 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Generates all syntactic variations of knowledge bases 
  * @author Matthias Thimm
  *
  */
-public class SyntacticEnumeratingIterator implements BeliefSetIterator<PropositionalFormula,PlBeliefSet> {
+public class SyntacticEnumeratingIterator implements BeliefSetIterator<PlFormula,PlBeliefSet> {
 
 	/** the maximal length of each formula (each proposition, negation, conjunction, and
 	  	disjunction counts one). */
@@ -60,7 +60,7 @@ public class SyntacticEnumeratingIterator implements BeliefSetIterator<Propositi
 	/**
 	 * The used signature.
 	 */
-	private PropositionalSignature signature;
+	private PlSignature signature;
 	
 	/** Creates a new sampler.
 	 * @param signature the signature for formulas of the generated belief set.
@@ -71,7 +71,7 @@ public class SyntacticEnumeratingIterator implements BeliefSetIterator<Propositi
 	 * @param deleteTmp if "true" then the temporary folder is cleaned after each sample (it is recommended to set this
 	 * to "false" to speed up sampling)
 	 */
-	public SyntacticEnumeratingIterator(PropositionalSignature signature, int formulaLength, File pathToTmp, boolean deleteTmp) {
+	public SyntacticEnumeratingIterator(PlSignature signature, int formulaLength, File pathToTmp, boolean deleteTmp) {
 		this.signature = signature;
 		this.deleteTmp = deleteTmp;
 		this.pathToTmp = pathToTmp;
@@ -104,7 +104,7 @@ public class SyntacticEnumeratingIterator implements BeliefSetIterator<Propositi
 			this.generateFormulasOfLength(length-1);
 			// use formulas of length-1 and add a negation
 			for (File fileEntry: new File(this.pathToTmp.getAbsolutePath() + "/" + (length-1)).listFiles()) {
-				PropositionalFormula f = (PropositionalFormula) parser.parseFormulaFromFile(fileEntry.getAbsolutePath());
+				PlFormula f = (PlFormula) parser.parseFormulaFromFile(fileEntry.getAbsolutePath());
 				f = new Negation(f);
 				file = new File(path.getAbsolutePath() + "/f_" + length + "_" + idx++ + ".plogic");
 				file.createNewFile();
@@ -121,10 +121,10 @@ public class SyntacticEnumeratingIterator implements BeliefSetIterator<Propositi
 					// right = length of right formula 
 					for (File leftEntry: new File(this.pathToTmp.getAbsolutePath() + "/" + left).listFiles()) {
 						for (File rightEntry: new File(this.pathToTmp.getAbsolutePath() + "/" + right).listFiles()) {
-							PropositionalFormula leftF = (PropositionalFormula) parser.parseFormulaFromFile(leftEntry.getAbsolutePath());
-							PropositionalFormula rightF = (PropositionalFormula) parser.parseFormulaFromFile(rightEntry.getAbsolutePath());
-							PropositionalFormula conj = new Conjunction(leftF, rightF);
-							PropositionalFormula disj = new Disjunction(leftF, rightF);
+							PlFormula leftF = (PlFormula) parser.parseFormulaFromFile(leftEntry.getAbsolutePath());
+							PlFormula rightF = (PlFormula) parser.parseFormulaFromFile(rightEntry.getAbsolutePath());
+							PlFormula conj = new Conjunction(leftF, rightF);
+							PlFormula disj = new Disjunction(leftF, rightF);
 							file = new File(path.getAbsolutePath() + "/f_" + length + "_" + idx++ + ".plogic");
 							file.createNewFile();
 							PrintWriter writer = new PrintWriter(file, "UTF-8");
@@ -175,7 +175,7 @@ public class SyntacticEnumeratingIterator implements BeliefSetIterator<Propositi
 			PlBeliefSet bs = new PlBeliefSet();
 			PlParser parser = new PlParser();
 			for(File f: files)
-				bs.add((PropositionalFormula)parser.parseFormulaFromFile(f.getAbsolutePath()));			
+				bs.add((PlFormula)parser.parseFormulaFromFile(f.getAbsolutePath()));			
 			// delete files if required
 			if(this.deleteTmp){
 				this.formulasGenerated  = false;

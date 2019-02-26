@@ -23,7 +23,7 @@ import java.util.Set;
 
 import net.sf.tweety.arg.dung.syntax.DungSignature;
 import net.sf.tweety.logics.commons.LogicalSymbols;
-import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
+import net.sf.tweety.logics.pl.syntax.PlPredicate;
 
 /**
  * This class models classical negation of ldo logic.
@@ -96,7 +96,7 @@ public class LdoNegation extends LdoFormula {
 	}
 
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
+	public Set<PlPredicate> getPredicates() {
 		return formula.getPredicates();
 	}
 

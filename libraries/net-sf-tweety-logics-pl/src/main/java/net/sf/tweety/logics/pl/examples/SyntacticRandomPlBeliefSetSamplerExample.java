@@ -18,14 +18,14 @@
  */
 package net.sf.tweety.logics.pl.examples;
 
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.SyntacticRandomSampler;
 import net.sf.tweety.math.probability.Probability;
 
 public class SyntacticRandomPlBeliefSetSamplerExample {
 
 	public static void main(String[] args){
-		PropositionalSignature sig = new PropositionalSignature(4);
+		PlSignature sig = new PlSignature(4);
 		SyntacticRandomSampler sampler = new SyntacticRandomSampler(sig,new Probability(0.2),new Probability(0.35),new Probability(0.35),0.5,1, 1);
 		for(int i = 0; i< 10; i++)
 			System.out.println(sampler.next());

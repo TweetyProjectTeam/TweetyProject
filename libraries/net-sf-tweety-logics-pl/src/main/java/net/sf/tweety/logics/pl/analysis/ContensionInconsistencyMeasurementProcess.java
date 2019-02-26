@@ -30,15 +30,15 @@ import net.sf.tweety.logics.pl.semantics.PriestWorld;
 import net.sf.tweety.logics.pl.semantics.PriestWorld.TruthValue;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Implements an approximation algorithm for the Contension inconsistency measure on streams.
  * 
  * @author Matthias Thimm
  */
-public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeasurementProcess<PropositionalFormula>{
+public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeasurementProcess<PlFormula>{
 
 	/** Configuration key for the signature. */
 	public static final String CONFIG_KEY_SIGNATURE = "signature";
@@ -57,9 +57,9 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 	private List<PriestWorld> worlds;
 	
 	/** The signature of the formulas. */
-	private PropositionalSignature sig;
+	private PlSignature sig;
 	/** The witness provider used. */
-	private ConsistencyWitnessProvider<PlBeliefSet,PropositionalFormula> witnessProvider;
+	private ConsistencyWitnessProvider<PlBeliefSet,PlFormula> witnessProvider;
 	/** For randomization. */
 	private Random rand;
 	/** Whether the inconsistency value should be smoothed: if X1 is the previous
@@ -81,8 +81,8 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void init(Map<String, Object> config) {
-		this.sig = (PropositionalSignature) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
-		this.witnessProvider = (ConsistencyWitnessProvider<PlBeliefSet,PropositionalFormula>) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER);
+		this.sig = (PlSignature) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_SIGNATURE);
+		this.witnessProvider = (ConsistencyWitnessProvider<PlBeliefSet,PlFormula>) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_WITNESSPROVIDER);
 		this.numberOfPopulations = (int) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_KEY_NUMBEROFPOPULATIONS);
 		if(config.containsKey(ContensionInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR))
 			this.smoothingFactor = (double) config.get(ContensionInconsistencyMeasurementProcess.CONFIG_SMOOTHINGFACTOR);
@@ -103,7 +103,7 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 	 * @see net.sf.tweety.logics.commons.analysis.streams.InconsistencyMeasurementProcess#update(net.sf.tweety.Formula)
 	 */
 	@Override
-	protected double update(PropositionalFormula formula) {
+	protected double update(PlFormula formula) {
 		int newValue = 0;
 		//for every population
 		for(PriestWorld w: this.worlds){
@@ -119,7 +119,7 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 				PossibleWorld pw = (PossibleWorld)this.witnessProvider.getWitness(formula);
 				for(Proposition p: pw)
 					if(w.get(p).equals(TruthValue.FALSE)) w.set(p, TruthValue.BOTH);
-				PropositionalSignature sig2 = new PropositionalSignature(formula.getSignature());
+				PlSignature sig2 = new PlSignature(formula.getSignature());
 				sig2.removeAll(pw);
 				for(Proposition p: sig2)
 					if(w.get(p).equals(TruthValue.TRUE)) w.set(p, TruthValue.BOTH);				

@@ -22,23 +22,23 @@ import java.util.Set;
 
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Naive classical inference  (checks all interpretations for satisfiability).
  * 
  * @author Matthias Thimm
  */
-public class SimpleReasoner extends AbstractPropositionalLogicReasoner {
+public class SimpleReasoner extends AbstractPlReasoner {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.reasoner.AbstractPropositionalLogicReasoner#query(net.sf.tweety.logics.pl.syntax.PlBeliefSet, net.sf.tweety.logics.pl.syntax.PropositionalFormula)
 	 */
 	@Override
-	public Boolean query(PlBeliefSet beliefbase, PropositionalFormula formula) {
-		PropositionalSignature signature = new PropositionalSignature();
-		for(PropositionalFormula f: beliefbase)
+	public Boolean query(PlBeliefSet beliefbase, PlFormula formula) {
+		PlSignature signature = new PlSignature();
+		for(PlFormula f: beliefbase)
 			signature.addAll(f.getAtoms());
 		signature.addAll(formula.getAtoms());
 		Set<PossibleWorld> possibleWorlds = PossibleWorld.getAllPossibleWorlds(signature);

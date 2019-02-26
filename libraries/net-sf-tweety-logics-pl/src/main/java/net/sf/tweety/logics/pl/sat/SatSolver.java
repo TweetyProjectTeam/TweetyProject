@@ -36,13 +36,13 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Abstract class for specifying SAT solvers.
  * @author Matthias Thimm
  */
-public abstract class SatSolver implements BeliefSetConsistencyTester<PropositionalFormula>, ConsistencyWitnessProvider<PlBeliefSet,PropositionalFormula>{
+public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>, ConsistencyWitnessProvider<PlBeliefSet,PlFormula>{
 
 	/** The default SAT solver. */
 	private static SatSolver defaultSatSolver = null;
@@ -103,16 +103,16 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @param a list of propositions (=signature) where the indices are used for writing the clauses.
 	 * @return a string in Dimacs CNF.
 	 */
-	protected static String convertToDimacs(Collection<PropositionalFormula> formulas, List<Proposition> props){
+	protected static String convertToDimacs(Collection<PlFormula> formulas, List<Proposition> props){
 		String s = "";
 		int num_clauses = 0;
-		for(PropositionalFormula p: formulas){
+		for(PlFormula p: formulas){
 			Conjunction conj = p.toCnf();
-			for(PropositionalFormula p1: conj){
+			for(PlFormula p1: conj){
 				num_clauses++;
 				// as conj is in CNF all formulas should be disjunctions
 				Disjunction disj = (Disjunction) p1;
-				for(PropositionalFormula p2: disj){
+				for(PlFormula p2: disj){
 					if(p2 instanceof Proposition)
 						s += (props.indexOf(p2) + 1) + " ";
 					else if(p2 instanceof Negation){
@@ -134,26 +134,26 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @param formulas a collection of formulas.
 	 * @return a string in Dimacs CNF and a mapping between clauses and original formulas.
 	 */
-	protected static Pair<String,List<PropositionalFormula>> convertToDimacs(Collection<PropositionalFormula> formulas){
+	protected static Pair<String,List<PlFormula>> convertToDimacs(Collection<PlFormula> formulas){
 		List<Proposition> props = new ArrayList<Proposition>();
-		for(PropositionalFormula f: formulas){
+		for(PlFormula f: formulas){
 			props.removeAll(f.getAtoms());
 			props.addAll(f.getAtoms());		
 		}		
-		List<PropositionalFormula> clauses = new ArrayList<PropositionalFormula>();
-		List<PropositionalFormula> mappings = new ArrayList<PropositionalFormula>();
-		for(PropositionalFormula p: formulas){
+		List<PlFormula> clauses = new ArrayList<PlFormula>();
+		List<PlFormula> mappings = new ArrayList<PlFormula>();
+		for(PlFormula p: formulas){
 			Conjunction pcnf = p.toCnf();
-			for(PropositionalFormula sub: pcnf){
+			for(PlFormula sub: pcnf){
 				clauses.add(sub);
 				mappings.add(p);
 			}			
 		}		
 		String s = "p cnf " + props.size() + " " + clauses.size() + "\n";
-		for(PropositionalFormula p1: clauses){
+		for(PlFormula p1: clauses){
 			// as conj is in CNF all formulas should be disjunctions
 			Disjunction disj = (Disjunction) p1;
-			for(PropositionalFormula p2: disj){
+			for(PlFormula p2: disj){
 				if(p2 instanceof Proposition)
 					s += (props.indexOf(p2) + 1) + " ";
 				else if(p2 instanceof Negation){
@@ -162,7 +162,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 			}			
 			s += "0\n";
 		}
-		return new Pair<String,List<PropositionalFormula>>(s,mappings);
+		return new Pair<String,List<PlFormula>>(s,mappings);
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @return the file handler. 
 	 * @throws IOException if something went wrong while creating a temporary file. 
 	 */
-	protected static File createTmpDimacsFile(Collection<PropositionalFormula> formulas, List<Proposition> props) throws IOException{
+	protected static File createTmpDimacsFile(Collection<PlFormula> formulas, List<Proposition> props) throws IOException{
 		String r = SatSolver.convertToDimacs(formulas, props);
 		File f = File.createTempFile("tweety-sat", ".cnf", SatSolver.tempFolder);		
 		f.deleteOnExit();
@@ -191,14 +191,14 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @return the file handler and a mapping between clauses and original formulas. 
 	 * @throws IOException if something went wrong while creating a temporary file. 
 	 */
-	protected static Pair<File,List<PropositionalFormula>> createTmpDimacsFile(Collection<PropositionalFormula> formulas) throws IOException{
-		Pair<String,List<PropositionalFormula>> r = SatSolver.convertToDimacs(formulas);
+	protected static Pair<File,List<PlFormula>> createTmpDimacsFile(Collection<PlFormula> formulas) throws IOException{
+		Pair<String,List<PlFormula>> r = SatSolver.convertToDimacs(formulas);
 		File f = File.createTempFile("tweety-sat", ".cnf");
 		f.deleteOnExit();
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
 		writer.print(r.getFirst());
 		writer.close();		
-		return new Pair<File,List<PropositionalFormula>>(f,r.getSecond());
+		return new Pair<File,List<PlFormula>>(f,r.getSecond());
 	}
 	
 	/**
@@ -206,20 +206,20 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the formulas or null.
 	 */
-	public abstract Interpretation<PlBeliefSet,PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas);
+	public abstract Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas);
 	
 	/**
 	 * Checks whether the given set of formulas is satisfiable.
 	 * @param formulas a set of formulas.
 	 * @return "true" if the set is consistent.
 	 */
-	public abstract boolean isSatisfiable(Collection<PropositionalFormula> formulas);
+	public abstract boolean isSatisfiable(Collection<PlFormula> formulas);
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.commons.BeliefSet)
 	 */
 	@Override
-	public boolean isConsistent(BeliefSet<PropositionalFormula> beliefSet) {
+	public boolean isConsistent(BeliefSet<PlFormula> beliefSet) {
 		return this.isSatisfiable(beliefSet);
 	}
 
@@ -227,7 +227,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(java.util.Collection)
 	 */
 	@Override
-	public boolean isConsistent(Collection<PropositionalFormula> formulas) {
+	public boolean isConsistent(Collection<PlFormula> formulas) {
 		return this.isSatisfiable(formulas);
 	}
 
@@ -235,8 +235,8 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public boolean isConsistent(PropositionalFormula formula) {
-		Collection<PropositionalFormula> formulas = new HashSet<PropositionalFormula>();
+	public boolean isConsistent(PlFormula formula) {
+		Collection<PlFormula> formulas = new HashSet<PlFormula>();
 		formulas.add(formula);
 		return this.isSatisfiable(formulas);
 	}
@@ -245,8 +245,8 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(PropositionalFormula formula) {
-		Collection<PropositionalFormula> f = new HashSet<PropositionalFormula>();
+	public Interpretation<PlBeliefSet,PlFormula> getWitness(PlFormula formula) {
+		Collection<PlFormula> f = new HashSet<PlFormula>();
 		f.add(formula);
 		return this.getWitness(f);
 	}
@@ -255,7 +255,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<Propositio
 	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.commons.BeliefSet)
 	 */
 	@Override
-	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(BeliefSet<PropositionalFormula> bs) {
-		return this.getWitness((Collection<PropositionalFormula>) bs);
+	public Interpretation<PlBeliefSet,PlFormula> getWitness(BeliefSet<PlFormula> bs) {
+		return this.getWitness((Collection<PlFormula>) bs);
 	}
 }

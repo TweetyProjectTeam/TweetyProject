@@ -26,8 +26,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * A simple sampler for propositional belief bases. This sampler
@@ -36,7 +36,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Matthias Thimm
  */
-public class CnfSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet>{
+public class CnfSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 
 	/** The maximum ratio of variables appearing in a single formula. */
 	private double maxVariableRatio;
@@ -49,7 +49,7 @@ public class CnfSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSe
 	 */
 	public CnfSampler(Signature signature, double maxVariableRatio) {
 		super(signature);
-		if(!(signature instanceof PropositionalSignature))
+		if(!(signature instanceof PlSignature))
 			throw new IllegalArgumentException("Signature of type \"PropositionalSignature\" expected. ");
 		this.maxVariableRatio = maxVariableRatio;
 	}
@@ -64,7 +64,7 @@ public class CnfSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSe
 	 */
 	public CnfSampler(Signature signature, double maxVariableRatio, int minLength, int maxLength) {
 		super(signature, minLength, maxLength);
-		if(!(signature instanceof PropositionalSignature))
+		if(!(signature instanceof PlSignature))
 			throw new IllegalArgumentException("Signature of type \"PropositionalSignature\" expected. ");
 		this.maxVariableRatio = maxVariableRatio;
 	}
@@ -90,8 +90,8 @@ public class CnfSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSe
 	 * Returns a random formula
 	 * @return a random formula
 	 */
-	public PropositionalFormula sampleFormula(){
-		PropositionalSignature sig = (PropositionalSignature)this.getSignature();
+	public PlFormula sampleFormula(){
+		PlSignature sig = (PlSignature)this.getSignature();
 		Disjunction d = new Disjunction();		
 		Random rand = new Random();
 		for(Proposition p: sig){

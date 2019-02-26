@@ -43,7 +43,7 @@ public class ProbabilisticConditional extends Conditional implements Probability
 	 * @param conclusion the conclusion (a formula) of this conditional.
 	 * @param probability a probability.
 	 */
-	public ProbabilisticConditional(PropositionalFormula conclusion, Probability probability){
+	public ProbabilisticConditional(PlFormula conclusion, Probability probability){
 		super(conclusion);
 		this.probability = probability;
 	}
@@ -55,7 +55,7 @@ public class ProbabilisticConditional extends Conditional implements Probability
 	 * @param conclusion the conclusion (a formula) of this conditional.
 	 * @param probability a probability.
 	 */
-	public ProbabilisticConditional(PropositionalFormula premise, PropositionalFormula conclusion, Probability probability){
+	public ProbabilisticConditional(PlFormula premise, PlFormula conclusion, Probability probability){
 		super(premise,conclusion);
 		this.probability = probability;
 	}
@@ -138,7 +138,7 @@ public class ProbabilisticConditional extends Conditional implements Probability
 
 	@Override
 	public Probability getUniformProbability() {
-		Double n = ((PropositionalFormula)this.getConclusion().combineWithAnd(this.getPremise().iterator().next())).getUniformProbability().getValue();
+		Double n = ((PlFormula)this.getConclusion().combineWithAnd(this.getPremise().iterator().next())).getUniformProbability().getValue();
 		Double d = this.getPremise().iterator().next().getUniformProbability().getValue();
 		if(d == 0)
 			return new Probability(0d);

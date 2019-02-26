@@ -31,7 +31,7 @@ import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Conjunctable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Disjunctable;
-import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
+import net.sf.tweety.logics.pl.syntax.PlPredicate;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -73,7 +73,7 @@ public abstract class LdoFormula implements ClassicalFormula{
 	 * @see net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula#getPredicates()
 	 */
 	@Override
-	public abstract Set<PropositionalPredicate> getPredicates();
+	public abstract Set<PlPredicate> getPredicates();
 	
 	/**
 	 * Returns all literals, i.e. all formulas of the form "a" or "!a"
@@ -121,8 +121,8 @@ public abstract class LdoFormula implements ClassicalFormula{
 	}
 	
 	@Override
-	public Class<PropositionalPredicate> getPredicateCls() {
-		return PropositionalPredicate.class;
+	public Class<PlPredicate> getPredicateCls() {
+		return PlPredicate.class;
 	}
 	
 	@Override

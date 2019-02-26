@@ -30,26 +30,26 @@ import net.sf.tweety.logics.commons.analysis.CspInconsistencyMeasure;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.opt.solver.GlpkSolver;
 
 public class CspInconsistencyMeasureTest {
 	
-	private CspInconsistencyMeasure<PropositionalFormula> m; 
+	private CspInconsistencyMeasure<PlFormula> m; 
 	private double accuracy = 0.001;
 	
 	@Before
 	public void setUp() {		
 		GlpkSolver.binary = "/usr/local/bin/glpsol";
-		m = new CspInconsistencyMeasure<PropositionalFormula>(new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"),new GlpkSolver());
+		m = new CspInconsistencyMeasure<PlFormula>(new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"),new GlpkSolver());
 	}
 	
 	@Test
 	public void test1() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 1, accuracy);		
 	}
@@ -58,10 +58,10 @@ public class CspInconsistencyMeasureTest {
 	public void test2() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
-		bs.add((PropositionalFormula) parser.parseFormula("b"));
-		bs.add((PropositionalFormula) parser.parseFormula("!b"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("b"));
+		bs.add((PlFormula) parser.parseFormula("!b"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 2, accuracy);		
 	}
@@ -70,12 +70,12 @@ public class CspInconsistencyMeasureTest {
 	public void test3() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
-		bs.add((PropositionalFormula) parser.parseFormula("b"));
-		bs.add((PropositionalFormula) parser.parseFormula("!b"));		
-		bs.add((PropositionalFormula) parser.parseFormula("c"));
-		bs.add((PropositionalFormula) parser.parseFormula("!c"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("b"));
+		bs.add((PlFormula) parser.parseFormula("!b"));		
+		bs.add((PlFormula) parser.parseFormula("c"));
+		bs.add((PlFormula) parser.parseFormula("!c"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 3, accuracy);		
 	}
@@ -84,12 +84,12 @@ public class CspInconsistencyMeasureTest {
 	public void test4() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
-		bs.add((PropositionalFormula) parser.parseFormula("b"));
-		bs.add((PropositionalFormula) parser.parseFormula("!b && d"));		
-		bs.add((PropositionalFormula) parser.parseFormula("c && !d"));
-		bs.add((PropositionalFormula) parser.parseFormula("!c"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("b"));
+		bs.add((PlFormula) parser.parseFormula("!b && d"));		
+		bs.add((PlFormula) parser.parseFormula("c && !d"));
+		bs.add((PlFormula) parser.parseFormula("!c"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 2.833, accuracy);		
 	}
@@ -98,13 +98,13 @@ public class CspInconsistencyMeasureTest {
 	public void test5() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
-		bs.add((PropositionalFormula) parser.parseFormula("b"));
-		bs.add((PropositionalFormula) parser.parseFormula("!b && (d || e)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!e"));
-		bs.add((PropositionalFormula) parser.parseFormula("c && (!d || e)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!c"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("b"));
+		bs.add((PlFormula) parser.parseFormula("!b && (d || e)"));
+		bs.add((PlFormula) parser.parseFormula("!e"));
+		bs.add((PlFormula) parser.parseFormula("c && (!d || e)"));
+		bs.add((PlFormula) parser.parseFormula("!c"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 3.5, accuracy);		
 	}
@@ -113,14 +113,14 @@ public class CspInconsistencyMeasureTest {
 	public void test6() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
-		bs.add((PropositionalFormula) parser.parseFormula("b && (f || g)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!b && (d || e)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!e"));
-		bs.add((PropositionalFormula) parser.parseFormula("!g"));
-		bs.add((PropositionalFormula) parser.parseFormula("c && (!d || e)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!c && (!f || g)"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("b && (f || g)"));
+		bs.add((PlFormula) parser.parseFormula("!b && (d || e)"));
+		bs.add((PlFormula) parser.parseFormula("!e"));
+		bs.add((PlFormula) parser.parseFormula("!g"));
+		bs.add((PlFormula) parser.parseFormula("c && (!d || e)"));
+		bs.add((PlFormula) parser.parseFormula("!c && (!f || g)"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 3.833, accuracy);		
 	}
@@ -129,17 +129,17 @@ public class CspInconsistencyMeasureTest {
 	public void test7() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
-		bs.add((PropositionalFormula) parser.parseFormula("b && (f || g)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!b && (d || e)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!e"));
-		bs.add((PropositionalFormula) parser.parseFormula("!g"));
-		bs.add((PropositionalFormula) parser.parseFormula("c && (!d || e)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!c && (!f || g)"));
-		bs.add((PropositionalFormula) parser.parseFormula("h"));
-		bs.add((PropositionalFormula) parser.parseFormula("i"));
-		bs.add((PropositionalFormula) parser.parseFormula("!h || !i"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("b && (f || g)"));
+		bs.add((PlFormula) parser.parseFormula("!b && (d || e)"));
+		bs.add((PlFormula) parser.parseFormula("!e"));
+		bs.add((PlFormula) parser.parseFormula("!g"));
+		bs.add((PlFormula) parser.parseFormula("c && (!d || e)"));
+		bs.add((PlFormula) parser.parseFormula("!c && (!f || g)"));
+		bs.add((PlFormula) parser.parseFormula("h"));
+		bs.add((PlFormula) parser.parseFormula("i"));
+		bs.add((PlFormula) parser.parseFormula("!h || !i"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 4.833, accuracy);		
 	}
@@ -148,19 +148,19 @@ public class CspInconsistencyMeasureTest {
 	public void test8() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a"));
-		bs.add((PropositionalFormula) parser.parseFormula("b && (f || g)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!b && (d || e)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!e"));
-		bs.add((PropositionalFormula) parser.parseFormula("!g"));
-		bs.add((PropositionalFormula) parser.parseFormula("c && (!d || e)"));
-		bs.add((PropositionalFormula) parser.parseFormula("!c && (!f || g)"));
-		bs.add((PropositionalFormula) parser.parseFormula("h"));
-		bs.add((PropositionalFormula) parser.parseFormula("i"));
-		bs.add((PropositionalFormula) parser.parseFormula("!h || !i"));
-		bs.add((PropositionalFormula) parser.parseFormula("j && !i"));
-		bs.add((PropositionalFormula) parser.parseFormula("!j && !h"));
+		bs.add((PlFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a"));
+		bs.add((PlFormula) parser.parseFormula("b && (f || g)"));
+		bs.add((PlFormula) parser.parseFormula("!b && (d || e)"));
+		bs.add((PlFormula) parser.parseFormula("!e"));
+		bs.add((PlFormula) parser.parseFormula("!g"));
+		bs.add((PlFormula) parser.parseFormula("c && (!d || e)"));
+		bs.add((PlFormula) parser.parseFormula("!c && (!f || g)"));
+		bs.add((PlFormula) parser.parseFormula("h"));
+		bs.add((PlFormula) parser.parseFormula("i"));
+		bs.add((PlFormula) parser.parseFormula("!h || !i"));
+		bs.add((PlFormula) parser.parseFormula("j && !i"));
+		bs.add((PlFormula) parser.parseFormula("!j && !h"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 5.916, accuracy);		
 	}
@@ -169,13 +169,13 @@ public class CspInconsistencyMeasureTest {
 	public void test9() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a && !b"));
-		bs.add((PropositionalFormula) parser.parseFormula("b && !c"));
-		bs.add((PropositionalFormula) parser.parseFormula("c && !d"));
-		bs.add((PropositionalFormula) parser.parseFormula("d && !e"));
-		bs.add((PropositionalFormula) parser.parseFormula("e && !f"));
-		bs.add((PropositionalFormula) parser.parseFormula("f && !g"));
-		bs.add((PropositionalFormula) parser.parseFormula("g && !a"));
+		bs.add((PlFormula) parser.parseFormula("a && !b"));
+		bs.add((PlFormula) parser.parseFormula("b && !c"));
+		bs.add((PlFormula) parser.parseFormula("c && !d"));
+		bs.add((PlFormula) parser.parseFormula("d && !e"));
+		bs.add((PlFormula) parser.parseFormula("e && !f"));
+		bs.add((PlFormula) parser.parseFormula("f && !g"));
+		bs.add((PlFormula) parser.parseFormula("g && !a"));
 		
 		assertEquals(m.inconsistencyMeasure(bs), 3.916, accuracy);		
 	}	

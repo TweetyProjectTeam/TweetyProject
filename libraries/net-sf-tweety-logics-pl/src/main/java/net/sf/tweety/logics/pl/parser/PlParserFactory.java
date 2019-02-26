@@ -20,7 +20,7 @@ package net.sf.tweety.logics.pl.parser;
 
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Manages and creates different parsers for propositional logic.
@@ -53,7 +53,7 @@ public class PlParserFactory {
 	 * @param f some format
 	 * @return a parser
 	 */
-	public static Parser<PlBeliefSet,PropositionalFormula> getParserForFormat(Format f){
+	public static Parser<PlBeliefSet,PlFormula> getParserForFormat(Format f){
 		if(f.equals(Format.TWEETY))
 			return new PlParser();
 		return null;

@@ -28,8 +28,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * Generates random propositional belief base with a given
@@ -38,7 +38,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * 
  * @author Matthias Thimm
  */
-public class ContensionSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet>{
+public class ContensionSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 	
 	/**
 	 * The inconsistency value of the generated belief sets
@@ -53,7 +53,7 @@ public class ContensionSampler extends BeliefSetSampler<PropositionalFormula,PlB
 	 * @param signature some propositional signature
 	 * @param incvalue some inconsistency value.
 	 */
-	public ContensionSampler(PropositionalSignature signature, int incvalue) {
+	public ContensionSampler(PlSignature signature, int incvalue) {
 		super(signature);
 		if(incvalue > signature.size())
 			throw new IllegalArgumentException("A propositional belief base with inconsistency value " + this.incvalue + " cannot be generated with the given signature."); 
@@ -69,7 +69,7 @@ public class ContensionSampler extends BeliefSetSampler<PropositionalFormula,PlB
 	 * @param minLength the minimum length of knowledge bases
 	 * @param maxLength the maximum length of knowledge bases
 	 */
-	public ContensionSampler(PropositionalSignature signature, int incvalue, int minLength, int maxLength) {
+	public ContensionSampler(PlSignature signature, int incvalue, int minLength, int maxLength) {
 		super(signature,minLength,maxLength);
 		if(incvalue > signature.size())
 			throw new IllegalArgumentException("A propositional belief base with inconsistency value " + this.incvalue + " cannot be generated with the given signature."); 
@@ -81,8 +81,8 @@ public class ContensionSampler extends BeliefSetSampler<PropositionalFormula,PlB
 	 */
 	@Override
 	public PlBeliefSet next() {
-		List<Proposition> props = new ArrayList<Proposition>((PropositionalSignature)this.getSignature());
-		List<PropositionalFormula> formulas = new ArrayList<PropositionalFormula>();
+		List<Proposition> props = new ArrayList<Proposition>((PlSignature)this.getSignature());
+		List<PlFormula> formulas = new ArrayList<PlFormula>();
 		// first add contradictoy formulas
 		int num = 0;		
 		for(Proposition p: props){

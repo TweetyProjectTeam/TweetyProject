@@ -29,7 +29,7 @@ import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Uses a SAT solver to determine complete extensions.
@@ -56,22 +56,22 @@ public class SatCompleteReasoner  extends AbstractSatExtensionReasoner {
 		// an argument is in iff all attackers are out
 		for(Argument a: aaf){
 			if(aaf.getAttackers(a).isEmpty()){
-				beliefSet.add(((PropositionalFormula)in.get(a)));
+				beliefSet.add(((PlFormula)in.get(a)));
 			}else{
-				Collection<PropositionalFormula> attackersAnd = new HashSet<PropositionalFormula>();//new Tautology();
-				Collection<PropositionalFormula> attackersOr = new HashSet<PropositionalFormula>();//new Contradiction();
-				Collection<PropositionalFormula> attackersNotAnd = new HashSet<PropositionalFormula>();//new Tautology();
-				Collection<PropositionalFormula> attackersNotOr = new HashSet<PropositionalFormula>();//new Contradiction();
+				Collection<PlFormula> attackersAnd = new HashSet<PlFormula>();//new Tautology();
+				Collection<PlFormula> attackersOr = new HashSet<PlFormula>();//new Contradiction();
+				Collection<PlFormula> attackersNotAnd = new HashSet<PlFormula>();//new Tautology();
+				Collection<PlFormula> attackersNotOr = new HashSet<PlFormula>();//new Contradiction();
 				for(Argument b: aaf.getAttackers(a)){
 					attackersAnd.add(out.get(b));
 					attackersOr.add(in.get(b));
-					attackersNotAnd.add((PropositionalFormula)in.get(b).complement());
-					attackersNotOr.add((PropositionalFormula)out.get(b).complement());
+					attackersNotAnd.add((PlFormula)in.get(b).complement());
+					attackersNotOr.add((PlFormula)out.get(b).complement());
 				}
-				beliefSet.add(((PropositionalFormula)out.get(a).complement()).combineWithOr(new Disjunction(attackersOr)));
-				beliefSet.add(((PropositionalFormula)in.get(a).complement()).combineWithOr(new Conjunction(attackersAnd)));
-				beliefSet.add(((PropositionalFormula)undec.get(a).complement()).combineWithOr(new Conjunction(attackersNotAnd)));
-				beliefSet.add(((PropositionalFormula)undec.get(a).complement()).combineWithOr(new Disjunction(attackersNotOr)));
+				beliefSet.add(((PlFormula)out.get(a).complement()).combineWithOr(new Disjunction(attackersOr)));
+				beliefSet.add(((PlFormula)in.get(a).complement()).combineWithOr(new Conjunction(attackersAnd)));
+				beliefSet.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Conjunction(attackersNotAnd)));
+				beliefSet.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Disjunction(attackersNotOr)));
 			}
 		}		
 		return beliefSet;

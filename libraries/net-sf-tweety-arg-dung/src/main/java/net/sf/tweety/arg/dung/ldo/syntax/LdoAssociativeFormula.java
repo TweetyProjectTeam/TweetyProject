@@ -31,8 +31,8 @@ import net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport;
 import net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport.AssociativeSupportBridge;
 import net.sf.tweety.logics.commons.syntax.interfaces.AssociativeFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlPredicate;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This class captures the common functionalities of formulas with an associative
@@ -77,8 +77,8 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
-		return (Set<PropositionalPredicate>) support.getPredicates();
+	public Set<PlPredicate> getPredicates() {
+		return (Set<PlPredicate>) support.getPredicates();
 	}
 	
 	@Override
@@ -123,7 +123,7 @@ public abstract class LdoAssociativeFormula extends LdoFormula implements Associ
 	
 	@Override
 	public Signature createEmptySignature() {
-		return new PropositionalSignature();
+		return new PlSignature();
 	}
 	
 	//-------------------------------------------------------------------------

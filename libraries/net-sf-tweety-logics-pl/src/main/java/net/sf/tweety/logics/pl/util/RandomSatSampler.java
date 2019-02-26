@@ -26,8 +26,8 @@ import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * A sampler for uniform random k-SAT instances.
@@ -35,7 +35,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class RandomSatSampler extends BeliefSetSampler<PropositionalFormula,PlBeliefSet> {
+public class RandomSatSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 	
 	/**
 	 * The length of each clause 
@@ -96,11 +96,11 @@ public class RandomSatSampler extends BeliefSetSampler<PropositionalFormula,PlBe
 	public Disjunction randomClause() {
 		Disjunction clause = new Disjunction();
 		while(clause.size() < this.k) {
-			Proposition p = this.setTools.randomElement((PropositionalSignature)this.getSignature());
+			Proposition p = this.setTools.randomElement((PlSignature)this.getSignature());
 			if(!(clause.contains(p.complement()) || clause.contains(p)))
 				if(this.rand.nextBoolean())
 					clause.add(p);
-				else clause.add((PropositionalFormula) p.complement());
+				else clause.add((PlFormula) p.complement());
 		}
 		return clause;
 	}

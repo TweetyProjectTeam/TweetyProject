@@ -28,8 +28,8 @@ import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.RandomSampler;
 
 /**
@@ -40,14 +40,18 @@ import net.sf.tweety.logics.pl.util.RandomSampler;
 public class ImPostulateEvaluationExample {
 	public static void main(String[] args) {
 		SatSolver.setDefaultSolver(new Sat4jSolver());
-		PlMusEnumerator.setDefaultEnumerator(new NaiveMusEnumerator<PropositionalFormula>(SatSolver.getDefaultSolver()));
-		BeliefSetInconsistencyMeasure<PropositionalFormula> im = new HsInconsistencyMeasure<PlBeliefSet,PropositionalFormula>(new PossibleWorldIterator());
-		RandomSampler sampler = new RandomSampler(new PropositionalSignature(4),0.2,2,4);
-		PostulateEvaluator<PropositionalFormula,PlBeliefSet> evaluator = new PostulateEvaluator<PropositionalFormula,PlBeliefSet>(sampler, im);
-		evaluator.addPostulate(ImPostulate.MONOTONY);
-		evaluator.addPostulate(ImPostulate.FREEFORMULAINDEPENDENCE);
-		evaluator.addPostulate(ImPostulate.CONSISTENCY);
-		evaluator.addPostulate(ImPostulate.NORMALIZATION);
-		System.out.println(evaluator.evaluate(20, false));
+		PlMusEnumerator.setDefaultEnumerator(new NaiveMusEnumerator<PlFormula>(SatSolver.getDefaultSolver()));
+		BeliefSetInconsistencyMeasure<PlFormula> im = new HsInconsistencyMeasure<PlBeliefSet,PlFormula>(new PossibleWorldIterator());
+		RandomSampler sampler = new RandomSampler(new PlSignature(4),0.2,2,4);
+		PostulateEvaluator<PlFormula,PlBeliefSet> evaluator = new PostulateEvaluator<PlFormula,PlBeliefSet>(sampler, im);
+//		evaluator.addPostulate(ImPostulate.ADJUNCTIONINVARIANCE);
+//		evaluator.addPostulate(ImPostulate.ATTENUATION);
+//		evaluator.addPostulate(ImPostulate.CONTRADICTION);
+		evaluator.addPostulate(ImPostulate.EQUALCONFLICT);
+		evaluator.addPostulate(ImPostulate.MINORMALIZATION);
+		evaluator.addPostulate(ImPostulate.PENALTY);
+		evaluator.addPostulate(ImPostulate.SUPERADDITIVITY);
+		evaluator.addPostulate(ImPostulate.SAFEFORMULAINDEPENDENCE);
+		System.out.println(evaluator.evaluate(10, false));
 	}
 }

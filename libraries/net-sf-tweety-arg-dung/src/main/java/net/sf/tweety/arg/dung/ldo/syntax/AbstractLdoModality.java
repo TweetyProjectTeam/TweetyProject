@@ -20,7 +20,7 @@ package net.sf.tweety.arg.dung.ldo.syntax;
 
 import java.util.Set;
 
-import net.sf.tweety.logics.pl.syntax.PropositionalPredicate;
+import net.sf.tweety.logics.pl.syntax.PlPredicate;
 
 /**
  * Provides common functionalities for all modalities in LDO.
@@ -54,7 +54,7 @@ public abstract class AbstractLdoModality extends LdoFormula{
 	}
 	
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
+	public Set<PlPredicate> getPredicates() {
 		return this.innerFormula.getPredicates();
 	}
 

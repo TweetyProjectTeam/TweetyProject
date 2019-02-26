@@ -20,7 +20,7 @@ package net.sf.tweety.logics.pl.writer;
 
 import net.sf.tweety.commons.Writer;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class implements a writer for propositional formulas and belief bases.
@@ -29,7 +29,7 @@ import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
  */
 public class PlWriter extends Writer {
 
-	public PlWriter(PropositionalFormula plFormula) {
+	public PlWriter(PlFormula plFormula) {
 		super(plFormula);
 	}
 	

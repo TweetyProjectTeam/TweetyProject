@@ -24,7 +24,7 @@ import java.util.Set;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.SatSolver;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "contradiction" postulate for inconsistency measures: A knowledge base
@@ -50,19 +50,19 @@ public class ImContradiction extends ImPostulate {
 	}
 
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		return true;
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb,
-			BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb,
+			BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency = ev.inconsistencyMeasure(kb);
-		Set<Set<PropositionalFormula>> subsets =  new SetTools<PropositionalFormula>().subsets(kb);
+		Set<Set<PlFormula>> subsets =  new SetTools<PlFormula>().subsets(kb);
 		SatSolver solver = SatSolver.getDefaultSolver();
-		for (Set<PropositionalFormula> kbx : subsets) {
+		for (Set<PlFormula> kbx : subsets) {
 			if (!kbx.isEmpty() && solver.isConsistent(kbx)) 
 				return (inconsistency != 1);
 		}

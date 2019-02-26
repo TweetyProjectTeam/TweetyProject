@@ -30,8 +30,8 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 import org.sat4j.core.VecInt;
@@ -79,12 +79,12 @@ public class Sat4jSolver extends SatSolver{
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#isSatisfiable(java.util.Collection)
 	 */
 	@Override
-	public boolean isSatisfiable(Collection<PropositionalFormula> formulas) {
+	public boolean isSatisfiable(Collection<PlFormula> formulas) {
 		ISolver solver = SolverFactory.newLight();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		
-		PropositionalSignature sig = new PropositionalSignature();
-		for(PropositionalFormula f: formulas)
+		PlSignature sig = new PlSignature();
+		for(PlFormula f: formulas)
 			sig.addAll(f.getAtoms());		
 		Map<Proposition, Integer> prop2Idx = new HashMap<Proposition, Integer>();
 		Proposition[] idx2Prop = new Proposition[sig.size()];
@@ -94,16 +94,16 @@ public class Sat4jSolver extends SatSolver{
 			idx2Prop[i++] = p;
 		}
 		try{
-			for(PropositionalFormula f: formulas){
+			for(PlFormula f: formulas){
 				Conjunction conj = f.toCnf();
-				for(PropositionalFormula f2: conj){
+				for(PlFormula f2: conj){
 					Disjunction disj = (Disjunction) f2;
 					// first remove contradictions
 					while(disj.remove(new Contradiction()));					
 					int[] clause = new int[disj.size()];
 					i = 0;
 					boolean taut = false;
-					for(PropositionalFormula f3: disj){
+					for(PlFormula f3: disj){
 						if(f3 instanceof Proposition){
 							clause[i++] = prop2Idx.get(f3) + 1; 
 						}else if(f3 instanceof Negation){
@@ -128,12 +128,12 @@ public class Sat4jSolver extends SatSolver{
 	 * @see net.sf.tweety.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
 	 */
 	@Override
-	public Interpretation<PlBeliefSet,PropositionalFormula> getWitness(Collection<PropositionalFormula> formulas) {
+	public Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas) {
 		ISolver solver = SolverFactory.newLight();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		
-		PropositionalSignature sig = new PropositionalSignature();
-		for(PropositionalFormula f: formulas)
+		PlSignature sig = new PlSignature();
+		for(PlFormula f: formulas)
 			sig.addAll(f.getAtoms());		
 		Map<Proposition, Integer> prop2Idx = new HashMap<Proposition, Integer>();
 		Proposition[] idx2Prop = new Proposition[sig.size()];
@@ -143,16 +143,16 @@ public class Sat4jSolver extends SatSolver{
 			idx2Prop[i++] = p;
 		}
 		try{
-			for(PropositionalFormula f: formulas){
+			for(PlFormula f: formulas){
 				Conjunction conj = f.toCnf();
-				for(PropositionalFormula f2: conj){
+				for(PlFormula f2: conj){
 					Disjunction disj = (Disjunction) f2;
 					// first remove contradictions
 					while(disj.remove(new Contradiction()));					
 					int[] clause = new int[disj.size()];
 					i = 0;
 					boolean taut = false;
-					for(PropositionalFormula f3: disj){
+					for(PlFormula f3: disj){
 						if(f3 instanceof Proposition){
 							clause[i++] = prop2Idx.get(f3) + 1; 
 						}else if(f3 instanceof Negation){

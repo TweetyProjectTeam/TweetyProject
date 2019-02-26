@@ -27,26 +27,26 @@ import java.util.Set;
  * 
  * @author Matthias Thimm
  */
-public abstract class SpecialFormula extends PropositionalFormula {
+public abstract class SpecialFormula extends PlFormula {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
 	 */
 	@Override
-	public PropositionalFormula collapseAssociativeFormulas(){
+	public PlFormula collapseAssociativeFormulas(){
 		return this;
 	}
 	
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
-		return new HashSet<PropositionalPredicate>();
+	public Set<PlPredicate> getPredicates() {
+		return new HashSet<PlPredicate>();
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
 	 */
 	@Override
-	public PropositionalFormula toNnf() {
+	public PlFormula toNnf() {
 		return this;
 	}
 	
@@ -59,8 +59,8 @@ public abstract class SpecialFormula extends PropositionalFormula {
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
 	@Override
-	public Set<PropositionalFormula> getLiterals(){
-		return new HashSet<PropositionalFormula>();
+	public Set<PlFormula> getLiterals(){
+		return new HashSet<PlFormula>();
 	}
 	
 	/* (non-Javadoc)
@@ -85,14 +85,14 @@ public abstract class SpecialFormula extends PropositionalFormula {
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
 	 */
-	public PropositionalFormula replace(Proposition p, PropositionalFormula f, int i){
+	public PlFormula replace(Proposition p, PlFormula f, int i){
 		return this;
 	}	
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
 	 */
-	public PropositionalFormula trim(){
+	public PlFormula trim(){
 		return this;
 	}
 }

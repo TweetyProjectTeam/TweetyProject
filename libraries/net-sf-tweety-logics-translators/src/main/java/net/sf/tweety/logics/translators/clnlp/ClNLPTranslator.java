@@ -28,7 +28,7 @@ import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.commons.error.LanguageException;
 import net.sf.tweety.logics.commons.error.LanguageException.LanguageExceptionReason;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 import net.sf.tweety.logics.translators.Translator;
 import net.sf.tweety.logics.translators.folprop.FOLPropTranslator;
@@ -50,8 +50,8 @@ public class ClNLPTranslator extends Translator
 	 */
 	NLPRule toNLP(Conditional cond) {
 		NLPRule reval = new NLPRule();
-		PropositionalFormula plPremise = cond.getPremise().iterator().next();
-		PropositionalFormula plConclusion = cond.getConclusion();
+		PlFormula plPremise = cond.getPremise().iterator().next();
+		PlFormula plConclusion = cond.getConclusion();
 		
 		FolFormula folPremise = fol2pl.toFOL(plPremise);
 		FolFormula folConclusion = fol2pl.toFOL(plConclusion);
@@ -78,14 +78,14 @@ public class ClNLPTranslator extends Translator
 			throw new LanguageException("Cannot translate a NLPRule containing quantifiers to propositional conditional.", LanguageExceptionReason.LER_QUANTIFICATION_NOT_SUPPORTED);
 		}
 		Collection<FolFormula> folPremises = rule.getPremise();
-		PropositionalFormula plPremise = new Tautology();
+		PlFormula plPremise = new Tautology();
 		for(FolFormula folPremiseFormula : folPremises) {
 			if(folPremiseFormula.containsQuantifier()) {
 				throw new LanguageException("Cannot translate a NLPRule containing quantifiers to propositional conditional.", LanguageExceptionReason.LER_QUANTIFICATION_NOT_SUPPORTED);
 			}
 			plPremise.combineWithAnd(fol2pl.toPropositional(folPremiseFormula));
 		}
-		PropositionalFormula plConclusion = fol2pl.toPropositional(folConclusion);
+		PlFormula plConclusion = fol2pl.toPropositional(folConclusion);
 		
 		Conditional result = new Conditional(plPremise, plConclusion);
 		return result;

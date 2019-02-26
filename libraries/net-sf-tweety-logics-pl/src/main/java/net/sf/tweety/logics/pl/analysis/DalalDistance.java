@@ -20,7 +20,7 @@ package net.sf.tweety.logics.pl.analysis;
 
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This class models the dalal distance measure between possible worlds,
@@ -38,7 +38,7 @@ public class DalalDistance extends PossibleWorldDistance {
 	@Override
 	public double distance(PossibleWorld a, PossibleWorld b) {
 		int n = 0;
-		PropositionalSignature sig = new PropositionalSignature();
+		PlSignature sig = new PlSignature();
 		sig.addAll(a);
 		sig.addAll(b);
 		for(Proposition p: sig){

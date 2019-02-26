@@ -39,28 +39,28 @@ import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public abstract class AssociativePropositionalFormula extends PropositionalFormula 
-	implements AssociativeFormula<PropositionalFormula>,
+public abstract class AssociativePropositionalFormula extends PlFormula 
+	implements AssociativeFormula<PlFormula>,
 	AssociativeSupportBridge,
-	Collection<PropositionalFormula> {
+	Collection<PlFormula> {
 
 	/**
 	 * The inner formulas of this formula 
 	 */
-	protected AssociativeFormulaSupport<PropositionalFormula> support;
+	protected AssociativeFormulaSupport<PlFormula> support;
 	
 	/**
 	 * Creates a new (empty) associative formula.
 	 */
 	public AssociativePropositionalFormula(){
-		support = new AssociativeFormulaSupport<PropositionalFormula>(this);
+		support = new AssociativeFormulaSupport<PlFormula>(this);
 	}
 	
 	/**
 	 * Creates a new associative formula with the given inner formulas. 
 	 * @param formulas a collection of formulas.
 	 */
-	public AssociativePropositionalFormula(Collection<? extends PropositionalFormula> formulas){
+	public AssociativePropositionalFormula(Collection<? extends PlFormula> formulas){
 		this();
 		this.support.addAll(formulas);
 	}
@@ -70,7 +70,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	 * @param first a propositional formula.
 	 * @param second a propositional formula.
 	 */
-	public AssociativePropositionalFormula(PropositionalFormula first, PropositionalFormula second){
+	public AssociativePropositionalFormula(PlFormula first, PlFormula second){
 		this();
 		this.add(first);
 		this.add(second);
@@ -78,12 +78,12 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<PropositionalPredicate> getPredicates() {
-		return (Set<PropositionalPredicate>) support.getPredicates();
+	public Set<PlPredicate> getPredicates() {
+		return (Set<PlPredicate>) support.getPredicates();
 	}
 	
 	@Override
-	public List<PropositionalFormula> getFormulas() {
+	public List<PlFormula> getFormulas() {
 		return support.getFormulas();
 	}
 
@@ -103,9 +103,9 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
 	@Override
-	public Set<PropositionalFormula> getLiterals(){
-		Set<PropositionalFormula> result = new HashSet<PropositionalFormula>();
-		for(PropositionalFormula f: this.support){
+	public Set<PlFormula> getLiterals(){
+		Set<PlFormula> result = new HashSet<PlFormula>();
+		for(PlFormula f: this.support){
 			result.addAll(f.getLiterals());
 		}
 		return result;
@@ -117,13 +117,13 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	}
 	
 	@Override
-	public PropositionalSignature getSignature() {
-		return (PropositionalSignature)support.getSignature();
+	public PlSignature getSignature() {
+		return (PlSignature)support.getSignature();
 	}
 	
 	@Override
 	public Signature createEmptySignature() {
-		return new PropositionalSignature();
+		return new PlSignature();
 	}
 	
 	/* (non-Javadoc)
@@ -131,7 +131,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	 */
 	public  int numberOfOccurrences(Proposition p){
 		int result = 0;
-		for(PropositionalFormula f: this.support.getFormulas())
+		for(PlFormula f: this.support.getFormulas())
 			result += f.numberOfOccurrences(p);		
 		return result;
 	}
@@ -179,12 +179,12 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	//-------------------------------------------------------------------------
 	
 	@Override
-	public boolean add(PropositionalFormula f){
+	public boolean add(PlFormula f){
 		return this.support.add(f);
 	}
 	
 	@Override
-	public boolean addAll(Collection<? extends PropositionalFormula> c){
+	public boolean addAll(Collection<? extends PlFormula> c){
 		return this.support.addAll(c);
 	}
 	
@@ -209,7 +209,7 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	}
 	
 	@Override
-	public Iterator<PropositionalFormula> iterator(){
+	public Iterator<PlFormula> iterator(){
 		return this.support.iterator();
 	}
 
@@ -245,17 +245,17 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	}
 	
 	@Override
-	public void add(int index, PropositionalFormula element) {
+	public void add(int index, PlFormula element) {
 		this.support.add(index, element);
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends PropositionalFormula> c) {
+	public boolean addAll(int index, Collection<? extends PlFormula> c) {
 		return this.support.addAll(index, c);
 	}
 
 	@Override
-	public PropositionalFormula get(int index) {
+	public PlFormula get(int index) {
 		return this.support.get(index);
 	}
 
@@ -270,27 +270,27 @@ public abstract class AssociativePropositionalFormula extends PropositionalFormu
 	}
 
 	@Override
-	public ListIterator<PropositionalFormula> listIterator() {
+	public ListIterator<PlFormula> listIterator() {
 		return this.support.listIterator();
 	}
 
 	@Override
-	public ListIterator<PropositionalFormula> listIterator(int index) {
+	public ListIterator<PlFormula> listIterator(int index) {
 		return this.support.listIterator(index);
 	}
 
 	@Override
-	public PropositionalFormula remove(int index) {
+	public PlFormula remove(int index) {
 		return this.support.remove(index);
 	}
 
 	@Override
-	public PropositionalFormula set(int index, PropositionalFormula element) {
+	public PlFormula set(int index, PlFormula element) {
 		return this.support.set(index, element);
 	}
 
 	@Override
-	public List<PropositionalFormula> subList(int fromIndex, int toIndex) {
+	public List<PlFormula> subList(int fromIndex, int toIndex) {
 		return this.support.subList(fromIndex, toIndex);
 	}
 

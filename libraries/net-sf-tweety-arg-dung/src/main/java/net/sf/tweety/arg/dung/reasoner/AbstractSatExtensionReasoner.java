@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Uses a provided SAT solver to solve reasoning problems in AAFs.
@@ -76,7 +76,7 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 			result.add(ext);
 			// add the newly found extension in negative form to prop
 			// so the next witness cannot be the same
-			Collection<PropositionalFormula> f = new HashSet<PropositionalFormula>();
+			Collection<PlFormula> f = new HashSet<PlFormula>();
 			for(Proposition p: w)
 				f.add(p);
 			prop.add(new Negation(new Conjunction(f)));
@@ -107,9 +107,9 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 			undec.put(a, new Proposition("undec_" + a.getName()));
 			// for every argument only one of in/out/undec can be true
 			beliefSet.add(in.get(a).combineWithOr(out.get(a).combineWithOr(undec.get(a))));
-			beliefSet.add((PropositionalFormula)in.get(a).combineWithAnd(out.get(a)).complement());
-			beliefSet.add((PropositionalFormula)in.get(a).combineWithAnd(undec.get(a)).complement());
-			beliefSet.add((PropositionalFormula)out.get(a).combineWithAnd(undec.get(a)).complement());
+			beliefSet.add((PlFormula)in.get(a).combineWithAnd(out.get(a)).complement());
+			beliefSet.add((PlFormula)in.get(a).combineWithAnd(undec.get(a)).complement());
+			beliefSet.add((PlFormula)out.get(a).combineWithAnd(undec.get(a)).complement());
 		}
 		beliefSet.addAll(this.getPropositionalCharacterisationBySemantics(aaf,in,out,undec));
 		return beliefSet;

@@ -25,7 +25,7 @@ import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.reasoner.SatReasoner;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * The "exchange" postulate for inconsistency measures: Exchanging consistent parts
@@ -45,12 +45,12 @@ public class ImExchange extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isApplicable(java.util.Collection)
 	 */
 	@Override
-	public boolean isApplicable(Collection<PropositionalFormula> kb) {
+	public boolean isApplicable(Collection<PlFormula> kb) {
 		if(kb.isEmpty())
 			return false;
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PropositionalFormula f = orderedKB.get(0);
-		PropositionalFormula f2 = orderedKB.get(1);
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PlFormula f = orderedKB.get(0);
+		PlFormula f2 = orderedKB.get(1);
 		SatReasoner reasoner = new SatReasoner();
 		if (!SatSolver.getDefaultSolver().isConsistent(f)) 
 			return false;
@@ -63,12 +63,12 @@ public class ImExchange extends ImPostulate{
 	 * @see net.sf.tweety.logics.pl.postulates.AbstractImPostulate#isSatisfied(java.util.Collection, net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure)
 	 */
 	@Override
-	public boolean isSatisfied(Collection<PropositionalFormula> kb, BeliefSetInconsistencyMeasure<PropositionalFormula> ev) {
+	public boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if(!this.isApplicable(kb))
 			return true;
-		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PropositionalFormula f = orderedKB.get(0);
-		PropositionalFormula f2 = orderedKB.get(1);
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		PlFormula f = orderedKB.get(0);
+		PlFormula f2 = orderedKB.get(1);
 		PlBeliefSet kb1 = new PlBeliefSet(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
 		kb1.remove(f2);

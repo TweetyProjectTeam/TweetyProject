@@ -44,8 +44,8 @@ import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.CnfSampler;
 //import net.sf.tweety.logics.pl.util.ContensionSampler;
 import net.sf.tweety.logics.pl.util.MiSampler;
@@ -74,11 +74,11 @@ public class StreamInconsistencyEvaluationExample2 {
 		SatSolver.setTempFolder(new File(TMP_FILE_FOLDER));
 		SatSolver.setDefaultSolver(new LingelingSolver("/home/mthimm/strinc/lingeling/lingeling"));
 		PlMusEnumerator.setDefaultEnumerator(new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"));
-		PropositionalSignature signature = new PropositionalSignature(SIGNATURE_SIZE);
+		PlSignature signature = new PlSignature(SIGNATURE_SIZE);
 		// -----------------------------------------
 		// the inconsistency measures to be compared
 		// -----------------------------------------
-		Collection<StreamBasedInconsistencyMeasure<PropositionalFormula>> measures = new HashSet<StreamBasedInconsistencyMeasure<PropositionalFormula>>(); 
+		Collection<StreamBasedInconsistencyMeasure<PlFormula>> measures = new HashSet<StreamBasedInconsistencyMeasure<PlFormula>>(); 
 //		// Stream contension measure (population size = 10)
 //		Map<String,Object>  config = new HashMap<String,Object>();
 //		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
@@ -114,67 +114,67 @@ public class StreamInconsistencyEvaluationExample2 {
 //		measures.add(cont_stream_3);
 //		// Window-based MI measure (window size = 500)
 		Map<String,Object> config = new HashMap<String,Object>();
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator()));
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator()));
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 500);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mi-1");
-		StreamBasedInconsistencyMeasure<PropositionalFormula> mi_1 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> mi_1 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
 		mi_1.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/naive-mi-1.txt",STANDARD_EVENTS));
 		mi_1.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(mi_1);
 		// Window-based MI measure (window size = 1000)
 		config = new HashMap<String,Object>();
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator()));
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator()));
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 1000);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mi-2");
-		StreamBasedInconsistencyMeasure<PropositionalFormula> mi_2 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> mi_2 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
 		mi_2.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/naive-mi-2.txt",STANDARD_EVENTS));
 		mi_2.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(mi_2);
 		// Window-based MI measure (window size = 2000)
 		config = new HashMap<String,Object>();
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator()));
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MiInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator()));
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 2000);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mi-3");
-		StreamBasedInconsistencyMeasure<PropositionalFormula> mi_3 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> mi_3 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
 		mi_3.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/naive-mi-3.txt",STANDARD_EVENTS));
 		mi_3.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(mi_3);
 		// Window-based MI^C measure (window size = 500)
 		config = new HashMap<String,Object>();
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator()));
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator()));
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 500);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mic-1");
-		StreamBasedInconsistencyMeasure<PropositionalFormula> mic_1 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> mic_1 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
 		mic_1.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/naive-mic-1.txt",STANDARD_EVENTS));
 		mic_1.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(mic_1);
 		// Window-based MI^C measure (window size = 1000)
 		config = new HashMap<String,Object>();
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator()));
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator()));
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 1000);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mic-2");
-		StreamBasedInconsistencyMeasure<PropositionalFormula> mic_2 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> mic_2 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
 		mic_2.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/naive-mic-2.txt",STANDARD_EVENTS));
 		mic_2.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(mic_2);
 		// Window-based MI^C measure (window size = 2000)
 		config = new HashMap<String,Object>();
-		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator()));
+		config.put(WindowInconsistencyMeasurementProcess.CONFIG_MEASURE, new MicInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator()));
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_AGGREGATIONFUNCTION, STANDARD_AGGFUNCTION);		
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_WINDOWSIZE, 2000);
 		config.put(InconsistencyMeasurementProcess.CONFIG_TIMEOUT, TIMEOUT);
 		config.put(WindowInconsistencyMeasurementProcess.CONFIG_NAME, "-mic-3");
-		StreamBasedInconsistencyMeasure<PropositionalFormula> mic_3 = new DefaultStreamBasedInconsistencyMeasure<PropositionalFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
+		StreamBasedInconsistencyMeasure<PlFormula> mic_3 = new DefaultStreamBasedInconsistencyMeasure<PlFormula>(PlWindowInconsistencyMeasurementProcess.class,config);
 		mic_3.addInconsistencyListener(new EvaluationInconsistencyListener(RESULT_PATH+"/naive-mic-3.txt",STANDARD_EVENTS));
 		mic_3.addInconsistencyListener(new DefaultInconsistencyListener());
 		measures.add(mic_3);
@@ -218,8 +218,8 @@ public class StreamInconsistencyEvaluationExample2 {
 		int incvalue = 21;
 		double ival;
 		long millis;
-		MiInconsistencyMeasure<PropositionalFormula> testmeasure = new MiInconsistencyMeasure<PropositionalFormula>(PlMusEnumerator.getDefaultEnumerator());
-		BeliefSetSampler<PropositionalFormula,PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
+		MiInconsistencyMeasure<PlFormula> testmeasure = new MiInconsistencyMeasure<PlFormula>(PlMusEnumerator.getDefaultEnumerator());
+		BeliefSetSampler<PlFormula,PlBeliefSet> sampler = new CnfSampler(signature,CNF_RATIO);
 		for(int iteration = 0; iteration < NUMBER_OF_ITERATIONS; iteration++){
 			if(iteration % 10 == 0){
 				incvalue--;
@@ -241,8 +241,8 @@ public class StreamInconsistencyEvaluationExample2 {
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}	
-			for(StreamBasedInconsistencyMeasure<PropositionalFormula> sbim: measures){
-				InconsistencyMeasurementProcess<PropositionalFormula> imp = sbim.getInconsistencyMeasureProcess(new DefaultFormulaStream<PropositionalFormula>(bs,true));
+			for(StreamBasedInconsistencyMeasure<PlFormula> sbim: measures){
+				InconsistencyMeasurementProcess<PlFormula> imp = sbim.getInconsistencyMeasureProcess(new DefaultFormulaStream<PlFormula>(bs,true));
 				imp.start();
 				Thread.sleep(2000);
 				while(imp.isAlive()){

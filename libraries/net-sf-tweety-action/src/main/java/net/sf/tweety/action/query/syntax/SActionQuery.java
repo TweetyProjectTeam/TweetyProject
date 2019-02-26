@@ -36,7 +36,7 @@ import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class represents a single action query in the action query language S,
@@ -53,7 +53,7 @@ public class SActionQuery
   implements ActionQuery
 {
   
-  protected PropositionalFormula formula;
+  protected PlFormula formula;
   protected Set< GroundingRequirement > requirements =
     new HashSet< GroundingRequirement >();
   
@@ -63,7 +63,7 @@ public class SActionQuery
    * 
    * @param formula
    */
-  public SActionQuery( PropositionalFormula formula )
+  public SActionQuery( PlFormula formula )
   {
     if ( formula == null )
       throw new NullPointerException();
@@ -81,7 +81,7 @@ public class SActionQuery
    * @param formula
    * @param requirements
    */
-  public SActionQuery( PropositionalFormula formula,
+  public SActionQuery( PlFormula formula,
     Set< GroundingRequirement > requirements )
   {
     this( formula );
@@ -102,7 +102,7 @@ public class SActionQuery
    * Returns the formula represented by this action query.
    * @return the formula represented by this action query.
    */
-  public PropositionalFormula getFormula()
+  public PlFormula getFormula()
   {
     return formula;
   }
@@ -235,18 +235,18 @@ public Set< FolAtom > getInnerAtoms()
    * @return a new propositional formula in which all variables have been 
    * substituted by constants according to the given map. 
    */
-  private static PropositionalFormula substitutePropositions(
-    Map< Variable, Constant > map, PropositionalFormula formula )
+  private static PlFormula substitutePropositions(
+    Map< Variable, Constant > map, PlFormula formula )
   {
     if ( formula instanceof Conjunction ) {
       Conjunction newMe = new Conjunction();
-      for ( PropositionalFormula f : (Conjunction) formula )
+      for ( PlFormula f : (Conjunction) formula )
         newMe.add( substitutePropositions( map, f ) );
       return newMe;
     }
     if ( formula instanceof Disjunction ) {
       Disjunction newMe = new Disjunction();
-      for ( PropositionalFormula f : (Disjunction) formula )
+      for ( PlFormula f : (Disjunction) formula )
         newMe.add( substitutePropositions( map, f ) );
       return newMe;
     }

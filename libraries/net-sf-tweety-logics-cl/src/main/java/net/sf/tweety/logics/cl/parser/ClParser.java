@@ -94,8 +94,8 @@ public class ClParser extends Parser<ClBeliefSet,Conditional> {
 		}
 		PlParser plParser = new PlParser();
 		if(idx == -1)
-			return new Conditional((PropositionalFormula)plParser.parseFormula(s.substring(1, s.length()-1)));
-		return new Conditional((PropositionalFormula)plParser.parseFormula(s.substring(idx+1, s.length()-1)),(PropositionalFormula)plParser.parseFormula(s.substring(1, idx)));		
+			return new Conditional((PlFormula)plParser.parseFormula(s.substring(1, s.length()-1)));
+		return new Conditional((PlFormula)plParser.parseFormula(s.substring(idx+1, s.length()-1)),(PlFormula)plParser.parseFormula(s.substring(1, idx)));		
 	}
 
 }

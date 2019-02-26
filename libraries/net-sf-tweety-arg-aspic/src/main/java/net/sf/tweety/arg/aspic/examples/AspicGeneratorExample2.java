@@ -26,7 +26,7 @@ import net.sf.tweety.arg.aspic.util.RandomAspicArgumentationTheoryGenerator;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.dung.writer.ApxWriter;
 import net.sf.tweety.arg.dung.writer.TgfWriter;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This code shows the use of the ASPIC theory generator. It generates some random ASPIC
@@ -46,7 +46,7 @@ public class AspicGeneratorExample2 {
 		TgfWriter tgf = new TgfWriter();
 		
 		for(int i = 0; i < numberOfAFs; i++) {
-			AspicArgumentationTheory<PropositionalFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+			AspicArgumentationTheory<PlFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
 			DungTheory aaf = theory.asDungTheory(true);
 			System.out.println(aaf);
 			apx.write(aaf, new File(pathToExportFolder + "/aspic_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".apx" ));

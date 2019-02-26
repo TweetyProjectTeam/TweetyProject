@@ -31,7 +31,7 @@ import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Some examples from
@@ -53,8 +53,8 @@ public class FbInconsistencyMeasureTest {
 	public void example1() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a || a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a || !a"));
+		bs.add((PlFormula) parser.parseFormula("a || a"));
+		bs.add((PlFormula) parser.parseFormula("!a || !a"));
 		
 		assertEquals(inc.inconsistencyMeasure(bs), new Double(1));		
 	
@@ -64,8 +64,8 @@ public class FbInconsistencyMeasureTest {
 	public void example2() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("a && a"));
-		bs.add((PropositionalFormula) parser.parseFormula("!a && !a"));
+		bs.add((PlFormula) parser.parseFormula("a && a"));
+		bs.add((PlFormula) parser.parseFormula("!a && !a"));
 		
 		assertEquals(inc.inconsistencyMeasure(bs), new Double(2));		
 	}
@@ -74,7 +74,7 @@ public class FbInconsistencyMeasureTest {
 	public void example3() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("(a && !a) || (b && !b)"));
+		bs.add((PlFormula) parser.parseFormula("(a && !a) || (b && !b)"));
 		
 		assertEquals(inc.inconsistencyMeasure(bs), new Double(1));		
 	}
@@ -83,14 +83,14 @@ public class FbInconsistencyMeasureTest {
 	public void example4() throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		bs.add((PropositionalFormula) parser.parseFormula("!a && !a && !a"));
-		bs.add((PropositionalFormula) parser.parseFormula("a"));
+		bs.add((PlFormula) parser.parseFormula("!a && !a && !a"));
+		bs.add((PlFormula) parser.parseFormula("a"));
 		
 		assertEquals(inc.inconsistencyMeasure(bs), new Double(1));
 		
 		bs = new PlBeliefSet();		
-		bs.add((PropositionalFormula) parser.parseFormula("!a && !a && !a"));
-		bs.add((PropositionalFormula) parser.parseFormula("a && a && a"));
+		bs.add((PlFormula) parser.parseFormula("!a && !a && !a"));
+		bs.add((PlFormula) parser.parseFormula("a && a && a"));
 		
 		assertEquals(inc.inconsistencyMeasure(bs), new Double(3));
 	}

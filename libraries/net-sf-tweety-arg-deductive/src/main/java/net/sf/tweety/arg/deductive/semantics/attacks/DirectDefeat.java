@@ -21,7 +21,7 @@ package net.sf.tweety.arg.deductive.semantics.attacks;
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
 import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This attack notion models the direct defeat relation; A is defeated by B iff there is c in support(A) with claim(B) |- \neg c.
@@ -49,7 +49,7 @@ public class DirectDefeat implements Attack{
 	@Override
 	public boolean isAttackedBy(DeductiveArgument a, DeductiveArgument b) {
 		SimpleReasoner reasoner = new SimpleReasoner();
-		for(PropositionalFormula f: a.getSupport())
+		for(PlFormula f: a.getSupport())
 			if(reasoner.query(b.getClaim(), new Negation(f)))
 				return true;
 		return false;

@@ -37,30 +37,30 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class CrMasArgumentativeRevisionOperator extends MultipleBaseRevisionOperator<InformationObject<PropositionalFormula>>{
+public class CrMasArgumentativeRevisionOperator extends MultipleBaseRevisionOperator<InformationObject<PlFormula>>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
 	 */
 	@Override
-	public Collection<InformationObject<PropositionalFormula>> revise(Collection<InformationObject<PropositionalFormula>> base,	Collection<InformationObject<PropositionalFormula>> formulas) {
+	public Collection<InformationObject<PlFormula>> revise(Collection<InformationObject<PlFormula>> base,	Collection<InformationObject<PlFormula>> formulas) {
 		if(!(base instanceof CrMasBeliefSet))
 			throw new IllegalArgumentException("Argument 'base' has to be of type CrMasBeliefSet.");		
-		Collection<InformationObject<PropositionalFormula>> allInformation = new HashSet<InformationObject<PropositionalFormula>>(base);
+		Collection<InformationObject<PlFormula>> allInformation = new HashSet<InformationObject<PlFormula>>(base);
 		allInformation.addAll(formulas);
-		Collection<PropositionalFormula> plainFormulasFromBase = new HashSet<PropositionalFormula>();
-		for(InformationObject<PropositionalFormula> f: base)
+		Collection<PlFormula> plainFormulasFromBase = new HashSet<PlFormula>();
+		for(InformationObject<PlFormula> f: base)
 			plainFormulasFromBase.add(f.getFormula());
-		MultipleTransformationFunction<PropositionalFormula> transFunc = new ArgumentativeTransformationFunction(
-				new CredibilityCategorizer(allInformation, ((CrMasBeliefSet<PropositionalFormula>)base).getCredibilityOrder()),
+		MultipleTransformationFunction<PlFormula> transFunc = new ArgumentativeTransformationFunction(
+				new CredibilityCategorizer(allInformation, ((CrMasBeliefSet<PlFormula>)base).getCredibilityOrder()),
 				new SimpleAccumulator(),
 				new PlBeliefSet(plainFormulasFromBase),
 				false);
-		CrMasRevisionWrapper<PropositionalFormula> rev = new CrMasRevisionWrapper<PropositionalFormula>(
-				new MultipleSelectiveRevisionOperator<PropositionalFormula>(transFunc,
-						new LeviMultipleBaseRevisionOperator<PropositionalFormula>(
+		CrMasRevisionWrapper<PlFormula> rev = new CrMasRevisionWrapper<PlFormula>(
+				new MultipleSelectiveRevisionOperator<PlFormula>(transFunc,
+						new LeviMultipleBaseRevisionOperator<PlFormula>(
 								new RandomKernelContractionOperator(),
-								new DefaultMultipleBaseExpansionOperator<PropositionalFormula>()
+								new DefaultMultipleBaseExpansionOperator<PlFormula>()
 				)));		
 		return rev.revise(base, formulas);
 	}

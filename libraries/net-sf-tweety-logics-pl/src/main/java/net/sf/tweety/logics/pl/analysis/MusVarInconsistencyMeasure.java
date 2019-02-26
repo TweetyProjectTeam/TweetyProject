@@ -23,8 +23,8 @@ import java.util.Collection;
 import net.sf.tweety.logics.commons.analysis.AbstractMusEnumerator;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * This class implements the "MUS-variable based inconsistency measure" proposed in 
@@ -35,24 +35,24 @@ import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
  * @author Matthias Thimm
  *
  */
-public class MusVarInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PropositionalFormula>{
+public class MusVarInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlFormula>{
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)
 	 */
 	@Override
-	public Double inconsistencyMeasure(Collection<PropositionalFormula> formulas) {
+	public Double inconsistencyMeasure(Collection<PlFormula> formulas) {
 		// check empty set of formulas
 		if(formulas.isEmpty())
 			return 0d;		
-		AbstractMusEnumerator<PropositionalFormula> musEnum = PlMusEnumerator.getDefaultEnumerator();
-		Collection<Collection<PropositionalFormula>> muses = musEnum.minimalInconsistentSubsets(formulas);
-		PropositionalSignature allSig = new PropositionalSignature();
-		PropositionalSignature musSig = new PropositionalSignature();
-		for(PropositionalFormula f: formulas)
+		AbstractMusEnumerator<PlFormula> musEnum = PlMusEnumerator.getDefaultEnumerator();
+		Collection<Collection<PlFormula>> muses = musEnum.minimalInconsistentSubsets(formulas);
+		PlSignature allSig = new PlSignature();
+		PlSignature musSig = new PlSignature();
+		for(PlFormula f: formulas)
 			allSig.add(f.getSignature());
-		for(Collection<PropositionalFormula> mus: muses)
-			for(PropositionalFormula f: mus)
+		for(Collection<PlFormula> mus: muses)
+			for(PlFormula f: mus)
 				musSig.add(f.getSignature());
 		return new Double(musSig.size())/new Double(allSig.size());
 	}

@@ -31,13 +31,13 @@ import net.sf.tweety.logics.pl.syntax.*;
  * 
  * @author Matthias Thimm
  */
-public class RandomKernelContractionOperator extends KernelContractionOperator<PropositionalFormula> {
+public class RandomKernelContractionOperator extends KernelContractionOperator<PlFormula> {
 
 	/**
 	 * Creates a new contraction operator.
 	 */
 	public RandomKernelContractionOperator() {
-		super(new RandomIncisionFunction<PropositionalFormula>(), new SimpleReasoner());
+		super(new RandomIncisionFunction<PlFormula>(), new SimpleReasoner());
 	}
 
 }

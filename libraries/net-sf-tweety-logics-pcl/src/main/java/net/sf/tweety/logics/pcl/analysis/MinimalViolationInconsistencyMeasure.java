@@ -27,7 +27,7 @@ import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.PropositionalSignature;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.norm.RealVectorNorm;
@@ -70,7 +70,7 @@ public class MinimalViolationInconsistencyMeasure extends BeliefSetInconsistency
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal violation.
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PropositionalSignature)beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
 		int i = 0;
 		Term normConstraint = null;
