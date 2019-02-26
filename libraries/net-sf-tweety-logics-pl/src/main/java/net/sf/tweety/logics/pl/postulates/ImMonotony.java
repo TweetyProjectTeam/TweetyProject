@@ -56,7 +56,7 @@ public class ImMonotony extends ImPostulate{
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		kb2.remove(kb.iterator().next());
+		kb2.remove(((PlBeliefSet)kb).getCanonicalOrdering().iterator().next());
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		return inconsistency2 <= inconsistency1;
 	}

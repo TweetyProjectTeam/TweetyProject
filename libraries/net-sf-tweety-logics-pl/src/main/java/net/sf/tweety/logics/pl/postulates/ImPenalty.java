@@ -69,8 +69,7 @@ public class ImPenalty extends ImPostulate{
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
 		List<PropositionalFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PropositionalFormula f = orderedKB.get(0);
-		kb2.remove(f);
+		kb2.remove(orderedKB.get(0));
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		return (inconsistency1 > inconsistency2);
 	}

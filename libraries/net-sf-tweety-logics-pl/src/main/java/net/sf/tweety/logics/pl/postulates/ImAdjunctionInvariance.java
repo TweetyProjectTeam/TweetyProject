@@ -58,7 +58,7 @@ public class ImAdjunctionInvariance extends ImPostulate{
 		if(!this.isApplicable(kb))
 			return true;
 		double inconsistency1 = ev.inconsistencyMeasure(kb);
-		Iterator<PropositionalFormula> it = kb.iterator();
+		Iterator<PropositionalFormula> it = ((PlBeliefSet)kb).getCanonicalOrdering().iterator();
 		PropositionalFormula f1 = it.next();
 		PropositionalFormula f2 = it.next();
 		PlBeliefSet kb2 = new PlBeliefSet(kb);

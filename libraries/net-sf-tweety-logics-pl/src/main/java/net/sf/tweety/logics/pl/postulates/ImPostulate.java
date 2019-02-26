@@ -63,6 +63,10 @@ public abstract class ImPostulate implements Postulate<PropositionalFormula>{
 	public static final ImPostulate IRRELEVANCEOFSYNTAX = new ImIrrelevanceOfSyntax();
 	/** The EXCHANGE postulate **/
 	public static final ImPostulate EXCHANGE = new ImExchange();
+	/** The EQUALCONFLICT postulate **/
+	public static final ImPostulate EQUALCONFLICT = new ImEqualConflict();
+	/** The CONTRADICTION postulate **/
+	public static final ImPostulate CONTRADICTION = new ImContradiction();
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)
