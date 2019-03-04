@@ -27,6 +27,8 @@ import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.Equivalence;
+import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -137,6 +139,17 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 			for(PlFormula f: d)
 				val = val.or(this.satisfies3VL(f));
 			return val;
+		}
+		if (formula instanceof Implication) {
+			Implication i = (Implication) formula;
+			Disjunction d = new Disjunction(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond()); 
+			return this.satisfies3VL(d);
+		}
+		if(formula instanceof Equivalence) {
+			Equivalence e = (Equivalence) formula;
+			Disjunction d1 = new Disjunction(new Negation(e.getFormulas().getFirst()), e.getFormulas().getSecond()); 
+			Disjunction d2 = new Disjunction(new Negation(e.getFormulas().getSecond()), e.getFormulas().getFirst()); 
+			return this.satisfies3VL(new Conjunction(d1,d2));
 		}
 		throw new IllegalArgumentException("Propositional formula " + formula + " is of unknown type.");
 	}

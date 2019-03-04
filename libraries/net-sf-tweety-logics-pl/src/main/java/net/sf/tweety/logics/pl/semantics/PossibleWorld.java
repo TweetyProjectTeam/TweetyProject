@@ -75,6 +75,27 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PlF
 					return true;
 			return false;
 		}
+		if(formula instanceof Implication) {
+			Implication i = (Implication) formula;
+			if (this.satisfies((PlFormula) i.getFormulas().getFirst()))
+				if (!this.satisfies((PlFormula) i.getFormulas().getSecond()))
+						return false;
+			return true;
+		}
+		if(formula instanceof Equivalence) {
+			Equivalence e = (Equivalence) formula;
+			PlFormula a = e.getFormulas().getFirst();
+			PlFormula b = e.getFormulas().getSecond();
+			if (this.satisfies((PlFormula) a)) {
+				if (!this.satisfies((PlFormula) b))
+					return false;
+			}
+			else {
+				if (this.satisfies((PlFormula) b))
+					return false;
+			}
+			return true;	
+		}
 		throw new IllegalArgumentException("Propositional formula " + formula + " is of unknown type.");
 	}
 

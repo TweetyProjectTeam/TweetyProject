@@ -82,8 +82,8 @@ public abstract class PlFormula implements ClassicalFormula {
 	public abstract Set<PlPredicate> getPredicates();
 	
 	/**
-	 * Removes duplicates (identical formulas) from conjunctions and disjunctions and
-	 * duplicate negations.
+	 * Removes duplicate negations and removes duplicates (identical formulas) 
+	 * from conjunctions, disjunctions, implications and equivalences.
 	 * @return an equivalent formula without duplicates.
 	 */
 	public abstract PlFormula trim();

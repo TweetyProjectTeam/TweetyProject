@@ -32,6 +32,8 @@ import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.Equivalence;
+import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -78,6 +80,20 @@ public class PlParserTest {
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
+	public void ImplicationTest() throws ParserException, IOException {
+		PlFormula f = (PlFormula) parser.parseFormula("a => b");
+		Implication d = new Implication(new Proposition("a"), new Proposition("b"));
+		assertTrue(f.equals(d));
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void EquivalenceTest() throws ParserException, IOException {
+		PlFormula f = (PlFormula) parser.parseFormula("a <=> b");
+		Equivalence d = new Equivalence(new Proposition("a"), new Proposition("b"));
+		assertTrue(f.equals(d));
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
 	public void DisjunctionTest() throws ParserException, IOException {
 		PlFormula f = (PlFormula) parser.parseFormula("a || b");
 		Disjunction d = new Disjunction(new Proposition("a"), new Proposition("b"));
@@ -107,8 +123,17 @@ public class PlParserTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedFormulaTest() throws ParserException, IOException {
-		parser.parseFormula("!((a && b) || (c || !d))");
+		PlFormula f = parser.parseFormula("!((a && b) || !c || ((c => !d) <=> c))");
+		PlSignature sig = new PlSignature();
+		sig.add(new Proposition("a"));
+		sig.add(new Proposition("b"));
+		sig.add(new Proposition("c"));
+		sig.add(new Proposition("d"));
+		assertTrue(f instanceof Negation);
+		assertTrue(((Negation)f).getFormula() instanceof Disjunction);
+		assertTrue(f.getSignature().equals(sig));
 	}
+	
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SpecialCharactersTest() throws ParserException, IOException {

@@ -163,7 +163,7 @@ public class Implication extends FolFormula {
 	}
 
 	@Override
-	public FolFormula clone() {
+	public Implication clone() {
 		return new Implication(this.formulas);
 	}
 
@@ -187,5 +187,37 @@ public class Implication extends FolFormula {
 	public String toString() {
 		return "(" + this.formulas.getFirst().toString() + LogicalSymbols.IMPLICATION() + this.formulas.getSecond().toString() + ")";
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((formulas == null) ? 0 : formulas.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Implication other = (Implication) obj;
+		if (formulas == null) {
+			if (other.formulas != null)
+				return false;
+		} else if (!formulas.equals(other.formulas))
+			return false;
+		return true;
+	}
+
 
 }

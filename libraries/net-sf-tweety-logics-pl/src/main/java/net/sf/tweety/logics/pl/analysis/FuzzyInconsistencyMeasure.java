@@ -30,6 +30,8 @@ import net.sf.tweety.logics.pl.semantics.FuzzyInterpretation;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.Equivalence;
+import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
@@ -141,7 +143,18 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlF
 			for(PlFormula f: disjuncts)
 				disjunctsTerms.add(this.getTerm(f, assignments));
 			return this.tconorm.evalTerm(disjunctsTerms);
-		}		
+		}
+		if (formula instanceof Implication) {
+			Implication i = (Implication) formula;
+			Disjunction d = new Disjunction(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond()); 
+			return this.getTerm(d,assignments);
+		}
+		if(formula instanceof Equivalence) {
+			Equivalence e = (Equivalence) formula;
+			Disjunction d1 = new Disjunction(new Negation(e.getFormulas().getFirst()), e.getFormulas().getSecond()); 
+			Disjunction d2 = new Disjunction(new Negation(e.getFormulas().getSecond()), e.getFormulas().getFirst()); 
+			return this.getTerm(new Conjunction(d1,d2),assignments);
+		}
 		// this should not happen
 		throw new RuntimeException("Unexpected type of formula");
 	}
