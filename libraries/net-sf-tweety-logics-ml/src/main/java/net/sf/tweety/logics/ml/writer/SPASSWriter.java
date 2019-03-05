@@ -25,7 +25,7 @@ import net.sf.tweety.logics.fol.syntax.ForallQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.Implication;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.fol.syntax.Tautology;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 import net.sf.tweety.logics.ml.syntax.Necessity;
 import net.sf.tweety.logics.ml.syntax.Possibility;
 
@@ -75,7 +75,7 @@ public class SPASSWriter {
 	 * @param kb a knowledge base
 	 * @param formula a relational formula
 	 */
-	public void printProblem(ModalBeliefSet kb, RelationalFormula formula) throws ParserException, IOException {
+	public void printProblem(MlBeliefSet kb, RelationalFormula formula) throws ParserException, IOException {
 		FolSignature signature = (FolSignature) kb.getSignature();
 		signature.addSignature(formula.getSignature());
 		
@@ -191,7 +191,7 @@ public class SPASSWriter {
 	 * @return a string containing the axioms and conjectures declaration
 	 * @see <a href="https://webspass.spass-prover.org/help/spass-input-syntax15.pdf">https://webspass.spass-prover.org/help/spass-input-syntax15.pdf</a>
 	 */
-	private String printFormulas(ModalBeliefSet kb, RelationalFormula formula) {
+	private String printFormulas(MlBeliefSet kb, RelationalFormula formula) {
 		//list_of_special_formulae has to be used to allow for modal formulas
 		//For pure first-order logic, list_of_formulae(axioms) is sufficient
 		//EML specifies the type of special formulae, in this case "extended modal logic"

@@ -24,33 +24,40 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 
 /**
  * This class models the necessity modality.
+ * 
  * @author Matthias Thimm
  */
-public class Necessity extends ModalFormula {
+public class Necessity extends MlFormula {
 
 	/**
-	 * Creates a new necessity formula with the
-	 * given inner formula
+	 * Creates a new necessity formula with the given inner formula
+	 * 
 	 * @param formula a formula, either a modal formula or a first-order formula.
 	 */
-	public Necessity(RelationalFormula formula){
+	public Necessity(RelationalFormula formula) {
 		super(formula);
 	}
-		
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.sf.tweety.logics.firstorderlogic.syntax.Term, net.sf.tweety.logics.firstorderlogic.syntax.Term)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#substitute(net.
+	 * sf.tweety.logics.firstorderlogic.syntax.Term,
+	 * net.sf.tweety.logics.firstorderlogic.syntax.Term)
 	 */
-	public FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException{
+	public FolFormula substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		return new Necessity(this.getFormula().substitute(v, t));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#toString()
 	 */
-	public String toString(){
-		return "[]("+this.getFormula()+")";
+	public String toString() {
+		return "[](" + this.getFormula() + ")";
 	}
-
 
 	@Override
 	public FolFormula clone() {
@@ -59,19 +66,20 @@ public class Necessity extends ModalFormula {
 
 	@Override
 	public FolFormula toNnf() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("IMPLEMENT ME");
-	}
-
-	@Override
-	public RelationalFormula collapseAssociativeFormulas() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+		throw new UnsupportedOperationException("NNF is not supported for modal formulas.");
 	}
 
 	@Override
 	public boolean isDnf() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+		throw new UnsupportedOperationException("DNF is not supported for modal formulas.");
 	}
+
+	@Override
+	public RelationalFormula collapseAssociativeFormulas() {
+		if (this.getFormula() instanceof FolFormula) 
+			return new Necessity(((FolFormula)this.getFormula()).collapseAssociativeFormulas());
+		else
+			throw new IllegalArgumentException(this.getFormula() + " is not of type FolFormula");
+	}
+	
 }

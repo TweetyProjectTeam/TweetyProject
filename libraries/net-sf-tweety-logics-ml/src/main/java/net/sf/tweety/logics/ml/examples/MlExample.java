@@ -21,10 +21,10 @@
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.ml.reasoner.SimpleModalReasoner;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.reasoner.SimpleMlReasoner;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.ml.parser.ModalParser;
+import net.sf.tweety.logics.ml.parser.MlParser;
 
 /**
  * Some examples for testing ModalParser and NaiveModalReasoner
@@ -33,14 +33,27 @@ import net.sf.tweety.logics.ml.parser.ModalParser;
 public class MlExample {
 	
 	public static void main(String[] args) throws ParserException, IOException {
-		//Parse BeliefBase
-		ModalParser parser = new ModalParser();		
-		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n (Flies(martin))");
-		System.out.println(b);
+		//Parse simple BeliefBase from file
+		MlParser parser = new MlParser();	
+		MlBeliefSet b1 = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase2.mlogic");
+		FolFormula f1 = (FolFormula) parser.parseFormula("<>(A&&B)");
+		System.out.println("Parsed belief base:" + b1 + "\nSignature of belief base:" + b1.getSignature());
 		
-		//NaiveModalReasoner
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();
-		System.out.println(reasoner.query(b,(FolFormula) parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))")));
+		//Parse simple BeliefBase from string
+		parser = new MlParser();	
+		MlBeliefSet b2 = parser.parseBeliefBase("Animal = {penguin,eagle} \n type(Flies(Animal)) \n (Flies(eagle))");
+		FolFormula f2 = (FolFormula) parser.parseFormula("(Flies(penguin)) || (!(Flies(penguin)))");
+		System.out.println("Parsed belief base:" + b2);
+		
+		//Parse more complex BeliefBase from file
+		parser = new MlParser();	
+		MlBeliefSet b3 = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.mlogic");
+		System.out.println("Parsed belief base:" + b3 + "\nSignature of belief base:" + b3.getSignature());
+		
+		//Reasoner examples
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();
+		System.out.println("Answer to query: " + reasoner.query(b1,f1));
+		System.out.println("Answer to query: " + reasoner.query(b2,f2));
 	}
 
 }

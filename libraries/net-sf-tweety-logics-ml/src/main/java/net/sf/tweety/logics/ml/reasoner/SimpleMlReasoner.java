@@ -29,9 +29,9 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.semantics.AccessibilityRelation;
 import net.sf.tweety.logics.ml.semantics.KripkeModel;
-import net.sf.tweety.logics.ml.semantics.ModalHerbrandBase;
-import net.sf.tweety.logics.ml.semantics.ModalHerbrandInterpretation;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.semantics.MlHerbrandBase;
+import net.sf.tweety.logics.ml.semantics.MlHerbrandInterpretation;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 
 /**
  * This class implements inference for modal logic using a brute-force approach.
@@ -42,13 +42,13 @@ import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
  * @author Matthias Thimm
  */
 
-public class SimpleModalReasoner extends AbstractModalReasoner {
+public class SimpleMlReasoner extends AbstractMlReasoner {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.ml.reasoner.ModalReasoner#query(net.sf.tweety.logics.ml.syntax.ModalBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public Boolean query(ModalBeliefSet mbs, FolFormula formula) {
+	public Boolean query(MlBeliefSet mbs, FolFormula formula) {
 		if(!formula.isWellFormed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not well-formed.");
 		if(!formula.isClosed())
@@ -61,13 +61,13 @@ public class SimpleModalReasoner extends AbstractModalReasoner {
 		FolSignature sig = new FolSignature();
 		sig.addSignature(mbs.getSignature());
 		sig.addSignature(formula.getSignature());
-		ModalHerbrandBase hBase = new ModalHerbrandBase(sig);
-		Set<ModalHerbrandInterpretation> possibleWorlds = hBase.getAllHerbrandInterpretations(); 
-		Set<Set<ModalHerbrandInterpretation>> possibleWorldsCombinations = new SetTools<ModalHerbrandInterpretation>().subsets(possibleWorlds); 
+		MlHerbrandBase hBase = new MlHerbrandBase(sig);
+		Set<MlHerbrandInterpretation> possibleWorlds = hBase.getAllHerbrandInterpretations(); 
+		Set<Set<MlHerbrandInterpretation>> possibleWorldsCombinations = new SetTools<MlHerbrandInterpretation>().subsets(possibleWorlds); 
 
 		//For each set of worlds: Get all possible binary combinations of worlds to construct all possible accessibility relations
 		Set<KripkeModel> kripkeModels = new HashSet<KripkeModel>();
-		for (Set<ModalHerbrandInterpretation> possibleWorldCombination: possibleWorldsCombinations) {
+		for (Set<MlHerbrandInterpretation> possibleWorldCombination: possibleWorldsCombinations) {
 			Set<Pair<Interpretation<FolBeliefSet,FolFormula>,Interpretation<FolBeliefSet,FolFormula>>> setOfPairs = new HashSet<Pair<Interpretation<FolBeliefSet,FolFormula>,Interpretation<FolBeliefSet,FolFormula>>>();
 			for (Interpretation<FolBeliefSet,FolFormula> i: possibleWorldCombination) {	
 				for (Interpretation<FolBeliefSet,FolFormula> i2: possibleWorldCombination) {

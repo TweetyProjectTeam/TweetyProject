@@ -20,7 +20,7 @@ package net.sf.tweety.logics.ml.reasoner;
 
 import net.sf.tweety.commons.QualitativeReasoner;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 
 /**
  * Abstract modal reasoner to be implemented by concrete reasoners. 
@@ -31,32 +31,32 @@ import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
  * @author Matthias Thimm
  *
  */
-public abstract class AbstractModalReasoner implements QualitativeReasoner<ModalBeliefSet,FolFormula> {
+public abstract class AbstractMlReasoner implements QualitativeReasoner<MlBeliefSet,FolFormula> {
 	
 	/**
 	 * Empty default prover
 	 */
-	public static AbstractModalReasoner defaultReasoner = null;
+	public static AbstractMlReasoner defaultReasoner = null;
 	
 	/**
 	 * Set default modal reasoner with given
 	 * @param reasoner
 	 */
-	public static void setDefaultReasoner(AbstractModalReasoner reasoner){
-		AbstractModalReasoner.defaultReasoner = reasoner;
+	public static void setDefaultReasoner(AbstractMlReasoner reasoner){
+		AbstractMlReasoner.defaultReasoner = reasoner;
 	}
 	
 	/**
 	 * Returns the default reasoner for modal logic
 	 * @return the default modal reasoner
 	 */
-	public static AbstractModalReasoner getDefaultReasoner(){
-		if(AbstractModalReasoner.defaultReasoner != null){
-			return AbstractModalReasoner.defaultReasoner;
+	public static AbstractMlReasoner getDefaultReasoner(){
+		if(AbstractMlReasoner.defaultReasoner != null){
+			return AbstractMlReasoner.defaultReasoner;
 		} else{
 			System.err.println("No default modal reasoner configured, using "
 					+ "'NaiveModalReasoner' with default settings as fallback.");			
-			return new SimpleModalReasoner();
+			return new SimpleMlReasoner();
 		}
 	}
 
@@ -64,5 +64,5 @@ public abstract class AbstractModalReasoner implements QualitativeReasoner<Modal
 	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.Formula)
 	 */
 	@Override
-	public abstract Boolean query(ModalBeliefSet beliefbase, FolFormula formula);
+	public abstract Boolean query(MlBeliefSet beliefbase, FolFormula formula);
 }

@@ -1,11 +1,13 @@
-Animal = {duffy, carl, martin}
-Plant = {tuffy}
+Animal = {penguin, eagle, worm}
+Plant = {cactus}
 
 type(Flies(Animal))
-type(hasWings(Animal))
-type(Knows(Animal,Animal))
-type(test(Plant))
+type(HasWings(Animal))
+type(Eats(Animal,Animal))
+type(Stings(Plant))
 
-<>(Flies(carl))
-!([](<>(!test(tuffy))))
-[](forall X:(([](Flies(X))) || (<>(!hasWings(X)))))
+<>(Flies(eagle))
+!([](<>(!Stings(cactus))))
+Eats(eagle,worm)
+!(<>(Eats(worm,penguin)))
+[](forall X:(([](Flies(X))) || (<>(!HasWings(X)))))

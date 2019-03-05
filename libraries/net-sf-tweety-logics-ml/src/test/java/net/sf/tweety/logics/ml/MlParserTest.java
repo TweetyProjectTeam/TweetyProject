@@ -36,23 +36,23 @@ import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.ml.parser.ModalParser;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
-import net.sf.tweety.logics.ml.syntax.ModalFormula;
+import net.sf.tweety.logics.ml.parser.MlParser;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
+import net.sf.tweety.logics.ml.syntax.MlFormula;
 
 /**
  * JUnit Test class for ModalParser.
  * 
  *  @author Anna Gessler
  */
-public class ModalParserTest {
+public class MlParserTest {
 	
-	ModalParser parser;
+	MlParser parser;
 	public static final int DEFAULT_TIMEOUT = 5000;
 	
 	@Before
 	public void initParser() {
-		parser = new ModalParser();
+		parser = new MlParser();
 		FolSignature sig = new FolSignature(true);
 		Sort s_animal = new Sort("Animal");
 		sig.add(s_animal); 
@@ -69,35 +69,35 @@ public class ModalParserTest {
 		predicate_list2.add(s_animal);
 		Predicate p2 = new Predicate("Knows",predicate_list2);
 		sig.add(p2); 
-		Predicate p3 = new Predicate("Abba");
+		Predicate p3 = new Predicate("SunIsShining");
 		sig.add(p3); 
 		parser.setSignature(sig);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseModalFormulaTest() throws ParserException, IOException {
-		ModalFormula f1 = (ModalFormula)parser.parseFormula("[](Flies(penguin))");
-		ModalFormula f2 = (ModalFormula)parser.parseFormula("<>(Flies(penguin))");
-		Conjunction  f3 = (Conjunction) parser.parseFormula("!Abba && <>(Abba)");
+		MlFormula f1 = (MlFormula)parser.parseFormula("[](Flies(penguin))");
+		MlFormula f2 = (MlFormula)parser.parseFormula("<>(Flies(penguin))");
+		Conjunction  f3 = (Conjunction) parser.parseFormula("!SunIsShining && <>(SunIsShining)");
 		assertTrue(f1.containsModalityOperator());
 		assertTrue(f2.containsModalityOperator());
 		assertTrue(f1.getSignature().containsPredicate("Flies"));
 		assertTrue(f1.getSignature().containsConstant("penguin"));
 		assertTrue(f2.getSignature().containsPredicate("Flies"));
 		assertTrue(f2.getSignature().containsConstant("penguin"));
-		ModalFormula f5c2 = (ModalFormula)f3.get(1);
+		MlFormula f5c2 = (MlFormula)f3.get(1);
 		assertTrue(f5c2.containsModalityOperator());
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedModalFormulaTest() throws ParserException, IOException {
-		FolFormula f1= (FolFormula) parser.parseFormula("<>(Abba)||[](Abba)&& <>(Knows(kiwi,penguin) || Flies(penguin))");
+		FolFormula f1= (FolFormula) parser.parseFormula("<>(SunIsShining)||[](SunIsShining)&& <>(Knows(kiwi,penguin) || Flies(penguin))");
 		FolFormula f2 = (FolFormula) parser.parseFormula("[](Flies(kiwi)) || forall X:(==(penguin,X))");
-		FolFormula f3 = (FolFormula) parser.parseFormula("[](<>(!Flies(kiwi)) && forall X:(Knows(kiwi,X)) || Abba)");
-		FolFormula f4 = (FolFormula) parser.parseFormula("Abba && [](forall Y:(Flies(Y)) || forall X:(Knows(penguin,X)))");
+		FolFormula f3 = (FolFormula) parser.parseFormula("[](<>(!Flies(kiwi)) && forall X:(Knows(kiwi,X)) || SunIsShining)");
+		FolFormula f4 = (FolFormula) parser.parseFormula("SunIsShining && [](forall Y:(Flies(Y)) || forall X:(Knows(penguin,X)))");
 		FolFormula f5 = (FolFormula)parser.parseFormula("exists BIRD:(forall MyVar :([](Knows(BIRD,MyVar))))");
 		
-		assertTrue(f1.getSignature().containsPredicate("Abba"));
+		assertTrue(f1.getSignature().containsPredicate("SunIsShining"));
 		assertTrue(f1.getSignature().containsPredicate("Flies"));
 		assertTrue(f1.getSignature().containsPredicate("Knows"));
 		assertTrue(f1.getSignature().containsConstant("kiwi"));
@@ -108,18 +108,18 @@ public class ModalParserTest {
 		assertTrue(f2.getSignature().containsPredicate("=="));  
 		assertTrue(f3.getSignature().containsPredicate("Flies"));
 		assertTrue(f3.getSignature().containsPredicate("Knows"));
-		assertTrue(f3.getSignature().containsPredicate("Abba"));
+		assertTrue(f3.getSignature().containsPredicate("SunIsShining"));
 		assertTrue(f4.getSignature().containsPredicate("Flies"));
 		assertTrue(f4.getSignature().containsPredicate("Knows"));
-		assertTrue(f4.getSignature().containsPredicate("Abba"));
+		assertTrue(f4.getSignature().containsPredicate("SunIsShining"));
 		assertTrue(f5.getSignature().containsPredicate("Knows"));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseBeliefBaseFromFileTest() throws ParserException, IOException {
-		parser = new ModalParser();
-		ModalBeliefSet b = (ModalBeliefSet) parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.mlogic");
-		assertEquals(b.size(),3);
+		parser = new MlParser();
+		MlBeliefSet b = (MlBeliefSet) parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.mlogic");
+		assertEquals(b.size(),5);
 	}
 	
 	@Test(expected = ParserException.class, timeout = DEFAULT_TIMEOUT) 

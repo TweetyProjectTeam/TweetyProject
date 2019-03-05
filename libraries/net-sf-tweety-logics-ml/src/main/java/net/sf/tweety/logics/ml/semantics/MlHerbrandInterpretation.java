@@ -28,7 +28,7 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.ml.syntax.ModalFormula;
+import net.sf.tweety.logics.ml.syntax.MlFormula;
 import net.sf.tweety.logics.ml.syntax.Necessity;
 import net.sf.tweety.logics.ml.syntax.Possibility;
 
@@ -45,12 +45,12 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * @author Anna Gessler
  * @see net.sf.tweety.logics.fol.semantics.HerbrandInterpretation
  */
-public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBeliefSet,FolFormula> {
+public class MlHerbrandInterpretation extends InterpretationSet<FolAtom,FolBeliefSet,FolFormula> {
 	
 	/**
 	 * Creates a new empty Herbrand interpretation
 	 */
-	public ModalHerbrandInterpretation(){
+	public MlHerbrandInterpretation(){
 		this(new HashSet<FolAtom>());
 	}
 	
@@ -59,7 +59,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBe
 	 * set of atoms
 	 * @param atoms the set of true atoms in this Herbrand interpretation.
 	 */
-	public ModalHerbrandInterpretation(Collection<? extends FolAtom> atoms){
+	public MlHerbrandInterpretation(Collection<? extends FolAtom> atoms){
 		super(atoms);
 	}
 	
@@ -165,7 +165,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBe
 		}
 		if (formula instanceof Necessity) {
 			for (Interpretation<FolBeliefSet,FolFormula> j : successors) {
-				if (!j.satisfies((FolFormula) ((ModalFormula) formula).getFormula())) {
+				if (!j.satisfies((FolFormula) ((MlFormula) formula).getFormula())) {
 					return false; }
 
 			}
@@ -173,7 +173,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBe
 		if (formula instanceof Possibility) {
 			boolean satisfied = false;
 			for (Interpretation<FolBeliefSet,FolFormula> j : successors) {
-				if (j.satisfies((FolFormula) ((ModalFormula) formula).getFormula())) {
+				if (j.satisfies((FolFormula) ((MlFormula) formula).getFormula())) {
 					satisfied = true;
 					break;
 				}
@@ -193,7 +193,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBe
 	 * @param equivalenceClasses a set of sets of constants.
 	 * @return "true" iff the two interpretations are syntactically equivalent.
 	 */
-	public boolean isSyntacticallyEquivalent(ModalHerbrandInterpretation other, Collection<? extends Collection<? extends Constant>> equivalenceClasses){
+	public boolean isSyntacticallyEquivalent(MlHerbrandInterpretation other, Collection<? extends Collection<? extends Constant>> equivalenceClasses){
 		// check for obvious cases
 		if(this.size() != other.size())
 			return false;
@@ -279,7 +279,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBe
 	 * @param t2 a term.
 	 * @return a Herbrand interpretation
 	 */
-	public ModalHerbrandInterpretation exchange(Term<?> t1, Term<?> t2){
+	public MlHerbrandInterpretation exchange(Term<?> t1, Term<?> t2){
 		Set<FolAtom> atoms = new HashSet<FolAtom>();
 		Constant tempConstant = new Constant("__TEMP__");
 		for(Formula f: this){
@@ -288,7 +288,7 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBe
 			a = a.substitute(tempConstant, t2);
 			atoms.add(a);
 		}		
-		return new ModalHerbrandInterpretation(atoms);
+		return new MlHerbrandInterpretation(atoms);
 	}
 	
 	/**
@@ -297,8 +297,8 @@ public class ModalHerbrandInterpretation extends InterpretationSet<FolAtom,FolBe
 	 * @param mapping a mapping of terms.
 	 * @return a Herbrand interpretation.
 	 */
-	public ModalHerbrandInterpretation exchange(Map<Term<?>,Term<?>> mapping){
-		ModalHerbrandInterpretation result = new ModalHerbrandInterpretation(this);
+	public MlHerbrandInterpretation exchange(Map<Term<?>,Term<?>> mapping){
+		MlHerbrandInterpretation result = new MlHerbrandInterpretation(this);
 		for(Term<?> t: mapping.keySet())
 			result = result.exchange(t, mapping.get(t));
 		return result;

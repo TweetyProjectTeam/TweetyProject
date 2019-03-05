@@ -25,10 +25,10 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.ml.parser.ModalParser;
-import net.sf.tweety.logics.ml.reasoner.AbstractModalReasoner;
-import net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.parser.MlParser;
+import net.sf.tweety.logics.ml.reasoner.AbstractMlReasoner;
+import net.sf.tweety.logics.ml.reasoner.SPASSMlReasoner;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 
 /**
  * More examples for testing ModalParser and ModalReasoner
@@ -36,8 +36,8 @@ import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
  */
 public class MlExample2 {
 	public static void main(String[] args) throws ParserException, IOException {
-		ModalBeliefSet bs = new ModalBeliefSet();
-		ModalParser parser = new ModalParser();
+		MlBeliefSet bs = new MlBeliefSet();
+		MlParser parser = new MlParser();
 		FolSignature sig = new FolSignature();
 		sig.add(new Predicate("p",0));
 		sig.add(new Predicate("q",0));
@@ -49,7 +49,7 @@ public class MlExample2 {
 		bs.add((RelationalFormula) parser.parseFormula("[](r && <>(p || q))"));
 		bs.add((RelationalFormula) parser.parseFormula("!p && !q"));
 		System.out.println("Modal knowledge base: " + bs);		
-		AbstractModalReasoner reasoner = new SPASSModalReasoner("/add/path/to/SPASS");		
+		AbstractMlReasoner reasoner = new SPASSMlReasoner("/add/path/to/SPASS");		
 		System.out.println("[](!p)      " + reasoner.query(bs,(FolFormula) parser.parseFormula("[](!p)")));
 		System.out.println("<>(q || r)  " + reasoner.query(bs,(FolFormula) parser.parseFormula("<>(q || r)")));
 		System.out.println("p           " + reasoner.query(bs,(FolFormula) parser.parseFormula("p")));

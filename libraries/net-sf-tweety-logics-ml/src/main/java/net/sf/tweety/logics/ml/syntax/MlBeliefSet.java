@@ -32,12 +32,12 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
  * 
  * @author Anna Gessler
  */
-public class ModalBeliefSet extends BeliefSet<RelationalFormula> {
+public class MlBeliefSet extends BeliefSet<RelationalFormula> {
 	
 	/**
 	 * Creates a new empty modal knowledge base.
 	 */
-	public ModalBeliefSet(){
+	public MlBeliefSet(){
 		super();
 	}
 	
@@ -45,7 +45,7 @@ public class ModalBeliefSet extends BeliefSet<RelationalFormula> {
 	 * Creates a new modal knowledge base with the given set of formulas.
 	 * @param formulas
 	 */
-	public ModalBeliefSet(Set<RelationalFormula> formulas){
+	public MlBeliefSet(Set<RelationalFormula> formulas){
 		super(formulas);
 	}
 
@@ -53,8 +53,8 @@ public class ModalBeliefSet extends BeliefSet<RelationalFormula> {
 	public Signature getSignature() {
 		FolSignature sig = new FolSignature();
 		for(Formula m: this) {
-			while (m instanceof ModalFormula) {
-				m = ((ModalFormula)m).getFormula(); 
+			while (m instanceof MlFormula) {
+				m = ((MlFormula)m).getFormula(); 
 			}
 			sig.add(m);	
 			}	

@@ -56,8 +56,8 @@ import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.syntax.Tautology;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
-import net.sf.tweety.logics.ml.syntax.ModalFormula;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
+import net.sf.tweety.logics.ml.syntax.MlFormula;
 import net.sf.tweety.logics.ml.syntax.Necessity;
 import net.sf.tweety.logics.ml.syntax.Possibility;
 
@@ -90,14 +90,14 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * @author Anna Gessler
  */
 
-public class ModalParser extends Parser<ModalBeliefSet,RelationalFormula> {
+public class MlParser extends Parser<MlBeliefSet,RelationalFormula> {
 
 	/**
 	 * First-order logic parser used for parsing sorts and type declaration.
 	 */
 	FolParser folparser; 
 	
-	public ModalParser() {
+	public MlParser() {
 		folparser = new FolParser();
 	}
 
@@ -105,8 +105,8 @@ public class ModalParser extends Parser<ModalBeliefSet,RelationalFormula> {
 	 * @see net.sf.tweety.kr.Parser#parseBeliefBase(java.io.Reader)
 	 */
 	@Override
-	public ModalBeliefSet parseBeliefBase(Reader reader) throws IOException, ParserException {
-		ModalBeliefSet beliefSet = new ModalBeliefSet();
+	public MlBeliefSet parseBeliefBase(Reader reader) throws IOException, ParserException {
+		MlBeliefSet beliefSet = new MlBeliefSet();
 		String s = "";
 		// For keeping track of the section of the file:
 		// 0 means sorts declaration
@@ -470,13 +470,17 @@ public class ModalParser extends Parser<ModalBeliefSet,RelationalFormula> {
 				}
 			}	
 		}
-		
-		ModalFormula result;
+		MlFormula result;
+		if (!(l.get(1) instanceof RelationalFormula))
+			throw new ParserException("Unrecognized formula type " + l.get(1) + ". Probably caused by missing parentheses around modalized formula " + l.get(1) + ".");
 		if (l.get(0).equals("[]")) 
 			result = new Necessity((RelationalFormula) l.get(1));
-		else 
+		else if (l.get(0).equals("<>")) 
 			result = new Possibility((RelationalFormula) l.get(1));
-		//Add additional conjuncts/disjuncts to the right of the modalization (if applicable)
+		else
+			throw new ParserException("Unknown object " + l.get(0));
+		
+				//Add additional conjuncts/disjuncts to the right of the modalization (if applicable)
 		if (l.size() > 2) {
 			if (l.get(2).equals(LogicalSymbols.CONJUNCTION()))
 				return new Conjunction(result, parseQuantification(new ArrayList<Object>(l.subList(3, l.size()))));

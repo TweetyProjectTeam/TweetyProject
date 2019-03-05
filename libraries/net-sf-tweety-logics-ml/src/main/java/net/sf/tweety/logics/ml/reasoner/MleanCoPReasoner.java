@@ -26,7 +26,7 @@ import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 import net.sf.tweety.logics.ml.writer.MleanCoPWriter;
 
 /**
@@ -39,7 +39,7 @@ import net.sf.tweety.logics.ml.writer.MleanCoPWriter;
  * @author Anna Gessler
  * @author Matthias Thimm
  */
-public class MleanCoPReasoner extends AbstractModalReasoner {
+public class MleanCoPReasoner extends AbstractMlReasoner {
 	/**
 	 * String representation of the mleancop.sh path. 
 	 * This shell script specifies the prolog system, prover location and modal logic (D, T, S4 or S5)
@@ -97,7 +97,7 @@ public class MleanCoPReasoner extends AbstractModalReasoner {
 	 * @see net.sf.tweety.logics.ml.reasoner.ModalReasoner#query(net.sf.tweety.logics.ml.syntax.ModalBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public Boolean query(ModalBeliefSet beliefbase, FolFormula formula) {
+	public Boolean query(MlBeliefSet beliefbase, FolFormula formula) {
 		// check whether beliefbase => query is a theorem
 		FolFormula complete = formula;
 		for(RelationalFormula f: beliefbase)

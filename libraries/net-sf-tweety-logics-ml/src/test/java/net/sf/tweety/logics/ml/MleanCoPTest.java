@@ -11,9 +11,9 @@ import org.junit.Test;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.ml.parser.ModalParser;
+import net.sf.tweety.logics.ml.parser.MlParser;
 import net.sf.tweety.logics.ml.reasoner.MleanCoPReasoner;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 
 /**
  * JUnit Test class for MleanCoP.
@@ -22,14 +22,14 @@ import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
  */
 public class MleanCoPTest {
 
-	ModalParser parser;
+	MlParser parser;
 	MleanCoPReasoner prover;
 	public static final int DEFAULT_TIMEOUT = 10000;
 	
 	@Before 
 	public void init() throws ParserException, IOException {
-		parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("Test={test} \n type(p) \n type(q(Test)) \n p \n q(test)");
+		parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("Test={test} \n type(p) \n type(q(Test)) \n p \n q(test)");
 		parser.setSignature((FolSignature) b.getSignature());
 		prover = new MleanCoPReasoner("/home/anna/sw/mlProver/mleancop/mleancop.sh");
 	}
@@ -38,13 +38,13 @@ public class MleanCoPTest {
 	public void SimpleQueryTest() throws ParserException, IOException {
 		FolFormula f1 = (FolFormula) parser.parseFormula("p||!p");
 		FolFormula f2 = (FolFormula) parser.parseFormula("p&&!p");
-		assertTrue(prover.query(new ModalBeliefSet(),f1));
-		assertFalse(prover.query(new ModalBeliefSet(),f2));
+		assertTrue(prover.query(new MlBeliefSet(),f1));
+		assertFalse(prover.query(new MlBeliefSet(),f2));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ComplexQueryTest() throws ParserException, IOException {
 		FolFormula f1 = (FolFormula) parser.parseFormula("[](forall X:(q(X)))=>forall X:( [](q(X)))");
-		assertTrue(prover.query(new ModalBeliefSet(),f1));
+		assertTrue(prover.query(new MlBeliefSet(),f1));
 	}
 }

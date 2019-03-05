@@ -28,11 +28,11 @@ import org.junit.Test;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.commons.util.Shell;
-import net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.reasoner.SPASSMlReasoner;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 import net.sf.tweety.logics.ml.writer.SPASSWriter;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.ml.parser.ModalParser;
+import net.sf.tweety.logics.ml.parser.MlParser;
 
 /**
  * JUnit Test class for SPASS Prover for modal formulas.
@@ -42,18 +42,18 @@ import net.sf.tweety.logics.ml.parser.ModalParser;
 public class SPASSTest {
 	
 	public static final int DEFAULT_TIMEOUT = 10000;
-	static SPASSModalReasoner spass;
+	static SPASSMlReasoner spass;
 	SPASSWriter printer = new SPASSWriter();
 	
 	@BeforeClass public static void init(){
 		System.out.println("Initializing SPASS Test for Unix");
-		spass = new SPASSModalReasoner("/home/anna/sw/mlProver/SPASS/SPASS", Shell.getNativeShell());
+		spass = new SPASSMlReasoner("/home/anna/sw/mlProver/SPASS/SPASS", Shell.getNativeShell());
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleQueryTest1() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n !(<>(p))");
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("type(p) \n !(<>(p))");
 				
 		Boolean a1 = spass.query(b,(FolFormula) parser.parseFormula("<>(p)"));
 		Boolean a2 = spass.query(b,(FolFormula) parser.parseFormula("!(<>(p))"));
@@ -63,8 +63,8 @@ public class SPASSTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleQueryTest2() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n p");
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("type(p) \n p");
 		
 		Boolean a1 = spass.query(b,(FolFormula) parser.parseFormula("<>(p)"));
 		Boolean a2 = spass.query(b,(FolFormula) parser.parseFormula("[](p)"));
@@ -80,8 +80,8 @@ public class SPASSTest {
 	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ComplexQueryTest() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("Sort1={obj1} \n type(p) \n type(q(Sort1)) \n p \n q(obj1)");
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("Sort1={obj1} \n type(p) \n type(q(Sort1)) \n p \n q(obj1)");
 		Boolean a1 = spass.query(b, (FolFormula) parser.parseFormula("[](forall X:(q(X)))=>forall X:( [](q(X)))"));
 		assertTrue(a1);
 	}

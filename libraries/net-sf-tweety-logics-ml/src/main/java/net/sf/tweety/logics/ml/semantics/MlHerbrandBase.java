@@ -36,7 +36,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Anna Gessler
  * @see net.sf.tweety.logics.fol.semantics.HerbrandBase
  */
-public class ModalHerbrandBase {
+public class MlHerbrandBase {
 
 	private HerbrandBase hBase;
 
@@ -50,7 +50,7 @@ public class ModalHerbrandBase {
 	 * @throws IllegalArgumentationException if "sig" contains a functor.
 	 * @see net.sf.tweety.logics.fol.semantics.HerbrandBase#HerbrandBase(FolSignature sig)
 	 */
-	public ModalHerbrandBase(FolSignature sig) throws IllegalArgumentException{
+	public MlHerbrandBase(FolSignature sig) throws IllegalArgumentException{
 		this.hBase = new HerbrandBase(sig);
 	}
 	
@@ -61,11 +61,11 @@ public class ModalHerbrandBase {
 	 * @return all possible Herbrand interpretations of this Herbrand
 	 * base, i.e. all possible subsets of this Herbrand base.
 	 */
-	public Set<ModalHerbrandInterpretation> getAllHerbrandInterpretations(){
-		Set<ModalHerbrandInterpretation> interpretations = new HashSet<ModalHerbrandInterpretation>();
+	public Set<MlHerbrandInterpretation> getAllHerbrandInterpretations(){
+		Set<MlHerbrandInterpretation> interpretations = new HashSet<MlHerbrandInterpretation>();
 		Set<Set<FolAtom>> subsets = new SetTools<FolAtom>().subsets(this.getAtoms());
 		for(Set<FolAtom> atoms: subsets)
-			interpretations.add(new ModalHerbrandInterpretation(atoms));		
+			interpretations.add(new MlHerbrandInterpretation(atoms));		
 		return interpretations;
 	}
 	

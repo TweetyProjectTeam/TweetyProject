@@ -27,7 +27,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 import net.sf.tweety.logics.ml.writer.SPASSWriter;
 
 /**
@@ -42,7 +42,7 @@ import net.sf.tweety.logics.ml.writer.SPASSWriter;
  * @author Matthias Thimm
  *
  */
-public class SPASSModalReasoner extends AbstractModalReasoner {
+public class SPASSMlReasoner extends AbstractMlReasoner {
 	/**
 	 * String representation of the SPASS path.
 	 */
@@ -68,7 +68,7 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 	 * @param bash
 	 *            shell to run commands
 	 */
-	public SPASSModalReasoner(String binaryLocation, Shell bash) {
+	public SPASSMlReasoner(String binaryLocation, Shell bash) {
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
 	}
@@ -79,7 +79,7 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 	 * @param binaryLocation
 	 *            of the SPASS executable on the hard drive
 	 */
-	public SPASSModalReasoner(String binaryLocation) {
+	public SPASSMlReasoner(String binaryLocation) {
 		this(binaryLocation, Shell.getNativeShell());
 	}
 	
@@ -95,7 +95,7 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 	 * @see net.sf.tweety.logics.ml.reasoner.AbstractModalReasoner#query(net.sf.tweety.logics.ml.syntax.ModalBeliefSet, net.sf.tweety.logics.fol.syntax.FolFormula)
 	 */
 	@Override
-	public Boolean query(ModalBeliefSet kb, FolFormula query) {
+	public Boolean query(MlBeliefSet kb, FolFormula query) {
 		String output = null;
 		try {
 			File file = File.createTempFile("tmp", ".txt");
@@ -117,13 +117,13 @@ public class SPASSModalReasoner extends AbstractModalReasoner {
 	
 	/**
 	 * Determines the answer wrt. to the given query and returns the proof (if applicable).
-	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.ml.reasoner.SPASSModalReasoner#query(Formula)}
+	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.ml.reasoner.SPASSMlReasoner#query(Formula)}
 	 * if only a yes/no result is needed.
 	 * @param kb a modal belief set
 	 * @param query a formula
 	 * @return a string containing proof documentation 
 	 */
-	public String queryProof(ModalBeliefSet kb, Formula query) {
+	public String queryProof(MlBeliefSet kb, Formula query) {
 		String output = null;
 		try {
 			File file = File.createTempFile("tmp", ".txt");	

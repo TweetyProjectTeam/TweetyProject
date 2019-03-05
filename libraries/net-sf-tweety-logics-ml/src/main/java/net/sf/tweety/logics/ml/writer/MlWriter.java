@@ -20,15 +20,15 @@ package net.sf.tweety.logics.ml.writer;
 
 import net.sf.tweety.commons.Writer;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 
-public class ModalWriter extends Writer {
+public class MlWriter extends Writer {
 
-	public ModalWriter(RelationalFormula formula) {
+	public MlWriter(RelationalFormula formula) {
 		super(formula);
 	}
 	
-	public ModalWriter(ModalBeliefSet beliefSet) {
+	public MlWriter(MlBeliefSet beliefSet) {
 		super(beliefSet);
 	}
 

@@ -18,6 +18,9 @@
  */
 package net.sf.tweety.logics.ml.syntax;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
@@ -33,29 +36,33 @@ import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.Negation;
+import net.sf.tweety.logics.ml.semantics.MlHerbrandBase;
+import net.sf.tweety.logics.ml.semantics.MlHerbrandInterpretation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.math.probability.Probability;
 
 /**
- * This class models a modal formula, i.e. it encapsulates an modal operator
- * and a formula (either a modal formula or a FolFormula).
- *  
+ * This class models a modal formula, i.e. it encapsulates an modal operator and
+ * a formula (either a modal formula or a FolFormula).
+ * 
  * @author Matthias Thimm
  */
-public abstract class ModalFormula extends FolFormula {
+public abstract class MlFormula extends FolFormula {
 
 	/**
-	 * The inner formula of this modal formula 
+	 * The inner formula of this modal formula
 	 */
 	private RelationalFormula formula;
-	
-	public ModalFormula(RelationalFormula formula){
-		if(!(formula instanceof ModalFormula) && !(formula instanceof FolFormula))
+
+	public MlFormula(RelationalFormula formula) {
+		if (!(formula instanceof MlFormula) && !(formula instanceof FolFormula))
 			throw new IllegalArgumentException("Expecting first-order formula or modal formula for inner formula.");
 		this.formula = formula;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.kr.Formula#getSignature()
 	 */
 	@Override
@@ -66,99 +73,137 @@ public abstract class ModalFormula extends FolFormula {
 		sig.addAll(this.getPredicates());
 		return sig;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#getUniformProbability()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.RelationalFormula#
+	 * getUniformProbability()
 	 */
 	@Override
 	public Probability getUniformProbability() {
-		throw new UnsupportedOperationException("IMPLEMENT ME"); //TODO return this.formula.getUniformProbability()?
+		Set<Variable> vars = this.getUnboundVariables();
+		Map<Variable,Constant> map = new HashMap<Variable,Constant>();
+		int i = 0;
+		FolSignature sig = this.getSignature();
+		for(Variable var: vars){
+			Constant c = new Constant("d" + i++);
+			map.put(var, c);
+			sig.add(c);
+		}
+		FolFormula groundFormula = (FolFormula) this.substitute(map);
+		MlHerbrandBase hBase = new MlHerbrandBase(sig);
+		Collection<MlHerbrandInterpretation> allWorlds = hBase.getAllHerbrandInterpretations();
+		int cnt = 0;
+		for(MlHerbrandInterpretation hInt: allWorlds)
+			if(hInt.satisfies(groundFormula))
+				cnt++;
+		return new Probability(new Double(cnt)/new Double(allWorlds.size()));
 	}
-	
+
 	/**
 	 * Returns the inner formula of this modal formula.
+	 * 
 	 * @return the inner formula of this modal formula.
 	 */
-	public RelationalFormula getFormula(){
+	public RelationalFormula getFormula() {
 		return this.formula;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getPredicates()
 	 */
-	public Set<? extends Predicate> getPredicates(){
+	public Set<? extends Predicate> getPredicates() {
 		return this.formula.getPredicates();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getFunctors()
 	 */
-	public Set<Functor> getFunctors(){
+	public Set<Functor> getFunctors() {
 		return this.formula.getFunctors();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getAtoms()
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<FolAtom> getAtoms(){
+	public Set<FolAtom> getAtoms() {
 		return (Set<FolAtom>) this.formula.getAtoms();
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#containsQuantifier()
 	 */
-	public boolean containsQuantifier(){
+	public boolean containsQuantifier() {
 		return this.formula.containsQuantifier();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed()
 	 */
-	public boolean isClosed(){
+	public boolean isClosed() {
 		return this.formula.isClosed();
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed(java.util.Set)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#isClosed(java.util.
+	 * Set)
 	 */
-	public boolean isClosed(Set<Variable> boundVariables){
+	public boolean isClosed(Set<Variable> boundVariables) {
 		return this.formula.isClosed(boundVariables);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.firstorderlogic.syntax.FolFormula#getUnboundVariables()
 	 */
-	public Set<Variable> getUnboundVariables(){
+	public Set<Variable> getUnboundVariables() {
 		return this.getTerms(Variable.class);
 	}
-	
+
 	@Override
-	public boolean isWellBound(){
+	public boolean isWellBound() {
 		return this.formula.isWellBound();
 	}
-	
+
 	@Override
-	public boolean isWellBound(Set<Variable> boundVariables){
+	public boolean isWellBound(Set<Variable> boundVariables) {
 		return this.formula.isWellBound(boundVariables);
 	}
-	
+
 	@Override
-	public Conjunction combineWithAnd(Conjunctable f){
-		if(!(f instanceof ModalFormula))
+	public Conjunction combineWithAnd(Conjunctable f) {
+		if (!(f instanceof MlFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a modal formula.");
-		return new Conjunction(this,(ModalFormula)f);
+		return new Conjunction(this, (MlFormula) f);
 	}
-	
+
 	@Override
-	public Disjunction combineWithOr(Disjunctable f){
-		if(!(f instanceof ModalFormula))
+	public Disjunction combineWithOr(Disjunctable f) {
+		if (!(f instanceof MlFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a modal formula.");
-		return new Disjunction(this,(ModalFormula)f);
+		return new Disjunction(this, (MlFormula) f);
 	}
-	
+
 	@Override
-	public RelationalFormula complement(){		
+	public RelationalFormula complement() {
 		return new Negation(this);
 	}
 
@@ -182,13 +227,9 @@ public abstract class ModalFormula extends FolFormula {
 		return formula.getQuantifierVariables();
 	}
 
-	//@Override
-	//public RelationalFormula substitute(Term<?> v, Term<?> t)
-	//		throws IllegalArgumentException {
-	//	return formula.substitute(v, t);
-	//}
-	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -199,7 +240,9 @@ public abstract class ModalFormula extends FolFormula {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -210,7 +253,7 @@ public abstract class ModalFormula extends FolFormula {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ModalFormula other = (ModalFormula) obj;
+		MlFormula other = (MlFormula) obj;
 		if (formula == null) {
 			if (other.formula != null)
 				return false;
@@ -218,10 +261,15 @@ public abstract class ModalFormula extends FolFormula {
 			return false;
 		return true;
 	}
-	
-	public boolean containsModalityOperator(){
+
+	/**
+	 * Checks whether this formula contains a modal operator ("necessity" operator
+	 * or "possibility" operator).
+	 * 
+	 * @return true if formula contains modality, false otherwise
+	 */
+	public boolean containsModalityOperator() {
 		return true;
 	}
 
-	
 }

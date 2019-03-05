@@ -27,24 +27,24 @@ import org.junit.Test;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.ml.parser.ModalParser;
-import net.sf.tweety.logics.ml.reasoner.SimpleModalReasoner;
-import net.sf.tweety.logics.ml.syntax.ModalBeliefSet;
+import net.sf.tweety.logics.ml.parser.MlParser;
+import net.sf.tweety.logics.ml.reasoner.SimpleMlReasoner;
+import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 
 /**
  * JUnit Test class for NaiveModalReasoner.
  * 
  *  @author Anna Gessler
  */
-public class ModalReasonerTest {
+public class MlReasonerTest {
 	
 	public static final int DEFAULT_TIMEOUT = 10000;
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleQueryTest1() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n !(<>(p))");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();		
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("type(p) \n !(<>(p))");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();		
 		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("<>(p)"));
 		Boolean a2 = reasoner.query(b,(FolFormula) parser.parseFormula("!(<>(p))"));
 		assertFalse(a1);
@@ -53,9 +53,9 @@ public class ModalReasonerTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleQueryTest2() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n p");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();		
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("type(p) \n p");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();		
 		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("<>(p)"));
 		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("[](p)"));
 		assertFalse(a1);
@@ -64,9 +64,9 @@ public class ModalReasonerTest {
 	
 	@Test(timeout = 20000)
 	public void SimpleQueryTest3() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();
 		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("Flies(duffy)"));
 		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))"));
 		assertFalse(a1);
@@ -75,18 +75,18 @@ public class ModalReasonerTest {
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleQueryTest4() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n Flies(martin)\n Flies(duffy)");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n Flies(martin)\n Flies(duffy)");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();
 		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("forall X:(Flies(X))"));
 		assertTrue(a1);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ImplicationTest() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("type(p) \n type(q) \n p \n !p||q");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();		
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("type(p) \n type(q) \n p \n !p||q");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();		
 		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("p<=>p"));
 		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("!p=>!p"));
 		Boolean  a3 = reasoner.query(b,(FolFormula) parser.parseFormula("!p=>p"));
@@ -99,36 +99,36 @@ public class ModalReasonerTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void TautologyAsQueryTest() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();
 		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("+"));
 		assertEquals(a1,true);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ContradictionAsQueryTest() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();
 		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("-"));
 		assertEquals(a1,false);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void EmptyBeliefBaseTest() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();
 		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("+"));
 		assertEquals(a1,true);
 	}
 	
 	@Test(expected=ParserException.class, timeout = DEFAULT_TIMEOUT)
 	public void UnrecognizedQueryTest() throws FileNotFoundException, ParserException, IOException {
-		ModalParser parser = new ModalParser();
-		ModalBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
-		SimpleModalReasoner reasoner = new SimpleModalReasoner();
+		MlParser parser = new MlParser();
+		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
+		SimpleMlReasoner reasoner = new SimpleMlReasoner();
 		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("Knows(duffy,martin)"));
 		assertEquals(a1,true);
 	}

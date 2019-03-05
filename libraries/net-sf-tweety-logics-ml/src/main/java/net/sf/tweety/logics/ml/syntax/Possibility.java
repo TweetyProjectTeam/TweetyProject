@@ -26,7 +26,7 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
  * This class models the possibility modality.
  * @author Matthias Thimm
  */
-public class Possibility extends ModalFormula {
+public class Possibility extends MlFormula {
 
 	/**
 	 * Creates a new possibility formula with the
@@ -58,19 +58,19 @@ public class Possibility extends ModalFormula {
 
 	@Override
 	public FolFormula toNnf() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+		throw new UnsupportedOperationException("NNF is not supported for modal formulas.");
 	}
 
 	@Override
 	public RelationalFormula collapseAssociativeFormulas() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+		if (this.getFormula() instanceof FolFormula) 
+			return new Possibility(((FolFormula)this.getFormula()).collapseAssociativeFormulas());
+		else
+			throw new IllegalArgumentException(this.getFormula() + " is not of type FolFormula");
 	}
 
 	@Override
 	public boolean isDnf() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+		throw new UnsupportedOperationException("DNF is not supported for modal formulas.");
 	}
 }
