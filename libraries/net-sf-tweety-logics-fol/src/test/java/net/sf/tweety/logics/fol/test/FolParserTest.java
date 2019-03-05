@@ -61,7 +61,7 @@ public class FolParserTest {
 		Constant c_kiwi = new Constant("kiwi",s_animal);
 		sig.add(c_penguin);
 		sig.add(c_kiwi);
-		Predicate p1 = new Predicate("Abba");
+		Predicate p1 = new Predicate("SunIsShining");
 		sig.add(p1);
 		List<Sort> predicate_list = new ArrayList<Sort>();
 		predicate_list.add(s_animal);
@@ -77,14 +77,14 @@ public class FolParserTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseForallQuantificationTest() throws ParserException, IOException {
-		FolFormula f1 = (FolFormula)parser.parseFormula("forall X:(!Knows(kiwi,X) && Abba)");
+		FolFormula f1 = (FolFormula)parser.parseFormula("forall X:(!Knows(kiwi,X) && SunIsShining)");
 		FolSignature sig = f1.getSignature();
 		
 		assertTrue(f1.containsQuantifier());
 		assertTrue(sig.containsSort("Animal"));
 		assertTrue(sig.containsConstant("kiwi"));
 		assertFalse(sig.containsConstant("penguin"));
-		assertTrue(sig.containsPredicate("Abba"));
+		assertTrue(sig.containsPredicate("SunIsShining"));
 		assertTrue(sig.containsPredicate("Knows"));
 		assertFalse(sig.containsPredicate("Flies"));
 		assertEquals(f1.getTerms().size(),2);
@@ -92,7 +92,7 @@ public class FolParserTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseExistsQuantificationTest() throws ParserException, IOException {
-		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:(!Knows(kiwi,X) && Abba)");
+		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:(!Knows(kiwi,X) && SunIsShining)");
 		FolSignature sig = f1.getSignature();
 		
 		assertTrue(f1.containsQuantifier());
@@ -100,7 +100,7 @@ public class FolParserTest {
 		assertTrue(sig.containsConstant("kiwi"));
 		assertFalse(sig.containsConstant("penguin"));
 		assertTrue(sig.containsPredicate("Knows"));
-		assertTrue(sig.containsPredicate("Abba"));
+		assertTrue(sig.containsPredicate("SunIsShining"));
 		assertFalse(sig.containsPredicate("Flies"));
 		assertEquals(f1.getTerms().size(),2);
 	}
@@ -137,29 +137,29 @@ public class FolParserTest {
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ImplicationTest() throws ParserException, IOException {
-		Implication f = (Implication) parser.parseFormula("Abba=>Abba");
+		Implication f = (Implication) parser.parseFormula("SunIsShining=>SunIsShining");
 		FolSignature sig = f.getSignature();
-		assertTrue(sig.containsPredicate("Abba"));
-		assertEquals(f.getFormulas().getFirst(),parser.parseFormula("Abba"));
-		assertEquals(f.getFormulas().getSecond(),parser.parseFormula("Abba"));
+		assertTrue(sig.containsPredicate("SunIsShining"));
+		assertEquals(f.getFormulas().getFirst(),parser.parseFormula("SunIsShining"));
+		assertEquals(f.getFormulas().getSecond(),parser.parseFormula("SunIsShining"));
 	}
 	
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedQuantifiedFormulaTest() throws ParserException, IOException {
-		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:(!Knows(kiwi,X)) && Abba");
-		FolFormula f2 = (FolFormula)parser.parseFormula("Abba && forall X:(!Knows(kiwi,X))");
-		FolFormula f3 = (FolFormula)parser.parseFormula("Abba || forall X:(Flies(X)) && Abba || Abba && exists Y:(Knows(Y,kiwi))");
-		FolFormula f4 = (FolFormula)parser.parseFormula("exists BIRD:(forall MyVar :(Knows(BIRD,MyVar)))");
+		FolFormula f1 = (FolFormula)parser.parseFormula("exists X:(!Knows(kiwi,X)) && SunIsShining");
+		FolFormula f2 = (FolFormula)parser.parseFormula("SunIsShining && forall X:(!Knows(kiwi,X))");
+		FolFormula f3 = (FolFormula)parser.parseFormula("SunIsShining || forall X:(Flies(X)) && SunIsShining || SunIsShining && exists Y:(Knows(Y,kiwi))");
+		FolFormula f4 = (FolFormula)parser.parseFormula("exists VARIABLE:(forall OtherVariable :(Knows(VARIABLE,OtherVariable)))");
 		
 		assertTrue(f1.containsQuantifier());
 		assertTrue(f2.containsQuantifier());
 		assertTrue(f3.containsQuantifier());
-		assertTrue(f1.getSignature().containsPredicate("Abba"));
+		assertTrue(f1.getSignature().containsPredicate("SunIsShining"));
 		assertTrue(f1.getSignature().containsPredicate("Knows"));
-		assertTrue(f2.getSignature().containsPredicate("Abba"));
+		assertTrue(f2.getSignature().containsPredicate("SunIsShining"));
 		assertTrue(f2.getSignature().containsPredicate("Knows"));
-		assertTrue(f3.getSignature().containsPredicate("Abba"));
+		assertTrue(f3.getSignature().containsPredicate("SunIsShining"));
 		assertTrue(f3.getSignature().containsPredicate("Knows"));
 		assertTrue(f3.getSignature().containsPredicate("Flies"));
 		assertTrue(f4.getSignature().containsPredicate("Knows"));
@@ -170,7 +170,7 @@ public class FolParserTest {
 		parser = new FolParser();
 		FolBeliefSet beliefSet = new FolBeliefSet();
 		beliefSet = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.fologic");
-		assertEquals(beliefSet.size(),5);
+		assertEquals(beliefSet.size(),6);
 		
 		FolSignature sig = (FolSignature) beliefSet.getSignature();
 		assertEquals(sig.getConstants().size(),4);
