@@ -365,8 +365,8 @@ public class SActionQuerySatisfactionTester
   {
     Set< PlFormula > result = new HashSet< PlFormula >();
     result.add( formula );
-    if ( formula instanceof net.sf.tweety.logics.pl.syntax.AssociativePropositionalFormula ) {
-      for ( PlFormula f : (net.sf.tweety.logics.pl.syntax.AssociativePropositionalFormula) formula ) {
+    if ( formula instanceof net.sf.tweety.logics.pl.syntax.AssociativePlFormula ) {
+      for ( PlFormula f : (net.sf.tweety.logics.pl.syntax.AssociativePlFormula) formula ) {
         result.addAll( getQueryParts( f ) );
       }
     }

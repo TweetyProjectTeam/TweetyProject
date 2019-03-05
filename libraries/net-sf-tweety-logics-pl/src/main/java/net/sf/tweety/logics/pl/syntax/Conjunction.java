@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public class Conjunction extends AssociativePropositionalFormula {
+public class Conjunction extends AssociativePlFormula {
 		
 	/**
 	 * Creates a new conjunction with the given inner formulas. 

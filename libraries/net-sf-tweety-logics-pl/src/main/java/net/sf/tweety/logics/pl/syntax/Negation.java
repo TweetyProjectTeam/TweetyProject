@@ -75,7 +75,7 @@ public class Negation extends PlFormula {
 	 */
 	@Override
 	public String toString(){
-		if(this.formula instanceof AssociativePropositionalFormula || this.formula instanceof Negation)			
+		if(this.formula instanceof AssociativePlFormula || this.formula instanceof Negation)			
 			return LogicalSymbols.CLASSICAL_NEGATION() + "(" + this.formula + ")";
 		return LogicalSymbols.CLASSICAL_NEGATION() + this.formula;
 	}

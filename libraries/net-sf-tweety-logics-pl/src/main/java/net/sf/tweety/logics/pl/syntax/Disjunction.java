@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public class Disjunction extends AssociativePropositionalFormula {
+public class Disjunction extends AssociativePlFormula {
 	
 	/**
 	 * Creates a new disjunction with the given inner formulas. 

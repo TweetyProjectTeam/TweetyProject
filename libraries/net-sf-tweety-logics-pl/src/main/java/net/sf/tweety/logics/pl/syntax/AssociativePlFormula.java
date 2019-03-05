@@ -39,7 +39,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.SimpleLogicalFormula;
  * @author Matthias Thimm
  * @author Tim Janus
  */
-public abstract class AssociativePropositionalFormula extends PlFormula 
+public abstract class AssociativePlFormula extends PlFormula 
 	implements AssociativeFormula<PlFormula>,
 	AssociativeSupportBridge,
 	Collection<PlFormula> {
@@ -52,7 +52,7 @@ public abstract class AssociativePropositionalFormula extends PlFormula
 	/**
 	 * Creates a new (empty) associative formula.
 	 */
-	public AssociativePropositionalFormula(){
+	public AssociativePlFormula(){
 		support = new AssociativeFormulaSupport<PlFormula>(this);
 	}
 	
@@ -60,7 +60,7 @@ public abstract class AssociativePropositionalFormula extends PlFormula
 	 * Creates a new associative formula with the given inner formulas. 
 	 * @param formulas a collection of formulas.
 	 */
-	public AssociativePropositionalFormula(Collection<? extends PlFormula> formulas){
+	public AssociativePlFormula(Collection<? extends PlFormula> formulas){
 		this();
 		this.support.addAll(formulas);
 	}
@@ -70,7 +70,7 @@ public abstract class AssociativePropositionalFormula extends PlFormula
 	 * @param first a propositional formula.
 	 * @param second a propositional formula.
 	 */
-	public AssociativePropositionalFormula(PlFormula first, PlFormula second){
+	public AssociativePlFormula(PlFormula first, PlFormula second){
 		this();
 		this.add(first);
 		this.add(second);
@@ -163,7 +163,7 @@ public abstract class AssociativePropositionalFormula extends PlFormula
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AssociativePropositionalFormula other = (AssociativePropositionalFormula) obj;
+		AssociativePlFormula other = (AssociativePlFormula) obj;
 		if (support == null) {
 			if (other.support != null)
 				return false;
