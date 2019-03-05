@@ -45,7 +45,7 @@ import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
 import net.sf.tweety.math.opt.solver.GlpkSolver;
@@ -66,7 +66,7 @@ public class InconsistencyMeasurementService{
 	/** The SAT solver configured for this service. */
 	public static SatSolver satSolver = new Sat4jSolver();
 	/** The MUS enumerator configured for this service. */
-	public static AbstractMusEnumerator<PropositionalFormula> musEnumerator = new MarcoMusEnumerator("/home/shared/incmes/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
+	public static AbstractMusEnumerator<PlFormula> musEnumerator = new MarcoMusEnumerator("/home/shared/incmes/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
 	//public static AbstractMusEnumerator<PropositionalFormula> musEnumerator =  new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
 	/** The linear optimization solver configured for this service. */
 	public static Solver linearSolver = new ApacheCommonsSimplex();
@@ -123,9 +123,9 @@ public class InconsistencyMeasurementService{
 	 * For handling timeouts.
 	 */
 	private class MeasurementCallee implements Callable<Double>{
-		InconsistencyMeasure<BeliefSet<PropositionalFormula>> measure;
-		BeliefSet<PropositionalFormula> beliefSet;
-		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PropositionalFormula>> measure, BeliefSet<PropositionalFormula> beliefSet){
+		InconsistencyMeasure<BeliefSet<PlFormula>> measure;
+		BeliefSet<PlFormula> beliefSet;
+		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula>> measure, BeliefSet<PlFormula> beliefSet){
 			this.measure = measure;
 			this.beliefSet = beliefSet;
 		}
@@ -180,14 +180,14 @@ public class InconsistencyMeasurementService{
 	private JSONObject handleGetValue(JSONObject query) throws JSONException{
 		if(!query.has(InconsistencyMeasurementService.JSON_ATTR_MEASURE))
 			throw new JSONException("Malformed JSON: no \"measure\" attribute given");		
-		InconsistencyMeasure<BeliefSet<PropositionalFormula>> measure =
+		InconsistencyMeasure<BeliefSet<PlFormula>> measure =
 				InconsistencyMeasureFactory.getInconsistencyMeasure(
 						Measure.getMeasure(query.getString(InconsistencyMeasurementService.JSON_ATTR_MEASURE)));
 		if(measure == null)
 			throw new JSONException("Malformed JSON: unknown value for attribute \"measure\"");
 		if(!query.has(InconsistencyMeasurementService.JSON_ATTR_FORMAT))
 			throw new JSONException("Malformed JSON: no \"format\" attribute given");
-		Parser<PlBeliefSet,PropositionalFormula> parser = PlParserFactory.getParserForFormat(
+		Parser<PlBeliefSet,PlFormula> parser = PlParserFactory.getParserForFormat(
 						Format.getFormat(query.getString(InconsistencyMeasurementService.JSON_ATTR_FORMAT)));
 		if(parser == null)
 			throw new JSONException("Malformed JSON: unknown value for attribute \"format\"");
