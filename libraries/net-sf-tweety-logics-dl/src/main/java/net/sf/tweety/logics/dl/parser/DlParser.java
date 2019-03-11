@@ -275,7 +275,6 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	 * @throws ParserException if the list could not be parsed.
 	 */
 	private ComplexConcept parseConcept(List<Object> l) {
-		System.out.println("list:"+l);
 		if (l.size()==1)
 			return parseConcept(l.get(0));
 		if (l.get(0) instanceof ComplexConcept)
