@@ -106,8 +106,8 @@ public class Equivalence extends PlFormula {
 	public PlFormula trim() {
 		PlFormula f1 = formulas.getFirst().trim();
 		PlFormula f2 = formulas.getSecond().trim();
-		if (f1==f2)
-			return f1;
+		if (f1.equals(f2))
+			return new Tautology();
 		return new Equivalence(f1,f2);
 	}
 
