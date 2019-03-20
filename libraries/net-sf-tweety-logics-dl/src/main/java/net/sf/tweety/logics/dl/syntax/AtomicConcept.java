@@ -44,7 +44,7 @@ public class AtomicConcept extends ComplexConcept  {
 	 * @param name the name of the atomic concept
 	 */
 	public AtomicConcept(String name){
-		this.predicate = new Predicate(name);
+		this.predicate = new Predicate(name,1);
 	}
 
 	public AtomicConcept(Predicate p) {
@@ -115,8 +115,8 @@ public class AtomicConcept extends ComplexConcept  {
 		if (predicate == null) {
 			if (other.predicate != null)
 				return false;
-		} else if (!predicate.equals(other.predicate))
-			return false;
+		} 	else if (!predicate.equals(other.predicate)) 
+			return false; 
 		return true;
 	}
 }

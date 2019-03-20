@@ -155,7 +155,7 @@ public class DlSignature extends Signature {
 		}
 		else if (obj instanceof ConceptAssertion) {
 			ConceptAssertion d = (ConceptAssertion) obj;
-			this.add(d.getComplexConcept());
+			this.add(d.getConcept());
 			this.add(d.getIndividual());
 		}
 		else if (obj instanceof RoleAssertion) {
@@ -279,7 +279,7 @@ public class DlSignature extends Signature {
 	public Set<Predicate> getPredicates() {
 		Set<Predicate> predicates = new HashSet<Predicate>();
 		for (AtomicConcept c : this.conceptNames)
-			predicates.add(new Predicate(c.getName()));
+			predicates.add(new Predicate(c.getName(),1));
 		for (AtomicRole r: this.roleNames)
 			predicates.add(new Predicate(r.getName(),2));
 		return predicates;	

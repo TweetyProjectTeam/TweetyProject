@@ -31,7 +31,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
  * 
  * @author Anna Gessler
  */
-public class ConceptAssertion extends DlAxiom {
+public class ConceptAssertion extends AssertionalAxiom {
 
 	/**
 	 * The individual of this assertional axiom (= the individual that
@@ -122,13 +122,13 @@ public class ConceptAssertion extends DlAxiom {
 		if (individual == null) {
 			if (other.individual != null)
 				return false;
-		} else if (!individual.equals(other.individual))
-			return false;
+		} else if (!individual.equals(other.individual)) 
+			return false; 
 		if (concept == null) {
 			if (other.concept != null)
 				return false;
-		} else if (!concept.equals(other.concept))
-			return false;
+		} else if (!concept.equals(other.concept))  
+			return false;  
 		return true;
 	}
 	
@@ -150,10 +150,15 @@ public class ConceptAssertion extends DlAxiom {
 	}
 	
 	/**
-	 * Get the concept or role of this assertional axiom (= the concept or role that the 
+	 * Get the concept of this assertional axiom (= the concept that the 
 	 * individual is an instance of).
 	 */
-	public ComplexConcept getComplexConcept() {
+	public ComplexConcept getConcept() {
 		return concept;
+	}
+
+	@Override
+	public boolean isAtomic() {
+		return (this.concept instanceof AtomicConcept);
 	}
 }

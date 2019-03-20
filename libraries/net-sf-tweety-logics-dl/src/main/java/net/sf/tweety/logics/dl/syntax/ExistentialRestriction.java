@@ -64,6 +64,22 @@ public class ExistentialRestriction extends ComplexConcept  {
 	public Pair<AtomicRole,ComplexConcept> getFormulas() {
 	 return this.formulas;	
 	}
+	
+	/**
+	 * Get the role of the existential restriction.
+	 * @return an atomic role
+	 */
+	public AtomicRole getRole() {
+		return this.formulas.getFirst();
+	}
+	
+	/**
+	 * Get the concept of the existential restriction.
+	 * @return a concept
+	 */
+	public ComplexConcept getConcept() {
+		return this.formulas.getSecond();
+	}
 
 	@Override
 	public DlSignature getSignature() {

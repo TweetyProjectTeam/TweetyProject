@@ -25,6 +25,7 @@ import net.sf.tweety.logics.dl.syntax.Individual;
 import net.sf.tweety.logics.dl.syntax.RoleAssertion;
 import net.sf.tweety.logics.dl.syntax.Union;
 import net.sf.tweety.logics.dl.parser.DlParser;
+import net.sf.tweety.logics.dl.reasoner.NaiveDlReasoner;
 import net.sf.tweety.logics.dl.syntax.AtomicConcept;
 import net.sf.tweety.logics.dl.syntax.AtomicRole;
 import net.sf.tweety.logics.dl.syntax.Complement;
@@ -56,8 +57,10 @@ public class DlExample {
 		//Create some terminological axioms
 		EquivalenceAxiom femaleHuman = new EquivalenceAxiom(female,human);
 		EquivalenceAxiom maleHuman = new EquivalenceAxiom(male,human);
+		EquivalenceAxiom femaleNotMale = new EquivalenceAxiom(female,new Complement(male));
+		EquivalenceAxiom maleNotFemale = new EquivalenceAxiom(male,new Complement(female));
 		
-		EquivalenceAxiom fatherEq = new EquivalenceAxiom(father, new Union(male,fatherOf)); //TODO replace union
+		EquivalenceAxiom fatherEq = new EquivalenceAxiom(father, new Union(male,fatherOf)); 
 		EquivalenceAxiom houseNotHuman = new EquivalenceAxiom(house,new Complement(human));
 		
 		//Create some assertional axioms
@@ -70,6 +73,9 @@ public class DlExample {
 		//Add axioms to knowledge base
 		DlBeliefSet dbs = new DlBeliefSet();
 		dbs.add(femaleHuman);
+		dbs.add(maleHuman);
+		dbs.add(maleNotFemale);
+		dbs.add(femaleNotMale);
 		dbs.add(maleHuman);
 		dbs.add(fatherEq);
 		dbs.add(houseNotHuman);
@@ -84,7 +90,7 @@ public class DlExample {
 		System.out.println("Only the ABox: " + dbs.getABox());
 		System.out.println("Only the TBox: " + dbs.getTBox());	
 		
-		//Parse knowledge base (to be added soon)
+		//Parse knowledge base 
 		DlParser parser = new DlParser();
 		DlBeliefSet parseddbs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.dlogic");
 		DlSignature parsedsig = (DlSignature) parseddbs.getSignature();
@@ -92,5 +98,18 @@ public class DlExample {
 		System.out.println("\nParsed knowledge base: ");
 		for (DlAxiom dax : parseddbs)
 			System.out.println(dax);	
+		
+		//Naive DL reasoner
+		DlBeliefSet dbs2 = new DlBeliefSet();
+		Individual tweety = new Individual("Tweety");
+		ConceptAssertion tweetyMale = new ConceptAssertion(tweety,male);
+		ConceptAssertion tweetyHuman = new ConceptAssertion(tweety,human);
+		dbs2.add(aliceFemale);
+		dbs2.add(tweetyMale);
+		dbs2.add(maleNotFemale);
+		dbs2.add(aliceHuman);
+		NaiveDlReasoner reasoner = new NaiveDlReasoner();
+		System.out.println("\n"+reasoner.query(dbs2,femaleHuman ));
+		System.out.println(reasoner.query(dbs2,tweetyHuman ));
 	}
 }

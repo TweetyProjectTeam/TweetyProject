@@ -1,8 +1,8 @@
 /*
- *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  This file is part of "Tweety", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
- *  TweetyProject is free software: you can redistribute it and/or modify
+ *  Tweety is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License version 3 as
  *  published by the Free Software Foundation.
  *
@@ -14,14 +14,24 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The Tweety Project Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.dl.semantics;
+package net.sf.tweety.logics.dl.syntax;
 
-public class InterpretationFunction {
-
-	public InterpretationFunction() {
-		// TODO Auto-generated constructor stub
-	}
-
+/**
+ * 
+ * Abstract base class for assertional axioms (concept assertions
+ * and role assertions).
+ * 
+ * @author Anna Gessler
+ *
+ */
+public abstract class AssertionalAxiom extends DlAxiom {
+	
+	/**
+	 * @return "true" if the concept of the assertion is atomic, "false" if
+	 * it is a complex concept
+	 */
+	public abstract boolean isAtomic();
+	
 }

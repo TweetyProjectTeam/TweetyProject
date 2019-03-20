@@ -33,7 +33,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
  * 
  * @author Anna Gessler
  */
-public class RoleAssertion extends DlAxiom {
+public class RoleAssertion extends AssertionalAxiom {
 
 	/**
 	 * The individuals of this assertional axiom (= the individuals that
@@ -45,7 +45,7 @@ public class RoleAssertion extends DlAxiom {
 	 * The role of this assertional axiom (= the role that the
 	 * individuals are instances of).
 	 */
-	private ComplexConcept role;
+	private AtomicRole role;
 	
 
 	/**
@@ -98,7 +98,7 @@ public class RoleAssertion extends DlAxiom {
 	 *            role
 	 * 
 	 */
-	public RoleAssertion(Pair<Individual, Individual> args, ComplexConcept r) {
+	public RoleAssertion(Pair<Individual, Individual> args, AtomicRole r) {
 		this.role = r;
 		this.individuals = args;
 	}
@@ -155,11 +155,6 @@ public class RoleAssertion extends DlAxiom {
 	}
 
 	@Override
-	public boolean isLiteral() {
-		return false;
-	}
-
-	@Override
 	public DlSignature getSignature() {
 		DlSignature sig = new DlSignature();
 		sig.add(this.role);
@@ -182,8 +177,13 @@ public class RoleAssertion extends DlAxiom {
 	 * instances of.
 	 * @return role
 	 */
-	public ComplexConcept getRole() {
+	public AtomicRole getRole() {
 		return role;
+	}
+
+	@Override
+	public boolean isAtomic() {
+		return true;
 	}
 
 }

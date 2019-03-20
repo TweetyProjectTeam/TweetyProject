@@ -1,0 +1,9 @@
+signature(:atomic-concepts(Bird Mammal Cat)
+		  :roles(enemyOf)
+		  :individuals(tweety sylvester))
+
+implies Cat Mammal
+implies Bird (not Mammal)
+instance tweety Bird 
+instance sylvester Cat 
+related tweety sylvester enemyOf 
