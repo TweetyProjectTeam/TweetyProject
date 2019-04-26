@@ -28,7 +28,7 @@ import net.sf.tweety.commons.Formula;
  * 
  * @author Matthias Thimm
  */
-public interface CulpabilityMeasure<S extends Formula, T extends BeliefSet<S>> {
+public interface CulpabilityMeasure<S extends Formula, T extends BeliefSet<S,?>> {
 	
 	/**
 	 * Returns the degree of responsibility of the given formula to cause

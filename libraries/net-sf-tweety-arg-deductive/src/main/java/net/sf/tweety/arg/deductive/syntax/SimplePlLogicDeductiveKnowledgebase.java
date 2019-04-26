@@ -41,7 +41,7 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
  * simple rules, @see SimplePlRule
  * 
  */
-public class SimplePlLogicDeductiveKnowledgebase extends BeliefSet<SimplePlRule> {
+public class SimplePlLogicDeductiveKnowledgebase extends BeliefSet<SimplePlRule,PlSignature> {
 	
 	public SimplePlLogicDeductiveKnowledgebase(){
 		super();
@@ -51,7 +51,7 @@ public class SimplePlLogicDeductiveKnowledgebase extends BeliefSet<SimplePlRule>
 		super(_kb);
 	}
 	
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		PlSignature signature = new PlSignature();
 		for(SimplePlRule f: this)
 			signature.addSignature(f.getSignature());
@@ -98,6 +98,11 @@ public class SimplePlLogicDeductiveKnowledgebase extends BeliefSet<SimplePlRule>
 		
 		return af;
 		
+	}
+
+	@Override
+	protected PlSignature instantiateSignature() {
+		return new PlSignature();
 	}
 	
 	

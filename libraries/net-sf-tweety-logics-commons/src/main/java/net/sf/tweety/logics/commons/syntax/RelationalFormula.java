@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.MapTools;
 import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
 import net.sf.tweety.logics.commons.syntax.interfaces.ClassicalFormula;
@@ -275,12 +274,6 @@ public abstract class RelationalFormula implements ClassicalFormula, QuantifiedF
 		if(!this.isWellBound()) return false;		
 		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Formula#getSignature()
-	 */
-	@Override
-	public abstract Signature getSignature();
 	
 	@Override
 	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {

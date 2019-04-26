@@ -125,7 +125,7 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 	 */
 	@Override
 	public RankingFunction getModel(ClBeliefSet kb) {
-		RankingFunction crep = new RankingFunction(kb.getSignature());		
+		RankingFunction crep = new RankingFunction(kb.getMinimalSignature());		
 		Set<PossibleWorld> possibleWorlds = crep.getPossibleWorlds();
 		// variables for ranks
 		Map<PossibleWorld,IntegerVariable> ranks = new HashMap<PossibleWorld,IntegerVariable>();

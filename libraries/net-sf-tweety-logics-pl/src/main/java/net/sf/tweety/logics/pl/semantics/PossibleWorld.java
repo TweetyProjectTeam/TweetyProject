@@ -136,6 +136,17 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PlF
 	}
 	
 	/**
+	 * Returns the set of all possible worlds for the
+	 * given propositional signature.
+	 * @param signature a propositional signature.
+	 * @return the set of all possible worlds for the
+	 * given propositional signature.
+	 */
+	public static Set<PossibleWorld> getAllPossibleWorlds(PlSignature signature){
+		return getAllPossibleWorlds(signature.toCollection());
+	}
+	
+	/**
 	 * Returns the complete conjunction representing this possible world wrt.
 	 * 	the give signature
 	 * @param a propositional signature
@@ -146,7 +157,7 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PlF
 		Conjunction c = new Conjunction();
 		for(Proposition p: this)
 			c.add(p);
-		Collection<Proposition> remaining = new HashSet<Proposition>(sig);
+		Collection<Proposition> remaining = new HashSet<Proposition>(sig.toCollection());
 		remaining.removeAll(this);
 		for(Proposition p: remaining)
 			c.add(new Negation(p));		

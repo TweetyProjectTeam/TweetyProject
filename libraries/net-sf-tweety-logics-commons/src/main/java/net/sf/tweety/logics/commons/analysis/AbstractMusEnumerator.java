@@ -82,7 +82,7 @@ public abstract class AbstractMusEnumerator<S extends Formula> implements MusEnu
 	 * @see net.sf.tweety.logics.commons.analysis.MusEnumerator#isConsistent(net.sf.tweety.BeliefSet)
 	 */
 	@Override
-	public boolean isConsistent(BeliefSet<S> beliefSet){
+	public boolean isConsistent(BeliefSet<S,?> beliefSet){
 		return this.isConsistent((Collection<S>) beliefSet);
 	}
 

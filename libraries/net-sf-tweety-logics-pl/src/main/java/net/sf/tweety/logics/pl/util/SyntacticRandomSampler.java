@@ -92,7 +92,7 @@ public class SyntacticRandomSampler extends BeliefSetSampler<PlFormula,PlBeliefS
 		this.prob.put(DISJ, probdisj);
 		this.prob.put(PROP, new Probability(1-probneg.doubleValue()-probconj.doubleValue() - probdisj.doubleValue()));
 		this.recDecrease = recDecrease;
-		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>((PlSignature)this.getSignature()));
+		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>(((PlSignature)this.getSamplerSignature()).toCollection()));
 	}
 
 	/**
@@ -119,7 +119,8 @@ public class SyntacticRandomSampler extends BeliefSetSampler<PlFormula,PlBeliefS
 		this.prob.put(DISJ, probdisj);
 		this.prob.put(PROP, new Probability(1-probneg.doubleValue()-probconj.doubleValue() - probdisj.doubleValue()));
 		this.recDecrease = recDecrease;
-		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>((PlSignature)this.getSignature()));
+		this.probProp = ProbabilityFunction.getUniformDistribution(new HashSet<Proposition>(((PlSignature)this.getSamplerSignature()).toCollection()));
+		
 	}	
 	
 	/**

@@ -29,7 +29,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class ClBeliefSet extends BeliefSet<Conditional> {
+public class ClBeliefSet extends BeliefSet<Conditional,PlSignature> {
 	
 	/**
 	 * Creates a new (empty) conditional belief set.
@@ -51,7 +51,7 @@ public class ClBeliefSet extends BeliefSet<Conditional> {
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
 	@Override
-	public PlSignature getSignature(){
+	public PlSignature getMinimalSignature(){
 		PlSignature sig = new PlSignature();
 		for(Formula f: this){
 			Conditional c = (Conditional) f;
@@ -69,5 +69,10 @@ public class ClBeliefSet extends BeliefSet<Conditional> {
 			copy.add(i.next());
 		}
 		return copy;
+	}
+
+	@Override
+	protected PlSignature instantiateSignature() {
+		return new PlSignature();
 	}
 }

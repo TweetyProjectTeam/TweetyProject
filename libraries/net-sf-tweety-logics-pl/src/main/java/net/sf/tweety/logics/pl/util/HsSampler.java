@@ -75,7 +75,7 @@ public class HsSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 	 * @see net.sf.tweety.commons.BeliefSetSampler#next()
 	 */
 	public PlBeliefSet next() {
-		PlSignature sig = (PlSignature) this.getSignature();
+		PlSignature sig = (PlSignature) this.getSamplerSignature();
 		if(this.incvalue > Math.pow(2, sig.size()))
 			throw new IllegalArgumentException("A propositional belief base with inconsistency value " + this.incvalue + " cannot be generated with the given signature.");
 		List<PlFormula> canonical = this.getCanonicalFormulas(this.incvalue+1, sig);

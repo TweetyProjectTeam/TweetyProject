@@ -107,7 +107,7 @@ public class DefaultTheory implements BeliefBase{
 	public DefaultTheory ground(){
 		Set<DefaultRule> ds = new HashSet<>();
 		for(DefaultRule d: defaults){
-			ds.addAll((Set)(d.allGroundInstances(((FolSignature)getSignature()).getConstants())));
+			ds.addAll((Set)(d.allGroundInstances(((FolSignature)getMinimalSignature()).getConstants())));
 		}
 		return new DefaultTheory(facts, ds);
 	}
@@ -117,8 +117,8 @@ public class DefaultTheory implements BeliefBase{
 	 * @see net.sf.tweety.commons.BeliefBase#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
-		Signature result = facts.getSignature();
+	public Signature getMinimalSignature() {
+		Signature result = facts.getMinimalSignature();
 		for(DefaultRule d: defaults)
 			result.addSignature(d.getSignature());
 		return result;

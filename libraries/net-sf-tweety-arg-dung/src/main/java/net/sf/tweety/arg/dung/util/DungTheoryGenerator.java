@@ -27,7 +27,7 @@ import net.sf.tweety.commons.BeliefSetIterator;
  * to generate Dung theories.
  * @author Matthias Thimm
  */
-public interface DungTheoryGenerator extends BeliefSetIterator<Argument,DungTheory> {
+public interface DungTheoryGenerator extends BeliefSetIterator<Argument, DungTheory> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.BeliefSetIterator#hasNext()

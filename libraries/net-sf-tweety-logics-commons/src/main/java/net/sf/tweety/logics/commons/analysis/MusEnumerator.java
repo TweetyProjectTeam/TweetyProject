@@ -71,7 +71,7 @@ public interface MusEnumerator<S extends Formula> extends BeliefSetConsistencyTe
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.BeliefSet)
 	 */
-	public boolean isConsistent(BeliefSet<S> beliefSet);
+	public boolean isConsistent(BeliefSet<S,?> beliefSet);
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(java.util.Collection)

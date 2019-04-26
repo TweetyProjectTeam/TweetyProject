@@ -55,7 +55,7 @@ public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistenc
 	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {
 
 		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getMinimalSignature());
 		int noWorlds = worlds.size();
 		
 		

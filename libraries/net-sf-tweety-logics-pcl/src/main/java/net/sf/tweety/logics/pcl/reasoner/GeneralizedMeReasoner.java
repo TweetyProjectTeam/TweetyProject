@@ -126,7 +126,7 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 	 */
 	@Override
 	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase) {
-		return this.getModel(beliefbase, (PlSignature) beliefbase.getSignature());
+		return this.getModel(beliefbase, (PlSignature) beliefbase.getMinimalSignature());
 	}		
 	
 	/**
@@ -136,7 +136,7 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 	 * @return the ME-distribution this reasoner bases on.
 	 */
 	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet bs,PlSignature signature) {
-		if(!bs.getSignature().isSubSignature(signature))
+		if(!bs.getMinimalSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
 		// get inconsistency value
 		double iValue = inc.inconsistencyMeasure(bs);		

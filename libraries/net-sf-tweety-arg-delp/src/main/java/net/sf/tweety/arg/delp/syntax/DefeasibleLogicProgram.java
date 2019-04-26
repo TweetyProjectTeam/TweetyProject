@@ -58,7 +58,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Matthias Thimm
  *
  */
-public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
+public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
 
 	/**
 	 * Default constructor; initializes empty delpFacts, strict and defeasible rules
@@ -84,7 +84,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * @return the grounded version of <source>this</source>
 	 */
 	public DefeasibleLogicProgram ground(){
-		return this.ground(((FolSignature)this.getSignature()).getConstants());
+		return this.ground(((FolSignature)this.getMinimalSignature()).getConstants());
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		FolSignature signature = new FolSignature();
 		for(DelpRule rule: this){
 			signature.addAll(rule.getPredicates());
@@ -423,4 +423,9 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule>{
         @org.kohsuke.args4j.Argument(metaVar = "DELP_FILE(S)", usage = "read DeLP from given FILE(S)")
         List<File> arguments;
     }
+
+	@Override
+	protected FolSignature instantiateSignature() {
+		return new FolSignature();
+	}
 }

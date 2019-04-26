@@ -121,7 +121,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	}
 
 	@Override
-	public FolSignature getSignature() {
+	public FolSignature getMinimalSignature() {
 		FolSignature sig = new FolSignature();
 		for (ASPRule r : rules)
 			sig.add(r);

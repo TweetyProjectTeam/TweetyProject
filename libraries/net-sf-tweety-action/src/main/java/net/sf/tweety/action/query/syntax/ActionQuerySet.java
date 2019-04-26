@@ -20,8 +20,8 @@ package net.sf.tweety.action.query.syntax;
 
 import java.util.Collection;
 
+import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.commons.BeliefSet;
-
 /**
  * An Action Query Set consists of action queries in a specific query language
  * and provides some common functionalities for such queries.
@@ -30,7 +30,7 @@ import net.sf.tweety.commons.BeliefSet;
  * @param <T>
  */
 public abstract class ActionQuerySet< T extends ActionQuery >
-  extends BeliefSet< T >
+  extends BeliefSet< T,ActionSignature >
 {
   
   /**
@@ -51,4 +51,9 @@ public abstract class ActionQuerySet< T extends ActionQuery >
   {
     super();
   }
+  
+  @Override
+	protected ActionSignature instantiateSignature() {
+		return new ActionSignature();
+	}
 }

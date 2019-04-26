@@ -52,7 +52,7 @@ public class CrMasArgumentativeRevisionOperator extends MultipleBaseRevisionOper
 		for(InformationObject<PlFormula> f: base)
 			plainFormulasFromBase.add(f.getFormula());
 		MultipleTransformationFunction<PlFormula> transFunc = new ArgumentativeTransformationFunction(
-				new CredibilityCategorizer(allInformation, ((CrMasBeliefSet<PlFormula>)base).getCredibilityOrder()),
+				new CredibilityCategorizer(allInformation, ((CrMasBeliefSet<PlFormula,PlSignature>)base).getCredibilityOrder()),
 				new SimpleAccumulator(),
 				new PlBeliefSet(plainFormulasFromBase),
 				false);

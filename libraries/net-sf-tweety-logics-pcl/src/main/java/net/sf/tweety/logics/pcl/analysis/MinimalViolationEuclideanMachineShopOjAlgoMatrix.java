@@ -58,7 +58,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 	protected BeliefBase repair(PclBeliefSet beliefSet) {
 
 		
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getMinimalSignature());
 		int noWorlds = worlds.size();
 		
 		
@@ -109,7 +109,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 		log.debug("Repair knowledge base.");
 		
 		PhysicalStore<Double> result = BigMatrix.FACTORY.columns(tmpResult).toPrimitiveStore();
-		ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
+		ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getMinimalSignature());
 		
 		int k=0;
 		for(PossibleWorld world: worlds) {

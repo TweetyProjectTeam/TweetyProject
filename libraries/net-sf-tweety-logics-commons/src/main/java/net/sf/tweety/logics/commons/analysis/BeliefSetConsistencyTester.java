@@ -28,25 +28,28 @@ import net.sf.tweety.commons.Formula;
  * whether a given belief set is consistent. 
  * 
  * @author Matthias Thimm
+ * @param <T> The type of formulas of the belief set
+ * @param <S> The type of signature of the belief set
  */
-public interface BeliefSetConsistencyTester<S extends Formula> extends ConsistencyTester<BeliefSet<S>> {
+public interface BeliefSetConsistencyTester<T extends Formula> extends ConsistencyTester<BeliefSet<T,?>> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyTester#isConsistent(net.sf.tweety.BeliefBase)
 	 */
-	public boolean isConsistent(BeliefSet<S> beliefSet);
+	public boolean isConsistent(BeliefSet<T,?> beliefSet);
 	
 	/**
 	 * Checks whether the given collection of formulas is consistent.
 	 * @param formulas a collection of formulas.
 	 * @return "true" iff the given collection of formulas is consistent.
 	 */
-	public boolean isConsistent(Collection<S> formulas);
+	public boolean isConsistent(Collection<T> formulas);
 	
 	/**
 	 * Checks whether the given formula is consistent.
 	 * @param formula a formulas.
 	 * @return "true" iff the formula is consistent.
 	 */
-	public boolean isConsistent(S formula);
+	public boolean isConsistent(T formula);
+
 }

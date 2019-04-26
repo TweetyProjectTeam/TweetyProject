@@ -25,25 +25,42 @@ import java.util.Set;
 
 /**
  * This class models a belief set, i.e. a set of formulae
- * of some formalism.
+ * of some formalism, and a signature. 
  * 
  * @author Matthias Thimm
  * @author Tim Janus
+ * @author Anna Gessler
  * 
  * @param <T> The type of the beliefs in this belief set.
+ * @param <S> The type of signature attached to this belief set.
  */
-public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collection<T> {
+public abstract class BeliefSet<T extends Formula,S extends Signature> implements BeliefBase, Collection<T> {
 
+	/**
+	 *Flag that determines whether {@link java.lang.Object#equals(Object)} checks 
+	 *only for equality of the beliefs in the belief sets 
+	 *or whether it also checks for equality of the signatures attached to the belief sets.
+	 */
+	public static final boolean EQUALS_USES_SIGNATURE = false;
+	
 	/**
 	 * The set of formulas of this belief base.
 	 */
 	private Set<T> formulas;
 	
 	/**
+	 * The signature of this belief base. It is always larger than or equal to 
+	 * {@link net.sf.tweety.commons.BeliefSet#getMinimalSignature()} 
+	 * (the signature of the language of {@link net.sf.tweety.commons.BeliefSet#formulas}).
+	 */
+	private S signature;
+	
+	/**
 	 * Creates a new (empty) belief set.
 	 */
 	public BeliefSet(){
 		this(new HashSet<T>());
+		this.signature = instantiateSignature();
 	}
 	
 	/**
@@ -57,7 +74,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	}
 	
 	/**
-	 * instantiates the set which is used as data holder for the belief set.
+	 * Instantiates the set which is used as data holder for the belief set.
 	 * Subclasses might override this method if the do not want to use HashSet
 	 * as container implementation
 	 */
@@ -65,18 +82,40 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 		return new HashSet<T>();
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
+	/**
+	 * Instantiates the signature which is attached to the belief base.
 	 */
-	@Override
-	public abstract Signature getSignature();
+	protected abstract S instantiateSignature();
+	
+	/**
+	 * Returns the signature that is attached to his belief base (it is
+	 * always equal to or larger than {@link net.sf.tweety.commons.BeliefBase#getMinimalSignature()}).
+	 * @return the signature of this knowledge base.
+	 */
+	public S getSignature() {
+		return signature;
+	}
+	
+	/**
+	 * Sets the signature that is attached to his belief base.
+	 * @throws IllegalArgumentException if the given signature is smaller in size than the belief base's
+	 * formulas' signature.
+	 * @return the signature of this knowledge base.
+	 */
+	public void setSignature(S sig) {
+		signature = sig;
+	}
 	
 	/* (non-Javadoc)
 	 * @see java.util.Collection#add(java.lang.Object)
 	 */
 	@Override
 	public boolean add(T f){
-		return this.formulas.add(f);
+		if (this.formulas.add(f)) {
+			this.signature.add(f);
+			return true; 
+		}
+		return false;
 	}
 	
 	/* (non-Javadoc)
@@ -139,12 +178,19 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BeliefSet<?> other = (BeliefSet<?>) obj;
+		BeliefSet<?,?> other = (BeliefSet<?,?>) obj;
 		if (formulas == null) {
 			if (other.formulas != null)
 				return false;
 		} else if (!formulas.equals(other.formulas))
 			return false;
+		if (EQUALS_USES_SIGNATURE) {
+			if (signature == null) {
+				if (other.signature != null)
+					return false;
+			} else if (!signature.equals(other.signature))
+				return false;
+		}
 		return true;
 	}
 	
@@ -223,7 +269,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 	 * @see java.util.Collection#toArray(T[])
 	 */
 	@Override
-	public <S> S[] toArray(S[] a) {
+	public <R> 	R[] toArray(R[] a) {
 		return this.formulas.toArray(a);
 	}
 	
@@ -239,6 +285,7 @@ public abstract class BeliefSet<T extends Formula> implements BeliefBase, Collec
 		while(it.hasNext())
 			s += ", " + it.next();
 		s += " }";
+		s += "\nSignature: " + signature;
 		return s;
 	}
 }

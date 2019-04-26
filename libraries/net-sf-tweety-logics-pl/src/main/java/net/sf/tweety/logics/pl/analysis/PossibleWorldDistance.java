@@ -50,7 +50,7 @@ public abstract class PossibleWorldDistance implements InterpretationDistance<Po
 		//	is true for e.g. the Dalal distance 
 		PossibleWorld b2 = new PossibleWorld();
 		for(Proposition p: b)
-			if(f.getSignature().contains(p))
+			if(f.getSignature().toCollection().contains(p))
 				b2.add(p);
 		// get models
 		Set<PossibleWorld> models = f.getModels();

@@ -46,6 +46,7 @@ import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
 import net.sf.tweety.math.opt.solver.GlpkSolver;
@@ -123,9 +124,9 @@ public class InconsistencyMeasurementService{
 	 * For handling timeouts.
 	 */
 	private class MeasurementCallee implements Callable<Double>{
-		InconsistencyMeasure<BeliefSet<PlFormula>> measure;
-		BeliefSet<PlFormula> beliefSet;
-		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula>> measure, BeliefSet<PlFormula> beliefSet){
+		InconsistencyMeasure<BeliefSet<PlFormula,?>> measure;
+		BeliefSet<PlFormula,PlSignature> beliefSet;
+		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula,?>> measure, BeliefSet<PlFormula,PlSignature> beliefSet){
 			this.measure = measure;
 			this.beliefSet = beliefSet;
 		}
@@ -180,7 +181,7 @@ public class InconsistencyMeasurementService{
 	private JSONObject handleGetValue(JSONObject query) throws JSONException{
 		if(!query.has(InconsistencyMeasurementService.JSON_ATTR_MEASURE))
 			throw new JSONException("Malformed JSON: no \"measure\" attribute given");		
-		InconsistencyMeasure<BeliefSet<PlFormula>> measure =
+		InconsistencyMeasure<BeliefSet<PlFormula,?>> measure =
 				InconsistencyMeasureFactory.getInconsistencyMeasure(
 						Measure.getMeasure(query.getString(InconsistencyMeasurementService.JSON_ATTR_MEASURE)));
 		if(measure == null)

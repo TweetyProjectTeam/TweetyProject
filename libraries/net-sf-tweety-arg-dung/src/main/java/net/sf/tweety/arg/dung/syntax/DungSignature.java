@@ -29,7 +29,7 @@ import net.sf.tweety.commons.*;
  * 
  * @author Matthias Thimm
  */
-public class DungSignature extends SetSignature<Argument>{
+public class DungSignature extends SingleSetSignature<Argument>{
 
 	/**
  	  * Creates a new (empty) Dung signature.
@@ -43,7 +43,8 @@ public class DungSignature extends SetSignature<Argument>{
 	 * @param argument an argument.
 	 */
 	public DungSignature(Argument argument){
-		super(argument);
+		super();
+		this.add(argument);
 	}
 	
 	/**
@@ -51,7 +52,17 @@ public class DungSignature extends SetSignature<Argument>{
 	 * @param arguments a set of arguments.
 	 */
 	public DungSignature(Collection<? extends Argument> arguments){
-		super(arguments);		
+		super();
+		this.addAll(arguments);
+	}
+
+	@Override
+	public void add(Object obj) {
+		if (obj instanceof Argument)
+			formulas.add((Argument) obj);
+		else
+			throw new IllegalArgumentException("Illegal type " + obj.getClass());
+	
 	}	
 	
 }

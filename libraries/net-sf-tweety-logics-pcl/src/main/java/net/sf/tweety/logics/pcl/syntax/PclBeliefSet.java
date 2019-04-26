@@ -31,7 +31,7 @@ import net.sf.tweety.logics.pl.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class PclBeliefSet extends BeliefSet<ProbabilisticConditional> {
+public class PclBeliefSet extends BeliefSet<ProbabilisticConditional,PlSignature> {
 
 	/**
 	 * Creates a new (empty) conditional belief set.
@@ -53,11 +53,16 @@ public class PclBeliefSet extends BeliefSet<ProbabilisticConditional> {
 	 * @see net.sf.tweety.kr.BeliefSet#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		PlSignature sig = new PlSignature();
 		for(ProbabilisticConditional c: this)
-			sig.addAll(((PlSignature)c.getSignature()));			
+			sig.addSignature(((PlSignature)c.getSignature()));			
 		return sig;
+	}
+
+	@Override
+	protected PlSignature instantiateSignature() {
+		return new PlSignature();
 	}	
 	
 }

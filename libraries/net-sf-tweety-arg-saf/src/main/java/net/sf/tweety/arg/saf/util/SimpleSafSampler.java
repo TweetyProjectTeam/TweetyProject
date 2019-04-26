@@ -61,7 +61,7 @@ public class SimpleSafSampler extends BeliefSetSampler<Argument,StructuredArgume
 		//bbLength is interpreted as the maximum number of basic arguments
 		Random random = new Random();
 		int thisLength = random.nextInt(this.getMaxLength()-this.getMinLength()+1) + this.getMinLength();
-		BasicArgumentSampler argSampler = new BasicArgumentSampler(this.getSignature());
+		BasicArgumentSampler argSampler = new BasicArgumentSampler(this.getSamplerSignature());
 		StructuredArgumentationFramework saf = new StructuredArgumentationFramework();
 		for(int i = 0; i < thisLength; i++)
 			saf.add(argSampler.randomSample());

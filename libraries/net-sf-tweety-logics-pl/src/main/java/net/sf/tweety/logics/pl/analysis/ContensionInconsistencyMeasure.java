@@ -55,7 +55,7 @@ public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasur
 	public Double inconsistencyMeasure(Collection<PlFormula> formulas) {
 		PlBeliefSet bs = new PlBeliefSet(formulas);
 		Conjunction cnf = bs.toCnf();
-		SubsetIterator<Proposition> it = new IncreasingSubsetIterator<Proposition>(new HashSet<Proposition>((PlSignature)bs.getSignature()));
+		SubsetIterator<Proposition> it = new IncreasingSubsetIterator<Proposition>(new HashSet<Proposition>( ((PlSignature)bs.getMinimalSignature()).toCollection()));
 		while(it.hasNext()){
 			Collection<Proposition> props = it.next();
 			Conjunction newCnf = new Conjunction(cnf);

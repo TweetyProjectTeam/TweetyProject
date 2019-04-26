@@ -92,7 +92,7 @@ public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefS
 	 */
 	@Override
 	public Boolean query(RclBeliefSet bs, FolFormula query) {
-		return query(bs,query,(FolSignature)bs.getSignature());
+		return query(bs,query,(FolSignature)bs.getMinimalSignature());
 	}
 		
 	/**
@@ -215,7 +215,7 @@ public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefS
 	 */
 	@Override
 	public RelationalRankingFunction getModel(RclBeliefSet bbase) {
-		return this.getModel(bbase, (FolSignature) bbase.getSignature());
+		return this.getModel(bbase, (FolSignature) bbase.getMinimalSignature());
 	}
 
 	/**

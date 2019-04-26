@@ -25,6 +25,7 @@ import java.util.Set;
 
 import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Signature;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.lp.asp.syntax.*;
 
 /**
@@ -33,7 +34,7 @@ import net.sf.tweety.lp.asp.syntax.*;
  * @author Sebastian Homann
  *
  */
-public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
+public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature> {
 	private Program program;
 //	private Set<Argument> arguments = new HashSet<Argument>();
 	
@@ -164,8 +165,13 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument> {
 	 * @see net.sf.tweety.BeliefSet#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
-		return program.getSignature();
+	public Signature getMinimalSignature() {
+		return program.getMinimalSignature();
+	}
+
+	@Override
+	protected FolSignature instantiateSignature() {
+		return new FolSignature();
 	}
 
 	

@@ -29,7 +29,7 @@ import net.sf.tweety.commons.*;
  * @author Matthias Thimm
  *
  */
-public class FolBeliefSet extends BeliefSet<FolFormula>{
+public class FolBeliefSet extends BeliefSet<FolFormula,FolSignature>{
 	
 	/**
 	 * Creates a new and empty first-order knowledge base.
@@ -46,13 +46,15 @@ public class FolBeliefSet extends BeliefSet<FolFormula>{
 		super(formulas);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
-	 */
 	@Override
-	public Signature getSignature(){
+	public FolSignature getMinimalSignature() {
 		FolSignature sig = new FolSignature();
 		sig.addAll(this);
 		return sig;
+	}
+
+	@Override
+	protected FolSignature instantiateSignature() {
+		return new FolSignature();
 	}
 }

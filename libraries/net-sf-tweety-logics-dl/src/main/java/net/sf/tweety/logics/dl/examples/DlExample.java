@@ -93,7 +93,7 @@ public class DlExample {
 		//Parse knowledge base 
 		DlParser parser = new DlParser();
 		DlBeliefSet parseddbs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.dlogic");
-		DlSignature parsedsig = (DlSignature) parseddbs.getSignature();
+		DlSignature parsedsig = (DlSignature) parseddbs.getMinimalSignature();
 		System.out.println("\nParsed signature: " + parsedsig.getIndividuals() + ","+ parsedsig.getConcepts() + "," + parsedsig.getRoles());
 		System.out.println("\nParsed knowledge base: ");
 		for (DlAxiom dax : parseddbs)

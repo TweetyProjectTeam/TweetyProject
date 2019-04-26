@@ -59,7 +59,7 @@ public class GeneralizedMeMachineShop implements BeliefBaseMachineShop {
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		// Get generalized ME-model
 		GeneralizedMeReasoner reasoner = new GeneralizedMeReasoner(p);
-		ProbabilityDistribution<PossibleWorld> p =  reasoner.getModel(beliefSet,(PlSignature) beliefSet.getSignature());
+		ProbabilityDistribution<PossibleWorld> p =  reasoner.getModel(beliefSet,(PlSignature) beliefSet.getMinimalSignature());
 		PclBeliefSet result = new PclBeliefSet();
 		for(ProbabilisticConditional pc: beliefSet){
 			if(p.probability(new Conjunction(pc.getPremise())).doubleValue() <= Probability.PRECISION)

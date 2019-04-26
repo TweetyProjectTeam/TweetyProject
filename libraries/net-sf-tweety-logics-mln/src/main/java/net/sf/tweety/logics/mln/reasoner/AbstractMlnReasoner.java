@@ -38,7 +38,7 @@ public abstract class AbstractMlnReasoner implements QuantitativeReasoner<Markov
 	 */
 	@Override
 	public Double query(MarkovLogicNetwork mln, FolFormula query) {		
-		return this.query(mln, query, (FolSignature) mln.getSignature());
+		return this.query(mln, query, (FolSignature) mln.getMinimalSignature());
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public abstract class AbstractMlnReasoner implements QuantitativeReasoner<Markov
 	public Double query(MarkovLogicNetwork mln, FolFormula query, FolSignature signature) {
 		if(!( ((FolFormula)query).isGround() ))
 			throw new IllegalArgumentException("Reasoning in Markov logic with naive MLN reasoner is only defined for ground FOL formulas.");
-		if(!mln.getSignature().isSubSignature(signature))
+		if(!mln.getMinimalSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
 		return this.doQuery(mln,(FolFormula)query,signature);		
 	}

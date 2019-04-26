@@ -32,12 +32,12 @@ import net.sf.tweety.commons.postulates.PostulateEvaluatable;
  * @param <S> The type of formulas this measure supports.
  * @param <T> The type of belief sets this measure supports.
  */
-public abstract class BeliefSetInconsistencyMeasure<S extends Formula> implements InconsistencyMeasure<BeliefSet<S>>, PostulateEvaluatable<S> {
+public abstract class BeliefSetInconsistencyMeasure<S extends Formula> implements InconsistencyMeasure<BeliefSet<S,?>>, PostulateEvaluatable<S> {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.InconsistencyMeasure#inconsistencyMeasure(net.sf.tweety.BeliefBase)
 	 */
-	public Double inconsistencyMeasure(BeliefSet<S> beliefBase){
+	public Double inconsistencyMeasure(BeliefSet<S,?> beliefBase){
 		return this.inconsistencyMeasure((Collection<S>) beliefBase);
 	}
 	

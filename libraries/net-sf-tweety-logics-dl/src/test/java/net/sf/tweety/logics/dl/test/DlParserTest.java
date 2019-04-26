@@ -118,7 +118,7 @@ public class DlParserTest {
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ParseBeliefBaseFromFileTest() throws ParserException, IOException {
 		DlBeliefSet bs = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.dlogic");
-		DlSignature sig = (DlSignature) bs.getSignature();
+		DlSignature sig = (DlSignature) bs.getMinimalSignature();
 		assertEquals(bs.size(),20);
 		assertTrue(sig.containsConcept("Male"));
 		assertTrue(sig.containsConcept("Female"));

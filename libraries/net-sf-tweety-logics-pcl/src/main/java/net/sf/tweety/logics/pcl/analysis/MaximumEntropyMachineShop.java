@@ -55,7 +55,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 		// Determine unique values mu/nu that represent minimal adjustments for
 		// restoring consistency
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getMinimalSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
 		int i = 0;
 		Term normConstraint = null;
@@ -138,7 +138,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 			//solve for me-distribution
 			solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// construct probability distribution
-			ProbabilityDistribution<PossibleWorld> meDistribution = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
+			ProbabilityDistribution<PossibleWorld> meDistribution = new ProbabilityDistribution<PossibleWorld>(beliefSet.getMinimalSignature());
 			for(PossibleWorld world: worlds)
 				meDistribution.put(world, new Probability(solution.get(worlds2vars.get(world)).doubleValue()));
 			// prepare result

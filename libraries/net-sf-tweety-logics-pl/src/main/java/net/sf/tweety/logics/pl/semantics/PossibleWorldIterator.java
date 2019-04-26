@@ -62,7 +62,7 @@ public class PossibleWorldIterator implements InterpretationIterator<PlFormula,P
 	public PossibleWorldIterator(PlSignature sig){
 		this();
 		this.sig = sig;
-		this.it = new DefaultSubsetIterator<Proposition>(new HashSet<Proposition>(sig));
+		this.it = new DefaultSubsetIterator<Proposition>(new HashSet<Proposition>(sig.toCollection()));
 	}
 	
 	/* (non-Javadoc)

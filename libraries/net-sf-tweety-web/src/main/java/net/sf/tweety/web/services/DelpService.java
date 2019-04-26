@@ -134,7 +134,7 @@ public class DelpService{
 				throw new JSONException("Malformed JSON: unknown value for attribute \"compcriterion\"");
 			DelpReasoner reasoner = new DelpReasoner(comp);
 			FolParser folParser = new FolParser();
-			folParser.setSignature(parser.getSignature());
+			folParser.setSignature(parser.getMinimalSignature());
 			String qString = query.getString(DelpService.JSON_ATTR_QUERY).trim();
 			Formula f;
 			if(qString.startsWith("~"))

@@ -33,7 +33,7 @@ import net.sf.tweety.math.matrix.Matrix;
  * 
  * @author Matthias Thimm
  */
-public class AbstractDialecticalFramework extends BeliefSet<Argument> implements Graph<Argument>, Comparable<AbstractDialecticalFramework> {
+public class AbstractDialecticalFramework extends BeliefSet<Argument,AbstractDialecticalFrameworkSignature> implements Graph<Argument>, Comparable<AbstractDialecticalFramework> {
 
 	@Override
 	public int compareTo(AbstractDialecticalFramework o) {
@@ -144,9 +144,16 @@ public class AbstractDialecticalFramework extends BeliefSet<Argument> implements
 	}
 
 	@Override
-	public Signature getSignature() {
-		// TODO Auto-generated method stub
-		return null;
+	public Signature getMinimalSignature() {
+		AbstractDialecticalFrameworkSignature signature = new AbstractDialecticalFrameworkSignature();
+		for (Argument f : this)
+			signature.add(f);
+		return signature;
+	}
+
+	@Override
+	protected AbstractDialecticalFrameworkSignature instantiateSignature() {
+		return new AbstractDialecticalFrameworkSignature();
 	}
 	
 }

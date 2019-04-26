@@ -44,7 +44,7 @@ public class SimpleFolReasoner extends FolReasoner {
 		if(!formula.isClosed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");		
 		FolSignature sig = new FolSignature();
-		sig.addSignature(kb.getSignature());
+		sig.addSignature(kb.getMinimalSignature());
 		sig.addSignature(formula.getSignature());		
 		HerbrandBase hBase = new HerbrandBase(sig);
 		Set<HerbrandInterpretation> interpretations = hBase.getAllHerbrandInterpretations();

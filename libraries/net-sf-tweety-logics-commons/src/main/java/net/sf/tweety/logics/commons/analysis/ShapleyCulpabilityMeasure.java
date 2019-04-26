@@ -29,7 +29,7 @@ import net.sf.tweety.commons.util.*;
  * 
  * @author Matthias Thimm
  */
-public class ShapleyCulpabilityMeasure<S extends Formula, T extends BeliefSet<S>> implements CulpabilityMeasure<S,T> {
+public class ShapleyCulpabilityMeasure<S extends Formula, T extends BeliefSet<S,?>> implements CulpabilityMeasure<S,T> {
 
 	/**
 	 * The inconsistency measure this Shapley culpability measure bases on.

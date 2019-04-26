@@ -158,8 +158,8 @@ public class ZReasoner extends AbstractConditionalLogicReasoner {
 	 */
 	@Override
 	public RankingFunction getModel(ClBeliefSet beliefset) {
-		Set<PossibleWorld> omega = PossibleWorld.getAllPossibleWorlds(beliefset.getSignature() );		
-		RankingFunction ocf = new RankingFunction(beliefset.getSignature());
+		Set<PossibleWorld> omega = PossibleWorld.getAllPossibleWorlds(beliefset.getMinimalSignature().toCollection());		
+		RankingFunction ocf = new RankingFunction(beliefset.getMinimalSignature());
 		
 		// Compute partitioning of the knowledge base
 		ArrayList<ClBeliefSet> tolerancePartition = partition( beliefset ,omega);

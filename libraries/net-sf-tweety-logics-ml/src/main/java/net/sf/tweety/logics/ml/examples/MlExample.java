@@ -37,7 +37,7 @@ public class MlExample {
 		MlParser parser = new MlParser();	
 		MlBeliefSet b1 = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase2.mlogic");
 		FolFormula f1 = (FolFormula) parser.parseFormula("<>(A&&B)");
-		System.out.println("Parsed belief base:" + b1 + "\nSignature of belief base:" + b1.getSignature());
+		System.out.println("Parsed belief base:" + b1 + "\nSignature of belief base:" + b1.getMinimalSignature());
 		
 		//Parse simple BeliefBase from string
 		parser = new MlParser();	
@@ -48,7 +48,7 @@ public class MlExample {
 		//Parse more complex BeliefBase from file
 		parser = new MlParser();	
 		MlBeliefSet b3 = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.mlogic");
-		System.out.println("Parsed belief base:" + b3 + "\nSignature of belief base:" + b3.getSignature());
+		System.out.println("Parsed belief base:" + b3 + "\nSignature of belief base:" + b3.getMinimalSignature());
 		
 		//Reasoner examples
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();

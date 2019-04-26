@@ -23,48 +23,73 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.orders.*;
 
 /**
- * This class represents belief sets for credibility-based agents multi-agent systems.
- * Such a belief set contains a set of information objects and a credibility order among agents.
+ * This class represents belief sets for credibility-based agents multi-agent
+ * systems. Such a belief set contains a set of information objects and a
+ * credibility order among agents.
  * 
  * @author Matthias Thimm
  *
  * @param <T> The type of formulas in information objects.
+ * @param <S> The type of signatures.
  */
-public class CrMasBeliefSet<T extends Formula> extends BeliefSet<InformationObject<T>> {
+public class CrMasBeliefSet<T extends Formula, S extends Signature> extends BeliefSet<InformationObject<T>,S> {
 
 	/**
 	 * The subjective credibility order of the agent who owns this belief set.
 	 */
 	private Order<Agent> credibilityOrder;
-	
+
+	/**
+	 * The type of signature used in this system.
+	 */
+	private S sig;
+
 	/**
 	 * Creates a new belief set with the given credibility order.
+	 * 
 	 * @param credibilityOrder some credibility order.
+	 * @param The              type of signature used in this system.
 	 */
-	public CrMasBeliefSet(Order<Agent> credibilityOrder){
+	public CrMasBeliefSet(Order<Agent> credibilityOrder, S sig) {
 		this.credibilityOrder = credibilityOrder;
+		this.sig = sig;
 	}
-	
+
 	/**
 	 * Returns the credibility order of this belief set.
+	 * 
 	 * @return the credibility order of this belief set.
 	 */
-	public Order<Agent> getCredibilityOrder(){
+	public Order<Agent> getCredibilityOrder() {
 		return this.credibilityOrder;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.BeliefSet#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		Signature sig = null;
-		
-		for(InformationObject<T> f: this)
-			if(sig == null)
+
+		for (InformationObject<T> f : this)
+			if (sig == null)
 				sig = f.getSignature();
-			else sig.addSignature(f.getSignature());
+			else
+				sig.addSignature(f.getSignature());
 		return sig;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected S instantiateSignature() {
+		try {
+			return (S) sig.getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

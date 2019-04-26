@@ -64,7 +64,7 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	public RankingFunction(PlSignature signature){
 		this.signature = signature;		
 		this.ranks = new HashMap<PossibleWorld,Integer>();
-		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds(signature))
+		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds(signature.toCollection()))
 			this.ranks.put(w, 0);			
 	}
 	

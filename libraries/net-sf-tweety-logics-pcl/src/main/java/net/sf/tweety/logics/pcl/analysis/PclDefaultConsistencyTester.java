@@ -46,7 +46,7 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 		// Create variables for the probability of each possible world and
 		// create a multi-dimensional function that has a root iff the belief base is consistent
 		List<Term> functions = new ArrayList<Term>();
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getMinimalSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
 		int i = 0;
 		Term normConstraint = null;

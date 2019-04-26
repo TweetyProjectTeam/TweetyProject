@@ -54,5 +54,5 @@ public interface ConsistencyWitnessProvider<B extends BeliefBase, S extends Form
 	 * returns some model of it or, if it is inconsistent, null.
 	 * @return some model of the belief set or null.
 	 */
-	public Interpretation<B,S> getWitness(BeliefSet<S> bs);
+	public Interpretation<B,S> getWitness(BeliefSet<S,?> bs);
 }

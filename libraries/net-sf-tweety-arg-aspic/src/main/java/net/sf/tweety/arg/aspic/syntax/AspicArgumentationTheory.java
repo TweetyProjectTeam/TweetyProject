@@ -244,7 +244,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	 * @see net.sf.tweety.commons.BeliefBase#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		if(this.isEmpty())
 			return null;
 		Signature sig = this.iterator().next().getSignature();

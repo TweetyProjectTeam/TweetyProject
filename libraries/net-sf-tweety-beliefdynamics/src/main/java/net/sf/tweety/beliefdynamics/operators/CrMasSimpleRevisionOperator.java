@@ -59,7 +59,7 @@ public class CrMasSimpleRevisionOperator extends MultipleBaseRevisionOperator<In
 			throw new IllegalArgumentException("Argument 'base' has to be of type CrMasBeliefSet.");		
 		Collection<InformationObject<PlFormula>> allInformation = new HashSet<InformationObject<PlFormula>>(base);
 		allInformation.addAll(formulas);
-		CredibilityComparer comparer = new CredibilityComparer(allInformation,((CrMasBeliefSet<PlFormula>)base).getCredibilityOrder());
+		CredibilityComparer comparer = new CredibilityComparer(allInformation,((CrMasBeliefSet<PlFormula,PlSignature>)base).getCredibilityOrder());
 		Collection<PlFormula> allProps = new HashSet<PlFormula>();
 		for(InformationObject<PlFormula> f: allInformation)
 			allProps.add(f.getFormula());

@@ -100,11 +100,11 @@ public class RandomSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 	 * @return a random formula.
 	 */
 	private PlFormula randomFormula(){
-		Proposition a = ((PlSignature)this.getSignature()).iterator().next();
+		Proposition a = ((PlSignature)this.getSamplerSignature()).iterator().next();
 		PlFormula p = a.combineWithAnd(new Negation(a));
 		for(int i = 0; i < this.allWorlds.size(); i++)
 			if(this.rand.nextDouble()<this.worldProb)
-				p = p.combineWithOr(this.allWorlds.get(i).getCompleteConjunction((PlSignature)this.getSignature()));		
+				p = p.combineWithOr(this.allWorlds.get(i).getCompleteConjunction((PlSignature)this.getSamplerSignature()));		
 		return p;
 	}
 }

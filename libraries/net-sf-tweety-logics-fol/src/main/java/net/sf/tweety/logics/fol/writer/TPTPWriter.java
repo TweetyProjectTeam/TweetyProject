@@ -101,7 +101,7 @@ public class TPTPWriter implements FolWriter {
 	 */
 	public void printBase(FolBeliefSet b) throws IOException {
 			// print types
-			FolSignature sig = (FolSignature) b.getSignature();
+			FolSignature sig = (FolSignature) b.getMinimalSignature();
 			for (Constant c : sig.getConstants())
 				writer.write(makeAxiom(c + "_type", c.getSort() + "(" + c + ")"));
 

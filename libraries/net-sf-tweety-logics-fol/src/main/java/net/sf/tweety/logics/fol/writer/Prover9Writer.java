@@ -96,7 +96,7 @@ public class Prover9Writer implements FolWriter {
 			writer.write("formulas(sos).\n");
 			
 			// print types
-			FolSignature sig = (FolSignature) b.getSignature();
+			FolSignature sig = (FolSignature) b.getMinimalSignature();
 			for (Constant c : sig.getConstants())
 				writer.write( "\t"+c.getSort() + "(" + c + ").\n");
 

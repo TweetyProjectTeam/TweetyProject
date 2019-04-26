@@ -76,7 +76,7 @@ public class SPASSWriter {
 	 * @param formula a relational formula
 	 */
 	public void printProblem(MlBeliefSet kb, RelationalFormula formula) throws ParserException, IOException {
-		FolSignature signature = (FolSignature) kb.getSignature();
+		FolSignature signature = (FolSignature) kb.getMinimalSignature();
 		signature.addSignature(formula.getSignature());
 		
 		String problem = "begin_problem(UnnamedProblem).\n\n";

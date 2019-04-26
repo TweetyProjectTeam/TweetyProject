@@ -136,7 +136,7 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 	 */
 	@Override
 	public Double query(RpclBeliefSet beliefbase, FolFormula formula) {
-		return this.query(beliefbase, formula, (FolSignature) beliefbase.getSignature());
+		return this.query(beliefbase, formula, (FolSignature) beliefbase.getMinimalSignature());
 	}
 
 	/* (non-Javadoc)
@@ -154,7 +154,7 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 	 */
 	@Override
 	public RpclProbabilityDistribution<?> getModel(RpclBeliefSet bbase) {
-		return this.getModel(bbase, (FolSignature) bbase.getSignature());
+		return this.getModel(bbase, (FolSignature) bbase.getMinimalSignature());
 	}
 		
 	/**
@@ -165,12 +165,12 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 	 * @return the ME distribution of the knowledge base
 	 */
 	public RpclProbabilityDistribution<?> getModel(RpclBeliefSet kb, FolSignature signature) {
-		if(!kb.getSignature().isSubSignature(signature)){
+		if(!kb.getMinimalSignature().isSubSignature(signature)){
 			log.error("Signature must be super-signature of the belief set's signature.");
 			throw new IllegalArgumentException("Signature must be super-signature of the belief set's signature.");
 		}
 		if(inferenceType == RpclMeReasoner.LIFTED_INFERENCE)
-			for(Predicate p: ((FolSignature)kb.getSignature()).getPredicates())
+			for(Predicate p: ((FolSignature)kb.getMinimalSignature()).getPredicates())
 				if(p.getArity()>1){
 					log.error("Lifted inference only applicable for signatures containing only unary predicates.");
 					throw new IllegalArgumentException("Lifted inference only applicable for signatures containing only unary predicates.");

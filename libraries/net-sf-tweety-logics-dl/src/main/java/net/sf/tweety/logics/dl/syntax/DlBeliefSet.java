@@ -37,7 +37,7 @@ import net.sf.tweety.commons.Signature;
  * 
  * @author Anna Gessler
  */
-public class DlBeliefSet extends BeliefSet<DlAxiom> {
+public class DlBeliefSet extends BeliefSet<DlAxiom,DlSignature> {
 	/**
 	 * Creates a new and empty description logics knowledge base.
 	 */
@@ -54,7 +54,7 @@ public class DlBeliefSet extends BeliefSet<DlAxiom> {
 	}
 
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		DlSignature sig = new DlSignature();
 		sig.addAll(this);
 		return sig;
@@ -86,6 +86,11 @@ public class DlBeliefSet extends BeliefSet<DlAxiom> {
 				ABox.add(f);
 		}
 		return ABox;	
+	}
+
+	@Override
+	protected DlSignature instantiateSignature() {
+		return new DlSignature();
 	}
 	
 }

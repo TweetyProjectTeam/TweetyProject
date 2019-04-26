@@ -59,7 +59,7 @@ public class SimpleMlReasoner extends AbstractMlReasoner {
 		//To construct all possible Kripke models for the knowledge base, we need to find all possible sets of worlds for the knowledge base
 		//and all possible accessibility relations for each of those sets.
 		FolSignature sig = new FolSignature();
-		sig.addSignature(mbs.getSignature());
+		sig.addSignature(mbs.getMinimalSignature());
 		sig.addSignature(formula.getSignature());
 		MlHerbrandBase hBase = new MlHerbrandBase(sig);
 		Set<MlHerbrandInterpretation> possibleWorlds = hBase.getAllHerbrandInterpretations(); 

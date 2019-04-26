@@ -52,7 +52,7 @@ public class RandomAspicArgumentationTheoryGenerator{
 	public static AspicArgumentationTheory<PlFormula> next(int numPropositions, int numFormulas, int maxBodyLiterals, double probStrict){
 		Random rand = new Random();
 		PlSignature sig = new PlSignature(numPropositions);
-		List<Proposition> atoms = new ArrayList<Proposition>(sig);
+		List<Proposition> atoms = new ArrayList<Proposition>(sig.toCollection());
 		AspicArgumentationTheory<PlFormula> theory = new AspicArgumentationTheory<PlFormula>(new PlFormulaGenerator());
 		for(int i = 0; i < numFormulas; i++) {
 			InferenceRule<PlFormula> rule;

@@ -71,7 +71,7 @@ public class MinimumViolationMachineShop implements BeliefBaseMachineShop {
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal violation.
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getMinimalSignature());
 		Map<PossibleWorld,Variable> worlds2vars = new HashMap<PossibleWorld,Variable>();
 		int i = 0;
 		Term normConstraint = null;
@@ -109,7 +109,7 @@ public class MinimumViolationMachineShop implements BeliefBaseMachineShop {
 		try{			
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// prepare probability function
-			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
+			ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getMinimalSignature());
 			for(PossibleWorld world: worlds)
 				p.put(world, new Probability(solution.get(worlds2vars.get(world)).doubleValue()));
 			// prepare result

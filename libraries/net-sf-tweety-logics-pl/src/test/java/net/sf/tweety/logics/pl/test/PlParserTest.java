@@ -152,7 +152,7 @@ public class PlParserTest {
 		beliefSet = parser.parseBeliefBase("a || b || c \n !a || b \n !b || c \n !c || (!a && !b && !c && !d)");
 		assertEquals(beliefSet.size(),4);
 		
-		Signature sig = beliefSet.getSignature();
+		Signature sig = beliefSet.getMinimalSignature();
 		PlSignature sig2 = new PlSignature();
 		sig2.add(new Proposition("a"));
 		sig2.add(new Proposition("b"));
@@ -167,7 +167,7 @@ public class PlParserTest {
 		beliefSet = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.proplogic");
 		assertEquals(beliefSet.size(),4);
 		
-		Signature sig = beliefSet.getSignature();
+		Signature sig = beliefSet.getMinimalSignature();
 		PlSignature sig2 = new PlSignature();
 		sig2.add(new Proposition("a"));
 		sig2.add(new Proposition("b"));

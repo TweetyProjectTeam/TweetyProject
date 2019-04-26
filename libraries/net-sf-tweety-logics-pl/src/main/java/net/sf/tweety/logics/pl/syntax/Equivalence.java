@@ -199,7 +199,7 @@ public class Equivalence extends PlFormula {
 	@Override
 	public PlSignature getSignature() {
 		PlSignature sig = this.formulas.getFirst().getSignature();
-		sig.addAll(this.formulas.getSecond().getSignature());
+		sig.addSignature(this.formulas.getSecond().getSignature());
 		return sig;
 	}
 

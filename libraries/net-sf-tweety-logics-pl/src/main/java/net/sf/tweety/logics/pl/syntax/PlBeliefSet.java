@@ -28,7 +28,7 @@ import net.sf.tweety.commons.*;
  * @author Matthias Thimm
  *
  */
-public class PlBeliefSet extends BeliefSet<PlFormula> {
+public class PlBeliefSet extends BeliefSet<PlFormula,PlSignature> {
 
 	/**
 	 * Creates a new (empty) knowledge base.
@@ -44,19 +44,6 @@ public class PlBeliefSet extends BeliefSet<PlFormula> {
 	 */
 	public PlBeliefSet(Collection<? extends PlFormula> formulas) {
 		super(formulas);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
-	 */
-	@Override
-	public Signature getSignature() {
-		PlSignature signature = new PlSignature();
-		for (Formula f : this)
-			signature.addAll(((PlFormula) f).getAtoms());
-		return signature;
 	}
 
 	/**
@@ -91,7 +78,7 @@ public class PlBeliefSet extends BeliefSet<PlFormula> {
 			changed = false;
 			for (int i = 0; i < sets.size(); i++) {
 				for (int j = i + 1; j < sets.size(); j++) {
-					if (sets.get(i).getSignature().isOverlappingSignature(sets.get(j).getSignature())) {
+					if (sets.get(i).getMinimalSignature().isOverlappingSignature(sets.get(j).getMinimalSignature())) {
 						changed = true;
 						sets.get(i).addAll(sets.get(j));
 						sets.remove(j);
@@ -126,5 +113,18 @@ public class PlBeliefSet extends BeliefSet<PlFormula> {
 		public int compare(PlFormula p1, PlFormula p2) {
 			return p1.hashCode() - p2.hashCode();
 		}
+	}
+
+	@Override
+	public PlSignature getMinimalSignature() {
+		PlSignature signature = new PlSignature();
+		for (Formula f : this)
+			signature.addAll(((PlFormula) f).getAtoms());
+		return signature;
+	}
+
+	@Override
+	protected PlSignature instantiateSignature() {
+		return new PlSignature();
 	}
 }

@@ -217,7 +217,7 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 	 * 			the signature of the ConditionalStructure
 	 */
 	public Collection<Proposition> getSignature() {
-		return Collections.unmodifiableCollection(signature);
+		return Collections.unmodifiableCollection(signature.toCollection());
 	}
 	
 	/**
@@ -272,7 +272,7 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 		this.signature.addSignature(cond.getSignature());
 		if(sizeBefore < this.signature.size()) {
 			// if a change occurred update the worldData.
-			updateSignature(this.signature);
+			updateSignature(this.signature.toCollection());
 		}
 		
 		// generate fast falsifying and verifying lists:
@@ -307,7 +307,7 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 			}
 			if(sizeBefore > this.signature.size()) {
 				// if a change occurred update the worldData.
-				updateSignature(this.signature);
+				updateSignature(this.signature.toCollection());
 			}
 			
 			// remove generators of this conditional from world data

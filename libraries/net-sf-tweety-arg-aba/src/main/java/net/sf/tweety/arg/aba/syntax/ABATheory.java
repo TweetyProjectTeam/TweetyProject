@@ -358,7 +358,7 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 	 * @see net.sf.tweety.commons.BeliefBase#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		// TODO Auto-generated method stub
 		return null;
 	}

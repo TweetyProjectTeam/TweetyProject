@@ -62,7 +62,8 @@ public class AspicGeneratorExample3 {
 							writer.write(theory, new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic" ));							
 							//write example query							
 							BufferedWriter writer1 = new BufferedWriter(new FileWriter(new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".query" )));
-							List<Proposition> sig = new ArrayList<>((PlSignature) theory.getSignature());							
+			
+							List<Proposition> sig = new ArrayList<>(((PlSignature) theory.getMinimalSignature()).toCollection());							
 						    writer1.write(sig.get(rand.nextInt(sig.size())).toString());
 						    writer1.close();
 						}		

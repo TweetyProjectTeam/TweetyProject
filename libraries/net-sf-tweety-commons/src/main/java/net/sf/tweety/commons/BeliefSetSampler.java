@@ -25,10 +25,10 @@ package net.sf.tweety.commons;
  * 
  * @author Matthias Thimm 
  * 
- * @param <R> The type of formulas belief sets are made of
- * @param <S> The type of belief sets sampled
+ * @param <T> The type of formulas belief sets are made of
+ * @param <U> The type of belief sets sampled
  */
-public abstract class BeliefSetSampler<R extends Formula, S extends BeliefSet<R>> implements BeliefSetIterator<R,S>{
+public abstract class BeliefSetSampler<T extends Formula, U extends BeliefSet<T,?>> implements BeliefSetIterator<T,U>{
 
 	/**
 	 * The signature of this sampler.
@@ -95,13 +95,13 @@ public abstract class BeliefSetSampler<R extends Formula, S extends BeliefSet<R>
 	 * @see net.sf.tweety.commons.BeliefSetIterator#next()
 	 */
 	@Override
-	public abstract S next();
+	public abstract U next();
 	
 	/**
 	 * Returns the signature of this sampler.
 	 * @return the signature of this sampler.
 	 */
-	public Signature getSignature(){
+	public Signature getSamplerSignature(){
 		return this.signature;
 	}
 	

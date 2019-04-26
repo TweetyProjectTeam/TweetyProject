@@ -33,7 +33,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional> {
+public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional,FolSignature> {
 
 	/**
 	 * Creates a new (empty) conditional belief set.
@@ -60,8 +60,8 @@ public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional>
 	 * @return a set of sets of constants.
 	 */
 	public Set<Set<Constant>> getEquivalenceClasses(FolSignature signature){
-		if(!this.getSignature().isSubSignature(signature))
-			throw new IllegalArgumentException("Signature must be super-signature of this set's signature.");
+		if(!this.getMinimalSignature().isSubSignature(signature))
+			throw new IllegalArgumentException("Signature must be super-signature of this set's formulas' signature.");
 		Set<Set<Constant>> result = new HashSet<Set<Constant>>();
 		Stack<Constant> allconstants = new Stack<Constant>();
 		for(Term<?> t: signature.getConstants())
@@ -96,7 +96,7 @@ public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional>
 	 * @return a set of sets of constants.
 	 */
 	public Set<Set<Constant>> getEquivalenceClasses(){
-		return this.getEquivalenceClasses((FolSignature)this.getSignature());
+		return this.getEquivalenceClasses((FolSignature)this.getMinimalSignature());
 	}
 	
 	/**
@@ -142,7 +142,7 @@ public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional>
 	 * @see net.sf.tweety.kr.BeliefSet#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		FolSignature sig = new FolSignature();
 		for(RelationalProbabilisticConditional c: this){
 			sig.addAll(c.getTerms(Constant.class));
@@ -150,5 +150,10 @@ public class RpclBeliefSet extends BeliefSet<RelationalProbabilisticConditional>
 			sig.addAll(c.getPredicates());			
 		}
 		return sig;
+	}
+
+	@Override
+	protected FolSignature instantiateSignature() {
+		return new FolSignature();
 	}	
 }

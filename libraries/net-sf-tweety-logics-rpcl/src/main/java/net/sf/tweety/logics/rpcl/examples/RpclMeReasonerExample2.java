@@ -37,7 +37,7 @@ public class RpclMeReasonerExample2 {
 		RpclBeliefSet bs = parser.parseBeliefBaseFromFile(RpclMeReasonerExample2.class.getResource("/cold.rpcl").getFile());
 		System.out.println(bs);
 		FolParser folParser = new FolParser();
-		folParser.setSignature((FolSignature)bs.getSignature());
+		folParser.setSignature((FolSignature)bs.getMinimalSignature());
 		FolFormula query = (FolFormula)folParser.parseFormula("cold(anna)");
 		RpclMeReasoner reasoner = new RpclMeReasoner(new AggregatingSemantics(), RpclMeReasoner.STANDARD_INFERENCE);
 		System.out.println(reasoner.query(bs,query));		

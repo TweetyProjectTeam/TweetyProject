@@ -63,7 +63,7 @@ public class AbstractArgumentationExample {
 		PlBeliefSet beliefSet = reasoner.getPropositionalCharacterisation(theory); 
 		System.out.println(beliefSet);
 		System.out.println();
-		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getSignature())){
+		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet.getMinimalSignature())){
 			if(w.satisfies(beliefSet))
 				System.out.println(w);
 		}
@@ -76,7 +76,7 @@ public class AbstractArgumentationExample {
 		
 		System.out.println(beliefSet2);
 		System.out.println();
-		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet2.getSignature())){
+		for(PossibleWorld w: PossibleWorld.getAllPossibleWorlds((PlSignature)beliefSet2.getMinimalSignature())){
 			if(w.satisfies(beliefSet2))
 				System.out.println(w);
 		}

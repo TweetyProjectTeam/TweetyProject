@@ -91,7 +91,8 @@ public class CnfSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 	 * @return a random formula
 	 */
 	public PlFormula sampleFormula(){
-		PlSignature sig = (PlSignature)this.getSignature();
+		
+		PlSignature sig = (PlSignature)this.getSamplerSignature();
 		Disjunction d = new Disjunction();		
 		Random rand = new Random();
 		for(Proposition p: sig){

@@ -43,7 +43,7 @@ public class DSumMeasureExample {
 		c.add((PlFormula) parser.parseFormula("!a && !b && !c"));
 				
 		PlSignature sig = new PlSignature();
-		for(PlFormula f: c) sig.addAll(f.getSignature());
+		for(PlFormula f: c) sig.addAll(f.getSignature().toCollection());
 		
 		DSumInconsistencyMeasure<PossibleWorld,PlBeliefSet,PlFormula> inc1 = new DSumInconsistencyMeasure<PossibleWorld,PlBeliefSet,PlFormula>(new DalalDistance(),new PossibleWorldIterator(sig));
 		DMaxInconsistencyMeasure<PossibleWorld,PlBeliefSet,PlFormula> inc2 = new DMaxInconsistencyMeasure<PossibleWorld,PlBeliefSet,PlFormula>(new DalalDistance(),new PossibleWorldIterator(sig));

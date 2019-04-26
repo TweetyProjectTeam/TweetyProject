@@ -62,7 +62,7 @@ public class ConvexAggregatingMaxConsMeMachineShop implements BeliefBaseMachineS
 				bs.add((ProbabilisticConditional) f);
 			// name the signature explicitly in order to ensure that the distributions
 			// are defined on the same set. 
-			distributions[cnt] = new DefaultMeReasoner().getModel(bs,(PlSignature) beliefSet.getSignature());			
+			distributions[cnt] = new DefaultMeReasoner().getModel(bs,(PlSignature) beliefSet.getMinimalSignature());			
 			cnt++;
 		}
 		double[] factors = new double[maxCons.size()];

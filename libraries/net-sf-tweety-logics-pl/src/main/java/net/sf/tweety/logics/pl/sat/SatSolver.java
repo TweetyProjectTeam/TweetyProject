@@ -219,7 +219,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.commons.BeliefSet)
 	 */
 	@Override
-	public boolean isConsistent(BeliefSet<PlFormula> beliefSet) {
+	public boolean isConsistent(BeliefSet<PlFormula,?> beliefSet) {
 		return this.isSatisfiable(beliefSet);
 	}
 
@@ -255,7 +255,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyWitnessProvider#getWitness(net.sf.tweety.commons.BeliefSet)
 	 */
 	@Override
-	public Interpretation<PlBeliefSet,PlFormula> getWitness(BeliefSet<PlFormula> bs) {
+	public Interpretation<PlBeliefSet,PlFormula> getWitness(BeliefSet<PlFormula,?> bs) {
 		return this.getWitness((Collection<PlFormula>) bs);
 	}
 }

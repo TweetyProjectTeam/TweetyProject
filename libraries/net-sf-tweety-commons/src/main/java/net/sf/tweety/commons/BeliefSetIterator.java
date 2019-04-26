@@ -26,10 +26,10 @@ import java.util.Iterator;
  * 
  * @author Matthias Thimm
  *
- * @param <S> The type of formulas
- * @param <T> The type of belief sets
+ * @param <T> The type of formulas
+ * @param <U> The type of belief sets
  */
-public interface BeliefSetIterator<S extends Formula,T extends BeliefSet<S>> extends Iterator<T>{
+public interface BeliefSetIterator<T extends Formula,U extends BeliefSet<T,?>> extends Iterator<U>{
 
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#hasNext()
@@ -41,5 +41,5 @@ public interface BeliefSetIterator<S extends Formula,T extends BeliefSet<S>> ext
 	 * @see java.util.Iterator#next()
 	 */
 	@Override
-	public T next();
+	public U next();
 }

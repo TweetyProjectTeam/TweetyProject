@@ -113,7 +113,7 @@ public class RuleBasedCReasoner extends AbstractConditionalLogicReasoner{
 		rule.setKappas(kappas.values());
 		rules.add(rule);
 		
-		RankingFunction rfunc = new RankingFunction(beliefset.getSignature());
+		RankingFunction rfunc = new RankingFunction(beliefset.getMinimalSignature());
 		for(NicePossibleWorld npw : cs.getPossibleWorlds()) {
 			int weight = 0;
 			for(Entry<Conditional, Generator> entry : cs.getWorldGenerators(npw).entrySet()) {

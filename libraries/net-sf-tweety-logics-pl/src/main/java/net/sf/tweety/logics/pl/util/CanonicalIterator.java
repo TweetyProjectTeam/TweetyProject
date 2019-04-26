@@ -399,7 +399,7 @@ public class CanonicalIterator implements BeliefSetIterator<PlFormula,PlBeliefSe
 		String s = "1";
 		Map<Proposition,Integer> prop = new HashMap<Proposition,Integer>();
 		int idx = 1;
-		for(Proposition p: (PlSignature)bs.getSignature())
+		for(Proposition p: (PlSignature)bs.getMinimalSignature())
 			prop.put(p, idx++);
 		for(PlFormula f: bs)
 			s += CanonicalIterator.formula2String(f,prop);

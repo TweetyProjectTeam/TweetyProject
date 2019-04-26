@@ -55,7 +55,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 	protected BeliefBase repair(PclBeliefSet beliefSet) {
 
 
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getMinimalSignature());
 		int noWorlds = worlds.size();
 		
 		
@@ -105,7 +105,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 
 		log.debug("Repair knowledge base.");
 		
-		ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getSignature());
+		ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getMinimalSignature());
 		int k=0;
 		for(PossibleWorld world: worlds) {
 			p.put(world, new Probability(tmpVariables[k++].getValue().doubleValue()));

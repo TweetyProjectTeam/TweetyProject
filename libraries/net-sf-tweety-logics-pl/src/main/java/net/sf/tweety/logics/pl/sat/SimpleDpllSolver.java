@@ -64,7 +64,7 @@ public class SimpleDpllSolver extends SatSolver {
 		Stack<PlFormula> sel_literals = new Stack<PlFormula>();
 		// keeps track of the atoms which have not assigned a truth value yet
 		Stack<Proposition> remaining_atoms = new Stack<Proposition>();
-		remaining_atoms.addAll(PlSignature.getSignature(clauses));
+		remaining_atoms.addAll(PlSignature.getSignature(clauses).toCollection());
 		// for each literal on the "sel_literals" stack, the next stack says whether
 		// this literal was selected to have its truth value (true),
 		// or derived using unit propagation (false)

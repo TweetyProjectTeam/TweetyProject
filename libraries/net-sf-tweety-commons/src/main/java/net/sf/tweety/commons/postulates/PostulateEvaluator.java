@@ -33,25 +33,25 @@ import net.sf.tweety.commons.Formula;
  * 
  * @author Matthias Thimm
  *
- * @param <S> The type of formulas used in the evaluation.
- * @param <T> The type of belief bases used in the evaluation.
+ * @param <T> The type of formulas used in the evaluation.
+ * @param <U> The type of belief bases used in the evaluation.
  */
-public class PostulateEvaluator<S extends Formula,T extends BeliefSet<S>>{
+public class PostulateEvaluator<T extends Formula, U extends BeliefSet<T,?>>{
 	
 	/**
 	 * The belief base sampler used to test the rationality postulates
 	 */
-	private BeliefSetIterator<S,T> iterator;
+	private BeliefSetIterator<T,U> iterator;
 	
 	/**
 	 * The approach being evaluated.
 	 */
-	private PostulateEvaluatable<S> ev;
+	private PostulateEvaluatable<T> ev;
 	
 	/**
 	 * the list of postulates the approach is evaluated against
 	 */
-	private List<Postulate<S>> postulates = new LinkedList<Postulate<S>>();
+	private List<Postulate<T>> postulates = new LinkedList<Postulate<T>>();
 	
 	/**
 	 * Creates a new evaluator for the given evaluatable and
@@ -60,7 +60,7 @@ public class PostulateEvaluator<S extends Formula,T extends BeliefSet<S>>{
 	 * @param ev some evaluatable
 	 * @param postulates a set of postulates
 	 */
-	public PostulateEvaluator(BeliefSetIterator<S,T> iterator, PostulateEvaluatable<S> ev, Collection<Postulate<S>> postulates) {
+	public PostulateEvaluator(BeliefSetIterator<T,U> iterator, PostulateEvaluatable<T> ev, Collection<Postulate<T>> postulates) {
 		this.iterator = iterator;
 		this.ev = ev;
 		this.postulates.addAll(postulates);
@@ -72,7 +72,7 @@ public class PostulateEvaluator<S extends Formula,T extends BeliefSet<S>>{
 	 * @param iterator some belief set iterator
 	 * @param ev some evaluatable
 	 */
-	public PostulateEvaluator(BeliefSetIterator<S,T> iterator, PostulateEvaluatable<S> ev) {
+	public PostulateEvaluator(BeliefSetIterator<T,U> iterator, PostulateEvaluatable<T> ev) {
 		this.iterator = iterator;
 		this.ev = ev;
 	}
@@ -81,7 +81,7 @@ public class PostulateEvaluator<S extends Formula,T extends BeliefSet<S>>{
 	 * Adds the given postulate
 	 * @param p some postulate
 	 */
-	public void addPostulate(Postulate<S> p) {
+	public void addPostulate(Postulate<T> p) {
 		this.postulates.add(p);
 	}
 	
@@ -90,7 +90,7 @@ public class PostulateEvaluator<S extends Formula,T extends BeliefSet<S>>{
 	 * @param p some postulate
 	 * @return true if this contained the specified postulate.
 	 */
-	public boolean removePostulate(Postulate<S> p) {
+	public boolean removePostulate(Postulate<T> p) {
 		return this.postulates.remove(p);
 	}
 	
@@ -103,12 +103,12 @@ public class PostulateEvaluator<S extends Formula,T extends BeliefSet<S>>{
 	 * 	will be stopped once a violation has been encountered.
 	 * @return a report on the evaluation
 	 */
-	public PostulateEvaluationReport<S> evaluate(long num, boolean stopWhenFailed) {
-		PostulateEvaluationReport<S> rep = new PostulateEvaluationReport<S>(this.ev,this.postulates);
-		Collection<Postulate<S>> failedPostulates = new HashSet<Postulate<S>>();
+	public PostulateEvaluationReport<T> evaluate(long num, boolean stopWhenFailed) {
+		PostulateEvaluationReport<T> rep = new PostulateEvaluationReport<T>(this.ev,this.postulates);
+		Collection<Postulate<T>> failedPostulates = new HashSet<Postulate<T>>();
 		for(int i = 0; i < num; i++) {
-			T instance = this.iterator.next();
-			for(Postulate<S> postulate: this.postulates) {
+			U instance = this.iterator.next();
+			for(Postulate<T> postulate: this.postulates) {
 				if(stopWhenFailed && failedPostulates.contains(postulate))
 					continue;
 				if(!postulate.isApplicable(instance)) 
@@ -133,7 +133,7 @@ public class PostulateEvaluator<S extends Formula,T extends BeliefSet<S>>{
 	 * @param num the number of belief bases to be applied.
 	 * @return a report on the evaluation
 	 */
-	public PostulateEvaluationReport<S> evaluate(long num) {
+	public PostulateEvaluationReport<T> evaluate(long num) {
 		return this.evaluate(num, true);
 	}
 }

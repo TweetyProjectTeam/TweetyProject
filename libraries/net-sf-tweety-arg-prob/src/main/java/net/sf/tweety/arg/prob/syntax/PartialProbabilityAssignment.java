@@ -56,7 +56,7 @@ public class PartialProbabilityAssignment extends HashMap<Argument,Probability> 
 	 * @see net.sf.tweety.BeliefBase#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		DungSignature sig = new DungSignature();
 		for(Argument a: this.keySet())
 			sig.add(a);

@@ -96,7 +96,7 @@ public class RandomSatSampler extends BeliefSetSampler<PlFormula,PlBeliefSet> {
 	public Disjunction randomClause() {
 		Disjunction clause = new Disjunction();
 		while(clause.size() < this.k) {
-			Proposition p = this.setTools.randomElement((PlSignature)this.getSignature());
+			Proposition p = this.setTools.randomElement(((PlSignature)this.getSamplerSignature()).toCollection());
 			if(!(clause.contains(p.complement()) || clause.contains(p)))
 				if(this.rand.nextBoolean())
 					clause.add(p);

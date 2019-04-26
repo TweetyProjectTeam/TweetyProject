@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.commons.Signature;
+import net.sf.tweety.commons.QuadrupleSetSignature;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
@@ -35,21 +35,13 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * 
  * @author Matthias Thimm
  */
-public class FolSignature extends Signature {
-	
-	private Set<Constant> constants;
-	private Set<Sort> sorts;
-	private Set<Predicate> predicates;
-	private Set<Functor> functors;
+public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Functor,Sort> {
 	
 	/**
 	 * Creates an empty signature 
 	 */
 	public FolSignature(){
-		this.constants = new HashSet<Constant>();
-		this.sorts = new HashSet<Sort>();
-		this.predicates = new HashSet<Predicate>();
-		this.functors = new HashSet<Functor>();
+		super();
 	}
 	
 	/**
@@ -58,13 +50,42 @@ public class FolSignature extends Signature {
 	 * @param containsEquality if true, the equality predicate is added to the signature
 	 */
 	public FolSignature(boolean containsEquality){
-		this.constants = new HashSet<Constant>();
-		this.sorts = new HashSet<Sort>();
-		this.predicates = new HashSet<Predicate>();
-		this.functors = new HashSet<Functor>();
+		this();
 		if (containsEquality) {
-			this.predicates.add(new EqualityPredicate());
-			this.predicates.add(new InequalityPredicate()); }
+			this.add(new EqualityPredicate());
+			this.add(new InequalityPredicate()); }
+	}
+	
+	/**
+	 * Returns the constants of this fol signature.
+	 * @return set of constants
+	 */
+	public Set<Constant> getConstants() {
+		return this.firstSet;
+	}
+	
+	/**
+	 * Returns the predicates of this fol signature.
+	 * @return set of predicates
+	 */
+	public Set<Predicate> getPredicates() {
+		return this.secondSet;
+	}
+	
+	/**
+	 * Returns the functors of this fol signature.
+	 * @return set of functors
+	 */
+	public Set<Functor> getFunctors() {
+		return this.thirdSet;
+	}
+	
+	/**
+	 * Returns the sorts of this fol signature.
+	 * @return set of sorts
+	 */
+	public Set<Sort> getSorts(){
+		return this.fourthSet;
 	}
 	
 	/**
@@ -91,39 +112,9 @@ public class FolSignature extends Signature {
 		this();
 		this.addAll(c);
 		if (containsEquality) {
-			this.predicates.add(new EqualityPredicate());
-			this.predicates.add(new InequalityPredicate()); 
+			this.add(new EqualityPredicate());
+			this.add(new InequalityPredicate()); 
 			}
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.kr.Signature#isSubSignature(net.sf.tweety.kr.Signature)
-	 */
-	@Override
-	public boolean isSubSignature(Signature other){
-		if(!(other instanceof FolSignature))
-			return false;
-		FolSignature o = (FolSignature) other;
-		if(!o.constants.containsAll(this.constants)) return false;
-		if(!o.functors.containsAll(this.functors)) return false;
-		if(!o.predicates.containsAll(this.predicates)) return false;
-		if(!o.sorts.containsAll(this.sorts)) return false;
-		return true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.Signature#isOverlappingSignature(net.sf.tweety.Signature)
-	 */
-	@Override
-	public boolean isOverlappingSignature(Signature other){
-		if(!(other instanceof FolSignature))
-			return false;
-		FolSignature o = (FolSignature) other;
-		for(Object obj: o.constants) if(this.constants.contains(obj)) return true;
-		for(Object obj: o.functors) if(this.functors.contains(obj)) return true;
-		for(Object obj: o.predicates) if(this.predicates.contains(obj)) return true;
-		for(Object obj: o.sorts) if(this.sorts.contains(obj)) return true;
-		return true;
 	}
 	
 	/**
@@ -134,27 +125,29 @@ public class FolSignature extends Signature {
 	 * of this formula are added to the signature.
 	 * @param obj the object to be added, either a constant, a sort, a predicate, a functor,
 	 *    or a formula.
+	 * @return 
 	 * @throws IllegalArgumentException if the given object is neither a constant, a sort, a
 	 *    predicate, a functor, or a formula.
 	 */
+	@Override
 	public void add(Object obj) throws IllegalArgumentException{
 		if(obj instanceof Constant){
-			sorts.add(((Constant)obj).getSort());
-			constants.add((Constant)obj);
+			fourthSet.add(((Constant)obj).getSort());
+			firstSet.add((Constant)obj);
 			return;
 		}
 		if(obj instanceof Sort){
-			sorts.add((Sort)obj);
+			fourthSet.add((Sort)obj);
 			return;
 		}
 		if(obj instanceof Predicate){
-			predicates.add((Predicate)obj);
 			this.addAll(((Predicate)obj).getArgumentTypes());
+			secondSet.add((Predicate)obj);
 			return;
 		}
 		if(obj instanceof Functor){
-			functors.add((Functor)obj);
 			this.addAll(((Functor)obj).getArgumentTypes());
+			thirdSet.add((Functor)obj);
 			return;
 		}
 		if(obj instanceof FolFormula){
@@ -186,37 +179,22 @@ public class FolSignature extends Signature {
 	 * @return "true" if the given formula is representable, "false" otherwise.
 	 */
 	public boolean isRepresentable(FolFormula folFormula){
-		if(!this.constants.containsAll(folFormula.getTerms(Constant.class))) return false;
-		if(!this.predicates.containsAll(folFormula.getPredicates())) return false;
-		if(!this.functors.containsAll(folFormula.getFunctors())) return false;
+		if(!this.firstSet.containsAll(folFormula.getTerms(Constant.class))) return false;
+		if(!this.secondSet.containsAll(folFormula.getPredicates())) return false;
+		if(!this.thirdSet.containsAll(folFormula.getFunctors())) return false;
 		return true;
 	}
-
-	public Set<Constant> getConstants(){
-		return this.constants;
-	}
 	
-	public Set<Predicate> getPredicates(){
-		return this.predicates;
-	}
-	
-	public Set<Functor> getFunctors(){
-		return this.functors;
-	}
-	
-	public Set<Sort> getSorts(){
-		return this.sorts;
-	}
 	
 	public Constant getConstant(String s){
-		for(Term<?> t: this.constants)
+		for(Term<?> t: this.firstSet)
 			if(((Constant) t).get().equals(s))
 				return (Constant) t;
 		return null;
 	}
 	
 	public Predicate getPredicate(String s){
-		for(Predicate p: this.predicates)
+		for(Predicate p: this.secondSet)
 			if(p.getName().equals(s)) {
 				if (s.equals("=="))
 					return new EqualityPredicate();
@@ -228,14 +206,14 @@ public class FolSignature extends Signature {
 	}
 	
 	public Functor getFunctor(String s){
-		for(Functor f: this.functors)
+		for(Functor f: this.thirdSet)
 			if(f.getName().equals(s))
 				return f;
 		return null;
 	}
 	
 	public Sort getSort(String s){
-		for(Sort st: this.sorts)
+		for(Sort st: this.fourthSet)
 			if(st.getName().equals(s))
 				return st;
 		return null;
@@ -246,7 +224,6 @@ public class FolSignature extends Signature {
 	}
 
 	public boolean containsPredicate(String s){
-
 		return this.getPredicate(s) != null;
 	}
 	
@@ -258,74 +235,6 @@ public class FolSignature extends Signature {
 		return this.getSort(s) != null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((constants == null) ? 0 : constants.hashCode());
-		result = prime * result
-				+ ((functors == null) ? 0 : functors.hashCode());
-		result = prime * result
-				+ ((predicates == null) ? 0 : predicates.hashCode());
-		result = prime * result + ((sorts == null) ? 0 : sorts.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		FolSignature other = (FolSignature) obj;
-		if (constants == null) {
-			if (other.constants != null)
-				return false;
-		} else if (!constants.equals(other.constants))
-			return false;
-		if (functors == null) {
-			if (other.functors != null)
-				return false;
-		} else if (!functors.equals(other.functors))
-			return false;
-		if (predicates == null) {
-			if (other.predicates != null)
-				return false;
-		} else if (!predicates.equals(other.predicates))
-			return false;
-		if (sorts == null) {
-			if (other.sorts != null)
-				return false;
-		} else if (!sorts.equals(other.sorts))
-			return false;
-		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.Signature#addSignature(net.sf.tweety.Signature)
-	 */
-	@Override
-	public void addSignature(Signature other) {
-		if(!(other instanceof FolSignature))
-			return;
-		FolSignature folSig = (FolSignature) other;
-		this.constants.addAll(folSig.constants);
-		this.functors.addAll(folSig.functors);
-		this.predicates.addAll(folSig.predicates);
-		this.sorts.addAll(folSig.sorts);
-		
-	}
-	
-	
 	/**
 	 * Returns a string representation of the first-order logic signature.
 	 * 
@@ -334,7 +243,7 @@ public class FolSignature extends Signature {
 	 */
 	public String toString() {
 		String result = "[";
-		java.util.Iterator<Sort> it = this.sorts.iterator();
+		java.util.Iterator<Sort> it = this.fourthSet.iterator();
 		while (it.hasNext()) {
 			Sort s = it.next();
 			Set<Term<?>> containedConstants = new HashSet<Term<?>>();
@@ -348,7 +257,38 @@ public class FolSignature extends Signature {
 		}
 		result += "]";
 		
-		return result + ", " + this.predicates.toString() + ", "  + this.functors.toString() ;
+		return result + ", " + this.secondSet.toString() + ", "  + this.thirdSet.toString() ;
+	}
+
+	@Override
+	public void remove(Object obj) {
+		if(obj instanceof Constant){
+			fourthSet.remove(((Constant)obj).getSort());
+			firstSet.remove((Constant)obj);
+			return;
+		}
+		if(obj instanceof Sort){
+			fourthSet.remove((Sort)obj);
+			return;
+		}
+		if(obj instanceof Predicate){
+			this.removeAll(((Predicate)obj).getArgumentTypes());
+			secondSet.remove((Predicate)obj);
+			return;
+		}
+		if(obj instanceof Functor){
+			this.removeAll(((Functor)obj).getArgumentTypes());
+			thirdSet.remove((Functor)obj);
+			return;
+		}
+		if(obj instanceof FolFormula){
+			this.removeAll(((FolFormula)obj).getTerms(Constant.class));
+			this.removeAll(((FolFormula)obj).getPredicates());
+			this.removeAll(((FolFormula)obj).getFunctors());
+			return;
+		}
+		throw new IllegalArgumentException("Class " + obj.getClass() + " of parameter is unsupported.");
+	
 	}
 	
 }

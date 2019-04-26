@@ -47,7 +47,7 @@ public class NaiveDlReasoner implements QualitativeReasoner<DlBeliefSet,DlAxiom>
 	@Override
 	public Boolean query(DlBeliefSet kb, DlAxiom formula) {
 		DlSignature sig = new DlSignature();
-		sig.addSignature(kb.getSignature());
+		sig.addSignature(kb.getMinimalSignature());
 		sig.addSignature(formula.getSignature());	
 		
 		Set<DlInterpretation> interpretations = getAllInterpretations(sig);

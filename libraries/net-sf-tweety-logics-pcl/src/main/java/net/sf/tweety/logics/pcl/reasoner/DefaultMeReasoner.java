@@ -65,7 +65,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 	 */
 	@Override
 	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet beliefbase) {
-		return this.getModel(beliefbase, (PlSignature) beliefbase.getSignature());
+		return this.getModel(beliefbase, (PlSignature) beliefbase.getMinimalSignature());
 	}	
 	
 	/**
@@ -79,7 +79,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
 		if(!tester.isConsistent(bs))
 			throw new IllegalArgumentException("Knowledge base is inconsistent.");
-		if(!bs.getSignature().isSubSignature(signature))
+		if(!bs.getMinimalSignature().isSubSignature(signature))
 			throw new IllegalArgumentException("Given signature is not a super-signature of the belief base's signature.");
 				
 		// construct optimization problem

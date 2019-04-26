@@ -2,9 +2,9 @@ package net.sf.tweety.arg.adf.syntax;
 
 import java.util.Collection;
 
-import net.sf.tweety.commons.SetSignature;
+import net.sf.tweety.commons.SingleSetSignature;
 
-public class AbstractDialecticalFrameworkSignature extends SetSignature<Argument>{
+public class AbstractDialecticalFrameworkSignature extends SingleSetSignature<Argument>{
 
 	public AbstractDialecticalFrameworkSignature() {
 		super();
@@ -12,15 +12,22 @@ public class AbstractDialecticalFrameworkSignature extends SetSignature<Argument
 	}
 
 	public AbstractDialecticalFrameworkSignature(Argument f) {
-		super(f);
-		// TODO Auto-generated constructor stub
+		super();
+		this.add(f);
 	}
 
 	public AbstractDialecticalFrameworkSignature(Collection<? extends Argument> formulas) {
-		super(formulas);
-		// TODO Auto-generated constructor stub
+		super();
+		this.addAll(formulas);
 	}
 
+	@Override
+	public void add(Object obj) {
+		if (obj instanceof Argument)
+			formulas.add((Argument) obj);
+		else
+			throw new IllegalArgumentException("Unknown type " + obj.getClass());
 	
+	}
 	
 }

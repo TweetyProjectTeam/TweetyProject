@@ -20,6 +20,7 @@ package net.sf.tweety.action.description.syntax;
 
 import java.util.Collection;
 
+import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.commons.BeliefSet;
 
 /**
@@ -28,27 +29,28 @@ import net.sf.tweety.commons.BeliefSet;
  * @author Sebastian Homann
  * @param <T> Type of causal law to be kept in this action description.
  */
-public abstract class ActionDescription< T extends CausalLaw >
-  extends BeliefSet< T >
-{
-  
-  /**
-   * Creates a new empty action description.
-   */
-  public ActionDescription()
-  {
-    super();
-  }
-  
-  /**
-   * Creates a new action description containing all elements in the collection
-   * given.
-   * 
-   * @param c a collection of causal laws.
-   */
-  public ActionDescription( Collection< ? extends T > c )
-  {
-    super( c );
-  }
-  
+public abstract class ActionDescription<T extends CausalLaw> extends BeliefSet<T, ActionSignature> {
+
+	/**
+	 * Creates a new empty action description.
+	 */
+	public ActionDescription() {
+		super();
+	}
+
+	/**
+	 * Creates a new action description containing all elements in the collection
+	 * given.
+	 * 
+	 * @param c a collection of causal laws.
+	 */
+	public ActionDescription(Collection<? extends T> c) {
+		super(c);
+	}
+
+	@Override
+	protected ActionSignature instantiateSignature() {
+		return new ActionSignature();
+	}
+
 }

@@ -56,7 +56,7 @@ public class CrMasExample {
 		credOrder.setOrderedBefore(agents.get(1), agents.get(2));
 		
 		// a belief base (we use propositional logic)
-		CrMasBeliefSet<PlFormula> bs = new CrMasBeliefSet<PlFormula>(credOrder);
+		CrMasBeliefSet<PlFormula,PlSignature> bs = new CrMasBeliefSet<PlFormula,PlSignature>(credOrder, new PlSignature());
 		bs.add(new InformationObject<PlFormula>((PlFormula) parser.parseFormula("!c"), agents.get(1)));
 		bs.add(new InformationObject<PlFormula>((PlFormula) parser.parseFormula("b"), agents.get(2)));
 		bs.add(new InformationObject<PlFormula>((PlFormula) parser.parseFormula("!b||!a"), agents.get(2)));

@@ -44,7 +44,7 @@ public interface LogicProgram<C extends Formula, P extends Formula, T extends Ru
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.BeliefBase#getSignature()
 	 */
-	Signature getSignature();
+	Signature getMinimalSignature();
 	
 	/**
 	 * Substitutes all occurrences of term "v" in this formula

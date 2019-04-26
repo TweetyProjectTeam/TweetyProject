@@ -172,7 +172,7 @@ public class FolParserTest {
 		beliefSet = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.fologic");
 		assertEquals(beliefSet.size(),6);
 		
-		FolSignature sig = (FolSignature) beliefSet.getSignature();
+		FolSignature sig = (FolSignature) beliefSet.getMinimalSignature();
 		assertEquals(sig.getConstants().size(),4);
 		assertEquals(sig.getPredicates().size(),4);
 		assertEquals(sig.getSorts().size(),2);

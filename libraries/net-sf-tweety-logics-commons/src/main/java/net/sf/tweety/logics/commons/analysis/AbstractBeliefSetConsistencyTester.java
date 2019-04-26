@@ -28,23 +28,25 @@ import net.sf.tweety.commons.Formula;
  * whether a given belief set is consistent. 
  * 
  * @author Matthias Thimm
+ * @param <T> The type of formulas in the belief set
+ * @param <S> The type of signature of the belief set
  */
-public abstract class AbstractBeliefSetConsistencyTester<S extends Formula> implements BeliefSetConsistencyTester<S> {
+public abstract class AbstractBeliefSetConsistencyTester<T extends Formula> implements BeliefSetConsistencyTester<T> {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.ConsistencyTester#isConsistent(net.sf.tweety.BeliefBase)
 	 */
 	@Override
-	public boolean isConsistent(BeliefSet<S> beliefSet){
-		return this.isConsistent((Collection<S>) beliefSet);
+	public boolean isConsistent(BeliefSet<T,?> beliefSet){
+		return this.isConsistent((Collection<T>) beliefSet);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(net.sf.tweety.Formula)
 	 */
 	@Override
-	public boolean isConsistent(S formula){
-		Collection<S> c = new HashSet<S>();
+	public boolean isConsistent(T formula){
+		Collection<T> c = new HashSet<T>();
 		c.add(formula);
 		return this.isConsistent(c);
 	}
@@ -52,5 +54,5 @@ public abstract class AbstractBeliefSetConsistencyTester<S extends Formula> impl
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(java.util.Collection)
 	 */
-	public abstract boolean isConsistent(Collection<S> formulas);
+	public abstract boolean isConsistent(Collection<T> formulas);
 }

@@ -73,7 +73,7 @@ public class PmInconsistencyMeasure implements InconsistencyMeasure<Program> {
 		int min = Integer.MAX_VALUE;
 		SubsetIterator<ASPRule> it_del = new IncreasingSubsetIterator<ASPRule>(beliefBase);
 		Set<ASPRule> allFacts = new HashSet<ASPRule>();
-		FolSignature sig = beliefBase.getSignature();
+		FolSignature sig = beliefBase.getMinimalSignature();
 		for (FolAtom a : new HerbrandBase(sig).getAtoms()) {
 			allFacts.add(new ASPRule(new ASPAtom(a)));
 			allFacts.add(new ASPRule(new StrictNegation(new ASPAtom(a))));

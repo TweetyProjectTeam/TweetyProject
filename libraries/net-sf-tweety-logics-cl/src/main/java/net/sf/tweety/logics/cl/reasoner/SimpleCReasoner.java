@@ -114,7 +114,7 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 	 * @param kappa
 	 */
 	private RankingFunction constructRankingFunction(ClBeliefSet beliefset, Integer[] kappa){
-		RankingFunction candidate = new RankingFunction(beliefset.getSignature());
+		RankingFunction candidate = new RankingFunction(beliefset.getMinimalSignature());
 		if(kappa == null) 
 			return candidate;
 		for(PossibleWorld w: candidate.getPossibleWorlds()){

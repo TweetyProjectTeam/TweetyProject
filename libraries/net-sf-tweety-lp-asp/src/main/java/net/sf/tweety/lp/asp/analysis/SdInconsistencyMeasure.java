@@ -84,7 +84,7 @@ public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 			if(solver.getModel(beliefBase).size() > 0)
 				return 0d;
 			Set<ASPLiteral> allLiterals = new HashSet<ASPLiteral>();
-			FolSignature sig = beliefBase.getSignature();
+			FolSignature sig = beliefBase.getMinimalSignature();
 			for(FolAtom a: new HerbrandBase(sig).getAtoms()){
 				allLiterals.add(new ASPAtom(a));
 				allLiterals.add(new StrictNegation(new ASPAtom(a)));

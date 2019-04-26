@@ -59,7 +59,7 @@ public class NLPProgram
 	
 	
 	@Override
-	public FolSignature getSignature() {
+	public FolSignature getMinimalSignature() {
 		FolSignature reval = new FolSignature();
 		for(NLPRule rule : this) {
 			reval.addSignature(rule.getSignature());

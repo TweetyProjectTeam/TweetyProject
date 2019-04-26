@@ -81,7 +81,8 @@ public class ContensionSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 	 */
 	@Override
 	public PlBeliefSet next() {
-		List<Proposition> props = new ArrayList<Proposition>((PlSignature)this.getSignature());
+		
+		List<Proposition> props = new ArrayList<Proposition>(((PlSignature)this.getSamplerSignature()).toCollection());
 		List<PlFormula> formulas = new ArrayList<PlFormula>();
 		// first add contradictoy formulas
 		int num = 0;		

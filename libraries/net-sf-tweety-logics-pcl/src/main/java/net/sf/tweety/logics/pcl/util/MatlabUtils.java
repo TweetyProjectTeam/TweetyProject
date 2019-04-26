@@ -267,7 +267,7 @@ public class MatlabUtils {
                 + "(sp|ss)[0.8]\n"
                 );
 		
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) kb.getSignature());
+		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) kb.getMinimalSignature());
 		 
 		System.out.println("% "+kb+"\n\n");
 		

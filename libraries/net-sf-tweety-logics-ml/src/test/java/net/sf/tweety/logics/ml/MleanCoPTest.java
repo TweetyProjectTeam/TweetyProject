@@ -30,7 +30,7 @@ public class MleanCoPTest {
 	public void init() throws ParserException, IOException {
 		parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("Test={test} \n type(p) \n type(q(Test)) \n p \n q(test)");
-		parser.setSignature((FolSignature) b.getSignature());
+		parser.setSignature((FolSignature) b.getMinimalSignature());
 		prover = new MleanCoPReasoner("/home/anna/sw/mlProver/mleancop/mleancop.sh");
 	}
 	

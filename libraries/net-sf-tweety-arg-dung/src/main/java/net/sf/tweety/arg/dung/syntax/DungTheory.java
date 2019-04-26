@@ -42,7 +42,7 @@ import net.sf.tweety.math.term.IntegerConstant;
  * @author Matthias Thimm, Tjitze Rienstra
  *
  */
-public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, Comparable<DungTheory> {
+public class DungTheory extends BeliefSet<Argument,DungSignature> implements Graph<Argument>, Comparable<DungTheory> {
 
 	/**
 	 * For archiving sub graphs 
@@ -81,7 +81,7 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
-	public Signature getSignature(){
+	public Signature getMinimalSignature(){
 		return new DungSignature(this);
 	}
 
@@ -733,5 +733,10 @@ public class DungTheory extends BeliefSet<Argument> implements Graph<Argument>, 
 		// have a fixed (but arbitrary) order among all theories
 		// for that purpose we just use the hash code.
 		return this.hashCode() - o.hashCode();
+	}
+
+	@Override
+	protected DungSignature instantiateSignature() {
+		return new DungSignature();
 	}
 }

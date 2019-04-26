@@ -50,7 +50,7 @@ public class BasicArgumentSampler extends FormulaSampler<BasicArgument> {
 			throw new IllegalArgumentException("Signature must be a propositional signature.");
 		// randomly choose conclusion
 		Random random = new Random();
-		List<Formula> propositions = new ArrayList<Formula>((PlSignature)this.getSignature()); 
+		List<Formula> propositions = new ArrayList<Formula>(((PlSignature)this.getSignature()).toCollection()); 
 		Proposition claim = (Proposition) propositions.get(random.nextInt(propositions.size()));
 		propositions.remove(claim);
 		// the int formula_length is interpreted as length of support.

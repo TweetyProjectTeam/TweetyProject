@@ -115,8 +115,8 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 			if(!satisfied){		
 				PossibleWorld w = (PossibleWorld)this.witnessProvider.getWitness(formula);
 				// arbitrarily set remaining propositions
-				PlSignature sig = new PlSignature(this.sig);
-				sig.removeAll(formula.getSignature());
+				PlSignature sig = new PlSignature(this.sig.toCollection());
+				sig.removeAll(formula.getSignature().toCollection());
 				for(Proposition p: sig)
 					if(this.rand.nextDouble() < 0.5)
 						w.add(p);			

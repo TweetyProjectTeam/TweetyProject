@@ -50,7 +50,7 @@ public class MinimalViolationInconsistencyMeasureLPSolveTest {
 
 	double accuracy;
 	
-	InconsistencyMeasure<BeliefSet<ProbabilisticConditional>> inc;
+	InconsistencyMeasure<BeliefSet<ProbabilisticConditional,?>> inc;
 	
 	PclParser parser;
 	LinkedList<PclBeliefSet> kbs;

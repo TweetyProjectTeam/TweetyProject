@@ -30,7 +30,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class RclBeliefSet extends BeliefSet<RelationalConditional> {
+public class RclBeliefSet extends BeliefSet<RelationalConditional,FolSignature> {
 	
 	/**
 	 * Creates a new (empty) conditional belief set.
@@ -52,7 +52,7 @@ public class RclBeliefSet extends BeliefSet<RelationalConditional> {
 	 * @see net.sf.tweety.kr.BeliefBase#getSignature()
 	 */
 	@Override
-	public Signature getSignature(){
+	public Signature getMinimalSignature(){
 		FolSignature sig = new FolSignature();
 		for(Formula f: this){
 			RelationalConditional c = (RelationalConditional) f;
@@ -61,6 +61,11 @@ public class RclBeliefSet extends BeliefSet<RelationalConditional> {
 			sig.addAll(c.getPredicates());			
 		}
 		return sig;
+	}
+
+	@Override
+	protected FolSignature instantiateSignature() {
+		return new FolSignature();
 	}
 
 }

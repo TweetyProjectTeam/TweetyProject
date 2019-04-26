@@ -31,7 +31,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * 
  * @author Matthias Thimm
  */
-public class MarkovLogicNetwork extends BeliefSet<MlnFormula> implements Serializable {
+public class MarkovLogicNetwork extends BeliefSet<MlnFormula,FolSignature> implements Serializable {
 
 	private static final long serialVersionUID = 3313039501304912746L;
 
@@ -55,7 +55,7 @@ public class MarkovLogicNetwork extends BeliefSet<MlnFormula> implements Seriali
 	 * @see net.sf.tweety.BeliefSet#getSignature()
 	 */
 	@Override
-	public Signature getSignature() {
+	public Signature getMinimalSignature() {
 		FolSignature sig = new FolSignature();
 		for(MlnFormula formula: this){
 			sig.addAll(formula.getPredicates());
@@ -63,6 +63,11 @@ public class MarkovLogicNetwork extends BeliefSet<MlnFormula> implements Seriali
 			sig.addAll(formula.getFunctors());
 		}
 		return sig;
+	}
+
+	@Override
+	protected FolSignature instantiateSignature() {
+		return new FolSignature();
 	}
 
 }
