@@ -30,7 +30,14 @@ import java.util.*;
  */
 public abstract class DualSetSignature<T,S> implements Signature {
 
+	/**
+	 * The first set of formulas of this signature.
+	 */
 	protected Set<T> firstSet;
+	
+	/**
+	 * The second set of formulas of this signature.
+	 */
 	protected Set<S> secondSet;
 	
 	/**
@@ -39,6 +46,16 @@ public abstract class DualSetSignature<T,S> implements Signature {
 	public DualSetSignature() {
 		firstSet = new HashSet<T>();
 		secondSet = new HashSet<S>();
+	}
+	
+	/**
+	 * Creates a new signature with the given sets of formulas.
+	 * @param args1
+	 * @param args2
+	 */
+	public DualSetSignature(Set<T> args1, Set<S> args2) {
+		firstSet = args1;
+		secondSet = args2;
 	}
 	
 	@Override
@@ -109,6 +126,7 @@ public abstract class DualSetSignature<T,S> implements Signature {
 		for(Object obj: c)
 			this.add(obj);
 	}
+	
 	@Override
 	public boolean isEmpty() {
 		return (firstSet.isEmpty() && secondSet.isEmpty());
@@ -118,6 +136,12 @@ public abstract class DualSetSignature<T,S> implements Signature {
 	public void removeAll(Collection<?> c) {
 		for(Object obj: c)
 			this.remove(obj);
+	}
+	
+	@Override
+	public void clear() {
+		firstSet = new HashSet<T>();
+		secondSet = new HashSet<S>();
 	}
 	
 	@Override

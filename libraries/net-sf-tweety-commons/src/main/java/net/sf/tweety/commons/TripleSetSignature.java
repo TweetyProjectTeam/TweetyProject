@@ -30,8 +30,19 @@ import java.util.*;
  */
 public abstract class TripleSetSignature<T,S,U> implements Signature {
 
+	/**
+	 * The first set of formulas of this signature.
+	 */
 	protected Set<T> firstSet;
+	
+	/**
+	 * The second set of formulas of this signature.
+	 */
 	protected Set<S> secondSet;
+	
+	/**
+	 * The third set of formulas of this signature.
+	 */
 	protected Set<U> thirdSet;
 	
 	/**
@@ -131,6 +142,13 @@ public abstract class TripleSetSignature<T,S,U> implements Signature {
 	public void removeAll(Collection<?> c) {
 		for(Object obj: c)
 			this.remove(obj);
+	}
+	
+	@Override
+	public void clear() {
+		firstSet = new HashSet<T>();
+		secondSet = new HashSet<S>();
+		thirdSet = new HashSet<U>();
 	}
 	
 	@Override

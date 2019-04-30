@@ -30,9 +30,24 @@ import java.util.*;
  */
 public abstract class QuadrupleSetSignature<T,S,U,R> implements Signature {
 
+	/**
+	 * The first set of formulas in this signature.
+	 */
 	protected Set<T> firstSet;
+	
+	/**
+	 * The second set of formulas in this signature.
+	 */
 	protected Set<S> secondSet;
+	
+	/**
+	 * The third set of formulas in this signature.
+	 */
 	protected Set<U> thirdSet;
+	
+	/**
+	 * The fourth set of formulas in this signature.
+	 */
 	protected Set<R> fourthSet;
 	
 	/**
@@ -146,9 +161,16 @@ public abstract class QuadrupleSetSignature<T,S,U,R> implements Signature {
 	}
 	
 	@Override
+	public void clear() {
+		firstSet = new HashSet<T>();
+		secondSet = new HashSet<S>();
+		thirdSet = new HashSet<U>();
+		fourthSet = new HashSet<R>();
+	}
+	
+	@Override
 	public String toString() {
 		return firstSet.toString() + ", " + secondSet.toString() + ", " + thirdSet.toString() + ", " + fourthSet.toString();
 	}
-	
 	
 }

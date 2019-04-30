@@ -69,7 +69,7 @@ public class PlSignature extends SingleSetSignature<Proposition> {
 	}
 
 	/**
-	 * Returns the set of atoms appearing in the given collection of formulas
+	 * Returns the set of atoms appearing in the given collection of formulas.
 	 * 
 	 * @param formulas a set of propositional formulas
 	 * @return the signature of the formulas.

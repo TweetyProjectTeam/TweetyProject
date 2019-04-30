@@ -57,7 +57,7 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 	}
 	
 	/**
-	 * Returns the constants of this fol signature.
+	 * Returns the constants of this first-order logic signature.
 	 * @return set of constants
 	 */
 	public Set<Constant> getConstants() {
@@ -65,7 +65,7 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 	}
 	
 	/**
-	 * Returns the predicates of this fol signature.
+	 * Returns the predicates of this first-order logic signature.
 	 * @return set of predicates
 	 */
 	public Set<Predicate> getPredicates() {
@@ -73,7 +73,7 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 	}
 	
 	/**
-	 * Returns the functors of this fol signature.
+	 * Returns the functors of this first-order logic signature.
 	 * @return set of functors
 	 */
 	public Set<Functor> getFunctors() {
@@ -81,7 +81,7 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 	}
 	
 	/**
-	 * Returns the sorts of this fol signature.
+	 * Returns the sorts of this first-order logic signature.
 	 * @return set of sorts
 	 */
 	public Set<Sort> getSorts(){
@@ -185,7 +185,11 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 		return true;
 	}
 	
-	
+	/**
+	 * Get the constant with the given name.
+	 * @param s name of constant
+	 * @return the constant with the given name if it is part of the signature, null otherwise
+	 */
 	public Constant getConstant(String s){
 		for(Term<?> t: this.firstSet)
 			if(((Constant) t).get().equals(s))
@@ -193,6 +197,11 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 		return null;
 	}
 	
+	/**
+	 * Get the predicate with the given name.
+	 * @param s name of predicate
+	 * @return the predicate with the given name if it is part of the signature, null otherwise
+	 */
 	public Predicate getPredicate(String s){
 		for(Predicate p: this.secondSet)
 			if(p.getName().equals(s)) {
@@ -205,6 +214,11 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 		return null;
 	}
 	
+	/**
+	 * Get the functor with the given name.
+	 * @param s name of functor
+	 * @return the functor with the given name if it is part of the signature, null otherwise
+	 */
 	public Functor getFunctor(String s){
 		for(Functor f: this.thirdSet)
 			if(f.getName().equals(s))
@@ -212,6 +226,11 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 		return null;
 	}
 	
+	/**
+	 * Get the sort with the given name.
+	 * @param s name of sort
+	 * @return the sort with the given name if it is part of the signature, null otherwise
+	 */
 	public Sort getSort(String s){
 		for(Sort st: this.fourthSet)
 			if(st.getName().equals(s))
@@ -219,31 +238,82 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 		return null;
 	}
 	
+	/**
+	 * Returns true if this signature contains the specified constant,
+	 * predicate, functor, sort or all constants, predicates, functors
+	 * and sorts in the specified FolFormula.
+	 * @param o, either a constant, predicate, functor, sort or FolFormula
+	 * @return true if the signature contains the specified formula
+	 */
+	public boolean contains(Object o) {
+		if (o instanceof Constant)
+			return this.getConstants().contains((Constant)o);
+		if (o instanceof Predicate)
+			return this.getPredicates().contains((Predicate)o);
+		if (o instanceof Functor)
+			return this.getFunctors().contains((Functor)o);
+		if (o instanceof Sort)
+			return this.getSorts().contains((Sort)o);
+		if(o instanceof FolFormula){
+			for (Constant c : ((FolFormula)o).getTerms(Constant.class))
+				if (!this.contains(c))
+					return false;
+			for (Predicate p : ((FolFormula)o).getPredicates())
+				if (!this.contains(p))
+					return false;
+			for (Functor f : ((FolFormula)o).getFunctors())
+				if (!this.contains(f))
+					return false;
+			return true;
+		}
+		throw new IllegalArgumentException("Class " + o.getClass() + " of parameter is unsupported. Parameter must be a constant, predicate, functor, sort or FolFormula.");
+	}
+	
+	/**
+	 * Returns true if this signature contains the constant of the given name.
+	 * @param s name of constant
+	 * @return true if the signature contains the constant
+	 */
 	public boolean containsConstant(String s){
 		return this.getConstant(s) != null;
 	}
 
+	/**
+	 * Returns true if this signature contains the predicate of the given name.
+	 * @param s name of predicate
+	 * @return true if the signature contains the predicate
+	 */
 	public boolean containsPredicate(String s){
 		return this.getPredicate(s) != null;
 	}
 	
+	/**
+	 * Returns true if this signature contains the functor of the given name.
+	 * @param s name of functor
+	 * @return true if the signature contains the functor
+	 */
 	public boolean containsFunctor(String s){
 		return this.getFunctor(s) != null;
 	}
 	
+	/**
+	 * Returns true if this signature contains the sort of the given name.
+	 * @param s name of sort
+	 * @return true if the signature contains the sort
+	 */
 	public boolean containsSort(String s){
 		return this.getSort(s) != null;
 	}
 	
 	/**
-	 * Returns a string representation of the first-order logic signature.
+	 * Returns a string representation of this first-order logic signature.
 	 * 
 	 * @return a string consisting of the sorts with their constants 
 	 * followed by the predicates and functors of the signature.
 	 */
 	public String toString() {
 		String result = "[";
-		java.util.Iterator<Sort> it = this.fourthSet.iterator();
+		java.util.Iterator<Sort> it = this.getSorts().iterator();
 		while (it.hasNext()) {
 			Sort s = it.next();
 			Set<Term<?>> containedConstants = new HashSet<Term<?>>();
@@ -257,7 +327,7 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 		}
 		result += "]";
 		
-		return result + ", " + this.secondSet.toString() + ", "  + this.thirdSet.toString() ;
+		return result + ", " + this.getPredicates().toString() + ", "  + this.getFunctors().toString() ;
 	}
 
 	@Override
@@ -288,7 +358,6 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 			return;
 		}
 		throw new IllegalArgumentException("Class " + obj.getClass() + " of parameter is unsupported.");
-	
 	}
 	
 }

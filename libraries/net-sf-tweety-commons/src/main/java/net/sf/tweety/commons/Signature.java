@@ -22,12 +22,11 @@ import java.util.Collection;
 
 /**
  * A signatures lists the atomic language structures for some language. It is
- * modelled as a (multi-)set of formulas.
+ * represented by a (multi-)set of formulas.
  * 
  * @author Matthias Thimm
  * @author Anna Gessler
  * 
- * @param T The type of formulas in this signature.
  */
 public interface Signature {
 	/**
@@ -36,7 +35,7 @@ public interface Signature {
 	 * expressible with the given signature.
 	 * 
 	 * @param other a signature.
-	 * @return "true" iff this signature is a subsignature of the given one.
+	 * @return "true" iff this signature is a sub-signature of the given one.
 	 */
 	public abstract boolean isSubSignature(Signature other);
 
@@ -117,4 +116,11 @@ public interface Signature {
 	 * @return
 	 */
 	public abstract void removeAll(Collection<?> c);
+	
+	/**
+	 * Removes all elements of this signature. After this call returns, this
+	 * signature will contain no elements.
+	 */
+	public abstract void clear();
+
 }

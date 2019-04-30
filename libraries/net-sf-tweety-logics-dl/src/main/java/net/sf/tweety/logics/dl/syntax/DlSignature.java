@@ -33,39 +33,14 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * This class models a description logic signature. A signature for a
  * description logic consists of concept names (unary predicates, e.g.
  * "Male(X)"), role names (binary predicates, e.g. "DaughterOf(X,Y)") and
- * individuals (constants, e.g. "Alice"). <br>
- * - Concept names:
+ * individuals (constants, e.g. "Alice"). 
  * 
  * @author Bastian Wolf
  * @author Anna Gessler
  *
  */
 public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, Individual> {
-	/**
-	 * Get the atomic concepts of the signature. A concept is an unary (arity 1)
-	 * predicate.
-	 */
-	public Set<AtomicConcept> getConcepts() {
-		return this.firstSet;
-	}
-
-	/**
-	 * Get the role names of the signature. A role is a binary predicate (arity 2)
-	 * consisting of two individuals.
-	 */
-	public Set<AtomicRole> getRoles() {
-		return this.secondSet;
-	}
-
-	/**
-	 * Get the individuals of the signature. An individual is a single object
-	 * similar to objects used in first-order logic.
-	 */
-
-	public Set<Individual> getIndividuals() {
-		return this.thirdSet;
-	}
-
+	
 	/**
 	 * Creates an empty signature.
 	 */
@@ -100,7 +75,141 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 		this();
 		this.addAll(c);
 	}
+	
+	/**
+	 * Get the atomic concepts of the signature. A concept is an unary (arity 1)
+	 * predicate.
+	 */
+	public Set<AtomicConcept> getConcepts() {
+		return this.firstSet;
+	}
 
+	/**
+	 * Get the role names of the signature. A role is a binary predicate (arity 2)
+	 * consisting of two individuals.
+	 */
+	public Set<AtomicRole> getRoles() {
+		return this.secondSet;
+	}
+
+	/**
+	 * Get the individuals of the signature. An individual is a single object
+	 * similar to objects used in first-order logic.
+	 */
+
+	public Set<Individual> getIndividuals() {
+		return this.thirdSet;
+	}
+
+	/**
+	 * @return all predicates of this signature.
+	 */
+	public Set<Predicate> getPredicates() {
+		Set<Predicate> predicates = new HashSet<Predicate>();
+		for (AtomicConcept c : this.getConcepts())
+			predicates.add(new Predicate(c.getName(), 1));
+		for (AtomicRole r : this.getRoles())
+			predicates.add(new Predicate(r.getName(), 2));
+		return predicates;
+	}
+
+	/**
+	 * Get the individual with the given name.
+	 * @param s name of individual
+	 * @return the individual with the given name if it is part of the signature, null otherwise
+	 */
+	public Individual getIndividual(String s) {
+		for (Term<?> t : this.thirdSet)
+			if (((Individual) t).get().equals(s))
+				return (Individual) t;
+		return null;
+	}
+
+	/**
+	 * Get the concept with the given name.
+	 * @param s name of concept
+	 * @return the concept with the given name if it is part of the signature, null otherwise
+	 */
+	public AtomicConcept getConcept(String s) {
+		for (AtomicConcept p : this.firstSet)
+			if (p.getName().equals(s))
+				return p;
+		return null;
+	}
+
+	/**
+	 * Get the role with the given name.
+	 * @param s name of role
+	 * @return the role with the given name if it is part of the signature, null otherwise
+	 */
+	public AtomicRole getRole(String s) {
+		for (AtomicRole p : this.secondSet)
+			if (p.getName().equals(s))
+				return p;
+		return null;
+	}
+
+	/**
+	 * Checks whether the signature contains an Individual of the given name.
+	 * 
+	 * @param s the name of the Individual
+	 * @return true if the the signature contains an Individual of the given name,
+	 *         false otherwise
+	 */
+	public boolean containsIndividual(String s) {
+		return this.getIndividual(s) != null;
+	}
+
+	/**
+	 * Checks whether the signature contains an atomic concept of the given name.
+	 * 
+	 * @param s the name of the atomic concept
+	 * @return true if the the signature contains an atomic concept of the given
+	 *         name, false otherwise
+	 */
+	public boolean containsConcept(String s) {
+		return this.getConcept(s) != null;
+	}
+
+	/**
+	 * Checks whether the signature contains an atomic role of the given name.
+	 * 
+	 * @param s the name of the atomic role
+	 * @return true if the the signature contains a role of the given name, false
+	 *         otherwise
+	 */
+	public boolean containsRole(String s) {
+		return this.getRole(s) != null;
+	}
+
+	/**
+	 * Returns signature as string in the order individuals - concept names - role
+	 * names.
+	 * 
+	 * @return a String
+	 */
+	public String toString() {
+		return "Signature = (" + firstSet.toString() + ",\n" + secondSet.toString() + ",\n" + thirdSet.toString() + ")";
+	}
+
+	/**
+	 * Translates this DlSignature to a FolSignature, i.e. concept names 
+	 * and role names are added as predicates and individuals are added as
+	 * constants.
+	 * 
+	 * @return the corresponding FolSignature
+	 */
+	public FolSignature getCorrespondingFolSignature() {
+		FolSignature sig = new FolSignature();
+		for (AtomicConcept c : this.getConcepts())
+			sig.add(c.getPredicate());
+		for (AtomicRole r : this.getRoles())
+			sig.add(r.getPredicate());
+		for (Individual i : this.getIndividuals())
+			sig.add(new Constant(i.get()));
+		return sig;
+	}
+	
 	/**
 	 * Adds single objects to this signature, iff the object is an appropriate
 	 * concept, role or individual or a formula. For a formula (complex concept) all
@@ -174,97 +283,6 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 					"Class " + obj.getClass() + " of parameter is unsupported and cannot be added to the signature.");
 	}
 
-	public Set<Predicate> getPredicates() {
-		Set<Predicate> predicates = new HashSet<Predicate>();
-		for (AtomicConcept c : this.firstSet)
-			predicates.add(new Predicate(c.getName(), 1));
-		for (AtomicRole r : this.secondSet)
-			predicates.add(new Predicate(r.getName(), 2));
-		return predicates;
-	}
-
-	public Individual getIndividual(String s) {
-		for (Term<?> t : this.thirdSet)
-			if (((Individual) t).get().equals(s))
-				return (Individual) t;
-		return null;
-	}
-
-	public AtomicConcept getConcept(String s) {
-		for (AtomicConcept p : this.firstSet)
-			if (p.getName().equals(s))
-				return p;
-		return null;
-	}
-
-	public AtomicRole getRole(String s) {
-		for (AtomicRole p : this.secondSet)
-			if (p.getName().equals(s))
-				return p;
-		return null;
-	}
-
-	/**
-	 * Checks whether the signature contains an Individual of the given name.
-	 * 
-	 * @param s the name of the Individual
-	 * @return true if the the signature contains an Individual of the given name,
-	 *         false otherwise
-	 */
-	public boolean containsIndividual(String s) {
-		return this.getIndividual(s) != null;
-	}
-
-	/**
-	 * Checks whether the signature contains an atomic concept of the given name.
-	 * 
-	 * @param s the name of the atomic concept
-	 * @return true if the the signature contains an atomic concept of the given
-	 *         name, false otherwise
-	 */
-	public boolean containsConcept(String s) {
-		return this.getConcept(s) != null;
-	}
-
-	/**
-	 * Checks whether the signature contains an atomic role of the given name.
-	 * 
-	 * @param s the name of the atomic role
-	 * @return true if the the signature contains a role of the given name, false
-	 *         otherwise
-	 */
-	public boolean containsRole(String s) {
-		return this.getRole(s) != null;
-	}
-
-	/**
-	 * Returns signature as string in the order individuals - concept names - role
-	 * names.
-	 * 
-	 * @return a String
-	 */
-	public String toString() {
-		return "Signature = (" + firstSet.toString() + ",\n" + secondSet.toString() + ",\n" + thirdSet.toString() + ")";
-	}
-
-	/**
-	 * Translates this DlSignature to a FolSignature and returns it, meaning concept
-	 * names and role names are added as predicates and individuals are added as
-	 * constants.
-	 * 
-	 * @return the corresponding FolSignature
-	 */
-	public FolSignature getCorrespondingFolSignature() {
-		FolSignature sig = new FolSignature();
-		for (AtomicConcept c : this.firstSet)
-			sig.add(c.getPredicate());
-		for (AtomicRole r : this.secondSet)
-			sig.add(r.getPredicate());
-		for (Individual i : this.thirdSet)
-			sig.add(new Constant(i.get()));
-		return sig;
-	}
-
 	@Override
 	public void remove(Object obj) {
 		if (obj instanceof TopConcept || obj instanceof BottomConcept)
@@ -327,7 +345,6 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 		} else
 			throw new IllegalArgumentException(
 					"Class " + obj.getClass() + " of parameter is unsupported and cannot be removed from the signature.");
-	
 	}
 
 }

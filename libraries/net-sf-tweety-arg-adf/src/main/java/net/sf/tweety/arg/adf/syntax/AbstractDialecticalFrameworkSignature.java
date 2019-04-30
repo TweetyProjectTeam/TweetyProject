@@ -27,7 +27,6 @@ public class AbstractDialecticalFrameworkSignature extends SingleSetSignature<Ar
 			formulas.add((Argument) obj);
 		else
 			throw new IllegalArgumentException("Unknown type " + obj.getClass());
-	
 	}
 	
 }

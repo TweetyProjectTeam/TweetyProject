@@ -30,6 +30,9 @@ import java.util.*;
  */
 public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 
+	/**
+	 * The set of formulas that represents this signature.
+	 */
 	protected Set<T> formulas;
 	
 	/**
@@ -38,18 +41,13 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 	public SingleSetSignature() {
 		formulas = new HashSet<T>();
 	}
-
-	@Override
-	public Iterator<T> iterator() {
-		return formulas.iterator();
-	}
 	
 	/**
-	 * Get the formulas that make up this signature.
-	 * @return collection of formulas
+	 * Creates a new signature with the given set of elements.
+	 * @param formulas set of formulas 
 	 */
-	public Collection<T> toCollection() {
-		return formulas;
+	public SingleSetSignature(Set<T> formulas) {
+		this.formulas = formulas;
 	}
 
 	@Override
@@ -129,7 +127,24 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 			this.remove(obj);
 	}
 	
+	@Override
+	public void clear() {
+		formulas = new HashSet<T>();
+	}
+	
+	@Override
+	public Iterator<T> iterator() {
+		return formulas.iterator();
+	}
+	
+	@Override
+	public String toString() {
+		return formulas.toString();
+	}
+	
 	/**
+	 * Returns the number of elements in this signature, 
+	 * i.e. the the size of the set that represents the signature.
 	 * @return size of the signature
 	 */
 	public int size() {
@@ -137,14 +152,7 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 	}
 	
 	/**
-	 * Clears the signature.
-	 */
-	public void clear() {
-		formulas = new HashSet<T>();
-	}
-	
-	/**
-	 * Checks whether the signature contains the given formula.
+	 * Returns true if this signature contains the specified formula.
 	 * @param f a formula
 	 * @return true if the signature contains f, false otherwise
 	 */
@@ -153,14 +161,32 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 	}
 	
 	/**
+	 * Returns true if this signature contains all of the elements 
+	 * in the specified collection.
+	 * @param c collection of formulas
+	 * @return true if the signature contains c, false otherwise
+	 */
+	public boolean containsAll(Collection<T> c) {
+		for (T f : c)
+			if (!formulas.contains(f))
+				return false;
+		return true;
+	}
+	
+	/**
+	 * Returns an array containing all of the elements in this signature.
 	 * @return signature as array
 	 */
 	public Object[] toArray() {
 		return formulas.toArray();
 	}
 	
-	@Override
-	public String toString() {
-		return formulas.toString();
+	/**
+	 * Returns a collection containing all of the elements in this signature.
+	 * @return formulas of this signature
+	 */
+	public Collection<T> toCollection() {
+		return formulas;
 	}
+	
 }

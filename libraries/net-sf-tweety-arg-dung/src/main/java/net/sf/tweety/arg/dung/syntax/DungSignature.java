@@ -43,7 +43,7 @@ public class DungSignature extends SingleSetSignature<Argument>{
 	 * @param argument an argument.
 	 */
 	public DungSignature(Argument argument){
-		super();
+		this();
 		this.add(argument);
 	}
 	
@@ -52,7 +52,7 @@ public class DungSignature extends SingleSetSignature<Argument>{
 	 * @param arguments a set of arguments.
 	 */
 	public DungSignature(Collection<? extends Argument> arguments){
-		super();
+		this();
 		this.addAll(arguments);
 	}
 
