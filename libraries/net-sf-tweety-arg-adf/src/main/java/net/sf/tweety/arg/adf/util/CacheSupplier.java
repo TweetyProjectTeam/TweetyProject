@@ -16,54 +16,36 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.syntax;
+package net.sf.tweety.arg.adf.util;
 
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Signature;
-import net.sf.tweety.graphs.Node;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
+import java.util.function.Supplier;
 
 /**
- * An immutable representation of an ADF argument
+ * Delegates the first get() call to the given supplier and stores its result in
+ * cache. Consecutive calls return the cached result, therefore computation is
+ * only done once. Does not maintain a reference to the delegate once its result
+ * is computed.
  * 
  * @author Mathias Hofer
  *
  */
-public class Argument implements AcceptanceCondition, Formula, Node {
+public class CacheSupplier<T> implements Supplier<T> {
 
-	private String name;
-	
-	/**
-	 * @param name
-	 */
-	public Argument(String name) {
-		this.name = name;
+	private T cache;
+
+	private Supplier<T> delegate;
+
+	public CacheSupplier(Supplier<T> delegate) {
+		this.delegate = delegate;
 	}
 
 	@Override
-	public Stream<Argument> arguments() {
-		return Stream.of(this);
+	public T get() {
+		if (cache == null) {
+			cache = delegate.get();
+			delegate = null;
+		}
+		return cache;
 	}
 
-	@Override
-	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		return argumentMap.apply(this);
-	}
-
-	@Override
-	public Signature getSignature() {
-		return new AbstractDialecticalFrameworkSignature(this);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
 }

@@ -21,49 +21,40 @@ package net.sf.tweety.arg.adf.syntax;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Signature;
-import net.sf.tweety.graphs.Node;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
-/**
- * An immutable representation of an ADF argument
- * 
- * @author Mathias Hofer
- *
- */
-public class Argument implements AcceptanceCondition, Formula, Node {
+public class EquivalenceAcceptanceCondition implements AcceptanceCondition{
 
-	private String name;
-	
+	private AcceptanceCondition first;
+
+	private AcceptanceCondition second;
+
 	/**
-	 * @param name
+	 * @param first
+	 * @param second
 	 */
-	public Argument(String name) {
-		this.name = name;
+	public EquivalenceAcceptanceCondition(AcceptanceCondition first, AcceptanceCondition second) {
+		super();
+		this.first = first;
+		this.second = second;
 	}
 
 	@Override
 	public Stream<Argument> arguments() {
-		return Stream.of(this);
+		return Stream.concat(first.arguments(), second.arguments());
 	}
 
 	@Override
 	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		return argumentMap.apply(this);
+		PlFormula a = first.toPlFormula(argumentMap);
+		PlFormula b = second.toPlFormula(argumentMap);
+		Conjunction conj = new Conjunction();
+		conj.add(new Disjunction(new Negation(a), b));
+		conj.add(new Disjunction(a, new Negation(b)));
+		return conj;
 	}
-
-	@Override
-	public Signature getSignature() {
-		return new AbstractDialecticalFrameworkSignature(this);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
+	
 }

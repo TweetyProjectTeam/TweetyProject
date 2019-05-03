@@ -1,0 +1,16 @@
+s(7).
+s(4).
+s(8).
+s(3).
+s(5).
+s(1).
+s(6).
+s(2).
+ac(7,c(v)).
+ac(4,neg(7)).
+ac(8,or(and(neg(3),8),neg(6))).
+ac(3,and(neg(6),and(3,8))).
+ac(5,and(or(and(2,neg(8)),and(3,6)),neg(1))).
+ac(1,and(5,neg(3))).
+ac(6,or(and(neg(8),3),5)).
+ac(2,or(neg(5),3)).

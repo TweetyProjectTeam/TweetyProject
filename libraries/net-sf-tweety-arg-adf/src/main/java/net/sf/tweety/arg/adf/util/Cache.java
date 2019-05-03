@@ -16,54 +16,58 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.syntax;
+package net.sf.tweety.arg.adf.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Signature;
-import net.sf.tweety.graphs.Node;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
+public class Cache<T, R> implements Function<T, R> {
 
-/**
- * An immutable representation of an ADF argument
- * 
- * @author Mathias Hofer
- *
- */
-public class Argument implements AcceptanceCondition, Formula, Node {
+	private Map<T, R> cache;
 
-	private String name;
-	
+	private Function<T, R> function;
+
 	/**
-	 * @param name
+	 * Creates an empty cache
+	 * 
+	 * @param function
 	 */
-	public Argument(String name) {
-		this.name = name;
+	public Cache(Function<T, R> function) {
+		this.cache = new HashMap<T, R>();
+		this.function = function;
 	}
 
 	@Override
-	public Stream<Argument> arguments() {
-		return Stream.of(this);
+	public R apply(T input) {
+		R result = cache.computeIfAbsent(input, function);
+		return result;
 	}
 
-	@Override
-	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		return argumentMap.apply(this);
+	public R put(T input, R output) {
+		return cache.put(input, output);
 	}
 
-	@Override
-	public Signature getSignature() {
-		return new AbstractDialecticalFrameworkSignature(this);
+	public R remove(T input) {
+		return cache.remove(input);
 	}
 
-	public String getName() {
-		return name;
+	/**
+	 * @return
+	 * @see java.util.Map#size()
+	 */
+	public int size() {
+		return cache.size();
 	}
 
-	@Override
-	public String toString() {
-		return name;
+	/**
+	 * Sets the function which is used for future calls, but does not recompute
+	 * already cached elements.
+	 * 
+	 * @param function
+	 */
+	public void setFunction(Function<T, R> function) {
+		this.function = function;
 	}
+
 }

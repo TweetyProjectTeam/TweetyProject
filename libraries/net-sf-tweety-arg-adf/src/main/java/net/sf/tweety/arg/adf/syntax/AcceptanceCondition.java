@@ -21,49 +21,32 @@ package net.sf.tweety.arg.adf.syntax;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Signature;
-import net.sf.tweety.graphs.Node;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
- * An immutable representation of an ADF argument
+ * This class represents the acceptance conditions of ADF arguments. It
+ * basically mirrors the structure of propositional formulae.
  * 
  * @author Mathias Hofer
  *
  */
-public class Argument implements AcceptanceCondition, Formula, Node {
+public interface AcceptanceCondition {
 
-	private String name;
-	
 	/**
-	 * @param name
+	 * Recursively computes all of the arguments occuring in this acceptance
+	 * condition.
+	 * 
+	 * @return the union of the arguments of this acceptance condition and its
+	 *         sub-conditions.
 	 */
-	public Argument(String name) {
-		this.name = name;
-	}
+	public Stream<Argument> arguments();
+	
 
-	@Override
-	public Stream<Argument> arguments() {
-		return Stream.of(this);
-	}
+	/**
+	 * 
+	 * @param argumentMap 
+	 * @return
+	 */
+	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap);
 
-	@Override
-	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		return argumentMap.apply(this);
-	}
-
-	@Override
-	public Signature getSignature() {
-		return new AbstractDialecticalFrameworkSignature(this);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
 }

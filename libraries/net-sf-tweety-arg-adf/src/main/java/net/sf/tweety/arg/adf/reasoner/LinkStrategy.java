@@ -16,46 +16,15 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.syntax;
+package net.sf.tweety.arg.adf.reasoner;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import net.sf.tweety.arg.adf.semantics.Link;
+import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.Argument;
 
-import net.sf.tweety.commons.SingleSetSignature;
+public interface LinkStrategy {
 
-/**
- * 
- * @author Mathias Hofer
- *
- */
-public class AbstractDialecticalFrameworkSignature extends SingleSetSignature<Argument> {
 
-	/**
-	 * 
-	 */
-	public AbstractDialecticalFrameworkSignature() {
-		super();
-	}
+	public Link compute(AbstractDialecticalFramework adf, Argument a, Argument b);
 	
-	public AbstractDialecticalFrameworkSignature(Argument a) {
-		super(new HashSet<Argument>(Arrays.asList(a)));
-	}
-
-	/**
-	 * @param formulas
-	 */
-	public AbstractDialecticalFrameworkSignature(Set<Argument> formulas) {
-		super(formulas);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public void add(Object obj) {
-		if (obj instanceof Argument) {
-			formulas.add((Argument) obj);
-		}
-	}
-
-
 }

@@ -16,46 +16,26 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.syntax;
+package net.sf.tweety.arg.adf.semantics;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+public enum LinkType{
 
-import net.sf.tweety.commons.SingleSetSignature;
+	DEPENDENT, SUPPORTING, ATTACKING, REDUNDANT;
 
-/**
- * 
- * @author Mathias Hofer
- *
- */
-public class AbstractDialecticalFrameworkSignature extends SingleSetSignature<Argument> {
-
-	/**
-	 * 
-	 */
-	public AbstractDialecticalFrameworkSignature() {
-		super();
+	public boolean isBipolar() {
+		return this != DEPENDENT;
 	}
 	
-	public AbstractDialecticalFrameworkSignature(Argument a) {
-		super(new HashSet<Argument>(Arrays.asList(a)));
-	}
-
-	/**
-	 * @param formulas
-	 */
-	public AbstractDialecticalFrameworkSignature(Set<Argument> formulas) {
-		super(formulas);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public void add(Object obj) {
-		if (obj instanceof Argument) {
-			formulas.add((Argument) obj);
+	public static LinkType get(boolean attacking, boolean supporting) {
+		if (attacking && supporting) {
+			return REDUNDANT;
+		} else if (attacking) {
+			return ATTACKING;
+		} else if (supporting) {
+			return SUPPORTING;
+		} else {
+			return DEPENDENT;
 		}
 	}
-
 
 }

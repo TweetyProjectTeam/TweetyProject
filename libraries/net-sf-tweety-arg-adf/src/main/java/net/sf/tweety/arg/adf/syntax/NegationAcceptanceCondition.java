@@ -21,49 +21,26 @@ package net.sf.tweety.arg.adf.syntax;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Signature;
-import net.sf.tweety.graphs.Node;
+import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
-/**
- * An immutable representation of an ADF argument
- * 
- * @author Mathias Hofer
- *
- */
-public class Argument implements AcceptanceCondition, Formula, Node {
+public class NegationAcceptanceCondition implements AcceptanceCondition {
 
-	private String name;
+	private AcceptanceCondition subcondition;
 	
-	/**
-	 * @param name
-	 */
-	public Argument(String name) {
-		this.name = name;
+	public NegationAcceptanceCondition(AcceptanceCondition subcondition) {
+		super();
+		this.subcondition = subcondition;
 	}
-
+	
 	@Override
 	public Stream<Argument> arguments() {
-		return Stream.of(this);
+		return subcondition.arguments();
 	}
-
+	
 	@Override
 	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		return argumentMap.apply(this);
+		return new Negation(subcondition.toPlFormula(argumentMap));
 	}
-
-	@Override
-	public Signature getSignature() {
-		return new AbstractDialecticalFrameworkSignature(this);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
+	
 }
