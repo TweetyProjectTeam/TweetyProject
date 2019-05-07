@@ -69,8 +69,9 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	 * @param c a collection of formulae.
 	 */
 	public BeliefSet(Collection<? extends T> c){
+		this.signature = instantiateSignature();
 		this.formulas = instantiateSet();
-		this.formulas.addAll(c);
+		this.addAll(c);
 	}
 	
 	/**
