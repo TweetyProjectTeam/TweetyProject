@@ -42,6 +42,7 @@ public class CrMasArgumentativeRevisionOperator extends MultipleBaseRevisionOper
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.beliefdynamics.MultipleBaseRevisionOperator#revise(java.util.Collection, java.util.Collection)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<InformationObject<PlFormula>> revise(Collection<InformationObject<PlFormula>> base,	Collection<InformationObject<PlFormula>> formulas) {
 		if(!(base instanceof CrMasBeliefSet))

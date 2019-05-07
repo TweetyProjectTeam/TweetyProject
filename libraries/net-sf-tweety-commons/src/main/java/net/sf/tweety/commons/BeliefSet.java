@@ -75,6 +75,15 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	}
 	
 	/**
+	 * Creates a new belief set with the given type of signature.
+	 * @param c a collection of formulae.
+	 */
+	public BeliefSet(S sig){
+		this.signature = instantiateSignature(sig);
+		this.formulas = instantiateSet();
+	}
+	
+	/**
 	 * Instantiates the set which is used as data holder for the belief set.
 	 * Subclasses might override this method if the do not want to use HashSet
 	 * as container implementation
@@ -87,6 +96,20 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	 * Instantiates the signature which is attached to the belief base.
 	 */
 	protected abstract S instantiateSignature();
+	
+	/**
+	 * Instantiates the signature which is attached to the belief base 
+	 * as an instance of the class of the given signature.
+	 */
+	@SuppressWarnings("unchecked")
+	private S instantiateSignature(S sig) {
+		try {
+			return (S) sig.getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	/**
 	 * Returns a copy of the signature that is attached to his belief base (it is

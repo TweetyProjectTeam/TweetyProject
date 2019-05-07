@@ -20,6 +20,7 @@ package net.sf.tweety.logics.pl.syntax;
 
 import java.util.Collection;
 
+import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.SingleSetSignature;
 
@@ -89,6 +90,8 @@ public class PlSignature extends SingleSetSignature<Proposition> {
 			formulas.addAll(((PlFormula) obj).getAtoms());
 		else if (obj instanceof PlSignature)
 			this.addSignature((Signature) obj);
+		else if (obj instanceof Formula)
+			this.addSignature(((Formula) obj).getSignature());
 		else
 			throw new IllegalArgumentException("Unknown type " + obj.getClass());
 	}

@@ -42,7 +42,7 @@ public class CrMasBeliefSet<T extends Formula, S extends Signature> extends Beli
 	/**
 	 * The type of signature used in this system.
 	 */
-	private S sig;
+	private S type_of_signature;
 
 	/**
 	 * Creates a new belief set with the given credibility order.
@@ -51,8 +51,9 @@ public class CrMasBeliefSet<T extends Formula, S extends Signature> extends Beli
 	 * @param The              type of signature used in this system.
 	 */
 	public CrMasBeliefSet(Order<Agent> credibilityOrder, S sig) {
+		super(sig);
 		this.credibilityOrder = credibilityOrder;
-		this.sig = sig;
+		this.type_of_signature = sig;
 	}
 
 	/**
@@ -71,21 +72,20 @@ public class CrMasBeliefSet<T extends Formula, S extends Signature> extends Beli
 	 */
 	@Override
 	public Signature getMinimalSignature() {
-		Signature sig = null;
-
+		Signature sigm = type_of_signature;
 		for (InformationObject<T> f : this)
-			if (sig == null)
-				sig = f.getSignature();
+			if (sigm == null)
+				sigm = f.getSignature();
 			else
-				sig.addSignature(f.getSignature());
-		return sig;
+				sigm.addSignature(f.getSignature());
+		return sigm;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected S instantiateSignature() {
 		try {
-			return (S) sig.getClass().newInstance();
+			return (S) type_of_signature.getClass().newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 			return null;
