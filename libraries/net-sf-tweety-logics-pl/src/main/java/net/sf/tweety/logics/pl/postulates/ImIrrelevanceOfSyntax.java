@@ -52,7 +52,7 @@ public class ImIrrelevanceOfSyntax extends ImPostulate {
 	 */
 	@Override
 	public boolean isApplicable(Collection<PlFormula> kb) {
-		if (kb.isEmpty())
+		if (kb.size() < 2)
 			return false;
 		List<PlFormula> orderedKB = ((PlBeliefSet) kb).getCanonicalOrdering();
 		List<PlFormula> left = new ArrayList<PlFormula>(
@@ -66,16 +66,14 @@ public class ImIrrelevanceOfSyntax extends ImPostulate {
 				if (reasoner.isEquivalent(l, r)) {
 					found = true;
 					right.remove(r);
-					continue;
+					break;
 				}
 
 			}
 			if (!found)
 				return false;
-			else
-				found = false;
 		}
-		return false;
+		return true;
 	}
 
 	/*

@@ -46,7 +46,7 @@ public class ImExchange extends ImPostulate{
 	 */
 	@Override
 	public boolean isApplicable(Collection<PlFormula> kb) {
-		if(kb.isEmpty())
+		if(kb.size() < 2)
 			return false;
 		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
 		PlFormula f = orderedKB.get(0);
