@@ -93,4 +93,9 @@ public class PlSignature extends SingleSetSignature<Proposition> {
 			throw new IllegalArgumentException("Unknown type " + obj.getClass());
 	}
 
+	@Override
+	public PlSignature clone() {
+		return new PlSignature(this.formulas);
+	}
+
 }

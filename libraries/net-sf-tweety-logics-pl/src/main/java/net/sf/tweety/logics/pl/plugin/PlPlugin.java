@@ -26,7 +26,7 @@ import java.io.IOException;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.reasoner.AbstractPlReasoner;
-import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
+import net.sf.tweety.logics.pl.reasoner.SimplePlReasoner;
 import net.sf.tweety.logics.pl.reasoner.SatReasoner;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
@@ -145,7 +145,7 @@ public class PlPlugin extends AbstractTweetyPlugin {
 			if (tempComParam.getIdentifier().equals("-reasoner")) {
 				SelectionCommandParameter tmp = (SelectionCommandParameter) tempComParam;
 				if (tmp.getValue().equalsIgnoreCase("naive")) {
-					reasoner = new SimpleReasoner();
+					reasoner = new SimplePlReasoner();
 				} else if (tmp.getValue().equalsIgnoreCase("sat4j")) {
 					SatSolver.setDefaultSolver(new Sat4jSolver());
 					reasoner = new SatReasoner();

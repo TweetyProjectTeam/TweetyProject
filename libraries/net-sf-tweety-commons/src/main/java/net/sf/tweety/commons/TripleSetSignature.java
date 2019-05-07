@@ -155,4 +155,7 @@ public abstract class TripleSetSignature<T,S,U> implements Signature {
 	public String toString() {
 		return firstSet.toString() + ", " + secondSet.toString() + ", " + thirdSet.toString();
 	}
+	
+	@Override
+	public abstract TripleSetSignature<T,S,U> clone();
 }

@@ -189,4 +189,7 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 		return formulas;
 	}
 	
+	@Override
+	public abstract SingleSetSignature<T> clone();
+	
 }

@@ -134,7 +134,6 @@ public class PlParserTest {
 		assertTrue(f.getSignature().equals(sig));
 	}
 	
-	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SpecialCharactersTest() throws ParserException, IOException {
 		PlFormula f = (PlFormula) parser.parseFormula("a && î || !(!@$$f)");
@@ -151,6 +150,7 @@ public class PlParserTest {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		beliefSet = parser.parseBeliefBase("a || b || c \n !a || b \n !b || c \n !c || (!a && !b && !c && !d)");
 		assertEquals(beliefSet.size(),4);
+		assertEquals(beliefSet.getSignature().size(),4);
 		
 		Signature sig = beliefSet.getMinimalSignature();
 		PlSignature sig2 = new PlSignature();

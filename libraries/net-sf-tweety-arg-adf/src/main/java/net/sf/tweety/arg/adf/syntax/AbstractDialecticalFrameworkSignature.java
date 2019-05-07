@@ -57,5 +57,9 @@ public class AbstractDialecticalFrameworkSignature extends SingleSetSignature<Ar
 		}
 	}
 
+	@Override
+	public AbstractDialecticalFrameworkSignature clone() {
+		return new AbstractDialecticalFrameworkSignature(this.formulas);
+	}
 
 }

@@ -30,7 +30,7 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
  * 
  * @author Matthias Thimm
  */
-public class SimpleReasoner extends AbstractPlReasoner {
+public class SimplePlReasoner extends AbstractPlReasoner {
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pl.reasoner.AbstractPropositionalLogicReasoner#query(net.sf.tweety.logics.pl.syntax.PlBeliefSet, net.sf.tweety.logics.pl.syntax.PropositionalFormula)

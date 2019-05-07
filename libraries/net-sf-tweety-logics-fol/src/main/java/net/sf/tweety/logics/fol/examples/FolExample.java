@@ -78,6 +78,13 @@ public class FolExample {
 		bs.add(f4);
 		bs.add(f5);
 		System.out.println("\nParsed BeliefBase: " + bs);
+		
+		//Note that belief bases can have signatures larger (but not smaller) than their formulas' signature
+		FolSignature sig_larger = bs.getSignature();
+		sig_larger.add(new Constant("archaeopteryx",s_animal));
+		bs.setSignature(sig_larger);
+		System.out.println(bs);
+		System.out.println("Minimal signature: " + bs.getMinimalSignature());
 
 		/*
 		 * Example 3: Use one of the provers to check whether various formulas can be inferred from the knowledge base parsed in Example 2. 

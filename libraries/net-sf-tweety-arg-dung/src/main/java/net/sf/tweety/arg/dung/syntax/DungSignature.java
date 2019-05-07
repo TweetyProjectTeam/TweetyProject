@@ -65,4 +65,9 @@ public class DungSignature extends SingleSetSignature<Argument>{
 	
 	}	
 	
+	@Override
+	public DungSignature clone() {
+		return new DungSignature(this.formulas);
+	}
+	
 }

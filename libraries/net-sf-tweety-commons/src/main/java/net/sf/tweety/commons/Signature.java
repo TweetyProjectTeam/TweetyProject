@@ -28,7 +28,7 @@ import java.util.Collection;
  * @author Anna Gessler
  * 
  */
-public interface Signature {
+public interface Signature extends Cloneable {
 	/**
 	 * Checks whether this signature is a sub-signature of the given signature, i.e.
 	 * whether each logical expression expressible with this signature is also
@@ -37,7 +37,7 @@ public interface Signature {
 	 * @param other a signature.
 	 * @return "true" iff this signature is a sub-signature of the given one.
 	 */
-	public abstract boolean isSubSignature(Signature other);
+	public boolean isSubSignature(Signature other);
 
 	/**
 	 * Checks whether this signature has common elements with the given signature,
@@ -47,14 +47,14 @@ public interface Signature {
 	 * @param other a signature.
 	 * @return "true" iff this signature is overlapping with the given one.
 	 */
-	public abstract boolean isOverlappingSignature(Signature other);
+	public boolean isOverlappingSignature(Signature other);
 
 	/**
 	 * Adds the elements of the given signature to this signature.
 	 * 
 	 * @param other a signature.
 	 */
-	public abstract void addSignature(Signature other);
+	public void addSignature(Signature other);
 
 	/*
 	 * (non-Javadoc)
@@ -62,7 +62,7 @@ public interface Signature {
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public abstract int hashCode();
+	public int hashCode();
 
 	@Override
 	public String toString();
@@ -73,7 +73,7 @@ public interface Signature {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public abstract boolean equals(Object obj);
+	public boolean equals(Object obj);
 
 	/**
 	 * Adds the given formula to this signature.
@@ -81,7 +81,7 @@ public interface Signature {
 	 * @param obj
 	 * @return
 	 */
-	public abstract void add(Object obj);
+	public void add(Object obj);
 
 	/**
 	 * Adds all elements of this collection to this signature.
@@ -89,14 +89,14 @@ public interface Signature {
 	 * @param c a collection
 	 * @return
 	 */
-	public abstract void addAll(Collection<?> c);
+	public void addAll(Collection<?> c);
 
 	/**
 	 * Returns true if this signature is empty.
 	 * 
 	 * @return
 	 */
-	public abstract boolean isEmpty();
+	public boolean isEmpty();
 
 	/**
 	 * Removes the given formula from this signature, if it is present (optional
@@ -105,7 +105,7 @@ public interface Signature {
 	 * @param o
 	 * @return
 	 */
-	public abstract void remove(Object obj);
+	public void remove(Object obj);
 
 	/**
 	 * Removes all of this signature elements that are also contained in the
@@ -115,12 +115,14 @@ public interface Signature {
 	 * @param c
 	 * @return
 	 */
-	public abstract void removeAll(Collection<?> c);
+	public void removeAll(Collection<?> c);
 	
 	/**
 	 * Removes all elements of this signature. After this call returns, this
 	 * signature will contain no elements.
 	 */
-	public abstract void clear();
+	public void clear();
+	
+	public Signature clone();
 
 }

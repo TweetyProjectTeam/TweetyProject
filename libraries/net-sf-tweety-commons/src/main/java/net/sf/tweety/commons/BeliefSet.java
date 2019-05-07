@@ -53,7 +53,7 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	 * {@link net.sf.tweety.commons.BeliefSet#getMinimalSignature()} 
 	 * (the signature of the language of {@link net.sf.tweety.commons.BeliefSet#formulas}).
 	 */
-	private S signature;
+	protected S signature;
 	
 	/**
 	 * Creates a new (empty) belief set.
@@ -89,22 +89,28 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	protected abstract S instantiateSignature();
 	
 	/**
-	 * Returns the signature that is attached to his belief base (it is
+	 * Returns a copy of the signature that is attached to his belief base (it is
 	 * always equal to or larger than {@link net.sf.tweety.commons.BeliefBase#getMinimalSignature()}).
 	 * @return the signature of this knowledge base.
 	 */
+	@SuppressWarnings("unchecked")
 	public S getSignature() {
-		return signature;
+		return (S) signature.clone();
 	}
 	
 	/**
-	 * Sets the signature that is attached to his belief base.
+	 * Sets the signature that is attached to his belief base to a copy of the given
+	 * signature.
 	 * @throws IllegalArgumentException if the given signature is smaller in size than the belief base's
 	 * formulas' signature.
 	 * @return the signature of this knowledge base.
 	 */
+	@SuppressWarnings("unchecked")
 	public void setSignature(S sig) {
-		signature = sig;
+		if (this.signature.isSubSignature(sig))
+			this.signature = (S) sig.clone();
+		else 
+			throw new IllegalArgumentException("The given signature is smaller than the signature of the belief base's formulas.");
 	}
 	
 	/* (non-Javadoc)

@@ -25,6 +25,13 @@ package net.sf.tweety.commons;
  * @author Matthias Thimm
  */
 public interface TweetyConfiguration {
+	
+	//TODO: Add more configuration options:
+	//- Set default reasoners globally
+	//- Set precision globally
+	//- commons.BeliefSet: toggle EQUALS_USES_SIGNATURE
+	//- logics.fol.syntax.FolSignature: toggle whether EqualityPredicate and InequalityPredicate are included in all signatures
+	//- Improve/use logging levels
 
 	/**
 	 * The possible log levels.

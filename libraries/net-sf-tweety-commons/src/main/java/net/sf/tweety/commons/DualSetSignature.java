@@ -149,5 +149,8 @@ public abstract class DualSetSignature<T,S> implements Signature {
 		return firstSet.toString() + ", " + secondSet.toString();
 	}
 	
+	@Override
+	public abstract DualSetSignature<T,S> clone();
+	
 }
 	

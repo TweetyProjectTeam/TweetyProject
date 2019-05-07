@@ -346,5 +346,12 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 			throw new IllegalArgumentException(
 					"Class " + obj.getClass() + " of parameter is unsupported and cannot be removed from the signature.");
 	}
+	
+	@Override
+	public DlSignature clone() {
+		DlSignature copy = new DlSignature();
+		copy.addSignature(this);
+		return copy;
+	}
 
 }

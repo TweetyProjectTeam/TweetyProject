@@ -360,4 +360,11 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 		throw new IllegalArgumentException("Class " + obj.getClass() + " of parameter is unsupported.");
 	}
 	
+	@Override
+	public FolSignature clone() {
+		FolSignature copy = new FolSignature();
+		copy.addSignature(this);
+		return copy;
+	}
+	
 }

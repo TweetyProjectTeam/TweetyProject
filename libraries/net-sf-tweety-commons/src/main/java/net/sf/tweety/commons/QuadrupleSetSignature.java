@@ -173,4 +173,7 @@ public abstract class QuadrupleSetSignature<T,S,U,R> implements Signature {
 		return firstSet.toString() + ", " + secondSet.toString() + ", " + thirdSet.toString() + ", " + fourthSet.toString();
 	}
 	
+	@Override
+	public abstract QuadrupleSetSignature<T,S,U,R> clone();
+	
 }

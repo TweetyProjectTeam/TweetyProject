@@ -19,7 +19,7 @@
 package net.sf.tweety.arg.deductive.semantics.attacks;
 
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
-import net.sf.tweety.logics.pl.reasoner.SimpleReasoner;
+import net.sf.tweety.logics.pl.reasoner.SimplePlReasoner;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 
@@ -48,7 +48,7 @@ public class Defeat implements Attack{
 	 */
 	@Override
 	public boolean isAttackedBy(DeductiveArgument a, DeductiveArgument b) {
-		SimpleReasoner reasoner = new SimpleReasoner();
+		SimplePlReasoner reasoner = new SimplePlReasoner();
 		if(reasoner.query(b.getClaim(), new Negation(new Conjunction(a.getSupport()))))
 			return true;
 		return false;
