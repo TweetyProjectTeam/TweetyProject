@@ -53,12 +53,15 @@ public class ImIrrelevanceOfSyntax extends ImPostulate {
 	@Override
 	public boolean isApplicable(Collection<PlFormula> kb) {
 		if (kb.size() < 2)
+			return false;		
+		if (kb.size() % 2 != 0)
 			return false;
 		List<PlFormula> orderedKB = ((PlBeliefSet) kb).getCanonicalOrdering();
 		List<PlFormula> left = new ArrayList<PlFormula>(
 				orderedKB.subList(0, orderedKB.size() / 2));
 		List<PlFormula> right = new ArrayList<PlFormula>(
 				orderedKB.subList(orderedKB.size() / 2, orderedKB.size()));
+		
 		SatReasoner reasoner = new SatReasoner();
 		for (PlFormula l : left) {
 			Boolean found = false;

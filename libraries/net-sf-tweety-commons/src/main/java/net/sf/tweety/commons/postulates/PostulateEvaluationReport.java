@@ -20,6 +20,7 @@ package net.sf.tweety.commons.postulates;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +105,16 @@ public class PostulateEvaluationReport<S extends Formula> {
 		this.negativeInstances.get(postulate).add(instance);
 	}
 
+	/**
+	 * Returns the negative instances for the given postulate
+	 * @param postulate some postulate
+	 * @return a collection of negative instances.
+	 */
+	public Collection<Collection<S>> getNegativeInstances(Postulate<S> postulate){
+		if(this.negativeInstances.containsKey(postulate))
+			return this.negativeInstances.get(postulate);
+		return new HashSet<Collection<S>>();
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

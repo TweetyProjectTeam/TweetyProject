@@ -315,7 +315,7 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 		while(it.hasNext())
 			s += ", " + it.next();
 		s += " }";
-		s += "\nSignature: " + signature;
+		s += "[Signature: " + signature + "]";
 		return s;
 	}
 }
