@@ -163,12 +163,14 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 
 	@Override
 	public String toString() {
-		String r = "";
+		String r = "{";
 		for (ASPRule a : this.rules) {
-			r += a.toString() + "\n"; 
+			r += a.toString() + " "; 
 		}
+		r = r.substring(0, r.length()-1);
 		if (this.hasQuery())
-			r += "Query: " + query.toString();
+			r += " " + query.toString() +"?";
+		r += "}";
 		return r;
 	}
 
