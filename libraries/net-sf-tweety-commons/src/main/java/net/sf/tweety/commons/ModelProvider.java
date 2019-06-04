@@ -21,7 +21,7 @@ package net.sf.tweety.commons;
 import java.util.Collection;
 
 /**
- * Instances of this interface model reasoner that determine the (selected) models
+ * Instances of this interface model reasoners that determine the (selected) models
  * for a given set of formulas.
  * 
  * @author Matthias Thimm
