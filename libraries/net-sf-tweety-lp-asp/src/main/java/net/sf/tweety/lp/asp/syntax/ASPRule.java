@@ -401,8 +401,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		terms.addAll(head.getTerms());
 		for (ASPBodyElement be : body)
 			terms.addAll(be.getTerms());
-		terms.addAll(level.getTerms());
-		terms.addAll(weight.getTerms());
+		if (level != null)
+			terms.addAll(level.getTerms());
+		if (weight != null)
+			terms.addAll(weight.getTerms());
 		terms.addAll(constraint_terms);
 		return terms;
 	}
@@ -413,8 +415,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		terms.addAll(head.getTerms(cls));
 		for (ASPBodyElement be : body)
 			terms.addAll(be.getTerms(cls));
-		terms.addAll(level.getTerms(cls));
-		terms.addAll(weight.getTerms(cls));
+		if (level != null)
+			terms.addAll(level.getTerms(cls));
+		if (weight != null)
+			terms.addAll(weight.getTerms(cls));
 		for (Term<?> t : constraint_terms)
 			terms.addAll(t.getTerms(cls));
 		return terms;

@@ -179,7 +179,8 @@ public class ASPAtom extends ASPLiteral {
 	@Override
 	public FolSignature getSignature() {
 		FolSignature sig = new FolSignature();
-		sig.add(this);
+		sig.add(this.predicate);
+		sig.addAll(this.arguments);
 		return sig;
 	}
 

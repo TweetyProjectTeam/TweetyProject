@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -215,9 +216,9 @@ public class AggregateAtom extends ASPBodyElement {
 		for (AggregateElement e : aggregateElements)
 			sig.add(e.getSignature());
 		if (rightGuard != null)
-			sig.add(rightGuard);
+			sig.add(rightGuard.getTerms(Constant.class));
 		if (leftGuard != null)
-			sig.add(leftGuard);
+			sig.add(leftGuard.getTerms(Constant.class));
 		return sig;
 	}
 

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.sf.tweety.commons.util.rules.RuleSet;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.LogicProgram;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
@@ -123,10 +124,14 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	@Override
 	public FolSignature getMinimalSignature() {
 		FolSignature sig = new FolSignature();
-		for (ASPRule r : rules)
-			sig.add(r);
-		if (this.query != null)
-			sig.add(this.query);
+		for (ASPRule r : rules) {
+			sig.addAll(r.getPredicates()); 
+			sig.addAll(r.getTerms(Constant.class)); 
+			}
+		if (this.query != null) {
+			sig.addAll(this.query.getPredicates()); 
+			sig.addAll(this.query.getTerms(Constant.class)); 
+			}
 		return sig;
 	}
 
