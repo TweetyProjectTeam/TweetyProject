@@ -36,10 +36,12 @@ import net.sf.tweety.commons.postulates.PostulateEvaluatable;
  */
 public abstract class RankingPostulate implements Postulate<Argument>{
 
-	
-	/** The ABSTRACTION postulate **/
+	/** The INDEPENDENCE postulate **/
 	public static final RankingPostulate INDEPENDENCE = new RaIndependence();
+	/** The VOIDPRECEDENCE postulate **/
 	public static final RankingPostulate VOIDPRECEDENCE = new RaVoidPrecedence();
+	/** The SELFCONTRADICTION postulate **/
+	public static final RankingPostulate SELFCONTRADICTION = new RaSelfContradiction();
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)

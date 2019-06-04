@@ -31,6 +31,8 @@ import net.sf.tweety.commons.postulates.PostulateEvaluatable;
  *
  * @param <R> the type of ranking 
  */
-public interface AbstractRankingReasoner<R extends ArgumentRanking> extends ModelProvider<Argument,DungTheory,R>,  PostulateEvaluatable<Argument>  {
-
+public abstract class AbstractRankingReasoner<R extends ArgumentRanking> implements ModelProvider<Argument,DungTheory,R>,  PostulateEvaluatable<Argument>  {
+	
+	@Override
+	public abstract String toString();
 }

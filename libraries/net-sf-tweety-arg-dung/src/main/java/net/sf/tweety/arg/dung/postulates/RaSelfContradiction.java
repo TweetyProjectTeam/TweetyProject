@@ -24,27 +24,32 @@ import java.util.Iterator;
 import net.sf.tweety.arg.dung.reasoner.AbstractRankingReasoner;
 import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "independence" postulate for ranking semantics: The ranking
- *  between to arguments a and b should be independent of any argument 
- *  that is neither connected to a nor to b.
+ *  The "self-contradiction" postulate for ranking semantics: 
+ *  A self-attacking argument is ranked lower than any 
+ *  non-self-attacking argument.
  * 
  * @author Anna Gessler
  *
  */
-public class RaIndependence extends RankingPostulate {
+public class RaSelfContradiction extends RankingPostulate {
 
 	@Override
 	public String getName() {
-		return "Independence";
+		return "Self-Contradiction";
 	}
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size()>=2 && !kb.contains(new Argument("_t")) && !kb.contains(new Argument("_t2")));
+		if (kb.size()<2)
+			return false;
+		DungTheory dt = (DungTheory) kb;
+		Iterator<Argument> it = dt.iterator();
+		Argument a = it.next();
+		Argument b = it.next();
+		return (dt.isAttackedBy(a, a) && !dt.isAttackedBy(b, b));
 	}
 
 	@Override
@@ -56,13 +61,9 @@ public class RaIndependence extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		Argument t1 = new Argument("_t");
-		Argument t2 = new Argument("_t2");
-		dt.add(t1);
-		dt.add(t2);
-		dt.add(new Attack(t1,t2));
-		ArgumentRanking ranking2 = ev.getModel((DungTheory)dt);
-		return ranking.compare(a, b) == ranking2.compare(a, b);
+		return ranking.isStrictlyLessAcceptableThan(a, b);
 	}
+
+	
 
 }

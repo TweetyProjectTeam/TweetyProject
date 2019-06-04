@@ -21,7 +21,6 @@ package net.sf.tweety.arg.dung.examples;
 import net.sf.tweety.arg.dung.postulates.RankingPostulate;
 import net.sf.tweety.arg.dung.reasoner.CategorizerRankingReasoner;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.dung.util.DungTheoryGenerator;
 import net.sf.tweety.arg.dung.util.EnumeratingDungTheoryGenerator;
@@ -29,40 +28,17 @@ import net.sf.tweety.commons.postulates.PostulateEvaluator;
 
 
 /**
- * Example code for ranking semantics and postulates.
+ * Example code for postulates for ranking semantics.
  * 
  * @author Anna Gessler
  */
 public class RaPostulateExample {
 	public static void main(String[] args){
-		//Categorizer ranking semantics Example
-		DungTheory theory = new DungTheory();
-		Argument a = new Argument("a");
-		Argument b = new Argument("b");
-		Argument c = new Argument("c");
-		Argument d = new Argument("d");
-		Argument e = new Argument("e");
-		theory.add(a);
-		theory.add(b);
-		theory.add(c);
-		theory.add(d);
-		theory.add(e);
-	
-		theory.add(new Attack(a,e));
-		theory.add(new Attack(d,a));
-		theory.add(new Attack(e,d));
-		theory.add(new Attack(c,e));
-		theory.add(new Attack(b,c));
-		theory.add(new Attack(b,a));
-		
-		CategorizerRankingReasoner reasoner = new CategorizerRankingReasoner();
-		System.out.println(reasoner.getModels(theory));
-		
-		//Ranking postulate example (in progress)
 		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
 		PostulateEvaluator<Argument,DungTheory> evaluator = new PostulateEvaluator<Argument,DungTheory>(dg, new CategorizerRankingReasoner());
 		evaluator.addPostulate(RankingPostulate.INDEPENDENCE);
 		evaluator.addPostulate(RankingPostulate.VOIDPRECEDENCE);
+		evaluator.addPostulate(RankingPostulate.SELFCONTRADICTION);
 		System.out.println(evaluator.evaluate(100, false));
 	}
 }

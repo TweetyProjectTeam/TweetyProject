@@ -30,12 +30,14 @@ import net.sf.tweety.math.matrix.Matrix;
  * This class implements the "h-categorizer" argument ranking approach that was 
  * originally proposed by [Besnard, Hunter. A logic-based theory of deductive arguments. 2001]
  * for deductive logics. It uses the Fixed-point algorithm of 
- * [Pu, Zhang. Argument Ranking with Categoriser Function. 2001]
+ * [Pu, Zhang, Luo, Luo. Argument Ranking with Categoriser Function. 2014]
  * which allows for cycles in argumentation graphs.
+ * 
+ * @see {@link net.sf.tweety.arg.deductive.categorizer.HCategorizer}
  * 
  * @author Anna Gessler
  */
-public class CategorizerRankingReasoner implements AbstractRankingReasoner<NumericalArgumentRanking> {
+public class CategorizerRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
 	@Override
 	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
 		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
@@ -51,7 +53,7 @@ public class CategorizerRankingReasoner implements AbstractRankingReasoner<Numer
 		double valuations_old[] = new double[n]; //Stores valuations of the last iteration
 		
 		//Keep computing valuations until the values stop changing much or converge 
-		double epsilon = 0.1; 
+		double epsilon = 0.001; 
 		do {
 			valuations_old = valuations.clone();
 			for (int i = 0; i < n; i++) 
