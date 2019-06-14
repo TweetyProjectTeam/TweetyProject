@@ -17,6 +17,8 @@ import net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
 import net.sf.tweety.arg.adf.reasoner.AdmissibleInterpretationReasoner;
 import net.sf.tweety.arg.adf.reasoner.NaiveInterpretationReasoner;
 import net.sf.tweety.arg.adf.reasoner.SatModelReasoner;
+import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
+import net.sf.tweety.arg.adf.sat.NativeLingelingSolver;
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 import net.sf.tweety.arg.adf.util.TestUtil;
@@ -24,26 +26,36 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 
 public class ReasonerBenchmark {
+	
+	static {
+		SatSolver.setDefaultSolver(new NativeLingelingSolver());
+	}
 
 	public static final String[] ALL_SEMANTICS = { "mod", "cf", "nai", "adm", "com", "prf", "grd" };
 
 	private KPPADFFormatParser parser = new KPPADFFormatParser();
 
-	private SatSolver satSolver = SatSolver.getDefaultSolver();
+	//TODO add some getDefaultIncrementalSolver method to obtain type safety
+	private static IncrementalSatSolver satSolver = (IncrementalSatSolver) SatSolver.getDefaultSolver();
 
 	private LazyModelStorage modelStorage = new LazyModelStorage();
 
-	private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
+	private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(1);
 
 	public void testAllInDirectory(AbstractDialecticalFrameworkReasoner reasoner, String semantics, File dir,
 			ExecutorService executor) throws IOException {
 		File[] instances = dir.listFiles((File f, String name) -> name.endsWith(".adf"));
 		for (File f : instances) {
-			List<Map<String, Boolean>> models = modelStorage.getModels(f, semantics);
-			AbstractDialecticalFramework adf = parser.parseBeliefBaseFromFile(f.getPath());
-			CompletableFuture.supplyAsync(() -> runBenchmark(adf, reasoner, models), executor)
-					.exceptionally(th -> handleException(th)).thenAccept(result -> printResults(f, result, System.out));
+			testSingle(reasoner, semantics, f, executor);
 		}
+	}
+	
+	public void testSingle(AbstractDialecticalFrameworkReasoner reasoner, String semantics, File f,
+			ExecutorService executor) throws IOException {
+		List<Map<String, Boolean>> models = modelStorage.getModels(f, semantics);
+		AbstractDialecticalFramework adf = parser.parseBeliefBaseFromFile(f.getPath());
+		CompletableFuture.supplyAsync(() -> runBenchmark(adf, reasoner, models), executor)
+				.exceptionally(th -> handleException(th)).thenAccept(result -> printResults(f, result, System.out));
 	}
 
 	public BenchmarkResult handleException(Throwable th) {
@@ -118,7 +130,11 @@ public class ReasonerBenchmark {
 
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 		new ReasonerBenchmark().testAdmissibleInterpretationSemantics();
-		// new ReasonerBenchmark().testModelSemantics();
+//		new ReasonerBenchmark().testNaiveInterpretationSemantics();
+//		new ReasonerBenchmark().testModelSemantics();
+//		 new ReasonerBenchmark().testSingle(new SatModelReasoner(satSolver), "mod", new File("src/test/resources/instances/adfgen_nacyc_se05_a_02_s_02_b_02_t_02_x_02_c_sXOR_ABA2AF_afinput_exp_acyclic_depvary_step1_batch_yyy03_10_21.apx.adf"),
+//				DEFAULT_EXECUTOR_SERVICE);
+		
 	}
 
 	private class LazyModelStorage {

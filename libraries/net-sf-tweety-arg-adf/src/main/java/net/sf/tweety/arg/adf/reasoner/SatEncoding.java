@@ -18,9 +18,11 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,7 +48,9 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
- * TODO: generalize? TODO: rewrite encoding in cnf
+ * TODO: generalize?
+ * 
+ * TODO: rewrite encoding in cnf
  * 
  * @author Mathias Hofer
  *
@@ -76,24 +80,29 @@ public class SatEncoding {
 	 * 
 	 * TODO find better name, since it is not really xor (both can be false)
 	 */
-	private PlFormula argsTrueXorFalse;
+	private Collection<Disjunction> argsTrueXorFalse;
 
 	public SatEncoding(AbstractDialecticalFramework adf) {
 		this.adf = adf;
 		this.argsTrueXorFalse = adf.arguments()
 				.map(a -> new Disjunction(new Negation(trues.apply(a)), new Negation(falses.apply(a))))
-				.collect(PlCollectors.toConjunction());
+				.collect(Collectors.toList());
 	}
 
-	public PlFormula refineLarger(Interpretation interpretation) {
-		PlFormula sats = interpretation.satisfied().map(falses).collect(PlCollectors.toDisjunction());
+	public Disjunction refineLarger(Interpretation interpretation) {
+		Disjunction sats = interpretation.satisfied().map(falses).collect(PlCollectors.toDisjunction());
 		PlFormula unsats = interpretation.unsatisfied().map(trues).collect(PlCollectors.toDisjunction());
 		PlFormula undec = interpretation.undecided().flatMap(a -> Stream.of(trues.apply(a), falses.apply(a)))
 				.collect(PlCollectors.toDisjunction());
-		return new Disjunction(Arrays.asList(sats, unsats, undec));
+		return (Disjunction) new Disjunction(Arrays.asList(sats, unsats, undec)).collapseAssociativeFormulas();
 	}
 
-	public PlFormula refineUnequal(Interpretation interpretation) {
+	/**
+	 * 
+	 * @param interpretation
+	 * @return a clause
+	 */
+	public Disjunction refineUnequal(Interpretation interpretation) {
 		Disjunction clause = new Disjunction();
 		for (Argument a : adf) {
 			if (interpretation.isSatisfied(a)) {
@@ -108,7 +117,7 @@ public class SatEncoding {
 		return clause;
 	}
 
-	public PlFormula conflictFreeInterpretation() {
+	public Collection<Disjunction> conflictFreeInterpretation() {
 		Conjunction encoding = new Conjunction();
 		for (Argument s : adf) {
 			// link the arguments to their acceptance conditions
@@ -128,24 +137,36 @@ public class SatEncoding {
 			encoding.add(new Implication(falses.apply(s), negLinks));
 		}
 
-		return encoding;
+		return encoding.toCnf().stream().map(x -> (Disjunction) x).collect(Collectors.toList());
 	}
 
-	public PlFormula largerInterpretation(Interpretation interpretation) {
+	/**
+	 * 
+	 * @param interpretation
+	 * @return a collection of clauses
+	 */
+	public Collection<Disjunction> largerInterpretation(Interpretation interpretation) {
 		// fix values based on the given interpretation
-		Conjunction truesConj = interpretation.satisfied().map(trues).collect(PlCollectors.toConjunction());
-		Conjunction falsesConj = interpretation.unsatisfied().map(falses).collect(PlCollectors.toConjunction());
+		List<Disjunction> truesClauses = interpretation.satisfied().map(trues).map(x -> new Disjunction(Arrays.asList(x)))
+				.collect(Collectors.toList());
+		List<Disjunction> falsesClauses = interpretation.unsatisfied().map(falses)
+				.map(x -> new Disjunction(Arrays.asList(x))).collect(Collectors.toList());
 
 		// try to fix a truth value for the undecided arguments in the given
 		// interpretation. if it is possible, then the resulting interpretation
 		// is strictly "larger".
-		Disjunction undecidedDisj = interpretation.undecided().flatMap(a -> Stream.of(trues.apply(a), falses.apply(a)))
+		Disjunction undecidedClause = interpretation.undecided().flatMap(a -> Stream.of(trues.apply(a), falses.apply(a)))
 				.collect(PlCollectors.toDisjunction());
 
-		return new Conjunction(Arrays.asList(argsTrueXorFalse, truesConj, falsesConj, undecidedDisj));
+		Collection<Disjunction> clauses = new ArrayList<Disjunction>(truesClauses.size() + falsesClauses.size() + argsTrueXorFalse.size() + 1);
+		clauses.addAll(truesClauses);
+		clauses.addAll(falsesClauses);
+		clauses.addAll(argsTrueXorFalse);
+		clauses.add(undecidedClause);
+		return clauses;
 	}
 
-	public PlFormula bipolar() {
+	public Collection<Disjunction> bipolar() {
 		Conjunction encoding = new Conjunction();
 		for (Argument r : adf) {
 			Conjunction conj1 = adf.linksToParent(r).filter(l -> l.getLinkType() == LinkType.ATTACKING)
@@ -164,10 +185,11 @@ public class SatEncoding {
 			encoding.add(new Implication(trues.apply(r), new Conjunction(conj1, conj2)));
 			encoding.add(new Implication(falses.apply(r), new Conjunction(conj3, conj4)));
 		}
-		return encoding;
+		
+		return encoding.toCnf().stream().map(x -> (Disjunction) x).collect(Collectors.toList());
 	}
 
-	public PlFormula kBipolar(Interpretation interpretation) {
+	public Collection<Disjunction> kBipolar(Interpretation interpretation) {
 		Conjunction encoding = new Conjunction();
 		for (Argument s : adf) {
 			// set of arguments r with (r,s) non-bipolar and I(r) = u
@@ -193,10 +215,10 @@ public class SatEncoding {
 			encoding.add(new Implication(falses.apply(s), conj2));
 		}
 
-		return encoding;
+		return encoding.toCnf().stream().map(x -> (Disjunction) x).collect(Collectors.toList());
 	}
 
-	public Collection<PlFormula> verifyAdmissible(Interpretation interpretation) {
+	public Collection<Disjunction> verifyAdmissible(Interpretation interpretation) {
 		Cache<Argument, PlFormula> vars = new Cache<Argument, PlFormula>(s -> new Proposition(s.getName()));
 		Conjunction conj = new Conjunction();
 		Disjunction disj = new Disjunction();
@@ -210,7 +232,8 @@ public class SatEncoding {
 				disj.add(acc);
 			}
 		}
-		return new Conjunction(conj, disj);
+		PlFormula encoding = new Conjunction(conj, disj);
+		return encoding.toCnf().stream().map(x -> (Disjunction) x).collect(Collectors.toList());
 	}
 
 	public Interpretation interpretationFromWitness(

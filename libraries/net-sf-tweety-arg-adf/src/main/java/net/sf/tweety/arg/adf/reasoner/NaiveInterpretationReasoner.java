@@ -18,15 +18,14 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.List;
 
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
@@ -44,8 +43,8 @@ public class NaiveInterpretationReasoner extends AbstractDialecticalFrameworkRea
 	@Override
 	public Collection<Interpretation> getModels(AbstractDialecticalFramework adf) {
 		SatEncoding enc = new SatEncoding(adf);
-		Set<PlFormula> rho = new HashSet<PlFormula>();
-		rho.add(enc.conflictFreeInterpretation());
+		List<Disjunction> rho = new LinkedList<Disjunction>();
+		rho.addAll(enc.conflictFreeInterpretation());
 		Collection<Interpretation> models = new LinkedList<Interpretation>();
 		Interpretation interpretation;
 		while ((interpretation = existsNai(adf, new Interpretation(adf), rho, enc)) != null) {
@@ -59,18 +58,18 @@ public class NaiveInterpretationReasoner extends AbstractDialecticalFrameworkRea
 	@Override
 	public Interpretation getModel(AbstractDialecticalFramework adf) {
 		SatEncoding enc = new SatEncoding(adf);
-		return existsNai(adf, new Interpretation(adf), Arrays.asList(enc.conflictFreeInterpretation()), enc);
+		return existsNai(adf, new Interpretation(adf), enc.conflictFreeInterpretation(), enc);
 	}
 
 	private Interpretation existsNai(AbstractDialecticalFramework adf, Interpretation interpretation,
-			Collection<PlFormula> excluded, SatEncoding enc) {
+			Collection<Disjunction> excluded, SatEncoding enc) {
 		Collection<PlFormula> rho = new LinkedList<PlFormula>(excluded);
-		rho.add(enc.largerInterpretation(interpretation));
+		rho.addAll(enc.largerInterpretation(interpretation));
 		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = solver.getWitness(rho);
 		Interpretation result = null;
 		while (witness != null) {
 			result = enc.interpretationFromWitness(witness);
-			rho.add(enc.largerInterpretation(result));
+			rho.addAll(enc.largerInterpretation(result));
 			witness = solver.getWitness(rho);
 		}
 		return result;
