@@ -189,7 +189,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	 * @return a String
 	 */
 	public String toString() {
-		return "Signature = (" + firstSet.toString() + ",\n" + secondSet.toString() + ",\n" + thirdSet.toString() + ")";
+		return firstSet.toString() + ", " + secondSet.toString() + ", " + thirdSet.toString();
 	}
 
 	/**
