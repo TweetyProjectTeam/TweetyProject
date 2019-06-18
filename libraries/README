@@ -63,8 +63,10 @@ In the "Comments" tab, edit the "Files" pattern to contain the following:
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright <CURRENT_YEAR> The TweetyProject Team <http://tweetyproject.org/contact/>
  */
+
+<CURRENT_YEAR> should be replaced by the current year.
 
 Finally, check the "Automatically add comments for new methods, types, modules, packages
 and files" checkmark.

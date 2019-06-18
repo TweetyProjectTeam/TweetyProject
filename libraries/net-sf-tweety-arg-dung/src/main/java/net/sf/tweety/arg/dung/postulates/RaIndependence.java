@@ -28,8 +28,9 @@ import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "independence" postulate for ranking semantics: The ranking
- *  between to arguments a and b should be independent of any argument 
+ *  The "independence" postulate for ranking semantics as proposed in
+ *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: 
+ *  The ranking between to arguments a and b should be independent of any argument 
  *  that is neither connected to a nor to b.
  * 
  * @author Anna Gessler

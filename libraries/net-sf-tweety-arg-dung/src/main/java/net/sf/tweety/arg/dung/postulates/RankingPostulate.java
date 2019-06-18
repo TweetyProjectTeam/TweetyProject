@@ -36,6 +36,8 @@ import net.sf.tweety.commons.postulates.PostulateEvaluatable;
  */
 public abstract class RankingPostulate implements Postulate<Argument>{
 
+	/** The ABSTRACTION postulate **/
+	public static final RankingPostulate ABSTRACTION = new RaAbstraction();
 	/** The INDEPENDENCE postulate **/
 	public static final RankingPostulate INDEPENDENCE = new RaIndependence();
 	/** The VOIDPRECEDENCE postulate **/
@@ -50,7 +52,9 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	public static final RankingPostulate TOTAL = new RaTotal();
 	/** The NONATTACKEDEQUIVALENCE postulate **/
 	public static final RankingPostulate NONATTACKEDEQUIVALENCE = new RaNonAttackedEquivalence();
-	
+	/** The QUALITYPRECEDENCE postulate **/
+	public static final RankingPostulate QUALITYPRECEDENCE = new RaQualityPrecedence();
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)
 	 */

@@ -27,28 +27,25 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "void precedence" postulate for ranking semantics as proposed by
+ *  The "quality precedence" postulate for ranking semantics as proposed in
  *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]:
- *  A non-attacked argument is ranked strictly higher than any attacked argument.
+ *  The greater the acceptability of one direct attacker
+ *  for an argument, the weaker the level of acceptability of
+ *  this argument.
  * 
  * @author Anna Gessler
+ *
  */
-public class RaVoidPrecedence extends RankingPostulate {
+public class RaQualityPrecedence extends RankingPostulate {
 
 	@Override
 	public String getName() {
-		return "Void Precedence";
+		return "Quality Precedence";
 	}
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		if (kb.size()<2)
-			return false;
-		DungTheory dt = (DungTheory) kb;
-		Iterator<Argument> it = dt.iterator();
-		Argument a = it.next();
-		Argument b = it.next();
-		return (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty());
+		return (kb.size()>=2);
 	}
 
 	@Override
@@ -59,8 +56,18 @@ public class RaVoidPrecedence extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
+		
+		if (dt.getAttackers(b).isEmpty())
+			return true;
+		Argument c = dt.getAttackers(b).iterator().next();
+
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		return (ranking.isStrictlyMoreAcceptableThan(a, b));
+		for (Argument f: dt.getAttackers(a)) 
+			if (!ranking.isStrictlyMoreAcceptableThan(c,f))
+				return true;
+		
+		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
+
 
 }

@@ -27,7 +27,9 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "non-attacked equivalence" postulate for ranking semantics: 
+ *  The "non-attacked equivalence" postulate for ranking semantics as proposed in
+ *  [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
+ *  Semantics for Abstract Argumentation. 2016]: 
  *  All non-attacked arguments have the same rank.
  * 
  * @author Anna Gessler

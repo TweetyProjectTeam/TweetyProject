@@ -26,7 +26,9 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "total" postulate for ranking semantics: 
+ *  The "total" postulate for ranking semantics as proposed in 
+ *  [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
+ *  Semantics for Abstract Argumentation. 2016]: 
  *  All pairs of arguments can be compared.
  * 
  * @author Anna Gessler

@@ -29,7 +29,8 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "defense precedence" postulate for ranking semantics: 
+ *  The "defense precedence" postulate for ranking semantics as proposed 
+ *  in [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: 
  *  For two arguments with the same number of direct attackers,
  *  a defended argument is ranked higher than a non-defended argument.
  * 

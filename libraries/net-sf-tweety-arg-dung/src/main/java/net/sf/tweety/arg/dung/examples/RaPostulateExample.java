@@ -42,7 +42,9 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.CARDINALITYPRECEDENCE);
 		evaluator.addPostulate(RankingPostulate.DEFENSEPRECEDENCE);
 		evaluator.addPostulate(RankingPostulate.TOTAL);
+		evaluator.addPostulate(RankingPostulate.ABSTRACTION);
 		evaluator.addPostulate(RankingPostulate.NONATTACKEDEQUIVALENCE);
-		System.out.println(evaluator.evaluate(1000, false));
+		evaluator.addPostulate(RankingPostulate.QUALITYPRECEDENCE);
+		System.out.println(evaluator.evaluate(2000, false));
 	}
 }

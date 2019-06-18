@@ -27,7 +27,8 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "cardinality precedence" postulate for ranking semantics: 
+ *  The "cardinality precedence" postulate for ranking semantics as proposed 
+ *  in [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]:
  *  The greater the number of direct attackers for an argument,
  *  the weaker the level of acceptability of this argument.
  * 

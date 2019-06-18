@@ -24,31 +24,29 @@ import java.util.Iterator;
 import net.sf.tweety.arg.dung.reasoner.AbstractRankingReasoner;
 import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "void precedence" postulate for ranking semantics as proposed by
- *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]:
- *  A non-attacked argument is ranked strictly higher than any attacked argument.
+ *  The "abstraction" postulate for ranking semantics as proposed in
+ *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: 
+ *  The ranking on an abstract argumentation framework A should be defined only on the
+ *  basics of the attacks between arguments.
+ *  This postulate was 
  * 
  * @author Anna Gessler
+ *
  */
-public class RaVoidPrecedence extends RankingPostulate {
+public class RaAbstraction extends RankingPostulate {
 
 	@Override
 	public String getName() {
-		return "Void Precedence";
+		return "Abstraction";
 	}
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		if (kb.size()<2)
-			return false;
-		DungTheory dt = (DungTheory) kb;
-		Iterator<Argument> it = dt.iterator();
-		Argument a = it.next();
-		Argument b = it.next();
-		return (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty());
+		return (kb.size()>=2);
 	}
 
 	@Override
@@ -59,8 +57,24 @@ public class RaVoidPrecedence extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		return (ranking.isStrictlyMoreAcceptableThan(a, b));
+		
+		DungTheory iso_dt = new DungTheory(dt);
+		iso_dt.remove(a);
+		Argument iso_a = new Argument("iso_A_");
+		iso_dt.add(iso_a);
+		
+		for (Argument f: dt.getAttackers(a)) 
+			if (f.equals(a))
+				iso_dt.add(new Attack(iso_a, iso_a));
+			else
+				iso_dt.add(new Attack(f, iso_a));
+		
+		for (Argument f: dt.getAttacked(a)) 
+			if (!f.equals(a))
+				iso_dt.add(new Attack(iso_a, f));
+		
+		ArgumentRanking ranking = ev.getModel(dt);
+		ArgumentRanking iso_ranking = ev.getModel(iso_dt);
+		return ranking.compare(a, b) == iso_ranking.compare(iso_a, b);
 	}
-
 }

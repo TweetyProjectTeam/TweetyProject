@@ -27,7 +27,9 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "self-contradiction" postulate for ranking semantics: 
+ *  The "self-contradiction" postulate for ranking semantics as proposed 
+ *  in [Matt, Toni. A game-theoretic measure of argument strength
+ *  for abstract argumentation. 2008]: 
  *  A self-attacking argument is ranked lower than any 
  *  non-self-attacking argument.
  * 
