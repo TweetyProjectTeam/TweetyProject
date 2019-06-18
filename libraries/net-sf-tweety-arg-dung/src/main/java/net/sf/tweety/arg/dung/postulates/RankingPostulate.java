@@ -42,6 +42,14 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	public static final RankingPostulate VOIDPRECEDENCE = new RaVoidPrecedence();
 	/** The SELFCONTRADICTION postulate **/
 	public static final RankingPostulate SELFCONTRADICTION = new RaSelfContradiction();
+	/** The DEFENSEPRECEDENCE postulate **/
+	public static final RankingPostulate DEFENSEPRECEDENCE = new RaDefensePrecedence();
+	/** The CARDINALITYPRECEDENCE postulate **/
+	public static final RankingPostulate CARDINALITYPRECEDENCE = new RaCardinalityPrecedence();
+	/** The TOTAL postulate **/
+	public static final RankingPostulate TOTAL = new RaTotal();
+	/** The NONATTACKEDEQUIVALENCE postulate **/
+	public static final RankingPostulate NONATTACKEDEQUIVALENCE = new RaNonAttackedEquivalence();
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)
