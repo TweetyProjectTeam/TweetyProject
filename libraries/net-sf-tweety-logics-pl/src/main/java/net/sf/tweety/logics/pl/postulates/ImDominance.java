@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
  * consistent formula by a weaker formula should not increase the inconsistency
  * value.
  * 
- * @author Anna Gessler
+ * @author Anna Gessler, Matthias Thimm
  */
 public class ImDominance extends ImPostulate {
 
@@ -52,7 +52,7 @@ public class ImDominance extends ImPostulate {
 	public boolean isApplicable(Collection<PlFormula> kb) {
 		if (kb.size() < 2) 
 			return false;
-		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();	
 		PlFormula strongerFormula = orderedKB.get(0);
 		PlFormula weakerFormula = orderedKB.get(1);
 		if (!SatSolver.getDefaultSolver().isConsistent(strongerFormula)) 
@@ -66,16 +66,16 @@ public class ImDominance extends ImPostulate {
 	public boolean isSatisfied(Collection<PlFormula> kb,
 			BeliefSetInconsistencyMeasure<PlFormula> ev) {
 		if (!this.isApplicable(kb))
-			return true;
-		double inconsistency1 = ev.inconsistencyMeasure(kb);
+			return true;		
+		PlBeliefSet kb1 = new PlBeliefSet(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
+		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();		
 		PlFormula strongerFormula = orderedKB.get(0);
 		PlFormula weakerFormula = orderedKB.get(1);
-		kb2.remove(strongerFormula);
-		kb2.add(weakerFormula);
+		kb1.remove(weakerFormula);
+		kb2.remove(strongerFormula);		
+		double inconsistency1 = ev.inconsistencyMeasure(kb1);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		return (inconsistency1 >= inconsistency2);
 	}
-
 }
