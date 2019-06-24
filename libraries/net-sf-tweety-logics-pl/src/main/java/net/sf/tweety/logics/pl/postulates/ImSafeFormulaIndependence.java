@@ -51,9 +51,10 @@ public class ImSafeFormulaIndependence extends ImPostulate{
 			return false;
 		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
 		PlFormula safeFormula = orderedKB.get(0);
+		orderedKB.remove(0);
 		if (!SatSolver.getDefaultSolver().isConsistent(safeFormula)) 
 			return false;
-		if (safeFormula.getSignature().isOverlappingSignature(((PlBeliefSet)kb).getMinimalSignature()))
+		if (safeFormula.getSignature().isOverlappingSignature((new PlBeliefSet(orderedKB)).getMinimalSignature()))
 			return false;
 		return true;
 	}

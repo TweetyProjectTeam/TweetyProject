@@ -68,7 +68,7 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 		for (Object obj : o.formulas)
 			if (this.formulas.contains(obj))
 				return true;
-		return true;
+		return false;
 	}
 
 	@Override

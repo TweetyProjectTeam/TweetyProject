@@ -120,6 +120,7 @@ public class PostulateEvaluator<T extends Formula, U extends BeliefSet<T,?>>{
 					failedPostulates.add(postulate);
 				}
 			}
+			//System.out.println(rep);
 		}
 		return rep;
 	}
