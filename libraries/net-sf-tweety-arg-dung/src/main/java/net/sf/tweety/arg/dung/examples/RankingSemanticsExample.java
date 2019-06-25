@@ -24,7 +24,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.sf.tweety.arg.dung.reasoner.BurdenBasedRankingReasoner;
 import net.sf.tweety.arg.dung.reasoner.CategorizerRankingReasoner;
+//import net.sf.tweety.arg.dung.reasoner.DiscussionBasedRankingReasoner;
 import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -41,6 +43,7 @@ public class RankingSemanticsExample {
 	public static void main(String[] args){
 		//Categorizer ranking semantics 
 		CategorizerRankingReasoner reasoner = new CategorizerRankingReasoner();
+		System.out.println(reasoner);
 		
 		//Example 1, taken from [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study
 		//of Ranking-Based Semantics for Abstract Argumentation]
@@ -81,6 +84,16 @@ public class RankingSemanticsExample {
 		theory2.add(new Attack(c,f));
 		theory2.add(new Attack(e,c));
 		System.out.println(roundRanking(reasoner.getModel(theory2),3));
+		
+		//Burden-based ranking semantics 
+		BurdenBasedRankingReasoner reasoner2 = new BurdenBasedRankingReasoner();
+		System.out.println(reasoner2);
+		System.out.println(roundRanking(reasoner2.getModel(theory),3));
+		
+		//Discussion-based ranking semantics 
+//		DiscussionBasedRankingReasoner reasoner3 = new DiscussionBasedRankingReasoner();
+//		System.out.println(reasoner3);
+//		System.out.println(roundRanking(reasoner3.getModel(theory),3));
 
 	}
 	
