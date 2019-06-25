@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 
 import net.sf.tweety.arg.dung.reasoner.BurdenBasedRankingReasoner;
 import net.sf.tweety.arg.dung.reasoner.CategorizerRankingReasoner;
-//import net.sf.tweety.arg.dung.reasoner.DiscussionBasedRankingReasoner;
+import net.sf.tweety.arg.dung.reasoner.DiscussionBasedRankingReasoner;
 import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -91,9 +91,9 @@ public class RankingSemanticsExample {
 		System.out.println(roundRanking(reasoner2.getModel(theory),3));
 		
 		//Discussion-based ranking semantics 
-//		DiscussionBasedRankingReasoner reasoner3 = new DiscussionBasedRankingReasoner();
-//		System.out.println(reasoner3);
-//		System.out.println(roundRanking(reasoner3.getModel(theory),3));
+		DiscussionBasedRankingReasoner reasoner3 = new DiscussionBasedRankingReasoner();
+		System.out.println(reasoner3);
+		System.out.println(roundRanking(reasoner3.getModel(theory),3));
 
 	}
 	
