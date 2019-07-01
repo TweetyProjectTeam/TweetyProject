@@ -25,26 +25,46 @@ import net.sf.tweety.arg.dung.reasoner.AbstractRankingReasoner;
 import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.math.matrix.Matrix;
 
 /**
- *  The "cardinality precedence" postulate for ranking semantics as proposed 
- *  in [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]:
- *  The greater the number of direct attackers for an argument,
- *  the weaker the level of acceptability of this argument.
+ *  The "attack vs full defense" postulate for ranking semantics as proposed in 
+ *  [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
+ *  Semantics for Abstract Argumentation. 2016]: 
+ *  An argument without any attack branch is ranked higher than an argument only
+ *  attacked by one non-attacked argument.
  * 
  * @author Anna Gessler
  *
  */
-public class RaCardinalityPrecedence extends RankingPostulate {
+public class RaAttackVsFullDefense extends RankingPostulate {
 
 	@Override
 	public String getName() {
-		return "Cardinality Precedence";
+		return "Attack vs Full Defense";
 	}
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size()>=2);
+		if (kb.size()<2)
+			return false;
+		
+		//AF must be acyclic
+		DungTheory dt = (DungTheory) kb;
+		Matrix mat = dt.getAdjacencyMatrix();
+		for (int i = 0; i < mat.getYDimension(); i++) {
+			if (mat.getEntry(i, i).equals(1))
+				return false;
+		}
+		
+		Iterator<Argument> it = dt.iterator();
+		Argument a = it.next();
+		Argument b = it.next();
+		if (!dt.getAttackers(a).isEmpty())
+			return false;
+		if (dt.getAttackers(b).size()!=1)
+			return false;
+		return (dt.getAttackers(dt.getAttackers(b).iterator().next()).isEmpty());
 	}
 
 	@Override
@@ -56,9 +76,6 @@ public class RaCardinalityPrecedence extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		
-		if ( dt.getAttackers(a).size() >=  dt.getAttackers(b).size())
-			return true;
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

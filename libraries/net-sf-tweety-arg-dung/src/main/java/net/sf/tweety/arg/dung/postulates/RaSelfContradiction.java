@@ -45,13 +45,8 @@ public class RaSelfContradiction extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		if (kb.size()<2)
-			return false;
-		DungTheory dt = (DungTheory) kb;
-		Iterator<Argument> it = dt.iterator();
-		Argument a = it.next();
-		Argument b = it.next();
-		return (dt.isAttackedBy(a, a) && !dt.isAttackedBy(b, b));
+		return (kb.size()>=2);
+		
 	}
 
 	@Override
@@ -63,7 +58,11 @@ public class RaSelfContradiction extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		return ranking.isStrictlyLessAcceptableThan(a, b);
+		
+		if (dt.isAttackedBy(a, a) && !dt.isAttackedBy(b, b))
+			return ranking.isStrictlyLessAcceptableThan(a, b);
+		return true;
+		
 	}
 
 	

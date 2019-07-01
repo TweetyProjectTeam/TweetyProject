@@ -80,6 +80,14 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Nume
 		return bestRanking;
 	}
 
+	/**
+	 * Returns the number of linear discussions of the given length in the given DungTheory for
+	 * the given argument.
+	 * @param base
+	 * @param a an argument
+	 * @param i length of linear discussions
+	 * @return
+	 */
 	public int getNumberOfPathsOfLength(DungTheory base, Argument a, int i) {
 		if (i == 0 || i == 1)
 			return i;
