@@ -179,7 +179,7 @@ public class DefaultGraph<T extends Node> implements Graph<T>{
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.graphs.Graph#getAdjancyMatrix()
 	 */
-	public Matrix getAdjancyMatrix(){
+	public Matrix getAdjacencyMatrix(){
 		Matrix m = new Matrix(this.getNumberOfNodes(), this.getNumberOfNodes());
 		int i = 0, j;
 		for(T a: this.nodes){

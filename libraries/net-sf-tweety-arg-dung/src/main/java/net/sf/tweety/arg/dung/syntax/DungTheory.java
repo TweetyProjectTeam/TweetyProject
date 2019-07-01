@@ -640,7 +640,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @see net.sf.tweety.graphs.Graph#getAdjancyMatrix()
 	 */
 	@Override
-	public Matrix getAdjancyMatrix() {
+	public Matrix getAdjacencyMatrix() {
 		Matrix m = new Matrix(this.getNumberOfNodes(), this.getNumberOfNodes());
 		int i = 0, j;
 		for(Argument a: this){

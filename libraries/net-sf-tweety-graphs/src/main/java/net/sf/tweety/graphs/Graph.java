@@ -145,7 +145,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * of the nodes is the same as returned by "iterator()").
 	 * @return the adjacency matrix of this graph
 	 */
-	public Matrix getAdjancyMatrix();
+	public Matrix getAdjacencyMatrix();
 	
 	/**
 	 * Returns the complement graph of this graph, i.e. the graph

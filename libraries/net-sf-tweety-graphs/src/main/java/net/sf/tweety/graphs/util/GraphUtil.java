@@ -171,7 +171,7 @@ public abstract class GraphUtil {
 	 * @return an array of double (the real parts of the Eigenvalues).
 	 */
 	public static ComplexNumber[] eigenvalues(Graph<? extends Node> g){
-		Matrix m = g.getAdjancyMatrix();
+		Matrix m = g.getAdjacencyMatrix();
 		EigenvalueDecomposition ed = new EigenvalueDecomposition(m.getJamaMatrix());		
 		ComplexNumber[] result = new ComplexNumber[ed.getRealEigenvalues().length];
 		for(int i = 0; i < ed.getImagEigenvalues().length; i++){

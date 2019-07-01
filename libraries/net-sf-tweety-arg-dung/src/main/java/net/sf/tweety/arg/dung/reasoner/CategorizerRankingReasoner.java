@@ -47,7 +47,7 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 
 	@Override
 	public NumericalArgumentRanking getModel(DungTheory base) {
-		Matrix directAttackMatrix = base.getAdjancyMatrix().transpose(); //The matrix of direct attackers
+		Matrix directAttackMatrix = base.getAdjacencyMatrix().transpose(); //The matrix of direct attackers
 		int n = directAttackMatrix.getXDimension();
 		double valuations[] = new double[n];	 //Stores valuations of the current iteration
 		double valuations_old[] = new double[n]; //Stores valuations of the last iteration
