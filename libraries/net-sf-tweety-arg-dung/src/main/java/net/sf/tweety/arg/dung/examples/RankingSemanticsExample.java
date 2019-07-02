@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import net.sf.tweety.arg.dung.reasoner.BurdenBasedRankingReasoner;
 import net.sf.tweety.arg.dung.reasoner.CategorizerRankingReasoner;
 import net.sf.tweety.arg.dung.reasoner.DiscussionBasedRankingReasoner;
+import net.sf.tweety.arg.dung.reasoner.TuplesRankingReasoner;
 import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
@@ -64,7 +65,6 @@ public class RankingSemanticsExample {
 		theory.add(new Attack(c,e));
 		theory.add(new Attack(b,c));
 		theory.add(new Attack(b,a));		
-		
 		System.out.println(roundRanking(reasoner.getModel(theory),2));
 		
 		//Example 2, taken from 
@@ -89,11 +89,61 @@ public class RankingSemanticsExample {
 		BurdenBasedRankingReasoner reasoner2 = new BurdenBasedRankingReasoner();
 		System.out.println(reasoner2);
 		System.out.println(roundRanking(reasoner2.getModel(theory),3));
+		System.out.println(roundRanking(reasoner2.getModel(theory2),3));
+		
 		
 		//Discussion-based ranking semantics 
 		DiscussionBasedRankingReasoner reasoner3 = new DiscussionBasedRankingReasoner();
 		System.out.println(reasoner3);
 		System.out.println(roundRanking(reasoner3.getModel(theory),3));
+		System.out.println(roundRanking(reasoner3.getModel(theory2),3));
+		
+		//Example 3, taken from
+		//[Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005]
+		DungTheory theory3 = new DungTheory();
+		Argument a1 = new Argument("A");
+		Argument b1 = new Argument("B1");
+		Argument b2 = new Argument("B2");
+		Argument b3 = new Argument("B3");
+		Argument b4 = new Argument("B4");
+		Argument c1 = new Argument("C1");
+		Argument c2 = new Argument("C2");
+		Argument c3 = new Argument("C3");
+		Argument c4 = new Argument("C4");
+		Argument d1 = new Argument("D1");
+		Argument d2 = new Argument("D2");
+		Argument d3 = new Argument("D3");
+		Argument e1 = new Argument("E1");
+		theory3.add(a1);
+		theory3.add(b1);
+		theory3.add(b2);
+		theory3.add(b3);
+		theory3.add(b4);
+		theory3.add(c1);
+		theory3.add(c2);
+		theory3.add(c3);
+		theory3.add(c4);
+		theory3.add(d1);
+		theory3.add(d2);
+		theory3.add(d3);
+		theory3.add(e1);
+		theory3.add(new Attack(b1,a1));
+		theory3.add(new Attack(b2,a1));
+		theory3.add(new Attack(b3,a1));
+		theory3.add(new Attack(b4,a1));
+		theory3.add(new Attack(c1,b1));
+		theory3.add(new Attack(c2,b1));
+		theory3.add(new Attack(c3,b2));
+		theory3.add(new Attack(c4,b3));
+		theory3.add(new Attack(d1,c1));
+		theory3.add(new Attack(d2,c2));
+		theory3.add(new Attack(d3,c3));
+		theory3.add(new Attack(e1,d1));
+		
+		//Tuples* ranking semantics 
+		TuplesRankingReasoner reasoner4 = new TuplesRankingReasoner();
+		System.out.println(reasoner4);
+		System.out.println(reasoner4.getModel(theory3));
 
 	}
 	

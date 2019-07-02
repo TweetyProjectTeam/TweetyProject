@@ -18,15 +18,15 @@
  */
 package net.sf.tweety.arg.dung.semantics;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.graphs.orders.Order;
-
 /**
- * This class models argument ranking by representing the acceptability of arguments in 
- * a graph-based structure.
+ * This class models argument ranking by representing the acceptability of
+ * arguments in a graph-based structure.
  * 
  * @author Matthias Thimm
  *
@@ -35,41 +35,50 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 
 	/** The actual order */
 	private Order<Argument> order;
-	
+
 	/**
-	 * Creates a new argument ranking with the given arguments which 
-	 * are initially all incomparable.
+	 * Creates a new argument ranking with the given arguments which are initially
+	 * all incomparable.
+	 * 
 	 * @param args
 	 */
-	public LatticeArgumentRanking(Collection<Argument> args){
+	public LatticeArgumentRanking(Collection<Argument> args) {
 		this.order = new Order<>(args);
 	}
-	
+
 	/**
 	 * Defines "a" to be strictly less or equally acceptable than "b".
+	 * 
 	 * @param a some argument
 	 * @param b some argument
 	 */
-	public void setStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b){
+	public void setStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
 		this.order.setOrderedBefore(a, b);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.semantics.ArgumentRanking#isStrictlyLessOrEquallyAcceptableThan(net.sf.tweety.arg.dung.syntax.Argument, net.sf.tweety.arg.dung.syntax.Argument)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.arg.dung.semantics.ArgumentRanking#
+	 * isStrictlyLessOrEquallyAcceptableThan(net.sf.tweety.arg.dung.syntax.Argument,
+	 * net.sf.tweety.arg.dung.syntax.Argument)
 	 */
 	@Override
 	public boolean isStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
 		return this.order.isOrderedBefore(a, b);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(net.sf.tweety.arg.dung.semantics.ArgumentStatus)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.arg.dung.semantics.AbstractArgumentationInterpretation#
+	 * getArgumentsOfStatus(net.sf.tweety.arg.dung.semantics.ArgumentStatus)
 	 */
 	@Override
 	public Extension getArgumentsOfStatus(ArgumentStatus status) {
-		if(status.equals(ArgumentStatus.IN))
+		if (status.equals(ArgumentStatus.IN))
 			return new Extension(this.getMaximallyAcceptedArguments(this.order.getElements()));
-		if(status.equals(ArgumentStatus.OUT))
+		if (status.equals(ArgumentStatus.OUT))
 			return new Extension(this.getMinimallyAcceptedArguments(this.order.getElements()));
 		Collection<Argument> undec = new HashSet<>(this.order.getElements());
 		undec.removeAll(this.getMaximallyAcceptedArguments(this.order.getElements()));
@@ -77,12 +86,35 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 		return new Extension(undec);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.semantics.AbstractArgumentationInterpretation#toString()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.dung.semantics.AbstractArgumentationInterpretation#toString
+	 * ()
 	 */
 	@Override
 	public String toString() {
-		return this.order.toString();
+		Argument[] args = this.order.getElements().toArray(new Argument[0]);
+		//Brute-force solution for testing that does not accurately represent
+		//incomparable arguments
+		//TODO: Fix toString method in DefaultGraph when using OrderNode
+		int n = args.length;
+		boolean swapped = false;
+		do {
+			swapped = false;
+			for (int i = 0; i < n-1; ++i) {
+				if (this.isStrictlyMoreOrEquallyAcceptableThan(args[i], args[i+1])) {
+					Argument swap = args[i+1];
+					args[i+1] = args[i];
+					args[i] = swap; 
+					swapped = true;
+					}
+			}
+			n = n-1;
+		} while (swapped);
+
+		return "<" + this.order.getElements() + "," + Arrays.toString(args) + ">";
 	}
 
 }

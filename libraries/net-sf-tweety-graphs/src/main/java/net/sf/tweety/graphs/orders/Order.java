@@ -33,6 +33,7 @@ public class Order<T> {
 
 	/** The directed defaultGraph that represents the order */
 	private DefaultGraph<OrderNode> defaultGraph;
+	
 	/** A bijection between objects and nodes in the defaultGraph. */
 	private Map<T,OrderNode> nodes;
 	
@@ -92,6 +93,20 @@ public class Order<T> {
 	 */
 	public String toString(){
 		return this.defaultGraph.toString();
+	}
+	
+	/**
+	 * @return the directed defaultGraph that represents the order 
+	 */
+	public DefaultGraph<OrderNode> getDefaultGraph() {
+		return defaultGraph;
+	}
+	
+	/**
+	 * @return the bijection between objects and nodes in the defaultGraph
+	 */
+	public Map<T, OrderNode> getNodes() {
+		return nodes;
 	}
 	
 }
