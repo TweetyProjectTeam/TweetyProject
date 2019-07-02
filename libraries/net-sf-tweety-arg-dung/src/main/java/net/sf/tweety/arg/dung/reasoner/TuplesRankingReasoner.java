@@ -31,7 +31,6 @@ import java.util.Set;
 import net.sf.tweety.arg.dung.semantics.LatticeArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.math.matrix.Matrix;
 import net.sf.tweety.commons.util.Pair;
 
 /**
@@ -62,11 +61,8 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		LatticeArgumentRanking ranking = new LatticeArgumentRanking(kb.getNodes());
 
 		// Check if kb is acyclic
-		Matrix mat = kb.getAdjacencyMatrix();
-		for (int i = 0; i < mat.getYDimension(); i++) {
-			if (mat.getEntry(i, i).equals(1))
-				return ranking;
-		}
+		if (kb.containsCycle())
+			return ranking;
 
 		// Compute lookup table for tupled values
 		Map<Argument, Pair<int[], int[]>> tupled_values = new HashMap<Argument, Pair<int[], int[]>>();

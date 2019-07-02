@@ -739,4 +739,12 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	protected DungSignature instantiateSignature() {
 		return new DungSignature();
 	}
+	
+	/**
+	 * Checks whether there is at least one cycle in this DungTheory.
+	 * @return "true" if there is a cycle in this DungTheory, "false" otherwise
+	 */
+	public <S extends Node> boolean containsCycle() {
+		return DefaultGraph.containsCycle(this);
+	}
 }

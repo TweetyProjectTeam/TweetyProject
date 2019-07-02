@@ -25,7 +25,6 @@ import net.sf.tweety.arg.dung.reasoner.AbstractRankingReasoner;
 import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.math.matrix.Matrix;
 
 /**
  * The "attack vs full defense" postulate for ranking semantics as proposed in
@@ -53,13 +52,10 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
-		// AF must be acyclic
+	
 		DungTheory dt = new DungTheory((DungTheory) kb);
-		Matrix mat = dt.getAdjacencyMatrix();
-		for (int i = 0; i < mat.getYDimension(); i++) {
-			if (mat.getEntry(i, i).equals(1))
-				return true;
-		}
+		if (dt.containsCycle())
+			return true;
 
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
