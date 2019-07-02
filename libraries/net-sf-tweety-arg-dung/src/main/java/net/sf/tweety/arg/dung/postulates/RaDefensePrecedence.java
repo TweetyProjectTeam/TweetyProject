@@ -46,10 +46,15 @@ public class RaDefensePrecedence extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		if (kb.size()<2)
-			return false;
+		return (kb.size()>=2);
+		}
+
+	@Override
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
+		if (!this.isApplicable(kb))
+			return true;
 		
-		DungTheory dt = (DungTheory) kb;
+		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
@@ -57,20 +62,11 @@ public class RaDefensePrecedence extends RankingPostulate {
 		Set<Argument> attackers_b = dt.getAttackers(b);
 		
 		if (attackers_a.size() != attackers_b.size())
-			return false;
-
-		Extension kb_extension = new Extension(kb);
-		return dt.isAttacked(new Extension(dt.getAttackers(a)),kb_extension) && !dt.isAttacked(new Extension(dt.getAttackers(b)),kb_extension);
-	}
-
-	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
-		if (!this.isApplicable(kb))
 			return true;
-		DungTheory dt = (DungTheory) kb;
-		Iterator<Argument> it = dt.iterator();
-		Argument a = it.next();
-		Argument b = it.next();
+		Extension kb_extension = new Extension(kb);
+		if (!dt.isAttacked(new Extension(dt.getAttackers(a)),kb_extension) && !dt.isAttacked(new Extension(dt.getAttackers(b)),kb_extension))
+			return true;
+	
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
 		return ranking.isStrictlyMoreAcceptableThan(a, b); 
 	}

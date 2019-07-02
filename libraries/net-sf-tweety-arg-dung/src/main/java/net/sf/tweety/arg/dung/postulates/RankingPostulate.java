@@ -45,7 +45,9 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	/** The SELFCONTRADICTION postulate **/
 	public static final RankingPostulate SELFCONTRADICTION = new RaSelfContradiction();
 	/** The DEFENSEPRECEDENCE postulate **/
-	public static final RankingPostulate DEFENSEPRECEDENCE = new RaDefensePrecedence();
+//	public static final RankingPostulate DEFENSEPRECEDENCE = new RaDefensePrecedence();
+	/** The DISTDEFENSEPRECEDENCE postulate **/
+//	public static final RankingPostulate DISTDEFENSEPRECEDENCE = new RaDistDefensePrecedence();
 	/** The CARDINALITYPRECEDENCE postulate **/
 	public static final RankingPostulate CARDINALITYPRECEDENCE = new RaCardinalityPrecedence();
 	/** The TOTAL postulate **/
@@ -54,6 +56,23 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	public static final RankingPostulate NONATTACKEDEQUIVALENCE = new RaNonAttackedEquivalence();
 	/** The QUALITYPRECEDENCE postulate **/
 	public static final RankingPostulate QUALITYPRECEDENCE = new RaQualityPrecedence();
+	/** The COUNTERTRANSITIVITY postulate **/
+//	public static final RankingPostulate COUNTERTRANSITIVITY = new RaCounterTransitivity();
+	/** The STRICTCOUNTERTRANSITIVITY postulate **/
+//	public static final RankingPostulate STRICTCOUNTERTRANSITIVITY = new RaStrictCounterTransitivity();
+	/** The ATTACKVSFULLDEFENSE postulate **/
+	public static final RankingPostulate ATTACKVSFULLDEFENSE = new RaAttackVsFullDefense();
+	/** The STRICTADDITIONOFDEFENSEBRANCH postulate **/
+	public static final RankingPostulate STRICTADDITIONOFDEFENSEBRANCH = new RaStrictAdditionOfDefenseBranch();
+	/** The ADDITIONOFDEFENSEBRANCH postulate **/
+	public static final RankingPostulate ADDITIONOFDEFENSEBRANCH = new RaAdditionOfDefenseBranch();
+	/** The ADDITIONOFATTACKBRANCH postulate **/
+	public static final RankingPostulate ADDITIONOFATTACKBRANCH = new RaAdditionOfAttackBranch();
+	/** The INCREASEOFATTACKBRANCH postulate **/
+//	public static final RankingPostulate INCREASEOFATTACKBRANCH = new RaIncreaseOfAttackBranch();
+	/** The INCREASEOFDEFENSEBRANCH postulate **/
+//	public static final RankingPostulate INCREASEOFDEFENSEBRANCH = new RaIncreaseOfDefenseBranch();
+
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)

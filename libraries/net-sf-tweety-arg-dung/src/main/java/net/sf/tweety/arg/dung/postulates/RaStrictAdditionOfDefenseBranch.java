@@ -58,7 +58,7 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
-		DungTheory dt = (DungTheory) kb;
+		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a_old = it.next();
 		

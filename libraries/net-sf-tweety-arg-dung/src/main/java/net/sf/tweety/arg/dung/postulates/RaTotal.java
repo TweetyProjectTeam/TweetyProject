@@ -50,7 +50,7 @@ public class RaTotal extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
-		DungTheory dt = (DungTheory) kb;
+		DungTheory dt = new DungTheory((DungTheory) kb);
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
 		for (Argument a : dt) {
 			for (Argument b : dt) {

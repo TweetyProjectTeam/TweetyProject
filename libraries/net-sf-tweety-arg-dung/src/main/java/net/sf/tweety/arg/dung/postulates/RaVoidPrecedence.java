@@ -42,25 +42,22 @@ public class RaVoidPrecedence extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		if (kb.size()<2)
-			return false;
-		DungTheory dt = (DungTheory) kb;
-		Iterator<Argument> it = dt.iterator();
-		Argument a = it.next();
-		Argument b = it.next();
-		return (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty());
+		return (kb.size()>=2);
+		
 	}
 
 	@Override
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
-		DungTheory dt = (DungTheory) kb;
+		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		return (ranking.isStrictlyMoreAcceptableThan(a, b));
+		if (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty())
+			return (ranking.isStrictlyMoreAcceptableThan(a, b));
+		return true;	
 	}
 
 }

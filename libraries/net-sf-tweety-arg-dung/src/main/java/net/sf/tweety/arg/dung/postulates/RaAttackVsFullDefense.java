@@ -28,11 +28,11 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.math.matrix.Matrix;
 
 /**
- *  The "attack vs full defense" postulate for ranking semantics as proposed in 
- *  [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
- *  Semantics for Abstract Argumentation. 2016]: 
- *  An argument without any attack branch is ranked higher than an argument only
- *  attacked by one non-attacked argument.
+ * The "attack vs full defense" postulate for ranking semantics as proposed in
+ * [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based
+ * Semantics for Abstract Argumentation. 2016]: An argument without any attack
+ * branch is ranked higher than an argument only attacked by one non-attacked
+ * argument.
  * 
  * @author Anna Gessler
  *
@@ -46,36 +46,32 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		if (kb.size()<2)
-			return false;
-		
-		//AF must be acyclic
-		DungTheory dt = (DungTheory) kb;
-		Matrix mat = dt.getAdjacencyMatrix();
-		for (int i = 0; i < mat.getYDimension(); i++) {
-			if (mat.getEntry(i, i).equals(1))
-				return false;
-		}
-		
-		Iterator<Argument> it = dt.iterator();
-		Argument a = it.next();
-		Argument b = it.next();
-		if (!dt.getAttackers(a).isEmpty())
-			return false;
-		if (dt.getAttackers(b).size()!=1)
-			return false;
-		return (dt.getAttackers(dt.getAttackers(b).iterator().next()).isEmpty());
+		return (kb.size() >= 2);
 	}
 
 	@Override
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
-		DungTheory dt = (DungTheory) kb;
+		// AF must be acyclic
+		DungTheory dt = new DungTheory((DungTheory) kb);
+		Matrix mat = dt.getAdjacencyMatrix();
+		for (int i = 0; i < mat.getYDimension(); i++) {
+			if (mat.getEntry(i, i).equals(1))
+				return true;
+		}
+
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
+		if (!dt.getAttackers(a).isEmpty())
+			return true;
+		if (dt.getAttackers(b).size() != 1)
+			return true;
+		if (!dt.getAttackers(dt.getAttackers(b).iterator().next()).isEmpty())
+			return true;
+
+		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 
