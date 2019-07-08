@@ -37,6 +37,7 @@
     </dependencies>
 
     <build>
+    <pluginManagement>
         <plugins>
             <!-- generate parser files from .jj inside the source tree -->
             <plugin>
@@ -99,5 +100,6 @@
                 </executions>
             </plugin>
         </plugins>
+        </pluginManagement>
     </build>
 </project>
