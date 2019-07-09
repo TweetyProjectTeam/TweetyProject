@@ -71,7 +71,8 @@ public class ProbabilisticArgumentationFramework extends DungTheory{
 	@Override
 	public boolean add(Attack att){
 		boolean b = super.add(att);
-		this.attackProbabilityAssignment.put(att, Probability.ONE);
+		if (argumentProbabilityAssignment != null)
+			this.attackProbabilityAssignment.put(att, Probability.ONE);
 		return b;
 	}
 	
@@ -93,7 +94,8 @@ public class ProbabilisticArgumentationFramework extends DungTheory{
 	@Override
 	public boolean add(Argument a){
 		boolean b = super.add(a);
-		this.argumentProbabilityAssignment.put(a, Probability.ONE);
+		if (argumentProbabilityAssignment != null)
+			this.argumentProbabilityAssignment.put(a, Probability.ONE);
 		return b;
 	}
 	
