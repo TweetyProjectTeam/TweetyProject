@@ -206,6 +206,7 @@
   	<module>net-sf-tweety-arg-delp</module>
   	<module>net-sf-tweety-arg-dung</module>
   	<module>net-sf-tweety-arg-prob</module>
+  	<module>net-sf-tweety-arg-rankings</module>
   	<module>net-sf-tweety-arg-saf</module>
   	<module>net-sf-tweety-arg-social</module>
   	<module>net-sf-tweety-agents</module>
