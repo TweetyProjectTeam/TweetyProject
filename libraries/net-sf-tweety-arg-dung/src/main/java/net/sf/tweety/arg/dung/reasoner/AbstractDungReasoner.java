@@ -23,7 +23,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.commons.QualitativeReasoner;
 
 /**
- * Ancestor class for all AAF reasoner.
+ * Ancestor class for all AAF reasoners.
  * 
  * @author Matthias Thimm
  *

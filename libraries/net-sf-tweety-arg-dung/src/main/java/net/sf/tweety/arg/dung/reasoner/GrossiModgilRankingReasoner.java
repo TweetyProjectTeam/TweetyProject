@@ -24,12 +24,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.semantics.LatticeArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.util.SetTools;
 
 /**
@@ -40,7 +38,7 @@ import net.sf.tweety.commons.util.SetTools;
  *  
  * @author Matthias Thimm
  */
-public class GrossiModgilRankingReasoner extends AbstractDungReasoner implements ModelProvider<Argument,DungTheory,ArgumentRanking>{
+public class GrossiModgilRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking>{
 
 	/**
 	 * Determines the number of attackers from x to y.
@@ -287,8 +285,8 @@ public class GrossiModgilRankingReasoner extends AbstractDungReasoner implements
 	 * @see net.sf.tweety.commons.ModelProvider#getModels(net.sf.tweety.commons.BeliefBase)
 	 */
 	@Override
-	public Collection<ArgumentRanking> getModels(DungTheory bbase) {
-		Collection<ArgumentRanking> ranks = new HashSet<ArgumentRanking>();
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
@@ -297,7 +295,7 @@ public class GrossiModgilRankingReasoner extends AbstractDungReasoner implements
 	 * @see net.sf.tweety.commons.ModelProvider#getModel(net.sf.tweety.commons.BeliefBase)
 	 */
 	@Override
-	public ArgumentRanking getModel(DungTheory bbase) {
+	public LatticeArgumentRanking getModel(DungTheory bbase) {
 		// compute all mn-complete extensions for all m,n
 		Map<Point,Collection<Extension>> allExt = new HashMap<>();
 		for(int m = 1; m < bbase.size(); m++)
@@ -325,12 +323,9 @@ public class GrossiModgilRankingReasoner extends AbstractDungReasoner implements
 		return ranking;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.dung.reasoner.AbstractDungReasoner#query(net.sf.tweety.arg.dung.syntax.DungTheory, net.sf.tweety.arg.dung.syntax.Argument)
-	 */
 	@Override
-	public Boolean query(DungTheory beliefbase, Argument formula) {
-		throw new UnsupportedOperationException("Implement me");
+	public String toString() {
+		return "Grossi&Modgil";
 	}
 
 }
