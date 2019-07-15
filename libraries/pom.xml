@@ -29,7 +29,7 @@
 	<repository>
 	    <id>tweety-mvn</id>
 	    <name>Tweety MVN Repository</name>
-    	<url>http://tweetyproject.org/mvn</url>
+    	<url>https://tweetyproject.org/mvn</url>
 	</repository>
   </repositories>
 
