@@ -4,7 +4,7 @@
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
   <name>Tweety (Parent POM)</name>
-  <version>1.12-SNAPSHOT</version>
+  <version>1.13-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <description>Tweety is a collection of various Java libraries that implement approaches to different areas of artificial intelligence. In particular, it provides a general interface layer for doing research and working with different knowledge representation formalisms such as classical logics, conditional logics, probabilistic logics, and argumentation. Furthermore, Tweety contains libraries for dealing with agents, multi-agent systems, and dialog systems for agents, as well as belief revision, preference reasoning, preference aggregation, and action languages. A series of utility libraries that deal with e.g. mathematical optimization complement the collection.</description>
@@ -144,7 +144,7 @@
           </execution>
         </executions>
       </plugin>
-       -->
+     -->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>

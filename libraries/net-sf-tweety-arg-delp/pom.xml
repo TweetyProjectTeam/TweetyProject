@@ -8,7 +8,7 @@
     <parent>
         <groupId>net.sf.tweety</groupId>
         <artifactId>parent-pom</artifactId>
-        <version>1.12-SNAPSHOT</version>
+        <version>1.13-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -16,12 +16,12 @@
         <dependency>
             <groupId>net.sf.tweety.logics</groupId>
             <artifactId>fol</artifactId>
-            <version>1.12-SNAPSHOT</version>
+            <version>1.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.sf.tweety.arg</groupId>
             <artifactId>dung</artifactId>
-            <version>1.12-SNAPSHOT</version>
+            <version>1.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>args4j</groupId>
@@ -33,73 +33,6 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>        
     </dependencies>
-
-    <build>
-    <pluginManagement>
-        <plugins>
-            <!-- generate parser files from .jj inside the source tree -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javacc-maven-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>javacc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <outputDirectory>src/main/java</outputDirectory>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.java.dev.javacc</groupId>
-                        <artifactId>javacc</artifactId>
-                        <version>5.0</version> <!-- ATTENTION: leave this as 5.0 to match original files! -->
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <!-- cleaning any generated stuff such as the JavaCC files -->
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${project.basedir}/src/main/java/net/sf/tweety/arg/delp/parser</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-            <!-- assembling self-contained JAR -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>net.sf.tweety.arg.delp.DefeasibleLogicProgram</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-delp-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        </pluginManagement>
-    </build>
 </project>

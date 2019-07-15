@@ -1,3 +1,25 @@
+15.07.2019 - TweetyProject 1.13
+  New libraries:
+    - net.sf.tweety.arg.rankings: ranking-based semantics for abstract
+      argumentation frameworks
+  New functionalities:
+    - New ranking-based semantics for abstract argumentation
+      (net.sf.tweety.arg.rankings): burden-based semantics, discussion-based
+      semantics, categorizer ranking semantics, social argumentation ranking
+      semantics, tuples ranking semantics.
+    - added several postulates for ranking-based semantics for abstract
+      argumentation (net.sf.tweety.arg.rankings); automatic evaluation through
+      postulate evaluation framework (net.sf.tweety.commons.postulates).
+    - Added implementation of ADFs (net.sf.tweety.arg.adf), in particular
+      reasoner for model, naive, and admissible semantics and parser for
+      the k++ ADF format.
+  Minor changes:
+    - Refactored the use of signatures in logics; signature is now an
+      attribute in commons.BeliefSet
+    - added more postulates for inconsistency measures for propositional
+      logic (net.sf.tweety.logics.pl.postulates); automatic evaluation through
+      postulate evaluation framework (net.sf.tweety.commons.postulates).
+    - Belief base iteration from text files (with one belief base per line)
 23.01.2019 - TweetyProject 1.12
   New libraries:  <none>
   New functionalities:
