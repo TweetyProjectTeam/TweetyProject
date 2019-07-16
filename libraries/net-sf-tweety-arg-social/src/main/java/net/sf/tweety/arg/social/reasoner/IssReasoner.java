@@ -47,8 +47,8 @@ public class IssReasoner implements QuantitativeReasoner<SocialAbstractArgumenta
 	
 	/**
 	 * Creates a new reasoner.
-	 * @param the simple product semantics used
-	 * @param the tolerance of the ISS algorithm. 
+	 * @param semantics the simple product semantics used
+	 * @param tolerance the tolerance of the ISS algorithm. 
 	 */
 	public IssReasoner(SimpleProductSemantics semantics, double tolerance) {
 		this.semantics = semantics;

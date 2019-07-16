@@ -52,7 +52,7 @@ public class ConversionTools {
 	
 	/**
 	 * Provides a string representation of the bits in the given BitSet. 
-	 * @param value some BitSet
+	 * @param s some BitSet
 	 * @return a string representation of the bits in the given BitSet.
 	 */
 	public static String bitSet2BinaryString(BitSet s){

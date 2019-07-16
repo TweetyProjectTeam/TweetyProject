@@ -78,8 +78,8 @@ public interface Signature extends Cloneable {
 	/**
 	 * Adds the given formula to this signature.
 	 * 
-	 * @param obj
-	 * @return
+	 * @param obj some object
+	 * 
 	 */
 	public void add(Object obj);
 
@@ -87,14 +87,14 @@ public interface Signature extends Cloneable {
 	 * Adds all elements of this collection to this signature.
 	 * 
 	 * @param c a collection
-	 * @return
+	 * 
 	 */
 	public void addAll(Collection<?> c);
 
 	/**
 	 * Returns true if this signature is empty.
 	 * 
-	 * @return
+	 * @return true if this signature is empty.
 	 */
 	public boolean isEmpty();
 
@@ -102,8 +102,7 @@ public interface Signature extends Cloneable {
 	 * Removes the given formula from this signature, if it is present (optional
 	 * operation).
 	 * 
-	 * @param o
-	 * @return
+	 * @param obj some object
 	 */
 	public void remove(Object obj);
 
@@ -112,8 +111,7 @@ public interface Signature extends Cloneable {
 	 * specified collection (optional operation). After this call returns, this
 	 * signature will contain no elements in common with the specified collection.
 	 * 
-	 * @param c
-	 * @return
+	 * @param c a collection of objects
 	 */
 	public void removeAll(Collection<?> c);
 	

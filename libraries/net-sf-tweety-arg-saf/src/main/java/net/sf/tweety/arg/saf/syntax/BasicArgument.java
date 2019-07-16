@@ -50,7 +50,7 @@ public class BasicArgument extends Argument implements Rule<Proposition, Proposi
 	
 	/**
 	 * Deprecated for basic arguments.
-	 * @param name
+	 * @param name the name of the argument
 	 */
 	@Deprecated
 	public BasicArgument(String name){

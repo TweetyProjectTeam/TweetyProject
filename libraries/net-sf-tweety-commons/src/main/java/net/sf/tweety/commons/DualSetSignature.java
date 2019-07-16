@@ -26,7 +26,8 @@ import java.util.*;
  * @author Matthias Thimm
  * @author Anna Gessler
  *
- * @param T,S The types of formulas in this signature.
+ * @param <T> The first type of formulas in this signature.
+ * @param <S> The second type of formulas in this signature.
  */
 public abstract class DualSetSignature<T,S> implements Signature {
 
@@ -50,8 +51,8 @@ public abstract class DualSetSignature<T,S> implements Signature {
 	
 	/**
 	 * Creates a new signature with the given sets of formulas.
-	 * @param args1
-	 * @param args2
+	 * @param args1 a set of formulas
+	 * @param args2 a set of formulas
 	 */
 	public DualSetSignature(Set<T> args1, Set<S> args2) {
 		firstSet = args1;

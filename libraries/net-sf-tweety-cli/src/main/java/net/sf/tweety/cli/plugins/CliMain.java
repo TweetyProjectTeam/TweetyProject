@@ -113,7 +113,8 @@ public class CliMain {
 	 * This method is meant to load the tweety plugin pathes on startup
 	 * 
 	 * @return an object with one or more pluginpathes
-	 * @throws ConfigurationException
+	 * @throws ConfigurationException if there is an issue with the configuration
+	 * @throws FileNotFoundException if the file could not be found
 	 */
 	public static Map<String, String> configCLI()
 			throws ConfigurationException, FileNotFoundException {
@@ -200,18 +201,11 @@ public class CliMain {
 
 	}
 
-	/**
-	 * 
-	 * @param path
-	 */
+
 	public void setConfigurationFilePath(String path) {
 
 	}
 
-	/**
-	 * 
-	 * @param path
-	 */
 	public void setHelptextPath(String path) {
 
 	}

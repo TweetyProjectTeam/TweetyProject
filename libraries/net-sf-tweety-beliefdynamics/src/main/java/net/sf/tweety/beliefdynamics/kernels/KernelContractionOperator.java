@@ -48,7 +48,7 @@ public class KernelContractionOperator<T extends Formula> extends MultipleBaseCo
 	/**
 	 * Creates a new kernel contraction operator with the given incision function.
 	 * @param incisionFunction some incision function.
-	 * @param entailmentRelation an entailment relation used to determine kernels.
+	 * @param kernelProvider the kernel provider for determining kernels.
 	 */
 	public KernelContractionOperator(IncisionFunction<T> incisionFunction, KernelProvider<T> kernelProvider){
 		this.incisionFunction = incisionFunction;

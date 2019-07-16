@@ -26,7 +26,7 @@ import java.util.*;
  * @author Matthias Thimm
  * @author Anna Gessler
  *
- * @param T The type of formulas in this signature.
+ * @param <T> The type of formulas in this signature.
  */
 public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 

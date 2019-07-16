@@ -27,7 +27,7 @@ import java.util.*;
  *  
  * @author Matthias Thimm
  * 
- * @param T the class of the formulas.
+ * @param <T> the class of the formulas.
  */
 public abstract class FormulaSampler<T extends Formula> {
 	

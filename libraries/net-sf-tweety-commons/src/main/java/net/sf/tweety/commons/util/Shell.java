@@ -48,8 +48,8 @@ public abstract class Shell {
 	 * runs command 
 	 * @param cmd the command to be run
 	 * @return the terminal output
-	 * @throws InterruptedException
-	 * @throws IOException
+	 * @throws InterruptedException if some interruption occurred.
+	 * @throws IOException if some IO issue occurred.
 	 */
 	public abstract String run(String cmd) throws InterruptedException, IOException;
 }

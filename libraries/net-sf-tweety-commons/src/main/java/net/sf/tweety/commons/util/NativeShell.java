@@ -44,7 +44,7 @@ public class NativeShell extends Shell {
 	 * @param commandline some command
 	 * @return the output of the execution
 	 * @throws IOException of an error was encountered.
-	 * @throws InterruptedException 
+	 * @throws InterruptedException if some interruption occurred.
 	 */
 	public static String invokeExecutable(String commandline) throws IOException, InterruptedException{
 		return NativeShell.invokeExecutable(commandline, -1);
@@ -61,7 +61,7 @@ public class NativeShell extends Shell {
 	 * @param suppressErrors if set to true, possible errors will not be included in the output
 	 * @return the output of the execution
 	 * @throws IOException of an error was encountered.
-	 * @throws InterruptedException 
+	 * @throws InterruptedException if some interruption occurred. 
 	 */
 	public static String invokeExecutable(String commandline, long maxLines, boolean suppressErrors) throws IOException, InterruptedException{
 		Process child = Runtime.getRuntime().exec(commandline);

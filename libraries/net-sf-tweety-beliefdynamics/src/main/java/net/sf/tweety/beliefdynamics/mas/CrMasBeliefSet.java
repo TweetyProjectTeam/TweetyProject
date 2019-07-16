@@ -48,7 +48,7 @@ public class CrMasBeliefSet<T extends Formula, S extends Signature> extends Beli
 	 * Creates a new belief set with the given credibility order.
 	 * 
 	 * @param credibilityOrder some credibility order.
-	 * @param The              type of signature used in this system.
+	 * @param sig  			   The type of signature used in this system.
 	 */
 	public CrMasBeliefSet(Order<Agent> credibilityOrder, S sig) {
 		super(sig);

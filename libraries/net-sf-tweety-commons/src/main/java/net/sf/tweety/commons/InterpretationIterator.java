@@ -54,7 +54,7 @@ public interface InterpretationIterator<S extends Formula,B extends BeliefBase,T
 	
 	/**
 	 * Initializes a new reseted iterator for the given signature. 
-	 * @param some signature.
+	 * @param sig some signature.
 	 * @return a reseted iterator for the given signature.
 	 */
 	public InterpretationIterator<S,B,T> reset(Signature sig);
@@ -62,7 +62,7 @@ public interface InterpretationIterator<S extends Formula,B extends BeliefBase,T
 	/**
 	 * Initializes a new reseted iterator for the given signature derived from
 	 * the given set of formulas. 
-	 * @param a set of formulas.
+	 * @param formulas a set of formulas.
 	 * @return a reseted iterator for the given signature derived from
 	 * the given set of formulas. 
 	 */

@@ -32,7 +32,8 @@ public abstract class Parser<T extends BeliefBase,S extends Formula> {
 	 * @param filename the name of a file
 	 * @return a belief base
 	 * @throws FileNotFoundException if the file is not found 
-	 * @throws Exception some parsing exceptions may be added here.
+	 * @throws IOException if some IO issue occurred.
+	 * @throws ParserException some parsing exceptions may be added here.
 	 */
 	public T parseBeliefBaseFromFile(String filename) throws FileNotFoundException, IOException, ParserException{
 		InputStreamReader reader = new InputStreamReader(new java.io.FileInputStream(filename));
@@ -45,7 +46,8 @@ public abstract class Parser<T extends BeliefBase,S extends Formula> {
 	 * Parses the given text into a belief base of the given type.	 
 	 * @param text a string
 	 * @return a belief base.
-	 * @throws Exception some parsing exceptions may be added here.
+	 * @throws IOException if some IO issue occurred.
+	 * @throws ParserException some parsing exceptions may be added here.
 	 */
 	public T parseBeliefBase(String text) throws IOException, ParserException{
 		return this.parseBeliefBase(new StringReader(text));
@@ -55,7 +57,8 @@ public abstract class Parser<T extends BeliefBase,S extends Formula> {
 	 * Parses the given reader into a belief base of the given type.
 	 * @param reader a reader 
 	 * @return a belief base
-	 * @throws Exception some parsing exceptions may be added here.
+	 * @throws IOException if some IO issue occurred.
+	 * @throws ParserException some parsing exceptions may be added here.
 	 */
 	public abstract T parseBeliefBase(Reader reader) throws IOException, ParserException;
 	
@@ -64,7 +67,8 @@ public abstract class Parser<T extends BeliefBase,S extends Formula> {
 	 * @param filename the name of a file
 	 * @return a formula
 	 * @throws FileNotFoundException if the file is not found 
-	 * @throws Exception some parsing exceptions may be added here.
+	 * @throws IOException if some IO issue occurred.
+	 * @throws ParserException some parsing exceptions may be added here.
 	 */
 	public S parseFormulaFromFile(String filename) throws FileNotFoundException, IOException, ParserException{
 		InputStreamReader reader = new InputStreamReader(new java.io.FileInputStream(filename));
@@ -77,7 +81,8 @@ public abstract class Parser<T extends BeliefBase,S extends Formula> {
 	 * Parses the given text into a formula of the given type.
 	 * @param text a string
 	 * @return a formula
-	 * @throws Exception some parsing exceptions may be added here.
+	 * @throws IOException if some IO issue occurred.
+	 * @throws ParserException some parsing exceptions may be added here.
 	 */
 	public S parseFormula(String text) throws IOException, ParserException{
 		return this.parseFormula(new StringReader(text));
@@ -87,7 +92,8 @@ public abstract class Parser<T extends BeliefBase,S extends Formula> {
 	 * Parses the given reader into a formula of the given type.
 	 * @param reader a reader
 	 * @return a formula
-	 * @throws Exception some parsing exceptions may be added here.
+	 * @throws IOException if some IO issue occurred.
+	 * @throws ParserException some parsing exceptions may be added here.
 	 */
 	public abstract S parseFormula(Reader reader) throws IOException, ParserException;
 	

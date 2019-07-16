@@ -26,7 +26,9 @@ import java.util.*;
  * @author Matthias Thimm
  * @author Anna Gessler
  *
- * @param T,S,U The types of formulas in this signature.
+ * @param <T> The types of formulas in this signature.
+ * @param <S> The types of formulas in this signature.
+ * @param <U> The types of formulas in this signature.
  */
 public abstract class TripleSetSignature<T,S,U> implements Signature {
 

@@ -26,7 +26,7 @@ import net.sf.tweety.commons.*;
  * This class represents a set of rules and provides several
  * auxiliary methods for accessing such a set.
  * 
- * @param <T extends Rule> the specific rule class
+ * @param <T> the specific rule class
  * @author Matthias Thimm
  * @author Tim Janus
  */

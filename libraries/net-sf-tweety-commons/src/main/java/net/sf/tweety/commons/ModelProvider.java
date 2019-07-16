@@ -42,7 +42,7 @@ public interface ModelProvider<S extends Formula,B extends BeliefBase, T extends
 	 * Returns a single (dedicated) model of the given belief base.
 	 * If the implemented method allows for more than one dedicated model,
 	 * the selection may be non-deterministic.
-	 * @param formulas some belief base
+	 * @param bbase some belief base
 	 * @return a selected model of the belief base.
 	 */
 	public T getModel(B bbase);

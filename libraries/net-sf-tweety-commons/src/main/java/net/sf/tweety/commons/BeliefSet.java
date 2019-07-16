@@ -76,7 +76,7 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	
 	/**
 	 * Creates a new belief set with the given type of signature.
-	 * @param c a collection of formulae.
+	 * @param sig a signature
 	 */
 	public BeliefSet(S sig){
 		this.signature = instantiateSignature(sig);
@@ -126,10 +126,9 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	 * signature.
 	 * @throws IllegalArgumentException if the given signature is smaller in size than the belief base's
 	 * formulas' signature.
-	 * @return the signature of this knowledge base.
 	 */
 	@SuppressWarnings("unchecked")
-	public void setSignature(S sig) {
+	public void setSignature(S sig) throws IllegalArgumentException{
 		if (this.signature.isSubSignature(sig))
 			this.signature = (S) sig.clone();
 		else 

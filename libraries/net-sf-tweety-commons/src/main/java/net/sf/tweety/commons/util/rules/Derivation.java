@@ -35,7 +35,7 @@ import net.sf.tweety.commons.util.Triple;
  * Ri and for any p in the premise of Ri there is an Rj with j > i
  * and the conclusion of Rj equals p.
  * 
- * @param T the specific rule class 
+ * @param <T> the specific rule class 
  * 
  * @author Matthias Thimm
  */
