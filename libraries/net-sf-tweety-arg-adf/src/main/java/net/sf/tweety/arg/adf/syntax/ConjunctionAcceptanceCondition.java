@@ -31,8 +31,9 @@ public class ConjunctionAcceptanceCondition implements AcceptanceCondition {
 	private AcceptanceCondition second;
 
 	/**
-	 * @param first
-	 * @param second
+	 * creates a conjunction of acceptance conditions
+	 * @param first an acceptance condition
+	 * @param second an acceptance condition
 	 */
 	public ConjunctionAcceptanceCondition(AcceptanceCondition first, AcceptanceCondition second) {
 		super();

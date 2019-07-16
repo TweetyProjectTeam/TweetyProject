@@ -91,7 +91,7 @@ public class AbstractDialecticalFramework
 	/**
 	 * Checks if the ADF is bipolar. May compute all links to do so.
 	 * 
-	 * @return
+	 * @return true iff this ADF is bipolar
 	 */
 	public boolean bipolar() {
 		return links().allMatch(l -> l.isBipolar());
@@ -109,8 +109,9 @@ public class AbstractDialecticalFramework
 		return arguments().map(b -> linksToParent(b)).flatMap(Function.identity());
 	}
 
-	/**
-	 * @param b
+	/** 
+	 * TODO define functionality
+	 * @param b some argument
 	 * @return a stream of links (a,b)
 	 */
 	public Stream<Link> linksToParent(Argument b) {
@@ -118,7 +119,8 @@ public class AbstractDialecticalFramework
 	}
 
 	/**
-	 * @param a
+	 * TODO define functionality
+	 * @param a some argument
 	 * @return a stream of links (a,b)
 	 */
 	public Stream<Link> linksToChildren(Argument a) {
@@ -128,8 +130,8 @@ public class AbstractDialecticalFramework
 	/**
 	 * Computes the link (a,b) iff necessary and returns it afterwards.
 	 * 
-	 * @param a
-	 * @param b
+	 * @param a some argument
+	 * @param b some argument
 	 * @return (a,b)
 	 */
 	public Link link(Argument a, Argument b) {

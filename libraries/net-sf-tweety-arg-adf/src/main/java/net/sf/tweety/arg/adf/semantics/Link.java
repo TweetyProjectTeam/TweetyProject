@@ -34,10 +34,10 @@ public class Link{
 	private LinkType linkType;
 
 	/**
-	 * @param from
-	 * @param to
-	 * @param attacking
-	 * @param supporting
+	 * Creates a new link. 
+	 * @param from some argument
+	 * @param to some argument
+	 * @param linkType some link type
 	 */
 	public Link(Argument from, Argument to, LinkType linkType) {
 		super();
@@ -61,7 +61,7 @@ public class Link{
 	/**
 	 * Delegates to linkType.isBipolar()
 	 * 
-	 * @return
+	 * @return true iff the link is bipolar
 	 */
 	public boolean isBipolar() {
 		return linkType.isBipolar();

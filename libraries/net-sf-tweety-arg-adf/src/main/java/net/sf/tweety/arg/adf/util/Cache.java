@@ -31,7 +31,7 @@ public class Cache<T, R> implements Function<T, R> {
 	/**
 	 * Creates an empty cache
 	 * 
-	 * @param function
+	 * @param function some function
 	 */
 	public Cache(Function<T, R> function) {
 		this.cache = new HashMap<T, R>();
@@ -53,7 +53,8 @@ public class Cache<T, R> implements Function<T, R> {
 	}
 
 	/**
-	 * @return
+	 * Returns the size of this cache
+	 * @return the size of this cache
 	 * @see java.util.Map#size()
 	 */
 	public int size() {
@@ -64,7 +65,7 @@ public class Cache<T, R> implements Function<T, R> {
 	 * Sets the function which is used for future calls, but does not recompute
 	 * already cached elements.
 	 * 
-	 * @param function
+	 * @param function some function
 	 */
 	public void setFunction(Function<T, R> function) {
 		this.function = function;

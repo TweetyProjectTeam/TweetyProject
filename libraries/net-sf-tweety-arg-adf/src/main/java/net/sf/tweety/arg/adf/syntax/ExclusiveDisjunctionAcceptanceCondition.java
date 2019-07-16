@@ -33,8 +33,9 @@ public class ExclusiveDisjunctionAcceptanceCondition implements AcceptanceCondit
 	private AcceptanceCondition second;
 
 	/**
-	 * @param first
-	 * @param second
+	 * creates an XOR of acceptance conditions
+	 * @param first an acceptance condition
+	 * @param second an acceptance condition
 	 */
 	public ExclusiveDisjunctionAcceptanceCondition(AcceptanceCondition first, AcceptanceCondition second) {
 		super();

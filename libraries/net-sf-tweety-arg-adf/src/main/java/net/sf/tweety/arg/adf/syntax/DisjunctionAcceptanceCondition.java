@@ -31,8 +31,9 @@ public class DisjunctionAcceptanceCondition implements AcceptanceCondition {
 	private AcceptanceCondition second;
 
 	/**
-	 * @param first
-	 * @param second
+	 * creates a disjunction of acceptance conditions
+	 * @param first an acceptance condition
+	 * @param second an acceptance condition
 	 */
 	public DisjunctionAcceptanceCondition(AcceptanceCondition first, AcceptanceCondition second) {
 		super();

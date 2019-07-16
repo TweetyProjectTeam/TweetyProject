@@ -232,8 +232,8 @@ public class Interpretation extends AbstractInterpretation<AbstractDialecticalFr
 	}
 	
 	/**
-	 * 
-	 * @param a
+	 * TODO define functionality
+	 * @param a some argument
 	 * @return true, false or null if this argument is labeled as satisfied,
 	 *         unsatisfied or undecided.
 	 * @throws IllegalArgumentException if the interpretation does not contain

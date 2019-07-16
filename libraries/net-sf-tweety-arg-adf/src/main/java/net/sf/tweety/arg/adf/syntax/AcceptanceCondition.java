@@ -40,13 +40,7 @@ public interface AcceptanceCondition {
 	 *         sub-conditions.
 	 */
 	public Stream<Argument> arguments();
-	
 
-	/**
-	 * 
-	 * @param argumentMap 
-	 * @return
-	 */
 	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap);
 
 }

@@ -33,8 +33,9 @@ public class EquivalenceAcceptanceCondition implements AcceptanceCondition{
 	private AcceptanceCondition second;
 
 	/**
-	 * @param first
-	 * @param second
+	 * creates an equivalence formula of acceptance conditions
+	 * @param first an acceptance condition
+	 * @param second an acceptance condition
 	 */
 	public EquivalenceAcceptanceCondition(AcceptanceCondition first, AcceptanceCondition second) {
 		super();

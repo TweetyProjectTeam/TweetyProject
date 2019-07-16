@@ -43,7 +43,8 @@ public class AbstractDialecticalFrameworkSignature extends SingleSetSignature<Ar
 	}
 
 	/**
-	 * @param formulas
+	 * Creates a new signature
+	 * @param formulas a set of formulas
 	 */
 	public AbstractDialecticalFrameworkSignature(Set<Argument> formulas) {
 		super(formulas);

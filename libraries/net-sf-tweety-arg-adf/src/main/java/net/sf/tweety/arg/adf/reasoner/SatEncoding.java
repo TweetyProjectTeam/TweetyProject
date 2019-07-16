@@ -98,8 +98,8 @@ public class SatEncoding {
 	}
 
 	/**
-	 * 
-	 * @param interpretation
+	 * TODO Define functionality
+	 * @param interpretation some interpretation
 	 * @return a clause
 	 */
 	public Disjunction refineUnequal(Interpretation interpretation) {
@@ -141,8 +141,8 @@ public class SatEncoding {
 	}
 
 	/**
-	 * 
-	 * @param interpretation
+	 * TODO define functionality
+	 * @param interpretation some interpretation
 	 * @return a collection of clauses
 	 */
 	public Collection<Disjunction> largerInterpretation(Interpretation interpretation) {

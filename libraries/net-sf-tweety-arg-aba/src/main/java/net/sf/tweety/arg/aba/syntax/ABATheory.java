@@ -220,9 +220,10 @@ public class ABATheory<T extends Formula> implements BeliefBase {
 	}
 	
 	/**
-	 * @param formula
-	 * @param negation
-	 * @return
+	 * Checks whether the given two formulas are negations of each other
+	 * @param formula a formula
+	 * @param negation a formula
+	 * @return true iff the two formulas are negations of each other
 	 */
 	public boolean negates(T negation,T formula ){
 		return negations.contains(new Negation<>(formula, negation));

@@ -32,8 +32,9 @@ public class ImplicationAcceptanceCondition implements AcceptanceCondition{
 	private AcceptanceCondition second;
 
 	/**
-	 * @param first
-	 * @param second
+	 * creates an implication of acceptance conditions
+	 * @param first an acceptance condition
+	 * @param second an acceptance condition
 	 */
 	public ImplicationAcceptanceCondition(AcceptanceCondition first, AcceptanceCondition second) {
 		super();

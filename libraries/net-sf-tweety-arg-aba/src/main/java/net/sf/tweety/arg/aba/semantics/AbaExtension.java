@@ -47,7 +47,7 @@ public class AbaExtension<T extends Formula> extends AbstractInterpretation<ABAT
 	
 	/**
 	 * Creates a new extension with the given assumptions.
-	 * @param assumptions
+	 * @param assumptions a set of assumptions
 	 */
 	public AbaExtension(Collection<Assumption<T>> assumptions) {
 		this();

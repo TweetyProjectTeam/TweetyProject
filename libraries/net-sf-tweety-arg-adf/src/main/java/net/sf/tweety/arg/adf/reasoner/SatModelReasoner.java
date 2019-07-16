@@ -114,8 +114,9 @@ public class SatModelReasoner extends AbstractDialecticalFrameworkReasoner {
 		return new Interpretation(model); // the first found model
 	}
 
-	/**
-	 * @param aaf
+	/** 
+	 * returns a propositional characterisation of the reasoning problem
+	 * @param aaf some ADF
 	 * @return The propositional encoding of the model semantics.
 	 */
 	public PlBeliefSet getPropositionalCharacterisation(AbstractDialecticalFramework aaf,

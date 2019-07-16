@@ -16,7 +16,8 @@ public class AdmissibleInterpretationReasoner extends AbstractDialecticalFramewo
 	private IncrementalSatSolver solver;
 
 	/**
-	 * @param solver
+	 * Creates a new reasoner.
+	 * @param solver an incremental SAT solver
 	 */
 	public AdmissibleInterpretationReasoner(IncrementalSatSolver solver) {
 		super();

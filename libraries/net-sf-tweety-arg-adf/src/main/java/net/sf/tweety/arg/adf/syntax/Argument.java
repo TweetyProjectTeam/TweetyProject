@@ -37,7 +37,8 @@ public class Argument implements AcceptanceCondition, Formula, Node {
 	private String name;
 	
 	/**
-	 * @param name
+	 * Creates a new argument.
+	 * @param name the name of the argument
 	 */
 	public Argument(String name) {
 		this.name = name;

@@ -49,7 +49,7 @@ public abstract class GeneralABAReasoner<T extends Formula> implements Qualitati
 	 * inference type.
 	 * @param beliefbase an ABA theory
 	 * @param query some assumption
-	 * @param InferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
+	 * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return "true" if the query is accepted
 	 */
 	public Boolean query(ABATheory<T> beliefbase, Assumption<T> query, InferenceMode inferenceMode) {
