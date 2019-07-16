@@ -35,7 +35,6 @@ import net.sf.tweety.math.func.MaxFunction;
  * @author Matthias Thimm
  *
  * @param <S> The type of formulas
- * @param <T> The type of belief bases
  */
 public abstract class WindowInconsistencyMeasurementProcess<S extends Formula> extends InconsistencyMeasurementProcess<S>{
 

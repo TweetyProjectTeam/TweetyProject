@@ -33,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * @author Bastian Wolf
- * @param <T>
+ * @param <T> generic preference order type
  */
 public class POWriter<T> {
 	

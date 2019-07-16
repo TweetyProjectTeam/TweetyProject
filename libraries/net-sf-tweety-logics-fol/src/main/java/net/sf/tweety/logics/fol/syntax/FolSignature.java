@@ -125,7 +125,7 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 	 * of this formula are added to the signature.
 	 * @param obj the object to be added, either a constant, a sort, a predicate, a functor,
 	 *    or a formula.
-	 * @return 
+	 * 
 	 * @throws IllegalArgumentException if the given object is neither a constant, a sort, a
 	 *    predicate, a functor, or a formula.
 	 */
@@ -242,7 +242,7 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 	 * Returns true if this signature contains the specified constant,
 	 * predicate, functor, sort or all constants, predicates, functors
 	 * and sorts in the specified FolFormula.
-	 * @param o, either a constant, predicate, functor, sort or FolFormula
+	 * @param o either a constant, predicate, functor, sort or FolFormula
 	 * @return true if the signature contains the specified formula
 	 */
 	public boolean contains(Object o) {

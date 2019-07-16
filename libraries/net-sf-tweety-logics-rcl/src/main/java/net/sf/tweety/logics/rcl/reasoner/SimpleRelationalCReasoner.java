@@ -81,7 +81,7 @@ public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefS
 	 * @param bs some belief set
 	 * @param query some query
 	 * @param signature some signature
-	 * @return
+	 * @return true iff the query is true
 	 */
 	public Boolean query(RclBeliefSet bs, FolFormula query,FolSignature signature) {
 		return this.getModel(bs,signature).rank(query) == 0;		
@@ -98,8 +98,11 @@ public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefS
 	/**
 	 * Constructs a ranking function with the given kappa values [k1+,k1-,...,kn+,kn-], i.e.
 	 * for every possible world w set<br>
-	 * k(w)=k0 + \sum_{w verifies ri} ki+ + \sum_{w falsifies ri} kj-
-	 * @param kappa
+	 * k(w)=k0 + \sum_{ w verifies ri} ki+ + \sum_{w falsifies ri} kj-
+	 * @param kappa the kappa values
+	 * @param indexToConditional a map mapping indices to conditionals
+	 * @param signature the signature
+	 * @return the ranking function
 	 */
 	private RelationalRankingFunction constructRankingFunction(Integer[] kappa, Map<Integer,RelationalConditional> indexToConditional,  FolSignature signature){
 		RelationalRankingFunction candidate = new RelationalRankingFunction(signature);

@@ -78,7 +78,7 @@ public class StringListCommandParameter extends CommandParameter {
 	
 	/**
 	 * instantiates a list of arguments if valid 
-	 * @param s
+	 * @param s an array of strings
 	 */
 	public CommandParameter instantiate(String[] s){
 		

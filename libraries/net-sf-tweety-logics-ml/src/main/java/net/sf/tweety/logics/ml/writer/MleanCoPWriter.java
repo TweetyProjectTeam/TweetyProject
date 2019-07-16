@@ -77,7 +77,7 @@ public class MleanCoPWriter {
 	 * Prints the query.
 	 * 
 	 * @param f the query, a first-order logic or modal formula
-	 * @throws IOException
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public void printQuery(RelationalFormula f) throws IOException {
 		writer.write("f(" + printFormula(f) + ").");
@@ -147,7 +147,7 @@ public class MleanCoPWriter {
 	
 	/**
 	 * Closes the Writer.
-	 * @throws IOException
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public void close() throws IOException {
 		writer.close();

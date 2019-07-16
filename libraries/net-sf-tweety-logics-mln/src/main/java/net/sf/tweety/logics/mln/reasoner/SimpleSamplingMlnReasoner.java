@@ -45,9 +45,7 @@ public class SimpleSamplingMlnReasoner extends AbstractMlnReasoner{
 	
 	/**
 	 * Creates a new SimpleSamplingMlnReasoner for the given Markov logic network.
-	 * @param beliefBase a Markov logic network. 
-	 * @param signature another signature (if the probability distribution should be defined 
-	 * on that one (that one should subsume the signature of the Markov logic network)
+	 * 
 	 * @param precision the precision
 	 * @param numOfPositiveTests the number of positive consecutive tests on precision
 	 */

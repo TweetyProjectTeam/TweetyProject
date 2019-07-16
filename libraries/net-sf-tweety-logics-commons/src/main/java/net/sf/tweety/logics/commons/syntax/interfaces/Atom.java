@@ -61,7 +61,7 @@ public interface Atom extends SimpleLogicalFormula  {
 	 * 4. 	The old and new predicates' argument types differ then the list of arguments of the
 	 * 		atom get cleared and isComplete() returns false.
 	 * 
-	 * @param predicate
+	 * @param predicate some predicate
 	 * @return	Depends on the cases described above:
 	 * 			1. RSP_SUCCESS
 	 * 			2. RSP_INCOMPLETE

@@ -33,7 +33,6 @@ import net.sf.tweety.commons.streams.FormulaStream;
  * @author Matthias Thimm
  *
  * @param <S> The type of formulas
- * @param <T> The type of belief bases.
  */
 public class DefaultStreamBasedInconsistencyMeasure<S extends Formula> extends StreamBasedInconsistencyMeasure<S> {
 

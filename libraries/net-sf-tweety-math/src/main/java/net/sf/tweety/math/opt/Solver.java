@@ -174,7 +174,7 @@ public abstract class Solver {
 	 * needed for running the solver are available and dependencies are satisfied.
 	 * @return "true" if the solver of this class is installed and can therefore be instantiated
 	 * and used.
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException if the operation is not supported
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		throw new UnsupportedOperationException("The method 'isInstalled()' is not implemented in this class.");

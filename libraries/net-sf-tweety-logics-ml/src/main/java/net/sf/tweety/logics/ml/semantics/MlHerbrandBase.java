@@ -47,7 +47,7 @@ public class MlHerbrandBase {
      *   function symbols.
 	 * @param sig the underlying first-order signature for
 	 * 	this Herbrand base. There should be no functors defined in "sig"
-	 * @throws IllegalArgumentationException if "sig" contains a functor.
+	 * @throws IllegalArgumentException if "sig" contains a functor.
 	 * @see net.sf.tweety.logics.fol.semantics.HerbrandBase#HerbrandBase(FolSignature sig)
 	 */
 	public MlHerbrandBase(FolSignature sig) throws IllegalArgumentException{

@@ -44,8 +44,8 @@ public class EquivalenceAxiom extends DlAxiom {
 	/**
 	 * Creates a new equivalence axiom with the given formulas
 	 * (atomic or complex concepts).
-	 * @param c
-	 * @param d
+	 * @param c some concept
+	 * @param d some concept
 	 */
 	public EquivalenceAxiom(ComplexConcept c, ComplexConcept d) {
 		this.axiom = new Pair<ComplexConcept,ComplexConcept>(c,d);

@@ -40,9 +40,9 @@ public class FileListCommandParameter extends CommandParameter {
 	private File[] value;
 
 	/**
-	 * 
-	 * @param id
-	 * @param des
+	 * Creates a new file list command parameter
+	 * @param id some string
+	 * @param des some string
 	 */
 	public FileListCommandParameter(String id, String des) {
 		super(id, des);

@@ -36,7 +36,7 @@ import net.sf.tweety.preferences.Relation;
  * 
  * @todo exception handling for invalid preference orders (total preorder)
  * @author Bastian Wolf
- * @param <T>
+ * @param <T> generic preference order type
  * 
  */
 

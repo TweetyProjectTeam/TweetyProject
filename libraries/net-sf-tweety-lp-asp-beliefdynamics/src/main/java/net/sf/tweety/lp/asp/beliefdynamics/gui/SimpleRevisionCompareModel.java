@@ -120,7 +120,7 @@ public class SimpleRevisionCompareModel {
 	/**
 	 * Adds a belief base to the end of the ordered list of belief bases.
 	 * @param beliefBase	Reference to the new belief base
-	 * @throws ParseException 
+	 * @throws ParseException if parsing failed
 	 */
 	public void setBeliefbase(String beliefBase) throws ParseException {
 		Program old = this.beliefBase;

@@ -28,8 +28,7 @@ import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
  * General interface for inconsistency measures working on streams.
  * @author Matthias Thimm
  *
- * @param <S> The type of formulas
- * @param <T> The type of belief bases 
+ * @param <S> The type of formulas 
  */
 public abstract class StreamBasedInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S>{
 

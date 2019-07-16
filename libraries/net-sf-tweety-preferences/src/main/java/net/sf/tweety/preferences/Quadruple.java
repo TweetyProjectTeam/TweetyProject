@@ -52,10 +52,10 @@ public class Quadruple<E, F, G, H> {
 	
 	/**
 	 * Initializes the elements of this quadruple with given parameters
-	 * @param obj1
-	 * @param obj2
-	 * @param obj3
-	 * @param obj4
+	 * @param obj1 some object
+	 * @param obj2 some object
+	 * @param obj3 some object
+	 * @param obj4 some object
 	 */
 	public Quadruple(E obj1, F obj2, G obj3, H obj4){
 		this.obj1 = obj1;

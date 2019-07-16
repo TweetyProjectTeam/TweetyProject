@@ -49,7 +49,7 @@ public class HerbrandBase {
      *   function symbols.
 	 * @param sig the underlying first-order signature for
 	 * 	this Herbrand base. There should be no functors defined in "sig"
-	 * @throws IllegalArgumentationException if "sig" contains a functor.
+	 * @throws IllegalArgumentException if "sig" contains a functor.
 	 */
 	public HerbrandBase(FolSignature sig) throws IllegalArgumentException{
 		if(!sig.getFunctors().isEmpty()) throw new IllegalArgumentException("The Herbrand base is defined only for signatures without functors.");

@@ -59,7 +59,7 @@ public abstract class RootFinder {
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public RootFinder(Term function, Map<Variable,Term> startingPoint){
 		this.functions = new LinkedList<Term>();
@@ -70,7 +70,7 @@ public abstract class RootFinder {
 	/**
 	 * Creates a new root finder for the given starting point and the given
 	 * (multi-dimensional) function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public RootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		this.functions = new LinkedList<Term>();

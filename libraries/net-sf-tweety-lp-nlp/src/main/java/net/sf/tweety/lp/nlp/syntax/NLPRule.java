@@ -99,7 +99,7 @@ public class NLPRule
 	 * program language, that means it checks if it contains quantifiers and if that
 	 * is the case it throws a LanguageException
 	 * @param formula	The formula which gets checked
-	 * @throws LanguageException
+	 * @throws LanguageException if there is an issue with the language
 	 */
 	private void checkFormula(FolFormula formula) throws LanguageException {
 		if(formula.containsQuantifier()) {

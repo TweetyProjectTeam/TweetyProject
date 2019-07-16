@@ -44,7 +44,7 @@ public class OjAlgoPclUtils {
 	/**
 	 * Add probability normalization constraint to model 
 	 * (all probabilities have to sum to 1). 
-	 * @param model
+	 * @param model the model
 	 */
 	public static void addProbabilityNormalizationConstraint(ExpressionsBasedModel model) {
 		
@@ -58,8 +58,8 @@ public class OjAlgoPclUtils {
 
 	/**
 	 * Create (non-negative) variables for the probabilities of possible worlds. 
-	 * @param noWorlds
-	 * @return
+	 * @param noWorlds the number of worlds
+	 * @return the variables
 	 */
 	public static Variable[] createVariables(int noWorlds) {
 	
@@ -75,9 +75,9 @@ public class OjAlgoPclUtils {
 
 	/**
 	 * Create constraint matrix for a set of PCL conditionals over a set of possible worlds.
-	 * @param beliefSet
-	 * @param worlds
-	 * @return
+	 * @param beliefSet a belief set
+	 * @param worlds a set of possible worlds
+	 * @return the constraint matrix
 	 */
 	public static PrimitiveMatrix createConstraintMatrix(PclBeliefSet beliefSet, Set<PossibleWorld> worlds) {
 		

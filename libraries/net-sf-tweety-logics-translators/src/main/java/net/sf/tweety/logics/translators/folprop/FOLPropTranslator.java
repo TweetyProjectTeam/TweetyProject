@@ -63,11 +63,11 @@ public class FOLPropTranslator extends Translator {
 
 	/**
 	 * Translates the given propositional Disjunction to a FOL Disjunction
-	 * @param disjuntion	
+	 * @param disjunction	a PL disjunction
 	 * @return	The FOL Disjunction
 	 */
-	public Disjunction toFOL(net.sf.tweety.logics.pl.syntax.Disjunction disjuntion) {
-		return (Disjunction) this.translateAssociative(disjuntion, Disjunction.class);
+	public Disjunction toFOL(net.sf.tweety.logics.pl.syntax.Disjunction disjunction) {
+		return (Disjunction) this.translateAssociative(disjunction, Disjunction.class);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class FOLPropTranslator extends Translator {
 	
 	/**
 	 * Translates the given propositional Conjunction to a FOL Conjunction
-	 * @param conjunction	
+	 * @param conjunction a PL conjunction	
 	 * @return	The FOL Conjunction
 	 */
 	public Conjunction toFOL(net.sf.tweety.logics.pl.syntax.Conjunction conjunction) {

@@ -40,7 +40,7 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public OpenOptRootFinder(Term function, Map<Variable,Term> startingPoint){
 		super(function,startingPoint);
@@ -52,7 +52,7 @@ public class OpenOptRootFinder extends OptimizationRootFinder {
 	/**
 	 * Creates a new root finder for the given starting point and the given
 	 * (multi-dimensional) function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public OpenOptRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		super(functions,startingPoint);

@@ -157,7 +157,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	 * modifies the given signature accordingly.
 	 * 
 	 * @param s   a string
-	 * @param sig a signature
+	 * @param signature a signature
 	 */
 	private void parseTypeDeclaration(String s, DlSignature signature) {
 		String t = s;
@@ -299,7 +299,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	
 	/**
 	 * Parses an individual from a String token.
-	 * @param identifier of the individual
+	 * @param s identifier of the individual
 	 * @return an Individual
 	 * @throws ParserException if the individual could not be parsed
 	 */
@@ -312,7 +312,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	
 	/**
 	 * Parses an atomic concept, top concept or bottom concept from a String token.
-	 * @param String identifier of the concept
+	 * @param s String identifier of the concept
 	 * @return a ComplexConcept
 	 * @throws ParserException if the concept could not be parsed
 	 */
@@ -331,7 +331,7 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 
 	/**
 	 * Parses a role from a String token.
-	 * @param identifier of the role
+	 * @param s identifier of the role
 	 * @return an AtomicRole
 	 * @throws ParserException if the role could not be parsed
 	 */

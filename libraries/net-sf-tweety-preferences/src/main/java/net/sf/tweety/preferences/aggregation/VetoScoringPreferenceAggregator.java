@@ -23,7 +23,7 @@ package net.sf.tweety.preferences.aggregation;
  * 
  * @author Bastian Wolf
  *
- * @param <T>
+ * @param <T> generic preference order type
  */
 public class VetoScoringPreferenceAggregator<T> extends
 		ScoringPreferenceAggregator<T> {

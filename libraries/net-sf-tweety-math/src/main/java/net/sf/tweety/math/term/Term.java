@@ -172,8 +172,8 @@ public abstract class Term {
 	
 	/**
 	 * Evaluates each function in the given list with the given values for variables.
-	 * @param functions
-	 * @param mapping
+	 * @param functions a list of functions
+	 * @param mapping a map mapping variables to terms
 	 */
 	public static List<Double> evaluateVector(List<Term> functions, Map<Variable,? extends Term> mapping){
 		List<Double> result = new LinkedList<Double>();
@@ -184,7 +184,7 @@ public abstract class Term {
 	
 	/**
 	 * Evaluates each function in the given list with the given values for variables.
-	 * @param functions
+	 * @param functions a list of functions
 	 * @param values the values of the variables
 	 * @param variables the (ordered) list of variables
 	 */
@@ -198,7 +198,7 @@ public abstract class Term {
 	
 	/**
 	 *  Evaluates each function in the given matrix with the given values for variables.
-	 * @param functions
+	 * @param functions a list of functions
 	 * @param values the values of the variables
 	 * @param variables the (ordered) list of variables
 	 */

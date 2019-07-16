@@ -33,9 +33,9 @@ public class OjAlgoMathUtils {
 	
 	/**
 	 * Create (m,n)-matrix containing only ones.
-	 * @param m
-	 * @param n
-	 * @return
+	 * @param m some int
+	 * @param n some int
+	 * @return a matrix
 	 */
 	public static PrimitiveMatrix getOnes(int m, int n) {
 
@@ -52,9 +52,9 @@ public class OjAlgoMathUtils {
 
 	/**
 	 * Create unity matrix multiplied by scalar.
-	 * @param m
-	 * @param n
-	 * @return
+	 *  
+	 * @param n some int
+	 * @return the unity matrix
 	 */
 	public static PrimitiveMatrix getUnityMultiple(int n, double scalar) {
 

@@ -174,9 +174,9 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 	 * 
 	 * @param s String of format "include('path/to/file')." or "include('path/to/file',[formula,names,separated,by,commata])."
 	 * @return a belief set containing the parsed included formulas
-	 * @throws FileNotFoundException
-	 * @throws ParserException
-	 * @throws IOException
+	 * @throws FileNotFoundException if a file could not be found
+	 * @throws ParserException if parsing fails
+	 * @throws IOException if there is an IO issue
 	 */
 	private FolBeliefSet parseIncludedFiles(String s) throws FileNotFoundException, ParserException, IOException {
 		String pathOfIncludedFile = s.substring(s.indexOf("'")+1, s.lastIndexOf("'"));
@@ -245,7 +245,7 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 	 * If some or all of the symbols are already part of the signature,
 	 * they will not be overwritten. 
 	 * 
-	 * @param a String of a formula
+	 * @param formula a String of a formula
 	 */
 	private void parseTypes(String formula) {
 		if ((formula.charAt(0)=='(') && (formula.charAt(formula.length()-1) == ')')) 
@@ -776,7 +776,7 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 	
 	/**
 	 * Set the location of included files. 
-	 * @param path that will be prepended to the paths of all included problem files.
+	 * @param includePath path that will be prepended to the paths of all included problem files.
 	 */
 	public void setIncludePath(String includePath) {
 		this.includePath = includePath + "/";

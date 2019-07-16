@@ -122,7 +122,7 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 	
 	/**
 	 * Queries the knowledge base wrt. the given signature.
-	 * @param kb some knowledge base
+	 * @param beliefbase some knowledge base
 	 * @param query some query
 	 * @param signature some signature.
 	 * @return the answer to the query

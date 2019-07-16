@@ -160,7 +160,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	 * in Alchemy syntax.
 	 * @param mln some MLN.
 	 * @param signature some fol signature.
-	 * @param queryFormula the query formula that has to be encoded as well.
+	 * @param formula the query formula that has to be encoded as well.
 	 * @return the file object of the Alchemy MLN file. 
 	 * @throws IOException if file writing fails.
 	 */
@@ -305,7 +305,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	
 	/**
 	 * Returns the string in Alchemy syntax representing the given term.
-	 * @param tern some FOL tern
+	 * @param t some FOL tern
 	 * @return the string in Alchemy syntax representing the given term.
 	 */
 	private String alchemyStringForTerm(Term<?> t){

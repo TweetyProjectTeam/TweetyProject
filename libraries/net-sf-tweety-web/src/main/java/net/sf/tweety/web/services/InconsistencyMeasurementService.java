@@ -176,7 +176,7 @@ public class InconsistencyMeasurementService{
 	 * Handles the "Get inconsistency value" command
 	 * @param query some query
 	 * @return the reply
-	 * @throws JSONException 
+	 * @throws JSONException if some JSON issue occurs 
 	 */
 	private JSONObject handleGetValue(JSONObject query) throws JSONException{
 		if(!query.has(InconsistencyMeasurementService.JSON_ATTR_MEASURE))
@@ -237,7 +237,7 @@ public class InconsistencyMeasurementService{
 	 * Handles the "List inconsistency measures" command
 	 * @param query some query
 	 * @return the reply
-	 * @throws JSONException 
+	 * @throws JSONException if some JSON issue occurs.
 	 */
 	private JSONObject handleGetMeasures(JSONObject query) throws JSONException{
 		JSONObject jsonReply = new JSONObject();

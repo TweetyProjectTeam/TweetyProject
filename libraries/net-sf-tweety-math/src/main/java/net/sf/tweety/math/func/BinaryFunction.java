@@ -23,8 +23,8 @@ package net.sf.tweety.math.func;
  * 
  * @author Matthias Thimm
  * @param <T> The type of the domain of the first parameter
- * @param <T> The type of the domain of the second parameter
- * @param <S> The type of the co-domain
+ * @param <S> The type of the domain of the second parameter
+ * @param <R> The type of the co-domain
  */
 public interface BinaryFunction<T extends Object,S extends Object,R extends Object> {
 

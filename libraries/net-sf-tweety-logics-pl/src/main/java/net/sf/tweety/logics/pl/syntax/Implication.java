@@ -69,7 +69,7 @@ public class Implication extends PlFormula {
 	/**
 	 * Sets the formulas of the implication.
 	 * 
-	 * @param the formulas
+	 * @param formulas the formulas
 	 */
 	public void setFormulas(Pair<PlFormula, PlFormula> formulas) {
 		this.formulas = formulas;

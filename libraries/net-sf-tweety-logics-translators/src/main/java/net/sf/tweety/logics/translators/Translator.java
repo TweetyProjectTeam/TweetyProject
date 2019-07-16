@@ -87,7 +87,7 @@ public abstract class Translator {
 	 * @param source		The predicate acting as source for the operation
 	 * @param predicateCls	The description of the destination Predicate class
 	 * @return				An instance of predicateCls which is syntactically equal to source.
-	 * @throws LanguageException
+	 * @throws LanguageException if an issue with the language occurs.
 	 */
 	public <C extends Predicate> C translatePredicate(Predicate source, 
 			Class<C> predicateCls) throws LanguageException {
@@ -107,7 +107,7 @@ public abstract class Translator {
 	 * @param source		The atom acting as source
 	 * @param atomCls		The description of the destination Atom class
 	 * @return				The translated atom
-	 * @throws LanguageException
+	 * @throws LanguageException if an issue with the language occurs.
 	 */
 	public Atom translateAtom(Atom source, Class<?> atomCls) 
 			throws LanguageException {
@@ -128,7 +128,7 @@ public abstract class Translator {
 	 * Translates the given AssociativeFormula into another AssociativeFormula
 	 * thats type is given by the parameter assocCls
 	 * @param source	The 
-	 * @param assocCls
+	 * @param assocCls the class of the expected associative formula
 	 */
 	public <A extends AssociativeFormula<? extends SimpleLogicalFormula>> 
 		AssociativeFormula<?> translateAssociative(A source, Class<?> assocCls) {

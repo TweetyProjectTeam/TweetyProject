@@ -36,7 +36,7 @@ public class Complement extends ComplexConcept  {
 
 	/**
 	 * Create a new complement with the given DLFormula.
-	 * @param formula
+	 * @param formula some concept
 	 */
 	public Complement(ComplexConcept formula) {	
 		this.formula = formula;	

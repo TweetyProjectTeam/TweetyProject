@@ -69,8 +69,8 @@ public class DefaultSequence {
 
 	/**
 	 * constructs a sequence by appending d to ds 
-	 * @param ds
-	 * @param d
+	 * @param ds a default sequence
+//	 * @param d a default rule
 	 */
 	public DefaultSequence(DefaultSequence ds, DefaultRule d) {
 		defaults.addAll(ds.defaults);
@@ -88,7 +88,7 @@ public class DefaultSequence {
 	
 	/**
 	 * Constructs a new DefaultSequence
-	 * @param d
+	 * @param d a default rule
 	 * @return new Sequence adding d to this
 	 */
 	public DefaultSequence app(DefaultRule d){
@@ -97,7 +97,7 @@ public class DefaultSequence {
 	
 	/**
 	 * applicable ^= pre in In and (not jus_i) not in In forall i 
-	 * @param d
+	 * @param d a default rule
 	 * @return true iff d is applicable to In
 	 */
 	public boolean isApplicable(DefaultRule d){

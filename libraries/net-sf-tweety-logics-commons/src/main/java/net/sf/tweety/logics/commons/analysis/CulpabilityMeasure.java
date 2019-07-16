@@ -39,5 +39,5 @@ public interface CulpabilityMeasure<S extends Formula, T extends BeliefSet<S,?>>
 	 * @return a Double indicating the degree of inconsistency (NOTE: if the given formula
 	 * does not appear in the given belief set the degree is defined to be zero).
 	 */
-	public Double culpabilityMeasure(T beliefSet, S conditional);
+	public Double culpabilityMeasure(T beliefSet, S formula);
 }

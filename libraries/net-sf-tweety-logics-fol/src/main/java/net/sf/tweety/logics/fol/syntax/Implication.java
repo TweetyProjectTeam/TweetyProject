@@ -70,7 +70,7 @@ public class Implication extends FolFormula {
 	
 	/**
 	 * Sets the formulas of the implication.
-	 * @param the formulas
+	 * @param formulas the formulas
 	 */
 	public void setFormulas(Pair<RelationalFormula,RelationalFormula> formulas) {
 		this.formulas = formulas;

@@ -113,7 +113,7 @@ public class Sort implements LogicStructure {
 	
 	/**
 	 * Adds the given term to this sort.
-	 * @param term
+	 * @param term some term
 	 */
 	public void add(Term<?> term){
 		if(term instanceof Constant){

@@ -52,7 +52,7 @@ public class NewtonRootFinder extends RootFinder {
 	
 	/**
 	 * Creates a new Newton root finder for the given starting point and the given function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public NewtonRootFinder(Term function, Map<Variable,Term> startingPoint){
 		super(function,startingPoint);
@@ -61,7 +61,7 @@ public class NewtonRootFinder extends RootFinder {
 	/**
 	 * Creates a new Newton root finder for the given starting point and the given
 	 * (multi-dimensional) function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public NewtonRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		super(functions,startingPoint);
@@ -136,8 +136,8 @@ public class NewtonRootFinder extends RootFinder {
 	
 	/**
 	 * Computes the midpoint of the two maps
-	 * @param m1
-	 * @param m2
+	 * @param m1 a map
+	 * @param m2 a map
 	 */
 	private Map<Variable,Term> midpoint(Map<Variable,Term> m1, Map<Variable,Term> m2){
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
@@ -188,8 +188,8 @@ public class NewtonRootFinder extends RootFinder {
 	/**
 	 * Evaluates each function in the given matrix with
 	 * the given values for variables.
-	 * @param functions
-	 * @param mapping
+	 * @param functions a list of functions
+	 * @param mapping a map mapping variables to terms
 	 */
 	private List<List<Double>> evaluateMatrix(List<List<Term>> functions, Map<Variable,? extends Term> mapping){
 		List<List<Double>> result = new LinkedList<List<Double>>();

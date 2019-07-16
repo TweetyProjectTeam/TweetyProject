@@ -76,8 +76,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	/**
 	 * Creates a new program with the given rules.
 	 * 
-	 * @param query
-	 * @param rules
+	 * @param rules a set of rules
 	 */
 	public Program(Collection<ASPRule> rules) {
 		this.query = null;
@@ -88,8 +87,8 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	/**
 	 * Creates a new program with the given query and rules.
 	 * 
-	 * @param query
-	 * @param rules
+	 * @param query a query
+	 * @param rules a set of rules
 	 */
 	public Program(ASPLiteral query, Set<ASPRule> rules) {
 		this.rules = rules;
@@ -100,7 +99,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	/**
 	 * Copy-Constructor
 	 * 
-	 * @param other
+	 * @param other another program
 	 */
 	public Program(Program other) {
 		this(other.query, other.rules);

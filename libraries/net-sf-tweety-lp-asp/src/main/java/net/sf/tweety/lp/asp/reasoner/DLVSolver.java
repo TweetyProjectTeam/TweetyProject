@@ -52,7 +52,7 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
-	 * @param path2dlv binary location of DLV on the hard drive
+	 * @param pathToDLV binary location of DLV on the hard drive
 	 */
 	public DLVSolver(String pathToDLV) {
 		this.pathToSolver = pathToDLV;
@@ -61,7 +61,7 @@ public class DLVSolver extends ASPSolver {
 	
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
-	 * @param path2dlv binary location of DLV on the hard drive
+	 * @param pathToDLV binary location of DLV on the hard drive
 	 * @param bash shell to run commands
 	 */
 	public DLVSolver(String pathToDLV, Shell bash) {
@@ -135,7 +135,7 @@ public class DLVSolver extends ASPSolver {
 	/**
 	 * Processes a string containing answer sets and returns an AnswerSetList.
 	 * 
-	 * @param String containing DLV output
+	 * @param s String containing DLV output
 	 * @return AnswerSet
 	 */
 	protected List<AnswerSet> parseResult(String s) {
@@ -158,7 +158,7 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Set additional command line options for DLV.
-	 * @param options
+	 * @param options a string of options
 	 */
 	public void setOptions(String options) {
 		this.options = options;
@@ -166,7 +166,7 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Sets the location of the DLV solver on the hard drive.
-	 * @param pathToDLV
+	 * @param pathToDLV path to DLV
 	 */
 	public void setPathToDLV(String pathToDLV) {
 		this.pathToSolver = pathToDLV;

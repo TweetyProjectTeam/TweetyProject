@@ -245,10 +245,11 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	}
 
 	/**
-	 * 
-	 * @param firstElement
-	 * @param secondElement
-	 * @param relation
+	 * checks whether the given triple is contained
+	 * @param firstElement the first element
+	 * @param secondElement the second element
+	 * @param relation the relation
+	 * @return true iff  the given triple is contained
 	 */
 	public boolean containsTriple(T firstElement, T secondElement,
 			Relation relation) {
@@ -457,17 +458,16 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 		return changed;
 	}
 
-	/**
-	 * an Iterator over all relations in this po
+	/* (non-Javadoc)
+	 * @see java.util.Set#iterator()
 	 */
 	@Override
 	public Iterator<Triple<T, T, Relation>> iterator() {
 		return relations.iterator();
 	}
 
-	/**
-	 * 
-	 * @param obj
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -31,19 +31,10 @@ import java.util.Iterator;
 
 public class Interval<S extends Number> implements NumberSet<S> {
 	
-	/**
-	 * 
-	 */
 	private NumberSet<S> intervalset;
 	
-	/**
-	 * 
-	 */
 	private S lowerBound;
 	
-	/**
-	 * 
-	 */
 	private S upperBound;
 	
 	
@@ -97,11 +88,11 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	
 	/**
 	 * checks, whether an element is within this interval
-	 * @param a
+	 * @param a some element
 	 */
 	public boolean isElementOf(S a){
+		// TODO add
 		
-			
 		return false;
 		
 	}

@@ -255,8 +255,8 @@ public abstract class GraphUtil {
 	/**
 	 * Returns the global clustering coefficient of the graph (if it is directed it is interpreted
 	 * as an undirected version).
-	 * @param g
-	 * @return
+	 * @param g some graph
+	 * @return the clustering coefficient
 	 */
 	public static <T extends Node> double globalclusteringcoefficient(Graph<T> g){
 		double numClosedTriplets = 0;
@@ -291,8 +291,8 @@ public abstract class GraphUtil {
 	 * Enumerates all chordless circuits of the given graph, i.e. all circuits a1,...,an
 	 * where there is no edge connecting any ak with aj unless k=j+1 or k=j-1. The algorithm 
 	 * of this method is adapted from [Bisdorff, On enumerating chordless circuits in directed graphs, 2010].
-	 * @param g
-	 * @return
+	 * @param g some graph
+	 * @return the set of chordless circuits
 	 */
 	public static <T extends Node> Collection<List<T>> enumerateChordlessCircuits(Graph<T> g){
 		Collection<List<T>> ccircuits = new HashSet<List<T>>();

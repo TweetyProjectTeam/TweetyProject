@@ -50,7 +50,7 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public GradientDescentRootFinder(Term function, Map<Variable,Term> startingPoint){
 		super(function,startingPoint);
@@ -62,7 +62,7 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	/**
 	 * Creates a new root finder for the given starting point and the given
 	 * (multi-dimensional) function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public GradientDescentRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		super(functions,startingPoint);

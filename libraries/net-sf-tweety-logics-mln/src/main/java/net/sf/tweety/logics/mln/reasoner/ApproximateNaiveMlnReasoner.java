@@ -102,7 +102,6 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 
 	/** Computes the model of the given MLN wrt. the optimization parameters
 	 * @param mln some mln
-	 * @param query some query
 	 * @param signature some signature
 	 * @return  the model of the given MLN wrt. the optimization parameters.
 	 */

@@ -41,8 +41,8 @@ public class SolverException extends Exception {
 
 	/**
 	 * Creates a new SolverException with the given message.
-	 * @param text
-	 * @param exceptionCode
+	 * @param text the text for the exception
+	 * @param exceptionCode the exception code
 	 */
 	public SolverException(String text, int exceptionCode) {		
 		super(text);		

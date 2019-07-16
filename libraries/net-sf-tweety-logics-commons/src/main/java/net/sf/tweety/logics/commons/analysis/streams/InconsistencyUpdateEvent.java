@@ -35,10 +35,10 @@ public class InconsistencyUpdateEvent {
 	
 	/**
 	 * Creates a new event with the given parameters.
-	 * @param measure
-	 * @param process
-	 * @param inconsistencyValue
-	 * @param f
+	 * @param measure a stream-based inconsistency measure
+	 * @param process an inconsistent measurement process
+	 * @param inconsistencyValue an inconsistency value
+	 * @param f a formula
 	 */
 	public InconsistencyUpdateEvent(StreamBasedInconsistencyMeasure<?> measure, InconsistencyMeasurementProcess<?> process, Double inconsistencyValue, Formula f){
 		this.measure = measure;

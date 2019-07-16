@@ -117,7 +117,7 @@ public class SPASSMlReasoner extends AbstractMlReasoner {
 	
 	/**
 	 * Determines the answer wrt. to the given query and returns the proof (if applicable).
-	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.ml.reasoner.SPASSMlReasoner#query(Formula)}
+	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.ml.reasoner.SPASSMlReasoner#query(MlBeliefSet,FolFormula)}
 	 * if only a yes/no result is needed.
 	 * @param kb a modal belief set
 	 * @param query a formula

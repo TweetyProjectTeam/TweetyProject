@@ -37,7 +37,7 @@ import net.sf.tweety.commons.util.rules.Rule;
 public interface LogicProgram<C extends Formula, P extends Formula, T extends Rule<?,?>> extends BeliefBase{
 	/**
 	 * Adds the given fact to the program
-	 * @param fact
+	 * @param fact a fact
 	 */
 	void addFact(C fact);
 	

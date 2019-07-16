@@ -133,9 +133,9 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 	 * Returns the variable assignment that maximizes/minimizes the given term
 	 * (which only contains variables with defined upper and lower bounds).
 	 * @param t the term to be evaluated
-	 * @param optimization_objective one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE 
+	 * @param optimization_type one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE 
 	 * @return the optimal variable assignment
-	 * @throws GeneralMathException 
+	 * @throws GeneralMathException if there is some issue in the computation
 	 */
 	public Map<Variable, Term> solve(Term t, int optimization_type) throws GeneralMathException{
 		OptimizationProblem p = new OptimizationProblem(optimization_type);

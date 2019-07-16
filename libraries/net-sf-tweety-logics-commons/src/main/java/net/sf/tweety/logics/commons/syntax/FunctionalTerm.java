@@ -74,7 +74,7 @@ public class FunctionalTerm extends TermAdapter<Pair<Functor, List<Term<?>>>> {
 	
 	/**
 	 * Creates a new functional term with the given functor.
-	 * @param functor
+	 * @param functor a functor
 	 */
 	public FunctionalTerm(Functor functor){
 		this(functor,new ArrayList<Term<?>>());		

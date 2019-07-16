@@ -58,14 +58,14 @@ public class RuleBasedCReasoner extends AbstractConditionalLogicReasoner{
 		/**
 		 * Sets the {@link ConditionalStructure} that is used as data basis
 		 * for the rule.
-		 * @param cs
+		 * @param cs a conditional structure
 		 */
 		void setConditonalStructure(ConditionalStructure cs);
 		
 		/**
 		 * Sets the Collection of {@link KappaValue} that is used as data basis
 		 * for the rule 
-		 * @param kappas
+		 * @param kappas a set of kappa values
 		 */
 		void setKappas(Collection<KappaValue> kappas);
 		

@@ -62,7 +62,7 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 
 	/**
 	 * Set the maximum number of models to be generated.
-	 * @return maximum number
+	 * 
 	 */
 	public void setMaxNumOfModels(int maxNumOfModels) {
 		this.maxNumOfModels = maxNumOfModels;
@@ -107,8 +107,8 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * of the given belief base using the given 
 	 * upper integer limit.
 	 * 
-	 * @param p
-	 * @param maxInt
+	 * @param p a program
+	 * @param maxInt the max number of models to be returned
 	 * @return AnswerSet
 	 */
 	public Collection<AnswerSet> getModels(Program p, int maxInt) {
@@ -121,8 +121,8 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * of the given belief base using the given 
 	 * upper integer limit.
 	 * 
-	 * @param p
-	 * @param maxInt
+	 * @param p a program
+	 * @param maxInt the max number of models to be returned
 	 * @return AnswerSet
 	 */
 	public AnswerSet getModel(Program p, int maxInt) {
@@ -134,7 +134,7 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * Returns a characterizing model (answer set) 
 	 * of the given belief base.
 	 * 
-	 * @param string containing belief base
+	 * @param p containing belief base
 	 * @return AnswerSet
 	 */
 	public abstract Collection<AnswerSet> getModels(String p);
@@ -143,7 +143,7 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	 * Returns a characterizing model (answer set) 
 	 * of the given belief base.
 	 * 
-	 * @param file containing belief base
+	 * @param f containing belief base
 	 * @return AnswerSet
 	 */
 	public abstract Collection<AnswerSet> getModels(File f);

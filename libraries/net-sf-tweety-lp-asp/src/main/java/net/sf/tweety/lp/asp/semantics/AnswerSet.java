@@ -50,9 +50,9 @@ public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
 
 	/**
 	 * Creates a new empty AnswerSet with the given level and weight.
-	 * 
-	 * @param level 
-	 * @param weight
+	 * @param lits the literals
+	 * @param level the level
+	 * @param weight the weight
 	 */
 	public AnswerSet(Collection<ASPLiteral> lits, int level, int weight) {
 		super(lits);
@@ -63,8 +63,7 @@ public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
 	/**
 	 * Copy-Constructor
 	 * 
-	 * @param level 
-	 * @param weight
+	 * @param other another answer set
 	 */
 	public AnswerSet(AnswerSet other) {
 		super(other);
@@ -75,7 +74,7 @@ public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
 	/**
 	 * Returns all literals of a given name in the AnswerSet.
 	 * 
-	 * @param name
+	 * @param name the name of the literal
 	 * @return set of literals
 	 */
 	public Set<ASPLiteral> getLiteralsWithName(String name) {

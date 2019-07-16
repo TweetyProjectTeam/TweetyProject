@@ -41,8 +41,8 @@ public class TweetyServer {
     /**
      * Main server method.
      * @param args additional arguments (none expected)
-     * @throws IOException
-     * @throws InterruptedException 
+     * @throws IOException if an IO issue occurs.
+     * @throws InterruptedException if some interruption occurs.
      */
     public static void main(String[] args) throws IOException, InterruptedException {
     	// gather Tweety services (exposed as JAX-RS resources)

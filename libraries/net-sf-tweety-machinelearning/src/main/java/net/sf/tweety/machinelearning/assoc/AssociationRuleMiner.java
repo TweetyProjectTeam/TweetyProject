@@ -40,7 +40,7 @@ public interface AssociationRuleMiner<T extends Object> {
 	 * Mines a set of association rules from the given database. Only those rules
 	 * are mined where the conclusion has the maximal given number of elements.
 	 * @param database some database
-	 * @param the maximal size of elements in the conclusion of the mined rules.
+	 * @param conclusion_limit the maximal size of elements in the conclusion of the mined rules.
 	 * @return a set of association rules.
 	 */
 	public Collection<AssociationRule<T>> mineRules(Collection<Collection<T>> database, int conclusion_limit);
@@ -50,8 +50,8 @@ public interface AssociationRuleMiner<T extends Object> {
 	 * are mined where the conclusion and in total has the maximal given number of elements,
 	 * respectively.
 	 * @param database some database
-	 * @param the maximal size of elements in the conclusion of the mined rules.
-	 * @param the total number of elements that may appear in the mined rules.
+	 * @param conclusion_limit the maximal size of elements in the conclusion of the mined rules.
+	 * @param total_limit the total number of elements that may appear in the mined rules.
 	 * @return a set of association rules.
 	 */
 	public Collection<AssociationRule<T>> mineRules(Collection<Collection<T>> database, int conclusion_limit, int total_limit);

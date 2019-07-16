@@ -40,7 +40,7 @@ public abstract class AbstractMlReasoner implements QualitativeReasoner<MlBelief
 	
 	/**
 	 * Set default modal reasoner with given
-	 * @param reasoner
+	 * @param reasoner an ML Reasoner
 	 */
 	public static void setDefaultReasoner(AbstractMlReasoner reasoner){
 		AbstractMlReasoner.defaultReasoner = reasoner;

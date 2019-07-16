@@ -49,8 +49,8 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 	
 	/**
 	 * Compute solution using ojalgos matrix representation.
-	 * @param beliefBase
-	 * @return
+	 * @param beliefSet some belief set
+	 * 
 	 */
 	protected BeliefBase repair(PclBeliefSet beliefSet) {
 

@@ -303,7 +303,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 * @param g       the graph
 	 * @param index   an index map for the vertices
 	 * @param lowlink the lowlink map for the vertices
-	 * @return
+	 * @return the updated idx
 	 */
 	private static <S extends Node> int getStronglyConnectedComponentsRec(int idx, S v, Stack<S> stack,
 			Collection<Collection<S>> sccs, Graph<S> g, Map<S, Integer> index, Map<S, Integer> lowlink) {

@@ -100,7 +100,7 @@ public class PreferencesPlugin extends AbstractTweetyPlugin {
 	/**
 	 * non-empty constructur in case of errors in JSPF
 	 * 
-	 * @param args
+	 * @param args some arguments
 	 */
 	public PreferencesPlugin(String[] args) {
 		this();

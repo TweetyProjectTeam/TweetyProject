@@ -22,14 +22,14 @@ package net.sf.tweety.preferences.aggregation;
  * Implementation of the borda scoring preference aggregator
  * @author Bastian Wolf
  *
- * @param <T>
+ * @param <T> generic preference order type
  */
 public class BordaScoringPreferenceAggregator<T> extends
 		ScoringPreferenceAggregator<T> {
 
 	/**
 	 * calls super-constructor with the amount of domain elements to aggregate
-	 * @param size
+	 * @param size the size of the weight vector
 	 */
 	public BordaScoringPreferenceAggregator(int size) {
 		super(new BordaWeightVector(size));

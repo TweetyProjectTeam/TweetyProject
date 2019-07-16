@@ -31,7 +31,7 @@ import net.sf.tweety.preferences.PreferenceOrder;
  * 
  * @author Bastian Wolf
  *
- * @param <T>
+ * @param <T> generic preference order type
  */
 
 public abstract class Functions<T> extends HashMap<T, Integer> implements

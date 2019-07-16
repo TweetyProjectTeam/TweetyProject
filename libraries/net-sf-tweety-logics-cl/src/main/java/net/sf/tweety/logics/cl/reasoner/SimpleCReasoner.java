@@ -84,7 +84,7 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 	
 	/**
 	 * Creates a new simple c-representation reasoner.
-	 * @param beliefBase  a knowledge base.	
+	 * 	
 	 */
 	public SimpleCReasoner(){
 		this(false);
@@ -111,7 +111,8 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 	 * Constructs a ranking function with the given kappa values [k1+,k1-,...,kn+,kn-], i.e.
 	 * for every possible world w set<br>
 	 * k(w)=k0 + \sum_{w verifies ri} ki+ + \sum_{w falsifies ri} kj-
-	 * @param kappa
+	 * @param beliefset a belief set
+	 * @param kappa the kappa values
 	 */
 	private RankingFunction constructRankingFunction(ClBeliefSet beliefset, Integer[] kappa){
 		RankingFunction candidate = new RankingFunction(beliefset.getMinimalSignature());

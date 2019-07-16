@@ -70,7 +70,7 @@ public class Equivalence extends FolFormula  {
 	
 	/**
 	 * Sets the formulas of the equivalence.
-	 * @param the formulas
+	 * @param formulas the formulas
 	 */
 	public void setFormulas(Pair<RelationalFormula,RelationalFormula> formulas) {
 		this.formulas = formulas;

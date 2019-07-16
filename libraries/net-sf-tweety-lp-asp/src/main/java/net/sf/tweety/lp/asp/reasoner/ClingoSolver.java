@@ -113,10 +113,10 @@ public class ClingoSolver extends ASPSolver {
 	/**
 	 * Parses output from Clingo solver to AnswerSetList.
 	 * 
-	 * @param output
+	 * @param output the output string
 	 * @return AnswerSetList
-	 * @throws SolverException
-	 * @throws ParseException
+	 * @throws SolverException if the solver had an issue
+	 * @throws ParseException if parsing failed
 	 */
 	private List<AnswerSet> parseResult(String output) throws SolverException, ParseException {
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
@@ -226,7 +226,7 @@ public class ClingoSolver extends ASPSolver {
 	/**
 	 * Set additional command line options for Clingo.
 	 * 
-	 * @param options
+	 * @param options a string of options
 	 */
 	public void setOptions(String options) {
 		this.options = options;
@@ -235,7 +235,7 @@ public class ClingoSolver extends ASPSolver {
 	/**
 	 * Sets the location of the Clingo solver on the hard drive.
 	 * 
-	 * @param pathToDLV
+	 * @param path path to DLV
 	 */
 	public void setPathToDLV(String path) {
 		this.pathToSolver = path;

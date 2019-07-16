@@ -38,7 +38,7 @@ public abstract class FolReasoner implements QualitativeReasoner<FolBeliefSet,Fo
 	
 	/**
 	 * Set default reasoner with given
-	 * @param reasoner
+	 * @param reasoner a FolReasoner
 	 */
 	public static void setDefaultReasoner(FolReasoner reasoner){
 		FolReasoner.defaultReasoner = reasoner;

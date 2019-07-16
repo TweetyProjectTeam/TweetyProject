@@ -43,7 +43,7 @@ public class MlBeliefSet extends BeliefSet<RelationalFormula,FolSignature> {
 	
 	/**
 	 * Creates a new modal knowledge base with the given set of formulas.
-	 * @param formulas
+	 * @param formulas some formulas
 	 */
 	public MlBeliefSet(Set<RelationalFormula> formulas){
 		super(formulas);

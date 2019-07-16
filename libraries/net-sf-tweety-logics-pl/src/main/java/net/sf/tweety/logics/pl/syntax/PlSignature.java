@@ -62,7 +62,7 @@ public class PlSignature extends SingleSetSignature<Proposition> {
 	
 	/**
 	 * Creates a new propositional signature that is a copy of the given signature.
-	 * @param sig
+	 * @param sig a signature
 	 */
 	public PlSignature(PlSignature sig) {
 		this(); 

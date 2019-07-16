@@ -83,7 +83,7 @@ public class NaiveDlReasoner implements QualitativeReasoner<DlBeliefSet,DlAxiom>
 	 * where "arguments" defines the first arguments of the atoms.
 	 * @param sig a signature for which the instantiations should be computed.
 	 * @param p the predicate of the atoms.
-	 * @param arguments the currently set arguments of the atoms.
+	 * @param args the currently set arguments of the atoms.
 	 * @return the complete set of instantiations of "p" relative to "sig" and "arguments".
 	 */
 	private Set<AssertionalAxiom> getAllInstantiations(DlSignature sig, Predicate p, List<Individual> args) {

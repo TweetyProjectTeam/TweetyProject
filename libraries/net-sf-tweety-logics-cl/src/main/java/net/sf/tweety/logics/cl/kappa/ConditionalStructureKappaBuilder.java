@@ -96,11 +96,11 @@ public class ConditionalStructureKappaBuilder {
 	 * {@link KappaMin} is given, such that positiveMinimum is calculated using verifying worlds and 
 	 * negativeMinumum is using falsifying worlds.
 	 * 
-	 * @param structure
-	 * @param kappaMap
-	 * @param curCondition
-	 * @param worlds
-	 * @param workingMin
+	 * @param structure a conditional structure
+	 * @param kappaMap a map mapping conditionals to kappa values
+	 * @param curCondition a conditional
+	 * @param worlds a list of nice possible worlds
+	 * @param workingMin the minimal kappa
 	 */
 	private void buildMinima(ConditionalStructure structure, Map<Conditional, KappaValue> kappaMap, 
 			Conditional curCondition, List<NicePossibleWorld> worlds, KappaMin workingMin) {

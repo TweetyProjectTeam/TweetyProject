@@ -45,7 +45,7 @@ public class ClNLPTranslator extends Translator
 	private FOLPropTranslator fol2pl = new FOLPropTranslator();
 	/**
 	 * Translates the given conditional to a NLP-rule.
-	 * @param rule	The conditional that is going to be translated.
+	 * @param cond	The conditional that is going to be translated.
 	 * @return		The translated NLP rule
 	 */
 	NLPRule toNLP(Conditional cond) {
@@ -66,7 +66,7 @@ public class ClNLPTranslator extends Translator
 	 * for unquantified ground nlp-rules. In all other cases, an exception
 	 * is thrown.
 	 * 
-	 * @param rule
+	 * @param rule some rule
 	 * @return a conditional
 	 */
 	public Conditional toCl(NLPRule rule) {

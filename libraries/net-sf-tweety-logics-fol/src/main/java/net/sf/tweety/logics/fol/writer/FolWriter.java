@@ -43,7 +43,7 @@ public interface FolWriter {
 	 * Prints an Equivalence.
 	 * @param a formula on one side of the equation
 	 * @param b formula on the other side of the equation
-	 * @throws IOException
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public void printEquivalence( FolFormula a, FolFormula b) throws IOException ;
 
@@ -56,7 +56,7 @@ public interface FolWriter {
 	
 	/**
 	 * Closes the Writer.
-	 * @throws IOException
+	 * @throws IOException  if an IO issue occurs.
 	 */
 	public void close() throws IOException;
 

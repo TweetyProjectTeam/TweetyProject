@@ -72,7 +72,7 @@ public class ConceptAssertion extends AssertionalAxiom {
 	 * 
 	 * @param i
 	 *            an Individual, term of the concept
-	 * @param p
+	 * @param c
 	 *            AtomicConcept
 	 * 
 	 */
@@ -143,7 +143,7 @@ public class ConceptAssertion extends AssertionalAxiom {
 	/**
 	 * Get the individual of this assertional axiom (= the individual that
 	 * is an instance of this axiom's concept)
-	 * @return
+	 * @return the individual
 	 */
 	public Individual getIndividual() {
 		return individual;

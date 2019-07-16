@@ -66,7 +66,7 @@ public class SimpleDefaultReasoner implements QualitativeReasoner<DefaultTheory,
 	 * inference mode.
 	 * @param theory a default theory
 	 * @param query a formula
-	 * @param InferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
+	 * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return "true" if the formula is accepted
 	 */
 	public Boolean query(DefaultTheory theory, FolFormula query, InferenceMode inferenceMode) {

@@ -112,7 +112,7 @@ public class DelpService{
 	 * Handles the "query" command
 	 * @param query some query
 	 * @return the reply
-	 * @throws JSONException 
+	 * @throws JSONException if some JSON issue occurs. 
 	 */
 	private JSONObject handleQuery(JSONObject query) throws JSONException{
 		JSONObject jsonReply = new JSONObject();

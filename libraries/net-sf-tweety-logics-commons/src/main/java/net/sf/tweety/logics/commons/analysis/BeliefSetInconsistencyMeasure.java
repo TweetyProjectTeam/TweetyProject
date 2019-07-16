@@ -30,7 +30,6 @@ import net.sf.tweety.commons.postulates.PostulateEvaluatable;
  * 
  * @author Matthias Thimm
  * @param <S> The type of formulas this measure supports.
- * @param <T> The type of belief sets this measure supports.
  */
 public abstract class BeliefSetInconsistencyMeasure<S extends Formula> implements InconsistencyMeasure<BeliefSet<S,?>>, PostulateEvaluatable<S> {
 	

@@ -62,7 +62,6 @@ public class ScreenedMaxichoiceConsolidation implements ConsolidationOperator<AS
 	 * 
 	 * @param p a program
 	 * @return consolidation of program p
-	 * @throws SolverException
 	 */
 	public Program consolidate(Program p) {
 		return new Program(selection.select(new ScreenedRemainderSets(p, screen, solver)));

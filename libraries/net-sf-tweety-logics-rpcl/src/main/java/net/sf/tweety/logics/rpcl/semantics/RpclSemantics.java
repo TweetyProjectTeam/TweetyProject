@@ -32,7 +32,6 @@ import net.sf.tweety.math.term.*;
  * 
  * @author Matthias Thimm
  * 
- * @param <T> the type of Fol interpretations
  */
 public interface RpclSemantics {
 

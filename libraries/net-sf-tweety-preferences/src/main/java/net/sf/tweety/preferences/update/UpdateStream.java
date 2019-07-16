@@ -35,7 +35,7 @@ import java.util.LinkedList;
  *  
  * @author Bastian Wolf
  *
- * @param <T>
+ * @param <T> generic preference order type
  */
 
 public class UpdateStream<T> {

@@ -65,7 +65,7 @@ public class Equivalence extends PlFormula {
 	
 	/**
 	 * Sets the formulas of the equivalence.
-	 * @param the formulas
+	 * @param formulas the formulas
 	 */
 	public void setFormulas(Pair<PlFormula,PlFormula> formulas) {
 		this.formulas = formulas;

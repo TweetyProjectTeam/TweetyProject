@@ -63,6 +63,7 @@ import net.sf.tweety.lp.asp.semantics.*;
  * @author Anna Gessler
  * 
  */
+@SuppressWarnings("unused")
 public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstants, ASPCore2ParserConstants {/*@bgen(jjtree)*/
   protected JJTASPCore2ParserState jjtree = new JJTASPCore2ParserState();private static ASPCore2Parser oneThreadParser = new ASPCore2Parser(new StringReader(""));
 
@@ -101,7 +102,8 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return visitor.visit(oneThreadParser.AnswerSet(), null);
   }
 
-  final public ASTAnswerSet AnswerSet() throws ParseException {
+  
+final public ASTAnswerSet AnswerSet() throws ParseException {
  /*@bgen(jjtree) AnswerSet */
   ASTAnswerSet jjtn000 = new ASTAnswerSet(JJTANSWERSET);
   boolean jjtc000 = true;
@@ -2815,7 +2817,8 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     throw generateParseException();
   }
 
-  static private final class LookaheadSuccess extends java.lang.Error { }
+  @SuppressWarnings("serial")
+static private final class LookaheadSuccess extends java.lang.Error { }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {

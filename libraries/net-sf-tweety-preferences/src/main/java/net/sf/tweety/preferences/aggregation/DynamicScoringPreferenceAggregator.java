@@ -40,7 +40,7 @@ import net.sf.tweety.preferences.update.UpdateStream;
  * 
  * @author Bastian Wolf
  * 
- * @param <T>
+ * @param <T> generic preference order type
  */
 
 public abstract class DynamicScoringPreferenceAggregator<T> implements
@@ -223,7 +223,7 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 	/**
 	 * Fires an event every time a change occurred
 	 * 
-	 * @param event
+	 * @param event the update event
 	 */
 	private void fireEvent(UpdateEvent<T> event) {
 

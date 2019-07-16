@@ -36,9 +36,9 @@ public class MatlabUtils {
 	
 	/**
 	 * Print constraint matrix for belief set and possible worlds to output stream.
-	 * @param out
-	 * @param beliefSet
-	 * @param worlds
+	 * @param out some print stream
+	 * @param beliefSet some belief set
+	 * @param worlds a set of possible worlds
 	 */
 	public static void printConstraintMatrix(PrintStream out, PclBeliefSet beliefSet, Set<PossibleWorld> worlds) {
 
@@ -96,9 +96,9 @@ public class MatlabUtils {
 	
 	/**
 	 * Print conditional verification matrix (1 if antecedence and consequence are satisfied, 0 otherwise)
-	 * @param out
-	 * @param beliefSet
-	 * @param worlds
+	 * @param out some print stream
+	 * @param beliefSet some belief set
+	 * @param worlds a set of possible worlds
 	 */
 	public static void printConditionalVerificationMatrix(PrintStream out, PclBeliefSet beliefSet, Set<PossibleWorld> worlds) {
 
@@ -148,9 +148,9 @@ public class MatlabUtils {
 	
 	/**
 	 * Print antecedence verification matrix (1 if antecedence is satisfied, 0 otherwise)
-	 * @param out
-	 * @param beliefSet
-	 * @param worlds
+	 * @param out some print stream
+	 * @param beliefSet some belief set
+	 * @param worlds a set of possible worlds
 	 */
 	public static void printAntecedenceVerificationMatrix(PrintStream out, PclBeliefSet beliefSet, Set<PossibleWorld> worlds) {
 
@@ -194,7 +194,7 @@ public class MatlabUtils {
 	/**
 	 * Print optimization problem corresponding to minimal violation measure.
 	 * Call printConstraintMatrix first to define constraint matrix A.
-	 * @param out
+	 * @param out some print stream
 	 * @param n number of worlds
 	 * @param p norm
 	 */
@@ -215,7 +215,7 @@ public class MatlabUtils {
 	 * Print optimization problem corresponding to ME consolidation.
 	 * Call printConstraintMatrix and printMinimumViolationProblem first 
 	 * to define constraint matrix A and to compute minimal violation measure.
-	 * @param out
+	 * @param out some print stream
 	 * @param n number of worlds
 	 * @param p norm
 	 */
@@ -235,9 +235,9 @@ public class MatlabUtils {
 	
 	/**
 	 * Simple application example yielding the matlab script for spam example from [Potyka, Thimm, 2014].
-	 * @param args
-	 * @throws ParserException
-	 * @throws IOException
+	 * @param args app parameters
+	 * @throws ParserException if parsing fails
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		

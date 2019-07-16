@@ -92,10 +92,10 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 	 * 
 	 * k("i")=\sum_{"i" verifies ri} ki+ + \sum_{"i" falsifies ri} kj-
 	 * 
-	 * @param i a possible world.
+	 * @param w a possible world.
 	 * @param ranki the rank (an integer variable) of interpretation "i".
 	 * @param kappa_pos the positive penalties for interpretations.
-	 * @param kappa_min the negative penalties for interpretations.
+	 * @param kappa_neg the negative penalties for interpretations.
 	 */
 	private Statement getRankConstraint(PossibleWorld w, IntegerVariable ranki, Map<Conditional,IntegerVariable> kappa_pos, Map<Conditional,IntegerVariable> kappa_neg){		
 		// construct ride side of the inequation

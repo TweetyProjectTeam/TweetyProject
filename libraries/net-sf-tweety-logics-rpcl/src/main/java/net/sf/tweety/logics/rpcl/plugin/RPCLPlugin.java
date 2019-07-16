@@ -191,8 +191,8 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 	}
 	
 	/**
-	 * 
-	 * @param args
+	 * Constructs a new plugin
+	 * @param args arguments
 	 */
 	public RPCLPlugin(String[] args) {
 		this();

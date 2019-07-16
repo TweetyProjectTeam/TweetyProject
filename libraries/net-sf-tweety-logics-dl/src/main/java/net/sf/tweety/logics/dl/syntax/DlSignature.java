@@ -215,7 +215,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	 * concept, role or individual or a formula. For a formula (complex concept) all
 	 * individuals, concepts and roles of this formula are added to the signature.
 	 * 
-	 * @param an object to be added
+	 * @param obj an object to be added
 	 * @throws IllegalArgumentException if the object is not an individual, a
 	 *                                  concept, a role or a DlFormula.
 	 */

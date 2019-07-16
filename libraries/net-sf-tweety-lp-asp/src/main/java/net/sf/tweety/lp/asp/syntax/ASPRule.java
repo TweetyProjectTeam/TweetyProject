@@ -28,7 +28,6 @@ import java.util.TreeSet;
 
 import net.sf.tweety.commons.util.rules.Rule;
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
@@ -77,7 +76,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a fact with the given ASPHead.
 	 * 
-	 * @param head
+	 * @param head an ASPHead
 	 */
 	public ASPRule(ASPHead head) {
 		this.head = head;
@@ -90,7 +89,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a fact with the given literal.
 	 * 
-	 * @param literal
+	 * @param literal a literal
 	 */
 	public ASPRule(ASPLiteral literal) {
 		this();
@@ -100,8 +99,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a rule with the given head and body.
 	 * 
-	 * @param head
-	 * @param body
+	 * @param head an ASPHead
+	 * @param body a list of ASPBodyElement
 	 */
 	public ASPRule(ASPHead head, List<ASPBodyElement> body) {
 		this.head = head;
@@ -114,7 +113,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a rule with the given head and a single-element body.
 	 * 
-	 * @param head
+	 * @param head an ASPLiteral
 	 * @param b
 	 *            a body element
 	 */
@@ -129,8 +128,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a rule with the given head and body.
 	 * 
-	 * @param head
-	 * @param body
+	 * @param head an ASPLiteral
+	 * @param body a list of ASPBodyElement
 	 */
 	public ASPRule(ASPLiteral head, List<ASPBodyElement> body) {
 		this.head = new ASPHead(head);
@@ -143,7 +142,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a constraint with the given body.
 	 * 
-	 * @param body
+	 * @param body a list of ASPBodyElement
 	 */
 	public ASPRule(List<ASPBodyElement> body) {
 		this();
@@ -153,9 +152,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a constraint with the given weight and terms.
 	 * 
-	 * @param nafliterals
-	 * @param weight
-	 * @param terms
+	 * @param nafliterals the naf literals
+	 * @param weight some weight
+	 * @param terms a list of terms
 	 */
 	public ASPRule(List<ASPBodyElement> nafliterals, Term<?> weight, List<Term<?>> terms) {
 		this();
@@ -167,11 +166,11 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a constraint with the given weight, level and terms.
 	 * 
-	 * @param body
-	 * @param weight
-	 * @param level
-	 * @param wal
-	 */
+	 * @param body a list of ASPBodyElement
+	 * @param weight a term
+	 * @param level a term
+	 * @param terms a list of terms
+	 */ 
 	public ASPRule(List<ASPBodyElement> body, Term<?> weight, Term<?> level, List<Term<?>> terms) {
 		this.head = new ASPHead();
 		this.body = body;
@@ -183,7 +182,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Copy-Constructor
 	 * 
-	 * @param other
+	 * @param other another ASPRule
 	 */
 	public ASPRule(ASPRule other) {
 		this(other.body, other.weight, other.level, other.constraint_terms);
@@ -199,8 +198,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public Boolean isSafe() {
 		//Get all variables in the rule
-		Set<Variable> vars = this.getTerms(Variable.class);
-
+		//Set<Variable> vars = this.getTerms(Variable.class);
 		// TODO
 		throw new UnsupportedOperationException("WIP");
 	}

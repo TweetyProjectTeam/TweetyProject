@@ -105,7 +105,7 @@ public class TextfileIterator implements BeliefSetIterator<PlFormula,PlBeliefSet
 	/**
 	 * Close file reader (in case no more belief bases should be read)
 	 * 
-	 * @throws IOException
+	 * @throws IOException if some IO issue occurs.
 	 */
 	public void close() throws IOException {
 		this.file_reader.close();

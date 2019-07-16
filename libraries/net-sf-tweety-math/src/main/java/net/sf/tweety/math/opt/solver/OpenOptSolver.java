@@ -96,8 +96,7 @@ public class OpenOptSolver extends Solver {
 	}
 	
 	/**
-	 * Creates a new solver for the given problem.
-	 * @param problem a csp.
+	 * Creates a new solver for the given problem. 
 	 * @param startingPoint a starting point.
 	 */
 	public OpenOptSolver(Map<Variable,Term> startingPoint) {

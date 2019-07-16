@@ -29,7 +29,6 @@ import net.sf.tweety.commons.Formula;
  * 
  * @author Matthias Thimm
  * @param <T> The type of formulas of the belief set
- * @param <S> The type of signature of the belief set
  */
 public interface BeliefSetConsistencyTester<T extends Formula> extends ConsistencyTester<BeliefSet<T,?>> {
 

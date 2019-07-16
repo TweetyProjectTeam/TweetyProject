@@ -115,7 +115,7 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 	 * Determines the 3-valued truth value of the given formula.
 	 * @param formula some formula
 	 * @return the 3-valued truth value of the formula.
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException if the formula is of unknown type
 	 */
 	public TruthValue satisfies3VL(PlFormula formula) throws IllegalArgumentException {
 		if(formula instanceof Contradiction)

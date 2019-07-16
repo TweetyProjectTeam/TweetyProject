@@ -27,7 +27,7 @@ import net.sf.tweety.logics.commons.syntax.Predicate;
  * This class models an atomic concept (aka concept name) in description logics.
  * 
  * <br> Note: Concept assertions like a:C ("the Individual a is in the extension of the Concept C") are
- * modeled with a different class: {@link net.sf.tweety.logics.dl.ConceptAssertion.DlAtom}.
+ * modeled with a different class: {@link net.sf.tweety.logics.dl.syntax.ConceptAssertion}.
  * 
  * @author Anna Gessler
  *

@@ -77,7 +77,7 @@ public class ASPAtom extends ASPLiteral {
 	/**
 	 * Creates a new atom with the given predicate name and no terms.
 	 * 
-	 * @param name
+	 * @param name a name
 	 */
 	public ASPAtom(String name) {
 		this(new Predicate(name));
@@ -128,7 +128,7 @@ public class ASPAtom extends ASPLiteral {
 
 	/**
 	 * Creates a new ASPAtom with the given predicate.
-	 * @param p
+	 * @param p a predicate
 	 */
 	public ASPAtom(Predicate p) {
 		this();

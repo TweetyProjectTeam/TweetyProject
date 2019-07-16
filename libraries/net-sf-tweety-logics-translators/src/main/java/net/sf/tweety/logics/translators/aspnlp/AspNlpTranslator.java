@@ -82,7 +82,7 @@ public class AspNlpTranslator extends AspFolTranslator
 	 * a :- c.  Are generated. If Conjunctions exist in the head then a rule
 	 * for every element of the conjunction in the head is generated. Those
 	 * rules share the same body.
-	 * @param rule
+	 * @param rule some rule
 	 * @return The ASP program that represens the rule given as parameter.
 	 */
 	public Program toASP(NLPRule rule) {
@@ -155,8 +155,8 @@ public class AspNlpTranslator extends AspFolTranslator
 	
 	/**
 	 * Helper method:
-	 * @param source
-	 * @param bodies
+	 * @param source a disjunction
+	 * @param bodies  a list of list of body elements
 	 */
 	private void bodiesFromDisjunction(Disjunction source, List<List<ASPBodyElement>> bodies) {
 		List<List<ASPBodyElement>> reval = new LinkedList<List<ASPBodyElement>>();

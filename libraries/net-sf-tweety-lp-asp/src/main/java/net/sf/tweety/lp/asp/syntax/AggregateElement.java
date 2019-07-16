@@ -58,8 +58,8 @@ public class AggregateElement extends ASPElement {
 	 * Creates a new Aggregate Element with the given list of terms and 
 	 * the given list of naf literals.
 	 * 
-	 * @param l
-	 * @param r
+	 * @param l a list of terms
+	 * @param r a list of body elements
 	 */
 	public AggregateElement(List<Term<?>> l, List<ASPBodyElement> r) {
 		this.left = l;
@@ -69,7 +69,7 @@ public class AggregateElement extends ASPElement {
 	/**
 	 * Copy-Constructor
 	 * 
-	 * @param other
+	 * @param other another AggregateElement
 	 */
 	public AggregateElement(AggregateElement other) {
 		this.left = other.left;

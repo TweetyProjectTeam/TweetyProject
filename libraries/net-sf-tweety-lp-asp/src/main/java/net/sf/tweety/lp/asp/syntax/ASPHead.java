@@ -71,7 +71,7 @@ public class ASPHead extends ASPElement implements AssociativeFormula<ASPLiteral
 	/**
 	 * Creates a new head with a single element.
 	 * 
-	 * @param head
+	 * @param head an ASP literal
 	 */
 	public ASPHead(ASPLiteral head) {
 		this.add(head);
@@ -80,7 +80,7 @@ public class ASPHead extends ASPElement implements AssociativeFormula<ASPLiteral
 	/**
 	 * Copy-Constructor
 	 * 
-	 * @param other
+	 * @param other another ASPHead
 	 */
 	public ASPHead(ASPHead other) {
 		this(other.getFormulas());

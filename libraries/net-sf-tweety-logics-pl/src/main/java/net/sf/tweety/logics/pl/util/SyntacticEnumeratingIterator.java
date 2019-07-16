@@ -82,7 +82,7 @@ public class SyntacticEnumeratingIterator implements BeliefSetIterator<PlFormula
 	 * Generates all formulas of the given length and stores them
 	 * in "pathToTemp/length/"
 	 * @param length the length of the formula
-	 * @throws IOException 
+	 * @throws IOException  if some IO issue occurs.
 	 */
 	private void generateFormulasOfLength(int length) throws IOException{
 		PlParser parser = new PlParser();

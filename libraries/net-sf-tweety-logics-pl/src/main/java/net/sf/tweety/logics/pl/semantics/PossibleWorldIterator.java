@@ -49,8 +49,7 @@ public class PossibleWorldIterator implements InterpretationIterator<PlFormula,P
 	private SubsetIterator<Proposition> it = null;
 
 	/**
-	 * Creates new iterator for the given signature.
-	 * @param sig some signature
+	 * Creates new iterator.
 	 */
 	public PossibleWorldIterator(){		
 	}

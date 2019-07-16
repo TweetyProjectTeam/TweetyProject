@@ -39,7 +39,7 @@ public abstract class PlMusEnumerator extends AbstractMusEnumerator<PlFormula>{
 	
 	/**
 	 * Sets the default MUS enumerator.
-	 * @param solver some MUS enumerator
+	 * @param enumerator some MUS enumerator
 	 */
 	public static void setDefaultEnumerator(AbstractMusEnumerator<PlFormula> enumerator){
 		PlMusEnumerator.defaultEnumerator = enumerator;

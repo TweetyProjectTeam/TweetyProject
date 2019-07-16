@@ -66,7 +66,7 @@ public class StrictNegation extends ASPLiteral {
 
 	/**
 	 * Copy-Constructor
-	 * @param other
+	 * @param other another StrictNegation
 	 */
 	public StrictNegation(StrictNegation other) {
 		this.atom = (ASPAtom)other.getAtom().clone();

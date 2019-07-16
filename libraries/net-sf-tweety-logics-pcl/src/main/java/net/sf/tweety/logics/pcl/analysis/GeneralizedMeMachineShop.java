@@ -42,7 +42,7 @@ public class GeneralizedMeMachineShop implements BeliefBaseMachineShop {
 	
 	/**
 	 * Creates a new machine shop with the given norm.
-	 * @param norm some norm.
+	 * @param p the p for the p-norm.
 	 */
 	public GeneralizedMeMachineShop(int p){
 		this.p = p;

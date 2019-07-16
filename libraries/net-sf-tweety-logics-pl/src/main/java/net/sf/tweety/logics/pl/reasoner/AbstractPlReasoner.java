@@ -44,7 +44,7 @@ public abstract class AbstractPlReasoner implements QualitativeReasoner<PlBelief
 	/**
 	 * Checks whether the first formula entails the second.
 	 * @param formula some formula
-	 * @param formula a formula
+	 * @param formula2 a formula
 	 * @return true if the second formula is entailed be the first formula.
 	 */
 	public boolean query(PlFormula formula, PlFormula formula2) {
@@ -55,9 +55,9 @@ public abstract class AbstractPlReasoner implements QualitativeReasoner<PlBelief
 	
 	/**
 	 * Checks whether the two formulas are equivalent
-	 * @param p1
-	 * @param p2
-	 * @return
+	 * @param p1 a formula
+	 * @param p2 a formula
+	 * @return true iff the two formulas are equivalent
 	 */
 	public boolean isEquivalent(PlFormula p1, PlFormula p2) {
 		PlBeliefSet s1 = new PlBeliefSet();

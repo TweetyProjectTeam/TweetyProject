@@ -32,7 +32,7 @@ import net.sf.tweety.preferences.ranking.LevelingFunction;
  * 
  * @author Bastian Wolf
  * 
- * @param <T>
+ * @param <T> generic preference order type
  */
 
 public abstract class ScoringPreferenceAggregator<T> implements

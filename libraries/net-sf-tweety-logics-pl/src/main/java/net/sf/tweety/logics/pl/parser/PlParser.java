@@ -286,7 +286,7 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 	 * @param l a list objects, either String tokens or objects of type
 	 *          PropositionalFormula.
 	 * @return a propositional formula.
-	 * @throws ParserException
+	 * @throws ParserException if parsing fails
 	 */
 	private PlFormula parseAtomic(List<Object> l) throws ParserException {
 		if (l.size() == 1) {

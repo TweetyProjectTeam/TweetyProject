@@ -53,7 +53,7 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public OptimizationRootFinder(Term function, Map<Variable,Term> startingPoint){
 		super(function,startingPoint);
@@ -62,7 +62,7 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	/**
 	 * Creates a new root finder for the given starting point and the given
 	 * (multi-dimensional) function
-	 * @param startingPoint
+	 * @param startingPoint the starting point
 	 */
 	public OptimizationRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
 		super(functions,startingPoint);

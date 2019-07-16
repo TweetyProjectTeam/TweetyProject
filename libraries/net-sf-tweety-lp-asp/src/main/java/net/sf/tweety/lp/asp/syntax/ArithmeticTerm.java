@@ -54,8 +54,8 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 	
 	/**
 	 * Creates an arithmetic term of the form -(t)
-	 * @param op
-	 * @param t
+	 * @param op an operator
+	 * @param t a term
 	 */
 	public ArithmeticTerm(ArithmeticOperator op, Term<?> t) {
 		super(new Triple<ArithmeticOperator,Term<?>,Term<?>>(op,null,t));
@@ -89,7 +89,7 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 
 	/**
 	 * Sets the operator of this arithmetic term.
-	 * @param an arithmetic operator
+	 * @param op an arithmetic operator
 	 */
 	public void setOperator(ASPOperator.ArithmeticOperator op) {
 		this.set(new Triple<ArithmeticOperator, Term<?>, Term<?>>(op,this.getLeft(),this.getRight()));

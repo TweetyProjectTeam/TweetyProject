@@ -63,7 +63,6 @@ public class ScreenedRemainderSets extends RemainderSets<ASPRule> {
 	 * @param p an asp-program for which the screened remainder sets are calculated
 	 * @param r an asp-program representing the set of rules, that have to be contained in every remainder set. Has to be a subset of p
 	 * @param solver an asp-solver
-	 * @throws SolverException
 	 */
 	public ScreenedRemainderSets(Program p, Program r, ASPSolver solver) {
 		if(!p.containsAll(r)) {
@@ -124,8 +123,7 @@ public class ScreenedRemainderSets extends RemainderSets<ASPRule> {
 	 * Recursively calculates consistent subsets of p. This is slightly faster
 	 * than bruteforce calculating all possible combinations, as consistent subsets are
 	 * pruned.
-	 * @param p
-	 * @throws SolverException
+	 * @param p a program
 	 */
 	private Set<Program> calculateRemainderSetCandidates(Program p) {
 		Set<Program> result = new HashSet<Program>();
@@ -164,9 +162,8 @@ public class ScreenedRemainderSets extends RemainderSets<ASPRule> {
 	
 	/**
 	 * Simple test case taken from [1]
-	 * @param args
-	 * @throws ParseException
-	 * @throws SolverException
+	 * @param args some arguments
+	 * @throws ParseException if parsing failed
 	 */
 	public static void main(String[] args) throws ParseException {
 		String input = "a :- b.\n -a. \n b. \n :- not -a, not b.";

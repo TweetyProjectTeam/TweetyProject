@@ -156,7 +156,8 @@ public class SyntacticRandomSampler extends BeliefSetSampler<PlFormula,PlBeliefS
 	}
 	
 	/**
-	 * @return
+	 * Returns the next belief set
+	 * @return the next belief set
 	 */
 	@Override
 	public PlBeliefSet next() {		

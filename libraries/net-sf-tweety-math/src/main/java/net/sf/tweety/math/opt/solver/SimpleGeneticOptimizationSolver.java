@@ -188,7 +188,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 	 * @param t the term to be evaluated
 	 * @param optimization_objective one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE 
 	 * @return the optimal variable assignment
-	 * @throws GeneralMathException 
+	 * @throws GeneralMathException if some issue occured during computation.
 	 */
 	public Map<Variable,Term> solve(Term t, int optimization_objective) throws GeneralMathException{
 		List<Variable> vars = new ArrayList<Variable>(t.getVariables());

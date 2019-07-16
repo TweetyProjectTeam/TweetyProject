@@ -76,7 +76,7 @@ public abstract class TNorm implements BinaryFunction<Double,Double,Double> {
 	
 	/**
 	 * Returns the dual T-conorm of this T-norm.
-	 * @return
+	 * @return the dual T-conorm of this T-norm.
 	 */
 	public abstract TCoNorm getDualCoNorm();
 

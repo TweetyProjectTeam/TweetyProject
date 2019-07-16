@@ -101,7 +101,7 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 	/**
 	 * Ctor: Creates a AssociativeFormulaSupport object that uses the
 	 * given bridge
-	 * @param bridge
+	 * @param bridge an associative support bridge
 	 */
 	public AssociativeFormulaSupport(AssociativeSupportBridge bridge) {
 		this.bridge = bridge;
@@ -109,7 +109,7 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 	
 	/**
 	 * Copy-Ctor creates a deep copy of the associative formula support.
-	 * @param other
+	 * @param other another associative formula suppport
 	 */
 	public AssociativeFormulaSupport(AssociativeFormulaSupport<T> other) {
 		this.bridge = other.bridge;

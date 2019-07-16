@@ -63,7 +63,7 @@ public class DlInterpretation extends InterpretationSet<AssertionalAxiom, DlBeli
 	 * and role assertions  that represent the mapping
 	 * of concept names and role names to the domain. 
 	 * 
-	 * @param collection of AssertionalAxiom
+	 * @param assertions collection of AssertionalAxiom
 	 */
 	public DlInterpretation(Collection<AssertionalAxiom> assertions) {
 		super(assertions);

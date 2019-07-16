@@ -63,7 +63,8 @@ public class ZReasoner extends AbstractConditionalLogicReasoner {
 	/**
 	 * Returns a partitioning of a knowledge base into partitions containing all conditionals that 
 	 * tolerate the remaining set of conditionals of a knowledge base.
-	 * @param Knowledge base that needs to be partitioned
+	 * @param kb Knowledge base that needs to be partitioned
+	 * @param omega a set of possible worlds
 	 * @return ArrayList containing consistent belief sets
 	 */
 	private ArrayList<ClBeliefSet> partition( ClBeliefSet kb , Set<PossibleWorld> omega){
@@ -112,8 +113,9 @@ public class ZReasoner extends AbstractConditionalLogicReasoner {
 	 * Checks whether or not the given formula is tolerated by the knowledge base,
 	 * i.e., there is a world omega that satisfies the formula and does not falsify each conditional (B|A)
 	 * in the knowledge base (it satisfies the material implication A => B).
-	 * @param Conditional f - formula that should be tolerated by the knowledge base
-	 * @param ClBeliefSet kb - corresponding knowledge base 
+	 * @param f  formula that should be tolerated by the knowledge base
+	 * @param kb corresponding knowledge base
+	 * @param omega a set of possible worlds  
 	 * @return true if the Conditional f is tolerated, false otherwise
 	 */
 	private boolean isTolerated( Conditional f, ClBeliefSet kb , Set<PossibleWorld> omega) {

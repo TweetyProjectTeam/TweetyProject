@@ -43,7 +43,7 @@ public class CnfSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 	
 	/**
 	 * Creates a new sampler for the given signature.
-	 * @param signature
+	 * @param signature a signature
 	 * @param maxVariableRatio the maximum ratio (a value between 0 and 1) of variables
 	 * of the signature appearing in some formula.
 	 */
@@ -56,7 +56,7 @@ public class CnfSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 
 	/**
 	 * Creates a new sampler for the given signature.
-	 * @param signature
+	 * @param signature a signature
 	 * @param maxVariableRatio the maximum ratio (a value between 0 and 1) of variables
 	 * of the signature appearing in some formula.
 	 * @param minLength the minimum length of knowledge bases

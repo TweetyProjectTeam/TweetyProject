@@ -100,7 +100,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	 * set and the Dimacs representation. Use <code>convertToDimacs(.)</code> for
 	 * obtaining a map between those.
 	 * @param formulas a collection of formulas
-	 * @param a list of propositions (=signature) where the indices are used for writing the clauses.
+	 * @param props a list of propositions (=signature) where the indices are used for writing the clauses.
 	 * @return a string in Dimacs CNF.
 	 */
 	protected static String convertToDimacs(Collection<PlFormula> formulas, List<Proposition> props){
@@ -168,7 +168,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	/**
 	 * Creates a temporary file in Dimacs format with the given proposition2variable mapping.
 	 * @param formulas a collection of formulas
-	 * @param a list of propositions (=signature) where the indices are used for writing the clauses.
+	 * @param props a list of propositions (=signature) where the indices are used for writing the clauses.
 	 * @return the file handler. 
 	 * @throws IOException if something went wrong while creating a temporary file. 
 	 */
@@ -185,9 +185,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	/**
 	 * Creates a temporary file in Dimacs format and also returns a mapping between formulas and clauses.
 	 * @param formulas a collection of formulas
-	 * @param a list of propositions (=signature) where the indices are used for writing the clauses
-	 * (a list of collections of formulas (all from the given set); the interpretation of this list
-	 * is that the generated clause no K originated from the propositional formula given at index k).
+	 * 
 	 * @return the file handler and a mapping between clauses and original formulas. 
 	 * @throws IOException if something went wrong while creating a temporary file. 
 	 */

@@ -115,7 +115,7 @@ public class SpassFolReasoner extends FolReasoner {
 	
 	/**
 	 * Determines the answer wrt. to the given query and returns the proof (if applicable).
-	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.SpassFolReasoner.reasoner.SPASS#query(Formula)}
+	 * May decrease SPASS's performance, use {@link net.sf.tweety.logics.fol.reasoner.SpassFolReasoner#query(FolBeliefSet,FolFormula)}
 	 * if only a yes/no result is needed.
 	 * 
 	 * @param query a formula

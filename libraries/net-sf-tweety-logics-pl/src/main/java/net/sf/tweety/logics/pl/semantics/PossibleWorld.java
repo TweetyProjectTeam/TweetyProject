@@ -149,7 +149,7 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PlF
 	/**
 	 * Returns the complete conjunction representing this possible world wrt.
 	 * 	the give signature
-	 * @param a propositional signature
+	 * @param sig a propositional signature
 	 * @return the complete conjunction representing this possible world wrt.
 	 * 	the give signature
 	 */

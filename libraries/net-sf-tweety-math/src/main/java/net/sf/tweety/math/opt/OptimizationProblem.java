@@ -364,7 +364,7 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 	
 	/**
 	 * Sets the penalty for violated minimum.
-	 * @param penalty
+	 * @param penalty some penalty
 	 */
 	public void setPenalty(int penalty){
 		this.penalty = penalty;

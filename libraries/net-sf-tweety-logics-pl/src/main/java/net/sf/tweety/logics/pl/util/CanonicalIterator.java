@@ -230,7 +230,7 @@ public class CanonicalIterator implements BeliefSetIterator<PlFormula,PlBeliefSe
 	
 	/**
 	 * Reads the next formula of the given bitset, starting at the given index.
-	 * @param b a bitset
+	 * @param s a bitset
 	 * @param idx the start index of a formula
 	 * @param sig the current signature 
 	 * @return the formula that has been read and the index right in the bitset right

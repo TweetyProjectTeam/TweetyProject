@@ -41,19 +41,19 @@ public class SelectionCommandParameter extends CommandParameter {
 	private String value;
 
 	/**
-	 * 
-	 * @param id
-	 * @param des
+	 * Creates a new parameter.
+	 * @param id some string
+	 * @param des some string
 	 */
 	public SelectionCommandParameter(String id, String des) {
 		super(id, des);
 	}
 
 	/**
-	 * 
-	 * @param id
-	 * @param des
-	 * @param selections
+	 * Creates a new parameter.
+	 * @param id some string
+	 * @param des some string
+	 * @param selections some array of string
 	 */
 	public SelectionCommandParameter(String id, String des, String[] selections) {
 		super(id, des);
@@ -72,7 +72,7 @@ public class SelectionCommandParameter extends CommandParameter {
 	/**
 	 * sets new selection parameter
 	 * 
-	 * @param selections
+	 * @param selections an array of strings
 	 */
 	public void setSelections(String[] selections) {
 		this.selections = selections;

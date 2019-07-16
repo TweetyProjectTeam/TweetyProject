@@ -63,8 +63,8 @@ public class KappaValue implements KappaTerm {
 	
 	/**
 	 * Ctor: Generates a kappa value for the given {@link Conditional} with the given index.
-	 * @param index
-	 * @param cond
+	 * @param index an int 
+	 * @param cond some conditional
 	 */
 	public KappaValue(int index, Conditional cond) {
 		this.index = index;

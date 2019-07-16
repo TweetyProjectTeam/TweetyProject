@@ -626,7 +626,7 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 	 * with a list of terms).
 	 * @param l a list objects, either String tokens or objects of type folFormula.
 	 * @return a fol formula.
-	 * @throws ParserException
+	 * @throws ParserException if parsing fails
 	 */
 	@SuppressWarnings("unchecked")
 	private FolFormula parseAtomic(List<Object> l) throws ParserException{

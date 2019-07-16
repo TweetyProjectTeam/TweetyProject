@@ -54,7 +54,7 @@ public interface TypedStructure {
 	/**
 	 * Adds the given Sort as argument type to the typed Structure
 	 * @param argType	The Sort descibing the argument type
-	 * @throws LanguageException	
+	 * @throws LanguageException if there is some language issue
 	 */
 	void addArgumentType(Sort argType) throws LanguageException;
 	
@@ -71,7 +71,7 @@ public interface TypedStructure {
 	 * @param argType	The Sort which is removed
 	 * @return	true if the Sort exists in the list of argument types
 	 * 			and is successfully removed, false otherwise.
-	 * @throws LanguageException
+	 * @throws LanguageException if there is some language issue
 	 */
 	boolean removeArgumentType(Sort argType) throws LanguageException;
 	

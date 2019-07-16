@@ -151,7 +151,7 @@ public class AggregateAtom extends ASPBodyElement {
 	/**
 	 * Copy-Constructor
 	 * 
-	 * @param other
+	 * @param other another AggregateAtom
 	 */
 	public AggregateAtom(AggregateAtom other) {
 		this(other.getFunction(), other.getAggregateElements(), other.getRightOperator(), other.getRightGuard(),
@@ -294,8 +294,8 @@ public class AggregateAtom extends ASPBodyElement {
 	/**
 	 * Sets the aggregate function.
 	 * 
-	 * @param an
-	 *            aggregate function
+	 * @param function
+	 *            an aggregate function
 	 */
 	public void setFunction(ASPOperator.AggregateFunction function) {
 		this.function = function;
@@ -313,8 +313,7 @@ public class AggregateAtom extends ASPBodyElement {
 	/**
 	 * Sets the operator of the right aggregate relation.
 	 * 
-	 * @param comparative
-	 *            operator
+	 * @param op comparative operator
 	 */
 	public void setRightOperator(ASPOperator.BinaryOperator op) {
 		this.rightOp = op;
@@ -332,7 +331,7 @@ public class AggregateAtom extends ASPBodyElement {
 	/**
 	 * Set the right relation term (right guard).
 	 * 
-	 * @param Term
+	 * @param relationTerm some term
 	 */
 	public void setRightGuard(Term<?> relationTerm) {
 		this.rightGuard = relationTerm;
@@ -350,8 +349,7 @@ public class AggregateAtom extends ASPBodyElement {
 	/**
 	 * Sets the operator of the left aggregate relation.
 	 * 
-	 * @param comparative
-	 *            operator
+	 * @param op comparative operator
 	 */
 	public void setLeftOperator(ASPOperator.BinaryOperator op) {
 		this.leftOp = op;
@@ -369,7 +367,7 @@ public class AggregateAtom extends ASPBodyElement {
 	/**
 	 * Set the left relation term (right guard).
 	 * 
-	 * @param Term
+	 * @param relationTerm some term
 	 */
 	public void setLeftGuard(Term<?> relationTerm) {
 		this.leftGuard = relationTerm;

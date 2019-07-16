@@ -47,7 +47,7 @@ public class DlBeliefSet extends BeliefSet<DlAxiom,DlSignature> {
 	
 	/**
 	 * Creates a new description logics knowledge base with the given set of axioms.
-	 * @param formulas
+	 * @param formulas a set of axioms
 	 */
 	public DlBeliefSet(Set<DlAxiom> formulas){
 		super(formulas);

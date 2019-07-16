@@ -78,8 +78,8 @@ public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlForm
 	/**
 	 * Checks whether the selection of substitutions is consistent (no proposition to be
 	 * replaced by + and - at the same time).
-	 * @param current
-	 * @return
+	 * @param current current substitutions
+	 * @return true iff the selection of substitutions is consistent
 	 */
 	private boolean hasDuplicate(Set<Triple<Proposition,Integer,SpecialFormula>> current){
 		for(Triple<Proposition,Integer,SpecialFormula> elem1: current)
@@ -91,8 +91,8 @@ public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlForm
 	
 	/**
 	 * Orders the substitutions in decreasing order.
-	 * @param current
-	 * @return
+	 * @param current current substitutions
+	 * @return ordered list of current substitutions
 	 */
 	private List<Triple<Proposition,Integer,SpecialFormula>> order(Set<Triple<Proposition,Integer,SpecialFormula>> current){
 		// do selection sort

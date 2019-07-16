@@ -47,7 +47,7 @@ public class ClingoWriter {
 
 	/**
 	 * Create a new ClingoWriter with the given writer.
-	 * @param writer
+	 * @param writer a writer
 	 */
 	public ClingoWriter(Writer writer) {
 		this.writer = writer;
@@ -66,7 +66,7 @@ public class ClingoWriter {
 	 * Prints program
 	 * 
 	 * @param p a program
-	 * @throws IOException
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public void printProgram(Program p) throws IOException {
 		for (ASPRule r : p.getRules())

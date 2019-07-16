@@ -161,9 +161,9 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlF
 
 	/**
 	 * Utility method 
-	 * @param formulas
-	 * @param assignments
-	 * @return
+	 * @param formulas a set of formulas
+	 * @param assignments a map of assignments
+	 * @return the solution
 	 */
 	private Pair<Map<Variable,Term>,Double> constructAndSolveProblem(Collection<PlFormula> formulas, Map<Proposition,Variable> assignments){
 		Term t;		

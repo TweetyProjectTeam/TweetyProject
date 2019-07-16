@@ -55,7 +55,7 @@ public class IntegerCommandParameter extends CommandParameter {
 
 	/**
 	 * sets new selection parameter
-	 * @param interval
+	 * @param interval some string
 	 */
 	public void setInterval(String interval){
 		
@@ -112,7 +112,7 @@ public class IntegerCommandParameter extends CommandParameter {
 	}
 	
 	/**
-	 * @throws CloneNotSupportedException 
+	 * Clones the object 
 	 * 
 	 */
 	@Override

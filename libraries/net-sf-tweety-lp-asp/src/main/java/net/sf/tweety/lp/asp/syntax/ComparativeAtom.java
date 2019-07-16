@@ -62,7 +62,7 @@ public class ComparativeAtom extends ASPBodyElement {
 	/**
 	 * Copy-Constructor
 	 * 
-	 * @param comparativeAtom
+	 * @param other another ComparativeAtom
 	 */
 	public ComparativeAtom(ComparativeAtom other) {
 		this(other.op, other.left, other.right);
@@ -131,7 +131,7 @@ public class ComparativeAtom extends ASPBodyElement {
 
 	/**	
 	 * Returns the comparative operator of the atom.
-	 * @return
+	 * @return the comparative operator of the atom.
 	 */
 	public ASPOperator.BinaryOperator getOperator() {
 		return op;
@@ -139,7 +139,7 @@ public class ComparativeAtom extends ASPBodyElement {
 
 	/**
 	 * Returns the left (first) term of the comparative atom.
-	 * @return
+	 * @return the left (first) term of the comparative atom.
 	 */
 	public Term<?> getLeft() {
 		return left;
@@ -147,7 +147,7 @@ public class ComparativeAtom extends ASPBodyElement {
 
 	/**
 	 * Returns the right (second) term of the comparative atom.
-	 * @return
+	 * @return the right (second) term of the comparative atom.
 	 */
 	public Term<?> getRight() {
 		return right;
