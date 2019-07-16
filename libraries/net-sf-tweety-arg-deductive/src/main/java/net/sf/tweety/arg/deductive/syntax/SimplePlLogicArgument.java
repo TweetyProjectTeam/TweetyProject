@@ -48,8 +48,7 @@ public class SimplePlLogicArgument extends Argument{
 	/**
 	 * Constructor
 	 * 
-	 * @param 	node of a DigraphNode of a DerivationGraph<PropositionalFormula, SimplePlRule>
-	 * 			@see SimplePlLogicDeductiveKnowledgebase
+	 * @param 	derivation some derivation
 	 */
 	public SimplePlLogicArgument(Derivation<SimplePlRule> derivation) {
 		super(null);

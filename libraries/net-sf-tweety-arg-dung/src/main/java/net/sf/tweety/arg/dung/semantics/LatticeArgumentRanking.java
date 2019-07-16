@@ -40,7 +40,7 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 * Creates a new argument ranking with the given arguments which are initially
 	 * all incomparable.
 	 * 
-	 * @param args
+	 * @param args a set of arguments
 	 */
 	public LatticeArgumentRanking(Collection<Argument> args) {
 		this.order = new Order<>(args);

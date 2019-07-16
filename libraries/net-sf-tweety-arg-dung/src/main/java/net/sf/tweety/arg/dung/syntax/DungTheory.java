@@ -379,8 +379,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	
 	/**
 	 * Adds an attack from the first argument to the second to thisDdung theory.
-	 * @param a1 some argument
-	 * @param a2 some argument
+	 * @param attacker some argument
+	 * @param attacked some argument
 	 * @return "true" if the set of attacks has been modified.
 	 */
 	public boolean addAttack(Argument attacker, Argument attacked){

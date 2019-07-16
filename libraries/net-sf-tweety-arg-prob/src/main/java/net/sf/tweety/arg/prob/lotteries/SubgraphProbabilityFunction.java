@@ -84,7 +84,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	/**
 	 * Returns the epistemic probability of the given attack, i.e. the probability
 	 * that the given attack is present in some randomly sampled sub graph.
-	 * @param arg some argument
+	 * @param att some attack
 	 * @return a probability
 	 */
 	@SuppressWarnings("unlikely-arg-type")
@@ -250,7 +250,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * Computes Super(G,G′,Ci) = {(α,β) ∈ Arcs(G) | (α ∈ Nodes(G′) and β ∈ Nodes(Ci))
 	 * 	or (α ∈ Nodes(Ci) and β ∈ Nodes(G′))
      * 	or (α ∈ Nodes(Ci) and β ∈ Nodes(Ci))
-	 * @return
+	 * @return a set of attacks
 	 */
 	private Set<Attack> superGraphs(DungTheory g, DungTheory gp, DungTheory c){
 		Set<Attack> attacks = new HashSet<Attack>();

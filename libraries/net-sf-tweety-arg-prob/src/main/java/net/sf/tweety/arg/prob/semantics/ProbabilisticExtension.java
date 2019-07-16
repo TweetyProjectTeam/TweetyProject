@@ -95,7 +95,7 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	/**
 	 * Checks whether the given labeling is congruent to this probabilistic extension,
 	 * i.e. whether l(A)=in <=> P(A)=1, l(A)=out <=> P(A)=0, l(A)=undec <=> P(A)=0.5  
-	 * @param l
+	 * @param l some labelling
 	 */
 	@SuppressWarnings("unlikely-arg-type")
 	public boolean isCongruent(Labeling l){

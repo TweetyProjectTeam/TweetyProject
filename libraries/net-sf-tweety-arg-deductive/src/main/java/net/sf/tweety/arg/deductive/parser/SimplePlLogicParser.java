@@ -55,7 +55,7 @@ public class SimplePlLogicParser
 
 	/**
 	 * Read an entire piece of text and send each line to the actual parser
-	 * @see parseFormula
+	 * @param reader a reader
 	 * 
 	 * @return	the simple logic knowledge base read from the input
 	 */

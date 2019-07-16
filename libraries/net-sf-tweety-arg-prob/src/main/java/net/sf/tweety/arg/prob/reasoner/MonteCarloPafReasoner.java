@@ -42,8 +42,7 @@ public class MonteCarloPafReasoner extends AbstractPafReasoner{
 	 * Creates a new reasoner.
 	 * @param semantics semantics used for determining extensions.
 	 * @param numberOfTrials The number of runs of the Monte Carlo simulation
-	 * @param inferenceType The inference type used for estimating acceptability probability
-	 * 	of single arguments (credulous or skeptical inference).
+	 * 
 	 */
 	public MonteCarloPafReasoner(Semantics semantics, int numberOfTrials) {
 		super(semantics);

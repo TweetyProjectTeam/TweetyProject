@@ -65,7 +65,7 @@ public abstract class AbstractPafReasoner implements QuantitativeReasoner<Probab
 	 * inference type.
 	 * @param beliefbase an PAF
 	 * @param formula a single argument
-	 * @param InferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
+	 * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return probability of the argument
 	 */
 	public abstract Double query(ProbabilisticArgumentationFramework beliefbase, Argument formula, InferenceMode inferenceMode);

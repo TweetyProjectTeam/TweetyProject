@@ -61,7 +61,6 @@ public class ProbabilisticRankingReasoner implements ModelProvider<Argument,Dung
 	/**
 	 * Creates a new reasoner.
 	 * @param sem The classical semantics used for evaluating subgraphs
-	 * @param inferenceType The inference type (Semantics.CREDULOUS_INFERENCE or Semantics.SCEPTICAL_INFERENCE)
 	 * @param p The probability used for all arguments to instantiate a probabilistic argumentation framework
 	 * @param exactInference Whether to use exact inference. 
 	 */

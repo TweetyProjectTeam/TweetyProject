@@ -114,8 +114,8 @@ public class SimpleCF2Reasoner extends AbstractExtensionReasoner {
 
 	/**
 	 * Computes the extensions for the single af case.
-	 * @param theory
-	 * @return
+	 * @param theory some Dung theory
+	 * @return the set of extensions
 	 */
 	private Set<Extension> singleAFExtensions(DungTheory theory){
 		// an extension for a single scc is a conflict-free set with maximal arguments (minimality check is performed later)

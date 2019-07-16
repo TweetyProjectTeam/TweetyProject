@@ -58,8 +58,8 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	/**
 	 * Creates a new ArgumentationReasoner parameterised
 	 * by a notion of attack for the opponent and another notion of attack for the defense
-	 * @param attack
-	 * @param defence
+	 * @param attack some attack strategy
+	 * @param defence some attack strategy
 	 */
 	public ArgumentationReasoner(AttackStrategy attack, AttackStrategy defence) {
 		this.attackStrategy = attack;
@@ -169,9 +169,10 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	 * A is called x/y-acceptable wrt. a set of arguments S if for every argument B in P such 
      * that (B,A) \in x there exists an argument C \in S such that (C,B) \in y.
      *  
-	 * @param arguments
-	 * @param defendingArguments
-	 * @param toCheck
+     * @param kb a knowledge base
+	 * @param arguments a set of arguments
+	 * @param defendingArguments a s set of defending arguments
+	 * @param toCheck the argument to be checked
 	 * @return true iff toCheck is x/y-acceptable wrt. defendingArguments
 	 */
 	private boolean isAcceptable(ArgumentationKnowledgeBase kb, Set<Argument> arguments, Set<Argument> defendingArguments, Argument toCheck) {

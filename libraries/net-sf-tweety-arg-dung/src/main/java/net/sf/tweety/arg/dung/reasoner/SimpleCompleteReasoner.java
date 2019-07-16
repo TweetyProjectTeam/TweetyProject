@@ -50,7 +50,8 @@ public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 		
 	/**
 	 * Auxiliary method to compute all complete extensions
-	 * @param arguments a set of arguments
+	 * @param dungTheory a Dung theory
+	 * @param ext some extension
 	 * @param remaining arguments that still have to be considered to be part of an extension
 	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>
 	 */

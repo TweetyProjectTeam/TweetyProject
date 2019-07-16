@@ -142,7 +142,7 @@ public class Compilation extends DefaultGraph<CompilationNode>{
 	/**
 	 * This method recursively builds up the argument tree from
 	 * the given argument.
-	 * @param arg an argument.
+	 * @param argNode an argument.
 	 * @param remainingNodes the non-visited nodes in the compilation.
 	 * @param current the current node.
 	 * @param currentSupport the union of the supports of the current path.

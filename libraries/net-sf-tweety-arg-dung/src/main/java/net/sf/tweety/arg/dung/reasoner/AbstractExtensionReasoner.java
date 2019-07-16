@@ -47,7 +47,7 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 	 * inference type.
 	 * @param beliefbase an AAF
 	 * @param formula a single argument
-	 * @param InferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
+	 * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return "true" if the argument is accepted
 	 */
 	public Boolean query(DungTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
@@ -69,7 +69,6 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 	/**
 	 * Creates a reasoner for the given semantics.
 	 * @param semantics a semantics
-	 * @param inferenceType an inference type
 	 * @return a reasoner for the given Dung theory, inference type, and semantics
 	 */
 	public static AbstractExtensionReasoner getSimpleReasonerForSemantics(Semantics semantics){

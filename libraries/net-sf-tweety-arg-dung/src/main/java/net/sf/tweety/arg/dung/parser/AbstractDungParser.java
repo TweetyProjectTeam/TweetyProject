@@ -177,8 +177,7 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 	/**
 	 * Parses the given file into an abstract argumentation framework
 	 * 
-	 * @param f
-	 *            some file
+	 * @param reader some reader
 	 * @return an abstract argumentation framework
 	 * @throws IOException
 	 *             for all errors concerning file reading.

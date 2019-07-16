@@ -49,7 +49,7 @@ public class WeakestLinkOrder <T extends Invertable> implements Comparator<Aspic
 	 * Constructs a new weakest link ordering
 	 * @param rule_comp	comparator for defeasible rules	
 	 * @param prem_comp	comparator for ordinary premises
-	 * @param elitist	
+	 * @param elitist	 some boolean
 	 */
 	public WeakestLinkOrder(Comparator<InferenceRule<T>> rule_comp, Comparator<InferenceRule<T>> prem_comp, boolean elitist) {
 		ruleset_comp = new SetComparator<>(rule_comp, elitist);

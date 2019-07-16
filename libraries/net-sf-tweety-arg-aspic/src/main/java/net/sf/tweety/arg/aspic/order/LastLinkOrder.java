@@ -50,7 +50,7 @@ public class LastLinkOrder <T extends Invertable> implements Comparator<AspicArg
 	 * Constructs a new last link ordering
 	 * @param rule_comp	comparator for defeasible rules	
 	 * @param prem_comp	comparator for ordinary premises
-	 * @param elitist	
+	 * @param elitist	some boolean
 	 */
 	public LastLinkOrder(Comparator<InferenceRule<T>> rule_comp, Comparator<InferenceRule<T>> prem_comp, boolean elitist) {
 		ruleset_comp = new SetComparator<>(rule_comp, elitist);

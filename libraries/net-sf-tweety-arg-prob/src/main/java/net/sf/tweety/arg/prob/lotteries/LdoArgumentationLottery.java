@@ -78,7 +78,7 @@ public class LdoArgumentationLottery {
 	
 	/**
 	 * Returns the probability of the given outcome.
-	 * @param d some division
+	 * @param f some LDO formula
 	 * @return the probability of the given division.
 	 */
 	public Probability get(LdoFormula f){

@@ -40,9 +40,8 @@ public class LiteralReasoner extends ArgumentationReasoner {
 	 * framework is parameterised by two notions of attack. See the original
 	 * ArgumentationReasoner for details.
 	 *   
-	 * @param beliefBase
-	 * @param attack
-	 * @param defence
+	 * @param attack some attack strategy
+	 * @param defence some attack strategy
 	 */
 	public LiteralReasoner(AttackStrategy attack, AttackStrategy defence) {
 		super(attack, defence);

@@ -53,8 +53,7 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 	private ComparisonCriterion comparisonCriterion = new EmptyCriterion();
 
 	/**
-	 * Creates a new DelpReasoner for the given delp.
-	 * @param beliefBase a delp.
+	 * Creates a new DelpReasoner for the given delp.	 * 
 	 * @param comparisonCriterion a comparison criterion used for inference
 	 */
 	public DelpReasoner(ComparisonCriterion comparisonCriterion) {
@@ -83,8 +82,9 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 
 	/**
 	 * Checks whether the given argument is a warrant regarding a given set of arguments
+	 * @param groundDelp a grounded DeLP
 	 * @param argument a DeLP argument
-	 * @param arguments a set of DeLP arguments
+	 * 
 	 * @return <source>true</source> iff <source>argument</source> is a warrant given <source>arguments</source>.
 	 */
 	private boolean isWarrant(DefeasibleLogicProgram groundDelp, DelpArgument argument){

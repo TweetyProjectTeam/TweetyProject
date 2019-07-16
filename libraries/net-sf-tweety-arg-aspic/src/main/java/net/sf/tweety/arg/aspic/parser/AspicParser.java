@@ -90,7 +90,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 
 	/**
 	 * Sets a new symbol used for parsing defeasible function arrows
-	 * @param symbolStrict	is the new symbol
+	 * @param symbolDefeasible	is the new symbol
 	 */
 	public void setSymbolDefeasible(String symbolDefeasible) {
 		this.symbolDefeasible = symbolDefeasible;
@@ -99,7 +99,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 
 	/**
 	 * Sets a new symbol used for parsing parameter separators
-	 * @param symbolStrict	is the new symbol
+	 * @param symbolComma	is the new symbol
 	 */
 	public void setSymbolComma(String symbolComma) {
 		this.symbolComma = symbolComma;

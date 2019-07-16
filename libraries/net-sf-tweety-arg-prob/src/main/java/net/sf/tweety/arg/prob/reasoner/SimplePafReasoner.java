@@ -40,8 +40,7 @@ public class SimplePafReasoner extends AbstractPafReasoner{
 	/**
 	 * Creates a new reasoner.
 	 * @param semantics semantics used for determining extensions.
-	 * @param inferenceType The inference type used for estimating acceptability probability
-	 * 	of single arguments (credulous or skeptical inference).
+	 * 
 	 */
 	public SimplePafReasoner(Semantics semantics) {
 		super(semantics);

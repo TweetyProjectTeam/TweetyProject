@@ -38,10 +38,8 @@ public class StratifiedLabelingReasoner extends AbstractDungReasoner implements 
 	private Semantics semantics;
 	
 	/**
-	 * Creates a new reasoner for the given Dung theory, semantics, and inference type.
-	 * @param beliefBase a Dung theory
+	 * Creates a new reasoner for the given semantics.
 	 * @param semantics a semantics
-	 * @param inferenceType and inference type
 	 */
 	public StratifiedLabelingReasoner(Semantics semantics) {		
 		this.semantics = semantics;
@@ -49,7 +47,6 @@ public class StratifiedLabelingReasoner extends AbstractDungReasoner implements 
 
 	/**
 	 * Creates a new reasoner using sceptical inference and grounded semantics.
-	 * @param beliefBase The knowledge base for this reasoner.
 	 */
 	public StratifiedLabelingReasoner(){
 		this(Semantics.GROUNDED_SEMANTICS);		

@@ -80,7 +80,6 @@ public class DialecticalTree{
 	 * the whole argumentation line to this tree node is considered. As a side effect the computed tree nodes
 	 * are added as children of this node
      *
-	 * @param arguments a set of arguments
 	 * @param delp a defeasible logic program
 	 * @param comparisonCriterion a comparison criterion.
 	 * @return the set of defeater nodes of the argument in this node

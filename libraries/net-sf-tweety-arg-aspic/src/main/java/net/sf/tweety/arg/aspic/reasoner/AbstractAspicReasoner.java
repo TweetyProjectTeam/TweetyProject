@@ -69,7 +69,7 @@ public abstract class AbstractAspicReasoner<T extends Invertable> implements Qua
 	 * inference type.
 	 * @param aat an AspicArgumentationTheory
 	 * @param query a formula
-	 * @param inferenceType either Semantics.SCEPTICAL_INFERENCE or Semantics.CREDULOUS_INFERENCE
+	 * @param inferenceMode either Semantics.SCEPTICAL_INFERENCE or Semantics.CREDULOUS_INFERENCE
 	 * @return "true" if the formula is accepted
 	 */
 	public final Boolean query(AspicArgumentationTheory<T> aat, T query, InferenceMode inferenceMode) {
