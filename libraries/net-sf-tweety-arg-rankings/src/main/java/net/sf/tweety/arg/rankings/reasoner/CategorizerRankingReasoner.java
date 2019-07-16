@@ -33,7 +33,7 @@ import net.sf.tweety.math.matrix.Matrix;
  * [Pu, Zhang, Luo, Luo. Argument Ranking with Categoriser Function. KSEM 2014]
  * which allows for cycles in argumentation graphs.
  * 
- * @see {@link net.sf.tweety.arg.deductive.categorizer.HCategorizer}
+ * @see net.sf.tweety.arg.deductive.categorizer.HCategorizer
  * 
  * @author Anna Gessler
  */

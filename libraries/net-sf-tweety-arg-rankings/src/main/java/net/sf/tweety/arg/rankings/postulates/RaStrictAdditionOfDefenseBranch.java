@@ -37,7 +37,7 @@ import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
  *  which are not in the original knowledge base, for whom is true that 
  *  A <- X1 <- X2 ... <- Xn and where n is an even number.
  *  
- * @see {@link net.sf.tweety.arg.rankings.postulates.RaAdditionOfDefenseBranch}
+ * @see net.sf.tweety.arg.rankings.postulates.RaAdditionOfDefenseBranch
  * @author Anna Gessler
  *
  */

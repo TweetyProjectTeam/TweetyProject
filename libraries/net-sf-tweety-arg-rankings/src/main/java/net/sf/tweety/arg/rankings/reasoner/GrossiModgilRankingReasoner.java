@@ -254,7 +254,6 @@ public class GrossiModgilRankingReasoner extends AbstractRankingReasoner<Lattice
 	 * Returns all m-stable extensions.
 	 * @param theory a Dung theory
 	 * @param m some integer
-	 * @param n some integer
 	 * @return all m-stable extensions.
 	 */
 	public Collection<Extension> getAllMStableExtensions(DungTheory theory, int m){

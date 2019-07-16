@@ -174,7 +174,7 @@ public class RankingSemanticsExample {
 	/**
 	 * Rounds a double value to n decimals.
 	 * 
-	 * @param value
+	 * @param value a double value
 	 * @param n     number of decimals
 	 * @return value rounded to n decimals
 	 */

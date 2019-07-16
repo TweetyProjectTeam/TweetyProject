@@ -33,7 +33,7 @@ import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
  *  Semantics for Abstract Argumentation. 2016]: 
  *  Adding a defense branch to any attacked argument improves its ranking.
  * 
- * @see {@link net.sf.tweety.arg.rankings.postulates.RaStrictAdditionOfDefenseBranch}
+ * @see  net.sf.tweety.arg.rankings.postulates.RaStrictAdditionOfDefenseBranch
  * @author Anna Gessler
  *
  */
