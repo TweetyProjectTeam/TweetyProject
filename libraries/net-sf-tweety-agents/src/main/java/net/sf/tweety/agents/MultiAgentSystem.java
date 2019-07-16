@@ -28,7 +28,7 @@ import java.util.Set;
  * 
  * @author Matthias Thimm
  * 
- * @param T the agent class.
+ * @param <T> the agent class.
  */
 public class MultiAgentSystem<T extends Agent> implements Collection<T>{
 

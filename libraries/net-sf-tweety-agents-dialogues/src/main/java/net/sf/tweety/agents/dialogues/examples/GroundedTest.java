@@ -68,7 +68,7 @@ public class GroundedTest {
 	 * This method shows that with increasing complexity of the T1-belief state of
 	 * the CONTRA agent (and constant model of the PRO agent), the average utility of
 	 * the CONTRA agent increases. NOTE: the simulation might take a while.
-	 * @throws ProtocolTerminatedException
+	 * @throws ProtocolTerminatedException if the protocol already terminated
 	 */
 	public static void runSimulationT1() throws ProtocolTerminatedException{
 		// We run different simulations with increasing recursion depth
@@ -133,7 +133,7 @@ public class GroundedTest {
 	
 	/**
 	 * Same as runSimulationT1()
-	 * @throws ProtocolTerminatedException
+	 * @throws ProtocolTerminatedException  if the protocol already terminated
 	 */
 	public static void runSimulationT2() throws ProtocolTerminatedException{
 		// We run different simulations with increasing complexity
@@ -213,7 +213,7 @@ public class GroundedTest {
 	
 	/**
 	 * Same as runSimulationT1()
-	 * @throws ProtocolTerminatedException
+	 * @throws ProtocolTerminatedException  if the protocol already terminated
 	 */
 	public static void runSimulationT3() throws ProtocolTerminatedException{
 		// We run different simulations with increasing complexity

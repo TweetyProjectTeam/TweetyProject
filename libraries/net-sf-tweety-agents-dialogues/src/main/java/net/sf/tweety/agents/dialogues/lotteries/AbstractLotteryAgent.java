@@ -42,9 +42,7 @@ public abstract class AbstractLotteryAgent extends Agent {
 	 * Creates a new lottery agent
 	 * @param name the name of the agent 
 	 * @param theory some theory
-	 * @param prob a probability function
-	 * @param util a utility function
-	 * @param isDummy whether it is a dummy agent.
+	 * @param semantics the semantics underlying the theory
 	 */
 	public AbstractLotteryAgent(String name, DungTheory theory, Semantics semantics) {
 		super(name);

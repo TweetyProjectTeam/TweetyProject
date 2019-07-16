@@ -37,7 +37,7 @@ public class ExecutableDungTheory extends DungTheory implements Executable {
 	
 	/**
 	 * Creates a new dung theory for the given Dung theory.
-	 * @param arguments a Dung theory.
+	 * @param theory a Dung theory.
 	 */
 	public ExecutableDungTheory(DungTheory theory) {
 		super(theory);

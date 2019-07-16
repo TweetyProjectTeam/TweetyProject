@@ -45,7 +45,7 @@ public class GroundedGameT1AgentGenerator extends GroundedGameAgentGenerator {
 	/**
 	 * Creates a new generator for agents of type T1.
 	 * @param faction the faction of the agents to be generated.
-	 * @param config
+	 * @param config configuration object
 	 */
 	public GroundedGameT1AgentGenerator(GroundedGameSystem.AgentFaction faction, T1Configuration config) {
 		super(faction);

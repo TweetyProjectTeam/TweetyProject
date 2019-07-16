@@ -44,10 +44,11 @@ public class RandomLotteryAgent extends AbstractLotteryAgent{
 	private UtilityFunction util;
 	
 	/**
-	 * Creates a new agent with the given name, theory, and semantics
-	 * @param name
-	 * @param theory
-	 * @param semantics
+	 * Creates a new agent with the given name, theory, utility function and semantics
+	 * @param name the name of the agent 
+	 * @param theory some theory
+	 * @param util the used utility function
+	 * @param semantics the semantics underlying the theory
 	 */
 	public RandomLotteryAgent(String name, DungTheory theory, UtilityFunction util, Semantics semantics) {
 		super(name, theory, semantics);	

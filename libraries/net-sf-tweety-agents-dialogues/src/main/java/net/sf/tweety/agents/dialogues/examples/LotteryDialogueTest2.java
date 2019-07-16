@@ -67,10 +67,10 @@ public class LotteryDialogueTest2 {
 	
 	/**
 	 * Main method for evaluation.
-	 * @param args
-	 * @throws ParserException
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @param args additional arguments 
+	 * @throws ParserException if parsing failed
+	 * @throws FileNotFoundException if a file could not be found
+	 * @throws IOException if some general IO issue occurred
 	 */
 	public static void main(String[] args) throws ParserException, FileNotFoundException, IOException{
 		String pathToApxGraphs = args[0];

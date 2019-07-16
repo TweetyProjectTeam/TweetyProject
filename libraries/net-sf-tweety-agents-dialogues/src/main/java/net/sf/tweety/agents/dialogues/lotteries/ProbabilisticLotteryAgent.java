@@ -90,7 +90,7 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 	 * @param prob a probability function
 	 * @param util a utility function
 	 * @param updatestrategy The update strategy used
-	 * @param Stickyness coefficient for the sticky update (only needed when updatestrategy==UPDATE_STICKY.
+	 * @param stickynesscoefficient coefficient for the sticky update (only needed when updatestrategy==UPDATE_STICKY.
 	 */
 	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, Semantics semantics, byte updatestrategy, double stickynesscoefficient) {
 		super(name,theory,semantics);
