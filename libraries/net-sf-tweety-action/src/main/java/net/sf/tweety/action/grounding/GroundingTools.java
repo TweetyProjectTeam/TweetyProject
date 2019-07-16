@@ -41,6 +41,7 @@ public class GroundingTools
    * requirements.
    * 
    * @param map a map from variables to constants
+   * @param requirements a set of requirements
    * @return true, if map is a valid application of constants to variables.
    */
   public static boolean isValidGroundingApplication(

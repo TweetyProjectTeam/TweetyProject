@@ -41,8 +41,10 @@ public class GroundingRequirementsParser
   /**
    * Parses a string of the following form: REQUIREMENT ("," REQUIREMENT)*
    * 
-   * @param s A set of variables which are allowed in these requirements.
+   * @param s a string
+   * @param variables A set of variables which are allowed in these requirements.
    * @return The set of grounding requirements parsed from the given string.
+ * @throws ParserException if parsing fails 
    */
   public Set< GroundingRequirement > parseRequirements( String s,
     Set< Variable > variables )
@@ -66,6 +68,7 @@ public class GroundingRequirementsParser
    * variable VARIABLENAME.
    * 
    * @param s a string containing a single requirement
+ * @param variables a set of variables
    * @return the parsed grounding requirement.
    * @throws ParserException if parsing fails
    */

@@ -28,6 +28,7 @@ import net.sf.tweety.logics.commons.analysis.ConsistencyTester;
  *
  * @author Sebastian Homann
  * @author Tim Janus
+ * @param <T> the type of causal law
  */
 public interface ActionDescriptionConsistencyTester<T extends CausalLaw> extends ConsistencyTester<ActionDescription<T>>{
 

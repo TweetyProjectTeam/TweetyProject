@@ -128,6 +128,7 @@ public class ActionSignatureParser
    * and adds it to the signature.
    * 
    * @param s a string
+   * @throws ParserException if parsing fails
    */
   protected void parseSortDeclaration( String s )
     throws ParserException
@@ -176,6 +177,7 @@ public class ActionSignatureParser
    * and adds them to the signature.
    * 
    * @param s a string
+   * @throws ParserException if parsing fails
    */
   protected void parseTypeDeclaration( String s )
     throws ParserException

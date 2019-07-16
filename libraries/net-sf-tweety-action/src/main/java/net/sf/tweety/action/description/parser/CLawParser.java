@@ -121,6 +121,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * Parses a FolFormula from a string using the FolParser class
    * @param s a string
    * @return A first order formula 
+   * @throws ParserException if parsing fails
+   * @throws IOException if an IO issue occurs.
    */
   protected FolFormula parseFolFormula( String s )
     throws ParserException, IOException {
@@ -495,6 +497,7 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * Returns the set of forbidden keywords, that are contained in a string. This is used
    * for error recognition in input strings.
    * @param s some string
+   * @return the set of forbidden keywords  
    */
   protected Set<String> containedKeywords(String s) {
     final String[] keywords = {"caused ", " if ", " after ", " requires ", "inertial ", "default ", " causes ", "always ", "nonexecutable ", " may cause " };

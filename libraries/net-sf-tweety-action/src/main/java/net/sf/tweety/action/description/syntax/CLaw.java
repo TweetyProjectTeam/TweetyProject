@@ -126,6 +126,8 @@ public abstract class CLaw
    * requirements
    * 
    * @param headFormula some FOL formula
+   * @param ifFormula some FOL formula
+   * @param requirements  a set of requirements
    */
   public CLaw( FolFormula headFormula, FolFormula ifFormula,
     Set< GroundingRequirement > requirements )
@@ -139,6 +141,7 @@ public abstract class CLaw
    * Creates a causal law of the form caused headFormula if ifFormula
    * 
    * @param headFormula some FOL formula
+   * @param ifFormula  some FOL formula
    */
   public CLaw( FolFormula headFormula, FolFormula ifFormula )
   {

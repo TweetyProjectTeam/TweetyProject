@@ -36,7 +36,7 @@ import net.sf.tweety.logics.ml.writer.SPASSWriter;
  * >http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/</a>), 
  * an automated theorem prover for first-order logic, modal logic and description logics.
  * 
- * <br> Note: There are unresolved errors for some cases, see {@link net.sf.tweety.logics.ml.SPASSTest#ComplexQueryTest()} for examples.
+ * <br> Note: There are unresolved errors for some cases, see net.sf.tweety.logics.ml.SPASSTest#ComplexQueryTest() for examples.
  * 
  * @author Anna Gessler
  * @author Matthias Thimm

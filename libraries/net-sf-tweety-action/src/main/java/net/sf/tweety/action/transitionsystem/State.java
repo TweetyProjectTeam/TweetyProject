@@ -59,6 +59,7 @@ public class State
   
   /**
    * Returns the set of fluent atoms that are mapped to true by this state.
+   * @return the set of fluent atoms that are mapped to true by this state.
    */
   public Set< FolAtom > getPositiveFluents()
   {
