@@ -64,7 +64,7 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
 
   /**
    * This parser needs a valid action signature to parse causal laws.
-   * @param signature
+   * @param signature some signature
    */
   public CLawParser( ActionSignature signature ) {
     this.signature = signature;
@@ -119,10 +119,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
 
   /**
    * Parses a FolFormula from a string using the FolParser class
-   * @param s
-   * @return A first order formula
-   * @throws ParserException
-   * @throws IOException
+   * @param s a string
+   * @return A first order formula 
    */
   protected FolFormula parseFolFormula( String s )
     throws ParserException, IOException {
@@ -172,8 +170,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * @param s a string containing a single causal law.
    * @param reqString the grounding requirements of this law.
    * @return the corresponding causal law
-   * @throws ParserException
-   * @throws IOException
+   * @throws ParserException if parsing failes
+   * @throws IOException if io failes
    */
   private Formula parseCausedFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith("caused "))
@@ -229,8 +227,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * @param s a string containing a single inertial law.
    * @param reqString the grounding requirements of this law.
    * @return the corresponding causal law
-   * @throws ParserException
-   * @throws IOException
+   * @throws ParserException if parsing failes
+   * @throws IOException if io failes
    */
   private Formula parseInertialFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith("inertial "))
@@ -259,8 +257,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * @param s a string containing a single causal law.
    * @param reqString the grounding requirements of this law.
    * @return the corresponding causal law
-   * @throws ParserException
-   * @throws IOException
+   * @throws ParserException if parsing failes
+   * @throws IOException if io failes
    */
   private Formula parseDefaultFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith("default "))
@@ -307,8 +305,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * @param s a string containing a single causal law.
    * @param reqString the grounding requirements of this law.
    * @return the corresponding causal law
-   * @throws ParserException
-   * @throws IOException
+   * @throws ParserException if parsing failes
+   * @throws IOException if io failes
    */
   private Formula parseCausesFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.contains( " causes " ))
@@ -365,8 +363,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * @param s a string containing a single causal law.
    * @param reqString the grounding requirements of this law.
    * @return the corresponding causal law
-   * @throws ParserException
-   * @throws IOException
+   * @throws ParserException if parsing failes
+   * @throws IOException if io failes
    */
   private Formula parseAlwaysFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith( "always " ))
@@ -395,8 +393,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * @param s a string containing a single causal law.
    * @param reqString the grounding requirements of this law.
    * @return the corresponding causal law
-   * @throws ParserException
-   * @throws IOException
+   * @throws ParserException if parsing failes
+   * @throws IOException if io failes
    */
   private Formula parseNonexecutableFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.startsWith("nonexecutable "))
@@ -443,8 +441,8 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
    * @param s a string containing a single causal law.
    * @param reqString the grounding requirements of this law.
    * @return the corresponding causal law
-   * @throws ParserException
-   * @throws IOException
+   * @throws ParserException if parsing failes
+   * @throws IOException if io failes
    */
   private Formula parseMayCauseFormula(String s, String reqString) throws ParserException, IOException {
     if(!s.contains( " may cause " ))
@@ -496,7 +494,7 @@ public class CLawParser extends Parser<CActionDescription,Formula> {
   /**
    * Returns the set of forbidden keywords, that are contained in a string. This is used
    * for error recognition in input strings.
-   * @param s
+   * @param s some string
    */
   protected Set<String> containedKeywords(String s) {
     final String[] keywords = {"caused ", " if ", " after ", " requires ", "inertial ", "default ", " causes ", "always ", "nonexecutable ", " may cause " };

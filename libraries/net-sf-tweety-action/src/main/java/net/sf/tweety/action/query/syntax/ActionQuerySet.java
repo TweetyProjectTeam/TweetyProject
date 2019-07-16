@@ -27,7 +27,7 @@ import net.sf.tweety.commons.BeliefSet;
  * and provides some common functionalities for such queries.
  * 
  * @author Sebastian Homann
- * @param <T>
+ * @param <T> the tyoe of ActionQuery
  */
 public abstract class ActionQuerySet< T extends ActionQuery >
   extends BeliefSet< T,ActionSignature >
@@ -37,7 +37,7 @@ public abstract class ActionQuerySet< T extends ActionQuery >
    * Creates a new ActionQuerySet initialized with the given collection of
    * action queries.
    * 
-   * @param c
+   * @param c a collection of action queries
    */
   public ActionQuerySet( Collection< ? extends T > c )
   {

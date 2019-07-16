@@ -67,7 +67,7 @@ public class SActionQuerySatisfactionTester
    * Creates a new instance of this satisfaction tester using the given answer
    * set solver.
    * 
-   * @param aspsolver
+   * @param aspsolver some ASP solver
    */
   public SActionQuerySatisfactionTester( ASPSolver aspsolver )
   {
@@ -224,7 +224,7 @@ public class SActionQuerySatisfactionTester
    * Calculates the translation of an action query to rules of a normal logic
    * program according to the translation sheme presented in [1].
    * 
-   * @param queryPart
+   * @param queryPart a propositional formula
    * @return a String containing normal logic rules that represent the given
    *         action query.
    */
@@ -267,7 +267,7 @@ public class SActionQuerySatisfactionTester
    * Calculatesthe translation of a query proposition (holds, always,
    * necessarily) to rules of a normal logic program.
    * 
-   * @param queryProposition
+   * @param queryProposition a query proposition
    * @return the rules of a normal logic program representing the given query
    *         proposition.
    */
@@ -481,7 +481,7 @@ public class SActionQuerySatisfactionTester
    * This function exists mainly for debug reasons to regain a human readable
    * version of the atoms in a logic program or in a resulting stable model.
    * 
-   * @param s
+   * @param s a string
    */
   public String regainIllegalCharacters( String s )
   {

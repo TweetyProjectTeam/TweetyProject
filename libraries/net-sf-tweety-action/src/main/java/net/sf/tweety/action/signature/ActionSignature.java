@@ -68,7 +68,7 @@ public class ActionSignature
   /**
    * Creates a new Action Signature for a single first order formula.
    * 
-   * @param f
+   * @param f a FOL formula
    */
   public ActionSignature( FolFormula f )
   {
@@ -197,7 +197,7 @@ public class ActionSignature
    * Returns the fluent name predicate with the given name if one exists, null
    * otherwise.
    * 
-   * @param fluentName
+   * @param fluentName a string
    * @return the fluent predicate with the given name or null
    */
   public FolFluentName getFluentName( String fluentName )
@@ -213,7 +213,7 @@ public class ActionSignature
   /**
    * Returns true iff the given actionName is contained in this signature.
    * 
-   * @param actionName
+   * @param actionName a FOL action name
    * @return true iff the given actionName is contained in this signature.
    */
   public boolean containsActionName( FolActionName actionName )
@@ -224,7 +224,7 @@ public class ActionSignature
   /**
    * Returns true iff the given fluentName is contained in this signature.
    * 
-   * @param fluentName
+   * @param fluentName a string
    * @return true iff the given fluentName is contained in this signature.
    */
   public boolean containsFluentName( FolFluentName fluentName )
@@ -235,7 +235,7 @@ public class ActionSignature
   /**
    * Returns true iff the given predicate is contained in this signature.
    * 
-   * @param predicate
+   * @param predicate some predicate
    * @return true iff the given predicate is contained in this signature.
    */
   public boolean containsPredicate( Predicate predicate )

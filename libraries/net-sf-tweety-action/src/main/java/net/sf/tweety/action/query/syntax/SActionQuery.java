@@ -61,7 +61,7 @@ public class SActionQuery
    * Creates a new action query with the given propositional formula and no
    * grounding requirements.
    * 
-   * @param formula
+   * @param formula a propositional formula
    */
   public SActionQuery( PlFormula formula )
   {
@@ -78,8 +78,8 @@ public class SActionQuery
   /**
    * Creates a new action query with the given propositional formula 
    * and grounding requirements.
-   * @param formula
-   * @param requirements
+   * @param formula a propositional formula
+   * @param requirements a set of requirements
    */
   public SActionQuery( PlFormula formula,
     Set< GroundingRequirement > requirements )

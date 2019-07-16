@@ -48,7 +48,7 @@ public class CActionDescriptionConsistencyTester
    * Creates a new consistency tester which will use the given answer set
    * solver.
    * 
-   * @param aspsolver
+   * @param aspsolver some ASP solver
    */
   public CActionDescriptionConsistencyTester( ASPSolver aspsolver )
   {

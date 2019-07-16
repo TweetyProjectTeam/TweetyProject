@@ -59,9 +59,9 @@ public class DynamicLaw
    * Creates a new dynamic law of the form: caused headFormula if ifFormula
    * after afterFormula
    * 
-   * @param headFormula
-   * @param ifFormula
-   * @param afterFormula
+   * @param headFormula some FOL formula
+   * @param ifFormula some FOL formula
+   * @param afterFormula some FOL formula
    */
   public DynamicLaw( FolFormula headFormula, FolFormula ifFormula,
     FolFormula afterFormula )
@@ -74,10 +74,10 @@ public class DynamicLaw
    * Creates a new dynamic law of the form: caused headFormula if ifFormula
    * after afterFormula requires requirements
    * 
-   * @param headFormula
-   * @param ifFormula
-   * @param afterFormula
-   * @param requirements
+   * @param headFormula some FOL formula
+   * @param ifFormula some FOL formula
+   * @param afterFormula some FOL formula
+   * @param requirements a set of requirements
    */
   public DynamicLaw( FolFormula headFormula, FolFormula ifFormula,
     FolFormula afterFormula, Set< GroundingRequirement > requirements )
@@ -90,8 +90,8 @@ public class DynamicLaw
    * Creates a new dynamic law of the form caused headFormula after
    * afterFormula
    * 
-   * @param headFormula
-   * @param afterFormula
+   * @param headFormula some FOL formula
+   * @param afterFormula some FOL formula
    */
   public DynamicLaw( FolFormula headFormula, FolFormula afterFormula )
   {
@@ -103,9 +103,9 @@ public class DynamicLaw
    * Creates a new dynamic law of the form caused headFormula after
    * afterFormula requires requirements
    * 
-   * @param headFormula
-   * @param afterFormula
-   * @param requirements
+   * @param headFormula some FOL formula
+   * @param afterFormula some FOL formula
+   * @param requirements a set of requirements
    */
   public DynamicLaw( FolFormula headFormula, FolFormula afterFormula,
     Set< GroundingRequirement > requirements )

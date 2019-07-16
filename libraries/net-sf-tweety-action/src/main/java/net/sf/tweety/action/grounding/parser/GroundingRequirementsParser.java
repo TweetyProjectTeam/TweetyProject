@@ -67,7 +67,7 @@ public class GroundingRequirementsParser
    * 
    * @param s a string containing a single requirement
    * @return the parsed grounding requirement.
-   * @throws ParserException
+   * @throws ParserException if parsing fails
    */
   public GroundingRequirement parseRequirement( String s,
     Set< Variable > variables )

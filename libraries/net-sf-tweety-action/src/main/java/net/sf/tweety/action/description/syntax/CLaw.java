@@ -101,7 +101,7 @@ public abstract class CLaw
   /**
    * Creates a causal law of the form caused headFormula if True
    * 
-   * @param headFormula
+   * @param headFormula some FOL formula
    */
   public CLaw( FolFormula headFormula )
   {
@@ -112,8 +112,8 @@ public abstract class CLaw
    * Creates a causal law of the form caused headFormula if True requires
    * requirements
    * 
-   * @param headFormula
-   * @param requirements
+   * @param headFormula some FOL formula
+   * @param requirements a set of requirements
    */
   public CLaw( FolFormula headFormula, Set< GroundingRequirement > requirements )
   {
@@ -125,7 +125,7 @@ public abstract class CLaw
    * Creates a causal law of the form caused headFormula if ifFormula requires
    * requirements
    * 
-   * @param headFormula
+   * @param headFormula some FOL formula
    */
   public CLaw( FolFormula headFormula, FolFormula ifFormula,
     Set< GroundingRequirement > requirements )
@@ -138,7 +138,7 @@ public abstract class CLaw
   /**
    * Creates a causal law of the form caused headFormula if ifFormula
    * 
-   * @param headFormula
+   * @param headFormula some FOL formula
    */
   public CLaw( FolFormula headFormula, FolFormula ifFormula )
   {
@@ -175,7 +175,7 @@ public abstract class CLaw
   /**
    * Sets the IfFormula of this causal law
    * 
-   * @param IfFormula The new IfFormula of this causal law.
+   * @param ifFormula The new IfFormula of this causal law.
    */
   private void setIfFormula( FolFormula ifFormula )
   {

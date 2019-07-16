@@ -57,7 +57,7 @@ public class StaticLaw
   /**
    * Creates an empty static law of the form caused headFormula if True
    * 
-   * @param headFormula
+   * @param headFormula some FOL formula
    */
   public StaticLaw( FolFormula headFormula )
   {
@@ -68,8 +68,8 @@ public class StaticLaw
    * Creates an empty static law of the form caused headFormula if True
    * requires requirements
    * 
-   * @param headFormula
-   * @param requirements
+   * @param headFormula some FOL formula
+   * @param requirements a set of requirements
    */
   public StaticLaw( FolFormula headFormula,
     Set< GroundingRequirement > requirements )
@@ -80,8 +80,8 @@ public class StaticLaw
   /**
    * Creates an empty static law of the form caused headFormula if ifFormula
    * 
-   * @param headFormula
-   * @param ifFormula
+   * @param headFormula some FOL formula
+   * @param ifFormula some FOL formula
    */
   public StaticLaw( FolFormula headFormula, FolFormula ifFormula )
   {
@@ -92,9 +92,9 @@ public class StaticLaw
    * Creates an empty static law of the form caused headFormula if ifFormula
    * requires requirements
    * 
-   * @param headFormula
-   * @param ifFormula
-   * @param requirements
+   * @param headFormula some FOL formula
+   * @param ifFormula some FOL formula
+   * @param requirements a set of requirements
    */
   public StaticLaw( FolFormula headFormula, FolFormula ifFormula,
     Set< GroundingRequirement > requirements )

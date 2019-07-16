@@ -64,7 +64,7 @@ public class CTransitionSystemCalculator
    * Creates a new transition system calculator with the given interface to an
    * answer set solver.
    * 
-   * @param aspsolver
+   * @param aspsolver some ASP solver
    */
   public CTransitionSystemCalculator( ASPSolver aspsolver )
   {
@@ -78,7 +78,7 @@ public class CTransitionSystemCalculator
    * @param actionDescription an action description.
    * @param signature an action signature.
    * @return a transition system.
-   * @throws IOException
+   * @throws IOException if IO fails
    * @throws IllegalArgumentException is thrown, when the given action
    *           description is not definite, as this method only works for
    *           definite action descriptions.
@@ -140,7 +140,7 @@ public class CTransitionSystemCalculator
    * @param signature an action signature.
    * @return the set of all states of the transition system described by an
    *         action description.
-   * @throws IOException
+   * @throws IOException if IO fails
    * @throws IllegalArgumentException is thrown, when the given action
    *           description is not definite.
    */
@@ -324,7 +324,7 @@ public class CTransitionSystemCalculator
    * @param s a single answer set from the output of a solver.
    * @param signature the action signature of the original action description.
    * @return a map from timestamps to sets of atoms.
-   * @throws ParserException
+   * @throws ParserException if parsing fails
    */
   private Map< Integer, Set< FolAtom >> parseLpTSingleLine( String s,
     ActionSignature signature )

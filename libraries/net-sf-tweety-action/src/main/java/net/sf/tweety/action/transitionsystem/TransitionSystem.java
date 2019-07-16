@@ -113,7 +113,7 @@ public class TransitionSystem
    * Returns the state that maps the given fluents to true, if it exists,
    * otherwise null.
    * 
-   * @param fluents
+   * @param fluents a set of fluents
    * @return the state that maps the given fluents to true, if it exists,
    *         otherwise null.
    */

@@ -47,7 +47,7 @@ public class State
   /**
    * Returns true iff the fluent given is mapped to true by this state.
    * 
-   * @param fluent
+   * @param fluent an FOL atom
    * @return true iff the fluent given is mapped to true by this state.
    */
   public boolean isMappedToTrue( FolAtom fluent )

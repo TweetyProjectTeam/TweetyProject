@@ -264,10 +264,10 @@ public class ActionQueryParser
    * Parses a list of actionnames or a list of actions.
    * Actions are strings of the form ACTIONNAME ("," ACTIONNAME)*
    * into an action.
-   * @param s String
+   * @param l a list of action names 
    * @return an Action.
-   * @throws ParserException
-   * @throws IOException 
+   * @throws ParserException if parsing fails
+   * @throws IOException if IO fails
    */
   private FolAction parseAction(List<Object> l) throws ParserException, IOException {
     if(l.get(0) instanceof String) {
@@ -298,8 +298,8 @@ public class ActionQueryParser
   /**
    * Parses a simple formula as a list of string tokens or formulas into an action query.
    * This method expects a list of requirements at the end of the list.
-   * @param l a list of objects, either String tokens, objects of type PropositionalFormula or a list of requirements
-   * @throws ParserException
+   * @param stack a stack of objects, either String tokens, objects of type PropositionalFormula or a list of requirements
+   * @throws ParserException if parsing fails
    */
   private SActionQuery parseActionFormula(Stack<Object> stack ) throws ParserException {
     if(stack.isEmpty())
@@ -394,7 +394,7 @@ public class ActionQueryParser
    * and as such treats the formula as an atomic construct, either a contradiction, a tautology, or a proposition.
    * @param l a list objects, either String tokens or objects of type PropositionalFormula.
    * @return a propositional formula.
-   * @throws ParserException
+   * @throws ParserException if parsing fails
    */
   private PlFormula parseAtomic(List<Object> l) throws ParserException{
     if(l.size() == 1){

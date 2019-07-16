@@ -40,7 +40,7 @@ public class GroundingTools
    * Checks a grounding application for compliance with the grounding
    * requirements.
    * 
-   * @param map
+   * @param map a map from variables to constants
    * @return true, if map is a valid application of constants to variables.
    */
   public static boolean isValidGroundingApplication(

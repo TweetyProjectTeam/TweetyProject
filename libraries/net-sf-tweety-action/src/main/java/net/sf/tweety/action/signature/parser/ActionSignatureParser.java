@@ -61,7 +61,8 @@ public class ActionSignatureParser
    * @param filename the name of a file
    * @return a formula
    * @throws FileNotFoundException if the file is not found
-   * @throws Exception some parsing exceptions may be added here.
+   * @throws IOException if IO fails
+   * @throws ParserException some parsing exceptions may be added here.
    */
   public ActionSignature parseSignatureFromFile( String filename )
     throws FileNotFoundException, IOException, ParserException
@@ -75,7 +76,8 @@ public class ActionSignatureParser
    * 
    * @param text a string
    * @return a formula
-   * @throws Exception some parsing exceptions may be added here.
+   * @throws IOException if IO fails
+   * @throws ParserException some parsing exceptions may be added here.
    */
   public ActionSignature parseSignature( String text )
     throws IOException, ParserException
@@ -88,7 +90,8 @@ public class ActionSignatureParser
    * 
    * @param reader a reader
    * @return a formula
-   * @throws Exception some parsing exceptions may be added here.
+   * @throws IOException if IO fails
+   * @throws ParserException some parsing exceptions may be added here.
    */
   public ActionSignature parseSignature( Reader reader )
     throws IOException, ParserException

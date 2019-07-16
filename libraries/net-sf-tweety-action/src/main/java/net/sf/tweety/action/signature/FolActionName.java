@@ -37,8 +37,8 @@ public class FolActionName
   /**
    * Creates a new actionname predicate with the given name and arity.
    * 
-   * @param name
-   * @param arity
+   * @param name the name of the action
+   * @param arity the arity of the action
    */
   public FolActionName( String name, int arity )
   {
