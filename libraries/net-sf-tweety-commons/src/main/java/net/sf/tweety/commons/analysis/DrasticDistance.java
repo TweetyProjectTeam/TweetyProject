@@ -31,6 +31,8 @@ import net.sf.tweety.commons.Interpretation;
  * @author Matthias Thimm
  *
  * @param <T> The actual type of interpretation
+ * @param <B> the type of belief bases
+ * @param <S> the type of formulas
  */
 public class DrasticDistance<T extends Interpretation<B,S>,B extends BeliefBase, S extends Formula> implements InterpretationDistance<T,B,S>{
 

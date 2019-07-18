@@ -42,11 +42,11 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  * @author Nils Geilen
  * 
  * Parses a Aspic Argumentation System out of an input text. Every line contains one of the following: 
- *		<order> 		   ::= <identifier> ( '<' <identifier> )+
- *		<ordinary premise> ::= '=>' '-'? <identifier>
- *		<axiom> 		   ::= '->' '-'? <identifier>
- *		<defeasible rule>  ::= ( <identifier> ':' )? <identifier> ( ',' <identifier> )* '=>' (-)? <identifier>
- *		<static rule>	   ::= <identifier> ( ',' <identifier> )* '->' (-)? <identifier>
+ *		&lt;order&gt; 		   ::= &lt;identifier&gt; ( '&lt;' &lt;identifier&gt; )+
+ *		&lt;ordinary premise&gt; ::= '=&gt;' '-'? &lt;identifier&gt;
+ *		&lt;axiom&gt; 		   ::= '-&gt;' '-'? &lt;identifier&gt;
+ *		&lt;defeasible rule&gt;  ::= ( &lt;identifier&gt; ':' )? &lt;identifier&gt; ( ',' &lt;identifier&gt; )* '=&gt;' (-)? &lt;identifier&gt;
+ *		&lt;static rule&gt;	   ::= &lt;identifier&gt; ( ',' &lt;identifier&gt; )* '-&gt;' (-)? &lt;identifier&gt;
  *
  * 
  * @param <T>	is the type of the language that the ASPIC theory's rules range over 
@@ -66,7 +66,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	/**
 	 * Constructs a new instance
 	 * @param formulaparser	parses the bodies and the heads of the ASPIC argumentation systems rules
-	 * @param rfg	a generator, that transforms InferenceRule<T> into T
+	 * @param rfg	a generator, that transforms InferenceRule&lt;T&gt; into T
 	 */
 	public AspicParser(Parser<? extends BeliefBase,? extends Formula> formulaparser, RuleFormulaGenerator<T> rfg) {
 		super();
@@ -173,7 +173,7 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	
 	
 	/**
-	 * Extracts and Constructs a <code>SimpleAspicOrder</codeY> out of a string
+	 * Extracts and Constructs a <code>SimpleAspicOrder</code> out of a string
 	 * @param line	the source string
 	 * @return	the parsed order
 	 */

@@ -141,7 +141,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	        	token = tokenizer.nextToken();
 	        if(token == null)
 	        	throw new RuntimeException();	        	       
-			return new Double(token);
+			return Double.parseDouble(token);
 		}catch(Exception e) {
 			System.err.println("Could not find or missing rights to execute Alchemy binary 'infer'. "
 					+ "If 'infer' is not in your PATH please specify its location using the "

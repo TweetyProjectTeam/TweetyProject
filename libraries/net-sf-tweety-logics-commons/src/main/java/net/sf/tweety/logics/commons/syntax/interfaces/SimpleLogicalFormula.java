@@ -55,6 +55,9 @@ public interface SimpleLogicalFormula extends Formula {
 	@Override
 	boolean equals(Object other);
 	
-	/** Creates a deep copy of this formula */
+	/**
+	 * Creates a deep copy of this formula
+	 * @return the cloned formula
+	 */
 	SimpleLogicalFormula clone();
 }

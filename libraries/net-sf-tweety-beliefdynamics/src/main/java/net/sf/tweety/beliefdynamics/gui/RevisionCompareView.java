@@ -280,6 +280,9 @@ public class RevisionCompareView extends JPanel implements PropertyChangeListene
 	/**
 	 *  Helper method: got called if the revision process needs an update: It performs the revision for the left and right operator
 	 *  and saves the result to the result text areas.
+	 * @param op some object
+	 * @param b some boolean
+	 * @return a string
 	 */
 	private String updateRevision(Object op, boolean b) {
 		if(lstModel.getSize() < 2)

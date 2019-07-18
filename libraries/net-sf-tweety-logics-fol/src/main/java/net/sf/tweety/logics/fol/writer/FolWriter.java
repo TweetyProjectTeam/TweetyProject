@@ -36,6 +36,7 @@ public interface FolWriter {
 	 * Prints formatted representation of a query.
 	 * @param query
 	 *              the formula to be queried
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public void printQuery(FolFormula query) throws IOException;
 	
@@ -51,6 +52,7 @@ public interface FolWriter {
 	 * Prints formatted representation of a knowledge base.
 	 * @param b
 	 *          a knowledge base
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public void printBase(FolBeliefSet b) throws IOException ;
 	

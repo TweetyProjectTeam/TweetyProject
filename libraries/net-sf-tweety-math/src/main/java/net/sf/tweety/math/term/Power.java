@@ -33,6 +33,7 @@ public class Power extends FunctionalTerm {
 	/**
 	 * Creates a new power term with the given term and power.
 	 * @param term the potentiated term.
+	 * @param power the power
 	 */
 	public Power(Term term, Term power) {
 		super(term);

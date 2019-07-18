@@ -30,11 +30,11 @@ import net.sf.tweety.logics.pl.syntax.*;
  * propositional belief set is given by (starting symbol is FORMULASET) <br>
  * <br>
  * FORMULASET ::== FORMULA ( "\n" FORMULA )* <br>
- * FORMULA ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA
- * "||" FORMULA | FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA | "!" FORMULA |
+ * FORMULA ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&gt;&gt;" FORMULA | FORMULA
+ * "||" FORMULA | FORMULA "=&gt;" FORMULA | FORMULA "&lt;=&gt;" FORMULA | "!" FORMULA |
  * "+" | "-" <br>
  * <br>
- * PROPOSITION is a sequence of characters excluding |,&,!,(,),=,<,> and whitespace
+ * PROPOSITION is a sequence of characters excluding |,&amp;,!,(,),=,&lt;,&gt; and whitespace
  * characters.
  * 
  * @author Matthias Thimm

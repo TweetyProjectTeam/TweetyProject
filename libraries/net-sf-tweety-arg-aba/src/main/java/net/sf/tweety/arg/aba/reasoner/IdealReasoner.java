@@ -31,7 +31,7 @@ import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.commons.Formula;
 
 /**
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  * This reasoner for ABA theories performs inference on the ideal extension.
  * @param <T>	the language of the underlying ABA theory

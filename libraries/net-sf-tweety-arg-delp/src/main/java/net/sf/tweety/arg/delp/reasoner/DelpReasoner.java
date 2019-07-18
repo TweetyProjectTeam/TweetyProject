@@ -70,7 +70,8 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 
 	/**
 	 * Computes the subset of the arguments of this program, that are warrants.
-	 * @return a set of <source>DelpArgument</source> that are warrants
+	 * @param delp a delp
+	 * @return a set of <code>DelpArgument</code> that are warrants
 	 */
     public Set<DelpArgument> getWarrants(DefeasibleLogicProgram delp){
     	DefeasibleLogicProgram groundDelp = delp.ground();
@@ -101,6 +102,7 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 	/**
 	 * Returns all arguments with the given conclusion from the delp.
 	 * @param delp some delp.
+	 * @param f a formula
 	 * @return all arguments with the given conclusion from the delp.
 	 */
 	public static Set<DelpArgument> getArgumentsWithConclusion(DefeasibleLogicProgram delp, FolFormula f){

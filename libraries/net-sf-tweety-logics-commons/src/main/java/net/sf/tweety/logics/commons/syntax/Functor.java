@@ -48,6 +48,7 @@ public class Functor extends TypedStructureAdapter {
 	 * Initializes a functor with the given name and of the given arity.
 	 * Every argument and the target gets the sort Sort.THING. 
 	 * @param name the name of the functor
+	 * @param arity the arity of the functor
 	 */
 	public Functor(String name, int arity){
 		super(name,arity);
@@ -59,6 +60,7 @@ public class Functor extends TypedStructureAdapter {
 	 * of argument sorts, and the given target sort.
 	 * @param name the name of the functor
 	 * @param arguments the sorts of the arguments
+	 * @param targetSort the sort of the range
 	 */
 	public Functor(String name, List<Sort> arguments, Sort targetSort){
 		super(name,arguments);

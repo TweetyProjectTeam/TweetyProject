@@ -78,6 +78,7 @@ public abstract class AbstractProtocol implements Protocol{
 	
 	/**
 	 * Executes one step of the protocol.
+	 * @return the set of events that occurred.
 	 * @throws ProtocolTerminatedException if the protocol already terminated
 	 */
 	protected abstract Set<ActionEvent> doStep() throws ProtocolTerminatedException;

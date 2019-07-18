@@ -66,8 +66,8 @@ public class AspInconsistencyMeasureTest {
 		p3.add(new ASPRule(a1,new DefaultNegation(d)));
 		p3.add(new ASPRule(new StrictNegation(a1),new DefaultNegation(d)));
 		
-		assertEquals(new Double(3), mpm.inconsistencyMeasure(p3));
-		assertEquals(new Double(3), msd.inconsistencyMeasure(p3));
+		assertEquals(Double.valueOf(3), mpm.inconsistencyMeasure(p3));
+		assertEquals(Double.valueOf(3), msd.inconsistencyMeasure(p3));
 		
 		// Ex. 1b of [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]
 		Program p4 = new Program();
@@ -79,7 +79,7 @@ public class AspInconsistencyMeasureTest {
 		p4.add(new ASPRule(a1,new DefaultNegation(b)));
 		p4.add(new ASPRule(new StrictNegation(a1),new DefaultNegation(b)));
 				
-		assertEquals(new Double(1), mpm.inconsistencyMeasure(p4));
-		assertEquals(new Double(1), msd.inconsistencyMeasure(p4));
+		assertEquals(Double.valueOf(1), mpm.inconsistencyMeasure(p4));
+		assertEquals(Double.valueOf(1), msd.inconsistencyMeasure(p4));
 	}
 }

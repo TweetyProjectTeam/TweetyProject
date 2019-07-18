@@ -48,8 +48,10 @@ public class AspicAttack<T extends Invertable> extends Attack {
 		
 	/**
 	 * Checks for defeats in a list of arguments
+	 * @param <T> the type of formula
 	 * @param args	a list of arguments
 	 * @param order	an comparator which should compare the arguments in args 
+	 * @param rfgen a rule formula generator
 	 * @return a list of all tuples (a,b) with a, b in args where a defeats b
 	 */
 	public static <T extends Invertable> Collection<AspicAttack<T>> determineAttackRelations(Collection<AspicArgument<T>> args, Comparator<AspicArgument<T>> order, RuleFormulaGenerator<T> rfgen) {
@@ -65,7 +67,13 @@ public class AspicAttack<T extends Invertable> extends Attack {
 	}
 	
 	/**
-	 * Determines whether the attack is successfull
+	 * Determines whether the attack is successful
+	 * @param active the active argument
+	 * @param passive  the passive argument
+	 * @param rfgen  a rule formula generator 
+	 * @param order a comparator
+	 * @param <T> the type of formulas
+	 * @return true iff the attack is succuessful
 	 */
 	public static <T extends Invertable> boolean isAttack(AspicArgument<T> active, AspicArgument<T> passive, RuleFormulaGenerator<T> rfgen,Comparator<AspicArgument<T>> order) {
 		Collection<AspicArgument<T>> defargs = passive.getDefeasibleSubs();		

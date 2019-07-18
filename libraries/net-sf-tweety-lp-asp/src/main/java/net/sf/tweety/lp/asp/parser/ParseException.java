@@ -20,7 +20,7 @@ public class ParseException extends Exception {
    */
   private static final long serialVersionUID = 1L;
 
-  /**
+  /*
    * This constructor is used by the method "generateParseException"
    * in the generated parser.  Calling this constructor generates
    * a new object of this type with the fields "currentToken",
@@ -51,7 +51,7 @@ public class ParseException extends Exception {
     super();
   }
 
-  /** Constructor with message. */
+  /* Constructor with message. */
   public ParseException(String message) {
     super(message);
   }
@@ -78,7 +78,7 @@ public class ParseException extends Exception {
    */
   public String[] tokenImage;
 
-  /**
+  /*
    * It uses "currentToken" and "expectedTokenSequences" to generate a parse
    * error message and returns it.  If this object has been created
    * due to a parse error, and you do not catch it (it gets thrown
@@ -133,7 +133,7 @@ public class ParseException extends Exception {
    */
   protected String eol = System.getProperty("line.separator", "\n");
 
-  /**
+  /*
    * Used to convert raw characters to their escaped version
    * when these raw version cannot be used as part of an ASCII
    * string literal.

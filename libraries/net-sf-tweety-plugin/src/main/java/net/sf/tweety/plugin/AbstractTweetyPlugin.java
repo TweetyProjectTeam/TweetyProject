@@ -90,7 +90,7 @@ public abstract class AbstractTweetyPlugin implements TweetyPlugin {
 	
 	/**
 	 * This method handels instantiations with array-lists instead of a simple string (e.g. for multi-argument parameter)
-	 * @param s the ArrayList<String> containing the input parameter
+	 * @param s the ArrayList&lt;String&gt; containing the input parameter
 	 * @return the newly instantiated command parameter with the given value 
 	 * @throws CloneNotSupportedException if cloning is not supported
 	 */

@@ -24,7 +24,7 @@ import java.util.Set;
 import net.sf.tweety.logics.pl.syntax.PlPredicate;
 
 /**
- * Creates a relational formula, i.e. "A -> B" that can be used to model attacks in LDO.
+ * Creates a relational formula, i.e. "A -&gt; B" that can be used to model attacks in LDO.
  * 
  * @author Matthias Thimm
  *

@@ -25,8 +25,8 @@ import net.sf.tweety.graphs.*;
 
 /**
  * Instances of this class represent argument trees in the sense
- * of Definition 6.1 in<br/>
- * <br/>
+ * of Definition 6.1 in<br>
+ * <br>
  * Philippe Besnard and Anthony Hunter. A logic-based theory of deductive arguments.
  * In Artificial Intelligence, 128(1-2):203-235, 2001.
  * 

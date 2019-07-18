@@ -30,12 +30,13 @@ import net.sf.tweety.commons.util.SetTools;
 /**
  * This class implements the approach of [Meriem Ammoura, Badran Raddaoui, Yakoub Salhi, Brahim Oukacha.
  * On Measuring Inconsistency Using Maximal Consistent Sets. ECSQARU'15].
- * <br/>
+ * <br>
  * This implementation actually uses a different characterization of the measure proposed in the paper
  * above. Instead of using maximal consistent subsets the implementation uses minimal correction sets
  * (note that there is a 1:1 correspondence between the two).
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
  */
 public class McscInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
@@ -55,6 +56,7 @@ public class McscInconsistencyMeasure<S extends Formula> extends BeliefSetIncons
 	 * we call it MD-anticover).
 	 * @param md a list of all minimal correction sets
 	 * @param idx the current index in the list of minimal correction sets 
+	 * @param candidates the set of candidates
 	 * @return the set of all MD anticover
 	 */
 	private Set<Set<Set<S>>> getMdAnticover(List<Set<S>> md, int idx, Set<Set<Set<S>>> candidates){
@@ -119,7 +121,7 @@ public class McscInconsistencyMeasure<S extends Formula> extends BeliefSetIncons
 			}		
 		}		
 		if(found_finite)
-			return new Double(min_union_size);
+			return ((double)min_union_size);
 		else return Double.POSITIVE_INFINITY;
 	}
 

@@ -153,10 +153,10 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * vertices v and w with an edge if and only if v and w are not
 	 * connected in this graph.
 	 * 
-	 * @param selfloops Indicates how to deal with selfloops:<br/>
-	 * 	IGNORE_SELFLOOPS - ignore self loops (don't add and don't remove)<br/> 
-	 *  INVERT_SELFLOOPS - deal with self loops like ordinary edges (add if not present and remove if present)<br/>	
-	 *  REMOVE_SELFLOOPS - simple remove self loops, but don't add new ones.<br/>	
+	 * @param selfloops Indicates how to deal with selfloops:<br>
+	 * 	IGNORE_SELFLOOPS - ignore self loops (don't add and don't remove)<br> 
+	 *  INVERT_SELFLOOPS - deal with self loops like ordinary edges (add if not present and remove if present)<br>	
+	 *  REMOVE_SELFLOOPS - simple remove self loops, but don't add new ones.<br>	
 	 *  
 	 * @return the complement graph of this graph.
 	 */

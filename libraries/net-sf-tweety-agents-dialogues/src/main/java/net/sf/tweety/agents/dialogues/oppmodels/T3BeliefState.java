@@ -53,6 +53,9 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 	 * Creates a new T3-belief-state with the given parameters. 
 	 * @param knownArguments the set of arguments known by the agent.
 	 * @param utilityFunction the utility function of the agent.
+	 * @param virtualArguments the set of virtual arguments
+	 * @param virtualAttacks the set of virtual attacks
+	 * @param rec the recognition function
 	 * @param prob the probability function over opponent models.
 	 */
 	public T3BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction, Set<Argument> virtualArguments, Set<Attack> virtualAttacks, RecognitionFunction rec, ProbabilityFunction<T3BeliefState> prob){

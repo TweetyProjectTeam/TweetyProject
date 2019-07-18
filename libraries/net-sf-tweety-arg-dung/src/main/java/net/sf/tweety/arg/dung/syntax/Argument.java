@@ -35,7 +35,7 @@ public class Argument implements DungEntity, Node{
 	private String name;
 
 	/**
-	 * Default constructor that assigns the given <source>name</source> to this argument
+	 * Default constructor that assigns the given <code>name</code> to this argument
 	 * @param name the name of the argument
 	 */
 	public Argument(String name){

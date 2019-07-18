@@ -26,6 +26,7 @@ import net.sf.tweety.commons.BeliefBase;
  * 
  * @author Matthias Thimm
  * @author Tim Janus
+ * @param <T> the type of belief bases
  */
 public interface ConsistencyTester<T extends BeliefBase> {
 	

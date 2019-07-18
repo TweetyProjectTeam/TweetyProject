@@ -71,7 +71,9 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 	/** the default file handler cannot load any files and has to be replaced */
 	private FileHandler fileHandler = new DefaultFileHandler();
 	
-	/** Default Ctor: registers the view as listener to the correct model. */
+	/** Default Ctor: registers the view as listener to the correct model. 
+	 * @param model the model
+	 * @param view the view */
 	public SimpleRevisionComparePresenter(SimpleRevisionCompareModel model, SimpleRevisionCompareView view) {
 		this.model = model;
 		this.view = view;
@@ -191,7 +193,8 @@ public class SimpleRevisionComparePresenter implements ItemListener, ChangeListe
 		}
 	}
 	
-	/** Functional Test method: Only shows the view in a JFrame to test resize behavior. */
+	/** Functional Test method: Only shows the view in a JFrame to test resize behavior. 
+	 * @param args some arguments*/
 	public static void main(String [] args) {
 		SimpleRevisionCompareModel model = new SimpleRevisionCompareModel();
 		SimpleRevisionCompareView view = new SimpleRevisionCompareView();

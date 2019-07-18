@@ -86,9 +86,9 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 
 	/**
-	 * returns true if <source>arguments</source> attack all other arguments in the theory
+	 * returns true if <code>arguments</code> attack all other arguments in the theory
 	 * @param ext An extension contains a set of arguments.
-	 * @return true if <source>arguments</source> attack all other arguments in the theory
+	 * @return true if <code>arguments</code> attack all other arguments in the theory
 	 */
 	public boolean isAttackingAllOtherArguments(Extension ext){
 		for(Argument a: this) {
@@ -173,7 +173,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	/**
 	 * Computes the set {A | (A,argument) in attacks}.
 	 * @param argument an argument
-	 * @return the set of all arguments that attack <source>argument</source>.
+	 * @return the set of all arguments that attack <code>argument</code>.
 	 */
 	public Set<Argument> getAttackers(Argument argument){
 		if(!this.parents.containsKey(argument))
@@ -184,7 +184,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	/**
 	 * Computes the set {A | (argument,A) in attacks}.
 	 * @param argument an argument
-	 * @return the set of all arguments that are attacked by <source>argument</source>.
+	 * @return the set of all arguments that are attacked by <code>argument</code>.
 	 */
 	public Set<Argument> getAttacked(Argument argument){
 		if(!this.children.containsKey(argument))
@@ -193,10 +193,10 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 
 	/**
-	 * returns true if some argument of <source>ext</source> attacks argument.
+	 * returns true if some argument of <code>ext</code> attacks argument.
 	 * @param argument an argument
 	 * @param ext an extension, ie. a set of arguments
-	 * @return true if some argument of <source>ext</source> attacks argument.
+	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
 	public boolean isAttacked(Argument argument, Extension ext){
 		if(!this.parents.containsKey(argument))
@@ -208,10 +208,10 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	/**
-	 * returns true if some argument of <source>ext</source> is attacked by argument.
+	 * returns true if some argument of <code>ext</code> is attacked by argument.
 	 * @param argument an argument
 	 * @param ext an extension, ie. a set of arguments
-	 * @return true if some argument of <source>ext</source> is attacked by argument.
+	 * @return true if some argument of <code>ext</code> is attacked by argument.
 	 */
 	public boolean isAttackedBy(Argument argument, Collection<Argument> ext){
 		if(!this.children.containsKey(argument))
@@ -223,12 +223,12 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	/**
-	 * returns true if some argument of <source>ext2</source> attacks some argument
-	 * in <source>ext1</source>
+	 * returns true if some argument of <code>ext2</code> attacks some argument
+	 * in <code>ext1</code>
 	 * @param ext1 an extension, ie. a set of arguments
 	 * @param ext2 an extension, ie. a set of arguments
-	 * @return true if some argument of <source>ext2</source> attacks some argument
-	 * in <source>ext1</source>
+	 * @return true if some argument of <code>ext2</code> attacks some argument
+	 * in <code>ext1</code>
 	 */
 	public boolean isAttacked(Extension ext1, Extension ext2){
 		for(Argument a: ext1)
@@ -348,6 +348,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 
 	
 	/** Pretty print of the theory.
+	 * @return the pretty print of the theory.
 	 */
 	public String prettyPrint(){
 		String output = new String();
@@ -743,6 +744,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	/**
 	 * Checks whether there is at least one cycle in this DungTheory.
 	 * @return "true" if there is a cycle in this DungTheory, "false" otherwise
+	 * @param <S> the type of nodes
 	 */
 	public <S extends Node> boolean containsCycle() {
 		return DefaultGraph.containsCycle(this);

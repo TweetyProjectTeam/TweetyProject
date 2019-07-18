@@ -27,6 +27,8 @@ import net.sf.tweety.commons.Formula;
  * of responsibility for causing an inconsistency.
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
+ * @param <T> the type of belief sets
  */
 public interface CulpabilityMeasure<S extends Formula, T extends BeliefSet<S,?>> {
 	

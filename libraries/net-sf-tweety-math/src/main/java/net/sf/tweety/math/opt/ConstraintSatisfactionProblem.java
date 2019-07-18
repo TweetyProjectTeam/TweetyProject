@@ -52,7 +52,7 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	
 	/**
 	 * Normalizes this problem, i.e. every constraint is brought into
-	 * an equivalent form "T > 0" or "T >= 0" or "T = 0" or "T != 0". 
+	 * an equivalent form "T&gt; 0" or "T &gt;= 0" or "T = 0" or "T != 0". 
 	 * @return a csp.
 	 */
 	public ConstraintSatisfactionProblem toNormalizedForm(){

@@ -101,7 +101,7 @@ public class GlpkSolver extends Solver {
 				idx = outputFromFile.indexOf(" " + v.getName() +  " ");
 				tokens = outputFromFile.substring(idx, outputFromFile.indexOf("\n", idx)).split("\\s");
 				for(i = 0; i < tokens.length && !Parser.isNumeric(tokens[i]); i++){ ; }
-				result.put(v, new FloatConstant(new Double(tokens[i])));
+				result.put(v, new FloatConstant(Double.parseDouble(tokens[i])));
 			}			
 			return result;
 		}catch(IOException e){

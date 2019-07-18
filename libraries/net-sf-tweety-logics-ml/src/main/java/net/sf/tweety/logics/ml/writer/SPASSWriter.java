@@ -74,6 +74,8 @@ public class SPASSWriter {
 	 * Prints the contents of a SPASS problem file for a given knowledge base and a formula.
 	 * @param kb a knowledge base
 	 * @param formula a relational formula
+	 * @throws ParserException if parsing fails
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public void printProblem(MlBeliefSet kb, RelationalFormula formula) throws ParserException, IOException {
 		FolSignature signature = (FolSignature) kb.getMinimalSignature();

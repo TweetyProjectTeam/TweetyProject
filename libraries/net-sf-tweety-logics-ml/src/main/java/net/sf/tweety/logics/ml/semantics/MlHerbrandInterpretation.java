@@ -38,7 +38,7 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * 
  * A Herbrand interpretation is an interpretation for a first-order signature,
  * stating all ground atoms that are true in the interpretation.
- * <br/>
+ * <br>
  * NOTE: We only allow Herbrand interpretations for signatures without
  *   function symbols.
  * @author Matthias Thimm
@@ -75,6 +75,7 @@ public class MlHerbrandInterpretation extends InterpretationSet<FolAtom,FolBelie
 	 * Checks whether this Herbrand interpretation satisfies
 	 * the given formula.
 	 * @param formula a formula.
+	 * @param successors the successors
 	 * @return "true" if this interpretation satisfies "f".
 	 * @throws IllegalArgumentException if "f" is not closed.
 	 */
@@ -292,7 +293,7 @@ public class MlHerbrandInterpretation extends InterpretationSet<FolAtom,FolBelie
 	}
 	
 	/**
-	 * For every mapping t1 -> t2, this method substitutes every
+	 * For every mapping t1 -&gt; t2, this method substitutes every
 	 * occurrence of "t1" by "t2" and vice versa and returns the new interpretation
 	 * @param mapping a mapping of terms.
 	 * @return a Herbrand interpretation.

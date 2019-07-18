@@ -54,6 +54,7 @@ public class OjAlgoMathUtils {
 	 * Create unity matrix multiplied by scalar.
 	 *  
 	 * @param n some int
+	 * @param scalar a double value
 	 * @return the unity matrix
 	 */
 	public static PrimitiveMatrix getUnityMultiple(int n, double scalar) {

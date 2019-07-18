@@ -26,7 +26,7 @@ import java.util.LinkedList;
  * Der Update-Stream ist eine Datenstruktur, die benutzt wird, um eine Reihe von Updates fuer dynamische POs
  * einzuspeisen und zu verwalten. In dem Stream stehen Update-Elemente vom Typ Update, die wie folgt aufgebaut sind:
  * Update(Praeferenzordnung, Operation, Anzahl der Operationen, Element)
- * (Update<PreferenceOrder<T>, Operation, Integer, T>)
+ * (Update&lt;PreferenceOrder&lt;T&gt;, Operation, Integer, T&gt;)
  * 
  * Pro Aggregator-Instanz wird ein UpdateStream sowie Reader/Writer von dessen Konstruktor erzeugt.
  * 

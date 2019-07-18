@@ -35,11 +35,11 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * 
- * @author Federico Cerutti <federico.cerutti@acm.org>
+ * @author Federico Cerutti (federico.cerutti@acm.org)
  *
  * Parses a simple logic knowledge base out of an input text.
  * Each line contains either a literal or a simple rule of the form
- * l1, ..., ln -> c
+ * l1, ..., ln -&gt; c
  */
 public class SimplePlLogicParser
 		extends

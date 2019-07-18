@@ -27,6 +27,7 @@ import java.util.function.Supplier;
  * is computed.
  * 
  * @author Mathias Hofer
+ * @param <T> the type of results supplied by this supplier
  *
  */
 public class CacheSupplier<T> implements Supplier<T> {

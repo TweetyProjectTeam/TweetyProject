@@ -93,6 +93,7 @@ public class AssociationRule<T> {
 	 * @param item some object
 	 * @param database a database (set of sets of objects)
 	 * @return the support of the item.
+	 * @param <S> the type of objects
 	 */
 	public static <S extends Object> double support(S item, Collection<Collection<S>> database){
 		double cnt = 0;
@@ -109,6 +110,7 @@ public class AssociationRule<T> {
 	 * @param itemset some set of objects
 	 * @param database a database (set of sets of objects)
 	 * @return the support of the itemset.
+	 * @param <S> the type of objects
 	 */
 	public static <S extends Object> double support(Collection<S> itemset, Collection<Collection<S>> database){
 		double cnt = 0;

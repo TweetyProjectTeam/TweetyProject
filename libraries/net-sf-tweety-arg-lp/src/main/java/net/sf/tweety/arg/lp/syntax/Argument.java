@@ -69,7 +69,7 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 	/**
 	 * Returns the set of assumptions, i.e. the set of DLPLiterals, that appear
 	 * default-negated in the premise of some rule in this argument.
-	 * Ex.: Let a <- b, not -c. be a rule in argument A. Then A.getAssumptions() 
+	 * Ex.: Let a &lt;- b, not -c. be a rule in argument A. Then A.getAssumptions() 
 	 *      will contain -c.
 	 * 
 	 * @return a set of literals which this argument assumes not to be true
@@ -91,7 +91,8 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 	/**
 	 * An argument may only contain nonempty ground rules (i.e. no constraints).
 	 * Also, for an argument A = [r1, r2, ..., rn] for each literal Lj in the body
-	 * of a rule ri there has to be a rule rk with k>i with head(rk) = Lj.  
+	 * of a rule ri there has to be a rule rk with k&gt;i with head(rk) = Lj.  
+	 * @return true iff the the argument is valid
 	 */
 	public boolean checkValid() {
 		Set<ASPLiteral> foundLiterals = new HashSet<ASPLiteral>();

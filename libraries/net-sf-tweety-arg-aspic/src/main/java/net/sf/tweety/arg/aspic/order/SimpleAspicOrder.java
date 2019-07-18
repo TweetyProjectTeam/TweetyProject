@@ -47,7 +47,7 @@ public class SimpleAspicOrder<T extends Invertable> implements Comparator<AspicA
 	
 	/**
 	 * Creates a comparator for AspicArguments from a list of AspicInferneceRules
-	 * This will return a value <0, ==0 or >0 if the first argument's top rule is <,=,> the second 
+	 * This will return a value &lt;0, ==0 or &gt;0 if the first argument's top rule is &lt;,=,&gt; the second 
 	 * argument's top rule
 	 * @param rules	list of rules, ordered by their value ascending
 	 */

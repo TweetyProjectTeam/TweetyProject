@@ -117,7 +117,7 @@ public class ASPAtom extends ASPLiteral {
 	 * @param symbol
 	 *            The name of the atom
 	 * @param terms
-	 *            A list of Term<?> defining the arguments of the term
+	 *            A list of Term&lt;?&gt; defining the arguments of the term
 	 */
 	public ASPAtom(String symbol, Term<?>... terms) {
 		this.predicate = new Predicate(symbol, terms.length);

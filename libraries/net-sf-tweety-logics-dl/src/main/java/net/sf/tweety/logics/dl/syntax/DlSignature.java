@@ -79,6 +79,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	/**
 	 * Get the atomic concepts of the signature. A concept is an unary (arity 1)
 	 * predicate.
+	 * @return the atomic concepts of the signature
 	 */
 	public Set<AtomicConcept> getConcepts() {
 		return this.firstSet;
@@ -87,6 +88,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	/**
 	 * Get the role names of the signature. A role is a binary predicate (arity 2)
 	 * consisting of two individuals.
+	 * @return the role names of the signature
 	 */
 	public Set<AtomicRole> getRoles() {
 		return this.secondSet;
@@ -95,8 +97,8 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	/**
 	 * Get the individuals of the signature. An individual is a single object
 	 * similar to objects used in first-order logic.
+	 * @return the individuals of the signature
 	 */
-
 	public Set<Individual> getIndividuals() {
 		return this.thirdSet;
 	}

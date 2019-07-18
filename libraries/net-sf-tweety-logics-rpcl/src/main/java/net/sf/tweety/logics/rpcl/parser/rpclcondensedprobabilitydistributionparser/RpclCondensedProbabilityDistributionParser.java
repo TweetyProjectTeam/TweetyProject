@@ -27,18 +27,17 @@ import net.sf.tweety.commons.util.*;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.rpcl.*;
 import net.sf.tweety.logics.rpcl.semantics.*;
 import net.sf.tweety.math.probability.*;
 
-/**
+/*
  * This class implements a parser for condensed relational probability distributions. The BNF for 
  * condensed relational probability distributions is given by (start symbol is DISTRIBUTION)
  * <br>
  * <br>DISTRIBUTION				::== (PROBABILITYASSIGNMENT)*
  * <br>PROBABILITYASSIGNMENT	::== INTERPRETATION "=" PROBABILITY
  * <br>INTERPRETATION			::== "{" (INSTANCEASSIGNMENT ("," INSTANCEASSIGNMENT)*)? "}"
- * <br>INSTANCEASSIGNMENT		::== "<" PREDICATE "," "{" (CONSTANTSET "=" MULTIPLICATOR ("," CONSTANTSET "=" MULTIPLICATOR)*)?  "}" ">"
+ * <br>INSTANCEASSIGNMENT		::== "&lt;" PREDICATE "," "{" (CONSTANTSET "=" MULTIPLICATOR ("," CONSTANTSET "=" MULTIPLICATOR)*)?  "}" "&gt;"
  * <br>CONSTANTSET				::== "{" CONSTANT ("," CONSTANT)* "}"
  * <br>
  * <br>PREDICATE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with a lowercase letter at the beginning.<br>
@@ -48,12 +47,12 @@ import net.sf.tweety.math.probability.*;
 @SuppressWarnings("all")
 public class RpclCondensedProbabilityDistributionParser implements RpclCondensedProbabilityDistributionParserConstants {
 
-        /**
+        /*
      * The semantics used for the distribution to be read. 
      */
         private RpclSemantics semantics;
 
-        /**
+        /*
 	 * The signature for this parser (if one has been given)
 	 */
         private FolSignature signature = null;
@@ -264,12 +263,12 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   }
 
   static private boolean jj_initialized_once = false;
-  /** Generated Token Manager. */
+  /* Generated Token Manager. */
   static public RpclCondensedProbabilityDistributionParserTokenManager token_source;
   static SimpleCharStream jj_input_stream;
-  /** Current token. */
+  /* Current token. */
   static public Token token;
-  /** Next token. */
+  /* Next token. */
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
@@ -282,11 +281,11 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
       jj_la1_0 = new int[] {0x200,0xc0,0x400,0x1000,0x400,0x200,0x400,};
    }
 
-  /** Constructor with InputStream. */
+  /* Constructor with InputStream. */
   public RpclCondensedProbabilityDistributionParser(java.io.InputStream stream) {
      this(stream, null);
   }
-  /** Constructor with InputStream and supplied encoding */
+  /* Constructor with InputStream and supplied encoding */
   public RpclCondensedProbabilityDistributionParser(java.io.InputStream stream, String encoding) {
     if (jj_initialized_once) {
       System.out.println("ERROR: Second call to constructor of static parser.  ");
@@ -303,11 +302,11 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   static public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
-  /** Reinitialise. */
+  /* Reinitialise. */
   static public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     RpclCondensedProbabilityDistributionParserTokenManager.ReInit(jj_input_stream);
@@ -317,7 +316,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public RpclCondensedProbabilityDistributionParser(java.io.Reader stream) {
     if (jj_initialized_once) {
       System.out.println("ERROR: Second call to constructor of static parser. ");
@@ -334,7 +333,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   static public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     RpclCondensedProbabilityDistributionParserTokenManager.ReInit(jj_input_stream);
@@ -344,7 +343,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
-  /** Constructor with generated Token Manager. */
+  /* Constructor with generated Token Manager. */
   public RpclCondensedProbabilityDistributionParser(RpclCondensedProbabilityDistributionParserTokenManager tm) {
     if (jj_initialized_once) {
       System.out.println("ERROR: Second call to constructor of static parser. ");
@@ -360,7 +359,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     for (int i = 0; i < 7; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(RpclCondensedProbabilityDistributionParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -384,7 +383,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   }
 
 
-/** Get the next Token. */
+/* Get the next Token. */
   static final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = RpclCondensedProbabilityDistributionParserTokenManager.getNextToken();
@@ -393,7 +392,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     return token;
   }
 
-/** Get the specific Token. */
+/* Get the specific Token. */
   static final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
@@ -414,7 +413,7 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
   static private int[] jj_expentry;
   static private int jj_kind = -1;
 
-  /** Generate ParseException. */
+  /* Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[14];
@@ -445,11 +444,11 @@ public class RpclCondensedProbabilityDistributionParser implements RpclCondensed
     return new ParseException(token, exptokseq, tokenImage);
   }
 
-  /** Enable tracing. */
+  /* Enable tracing. */
   static final public void enable_tracing() {
   }
 
-  /** Disable tracing. */
+  /* Disable tracing. */
   static final public void disable_tracing() {
   }
 

@@ -44,6 +44,7 @@ public abstract class Writer {
 	
 	/**
 	 * Sets the object of this writer.
+	 * @param obj some object
 	 */
 	public void setObject(Object obj){
 		this.obj = obj;
@@ -66,6 +67,7 @@ public abstract class Writer {
 	/**
 	 * Writes the object into the given file.
 	 * @param filename the name of the file.
+	 * @throws IOException if an IO issue occurs.
 	 */
 	public void writeToFile(String filename) throws IOException{
 		String s = this.writeToString();

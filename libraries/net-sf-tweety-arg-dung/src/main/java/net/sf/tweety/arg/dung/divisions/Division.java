@@ -34,7 +34,7 @@ import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.graphs.Graph;
 
 /**
- * A pair <P,V> is a division of AAF G w.r.t. semantics X iff there is an X-extension E
+ * A pair &lt;P,V&gt; is a division of AAF G w.r.t. semantics X iff there is an X-extension E
  * such that P\subseteq E and E \cap V = {}, cf. [Hunter,Thimm,2014].
  * 
  * @author Matthias Thimm

@@ -81,7 +81,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
 	 * corresponding grounded theory, i.e., all schematic elements are replaced with all their grounded instances, where
 	 * all occurring variables are replaced with constants in every possible way. The set of constants used is the set
 	 * of constants appearing in this delp.
-	 * @return the grounded version of <source>this</source>
+	 * @return the grounded version of <code>this</code>
 	 */
 	public DefeasibleLogicProgram ground(){
 		return this.ground(((FolSignature)this.getMinimalSignature()).getConstants());
@@ -92,7 +92,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
 	 * corresponding grounded theory, i.e., all schematic elements are replaced with all their grounded instances, where
 	 * all occurring variables are replaced with constants in every possible way.
 	 * @param constants some set of constants. 
-	 * @return the grounded version of <source>this</source>
+	 * @return the grounded version of <code>this</code>
 	 */
 	public DefeasibleLogicProgram ground(Set<Constant> constants){
 		if(this.isGround()) return new DefeasibleLogicProgram(this);
@@ -163,7 +163,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
 	 * may be extended by the given parameters
 	 * @param literals a set of literals
 	 * @param defeasibleRules a set of defeasible rules
-	 * @param usefacts set to <source>true</source> iff the delpFacts of this program shall be used in computing the closure
+	 * @param usefacts set to <code>true</code> iff the delpFacts of this program shall be used in computing the closure
 	 * @return the closure of this program and the given parameters
 	 */
 	public Set<FolFormula> getStrictClosure(Set<FolFormula> literals,
@@ -206,7 +206,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
 	/**
 	 * Computes the strict closure of the program, i.e., the set of all strictly derivable literals.
      * The program is extended with delpFacts and defeasible rules (which are interpreted as strict rules here)
-     * described by the parameters <source>literals</source> and <source>defeasibleRules</source>.
+     * described by the parameters <code>literals</code> and <code>defeasibleRules</code>.
 	 * @param literals a set of literals
 	 * @param defeasibleRules a set of defeasible rules
 	 * @return the set of all strictly derivable literals.
@@ -218,7 +218,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
 
 	/**
 	 * Computes the strict closure of the program, i.e., the set of all strictly derivable literals.
-     * The program is extended with delpFacts described by the parameter <source>literals</source>
+     * The program is extended with delpFacts described by the parameter <code>literals</code>
 	 * @param literals a set of literals
 	 * @return the set of all strictly derivable literals.
 	 */
@@ -238,7 +238,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
 	 * Checks whether the given set of defeasible rules are consistent given the strict part of this
 	 * program.
 	 * @param rules a set of defeasible rules
-	 * @return <source>false</source> if the union of this program's delpFacts and strict rules with the given set
+	 * @return <code>false</code> if the union of this program's delpFacts and strict rules with the given set
 	 * 	of defeasible rules defeasibly derives two complementary literals
 	 */
 	public boolean isConsistent(Set<DefeasibleRule> rules){
@@ -260,7 +260,7 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
 	/**
 	 * Checks whether the given set of literals disagree with respect to the strict part of this program.
 	 * @param literals a set of literals
-	 * @return <source>true</source> if the union of this program's delpFacts and strict rules with the given set
+	 * @return <code>true</code> if the union of this program's delpFacts and strict rules with the given set
 	 * 	of literals defeasibly derives two complementary literals
 	 */
 	public boolean disagree(Set<FolFormula> literals){
@@ -320,6 +320,8 @@ public class DefeasibleLogicProgram extends BeliefSet<DelpRule,FolSignature>{
      * Parsing DeLP from given file and performing given query against it.
      *
      * @param args Options and arguments (try "-h" to get a help text with details)
+     * @throws IOException if an IO issue occurs.
+     * @throws CmdLineException if there is some problem parsing the command line
      */
     public static void main(String[] args) throws IOException, CmdLineException {
         List<String> queries = new ArrayList<>(); // queries from command line or batch file

@@ -45,6 +45,7 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,PlForm
 	
 	/**
 	 * Creates a new probability distribution.
+	 * @param signature the signature
 	 */
 	public ProbabilityDistribution(Signature signature){
 		this.probabilities = new HashMap<T,Probability>();
@@ -81,6 +82,7 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,PlForm
 	 * alias for get(Object o).
 	 * @param w a Herbrand interpretation.
 	 * @return the probability of the given Herbrand interpretation.
+	 * @throws IllegalArgumentException if the interpretation has no probability set
 	 */
 	public Probability probability(Interpretation<PlBeliefSet,PlFormula> w) throws IllegalArgumentException{
 		return this.get(w);
@@ -114,6 +116,7 @@ public class ProbabilityDistribution<T extends Interpretation<PlBeliefSet,PlForm
 	/**
 	 * Normalizes the given list of probabilities, i.e. divides
 	 * each probability by the sum of all probabilities.
+	 * @param probabilities initial list of probabilities
 	 */
 	public static void normalize(List<Double> probabilities){
 		double sum = 0;

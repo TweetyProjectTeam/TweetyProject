@@ -73,6 +73,7 @@ public abstract class AbstractPafReasoner implements QuantitativeReasoner<Probab
 	/**
 	 * Estimates the probability that the given set of
 	 * arguments is an extension
+	 * @param paf a PAF
 	 * @param ext some set of arguments
 	 * @return the estimated probability of the given set to be 
 	 * an extension

@@ -32,7 +32,7 @@ import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 
 /**
- * P is semi-founded wrt. AF if P(A) > 0.5 for every A in Arg with Attackers(A) = {}.
+ * P is semi-founded wrt. AF if P(A) &gt; 0.5 for every A in Arg with Attackers(A) = {}.
  * @author Matthias Thimm
  */
 public class SemiFoundedPASemantics extends AbstractPASemantics{

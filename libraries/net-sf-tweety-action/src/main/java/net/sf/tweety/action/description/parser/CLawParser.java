@@ -50,7 +50,7 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * <br> STATICLAW   ::== "caused" FOLFORMULA ("if" FOLFORMULA)? ("requires" REQUIREMENTS)?
  * <br> DYNAMICLAW  ::== "caused" FOLFORMULA ("if" FOLFORMULA)? "after" FOLFORMULA ("requires" REQUIREMENTS)? 
  * <br> REQUIREMENTS ::== REQUIREMENT ("," REQUIREMENT)* 
- * <br> REQUIREMENT  ::== (VARIABLENAME "<>" VARIABLENAME | VARIABLENAME "<>" CONSTANTNAME)*
+ * <br> REQUIREMENT  ::== (VARIABLENAME "&lt;&gt;" VARIABLENAME | VARIABLENAME "&lt;&gt;" CONSTANTNAME)*
  * <br>
  * where FOLFORMULA is an unquantified first-order formula without functors, <br>
  * and VARIABLENAME, CONSTANTNAME are sequences of symbols <br>

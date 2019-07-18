@@ -20,10 +20,10 @@ package net.sf.tweety.machinelearning;
 
 /**
  * A grid-search approach for learning parameters. For each parameter with I=[l,u] being
- * the boundaries for the parameter value of a given trainer, I is divided into <code>partitions<code>
+ * the boundaries for the parameter value of a given trainer, I is divided into <code>partitions</code>
  * number of partitions. For each partition of each parameter the border points are chosen and a new
  * classifier is learned with given parameter combination. From all combinations the combination
- * where the classifier performs best is chosen. If <code>depth</code> > 1, the process is iterated: after selecting
+ * where the classifier performs best is chosen. If <code>depth</code> &gt; 1, the process is iterated: after selecting
  * the best interval combination of the parameters, these intervals are again divided and the process
  * is repeated <code>depth</code> many times.
  *  

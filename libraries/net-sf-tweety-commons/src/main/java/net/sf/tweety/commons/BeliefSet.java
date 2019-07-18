@@ -87,6 +87,7 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	 * Instantiates the set which is used as data holder for the belief set.
 	 * Subclasses might override this method if the do not want to use HashSet
 	 * as container implementation
+	 * @return an new set
 	 */
 	protected Set<T> instantiateSet() {
 		return new HashSet<T>();
@@ -94,14 +95,18 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	
 	/**
 	 * Instantiates the signature which is attached to the belief base.
+	 * @return the signature of this belief base
 	 */
 	protected abstract S instantiateSignature();
 	
 	/**
 	 * Instantiates the signature which is attached to the belief base 
 	 * as an instance of the class of the given signature.
+	 * @param sig some signature 
+	 * @return the signature which is attached to the belief base 
+	 * as an instance of the class of the given signature.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	private S instantiateSignature(S sig) {
 		try {
 			return (S) sig.getClass().newInstance();
@@ -124,6 +129,7 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	/**
 	 * Sets the signature that is attached to his belief base to a copy of the given
 	 * signature.
+	 * @param sig a signature
 	 * @throws IllegalArgumentException if the given signature is smaller in size than the belief base's
 	 * formulas' signature.
 	 */

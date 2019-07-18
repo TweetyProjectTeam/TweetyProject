@@ -119,6 +119,7 @@ public abstract class InconsistencyMeasurementProcess<S extends Formula> extends
 	
 	/**
 	 * Additional initialization statements are put here.
+	 * @param config the configuration
 	 */
 	protected abstract void init(Map<String,Object> config);
 	

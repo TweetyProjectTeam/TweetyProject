@@ -52,9 +52,9 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
  * values in C-Representation for example).
  * 
  * To change the representation of the ConditionalStructure the user can
- * provide a Comparator<NicePossibleWorld> implementation that changes the
+ * provide a Comparator&lt;NicePossibleWorld&gt; implementation that changes the
  * sort behavior of the world data map or he/she can provide a 
- * Comparator<Pair<Proposition, Boolean>> to change the ordering of the literals
+ * Comparator&lt;Pair&lt;Proposition, Boolean&gt;&gt; to change the ordering of the literals
  * in the NicePossibleWorld representation.
  * The later approach will fit for most situations.
  * 
@@ -73,8 +73,8 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
  * 
  * The default Sorting provides a clean binary switching of true/false like counting a bit string. If
  * the user wants another ordering like c a b the Sorting behavior of the NicePossibleWorld
- * shall be adapted by providing a Comparator<Pair<Proposition, Boolean>> implementation that
- * implements the relation "c < a < b" by using the setWorldRepresentation() method.
+ * shall be adapted by providing a Comparator&lt;Pair&lt;Proposition, Boolean&gt;&gt; implementation that
+ * implements the relation "c &lt; a &lt; b" by using the setWorldRepresentation() method.
  * 
  * If the user wants to use a sorting depending on the Generator count for the worlds the
  * setWorldSorting() method can be used to provide the correct sorting method.

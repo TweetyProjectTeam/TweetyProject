@@ -26,6 +26,7 @@ import net.sf.tweety.commons.Formula;
  * This class models the MI inconsistency measure.
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
  */
 public class MiInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
@@ -45,7 +46,7 @@ public class MiInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 	 */
 	@Override
 	public Double inconsistencyMeasure(Collection<S> formulas) {
-		return new Double(this.enumerator.minimalInconsistentSubsets(formulas).size());
+		return ((double)this.enumerator.minimalInconsistentSubsets(formulas).size());
 	}
 
 	/* (non-Javadoc)

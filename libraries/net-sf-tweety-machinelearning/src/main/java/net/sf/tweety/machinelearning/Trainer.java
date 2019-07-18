@@ -49,7 +49,7 @@ public interface Trainer<S extends Observation, T extends Category> {
 	
 	/** 
 	 * Sets the parameters for this trainer (calling this
-	 * method must ensure that the next time <code>train(TrainingSet<S,T> trainingSet)</code>
+	 * method must ensure that the next time <code>train(TrainingSet&lt;S,T&gt; trainingSet)</code>
 	 * is used it uses these parameters.
 	 * @param params a parameter set.
 	 * @return true if the operation was successful.

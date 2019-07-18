@@ -40,7 +40,7 @@ public class PodlaszewskiCaminadaDungTheoryGenerator implements DungTheoryGenera
 	
 	/**
 	 * Creates a new generator that generates frameworks of the 
-	 * given numComponents >= 0. More precisely, the number of arguments in these
+	 * given numComponents &gt;= 0. More precisely, the number of arguments in these
 	 * frameworks have 4 + numComponents*4 arguments.
 	 * @param numComponents the number of components
 	 */

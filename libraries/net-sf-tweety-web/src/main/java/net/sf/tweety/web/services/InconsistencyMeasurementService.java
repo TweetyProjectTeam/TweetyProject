@@ -139,6 +139,7 @@ public class InconsistencyMeasurementService{
     /**
      * Handles all requests for the inconsistency measurement
      * service.
+     * @param query the query
      * @return String A serialized JSON containing the reply.
      * @throws JSONException thrown if something is completely going wrong.
      */

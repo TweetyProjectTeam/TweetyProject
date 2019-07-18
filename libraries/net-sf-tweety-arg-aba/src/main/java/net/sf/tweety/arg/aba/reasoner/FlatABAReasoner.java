@@ -41,6 +41,7 @@ import net.sf.tweety.commons.InferenceMode;
  * This class models a reasoner over ABA formulae
  * Can only be used with flat ABA theories because
  * only those can be transformed into Dung frameworks
+ * @param <T> the type of formulas
  */
 public class FlatABAReasoner<T extends Formula> extends GeneralABAReasoner<T> {
 

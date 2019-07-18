@@ -98,7 +98,7 @@ public abstract class MlFormula extends FolFormula {
 		for(MlHerbrandInterpretation hInt: allWorlds)
 			if(hInt.satisfies(groundFormula))
 				cnt++;
-		return new Probability(new Double(cnt)/new Double(allWorlds.size()));
+		return new Probability(((double)cnt)/((double)allWorlds.size()));
 	}
 
 	/**

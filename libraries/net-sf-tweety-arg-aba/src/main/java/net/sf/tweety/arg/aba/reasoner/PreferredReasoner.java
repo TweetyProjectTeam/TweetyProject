@@ -29,7 +29,7 @@ import net.sf.tweety.arg.aba.syntax.ABATheory;
 import net.sf.tweety.commons.Formula;
 
 /**
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  * This reasoner for ABA theories performs inference on the preferred extensions.
  * @param <T>	the language of the underlying ABA theory

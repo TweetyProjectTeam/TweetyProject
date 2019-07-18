@@ -90,11 +90,11 @@ public class Logarithm extends FunctionalTerm {
 		if(c instanceof IntegerConstant){
 			if(((IntegerConstant)c).getValue() <= 0)				
 				return new FloatConstant(Float.NEGATIVE_INFINITY);
-			else return new FloatConstant(new Float(Math.log(((IntegerConstant)c).getValue())));
+			else return new FloatConstant((float)(Math.log(((IntegerConstant)c).getValue())));
 		}else if(c instanceof FloatConstant){
 			if(((FloatConstant)c).getValue() <= 0)				
 				return new FloatConstant(Float.NEGATIVE_INFINITY);
-			else return new FloatConstant(new Float(Math.log(((FloatConstant)c).getValue())));
+			else return new FloatConstant((float)(Math.log(((FloatConstant)c).getValue())));
 		}
 		throw new IllegalArgumentException("Unrecognized atomic term type.");
 	}

@@ -64,13 +64,13 @@ public class MlnExample {
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
 		
 		//friends of friends are friends
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!friends(X,Y) || !friends(Y,Z) || friends(X,Z)"), new Double(0.7)));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!friends(X,Y) || !friends(Y,Z) || friends(X,Z)"), ((double)0.7)));
 		//friendless people smoke
-		//mln.add(new MlnFormula((FolFormula)parser.parseFormula("(exists Y: (friends(X,Y))) || smokes(X)"), new Double(2.3)));
+		//mln.add(new MlnFormula((FolFormula)parser.parseFormula("(exists Y: (friends(X,Y))) || smokes(X)"), ((double)2.3)));
 		//smoking causes cancer
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!smokes(X) ||  cancer(X)"), new Double(1.5)));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!smokes(X) ||  cancer(X)"), ((double)1.5)));
 		//smoking behavior of friends is the same
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!friends(X,Y) || ((smokes(X) && smokes(Y))||(!smokes(X) && !smokes(Y)))"), new Double(1.1)));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!friends(X,Y) || ((smokes(X) && smokes(Y))||(!smokes(X) && !smokes(Y)))"), ((double)1.1)));
 		// friends relationship is symmetric (strict formula)
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("(friends(X,Y) && friends(Y,X))||(!friends(X,Y) && !friends(Y,X))")));
 		
@@ -107,9 +107,9 @@ public class MlnExample {
 		// elephants are not keepers (strict formula)
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("(!keeper(X) && elephant(X))||(keeper(X) && !elephant(X))"))); //p=1		
 		//elephants like keepers
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!elephant(X) || !keeper(Y) || likes(X,Y)"), new Double(2.1972))); //p=0.9
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!elephant(X) || !keeper(Y) || likes(X,Y)"), ((double)2.1972))); //p=0.9
 		// elephants do not like Fred
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!elephant(X) || likes(X,fred)"), new Double(-0.8573))); //p=0.3
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!elephant(X) || likes(X,fred)"), ((double)-0.8573))); //p=0.3
 		// Clyde likes Fred
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("likes(clyde,fred)"))); //p=1
 				
@@ -136,11 +136,11 @@ public class MlnExample {
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
 		
 		// general probability of infection
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("cold(X)"), new Double(-4.5951198501))); //p=0.01
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("cold(X)"), ((double)-4.5951198501))); //p=0.01
 		// infection if susceptible
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!susceptible(X) || cold(X)"), new Double(-2.1972245773))); //p=0.1
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!susceptible(X) || cold(X)"), ((double)-2.1972245773))); //p=0.1
 		// infection by contact
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!contact(X,Y) || !cold(Y) || cold(X)"), new Double(0.4054651081))); //p=0.6
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!contact(X,Y) || !cold(Y) || cold(X)"), ((double)0.4054651081))); //p=0.6
 		// contact relationship is symmetric
 		mln.add(new MlnFormula((FolFormula)parser.parseFormula("!contact(X,Y) || contact(Y,X)")));
 		
@@ -160,8 +160,8 @@ public class MlnExample {
 		parser.setSignature(sig);
 		
 		MarkovLogicNetwork mln = new MarkovLogicNetwork();
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("A(X)"), new Double(2)));
-		mln.add(new MlnFormula((FolFormula)parser.parseFormula("A(c1)"), new Double(-5)));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("A(X)"), ((double)2)));
+		mln.add(new MlnFormula((FolFormula)parser.parseFormula("A(c1)"), ((double)-5)));
 		
 		return new Pair<MarkovLogicNetwork,FolSignature>(mln,sig);
 	}

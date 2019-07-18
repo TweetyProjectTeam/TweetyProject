@@ -97,6 +97,7 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	 *            first element of the new pair
 	 * @param s
 	 *            second element of the new pair
+	 * @param relation the relation
 	 * @return true if successful, false if not
 	 */
 	public boolean addPair(T f, T s, Relation relation) {
@@ -163,9 +164,10 @@ public class PreferenceOrder<T> implements BinaryRelation<T> {
 	}
 
 	/**
-	 * returns an iterator over a set of pairs
+	 * returns an iterator over a set of triples
+	 * @param s a set of triples
 	 * 
-	 * @return an iterator over a set of pairs
+	 * @return an iterator over a set of triples
 	 */
 
 	public Iterator<Triple<T, T, Relation>> iterator(

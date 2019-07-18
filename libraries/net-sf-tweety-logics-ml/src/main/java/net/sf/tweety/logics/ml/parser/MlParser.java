@@ -73,9 +73,9 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * <br> FUNCTORDEC	::== "type" "(" SORTNAME "=" FUNCTORNAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n"
  * <br> FORMULAS    ::== ( "\n" FORMULA)*
  * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
- * <br>					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
- * <br>					 FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
- * <br>                  "[]" "(" FORMULA ")" | "<>" "(" FORMULA ")"
+ * <br>					 "(" FORMULA ")" | FORMULA "&amp;&amp;" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
+ * <br>					 FORMULA "=&gt;" FORMULA | FORMULA "&lt;=&gt;" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
+ * <br>                  "[]" "(" FORMULA ")" | "&lt;&gt;" "(" FORMULA ")"
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 

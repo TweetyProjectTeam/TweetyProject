@@ -44,7 +44,7 @@ public class Implication extends FolFormula {
 	
 
 	/**
-	 * Creates a new implication a=>b with the two given formulas
+	 * Creates a new implication a=&gt;b with the two given formulas
 	 * @param a a relational formula.
 	 * @param b a relational formula.
 	 */

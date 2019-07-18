@@ -80,7 +80,7 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 	 * set of interpretations. Is -1 if all interpretations are to be selected.
 	 * @param maxNumberOfInterpretationsForModel the maximum number of interpretations used for the model. Those interpretations
 	 * are the subset of the interpretations selected with maximum weight. Is -1
-	 * if all interpretations are used for the model. It has to be maxNumberOfSelectedInterpretations >= maxNumberOfInterpretationsForModel.
+	 * if all interpretations are used for the model. It has to be maxNumberOfSelectedInterpretations &gt;= maxNumberOfInterpretationsForModel.
 	 */
 	public ApproximateNaiveMlnReasoner(long maxNumberOfSelectedInterpretations, long maxNumberOfInterpretationsForModel){
 		this.maxNumberOfSelectedInterpretations = maxNumberOfSelectedInterpretations;

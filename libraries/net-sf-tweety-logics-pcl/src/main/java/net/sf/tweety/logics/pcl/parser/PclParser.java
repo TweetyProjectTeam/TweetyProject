@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * <br>
  * <br> KB 			::== (CONDITIONAL "\n")*
  * <br> CONDITIONAL ::== "(" FORMULA ")" "[" PROB "]" | "(" FORMULA "|" FORMULA ")" "[" PROB "]" 
- * <br> FORMULA     ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
+ * <br> FORMULA     ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&amp;&amp;" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
  * <br> 
  * <br> where PROPOSITION is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with a letter at the beginning and PROB is a float in [0,1].
  * 

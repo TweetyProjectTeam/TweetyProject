@@ -28,7 +28,7 @@ import java.util.Collection;
 public class MathTools {
 
 	/**
-	 * This method computes "n choose k". If n < 0 or k < 0
+	 * This method computes "n choose k". If n &lt; 0 or k &lt; 0
 	 * the result is defined to be 0.
 	 * @param n an integer.
 	 * @param k an integer

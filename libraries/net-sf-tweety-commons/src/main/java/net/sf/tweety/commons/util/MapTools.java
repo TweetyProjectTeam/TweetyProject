@@ -35,18 +35,18 @@ public class MapTools<E,F> {
 	 * is equal to the union of all sets S with S in relations.keySet() and each
 	 * element "e" in m.keySet() is mapped to an element "f" such that "f" in
 	 * relations.get(S) with "e" in S. For example the map:<br>
-	 * {a,b}   => {1,2}<br>
-	 * {c,d}   => {3}<br>
-	 * {f}     => {4,5}<br>
+	 * {a,b}   =&gt; {1,2}<br>
+	 * {c,d}   =&gt; {3}<br>
+	 * {f}     =&gt; {4,5}<br>
 	 * yields the set of maps:<br>
-	 * a=>1, b=>1, c=>3, d=>3, f=>4<br>
-	 * a=>1, b=>1, c=>3, d=>3, f=>5<br>
-	 * a=>1, b=>2, c=>3, d=>3, f=>4<br>
-	 * a=>1, b=>2, c=>3, d=>3, f=>5<br>
-	 * a=>2, b=>1, c=>3, d=>3, f=>4<br>
-	 * a=>2, b=>1, c=>3, d=>3, f=>5<br>
-	 * a=>2, b=>2, c=>3, d=>3, f=>4<br>
-	 * a=>2, b=>2, c=>3, d=>3, f=>5<br>
+	 * a=&gt;1, b=&gt;1, c=&gt;3, d=&gt;3, f=&gt;4<br>
+	 * a=&gt;1, b=&gt;1, c=&gt;3, d=&gt;3, f=&gt;5<br>
+	 * a=&gt;1, b=&gt;2, c=&gt;3, d=&gt;3, f=&gt;4<br>
+	 * a=&gt;1, b=&gt;2, c=&gt;3, d=&gt;3, f=&gt;5<br>
+	 * a=&gt;2, b=&gt;1, c=&gt;3, d=&gt;3, f=&gt;4<br>
+	 * a=&gt;2, b=&gt;1, c=&gt;3, d=&gt;3, f=&gt;5<br>
+	 * a=&gt;2, b=&gt;2, c=&gt;3, d=&gt;3, f=&gt;4<br>
+	 * a=&gt;2, b=&gt;2, c=&gt;3, d=&gt;3, f=&gt;5<br>
 	 * @param relations a map from sets of E to sets of F.
 	 * @return a set of maps from E to F.
 	 */
@@ -68,14 +68,14 @@ public class MapTools<E,F> {
 	 * is equal to relations.keySet() and each
 	 * element "e" in m.keySet() is mapped to an element "f" such that "f" in
 	 * relations.get(S) with "e" in S. For example the map:<br>
-	 * a   => {1,2}<br>
-	 * b   => {3}<br>
-	 * c   => {4,5}<br>
+	 * a   =&gt; {1,2}<br>
+	 * b   =&gt; {3}<br>
+	 * c   =&gt; {4,5}<br>
 	 * yields the set of maps:<br>
-	 * a=>1, b=>3, c=>4<br>
-	 * a=>1, b=>3, c=>5<br>
-	 * a=>2, b=>3, c=>4<br>
-	 * a=>2, b=>3, c=>5<br>
+	 * a=&gt;1, b=&gt;3, c=&gt;4<br>
+	 * a=&gt;1, b=&gt;3, c=&gt;5<br>
+	 * a=&gt;2, b=&gt;3, c=&gt;4<br>
+	 * a=&gt;2, b=&gt;3, c=&gt;5<br>
 	 * @param relations a map from sets of E to sets of F.
 	 * @return a set of maps from E to F.
 	 */

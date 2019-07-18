@@ -28,6 +28,8 @@ import net.sf.tweety.commons.*;
  * 
  * @author Matthias Thimm
  * @author Tim Janus
+ * @param <C> the type of formulas for the conclusion
+ * @param <P> the type of formulas for the premises
  */
 public interface Rule<C extends Formula, P extends Formula> extends Formula {
 

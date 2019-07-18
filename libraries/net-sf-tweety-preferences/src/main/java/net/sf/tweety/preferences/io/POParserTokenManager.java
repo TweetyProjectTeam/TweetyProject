@@ -24,14 +24,14 @@ import java.util.*;
 import net.sf.tweety.commons.util.Triple;
 import net.sf.tweety.preferences.*;
 
-/** Token Manager. */
+/* Token Manager. */
 @SuppressWarnings("all")
 public class POParserTokenManager implements POParserConstants
 {
 
-  /** Debug output. */
+  /* Debug output. */
   public  java.io.PrintStream debugStream = System.out;
-  /** Set debug output. */
+  /* Set debug output. */
   public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
 private final int jjStopStringLiteralDfa_0(int pos, long active0)
 {
@@ -181,11 +181,11 @@ private int jjMoveNfa_0(int startState, int curPos)
 static final int[] jjnextStates = {
 };
 
-/** Token literal values. */
+/* Token literal values. */
 public static final String[] jjstrLiteralImages = {
 "", null, "\173", "\175", null, null, null, "\54", };
 
-/** Lexer state names. */
+/* Lexer state names. */
 public static final String[] lexStateNames = {
    "DEFAULT",
 };
@@ -199,20 +199,20 @@ protected SimpleCharStream input_stream;
 private final int[] jjrounds = new int[7];
 private final int[] jjstateSet = new int[14];
 protected char curChar;
-/** Constructor. */
+/* Constructor. */
 public POParserTokenManager(SimpleCharStream stream){
    if (SimpleCharStream.staticFlag)
       throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
    input_stream = stream;
 }
 
-/** Constructor. */
+/* Constructor. */
 public POParserTokenManager(SimpleCharStream stream, int lexState){
    this(stream);
    SwitchTo(lexState);
 }
 
-/** Reinitialise parser. */
+/* Reinitialise parser. */
 public void ReInit(SimpleCharStream stream)
 {
    jjmatchedPos = jjnewStateCnt = 0;
@@ -228,14 +228,14 @@ private void ReInitRounds()
       jjrounds[i] = 0x80000000;
 }
 
-/** Reinitialise parser. */
+/* Reinitialise parser. */
 public void ReInit(SimpleCharStream stream, int lexState)
 {
    ReInit(stream);
    SwitchTo(lexState);
 }
 
-/** Switch to specified lex state. */
+/* Switch to specified lex state. */
 public void SwitchTo(int lexState)
 {
    if (lexState >= 1 || lexState < 0)
@@ -275,7 +275,7 @@ int jjround;
 int jjmatchedPos;
 int jjmatchedKind;
 
-/** Get the next Token. */
+/* Get the next Token. */
 public Token getNextToken() 
 {
   Token matchedToken;

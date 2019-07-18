@@ -63,6 +63,7 @@ public abstract class TypedStructureAdapter implements TypedStructure, Comparabl
 	 * Initializes a structure with the given name and of the given arity.
 	 * Every argument gets the sort Sort.THING. 
 	 * @param name the name of the structure
+	 * @param arity the arity of this structure
 	 */
 	public TypedStructureAdapter(String name, int arity){
 		this(name);

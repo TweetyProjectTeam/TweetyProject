@@ -131,7 +131,7 @@ public abstract class Solver {
 	}
 		
 	/**
-	 * Returns the default solver for linear optimization problems.</br></br>
+	 * Returns the default solver for linear optimization problems.<br><br>
 	 * If a default solver for linear problems has been configured this solver
 	 * is returned by this method. If no default solver for linear problems is 
 	 * configured, the default solver for  general optimization problems is 

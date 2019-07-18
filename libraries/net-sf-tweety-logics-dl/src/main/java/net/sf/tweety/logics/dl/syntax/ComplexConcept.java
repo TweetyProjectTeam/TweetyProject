@@ -38,7 +38,7 @@ import net.sf.tweety.math.probability.Probability;
  * <li> All atomic concepts of the signature </li>
  * <li> The universal concept </li>
  * <li> The bottom concept </li>
- * <li> Complex concept descriptions, which are built with the following constructors: </li>
+ * <li> Complex concept descriptions, which are built with the following constructors:
  * 		<ul>
  *		<li> The intersection of two concept descriptions </li>
  *		<li> The union of two concept descriptions </li>
@@ -46,6 +46,7 @@ import net.sf.tweety.math.probability.Probability;
  *		<li> The universal restriction of a role by a concept description </li>
  *		<li> The existential restriction of a role by a concept description </li>
  * 		</ul>
+ *  </li>
  * </ul>
  * 
  * @author Anna Gessler

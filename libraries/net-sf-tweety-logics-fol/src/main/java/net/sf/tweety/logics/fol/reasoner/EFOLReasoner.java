@@ -85,6 +85,7 @@ public class EFOLReasoner extends FolReasoner {
 	/**
 	 * Returns the additional arguments given to the call of the
 	 * EProver binary (Default value is "--auto-schedule").
+	 * @return the additional arguments
 	 */
 	public String getAdditionalArguments(){
 		return this.additionalArguments;

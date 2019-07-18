@@ -32,6 +32,7 @@ import net.sf.tweety.math.probability.*;
  * Objects of this class represent probability distributions on the interpretations
  * of an underlying first-order signature for a relational probabilistic conditional knowledge base.
  * @author Matthias Thimm
+ * @param <T> the type of interpretations
  */
 public class RpclProbabilityDistribution<T extends Interpretation<FolBeliefSet,FolFormula>> extends AbstractInterpretation<RpclBeliefSet,RelationalProbabilisticConditional> implements Map<T,Probability> {
 	
@@ -52,6 +53,7 @@ public class RpclProbabilityDistribution<T extends Interpretation<FolBeliefSet,F
 	
 	/**
 	 * Creates a new probability distribution for the given signature.
+	 * @param semantics the used RPCL semantics
 	 * @param signature a fol signature.
 	 */
 	public RpclProbabilityDistribution(RpclSemantics semantics, FolSignature signature){

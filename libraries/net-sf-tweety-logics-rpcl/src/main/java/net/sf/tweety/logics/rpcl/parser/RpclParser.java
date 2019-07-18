@@ -35,7 +35,7 @@ import net.sf.tweety.math.probability.*;
  * <br> SORTSDEC    ::== ( SORTNAME "=" "{" (CONSTANTNAME ("," CONSTANTNAME)*)? "}" "\n" )*
  * <br> PREDDECS	::== ( "type" "(" PREDICATENAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n" )*
  * <br> CONDITIONAL ::== "(" FORMULA ")" "[" PROB "]" | "(" FORMULA "|" FORMULA ")" "[" PROB "]" 
- * <br> FORMULA     ::== ATOM | "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
+ * <br> FORMULA     ::== ATOM | "(" FORMULA ")" | FORMULA "&amp;&amp;" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
  * <br> ATOM		::== PREDICATENAME "(" (TERM ("," TERM)*)? ")"
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME 
  * <br> 

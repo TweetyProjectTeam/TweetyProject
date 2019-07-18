@@ -61,7 +61,7 @@ public class TokenMgrError extends Error
    */
   int errorCode;
 
-  /**
+  /*
    * Replaces unprintable characters by their escaped (or unicode escaped)
    * equivalents in the given string
    */
@@ -110,7 +110,7 @@ public class TokenMgrError extends Error
     return retval.toString();
   }
 
-  /**
+  /*
    * Returns a detailed message for the Error when it is thrown by the
    * token manager to indicate a lexical error.
    * Parameters :
@@ -152,13 +152,13 @@ public String getMessage() {
   public TokenMgrError() {
   }
 
-  /** Constructor with message and reason. */
+  /* Constructor with message and reason. */
   public TokenMgrError(String message, int reason) {
     super(message);
     errorCode = reason;
   }
 
-  /** Full Constructor. */
+  /* Full Constructor. */
   public TokenMgrError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar, int reason) {
     this(LexicalError(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
   }

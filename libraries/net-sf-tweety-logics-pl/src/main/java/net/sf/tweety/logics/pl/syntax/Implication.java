@@ -39,7 +39,7 @@ public class Implication extends PlFormula {
 	private Pair<PlFormula, PlFormula> formulas;
 
 	/**
-	 * Creates a new implication a=>b with the two given formulas
+	 * Creates a new implication a=&gt;b with the two given formulas
 	 * 
 	 * @param a a propositional formula.
 	 * @param b a propositional formula.
@@ -77,7 +77,7 @@ public class Implication extends PlFormula {
 	
 	/**
 	 * Sets the left side formula of the implication
-	 * left => right.
+	 * left =&gt; right.
 	 * 
 	 * @param left formula
 	 */
@@ -87,7 +87,7 @@ public class Implication extends PlFormula {
 	
 	/**
 	 * Sets the right side formula of the implication
-	 * left => right
+	 * left =&gt; right
 	 * 
 	 * @param right formula.
 	 */

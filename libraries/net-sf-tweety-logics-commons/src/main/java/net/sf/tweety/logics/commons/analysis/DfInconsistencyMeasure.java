@@ -106,7 +106,7 @@ public class DfInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 				result[inFormulas.size()-1] = 1d;
 			for(int i = 1; i <= restFormulas.size(); i++){
 				cidx = i + inFormulas.size() - 1;
-				result[cidx] = new Double(MathTools.binomial(restFormulas.size(), i));
+				result[cidx] = ((double)MathTools.binomial(restFormulas.size(), i));
 			}
 			return result;
 		}

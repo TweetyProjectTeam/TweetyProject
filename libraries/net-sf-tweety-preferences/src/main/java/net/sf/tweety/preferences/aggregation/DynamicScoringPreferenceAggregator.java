@@ -205,6 +205,7 @@ public abstract class DynamicScoringPreferenceAggregator<T> implements
 	 * 
 	 * @param stream
 	 *            the input stream with the Update-elements
+	 * @param input some input
 	 * @return the newly aggregated preference order after all updates are
 	 *         applied
 	 */

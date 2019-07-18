@@ -30,10 +30,12 @@ import net.sf.tweety.commons.analysis.InterpretationDistance;
  * This class implements the d-hit inconsistency measure from  [Grant, Hunter. Distance-based Measures of Inconsistency, ECSQARU'13].
  * This implementation uses a slightly different characterization than the one used in the paper. This measure seeks an interpretation
  * I such that the number of formulas not satisfied by I is minimal. The value
- * of the inconsistency is than exactly this number. The distance can be parameterized.<br/>
+ * of the inconsistency is than exactly this number. The distance can be parameterized.<br>
  * NOTE: Currently, this algorithm uses a brute force approach (checking all interpretations) for computing the solution.
  * 
  * @author Matthias Thimm
+ * @param <T> the type of interpretations
+ * @param <B> the type of belief bases
  *
  * @param <S> The type of formulas supported
  */

@@ -113,13 +113,13 @@ public class CTransitionSystemCalculator
       Set< FolAtom > sourceStateFluents = new HashSet< FolAtom >();
       Set< FolAtom > targetStateFluents = new HashSet< FolAtom >();
       Set< FolAtom > actionNames = new HashSet< FolAtom >();
-      for ( FolAtom a : answerSet.get( new Integer( 0 ) ) ) {
+      for ( FolAtom a : answerSet.get( 0 ) ) {
         if ( a.getPredicate() instanceof FolFluentName )
           sourceStateFluents.add( a );
         else if ( a.getPredicate() instanceof FolActionName )
           actionNames.add( a );
       }
-      for ( FolAtom a : answerSet.get( new Integer( 1 ) ) )
+      for ( FolAtom a : answerSet.get( 1 ) )
         targetStateFluents.add( a );
       
       State sourceState = transitionSystem.getState( sourceStateFluents );
@@ -163,7 +163,7 @@ public class CTransitionSystemCalculator
       return null;
     Set< Map< Integer, Set< FolAtom >>> states = parseLpT( claspResult, signature );
     for ( Map< Integer, Set< FolAtom >> state : states ) {
-      State s = new State( state.get( new Integer( 0 ) ) );
+      State s = new State( state.get( 0 ) );
       result.add( s );
     }
     
@@ -338,8 +338,8 @@ public class CTransitionSystemCalculator
       int i =
         Integer.parseInt( token.substring( token.indexOf( "(" ) + 1, token
           .indexOf( ")" ) ) );
-      if ( map.get( new Integer( i ) ) == null )
-        map.put( new Integer( i ), new HashSet< FolAtom >() );
+      if ( map.get( i ) == null )
+        map.put( i, new HashSet< FolAtom >() );
       if ( !token.startsWith( "-" ) ) {
         FolParser p = new FolParser();
         p.setSignature( signature );

@@ -89,7 +89,7 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> 
 	}
 	
 	/**
-	 * Constructs a new inference rule of rule p -> c if strict or p => c else
+	 * Constructs a new inference rule of rule p -&gt; c if strict or p =&gt; c else
 	 * @param conclusion	^= p
 	 * @param premise	^= c
 	 */

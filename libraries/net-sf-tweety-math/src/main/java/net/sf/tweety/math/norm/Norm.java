@@ -21,6 +21,7 @@ package net.sf.tweety.math.norm;
 /**
  * A norm for vector spaces.
  * @author Matthias Thimm
+ * @param <T>  The class of the objects used.
  */
 public interface Norm<T>{
 

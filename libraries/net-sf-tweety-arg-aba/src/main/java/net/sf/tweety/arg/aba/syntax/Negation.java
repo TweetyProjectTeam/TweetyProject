@@ -26,8 +26,9 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 
 /**
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
  * This represents a negation relation of form "not <code>formula</code> = <code>negation</code>"
+ * @param <T> the type of formulas
  *
  */
 public class Negation<T extends Formula> implements Formula {

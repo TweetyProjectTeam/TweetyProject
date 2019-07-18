@@ -52,6 +52,7 @@ public class NewtonRootFinder extends RootFinder {
 	
 	/**
 	 * Creates a new Newton root finder for the given starting point and the given function
+	 * @param function a function
 	 * @param startingPoint the starting point
 	 */
 	public NewtonRootFinder(Term function, Map<Variable,Term> startingPoint){
@@ -61,6 +62,7 @@ public class NewtonRootFinder extends RootFinder {
 	/**
 	 * Creates a new Newton root finder for the given starting point and the given
 	 * (multi-dimensional) function
+	 * @param functions a list of functions
 	 * @param startingPoint the starting point
 	 */
 	public NewtonRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
@@ -138,6 +140,7 @@ public class NewtonRootFinder extends RootFinder {
 	 * Computes the midpoint of the two maps
 	 * @param m1 a map
 	 * @param m2 a map
+	 * @return the midpoint of the two maps
 	 */
 	private Map<Variable,Term> midpoint(Map<Variable,Term> m1, Map<Variable,Term> m2){
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
@@ -148,7 +151,11 @@ public class NewtonRootFinder extends RootFinder {
 	
 	/**
 	 * Solves the linear equation currentJacobianValue * (X-currentVector) = - currentValue.
+	 * @param currentJacobianValue the current Jacobian value
+	 * @param currentVector  the current vector
+	 * @param currentValue the current value
 	 * @return the next guess for the approximation.
+	 * @throws GeneralMathException 
 	 */
 	private List<Double> approximate(List<List<Double>> currentJacobianValue, List<Double> currentVector ,List<Double> currentValue) throws GeneralMathException{
 		// We construct a csp for solving the equations
@@ -190,6 +197,7 @@ public class NewtonRootFinder extends RootFinder {
 	 * the given values for variables.
 	 * @param functions a list of functions
 	 * @param mapping a map mapping variables to terms
+	 * @return the matrix of values
 	 */
 	private List<List<Double>> evaluateMatrix(List<List<Term>> functions, Map<Variable,? extends Term> mapping){
 		List<List<Double>> result = new LinkedList<List<Double>>();

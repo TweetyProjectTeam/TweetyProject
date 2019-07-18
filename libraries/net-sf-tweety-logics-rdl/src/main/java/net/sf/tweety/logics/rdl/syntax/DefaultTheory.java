@@ -66,6 +66,7 @@ public class DefaultTheory implements BeliefBase{
 	
 	/**
 	 * add facts to knowledge base
+	 * @param fact some fol formula
 	 */
 	void addFact(FolFormula fact){
 		facts.add(fact);
@@ -73,6 +74,7 @@ public class DefaultTheory implements BeliefBase{
 	
 	/**
 	 * removes fact from knowledge base
+	 * @param fact some fol formula
 	 */
 	void removeFact(FolFormula fact){
 		facts.remove(fact);
@@ -80,13 +82,15 @@ public class DefaultTheory implements BeliefBase{
 	
 	/**
 	 * adds default rule 
+	 * @param d a default rule
 	 */
 	void addDefault(DefaultRule d){
 		defaults.add(d);
 	}
 	
 	/**
-	 * removes default rule 
+	 * removes default rule
+	 * @param d a default rule 
 	 */
 	void removeDefault(DefaultRule d){
 		defaults.remove(d);

@@ -59,7 +59,7 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * This class implements a parser for action queries in S. The BNF of such queries is given by: (starting symbol is KB) <br>
  * KB               ::== QUERY1 ("\n" QUERY1)* <br>
  * QUERY1           ::== QUERY ( "requires" REQUIREMENTS )? <br>
- * QUERY            ::== PROPOSITION | QUERY "&&" QUERY | QUERY "||" QUERY | "!" QUERY | "(" QUERY ")" | "+" | "-" <br>
+ * QUERY            ::== PROPOSITION | QUERY "&amp;&amp;" QUERY | QUERY "||" QUERY | "!" QUERY | "(" QUERY ")" | "+" | "-" <br>
  * PROPOSITION      ::== HOLDSQUERY | ALWAYSQUERY | NECESSARILYQUERY <br>
  * HOLDSQUERY       ::== "holds" "[" STATEFORMULA "]" <br>
  * ALWAYSQUERY      ::== "always" "[" STATEFORMULA "]" <br>
@@ -67,7 +67,7 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * ACTIONS          ::== ACTION ( ";" ACTION )* <br>
  * ACTION           ::== "{" ACTIONNAME ("," ACTIONNAME)* "}" <br>
  * REQUIREMENTS     ::== REQUIREMENT ("," REQUIREMENT)* <br>
- * REQUIREMENT      ::== (VARIABLENAME "<>" VARIABLENAME | VARIABLENAME "<>" CONSTANTNAME)* <br>
+ * REQUIREMENT      ::== (VARIABLENAME "&lt;&gt;" VARIABLENAME | VARIABLENAME "&lt;&gt;" CONSTANTNAME)* <br>
  * <br>
  * where STATEFORMULA is an unquantified first-order formula without functors, <br>
  * and VARIABLENAME, CONSTANTNAME are sequences of symbols <br>

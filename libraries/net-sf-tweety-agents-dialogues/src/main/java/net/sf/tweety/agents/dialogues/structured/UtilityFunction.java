@@ -33,7 +33,7 @@ public interface UtilityFunction {
 
 	/**
 	 * Rank the given collection of propositions. A set S is preferred to
-	 * a set T if rank(S)>rank(T).
+	 * a set T if rank(S)&gt;rank(T).
 	 * @param propositions a collection of propositions.
 	 * @return the rank of the given collection.
 	 */

@@ -54,6 +54,6 @@ public class MusVarInconsistencyMeasure extends BeliefSetInconsistencyMeasure<Pl
 		for(Collection<PlFormula> mus: muses)
 			for(PlFormula f: mus)
 				musSig.add(f.getSignature());
-		return new Double(musSig.size())/new Double(allSig.size());
+		return ((double)musSig.size())/((double)allSig.size());
 	}
 }

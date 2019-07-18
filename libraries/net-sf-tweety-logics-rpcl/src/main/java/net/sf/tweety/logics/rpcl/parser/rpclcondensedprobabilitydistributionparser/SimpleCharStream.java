@@ -20,19 +20,19 @@
 /* JavaCCOptions:STATIC=true,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package net.sf.tweety.logics.rpcl.parser.rpclcondensedprobabilitydistributionparser;
 
-/**
+/*
  * An implementation of interface CharStream, where the stream is assumed to
  * contain only ASCII characters (without unicode processing).
  */
 
 public class SimpleCharStream
 {
-/** Whether parser is static. */
+/* Whether parser is static. */
   public static final boolean staticFlag = true;
   static int bufsize;
   static int available;
   static int tokenBegin;
-/** Position in buffer. */
+/* Position in buffer. */
   static public int bufpos = -1;
   static protected int bufline[];
   static protected int bufcolumn[];
@@ -147,7 +147,7 @@ public class SimpleCharStream
     }
   }
 
-/** Start. */
+/* Start. */
   static public char BeginToken() throws java.io.IOException
   {
     tokenBegin = -1;
@@ -197,7 +197,7 @@ public class SimpleCharStream
     bufcolumn[bufpos] = column;
   }
 
-/** Read a character. */
+/* Read a character. */
   static public char readChar() throws java.io.IOException
   {
     if (inBuf > 0)
@@ -220,7 +220,7 @@ public class SimpleCharStream
   }
 
   @Deprecated
-  /**
+  /*
    * @deprecated
    * @see #getEndColumn
    */
@@ -230,7 +230,7 @@ public class SimpleCharStream
   }
 
   @Deprecated
-  /**
+  /*
    * @deprecated
    * @see #getEndLine
    */
@@ -239,27 +239,27 @@ public class SimpleCharStream
     return bufline[bufpos];
   }
 
-  /** Get token end column number. */
+  /* Get token end column number. */
   static public int getEndColumn() {
     return bufcolumn[bufpos];
   }
 
-  /** Get token end line number. */
+  /* Get token end line number. */
   static public int getEndLine() {
      return bufline[bufpos];
   }
 
-  /** Get token beginning column number. */
+  /* Get token beginning column number. */
   static public int getBeginColumn() {
     return bufcolumn[tokenBegin];
   }
 
-  /** Get token beginning line number. */
+  /* Get token beginning line number. */
   static public int getBeginLine() {
     return bufline[tokenBegin];
   }
 
-/** Backup a number of characters. */
+/* Backup a number of characters. */
   static public void backup(int amount) {
 
     inBuf += amount;
@@ -267,7 +267,7 @@ public class SimpleCharStream
       bufpos += bufsize;
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.Reader dstream, int startline,
   int startcolumn, int buffersize)
   {
@@ -285,20 +285,20 @@ public class SimpleCharStream
     bufcolumn = new int[buffersize];
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.Reader dstream, int startline,
                           int startcolumn)
   {
     this(dstream, startline, startcolumn, 4096);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.Reader dstream)
   {
     this(dstream, 1, 1, 4096);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.Reader dstream, int startline,
   int startcolumn, int buffersize)
   {
@@ -318,96 +318,96 @@ public class SimpleCharStream
     bufpos = -1;
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.Reader dstream, int startline,
                      int startcolumn)
   {
     ReInit(dstream, startline, startcolumn, 4096);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.Reader dstream)
   {
     ReInit(dstream, 1, 1, 4096);
   }
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
   int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
   {
     this(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, int startline,
   int startcolumn, int buffersize)
   {
     this(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
                           int startcolumn) throws java.io.UnsupportedEncodingException
   {
     this(dstream, encoding, startline, startcolumn, 4096);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, int startline,
                           int startcolumn)
   {
     this(dstream, startline, startcolumn, 4096);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
   {
     this(dstream, encoding, 1, 1, 4096);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream)
   {
     this(dstream, 1, 1, 4096);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, String encoding, int startline,
                           int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
   {
     ReInit(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, int startline,
                           int startcolumn, int buffersize)
   {
     ReInit(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
   {
     ReInit(dstream, encoding, 1, 1, 4096);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream)
   {
     ReInit(dstream, 1, 1, 4096);
   }
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, String encoding, int startline,
                      int startcolumn) throws java.io.UnsupportedEncodingException
   {
     ReInit(dstream, encoding, startline, startcolumn, 4096);
   }
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, int startline,
                      int startcolumn)
   {
     ReInit(dstream, startline, startcolumn, 4096);
   }
-  /** Get token literal value. */
+  /* Get token literal value. */
   static public String GetImage()
   {
     if (bufpos >= tokenBegin)
@@ -417,7 +417,7 @@ public class SimpleCharStream
                             new String(buffer, 0, bufpos + 1);
   }
 
-  /** Get the suffix. */
+  /* Get the suffix. */
   static public char[] GetSuffix(int len)
   {
     char[] ret = new char[len];
@@ -434,7 +434,7 @@ public class SimpleCharStream
     return ret;
   }
 
-  /** Reset buffer when finished. */
+  /* Reset buffer when finished. */
   static public void Done()
   {
     buffer = null;
@@ -442,7 +442,7 @@ public class SimpleCharStream
     bufcolumn = null;
   }
 
-  /**
+  /*
    * Method to adjust line and column numbers for the start of a token.
    */
   static public void adjustBeginLineColumn(int newLine, int newCol)

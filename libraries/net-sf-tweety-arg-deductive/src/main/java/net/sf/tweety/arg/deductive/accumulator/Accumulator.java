@@ -22,8 +22,8 @@ import java.util.List;
 
 /**
  * Classes implementing this interface represent accumulators in the sense
- * of Definition 8.11 in<br/>
- * <br/>
+ * of Definition 8.11 in<br>
+ * <br>
  * Philippe Besnard and Anthony Hunter. A logic-based theory of deductive arguments.
  * In Artificial Intelligence, 128(1-2):203-235, 2001.
  * 

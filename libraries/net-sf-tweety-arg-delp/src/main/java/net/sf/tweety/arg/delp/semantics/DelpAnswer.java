@@ -25,9 +25,9 @@
  * We ensure backward compatibility by mapping those 3 values to Double
  * values as follows:
  * <ul>
- *     <li><pre>true  <=> YES       <=> Double(0)</pre></li>
- *     <li><pre>false <=  NO        <=> negative number</pre></li>
- *     <li><pre>false <=  UNDECIDED <=> positive number</pre></li>
+ *     <li><pre>true  &lt;=&gt; YES       &lt;=&gt; Double(0)</pre></li>
+ *     <li><pre>false &lt;=  NO        &lt;=&gt; negative number</pre></li>
+ *     <li><pre>false &lt;=  UNDECIDED &lt;=&gt; positive number</pre></li>
  * </ul>
  * Note that only <code>true</code> can be reliably mapped to YES, whereas
  * <code>false</code> remains ambiguous.

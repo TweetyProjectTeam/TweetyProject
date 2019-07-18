@@ -64,6 +64,7 @@ public class AspicTest {
 
 	/**
 	 * Implements examples 3.7, 3.9 and 3.11 from Modgil and Prakken
+	 * @throws Exception if something goes wrong
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
@@ -118,6 +119,7 @@ public class AspicTest {
 
 	/**
 	 * Implements example 3.25 from Modgil and Prakken
+	 * @throws Exception if something goes wrong
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
@@ -160,6 +162,7 @@ public class AspicTest {
 
 	/**
 	 * Implements example 3.26 from Modgil and Prakken
+	 * @throws Exception if something goes wrong
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
@@ -189,6 +192,7 @@ public class AspicTest {
 
 	/**
 	 * Implements example 4.1 from Modgil and Prakken
+	 * @throws Exception if something goes wrong
 	 */
 	@SuppressWarnings("unchecked")
 	@Test

@@ -23,6 +23,8 @@ import java.util.Collection;
 /**
  * An abstract interpretation for some logical language.
  * @author Matthias Thimm
+ * @param <B> the type of belief bases
+ * @param <S> the type of formulas
  */
 public abstract class AbstractInterpretation<B extends BeliefBase, S extends Formula> implements Interpretation<B,S> {
 	

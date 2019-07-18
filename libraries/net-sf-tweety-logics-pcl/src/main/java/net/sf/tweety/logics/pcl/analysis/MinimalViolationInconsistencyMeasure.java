@@ -55,6 +55,7 @@ public class MinimalViolationInconsistencyMeasure extends BeliefSetInconsistency
 	/**
 	 * Creates a new measure the given norm
 	 * @param norm some norm.
+	 * @param solver the solver to be used
 	 */
 	public MinimalViolationInconsistencyMeasure(RealVectorNorm norm, Solver solver){
 		this.norm = norm;

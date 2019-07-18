@@ -56,7 +56,7 @@ public class FbInconsistencyMeasureTest {
 		bs.add((PlFormula) parser.parseFormula("a || a"));
 		bs.add((PlFormula) parser.parseFormula("!a || !a"));
 		
-		assertEquals(inc.inconsistencyMeasure(bs), new Double(1));		
+		assertEquals(inc.inconsistencyMeasure(bs), Double.valueOf(1d));		
 	
 	}
 	
@@ -67,7 +67,7 @@ public class FbInconsistencyMeasureTest {
 		bs.add((PlFormula) parser.parseFormula("a && a"));
 		bs.add((PlFormula) parser.parseFormula("!a && !a"));
 		
-		assertEquals(inc.inconsistencyMeasure(bs), new Double(2));		
+		assertEquals(inc.inconsistencyMeasure(bs), Double.valueOf(2d));		
 	}
 	
 	@Test
@@ -76,7 +76,7 @@ public class FbInconsistencyMeasureTest {
 		PlParser parser = new PlParser();
 		bs.add((PlFormula) parser.parseFormula("(a && !a) || (b && !b)"));
 		
-		assertEquals(inc.inconsistencyMeasure(bs), new Double(1));		
+		assertEquals(inc.inconsistencyMeasure(bs), Double.valueOf(1d));		
 	}
 	
 	@Test
@@ -86,12 +86,12 @@ public class FbInconsistencyMeasureTest {
 		bs.add((PlFormula) parser.parseFormula("!a && !a && !a"));
 		bs.add((PlFormula) parser.parseFormula("a"));
 		
-		assertEquals(inc.inconsistencyMeasure(bs), new Double(1));
+		assertEquals(inc.inconsistencyMeasure(bs), Double.valueOf(1d));
 		
 		bs = new PlBeliefSet();		
 		bs.add((PlFormula) parser.parseFormula("!a && !a && !a"));
 		bs.add((PlFormula) parser.parseFormula("a && a && a"));
 		
-		assertEquals(inc.inconsistencyMeasure(bs), new Double(3));
+		assertEquals(inc.inconsistencyMeasure(bs), Double.valueOf(3d));
 	}
 }

@@ -29,11 +29,11 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 /**
  * Parses abstract argumentation frameworks in the CNF/Dimacs Format used for the
  * SAT solver competition (see also http://people.sc.fsu.edu/~jburkardt/data/cnf/cnf.html).
- * It is given by the following BNF (start symbol is S):<br/>
- * <br/>
- * S 	     ::== COMMENTS "\n" PROBLEM "\n" ATTACKS<br/>
- * COMMENTS  ::== ("c" COMMENT "\n")*<br/>
- * PROBLEM   ::== "p af " INT INT</br>
+ * It is given by the following BNF (start symbol is S):<br>
+ * <br>
+ * S 	     ::== COMMENTS "\n" PROBLEM "\n" ATTACKS<br>
+ * COMMENTS  ::== ("c" COMMENT "\n")*<br>
+ * PROBLEM   ::== "p af " INT INT<br>
  * ATTACKS   ::== (INT " -" INT " 0\n")*  
  * 
  * where "COMMENT" represents any string, and INT is a positive natural number. Lines beginning
@@ -68,8 +68,8 @@ public class CnfParser extends AbstractDungParser {
 			// problem definition line, check validity later
 			if(row.startsWith("p af")){
 				row = row.substring(4).trim();
-				numArgs = new Integer(row.substring(0,row.indexOf(" ")).trim());
-				numAtt = new Integer(row.substring(row.indexOf(" ")+1).trim());
+				numArgs = Integer.parseInt(row.substring(0,row.indexOf(" ")).trim());
+				numAtt = Integer.parseInt(row.substring(row.indexOf(" ")+1).trim());
 				continue;
 			}
 			// line describing an attack

@@ -92,6 +92,7 @@ public class IncreasingSubsetIterator<T> extends SubsetIterator<T> {
 	/**
 	 * Increments the indices.
 	 * @param lvl the level
+	 * @return the new index
 	 */
 	private int increment(int lvl){
 		if(lvl >= this.currentSize){

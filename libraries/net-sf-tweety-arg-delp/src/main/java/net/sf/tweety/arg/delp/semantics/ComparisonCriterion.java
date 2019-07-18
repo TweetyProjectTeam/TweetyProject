@@ -47,16 +47,16 @@ public abstract class ComparisonCriterion {
     public enum Result { IS_BETTER, NOT_COMPARABLE, IS_WORSE, IS_EQUAL }
 
 	/**
-	 * This method returns the relation of <source>argument1</source> to <source>argument2</source>
-     * given <source>context</source>.
+	 * This method returns the relation of <code>argument1</code> to <code>argument2</code>
+     * given <code>context</code>.
 	 * @param argument1 a DeLP argument
 	 * @param argument2 a DeLP argument
 	 * @param context a defeasible logic program as context
 	 * @return
-	 * 	<br>- Result.IS_BETTER iff <source>argument1</source> is better than <source>argument2</source>
-	 *  <br>- Result.IS_WORSE iff <source>argument1</source> is worse than <source>argument2</source>
-	 *  <br>- Result.IS_EQUAL iff <source>argument1</source> and <source>argument2</source> are in the same equivalence class
-	 *  <br>- Result.NOT_COMPARABLE iff <source>argument1</source> and <source>argument2</source> are not comparable
+	 * 	<br>- Result.IS_BETTER iff <code>argument1</code> is better than <code>argument2</code>
+	 *  <br>- Result.IS_WORSE iff <code>argument1</code> is worse than <code>argument2</code>
+	 *  <br>- Result.IS_EQUAL iff <code>argument1</code> and <code>argument2</code> are in the same equivalence class
+	 *  <br>- Result.NOT_COMPARABLE iff <code>argument1</code> and <code>argument2</code> are not comparable
 	 */
     public abstract Result compare(DelpArgument argument1,
                                    DelpArgument argument2,

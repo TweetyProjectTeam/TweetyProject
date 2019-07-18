@@ -36,7 +36,7 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  * The conditionals of the knowledge base KB are splitted in different partitions. The first partition 
  * KB_0 contains all conditionals (B_i|A_i) that are tolerated by all other rules of the knowledge base,
  * i.e., there exists a world w that satisfies A_iB_i and for all other conditionals (B_j|A_j) it satisfies 
- * the material implication A_j => B_j. These conditionals are removed from the knowledge base. 
+ * the material implication A_j =&gt; B_j. These conditionals are removed from the knowledge base. 
  * The second partition KB_1 contains all conditionals of the remaining conditional set that are tolerated by it.
  * This is done until the original knowledge base is the empty set.
  * This is simultaniously a test on whether or not the knowledge base is consistent.
@@ -47,8 +47,8 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  * 
  *  Z(r_i) = j iff r_i in KB_j
  *  
- *        ( 0, if w |=  A_i => B_i  for all 1<=i<=n
- * Z(w) = <
+ *        ( 0, if w |=  A_i =&gt; B_i  for all 1&lt;=i&lt;=n
+ * Z(w) = &lt;
  *        ( max {z(r_i)} + 1 for all conditionals r_i=(B_i|A_i) with w |= A_i !B_i
  * 
  * <br><br>See Judea Pearl. System Z: a natural ordering of defaults with tractable applications to default 

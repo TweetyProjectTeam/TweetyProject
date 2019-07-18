@@ -53,6 +53,7 @@ public class UpdateEvent<T> extends EventObject {
 	/**
 	 * Sets the result in for this update event
 	 * @param result of this update event
+	 * @return true iff the operation was successful
 	 */
 	public boolean setResult(PreferenceOrder<T> result) {
 		if (result != null && !result.isEmpty()) {

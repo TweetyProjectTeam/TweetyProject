@@ -54,7 +54,7 @@ public abstract class PlMusEnumerator extends AbstractMusEnumerator<PlFormula>{
 	}
 
 	/**
-	 * Returns the default MUS enumerator.</br></br>
+	 * Returns the default MUS enumerator.<br><br>
 	 * If a default MUS enumerator has been configured this enumerator
 	 * is returned by this method. If no default  MUS enumerator is 
 	 * configured, a naive enumerator based on the default SAT solver

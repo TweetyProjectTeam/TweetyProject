@@ -47,7 +47,7 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 	}	
 
 	/**
-	 * Returns "true" iff a is strictly more acceptable than b, i.e. a < b
+	 * Returns "true" iff a is strictly more acceptable than b, i.e. a &lt; b
 	 * (least arguments are maximally acceptable arguments)
 	 * @param a some argument
 	 * @param b some argument
@@ -58,7 +58,7 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 	}
 	
 	/**
-	 * Returns "true" iff a is strictly less acceptable than b, i.e. a > b
+	 * Returns "true" iff a is strictly less acceptable than b, i.e. a &gt; b
 	 * (least arguments are maximally acceptable arguments)
 	 * @param a some argument
 	 * @param b some argument
@@ -70,7 +70,7 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 	
 	/**
 	 * Returns "true" iff a is strictly more acceptable than b or a is equally
-	 * acceptable as b or a and b are not comparable, i.e. a <= b (or a ~ b)
+	 * acceptable as b or a and b are not comparable, i.e. a &lt;= b (or a ~ b)
 	 * (least arguments are maximally acceptable arguments)
 	 * @param a some argument
 	 * @param b some argument
@@ -155,7 +155,7 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 	}
 	/**
 	 * Returns "true" iff a is strictly less acceptable than b or a is equally
-	 * acceptable as b or a and b are not comparable, i.e. a >= b (or a ~ b)
+	 * acceptable as b or a and b are not comparable, i.e. a &gt;= b (or a ~ b)
 	 * (least arguments are maximally acceptable arguments)
 	 * @param a some argument
 	 * @param b some argument

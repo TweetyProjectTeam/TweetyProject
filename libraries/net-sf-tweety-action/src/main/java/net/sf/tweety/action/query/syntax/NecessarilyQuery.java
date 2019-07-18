@@ -35,7 +35,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
  * This class represents a necessarily query in the action query language S.
  * Such queries have the following form: 
  *   necessarily F after A_1 ; A_2 ; ... ; A_n 
- * where F is a state formula, and each A_i (0 < i < n+1) is an action.
+ * where F is a state formula, and each A_i (0 &lt; i &lt; n+1) is an action.
  * 
  * @author Sebastian Homann
  */

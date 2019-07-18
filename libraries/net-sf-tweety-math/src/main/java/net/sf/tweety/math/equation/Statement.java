@@ -113,14 +113,14 @@ public abstract class Statement {
 	
 	/**
 	 * Checks whether this constraint is of normalized form, i.e.
-	 * whether it has the form "T > 0" or "T >= 0", "T = 0" or "T != 0"
+	 * whether it has the form "T &gt; 0" or "T &gt;= 0", "T = 0" or "T != 0"
 	 * @return "true" iff this constraint is normalized.
 	 */
 	public abstract boolean isNormalized();
 
 	/**
 	 * Normalizes this constraint, i.e. brings it into
-	 * an equivalent form "T > 0" or "T >= 0", "T = 0" or "T != 0". 
+	 * an equivalent form "T &gt; 0" or "T &gt;= 0", "T = 0" or "T != 0". 
 	 * @return a statement.
 	 */
 	public abstract Statement toNormalizedForm();

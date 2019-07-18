@@ -8,7 +8,7 @@ import net.sf.tweety.lp.asp.semantics.*;
  * 
  * Parser for ASP programs in the ASP-Core-2 syntax 
  * <a href="https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf">https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf</a>.
- * This parser also supports most of the (<a href=" https://potassco.org/clingo/">Clingo</a>) 
+ * This parser also supports most of the (<a href="https://potassco.org/clingo/">Clingo</a>) 
  * and <a href="http://www.dlvsystem.com/html/DLV_User_Manual.html">DLV</a>
  * input syntaxes and provides additional methods for parsing answer sets given by the DLV and Clingo solvers.
  *
@@ -40,7 +40,7 @@ import net.sf.tweety.lp.asp.semantics.*;
  * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
  * LITERAL ::== ("-")? ID ("(" Terms ")")? <br>
  * BUILTIN_ATOM ::== TERM BINOP TERM <br>
- * BINOP ::== "=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" <br>
+ * BINOP ::== "=" | "!=" | "&lt;&gt;" | "&lt;" | "&gt;" | "&lt;=" | "&gt;=" <br>
  * TERMS ::== (TERMS ",")? TERM <br>
  * TERM ::== ID ("(" TERMS ")")? | NUMBER | STRING | VARIABLE | "_" | "(" TERM
  * ")" | "-" TERM | TERM ARITHOP TERM <br>
@@ -2718,11 +2718,11 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
-  /** Constructor with InputStream. */
+  /* Constructor with InputStream. */
   public ASPCore2Parser(java.io.InputStream stream) {
      this(stream, null);
   }
-  /** Constructor with InputStream and supplied encoding */
+  /* Constructor with InputStream and supplied encoding */
   public ASPCore2Parser(java.io.InputStream stream, String encoding) {
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new ASPCore2ParserTokenManager(jj_input_stream);
@@ -2733,11 +2733,11 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
@@ -2749,7 +2749,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public ASPCore2Parser(java.io.Reader stream) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new ASPCore2ParserTokenManager(jj_input_stream);
@@ -2760,7 +2760,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
@@ -2772,7 +2772,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /** Constructor with generated Token Manager. */
+  /* Constructor with generated Token Manager. */
   public ASPCore2Parser(ASPCore2ParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -2782,7 +2782,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(ASPCore2ParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -2842,7 +2842,7 @@ static private final class LookaheadSuccess extends java.lang.Error { }
   }
 
 
-/** Get the next Token. */
+/* Get the next Token. */
   final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -2851,7 +2851,7 @@ static private final class LookaheadSuccess extends java.lang.Error { }
     return token;
   }
 
-/** Get the specific Token. */
+/* Get the specific Token. */
   final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
@@ -2899,7 +2899,7 @@ static private final class LookaheadSuccess extends java.lang.Error { }
     }
   }
 
-  /** Generate ParseException. */
+  /* Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[45];

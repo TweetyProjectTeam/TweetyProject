@@ -78,7 +78,7 @@ public class LingelingSolver extends SatSolver {
 			PossibleWorld w = new PossibleWorld();
 			while(tokenizer.hasMoreTokens()){
 				String s = tokenizer.nextToken().trim();				
-				Integer i = new Integer(s);
+				Integer i = Integer.parseInt(s);
 				if(i > 0){
 					w.add(props.get(i-1));
 				}

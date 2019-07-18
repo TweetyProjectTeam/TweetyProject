@@ -39,6 +39,7 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
  *
  */
 public class AspicGeneratorExample {
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {		 
 		int repetitions = 50;
 		int numberAtoms = 35;

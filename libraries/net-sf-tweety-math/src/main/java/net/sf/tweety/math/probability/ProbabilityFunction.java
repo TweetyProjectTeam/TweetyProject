@@ -54,6 +54,7 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 			
 		/**
 		 * Creates a new probability function by copying the given one.
+		 * @param other another probability function
 		 */
 		public ProbabilityFunction(ProbabilityFunction<T> other){
 			this();
@@ -65,6 +66,7 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		 * Gets the probability of the given object.
 		 * @param w some object.
 		 * @return the probability of the given object.
+		 * @throws IllegalArgumentException if the given object has no probability
 		 */
 		public Probability probability(T w) throws IllegalArgumentException{
 			return this.get(w);
@@ -74,6 +76,7 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		 * Gets the probability of the given object.
 		 * @param objects some object.
 		 * @return the probability of the given object.
+		 * @throws IllegalArgumentException if the given object has no probability
 		 */
 		public Probability probability(Collection<? extends T> objects) throws IllegalArgumentException{
 			double prob = 0;
@@ -85,6 +88,7 @@ public class ProbabilityFunction<T extends Comparable<T>> implements Map<T,Proba
 		/**
 		 * Normalizes the given list of probabilities, i.e. divides
 		 * each probability by the sum of all probabilities.
+		 * @param probabilities a list of probabilities
 		 */
 		protected static void normalize(List<Double> probabilities){
 			double sum = 0;

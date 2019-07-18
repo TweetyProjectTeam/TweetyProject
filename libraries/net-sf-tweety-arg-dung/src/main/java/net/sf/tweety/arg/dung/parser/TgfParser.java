@@ -30,12 +30,12 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 /**
  * Parses abstract argumentation frameworks given in the 
  * trivial graph format which is given by the following BNF
- * (start symbol is S):<br/>
- * <br/>
- * S 			::== ARGUMENTS "#" "\n" ATTACKS	<br/>
- * ARGUMENTS	::== "" | ARGUMENT "\n" ARGUMENTS<br/>
- * ATTACKS		::== "" | ATTACK "\n" ATTACKS<br/>
- * ATTACK		::== ARGUMENT ARGUMENT<br/>
+ * (start symbol is S):<br>
+ * <br>
+ * S 			::== ARGUMENTS "#" "\n" ATTACKS	<br>
+ * ARGUMENTS	::== "" | ARGUMENT "\n" ARGUMENTS<br>
+ * ATTACKS		::== "" | ATTACK "\n" ATTACKS<br>
+ * ATTACK		::== ARGUMENT ARGUMENT<br>
  * 
  * where "ARGUMENT" represents any string (without blanks) as a terminal symbol.
  * 

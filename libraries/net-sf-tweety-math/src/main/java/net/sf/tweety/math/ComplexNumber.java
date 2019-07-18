@@ -57,7 +57,7 @@ public class ComplexNumber extends Number {
 	 */
 	@Override
 	public float floatValue() {
-		return new Float(this.realPart);
+		return (float)this.realPart;
 	}
 
 	/* (non-Javadoc)
@@ -65,7 +65,7 @@ public class ComplexNumber extends Number {
 	 */
 	@Override
 	public int intValue() {		
-		return new Integer((int)Math.round(this.realPart));
+		return (int)Math.round(this.realPart);
 	}
 
 	/* (non-Javadoc)

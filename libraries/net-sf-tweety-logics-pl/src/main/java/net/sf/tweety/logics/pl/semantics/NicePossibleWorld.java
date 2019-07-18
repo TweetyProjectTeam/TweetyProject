@@ -83,6 +83,7 @@ public class NicePossibleWorld extends InterpretationSet<Proposition,PlBeliefSet
 	 * @param signature		A set of propositions describing all know propositions by the
 	 * 						the problem, the signature. It has to be a super set of
 	 * 						trueInWorld
+	 * @param comparator    The comparator
 	 * 
 	 */
 	public NicePossibleWorld(Collection<Proposition> trueInWorld, Collection<Proposition> signature, 

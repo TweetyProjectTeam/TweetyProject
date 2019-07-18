@@ -52,6 +52,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	/**
 	 * Creates an empty Argument 
 	 * @param toprule the argument's TopRule
+	 * @param directsubs the direct sub arguments
 	 */
 	public AspicArgument(InferenceRule<T> toprule, Collection<AspicArgument<T>> directsubs) {
 		super(null);
@@ -337,7 +338,13 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	
 	
 	/**
-	 * Determines whether the attack is successfull
+	 * Determines whether the attack is successful
+	 * @param active the active argument
+	 * @param passive  the passive argument
+	 * @param rfgen  a rule formula generator 
+	 * @param order a comparator
+	 * @param <T> the type of formulas
+	 * @return true iff the attack is successful
 	 */
 	public static <T extends Invertable> boolean isAttack(AspicArgument<T> active, AspicArgument<T> passive, RuleFormulaGenerator<T> rfgen,Comparator<AspicArgument<T>> order) {
 		Collection<AspicArgument<T>> defargs = passive.getDefeasibleSubs();		

@@ -25,7 +25,6 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.commons.util.*;
 import net.sf.tweety.logics.fol.semantics.*;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.rpcl.*;
 import net.sf.tweety.logics.rpcl.semantics.*;
 import net.sf.tweety.math.probability.*;
 

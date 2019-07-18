@@ -70,6 +70,7 @@ public class DefaultRule extends RelationalFormula {
 	 * @param pre 	the prerequsite
 	 * @param jus	the justification
 	 * @param conc	the conclusion
+	 * @throws IllegalArgumentException if there is some issue with the arguments
 	 * @throws ParserException	when a parameter is missing
 	 */
 	public DefaultRule(FolFormula pre, FolFormula jus, FolFormula conc) throws IllegalArgumentException {
@@ -81,7 +82,7 @@ public class DefaultRule extends RelationalFormula {
 	 * @param pre 	the prerequsite
 	 * @param jus	the justifications
 	 * @param conc	the conclusion
-	 * @throws ParserException	when a parameter is missing
+	 * @throws IllegalArgumentException if there is some issue with the arguments
 	 */
 	public DefaultRule(FolFormula pre, Collection<FolFormula> jus, FolFormula conc) throws IllegalArgumentException {
 		super();
@@ -100,6 +101,8 @@ public class DefaultRule extends RelationalFormula {
 	/**
 	 * Tests, whether the default is normal
 	 * normal ^= a:c/c
+	 * @param dt a default theory
+	 * @return true iff the theory is normal
 	 */
 	public boolean isNormal(DefaultTheory dt) {
 		if(jus.size()!=1)

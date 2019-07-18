@@ -32,10 +32,10 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
- * This class implements the contension inconsistency measure, cf. [Grant, Hunter, 2011].<br/>
+ * This class implements the contension inconsistency measure, cf. [Grant, Hunter, 2011].<br>
  * This measure is defined on paraconsistent models (three-valued models with truth values F,T,B) 
  * of a knowledge base via taking the minimal number of B-valued propositions needed in a model
- * of the knowledge base.<br/>
+ * of the knowledge base.<br>
  * The computation of the inconsistency value is done as follows. First, the knowledge base
  * is transformed into CNF. If the knowledge base is consistent the inconsistency value is 0.
  * Otherwise, for every proposition "p" we create a new knowledge base by removing all clauses
@@ -65,7 +65,7 @@ public class ContensionInconsistencyMeasure extends BeliefSetInconsistencyMeasur
 						newCnf.remove(f);
 			}
 			if(SatSolver.getDefaultSolver().isConsistent((PlFormula)newCnf))
-				return new Double(props.size());
+				return ((double)props.size());
 		}
 		// this should not happen as at least the paraconsistent interpretation which assigns
 		// to every proposition the truth value B is a model

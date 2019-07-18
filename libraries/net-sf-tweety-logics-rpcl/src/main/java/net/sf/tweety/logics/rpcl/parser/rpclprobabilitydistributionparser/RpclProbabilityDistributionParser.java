@@ -28,11 +28,10 @@ import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.fol.semantics.*;
 import net.sf.tweety.logics.fol.syntax.*;
-import net.sf.tweety.logics.rpcl.*;
 import net.sf.tweety.logics.rpcl.semantics.*;
 import net.sf.tweety.math.probability.*;
 
-/**
+/*
  * This class implements a parser for relational probability distributions. The BNF for 
  * relational probability distributions is given by (start symbol is DISTRIBUTION)
  * <br>
@@ -48,12 +47,12 @@ import net.sf.tweety.math.probability.*;
 @SuppressWarnings("all")
 public class RpclProbabilityDistributionParser implements RpclProbabilityDistributionParserConstants {
 
-        /**
+        /*
      * The semantics used for the distribution to be read. 
      */
         private RpclSemantics semantics = null;
 
-        /**
+        /*
 	 * The signature for this parser (if one has been given)
 	 */
         private FolSignature signature = null;
@@ -206,12 +205,12 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
   }
 
   static private boolean jj_initialized_once = false;
-  /** Generated Token Manager. */
+  /* Generated Token Manager. */
   static public RpclProbabilityDistributionParserTokenManager token_source;
   static SimpleCharStream jj_input_stream;
-  /** Current token. */
+  /* Current token. */
   static public Token token;
-  /** Next token. */
+  /* Next token. */
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
@@ -224,11 +223,11 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
       jj_la1_0 = new int[] {0x80,0x100,0x20,0x100,0x800,};
    }
 
-  /** Constructor with InputStream. */
+  /* Constructor with InputStream. */
   public RpclProbabilityDistributionParser(java.io.InputStream stream) {
      this(stream, null);
   }
-  /** Constructor with InputStream and supplied encoding */
+  /* Constructor with InputStream and supplied encoding */
   public RpclProbabilityDistributionParser(java.io.InputStream stream, String encoding) {
     if (jj_initialized_once) {
       System.out.println("ERROR: Second call to constructor of static parser.  ");
@@ -245,11 +244,11 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   static public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
-  /** Reinitialise. */
+  /* Reinitialise. */
   static public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
@@ -259,7 +258,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public RpclProbabilityDistributionParser(java.io.Reader stream) {
     if (jj_initialized_once) {
       System.out.println("ERROR: Second call to constructor of static parser. ");
@@ -276,7 +275,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   static public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
@@ -286,7 +285,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
-  /** Constructor with generated Token Manager. */
+  /* Constructor with generated Token Manager. */
   public RpclProbabilityDistributionParser(RpclProbabilityDistributionParserTokenManager tm) {
     if (jj_initialized_once) {
       System.out.println("ERROR: Second call to constructor of static parser. ");
@@ -302,7 +301,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(RpclProbabilityDistributionParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -326,7 +325,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
   }
 
 
-/** Get the next Token. */
+/* Get the next Token. */
   static final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -335,7 +334,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     return token;
   }
 
-/** Get the specific Token. */
+/* Get the specific Token. */
   static final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
@@ -356,7 +355,7 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
   static private int[] jj_expentry;
   static private int jj_kind = -1;
 
-  /** Generate ParseException. */
+  /* Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[13];
@@ -387,11 +386,11 @@ public class RpclProbabilityDistributionParser implements RpclProbabilityDistrib
     return new ParseException(token, exptokseq, tokenImage);
   }
 
-  /** Enable tracing. */
+  /* Enable tracing. */
   static final public void enable_tracing() {
   }
 
-  /** Disable tracing. */
+  /* Disable tracing. */
   static final public void disable_tracing() {
   }
 

@@ -58,6 +58,7 @@ public class LiteralReasoner extends ArgumentationReasoner {
 	
 	/**
 	 * A literal is called x/y-overruled, iff it is not x/y-justified.
+	 *  @param kb a knowledge base
 	 * @param arg a literal
 	 * @return true iff arg is not x/y-overruled
 	 */
@@ -68,7 +69,7 @@ public class LiteralReasoner extends ArgumentationReasoner {
 	/**
 	 * A literal is called x/y-justified, if a x/y-justified
 	 * argument with conclusion arg can be constructed from p.
-	 * 
+	 *  @param kb a knowledge base
 	 * @param arg a literal
 	 * @return true iff a x/y-justified argument with conclusion arg can be constructed from p 
 	 */

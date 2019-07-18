@@ -50,11 +50,11 @@ public abstract class AbstractArgumentationInterpretation extends AbstractInterp
 	}
 
 	/**
-	 * returns true if every attacker on <source>argument</source> is attacked by some 
+	 * returns true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 * @param argument an argument
 	 * @param dungTheory a Dung theory (the knowledge base)
-	 * @return true if every attacker on <source>argument</source> is attacked by some 
+	 * @return true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 */
 	public boolean isAcceptable(Argument argument, DungTheory dungTheory){

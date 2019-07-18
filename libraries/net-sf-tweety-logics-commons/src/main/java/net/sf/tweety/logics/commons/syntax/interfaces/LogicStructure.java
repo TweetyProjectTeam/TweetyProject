@@ -41,6 +41,7 @@ public interface LogicStructure {
 	 * @param cls	The Class structure containing type information about the
 	 * 				searched term
 	 * @return		A set containing all terms of type C of this logical structure
+	 * @param <C> the type of terms
 	 */
 	<C extends Term<?>> Set<C> getTerms(Class<C> cls);
 	
@@ -51,6 +52,7 @@ public interface LogicStructure {
 	 * @param cls	The class structure representing the type C of the term.
 	 * @return		True if this logical structure contains at least one term
 	 * 				of type C or false otherwise.
+	 * @param <C> the type of terms
 	 */
 	<C extends Term<?>> boolean containsTermsOfType(Class<C> cls);
 }

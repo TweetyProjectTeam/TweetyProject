@@ -88,11 +88,11 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 	 * Creates a propositional representation of the set of labelings of the given
 	 * Dung theory that are consistent with the given semantics. This means that
 	 * for every argument A in the theory three propositions are created: in_A, out_A,
-	 * undec_A. For every attack A->B the formula "in_A => out_B" is added to the belief set.
+	 * undec_A. For every attack A-&gt;B the formula "in_A =&gt; out_B" is added to the belief set.
 	 * Depending on the actual semantics further propositional formulas are added. For example,
-	 * for any admissable semantics and unattacked argument A, the constraint "\top=>in_A" is added;
+	 * for any admissable semantics and unattacked argument A, the constraint "\top=&gt;in_A" is added;
 	 * another constraint added for admissable semantics is, given any argument A and attackers B1...BN,
-	 * add the constraint in_A => out_B1 ^ ... ^ out_BN.
+	 * add the constraint in_A =&gt; out_B1 ^ ... ^ out_BN.
 	 * @param aaf a Dung Thery    
 	 * @return a propositional belief set.
 	 */

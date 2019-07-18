@@ -81,7 +81,7 @@ public abstract class TCoNorm implements BinaryFunction<Double,Double,Double>{
 	public abstract TNorm getDualNorm();
 	
 	/**
-	 * A T-conorm is nilpotent if there are x,y<1 with s(x,y)=1
+	 * A T-conorm is nilpotent if there are x,y&lt;1 with s(x,y)=1
 	 * @return true if the conorm is nilpotent
 	 */
 	public abstract boolean isNilpotent();

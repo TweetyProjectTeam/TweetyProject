@@ -28,6 +28,7 @@ import net.sf.tweety.logics.commons.syntax.Sort;
  * 
  * @author Matthias Thimm
  * @author Tim Janus
+ * @param <T> the type of values
  */
 public interface Term<T> extends LogicStructure {
 	
@@ -63,6 +64,7 @@ public interface Term<T> extends LogicStructure {
 	
 	/**
 	 * Creates a deep copy of the term
+	 * @return the clone
 	 */
 	Term<?> clone();
 }

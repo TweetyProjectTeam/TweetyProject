@@ -59,6 +59,7 @@ public abstract class RootFinder {
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
+	 * @param function a function
 	 * @param startingPoint the starting point
 	 */
 	public RootFinder(Term function, Map<Variable,Term> startingPoint){
@@ -70,6 +71,7 @@ public abstract class RootFinder {
 	/**
 	 * Creates a new root finder for the given starting point and the given
 	 * (multi-dimensional) function
+	 * @param functions a list of functions
 	 * @param startingPoint the starting point
 	 */
 	public RootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
@@ -80,6 +82,7 @@ public abstract class RootFinder {
 	
 	/**
 	 * sets the starting point of this root finder.
+	 * @param startingPoint the starting point
 	 */
 	public void setStartingPoint(Map<Variable,Term> startingPoint){
 		this.startingPoint = startingPoint;

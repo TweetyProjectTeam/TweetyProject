@@ -96,6 +96,7 @@ public class CReasoner extends AbstractConditionalLogicReasoner{
 	 * @param ranki the rank (an integer variable) of interpretation "i".
 	 * @param kappa_pos the positive penalties for interpretations.
 	 * @param kappa_neg the negative penalties for interpretations.
+	 * @return the mathematical statement
 	 */
 	private Statement getRankConstraint(PossibleWorld w, IntegerVariable ranki, Map<Conditional,IntegerVariable> kappa_pos, Map<Conditional,IntegerVariable> kappa_neg){		
 		// construct ride side of the inequation

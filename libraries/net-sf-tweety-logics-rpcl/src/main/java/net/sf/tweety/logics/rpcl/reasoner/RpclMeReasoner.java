@@ -232,7 +232,7 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 				CondensedProbabilityDistribution p = new CondensedProbabilityDistribution(this.semantics,signature);
 				for(Interpretation<FolBeliefSet,FolFormula> w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
-					Double value = new Double(c.doubleValue());
+					Double value = c.doubleValue();
 					p.put((ReferenceWorld)w, new Probability(value));			
 				}
 				return p;
@@ -284,7 +284,7 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 				RpclProbabilityDistribution<Interpretation<FolBeliefSet,FolFormula>> p = new RpclProbabilityDistribution<Interpretation<FolBeliefSet,FolFormula>>(this.semantics,signature);
 				for(Interpretation<FolBeliefSet,FolFormula> w: worlds2vars.keySet()){
 					net.sf.tweety.math.term.Constant c = solution.get(worlds2vars.get(w)).value();
-					Double value = new Double(c.doubleValue());
+					Double value = c.doubleValue();
 					p.put(w, new Probability(value));			
 				}
 				return p;

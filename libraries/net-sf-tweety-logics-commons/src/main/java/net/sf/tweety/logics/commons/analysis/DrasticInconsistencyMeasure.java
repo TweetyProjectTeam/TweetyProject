@@ -26,6 +26,7 @@ import net.sf.tweety.commons.Formula;
  * This class models the drastic inconsistency measure.
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
  */
 public class DrasticInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 

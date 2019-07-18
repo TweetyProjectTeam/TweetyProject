@@ -70,7 +70,7 @@ public class DefaultSequence {
 	/**
 	 * constructs a sequence by appending d to ds 
 	 * @param ds a default sequence
-//	 * @param d a default rule
+	 * @param d a default rule
 	 */
 	public DefaultSequence(DefaultSequence ds, DefaultRule d) {
 		defaults.addAll(ds.defaults);
@@ -125,7 +125,7 @@ public class DefaultSequence {
 	}
 
 	/**
-	 * process <=> all defaults are unique and applicable in sequence
+	 * process &lt;=&gt; all defaults are unique and applicable in sequence
 	 * @return true iff is process
 	 */
 	public boolean isProcess() {
@@ -133,7 +133,7 @@ public class DefaultSequence {
 	}
 
 	/**
-	 * successfull <=> there is no x: x in In and x in Out
+	 * successfull &lt;=&gt; there is no x: x in In and x in Out
 	 * @return true iff successfull
 	 */
 	public boolean isSuccessful() {
@@ -146,6 +146,7 @@ public class DefaultSequence {
 
 	/**
 	 * Tests wether all applicble defaukts from t have been applied
+	 * @param t a default theory
 	 * @return true iff every possible default is applied
 	 */
 	public boolean isClosed(DefaultTheory t) {

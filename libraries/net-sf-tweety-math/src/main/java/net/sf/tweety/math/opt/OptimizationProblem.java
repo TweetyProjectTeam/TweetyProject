@@ -170,10 +170,10 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 	 * Resolves all occurrences of absolute values "abs(X)" by
 	 * <ul>
 	 * 	<li>replacing "abs(X)" by a new variable "TMPABS"</li>
-	 *  <li>adding constraints "TMPABS - X>= 0" and "TMPABS + X >= 0" (yielding "TMPABS <= abs(X)")</li>
+	 *  <li>adding constraints "TMPABS - X&gt;= 0" and "TMPABS + X &gt;= 0" (yielding "TMPABS &lt;= abs(X)")</li>
 	 *  <li>introducing a new variable "TMPABSB"</li>
-	 *  <li>adding constraints "X+PENALTY*TMPABSB - TMPABS >= 0" and "-X-TMPABSB*PENALTY - TMPABS >= -PENALTY" (yielding "TMPABS >= abs(X)")</li>
-	 *  <li>adding constraints "TMPABSB<=1"</li>
+	 *  <li>adding constraints "X+PENALTY*TMPABSB - TMPABS &gt;= 0" and "-X-TMPABSB*PENALTY - TMPABS &gt;= -PENALTY" (yielding "TMPABS &gt;= abs(X)")</li>
+	 *  <li>adding constraints "TMPABSB&lt;=1"</li>
 	 * </ul>
 	 */
 	public void resolveAbsoluteValues(){

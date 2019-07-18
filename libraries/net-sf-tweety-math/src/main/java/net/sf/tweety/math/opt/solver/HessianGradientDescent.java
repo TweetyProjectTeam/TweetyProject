@@ -121,6 +121,7 @@ public class HessianGradientDescent extends Solver {
 	 * @param dir the direction 
 	 * @param gradient the gradient
 	 * @param variables the variables.
+	 * @return the best guess
 	 */
 	private double[] bestGuess(double[] currentGuess, double[] dir, List<Term> gradient, List<Variable> variables){
 		double upperBound = 1;
@@ -145,6 +146,7 @@ public class HessianGradientDescent extends Solver {
 	 * Find the best direction.
 	 * @param approxHessian the approximated Hessian
 	 * @param evaluatedGradient the evaluated gradient
+	 * @return the direction
 	 */
 	private double[] getDirection(double[][] approxHessian, double[] evaluatedGradient){
 		ConstraintSatisfactionProblem problem = new ConstraintSatisfactionProblem();

@@ -31,7 +31,7 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
 /**
  * Basic data structure for handling simple rule
  * 
- * @author Federico Cerutti <federico.cerutti@acm.org>
+ * @author Federico Cerutti (federico.cerutti@acm.org)
  *
  */
 public class SimplePlRule implements Rule<PlFormula, PlFormula> {

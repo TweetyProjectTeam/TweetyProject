@@ -33,7 +33,7 @@ import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 
 /**
- * P is involutary wrt. AF if for every A,B in Arg, if A->B then P(A)=1-P(B).
+ * P is involutary wrt. AF if for every A,B in Arg, if A-&gt;B then P(A)=1-P(B).
  * @author Matthias Thimm
  */
 public class InvolutaryPASemantics extends AbstractPASemantics{

@@ -66,6 +66,7 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 	 * @param theory some theory
 	 * @param prob a probability function
 	 * @param util a utility function
+	 * @param semantics the used semantics
 	 */
 	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, Semantics semantics) {
 		this(name,theory, prob,util, semantics, ProbabilisticLotteryAgent.UPDATE_NAIVE);
@@ -77,6 +78,7 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 	 * @param theory some theory
 	 * @param prob a probability function
 	 * @param util a utility function
+	 * @param semantics the used semantics
 	 * @param updatestrategy The update strategy used
 	 */
 	public ProbabilisticLotteryAgent(String name, DungTheory theory, SubgraphProbabilityFunction prob, UtilityFunction util, Semantics semantics, byte updatestrategy) {
@@ -89,6 +91,7 @@ public class ProbabilisticLotteryAgent extends AbstractLotteryAgent {
 	 * @param theory some theory
 	 * @param prob a probability function
 	 * @param util a utility function
+	 * @param semantics the used semantics
 	 * @param updatestrategy The update strategy used
 	 * @param stickynesscoefficient coefficient for the sticky update (only needed when updatestrategy==UPDATE_STICKY.
 	 */

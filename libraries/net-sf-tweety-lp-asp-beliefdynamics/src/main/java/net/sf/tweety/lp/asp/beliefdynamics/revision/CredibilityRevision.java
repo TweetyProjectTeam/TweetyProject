@@ -78,7 +78,7 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 	/**
 	 * This class implements a default behavior for the processing of the answer sets
 	 * of the credibility logic programs.
-	 * @remark 	It does not support the generation of two different programs. If two programs
+	 * Remark: 	It does not support the generation of two different programs. If two programs
 	 * 			are possible the first answer set is used for revision.
 	 * @author Tim Janus
 	 *

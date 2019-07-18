@@ -33,7 +33,7 @@ public class ProductAggregator implements AggregationFunction {
 	 */
 	@Override
 	public Double eval(List<Double> elements) {
-		Double prod = new Double(1);
+		Double prod = 1d;
 		for(Double elem: elements)
 			prod *= elem;
 		return prod;

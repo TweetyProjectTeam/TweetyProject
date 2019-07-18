@@ -173,7 +173,7 @@ public abstract class FolFormula extends RelationalFormula {
 		for(HerbrandInterpretation hInt: allWorlds)
 			if(hInt.satisfies(groundFormula))
 				cnt++;
-		return new Probability(new Double(cnt)/new Double(allWorlds.size()));
+		return new Probability(((double)cnt)/((double)allWorlds.size()));
 	}
 	
 	/**

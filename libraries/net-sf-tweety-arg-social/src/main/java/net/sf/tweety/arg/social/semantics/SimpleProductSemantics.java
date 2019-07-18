@@ -77,7 +77,7 @@ public class SimpleProductSemantics extends AbstractSocialSemantics<Double>{
 	public Double supp(int pos, int neg) {
 		if(pos == 0 && neg == 0)
 			return 0d;
-		return pos/new Double(pos+neg+this.epsilon);
+		return pos/((double)pos+neg+this.epsilon);
 	}
 
 	/* (non-Javadoc)

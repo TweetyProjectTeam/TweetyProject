@@ -218,6 +218,7 @@ public class ClingoSolver extends ASPSolver {
 	 * activated, answer sets will only contain atoms over predicates that are part
 	 * of the whitelist. This corresponds to the #show statement of the clingo input
 	 * language.
+	 * @param b whether to use a whitelist of predicate
 	 */
 	public void toggleOutputWhitelist(boolean b) {
 		usePredicateWhitelist = b;

@@ -25,7 +25,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 /**
  * @author Nils Geilen
  * 
- * Indefeasible implementation of <code>InferenceRule<T></code>
+ * Indefeasible implementation of <code>InferenceRule&lt;T&gt;</code>
  *
  * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
@@ -38,7 +38,7 @@ public class StrictInferenceRule<T extends Invertable> extends InferenceRule<T> 
 	}
 	
 	/**
-	 * Constructs a strict inference rule p -> c 
+	 * Constructs a strict inference rule p -&gt; c 
 	 * @param conclusion	^= p
 	 * @param premise	^= c
 	 */

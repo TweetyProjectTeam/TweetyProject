@@ -36,7 +36,7 @@ import net.sf.tweety.lp.asp.syntax.ASPRule;
 /**
  * This class implements the inconsistency measure $I_\pm$ from [Ulbricht,
  * Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA
- * 2016]<br/>
+ * 2016]<br>
  * The implememtation is a straightforward brute-force search approach.
  * 
  * @author Matthias Thimm
@@ -83,7 +83,7 @@ public class PmInconsistencyMeasure implements InconsistencyMeasure<Program> {
 			Set<ASPRule> del = it_del.next();
 			// if we already have a result better than what we remove now, we are finished
 			if (del.size() > min)
-				return new Double(min);
+				return Double.valueOf(min);
 			while (it_add.hasNext()) {
 				Set<ASPRule> add = it_add.next();
 				// only test if we can improve a previous change
@@ -96,6 +96,6 @@ public class PmInconsistencyMeasure implements InconsistencyMeasure<Program> {
 				}
 			}
 		}
-		return new Double(min);
+		return Double.valueOf(min);
 	}
 }

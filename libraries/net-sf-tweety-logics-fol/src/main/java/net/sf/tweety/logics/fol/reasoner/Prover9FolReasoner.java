@@ -120,6 +120,7 @@ public class Prover9FolReasoner extends FolReasoner {
 	 * @param file
 	 *            input file for Prover9
 	 * @return query result
+	 * @throws Exception if something goes wrong
 	 */
 	private boolean eval(File file) throws Exception {
 		String cmd = binaryLocation + " -f " + file.getAbsolutePath();

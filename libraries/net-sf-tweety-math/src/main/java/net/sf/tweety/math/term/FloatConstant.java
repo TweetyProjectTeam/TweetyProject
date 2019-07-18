@@ -42,7 +42,7 @@ public class FloatConstant extends Constant {
 	 * @param f a double.
 	 */
 	public FloatConstant(double f){
-		this.f = new Float(f);
+		this.f = (float)f;
 	}
 	
 	/**

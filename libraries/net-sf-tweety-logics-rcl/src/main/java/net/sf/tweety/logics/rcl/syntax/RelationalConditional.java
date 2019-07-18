@@ -47,7 +47,7 @@ import net.sf.tweety.math.probability.Probability;
  * quantifiers and without functions (@see net.sf.tweety.logics.firstorderlogic.lang.FolLanguageNoQuantifiersNoFunctions)
  * 
  * @author Matthias Thimm
- * @todo dont use relation formula cause it is a Quantified formula that not support or and etc.
+ * TODO dont use relation formula cause it is a Quantified formula that not support or and etc.
  */
 public class RelationalConditional extends RelationalFormula implements Rule<FolFormula, FolFormula>  {
 

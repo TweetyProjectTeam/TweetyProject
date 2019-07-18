@@ -29,7 +29,7 @@ import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.QualitativeReasoner;
 
 /**
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
  * @author Matthias Thimm
  * This is an abstract gerneralization over non-flat ABA reasoners
  * @param <T>	the language of the underlying ABA theory

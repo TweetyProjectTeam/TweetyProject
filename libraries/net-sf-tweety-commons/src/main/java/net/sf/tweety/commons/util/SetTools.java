@@ -23,6 +23,7 @@ import java.util.*;
 /**
  * This class provides some methods for set operations.
  * @author Matthias Thimm
+ * @param <E> the type of elements
  */
 public class SetTools<E> {
 	
@@ -258,10 +259,11 @@ public class SetTools<E> {
 	/**
 	 * Returns all independent sets of the given cardinality of the given set of sets.
 	 * A set M={M1,...,Mk} is an independent set of N={N1,...,Nl} if M\subseteq N and
-	 * for all i,j, i\neq j, Mi\cap Mj=\emptyset.  <br/>
+	 * for all i,j, i\neq j, Mi\cap Mj=\emptyset.  <br>
 	 * This method uses a brute force approach to determine these sets.
 	 * 
 	 * @param sets a set of sets
+	 * @param cardinality an int
 	 * @return all independent sets of the given cardinality of the given set of sets
 	 */
 	public Set<Set<Collection<E>>> independentSets(Set<Collection<E>> sets, int cardinality){

@@ -170,6 +170,7 @@ public enum ProboProblem {
 		 * Creates a new sub-problem
 		 * @param description some description.
 		 * @param abbreviation the abbreviation of the sub-problem.
+		 * @param just whether justification is needed
 		 */
 		private SubProblem(String description, String abbreviation, boolean just){
 			this.description = description;

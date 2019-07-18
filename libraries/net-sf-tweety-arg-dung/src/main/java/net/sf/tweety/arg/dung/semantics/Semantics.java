@@ -54,6 +54,7 @@ public enum Semantics {
 	/**
 	 * Creates a new semantics.
 	 * @param description some description
+	 * @param abbreviation an abbreviation
 	 */
 	private Semantics(String description, String abbreviation){
 		this.description = description;

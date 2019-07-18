@@ -57,10 +57,10 @@ public class ProbabilisticPNorm implements RealVectorNorm, Serializable {
 	public double distance(Vector<Double> l1, Vector<Double> l2) {
 		if(l1.size() != l2.size())
 			throw new IllegalArgumentException("Lengths of lists must match.");
-		Double sum = new Double(0);
+		Double sum = 0d;
 		for(int i = 0; i< l1.size(); i++)
 			sum += Math.pow(Math.abs(Math.pow(0.5-l1.get(i),this.c)-Math.pow(0.5-l2.get(i),this.c)),this.p);
-		return Math.pow(sum, new Double(1)/p);
+		return Math.pow(sum, 1d/p);
 	}
 
 	/* (non-Javadoc)

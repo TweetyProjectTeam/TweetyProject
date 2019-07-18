@@ -29,6 +29,8 @@ import net.sf.tweety.commons.Interpretation;
  * @author Matthias Thimm
  *
  * @param <T> The actual type of interpretation used
+ * @param <B> the type of belief bases
+ * @param <S> the type of formulas
  */
 public interface InterpretationDistance<T extends Interpretation<B,S>,B extends BeliefBase, S extends Formula> {
 

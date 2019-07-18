@@ -53,6 +53,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 	
 	/**
 	 * Returns all minimal arguments constructible from the extended logic program 
+	 * @return all minimal arguments constructible from the extended logic program
 	 */
 	public Set<Argument> getArguments() {
 		Set<Argument> result = new HashSet<Argument>();
@@ -101,6 +102,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 	 * Returns the set of non-default-negated literals that are part of the premise
 	 * of some rule but not the conclusion of some other rule
 	 * @param rules a set of rules
+	 * @return the set of non-default-negated literals
 	 */
 	private Set<ASPLiteral> getOpenLiterals(Collection<ASPRule> rules) {
 		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
@@ -148,6 +150,8 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 	 * of rule is contained in the set of literals
 	 * @param rule an elp rule
 	 * @param literals a set of literals
+	 * @return true iff each non-default-negated literal in the premise
+	 * of rule is contained in the set of literals
 	 */
 	private boolean isTrue(ASPRule rule, Set<ASPLiteral> literals) {
 		for(ASPBodyElement element : rule.getPremise()) {

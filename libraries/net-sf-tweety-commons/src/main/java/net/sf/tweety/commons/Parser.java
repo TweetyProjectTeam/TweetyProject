@@ -24,6 +24,8 @@ import java.io.*;
  * This class models an abstract parser for belief bases and formulas.
  * 
  * @author Matthias Thimm
+ * @param <T> the type of belief bases
+ * @param <S> the type of formulas
  */
 public abstract class Parser<T extends BeliefBase,S extends Formula> {
 

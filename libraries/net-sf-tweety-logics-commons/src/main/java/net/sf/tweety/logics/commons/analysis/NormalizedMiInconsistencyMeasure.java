@@ -27,6 +27,7 @@ import net.sf.tweety.commons.util.*;
  * This class models the normalized MI inconsistency measure, see [PhD thesis, Thimm].
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
  */
 public class NormalizedMiInconsistencyMeasure<S extends Formula> extends MiInconsistencyMeasure<S> {
 
@@ -45,6 +46,7 @@ public class NormalizedMiInconsistencyMeasure<S extends Formula> extends MiIncon
 	public Double inconsistencyMeasure(Collection<S> beliefSet) {
 		Double value = super.inconsistencyMeasure(beliefSet);
 		if(value == 0) return value;
+		@SuppressWarnings("deprecation")
 		double normFactor = MathTools.binomial(beliefSet.size(), new Double(Math.ceil(new Double(beliefSet.size()) / 2)).intValue());
 		return value / normFactor;
 	}

@@ -33,7 +33,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * In answer set programming, the body of a rule is usually composed of a
  * set of positive and negative literals, where this valuation
  * refers to default negation or negation as failure. When
- * implementing a rule, there are two opportunities:
+ * implementing a rule, there are two opportunities:</p>
  * <ul>
  * <li>implement the rule with two distinct lists, representing
  *   the sets of positive and negative literals </li>
@@ -41,7 +41,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  *   where a super literal can be positive or strictly negated,
  *   with or without default negation. </li>
  * </ul>
- * This library takes the second approach, which allows more
+ * <p>This library takes the second approach, which allows more
  * flexibility, but comes at the cost that malformed constructs
  * like "not not a" are not intercepted by the library.
  * </p>

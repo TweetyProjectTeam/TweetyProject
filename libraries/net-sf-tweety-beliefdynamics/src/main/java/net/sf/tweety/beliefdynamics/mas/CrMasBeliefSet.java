@@ -81,7 +81,7 @@ public class CrMasBeliefSet<T extends Formula, S extends Signature> extends Beli
 		return sigm;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	protected S instantiateSignature() {
 		try {

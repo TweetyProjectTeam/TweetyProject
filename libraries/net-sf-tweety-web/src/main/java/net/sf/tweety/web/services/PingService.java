@@ -40,6 +40,7 @@ public class PingService {
 
 	/**
      * Handles all requests for theping service.
+	 * @param query the query
      * @return String Some request
      * @throws JSONException thrown if something is completely going wrong.
      */

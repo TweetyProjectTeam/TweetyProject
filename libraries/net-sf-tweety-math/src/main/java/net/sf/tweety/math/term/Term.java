@@ -101,6 +101,7 @@ public abstract class Term {
 	
 	/**
 	 * Checks whether this term is continuous in v. 
+	 * @param v a variable
 	 * @return "true" iff this term is continuous in v.
 	 */
 	public abstract boolean isContinuous(Variable v);
@@ -174,6 +175,7 @@ public abstract class Term {
 	 * Evaluates each function in the given list with the given values for variables.
 	 * @param functions a list of functions
 	 * @param mapping a map mapping variables to terms
+	 * @return the values
 	 */
 	public static List<Double> evaluateVector(List<Term> functions, Map<Variable,? extends Term> mapping){
 		List<Double> result = new LinkedList<Double>();
@@ -187,6 +189,7 @@ public abstract class Term {
 	 * @param functions a list of functions
 	 * @param values the values of the variables
 	 * @param variables the (ordered) list of variables
+	 * @return the values
 	 */
 	public static double[] evaluateVector(List<Term> functions, double[] values, List<Variable> variables){
 		double[] result = new double[functions.size()];
@@ -201,6 +204,7 @@ public abstract class Term {
 	 * @param functions a list of functions
 	 * @param values the values of the variables
 	 * @param variables the (ordered) list of variables
+	 * @return the values
 	 */
 	public static double[][] evaluateMatrix(List<List<Term>> functions, double[] values, List<Variable> variables){
 		double[][] result = new double[functions.size()][functions.size()];

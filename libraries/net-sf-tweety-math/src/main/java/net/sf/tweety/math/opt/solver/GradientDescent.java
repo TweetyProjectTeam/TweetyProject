@@ -75,6 +75,7 @@ public class GradientDescent extends Solver {
 	
 	/**
 	 * Creates a new gradient descent solver
+	 * @param startingPoint the starting point
 	 */
 	public GradientDescent(Map<Variable,Term> startingPoint) {
 		this.startingPoint = startingPoint;

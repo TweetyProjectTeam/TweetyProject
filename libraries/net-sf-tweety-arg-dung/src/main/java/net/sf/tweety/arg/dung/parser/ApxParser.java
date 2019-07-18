@@ -32,9 +32,9 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 /**
  * Parses abstract argumentation frameworks in the logic programming
  * format which is given by the following BNF
- * (start symbol is S):<br/>
- * <br/>
- * S 	::== "" | "arg" "(" ARGUMENT ")" "\n" S | "att" "(" ARGUMENT "," ARGUMENT ")" "\n" S<br/>
+ * (start symbol is S):<br>
+ * <br>
+ * S 	::== "" | "arg" "(" ARGUMENT ")" "\n" S | "att" "(" ARGUMENT "," ARGUMENT ")" "\n" S<br>
  * 
  * where "ARGUMENT" represents any string (without blanks) as a terminal symbol.
  *  

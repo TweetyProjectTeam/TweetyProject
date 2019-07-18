@@ -28,7 +28,7 @@ import net.sf.tweety.logics.pl.syntax.*;
 /**
  * This class models an argument structure, i.e. a minimal (with respect to set
  * inclusion) conflict-free sequence of basic arguments AS = [A1, ... ,An] such that for any
- * Ai and for any p in supp(Ai) there is an Aj with j > i and claim(Aj) = p.
+ * Ai and for any p in supp(Ai) there is an Aj with j &gt; i and claim(Aj) = p.
  * 
  * @author Matthias Thimm
  */
@@ -70,7 +70,7 @@ public class ArgumentStructure extends Argument implements Collection<BasicArgum
 	 * structured argumentation framework, i.e. whether
 	 * it is a minimal (with respect to set inclusion) conflict-free
 	 * sequence of basic arguments AS = [A1, ... ,An] such that for any
-	 * Ai and for any p in supp(Ai) there is an Aj with j > i and claim(Aj) = p.
+	 * Ai and for any p in supp(Ai) there is an Aj with j &gt; i and claim(Aj) = p.
 	 * @param saf a structured argumentation framework.
 	 * @return "true" iff this argument structure is valid.
 	 */

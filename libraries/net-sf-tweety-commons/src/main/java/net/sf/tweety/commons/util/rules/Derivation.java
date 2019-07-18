@@ -32,7 +32,7 @@ import net.sf.tweety.commons.util.Triple;
 /**
  * This class models a derivation, i.e. a minimal (with respect to set
  * inclusion) sequence of rules [R1, ... ,Rn] such that for any
- * Ri and for any p in the premise of Ri there is an Rj with j > i
+ * Ri and for any p in the premise of Ri there is an Rj with j &gt; i
  * and the conclusion of Rj equals p.
  * 
  * @param <T> the specific rule class 
@@ -67,6 +67,7 @@ public class Derivation<T extends Rule<?,?>> extends ArrayList<T>{
 	 * Returns the set of all possible derivations from the set of rules. 
 	 * @param rules a set of rules
 	 * @return the set of all possible derivations
+	 * @param <S> the type of rules
 	 */
 	public static <S extends Rule<?,?>> Set<Derivation<S>> allDerivations(Collection<? extends S> rules){
 		RuleSet<S> theRules = new RuleSet<S>(rules);
@@ -79,7 +80,9 @@ public class Derivation<T extends Rule<?,?>> extends ArrayList<T>{
 	/**
 	 * Returns the set of all possible derivations with the given
 	 * conclusion from the set of rules. 
+	 * @param <S> the type of rules
 	 * @param rules a set of rules
+	 * @param conclusion the conclusion
 	 * @return the set of all possible derivations with the given conclusion
 	 */
 	public static <S extends Rule<?,?>> Set<Derivation<S>> allDerivations(Collection<? extends S> rules, Formula conclusion){

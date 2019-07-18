@@ -115,12 +115,12 @@ public class TrainingSet<S extends Observation, T extends Category> extends Hash
 		TrainingSet<DefaultObservation, DoubleCategory> set = new TrainingSet<DefaultObservation, DoubleCategory>();
 		while ((line = br.readLine()) != null) {
 			StringTokenizer tokens = new StringTokenizer(line, " ");
-			DoubleCategory cat = new DoubleCategory(new Double(tokens.nextToken()));
+			DoubleCategory cat = new DoubleCategory(Double.parseDouble(tokens.nextToken()));
 			DefaultObservation obs = new DefaultObservation();
 		    while(tokens.hasMoreElements()){
 		    	StringTokenizer tokens2 = new StringTokenizer(tokens.nextToken(), ":");
 		    	tokens2.nextToken();
-		    	obs.add(new Double(tokens2.nextToken()));
+		    	obs.add(Double.parseDouble(tokens2.nextToken()));
 		    }
 		    set.add(obs,cat);
 		}

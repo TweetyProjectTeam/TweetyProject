@@ -172,7 +172,7 @@ public class InstanceAssignment extends HashMap<Collection<? extends Constant>,I
 			cTmp.add(c);
 			Set<Integer> ints = new HashSet<Integer>();
 			for(int i = 0; i <= c.size(); i++)
-				ints.add(new Integer(i));
+				ints.add(Integer.valueOf(i));
 			tmp.put(cTmp, ints);
 		}
 		Set<Map<Set<Constant>,Integer>> assignments = new MapTools<Set<Constant>,Integer>().allMaps(tmp);

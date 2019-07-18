@@ -26,6 +26,7 @@ import java.util.Set;
  * a conjunction.
  * 
  * @author Tim Janus
+ * @param <T> the type of formulas
  */
 public interface AssociativeFormula<T extends SimpleLogicalFormula> 
 	extends SimpleLogicalFormula, List<T> {
@@ -39,6 +40,7 @@ public interface AssociativeFormula<T extends SimpleLogicalFormula>
 	 * @param cls	the class structure defining the type of formulas which
 	 * 				are searched.
 	 * @return		A set of formulas of type C which are members of the associative formula
+	 * @param <C> the type of formulas
 	 */
 	<C extends SimpleLogicalFormula> Set<C> getFormulas(Class<C> cls);
 }

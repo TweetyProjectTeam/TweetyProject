@@ -117,6 +117,7 @@ public class SatModelReasoner extends AbstractDialecticalFrameworkReasoner {
 	/** 
 	 * returns a propositional characterisation of the reasoning problem
 	 * @param aaf some ADF
+	 * @param cache the cache
 	 * @return The propositional encoding of the model semantics.
 	 */
 	public PlBeliefSet getPropositionalCharacterisation(AbstractDialecticalFramework aaf,

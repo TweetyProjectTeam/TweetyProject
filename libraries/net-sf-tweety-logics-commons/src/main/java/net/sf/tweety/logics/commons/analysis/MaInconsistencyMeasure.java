@@ -31,6 +31,7 @@ import net.sf.tweety.commons.util.SetTools;
  * that are self-contradicting minus 1.
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
  */
 public class MaInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 

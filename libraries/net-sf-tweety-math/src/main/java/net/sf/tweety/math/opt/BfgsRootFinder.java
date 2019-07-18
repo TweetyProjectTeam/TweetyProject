@@ -36,6 +36,7 @@ public class BfgsRootFinder extends OptimizationRootFinder {
 
 	/**
 	 * Creates a new root finder for the given starting point and the given function
+	 * @param function a function
 	 * @param startingPoint the starting point
 	 */
 	public BfgsRootFinder(Term function, Map<Variable,Term> startingPoint){
@@ -48,6 +49,7 @@ public class BfgsRootFinder extends OptimizationRootFinder {
 	/**
 	 * Creates a new root finder for the given starting point and the given
 	 * (multi-dimensional) function
+	 * @param functions a list of functions
 	 * @param startingPoint the starting point
 	 */
 	public BfgsRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){

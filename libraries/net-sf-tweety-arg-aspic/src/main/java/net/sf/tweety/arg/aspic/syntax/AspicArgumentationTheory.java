@@ -44,10 +44,10 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  *	this represents an argumentation theory (AS, KB) with
  *		- AS argumentation system (e.g. inference rules)
  *		- KB knowledge base
- *  and/or a corresponding structured argumentation framework (A,C,<=) with
+ *  and/or a corresponding structured argumentation framework (A,C,&lt;=) with
  *		- A set of arguments
  *		- C set of attacks
- *		- <= order on the arguments
+ *		- &lt;= order on the arguments
  *	and/or a corresponding abstract argumentation framework (A, D) with
  *		- A set of arguments
  *		- D defeat relationship

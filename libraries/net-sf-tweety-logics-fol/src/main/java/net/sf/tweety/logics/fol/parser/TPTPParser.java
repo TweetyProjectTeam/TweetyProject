@@ -61,15 +61,15 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
 /**
  * This class implements a parser for the TPTP syntax that parses single fol formulas and knowledge bases 
  * (TPTP problem files or axiom files). 
- * <p> TPTP files consist of any of the following in any order and separated by newlines:
+ * TPTP files consist of any of the following in any order and separated by newlines:
  *  <ul>
  *  <li> formulas </li>
  *  <li> comments, i.e. lines starting with "%" </li>
  *  <li> includes of other TPTP files, i.e. lines like "include('path/to/file',[optional,formula,names])" </li>
  *  </ul>
- * </p>
  * 
- * <p> The syntax for first-order logic formulas is 'fof(name,role,formula,source,[useful_info]).':
+ * 
+ * The syntax for first-order logic formulas is 'fof(name,role,formula,source,[useful_info]).':
  * <ul>
  * <li> name is the name of the formula </li>
  * <li> role is anything out of {axiom, hypothesis, definition, assumption, lemma, theorem, corollary
@@ -77,22 +77,22 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * <li> formula is the actual formula </li>
  * <li> The other arguments are optional and ignored by this parser. </li>
  * </ul>
- * </p>
  * 
- * <p>Supported operators and pre-defined predicates in formulas:
+ * 
+ * Supported operators and pre-defined predicates in formulas:
  * <br> Negation: ~ formula					
- * <br> Conjunction: formula & formula		
+ * <br> Conjunction: formula &amp; formula		
  * <br> Disjunction: formula | formula		
- * <br> Implication: formula => formula <br>formula <= formula   
- * <br> Equivalence: formula <=> formula	
- * <br> Universal quantifier: ! [Variable1,Variable2,...] : (formula)	</li> 
- * <br> Existential quantifier:	? [Variable1,Variable2,...] : (formula)	</li> 
+ * <br> Implication: formula =&gt; formula <br>formula &lt;= formula   
+ * <br> Equivalence: formula &lt;=&gt; formula	
+ * <br> Universal quantifier: ! [Variable1,Variable2,...] : (formula)	 
+ * <br> Existential quantifier:	? [Variable1,Variable2,...] : (formula)	 
  * <br> Tautology: $true 
  * <br> Contradiction: $false 
  * <br> Equality: = (TODO soon to be added)
  * <br> Inequality: != (TODO soon to be added)
- * </ul>
- * </p>
+ * 
+ * 
  * 
  * @author Anna Gessler
  */
@@ -743,6 +743,7 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 	/**
 	 * Set the regular expression that restricts which formulas will be parsed. Formulas with
 	 * names that do not match the expression will not be parsed. 
+	 * @param formulaNames the regex for formula names
 	 */
 	public void setFormulaNames(String formulaNames) {
 		this.formulaNames = formulaNames;
@@ -750,7 +751,8 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 
 	/**
 	 * Set the regular expression that restricts which formulas will be parsed. Formulas with
-	 * roles that do not match the expression will not be parsed. 
+	 * roles that do not match the expression will not be parsed.
+	 * @param formulaRoles the regex for formula roles
 	 */
 	public void setFormulaRoles(String formulaRoles) {
 		this.formulaRoles = formulaRoles;

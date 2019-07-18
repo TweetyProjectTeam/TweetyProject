@@ -60,7 +60,7 @@ public class MonteCarloPafReasoner extends AbstractPafReasoner{
 			if(r.getModels(sub).contains(ext))
 				count++;
 		}
-		return new Double(count)/this.numberOfTrials;
+		return ((double)count)/this.numberOfTrials;
 	}
 	
 	/* (non-Javadoc)
@@ -74,6 +74,6 @@ public class MonteCarloPafReasoner extends AbstractPafReasoner{
 			if(r.query(sub,formula,inferenceMode))
 				count++;
 		}
-		return new Double(count)/this.numberOfTrials;
+		return ((double)count)/this.numberOfTrials;
 	}	
 }

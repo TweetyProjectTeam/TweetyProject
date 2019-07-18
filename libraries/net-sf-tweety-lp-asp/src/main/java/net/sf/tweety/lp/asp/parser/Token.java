@@ -60,7 +60,7 @@ public class Token implements java.io.Serializable {
    */
   public Token specialToken;
 
-  /**
+  /*
    * An optional attribute value of the Token.
    * Tokens which are not used as syntactic sugar will often contain
    * meaningful values that will be used later on by the compiler or
@@ -77,7 +77,7 @@ public class Token implements java.io.Serializable {
    */
   public Token() {}
 
-  /**
+  /*
    * Constructs a new token for the specified Image.
    */
   public Token(int kind)
@@ -85,7 +85,7 @@ public class Token implements java.io.Serializable {
     this(kind, null);
   }
 
-  /**
+  /*
    * Constructs a new token for the specified Image and Kind.
    */
   public Token(int kind, String image)
@@ -102,7 +102,7 @@ public class Token implements java.io.Serializable {
     return image;
   }
 
-  /**
+  /*
    * Returns a new Token object, by default. However, if you want, you
    * can create and return subclass objects based on the value of ofKind.
    * Simply add the cases to the switch for all those special cases.

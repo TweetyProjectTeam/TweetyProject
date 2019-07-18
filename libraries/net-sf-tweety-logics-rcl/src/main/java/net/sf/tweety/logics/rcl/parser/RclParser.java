@@ -33,7 +33,7 @@ import net.sf.tweety.logics.rcl.syntax.*;
  * <br> SORTSDEC    ::== ( SORTNAME "=" "{" (CONSTANTNAME ("," CONSTANTNAME)*)? "}" "\n" )*
  * <br> PREDDECS	::== ( "type" "(" PREDICATENAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n" )*
  * <br> CONDITIONAL ::== "(" FORMULA ")" "[" PROB "]" | "(" FORMULA "|" FORMULA ")" 
- * <br> FORMULA     ::== ATOM | "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
+ * <br> FORMULA     ::== ATOM | "(" FORMULA ")" | FORMULA "&amp;&amp;" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-"
  * <br> ATOM		::== PREDICATENAME "(" (TERM ("," TERM)*)? ")"
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME 
  * <br> 

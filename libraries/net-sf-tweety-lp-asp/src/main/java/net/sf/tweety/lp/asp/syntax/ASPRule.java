@@ -33,7 +33,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class models a rule in ASP. A rule consists of a head and a body. The
- * head contains n>=0 classical atoms and the body contains n>=0 literals. Rules
+ * head contains n&gt;=0 classical atoms and the body contains n&gt;=0 literals. Rules
  * with non-empty heads and empty bodies are called facts, rules with empty
  * heads and non-empty bodies are called constraints.
  *

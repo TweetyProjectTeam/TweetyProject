@@ -33,7 +33,7 @@ import net.sf.tweety.logics.fol.syntax.*;
 /**
  * A Herbrand interpretation is an interpretation for a first-order signature,
  * stating all ground atoms that are true in the interpretation.
- * <br/>
+ * <br>
  * NOTE: We only allow Herbrand interpretations for signatures without
  *   function symbols.
  * @author Matthias Thimm
@@ -278,7 +278,7 @@ public class HerbrandInterpretation extends InterpretationSet<FolAtom,FolBeliefS
 	}
 	
 	/**
-	 * For every mapping t1 -> t2, this method substitutes every
+	 * For every mapping t1 -&gt; t2, this method substitutes every
 	 * occurrence of "t1" by "t2" and vice versa and returns the new interpretation
 	 * @param mapping a mapping of terms.
 	 * @return a Herbrand interpretation.

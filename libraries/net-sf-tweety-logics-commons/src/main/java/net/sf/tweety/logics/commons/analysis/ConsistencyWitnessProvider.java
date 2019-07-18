@@ -32,12 +32,14 @@ import net.sf.tweety.commons.Interpretation;
  * @author Matthias Thimm
  *
  * @param <S> The type of formulas.
+ * @param <B> the type of belief bases
  */
 public interface ConsistencyWitnessProvider<B extends BeliefBase, S extends Formula> {
 
 	/**
 	 * If the collection of formulas is consistent this method
 	 * returns some model of it or, if it is inconsistent, null.
+	 * @param formulas a set of formulas
 	 * @return some model of the formulas or null.
 	 */
 	public Interpretation<B,S> getWitness(Collection<S> formulas);
@@ -45,6 +47,7 @@ public interface ConsistencyWitnessProvider<B extends BeliefBase, S extends Form
 	/**
 	 * If the formula is consistent this method
 	 * returns some model of it or, if it is inconsistent, null.
+	 * @param formula a formula
 	 * @return some model of the formula or null.
 	 */
 	public Interpretation<B,S> getWitness(S formula);
@@ -52,6 +55,7 @@ public interface ConsistencyWitnessProvider<B extends BeliefBase, S extends Form
 	/**
 	 * If the belief set is consistent this method
 	 * returns some model of it or, if it is inconsistent, null.
+	 * @param bs a belief set
 	 * @return some model of the belief set or null.
 	 */
 	public Interpretation<B,S> getWitness(BeliefSet<S,?> bs);

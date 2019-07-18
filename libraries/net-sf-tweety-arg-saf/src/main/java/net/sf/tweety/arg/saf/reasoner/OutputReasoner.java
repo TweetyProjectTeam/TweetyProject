@@ -60,6 +60,7 @@ public class OutputReasoner implements QualitativeReasoner<StructuredArgumentati
 	
 	/**
 	 * Returns the output this reasoner bases upon.
+	 * @param saf an SAF
 	 * @return the output this reasoner bases upon.
 	 */
 	public Set<Proposition> getOutput(StructuredArgumentationFramework saf){

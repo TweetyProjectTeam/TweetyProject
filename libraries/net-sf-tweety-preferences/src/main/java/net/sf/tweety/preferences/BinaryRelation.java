@@ -52,6 +52,7 @@ public abstract interface BinaryRelation<T> extends Set<Triple<T, T, Relation>> 
 
 	/**
 	 * returns a set of the single elements in this binary relation
+	 * @return a set of the single elements in this binary relation
 	 */
 	public abstract Set<T> getDomainElements();
 	

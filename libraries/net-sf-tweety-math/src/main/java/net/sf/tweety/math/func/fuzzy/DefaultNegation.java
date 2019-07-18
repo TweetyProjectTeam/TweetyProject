@@ -19,7 +19,7 @@
 package net.sf.tweety.math.func.fuzzy;
 
 /**
- * Implements the default fuzzy negation x -> x-1
+ * Implements the default fuzzy negation x -&gt; x-1
  * 
  * @author Matthias Thimm
  */

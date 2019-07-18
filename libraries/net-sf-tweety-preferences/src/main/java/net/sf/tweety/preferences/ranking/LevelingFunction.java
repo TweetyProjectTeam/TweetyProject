@@ -169,7 +169,7 @@ public class LevelingFunction<T> extends Functions<T> {
 		return this;
 	}
 
-	/**
+	/*
 	 * returns a new RankingFunction based on this LevelingFunction
 	 */
 	public RankingFunction<T> getRankingFunction() {

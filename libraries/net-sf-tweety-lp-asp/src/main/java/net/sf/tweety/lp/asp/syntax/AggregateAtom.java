@@ -121,6 +121,8 @@ public class AggregateAtom extends ASPBodyElement {
 	 *            an aggregate function
 	 * @param elements
 	 *            list of aggregate elements
+	 * @param relation the relation
+	 * @param t some term
 	 */
 	public AggregateAtom(ASPOperator.AggregateFunction func, List<AggregateElement> elements,
 			ASPOperator.BinaryOperator relation, Term<?> t) {
@@ -137,6 +139,10 @@ public class AggregateAtom extends ASPBodyElement {
 	 *            an aggregate function
 	 * @param elements
 	 *            list of aggregate elements
+	 * @param relation the relation
+	 * @param t some term
+	 * @param relation2 the relation
+	 * @param t2 some term
 	 */
 	public AggregateAtom(ASPOperator.AggregateFunction func, List<AggregateElement> elements,
 			ASPOperator.BinaryOperator relation, Term<?> t, ASPOperator.BinaryOperator relation2, Term<?> t2) {

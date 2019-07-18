@@ -52,12 +52,16 @@ public interface DynamicPreferenceAggregator<T>{
 	 * Possible Structures: ArrayList, Queue
 	 * 
 	 * Empty initialization, update() if stream is not empty
+	 * @param update an update
+	 * @param input some input
+	 * @return a preference order
 	 */
 	public PreferenceOrder<T> update(Update<T> update, List<PreferenceOrder<T>> input);
 
 	
 	/**
 	 * The add-method for listeners for a dynamic preference aggregator
+	 * @param listener an update listener
 	 */
 	 public void addListener(UpdateListener<T> listener);
 	 
@@ -65,6 +69,7 @@ public interface DynamicPreferenceAggregator<T>{
 	 
 	 /**
 	 * The remove-method for listeners for a dynamic preference aggregator
+	 * @param listener an update listener
 	 */
 	 public void removeListener(UpdateListener<T> listener);
 }

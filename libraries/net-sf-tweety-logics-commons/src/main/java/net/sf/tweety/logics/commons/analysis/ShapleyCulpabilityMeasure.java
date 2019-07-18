@@ -28,6 +28,8 @@ import net.sf.tweety.commons.util.*;
  * This class implements the Shapley culpability measure.
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
+ * @param <T> the type of belief sets
  */
 public class ShapleyCulpabilityMeasure<S extends Formula, T extends BeliefSet<S,?>> implements CulpabilityMeasure<S,T> {
 
@@ -57,7 +59,7 @@ public class ShapleyCulpabilityMeasure<S extends Formula, T extends BeliefSet<S,
 		if(this.archive.containsKey(new Pair<T,S>(beliefSet,formula)))
 			return this.archive.get(new Pair<T,S>(beliefSet,formula)); 
 		Set<Pair<Collection<S>,Collection<S>>> subbases = this.getSubsets(beliefSet, formula);		
-		Double result = new Double(0);
+		Double result = 0d;
 		for(Pair<Collection<S>,Collection<S>> pair : subbases){
 			Double v1,v2;
 			v1 = this.inconsistencyMeasure.inconsistencyMeasure(pair.getFirst());

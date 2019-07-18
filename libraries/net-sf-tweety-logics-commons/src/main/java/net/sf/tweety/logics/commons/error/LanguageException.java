@@ -20,7 +20,7 @@ package net.sf.tweety.logics.commons.error;
 
 /**
  * A language exception is thrown if something illegal is tried in a language
- * like setting the arity of a propositional predicate > zero.
+ * like setting the arity of a propositional predicate &gt; zero.
  * 
  * @author Tim Janus
  */

@@ -47,8 +47,8 @@ import net.sf.tweety.math.term.Variable;
  * This class is a wrapper for the Apache Commons Math3 Non-Linear
  * Conjugate Gradient Optimizer 
  * (<a href="https://commons.apache.org/proper/commons-math/">https://commons.apache.org/proper/commons-math/</a>). 
- * <br/>
- * <br/>
+ * <br>
+ * <br>
  * NOTE: This solver does not allow any constraints, box constraints of
  * variables are ignored!
  * @author Matthias Thimm

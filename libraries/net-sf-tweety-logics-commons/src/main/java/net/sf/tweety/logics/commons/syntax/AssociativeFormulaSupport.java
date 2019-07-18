@@ -66,7 +66,8 @@ public class AssociativeFormulaSupport<T extends SimpleLogicalFormula>
 	 * @author Tim Janus
 	 */
 	public static interface AssociativeSupportBridge {
-		/** @return an empty version of the AssociativeFormula */
+		/** @return an empty version of the AssociativeFormula
+		 * @param <T> the type of formulas */		
 		<T extends SimpleLogicalFormula> AssociativeFormula<T> createEmptyFormula();
 		
 		/** @return An empty signature of the language of the AssociativeFormula implementation */

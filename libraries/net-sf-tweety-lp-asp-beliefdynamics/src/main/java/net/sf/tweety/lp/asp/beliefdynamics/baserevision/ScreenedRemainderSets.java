@@ -124,6 +124,7 @@ public class ScreenedRemainderSets extends RemainderSets<ASPRule> {
 	 * than bruteforce calculating all possible combinations, as consistent subsets are
 	 * pruned.
 	 * @param p a program
+	 * @return consistent subsets of p
 	 */
 	private Set<Program> calculateRemainderSetCandidates(Program p) {
 		Set<Program> result = new HashSet<Program>();

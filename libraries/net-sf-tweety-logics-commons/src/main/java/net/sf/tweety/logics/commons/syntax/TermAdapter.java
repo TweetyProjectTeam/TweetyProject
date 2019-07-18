@@ -42,6 +42,7 @@ public abstract class TermAdapter<T> implements Term<T>{
 	
 	/**
 	 * Default-Ctor: Creates an TermAdapter with the Sort "Thing"
+	 * @param value the value of this term
 	 */
 	public TermAdapter(T value) {
 		this(value, Sort.THING);
@@ -49,6 +50,7 @@ public abstract class TermAdapter<T> implements Term<T>{
 	
 	/**
 	 * Ctor: Creates a TermAdapter with the given Sort
+	 * @param value the value of this term
 	 * @param sort	The Sort (Type) of the TermAdapter instance
 	 */
 	public TermAdapter(T value, Sort sort) {

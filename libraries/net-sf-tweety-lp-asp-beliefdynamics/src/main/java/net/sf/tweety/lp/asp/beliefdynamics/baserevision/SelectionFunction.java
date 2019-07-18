@@ -25,6 +25,7 @@ import net.sf.tweety.commons.Formula;
 /**
  * This interface models a general selection function for remainder sets
  * @author Sebastian Homann
+ * @param <T> the type of formulas
  *
  */
 public interface SelectionFunction<T extends Formula> {

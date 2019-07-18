@@ -78,6 +78,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	/**
 	 * An argument is called x/y-overruled, if it is attacked by an 
 	 * x/y-justified argument.
+	 * @param kb a knowledge base
 	 * 
 	 * @param arg an argument
 	 * @return true iff arg is x-attacked by an x/y-justified argument
@@ -94,6 +95,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	/**
 	 * An argument is called x/y-defensible if it is neither x/y-justified
 	 * nor x/y-overruled.
+	 *  @param kb a knowledge base
 	 * @param arg an argument
 	 * @return true iff arg is neither x/y-justified nor x/y-overruled.
 	 */
@@ -103,6 +105,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	
 	/**
 	 * Returns the set of x/y-justified arguments using a bottom-up fixpoint calculation
+	 *  @param kb a knowledge base
 	 * @return the set of x/y-justified arguments
 	 */
 	public Set<Argument> getJustifiedArguments(ArgumentationKnowledgeBase kb) {
@@ -128,6 +131,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	/**
 	 * Returns the set of overruled arguments, i.e. the set of arguments,
 	 * which are attacked by a justified argument.
+	 *  @param kb a knowledge base
 	 * @return the set of overruled arguments.
 	 */
 	public Set<Argument> getOverruledArguments(ArgumentationKnowledgeBase kb) {
@@ -147,6 +151,7 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 	/**
 	 * Returns the set of defensible arguments, i.e. the set of arguments,
 	 * that are neither justified nor overruled.
+	 *  @param kb a knowledge base
 	 * @return the set of defensible arguments.
 	 */
 	public Set<Argument> getDefensibleArguments(ArgumentationKnowledgeBase kb) {

@@ -112,11 +112,11 @@ public class DialecticalTree{
 
 	/**
 	 * Checks whether the argumentation line composed of the ancestors of this node and the parameter
-	 * <source>argument</source> is acceptable given the parameter <source>delp</source>
+	 * <code>argument</code> is acceptable given the parameter <code>delp</code>
 	 * @param argument a DeLP argument
 	 * @param delp a defeasible logic program
 	 * @param comparisonCriterion a comparison criterion.
-	 * @return <source>true</source> if the corresponding argumentation line is acceptable
+	 * @return <code>true</code> if the corresponding argumentation line is acceptable
 	 */
 	public boolean isAcceptable(DelpArgument argument,
                                  DefeasibleLogicProgram delp,

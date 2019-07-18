@@ -33,7 +33,7 @@ public class AverageAggregator implements AggregationFunction {
 	 */
 	@Override
 	public Double eval(List<Double> elements) {
-		Double sum = new Double(0);
+		Double sum = 0d;
 		for(Double elem: elements)
 			sum += elem;
 		return sum/elements.size();

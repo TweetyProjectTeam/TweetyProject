@@ -47,6 +47,7 @@ public class Predicate extends TypedStructureAdapter {
 	 * Initializes a predicate with the given name and of the given arity.
 	 * Every argument gets the sort Sort.THING. 
 	 * @param name the name of the predicate
+	 * @param arity the arity of the predicate
 	 */
 	public Predicate(String name, int arity){
 		super(name,arity);

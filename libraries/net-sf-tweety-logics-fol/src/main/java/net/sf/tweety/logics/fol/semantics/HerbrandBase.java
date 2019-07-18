@@ -30,7 +30,7 @@ import net.sf.tweety.logics.fol.syntax.*;
 /**
  * The Herbrand base is the set of all possible ground atoms of some
  * given first-order logic.
- * <br/>
+ * <br>
  * NOTE: We only allow to define a Herbrand base for signatures without
  *   function symbols.
  * @author Matthias Thimm
@@ -44,7 +44,7 @@ public class HerbrandBase {
 	
 	/**
 	 * Creates a new Herbrand base for the given signature.
-     * <br/>
+     * <br>
      * NOTE: We only allow to define a Herbrand base for signatures without
      *   function symbols.
 	 * @param sig the underlying first-order signature for

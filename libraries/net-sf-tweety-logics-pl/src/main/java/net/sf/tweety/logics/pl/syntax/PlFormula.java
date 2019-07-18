@@ -84,7 +84,7 @@ public abstract class PlFormula implements ClassicalFormula {
 	/**
 	 * Removes duplicates (identical formulas) from conjunctions and disjunctions
 	 * and removes duplicate negations. Simplifies equivalences and implications
-	 * with equivalent formulas (A=>A, A<=>A) to tautologies.
+	 * with equivalent formulas (A=&gt;A, A&lt;=&gt;A) to tautologies.
 	 * @return an equivalent formula without duplicates.
 	 */
 	public abstract PlFormula trim();
@@ -100,7 +100,7 @@ public abstract class PlFormula implements ClassicalFormula {
 		for(PossibleWorld world: worlds)
 			if(world.satisfies(this))
 				cnt++;
-		return new Probability(new Double(cnt)/new Double(worlds.size()));
+		return new Probability(((double)cnt)/((double)worlds.size()));
 	}
 	
     /**

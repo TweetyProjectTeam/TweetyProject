@@ -40,6 +40,7 @@ import net.sf.tweety.math.term.Variable;
 /**
  * This class implements the Eta-inconsistency measure, cf. [Knight, 2002].
  * @author Matthias Thimm
+ * @param <B> the type of belief bases
  *
  * @param <S> The type of formula
  */

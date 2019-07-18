@@ -27,7 +27,7 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * 
- * @author Federico Cerutti <federico.cerutti@acm.org>
+ * @author Federico Cerutti (federico.cerutti@acm.org)
  *
  * Argument structure as defined in 
  * http://www0.cs.ucl.ac.uk/staff/a.hunter/papers/ac13t.pdf

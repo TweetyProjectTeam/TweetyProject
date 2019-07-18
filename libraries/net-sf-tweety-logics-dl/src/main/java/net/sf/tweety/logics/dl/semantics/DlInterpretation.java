@@ -111,7 +111,7 @@ public class DlInterpretation extends InterpretationSet<AssertionalAxiom, DlBeli
 	
 	/**
 	 * Checks whether a concept is subsumed by another concept
-	 * (c1 => c2) wrt to this interpretation
+	 * (c1 =&gt; c2) wrt to this interpretation
 	 * @param c1 a concept
 	 * @param c2 a concept
 	 * @return "true" if c1 is subsumed by c2, "false" otherwise

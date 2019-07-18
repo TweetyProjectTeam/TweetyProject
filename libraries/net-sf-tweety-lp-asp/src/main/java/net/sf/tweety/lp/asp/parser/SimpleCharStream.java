@@ -129,7 +129,7 @@ public class SimpleCharStream
     }
   }
 
-/** Start. */
+/* Start. */
   public char BeginToken() throws java.io.IOException
   {
     tokenBegin = -1;
@@ -179,7 +179,7 @@ public class SimpleCharStream
     bufcolumn[bufpos] = column;
   }
 
-/** Read a character. */
+/* Read a character. */
   public char readChar() throws java.io.IOException
   {
     if (inBuf > 0)
@@ -221,27 +221,27 @@ public class SimpleCharStream
     return bufline[bufpos];
   }
 
-  /** Get token end column number. */
+  /* Get token end column number. */
   public int getEndColumn() {
     return bufcolumn[bufpos];
   }
 
-  /** Get token end line number. */
+  /* Get token end line number. */
   public int getEndLine() {
      return bufline[bufpos];
   }
 
-  /** Get token beginning column number. */
+  /* Get token beginning column number. */
   public int getBeginColumn() {
     return bufcolumn[tokenBegin];
   }
 
-  /** Get token beginning line number. */
+  /* Get token beginning line number. */
   public int getBeginLine() {
     return bufline[tokenBegin];
   }
 
-/** Backup a number of characters. */
+/* Backup a number of characters. */
   public void backup(int amount) {
 
     inBuf += amount;
@@ -249,7 +249,7 @@ public class SimpleCharStream
       bufpos += bufsize;
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.Reader dstream, int startline,
   int startcolumn, int buffersize)
   {
@@ -263,20 +263,20 @@ public class SimpleCharStream
     bufcolumn = new int[buffersize];
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.Reader dstream, int startline,
                           int startcolumn)
   {
     this(dstream, startline, startcolumn, 4096);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.Reader dstream)
   {
     this(dstream, 1, 1, 4096);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.Reader dstream, int startline,
   int startcolumn, int buffersize)
   {
@@ -296,96 +296,96 @@ public class SimpleCharStream
     bufpos = -1;
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.Reader dstream, int startline,
                      int startcolumn)
   {
     ReInit(dstream, startline, startcolumn, 4096);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.Reader dstream)
   {
     ReInit(dstream, 1, 1, 4096);
   }
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
   int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
   {
     this(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, int startline,
   int startcolumn, int buffersize)
   {
     this(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
                           int startcolumn) throws java.io.UnsupportedEncodingException
   {
     this(dstream, encoding, startline, startcolumn, 4096);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, int startline,
                           int startcolumn)
   {
     this(dstream, startline, startcolumn, 4096);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
   {
     this(dstream, encoding, 1, 1, 4096);
   }
 
-  /** Constructor. */
+  /* Constructor. */
   public SimpleCharStream(java.io.InputStream dstream)
   {
     this(dstream, 1, 1, 4096);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, String encoding, int startline,
                           int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
   {
     ReInit(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, int startline,
                           int startcolumn, int buffersize)
   {
     ReInit(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
   {
     ReInit(dstream, encoding, 1, 1, 4096);
   }
 
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream)
   {
     ReInit(dstream, 1, 1, 4096);
   }
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, String encoding, int startline,
                      int startcolumn) throws java.io.UnsupportedEncodingException
   {
     ReInit(dstream, encoding, startline, startcolumn, 4096);
   }
-  /** Reinitialise. */
+  /* Reinitialise. */
   public void ReInit(java.io.InputStream dstream, int startline,
                      int startcolumn)
   {
     ReInit(dstream, startline, startcolumn, 4096);
   }
-  /** Get token literal value. */
+  /* Get token literal value. */
   public String GetImage()
   {
     if (bufpos >= tokenBegin)
@@ -395,7 +395,7 @@ public class SimpleCharStream
                             new String(buffer, 0, bufpos + 1);
   }
 
-  /** Get the suffix. */
+  /* Get the suffix. */
   public char[] GetSuffix(int len)
   {
     char[] ret = new char[len];
@@ -420,7 +420,7 @@ public class SimpleCharStream
     bufcolumn = null;
   }
 
-  /**
+  /*
    * Method to adjust line and column numbers for the start of a token.
    */
   public void adjustBeginLineColumn(int newLine, int newCol)

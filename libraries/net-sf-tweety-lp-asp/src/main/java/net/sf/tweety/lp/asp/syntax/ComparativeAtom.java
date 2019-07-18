@@ -29,7 +29,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class represents a comparative atom, meaning an expression of the form t x u
- * where t,u are terms and x is in {<, <=, ==, !=, >, >=}. Comparatives are
+ * where t,u are terms and x is in {&lt;, &lt;=, ==, !=, &gt;, &gt;=}. Comparatives are
  * called "Built-in atoms" in the ASP-Core-2 standard.
  * 
  * @author Tim Janus

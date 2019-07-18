@@ -38,7 +38,7 @@ import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
  * This class implements the inconsistency measure $I_sd$ from
- * [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]<br/>
+ * [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]<br>
  * The implememtation is a straightforward brute-force search approach.
  * 
  * @author Matthias Thimm
@@ -100,7 +100,7 @@ public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 				if(asl.size() == 0) continue;
 				int val = (new SetTools<ASPLiteral>()).symmetricDifference(m, asl.iterator().next()).size();
 				if(val < result)
-					result = new Double(val);				
+					result = Double.valueOf(val);				
 			}			
 			return result;
 		} catch (Exception e) {

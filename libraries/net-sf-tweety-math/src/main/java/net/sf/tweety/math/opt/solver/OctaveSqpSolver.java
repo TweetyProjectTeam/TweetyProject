@@ -168,7 +168,7 @@ public class OctaveSqpSolver extends Solver{
 			sub = sub.trim();
 			StringTokenizer tokenizer = new StringTokenizer(sub,"\n");
 			for(int i = 1; i <= idx2var.keySet().size(); i++ ){
-				FloatConstant f = new FloatConstant(new Double((tokenizer.nextToken().trim())));
+				FloatConstant f = new FloatConstant(Double.parseDouble((tokenizer.nextToken().trim())));
 				varMap.put(idx2var.get(i), f);
 			}			 
 			return varMap;

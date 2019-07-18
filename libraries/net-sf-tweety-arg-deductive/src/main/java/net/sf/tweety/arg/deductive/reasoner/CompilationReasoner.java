@@ -27,12 +27,12 @@ import net.sf.tweety.arg.deductive.syntax.DeductiveKnowledgeBase;
 
 
 /**
- * This class implements the approach of knowledge base compilation as proposed in<br/>
- * <br/>
+ * This class implements the approach of knowledge base compilation as proposed in<br>
+ * <br>
  * Philippe Besnard and Anthony Hunter. Knowledgebase Compilation for Efficient Logical Argumentation.
  * In Proceedings of the 10th International Conference on Knowledge Representation (KR'06), pages
- * 123-133, AAAI Press, 2006.<br/>
- * <br/>
+ * 123-133, AAAI Press, 2006.<br>
+ * <br>
  * 
  * It performs deductive argumentation on a set of propositional formulas. 
  * 

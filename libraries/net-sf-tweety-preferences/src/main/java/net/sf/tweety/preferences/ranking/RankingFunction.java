@@ -30,11 +30,11 @@ import net.sf.tweety.preferences.Relation;
 /**
  * This class is meant to provide ranking functions to given preference orders
  * and vice versa. To be implemented. A ranking function characterizes a
- * preference order uniquely as: 1.: rank: O -> N+ where O is the set of
+ * preference order uniquely as: 1.: rank: O -&gt; N+ where O is the set of
  * elements in the preference order. 2.: the sum of all ranks for each element
  * in O is minimal
  * 
- * @todo exception handling for invalid preference orders (total preorder)
+ * TODO exception handling for invalid preference orders (total preorder)
  * @author Bastian Wolf
  * @param <T> generic preference order type
  * 

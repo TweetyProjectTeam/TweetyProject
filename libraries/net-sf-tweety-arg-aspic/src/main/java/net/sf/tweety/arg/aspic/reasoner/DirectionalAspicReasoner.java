@@ -89,7 +89,7 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 	 * restricted AF is sufficient to determine the correct status of the conclusion.
 	 * 
 	 * @param aat The aspic theory to generate arguments from
-	 * @param simplifyArgumentStructure @see net.sf.tweety.arg.aspic.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.AspicArgumentationTheory, net.sf.tweety.commons.Formula)
+	 * @param simplifyArgumentStructure a boolean, see net.sf.tweety.arg.aspic.AbstractAspicReasoner#getDungTheory(net.sf.tweety.arg.aspic.AspicArgumentationTheory, net.sf.tweety.commons.Formula)
 	 * @param conc Conclusion to generate restricted AF for
 	 * @return The restricted AF
 	 */
@@ -158,6 +158,9 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 	
 	
 	/**
+	 * Gets the arguments recursively
+	 * @param aat the argumentation theory
+	 * @param conc the conclusion
 	 * @return	arguments with given conclusion plus recursively all attackers 
 	 */
 	private Collection<AspicArgument<T>> getArgsRec(AspicArgumentationTheory<T> aat, T conc) {

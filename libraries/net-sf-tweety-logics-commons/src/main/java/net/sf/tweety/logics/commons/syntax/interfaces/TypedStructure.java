@@ -62,7 +62,7 @@ public interface TypedStructure {
 	 * Removes the argument type at the specified index
 	 * @param index	The index
 	 * @return A reference to the sort that has been remove or null if no sort has been removed.
-	 * @throws LanguageException, IndexOutOfBoundsException
+	 * @throws LanguageException if something is wrong with the language
 	 */
 	Sort removeArgumentType(int index) throws LanguageException;
 	

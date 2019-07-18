@@ -80,6 +80,7 @@ public class ParameterisedArgumentativeSelectiveRevisionOperator extends
 	 * @param solver an answer set solver
 	 * @param attackRelation a notion of attack
 	 * @param defenseRelation a notion of attack
+	 * @param type the type of transformation
 	 */
 	public ParameterisedArgumentativeSelectiveRevisionOperator(ASPSolver solver, AttackStrategy attackRelation, AttackStrategy defenseRelation, TransformationType type) {
 		this.solver = solver;

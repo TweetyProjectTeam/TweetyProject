@@ -109,7 +109,7 @@ public class ContensionInconsistencyMeasurementProcess extends InconsistencyMeas
 		for(PriestWorld w: this.worlds){
 			// random choice whether some variable assignment 
 			// is changed from BOTH to TRUE or FALSE
-			if(!w.getConflictbase().isEmpty() && rand.nextDouble() <= 1-new Double(this.numFormulas)/(this.numFormulas+1)){
+			if(!w.getConflictbase().isEmpty() && rand.nextDouble() <= 1-((double)this.numFormulas)/(this.numFormulas+1)){
 				TruthValue newVal = rand.nextBoolean() ? TruthValue.TRUE : TruthValue.FALSE;
 				List<Proposition> lst = new ArrayList<Proposition>(w.getConflictbase());
 				w.set(lst.get(rand.nextInt(lst.size())), newVal);				

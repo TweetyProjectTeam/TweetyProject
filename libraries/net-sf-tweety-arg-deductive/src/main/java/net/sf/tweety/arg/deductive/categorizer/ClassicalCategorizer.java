@@ -28,8 +28,8 @@ import net.sf.tweety.arg.deductive.semantics.DeductiveArgumentNode;
  * an bottom-up marking of the tree; leafs are marked
  * undefeated and an inner node is marked defeated
  * if at least one child is marked undefeated and
- * defeated otherwise.<br/>
- * <br/>
+ * defeated otherwise.<br>
+ * <br>
  * The method "categorize" returns "1" if the root node is
  * undefeated and "0" if it is defeated.
  * 

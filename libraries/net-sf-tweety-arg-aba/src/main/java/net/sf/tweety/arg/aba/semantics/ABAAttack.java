@@ -29,7 +29,7 @@ import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.commons.Formula;
 
 /**
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
  *
  * @param <T>	is the type of the language that the ABA theory's rules range over 
  */
@@ -58,6 +58,7 @@ public class ABAAttack<T extends Formula> extends Attack {
 	 * @param to	the attacked set
 	 * @param abat	the ABA theory used to determine attacks
 	 * @return	the set of attacks from the attacking set to the attacked set
+	 * @param <T> the type of formulas
 	 */
 	public static <T extends Formula> Collection<ABAAttack<T>> allAttacks(Collection<Assumption<T>> from,
 			Collection<Assumption<T>> to, ABATheory<T> abat) {
@@ -76,6 +77,7 @@ public class ABAAttack<T extends Formula> extends Attack {
 	/**
 	 * @param abat	the ABA theory used to determine attacks
 	 * @return	all attacks between arguments in abat
+	 * @param <T> the type of formulas
 	 */
 	public static <T extends Formula> Collection<ABAAttack<T>> allAttacks(ABATheory<T> abat) {
 		return allAttacks(abat.getAssumptions(), abat.getAssumptions(), abat);

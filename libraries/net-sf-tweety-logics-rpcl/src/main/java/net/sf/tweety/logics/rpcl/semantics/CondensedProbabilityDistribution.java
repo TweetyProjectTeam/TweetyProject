@@ -87,6 +87,7 @@ public class CondensedProbabilityDistribution extends RpclProbabilityDistributio
 	 * Returns the uniform distribution on the given signature.
 	 * @param semantics the semantics used for the distribution
 	 * @param signature a fol signature
+	 * @param equivalenceClasses the set of equivalence classes
 	 * @return the uniform distribution on the given signature.
 	 */
 	public static CondensedProbabilityDistribution getUniformDistribution(RpclSemantics semantics, FolSignature signature, Set<Set<Constant>> equivalenceClasses){
@@ -104,6 +105,7 @@ public class CondensedProbabilityDistribution extends RpclProbabilityDistributio
 	 * Returns a random distribution on the given signature.
 	 * @param semantics the semantics used for the distribution
 	 * @param signature a fol signature
+	 * @param equivalenceClasses the set of equivalence classes
 	 * @return a random distribution on the given signature.
 	 */
 	public static CondensedProbabilityDistribution getRandomDistribution(RpclSemantics semantics, FolSignature signature, Set<Set<Constant>> equivalenceClasses){

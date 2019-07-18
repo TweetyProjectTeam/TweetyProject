@@ -38,12 +38,12 @@ import net.sf.tweety.commons.ParserException;
  * 
  * Parses a Assumption Based Argumentation System out of an input text. 
  * With standard symbols, every line contains one of the following:
- * 	<rule> ::= <head> '<-' <body>?
- * 			<head> ::= <word>
- * 			<body> ::= 'true' | <word> (',' <word>)*
- * 	<assumption> ::= <word>
- * 	<assumptions> ::= '{' <assumption> (',' <assumption>)* '}'
- * 	with <word> in the theory's language.
+ * 	&lt;rule&gt; ::= &lt;head&gt; '&lt;-' &lt;body&gt;?
+ * 			&lt;head&gt; ::= &lt;word&gt;
+ * 			&lt;body&gt; ::= 'true' | &lt;word&gt; (',' &lt;word&gt;)*
+ * 	&lt;assumption&gt; ::= &lt;word&gt;
+ * 	&lt;assumptions&gt; ::= '{' &lt;assumption&gt; (',' &lt;assumption&gt;)* '}'
+ * 	with &lt;word&gt; in the theory's language.
  *		
  * 
  * @param <T>	is the type of the language that the ABA theory ranges over 

@@ -27,7 +27,7 @@ import net.sf.tweety.logics.commons.syntax.Variable;
  * This is a common interface for grounding constraints, which have to be met by
  * a grounder when calculating possible applications of constants to variables.
  * Example: 
- *   caused at(X) after go(X) && at(Y) requires X <> Y 
+ *   caused at(X) after go(X) &amp;&amp; at(Y) requires X &lt;&gt; Y 
  * Here, variables X and Y are required to have different values.
  * 
  * @author Sebastian Homann

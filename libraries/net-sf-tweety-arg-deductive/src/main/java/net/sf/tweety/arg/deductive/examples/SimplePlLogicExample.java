@@ -31,7 +31,7 @@ import net.sf.tweety.commons.ParserException;
 /**
  * For testing purpose only
  * 
- * @author Federico Cerutti <federico.cerutti@acm.org>
+ * @author Federico Cerutti (federico.cerutti@acm.org)
  *
  */
 public class SimplePlLogicExample {

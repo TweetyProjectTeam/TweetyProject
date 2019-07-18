@@ -78,6 +78,6 @@ public class DoubleCategory implements Category {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return new Double(this.cat).toString();
+		return Double.toString(this.cat);
 	}
 }

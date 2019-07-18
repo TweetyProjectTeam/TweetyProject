@@ -63,7 +63,7 @@ public class GroundingRequirementsParser
   
   /**
    * Parses a string of the following form: 
-   *   (VARIABLENAME "<>" VARIABLENAME | VARIABLENAME "<>" CONSTANTNAME) 
+   *   (VARIABLENAME "&lt;&gt;" VARIABLENAME | VARIABLENAME "&lt;&gt;" CONSTANTNAME) 
    * where the constant CONSTANTNAME has to be of the same sort as the 
    * variable VARIABLENAME.
    * 

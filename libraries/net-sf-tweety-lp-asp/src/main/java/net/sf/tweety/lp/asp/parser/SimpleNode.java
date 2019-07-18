@@ -79,12 +79,12 @@ public class SimpleNode implements Node {
 		return value;
 	}
 
-	/** Accept the visitor. **/
+	/* Accept the visitor. **/
 	public Object jjtAccept(ASPCore2ParserVisitor visitor, Object data) {
 		return visitor.visit(this, data);
 	}
 
-	/** Accept the visitor. **/
+	/* Accept the visitor. **/
 	public Object childrenAccept(ASPCore2ParserVisitor visitor, Object data) {
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {

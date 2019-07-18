@@ -51,28 +51,27 @@ public interface TweetyConfiguration {
 	    /** The log level as string */
 	    private final String levelAsString;
 	    
-	    /** Creates a new LogLevel */
+	    /* Creates a new LogLevel */
 	    LogLevel(int levelAsInt, String levelAsString) {
 	        this.levelAsInt = levelAsInt;
 	        this.levelAsString = levelAsString;
 	    }
 	    
-	    /** Returns the log level as integer */
+	    /* Returns the log level as integer */
 	    public int levelAsInt(){ return this.levelAsInt; }
 	    
-	    /** Returns the log level as string */
+	    /* Returns the log level as string */
 	    public String levelAsString(){ return this.levelAsString; }
 	    
-	    /**
-	     * Returns the log level described by the given string.
-	     * @param s a string.
+	    /*
+	     * Returns the log level described by the given string. 
 	     */
 	    public static LogLevel getLogLevel(String s){
 	    	for(LogLevel l: LogLevel.values()){
 	    		if(l.levelAsString.equals(s.toLowerCase()))
 	    			return l;
 	    		try{
-	    			if(l.levelAsInt == new Integer(s))
+	    			if(l.levelAsInt == Integer.parseInt(s))
 	    				return l;
 	    		}catch(Exception e){}
 	    	}

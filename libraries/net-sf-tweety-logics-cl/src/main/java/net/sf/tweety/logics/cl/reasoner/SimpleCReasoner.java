@@ -113,6 +113,7 @@ public class SimpleCReasoner extends AbstractConditionalLogicReasoner {
 	 * k(w)=k0 + \sum_{w verifies ri} ki+ + \sum_{w falsifies ri} kj-
 	 * @param beliefset a belief set
 	 * @param kappa the kappa values
+	 * @return a ranking function
 	 */
 	private RankingFunction constructRankingFunction(ClBeliefSet beliefset, Integer[] kappa){
 		RankingFunction candidate = new RankingFunction(beliefset.getMinimalSignature());

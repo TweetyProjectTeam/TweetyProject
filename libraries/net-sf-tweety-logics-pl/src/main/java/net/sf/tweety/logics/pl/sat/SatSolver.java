@@ -74,7 +74,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	}
 
 	/**
-	 * Returns the default SAT solver.</br></br>
+	 * Returns the default SAT solver.<br><br>
 	 * If a default SAT solver has been configured this solver
 	 * is returned by this method. If no default solver is 
 	 * configured, the Sat4j solver (<code>net.sf.tweety.pl.sat.Sat4jSolver</code>)
@@ -127,8 +127,8 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 
 	/**
 	 * Converts the given set of formulas to their string representation in 
-	 * Dimacs CNF. The return value is a pair of<br/>
-	 * 1.) the string representation<br/>
+	 * Dimacs CNF. The return value is a pair of<br>
+	 * 1.) the string representation<br>
 	 * 2.) a list of collections of formulas (all from the given set); the interpretation of this list
 	 * is that the generated clause no K originated from the propositional formula given at index k.
 	 * @param formulas a collection of formulas.

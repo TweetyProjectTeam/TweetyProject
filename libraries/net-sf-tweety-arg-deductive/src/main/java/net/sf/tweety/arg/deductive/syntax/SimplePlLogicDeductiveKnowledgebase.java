@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
 
 /**
  * 
- * @author Federico Cerutti <federico.cerutti@acm.org>
+ * @author Federico Cerutti (federico.cerutti@acm.org)
  * 
  * According to 
  * http://www0.cs.ucl.ac.uk/staff/a.hunter/papers/ac13t.pdf

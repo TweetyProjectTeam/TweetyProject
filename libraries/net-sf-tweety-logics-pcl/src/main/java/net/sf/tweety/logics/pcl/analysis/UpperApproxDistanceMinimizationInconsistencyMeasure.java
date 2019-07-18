@@ -74,8 +74,8 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		log.trace("Checking whether '" + beliefSet + "' is inconsistent.");
 		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester().isConsistent(beliefSet)){
 			// update archive
-			this.archive.put(beliefSet, new Double(0));
-			return new Double(0);
+			this.archive.put(beliefSet, 0d);
+			return 0d;
 		}
 		log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem for computing the measure.");
 		// Create variables for the probability of each possible world and

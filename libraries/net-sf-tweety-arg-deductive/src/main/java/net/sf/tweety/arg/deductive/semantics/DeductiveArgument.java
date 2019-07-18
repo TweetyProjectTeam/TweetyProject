@@ -24,8 +24,8 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Instances of this class represent arguments in the sense
- * of Definition 3.1 in<br/>
- * <br/>
+ * of Definition 3.1 in<br>
+ * <br>
  * Philippe Besnard and Anthony Hunter. A logic-based theory of deductive arguments.
  * In Artificial Intelligence, 128(1-2):203-235, 2001.
  * 

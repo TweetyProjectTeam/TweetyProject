@@ -64,6 +64,7 @@ public abstract class AbstractDeductiveArgumentationReasoner implements Quantita
 
 	/**
 	 * Computes the argument tree of the given argument.
+	 * @param kb a knowledge base
 	 * @param arg some argument.
 	 * @return the argument tree for the argument
 	 */

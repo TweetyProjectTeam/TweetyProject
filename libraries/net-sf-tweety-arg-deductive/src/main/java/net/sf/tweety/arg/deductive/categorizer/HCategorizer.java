@@ -24,8 +24,8 @@ import net.sf.tweety.arg.deductive.semantics.ArgumentTree;
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgumentNode;
 
 /**
- * This class implements the h-categorizer from<br/>
- * <br/>
+ * This class implements the h-categorizer from<br>
+ * <br>
  * Philippe Besnard and Anthony Hunter. A logic-based theory of deductive arguments.
  * In Artificial Intelligence, 128(1-2):203-235, 2001.
  * 

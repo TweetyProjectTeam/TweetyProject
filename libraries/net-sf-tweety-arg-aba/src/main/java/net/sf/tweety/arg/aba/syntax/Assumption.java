@@ -25,7 +25,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 
 /**
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
  *	An assumption of an ABA theory
  * @param <T>	is the type of the language that the ABA theory's rules range over 
  */

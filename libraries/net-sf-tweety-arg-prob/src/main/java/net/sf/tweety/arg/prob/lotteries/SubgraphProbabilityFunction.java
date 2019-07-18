@@ -163,6 +163,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * all theories that do not contain the given arguments get probability zero.
 	 * Afterwards the function is normalized.
 	 * @param e some extension
+	 * @return the updated probability function
 	 */
 	public SubgraphProbabilityFunction naiveUpdate(Extension e){
 		SubgraphProbabilityFunction func = new SubgraphProbabilityFunction(this.theory);
@@ -178,6 +179,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * Updates this probability function with the given theory using
 	 * "simple redistribution", cf. [Hunter, Thimm, 2015].
 	 * @param theory some abstract theory
+	 * @return the updated probability function
 	 */
 	public SubgraphProbabilityFunction simpleUpdate(DungTheory theory){
 		return this.stickyUpdate(theory, 1);
@@ -188,6 +190,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * "sticky redistribution", cf. [Hunter, Thimm, 2015].
 	 * @param theory some abstract theory
 	 * @param stickyCoefficient the sticky coefficient
+	 * @return the updated probability function
 	 */
 	public SubgraphProbabilityFunction stickyUpdate(DungTheory theory, double stickyCoefficient){
 		SubgraphProbabilityFunction func = new SubgraphProbabilityFunction(this.theory);
@@ -214,6 +217,7 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * Updates this probability function with the given theory using
 	 * "rough redistribution", cf. [Hunter, Thimm, 2015].
 	 * @param theory some abstract theory
+	 * @return the updated probability function
 	 */
 	public SubgraphProbabilityFunction roughUpdate(DungTheory theory){
 		SubgraphProbabilityFunction func = new SubgraphProbabilityFunction(this.theory);
@@ -250,6 +254,9 @@ public class SubgraphProbabilityFunction extends ProbabilityFunction<DungTheory>
 	 * Computes Super(G,G′,Ci) = {(α,β) ∈ Arcs(G) | (α ∈ Nodes(G′) and β ∈ Nodes(Ci))
 	 * 	or (α ∈ Nodes(Ci) and β ∈ Nodes(G′))
      * 	or (α ∈ Nodes(Ci) and β ∈ Nodes(Ci))
+	 * @param g A Dung theory G
+	 * @param gp A Dung theory G'
+	 * @param c A Dung Theory Ci
 	 * @return a set of attacks
 	 */
 	private Set<Attack> superGraphs(DungTheory g, DungTheory gp, DungTheory c){

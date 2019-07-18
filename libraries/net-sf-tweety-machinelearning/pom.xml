@@ -7,14 +7,14 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.13-SNAPSHOT</version>
+  	<version>1.14-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>math</artifactId>
-  		<version>1.13-SNAPSHOT</version>
+  		<version>1.14-SNAPSHOT</version>
   	</dependency>
   	<dependency>
 		<groupId>tw.edu.ntu.csie</groupId>

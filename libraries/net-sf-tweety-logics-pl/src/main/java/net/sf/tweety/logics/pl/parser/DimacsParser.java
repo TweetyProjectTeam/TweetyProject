@@ -84,7 +84,7 @@ public class DimacsParser extends Parser<PlBeliefSet,PlFormula> {
 						StringTokenizer tokenizer = new StringTokenizer(s," ");
 						tokenizer.nextToken();
 						tokenizer.nextToken();
-						int numberVars = new Integer(tokenizer.nextToken());
+						int numberVars = Integer.parseInt(tokenizer.nextToken());
 						this.signature = new PlSignature();
 						this.prop_idx = new Proposition[numberVars];
 						for(Integer i = 1; i <= numberVars; i++) {
@@ -123,7 +123,7 @@ public class DimacsParser extends Parser<PlBeliefSet,PlFormula> {
 			}else if(c == ' ' || c == '\t'){
 				s = s.trim();
 				if(s.length()>0) {
-					int idx = new Integer(s);
+					int idx = Integer.parseInt(s);
 					if(idx < 0)
 						clause.add(new Negation(this.prop_idx[(idx*-1)-1]));
 					else

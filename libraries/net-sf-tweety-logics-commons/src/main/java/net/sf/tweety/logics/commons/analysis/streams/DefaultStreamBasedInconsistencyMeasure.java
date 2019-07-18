@@ -76,6 +76,7 @@ public class DefaultStreamBasedInconsistencyMeasure<S extends Formula> extends S
 	@Override
 	public InconsistencyMeasurementProcess<S> getInconsistencyMeasureProcess(FormulaStream<S> stream) {		
 		try {
+			@SuppressWarnings("deprecation")
 			InconsistencyMeasurementProcess<S> imp = this.clazz.newInstance();
 			imp.init(stream, this, config);			
 			return imp;			

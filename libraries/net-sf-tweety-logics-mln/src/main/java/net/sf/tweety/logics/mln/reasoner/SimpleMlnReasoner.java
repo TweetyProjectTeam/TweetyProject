@@ -62,6 +62,8 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 	}
 	
 	/** Computes the model of the given MLN.
+	 * @param mln The MLN
+	 * @param signature the signature
 	 * @return a file where the model is stored.
 	 */
 	private File computeModel(MarkovLogicNetwork mln, FolSignature signature){
@@ -145,9 +147,9 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 				StringTokenizer tokenizer = new StringTokenizer(strLine,"#");
 				try{
 					if(tokenizer.countTokens() == 1)
-						out.append("#" + (new Double(tokenizer.nextToken())/sum));
+						out.append("#" + (Double.parseDouble(tokenizer.nextToken())/sum));
 					else
-						out.append(tokenizer.nextToken() + "#" + (new Double(tokenizer.nextToken())/sum));
+						out.append(tokenizer.nextToken() + "#" + (Double.parseDouble(tokenizer.nextToken())/sum));
 					out.newLine();
 				}catch(Exception e){
 					
@@ -184,7 +186,7 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 						hInt = new HerbrandInterpretation();
 					else hInt = this.parseInterpretation(tokenizer.nextToken(),signature);
 					if(hInt.satisfies(query))
-						prob += new Double(tokenizer.nextToken());					
+						prob += Double.parseDouble(tokenizer.nextToken());					
 				}catch(Exception e){
 					e.printStackTrace();
 				}				
@@ -203,6 +205,7 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 
 	/** Constructs a Herbrand interpretation from the given string
 	 * @param str a string.
+	 * @param signature the signature
 	 * @return a Herbrand interpretation
 	 */
 	private HerbrandInterpretation parseInterpretation(String str,FolSignature signature){

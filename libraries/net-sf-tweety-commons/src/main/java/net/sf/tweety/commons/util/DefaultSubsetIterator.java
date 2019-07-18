@@ -23,8 +23,8 @@ import java.util.*;
 /**
  * Iterates over all subsets of a given sets. The order is given by the increment of a bitset as follows.
  * Let {1,2,3,4} a set where a subsets should be enumerated. Then a bitset 0000 of the same length is
- * initialized. At every next() operation the bitset is incremented in the standard way (0000->0001,...
- * 0101->0110,...) and the set is returned which contains exactly the elements at the indices with 1 in the
+ * initialized. At every next() operation the bitset is incremented in the standard way (0000-&gt;0001,...
+ * 0101-&gt;0110,...) and the set is returned which contains exactly the elements at the indices with 1 in the
  * bitset.
  * 
  * @author Matthias Thimm

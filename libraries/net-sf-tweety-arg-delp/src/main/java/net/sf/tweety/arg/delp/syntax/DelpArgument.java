@@ -71,7 +71,7 @@ public class DelpArgument implements Formula {
 	/**
 	 * Checks whether this argument is a subargument of the given argument
 	 * @param argument a DeLP argument
-	 * @return <source>true</source> iff this argument is a subargument of the given argument
+	 * @return <code>true</code> iff this argument is a subargument of the given argument
 	 */
 	public boolean isSubargumentOf(DelpArgument argument){
 		return argument.getSupport().containsAll(support);
@@ -81,7 +81,7 @@ public class DelpArgument implements Formula {
 	 * Checks whether this argument is a strong subargument of the given argument, i.e., if the
 	 * support of this argument is a strict subset of the support of the given argument
 	 * @param argument a DeLP argument
-	 * @return <source>true</source> iff this argument is a strong subargument of the given argument
+	 * @return <code>true</code> iff this argument is a strong subargument of the given argument
 	 */
 	public boolean isStrongSubargumentOf(DelpArgument argument){
 		if(!isSubargumentOf(argument)) return false;
@@ -113,7 +113,7 @@ public class DelpArgument implements Formula {
 	 * Computes the disagreement subargument of this argument for the given literal
 	 * @param lit a literal
 	 * @param delp a defeasible logic program
-	 * @return the disagreement subargument for <source>lit</source> or <source>null</source> if
+	 * @return the disagreement subargument for <code>lit</code> or <code>null</code> if
 	 * 	there is no disagreement subargument
 	 */
 	public DelpArgument getDisagreementSubargument(FolFormula lit, DefeasibleLogicProgram delp){

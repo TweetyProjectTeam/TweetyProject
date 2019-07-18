@@ -33,6 +33,7 @@ import net.sf.tweety.math.term.Term;
  * probability distributions as distance.
  * Note that entropy is not actually a norm!
  * @author Matthias Thimm
+ * @param <T>  The class of the objects used. 
  */
 public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implements RealVectorNorm{
 

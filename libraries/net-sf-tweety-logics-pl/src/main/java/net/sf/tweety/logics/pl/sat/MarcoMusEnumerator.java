@@ -79,7 +79,7 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 					StringTokenizer tokenizer2 = new StringTokenizer(line.substring(2), " ");
 					Collection<PlFormula> mus = new HashSet<PlFormula>();
 					while(tokenizer2.hasMoreTokens()){
-						idx = new Integer(tokenizer2.nextToken().trim()) - 1;
+						idx = Integer.parseInt(tokenizer2.nextToken().trim()) - 1;
 						mus.add(p.getSecond().get(idx));
 					}					
 					preResult.add(mus);

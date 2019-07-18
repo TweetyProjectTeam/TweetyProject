@@ -47,6 +47,7 @@ public abstract class ClassificationTester<S extends Observation, T extends Cate
 	 * observations. 
 	 * @param classifier some classifier.
 	 * @param trainingSet some training set.
+	 * @return the performance of the given classifier 
 	 */
 	public double test(Classifier classifier, TrainingSet<S,T> trainingSet){
 		int correctPredictions = 0;
@@ -54,6 +55,6 @@ public abstract class ClassificationTester<S extends Observation, T extends Cate
 			if(classifier.classify(entry.getFirst()).equals(entry.getSecond()))
 				correctPredictions++;
 		}
-		return new Double(correctPredictions)/trainingSet.size();
+		return ((double)correctPredictions)/trainingSet.size();
 	}
 }

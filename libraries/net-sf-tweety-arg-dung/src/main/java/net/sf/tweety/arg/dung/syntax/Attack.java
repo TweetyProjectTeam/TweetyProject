@@ -27,8 +27,8 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.DirectedEdge;
 
 /**
- * This class models an attack between two arguments. It comprises of two attributes of <source>Argument</source> and is mainly used by
- * abstract argumentation theories as e.g. <source>DungTheory</source>.
+ * This class models an attack between two arguments. It comprises of two attributes of <code>Argument</code> and is mainly used by
+ * abstract argumentation theories as e.g. <code>DungTheory</code>.
  *
  * @author Matthias Thimm
  *
@@ -45,9 +45,9 @@ public class Attack extends DirectedEdge<Argument> implements DungEntity {
 	}
 
 	/**
-	 * returns true if one arguments in <source>arguments</source> attacks another within this attack relation.
+	 * returns true if one arguments in <code>arguments</code> attacks another within this attack relation.
 	 * @param arguments a list of arguments
-	 * @return returns true if one arguments in <source>arguments</source> attacks another.
+	 * @return returns true if one arguments in <code>arguments</code> attacks another.
 	 */
 	public boolean isConflictFree(Collection<? extends Argument> arguments){
 		Iterator<? extends Argument> it = arguments.iterator();

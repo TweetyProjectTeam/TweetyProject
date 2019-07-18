@@ -97,6 +97,7 @@ public abstract class AbstractMlnReasoner implements QuantitativeReasoner<Markov
 	/** Performs the actual querying. 
 	 * @param mln an MLN
 	 * @param query a fol formula guaranteed to be ground.
+	 * @param signature the signature
 	 * @return the answer of the query.
 	 */
 	protected abstract double doQuery(MarkovLogicNetwork mln, FolFormula query, FolSignature signature);

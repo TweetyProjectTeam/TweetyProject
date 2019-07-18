@@ -197,6 +197,8 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	/**
 	 * Returns the signature of the first-order language this ranking function
 	 * is defined on.
+	 * @return the signature of the first-order language this ranking function
+	 * is defined on.
 	 */
 	public PlSignature getSignature(){
 		return this.signature;

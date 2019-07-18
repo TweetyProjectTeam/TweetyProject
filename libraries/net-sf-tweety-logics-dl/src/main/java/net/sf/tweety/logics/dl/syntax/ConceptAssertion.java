@@ -152,6 +152,7 @@ public class ConceptAssertion extends AssertionalAxiom {
 	/**
 	 * Get the concept of this assertional axiom (= the concept that the 
 	 * individual is an instance of).
+	 * @return the concept of this assertional axiom
 	 */
 	public ComplexConcept getConcept() {
 		return concept;

@@ -33,12 +33,12 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * Instances of this class are compilations in the sense of
- * Definition 8 in<br/>
- * <br/>
+ * Definition 8 in<br>
+ * <br>
  * Philippe Besnard and Anthony Hunter. Knowledgebase Compilation for Efficient Logical Argumentation.
  * In Proceedings of the 10th International Conference on Knowledge Representation (KR'06), pages
- * 123-133, AAAI Press, 2006.<br/>
- * <br/>
+ * 123-133, AAAI Press, 2006.<br>
+ * <br>
  * A compilation of a knowledge base is a graph where the nodes
  * are the minimal inconsistent subsets of the knowledge base
  * and the edges connect sets that have a non-empty intersection.

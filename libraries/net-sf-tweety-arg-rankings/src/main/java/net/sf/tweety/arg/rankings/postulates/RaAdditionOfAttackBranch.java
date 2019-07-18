@@ -35,7 +35,7 @@ import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
  * 
  * 'Adding an attack branch to the argument A' means adding the arguments {X1, ... , Xn} 
  *  which are not in the original knowledge base, for whom is true that 
- *  A <- X1 <- X2 ... <- Xn and where n is an odd number.
+ *  A &lt;- X1 &lt;- X2 ... &lt;- Xn and where n is an odd number.
  *  
  * @author Anna Gessler
  *

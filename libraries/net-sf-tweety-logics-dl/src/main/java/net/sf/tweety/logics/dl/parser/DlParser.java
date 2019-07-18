@@ -49,7 +49,7 @@ import net.sf.tweety.logics.dl.syntax.UniversalRestriction;
  * This class implements a parser for the description logic ALC (attributive
  * concept language with complements). The input syntax is based on the input
  * syntax of the
- * <a href="https://www.ifis.uni-luebeck.de/~moeller/racer/index.html">Racer<a/>
+ * <a href="https://www.ifis.uni-luebeck.de/~moeller/racer/index.html">Racer</a>
  * reasoner.
  * <br>
  * Note: Racer is built for the description logic SRIQ(D) (= the DL that

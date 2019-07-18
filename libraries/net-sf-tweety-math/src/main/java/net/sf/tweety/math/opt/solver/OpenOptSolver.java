@@ -172,6 +172,7 @@ public class OpenOptSolver extends Solver {
 	/**
 	 * Builds the OpenOpt code for the given problem which can be interpreted
 	 * by a python.
+	 * @param problem the optimisation problem
 	 * @return the python code for the given problem
 	 */
 	public String getOpenOptCode(OptimizationProblem problem){
@@ -274,7 +275,6 @@ public class OpenOptSolver extends Solver {
 	/**
 	 * This method parses the output data of an OpenOpt run
 	 * @param output a string.
-	 * @params length the length of the array to be parsed.
 	 * @return a map from variable to terms
 	 */
 	protected Map<Variable,Term> parseOutput(String output){
@@ -288,7 +288,7 @@ public class OpenOptSolver extends Solver {
 			for(String token : tokens){
 				if(token.trim().equals(""))
 					continue;
-				r[i] = new Double(token.trim());
+				r[i] = Double.parseDouble(token.trim());
 				i++;
 				if(i==this.idx2newVars.keySet().size()) break;
 			}

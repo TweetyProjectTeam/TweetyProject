@@ -65,7 +65,7 @@ public class HsInconsistencyMeasure<B extends BeliefBase, S extends Formula> ext
 		for(int card = 1; card <= formulas.size(); card++){
 			Collection<Interpretation<B,S>> hittingSet = this.getHittingSet(formulas, card, new HashSet<Interpretation<B,S>>());
 			if(hittingSet != null){				
-				return new Double(hittingSet.size()-1);
+				return ((double)hittingSet.size()-1);
 			}
 		}
 		// if no hitting set has been found there is a contradictory formula and we return Infinity as inconsistency value.

@@ -73,9 +73,9 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 	}
 
 	/**
-	 * Checks whether this rule is applicaple in the given context <source>literals</source>,
+	 * Checks whether this rule is applicaple in the given context <code>literals</code>,
 	 * @param literals a set of literals
-	 * @return <source>true</source> iff this rule is applicaple, i.e., if the body of the rule is a subset
+	 * @return <code>true</code> iff this rule is applicaple, i.e., if the body of the rule is a subset
 	 * 	of the given set of literals
 	 */
 	public boolean isApplicable(Collection<? extends FolFormula> literals){
@@ -87,7 +87,7 @@ public abstract class DelpRule extends RelationalFormula implements Rule<FolForm
 
 	/**
 	 * Checks whether there appear any variables in this rule
-	 * @return <source>true</source> iff there appears no variable in this rule
+	 * @return <code>true</code> iff there appears no variable in this rule
 	 */
 	public boolean isGround(){
 		if(!this.head.isGround()) return false;

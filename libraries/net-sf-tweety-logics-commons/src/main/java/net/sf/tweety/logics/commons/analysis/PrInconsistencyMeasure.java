@@ -29,6 +29,7 @@ import net.sf.tweety.commons.Formula;
  * minimal inconsistency subset.
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
  */
 public class PrInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
@@ -52,6 +53,6 @@ public class PrInconsistencyMeasure<S extends Formula> extends BeliefSetInconsis
 		Collection<S> problematic = new HashSet<S>();
 		for(Collection<S> mi: mis)
 			problematic.addAll(mi);
-		return new Double(problematic.size());
+		return ((double)problematic.size());
 	}
 }

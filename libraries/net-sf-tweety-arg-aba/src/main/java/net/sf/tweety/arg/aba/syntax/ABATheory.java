@@ -36,7 +36,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 
 /**
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
  * 
  * An implementation of Assumption Based Argumentation
  *

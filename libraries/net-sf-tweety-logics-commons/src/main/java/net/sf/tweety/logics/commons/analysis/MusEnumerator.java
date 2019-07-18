@@ -29,6 +29,7 @@ import net.sf.tweety.commons.Formula;
  * MCSs (maximal consistent sets). 
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
  *
  */
 public interface MusEnumerator<S extends Formula> extends BeliefSetConsistencyTester<S> {

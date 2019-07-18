@@ -101,7 +101,7 @@ public class HsInconsistencyMeasurementProcess extends InconsistencyMeasurementP
 		for(List<PossibleWorld> hs: this.hittingSets){
 			// random choice whether an existing world is removed
 			// the probability of removal is decreasing in time
-			if(!hs.isEmpty() && rand.nextDouble() <= 1-new Double(this.numFormulas)/(this.numFormulas+1)){
+			if(!hs.isEmpty() && rand.nextDouble() <= 1-((double)this.numFormulas)/(this.numFormulas+1)){
 				hs.remove(rand.nextInt(hs.size()));
 			}			
 			boolean satisfied = false;		

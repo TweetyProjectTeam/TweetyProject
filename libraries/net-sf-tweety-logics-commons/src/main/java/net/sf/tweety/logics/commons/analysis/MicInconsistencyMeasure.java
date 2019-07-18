@@ -26,6 +26,7 @@ import net.sf.tweety.commons.*;
  * This class models the MI^C inconsistency measure.
  * 
  * @author Matthias Thimm
+ * @param <S> the type of formulas
  */
 public class MicInconsistencyMeasure<S extends Formula> extends BeliefSetInconsistencyMeasure<S> {
 
@@ -47,7 +48,7 @@ public class MicInconsistencyMeasure<S extends Formula> extends BeliefSetInconsi
 	public Double inconsistencyMeasure(Collection<S> formulas) {
 		double value = 0; 
 		for(Collection<S> minInconSet: this.enumerator.minimalInconsistentSubsets(formulas)){			
-			value += ( 1 / new Double(minInconSet.size()) );
+			value += ( 1 / ((double)minInconSet.size()) );
 		}
 		return value;
 	}

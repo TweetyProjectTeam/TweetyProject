@@ -23,6 +23,8 @@ import java.util.*;
 /**
  * An interpretation for some logical language.
  * @author Matthias Thimm
+ * @param <B> the type of belief bases
+ * @param <S> the type of formulas
  */
 public interface Interpretation<B extends BeliefBase, S extends Formula> {
 	

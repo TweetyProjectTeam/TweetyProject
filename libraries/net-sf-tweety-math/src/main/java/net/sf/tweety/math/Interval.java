@@ -50,6 +50,8 @@ public class Interval<S extends Number> implements NumberSet<S> {
 
 	
 	/**
+	 * Returns the lower bound
+	 * @return the lower bound
 	 * 
 	 */
 	public S getLowerBound() {
@@ -89,6 +91,7 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	/**
 	 * checks, whether an element is within this interval
 	 * @param a some element
+	 * @return true iff a is an element of this interval
 	 */
 	public boolean isElementOf(S a){
 		// TODO add

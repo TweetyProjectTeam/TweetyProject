@@ -99,6 +99,7 @@ public abstract class GraphUtil {
 	 * @param g a graph
 	 * @param n a node
 	 * @param precision the precision (smaller values mean higher precision)
+	 * @param getAuth whether to use Auth (instead of Hub)
 	 * @return the HITS rank of the given node in the given graph.
 	 */
 	public static Double hitsRank(Graph<? extends Node> g, Node n, double precision, boolean getAuth){

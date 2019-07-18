@@ -67,6 +67,7 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 	
 	/**
 	 * Parameters from org.apache.commons.math3.optim.nonlinear.scalar.noderiv.CMAESOptimizer:
+	 * @param populationSize the population size
 	 * @param maxIterations Maximal number of iterations.
 	 * @param stopFitness Whether to stop if objective function value is smaller than stopFitness.
 	 * @param isActiveCMA Chooses the covariance matrix update method.

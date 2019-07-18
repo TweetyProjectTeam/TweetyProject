@@ -65,10 +65,10 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	}
 	
 	/** Returns the upper cut of this probabilistic extension wrt. delta, i.e.
-	 * all arguments that have probability >= delta.
+	 * all arguments that have probability &gt;= delta.
 	 * @param theory a Dung theory.
 	 * @param delta some threshold.
-	 * @return the set of arguments that have probability >= delta.
+	 * @return the set of arguments that have probability &gt;= delta.
 	 */
 	public Extension getUpperCut(DungTheory theory, double delta){
 		Extension e = new Extension();
@@ -79,10 +79,10 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	}
 	
 	/** Returns the lower cut of this probabilistic extension wrt. delta, i.e.
-	 * all arguments that have probability <= delta.
+	 * all arguments that have probability &lt;= delta.
 	 * @param theory a Dung theory.
 	 * @param delta some threshold.
-	 * @return the set of arguments that have probability <= delta.
+	 * @return the set of arguments that have probability &lt;= delta.
 	 */
 	public Extension geLowerCut(DungTheory theory, double delta){
 		Extension e = new Extension();
@@ -94,8 +94,9 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	
 	/**
 	 * Checks whether the given labeling is congruent to this probabilistic extension,
-	 * i.e. whether l(A)=in <=> P(A)=1, l(A)=out <=> P(A)=0, l(A)=undec <=> P(A)=0.5  
+	 * i.e. whether l(A)=in &lt;=&gt; P(A)=1, l(A)=out &lt;=&gt; P(A)=0, l(A)=undec &lt;=&gt; P(A)=0.5  
 	 * @param l some labelling
+	 * @return true iff the given labeling is congruent to this probabilistic extension
 	 */
 	@SuppressWarnings("unlikely-arg-type")
 	public boolean isCongruent(Labeling l){
@@ -109,7 +110,7 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	
 	/**
 	 * Returns the epistemic labeling of this probabilistic extension, i.e.
-	 * the labeling with l(A)=in if P(A)>0.5, l(A)=undecided if P(A)=0.5, and 
+	 * the labeling with l(A)=in if P(A)&gt;0.5, l(A)=undecided if P(A)=0.5, and 
 	 * l(A)=0 if P(A)=0.
 	 * @return the epistemic labeling of this probabilistic extension
 	 */

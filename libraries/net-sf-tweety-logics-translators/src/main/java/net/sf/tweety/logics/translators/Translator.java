@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * the translate map is necessary to support nested formulas like a disjunction
  * of conjunction of several disjunction etc.
  * 
- * @remark The implementations used unchecked generic casts. It is important
+ * Remark: The implementations used unchecked generic casts. It is important
  * 			that the subclasses create consistent translation maps, otherwise
  * 			there might be a ClassCastException which is not thrown by this
  * 			code although it is caused by the inconsistent translation
@@ -88,6 +88,7 @@ public abstract class Translator {
 	 * @param predicateCls	The description of the destination Predicate class
 	 * @return				An instance of predicateCls which is syntactically equal to source.
 	 * @throws LanguageException if an issue with the language occurs.
+	 * @param <C> the type of predicate
 	 */
 	public <C extends Predicate> C translatePredicate(Predicate source, 
 			Class<C> predicateCls) throws LanguageException {
@@ -127,8 +128,10 @@ public abstract class Translator {
 	/**
 	 * Translates the given AssociativeFormula into another AssociativeFormula
 	 * thats type is given by the parameter assocCls
+	 * @param <A> the type of associative formulas
 	 * @param source	The 
 	 * @param assocCls the class of the expected associative formula
+	 * @return an associative formula
 	 */
 	public <A extends AssociativeFormula<? extends SimpleLogicalFormula>> 
 		AssociativeFormula<?> translateAssociative(A source, Class<?> assocCls) {
@@ -178,6 +181,7 @@ public abstract class Translator {
 		return dest;
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected static <T> T createInstance(Class<T> cls) throws LanguageException {
 		T reval = null;
 		LanguageException ex = null;

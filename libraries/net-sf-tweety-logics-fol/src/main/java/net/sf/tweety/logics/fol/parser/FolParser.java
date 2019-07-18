@@ -45,8 +45,8 @@ import net.sf.tweety.logics.fol.syntax.*;
  * <br> FUNCTORDEC	::== "type" "(" SORTNAME "=" FUNCTORNAME "(" (SORTNAME ("," SORTNAME)*)? ")" ")" "\n"
  * <br> FORMULAS    ::== ( "\n" FORMULA)*
  * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
- * <br>					 "(" FORMULA ")" | FORMULA "&&" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
- * <br>					 FORMULA "=>" FORMULA | FORMULA "<=>" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
+ * <br>					 "(" FORMULA ")" | FORMULA "&amp;&amp;" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
+ * <br>					 FORMULA "=&gt;" FORMULA | FORMULA "&lt;=&gt;" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
@@ -136,6 +136,7 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 	 * and modifies the given signature accordingly. 
 	 * @param s a string
 	 * @param sig a signature
+	 * @throws ParserException if parsing fails
 	 */
 	public void parseSortDeclaration(String s, FolSignature sig) throws ParserException{
 		if(!s.contains("=")) throw new ParserException("Missing '=' in sort declaration '" + s + "'.");
@@ -168,6 +169,7 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 	 * and modifies the given signature accordingly.
 	 * @param s a string
 	 * @param sig a signature
+	 * @throws ParserException if parsing fails
 	 */
 	public void parseTypeDeclaration(String s, FolSignature sig) throws ParserException{
 		if(!s.startsWith("type")) throw new ParserException("Type declaration has to start with 'type'.");
@@ -723,6 +725,7 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 	/**
 	 * This function parses only the sorts declaration and type declaration parts
 	 * of a belief base.
+	 * @param s the signature as a string
 	 * 
 	 * @return the parsed fol signature
 	 */

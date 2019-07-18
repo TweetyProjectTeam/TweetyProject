@@ -365,6 +365,8 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/**
 	 * Returns the set of sub graphs of the given graph.
+	 * @param g a graph
+	 * @param <S> the type of nodes
 	 * 
 	 * @return the set of sub graphs of the given graph.
 	 */

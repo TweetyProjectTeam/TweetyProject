@@ -70,9 +70,9 @@ public class FbInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlForm
 			for(Triple<Proposition,Integer,SpecialFormula> sub: order)
 				r = r.replace(sub.getFirst(), sub.getThird(),sub.getSecond());
 			if(SatSolver.getDefaultSolver().isConsistent(r))
-				return new Double(size);	
+				return ((double)size);	
 		}
-		return new Double(Integer.MAX_VALUE);		
+		return ((double)Integer.MAX_VALUE);		
 	}	
 	
 	/**

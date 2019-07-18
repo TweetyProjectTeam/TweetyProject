@@ -22,7 +22,7 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.util.rules.Rule;
 
 /**
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
  *	An interface that combines assumptions and inference rules
  * @param <T>	is the type of the language that the ABA theory's rules range over 
  */
