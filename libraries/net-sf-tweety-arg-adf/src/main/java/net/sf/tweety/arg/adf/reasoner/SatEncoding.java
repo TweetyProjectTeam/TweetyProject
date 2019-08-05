@@ -18,10 +18,9 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,22 +29,18 @@ import java.util.stream.Stream;
 
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.semantics.LinkType;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.Argument;
+import net.sf.tweety.arg.adf.syntax.DefinitionalCNFTransform;
 import net.sf.tweety.arg.adf.util.Cache;
-import net.sf.tweety.arg.adf.util.PlCollectors;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
 import net.sf.tweety.commons.util.SubsetIterator;
-import net.sf.tweety.logics.pl.syntax.Conjunction;
-import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * TODO: generalize?
@@ -78,162 +73,211 @@ public class SatEncoding {
 	 * 
 	 * Store globally, since it does not depend on interpretations.
 	 * 
-	 * TODO find better name, since it is not really xor (both can be false)
 	 */
-	private Collection<Disjunction> argsTrueXorFalse;
+	private Collection<Disjunction> argsNotTrueAndFalse;
 
 	public SatEncoding(AbstractDialecticalFramework adf) {
 		this.adf = adf;
-		this.argsTrueXorFalse = adf.arguments()
+		this.argsNotTrueAndFalse = adf.arguments()
 				.map(a -> new Disjunction(new Negation(trues.apply(a)), new Negation(falses.apply(a))))
 				.collect(Collectors.toList());
 	}
 
 	public Disjunction refineLarger(Interpretation interpretation) {
-		Disjunction sats = interpretation.satisfied().map(falses).collect(PlCollectors.toDisjunction());
-		PlFormula unsats = interpretation.unsatisfied().map(trues).collect(PlCollectors.toDisjunction());
-		PlFormula undec = interpretation.undecided().flatMap(a -> Stream.of(trues.apply(a), falses.apply(a)))
-				.collect(PlCollectors.toDisjunction());
-		return (Disjunction) new Disjunction(Arrays.asList(sats, unsats, undec)).collapseAssociativeFormulas();
+		Disjunction encoding = new Disjunction();
+		interpretation.satisfied().map(falses).forEach(encoding::add);
+		interpretation.unsatisfied().map(trues).forEach(encoding::add);
+		interpretation.undecided().flatMap(a -> Stream.of(trues.apply(a), falses.apply(a))).forEach(encoding::add);
+		return encoding;
 	}
 
 	/**
-	 * TODO Define functionality
-	 * @param interpretation some interpretation
+	 * 
+	 * @param interpretation
 	 * @return a clause
 	 */
 	public Disjunction refineUnequal(Interpretation interpretation) {
-		Disjunction clause = new Disjunction();
-		for (Argument a : adf) {
-			if (interpretation.isSatisfied(a)) {
-				clause.add(new Negation(trues.apply(a)));
-			} else if (interpretation.isUnsatisfied(a)) {
-				clause.add(new Negation(falses.apply(a)));
-			} else {
-				clause.add(trues.apply(a));
-				clause.add(falses.apply(a));
-			}
-		}
-		return clause;
+		Disjunction encoding = new Disjunction();
+		interpretation.satisfied().map(trues).map(Negation::new).forEach(encoding::add);
+		interpretation.unsatisfied().map(falses).map(Negation::new).forEach(encoding::add);
+		interpretation.undecided().flatMap(x -> Stream.of(trues.apply(x), falses.apply(x))).forEach(encoding::add);
+		return encoding;
 	}
 
 	public Collection<Disjunction> conflictFreeInterpretation() {
-		Conjunction encoding = new Conjunction();
+		List<Disjunction> encoding = new LinkedList<Disjunction>();
 		for (Argument s : adf) {
+			DefinitionalCNFTransform transform = new DefinitionalCNFTransform(r -> links.apply(adf.link(r, s)));
+			AcceptanceCondition acc = adf.getAcceptanceCondition(s);
+			Proposition accName = acc.collect(transform, List::add, encoding);
+
 			// link the arguments to their acceptance conditions
-			PlFormula acc = adf.getAcceptanceCondition(s).toPlFormula(r -> links.apply(adf.link(r, s)));
-			Implication acSat = new Implication(trues.apply(s), acc);
-			Implication acUnsat = new Implication(falses.apply(s), new Negation(acc));
+			Disjunction acSat = new Disjunction(new Negation(trues.apply(s)), accName);
+			Disjunction acUnsat = new Disjunction(new Negation(falses.apply(s)), new Negation(accName));
 			encoding.add(acSat);
 			encoding.add(acUnsat);
 
-			Conjunction posLinks = new Conjunction();
-			Conjunction negLinks = new Conjunction();
+			// draw connection between argument and outgoing links
 			for (Link relation : (Iterable<Link>) adf.linksToChildren(s)::iterator) {
-				posLinks.add(links.apply(relation));
-				negLinks.add(new Negation(links.apply(relation)));
+				encoding.add(new Disjunction(new Negation(trues.apply(s)), links.apply(relation)));
+				encoding.add(new Disjunction(new Negation(falses.apply(s)), new Negation(links.apply(relation))));
 			}
-			encoding.add(new Implication(trues.apply(s), posLinks));
-			encoding.add(new Implication(falses.apply(s), negLinks));
 		}
 
-		return encoding.toCnf().stream().map(x -> (Disjunction) x).collect(Collectors.toList());
+		return encoding;
 	}
 
 	/**
-	 * TODO define functionality
-	 * @param interpretation some interpretation
+	 * 
+	 * @param interpretation
 	 * @return a collection of clauses
 	 */
 	public Collection<Disjunction> largerInterpretation(Interpretation interpretation) {
-		// fix values based on the given interpretation
-		List<Disjunction> truesClauses = interpretation.satisfied().map(trues).map(x -> new Disjunction(Arrays.asList(x)))
-				.collect(Collectors.toList());
-		List<Disjunction> falsesClauses = interpretation.unsatisfied().map(falses)
-				.map(x -> new Disjunction(Arrays.asList(x))).collect(Collectors.toList());
+		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
+		encoding.addAll(argsNotTrueAndFalse);
 
-		// try to fix a truth value for the undecided arguments in the given
-		// interpretation. if it is possible, then the resulting interpretation
-		// is strictly "larger".
-		Disjunction undecidedClause = interpretation.undecided().flatMap(a -> Stream.of(trues.apply(a), falses.apply(a)))
-				.collect(PlCollectors.toDisjunction());
+		for (Argument a : (Iterable<Argument>) interpretation.satisfied()::iterator) {
+			Disjunction clause = new Disjunction();
+			clause.add(trues.apply(a));
+			encoding.add(clause);
+		}
 
-		Collection<Disjunction> clauses = new ArrayList<Disjunction>(truesClauses.size() + falsesClauses.size() + argsTrueXorFalse.size() + 1);
-		clauses.addAll(truesClauses);
-		clauses.addAll(falsesClauses);
-		clauses.addAll(argsTrueXorFalse);
-		clauses.add(undecidedClause);
-		return clauses;
+		for (Argument a : (Iterable<Argument>) interpretation.unsatisfied()::iterator) {
+			Disjunction clause = new Disjunction();
+			clause.add(falses.apply(a));
+			encoding.add(clause);
+		}
+
+		Disjunction undecided = new Disjunction();
+		for (Argument a : (Iterable<Argument>) interpretation.undecided()::iterator) {
+			undecided.add(trues.apply(a));
+			undecided.add(falses.apply(a));
+		}
+		encoding.add(undecided);
+		return encoding;
 	}
 
 	public Collection<Disjunction> bipolar() {
-		Conjunction encoding = new Conjunction();
+		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
 		for (Argument r : adf) {
-			Conjunction conj1 = adf.linksToParent(r).filter(l -> l.getLinkType() == LinkType.ATTACKING)
-					.map(l -> new Implication(new Negation(falses.apply(l.getFrom())), links.apply(l)))
-					.collect(PlCollectors.toConjunction());
-			Conjunction conj2 = adf.linksToParent(r).filter(l -> l.getLinkType() == LinkType.SUPPORTING)
-					.map(l -> new Implication(new Negation(trues.apply(l.getFrom())), new Negation(links.apply(l))))
-					.collect(PlCollectors.toConjunction());
-			Conjunction conj3 = adf.linksToParent(r).filter(l -> l.getLinkType() == LinkType.ATTACKING)
-					.map(l -> new Implication(new Negation(trues.apply(l.getFrom())), new Negation(links.apply(l))))
-					.collect(PlCollectors.toConjunction());
-			Conjunction conj4 = adf.linksToParent(r).filter(l -> l.getLinkType() == LinkType.SUPPORTING)
-					.map(l -> new Implication(new Negation(falses.apply(l.getFrom())), links.apply(l)))
-					.collect(PlCollectors.toConjunction());
+			Proposition rTrue = trues.apply(r);
+			Proposition rFalse = falses.apply(r);
+			for (Link l : (Iterable<Link>) adf.linksToParent(r)::iterator) {
+				if (l.isAttacking()) {
+					// first implication
+					Disjunction clause1 = new Disjunction();
+					clause1.add(new Negation(rTrue));
+					clause1.add(falses.apply(l.getFrom()));
+					clause1.add(links.apply(l));
+					encoding.add(clause1);
 
-			encoding.add(new Implication(trues.apply(r), new Conjunction(conj1, conj2)));
-			encoding.add(new Implication(falses.apply(r), new Conjunction(conj3, conj4)));
+					// second implication
+					Disjunction clause2 = new Disjunction();
+					clause2.add(new Negation(rFalse));
+					clause2.add(trues.apply(l.getFrom()));
+					clause2.add(new Negation(links.apply(l)));
+					encoding.add(clause2);
+				} else if (l.isSupporting()) {
+					// first implication
+					Disjunction clause1 = new Disjunction();
+					clause1.add(new Negation(rTrue));
+					clause1.add(trues.apply(l.getFrom()));
+					clause1.add(new Negation(links.apply(l)));
+					encoding.add(clause1);
+
+					// second implication
+					Disjunction clause2 = new Disjunction();
+					clause2.add(new Negation(rFalse));
+					clause2.add(falses.apply(l.getFrom()));
+					clause2.add(links.apply(l));
+					encoding.add(clause2);
+				}
+			}
 		}
-		
-		return encoding.toCnf().stream().map(x -> (Disjunction) x).collect(Collectors.toList());
+		return encoding;
 	}
 
 	public Collection<Disjunction> kBipolar(Interpretation interpretation) {
-		Conjunction encoding = new Conjunction();
+		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
+
+		// use these proposition as a substitution for the special formulas
+		// Tautology and Contradiction
+		final Proposition TAUT = new Proposition("T");
+		final Proposition CONT = new Proposition("F");
+
+		// fix values for TAUT and CONT
+		Disjunction tautClause = new Disjunction();
+		tautClause.add(TAUT);
+		Disjunction contClause = new Disjunction();
+		contClause.add(new Negation(CONT));
+		encoding.add(tautClause);
+		encoding.add(contClause);
+
 		for (Argument s : adf) {
 			// set of arguments r with (r,s) non-bipolar and I(r) = u
-			Set<Argument> xs = adf.linksToParent(s).filter(l -> l.getLinkType() == LinkType.DEPENDENT)
-					.map(l -> l.getFrom()).filter(r -> interpretation.isUndecided(r)).collect(Collectors.toSet());
+			Set<Argument> xs = adf.linksToParent(s).filter(Link::isDependent).map(Link::getFrom)
+					.filter(interpretation::isUndecided).collect(Collectors.toSet());
 
 			SubsetIterator<Argument> subsetIterator = new DefaultSubsetIterator<Argument>(xs);
 
-			Conjunction conj1 = new Conjunction();
-			Conjunction conj2 = new Conjunction();
 			while (subsetIterator.hasNext()) {
 				Set<Argument> subset = subsetIterator.next();
-				PlFormula acc = adf.getAcceptanceCondition(s).toPlFormula(r -> xs.contains(r)
-						? links.apply(adf.link(r, s)) : (subset.contains(r) ? new Tautology() : new Contradiction()));
 
-				Disjunction disj1 = subset.stream().map(falses).collect(PlCollectors.toDisjunction());
-				Disjunction disj2 = xs.stream().filter(r -> !subset.contains(r)).map(trues)
-						.collect(PlCollectors.toDisjunction());
-				conj1.add(new Disjunction(Arrays.asList(acc, disj1, disj2)));
-				conj2.add(new Disjunction(Arrays.asList(new Negation(acc), disj1, disj2)));
+				DefinitionalCNFTransform transform = new DefinitionalCNFTransform(
+						r -> !xs.contains(r) ? links.apply(adf.link(r, s)) : (subset.contains(r) ? TAUT : CONT));
+				AcceptanceCondition acc = adf.getAcceptanceCondition(s);
+				Proposition accName = acc.collect(transform, Collection::add, encoding);
+
+				// first implication
+				Disjunction clause1 = new Disjunction();
+				clause1.add(new Negation(trues.apply(s)));
+				clause1.add(accName);
+
+				// second implication
+				Disjunction clause2 = new Disjunction();
+				clause2.add(new Negation(falses.apply(s)));
+				clause2.add(new Negation(accName));
+
+				// stuff for both implications
+				subset.stream().map(falses).forEach(rFalse -> {
+					clause1.add(rFalse);
+					clause2.add(rFalse);
+				});
+				xs.stream().filter(r -> !subset.contains(r)).map(trues).forEach(rTrue -> {
+					clause1.add(rTrue);
+					clause2.add(rTrue);
+				});
+
+				encoding.add(clause1);
+				encoding.add(clause2);
 			}
-			encoding.add(new Implication(trues.apply(s), conj1));
-			encoding.add(new Implication(falses.apply(s), conj2));
 		}
 
-		return encoding.toCnf().stream().map(x -> (Disjunction) x).collect(Collectors.toList());
+		return encoding;
 	}
 
 	public Collection<Disjunction> verifyAdmissible(Interpretation interpretation) {
-		Cache<Argument, PlFormula> vars = new Cache<Argument, PlFormula>(s -> new Proposition(s.getName()));
-		Conjunction conj = new Conjunction();
-		Disjunction disj = new Disjunction();
+		Cache<Argument, Proposition> vars = new Cache<Argument, Proposition>(s -> new Proposition(s.getName()));
+		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
+		Disjunction accs = new Disjunction();
 		for (Argument s : adf) {
-			PlFormula acc = adf.getAcceptanceCondition(s).toPlFormula(vars);
+			DefinitionalCNFTransform transform = new DefinitionalCNFTransform(vars);
+			AcceptanceCondition acc = adf.getAcceptanceCondition(s);
+			Proposition accName = acc.collect(transform, Collection::add, encoding);
 			if (interpretation.isSatisfied(s)) {
-				conj.add(vars.apply(s));
-				disj.add(new Negation(acc));
+				Disjunction clause = new Disjunction();
+				clause.add(vars.apply(s));
+				encoding.add(clause);
+				accs.add(new Negation(accName));
 			} else if (interpretation.isUnsatisfied(s)) {
-				conj.add(new Negation(vars.apply(s)));
-				disj.add(acc);
+				Disjunction clause = new Disjunction();
+				clause.add(new Negation(vars.apply(s)));
+				encoding.add(clause);
+				accs.add(accName);
 			}
 		}
-		PlFormula encoding = new Conjunction(conj, disj);
-		return encoding.toCnf().stream().map(x -> (Disjunction) x).collect(Collectors.toList());
+		encoding.add(accs);
+		return encoding;
 	}
 
 	public Interpretation interpretationFromWitness(
@@ -248,7 +292,6 @@ public class SatEncoding {
 				assignment.put(a, null);
 			}
 		}
-
 		return new Interpretation(assignment);
 	}
 

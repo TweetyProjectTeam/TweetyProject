@@ -27,7 +27,8 @@ import java.util.Set;
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.util.Cache;
+import net.sf.tweety.arg.adf.syntax.PlFormulaTransform;
+import net.sf.tweety.arg.adf.syntax.Transform;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Equivalence;
@@ -41,14 +42,14 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * @author Mathias Hofer
  *
  */
-public class SatModelReasoner extends AbstractDialecticalFrameworkReasoner {
+public class ModelReasoner extends AbstractDialecticalFrameworkReasoner {
 
 	/**
 	 * A SAT solver
 	 */
 	private SatSolver solver;
 
-	public SatModelReasoner(SatSolver solver) {
+	public ModelReasoner(SatSolver solver) {
 		this.solver = solver;
 	}
 
@@ -61,8 +62,8 @@ public class SatModelReasoner extends AbstractDialecticalFrameworkReasoner {
 	 */
 	@Override
 	public Collection<Interpretation> getModels(AbstractDialecticalFramework bbase) {
-		Cache<Argument, PlFormula> cache = new Cache<Argument, PlFormula>(arg -> new Proposition(arg.getName()));
-		PlBeliefSet encoding = this.getPropositionalCharacterisation(bbase, cache);
+		Transform<?, PlFormula> transform = new PlFormulaTransform(arg -> new Proposition(arg.getName()));
+		PlBeliefSet encoding = this.getPropositionalCharacterisation(bbase, transform);
 		Set<Interpretation> result = new HashSet<Interpretation>();
 
 		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = null;
@@ -72,7 +73,7 @@ public class SatModelReasoner extends AbstractDialecticalFrameworkReasoner {
 			// we build a (complete) two-valued interpretation
 			Map<Argument, Boolean> model = new HashMap<Argument, Boolean>();
 			for (Argument a : bbase) {
-				PlFormula prop = a.toPlFormula(cache);
+				PlFormula prop = a.transform(transform);
 				if (witness.satisfies(prop)) {
 					literals.add(prop);
 					model.put(a, true);
@@ -99,13 +100,13 @@ public class SatModelReasoner extends AbstractDialecticalFrameworkReasoner {
 	 */
 	@Override
 	public Interpretation getModel(AbstractDialecticalFramework bbase) {
-		Cache<Argument, PlFormula> cache = new Cache<Argument, PlFormula>(arg -> new Proposition(arg.getName()));
-		PlBeliefSet prop = this.getPropositionalCharacterisation(bbase, cache);
+		Transform<?, PlFormula> transform = new PlFormulaTransform(arg -> new Proposition(arg.getName()));
+		PlBeliefSet prop = this.getPropositionalCharacterisation(bbase, transform);
 		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = this.solver.getWitness(prop);
 		Map<Argument, Boolean> model = new HashMap<Argument, Boolean>();
 		// we build a (complete) two-valued interpretation
 		for (Argument a : bbase) {
-			if (witness.satisfies(a.toPlFormula(cache))) {
+			if (witness.satisfies(a.transform(transform))) {
 				model.put(a, true);
 			} else {
 				model.put(a, false);
@@ -114,17 +115,15 @@ public class SatModelReasoner extends AbstractDialecticalFrameworkReasoner {
 		return new Interpretation(model); // the first found model
 	}
 
-	/** 
-	 * returns a propositional characterisation of the reasoning problem
-	 * @param aaf some ADF
-	 * @param cache the cache
+	/**
+	 * @param aaf
 	 * @return The propositional encoding of the model semantics.
 	 */
 	public PlBeliefSet getPropositionalCharacterisation(AbstractDialecticalFramework aaf,
-			Cache<Argument, PlFormula> cache) {
+			Transform<?, PlFormula> cache) {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		for (Argument a : aaf) {
-			Equivalence equiv = new Equivalence(a.toPlFormula(cache), aaf.getAcceptanceCondition(a).toPlFormula(cache));
+			Equivalence equiv = new Equivalence(a.transform(cache), aaf.getAcceptanceCondition(a).transform(cache));
 			beliefSet.add(equiv);
 		}
 		return beliefSet;

@@ -18,36 +18,41 @@
  */
 package net.sf.tweety.arg.adf.syntax;
 
-import java.util.function.Function;
+import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
+public class DisjunctionAcceptanceCondition extends AcceptanceCondition {
 
-public class DisjunctionAcceptanceCondition implements AcceptanceCondition {
-
-	private AcceptanceCondition first;
-
-	private AcceptanceCondition second;
+	private AcceptanceCondition[] subconditions;
 
 	/**
-	 * creates a disjunction of acceptance conditions
-	 * @param first an acceptance condition
-	 * @param second an acceptance condition
+	 * @param first
+	 * @param second
 	 */
-	public DisjunctionAcceptanceCondition(AcceptanceCondition first, AcceptanceCondition second) {
-		super();
-		this.first = first;
-		this.second = second;
+	public DisjunctionAcceptanceCondition(AcceptanceCondition... subconditions) {
+		this.subconditions = subconditions;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#arguments()
+	 */
 	@Override
 	public Stream<Argument> arguments() {
-		return Stream.concat(first.arguments(), second.arguments());
+		return Stream.of(subconditions).flatMap(x -> x.arguments());
 	}
 
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.arg.adf.syntax.Transform, java.util.function.Consumer)
+	 */
 	@Override
-	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		return new Disjunction(first.toPlFormula(argumentMap), second.toPlFormula(argumentMap));
+	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
+		Collection<R> transformedSubconditions = Stream.of(subconditions).map(acc -> acc.transform(transform, consumer, polarity)).collect(Collectors.toList());
+		return transform.transformDisjunction(consumer, transformedSubconditions, polarity);
 	}
+
 }

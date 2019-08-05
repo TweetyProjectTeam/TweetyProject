@@ -19,12 +19,14 @@
 package net.sf.tweety.arg.adf.reasoner;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
+import net.sf.tweety.arg.adf.sat.SatSolverState;
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
@@ -34,43 +36,47 @@ public class NaiveInterpretationReasoner extends AbstractDialecticalFrameworkRea
 	/**
 	 * A SAT solver
 	 */
-	private SatSolver solver;
+	private IncrementalSatSolver solver;
 
-	public NaiveInterpretationReasoner(SatSolver solver) {
+	public NaiveInterpretationReasoner(IncrementalSatSolver solver) {
 		this.solver = solver;
 	}
 
 	@Override
 	public Collection<Interpretation> getModels(AbstractDialecticalFramework adf) {
 		SatEncoding enc = new SatEncoding(adf);
-		List<Disjunction> rho = new LinkedList<Disjunction>();
-		rho.addAll(enc.conflictFreeInterpretation());
 		Collection<Interpretation> models = new LinkedList<Interpretation>();
+		List<Disjunction> excluded = new LinkedList<Disjunction>();
+		final Interpretation EMPTY = new Interpretation(adf);
 		Interpretation interpretation;
-		while ((interpretation = existsNai(adf, new Interpretation(adf), rho, enc)) != null) {
-			rho.add(enc.refineLarger(interpretation));
+		while ((interpretation = existsNai(adf, EMPTY, excluded, enc)) != null) {
+			excluded.add(enc.refineLarger(interpretation));
 			models.add(interpretation);
 		}
-
 		return models;
 	}
 
 	@Override
 	public Interpretation getModel(AbstractDialecticalFramework adf) {
 		SatEncoding enc = new SatEncoding(adf);
-		return existsNai(adf, new Interpretation(adf), enc.conflictFreeInterpretation(), enc);
+		return existsNai(adf, new Interpretation(adf), Collections.emptyList(), enc);
 	}
 
 	private Interpretation existsNai(AbstractDialecticalFramework adf, Interpretation interpretation,
-			Collection<Disjunction> excluded, SatEncoding enc) {
-		Collection<PlFormula> rho = new LinkedList<PlFormula>(excluded);
-		rho.addAll(enc.largerInterpretation(interpretation));
-		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = solver.getWitness(rho);
+			List<Disjunction> excluded, SatEncoding enc) {
 		Interpretation result = null;
-		while (witness != null) {
-			result = enc.interpretationFromWitness(witness);
-			rho.addAll(enc.largerInterpretation(result));
-			witness = solver.getWitness(rho);
+		try (SatSolverState state = solver.createState()) {
+			state.add(enc.conflictFreeInterpretation());
+			state.add(excluded);
+			state.add(enc.largerInterpretation(interpretation));
+			net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = state.witness();
+			while (witness != null) {
+				result = enc.interpretationFromWitness(witness);
+				state.add(enc.largerInterpretation(result));
+				witness = state.witness();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return result;
 	}

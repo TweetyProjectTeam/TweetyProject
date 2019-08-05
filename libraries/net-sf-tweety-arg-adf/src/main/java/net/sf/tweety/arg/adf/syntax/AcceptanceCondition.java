@@ -18,29 +18,58 @@
  */
 package net.sf.tweety.arg.adf.syntax;
 
-import java.util.function.Function;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-import net.sf.tweety.logics.pl.syntax.PlFormula;
-
 /**
- * This class represents the acceptance conditions of ADF arguments. It
- * basically mirrors the structure of propositional formulae.
+ * TODO make contract of collect s.t. it is consistent with the one of stream
  * 
  * @author Mathias Hofer
  *
  */
-public interface AcceptanceCondition {
+public abstract class AcceptanceCondition {
+
+	public abstract Stream<Argument> arguments();
 
 	/**
-	 * Recursively computes all of the arguments occuring in this acceptance
-	 * condition.
 	 * 
-	 * @return the union of the arguments of this acceptance condition and its
-	 *         sub-conditions.
+	 * @param transform
+	 * @param collector
+	 * @return
 	 */
-	public Stream<Argument> arguments();
+	public <C, R, A, O> O collect(Transform<C, R> transform, Collector<C, A, O> collector) {
+		A container = collector.supplier().get();
+		BiConsumer<A,C> accumulator = collector.accumulator();
+		Consumer<C> consumer = c -> accumulator.accept(container, c);
+		transform(transform, consumer, 1);
+		O output = collector.finisher().apply(container);
+		return output;
+	}
+	
+	/**
+	 * 
+	 * @param transform
+	 * @param collector
+	 * @param container
+	 * @return
+	 */
+	public <C, R, O> R collect(Transform<C, R> transform, BiConsumer<O,C> accumulator, O container) {
+		Consumer<C> consumer = c -> accumulator.accept(container, c);
+		R output = transform(transform, consumer, 1);
+		return output;
+	}
 
-	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap);
+	protected abstract <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity);
+
+	/**
+	 * 
+	 * @param transform
+	 * @return the result of the (simple) recursive transform operation
+	 */
+	public <R> R transform(Transform<?, R> transform) {
+		return transform(transform, c -> {}, 1);
+	}
 
 }

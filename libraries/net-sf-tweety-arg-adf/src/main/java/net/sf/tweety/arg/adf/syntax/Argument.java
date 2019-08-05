@@ -18,13 +18,12 @@
  */
 package net.sf.tweety.arg.adf.syntax;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.graphs.Node;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * An immutable representation of an ADF argument
@@ -32,26 +31,21 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
  * @author Mathias Hofer
  *
  */
-public class Argument implements AcceptanceCondition, Formula, Node {
+public class Argument extends AcceptanceCondition implements Formula, Node {
 
 	private String name;
 	
 	/**
-	 * Creates a new argument.
-	 * @param name the name of the argument
+	 * @param name
 	 */
 	public Argument(String name) {
+		super();
 		this.name = name;
 	}
 
 	@Override
 	public Stream<Argument> arguments() {
 		return Stream.of(this);
-	}
-
-	@Override
-	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		return argumentMap.apply(this);
 	}
 
 	@Override
@@ -66,5 +60,13 @@ public class Argument implements AcceptanceCondition, Formula, Node {
 	@Override
 	public String toString() {
 		return name;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.arg.adf.syntax.Transform, java.util.function.Consumer)
+	 */
+	@Override
+	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
+		return transform.transformArgument(consumer, this, polarity);
 	}
 }

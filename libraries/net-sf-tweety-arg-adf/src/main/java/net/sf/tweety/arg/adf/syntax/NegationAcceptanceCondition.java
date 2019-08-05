@@ -18,29 +18,33 @@
  */
 package net.sf.tweety.arg.adf.syntax;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
-
-public class NegationAcceptanceCondition implements AcceptanceCondition {
+public class NegationAcceptanceCondition extends AcceptanceCondition {
 
 	private AcceptanceCondition subcondition;
-	
+
 	public NegationAcceptanceCondition(AcceptanceCondition subcondition) {
 		super();
 		this.subcondition = subcondition;
 	}
-	
+
 	@Override
 	public Stream<Argument> arguments() {
 		return subcondition.arguments();
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.
+	 * arg.adf.syntax.Transform, java.util.function.Consumer)
+	 */
 	@Override
-	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		return new Negation(subcondition.toPlFormula(argumentMap));
+	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
+		return transform.transformNegation(consumer, subcondition.transform(transform, consumer, -polarity), polarity);
 	}
-	
+
 }

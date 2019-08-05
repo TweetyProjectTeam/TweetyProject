@@ -18,44 +18,40 @@
  */
 package net.sf.tweety.arg.adf.syntax;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import net.sf.tweety.logics.pl.syntax.Conjunction;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
+public class EquivalenceAcceptanceCondition extends AcceptanceCondition {
 
-public class EquivalenceAcceptanceCondition implements AcceptanceCondition{
+	private AcceptanceCondition left;
 
-	private AcceptanceCondition first;
-
-	private AcceptanceCondition second;
+	private AcceptanceCondition right;
 
 	/**
-	 * creates an equivalence formula of acceptance conditions
-	 * @param first an acceptance condition
-	 * @param second an acceptance condition
+	 * @param left
+	 * @param right
 	 */
-	public EquivalenceAcceptanceCondition(AcceptanceCondition first, AcceptanceCondition second) {
+	public EquivalenceAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
 		super();
-		this.first = first;
-		this.second = second;
+		this.left = left;
+		this.right = right;
 	}
 
 	@Override
 	public Stream<Argument> arguments() {
-		return Stream.concat(first.arguments(), second.arguments());
+		return Stream.concat(left.arguments(), right.arguments());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.
+	 * arg.adf.syntax.Transform, java.util.function.Consumer)
+	 */
 	@Override
-	public PlFormula toPlFormula(Function<Argument, PlFormula> argumentMap) {
-		PlFormula a = first.toPlFormula(argumentMap);
-		PlFormula b = second.toPlFormula(argumentMap);
-		Conjunction conj = new Conjunction();
-		conj.add(new Disjunction(new Negation(a), b));
-		conj.add(new Disjunction(a, new Negation(b)));
-		return conj;
+	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
+		return transform.transformEquivalence(consumer, left.transform(transform, consumer, 0),
+				right.transform(transform, consumer, 0), polarity);
 	}
-	
 }

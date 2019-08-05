@@ -59,11 +59,23 @@ public class BenchmarkResult {
 	 */
 	private long endTimeInMillis;
 	
+	/**
+	 * @param exception
+	 */
 	public BenchmarkResult(Throwable exception) {
 		super();
 		this.exception = exception;
 	}
-	
+
+	/**
+	 * @param exception
+	 * @param modelCount
+	 * @param modelDifference
+	 * @param correctModels
+	 * @param correct
+	 * @param startTimeInMillis
+	 * @param endTimeInMillis
+	 */
 	public BenchmarkResult(int modelCount, int modelDifference, int correctModels, boolean correct,
 			long startTimeInMillis, long endTimeInMillis) {
 		super();

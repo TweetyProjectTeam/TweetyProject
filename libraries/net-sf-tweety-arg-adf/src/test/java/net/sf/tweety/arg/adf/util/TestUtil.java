@@ -40,10 +40,11 @@ public class TestUtil {
 	 * single one. Allows us to keep the number of files per instance much lower
 	 * since we must not store the models in a separate file for each semantics.
 	 * 
-	 * @param dir  the path
-	 * @param semantics the used semantics
-	 * @param outputExtension some string
-	 * @throws IOException if some IO issue occurs
+	 * @param path
+	 *            the path
+	 * @param semantics
+	 * @param outputExtension
+	 * @throws IOException
 	 */
 	public static void mergeSolutionFiles(String dir, String[] semantics, String outputExtension) throws IOException {
 		File[] instances = new File(dir).listFiles((File f, String name) -> name.endsWith(".adf"));
@@ -75,9 +76,9 @@ public class TestUtil {
 	 * Reads all models from the given solution file and groups them by their
 	 * semantics.
 	 * 
-	 * @param file the solution file
+	 * @param instance
 	 * @return a mapping of all the models per semantic
-	 * @throws IOException if an IO issue occurs
+	 * @throws IOException
 	 */
 	public static Map<String, List<Map<String, Boolean>>> readSolutionFile(File file) throws IOException {
 		Map<String, List<Map<String, Boolean>>> modelsPerSemantic = new HashMap<String, List<Map<String, Boolean>>>();
@@ -124,9 +125,9 @@ public class TestUtil {
 	 * Checks if the different representations of interpretations are equal,
 	 * i.e. all assignments are equal.
 	 * 
-	 * @param interpretation some interpretation
-	 * @param map some map from string to boolean
-	 * @return true if the different representations of interpretations are equal
+	 * @param interpretation
+	 * @param map
+	 * @return
 	 */
 	public static boolean equalInterpretations(Interpretation interpretation, Map<String, Boolean> map) {
 		return interpretation.arguments().allMatch(a -> interpretation.get(a) == map.get(a.getName()));

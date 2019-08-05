@@ -111,6 +111,7 @@ public class PlCollectors {
 			return left;
 		});
 	}
+	
 
 	private static class MapAccumulator<R extends AssociativePlFormula, T> implements BiConsumer<R, T> {
 

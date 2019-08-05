@@ -34,10 +34,10 @@ public class Link{
 	private LinkType linkType;
 
 	/**
-	 * Creates a new link. 
-	 * @param from some argument
-	 * @param to some argument
-	 * @param linkType some link type
+	 * @param from
+	 * @param to
+	 * @param attacking
+	 * @param supporting
 	 */
 	public Link(Argument from, Argument to, LinkType linkType) {
 		super();
@@ -58,13 +58,29 @@ public class Link{
 		return linkType;
 	}
 	
+	public boolean isAttacking() {
+		return linkType == LinkType.ATTACKING;
+	}
+	
+	public boolean isSupporting() {
+		return linkType == LinkType.SUPPORTING;
+	}
+	
+	public boolean isDependent() {
+		return linkType == LinkType.DEPENDENT;
+	}
+	
+	public boolean isRedundant() {
+		return linkType == LinkType.REDUNDANT;
+	}
+	
 	/**
 	 * Delegates to linkType.isBipolar()
 	 * 
-	 * @return true iff the link is bipolar
+	 * @return
 	 */
 	public boolean isBipolar() {
-		return linkType.isBipolar();
+		return linkType != LinkType.DEPENDENT;
 	}
 
 	/* (non-Javadoc)

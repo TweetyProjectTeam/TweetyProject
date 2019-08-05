@@ -21,10 +21,6 @@ package net.sf.tweety.arg.adf.semantics;
 public enum LinkType{
 
 	DEPENDENT, SUPPORTING, ATTACKING, REDUNDANT;
-
-	public boolean isBipolar() {
-		return this != DEPENDENT;
-	}
 	
 	public static LinkType get(boolean attacking, boolean supporting) {
 		if (attacking && supporting) {

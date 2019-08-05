@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package net.sf.tweety.arg.adf.reasoner;
 
 import java.util.Collection;
@@ -11,15 +29,19 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
+/**
+ * 
+ * @author Mathias Hofer
+ *
+ */
 public class AdmissibleInterpretationReasoner extends AbstractDialecticalFrameworkReasoner {
 
 	private IncrementalSatSolver solver;
 
 	/**
-	 * Creates a new reasoner.
-	 * @param solver an incremental SAT solver
+	 * @param solver
 	 */
-	public AdmissibleInterpretationReasoner(IncrementalSatSolver solver) {
+	public <T extends SatSolverState> AdmissibleInterpretationReasoner(IncrementalSatSolver solver) {
 		super();
 		this.solver = solver;
 	}
@@ -27,23 +49,21 @@ public class AdmissibleInterpretationReasoner extends AbstractDialecticalFramewo
 	@Override
 	public Collection<Interpretation> getModels(AbstractDialecticalFramework adf) {
 		SatEncoding enc = new SatEncoding(adf);
-		Interpretation interpretation = new Interpretation(adf);
-		SatSolverState state = solver.createState();
-		state.add(enc.conflictFreeInterpretation());
-		state.add(enc.largerInterpretation(interpretation));
 		Collection<Interpretation> models = new LinkedList<Interpretation>();
+		Interpretation interpretation = new Interpretation(adf);
 		models.add(interpretation);
-		int count = 0;
-		while ((interpretation = existsAdm(adf, new Interpretation(adf), state, enc)) != null) {
-			state.add(enc.refineUnequal(interpretation));
-			System.out.println(++count + ": " + interpretation);
-			models.add(interpretation);
-		}
-		System.out.println("done");
-		try {
-			state.close();
+		try (SatSolverState state = solver.createState()) {
+			state.add(enc.conflictFreeInterpretation());
+			state.add(enc.bipolar());
+			if (!adf.bipolar()) {
+				state.add(enc.kBipolar(interpretation));
+			}
+			state.add(enc.largerInterpretation(interpretation));
+			while ((interpretation = existsAdm(adf, new Interpretation(adf), state, enc)) != null) {
+				state.add(enc.refineUnequal(interpretation));
+				models.add(interpretation);
+			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return models;
@@ -56,30 +76,28 @@ public class AdmissibleInterpretationReasoner extends AbstractDialecticalFramewo
 
 	private Interpretation existsAdm(AbstractDialecticalFramework adf, Interpretation interpretation,
 			SatSolverState state, SatEncoding enc) {
-//		Collection<PlFormula> clauses = new HashSet<PlFormula>(c);
-//		clauses.addAll(enc.largerInterpretation(interpretation));
-		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = solver.getWitness(state);
+		// Collection<PlFormula> clauses = new HashSet<PlFormula>(c);
+		// clauses.addAll(enc.largerInterpretation(interpretation));
+		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = state.witness();
 		Interpretation result = null;
 		while (witness != null) {
 			result = enc.interpretationFromWitness(witness);
-			SatSolverState newState = solver.createState();
-			Collection<Disjunction> verifyAdmissible = enc.verifyAdmissible(result);
-			newState.add(verifyAdmissible);
-			boolean sat = solver.isSatisfiable(newState);
-			try {
-				newState.close();
+			try (SatSolverState newState = solver.createState()) {
+				Collection<Disjunction> verifyAdmissible = enc.verifyAdmissible(result);
+				newState.add(verifyAdmissible);
+				boolean sat = newState.satisfiable();
+
+				if (sat) {
+					Disjunction refineUnequal = enc.refineUnequal(result);
+					// System.out.println(refineUnequal);
+					state.add(refineUnequal);
+				} else {
+					return result;
+				}
+				witness = state.witness();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (sat) {
-				Disjunction refineUnequal = enc.refineUnequal(result);
-//				System.out.println(refineUnequal);
-				state.add(refineUnequal);
-			} else {
-				return result;
-			}
-			witness = solver.getWitness(state);
 		}
 		return null;
 	}

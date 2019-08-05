@@ -16,36 +16,12 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.util;
-
-import java.util.function.Supplier;
+package net.sf.tweety.arg.adf.reasoner;
 
 /**
- * Delegates the first get() call to the given supplier and stores its result in
- * cache. Consecutive calls return the cached result, therefore computation is
- * only done once. Does not maintain a reference to the delegate once its result
- * is computed.
- * 
- * @author Mathias Hofer
+ * @author Mathias
  *
  */
-public class CacheSupplier<T> implements Supplier<T> {
-
-	private T cache;
-
-	private Supplier<T> delegate;
-
-	public CacheSupplier(Supplier<T> delegate) {
-		this.delegate = delegate;
-	}
-
-	@Override
-	public T get() {
-		if (cache == null) {
-			cache = delegate.get();
-			delegate = null;
-		}
-		return cache;
-	}
+public class StableInterpretationReasoner {
 
 }

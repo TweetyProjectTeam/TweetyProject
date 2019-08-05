@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package net.sf.tweety.arg.adf.reasoner.test;
 
 import java.io.File;
@@ -16,7 +34,7 @@ import net.sf.tweety.arg.adf.parser.KPPADFFormatParser;
 import net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
 import net.sf.tweety.arg.adf.reasoner.AdmissibleInterpretationReasoner;
 import net.sf.tweety.arg.adf.reasoner.NaiveInterpretationReasoner;
-import net.sf.tweety.arg.adf.reasoner.SatModelReasoner;
+import net.sf.tweety.arg.adf.reasoner.ModelReasoner;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.NativeLingelingSolver;
 import net.sf.tweety.arg.adf.semantics.Interpretation;
@@ -124,15 +142,15 @@ public class ReasonerBenchmark {
 	}
 
 	public void testModelSemantics() throws IOException {
-		testAllInDirectory(new SatModelReasoner(satSolver), "mod", new File("src/test/resources/instances"),
+		testAllInDirectory(new ModelReasoner(satSolver), "mod", new File("src/test/resources/instances"),
 				DEFAULT_EXECUTOR_SERVICE);
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
-		new ReasonerBenchmark().testAdmissibleInterpretationSemantics();
-//		new ReasonerBenchmark().testNaiveInterpretationSemantics();
+//		new ReasonerBenchmark().testAdmissibleInterpretationSemantics();
+		new ReasonerBenchmark().testNaiveInterpretationSemantics();
 //		new ReasonerBenchmark().testModelSemantics();
-//		 new ReasonerBenchmark().testSingle(new SatModelReasoner(satSolver), "mod", new File("src/test/resources/instances/adfgen_nacyc_se05_a_02_s_02_b_02_t_02_x_02_c_sXOR_ABA2AF_afinput_exp_acyclic_depvary_step1_batch_yyy03_10_21.apx.adf"),
+//		 new ReasonerBenchmark().testSingle(new AdmissibleInterpretationReasoner(satSolver), "adm", new File("src/test/resources/instances/adfgen_nacyc_se05_a_02_s_02_b_02_t_02_x_02_c_sXOR_ABA2AF_afinput_exp_acyclic_depvary_step1_batch_yyy03_10_21.apx.adf"),
 //				DEFAULT_EXECUTOR_SERVICE);
 		
 	}

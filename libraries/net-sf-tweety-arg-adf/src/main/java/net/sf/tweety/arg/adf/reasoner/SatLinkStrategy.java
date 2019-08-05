@@ -19,14 +19,14 @@
 package net.sf.tweety.arg.adf.reasoner;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import net.sf.tweety.arg.adf.semantics.Link;
 import net.sf.tweety.arg.adf.semantics.LinkType;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.util.Cache;
+import net.sf.tweety.arg.adf.syntax.DefinitionalCNFTransform;
 import net.sf.tweety.logics.pl.sat.SatSolver;
-import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
@@ -49,17 +49,17 @@ public class SatLinkStrategy implements LinkStrategy {
 
 	@Override
 	public Link compute(AbstractDialecticalFramework adf, Argument a, Argument b) {
-		Cache<Argument,PlFormula> cache = new Cache<Argument,PlFormula>(arg -> new Proposition(arg.getName()));
-		PlFormula fromPl = a.toPlFormula(cache);
-		PlFormula toAccPl = adf.getAcceptanceCondition(b).toPlFormula(cache);
-		boolean attacking = isAttacking(fromPl, toAccPl);
-		boolean supporting = isSupporting(fromPl, toAccPl);
+		DefinitionalCNFTransform transform = new DefinitionalCNFTransform(arg -> new Proposition(arg.getName()));
+		Collection<Disjunction> toAcc = new LinkedList<Disjunction>();
+		PlFormula fromPl = a.transform(transform);
+		Proposition toAccName = adf.getAcceptanceCondition(b).collect(transform, Collection::add, toAcc);
+		boolean attacking = isAttacking(fromPl, toAccName, new LinkedList<PlFormula>(toAcc));
+		boolean supporting = isSupporting(fromPl, toAccName, new LinkedList<PlFormula>(toAcc));
 		LinkType linkType = LinkType.get(attacking, supporting);
 		return new Link(a, b, linkType);
 	}
 
-	private boolean isAttacking(PlFormula from, PlFormula toAcc) {
-		Collection<PlFormula> clauses = new Conjunction();
+	private boolean isAttacking(PlFormula from, PlFormula toAcc, Collection<PlFormula> clauses) {
 		clauses.add(new Negation(toAcc));
 		clauses.add(new Disjunction(toAcc, new Negation(from)));
 
@@ -67,8 +67,7 @@ public class SatLinkStrategy implements LinkStrategy {
 		return !sat;
 	}
 
-	private boolean isSupporting(PlFormula from, PlFormula toAcc) {
-		Collection<PlFormula> clauses = new Conjunction();
+	private boolean isSupporting(PlFormula from, PlFormula toAcc, Collection<PlFormula> clauses) {
 		clauses.add(new Negation(toAcc));
 		clauses.add(new Disjunction(toAcc, from));
 
