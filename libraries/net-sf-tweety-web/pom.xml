@@ -32,6 +32,25 @@
     		<groupId>org.glassfish.jersey.media</groupId>
     		<artifactId>jersey-media-json-jettison</artifactId>
    		</dependency>        
+   		<dependency>
+    		<groupId>org.glassfish.jersey.inject</groupId>
+    		<artifactId>jersey-hk2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>2.3.0.1</version>
+		</dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -57,7 +76,7 @@
 
 
     <properties>
-        <jersey.version>2.9</jersey.version>
+        <jersey.version>2.29</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

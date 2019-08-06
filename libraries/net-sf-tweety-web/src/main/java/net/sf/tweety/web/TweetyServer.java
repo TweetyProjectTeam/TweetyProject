@@ -34,7 +34,7 @@ import java.net.URI;
 public class TweetyServer {
 	
     // Base URI of this server
-    public static final String BASE_URI = "http://192.168.0.2:8080/tweety/";//"http://192.168.0.2:8080/tweety/"; 
+    public static final String BASE_URI = "http://192.168.0.2:8080/tweety/";//"http://141.26.208.49:8080/tweety/"; 
     // Log file of this server
     private static final String LOG = "tweetyserver.log";
      
@@ -48,7 +48,7 @@ public class TweetyServer {
     	// gather Tweety services (exposed as JAX-RS resources)
     	TweetyServer.log("server", "Initiliazing TweetyServer...");
     	final ResourceConfig resourceConfig = new ResourceConfig().packages("net.sf.tweety.web.services");
-    	resourceConfig.register(CorsResponseFilter.class);
+    	resourceConfig.register(new CorsResponseFilter());
     	TweetyServer.log("server", "Starting TweetyServer...");
         // start server    	
         GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), resourceConfig);        
