@@ -26,6 +26,7 @@ import net.sf.tweety.commons.QuadrupleSetSignature;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Functor;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
@@ -150,10 +151,10 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 			thirdSet.add((Functor)obj);
 			return;
 		}
-		if(obj instanceof FolFormula){
-			this.addAll(((FolFormula)obj).getTerms(Constant.class));
-			this.addAll(((FolFormula)obj).getPredicates());
-			this.addAll(((FolFormula)obj).getFunctors());
+		if(obj instanceof RelationalFormula){
+			this.addAll(((RelationalFormula)obj).getTerms(Constant.class));
+			this.addAll(((RelationalFormula)obj).getPredicates());
+			this.addAll(((RelationalFormula)obj).getFunctors());
 			return;
 		}
 		throw new IllegalArgumentException("Class " + obj.getClass() + " of parameter is unsupported.");
