@@ -6,6 +6,7 @@ import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.Proposition;
 
 //TODO contract - only clauses - no special formulae (i.e. constants)
 public interface SatSolverState extends AutoCloseable {
@@ -16,6 +17,8 @@ public interface SatSolverState extends AutoCloseable {
 	
 	public Interpretation<PlBeliefSet, PlFormula> witness();
 	
+	public void assume(Proposition proposition, boolean value);
+		
 	public boolean add(Disjunction clause);
 	
 	public boolean add(Collection<Disjunction> clauses);

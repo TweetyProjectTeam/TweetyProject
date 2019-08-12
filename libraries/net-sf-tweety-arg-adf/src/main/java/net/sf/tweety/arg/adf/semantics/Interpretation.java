@@ -20,6 +20,7 @@ package net.sf.tweety.arg.adf.semantics;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -38,7 +39,7 @@ import net.sf.tweety.commons.AbstractInterpretation;
  *
  */
 public class Interpretation extends AbstractInterpretation<AbstractDialecticalFramework, Argument>
-		implements Comparable<Interpretation> {
+		implements Comparable<Interpretation>, Iterable<Argument> {
 
 	private Set<Argument> satisfied;
 
@@ -248,6 +249,14 @@ public class Interpretation extends AbstractInterpretation<AbstractDialecticalFr
 			return null;
 		}
 		throw new IllegalArgumentException(a + " not labeled in this interpretation.");
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Iterable#iterator()
+	 */
+	@Override
+	public Iterator<Argument> iterator() {
+		return Stream.concat(satisfied(), Stream.concat(unsatisfied(), undecided())).iterator();
 	}
 
 }

@@ -32,9 +32,12 @@ import java.util.concurrent.Executors;
 
 import net.sf.tweety.arg.adf.parser.KPPADFFormatParser;
 import net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
-import net.sf.tweety.arg.adf.reasoner.AdmissibleInterpretationReasoner;
-import net.sf.tweety.arg.adf.reasoner.NaiveInterpretationReasoner;
+import net.sf.tweety.arg.adf.reasoner.AdmissibleReasoner;
+import net.sf.tweety.arg.adf.reasoner.CompleteReasoner;
+import net.sf.tweety.arg.adf.reasoner.GroundReasoner;
 import net.sf.tweety.arg.adf.reasoner.ModelReasoner;
+import net.sf.tweety.arg.adf.reasoner.NaiveReasoner;
+import net.sf.tweety.arg.adf.reasoner.PreferredReasoner;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.NativeLingelingSolver;
 import net.sf.tweety.arg.adf.semantics.Interpretation;
@@ -49,7 +52,7 @@ public class ReasonerBenchmark {
 		SatSolver.setDefaultSolver(new NativeLingelingSolver());
 	}
 
-	public static final String[] ALL_SEMANTICS = { "mod", "cf", "nai", "adm", "com", "prf", "grd" };
+	public static final String[] ALL_SEMANTICS = { "mod", "cf", "nai", "adm", "com", "prf", "grd", "stm" };
 
 	private KPPADFFormatParser parser = new KPPADFFormatParser();
 
@@ -132,15 +135,30 @@ public class ReasonerBenchmark {
 	}
 	
 	public void testAdmissibleInterpretationSemantics() throws IOException {
-		testAllInDirectory(new AdmissibleInterpretationReasoner(satSolver), "adm", new File("src/test/resources/instances"),
+		testAllInDirectory(new AdmissibleReasoner(satSolver), "adm", new File("src/test/resources/instances"),
 				DEFAULT_EXECUTOR_SERVICE);
 	}
 
 	public void testNaiveInterpretationSemantics() throws IOException {
-		testAllInDirectory(new NaiveInterpretationReasoner(satSolver), "nai", new File("src/test/resources/instances"),
+		testAllInDirectory(new NaiveReasoner(satSolver), "nai", new File("src/test/resources/instances"),
 				DEFAULT_EXECUTOR_SERVICE);
 	}
+	
+	public void testPreferredInterpretationSemantics() throws IOException {
+		testAllInDirectory(new PreferredReasoner(satSolver), "prf", new File("src/test/resources/instances"),
+				DEFAULT_EXECUTOR_SERVICE);	
+	}
 
+	public void testCompleteInterpretationSemantics() throws IOException {
+		testAllInDirectory(new CompleteReasoner(satSolver), "com", new File("src/test/resources/instances"),
+				DEFAULT_EXECUTOR_SERVICE);	
+	}
+	
+	public void testGroundInterpretationSemantics() throws IOException {
+		testAllInDirectory(new GroundReasoner(satSolver), "grd", new File("src/test/resources/instances"),
+				DEFAULT_EXECUTOR_SERVICE);	
+	}
+	
 	public void testModelSemantics() throws IOException {
 		testAllInDirectory(new ModelReasoner(satSolver), "mod", new File("src/test/resources/instances"),
 				DEFAULT_EXECUTOR_SERVICE);
@@ -148,10 +166,16 @@ public class ReasonerBenchmark {
 
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 //		new ReasonerBenchmark().testAdmissibleInterpretationSemantics();
-		new ReasonerBenchmark().testNaiveInterpretationSemantics();
+//		new ReasonerBenchmark().testNaiveInterpretationSemantics();
+//		new ReasonerBenchmark().testPreferredInterpretationSemantics();
+//		new ReasonerBenchmark().testCompleteInterpretationSemantics();
+//		new ReasonerBenchmark().testGroundInterpretationSemantics();
 //		new ReasonerBenchmark().testModelSemantics();
-//		 new ReasonerBenchmark().testSingle(new AdmissibleInterpretationReasoner(satSolver), "adm", new File("src/test/resources/instances/adfgen_nacyc_se05_a_02_s_02_b_02_t_02_x_02_c_sXOR_ABA2AF_afinput_exp_acyclic_depvary_step1_batch_yyy03_10_21.apx.adf"),
+//		 new ReasonerBenchmark().testSingle(new AdmissibleReasoner(satSolver), "adm", new File("src/test/resources/instances/adfgen_nacyc_se05_a_02_s_02_b_02_t_02_x_02_c_sXOR_ABA2AF_afinput_exp_acyclic_depvary_step1_batch_yyy03_10_21.apx.adf"),
 //				DEFAULT_EXECUTOR_SERVICE);
+		
+		
+//		TestUtil.mergeSolutionFiles("C:\\Users\\Mathias\\Downloads\\adf instances\\instances", ALL_SEMANTICS, "solutions");
 		
 	}
 

@@ -157,8 +157,8 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 		 * Contains the disjunctions which were added after the last sat call
 		 * and must be added before the next sat call.
 		 */
-		private Set<Disjunction> cache = new HashSet<Disjunction>();
-
+		private Set<Disjunction> stateCache = new HashSet<Disjunction>();
+		
 		/**
 		 * Keeps track of the int representation of fresh propositions
 		 */
@@ -182,13 +182,13 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 		@Override
 		public boolean add(Collection<Disjunction> clauses) {
 			assert clauses.stream().allMatch(Disjunction::isClause);
-			return cache.addAll(clauses);
+			return stateCache.addAll(clauses);
 		}
 
 		@Override
 		public boolean add(Disjunction clause) {
 			assert clause.isClause();
-			return cache.add(clause);
+			return stateCache.add(clause);
 		}
 
 		/*
@@ -200,7 +200,7 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 		 */
 		@Override
 		public boolean remove(Disjunction clause) {
-			return cache.remove(clause);
+			return stateCache.remove(clause);
 		}
 
 		/*
@@ -232,7 +232,7 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 		@Override
 		public boolean satisfiable() {
 			// update native state
-			for (Disjunction clause : cache) {
+			for (Disjunction clause : stateCache) {
 				for (Proposition p : clause.getAtoms()) {
 					if (!propositionsToNative.containsKey(p)) {
 						propositionsToNative.put(p, nextProposition);
@@ -257,11 +257,24 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 				}
 				NativeLingelingSolver.add(handle, 0); // end of clause
 			}
-			cache.clear();
+			stateCache.clear();
 
 			boolean sat = NativeLingelingSolver.sat(handle);
 			return sat;
 		}
 
+		/* (non-Javadoc)
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.pl.syntax.Proposition, boolean)
+		 */
+		@Override
+		public void assume(Proposition proposition, boolean value) {
+			if (!propositionsToNative.containsKey(proposition)) {
+				propositionsToNative.put(proposition, nextProposition);
+				nextProposition += 1;
+			}
+			int lit = value ? propositionsToNative.get(proposition) : -propositionsToNative.get(proposition);
+			NativeLingelingSolver.assume(handle, lit);
+			NativeLingelingSolver.freeze(handle, lit);
+		}
 	}
 }

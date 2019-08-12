@@ -35,6 +35,7 @@ import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.DefinitionalCNFTransform;
 import net.sf.tweety.arg.adf.util.Cache;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
+import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.commons.util.SubsetIterator;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -67,20 +68,8 @@ public class SatEncoding {
 	 */
 	private AbstractDialecticalFramework adf;
 
-	/**
-	 * This formula ensures that the propositions s_t and s_f for an argument s
-	 * cannot both be true at the same time.
-	 * 
-	 * Store globally, since it does not depend on interpretations.
-	 * 
-	 */
-	private Collection<Disjunction> argsNotTrueAndFalse;
-
 	public SatEncoding(AbstractDialecticalFramework adf) {
 		this.adf = adf;
-		this.argsNotTrueAndFalse = adf.arguments()
-				.map(a -> new Disjunction(new Negation(trues.apply(a)), new Negation(falses.apply(a))))
-				.collect(Collectors.toList());
 	}
 
 	public Disjunction refineLarger(Interpretation interpretation) {
@@ -122,8 +111,128 @@ public class SatEncoding {
 				encoding.add(new Disjunction(new Negation(trues.apply(s)), links.apply(relation)));
 				encoding.add(new Disjunction(new Negation(falses.apply(s)), new Negation(links.apply(relation))));
 			}
+
+			// make sure that we never satisfy s_t and s_f at the same time
+			Disjunction eitherTrueOrFalse = new Disjunction(new Negation(trues.apply(s)),
+					new Negation(falses.apply(s)));
+			encoding.add(eitherTrueOrFalse);
 		}
 
+		return encoding;
+	}
+
+	public Collection<Disjunction> fixTwoValued(Interpretation interpretation) {
+		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
+
+		for (Argument a : (Iterable<Argument>) interpretation.satisfied()::iterator) {
+			Disjunction clause = new Disjunction();
+			clause.add(trues.apply(a));
+			encoding.add(clause);
+		}
+
+		for (Argument a : (Iterable<Argument>) interpretation.unsatisfied()::iterator) {
+			Disjunction clause = new Disjunction();
+			clause.add(falses.apply(a));
+			encoding.add(clause);
+		}
+
+		return encoding;
+	}
+
+	public Proposition getTrueRepresentation(Argument s) {
+		return trues.apply(s);
+	}
+
+	public Proposition getFalseRepresentation(Argument s) {
+		return falses.apply(s);
+	}
+
+	public Pair<Proposition, Collection<Disjunction>> definitionalAcc(Argument s) {
+		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
+		DefinitionalCNFTransform transform = new DefinitionalCNFTransform(r -> links.apply(adf.link(r, s)));
+		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
+		Proposition accName = acc.collect(transform, Collection::add, encoding);
+
+		return new Pair<Proposition, Collection<Disjunction>>(accName, encoding);
+	}
+
+	public Pair<Proposition, Collection<Disjunction>> verifyComplete(Interpretation interpretation, Argument s) {
+		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
+		// Cache<Argument, Proposition> vars = new Cache<Argument,
+		// Proposition>(a -> new Proposition(a.getName()));
+		Proposition resultAccName = new Proposition();
+		for (Argument a : adf) {
+			if (interpretation.isSatisfied(a)) {
+				Disjunction clause = new Disjunction();
+				clause.add(trues.apply(a));
+				encoding.add(clause);
+			}
+
+			if (interpretation.isUnsatisfied(a)) {
+				Disjunction clause = new Disjunction();
+				clause.add(falses.apply(a));
+				encoding.add(clause);
+			}
+
+			DefinitionalCNFTransform transform = new DefinitionalCNFTransform(r -> links.apply(adf.link(r, a)));
+			AcceptanceCondition acc = adf.getAcceptanceCondition(a);
+			Proposition accName = acc.collect(transform, Collection::add, encoding);
+			if (a == s) {
+				resultAccName = accName;
+			}
+			// link the arguments to their acceptance conditions
+			Disjunction acSat = new Disjunction(new Negation(trues.apply(a)), accName);
+			Disjunction acUnsat = new Disjunction(new Negation(falses.apply(a)), new Negation(accName));
+			encoding.add(acSat);
+			encoding.add(acUnsat);
+
+			// draw connection between argument and outgoing links
+			for (Link relation : (Iterable<Link>) adf.linksToChildren(a)::iterator) {
+				encoding.add(new Disjunction(new Negation(trues.apply(a)), links.apply(relation)));
+				encoding.add(new Disjunction(new Negation(falses.apply(a)), new Negation(links.apply(relation))));
+			}
+
+			// make sure that we never satisfy s_t and s_f at the same time
+			Disjunction eitherTrueOrFalse = new Disjunction(new Negation(trues.apply(a)),
+					new Negation(falses.apply(a)));
+			encoding.add(eitherTrueOrFalse);
+		}
+		return new Pair<Proposition, Collection<Disjunction>>(resultAccName, encoding);
+	}
+
+	public Collection<Disjunction> smallerInterpretation(Interpretation interpretation) {
+		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
+		Disjunction tryUndecided = new Disjunction();
+		for (Argument a : interpretation) {
+			// fix undecided
+			if (interpretation.isUndecided(a)) {
+				Disjunction clause1 = new Disjunction();
+				clause1.add(new Negation(trues.apply(a)));
+				encoding.add(clause1);
+
+				Disjunction clause2 = new Disjunction();
+				clause2.add(new Negation(falses.apply(a)));
+				encoding.add(clause2);
+			}
+			else {
+				//try to make undecided
+				Proposition undecideA = new Proposition("tu_"+a.getName());
+				tryUndecided.add(undecideA);
+				
+				Disjunction clause1 = new Disjunction();
+				clause1.add(new Negation(undecideA));
+				clause1.add(new Negation(trues.apply(a)));
+				clause1.add(falses.apply(a));
+				encoding.add(clause1);
+				
+				Disjunction clause2 = new Disjunction();
+				clause2.add(new Negation(undecideA));
+				clause2.add(trues.apply(a));
+				clause2.add(new Negation(falses.apply(a)));
+				encoding.add(clause1);
+			}
+		}
+		encoding.add(tryUndecided);
 		return encoding;
 	}
 
@@ -134,7 +243,6 @@ public class SatEncoding {
 	 */
 	public Collection<Disjunction> largerInterpretation(Interpretation interpretation) {
 		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
-		encoding.addAll(argsNotTrueAndFalse);
 
 		for (Argument a : (Iterable<Argument>) interpretation.satisfied()::iterator) {
 			Disjunction clause = new Disjunction();

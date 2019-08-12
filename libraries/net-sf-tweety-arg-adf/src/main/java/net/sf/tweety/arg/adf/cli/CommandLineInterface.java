@@ -25,9 +25,9 @@ import java.util.Map;
 
 import net.sf.tweety.arg.adf.parser.KPPADFFormatParser;
 import net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
-import net.sf.tweety.arg.adf.reasoner.AdmissibleInterpretationReasoner;
+import net.sf.tweety.arg.adf.reasoner.AdmissibleReasoner;
 import net.sf.tweety.arg.adf.reasoner.ModelReasoner;
-import net.sf.tweety.arg.adf.reasoner.NaiveInterpretationReasoner;
+import net.sf.tweety.arg.adf.reasoner.NaiveReasoner;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.NativeLingelingSolver;
 import net.sf.tweety.arg.adf.semantics.Interpretation;
@@ -54,8 +54,8 @@ public class CommandLineInterface {
 		
 		// cf|nai|adm|com|prf|grd|mod
 		reasonerBySemantics.put("mod", new ModelReasoner(satSolver));
-		reasonerBySemantics.put("nai", new NaiveInterpretationReasoner(satSolver));
-		reasonerBySemantics.put("adm", new AdmissibleInterpretationReasoner(satSolver));
+		reasonerBySemantics.put("nai", new NaiveReasoner(satSolver));
+		reasonerBySemantics.put("adm", new AdmissibleReasoner(satSolver));
 	}
 
 	public static void main(String[] args) {

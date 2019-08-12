@@ -25,9 +25,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 
@@ -59,10 +61,15 @@ public class TestUtil {
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(new FileInputStream(solutionFile)));
 					String line = null;
+					Set<String> last = new HashSet<String>();
 					while ((line = reader.readLine()) != null) {
 						// filter out all non-model output
 						if (line.matches("(\\s*(t|f|u)\\([a-zA-Z0-9]*\\)\\s*)+")) {
-							out.println(line);
+							// only print distinct interpretations
+							if (!last.contains(line)) {
+								out.println(line);
+								last.add(line);
+							}
 						}
 					}
 					reader.close();

@@ -21,17 +21,17 @@ package net.sf.tweety.arg.adf.reasoner;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.syntax.PlFormulaTransform;
-import net.sf.tweety.arg.adf.syntax.Transform;
+import net.sf.tweety.arg.adf.syntax.DefinitionalCNFTransform;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
-import net.sf.tweety.logics.pl.syntax.Equivalence;
+import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
@@ -61,9 +61,16 @@ public class ModelReasoner extends AbstractDialecticalFrameworkReasoner {
 	 * sf.tweety.arg.adf.syntax.AbstractDialecticalFramework)
 	 */
 	@Override
-	public Collection<Interpretation> getModels(AbstractDialecticalFramework bbase) {
-		Transform<?, PlFormula> transform = new PlFormulaTransform(arg -> new Proposition(arg.getName()));
-		PlBeliefSet encoding = this.getPropositionalCharacterisation(bbase, transform);
+	public Collection<Interpretation> getModels(AbstractDialecticalFramework adf) {
+		Collection<PlFormula> encoding = new LinkedList<PlFormula>();
+		DefinitionalCNFTransform transform = new DefinitionalCNFTransform(arg -> new Proposition(arg.getName()));		
+		for (Argument a : adf) {
+			Proposition accName = adf.getAcceptanceCondition(a).collect(transform, Collection::add, encoding);
+			Proposition arg = a.transform(transform);
+			encoding.add(new Disjunction(new Negation(accName), arg));
+			encoding.add(new Disjunction(accName, new Negation(arg)));
+		}
+		
 		Set<Interpretation> result = new HashSet<Interpretation>();
 
 		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = null;
@@ -72,7 +79,7 @@ public class ModelReasoner extends AbstractDialecticalFrameworkReasoner {
 
 			// we build a (complete) two-valued interpretation
 			Map<Argument, Boolean> model = new HashMap<Argument, Boolean>();
-			for (Argument a : bbase) {
+			for (Argument a : adf) {
 				PlFormula prop = a.transform(transform);
 				if (witness.satisfies(prop)) {
 					literals.add(prop);
@@ -99,13 +106,20 @@ public class ModelReasoner extends AbstractDialecticalFrameworkReasoner {
 	 * .tweety.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Interpretation getModel(AbstractDialecticalFramework bbase) {
-		Transform<?, PlFormula> transform = new PlFormulaTransform(arg -> new Proposition(arg.getName()));
-		PlBeliefSet prop = this.getPropositionalCharacterisation(bbase, transform);
-		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = this.solver.getWitness(prop);
+	public Interpretation getModel(AbstractDialecticalFramework adf) {
+		Collection<PlFormula> encoding = new LinkedList<PlFormula>();
+		DefinitionalCNFTransform transform = new DefinitionalCNFTransform(arg -> new Proposition(arg.getName()));		
+		for (Argument a : adf) {
+			Proposition accName = adf.getAcceptanceCondition(a).collect(transform, Collection::add, encoding);
+			Proposition arg = a.transform(transform);
+			encoding.add(new Disjunction(new Negation(accName), arg));
+			encoding.add(new Disjunction(accName, new Negation(arg)));
+		}
+		
+		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = this.solver.getWitness(encoding);
 		Map<Argument, Boolean> model = new HashMap<Argument, Boolean>();
 		// we build a (complete) two-valued interpretation
-		for (Argument a : bbase) {
+		for (Argument a : adf) {
 			if (witness.satisfies(a.transform(transform))) {
 				model.put(a, true);
 			} else {
@@ -113,20 +127,6 @@ public class ModelReasoner extends AbstractDialecticalFrameworkReasoner {
 			}
 		}
 		return new Interpretation(model); // the first found model
-	}
-
-	/**
-	 * @param aaf
-	 * @return The propositional encoding of the model semantics.
-	 */
-	public PlBeliefSet getPropositionalCharacterisation(AbstractDialecticalFramework aaf,
-			Transform<?, PlFormula> cache) {
-		PlBeliefSet beliefSet = new PlBeliefSet();
-		for (Argument a : aaf) {
-			Equivalence equiv = new Equivalence(a.transform(cache), aaf.getAcceptanceCondition(a).transform(cache));
-			beliefSet.add(equiv);
-		}
-		return beliefSet;
 	}
 
 }

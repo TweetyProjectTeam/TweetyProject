@@ -34,14 +34,14 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
  * @author Mathias Hofer
  *
  */
-public class AdmissibleInterpretationReasoner extends AbstractDialecticalFrameworkReasoner {
+public class AdmissibleReasoner extends AbstractDialecticalFrameworkReasoner {
 
 	private IncrementalSatSolver solver;
 
 	/**
 	 * @param solver
 	 */
-	public <T extends SatSolverState> AdmissibleInterpretationReasoner(IncrementalSatSolver solver) {
+	public <T extends SatSolverState> AdmissibleReasoner(IncrementalSatSolver solver) {
 		super();
 		this.solver = solver;
 	}
@@ -76,28 +76,27 @@ public class AdmissibleInterpretationReasoner extends AbstractDialecticalFramewo
 
 	private Interpretation existsAdm(AbstractDialecticalFramework adf, Interpretation interpretation,
 			SatSolverState state, SatEncoding enc) {
-		// Collection<PlFormula> clauses = new HashSet<PlFormula>(c);
-		// clauses.addAll(enc.largerInterpretation(interpretation));
 		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = state.witness();
 		Interpretation result = null;
-		while (witness != null) {
-			result = enc.interpretationFromWitness(witness);
-			try (SatSolverState newState = solver.createState()) {
-				Collection<Disjunction> verifyAdmissible = enc.verifyAdmissible(result);
-				newState.add(verifyAdmissible);
+		try (SatSolverState newState = solver.createState()) {
+//			newState.add(enc.bipolar());
+//			if (!adf.bipolar()) {
+//				newState.add(enc.kBipolar(interpretation));
+//			}
+			while (witness != null) {
+				result = enc.interpretationFromWitness(witness);
+				newState.add(enc.verifyAdmissible(result));
 				boolean sat = newState.satisfiable();
-
 				if (sat) {
 					Disjunction refineUnequal = enc.refineUnequal(result);
-					// System.out.println(refineUnequal);
 					state.add(refineUnequal);
 				} else {
 					return result;
 				}
 				witness = state.witness();
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}

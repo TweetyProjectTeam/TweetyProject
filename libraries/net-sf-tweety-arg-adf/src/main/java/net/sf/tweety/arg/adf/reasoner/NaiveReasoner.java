@@ -31,14 +31,14 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
-public class NaiveInterpretationReasoner extends AbstractDialecticalFrameworkReasoner {
+public class NaiveReasoner extends AbstractDialecticalFrameworkReasoner {
 
 	/**
 	 * A SAT solver
 	 */
 	private IncrementalSatSolver solver;
 
-	public NaiveInterpretationReasoner(IncrementalSatSolver solver) {
+	public NaiveReasoner(IncrementalSatSolver solver) {
 		this.solver = solver;
 	}
 
