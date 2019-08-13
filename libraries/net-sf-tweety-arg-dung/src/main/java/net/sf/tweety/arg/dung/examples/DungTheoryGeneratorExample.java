@@ -34,7 +34,7 @@ import net.sf.tweety.arg.dung.writer.ApxWriter;
  * 
  * @author Anna Gessler
  */
-public class DungTheoyGeneratorExample {
+public class DungTheoryGeneratorExample {
 	public static void main(String[] args) throws IOException{
 		ApxWriter writer = new ApxWriter();
 		String path = "/home/anna/";

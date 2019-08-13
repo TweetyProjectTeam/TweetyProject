@@ -16,13 +16,13 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.prob.examples;
+package net.sf.tweety.arg.rankings.examples;
 
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.arg.prob.reasoner.ProbabilisticRankingReasoner;
+import net.sf.tweety.arg.rankings.reasoner.ProbabilisticRankingReasoner;
 import net.sf.tweety.math.probability.Probability;
 
 /**
