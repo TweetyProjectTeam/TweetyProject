@@ -63,6 +63,7 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 		//Use computed valuations as values for argument ranking
 		//Note: The order of valuations v[i] is the same as the ordner of DungTheory.iterator()
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
+		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
 		int i = 0;
 		for (Argument a : base) 
 			ranking.put(a, valuations[i++]);

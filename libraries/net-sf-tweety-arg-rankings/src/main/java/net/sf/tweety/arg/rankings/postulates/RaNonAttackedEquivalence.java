@@ -56,7 +56,7 @@ public class RaNonAttackedEquivalence extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
-		if (dt.getAttackers(a).isEmpty() && dt.getAttackers(b).isEmpty())
+		if (dt.getAttackers(a).isEmpty() && dt.getAttackers(b).isEmpty() && !ranking.isIncomparable(a, b))
 			return ranking.compare(a, b) == 0;
 		return true;
 	}

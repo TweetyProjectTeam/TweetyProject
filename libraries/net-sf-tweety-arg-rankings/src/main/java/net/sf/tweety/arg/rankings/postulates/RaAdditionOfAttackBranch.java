@@ -83,9 +83,11 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 		dt.add(new Attack(t1,a_clone));
 		dt.add(new Attack(t2,t1));
 		dt.add(new Attack(t3,t2));
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
 		
-		return ranking.isStrictlyLessAcceptableThan(a_clone, a_old);
+		ArgumentRanking ranking = ev.getModel(dt);
+		if (ranking.isIncomparable(a_clone, a_old))
+				return true;
+		return ranking.isStrictlyLessAcceptableThan(a_clone, a_old) ;
 	}
 
 	

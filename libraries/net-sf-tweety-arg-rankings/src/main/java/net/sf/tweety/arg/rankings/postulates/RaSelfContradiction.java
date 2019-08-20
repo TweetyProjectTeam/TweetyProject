@@ -57,9 +57,9 @@ public class RaSelfContradiction extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
 		
-		if (dt.isAttackedBy(a, a) && !dt.isAttackedBy(b, b))
+		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
+		if (dt.isAttackedBy(a, a) && !dt.isAttackedBy(b, b) && !ranking.isIncomparable(a, b))
 			return ranking.isStrictlyLessAcceptableThan(a, b);
 		return true;
 		

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import net.sf.tweety.arg.dung.semantics.LatticeArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
@@ -36,60 +37,72 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
  * 
  * @author Anna Gessler
  */
-public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
+public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
-		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory base) {
+	public LatticeArgumentRanking getModel(DungTheory kb) {
 		// Maximum length of linear discussions (paths)
 		int i_max = 10;
 
 		ArrayList<NumericalArgumentRanking> rankings = new ArrayList<NumericalArgumentRanking>();
 		for (int i = 1; i <= i_max; i++) {
 			NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-			for (Argument a : base) {
-				double discussion_count = getNumberOfPathsOfLength(base, a, i);
+			ranking.setSortingType(NumericalArgumentRanking.SortingType.LEXICOGRAPHIC);
+			for (Argument a : kb) {
+				double discussion_count = getNumberOfPathsOfLength(kb, a, i);
 				if ((i & 1) != 0)
 					discussion_count = -discussion_count; // odd value => negative discussion count
-				ranking.put(a, discussion_count);
+				ranking.put(a, discussion_count + 0.0);
 			}
 			rankings.add(ranking);
 		}
-		
-		//Return the ranking with the least amount of equal arguments
-		int max =  1;
-		NumericalArgumentRanking bestRanking = rankings.get(0);
-		for (int i = 1; i < rankings.size(); i++) {
-			int ranking_unique_values = new HashSet<Object>(rankings.get(i).values()).size();
-			if (ranking_unique_values > max) {
-				max = ranking_unique_values; 
-				bestRanking = rankings.get(i);
+
+		LatticeArgumentRanking finalRanking = new LatticeArgumentRanking(kb);
+		for (Argument a : kb) {
+			for (Argument b : kb) {
+				int i = 1;
+				for (; i < i_max; i++) {
+					NumericalArgumentRanking ithRanking = rankings.get(i);
+					if (ithRanking.isStrictlyLessAcceptableThan(a, b)) {
+						finalRanking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+						break;
+					} else if (ithRanking.isStrictlyLessAcceptableThan(b, a)) {
+						finalRanking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+						break;
+					}
+					else if (i == i_max-1) {
+						finalRanking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+						finalRanking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+					}
+				}
 			}
 		}
-		return bestRanking;
+		return finalRanking;
 	}
 
 	/**
-	 * Returns the number of linear discussions of the given length in the given DungTheory for
-	 * the given argument.
+	 * Returns the number of linear discussions of the given length in the given
+	 * DungTheory for the given argument.
+	 * 
 	 * @param base the abstract argumentation framework
-	 * @param a an argument
-	 * @param i length of linear discussions
+	 * @param a    an argument
+	 * @param i    length of linear discussions
 	 * @return the number of linear discussions of the given length
 	 */
 	public int getNumberOfPathsOfLength(DungTheory base, Argument a, int i) {
 		if (i == 0 || i == 1)
 			return i;
-		
+
 		HashSet<ArrayList<Argument>> paths = new HashSet<ArrayList<Argument>>();
-		
-		//add linear discussions of length 2
+
+		// add linear discussions of length 2
 		for (Argument attacker : base.getAttackers(a)) {
 			ArrayList<Argument> path = new ArrayList<Argument>();
 			path.add(a);
@@ -99,17 +112,18 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Nume
 
 		int j = 2;
 		while (j < i && !paths.isEmpty()) {
-			paths = getPathsOfHigherSize(paths, base); //recursively add linear discussions of length>2
+			paths = getPathsOfHigherSize(paths, base); // recursively add linear discussions of length>2
 			j++;
 		}
 		return paths.size();
 	}
 
 	/**
-	 * Given a set of argument paths of length i-1, this method returns a set of argument paths 
-	 * of length i for the given DungTheory. 
+	 * Given a set of argument paths of length i-1, this method returns a set of
+	 * argument paths of length i for the given DungTheory.
+	 * 
 	 * @param old_paths set of paths of length i-1
-	 * @param base the DungTheory
+	 * @param base      the DungTheory
 	 * @return a set of paths of length i
 	 */
 	public HashSet<ArrayList<Argument>> getPathsOfHigherSize(HashSet<ArrayList<Argument>> old_paths, DungTheory base) {
@@ -117,7 +131,7 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Nume
 		for (ArrayList<Argument> path : old_paths) {
 			Argument tail = path.get(path.size() - 1);
 			for (Argument attacker : base.getAttackers(tail)) {
-				if (!path.contains(attacker)) { //ignore cycles
+				if (!path.contains(attacker)) { // ignore cycles
 					ArrayList<Argument> new_path = new ArrayList<Argument>();
 					new_path.addAll(path);
 					new_path.add(attacker);

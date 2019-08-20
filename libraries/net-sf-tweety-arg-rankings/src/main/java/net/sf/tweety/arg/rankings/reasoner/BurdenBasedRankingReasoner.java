@@ -65,7 +65,7 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<Numerica
 				double new_burden = 1.0;
 				for (Argument b: attackers) {
 					double[] attacker_burden_numbers = burdenNumbers.get(b);
-					new_burden += 1.0/attacker_burden_numbers[i-1];
+					new_burden += 1.0/(attacker_burden_numbers[i-1]);
 				}
 				double[] burden_numbers = burdenNumbers.get(a);
 				burden_numbers[i] = new_burden;
@@ -75,9 +75,10 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<Numerica
 		
 		//Use the lexicographical order of the burden numbers as ranking
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
+		ranking.setSortingType(NumericalArgumentRanking.SortingType.LEXICOGRAPHIC);
 		for (Argument a : base) {
-			double[] burdens = burdenNumbers.get(a);
-			ranking.put(a, burdens[i_max]); 
+			double[] burdens_a = burdenNumbers.get(a);
+			ranking.put(a, burdens_a[i_max]);
 		}
 		return ranking;
 	}

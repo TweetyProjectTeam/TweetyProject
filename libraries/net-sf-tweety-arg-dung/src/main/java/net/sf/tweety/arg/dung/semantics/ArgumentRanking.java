@@ -40,9 +40,9 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 		// Recall that if arg0 is less than arg1 (arg0 < arg1) then
 		// arg0 is more preferred than arg1
 		if(this.isStrictlyLessAcceptableThan(arg0, arg1))
-			return 1;
-		if(this.isStrictlyLessAcceptableThan(arg1, arg0))
 			return -1;
+		if(this.isStrictlyMoreAcceptableThan(arg0, arg1))
+			return 1;
 		return 0;
 	}	
 
@@ -153,6 +153,7 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 			}
 		return true;
 	}
+	
 	/**
 	 * Returns "true" iff a is strictly less acceptable than b or a is equally
 	 * acceptable as b or a and b are not comparable, i.e. a &gt;= b (or a ~ b)
@@ -163,4 +164,13 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 	 * acceptable as b or a and b are not comparable
 	 */
 	public abstract boolean isStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b);
+	
+	/**
+	 * Returns "true" iff a and b are incomparable (i.e. this ranking is a partial ranking).
+	 * @param a Argument
+	 * @param b Argument
+	 * @return "true" iff a and b are incomparable
+	 */
+	public abstract boolean isIncomparable(Argument a, Argument b);
+	
 }

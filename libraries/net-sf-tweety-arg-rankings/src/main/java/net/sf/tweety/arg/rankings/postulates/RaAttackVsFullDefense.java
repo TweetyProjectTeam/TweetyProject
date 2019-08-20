@@ -68,6 +68,8 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 			return true;
 
 		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
+		if (ranking.isIncomparable(a, b))
+			return true;
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

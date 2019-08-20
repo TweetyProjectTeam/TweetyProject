@@ -54,6 +54,8 @@ public class RaTotal extends RankingPostulate {
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
 		for (Argument a : dt) {
 			for (Argument b : dt) {
+				if (ranking.isIncomparable(a, b))
+					return false;
 				ranking.compare(a, b);
 			}
 		}

@@ -86,6 +86,8 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 		dt.add(new Attack(t4,t3));
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
 		
+		if (ranking.isIncomparable(a_clone, a_old))
+			return true;
 		return ranking.isStrictlyMoreAcceptableThan(a_clone, a_old);
 	}
 

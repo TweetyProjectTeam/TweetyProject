@@ -71,12 +71,13 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 			tupled_values.put(a, computeTupledValue(a, kb));
 			tv += ", v(" + a + ") = [" + Arrays.toString(tupled_values.get(a).getFirst()) + "," + Arrays.toString(tupled_values.get(a).getSecond()) + "]";
 		}
-		System.out.println("Tupled values:" + tv.substring(1));
-
+//		System.out.println("Tupled values:" + tv.substring(1));
+		
 		// Tuples* Algorithm
 		// Compare lengths of attack/defense branches
 		// In case of a tie, compare values inside tuples
 		LexicographicTupleComparator c = new LexicographicTupleComparator();
+		
 		for (Argument a : kb) {
 			for (Argument b : kb) {
 				Pair<int[], int[]> tv_a = tupled_values.get(a);
@@ -94,14 +95,14 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 				int[] b_attack_tuple = tv_b.getSecond();
 				if (a_attack_tuple.length == b_attack_tuple.length
 						&& a_defense_tuple.length == b_defense_tuple.length) {
-					if ((c.compare(a_defense_tuple, b_defense_tuple) < 1)
+					if ((c.compare(a_defense_tuple, b_defense_tuple) <= 0)
 							&& (c.compare(a_attack_tuple, b_attack_tuple) >= 0)) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 					} else if ((c.compare(a_defense_tuple, b_defense_tuple) >= 1)
 							&& (c.compare(a_attack_tuple, b_attack_tuple) < 1)) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
 					}
-					// else: incomparable tupled values
+					// else: incomparable
 
 				} else {
 					if (a_attack_tuple.length >= b_attack_tuple.length
@@ -111,10 +112,11 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 							&& a_defense_tuple.length >= b_defense_tuple.length) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 					}
-					// else: incomparable tupled values
+					// else: incomparable
 				}
 			}
 		}
+		
 		return ranking;
 	}
 

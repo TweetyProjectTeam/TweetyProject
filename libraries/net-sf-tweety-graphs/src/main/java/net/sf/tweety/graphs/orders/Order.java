@@ -54,7 +54,16 @@ public class Order<T> {
 			OrderNode node = new OrderNode();
 			this.nodes.put(object, node);
 			this.defaultGraph.add(node);
-		}			
+		}		
+	}
+	
+	/**
+	 * Removes the given node and all of its relations.
+	 * @param The object whose node will be removed
+	 */
+	public void removeNode(T n) {
+		this.nodes.remove(n);
+		defaultGraph = defaultGraph.getRestriction(this.nodes.values());
 	}
 	
 	/**
@@ -78,6 +87,12 @@ public class Order<T> {
 		OrderNode node1 = this.nodes.get(object1);
 		OrderNode node2 = this.nodes.get(object2);
 		return this.defaultGraph.existsDirectedPath(node1, node2);
+	}
+	
+	public boolean isComparable(T object1, T object2) {
+		OrderNode node1 = this.nodes.get(object1);
+		OrderNode node2 = this.nodes.get(object2);
+		return (this.defaultGraph.existsDirectedPath(node1, node2) || this.defaultGraph.existsDirectedPath(node2, node1));
 	}
 	
 	/**

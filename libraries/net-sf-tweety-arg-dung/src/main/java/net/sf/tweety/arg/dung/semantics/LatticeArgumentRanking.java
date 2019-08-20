@@ -18,12 +18,12 @@
  */
 package net.sf.tweety.arg.dung.semantics;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.graphs.orders.Order;
+
 /**
  * This class models argument ranking by representing the acceptability of
  * arguments in a graph-based structure.
@@ -65,7 +65,22 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 */
 	@Override
 	public boolean isStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
-		return this.order.isOrderedBefore(a, b);
+		return !isIncomparable(a, b) && this.order.isOrderedBefore(a, b);
+	}
+
+	@Override
+	public boolean isStrictlyMoreAcceptableThan(Argument a, Argument b) {
+		return !isIncomparable(a, b) && !this.isStrictlyLessOrEquallyAcceptableThan(a, b);
+	}
+
+	@Override
+	public boolean isStrictlyLessAcceptableThan(Argument a, Argument b) {
+		return this.isStrictlyMoreAcceptableThan(b, a);
+	}
+
+	@Override
+	public boolean isIncomparable(Argument a, Argument b) {
+		return !this.order.isComparable(a, b);
 	}
 
 	/*
@@ -95,26 +110,21 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 */
 	@Override
 	public String toString() {
-		Argument[] args = this.order.getElements().toArray(new Argument[0]);
-		//Brute-force solution for testing that does not accurately represent
-		//incomparable arguments
-		//TODO: Fix toString method in DefaultGraph when using OrderNode
-		int n = args.length;
-		boolean swapped = false;
-		do {
-			swapped = false;
-			for (int i = 0; i < n-1; ++i) {
-				if (this.isStrictlyMoreOrEquallyAcceptableThan(args[i], args[i+1])) {
-					Argument swap = args[i+1];
-					args[i+1] = args[i];
-					args[i] = swap; 
-					swapped = true;
-					}
+		Collection<Argument> args = this.order.getElements();
+		String result = "[";
+		for (Argument a : args) {
+			for (Argument b : args) {
+				if (this.isStrictlyMoreAcceptableThan(a, b))
+					result += "(" + a + ">" + b + "), ";
+				else if (this.isEquallyAcceptableThan(a, b) && !a.equals(b))
+					result += "(" + a + "=" + b + "), ";
+				else if (this.isIncomparable(a, b))
+					result += "(" + a + "?" + b + "), ";
 			}
-			n = n-1;
-		} while (swapped);
-
-		return "<" + this.order.getElements() + "," + Arrays.toString(args) + ">";
+		}
+		if (result.length() > 1)
+			result = result.substring(0, result.length() - 2);
+		return result + "]";
 	}
 
 }

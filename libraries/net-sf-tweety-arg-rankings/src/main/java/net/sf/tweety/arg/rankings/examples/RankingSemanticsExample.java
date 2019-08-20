@@ -141,8 +141,8 @@ public class RankingSemanticsExample {
 		// Discussion-based ranking semantic
 		DiscussionBasedRankingReasoner reasoner3 = new DiscussionBasedRankingReasoner();
 		System.out.println(reasoner3.getClass().getSimpleName());
-		System.out.println(roundRanking(reasoner3.getModel(example1), 3));
-		System.out.println(roundRanking(reasoner3.getModel(example2), 3));
+		System.out.println(reasoner3.getModel(example1));
+		System.out.println(reasoner3.getModel(example2));
 
 		// Tuples* ranking semantic
 		TuplesRankingReasoner reasoner4 = new TuplesRankingReasoner();
