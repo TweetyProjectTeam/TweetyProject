@@ -45,9 +45,9 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	/** The SELFCONTRADICTION postulate **/
 	public static final RankingPostulate SELFCONTRADICTION = new RaSelfContradiction();
 	/** The DEFENSEPRECEDENCE postulate **/
-//	public static final RankingPostulate DEFENSEPRECEDENCE = new RaDefensePrecedence();
+	public static final RankingPostulate DEFENSEPRECEDENCE = new RaDefensePrecedence();
 	/** The DISTDEFENSEPRECEDENCE postulate **/
-//	public static final RankingPostulate DISTDEFENSEPRECEDENCE = new RaDistDefensePrecedence();
+	public static final RankingPostulate DISTDEFENSEPRECEDENCE = new RaDistDefensePrecedence();
 	/** The CARDINALITYPRECEDENCE postulate **/
 	public static final RankingPostulate CARDINALITYPRECEDENCE = new RaCardinalityPrecedence();
 	/** The TOTAL postulate **/
@@ -57,9 +57,9 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	/** The QUALITYPRECEDENCE postulate **/
 	public static final RankingPostulate QUALITYPRECEDENCE = new RaQualityPrecedence();
 	/** The COUNTERTRANSITIVITY postulate **/
-//	public static final RankingPostulate COUNTERTRANSITIVITY = new RaCounterTransitivity();
+	public static final RankingPostulate COUNTERTRANSITIVITY = new RaCounterTransitivity();
 	/** The STRICTCOUNTERTRANSITIVITY postulate **/
-//	public static final RankingPostulate STRICTCOUNTERTRANSITIVITY = new RaStrictCounterTransitivity();
+	public static final RankingPostulate STRICTCOUNTERTRANSITIVITY = new RaStrictCounterTransitivity();
 	/** The ATTACKVSFULLDEFENSE postulate **/
 	public static final RankingPostulate ATTACKVSFULLDEFENSE = new RaAttackVsFullDefense();
 	/** The STRICTADDITIONOFDEFENSEBRANCH postulate **/

@@ -34,6 +34,7 @@ import net.sf.tweety.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.CategorizerRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.DiscussionBasedRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.GrossiModgilRankingReasoner;
+import net.sf.tweety.arg.rankings.reasoner.MTRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.ProbabilisticRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.SAFRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.TuplesRankingReasoner;
@@ -125,7 +126,60 @@ public class RankingSemanticsExample {
 		example3.add(new Attack(d2, c2));
 		example3.add(new Attack(d3, c3));
 		example3.add(new Attack(e1, d1));
-
+		
+		// Example 4a, taken from Figure 2 in
+		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
+		DungTheory example4a = new DungTheory();
+		Argument g = new Argument("g");
+		example4a.add(a);
+		example4a.add(b);
+		example4a.add(c);
+		example4a.add(d);
+		example4a.add(e);
+		example4a.add(f);
+		example4a.add(g);
+		example4a.add(new Attack(b, a));	
+		example4a.add(new Attack(c, a));	
+		example4a.add(new Attack(d, a));	
+		example4a.add(new Attack(f, a));	
+		example4a.add(new Attack(e, d));	
+		example4a.add(new Attack(g, f));	
+		
+		// Example 4b, taken from Figure 4 in
+		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
+		DungTheory example4b = new DungTheory();
+		example4b.add(a);
+		example4b.add(b);
+		example4b.add(c);
+		example4b.add(d);
+		example4b.add(e);
+		example4b.add(f);
+		example4b.add(new Attack(e, f));	
+		example4b.add(new Attack(f, e));		
+		example4b.add(new Attack(d, e));
+		example4b.add(new Attack(e, b));	
+		example4b.add(new Attack(a, b));	
+		example4b.add(new Attack(c, b));	
+		
+		// Example 4c, taken from Figure 4 in
+		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
+		DungTheory example4c = new DungTheory();
+		example4c.add(a);
+		example4c.add(b);
+		example4c.add(c);
+		example4c.add(d);
+		example4c.add(e);
+		example4c.add(f);
+		example4c.add(new Attack(a, b));
+		example4c.add(new Attack(a, e));
+		example4c.add(new Attack(c, b));
+		example4c.add(new Attack(d, e));
+		example4c.add(new Attack(e, f));
+		example4c.add(new Attack(e, e));
+		example4c.add(new Attack(e, b));
+		example4c.add(new Attack(f, e));
+		example4c.add(new Attack(f, b));
+		
 		// Categorizer ranking semantic
 		CategorizerRankingReasoner reasoner = new CategorizerRankingReasoner();
 		System.out.println(reasoner.getClass().getSimpleName());
@@ -150,9 +204,12 @@ public class RankingSemanticsExample {
 		System.out.println(reasoner4.getModel(example3));
 
 		// Matt & Toni ranking semantic
-//		MTRankingReasoner reasoner5 = new MTRankingReasoner();
-//		System.out.println(reasoner5.getClass().getSimpleName());
-//		System.out.println(reasoner5.getModel(theory1));
+		MTRankingReasoner reasoner5 = new MTRankingReasoner();
+		System.out.println(reasoner5.getClass().getSimpleName());
+		System.out.println(roundRanking(reasoner5.getModel(example1),2));
+		System.out.println(roundRanking(reasoner5.getModel(example4a),3));
+		System.out.println(roundRanking(reasoner5.getModel(example4b),3));
+		System.out.println(roundRanking(reasoner5.getModel(example4c),3));
 
 		// Social Abstract Argumentation framework with simple product semantic
 		SAFRankingReasoner reasoner6 = new SAFRankingReasoner();

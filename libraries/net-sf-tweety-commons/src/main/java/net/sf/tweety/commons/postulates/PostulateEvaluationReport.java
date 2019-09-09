@@ -127,7 +127,7 @@ public class PostulateEvaluationReport<S extends Formula> {
 				longest = p.getName().length();
 		longest++;
 
-		String result = this.ev.toString() + " RESULTS\n----------\n" + String.format("%-" + longest + "s%-13s%-14s%s",
+		String result = this.ev.getClass().getSimpleName() + " RESULTS\n----------\n" + String.format("%-" + longest + "s%-13s%-14s%s",
 				"Postulate ", "posInstances ", "notApplicable ", "negInstances\n");
 		for (Postulate<S> p : this.positiveInstances.keySet()) {
 			result += String.format("%-" + longest + "s%-13s%-14s%s", p.getName() + " ",
