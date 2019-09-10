@@ -66,13 +66,22 @@ public class RaCounterTransitivity extends RankingPostulate {
 		for (Argument ax : attackers_a) {
 			boolean flag = false;
 			for (Argument bx : attackers_b) {
-				if (ranking.isStrictlyLessOrEquallyAcceptableThan(bx, ax))
-					flag = true;
+				if (ranking.isStrictlyLessOrEquallyAcceptableThan(bx, ax)) {
+					flag = true; 
+					break;
+				}
 			}
 			if (!flag)
 				return true;
 		}
-
+		
+		if (ranking.isIncomparable(a, b)) {
+			if (IGNORE_INCOMPARABLE_ARGUMENTS) 
+				return true;
+			else
+				return false;
+		}
+		
 		return ranking.isStrictlyMoreOrEquallyAcceptableThan(a, b);
 	}
 

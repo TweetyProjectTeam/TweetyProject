@@ -46,7 +46,7 @@ public class RaAbstraction extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size()>=2);
+		return (kb.size()>=2 && !kb.contains(new Argument("isoA")));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class RaAbstraction extends RankingPostulate {
 		
 		DungTheory iso_dt = new DungTheory(dt);
 		iso_dt.remove(a);
-		Argument iso_a = new Argument("iso_A_");
+		Argument iso_a = new Argument("isoA");
 		iso_dt.add(iso_a);
 		
 		for (Argument f: dt.getAttackers(a)) 

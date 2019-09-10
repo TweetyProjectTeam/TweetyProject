@@ -28,15 +28,15 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
 
 /**
- *  The "strict addition of defense branch" postulate for ranking semantics as formalized 
- *  in [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
- *  Semantics for Abstract Argumentation. 2016]: 
- *  Adding a defense branch to any argument improves its ranking. 
- *  
- *  'Adding a defense branch to the argument A' means adding the arguments {X1, ... , Xn} 
- *  which are not in the original knowledge base, for whom is true that 
- *  A &lt;- X1 &lt;- X2 ... &lt;- Xn and where n is an even number.
- *  
+ * The "strict addition of defense branch" postulate for ranking semantics as
+ * formalized in [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of
+ * Ranking-Based Semantics for Abstract Argumentation. 2016]: Adding a defense
+ * branch to any argument improves its ranking.
+ * 
+ * 'Adding a defense branch to the argument A' means adding the arguments {X1,
+ * ... , Xn} which are not in the original knowledge base, for whom is true that
+ * A &lt;- X1 &lt;- X2 ... &lt;- Xn and where n is an even number.
+ * 
  * @see net.sf.tweety.arg.rankings.postulates.RaAdditionOfDefenseBranch
  * @author Anna Gessler
  *
@@ -50,8 +50,8 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size()>=1 && !kb.contains(new Argument("_t1")) && !kb.contains(new Argument("_t2")) && !kb.contains(new Argument("_t3")) && !kb.contains(new Argument("_t4")) 
-				&& !kb.contains(new Argument(((DungTheory) kb).iterator().next().getName()+"_clone")));
+		return (kb.size() >= 1 && !kb.contains(new Argument("t1")) && !kb.contains(new Argument("t2"))
+				&& !kb.contains(new Argument("clone")));
 	}
 
 	@Override
@@ -61,33 +61,31 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a_old = it.next();
-		
-		//clone argument and relations
-		Argument a_clone = new Argument(a_old.getName()+"_clone");
+
+		// clone argument and relations
+		Argument a_clone = new Argument("clone");
 		dt.add(a_clone);
 		for (Argument attacker : dt.getAttackers(a_old)) {
 			if (attacker.equals(a_old))
-				dt.add(new Attack(a_clone,a_clone));
+				dt.add(new Attack(a_clone, a_clone));
 			else
-				dt.add(new Attack(attacker,a_clone));
+				dt.add(new Attack(attacker, a_clone));
 		}
-		//add new defense branch
-		Argument t1 = new Argument("_t1");
-		Argument t2 = new Argument("_t2");
-		Argument t3 = new Argument("_t3");
-		Argument t4 = new Argument("_t4");
+		// add new defense branch
+		Argument t1 = new Argument("t1");
+		Argument t2 = new Argument("t2");
 		dt.add(t1);
 		dt.add(t2);
-		dt.add(t3);
-		dt.add(t4);
-		dt.add(new Attack(t1,a_clone));
-		dt.add(new Attack(t2,t1));
-		dt.add(new Attack(t3,t2));
-		dt.add(new Attack(t4,t3));
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		
-		if (ranking.isIncomparable(a_clone, a_old))
-			return true;
+		dt.add(new Attack(t1, a_clone));
+		dt.add(new Attack(t2, t1));
+		ArgumentRanking ranking = ev.getModel(dt);
+
+		if (ranking.isIncomparable(a_clone, a_old)) {
+			if (IGNORE_INCOMPARABLE_ARGUMENTS)
+				return true;
+			else
+				return false;
+		}
 		return ranking.isStrictlyMoreAcceptableThan(a_clone, a_old);
 	}
 

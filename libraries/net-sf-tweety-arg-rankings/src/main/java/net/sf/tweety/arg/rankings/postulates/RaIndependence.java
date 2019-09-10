@@ -45,7 +45,7 @@ public class RaIndependence extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size()>=2 && !kb.contains(new Argument("_t")) && !kb.contains(new Argument("_t2")));
+		return (kb.size()>=2 && !kb.contains(new Argument("t")) && !kb.contains(new Argument("t2")));
 	}
 
 	@Override
@@ -57,8 +57,8 @@ public class RaIndependence extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		Argument t1 = new Argument("_t");
-		Argument t2 = new Argument("_t2");
+		Argument t1 = new Argument("t");
+		Argument t2 = new Argument("t2");
 		dt.add(t1);
 		dt.add(t2);
 		dt.add(new Attack(t1,t2));

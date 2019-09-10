@@ -67,13 +67,20 @@ public class RaStrictCounterTransitivity extends RankingPostulate {
 		for (Argument ax : attackers_a) {
 			boolean flag = false;
 			for (Argument bx : attackers_b) {
-				if (ranking.isStrictlyLessOrEquallyAcceptableThan(bx, ax))
+				if (ranking.isStrictlyLessOrEquallyAcceptableThan(bx, ax)) 
 					flag = true;
 				if (ranking.isStrictlyLessAcceptableThan(bx, ax))
 					strict_flag = true;
 			}
 			if (!flag)
 				return true;
+		}
+		
+		if (ranking.isIncomparable(a, b)) {
+			if (IGNORE_INCOMPARABLE_ARGUMENTS)
+				return true;
+			else
+				return false;
 		}
 		
 		if ((attackers_a.size() < attackers_b.size()) || strict_flag) 

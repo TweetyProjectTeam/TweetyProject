@@ -110,6 +110,14 @@ public class RaDistDefensePrecedence extends RankingPostulate {
 			return true;
 		
 		ArgumentRanking ranking = ev.getModel(dt);
+		
+		if (ranking.isIncomparable(a, b)) {
+			if (IGNORE_INCOMPARABLE_ARGUMENTS)
+				return true;
+			else
+				return false;
+		}
+		
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

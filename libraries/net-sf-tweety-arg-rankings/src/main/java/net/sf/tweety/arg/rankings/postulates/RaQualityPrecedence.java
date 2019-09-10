@@ -65,8 +65,12 @@ public class RaQualityPrecedence extends RankingPostulate {
 		for (Argument f: dt.getAttackers(a)) 
 			if (!ranking.isStrictlyMoreAcceptableThan(c,f))
 				return true;
-		if (ranking.isIncomparable(a, b))
-			return true;
+		if (ranking.isIncomparable(a, b)) {
+			if (IGNORE_INCOMPARABLE_ARGUMENTS)
+				return true;
+			else
+				return false;
+		}
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

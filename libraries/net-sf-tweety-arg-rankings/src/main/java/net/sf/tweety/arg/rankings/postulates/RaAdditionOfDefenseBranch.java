@@ -49,8 +49,8 @@ public class RaAdditionOfDefenseBranch extends RankingPostulate {
 		if (kb.size()<1)
 			return false;
 		Argument a_old = ((DungTheory) kb).iterator().next();		
-		return (!((DungTheory) kb).getAttackers(a_old).isEmpty() && !kb.contains(new Argument("_t1")) && !kb.contains(new Argument("_t2")) && !kb.contains(new Argument("_t3")) && !kb.contains(new Argument("_t4")) 
-				&& !kb.contains(new Argument(a_old.getName()+"_clone")));
+		return (!((DungTheory) kb).getAttackers(a_old).isEmpty() && !kb.contains(new Argument("t1"))
+				&& !kb.contains(new Argument(a_old.getName()+"clone")));
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class RaAdditionOfDefenseBranch extends RankingPostulate {
 		Argument a_old = it.next();
 		
 		//clone argument and relations
-		Argument a_clone = new Argument(a_old.getName()+"_clone");
+		Argument a_clone = new Argument(a_old.getName()+"clone");
 		dt.add(a_clone);
 		for (Argument attacker : dt.getAttackers(a_old)) {
 			if (attacker.equals(a_old))
@@ -71,22 +71,19 @@ public class RaAdditionOfDefenseBranch extends RankingPostulate {
 				dt.add(new Attack(attacker,a_clone));
 		}
 		//add new defense branch
-		Argument t1 = new Argument("_t1");
-		Argument t2 = new Argument("_t2");
-		Argument t3 = new Argument("_t3");
-		Argument t4 = new Argument("_t4");
+		Argument t1 = new Argument("t1");
+		Argument t2 = new Argument("t2");
 		dt.add(t1);
-		dt.add(t2);
-		dt.add(t3);
-		dt.add(t4);
+		dt.add(t2);;
 		dt.add(new Attack(t1,a_clone));
 		dt.add(new Attack(t2,t1));
-		dt.add(new Attack(t3,t2));
-		dt.add(new Attack(t4,t3));
-		
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		if (ranking.isIncomparable(a_clone, a_old))
-			return true;
+		if (ranking.isIncomparable(a_clone, a_old)) {
+			if (IGNORE_INCOMPARABLE_ARGUMENTS)
+				return true;
+			else
+				return false;
+		}
 		return ranking.isStrictlyMoreAcceptableThan(a_clone, a_old);
 	}
 

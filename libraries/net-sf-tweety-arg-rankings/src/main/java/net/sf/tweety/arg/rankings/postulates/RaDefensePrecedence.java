@@ -65,6 +65,14 @@ public class RaDefensePrecedence extends RankingPostulate {
 		if (dt.isAttacked(new Extension(dt.getAttackers(a)), new Extension(kb))
 				&& !dt.isAttacked(new Extension(dt.getAttackers(b)), new Extension(kb))) {
 			ArgumentRanking ranking = ev.getModel((DungTheory) dt);
+			
+			if (ranking.isIncomparable(a, b)) {
+				if (IGNORE_INCOMPARABLE_ARGUMENTS)
+					return true;
+				else
+					return false;
+			}
+			
 			return ranking.isStrictlyMoreAcceptableThan(a, b);
 		}
 		return true;

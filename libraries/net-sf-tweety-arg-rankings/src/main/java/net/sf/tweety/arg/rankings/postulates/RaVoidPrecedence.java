@@ -55,7 +55,13 @@ public class RaVoidPrecedence extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		if (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty() && !ranking.isIncomparable(a, b)) 
+		if (ranking.isIncomparable(a, b)) {
+			if (IGNORE_INCOMPARABLE_ARGUMENTS)
+				return true;
+			else
+				return false;
+		}
+		if (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty()) 
 			return (ranking.isStrictlyMoreAcceptableThan(a, b)); 
 		return true;	
 	}

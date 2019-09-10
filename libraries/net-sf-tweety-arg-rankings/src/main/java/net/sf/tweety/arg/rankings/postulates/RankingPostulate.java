@@ -35,6 +35,8 @@ import net.sf.tweety.commons.postulates.PostulateEvaluatable;
  *
  */
 public abstract class RankingPostulate implements Postulate<Argument>{
+	
+	public boolean IGNORE_INCOMPARABLE_ARGUMENTS = true;
 
 	/** The ABSTRACTION postulate **/
 	public static final RankingPostulate ABSTRACTION = new RaAbstraction();
@@ -69,9 +71,9 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	/** The ADDITIONOFATTACKBRANCH postulate **/
 	public static final RankingPostulate ADDITIONOFATTACKBRANCH = new RaAdditionOfAttackBranch();
 	/** The INCREASEOFATTACKBRANCH postulate **/
-//	public static final RankingPostulate INCREASEOFATTACKBRANCH = new RaIncreaseOfAttackBranch();
+	public static final RankingPostulate INCREASEOFATTACKBRANCH = new RaIncreaseOfAttackBranch();
 	/** The INCREASEOFDEFENSEBRANCH postulate **/
-//	public static final RankingPostulate INCREASEOFDEFENSEBRANCH = new RaIncreaseOfDefenseBranch();
+	public static final RankingPostulate INCREASEOFDEFENSEBRANCH = new RaIncreaseOfDefenseBranch();
 
 
 	/* (non-Javadoc)
@@ -94,4 +96,11 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	 * @see net.sf.tweety.commons.postulates.Postulate#isSatisfied(net.sf.tweety.commons.BeliefBase, net.sf.tweety.commons.postulates.PostulateEvaluatable)
 	 */
 	public abstract boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev);
+	
+	/**
+	 * If set to true, incomparable arguments will be ignored by the postulate.
+	 */
+	public void setIgnoreIncomparableArguments(boolean i) {
+		IGNORE_INCOMPARABLE_ARGUMENTS = i;
+	}
 }

@@ -57,7 +57,13 @@ public class RaCardinalityPrecedence extends RankingPostulate {
 		Argument b = it.next();
 		
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		if ( dt.getAttackers(a).size() <  dt.getAttackers(b).size() && !ranking.isIncomparable(a, b)) 
+		if (ranking.isIncomparable(a, b)) {
+			if (IGNORE_INCOMPARABLE_ARGUMENTS)
+				return true;
+			else
+				return false;
+		}
+		if ( dt.getAttackers(a).size() <  dt.getAttackers(b).size()) 
 			return ranking.isStrictlyMoreAcceptableThan(a, b); 	
 		return true;
 	}
