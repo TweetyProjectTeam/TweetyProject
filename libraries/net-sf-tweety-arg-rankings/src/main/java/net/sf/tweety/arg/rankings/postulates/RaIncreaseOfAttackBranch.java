@@ -34,7 +34,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
  *  Increasing the length of an attack branch of an argument improves
  *  its ranking.
  * 
- * @see {@link net.sf.tweety.arg.dung.postulates.RaAdditionOfAttackBranch}
+ * @see net.sf.tweety.arg.rankings.postulates.RaAdditionOfAttackBranch
  * @author Anna Gessler
  *
  */

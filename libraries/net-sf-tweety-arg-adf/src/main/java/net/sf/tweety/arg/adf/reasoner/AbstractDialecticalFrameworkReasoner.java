@@ -58,7 +58,7 @@ public abstract class AbstractDialecticalFrameworkReasoner
 	 *            an AAF
 	 * @param formula
 	 *            a single argument
-	 * @param InferenceMode
+	 * @param inferenceMode
 	 *            either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return "true" if the argument is accepted
 	 */

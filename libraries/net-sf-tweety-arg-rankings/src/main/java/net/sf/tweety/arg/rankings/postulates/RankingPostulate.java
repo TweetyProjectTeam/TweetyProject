@@ -99,6 +99,7 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	
 	/**
 	 * If set to true, incomparable arguments will be ignored by the postulate.
+	 * @param i whether incomparable arguments will be ignored by the postulate.
 	 */
 	public void setIgnoreIncomparableArguments(boolean i) {
 		IGNORE_INCOMPARABLE_ARGUMENTS = i;

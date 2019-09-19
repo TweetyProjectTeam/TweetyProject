@@ -33,7 +33,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
  * Ranking-Based Semantics for Abstract Argumentation. 2016]: Increasing the
  * length of a defense branch of an argument degrades its ranking.
  * 
- * @see {@link net.sf.tweety.arg.dung.postulates.RaStrictAdditionOfDefenseBranch}
+ * @see  net.sf.tweety.arg.rankings.postulates.RaStrictAdditionOfDefenseBranch
  * @author Anna Gessler
  *
  */

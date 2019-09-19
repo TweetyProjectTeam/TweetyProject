@@ -53,7 +53,7 @@ public class Cache<T, R> implements Function<T, R> {
 	}
 
 	/**
-	 * @return
+	 * @return the cache size
 	 * @see java.util.Map#size()
 	 */
 	public int size() {

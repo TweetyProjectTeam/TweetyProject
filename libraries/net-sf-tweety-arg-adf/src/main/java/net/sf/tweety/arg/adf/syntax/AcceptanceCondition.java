@@ -37,7 +37,7 @@ public abstract class AcceptanceCondition {
 	 * 
 	 * @param transform
 	 * @param collector
-	 * @return
+	 * @return TODO
 	 */
 	public <C, R, A, O> O collect(Transform<C, R> transform, Collector<C, A, O> collector) {
 		A container = collector.supplier().get();
@@ -51,9 +51,9 @@ public abstract class AcceptanceCondition {
 	/**
 	 * 
 	 * @param transform
-	 * @param collector
+	 * @param accumulator
 	 * @param container
-	 * @return
+	 * @return TODO
 	 */
 	public <C, R, O> R collect(Transform<C, R> transform, BiConsumer<O,C> accumulator, O container) {
 		Consumer<C> consumer = c -> accumulator.accept(container, c);

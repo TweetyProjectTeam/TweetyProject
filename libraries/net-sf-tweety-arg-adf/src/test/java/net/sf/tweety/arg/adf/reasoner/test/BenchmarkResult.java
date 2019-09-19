@@ -68,7 +68,6 @@ public class BenchmarkResult {
 	}
 
 	/**
-	 * @param exception
 	 * @param modelCount
 	 * @param modelDifference
 	 * @param correctModels

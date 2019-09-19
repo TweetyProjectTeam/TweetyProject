@@ -42,7 +42,7 @@ public class TestUtil {
 	 * single one. Allows us to keep the number of files per instance much lower
 	 * since we must not store the models in a separate file for each semantics.
 	 * 
-	 * @param path
+	 * @param dir
 	 *            the path
 	 * @param semantics
 	 * @param outputExtension
@@ -83,7 +83,7 @@ public class TestUtil {
 	 * Reads all models from the given solution file and groups them by their
 	 * semantics.
 	 * 
-	 * @param instance
+	 * @param file
 	 * @return a mapping of all the models per semantic
 	 * @throws IOException
 	 */
@@ -134,7 +134,7 @@ public class TestUtil {
 	 * 
 	 * @param interpretation
 	 * @param map
-	 * @return
+	 * @return TODO
 	 */
 	public static boolean equalInterpretations(Interpretation interpretation, Map<String, Boolean> map) {
 		return interpretation.arguments().allMatch(a -> interpretation.get(a) == map.get(a.getName()));

@@ -59,7 +59,7 @@ public class Order<T> {
 	
 	/**
 	 * Removes the given node and all of its relations.
-	 * @param The object whose node will be removed
+	 * @param n The object whose node will be removed
 	 */
 	public void removeNode(T n) {
 		this.nodes.remove(n);

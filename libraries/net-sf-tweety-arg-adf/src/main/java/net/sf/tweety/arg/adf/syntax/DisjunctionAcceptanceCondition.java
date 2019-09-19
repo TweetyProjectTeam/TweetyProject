@@ -28,8 +28,7 @@ public class DisjunctionAcceptanceCondition extends AcceptanceCondition {
 	private AcceptanceCondition[] subconditions;
 
 	/**
-	 * @param first
-	 * @param second
+	 * @param subconditions
 	 */
 	public DisjunctionAcceptanceCondition(AcceptanceCondition... subconditions) {
 		this.subconditions = subconditions;

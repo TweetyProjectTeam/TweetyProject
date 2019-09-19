@@ -91,7 +91,7 @@ public class AbstractDialecticalFramework
 	/**
 	 * Checks if the ADF is bipolar. May compute all links to do so.
 	 * 
-	 * @return
+	 * @return true iff the link is bipolar
 	 */
 	public boolean bipolar() {
 		return links().allMatch(Link::isBipolar);

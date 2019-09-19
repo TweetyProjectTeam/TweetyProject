@@ -19,7 +19,6 @@
 package net.sf.tweety.arg.rankings.reasoner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -66,10 +65,10 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 
 		// Compute lookup table for tupled values
 		Map<Argument, Pair<int[], int[]>> tupled_values = new HashMap<Argument, Pair<int[], int[]>>();
-		String tv = "";
+		//String tv = "";
 		for (Argument a : kb) {
 			tupled_values.put(a, computeTupledValue(a, kb));
-			tv += ", v(" + a + ") = [" + Arrays.toString(tupled_values.get(a).getFirst()) + "," + Arrays.toString(tupled_values.get(a).getSecond()) + "]";
+			//tv += ", v(" + a + ") = [" + Arrays.toString(tupled_values.get(a).getFirst()) + "," + Arrays.toString(tupled_values.get(a).getSecond()) + "]";
 		}
 //		System.out.println("Tupled values:" + tv.substring(1));
 		
