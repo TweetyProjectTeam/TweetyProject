@@ -25,8 +25,10 @@ import java.util.Set;
 import net.sf.tweety.arg.deductive.semantics.DeductiveArgument;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.logics.pl.reasoner.SimplePlReasoner;
+import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
@@ -60,28 +62,18 @@ public class DeductiveKnowledgeBase extends PlBeliefSet{
 	 * @return the set of all deductive arguments for the given claim.
 	 */
 	public Set<DeductiveArgument> getDeductiveArguments(PlFormula claim){
+		// we use a MUS enumerator to filter out deductive arguments
+		PlBeliefSet bs = new PlBeliefSet(this);
+		PlFormula negClaim = new Negation(claim);
+		bs.add(negClaim);
+		Collection<Collection<PlFormula>> muses = PlMusEnumerator.getDefaultEnumerator().minimalInconsistentSubsets(bs);
 		Set<DeductiveArgument> arguments = new HashSet<DeductiveArgument>();
-		SetTools<PlFormula> setTools = new SetTools<PlFormula>();
-		for(int card = 1; card <= this.size(); card++){
-			Set<Set<PlFormula>> sets = setTools.subsets(this, card);
-			for(Set<PlFormula> set: sets){
-				// test if we already have a subset in arguments
-				boolean properSet = true;
-				for(DeductiveArgument arg: arguments)
-					if(set.containsAll(arg.getSupport())){
-						properSet = false;
-						break;
-					}
-				if(!properSet) continue;
-				// check for consistency
-				PlBeliefSet candidate = new PlBeliefSet(set);				
-				if(!SatSolver.getDefaultSolver().isConsistent(candidate)) continue;
-				// check for entailment
-				SimplePlReasoner reasoner = new SimplePlReasoner();
-				if(reasoner.query(candidate, claim))
-					arguments.add(new DeductiveArgument(candidate,claim));
+		for(Collection<PlFormula> mus: muses) {
+			if(mus.contains(negClaim)) {
+				mus.remove(negClaim);
+				arguments.add(new DeductiveArgument(mus,claim));
 			}
-		}
+		}	
 		return arguments;
 	}
 	

@@ -98,7 +98,7 @@ public class Derivation<T extends Rule<?,?>> extends ArrayList<T>{
 		initial.getSecond().add(conclusion);
 		initial.setThird(new RuleSet<S>(rules));
 		stack.add(initial);		
-		Set<Derivation<S>> derivations = new HashSet<Derivation<S>>();
+		Set<Derivation<S>> derivations = new HashSet<Derivation<S>>();		
 		while(!stack.isEmpty()){
 			Triple<List<S>,Set<Formula>,RuleSet<S>> derivation = stack.pop();
 			if(derivation.getSecond().isEmpty())

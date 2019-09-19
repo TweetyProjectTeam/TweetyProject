@@ -41,4 +41,12 @@ public class WeightedDirectedEdge<S extends Node,T extends Number> extends Direc
 	public T getWeight() {
 		return this.weight;
 	}
+	
+	/**
+	 * TODO
+	 * @param number
+	 */
+	public void setWeight(T number) {
+		this.weight = number;
+	}
 }
