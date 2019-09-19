@@ -32,8 +32,7 @@ import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
  *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: 
  *  The ranking on an abstract argumentation framework A should be defined only on the
  *  basics of the attacks between arguments.
- *  This postulate was 
- * 
+ *  
  * @author Anna Gessler
  *
  */

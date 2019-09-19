@@ -180,30 +180,30 @@ public class RankingSemanticsExample {
 		example4c.add(new Attack(f, e));
 		example4c.add(new Attack(f, b));
 		
-		// Categorizer ranking semantic
+		// Categorizer ranking semantics
 		CategorizerRankingReasoner reasoner = new CategorizerRankingReasoner();
 		System.out.println(reasoner.getClass().getSimpleName());
 		System.out.println(roundRanking(reasoner.getModel(example1), 2));
 		System.out.println(roundRanking(reasoner.getModel(example2), 3));
 
-		// Burden-based ranking semantic
+		// Burden-based ranking semantics
 		BurdenBasedRankingReasoner reasoner2 = new BurdenBasedRankingReasoner();
 		System.out.println(reasoner2.getClass().getSimpleName());
 		System.out.println(roundRanking(reasoner2.getModel(example1), 3));
 		System.out.println(roundRanking(reasoner2.getModel(example2), 3));
 
-		// Discussion-based ranking semantic
+		// Discussion-based ranking semantics
 		DiscussionBasedRankingReasoner reasoner3 = new DiscussionBasedRankingReasoner();
 		System.out.println(reasoner3.getClass().getSimpleName());
 		System.out.println(reasoner3.getModel(example1));
 		System.out.println(reasoner3.getModel(example2));
 
-		// Tuples* ranking semantic
+		// Tuples* ranking semantics
 		TuplesRankingReasoner reasoner4 = new TuplesRankingReasoner();
 		System.out.println(reasoner4.getClass().getSimpleName());
 		System.out.println(reasoner4.getModel(example3));
 
-		// Matt & Toni ranking semantic
+		// Matt & Toni ranking semantics
 		MTRankingReasoner reasoner5 = new MTRankingReasoner();
 		System.out.println(reasoner5.getClass().getSimpleName());
 		System.out.println(roundRanking(reasoner5.getModel(example1),2));
@@ -211,12 +211,12 @@ public class RankingSemanticsExample {
 		System.out.println(roundRanking(reasoner5.getModel(example4b),3));
 		System.out.println(roundRanking(reasoner5.getModel(example4c),3));
 
-		// Social Abstract Argumentation framework with simple product semantic
+		// Social Abstract Argumentation framework with simple product semantics
 		SAFRankingReasoner reasoner6 = new SAFRankingReasoner();
 		System.out.println(reasoner6.getClass().getSimpleName());
 		System.out.println(roundRanking(reasoner6.getModel(example1), 2));
 
-		// Grossi & Modgil ranking semantic
+		// Grossi & Modgil ranking semantics
 		GrossiModgilRankingReasoner reasoner7 = new GrossiModgilRankingReasoner();
 		System.out.println(reasoner7.getClass().getSimpleName());
 		System.out.println(reasoner7.getModel(example1));
