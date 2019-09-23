@@ -21,9 +21,9 @@ package net.sf.tweety.arg.rankings.reasoner;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.social.reasoner.IssReasoner;
 import net.sf.tweety.arg.social.semantics.SimpleProductSemantics;
 import net.sf.tweety.arg.social.semantics.SocialMapping;

@@ -21,15 +21,15 @@ package net.sf.tweety.arg.rankings.postulates;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 
 /**
- *  The "void precedence" postulate for ranking semantics as proposed by
- *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]:
- *  A non-attacked argument is ranked strictly higher than any attacked argument.
+ * The "void precedence" postulate for ranking semantics as proposed by [Amgoud,
+ * Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: A
+ * non-attacked argument is ranked strictly higher than any attacked argument.
  * 
  * @author Anna Gessler
  */
@@ -42,8 +42,8 @@ public class RaVoidPrecedence extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size()>=2);
-		
+		return (kb instanceof DungTheory && kb.size() >= 2);
+
 	}
 
 	@Override
@@ -54,16 +54,16 @@ public class RaVoidPrecedence extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
+		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
 		if (ranking.isIncomparable(a, b)) {
 			if (IGNORE_INCOMPARABLE_ARGUMENTS)
 				return true;
 			else
 				return false;
 		}
-		if (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty()) 
-			return (ranking.isStrictlyMoreAcceptableThan(a, b)); 
-		return true;	
+		if (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty())
+			return (ranking.isStrictlyMoreAcceptableThan(a, b));
+		return true;
 	}
 
 }

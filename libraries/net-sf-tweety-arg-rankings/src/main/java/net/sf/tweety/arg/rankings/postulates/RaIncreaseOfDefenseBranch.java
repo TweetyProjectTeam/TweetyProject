@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
@@ -33,7 +33,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
  * Ranking-Based Semantics for Abstract Argumentation. 2016]: Increasing the
  * length of a defense branch of an argument degrades its ranking.
  * 
- * @see  net.sf.tweety.arg.rankings.postulates.RaStrictAdditionOfDefenseBranch
+ * @see net.sf.tweety.arg.rankings.postulates.RaStrictAdditionOfDefenseBranch
  * @author Anna Gessler
  *
  */
@@ -46,12 +46,15 @@ public class RaIncreaseOfDefenseBranch extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		if (kb.size() < 1)
+		if (!(kb instanceof DungTheory))
+			return false;
+		else if (kb.size() < 1)
 			return false;
 		Argument a_old = ((DungTheory) kb).iterator().next();
 		return (!((DungTheory) kb).getAttackers(a_old).isEmpty() && !kb.contains(new Argument("t1"))
 				&& !kb.contains(new Argument("t2")) && !kb.contains(new Argument("t3"))
-				&& !kb.contains(new Argument("t4")) && !kb.contains(new Argument(a_old.getName() + "clone")) && !kb.contains(new Argument(a_old.getName()+"clone2")) );
+				&& !kb.contains(new Argument("t4")) && !kb.contains(new Argument(a_old.getName() + "clone"))
+				&& !kb.contains(new Argument(a_old.getName() + "clone2")));
 	}
 
 	@Override
@@ -88,7 +91,7 @@ public class RaIncreaseOfDefenseBranch extends RankingPostulate {
 		dt.add(t4);
 		dt.add(new Attack(t3, a_clone));
 		dt.add(new Attack(t4, t3));
-		//add increased defense branch
+		// add increased defense branch
 		dt.add(new Attack(t1, a_clone2));
 		dt.add(new Attack(t2, t1));
 		dt.add(new Attack(t3, t2));

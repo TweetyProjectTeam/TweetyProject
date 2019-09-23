@@ -16,11 +16,13 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung.semantics;
+package net.sf.tweety.arg.rankings.semantics;
 
 import java.util.Collection;
 import java.util.HashSet;
 
+import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
+import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.graphs.orders.Order;
 

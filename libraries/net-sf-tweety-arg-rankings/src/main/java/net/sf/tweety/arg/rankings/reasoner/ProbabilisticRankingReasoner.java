@@ -21,7 +21,6 @@ package net.sf.tweety.arg.rankings.reasoner;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
@@ -29,6 +28,7 @@ import net.sf.tweety.arg.prob.reasoner.AbstractPafReasoner;
 import net.sf.tweety.arg.prob.reasoner.MonteCarloPafReasoner;
 import net.sf.tweety.arg.prob.reasoner.SimplePafReasoner;
 import net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework;
+import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.math.probability.Probability;
 

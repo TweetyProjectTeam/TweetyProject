@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
@@ -46,7 +46,7 @@ public class RaDefensePrecedence extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size() >= 2);
+		return (kb instanceof DungTheory && kb.size() >= 2);
 	}
 
 	@Override

@@ -21,10 +21,10 @@ package net.sf.tweety.arg.rankings.postulates;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 
 /**
  * The "attack vs full defense" postulate for ranking semantics as proposed in
@@ -45,14 +45,14 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size() >= 2);
+		return (kb instanceof DungTheory && kb.size() >= 2);
 	}
 
 	@Override
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
-	
+
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		if (dt.containsCycle())
 			return true;

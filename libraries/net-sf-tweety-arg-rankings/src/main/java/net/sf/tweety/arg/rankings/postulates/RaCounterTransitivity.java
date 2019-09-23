@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
@@ -45,7 +45,7 @@ public class RaCounterTransitivity extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size() >= 2);
+		return (kb instanceof DungTheory && kb.size() >= 2);
 	}
 
 	@Override
@@ -58,30 +58,30 @@ public class RaCounterTransitivity extends RankingPostulate {
 		Argument b = it.next();
 		Set<Argument> attackers_a = dt.getAttackers(a);
 		Set<Argument> attackers_b = dt.getAttackers(b);
-		
+
 		if (attackers_b.size() < attackers_a.size())
 			return true;
-		
+
 		ArgumentRanking ranking = ev.getModel(dt);
 		for (Argument ax : attackers_a) {
 			boolean flag = false;
 			for (Argument bx : attackers_b) {
 				if (ranking.isStrictlyLessOrEquallyAcceptableThan(bx, ax)) {
-					flag = true; 
+					flag = true;
 					break;
 				}
 			}
 			if (!flag)
 				return true;
 		}
-		
+
 		if (ranking.isIncomparable(a, b)) {
-			if (IGNORE_INCOMPARABLE_ARGUMENTS) 
+			if (IGNORE_INCOMPARABLE_ARGUMENTS)
 				return true;
 			else
 				return false;
 		}
-		
+
 		return ranking.isStrictlyMoreOrEquallyAcceptableThan(a, b);
 	}
 

@@ -20,16 +20,15 @@ package net.sf.tweety.arg.rankings.postulates;
 
 import java.util.Collection;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 
 /**
- *  The "total" postulate for ranking semantics as proposed in 
- *  [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
- *  Semantics for Abstract Argumentation. 2016]: 
- *  All pairs of arguments can be compared.
+ * The "total" postulate for ranking semantics as proposed in [Bonzon,
+ * Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based Semantics
+ * for Abstract Argumentation. 2016]: All pairs of arguments can be compared.
  * 
  * @author Anna Gessler
  *
@@ -43,7 +42,7 @@ public class RaTotal extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return true;
+		return (kb instanceof DungTheory);
 	}
 
 	@Override
@@ -51,16 +50,12 @@ public class RaTotal extends RankingPostulate {
 		if (!this.isApplicable(kb))
 			return true;
 		DungTheory dt = new DungTheory((DungTheory) kb);
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
+		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
 		for (Argument a : dt) {
 			for (Argument b : dt) {
 				if (ranking.isIncomparable(a, b)) {
-					if (IGNORE_INCOMPARABLE_ARGUMENTS)
-						return true;
-					else
-						return false;
+					return false;
 				}
-				ranking.compare(a, b);
 			}
 		}
 		return true;

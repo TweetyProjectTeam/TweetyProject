@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;

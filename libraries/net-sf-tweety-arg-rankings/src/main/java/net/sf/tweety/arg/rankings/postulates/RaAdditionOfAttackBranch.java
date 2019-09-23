@@ -21,11 +21,11 @@ package net.sf.tweety.arg.rankings.postulates;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 
 /**
  * The "addition of attack branch" postulate for ranking semantics as formalized
@@ -49,7 +49,9 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		if (kb.size() < 1)
+		if (!(kb instanceof DungTheory))
+			return false;
+		else if (kb.size() < 1)
 			return false;
 		Argument a_old = ((DungTheory) kb).iterator().next();
 		return (!((DungTheory) kb).getAttackers(a_old).isEmpty() && !kb.contains(new Argument("t1"))
@@ -93,7 +95,7 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 			else
 				return false;
 		}
-		
+
 		return ranking.isStrictlyLessAcceptableThan(a_clone, a_old);
 	}
 

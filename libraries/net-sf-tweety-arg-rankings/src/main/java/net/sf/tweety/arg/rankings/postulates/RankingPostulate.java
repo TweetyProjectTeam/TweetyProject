@@ -20,9 +20,9 @@ package net.sf.tweety.arg.rankings.postulates;
 
 import java.util.Collection;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 import net.sf.tweety.commons.postulates.Postulate;
 import net.sf.tweety.commons.postulates.PostulateEvaluatable;
 
@@ -36,6 +36,11 @@ import net.sf.tweety.commons.postulates.PostulateEvaluatable;
  */
 public abstract class RankingPostulate implements Postulate<Argument>{
 	
+	/**
+	 * Determines whether incomparable arguments will be ignored when evaluating postulates.
+	 * Exception: The TOTAL postulate will never ignore incomparable arguments because its 
+	 * entire purpose is to check if all pairs of arguments can be compared.
+	 */
 	public boolean IGNORE_INCOMPARABLE_ARGUMENTS = true;
 
 	/** The ABSTRACTION postulate **/

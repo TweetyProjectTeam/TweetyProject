@@ -25,9 +25,9 @@ import java.util.HashSet;
 import java.util.Map;
 
 import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.semantics.LatticeArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.arg.rankings.semantics.LatticeArgumentRanking;
 import net.sf.tweety.commons.util.SetTools;
 
 /**

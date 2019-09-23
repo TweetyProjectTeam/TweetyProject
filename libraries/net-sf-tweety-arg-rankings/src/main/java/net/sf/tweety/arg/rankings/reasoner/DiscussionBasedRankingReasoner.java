@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.arg.dung.semantics.LatticeArgumentRanking;
-import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.arg.rankings.semantics.LatticeArgumentRanking;
+import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 
 /**
  * This class implements the "Discussion-based" argument semantics approach as

@@ -18,9 +18,9 @@
  */
 package net.sf.tweety.arg.rankings.reasoner;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.postulates.PostulateEvaluatable;
 

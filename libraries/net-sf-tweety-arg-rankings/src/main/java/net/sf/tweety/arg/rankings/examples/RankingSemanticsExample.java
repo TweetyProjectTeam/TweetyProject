@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
-import net.sf.tweety.arg.dung.semantics.NumericalArgumentRanking;
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
@@ -38,6 +36,8 @@ import net.sf.tweety.arg.rankings.reasoner.MTRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.ProbabilisticRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.SAFRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.TuplesRankingReasoner;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
+import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 import net.sf.tweety.math.probability.Probability;
 
 /**

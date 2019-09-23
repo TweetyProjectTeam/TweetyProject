@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.dung.semantics;
+package net.sf.tweety.arg.rankings.semantics;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
+import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 
 /**
@@ -280,7 +282,6 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 
 	@Override
 	public boolean isIncomparable(Argument a, Argument b) {
-		return false;
+		return (!(isStrictlyLessOrEquallyAcceptableThan(a, b) || isStrictlyLessOrEquallyAcceptableThan(b, a)));
 	}
-
 }

@@ -21,17 +21,17 @@ package net.sf.tweety.arg.rankings.postulates;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.sf.tweety.arg.dung.semantics.ArgumentRanking;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.AbstractRankingReasoner;
+import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 
 /**
- *  The "independence" postulate for ranking semantics as proposed in
- *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: 
- *  The ranking between to arguments a and b should be independent of any argument 
- *  that is neither connected to a nor to b.
+ * The "independence" postulate for ranking semantics as proposed in [Amgoud,
+ * Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: The
+ * ranking between to arguments a and b should be independent of any argument
+ * that is neither connected to a nor to b.
  * 
  * @author Anna Gessler
  *
@@ -45,7 +45,8 @@ public class RaIndependence extends RankingPostulate {
 
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb.size()>=2 && !kb.contains(new Argument("t")) && !kb.contains(new Argument("t2")));
+		return (kb instanceof DungTheory && kb.size() >= 2 && !kb.contains(new Argument("t"))
+				&& !kb.contains(new Argument("t2")));
 	}
 
 	@Override
@@ -56,13 +57,13 @@ public class RaIndependence extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
+		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
 		Argument t1 = new Argument("t");
 		Argument t2 = new Argument("t2");
 		dt.add(t1);
 		dt.add(t2);
-		dt.add(new Attack(t1,t2));
-		ArgumentRanking ranking2 = ev.getModel((DungTheory)dt);
+		dt.add(new Attack(t1, t2));
+		ArgumentRanking ranking2 = ev.getModel((DungTheory) dt);
 		return ranking.compare(a, b) == ranking2.compare(a, b);
 	}
 
