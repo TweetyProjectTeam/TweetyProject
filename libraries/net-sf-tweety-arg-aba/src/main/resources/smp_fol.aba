@@ -1,0 +1,12 @@
+{Pair(a,c);Pair(a,d);Pair(b,c);Pair(b,d)}
+
+ContraryPair(A,B) <- MPrefers(A,D,B); Pair(A,D)
+ContraryPair(A,B) <- WPrefers(B,E,A); Pair(E,B)
+MPrefers(a,d,c) <-
+MPrefers(b,c,d) <-
+WPrefers(c,a,b) <-
+WPrefers(d,b,a) <-
+
+not Pair(A,B) = ContraryPair(A,B)
+
+

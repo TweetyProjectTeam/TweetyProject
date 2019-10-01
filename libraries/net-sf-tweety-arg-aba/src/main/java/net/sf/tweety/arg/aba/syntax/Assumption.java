@@ -16,20 +16,27 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
- package net.sf.tweety.arg.aba.syntax;
+package net.sf.tweety.arg.aba.syntax;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * @author Nils Geilen (geilenn@uni-koblenz.de)
- *	An assumption of an ABA theory
- * @param <T>	is the type of the language that the ABA theory's rules range over 
+ * This class models an assumption of an ABA theory.
+ * 
+ * @param <T> is the type of the language that the ABA theory's rules range over
+ * @author Nils Geilen (geilenn@uni-koblenz.de) 
  */
-public class Assumption <T extends Formula> implements ABARule< T> {
+public class Assumption<T extends Formula> extends AbaRule<T> {
 	/**
 	 * The assumed formula
 	 */
@@ -37,23 +44,27 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 
 	/**
 	 * Creates a new assumption
-	 * @param assumption	the assumed formula
+	 * 
+	 * @param assumption the assumed formula
 	 */
 	public Assumption(T assumption) {
 		super();
 		this.assumption = assumption;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.commons.util.rules.Rule#isFact()
 	 */
 	@Override
 	public boolean isFact() {
-		return true; 
+		return true;
 	}
-	
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.commons.util.rules.Rule#isConstraint()
 	 */
 	@Override
@@ -61,33 +72,44 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.util.rules.Rule#setConclusion(net.sf.tweety.commons.Formula)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.commons.util.rules.Rule#setConclusion(net.sf.tweety.commons.
+	 * Formula)
 	 */
 	@Override
 	public void setConclusion(T conclusion) {
 		assumption = conclusion;
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.commons.util.rules.Rule#addPremise(net.sf.tweety.commons.Formula)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.commons.util.rules.Rule#addPremise(net.sf.tweety.commons.
+	 * Formula)
 	 */
 	@Override
 	public void addPremise(T premise) {
-		throw new RuntimeException("Cannot add Premise to Assumtion");			
+		throw new RuntimeException("Cannot add Premise to Assumtion");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.commons.util.rules.Rule#addPremises(java.util.Collection)
 	 */
 	@Override
 	public void addPremises(Collection<? extends T> premises) {
-		throw new RuntimeException("Cannot add Premise to Assumtion");	
-		
+		throw new RuntimeException("Cannot add Premise to Assumtion");
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.commons.util.rules.Rule#getSignature()
 	 */
 	@Override
@@ -95,7 +117,9 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 		return assumption.getSignature();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.commons.util.rules.Rule#getPremise()
 	 */
 	@Override
@@ -103,23 +127,28 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 		return new ArrayList<>();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.commons.util.rules.Rule#getConclusion()
 	 */
 	@Override
 	public T getConclusion() {
 		return assumption;
 	}
-	
+
 	/**
 	 * Returns the inner formula of this assumption.
+	 * 
 	 * @return the inner formula of this assumption.
 	 */
 	public T getFormula() {
 		return assumption;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.arg.aba.syntax.ABARule#isAssumption()
 	 */
 	@Override
@@ -127,7 +156,9 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -135,7 +166,9 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 		return assumption.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -146,7 +179,9 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@SuppressWarnings("rawtypes")
@@ -167,6 +202,63 @@ public class Assumption <T extends Formula> implements ABARule< T> {
 		return true;
 	}
 
-	
+	@Override
+	public Set<? extends Predicate> getPredicates() {
+		Set<Predicate> predicates = new HashSet<Predicate>();
+		Signature sig = this.getSignature();
+		if (sig instanceof FolSignature) {
+			predicates.addAll(((RelationalFormula) assumption).getPredicates());
+		}
+		return predicates;
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return true;
+	}
+
+	@Override
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> reval = new HashSet<Term<?>>();
+		Signature sig = assumption.getSignature();
+		if (sig instanceof FolSignature) {
+			reval.addAll(((RelationalFormula) assumption).getTerms());
+		}
+		return reval;
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		Set<C> reval = new HashSet<C>();
+		Signature sig = assumption.getSignature();
+		if (sig instanceof FolSignature) {
+			for (Term<?> arg : ((RelationalFormula) assumption).getTerms()) {
+				if (arg.getClass().equals(cls)) {
+					@SuppressWarnings("unchecked")
+					C castArg = (C) arg;
+					reval.add(castArg);
+				}
+				// recursively add terms for all inner functional terms
+				reval.addAll(arg.getTerms(cls));
+			}
+		}
+		return reval;
+	}
+
+	@Override
+	public AbaElement<T> clone() {
+		return new Assumption<T>(this.assumption);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Assumption<T> substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		Assumption<T> a = new Assumption<T>(assumption);
+		Signature sig = assumption.getSignature();
+		if (sig instanceof FolSignature) {
+			a = new Assumption<T>((T) (((RelationalFormula) assumption).substitute(v, t)));
+		}
+		return a;
+	}
 
 }

@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.aba.semantics.AbaExtension;
-import net.sf.tweety.arg.aba.syntax.ABATheory;
+import net.sf.tweety.arg.aba.syntax.AbaTheory;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
@@ -36,14 +36,16 @@ import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.InferenceMode;
 
 /**
+ * This class models a reasoner over ABA formulae.
+ * This reasoner can only be used with flat ABA theories because
+ * only those can be transformed into Dung frameworks.
+ * 
+ * @param <T> the type of formulas
+ * 
  * @author Nils Geilen 
  * @author Matthias Thimm
- * This class models a reasoner over ABA formulae
- * Can only be used with flat ABA theories because
- * only those can be transformed into Dung frameworks
- * @param <T> the type of formulas
  */
-public class FlatABAReasoner<T extends Formula> extends GeneralABAReasoner<T> {
+public class FlatAbaReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 
 	private Semantics semantics;
 	
@@ -54,7 +56,7 @@ public class FlatABAReasoner<T extends Formula> extends GeneralABAReasoner<T> {
 	 *            an indicator for the used semantics (c.f.
 	 *            net.sf.tweety.arg.dung.semantics.Semantics)
 	 */
-	public FlatABAReasoner(Semantics semantics) {
+	public FlatAbaReasoner(Semantics semantics) {
 		this.semantics = semantics;
 	}
 
@@ -62,7 +64,7 @@ public class FlatABAReasoner<T extends Formula> extends GeneralABAReasoner<T> {
 	 * @see net.sf.tweety.arg.aba.reasoner.GeneralABAReasoner#query(net.sf.tweety.arg.aba.syntax.ABATheory, net.sf.tweety.arg.aba.syntax.Assumption, net.sf.tweety.commons.InferenceMode)
 	 */
 	@Override
-	public Boolean query(ABATheory<T> beliefbase, Assumption<T> query, InferenceMode inferenceMode) {
+	public Boolean query(AbaTheory<T> beliefbase, Assumption<T> query, InferenceMode inferenceMode) {
 		Argument arg = new Argument(query.getConclusion().toString());
 		DungTheory dt = beliefbase.asDungTheory();
 		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
@@ -73,7 +75,7 @@ public class FlatABAReasoner<T extends Formula> extends GeneralABAReasoner<T> {
 	 * @see net.sf.tweety.arg.aba.reasoner.GeneralABAReasoner#getModels(net.sf.tweety.arg.aba.syntax.ABATheory)
 	 */
 	@Override
-	public Collection<AbaExtension<T>> getModels(ABATheory<T> abat) {
+	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
 		DungTheory dt = abat.asDungTheory();
 		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
 		Collection<AbaExtension<T>> result = new HashSet<>();

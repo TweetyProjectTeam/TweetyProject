@@ -26,23 +26,24 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.sf.tweety.arg.aba.semantics.AbaExtension;
-import net.sf.tweety.arg.aba.syntax.ABATheory;
+import net.sf.tweety.arg.aba.syntax.AbaTheory;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.commons.Formula;
 
 /**
- * @author Nils Geilen (geilenn@uni-koblenz.de)
- * @author Matthias Thimm
  * This reasoner for ABA theories performs inference on the ideal extension.
  * @param <T>	the language of the underlying ABA theory
+ * 
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
+ * @author Matthias Thimm
  */
-public class IdealReasoner<T extends Formula> extends GeneralABAReasoner<T> {
+public class IdealReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.aba.reasoner.GeneralABAReasoner#getModels(net.sf.tweety.arg.aba.syntax.ABATheory)
 	 */
 	@Override
-	public Collection<AbaExtension<T>> getModels(ABATheory<T> abat) {
+	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
 		Collection<AbaExtension<T>> prefexts = new PreferredReasoner<T>().getModels(abat);
 		Iterator<AbaExtension<T>> iter = prefexts.iterator();
 		Collection<Assumption<T>> intersec = iter.hasNext() ? iter.next() : new HashSet<Assumption<T>>();

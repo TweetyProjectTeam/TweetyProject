@@ -22,30 +22,29 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import net.sf.tweety.arg.aba.semantics.AbaExtension;
-import net.sf.tweety.arg.aba.syntax.ABATheory;
+import net.sf.tweety.arg.aba.syntax.AbaTheory;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.commons.Formula;
 
 /**
- * @author Nils Geilen (geilenn@uni-koblenz.de)
- * @author Matthias Thimm
  * This reasoner for ABA theories performs inference on the complete extensions.
  * @param <T>	the language of the underlying ABA theory
+ * 
+ * @author Nils Geilen (geilenn@uni-koblenz.de)
+ * @author Matthias Thimm
  */
-public class CompleteReasoner<T extends Formula> extends GeneralABAReasoner<T> {
+public class CompleteReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.aba.reasoner.GeneralABAReasoner#getModels(net.sf.tweety.arg.aba.syntax.ABATheory)
 	 */
 	@Override
-	public Collection<AbaExtension<T>> getModels(ABATheory<T> abat) {
+	public Collection<AbaExtension<T>> getModels(AbaTheory<T> abat) {
 		Collection<AbaExtension<T>> result = new HashSet<>();
 		Collection<AbaExtension<T>> exts = abat.getAllAdmissbleExtensions();
 		l:for(Collection<Assumption<T>> ext : exts) {
-			//System.out.println(ext);
 			for(Assumption<T> a: abat.getAssumptions()) {
 				if(!ext.contains(a)&&abat.defends(ext, a)){
-					//System.out.println(a);
 					continue l;
 				}
 			}

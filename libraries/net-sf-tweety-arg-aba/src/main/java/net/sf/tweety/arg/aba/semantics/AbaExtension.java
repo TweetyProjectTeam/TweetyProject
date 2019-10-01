@@ -22,18 +22,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import net.sf.tweety.arg.aba.syntax.ABATheory;
+import net.sf.tweety.arg.aba.syntax.AbaTheory;
 import net.sf.tweety.arg.aba.syntax.Assumption;
 import net.sf.tweety.commons.AbstractInterpretation;
 import net.sf.tweety.commons.Formula;
 
 /**
- * An set of assumptions.
- * @author Matthias Thimm
- *
+ * 
+ * This class models an ABA Extension, meaning a set of assumptions.
+ * 
  * @param <T> The type of formulas
+ * @author Matthias Thimm
  */
-public class AbaExtension<T extends Formula> extends AbstractInterpretation<ABATheory<T>,Assumption<T>> implements Collection<Assumption<T>> {
+public class AbaExtension<T extends Formula> extends AbstractInterpretation<AbaTheory<T>,Assumption<T>> implements Collection<Assumption<T>> {
 
 	/** the assumptions */
 	private Collection<Assumption<T>> assumptions;
@@ -66,7 +67,7 @@ public class AbaExtension<T extends Formula> extends AbstractInterpretation<ABAT
 	 * @see net.sf.tweety.commons.Interpretation#satisfies(net.sf.tweety.commons.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(ABATheory<T> beliefBase) throws IllegalArgumentException {
+	public boolean satisfies(AbaTheory<T> beliefBase) throws IllegalArgumentException {
 		throw new IllegalArgumentException("Satisfaction of belief bases by extensions is undefined.");
 	}
 
