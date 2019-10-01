@@ -24,9 +24,12 @@ import java.util.Map;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.commons.InferenceMode;
 import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.semantics.PossibleWorld;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
@@ -75,5 +78,27 @@ public class SatCompleteReasoner  extends AbstractSatExtensionReasoner {
 			}
 		}		
 		return beliefSet;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#query(net.sf.tweety.arg.dung.syntax.DungTheory,net.sf.tweety.arg.dung.syntax.Argument,net.sf.tweety.commons.InferenceMode)
+	 */
+	@Override
+	public Boolean query(DungTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
+		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
+			PlBeliefSet prop = this.getPropositionalCharacterisation(beliefbase);
+			prop.add(new Negation(new Proposition("in_" + formula.getName())));
+			PossibleWorld w = (PossibleWorld) super.solver.getWitness(prop);
+			if(w == null)
+				return true;
+			return false;
+		}
+		// so its credulous semantics
+		PlBeliefSet prop = this.getPropositionalCharacterisation(beliefbase);
+		prop.add(new Proposition("in_" + formula.getName()));
+		PossibleWorld w = (PossibleWorld) super.solver.getWitness(prop);
+		if(w == null)
+			return false;
+		return true;
 	}
 }

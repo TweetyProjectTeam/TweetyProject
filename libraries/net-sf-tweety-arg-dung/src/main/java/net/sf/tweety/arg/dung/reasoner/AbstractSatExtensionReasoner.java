@@ -44,7 +44,7 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 	/**
 	 * A SAT solver 
 	 */
-	private SatSolver solver;
+	protected SatSolver solver;
 	
 	/**
 	 * Instantiates a new reasoner that uses the given SAT solver
