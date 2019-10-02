@@ -115,7 +115,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 				for(PlFormula p2: disj){
 					if(p2 instanceof Proposition)
 						s += (props.indexOf(p2) + 1) + " ";
-					else if(p2 instanceof Negation){
+					else if(p2.isLiteral()){
 						s += "-" + (props.indexOf((Proposition)((Negation)p2).getFormula()) + 1) + " ";
 					}else throw new RuntimeException("This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered.");				
 				}			
@@ -156,7 +156,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 			for(PlFormula p2: disj){
 				if(p2 instanceof Proposition)
 					s += (props.indexOf(p2) + 1) + " ";
-				else if(p2 instanceof Negation){
+				else if(p2.isLiteral()){
 					s += "-" + (props.indexOf((Proposition)((Negation)p2).getFormula()) + 1) + " ";
 				}else throw new RuntimeException("This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered.");				
 			}			
