@@ -25,7 +25,7 @@ import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.commons.postulates.PostulateEvaluatable;
 
 /**
- * Interface for ranking reasoners for abstract argumentation.
+ * Common abstract class for ranking reasoners for abstract argumentation.
  * 
  * @author Anna Gessler
  *

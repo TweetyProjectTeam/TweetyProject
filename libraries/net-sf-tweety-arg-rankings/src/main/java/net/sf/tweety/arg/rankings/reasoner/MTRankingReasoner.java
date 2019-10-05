@@ -30,11 +30,9 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 import net.sf.tweety.commons.util.SetTools;
-import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -126,14 +124,15 @@ public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgument
 		/*
 		 * Solve problem with simplex algorithm
 		 */
-		Solver solver = new ApacheCommonsSimplex();
+		ApacheCommonsSimplex solver = new ApacheCommonsSimplex();
+		solver.onlyPositive = true;
 		try {
 			Map<Variable, Term> solution = solver.solve(problem);
 			return solution.get(target_var).doubleValue();
-		} catch (GeneralMathException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return 0.0;
+		return -1.0;
 	}
 
 	/**

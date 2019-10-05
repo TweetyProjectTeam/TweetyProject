@@ -79,6 +79,11 @@ public class RaIncreaseOfDefenseBranch extends RankingPostulate {
 				dt.add(new Attack(attacker, a_clone2));
 			}
 		}
+		for (Argument attacked : dt.getAttacked(a_old)) {
+			if (!attacked.equals(a_old)) {
+				dt.add(new Attack(a_clone, attacked));
+				dt.add(new Attack(a_clone2, attacked)); }
+		}
 
 		// add new defense branch
 		Argument t1 = new Argument("t1");

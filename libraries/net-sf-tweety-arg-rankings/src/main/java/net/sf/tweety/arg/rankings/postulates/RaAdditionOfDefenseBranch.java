@@ -72,6 +72,11 @@ public class RaAdditionOfDefenseBranch extends RankingPostulate {
 			else
 				dt.add(new Attack(attacker, a_clone));
 		}
+		for (Argument attacked : dt.getAttacked(a_old)) {
+			if (!attacked.equals(a_old)) 
+				dt.add(new Attack(a_clone, attacked));
+		}
+		
 		// add new defense branch
 		Argument t1 = new Argument("t1");
 		Argument t2 = new Argument("t2");
