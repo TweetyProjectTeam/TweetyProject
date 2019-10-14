@@ -19,6 +19,7 @@
 package net.sf.tweety.arg.rankings.postulates;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -62,12 +63,16 @@ public class RaCounterTransitivity extends RankingPostulate {
 		if (attackers_b.size() < attackers_a.size())
 			return true;
 
+		Set<Argument> toRemove = new HashSet<Argument>();
 		ArgumentRanking ranking = ev.getModel(dt);
 		for (Argument ax : attackers_a) {
 			boolean flag = false;
-			for (Argument bx : attackers_b) {
-				if (ranking.isStrictlyLessOrEquallyAcceptableThan(bx, ax)) {
+			Set<Argument> tempSet = new HashSet<Argument>(attackers_b);
+			tempSet.removeAll(toRemove);
+			for (Argument bx : tempSet) {
+				if (ranking.isStrictlyMoreOrEquallyAcceptableThan(bx, ax)) {
 					flag = true;
+					toRemove.add(bx);
 					break;
 				}
 			}

@@ -344,6 +344,66 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return false;
 	}
 	
+	/**
+	 * Checks whether the path from b to a is an attack branch,
+	 * i.e. whether b is a non-attacked (indirect) attacker of a.
+	 * @param a an Argument
+	 * @param b an Argument
+	 * @return true iff the path from a to b is an attack branch, false otherwise
+	 */
+	public boolean isAttackBranch(Argument a, Argument b) {
+		if (!this.getAttackers(b).isEmpty())
+			return false;
+		return isIndirectAttack(b,a);
+	}
+	
+	/**
+	 * Checks whether the path from b to a is a defense branch,
+	 * i.e. whether b is a non-attacked (indirect) defender of a.
+	 * @param a an Argument
+	 * @param b an Argument
+	 * @return true iff the path from a to b is a defense branch, false otherwise
+	 */
+	public boolean isDefenseBranch(Argument a, Argument b) {
+		if (!this.getAttackers(b).isEmpty())
+			return false;
+		return isSupport(b,a);
+	}
+	
+	/**
+	 * If this graph is acyclic, this method checks if the given
+	 * argument has an attack branch, i.e. if it is (indirectly) attacked
+	 * by a non-attacked argument.
+	 * @param a an Argument
+	 * @return true iff this graph is acyclic and a has an attack branch, false otherwise
+	 */
+	public boolean hasAttackBranch(Argument a) {
+		if (this.containsCycle())
+			return false;
+		for (Argument b : this.getNodes()) {
+			if (isAttackBranch(b,a))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * If this graph is acyclic, this method checks if the given
+	 * argument has a defense branch, i.e. if it is supported
+	 * by a non-attacked argument.
+	 * @param a an Argument
+	 * @return true iff this graph is acyclic and a has a defense branch, false otherwise
+	 */
+	public boolean hasDefenseBranch(Argument a) {
+		if (this.containsCycle())
+			return false;
+		for (Argument b : this.getNodes()) {
+			if (isDefenseBranch(b,a))
+				return true;
+		}
+		return false;
+	}
+	
 	// Misc methods
 
 	

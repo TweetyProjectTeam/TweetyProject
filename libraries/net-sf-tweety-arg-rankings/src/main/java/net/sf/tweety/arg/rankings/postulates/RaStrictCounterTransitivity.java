@@ -19,6 +19,7 @@
 package net.sf.tweety.arg.rankings.postulates;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -28,13 +29,12 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- *  The "strict counter-transitivity" postulate for ranking semantics as proposed by
- *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: 
- *  If the "counter-transitivity" postulate is satisfied and
- *  either the direct attackers of an b are strictly 
- *  more numerous or acceptable than those of a, then a
- *  is strictly more acceptable than b.
- *  
+ * The "strict counter-transitivity" postulate for ranking semantics as proposed
+ * by [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks.
+ * 2013]: If the "counter-transitivity" postulate is satisfied and either the
+ * direct attackers of an b are strictly more numerous or acceptable than those
+ * of a, then a is strictly more acceptable than b.
+ * 
  * @author Anna Gessler
  */
 public class RaStrictCounterTransitivity extends RankingPostulate {
@@ -43,9 +43,10 @@ public class RaStrictCounterTransitivity extends RankingPostulate {
 	public String getName() {
 		return "Strict Counter-Transitivity";
 	}
+
 	@Override
 	public boolean isApplicable(Collection<Argument> kb) {
-		return (kb instanceof DungTheory && kb.size()>=2);
+		return (kb instanceof DungTheory && kb.size() >= 2);
 	}
 
 	@Override
@@ -58,33 +59,40 @@ public class RaStrictCounterTransitivity extends RankingPostulate {
 		Argument b = it.next();
 		Set<Argument> attackers_a = dt.getAttackers(a);
 		Set<Argument> attackers_b = dt.getAttackers(b);
-		
+
 		if (attackers_b.size() < attackers_a.size())
 			return true;
-		
+
+		Set<Argument> toRemove = new HashSet<Argument>();
 		ArgumentRanking ranking = ev.getModel(dt);
 		boolean strict_flag = false;
 		for (Argument ax : attackers_a) {
 			boolean flag = false;
-			for (Argument bx : attackers_b) {
-				if (ranking.isStrictlyLessOrEquallyAcceptableThan(bx, ax)) 
-					flag = true;
-				if (ranking.isStrictlyLessAcceptableThan(bx, ax))
+			Set<Argument> tempSet = new HashSet<Argument>(attackers_b);
+			tempSet.removeAll(toRemove);
+			for (Argument bx : tempSet) {
+				if (ranking.isStrictlyMoreAcceptableThan(bx, ax))
 					strict_flag = true;
+				if (ranking.isStrictlyMoreOrEquallyAcceptableThan(bx, ax)) {
+					flag = true;
+					toRemove.add(bx);
+					break;
+				}
+
 			}
 			if (!flag)
 				return true;
 		}
-		
+
 		if (ranking.isIncomparable(a, b)) {
 			if (IGNORE_INCOMPARABLE_ARGUMENTS)
 				return true;
 			else
 				return false;
 		}
-		
-		if ((attackers_a.size() < attackers_b.size()) || strict_flag) 
-			return ranking.isStrictlyMoreAcceptableThan(a, b); 
+
+		if ((attackers_a.size() < attackers_b.size()) || strict_flag)
+			return ranking.isStrictlyMoreAcceptableThan(a, b);
 		return true;
 	}
 }
