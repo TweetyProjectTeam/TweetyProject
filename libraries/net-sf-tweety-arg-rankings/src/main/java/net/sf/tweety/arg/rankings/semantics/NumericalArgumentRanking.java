@@ -271,8 +271,8 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	}
 
 	/**
-	 * Set the sorting type for ranking values. For example, the "ascending" type means that
-	 * smaller values signify a higher ranking than bigger values.
+	 * Set the sorting type for ranking values. For example, the "ascending" type
+	 * means that smaller values signify a higher ranking than bigger values.
 	 * 
 	 * @param order
 	 */
@@ -283,5 +283,14 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	@Override
 	public boolean isIncomparable(Argument a, Argument b) {
 		return (!(isStrictlyLessOrEquallyAcceptableThan(a, b) || isStrictlyLessOrEquallyAcceptableThan(b, a)));
+	}
+
+	@Override
+	public boolean containsIncomparableArguments() {
+		for (Argument a : this.theMap.keySet()) 
+			for (Argument b : this.theMap.keySet()) 
+				if (this.isIncomparable(a, b)) 
+					return true;
+		return false;
 	}
 }

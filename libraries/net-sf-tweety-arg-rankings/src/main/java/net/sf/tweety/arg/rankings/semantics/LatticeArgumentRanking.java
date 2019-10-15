@@ -18,8 +18,12 @@
  */
 package net.sf.tweety.arg.rankings.semantics;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 
 import net.sf.tweety.arg.dung.semantics.ArgumentStatus;
 import net.sf.tweety.arg.dung.semantics.Extension;
@@ -85,6 +89,15 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 		return !this.order.isComparable(a, b);
 	}
 
+	@Override
+	public boolean containsIncomparableArguments() {
+		for (Argument a : this.order.getElements()) 
+			for (Argument b : this.order.getElements()) 
+				if (this.isIncomparable(a, b)) 
+					return true;
+		return false;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -112,21 +125,68 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 */
 	@Override
 	public String toString() {
-		Collection<Argument> args = this.order.getElements();
 		String result = "[";
-		for (Argument a : args) {
-			for (Argument b : args) {
-				if (this.isStrictlyMoreAcceptableThan(a, b))
-					result += "(" + a + ">" + b + "), ";
-				else if (this.isEquallyAcceptableThan(a, b) && !a.equals(b))
-					result += "(" + a + "=" + b + "), ";
-				else if (this.isIncomparable(a, b))
-					result += "(" + a + "?" + b + "), ";
+		if (!this.containsIncomparableArguments()) {
+			List<Argument> args = new ArrayList<Argument>(this.order.getElements());
+			Collections.sort(args, new LatticeComparator(this));
+			for (int i = args.size() - 1; i > 0; i--) {
+				Argument a = args.get(i);
+				Argument b = args.get(i - 1);
+				if (i == args.size() - 1)
+					result += a;
+				if (this.isEquallyAcceptableThan(a, b))
+					result += " = " + b;
+				else
+					result += " > " + b;
 			}
+		} else {
+			String incomparables = "";
+			for (Argument a : this.order.getElements()) {
+				for (Argument b : this.order.getElements()) {
+					if (this.isStrictlyMoreAcceptableThan(a, b))
+						result += "" + a + ">" + b + ", ";
+					else if (this.isEquallyAcceptableThan(a, b) && !a.equals(b))
+						result += "" + a + "=" + b + ", ";
+					else if (this.isIncomparable(a, b))
+						incomparables += "" + a + "?" + b + ", ";
+				}
+			}
+			result += incomparables; // print incomparable arguments last
+			if (result.length() > 1)
+				result = result.substring(0, result.length() - 2);
 		}
-		if (result.length() > 1)
-			result = result.substring(0, result.length() - 2);
-		return result + "]";
+		return result += "]";
+	}
+
+	/**
+	 * Comparator for comparing arguments on the basis of a given
+	 * LatticeArgumentRanking. Fails for incomparable arguments.
+	 * 
+	 * @author Anna Gessler
+	 * @throws IllegalArgumentException for incomparable arguments
+	 *
+	 */
+	private class LatticeComparator implements Comparator<Argument> {
+		/**
+		 * The ranking that is associated with this comparator.
+		 */
+		private LatticeArgumentRanking order;
+
+		public LatticeComparator(LatticeArgumentRanking order) {
+			this.order = order;
+		}
+
+		@Override
+		public int compare(Argument a, Argument b) {
+			if (order.isIncomparable(a, b))
+				throw new IllegalArgumentException("Incomparable arguments " + a + ", " + b);
+			else if (order.isStrictlyLessAcceptableThan(a, b))
+				return -1;
+			else if (order.isStrictlyMoreAcceptableThan(a, b))
+				return 1;
+			else
+				return 0;
+		}
 	}
 
 }

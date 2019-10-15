@@ -174,4 +174,9 @@ public abstract class ArgumentRanking extends AbstractArgumentationInterpretatio
 	 */
 	public abstract boolean isIncomparable(Argument a, Argument b);
 	
+	/**
+	 * @return true if this ranking contains incomparable arguments, false otherwise
+	 */
+	public abstract boolean containsIncomparableArguments();
+	
 }
