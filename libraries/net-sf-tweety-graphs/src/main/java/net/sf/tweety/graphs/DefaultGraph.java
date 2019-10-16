@@ -19,6 +19,7 @@
 package net.sf.tweety.graphs;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.math.matrix.Matrix;
@@ -469,5 +470,169 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		}
 		states.put(parent, CLOSED);
 		return false;
+	}
+	
+	/**
+	 * Finds the cycles of an graph order-sensitively, excluding self-loops (cycles of length one).
+	 * @param g The graph to be searched.
+	 * @return An stack of nodes with the order indicating the direction of the cycle (assuming an directed graph).
+	 */
+	public static <S extends Node> Set<Stack<S>> getCyclesExcludingSelfLoops(Graph<S> g) {
+		Set<Stack<S>> results = new HashSet<Stack<S>>();
+		results.addAll(DefaultGraph.getCyclesIncludingSelfLoops(g));
+		Collection<? extends Edge<? extends S>> edges = g.getEdges();
+		
+		// removing all self-loops
+		for(Edge<? extends S> singleEdge : edges) {
+			if(singleEdge.getNodeA().equals(singleEdge.getNodeB())) {
+				Stack<S> removeFromResults = new Stack<S>();
+				removeFromResults.push(singleEdge.getNodeA());
+				removeFromResults.push(singleEdge.getNodeA());
+				results.remove(removeFromResults);
+			}
+		}
+		
+		return results;
+	}
+	
+	/**
+	 * Finds the cycles of an graph order-sensitively, including self-loops (cycles of length one).
+	 * @param g The graph to be searched.
+	 * @return An stack of nodes with the order indicating the direction of the cycle (assuming an directed graph).
+	 */
+	public static <S extends Node> Set<Stack<S>> getCyclesIncludingSelfLoops(Graph<S> g) {
+		// early out for performance reason
+		if(!DefaultGraph.containsCycle(g))
+			return new HashSet<Stack<S>>();
+		
+		// Adapted version of Johnson's Algorithm described in
+		// "Find All The elementary Circuits Of A Directed Graph" by D. B. Johnson (1975)
+		Map<S, Set<S>> ag = new HashMap<S, Set<S>>();
+		Map<S, Set<S>> b = new HashMap<S, Set<S>>();
+		Map<S, Boolean> blocked = new HashMap<S, Boolean>();
+		S s;
+		Stack<S> stack = new Stack<S>();
+		Set<Stack<S>> results = new HashSet<Stack<S>>();
+		
+		Collection<Collection<S>> stronglyConnectedComponents = DefaultGraph.getStronglyConnectedComponents(g);
+		for(Collection<S> singleComponent : stronglyConnectedComponents) {
+			for(S node : singleComponent) {
+				Collection<S> children = g.getChildren(node);
+				// Filtering out children who are not in the same SCC
+				// SCC := Strongly Connected Component
+				Set<S> childrenInSCC = children.stream().filter(child -> singleComponent.contains(child)).collect(Collectors.toSet());
+				ag.put(node, childrenInSCC); 
+			}
+		}
+		
+		for(Collection<S> singleComponent : stronglyConnectedComponents) {
+			Iterator<S> componentIterator = singleComponent.iterator();
+			while(componentIterator.hasNext()) {
+				s = componentIterator.next();
+				for(S i : singleComponent) {
+					blocked.put(i, false);
+					b.put(i, new HashSet<S>());
+				}
+				
+				DefaultGraph.circuit(s, stack, blocked, ag, b, s, results);
+			}
+		}
+		
+		
+		return results;
+		
+		
+	}
+	
+	// Helper function for getCycles
+	private static <S extends Node> void unblock(S u, Map<S, Boolean> blocked, Map<S, Set<S>> b){
+		blocked.put(u, false);
+		for(S w : b.get(u)) {
+			b.remove(w);
+			if(blocked.get(w))
+				DefaultGraph.unblock(w, blocked, b);
+		}
+	}
+	
+	// Helper function for getCycles
+	private static <S extends Node> Boolean circuit(S v, Stack<S> stack, Map<S, Boolean> blocked, Map<S, Set<S>> ak, Map<S, Set<S>> b, S s, Set<Stack<S>> results) {
+		Boolean f = false;
+		stack.push(v);
+		blocked.put(v, true);
+		for (S w : ak.get(v)) {
+			if(w == s) {
+				Stack<S> singleResult = new Stack<S>();
+				singleResult.addAll(stack);
+				singleResult.push(s);
+				results.add(singleResult);
+				f = true;
+			} else if(!blocked.get(w))
+				if(DefaultGraph.circuit(w, stack, blocked, ak, b, s, results))
+					f = true;
+		}
+		
+		if(f)
+			unblock(v, blocked, b);
+		else
+			for(S w : ak.get(v))
+				b.get(w).add(v);
+		
+		stack.pop();
+		return f;
+	}
+	
+	
+	/**
+	 * Finds all components of a graph and returns them as a graph.
+	 * @param g The graph which components should be found.
+	 * @return A collection of the components as separate graphs.
+	 */
+	public static <S extends Node> Collection<Graph<S>> getComponents(Graph<S> g) {
+		// implementation via BFS adapted to directed graphs
+		Collection<Graph<S>> components = new HashSet<Graph<S>>();
+		Stack<S> notVisited = new Stack<S>();
+		notVisited.addAll(g.getNodes());
+		
+		while(!notVisited.isEmpty()) {
+			Graph<S> singleComponent = new DefaultGraph<S>();
+			S startNode = notVisited.pop();
+			
+			Queue<S> queue = new LinkedList<S>();
+			queue.add(startNode);
+			
+			while(!queue.isEmpty()) {
+				S currentNode = queue.poll();
+				singleComponent.add(currentNode);
+				
+				Collection<S> parentNodes = g.getParents(currentNode);
+				Collection<S> childNodes = g.getChildren(currentNode);
+				
+				Collection<S> adjacentNodes = new HashSet<S>();
+				adjacentNodes.addAll(parentNodes);
+				adjacentNodes.addAll(childNodes);
+				Collection<S> filteredAdjacentNodes = adjacentNodes.stream().filter(node -> notVisited.contains(node)).collect(Collectors.toList());
+				
+				queue.addAll(filteredAdjacentNodes);
+				notVisited.removeAll(filteredAdjacentNodes);
+				
+				for(S singleParentNode : parentNodes) {
+					singleComponent.add(singleParentNode);
+					singleComponent.add(g.getEdge(singleParentNode, currentNode));
+				}
+					
+				for(S singleChildNode : childNodes) {
+					singleComponent.add(singleChildNode);
+					singleComponent.add(g.getEdge(currentNode, singleChildNode));
+				}
+				
+			}
+			
+			components.add(singleComponent);
+			
+		}
+		
+		
+		
+		return components;
 	}
 }

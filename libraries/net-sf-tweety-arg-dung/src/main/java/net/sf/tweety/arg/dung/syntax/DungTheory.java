@@ -559,6 +559,10 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return b1 || b2 ;		
 	}
 	
+	public boolean add(Argument argument) {
+		return super.add(argument);
+	}
+	
 	/**
 	 * Returns all attacks of this theory.
 	 * @return all attacks of this theory.
@@ -808,5 +812,12 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 */
 	public <S extends Node> boolean containsCycle() {
 		return DefaultGraph.containsCycle(this);
+	}
+
+	/**
+	 * @return
+	 */
+	public Collection<Graph<Argument>> getComponents() {
+		return DefaultGraph.getComponents(this);
 	}
 }
