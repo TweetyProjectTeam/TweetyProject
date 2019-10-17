@@ -37,7 +37,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
  * @author Timothy Gillespie
  *
  */
-public class InconsistencyMeasure {
+public class GraphStructureInconsistencyMeasure {
 
 	static Argument a = new Argument("a");
 	static Argument b = new Argument("b");
@@ -340,8 +340,8 @@ public class InconsistencyMeasure {
 		
 		WeightedCycleCountInconsistencyMeasure<DungTheory> tester = new WeightedCycleCountInconsistencyMeasure<DungTheory>();
 		
-		Double cycleCount = tester.inconsistencyMeasure(hunterExample13G1);
-		assertEquals(0d, cycleCount, 0.0);
+		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample13G1);
+		assertEquals(0d, weightedCycleCount, 0.0);
 	}
 	
 	@Test
@@ -349,8 +349,8 @@ public class InconsistencyMeasure {
 		
 		WeightedCycleCountInconsistencyMeasure<DungTheory> tester = new WeightedCycleCountInconsistencyMeasure<DungTheory>();
 		
-		Double cycleCount = tester.inconsistencyMeasure(hunterExample13G2);
-		assertEquals(0d, cycleCount, 0.0);
+		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample13G2);
+		assertEquals(0d, weightedCycleCount, 0.0);
 	}
 	
 	@Test
@@ -358,8 +358,8 @@ public class InconsistencyMeasure {
 		
 		WeightedCycleCountInconsistencyMeasure<DungTheory> tester = new WeightedCycleCountInconsistencyMeasure<DungTheory>();
 		
-		Double cycleCount = tester.inconsistencyMeasure(hunterExample14G1);
-		assertEquals(1.0/4.0, cycleCount, 0.0);
+		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample14G1);
+		assertEquals(1.0/4.0, weightedCycleCount, 0.0);
 	}
 	
 	@Test
@@ -367,8 +367,8 @@ public class InconsistencyMeasure {
 		
 		WeightedCycleCountInconsistencyMeasure<DungTheory> tester = new WeightedCycleCountInconsistencyMeasure<DungTheory>();
 		
-		Double cycleCount = tester.inconsistencyMeasure(hunterExample14G2);
-		assertEquals(1.0/3.0, cycleCount, 0.0);
+		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample14G2);
+		assertEquals(1.0/3.0, weightedCycleCount, 0.0);
 	}
 	
 	@Test
@@ -376,8 +376,8 @@ public class InconsistencyMeasure {
 		
 		WeightedCycleCountInconsistencyMeasure<DungTheory> tester = new WeightedCycleCountInconsistencyMeasure<DungTheory>();
 		
-		Double cycleCount = tester.inconsistencyMeasure(hunterExample10);
-		assertEquals((29.0/6.0), cycleCount, 0.0);
+		Double weightedCycleCount = tester.inconsistencyMeasure(hunterExample10);
+		assertEquals((29.0/6.0), weightedCycleCount, 0.0);
 	}
 	
 	@Test
@@ -385,7 +385,7 @@ public class InconsistencyMeasure {
 		
 		WeightedCycleCountInconsistencyMeasure<DungTheory> tester = new WeightedCycleCountInconsistencyMeasure<DungTheory>();
 		
-		Double cycleCount = tester.inconsistencyMeasure(twoComponentFramework);
-		assertEquals(0d, cycleCount, 0.0);
+		Double weightedCycleCount = tester.inconsistencyMeasure(twoComponentFramework);
+		assertEquals(0d, weightedCycleCount, 0.0);
 	}
 }
