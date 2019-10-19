@@ -54,7 +54,7 @@ import net.sf.tweety.commons.ParserException;
  * @author Mathias Hofer
  *
  */
-public class KPPADFFormatParser extends Parser<AbstractDialecticalFramework, Formula> {
+public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, Formula> {
 
 	private static final int BUFFER_CAPACITY = 8192;
 

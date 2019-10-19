@@ -27,30 +27,73 @@ import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
+ * An implementation of a definitional (resp. Tseitin) CNF transformation
+ * algorithm. It avoids potential exponential blowup by the idea of naming
+ * subformulas. This works via the introduction of fresh propositional variables
+ * which are then defined s.t. their truth values match their corresponding
+ * subformulas.
+ * <p>
+ * <b>Example:</b><br>
+ * Formula: a v b<br>
+ * Fresh variable: n<br>
+ * Define n: n <-> a v b<br>
+ * Clauses: (-n v a v b), (-a v n), (-b v n)<br>
+ * Now n is defined and can be used at occurences of (a v b). For instance,
+ * instead of generating clauses for (a v b) -> c, we can continue generating
+ * clauses for n -> c.
+ * <p>
+ * Note that this implementation also provides an optimized version which is
+ * disabled by default but can be enabled with a constructor parameter. This
+ * optimization does not always generate full definitions, i.e. n <-> (a v b),
+ * but based on the polarity either n -> (a v b) resp. (a v b) -> n. This
+ * generates less clauses but does not guarantee satisfiability-equivalence if
+ * it is used in the context of other formulas. It should therefore only be used
+ * if the transformed formula does not appear in the context of other formulas
+ * or if it appears only at positions with positive polarity.
+ * <p>
+ * <b>Example:</b> Let f be an arbitrary formula which we translate using this
+ * implementation. We then get a name to f, say fn, and a set of clauses which
+ * represents f, say Cf. If we plan to use fn in some context like (fn -> a) v
+ * (-fn -> b) together with Cf, we are fine if we use the non-optimized version.
+ * However, the optimized version makes assumptions on the positions of the
+ * subformulas, if we thus change the context, these assumptions may no longer
+ * be true. In this example fn is used at a positive and at a negative position,
+ * which is not permitted.
  * 
  * @author Mathias Hofer
  *
  */
 public class DefinitionalCNFTransform implements Transform<Disjunction, Proposition> {
-	
+
 	private Function<Argument, Proposition> argumentToProposition;
-	
+
 	private boolean optimize = false;
 
 	/**
+	 * Constructs a non-optimized version of the definitional (resp. Tseitin)
+	 * CNF transformation algorithm.
+	 * 
 	 * @param argumentToProposition
+	 *            mapping used to transform the arguments to propositions.
 	 */
 	public DefinitionalCNFTransform(Function<Argument, Proposition> argumentToProposition) {
-		super();
 		this.argumentToProposition = argumentToProposition;
 	}
 
 	/**
+	 * Constructs a possibly optimized version of the definitional (resp.
+	 * Tseitin) CNF transformation algorithm.
+	 * <p>
+	 * The optimization generates only the necessary parts of the definitions
+	 * based on the polarity of the subformulas, i.e. <- or -> (or both for
+	 * polarity = 0) instead of always <->.
+	 * 
 	 * @param argumentToProposition
+	 *            mapping used to transform the arguments to propositions.
 	 * @param optimize
+	 *            true enables the optimized definition
 	 */
 	public DefinitionalCNFTransform(Function<Argument, Proposition> argumentToProposition, boolean optimize) {
-		super();
 		this.argumentToProposition = argumentToProposition;
 		this.optimize = optimize;
 	}
@@ -72,7 +115,7 @@ public class DefinitionalCNFTransform implements Transform<Disjunction, Proposit
 			clause.add(new Negation(name));
 			consumer.accept(clause);
 		}
-		if (polarity <= 0  || !optimize) {
+		if (polarity <= 0 || !optimize) {
 			for (Proposition p : subconditions) {
 				Disjunction clause = new Disjunction(new Negation(p), name);
 				consumer.accept(clause);
@@ -92,13 +135,13 @@ public class DefinitionalCNFTransform implements Transform<Disjunction, Proposit
 	public Proposition transformConjunction(Consumer<Disjunction> consumer, Collection<Proposition> subconditions,
 			int polarity) {
 		Proposition name = new Proposition("and_" + subconditions.hashCode());
-		if (polarity >= 0  || !optimize) {
+		if (polarity >= 0 || !optimize) {
 			for (Proposition p : subconditions) {
 				Disjunction clause = new Disjunction(p, new Negation(name));
 				consumer.accept(clause);
 			}
 		}
-		if (polarity <= 0  || !optimize) {
+		if (polarity <= 0 || !optimize) {
 			Disjunction clause = new Disjunction();
 			for (Proposition p : subconditions) {
 				clause.add(new Negation(p));

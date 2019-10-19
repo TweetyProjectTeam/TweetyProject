@@ -16,14 +16,13 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.reasoner;
+package net.sf.tweety.arg.adf.semantics;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
-import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.semantics.LinkType;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.DefinitionalCNFTransform;
 import net.sf.tweety.logics.pl.sat.SatSolver;
@@ -49,14 +48,20 @@ public class SatLinkStrategy implements LinkStrategy {
 
 	@Override
 	public Link compute(AbstractDialecticalFramework adf, Argument a, Argument b) {
-		DefinitionalCNFTransform transform = new DefinitionalCNFTransform(arg -> new Proposition(arg.getName()));
-		Collection<Disjunction> toAcc = new LinkedList<Disjunction>();
-		PlFormula fromPl = a.transform(transform);
-		Proposition toAccName = adf.getAcceptanceCondition(b).collect(transform, Collection::add, toAcc);
-		boolean attacking = isAttacking(fromPl, toAccName, new LinkedList<PlFormula>(toAcc));
-		boolean supporting = isSupporting(fromPl, toAccName, new LinkedList<PlFormula>(toAcc));
-		LinkType linkType = LinkType.get(attacking, supporting);
-		return new Link(a, b, linkType);
+		// first check if "a" is a parent of "b"
+		AcceptanceCondition bAcc = adf.getAcceptanceCondition(b);
+		boolean containsA = bAcc.arguments().anyMatch(p -> p == a);
+		if (containsA) {
+			DefinitionalCNFTransform transform = new DefinitionalCNFTransform(arg -> new Proposition(arg.getName()));
+			Collection<Disjunction> toAcc = new LinkedList<Disjunction>();
+			PlFormula fromPl = a.transform(transform);
+			Proposition toAccName = bAcc.collect(transform, Collection::add, toAcc);
+			boolean attacking = isAttacking(fromPl, toAccName, new LinkedList<PlFormula>(toAcc));
+			boolean supporting = isSupporting(fromPl, toAccName, new LinkedList<PlFormula>(toAcc));
+			LinkType linkType = LinkType.get(attacking, supporting);
+			return new Link(a, b, linkType);
+		}
+		return null;
 	}
 
 	private boolean isAttacking(PlFormula from, PlFormula toAcc, Collection<PlFormula> clauses) {

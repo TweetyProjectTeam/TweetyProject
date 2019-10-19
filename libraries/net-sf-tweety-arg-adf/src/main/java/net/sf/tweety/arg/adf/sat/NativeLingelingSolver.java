@@ -85,23 +85,6 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 		return new LingelingSolverState(init());
 	}
 
-	// @Override
-	// public boolean isSatisfiable(SatSolverState state) {
-	// return getWitness(state) != null;
-	// }
-	//
-	// @Override
-	// public Interpretation<PlBeliefSet, PlFormula> getWitness(SatSolverState
-	// state) {
-	// boolean sat = sat(state.getHandle());
-	// state.setSatCalled();
-	// PossibleWorld pw = null;
-	// if (sat) {
-	// pw = ((LingelingSolverState) state).getPossibleWorld();
-	// }
-	// return pw;
-	// }
-
 	private native void addClause(long lgl, int[] clause);
 
 	/*

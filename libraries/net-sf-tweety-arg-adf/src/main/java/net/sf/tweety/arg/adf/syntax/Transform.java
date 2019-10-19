@@ -22,34 +22,220 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
- * An interface which allows for transform operations on the recursive structure of AcceptanceCondition.
+ * An interface which allows transform operations on the recursive structure
+ * of AcceptanceCondition.
+ * <p>
+ * This transform works via the visitor-pattern. Via dynamic dispatch on
+ * {@link AcceptanceCondition#transform(Transform)} the concrete
+ * {@link AcceptanceCondition}-transform implementation visits its matching
+ * {@link Transform}-transform method. Before that, it however calls
+ * {@link AcceptanceCondition}-transform on its sub-conditions and passes its
+ * return values (of type R) to the specific {@link Transform}-transform of this
+ * condition. This way information is passed from the bottom to the top of the
+ * acceptance condition structure.
  * 
  * @author Mathias Hofer
  *
  * @param <R>
- *            intermediate type which results from transforming the current node
- *            and is shared between the parent and its children
+ *            the type of the bottom-up information, i.e. the values returned by
+ *            the children of a node
  * @param <C>
- *            the result which gets consumed by some provided consumer
+ *            the type of the additional results the implementing transform
+ *            operation may return
  */
 public interface Transform<C, R> {
 
+	/**
+	 * This method is visited by the {@link DisjunctionAcceptanceCondition
+	 * DisjunctionAcceptanceConditions} of the acceptance condition on which we
+	 * apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param subconditions
+	 *            the subconditions of this disjunction, e.g. {a, b} if this =
+	 *            or(a,b)
+	 * @param polarity
+	 *            polarity < 0: negative global position of this disjunction,
+	 *            e.g. this -> a<br>
+	 *            polarity = 0: neutral global position of this disjunction,
+	 *            e.g. this <-> a<br>
+	 *            polarity > 0: positive global position of this disjunction,
+	 *            e.g. a -> this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         disjunction
+	 */
 	public R transformDisjunction(Consumer<C> consumer, Collection<R> subconditions, int polarity);
 
+	/**
+	 * This method is visited by the {@link ConjunctionAcceptanceCondition
+	 * ConjunctionAcceptanceConditions} of the acceptance condition on which we
+	 * apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param subconditions
+	 *            the subconditions of this conjunction, e.g. {a, b} if this =
+	 *            and(a,b)
+	 * @param polarity
+	 *            polarity < 0: negative global position of this conjunction,
+	 *            e.g. this -> a<br>
+	 *            polarity = 0: neutral global position of this conjunction,
+	 *            e.g. this <-> a<br>
+	 *            polarity > 0: positive global position of this conjunction,
+	 *            e.g. a -> this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         conjunction
+	 */
 	public R transformConjunction(Consumer<C> consumer, Collection<R> subconditions, int polarity);
 
+	/**
+	 * This method is visited by the {@link ImplicationAcceptanceCondition
+	 * ImplicationAcceptanceConditions} of the acceptance condition on which we
+	 * apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param left
+	 *            the left part of the implication
+	 * @param right
+	 *            the right part of the implication
+	 * @param polarity
+	 *            polarity < 0: negative global position of this implication,
+	 *            e.g. this -> a<br>
+	 *            polarity = 0: neutral global position of this implication,
+	 *            e.g. this <-> a<br>
+	 *            polarity > 0: positive global position of this implication,
+	 *            e.g. a -> this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         implication
+	 */
 	public R transformImplication(Consumer<C> consumer, R left, R right, int polarity);
 
+	/**
+	 * This method is visited by the {@link EquivalenceAcceptanceCondition
+	 * EquivalenceAcceptanceConditions} of the acceptance condition on which we
+	 * apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param left
+	 *            the left part of the equivalence
+	 * @param right
+	 *            the right part of the equivalence
+	 * @param polarity
+	 *            polarity < 0: negative global position of this equivalence,
+	 *            e.g. this -> a<br>
+	 *            polarity = 0: neutral global position of this equivalence,
+	 *            e.g. this <-> a<br>
+	 *            polarity > 0: positive global position of this equivalence,
+	 *            e.g. a -> this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         equivalence
+	 */
 	public R transformEquivalence(Consumer<C> consumer, R left, R right, int polarity);
 
+	/**
+	 * This method is visited by the
+	 * {@link ExclusiveDisjunctionAcceptanceCondition
+	 * ExclusiveDisjunctionAcceptanceConditions} of the acceptance condition on
+	 * which we apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param left
+	 *            the left part of the xor
+	 * @param right
+	 *            the right part of the xor
+	 * @param polarity
+	 *            polarity < 0: negative global position of this xor, e.g. this
+	 *            -> a<br>
+	 *            polarity = 0: neutral global position of this xor, e.g. this
+	 *            <-> a<br>
+	 *            polarity > 0: positive global position of this xor, e.g. a ->
+	 *            this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         xor
+	 */
 	public R transformExclusiveDisjunction(Consumer<C> consumer, R left, R right, int polarity);
 
+	/**
+	 * This method is visited by the {@link NegationAcceptanceCondition
+	 * NegationAcceptanceConditions} of the acceptance condition on which we
+	 * apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param sub
+	 *            the subformula of this negation, i.e. this = neg(sub)
+	 * @param polarity
+	 *            polarity < 0: negative global position of this negation, e.g.
+	 *            this -> a<br>
+	 *            polarity = 0: neutral global position of this negation, e.g.
+	 *            this <-> a<br>
+	 *            polarity > 0: positive global position of this negation, e.g.
+	 *            a -> this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         negation
+	 */
 	public R transformNegation(Consumer<C> consumer, R sub, int polarity);
 
+	/**
+	 * This method is visited by the {@link Argument Arguments} of the
+	 * acceptance condition on which we apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param argument
+	 *            the argument which calls this method
+	 * @param polarity
+	 *            polarity < 0: negative global position of this argument, e.g.
+	 *            this -> a<br>
+	 *            polarity = 0: neutral global position of this argument, e.g.
+	 *            this <-> a<br>
+	 *            polarity > 0: positive global position of this argument, e.g.
+	 *            a -> this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         argument
+	 */
 	public R transformArgument(Consumer<C> consumer, Argument argument, int polarity);
 
+	/**
+	 * This method is visited by the {@link ContradictionAcceptanceCondition
+	 * ContradictionAcceptanceConditions} of the acceptance condition on which
+	 * we apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param polarity
+	 *            polarity < 0: negative global position of this contradiction,
+	 *            e.g. this -> a<br>
+	 *            polarity = 0: neutral global position of this contradiction,
+	 *            e.g. this <-> a<br>
+	 *            polarity > 0: positive global position of this contradiction,
+	 *            e.g. a -> this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         contradiction
+	 */
 	public R transformContradiction(Consumer<C> consumer, int polarity);
 
+	/**
+	 * This method is visited by the {@link TautologyAcceptanceCondition
+	 * TautologyAcceptanceConditions} of the acceptance condition on which we
+	 * apply this {@link Transform}.
+	 * 
+	 * @param consumer
+	 *            the consumer of the computed return values
+	 * @param polarity
+	 *            polarity < 0: negative global position of this tautology, e.g.
+	 *            this -> a<br>
+	 *            polarity = 0: neutral global position of this tautology, e.g.
+	 *            this <-> a<br>
+	 *            polarity > 0: positive global position of this tautology, e.g.
+	 *            a -> this
+	 * @return the result which we want to return to the parent-formula of this
+	 *         tautology
+	 */
 	public R transformTautology(Consumer<C> consumer, int polarity);
-	
+
 }

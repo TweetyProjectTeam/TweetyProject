@@ -85,8 +85,4 @@ public class LinkTypeTest {
 		assertTrue(baLink.getLinkType() == LinkType.REDUNDANT);
 	}
 	
-	public static void main(String[] args) {
-		new LinkTypeTest().testAttacking();
-	}
-	
 }

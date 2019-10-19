@@ -47,4 +47,13 @@ public class NegationAcceptanceCondition extends AcceptanceCondition {
 		return transform.transformNegation(consumer, subcondition.transform(transform, consumer, -polarity), polarity);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "neg(" + subcondition.toString() + ")";
+	}
 }

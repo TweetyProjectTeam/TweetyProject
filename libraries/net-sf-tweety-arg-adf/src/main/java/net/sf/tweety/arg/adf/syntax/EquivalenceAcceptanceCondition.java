@@ -54,4 +54,14 @@ public class EquivalenceAcceptanceCondition extends AcceptanceCondition {
 		return transform.transformEquivalence(consumer, left.transform(transform, consumer, 0),
 				right.transform(transform, consumer, 0), polarity);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "iff(" + left.toString() + "," + right.toString() + ")";
+	}
 }

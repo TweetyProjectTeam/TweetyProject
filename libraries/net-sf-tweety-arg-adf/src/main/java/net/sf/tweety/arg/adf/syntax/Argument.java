@@ -27,6 +27,9 @@ import net.sf.tweety.graphs.Node;
 
 /**
  * An immutable representation of an ADF argument
+ * <p>
+ * This argument can also be used as an {@link AcceptanceCondition}, since it is
+ * its atomic building block.
  * 
  * @author Mathias Hofer
  *
@@ -34,7 +37,7 @@ import net.sf.tweety.graphs.Node;
 public class Argument extends AcceptanceCondition implements Formula, Node {
 
 	private String name;
-	
+
 	/**
 	 * @param name
 	 */
@@ -61,9 +64,13 @@ public class Argument extends AcceptanceCondition implements Formula, Node {
 	public String toString() {
 		return name;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.arg.adf.syntax.Transform, java.util.function.Consumer)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.
+	 * arg.adf.syntax.Transform, java.util.function.Consumer)
 	 */
 	@Override
 	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {

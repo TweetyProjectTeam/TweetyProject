@@ -19,6 +19,8 @@
 package net.sf.tweety.arg.adf.reasoner;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
@@ -37,7 +39,7 @@ import net.sf.tweety.commons.QualitativeReasoner;
 public abstract class AbstractDialecticalFrameworkReasoner
 		implements QualitativeReasoner<AbstractDialecticalFramework, Argument>,
 		ModelProvider<Argument, AbstractDialecticalFramework, Interpretation> {
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -63,18 +65,22 @@ public abstract class AbstractDialecticalFrameworkReasoner
 	 * @return "true" if the argument is accepted
 	 */
 	public Boolean query(AbstractDialecticalFramework beliefbase, Argument formula, InferenceMode inferenceMode) {
-		Collection<Interpretation> extensions = this.getModels(beliefbase);
-		//TODO replace naive implementation
+		Iterator<Interpretation> iterator = this.modelIterator(beliefbase);
 		if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
-			for (Interpretation e : extensions)
-				if (!e.satisfies(formula))
+			while (iterator.hasNext()) {
+				Interpretation interpretation = iterator.next();
+				if (!interpretation.satisfies(formula)) {
 					return false;
+				}
+			}
 			return true;
 		}
 		// so its credulous semantics
-		for (Interpretation e : extensions) {
-			if (e.satisfies(formula))
+		while (iterator.hasNext()) {
+			Interpretation interpretation = iterator.next();
+			if (interpretation.satisfies(formula)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -86,7 +92,14 @@ public abstract class AbstractDialecticalFrameworkReasoner
 	 * BeliefBase)
 	 */
 	@Override
-	public abstract Collection<Interpretation> getModels(AbstractDialecticalFramework bbase);
+	public Collection<Interpretation> getModels(AbstractDialecticalFramework adf) {
+		Collection<Interpretation> models = new LinkedList<Interpretation>();
+		Iterator<Interpretation> modelIterator = modelIterator(adf);
+		while (modelIterator.hasNext()) {
+			models.add(modelIterator.next());
+		}
+		return models;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -95,5 +108,13 @@ public abstract class AbstractDialecticalFrameworkReasoner
 	 * BeliefBase)
 	 */
 	@Override
-	public abstract Interpretation getModel(AbstractDialecticalFramework bbase);
+	public Interpretation getModel(AbstractDialecticalFramework adf) {
+		Iterator<Interpretation> modelIterator = modelIterator(adf);
+		if (modelIterator.hasNext()) {
+			return modelIterator.next();
+		}
+		return null;
+	}
+	
+	public abstract Iterator<Interpretation> modelIterator(AbstractDialecticalFramework adf);
 }

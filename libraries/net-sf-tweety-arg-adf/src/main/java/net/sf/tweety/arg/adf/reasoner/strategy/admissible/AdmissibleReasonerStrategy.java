@@ -16,15 +16,29 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.reasoner;
+package net.sf.tweety.arg.adf.reasoner.strategy.admissible;
 
-import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.Argument;
+import net.sf.tweety.arg.adf.reasoner.ReasonerStrategy;
+import net.sf.tweety.arg.adf.reasoner.strategy.SearchSpace;
+import net.sf.tweety.arg.adf.semantics.Interpretation;
 
-public interface LinkStrategy {
-
-
-	public Link compute(AbstractDialecticalFramework adf, Argument a, Argument b);
+/**
+ * Contains admissible-semantics-affine methods.
+ * 
+ * @author Mathias Hofer
+ *
+ */
+public interface AdmissibleReasonerStrategy extends ReasonerStrategy{
 	
+	public Interpretation nextAdmissible(SearchSpace searchSpace);
+	
+	public boolean verifyAdmissible(Interpretation candidate, SearchSpace searchSpace);
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.reasoner.ReasonerStrategy#next(net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncodingContext, net.sf.tweety.arg.adf.sat.SatSolverState)
+	 */
+	@Override
+	default Interpretation next(SearchSpace searchSpace) {
+		return nextAdmissible(searchSpace);
+	}
 }

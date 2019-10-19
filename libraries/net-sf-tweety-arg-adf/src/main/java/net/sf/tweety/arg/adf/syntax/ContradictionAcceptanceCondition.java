@@ -21,6 +21,7 @@ package net.sf.tweety.arg.adf.syntax;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+//TODO make singleton?
 public class ContradictionAcceptanceCondition extends AcceptanceCondition {
 
 	
@@ -38,5 +39,13 @@ public class ContradictionAcceptanceCondition extends AcceptanceCondition {
 	@Override
 	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
 		return transform.transformContradiction(consumer, polarity);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "c(f)";
 	}
 }

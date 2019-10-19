@@ -28,9 +28,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.sf.tweety.arg.adf.reasoner.LinkStrategy;
-import net.sf.tweety.arg.adf.reasoner.SatLinkStrategy;
+import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.semantics.Link;
+import net.sf.tweety.arg.adf.semantics.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.SatLinkStrategy;
 import net.sf.tweety.arg.adf.util.Cache;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
@@ -91,12 +92,12 @@ public class AbstractDialecticalFramework
 	/**
 	 * Checks if the ADF is bipolar. May compute all links to do so.
 	 * 
-	 * @return true iff the link is bipolar
+	 * @return true iff all of the links are bipolar
 	 */
 	public boolean bipolar() {
 		return links().allMatch(Link::isBipolar);
 	}
-	
+
 	public long kBipolar() {
 		return links().filter(l -> !l.isBipolar()).count();
 	}
@@ -110,14 +111,35 @@ public class AbstractDialecticalFramework
 	}
 
 	public Stream<Link> links() {
-		return arguments().map(b -> linksToParent(b)).flatMap(Function.identity());
+		return arguments().map(b -> linksFromParents(b)).flatMap(Function.identity());
+	}
+	
+	public boolean containsArgument(Argument a) {
+		return accByArgument.containsKey(a);
+	}
+
+	/**
+	 * Computes a reduct of this ADF relative to the given interpretation s.t.
+	 * all unsatisfied arguments are replaced with false.
+	 * 
+	 * @param interpretation
+	 * @return
+	 */
+	public AbstractDialecticalFramework omegaReduct(Interpretation interpretation) {
+		Transform<AcceptanceCondition, AcceptanceCondition> reductTransform = new OmegaReductTransform(interpretation);
+		Map<Argument, AcceptanceCondition> reduct = new HashMap<Argument, AcceptanceCondition>();
+		for (Argument a : accByArgument.keySet()) {
+			AcceptanceCondition acc = accByArgument.get(a);
+			reduct.put(a, acc.transform(reductTransform));
+		}
+		return new AbstractDialecticalFramework(reduct);
 	}
 
 	/**
 	 * @param b
 	 * @return a stream of links (a,b)
 	 */
-	public Stream<Link> linksToParent(Argument b) {
+	public Stream<Link> linksFromParents(Argument b) {
 		return parentsByChild.getOrDefault(b, Collections.emptySet()).stream().map(a -> link(a, b));
 	}
 
@@ -140,6 +162,7 @@ public class AbstractDialecticalFramework
 		return linkCache.apply(new Pair<Argument, Argument>(a, b));
 	}
 
+	// TODO reconsider since it affects immutability
 	public void setLink(Link link) {
 		Argument a = link.getFrom();
 		Argument b = link.getTo();
@@ -156,35 +179,11 @@ public class AbstractDialecticalFramework
 	/**
 	 * 
 	 * @param linkStrategy
-	 *            the strategy which is used in order to compute the links
-	 *            whenever its necessary
+	 *            the strategy which is used for computing the links
 	 */
 	public void setLinkStrategy(LinkStrategy linkStrategy) {
 		this.linkStrategy = linkStrategy;
 	}
-
-	// @Override
-	// public boolean add(Argument f) {
-	// // TODO currently does not make any sense since we do not add its
-	// // acceptance condition, however add is inherited from BeliefSet and
-	// // therefore we cannot alter its signature.
-	// boolean result = super.add(f);
-	// // do the bookkeeping
-	// updateRelations(f);
-	// return result;
-	// }
-	//
-	// @Override
-	// public boolean addAll(Collection<? extends Argument> c) {
-	// // override to ensure the bookkeeping is done.
-	// boolean result = true;
-	// for (Argument a : c) {
-	// // implicit bookkeeping by this.add(a)
-	// boolean sub = this.add(a);
-	// result = result && sub;
-	// }
-	// return result;
-	// }
 
 	@Override
 	public int compareTo(AbstractDialecticalFramework o) {

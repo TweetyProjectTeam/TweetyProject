@@ -19,13 +19,14 @@
 package net.sf.tweety.arg.adf.cli;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-import net.sf.tweety.arg.adf.parser.KPPADFFormatParser;
+import net.sf.tweety.arg.adf.parser.KppADFFormatParser;
 import net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
 import net.sf.tweety.arg.adf.reasoner.AdmissibleReasoner;
+import net.sf.tweety.arg.adf.reasoner.CompleteReasoner;
 import net.sf.tweety.arg.adf.reasoner.ModelReasoner;
 import net.sf.tweety.arg.adf.reasoner.NaiveReasoner;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
@@ -45,17 +46,18 @@ public class CommandLineInterface {
 
 	private static Map<String, AbstractDialecticalFrameworkReasoner> reasonerBySemantics = new HashMap<String, AbstractDialecticalFrameworkReasoner>();
 
-	private static KPPADFFormatParser parser = new KPPADFFormatParser();
+	private static KppADFFormatParser parser = new KppADFFormatParser();
 
-	private static final String prompt = "USAGE: java -jar jadf.jar <file> <sem>\r\n\nCOMMAND LINE ARGUMENTS:\r\n<file>  : Input filename for ADF instance.\r\n<sem>   : ADF semantics. <sem>={mod|nai|adm}";
+	private static final String prompt = "USAGE: java -jar jadf.jar <file> <sem>\r\n\nCOMMAND LINE ARGUMENTS:\r\n<file>  : Input filename for ADF instance.\r\n<sem>   : ADF semantics. <sem>={mod|nai|adm|com}";
 
 	static {
 		SatSolver.setDefaultSolver(satSolver);
-		
+
 		// cf|nai|adm|com|prf|grd|mod
 		reasonerBySemantics.put("mod", new ModelReasoner(satSolver));
 		reasonerBySemantics.put("nai", new NaiveReasoner(satSolver));
 		reasonerBySemantics.put("adm", new AdmissibleReasoner(satSolver));
+		reasonerBySemantics.put("com", new CompleteReasoner(satSolver));
 	}
 
 	public static void main(String[] args) {
@@ -68,11 +70,14 @@ public class CommandLineInterface {
 			try {
 				AbstractDialecticalFramework adf = parser.parseBeliefBaseFromFile(filename);
 				System.out.println("Compute models... (all at once, thus it may take a while)");
-				Collection<Interpretation> models = reasoner.getModels(adf);
-				for (Interpretation model : models) {
+				int modelCount = 0;
+				Iterator<Interpretation> modelIterator = reasoner.modelIterator(adf);
+				while (modelIterator.hasNext()) {
+					Interpretation model = modelIterator.next();
 					System.out.println(model);
+					modelCount++;
 				}
-				System.out.println("Total: " + models.size());
+				System.out.println("Total: " + modelCount);
 			} catch (ParserException | IOException e) {
 				e.printStackTrace();
 			}

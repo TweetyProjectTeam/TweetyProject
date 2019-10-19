@@ -28,7 +28,7 @@ public class ConjunctionAcceptanceCondition extends AcceptanceCondition {
 	private AcceptanceCondition[] subconditions;
 
 	/**
-	 * @param subconditions
+	 * @param subconditions the sub conditions
 	 */
 	public ConjunctionAcceptanceCondition(AcceptanceCondition... subconditions) {
 		this.subconditions = subconditions;
@@ -51,5 +51,24 @@ public class ConjunctionAcceptanceCondition extends AcceptanceCondition {
 	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
 		Collection<R> transformedSubconditions = Stream.of(subconditions).map(acc -> acc.transform(transform, consumer, polarity)).collect(Collectors.toList());
 		return transform.transformConjunction(consumer, transformedSubconditions, polarity);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		boolean first = true;
+		StringBuilder builder = new StringBuilder("and(");
+		for (AcceptanceCondition sub : subconditions) {
+			if (first) {
+				builder.append(sub.toString());
+				first = false;
+			} else {
+				builder.append("," + sub.toString());
+			}
+		}
+		builder.append(")");
+		return builder.toString();
 	}
 }

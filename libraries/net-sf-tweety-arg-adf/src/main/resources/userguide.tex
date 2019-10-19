@@ -1,0 +1,361 @@
+\documentclass{scrartcl}[a4paper,10pt]
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{awesomebox}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\parindent0mm
+\pagestyle{empty}
+
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+\newcommand{\jlstinline}[1]{\lstinline[style=java]|#1|}
+
+\lstdefinestyle{java}{
+		language=Java,
+		morekeywords={assert},
+		frame=single,
+		showspaces=false,
+		showtabs=false,
+		breaklines=true,
+		showstringspaces=false,
+		breakatwhitespace=true,
+		captionpos=b,
+		commentstyle=\color{pgreen},
+		keywordstyle=\color{pblue},
+		stringstyle=\color{pred},
+		basicstyle=\ttfamily,
+		moredelim=[il][\textcolor{pgrey}]{${}$},
+		moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+\title{Tweety ADF Library - User Guide}
+\author{Mathias Hofer}
+
+\date{\today}
+
+\begin{document}
+	
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+
+\section{Creating an ADF}
+
+\subsection{Using a parser}
+
+The ADF Library provides a parser for the \hyperlink{https://www.cs.helsinki.fi/group/coreo/k++adf/}{k++adf} file format. The respective Java class \jlstinline{net.sf.tweety.arg.adf.parser.KPPADFFormatParser} is a subtype of Tweetys general parser type \jlstinline{net.sf.tweety.commons.Parser} which ensures interoperability. \jlstinline{KPPADFFormatParser} is stateless, hence we can share and reuse a single instance.
+
+\begin{lstlisting}[style=java,caption=Parse from file.]
+KppADFFormatParser parser = new KppADFFormatParser();
+AbstractDialecticalFramework adf = parser.parseBeliefBaseFromFile("path_to_file");
+\end{lstlisting}
+
+\begin{lstlisting}[style=java,caption=Parse from string.]
+KppADFFormatParser parser = new KppADFFormatParser();
+AbstractDialecticalFramework adf = parser.parseBeliefBase("s(1). s(2). ac(1,and(1,2)).");
+\end{lstlisting}
+
+\subsection{Manually}
+
+The core building blocks of an ADF are arguments and the corresponding acceptance conditions, represented in Tweety by \jlstinline{net.sf.tweety.arg.adf.syntax.Argument} and \jlstinline{net.sf.tweety.arg.adf.syntax.AcceptanceCondition}. Note that \jlstinline{Argument} is itself a subtype of \jlstinline{AcceptanceCondition}.
+
+\tipbox{Albeit the structure of \jlstinline{net.sf.tweety.logics.pl.syntax.Proposition} and \jlstinline{net.sf.tweety.logics.pl.syntax.PlFormula} is mirrored, Tweetys propositional logic library is not used directly. This has mostly technical reasons, type-safety issues for example. There are however easy ways to transform acceptance conditions into propositional logic formulas as we will see in later sections. This approach allows us to enforce immutability on most of the structures in \jlstinline{net.sf.tweety.arg.adf}.}
+\tipbox{Since both \jlstinline{Argument} and \jlstinline{AcceptanceCondition} are immutable, we have no direct reference from an argument to its acceptance condition. This is simply not possible because of potential cycles. For instance, let $a$ and $b$ be two arguments with $acc(a) = b$ and $acc(b) = a$. By immutability we cannot add a reference from $a$ to $b$ once we created $a$, hence we have to instantiate $b$ first. However, since the same holds for $b$ we are stuck. Therefore we manage the references from the arguments to their acceptance condition externally via a map.}
+
+\begin{lstlisting}[style=java,caption=Creating an adf.,label=lst:create1]
+// first create the arguments
+Argument a = new Argument("a");
+Argument b = new Argument("b");
+Argument c = new Argument("c");
+
+// then link them to their acceptance conditions
+Map<Argument,AcceptanceCondition> map = new HashMap<>();
+// a is accepted iff T
+map.put(a, new TautologyAcceptanceCondition());
+// b is accepted iff T
+map.put(b, new TautologyAcceptanceCondition());
+// c is accepted iff a <-> b
+map.put(c, new EquivalenceAcceptanceCondition(a, b));
+
+// now create the adf
+AbstractDialecticalFramework adf = new AbstractDialecticalFramework(map);
+\end{lstlisting}
+
+Note that since we are immutable it is safe to use the same acceptance condition for arguments $a$ and $b$.
+
+\begin{lstlisting}[style=java,caption=Creating an adf.,label=lst:create2]
+final AcceptanceCondition TAUT = new TautologyAcceptanceCondition();
+
+// link them to their acceptance conditions
+Map<Argument,AcceptanceCondition> map = new HashMap<Argument,AcceptanceCondition>();
+// a is accepted iff T
+map.put(a, TAUT);
+// b is accepted iff T
+map.put(b, TAUT);
+// c is accepted iff a <-> b
+map.put(c, new EquivalenceAcceptanceCondition(a, b));
+\end{lstlisting}
+
+\section{Using an ADF}
+
+Given an instantiated \jlstinline{net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework} object we have access to its arguments, the acceptance conditions and links between arguments.
+
+Many of the structures provided by the ADF library offer multiple ways to access their internals, one can either retrieve the properties as a \jlstinline{java.util.stream.Stream}, an \jlstinline{java.util.Iterator} or a subtype of \jlstinline{java.util.Collection}.
+
+\tipbox{We never return internal data structures directly. Thus, it is safe to work with returned collections.}
+
+\subsection{Argument}
+
+There are multiple ways to access the arguments of an \jlstinline{AbstractDialecticalFramework} object. Since \jlstinline{AbstractDialecticalFramework} implements \jlstinline{java.lang.Iterable} we can iterate through its arguments via a for-each loop. Or, we also have access to a \jlstinline{Stream} or an \jlstinline{Iterator} of arguments.
+
+\begin{lstlisting}[style=java,caption=Access the arguments.]
+Stream<Argument> argumentStream = adf.arguments();
+Iterator<Argument> argumentIterator = adf.iterator();
+for (Argument a : adf) {
+// do something with a
+}
+\end{lstlisting}
+
+\subsection{AcceptanceCondition}
+
+Since we have no direct reference from an argument to its acceptance condition, it is always relative to an \jlstinline{AbstractDialecticalFramework} object. Hence, we can reuse the arguments in different ADFs with different acceptance conditions. 
+
+\begin{lstlisting}[style=java,caption=Access the acceptance conditions]
+Argument a = new Argument("a");
+
+final AcceptanceCondition TAUT = new TautologyAcceptanceCondition();
+final AcceptanceCondition CONT = new ContradictionAcceptanceCondition();
+
+Map<Argument,AcceptanceCondition> map1 = new HashMap<>();
+map1.put(a, TAUT); // a iff T
+Map<Argument,AcceptanceCondition> map2 = new HashMap<>();
+map2.put(a, CONT); // a iff F
+
+AbstractDialecticalFramework adf1 = new AbstractDialecticalFramework(map1);
+AbstractDialecticalFramework adf2 = new AbstractDialecticalFramework(map2);
+
+// acceptance condition relative to adf
+assert adf1.getAcceptanceCondition(a) == TAUT;
+assert adf2.getAcceptanceCondition(a) == CONT;
+
+// the adfs do not keep a reference to the maps
+map1.put(a, CONT);
+assert adf1.getAcceptanceCondition(a) == TAUT;		
+map2.clear();
+assert adf2.getAcceptanceCondition(a) == CONT;
+\end{lstlisting}
+
+\subsection{Link}
+
+The third important component of an ADF are links. Since determining the link type can be a computation heavy task, links are computed lazily on demand. Links are represented by the type \jlstinline{net.sf.tweety.arg.adf.semantics.Link}.
+
+\begin{lstlisting}[style=java,caption=Access the links]
+Argument c = new Argument("c");
+Argument b = new Argument("b");
+Argument a = new Argument("a");
+
+Map<Argument,AcceptanceCondition> map = new HashMap<>();
+map.put(c, new TautologyAcceptanceCondition());
+map.put(b, new TautologyAcceptanceCondition());
+map.put(a, new ImplicationAcceptanceCondition(b, c));
+
+AbstractDialecticalFramework adf = new AbstractDialecticalFramework(map);
+
+// there is no link from a to b
+Link abLink = adf.link(a, b);
+assert abLink == null;
+
+// b is attacking a
+Link baLink = adf.link(b, a);
+assert baLink.isAttacking();
+assert baLink.getLinkType() == LinkType.ATTACKING;
+
+// c is supporting a
+Link caLink = adf.link(c, a);
+assert caLink.isSupporting();
+assert caLink.getLinkType() == LinkType.SUPPORTING;
+\end{lstlisting}
+
+\tipbox{The methods \jlstinline{isSupporting()}, \jlstinline{isAttacking()}, \jlstinline{isRedundant()} and \jlstinline{isDependent()} are just convenience methods for \jlstinline{getLinkType() == LinkType.SUPPORTING} etc. This means that isSupporting() and isAttacking() both return false if a link is redundant, even if conceptually redundancy means that a link is supporting and attacking.}
+
+Next its illustrated how to access a set of links, note that we reuse the example adf from above.
+
+\begin{lstlisting}[style=java,caption=Access a stream of links]
+// returns a stream of all links
+adf.links().forEach(System.out::println);
+// Output:
+// Link [from=c, to=a, linkType=SUPPORTING]
+// Link [from=b, to=a, linkType=ATTACKING]
+	
+// returns all links that have a as a child
+adf.linksFromParents(a).forEach(System.out::println);
+// Output:
+// Link [from=c, to=a, linkType=SUPPORTING]
+// Link [from=b, to=a, linkType=ATTACKING]
+
+// returns all links to the children of c
+adf.linksToChildren(c).forEach(System.out::println);
+// Output:
+// Link [from=c, to=a, linkType=SUPPORTING]
+	
+// returns all links to the children of b
+adf.linksToChildren(b).forEach(System.out::println);
+// Output:
+// Link [from=b, to=a, linkType=ATTACKING]
+\end{lstlisting}
+
+\tipbox{The links are only computed once, so multiple \jlstinline{links()} calls only result in the computation of the links the first time, all subsequent calls return the cached results.}
+
+\section{Reasoning}
+
+There are reasoners for all common adf semantics, the table below illustrates the semantics and their corresponding reasoners in Tweety.
+
+\begin{table}[h!]
+	\begin{tabular}{|l|l|}
+		\hline
+		\textbf{Semantics} & \textbf{Reasoner}                                   \\ \hline
+		Stable             & net.sf.tweety.arg.adf.reasoner.StableReasoner       \\ \hline
+		Two-valued Model   & net.sf.tweety.arg.adf.reasoner.ModelReasoner        \\ \hline
+		Preferred          & net.sf.tweety.arg.adf.reasoner.PreferredReasoner    \\ \hline
+		Complete           & net.sf.tweety.arg.adf.reasoner.CompleteReasoner     \\ \hline
+		Grounded           & net.sf.tweety.arg.adf.reasoner.GroundReasoner       \\ \hline
+		Admissible         & net.sf.tweety.arg.adf.reasoner.AdmissibleReasoner   \\ \hline
+		Naive              & net.sf.tweety.arg.adf.reasoner.NaiveReasoner        \\ \hline
+		Conflict-free      & net.sf.tweety.arg.adf.reasoner.ConflictFreeReasoner \\ \hline
+	\end{tabular}
+\end{table}
+
+Each reasoner is a subtype of \jlstinline{net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner} which is for interoperability reasons a subtype of \jlstinline{net.sf.tweety.commons.QualitativeReasoner} and \jlstinline{net.sf.tweety.commons.ModelProvider}.
+
+The usage of \jlstinline{AbstractDialecticalFrameworkReasoner} is fairly simple as the following example should illustrate. It provides methods for quering and for model computation
+
+\begin{lstlisting}[style=java,caption=Computing the models of an adf]
+IncrementalSatSolver satSolver = new NativeLingelingSolver();
+AbstractDialecticalFrameworkReasoner reasoner = new AdmissibleReasoner(satSolver);
+
+// compute all models
+Collection<Interpretation> models = reasoner.getModels(adf);
+
+// compute just one model
+// in the case of the admissible reasoner, it returns the empty model without much computation.
+Interpretation model = reasoner.getModel(adf);
+\end{lstlisting}
+
+Since we not always need all of the models, there is a way to compute a model one after another by using an iterator.
+
+\begin{lstlisting}[style=java,caption=Iteratively computing the models]
+Iterator<Interpretation> modelIterator = reasoner.modelIterator();
+while (modelIterator.hasNext()) {
+	Interpretation model = modelIterator.next();
+	// do something
+}
+\end{lstlisting}
+
+Quering is fairly easy as well, note that we use the adf from the link section for the following example.
+
+\begin{lstlisting}[style=java,caption=Querying]
+Collection<Interpretation> models = reasoner.getModels(adf);
+models.forEach(System.out::println);
+// OUTPUT:
+// u(c) u(b) u(a)
+// t(c) t(b) t(a)
+// t(c) t(a) u(b)
+// t(c) u(b) u(a)
+// t(c) t(b) u(a)
+// t(b) u(c) u(a)
+
+// returns false
+boolean skepticalQuery = reasoner.query(adf, a, InferenceMode.SKEPTICAL);
+
+// returns true
+boolean credulousQuery = reasoner.query(adf, a, InferenceMode.CREDULOUS);
+\end{lstlisting}
+
+\section{Transforming}
+
+It is sometimes necessary to modify \jlstinline{AcceptanceCondition} instances, for example when we have to compute a reduct. Therefore, \jlstinline{AcceptanceCondition} provides some mechanisms in order to create transformed copies of its structure.
+
+First we provide an illustrating example before we have a deeper look at the core interface for all transformation operations, namely \jlstinline{net.sf.tweety.arg.adf.syntax.Transform}. Every \jlstinline{AcceptanceCondition} has the following \jlstinline{tramsform} method which expects a \jlstinline{Transform} with the generic type \jlstinline{R}. We ignore its other generic type for now. The type \jlstinline{R} symbolizes its return type, which should be clear after the next example.
+
+\begin{lstlisting}[style=java,caption=Transform-Method Signature]
+R transform(Transform<?, R> transform)
+\end{lstlisting}
+
+\begin{lstlisting}[style=java,caption=Transform-Method Signature]
+// a & b -> -c
+AcceptanceCondition acc = new ImplicationAcceptanceCondition(
+	new ConjunctionAcceptanceCondition(a, b),
+	new NegationAcceptanceCondition(c));
+
+Function<Argument, PlFormula> argumentMapping = (arg -> new Proposition(arg.getName()));
+Transform<?, PlFormula> toPlFormula = new PlFormulaTransform(argumentMapping);
+
+PlFormula formula = acc.transform(toPlFormula);
+System.out.println(formula);
+// OUTPUT: 
+// (a&&b=>!c)
+\end{lstlisting}
+
+\jlstinline{PlFormulaTransform} expects a function \jlstinline{Argument} $\rightarrow$ \jlstinline{PlFormula} which defines how it should transform arguments, as the atomic building blocks of an acceptance condition. This is for example useful if we want to compute a reduct, since we can then map certain arguments to false, or if we want to share propositions between different acceptance conditions.
+
+\jlstinline{PlFormulaTransform} implements a simple transform operations which just maps the \jlstinline{AcceptanceCondition} types to their \jlstinline{PlFormula} counterparts. Since it does not make use of \jlstinline{Transform}s more complex features, we have created a convenience type \jlstinline{SimpleTransform} which makes it easier to define custom transform operations. Since \jlstinline{PlFormulaTransform} is a subtype of \jlstinline{SimpleTransform} we can also declare it as follows, which allows us to hide one generic type.
+
+\begin{lstlisting}[style=java,caption=SimpleTransform declaration]
+SimpleTransform<PlFormula> toPlFormula = new PlFormulaTransform(argumentMapping);
+\end{lstlisting}
+
+As already mentioned, the transform mechanism can do more than just transform one recursive structure into another. Let us take a look at two other methods of \jlstinline{AcceptanceCondition} that expect \jlstinline{Transform} as a parameter.
+
+\begin{lstlisting}[style=java,caption=Access a stream of links]
+O collect(Transform<C, R> transform, Collector<C, A, O> collector)
+
+R collect(Transform<C, R> transform, BiConsumer<O,C> accumulator, O container)
+\end{lstlisting}
+
+The name of the methods already suggest what they do, it is possible to collect the structure of \jlstinline{AcceptanceCondition} into an arbitrary, maybe flat, structure. First we provide an example and then we take a look at how it works.
+
+\begin{lstlisting}[style=java,caption=Transforming AcceptanceCondition into CNF]
+Function<Argument, Proposition> argumentMapping = (arg -> new Proposition(arg.getName()));
+
+Transform<Disjunction, Proposition> transform = new DefinitionalCNFTransform(argumentMapping);
+List<Disjunction> cnf = acc.collect(transform, Collectors.toList());
+System.out.println(cnf);
+// OUTPUT:
+// [a||!and_37026, b||!and_37026, !a||!b||and_37026, !neg_c||!c, neg_c||c, !and_37026_impl_neg_c||!and_37026||neg_c, and_37026_impl_neg_c||and_37026, and_37026_impl_neg_c||!neg_c]
+
+// there also exists an optimized version
+transform = new DefinitionalCNFTransform(argumentMapping, true);
+cnf = acc.collect(transform, Collectors.toList());
+System.out.println(cnf);
+// OUTPUT:
+// [!a||!b||and_37026, !neg_c||!c, !and_37026_impl_neg_c||!and_37026||neg_c]
+\end{lstlisting}
+
+\jlstinline{DefinitionalCNFTransform} makes use of names in order to avoid exponential blowup during the CNF transformation. There is a use case where we want to collect the CNF, but then do further stuff with the name of the formula, as it is a compact representation of the formula. The \jlstinline{collect} method we used above returns however the CNF itself, so if we want to get both, the CNF and its name, we have to use the other \jlstinline{collect} method as illustrated below.
+
+\begin{lstlisting}[style=java,caption=Transforming AcceptanceCondition into CNF]
+Function<Argument, Proposition> argumentMapping = (arg -> new Proposition(arg.getName()));
+
+Transform<Disjunction, Proposition> transform = new DefinitionalCNFTransform(argumentMapping);
+
+List<Disjunction> container = new LinkedList<Disjunction>();
+Proposition name = acc.collect(transform, List::add, container);
+System.out.println(name);
+System.out.println(container);
+// OUTPUT:
+// and_37026_impl_neg_c
+// [a||!and_37026, b||!and_37026, !a||!b||and_37026, !neg_c||!c, neg_c||c, !and_37026_impl_neg_c||!and_37026||neg_c, and_37026_impl_neg_c||and_37026, and_37026_impl_neg_c||!neg_c]
+\end{lstlisting}
+
+\end{document}

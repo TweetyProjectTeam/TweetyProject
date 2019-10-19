@@ -30,7 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import net.sf.tweety.arg.adf.parser.KPPADFFormatParser;
+import net.sf.tweety.arg.adf.parser.KppADFFormatParser;
 import net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
 import net.sf.tweety.arg.adf.reasoner.AdmissibleReasoner;
 import net.sf.tweety.arg.adf.reasoner.CompleteReasoner;
@@ -38,6 +38,7 @@ import net.sf.tweety.arg.adf.reasoner.GroundReasoner;
 import net.sf.tweety.arg.adf.reasoner.ModelReasoner;
 import net.sf.tweety.arg.adf.reasoner.NaiveReasoner;
 import net.sf.tweety.arg.adf.reasoner.PreferredReasoner;
+import net.sf.tweety.arg.adf.reasoner.StableReasoner;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.NativeLingelingSolver;
 import net.sf.tweety.arg.adf.semantics.Interpretation;
@@ -52,9 +53,9 @@ public class ReasonerBenchmark {
 		SatSolver.setDefaultSolver(new NativeLingelingSolver());
 	}
 
-	public static final String[] ALL_SEMANTICS = { "mod", "cf", "nai", "adm", "com", "prf", "grd", "stm" };
+	public static final String[] ALL_SEMANTICS = { "cf", "nai", "mod", "stm", "adm", "com", "prf", "grd" };
 
-	private KPPADFFormatParser parser = new KPPADFFormatParser();
+	private KppADFFormatParser parser = new KppADFFormatParser();
 
 	//TODO add some getDefaultIncrementalSolver method to obtain type safety
 	private static IncrementalSatSolver satSolver = (IncrementalSatSolver) SatSolver.getDefaultSolver();
@@ -63,24 +64,46 @@ public class ReasonerBenchmark {
 
 	private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(1);
 
-	public void testAllInDirectory(AbstractDialecticalFrameworkReasoner reasoner, String semantics, File dir,
+	public void testAllInDirectoryAsync(AbstractDialecticalFrameworkReasoner reasoner, String semantics, File dir,
 			ExecutorService executor) throws IOException {
 		File[] instances = dir.listFiles((File f, String name) -> name.endsWith(".adf"));
 		for (File f : instances) {
-			testSingle(reasoner, semantics, f, executor);
+			testSingleAsync(reasoner, semantics, f, executor);
 		}
 	}
 	
-	public void testSingle(AbstractDialecticalFrameworkReasoner reasoner, String semantics, File f,
+	public void testAllInDirectory(AbstractDialecticalFrameworkReasoner reasoner, String semantics, File dir,
+			ExecutorService executor) throws IOException {
+		File[] instances = dir.listFiles((File f, String name) -> name.endsWith(".adf"));
+		long endTimes = 0;
+		long startTimes = 0;
+		for (File f : instances) {
+			BenchmarkResult result = testSingle(reasoner, semantics, f, executor);
+			endTimes += result.getEndTimeInMillis();
+			startTimes += result.getStartTimeInMillis();
+		}
+		double secs = (endTimes - startTimes) / 1000.0;
+		System.out.println(semantics + " total: " + secs + "s");
+	}
+	
+	public void testSingleAsync(AbstractDialecticalFrameworkReasoner reasoner, String semantics, File f,
 			ExecutorService executor) throws IOException {
 		List<Map<String, Boolean>> models = modelStorage.getModels(f, semantics);
 		AbstractDialecticalFramework adf = parser.parseBeliefBaseFromFile(f.getPath());
 		CompletableFuture.supplyAsync(() -> runBenchmark(adf, reasoner, models), executor)
 				.exceptionally(th -> handleException(th)).thenAccept(result -> printResults(f, result, System.out));
 	}
+	
+	public BenchmarkResult testSingle(AbstractDialecticalFrameworkReasoner reasoner, String semantics, File f,
+			ExecutorService executor) throws IOException {
+		List<Map<String, Boolean>> models = modelStorage.getModels(f, semantics);
+		AbstractDialecticalFramework adf = parser.parseBeliefBaseFromFile(f.getPath());
+		BenchmarkResult result = runBenchmark(adf, reasoner, models);
+		printResults(f, result, System.out);
+		return result;
+	}
 
 	public BenchmarkResult handleException(Throwable th) {
-		System.out.println(th);
 		return new BenchmarkResult(th);
 	}
 
@@ -124,7 +147,7 @@ public class ReasonerBenchmark {
 				// assume that assignments is complete and correct, we must have
 				// calculated at least one wrong model.
 				correct = false;
-				break;
+//				break;
 			}
 		}
 
@@ -163,7 +186,11 @@ public class ReasonerBenchmark {
 		testAllInDirectory(new ModelReasoner(satSolver), "mod", new File("src/test/resources/instances"),
 				DEFAULT_EXECUTOR_SERVICE);
 	}
-
+	
+	public void testStableModelSemantics() throws IOException {
+		testAllInDirectory(new StableReasoner(satSolver), "stm", new File("src/test/resources/instances"),
+				DEFAULT_EXECUTOR_SERVICE);
+	}
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 //		new ReasonerBenchmark().testAdmissibleInterpretationSemantics();
 //		new ReasonerBenchmark().testNaiveInterpretationSemantics();
@@ -171,7 +198,8 @@ public class ReasonerBenchmark {
 //		new ReasonerBenchmark().testCompleteInterpretationSemantics();
 //		new ReasonerBenchmark().testGroundInterpretationSemantics();
 //		new ReasonerBenchmark().testModelSemantics();
-//		 new ReasonerBenchmark().testSingle(new AdmissibleReasoner(satSolver), "adm", new File("src/test/resources/instances/adfgen_nacyc_se05_a_02_s_02_b_02_t_02_x_02_c_sXOR_ABA2AF_afinput_exp_acyclic_depvary_step1_batch_yyy03_10_21.apx.adf"),
+		new ReasonerBenchmark().testStableModelSemantics();
+//		 new ReasonerBenchmark().testSingle(new StableReasoner(satSolver), "stm", new File("src/test/resources/instances/adfgen_nacyc_se05_a_02_s_02_b_02_t_02_x_02_c_sXOR_ABA2AF_afinput_exp_acyclic_depvary_step1_batch_yyy03_10_21.apx.adf"),
 //				DEFAULT_EXECUTOR_SERVICE);
 		
 		

@@ -28,7 +28,7 @@ public class DisjunctionAcceptanceCondition extends AcceptanceCondition {
 	private AcceptanceCondition[] subconditions;
 
 	/**
-	 * @param subconditions
+	 * @param subconditions the sub conditions
 	 */
 	public DisjunctionAcceptanceCondition(AcceptanceCondition... subconditions) {
 		this.subconditions = subconditions;
@@ -54,4 +54,22 @@ public class DisjunctionAcceptanceCondition extends AcceptanceCondition {
 		return transform.transformDisjunction(consumer, transformedSubconditions, polarity);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		boolean first = true;
+		StringBuilder builder = new StringBuilder("or(");
+		for (AcceptanceCondition sub : subconditions) {
+			if (first) {
+				builder.append(sub.toString());
+				first = false;
+			} else {
+				builder.append("," + sub.toString());
+			}
+		}
+		builder.append(")");
+		return builder.toString();
+	}
 }

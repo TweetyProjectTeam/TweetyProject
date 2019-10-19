@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.arg.adf.semantics;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -46,13 +45,12 @@ public class Interpretation extends AbstractInterpretation<AbstractDialecticalFr
 	private Set<Argument> unsatisfied;
 
 	private Set<Argument> undecided;
-
-	public Interpretation(Collection<Argument> undecided) {
-		this.satisfied = new HashSet<Argument>();
-		this.unsatisfied = new HashSet<Argument>();
-		this.undecided = new HashSet<Argument>(undecided);
-	}
 	
+	/**
+	 * Creates a new empty interpretation, hence where all arguments are undecided.
+	 * 
+	 * @param undecided
+	 */
 	public Interpretation(Iterable<Argument> undecided) {
 		this.satisfied = new HashSet<Argument>();
 		this.unsatisfied = new HashSet<Argument>();
@@ -62,6 +60,18 @@ public class Interpretation extends AbstractInterpretation<AbstractDialecticalFr
 		}
 	}
 
+	/**
+	 * Creates an interpretation based on the given mapping.
+	 * <p>
+	 * An argument becomes:
+	 * <ul>
+	 * 	<li>satisfied iff it is mapped to true</li>
+	 * 	<li>unsatisfied iff it is mapped to false</li>
+	 * 	<li>undecided iff it is mapped to null</li>
+	 * </ul>
+	 * 
+	 * @param assignments
+	 */
 	public Interpretation(Map<Argument, Boolean> assignments) {
 		this.satisfied = new HashSet<Argument>();
 		this.unsatisfied = new HashSet<Argument>();
@@ -234,7 +244,7 @@ public class Interpretation extends AbstractInterpretation<AbstractDialecticalFr
 	
 	/**
 	 * 
-	 * @param a
+	 * @param a the argument for which we want to know its value
 	 * @return true, false or null if this argument is labeled as satisfied,
 	 *         unsatisfied or undecided.
 	 * @throws IllegalArgumentException if the interpretation does not contain

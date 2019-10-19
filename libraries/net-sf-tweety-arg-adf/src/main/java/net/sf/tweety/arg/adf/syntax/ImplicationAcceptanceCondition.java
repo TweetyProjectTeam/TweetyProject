@@ -54,4 +54,15 @@ public class ImplicationAcceptanceCondition extends AcceptanceCondition {
 		return transform.transformImplication(consumer, left.transform(transform, consumer, -polarity),
 				right.transform(transform, consumer, polarity), polarity);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "imp(" + left.toString() + "," + right.toString() + ")";
+
+	}
 }

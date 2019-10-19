@@ -55,4 +55,13 @@ public class ExclusiveDisjunctionAcceptanceCondition extends AcceptanceCondition
 				right.transform(transform, consumer, 0), polarity);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "xor(" + left.toString() + "," + right.toString() + ")";
+	}
 }
