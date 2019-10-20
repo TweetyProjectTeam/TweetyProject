@@ -20,7 +20,9 @@ package net.sf.tweety.arg.rankings.reasoner;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
@@ -48,43 +50,47 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 
 	@Override
 	public LatticeArgumentRanking getModel(DungTheory kb) {
-		// Maximum length of linear discussions (paths)
-		int i_max = 10;
+		int i_max = 10; // Treshold for maximum length of linear discussions (paths)
 
-		ArrayList<NumericalArgumentRanking> rankings = new ArrayList<NumericalArgumentRanking>();
-		for (int i = 1; i <= i_max; i++) {
-			NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-			ranking.setSortingType(NumericalArgumentRanking.SortingType.LEXICOGRAPHIC);
+		Map<Argument, ArrayList<Double>> discussionCounts = new HashMap<Argument, ArrayList<Double>>();
+		for (int i = 2; i <= i_max+1; i++) { //Start with paths of length i=2 (discussion_count for length 1 would be -1 for all arguments)
 			for (Argument a : kb) {
 				double discussion_count = getNumberOfPathsOfLength(kb, a, i);
 				if ((i & 1) != 0)
 					discussion_count = -discussion_count; // odd value => negative discussion count
-				ranking.put(a, discussion_count + 0.0);
+				ArrayList<Double> argumentDiscussionCounts = discussionCounts.get(a);
+				if (argumentDiscussionCounts == null)
+					argumentDiscussionCounts = new ArrayList<Double>();
+				argumentDiscussionCounts.add(discussion_count + 0.0);
+				discussionCounts.put(a, argumentDiscussionCounts);
 			}
-			rankings.add(ranking);
 		}
 
-		LatticeArgumentRanking finalRanking = new LatticeArgumentRanking(kb);
+		LatticeArgumentRanking resultRanking = new LatticeArgumentRanking(kb.getNodes());
 		for (Argument a : kb) {
 			for (Argument b : kb) {
-				int i = 1;
-				for (; i < i_max; i++) {
-					NumericalArgumentRanking ithRanking = rankings.get(i);
-					if (ithRanking.isStrictlyLessAcceptableThan(a, b)) {
-						finalRanking.setStrictlyLessOrEquallyAcceptableThan(a, b);
-						break;
-					} else if (ithRanking.isStrictlyLessAcceptableThan(b, a)) {
-						finalRanking.setStrictlyLessOrEquallyAcceptableThan(b, a);
-						break;
-					}
-					else if (i == i_max-1) {
-						finalRanking.setStrictlyLessOrEquallyAcceptableThan(a, b);
-						finalRanking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+				Boolean args_equal = true;
+				for (int i = 0; i < i_max && args_equal; i++) {
+					NumericalArgumentRanking tempRanking = new NumericalArgumentRanking();
+					tempRanking.put(a, discussionCounts.get(a).get(i));
+					tempRanking.put(b, discussionCounts.get(b).get(i));
+					if (tempRanking.isStrictlyLessAcceptableThan(a, b)) {
+						resultRanking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+						args_equal = false;
+					} else if (tempRanking.isStrictlyLessAcceptableThan(b, a)) {
+						resultRanking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+						args_equal = false;
 					}
 				}
+				if (args_equal) {
+					resultRanking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+					resultRanking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+				}
 			}
+		
 		}
-		return finalRanking;
+
+		return resultRanking;
 	}
 
 	/**
@@ -131,12 +137,10 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 		for (ArrayList<Argument> path : old_paths) {
 			Argument tail = path.get(path.size() - 1);
 			for (Argument attacker : base.getAttackers(tail)) {
-				if (!path.contains(attacker)) { // ignore cycles
 					ArrayList<Argument> new_path = new ArrayList<Argument>();
 					new_path.addAll(path);
 					new_path.add(attacker);
 					new_paths.add(new_path);
-				}
 			}
 		}
 		return new_paths;
