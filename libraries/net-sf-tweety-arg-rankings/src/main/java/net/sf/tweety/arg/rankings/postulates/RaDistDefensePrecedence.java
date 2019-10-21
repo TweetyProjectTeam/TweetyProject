@@ -48,23 +48,7 @@ public class RaDistDefensePrecedence extends RankingPostulate {
 	public boolean isApplicable(Collection<Argument> kb) {
 		if (!(kb instanceof DungTheory))
 			return false;
-		else if (kb.size() < 2)
-			return false;
-		DungTheory dt = (DungTheory) kb;
-		Iterator<Argument> it = dt.iterator();
-		Argument a = it.next();
-		Argument b = it.next();
-		if (dt.getAttackers(a).size() != dt.getAttackers(b).size())
-			return false;
-		Set<Argument> defenders_a = new HashSet<Argument>();
-		Set<Argument> defenders_b = new HashSet<Argument>();
-		for (Argument at : dt.getAttackers(a))
-			defenders_a.addAll(dt.getAttackers(at));
-		for (Argument at : dt.getAttackers(b))
-			defenders_b.addAll(dt.getAttackers(at));
-		if (defenders_a.size() != defenders_b.size())
-			return false;
-		return true;
+		return(kb.size() >= 2);
 	}
 
 	@Override
@@ -76,13 +60,18 @@ public class RaDistDefensePrecedence extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
+		
+		if (dt.getAttackers(a).size() != dt.getAttackers(b).size())
+			return true;
 		Set<Argument> defenders_a = new HashSet<Argument>();
 		Set<Argument> defenders_b = new HashSet<Argument>();
 		for (Argument at : dt.getAttackers(a))
 			defenders_a.addAll(dt.getAttackers(at));
-		for (Argument at : dt.getAttackers(b))
-			defenders_b.addAll(dt.getAttackers(at));
-
+		for (Argument bt : dt.getAttackers(b))
+			defenders_b.addAll(dt.getAttackers(bt));
+		if (defenders_a.size() != defenders_b.size())
+			return true;
+	
 		// check if defense of a and b is simple
 		for (Argument defender : defenders_a) {
 			Set<Argument> attackers_a = new HashSet<Argument>(dt.getAttackers(a));
@@ -104,23 +93,20 @@ public class RaDistDefensePrecedence extends RankingPostulate {
 		}
 
 		// check if defense of b is not distributed
-		boolean flag = false;
+		boolean defenseIsDistributed = true;
 		for (Argument attacker : dt.getAttackers(a)) {
 			if (dt.getAttackers(attacker).size() > 1)
-				flag = true;
+				defenseIsDistributed = false;
 		}
-		if (flag)
+		if (defenseIsDistributed)
 			return true;
 
 		ArgumentRanking ranking = ev.getModel(dt);
 
-		if (ranking.isIncomparable(a, b)) {
+		if (ranking.isIncomparable(a, b)) 
 			if (IGNORE_INCOMPARABLE_ARGUMENTS)
 				return true;
-			else
-				return false;
-		}
-
+		
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

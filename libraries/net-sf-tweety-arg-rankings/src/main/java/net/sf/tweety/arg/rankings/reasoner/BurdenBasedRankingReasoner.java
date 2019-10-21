@@ -47,7 +47,7 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<Numerica
 	@Override
 	public NumericalArgumentRanking getModel(DungTheory base) {
 		//Number of steps
-		int i_max = 2;
+		int i_max = 3;
 		//Map for storing burden numbers of previous steps
 		Map<Argument, double[]> burdenNumbers = new HashMap<Argument, double[]>();	
 		
