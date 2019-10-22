@@ -39,6 +39,57 @@ import net.sf.tweety.arg.social.syntax.SocialAbstractArgumentationFramework;
  * @author Anna Gessler
  */
 public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
+	
+	/**
+	 * Parameters for the simple product semantic.
+	 */
+	private double epsilon;
+	private double precision;
+	private double tolerance;
+	
+	/**
+	 * Create a new SAFRankingReasoner with default parameters.
+	 */
+	public SAFRankingReasoner() {
+		this.epsilon = 0.1;
+		this.precision =  0.001;
+		this.tolerance = 0.001;
+	}
+	
+	/**
+	 * Create a new SAFRankingReasoner with the given epsilon 
+	 * for the SimpleProductSemantic.
+	 * @param epsilon, must be non-negative
+	 */
+	public SAFRankingReasoner(double epsilon) {
+		this();
+		this.epsilon = epsilon;
+	}
+	
+	/**
+	 * Create a new SAFRankingReasoner with the given epsilon 
+	 * and the given tolerance for the SimpleProductSemantic.
+	 * @param epsilon
+	 * @param tolerance
+	 */
+	public SAFRankingReasoner(double epsilon, double tolerance) {
+		this();
+		this.epsilon = epsilon;
+		this.tolerance = tolerance;
+	}
+
+	/**
+	 * Create a new SAFRankingReasoner with the given epsilon, the given precision 
+	 * and the given tolerance for the SimpleProductSemantic.
+	 * @param epsilon
+	 * @param precision
+	 * @param tolerance
+	 */
+	public SAFRankingReasoner(double epsilon, double precision, double tolerance) {
+		this.epsilon = epsilon;
+		this.precision = precision;
+		this.tolerance = tolerance;
+	}
 
 	@Override
 	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
@@ -53,7 +104,7 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 		saf.add(kb);
 		for (Argument a : kb)
 			saf.voteUp(a, 1);
-		IssReasoner reasoner6 = new IssReasoner(new SimpleProductSemantics(0.1), 0.001);
+		IssReasoner reasoner6 = new IssReasoner(new SimpleProductSemantics(this.epsilon, this.precision), this.tolerance);
 		SocialMapping<Double> result = reasoner6.getModel(saf);
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		for (Argument a : kb)
