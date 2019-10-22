@@ -71,24 +71,8 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 */
 	@Override
 	public boolean isStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
-		return isIncomparable(a, b) || this.order.isOrderedBefore(a, b);
+		return !isIncomparable(a, b) && this.order.isOrderedBefore(a, b);
 	}
-
-	@Override
-	public boolean isStrictlyMoreAcceptableThan(Argument a, Argument b) {
-		return !isIncomparable(a, b) && !this.isStrictlyLessOrEquallyAcceptableThan(a, b);
-	}
-
-	@Override
-	public boolean isStrictlyLessAcceptableThan(Argument a, Argument b) {
-		return !isIncomparable(a, b) && this.isStrictlyMoreAcceptableThan(b, a);
-	}
-	
-	@Override
-	public boolean isEquallyAcceptableThan(Argument a, Argument b) {
-		return this.isStrictlyLessOrEquallyAcceptableThan(a, b) && this.isStrictlyLessOrEquallyAcceptableThan(b, a);
-	}
-	
 
 	@Override
 	public boolean isIncomparable(Argument a, Argument b) {

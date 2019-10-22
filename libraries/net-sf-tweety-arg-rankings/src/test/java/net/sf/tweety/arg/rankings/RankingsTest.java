@@ -141,11 +141,11 @@ public class RankingsTest {
 		dt.add(b);
 		LatticeArgumentRanking ranking = new LatticeArgumentRanking(dt);
 		assertTrue(ranking.isIncomparable(a, b));
-		assertTrue(ranking.isEquallyAcceptableThan(a, b));
+		assertFalse(ranking.isEquallyAcceptableThan(a, b));
 		assertFalse(ranking.isStrictlyLessAcceptableThan(a, b));
 		assertFalse(ranking.isStrictlyLessAcceptableThan(b, a));
 		assertFalse(ranking.isStrictlyMoreAcceptableThan(a, b));
-		assertFalse(ranking.isStrictlyLessAcceptableThan(a, b));
+		assertFalse(ranking.isStrictlyMoreAcceptableThan(b, a));
 	}
 
 	
