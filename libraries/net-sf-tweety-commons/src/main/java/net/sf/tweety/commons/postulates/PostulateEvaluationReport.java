@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import net.sf.tweety.commons.Formula;
 
@@ -129,12 +130,19 @@ public class PostulateEvaluationReport<S extends Formula> {
 
 		String result = this.ev.getClass().getSimpleName() + " RESULTS\n----------\n" + String.format("%-" + longest + "s%-13s%-14s%s",
 				"Postulate ", "posInstances ", "notApplicable ", "negInstances\n");
+
+		TreeMap<String,String> ordered_postulate_strings = new TreeMap<String,String>(); 
 		for (Postulate<S> p : this.positiveInstances.keySet()) {
-			result += String.format("%-" + longest + "s%-13s%-14s%s", p.getName() + " ",
+			String s = String.format("%-" + longest + "s%-13s%-14s%s", p.getName() + " ",
 					this.positiveInstances.get(p).size(), this.notApplicableInstances.get(p).size(),
 					this.negativeInstances.get(p).size()) + "\n";
+			ordered_postulate_strings.put(p.getName(), s); //TreeMap sorts postulates alphabetically by their names
+			
 		}
-
+		
+		for(String s : ordered_postulate_strings.values()) 
+			result += s;
+		
 		return result;
 	}
 }

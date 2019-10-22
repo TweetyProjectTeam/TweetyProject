@@ -19,6 +19,7 @@
 package net.sf.tweety.arg.rankings.reasoner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,6 +49,12 @@ import net.sf.tweety.commons.util.Pair;
  */
 public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
 
+	/**
+	 * Stores the tupled values computed by this reasoner for lookup.
+	 */
+	private Map<Argument, Pair<int[], int[]>> tupled_values = new HashMap<Argument, Pair<int[], int[]>>();
+
+
 	@Override
 	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
@@ -64,24 +71,20 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 			return ranking;
 
 		// Compute lookup table for tupled values
-		Map<Argument, Pair<int[], int[]>> tupled_values = new HashMap<Argument, Pair<int[], int[]>>();
-		//String tv = "";
-		for (Argument a : kb) {
-			tupled_values.put(a, computeTupledValue(a, kb));
-			//tv += ", v(" + a + ") = [" + Arrays.toString(tupled_values.get(a).getFirst()) + "," + Arrays.toString(tupled_values.get(a).getSecond()) + "]";
-		}
-//		System.out.println("Tupled values:" + tv.substring(1));
-		
+		this.tupled_values = new HashMap<Argument, Pair<int[], int[]>>();
+		for (Argument a : kb)
+			this.tupled_values.put(a, computeTupledValue(a, kb));
+
 		// Tuples* Algorithm
 		// Compare lengths of attack/defense branches
 		// In case of a tie, compare values inside tuples
 		LexicographicTupleComparator c = new LexicographicTupleComparator();
-		
+
 		for (Argument a : kb) {
 			for (Argument b : kb) {
-				Pair<int[], int[]> tv_a = tupled_values.get(a);
-				Pair<int[], int[]> tv_b = tupled_values.get(b);
-				
+				Pair<int[], int[]> tv_a = this.tupled_values.get(a);
+				Pair<int[], int[]> tv_b = this.tupled_values.get(b);
+
 				if (tv_a.equals(tv_b)) {
 					ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
 					ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
@@ -115,7 +118,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 				}
 			}
 		}
-		
+
 		return ranking;
 	}
 
@@ -154,6 +157,27 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		}
 		return new Pair<int[], int[]>(defense.stream().mapToInt(i -> i).toArray(),
 				attack.stream().mapToInt(i -> i).toArray());
+	}
+
+	/**
+	 * @return the tupled values computed by previous calls of getModel oder
+	 *         getModels
+	 */
+	public Map<Argument, Pair<int[], int[]>> getTupledValues() {
+		return this.tupled_values;
+	}
+
+	/**
+	 * Prints the tupled values computed by previous calls of getModel oder getModels in a 
+	 * human-readable way.
+	 */
+	public String prettyPrintTupledValues() {
+		Set<Argument> args = this.tupled_values.keySet();
+		String tv = "";
+		for (Argument a : args)
+			tv += ", v(" + a + ") = [" + Arrays.toString(tupled_values.get(a).getFirst()) + ","
+					+ Arrays.toString(tupled_values.get(a).getSecond()) + "]";
+		return tv;
 	}
 
 	/**
