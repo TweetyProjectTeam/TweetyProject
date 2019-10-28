@@ -52,6 +52,9 @@ public class RaQualityPrecedence extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
@@ -65,12 +68,7 @@ public class RaQualityPrecedence extends RankingPostulate {
 		for (Argument f: dt.getAttackers(a)) 
 			if (!ranking.isStrictlyMoreAcceptableThan(c,f))
 				return true;
-		if (ranking.isIncomparable(a, b)) {
-			if (IGNORE_INCOMPARABLE_ARGUMENTS)
-				return true;
-			else
-				return false;
-		}
+		
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

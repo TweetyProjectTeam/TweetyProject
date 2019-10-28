@@ -58,6 +58,9 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a_old = it.next();
@@ -83,14 +86,8 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 		dt.add(t2);
 		dt.add(new Attack(t1, a_clone));
 		dt.add(new Attack(t2, t1));
+		
 		ArgumentRanking ranking = ev.getModel(dt);
-
-		if (ranking.isIncomparable(a_clone, a_old)) {
-			if (IGNORE_INCOMPARABLE_ARGUMENTS)
-				return true;
-			else
-				return false;
-		}
 		return ranking.isStrictlyMoreAcceptableThan(a_clone, a_old);
 	}
 

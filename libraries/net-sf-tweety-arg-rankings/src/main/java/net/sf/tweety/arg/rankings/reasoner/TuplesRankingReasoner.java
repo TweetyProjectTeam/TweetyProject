@@ -68,7 +68,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 
 		// Check if kb is acyclic
 		if (kb.containsCycle())
-			return ranking;
+			return null;
 
 		// Compute lookup table for tupled values
 		this.tupled_values = new HashMap<Argument, Pair<int[], int[]>>();
@@ -81,37 +81,35 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		LexicographicTupleComparator c = new LexicographicTupleComparator();
 
 		for (Argument a : kb) {
+			Pair<int[], int[]> tv_a = this.tupled_values.get(a);
+			int[] a_defense_tuple = tv_a.getFirst();
+			int[] a_attack_tuple = tv_a.getSecond();
+			double a_defense_tuple_size = getTrueTupleSize(a_defense_tuple);
+			double a_attack_tuple_size = getTrueTupleSize(a_attack_tuple);
 			for (Argument b : kb) {
-				Pair<int[], int[]> tv_a = this.tupled_values.get(a);
 				Pair<int[], int[]> tv_b = this.tupled_values.get(b);
-
 				if (tv_a.equals(tv_b)) {
 					ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
 					ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 					continue;
 				}
-
-				int[] a_defense_tuple = tv_a.getFirst();
-				int[] a_attack_tuple = tv_a.getSecond();
 				int[] b_defense_tuple = tv_b.getFirst();
 				int[] b_attack_tuple = tv_b.getSecond();
-				if (a_attack_tuple.length == b_attack_tuple.length
-						&& a_defense_tuple.length == b_defense_tuple.length) {
-					if ((c.compare(a_defense_tuple, b_defense_tuple) <= 0)
-							&& (c.compare(a_attack_tuple, b_attack_tuple) >= 0)) {
+				double b_defense_tuple_size = getTrueTupleSize(b_defense_tuple);
+				double b_attack_tuple_size = getTrueTupleSize(b_attack_tuple);
+				
+				if (a_attack_tuple_size == b_attack_tuple_size && a_defense_tuple_size == b_defense_tuple_size) {
+					if ((c.compare(a_defense_tuple, b_defense_tuple) <= 0) && (c.compare(a_attack_tuple, b_attack_tuple) >= 0)) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
-					} else if ((c.compare(a_defense_tuple, b_defense_tuple) >= 1)
-							&& (c.compare(a_attack_tuple, b_attack_tuple) < 1)) {
+					} else if ((c.compare(a_defense_tuple, b_defense_tuple) >= 0) && (c.compare(a_attack_tuple, b_attack_tuple) <= 0)) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
 					}
 					// else: incomparable
 
 				} else {
-					if (a_attack_tuple.length >= b_attack_tuple.length
-							&& a_defense_tuple.length <= b_defense_tuple.length) {
+					if (a_attack_tuple_size >= b_attack_tuple_size && a_defense_tuple_size <= b_defense_tuple_size) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
-					} else if (a_attack_tuple.length <= b_attack_tuple.length
-							&& a_defense_tuple.length >= b_defense_tuple.length) {
+					} else if (a_attack_tuple_size <= b_attack_tuple_size && a_defense_tuple_size >= b_defense_tuple_size) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 					}
 					// else: incomparable
@@ -120,6 +118,21 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		}
 
 		return ranking;
+	}
+	
+	/**
+	 * Returns the true tuple size, i.e. infinity iff the tuple 
+	 * contains only 0 (a placeholder 
+	 * for an infinite number of zeroes in this implementation), 
+	 * or the length of the array in all other cases.
+	 * @param l tuple represented by an array of integers
+	 * @return true size of the tuple
+	 */
+	private double getTrueTupleSize(int[] l) {
+		if (l.length==1 && l[0]==0)
+			return Double.POSITIVE_INFINITY;
+		else 
+			return (double) l.length;
 	}
 
 	/**
@@ -136,7 +149,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 
 		Set<Argument> attackers = kb.getAttackers(a);
 		if (attackers.isEmpty())
-			defense.add(0);
+			defense.add(0); //technically, this would be an infinite number of zeroes
 		else {
 			for (Argument b : attackers) {
 				for (Integer i : computeTupledValue(b, kb).getSecond()) {
@@ -177,6 +190,8 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		for (Argument a : args)
 			tv += ", v(" + a + ") = [" + Arrays.toString(tupled_values.get(a).getFirst()) + ","
 					+ Arrays.toString(tupled_values.get(a).getSecond()) + "]";
+		if (tv.length() > 2)
+			tv = tv.substring(2);
 		return tv;
 	}
 
@@ -187,15 +202,13 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 	public class LexicographicTupleComparator implements Comparator<int[]> {
 		@Override
 		public int compare(int[] o1, int[] o2) {
-			if (o1.equals(o2))
-				return 0;
-			for (int i = 0; i < o1.length; i++) {
-				if (o2.length < i + 1)
-					break;
-				if (o1[i] > o2[i])
-					return 1;
-			}
-			return -1;
+			String s1 = "";
+			String s2 = "";
+			for (int i : o1) 
+				s1 += i; 
+			for (int j : o2) 
+				s2 += j; 
+			return s1.compareTo(s2);
 		}
 	}
 

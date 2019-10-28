@@ -50,22 +50,18 @@ public class RaCardinalityPrecedence extends RankingPostulate {
 	@Override
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb)) 
-			return true; 
+			return true;
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
 
 		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
-		if (dt.getAttackers(a).size() < dt.getAttackers(b).size()) {
-			if (ranking.isIncomparable(a, b)) {
-				if (IGNORE_INCOMPARABLE_ARGUMENTS)
-					return true;
-				else
-					return false;
-			}
+		if (dt.getAttackers(a).size() < dt.getAttackers(b).size()) 
 			return ranking.isStrictlyMoreAcceptableThan(a, b);
-		}
 		return true;
 	}
 

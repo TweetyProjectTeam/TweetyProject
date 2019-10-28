@@ -51,18 +51,14 @@ public class RaNonAttackedEquivalence extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
-		
-		if (ranking.isIncomparable(a, b)) {
-			if (IGNORE_INCOMPARABLE_ARGUMENTS)
-				return true;
-			else
-				return false;
-		}
 		
 		if (dt.getAttackers(a).isEmpty() && dt.getAttackers(b).isEmpty())
 			return ranking.compare(a, b) == 0;

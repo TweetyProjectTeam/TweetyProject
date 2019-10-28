@@ -381,11 +381,13 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		if (this.containsCycle())
 			return false;
 		for (Argument b : this.getNodes()) {
-			if (isAttackBranch(b,a))
+			if (isAttackBranch(a,b))
 				return true;
 		}
+		
 		return false;
 	}
+	
 	
 	/**
 	 * If this graph is acyclic, this method checks if the given

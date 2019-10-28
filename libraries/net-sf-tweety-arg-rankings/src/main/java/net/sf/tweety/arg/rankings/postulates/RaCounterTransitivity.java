@@ -53,6 +53,9 @@ public class RaCounterTransitivity extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
@@ -78,13 +81,6 @@ public class RaCounterTransitivity extends RankingPostulate {
 			}
 			if (!flag)
 				return true;
-		}
-
-		if (ranking.isIncomparable(a, b)) {
-			if (IGNORE_INCOMPARABLE_ARGUMENTS)
-				return true;
-			else
-				return false;
 		}
 
 		return ranking.isStrictlyMoreOrEquallyAcceptableThan(a, b);

@@ -34,15 +34,8 @@ import net.sf.tweety.commons.postulates.PostulateEvaluatable;
  * @author Matthias Thimm
  *
  */
-public abstract class RankingPostulate implements Postulate<Argument>{
+public abstract class RankingPostulate implements Postulate<Argument> {
 	
-	/**
-	 * Determines whether incomparable arguments will be ignored when evaluating postulates.
-	 * Exception: The TOTAL postulate will never ignore incomparable arguments because its 
-	 * entire purpose is to check if all pairs of arguments can be compared.
-	 */
-	public boolean IGNORE_INCOMPARABLE_ARGUMENTS = true;
-
 	/** The ABSTRACTION postulate **/
 	public static final RankingPostulate ABSTRACTION = new RaAbstraction();
 	/** The INDEPENDENCE postulate **/
@@ -102,11 +95,4 @@ public abstract class RankingPostulate implements Postulate<Argument>{
 	 */
 	public abstract boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev);
 	
-	/**
-	 * If set to true, incomparable arguments will be ignored by the postulate.
-	 * @param i whether incomparable arguments will be ignored by the postulate.
-	 */
-	public void setIgnoreIncomparableArguments(boolean i) {
-		IGNORE_INCOMPARABLE_ARGUMENTS = i;
-	}
 }

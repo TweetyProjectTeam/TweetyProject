@@ -52,8 +52,8 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	 */
 	public SAFRankingReasoner() {
 		this.epsilon = 0.1;
-		this.precision =  0.001;
-		this.tolerance = 0.001;
+		this.precision =  0.0001;
+		this.tolerance = 0.0001;
 	}
 	
 	/**
@@ -102,11 +102,14 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	public NumericalArgumentRanking getModel(DungTheory kb) {
 		SocialAbstractArgumentationFramework saf = new SocialAbstractArgumentationFramework();
 		saf.add(kb);
-		for (Argument a : kb)
+		for (Argument a : kb) {
 			saf.voteUp(a, 1);
+			saf.voteDown(a, 1); 
+		}
 		IssReasoner reasoner6 = new IssReasoner(new SimpleProductSemantics(this.epsilon, this.precision), this.tolerance);
 		SocialMapping<Double> result = reasoner6.getModel(saf);
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
+		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
 		for (Argument a : kb)
 			ranking.put(a, result.get(a));
 		return ranking;

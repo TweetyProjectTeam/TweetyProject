@@ -180,6 +180,32 @@ public class RankingSemanticsExample {
 		example4c.add(new Attack(f, e));
 		example4c.add(new Attack(f, b));
 		
+		//Example 5, taken from [Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
+		DungTheory example5 = new DungTheory();
+		Argument h = new Argument("h");
+		Argument i = new Argument("i");
+		Argument j = new Argument("j");
+		example5.add(a);
+		example5.add(b);
+		example5.add(c);
+		example5.add(d);
+		example5.add(e);
+		example5.add(f);
+		example5.add(g);
+		example5.add(h);
+		example5.add(i);
+		example5.add(j);
+		example5.add(new Attack(a,b));
+		example5.add(new Attack(b,c));
+		example5.add(new Attack(b,f));
+		example5.add(new Attack(d,g));
+		example5.add(new Attack(d,f));
+		example5.add(new Attack(e,h));
+		example5.add(new Attack(e,d));
+		example5.add(new Attack(e,i));
+		example5.add(new Attack(h,g));
+		example5.add(new Attack(j,i));
+		
 		// Categorizer ranking semantics
 		CategorizerRankingReasoner reasoner = new CategorizerRankingReasoner();
 		System.out.println(reasoner.getClass().getSimpleName());
@@ -191,6 +217,7 @@ public class RankingSemanticsExample {
 		System.out.println(reasoner2.getClass().getSimpleName());
 		System.out.println(roundRanking(reasoner2.getModel(example1), 3));
 		System.out.println(roundRanking(reasoner2.getModel(example2), 3));
+		System.out.println(roundRanking(reasoner2.getModel(example5), 3));
 
 		// Discussion-based ranking semantics
 		DiscussionBasedRankingReasoner reasoner3 = new DiscussionBasedRankingReasoner();
@@ -201,8 +228,11 @@ public class RankingSemanticsExample {
 		// Tuples* ranking semantics
 		TuplesRankingReasoner reasoner4 = new TuplesRankingReasoner();
 		System.out.println(reasoner4.getClass().getSimpleName());
+		System.out.println(reasoner4.getModel(example5));
+		System.out.println(reasoner4.prettyPrintTupledValues());
 		System.out.println(reasoner4.getModel(example3));
-
+		System.out.println(reasoner4.prettyPrintTupledValues());
+		
 		// Matt & Toni ranking semantics
 		MTRankingReasoner reasoner5 = new MTRankingReasoner();
 		System.out.println(reasoner5.getClass().getSimpleName());

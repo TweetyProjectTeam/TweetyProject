@@ -50,7 +50,7 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 
 	@Override
 	public LatticeArgumentRanking getModel(DungTheory kb) {
-		int i_max = 10; // Treshold for maximum length of linear discussions (paths)
+		int i_max = 6; // Treshold for maximum length of linear discussions (paths)
 
 		Map<Argument, ArrayList<Double>> discussionCounts = new HashMap<Argument, ArrayList<Double>>();
 		for (int i = 2; i <= i_max+1; i++) { //Start with paths of length i=2 (discussion_count for length 1 would be -1 for all arguments)

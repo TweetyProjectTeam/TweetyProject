@@ -53,24 +53,19 @@ public class RaSelfContradiction extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
 		
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
-		if (ranking.isIncomparable(a, b)) {
-			if (IGNORE_INCOMPARABLE_ARGUMENTS)
-				return true;
-			else
-				return false;
-		}
-		if (dt.isAttackedBy(a, a) && !dt.isAttackedBy(b, b))
-			return ranking.isStrictlyLessAcceptableThan(a, b);
+		if (dt.isAttackedBy(a, a) && !dt.isAttackedBy(b, b)) 
+			return ranking.isStrictlyLessAcceptableThan(a, b); 
 		return true;
 		
 	}
-
-	
 
 }

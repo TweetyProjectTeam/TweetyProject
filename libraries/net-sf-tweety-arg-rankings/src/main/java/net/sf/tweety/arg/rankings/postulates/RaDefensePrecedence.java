@@ -53,6 +53,9 @@ public class RaDefensePrecedence extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
@@ -65,14 +68,6 @@ public class RaDefensePrecedence extends RankingPostulate {
 		if (dt.isAttacked(new Extension(dt.getAttackers(a)), new Extension(kb))
 				&& !dt.isAttacked(new Extension(dt.getAttackers(b)), new Extension(kb))) {
 			ArgumentRanking ranking = ev.getModel((DungTheory) dt);
-			
-			if (ranking.isIncomparable(a, b)) {
-				if (IGNORE_INCOMPARABLE_ARGUMENTS)
-					return true;
-				else
-					return false;
-			}
-			
 			return ranking.isStrictlyMoreAcceptableThan(a, b);
 		}
 		return true;

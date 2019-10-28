@@ -52,7 +52,9 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
-
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		if (dt.containsCycle())
 			return true;
@@ -69,12 +71,6 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 			return true;
 
 		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
-		if (ranking.isIncomparable(a, b)) {
-			if (IGNORE_INCOMPARABLE_ARGUMENTS)
-				return true;
-			else
-				return false;
-		}
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

@@ -61,6 +61,9 @@ public class RaIncreaseOfAttackBranch extends RankingPostulate {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
 		if (!this.isApplicable(kb))
 			return true;
+		if (ev.getModel((DungTheory) kb) == null)
+			return true;
+		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
 		Argument a_old = it.next();
@@ -99,12 +102,6 @@ public class RaIncreaseOfAttackBranch extends RankingPostulate {
 		dt.add(new Attack(t1, t2));
 
 		ArgumentRanking ranking = ev.getModel(dt);
-		if (ranking.isIncomparable(a_clone, a_clone2)) {
-			if (IGNORE_INCOMPARABLE_ARGUMENTS)
-				return true;
-			else
-				return false;
-		}
 		return ranking.isStrictlyMoreAcceptableThan(a_clone2, a_clone);
 	}
 
