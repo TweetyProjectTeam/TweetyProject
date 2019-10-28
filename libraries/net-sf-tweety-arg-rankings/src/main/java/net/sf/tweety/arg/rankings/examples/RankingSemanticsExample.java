@@ -46,7 +46,7 @@ import net.sf.tweety.math.probability.Probability;
  * @author Anna Gessler
  */
 public class RankingSemanticsExample {
-	public static void main(String[] args) {
+	public static void main(String[] args) {	
 		// Example 1, taken from [Bonzon, Delobelle, Konieczny, Maudet. A Comparative
 		// Study of Ranking-Based Semantics for Abstract Argumentation. AAAI 2016]
 		DungTheory example1 = new DungTheory();
@@ -211,13 +211,13 @@ public class RankingSemanticsExample {
 		System.out.println(reasoner.getClass().getSimpleName());
 		System.out.println(roundRanking(reasoner.getModel(example1), 2));
 		System.out.println(roundRanking(reasoner.getModel(example2), 3));
-
+		
 		// Burden-based ranking semantics
 		BurdenBasedRankingReasoner reasoner2 = new BurdenBasedRankingReasoner();
 		System.out.println(reasoner2.getClass().getSimpleName());
-		System.out.println(roundRanking(reasoner2.getModel(example1), 3));
-		System.out.println(roundRanking(reasoner2.getModel(example2), 3));
-		System.out.println(roundRanking(reasoner2.getModel(example5), 3));
+		System.out.println(reasoner2.getModel(example1));
+		System.out.println(reasoner2.getModel(example2));
+		System.out.println(reasoner2.getModel(example5));
 
 		// Discussion-based ranking semantics
 		DiscussionBasedRankingReasoner reasoner3 = new DiscussionBasedRankingReasoner();
@@ -255,7 +255,6 @@ public class RankingSemanticsExample {
 		ProbabilisticRankingReasoner reasoner8 = new ProbabilisticRankingReasoner(Semantics.GROUNDED_SEMANTICS,	new Probability(0.5), true);
 		System.out.println(reasoner8.getClass().getSimpleName());
 		System.out.println(reasoner8.getModel(example2));
-		
 	}
 
 	/**

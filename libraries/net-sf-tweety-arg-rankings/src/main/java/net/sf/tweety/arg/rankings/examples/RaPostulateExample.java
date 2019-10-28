@@ -20,8 +20,6 @@ package net.sf.tweety.arg.rankings.examples;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.arg.dung.util.DefaultDungTheoryGenerator;
-import net.sf.tweety.arg.dung.util.DungTheoryGenerationParameters;
 import net.sf.tweety.arg.dung.util.DungTheoryGenerator;
 import net.sf.tweety.arg.dung.util.EnumeratingDungTheoryGenerator;
 import net.sf.tweety.arg.rankings.postulates.RankingPostulate;
@@ -61,7 +59,7 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(2000, false));
+		System.out.println(evaluator.evaluate(4000, false));
 	}
 	
 	public static void BurdenExample() {
@@ -133,7 +131,7 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(2000, false));
+		System.out.println(evaluator.evaluate(4000, false));
 	}
 	
 	public static void MTExample() {
@@ -154,14 +152,14 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ATTACKVSFULLDEFENSE);
 		evaluator.addPostulate(RankingPostulate.STRICTADDITIONOFDEFENSEBRANCH);
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFDEFENSEBRANCH);
-		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);	
+		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
 		System.out.println(evaluator.evaluate(10, false));
 	}
 	
 	public static void SAFExample() {
-		DungTheoryGenerator dg = new DefaultDungTheoryGenerator(new DungTheoryGenerationParameters());
+		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
 		PostulateEvaluator<Argument,DungTheory> evaluator = new PostulateEvaluator<Argument,DungTheory>(dg, new SAFRankingReasoner());
 		evaluator.addPostulate(RankingPostulate.ABSTRACTION);
 		evaluator.addPostulate(RankingPostulate.INDEPENDENCE);
@@ -181,9 +179,8 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(80, false));
+		System.out.println(evaluator.evaluate(2000, false));
 	}
-	
 	
 	public static void main(String[] args){
 		CategorizerExample();

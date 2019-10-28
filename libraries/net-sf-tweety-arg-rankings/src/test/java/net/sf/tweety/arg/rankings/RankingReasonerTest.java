@@ -29,23 +29,24 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.SAFRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.TuplesRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.BurdenBasedRankingReasoner;
+import net.sf.tweety.arg.rankings.reasoner.CategorizerRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.DiscussionBasedRankingReasoner;
+import net.sf.tweety.arg.rankings.reasoner.MTRankingReasoner;
 import net.sf.tweety.arg.rankings.semantics.LatticeArgumentRanking;
 import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 
 /**
- * Test class for checking some counterexamples for the Tuples*
- * ranking reasoner and the SAF ranking reasoner.
+ * Test class for checking counterexamples for some postulates.
  * 
  * @author Anna Gessler
  */
 public class RankingReasonerTest {
 
-	public static final int DEFAULT_TIMEOUT = 20000;
+	public static final int DEFAULT_TIMEOUT = 50000;
 
 	@Test(timeout = DEFAULT_TIMEOUT)
+	//Counterexample for QP (and DP) for the Tuples* reasoner
 	public void DPandQPCounterexampleTest() throws Exception {
-		TuplesRankingReasoner reasoner_tuples = new TuplesRankingReasoner();
 		DungTheory dt = new DungTheory();
 		Argument a = new Argument("a");
 		Argument a1 = new Argument("a1");
@@ -79,16 +80,14 @@ public class RankingReasonerTest {
 		dt.add(new Attack(b4,b3));
 		dt.add(new Attack(b3,b)); 
 		
+		TuplesRankingReasoner reasoner_tuples = new TuplesRankingReasoner();
 		LatticeArgumentRanking ranking = reasoner_tuples.getModel(dt);
 		assertFalse(ranking.isStrictlyMoreAcceptableThan(b, a));
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
+	//Counterexample for DDP for the Categorizer, Tuples, Discussion and SAF reasoner
 	public void DDPCounterexampleTest() throws Exception {
-		TuplesRankingReasoner reasoner_tuples = new TuplesRankingReasoner();
-		SAFRankingReasoner reasoner_saf = new SAFRankingReasoner();
-		BurdenBasedRankingReasoner reasoner_burden = new BurdenBasedRankingReasoner();
-		DiscussionBasedRankingReasoner reasoner_dis = new DiscussionBasedRankingReasoner();
 		DungTheory dt = new DungTheory();
 		Argument a = new Argument("a");
 		Argument a1 = new Argument("a1");
@@ -125,19 +124,29 @@ public class RankingReasonerTest {
 		dt.add(new Attack(b4, b2));
 		dt.add(new Attack(b1, b));
 		
+		TuplesRankingReasoner reasoner_tuples = new TuplesRankingReasoner();
+		SAFRankingReasoner reasoner_saf = new SAFRankingReasoner();
+		BurdenBasedRankingReasoner reasoner_burden = new BurdenBasedRankingReasoner();
+		DiscussionBasedRankingReasoner reasoner_dis = new DiscussionBasedRankingReasoner();
+		CategorizerRankingReasoner reasoner_cat = new CategorizerRankingReasoner();
+		MTRankingReasoner reasoner_mt = new MTRankingReasoner();
 		LatticeArgumentRanking ranking = reasoner_tuples.getModel(dt);
 		NumericalArgumentRanking ranking2 = reasoner_saf.getModel(dt);
-		NumericalArgumentRanking ranking3 = reasoner_burden.getModel(dt);
+		LatticeArgumentRanking ranking3 = reasoner_burden.getModel(dt);
 		LatticeArgumentRanking ranking4 = reasoner_dis.getModel(dt);
+		NumericalArgumentRanking ranking5 = reasoner_cat.getModel(dt);
+//		NumericalArgumentRanking ranking6 = reasoner_mt.getModel(dt); //causes timeout
 		assertFalse(ranking.isStrictlyMoreAcceptableThan(a, b));
 		assertFalse(ranking2.isStrictlyMoreAcceptableThan(a, b));
-//		assertTrue(ranking3.isStrictlyMoreAcceptableThan(a, b));
+		assertTrue(ranking3.isStrictlyMoreAcceptableThan(a, b)); //Bbs satisfies DDP
 		assertFalse(ranking4.isStrictlyMoreAcceptableThan(a, b));
+		assertFalse(ranking5.isStrictlyMoreAcceptableThan(a, b));
+//		assertFalse(ranking6.isStrictlyMoreAcceptableThan(a, b));
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
+	//Counterexample for AvsFD for the SAF reasoner
 	public void AvsFDCounterexampleTest() throws Exception {
-		SAFRankingReasoner reasoner_saf = new SAFRankingReasoner();
 		DungTheory dt = new DungTheory();
 		Argument a = new Argument("a");
 		Argument a1 = new Argument("a1");
@@ -166,8 +175,53 @@ public class RankingReasonerTest {
 		dt.add(new Attack(a3,a));
 		dt.add(new Attack(b1,b));
 		
+		SAFRankingReasoner reasoner_saf = new SAFRankingReasoner();
 		NumericalArgumentRanking ranking = reasoner_saf.getModel(dt);
 		assertFalse(ranking.isStrictlyMoreAcceptableThan(a, b));
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	//Test that shows a difference between Bbs and Dbs
+	public void DiscussionBurdenExample() throws Exception {
+		BurdenBasedRankingReasoner reasoner_burden = new BurdenBasedRankingReasoner();
+		DiscussionBasedRankingReasoner reasoner_dis = new DiscussionBasedRankingReasoner();
+		DungTheory dt = new DungTheory();
+		Argument a = new Argument("a");
+		Argument b = new Argument("b");
+		Argument c = new Argument("c");
+		Argument d = new Argument("d");
+		Argument e = new Argument("e");
+		Argument g = new Argument("g");
+		Argument h = new Argument("h");
+		Argument i = new Argument("i");
+		Argument j = new Argument("j");
+		Argument k = new Argument("k");
+		Argument l = new Argument("l");
+		dt.add(a);
+		dt.add(b);
+		dt.add(c);
+		dt.add(d);
+		dt.add(e);
+		dt.add(g);
+		dt.add(h);
+		dt.add(i);
+		dt.add(j);
+		dt.add(k);
+		dt.add(l);
+		dt.add(new Attack(h,c));
+		dt.add(new Attack(c,a));
+		dt.add(new Attack(g,d));
+		dt.add(new Attack(d,a));
+		dt.add(new Attack(l,h));
+		dt.add(new Attack(e,j));
+		dt.add(new Attack(k,j));
+		dt.add(new Attack(j,b));
+		dt.add(new Attack(i,b));
+	
+		LatticeArgumentRanking ranking_burden = reasoner_burden.getModel(dt);
+		LatticeArgumentRanking ranking_discussion = reasoner_dis.getModel(dt);
+		assertTrue(ranking_burden.isStrictlyMoreAcceptableThan(a, b));
+		assertFalse(ranking_discussion.isStrictlyMoreAcceptableThan(a,b));
 	}
 	
 }

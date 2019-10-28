@@ -19,6 +19,7 @@
 package net.sf.tweety.arg.rankings.reasoner;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,61 +27,95 @@ import java.util.Set;
 
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
+import net.sf.tweety.arg.rankings.semantics.LatticeArgumentRanking;
 
 /**
- * This class implements the "Burden-based" argument semantics approach as proposed
- * by [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]. 
- * It assigns a "Burden number" to every argument.
+ * This class implements the "Burden-based" argument semantics approach as
+ * proposed by [Amgoud, Ben-Naim. Ranking-based semantics for argumentation
+ * frameworks. 2013]. It assigns a "Burden number" to every argument.
  * 
  * @author Anna Gessler
  */
-public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
-	
+public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
+
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
-		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory base) {
-		//Number of steps
-		int i_max = 3;
-		//Map for storing burden numbers of previous steps
-		Map<Argument, double[]> burdenNumbers = new HashMap<Argument, double[]>();	
-		
-		//Initialize burden numbers array
+	public LatticeArgumentRanking getModel(DungTheory base) {
+		// Number of steps
+		int i_max = 6;
+		// Map for storing burden numbers of previous steps
+		Map<Argument, double[]> burdenNumbers = new HashMap<Argument, double[]>();
+
+		// Initialize burden numbers array
 		for (Argument a : base) {
-			double[] initial_numbers = new double[i_max+1];
-			initial_numbers[0] = 1.0; //burden number for step 0 is 1.0 for all arguments
- 			burdenNumbers.put(a, initial_numbers);
+			double[] initial_numbers = new double[i_max + 1];
+			initial_numbers[0] = 1.0; // burden number for step 0 is 1.0 for all arguments
+			burdenNumbers.put(a, initial_numbers);
 		}
-		
-		//Compute burden numbers for all steps i
-		for (int i = 1; i <= i_max; i++ ) {
+
+		// Compute burden numbers for all steps i
+		for (int i = 1; i <= i_max; i++) {
 			for (Argument a : base) {
 				Set<Argument> attackers = base.getAttackers(a);
 				double new_burden = 1.0;
-				for (Argument b: attackers) {
+				for (Argument b : attackers) {
 					double[] attacker_burden_numbers = burdenNumbers.get(b);
-					new_burden += 1.0/(attacker_burden_numbers[i-1]);
+					new_burden += 1.0 / (attacker_burden_numbers[i - 1]);
 				}
 				double[] burden_numbers = burdenNumbers.get(a);
 				burden_numbers[i] = new_burden;
-				burdenNumbers.put(a,burden_numbers);
+				burdenNumbers.put(a, burden_numbers);
 			}
 		}
-		
-		//Use the lexicographical order of the burden numbers as ranking
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.setSortingType(NumericalArgumentRanking.SortingType.LEXICOGRAPHIC);
+
+		// Use the lexicographical order of the burden numbers as ranking
+		LatticeArgumentRanking ranking = new LatticeArgumentRanking(base.getNodes());
+		LexicographicTupleComparator c = new LexicographicTupleComparator();
 		for (Argument a : base) {
-			double[] burdens_a = burdenNumbers.get(a);
-			ranking.put(a, burdens_a[i_max]);
+			for (Argument b : base) {
+				double[] burdens_a = burdenNumbers.get(a);
+				double[] burdens_b = burdenNumbers.get(b);
+				int res = c.compare(burdens_a, burdens_b);
+				if (res < 0)
+					ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+				else if (res > 0)
+					ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+				else {
+					ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+					ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+				}
+			}
 		}
 		return ranking;
 	}
-	
+
+	/**
+	 * Compares burden numbers according to the lexicographic ordering.
+	 */
+	public class LexicographicTupleComparator implements Comparator<double[]> {
+		/**
+		 * Precision for comparing values.
+		 */
+		public static final double PRECISION = 0.001;
+
+		@Override
+		public int compare(double[] o1, double[] o2) {
+			for (int i = 0; i < o1.length; i++) {
+				if (Math.abs(o1[i] - o2[i]) < PRECISION)
+					continue;
+				else if (o1[i] < o2[i] + PRECISION)
+					return -1;
+				else if (o1[i] > o2[i] + PRECISION)
+					return 1;
+			}
+			return 0;
+		}
+	}
+
 }
