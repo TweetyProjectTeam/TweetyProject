@@ -45,7 +45,7 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 
 	@Override
 	public String getName() {
-		return "Strict addition of Defense Branch";
+		return "Strict Addition of Defense Branch";
 	}
 
 	@Override

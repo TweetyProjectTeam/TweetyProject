@@ -36,14 +36,14 @@ import net.sf.tweety.commons.util.Pair;
 /**
  * This class implements the "tuples*" argument ranking approach as proposed by
  * [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005]. It takes into
- * account all the ancestors branches of an arguument stored in tupled values.
+ * account all the ancestors branches of an arguument stored in tupled values. 
+ * Some arguments are incomparable using this approach, i.e. it generates
+ * partial rankings.
+ * 
  * <br>
  * <br>
- * Notes on this implementation: <br>
- * - This implementation only works for acyclic argument graphs. For cyclic
- * graphs an empty ranking is returned. <br>
- * - This reasoner generates partial rankings because some arguments are
- * incomparable using this approach.
+ * Note: This implementation only works for acyclic argument graphs. For cyclic
+ * graphs <b>null</b> is returned. 
  * 
  * @author Anna Gessler
  */

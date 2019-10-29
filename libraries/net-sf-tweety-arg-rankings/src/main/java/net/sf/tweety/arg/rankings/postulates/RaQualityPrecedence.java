@@ -62,13 +62,12 @@ public class RaQualityPrecedence extends RankingPostulate {
 		
 		if (dt.getAttackers(b).isEmpty())
 			return true;
+		
 		Argument c = dt.getAttackers(b).iterator().next();
-
 		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
 		for (Argument f: dt.getAttackers(a)) 
 			if (!ranking.isStrictlyMoreAcceptableThan(c,f))
 				return true;
-		
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

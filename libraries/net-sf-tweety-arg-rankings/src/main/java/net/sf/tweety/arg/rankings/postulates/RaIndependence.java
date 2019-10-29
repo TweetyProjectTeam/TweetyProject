@@ -61,12 +61,15 @@ public class RaIndependence extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
+		
+		//add new arguments that are not connected to a or b
 		Argument t1 = new Argument("t");
 		Argument t2 = new Argument("t2");
 		dt.add(t1);
 		dt.add(t2);
 		dt.add(new Attack(t1, t2));
 		ArgumentRanking ranking2 = ev.getModel((DungTheory) dt);
+		
 		return ranking.compare(a, b) == ranking2.compare(a, b);
 	}
 

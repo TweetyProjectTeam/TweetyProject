@@ -38,42 +38,41 @@ public abstract class RankingPostulate implements Postulate<Argument> {
 	
 	/** The ABSTRACTION postulate **/
 	public static final RankingPostulate ABSTRACTION = new RaAbstraction();
-	/** The INDEPENDENCE postulate **/
-	public static final RankingPostulate INDEPENDENCE = new RaIndependence();
-	/** The VOIDPRECEDENCE postulate **/
-	public static final RankingPostulate VOIDPRECEDENCE = new RaVoidPrecedence();
-	/** The SELFCONTRADICTION postulate **/
-	public static final RankingPostulate SELFCONTRADICTION = new RaSelfContradiction();
+	/** The ADDITIONOFATTACKBRANCH postulate **/
+	public static final RankingPostulate ADDITIONOFATTACKBRANCH = new RaAdditionOfAttackBranch();
+	/** The ADDITIONOFDEFENSEBRANCH postulate **/
+	public static final RankingPostulate ADDITIONOFDEFENSEBRANCH = new RaAdditionOfDefenseBranch();
+	/** The ATTACKVSFULLDEFENSE postulate **/
+	public static final RankingPostulate ATTACKVSFULLDEFENSE = new RaAttackVsFullDefense();
+	/** The CARDINALITYPRECEDENCE postulate **/
+	public static final RankingPostulate CARDINALITYPRECEDENCE = new RaCardinalityPrecedence();
+	/** The COUNTERTRANSITIVITY postulate **/
+	public static final RankingPostulate COUNTERTRANSITIVITY = new RaCounterTransitivity();
 	/** The DEFENSEPRECEDENCE postulate **/
 	public static final RankingPostulate DEFENSEPRECEDENCE = new RaDefensePrecedence();
 	/** The DISTDEFENSEPRECEDENCE postulate **/
 	public static final RankingPostulate DISTDEFENSEPRECEDENCE = new RaDistDefensePrecedence();
-	/** The CARDINALITYPRECEDENCE postulate **/
-	public static final RankingPostulate CARDINALITYPRECEDENCE = new RaCardinalityPrecedence();
-	/** The TOTAL postulate **/
-	public static final RankingPostulate TOTAL = new RaTotal();
-	/** The NONATTACKEDEQUIVALENCE postulate **/
-	public static final RankingPostulate NONATTACKEDEQUIVALENCE = new RaNonAttackedEquivalence();
-	/** The QUALITYPRECEDENCE postulate **/
-	public static final RankingPostulate QUALITYPRECEDENCE = new RaQualityPrecedence();
-	/** The COUNTERTRANSITIVITY postulate **/
-	public static final RankingPostulate COUNTERTRANSITIVITY = new RaCounterTransitivity();
-	/** The STRICTCOUNTERTRANSITIVITY postulate **/
-	public static final RankingPostulate STRICTCOUNTERTRANSITIVITY = new RaStrictCounterTransitivity();
-	/** The ATTACKVSFULLDEFENSE postulate **/
-	public static final RankingPostulate ATTACKVSFULLDEFENSE = new RaAttackVsFullDefense();
-	/** The STRICTADDITIONOFDEFENSEBRANCH postulate **/
-	public static final RankingPostulate STRICTADDITIONOFDEFENSEBRANCH = new RaStrictAdditionOfDefenseBranch();
-	/** The ADDITIONOFDEFENSEBRANCH postulate **/
-	public static final RankingPostulate ADDITIONOFDEFENSEBRANCH = new RaAdditionOfDefenseBranch();
-	/** The ADDITIONOFATTACKBRANCH postulate **/
-	public static final RankingPostulate ADDITIONOFATTACKBRANCH = new RaAdditionOfAttackBranch();
 	/** The INCREASEOFATTACKBRANCH postulate **/
 	public static final RankingPostulate INCREASEOFATTACKBRANCH = new RaIncreaseOfAttackBranch();
 	/** The INCREASEOFDEFENSEBRANCH postulate **/
 	public static final RankingPostulate INCREASEOFDEFENSEBRANCH = new RaIncreaseOfDefenseBranch();
-
-
+	/** The INDEPENDENCE postulate **/
+	public static final RankingPostulate INDEPENDENCE = new RaIndependence();
+	/** The NONATTACKEDEQUIVALENCE postulate **/
+	public static final RankingPostulate NONATTACKEDEQUIVALENCE = new RaNonAttackedEquivalence();
+	/** The QUALITYPRECEDENCE postulate **/
+	public static final RankingPostulate QUALITYPRECEDENCE = new RaQualityPrecedence();
+	/** The SELFCONTRADICTION postulate **/
+	public static final RankingPostulate SELFCONTRADICTION = new RaSelfContradiction();
+	/** The STRICTCOUNTERTRANSITIVITY postulate **/
+	public static final RankingPostulate STRICTCOUNTERTRANSITIVITY = new RaStrictCounterTransitivity();
+	/** The STRICTADDITIONOFDEFENSEBRANCH postulate **/
+	public static final RankingPostulate STRICTADDITIONOFDEFENSEBRANCH = new RaStrictAdditionOfDefenseBranch();
+	/** The TOTAL postulate **/
+	public static final RankingPostulate TOTAL = new RaTotal();
+	/** The VOIDPRECEDENCE postulate **/
+	public static final RankingPostulate VOIDPRECEDENCE = new RaVoidPrecedence();
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)
 	 */
