@@ -1,0 +1,15 @@
+=> snores(bob)
+=> snores(alice)
+=> professor(bob)
+
+d0: accessDenied(X) => !accessAllowed(X)
+
+d1: snores(X) => misbehaves(X)
+d2: misbehaves(X) => accessDenied(X)
+d3: professor(X) => accessAllowed(X)
+
+d1 < d2 < d3
+
+
+
+

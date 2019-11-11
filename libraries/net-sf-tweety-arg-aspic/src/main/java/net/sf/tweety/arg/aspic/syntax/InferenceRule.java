@@ -21,11 +21,25 @@ package net.sf.tweety.arg.aspic.syntax;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import net.sf.tweety.commons.Signature;
+import net.sf.tweety.commons.util.MapTools;
 import net.sf.tweety.commons.util.rules.Rule;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.Sort;
+import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Atom;
+import net.sf.tweety.logics.commons.syntax.interfaces.ComplexLogicalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * @author Nils Geilen
@@ -35,7 +49,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
  * 
  * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
-public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> {
+public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>, ComplexLogicalFormula {
 	
 	@Override
 	public int hashCode() {
@@ -236,7 +250,137 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T> 
 		return conclusion;
 	}
 
+	public Set<InferenceRule<T>> allGroundInstances(Set<Constant> constants) {
+		Set<Map<Variable, Term<?>>> maps = this.allSubstitutions(constants);
+		Set<InferenceRule<T>> result = new HashSet<InferenceRule<T>>();
+		for (Map<Variable, Term<?>> map : maps)
+			result.add(this.substitute(map));
+		return result;
+	}
 	
+	@Override
+	public abstract InferenceRule<T> substitute(Term<?> v, Term<?> t) throws IllegalArgumentException;
+
+	@Override
+	public InferenceRule<T> substitute(Map<? extends Term<?>, ? extends Term<?>> map) throws IllegalArgumentException {
+		InferenceRule<T> f = this.clone();
+		for (Term<?> v : map.keySet())
+			f = f.substitute(v, map.get(v));
+		return f;
+	}
 	
+	public abstract InferenceRule<T> clone();
+	
+	/**
+	 * Computes all possible substitutions, i.e. maps from variables to terms, of
+	 * unbound variables of this formula's inner fol formulas to terms in "terms".
+	 * 
+	 * @param terms a set of terms.
+	 * @return a set of maps from variables to terms.
+	 * @throws IllegalArgumentException if there is an unbound variable in this
+	 *                                  formula for which there is no term in
+	 *                                  "terms" with the same sort.
+	 */
+	public Set<Map<Variable, Term<?>>> allSubstitutions(Collection<? extends Term<?>> terms)
+			throws IllegalArgumentException {
+		Set<Variable> variables = this.getUnboundVariables();
+		// partition variables by sorts
+		Map<Sort, Set<Variable>> sorts_variables = new HashMap<Sort, Set<Variable>>();
+		for (Variable v : variables) {
+			if (!sorts_variables.containsKey(v.getSort()))
+				sorts_variables.put(v.getSort(), new HashSet<Variable>());
+			sorts_variables.get(v.getSort()).add(v);
+		}
+		// partition terms by sorts
+		Map<Sort, Set<Term<?>>> sorts_terms = Sort.sortTerms(terms);
+		// combine the partitions
+		Map<Set<Variable>, Set<Term<?>>> relations = new HashMap<Set<Variable>, Set<Term<?>>>();
+		for (Sort s : sorts_variables.keySet()) {
+			if (!sorts_terms.containsKey(s))
+				throw new IllegalArgumentException("There is no term of sort " + s + " to substitute.");
+			relations.put(sorts_variables.get(s), sorts_terms.get(s));
+		}
+		return new MapTools<Variable, Term<?>>().allMaps(relations);
+	}
+	
+	public Set<Variable> getUnboundVariables() {
+		return this.getTerms(Variable.class);
+	}
+	
+	@Override
+	public InferenceRule<T> exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean isGround() {
+		return this.getTerms(Variable.class).isEmpty();
+	}
+
+	@Override
+	public boolean isWellFormed() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Set<? extends Atom> getAtoms() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Class<? extends Predicate> getPredicateCls() {
+		return Predicate.class;
+	}
+
+	@Override
+	public boolean isLiteral() {
+		return false;
+	}
+
+	@Override
+	public <C extends Term<?>> boolean containsTermsOfType(Class<C> cls) {
+		return !getTerms(cls).isEmpty();
+	}
+	
+	@Override
+	public Set<? extends Predicate> getPredicates() {
+		Set<Predicate> predicates = new HashSet<Predicate>();
+		Signature sig = this.getSignature();
+		if (sig instanceof FolSignature) {
+			predicates.addAll(((RelationalFormula) this.getPremise()).getPredicates());
+			predicates.addAll(((RelationalFormula) this.getConclusion()).getPredicates());
+		}
+		return predicates;
+	}
+	
+	@Override
+	public Set<Term<?>> getTerms() {
+		Set<Term<?>> reval = new HashSet<Term<?>>();
+		Signature sig = this.getSignature();
+		if (sig instanceof FolSignature) {
+			for (T x : this.getPremise())
+				reval.addAll(((RelationalFormula) x).getTerms());
+			reval.addAll(((RelationalFormula) this.getConclusion()).getTerms());
+		}
+		return reval;
+	}
+
+	@Override
+	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
+		Set<C> reval = new HashSet<C>();
+		Signature sig = this.getSignature();
+		if (sig instanceof FolSignature) {
+			for (Term<?> arg : this.getTerms()) {
+				if (arg.getClass().equals(cls)) {
+					@SuppressWarnings("unchecked")
+					C castArg = (C) arg;
+					reval.add(castArg);
+				}
+				// recursively add terms for all inner functional terms
+				reval.addAll(arg.getTerms(cls));
+			}
+		}
+		return reval;
+	}
 	
 }

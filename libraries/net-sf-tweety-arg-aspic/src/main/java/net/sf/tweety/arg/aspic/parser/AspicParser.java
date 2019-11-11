@@ -39,17 +39,18 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
- * @author Nils Geilen
- * 
+ *
  * Parses a Aspic Argumentation System out of an input text. Every line contains one of the following: 
- *		&lt;order&gt; 		   ::= &lt;identifier&gt; ( '&lt;' &lt;identifier&gt; )+
- *		&lt;ordinary premise&gt; ::= '=&gt;' '-'? &lt;identifier&gt;
- *		&lt;axiom&gt; 		   ::= '-&gt;' '-'? &lt;identifier&gt;
- *		&lt;defeasible rule&gt;  ::= ( &lt;identifier&gt; ':' )? &lt;identifier&gt; ( ',' &lt;identifier&gt; )* '=&gt;' (-)? &lt;identifier&gt;
- *		&lt;static rule&gt;	   ::= &lt;identifier&gt; ( ',' &lt;identifier&gt; )* '-&gt;' (-)? &lt;identifier&gt;
+ *		
+ * <br> &lt;order&gt; 		    ::= &lt;identifier&gt; ( '&lt;' &lt;identifier&gt; )+
+ * <br> &lt;ordinary premise&gt; ::= '=&gt;' '-'? &lt;identifier&gt;
+ * <br> &lt;axiom&gt; 		    ::= '-&gt;' '-'? &lt;identifier&gt;
+ * <br> &lt;defeasible rule&gt;  ::= ( &lt;identifier&gt; ':' )? &lt;identifier&gt; ( ',' &lt;identifier&gt; )* '=&gt;' (-)? &lt;identifier&gt;
+ * <br> &lt;static rule&gt;	    ::= &lt;identifier&gt; ( ',' &lt;identifier&gt; )* '-&gt;' (-)? &lt;identifier&gt;
  *
  * 
  * @param <T>	is the type of the language that the ASPIC theory's rules range over 
+ * @author Nils Geilen
  */
 public class AspicParser <T extends Invertable> extends Parser<AspicArgumentationTheory<T>,Formula>{
 	
@@ -73,8 +74,6 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 		this.formulaparser = formulaparser;
 		this.rfg = rfg;
 	}
-	
-	
 
 	/**
 	 * Sets a new symbol used for parsing strict function arrows
@@ -83,9 +82,6 @@ public class AspicParser <T extends Invertable> extends Parser<AspicArgumentatio
 	public void setSymbolStrict(String symbolStrict) {
 		this.symbolStrict = symbolStrict;
 	}
-
-
-	
 
 
 	/**

@@ -20,38 +20,71 @@ package net.sf.tweety.arg.aspic.syntax;
 
 import java.util.Collection;
 
+import net.sf.tweety.commons.Signature;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * @author Nils Geilen
  * 
- * Indefeasible implementation of <code>InferenceRule&lt;T&gt;</code>
+ *         Indefeasible implementation of <code>InferenceRule&lt;T&gt;</code>
  *
- * @param <T>	is the type of the language that the ASPIC theory's rules range over 
+ * @param <T> is the type of the language that the ASPIC theory's rules range
+ *            over
  */
 public class StrictInferenceRule<T extends Invertable> extends InferenceRule<T> {
-	
+
 	/**
 	 * Constructs an empty instance
 	 */
-	public StrictInferenceRule(){	
+	public StrictInferenceRule() {
 	}
-	
+
 	/**
-	 * Constructs a strict inference rule p -&gt; c 
-	 * @param conclusion	^= p
-	 * @param premise	^= c
+	 * Constructs a strict inference rule p -&gt; c
+	 * 
+	 * @param conclusion ^= p
+	 * @param premise    ^= c
 	 */
 	public StrictInferenceRule(T conclusion, Collection<T> premise) {
 		super(conclusion, premise);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.arg.aspic.syntax.InferenceRule#isDefeasible()
 	 */
 	@Override
 	public boolean isDefeasible() {
 		return false;
+	}
+
+	@Override
+	public StrictInferenceRule<T> clone() {
+		StrictInferenceRule<T> rule = new StrictInferenceRule<T>();
+		rule.addPremises(this.getPremise());
+		rule.setConclusion(this.getConclusion());
+		return rule;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public StrictInferenceRule<T> substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		StrictInferenceRule<T> n = this.clone();
+		Signature sig = this.getSignature();
+		if (sig instanceof FolSignature) {
+			n = new StrictInferenceRule<T>();
+			RelationalFormula c2 = ((RelationalFormula) this.getConclusion()).substitute(v, t);
+			for (T x : this.getPremise()) {
+				RelationalFormula p2 = ((RelationalFormula) x).substitute(v, t);
+				n.addPremise((T) p2);
+			}
+			n.setConclusion((T) c2);
+		}
+		return n;
 	}
 
 }
