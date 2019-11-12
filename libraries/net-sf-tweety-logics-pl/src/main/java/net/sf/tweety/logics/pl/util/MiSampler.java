@@ -25,7 +25,6 @@ import java.util.Random;
 import java.util.Stack;
 
 import net.sf.tweety.commons.BeliefSetSampler;
-import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
@@ -91,7 +90,8 @@ public class MiSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 		// first generate MIs
 		int num = 0;
 		Stack<Proposition> st = new Stack<Proposition>();
-		((Signature) st).addSignature((PlSignature)this.getSamplerSignature());
+		for (Proposition p : ((PlSignature) this.getSamplerSignature()))
+			st.push(p);
 		Proposition a,b;
 		while(num < this.incvalue){
 			a = st.pop();
