@@ -63,8 +63,9 @@ public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgument
 	public NumericalArgumentRanking getModel(DungTheory kb) {
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
+		Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(kb.getNodes());
 		for (Argument a : kb) 
-			ranking.put(a, computeStrengthOfArgument(a, kb)); 
+			ranking.put(a, computeStrengthOfArgument(a, kb, subsets)); 
 		return ranking;
 	}
 
@@ -73,9 +74,10 @@ public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgument
 	 * 
 	 * @param a  an Argument
 	 * @param kb DungTheory
+	 * @param subsets all subsets of the knowledge base
 	 * @return strength value of the given argument
 	 */
-	public double computeStrengthOfArgument(Argument a, DungTheory kb) {
+	public double computeStrengthOfArgument(Argument a, DungTheory kb, Set<Set<Argument>> subsets) {
 		/* 
 		 * The value of the game is the solution to a linear optimization problem
 		*/
@@ -83,17 +85,13 @@ public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgument
 		Variable target_var = new FloatVariable("PMAX");
 		problem.setTargetFunction(target_var);
 		
-		//Generate strategies of the proponent of the zero-sum strategic game
-		Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(kb.getNodes());
+		//Generate strategies of the proponent and opponent of the zero-sum strategic game
 		Set<Collection<Argument>> proponent_strategies = new HashSet<Collection<Argument>>();
+		Set<Collection<Argument>> opponent_strategies = new HashSet<Collection<Argument>>();
 		for (Set<Argument> p : subsets) {
+			opponent_strategies.add(p);
 			if (p.contains(a)) 
 				proponent_strategies.add(p);
-		}
-		//Generate strategies of the opponent of the zero-sum strategic game
-		Set<Collection<Argument>> opponent_strategies = new HashSet<Collection<Argument>>();
-		for (Set<Argument> o : subsets) {
-			opponent_strategies.add(o);
 		}
 
 		/*
