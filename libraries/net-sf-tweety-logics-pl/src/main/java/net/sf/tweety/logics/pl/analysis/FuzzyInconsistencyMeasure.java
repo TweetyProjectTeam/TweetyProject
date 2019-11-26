@@ -47,7 +47,7 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This measure implements the approach presented in [Thimm, 2016, to appear].
+ * This measure implements the approach presented in [Thimm, Measuring Inconsistency with Many-Valued Logics. 2017.] 
  * 
  * @author Matthias Thimm
  *
