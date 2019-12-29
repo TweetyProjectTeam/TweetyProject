@@ -74,7 +74,7 @@ public class Link{
 	}
 	
 	/**
-	 * Delegates to linkType.isBipolar()
+	 * 
 	 * 
 	 * @return true iff the link is bipolar
 	 */

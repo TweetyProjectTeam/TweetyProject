@@ -18,39 +18,28 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import java.util.Iterator;
-
-import net.sf.tweety.arg.adf.reasoner.strategy.ModelIterator;
-import net.sf.tweety.arg.adf.reasoner.strategy.ground.SatGroundReasonerStrategy;
-import net.sf.tweety.arg.adf.reasoner.strategy.model.SatModelReasonerStrategy;
-import net.sf.tweety.arg.adf.reasoner.strategy.stable.DefaultStableReasonerStrategy;
-import net.sf.tweety.arg.adf.reasoner.strategy.stable.StableReasonerStrategy;
+import net.sf.tweety.arg.adf.reasoner.generator.SatGroundGenerator;
+import net.sf.tweety.arg.adf.reasoner.generator.SatModelGenerator;
+import net.sf.tweety.arg.adf.reasoner.verifier.GrounderStableVerifier;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
  *
  */
 public class StableReasoner extends AbstractDialecticalFrameworkReasoner {
-
-	private StableReasonerStrategy strategy;
 	
 	/**
 	 * @param solver the underlying sat solver
 	 */
 	public StableReasoner(IncrementalSatSolver solver) {
-		super();
-		this.strategy = new DefaultStableReasonerStrategy(new SatModelReasonerStrategy(solver), new SatGroundReasonerStrategy(solver));
+		super(satBased(solver));
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner#modelIterator(net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework)
-	 */
-	@Override
-	public Iterator<Interpretation> modelIterator(AbstractDialecticalFramework adf) {
-		return new ModelIterator(strategy, adf);
+	private static Pipeline<SatReasonerContext> satBased(IncrementalSatSolver solver) {
+		return Pipeline.builder(new SatModelGenerator(solver))
+				.addVerifier(new GrounderStableVerifier<>(new SatGroundGenerator(solver)))
+				.build();
 	}
 
 }

@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.arg.adf.semantics;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -190,10 +191,10 @@ public class Interpretation extends AbstractInterpretation<AbstractDialecticalFr
 	}
 
 	/**
-	 * @return a copy of the set of satisfied arguments
+	 * @return an unmodifiable view of the satisfied arguments
 	 */
 	public Set<Argument> getSatisfied() {
-		return new HashSet<Argument>(satisfied);
+		return Collections.unmodifiableSet(satisfied);
 	}
 	
 	public Stream<Argument> satisfied() {
@@ -201,10 +202,10 @@ public class Interpretation extends AbstractInterpretation<AbstractDialecticalFr
 	}
 	
 	/**
-	 * @return a copy of the set of unsatisfied arguments
+	 * @return an unmodifiable view of the unsatisfied arguments
 	 */
 	public Set<Argument> getUnsatisfied() {
-		return new HashSet<Argument>(unsatisfied);
+		return Collections.unmodifiableSet(unsatisfied);
 	}
 
 	public Stream<Argument> unsatisfied() {
@@ -212,10 +213,10 @@ public class Interpretation extends AbstractInterpretation<AbstractDialecticalFr
 	}
 	
 	/**
-	 * @return a copy of the set of undecided arguments
+	 * @return an unmodifiable view of the undecided arguments
 	 */
 	public Set<Argument> getUndecided() {
-		return new HashSet<Argument>(undecided);
+		return Collections.unmodifiableSet(undecided);
 	}
 
 	public Stream<Argument> undecided() {

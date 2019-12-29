@@ -31,7 +31,8 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * A dummy state that can be used in combination with non-incremental
- * Sat-Solvers at positions where a SatSolverState is required.
+ * Sat-Solvers and {@link SimpleIncrementalSatSolver} at positions where a
+ * SatSolverState is required.
  * <p>
  * Maintains an internal collection of disjunctions.
  * 
@@ -40,21 +41,21 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  */
 public class SimpleSatSolverState implements SatSolverState {
 
-	private SatSolver satSolver;
+	private SatSolver solver;
 
 	private Collection<PlFormula> state;
-	
+
 	private Collection<Disjunction> assume;
 
 	/**
-	 * @param satSolver
+	 * @param solver
 	 */
-	public SimpleSatSolverState(SatSolver satSolver) {
-		this.satSolver = satSolver;
+	SimpleSatSolverState(SatSolver solver) {
+		this.solver = solver;
 		this.state = new LinkedList<PlFormula>();
 		this.assume = new LinkedList<Disjunction>();
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -77,17 +78,17 @@ public class SimpleSatSolverState implements SatSolverState {
 			temporaryState.addAll(state);
 			temporaryState.addAll(assume);
 			assume.clear();
-			return satSolver.getWitness(temporaryState);
+			return solver.getWitness(temporaryState);
 		}
-		return satSolver.getWitness(state);
+		return solver.getWitness(state);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.pl.
-	 * syntax.Proposition, boolean)
+	 * net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.
+	 * pl. syntax.Proposition, boolean)
 	 */
 	@Override
 	public void assume(Proposition proposition, boolean value) {
@@ -99,7 +100,7 @@ public class SimpleSatSolverState implements SatSolverState {
 		}
 		assume.add(clause);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -115,7 +116,8 @@ public class SimpleSatSolverState implements SatSolverState {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.sf.tweety.arg.adf.sat.SatSolverState#add(java.util.Collection)
+	 * @see
+	 * net.sf.tweety.arg.adf.sat.SatSolverState#add(java.util.Collection)
 	 */
 	@Override
 	public boolean add(Collection<Disjunction> clauses) {
@@ -126,12 +128,11 @@ public class SimpleSatSolverState implements SatSolverState {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.sf.tweety.arg.adf.sat.SatSolverState#remove(net.sf.tweety.logics.pl.
-	 * syntax.Disjunction)
+	 * net.sf.tweety.arg.adf.sat.SatSolverState#remove(net.sf.tweety.logics.
+	 * pl. syntax.Disjunction)
 	 */
 	@Override
 	public boolean remove(Disjunction clause) {
 		return state.remove(clause);
 	}
-
 }

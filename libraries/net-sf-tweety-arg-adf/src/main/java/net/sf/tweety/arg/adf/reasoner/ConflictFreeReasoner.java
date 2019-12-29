@@ -18,33 +18,20 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import java.util.Iterator;
-
-import net.sf.tweety.arg.adf.reasoner.strategy.ModelIterator;
-import net.sf.tweety.arg.adf.reasoner.strategy.conflictfree.ConflictFreeReasonerStrategy;
-import net.sf.tweety.arg.adf.reasoner.strategy.conflictfree.SatConflictFreeReasonerStrategy;
+import net.sf.tweety.arg.adf.reasoner.generator.SatConflictFreeGenerator;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
  *
  */
-public class ConflictFreeReasoner extends AbstractDialecticalFrameworkReasoner{
+public class ConflictFreeReasoner extends AbstractDialecticalFrameworkReasoner {
 
-	private ConflictFreeReasonerStrategy strategy;
-	
-	public ConflictFreeReasoner(IncrementalSatSolver satSolver) {
-		this.strategy = new SatConflictFreeReasonerStrategy(satSolver);
+	public ConflictFreeReasoner(IncrementalSatSolver solver) {
+		super(satBased(solver));
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner#modelIterator(net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework)
-	 */
-	@Override
-	public Iterator<Interpretation> modelIterator(AbstractDialecticalFramework adf) {
-		return new ModelIterator(strategy, adf);
+	private static Pipeline<SatReasonerContext> satBased(IncrementalSatSolver solver) {
+		return Pipeline.builder(new SatConflictFreeGenerator(solver)).build();
 	}
-
 }

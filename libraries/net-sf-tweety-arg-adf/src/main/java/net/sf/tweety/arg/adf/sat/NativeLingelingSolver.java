@@ -129,7 +129,7 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 
 	private static native void reuse(long lgl, int lit);
 
-	class LingelingSolverState implements SatSolverState {
+	private static class LingelingSolverState implements SatSolverState {
 
 		/**
 		 * Maps the propositions to their native representation.
@@ -148,8 +148,8 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 		private int nextProposition = 1;
 
 		private long handle;
-
-		public LingelingSolverState(long handle) {
+				
+		private LingelingSolverState(long handle) {
 			this.handle = handle;
 		}
 
@@ -164,13 +164,11 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 
 		@Override
 		public boolean add(Collection<Disjunction> clauses) {
-			assert clauses.stream().allMatch(Disjunction::isClause);
 			return stateCache.addAll(clauses);
 		}
 
 		@Override
 		public boolean add(Disjunction clause) {
-			assert clause.isClause();
 			return stateCache.add(clause);
 		}
 

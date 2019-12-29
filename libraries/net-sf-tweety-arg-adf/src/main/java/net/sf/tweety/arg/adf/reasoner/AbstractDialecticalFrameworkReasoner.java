@@ -40,6 +40,15 @@ public abstract class AbstractDialecticalFrameworkReasoner
 		implements QualitativeReasoner<AbstractDialecticalFramework, Argument>,
 		ModelProvider<Argument, AbstractDialecticalFramework, Interpretation> {
 	
+	private Pipeline<?> computationPipeline;
+	
+	/**
+	 * @param computationPipeline
+	 */
+	public AbstractDialecticalFrameworkReasoner(Pipeline<?> computationPipeline) {
+		this.computationPipeline = computationPipeline;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -115,6 +124,8 @@ public abstract class AbstractDialecticalFrameworkReasoner
 		}
 		return null;
 	}
-	
-	public abstract Iterator<Interpretation> modelIterator(AbstractDialecticalFramework adf);
+		
+	public Iterator<Interpretation> modelIterator(AbstractDialecticalFramework adf) {
+		return computationPipeline.iterator(adf);
+	}
 }

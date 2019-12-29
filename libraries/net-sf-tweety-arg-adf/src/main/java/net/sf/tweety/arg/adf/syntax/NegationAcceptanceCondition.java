@@ -19,41 +19,38 @@
 package net.sf.tweety.arg.adf.syntax;
 
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
-public class NegationAcceptanceCondition extends AcceptanceCondition {
+import net.sf.tweety.arg.adf.transform.Transform;
 
-	private AcceptanceCondition subcondition;
+public final class NegationAcceptanceCondition extends UnaryAcceptanceCondition {
+
 
 	public NegationAcceptanceCondition(AcceptanceCondition subcondition) {
-		super();
-		this.subcondition = subcondition;
+		super(subcondition);
 	}
 
-	@Override
-	public Stream<Argument> arguments() {
-		return subcondition.arguments();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.
-	 * arg.adf.syntax.Transform, java.util.function.Consumer)
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.UnaryAcceptanceCondition#transform(net.sf.tweety.arg.adf.transform.Transform, java.util.function.Consumer, java.lang.Object, int)
 	 */
 	@Override
-	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
-		return transform.transformNegation(consumer, subcondition.transform(transform, consumer, -polarity), polarity);
+	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, R sub, int polarity) {
+		return transform.transformNegation(consumer, sub, polarity);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.UnaryAcceptanceCondition#subPolarity(int)
 	 */
 	@Override
-	public String toString() {
-		return "neg(" + subcondition.toString() + ")";
+	protected int subPolarity(int polarity) {
+		return -polarity;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#getName()
+	 */
+	@Override
+	protected String getName() {
+		return "neg";
+	}
+
 }

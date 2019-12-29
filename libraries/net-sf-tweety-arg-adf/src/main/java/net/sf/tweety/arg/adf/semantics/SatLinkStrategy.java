@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.syntax.DefinitionalCNFTransform;
+import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;

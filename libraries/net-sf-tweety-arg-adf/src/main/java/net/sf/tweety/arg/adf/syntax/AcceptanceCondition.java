@@ -23,6 +23,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
+import net.sf.tweety.arg.adf.transform.Transform;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
@@ -34,7 +36,7 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
  *
  */
 public abstract class AcceptanceCondition {
-
+	
 	/**
 	 * 
 	 * @return a stream of all arguments of this acceptance condition and its
@@ -125,6 +127,38 @@ public abstract class AcceptanceCondition {
 		return output;
 	}
 
+	/**
+	 * Note that this method does not perform any computations to determine if
+	 * this acceptance condition is a tautology, it only checks if this is of
+	 * type {@link TautologyAcceptanceCondition}.
+	 * <p>
+	 * This is useful for some syntax level rewriting to avoid instanceof checks
+	 * and keep the code typesafe.
+	 * 
+	 * @return true iff this acceptance condition represents the tautology
+	 *         constant
+	 */
+	public boolean isTautology() {
+		return false;
+	}
+
+	/**
+	 * Note that this method does not perform any computations to determine if
+	 * this acceptance condition is a tautology, it only checks if this is of
+	 * type {@link ContradictionAcceptanceCondition}.
+	 * <p>
+	 * This is useful for some syntax level rewriting to avoid instanceof checks
+	 * and keep the code typesafe.
+	 * 
+	 * @return true iff this acceptance condition represents the contradiction
+	 *         constant
+	 */
+	public boolean isContradiction() {
+		return false;
+	}
+	
+	protected abstract String getName();
+
 	protected abstract <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity);
 
 	/**
@@ -147,7 +181,76 @@ public abstract class AcceptanceCondition {
 	 * @return the result of the (simple) recursive transform operation
 	 */
 	public <R> R transform(Transform<?, R> transform) {
-		return transform(transform, c -> {}, 1);
+		return transform(transform, c -> {
+		}, 1);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
+	public Builder builder() {
+		return new Builder(this);
+	}
+	
+	public static Builder builder(AcceptanceCondition acc) {
+		return new Builder(acc);
+	}
+	
+	public static class Builder {
+		
+		private AcceptanceCondition left;
+		
+		private Builder(AcceptanceCondition left) {
+			this.left = left;
+		}
+		
+		public Builder and(AcceptanceCondition acc) {
+			this.left = new ConjunctionAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder and(AcceptanceCondition... accs) {
+			this.left = new ConjunctionAcceptanceCondition(left, new ConjunctionAcceptanceCondition(accs));
+			return this;
+		}
+		
+		public Builder or(AcceptanceCondition acc) {
+			this.left = new DisjunctionAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder or(AcceptanceCondition... accs) {
+			this.left = new DisjunctionAcceptanceCondition(left, new DisjunctionAcceptanceCondition(accs));
+			return this;
+		}
+		
+		public Builder implies(AcceptanceCondition acc) {
+			this.left = new ImplicationAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder iff(AcceptanceCondition acc) {
+			this.left = new EquivalenceAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder xor(AcceptanceCondition acc) {
+			this.left = new ExclusiveDisjunctionAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder neg() {
+			this.left = new NegationAcceptanceCondition(left);
+			return this;
+		}
+		
+		public AcceptanceCondition build() {
+			return left;
+		}
+	}
 }

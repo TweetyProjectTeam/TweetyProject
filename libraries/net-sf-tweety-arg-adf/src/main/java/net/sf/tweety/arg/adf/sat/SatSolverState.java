@@ -44,7 +44,7 @@ public interface SatSolverState extends AutoCloseable {
 	public default boolean satisfiable() {
 		return witness() != null;
 	}
-
+		
 	public Interpretation<PlBeliefSet, PlFormula> witness();
 
 	public void assume(Proposition proposition, boolean value);

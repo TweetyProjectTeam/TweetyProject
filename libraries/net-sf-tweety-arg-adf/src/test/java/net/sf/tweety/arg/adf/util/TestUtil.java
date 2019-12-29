@@ -26,8 +26,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -87,8 +85,8 @@ public class TestUtil {
 	 * @return a mapping of all the models per semantic
 	 * @throws IOException
 	 */
-	public static Map<String, List<Map<String, Boolean>>> readSolutionFile(File file) throws IOException {
-		Map<String, List<Map<String, Boolean>>> modelsPerSemantic = new HashMap<String, List<Map<String, Boolean>>>();
+	public static Map<String, Set<Map<String, Boolean>>> readSolutionFile(File file) throws IOException {
+		Map<String, Set<Map<String, Boolean>>> modelsPerSemantic = new HashMap<>();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 		String line = null;
 		String currentSemantics = null;
@@ -97,7 +95,7 @@ public class TestUtil {
 			// semantics line
 			if (line.matches("\\[[a-zA-Z]+\\]")) {
 				currentSemantics = line.substring(1, line.length() - 1);
-				modelsPerSemantic.put(currentSemantics, new LinkedList<Map<String, Boolean>>());
+				modelsPerSemantic.put(currentSemantics, new HashSet<Map<String, Boolean>>());
 			}
 			// model line
 			else if (line.matches("(\\s*(t|f|u)\\([a-zA-Z0-9]+\\)\\s*)+")) {

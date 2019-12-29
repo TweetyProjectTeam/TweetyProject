@@ -21,8 +21,9 @@ package net.sf.tweety.arg.adf.syntax;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-//TODO make singleton?
-public class ContradictionAcceptanceCondition extends AcceptanceCondition {
+import net.sf.tweety.arg.adf.transform.Transform;
+
+public final class ContradictionAcceptanceCondition extends AcceptanceCondition {
 
 	
 	/* (non-Javadoc)
@@ -32,6 +33,14 @@ public class ContradictionAcceptanceCondition extends AcceptanceCondition {
 	public Stream<Argument> arguments() {
 		return Stream.empty();
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#isContradiction()
+	 */
+	@Override
+	public boolean isContradiction() {
+		return true;
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.arg.adf.syntax.Transform, java.util.function.Consumer)
@@ -40,12 +49,28 @@ public class ContradictionAcceptanceCondition extends AcceptanceCondition {
 	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
 		return transform.transformContradiction(consumer, polarity);
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#getName()
 	 */
 	@Override
-	public String toString() {
+	protected String getName() {
 		return "c(f)";
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof ContradictionAcceptanceCondition;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return 37;
 	}
 }

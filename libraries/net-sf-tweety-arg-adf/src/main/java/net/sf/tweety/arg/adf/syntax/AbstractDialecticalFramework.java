@@ -28,15 +28,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.sf.tweety.arg.adf.sat.NativeLingelingSolver;
 import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.semantics.Link;
 import net.sf.tweety.arg.adf.semantics.LinkStrategy;
 import net.sf.tweety.arg.adf.semantics.SatLinkStrategy;
+import net.sf.tweety.arg.adf.transform.OmegaReductTransform;
+import net.sf.tweety.arg.adf.transform.Transform;
 import net.sf.tweety.arg.adf.util.Cache;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.commons.util.Pair;
-import net.sf.tweety.logics.pl.sat.SatSolver;
 
 /**
  * This class implements abstract dialectical frameworks, cf. [Brewka,
@@ -48,7 +50,7 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 public class AbstractDialecticalFramework
 		implements BeliefBase, Comparable<AbstractDialecticalFramework>, Iterable<Argument> {
 
-	private LinkStrategy linkStrategy = new SatLinkStrategy(SatSolver.getDefaultSolver());
+	private LinkStrategy linkStrategy = new SatLinkStrategy(new NativeLingelingSolver());
 
 	/**
 	 * Maps an argument to the arguments of its acceptance condition
@@ -62,7 +64,7 @@ public class AbstractDialecticalFramework
 	private Map<Argument, Set<Argument>> childrenByParent;
 
 	private Map<Argument, AcceptanceCondition> accByArgument;
-
+	
 	private Cache<Pair<Argument, Argument>, Link> linkCache;
 
 	public AbstractDialecticalFramework(Map<Argument, AcceptanceCondition> accByArgument) {
@@ -126,13 +128,22 @@ public class AbstractDialecticalFramework
 	 * @return
 	 */
 	public AbstractDialecticalFramework omegaReduct(Interpretation interpretation) {
-		Transform<AcceptanceCondition, AcceptanceCondition> reductTransform = new OmegaReductTransform(interpretation);
-		Map<Argument, AcceptanceCondition> reduct = new HashMap<Argument, AcceptanceCondition>();
+		return transform(new OmegaReductTransform(interpretation));
+	}
+	
+	/**
+	 * Creates a copy of this ADF with transformed acceptance conditions.
+	 * 
+	 * @param transform the transform to apply
+	 * @return a copy of this ADF
+	 */
+	public AbstractDialecticalFramework transform(Transform<AcceptanceCondition, AcceptanceCondition> transform) {
+		Map<Argument, AcceptanceCondition> transformed = new HashMap<Argument, AcceptanceCondition>();
 		for (Argument a : accByArgument.keySet()) {
 			AcceptanceCondition acc = accByArgument.get(a);
-			reduct.put(a, acc.transform(reductTransform));
+			transformed.put(a, acc.transform(transform));
 		}
-		return new AbstractDialecticalFramework(reduct);
+		return new AbstractDialecticalFramework(transformed);
 	}
 
 	/**
@@ -160,20 +171,6 @@ public class AbstractDialecticalFramework
 	 */
 	public Link link(Argument a, Argument b) {
 		return linkCache.apply(new Pair<Argument, Argument>(a, b));
-	}
-
-	// TODO reconsider since it affects immutability
-	public void setLink(Link link) {
-		Argument a = link.getFrom();
-		Argument b = link.getTo();
-
-		if (!accByArgument.containsKey(a) || !accByArgument.containsKey(b)) {
-			throw new IllegalArgumentException("Arguments of the given link are unknown to this ADF!");
-		}
-
-		parentsByChild.putIfAbsent(b, new HashSet<Argument>());
-		parentsByChild.get(b).add(a);
-		linkCache.put(new Pair<Argument, Argument>(a, b), link);
 	}
 
 	/**

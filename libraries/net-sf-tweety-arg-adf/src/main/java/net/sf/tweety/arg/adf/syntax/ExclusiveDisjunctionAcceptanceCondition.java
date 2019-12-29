@@ -19,49 +19,49 @@
 package net.sf.tweety.arg.adf.syntax;
 
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
-public class ExclusiveDisjunctionAcceptanceCondition extends AcceptanceCondition {
+import net.sf.tweety.arg.adf.transform.Transform;
 
-	private AcceptanceCondition left;
-
-	private AcceptanceCondition right;
+public final class ExclusiveDisjunctionAcceptanceCondition extends BinaryAcceptanceCondition {
 
 	/**
 	 * @param left
 	 * @param right
 	 */
 	public ExclusiveDisjunctionAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
-		super();
-		this.left = left;
-		this.right = right;
+		super(left, right);
 	}
 
-	@Override
-	public Stream<Argument> arguments() {
-		return Stream.concat(left.arguments(), right.arguments());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.
-	 * arg.adf.syntax.Transform, java.util.function.Consumer)
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.BinaryAcceptanceCondition#leftPolarity(int)
 	 */
 	@Override
-	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
-		return transform.transformExclusiveDisjunction(consumer, left.transform(transform, consumer, 0),
-				right.transform(transform, consumer, 0), polarity);
+	protected int leftPolarity(int polarity) {
+		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.BinaryAcceptanceCondition#rightPolarity(int)
 	 */
 	@Override
-	public String toString() {
-		return "xor(" + left.toString() + "," + right.toString() + ")";
+	protected int rightPolarity(int polarity) {
+		return 0;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.BinaryAcceptanceCondition#transform(net.sf.tweety.arg.adf.transform.Transform, java.util.function.Consumer, java.lang.Object, java.lang.Object, int)
+	 */
+	@Override
+	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, R left, R right, int polarity) {
+		return transform.transformExclusiveDisjunction(consumer, left, right, polarity);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#getName()
+	 */
+	@Override
+	protected String getName() {
+		return "xor";
+	}
+
 }

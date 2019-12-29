@@ -21,12 +21,21 @@ package net.sf.tweety.arg.adf.syntax;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-// TODO make singleton?
-public class TautologyAcceptanceCondition extends AcceptanceCondition {
+import net.sf.tweety.arg.adf.transform.Transform;
+
+public final class TautologyAcceptanceCondition extends AcceptanceCondition {
 
 	@Override
 	public Stream<Argument> arguments() {
 		return Stream.empty();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#isTautology()
+	 */
+	@Override
+	public boolean isTautology() {
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -36,13 +45,28 @@ public class TautologyAcceptanceCondition extends AcceptanceCondition {
 	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
 		return transform.transformTautology(consumer, polarity);
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	 * @see net.sf.tweety.arg.adf.syntax.AcceptanceCondition#getName()
 	 */
 	@Override
-	public String toString() {
+	protected String getName() {
 		return "c(v)";
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof TautologyAcceptanceCondition;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return 13;
+	}
 }

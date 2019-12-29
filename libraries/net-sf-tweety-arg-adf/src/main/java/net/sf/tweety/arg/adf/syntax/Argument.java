@@ -21,6 +21,7 @@ package net.sf.tweety.arg.adf.syntax;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import net.sf.tweety.arg.adf.transform.Transform;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.graphs.Node;
@@ -42,7 +43,6 @@ public class Argument extends AcceptanceCondition implements Formula, Node {
 	 * @param name
 	 */
 	public Argument(String name) {
-		super();
 		this.name = name;
 	}
 
@@ -56,12 +56,10 @@ public class Argument extends AcceptanceCondition implements Formula, Node {
 		return new AbstractDialecticalFrameworkSignature(this);
 	}
 
+	/**
+	 * @return the name
+	 */
 	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
 		return name;
 	}
 
