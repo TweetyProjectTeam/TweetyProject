@@ -49,7 +49,7 @@ public class DimacsParser extends Parser<PlBeliefSet,PlFormula> {
 	/**
 	 * An array representation of the propositions (for index mapping) 
 	 */
-	private Proposition[] prop_idx = null;
+	protected Proposition[] prop_idx = null;
 	
 	/**
 	 * Sets the signature of this parser. Note that the natural order of the atoms

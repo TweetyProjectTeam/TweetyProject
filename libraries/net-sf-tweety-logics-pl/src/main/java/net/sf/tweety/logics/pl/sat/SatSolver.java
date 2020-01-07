@@ -134,7 +134,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	 * @param formulas a collection of formulas.
 	 * @return a string in Dimacs CNF and a mapping between clauses and original formulas.
 	 */
-	protected static Pair<String,List<PlFormula>> convertToDimacs(Collection<PlFormula> formulas){
+	public static Pair<String,List<PlFormula>> convertToDimacs(Collection<PlFormula> formulas){
 		List<Proposition> props = new ArrayList<Proposition>();
 		for(PlFormula f: formulas){
 			props.removeAll(f.getAtoms());

@@ -208,7 +208,7 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 	 * @return a propositional formula.
 	 * @throws ParserException if the list could not be parsed.
 	 */
-	private PlFormula parseDisjunction(List<Object> l) throws ParserException {
+	protected PlFormula parseDisjunction(List<Object> l) throws ParserException {
 		if (l.isEmpty())
 			throw new ParserException("Empty parentheses.");
 		if (!(l.contains(LogicalSymbols.DISJUNCTION())))
