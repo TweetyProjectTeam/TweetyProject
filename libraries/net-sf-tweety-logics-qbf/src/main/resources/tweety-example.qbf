@@ -1,0 +1,2 @@
+forall a: (exists c:(a || b || (c && !c)))
+

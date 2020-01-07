@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>net.sf.tweety.logics</groupId>
+  <artifactId>qbf</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Tweety (Quantified Boolean Formulas)</name>
+  <url>http://sourceforge.net/projects/tweety/</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.9</version>
+      <scope>test</scope>
+    </dependency>
+	<dependency>
+	  <groupId>org.ow2.sat4j</groupId>
+	  <artifactId>org.ow2.sat4j.core</artifactId>
+	  <version>2.3.4</version>
+	</dependency>
+    <dependency>
+    	<groupId>net.sf.tweety.logics</groupId>
+    	<artifactId>pl</artifactId>
+    	<version>1.14-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>net.sf.tweety</groupId>
+    	<artifactId>math</artifactId>
+    	<version>1.14-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  <parent>
+  <groupId>net.sf.tweety</groupId>
+  <artifactId>parent-pom</artifactId>
+  	<version>1.14-SNAPSHOT</version>
+  	<relativePath>..</relativePath>
+  </parent>
+</project>

@@ -1,0 +1,11 @@
+c This QDIMACS file encodes the formula     
+c forall x1, x2 exists y. y <-> x1 & x2.
+c x1 is represented by number 1
+c x2 is represented by number 2
+c y  is represented by number 3
+p cnf 3 3                                   
+a 1 2 0                                     
+e 3 0                                       
+1 -3 0                                      
+2 -3 0                                      
+-1 -2 3 0       
