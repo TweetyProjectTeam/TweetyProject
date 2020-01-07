@@ -65,6 +65,11 @@ public class QdimacsWriter {
 	public QdimacsWriter() {
 		this.writer = new StringWriter();
 	}
+	
+	/**
+	 * Removes zero at the end of the problem line (workaround for some solvers).
+	 */
+	public boolean DISABLE_PREAMBLE_ZERO = false;
 
 	public void printBase(PlBeliefSet kb) throws IOException {
 		// Map the literals to numbers according to their natural order returned by the
@@ -113,6 +118,8 @@ public class QdimacsWriter {
 		String dimacs_clauses = SatSolver.convertToDimacs(clauses_only).getFirst();
 		int first_line_end = dimacs_clauses.indexOf("\n");
 		String preamble = dimacs_clauses.substring(0, first_line_end) + " 0\n";
+		if (DISABLE_PREAMBLE_ZERO)
+			preamble = dimacs_clauses.substring(0, first_line_end) + "\n";
 		String clauses = dimacs_clauses.substring(first_line_end + 1);
 
 		System.out.print(preamble);

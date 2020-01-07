@@ -41,16 +41,19 @@ public class QbfReasonersExample {
 		// CAQE
 		System.out.println("\nCAQE\n=================");
 		CaqeSolver reasoner3 = new CaqeSolver("/home/anna/snap/qbf/caqe/");
-		System.out.println(reasoner3.isSatisfiable(p3));
+		PlBeliefSet p4 = parser1.parseBeliefBase("exists A: ( forall C:( exists B:((!A && C) && (D || B && !C))))");
+		System.out.println(reasoner3.isSatisfiable(p4));
 
 		// Qute
 		System.out.println("\nQute\n=================");
 		QuteSolver reasoner4 = new QuteSolver("/home/anna/snap/qbf/qute");
-		System.out.println(reasoner4.isSatisfiable(p3));
+		System.out.println(reasoner4.isSatisfiable(p3)+"\n"); //TODO: Why does this evaluate to false (in contrast to the other solvers)?
+		System.out.println(reasoner4.isSatisfiable(p4));
 
 		// GhostQ
 		System.out.println("\nGhostQ\n=================");
-		GhostQSolver reasoner5 = new GhostQSolver("/home/anna/snap/qbf/ghostq");
-//		System.out.println(reasoner5.isSatisfiable(p3));
+		GhostQSolver reasoner5 = new GhostQSolver("/home/anna/snap/qbf/ghostq/bin/");
+		System.out.println(reasoner5.isSatisfiable(p3) + "\n");
+		System.out.println(reasoner5.isSatisfiable(p4));
 	}
 }

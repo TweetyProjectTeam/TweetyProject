@@ -21,13 +21,13 @@ package net.sf.tweety.logics.qbf.reasoner;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
-import net.sf.tweety.logics.qbf.parser.QdimacsParser;
 import net.sf.tweety.logics.qbf.writer.QdimacsWriter;
 
 /**
@@ -80,15 +80,13 @@ public class QuteSolver extends SatSolver {
 	 * @throws Exception if the bash command fails or if Qute produces no interpretable output
 	 */
 	private boolean evaluate(File file) throws Exception {
-		String cmd = binaryLocation + "qute " + file.getAbsolutePath();
+		String cmd = binaryLocation + "/qute " + file.getAbsolutePath();
 		String output = null;
 		output = bash.run(cmd);
-		QdimacsParser parser = new QdimacsParser();
-		QdimacsParser.Answer answer = parser.parseQDimacsOutput(output);
-		if (answer == QdimacsParser.Answer.SAT)
-			return true;
-		if (answer == QdimacsParser.Answer.UNSAT)
+		if (Pattern.compile("UNSAT").matcher(output).find())
 			return false;
+		if (Pattern.compile("SAT").matcher(output).find()) 
+			return true;
 		throw new RuntimeException("Failed to invoke Qute: Qute returned no result which can be interpreted.");
 	}
 
@@ -102,7 +100,7 @@ public class QuteSolver extends SatSolver {
 	public boolean isSatisfiable(Collection<PlFormula> kb) {
 		try {
 			File file = File.createTempFile("tmp", ".txt");
-			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file));
+			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file, "UTF-8"));
 			printer.printBase((PlBeliefSet) kb);
 			printer.close();
 			if (evaluate(file))

@@ -83,10 +83,10 @@ public class CadetSolver extends SatSolver {
 		String cmd =  binaryLocation + "./cadet " + file.getAbsolutePath();
 		String output = null;
 		output = bash.run(cmd);
-		if (Pattern.compile("SAT").matcher(output).find()) //TODO some warnings also contain "SAT"
-			return true;
 		if (Pattern.compile("UNSAT").matcher(output).find())
 			return false;
+		if (Pattern.compile("SAT").matcher(output).find()) //TODO some warnings also contain "SAT"
+			return true;
 		throw new RuntimeException("Failed to invoke Cadet: Cadet returned no result which can be interpreted.");
 	}
 
@@ -100,7 +100,7 @@ public class CadetSolver extends SatSolver {
 	public boolean isSatisfiable(Collection<PlFormula> kb) {
 		try {
 			File file = File.createTempFile("tmp", ".txt");
-			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file));
+			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file, "UTF-8"));
 			printer.printBase((PlBeliefSet) kb);
 			printer.close();
 			if (evaluate(file))

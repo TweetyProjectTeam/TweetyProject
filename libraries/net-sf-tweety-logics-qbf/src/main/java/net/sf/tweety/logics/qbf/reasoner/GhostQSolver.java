@@ -21,13 +21,13 @@ package net.sf.tweety.logics.qbf.reasoner;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
-import net.sf.tweety.logics.qbf.parser.QdimacsParser;
 import net.sf.tweety.logics.qbf.writer.QdimacsWriter;
 
 /**
@@ -79,17 +79,16 @@ public class GhostQSolver extends SatSolver {
 	 * @return true if the result is SAT, false if the result is UNSAT
 	 * @throws Exception if the bash command fails or if GhostQ produces no interpretable output
 	 */
-	private boolean evaluate(File file) throws Exception {
-		//TODO use conversion script
-		String cmd = binaryLocation + "./ghostq " + file.getAbsolutePath();
+	private boolean evaluate(File file, File file2) throws Exception {
+		String cmd_convert_file = "python " + binaryLocation + "qcir-conv.py "+ file.getAbsolutePath() +" -o " + file2.getAbsolutePath() + " -write-gq -quiet";
+		bash.run(cmd_convert_file);
+		String cmd = binaryLocation + "./ghostq " + file2.getAbsolutePath();
 		String output = null;
 		output = bash.run(cmd);
-		QdimacsParser parser = new QdimacsParser();
-		QdimacsParser.Answer answer = parser.parseQDimacsOutput(output);
-		if (answer == QdimacsParser.Answer.SAT)
-			return true;
-		if (answer == QdimacsParser.Answer.UNSAT)
+		if (Pattern.compile("false").matcher(output).find())
 			return false;
+		if (Pattern.compile("true").matcher(output).find()) //TODO some warnings also contain "SAT"
+			return true;
 		throw new RuntimeException("Failed to invoke GhostQ: GhostQ returned no result which can be interpreted.");
 	}
 
@@ -103,10 +102,11 @@ public class GhostQSolver extends SatSolver {
 	public boolean isSatisfiable(Collection<PlFormula> kb) {
 		try {
 			File file = File.createTempFile("tmp", ".txt");
-			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file));
+			File file2 = File.createTempFile("tmp", ".txt");
+			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file, "UTF-8"));
 			printer.printBase((PlBeliefSet) kb);
 			printer.close();
-			if (evaluate(file))
+			if (evaluate(file,file2))
 				return true;
 			else return false;
 		} catch (Exception e) {
