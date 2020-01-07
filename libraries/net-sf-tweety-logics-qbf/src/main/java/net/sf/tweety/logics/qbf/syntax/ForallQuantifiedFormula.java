@@ -29,6 +29,7 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.PlPredicate;
 import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * This class represents universal quantification for boolean formulas.
@@ -133,8 +134,22 @@ public class ForallQuantifiedFormula extends PlFormula {
 
 	@Override
 	public Set<PossibleWorld> getModels(PlSignature sig) {
-		// TODO Auto-generated method stub
-		return null;
+		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
+		for (Proposition p : this.quantifier_variables) {
+			Set<PossibleWorld> models_p = new HashSet<PossibleWorld>();
+			int n = this.innerFormula.numberOfOccurrences(p);
+			PlFormula result_tautology = this.innerFormula.replace(p, new Tautology(), 1);
+			for (int i = 2; i < n; i++)
+				result_tautology = result_tautology.replace(p, new Tautology(), i);
+			models_p = result_tautology.getModels();
+			
+			PlFormula result_contra = this.innerFormula.replace(p, new Tautology(), 1);
+			for (int i = 2; i < n; i++)
+				result_contra = result_contra.replace(p, new Tautology(), i);
+			models_p.retainAll(result_contra.getModels());
+			models.retainAll(models_p);
+		}
+		return models;
 	}
 
 	@Override

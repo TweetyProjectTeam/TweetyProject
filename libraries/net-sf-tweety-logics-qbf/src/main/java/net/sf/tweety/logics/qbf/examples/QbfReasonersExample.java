@@ -27,10 +27,16 @@ public class QbfReasonersExample {
 		// Naive classical inference
 		System.out.println("\nNaiveQbfReasoner\n=================");
 		NaiveQbfReasoner reasoner = new NaiveQbfReasoner();
-		PlBeliefSet p2 = parser1.parseBeliefBase("forall a: (a && b)");
+		PlBeliefSet p2 = parser1.parseBeliefBase("forall a: (a || !a) \n"
+				+ "!b");
 		System.out.println(p2);
-		PlFormula query = parser1.parseFormula("b");
+		PlFormula query = parser1.parseFormula("a || !a");
 		System.out.println(reasoner.query(p2, query));
+		PlFormula query2 = parser1.parseFormula("forall a: (a || !b)");
+		System.out.println(reasoner.query(p2, query2));
+		PlFormula query3 = parser1.parseFormula("exists b: (b && !b)");
+		System.out.println(reasoner.query(p2, query3));
+
 
 		// Cadet
 		System.out.println("\nCadet\n=================");

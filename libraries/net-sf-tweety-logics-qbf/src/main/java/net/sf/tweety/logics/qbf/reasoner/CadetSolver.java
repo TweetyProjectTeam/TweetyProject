@@ -25,28 +25,22 @@ import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.Shell;
-import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.qbf.writer.QdimacsWriter;
 
 /**
  * A wrapper for the Cadet (<a href="https://markusrabe.github.io/cadet/">https://markusrabe.github.io/cadet/</a>) solver.
+ * Tested with version 2.5.
  * 
  * @author Anna Gessler
  *
  */
-public class CadetSolver extends SatSolver {
+public class CadetSolver extends QbfSolver {
 	/**
 	 *  String representation of the Cadet binary path. 
-	 *  Temporary files are stored in this directory.
 	 */
 	private String binaryLocation;
-
-	/**
-	 * Shell to run CadetSolver
-	 */
-	private Shell bash;
 	
 	/**
 	 * Constructs a new instance pointing to a specific CadetSolver.
@@ -70,7 +64,6 @@ public class CadetSolver extends SatSolver {
 	public CadetSolver(String binaryLocation) {
 		this(binaryLocation, Shell.getNativeShell());
 	}
-
 	
 	/**
 	 * Invokes Cadet with the given input file.

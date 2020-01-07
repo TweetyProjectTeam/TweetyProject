@@ -122,10 +122,6 @@ public class QdimacsWriter {
 			preamble = dimacs_clauses.substring(0, first_line_end) + "\n";
 		String clauses = dimacs_clauses.substring(first_line_end + 1);
 
-		System.out.print(preamble);
-		System.out.print(quantifiers);
-		System.out.print(clauses);
-
 		writer.write(preamble);
 		writer.write(quantifiers);
 		writer.write(clauses);

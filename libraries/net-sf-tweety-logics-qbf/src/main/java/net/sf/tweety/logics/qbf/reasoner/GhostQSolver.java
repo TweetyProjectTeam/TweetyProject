@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.Shell;
-import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.qbf.writer.QdimacsWriter;
@@ -37,17 +36,12 @@ import net.sf.tweety.logics.qbf.writer.QdimacsWriter;
  * @author Anna Gessler
  *
  */
-public class GhostQSolver extends SatSolver {
+public class GhostQSolver extends QbfSolver {
 	/**
 	 *  String representation of the GhostQ binary path. 
 	 *  Temporary files are stored in this directory.
 	 */
 	private String binaryLocation;
-
-	/**
-	 * Shell to run GhostQ
-	 */
-	private Shell bash;
 	
 	/**
 	 * Constructs a new instance pointing to a specific GhostQSolver.
