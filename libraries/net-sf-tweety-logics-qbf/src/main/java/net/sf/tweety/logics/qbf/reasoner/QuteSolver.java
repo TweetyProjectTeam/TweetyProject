@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.commons.util.Shell;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
@@ -81,12 +80,6 @@ public class QuteSolver extends QbfSolver {
 		if (Pattern.compile("SAT").matcher(output).find()) 
 			return true;
 		throw new RuntimeException("Failed to invoke Qute: Qute returned no result which can be interpreted.");
-	}
-
-	@Override
-	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

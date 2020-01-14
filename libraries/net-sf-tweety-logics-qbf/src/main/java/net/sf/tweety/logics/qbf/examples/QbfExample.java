@@ -5,7 +5,9 @@ import java.io.IOException;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.qbf.parser.QCirParser;
 import net.sf.tweety.logics.qbf.parser.QbfParser;
 import net.sf.tweety.logics.qbf.parser.QdimacsParser;
 import net.sf.tweety.logics.qbf.syntax.ExistsQuantifiedFormula;
@@ -47,8 +49,15 @@ public class QbfExample {
 		QdimacsWriter writer = new QdimacsWriter();
 		writer.printBase(p);
 
-		// QCir Parser (WIP)
-//		System.out.println("\nQCir parser\n=================");
-//		QCirParser parser3 = new QCirParser();
+		// QCir Parser 
+		System.out.println("\nQCir parser\n=================");
+		QCirParser parser3 = new QCirParser();
+		PlBeliefSet p3 = parser3.parseBeliefBaseFromFile("src/main/resources/qcir-example1.qcir");
+		System.out.println(p3);
+		System.out.println("output: "+parser3.getOutputVariable()+"\n");
+		PlBeliefSet p4 = parser3.parseBeliefBaseFromFile("src/main/resources/qcir-example2-sat.qcir");
+		for (PlFormula f : p4)
+			System.out.println(f);
+		System.out.println("output: " + parser3.getOutputVariable());
 	}
 }

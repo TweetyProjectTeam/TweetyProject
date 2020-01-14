@@ -211,5 +211,12 @@ public class ExistsQuantifiedFormula extends PlFormula {
 		s += ": (" + this.getFormula() + ")";
 		return s;
 	}
+	
+	@Override
+	public PlSignature getSignature() {
+		PlSignature sig = this.innerFormula.getSignature();
+		sig.addAll(this.quantifier_variables);
+		return sig;
+	}
 
 }
