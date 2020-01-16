@@ -144,6 +144,11 @@
   		<artifactId>pl</artifactId>
   		<version>1.14-SNAPSHOT</version>
   	</dependency>
+    <dependency>
+  		<groupId>net.sf.tweety.logics</groupId>
+  		<artifactId>qbf</artifactId>
+  		<version>1.14-SNAPSHOT</version>
+  	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>rcl</artifactId>
