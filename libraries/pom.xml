@@ -197,6 +197,7 @@
   	<module>net-sf-tweety-arg-adf</module>
   	<module>net-sf-tweety-arg-aspic</module>
     <module>net-sf-tweety-arg-aba</module>
+    <module>net-sf-tweety-arg-bipolar</module>
   	<module>net-sf-tweety-arg-deductive</module>
   	<module>net-sf-tweety-arg-lp</module>
   	<module>net-sf-tweety-arg-delp</module>

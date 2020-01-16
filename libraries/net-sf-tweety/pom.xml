@@ -34,6 +34,11 @@
   		<artifactId>adf</artifactId>
   		<version>1.14-SNAPSHOT</version>
   	</dependency>
+    <dependency>
+  		<groupId>net.sf.tweety.arg</groupId>
+  		<artifactId>bipolar</artifactId>
+  		<version>1.14-SNAPSHOT</version>
+  	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.arg</groupId>
   		<artifactId>aspic</artifactId>
