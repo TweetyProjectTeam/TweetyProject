@@ -77,9 +77,35 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 	 * @return the output gate of this QCir problem.
 	 */
 	public PlFormula getOutputVariable() {
+		PlFormula result = this.output;
 		if (this.gate_variables.containsKey(this.output.getName()))
-			return (this.gate_variables.get(this.output.getName()));
-		return this.output;
+			result = this.gate_variables.get(this.output.getName());
+
+		//add quantifiers from quantifier block
+		for (Proposition v : this.forall_quantified_variables) {
+			if (result.getSignature().contains(v)) {
+				Set<Proposition> vars = new HashSet<Proposition>();
+				vars.add(v);
+				if (result instanceof ForallQuantifiedFormula) {
+					vars.addAll(((ForallQuantifiedFormula) result).getQuantifierVariables());
+					result = new ForallQuantifiedFormula(((ForallQuantifiedFormula) result).getFormula(), vars);
+				} else
+					result = new ForallQuantifiedFormula(result, vars);
+			}
+		}
+
+		for (Proposition v : this.exists_quantified_variables) {
+			if (result.getSignature().contains(v)) {
+				Set<Proposition> vars = new HashSet<Proposition>();
+				vars.add(v);
+				if (result instanceof ExistsQuantifiedFormula) {
+					vars.addAll(((ExistsQuantifiedFormula) result).getQuantifierVariables());
+					result = new ExistsQuantifiedFormula(((ExistsQuantifiedFormula) result).getFormula(), vars);
+				} else
+					result = new ExistsQuantifiedFormula(result, vars);
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -148,7 +174,6 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 			}
 			beliefSet_exists_quantified.add(temp);
 		}
-
 		return beliefSet_exists_quantified;
 	}
 
@@ -377,7 +402,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 		Disjunction result = new Disjunction();
 		result.add(new Conjunction(formulas.get(0), new Negation(formulas.get(1))));
 		result.add(new Conjunction(formulas.get(1), new Negation(formulas.get(0))));
-		return null;
+		return result;
 	}
 
 }

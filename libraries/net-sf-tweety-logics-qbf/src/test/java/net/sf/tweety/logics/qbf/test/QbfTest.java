@@ -18,29 +18,21 @@
  */
 package net.sf.tweety.logics.qbf.test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
-import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.qbf.parser.QbfParser;
 import net.sf.tweety.logics.qbf.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.qbf.syntax.ForallQuantifiedFormula;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -89,8 +81,4 @@ public class QbfTest {
 		assertTrue(((Conjunction)f2.get(1)).get(0) instanceof ExistsQuantifiedFormula);
 	}
 	
-	@Test(timeout = DEFAULT_TIMEOUT)
-	public void NaiveReasonerTest() {
-		//TODO
-	}
 }

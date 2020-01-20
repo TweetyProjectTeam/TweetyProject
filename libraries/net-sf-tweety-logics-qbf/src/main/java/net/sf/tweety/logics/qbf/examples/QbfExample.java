@@ -14,7 +14,8 @@ import net.sf.tweety.logics.qbf.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.qbf.writer.QdimacsWriter;
 
 /**
- * Some general examples for quantified boolean formulas and for parsers and writers.
+ * Some general examples for quantified boolean formulas and for parsers and
+ * writers.
  * 
  * @author Anna Gessler
  *
@@ -47,14 +48,14 @@ public class QbfExample {
 		// QDIMACS Writer
 		System.out.println("\nQDIMACS writer\n=================");
 		QdimacsWriter writer = new QdimacsWriter();
-		writer.printBase(p);
+		System.out.println(writer.printBase(p));
 
-		// QCir Parser 
+		// QCir Parser
 		System.out.println("\nQCir parser\n=================");
 		QCirParser parser3 = new QCirParser();
 		PlBeliefSet p3 = parser3.parseBeliefBaseFromFile("src/main/resources/qcir-example1.qcir");
 		System.out.println(p3);
-		System.out.println("output: "+parser3.getOutputVariable()+"\n");
+		System.out.println("output: " + parser3.getOutputVariable() + "\n");
 		PlBeliefSet p4 = parser3.parseBeliefBaseFromFile("src/main/resources/qcir-example2-sat.qcir");
 		for (PlFormula f : p4)
 			System.out.println(f);

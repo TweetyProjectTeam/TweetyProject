@@ -71,7 +71,7 @@ public class QdimacsWriter {
 	 */
 	public boolean DISABLE_PREAMBLE_ZERO = false;
 
-	public void printBase(PlBeliefSet kb) throws IOException {
+	public String printBase(PlBeliefSet kb) throws IOException {
 		// Map the literals to numbers according to their natural order returned by the
 		// signature's iterator
 		Map<Proposition, Integer> mappings = new HashMap<Proposition, Integer>();
@@ -125,6 +125,8 @@ public class QdimacsWriter {
 		writer.write(preamble);
 		writer.write(quantifiers);
 		writer.write(clauses);
+		
+		return preamble + quantifiers + clauses;
 	}
 
 	public String printVariables(Set<Proposition> vars, Map<Proposition, Integer> mappings) {

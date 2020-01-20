@@ -52,6 +52,9 @@ public class QbPossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,P
 		super(propositions);
 	}
 
+	/**
+	 * Checks whether this interpretation satisfies the given formula.
+	 */
 	public boolean satisfies(PlFormula formula) throws IllegalArgumentException {
 		if(formula instanceof Contradiction)
 			return false;
@@ -136,6 +139,9 @@ public class QbPossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,P
 			throw new IllegalArgumentException("Quantified boolean formula " + formula + " is of unknown type.");
 	}
 	
+	/**
+	 * Checks whether this interpretation satisfies the given formula.
+	 */
 	public boolean satisfies(Collection<PlFormula> formulas) throws IllegalArgumentException {
 		for(Formula f: formulas)
 			if(!(f instanceof PlFormula))
@@ -145,10 +151,20 @@ public class QbPossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,P
 		return true;
 	}
 	
+	/**
+	 * Checks whether this interpretation satisfies the given formula.
+	 */
 	public boolean satisfies(PlBeliefSet beliefBase) throws IllegalArgumentException {
 		return this.satisfies((Collection<PlFormula>) beliefBase);
 	}
 
+	/**
+	 * Returns the set of all possible worlds for the
+	 * given propositional signature.
+	 * @param signature a propositional signature.
+	 * @return the set of all possible worlds for the
+	 * given propositional signature.
+	 */
 	public static Set<QbPossibleWorld> getAllPossibleWorlds(Collection<Proposition> signature) {
 		Set<QbPossibleWorld> possibleWorlds = new HashSet<QbPossibleWorld>();
 		Set<Set<Proposition>> propositions = new SetTools<Proposition>().subsets(signature);
@@ -168,6 +184,11 @@ public class QbPossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,P
 		return getAllPossibleWorlds(signature.toCollection());
 	}
 
+	/**
+	 * Substitutes all occurrences of the proposition v 
+	 * with the possible truth values and returns
+	 * a set of the possible substitutions.
+	 */
 	public Set<PlFormula> substitute(PlFormula f, Proposition v) {
 		Set<PlFormula> result = new HashSet<PlFormula>();
 		if (f instanceof SpecialFormula) 

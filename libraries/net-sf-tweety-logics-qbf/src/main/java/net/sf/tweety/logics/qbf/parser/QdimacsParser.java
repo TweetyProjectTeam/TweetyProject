@@ -97,11 +97,17 @@ public class QdimacsParser extends DimacsParser {
 		//Parse the quantifier lines
 		for (String q : quantifications) {
 			Set<Proposition> vars = new HashSet<Proposition>();
-			for (int i = 2; i < q.length(); i += 2) {
+			String ids = "";
+			for (int i = 2; i < q.length(); i++) {
 				if (q.charAt(i) == '0')
 					break;
-				int idx = Character.getNumericValue(q.charAt(i));
-				vars.add(super.prop_idx[idx - 1]);
+				if (q.charAt(i) == ' ') {
+					int idx = Integer.parseInt(ids); 
+					vars.add(super.prop_idx[idx - 1]);
+					ids = "";
+				}
+				else
+					ids += q.charAt(i);
 			}
 			if (q.startsWith("a")) {
 				temp = new ForallQuantifiedFormula(temp, vars);
