@@ -77,8 +77,10 @@ public class CadetSolver extends QbfSolver {
 		output = bash.run(cmd);
 		if (Pattern.compile("UNSAT").matcher(output).find())
 			return false;
-		if (Pattern.compile("SAT").matcher(output).find()) //TODO some warnings also contain "SAT"
+		if (Pattern.compile("SAT(\\s)*\n").matcher(output).find())
 			return true;
+		if (Pattern.compile("Is not 2QBF. Currently not supported.").matcher(output).find())
+			throw new RuntimeException("Failed to invoke Cadet: Input is not in 2QBF, Cadet currently only supports 2QBF formulas.");
 		throw new RuntimeException("Failed to invoke Cadet: Cadet returned no result which can be interpreted.");
 	}
 
