@@ -23,6 +23,7 @@ import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
+ * @param <S> some class
  *
  */
 public interface CandidateGenerator<S> {
@@ -34,7 +35,7 @@ public interface CandidateGenerator<S> {
 	 * 
 	 * @param state
 	 * @param adf
-	 * @return
+	 * @return an interpretation
 	 */
 	public Interpretation generate(S state, AbstractDialecticalFramework adf);
 

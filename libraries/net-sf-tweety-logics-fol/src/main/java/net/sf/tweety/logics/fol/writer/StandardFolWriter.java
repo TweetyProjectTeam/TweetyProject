@@ -34,7 +34,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * Writes FOL formulas and knowledge bases in the standard TweetyProject
- * format, see <tt>parser.FolParser</tt>.
+ * format, see parser.FolParser.
  * 
  * @author Matthias Thimm
  *

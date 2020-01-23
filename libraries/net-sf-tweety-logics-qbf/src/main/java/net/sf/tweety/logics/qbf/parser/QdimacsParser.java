@@ -50,7 +50,7 @@ import net.sf.tweety.logics.qbf.syntax.ForallQuantifiedFormula;
  * Lines starting with "c" and consisting of non-special-ASCII characters
  * (comments) are ignored. <br>
  * LITERAL is a signed integer != 0. <br>
- * PNUM is a signed integer > 0. <br>
+ * PNUM is a signed integer &gt; 0. <br>
  * The two numbers in PREAMBLE specify the number of variables and the number of
  * clauses. <br>
  * <br>

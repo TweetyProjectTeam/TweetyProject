@@ -817,7 +817,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 
 	/**
-	 * @return
+	 * Returns the (connected) components of the theory
+	 * @return the (connected) components of the theory
 	 */
 	public Collection<Graph<Argument>> getComponents() {
 		return DefaultGraph.getComponents(this);

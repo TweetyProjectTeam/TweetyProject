@@ -26,7 +26,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
  * @author Timothy Gillespie
- *
+ * @param <T> the type of Dung theories used
  */
 public class PreferredCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 

@@ -153,7 +153,6 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 * LatticeArgumentRanking. Fails for incomparable arguments.
 	 * 
 	 * @author Anna Gessler
-	 * @throws IllegalArgumentException for incomparable arguments
 	 *
 	 */
 	private class LatticeComparator implements Comparator<Argument> {

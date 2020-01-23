@@ -28,7 +28,7 @@ import net.sf.tweety.logics.qbf.syntax.ForallQuantifiedFormula;
 
 /**
  * This class implements a parser for the QCIR (Quantified CIRcuit) format. See
- * {@link http://www.qbflib.org/qcir.pdf} for more information. <br>
+ * <a href="http://www.qbflib.org/qcir.pdf">http://www.qbflib.org/qcir.pdf</a> for more information. <br>
  * The BNF for a QCir file is given by (starting symbol is QCIR-FILE): <br>
  * <br>
  * QCIR-FILE ::== FORMAT-ID QBLOCK-STMT OUTPUT-STMT (GATE-STMT)* <br>
@@ -224,7 +224,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 	 * quantification, xor-construct or if-then-else-construct.
 	 * 
 	 * @param formula the input formula as a String
-	 * @param the     parsed quantified boolean formula
+	 * @return the parsed quantified boolean formula
 	 */
 	private PlFormula parseGateFormula(String formula) {
 		// left part of formula

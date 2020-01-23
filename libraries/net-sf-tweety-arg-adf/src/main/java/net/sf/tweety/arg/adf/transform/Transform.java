@@ -67,12 +67,12 @@ public interface Transform<C, R> {
 	 *            the subconditions of this disjunction, e.g. {a, b} if this =
 	 *            or(a,b)
 	 * @param polarity
-	 *            polarity < 0: negative global position of this disjunction,
-	 *            e.g. this -> a<br>
+	 *            polarity &lt; 0: negative global position of this disjunction,
+	 *            e.g. this -&gt; a<br>
 	 *            polarity = 0: neutral global position of this disjunction,
-	 *            e.g. this <-> a<br>
-	 *            polarity > 0: positive global position of this disjunction,
-	 *            e.g. a -> this
+	 *            e.g. this &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this disjunction,
+	 *            e.g. a -&gt; this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         disjunction
 	 */
@@ -89,12 +89,12 @@ public interface Transform<C, R> {
 	 *            the subconditions of this conjunction, e.g. {a, b} if this =
 	 *            and(a,b)
 	 * @param polarity
-	 *            polarity < 0: negative global position of this conjunction,
-	 *            e.g. this -> a<br>
+	 *            polarity &lt; 0: negative global position of this conjunction,
+	 *            e.g. this -&gt; a<br>
 	 *            polarity = 0: neutral global position of this conjunction,
-	 *            e.g. this <-> a<br>
-	 *            polarity > 0: positive global position of this conjunction,
-	 *            e.g. a -> this
+	 *            e.g. this &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this conjunction,
+	 *            e.g. a -&gt; this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         conjunction
 	 */
@@ -112,12 +112,12 @@ public interface Transform<C, R> {
 	 * @param right
 	 *            the right part of the implication
 	 * @param polarity
-	 *            polarity < 0: negative global position of this implication,
-	 *            e.g. this -> a<br>
+	 *            polarity &lt; 0: negative global position of this implication,
+	 *            e.g. this -&gt; a<br>
 	 *            polarity = 0: neutral global position of this implication,
-	 *            e.g. this <-> a<br>
-	 *            polarity > 0: positive global position of this implication,
-	 *            e.g. a -> this
+	 *            e.g. this &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this implication,
+	 *            e.g. a -&gt; this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         implication
 	 */
@@ -135,12 +135,12 @@ public interface Transform<C, R> {
 	 * @param right
 	 *            the right part of the equivalence
 	 * @param polarity
-	 *            polarity < 0: negative global position of this equivalence,
-	 *            e.g. this -> a<br>
+	 *            polarity &lt; 0: negative global position of this equivalence,
+	 *            e.g. this -&gt; a<br>
 	 *            polarity = 0: neutral global position of this equivalence,
-	 *            e.g. this <-> a<br>
-	 *            polarity > 0: positive global position of this equivalence,
-	 *            e.g. a -> this
+	 *            e.g. this &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this equivalence,
+	 *            e.g. a -&gt; this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         equivalence
 	 */
@@ -159,11 +159,11 @@ public interface Transform<C, R> {
 	 * @param right
 	 *            the right part of the xor
 	 * @param polarity
-	 *            polarity < 0: negative global position of this xor, e.g. this
-	 *            -> a<br>
+	 *            polarity &lt; 0: negative global position of this xor, e.g. this
+	 *            -&gt; a<br>
 	 *            polarity = 0: neutral global position of this xor, e.g. this
-	 *            <-> a<br>
-	 *            polarity > 0: positive global position of this xor, e.g. a ->
+	 *            &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this xor, e.g. a -&gt;
 	 *            this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         xor
@@ -180,12 +180,12 @@ public interface Transform<C, R> {
 	 * @param sub
 	 *            the subformula of this negation, i.e. this = neg(sub)
 	 * @param polarity
-	 *            polarity < 0: negative global position of this negation, e.g.
-	 *            this -> a<br>
+	 *            polarity &lt; 0: negative global position of this negation, e.g.
+	 *            this -&gt; a<br>
 	 *            polarity = 0: neutral global position of this negation, e.g.
-	 *            this <-> a<br>
-	 *            polarity > 0: positive global position of this negation, e.g.
-	 *            a -> this
+	 *            this &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this negation, e.g.
+	 *            a -&gt; this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         negation
 	 */
@@ -200,12 +200,12 @@ public interface Transform<C, R> {
 	 * @param argument
 	 *            the argument which calls this method
 	 * @param polarity
-	 *            polarity < 0: negative global position of this argument, e.g.
-	 *            this -> a<br>
+	 *            polarity &lt; 0: negative global position of this argument, e.g.
+	 *            this -&gt; a<br>
 	 *            polarity = 0: neutral global position of this argument, e.g.
-	 *            this <-> a<br>
-	 *            polarity > 0: positive global position of this argument, e.g.
-	 *            a -> this
+	 *            this &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this argument, e.g.
+	 *            a -&gt; this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         argument
 	 */
@@ -219,12 +219,12 @@ public interface Transform<C, R> {
 	 * @param consumer
 	 *            the consumer of the computed return values
 	 * @param polarity
-	 *            polarity < 0: negative global position of this contradiction,
-	 *            e.g. this -> a<br>
+	 *            polarity &lt; 0: negative global position of this contradiction,
+	 *            e.g. this -&gt; a<br>
 	 *            polarity = 0: neutral global position of this contradiction,
-	 *            e.g. this <-> a<br>
-	 *            polarity > 0: positive global position of this contradiction,
-	 *            e.g. a -> this
+	 *            e.g. this &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this contradiction,
+	 *            e.g. a -&gt; this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         contradiction
 	 */
@@ -238,12 +238,12 @@ public interface Transform<C, R> {
 	 * @param consumer
 	 *            the consumer of the computed return values
 	 * @param polarity
-	 *            polarity < 0: negative global position of this tautology, e.g.
-	 *            this -> a<br>
+	 *            polarity &lt; 0: negative global position of this tautology, e.g.
+	 *            this -&gt; a<br>
 	 *            polarity = 0: neutral global position of this tautology, e.g.
-	 *            this <-> a<br>
-	 *            polarity > 0: positive global position of this tautology, e.g.
-	 *            a -> this
+	 *            this &lt;-&gt; a<br>
+	 *            polarity &gt; 0: positive global position of this tautology, e.g.
+	 *            a -&gt; this
 	 * @return the result which we want to return to the parent-formula of this
 	 *         tautology
 	 */

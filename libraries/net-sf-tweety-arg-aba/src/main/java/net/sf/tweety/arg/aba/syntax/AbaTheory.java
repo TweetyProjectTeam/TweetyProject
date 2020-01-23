@@ -315,7 +315,7 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 	 * 
 	 * @param attackers set of assumptions
 	 * @param attackeds set of assumptions
-	 * @return
+	 * @return true iff the first set of assumptions attacks the second set
 	 */
 	public boolean attacks(Collection<Assumption<T>> attackers, Collection<Assumption<T>> attackeds) {
 		for (Deduction<T> d : getAllDeductions(attackers)) {

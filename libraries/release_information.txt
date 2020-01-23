@@ -1,3 +1,23 @@
+23.01.2020 - TweetyProject 1.16
+  New libraries:
+    - net.sf.tweety.arg.bipolar: bipolar argumentation frameworks
+    - net.sf.tweety.logics.qbf: Quantified Boolean Formula framework; bridges
+      to solvers Cadet, Caqe, GhostQ, and Qute; parser for QDIMACS and QCIR
+      format
+  New functionalities:
+    - added preferred, complete, grounded, stable and conflict-free semantics to
+      ADFs (net.sf.tweety.arg.adf)
+    - new ranking-based semantics for abstract argumentation
+      (net.sf.tweety.arg.rankings): Matt and Toni reasoner
+    - added first-order logic support to both ASPIC+ and ABA
+      (net.sf.tweety.arg.aspic, net.sf.tweety.arg.aba)
+    - added MAXSat solver functionalities and bridge to open-wbo
+      (net.sf.tweety.logics.pl)
+  Minor changes:
+    - improved enumeration of deductive arguments in net.sf.tweety.arg.deductive
+    - bugfixes in several ranking semantics (net.sf.tweety.arg.rankings)
+    - bugfixes in ASPIC+ (net.sf.tweety.arg.aspic)
+21.01.2020 - TweetyProject 1.15 (not officially released)
 18.07.2019 - TweetyProject 1.14
   New libraries:
     - net.sf.tweety.arg.rankings: ranking-based semantics for abstract

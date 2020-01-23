@@ -47,9 +47,11 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 
 	/**
 	 * Possible sorting types for the numerical values.
+	 * <ul>
 	 * <li>{@link #DESCENDING}</li>
 	 * <li>{@link #ASCENDING}</li>
 	 * <li>{@link #LEXICOGRAPHIC}</li>
+	 * </ul>
 	 */
 	public enum SortingType {
 		/**

@@ -22,6 +22,7 @@ import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
+ * @param <S> some class
  *
  */
 public interface StateProcessor<S> {

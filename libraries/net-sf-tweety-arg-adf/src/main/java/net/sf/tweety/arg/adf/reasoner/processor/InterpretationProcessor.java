@@ -42,6 +42,7 @@ import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
  * updateState} method, which is guaranteed to get the shared state.
  * 
  * @author Mathias Hofer
+ * @param <S> some class
  *
  */
 public interface InterpretationProcessor<S> {
@@ -64,14 +65,14 @@ public interface InterpretationProcessor<S> {
 	 *            the result of the previous processor
 	 * @param adf
 	 *            the corresponding adf
-	 * @return
+	 * @return an interpretation
 	 */
 	public Interpretation process(S state, Interpretation interpretation, AbstractDialecticalFramework adf);
 
 	/**
 	 * This method is called by the {@link Pipeline} on the shared state and the
 	 * result of the
-	 * {@link #process(S, Interpretation, AbstractDialecticalFramework) process}
+	 * {@link #process(Object, Interpretation, AbstractDialecticalFramework) process}
 	 * method, hence after the processing is done.
 	 * <p>
 	 * Note that if this processor has to update the shared state, it has to

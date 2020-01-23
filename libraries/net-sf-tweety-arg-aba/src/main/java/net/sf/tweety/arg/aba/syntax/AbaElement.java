@@ -39,6 +39,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
  * Abstract class that models common properties of aba syntax elements.
  * 
  * @author Anna Gessler
+ * @param <T> the type of formula
  *
  */
 public abstract class AbaElement<T extends Formula> implements ComplexLogicalFormula {

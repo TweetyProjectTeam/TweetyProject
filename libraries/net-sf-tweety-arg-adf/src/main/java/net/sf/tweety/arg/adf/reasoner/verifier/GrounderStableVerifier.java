@@ -27,6 +27,7 @@ import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
  * ground interpretation of its omega reduct.
  * 
  * @author Mathias Hofer
+ * @param <S> some class
  *
  */
 public class GrounderStableVerifier<S> implements Verifier<S> {

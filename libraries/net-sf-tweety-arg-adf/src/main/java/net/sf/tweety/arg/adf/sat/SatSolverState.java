@@ -64,7 +64,7 @@ public interface SatSolverState extends AutoCloseable {
 	 * Tries to remove the given clause from the sat instance.
 	 * 
 	 * @param clause
-	 * @return
+	 * @return true iff the removal was successful
 	 */
 	public boolean remove(Disjunction clause);
 

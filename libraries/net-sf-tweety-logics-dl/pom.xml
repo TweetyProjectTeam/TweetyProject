@@ -3,24 +3,24 @@
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-    <version>1.14-SNAPSHOT</version>
+    <version>1.16-SNAPSHOT</version>
   </parent>
   <artifactId>dl</artifactId>
   <dependencies>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
   		<artifactId>math</artifactId>
-  		<version>1.14-SNAPSHOT</version>
+  		<version>1.16-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>fol</artifactId>
-  		<version>1.14-SNAPSHOT</version>
+  		<version>1.16-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety.logics</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.14-SNAPSHOT</version>
+  		<version>1.16-SNAPSHOT</version>
   	</dependency>
     <dependency>
       <groupId>junit</groupId>

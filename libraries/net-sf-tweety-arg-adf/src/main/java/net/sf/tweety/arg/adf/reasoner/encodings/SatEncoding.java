@@ -44,7 +44,7 @@ public interface SatEncoding {
 	 * 
 	 * @param context
 	 * @param interpretation
-	 * @return
+	 * @return a set of disjunctions
 	 */
 	public Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation);
 

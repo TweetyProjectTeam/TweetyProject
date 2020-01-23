@@ -29,7 +29,7 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 
 /**
  * The abstract ancestor of all Aspic reasoner implementations
- * 
+ *
  * @author Matthias Thimm
  *
  * @param <T> The type of formulas
@@ -44,7 +44,7 @@ public abstract class AbstractAspicReasoner<T extends Invertable>
 
 	/**
 	 * Creates a new instance
-	 * 
+	 *
 	 * @param aafReasoner Underlying reasoner for AAFs.
 	 */
 	public AbstractAspicReasoner(AbstractExtensionReasoner aafReasoner) {
@@ -53,7 +53,7 @@ public abstract class AbstractAspicReasoner<T extends Invertable>
 
 	/**
 	 * Computes the Dung theory from which the answer will be derived
-	 * 
+	 *
 	 * @param aat   some Aspic theory
 	 * @param query some query
 	 * @return a Dung theory
@@ -62,7 +62,7 @@ public abstract class AbstractAspicReasoner<T extends Invertable>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see net.sf.tweety.commons.QualitativeReasoner#query(net.sf.tweety.commons.
 	 * BeliefBase, net.sf.tweety.commons.Formula)
 	 */
@@ -74,7 +74,7 @@ public abstract class AbstractAspicReasoner<T extends Invertable>
 	/**
 	 * Queries the given AspicArgumentationTheory for the given formula using the
 	 * given inference type.
-	 * 
+	 *
 	 * @param aat           an AspicArgumentationTheory
 	 * @param query         a formula
 	 * @param inferenceMode either Semantics.SCEPTICAL_INFERENCE or
@@ -86,20 +86,10 @@ public abstract class AbstractAspicReasoner<T extends Invertable>
 	}
 
 	public final Boolean query(DungTheory dt, T query, InferenceMode inferenceMode) {
-		if (inferenceMode == InferenceMode.SKEPTICAL) {
-			for (Argument arg : dt)
-				if (((AspicArgument<?>) arg).getConclusion().equals(query))
-					if (!this.aafReasoner.query(dt, arg, inferenceMode))
-						return false;
-			return true;
-		}
-		else {
-			for (Argument arg : dt)
-				if (((AspicArgument<?>) arg).getConclusion().equals(query))
-					if (this.aafReasoner.query(dt, arg, inferenceMode))
-						return true;
-
-			return false;
-		}
+		for (Argument arg : dt)
+			if (((AspicArgument<?>) arg).getConclusion().equals(query))
+				if (this.aafReasoner.query(dt, arg, inferenceMode))
+					return true;
+		return false;
 	}
 }

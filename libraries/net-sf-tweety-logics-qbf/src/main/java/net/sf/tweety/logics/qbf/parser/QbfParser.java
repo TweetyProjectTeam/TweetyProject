@@ -168,12 +168,11 @@ public class QbfParser extends PlParser {
 			throw new ParserException(e);
 		}
 	}
-	
+		
 	/**
-	 * @param stack
-	 * @return
-	 * @throws IOException 
-	 * @throws ParserException 
+	 * Parses a quantification
+	 * @param l list of terms
+	 * @return the formula
 	 */
 	private PlFormula parseQuantification(List<Object> l) {
 		if(l.isEmpty())

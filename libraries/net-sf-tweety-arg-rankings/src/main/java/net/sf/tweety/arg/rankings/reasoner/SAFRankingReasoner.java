@@ -59,7 +59,7 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	/**
 	 * Create a new SAFRankingReasoner with the given epsilon 
 	 * for the SimpleProductSemantic.
-	 * @param epsilon, must be non-negative
+	 * @param epsilon must be non-negative
 	 */
 	public SAFRankingReasoner(double epsilon) {
 		this();

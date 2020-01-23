@@ -183,6 +183,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 	/**
 	 * Prints the tupled values computed by previous calls of getModel oder getModels in a 
 	 * human-readable way.
+	 * @return a string representation of the tuples
 	 */
 	public String prettyPrintTupledValues() {
 		Set<Argument> args = this.tupled_values.keySet();

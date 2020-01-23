@@ -188,6 +188,9 @@ public class QbPossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,P
 	 * Substitutes all occurrences of the proposition v 
 	 * with the possible truth values and returns
 	 * a set of the possible substitutions.
+	 * @param f a formula
+	 * @param v a proposition
+	 * @return all possible substituted formulas
 	 */
 	public Set<PlFormula> substitute(PlFormula f, Proposition v) {
 		Set<PlFormula> result = new HashSet<PlFormula>();

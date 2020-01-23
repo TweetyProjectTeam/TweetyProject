@@ -37,16 +37,16 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * <b>Example:</b><br>
  * Formula: a v b<br>
  * Fresh variable: n<br>
- * Define n: n <-> a v b<br>
+ * Define n: n &lt;-&gt; a v b<br>
  * Clauses: (-n v a v b), (-a v n), (-b v n)<br>
  * Now n is defined and can be used at occurences of (a v b). For instance,
- * instead of generating clauses for (a v b) -> c, we can continue generating
- * clauses for n -> c.
+ * instead of generating clauses for (a v b) -&gt; c, we can continue generating
+ * clauses for n -&gt; c.
  * <p>
  * Note that this implementation also provides an optimized version which is
  * disabled by default but can be enabled with a constructor parameter. This
- * optimization does not always generate full definitions, i.e. n <-> (a v b),
- * but based on the polarity either n -> (a v b) resp. (a v b) -> n. This
+ * optimization does not always generate full definitions, i.e. n &lt;-&gt; (a v b),
+ * but based on the polarity either n -&gt; (a v b) resp. (a v b) -&gt; n. This
  * generates less clauses but does not guarantee satisfiability-equivalence if
  * it is used in the context of other formulas. It should therefore only be used
  * if the transformed formula does not appear in the context of other formulas
@@ -54,8 +54,8 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * <p>
  * <b>Example:</b> Let f be an arbitrary formula which we translate using this
  * implementation. We then get a name to f, say fn, and a set of clauses which
- * represents f, say Cf. If we plan to use fn in some context like (fn -> a) v
- * (-fn -> b) together with Cf, we are fine if we use the non-optimized version.
+ * represents f, say Cf. If we plan to use fn in some context like (fn -&gt; a) v
+ * (-fn -&gt; b) together with Cf, we are fine if we use the non-optimized version.
  * However, the optimized version makes assumptions on the positions of the
  * subformulas, if we thus change the context, these assumptions may no longer
  * be true. In this example fn is used at a positive and at a negative position,
@@ -86,8 +86,8 @@ public class DefinitionalCNFTransform implements Transform<Disjunction, Proposit
 	 * Tseitin) CNF transformation algorithm.
 	 * <p>
 	 * The optimization generates only the necessary parts of the definitions
-	 * based on the polarity of the subformulas, i.e. <- or -> (or both for
-	 * polarity = 0) instead of always <->.
+	 * based on the polarity of the subformulas, i.e. &lt;- or -&gt; (or both for
+	 * polarity = 0) instead of always &lt;-&gt;.
 	 * 
 	 * @param argumentToProposition
 	 *            mapping used to transform the arguments to propositions.

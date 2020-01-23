@@ -125,7 +125,7 @@ public class AbstractDialecticalFramework
 	 * all unsatisfied arguments are replaced with false.
 	 * 
 	 * @param interpretation
-	 * @return
+	 * @return the reduct
 	 */
 	public AbstractDialecticalFramework omegaReduct(Interpretation interpretation) {
 		return transform(new OmegaReductTransform(interpretation));

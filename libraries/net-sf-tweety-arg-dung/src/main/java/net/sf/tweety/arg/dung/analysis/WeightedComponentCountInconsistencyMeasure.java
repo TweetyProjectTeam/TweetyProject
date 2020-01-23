@@ -27,7 +27,7 @@ import java.util.Collection;
 
 /**
  * @author Timothy Gillespie
- *
+ * @param <T> the type of Dung theories used
  */
 public class WeightedComponentCountInconsistencyMeasure<T extends DungTheory> implements InconsistencyMeasure<T> {
 
