@@ -19,17 +19,24 @@
 
 package net.sf.tweety.arg.bipolar.syntax;
 
+import net.sf.tweety.arg.dung.syntax.Argument;
+
 /**
- * This interface captures common methods of different interpretations of the support relation in
- * bipolar abstract argumentation theories.
- *
+ * This class models an argument used by bipolar abstract argumentation theories.
  * @author Lars Bengel
  *
  */
-public interface Support extends BipolarEntity{
-    public BipolarEntity getSupported();
+public class BArgument extends net.sf.tweety.arg.dung.syntax.Argument implements BipolarEntity {
 
-    public BipolarEntity getSupporter();
+    public BArgument(String name) {
+        super(name);
+    }
 
-    public String toString();
+    public BArgument(Argument arg) {
+        super(arg.getName());
+    }
+
+    public boolean contains(Object arg0) {
+        return this.equals(arg0);
+    }
 }

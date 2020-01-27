@@ -20,16 +20,16 @@
 package net.sf.tweety.arg.bipolar.syntax;
 
 /**
- * This interface captures common methods of different interpretations of the support relation in
+ * This interface captures common methods of different interpretations of the attack relation in
  * bipolar abstract argumentation theories.
  *
  * @author Lars Bengel
  *
  */
-public interface Support extends BipolarEntity{
-    public BipolarEntity getSupported();
+public interface Attack extends BipolarEntity{
+    public BipolarEntity getAttacked();
 
-    public BipolarEntity getSupporter();
+    public BipolarEntity getAttacker();
 
     public String toString();
 }

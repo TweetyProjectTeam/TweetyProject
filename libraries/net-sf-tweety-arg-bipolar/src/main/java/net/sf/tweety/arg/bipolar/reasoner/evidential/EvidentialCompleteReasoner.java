@@ -18,36 +18,34 @@
  */
 package net.sf.tweety.arg.bipolar.reasoner.evidential;
 
-import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.bipolar.reasoner.evidential.AdmissibleReasoner;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgSystem;
-
+import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
+import net.sf.tweety.arg.bipolar.syntax.BArgument;
+import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
 import java.util.*;
 
 public class EvidentialCompleteReasoner {
     //TODO make more efficient. dont check all arguments in bbase
-    public Collection<Extension> getModels(EvidentialArgSystem bbase) {
-        Set<Extension> extensions = new HashSet<Extension>();
+    public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
+        Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all admissible subsets
         AdmissibleReasoner admissibleReasoner = new AdmissibleReasoner();
-        for(Extension ext: admissibleReasoner.getModels(bbase)){
+        for(ArgumentSet ext: admissibleReasoner.getModels(bbase)){
             boolean complete = true;
-            Set<Argument> otherArguments = new HashSet<Argument>(bbase);
+            Set<BArgument> otherArguments = new HashSet<BArgument>(bbase);
             otherArguments.removeAll(ext);
-            for (Argument argument : otherArguments) {
+            for (BArgument argument : otherArguments) {
                 complete &= !bbase.isAcceptable(argument, ext);
             }
             if (complete)
-                extensions.add(new Extension(ext));
+                extensions.add(new ArgumentSet(ext));
         }
         return extensions;
     }
 
-    public Extension getModel(EvidentialArgSystem bbase) {
+    public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         // as the set only containing epsilon is always complete we return that one.
-        Extension ext = new Extension();
-        ext.add(bbase.getEpsilon());
+        ArgumentSet ext = new ArgumentSet();
+        ext.add(bbase.getEta());
         return ext;
     }
 }

@@ -18,28 +18,71 @@
  */
 package net.sf.tweety.arg.bipolar.reasoner.evidential;
 
-import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgSystem;
+import net.sf.tweety.arg.bipolar.syntax.*;
 
 import java.util.*;
 
 public class StableReasoner {
-    public Collection<Extension> getModels(EvidentialArgSystem bbase) {
+    public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         //TODO efficiency
-        Collection<Extension> completeExtensions = new EvidentialCompleteReasoner().getModels(bbase);
-        Set<Extension> result = new HashSet<Extension>();
-        for(Extension ext: completeExtensions){
-            Set<Argument> eSupportedArguments = bbase.getEvidenceSupportedArguments();
+        Collection<ArgumentSet> preferredExtensions = new PreferredReasoner().getModels(bbase);
+        Set<ArgumentSet> result = new HashSet<>();
+        for(ArgumentSet ext: preferredExtensions){
+            Set<BArgument> eSupportedArguments = bbase.getEvidenceSupportedArguments();
             eSupportedArguments.removeAll(ext);
             boolean attacksAllESupportedArguments = true;
-            for (Argument argument: eSupportedArguments){
-                attacksAllESupportedArguments &= bbase.isAttacked(argument, ext);
+            for (BArgument argument: eSupportedArguments){
+                if (bbase.isEvidenceSupportedAttack(ext, argument)) {
+                    continue;
+                }
+                boolean attacksAllESupporters = true;
+                for (Set<BArgument> supporter: bbase.getMinimalEvidentialSupporters(argument)) {
+                    boolean attacksSupporter = false;
+                    for (BArgument arg: supporter) {
+                        if (bbase.isEvidenceSupportedAttack(ext, arg)) {
+                            attacksSupporter = true;
+                            break;
+                        }
+                    }
+                    attacksAllESupporters &= attacksSupporter;
+                }
+                attacksAllESupportedArguments &= attacksAllESupporters;
             }
 
             if (attacksAllESupportedArguments)
                 result.add(ext);
         }
         return result;
+    }
+
+    public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
+        //TODO efficiency
+        Collection<ArgumentSet> preferredExtensions = new PreferredReasoner().getModels(bbase);
+        for(ArgumentSet ext: preferredExtensions){
+            Set<BArgument> eSupportedArguments = bbase.getEvidenceSupportedArguments();
+            eSupportedArguments.removeAll(ext);
+            boolean attacksAllESupportedArguments = true;
+            for (BArgument argument: eSupportedArguments){
+                if (bbase.isEvidenceSupportedAttack(ext, argument)) {
+                    continue;
+                }
+                boolean attacksAllESupporters = true;
+                for (Set<BArgument> supporter: bbase.getMinimalEvidentialSupporters(argument)) {
+                    boolean attacksSupporter = false;
+                    for (BArgument arg: supporter) {
+                        if (bbase.isEvidenceSupportedAttack(ext, arg)) {
+                            attacksSupporter = true;
+                            break;
+                        }
+                    }
+                    attacksAllESupporters &= attacksSupporter;
+                }
+                attacksAllESupportedArguments &= attacksAllESupporters;
+            }
+
+            if (attacksAllESupportedArguments)
+                return ext;
+        }
+        return null;
     }
 }

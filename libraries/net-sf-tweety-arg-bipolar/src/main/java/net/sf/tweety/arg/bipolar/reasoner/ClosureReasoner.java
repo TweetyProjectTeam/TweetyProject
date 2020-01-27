@@ -18,31 +18,27 @@
  */
 package net.sf.tweety.arg.bipolar.reasoner;
 
-import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.arg.bipolar.syntax.*;
 import net.sf.tweety.commons.util.SetTools;
-import net.sf.tweety.arg.bipolar.syntax.BipolarArgFramework;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ClosureReasoner {
 
     /* (non-Javadoc)
      * @see net.sf.tweety.arg.dung.reasoner.AbstractExtensionReasoner#getModels(net.sf.tweety.arg.baf.syntax.syntax.BipolarArgFramework)
      */
-    public Collection<Extension> getModels(BipolarArgFramework bbase) {
-        Set<Extension> extensions = new HashSet<Extension>();
+    public Collection<ArgumentSet> getModels(DeductiveArgumentationFramework bbase) {
+        Set<ArgumentSet> extensions = new HashSet<>();
         // Check all subsets
-        for(Set<Argument> ext: new SetTools<Argument>().subsets(bbase))
-            if(bbase.isClosed(new Extension(ext)))
-                extensions.add(new Extension(ext));
+        for(Set<BArgument> ext: new SetTools<BArgument>().subsets(bbase))
+            if(bbase.isClosed(new ArgumentSet(ext)))
+                extensions.add(new ArgumentSet(ext));
         return extensions;
     }
 
-    public Extension getModel(DungTheory bbase) {
-        return null;
+    public ArgumentSet getModel(DeductiveArgumentationFramework bbase) {
+        // as the empty set is always closed we return that one.
+        return new ArgumentSet();
     }
 }

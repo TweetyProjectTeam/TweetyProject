@@ -18,30 +18,29 @@
  */
 package net.sf.tweety.arg.bipolar.reasoner.evidential;
 
-import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.syntax.Argument;
+import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
+import net.sf.tweety.arg.bipolar.syntax.BArgument;
+import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
 import net.sf.tweety.commons.util.SetTools;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgSystem;
-
 import java.util.*;
 
 public class SelfSupportingReasoner {
-    public Collection<Extension> getModels(EvidentialArgSystem bbase) {
-        Set<Extension> extensions = new HashSet<Extension>();
+    public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
+        Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all subsets
-        for(Set<Argument> ext: new SetTools<Argument>().subsets(bbase)) {
+        for(Set<BArgument> ext: new SetTools<BArgument>().subsets(bbase)) {
             boolean selfSupporting = true;
-            for (Argument argument : ext) {
+            for (BArgument argument : ext) {
                 selfSupporting &= bbase.hasEvidentialSupport(argument, ext);
             }
             if (selfSupporting)
-            extensions.add(new Extension(ext));
+            extensions.add(new ArgumentSet(ext));
         }
         return extensions;
     }
 
-    public Extension getModel(EvidentialArgSystem bbase) {
+    public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         // as the empty set is always self-supporting we return that one.
-        return new Extension();
+        return new ArgumentSet();
     }
 }

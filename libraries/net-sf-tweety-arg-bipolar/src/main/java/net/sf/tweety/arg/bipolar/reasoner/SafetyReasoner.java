@@ -18,27 +18,27 @@
  */
 package net.sf.tweety.arg.bipolar.reasoner;
 
+import net.sf.tweety.arg.bipolar.syntax.*;
 import net.sf.tweety.arg.dung.reasoner.SimpleConflictFreeReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.arg.bipolar.syntax.BipolarArgFramework;
 
 import java.util.*;
 
 
 public class SafetyReasoner  {
 
-    public Collection<Extension> getModels(BipolarArgFramework bbase) {
-        Set<Extension> extensions = new HashSet<Extension>();
+    public Collection<ArgumentSet> getModels(DeductiveArgumentationFramework bbase) {
+        Set<ArgumentSet> extensions = new HashSet<>();
         // Check only conflict-free subsets
         SimpleConflictFreeReasoner cfReasoner = new SimpleConflictFreeReasoner();
         for(Extension ext: cfReasoner.getModels(bbase.getCompleteAssociatedDungTheory())){
-            Set<Argument> supported = bbase.getSupported(ext);
-            supported.removeAll(ext);
+            ArgumentSet argSet = new ArgumentSet(ext);
+            Set<BArgument> supported = bbase.getSupported(argSet);
+            supported.removeAll(argSet);
             boolean isSafe = true;
-            for (Argument a: ext) {
-                for (Argument c: supported) {
+            for (BArgument a: argSet) {
+                for (BArgument c: supported) {
                     if (bbase.isAttackedBy(c, a) || bbase.isSupportedAttack(a, c) ||
                             bbase.isMediatedAttack(a, c) || bbase.isSuperMediatedAttack(a, c)) {
                         isSafe = false;
@@ -46,14 +46,14 @@ public class SafetyReasoner  {
                 }
             }
             if (isSafe)
-                extensions.add(ext);
+                extensions.add(argSet);
         }
 
         return extensions;
     }
 
-    public Extension getModel(DungTheory bbase) {
+    public ArgumentSet getModel(DeductiveArgumentationFramework bbase) {
         // as the empty set is always safe we return that one.
-        return new Extension();
+        return new ArgumentSet();
     }
 }

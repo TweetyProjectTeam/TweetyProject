@@ -16,27 +16,47 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
+
 package net.sf.tweety.arg.bipolar.reasoner.evidential;
 
 import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
+import net.sf.tweety.arg.bipolar.syntax.BArgument;
 import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
-import java.util.*;
+import net.sf.tweety.commons.util.SetTools;
 
-public class GroundedReasoner {
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+public class ConflictFreeReasoner {
+    public ConflictFreeReasoner() {
+    }
 
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
-        Collection<ArgumentSet> extensions = new HashSet<>();
-        extensions.add(this.getModel(bbase));
+        Set<ArgumentSet> extensions = new HashSet<>();
+        Set<Set<BArgument>> subsets = new SetTools<BArgument>().subsets(bbase);
+
+        for (Set<BArgument> ext: subsets) {
+            boolean conflict = false;
+            for (BArgument argument: ext) {
+                Set<Set<BArgument>> subExtensions = new SetTools<BArgument>().subsets(ext);
+                for (Set<BArgument> subExt: subExtensions) {
+                    if (bbase.isAttackedBy(argument, new ArgumentSet(subExt))) {
+                        conflict = true;
+                        break;
+                    }
+                }
+                if (conflict)
+                    break;
+            }
+            if (!conflict)
+                extensions.add(new ArgumentSet(ext));
+        }
+
         return extensions;
     }
 
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
-        ArgumentSet ext = new ArgumentSet();
-        int size;
-        do{
-            size = ext.size();
-            ext = bbase.fes(ext);
-        }while(size!=ext.size());
-        return ext;
+        return new ArgumentSet();
     }
 }

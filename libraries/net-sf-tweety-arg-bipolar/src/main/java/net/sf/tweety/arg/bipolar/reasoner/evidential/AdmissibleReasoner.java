@@ -18,31 +18,30 @@
  */
 package net.sf.tweety.arg.bipolar.reasoner.evidential;
 
-import net.sf.tweety.arg.dung.reasoner.SimpleConflictFreeReasoner;
-import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.dung.syntax.Argument;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgSystem;
+import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
+import net.sf.tweety.arg.bipolar.syntax.BArgument;
+import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
 
 import java.util.*;
 
 public class AdmissibleReasoner {
-    public Collection<Extension> getModels(EvidentialArgSystem bbase) {
-        Set<Extension> extensions = new HashSet<Extension>();
+    public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
+        Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all conflict-free subsets
-        SimpleConflictFreeReasoner cfReasoner = new SimpleConflictFreeReasoner();
-        for(Extension ext: cfReasoner.getModels(bbase)){
+        ConflictFreeReasoner cfReasoner = new ConflictFreeReasoner();
+        for(ArgumentSet ext: cfReasoner.getModels(bbase)){
             boolean admissible = true;
-            for (Argument argument : ext) {
+            for (BArgument argument : ext) {
                 admissible &= bbase.isAcceptable(argument, ext);
             }
             if (admissible)
-                extensions.add(new Extension(ext));
+                extensions.add(new ArgumentSet(ext));
         }
         return extensions;
     }
 
-    public Extension getModel(EvidentialArgSystem bbase) {
+    public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         // as the empty set is always self-supporting we return that one.
-        return new Extension();
+        return new ArgumentSet();
     }
 }

@@ -18,20 +18,19 @@
  */
 package net.sf.tweety.arg.bipolar.reasoner.evidential;
 
-import net.sf.tweety.arg.dung.semantics.Extension;
-import net.sf.tweety.arg.bipolar.reasoner.evidential.EvidentialCompleteReasoner;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgSystem;
+import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
+import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
 
 import java.util.*;
 
 public class PreferredReasoner {
-    public Collection<Extension> getModels(EvidentialArgSystem bbase) {
-        Collection<Extension> completeExtensions = new EvidentialCompleteReasoner().getModels(bbase);
-        Set<Extension> result = new HashSet<Extension>();
+    public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
+        Collection<ArgumentSet> completeExtensions = new EvidentialCompleteReasoner().getModels(bbase);
+        Set<ArgumentSet> result = new HashSet<ArgumentSet>();
         boolean maximal;
-        for(Extension e1: completeExtensions){
+        for(ArgumentSet e1: completeExtensions){
             maximal = true;
-            for(Extension e2: completeExtensions)
+            for(ArgumentSet e2: completeExtensions)
                 if(e1 != e2 && e2.containsAll(e1)){
                     maximal = false;
                     break;
@@ -42,13 +41,13 @@ public class PreferredReasoner {
         return result;
     }
 
-    public Extension getModel(EvidentialArgSystem bbase) {
+    public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         // just return the first found preferred extension
-        Collection<Extension> completeExtensions = new EvidentialCompleteReasoner().getModels(bbase);
+        Collection<ArgumentSet> completeExtensions = new EvidentialCompleteReasoner().getModels(bbase);
         boolean maximal;
-        for(Extension e1: completeExtensions){
+        for(ArgumentSet e1: completeExtensions){
             maximal = true;
-            for(Extension e2: completeExtensions)
+            for(ArgumentSet e2: completeExtensions)
                 if(e1 != e2 && e2.containsAll(e1)){
                     maximal = false;
                     break;

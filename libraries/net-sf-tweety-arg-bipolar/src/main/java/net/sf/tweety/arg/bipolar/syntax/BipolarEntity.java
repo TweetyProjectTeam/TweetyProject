@@ -19,17 +19,16 @@
 
 package net.sf.tweety.arg.bipolar.syntax;
 
+import net.sf.tweety.arg.dung.syntax.DungEntity;
+import net.sf.tweety.graphs.Node;
+
 /**
- * This interface captures common methods of different interpretations of the support relation in
+ * This interface captures common methods of arguments and argument sets of
  * bipolar abstract argumentation theories.
  *
  * @author Lars Bengel
  *
  */
-public interface Support extends BipolarEntity{
-    public BipolarEntity getSupported();
-
-    public BipolarEntity getSupporter();
-
-    public String toString();
+public interface BipolarEntity extends DungEntity, Node {
+    boolean contains(Object o);
 }
