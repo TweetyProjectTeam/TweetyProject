@@ -16,26 +16,28 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.bipolar.reasoner.evidential;
+package net.sf.tweety.arg.bipolar.reasoner.necessity;
 
-import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
-import net.sf.tweety.arg.bipolar.syntax.BArgument;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
+import net.sf.tweety.arg.bipolar.syntax.*;
+import net.sf.tweety.commons.util.SetTools;
 
 import java.util.*;
 
 /**
- * a set of arguments S is admissible iff it is conflict-free and all elements of S are acceptable wrt. S.
+ * a set of arguments S is admissible iff it is strongly coherent and defends all of its arguments.
  *
  * @author Lars Bengel
  *
  */
 public class AdmissibleReasoner {
-    public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
+    public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
-        // Check all conflict-free subsets
-        ConflictFreeReasoner cfReasoner = new ConflictFreeReasoner();
-        for(ArgumentSet ext: cfReasoner.getModels(bbase)){
+        Set<Set<BArgument>> subsets = new SetTools<BArgument>().subsets(bbase);
+
+        for (Set<BArgument> ext: subsets) {
+            if (!bbase.isStronglyCoherent(ext)) {
+                continue;
+            }
             boolean admissible = true;
             for (BArgument argument : ext) {
                 admissible &= bbase.isAcceptable(argument, ext);
@@ -46,7 +48,7 @@ public class AdmissibleReasoner {
         return extensions;
     }
 
-    public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
+    public ArgumentSet getModel(NecessityArgumentationFramework bbase) {
         // as the empty set is always self-supporting we return that one.
         return new ArgumentSet();
     }

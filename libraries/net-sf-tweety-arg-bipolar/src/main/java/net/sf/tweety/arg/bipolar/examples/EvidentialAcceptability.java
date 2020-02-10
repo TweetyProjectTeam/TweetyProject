@@ -67,12 +67,12 @@ public class EvidentialAcceptability {
         s1.add(a);
         s1.add(d);
 
-        System.out.println("Argument a is acceptable wrt. s1: " + et.isAcceptable(a, s1));
-        System.out.println("Argument b is acceptable wrt. s1: " + et.isAcceptable(b, s1));
-        System.out.println("Argument c is acceptable wrt. s1: " + et.isAcceptable(c, s1));
-        System.out.println("Argument d is acceptable wrt. s1: " + et.isAcceptable(d, s1));
-        System.out.println("Argument e is acceptable wrt. s1: " + et.isAcceptable(e, s1));
-        System.out.println("Argument f is acceptable wrt. s1: " + et.isAcceptable(f, s1));
+        System.out.println("Argument a is acceptable wrt. " + s1 + ": " + et.isAcceptable(a, s1));
+        System.out.println("Argument b is acceptable wrt. " + s1 + ": " + et.isAcceptable(b, s1));
+        System.out.println("Argument c is acceptable wrt. " + s1 + ": " + et.isAcceptable(c, s1));
+        System.out.println("Argument d is acceptable wrt. " + s1 + ": " + et.isAcceptable(d, s1));
+        System.out.println("Argument e is acceptable wrt. " + s1 + ": " + et.isAcceptable(e, s1));
+        System.out.println("Argument f is acceptable wrt. " + s1 + ": " + et.isAcceptable(f, s1));
 
     }
 }

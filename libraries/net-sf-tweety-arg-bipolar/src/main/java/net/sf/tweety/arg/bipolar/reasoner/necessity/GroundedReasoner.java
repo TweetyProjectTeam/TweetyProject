@@ -16,11 +16,12 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.bipolar.reasoner.evidential;
+package net.sf.tweety.arg.bipolar.reasoner.necessity;
 
-import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
-import java.util.*;
+import net.sf.tweety.arg.bipolar.syntax.*;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * the grounded extension of bbase is the least fixed point of the characteristic function.
@@ -29,14 +30,13 @@ import java.util.*;
  *
  */
 public class GroundedReasoner {
-
-    public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
+    public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
         Collection<ArgumentSet> extensions = new HashSet<>();
         extensions.add(this.getModel(bbase));
         return extensions;
     }
 
-    public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
+    public ArgumentSet getModel(NecessityArgumentationFramework bbase) {
         ArgumentSet ext = new ArgumentSet();
         int size;
         do{

@@ -54,6 +54,14 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
     }
 
     /**
+     * creates an evidential argumentation framework from the given framework with necessities
+     * @param naf a argumentation framework with necessities
+     */
+    public EvidentialArgumentationFramework(NecessityArgumentationFramework naf) {
+        this.add(naf.toEAF());
+    }
+
+    /**
      * returns true if argument has evidential support from set <code>ext</code>.
      * An argument a has e-support from ext iff a=eta or there exists a subset S
      * of ext which supports a and all arguments in S have e-support from ext \ {a}
@@ -219,46 +227,34 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
     }
 
     /**
-     * The characteristic function of an abstract argumentation framework: F_ES(S) = {A|A is acceptable wrt. S}.
-     * @param extension an extension (a set of arguments).
-     * @return an extension (a set of arguments).
-     */
-    public ArgumentSet fes(ArgumentSet extension){
-        ArgumentSet newExtension = new ArgumentSet();
-        for (BArgument argument : this) {
-            if (this.isAcceptable(argument, extension))
-                newExtension.add(argument);
-        }
-        return newExtension;
-    }
-
-    /**
      * Computes the set {A | there is a sequence of direct supports from argumentSet to A}
      * @param argumentSet a set of arguments
      * @return the set of all arguments that are supported by <code>argumentSet</code>.
      */
     public Set<BArgument> getSupported(ArgumentSet argumentSet){
-        //TODO FIX set-form
-        return this.getSupported(argumentSet, new HashSet<BArgument>());
+        Set<BArgument> supportedArguments = new HashSet<>();
+        int size;
+        do{
+            size = supportedArguments.size();
+            supportedArguments.addAll(getSupported(new HashSet<>(argumentSet)));
+            argumentSet.addAll(supportedArguments);
+        }while(size!=supportedArguments.size());
+        return supportedArguments;
     }
 
     /**
      * Computes the set {A | there is a sequence of direct supports from argument to A}.
      * @param argumentSet a set of arguments
-     * @param visited already visited arguments
      * @return the set of all arguments that are supported by <code>argumentSet</code>.
      */
-    private Set<BArgument> getSupported(ArgumentSet argumentSet, Set<BArgument> visited){
-        if(!this.supportChildren.containsKey(argumentSet)) {
-            return new HashSet<BArgument>();
-        }
-        Set<BArgument> directSupportedArguments = this.getDirectSupported(argumentSet);
-        Set<BArgument> supportedArguments = new HashSet<>(directSupportedArguments);
-
-        directSupportedArguments.removeAll(visited);
-        for(BArgument supported: directSupportedArguments){
-            visited.add(supported);
-            supportedArguments.addAll(this.getSupported(new ArgumentSet(supported), visited));
+    private Set<BArgument> getSupported(Set<BArgument> argumentSet){
+        Set<BArgument> supportedArguments = new HashSet<>();
+        for (Set<BArgument> subset: new SetTools<BArgument>().subsets(argumentSet)) {
+            if (!this.supportChildren.containsKey(new ArgumentSet(subset))) {
+                continue;
+            }
+            Set<BArgument> directSupportedArguments = this.getDirectSupported(new ArgumentSet(subset));
+            supportedArguments.addAll(directSupportedArguments);
         }
         return supportedArguments;
     }
@@ -274,6 +270,9 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
         return new HashSet<>(this.attackParents.get(argument));
     }
 
+    /* (non-Javadoc)
+     * @see net.sf.tweety.arg.bipolar.syntax.AbstractBipolarFramework#add(net.sf.tweety.arg.bipolar.syntax.Support)
+     */
     public boolean add(Support s) {
         if(s instanceof BinarySupport) {
             return this.addSupport((BArgument) s.getSupporter(), (BArgument) s.getSupported());
@@ -313,7 +312,9 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
         return result;
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see net.sf.tweety.arg.bipolar.syntax.AbstractBipolarFramework#add(net.sf.tweety.arg.bipolar.syntax.Support)
+     */
     public boolean add(Attack att) {
         if(att instanceof BinaryAttack) {
             return this.addAttack((BArgument) att.getAttacker(), (BArgument) att.getAttacked());
@@ -425,8 +426,9 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
     }
 
     /**
-     *
-     * @return the minimal form of this evidential argumentation system
+     * calculates the minimal form of this argumentation framework
+     * ie. only attacks and supports with minimal attacker/supporter are kept
+     * @return the minimal form of this evidential argumentation framework
      */
     public EvidentialArgumentationFramework getMinimalForm() {
         Set<Attack> attacks = this.getAttacks();
@@ -473,7 +475,66 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
         return minimalEvidentialArgSystem;
     }
 
-    @Override
+    /**
+     * translates this EAF into the corresponding NAF
+     * can only translate framework which contain only binary attacks
+     * translation algorithm from:
+     * Polberg, Oren. Revisiting Support in Abstract Argumentation Systems. 2014
+     * @return the corresponding NAF
+     */
+    public NecessityArgumentationFramework toNAF() {
+        NecessityArgumentationFramework naf = new NecessityArgumentationFramework();
+        //set of arguments stays the same
+        naf.addAll(this);
+        //attacks can only be translated when they are binary
+        for (Attack att: this.getAttacks()) {
+            SetAttack attack = (SetAttack) att;
+            Iterator<BArgument> iterator = attack.getAttacker().iterator();
+            BArgument attacker = iterator.next();
+            if (iterator.hasNext()){
+                throw new IllegalArgumentException("Framework can only have binary attacks");
+            }
+            naf.addAttack(attacker, attack.getAttacked());
+        }
+        //handle supports
+        for (BArgument argument: this) {
+            if (argument == this.getEta())
+                continue;
+            Set<BipolarEntity> supporters = this.getDirectSupporters(argument);
+            if (supporters.isEmpty()) {
+                // an element without support in this EAF is disqualified in the corresponding NAF,
+                //since it has no evidential support in this EAF.
+                naf.addSupport(argument, argument);
+            } else {
+                // every argument that is supported in this EAF, is supported in the corresponding NAF
+                // by all subsets of the supporters in EAF, which have non-empty intersections with all supporting sets
+                Set<Set<BArgument>> supportingSets = new HashSet<>();
+                for (BipolarEntity bipolarEntity: supporters) {
+                    supportingSets.add(new HashSet<>((ArgumentSet) bipolarEntity));
+                }
+                Set<BArgument> supportingArguments = new SetTools<BArgument>().getUnion(supportingSets);
+                for (Set<BArgument> supportingSet: new SetTools<BArgument>().subsets(supportingArguments)) {
+                    boolean nonEmptyIntersect = true;
+                    for (Set<BArgument> s: supportingSets) {
+                        Set<Set<BArgument>> intersect = new HashSet<>();
+                        intersect.add(supportingSet);
+                        intersect.add(s);
+                        nonEmptyIntersect &= !(new SetTools<BArgument>().hasEmptyIntersection(intersect));
+                    }
+                    if (nonEmptyIntersect) {
+                        Support supp = new SetSupport(supportingSet, argument);
+                        naf.add(supp);
+                    }
+                }
+            }
+        }
+
+        return naf;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework)
+     */
     public int compareTo(EvidentialArgumentationFramework o) {
         return this.hashCode() - o.hashCode();
     }

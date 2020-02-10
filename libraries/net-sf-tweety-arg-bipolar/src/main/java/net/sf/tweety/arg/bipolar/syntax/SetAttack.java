@@ -109,12 +109,16 @@ public class SetAttack extends DirectedEdge<BipolarEntity> implements Attack{
         return this.getAttacked().equals(o) || this.getAttacker().contains(o);
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see net.sf.tweety.arg.dung.syntax.DungEntity#getLdoFormula()
+     */
     public LdoFormula getLdoFormula() {
         return new LdoRelation(this.getAttacker().getLdoFormula(), new LdoNegation(this.getAttacked().getLdoFormula()));
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see net.sf.tweety.kr.Formula#getSignature()
+     */
     public Signature getSignature() {
         DungSignature sig = new DungSignature();
         sig.add(this.getAttacked());

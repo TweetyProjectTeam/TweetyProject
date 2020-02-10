@@ -27,9 +27,9 @@ package net.sf.tweety.arg.bipolar.syntax;
  *
  */
 public interface Support extends BipolarEntity{
-    public BipolarEntity getSupported();
+    BipolarEntity getSupported();
 
-    public BipolarEntity getSupporter();
+    BipolarEntity getSupporter();
 
-    public String toString();
+    String toString();
 }

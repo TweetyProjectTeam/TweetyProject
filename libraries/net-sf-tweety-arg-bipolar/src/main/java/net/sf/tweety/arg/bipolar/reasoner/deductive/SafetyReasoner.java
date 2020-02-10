@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.bipolar.reasoner;
+package net.sf.tweety.arg.bipolar.reasoner.deductive;
 
 import net.sf.tweety.arg.bipolar.syntax.*;
 import net.sf.tweety.arg.dung.reasoner.SimpleConflictFreeReasoner;
@@ -25,7 +25,14 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 
 import java.util.*;
 
-
+/**
+ * a set of arguments S is safe wrt. the complex attacks iff there are no arguments a, b of S and argument c such that:
+ * b supports c or c is in S and
+ * there is a complex attack from a to c.
+ *
+ * @author Lars Bengel
+ *
+ */
 public class SafetyReasoner  {
 
     public Collection<ArgumentSet> getModels(DeductiveArgumentationFramework bbase) {

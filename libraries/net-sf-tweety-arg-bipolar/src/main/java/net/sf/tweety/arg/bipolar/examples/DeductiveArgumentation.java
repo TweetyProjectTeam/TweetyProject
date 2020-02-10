@@ -20,8 +20,7 @@
 
 package net.sf.tweety.arg.bipolar.examples;
 
-import net.sf.tweety.arg.bipolar.reasoner.ClosureReasoner;
-import net.sf.tweety.arg.bipolar.reasoner.SafetyReasoner;
+import net.sf.tweety.arg.bipolar.reasoner.deductive.*;
 import net.sf.tweety.arg.bipolar.syntax.*;
 import net.sf.tweety.arg.dung.reasoner.SimpleCompleteReasoner;
 import net.sf.tweety.arg.dung.reasoner.SimpleGroundedReasoner;
@@ -31,7 +30,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 
-public class BipolarArgumentationExample {
+public class DeductiveArgumentation {
     public static void main(String[] args) {
         // Example from Cayrol, Lagasquie-Schiex. Bipolarity in argumentation graphs: Towards a better understanding. 2013
         DeductiveArgumentationFramework at = new DeductiveArgumentationFramework();

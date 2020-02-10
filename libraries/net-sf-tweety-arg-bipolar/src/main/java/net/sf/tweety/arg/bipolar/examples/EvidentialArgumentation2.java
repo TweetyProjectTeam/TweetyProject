@@ -22,7 +22,7 @@ package net.sf.tweety.arg.bipolar.examples;
 import net.sf.tweety.arg.bipolar.reasoner.evidential.*;
 import net.sf.tweety.arg.bipolar.syntax.*;
 
-public class EvidentialArgumentationExample2 {
+public class EvidentialArgumentation2 {
     public static void main(String[] args) {
         // Example from Oren, Norman. Semantics for Evidence-Based Argumentation. 2008
         EvidentialArgumentationFramework et = new EvidentialArgumentationFramework();
@@ -48,7 +48,7 @@ public class EvidentialArgumentationExample2 {
         et.addPrimaFacie(a);
         et.addPrimaFacie(b);
         et.addPrimaFacie(c);
-        //et.addPrimaFacie(x);
+        et.addPrimaFacie(x);
 
         System.out.println(et.prettyPrint());
 
@@ -56,8 +56,8 @@ public class EvidentialArgumentationExample2 {
         System.out.println("Conflict-Free extensions: " + new ConflictFreeReasoner().getModels(et));
         System.out.println("Admissible extensions: " + new AdmissibleReasoner().getModels(et));
         System.out.println("Grounded extensions: " + new GroundedReasoner().getModels(et));
-        System.out.println("Complete extensions: " + new EvidentialCompleteReasoner().getModels(et));
+        System.out.println("Complete extensions: " + new CompleteReasoner().getModels(et));
         System.out.println("Preferred extensions: " + new PreferredReasoner().getModels(et));
-        //System.out.println("Stable extensions: " + new StableReasoner().getModels(et));
+        System.out.println("Stable extensions: " + new StableReasoner().getModels(et));
     }
 }

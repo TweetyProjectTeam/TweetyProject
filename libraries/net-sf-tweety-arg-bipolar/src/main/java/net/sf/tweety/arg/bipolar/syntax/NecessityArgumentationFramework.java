@@ -19,6 +19,9 @@
 
 package net.sf.tweety.arg.bipolar.syntax;
 
+import net.sf.tweety.commons.util.SetTools;
+import org.apache.commons.math.random.AbstractRandomGenerator;
+
 import java.util.*;
 
 /**
@@ -45,9 +48,82 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
         super();
     }
 
-    @Override
+    /**
+     * creates a necessity argumentation framework from the given evidential argumentation framework
+     * @param eaf a bipolar evidential argumentation framework
+     */
+    public NecessityArgumentationFramework(EvidentialArgumentationFramework eaf) {
+        super();
+        this.add(eaf.toNAF());
+    }
+
+    /**
+     * creates a necessity argumentation framework from the given deductive argumentation framework
+     * @param daf a bipolar deductive argumentation framework
+     */
+    public NecessityArgumentationFramework(DeductiveArgumentationFramework daf) {
+        super();
+        this.add(daf.toNAF());
+    }
+
+    /**
+     * checks whether ext defends argument
+     * a set of arguments S defends an argument a iff S u {a} is coherent and S attacks
+     * each coherent set T, which attacks a
+     * @param argument some argument
+     * @param ext a set of arguments
+     * @return "true" if ext defends argument
+     */
     public boolean isAcceptable(BArgument argument, Collection<BArgument> ext) {
-        return false;
+        //TODO efficiency
+        Set<BArgument> extWithA = new HashSet<>(ext);
+        extWithA.add(argument);
+        if (!this.isCoherent(extWithA)) {
+            return false;
+        }
+        for (Set<BArgument> subset: new SetTools<BArgument>().subsets(this)) {
+            for (BipolarEntity attacker: this.getAttackers(argument)) {
+                if (subset.contains((BArgument)attacker) && !this.isAttackedBy(subset, ext) && this.isCoherent(subset)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * computes the set of deactivated arguments of argumentSet
+     * a set of arguments S deactivates an argument a iff either S attacks a or S does not support a
+     * @param argumentSet a set of arguments
+     * @return the set of deactivated arguments
+     */
+    public Set<BArgument> getDeactivatedArguments(Collection<BArgument> argumentSet) {
+        Set<BArgument> deactivatedArguments = new HashSet<>();
+        for (BArgument argument: this) {
+            if (this.isAttackedBy(argument, argumentSet)) {
+                deactivatedArguments.add(argument);
+                continue;
+            }
+            for (BipolarEntity supporter: this.getDirectSupporters(argument)) {
+                Set<Set<BArgument>> intersect = new HashSet<>();
+                intersect.add(new HashSet<>((ArgumentSet)supporter));
+                intersect.add(new HashSet<>(argumentSet));
+                if (new SetTools<BArgument>().hasEmptyIntersection(intersect)) {
+                    deactivatedArguments.add(argument);
+                }
+            }
+        }
+        return deactivatedArguments;
+    }
+
+    /**
+     * checks whether the given set of arguments is strongly coherent in this argumentation framework
+     * a set of arguments is strongly coherent iff it is coherent an conflict-free
+     * @param argumentSet a set of arguments
+     * @return "true" if argumentSet is strongly coherent
+     */
+    public boolean isStronglyCoherent(Collection<BArgument> argumentSet) {
+        return this.isConflictFree(argumentSet) && this.isCoherent(argumentSet);
     }
 
     /**
@@ -71,9 +147,12 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
         for (BArgument argument: argumentSet) {
             for (BipolarEntity s: this.getDirectSupporters(argument)) {
                 ArgumentSet supporter = (ArgumentSet) s;
-                (supporter).retainAll(argumentSet);
-                if (supporter.isEmpty())
+                Set<Set<BArgument>> intersect = new HashSet<>();
+                intersect.add(new HashSet<>(supporter));
+                intersect.add((Set<BArgument>) argumentSet);
+                if (new SetTools<BArgument>().hasEmptyIntersection(intersect)) {
                     return false;
+                }
             }
         }
         return true;
@@ -136,6 +215,52 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
         return false;
     }
 
+    /**
+     * checks whether the given set is conflict-free wrt. the attack relation
+     * @param argumentSet a set of arguments
+     * @return "true" if argumentSet is Conflict-Free
+     */
+    public boolean isConflictFree(Collection<BArgument> argumentSet) {
+        for (BArgument argument: argumentSet) {
+            for (BipolarEntity attacker: this.getAttackers(argument)) {
+                if (argumentSet.contains((BArgument) attacker)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * checks whether argument is attacked by any argument in argumentSet
+     * @param argument some argument
+     * @param argumentSet a set of arguments
+     * @return "true" if some argument in argumentSet attacks argument
+     */
+    public boolean isAttackedBy(BArgument argument, Collection<BArgument> argumentSet) {
+        for (BArgument arg: argumentSet) {
+            if (this.isAttackedBy(argument, arg)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * checks whether some argument in argumentSet1 is attacked by any argument in argumentSet2
+     * @param argumentSet1 a set of arguments
+     * @param argumentSet2 a set of arguments
+     * @return "true" if some argument in argumentSet2 attacks any argument in argumentSet1
+     */
+    public boolean isAttackedBy(Collection<BArgument> argumentSet1, Collection<BArgument> argumentSet2) {
+        for (BArgument argument: argumentSet1) {
+            if (this.isAttackedBy(argument, argumentSet2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean add(Support s) {
         if(s instanceof BinarySupport) {
@@ -163,6 +288,8 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
      * @return "true" if the set of supports has been modified.
      */
     public boolean addSupport(ArgumentSet supporter, BArgument supported){
+        if (supporter.isEmpty())
+            throw new IllegalArgumentException("Supporting set cannot be empty");
         boolean result = false;
         if(!supportParents.containsKey(supported))
             supportParents.put(supported, new HashSet<>());
@@ -222,6 +349,63 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
             }
         }
         return attacks;
+    }
+
+    /**
+     * translates this necessity argumentation framework into an evidential argumentation framework
+     * Translation algorithm from:
+     * Polberg, Oren. Revisiting Support in Abstract Argumentation Systems. 2014
+     * @return the corresponding evidential argumentation framework
+     */
+    public EvidentialArgumentationFramework toEAF() {
+        EvidentialArgumentationFramework eaf = new EvidentialArgumentationFramework();
+        // arguments and attacks are identical
+        eaf.addAll(this);
+        eaf.addAllAttacks(this.getAttacks());
+        //handle support relations
+        for (BArgument argument: this) {
+            Set<BipolarEntity> supporters = this.getDirectSupporters(argument);
+            if (supporters.isEmpty()) {
+                // an argument with no supporters in this NAF is considered prima-facie in the corresponding EAF
+                eaf.addPrimaFacie(argument);
+            } else {
+                //arguments with support from any argument in NAF are supported in EAF
+                // by all permutations of the supporters in NAF
+                Set<Set<BArgument>> supportingSets = new HashSet<>();
+                for (BipolarEntity bipolarEntity: supporters) {
+                    supportingSets.add(new HashSet<>((ArgumentSet)bipolarEntity));
+                }
+                for (Set<BArgument> supporter: new SetTools<BArgument>().permutations(supportingSets)) {
+                    Support supp = new SetSupport(supporter, argument);
+                    eaf.add(supp);
+                }
+            }
+        }
+        return eaf;
+    }
+
+    /**
+     * translates this NAF into the corresponding framework with support in a deductive sense
+     * only works for NAFs which contain only binary support relations
+     * See Cayrol, Lagasquie-Schiex. Bipolarity in argumentation graphs: Towards a better understanding. 2013
+     * @return the corresponding DAF
+     */
+    public DeductiveArgumentationFramework toDAF() {
+        DeductiveArgumentationFramework daf = new DeductiveArgumentationFramework();
+        // arguments and attacks are the same
+        daf.addAll(this);
+        daf.addAllAttacks(this.getAttacks());
+        // every support relation is reversed
+        for (Support supp: this.getSupports()) {
+            SetSupport support = (SetSupport) supp;
+            Iterator<BArgument> iterator = support.getSupporter().iterator();
+            BArgument supporter = iterator.next();
+            if (iterator.hasNext()){
+                throw new IllegalArgumentException("Framework can only have binary supports");
+            }
+            daf.addSupport(support.getSupported(), supporter);
+        }
+        return daf;
     }
 
     @Override

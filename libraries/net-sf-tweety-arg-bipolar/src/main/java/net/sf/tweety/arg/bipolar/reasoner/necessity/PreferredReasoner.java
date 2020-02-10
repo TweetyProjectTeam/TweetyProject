@@ -16,21 +16,22 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.bipolar.reasoner.evidential;
+package net.sf.tweety.arg.bipolar.reasoner.necessity;
 
-import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
+import net.sf.tweety.arg.bipolar.syntax.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * a set of arguments S is preferred iff it is maximal wrt. set inclusion admissible.
+ * a set of arguments S is preferred iff it is maximal wrt set inclusion admissible.
  *
  * @author Lars Bengel
  *
  */
 public class PreferredReasoner {
-    public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
+    public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
         Collection<ArgumentSet> completeExtensions = new CompleteReasoner().getModels(bbase);
         Set<ArgumentSet> result = new HashSet<ArgumentSet>();
         boolean maximal;
@@ -47,7 +48,7 @@ public class PreferredReasoner {
         return result;
     }
 
-    public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
+    public ArgumentSet getModel(NecessityArgumentationFramework bbase) {
         // just return the first found preferred extension
         Collection<ArgumentSet> completeExtensions = new CompleteReasoner().getModels(bbase);
         boolean maximal;

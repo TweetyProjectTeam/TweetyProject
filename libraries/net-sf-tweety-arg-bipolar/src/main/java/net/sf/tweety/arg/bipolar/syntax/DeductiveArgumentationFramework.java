@@ -18,6 +18,7 @@
  */
 
 package net.sf.tweety.arg.bipolar.syntax;
+
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
@@ -371,7 +372,7 @@ public class DeductiveArgumentationFramework extends AbstractBipolarFramework im
 
     @Override
     public boolean isAcceptable(BArgument argument, Collection<BArgument> ext) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -448,7 +449,27 @@ public class DeductiveArgumentationFramework extends AbstractBipolarFramework im
         return metaFramework;
     }
 
-    @Override
+    /**
+     * translates this DAF into the corresponding framework with support in a necessary sense
+     * See Cayrol, Lagasquie-Schiex. Bipolarity in argumentation graphs: Towards a better understanding. 2013
+     * @return the corresponding NAF
+     */
+    public NecessityArgumentationFramework toNAF() {
+        NecessityArgumentationFramework naf = new NecessityArgumentationFramework();
+        // arguments and attacks are the same
+        naf.addAll(this);
+        naf.addAllAttacks(this.getAttacks());
+        // every support relation is reversed
+        for (Support supp: this.getSupports()) {
+            BinarySupport support = (BinarySupport) supp;
+            naf.addSupport(support.getSupported(), support.getSupporter());
+        }
+        return naf;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(net.sf.tweety.arg.bipolar.syntax.DeductiveArgumentationFramework)
+     */
     public int compareTo(DeductiveArgumentationFramework o) {
         return this.hashCode() - o.hashCode();
     }

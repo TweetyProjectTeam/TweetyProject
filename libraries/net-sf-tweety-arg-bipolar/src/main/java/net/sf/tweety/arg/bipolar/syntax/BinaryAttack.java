@@ -92,12 +92,16 @@ public class BinaryAttack extends DirectedEdge<BArgument> implements Attack {
         return this.getAttacked().equals(o) || this.getAttacker().equals(o);
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see net.sf.tweety.arg.dung.syntax.DungEntity#getLdoFormula()
+     */
     public LdoFormula getLdoFormula() {
         return new LdoRelation(this.getAttacker().getLdoFormula(), new LdoNegation(this.getAttacked().getLdoFormula()));
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see net.sf.tweety.kr.Formula#getSignature()
+     */
     public Signature getSignature() {
         DungSignature sig = new DungSignature();
         sig.add(this.getAttacked());

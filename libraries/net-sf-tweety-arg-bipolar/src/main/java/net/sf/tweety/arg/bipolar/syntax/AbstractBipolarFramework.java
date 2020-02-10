@@ -98,7 +98,27 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
         return new HashSet<>(this.attackChildren.get(arg));
     }
 
+    /**
+     * checks whether argument is acceptable wrt. ext
+     * @param argument some argument
+     * @param ext a set of arguments
+     * @return "true" if argument is acceptable wrt. ext
+     */
     public abstract boolean isAcceptable(BArgument argument, Collection<BArgument> ext);
+
+    /**
+     * The characteristic function of an bipolar argumentation framework: F_AF(S) = {A|A is acceptable wrt. S}.
+     * @param extension an extension (a set of arguments).
+     * @return an extension (a set of arguments).
+     */
+    public ArgumentSet faf(ArgumentSet extension){
+        ArgumentSet newExtension = new ArgumentSet();
+        for (BArgument argument : this) {
+            if (this.isAcceptable(argument, extension))
+                newExtension.add(argument);
+        }
+        return newExtension;
+    }
 
     /**
      * Checks whether arg1 is directly supported by arg2.
@@ -180,7 +200,7 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
      * @param theory some abstract support framework
      * @return "true" if this framework has been modified
      */
-    public boolean add(AbstractBipolarFramework theory){
+    protected boolean add(AbstractBipolarFramework theory){
         boolean b1 = this.addAll(theory);
         boolean b2 = this.addAllAttacks(theory.getAttacks());
         boolean b3 = this.addAllSupports(theory.getSupports());
@@ -346,10 +366,12 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
 
     @Override
     public Collection<BArgument> getChildren(Node node) {
-        if (!(node instanceof BArgument)) {
+        if (!(node instanceof BipolarEntity)) {
             throw new IllegalArgumentException("Node of type BArgument expected");
         } else {
-            return this.getAttacked((BArgument)node);
+            Collection<BArgument> result = this.getAttacked((BipolarEntity) node);
+            result.addAll(this.getDirectSupported((BipolarEntity) node));
+            return result;
         }
     }
 
@@ -366,20 +388,18 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
 
     @Override
     public Collection<BArgument> getNeighbors(BArgument node) {
-        //TODO implement
-        return null;
+        //Neighbors can be arguments and sets of arguments
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Matrix getAdjacencyMatrix() {
-        //TODO implement
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Graph<BArgument> getComplementGraph(int i) {
-        //TODO implement
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -398,14 +418,12 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
 
     @Override
     public Graph<BArgument> getRestriction(Collection<BArgument> collection) {
-        //TODO implement
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean hasSelfLoops() {
-        //TODO implement
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override

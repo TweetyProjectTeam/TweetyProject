@@ -23,7 +23,7 @@ package net.sf.tweety.arg.bipolar.examples;
 import net.sf.tweety.arg.bipolar.reasoner.evidential.*;
 import net.sf.tweety.arg.bipolar.syntax.*;
 
-public class EvidentialArgumentationExample {
+public class EvidentialArgumentation {
     public static void main(String[] args) {
         // Example from Polberg, Oren. Revisiting Support in Abstract Argumentation Systems. 2014
         EvidentialArgumentationFramework et = new EvidentialArgumentationFramework();
@@ -59,13 +59,13 @@ public class EvidentialArgumentationExample {
         et.addPrimaFacie(b);
         et.addPrimaFacie(c);
         et.addPrimaFacie(d);
-        //et.addPrimaFacie(f);
+        et.addPrimaFacie(f);
 
         System.out.println("Self-Supporting extensions: " + new SelfSupportingReasoner().getModels(et));
         System.out.println("Conflict-Free extensions: " + new ConflictFreeReasoner().getModels(et));
         System.out.println("Admissible extensions: " + new AdmissibleReasoner().getModels(et));
         System.out.println("Grounded extensions: " + new GroundedReasoner().getModels(et));
-        System.out.println("Complete extensions: " + new EvidentialCompleteReasoner().getModels(et));
+        System.out.println("Complete extensions: " + new CompleteReasoner().getModels(et));
         System.out.println("Preferred extensions: " + new PreferredReasoner().getModels(et));
         System.out.println("Stable extensions: " + new StableReasoner().getModels(et));
     }

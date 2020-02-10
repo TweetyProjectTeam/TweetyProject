@@ -25,6 +25,8 @@ import net.sf.tweety.arg.dung.syntax.DungSignature;
 import net.sf.tweety.commons.Signature;
 import net.sf.tweety.graphs.DirectedEdge;
 
+import java.util.Collection;
+
 /**
  * This class models a support between a set of arguments and an argument. It comprises of a set of <code>BArgument</code> and is used by
  * bipolar abstract argumentation theories.
@@ -41,6 +43,15 @@ public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
      */
     public SetSupport(ArgumentSet supporter, BArgument supported){
         super(supporter, supported);
+    }
+
+    /**
+     * initializes the arguments used in this support relation
+     * @param supporter a collection of arguments
+     * @param supported some argument
+     */
+    public SetSupport(Collection<BArgument> supporter, BArgument supported) {
+        this(new ArgumentSet(supporter), supported);
     }
 
     /**

@@ -22,6 +22,14 @@ import net.sf.tweety.arg.bipolar.syntax.*;
 
 import java.util.*;
 
+
+/**
+ * a set of arguments S is stable iff it is conflict-free, self-supporting and for any argument a e-supported by bbase,
+ * where a is not in S, S e-support attacks either a or every set of arguments minimally e-supporting a.
+ *
+ * @author Lars Bengel
+ *
+ */
 public class StableReasoner {
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         //TODO efficiency

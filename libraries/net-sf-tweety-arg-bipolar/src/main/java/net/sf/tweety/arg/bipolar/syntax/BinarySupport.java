@@ -20,9 +20,7 @@
 package net.sf.tweety.arg.bipolar.syntax;
 
 import net.sf.tweety.arg.dung.ldo.syntax.LdoFormula;
-import net.sf.tweety.arg.dung.ldo.syntax.LdoNegation;
 import net.sf.tweety.arg.dung.ldo.syntax.LdoRelation;
-import net.sf.tweety.arg.dung.syntax.DungEntity;
 import net.sf.tweety.arg.dung.syntax.DungSignature;
 import net.sf.tweety.commons.*;
 import net.sf.tweety.graphs.DirectedEdge;

@@ -24,6 +24,12 @@ import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
 import net.sf.tweety.commons.util.SetTools;
 import java.util.*;
 
+/**
+ * a set of arguments S is self-supporting iff all arguments in S are e-supported by S.
+ *
+ * @author Lars Bengel
+ *
+ */
 public class SelfSupportingReasoner {
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();

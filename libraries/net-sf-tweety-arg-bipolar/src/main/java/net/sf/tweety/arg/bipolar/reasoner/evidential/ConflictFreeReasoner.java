@@ -28,6 +28,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * a set of arguments S is conflict-free iff there exists no attack between a subset of S and an element of S.
+ *
+ * @author Lars Bengel
+ *
+ */
 public class ConflictFreeReasoner {
     public ConflictFreeReasoner() {
     }

@@ -18,12 +18,16 @@
  */
 package net.sf.tweety.arg.bipolar.reasoner.evidential;
 
-import net.sf.tweety.arg.bipolar.syntax.ArgumentSet;
-import net.sf.tweety.arg.bipolar.syntax.BArgument;
-import net.sf.tweety.arg.bipolar.syntax.EvidentialArgumentationFramework;
+import net.sf.tweety.arg.bipolar.syntax.*;
 import java.util.*;
 
-public class EvidentialCompleteReasoner {
+/**
+ * a set of arguments S is complete iff it is admissible and all arguments acceptable wrt. S are in S.
+ *
+ * @author Lars Bengel
+ *
+ */
+public class CompleteReasoner {
     //TODO make more efficient. dont check all arguments in bbase
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();

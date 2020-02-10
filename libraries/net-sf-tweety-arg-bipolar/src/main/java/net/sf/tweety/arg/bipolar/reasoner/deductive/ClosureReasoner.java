@@ -16,13 +16,19 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.bipolar.reasoner;
+package net.sf.tweety.arg.bipolar.reasoner.deductive;
 
 import net.sf.tweety.arg.bipolar.syntax.*;
 import net.sf.tweety.commons.util.SetTools;
 
 import java.util.*;
 
+/**
+ * a set of arguments S is closed under the support relation iff all arguments supported by an element of S are in S.
+ *
+ * @author Lars Bengel
+ *
+ */
 public class ClosureReasoner {
 
     /* (non-Javadoc)
