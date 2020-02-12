@@ -32,7 +32,7 @@ import java.util.*;
 public class PreferredReasoner {
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Collection<ArgumentSet> completeExtensions = new CompleteReasoner().getModels(bbase);
-        Set<ArgumentSet> result = new HashSet<ArgumentSet>();
+        Set<ArgumentSet> result = new HashSet<>();
         boolean maximal;
         for(ArgumentSet e1: completeExtensions){
             maximal = true;

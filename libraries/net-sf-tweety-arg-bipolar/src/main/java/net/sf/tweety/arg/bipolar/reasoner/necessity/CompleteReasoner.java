@@ -31,7 +31,6 @@ import java.util.Set;
  *
  */
 public class CompleteReasoner {
-    //TODO make more efficient. dont check all arguments in bbase
     public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all admissible subsets

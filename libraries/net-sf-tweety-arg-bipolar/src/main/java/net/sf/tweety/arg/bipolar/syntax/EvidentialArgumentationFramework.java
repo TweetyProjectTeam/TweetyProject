@@ -70,9 +70,9 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
      * @return true if argument has e-support from <code>ext</code>.
      */
     public boolean hasEvidentialSupport(BArgument argument, Collection<BArgument> ext){
-        if(argument == this.eta)
+        if(argument == this.getEta())
             return true;
-        Set<BArgument> extWithoutArgument = new HashSet<BArgument>(ext);
+        Set<BArgument> extWithoutArgument = new HashSet<>(ext);
         extWithoutArgument.remove(argument);
         Set<Set<BArgument>> subsets = new SetTools<BArgument>().subsets(ext);
         for(Collection<BArgument> subExt: subsets) {
@@ -208,7 +208,6 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
      * @return true if argument is acceptable wrt. <code>ext</code>
      */
     public boolean isAcceptable(BArgument argument, Collection<BArgument> ext){
-        //TODO efficiency
         if (!this.hasEvidentialSupport(argument, ext)) {
             return false;
         }
@@ -221,7 +220,10 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
                     break;
                 }
             }
-            result &= isAttackingSet;
+            if (!isAttackingSet) {
+                result = false;
+                break;
+            }
         }
         return result;
     }

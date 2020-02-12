@@ -75,7 +75,6 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
      * @return "true" if ext defends argument
      */
     public boolean isAcceptable(BArgument argument, Collection<BArgument> ext) {
-        //TODO efficiency
         Set<BArgument> extWithA = new HashSet<>(ext);
         extWithA.add(argument);
         if (!this.isCoherent(extWithA)) {

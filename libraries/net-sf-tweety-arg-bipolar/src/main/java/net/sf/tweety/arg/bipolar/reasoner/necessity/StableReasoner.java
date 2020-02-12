@@ -33,7 +33,6 @@ import java.util.Set;
  */
 public class StableReasoner {
     public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
-        //TODO efficiency
         Collection<ArgumentSet> preferredExtensions = new PreferredReasoner().getModels(bbase);
         Set<ArgumentSet> result = new HashSet<>();
         for(ArgumentSet ext: preferredExtensions){

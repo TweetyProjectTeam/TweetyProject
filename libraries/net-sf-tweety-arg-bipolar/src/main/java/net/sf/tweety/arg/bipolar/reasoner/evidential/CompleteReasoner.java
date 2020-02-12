@@ -28,17 +28,19 @@ import java.util.*;
  *
  */
 public class CompleteReasoner {
-    //TODO make more efficient. dont check all arguments in bbase
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all admissible subsets
         AdmissibleReasoner admissibleReasoner = new AdmissibleReasoner();
         for(ArgumentSet ext: admissibleReasoner.getModels(bbase)){
             boolean complete = true;
-            Set<BArgument> otherArguments = new HashSet<BArgument>(bbase);
+            Set<BArgument> otherArguments = new HashSet<>(bbase);
             otherArguments.removeAll(ext);
             for (BArgument argument : otherArguments) {
-                complete &= !bbase.isAcceptable(argument, ext);
+                if (bbase.isAcceptable(argument, ext)) {
+                    complete = false;
+                    break;
+                }
             }
             if (complete)
                 extensions.add(new ArgumentSet(ext));

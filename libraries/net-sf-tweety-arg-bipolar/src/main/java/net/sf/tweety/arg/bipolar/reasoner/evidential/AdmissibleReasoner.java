@@ -36,9 +36,16 @@ public class AdmissibleReasoner {
         // Check all conflict-free subsets
         ConflictFreeReasoner cfReasoner = new ConflictFreeReasoner();
         for(ArgumentSet ext: cfReasoner.getModels(bbase)){
+            // every admissible set S has to contain Eta, since every argument in S has to be e-supported by S
+            if (!ext.contains(bbase.getEta())) {
+                continue;
+            }
             boolean admissible = true;
             for (BArgument argument : ext) {
-                admissible &= bbase.isAcceptable(argument, ext);
+                if (!bbase.isAcceptable(argument, ext)) {
+                    admissible = false;
+                    break;
+                }
             }
             if (admissible)
                 extensions.add(new ArgumentSet(ext));
@@ -47,7 +54,7 @@ public class AdmissibleReasoner {
     }
 
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
-        // as the empty set is always self-supporting we return that one.
+        // as the empty set is always admissible we return that one.
         return new ArgumentSet();
     }
 }

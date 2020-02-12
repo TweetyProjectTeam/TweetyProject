@@ -32,7 +32,6 @@ import java.util.*;
  */
 public class StableReasoner {
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
-        //TODO efficiency
         Collection<ArgumentSet> preferredExtensions = new PreferredReasoner().getModels(bbase);
         Set<ArgumentSet> result = new HashSet<>();
         for(ArgumentSet ext: preferredExtensions){
@@ -52,9 +51,15 @@ public class StableReasoner {
                             break;
                         }
                     }
-                    attacksAllESupporters &= attacksSupporter;
+                    if (!attacksSupporter) {
+                        attacksAllESupporters = false;
+                        break;
+                    }
                 }
-                attacksAllESupportedArguments &= attacksAllESupporters;
+                if (!attacksAllESupporters) {
+                    attacksAllESupportedArguments = false;
+                    break;
+                }
             }
 
             if (attacksAllESupportedArguments)
@@ -64,7 +69,6 @@ public class StableReasoner {
     }
 
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
-        //TODO efficiency
         Collection<ArgumentSet> preferredExtensions = new PreferredReasoner().getModels(bbase);
         for(ArgumentSet ext: preferredExtensions){
             Set<BArgument> eSupportedArguments = bbase.getEvidenceSupportedArguments();
@@ -83,9 +87,15 @@ public class StableReasoner {
                             break;
                         }
                     }
-                    attacksAllESupporters &= attacksSupporter;
+                    if (!attacksSupporter) {
+                        attacksAllESupporters = false;
+                        break;
+                    }
                 }
-                attacksAllESupportedArguments &= attacksAllESupporters;
+                if (!attacksAllESupporters) {
+                    attacksAllESupportedArguments = false;
+                    break;
+                }
             }
 
             if (attacksAllESupportedArguments)

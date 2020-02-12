@@ -37,7 +37,10 @@ public class SelfSupportingReasoner {
         for(Set<BArgument> ext: new SetTools<BArgument>().subsets(bbase)) {
             boolean selfSupporting = true;
             for (BArgument argument : ext) {
-                selfSupporting &= bbase.hasEvidentialSupport(argument, ext);
+                if (!bbase.hasEvidentialSupport(argument, ext)) {
+                    selfSupporting = false;
+                    break;
+                }
             }
             if (selfSupporting)
             extensions.add(new ArgumentSet(ext));

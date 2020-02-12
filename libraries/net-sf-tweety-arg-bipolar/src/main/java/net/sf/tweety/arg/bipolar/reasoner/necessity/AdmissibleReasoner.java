@@ -40,7 +40,10 @@ public class AdmissibleReasoner {
             }
             boolean admissible = true;
             for (BArgument argument : ext) {
-                admissible &= bbase.isAcceptable(argument, ext);
+                if (!bbase.isAcceptable(argument, ext)) {
+                    admissible = false;
+                    break;
+                }
             }
             if (admissible)
                 extensions.add(new ArgumentSet(ext));
