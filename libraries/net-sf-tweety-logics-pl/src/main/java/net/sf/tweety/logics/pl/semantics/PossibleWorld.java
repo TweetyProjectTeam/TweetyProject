@@ -78,9 +78,9 @@ public class PossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,PlF
 		if(formula instanceof ExclusiveDisjunction){
 			ExclusiveDisjunction x = (ExclusiveDisjunction) formula;
 			for(PlFormula f: x.toCnf())
-				if(this.satisfies(f))
-					return true;
-			return false;
+				if(!this.satisfies(f))
+					return false;
+			return true;
 		}
 		if(formula instanceof Implication) {
 			Implication i = (Implication) formula;
