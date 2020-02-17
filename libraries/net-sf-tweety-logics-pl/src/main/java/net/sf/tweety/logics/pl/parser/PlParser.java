@@ -30,12 +30,12 @@ import net.sf.tweety.logics.pl.syntax.*;
  * propositional belief set is given by (starting symbol is FORMULASET) <br>
  * <br>
  * FORMULASET ::== FORMULA ( "\n" FORMULA )* <br>
- * FORMULA ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&gt;&gt;" FORMULA | FORMULA
- * "||" FORMULA | FORMULA "=&gt;" FORMULA | FORMULA "&lt;=&gt;" FORMULA | "!" FORMULA |
- * "+" | "-" <br>
+ * FORMULA ::== PROPOSITION | "(" FORMULA ")" | FORMULA "&gt;&gt;" FORMULA |
+ * FORMULA "||" FORMULA | FORMULA "=&gt;" FORMULA | FORMULA "&lt;=&gt;" FORMULA
+ * | FORMULA "^^" FORMULA | "!" FORMULA | "+" | "-" <br>
  * <br>
- * PROPOSITION is a sequence of characters excluding |,&amp;,!,(,),=,&lt;,&gt; and whitespace
- * characters.
+ * PROPOSITION is a sequence of characters excluding |,&amp;,!,(,),=,&lt;,&gt;
+ * and whitespace characters.
  * 
  * @author Matthias Thimm
  * @author Bastian Wolf
@@ -121,6 +121,12 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 					stack.push("&&");
 				} else
 					stack.push(s);
+			} else if (s.equals("^")) {
+				if (stack.lastElement().equals("^")) {
+					stack.pop();
+					stack.push("^^");
+				} else
+					stack.push(s);
 			} else if (s.equals(">")) {
 				if (stack.lastElement().equals("=")) {
 					if (stack.size() >= 2 && stack.get(stack.size() - 2).equals("<")) {
@@ -139,7 +145,7 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 			throw new ParserException(e);
 		}
 	}
-	
+
 	/**
 	 * Parses a simple formula as a list of String tokens or formulas into a
 	 * propositional formula. This method expects no parentheses in the list and as
@@ -182,7 +188,7 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
 		if(!(l.contains(LogicalSymbols.IMPLICATION())))
-			return this.parseDisjunction(l);	
+			return this.parseExclusiveDisjunction(l);	
 		
 		List<Object> left = new ArrayList<Object>(); 
 		List<Object> right = new ArrayList<Object>(); 
@@ -196,6 +202,38 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 				left.add(o);
 		}	
 		return new Implication(parseEquivalence(left),parseEquivalence(right));	
+	}
+	
+	/**
+	 * Parses a simple formula as a list of String tokens or formulas into a
+	 * propositional formula. This method expects no parentheses in the list and as
+	 * such treats the formula as a disjunction.
+	 * 
+	 * @param l a list objects, either String tokens or objects of type
+	 *          PropositionalFormula.
+	 * @return a propositional formula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	protected PlFormula parseExclusiveDisjunction(List<Object> l) throws ParserException {
+		if (l.isEmpty())
+			throw new ParserException("Empty parentheses.");
+		if (!(l.contains(LogicalSymbols.EXCLUSIVEDISJUNCTION())))
+			return this.parseDisjunction(l);
+		
+		
+		ExclusiveDisjunction d = new ExclusiveDisjunction();
+		List<Object> tmp = new ArrayList<Object>();
+		for (Object o : l) {
+			if ((o instanceof String) && ((String) o).equals(LogicalSymbols.EXCLUSIVEDISJUNCTION())) {
+				d.add(this.parseDisjunction(tmp));
+				tmp = new ArrayList<Object>();
+			} else
+				tmp.add(o);
+		}
+		d.add(this.parseDisjunction(tmp));
+		if (d.size() > 1)
+			return d;
+		throw new ParserException("General parsing exception.");
 	}
 
 	/**
@@ -299,9 +337,9 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 					return new Contradiction();
 				if (s.equals(LogicalSymbols.TAUTOLOGY()))
 					return new Tautology();
-				// Allow all characters for proposition names except |,&,!,(,) and whitespace
+				// Allow all characters for proposition names except |,&,!,(,),^ and whitespace
 				// characters.
-				if (s.matches("[^|&!\\s\\(\\)\\<\\>\\=]"))
+				if (s.matches("[^|&!\\s\\(\\)\\<\\>\\=\\^]"))
 					return new Proposition(s);
 			}
 			throw new ParserException("Unknown object " + o);
@@ -313,10 +351,11 @@ public class PlParser extends Parser<PlBeliefSet, PlFormula> {
 					throw new ParserException("Unknown object " + o);
 				s += (String) o;
 			}
-			if (s.matches("([^|&!\\s\\(\\)\\<\\>\\=])+"))
+			if (s.matches("([^|&!\\s\\(\\)\\<\\>\\=\\^])+"))
 				return new Proposition(s);
 			throw new ParserException("General parsing error.");
 		}
 	}
+
 
 }

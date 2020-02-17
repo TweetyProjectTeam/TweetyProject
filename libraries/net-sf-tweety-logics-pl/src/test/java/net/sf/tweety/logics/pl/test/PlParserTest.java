@@ -33,6 +33,7 @@ import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Equivalence;
+import net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction;
 import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
@@ -104,6 +105,13 @@ public class PlParserTest {
 	public void ConjunctionTest() throws ParserException, IOException {
 		PlFormula f = (PlFormula) parser.parseFormula("a && b");
 		Conjunction c = new Conjunction(new Proposition("a"), new Proposition("b"));
+		assertTrue(f.equals(c));
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void ExclusiveDisjunctionTest() throws ParserException, IOException {
+		PlFormula f = (PlFormula) parser.parseFormula("a ^^ b");
+		ExclusiveDisjunction c = new ExclusiveDisjunction(new Proposition("a"), new Proposition("b"));
 		assertTrue(f.equals(c));
 	}
 	

@@ -31,6 +31,7 @@ import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Equivalence;
+import net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction;
 import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -132,6 +133,13 @@ public class FuzzyInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlF
 			return new FloatConstant(1).minus(this.getTerm(((Negation)formula).getFormula(), assignments));
 		if(formula instanceof Conjunction){
 			List<PlFormula> conjuncts = ((Conjunction)formula).getFormulas();
+			List<Term> conjunctTerms = new LinkedList<Term>();
+			for(PlFormula f: conjuncts)
+				conjunctTerms.add(this.getTerm(f, assignments));
+			return this.tnorm.evalTerm(conjunctTerms);
+		}
+		if(formula instanceof ExclusiveDisjunction){
+			List<PlFormula> conjuncts = (formula.toCnf()).getFormulas();
 			List<Term> conjunctTerms = new LinkedList<Term>();
 			for(PlFormula f: conjuncts)
 				conjunctTerms.add(this.getTerm(f, assignments));

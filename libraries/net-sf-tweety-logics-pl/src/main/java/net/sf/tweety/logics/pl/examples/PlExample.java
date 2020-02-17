@@ -46,5 +46,21 @@ public class PlExample {
 		System.out.println(answer1);
 		Boolean answer2 = reasoner.query(beliefSet, new Contradiction());
 		System.out.println(answer2);
+		
+		System.out.println();
+		PlFormula xor = parser.parseFormula("a ^^ b ^^ c");
+		System.out.println("parsed formula: " + xor);
+		System.out.println("dnf: " +  xor.toDnf());
+		System.out.println("cnf: " + xor.toCnf());
+		System.out.println("nnf: " +  xor.toNnf());
+		System.out.println("models :" + xor.getModels());
+		xor = parser.parseFormula("a ^^ b ^^ c ^^ d ^^ e ^^ f");
+		System.out.println("parsed formula: " + xor);
+		System.out.println("models: " + xor.getModels());
+		
+
+		System.out.println();
+		beliefSet = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase_xor.proplogic");
+		System.out.println(beliefSet);
 	}
 }

@@ -28,6 +28,7 @@ import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Equivalence;
+import net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction;
 import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
@@ -138,6 +139,14 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 			TruthValue val = TruthValue.FALSE;
 			for(PlFormula f: d)
 				val = val.or(this.satisfies3VL(f));
+			return val;
+		}
+		if(formula instanceof ExclusiveDisjunction){
+			ExclusiveDisjunction x = (ExclusiveDisjunction) formula;
+			Conjunction c = x.toCnf();
+			TruthValue val = TruthValue.TRUE;
+			for(PlFormula f : c)
+				val = val.and(this.satisfies3VL(f));
 			return val;
 		}
 		if (formula instanceof Implication) {

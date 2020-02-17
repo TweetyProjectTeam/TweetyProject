@@ -71,6 +71,13 @@ public class QbPossibleWorld extends InterpretationSet<Proposition,PlBeliefSet,P
 					return false;
 			return true;
 		}
+		if(formula instanceof ExclusiveDisjunction){
+			Conjunction c = ((ExclusiveDisjunction) formula).toCnf();
+			for(PlFormula f : c)
+				if(!this.satisfies(f))
+					return false;
+			return true;
+		}
 		if(formula instanceof Disjunction){
 			Disjunction d = (Disjunction) formula;
 			for(PlFormula f: d)

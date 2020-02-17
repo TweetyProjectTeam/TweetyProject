@@ -82,4 +82,7 @@ public class LogicalSymbols {
 	public static String INEQUALITY() {
 		return "/==";
 	}
+	public static String EXCLUSIVEDISJUNCTION() {
+		return "^^";
+	}
 }
