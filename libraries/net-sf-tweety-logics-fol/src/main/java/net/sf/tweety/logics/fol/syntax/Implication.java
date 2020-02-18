@@ -153,8 +153,7 @@ public class Implication extends FolFormula {
 
 	@Override
 	public boolean isDnf() {
-		Disjunction d = new Disjunction(new Negation(this.formulas.getFirst()),this.formulas.getSecond()); //(A=>B) <=> (!A || B)
-		return d.isDnf();
+		return false;
 	}
 
 	@Override

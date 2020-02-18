@@ -154,9 +154,7 @@ public class Equivalence extends FolFormula  {
 
 	@Override
 	public boolean isDnf() {
-		Disjunction d1 = new Disjunction(new Negation(this.formulas.getFirst()),this.formulas.getSecond());
-		Disjunction d2 = new Disjunction(new Negation(this.formulas.getSecond()),this.formulas.getFirst()); 
-		return new Conjunction(d1,d2).isDnf();
+		return false;
 	}
 
 	@Override
