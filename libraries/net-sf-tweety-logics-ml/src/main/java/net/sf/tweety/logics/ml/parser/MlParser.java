@@ -45,6 +45,7 @@ import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
 import net.sf.tweety.logics.fol.syntax.EqualityPredicate;
 import net.sf.tweety.logics.fol.syntax.Equivalence;
+import net.sf.tweety.logics.fol.syntax.ExclusiveDisjunction;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -75,7 +76,7 @@ import net.sf.tweety.logics.ml.syntax.Possibility;
  * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
  * <br>					 "(" FORMULA ")" | FORMULA "&amp;&amp;" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
  * <br>					 FORMULA "=&gt;" FORMULA | FORMULA "&lt;=&gt;" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
- * <br>                  "[]" "(" FORMULA ")" | "&lt;&gt;" "(" FORMULA ")"
+ * <br>                  "[]" "(" FORMULA ")" | "&lt;&gt;" "(" FORMULA ")" | FORMULA "^^" FORMULA
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
@@ -205,8 +206,6 @@ public class MlParser extends Parser<MlBeliefSet,RelationalFormula> {
 				if(!stack.contains("("))
 					throw new ParserException("Missing opening parentheses.");				
 				List<Object> l = new ArrayList<Object>();
-				
-				
 				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() )
 					l.add(0, o);
 				// if the preceding token is in {a,...,z,A,...,Z,0,...,9,==,/==} then treat the 
@@ -225,6 +224,11 @@ public class MlParser extends Parser<MlBeliefSet,RelationalFormula> {
 				if(stack.lastElement().equals("&")){
 					stack.pop();
 					stack.push("&&"); 
+				}else stack.push(s);
+			}else if(s.equals("^")){
+				if(stack.lastElement().equals("^")){
+					stack.pop();
+					stack.push("^^"); 
 				}else stack.push(s);
 			}else if(s.equals("]")){
 				if(stack.lastElement().equals("[")){
@@ -532,7 +536,7 @@ public class MlParser extends Parser<MlBeliefSet,RelationalFormula> {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
 		if(!(l.contains(LogicalSymbols.IMPLICATION())))
-			return this.parseDisjunction(l);	
+			return this.parseExclusiveDisjunction(l);	
 	
 		List<Object> left = new ArrayList<Object>(); 
 		List<Object> right = new ArrayList<Object>(); 
@@ -546,6 +550,32 @@ public class MlParser extends Parser<MlBeliefSet,RelationalFormula> {
 				left.add(o);
 		}	
 		return new Implication(parseQuantification(left),parseQuantification(right));	
+	}
+	
+	/**
+	 * Parses an exclusive disjunction as a list of String tokens or formulas into a fol formula.
+	 * This method expects no parentheses in the list and as such treats the formula as a disjunction.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	private RelationalFormula parseExclusiveDisjunction(List<Object> l){
+		if(l.isEmpty())
+			throw new ParserException("Empty parentheses.");
+		if(!(l.contains(LogicalSymbols.EXCLUSIVEDISJUNCTION())))
+			return this.parseDisjunction(l);		
+		ExclusiveDisjunction d = new ExclusiveDisjunction();
+		List<Object> tmp = new ArrayList<Object>(); 
+		for(Object o: l){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.EXCLUSIVEDISJUNCTION()) ){
+				d.add(this.parseDisjunction(tmp));
+				tmp = new ArrayList<Object>();
+			}else tmp.add(o);
+		}		
+		d.add(this.parseDisjunction(tmp));
+		if(d.size() > 1)	
+			return d;
+		throw new ParserException("General parsing exception.");
 	}
 	
 

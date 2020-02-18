@@ -129,7 +129,7 @@ public abstract class Translator {
 	 * Translates the given AssociativeFormula into another AssociativeFormula
 	 * thats type is given by the parameter assocCls
 	 * @param <A> the type of associative formulas
-	 * @param source	The 
+	 * @param source	The source formula
 	 * @param assocCls the class of the expected associative formula
 	 * @return an associative formula
 	 */

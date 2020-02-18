@@ -39,6 +39,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.syntax.Implication;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
+import net.sf.tweety.logics.fol.syntax.ExclusiveDisjunction;
 import net.sf.tweety.logics.fol.syntax.FolBeliefSet;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 /**
@@ -140,10 +141,18 @@ public class FolParserTest {
 		Implication f = (Implication) parser.parseFormula("SunIsShining=>SunIsShining");
 		FolSignature sig = f.getSignature();
 		assertTrue(sig.containsPredicate("SunIsShining"));
+		assertFalse(f.isDnf());
 		assertEquals(f.getFormulas().getFirst(),parser.parseFormula("SunIsShining"));
 		assertEquals(f.getFormulas().getSecond(),parser.parseFormula("SunIsShining"));
 	}
 	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void XorTest() throws ParserException, IOException {
+		ExclusiveDisjunction f = (ExclusiveDisjunction) parser.parseFormula("SunIsShining ^^ Flies(kiwi)");
+		assertFalse(f.isDnf());
+		assertEquals(f.get(0),parser.parseFormula("SunIsShining"));
+		assertEquals(f.get(1),parser.parseFormula("Flies(kiwi)"));
+	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void NestedQuantifiedFormulaTest() throws ParserException, IOException {

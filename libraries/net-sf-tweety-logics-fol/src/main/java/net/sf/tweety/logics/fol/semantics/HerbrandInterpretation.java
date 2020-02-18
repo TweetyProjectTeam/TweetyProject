@@ -104,6 +104,12 @@ public class HerbrandInterpretation extends InterpretationSet<FolAtom,FolBeliefS
 				if(!this.satisfies((FolFormula) rf)) return false;
 			return true;
 		}
+		if(f instanceof ExclusiveDisjunction){
+			Disjunction d = (Disjunction) ((ExclusiveDisjunction) f).toDnf();
+			for(RelationalFormula rf: d)
+				if(this.satisfies((FolFormula) rf)) return true;
+			return false;
+		}
 		if (f instanceof Implication) {
 			Implication i = (Implication) f;
 			if (this.satisfies((FolFormula) i.getFormulas().getFirst()))

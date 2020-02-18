@@ -25,6 +25,7 @@ import net.sf.tweety.commons.util.Pair;
 import net.sf.tweety.logics.translators.Translator;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.ExclusiveDisjunction;
 import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
@@ -35,7 +36,9 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * A Translator between the FOL and propositonal logic and vice versa.
+ * 
  * @author Tim Janus
+ * @author Anna Gessler
  */
 public class FOLPropTranslator extends Translator {
 
@@ -83,6 +86,18 @@ public class FOLPropTranslator extends Translator {
 	}
 	
 	/**
+	 * Translates the given FOL Exclusive Disjunction to a propositional Exclusive Disjunction
+	 * @param disjunction	The FOL-Exclusive Disjunction, if it contains formulas which
+	 * 						are not expressible in propositional logic an exception
+	 * 						is thrown.
+	 * @return	The propositional Exclusive Disjunction
+	 */
+	public net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction toPropositional(ExclusiveDisjunction xor) {
+		return (net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction)
+				this.translateAssociative(xor, net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction.class);
+	}
+	
+	/**
 	 * Translates the given propositional Conjunction to a FOL Conjunction
 	 * @param conjunction a PL conjunction	
 	 * @return	The FOL Conjunction
@@ -126,6 +141,10 @@ public class FOLPropTranslator extends Translator {
 			net.sf.tweety.logics.pl.syntax.Disjunction disj = (net.sf.tweety.logics.pl.syntax.Disjunction) propFormula;
 			return toFOL(disj);
 		}
+		if(propFormula instanceof net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction) {
+			net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction xor = (net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction) propFormula;
+			return toFOL(xor);
+		}
 		return null;
 	}
 	
@@ -151,6 +170,10 @@ public class FOLPropTranslator extends Translator {
 			Disjunction disj = (Disjunction) folFormula;
 			return toPropositional(disj);
 		}
+		if(folFormula instanceof ExclusiveDisjunction) {
+			ExclusiveDisjunction xor = (ExclusiveDisjunction) folFormula;
+			return toPropositional(xor);
+		}
 		return null;
 	}
 	
@@ -169,6 +192,11 @@ public class FOLPropTranslator extends Translator {
 				TT_ASSOC, net.sf.tweety.logics.pl.syntax.Conjunction.class));
 		tmap.put(net.sf.tweety.logics.pl.syntax.Conjunction.class, 
 				new Pair<Integer, Class<?>>(TT_ASSOC, Conjunction.class));
+		
+		tmap.put(ExclusiveDisjunction.class, new Pair<Integer, Class<?>>(
+				TT_ASSOC, net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction.class));
+		tmap.put(net.sf.tweety.logics.pl.syntax.ExclusiveDisjunction.class, 
+				new Pair<Integer, Class<?>>(TT_ASSOC, ExclusiveDisjunction.class));
 		
 		return tmap;
 	}

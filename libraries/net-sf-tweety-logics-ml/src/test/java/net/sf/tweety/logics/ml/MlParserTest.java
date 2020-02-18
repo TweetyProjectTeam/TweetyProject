@@ -32,8 +32,10 @@ import org.junit.Test;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.commons.syntax.Sort;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
+import net.sf.tweety.logics.fol.syntax.ExclusiveDisjunction;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.ml.parser.MlParser;
@@ -87,6 +89,12 @@ public class MlParserTest {
 		assertTrue(f2.getSignature().containsConstant("penguin"));
 		MlFormula f5c2 = (MlFormula)f3.get(1);
 		assertTrue(f5c2.containsModalityOperator());
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void XorModalTest() throws ParserException, IOException {
+		RelationalFormula f1 = (RelationalFormula)parser.parseFormula("([](Flies(penguin))) ^^ (<>(Flies(penguin)))");
+		assertTrue(f1 instanceof ExclusiveDisjunction);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)

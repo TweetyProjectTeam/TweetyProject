@@ -37,6 +37,7 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Disjunction;
+import net.sf.tweety.logics.fol.syntax.ExclusiveDisjunction;
 import net.sf.tweety.logics.fol.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
@@ -299,6 +300,9 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 			if(a.getArguments().size()>0)
 				result += ")";
 			return result;
+		}
+		if (formula instanceof ExclusiveDisjunction) {
+			return alchemyStringForFormula((Disjunction) ((ExclusiveDisjunction) formula).toDnf());
 		}
 		throw new IllegalArgumentException("Representation of tautologies and contradictions not supported in Alchemy.");
 	}

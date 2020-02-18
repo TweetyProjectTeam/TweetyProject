@@ -105,6 +105,12 @@ public class MlHerbrandInterpretation extends InterpretationSet<FolAtom,FolBelie
 				if(!this.satisfies((FolFormula) rf)) return false;
 			return true;
 		}
+		if(f instanceof ExclusiveDisjunction){
+			Disjunction d = (Disjunction) ((ExclusiveDisjunction) f).toDnf();
+			for(RelationalFormula rf: d)
+				if(this.satisfies((FolFormula) rf)) return true;
+			return false;
+		}
 		if(f instanceof Negation){
 			Negation n = (Negation) f;
 			return !this.satisfies(n.getFormula());

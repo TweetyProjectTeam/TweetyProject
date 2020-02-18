@@ -47,6 +47,7 @@ import net.sf.tweety.logics.fol.syntax.*;
  * <br> FORMULA     ::== ATOM | "forall" VARIABLENAME ":" "(" FORMULA ")" | "exists" VARIABLENAME ":" "(" FORMULA ")" |
  * <br>					 "(" FORMULA ")" | FORMULA "&amp;&amp;" FORMULA | FORMULA "||" FORMULA | "!" FORMULA | "+" | "-" |
  * <br>					 FORMULA "=&gt;" FORMULA | FORMULA "&lt;=&gt;" FORMULA | FORMULA "==" FORMULA | FORMULA "/==" FORMULA |
+ * <br>					 FORMULA "^^" FORMULA
  * <br> ATOM		::== PREDICATENAME ("(" TERM ("," TERM)* ")")?
  * <br> TERM		::== VARIABLENAME | CONSTANTNAME | FUNCTORNAME "(" (TERM ("," TERM)*)?  ")" 
  * <br> 
@@ -157,7 +158,7 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 			String c = token.trim();
 			if(sig.containsConstant(c))
 				throw new ParserException("Constant '" + c + "' has already been defined to be of sort '" + sig.getConstant(c).getSort() + "'.");
-			if(c.matches("[a-z,A-Z]([^|&!<=>\\[\\]\\s\\(\\)])*"))
+			if(c.matches("[a-z,A-Z]([^|&!<=>\\[\\]\\s\\(\\)\\^])*"))
 				sig.add(new Constant(c, theSort));
 			else throw new ParserException("Illegal characters in constant definition '" + c + "'; declaration must conform to [a-z,A-Z]([a-z,A-Z,0-9])*");
 		}		
@@ -280,8 +281,6 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 				if(!stack.contains("("))
 					throw new ParserException("Missing opening parentheses.");				
 				List<Object> l = new ArrayList<Object>();
-				
-				
 				for(Object o = stack.pop(); !((o instanceof String) && ((String)o).equals("(")); o = stack.pop() )
 					l.add(0, o);
 				// if the preceding token is in {a,...,z,A,...,Z,0,...,9,==,/==} then treat the 
@@ -300,6 +299,11 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 				if(stack.lastElement().equals("&")){
 					stack.pop();
 					stack.push("&&"); 
+				}else stack.push(s);
+			}else if(s.equals("^")){
+				if(stack.lastElement().equals("^")){
+					stack.pop();
+					stack.push("^^"); 
 				}else stack.push(s);
 			}else if(s.equals(">")){
 				if(stack.lastElement().equals("=")){
@@ -538,7 +542,7 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 		if(l.isEmpty())
 			throw new ParserException("Empty parentheses.");
 		if(!(l.contains(LogicalSymbols.IMPLICATION())))
-			return this.parseDisjunction(l);	
+			return this.parseExclusiveDisjunction(l);	
 	
 		List<Object> left = new ArrayList<Object>(); 
 		List<Object> right = new ArrayList<Object>(); 
@@ -552,6 +556,32 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 				left.add(o);
 		}	
 		return new Implication(parseQuantification(left),parseQuantification(right));	
+	}
+	
+	/**
+	 * Parses an exclusive disjunction as a list of String tokens or formulas into a fol formula.
+	 * This method expects no parentheses in the list and as such treats the formula as a disjunction.
+	 * @param l a list objects, either String tokens or objects of type FolFormula.
+	 * @return a FolFormula.
+	 * @throws ParserException if the list could not be parsed.
+	 */
+	private FolFormula parseExclusiveDisjunction(List<Object> l){
+		if(l.isEmpty())
+			throw new ParserException("Empty parentheses.");
+		if(!(l.contains(LogicalSymbols.EXCLUSIVEDISJUNCTION())))
+			return this.parseDisjunction(l);		
+		ExclusiveDisjunction d = new ExclusiveDisjunction();
+		List<Object> tmp = new ArrayList<Object>(); 
+		for(Object o: l){
+			if((o instanceof String) && ((String)o).equals(LogicalSymbols.EXCLUSIVEDISJUNCTION()) ){
+				d.add(this.parseDisjunction(tmp));
+				tmp = new ArrayList<Object>();
+			}else tmp.add(o);
+		}		
+		d.add(this.parseDisjunction(tmp));
+		if(d.size() > 1)	
+			return d;
+		throw new ParserException("General parsing exception.");
 	}
 	
 		
