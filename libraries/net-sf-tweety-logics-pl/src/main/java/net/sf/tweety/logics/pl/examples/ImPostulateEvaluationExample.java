@@ -44,14 +44,11 @@ public class ImPostulateEvaluationExample {
 		BeliefSetInconsistencyMeasure<PlFormula> im = new HsInconsistencyMeasure<PlBeliefSet,PlFormula>(new PossibleWorldIterator());
 		RandomSampler sampler = new RandomSampler(new PlSignature(4),0.2,2,4);
 		PostulateEvaluator<PlFormula,PlBeliefSet> evaluator = new PostulateEvaluator<PlFormula,PlBeliefSet>(sampler, im);
-//		evaluator.addPostulate(ImPostulate.ADJUNCTIONINVARIANCE);
-//		evaluator.addPostulate(ImPostulate.ATTENUATION);
-//		evaluator.addPostulate(ImPostulate.CONTRADICTION);
 		evaluator.addPostulate(ImPostulate.EQUALCONFLICT);
 		evaluator.addPostulate(ImPostulate.MINORMALIZATION);
 		evaluator.addPostulate(ImPostulate.PENALTY);
 		evaluator.addPostulate(ImPostulate.SUPERADDITIVITY);
 		evaluator.addPostulate(ImPostulate.SAFEFORMULAINDEPENDENCE);
-		System.out.println(evaluator.evaluate(10, false));
+		System.out.println(evaluator.evaluate(10, false).prettyPrint());
 	}
 }

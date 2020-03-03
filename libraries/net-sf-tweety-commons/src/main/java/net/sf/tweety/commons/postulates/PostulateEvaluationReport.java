@@ -122,6 +122,18 @@ public class PostulateEvaluationReport<S extends Formula> {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
+		String result = "[" + this.ev.toString() + ":";
+		for(Postulate<S> p: this.positiveInstances.keySet())
+			result += p.getName()+"<"+this.positiveInstances.get(p).size()+","+this.notApplicableInstances.get(p).size()+","+this.negativeInstances.get(p).size()+">;";
+		return result + "]";
+
+	}
+	
+	/**
+	 * @return an easy-to-read string representation of the report in which 
+	 * the results are ordered alphabetically by postulate name.
+	 */
+	public String prettyPrint() {
 		int longest = 10;
 		for (Postulate<S> p : this.positiveInstances.keySet())
 			if (p.getName().length() > longest)

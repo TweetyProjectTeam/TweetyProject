@@ -59,7 +59,7 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(4000, false));
+		System.out.println(evaluator.evaluate(4000, false).prettyPrint());
 	}
 	
 	public static void BurdenExample() {
@@ -83,7 +83,7 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(2000, false));
+		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
 	}
 	
 	public static void DiscussionExample() {
@@ -107,7 +107,7 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(2000, false));
+		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
 	}
 	
 	public static void TuplesExample() {
@@ -131,7 +131,7 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(4000, false));
+		System.out.println(evaluator.evaluate(4000, false).prettyPrint());
 	}
 	
 	public static void MTExample() {
@@ -155,7 +155,7 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(10, false));
+		System.out.println(evaluator.evaluate(10, false).prettyPrint());
 	}
 	
 	public static void SAFExample() {
@@ -179,7 +179,7 @@ public class RaPostulateExample {
 		evaluator.addPostulate(RankingPostulate.ADDITIONOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFATTACKBRANCH);
 		evaluator.addPostulate(RankingPostulate.INCREASEOFDEFENSEBRANCH);
-		System.out.println(evaluator.evaluate(2000, false));
+		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
 	}
 	
 	public static void main(String[] args){
