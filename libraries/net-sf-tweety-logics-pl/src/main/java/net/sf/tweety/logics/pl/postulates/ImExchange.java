@@ -20,6 +20,7 @@ package net.sf.tweety.logics.pl.postulates;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.reasoner.SatReasoner;
@@ -48,13 +49,18 @@ public class ImExchange extends ImPostulate{
 	public boolean isApplicable(Collection<PlFormula> kb) {
 		if(kb.size() < 2)
 			return false;
+		
+		//generate random index based on the knowledge base's hash code
 		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PlFormula f = orderedKB.get(0);
-		PlFormula f2 = orderedKB.get(1);
+		Random rand = new Random(orderedKB.hashCode()); 
+		int i = rand.nextInt(orderedKB.size());
+		PlFormula f0 = orderedKB.get(0);
+		PlFormula f1 = orderedKB.get(i);
+		
 		SatReasoner reasoner = new SatReasoner();
-		if (!SatSolver.getDefaultSolver().isConsistent(f)) 
+		if (!SatSolver.getDefaultSolver().isConsistent(f0)) 
 			return false;
-		if (!reasoner.isEquivalent(f,f2)) 
+		if (!reasoner.isEquivalent(f0,f1)) 
 			return false;
 		return true;
 	}
@@ -67,12 +73,14 @@ public class ImExchange extends ImPostulate{
 		if(!this.isApplicable(kb))
 			return true;
 		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();
-		PlFormula f = orderedKB.get(0);
-		PlFormula f2 = orderedKB.get(1);
+		Random rand = new Random(orderedKB.hashCode()); 
+		int i = rand.nextInt(orderedKB.size());
+		PlFormula f0 = orderedKB.get(0);
+		PlFormula f1 = orderedKB.get(i);
 		PlBeliefSet kb1 = new PlBeliefSet(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
-		kb1.remove(f2);
-		kb2.remove(f);
+		kb1.remove(f0);
+		kb2.remove(f1);
 		double inconsistency1 = ev.inconsistencyMeasure(kb1);
 		double inconsistency2 = ev.inconsistencyMeasure(kb2);
 		return (inconsistency1 == inconsistency2);
