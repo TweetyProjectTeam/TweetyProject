@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import net.sf.tweety.arg.dung.analysis.NonGroundedCountInconsistencyMeasure;
 import net.sf.tweety.arg.dung.analysis.PreferredCountInconsistencyMeasure;
+import net.sf.tweety.arg.dung.analysis.UnstableCountInconsistencyMeasure;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
@@ -75,13 +76,19 @@ public class ExtensionInconsistencyMeasure {
 	@Test
 	public void preferredCountInconsistencyMeasure() {
 		Double preferredCount = new PreferredCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
-		assertEquals(2d, preferredCount, 0.0);
+		assertEquals(1d, preferredCount, 0.0);
 	}
 	
 	@Test
 	public void nonGroundedCountInconsistencyMeasure() {
 		Double nonGroundedCount = new NonGroundedCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
 		assertEquals(5d, nonGroundedCount, 0.0);
+	}
+	
+	@Test
+	public void unstableCountInconsistencyMeasure() {
+		Double unstableCount = new UnstableCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
+		assertEquals(3d, unstableCount, 0.0);
 	}
 	
 	
