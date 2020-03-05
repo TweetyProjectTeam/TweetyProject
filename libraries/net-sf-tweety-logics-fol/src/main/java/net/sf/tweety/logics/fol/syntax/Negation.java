@@ -257,6 +257,6 @@ public class Negation extends FolFormula {
 
 	@Override
 	public Negation clone() {
-		return new Negation(this);
+		return new Negation(this.getFormula().clone());
 	}
 }
