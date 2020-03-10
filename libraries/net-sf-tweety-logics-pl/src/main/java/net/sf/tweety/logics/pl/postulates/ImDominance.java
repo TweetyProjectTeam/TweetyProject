@@ -20,6 +20,7 @@ package net.sf.tweety.logics.pl.postulates;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pl.reasoner.SatReasoner;
@@ -53,8 +54,10 @@ public class ImDominance extends ImPostulate {
 		if (kb.size() < 2) 
 			return false;
 		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();	
+		Random rand = new Random(orderedKB.hashCode()); 
+		int i = rand.nextInt(orderedKB.size());
 		PlFormula strongerFormula = orderedKB.get(0);
-		PlFormula weakerFormula = orderedKB.get(1);
+		PlFormula weakerFormula = orderedKB.get(i);
 		if (!SatSolver.getDefaultSolver().isConsistent(strongerFormula)) 
 			return false;
 		if (!new SatReasoner().query(strongerFormula, weakerFormula)) 
@@ -70,8 +73,10 @@ public class ImDominance extends ImPostulate {
 		PlBeliefSet kb1 = new PlBeliefSet(kb);
 		PlBeliefSet kb2 = new PlBeliefSet(kb);
 		List<PlFormula> orderedKB = ((PlBeliefSet)kb).getCanonicalOrdering();		
+		Random rand = new Random(orderedKB.hashCode()); 
+		int i = rand.nextInt(orderedKB.size());
 		PlFormula strongerFormula = orderedKB.get(0);
-		PlFormula weakerFormula = orderedKB.get(1);
+		PlFormula weakerFormula = orderedKB.get(i);
 		kb1.remove(weakerFormula);
 		kb2.remove(strongerFormula);		
 		double inconsistency1 = ev.inconsistencyMeasure(kb1);

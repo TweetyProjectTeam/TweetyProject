@@ -56,6 +56,8 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 	public static final ImPostulate PENALTY = new ImPenalty();
 	/** The MINORMALIZATION postulate **/
 	public static final ImPostulate MINORMALIZATION = new ImMINormalization();
+	/** The MISEPARABILITY postulate **/
+	public static final ImPostulate MISEPARABILITY = new ImMISeparability();
 	/** The ATTENUATION postulate **/
 	public static final ImPostulate ATTENUATION = new ImAttenuation();
 	/** The ADJUNCTIONINVARIANCE postulate **/
