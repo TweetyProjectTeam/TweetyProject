@@ -27,6 +27,7 @@ import net.sf.tweety.arg.dung.reasoner.SimpleStableReasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
+import net.sf.tweety.graphs.Graph;
 
 /**
  * @author Timothy Gillespie
@@ -36,48 +37,39 @@ public class UnstableCountInconsistencyMeasure<T extends DungTheory> implements 
 
 	@Override
 	public Double inconsistencyMeasure(T argumentationFramework) {
-		//Filtering method: Checking cases with lower inconsistency measures first and if they are not applicable go down 
-		
 		//Check if there is already a stable extension; if yes then then the inconsistency is measured as 0
 		Collection<Extension> stableExtensions = new SimpleStableReasoner().getModels(argumentationFramework);
 		if(!stableExtensions.isEmpty()) {
 			return 0d;
 		}
 		
-		int numberOfNodes = argumentationFramework.getNumberOfNodes();
+		// Other solutions by brute force
 		
-		//Check if there are preferred extensions; if yes calculate from there
-		Collection<Extension> preferredExtensions = new SimplePreferredReasoner().getModels(argumentationFramework);
-		if(!preferredExtensions.isEmpty()) {
-			int max = 0;
-			for(Extension singleExtension : preferredExtensions) {
-				Set<Argument> extensionAndAttackees = new HashSet<Argument>();
-				extensionAndAttackees.addAll(singleExtension);
-				
-				for(Argument singleArgument : singleExtension)
-					extensionAndAttackees.addAll(argumentationFramework.getAttacked(singleArgument));
-				
-				int size = extensionAndAttackees.size();
-				if(max < size)
-					max = size;
-			}
+		// You cannot filter down checking through the lower extensions first. This leads to wrong results even though it seems intuitive.
+		
+		// Check all subgraphs if they have stable extensions and save the subgraph with the most nodes.
+		
+		int numberOfNodes = argumentationFramework.getNumberOfNodes();
+		int maxNumberOfNodes = 0;
+		
+		Collection<Graph<Argument>> subgraphs = argumentationFramework.getInducedSubgraphs();
+		
+		for(Graph<Argument> singleSubgraph : subgraphs) {
+			DungTheory subTheory = new DungTheory(singleSubgraph);
+			// If the current Graph is smaller than the current maximal graph with a stable extension skip the rest
+			// since it cannot increase the maximum
+			if(maxNumberOfNodes >= subTheory.size())
+				continue;
 			
-			return (Double)((double) numberOfNodes - max);
-			
+			Collection<Extension> subTheoryStableExtensions = new SimpleStableReasoner().getModels(subTheory);
+			if(subTheoryStableExtensions.size() > 0)
+				if(maxNumberOfNodes < subTheory.size()) {
+					maxNumberOfNodes = subTheory.size();
+				}
 		}
 		
-		//If a grounded extension exists then a preferred extension must exist as well
-		//If a complete extension exists then a preferred extension must exist as well
-		
-		//Part missing: How many nodes must be removed to obtain a stable extension if there is no complete extension?
-		
-		//Removing all but one node is a stable extension except if all nodes have a self loop
-		for(Argument singleArgument : argumentationFramework)
-			if(argumentationFramework.getEdge(singleArgument, singleArgument) == null)
-				 return (Double)((double) numberOfNodes - 1);
-		
-		//It is always possible to receive a stable extension by removing all arguments which will be the empty set in an empty argumentation framework
-		return (Double)((double) numberOfNodes);
+		// There will always be a stable extension that will be reached since the empty graph is stable.
+		return (Double) ((double)numberOfNodes - maxNumberOfNodes);
 	}
 
 	

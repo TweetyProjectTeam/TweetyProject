@@ -816,11 +816,18 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return DefaultGraph.containsCycle(this);
 	}
 
-	/**
-	 * Returns the (connected) components of the theory
-	 * @return the (connected) components of the theory
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.DefaultGraph#getComponents()
 	 */
 	public Collection<Graph<Argument>> getComponents() {
 		return DefaultGraph.getComponents(this);
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.graphs.DefaultGraph#getInducedSubgraphs()
+	 */
+	public Collection<Graph<Argument>> getInducedSubgraphs() {
+		return DefaultGraph.getInducedSubgraphs(this);
+	}
+	
 }

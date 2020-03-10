@@ -76,6 +76,7 @@ public class ExtensionInconsistencyMeasure {
 	@Test
 	public void preferredCountInconsistencyMeasure() {
 		Double preferredCount = new PreferredCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
+		// Deviation from the paper since it seems it is supposed to be 1 considering there are 2 preferred extensions from which we must subtract 1.
 		assertEquals(1d, preferredCount, 0.0);
 	}
 	
@@ -88,7 +89,8 @@ public class ExtensionInconsistencyMeasure {
 	@Test
 	public void unstableCountInconsistencyMeasure() {
 		Double unstableCount = new UnstableCountInconsistencyMeasure<DungTheory>().inconsistencyMeasure(hunterExample15);
-		assertEquals(3d, unstableCount, 0.0);
+		// Deviates from the paper since removing A3 will result in a stable extension with {A1, A4, A6, A8}
+		assertEquals(1d, unstableCount, 0.0);
 	}
 	
 	

@@ -583,7 +583,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	
 	
 	/**
-	 * Finds all components of a graph and returns them as a graph.
+	 * Finds all components of a graph.
 	 * @param g The graph which components should be found.
 	 * @return A collection of the components as separate graphs.
 	 */
@@ -631,8 +631,38 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 			
 		}
 		
-		
-		
 		return components;
 	}
+	
+	
+	/**
+	 * Finds all induced subgraphs.
+	 * @param g The graph which induced subgraphs should be found.
+	 * @return A collection of graphs representing the induced subgraphs.
+	 */
+	public static <S extends Node> Collection<Graph<S>> getInducedSubgraphs(Graph<S> g) {
+		Collection<Graph<S>> resultingInducedSubgraphs = new HashSet<Graph<S>>();
+		
+		Set<Set<S>> subsetOfNodes = new SetTools<S>().subsets(g.getNodes()); 
+		
+		for(Set<S> singleSubset : subsetOfNodes) {
+			Graph<S> singleInducedSubgraph = new DefaultGraph<S>();
+			for(S singleNode : singleSubset)
+				singleInducedSubgraph.add(singleNode);
+				
+			@SuppressWarnings("unchecked")
+			Collection<Edge<S>> edges = (Collection<Edge<S>>) g.getEdges();
+			
+			// Leave only those edges where both nodeA and nodeB are contained in the induced graph
+			Collection<Edge<S>> filteredEdges = edges.stream().filter(edge -> singleSubset.contains(edge.getNodeA()) && singleSubset.contains(edge.getNodeB())).collect(Collectors.toList());
+			
+			for(Edge<S> singleEdge : filteredEdges)
+				singleInducedSubgraph.add(g.getEdge(singleEdge.getNodeA(), singleEdge.getNodeB()));
+			
+			resultingInducedSubgraphs.add(singleInducedSubgraph);
+		}
+		
+		return resultingInducedSubgraphs;
+	}
+	
 }
