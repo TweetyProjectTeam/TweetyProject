@@ -127,6 +127,14 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 			this.remove(obj);
 	}
 	
+	public void retainAll(Collection<?> c) {
+		Collection<Object> toBeRemoved = new HashSet<Object>();
+		for(Object obj: this)
+			if(!c.contains(obj))
+				toBeRemoved.add(obj);
+		this.removeAll(toBeRemoved);			
+	}
+	
 	@Override
 	public void clear() {
 		formulas = new HashSet<T>();
@@ -171,7 +179,7 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 			if (!formulas.contains(f))
 				return false;
 		return true;
-	}
+	}	
 	
 	/**
 	 * Returns an array containing all of the elements in this signature.

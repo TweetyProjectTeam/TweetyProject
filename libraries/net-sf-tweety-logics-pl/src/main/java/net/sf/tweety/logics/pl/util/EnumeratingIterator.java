@@ -38,6 +38,10 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
  * @author Matthias Thimm
  *
  */
+/**
+ * @author mthimm
+ *
+ */
 public class EnumeratingIterator implements BeliefSetIterator<PlFormula,PlBeliefSet> {
 
 	/** The current length */
@@ -53,12 +57,30 @@ public class EnumeratingIterator implements BeliefSetIterator<PlFormula,PlBelief
 	 */
 	private PlSignature signature;
 	
+	
+	/**
+	 * Whether semantical variants of the same formula
+	 * 	should be considered as distinct (="false")
+	 */
+	private boolean joinSemanticVariants;
+	
 	/**
 	 * Creates a new sampler for the given signature
 	 * @param signature some signature
 	 */
 	public EnumeratingIterator(PlSignature signature) {
+		this(signature,false);
+	}
+	
+	/**
+	 * Creates a new sampler for the given signature
+	 * @param signature some signature
+	 * @param joinSemanticVariants whether semantical variants of the same formula
+	 * 	should be considered as distinct (="false").
+	 */
+	public EnumeratingIterator(PlSignature signature, boolean joinSemanticVariants) {
 		this.signature = signature;
+		this.joinSemanticVariants = joinSemanticVariants;
 		this.currentLength = 0;
 		this.allWorlds = new LinkedList<PossibleWorld>(PossibleWorld.getAllPossibleWorlds(this.signature));
 		this.indices = new BitSet(this.currentLength * this.allWorlds.size());
@@ -87,7 +109,11 @@ public class EnumeratingIterator implements BeliefSetIterator<PlFormula,PlBelief
 		int size = this.allWorlds.size();		
 		for(int i = 0; i < this.currentLength; i++){
 			// we have to ensure that appearing formulas are not syntactically equivalent.
-			PlFormula p = contr.combineWithAnd(new Proposition("XSA"+i));
+			PlFormula p;
+			if(this.joinSemanticVariants)
+				p = contr.clone();
+			else
+				p = contr.combineWithAnd(new Proposition("XSA"+i));
 			for(int j = 0; j < size; j++){
 				if(this.indices.get(i*size + j))
 					p = p.combineWithOr(this.allWorlds.get(j).getCompleteConjunction(this.signature));				

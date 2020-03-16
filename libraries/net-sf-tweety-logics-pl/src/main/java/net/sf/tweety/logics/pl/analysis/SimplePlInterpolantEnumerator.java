@@ -23,7 +23,11 @@ import java.util.HashSet;
 
 import net.sf.tweety.logics.commons.analysis.InterpolantEnumerator;
 import net.sf.tweety.logics.pl.reasoner.AbstractPlReasoner;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
+import net.sf.tweety.logics.pl.util.EnumeratingIterator;
 
 /**
  * Implements an exhaustive search approach to compute all interpolants of
@@ -51,10 +55,42 @@ public class SimplePlInterpolantEnumerator implements InterpolantEnumerator<PlFo
 	@Override
 	public Collection<PlFormula> getInterpolants(Collection<PlFormula> k1, Collection<PlFormula> k2) {
 		Collection<PlFormula> interpolants = new HashSet<PlFormula>();
-		// TODO continue
+		PlSignature commonSignature = PlSignature.getSignature(k1);
+		commonSignature.retainAll(PlSignature.getSignature(k2).toCollection());
+		// the following iterator can be used to enumerate all possible formulas of
+		// the given signature
+		EnumeratingIterator it = new EnumeratingIterator(commonSignature,true);
+		// omit the empty belief base
+		it.next();
+		PlFormula currentCandidate;
+		PlBeliefSet currentBeliefSet;		
+		while(true) {			
+			currentBeliefSet = it.next();
+			// if there is more than one formula in the set, we are finished
+			if(currentBeliefSet.size() > 1)
+				break;
+			currentCandidate = currentBeliefSet.iterator().next();
+			if(this.isInterpolant(currentCandidate, k1, k2))
+				interpolants.add(currentCandidate);
+		}
 		return interpolants;
 	}
-
+	
+	@Override
+	public boolean isInterpolant(PlFormula candidate, Collection<PlFormula> k1, Collection<PlFormula> k2) {
+		PlSignature commonSignature = PlSignature.getSignature(k1);
+		commonSignature.retainAll(PlSignature.getSignature(k2).toCollection());
+		if(!candidate.getSignature().isSubSignature(commonSignature))
+			return false;
+		if(!this.reasoner.query(new PlBeliefSet(k1), candidate))
+			return false;
+		Collection<PlFormula> k2extended = new HashSet<PlFormula>(k2);
+		k2extended.add(candidate);
+		if(!this.reasoner.query(new PlBeliefSet(k2extended), new Contradiction()))
+			return false;
+		return true;
+	}
+	
 	@Override
 	public PlFormula getStrongestInterpolant(Collection<PlFormula> k1, Collection<PlFormula> k2) {
 		Collection<PlFormula> interpolants = this.getInterpolants(k1, k2);
@@ -62,7 +98,7 @@ public class SimplePlInterpolantEnumerator implements InterpolantEnumerator<PlFo
 			throw new IllegalArgumentException("Strongest interpolant undefined as the union of the given knowledge bases is consistent");
 		PlFormula f = interpolants.iterator().next();		
 		for(PlFormula g: interpolants) {
-			if(this.reasoner.query(g, f));
+			if(this.reasoner.query(g, f))
 				f = g;
 		}		
 		return f;
@@ -75,10 +111,9 @@ public class SimplePlInterpolantEnumerator implements InterpolantEnumerator<PlFo
 			throw new IllegalArgumentException("Weakest interpolant undefined as the union of the given knowledge bases is consistent");
 		PlFormula f = interpolants.iterator().next();		
 		for(PlFormula g: interpolants) {
-			if(this.reasoner.query(f, g));
+			if(this.reasoner.query(f, g))
 				f = g;
 		}		
 		return f;
 	}
-
 }

@@ -47,6 +47,16 @@ public interface InterpolantEnumerator<S extends Formula> {
 	public Collection<S> getInterpolants(Collection<S> k1, Collection<S> k2);
 	
 	/**
+	 * Checks whether the given formula "candidate" is an interpolant
+	 * of k1 wrt. k2.
+	 * @param candidate some candidate formula.
+	 * @param k1 some set of formulas
+	 * @param k2 some set of formulas
+	 * @return "true" if "candidate" is an interpolant of k1 wrt. k2.
+	 */
+	public boolean isInterpolant(S candidate, Collection<S> k1, Collection<S> k2);
+	
+	/**
 	 * Returns the strongest interpolant (up to semantical equivalence)
 	 * of K1 wrt. K2, i.e., the interpolant IS such that IS entails I for
 	 * every other interpolant I.
