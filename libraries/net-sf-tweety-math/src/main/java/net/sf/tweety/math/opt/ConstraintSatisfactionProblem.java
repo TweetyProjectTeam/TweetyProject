@@ -107,6 +107,9 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 * Resolves all occurrences of minimums by substituting
 	 * a minimum "min{a,b}" by "0.5 a + 0.5 b - abs(a-b)".
 	 */
+	/*
+	 * Sebi: Formel falsch? => eig: 0.5*a+0.5*b-abs(a-b)
+	 */
 	public void resolveMinimums(){
 		// expand all minimums		
 		for(Statement s: this)
@@ -131,6 +134,9 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	/**
 	 * Resolves all occurrences of maximums by substituting
 	 * a maximum "max{a,b}" by "0.5 a + 0.5 b + abs(a-b)".
+	 */
+	/*
+	 * Sebi: Formel falsch? => eig: 0.5*a+0.5*b+0abs(a-b)
 	 */
 	public void resolveMaximums(){
 		// expand all maximums		

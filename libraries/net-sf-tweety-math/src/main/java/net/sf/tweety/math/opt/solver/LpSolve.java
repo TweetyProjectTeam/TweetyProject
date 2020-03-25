@@ -48,6 +48,7 @@ import net.sf.tweety.math.term.Variable;
 public class LpSolve extends Solver {
 	
 	/**Path to the binary or lp_solve*/
+	
 	private static String binary = "lp_solve";
 	
 	/** For temporary files. */
@@ -70,13 +71,16 @@ public class LpSolve extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) {
+		
 		if(!problem.isLinear())
 			throw new IllegalArgumentException("The solver \"lpsolve\" needs linear optimization problems.");
 		//check existence of lp_solve first
-		if(!LpSolve.isInstalled())
-			return null;
+		if(!LpSolve.isInstalled()) {
+			System.out.println("so");
+			return null;}
 		String output = new String();
 		//String error = "";
+		
 		try{
 			File lpFile = File.createTempFile("lptmp", null, LpSolve.tmpFolder);
 //			File lpFile = new File("lptmp2");
@@ -97,7 +101,8 @@ public class LpSolve extends Solver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
-		}		
+		}	
+		
 		//parse output		
 		String delimiter = "Actual values of the variables:";
 		String assignments = output.substring(output.indexOf(delimiter)+delimiter.length(), output.length());
