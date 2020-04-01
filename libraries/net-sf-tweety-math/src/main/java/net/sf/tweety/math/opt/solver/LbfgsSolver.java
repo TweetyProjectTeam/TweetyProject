@@ -99,11 +99,15 @@ public class LbfgsSolver extends Solver {
 		int[] iflag = new int[1];
 		iflag[0] = 0;
 		this.log.trace("Starting optimization.");
+		
 		while(iflag[0] >= 0){
 			try{
+				System.out.println(currentGuess.toString());
 				new LBFGS().lbfgs(n, m, x, f, g, diagco, diag, iprint, eps, xtol, iflag);
+				System.out.println("1");
 				this.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(g));
 			}catch(Exception e){
+				System.out.println(e);
 				throw new GeneralMathException("Call to L-BFGS failed.");
 			}
 			if(iflag[0] == 0){

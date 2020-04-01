@@ -41,6 +41,9 @@ public abstract class Variable extends Term{
 	 */
 	private double upperBound, lowerBound;
 	
+	
+
+
 	/**
 	 * Creates a new variable with the given name.
 	 * @param name the name of this variable.

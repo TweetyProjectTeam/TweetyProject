@@ -76,7 +76,7 @@ public class LpSolve extends Solver {
 			throw new IllegalArgumentException("The solver \"lpsolve\" needs linear optimization problems.");
 		//check existence of lp_solve first
 		if(!LpSolve.isInstalled()) {
-			System.out.println("so");
+			System.out.println("LpSolve is not installed \n");
 			return null;}
 		String output = new String();
 		//String error = "";

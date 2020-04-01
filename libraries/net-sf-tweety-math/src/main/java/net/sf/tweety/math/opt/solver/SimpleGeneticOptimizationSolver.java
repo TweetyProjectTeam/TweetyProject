@@ -150,8 +150,10 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			if(this.rand.nextDouble() < SimpleGeneticOptimizationSolver.VAR_MUTATE_PROB){
 				// positive or negative mutation
 				if(rand.nextBoolean()){
+					
 					double val = ind.get(v).doubleValue();
 					val = val + rand.nextDouble() * SimpleGeneticOptimizationSolver.VAR_MUTATE_STRENGTH * (v.getUpperBound() - val);
+					//System.out.println(val);
 					mutant.put(v, new FloatConstant(val));
 				}else{
 					double val = ind.get(v).doubleValue();
@@ -208,6 +210,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			for(Variable v: vars){
 				w = (FloatVariable) v;
 				val = this.rand.nextDouble() * (w.getUpperBound() - w.getLowerBound()) + w.getLowerBound();
+				//System.out.println(w.getUpperBound()+ " " + w.getLowerBound());
 				ind.put(w, new FloatConstant(val));
 			}
 			currentPopulation.add(ind);
@@ -223,11 +226,14 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		Map<FloatVariable,Term> currentBest = null;
 		PriorityQueue<Map<FloatVariable,Term>> p = new PriorityQueue<Map<FloatVariable,Term>>(this.populationSize,new FitnessComparator(minT));
 		int it = 0;
+		
 		do{
 			previous_val = current_val;
 			// create new population
 			p.clear();
+			//System.out.println("Pop: " +currentPopulation.size());
 			p.addAll(currentPopulation);
+			
 			// mutate
 			for(Map<FloatVariable,Term> ind: currentPopulation)
 				for(int i = 0; i < this.populationIncreaseMutation; i++)
@@ -240,6 +246,7 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 							p.add(this.crossover(ind1, ind2));
 			// select best individuals
 			currentBest = p.peek();
+			
 			current_val = minT.replaceAllTerms(p.peek()).doubleValue();			
 			currentPopulation.clear();			
 			for(int i = 0; i < this.populationSize; i++)

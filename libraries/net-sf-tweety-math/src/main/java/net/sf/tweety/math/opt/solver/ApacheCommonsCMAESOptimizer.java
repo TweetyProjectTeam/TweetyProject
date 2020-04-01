@@ -108,6 +108,7 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 			s[i] = (lb[i]+ub[i])/2;
 			sigma[i] = ub[i]-lb[i];
 		}
+		
 		final Term targetFunction = p.getTargetFunction();
 		MultivariateFunction target = new MultivariateFunction(){
 			@Override
