@@ -7,18 +7,24 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import net.sf.tweety.arg.adf.sat.NativeMinisatSolver;
 import net.sf.tweety.arg.adf.semantics.Link;
+import net.sf.tweety.arg.adf.semantics.LinkStrategy;
 import net.sf.tweety.arg.adf.semantics.LinkType;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
+import net.sf.tweety.arg.adf.semantics.SatLinkStrategy;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.syntax.EquivalenceAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.ImplicationAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.TautologyAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 public class LinkTypeTest {
 
 	public static final int DEFAULT_TIMEOUT = 2000;
+	
+	private final LinkStrategy linkStrategy = new SatLinkStrategy(new NativeMinisatSolver());
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void testAttacking() {		
@@ -27,10 +33,10 @@ public class LinkTypeTest {
 		Argument a = new Argument("a");
 		
 		Map<Argument,AcceptanceCondition> map = new HashMap<Argument,AcceptanceCondition>();
-		map.put(c, new TautologyAcceptanceCondition());
-		map.put(b, new TautologyAcceptanceCondition());
+		map.put(c, AcceptanceCondition.TAUTOLOGY);
+		map.put(b, AcceptanceCondition.TAUTOLOGY);
 		map.put(a, new ImplicationAcceptanceCondition(b, c));
-		AbstractDialecticalFramework adf = new AbstractDialecticalFramework(map);
+		AbstractDialecticalFramework adf = AbstractDialecticalFramework.fromMap(map).lazy(linkStrategy).build();
 		
 		Link baLink = adf.link(b, a);
 		assertTrue(baLink.getLinkType() == LinkType.ATTACKING);
@@ -43,10 +49,10 @@ public class LinkTypeTest {
 		Argument a = new Argument("a");
 		
 		Map<Argument,AcceptanceCondition> map = new HashMap<Argument,AcceptanceCondition>();
-		map.put(c, new TautologyAcceptanceCondition());
-		map.put(b, new TautologyAcceptanceCondition());
+		map.put(c, AcceptanceCondition.TAUTOLOGY);
+		map.put(b, AcceptanceCondition.TAUTOLOGY);
 		map.put(a, new ImplicationAcceptanceCondition(b, c));
-		AbstractDialecticalFramework adf = new AbstractDialecticalFramework(map);
+		AbstractDialecticalFramework adf = AbstractDialecticalFramework.fromMap(map).lazy(linkStrategy).build();
 		
 		Link caLink = adf.link(c, a);
 		assertTrue(caLink.getLinkType() == LinkType.SUPPORTING);
@@ -59,10 +65,10 @@ public class LinkTypeTest {
 		Argument c = new Argument("c");
 		
 		Map<Argument,AcceptanceCondition> map = new HashMap<Argument,AcceptanceCondition>();
-		map.put(a, new TautologyAcceptanceCondition());
-		map.put(b, new TautologyAcceptanceCondition());
+		map.put(a, AcceptanceCondition.TAUTOLOGY);
+		map.put(b, AcceptanceCondition.TAUTOLOGY);
 		map.put(c, new EquivalenceAcceptanceCondition(a, b));
-		AbstractDialecticalFramework adf = new AbstractDialecticalFramework(map);
+		AbstractDialecticalFramework adf = AbstractDialecticalFramework.fromMap(map).lazy(linkStrategy).build();
 		
 		Link acLink = adf.link(a, c);
 		assertTrue(acLink.getLinkType() == LinkType.DEPENDENT);
@@ -72,17 +78,15 @@ public class LinkTypeTest {
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
-	public void testRedundant() {
+	public void testRedundant() {	
 		Argument a = new Argument("a");
-		Argument b = new Argument("b");
+		AbstractDialecticalFramework adf = AbstractDialecticalFramework.builder()
+				.lazy(linkStrategy)
+				.add(a, new DisjunctionAcceptanceCondition(a, new NegationAcceptanceCondition(a)))
+				.build();
 		
-		Map<Argument,AcceptanceCondition> map = new HashMap<Argument,AcceptanceCondition>();
-		map.put(a, new TautologyAcceptanceCondition());
-		map.put(b, new TautologyAcceptanceCondition());
-		AbstractDialecticalFramework adf = new AbstractDialecticalFramework(map);
-		
-		Link baLink = adf.link(b,a);
-		assertTrue(baLink.getLinkType() == LinkType.REDUNDANT);
+		Link aaLink = adf.link(a,a);
+		assertTrue(aaLink.getLinkType() == LinkType.REDUNDANT);
 	}
 	
 }

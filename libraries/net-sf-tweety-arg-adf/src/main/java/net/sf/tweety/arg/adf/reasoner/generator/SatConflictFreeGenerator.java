@@ -25,21 +25,21 @@ import net.sf.tweety.arg.adf.reasoner.encodings.SatEncoding;
 import net.sf.tweety.arg.adf.reasoner.encodings.SatEncodingContext;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
  *
  */
-public class SatConflictFreeGenerator implements CandidateGenerator<SatReasonerContext> {
-	
+public final class SatConflictFreeGenerator implements CandidateGenerator<SatReasonerContext> {
+
 	private static final SatEncoding CONFLICT_FREE_ENCODING = new ConflictFreeInterpretationSatEncoding();
-	
+
 	private static final SatEncoding REFINE_UNEQUAL = new RefineUnequalSatEncoding();
 
-	private IncrementalSatSolver solver;
-	
+	private final IncrementalSatSolver solver;
+
 	/**
 	 * @param solver
 	 */
@@ -47,8 +47,11 @@ public class SatConflictFreeGenerator implements CandidateGenerator<SatReasonerC
 		this.solver = solver;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.generator.CandidateGenerator#initialize()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.reasoner.generator.CandidateGenerator#initialize()
 	 */
 	@Override
 	public SatReasonerContext initialize(AbstractDialecticalFramework adf) {
@@ -57,9 +60,13 @@ public class SatConflictFreeGenerator implements CandidateGenerator<SatReasonerC
 		solverState.add(CONFLICT_FREE_ENCODING.encode(encodingContext));
 		return new SatReasonerContext(encodingContext, solver, solverState);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.generator.CandidateGenerator#generate(java.lang.Object)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.reasoner.generator.CandidateGenerator#generate(java
+	 * .lang.Object)
 	 */
 	@Override
 	public Interpretation generate(SatReasonerContext context, AbstractDialecticalFramework adf) {

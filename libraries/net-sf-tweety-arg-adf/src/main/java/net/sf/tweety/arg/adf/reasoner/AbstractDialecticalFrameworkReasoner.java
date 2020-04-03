@@ -22,23 +22,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import net.sf.tweety.commons.InferenceMode;
-import net.sf.tweety.commons.ModelProvider;
-import net.sf.tweety.commons.QualitativeReasoner;
 
 /**
  * Ancestor class for all adf reasoner
- * 
- * TODO: may be replaced with an interface with default implementations
- * 
+ *  
  * @author Mathias Hofer
  */
-public abstract class AbstractDialecticalFrameworkReasoner
-		implements QualitativeReasoner<AbstractDialecticalFramework, Argument>,
-		ModelProvider<Argument, AbstractDialecticalFramework, Interpretation> {
+public abstract class AbstractDialecticalFrameworkReasoner {
 	
 	private Pipeline<?> computationPipeline;
 	
@@ -49,58 +43,50 @@ public abstract class AbstractDialecticalFrameworkReasoner
 		this.computationPipeline = computationPipeline;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.dung.reasoner.AbstractDungReasoner#query(net.sf.tweety.
-	 * arg.dung.syntax.DungTheory, net.sf.tweety.arg.dung.syntax.Argument)
-	 */
-	@Override
 	public Boolean query(AbstractDialecticalFramework beliefbase, Argument formula) {
 		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
 
 	/**
-	 * Queries the given AAF for the given argument using the given inference
-	 * type.
 	 * 
-	 * @param beliefbase
-	 *            an AAF
-	 * @param formula
-	 *            a single argument
+	 * @param adf
+	 * @param argument
 	 * @param inferenceMode
-	 *            either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
-	 * @return "true" if the argument is accepted
+	 * @return
 	 */
-	public Boolean query(AbstractDialecticalFramework beliefbase, Argument formula, InferenceMode inferenceMode) {
-		Iterator<Interpretation> iterator = this.modelIterator(beliefbase);
-		if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
-			while (iterator.hasNext()) {
-				Interpretation interpretation = iterator.next();
-				if (!interpretation.satisfies(formula)) {
-					return false;
-				}
-			}
-			return true;
+	public Boolean query(AbstractDialecticalFramework adf, Argument argument, InferenceMode inferenceMode) {
+		switch (inferenceMode) {
+		case CREDULOUS:
+			return credulousQuery(adf, argument);
+		case SKEPTICAL:
+			return skepticalQuery(adf, argument);
+		default:
+			throw new IllegalArgumentException("InferenceMode not implemented!");
 		}
-		// so its credulous semantics
+	}
+	
+	private boolean skepticalQuery(AbstractDialecticalFramework adf, Argument argument) {
+		Iterator<Interpretation> iterator = modelIterator(adf);
 		while (iterator.hasNext()) {
 			Interpretation interpretation = iterator.next();
-			if (interpretation.satisfies(formula)) {
+			if (!interpretation.satisfied(argument)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean credulousQuery(AbstractDialecticalFramework adf, Argument argument) {
+		Iterator<Interpretation> iterator = modelIterator(adf);
+		while (iterator.hasNext()) {
+			Interpretation interpretation = iterator.next();
+			if (interpretation.satisfied(argument)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.sf.tweety.commons.ModelProvider#getModels(net.sf.tweety.commons.
-	 * BeliefBase)
-	 */
-	@Override
 	public Collection<Interpretation> getModels(AbstractDialecticalFramework adf) {
 		Collection<Interpretation> models = new LinkedList<Interpretation>();
 		Iterator<Interpretation> modelIterator = modelIterator(adf);
@@ -110,13 +96,6 @@ public abstract class AbstractDialecticalFrameworkReasoner
 		return models;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.sf.tweety.commons.ModelProvider#getModel(net.sf.tweety.commons.
-	 * BeliefBase)
-	 */
-	@Override
 	public Interpretation getModel(AbstractDialecticalFramework adf) {
 		Iterator<Interpretation> modelIterator = modelIterator(adf);
 		if (modelIterator.hasNext()) {

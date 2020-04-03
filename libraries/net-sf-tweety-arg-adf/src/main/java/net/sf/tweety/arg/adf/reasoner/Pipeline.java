@@ -29,29 +29,30 @@ import net.sf.tweety.arg.adf.reasoner.generator.CandidateGenerator;
 import net.sf.tweety.arg.adf.reasoner.processor.InterpretationProcessor;
 import net.sf.tweety.arg.adf.reasoner.processor.StateProcessor;
 import net.sf.tweety.arg.adf.reasoner.verifier.Verifier;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
+ * 
  * @author Mathias Hofer
- * @param <S> some class
  *
+ * @param <S> the state
  */
-public final class Pipeline<S> {
+public final class Pipeline<S extends AutoCloseable> {
 
-	private Queue<StateProcessor<S>> stateProcessors;
+	private final Queue<StateProcessor<S>> stateProcessors;
 
-	private CandidateGenerator<S> candidateGenerator;
+	private final CandidateGenerator<S> candidateGenerator;
 
-	private Queue<InterpretationProcessor<S>> candidateProcessors;
+	private final Queue<InterpretationProcessor<S>> candidateProcessors;
 
-	private Set<InterpretationProcessor<S>> isolatedCandidateProcessors;
+	private final Set<InterpretationProcessor<S>> isolatedCandidateProcessors;
 
-	private Queue<Verifier<S>> verifiers;
+	private final Queue<Verifier<S>> verifiers;
 
-	private Queue<InterpretationProcessor<S>> modelProcessors;
+	private final Queue<InterpretationProcessor<S>> modelProcessors;
 
-	private Set<InterpretationProcessor<S>> isolatedModelProcessors;
+	private final Set<InterpretationProcessor<S>> isolatedModelProcessors;
 
 	/**
 	 * Constructs the pipeline from the given builder. It creates copies of the
@@ -69,7 +70,7 @@ public final class Pipeline<S> {
 		this.isolatedModelProcessors = new HashSet<>(builder.isolatedModelProcessor);
 	}
 
-	public static <S> Builder<S> builder(CandidateGenerator<S> candidateGenerator) {
+	public static <S extends AutoCloseable> Builder<S> builder(CandidateGenerator<S> candidateGenerator) {
 		return new Builder<S>(candidateGenerator);
 	}
 
@@ -92,7 +93,12 @@ public final class Pipeline<S> {
 		Interpretation processed = interpretation;
 		for (InterpretationProcessor<S> processor : processors) {
 			if (isolated.contains(processor)) {
-				processed = processor.process(initializeState(adf), processed, adf);
+				try(S isolatedState = initializeState(adf)) {
+				processed = processor.process(isolatedState, processed, adf);
+				} catch (Exception e) {
+					// TODO wrap around some pipeline exception
+					e.printStackTrace();
+				}
 			} else {
 				processed = processor.process(state, processed, adf);
 			}
@@ -103,13 +109,13 @@ public final class Pipeline<S> {
 
 	private class PipelineIterator implements Iterator<Interpretation> {
 
-		private S state;
+		private final S state;
 
 		private Interpretation next = null;
 
 		private boolean end = false;
-
-		private AbstractDialecticalFramework adf;
+		
+		private final AbstractDialecticalFramework adf;
 
 		private PipelineIterator(S state, AbstractDialecticalFramework adf) {
 			this.state = state;
@@ -148,6 +154,11 @@ public final class Pipeline<S> {
 				Interpretation model = nextModel();
 				if (model == null) {
 					end = true;
+					try {
+						state.close();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
 					return null;
 				}
 				result = process(modelProcessors, isolatedModelProcessors, state, model, adf);
@@ -189,7 +200,7 @@ public final class Pipeline<S> {
 	 * @param <S>
 	 *            the shared state of the pipeline to build
 	 */
-	public static class Builder<S> {
+	public static final class Builder<S extends AutoCloseable> {
 		private Queue<StateProcessor<S>> stateProcessors = new LinkedList<>();
 
 		private CandidateGenerator<S> candidateGenerator;

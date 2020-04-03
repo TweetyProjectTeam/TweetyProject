@@ -29,8 +29,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-
 public class TestUtil {
 
 	public static final String DEFAULT_SOLUTION_EXTENSION = "solutions";
@@ -124,18 +122,6 @@ public class TestUtil {
 		default:
 			throw new IllegalArgumentException(ch + " must be 'u', 'f' or 't'");
 		}
-	}
-
-	/**
-	 * Checks if the different representations of interpretations are equal,
-	 * i.e. all assignments are equal.
-	 * 
-	 * @param interpretation
-	 * @param map
-	 * @return TODO
-	 */
-	public static boolean equalInterpretations(Interpretation interpretation, Map<String, Boolean> map) {
-		return interpretation.arguments().allMatch(a -> interpretation.get(a) == map.get(a.getName()));
 	}
 
 }

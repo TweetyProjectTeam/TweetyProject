@@ -18,9 +18,7 @@
  */
 package net.sf.tweety.arg.adf.reasoner.verifier;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import net.sf.tweety.arg.adf.reasoner.SatReasonerContext;
 import net.sf.tweety.arg.adf.reasoner.encodings.ConflictFreeInterpretationSatEncoding;
@@ -30,12 +28,10 @@ import net.sf.tweety.arg.adf.reasoner.encodings.SatEncoding;
 import net.sf.tweety.arg.adf.reasoner.encodings.SatEncodingContext;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.transform.TseitinTransformer;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
@@ -65,13 +61,8 @@ public class SatCompleteVerifier implements Verifier<SatReasonerContext>{
 			newState.add(LARGER_INTERPRETATION_ENCODING.encode(encodingContext, candidate));
 			while (undecided.hasNext() && complete) {
 				Argument s = undecided.next();
-				Collection<Disjunction> acc = new LinkedList<Disjunction>();
-				DefinitionalCNFTransform transform = new DefinitionalCNFTransform(
-						r -> encodingContext.getLinkRepresentation(r, s));
-				AcceptanceCondition acceptanceCondition = adf.getAcceptanceCondition(s);
-				Proposition accName = acceptanceCondition.collect(transform, Collection::add, acc);
-
-				newState.add(acc);
+				TseitinTransformer transformer = new TseitinTransformer(r -> encodingContext.getLinkRepresentation(r, s), false);
+				Proposition accName =  transformer.collect(adf.getAcceptanceCondition(s), newState::add);
 
 				// check not-taut
 				newState.assume(accName, false);

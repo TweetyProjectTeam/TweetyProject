@@ -22,12 +22,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.syntax.ContradictionAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.EquivalenceAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.NegationAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.TautologyAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition;
 
 /**
  * @author Mathias Hofer
@@ -50,25 +48,6 @@ public class AccEqualityTest {
 		Argument b = new Argument("b");
 		AcceptanceCondition acc1 = new EquivalenceAcceptanceCondition(new NegationAcceptanceCondition(a), b);
 		AcceptanceCondition acc2 = new EquivalenceAcceptanceCondition(new NegationAcceptanceCondition(a), b);
-		assertTrue(acc1.equals(acc2));
-	}
-	
-	@Test
-	public void testEquality3() {
-		assertTrue(new ContradictionAcceptanceCondition().equals(new ContradictionAcceptanceCondition()));
-	}
-	
-	@Test
-	public void testEquality4() {
-		assertTrue(new TautologyAcceptanceCondition().equals(new TautologyAcceptanceCondition()));
-	}
-	
-	@Test
-	public void testEquality5() {
-		Argument a = new Argument("a");
-		Argument b = new Argument("b");
-		AcceptanceCondition acc1 = new EquivalenceAcceptanceCondition(a, b);
-		AcceptanceCondition acc2 = a.builder().iff(b).build();
 		assertTrue(acc1.equals(acc2));
 	}
 	

@@ -31,8 +31,10 @@ import net.sf.tweety.arg.adf.reasoner.ModelReasoner;
 import net.sf.tweety.arg.adf.reasoner.NaiveReasoner;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.NativeLingelingSolver;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.SatLinkStrategy;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 
@@ -42,11 +44,13 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
  */
 public class CommandLineInterface {
 
-	private static IncrementalSatSolver satSolver = new NativeLingelingSolver();
+	private static final IncrementalSatSolver satSolver = new NativeLingelingSolver();
 
-	private static Map<String, AbstractDialecticalFrameworkReasoner> reasonerBySemantics = new HashMap<String, AbstractDialecticalFrameworkReasoner>();
+	private static final Map<String, AbstractDialecticalFrameworkReasoner> reasonerBySemantics = new HashMap<String, AbstractDialecticalFrameworkReasoner>();
 
-	private static KppADFFormatParser parser = new KppADFFormatParser();
+	private static final LinkStrategy linkStrategy = new SatLinkStrategy(satSolver);
+	
+	private static final KppADFFormatParser parser = new KppADFFormatParser(linkStrategy, true);
 
 	private static final String prompt = "USAGE: java -jar jadf.jar <file> <sem>\r\n\nCOMMAND LINE ARGUMENTS:\r\n<file>  : Input filename for ADF instance.\r\n<sem>   : ADF semantics. <sem>={mod|nai|adm|com}";
 
@@ -60,7 +64,7 @@ public class CommandLineInterface {
 		reasonerBySemantics.put("com", new CompleteReasoner(satSolver));
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		if (args.length < 2) {
 			System.out.println(prompt);
 		} else {

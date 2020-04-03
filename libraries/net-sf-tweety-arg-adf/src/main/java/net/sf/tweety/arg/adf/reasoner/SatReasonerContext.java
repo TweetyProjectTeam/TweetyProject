@@ -28,7 +28,7 @@ import net.sf.tweety.arg.adf.sat.SatSolverState;
  * @author Mathias Hofer
  *
  */
-public final class SatReasonerContext {
+public final class SatReasonerContext implements AutoCloseable{
 
 	private SatEncodingContext encodingContext;
 
@@ -67,6 +67,14 @@ public final class SatReasonerContext {
 	 */
 	public SatSolverState getSolverState() {
 		return solverState;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.AutoCloseable#close()
+	 */
+	@Override
+	public void close() throws Exception {
+		solverState.close();
 	}
 
 }

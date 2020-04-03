@@ -21,10 +21,11 @@ package net.sf.tweety.arg.adf.reasoner.encodings;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.LinkType;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -46,11 +47,12 @@ public class BipolarSatEncoding implements SatEncoding {
 	public Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation) {
 		AbstractDialecticalFramework adf = context.getAbstractDialecticalFramework();
 		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
-		for (Argument r : adf) {
+		for (Argument r : adf.getArguments()) {
 			Proposition rTrue = context.getTrueRepresentation(r);
 			Proposition rFalse = context.getFalseRepresentation(r);
-			for (Link l : (Iterable<Link>) adf.linksFromParents(r)::iterator) {
-				if (l.isAttacking()) {
+			for (Link l : adf.linksTo(r)) {
+				// TODO what about redundant?
+				if (l.getLinkType() == LinkType.ATTACKING) {
 					// first implication
 					Disjunction clause1 = new Disjunction();
 					clause1.add(new Negation(rTrue));
@@ -64,7 +66,7 @@ public class BipolarSatEncoding implements SatEncoding {
 					clause2.add(context.getTrueRepresentation(l.getFrom()));
 					clause2.add(new Negation(context.getLinkRepresentation(l)));
 					encoding.add(clause2);
-				} else if (l.isSupporting()) {
+				} else if (l.getLinkType() == LinkType.SUPPORTING) {
 					// first implication
 					Disjunction clause1 = new Disjunction();
 					clause1.add(new Negation(rTrue));

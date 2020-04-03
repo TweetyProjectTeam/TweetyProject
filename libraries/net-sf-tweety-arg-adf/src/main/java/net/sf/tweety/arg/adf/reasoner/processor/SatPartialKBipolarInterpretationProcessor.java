@@ -24,9 +24,8 @@ import net.sf.tweety.arg.adf.reasoner.encodings.KBipolarSatEncoding;
 import net.sf.tweety.arg.adf.reasoner.encodings.SatEncoding;
 import net.sf.tweety.arg.adf.reasoner.encodings.SatEncodingContext;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.transform.FixPartialTransform;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -46,8 +45,8 @@ public class SatPartialKBipolarInterpretationProcessor implements Interpretation
 			AbstractDialecticalFramework adf) {
 		SatSolverState state = context.getSolverState();
 		SatEncodingContext encodingContext = context.getEncodingContext();
-		AbstractDialecticalFramework transformed = adf.transform(new FixPartialTransform(interpretation));
-		encodingContext.setAdf(transformed);
+//		AbstractDialecticalFramework transformed = adf.transform(new FixPartialTransform(interpretation));
+//		encodingContext.setAdf(transformed);
 //		if (transformed.kBipolar() <= 5) {
 //			state.add(BIPOLAR_ENCODING.encode(encodingContext));
 //			System.out.println("kbip: " + transformed.kBipolar());
@@ -55,7 +54,7 @@ public class SatPartialKBipolarInterpretationProcessor implements Interpretation
 			state.add(K_BIPOLAR_ENCODING.encode(encodingContext, interpretation));
 //			System.out.println("encoded");
 //		}
-		encodingContext.setAdf(adf);
+//		encodingContext.setAdf(adf);
 		return interpretation;
 	}
 

@@ -18,13 +18,12 @@
  */
 package net.sf.tweety.arg.adf.syntax;
 
-import java.util.function.Consumer;
+import java.util.Collections;
+import java.util.Set;
 import java.util.stream.Stream;
 
-import net.sf.tweety.arg.adf.transform.Transform;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Signature;
-import net.sf.tweety.graphs.Node;
+import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.Visitor;
 
 /**
  * An immutable representation of an ADF argument
@@ -35,9 +34,9 @@ import net.sf.tweety.graphs.Node;
  * @author Mathias Hofer
  *
  */
-public class Argument extends AcceptanceCondition implements Formula, Node {
+public final class Argument implements AcceptanceCondition {
 
-	private String name;
+	private final String name;
 
 	/**
 	 * @param name
@@ -51,11 +50,6 @@ public class Argument extends AcceptanceCondition implements Formula, Node {
 		return Stream.of(this);
 	}
 
-	@Override
-	public Signature getSignature() {
-		return new AbstractDialecticalFrameworkSignature(this);
-	}
-
 	/**
 	 * @return the name
 	 */
@@ -63,15 +57,35 @@ public class Argument extends AcceptanceCondition implements Formula, Node {
 		return name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.syntax.AcceptanceCondition#transform(net.sf.tweety.
-	 * arg.adf.syntax.Transform, java.util.function.Consumer)
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition#contains(net.sf.tweety.arg.adf.syntax.Argument)
 	 */
 	@Override
-	protected <C, R> R transform(Transform<C, R> transform, Consumer<C> consumer, int polarity) {
-		return transform.transformArgument(consumer, this, polarity);
+	public boolean contains(Argument arg) {
+		return arg == this;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition#children()
+	 */
+	@Override
+	public Set<AcceptanceCondition> getChildren() {
+		return Collections.emptySet();
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition#accept(net.sf.tweety.arg.adf.syntax.acc.Visitor, java.lang.Object)
+	 */
+	@Override
+	public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
+		return visitor.visit(this, topDownData);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return name;
 	}
 }

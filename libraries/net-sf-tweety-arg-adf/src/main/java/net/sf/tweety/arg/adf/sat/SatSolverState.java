@@ -19,8 +19,8 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * Therefore, the overhead should be kept as low as possible, which means that
  * no additional preprocessing is performed by its methods.
  * <p>
- * Hence, the following must hold for {@link #add(Collection)},
- * {@link #add(Disjunction)} and {@link #remove(Disjunction)}
+ * Hence, the following must hold for {@link #add(Collection)} and
+ * {@link #add(Disjunction)}
  * <ul>
  * <li>The disjunctions must be flat</li>
  * <li>The disjunctions contain literals only</li>
@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  * transformations or optimizations on the input.
  * <p>
  * There are however no restrictions on how a state should interact with its
- * corresponding sat-solver. Which means that add or remove calls must not be
+ * corresponding sat-solver. Which means that add calls must not be
  * directly translated into calls to the sat-solver, which allows the
  * implementation of mechanisms like caching.
  * 
@@ -41,31 +41,23 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
  */
 public interface SatSolverState extends AutoCloseable {
 
-	public default boolean satisfiable() {
+	default boolean satisfiable() {
 		return witness() != null;
 	}
-		
-	public Interpretation<PlBeliefSet, PlFormula> witness();
 
-	public void assume(Proposition proposition, boolean value);
+	Interpretation<PlBeliefSet, PlFormula> witness();
+
+	void assume(Proposition proposition, boolean value);
 
 	/**
-	 * Updates the state of the corresponding SAT-Solver by adding a clause. 
+	 * Updates the state of the corresponding SAT-Solver by adding a clause.
 	 * 
 	 * @param clause
 	 *            a clause containing only literals - no constants!
-	 * @return true iff the 
+	 * @return true iff the
 	 */
-	public boolean add(Disjunction clause);
+	boolean add(Disjunction clause);
 
-	public boolean add(Collection<Disjunction> clauses);
-
-	/**
-	 * Tries to remove the given clause from the sat instance.
-	 * 
-	 * @param clause
-	 * @return true iff the removal was successful
-	 */
-	public boolean remove(Disjunction clause);
-
+	boolean add(Collection<Disjunction> clauses);
+	
 }

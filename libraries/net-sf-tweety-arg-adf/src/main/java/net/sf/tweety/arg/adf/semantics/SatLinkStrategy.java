@@ -20,11 +20,12 @@ package net.sf.tweety.arg.adf.semantics;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Objects;
+import java.util.function.Function;
 
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
+import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.transform.TseitinTransformer;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -38,43 +39,46 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * @author Mathias Hofer
  *
  */
-public class SatLinkStrategy implements LinkStrategy {
+public final class SatLinkStrategy implements LinkStrategy {
 
-	private SatSolver solver;
+	private final SatSolver solver;
+	
+	private static final Function<Argument, Proposition> ARGUMENT_MAPPING = arg -> new Proposition(arg.getName());
+	
+	private static final TseitinTransformer TRANSFORMER = new TseitinTransformer(ARGUMENT_MAPPING, false);
 
 	public SatLinkStrategy(SatSolver solver) {
-		this.solver = solver;
+		this.solver = Objects.requireNonNull(solver);
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.semantics.LinkStrategy#link(net.sf.tweety.arg.adf.syntax.Argument, net.sf.tweety.arg.adf.syntax.Argument, net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition)
+	 */
 	@Override
-	public Link compute(AbstractDialecticalFramework adf, Argument a, Argument b) {
-		// first check if "a" is a parent of "b"
-		AcceptanceCondition bAcc = adf.getAcceptanceCondition(b);
-		boolean containsA = bAcc.arguments().anyMatch(p -> p == a);
-		if (containsA) {
-			DefinitionalCNFTransform transform = new DefinitionalCNFTransform(arg -> new Proposition(arg.getName()));
-			Collection<Disjunction> toAcc = new LinkedList<Disjunction>();
-			PlFormula fromPl = a.transform(transform);
-			Proposition toAccName = bAcc.collect(transform, Collection::add, toAcc);
-			boolean attacking = isAttacking(fromPl, toAccName, new LinkedList<PlFormula>(toAcc));
-			boolean supporting = isSupporting(fromPl, toAccName, new LinkedList<PlFormula>(toAcc));
-			LinkType linkType = LinkType.get(attacking, supporting);
-			return new Link(a, b, linkType);
+	public LinkType compute(Argument parent, Argument child, AcceptanceCondition childAcc) {
+		if (!childAcc.contains(parent)) {
+			throw new IllegalArgumentException("The parent does not occur in the child acceptance condition!");
 		}
-		return null;
+		
+		Collection<Disjunction> childAccClauses = new LinkedList<Disjunction>();
+		Proposition parentProposition = ARGUMENT_MAPPING.apply(parent);
+		Proposition childAccClausesName = TRANSFORMER.collect(childAcc, childAccClauses);
+		boolean attacking = isAttacking(parentProposition, childAccClausesName, new LinkedList<PlFormula>(childAccClauses));
+		boolean supporting = isSupporting(parentProposition, childAccClausesName, new LinkedList<PlFormula>(childAccClauses));
+		return LinkType.get(attacking, supporting);
 	}
 
-	private boolean isAttacking(PlFormula from, PlFormula toAcc, Collection<PlFormula> clauses) {
-		clauses.add(new Negation(toAcc));
-		clauses.add(new Disjunction(toAcc, new Negation(from)));
+	private boolean isAttacking(Proposition parent, PlFormula childAcc, Collection<PlFormula> clauses) {
+		clauses.add(new Negation(childAcc));
+		clauses.add(new Disjunction(childAcc, new Negation(parent)));
 
 		boolean sat = solver.isSatisfiable(clauses);
 		return !sat;
 	}
 
-	private boolean isSupporting(PlFormula from, PlFormula toAcc, Collection<PlFormula> clauses) {
-		clauses.add(new Negation(toAcc));
-		clauses.add(new Disjunction(toAcc, from));
+	private boolean isSupporting(Proposition parent, PlFormula childAcc, Collection<PlFormula> clauses) {
+		clauses.add(new Negation(childAcc));
+		clauses.add(new Disjunction(childAcc, parent));
 
 		boolean sat = solver.isSatisfiable(clauses);
 		return !sat;

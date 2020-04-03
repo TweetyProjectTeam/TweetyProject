@@ -39,18 +39,18 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * @author Mathias Hofer
  *
  */
-public class SimpleSatSolverState implements SatSolverState {
+public final class SimpleSatSolverState implements SatSolverState {
 
-	private SatSolver solver;
+	private final SatSolver solver;
 
-	private Collection<PlFormula> state;
+	private final Collection<PlFormula> state;
 
-	private Collection<Disjunction> assume;
+	private final Collection<Disjunction> assume;
 
 	/**
 	 * @param solver
 	 */
-	SimpleSatSolverState(SatSolver solver) {
+	public SimpleSatSolverState(SatSolver solver) {
 		this.solver = solver;
 		this.state = new LinkedList<PlFormula>();
 		this.assume = new LinkedList<Disjunction>();
@@ -122,17 +122,5 @@ public class SimpleSatSolverState implements SatSolverState {
 	@Override
 	public boolean add(Collection<Disjunction> clauses) {
 		return state.addAll(clauses);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.sat.SatSolverState#remove(net.sf.tweety.logics.
-	 * pl. syntax.Disjunction)
-	 */
-	@Override
-	public boolean remove(Disjunction clause) {
-		return state.remove(clause);
 	}
 }

@@ -20,7 +20,7 @@ package net.sf.tweety.arg.adf.reasoner.encodings;
 
 import java.util.Collection;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 
 /**
@@ -34,7 +34,7 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
  */
 public interface SatEncoding {
 
-	public default Collection<Disjunction> encode(SatEncodingContext context) {
+	default Collection<Disjunction> encode(SatEncodingContext context) {
 		return encode(context, null);
 	}
 
@@ -46,6 +46,6 @@ public interface SatEncoding {
 	 * @param interpretation
 	 * @return a set of disjunctions
 	 */
-	public Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation);
+	Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation);
 
 }

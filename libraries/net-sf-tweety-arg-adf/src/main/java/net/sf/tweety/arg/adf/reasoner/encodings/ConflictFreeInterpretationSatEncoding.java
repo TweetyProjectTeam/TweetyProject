@@ -22,12 +22,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
+import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.transform.TseitinTransformer;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -49,10 +49,11 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding {
 	public Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation) {
 		AbstractDialecticalFramework adf = context.getAbstractDialecticalFramework();
 		List<Disjunction> encoding = new LinkedList<Disjunction>();
-		for (Argument s : adf) {
-			DefinitionalCNFTransform transform = new DefinitionalCNFTransform(r -> context.getLinkRepresentation(adf.link(r, s)));
+		for (Argument s : adf.getArguments()) {
 			AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-			Proposition accName = acc.collect(transform, List::add, encoding);
+			
+			TseitinTransformer transformer = new TseitinTransformer(r -> context.getLinkRepresentation(adf.link(r, s)), false);
+			Proposition accName = transformer.collect(acc, encoding);
 			
 			// the propositions represent the assignment of s
 			Proposition trueRepr = context.getTrueRepresentation(s);
@@ -65,7 +66,7 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding {
 			encoding.add(acUnsat);
 
 			// draw connection between argument and outgoing links
-			for (Link relation : (Iterable<Link>) adf.linksToChildren(s)::iterator) {
+			for (Link relation : adf.linksFrom(s)) {
 				Proposition linkRepr = context.getLinkRepresentation(relation);
 
 				encoding.add(new Disjunction(new Negation(trueRepr), linkRepr));

@@ -24,8 +24,8 @@ import net.sf.tweety.arg.adf.reasoner.encodings.SatEncodingContext;
 import net.sf.tweety.arg.adf.reasoner.encodings.VerifyAdmissibleSatEncoding;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -45,7 +45,7 @@ public class SatAdmissibleVerifier implements Verifier<SatReasonerContext> {
 	@Override
 	public boolean verify(SatReasonerContext state, Interpretation candidate, AbstractDialecticalFramework adf) {
 		IncrementalSatSolver satSolver = state.getSolver();
-		SatEncodingContext encodingContext = new SatEncodingContext(adf);
+		SatEncodingContext encodingContext = state.getEncodingContext();
 		try (SatSolverState verificationState = satSolver.createState()) {
 			verificationState.add(VERIFY_ADMISSIBLE_ENCODING.encode(encodingContext, candidate));
 			boolean notAdmissible = verificationState.satisfiable();

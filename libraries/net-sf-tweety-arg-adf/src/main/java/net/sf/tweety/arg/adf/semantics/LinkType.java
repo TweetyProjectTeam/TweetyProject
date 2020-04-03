@@ -20,8 +20,62 @@ package net.sf.tweety.arg.adf.semantics;
 
 public enum LinkType{
 
-	DEPENDENT, SUPPORTING, ATTACKING, REDUNDANT;
+	DEPENDENT(false, false), 
+	SUPPORTING(false, true), 
+	ATTACKING(true, false), 
+	REDUNDANT(true, true);
 	
+	private final boolean attacking;
+	private final boolean supporting;
+	
+	/**
+	 * @param attacking
+	 * @param supporting
+	 */
+	private LinkType(boolean attacking, boolean supporting) {
+		this.attacking = attacking;
+		this.supporting = supporting;
+	}
+	
+	/**  
+	 * @return true iff the link is supporting, note that this is also the case if the link is redundant.
+	 */
+	public boolean isAttacking() {
+		return attacking;
+	}
+	
+	/**
+	 * @return true iff the link is supporting, note that this is also the case if the link is redundant.
+	 */
+	public boolean isSupporting() {
+		return supporting;
+	}
+	
+	/**
+	 * @return true iff the link is attacking and supporting
+	 */
+	public boolean isRedundant() {
+		return attacking && supporting;
+	}
+	
+	/**
+	 * @return true iff the link is neither attacking nor supporting
+	 */
+	public boolean isDependent() {
+		return !attacking && !supporting;
+	}
+	
+	/**
+	 * @return true iff the links is attacking or supporting
+	 */
+	public boolean isBipolar() {
+		return attacking || supporting;
+	}
+	
+	public boolean isNonBipolar() {
+		return !attacking && !supporting;
+	}
+
 	public static LinkType get(boolean attacking, boolean supporting) {
 		if (attacking && supporting) {
 			return REDUNDANT;

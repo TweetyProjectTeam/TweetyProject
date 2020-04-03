@@ -18,15 +18,14 @@
  */
 package net.sf.tweety.arg.adf.sat;
 
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
@@ -39,7 +38,7 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * @author Mathias Hofer
  *
  */
-public class NativeLingelingSolver extends IncrementalSatSolver {
+public final class NativeLingelingSolver extends IncrementalSatSolver {
 
 	private static final String DEFAULT_WIN_LIB = "/lingeling.dll";
 	private static final String DEFAULT_LINUX_LIB = "/lingeling.so";
@@ -57,77 +56,78 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 	}
 
 	@Override
-	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas) {
-		try (SatSolverState state = createState()) {
-			for (PlFormula f : formulas) {
-				Conjunction cnf = f.toCnf();
-				for (PlFormula c : cnf) {
-					assert c.isClause();
-					Disjunction clause = (Disjunction) c;
-					state.add(clause);
-				}
-			}
-			return state.witness();
-		} catch (Exception e1) {
-			// TODO how to deal with exceptions?
-			e1.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public boolean isSatisfiable(Collection<PlFormula> formulas) {
-		return getWitness(formulas) != null;
-	}
-
-	@Override
 	public SatSolverState createState() {
-		return new LingelingSolverState(init());
+		return new LingelingSolverState();
 	}
 
-	private native void addClause(long lgl, int[] clause);
+
+	private static native void addClause(long handle, int lit);
+
+	private static native void addClause(long handle, int lit1, int lit2);
+
+	private static native void addClause(long handle, int lit1, int lit2, int lit3);
+
+	private static native void addClause(long handle, int[] clause);
+	
+	/**
+	 * Tries to avoid a copy of the given array by using GetPrimitiveArrayCritical
+	 * 
+	 * @param handle
+	 * @param buf
+	 * @param size
+	 */
+	private static native void addArray(long handle, int[] buf, int size);
+	
+	/**
+	 * Uses GetDirectBufferAddress
+	 * 
+	 * @param handle
+	 * @param buf
+	 * @param size
+	 */
+	private static native void addBuffer(long handle, ByteBuffer buf, int size);
 
 	/*
 	 * The following methods directly correspond to lingeling calls as defined
-	 * in lglib.h
+	 * in handleib.h
 	 */
 	private static native long init();
 
-	private static native void release(long lgl);
+	private static native void release(long handle);
 
-	private static native void add(long lgl, int lit);
+	private static native void add(long handle, int lit);
 
-	private static native void assume(long lgl, int lit);
+	private static native void assume(long handle, int lit);
 
-	private static native boolean sat(long lgl);
+	private static native boolean sat(long handle);
 
-	private static native boolean deref(long lgl, int lit);
+	private static native boolean deref(long handle, int lit);
 
-	private static native boolean fixed(long lgl, int lit);
+	private static native boolean fixed(long handle, int lit);
 
-	private static native boolean failed(long lgl, int lit);
+	private static native boolean failed(long handle, int lit);
 
-	private static native boolean inconsistent(long lgl);
+	private static native boolean inconsistent(long handle);
 
-	private static native boolean changed(long lgl);
+	private static native boolean changed(long handle);
 
-	private static native void reduceCache(long lgl);
+	private static native void reduceCache(long handle);
 
-	private static native void flushCache(long lgl);
+	private static native void flushCache(long handle);
 
-	private static native void freeze(long lgl, int lit);
+	private static native void freeze(long handle, int lit);
 
-	private static native boolean frozen(long lgl, int lit);
+	private static native boolean frozen(long handle, int lit);
 
-	private static native void melt(long lgl, int lit);
+	private static native void melt(long handle, int lit);
 
-	private static native void meltAll(long lgl);
+	private static native void meltAll(long handle);
 
-	private static native boolean usable(long lgl, int lit);
+	private static native boolean usable(long handle, int lit);
 
-	private static native boolean reusable(long lgl, int lit);
+	private static native boolean reusable(long handle, int lit);
 
-	private static native void reuse(long lgl, int lit);
+	private static native void reuse(long handle, int lit);
 
 	private static class LingelingSolverState implements SatSolverState {
 
@@ -136,11 +136,9 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 		 */
 		private Map<Proposition, Integer> propositionsToNative = new HashMap<Proposition, Integer>();
 
-		/**
-		 * Contains the disjunctions which were added after the last sat call
-		 * and must be added before the next sat call.
-		 */
-		private Set<Disjunction> stateCache = new HashSet<Disjunction>();
+//		private int[] buffer = new int[2048];
+				
+//		private int index = 0;
 		
 		/**
 		 * Keeps track of the int representation of fresh propositions
@@ -149,41 +147,86 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 
 		private long handle;
 				
-		private LingelingSolverState(long handle) {
-			this.handle = handle;
+		private LingelingSolverState() {
+			this.handle = init();
 		}
 
 		@Override
-		public void close() throws Exception {
-			NativeLingelingSolver.release(handle);
+		public void close() throws Exception {			
+			release(handle);
 		}
 
 		private boolean isTrue(Proposition p) {
-			return NativeLingelingSolver.deref(handle, propositionsToNative.get(p));
+			return deref(handle, propositionsToNative.get(p));
 		}
 
 		@Override
 		public boolean add(Collection<Disjunction> clauses) {
-			return stateCache.addAll(clauses);
+			for (Disjunction clause : clauses) {
+				update(clause);
+			}
+			return true;
 		}
 
 		@Override
 		public boolean add(Disjunction clause) {
-			return stateCache.add(clause);
+			update(clause);
+			return true;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * net.sf.tweety.arg.adf.sat.SatSolverState#remove(net.sf.tweety.logics.
-		 * pl.syntax.Disjunction)
-		 */
-		@Override
-		public boolean remove(Disjunction clause) {
-			return stateCache.remove(clause);
+		private void update(Disjunction clause) {		
+//			if (buffer.length < index + clause.size() + 1) {
+//				NativeLingelingSolver.addArray(handle, buffer, index);
+//				index = 0;
+//			}
+			
+			int size = clause.size();
+			int[] nclause = new int[size + 1];
+			for (int i = 0; i < size; i++) {
+				// try to get the propositions of the given clause, ugly but works
+				// Note: 
+				// 1. getAtoms() causes way to much overhead
+				// 2. there currently is no elegant way to deal with literals
+				PlFormula lit = clause.get(i);
+				Proposition p = null;
+				int sign = 1;
+				if (lit instanceof Proposition) {
+					p = (Proposition) lit;
+				} else {
+					p = (Proposition) ((Negation) lit).getFormula();
+					sign = -1;
+				}
+				
+				if (!propositionsToNative.containsKey(p)) {
+					propositionsToNative.put(p, nextProposition);
+					NativeLingelingSolver.freeze(handle, nextProposition);
+					nextProposition += 1;
+				}
+				
+				int nprop = propositionsToNative.get(p);
+				nclause[i] = sign * nprop;
+			}
+			
+			// 0 indicates end of clause
+			nclause[size] = 0;
+			
+			// optimization: jni calls without arrays have less overhead
+			switch (size) {
+			case 1:
+				addClause(handle, nclause[0]);
+				break;
+			case 2:
+				addClause(handle, nclause[0], nclause[1]);
+				break;
+			case 3:
+				addClause(handle, nclause[0], nclause[1], nclause[2]);
+				break;
+			default:
+				addClause(handle, nclause);
+				break;
+			}
 		}
-
+		
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -194,7 +237,7 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 			boolean sat = satisfiable();
 
 			if (sat) {
-				Set<Proposition> trues = new HashSet<Proposition>();
+				Collection<Proposition> trues = new LinkedList<Proposition>();
 				for (Proposition p : propositionsToNative.keySet()) {
 					if (isTrue(p)) {
 						trues.add(p);
@@ -212,40 +255,15 @@ public class NativeLingelingSolver extends IncrementalSatSolver {
 		 */
 		@Override
 		public boolean satisfiable() {
-			// update native state
-			for (Disjunction clause : stateCache) {
-				for (Proposition p : clause.getAtoms()) {
-					if (!propositionsToNative.containsKey(p)) {
-						propositionsToNative.put(p, nextProposition);
-						NativeLingelingSolver.freeze(handle, nextProposition);
-						nextProposition += 1;
-					}
-				}
-
-				// TODO typesafety
-				for (PlFormula literal : clause) {
-					assert literal.isLiteral();
-					if (literal instanceof Negation) {
-						Negation neg = (Negation) literal;
-						int lit = -propositionsToNative.get(neg.getFormula());
-						assert lit != 0;
-						NativeLingelingSolver.add(handle, lit);
-					} else if (literal instanceof Proposition) {
-						int lit = propositionsToNative.get(literal);
-						assert lit != 0;
-						NativeLingelingSolver.add(handle, lit);
-					}
-				}
-				NativeLingelingSolver.add(handle, 0); // end of clause
-			}
-			stateCache.clear();
-
-			boolean sat = NativeLingelingSolver.sat(handle);
-			return sat;
+			return NativeLingelingSolver.sat(handle);
 		}
 
-		/* (non-Javadoc)
-		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.pl.syntax.Proposition, boolean)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.
+		 * pl.syntax.Proposition, boolean)
 		 */
 		@Override
 		public void assume(Proposition proposition, boolean value) {

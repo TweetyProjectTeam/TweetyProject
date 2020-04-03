@@ -21,11 +21,10 @@ package net.sf.tweety.arg.adf.reasoner.encodings;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.transform.TseitinTransformer;
 import net.sf.tweety.arg.adf.util.Cache;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -51,16 +50,15 @@ public class VerifyAdmissibleSatEncoding implements SatEncoding {
 		Cache<Argument, Proposition> vars = new Cache<Argument, Proposition>(s -> new Proposition(s.getName()));
 		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
 		Disjunction accs = new Disjunction();
-		for (Argument s : adf) {
-			DefinitionalCNFTransform transform = new DefinitionalCNFTransform(vars);
-			AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-			Proposition accName = acc.collect(transform, Collection::add, encoding);
-			if (interpretation.isSatisfied(s)) {
+		TseitinTransformer transformer = new TseitinTransformer(vars, false);
+		for (Argument s : adf.getArguments()) {
+			Proposition accName = transformer.collect(adf.getAcceptanceCondition(s), encoding);
+			if (interpretation.satisfied(s)) {
 				Disjunction clause = new Disjunction();
 				clause.add(vars.apply(s));
 				encoding.add(clause);
 				accs.add(new Negation(accName));
-			} else if (interpretation.isUnsatisfied(s)) {
+			} else if (interpretation.unsatisfied(s)) {
 				Disjunction clause = new Disjunction();
 				clause.add(new Negation(vars.apply(s)));
 				encoding.add(clause);

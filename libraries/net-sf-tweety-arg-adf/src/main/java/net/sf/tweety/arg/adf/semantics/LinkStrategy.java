@@ -18,12 +18,11 @@
  */
 package net.sf.tweety.arg.adf.semantics;
 
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
 import net.sf.tweety.arg.adf.syntax.Argument;
+import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 
 public interface LinkStrategy {
 
-
-	public Link compute(AbstractDialecticalFramework adf, Argument a, Argument b);
-	
+	LinkType compute(Argument parent, Argument child, AcceptanceCondition childAcc);
+		
 }

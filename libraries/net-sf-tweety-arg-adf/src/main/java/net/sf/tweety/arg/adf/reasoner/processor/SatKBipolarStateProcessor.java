@@ -24,8 +24,8 @@ import net.sf.tweety.arg.adf.reasoner.encodings.KBipolarSatEncoding;
 import net.sf.tweety.arg.adf.reasoner.encodings.SatEncoding;
 import net.sf.tweety.arg.adf.reasoner.encodings.SatEncodingContext;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -50,8 +50,7 @@ public class SatKBipolarStateProcessor implements StateProcessor<SatReasonerCont
 		SatSolverState solverState = context.getSolverState();
 		solverState.add(BIPOLAR_ENCODING.encode(encodingContext));
 		if (!adf.bipolar()) {
-			final Interpretation EMPTY_INTERPRETATION = new Interpretation(adf);
-			solverState.add(K_BIPOLAR_ENCODING.encode(encodingContext, EMPTY_INTERPRETATION));
+			solverState.add(K_BIPOLAR_ENCODING.encode(encodingContext, Interpretation.empty(adf)));
 		}
 	}
 

@@ -19,8 +19,8 @@
 package net.sf.tweety.arg.adf.reasoner.processor;
 
 import net.sf.tweety.arg.adf.reasoner.Pipeline;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * Performs further processing on interpretations, e.g. maximization.
@@ -34,15 +34,16 @@ import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
  * and which is only used by this processor.
  * <p>
  * As a consequence the implementation of the
- * {@link #process(Object, Interpretation, AbstractDialecticalFramework)
+ * {@link #process(Object, Interpretation, AbstractDialecticalFramework)}
  * process} method must not rely on the fact that its state updates are seen be
  * subsequent processors. Final updates on the shared state must therefore be
  * performed in the
- * {@link #updateState(Object, Interpretation, AbstractDialecticalFramework)
- * updateState} method, which is guaranteed to get the shared state.
+ * {@link #updateState(Object, Interpretation, AbstractDialecticalFramework)}
+ * method, which is guaranteed to get the shared state.
  * 
  * @author Mathias Hofer
- * @param <S> some class
+ * 
+ * @param <S> the state
  *
  */
 public interface InterpretationProcessor<S> {
@@ -55,7 +56,7 @@ public interface InterpretationProcessor<S> {
 	 * and hence by the user.
 	 * <p>
 	 * Necessary updates on the shared state have to be performed in the
-	 * {@link #updateState(Object, Interpretation, AbstractDialecticalFramework)
+	 * {@link #updateState(Object, Interpretation, AbstractDialecticalFramework)}
 	 * updateState} method, which is called by the pipeline after the processing
 	 * is done.
 	 * 
@@ -72,14 +73,13 @@ public interface InterpretationProcessor<S> {
 	/**
 	 * This method is called by the {@link Pipeline} on the shared state and the
 	 * result of the
-	 * {@link #process(Object, Interpretation, AbstractDialecticalFramework) process}
+	 * {@link #process(Object, Interpretation, AbstractDialecticalFramework)}
 	 * method, hence after the processing is done.
 	 * <p>
 	 * Note that if this processor has to update the shared state, it has to
 	 * happen in this method. Since
-	 * {@link #process(Object, Interpretation, AbstractDialecticalFramework)
-	 * process} may only have access to an isolated state to perform its
-	 * processing.
+	 * {@link #process(Object, Interpretation, AbstractDialecticalFramework)}
+	 * may only have access to an isolated state to perform its processing.
 	 * 
 	 * @param state
 	 *            the shared state

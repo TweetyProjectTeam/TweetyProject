@@ -37,7 +37,7 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
  * @author Mathias Hofer
  *
  */
-public class SimpleIncrementalSatSolver extends IncrementalSatSolver {
+public final class SimpleIncrementalSatSolver extends IncrementalSatSolver {
 
 	private SatSolver delegate;
 

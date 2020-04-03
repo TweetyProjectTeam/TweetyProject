@@ -25,13 +25,15 @@ import java.io.IOException;
 import org.junit.Test;
 
 import net.sf.tweety.arg.adf.parser.KppADFFormatParser;
+import net.sf.tweety.arg.adf.sat.NativeMinisatSolver;
+import net.sf.tweety.arg.adf.semantics.SatLinkStrategy;
 import net.sf.tweety.commons.ParserException;
 
 public class KppADFFormatParserTest {
 
 	public static final int DEFAULT_TIMEOUT = 2000;
 
-	private KppADFFormatParser parser = new KppADFFormatParser();
+	private KppADFFormatParser parser = new KppADFFormatParser(new SatLinkStrategy(new NativeMinisatSolver()), false);
 
 	private void parseAllInDirectory(String dir) throws ParserException, FileNotFoundException, IOException {
 		File[] instances = new File(dir).listFiles((File f, String name) -> name.endsWith(".adf"));

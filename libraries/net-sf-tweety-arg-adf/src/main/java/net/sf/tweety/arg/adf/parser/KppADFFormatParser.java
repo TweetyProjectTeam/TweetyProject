@@ -25,17 +25,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
+import net.sf.tweety.arg.adf.semantics.LinkStrategy;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.syntax.ConjunctionAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.ContradictionAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.DisjunctionAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.EquivalenceAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.ExclusiveDisjunctionAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.ImplicationAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.NegationAcceptanceCondition;
-import net.sf.tweety.arg.adf.syntax.TautologyAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
@@ -57,6 +56,20 @@ import net.sf.tweety.commons.ParserException;
 public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, Formula> {
 
 	private static final int BUFFER_CAPACITY = 8192;
+	
+	private final boolean lazy;
+	
+	private final LinkStrategy linkStrategy;
+
+	/**
+	 * 
+	 * @param linkStrategy
+	 * @param lazy
+	 */
+	public KppADFFormatParser(LinkStrategy linkStrategy, boolean lazy) {
+		this.linkStrategy = linkStrategy;
+		this.lazy = lazy;
+	}
 
 	@Override
 	public AbstractDialecticalFramework parseBeliefBase(Reader reader) throws IOException, ParserException {
@@ -144,8 +157,14 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		if (!nodes.isEmpty()) {
 			throw new ParserException("Unprocessed node(s) on the stack!");
 		}
-
-		return new AbstractDialecticalFramework(accByArgument);
+		
+		AbstractDialecticalFramework.Builder builder = AbstractDialecticalFramework.fromMap(accByArgument);
+		if (lazy) {
+			builder = builder.lazy(linkStrategy);
+		} else {
+			builder = builder.eager(linkStrategy);
+		}
+		return builder.build();
 	}
 
 	@Override
@@ -317,9 +336,9 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		@Override
 		AcceptanceCondition parseSpecialFormula() throws ParserException {
 			if ("v".equals(getName())) {
-				return new TautologyAcceptanceCondition();
+				return AcceptanceCondition.TAUTOLOGY;
 			} else if ("f".equals(getName())) {
-				return new ContradictionAcceptanceCondition();
+				return AcceptanceCondition.CONTRADICTION;
 			}
 			return super.parseSpecialFormula();
 		}

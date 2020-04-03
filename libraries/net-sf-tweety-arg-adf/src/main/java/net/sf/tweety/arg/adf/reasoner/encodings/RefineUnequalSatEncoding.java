@@ -20,9 +20,9 @@ package net.sf.tweety.arg.adf.reasoner.encodings;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Stream;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 
@@ -42,11 +42,16 @@ public class RefineUnequalSatEncoding implements SatEncoding {
 	@Override
 	public Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation) {
 		Disjunction encoding = new Disjunction();
-		interpretation.satisfied().map(context::getTrueRepresentation).map(Negation::new).forEach(encoding::add);
-		interpretation.unsatisfied().map(context::getFalseRepresentation).map(Negation::new).forEach(encoding::add);
-		interpretation.undecided()
-				.flatMap(x -> Stream.of(context.getTrueRepresentation(x), context.getFalseRepresentation(x)))
-				.forEach(encoding::add);
+		for (Argument arg : interpretation.satisfied()) {
+			encoding.add(new Negation(context.getTrueRepresentation(arg)));
+		}
+		for (Argument arg : interpretation.unsatisfied()) {
+			encoding.add(new Negation(context.getFalseRepresentation(arg)));
+		}
+		for (Argument arg : interpretation.undecided()) {
+			encoding.add(context.getTrueRepresentation(arg));
+			encoding.add(context.getFalseRepresentation(arg));
+		}
 		return Collections.singleton(encoding);
 	}
 

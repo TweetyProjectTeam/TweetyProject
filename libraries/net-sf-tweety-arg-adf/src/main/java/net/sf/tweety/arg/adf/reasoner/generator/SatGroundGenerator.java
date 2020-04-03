@@ -18,11 +18,8 @@
  */
 package net.sf.tweety.arg.adf.reasoner.generator;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 
 import net.sf.tweety.arg.adf.reasoner.SatReasonerContext;
@@ -32,11 +29,10 @@ import net.sf.tweety.arg.adf.reasoner.encodings.SatEncoding;
 import net.sf.tweety.arg.adf.reasoner.encodings.SatEncodingContext;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.transform.TseitinTransformer;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -45,13 +41,13 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * @author Mathias Hofer
  *
  */
-public class SatGroundGenerator implements CandidateGenerator<SatReasonerContext> {
+public final class SatGroundGenerator implements CandidateGenerator<SatReasonerContext> {
 
 	private static final SatEncoding FIX_PARTIAL = new FixPartialSatEncoding();
 
 	private static final SatEncoding CONFLICT_FREE = new ConflictFreeInterpretationSatEncoding();
 
-	private IncrementalSatSolver solver;
+	private final IncrementalSatSolver solver;
 
 	/**
 	 * @param solver
@@ -91,20 +87,14 @@ public class SatGroundGenerator implements CandidateGenerator<SatReasonerContext
 		}
 
 		SatEncodingContext encodingContext = context.getEncodingContext();
-		Interpretation interpretation = new Interpretation(adf);
+		Interpretation interpretation = Interpretation.empty(adf);
 		while (true) {
-			Iterator<Argument> undecided = interpretation.iterator();// .getUndecided().iterator();
 			Map<Argument, Boolean> valMap = new HashMap<Argument, Boolean>();
-			while (undecided.hasNext()) {
-				Argument s = undecided.next();
+			for (Argument s : interpretation.arguments()) {
 				state.add(FIX_PARTIAL.encode(encodingContext, interpretation));
 
-				Collection<Disjunction> accClauses = new LinkedList<Disjunction>();
-				DefinitionalCNFTransform transform = new DefinitionalCNFTransform(
-						r -> encodingContext.getLinkRepresentation(r, s));
-				AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-				Proposition accName = acc.collect(transform, Collection::add, accClauses);
-				state.add(accClauses);
+				TseitinTransformer transformer = new TseitinTransformer(r -> encodingContext.getLinkRepresentation(r, s), false);
+				Proposition accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
 
 				// check not-taut
 				state.assume(accName, false);
@@ -122,8 +112,8 @@ public class SatGroundGenerator implements CandidateGenerator<SatReasonerContext
 					valMap.put(s, null);
 				}
 			}
-			Interpretation newInterpretation = new Interpretation(valMap);
-			if (newInterpretation.equals(interpretation)) {
+			Interpretation newInterpretation = Interpretation.fromMap(valMap);
+			if (interpretation.equals(newInterpretation)) {
 				// we have to make sure that further calls return null
 				makeUnsat(state);
 				return interpretation;
@@ -132,6 +122,7 @@ public class SatGroundGenerator implements CandidateGenerator<SatReasonerContext
 			}
 		}
 	}
+
 
 	private void makeUnsat(SatSolverState state) {
 		Proposition p = new Proposition();

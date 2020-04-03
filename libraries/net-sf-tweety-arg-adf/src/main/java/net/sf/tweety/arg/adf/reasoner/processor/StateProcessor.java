@@ -18,12 +18,13 @@
  */
 package net.sf.tweety.arg.adf.reasoner.processor;
 
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
+ * 
  * @author Mathias Hofer
- * @param <S> some class
  *
+ * @param <S> the state
  */
 public interface StateProcessor<S> {
 

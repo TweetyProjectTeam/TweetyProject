@@ -20,9 +20,9 @@ package net.sf.tweety.arg.adf.reasoner.encodings;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Stream;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 
 /**
@@ -43,11 +43,16 @@ public class RefineLargerSatEncoding implements SatEncoding {
 	@Override
 	public Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation) {
 		Disjunction encoding = new Disjunction();
-		interpretation.satisfied().map(context::getFalseRepresentation).forEach(encoding::add);
-		interpretation.unsatisfied().map(context::getTrueRepresentation).forEach(encoding::add);
-		interpretation.undecided()
-				.flatMap(a -> Stream.of(context.getTrueRepresentation(a), context.getFalseRepresentation(a)))
-				.forEach(encoding::add);
+		for (Argument arg : interpretation.satisfied()) {
+			encoding.add(context.getFalseRepresentation(arg));
+		}
+		for (Argument arg : interpretation.unsatisfied()) {
+			encoding.add(context.getTrueRepresentation(arg));
+		}
+		for (Argument arg : interpretation.undecided()) {
+			encoding.add(context.getTrueRepresentation(arg));
+			encoding.add(context.getFalseRepresentation(arg));
+		}
 		return Collections.singleton(encoding);
 	}
 

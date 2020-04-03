@@ -19,21 +19,27 @@
 package net.sf.tweety.arg.adf.reasoner.verifier;
 
 import net.sf.tweety.arg.adf.reasoner.generator.CandidateGenerator;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.sat.NativeMinisatSolver;
+import net.sf.tweety.arg.adf.semantics.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.SatLinkStrategy;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.transform.OmegaReductTransformer;
 
 /**
  * Verifies if a given interpretation is stable by comparing it with the
  * ground interpretation of its omega reduct.
  * 
  * @author Mathias Hofer
- * @param <S> some class
+ * @param <S> the state
  *
  */
-public class GrounderStableVerifier<S> implements Verifier<S> {
+public final class GrounderStableVerifier<S> implements Verifier<S> {
 
-	private CandidateGenerator<S> groundGenerator;
-
+	private final CandidateGenerator<S> groundGenerator;
+	
+	private final LinkStrategy linkStrategy = new SatLinkStrategy(new NativeMinisatSolver());
+	
 	/**
 	 * Expects a candidate generator for ground semantics
 	 * 
@@ -53,7 +59,7 @@ public class GrounderStableVerifier<S> implements Verifier<S> {
 	 */
 	@Override
 	public boolean verify(S state, Interpretation candidate, AbstractDialecticalFramework adf) {
-		AbstractDialecticalFramework reduct = adf.omegaReduct(candidate);
+		AbstractDialecticalFramework reduct = AbstractDialecticalFramework.transformed(adf, new OmegaReductTransformer(candidate), linkStrategy);
 		S grounderState = groundGenerator.initialize(reduct);
 		Interpretation ground = groundGenerator.generate(grounderState, reduct);
 		boolean stable = candidate.equals(ground);

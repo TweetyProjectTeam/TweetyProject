@@ -18,13 +18,14 @@
  */
 package net.sf.tweety.arg.adf.reasoner.generator;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
+ * 
  * @author Mathias Hofer
- * @param <S> some class
  *
+ * @param <S> the state
  */
 public interface CandidateGenerator<S> {
 

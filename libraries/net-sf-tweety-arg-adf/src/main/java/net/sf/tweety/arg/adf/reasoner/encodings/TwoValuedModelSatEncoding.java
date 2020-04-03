@@ -20,11 +20,12 @@ package net.sf.tweety.arg.adf.reasoner.encodings;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.function.Function;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.transform.TseitinTransformer;
 import net.sf.tweety.arg.adf.util.Cache;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
@@ -47,11 +48,11 @@ public class TwoValuedModelSatEncoding implements SatEncoding {
 	public Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation) {
 		AbstractDialecticalFramework adf = context.getAbstractDialecticalFramework();
 		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
-		DefinitionalCNFTransform transform = new DefinitionalCNFTransform(
-				new Cache<Argument, Proposition>(arg -> new Proposition(arg.getName())));
-		for (Argument a : adf) {
-			Proposition accName = adf.getAcceptanceCondition(a).collect(transform, Collection::add, encoding);
-			Proposition arg = a.transform(transform);
+		Function<Argument, Proposition> argumentMapping = new Cache<>(arg -> new Proposition(arg.getName()));
+		TseitinTransformer transformer = new TseitinTransformer(argumentMapping, false);
+		for (Argument a : adf.getArguments()) {
+			Proposition accName = transformer.collect(adf.getAcceptanceCondition(a), encoding);
+			Proposition arg = argumentMapping.apply(a);
 			encoding.add(new Disjunction(new Negation(accName), arg));
 			encoding.add(new Disjunction(accName, new Negation(arg)));
 			

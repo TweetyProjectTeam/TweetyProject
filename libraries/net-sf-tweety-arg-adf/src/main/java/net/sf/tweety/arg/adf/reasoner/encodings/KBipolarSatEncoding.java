@@ -23,12 +23,12 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
-import net.sf.tweety.arg.adf.syntax.AcceptanceCondition;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.arg.adf.transform.DefinitionalCNFTransform;
+import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.transform.TseitinTransformer;
 import net.sf.tweety.commons.util.DefaultSubsetIterator;
 import net.sf.tweety.commons.util.SubsetIterator;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
@@ -67,20 +67,25 @@ public class KBipolarSatEncoding implements SatEncoding {
 		encoding.add(tautClause);
 		encoding.add(contClause);
 
-		for (Argument s : adf) {
+		for (Argument s : adf.getArguments()) {
 			// set of arguments r with (r,s) non-bipolar and I(r) = u
-			Set<Argument> xs = adf.linksFromParents(s).filter(Link::isDependent).map(Link::getFrom)
-					.filter(interpretation::isUndecided).collect(Collectors.toSet());
+			Set<Link> linksTo = adf.linksTo(s);
+			Set<Argument> xs = linksTo.stream()
+					.filter(l -> l.getLinkType().isDependent())
+					.map(Link::getFrom)
+					.filter(interpretation::undecided)
+					.collect(Collectors.toSet());
 
 			SubsetIterator<Argument> subsetIterator = new DefaultSubsetIterator<Argument>(xs);
 
 			while (subsetIterator.hasNext()) {
 				Set<Argument> subset = subsetIterator.next();
 
-				DefinitionalCNFTransform transform = new DefinitionalCNFTransform(
-						r -> !xs.contains(r) ? context.getLinkRepresentation(r, s) : (subset.contains(r) ? TAUT : CONT));
+				TseitinTransformer transformer = new TseitinTransformer(
+						r -> !xs.contains(r) ? context.getLinkRepresentation(r, s) : (subset.contains(r) ? TAUT : CONT), false);
 				AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-				Proposition accName = acc.collect(transform, Collection::add, encoding);
+				
+				Proposition accName = transformer.collect(acc, encoding);
 
 				// first implication
 				Disjunction clause1 = new Disjunction();

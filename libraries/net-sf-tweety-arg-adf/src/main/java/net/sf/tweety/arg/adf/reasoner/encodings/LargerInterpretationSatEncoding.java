@@ -21,7 +21,7 @@ package net.sf.tweety.arg.adf.reasoner.encodings;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 
@@ -42,20 +42,20 @@ public class LargerInterpretationSatEncoding implements SatEncoding {
 	public Collection<Disjunction> encode(SatEncodingContext context, Interpretation interpretation) {
 		Collection<Disjunction> encoding = new LinkedList<Disjunction>();
 
-		for (Argument a : (Iterable<Argument>) interpretation.satisfied()::iterator) {
+		for (Argument a : interpretation.satisfied()) {
 			Disjunction clause = new Disjunction();
 			clause.add(context.getTrueRepresentation(a));
 			encoding.add(clause);
 		}
 
-		for (Argument a : (Iterable<Argument>) interpretation.unsatisfied()::iterator) {
+		for (Argument a : interpretation.unsatisfied()) {
 			Disjunction clause = new Disjunction();
 			clause.add(context.getFalseRepresentation(a));
 			encoding.add(clause);
 		}
 
 		Disjunction undecided = new Disjunction();
-		for (Argument a : (Iterable<Argument>) interpretation.undecided()::iterator) {
+		for (Argument a : interpretation.undecided()) {
 			undecided.add(context.getTrueRepresentation(a));
 			undecided.add(context.getFalseRepresentation(a));
 		}

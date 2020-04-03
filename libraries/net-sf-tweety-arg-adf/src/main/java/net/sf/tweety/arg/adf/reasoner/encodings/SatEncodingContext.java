@@ -21,10 +21,10 @@ package net.sf.tweety.arg.adf.reasoner.encodings;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.tweety.arg.adf.semantics.Interpretation;
 import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import net.sf.tweety.arg.adf.util.Cache;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
@@ -55,19 +55,12 @@ public class SatEncodingContext {
 		this.adf = adf;
 		this.falses = new HashMap<Argument, Proposition>();
 		this.trues = new HashMap<Argument, Proposition>();
-		for (Argument a : adf) {
+		for (Argument a : adf.getArguments()) {
 			this.falses.put(a, new Proposition(a.getName() + "_f"));
 			this.trues.put(a, new Proposition(a.getName() + "_t"));
 		}
 	}
-	
-	/**
-	 * @param adf the adf to set
-	 */
-	public void setAdf(AbstractDialecticalFramework adf) {
-		this.adf = adf;
-	}
-
+		
 	public Proposition getFalseRepresentation(Argument argument) {
 		if (!falses.containsKey(argument)) {
 			throw new IllegalArgumentException("The given argument is unknown to this context.");
@@ -93,7 +86,7 @@ public class SatEncodingContext {
 	}
 
 	public Proposition getLinkRepresentation(Link link) {
-		return getLinkRepresentation(link.getFrom(), link.getTo());
+		return links.apply(link);
 	}
 
 	/**
@@ -117,7 +110,7 @@ public class SatEncodingContext {
 		}
 		
 		Map<Argument, Boolean> assignment = new HashMap<Argument, Boolean>();
-		for (Argument a : adf) {
+		for (Argument a : adf.getArguments()) {
 			if (witness.satisfies(trues.get(a))) {
 				assignment.put(a, true);
 			} else if (witness.satisfies(falses.get(a))) {
@@ -126,6 +119,6 @@ public class SatEncodingContext {
 				assignment.put(a, null);
 			}
 		}
-		return new Interpretation(assignment);
+		return Interpretation.fromMap(assignment);
 	}
 }

@@ -25,26 +25,25 @@ import net.sf.tweety.arg.adf.reasoner.encodings.SatEncodingContext;
 import net.sf.tweety.arg.adf.reasoner.encodings.TwoValuedModelSatEncoding;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
-import net.sf.tweety.arg.adf.semantics.Interpretation;
-import net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
  *
  */
-public class SatModelGenerator implements CandidateGenerator<SatReasonerContext> {
+public final class SatModelGenerator implements CandidateGenerator<SatReasonerContext> {
 
 	private static final SatEncoding TWO_VALUED_MODEL_ENCODING = new TwoValuedModelSatEncoding();
-	
+
 	private static final SatEncoding REFINE_UNEQUAL = new RefineUnequalSatEncoding();
 
-	private IncrementalSatSolver solver;
+	private final IncrementalSatSolver solver;
 
 	/**
 	 * @param solver
 	 */
 	public SatModelGenerator(IncrementalSatSolver solver) {
-		super();
 		this.solver = solver;
 	}
 
@@ -57,8 +56,8 @@ public class SatModelGenerator implements CandidateGenerator<SatReasonerContext>
 	 */
 	@Override
 	public SatReasonerContext initialize(AbstractDialecticalFramework adf) {
-		SatEncodingContext encodingContext = new SatEncodingContext(adf);
 		SatSolverState solverState = solver.createState();
+		SatEncodingContext encodingContext = new SatEncodingContext(adf);
 		solverState.add(TWO_VALUED_MODEL_ENCODING.encode(encodingContext));
 		return new SatReasonerContext(encodingContext, solver, solverState);
 	}
