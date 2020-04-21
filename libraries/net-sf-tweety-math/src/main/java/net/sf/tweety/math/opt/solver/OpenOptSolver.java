@@ -134,10 +134,13 @@ public class OpenOptSolver extends Solver {
 			//execute openopt on problem and retrieve console output
 			this.log.info("Calling OpenOpt optimization library.");
 			child = Runtime.getRuntime().exec("python " + ooFile.getAbsolutePath());
-			int c;		
+			System.out.println("ooFILE: " + ooFile.getAbsolutePath());
+			int c = 0;		
 			in = child.getInputStream();
+			
 	        while ((c = in.read()) != -1){
 	            output += ((char)c);
+	           
 	        }
 			in.close();		        		        
 	        in = child.getErrorStream();
@@ -162,6 +165,7 @@ public class OpenOptSolver extends Solver {
 		// parser output
 		this.log.info("Parsing solution from OpenOpt.");
 		try{
+			
 			return this.parseOutput(output);
 		}catch(Exception e){
 			this.log.error(e.getMessage());
@@ -267,8 +271,8 @@ public class OpenOptSolver extends Solver {
 		code += "p.maxIter = " + this.maxIter + "\n";
 		code += "p.maxFunEvals = " + this.maxFunEvals + "\n";
 		code += "r = p.solve('" + this.solver + "')\n";
-		code += "print r.xf";
-		this.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");		
+		code += "print(r.xf) ";
+		this.log.trace("Generated the OpenOpt code:\n===BEGIN===\n" + code + "\n===END===");
 		return code;
 	}
 	
