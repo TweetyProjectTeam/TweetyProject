@@ -39,9 +39,12 @@ public class ApacheCommonsCMAESOptimizerEx {
 		//Create toy problem
 		ConstraintSatisfactionProblem prob = createConstraintSatProb1();
 
-		//solve via BfggsSolver
-		ApacheCommonsCMAESOptimizer solver = new ApacheCommonsCMAESOptimizer(1000, 1000, 100, false, 1, 1, 0.0001);
-		Map<Variable, Term> solution = solver.solve(prob);
+		//solve via CommonsCMAESOptimizer
+		ApacheCommonsCMAESOptimizer solver = new ApacheCommonsCMAESOptimizer(20, 2000000, 0.00001, false, 10, 1, 0.0001);
+ 
+			Map<Variable, Term> solution = solver.solve(prob);
+
+		
 		System.out.println(solution.toString());
 		
 		

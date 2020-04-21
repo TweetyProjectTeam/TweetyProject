@@ -12,6 +12,7 @@ import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Power;
+import net.sf.tweety.math.term.Product;
 import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
@@ -26,10 +27,11 @@ public class LbfgsSolverEx {
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		FloatVariable m1 = new FloatVariable("Machine 1");
 		FloatVariable m2 = new FloatVariable("Machine 2");
-		//Target funcion = (m1+1)^2+m2^2
-		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(-100)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
-
-		
+		//Target funcion = (m1+100)^2+m2^2
+		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(100)), new IntegerConstant(2)), new Power(new Sum(m2,new FloatConstant(100)), new IntegerConstant(2)));
+		//Term opt = new Sum(new Product(new Sum(m1,new FloatConstant(100)), new IntegerConstant(2)), m2);
+		//Term opt = new Sum(new Power(new Sum(m1, new FloatConstant(2)), new FloatConstant(2)), new Power(m2, new FloatConstant(2)));
+		//Term opt = new Power(new Sum(m1, new FloatConstant(2)), new IntegerConstant(2));
 		
 		OptimizationProblem prob = new OptimizationProblem(0);
 		((OptimizationProblem)prob).setTargetFunction(opt);
@@ -45,7 +47,7 @@ public class LbfgsSolverEx {
 		//Create starting point; all variables start at 0
 		Map<Variable, Term> startingPoint = new HashMap<Variable, Term>();
 		for(Variable x : constr) {
-			startingPoint.put(x, new IntegerConstant(0));
+			startingPoint.put(x, new IntegerConstant(-10));
 		}
 		//solve via Gradient Descent
 		LbfgsSolver solver = new LbfgsSolver(startingPoint);

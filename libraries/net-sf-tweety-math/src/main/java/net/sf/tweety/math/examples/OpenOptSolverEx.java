@@ -30,8 +30,8 @@ public class OpenOptSolverEx {
 		public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 			
 			//Define the constraints (all are equations)
-			IntegerVariable m1 = new IntegerVariable("Maschine 1");
-			IntegerVariable m2 = new IntegerVariable("Maschine 2");
+			FloatVariable m1 = new FloatVariable("Machine 1", -100, 100);
+			FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
 			Equation constr1 = new Equation(m1, new IntegerConstant(10));
 			Equation constr2 = new Equation(m2, new IntegerConstant(12));
 			Equation constr3 = new Equation(m1, new IntegerConstant(0));

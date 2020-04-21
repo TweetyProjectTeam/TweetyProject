@@ -1,12 +1,16 @@
 package net.sf.tweety.math.examples;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.equation.Inequation;
+import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.BfgsSolver;
@@ -14,6 +18,7 @@ import net.sf.tweety.math.opt.solver.LpSolve;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.IntegerVariable;
 import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
@@ -21,15 +26,30 @@ import net.sf.tweety.math.term.Variable;
 
 public class LpSolverEx {
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
-		FloatVariable m1 = new FloatVariable("Machine 1");
-		FloatVariable m2 = new FloatVariable("Machine 2");
-		//Target funcion = (m1+1)^2+m2^2
-		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
-
+		//Define the constraints (all are equations)
+		FloatVariable m1 = new FloatVariable("Maschine1");
+		FloatVariable m2 = new FloatVariable("Maschine2");
+		Inequation constr1 = new Inequation(m1, m2, 1);
+		Inequation constr2 = new Inequation(m2, new FloatConstant(12), 1);
+		Inequation constr3 = new Inequation(m1, new FloatConstant(0), 3);
+		Inequation constr4 = new Inequation(m2, new FloatConstant(0), 3);
 		
 		
-		OptimizationProblem prob = new OptimizationProblem(0);
-		((OptimizationProblem)prob).setTargetFunction(opt);
+		Collection<Statement> constraints = new ArrayList<Statement>();
+		constraints.add(constr1);
+		constraints.add(constr2);
+		constraints.add(constr3);
+		constraints.add(constr4);
+		
+		OptimizationProblem prob = new OptimizationProblem(1);
+		prob.addAll(constraints);
+		
+		//Define targetfunction
+		Term opt = m1;
+		prob.setTargetFunction(opt);
+		
+		System.out.println(prob.size());
+		
 		return prob;
 		
 	}
