@@ -26,17 +26,26 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import java.util.*;
 
 /**
- * Reasoner for CF2 extensions using scc-recursiveness.
+ * Reasoner for SCF2 extensions using scc-recursiveness.
+ * SCF2 semantics combine the scc-recursive scheme of CF2 with the strong completeness outside odd circles (SCOOC) principle
  *
  * definition see:
- * Baroni, Giacomin, Guida: Scc-recursiveness: A general schema for argumentation semantics 2005
+ * Cramer, van der Torre: SCF2 – an Argumentation Semantics for Rational Human Judgments on Argument Acceptability:Technical Report 2019
  *
  * @author Lars Bengel
  */
-public class SccCF2Reasoner extends AbstractExtensionReasoner {
+public class SCF2Reasoner extends AbstractExtensionReasoner {
     @Override
     public Collection<Extension> getModels(DungTheory bbase) {
-        List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(bbase.getStronglyConnectedComponents());
+        DungTheory restrictedTheory = new DungTheory(bbase);
+        // remove all self-attacking arguments
+        for (Argument argument: bbase) {
+            if (restrictedTheory.isAttackedBy(argument, argument)) {
+                restrictedTheory.remove(argument);
+            }
+        }
+
+        List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(restrictedTheory.getStronglyConnectedComponents());
         // order SCCs in a DAG
         boolean[][] dag = new boolean[sccs.size()][sccs.size()];
         for(int i = 0; i < sccs.size(); i++){
@@ -46,7 +55,7 @@ public class SccCF2Reasoner extends AbstractExtensionReasoner {
         for(int i = 0; i < sccs.size(); i++)
             for(int j = 0; j < sccs.size(); j++)
                 if(i != j)
-                    if(bbase.isAttacked(new Extension(sccs.get(i)), new Extension(sccs.get(j))))
+                    if(restrictedTheory.isAttacked(new Extension(sccs.get(i)), new Extension(sccs.get(j))))
                         dag[i][j] = true;
         // order SCCs topologically
         List<Collection<Argument>> sccs_ordered = new ArrayList<Collection<Argument>>();
@@ -67,7 +76,7 @@ public class SccCF2Reasoner extends AbstractExtensionReasoner {
                 }
             }
         }
-        return this.computeExtensionsViaSccs(bbase, sccs_ordered, 0, new HashSet<Argument>(), new HashSet<Argument>(), new HashSet<Argument>());
+        return this.computeExtensionsViaSccs(restrictedTheory, sccs_ordered, 0, new HashSet<Argument>(), new HashSet<Argument>(), new HashSet<Argument>());
     }
 
     @Override
@@ -104,7 +113,7 @@ public class SccCF2Reasoner extends AbstractExtensionReasoner {
             subExts = this.getModels(subTheory);
         } else {
             // compute naive extensions of sub theory(scc)
-            subExts = new NaiveReasoner().getModels(subTheory);
+            subExts = new SCOOCNaiveReasoner().getModels(subTheory);
         }
 
         Set<Extension> result = new HashSet<Extension>();
