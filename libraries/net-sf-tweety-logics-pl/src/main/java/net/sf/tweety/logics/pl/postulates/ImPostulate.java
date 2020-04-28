@@ -70,6 +70,8 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 	public static final ImPostulate EQUALCONFLICT = new ImEqualConflict();
 	/** The CONTRADICTION postulate **/
 	public static final ImPostulate CONTRADICTION = new ImContradiction();
+	/** The WEAKDOMINANCE postulate **/
+	public static final ImPostulate WEAKDOMINANCE = new ImWeakDominance();
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.postulates.Postulate#isApplicable(java.util.Collection)
