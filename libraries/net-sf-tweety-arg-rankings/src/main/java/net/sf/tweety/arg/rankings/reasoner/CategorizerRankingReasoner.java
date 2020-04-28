@@ -38,6 +38,27 @@ import net.sf.tweety.math.matrix.Matrix;
  * @author Anna Gessler
  */
 public class CategorizerRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
+	
+	private double epsilon;
+	
+	/**
+	 * Create a new CountingRankingReasoner with default
+	 * parameters.
+	 */
+	public CategorizerRankingReasoner() {
+		this.epsilon = 0.001;
+	}
+	
+	/**
+	 * Create a new CategorizerRankingReasoner with the given
+	 * parameters.
+	 * 
+	 * @param epsilon
+	 */
+	public CategorizerRankingReasoner(double epsilon) {
+		this.epsilon = epsilon;
+	}
+	
 	@Override
 	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
 		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
@@ -53,15 +74,14 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 		double valuations_old[] = new double[n]; //Stores valuations of the last iteration
 		
 		//Keep computing valuations until the values stop changing much or converge 
-		double epsilon = 0.001; 
 		do {
 			valuations_old = valuations.clone();
 			for (int i = 0; i < n; i++) 
 				valuations[i] = calculateCategorizerFunction(valuations_old,directAttackMatrix,i);
-		} while (getDistance(valuations_old, valuations) > epsilon);
+		} while (getDistance(valuations_old, valuations) > this.epsilon);
 	
 		//Use computed valuations as values for argument ranking
-		//Note: The order of valuations v[i] is the same as the ordner of DungTheory.iterator()
+		//Note: The order of valuations v[i] is the same as the order of DungTheory.iterator()
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
 		int i = 0;

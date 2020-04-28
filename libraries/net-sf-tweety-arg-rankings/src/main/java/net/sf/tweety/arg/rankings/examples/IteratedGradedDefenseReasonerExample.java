@@ -21,15 +21,15 @@
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
-import net.sf.tweety.arg.rankings.reasoner.GrossiModgilRankingReasoner;
+import net.sf.tweety.arg.rankings.reasoner.IteratedGradedDefenseReasoner;
 
 /**
- * Example code for using graded semantics by Grossi/Modgil
+ * Example code for using the iterated graded semantics by Grossi/Modgil
  * 
  * @author Matthias Thimm
  *
  */
-public class GrossiModgilReasonerExample {
+public class IteratedGradedDefenseReasonerExample {
 
 	public static void main(String[] args){
 		// See [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015]
@@ -57,7 +57,7 @@ public class GrossiModgilReasonerExample {
 		theory.add(new Attack(f,e));
 		theory.add(new Attack(g,e));
 		
-		GrossiModgilRankingReasoner reasoner = new GrossiModgilRankingReasoner();
+		IteratedGradedDefenseReasoner reasoner = new IteratedGradedDefenseReasoner();
 		
 		for(int m = 1; m < theory.size(); m++)
 			for(int n = 1; n < theory.size(); n++)

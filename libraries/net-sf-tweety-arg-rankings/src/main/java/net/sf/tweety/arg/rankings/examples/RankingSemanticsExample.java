@@ -31,7 +31,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.CategorizerRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.DiscussionBasedRankingReasoner;
-import net.sf.tweety.arg.rankings.reasoner.GrossiModgilRankingReasoner;
+import net.sf.tweety.arg.rankings.reasoner.IteratedGradedDefenseReasoner;
 import net.sf.tweety.arg.rankings.reasoner.MTRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.ProbabilisticRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.SAFRankingReasoner;
@@ -180,7 +180,8 @@ public class RankingSemanticsExample {
 		example4c.add(new Attack(f, e));
 		example4c.add(new Attack(f, b));
 		
-		//Example 5, taken from [Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
+		//Example 5, taken from taken from Figure 2.4 in 
+		//[Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
 		DungTheory example5 = new DungTheory();
 		Argument h = new Argument("h");
 		Argument i = new Argument("i");
@@ -246,8 +247,8 @@ public class RankingSemanticsExample {
 		System.out.println(reasoner6.getClass().getSimpleName());
 		System.out.println(roundRanking(reasoner6.getModel(example1), 2));
 
-		// Grossi & Modgil ranking semantics
-		GrossiModgilRankingReasoner reasoner7 = new GrossiModgilRankingReasoner();
+		// Iterated graded defense (Grossi & Modgil) ranking semantics
+		IteratedGradedDefenseReasoner reasoner7 = new IteratedGradedDefenseReasoner();
 		System.out.println(reasoner7.getClass().getSimpleName());
 		System.out.println(reasoner7.getModel(example1));
 
