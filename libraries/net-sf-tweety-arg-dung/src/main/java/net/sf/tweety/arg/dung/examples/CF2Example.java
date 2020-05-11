@@ -18,7 +18,7 @@
  */
 package net.sf.tweety.arg.dung.examples;
 
-import net.sf.tweety.arg.dung.reasoner.SimpleCF2Reasoner;
+import net.sf.tweety.arg.dung.reasoner.SccCF2Reasoner;
 import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
@@ -51,7 +51,7 @@ public class CF2Example {
 		theory.add(new Attack(e,a));
 		theory.add(new Attack(e,f));
 		
-		SimpleCF2Reasoner reasoner = new SimpleCF2Reasoner();
+		SccCF2Reasoner reasoner = new SccCF2Reasoner();
 		
 		for(Extension ext: reasoner.getModels(theory)){
 			System.out.println(ext);			
