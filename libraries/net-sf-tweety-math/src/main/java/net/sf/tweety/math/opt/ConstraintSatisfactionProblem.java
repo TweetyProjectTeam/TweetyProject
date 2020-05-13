@@ -136,7 +136,7 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 * a maximum "max{a,b}" by "0.5 a + 0.5 b + abs(a-b)".
 	 */
 	/*
-	 * Sebi: Formel falsch? => eig: 0.5*a+0.5*b+0abs(a-b)
+	 * Sebi: Formel falsch? => eig: 0.5*a+0.5*b+abs(a-b)
 	 */
 	public void resolveMaximums(){
 		// expand all maximums		

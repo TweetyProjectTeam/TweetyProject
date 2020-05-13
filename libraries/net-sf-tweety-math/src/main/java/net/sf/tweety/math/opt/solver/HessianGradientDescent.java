@@ -68,6 +68,7 @@ public class HessianGradientDescent extends Solver {
 	 */
 	@Override
 	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+		System.out.println(problem.toString());
 		if(problem.size() > 0)
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
 		this.log.trace("Solving the following optimization problem using hessian gradient descent:\n===BEGIN===\n" + problem + "\n===END===");

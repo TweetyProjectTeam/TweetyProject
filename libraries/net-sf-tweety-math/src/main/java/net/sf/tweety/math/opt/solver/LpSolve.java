@@ -49,10 +49,10 @@ public class LpSolve extends Solver {
 	
 	/**Path to the binary or lp_solve*/
 	
-	private static String binary = "lp_solve";
+	private static String binary = "D:\\Uni\\Semester6\\HiWi\\lp_solve\\lp_solve.exe";
 	
 	/** For temporary files. */
-	private static File tmpFolder = null;
+	private static File tmpFolder = new File("D:\\Uni\\Semester6\\HiWi\\tmpVonSebi");
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.Solver#isInstalled()
@@ -85,14 +85,15 @@ public class LpSolve extends Solver {
 			File lpFile = File.createTempFile("lptmp", null, LpSolve.tmpFolder);
 //			File lpFile = new File("lptmp2");
 			// Delete temp file when program exits.
-			lpFile.deleteOnExit();    
+			//lpFile.deleteOnExit();    
 			// Write to temp file
 			BufferedWriter out = new BufferedWriter(new FileWriter(lpFile));
 			out.write(((OptimizationProblem)problem).convertToLpFormat());
 			out.close();		
 			//execute lp_solve on problem in lp format and retrieve console output					
 			output = NativeShell.invokeExecutable(LpSolve.binary + " " + lpFile.getAbsolutePath());
-			lpFile.delete();
+			
+			//lpFile.delete();
 		}catch(IOException e){
 			//TODO add error handling
 			e.printStackTrace();
@@ -105,6 +106,8 @@ public class LpSolve extends Solver {
 		
 		//parse output		
 		String delimiter = "Actual values of the variables:";
+		
+		
 		String assignments = output.substring(output.indexOf(delimiter)+delimiter.length(), output.length());
 		StringTokenizer tokenizer = new StringTokenizer(assignments,"\n");
 		Set<Variable> variables = problem.getVariables();

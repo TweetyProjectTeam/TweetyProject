@@ -78,10 +78,13 @@ public abstract class OptimizationRootFinder extends RootFinder {
 		LOG.trace("Constructing optimization problem to find a root of the function '" + this.getFunctions() + "'.");
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		Term target = null;
+		
 		for(Term f: this.getFunctions())
 			if(target == null)
-				target = f.mult(f);
+				target = f;
+				//target = f.mult(f);
 			else target = target.add(f.mult(f));
+			
 		problem.setTargetFunction(target);
 		LOG.trace("Constructing optimization problem finished; the target function is '" + target + "'.");
 		return problem;

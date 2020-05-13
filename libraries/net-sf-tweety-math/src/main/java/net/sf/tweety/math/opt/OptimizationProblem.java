@@ -19,7 +19,6 @@
 package net.sf.tweety.math.opt;
 
 import java.util.*;
-
 import net.sf.tweety.math.equation.*;
 import net.sf.tweety.math.term.*;
 
@@ -236,17 +235,31 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		}else if(this.type == OptimizationProblem.MINIMIZE){
 			result += "min: ";			
 		}else throw new IllegalArgumentException("Unrecognized type of optimization problem.");
-		result += this.targetFunction + ";\n";
+		//Edit @Sebastian Franke: target function must be a single variable to fulfill the current version of LpSolve
+		result += this.targetFunction.toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "") + ";\n";
+		//result += "currentTargetFunc = "	+ this.targetFunction.toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "") + ";\n";
 		for(Statement s: this){
 			// As the lp format treats "<" and "<=" both as lesser or equal (same for ">" and ">="
 			// we have to add an "epsilon" to the lesser term in order to represent "<"
+			//left and right part of the statements have to be in linear form in order for lp_solve to parse them coorectly
 			if(s instanceof Inequation && ((Inequation) s).getType() == Inequation.LESS){
-				result += s.getLeftTerm() + " + " + OptimizationProblem.EPSILON + s.getRelationSymbol() + s.getRightTerm() + ";\n";
+				result += s.getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")
+						+ " + " + OptimizationProblem.EPSILON 
+						+ s.getRelationSymbol() 
+						+ s.getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  + ";\n";
 			}else if(s instanceof Inequation && ((Inequation) s).getType() == Inequation.GREATER){
-				result += s.getLeftTerm() + s.getRelationSymbol() + s.getRightTerm() + " + " + OptimizationProblem.EPSILON + ";\n";
-			}else result += s.getLeftTerm() + s.getRelationSymbol() + s.getRightTerm() + ";\n";
+				result += s.getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  
+						+ s.getRelationSymbol() 
+						+ s.getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  
+						+ " + " + OptimizationProblem.EPSILON + ";\n";
+			}else result += s.getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "") 
+						+ s.getRelationSymbol() 
+						+ s.getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  + ";\n";
 		}
+		
+		//Edit @Sebastian Franke: target function is always
 		Iterator<Variable> it = this.getVariables().iterator();
+		//result += "sec " + "currentTargetFunc" + ";\n";
 		while(it.hasNext()){
 			Variable v = it.next();
 			if(v instanceof IntegerVariable)

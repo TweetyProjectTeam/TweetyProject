@@ -51,7 +51,7 @@ public class LagrangeSolverEx {
 		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 		prob.setTargetFunction(opt);
 		
-		System.out.println(prob.size());
+		
 		
 		return prob;
 	}

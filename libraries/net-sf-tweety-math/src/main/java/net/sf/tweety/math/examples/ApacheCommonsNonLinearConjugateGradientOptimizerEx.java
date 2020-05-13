@@ -18,6 +18,10 @@ import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
+/**
+ * This class implements an example for the BfgsSolver
+ * @author Sebastian Franke
+ */
 public class ApacheCommonsNonLinearConjugateGradientOptimizerEx {
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		FloatVariable m1 = new FloatVariable("Machine 1");

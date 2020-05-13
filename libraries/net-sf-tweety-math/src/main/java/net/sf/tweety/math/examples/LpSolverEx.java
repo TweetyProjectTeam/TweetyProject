@@ -13,17 +13,19 @@ import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.BfgsSolver;
 import net.sf.tweety.math.opt.solver.LpSolve;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
-import net.sf.tweety.math.term.IntegerVariable;
-import net.sf.tweety.math.term.Power;
-import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
+/**
+ * This class implements an example for the Genetic LpSolver
+ * it uses LpSolve Version 5.5.2.5 (https://sourceforge.net/projects/lpsolve/)
+ * it is currently not working
+ * @author Sebastian Franke
+ */
 public class LpSolverEx {
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		//Define the constraints (all are equations)
@@ -48,7 +50,7 @@ public class LpSolverEx {
 		Term opt = m1;
 		prob.setTargetFunction(opt);
 		
-		System.out.println(prob.size());
+
 		
 		return prob;
 		

@@ -21,6 +21,11 @@ import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
+/**
+ * This class implements an example for the Apache Commons SimplexSolver
+ * Version used is 2.0
+ * @author Sebastian Franke
+ */
 public class ApacheCommonsSimplexEx {
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		//Define the constraints (all are equations)
@@ -45,7 +50,7 @@ public class ApacheCommonsSimplexEx {
 				Term opt = new Sum(new Sum(m1,new FloatConstant(1)), m2);
 				prob.setTargetFunction(opt);
 				
-				System.out.println(prob.size());
+				
 				
 				return prob;
 		

@@ -1,16 +1,12 @@
 package net.sf.tweety.math.examples;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.ApacheCommonsCMAESOptimizer;
-import net.sf.tweety.math.opt.solver.BfgsSolver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
@@ -18,6 +14,11 @@ import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
+
+/**
+ * This class implements an example for the BfgsSolver
+ * @author Sebastian Franke
+ */
 
 public class ApacheCommonsCMAESOptimizerEx {
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {

@@ -117,7 +117,9 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 			}			
 		};		
 		// construct solver
-		CMAESOptimizer optimizer = new CMAESOptimizer(this.maxIterations, this.stopFitness, this.isActiveCMA, this.diagonalOnly, this.checkFeasableCount, new JDKRandomGenerator(), false, new SimplePointChecker<PointValuePair>(this.precision,this.precision));
+		
+		CMAESOptimizer optimizer = new CMAESOptimizer(this.maxIterations, this.stopFitness, this.isActiveCMA, this.diagonalOnly, 
+				this.checkFeasableCount, new JDKRandomGenerator(), true, new SimplePointChecker<PointValuePair>(this.precision,this.precision));
 		PointValuePair val = optimizer.optimize(new CMAESOptimizer.Sigma(sigma),
 				new ObjectiveFunction(target),
 				new InitialGuess(s),
@@ -125,6 +127,7 @@ public class ApacheCommonsCMAESOptimizer extends Solver{
 				new MaxEval(this.maxIterations),
 				new SimpleBounds(lb,ub),
 				new CMAESOptimizer.PopulationSize(this.populationSize));
+		
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
 		for(int i = 0; i < vars.size(); i++)
 			result.put(vars.get(i), new FloatConstant(val.getPoint()[i]));
