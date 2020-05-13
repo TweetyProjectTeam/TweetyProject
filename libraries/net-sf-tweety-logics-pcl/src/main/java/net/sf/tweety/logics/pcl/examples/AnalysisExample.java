@@ -24,6 +24,7 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.*;
 import net.sf.tweety.logics.pcl.syntax.*;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 
 public class AnalysisExample {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
@@ -32,15 +33,16 @@ public class AnalysisExample {
 
 		PclBeliefSet beliefSet = (PclBeliefSet) new net.sf.tweety.logics.pcl.parser.PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/test.pcl");
 
-		BeliefSetInconsistencyMeasure<ProbabilisticConditional> dist = new DistanceMinimizationInconsistencyMeasure();
-		MeanDistanceCulpabilityMeasure cp = new MeanDistanceCulpabilityMeasure(false);
+		OptimizationRootFinder rootFinder = null; // TODO to be defined
+		BeliefSetInconsistencyMeasure<ProbabilisticConditional> dist = new DistanceMinimizationInconsistencyMeasure(rootFinder);
+		MeanDistanceCulpabilityMeasure cp = new MeanDistanceCulpabilityMeasure(rootFinder,false);
 		System.out.println(beliefSet);
 		System.out.println(dist.inconsistencyMeasure(beliefSet));
 
 		for(ProbabilisticConditional pc: beliefSet)
 			System.out.println(pc + "\t" + cp.culpabilityMeasure(beliefSet, pc));
 
-		PenalizingCreepingMachineShop ms = new PenalizingCreepingMachineShop();
+		PenalizingCreepingMachineShop ms = new PenalizingCreepingMachineShop(rootFinder);
 		BalancedMachineShop ms2 = new BalancedMachineShop(cp);
 		System.out.print(ms.repair(beliefSet));
 		System.out.print(ms2.repair(beliefSet));

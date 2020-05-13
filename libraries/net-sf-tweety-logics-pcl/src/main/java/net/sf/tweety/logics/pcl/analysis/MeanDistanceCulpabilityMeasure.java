@@ -38,14 +38,18 @@ import net.sf.tweety.math.term.*;
  */
 public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure {
 
+	private OptimizationRootFinder rootFinder;
+	
 	/** Whether this measure uses the normalized mindev measure. */
 	private boolean normalized;
 	
 	/** Creates a new measure.
+	 * @param rootFinder a root finder
 	 * @param normalized whether this measure uses the normalized mindev measure.
 	 */
-	public MeanDistanceCulpabilityMeasure(boolean normalized){
+	public MeanDistanceCulpabilityMeasure(OptimizationRootFinder rootFinder, boolean normalized){
 		this.normalized = normalized;
+		this.rootFinder = rootFinder;
 	}
 	
 	/* (non-Javadoc)
@@ -54,7 +58,7 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 	@Override
 	public Double culpabilityMeasure(PclBeliefSet beliefSet, ProbabilisticConditional conditional) {
 		// determine the mindev inconsistency measure (and add some tolerance)
-		double incVal =	new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet) + InconsistencyMeasure.MEASURE_TOLERANCE;
+		double incVal =	new DistanceMinimizationInconsistencyMeasure(this.rootFinder).inconsistencyMeasure(beliefSet) + InconsistencyMeasure.MEASURE_TOLERANCE;
 		if(incVal == 0)
 			return 0d;
 		if(this.normalized)
@@ -68,7 +72,7 @@ public class MeanDistanceCulpabilityMeasure implements SignedCulpabilityMeasure 
 	@Override
 	public Double sign(PclBeliefSet beliefSet, ProbabilisticConditional conditional) {
 		// determine the mindev inconsistency measure
-		double incVal = new DistanceMinimizationInconsistencyMeasure().inconsistencyMeasure(beliefSet) + InconsistencyMeasure.MEASURE_TOLERANCE;
+		double incVal = new DistanceMinimizationInconsistencyMeasure(this.rootFinder).inconsistencyMeasure(beliefSet) + InconsistencyMeasure.MEASURE_TOLERANCE;
 		if(incVal == 0)	return 0d;
 		return Math.signum(this.getMinimumValue(beliefSet, conditional, incVal) + this.getMaximumValue(beliefSet, conditional, incVal));		
 	}

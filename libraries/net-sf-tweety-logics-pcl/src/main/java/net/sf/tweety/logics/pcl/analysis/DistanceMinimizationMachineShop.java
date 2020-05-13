@@ -20,6 +20,7 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pcl.syntax.*;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 import net.sf.tweety.math.probability.*;
 
 /**
@@ -31,6 +32,12 @@ import net.sf.tweety.math.probability.*;
  */
 public class DistanceMinimizationMachineShop implements BeliefBaseMachineShop  {
 
+	private OptimizationRootFinder rootFinder;
+	
+	public DistanceMinimizationMachineShop(OptimizationRootFinder rootFinder) {
+		this.rootFinder = rootFinder;
+	}
+	
 	/**
 	 * The p-norm parameter.
 	 */
@@ -59,11 +66,11 @@ public class DistanceMinimizationMachineShop implements BeliefBaseMachineShop  {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
-		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
+		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;
 		PclBeliefSet newBeliefSet = new PclBeliefSet();
-		DistanceMinimizationInconsistencyMeasure m = new DistanceMinimizationInconsistencyMeasure(this.p);
+		DistanceMinimizationInconsistencyMeasure m = new DistanceMinimizationInconsistencyMeasure(this.rootFinder,this.p);
 		for(ProbabilisticConditional pc: beliefSet)
 			newBeliefSet.add(new ProbabilisticConditional(pc, new Probability(pc.getProbability().doubleValue()+m.getDeviation(beliefSet, pc))));		
 		return newBeliefSet;

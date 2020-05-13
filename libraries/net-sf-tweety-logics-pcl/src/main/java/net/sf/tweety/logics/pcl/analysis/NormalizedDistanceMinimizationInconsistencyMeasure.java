@@ -21,6 +21,7 @@ package net.sf.tweety.logics.pcl.analysis;
 import java.util.Collection;
 
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 
 /**
  * This class models the normalized distance minimization inconsistency measure, see [PhD thesis, Thimm].
@@ -28,6 +29,14 @@ import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
  * @author Matthias Thimm
  */
 public class NormalizedDistanceMinimizationInconsistencyMeasure extends DistanceMinimizationInconsistencyMeasure {
+	
+	public NormalizedDistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder) {
+		super(rootFinder);		
+	}
+
+	public NormalizedDistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder, int p) {
+		super(rootFinder,p);		
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pcl.analysis.DistanceMinimizationInconsistencyMeasure#inconsistencyMeasure(java.util.Collection)

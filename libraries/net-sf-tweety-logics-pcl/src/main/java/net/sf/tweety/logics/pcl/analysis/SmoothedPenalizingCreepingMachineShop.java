@@ -22,6 +22,7 @@ import java.util.*;
 
 import net.sf.tweety.logics.commons.analysis.CulpabilityMeasure;
 import net.sf.tweety.logics.pcl.syntax.*;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 import net.sf.tweety.math.probability.*;
 
 /**
@@ -47,7 +48,8 @@ public class SmoothedPenalizingCreepingMachineShop extends AbstractCreepingMachi
 	 * Creates a new creeping machine shop based on the given culpability measure.
 	 * @param culpabilityMeasure a culpability measure.
 	 */
-	public SmoothedPenalizingCreepingMachineShop(CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure){
+	public SmoothedPenalizingCreepingMachineShop(OptimizationRootFinder rootFinder,CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure){
+		super(rootFinder);
 		this.culpabilityMeasure = culpabilityMeasure;
 	}
 	

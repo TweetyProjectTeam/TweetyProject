@@ -42,6 +42,12 @@ import net.sf.tweety.math.probability.*;
  */
 public class DefaultMeReasoner extends AbstractPclReasoner {
 		
+	private OptimizationRootFinder rootFinder;
+	
+	public DefaultMeReasoner(OptimizationRootFinder rootFinder) {
+		this.rootFinder = rootFinder;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.pcl.reasoner.AbstractPclReasoner#query(net.sf.tweety.logics.pcl.syntax.PclBeliefSet, net.sf.tweety.logics.pl.syntax.PropositionalFormula)
 	 */
@@ -76,7 +82,7 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 	 */
 	public ProbabilityDistribution<PossibleWorld> getModel(PclBeliefSet bs,PlSignature signature) {
 		// if belief set is inconsistent no reasoning is possible
-		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
+		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(!tester.isConsistent(bs))
 			throw new IllegalArgumentException("Knowledge base is inconsistent.");
 		if(!bs.getMinimalSignature().isSubSignature(signature))

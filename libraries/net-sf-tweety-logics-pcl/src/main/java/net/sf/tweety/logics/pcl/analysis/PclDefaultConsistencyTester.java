@@ -36,6 +36,12 @@ import net.sf.tweety.logics.commons.analysis.*;
  */
 public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTester<ProbabilisticConditional> {
 	
+	private OptimizationRootFinder rootFinder;
+	
+	public PclDefaultConsistencyTester(OptimizationRootFinder rootFinder) {
+		this.rootFinder = rootFinder;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.commons.analysis.AbstractBeliefSetConsistencyTester#isConsistent(java.util.Collection)
 	 */
@@ -100,14 +106,8 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 		Map<Variable,Term> startingPoint = new HashMap<Variable,Term>();
 		for(PossibleWorld w: worlds)
 			startingPoint.put(worlds2vars.get(w), new IntegerConstant(1));
-		OpenOptRootFinder rootFinder = new OpenOptRootFinder(functions,startingPoint);
-		RootFinder.PRECISION = 0.001;
-		rootFinder.setContol(1.0E-8);
-		rootFinder.setFtol(1.0E-8);
-		rootFinder.setGtol(1.0E-8);
-		rootFinder.setXtol(1.0E-8);		
 		try {
-			rootFinder.randomRoot();
+			this.rootFinder.randomRoot();
 		} catch (GeneralMathException e) {
 			return false;
 		}

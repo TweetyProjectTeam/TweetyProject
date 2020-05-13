@@ -32,6 +32,7 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -49,6 +50,12 @@ import org.slf4j.LoggerFactory;
  */
 public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
+	private OptimizationRootFinder rootFinder;
+	
+	public LowerApproxDistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder) {
+		this.rootFinder = rootFinder;
+	}
+	
 	/**
 	 * Logger.
 	 */
@@ -71,7 +78,7 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 			return this.archive.get(beliefSet);
 		// first check whether the belief set is consistent		
 		log.trace("Checking whether '" + beliefSet + "' is inconsistent.");
-		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester().isConsistent(beliefSet)){
+		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet)){
 			// update archive
 			this.archive.put(beliefSet, 0d);
 			return 0d;

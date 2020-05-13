@@ -18,11 +18,9 @@
  */
 package net.sf.tweety.logics.pcl.analysis;
 
-import java.io.*;
 import java.util.*;
 
 import net.sf.tweety.commons.*;
-import net.sf.tweety.logics.pcl.parser.*;
 import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
@@ -40,6 +38,12 @@ import net.sf.tweety.math.probability.*;
  */
 public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineShop {
 
+	private OptimizationRootFinder rootFinder;
+	
+	public MinimumAggregatedDistanceMachineShop(OptimizationRootFinder rootFinder) {
+		this.rootFinder = rootFinder;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.BeliefBaseMachineShop#repair(net.sf.tweety.BeliefBase)
 	 */
@@ -48,7 +52,7 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
-		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
+		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;
 		// construct convex optimization problem
@@ -148,19 +152,5 @@ public class MinimumAggregatedDistanceMachineShop implements BeliefBaseMachineSh
 			// This should not happen as the optimization problem is guaranteed to be feasible
 			throw new RuntimeException("Fatal error: Optimization problem to compute the minimal distance to a consistent knowledge base is not feasible.");
 		}		
-	}
-
-	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		PclParser parser = new PclParser();
-		PclBeliefSet kb = (PclBeliefSet) parser.parseBeliefBase("(a)[0.3]\n(a)[0.7]");
-		System.out.println("INITIAL: " + kb);
-		
-		System.out.println();
-		System.out.println();
-		
-		MinimumAggregatedDistanceMachineShop mshop = new MinimumAggregatedDistanceMachineShop();
-		
-		System.out.println("RESULT: " + mshop.repair(kb));
-	}
-	
+	}	
 }

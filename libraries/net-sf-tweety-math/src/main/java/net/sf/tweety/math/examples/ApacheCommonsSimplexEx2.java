@@ -8,25 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
-
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.ComplexNumber;
-import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.func.AverageAggregator;
-import net.sf.tweety.math.func.MaxAggregator;
 import net.sf.tweety.math.opt.HessianGradientDescentRootFinder;
 import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
 import net.sf.tweety.math.term.Difference;
-import net.sf.tweety.math.term.Exp;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;
-import net.sf.tweety.math.term.Logarithm;
 import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Root;
 import net.sf.tweety.math.term.Sum;

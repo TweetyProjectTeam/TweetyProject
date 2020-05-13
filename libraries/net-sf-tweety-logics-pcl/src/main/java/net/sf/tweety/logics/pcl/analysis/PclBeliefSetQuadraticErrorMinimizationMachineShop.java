@@ -36,6 +36,7 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.probability.Probability;
 import net.sf.tweety.math.term.FloatConstant;
@@ -55,6 +56,8 @@ import org.slf4j.LoggerFactory;
  */
 public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements BeliefBaseMachineShop {
 
+	private OptimizationRootFinder rootFinder;
+	
 	/**
 	 * Logger.
 	 */
@@ -68,9 +71,11 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 	/**
 	 * Creates a new machine shop based on the given culpability measure.
 	 * @param culpabilityMeasure a culpability measure.
+	 * @param rootFinder a root finder
 	 */
-	public PclBeliefSetQuadraticErrorMinimizationMachineShop(CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure){
+	public PclBeliefSetQuadraticErrorMinimizationMachineShop(CulpabilityMeasure<ProbabilisticConditional,PclBeliefSet> culpabilityMeasure,OptimizationRootFinder rootFinder){
 		this.culpabilityMeasure = culpabilityMeasure;
+		this.rootFinder = rootFinder;
 	}
 	
 	/* (non-Javadoc)
@@ -82,7 +87,7 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		// check whether the belief set is already consistent
-		if(new PclDefaultConsistencyTester().isConsistent(beliefSet))
+		if(new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet))
 			return beliefSet;
 		log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem to restore consistency.");
 		// Create variables for the probability of each possible world and

@@ -21,6 +21,7 @@ package net.sf.tweety.logics.pcl.analysis;
 import java.util.*;
 
 import net.sf.tweety.logics.pcl.syntax.*;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 import net.sf.tweety.math.probability.*;
 
 /**
@@ -31,6 +32,10 @@ import net.sf.tweety.math.probability.*;
  */
 public class UnbiasedCreepingMachineShop extends AbstractCreepingMachineShop {
 	
+	public UnbiasedCreepingMachineShop(OptimizationRootFinder rootFinder) {
+		super(rootFinder);
+	}
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.probabilisticconditionallogic.analysis.AbstractCreepingMachineShop#getValues(double, net.sf.tweety.logics.probabilisticconditionallogic.PclBeliefSet)
 	 */

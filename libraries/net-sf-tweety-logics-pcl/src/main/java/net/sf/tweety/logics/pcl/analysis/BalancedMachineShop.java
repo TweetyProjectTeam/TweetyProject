@@ -37,6 +37,12 @@ import net.sf.tweety.math.probability.*;
  */
 public class BalancedMachineShop implements BeliefBaseMachineShop {
 
+	private OptimizationRootFinder rootFinder;
+	
+	public BalancedMachineShop(OptimizationRootFinder rootFinder) {
+		this.rootFinder = rootFinder;
+	}
+	
 	/** The precision for comparing culpability values. */
 	public static final double PRECISIONCULP = 0.01;
 	/** The precision for comparing culpability values. */
@@ -57,7 +63,7 @@ public class BalancedMachineShop implements BeliefBaseMachineShop {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
-		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
+		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;		
 		// get culpability values

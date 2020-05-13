@@ -48,11 +48,6 @@
 		<artifactId>ojalgo</artifactId>
 		<version>35.0</version>
 	</dependency>
-	<dependency>
-		<groupId>com.dbtsai.lbfgs</groupId>
-		<artifactId>lbfgs</artifactId>
-		<version>0.1</version>
-	</dependency>	    
   </dependencies>
   <parent>
   <groupId>net.sf.tweety</groupId>

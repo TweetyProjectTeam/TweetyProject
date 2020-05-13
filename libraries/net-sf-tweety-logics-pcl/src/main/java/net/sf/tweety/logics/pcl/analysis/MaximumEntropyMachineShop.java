@@ -41,6 +41,12 @@ import net.sf.tweety.math.probability.*;
  */
 public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 
+	private OptimizationRootFinder rootFinder;
+	
+	public MaximumEntropyMachineShop(OptimizationRootFinder rootFinder) {
+		this.rootFinder = rootFinder;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.BeliefBaseMachineShop#repair(net.sf.tweety.BeliefBase)
 	 */
@@ -49,7 +55,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
-		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
+		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;
 		// Determine unique values mu/nu that represent minimal adjustments for

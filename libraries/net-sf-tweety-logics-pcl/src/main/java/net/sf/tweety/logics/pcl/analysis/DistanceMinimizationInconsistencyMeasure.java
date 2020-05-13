@@ -32,6 +32,7 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 import net.sf.tweety.math.opt.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
@@ -52,6 +53,8 @@ import org.slf4j.LoggerFactory;
  */
 public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
+	private OptimizationRootFinder rootFinder;
+		
 	/**
 	 * Logger.
 	 */
@@ -75,16 +78,17 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 	/**
 	 * Creates a new measure for p=1.
 	 */
-	public DistanceMinimizationInconsistencyMeasure(){
-		this(1);
+	public DistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder){
+		this(rootFinder,1);
 	}
 	
 	/**
 	 * Creates a new measure for the given p.
 	 * @param p some parameter for the p-norm.
 	 */
-	public DistanceMinimizationInconsistencyMeasure(int p){
+	public DistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder, int p){
 		this.p = p;
+		this.rootFinder = rootFinder;
 	}
 	
 	/** 
@@ -112,7 +116,7 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 			return this.archive.get(beliefSet);
 		// first check whether the belief set is consistent		
 		log.trace("Checking whether '" + beliefSet + "' is inconsistent.");
-		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester().isConsistent(beliefSet)){
+		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet)){
 			// update archive
 			this.archive.put(beliefSet, 0d);
 			return 0d;

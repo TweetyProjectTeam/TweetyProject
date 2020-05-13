@@ -24,6 +24,7 @@ import java.util.Map;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 import net.sf.tweety.math.probability.Probability;
 
 import org.slf4j.Logger;
@@ -38,6 +39,10 @@ import org.slf4j.LoggerFactory;
  */
 public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 
+	public PenalizingCreepingMachineShop(OptimizationRootFinder rootFinder) {
+		super(rootFinder);
+	}
+	
 	/**
 	 * The step length for the line search.
 	 */
@@ -67,8 +72,8 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
 		log.debug("Determining culpability vector of '" + beliefSet + "'.");
-		DistanceMinimizationInconsistencyMeasure inconMeasure = new DistanceMinimizationInconsistencyMeasure();
-		MeanDistanceCulpabilityMeasure agMeasure = new MeanDistanceCulpabilityMeasure(false);
+		DistanceMinimizationInconsistencyMeasure inconMeasure = new DistanceMinimizationInconsistencyMeasure(this.rootFinder);
+		MeanDistanceCulpabilityMeasure agMeasure = new MeanDistanceCulpabilityMeasure(this.rootFinder,false);
 		this.culpVector = new HashMap<ProbabilisticConditional,Double>();
 		for(ProbabilisticConditional pc: beliefSet){
 			this.culpVector.put(pc, agMeasure.sign(beliefSet, pc) * agMeasure.culpabilityMeasure(beliefSet, pc));

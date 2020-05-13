@@ -24,6 +24,7 @@ import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
 import net.sf.tweety.logics.pl.syntax.PlSignature;
+import net.sf.tweety.math.opt.OptimizationRootFinder;
 
 /**
  * This consistency restorer determines the new probabilities of conditionals
@@ -35,6 +36,12 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
  */
 public class ConvexAggregatingMeMachineShop implements BeliefBaseMachineShop {
 
+	private OptimizationRootFinder rootFinder;
+	
+	public ConvexAggregatingMeMachineShop(OptimizationRootFinder rootFinder) {
+		this.rootFinder = rootFinder;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.BeliefBaseMachineShop#repair(net.sf.tweety.BeliefBase)
 	 */
@@ -43,7 +50,7 @@ public class ConvexAggregatingMeMachineShop implements BeliefBaseMachineShop {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
-		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester();
+		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;
 		// for each conditional determine its ME-distribution
@@ -55,7 +62,7 @@ public class ConvexAggregatingMeMachineShop implements BeliefBaseMachineShop {
 			bs.add(pc);
 			// name the signature explicitly in order to ensure that the distributions
 			// are defined on the same set. 
-			distributions[cnt] = new DefaultMeReasoner().getModel(bs,(PlSignature) beliefSet.getMinimalSignature());			
+			distributions[cnt] = new DefaultMeReasoner(this.rootFinder).getModel(bs,(PlSignature) beliefSet.getMinimalSignature());			
 			cnt++;
 		}
 		double[] factors = new double[beliefSet.size()];
