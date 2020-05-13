@@ -49,6 +49,9 @@ public class QbfReasonersExample {
 		CaqeSolver reasoner3 = new CaqeSolver("/home/anna/snap/qbf/caqe/");
 		PlBeliefSet p4 = parser1.parseBeliefBase("exists A: ( forall C:( exists B:((!A && C) && (D || B && !C))))");
 		System.out.println(reasoner3.isSatisfiable(p4));
+		PlFormula f1 = parser1.parseFormula("forall x1: (exists y1: (forall x2: (exists y2: ((x1 || y1) && (!x2 || y2)))))");
+		System.out.println(reasoner3.isConsistent(f1));
+
 
 		// Qute
 		System.out.println("\nQute\n=================");

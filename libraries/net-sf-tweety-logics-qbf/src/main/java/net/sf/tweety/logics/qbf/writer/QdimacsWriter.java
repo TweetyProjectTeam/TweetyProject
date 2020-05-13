@@ -14,15 +14,15 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package net.sf.tweety.logics.qbf.writer;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.pl.sat.SatSolver;
@@ -72,14 +72,12 @@ public class QdimacsWriter {
 	public boolean DISABLE_PREAMBLE_ZERO = false;
 
 	public String printBase(PlBeliefSet kb) throws IOException {
-		// Map the literals to numbers according to their natural order returned by the
-		// signature's iterator
-		Map<Proposition, Integer> mappings = new HashMap<Proposition, Integer>();
-		int mi = 1;
-		for (Proposition p : kb.getMinimalSignature()) {
-			mappings.put(p, mi);
-			mi++;
-		}
+		// Map the literals to numbers (indices of the list) 
+		List<Proposition> mappings = new ArrayList<Proposition>();
+		for(PlFormula f: kb){
+			mappings.removeAll(f.getAtoms());
+			mappings.addAll(f.getAtoms());		
+		}		
 
 		// Collect nested quantifications 
 		String quantifiers = "";
@@ -115,7 +113,7 @@ public class QdimacsWriter {
 		}
 		
 		//Collect clauses with standard dimacs converter
-		String dimacs_clauses = SatSolver.convertToDimacs(clauses_only).getFirst();
+		String dimacs_clauses = SatSolver.convertToDimacs(clauses_only, mappings);
 		int first_line_end = dimacs_clauses.indexOf("\n");
 		String preamble = dimacs_clauses.substring(0, first_line_end) + " 0\n";
 		if (DISABLE_PREAMBLE_ZERO)
@@ -129,10 +127,10 @@ public class QdimacsWriter {
 		return preamble + quantifiers + clauses;
 	}
 
-	public String printVariables(Set<Proposition> vars, Map<Proposition, Integer> mappings) {
+	public String printVariables(Set<Proposition> vars, List<Proposition> mappings) {
 		String result = "";
 		for (Proposition v : vars)
-			result += " " + mappings.get(v);
+			result += " " + (mappings.indexOf(v) + 1);
 		return result;
 	}
 

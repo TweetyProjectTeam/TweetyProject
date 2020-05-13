@@ -103,7 +103,7 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	 * @param props a list of propositions (=signature) where the indices are used for writing the clauses.
 	 * @return a string in Dimacs CNF.
 	 */
-	protected static String convertToDimacs(Collection<PlFormula> formulas, List<Proposition> props){
+	public static String convertToDimacs(Collection<PlFormula> formulas, List<Proposition> props){
 		String s = "";
 		int num_clauses = 0;
 		for(PlFormula p: formulas){
