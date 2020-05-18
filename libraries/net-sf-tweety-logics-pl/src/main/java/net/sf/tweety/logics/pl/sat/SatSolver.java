@@ -109,17 +109,19 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 		for(PlFormula p: formulas){
 			Conjunction conj = p.toCnf();
 			for(PlFormula p1: conj){
-				num_clauses++;
 				// as conj is in CNF all formulas should be disjunctions
 				Disjunction disj = (Disjunction) p1;
+				if (disj.isEmpty())
+					continue;
+				num_clauses++;
 				for(PlFormula p2: disj){
 					if(p2 instanceof Proposition)
 						s += (props.indexOf(p2) + 1) + " ";
 					else if(p2.isLiteral()){
 						s += "-" + (props.indexOf((Proposition)((Negation)p2).getFormula()) + 1) + " ";
 					}else throw new RuntimeException("This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered.");				
-				}			
-				s += "0\n";
+				}
+					s += "0\n";
 			}
 		}
 		return "p cnf " + props.size() + " " + num_clauses + "\n" + s;

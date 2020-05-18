@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.logics.pl.sat.SatSolver;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
@@ -39,8 +42,8 @@ import net.sf.tweety.logics.qbf.syntax.ForallQuantifiedFormula;
  * - Currently only works for belief bases that have only quantifiers in the
  * left portion of each formula and have only unquantified formulas in the right
  * portion of each formula. <br>
- * - The right portion of the formulas does
- * not need to be in any special form (it will be converted to cnf).
+ * - The right portion of the formulas does not need to be in any special form
+ * (it will be converted to cnf).
  * 
  * @author Anna Gessler
  */
@@ -65,66 +68,130 @@ public class QdimacsWriter {
 	public QdimacsWriter() {
 		this.writer = new StringWriter();
 	}
-	
+
 	/**
 	 * Removes zero at the end of the problem line (workaround for some solvers).
 	 */
 	public boolean DISABLE_PREAMBLE_ZERO = false;
 
 	public String printBase(PlBeliefSet kb) throws IOException {
-		// Map the literals to numbers (indices of the list) 
+		// Map the literals to numbers (indices of the list)
 		List<Proposition> mappings = new ArrayList<Proposition>();
-		for(PlFormula f: kb){
+		for (PlFormula f : kb) {
 			mappings.removeAll(f.getAtoms());
-			mappings.addAll(f.getAtoms());		
-		}		
+			mappings.addAll(f.getAtoms());
+		}
 
-		// Collect nested quantifications 
+		// Collect nested quantifications
 		String quantifiers = "";
 		PlBeliefSet clauses_only = new PlBeliefSet();
 		for (PlFormula f : kb) {
+			f = getForallReduct(f); // last quantifier must be existential in QDIMACS
 			boolean nestedFormula = true;
 			PlFormula temp = f;
-			String lastQuantifier = ""; //used for tracking consecutive quantifiers of the same type (not allowed in QDIMACS)
+			String lastQuantifier = ""; // used for tracking consecutive quantifiers of the same type (not allowed in
+										// QDIMACS)
 			while (nestedFormula) {
 				nestedFormula = false;
 				if (temp instanceof ExistsQuantifiedFormula) {
-					//concatenate consecutive quantifiers of the same type 
+					// concatenate consecutive quantifiers of the same type
 					if (lastQuantifier.equals("e"))
-						quantifiers = quantifiers.substring(0,quantifiers.length()-3) + printVariables(((ExistsQuantifiedFormula) temp).getQuantifierVariables(), mappings) + " 0\n";
+						quantifiers = quantifiers.substring(0, quantifiers.length() - 3)
+								+ printVariables(((ExistsQuantifiedFormula) temp).getQuantifierVariables(), mappings)
+								+ " 0\n";
 					else
-						quantifiers += "e" + printVariables(((ExistsQuantifiedFormula) temp).getQuantifierVariables(), mappings) + " 0\n";
+						quantifiers += "e"
+								+ printVariables(((ExistsQuantifiedFormula) temp).getQuantifierVariables(), mappings)
+								+ " 0\n";
 					nestedFormula = true;
 					temp = ((ExistsQuantifiedFormula) temp).getFormula();
 					lastQuantifier = "e";
 
 				} else if (temp instanceof ForallQuantifiedFormula) {
-					//concatenate consecutive quantifiers of the same type 
+
+					// concatenate consecutive quantifiers of the same type
 					if (lastQuantifier.equals("a"))
-						quantifiers = quantifiers.substring(0,quantifiers.length()-3) + printVariables(((ForallQuantifiedFormula) temp).getQuantifierVariables(), mappings) + " 0\n";
+						quantifiers = quantifiers.substring(0, quantifiers.length() - 3)
+								+ printVariables(((ForallQuantifiedFormula) temp).getQuantifierVariables(), mappings)
+								+ " 0\n";
 					else
-						quantifiers += "a" + printVariables(((ForallQuantifiedFormula) temp).getQuantifierVariables(), mappings) + " 0\n";
+						quantifiers += "a"
+								+ printVariables(((ForallQuantifiedFormula) temp).getQuantifierVariables(), mappings)
+								+ " 0\n";
 					nestedFormula = true;
 					temp = ((ForallQuantifiedFormula) temp).getFormula();
 					lastQuantifier = "a";
 				}
 			}
+
 			clauses_only.add(f.toCnf());
 		}
 		
-		//Collect clauses with standard dimacs converter
+		// Collect clauses with standard dimacs converter
 		String dimacs_clauses = SatSolver.convertToDimacs(clauses_only, mappings);
 		int first_line_end = dimacs_clauses.indexOf("\n");
 		String preamble = dimacs_clauses.substring(0, first_line_end) + " 0\n";
 		if (DISABLE_PREAMBLE_ZERO)
 			preamble = dimacs_clauses.substring(0, first_line_end) + "\n";
 		String clauses = dimacs_clauses.substring(first_line_end + 1);
-
+		
 		writer.write(preamble);
 		writer.write(quantifiers);
 		writer.write(clauses);
 		
-		return preamble + quantifiers + clauses;
+		return preamble + quantifiers.strip() + clauses.strip();
+	}
+
+	/**
+	 * Checks if the innermost quantifier of the formula is universal (not allowed in
+	 * QDimacs format) and eliminates it if needed.
+	 * An innermost universal quantifier can be eliminated by removing all occurrences of the
+	 * bound variables (e.g. "forall a: (a || b)" is true iff "b" is true).
+	 * 
+	 * @param f a PlFormula
+	 * @return the forall-reduct of f
+	 */
+	private PlFormula getForallReduct(PlFormula f) {
+		while (getFinalQuantification(f) instanceof ForallQuantifiedFormula) {
+			System.out.print("QDimacsWriter: Last quantifier is universal. Performing forall-reduction " + ((ForallQuantifiedFormula) getFinalQuantification(f)).getFormula());
+			ForallQuantifiedFormula innermostQuantification = (ForallQuantifiedFormula) getFinalQuantification(f);
+			Set<Proposition> vars = innermostQuantification.getQuantifierVariables();
+			Conjunction fReduct = new Conjunction();
+			for (PlFormula fd : f.toCnf()) {
+				//As the formula is in CNF, we can simply remove the 
+				//literals containing the bound variables from the disjunctions
+				Disjunction d = (Disjunction) fd;
+				for (Proposition v : vars) {
+					d.remove(v);
+					d.remove(new Negation(v));
+				}
+				fReduct.add(d);
+			}
+			f = fReduct;
+			System.out.println(" -> " + f);
+		}
+		return f;
+	}
+
+	/**
+	 * Get the innermost quantification of the given formula.
+	 * 
+	 * @param f PlFormula
+	 * @return the innermost quantification of f, including the quantifier
+	 *         variables, i.e. an instance of ExistsQuantifiedFormula or
+	 *         ForallQuantifiedFormula
+	 */
+	private PlFormula getFinalQuantification(PlFormula f) {
+		PlFormula finalFormula = f;
+		PlFormula finalFormulaTemp = f;
+		while (finalFormulaTemp instanceof ExistsQuantifiedFormula || finalFormulaTemp instanceof ForallQuantifiedFormula) {
+			finalFormula = finalFormulaTemp;
+			if (finalFormulaTemp instanceof ExistsQuantifiedFormula)
+				finalFormulaTemp = ((ExistsQuantifiedFormula) finalFormulaTemp).getFormula();
+			else
+				finalFormulaTemp = ((ForallQuantifiedFormula) finalFormulaTemp).getFormula();
+		}
+		return finalFormula;
 	}
 
 	public String printVariables(Set<Proposition> vars, List<Proposition> mappings) {
