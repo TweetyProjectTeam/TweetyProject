@@ -92,7 +92,7 @@ public class GhostQSolver extends QbfSolver {
 			File file = File.createTempFile("tmp", ".txt");
 			File file2 = File.createTempFile("tmp", ".txt");
 			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file, "UTF-8"));
-			printer.printBase((PlBeliefSet) kb);
+			printer.printBase(new PlBeliefSet(kb));
 			printer.close();
 			if (evaluate(file,file2))
 				return true;

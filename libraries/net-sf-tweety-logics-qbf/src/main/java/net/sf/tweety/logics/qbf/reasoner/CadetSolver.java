@@ -89,7 +89,7 @@ public class CadetSolver extends QbfSolver {
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file, "UTF-8"));
-			printer.printBase((PlBeliefSet) kb);
+			printer.printBase(new PlBeliefSet(kb));
 			printer.close();
 			if (evaluate(file))
 				return true;
