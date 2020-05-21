@@ -195,6 +195,18 @@ public class RankingFunction extends AbstractInterpretation<ClBeliefSet,Conditio
 	}
 	
 	/**
+	 * Returns all interpretations that are mapped to 0
+	 * @return all interpretations that are mapped to 0
+	 */
+	public Set<PossibleWorld> getPlausibleWorlds(){
+		Set<PossibleWorld> worlds = new HashSet<PossibleWorld>();
+		for(PossibleWorld w: this.ranks.keySet())
+			if(this.ranks.get(w) == 0)
+				worlds.add(w);
+		return worlds;
+	}
+	
+	/**
 	 * Returns the signature of the first-order language this ranking function
 	 * is defined on.
 	 * @return the signature of the first-order language this ranking function
