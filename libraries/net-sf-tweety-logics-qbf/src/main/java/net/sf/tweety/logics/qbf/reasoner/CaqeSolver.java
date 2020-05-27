@@ -90,6 +90,8 @@ public class CaqeSolver extends QbfSolver {
 			printer.DISABLE_PREAMBLE_ZERO = true;
 			printer.printBase(new PlBeliefSet(kb));
 			printer.close();
+			if (printer.special_formula_flag != null) 
+				return printer.special_formula_flag;
 			if (evaluate(file))
 				return true;
 			else return false;

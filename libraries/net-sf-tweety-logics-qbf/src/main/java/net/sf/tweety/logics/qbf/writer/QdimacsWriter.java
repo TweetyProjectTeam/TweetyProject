@@ -27,11 +27,13 @@ import java.util.Set;
 
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
+import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.Tautology;
 import net.sf.tweety.logics.qbf.syntax.ExistsQuantifiedFormula;
 import net.sf.tweety.logics.qbf.syntax.ForallQuantifiedFormula;
 
@@ -61,7 +63,6 @@ public class QdimacsWriter {
 	public QdimacsWriter(Writer writer) {
 		this.writer = writer;
 	}
-
 	/**
 	 * Creates a new QDIMACS writer.
 	 */
@@ -73,6 +74,13 @@ public class QdimacsWriter {
 	 * Removes zero at the end of the problem line (workaround for some solvers).
 	 */
 	public boolean DISABLE_PREAMBLE_ZERO = false;
+	
+	/**
+	 * Will be set to true/false if the input can be simplified to a tautology/contradiction.
+	 * Used in some of the solver wrappers to immediately return true/false instead of calling the solver
+	 * in case of a tautology/contradiction.
+	 */
+	public Boolean special_formula_flag = null;
 
 	public String printBase(PlBeliefSet kb) throws IOException {
 		// Map the literals to numbers (indices of the list)
@@ -91,6 +99,7 @@ public class QdimacsWriter {
 			PlFormula temp = f;
 			String lastQuantifier = ""; // used for tracking consecutive quantifiers of the same type (not allowed in
 										// QDIMACS)
+
 			while (nestedFormula) {
 				nestedFormula = false;
 				if (temp instanceof ExistsQuantifiedFormula) {
@@ -126,40 +135,95 @@ public class QdimacsWriter {
 
 			clauses_only.add(f.toCnf());
 		}
+
+		//check for tautologies and contradictions 
+		//because they can't be directly represented in QDIMACS format
+		Conjunction cnf = new Conjunction();
+		cnf.addAll(clauses_only);
+		Conjunction simplified_cnf = simplify_special_formulas(cnf);
+		if (simplified_cnf.size() == 1 && simplified_cnf.iterator().next() instanceof Tautology) {
+			this.special_formula_flag = true;
+			return "TRUE"; 
+		}
+		else if (simplified_cnf.size() == 1 && simplified_cnf.iterator().next() instanceof Contradiction) {
+			this.special_formula_flag = false;
+			return "FALSE"; 
+		}
 		
 		// Collect clauses with standard dimacs converter
-		String dimacs_clauses = SatSolver.convertToDimacs(clauses_only, mappings);
+		String dimacs_clauses = SatSolver.convertToDimacs(simplified_cnf, mappings);
 		int first_line_end = dimacs_clauses.indexOf("\n");
 		String preamble = dimacs_clauses.substring(0, first_line_end) + " 0\n";
 		if (DISABLE_PREAMBLE_ZERO)
 			preamble = dimacs_clauses.substring(0, first_line_end) + "\n";
 		String clauses = dimacs_clauses.substring(first_line_end + 1);
-		
+
 		writer.write(preamble);
 		writer.write(quantifiers);
 		writer.write(clauses);
-		
+
 		return preamble + quantifiers.strip() + clauses.strip();
 	}
 
 	/**
-	 * Checks if the innermost quantifier of the formula is universal (not allowed in
-	 * QDimacs format) and eliminates it if needed.
-	 * An innermost universal quantifier can be eliminated by removing all occurrences of the
-	 * bound variables (e.g. "forall a: (a || b)" is true iff "b" is true).
+	 * Simplify clauses that contain tautologies or contradictions.
+	 * 
+	 * @param a formula in cnf (if it is not in cnf already, it will be converted
+	 *          to cnf)
+	 * @return simplified belief set
+	 */
+	private Conjunction simplify_special_formulas(PlFormula f) {
+			Conjunction c = f.toCnf();
+			Conjunction c_simplified = new Conjunction();
+			boolean found_contradiction = false;
+			for (PlFormula fd : c) {
+				Disjunction d = (Disjunction) fd;
+				Disjunction d_simplified = new Disjunction();
+				for (PlFormula l : d) {
+					// (+ || x || ...)  <=> +
+					if (l instanceof Tautology) {
+						d_simplified = new Disjunction();
+						break;
+					} 
+					// (- || x || ...) <=> (x ...)
+					else if (l instanceof Contradiction) 
+						found_contradiction = true;
+					else 
+						d_simplified.add(l);
+				}
+				// border case: disjunct consists only of "-"
+				// the whole conjunction is false
+				if (d_simplified.isEmpty() && found_contradiction) {
+					c_simplified = new Conjunction();
+					c_simplified.add(new Contradiction()); 
+					return c_simplified;
+				}
+				else if (!d_simplified.isEmpty())
+					c_simplified.add(d_simplified);
+			}
+			// border case: all disjuncts are tautologies
+			if (c_simplified.isEmpty()) 
+				c_simplified.add(new Tautology());
+		return c_simplified;
+	}
+
+	/**
+	 * Checks if the innermost quantifier of the formula is universal (not allowed
+	 * in QDimacs format) and eliminates it if needed. An innermost universal
+	 * quantifier can be eliminated by removing all occurrences of the bound
+	 * variables (e.g. "forall a: (a || b)" is true iff "b" is true).
 	 * 
 	 * @param f a PlFormula
 	 * @return the forall-reduct of f
 	 */
 	private PlFormula getForallReduct(PlFormula f) {
 		while (getFinalQuantification(f) instanceof ForallQuantifiedFormula) {
-			System.out.print("QDimacsWriter: Last quantifier is universal. Performing forall-reduction " + ((ForallQuantifiedFormula) getFinalQuantification(f)).getFormula());
 			ForallQuantifiedFormula innermostQuantification = (ForallQuantifiedFormula) getFinalQuantification(f);
 			Set<Proposition> vars = innermostQuantification.getQuantifierVariables();
 			Conjunction fReduct = new Conjunction();
 			for (PlFormula fd : f.toCnf()) {
-				//As the formula is in CNF, we can simply remove the 
-				//literals containing the bound variables from the disjunctions
+				// As the formula is in CNF, we can simply remove the
+				// literals containing the bound variables from the disjunctions
 				Disjunction d = (Disjunction) fd;
 				for (Proposition v : vars) {
 					d.remove(v);
@@ -168,7 +232,6 @@ public class QdimacsWriter {
 				fReduct.add(d);
 			}
 			f = fReduct;
-			System.out.println(" -> " + f);
 		}
 		return f;
 	}
@@ -184,7 +247,8 @@ public class QdimacsWriter {
 	private PlFormula getFinalQuantification(PlFormula f) {
 		PlFormula finalFormula = f;
 		PlFormula finalFormulaTemp = f;
-		while (finalFormulaTemp instanceof ExistsQuantifiedFormula || finalFormulaTemp instanceof ForallQuantifiedFormula) {
+		while (finalFormulaTemp instanceof ExistsQuantifiedFormula
+				|| finalFormulaTemp instanceof ForallQuantifiedFormula) {
 			finalFormula = finalFormulaTemp;
 			if (finalFormulaTemp instanceof ExistsQuantifiedFormula)
 				finalFormulaTemp = ((ExistsQuantifiedFormula) finalFormulaTemp).getFormula();

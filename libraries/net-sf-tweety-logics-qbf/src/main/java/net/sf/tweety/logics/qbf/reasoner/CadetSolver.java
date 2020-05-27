@@ -91,6 +91,8 @@ public class CadetSolver extends QbfSolver {
 			QdimacsWriter printer = new QdimacsWriter(new PrintWriter(file, "UTF-8"));
 			printer.printBase(new PlBeliefSet(kb));
 			printer.close();
+			if (printer.special_formula_flag != null) 
+				return printer.special_formula_flag;
 			if (evaluate(file))
 				return true;
 			else return false;
