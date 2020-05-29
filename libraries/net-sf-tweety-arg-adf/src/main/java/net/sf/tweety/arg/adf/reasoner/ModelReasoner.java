@@ -18,7 +18,8 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import net.sf.tweety.arg.adf.reasoner.generator.SatModelGenerator;
+import net.sf.tweety.arg.adf.reasoner.sat.Pipeline;
+import net.sf.tweety.arg.adf.reasoner.sat.generator.ModelGenerator;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 
 /**
@@ -32,7 +33,7 @@ public class ModelReasoner extends AbstractDialecticalFrameworkReasoner {
 		super(satBased(solver));
 	}
 	
-	private static Pipeline<SatReasonerContext> satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new SatModelGenerator(solver)).build();
+	private static Pipeline satBased(IncrementalSatSolver solver) {
+		return Pipeline.builder(new ModelGenerator(), solver).build();
 	}
 }

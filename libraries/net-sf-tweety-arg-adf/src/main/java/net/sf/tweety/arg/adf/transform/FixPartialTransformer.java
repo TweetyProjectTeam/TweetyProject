@@ -24,13 +24,16 @@ import static net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition.TAUTOLOGY;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Objects;
 
+import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ContradictionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.TautologyAcceptanceCondition;
@@ -51,6 +54,15 @@ import net.sf.tweety.arg.adf.syntax.acc.TautologyAcceptanceCondition;
  *
  */
 public final class FixPartialTransformer extends AbstractTransformer<AcceptanceCondition, Void, AcceptanceCondition>{
+
+	private final Interpretation interpretation;
+	
+	/**
+	 * @param interpretation the interpretation which is used
+	 */
+	public FixPartialTransformer(Interpretation interpretation) {
+		this.interpretation = Objects.requireNonNull(interpretation);
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#initialize()
@@ -84,6 +96,11 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 				filtered.add(child);
 			}
 		}
+		
+		if (filtered.size() == 1) {
+			return filtered.iterator().next();
+		}
+		
 		return new DisjunctionAcceptanceCondition(filtered);
 	}
 
@@ -103,6 +120,11 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 				filtered.add(child);
 			}
 		}
+		
+		if (filtered.size() == 1) {
+			return filtered.iterator().next();
+		}
+		
 		return new ConjunctionAcceptanceCondition(filtered);
 	}
 
@@ -156,7 +178,7 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 			return TAUTOLOGY;
 		}
 		
-		// if we contain both constant, we are clearly contradicting
+		// if we contain both constants, we are clearly contradicting
 		if (containsContradiction && containsTautology) {
 			return CONTRADICTION;
 		}
@@ -185,8 +207,20 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	@Override
 	protected AcceptanceCondition transformExclusiveDisjunction(AcceptanceCondition left, AcceptanceCondition right,
 			Void topDownData, int polarity) {
-		// TODO Auto-generated method stub
-		return null;
+		if (left.equals(right)) {
+			return CONTRADICTION;
+		} else if ((left == CONTRADICTION && right == TAUTOLOGY) || (left == TAUTOLOGY && right == CONTRADICTION)) {
+			return TAUTOLOGY;
+		} else if (left == CONTRADICTION) {
+			return right;
+		} else if (right == CONTRADICTION) {
+			return left;
+		} else if (left == TAUTOLOGY) {
+			return new NegationAcceptanceCondition(right);
+		} else if (right == TAUTOLOGY) {
+			return new NegationAcceptanceCondition(left);
+		}
+		return new ExclusiveDisjunctionAcceptanceCondition(left, right);
 	}
 
 	/* (non-Javadoc)
@@ -194,8 +228,12 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	 */
 	@Override
 	protected AcceptanceCondition transformNegation(AcceptanceCondition child, Void topDownData, int polarity) {
-		// TODO Auto-generated method stub
-		return null;
+		if (child == CONTRADICTION) {
+			return TAUTOLOGY;
+		} else if (child == TAUTOLOGY) {
+			return CONTRADICTION;
+		}
+		return new NegationAcceptanceCondition(child);
 	}
 
 	/* (non-Javadoc)
@@ -203,8 +241,12 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	 */
 	@Override
 	protected AcceptanceCondition transformArgument(Argument argument, Void topDownData, int polarity) {
-		// TODO Auto-generated method stub
-		return null;
+		if (interpretation.satisfied(argument)) {
+			return TAUTOLOGY;
+		} else if (interpretation.unsatisfied(argument)) {
+			return CONTRADICTION;
+		}
+		return argument;
 	}
 
 	/* (non-Javadoc)
@@ -212,8 +254,7 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	 */
 	@Override
 	protected AcceptanceCondition transformContradiction(Void topDownData, int polarity) {
-		// TODO Auto-generated method stub
-		return null;
+		return CONTRADICTION;
 	}
 
 	/* (non-Javadoc)
@@ -221,8 +262,7 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	 */
 	@Override
 	protected AcceptanceCondition transformTautology(Void topDownData, int polarity) {
-		// TODO Auto-generated method stub
-		return null;
+		return TAUTOLOGY;
 	}
 
 }

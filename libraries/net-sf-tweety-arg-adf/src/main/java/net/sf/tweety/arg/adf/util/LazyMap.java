@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
+ * Lazily computes missing values. If a key is mapped to null, the value is computed by the provided function on its first access.
  * 
  * @author Mathias Hofer
  *
@@ -41,7 +42,7 @@ public final class LazyMap<K, V> implements Map<K, V> {
 	private final Map<K, V> delegate = new HashMap<>();
 	
 	/**
-	 * @param function
+	 * @param function the function to compute missing values
 	 */
 	public LazyMap(Function<K, V> function) {
 		this.function = function;
@@ -97,8 +98,7 @@ public final class LazyMap<K, V> implements Map<K, V> {
 	public V get(Object key) {
 		// implicit type-check
 		if (delegate.containsKey(key)) {
-			V value = delegate.computeIfAbsent((K) key, function);
-			return value;
+			return delegate.computeIfAbsent((K) key, function);
 		}
 		return null;
 	}

@@ -26,6 +26,8 @@ import java.util.stream.Stream;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
+ * This class provides a skeletal implementation of the {@link Ordering}
+ * interface, to minimize the effort required to implement this interface.
  * 
  * @author Mathias Hofer
  *
@@ -40,7 +42,7 @@ public abstract class AbstractOrdering<T> implements Ordering<T> {
 	 * function.Predicate)
 	 */
 	@Override
-	public Ordering<T> filter(Predicate<T> filter) {
+	public Ordering<T> filter(Predicate<? super T> filter) {
 		return new FilteredOrdering<T>(filter, this);
 	}
 
@@ -130,7 +132,7 @@ public abstract class AbstractOrdering<T> implements Ordering<T> {
 
 	private static final class FilteredOrdering<T> extends AbstractOrdering<T> {
 
-		private final Predicate<T> filter;
+		private final Predicate<? super T> filter;
 
 		private final AbstractOrdering<T> delegate;
 
@@ -138,7 +140,7 @@ public abstract class AbstractOrdering<T> implements Ordering<T> {
 		 * @param filter
 		 * @param delegate
 		 */
-		public FilteredOrdering(Predicate<T> filter, AbstractOrdering<T> delegate) {
+		public FilteredOrdering(Predicate<? super T> filter, AbstractOrdering<T> delegate) {
 			this.filter = filter;
 			this.delegate = delegate;
 		}

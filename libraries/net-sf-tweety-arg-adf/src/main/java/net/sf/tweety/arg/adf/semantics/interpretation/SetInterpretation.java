@@ -42,9 +42,9 @@ public final class SetInterpretation implements Interpretation {
 
 	/**
 	 * 
-	 * @param satisfied
-	 * @param unsatisfied
-	 * @param undecided
+	 * @param satisfied the satisfied arguments
+	 * @param unsatisfied the unsatisfied arguments
+	 * @param undecided the undecided arguments
 	 */
 	public SetInterpretation(Set<Argument> satisfied, Set<Argument> unsatisfied, Set<Argument> undecided) {
 		if (satisfied.isEmpty() && unsatisfied.isEmpty() && undecided.isEmpty()) {

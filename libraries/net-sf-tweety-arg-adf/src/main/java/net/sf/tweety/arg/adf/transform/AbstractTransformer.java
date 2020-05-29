@@ -61,13 +61,17 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 	}
 	
 	protected U transform(AcceptanceCondition acc, D userObject) {
-		return acc.accept(visitor, new TopDownData<D>(1, userObject));
+		return acc.accept(visitor, new TopDownData<D>(topLevelPolarity(), userObject));
+	}
+	
+	protected int topLevelPolarity() {
+		return 1;
 	}
 
 	/**
 	 * Provides the initial top-down data.
 	 * 
-	 * @return
+	 * @return the initial top-down data
 	 */
 	protected abstract D initialize();
 

@@ -18,16 +18,24 @@
  */
 package net.sf.tweety.arg.adf.semantics.interpretation;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
+import net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.util.MinusSetView;
+import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
+import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
- * This class represents an immutable three-valued interpretation of an Abstract
+ * This class represents a three-valued interpretation of an Abstract
  * Dialectical Framework (ADF).
  * 
  * @author Mathias Hofer
@@ -54,8 +62,58 @@ public interface Interpretation {
 		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
+	
+	static Interpretation fromSet(Set<Argument> satisfied, AbstractDialecticalFramework adf) {
+		return new SetInterpretation(satisfied, Set.of(), new MinusSetView<>(adf.getArguments(), satisfied));
+	}
+	
+	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, AbstractDialecticalFramework adf) {
+		Set<Argument> undecided = new HashSet<>();
+		for (Argument arg : adf.getArguments()) {
+			if (!satisfied.contains(arg) && !unsatisfied.contains(arg)) {
+				undecided.add(arg);
+			}
+		}
+		return new SetInterpretation(satisfied, unsatisfied, undecided);
+	}
 
 	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, Set<Argument> undecided) {
+		return new SetInterpretation(satisfied, unsatisfied, undecided);
+	}
+	
+	/**
+	 * Constructs a three-valued ADF interpretation from a witness of a propositional sat encoding.
+	 * 
+	 * @param witness the propositional sat witness
+	 * @param encodingContext the mapping of the propositional variables and the adf
+	 * @param adf the ADF for which we construct the interpretation
+	 * @throws NullPointerException if any of the arguments are null
+	 * @return an ADF interpretation
+	 */
+	static Interpretation fromWitness(net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness,
+			PropositionalMapping encodingContext, AbstractDialecticalFramework adf) {
+		Set<Argument> satisfied = new HashSet<>();
+		Set<Argument> unsatisfied = new HashSet<>();
+		Set<Argument> undecided = new HashSet<>();
+		for (Argument a : adf.getArguments()) {
+			if (witness.satisfies(encodingContext.getTrue(a))) {
+				satisfied.add(a);
+			} else if (witness.satisfies(encodingContext.getFalse(a))) {
+				unsatisfied.add(a);
+			} else {
+				undecided.add(a);
+			}
+		}
+		return new SetInterpretation(satisfied, unsatisfied, undecided);
+	}
+		
+	static Interpretation partial(Set<Argument> satisfied, Set<Argument> unsatisfied, AbstractDialecticalFramework adf) {
+		Set<Argument> undecided = new HashSet<Argument>();
+		for (Argument arg : adf.getArguments()) {
+			if (!satisfied.contains(arg) && !unsatisfied.contains(arg)) {
+				undecided.add(arg);
+			}
+		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
 
@@ -72,7 +130,125 @@ public interface Interpretation {
 		}
 		return assignment;
 	}
+	
+	/**
+	 * Creates a new interpretation with the same assignments as in the given arguments, but only uses the arguments contained in <code>restriction</code>.
+	 * 
+	 * @param interpretation the interpretation to restrict
+	 * @param restriction the arguments that act as a restriction/filter
+	 * @return an interpretation which only contains arguments in <code>restriction</code>
+	 */
+	static Interpretation restrict(Interpretation interpretation, Collection<Argument> restriction) {
+		Set<Argument> satisfied = new HashSet<>();
+		Set<Argument> unsatisfied = new HashSet<>();
+		Set<Argument> undecided = new HashSet<>();
+		for (Argument arg : restriction) {
+			if (interpretation.satisfied(arg)) {
+				satisfied.add(arg);
+			} else if (interpretation.unsatisfied(arg)) {
+				unsatisfied.add(arg);
+			} else {
+				undecided.add(arg);
+			}
+		}
+		return new SetInterpretation(satisfied, unsatisfied, undecided);
+	}
+	
+	/**
+	 * Checks if, and only if, the two valued assignments for both of the
+	 * interpretations are the same, ignores differences in the undecided
+	 * assignments.
+	 * 
+	 * @param i1 an interpretation
+	 * @param i2 an interpretation to be compared with <code>i1</code> for the two-valued assignments
+	 * @return true iff the values of the decided arguments of both interpretations are the same
+	 */
+	static boolean equalsTwoValued(Interpretation i1, Interpretation i2) {
+		return Objects.equals(i1, i2) ||
+				(i1.satisfied().containsAll(i2.satisfied()) && i2.satisfied().containsAll(i1.satisfied()) && 
+				i1.unsatisfied().containsAll(i2.unsatisfied()) && i2.unsatisfied().containsAll(i1.unsatisfied()));
+	}
+	
+	/**
+	 * Returns an interpretation relative to <code>adf</code> with a single truth value decided.
+	 * <p>
+	 * This may be useful for some decision-level based algorithms.
+	 * 
+	 * @param argument the argument to decide
+	 * @param value the value of the argument
+	 * @param adf the contextual ADF
+	 * @return an interpretation with a single argument decided
+	 */
+	static Interpretation singleValued(Argument argument, boolean value, AbstractDialecticalFramework adf) {
+		return new SingleValuedInterpretation(argument, value, adf);
+	}
+	
+	/**
+	 * Goes through all possible partial interpretations respecting the order of the given list of arguments.
+	 * <p>
+	 * This returns exponentially many in the size of <code>arguments</code> interpretations.
+	 * 
+	 * @param arguments the arguments for which we compute the interpretations
+	 * @param adf the contextual ADF
+	 * @return the partial interpretations
+	 */
+	static Iterator<Interpretation> partials(List<Argument> arguments, AbstractDialecticalFramework adf) {
+		return new Iterator<Interpretation>() {
+			
+			private final Iterator<Interpretation> iter = new InterpretationIterator(arguments);
+			
+			/* (non-Javadoc)
+			 * @see net.sf.tweety.arg.adf.semantics.interpretation.InterpretationIterator#next()
+			 */
+			@Override
+			public Interpretation next() {
+				Interpretation partial = iter.next();
+				return partial(partial.satisfied(), partial.unsatisfied(), adf);
+			}
 
+			@Override
+			public boolean hasNext() {
+				return iter.hasNext();
+			}
+			
+		};
+	}
+	
+	static Builder builder(AbstractDialecticalFramework adf) {
+		return new Builder(adf);
+	}
+	
+	static Builder builder(Collection<Argument> arguments) {
+		return new Builder(arguments);
+	}
+	
+	static final class Builder {
+		private final Map<Argument, Boolean> assignment = new HashMap<>();
+		
+		private Builder(Collection<Argument> arguments) {
+			for (Argument arg : arguments) {
+				// initialize as undecided
+				assignment.put(arg, null);
+			}
+		}
+				
+		private Builder(AbstractDialecticalFramework adf) {
+			this(adf.getArguments());
+		}
+		
+		public Builder put(Argument arg, Boolean value) {
+			if (!assignment.containsKey(arg)) {
+				throw new IllegalArgumentException("The given argument is unknown to the provided ADF!");
+			}
+			assignment.put(arg, value);
+			return this;
+		}
+		
+		public Interpretation build() {
+			return Interpretation.fromMap(assignment);
+		}
+	}
+	
 	boolean satisfied(Argument arg);
 
 	boolean unsatisfied(Argument arg);
@@ -92,5 +268,43 @@ public interface Interpretation {
 	 * @return all the assigned arguments
 	 */
 	Set<Argument> arguments();
+	
+	/**
+	 * Returns the number of arguments in this interpretation.
+	 * 
+	 * @return the number of arguments
+	 */
+	default int size() {
+		return arguments().size();
+	}
+	
+	default boolean containsAll(Collection<Argument> arguments) {
+		return arguments().containsAll(arguments);
+	}
+	
+	/**
+	 * Returns the number of decided arguments, i.e. satisfied or unsatisfied, in this interpretation.
+	 *  
+	 * @return the number of decided arguments
+	 */
+	default int numDecided() {
+		return satisfied().size() + unsatisfied().size();
+	}
+	
+	default boolean isSubsetOf(Interpretation superset) {
+		return superset.satisfied().containsAll(satisfied()) && superset.unsatisfied().containsAll(unsatisfied());
+	}
+	
+	default boolean isStrictSubsetOf(Interpretation superset) {
+		return isSubsetOf(superset) && numDecided() != superset.numDecided();
+	}
+	
+	default boolean isSupersetOf(Interpretation subset) {
+		return satisfied().containsAll(subset.satisfied()) && unsatisfied().containsAll(subset.unsatisfied());
+	}
+	
+	default boolean isStrictSupersetOf(Interpretation subset) {
+		return isSupersetOf(subset) && numDecided() != subset.numDecided();
+	}
 
 }

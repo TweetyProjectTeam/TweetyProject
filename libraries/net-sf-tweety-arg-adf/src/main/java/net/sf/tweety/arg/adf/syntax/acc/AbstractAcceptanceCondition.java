@@ -20,6 +20,7 @@ package net.sf.tweety.arg.adf.syntax.acc;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -32,7 +33,7 @@ public abstract class AbstractAcceptanceCondition implements AcceptanceCondition
 	
 	/**
 	 * 
-	 * @param children 
+	 * @param children the children of this acceptance condition
 	 * @throws NullPointerException if children or one of its elements is null
 	 */
 	public AbstractAcceptanceCondition(Collection<AcceptanceCondition> children) {
@@ -50,38 +51,6 @@ public abstract class AbstractAcceptanceCondition implements AcceptanceCondition
 	abstract String getName();
 
 	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((children == null) ? 0 : children.hashCode());
-		return result;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AbstractAcceptanceCondition other = (AbstractAcceptanceCondition) obj;
-		if (children == null) {
-			if (other.children != null)
-				return false;
-		} else if (!children.equals(other.children))
-			return false;
-		return true;
-	}
-
-	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -96,6 +65,32 @@ public abstract class AbstractAcceptanceCondition implements AcceptanceCondition
 		}
 		builder.append(")");
 		return builder.toString();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((children == null) ? 0 : children.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof AbstractAcceptanceCondition)) {
+			return false;
+		}
+		AbstractAcceptanceCondition other = (AbstractAcceptanceCondition) obj;
+		return Objects.equals(children, other.children);
 	}
 
 }

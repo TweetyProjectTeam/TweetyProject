@@ -24,15 +24,17 @@ import java.util.Set;
 public final class EquivalenceAcceptanceCondition extends AbstractAcceptanceCondition {
 	
 	/**
-	 * @param left
-	 * @param right
+	 * @param left the left side of the equivalence
+	 * @param right the right side of the equivalence
 	 */
 	public EquivalenceAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
 		super(Set.of(left, right));
 	}
 	
 	/**
-	 * @param children
+	 * Asserts all children to be pairwise equivalent.
+	 * 
+	 * @param children the children of the equivalence
 	 */
 	public EquivalenceAcceptanceCondition(Collection<AcceptanceCondition> children) {
 		super(children);

@@ -18,10 +18,12 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import net.sf.tweety.arg.adf.reasoner.generator.SatGroundGenerator;
-import net.sf.tweety.arg.adf.reasoner.generator.SatModelGenerator;
-import net.sf.tweety.arg.adf.reasoner.verifier.GrounderStableVerifier;
+import net.sf.tweety.arg.adf.reasoner.sat.Pipeline;
+import net.sf.tweety.arg.adf.reasoner.sat.generator.GroundGenerator;
+import net.sf.tweety.arg.adf.reasoner.sat.generator.ModelGenerator;
+import net.sf.tweety.arg.adf.reasoner.sat.verifier.GrounderStableVerifier;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
+import net.sf.tweety.arg.adf.semantics.link.SatLinkStrategy;
 
 /**
  * @author Mathias Hofer
@@ -36,9 +38,9 @@ public class StableReasoner extends AbstractDialecticalFrameworkReasoner {
 		super(satBased(solver));
 	}
 	
-	private static Pipeline<SatReasonerContext> satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new SatModelGenerator(solver))
-				.addVerifier(new GrounderStableVerifier<>(new SatGroundGenerator(solver)))
+	private static Pipeline satBased(IncrementalSatSolver solver) {
+		return Pipeline.builder(new ModelGenerator(), solver)
+				.setVerifier(new GrounderStableVerifier(new GroundGenerator(), new SatLinkStrategy(solver)))
 				.build();
 	}
 

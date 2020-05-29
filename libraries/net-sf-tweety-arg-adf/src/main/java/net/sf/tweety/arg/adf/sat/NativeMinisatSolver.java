@@ -19,9 +19,9 @@
 package net.sf.tweety.arg.adf.sat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.commons.Interpretation;
@@ -51,11 +51,6 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 		}
 		String path = getClass().getResource(lib).getPath();
 		System.load(path);
-	}
-	
-	@Override
-	public boolean isSatisfiable(Collection<PlFormula> formulas) {
-		return getWitness(formulas) != null;
 	}
 
 	/*
@@ -88,6 +83,28 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 
 	private static native boolean solve(long handle, int assumption);
 
+	private static native boolean solve(long handle, int assumption1, int assumption2);
+
+	private static native boolean solve(long handle, int assumption1, int assumption2, int assumption3);
+
+	private static native boolean solve(long handle, int[] assumptions, int size);
+
+	/**
+	 * Must call solve() manually beforehand.
+	 * <p>
+	 * This is especially useful if we want to call solve with assumptions.
+	 * 
+	 * @param handle
+	 * @return
+	 */
+	private static native int[] model(long handle);
+
+	/**
+	 * Calls solve() by itself before returning a witness.
+	 * 
+	 * @param handle
+	 * @return
+	 */
 	private static native int[] witness(long handle);
 
 	/**
@@ -97,32 +114,21 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 	 */
 	private static native int value(long handle, int var);
 
-	private static class MinisatSolverState implements SatSolverState {
+	private static final class MinisatSolverState implements SatSolverState {
 
-		private long handle;
+		private final long handle;
 
-		private Integer assumption;
+		private List<Integer> assumptions;
 
 		/**
 		 * Maps the propositions to their native representation.
 		 */
-		private Map<Proposition, Integer> propositionsToNative = new HashMap<Proposition, Integer>();
-
-		private static final int INITIAL_MAPPING_SIZE = 256;
-
-		private static final double GROWTH_FACTOR = 0.5;
+		private final Map<Proposition, Integer> propositionsToNative = new HashMap<Proposition, Integer>();
 
 		/**
-		 * Use an array instead of a HashMap to avoid the recurring calculation
-		 * of hashcode(). Even if a hashcode() call is relatively fast, it
-		 * turned out to accumulate for instances with several thousand models
-		 * for which we perform millions of native calls.
-		 * <p>
-		 * The faster access is bought by the resize overhead, once
-		 * the array is full. This should however not occur very often and we
-		 * can experiment a bit with the initial size and the growth factor.
+		 * The index corresponds to the native representation.
 		 */
-		private Proposition[] nativeToProp = new Proposition[INITIAL_MAPPING_SIZE];
+		private final List<Proposition> nativeToProp = new ArrayList<>();
 
 		private MinisatSolverState() {
 			this.handle = init();
@@ -130,16 +136,7 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 			// represent negative literals as negative numbers, but we cannot
 			// distinguish -0 and +0
 			newVar(handle);
-		}
-
-		private void updateNativeMapping(int n, Proposition p) {
-			// resize if necessary
-			if (n > nativeToProp.length - 1) {
-				int growth = (int) (nativeToProp.length * GROWTH_FACTOR);
-				int newLength = nativeToProp.length + growth;
-				nativeToProp = Arrays.copyOf(nativeToProp, newLength);
-			}
-			nativeToProp[n] = p;
+			nativeToProp.add(null); // adjust index
 		}
 
 		/*
@@ -148,7 +145,7 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 		 * @see java.lang.AutoCloseable#close()
 		 */
 		@Override
-		public void close() throws Exception {
+		public void close() {
 			delete(handle);
 		}
 
@@ -165,7 +162,7 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 				Collection<Proposition> model = new ArrayList<>(witness.length);
 				for (int i = 0; i < witness.length; i++) {
 					if (witness[i] == 1) {
-						model.add(nativeToProp[i]);
+						model.add(nativeToProp.get(i));
 					}
 				}
 				return new PossibleWorld(model);
@@ -181,9 +178,25 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 		 */
 		@Override
 		public boolean satisfiable() {
-			if (assumption != null) {
-				boolean sat = solve(handle, assumption);
-				assumption = null;
+			if (assumptions != null) {
+				boolean sat = false;
+				int size = assumptions.size();
+				// optimization: jni calls without arrays have less overhead
+				switch (size) {
+				case 1:
+					sat = solve(handle, assumptions.get(0));
+					break;
+				case 2:
+					sat = solve(handle, assumptions.get(0), assumptions.get(1));
+					break;
+				case 3:
+					sat = solve(handle, assumptions.get(0), assumptions.get(1), assumptions.get(2));
+					break;
+				default:
+					sat = solve(handle, assumptions.stream().mapToInt(i -> i).toArray(), size);
+					break;
+				}
+				assumptions = null;
 				return sat;
 			}
 
@@ -200,7 +213,11 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 		@Override
 		public void assume(Proposition proposition, boolean value) {
 			int mapped = mapToNative(proposition);
-			this.assumption = value ? mapped : -mapped;
+			int assumption = value ? mapped : -mapped;
+			if (assumptions == null) {
+				assumptions = new ArrayList<>();
+			}
+			assumptions.add(assumption);
 		}
 
 		@Override
@@ -216,12 +233,13 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 			updateState(clause);
 			return true;
 		}
-		
+
 		private int mapToNative(Proposition p) {
 			if (!propositionsToNative.containsKey(p)) {
 				int var = newVar(handle);
 				propositionsToNative.put(p, var);
-				updateNativeMapping(var, p);
+				assert var == nativeToProp.size();
+				nativeToProp.add(p);
 			}
 			return propositionsToNative.get(p);
 		}

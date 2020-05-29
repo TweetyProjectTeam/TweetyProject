@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.arg.adf.syntax.test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -25,6 +26,7 @@ import org.junit.Test;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition;
 
 /**
@@ -52,19 +54,28 @@ public class AccEqualityTest {
 	}
 	
 	@Test
-	public void testUnequality1() {
+	public void testEquality3() {
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");
 		AcceptanceCondition acc1 = new EquivalenceAcceptanceCondition(a, b);
 		AcceptanceCondition acc2 = new EquivalenceAcceptanceCondition(b, a);
-		assertTrue(!acc1.equals(acc2));
+		assertTrue(acc1.equals(acc2));
+	}
+	
+	@Test
+	public void testUnequality1() {
+		Argument a = new Argument("a");
+		Argument b = new Argument("b");
+		AcceptanceCondition acc1 = new ImplicationAcceptanceCondition(a, b);
+		AcceptanceCondition acc2 = new ImplicationAcceptanceCondition(b, a);
+		assertFalse(acc1.equals(acc2));
 	}
 	
 	@Test
 	public void testUnequality2() {
 		Argument a = new Argument("a");
 		Argument b = new Argument("a");
-		assertTrue(!a.equals(b));
+		assertFalse(a.equals(b));
 	}
 		
 }

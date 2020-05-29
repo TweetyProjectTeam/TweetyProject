@@ -25,7 +25,8 @@ public final class NegationAcceptanceCondition extends AbstractAcceptanceConditi
 	private final AcceptanceCondition child;
 	
 	/**
-	 * @param children
+	 * 
+	 * @param child the child of the negation
 	 */
 	public NegationAcceptanceCondition(AcceptanceCondition child) {
 		super(Set.of(child));

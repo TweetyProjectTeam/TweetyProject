@@ -29,6 +29,23 @@ import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 public final class ArgumentDegreeOrdering extends AbstractOrdering<Argument> {
 
+	public static enum DegreeType {
+		INCOMING,
+		OUTGOING,
+		UNDIRECTED
+	}
+	
+	private final DegreeType degreeType;
+	
+	/**
+	 * 
+	 * @param degreeType specifies the type of the degree
+	 */
+	public ArgumentDegreeOrdering(DegreeType degreeType) {
+		this.degreeType = degreeType;
+	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -39,8 +56,21 @@ public final class ArgumentDegreeOrdering extends AbstractOrdering<Argument> {
 	 */
 	@Override
 	protected int compare(Argument a1, Argument a2, AbstractDialecticalFramework adf) {
-		
-		return 0;
+		int degree1 = degree(a1, adf);
+		int degree2 = degree(a2, adf);
+		return Integer.compare(degree1, degree2);
+	}
+	
+	private int degree(Argument arg, AbstractDialecticalFramework adf) {
+		switch (degreeType) {
+		case INCOMING:
+			return adf.incomingDegree(arg);
+		case OUTGOING:
+			return adf.outgoingDegree(arg);
+		case UNDIRECTED:
+			return adf.incomingDegree(arg) + adf.outgoingDegree(arg);
+		}
+		throw new AssertionError();
 	}
 
 	/*

@@ -30,7 +30,7 @@ import java.util.stream.Stream;
  *
  * @param <E> the elements
  */
-public final class UnionSetView<E> implements Set<E> {
+public final class UnionSetView<E> extends AbstractUnmodifiableSet<E> {
 
 	private final Set<E> set1;
 
@@ -43,12 +43,12 @@ public final class UnionSetView<E> implements Set<E> {
 	 * It is up to the caller to ensure this property, this class performs
 	 * no additional checks.
 	 * 
-	 * @param set1
-	 * @param set2
+	 * @param set1 the first set
+	 * @param set2 the second set
 	 */
 	public UnionSetView(Set<E> set1, Set<E> set2) {
-		this.set1 = set1;
-		this.set2 = set2;
+		this.set1 = Set.copyOf(set1);
+		this.set2 = Set.copyOf(set2);
 	}
 	
 	public static <E> Set<E> of(Set<E> set1, Set<E> set2, Set<E> set3) {
@@ -130,26 +130,6 @@ public final class UnionSetView<E> implements Set<E> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see java.util.Set#add(java.lang.Object)
-	 */
-	@Override
-	public boolean add(E e) {
-		throw new UnsupportedOperationException();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Set#remove(java.lang.Object)
-	 */
-	@Override
-	public boolean remove(Object o) {
-		throw new UnsupportedOperationException();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see java.util.Set#containsAll(java.util.Collection)
 	 */
 	@Override
@@ -162,43 +142,4 @@ public final class UnionSetView<E> implements Set<E> {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Set#addAll(java.util.Collection)
-	 */
-	@Override
-	public boolean addAll(Collection<? extends E> c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Set#retainAll(java.util.Collection)
-	 */
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Set#removeAll(java.util.Collection)
-	 */
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Set#clear()
-	 */
-	@Override
-	public void clear() {
-		throw new UnsupportedOperationException();
-	}
 }

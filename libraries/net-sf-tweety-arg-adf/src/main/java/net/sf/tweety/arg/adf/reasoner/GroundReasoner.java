@@ -18,7 +18,8 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import net.sf.tweety.arg.adf.reasoner.generator.SatGroundGenerator;
+import net.sf.tweety.arg.adf.reasoner.sat.Pipeline;
+import net.sf.tweety.arg.adf.reasoner.sat.generator.GroundGenerator;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 
 /**
@@ -35,8 +36,8 @@ public class GroundReasoner extends AbstractDialecticalFrameworkReasoner {
 		super(satBased(solver));
 	}
 
-	private static Pipeline<SatReasonerContext> satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new SatGroundGenerator(solver)).build();
+	private static Pipeline satBased(IncrementalSatSolver solver) {
+		return Pipeline.builder(new GroundGenerator(), solver).build();
 	}
 
 }

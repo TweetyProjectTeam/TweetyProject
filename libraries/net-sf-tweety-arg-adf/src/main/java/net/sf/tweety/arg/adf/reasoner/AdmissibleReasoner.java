@@ -18,9 +18,10 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import net.sf.tweety.arg.adf.reasoner.generator.SatConflictFreeGenerator;
-import net.sf.tweety.arg.adf.reasoner.processor.SatKBipolarStateProcessor;
-import net.sf.tweety.arg.adf.reasoner.verifier.SatAdmissibleVerifier;
+import net.sf.tweety.arg.adf.reasoner.sat.Pipeline;
+import net.sf.tweety.arg.adf.reasoner.sat.generator.ConflictFreeGenerator;
+import net.sf.tweety.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
+import net.sf.tweety.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 
 /**
@@ -34,11 +35,11 @@ public class AdmissibleReasoner extends AbstractDialecticalFrameworkReasoner {
 		super(satBased(solver));
 	}
 
-	private static Pipeline<SatReasonerContext> satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new SatConflictFreeGenerator(solver))
-				.addStateProcessor(new SatKBipolarStateProcessor())
-//				.addModelProcessor(new SatPartialKBipolarInterpretationProcessor(), false)
-				.addVerifier(new SatAdmissibleVerifier())
+	private static Pipeline satBased(IncrementalSatSolver solver) {
+		return Pipeline.builder(new ConflictFreeGenerator(), solver)
+				.addStateProcessor(new KBipolarStateProcessor())
+//				.addStateProcessor(RelativeKBipolarStateProcessor.relativeBounded(0.2, 10, new ArgumentDegreeOrdering(DegreeType.OUTGOING), solver))
+				.setVerifier(new AdmissibleVerifier())
 				.build();
 	}
 }

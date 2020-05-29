@@ -21,6 +21,8 @@ package net.sf.tweety.arg.adf.transform;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -42,20 +44,28 @@ public final class TseitinTransformer
 
 	private final Function<Argument, Proposition> argumentMapping;
 
-	/**
-	 * Constructs a possibly optimized version of the definitional (resp.
-	 * Tseitin) CNF transformation algorithm.
-	 * <p>
-	 * The optimization generates only the necessary parts of the definitions
-	 * based on the polarity of the subformulas, i.e. <- or -> (or both for
-	 * polarity = 0) instead of always <->.
-	 * 
-	 * @param argumentMapping
-	 * @param optimize
+	private final int topLevelPolarity;
+
+	private TseitinTransformer(Builder builder) {
+		this.argumentMapping = builder.argumentMapping;
+		this.optimize = builder.optimize;
+		this.topLevelPolarity = builder.topLevelPolarity;
+	}
+	
+	public static Builder builder(Function<Argument, Proposition> argumentMapping) {
+		return new Builder(argumentMapping);
+	}
+	
+	public static Builder builder(Map<Argument, Proposition> argumentMapping) {
+		return new Builder(argumentMapping::get);
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.transform.AbstractCollector#topLevelPolarity()
 	 */
-	public TseitinTransformer(Function<Argument, Proposition> argumentMapping, boolean optimize) {
-		this.argumentMapping = argumentMapping;
-		this.optimize = optimize;
+	@Override
+	protected int topLevelPolarity() {
+		return topLevelPolarity;
 	}
 
 	/*
@@ -303,4 +313,48 @@ public final class TseitinTransformer
 		clauses.accept(clause);
 		return name;
 	}
+	
+	public static final class Builder {
+		
+		private final Function<Argument, Proposition> argumentMapping;
+		
+		private boolean optimize = false;
+		
+		private int topLevelPolarity = 1;
+
+		/**
+		 * @param argumentMapping the argument to proposition mapping
+		 */
+		public Builder(Function<Argument, Proposition> argumentMapping) {
+			this.argumentMapping = Objects.requireNonNull(argumentMapping);
+		}
+		
+		/**
+		 * The optimization generates only the necessary parts of the
+		 * definitions based on the polarity of the subformulas, i.e. &lt;- or -&gt;
+		 * (or both for polarity = 0) instead of always &lt;-&gt;.
+		 * 
+		 * @param optimize
+		 *            the optimize to set
+		 * @return the builder
+		 */
+		public Builder setOptimize(boolean optimize) {
+			this.optimize = optimize;
+			return this;
+		}
+		
+		/**
+		 * @param topLevelPolarity the topLevelPolarity to set
+		 * @return the builder
+		 */
+		public Builder setTopLevelPolarity(int topLevelPolarity) {
+			this.topLevelPolarity = topLevelPolarity;
+			return this;
+		}
+		
+		public TseitinTransformer build() {
+			return new TseitinTransformer(this);
+		}
+	}
+	
 }

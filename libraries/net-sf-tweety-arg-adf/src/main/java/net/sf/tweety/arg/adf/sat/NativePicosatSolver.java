@@ -119,7 +119,7 @@ public final class NativePicosatSolver extends IncrementalSatSolver {
 		/**
 		 * Maps the propositions to their native representation.
 		 */
-		private Map<Proposition, Integer> propositionsToNative = new HashMap<Proposition, Integer>();
+		private final Map<Proposition, Integer> propositionsToNative = new HashMap<Proposition, Integer>();
 		
 		private static final int NO_DECISION_LIMIT = -1;
 				
@@ -128,14 +128,14 @@ public final class NativePicosatSolver extends IncrementalSatSolver {
 		 */
 		private int nextProposition = 1;
 
-		private long handle;
+		private final long handle;
 				
 		private PicosatSolverState() {
 			this.handle = init();
 		}
 
 		@Override
-		public void close() throws Exception {			
+		public void close() {			
 			NativePicosatSolver.reset(handle);
 		}
 

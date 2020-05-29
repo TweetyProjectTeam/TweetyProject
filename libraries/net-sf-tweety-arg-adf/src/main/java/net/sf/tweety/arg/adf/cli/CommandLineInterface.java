@@ -30,13 +30,12 @@ import net.sf.tweety.arg.adf.reasoner.CompleteReasoner;
 import net.sf.tweety.arg.adf.reasoner.ModelReasoner;
 import net.sf.tweety.arg.adf.reasoner.NaiveReasoner;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
-import net.sf.tweety.arg.adf.sat.NativeLingelingSolver;
-import net.sf.tweety.arg.adf.semantics.LinkStrategy;
-import net.sf.tweety.arg.adf.semantics.SatLinkStrategy;
+import net.sf.tweety.arg.adf.sat.NativeMinisatSolver;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.link.SatLinkStrategy;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.pl.sat.SatSolver;
 
 /**
  * @author Mathias Hofer
@@ -44,7 +43,7 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
  */
 public class CommandLineInterface {
 
-	private static final IncrementalSatSolver satSolver = new NativeLingelingSolver();
+	private static final IncrementalSatSolver satSolver = new NativeMinisatSolver();
 
 	private static final Map<String, AbstractDialecticalFrameworkReasoner> reasonerBySemantics = new HashMap<String, AbstractDialecticalFrameworkReasoner>();
 
@@ -55,8 +54,6 @@ public class CommandLineInterface {
 	private static final String prompt = "USAGE: java -jar jadf.jar <file> <sem>\r\n\nCOMMAND LINE ARGUMENTS:\r\n<file>  : Input filename for ADF instance.\r\n<sem>   : ADF semantics. <sem>={mod|nai|adm|com}";
 
 	static {
-		SatSolver.setDefaultSolver(satSolver);
-
 		// cf|nai|adm|com|prf|grd|mod
 		reasonerBySemantics.put("mod", new ModelReasoner(satSolver));
 		reasonerBySemantics.put("nai", new NaiveReasoner(satSolver));
@@ -73,7 +70,6 @@ public class CommandLineInterface {
 			AbstractDialecticalFrameworkReasoner reasoner = reasonerBySemantics.get(semantics);
 			try {
 				AbstractDialecticalFramework adf = parser.parseBeliefBaseFromFile(filename);
-				System.out.println("Compute models... (all at once, thus it may take a while)");
 				int modelCount = 0;
 				Iterator<Interpretation> modelIterator = reasoner.modelIterator(adf);
 				while (modelIterator.hasNext()) {

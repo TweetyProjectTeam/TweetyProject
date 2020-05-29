@@ -20,10 +20,12 @@ package net.sf.tweety.arg.adf.transform;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.Function;
 
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
 import net.sf.tweety.logics.pl.syntax.Disjunction;
@@ -37,22 +39,28 @@ import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
  * Transforms an {@link AcceptanceCondition} into a {@link PlFormula}.
+ * <p>
+ * Most of the transformation is a 1:1 mapping between the structures since they are quite
+ * similar, except for {@link EquivalenceAcceptanceCondition} which allows for a
+ * compact representation of pairwise equivalences.
  * 
  * @author Mathias Hofer
  *
  */
-public final class PropositionalTransformer extends AbstractTransformer<PlFormula, Void, PlFormula>{
-	
+public final class PropositionalTransformer extends AbstractTransformer<PlFormula, Void, PlFormula> {
+
 	private final Function<Argument, Proposition> argumentMapping;
-	
+
 	/**
-	 * @param argumentMapping
+	 * @param argumentMapping the argument to proposition mapping
 	 */
 	public PropositionalTransformer(Function<Argument, Proposition> argumentMapping) {
-		this.argumentMapping = argumentMapping;
+		this.argumentMapping = Objects.requireNonNull(argumentMapping);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#initialize()
 	 */
 	@Override
@@ -60,40 +68,60 @@ public final class PropositionalTransformer extends AbstractTransformer<PlFormul
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#finish(java.lang.Object, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.transform.AbstractTransformer#finish(java.lang.
+	 * Object, java.lang.Object)
 	 */
 	@Override
 	protected PlFormula finish(PlFormula bottomUpData, Void topDownData) {
 		return bottomUpData;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformDisjunction(java.util.Collection, java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.transform.AbstractTransformer#transformDisjunction(
+	 * java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformDisjunction(Collection<PlFormula> children, Void topDownData, int polarity) {
 		return new Disjunction(children);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformConjunction(java.util.Collection, java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.transform.AbstractTransformer#transformConjunction(
+	 * java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformConjunction(Collection<PlFormula> children, Void topDownData, int polarity) {
 		return new Conjunction(children);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformImplication(java.lang.Object, java.lang.Object, java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.transform.AbstractTransformer#transformImplication(
+	 * java.lang.Object, java.lang.Object, java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformImplication(PlFormula left, PlFormula right, Void topDownData, int polarity) {
 		return new Implication(left, right);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformEquivalence(java.util.Collection, java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.transform.AbstractTransformer#transformEquivalence(
+	 * java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformEquivalence(Collection<PlFormula> children, Void topDownData, int polarity) {
@@ -120,44 +148,63 @@ public final class PropositionalTransformer extends AbstractTransformer<PlFormul
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformExclusiveDisjunction(java.lang.Object, java.lang.Object, java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#
+	 * transformExclusiveDisjunction(java.lang.Object, java.lang.Object,
+	 * java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformExclusiveDisjunction(PlFormula left, PlFormula right, Void topDownData, int polarity) {
 		return new ExclusiveDisjunction(left, right);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformNegation(java.lang.Object, java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.transform.AbstractTransformer#transformNegation(
+	 * java.lang.Object, java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformNegation(PlFormula child, Void topDownData, int polarity) {
 		return new Negation(child);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformArgument(net.sf.tweety.arg.adf.syntax.Argument, java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.transform.AbstractTransformer#transformArgument(net
+	 * .sf.tweety.arg.adf.syntax.Argument, java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformArgument(Argument argument, Void topDownData, int polarity) {
 		return argumentMapping.apply(argument);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformContradiction(java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#
+	 * transformContradiction(java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformContradiction(Void topDownData, int polarity) {
 		return new Contradiction();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractTransformer#transformTautology(java.lang.Object, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.arg.adf.transform.AbstractTransformer#transformTautology(
+	 * java.lang.Object, int)
 	 */
 	@Override
 	protected PlFormula transformTautology(Void topDownData, int polarity) {
 		return new Tautology();
 	}
-	
+
 }

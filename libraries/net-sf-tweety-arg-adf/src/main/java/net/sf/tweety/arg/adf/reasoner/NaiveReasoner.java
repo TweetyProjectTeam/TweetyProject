@@ -18,8 +18,9 @@
  */
 package net.sf.tweety.arg.adf.reasoner;
 
-import net.sf.tweety.arg.adf.reasoner.generator.SatConflictFreeGenerator;
-import net.sf.tweety.arg.adf.reasoner.processor.SatMaximizeInterpretationProcessor;
+import net.sf.tweety.arg.adf.reasoner.sat.Pipeline;
+import net.sf.tweety.arg.adf.reasoner.sat.generator.ConflictFreeGenerator;
+import net.sf.tweety.arg.adf.reasoner.sat.processor.MaximizeInterpretationProcessor;
 import net.sf.tweety.arg.adf.sat.IncrementalSatSolver;
 
 public class NaiveReasoner extends AbstractDialecticalFrameworkReasoner {
@@ -33,9 +34,9 @@ public class NaiveReasoner extends AbstractDialecticalFrameworkReasoner {
 		super(satBased(solver));
 	}
 
-	private static Pipeline<SatReasonerContext> satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new SatConflictFreeGenerator(solver))
-				.addModelProcessor(new SatMaximizeInterpretationProcessor(), true)
+	private static Pipeline satBased(IncrementalSatSolver solver) {
+		return Pipeline.builder(new ConflictFreeGenerator(), solver)
+				.addModelProcessor(new MaximizeInterpretationProcessor())
 				.build();
 	}
 

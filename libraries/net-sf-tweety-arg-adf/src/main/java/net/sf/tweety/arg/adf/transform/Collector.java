@@ -24,6 +24,19 @@ import java.util.function.Consumer;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 
 /**
+ * The concept of a collector is similar to its sibling {@link Transformer}, we
+ * want to transform an {@link AcceptanceCondition} into a different structure.
+ * A collector is however more flexible since it may provide two different
+ * results, one is computed while traversing through the acceptance condition
+ * beginning from the root to its leaves and the other one is computed on the
+ * way back from the leaves to the root.
+ * <p>
+ * This is best illustrated by an example, e.g. {@link TseitinTransformer} which
+ * transforms an acceptance condition into a set of clauses. It starts top-down
+ * by rewriting the root connective while the names of the sub-clauses are
+ * computed bottom-up.
+ * <p>
+ * To minimize the effort for developers see {@link AbstractCollector}.
  * 
  * @author Mathias Hofer
  *
@@ -32,8 +45,28 @@ import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
  */
 public interface Collector<U, D> {
 
-	U collect(AcceptanceCondition acc, Collection<D> collection);
-	
+	/**
+	 * Traverses through the given {@link AcceptanceCondition} and adds all the
+	 * collected data to the provided collection.
+	 * 
+	 * @param acc
+	 *            the acceptance condition
+	 * @param collection
+	 *            the collection which we use to store the collected data
+	 * @return the result we may compute while collecting data
+	 */
+	default U collect(AcceptanceCondition acc, Collection<D> collection) {
+		return collect(acc, collection::add);
+	}
+
+	/**
+	 * Traverses through the given {@link AcceptanceCondition} and calls the
+	 * provided consumer on all the collected data.
+	 *  
+	 * @param acc the acceptance condition
+	 * @param consumer the consumer which is used as a callback for the collected data.
+	 * @return the result we may compute while collecting data
+	 */
 	U collect(AcceptanceCondition acc, Consumer<D> consumer);
-	
+
 }

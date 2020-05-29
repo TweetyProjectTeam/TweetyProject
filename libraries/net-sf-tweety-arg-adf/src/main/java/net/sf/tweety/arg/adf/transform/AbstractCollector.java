@@ -54,20 +54,16 @@ public abstract class AbstractCollector<U, D, R> implements Transformer<R>, Coll
 	@Override
 	public R transform(AcceptanceCondition acc) {
 		Collection<D> collection = initialize();
-		U bottomUpData = transform(acc, new CollectionConsumer<>(collection));
+		U bottomUpData = transform(acc, collection::add);
 		return finish(bottomUpData, collection);
 	}
 	
 	protected U transform(AcceptanceCondition acc, Consumer<D> userObject) {
-		return acc.accept(visitor, new TopDownData<D>(1, userObject));
+		return acc.accept(visitor, new TopDownData<D>(topLevelPolarity(), userObject));
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.Collector#collect(net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition, java.util.Collection)
-	 */
-	@Override
-	public U collect(AcceptanceCondition acc, Collection<D> collection) {
-		return transform(acc, new CollectionConsumer<>(collection));
+	protected int topLevelPolarity() {
+		return 1;
 	}
 	
 	/* (non-Javadoc)
@@ -81,7 +77,7 @@ public abstract class AbstractCollector<U, D, R> implements Transformer<R>, Coll
 	/**
 	 * Provides the initial top-down data.
 	 * 
-	 * @return
+	 * @return the initial top-down data
 	 */
 	protected abstract Collection<D> initialize();
 
@@ -258,29 +254,6 @@ public abstract class AbstractCollector<U, D, R> implements Transformer<R>, Coll
 		public TopDownData(int polarity, Consumer<D> userObject) {
 			this.polarity = polarity;
 			this.userObject = userObject;
-		}
-
-	}
-	
-	private static final class CollectionConsumer<D> implements Consumer<D> {
-
-		private final Collection<D> collection;
-
-		/**
-		 * @param collection
-		 */
-		public CollectionConsumer(Collection<D> collection) {
-			this.collection = collection;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.function.Consumer#accept(java.lang.Object)
-		 */
-		@Override
-		public void accept(D t) {
-			collection.add(t);
 		}
 
 	}

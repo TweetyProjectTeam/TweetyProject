@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import net.sf.tweety.arg.adf.syntax.Argument;
+import net.sf.tweety.arg.adf.util.UnionSetView;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
@@ -65,14 +66,15 @@ public interface AcceptanceCondition {
 	Set<AcceptanceCondition> getChildren();
 	
 	/**
-	 * Passes the topDownData to the visitor and returns the result of the
-	 * visitors visit method, performs no modifications on them.
+	 * Passes the topDownData to the right visit method and returns the result of the visit method, performs no modifications on them.
+	 * <p>
+	 * This allows for type-safe traversal through the acceptance condition structure.
 	 * 
-	 * @param <U>
-	 * @param <D>
-	 * @param visitor
-	 * @param topDownData
-	 * @return
+	 * @param <U> the bottom-up data
+	 * @param <D> the top-down data
+	 * @param visitor the visitor
+	 * @param topDownData the data which is passed from the root of the acceptance condition to the leaf
+	 * @return the result of the visit method
 	 */
 	<U, D> U accept(Visitor<U, D> visitor, D topDownData);
 	
@@ -82,11 +84,17 @@ public interface AcceptanceCondition {
 				.anyMatch(x -> x.contains(arg));
 	}
 	
-	static Builder from(AcceptanceCondition acc) {
+	/**
+	 * Returns a left-associative builder.
+	 * 
+	 * @param acc the base acceptance condition, e.g. an argument
+	 * @return a builder
+	 */
+	static Builder builder(AcceptanceCondition acc) {
 		return new Builder(acc);
 	}
 	
-	public static final class Builder {
+	static final class Builder {
 		
 		private AcceptanceCondition left;
 		
@@ -94,45 +102,50 @@ public interface AcceptanceCondition {
 			this.left = left;
 		}
 		
-//		public Builder and(AcceptanceCondition acc) {
-//			this.left = new ConjunctionAcceptanceCondition(left, acc);
-//			return this;
-//		}
-//		
-//		public Builder and(AcceptanceCondition... accs) {
-//			this.left = new ConjunctionAcceptanceCondition(left, new ConjunctionAcceptanceCondition(accs));
-//			return this;
-//		}
-//		
-//		public Builder or(AcceptanceCondition acc) {
-//			this.left = new DisjunctionAcceptanceCondition(left, acc);
-//			return this;
-//		}
-//		
-//		public Builder or(AcceptanceCondition... accs) {
-//			this.left = new DisjunctionAcceptanceCondition(left, new DisjunctionAcceptanceCondition(accs));
-//			return this;
-//		}
-//		
-//		public Builder implies(AcceptanceCondition acc) {
-//			this.left = new ImplicationAcceptanceCondition(left, acc);
-//			return this;
-//		}
-//		
-//		public Builder iff(AcceptanceCondition acc) {
-//			this.left = new EquivalenceAcceptanceCondition(left, acc);
-//			return this;
-//		}
-//		
-//		public Builder xor(AcceptanceCondition acc) {
-//			this.left = new ExclusiveDisjunctionAcceptanceCondition(left, acc);
-//			return this;
-//		}
-//		
-//		public Builder neg() {
-//			this.left = new NegationAcceptanceCondition(left);
-//			return this;
-//		}
+		public Builder and(AcceptanceCondition acc) {
+			this.left = new ConjunctionAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder and(AcceptanceCondition... accs) {
+			this.left = new ConjunctionAcceptanceCondition(new UnionSetView<>(Set.of(left), Set.of(accs)));
+			return this;
+		}
+		
+		public Builder or(AcceptanceCondition acc) {
+			this.left = new DisjunctionAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder or(AcceptanceCondition... accs) {
+			this.left = new DisjunctionAcceptanceCondition(new UnionSetView<>(Set.of(left), Set.of(accs)));
+			return this;
+		}
+		
+		public Builder implies(AcceptanceCondition acc) {
+			this.left = new ImplicationAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder equiv(AcceptanceCondition acc) {
+			this.left = new EquivalenceAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder equiv(AcceptanceCondition... accs) {
+			this.left = new DisjunctionAcceptanceCondition(new UnionSetView<>(Set.of(left), Set.of(accs)));
+			return this;
+		}
+		
+		public Builder xor(AcceptanceCondition acc) {
+			this.left = new ExclusiveDisjunctionAcceptanceCondition(left, acc);
+			return this;
+		}
+		
+		public Builder neg() {
+			this.left = new NegationAcceptanceCondition(left);
+			return this;
+		}
 		
 		public AcceptanceCondition build() {
 			return left;

@@ -27,8 +27,8 @@ public final class ExclusiveDisjunctionAcceptanceCondition extends AbstractAccep
 	private final AcceptanceCondition right;
 
 	/**
-	 * @param left
-	 * @param right
+	 * @param left the left side of the xor
+	 * @param right the right side of the xor
 	 */
 	public ExclusiveDisjunctionAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
 		super(Set.of(left, right));

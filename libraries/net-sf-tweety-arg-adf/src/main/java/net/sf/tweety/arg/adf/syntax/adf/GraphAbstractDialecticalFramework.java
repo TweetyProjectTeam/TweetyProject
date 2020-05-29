@@ -24,21 +24,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.semantics.LinkStrategy;
-import net.sf.tweety.arg.adf.semantics.LinkType;
-import net.sf.tweety.arg.adf.semantics.SimpleLink;
+import net.sf.tweety.arg.adf.semantics.link.Link;
+import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.link.LinkType;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.util.AbstractUnmodifiableSet;
 import net.sf.tweety.arg.adf.util.LazyMap;
 
 /**
- * Internally represented as a graph-like structure. This allows for efficient queries most of the time.
+ * Internally represented as a graph-like structure. This allows for efficient
+ * queries at the cost of a bit more memory overhead, since every argument
+ * maintains references to its parents and children.
  * 
  * @author Mathias Hofer
  *
@@ -51,7 +53,7 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 
 	private final LinkStrategy linkStrategy;
 
-	private GraphAbstractDialecticalFramework(GraphBuilder builder) {
+	private GraphAbstractDialecticalFramework(Builder builder) {
 		this.linkStrategy = builder.linkStrategy;
 		this.index = new HashMap<>(builder.arguments.size());
 		
@@ -89,6 +91,14 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 	public Set<Argument> getArguments() {
 		return Collections.unmodifiableSet(index.keySet());
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#size()
+	 */
+	@Override
+	public int size() {
+		return index.size();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -98,7 +108,7 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 	 */
 	@Override
 	public Set<Link> links() {
-		return linksStream().collect(Collectors.toSet());
+		return linksStream().collect(Collectors.toUnmodifiableSet());
 	}
 	
 	/* (non-Javadoc)
@@ -191,7 +201,29 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 	public AcceptanceCondition getAcceptanceCondition(Argument argument) {
 		return node(argument).acc;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#incomingDegree(net.sf.tweety.arg.adf.syntax.Argument)
+	 */
+	@Override
+	public int incomingDegree(Argument arg) {
+		return node(arg).parents.size();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#outgoingDegree(net.sf.tweety.arg.adf.syntax.Argument)
+	 */
+	@Override
+	public int outgoingDegree(Argument arg) {
+		return node(arg).children.size();
+	}
 
+	/**
+	 * We do not want to return null values, therefore fail if we do not find the given argument.
+	 * 
+	 * @param arg
+	 * @return
+	 */
 	private Node node(Argument arg) {
 		Node node = index.get(arg);
 		if (node == null) {
@@ -211,12 +243,38 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 	public int kBipolar() {
 		if (this.k < 0) {
 			long count = linksStream()
-					.map(Link::getLinkType)
+					.map(Link::getType)
 					.filter(LinkType::isNonBipolar)
 					.count();
 			this.k = Math.toIntExact(count);
 		}
 		return k;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((index == null) ? 0 : index.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof GraphAbstractDialecticalFramework)) {
+			return false;
+		}
+		GraphAbstractDialecticalFramework other = (GraphAbstractDialecticalFramework) obj;
+		return Objects.equals(index, other.index);
 	}
 
 	private final class Node {
@@ -237,15 +295,46 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 		}
 
 		private Link computeOutgoing(Argument to) {
-			LinkType type = linkStrategy.compute(arg, to, node(to).acc);
-			return new SimpleLink(arg, to, type);
+			LinkType type = linkStrategy.compute(arg, node(to).acc);
+			return Link.of(arg, to, type);
 		}
 
 		private Link computeIncoming(Argument from) {
-			LinkType type = linkStrategy.compute(from, arg, acc);
-			return new SimpleLink(from, arg, type);
-		}		
+			LinkType type = linkStrategy.compute(from, acc);
+			return Link.of(from, arg, type);
+		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + acc.hashCode();
+			result = prime * result + arg.hashCode();
+			result = prime * result + children.keySet().hashCode();
+			result = prime * result + parents.keySet().hashCode();
+			return result;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof Node)) {
+				return false;
+			}
+			Node other = (Node) obj;
+			return Objects.equals(acc, other.acc) 
+					&& Objects.equals(arg, other.arg)
+					&& Objects.equals(children.keySet(), other.children.keySet())
+					&& Objects.equals(parents.keySet(), other.parents.keySet());
+		}	
 	}
 	
 	private static abstract class LinkSet extends AbstractUnmodifiableSet<Link> {
@@ -258,7 +347,7 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 		 * @param edges
 		 */
 		public LinkSet(Collection<Link> edges) {
-			this.edges = edges;
+			this.edges = Collections.unmodifiableCollection(edges);
 		}
 
 		/* (non-Javadoc)
@@ -353,7 +442,7 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 		
 	}
 
-	static final class GraphBuilder extends AbstractBuilder {
+	static final class Builder extends AbstractBuilder {
 
 		/* (non-Javadoc)
 		 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework.Builder#build()

@@ -26,11 +26,6 @@
   	</dependency>
   	<dependency>
   		<groupId>net.sf.tweety</groupId>
-  		<artifactId>graphs</artifactId>
-  		<version>1.16-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>net.sf.tweety</groupId>
   		<artifactId>math</artifactId>
   		<version>1.16-SNAPSHOT</version>
   	</dependency>

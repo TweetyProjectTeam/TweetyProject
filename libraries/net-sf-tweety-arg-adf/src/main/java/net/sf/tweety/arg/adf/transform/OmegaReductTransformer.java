@@ -19,11 +19,13 @@
 package net.sf.tweety.arg.adf.transform;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.ContradictionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition;
@@ -31,18 +33,17 @@ import net.sf.tweety.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition;
 
 /**
+ * Replaces all unsatisfied arguments relative to a provided {@link Interpretation} with {@link ContradictionAcceptanceCondition}, all the rest remains untouched.
+ * 
  * @author Mathias Hofer
  *
  */
-public final class OmegaReductTransformer extends AbstractTransformer<AcceptanceCondition, Void, AcceptanceCondition>{
+public class OmegaReductTransformer extends AbstractTransformer<AcceptanceCondition, Void, AcceptanceCondition>{
 
 	private final Interpretation interpretation;
 	
-	/**
-	 * @param interpretation
-	 */
 	public OmegaReductTransformer(Interpretation interpretation) {
-		this.interpretation = interpretation;
+		this.interpretation = Objects.requireNonNull(interpretation);
 	}
 
 	/* (non-Javadoc)

@@ -42,7 +42,7 @@ public final class SimpleIncrementalSatSolver extends IncrementalSatSolver {
 	private SatSolver delegate;
 
 	/**
-	 * @param delegate
+	 * @param delegate the solver to delegate to
 	 */
 	public SimpleIncrementalSatSolver(SatSolver delegate) {
 		this.delegate = delegate;

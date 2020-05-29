@@ -31,10 +31,10 @@ import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 public interface Ordering<T> {
 
-	public Ordering<T> filter(Predicate<T> filter);
+	Ordering<T> filter(Predicate<? super T> filter);
 	
-	public Ordering<T> limit(int limit);
+	Ordering<T> limit(int limit);
 	
-	public List<T> order(AbstractDialecticalFramework adf);
+	List<T> order(AbstractDialecticalFramework adf);
 	
 }

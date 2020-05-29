@@ -48,7 +48,7 @@ public final class SimpleSatSolverState implements SatSolverState {
 	private final Collection<Disjunction> assume;
 
 	/**
-	 * @param solver
+	 * @param solver the solver to use
 	 */
 	public SimpleSatSolverState(SatSolver solver) {
 		this.solver = solver;
@@ -62,9 +62,7 @@ public final class SimpleSatSolverState implements SatSolverState {
 	 * @see java.lang.AutoCloseable#close()
 	 */
 	@Override
-	public void close() throws Exception {
-		// do nothing
-	}
+	public void close() {}
 
 	/*
 	 * (non-Javadoc)
@@ -100,7 +98,7 @@ public final class SimpleSatSolverState implements SatSolverState {
 		}
 		assume.add(clause);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

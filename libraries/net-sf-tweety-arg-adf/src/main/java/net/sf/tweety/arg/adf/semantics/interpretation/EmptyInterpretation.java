@@ -34,7 +34,9 @@ public final class EmptyInterpretation implements Interpretation {
 	private final Set<Argument> undecided;
 	
 	/**
+	 * An empty interpretation relative to the given ADF
 	 * 
+	 * @param adf the contextual ADF
 	 */
 	public EmptyInterpretation(AbstractDialecticalFramework adf) {
 		this.undecided = Set.copyOf(adf.getArguments());
@@ -106,6 +108,30 @@ public final class EmptyInterpretation implements Interpretation {
 	@Override
 	public Set<Argument> undecided() {
 		return undecided;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.semantics.interpretation.Interpretation#subset(net.sf.tweety.arg.adf.semantics.interpretation.Interpretation)
+	 */
+	@Override
+	public boolean isSubsetOf(Interpretation superset) {
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.semantics.interpretation.Interpretation#numDecided()
+	 */
+	@Override
+	public int numDecided() {
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.semantics.interpretation.Interpretation#isStrictSupersetOf(net.sf.tweety.arg.adf.semantics.interpretation.Interpretation)
+	 */
+	@Override
+	public boolean isStrictSupersetOf(Interpretation subset) {
+		return false;
 	}
 
 	/* (non-Javadoc)

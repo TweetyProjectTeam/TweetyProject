@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sf.tweety.commons.Interpretation;
 import net.sf.tweety.logics.pl.semantics.PossibleWorld;
@@ -129,35 +130,27 @@ public final class NativeLingelingSolver extends IncrementalSatSolver {
 
 	private static native void reuse(long handle, int lit);
 
-	private static class LingelingSolverState implements SatSolverState {
+	private static final class LingelingSolverState implements SatSolverState {
 
 		/**
 		 * Maps the propositions to their native representation.
 		 */
 		private Map<Proposition, Integer> propositionsToNative = new HashMap<Proposition, Integer>();
-
-//		private int[] buffer = new int[2048];
-				
-//		private int index = 0;
 		
 		/**
 		 * Keeps track of the int representation of fresh propositions
 		 */
 		private int nextProposition = 1;
 
-		private long handle;
+		private final long handle;
 				
 		private LingelingSolverState() {
 			this.handle = init();
-		}
+		}		
 
 		@Override
-		public void close() throws Exception {			
+		public void close() {			
 			release(handle);
-		}
-
-		private boolean isTrue(Proposition p) {
-			return deref(handle, propositionsToNative.get(p));
 		}
 
 		@Override
@@ -174,12 +167,7 @@ public final class NativeLingelingSolver extends IncrementalSatSolver {
 			return true;
 		}
 
-		private void update(Disjunction clause) {		
-//			if (buffer.length < index + clause.size() + 1) {
-//				NativeLingelingSolver.addArray(handle, buffer, index);
-//				index = 0;
-//			}
-			
+		private void update(Disjunction clause) {			
 			int size = clause.size();
 			int[] nclause = new int[size + 1];
 			for (int i = 0; i < size; i++) {
@@ -238,9 +226,10 @@ public final class NativeLingelingSolver extends IncrementalSatSolver {
 
 			if (sat) {
 				Collection<Proposition> trues = new LinkedList<Proposition>();
-				for (Proposition p : propositionsToNative.keySet()) {
-					if (isTrue(p)) {
-						trues.add(p);
+				for (Entry<Proposition, Integer> entry : propositionsToNative.entrySet()) {
+					boolean isTrue = deref(handle, entry.getValue());
+					if (isTrue) {
+						trues.add(entry.getKey());
 					}
 				}
 				return new PossibleWorld(trues);
@@ -273,7 +262,6 @@ public final class NativeLingelingSolver extends IncrementalSatSolver {
 			}
 			int lit = value ? propositionsToNative.get(proposition) : -propositionsToNative.get(proposition);
 			NativeLingelingSolver.assume(handle, lit);
-			NativeLingelingSolver.freeze(handle, lit);
 		}
 	}
 }

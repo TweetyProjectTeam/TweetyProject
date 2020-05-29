@@ -20,7 +20,7 @@ package net.sf.tweety.arg.adf.syntax.adf;
 
 import java.util.Set;
 
-import net.sf.tweety.arg.adf.semantics.Link;
+import net.sf.tweety.arg.adf.semantics.link.Link;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 
@@ -64,6 +64,14 @@ enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
 	public Set<Link> linksTo(Argument child) {
 		return Set.of();
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#size()
+	 */
+	@Override
+	public int size() {
+		return 0;
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#linksToChildren(net.sf.tweety.arg.adf.syntax.Argument)
@@ -103,6 +111,22 @@ enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
 	@Override
 	public AcceptanceCondition getAcceptanceCondition(Argument argument) {
 		throw new IllegalArgumentException();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#incomingDegree(net.sf.tweety.arg.adf.syntax.Argument)
+	 */
+	@Override
+	public int incomingDegree(Argument arg) {
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#outgoingDegree(net.sf.tweety.arg.adf.syntax.Argument)
+	 */
+	@Override
+	public int outgoingDegree(Argument arg) {
+		return 0;
 	}
 
 	/* (non-Javadoc)

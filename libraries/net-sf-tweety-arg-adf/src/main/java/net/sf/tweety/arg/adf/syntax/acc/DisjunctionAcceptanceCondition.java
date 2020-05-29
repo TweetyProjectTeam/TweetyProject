@@ -25,15 +25,15 @@ public final class DisjunctionAcceptanceCondition extends AbstractAcceptanceCond
 	
 	/**
 	 * 
-	 * @param left
-	 * @param right
+	 * @param left the left side of the disjunction
+	 * @param right the right side of the disjunction
 	 */
 	public DisjunctionAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
 		super(Set.of(left, right));
 	}
 
 	/**
-	 * @param children
+	 * @param children the children of the disjunction
 	 */
 	public DisjunctionAcceptanceCondition(Collection<AcceptanceCondition> children) {
 		super(children);

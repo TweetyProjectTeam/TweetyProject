@@ -35,7 +35,7 @@ public final class ClauseSplittingProcessor implements Processor<Disjunction, Co
 	private final int maxClauseSize;
 		
 	/**
-	 * @param maxClauseSize
+	 * @param maxClauseSize the maximal clause size of the generated clauses
 	 */
 	public ClauseSplittingProcessor(int maxClauseSize) {
 		this.maxClauseSize = maxClauseSize;

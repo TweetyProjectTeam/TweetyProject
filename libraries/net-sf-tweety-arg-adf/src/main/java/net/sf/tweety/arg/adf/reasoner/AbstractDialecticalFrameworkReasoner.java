@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import net.sf.tweety.arg.adf.reasoner.sat.Pipeline;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
@@ -34,12 +35,12 @@ import net.sf.tweety.commons.InferenceMode;
  */
 public abstract class AbstractDialecticalFrameworkReasoner {
 	
-	private Pipeline<?> computationPipeline;
+	private final Pipeline computationPipeline;
 	
 	/**
-	 * @param computationPipeline
+	 * @param computationPipeline the pipeline which is used to compute the models
 	 */
-	public AbstractDialecticalFrameworkReasoner(Pipeline<?> computationPipeline) {
+	public AbstractDialecticalFrameworkReasoner(Pipeline computationPipeline) {
 		this.computationPipeline = computationPipeline;
 	}
 
@@ -49,10 +50,10 @@ public abstract class AbstractDialecticalFrameworkReasoner {
 
 	/**
 	 * 
-	 * @param adf
-	 * @param argument
-	 * @param inferenceMode
-	 * @return
+	 * @param adf the ADF
+	 * @param argument the query argument
+	 * @param inferenceMode the mode of the query
+	 * @return true iff the query was successful
 	 */
 	public Boolean query(AbstractDialecticalFramework adf, Argument argument, InferenceMode inferenceMode) {
 		switch (inferenceMode) {

@@ -26,10 +26,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.semantics.LinkStrategy;
-import net.sf.tweety.arg.adf.semantics.LinkType;
-import net.sf.tweety.arg.adf.semantics.SimpleLink;
+import net.sf.tweety.arg.adf.semantics.link.Link;
+import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.link.LinkType;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework.Builder;
@@ -131,26 +130,38 @@ abstract class AbstractBuilder implements Builder {
 	@Override
 	public Builder remove(Argument arg) {
 		arguments.remove(Objects.requireNonNull(arg));
+		linksTo.remove(arg);
 		return this;
 	}
 
 	protected Collection<Link> linksTo(Argument child) {
 		Set<Link> to = linksTo.computeIfAbsent(child, a -> new HashSet<>());		
-		if (eager) {	
+		if (eager) {
 			// check if we have to compute missing links
 			AcceptanceCondition acc = arguments.get(child);
 			Set<Argument> parents = acc.arguments().collect(Collectors.toSet());
+			
+			// check if there are missing parent arguments
+			for (Argument parent: parents) {
+				if (!arguments.containsKey(parent)) {
+					throw new IllegalStateException("Could not build ADF because of missing arguments!");
+				}
+			}
+			
+			// check if there are missing links
 			for (Link link : to) {
 				parents.remove(link.getFrom());
 			}
 
 			if (!parents.isEmpty() && linkStrategy == null) {
+				// if mode is provided
 				throw new IllegalStateException("Could not build ADF because of missing links!");
 			}
 
+			// eagerly compute missing links
 			for (Argument parent : parents) {
-				LinkType type = linkStrategy.compute(parent, child, acc);
-				to.add(new SimpleLink(parent, child, type));
+				LinkType type = linkStrategy.compute(parent, acc);
+				to.add(Link.of(parent, child, type));
 			}
 		}
 		return to;

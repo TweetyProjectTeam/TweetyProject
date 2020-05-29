@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import net.sf.tweety.arg.adf.semantics.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
@@ -63,8 +63,8 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 
 	/**
 	 * 
-	 * @param linkStrategy
-	 * @param lazy
+	 * @param linkStrategy the strategy which is used to compute the links
+	 * @param lazy specifies if the link computation should be done lazily
 	 */
 	public KppADFFormatParser(LinkStrategy linkStrategy, boolean lazy) {
 		this.linkStrategy = linkStrategy;

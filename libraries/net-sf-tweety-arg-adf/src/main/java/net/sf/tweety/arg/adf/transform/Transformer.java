@@ -21,6 +21,9 @@ package net.sf.tweety.arg.adf.transform;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 
 /**
+ * Transforms an acceptance condition into an arbitrary structure.
+ * <p>
+ * See its sibling {@link Collector} for a more flexible and collection based transformer.
  * 
  * @author Mathias Hofer
  *
@@ -28,6 +31,12 @@ import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
  */
 public interface Transformer<R> {
 
+	/**
+	 * Transforms the given acceptance condition into another structure.
+	 * 
+	 * @param acc the acceptance condition
+	 * @return the transformed result
+	 */
 	R transform(AcceptanceCondition acc);
 
 }

@@ -24,8 +24,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.semantics.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.link.Link;
+import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.transform.Transformer;
@@ -55,75 +55,64 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 	}
 
 	static Builder builder() {
-		return new GraphAbstractDialecticalFramework.GraphBuilder();
+		return new GraphAbstractDialecticalFramework.Builder();
 	}
 
 	static Builder fromMap(Map<Argument, AcceptanceCondition> map) {
-		Builder builder = new GraphAbstractDialecticalFramework.GraphBuilder();
+		Builder builder = new GraphAbstractDialecticalFramework.Builder();
 		for (Entry<Argument, AcceptanceCondition> entry : map.entrySet()) {
 			builder.add(entry.getKey(), entry.getValue());
 		}
 		return builder;
-	}
-
-	/**
-	 * Allows to add, remove and change links, arguments and acceptance
-	 * conditions of the provided adf.
-	 * <p>
-	 * Since {@link AbstractDialecticalFramework} is immutable, it does not
-	 * change the adf directly, the resulting adf however behaves as if this was
-	 * the case.
-	 * <p>
-	 * The Builder tries as hard as it can to keep the overhead as low as
-	 * possible by reusing already computed links. This works especially well if
-	 * we only add new arguments. If we change the acceptance condition of some
-	 * argument, then we obviously must compute a new link.
-	 * 
-	 * @param adf
-	 * @return
-	 */
-	static Builder modify(AbstractDialecticalFramework adf) {
-		return null;
 	}
 	
 	/**
 	 * Allows to add arguments and acceptance conditions. Throws an exception if
 	 * any other operation is performed on the ADF.
 	 * 
-	 * @param adf
-	 * @return
+	 * @param adf the ADF to extend
+	 * @return an extension builder
 	 */
 	static Builder extend(AbstractDialecticalFramework adf) {
-		return null;
+		return new ExtendedAbstractDialecticalFramework.ExtendedBuilder(adf);
 	}
 	
 	/**
-	 * Allows to remove arguments and acceptance conditions. Throws an exception
-	 * if any other operation is performed on the ADF.
+	 * Creates a copy of the given AbstractDialecticalFramework, which can be modified before build() is called.
 	 * 
-	 * @param adf
-	 * @return
+	 * @param adf the ADF to copy
+	 * @return the builder initialized with the values of the original ADF
 	 */
-	static Builder reduce(AbstractDialecticalFramework adf) {
-		return null;
+	static Builder copy(AbstractDialecticalFramework adf) {
+		Builder builder = new GraphAbstractDialecticalFramework.Builder();
+		for (Argument arg : adf.getArguments()) {
+			builder.add(arg, adf.getAcceptanceCondition(arg));
+		}
+		for (Link link : adf.links()) {
+			builder.add(link);
+		}
+		return builder;
 	}
 
 	/**
 	 * Creates a new {@link AbstractDialecticalFramework} with transformed acceptance conditions.
 	 * 
-	 * @param adf
-	 * @param transformer
-	 * @param linkStrategy
-	 * @return
+	 * @param adf the ADF
+	 * @param transformer the transformed to use
+	 * @return the builder which is initialized with the transformed acceptance conditions
 	 */
-	static AbstractDialecticalFramework transformed(AbstractDialecticalFramework adf,
-			Transformer<AcceptanceCondition> transformer, LinkStrategy linkStrategy) {
-		Builder builder = new GraphAbstractDialecticalFramework.GraphBuilder().eager(linkStrategy);
+	static Builder transform(AbstractDialecticalFramework adf,
+			Transformer<AcceptanceCondition> transformer) {
+		Builder builder = new GraphAbstractDialecticalFramework.Builder();
 		for (Argument arg : adf.getArguments()) {
 			AcceptanceCondition acc = adf.getAcceptanceCondition(arg);
 			builder.add(arg, transformer.transform(acc));
 		}
-		return builder.build();
+		return builder;
+	}
+	
+	default int size() {
+		return getArguments().size();
 	}
 
 	/**
@@ -157,8 +146,8 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 	 * Computes the link (parent, child) iff necessary and returns it
 	 * afterwards.
 	 * 
-	 * @param a
-	 * @param b
+	 * @param parent the parent
+	 * @param child the child
 	 * @throws IllegalArgumentException if the adf does not contain a link (parent, child)
 	 * @return the link (parent, child)
 	 */
@@ -166,14 +155,14 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 
 	/**
 	 * 
-	 * @param child
+	 * @param child the child
 	 * @return a set of links (parent, child)
 	 */
 	Set<Link> linksTo(Argument child);
 
 	/**
 	 * 
-	 * @param parent
+	 * @param parent the parent
 	 * @return a set of links (parent, child)
 	 */
 	Set<Link> linksFrom(Argument parent);
@@ -182,14 +171,18 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 
 	Set<Argument> children(Argument parent);
 	
+	int outgoingDegree(Argument arg);
+	
+	int incomingDegree(Argument arg);
+	
 	boolean contains(Argument arg);
 
 	/**
 	 * Guaranteed to be non-null if the ADF contains the argument.
 	 * 
-	 * @param argument
+	 * @param argument some argument of this ADF
 	 * @throws IllegalArgumentException if the argument is not contained in the ADF
-	 * @return
+	 * @return the found acceptance condition, never <code>null</code>
 	 */
 	AcceptanceCondition getAcceptanceCondition(Argument argument);
 
@@ -239,9 +232,6 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 
 	static class Signature extends SingleSetSignature<Argument> {
 
-		/**
-		 * @param formulas
-		 */
 		public Signature(Set<Argument> formulas) {
 			super(formulas);
 		}

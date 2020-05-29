@@ -8,10 +8,10 @@ import java.util.Map;
 import org.junit.Test;
 
 import net.sf.tweety.arg.adf.sat.NativeMinisatSolver;
-import net.sf.tweety.arg.adf.semantics.Link;
-import net.sf.tweety.arg.adf.semantics.LinkStrategy;
-import net.sf.tweety.arg.adf.semantics.LinkType;
-import net.sf.tweety.arg.adf.semantics.SatLinkStrategy;
+import net.sf.tweety.arg.adf.semantics.link.Link;
+import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.link.LinkType;
+import net.sf.tweety.arg.adf.semantics.link.SatLinkStrategy;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
@@ -39,7 +39,7 @@ public class LinkTypeTest {
 		AbstractDialecticalFramework adf = AbstractDialecticalFramework.fromMap(map).lazy(linkStrategy).build();
 		
 		Link baLink = adf.link(b, a);
-		assertTrue(baLink.getLinkType() == LinkType.ATTACKING);
+		assertTrue(baLink.getType() == LinkType.ATTACKING);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -55,7 +55,7 @@ public class LinkTypeTest {
 		AbstractDialecticalFramework adf = AbstractDialecticalFramework.fromMap(map).lazy(linkStrategy).build();
 		
 		Link caLink = adf.link(c, a);
-		assertTrue(caLink.getLinkType() == LinkType.SUPPORTING);
+		assertTrue(caLink.getType() == LinkType.SUPPORTING);
 	}
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -71,10 +71,10 @@ public class LinkTypeTest {
 		AbstractDialecticalFramework adf = AbstractDialecticalFramework.fromMap(map).lazy(linkStrategy).build();
 		
 		Link acLink = adf.link(a, c);
-		assertTrue(acLink.getLinkType() == LinkType.DEPENDENT);
+		assertTrue(acLink.getType() == LinkType.DEPENDENT);
 		
 		Link bcLink = adf.link(b,c);
-		assertTrue(bcLink.getLinkType() == LinkType.DEPENDENT);
+		assertTrue(bcLink.getType() == LinkType.DEPENDENT);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
@@ -86,7 +86,7 @@ public class LinkTypeTest {
 				.build();
 		
 		Link aaLink = adf.link(a,a);
-		assertTrue(aaLink.getLinkType() == LinkType.REDUNDANT);
+		assertTrue(aaLink.getType() == LinkType.REDUNDANT);
 	}
 	
 }

@@ -18,11 +18,19 @@
  */
 package net.sf.tweety.arg.adf.syntax.adf;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import net.sf.tweety.arg.adf.semantics.Link;
+import net.sf.tweety.arg.adf.semantics.link.Link;
+import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
+import net.sf.tweety.arg.adf.semantics.link.LinkType;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
+import net.sf.tweety.arg.adf.util.LazyMap;
 import net.sf.tweety.arg.adf.util.UnionSetView;
 
 /**
@@ -40,14 +48,17 @@ public final class ExtendedAbstractDialecticalFramework implements AbstractDiale
 
 	private final AbstractDialecticalFramework extended;
 
-	private final Set<Argument> arguments;
+	private final Map<Argument, Node> index;
+		
+	private final LinkStrategy linkStrategy;
 
 	/**
 	 * @param extended
 	 */
 	private ExtendedAbstractDialecticalFramework(ExtendedBuilder builder) {
 		this.extended = builder.adf;
-		this.arguments = null;
+		this.linkStrategy = builder.linkStrategy;
+		this.index = new HashMap<>(builder.arguments.size());
 	}
 
 	/*
@@ -58,7 +69,7 @@ public final class ExtendedAbstractDialecticalFramework implements AbstractDiale
 	 */
 	@Override
 	public Set<Argument> getArguments() {
-		return new UnionSetView<Argument>(extended.getArguments(), arguments);
+		return new UnionSetView<Argument>(extended.getArguments(), index.keySet());
 	}
 
 	/*
@@ -69,7 +80,18 @@ public final class ExtendedAbstractDialecticalFramework implements AbstractDiale
 	 */
 	@Override
 	public Set<Link> links() {
-		return null;
+		return linksStream().collect(Collectors.toSet());
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#linksStream()
+	 */
+	@Override
+	public Stream<Link> linksStream() {
+		Stream<Link> deltaStream = index.values()
+				.stream()
+				.flatMap(n -> n.parents.values().stream());
+		return Stream.concat(deltaStream, extended.linksStream());
 	}
 
 	/*
@@ -81,8 +103,10 @@ public final class ExtendedAbstractDialecticalFramework implements AbstractDiale
 	 */
 	@Override
 	public Link link(Argument parent, Argument child) {
-		// TODO Auto-generated method stub
-		return null;
+		if (index.containsKey(child)) {
+			return node(child).parents.get(parent);
+		}
+		return extended.link(parent, child);
 	}
 
 	/*
@@ -94,7 +118,6 @@ public final class ExtendedAbstractDialecticalFramework implements AbstractDiale
 	 */
 	@Override
 	public Set<Link> linksTo(Argument child) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -107,7 +130,7 @@ public final class ExtendedAbstractDialecticalFramework implements AbstractDiale
 	 */
 	@Override
 	public Set<Link> linksFrom(Argument parent) {
-		// TODO Auto-generated method stub
+		Set<Link> linksFrom = extended.linksFrom(parent);
 		return null;
 	}
 
@@ -120,8 +143,10 @@ public final class ExtendedAbstractDialecticalFramework implements AbstractDiale
 	 */
 	@Override
 	public Set<Argument> parents(Argument child) {
-		// TODO Auto-generated method stub
-		return null;
+		if (index.containsKey(child)) {
+			return node(child).parents.keySet();
+		}
+		return extended.parents(child);
 	}
 
 	/*
@@ -172,16 +197,121 @@ public final class ExtendedAbstractDialecticalFramework implements AbstractDiale
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#incomingDegree(net.sf.tweety.arg.adf.syntax.Argument)
+	 */
+	@Override
+	public int incomingDegree(Argument arg) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework#outgoingDegree(net.sf.tweety.arg.adf.syntax.Argument)
+	 */
+	@Override
+	public int outgoingDegree(Argument arg) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	private Node node(Argument arg) {
+		Node node = index.get(arg);
+		if (node == null) {
+			throw new IllegalArgumentException("Could not find Argument " + arg);
+		}
+		return node;
+	}
+	
+	private final class Node {
+
+		private final Argument arg;
+
+		private final AcceptanceCondition acc;
+
+		private final Map<Argument, Link> parents;
+
+		private final Map<Argument, Link> children;
+
+		Node(Argument arg, AcceptanceCondition acc) {
+			this.arg = arg;
+			this.acc = acc;
+			this.parents = new LazyMap<>(this::computeIncoming);
+			this.children = new LazyMap<>(this::computeOutgoing);
+		}
+
+		private Link computeOutgoing(Argument to) {
+			LinkType type = linkStrategy.compute(arg, node(to).acc);
+			return Link.of(arg, to, type);
+		}
+
+		private Link computeIncoming(Argument from) {
+			LinkType type = linkStrategy.compute(from, acc);
+			return Link.of(from, arg, type);
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + acc.hashCode();
+			result = prime * result + arg.hashCode();
+			result = prime * result + children.keySet().hashCode();
+			result = prime * result + parents.keySet().hashCode();
+			return result;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof Node)) {
+				return false;
+			}
+			Node other = (Node) obj;
+			return Objects.equals(acc, other.acc) 
+					&& Objects.equals(arg, other.arg)
+					&& Objects.equals(children.keySet(), other.children.keySet())
+					&& Objects.equals(parents.keySet(), other.parents.keySet());
+		}	
+	}
 
 	static final class ExtendedBuilder extends AbstractBuilder {
 
 		private final AbstractDialecticalFramework adf;
 
 		/**
-		 * @param adf
+		 * @param adf the ADF to extend
 		 */
 		public ExtendedBuilder(AbstractDialecticalFramework adf) {
 			this.adf = adf;
+		}
+		
+		/* (non-Javadoc)
+		 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractBuilder#add(net.sf.tweety.arg.adf.syntax.Argument, net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition)
+		 */
+		@Override
+		public Builder add(Argument arg, AcceptanceCondition acc) {
+			if (adf.contains(arg)) {
+				throw new IllegalArgumentException("Argument already exists in the ADF!");
+			}
+			return super.add(arg, acc);
+		}
+		
+		/* (non-Javadoc)
+		 * @see net.sf.tweety.arg.adf.syntax.adf.AbstractBuilder#remove(net.sf.tweety.arg.adf.syntax.Argument)
+		 */
+		@Override
+		public Builder remove(Argument arg) {
+			throw new UnsupportedOperationException();
 		}
 	
 		/* (non-Javadoc)
