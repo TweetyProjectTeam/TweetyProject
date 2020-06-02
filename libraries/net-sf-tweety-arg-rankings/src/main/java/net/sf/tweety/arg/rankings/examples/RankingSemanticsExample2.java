@@ -28,6 +28,7 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.CountingRankingReasoner;
+import net.sf.tweety.arg.rankings.reasoner.PropagationRankingReasoner;
 import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
 import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 
@@ -112,6 +113,17 @@ public class RankingSemanticsExample2 {
 		reasoner = new CountingRankingReasoner(0.9, 0.001);
 		System.out.println(roundRanking(reasoner.getModel(example3), 3));
 		
+		//Propagation semantics
+		PropagationRankingReasoner propagation_reasoner_1 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
+		System.out.println(propagation_reasoner_1.getModel(example3));
+		propagation_reasoner_1 = new PropagationRankingReasoner(0.3, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
+		System.out.println(propagation_reasoner_1.getModel(example3));
+		propagation_reasoner_1 = new PropagationRankingReasoner(0.75, true, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
+		System.out.println(propagation_reasoner_1.getModel(example3));
+		PropagationRankingReasoner propagation_reasoner_2 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION2);
+		System.out.println(propagation_reasoner_2.getModel(example3));
+		propagation_reasoner_2 = new PropagationRankingReasoner(0.75, true, PropagationRankingReasoner.PropagationSemantics.PROPAGATION2);
+		System.out.println(propagation_reasoner_2.getModel(example3));
 	}
 
 	/**
