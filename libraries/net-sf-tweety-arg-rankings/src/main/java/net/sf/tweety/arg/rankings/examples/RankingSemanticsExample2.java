@@ -18,19 +18,12 @@
  */
 package net.sf.tweety.arg.rankings.examples;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.CountingRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.PropagationRankingReasoner;
-import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
-import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
+import net.sf.tweety.arg.rankings.util.RankingTools;
 
 /**
  * Example code for even more ranking semantics.
@@ -108,10 +101,10 @@ public class RankingSemanticsExample2 {
 		// Counting semantics
 		CountingRankingReasoner reasoner = new CountingRankingReasoner(0.98, 0.001);
 		System.out.println(reasoner.getClass().getSimpleName());
-		System.out.println(roundRanking(reasoner.getModel(example1), 2));
-		System.out.println(roundRanking(reasoner.getModel(example2), 2));
+		System.out.println(RankingTools.roundRanking(reasoner.getModel(example1), 2));
+		System.out.println(RankingTools.roundRanking(reasoner.getModel(example2), 2));
 		reasoner = new CountingRankingReasoner(0.9, 0.001);
-		System.out.println(roundRanking(reasoner.getModel(example3), 3));
+		System.out.println(RankingTools.roundRanking(reasoner.getModel(example3), 3));
 		
 		//Propagation semantics
 		PropagationRankingReasoner propagation_reasoner_1 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
@@ -126,37 +119,4 @@ public class RankingSemanticsExample2 {
 		System.out.println(propagation_reasoner_2.getModel(example3));
 	}
 
-	/**
-	 * Rounds a double value to n decimals.
-	 * 
-	 * @param value a double value
-	 * @param n     number of decimals
-	 * @return value rounded to n decimals
-	 */
-	private static double round(double value, int n) {
-		if (n < 0)
-			throw new IllegalArgumentException();
-		BigDecimal bd = new BigDecimal(Double.toString(value));
-		bd = bd.setScale(n, RoundingMode.HALF_UP);
-		return bd.doubleValue();
-	}
-
-	/**
-	 * Rounds values in the given numerical argument ranking to n decimals.
-	 * 
-	 * @param ranking a NumericalArgumentRanking
-	 * @param n       decimals
-	 * @return rounded NumericalArgumentRanking
-	 */
-	private static ArgumentRanking roundRanking(NumericalArgumentRanking ranking, int n) {
-		Iterator<Entry<Argument, Double>> it = ranking.entrySet().iterator();
-		NumericalArgumentRanking reval = new NumericalArgumentRanking();
-		while (it.hasNext()) {
-			Map.Entry<Argument, Double> pair = (Map.Entry<Argument, Double>) it.next();
-			Argument a = pair.getKey();
-			reval.put(a, round(pair.getValue(), n));
-			it.remove();
-		}
-		return reval;
-	}
 }

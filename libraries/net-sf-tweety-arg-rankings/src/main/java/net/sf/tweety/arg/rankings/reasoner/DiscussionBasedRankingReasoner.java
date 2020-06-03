@@ -28,6 +28,7 @@ import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.semantics.LatticeArgumentRanking;
 import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
+import net.sf.tweety.arg.rankings.util.RankingTools;
 
 /**
  * This class implements the "Discussion-based" argument semantics approach as
@@ -118,32 +119,10 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 
 		int j = 2;
 		while (j < i && !paths.isEmpty()) {
-			paths = getPathsOfHigherSize(paths, base); // recursively add linear discussions of length>2
+			paths = RankingTools.getPathsOfHigherSize(paths, base); // recursively add linear discussions of length>2
 			j++;
 		}
 		return paths.size();
-	}
-
-	/**
-	 * Given a set of argument paths of length i-1, this method returns a set of
-	 * argument paths of length i for the given DungTheory.
-	 * 
-	 * @param old_paths set of paths of length i-1
-	 * @param base      the DungTheory
-	 * @return a set of paths of length i
-	 */
-	public HashSet<ArrayList<Argument>> getPathsOfHigherSize(HashSet<ArrayList<Argument>> old_paths, DungTheory base) {
-		HashSet<ArrayList<Argument>> new_paths = new HashSet<ArrayList<Argument>>();
-		for (ArrayList<Argument> path : old_paths) {
-			Argument tail = path.get(path.size() - 1);
-			for (Argument attacker : base.getAttackers(tail)) {
-					ArrayList<Argument> new_path = new ArrayList<Argument>();
-					new_path.addAll(path);
-					new_path.add(attacker);
-					new_paths.add(new_path);
-			}
-		}
-		return new_paths;
 	}
 
 }

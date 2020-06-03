@@ -18,12 +18,6 @@
  */
 package net.sf.tweety.arg.rankings.examples;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.sf.tweety.arg.dung.semantics.Semantics;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.Attack;
@@ -36,8 +30,7 @@ import net.sf.tweety.arg.rankings.reasoner.MTRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.ProbabilisticRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.SAFRankingReasoner;
 import net.sf.tweety.arg.rankings.reasoner.TuplesRankingReasoner;
-import net.sf.tweety.arg.rankings.semantics.ArgumentRanking;
-import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
+import net.sf.tweety.arg.rankings.util.RankingTools;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -210,8 +203,8 @@ public class RankingSemanticsExample {
 		// Categorizer ranking semantics
 		CategorizerRankingReasoner reasoner = new CategorizerRankingReasoner();
 		System.out.println(reasoner.getClass().getSimpleName());
-		System.out.println(roundRanking(reasoner.getModel(example1), 2));
-		System.out.println(roundRanking(reasoner.getModel(example2), 3));
+		System.out.println(RankingTools.roundRanking(reasoner.getModel(example1), 2));
+		System.out.println(RankingTools.roundRanking(reasoner.getModel(example2), 3));
 		
 		// Burden-based ranking semantics
 		BurdenBasedRankingReasoner reasoner2 = new BurdenBasedRankingReasoner();
@@ -237,15 +230,15 @@ public class RankingSemanticsExample {
 		// Matt & Toni ranking semantics
 		MTRankingReasoner reasoner5 = new MTRankingReasoner();
 		System.out.println(reasoner5.getClass().getSimpleName());
-		System.out.println(roundRanking(reasoner5.getModel(example1),2));
-		System.out.println(roundRanking(reasoner5.getModel(example4a),3));
-		System.out.println(roundRanking(reasoner5.getModel(example4b),3));
-		System.out.println(roundRanking(reasoner5.getModel(example4c),3));
+		System.out.println(RankingTools.roundRanking(reasoner5.getModel(example1),2));
+		System.out.println(RankingTools.roundRanking(reasoner5.getModel(example4a),3));
+		System.out.println(RankingTools.roundRanking(reasoner5.getModel(example4b),3));
+		System.out.println(RankingTools.roundRanking(reasoner5.getModel(example4c),3));
 
 		// Social Abstract Argumentation framework with simple product semantics
 		SAFRankingReasoner reasoner6 = new SAFRankingReasoner();
 		System.out.println(reasoner6.getClass().getSimpleName());
-		System.out.println(roundRanking(reasoner6.getModel(example1), 2));
+		System.out.println(RankingTools.roundRanking(reasoner6.getModel(example1), 2));
 
 		// Iterated graded defense (Grossi & Modgil) ranking semantics
 		IteratedGradedDefenseReasoner reasoner7 = new IteratedGradedDefenseReasoner();
@@ -258,37 +251,5 @@ public class RankingSemanticsExample {
 		System.out.println(reasoner8.getModel(example2));
 	}
 
-	/**
-	 * Rounds a double value to n decimals.
-	 * 
-	 * @param value a double value
-	 * @param n     number of decimals
-	 * @return value rounded to n decimals
-	 */
-	private static double round(double value, int n) {
-		if (n < 0)
-			throw new IllegalArgumentException();
-		BigDecimal bd = new BigDecimal(Double.toString(value));
-		bd = bd.setScale(n, RoundingMode.HALF_UP);
-		return bd.doubleValue();
-	}
 
-	/**
-	 * Rounds values in the given numerical argument ranking to n decimals.
-	 * 
-	 * @param ranking a NumericalArgumentRanking
-	 * @param n       decimals
-	 * @return rounded NumericalArgumentRanking
-	 */
-	private static ArgumentRanking roundRanking(NumericalArgumentRanking ranking, int n) {
-		Iterator<Entry<Argument, Double>> it = ranking.entrySet().iterator();
-		NumericalArgumentRanking reval = new NumericalArgumentRanking();
-		while (it.hasNext()) {
-			Map.Entry<Argument, Double> pair = (Map.Entry<Argument, Double>) it.next();
-			Argument a = pair.getKey();
-			reval.put(a, round(pair.getValue(), n));
-			it.remove();
-		}
-		return reval;
-	}
 }

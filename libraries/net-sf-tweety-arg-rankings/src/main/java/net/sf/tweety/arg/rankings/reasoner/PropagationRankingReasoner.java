@@ -20,7 +20,6 @@ package net.sf.tweety.arg.rankings.reasoner;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +29,8 @@ import net.sf.tweety.arg.dung.semantics.Extension;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.semantics.LatticeArgumentRanking;
+import net.sf.tweety.arg.rankings.util.RankingTools;
+import net.sf.tweety.arg.rankings.util.LexicographicDoubleTupleComparator;
 
 /**
  * This class implements the argument ranking approach of [Delobelle. Ranking-
@@ -113,7 +114,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	@Override
 	public LatticeArgumentRanking getModel(DungTheory kb) {
 		LatticeArgumentRanking ranking = new LatticeArgumentRanking(kb.getNodes());
-		LexicographicTupleComparator c = new LexicographicTupleComparator();
+		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
 		Map<Argument, List<Double>> pv = calculatePropagationVector(kb);
 
 		if (this.semantics == PropagationSemantics.PROPAGATION1) {
@@ -235,7 +236,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 		}
 		int j = 2;
 		while (j < i + 1 && !paths.isEmpty()) {
-			paths = getPathsOfHigherSize(paths, kb); // recursively add linear discussions of length>2
+			paths = RankingTools.getPathsOfHigherSize(paths, kb); // recursively add linear discussions of length>2
 			j++;
 		}
 
@@ -262,28 +263,6 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	}
 
 	/**
-	 * Given a set of argument paths of length i-1, this method returns a set of
-	 * argument paths of length i for the given DungTheory.
-	 * 
-	 * @param old_paths set of paths of length i-1
-	 * @param base      the DungTheory
-	 * @return a set of paths of length i
-	 */
-	public HashSet<ArrayList<Argument>> getPathsOfHigherSize(HashSet<ArrayList<Argument>> old_paths, DungTheory base) {
-		HashSet<ArrayList<Argument>> new_paths = new HashSet<ArrayList<Argument>>();
-		for (ArrayList<Argument> path : old_paths) {
-			Argument tail = path.get(path.size() - 1);
-			for (Argument attacker : base.getAttackers(tail)) {
-				ArrayList<Argument> new_path = new ArrayList<Argument>();
-				new_path.addAll(path);
-				new_path.add(attacker);
-				new_paths.add(new_path);
-			}
-		}
-		return new_paths;
-	}
-
-	/**
 	 * Performs the "shuffle operation": The two input vectors are combined in an
 	 * alternating fashion.
 	 * 
@@ -291,7 +270,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	 * @param b double array
 	 * @return "shuffled" array containing the elements of a,b alternately
 	 */
-	double[] shufflePropagationVectors(double[] a, double[] b) {
+	private double[] shufflePropagationVectors(double[] a, double[] b) {
 		if (a.length != b.length)
 			throw new IllegalArgumentException("The input arrays must be the same size");
 		List<Double> shuffled_list = new ArrayList<Double>();
@@ -300,29 +279,6 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 			shuffled_list.add(b[i]);
 		}
 		return shuffled_list.stream().mapToDouble(d -> d).toArray();
-	}
-
-	/**
-	 * Compares two vectors of double according to the lexicographic ordering.
-	 */
-	public class LexicographicTupleComparator implements Comparator<double[]> {
-		/**
-		 * Precision for comparing values.
-		 */
-		public static final double PRECISION = 0.001;
-
-		@Override
-		public int compare(double[] o1, double[] o2) {
-			for (int i = 0; i < o1.length; i++) {
-				if (Math.abs(o1[i] - o2[i]) < PRECISION)
-					continue;
-				else if (o1[i] < o2[i] + PRECISION)
-					return -1;
-				else if (o1[i] > o2[i] + PRECISION)
-					return 1;
-			}
-			return 0;
-		}
 	}
 
 }

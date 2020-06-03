@@ -19,7 +19,6 @@
 package net.sf.tweety.arg.rankings.reasoner;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,6 +27,7 @@ import java.util.Set;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.semantics.LatticeArgumentRanking;
+import net.sf.tweety.arg.rankings.util.LexicographicDoubleTupleComparator;
 
 /**
  * This class implements the "Burden-based" argument semantics approach as
@@ -76,7 +76,7 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeA
 
 		// Use the lexicographical order of the burden numbers as ranking
 		LatticeArgumentRanking ranking = new LatticeArgumentRanking(base.getNodes());
-		LexicographicTupleComparator c = new LexicographicTupleComparator();
+		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
 		for (Argument a : base) {
 			for (Argument b : base) {
 				double[] burdens_a = burdenNumbers.get(a);
@@ -93,29 +93,6 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeA
 			}
 		}
 		return ranking;
-	}
-
-	/**
-	 * Compares burden numbers according to the lexicographic ordering.
-	 */
-	public class LexicographicTupleComparator implements Comparator<double[]> {
-		/**
-		 * Precision for comparing values.
-		 */
-		public static final double PRECISION = 0.001;
-
-		@Override
-		public int compare(double[] o1, double[] o2) {
-			for (int i = 0; i < o1.length; i++) {
-				if (Math.abs(o1[i] - o2[i]) < PRECISION)
-					continue;
-				else if (o1[i] < o2[i] + PRECISION)
-					return -1;
-				else if (o1[i] > o2[i] + PRECISION)
-					return 1;
-			}
-			return 0;
-		}
 	}
 
 }

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,6 +30,7 @@ import java.util.Set;
 import net.sf.tweety.arg.dung.syntax.Argument;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.semantics.LatticeArgumentRanking;
+import net.sf.tweety.arg.rankings.util.LexicographicIntTupleComparator;
 import net.sf.tweety.commons.util.Pair;
 
 /**
@@ -78,7 +78,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		// Tuples* Algorithm
 		// Compare lengths of attack/defense branches
 		// In case of a tie, compare values inside tuples
-		LexicographicTupleComparator c = new LexicographicTupleComparator();
+		LexicographicIntTupleComparator c = new LexicographicIntTupleComparator();
 
 		for (Argument a : kb) {
 			Pair<int[], int[]> tv_a = this.tupled_values.get(a);
@@ -194,23 +194,6 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		if (tv.length() > 2)
 			tv = tv.substring(2);
 		return tv;
-	}
-
-	/**
-	 * Compares tuples according to the lexicographic ordering as described in
-	 * [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005].
-	 */
-	public class LexicographicTupleComparator implements Comparator<int[]> {
-		@Override
-		public int compare(int[] o1, int[] o2) {
-			String s1 = "";
-			String s2 = "";
-			for (int i : o1) 
-				s1 += i; 
-			for (int j : o2) 
-				s2 += j; 
-			return s1.compareTo(s2);
-		}
 	}
 
 }
