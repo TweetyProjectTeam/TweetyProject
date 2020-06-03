@@ -85,6 +85,14 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 	}
 	
 	/**
+	 * Creates a new world which is a copy of the given world	 
+	 * @param other some other world
+	 */
+	public PriestWorld(PriestWorld other){
+		this.values = new HashMap<Proposition,TruthValue>(other.values);
+	}
+	
+	/**
 	 * Sets the value of the given proposition.
 	 * @param p some proposition.
 	 * @param val some truth value.
