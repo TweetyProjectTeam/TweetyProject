@@ -122,9 +122,14 @@ public class ClingoSolver extends ASPSolver {
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		if (output.contains("UNSATISFIABLE"))
 			return result;
-		else if (!output.contains("SATISFIABLE"))
-			throw new SolverException("Clingo returned no output that can be interpreted.", 1);
-
+		else if (!output.contains("SATISFIABLE")) {
+			int error_index = output.indexOf("error");
+			if (error_index != -1) 
+				throw new SolverException("Clingo error: " + output.substring(error_index), 1);
+			else
+				throw new SolverException("Clingo returned no output that can be interpreted: " + output, 1);
+		}
+			
 		String[] as = output.split("Answer:\\s*[0-9]*\n");
 
 		for (int i = 1; i < as.length - 1; i++) {

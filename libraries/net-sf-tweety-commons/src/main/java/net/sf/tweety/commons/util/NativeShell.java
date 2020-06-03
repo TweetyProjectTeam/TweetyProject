@@ -92,6 +92,8 @@ public class NativeShell extends Shell {
 			error.trim();
 			if(!suppressErrors && !error.equals("")) 
 				throw new IOException(error); 
+			else
+				output += error;
 		}
 		return output;
 	}
