@@ -34,6 +34,7 @@ import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.syntax.Tautology;
 
 /**
@@ -206,6 +207,16 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 			if(!this.satisfies(f))
 				return false;
 		return true;
+	}
+	
+	/**
+	 * Returns the signature of this world.
+	 * @return the signature of this world.
+	 */
+	public PlSignature getSignature() {
+		PlSignature sig = new PlSignature();
+		sig.addAll(this.values.keySet());
+		return sig;
 	}
 	
 	/* (non-Javadoc)
