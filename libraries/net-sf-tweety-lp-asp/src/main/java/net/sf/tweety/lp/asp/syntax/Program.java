@@ -20,7 +20,6 @@ package net.sf.tweety.lp.asp.syntax;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.sf.tweety.commons.util.rules.RuleSet;
@@ -44,12 +43,6 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	private static final long serialVersionUID = -1498770939009078101L;
 
 	/**
-	 * The rules of the programs, including facts (rules with no body) and weak
-	 * constraint (rules with no head).
-	 */
-	private Set<ASPRule> rules;
-
-	/**
 	 * A single query.
 	 */
 	private ASPLiteral query;
@@ -68,7 +61,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * Creates a new empty program.
 	 */
 	public Program() {
-		this.rules = new HashSet<ASPRule>();
+		super();
 		this.query = null;
 		this.output_predicate_whitelist = new HashSet<Predicate>();
 	}
@@ -79,8 +72,8 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * @param rules a set of rules
 	 */
 	public Program(Collection<ASPRule> rules) {
+		super(rules);
 		this.query = null;
-		this.rules = (Set<ASPRule>) rules;
 		this.output_predicate_whitelist = this.getPredicates();
 	}
 
@@ -91,7 +84,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * @param rules a set of rules
 	 */
 	public Program(ASPLiteral query, Set<ASPRule> rules) {
-		this.rules = rules;
+		super(rules);
 		this.query = query;
 		this.output_predicate_whitelist = this.getPredicates();
 	}
@@ -102,7 +95,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * @param other another program
 	 */
 	public Program(Program other) {
-		this(other.query, other.rules);
+		this(other.query, other);
 	}
 
 	/**
@@ -117,13 +110,13 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 
 	@Override
 	public void addFact(ASPHead fact) {
-		this.rules.add(new ASPRule(fact));
+		this.add(new ASPRule(fact));
 	}
 
 	@Override
 	public FolSignature getMinimalSignature() {
 		FolSignature sig = new FolSignature();
-		for (ASPRule r : rules) {
+		for (ASPRule r : this) {
 			sig.addAll(r.getPredicates()); 
 			sig.addAll(r.getTerms(Constant.class)); 
 			}
@@ -137,7 +130,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	@Override
 	public Program substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		Program reval = new Program();
-		for(ASPRule r : rules) 
+		for(ASPRule r : this) 
 			reval.add(r.substitute(t, v));
 		if (this.hasQuery())
 			reval.setQuery((ASPLiteral) this.query.substitute(t, v));
@@ -158,7 +151,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	@Override
 	public Program exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
 		Program reval = new Program();
-		for(ASPRule r : this.rules) 
+		for(ASPRule r : this) 
 			reval.add(r.exchange(v, t));
 		if (this.hasQuery())
 			reval.setQuery((ASPLiteral) this.query.exchange(t, v));
@@ -168,7 +161,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	@Override
 	public String toString() {
 		String r = "{";
-		for (ASPRule a : this.rules) {
+		for (ASPRule a : this) {
 			r += a.toString() + " "; 
 		}
 		r = r.substring(0, r.length()-1);
@@ -179,7 +172,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	}
 
 	public boolean isGround() {
-		for (ASPRule r : this.rules)
+		for (ASPRule r : this)
 			if (!r.isGround())
 				return false;
 		if (this.hasQuery() && !query.isGround())
@@ -222,7 +215,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 */
 	private Set<Predicate> getPredicates() {
 		Set<Predicate> prs = new HashSet<Predicate>();
-		for (ASPRule r : rules)
+		for (ASPRule r : this)
 			prs.addAll(r.getPredicates());
 		if (this.hasQuery())
 			prs.add(query.getPredicate());
@@ -245,14 +238,6 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 */
 	public ASPLiteral getQuery() {
 		return query;
-	}
-
-	/**
-	 * Returns all rules of the program.
-	 * @return set of rules
-	 */
-	public Set<ASPRule> getRules() {
-		return rules;
 	}
 
 	/**
@@ -335,7 +320,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * @return True if the program is an extended program, false otherwise.
 	 */
 	public boolean isExtendedProgram() {
-		for (ASPRule r : this.rules) {
+		for (ASPRule r : this) {
 			if (r.getHead().size() > 1)
 				return false;
 		}
@@ -347,7 +332,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * @param other	Reference to the other program.
 	 */
 	public void add(Program other) {
-		for (ASPRule r : other.rules)
+		for (ASPRule r : other)
 			this.add(r);
 		
 		if (other.hasQuery())
@@ -357,19 +342,6 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 				this.query = other.getQuery();
 	}
 	
-	public void addAll(List<ASPRule> rules) {
-		this.rules.addAll(rules);
-	}
-	
-	/**
-	 * Returns true if the program contains a given rule.
-	 * @param r an ASP rule
-	 * @return true if program contains r
-	 */
-	public boolean contains(ASPRule r) {
-		return rules.contains(r);
-	}
-	
 	/**
 	 * Returns true if the program is safe, 
 	 * i.e. if all of its rules and its
@@ -377,7 +349,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 * @return true if the program is safe, false otherwise
 	 */
 	public boolean isSafe() {
-		for (ASPRule r: rules)
+		for (ASPRule r: this)
 			if (!r.isSafe())
 				return false;
 		return true;

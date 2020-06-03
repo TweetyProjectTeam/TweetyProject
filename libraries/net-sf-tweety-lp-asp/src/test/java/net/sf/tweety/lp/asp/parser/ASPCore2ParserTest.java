@@ -76,7 +76,7 @@ public class ASPCore2ParserTest {
 		String pstr = "motive(harry). \n" + "motive(sally). \n" + "guilty(harry). \n"
 				+ "innocent(Suspect) :- motive(Suspect), not guilty(Suspect). \n";
 		Program p1 = ASPCore2Parser.parseProgram(pstr);
-		assertEquals(p1.getRules().size(), 4);
+		assertEquals(p1.size(), 4);
 		assertFalse(p1.hasQuery());
 
 		String pstr2 = "motive(harry). \n" + "motive(sally). \n" + "guilty(harry). \n"
@@ -106,7 +106,7 @@ public class ASPCore2ParserTest {
 	public void DLVTest() throws ParseException {
 		String pstr = ":- <=(harry,sally).";
 		Program p = ASPCore2Parser.parseProgram(pstr);
-		ASPRule r = p.getRules().iterator().next();
+		ASPRule r = p.iterator().next();
 		assertTrue(r.getBody().get(0) instanceof ComparativeAtom);	
 		
 		parser.ReInit(new StringReader("23==23"));

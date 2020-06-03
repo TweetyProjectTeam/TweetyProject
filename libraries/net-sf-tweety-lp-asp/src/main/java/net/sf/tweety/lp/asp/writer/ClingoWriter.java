@@ -69,7 +69,7 @@ public class ClingoWriter {
 	 * @throws IOException if an IO issue occurs.
 	 */
 	public void printProgram(Program p) throws IOException {
-		for (ASPRule r : p.getRules())
+		for (ASPRule r : p)
 			writer.write(printRule(r) + ".\n");
 	
 		//Optionally suppress irrelevant atoms from output.

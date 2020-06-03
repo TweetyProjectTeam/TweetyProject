@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.util.List;
-import java.util.Set;
 
 import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
@@ -51,7 +50,7 @@ public class ASPCore2ParserExample {
 		System.out.println("Parsed program:\n" + pr1);
 		System.out.println("#show list:" + pr1.getOutputWhitelist());
 		
-		ClingoSolver solver = new ClingoSolver("/home/anna/sw/asp/clingo");
+		ClingoSolver solver = new ClingoSolver("/Users/mthimm/Documents/software/misc_bins/clingo-4.5.4-macos-10.9");
 		List<AnswerSet> as = solver.getModels(pr1);
 		System.out.println("\nClingo output:\n" + as);
 		
@@ -59,8 +58,7 @@ public class ASPCore2ParserExample {
 		System.out.println("--------------\nClingo output:\n" +as2);
 		
 		System.out.println("-------------");
-		Set<ASPRule> rules = pr1.getRules();
-		for (ASPRule r : rules)
+		for (ASPRule r : pr1)
 			System.out.println("Sorted literals:" + r.getLiterals());
 	}
 
