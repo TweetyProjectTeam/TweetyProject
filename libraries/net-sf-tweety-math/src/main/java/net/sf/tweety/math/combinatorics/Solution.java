@@ -1,4 +1,4 @@
-package nef.sf.tweety.math.combinatorics;
+package net.sf.tweety.math.combinatorics;
 
 import java.util.ArrayList;
 

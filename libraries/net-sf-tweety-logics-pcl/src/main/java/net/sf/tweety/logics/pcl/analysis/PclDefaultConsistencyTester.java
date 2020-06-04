@@ -107,7 +107,7 @@ public class PclDefaultConsistencyTester extends AbstractBeliefSetConsistencyTes
 		for(PossibleWorld w: worlds)
 			startingPoint.put(worlds2vars.get(w), new IntegerConstant(1));
 		try {
-			this.rootFinder.randomRoot();
+			this.rootFinder.randomRoot(functions,startingPoint);
 		} catch (GeneralMathException e) {
 			return false;
 		}

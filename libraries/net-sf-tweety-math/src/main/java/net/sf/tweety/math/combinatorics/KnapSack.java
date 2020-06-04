@@ -1,4 +1,4 @@
-package nef.sf.tweety.math.combinatorics;
+package net.sf.tweety.math.combinatorics;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
-import nef.sf.tweety.math.combinatorics.Solution;
+import net.sf.tweety.math.combinatorics.Solution;
 
 public class KnapSack extends CombinatoricsProblem{
 

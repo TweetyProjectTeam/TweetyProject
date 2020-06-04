@@ -1,9 +1,9 @@
-package nef.sf.tweety.math.combinatorics;
+package net.sf.tweety.math.combinatorics;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import nef.sf.tweety.math.combinatorics.Solution;
+import net.sf.tweety.math.combinatorics.Solution;
 
 import net.sf.tweety.math.equation.Statement;
 
