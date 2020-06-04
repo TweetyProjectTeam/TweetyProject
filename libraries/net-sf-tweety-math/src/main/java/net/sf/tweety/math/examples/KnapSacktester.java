@@ -1,7 +1,8 @@
-package net.sf.tweety.math.combinatorics;
+package net.sf.tweety.math.examples;
 
 import java.util.ArrayList;
 
+import net.sf.tweety.math.combinatorics.*;
 import net.sf.tweety.math.opt.solver.TabuSearch;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;
