@@ -19,7 +19,7 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class implements an example for the BfgsSolver
+ * This class implements an example for the ApacheCommonsNonLinearConjugateGradientOptimizer
  * @author Sebastian Franke
  */
 public class ApacheCommonsNonLinearConjugateGradientOptimizerEx {
@@ -47,7 +47,7 @@ public class ApacheCommonsNonLinearConjugateGradientOptimizerEx {
 		for(Variable x : constr) {
 			startingPoint.put(x, new IntegerConstant(0));
 		}
-		//solve via BfggsSolver
+		//solve via ApacheCommonsNonLinearConjugateGradientOptimizer
 		ApacheCommonsNonLinearConjugateGradientOptimizer solver = new ApacheCommonsNonLinearConjugateGradientOptimizer(1000, 0.00001);
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());

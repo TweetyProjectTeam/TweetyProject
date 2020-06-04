@@ -33,6 +33,7 @@ import net.sf.tweety.math.term.*;
  * given by this solver is not verified as it only checks for necessary optimality
  * conditions.
  * 
+ *  it is natively implemented
  * @author Matthias Thimm
  */
 public class LagrangeSolver extends Solver {
@@ -126,10 +127,10 @@ public class LagrangeSolver extends Solver {
 					if(!actualStartingPoint.containsKey(lm))
 						actualStartingPoint.put(lm, new FloatConstant(-1));
 				if(rootFinder == null)
-					rootFinder = new BfgsRootFinder(partialDerivations,actualStartingPoint);
+					rootFinder = new BfgsRootFinder();
 				else rootFinder.setStartingPoint(actualStartingPoint);
 				// now find the (single?) zero point of the gradient
-				return rootFinder.randomRoot();
+				return rootFinder.randomRoot(partialDerivations,actualStartingPoint);
 			}catch(GeneralMathException e){
 				// -> Bad starting point, try again
 			}

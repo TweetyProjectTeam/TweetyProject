@@ -23,7 +23,7 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class implements an example for the BfgsSolver
+ * This class implements an example for the OctaveSqpSolver
  * Version used is 5.2.0
  * @author Sebastian Franke
  */

@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This class implements a gradient descent involving Hessian correction
  * for solving unconstrained optimization problems.
+ * it is natively implemented
  * @author Matthias Thimm
  */
 public class HessianGradientDescent extends Solver {

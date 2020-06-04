@@ -9,7 +9,6 @@ import net.sf.tweety.math.opt.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolver;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
-import net.sf.tweety.math.term.IntegerVariable;
 import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
@@ -17,6 +16,7 @@ import net.sf.tweety.math.term.Variable;
 
 /**
  * This class implements an example for the Genetic Optimization Solver
+ * It is natively implemented
  * @author Sebastian Franke
  */
 public class SimpleGeneticOptimizationSolverEx {
@@ -61,7 +61,7 @@ public class SimpleGeneticOptimizationSolverEx {
 		for(Variable x : constr) {
 			startingPoint.put(x, new IntegerConstant(1));
 		}
-		//solve via Gradient Descent
+		//solve via Simple Genetic Solver
 		SimpleGeneticOptimizationSolver solver = new SimpleGeneticOptimizationSolver(100, 200, 20, 100, 0.001);
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());

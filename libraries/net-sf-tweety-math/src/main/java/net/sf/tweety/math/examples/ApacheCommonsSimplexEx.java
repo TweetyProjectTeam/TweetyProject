@@ -66,7 +66,7 @@ public class ApacheCommonsSimplexEx {
 		for(Variable x : constr) {
 			startingPoint.put(x, new IntegerConstant(0));
 		}
-		//solve via BfggsSolver
+		//solve via Apache Commons Simplex Solver
 		ApacheCommonsSimplex solver = new ApacheCommonsSimplex();
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());

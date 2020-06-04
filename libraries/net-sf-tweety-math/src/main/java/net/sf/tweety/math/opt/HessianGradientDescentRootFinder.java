@@ -34,17 +34,7 @@ import net.sf.tweety.math.term.*;
  */
 public class HessianGradientDescentRootFinder extends OptimizationRootFinder {
 	
-	/**
-	 * Creates a new root finder for the given starting point and the given function
-	 * @param function a function
-	 * @param startingPoint the starting point
-	 */
-	public HessianGradientDescentRootFinder(Term function, Map<Variable,Term> startingPoint){
-		super(function,startingPoint);
-		//check whether the solver is installed
-		if(!HessianGradientDescent.isInstalled())
-			throw new RuntimeException("Cannot instantiate HessianGradientDescentRootFinder as the HessianGradientDescent solver is not installed.");
-	}
+
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given
@@ -52,8 +42,8 @@ public class HessianGradientDescentRootFinder extends OptimizationRootFinder {
 	 * @param functions a list of functions
 	 * @param startingPoint the starting point
 	 */
-	public HessianGradientDescentRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
-		super(functions,startingPoint);
+	public HessianGradientDescentRootFinder(){
+	
 		//check whether the solver is installed
 		if(!HessianGradientDescent.isInstalled())
 			throw new RuntimeException("Cannot instantiate HessianGradientDescentRootFinder as the HessianGradientDescent solver is not installed.");
@@ -63,7 +53,10 @@ public class HessianGradientDescentRootFinder extends OptimizationRootFinder {
 	 * @see net.sf.tweety.math.opt.RootFinder#randomRoot()
 	 */
 	@Override
-	public Map<Variable, Term> randomRoot() throws GeneralMathException {			
+	public Map<Variable, Term> randomRoot(List<Term> functions, Map<Variable,Term> startingPoint) throws GeneralMathException {	
+		super.functions = new LinkedList<Term>();
+		this.functions.addAll(functions);
+		this.startingPoint = startingPoint;
 		return new HessianGradientDescent(this.getStartingPoint()).solve(this.buildOptimizationProblem());
 	}
 

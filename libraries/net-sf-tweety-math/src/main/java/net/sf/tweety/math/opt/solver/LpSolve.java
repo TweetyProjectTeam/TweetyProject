@@ -43,6 +43,7 @@ import net.sf.tweety.math.term.Variable;
 /**
  * This class implements a wrapper to the lpsolve binary
  * for mixed integer  linear programming. See http://lpsolve.sourceforge.net.
+ * it uses LpSolve Version 5.5.2.5 (https://sourceforge.net/projects/lpsolve/)
  * @author Matthias Thimm
  */
 public class LpSolve extends Solver {

@@ -49,6 +49,7 @@ import org.apache.commons.math.optimization.linear.SimplexSolver;
 /**
  * This class is a wrapper for the Apache Commons Math Simplex implementation.
  * See http://commons.apache.org/math.  
+ * Version used is 2.0
  * @author Matthias Thimm
  */
 public class ApacheCommonsSimplex extends Solver {

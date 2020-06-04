@@ -25,7 +25,7 @@ public class GradientDescentSolverEx {
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		FloatVariable m1 = new FloatVariable("Machine 1");
 		FloatVariable m2 = new FloatVariable("Machine 2");
-		//Target funcion = (m1+1)^2+m2^2
+		//Target function = (m1+1)^2+m2^2
 		Term opt = new Sum(new Power(new Sum(m1,new FloatConstant(1)), new IntegerConstant(2)), new Power(m2, new IntegerConstant(2)));
 
 		

@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.math.opt;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -43,21 +44,14 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	/** reference to the logback logger instance */
 	private static Logger LOG = LoggerFactory.getLogger(OptimizationRootFinder.class);
 	
-	/**
-	 * Creates a new root finder for the given function.
-	 * @param function a term
-	 */
-	public OptimizationRootFinder(Term function){
-		super(function);
-	}
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
 	 * @param function a function
 	 * @param startingPoint the starting point
 	 */
-	public OptimizationRootFinder(Term function, Map<Variable,Term> startingPoint){
-		super(function,startingPoint);
+	public OptimizationRootFinder(){
+		
 	}
 	
 	/**
@@ -94,6 +88,6 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	 * @see net.sf.tweety.math.opt.RootFinder#randomRoot()
 	 */
 	@Override
-	public abstract Map<Variable, Term> randomRoot() throws GeneralMathException;
+	public abstract Map<Variable, Term> randomRoot(List<Term> functions, Map<Variable,Term> startingPoint) throws GeneralMathException;
 
 }

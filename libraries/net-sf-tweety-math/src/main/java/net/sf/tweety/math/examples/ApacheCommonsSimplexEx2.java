@@ -46,8 +46,10 @@ public class ApacheCommonsSimplexEx2 {
 		
 		//e1^2+e2^2
 		Term mustBeZero = new Sum(new Power(e1, new IntegerConstant(2)), new Power(e2, new IntegerConstant(2)));
-		HessianGradientDescentRootFinder beZero = new HessianGradientDescentRootFinder(mustBeZero, startingPoint);
-		Map<Variable, Term> solution = beZero.randomRoot();
+		ArrayList<Term> terms = new ArrayList<Term>();
+		terms.add(mustBeZero);
+		HessianGradientDescentRootFinder beZero = new HessianGradientDescentRootFinder();
+		Map<Variable, Term> solution = beZero.randomRoot(terms, startingPoint);
 		
 		
 		//********************create a list for evaluating its average as a constraint

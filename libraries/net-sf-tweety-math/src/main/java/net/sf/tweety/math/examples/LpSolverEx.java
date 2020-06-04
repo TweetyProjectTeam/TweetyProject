@@ -23,7 +23,6 @@ import net.sf.tweety.math.term.Variable;
 /**
  * This class implements an example for the Genetic LpSolver
  * it uses LpSolve Version 5.5.2.5 (https://sourceforge.net/projects/lpsolve/)
- * it is currently not working
  * @author Sebastian Franke
  */
 public class LpSolverEx {
@@ -66,7 +65,7 @@ public class LpSolverEx {
 		for(Variable x : constr) {
 			startingPoint.put(x, new IntegerConstant(0));
 		}
-		//solve via Gradient Descent
+		//solve via LpSolve
 		LpSolve solver = new LpSolve();
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());

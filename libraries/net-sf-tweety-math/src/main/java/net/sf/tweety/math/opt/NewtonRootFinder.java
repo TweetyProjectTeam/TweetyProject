@@ -55,25 +55,18 @@ public class NewtonRootFinder extends RootFinder {
 	 * @param function a function
 	 * @param startingPoint the starting point
 	 */
-	public NewtonRootFinder(Term function, Map<Variable,Term> startingPoint){
-		super(function,startingPoint);
+	public NewtonRootFinder(){		
 	}
-	
-	/**
-	 * Creates a new Newton root finder for the given starting point and the given
-	 * (multi-dimensional) function
-	 * @param functions a list of functions
-	 * @param startingPoint the starting point
-	 */
-	public NewtonRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
-		super(functions,startingPoint);
-	}
+
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.opt.RootFinder#randomRoot(java.util.Collection)
 	 */
 	@Override
-	public Map<Variable, Term> randomRoot() throws GeneralMathException{
+	public Map<Variable, Term> randomRoot(List<Term> functions, Map<Variable,Term> startingPoint) throws GeneralMathException{
+		super.functions = new LinkedList<Term>();
+		this.functions.addAll(functions);
+		this.startingPoint = startingPoint;
 		List<Term> f = this.getFunctions();
 		Set<Variable> variablesTemp = new HashSet<Variable>();
 		for(Term t: f)

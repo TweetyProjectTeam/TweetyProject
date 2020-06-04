@@ -44,6 +44,7 @@ import net.sf.tweety.math.term.Variable;
  * solver "sqp" which implements a successive quadratic programming solver for
  * general non-linear optimization problems.
  * 
+ * Version used is 5.2.0
  * @author Matthias Thimm
  *
  */

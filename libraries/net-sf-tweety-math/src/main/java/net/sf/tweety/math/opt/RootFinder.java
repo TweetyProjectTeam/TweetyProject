@@ -40,34 +40,32 @@ public abstract class RootFinder {
 	/**
 	 * The (multi-dimensional) function of this root finder.
 	 */
-	private List<Term> functions;
+	protected List<Term> functions;
 
 	/**
 	 * The starting point of this root finder.
 	 */
-	private Map<Variable,Term> startingPoint;
+	protected Map<Variable,Term> startingPoint;
 	
 	/**
 	 * Creates a new root finder for the given function.
 	 * @param function a term
 	 */
-	public RootFinder(Term function){
-		List<Term> functions = new ArrayList<Term>();
-		functions.add(function);
-		this.functions = functions;
+	public RootFinder(){
+
 	}
-	
+	/*
 	/**
 	 * Creates a new root finder for the given starting point and the given function
 	 * @param function a function
 	 * @param startingPoint the starting point
-	 */
+	 /
 	public RootFinder(Term function, Map<Variable,Term> startingPoint){
 		this.functions = new LinkedList<Term>();
 		this.functions.add(function);
 		this.startingPoint = startingPoint;
 	}
-	
+	*/
 	/**
 	 * Creates a new root finder for the given starting point and the given
 	 * (multi-dimensional) function
@@ -110,6 +108,6 @@ public abstract class RootFinder {
 	 * @return a map from variables to terms such that "function" evaluates to zero.
 	 * @throws GeneralMathException if something went wrong.
 	 */
-	public abstract Map<Variable,Term> randomRoot() throws GeneralMathException;	
+	public abstract Map<Variable,Term> randomRoot(List<Term> functions, Map<Variable,Term> startingPoint) throws GeneralMathException;	
 	
 }

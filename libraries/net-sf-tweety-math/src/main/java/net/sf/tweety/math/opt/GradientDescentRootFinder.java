@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.math.opt;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,17 +49,7 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	 */
 	public double precision = 0.00001;
 	
-	/**
-	 * Creates a new root finder for the given starting point and the given function
-	 * @param function a function
-	 * @param startingPoint the starting point
-	 */
-	public GradientDescentRootFinder(Term function, Map<Variable,Term> startingPoint){
-		super(function,startingPoint);
-		//check whether the solver is installed
-		if(!GradientDescent.isInstalled())
-			throw new RuntimeException("Cannot instantiate GradientDescentRootFinder as the GradientDescent solver is not installed.");
-	}
+
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given
@@ -66,8 +57,7 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	 * @param functions a list of functions
 	 * @param startingPoint the starting point
 	 */
-	public GradientDescentRootFinder(List<Term> functions, Map<Variable,Term> startingPoint){
-		super(functions,startingPoint);
+	public GradientDescentRootFinder(){
 		//check whether the solver is installed
 		if(!GradientDescent.isInstalled())
 			throw new RuntimeException("Cannot instantiate GradientDescentRootFinder as the GradientDescent solver is not installed.");
@@ -77,7 +67,10 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 	 * @see net.sf.tweety.math.opt.RootFinder#randomRoot()
 	 */
 	@Override
-	public Map<Variable, Term> randomRoot() throws GeneralMathException {		
+	public Map<Variable, Term> randomRoot(List<Term> functions, Map<Variable,Term> startingPoint) throws GeneralMathException {		
+		super.functions = new LinkedList<Term>();
+		this.functions.addAll(functions);
+		this.startingPoint = startingPoint;
 		LOG.trace("Determining a random root of the function '" + this.getFunctions() + "' using the gradient descent root finder.");
 		GradientDescent solver = new GradientDescent(this.getStartingPoint());
 		solver.precision = this.precision;
