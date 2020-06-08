@@ -50,9 +50,9 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	private double attacked_arguments_influence;
 
 	/**
-	 * Determines whether the multiset (M) of attackers/defenders of some length is used
-	 * instead of the set (S). Using the multiset means that if there are multiple
-	 * paths from an argument a to an argument b, multiple values will be
+	 * Determines whether the multiset (M) of attackers/defenders of some length is
+	 * used instead of the set (S). Using the multiset means that if there are
+	 * multiple paths from an argument a to an argument b, multiple values will be
 	 * propagated from a to b instead of just one.
 	 */
 	private boolean use_multiset;
@@ -115,7 +115,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	public LatticeArgumentRanking getModel(DungTheory kb) {
 		LatticeArgumentRanking ranking = new LatticeArgumentRanking(kb.getNodes());
 		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
-		Map<Argument, List<Double>> pv = calculatePropagationVector(kb);
+		Map<Argument, List<Double>> pv = calculatePropagationVector(kb, this.attacked_arguments_influence);
 
 		if (this.semantics == PropagationSemantics.PROPAGATION1) {
 			for (Argument a : kb) {
@@ -133,13 +133,9 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 					}
 				}
 			}
-
+			
 		} else if (this.semantics == PropagationSemantics.PROPAGATION2) {
-			double attacked_arguments_influence_backup = this.attacked_arguments_influence;
-			this.attacked_arguments_influence = 0.0;
-			Map<Argument, List<Double>> pv_0 = calculatePropagationVector(kb);
-			this.attacked_arguments_influence = attacked_arguments_influence_backup;
-
+			Map<Argument, List<Double>> pv_0 = calculatePropagationVector(kb, 0.0);
 			for (Argument a : kb) {
 				for (Argument b : kb) {
 					double[] pv_a = pv.get(a).stream().mapToDouble(d -> d).toArray();
@@ -159,34 +155,66 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 					}
 				}
 			}
+			
+		} else if (this.semantics == PropagationSemantics.PROPAGATION3) {
+			Map<Argument, List<Double>> pv_0 = calculatePropagationVector(kb, 0.0);
+			for (Argument a : kb) {
+				for (Argument b : kb) {
+					double[] pv_a = pv_0.get(a).stream().mapToDouble(d -> d).toArray();
+					double[] pv_b = pv_0.get(b).stream().mapToDouble(d -> d).toArray();
+					int res = c.compare(pv_a, pv_b);
+					if (res < 0)
+						ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+					else if (res > 0)
+						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+					else {
+						//if two arguments are ranked equally using the 0.0
+						//propagation vector, compare them using the epsilon
+						//propagation vector instead
+						pv_a = pv.get(a).stream().mapToDouble(d -> d).toArray();
+						pv_b = pv.get(b).stream().mapToDouble(d -> d).toArray();
+						res = c.compare(pv_a, pv_b);
+						if (res < 0)
+							ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+						else if (res > 0)
+							ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+						else {
+							ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
+							ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
+						}
+					}
+				}
+			}
 
 		} else
-			throw new UnsupportedOperationException("Unknown semantic: " + this.semantics);
+			throw new IllegalArgumentException("Unknown semantic: " + this.semantics);
 
 		return ranking;
 	}
 
 	/**
-	 * Calculate the "propagation vector" for the given argumentation 
-	 * framework.
+	 * Calculate the "propagation vector" for the given argumentation framework.
 	 * 
 	 * @param kb
-	 * @return propagation vector (a map of arguments and their corresponding lists of valuations)
+	 * @param epsilon the influence of attacked arguments
+	 * @return propagation vector (a map of arguments and their corresponding lists
+	 *         of valuations)
 	 */
-	public Map<Argument, List<Double>> calculatePropagationVector(DungTheory kb) {
+	private Map<Argument, List<Double>> calculatePropagationVector(DungTheory kb, double epsilon) {
 		Map<Argument, List<Double>> valuations = new HashMap<Argument, List<Double>>();
-		
+
 		// Assign initial weights
 		// Non-attacked arguments always get the initial value 1
 		for (Argument a : kb) {
 			List<Double> l = new ArrayList<Double>();
-			l.add(getInitialValuation(a, kb));
+			l.add(getInitialValuation(a, kb, epsilon));
 			valuations.put(a, l);
 		}
 
 		// Compute the propagation vector
-		int nOfSteps = 5;
-		for (int i = 1; i < nOfSteps; i++) {
+		int maxNOfSteps = 20;
+		for (int i = 1; i < maxNOfSteps; i++) {
+			boolean found_path_of_size_i = false;
 			for (Argument a : kb) {
 				List<Double> l = valuations.get(a);
 				double result = l.get(i - 1);
@@ -194,8 +222,10 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 				// accumulate and store weights from attackers and defenders
 				double sum = 0.0;
 				List<Argument> s = getArgsWithPathsOfLength(a, kb, i);
+				if (!s.isEmpty())
+					found_path_of_size_i = true;
 				for (Argument b : s)
-					sum += getInitialValuation(b, kb);
+					sum += getInitialValuation(b, kb, epsilon);
 
 				// change polarities based on attack relation meaning
 				// (attack or defense)
@@ -207,18 +237,22 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 				l.add(i, result);
 				valuations.put(a, l);
 			}
+			// stop if there are no paths of length >=i in the graph
+			if (!found_path_of_size_i)
+				break;
 		}
 		return valuations;
 	}
 
 	/**
-	 * Computes the (multi-)set of arguments such that there exists a path with a given
-	 * length to the given argument a.
+	 * Computes the (multi-)set of arguments such that there exists a path with a
+	 * given length to the given argument a.
 	 * 
-	 * @param a argument
+	 * @param a  argument
 	 * @param kb the complete framework
-	 * @param i path length
-	 * @return the (multi)set of arguments b that are at the end of a path (a,...,b) of length i
+	 * @param i  path length
+	 * @return the (multi)set of arguments b that are at the end of a path (a,...,b)
+	 *         of length i
 	 */
 	private List<Argument> getArgsWithPathsOfLength(Argument a, DungTheory kb, int i) {
 		if (i == 0)
@@ -252,13 +286,14 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	}
 
 	/**
-	 * @param a  argument
-	 * @param kb DungTheory
+	 * @param a       argument
+	 * @param kb      DungTheory
+	 * @param epsilon the influence of attacked arguments
 	 * @return the initial valuation of the given argument
 	 */
-	private double getInitialValuation(Argument a, DungTheory kb) {
+	private double getInitialValuation(Argument a, DungTheory kb, double epsilon) {
 		if (kb.isAttacked(a, new Extension(kb)))
-			return this.attacked_arguments_influence;
+			return epsilon;
 		return 1.0;
 	}
 

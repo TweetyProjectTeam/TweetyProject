@@ -106,17 +106,27 @@ public class RankingSemanticsExample2 {
 		reasoner = new CountingRankingReasoner(0.9, 0.001);
 		System.out.println(RankingTools.roundRanking(reasoner.getModel(example3), 3));
 		
-		//Propagation semantics
+		//Propagation semantics (examples from chapter 3.3 in 
+		//[Delobelle. Ranking-based Semantics for Abstract Argumentation. Thesis, 2017])
+		System.out.println("Propagation semantics epsilon:");
 		PropagationRankingReasoner propagation_reasoner_1 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
-		System.out.println(propagation_reasoner_1.getModel(example3));
+		System.out.println("S,0.75:" + propagation_reasoner_1.getModel(example3));
 		propagation_reasoner_1 = new PropagationRankingReasoner(0.3, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
-		System.out.println(propagation_reasoner_1.getModel(example3));
+		System.out.println("S,0.3:" + propagation_reasoner_1.getModel(example3));
 		propagation_reasoner_1 = new PropagationRankingReasoner(0.75, true, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
-		System.out.println(propagation_reasoner_1.getModel(example3));
+		System.out.println("M:" + propagation_reasoner_1.getModel(example3));
+		
+		System.out.println("Propagation semantics 1+epsilon:");
 		PropagationRankingReasoner propagation_reasoner_2 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION2);
-		System.out.println(propagation_reasoner_2.getModel(example3));
+		System.out.println("S:" + propagation_reasoner_2.getModel(example3));
 		propagation_reasoner_2 = new PropagationRankingReasoner(0.75, true, PropagationRankingReasoner.PropagationSemantics.PROPAGATION2);
-		System.out.println(propagation_reasoner_2.getModel(example3));
+		System.out.println("M:" + propagation_reasoner_2.getModel(example3));
+		
+		System.out.println("Propagation semantics 1->epsilon:");
+		propagation_reasoner_2 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION3);
+		System.out.println("S:" + propagation_reasoner_2.getModel(example3));
+		propagation_reasoner_2 = new PropagationRankingReasoner(0.75, true, PropagationRankingReasoner.PropagationSemantics.PROPAGATION3);
+		System.out.println("M:" + propagation_reasoner_2.getModel(example3));
 	}
 
 }
