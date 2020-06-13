@@ -8,7 +8,7 @@ import java.util.List;
 
 import net.sf.tweety.math.equation.Statement;
 
-public abstract class CombinatoricsProblem extends HashSet<Element>{
+public abstract class CombinatoricsProblem extends HashSet<ElementOfCombinatoricsProb>{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -22,10 +22,10 @@ public abstract class CombinatoricsProblem extends HashSet<Element>{
 	 */
 	public static final int MAXIMIZE = 1;
 	
-	List<Element> elements;
+	List<ElementOfCombinatoricsProb> elements;
 	Collection<Statement> constraints = new ArrayList<Statement>();
 		
-	public CombinatoricsProblem(List<Element> elements){
+	public CombinatoricsProblem(List<ElementOfCombinatoricsProb> elements){
 		super(elements);
 
 	}
@@ -34,10 +34,10 @@ public abstract class CombinatoricsProblem extends HashSet<Element>{
 	 * @param c the List to be subtracted from "this" List
 	 * @return the differnece of the lists
 	 */
-	public ArrayList<Element> createDifference(ArrayList<Element> c) {
-		ArrayList<Element> newColl = new ArrayList<Element>();
+	public ArrayList<ElementOfCombinatoricsProb> createDifference(ArrayList<ElementOfCombinatoricsProb> c) {
+		ArrayList<ElementOfCombinatoricsProb> newColl = new ArrayList<ElementOfCombinatoricsProb>();
 		System.out.println("hi");
-	    for(Element i : this) {
+	    for(ElementOfCombinatoricsProb i : this) {
 	    	if(!c.contains(i))
 	    			newColl.add(i);
 	    }
@@ -48,16 +48,18 @@ public abstract class CombinatoricsProblem extends HashSet<Element>{
 	 * @param sol is the solution to be viewd
 	 * @return if the solution sol is valid under the constraints of the problem
 	 */
-	public abstract double sumOfWeights(ArrayList<Element> sol);
-	public ArrayList<ArrayList<Element>> formNeighborhood(ArrayList<Element> currSol, int minIterations, int maxIteration, double threshold)
+	public abstract double sumOfWeights(ArrayList<ElementOfCombinatoricsProb> sol);
+	
+	public ArrayList<ArrayList<ElementOfCombinatoricsProb>> formNeighborhood(ArrayList<ElementOfCombinatoricsProb> currSol, int minIterations, int maxIteration, double threshold)
 	{
 		int cnt = 0;
 		int thresholdCnt = 0;
 		boolean thresholdSwitch = false;
-		ArrayList<ArrayList<Element>> result = new ArrayList<ArrayList<Element>>();
+		ArrayList<ArrayList<ElementOfCombinatoricsProb>> result = new ArrayList<ArrayList<ElementOfCombinatoricsProb>>();
 		while((cnt < minIterations || thresholdCnt < 10) && cnt < maxIteration)
 		{
-			ArrayList<Element> newSol = createRandomNewSolution(currSol);
+
+			ArrayList<ElementOfCombinatoricsProb> newSol = createRandomNewSolution(currSol);
 			result.add(newSol);
 			double eval = evaluate(newSol);
 			if(thresholdSwitch == true)
@@ -69,11 +71,8 @@ public abstract class CombinatoricsProblem extends HashSet<Element>{
 
 		return result;
 	}
-	public abstract ArrayList<Element> createRandomNewSolution(ArrayList<Element> currSol);
-	public abstract double evaluate(ArrayList<Element> sol);
-	public abstract ArrayList<Element> solve();
-	public boolean isValid(ArrayList<Element> sol) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public abstract ArrayList<ElementOfCombinatoricsProb> createRandomNewSolution(ArrayList<ElementOfCombinatoricsProb> currSol);
+	public abstract double evaluate(ArrayList<ElementOfCombinatoricsProb> sol);
+	public abstract boolean isValid(ArrayList<ElementOfCombinatoricsProb> sol);
+
 }
