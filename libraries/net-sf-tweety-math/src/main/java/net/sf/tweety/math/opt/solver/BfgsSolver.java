@@ -25,9 +25,8 @@ import java.util.Map;
 
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.matrix.Matrix;
-import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
@@ -63,7 +62,7 @@ public class BfgsSolver extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+	public Map<Variable,Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
 		if(problem.size() > 0)
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
 		Term func = ((OptimizationProblem)problem).getTargetFunction();

@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.math.opt;
+package net.sf.tweety.math.opt.rootFinder;
 
 import java.util.*;
 

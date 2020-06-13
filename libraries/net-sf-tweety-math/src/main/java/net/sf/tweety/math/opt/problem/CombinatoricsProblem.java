@@ -1,4 +1,5 @@
-package net.sf.tweety.math.combinatorics;
+package net.sf.tweety.math.opt.problem;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +23,7 @@ public abstract class CombinatoricsProblem extends HashSet<Element>{
 	public static final int MAXIMIZE = 1;
 	
 	List<Element> elements;
-	Collection<Statement> constraints = new HashSet<Statement>();
+	Collection<Statement> constraints = new ArrayList<Statement>();
 		
 	public CombinatoricsProblem(List<Element> elements){
 		super(elements);
@@ -72,6 +73,7 @@ public abstract class CombinatoricsProblem extends HashSet<Element>{
 	public abstract double evaluate(ArrayList<Element> sol);
 	public abstract ArrayList<Element> solve();
 	public boolean isValid(ArrayList<Element> sol) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 }

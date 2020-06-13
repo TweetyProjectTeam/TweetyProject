@@ -25,10 +25,10 @@ import java.util.Set;
 
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
-import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.ProblemInconsistentException;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.term.Constant;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;

@@ -5,7 +5,7 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Statement;
-import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolver;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;

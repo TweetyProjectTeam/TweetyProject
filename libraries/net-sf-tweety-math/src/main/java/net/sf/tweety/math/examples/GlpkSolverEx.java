@@ -7,8 +7,8 @@ import java.util.Set;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.math.GeneralMathException;
-import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.BfgsSolver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;

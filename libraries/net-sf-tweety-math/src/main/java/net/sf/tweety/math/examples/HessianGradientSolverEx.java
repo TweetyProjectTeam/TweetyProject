@@ -5,8 +5,8 @@ import java.util.*;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.math.*;
-import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.HessianGradientDescent;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;

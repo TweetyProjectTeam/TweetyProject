@@ -3,7 +3,7 @@ package net.sf.tweety.math.opt.solver;
 import java.util.ArrayList;
 
 import net.sf.tweety.math.combinatorics.CombinatoricsProblem;
-import net.sf.tweety.math.combinatorics.Solution;
+import net.sf.tweety.math.combinatorics.Element;
 
 /**
  * implements a simple Tabu Search without long term memory
@@ -14,7 +14,7 @@ import net.sf.tweety.math.combinatorics.Solution;
 public class TabuSearch {
 
 	//the forbidden solutions
-	private ArrayList<Solution> tabu = new ArrayList<Solution>();
+	private ArrayList<ArrayList<Element>> tabu = new ArrayList<ArrayList<Element>>();
 	//the exact problem that is to  be solved
 	private CombinatoricsProblem prob;
 	private int maxIteration;
@@ -29,20 +29,20 @@ public class TabuSearch {
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
 	}
 	
-	public Solution solve(Solution initialSol) {
-		Solution bestSol = initialSol;
-		Solution currSol = initialSol;
+	public ArrayList<Element> solve(ArrayList<Element> initialSol) {
+		ArrayList<Element> bestSol = initialSol;
+		ArrayList<Element> currSol = initialSol;
 		
 		Integer cnt = 0;
 		int smthHappened = 0;
 		//break if max amount of iterations is reached or if there are no better solutions fund in maxStepsWithNoImprove steps
 		while (cnt < maxIteration && smthHappened < maxStepsWithNoImprove) {
 			//construct a list for between 10 and 20 neighbors for the next step
-			ArrayList<Solution> candidateNeighbors = this.prob.formNeighborhood(currSol, 10, 20, 1.0);
-			Solution newSol = candidateNeighbors.get(0);
+			ArrayList<ArrayList<Element>> candidateNeighbors = this.prob.formNeighborhood(currSol, 10, 20, 1.0);
+			ArrayList<Element> newSol = candidateNeighbors.get(0);
 			//System.out.println("TabU: " + tabu.size() + "     " + tabu.toString());
 			//check which one of the neighborhood is the best
-			for(Solution i : candidateNeighbors) {	
+			for(ArrayList<Element> i : candidateNeighbors) {	
 				if(!tabu.contains(i) && this.prob.evaluate(i) > this.prob.evaluate(newSol)) {
 					newSol = i;
 				}
@@ -50,7 +50,7 @@ public class TabuSearch {
 
 			
 			currSol = newSol;
-			Solution tabuSol = new Solution();
+			ArrayList<Element> tabuSol = new ArrayList<Element>();
 			//update the tabu list
 			for(int i = 0; i < currSol.size(); i++)
 				tabuSol.add(currSol.get(i));				

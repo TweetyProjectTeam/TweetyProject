@@ -16,11 +16,12 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.math.opt;
+package net.sf.tweety.math.opt.rootFinder;
 
 import java.util.*;
 
-import net.sf.tweety.math.*;
+import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
 
@@ -57,7 +58,7 @@ public class HessianGradientDescentRootFinder extends OptimizationRootFinder {
 		super.functions = new LinkedList<Term>();
 		this.functions.addAll(functions);
 		this.startingPoint = startingPoint;
-		return new HessianGradientDescent(this.getStartingPoint()).solve(this.buildOptimizationProblem());
+		return new HessianGradientDescent(this.getStartingPoint()).solve((ConstraintSatisfactionProblem)  this.buildOptimizationProblem());
 	}
 
 }

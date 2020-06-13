@@ -28,9 +28,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import net.sf.tweety.commons.util.NativeShell;
-import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.term.Constant;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;

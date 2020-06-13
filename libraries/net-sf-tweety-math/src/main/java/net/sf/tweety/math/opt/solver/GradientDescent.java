@@ -26,9 +26,7 @@ import java.util.Map;
 
 import net.sf.tweety.commons.util.VectorTools;
 import net.sf.tweety.math.GeneralMathException;
-import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.problem.*;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Term;
@@ -85,12 +83,12 @@ public class GradientDescent extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
-		if(problem.size() > 0)
+	public Map<Variable, Term> solve(ConstraintSatisfactionProblem constraintSatisfactionProblem) throws GeneralMathException {
+		if(constraintSatisfactionProblem.size() > 0)
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
-		this.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + problem + "\n===END===");
-		Term f = ((OptimizationProblem)problem).getTargetFunction();
-		if(((OptimizationProblem)problem).getType() == OptimizationProblem.MAXIMIZE)
+		this.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + constraintSatisfactionProblem + "\n===END===");
+		Term f = ((OptimizationProblem)constraintSatisfactionProblem).getTargetFunction();
+		if(((OptimizationProblem)constraintSatisfactionProblem).getType() == OptimizationProblem.MAXIMIZE)
 			f = new IntegerConstant(-1).mult(f);	
 		// variables need to be ordered
 		List<Variable> variables = new ArrayList<Variable>(f.getVariables());

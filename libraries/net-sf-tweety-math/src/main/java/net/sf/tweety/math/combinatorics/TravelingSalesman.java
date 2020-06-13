@@ -34,33 +34,33 @@ public class TravelingSalesman extends CombinatoricsProblem{
 	private static final long serialVersionUID = 1L;
 
 	Term maxWeight;
-	Solution currSol = new Solution();
-	Solution bestSol;
+	ArrayList<Element> currSol = new ArrayList<Element>();
+	ArrayList<Element> bestSol;
 	/**
 	 * @return the weight of a certain element
 	 */
-	Term weight(int i, Solution sol) {
+	Term weight(int i, ArrayList<Element> sol) {
 		return sol.get(i).get(1) ;
 	}
 	
 	/**
 	 * @return the value of a certain element
 	 */
-	Term value(int i, Solution sol) {
+	Term value(int i, ArrayList<Element> sol) {
 		return sol.get(i).get(0) ;
 	}
 
 
 
 	@Override
-	public Solution createRandomNewSolution(Solution currSol) {
+	public ArrayList<Element> createRandomNewSolution(ArrayList<Element> currSol) {
 		//chosse two random cities to swap in order
 		int random0 = (int)(Math.random() * currSol.size());
 		int random1 = (int)(Math.random() * currSol.size());
 		while(random0 == random1)
 			random1 = (int)(Math.random() * currSol.size());
 		//create new solution with cities swapped
-		Solution newSol = new Solution();
+		ArrayList<Element> newSol = new ArrayList<Element>();
 		for(Element i : currSol)
 			newSol.add(i);
 		Element tmp0 = currSol.get(random0);
@@ -76,7 +76,7 @@ public class TravelingSalesman extends CombinatoricsProblem{
 
 
 	@Override
-	public boolean isValid(Solution sol) {
+	public boolean isValid(ArrayList<Element> sol) {
 		if(sol.size() == this.size())		
 			return true;
 		else
@@ -84,7 +84,7 @@ public class TravelingSalesman extends CombinatoricsProblem{
 	}
 
 	@Override
-	public double evaluate(Solution sol) {
+	public double evaluate(ArrayList<Element> sol) {
 		//calculate the sum of distances between the connected cities
 		Term sum = new FloatConstant(0);
 		//sum from position 0 to n-1
@@ -104,13 +104,13 @@ public class TravelingSalesman extends CombinatoricsProblem{
 	}
 
 	@Override
-	public double sumOfWeights(Solution sol) {
+	public double sumOfWeights(ArrayList<Element> sol) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public Solution solve() {
+	public ArrayList<Element> solve() {
 		// TODO Auto-generated method stub
 		return null;
 	}

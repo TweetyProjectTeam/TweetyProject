@@ -16,14 +16,15 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.math.opt;
+package net.sf.tweety.math.opt.rootFinder;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import net.sf.tweety.math.GeneralMathException;
-import net.sf.tweety.math.opt.solver.GradientDescent;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
@@ -74,7 +75,7 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 		LOG.trace("Determining a random root of the function '" + this.getFunctions() + "' using the gradient descent root finder.");
 		GradientDescent solver = new GradientDescent(this.getStartingPoint());
 		solver.precision = this.precision;
-		return solver.solve(this.buildOptimizationProblem());
+		return solver.solve((ConstraintSatisfactionProblem) this.buildOptimizationProblem());
 	}
 
 }

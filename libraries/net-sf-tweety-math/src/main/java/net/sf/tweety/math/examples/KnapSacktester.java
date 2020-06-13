@@ -29,7 +29,7 @@ public class KnapSacktester {
 		
 		//solve the problem with a tabu size of 5, max 100000 iterations and max 2000 iterations without an improvement to the best solution
 		TabuSearch ts = new TabuSearch(test, 1000000, 50, 1000);
-		System.out.println("MySol: " + ts.solve(new Solution()));
+		System.out.println("MySol: " + ts.solve(new ArrayList<Element>()));
 		//System.out.println(elems.size());
 		
 			

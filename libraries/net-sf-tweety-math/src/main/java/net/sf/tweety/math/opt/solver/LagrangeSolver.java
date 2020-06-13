@@ -22,7 +22,8 @@ import java.util.*;
 
 import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.*;
-import net.sf.tweety.math.opt.*;
+import net.sf.tweety.math.opt.problem.*;
+import net.sf.tweety.math.opt.rootFinder.*;
 import net.sf.tweety.math.term.*;
 
 
@@ -148,4 +149,8 @@ public class LagrangeSolver extends Solver {
 		// as this is a native implementation it is always installed
 		return true;
 	}
+
+
+
+
 }

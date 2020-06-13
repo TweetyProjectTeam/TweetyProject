@@ -35,9 +35,9 @@ import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.CMAESOptimizer;
 import org.apache.commons.math3.random.JDKRandomGenerator;
 
 import net.sf.tweety.math.GeneralMathException;
-import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.OptimizationProblem;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;

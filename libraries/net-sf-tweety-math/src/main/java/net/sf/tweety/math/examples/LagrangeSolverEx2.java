@@ -11,9 +11,8 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Statement;
-import net.sf.tweety.math.func.MaxAggregator;
-import net.sf.tweety.math.opt.ConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.LagrangeSolver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;
@@ -30,7 +29,6 @@ public class LagrangeSolverEx2 {
 public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		
 	
-		MaxAggregator maxl = new MaxAggregator();
 		//Define the constraints (all are equations)
 		IntegerVariable m1 = new IntegerVariable("Maschine 1");
 		IntegerVariable m2 = new IntegerVariable("Maschine 2");
