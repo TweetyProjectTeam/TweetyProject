@@ -16,11 +16,12 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.math.opt;
+package net.sf.tweety.math.opt.solver;
 
 import java.util.*;
 
-import net.sf.tweety.math.*;
+import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.opt.problem.*;
 import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
 import net.sf.tweety.math.term.*;
 
@@ -157,7 +158,7 @@ public abstract class Solver {
 				+ "It is strongly advised that a default solver is manually configured, see "
 				+ "'http://tweetyproject.org/doc/optimization-problem-solvers.html' "
 				+ "for more information.");
-		return new ApacheCommonsSimplex();
+		return  new ApacheCommonsSimplex();
 	}
 	
 	/**
