@@ -24,7 +24,7 @@ import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import net.sf.tweety.logics.pcl.analysis.*;
 import net.sf.tweety.logics.pcl.syntax.*;
-import net.sf.tweety.math.opt.OptimizationRootFinder;
+import net.sf.tweety.math.opt.rootFinder.OptimizationRootFinder;
 
 public class AnalysisExample {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{

@@ -39,7 +39,7 @@ import net.sf.tweety.preferences.io.POParser;
 import net.sf.tweety.preferences.io.ParseException;
 import net.sf.tweety.preferences.io.UPParser;
 import net.sf.tweety.preferences.update.Update;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.opt.solver.LpSolve;
 import net.xeoh.plugins.base.annotations.Capabilities;
 import net.xeoh.plugins.base.annotations.PluginImplementation;

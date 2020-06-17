@@ -20,7 +20,7 @@ package net.sf.tweety.logics.pcl.analysis;
 
 import net.sf.tweety.commons.*;
 import net.sf.tweety.logics.pcl.syntax.*;
-import net.sf.tweety.math.opt.OptimizationRootFinder;
+import net.sf.tweety.math.opt.rootFinder.OptimizationRootFinder;
 import net.sf.tweety.math.probability.*;
 
 /**

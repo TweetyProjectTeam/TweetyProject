@@ -51,7 +51,7 @@ import net.sf.tweety.logics.pl.util.CnfSampler;
 import net.sf.tweety.logics.pl.util.MiSampler;
 import net.sf.tweety.math.func.BinaryFunction;
 import net.sf.tweety.math.func.MaxFunction;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.opt.solver.LpSolve;
 
 public class StreamInconsistencyEvaluationExample2 {

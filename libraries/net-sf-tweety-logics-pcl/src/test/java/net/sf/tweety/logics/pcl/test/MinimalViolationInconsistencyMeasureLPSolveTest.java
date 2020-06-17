@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 import net.sf.tweety.math.norm.ManhattanNorm;
 import net.sf.tweety.math.norm.MaximumNorm;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.opt.solver.LpSolve;
 
 import org.junit.Before;

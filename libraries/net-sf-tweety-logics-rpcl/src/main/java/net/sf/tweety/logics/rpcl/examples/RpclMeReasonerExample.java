@@ -26,7 +26,7 @@ import net.sf.tweety.logics.fol.syntax.*;
 import net.sf.tweety.logics.rpcl.reasoner.RpclMeReasoner;
 import net.sf.tweety.logics.rpcl.semantics.*;
 import net.sf.tweety.logics.rpcl.syntax.*;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.opt.solver.OctaveSqpSolver;
 import net.sf.tweety.math.probability.*;
 

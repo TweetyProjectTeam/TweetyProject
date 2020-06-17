@@ -24,7 +24,9 @@ import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
 import net.sf.tweety.logics.pl.syntax.*;
 import net.sf.tweety.math.*;
-import net.sf.tweety.math.opt.*;
+import net.sf.tweety.math.opt.rootFinder.*;
+import net.sf.tweety.math.opt.problem.*;
+import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.*;
 import net.sf.tweety.logics.commons.analysis.*;
 

@@ -48,7 +48,7 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.CnfSampler;
 //import net.sf.tweety.logics.pl.util.ContensionSampler;
 import net.sf.tweety.logics.pl.util.HsSampler;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 //import net.sf.tweety.logics.pl.util.MiSampler;
 import net.sf.tweety.math.opt.solver.LpSolve;
 

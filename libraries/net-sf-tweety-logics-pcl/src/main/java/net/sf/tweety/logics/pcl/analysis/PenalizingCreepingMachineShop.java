@@ -24,7 +24,7 @@ import java.util.Map;
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
-import net.sf.tweety.math.opt.OptimizationRootFinder;
+import net.sf.tweety.math.opt.rootFinder.OptimizationRootFinder;
 import net.sf.tweety.math.probability.Probability;
 
 import org.slf4j.Logger;

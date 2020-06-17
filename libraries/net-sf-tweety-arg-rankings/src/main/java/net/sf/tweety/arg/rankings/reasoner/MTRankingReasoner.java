@@ -32,7 +32,7 @@ import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
-import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;

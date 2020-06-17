@@ -27,7 +27,7 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorldIterator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.func.FracAggrFunction;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 
 /**
  * Main factory for retrieving inconsistency measures for propositional logic.

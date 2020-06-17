@@ -28,7 +28,7 @@ import net.sf.tweety.logics.pcl.semantics.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.logics.pl.semantics.*;
 import net.sf.tweety.logics.pl.syntax.PlSignature;
-import net.sf.tweety.math.opt.OptimizationRootFinder;
+import net.sf.tweety.math.opt.rootFinder.OptimizationRootFinder;
 
 /**
  * This consistency restorer determines the new probabilities of conditionals

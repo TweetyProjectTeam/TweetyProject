@@ -25,7 +25,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import net.sf.tweety.math.GeneralMathException;
-import net.sf.tweety.math.opt.OptimizationProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;

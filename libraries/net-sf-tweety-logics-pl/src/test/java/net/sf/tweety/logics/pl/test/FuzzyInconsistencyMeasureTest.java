@@ -32,7 +32,7 @@ import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.func.fuzzy.MinimumNorm;
 import net.sf.tweety.math.func.fuzzy.ProductNorm;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.opt.solver.ApacheCommonsCMAESOptimizer;
 
 public class FuzzyInconsistencyMeasureTest {

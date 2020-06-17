@@ -47,7 +47,7 @@ import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.PlSignature;
-import net.sf.tweety.math.opt.Solver;
+import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.opt.solver.ApacheCommonsSimplex;
 import net.sf.tweety.math.opt.solver.GlpkSolver;
 import net.sf.tweety.web.TweetyServer;
