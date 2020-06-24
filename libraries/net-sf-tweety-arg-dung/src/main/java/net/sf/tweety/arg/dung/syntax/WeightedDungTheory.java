@@ -143,16 +143,20 @@ public class WeightedDungTheory extends DungTheory {
     }
 
     /**
-     * remove all attacks with weight < 0
+     * remove all attacks with weight < threshold
      * @return "true" if all attacks were removed
      */
-    public boolean removeDiscardedAttacks() {
+    public boolean removeDiscardedAttacks(int threshold) {
         boolean result = true;
         for (Attack att: this.getAttacks()) {
-            if (this.getWeight(att) < 0) {
+            if (this.getWeight(att) < threshold) {
                 result &= this.remove(att);
             }
         }
         return result;
+    }
+
+    public boolean removeDiscardedAttacks() {
+        return this.removeDiscardedAttacks(0);
     }
 }

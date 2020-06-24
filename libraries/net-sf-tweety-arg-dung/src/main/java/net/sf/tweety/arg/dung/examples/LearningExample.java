@@ -19,7 +19,6 @@
 
 package net.sf.tweety.arg.dung.examples;
 
-import net.sf.tweety.arg.dung.learning.RiveretTheoryLearner;
 import net.sf.tweety.arg.dung.reasoner.SimpleGroundedReasoner;
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
@@ -52,8 +51,8 @@ public class LearningExample {
         }
 
         // Learn new graph from constructed list of labelings
-        RiveretTheoryLearner learner = new RiveretTheoryLearner(dt);
-        DungTheory dt_learned = learner.learnLabelings(labelings, true);
+        net.sf.tweety.arg.dung.learning.ImprovedRiveretTheoryLearner learner = new net.sf.tweety.arg.dung.learning.ImprovedRiveretTheoryLearner(dt, 50);
+        DungTheory dt_learned = learner.learnLabelings(labelings, true, -5);
         System.out.println(dt_learned.prettyPrint());
     }
 }
