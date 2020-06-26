@@ -1,9 +1,27 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+
 package net.sf.tweety.math.opt.solver;
 
 import java.util.ArrayList;
 
 import net.sf.tweety.math.opt.problem.*;
-import net.sf.tweety.math.examples.*;
 
 
 /**
@@ -14,12 +32,12 @@ import net.sf.tweety.math.examples.*;
  */
 public class TabuSearch {
 
-	//the forbidden solutions
+	/**the forbidden solutions*/
 	private ArrayList<ArrayList<ElementOfCombinatoricsProb>> tabu = new ArrayList<ArrayList<ElementOfCombinatoricsProb>>();
 	//the exact problem that is to  be solved
 	private CombinatoricsProblem prob;
 	private int maxIteration;
-	//number of tabu solutions
+	/**number of tabu solutions*/
 	private int tabuSize;
 	private int maxStepsWithNoImprove;
 	
@@ -29,7 +47,11 @@ public class TabuSearch {
 		this.tabuSize = tabuSize;
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
 	}
-	
+	/**
+	 * 
+	 * @param initialSol: a starting point for the search
+	 * @return the best solution encountered
+	 */
 	public ArrayList<ElementOfCombinatoricsProb> solve(ArrayList<ElementOfCombinatoricsProb> initialSol) {
 		ArrayList<ElementOfCombinatoricsProb> bestSol = initialSol;
 		ArrayList<ElementOfCombinatoricsProb> currSol = initialSol;
@@ -41,7 +63,6 @@ public class TabuSearch {
 			//construct a list for between 10 and 20 neighbors for the next step
 			ArrayList<ArrayList<ElementOfCombinatoricsProb>> candidateNeighbors = this.prob.formNeighborhood(currSol, 10, 20, 1.0);
 			ArrayList<ElementOfCombinatoricsProb> newSol = candidateNeighbors.get(0);
-			//System.out.println("TabU: " + tabu.size() + "     " + tabu.toString());
 			//check which one of the neighborhood is the best
 			
 			for(ArrayList<ElementOfCombinatoricsProb> i : candidateNeighbors) {	
