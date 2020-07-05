@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 
 import net.sf.tweety.math.term.FloatConstant;
-import net.sf.tweety.math.term.Fraction;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Sum;
@@ -120,7 +119,7 @@ public class TravelingSalesman extends CombinatoricsProblem{
 		Term x = new AbsoluteValue(new Difference(sol.get(lastpos).get(0), sol.get(0).get(0)));
 		Term y = new AbsoluteValue(new Difference(sol.get(lastpos).get(1), sol.get(0).get(1)));
 		sum = new Sum(sum, new Power(new Sum(x, y), new IntegerConstant(2)));
-		sum = new Fraction(new FloatConstant(1), sum);
+		//sum = new Fraction(new FloatConstant(1), sum);
 
 		return sum.doubleValue();
 	}

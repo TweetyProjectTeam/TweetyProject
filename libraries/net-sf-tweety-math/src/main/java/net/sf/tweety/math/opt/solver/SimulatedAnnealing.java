@@ -20,31 +20,32 @@
 package net.sf.tweety.math.opt.solver;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-import net.sf.tweety.math.opt.problem.*;
-
+import net.sf.tweety.math.opt.problem.CombinatoricsProblem;
+import net.sf.tweety.math.opt.problem.ElementOfCombinatoricsProb;
 
 /**
- * implements a simple Tabu Search without long term memory
- * for combinatorics problems
+ * This class implements the simulated annealing algorithm for combinatrics problems
+ * It is natively implemented
  * @author Sebastian Franke
- *
  */
-public class TabuSearch {
+public class SimulatedAnnealing {
 
-	/**the forbidden solutions*/
-	private ArrayList<ArrayList<ElementOfCombinatoricsProb>> tabu = new ArrayList<ArrayList<ElementOfCombinatoricsProb>>();
+
+	 
 	//the exact problem that is to  be solved
 	private CombinatoricsProblem prob;
-	private int maxIteration;
-	/**number of tabu solutions*/
-	private int tabuSize;
+	/** starting temperature to be lowered*/
+	private double startTemp;
+	/**the factor to linearely reduce the temperature by every iteration*/
+	private double decreasePerIt;
 	private int maxStepsWithNoImprove;
 	
-	public TabuSearch(CombinatoricsProblem prob, int maxIteration, int tabuSize, int maxStepsWithNoImprove) {
+	public SimulatedAnnealing(CombinatoricsProblem prob, double startTemp, double decreasePerIt, int maxStepsWithNoImprove) {
 		this.prob = prob;
-		this.maxIteration = maxIteration;
-		this.tabuSize = tabuSize;
+		this.startTemp = startTemp;
+		this.decreasePerIt = decreasePerIt;
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
 	}
 	/**
@@ -55,33 +56,27 @@ public class TabuSearch {
 	public ArrayList<ElementOfCombinatoricsProb> solve(ArrayList<ElementOfCombinatoricsProb> initialSol) {
 		ArrayList<ElementOfCombinatoricsProb> bestSol = initialSol;
 		ArrayList<ElementOfCombinatoricsProb> currSol = initialSol;
+		double temp = startTemp;
+		Random rand = new Random();
 
 		Integer cnt = 0;
 		int smthHappened = 0;
-		//break if max amount of iterations is reached or if there are no better solutions fund in maxStepsWithNoImprove steps
-		while (cnt < maxIteration && smthHappened < maxStepsWithNoImprove) {
+		//break if temp == 0 or if there are no better solutions fund in maxStepsWithNoImprove steps
+		while (temp > 0 && smthHappened < maxStepsWithNoImprove) {
 			//construct a list for between 10 and 20 neighbors for the next step
 			ArrayList<ArrayList<ElementOfCombinatoricsProb>> candidateNeighbors = this.prob.formNeighborhood(currSol, 10, 20, 1.0);
-			ArrayList<ElementOfCombinatoricsProb> newSol = candidateNeighbors.get(0);
-			//check which one of the neighborhood is the best
+			int randomNum = rand.nextInt((candidateNeighbors.size()));
+			//create a random new solution
+			ArrayList<ElementOfCombinatoricsProb> newSol = candidateNeighbors.get(randomNum);
+			//make a random number for deciding if we accept a possible worsening		
+			double randomDecider = rand.nextDouble();
 			
-			for(ArrayList<ElementOfCombinatoricsProb> i : candidateNeighbors) {	
-				if(!tabu.contains(i) && this.prob.evaluate(i) > this.prob.evaluate(newSol)) {
-					
-					newSol = i;
-				}
-			}
-			
-			
-			currSol = newSol;
-			ArrayList<ElementOfCombinatoricsProb> tabuSol = new ArrayList<ElementOfCombinatoricsProb>();
-			//update the tabu list
+			//decide if we accept the new solution
+			if(Math.exp(-(this.prob.evaluate(newSol) - this.prob.evaluate(currSol)) / temp) >= randomDecider)
+				currSol = newSol;
 
-			for(int i = 0; i < currSol.size(); i++)
-				tabuSol.add(currSol.get(i));				
-			tabu.add(currSol);
-			if(tabu.size() > tabuSize)
-				tabu.remove(0);
+
+
 			if(this.prob.evaluate(currSol) < this.prob.evaluate(bestSol)) {
 				smthHappened = -1;
 				bestSol = currSol;			
@@ -90,9 +85,9 @@ public class TabuSearch {
 			System.out.println("current solution: " + currSol);
 			cnt++;
 			smthHappened++;
-			
+			temp -= this.decreasePerIt;
 		}
-		System.out.println("number of iterations: " + cnt);
+		System.out.println("number of iterations: " +cnt);
 		
 		return bestSol;
 	}

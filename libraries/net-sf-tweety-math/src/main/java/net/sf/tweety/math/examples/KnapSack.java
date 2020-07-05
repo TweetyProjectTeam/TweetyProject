@@ -130,8 +130,9 @@ import net.sf.tweety.math.opt.problem.*;
  	public double evaluate(ArrayList<ElementOfCombinatoricsProb> sol) {		
  		if(!isValid(sol))
  			return 0;
- 		else
- 			return sumOfValues(sol);
+ 		else {
+ 			return -1 * sumOfValues(sol);
+ 		}
  	
  	}
 }

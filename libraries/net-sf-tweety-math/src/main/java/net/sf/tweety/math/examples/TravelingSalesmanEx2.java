@@ -16,43 +16,48 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package net.sf.tweety.math.examples;
+
+
 
 import java.util.ArrayList;
 
 import net.sf.tweety.math.opt.problem.*;
-import net.sf.tweety.math.opt.solver.SimulatedAnnealing;
-import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.opt.solver.TabuSearch;
 import net.sf.tweety.math.term.IntegerConstant;
 
-public class KnapSacktester {
-	
-	
+/**
+ * Class implementing an example for a TSP on a cartesian fully connected graph
+ *
+ * @author Sebastian Franke
+ */
+
+public class TravelingSalesmanEx2 {
 	public static void main(String args[]) {
 		
+		int numberOfCities = 20;
+		//create a list of numberOfCities random cities (defined by their x- and y- coordinate)
+		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();
 		
-		//define the maximum weight
-		FloatConstant maxl = new FloatConstant(15);
-
-		//create a list of items defined by weight and value
-		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();	
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < numberOfCities; i++) {
 			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb();
 			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
 			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
 			elems.add(x);
 		}
-		KnapSack test = new KnapSack(elems, maxl);
+		//create the problem
+		TravelingSalesman test = new TravelingSalesman(elems);
 
-		
 		//solve the problem with a tabu size of 5, max 100000 iterations and max 2000 iterations without an improvement to the best solution
-		SimulatedAnnealing ts = new SimulatedAnnealing(test, 100000, 1, 2000);
-		System.out.println("MySol: " + ts.solve(new ArrayList<ElementOfCombinatoricsProb>()));
-		//System.out.println(elems.size());
+		TabuSearch ts = new TabuSearch(test, 100000, 5, 2000);
+		ArrayList<ElementOfCombinatoricsProb> initial = new ArrayList<ElementOfCombinatoricsProb>();
+		for(ElementOfCombinatoricsProb i : elems)
+			initial.add(i);
+
+		System.out.println("Mysol: " + ts.solve(initial));
+
 		
 			
 		
 	}
 }
-
