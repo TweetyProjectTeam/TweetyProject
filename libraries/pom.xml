@@ -181,7 +181,8 @@
   	<module>net-sf-tweety-plugin</module>
   	<module>net-sf-tweety-lp-asp</module>
   	<module>net-sf-tweety-lp-asp-beliefdynamics</module>
-  	<module>net-sf-tweety-lp-nlp</module>
+  	<module>net-sf-tweety-lp-nlp</module>  	
+  	<module>net-sf-tweety-logics-bpm</module>
   	<module>net-sf-tweety-logics-commons</module>
   	<module>net-sf-tweety-logics-cl</module>
   	<module>net-sf-tweety-logics-fol</module>
