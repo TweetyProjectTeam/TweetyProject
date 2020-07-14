@@ -76,6 +76,15 @@ public class Implication extends FolFormula {
 		this.formulas = formulas;
 	}
 	
+	/**
+	 * Sets the formulas of the implication.
+	 * @param left
+	 * @param right
+	 */
+	public void setFormulas(RelationalFormula left, RelationalFormula right) {
+		this.formulas = new Pair<RelationalFormula, RelationalFormula>(left, right);
+	}
+	
 	@Override
 	public Set<? extends Predicate> getPredicates() {
 		Set<Predicate> predicates = new HashSet<Predicate>();

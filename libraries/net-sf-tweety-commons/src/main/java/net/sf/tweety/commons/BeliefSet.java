@@ -153,6 +153,21 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 		return false;
 	}
 	
+	/**
+	 * Adds the specified elements to the end of this collection (optional operation).
+	 * @param formulas to be appended to collection
+	 * @return true if all elements were added, false otherwise
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean add(T... formulas){
+		boolean result = true;
+		for (T f : formulas) {
+			boolean sub = this.add(f);
+			result = result && sub;
+		}
+		return result;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.util.Collection#addAll(java.util.Collection)
 	 */

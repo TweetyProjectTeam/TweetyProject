@@ -136,6 +136,12 @@ public abstract class TripleSetSignature<T,S,U> implements Signature {
 	}
 	
 	@Override
+	public void add(Object... objects) throws IllegalArgumentException {
+		for (Object f : objects) 
+			this.add(f);
+	}
+	
+	@Override
 	public boolean isEmpty() {
 		return (firstSet.isEmpty() && secondSet.isEmpty() && thirdSet.isEmpty());
 	}

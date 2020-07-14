@@ -151,6 +151,12 @@ public abstract class QuadrupleSetSignature<T,S,U,R> implements Signature {
 		for(Object obj: c)
 			this.add(obj);
 	}
+
+	@Override
+	public void add(Object... objects) throws IllegalArgumentException {
+		for (Object f : objects) 
+			this.add(f);
+	}
 	
 	@Override
 	public boolean isEmpty() {

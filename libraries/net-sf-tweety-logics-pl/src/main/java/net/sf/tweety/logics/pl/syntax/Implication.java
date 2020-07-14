@@ -76,6 +76,15 @@ public class Implication extends PlFormula {
 	}
 	
 	/**
+	 * Sets the formulas of the implication.
+	 * @param left
+	 * @param right
+	 */
+	public void setFormulas(PlFormula left, PlFormula right) {
+		this.formulas = new Pair<PlFormula, PlFormula>(left, right);
+	}
+	
+	/**
 	 * Sets the left side formula of the implication
 	 * left =&gt; right.
 	 * 

@@ -41,6 +41,13 @@ public interface LogicProgram<C extends Formula, P extends Formula, T extends Ru
 	 */
 	void addFact(C fact);
 	
+	/**
+	 * Adds the given facts to the program
+	 * @param facts
+	 */
+	@SuppressWarnings("unchecked")
+	void addFacts(C... facts);
+	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.commons.BeliefBase#getSignature()
 	 */

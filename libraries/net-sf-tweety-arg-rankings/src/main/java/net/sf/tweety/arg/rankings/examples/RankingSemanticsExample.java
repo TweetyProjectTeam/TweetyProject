@@ -48,35 +48,24 @@ public class RankingSemanticsExample {
 		Argument c = new Argument("c");
 		Argument d = new Argument("d");
 		Argument e = new Argument("e");
-		example1.add(a);
-		example1.add(b);
-		example1.add(c);
-		example1.add(d);
-		example1.add(e);
+		example1.add(a,b,c,d,e);
 		example1.add(new Attack(a, e));
 		example1.add(new Attack(d, a));
 		example1.add(new Attack(e, d));
 		example1.add(new Attack(c, e));
-		example1.add(new Attack(b, c));
-		example1.add(new Attack(b, a));
+		example1.add(new Attack(b, c), new Attack(b, a));
 
 		// Example 2, taken from
 		// [Baumeister, Neugebauer, Rothe. Argumentation Meets Computational Social
 		// Choice. Tutorial. 2018]
 		DungTheory example2 = new DungTheory();
 		Argument f = new Argument("f");
-		example2.add(a);
-		example2.add(b);
-		example2.add(c);
-		example2.add(d);
-		example2.add(e);
-		example2.add(f);
+		example2.add(a,b,c,d,e,f);
 		example2.add(new Attack(a, b));
 		example2.add(new Attack(b, c));
 		example2.add(new Attack(d, e));
-		example2.add(new Attack(e, d));
 		example2.add(new Attack(c, f));
-		example2.add(new Attack(e, c));
+		example2.add(new Attack(e, d),new Attack(e, c));
 
 		// Example 3, taken from
 		// [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005]
@@ -94,19 +83,9 @@ public class RankingSemanticsExample {
 		Argument d2 = new Argument("D2");
 		Argument d3 = new Argument("D3");
 		Argument e1 = new Argument("E1");
-		example3.add(a1);
-		example3.add(b1);
-		example3.add(b2);
-		example3.add(b3);
-		example3.add(b4);
-		example3.add(c1);
-		example3.add(c2);
-		example3.add(c3);
-		example3.add(c4);
-		example3.add(d1);
-		example3.add(d2);
-		example3.add(d3);
-		example3.add(e1);
+		example3.add(a1,b1,b2,b3,b4);
+		example3.add(c1,c2,c3,c4);
+		example3.add(d1,d2,d3,e1);
 		example3.add(new Attack(b1, a1));
 		example3.add(new Attack(b2, a1));
 		example3.add(new Attack(b3, a1));
@@ -124,13 +103,7 @@ public class RankingSemanticsExample {
 		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
 		DungTheory example4a = new DungTheory();
 		Argument g = new Argument("g");
-		example4a.add(a);
-		example4a.add(b);
-		example4a.add(c);
-		example4a.add(d);
-		example4a.add(e);
-		example4a.add(f);
-		example4a.add(g);
+		example4a.add(a,b,c,d,e,f,g);
 		example4a.add(new Attack(b, a));	
 		example4a.add(new Attack(c, a));	
 		example4a.add(new Attack(d, a));	
@@ -141,37 +114,22 @@ public class RankingSemanticsExample {
 		// Example 4b, taken from Figure 4 in
 		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
 		DungTheory example4b = new DungTheory();
-		example4b.add(a);
-		example4b.add(b);
-		example4b.add(c);
-		example4b.add(d);
-		example4b.add(e);
-		example4b.add(f);
-		example4b.add(new Attack(e, f));	
-		example4b.add(new Attack(f, e));		
-		example4b.add(new Attack(d, e));
-		example4b.add(new Attack(e, b));	
+		example4b.add(a,b,c,d,e,f);
 		example4b.add(new Attack(a, b));	
 		example4b.add(new Attack(c, b));	
+		example4b.add(new Attack(d, e));
+		example4b.add(new Attack(e, f),new Attack(e, b));	
+		example4b.add(new Attack(f, e));		
 		
 		// Example 4c, taken from Figure 4 in
 		// [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
 		DungTheory example4c = new DungTheory();
-		example4c.add(a);
-		example4c.add(b);
-		example4c.add(c);
-		example4c.add(d);
-		example4c.add(e);
-		example4c.add(f);
-		example4c.add(new Attack(a, b));
-		example4c.add(new Attack(a, e));
+		example4c.add(a,b,c,d,e,f);
+		example4c.add(new Attack(a, b), new Attack(a, e));
 		example4c.add(new Attack(c, b));
 		example4c.add(new Attack(d, e));
-		example4c.add(new Attack(e, f));
-		example4c.add(new Attack(e, e));
-		example4c.add(new Attack(e, b));
-		example4c.add(new Attack(f, e));
-		example4c.add(new Attack(f, b));
+		example4c.add(new Attack(e, f), new Attack(e, e), new Attack(e, b));
+		example4c.add(new Attack(f, e), new Attack(f, b));
 		
 		//Example 5, taken from taken from Figure 2.4 in 
 		//[Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
@@ -179,24 +137,11 @@ public class RankingSemanticsExample {
 		Argument h = new Argument("h");
 		Argument i = new Argument("i");
 		Argument j = new Argument("j");
-		example5.add(a);
-		example5.add(b);
-		example5.add(c);
-		example5.add(d);
-		example5.add(e);
-		example5.add(f);
-		example5.add(g);
-		example5.add(h);
-		example5.add(i);
-		example5.add(j);
+		example5.add(a,b,c,d,e,f,g,h,i,j);
 		example5.add(new Attack(a,b));
-		example5.add(new Attack(b,c));
-		example5.add(new Attack(b,f));
-		example5.add(new Attack(d,g));
-		example5.add(new Attack(d,f));
-		example5.add(new Attack(e,h));
-		example5.add(new Attack(e,d));
-		example5.add(new Attack(e,i));
+		example5.add(new Attack(b,c), new Attack(b,f));
+		example5.add(new Attack(d,g), new Attack(d,f));
+		example5.add(new Attack(e,h), new Attack(e,d), new Attack(e,i));
 		example5.add(new Attack(h,g));
 		example5.add(new Attack(j,i));
 		

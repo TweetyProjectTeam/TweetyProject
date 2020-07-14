@@ -183,6 +183,15 @@ public abstract class AssociativePlFormula extends PlFormula
 		return this.support.add(f);
 	}
 	
+	/**
+	 * Adds the specified elements to the end of this collection (optional operation).
+	 * @param formulas to be appended to collection
+	 * @return true if all elements were added, false otherwise
+	 */
+	public boolean add(PlFormula ... formulas) {
+		return this.support.add(formulas);
+	}
+	
 	@Override
 	public boolean addAll(Collection<? extends PlFormula> c){
 		return this.support.addAll(c);

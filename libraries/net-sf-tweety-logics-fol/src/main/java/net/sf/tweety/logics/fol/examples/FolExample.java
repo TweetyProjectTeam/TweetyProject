@@ -43,22 +43,27 @@ public class FolExample {
 		/*
 		 * Example 1: Add sorts, constants and predicates to a first-order logic signature
 		 */
-		FolSignature sig = new FolSignature(true); //Create new FOLSignature with equality
+		//Create new FOLSignature with equality
+		FolSignature sig = new FolSignature(true); 
+		
+		//Add sort
 		Sort s_animal = new Sort("Animal");
 		sig.add(s_animal); 
+		
+		//Add constants
 		Constant c_penguin = new Constant("penguin",s_animal);
 		Constant c_kiwi = new Constant("kiwi",s_animal);
-		sig.add(c_penguin);
-		sig.add(c_kiwi);
+		sig.add(c_penguin, c_kiwi);
+
+		//Add predicates
 		List<Sort> predicate_list = new ArrayList<Sort>();
 		predicate_list.add(s_animal);
 		Predicate p = new Predicate("Flies",predicate_list);
-		sig.add(p); //Add Predicate Flies(Animal) 
 		List<Sort> predicate_list2 = new ArrayList<Sort>();
 		predicate_list2.add(s_animal);
 		predicate_list2.add(s_animal);
-		Predicate p2 = new Predicate("Knows",predicate_list2);
-		sig.add(p2); //Add Predicate Knows(Animal,Animal) 
+		Predicate p2 = new Predicate("Knows",predicate_list2); //Add Predicate Knows(Animal,Animal) 
+		sig.add(p, p2); 
 		System.out.println("Signature: " + sig);
 		
 		/*
@@ -72,11 +77,7 @@ public class FolExample {
 		FolFormula f3 = (FolFormula)parser.parseFormula("!Knows(penguin,kiwi)");
 		FolFormula f4 = (FolFormula)parser.parseFormula("/==(penguin,kiwi)");
 		FolFormula f5 = (FolFormula)parser.parseFormula("kiwi == kiwi");
-		bs.add(f1);
-		bs.add(f2);
-		bs.add(f3);
-		bs.add(f4);
-		bs.add(f5);
+		bs.add(f1, f2, f3, f4, f5);
 		System.out.println("\nParsed BeliefBase: " + bs);
 		
 		//Note that belief bases can have signatures larger (but not smaller) than their formulas' signature

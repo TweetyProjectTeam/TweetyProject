@@ -90,7 +90,14 @@ public interface Signature extends Cloneable {
 	 * 
 	 */
 	public void addAll(Collection<?> c);
-
+	
+	/**
+	 * Adds the given formulas to the signature.
+	 * 
+	 * @param objects
+	 */
+	public void add(Object... objects);
+	
 	/**
 	 * Returns true if this signature is empty.
 	 * 

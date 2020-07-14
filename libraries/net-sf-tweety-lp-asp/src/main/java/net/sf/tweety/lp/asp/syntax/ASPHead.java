@@ -183,6 +183,15 @@ public class ASPHead extends ASPElement implements AssociativeFormula<ASPLiteral
 	public boolean addAll(int index, Collection<? extends ASPLiteral> c) {
 		return assocSupport.addAll(index, c);
 	}
+	
+	/**
+	 * Adds the specified elements to the end of this collection (optional operation).
+	 * @param formulas to be appended to collection
+	 * @return true if all elements were added, false otherwise
+	 */
+	public boolean add(ASPLiteral ... formulas) {
+		return this.assocSupport.add(formulas);
+	}
 
 	@Override
 	public void clear() {

@@ -144,6 +144,15 @@ public abstract class AssociativeDlFormula extends ComplexConcept
 	public boolean add(ComplexConcept e) {
 		return this.support.add(e);
 	}
+	
+	/**
+	 * Adds the specified elements to the end of this collection (optional operation).
+	 * @param formulas to be appended to collection
+	 * @return true if all elements were added, false otherwise
+	 */
+	public boolean add(ComplexConcept ... formulas) {
+		return this.support.add(formulas);
+	}
 
 	@Override
 	public boolean addAll(Collection<? extends ComplexConcept> c) {

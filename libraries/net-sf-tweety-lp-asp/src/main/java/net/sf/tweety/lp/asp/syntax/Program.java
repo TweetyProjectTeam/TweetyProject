@@ -112,6 +112,12 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	public void addFact(ASPHead fact) {
 		this.add(new ASPRule(fact));
 	}
+	
+	@Override
+	public void addFacts(ASPHead... fact) {
+		for (ASPHead a : fact)
+			addFact(a);
+	}
 
 	@Override
 	public FolSignature getMinimalSignature() {
@@ -311,6 +317,11 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 
 	public void addFact(ASPLiteral fact) {
 		this.add(new ASPRule(fact));
+	}
+	
+	void addFacts(ASPLiteral... facts) {
+		for (ASPLiteral l : facts)
+			this.addFact(l);
 	}
 
 	/**

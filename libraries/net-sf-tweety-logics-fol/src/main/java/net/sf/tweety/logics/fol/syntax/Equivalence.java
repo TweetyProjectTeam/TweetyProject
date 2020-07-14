@@ -75,6 +75,15 @@ public class Equivalence extends FolFormula  {
 	public void setFormulas(Pair<RelationalFormula,RelationalFormula> formulas) {
 		this.formulas = formulas;
 	}
+	
+	/**
+	 * Sets the formulas of the equivalence.
+	 * @param formula1
+	 * @param formula2
+	 */
+	public void setFormulas(RelationalFormula formula1, RelationalFormula formula2) {
+		this.formulas = new Pair<RelationalFormula, RelationalFormula>(formula1, formula2);
+	}
 
 	@Override
 	public Set<? extends Predicate> getPredicates() {

@@ -112,6 +112,12 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 	}
 	
 	@Override
+	public void add(Object... objects) throws IllegalArgumentException {
+		for (Object f : objects) 
+			this.add(f);
+	}
+	
+	@Override
 	public void remove(Object o) {
 		formulas.remove(o);
 	}

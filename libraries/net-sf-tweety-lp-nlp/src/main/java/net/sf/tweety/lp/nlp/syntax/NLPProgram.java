@@ -57,6 +57,11 @@ public class NLPProgram
 		this.add(new NLPRule(fact));
 	}
 	
+	@Override
+	public void addFacts(FolFormula... facts) {
+		for (FolFormula f : facts)
+			this.addFact(f);
+	}
 	
 	@Override
 	public FolSignature getMinimalSignature() {

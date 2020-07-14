@@ -3,9 +3,11 @@ package net.sf.tweety.logics.pl.examples;
 import java.io.IOException;
 
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.pl.syntax.Conjunction;
 import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.reasoner.SimplePlReasoner;
 import net.sf.tweety.logics.pl.syntax.Contradiction;
+import net.sf.tweety.logics.pl.syntax.Implication;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
@@ -20,9 +22,19 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  */
 public class PlExample {
 	public static void main(String[] args) throws ParserException, IOException {
-		PlParser parser = new PlParser();	
+		//Manually create formulas and belief base
+		PlBeliefSet beliefSet = new PlBeliefSet();
+		Proposition f1 = new Proposition("a");
+		Negation f2 = new Negation(f1);
+		Conjunction c = new Conjunction();
+		c.add(f1, f2, new Proposition("b"));
+		Implication i = new Implication(f2, new Proposition("c"));
+		beliefSet.add(f1,f2,c,i);
+		System.out.println(beliefSet + "\n");
+		
 		//Parse belief base from string
-		PlBeliefSet beliefSet = parser.parseBeliefBase("a || b || c \n !a || b \n !b || c \n !c || (!a && !b && !c && !d)");
+		PlParser parser = new PlParser();	
+		beliefSet = parser.parseBeliefBase("a || b || c \n !a || b \n !b || c \n !c || (!a && !b && !c && !d)");
 		System.out.println(beliefSet);
 		
 		//Parse belief base from file
@@ -47,6 +59,7 @@ public class PlExample {
 		Boolean answer2 = reasoner.query(beliefSet, new Contradiction());
 		System.out.println(answer2);
 		
+		//Examples for using XOR
 		System.out.println();
 		PlFormula xor = parser.parseFormula("a ^^ b ^^ c");
 		System.out.println("parsed formula: " + xor);
@@ -57,8 +70,6 @@ public class PlExample {
 		xor = parser.parseFormula("a ^^ b ^^ c ^^ d ^^ e ^^ f");
 		System.out.println("parsed formula: " + xor);
 		System.out.println("models: " + xor.getModels());
-		
-
 		System.out.println();
 		beliefSet = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase_xor.proplogic");
 		System.out.println(beliefSet);

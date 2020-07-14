@@ -40,17 +40,12 @@ public class RankingSemanticsExample2 {
 		Argument c = new Argument("c");
 		Argument d = new Argument("d");
 		Argument e = new Argument("e");
-		example1.add(a);
-		example1.add(b);
-		example1.add(c);
-		example1.add(d);
-		example1.add(e);
+		example1.add(a,b,c,d,e);
 		example1.add(new Attack(a, e));
 		example1.add(new Attack(d, a));
 		example1.add(new Attack(e, d));
 		example1.add(new Attack(c, e));
-		example1.add(new Attack(b, c));
-		example1.add(new Attack(b, a));
+		example1.add(new Attack(b, c), new Attack(b, a));
 		
 		// Example 2, taken from Figure 1.a in [Pu, Zhang, G.Luo, J.Luo.
 		//Attacker and Defender Counting Approach for Abstract Argumentation. CoRR 2015]
@@ -59,14 +54,9 @@ public class RankingSemanticsExample2 {
 		Argument x2 = new Argument("x2");
 		Argument x3 = new Argument("x3");
 		Argument x4 = new Argument("x4");
-		example2.add(x1);
-		example2.add(x2);
-		example2.add(x3);
-		example2.add(x4);
-		example2.add(new Attack(x2, x3));
-		example2.add(new Attack(x2, x1));
-		example2.add(new Attack(x3, x2));
-		example2.add(new Attack(x3, x3));
+		example2.add(x1, x2, x3, x4);
+		example2.add(new Attack(x2, x3), new Attack(x2, x1));
+		example2.add(new Attack(x3, x2), new Attack(x3, x3));
 		example2.add(new Attack(x4, x2));
 		
 		//Example 3, taken from Figure 2.4 in 
@@ -77,24 +67,11 @@ public class RankingSemanticsExample2 {
 		Argument h = new Argument("h");
 		Argument i = new Argument("i");
 		Argument j = new Argument("j");
-		example3.add(a);
-		example3.add(b);
-		example3.add(c);
-		example3.add(d);
-		example3.add(e);
-		example3.add(f);
-		example3.add(g);
-		example3.add(h);
-		example3.add(i);
-		example3.add(j);
+		example3.add(a,b,c,d,e,f,g,h,i,j);
 		example3.add(new Attack(a,b));
-		example3.add(new Attack(b,c));
-		example3.add(new Attack(b,f));
-		example3.add(new Attack(d,g));
-		example3.add(new Attack(d,f));
-		example3.add(new Attack(e,h));
-		example3.add(new Attack(e,d));
-		example3.add(new Attack(e,i));
+		example3.add(new Attack(b,c), new Attack(b,f));
+		example3.add(new Attack(d,g), new Attack(d,f));
+		example3.add(new Attack(e,h), new Attack(e,d), new Attack(e,i));
 		example3.add(new Attack(h,g));
 		example3.add(new Attack(j,i));
 		

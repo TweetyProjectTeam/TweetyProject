@@ -202,6 +202,14 @@ public class AbaTheory<T extends Formula> implements BeliefBase {
 		else if (rule instanceof Negation)
 			negations.add((Negation<T>) rule);
 	}
+	
+	/**
+	 * @param rules assumptions or inference rules or negations that are added to the theory
+	 */
+	public void add(Formula... rules) {
+		for (Formula f : rules)
+			add(f);
+	}
 
 	/**
 	 * @param assumption a formula that is used as an assumption in the theory

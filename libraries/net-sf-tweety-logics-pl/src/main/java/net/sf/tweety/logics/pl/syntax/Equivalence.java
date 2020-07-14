@@ -71,6 +71,15 @@ public class Equivalence extends PlFormula {
 		this.formulas = formulas;
 	}
 	
+	/**
+	 * Sets the formulas of the equivalence.
+	 * @param formula1
+	 * @param formula2
+	 */
+	public void setFormulas(PlFormula formula1, PlFormula formula2) {
+		this.formulas = new Pair<PlFormula, PlFormula>(formula1, formula2);
+	}
+	
 	@Override
 	public Set<Proposition> getAtoms() {
 		Set<Proposition> result = new HashSet<Proposition>();

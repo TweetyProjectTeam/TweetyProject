@@ -129,6 +129,12 @@ public abstract class DualSetSignature<T,S> implements Signature {
 	}
 	
 	@Override
+	public void add(Object... objects) throws IllegalArgumentException {
+		for (Object f : objects) 
+			this.add(f);
+	}
+	
+	@Override
 	public boolean isEmpty() {
 		return (firstSet.isEmpty() && secondSet.isEmpty());
 	}

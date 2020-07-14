@@ -257,6 +257,15 @@ public abstract class AssociativeFolFormula extends FolFormula implements
 	public boolean add(RelationalFormula e) {
 		return this.support.add(e);
 	}
+	
+	/**
+	 * Adds the specified elements to the end of this collection (optional operation).
+	 * @param formulas to be appended to collection
+	 * @return true if all elements were added, false otherwise
+	 */
+	public boolean add(FolFormula ... formulas) {
+		return this.support.add(formulas);
+	}
 
 	@Override
 	public boolean addAll(Collection<? extends RelationalFormula> c) {
