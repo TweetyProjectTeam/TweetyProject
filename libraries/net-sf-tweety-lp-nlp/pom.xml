@@ -22,13 +22,13 @@
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>
     	<artifactId>fol</artifactId>
-    	<version>1.16-SNAPSHOT</version>
+    	<version>1.17-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <parent>
   <groupId>net.sf.tweety</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.16-SNAPSHOT</version>
+  	<version>1.17-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>

@@ -48,8 +48,7 @@ public abstract class RootFinder {
 	protected Map<Variable,Term> startingPoint;
 	
 	/**
-	 * Creates a new root finder for the given function.
-	 * @param function a term
+	 * Creates a new root finder for the given function. 
 	 */
 	public RootFinder(){
 
@@ -105,6 +104,8 @@ public abstract class RootFinder {
 	/**
 	 * Determines the values for the variables appearing in the function such
 	 * the function evaluates to zero.
+	 * @param functions the functions
+	 * @param startingPoint the starting point for the search
 	 * @return a map from variables to terms such that "function" evaluates to zero.
 	 * @throws GeneralMathException if something went wrong.
 	 */

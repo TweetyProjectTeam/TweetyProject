@@ -53,7 +53,7 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 	 * Create a new CategorizerRankingReasoner with the given
 	 * parameters.
 	 * 
-	 * @param epsilon
+	 * @param epsilon TODO add description
 	 */
 	public CategorizerRankingReasoner(double epsilon) {
 		this.epsilon = epsilon;

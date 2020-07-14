@@ -69,8 +69,8 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	/**
 	 * Create a new SAFRankingReasoner with the given epsilon 
 	 * and the given tolerance for the SimpleProductSemantic.
-	 * @param epsilon
-	 * @param tolerance
+	 * @param epsilon TODO add description
+	 * @param tolerance TODO add description
 	 */
 	public SAFRankingReasoner(double epsilon, double tolerance) {
 		this();
@@ -81,9 +81,9 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	/**
 	 * Create a new SAFRankingReasoner with the given epsilon, the given precision 
 	 * and the given tolerance for the SimpleProductSemantic.
-	 * @param epsilon
-	 * @param precision
-	 * @param tolerance
+	 * @param epsilon TODO add description
+	 * @param precision TODO add description
+	 * @param tolerance TODO add description
 	 */
 	public SAFRankingReasoner(double epsilon, double precision, double tolerance) {
 		this.epsilon = epsilon;

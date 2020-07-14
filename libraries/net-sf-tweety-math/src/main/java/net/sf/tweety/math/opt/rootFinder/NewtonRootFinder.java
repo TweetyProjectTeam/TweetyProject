@@ -53,8 +53,6 @@ public class NewtonRootFinder extends RootFinder {
 	
 	/**
 	 * Creates a new Newton root finder for the given starting point and the given function
-	 * @param function a function
-	 * @param startingPoint the starting point
 	 */
 	public NewtonRootFinder(){		
 	}

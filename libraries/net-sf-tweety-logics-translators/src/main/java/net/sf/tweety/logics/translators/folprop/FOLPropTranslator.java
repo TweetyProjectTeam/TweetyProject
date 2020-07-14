@@ -87,7 +87,7 @@ public class FOLPropTranslator extends Translator {
 	
 	/**
 	 * Translates the given FOL Exclusive Disjunction to a propositional Exclusive Disjunction
-	 * @param disjunction	The FOL-Exclusive Disjunction, if it contains formulas which
+	 * @param xor			The FOL-Exclusive Disjunction, if it contains formulas which
 	 * 						are not expressible in propositional logic an exception
 	 * 						is thrown.
 	 * @return	The propositional Exclusive Disjunction

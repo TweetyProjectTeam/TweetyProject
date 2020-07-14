@@ -49,6 +49,7 @@ public class ImprovedRiveretTheoryLearner {
     /**
      * initialize learner for the given set of arguments
      * @param arguments a set of arguments
+     * @param max_cycles TODO description needed
      */
     public ImprovedRiveretTheoryLearner(Collection<Argument> arguments, int max_cycles) {
         this.cycles = 0;
@@ -133,6 +134,7 @@ public class ImprovedRiveretTheoryLearner {
      * learn random labelings from the given List until no undecided attacks are left in the theory
      * @param labelings a list of labelings
      * @param prune if true, remove discarded attacks after each step
+     * @param threshold TODO description needed
      * @return the learned dung theory
      */
     public DungTheory learnLabelings(ArrayList<Labeling> labelings, boolean prune, int threshold) {

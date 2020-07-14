@@ -42,6 +42,7 @@ public class OrderingSemanticsReasoner {
     /**
      * create a reasoner for the given ordering semantics
      * @param semantics an ordering semantics
+     * @throws NoSuchMethodException should never happen
      */
     public OrderingSemanticsReasoner(OrderingSemantics semantics) throws NoSuchMethodException {
         this.semantics1 = semantics;
@@ -53,6 +54,7 @@ public class OrderingSemanticsReasoner {
      * create a reasoner for the given combination of ordering semantics
      * @param semantics1 an ordering semantics
      * @param semantics2 an ordering semantics
+     * @throws NoSuchMethodException should never happen
      */
     public OrderingSemanticsReasoner(OrderingSemantics semantics1, OrderingSemantics semantics2) throws NoSuchMethodException {
         this.semantics1 = semantics1;

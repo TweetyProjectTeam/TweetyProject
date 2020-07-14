@@ -48,8 +48,6 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	
 	/**
 	 * Creates a new root finder for the given starting point and the given function
-	 * @param function a function
-	 * @param startingPoint the starting point
 	 */
 	public OptimizationRootFinder(){
 		

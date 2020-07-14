@@ -77,4 +77,9 @@ public class BpmnSignature implements Signature{
 		return null;
 	}
 
+	@Override
+	public void add(Object... objects) {
+		
+	}
+
 }

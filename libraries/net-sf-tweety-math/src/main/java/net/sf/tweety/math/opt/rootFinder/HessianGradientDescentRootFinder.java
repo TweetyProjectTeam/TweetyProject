@@ -40,8 +40,6 @@ public class HessianGradientDescentRootFinder extends OptimizationRootFinder {
 	/**
 	 * Creates a new root finder for the given starting point and the given
 	 * (multi-dimensional) function
-	 * @param functions a list of functions
-	 * @param startingPoint the starting point
 	 */
 	public HessianGradientDescentRootFinder(){
 	

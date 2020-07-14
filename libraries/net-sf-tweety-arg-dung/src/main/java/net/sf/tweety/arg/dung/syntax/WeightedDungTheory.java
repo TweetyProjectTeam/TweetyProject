@@ -111,6 +111,7 @@ public class WeightedDungTheory extends DungTheory {
      * add attack between both arguments to the theory and set weight to given value
      * @param attacker an argument
      * @param attacked an argument
+     * @param weight the weight of the attack
      * @return "true" if attack between the arguments was added
      */
     public boolean addAttack(Argument attacker, Argument attacked, double weight) {
@@ -143,7 +144,8 @@ public class WeightedDungTheory extends DungTheory {
     }
 
     /**
-     * remove all attacks with weight < threshold
+     * remove all attacks with weight &lt; threshold
+     * @param threshold some threshold
      * @return "true" if all attacks were removed
      */
     public boolean removeDiscardedAttacks(int threshold) {

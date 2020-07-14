@@ -66,6 +66,7 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	 * Create a new CountingRankingReasoner with the given parameters.
 	 * 
 	 * @param damping_factor must be in (0,1)
+	 * @param epsilon TODO add description
 	 */
 	public CountingRankingReasoner(double damping_factor, double epsilon) {
 		this.damping_factor = damping_factor;

@@ -62,7 +62,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	 * <ol>
 	 * <li>PROPAGATION1 ("Propa_epsilon")</li>
 	 * <li>PROPAGATION2 ("Propa_{1+epsilon}")</li>
-	 * <li>PROPAGATION3 ("Propa_{1->epsilon}")</li>
+	 * <li>PROPAGATION3 ("Propa_{1-&gt;epsilon}")</li>
 	 * </ol>
 	 */
 	public enum PropagationSemantics {

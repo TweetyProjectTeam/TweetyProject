@@ -86,9 +86,9 @@ public class TabuSearchOnConstrProb extends Solver{
 	 * @param maxIterations: the maximum amount of solutions to be created
 	 * @param threshold: if a solution with the quality of threshold is reached we do maximum 10 more tries
 	 * @param currSol: the solution that every newly created solution uses as a initial solution in createNewSol
-	 * @returns: the best solution that was found and is a mutant of currSol
+	 * @return the best solution that was found and is a mutant of currSol
 	 */
-	public Map<Variable,Term> chooseANeighbor(Map<Variable,Term> currSol, int minIterations, int maxIteration, double threshold)
+	public Map<Variable,Term> chooseANeighbor(Map<Variable,Term> currSol, int minIterations, int maxIterations, double threshold)
 	{
 		int cnt = 0;
 		int thresholdCnt = 0;

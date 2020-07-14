@@ -1,3 +1,30 @@
+14.07.2020 - TweetyProject 1.17
+  New libraries:
+    - net.sf.tweety.logics.bpm: business process modelling library (stub)
+  New functionalities:
+    - added reasoner for bipolar argumentation (net.sf.tweety.arg.bipolar)
+    - added reasoner for weak admissibility, naive semantics, stage2 semantics,
+      cf2 semantics, scf2 semantics, scooc-naive semantics, qualified and
+      semi-qualified sigma-semantics, and ordering semantics in abstract
+      argumentation (net.sf.tweety.arg.dung)
+    - added inconsistency measures for abstract argumentation
+      (net.sf.tweety.arg.dung)
+    - added learning capabilities for abstract argumentation
+      (net.sf.tweety.arg.dung)
+    - added further reasoner for ranking semantics in abstract argumentation
+      (net.sf.tweety.arg.dung.rankings)
+    - added functionalities to enumerate interpolants in propositional
+      logic (net.sf.tweety.logics.pl)
+    - added iceberg inconsistency measure (net.sf.tweety.logics.pl)
+    - refactoring and extension of optimisation functionalities
+      (net.sf.tweety.math)
+    - refactoring and extension of abstract dialectical frameworks
+      (net.sf.tweety.arg.adf)
+  Minor changes:
+    - added XOR to various logics
+    - added convenience methods for easier adding multiple formulas 
+      to belief bases
+    - bugfixes in ASP (net.sf.tweety.lp.asp)
 23.01.2020 - TweetyProject 1.16
   New libraries:
     - net.sf.tweety.arg.bipolar: bipolar argumentation frameworks

@@ -49,10 +49,10 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 	 * <ul>
 	 * <li>Identity: using this consequence operation, *-conflicts of a knowledge
 	 * base are equivalent to the MIS of the knowledge base</li>
-	 * <li>Conjuncts: contains all conjuncts of the input, e.g. {a,b,a&&b} for
-	 * a&&b</li>
+	 * <li>Conjuncts: contains all conjuncts of the input, e.g. {a,b,a&amp;&amp;b} for
+	 * a&amp;&amp;b</li>
 	 * <li>Smallest conjuncts: contains only the smallest conjuncts of the input,
-	 * i.e. {a,b} for a&&b</li>
+	 * i.e. {a,b} for a&amp;&amp;b</li>
 	 * <li>Modular classical consequence: modular version of classical
 	 * consequence</li>
 	 * <li>Modus ponens: non-modular consequence operation, contains the result of
@@ -92,8 +92,7 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 	 * Creates a new Iceberg Inconsistency Measure with the given consequence
 	 * operation with default properties.
 	 * 
-	 * @param c a consequence operation
-	 * @throws IllegalArgumentException
+	 * @param c a consequence operation 
 	 */
 	public IcebergInconsistencyMeasure(ConsequenceOperation c) {
 		this.consequenceOperation = c;
@@ -107,8 +106,7 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 	 * 
 	 * @param c             a consequence operation
 	 * @param useSumVariant if set to true, the sum variant of the inconsistency
-	 *                      measure is used
-	 * @throws IllegalArgumentException
+	 *                      measure is used	 * 
 	 */
 	public IcebergInconsistencyMeasure(ConsequenceOperation c, boolean useSumVariant) {
 		this.consequenceOperation = c;
@@ -131,9 +129,9 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 	/**
 	 * Computes all *-conflicts of a given belief base. A set of formulas S is a
 	 * *-conflict iff there are a minimal inconsistent set delta in Cn*(S) and a
-	 * *-mapping f: delta -> powerset(S).
+	 * *-mapping f: delta -&gt; powerset(S).
 	 * 
-	 * @param beliefSet
+	 * @param beliefSet some belief set
 	 * @return all *-conflicts of beliefSet
 	 */
 	public Collection<Set<PlFormula>> getStarConflicts(Collection<PlFormula> beliefSet) {
@@ -340,7 +338,7 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 	/**
 	 * Sets the consequence operation for this IcebergInconsistencyMeasure.
 	 * 
-	 * @param consequenceOperation
+	 * @param consequenceOperation some consequence operation
 	 */
 	public void setConsequenceOperation(ConsequenceOperation consequenceOperation) {
 		this.consequenceOperation = consequenceOperation;

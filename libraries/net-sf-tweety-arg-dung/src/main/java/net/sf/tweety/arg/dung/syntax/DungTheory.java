@@ -442,7 +442,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	
 	/**
 	 * Adds the given attacks to this dung theory.
-	 * @param attacks
+	 * @param attacks some attacks
 	 * @return "true" if the set of attacks has been modified.
 	 */
 	public boolean add(Attack... attacks){

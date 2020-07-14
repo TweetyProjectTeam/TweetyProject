@@ -276,7 +276,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * Set the sorting type for ranking values. For example, the "ascending" type
 	 * means that smaller values signify a higher ranking than bigger values.
 	 * 
-	 * @param order
+	 * @param order TODO add description
 	 */
 	public void setSortingType(SortingType order) {
 		this.sortingType = order;
