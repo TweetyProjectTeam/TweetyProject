@@ -42,7 +42,6 @@ public class OrderingSemanticsReasoner {
     /**
      * create a reasoner for the given ordering semantics
      * @param semantics an ordering semantics
-     * @throws NoSuchMethodException should never happen
      */
     public OrderingSemanticsReasoner(OrderingSemantics semantics) throws NoSuchMethodException {
         this.semantics1 = semantics;
@@ -54,7 +53,6 @@ public class OrderingSemanticsReasoner {
      * create a reasoner for the given combination of ordering semantics
      * @param semantics1 an ordering semantics
      * @param semantics2 an ordering semantics
-     * @throws NoSuchMethodException should never happen
      */
     public OrderingSemanticsReasoner(OrderingSemantics semantics1, OrderingSemantics semantics2) throws NoSuchMethodException {
         this.semantics1 = semantics1;
@@ -64,21 +62,20 @@ public class OrderingSemanticsReasoner {
     }
 
     /**
-     * compute a meta graph for the ordering of the subsets over the given theory
+     * compute the ordering over all subsets of theory wrt. to the ordering semantics
+     * this is done by counting the attacks in a theoretical meta graph, where directed edges represent subset
+     * relations over the semantics compare sets.
      * @param theory a dung theory
-     * @return a graph representing the ordered subsets of theory
+     * @return a list representing the ordering of all subsets of the given graph wrt. the ordering semantics
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    public DungTheory getModels(DungTheory theory) throws InvocationTargetException, IllegalAccessException {
-        DungTheory metaTheory = new DungTheory();
-
+    public List<Collection<Collection<Argument>>> getModels(DungTheory theory) throws InvocationTargetException, IllegalAccessException {
         // compute "compare sets" for each subset of theory
         Map<Collection<Argument>, Collection<Argument>> exts1 = new HashMap<>();
         Map<Collection<Argument>, Collection<Argument>> exts2 = new HashMap<>();
         Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
         for (Collection<Argument> subset: subsets) {
-            metaTheory.add(new Argument(subset.toString()));
             Object[] parameters = new Object[2];
             parameters[0] = new Extension(subset);
             parameters[1] = theory;
@@ -86,8 +83,11 @@ public class OrderingSemanticsReasoner {
             exts2.put(subset, (Collection<Argument>) this.getCompareSet2.invoke(this, parameters));
         }
 
-        // compare all subsets and create meta argumentation graph
+        // compare all subsets and count number of attacks in the theoretical meta argumentation graph
+        // more attacks means higher level in the ordering
+        Map<Collection<Argument>, Integer> numAttacks = new HashMap<>();
         for (Collection<Argument> subset1: subsets) {
+            numAttacks.putIfAbsent(subset1, 0);
             Collection<Argument> cs1_1 = exts1.get(subset1);
             for (Collection<Argument> subset2: subsets) {
                 Collection<Argument> cs2_1 = exts1.get(subset2);
@@ -95,10 +95,10 @@ public class OrderingSemanticsReasoner {
                 union1.addAll(cs2_1);
                 if (union1.equals(cs1_1) && !union1.equals(cs2_1)) {
                     // subset2 is subset of subset1 iff the union of the compare sets equals the compare set of 1 and not 2
-                    metaTheory.addAttack(new Argument(subset1.toString()), new Argument(subset2.toString()));
+                    numAttacks.put(subset2, numAttacks.getOrDefault(subset2, 0) + 1);
                 } else if (!union1.equals(cs1_1) && union1.equals(cs2_1)) {
                     // subset1 is subset of subset2 iff the union of the compare sets equals the compare set of 2 and not 1
-                    metaTheory.addAttack(new Argument(subset2.toString()), new Argument(subset1.toString()));
+                    numAttacks.put(subset1, numAttacks.getOrDefault(subset1, 0) + 1);
                 } else if (union1.equals(cs1_1) && union1.equals(cs2_1)) {
                     // both sets are equal in regards to the first ordering semantics
                     Collection<Argument> cs1_2 = exts2.get(subset1);
@@ -107,15 +107,33 @@ public class OrderingSemanticsReasoner {
                     union2.addAll(cs2_2);
                     if (union2.equals(cs1_2) && !union2.equals(cs2_2)) {
                         // subset2 is subset of subset1 in regards to the second ordering semantics
-                        metaTheory.addAttack(new Argument(subset1.toString()), new Argument(subset2.toString()));
+                        numAttacks.put(subset2, numAttacks.getOrDefault(subset2, 0) + 1);
                     } else if (!union2.equals(cs1_2) && union2.equals(cs2_2)) {
                         // subset1 is subset of subset2 in regards to the second ordering semantics
-                        metaTheory.addAttack(new Argument(subset2.toString()), new Argument(subset1.toString()));
+                        numAttacks.put(subset1, numAttacks.getOrDefault(subset1, 0) + 1);
                     }
                 }
             }
         }
-        return metaTheory;
+
+        // get the list of "levels" in the resulting ordering
+        // extensions on the same level are considered equal or incomparable
+        List<Integer> levels = new ArrayList<>(new HashSet<>(numAttacks.values()));
+        levels.sort(Collections.reverseOrder());
+
+        // temporarily write the ordering in a ordered map
+        Map<Integer, Collection<Collection<Argument>>> result = new LinkedHashMap<>();
+
+        for (int level: levels) {
+            result.put(level, new HashSet<>());
+        }
+        for (Collection<Argument> subset: subsets) {
+            // add the subset to the "level" it belongs in
+            result.get(numAttacks.get(subset)).add(subset);
+        }
+
+        // return the list of levels, which is ordered from best to worst
+        return new ArrayList<>(result.values());
     }
 
     /**

@@ -24,6 +24,8 @@ import net.sf.tweety.arg.dung.semantics.OrderingSemantics;
 import net.sf.tweety.arg.dung.reasoner.OrderingSemanticsReasoner;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * example on how to use the OrderingSemanticsReasoner
@@ -44,13 +46,16 @@ public class OrderingExample {
 
         //System.out.println(theory.prettyPrint());
 
-        // reasoner with only one ordering semantics
-        OrderingSemanticsReasoner reasoner1 = new OrderingSemanticsReasoner(OrderingSemantics.CF);
-        // get graph showing relations between all subsets of theory
-        System.out.println(reasoner1.getModels(theory).prettyPrint());
+        // reasoner with two ordering semantics
+        OrderingSemanticsReasoner reasoner1 = new OrderingSemanticsReasoner(OrderingSemantics.AD, OrderingSemantics.CF);
+        // get ordering list over all subsets of theory
+        List<Collection<Collection<Argument>>> result = reasoner1.getModels(theory);
+        for (Collection<Collection<Argument>> level: result) {
+            System.out.println(level);
+        }
 
         // reasoner with two ordering semantics
-        OrderingSemanticsReasoner reasoner2 = new OrderingSemanticsReasoner(OrderingSemantics.CF, OrderingSemantics.ST);
+        OrderingSemanticsReasoner reasoner2 = new OrderingSemanticsReasoner(OrderingSemantics.CF, OrderingSemantics.AD);
         // show the sets for both semantics in a table
         reasoner2.show(theory);
 
