@@ -61,7 +61,7 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 	public Set<ASPLiteral> getConclusions() {
 		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
 		for(ASPRule r : this) {
-			result.add(r.getConclusion().iterator().next());
+			result.add(((ClassicalHead)r.getConclusion()).iterator().next());
 		}
 		return result;
 	}
@@ -107,7 +107,7 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 				return false;
 			}
 			if(r.isFact()) {
-				foundLiterals.add(r.getConclusion().getFormulas().iterator().next());
+				foundLiterals.add(((ClassicalHead)r.getConclusion()).getFormulas().iterator().next());
 			}
 			for(ASPBodyElement element : r.getPremise()) {
 				if(element instanceof DefaultNegation) {

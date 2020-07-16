@@ -50,11 +50,14 @@ public class AspNlpTranslator extends AspFolTranslator
 	 */
 	NLPRule toNLP(ASPRule rule) {
 		NLPRule reval = new NLPRule();
-		if(rule.getConclusion().size() == 1) {
-			FolFormula conclusion = this.toFOL(rule.getConclusion().get(0));
+		if (!(rule.getConclusion() instanceof ClassicalHead))
+			throw new IllegalArgumentException("Non-classical heads (like aggregate heads) are not currently supported by this translator.");
+		ClassicalHead h = (ClassicalHead) rule.getConclusion();
+		if(h.size() == 1) {
+			FolFormula conclusion = this.toFOL(h.get(0));
 			reval.setConclusion(conclusion);
-		} else if(rule.getConclusion().size() > 1) {
-			FolFormula conclusion = this.toFOL(rule.getConclusion());
+		} else if(h.size() > 1) {
+			FolFormula conclusion = this.toFOL(h);
 			reval.setConclusion(conclusion);
 		}
 		
@@ -87,12 +90,12 @@ public class AspNlpTranslator extends AspFolTranslator
 	 */
 	public Program toASP(NLPRule rule) {
 		Program reval = new Program();
-		List<ASPHead> heads = new LinkedList<ASPHead>();
+		List<ClassicalHead> heads = new LinkedList<ClassicalHead>();
 		
 		// 1. create all possible heads
 		FolFormula head = rule.getConclusion();
 		if(head.isLiteral()) {
-			heads.add(new ASPHead((ASPLiteral) this.toASP(head)));
+			heads.add(new ClassicalHead((ASPLiteral) this.toASP(head)));
 		} else if(head instanceof Disjunction) {
 			heads.add(this.toASP((Disjunction)head));
 		} else if(head instanceof Conjunction) {
@@ -107,7 +110,7 @@ public class AspNlpTranslator extends AspFolTranslator
 		}
 		
 		// 3. create rules form heads and bodies:
-		for(ASPHead h : heads) {
+		for(ClassicalHead h : heads) {
 			for(List<ASPBodyElement> body : bodies) {
 				reval.add(new ASPRule(h, body));
 			}
@@ -179,13 +182,13 @@ public class AspNlpTranslator extends AspFolTranslator
 		bodies.addAll(reval);
 	}
 	
-	private List<ASPHead> headsFromConjunction(Conjunction c) {
-		List<ASPHead> reval = new LinkedList<ASPHead>();
+	private List<ClassicalHead> headsFromConjunction(Conjunction c) {
+		List<ClassicalHead> reval = new LinkedList<ClassicalHead>();
 		for(RelationalFormula formula : c){
 			FolFormula fol = (FolFormula)formula;
 			if(fol.isLiteral()) {
 				ASPLiteral trans = (ASPLiteral)this.toASP(fol);
-				reval.add(new ASPHead(trans));
+				reval.add(new ClassicalHead(trans));
 			} else if(fol instanceof Disjunction) {
 				reval.add(this.toASP((Disjunction)fol));
 			} else if(fol instanceof Conjunction) {

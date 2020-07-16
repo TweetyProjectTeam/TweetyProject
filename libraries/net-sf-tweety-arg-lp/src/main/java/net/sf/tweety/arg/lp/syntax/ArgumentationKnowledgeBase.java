@@ -44,7 +44,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 		
 		// preprocessing: remove unnecessary rules, i.e. a <- a.
 		for(ASPRule r : program) {
-			ASPLiteral head = r.getConclusion().iterator().next();
+			ASPLiteral head = ((ClassicalHead)r.getConclusion()).iterator().next();
 			if(r.getPremise().contains(head)) {
 				this.program.remove(r);
 			}
@@ -87,7 +87,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 		
 		// there is at least one unaccounted literal l, find a rule with head l
 		for(ASPRule r : program) {
-			ASPLiteral head = r.getConclusion().iterator().next();
+			ASPLiteral head = ((ClassicalHead)r.getConclusion()).iterator().next();
 			if(openLiterals.contains(head)) {
 				LinkedList<ASPRule> newRules = (LinkedList<ASPRule>)rules.clone();
 				newRules.addLast(r);
@@ -116,7 +116,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 		}
 		// remove all conclusions as they must have been accounted for
 		for(ASPRule r : rules) {
-			ASPLiteral head = r.getConclusion().iterator().next();
+			ASPLiteral head = ((ClassicalHead)r.getConclusion()).iterator().next();
 			result.remove(head);
 		}
 		return result;
@@ -136,7 +136,7 @@ public class ArgumentationKnowledgeBase extends BeliefSet<Argument,FolSignature>
 			changed = false;
 			for(ASPRule r : rules) {
 				if(isTrue(r,result)) {
-					ASPLiteral head = r.getConclusion().iterator().next();
+					ASPLiteral head = ((ClassicalHead)r.getConclusion()).iterator().next();
 					result.add(head);
 					changed = true;
 				}

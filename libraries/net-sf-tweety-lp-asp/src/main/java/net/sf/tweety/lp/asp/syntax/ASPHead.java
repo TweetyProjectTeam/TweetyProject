@@ -30,13 +30,13 @@ public abstract class ASPHead extends ASPElement {
 	/**
 	 * @return true if the head is empty, false otherwise
 	 */
-	protected abstract boolean isEmpty();
+	public abstract boolean isEmpty();
 
 	/**
 	 * Returns all literals in this element in form of a SortedSet. 
 	 * Literals are atoms or strict negations of atoms.
 	 * @return all the literals used in the rule element 
 	 */
-	protected abstract Collection<? extends ASPLiteral> getLiterals();
+	public abstract Collection<? extends ASPLiteral> getLiterals();
 
 }

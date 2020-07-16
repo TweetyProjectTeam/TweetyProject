@@ -127,7 +127,7 @@ public class AggregateHead extends ASPHead {
 	}
 
 	@Override
-	protected boolean isEmpty() {
+	public boolean isEmpty() {
 		return false;
 	}
 
@@ -137,8 +137,7 @@ public class AggregateHead extends ASPHead {
 	}
 
 	@Override
-	protected Collection<? extends ASPLiteral> getLiterals() {
+	public Collection<? extends ASPLiteral> getLiterals() {
 		return this.head.getLiterals();
 	}
-
 }

@@ -79,12 +79,12 @@ public class AspFolTranslator extends Translator
 		return null;
 	}
 	
-	public Disjunction toFOL(ASPHead source) {
+	public Disjunction toFOL(ClassicalHead source) {
 		return (Disjunction) this.translateAssociative(source, Disjunction.class);
 	}
 	
-	public ASPHead toASP(Disjunction source) {
-		return (ASPHead) this.translateAssociative(source, ASPHead.class);
+	public ClassicalHead toASP(Disjunction source) {
+		return (ClassicalHead) this.translateAssociative(source, ClassicalHead.class);
 	}
 	
 	@Override
@@ -109,8 +109,8 @@ public class AspFolTranslator extends Translator
 		tmap.put(ASPAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, FolAtom.class));
 		tmap.put(FolAtom.class, new Pair<Integer, Class<?>>(TT_ATOM, ASPAtom.class));
 		
-		tmap.put(ASPHead.class, new Pair<Integer, Class<?>>(TT_ASSOC, Disjunction.class));
-		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(TT_ASSOC, ASPHead.class));
+		tmap.put(ClassicalHead.class, new Pair<Integer, Class<?>>(TT_ASSOC, Disjunction.class));
+		tmap.put(Disjunction.class, new Pair<Integer, Class<?>>(TT_ASSOC, ClassicalHead.class));
 		
 		return tmap;
 	}

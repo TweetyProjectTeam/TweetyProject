@@ -30,6 +30,7 @@ import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunc
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.ClassicalHead;
 
 /**
  * This class represents the naive transformation function
@@ -73,7 +74,7 @@ public class NaiveLiteralTransformationFunction implements
 		LiteralReasoner reasoner = new LiteralReasoner(attackRelation, defenseRelation);
 		for(ASPRule r : formulas) {
 			if(r.isFact()) {
-				ASPLiteral head = r.getConclusion().iterator().next();
+				ASPLiteral head = ((ClassicalHead)r.getConclusion()).iterator().next();
 				if(reasoner.isOverruled(argkb,head.complement())) {
 					result.add(r);
 				}

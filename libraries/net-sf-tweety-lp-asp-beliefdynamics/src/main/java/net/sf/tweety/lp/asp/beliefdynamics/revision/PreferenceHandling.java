@@ -40,6 +40,7 @@ import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.StrictNegation;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.ClassicalHead;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,10 +158,10 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 			for(AnswerSet as : asDefault) {
 				Set<ASPLiteral> literals = new HashSet<ASPLiteral>();
 				literals.addAll(conflict.getSecond().getLiterals());
-				literals.removeAll(conflict.getSecond().getConclusion());
+				literals.removeAll((Collection<?>) conflict.getSecond().getConclusion());
 				
 				if(	as.containsAll(literals) &&
-					!as.containsAll(conflict.getSecond().getConclusion())) {
+					!as.containsAll((Collection<?>) conflict.getSecond().getConclusion())) {
 					toRemoveCollection.add(conflict.getFirst());
 				}
 			}
@@ -193,7 +194,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 				continue;
 			
 			// Create negated head of rule 1.
-			ASPLiteral head1 = r1.getConclusion().iterator().next();
+			ASPLiteral head1 = ((ClassicalHead)r1.getConclusion()).iterator().next();
 			ASPLiteral negHead1 = null;
 			if(head1 instanceof ASPAtom) {
 				negHead1 = new StrictNegation(head1.getAtom());
@@ -209,7 +210,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 				ASPRule r2 = p2it.next();
 				if(r2.isConstraint())
 					continue;
-				if(r2.getConclusion().iterator().next().equals(negHead1)) {
+				if(((ClassicalHead)r2.getConclusion()).iterator().next().equals(negHead1)) {
 					reval.add(new Pair<ASPRule, ASPRule>(r1, r2));
 				}
 			}
