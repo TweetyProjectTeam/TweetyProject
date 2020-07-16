@@ -19,6 +19,7 @@
 package net.sf.tweety.lp.asp.syntax;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -72,6 +73,21 @@ public class ASPAtom extends ASPLiteral {
 			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given predicate " + p + " is not.");
 		this.predicate = p;
 		this.arguments = terms;
+	}
+	
+	/**
+	 * Creates a new atom with the given predicate and terms.
+	 * 
+	 * @param p
+	 *            a predicate
+	 * @param terms
+	 *            arguments of the atom
+	 */
+	public ASPAtom(Predicate p, Term<?>... terms) {
+		if (p.isTyped())
+			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given predicate " + p + " is not.");
+		this.predicate = p;
+		this.arguments = Arrays.asList(terms);
 	}
 
 	/**

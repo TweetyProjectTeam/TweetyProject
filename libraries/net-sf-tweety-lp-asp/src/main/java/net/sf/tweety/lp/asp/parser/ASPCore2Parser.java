@@ -58,8 +58,7 @@ import net.sf.tweety.lp.asp.semantics.*;
  * <br> Other Clingo meta-statements (#include, #external, #program, #script and #const)
  * are currently not supported.
  * <br>
- * <br>The following constructs from DLV are supported additionally to the ASP-Core-2 syntax:
- * <br> -  TODO
+ * <br>
  * @author Anna Gessler
  * 
  */

@@ -33,8 +33,8 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class models an aggregate element, meaning a set of terms and a set of
- * naf literals (= literals or default negated literals). One or more
- * aggregate elements form an aggregate or aggregate atom.
+ * naf literals (= literals or default negated literals). One or more aggregate
+ * elements form an aggregate or aggregate atom.
  * 
  * @see net.sf.tweety.lp.asp.syntax.AggregateAtom
  * 
@@ -45,18 +45,17 @@ public class AggregateElement extends ASPElement {
 	 * The term tuple of the aggregate element.
 	 */
 	private List<Term<?>> left;
-	
+
 	/**
 	 * The literal tuple of this aggregate element.
 	 * 
-	 * TODO: Remove possibility of having AggregateAtoms
-	 * in this list.
+	 * TODO: Remove possibility of having AggregateAtoms in this list.
 	 */
 	private List<ASPBodyElement> right;
 
 	/**
-	 * Creates a new Aggregate Element with the given list of terms and 
-	 * the given list of naf literals.
+	 * Creates a new Aggregate Element with the given list of terms and the given
+	 * list of naf literals.
 	 * 
 	 * @param l a list of terms
 	 * @param r a list of body elements
@@ -79,12 +78,15 @@ public class AggregateElement extends ASPElement {
 	@Override
 	public String toString() {
 		String r = "";
-		for (int i = 0; i < left.size() - 1; i++)
-			r += left.get(i).toString() + ",";
-		r += left.get(left.size() - 1);
 
+		if (!left.isEmpty()) {
+			for (int i = 0; i < left.size() - 1; i++)
+				r += left.get(i).toString() + ",";
+			r += left.get(left.size() - 1);
+		}
 		if (!right.isEmpty()) {
-			r += " : ";
+			if (!left.isEmpty())
+				r += " : ";
 			for (int i = 0; i < right.size() - 1; i++)
 				r += right.get(i).toString() + ",";
 			r += right.get(right.size() - 1);
@@ -138,15 +140,15 @@ public class AggregateElement extends ASPElement {
 		List<Term<?>> terms = new LinkedList<Term<?>>();
 		List<ASPBodyElement> elements = new LinkedList<ASPBodyElement>();
 		AggregateElement a = this;
-		
-		for (Term<?> x : a.left) 
+
+		for (Term<?> x : a.left)
 			terms.add(x.substitute(t, v));
-		for (ASPBodyElement x : a.right) 
+		for (ASPBodyElement x : a.right)
 			elements.add(x.substitute(t, v));
-		
-		return new AggregateElement(terms,elements);
+
+		return new AggregateElement(terms, elements);
 	}
-	
+
 	@Override
 	public FolSignature getSignature() {
 		FolSignature sig = new FolSignature();
@@ -161,10 +163,11 @@ public class AggregateElement extends ASPElement {
 	public AggregateElement clone() {
 		return new AggregateElement(this);
 	}
-	
+
 	/**
 	 * Returns the left part of the Aggregate element.
-	 * @return list of terms 
+	 * 
+	 * @return list of terms
 	 */
 	public List<Term<?>> getLeft() {
 		return left;
@@ -172,6 +175,7 @@ public class AggregateElement extends ASPElement {
 
 	/**
 	 * Returns the right part of the Aggregate element.
+	 * 
 	 * @return list of naf literals (= literals or default negated literals)
 	 */
 	public List<ASPBodyElement> getRight() {
@@ -179,24 +183,23 @@ public class AggregateElement extends ASPElement {
 	}
 
 	@Override
-	public AggregateElement substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
+	public AggregateElement substitute(Map<? extends Term<?>, ? extends Term<?>> map) throws IllegalArgumentException {
 		AggregateElement e = this;
-		for(Term<?> v: map.keySet())
-			e = e.substitute(v,map.get(v));
+		for (Term<?> v : map.keySet())
+			e = e.substitute(v, map.get(v));
 		return e;
 	}
 
 	@Override
 	public AggregateElement exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		if(!v.getSort().equals(t.getSort()))
+		if (!v.getSort().equals(t.getSort()))
 			throw new IllegalArgumentException("Terms '" + v + "' and '" + t + "' are of different sorts.");
 		Constant temp = new Constant("$TEMP$", v.getSort());
 		AggregateElement rf = this.substitute(v, temp);
 		rf = rf.substitute(t, v);
 		rf = rf.substitute(temp, t);
 		// remove temporary constant from signature
-		v.getSort().remove(temp);	
+		v.getSort().remove(temp);
 		return rf;
 	}
 
@@ -206,6 +209,5 @@ public class AggregateElement extends ASPElement {
 			literals.addAll(t.getLiterals());
 		return literals;
 	}
-
 
 }

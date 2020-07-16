@@ -131,7 +131,6 @@ public class ASPCore2ParserTest {
 		assertTrue(nafConstraint.isConstraint());
 		assertTrue((nafConstraint.getBody().iterator().next()) instanceof DefaultNegation);
 		assertFalse(simpleASPRule.isFact());
-		assertEquals(simpleASPRule.getHead().size(), 1);
 		assertEquals(simpleASPRule.getBody().size(), 2);
 	}
 

@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.lp.asp.syntax;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,9 +34,9 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class models a rule in ASP. A rule consists of a head and a body. The
- * head contains n&gt;=0 classical atoms and the body contains n&gt;=0 literals. Rules
- * with non-empty heads and empty bodies are called facts, rules with empty
- * heads and non-empty bodies are called constraints.
+ * head contains n&gt;=0 classical atoms and the body contains n&gt;=0 literals.
+ * Rules with non-empty heads and empty bodies are called facts, rules with
+ * empty heads and non-empty bodies are called constraints.
  *
  * 
  * @author Anna Gessler
@@ -66,7 +67,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * Empty constructor
 	 */
 	public ASPRule() {
-		this.head = new ASPHead();
+		this.head = new ClassicalHead();
 		this.body = new LinkedList<ASPBodyElement>();
 		this.weight = null;
 		this.level = null;
@@ -93,7 +94,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(ASPLiteral literal) {
 		this();
-		this.head = new ASPHead(literal);
+		this.head = new ClassicalHead(literal);
 	}
 
 	/**
@@ -114,10 +115,23 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * Creates a rule with the given head and a single-element body.
 	 * 
 	 * @param head an ASPLiteral
-	 * @param b
-	 *            a body element
+	 * @param b    a body element
 	 */
 	public ASPRule(ASPLiteral head, ASPBodyElement b) {
+		this(head);
+		this.body.add(b);
+		this.weight = null;
+		this.level = null;
+		this.constraint_terms = new LinkedList<Term<?>>();
+	}
+
+	/**
+	 * Creates a rule with the given head and a single-element body.
+	 * 
+	 * @param head an ASPHead
+	 * @param b    a body element
+	 */
+	public ASPRule(ASPHead head, ASPBodyElement b) {
 		this(head);
 		this.body.add(b);
 		this.weight = null;
@@ -132,7 +146,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @param body a list of ASPBodyElement
 	 */
 	public ASPRule(ASPLiteral head, List<ASPBodyElement> body) {
-		this.head = new ASPHead(head);
+		this.head = new ClassicalHead(head);
 		this.body = body;
 		this.weight = null;
 		this.level = null;
@@ -153,8 +167,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * Creates a constraint with the given weight and terms.
 	 * 
 	 * @param nafliterals the naf literals
-	 * @param weight some weight
-	 * @param terms a list of terms
+	 * @param weight      some weight
+	 * @param terms       a list of terms
 	 */
 	public ASPRule(List<ASPBodyElement> nafliterals, Term<?> weight, List<Term<?>> terms) {
 		this();
@@ -166,13 +180,13 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	/**
 	 * Creates a constraint with the given weight, level and terms.
 	 * 
-	 * @param body a list of ASPBodyElement
+	 * @param body   a list of ASPBodyElement
 	 * @param weight a term
-	 * @param level a term
-	 * @param terms a list of terms
-	 */ 
+	 * @param level  a term
+	 * @param terms  a list of terms
+	 */
 	public ASPRule(List<ASPBodyElement> body, Term<?> weight, Term<?> level, List<Term<?>> terms) {
-		this.head = new ASPHead();
+		this.head = new ClassicalHead();
 		this.body = body;
 		this.weight = weight;
 		this.level = level;
@@ -190,15 +204,15 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	/**
-	 * This methods tests a rule for safety. 
-	 * Safety is defined as follows in the ASP-Core-2 standard:
-	 * A rule, weak constraint or query is safe, if the  set V of global variables
+	 * This methods tests a rule for safety. Safety is defined as follows in the
+	 * ASP-Core-2 standard: A rule, weak constraint or query is safe, if the set V
+	 * of global variables
 	 * 
 	 * @return true if the rule is safe, false otherwise
 	 */
 	public Boolean isSafe() {
-		//Get all variables in the rule
-		//Set<Variable> vars = this.getTerms(Variable.class);
+		// Get all variables in the rule
+		// Set<Variable> vars = this.getTerms(Variable.class);
 		// TODO
 		throw new UnsupportedOperationException("WIP");
 	}
@@ -233,7 +247,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	public void setConclusion(ASPLiteral head) {
-		this.head = new ASPHead(head);
+		this.head = new ClassicalHead(head);
 	}
 
 	@Override
@@ -256,12 +270,16 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		String ret = "";
 		
 		if (!head.isEmpty()) {
-			for (int i = 0; i < head.size() - 1; i++)
-				ret += head.get(i).toString() + ",";
-			ret += head.get(head.size() - 1).toString();
+			if (head instanceof ClassicalHead) {
+				for (int i = 0; i < ((ClassicalHead)head).size() - 1; i++)
+					ret += ((ClassicalHead)head).get(i).toString() + ",";
+				ret += ((ClassicalHead)head).get(((ClassicalHead)head).size() - 1).toString();
+			}
+			else 
+				ret += head.toString();
 		}
 		if (!body.isEmpty()) {
-			ret += ":- " + body.get(0);
+			ret += " :- " + body.get(0);
 			for (int i = 1; i < body.size(); ++i) {
 				ret += ", " + body.get(i);
 			}
@@ -308,8 +326,15 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.head = head;
 	}
 
+	/**
+	 * Add the given literal to the head of the rule.
+	 * 
+	 * @param h ASPLiteral
+	 */
 	public void addToHead(ASPLiteral h) {
-		this.head.add(h);
+		if (this.head instanceof ClassicalHead) 
+			((ClassicalHead)this.head).add(h);
+		else throw new UnsupportedOperationException("This function is currently only supported for classical heads (disjunctions of literals)");
 	}
 
 	public List<ASPBodyElement> getBody() {
@@ -319,7 +344,14 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	public void setBody(List<ASPBodyElement> body) {
 		this.body = body;
 	}
-	
+
+	public void setBody(ASPBodyElement... aspBodyElements) {
+		List<ASPBodyElement> bes = new ArrayList<ASPBodyElement>();
+		for (ASPBodyElement a : aspBodyElements)
+			bes.add(a);
+		this.body = bes;
+	}
+
 	public List<Term<?>> getConstraintTerms() {
 		return constraint_terms;
 	}
@@ -365,7 +397,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	public Collection<? extends ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
-		literals.addAll(head);
+		literals.addAll(head.getLiterals());
 		for (ASPBodyElement pe : body) {
 			literals.addAll(pe.getLiterals());
 		}
@@ -374,17 +406,17 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	public ASPRule substitute(Term<?> v, Term<?> t) {
 		ASPRule reval = new ASPRule();
-		reval.head = head.substitute(v, t);
-		for(ASPBodyElement bodyElement : body) 
-			reval.body.add(bodyElement.substitute(v,t));
+		reval.head = (ASPHead) head.substitute(v, t);
+		for (ASPBodyElement bodyElement : body)
+			reval.body.add(bodyElement.substitute(v, t));
 		return reval;
 	}
-	
+
 	public ASPRule exchange(Term<?> v, Term<?> t) {
 		ASPRule reval = new ASPRule();
-		reval.head = head.exchange(v, t);
-		for(ASPBodyElement bodyElement : body) 
-			reval.body.add((ASPBodyElement) bodyElement.exchange(v,t));
+		reval.head = (ASPHead) head.exchange(v, t);
+		for (ASPBodyElement bodyElement : body)
+			reval.body.add((ASPBodyElement) bodyElement.exchange(v, t));
 		return reval;
 	}
 
@@ -444,28 +476,27 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	public ASPRule clone() {
 		return new ASPRule(this);
 	}
-	
-	@Override 
+
+	@Override
 	public boolean equals(Object other) {
-		if(!(other instanceof Rule)) 	return false;
-		ASPRule or = (ASPRule)other;
-		
+		if (!(other instanceof Rule))
+			return false;
+		ASPRule or = (ASPRule) other;
+
 		boolean reval = this.head.equals(or.head) && this.body.equals(or.body);
 		return reval;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return head.hashCode() + body.hashCode();
 	}
 
 	/**
-	 * @return true if the rule's head and body are both empty, 
-	 * false otherwise.
+	 * @return true if the rule's head and body are both empty, false otherwise.
 	 */
 	public boolean isEmpty() {
 		return this.head.isEmpty() && this.body.isEmpty();
 	}
-	
-	
+
 }

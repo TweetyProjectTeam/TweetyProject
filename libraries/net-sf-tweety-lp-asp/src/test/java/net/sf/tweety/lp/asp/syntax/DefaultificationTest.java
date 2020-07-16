@@ -54,7 +54,7 @@ public class DefaultificationTest extends TestCase {
     	
     	assertEquals(dr.getConclusion(), onlyRule.getConclusion());
     	assertTrue(dr.getPremise().contains(onlyRule.getPremise().iterator().next()));
-    	DefaultNegation defNot = new DefaultNegation(new StrictNegation(dr.getConclusion().iterator().next().getAtom()));
+    	DefaultNegation defNot = new DefaultNegation(new StrictNegation(((ClassicalHead)dr.getConclusion()).iterator().next().getAtom()));
     	assertTrue(dr.getPremise().contains(defNot));
     	
     	p = new Program();
@@ -67,7 +67,7 @@ public class DefaultificationTest extends TestCase {
     	dr = dp.iterator().next();
     	
     	assertEquals(dr.getConclusion(), onlyRule.getConclusion());
-    	defNot = new DefaultNegation(dr.getConclusion().iterator().next().getAtom());
+    	defNot = new DefaultNegation(((ClassicalHead)dr.getConclusion()).iterator().next().getAtom());
     	assertEquals(true, dr.getPremise().contains(defNot));
     }
     

@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.lp.asp.syntax;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -38,7 +39,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * @author Thomas Vengels
  * @author Anna Gessler
  */
-public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, ASPBodyElement, ASPRule> {
+public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalHead, ASPBodyElement, ASPRule> {
 
 	private static final long serialVersionUID = -1498770939009078101L;
 
@@ -76,6 +77,18 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 		this.query = null;
 		this.output_predicate_whitelist = this.getPredicates();
 	}
+	
+	/**
+	 * Creates a new program with the given rules.
+	 * 
+	 * @param rules a set of rules
+	 */
+	public Program(ASPRule... rules) {
+		super();
+		this.query = null;
+		this.output_predicate_whitelist = this.getPredicates();
+		this.addAll(Arrays.asList(rules));
+	}
 
 	/**
 	 * Creates a new program with the given query and rules.
@@ -109,13 +122,13 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	}
 
 	@Override
-	public void addFact(ASPHead fact) {
+	public void addFact(ClassicalHead fact) {
 		this.add(new ASPRule(fact));
 	}
 	
 	@Override
-	public void addFacts(ASPHead... fact) {
-		for (ASPHead a : fact)
+	public void addFacts(ClassicalHead... fact) {
+		for (ClassicalHead a : fact)
 			addFact(a);
 	}
 
@@ -292,7 +305,9 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 		for (ASPRule origRule : p) {
 			ASPRule defRule = new ASPRule();
 			if (!origRule.isConstraint()) {
-				ASPLiteral head = origRule.getHead().iterator().next();
+				if (!(origRule.getHead() instanceof ClassicalHead))
+					throw new UnsupportedOperationException("This function is currently only supported for classical heads (disjunctions of literals)");
+				ASPLiteral head = ((ClassicalHead)origRule.getHead()).iterator().next();
 				StrictNegation neg = new StrictNegation(head.getAtom());
 				defRule.addPremises(origRule.getBody());
 				DefaultNegation defaultificationLit = null;
@@ -332,7 +347,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ASPHead, A
 	 */
 	public boolean isExtendedProgram() {
 		for (ASPRule r : this) {
-			if (r.getHead().size() > 1)
+			if (r.getHead().getLiterals().size() > 1)
 				return false;
 		}
 		return true;

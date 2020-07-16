@@ -37,10 +37,22 @@ public interface Rule<C extends Formula, P extends Formula> extends Formula {
 	
 	public boolean isConstraint();
 	
+	/**
+	 * Set the conclusion of this rule.
+	 * @param conclusion
+	 */
 	public void setConclusion(C conclusion);
 	
+	/**
+	 * Add the given premise to this rule.
+	 * @param premise
+	 */
 	public void addPremise(P premise);
 	
+	/**
+	 * Add the given premises to this rule.
+	 * @param premise
+	 */
 	public void addPremises(Collection<? extends P> premises);
 	
 	@Override

@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.lp.asp.syntax;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -152,6 +154,24 @@ public class AggregateAtom extends ASPBodyElement {
 		this.rightGuard = t;
 		this.leftOp = relation2;
 		this.leftGuard = t2;
+	}
+	
+	/**
+	 * Creates a new cardinality rule.
+	 * 
+	 * @param literals   of the cardinality rule
+	 * @param leftBound  of the cardinality rule
+	 * @param rightBound of the cardinality rule
+	 */
+	public AggregateAtom(List<ASPBodyElement> literals, int leftBound, int rightBound) {
+		List<AggregateElement> elements = new ArrayList<AggregateElement>();
+		elements.add(new AggregateElement(new ArrayList<Term<?>>(), literals));
+		this.aggregateElements = elements;
+		this.function = ASPOperator.AggregateFunction.COUNT;
+		this.rightOp = ASPOperator.BinaryOperator.LEQ;
+		this.rightGuard = new NumberTerm(rightBound);
+		this.leftOp = ASPOperator.BinaryOperator.LEQ;
+		this.leftGuard = new NumberTerm(leftBound);
 	}
 
 	/**

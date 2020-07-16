@@ -80,7 +80,7 @@ public class ASPOperator {
 	 * and by Tweety. 'weight' in this context is the first element of an aggregate
 	 * element (term tuple).
 	 * 
-	 * <br> - #count: Number of elements
+	 * <br> - #count: Number of elements, used to represent cardinality constraints.
 	 * <br> - #sum: Sum of weights, used to represent weight constraints. 
 	 * <br> - #max: Maximum weight
 	 * <br> - #min: Minimum weight
