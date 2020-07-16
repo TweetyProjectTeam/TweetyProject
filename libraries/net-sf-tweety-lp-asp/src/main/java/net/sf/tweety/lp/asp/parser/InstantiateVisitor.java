@@ -34,7 +34,7 @@ import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.syntax.ASPAtom;
-import net.sf.tweety.lp.asp.syntax.ASPHead;
+import net.sf.tweety.lp.asp.syntax.ClassicalHead;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
 import net.sf.tweety.lp.asp.syntax.StrictNegation;
@@ -131,7 +131,7 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 
 	@Override
 	public ASPRule visit(ASTRule node, Object data) {
-		ASPHead head = new ASPHead();
+		ClassicalHead head = new ClassicalHead();
 		List<ASPBodyElement> body = new LinkedList<ASPBodyElement>();
 		Term<?> weight = null;
 		Term<?> level = null;
@@ -166,14 +166,14 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 	}
 
 	@Override
-	public ASPHead visit(ASTHead node, Object data) {
+	public ClassicalHead visit(ASTHead node, Object data) {
 		List<ASPLiteral> head_atoms = new ArrayList<ASPLiteral>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTHeadElementsList) {
 				head_atoms = visit((ASTHeadElementsList) node.jjtGetChild(i), null);
 			}
 		}
-		return new ASPHead(head_atoms);
+		return new ClassicalHead(head_atoms);
 	}
 
 	@Override
