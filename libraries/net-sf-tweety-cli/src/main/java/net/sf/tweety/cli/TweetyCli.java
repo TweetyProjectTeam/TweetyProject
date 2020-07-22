@@ -200,7 +200,7 @@ public class TweetyCli {
 			if(inputFiles.length == 1){				
 				RpclMeReasoner reasoner = new RpclMeReasoner(semantics,inferenceType);
 				RpclProbabilityDistribution<?> p = reasoner.getModel(kb,((RpclParser) inputParser[0]).getSignature());
-				outputWriter.setObject(p);
+				outputWriter.setObjectToBePrinted(p);
 				outputWriter.writeToFile(outputFile);
 				System.exit(0);
 			}else if(inputParser[1] instanceof RpclProbabilityDistributionParser) {

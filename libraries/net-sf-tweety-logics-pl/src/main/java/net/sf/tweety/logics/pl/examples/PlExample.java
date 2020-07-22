@@ -1,6 +1,7 @@
 package net.sf.tweety.logics.pl.examples;
 
 import java.io.IOException;
+import java.util.List;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
@@ -40,6 +41,14 @@ public class PlExample {
 		//Parse belief base from file
 		beliefSet = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase.proplogic");
 		System.out.println(beliefSet);
+		
+		//Parse list of belief bases from file
+		List<PlBeliefSet> beliefSets = parser.parseListOfBeliefBasesFromFile("src/main/resources/examplebeliefbase_multiple.proplogic");
+		System.out.println(beliefSets);
+		
+		//Parse list of belief bases using a custom delimiter
+		beliefSets = parser.parseListOfBeliefBases("a || b \n a && !a ##### c => d", "#####");
+		System.out.println(beliefSets);
 		
 		//Note that belief bases can have signatures larger than their formulas' signature
 		PlSignature sig = beliefSet.getSignature();

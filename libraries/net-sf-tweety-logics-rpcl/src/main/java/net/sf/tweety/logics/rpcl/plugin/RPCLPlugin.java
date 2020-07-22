@@ -339,7 +339,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				
 				// write probability function into prob output file
 				if(probOutFile != null){	
-					probOutWriter.setObject(p);
+					probOutWriter.setObjectToBePrinted(p);
 					probOutWriter.writeToFile(probOutFile);
 				}
 				
@@ -356,7 +356,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 					} else {
 						log.info("Output written to file " + outputFile);
 						// TODO: Write output to file
-						probOutWriter.setObject(p);
+						probOutWriter.setObjectToBePrinted(p);
 						probOutWriter.writeToFile(outputFile);
 						System.out.println("Write plugin output into file " + outputFile);
 					}
@@ -385,7 +385,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				}
 					
 				if(probOutFile != null){	
-					probOutWriter.setObject(p);
+					probOutWriter.setObjectToBePrinted(p);
 					probOutWriter.writeToFile(probOutFile);
 				}
 				
@@ -407,7 +407,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				}
 				
 				if(probOutFile != null){	
-					probOutWriter.setObject(p);
+					probOutWriter.setObjectToBePrinted(p);
 					probOutWriter.writeToFile(probOutFile);
 				}
 						
