@@ -27,14 +27,22 @@ public class MlWriter extends Writer {
 	public MlWriter(RelationalFormula formula) {
 		super(formula);
 	}
-	
+
 	public MlWriter(MlBeliefSet beliefSet) {
 		super(beliefSet);
 	}
 
 	@Override
 	public String writeToString() {
-		return this.getObject().toString();
+		if (input == null)
+			return "";
+		else if (input instanceof MlBeliefSet) {
+			String result = "";
+			for (RelationalFormula f : ((MlBeliefSet) input))
+				result += f.toString() + "\n";
+			return result;
+		} else
+			return input.toString();
 	}
 
 }

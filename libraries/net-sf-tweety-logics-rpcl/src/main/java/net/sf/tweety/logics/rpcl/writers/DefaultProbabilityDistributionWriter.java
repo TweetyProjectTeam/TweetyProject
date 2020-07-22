@@ -54,7 +54,7 @@ public class DefaultProbabilityDistributionWriter extends Writer {
 	@Override
 	public String writeToString() {
 		String result = "";
-		RpclProbabilityDistribution<?> distribution = (RpclProbabilityDistribution<?>) this.getObject();
+		RpclProbabilityDistribution<?> distribution = (RpclProbabilityDistribution<?>) this.input;
 		NumberFormat formatter = new DecimalFormat("#.###################");
 		for(Interpretation<?,?> interpretation: distribution.keySet()){
 			result += "{";

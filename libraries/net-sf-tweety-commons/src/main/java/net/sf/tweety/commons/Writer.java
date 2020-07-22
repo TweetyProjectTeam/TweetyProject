@@ -30,32 +30,39 @@ import java.io.*;
 public abstract class Writer {
 
 	/**
-	 * 
+	 * The object to be printed.
 	 */
-	private Object obj;
+	protected Object input = null;
 	
 	/**
 	 * Creates a new writer for the given object.
 	 * @param obj an object.
 	 */
 	public Writer(Object obj){
-		this.obj = obj;
+		this.input = obj;
+	}
+	
+	/**
+	 * Creates a new empty writer for the given object.
+	 * @param obj an object.
+	 */
+	public Writer() {
 	}
 	
 	/**
 	 * Sets the object of this writer.
 	 * @param obj some object
 	 */
-	public void setObject(Object obj){
-		this.obj = obj;
+	public void setObjectToBePrinted(Object obj){
+		this.input = obj;
 	}
 	
 	/**
 	 * Returns the object of this writer.
 	 * @return the object of this writer.
 	 */
-	public Object getObject(){
-		return this.obj;
+	public Object getObjectToBePrinted(){
+		return this.input;
 	}
 	
 	/**

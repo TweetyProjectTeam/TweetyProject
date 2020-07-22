@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package net.sf.tweety.logics.pl.writer;
 
@@ -23,23 +23,43 @@ import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
- * This class implements a writer for propositional formulas and belief bases.
+ * This class implements a writer for propositional formulas and belief bases. It prints
+ * formulas and belief bases in the Tweety input format.
  * 
  * @author Anna Gessler
  */
 public class PlWriter extends Writer {
-
+	/**
+	 * Creates a new PlWriter for the given formula.
+	 */
 	public PlWriter(PlFormula plFormula) {
 		super(plFormula);
 	}
 	
+	/**
+	 * Creates a new PlWriter for the given belief set.
+	 */
 	public PlWriter(PlBeliefSet plBeliefSet) {
 		super(plBeliefSet);
 	}
 
+	/**
+	 * Creates a new empty PlWriter.
+	 */
+	public PlWriter() {
+	}
+	
 	@Override
 	public String writeToString() {
-		return this.getObject().toString();
+		if (input == null)
+			return "";
+		else if (input instanceof PlBeliefSet) {
+			String result = "";
+			for (PlFormula f : ((PlBeliefSet) input))
+				 result += f.toString() + "\n";
+			return result;
+		}
+		else return input.toString();
 	}
-
+	
 }

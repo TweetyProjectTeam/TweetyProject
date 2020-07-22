@@ -53,7 +53,7 @@ public class DefaultCondensedProbabilityDistributionWriter extends Writer {
 	@Override
 	public String writeToString() {
 		String result = "";
-		CondensedProbabilityDistribution distribution = (CondensedProbabilityDistribution) this.getObject();
+		CondensedProbabilityDistribution distribution = (CondensedProbabilityDistribution) this.input;
 		NumberFormat formatter = new DecimalFormat("#.###################"); 
 		for(Interpretation<?,?> interpretation: distribution.keySet()){
 			result += "{";
