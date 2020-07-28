@@ -29,8 +29,8 @@ import java.util.*;
  * Implementation of the algorithm for learning (grounded) labelings from with some improvements:
  * Riveret, Régis, and Guido Governatori. "On learning attacks in probabilistic abstract argumentation." 2016.
  *
- * - instead of stopping when no undecided attacks are left, we always use the full budget. While slower, greatly improves results.
- * - added additional parameter for pruning instead of pruning at 0. approx. -10% of budget gives better results. eg budget: 1000 threshold: -100
+ * - instead of stopping when no undecided attacks are left, we always use the full computational budget
+ * - added additional parameter for pruning instead of pruning at 0. eg budget: 500 threshold: -10
  * - added fifth rule to capture self-attacking arguments
  *
  * @author Lars Bengel
@@ -49,7 +49,6 @@ public class ImprovedRiveretTheoryLearner {
     /**
      * initialize learner for the given set of arguments
      * @param arguments a set of arguments
-     * @param max_cycles TODO description needed
      */
     public ImprovedRiveretTheoryLearner(Collection<Argument> arguments, int max_cycles) {
         this.cycles = 0;
@@ -88,25 +87,33 @@ public class ImprovedRiveretTheoryLearner {
                 // Rule 3
                 Set<Argument> possibleAttackers = this.theory.getAttackers(a);
                 possibleAttackers.addAll(this.theory.getAttackers(b));
+                boolean all_out_or_off = true;
                 for (Argument c: possibleAttackers) {
-                    if (c != a && c != b && (l.get(c) == ArgumentStatus.OUT || l.get(c) == null)) {
-                        this.update(attack, 1.0);
-                        this.update(new Attack(b, a), 1.0);
+                    if (c != a && c != b && !(l.get(c) == ArgumentStatus.OUT || l.get(c) == null)) {
+                        all_out_or_off = false;
                         break;
                     }
+                }
+                if (all_out_or_off) {
+                    this.update(attack, 1.0);
+                    this.update(new Attack(b, a), 1.0);
                 }
 
             } else if (lab_a == ArgumentStatus.OUT && lab_b == ArgumentStatus.IN) {
                 // Rule 4
+                boolean all_not_in = true;
                 for (Argument c: this.theory.getAttackers(a)) {
-                    if (c != a && c != b && l.get(c) != ArgumentStatus.IN) {
-                        this.update(attack, -1.0);
-                        this.update(new Attack(b, a), 1.0);
+                    if (c != a && c != b && l.get(c) == ArgumentStatus.IN) {
+                        all_not_in = false;
                         break;
                     }
                 }
+                if (all_not_in) {
+                    this.update(attack, -1.0);
+                    this.update(new Attack(b, a), 1.0);
+                }
             } else if (a == b && lab_a == ArgumentStatus.UNDECIDED) {
-                //test rule
+                //Rule 5, handles self-attacking arguments
                 this.update(attack,1.0);
             }
 
@@ -134,7 +141,6 @@ public class ImprovedRiveretTheoryLearner {
      * learn random labelings from the given List until no undecided attacks are left in the theory
      * @param labelings a list of labelings
      * @param prune if true, remove discarded attacks after each step
-     * @param threshold TODO description needed
      * @return the learned dung theory
      */
     public DungTheory learnLabelings(ArrayList<Labeling> labelings, boolean prune, int threshold) {

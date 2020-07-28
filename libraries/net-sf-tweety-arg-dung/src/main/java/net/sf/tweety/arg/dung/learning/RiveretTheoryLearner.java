@@ -33,6 +33,9 @@ import java.util.*;
  */
 public class RiveretTheoryLearner {
     private WeightedDungTheory theory;
+    private int cycles;
+    private int MAX_CYCLES;
+
 
     /**
      * variable for tracking the amount of undecided attacks in the theory
@@ -43,7 +46,9 @@ public class RiveretTheoryLearner {
      * initialize learner for the given set of arguments
      * @param arguments a set of arguments
      */
-    public RiveretTheoryLearner(Collection<Argument> arguments) {
+    public RiveretTheoryLearner(Collection<Argument> arguments, int max_cycles) {
+        this.cycles = 0;
+        this.MAX_CYCLES = max_cycles;
         // initialize argumentation graph with all edges with weight 0
         this.theory = new WeightedDungTheory();
         this.theory.addAll(arguments);
@@ -78,24 +83,33 @@ public class RiveretTheoryLearner {
                 // Rule 3
                 Set<Argument> possibleAttackers = this.theory.getAttackers(a);
                 possibleAttackers.addAll(this.theory.getAttackers(b));
+                boolean all_out_or_off = true;
                 for (Argument c: possibleAttackers) {
-                    if (c != a && c != b && (l.get(c) == ArgumentStatus.OUT || l.get(c) == null)) {
-                        this.update(attack, 1.0);
-                        this.update(new Attack(b, a), 1.0);
+                    if (c != a && c != b && !(l.get(c) == ArgumentStatus.OUT || l.get(c) == null)) {
+                        all_out_or_off = false;
                         break;
                     }
+                }
+                if (all_out_or_off) {
+                    this.update(attack, 1.0);
+                    this.update(new Attack(b, a), 1.0);
                 }
 
             } else if (lab_a == ArgumentStatus.OUT && lab_b == ArgumentStatus.IN) {
                 // Rule 4
+                boolean all_out_or_off = true;
                 for (Argument c: this.theory.getAttackers(a)) {
-                    if (c != a && c != b && l.get(c) != ArgumentStatus.IN) {
-                        this.update(attack, -1.0);
-                        this.update(new Attack(b, a), 1.0);
+                    if (c != a && c != b && l.get(c) == ArgumentStatus.IN) {
+                        all_out_or_off = false;
                         break;
                     }
                 }
+                if (all_out_or_off) {
+                    this.update(attack, -1.0);
+                    this.update(new Attack(b, a), 1.0);
+                }
             }
+
         }
     }
 
@@ -122,8 +136,9 @@ public class RiveretTheoryLearner {
      * @param prune if true, remove discarded attacks after each step
      * @return the learned dung theory
      */
-    public DungTheory learnLabelings(ArrayList<Labeling> labelings, boolean prune) {
-        while (this.undecidedAttacks != 0) {
+    public DungTheory learnLabelings(ArrayList<Labeling> labelings, boolean prune, int threshold) {
+        while (this.undecidedAttacks != 0 && this.cycles < this.MAX_CYCLES) {
+            this.cycles++;
             // while there are undecided attacks, take random labeling with equal probability and learn it
             // TODO implement probability distribution for labelings
             int idx = new Random().nextInt(labelings.size());
@@ -131,7 +146,7 @@ public class RiveretTheoryLearner {
             this.learnLabeling(l);
 
             if (prune)
-                this.theory.removeDiscardedAttacks();
+                this.theory.removeDiscardedAttacks(threshold);
         }
         return this.theory.getDungTheory();
     }
@@ -142,6 +157,6 @@ public class RiveretTheoryLearner {
      * @return the learned dung theory
      */
     public DungTheory learnLabelings(ArrayList<Labeling> labelings) {
-        return this.learnLabelings(labelings, false);
+        return this.learnLabelings(labelings, false, 0);
     }
 }
