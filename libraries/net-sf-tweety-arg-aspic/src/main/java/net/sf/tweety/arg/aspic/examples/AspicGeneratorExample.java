@@ -58,8 +58,9 @@ public class AspicGeneratorExample {
 		long totalRandom = 0;
 		long correctRandom = 0;
 		long correctDirectional = 0;
+		RandomAspicArgumentationTheoryGenerator gen = new RandomAspicArgumentationTheoryGenerator(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
 		for(int i = 0; i < repetitions; i++) {
-			AspicArgumentationTheory<PlFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+			AspicArgumentationTheory<PlFormula> theory = gen.next();
 			System.out.println(i + "\t" + theory);
 			PlFormula query = new Proposition("A1");
 			// Naive

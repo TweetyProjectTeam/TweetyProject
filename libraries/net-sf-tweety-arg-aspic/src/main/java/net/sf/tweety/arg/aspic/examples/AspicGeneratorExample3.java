@@ -55,10 +55,11 @@ public class AspicGeneratorExample3 {
 		for(int numberAtoms: l_numberAtoms)
 			for(int numberFormulas: l_numberFormulas)
 				for(int maxLiteralsInPremises: l_maxLiteralsInPremises)
-					for(double percentageStrictRules: l_percentageStrictRules)
+					for(double percentageStrictRules: l_percentageStrictRules) {
+						RandomAspicArgumentationTheoryGenerator gen = new RandomAspicArgumentationTheoryGenerator(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);						
 						for(int i = 0; i < numberOfAFs; i++) {
 							System.out.println(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic");
-							AspicArgumentationTheory<PlFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+							AspicArgumentationTheory<PlFormula> theory = gen.next();
 							writer.write(theory, new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".aspic" ));							
 							//write example query							
 							BufferedWriter writer1 = new BufferedWriter(new FileWriter(new File(pathToFolder + "/rand_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".query" )));
@@ -67,5 +68,6 @@ public class AspicGeneratorExample3 {
 						    writer1.write(sig.get(rand.nextInt(sig.size())).toString());
 						    writer1.close();
 						}		
+					}
 	}
 }

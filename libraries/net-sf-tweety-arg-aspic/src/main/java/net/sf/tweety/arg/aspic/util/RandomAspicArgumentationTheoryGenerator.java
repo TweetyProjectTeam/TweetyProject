@@ -40,16 +40,30 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
  */
 public class RandomAspicArgumentationTheoryGenerator{ 
 
-	/**
-	 * Generates a random ASPIC argumentation theory with <code>numPropositions</code>
+	private int numPropositions;
+	private int numFormulas;
+	private int maxBodyLiterals;
+	private double probStrict;
+		
+	/** Creates a random ASPIC argumentation theory generatir with <code>numPropositions</code>
 	 * and <code>numFormulas</code> formulas (inference rules).
 	 * @param numPropositions the number of propositions
 	 * @param numFormulas the number of formulas
 	 * @param maxBodyLiterals the maximal number of body literals in each rule.
 	 * @param probStrict the probability of each rule being strict.
+	 */
+	public RandomAspicArgumentationTheoryGenerator(int numPropositions, int numFormulas, int maxBodyLiterals, double probStrict) {
+		this.numPropositions = numPropositions;
+		this.numFormulas = numFormulas;
+		this.maxBodyLiterals = maxBodyLiterals;
+		this.probStrict = probStrict;
+	}
+	
+	/**
+	 * Returns an ASPIC argumentation theory
 	 * @return an ASPIC argumentation theory
 	 */
-	public static AspicArgumentationTheory<PlFormula> next(int numPropositions, int numFormulas, int maxBodyLiterals, double probStrict){
+	public AspicArgumentationTheory<PlFormula> next(){
 		Random rand = new Random();
 		PlSignature sig = new PlSignature(numPropositions);
 		List<Proposition> atoms = new ArrayList<Proposition>(sig.toCollection());

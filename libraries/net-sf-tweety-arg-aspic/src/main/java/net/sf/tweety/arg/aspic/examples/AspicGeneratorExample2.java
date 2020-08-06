@@ -45,8 +45,10 @@ public class AspicGeneratorExample2 {
 		ApxWriter apx = new ApxWriter();
 		TgfWriter tgf = new TgfWriter();
 		
+		RandomAspicArgumentationTheoryGenerator gen = new RandomAspicArgumentationTheoryGenerator(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+		
 		for(int i = 0; i < numberOfAFs; i++) {
-			AspicArgumentationTheory<PlFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+			AspicArgumentationTheory<PlFormula> theory = gen.next();
 			DungTheory aaf = theory.asDungTheory(true);
 			System.out.println(aaf);
 			apx.write(aaf, new File(pathToExportFolder + "/aspic_" + numberAtoms + "_" + numberFormulas + "_" + maxLiteralsInPremises + "_" + percentageStrictRules + "__" + i + ".apx" ));

@@ -62,8 +62,9 @@ public class DirectionalReasonerTest {
 		long totalArgsModuleBased = 0;
 		long totalArgsDirectional = 0;
 		long totalTrue = 0;
+		RandomAspicArgumentationTheoryGenerator gen = new RandomAspicArgumentationTheoryGenerator(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);		
 		for(int i = 0; i < repetitions; i++) {
-			AspicArgumentationTheory<PlFormula> theory = RandomAspicArgumentationTheoryGenerator.next(numberAtoms, numberFormulas, maxLiteralsInPremises, percentageStrictRules);
+			AspicArgumentationTheory<PlFormula> theory = gen.next();
 			System.out.println(i + "\t" + theory);
 			PlFormula query = new Proposition("A1");
 			
