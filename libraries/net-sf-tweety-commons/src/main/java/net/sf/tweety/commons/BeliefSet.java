@@ -328,6 +328,15 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	 */
 	@Override
 	public String toString() {
+		return this.toString(false);
+	}
+	
+	/**
+	 * returns a string representation of this belief set
+	 * @param showSignature whether to show the underlying signature
+	 * @return a string representation of this belief set
+	 */
+	public String toString(boolean showSignature) {
 		String s = "{ ";
 		Iterator<T> it = this.iterator();
 		if(it.hasNext())
@@ -335,7 +344,8 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 		while(it.hasNext())
 			s += ", " + it.next();
 		s += " }";
-		s += "[Signature: " + signature + "]";
+		if(showSignature)
+			s += "[Signature: " + signature + "]";
 		return s;
 	}
 }
