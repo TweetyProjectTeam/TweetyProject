@@ -29,7 +29,6 @@ import net.sf.tweety.arg.prob.reasoner.MonteCarloPafReasoner;
 import net.sf.tweety.arg.prob.reasoner.SimplePafReasoner;
 import net.sf.tweety.arg.prob.syntax.ProbabilisticArgumentationFramework;
 import net.sf.tweety.arg.rankings.semantics.NumericalArgumentRanking;
-import net.sf.tweety.commons.ModelProvider;
 import net.sf.tweety.math.probability.Probability;
 
 /**
@@ -37,7 +36,7 @@ import net.sf.tweety.math.probability.Probability;
  * 
  * @author Matthias Thimm
  */
-public class ProbabilisticRankingReasoner implements ModelProvider<Argument,DungTheory,NumericalArgumentRanking>{
+public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking>{
 
 	/**
 	 * Number of trials for the used monte carlo search (this is a factor
@@ -100,6 +99,7 @@ public class ProbabilisticRankingReasoner implements ModelProvider<Argument,Dung
 		else
 			reasoner = new MonteCarloPafReasoner(this.sem, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
+		ranking.sortingType = NumericalArgumentRanking.SortingType.DESCENDING;
 		for(Argument a: aaf)
 			ranking.put(a, reasoner.query(paf,a));
 		return ranking;

@@ -32,8 +32,8 @@ import net.sf.tweety.commons.QuantitativeReasoner;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * This class contains common characteristics for deductive argumentation
@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractDeductiveArgumentationReasoner implements QuantitativeReasoner<DeductiveKnowledgeBase,PlFormula> {
 
 	/** Logger. */
-	static private Logger log = LoggerFactory.getLogger(AbstractDeductiveArgumentationReasoner.class);
+	//static private Logger log = LoggerFactory.getLogger(AbstractDeductiveArgumentationReasoner.class);
 	
 	/** The categorizer used for reasoning. */
 	private Categorizer categorizer;
@@ -90,26 +90,26 @@ public abstract class AbstractDeductiveArgumentationReasoner implements Quantita
 		// 5.) categorize each pro tree
 		List<Double> proCategorization = new ArrayList<Double>();
 		for(ArgumentTree argTree: proTrees){
-			log.trace("Argument tree for " + argTree.getRoot() + "\n" + argTree.prettyPrint());
+			//log.trace("Argument tree for " + argTree.getRoot() + "\n" + argTree.prettyPrint());
 			//System.out.println("Argument tree for " + argTree.getRoot() + "\n" + argTree.prettyPrint());
 			double val = this.categorizer.categorize(argTree);
 			proCategorization.add(val);
-			log.trace("Categorization " + val);
+			//log.trace("Categorization " + val);
 			//System.out.println("Categorization " + val);
 		}
 		// 6.) categorize each con tree
 		List<Double> conCategorization = new ArrayList<Double>();
 		for(ArgumentTree argTree: conTrees){
-			log.trace("Argument tree for " + argTree.getRoot() + "\n" + argTree.prettyPrint());
+			//log.trace("Argument tree for " + argTree.getRoot() + "\n" + argTree.prettyPrint());
 			//System.out.println("Argument tree for " + argTree.getRoot() + "\n" + argTree.prettyPrint());
 			double val = this.categorizer.categorize(argTree);
 			conCategorization.add(val);
-			log.trace("Categorization " + val);
+			//log.trace("Categorization " + val);
 			//System.out.println("Categorization " + val);
 		}
 		// 7.) evaluate using the accumulator
 		Double result = this.accumulator.accumulate(proCategorization, conCategorization);
-		log.trace("Result for " + f + ": " + result);
+		//log.trace("Result for " + f + ": " + result);
 		// 8.) prepare answer
 		return result;
 	}
