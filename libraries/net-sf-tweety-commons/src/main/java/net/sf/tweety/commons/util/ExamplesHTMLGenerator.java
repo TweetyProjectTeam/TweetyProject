@@ -101,9 +101,10 @@ public class ExamplesHTMLGenerator {
 	 * @throws IOException
 	 */
 	private static String generateHTMLOverview(String tweety_libraries_dir) throws IOException {
-		if (tweety_libraries_dir.equals(""))
+		if (tweety_libraries_dir.isBlank()) {
 			tweety_libraries_dir = System.getProperty("user.dir");
-		tweety_libraries_dir = tweety_libraries_dir.substring(0, tweety_libraries_dir.lastIndexOf("/"));
+			tweety_libraries_dir = tweety_libraries_dir.substring(0, tweety_libraries_dir.lastIndexOf("/"));
+		}
 
 		// variables that will be used to replace the keywords of the same names
 		// in the table of contents HTML template
@@ -126,7 +127,8 @@ public class ExamplesHTMLGenerator {
 		String OTHER_LIBRARIES = "";
 
 		File[] tweety_dirs = new File(tweety_libraries_dir).listFiles();
-		//this map is used to store and sort the libraries and their corresponding examples and resources
+		// this map is used to store and sort the libraries and their corresponding
+		// examples and resources
 		TreeMap<String, Pair<String, String>> library_items = new TreeMap<String, Pair<String, String>>();
 		if (tweety_dirs != null) {
 			for (File child : tweety_dirs) {
@@ -241,7 +243,7 @@ public class ExamplesHTMLGenerator {
 		} else
 			throw new IllegalArgumentException(tweety_libraries_dir + " is not a valid Tweety directory");
 
-		//Put collected libraries together
+		// Put collected libraries together
 		for (Map.Entry<String, Pair<String, String>> i : library_items.entrySet()) {
 			String MODULEPATH = i.getKey();
 			String item = i.getValue().getFirst();
@@ -296,6 +298,9 @@ public class ExamplesHTMLGenerator {
 	 */
 	public static void printExamplesToHtmlFile(String path) throws IOException {
 		FileWriter writer = new FileWriter(path + "examples.html");
+		// the path parameter can be left empty if this class is part of the same local
+		// Tweety repository that the generator is supposed to generate the overview from
+		// otherwise, use the path to a Tweety 'libraries' folder
 		writer.write(generateHTMLOverview(""));
 		writer.close();
 	}
