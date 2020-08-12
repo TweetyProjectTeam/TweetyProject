@@ -29,7 +29,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <name>Tweety (DL)</name>
+  <name>Tweety (Description Logics)</name>
   <url>http://sourceforge.net/projects/tweety/</url>
   <groupId>net.sf.tweety.logics</groupId>
   <properties>

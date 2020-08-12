@@ -5,7 +5,7 @@
   <artifactId>cl</artifactId>
   <packaging>jar</packaging>
 
-  <name>Tweety (Conditional)</name>
+  <name>Tweety (Conditional Logic)</name>
   <url>http://sourceforge.net/projects/tweety/</url>
 
   <properties>
