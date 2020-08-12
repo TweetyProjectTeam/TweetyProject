@@ -27,6 +27,11 @@ import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
+/**
+ * Example code illustrating the MCSC inconsistency measure.
+ * 
+ * @author Matthias Thimm
+ */
 public class McscInconsistencyMeasureExample {
 
 	public static void main(String[] args) throws ParserException, IOException{

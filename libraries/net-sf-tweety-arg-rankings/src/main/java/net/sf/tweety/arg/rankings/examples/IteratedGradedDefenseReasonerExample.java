@@ -24,7 +24,7 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.arg.rankings.reasoner.IteratedGradedDefenseReasoner;
 
 /**
- * Example code for using the iterated graded semantics by Grossi/Modgil
+ * Example code for using the iterated graded semantics by Grossi/Modgil.
  * 
  * @author Matthias Thimm
  *

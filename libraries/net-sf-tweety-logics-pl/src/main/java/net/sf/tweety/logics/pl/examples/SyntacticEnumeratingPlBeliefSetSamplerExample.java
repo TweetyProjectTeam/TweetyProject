@@ -24,6 +24,10 @@ import java.io.IOException;
 import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.SyntacticEnumeratingIterator;
 
+/**
+ * Illustrates the use of the belief base enumerators.
+ * @author Matthias Thimm
+ */
 public class SyntacticEnumeratingPlBeliefSetSamplerExample {
 
 	public static void main(String[] args) throws IOException{

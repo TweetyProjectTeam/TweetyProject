@@ -25,6 +25,9 @@ import net.sf.tweety.arg.bipolar.syntax.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Examples for evidential argumentation frameworks.
+ */
 public class EvidentialAcceptability {
     public static void main(String[] args) {
         EvidentialArgumentationFramework et = new EvidentialArgumentationFramework();

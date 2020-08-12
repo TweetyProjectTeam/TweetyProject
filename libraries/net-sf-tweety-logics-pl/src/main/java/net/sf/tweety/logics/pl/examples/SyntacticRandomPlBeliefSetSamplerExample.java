@@ -22,6 +22,10 @@ import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.SyntacticRandomSampler;
 import net.sf.tweety.math.probability.Probability;
 
+/**
+ * Illustrates the use of the belief base enumerators.
+ * @author Matthias Thimm
+ */
 public class SyntacticRandomPlBeliefSetSamplerExample {
 
 	public static void main(String[] args){

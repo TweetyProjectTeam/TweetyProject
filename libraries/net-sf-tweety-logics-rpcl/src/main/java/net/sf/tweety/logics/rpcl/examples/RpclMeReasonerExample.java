@@ -30,6 +30,9 @@ import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.opt.solver.OctaveSqpSolver;
 import net.sf.tweety.math.probability.*;
 
+/**
+ *  Example code illustrating relational probabilistic conditional logic and reasoning with it.
+ */
 public class RpclMeReasonerExample {
 	public static void main(String[] args){
 		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;

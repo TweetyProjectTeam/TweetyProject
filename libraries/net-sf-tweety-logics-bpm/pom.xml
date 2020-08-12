@@ -28,7 +28,7 @@
 			<version>1.17-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-	<name>Tweety (BPM)</name>
+	<name>Tweety (Business Process Modelling)</name>
 	<url>http://sourceforge.net/projects/tweety/</url>
 	<groupId>net.sf.tweety.logics</groupId>
 	<properties>

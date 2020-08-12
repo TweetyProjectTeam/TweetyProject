@@ -30,7 +30,8 @@ import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- * Example code for working with divisions
+ * Example code for working with divisions.
+ * 
  * @author Matthias Thimm
  */
 public class DivisionExample {

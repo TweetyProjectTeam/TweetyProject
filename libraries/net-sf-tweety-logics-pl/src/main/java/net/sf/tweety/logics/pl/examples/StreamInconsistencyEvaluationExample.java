@@ -52,6 +52,11 @@ import net.sf.tweety.math.opt.solver.Solver;
 //import net.sf.tweety.logics.pl.util.MiSampler;
 import net.sf.tweety.math.opt.solver.LpSolve;
 
+/**
+ * Illustrates stream-based inconsistency measurement.
+ * @author Matthias Thimm
+ * 
+ */
 public class StreamInconsistencyEvaluationExample {
 	
 	public static final int 												SIGNATURE_SIZE				= 60;//30;

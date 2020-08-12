@@ -42,8 +42,8 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class implements an example for the Lagrange Solver
- * it is natively implemented
+ * This class implements an example for the Lagrange Solver.
+ * It is natively implemented.
  * @author Sebastian Franke
  */
 public class LagrangeSolverEx {

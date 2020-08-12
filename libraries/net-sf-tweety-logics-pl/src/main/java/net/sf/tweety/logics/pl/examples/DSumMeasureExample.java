@@ -34,6 +34,11 @@ import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.PlSignature;
 
+/**
+ * Example code illustrating the distance-based inconsistency measures DSum, DMax and DHit.
+ * 
+ * @author Matthias Thimm
+ */
 public class DSumMeasureExample {
 
 	public static void main(String[] args) throws ParserException, IOException{

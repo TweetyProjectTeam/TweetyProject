@@ -26,6 +26,10 @@ import net.sf.tweety.logics.pcl.analysis.*;
 import net.sf.tweety.logics.pcl.syntax.*;
 import net.sf.tweety.math.opt.rootFinder.OptimizationRootFinder;
 
+/**
+ * Example code illustrating the use of inconsistency measures and repairing approaches.
+ *
+ */
 public class AnalysisExample {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		//TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;

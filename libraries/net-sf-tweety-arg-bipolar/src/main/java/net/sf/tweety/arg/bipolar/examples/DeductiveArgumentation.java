@@ -30,6 +30,9 @@ import net.sf.tweety.arg.dung.syntax.DungTheory;
 import net.sf.tweety.logics.pl.sat.Sat4jSolver;
 import net.sf.tweety.logics.pl.sat.SatSolver;
 
+/**
+ * Examples for constructing deductive argumentation frameworks and computing their extensions.
+ */
 public class DeductiveArgumentation {
     public static void main(String[] args) {
         // Example from Cayrol, Lagasquie-Schiex. Bipolarity in argumentation graphs: Towards a better understanding. 2013

@@ -30,6 +30,9 @@ import net.sf.tweety.logics.cl.syntax.Conditional;
 import net.sf.tweety.logics.pl.syntax.Negation;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 
+/**
+ * Compares reasoning with different reasoners.
+ */
 public class ReasonerExample {
 
 	private static boolean run = true;

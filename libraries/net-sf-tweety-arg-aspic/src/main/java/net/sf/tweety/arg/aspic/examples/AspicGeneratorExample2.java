@@ -30,7 +30,7 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This code shows the use of the ASPIC theory generator. It generates some random ASPIC
- * theories, constructs the corresponding AF graphs, and writes them to a specific folder
+ * theories, constructs the corresponding AF graphs, and writes them to a specific folder.
  * 
  * @author Matthias Thimm
  */

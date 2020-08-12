@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * 
- * For testing purposes.
+ * Shows how to construct and query a deductive knowledge base.
  * 
  * @author Matthias Thimm
  *

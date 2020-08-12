@@ -26,33 +26,32 @@ import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolverCombinatoric
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;
 
+/**
+ * More KnapSack tests.
+ * 
+ * @author Sebastian Franke
+ */
 public class KnapSacktester3 {
-	
-	
+
 	public static void main(String args[]) {
-		
-		
-		//define the maximum weight
+
+		// define the maximum weight
 		FloatConstant maxl = new FloatConstant(15);
 
-		//create a list of items defined by weight and value
-		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();	
-		for(int i = 0; i < 10; i++) {
+		// create a list of items defined by weight and value
+		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();
+		for (int i = 0; i < 10; i++) {
 			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb();
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			x.add(new IntegerConstant((int) (Math.random() * 10) + 1));
+			x.add(new IntegerConstant((int) (Math.random() * 10) + 1));
 			elems.add(x);
 		}
 		KnapSack test = new KnapSack(elems, maxl);
 
-		
-		//solve the problem with a genetic optimization, min 100000 iterations
-		SimpleGeneticOptimizationSolverCombinatorics ts = new SimpleGeneticOptimizationSolverCombinatorics(test, 100, 200, 20, 5000, 0.001);
+		// solve the problem with a genetic optimization, min 100000 iterations
+		SimpleGeneticOptimizationSolverCombinatorics ts = new SimpleGeneticOptimizationSolverCombinatorics(test, 100,
+				200, 20, 5000, 0.001);
 		System.out.println("MySol: " + ts.solve(new ArrayList<ElementOfCombinatoricsProb>()));
-		
-		
-			
-		
+
 	}
 }
-

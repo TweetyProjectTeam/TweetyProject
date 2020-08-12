@@ -29,7 +29,7 @@ import net.sf.tweety.arg.deductive.syntax.SimplePlLogicDeductiveKnowledgebase;
 import net.sf.tweety.commons.ParserException;
 
 /**
- * For testing purpose only
+ * Example code for simple logic argumentation.
  * 
  * @author Federico Cerutti (federico.cerutti@acm.org)
  *

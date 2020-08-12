@@ -31,7 +31,10 @@ import net.sf.tweety.logics.ml.reasoner.SPASSMlReasoner;
 import net.sf.tweety.logics.ml.syntax.MlBeliefSet;
 
 /**
- * More examples for testing ModalParser and ModalReasoner
+ * More examples for testing ModalParser and ModalReasoner. Shows how to
+ * construct a modal logic knowledge base programmatically and how to query it
+ * using the SPASS reasoner.
+ * 
  * @author Matthias Thimm
  */
 public class MlExample2 {
@@ -39,22 +42,22 @@ public class MlExample2 {
 		MlBeliefSet bs = new MlBeliefSet();
 		MlParser parser = new MlParser();
 		FolSignature sig = new FolSignature();
-		sig.add(new Predicate("p",0));
-		sig.add(new Predicate("q",0));
-		sig.add(new Predicate("r",0));
+		sig.add(new Predicate("p", 0));
+		sig.add(new Predicate("q", 0));
+		sig.add(new Predicate("r", 0));
 		parser.setSignature(sig);
 		bs.add((RelationalFormula) parser.parseFormula("!(<>(p))"));
 		bs.add((RelationalFormula) parser.parseFormula("p || r"));
 		bs.add((RelationalFormula) parser.parseFormula("!r || [](q && r)"));
 		bs.add((RelationalFormula) parser.parseFormula("[](r && <>(p || q))"));
 		bs.add((RelationalFormula) parser.parseFormula("!p && !q"));
-		System.out.println("Modal knowledge base: " + bs);		
-		AbstractMlReasoner reasoner = new SPASSMlReasoner("/add/path/to/SPASS");		
-		System.out.println("[](!p)      " + reasoner.query(bs,(FolFormula) parser.parseFormula("[](!p)")));
-		System.out.println("<>(q || r)  " + reasoner.query(bs,(FolFormula) parser.parseFormula("<>(q || r)")));
-		System.out.println("p           " + reasoner.query(bs,(FolFormula) parser.parseFormula("p")));
-		System.out.println("r           " + reasoner.query(bs,(FolFormula) parser.parseFormula("r")));
-		System.out.println("[](r)       " + reasoner.query(bs,(FolFormula) parser.parseFormula("[](r)")));
-		System.out.println("[](q)       " + reasoner.query(bs,(FolFormula) parser.parseFormula("[](q)")));
+		System.out.println("Modal knowledge base: " + bs);
+		AbstractMlReasoner reasoner = new SPASSMlReasoner("/add/path/to/SPASS");
+		System.out.println("[](!p)      " + reasoner.query(bs, (FolFormula) parser.parseFormula("[](!p)")));
+		System.out.println("<>(q || r)  " + reasoner.query(bs, (FolFormula) parser.parseFormula("<>(q || r)")));
+		System.out.println("p           " + reasoner.query(bs, (FolFormula) parser.parseFormula("p")));
+		System.out.println("r           " + reasoner.query(bs, (FolFormula) parser.parseFormula("r")));
+		System.out.println("[](r)       " + reasoner.query(bs, (FolFormula) parser.parseFormula("[](r)")));
+		System.out.println("[](q)       " + reasoner.query(bs, (FolFormula) parser.parseFormula("[](q)")));
 	}
 }

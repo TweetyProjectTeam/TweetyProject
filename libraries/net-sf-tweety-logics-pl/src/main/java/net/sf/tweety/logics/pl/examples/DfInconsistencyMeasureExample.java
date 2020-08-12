@@ -29,7 +29,6 @@ import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.func.FracAggrFunction;
 
-
 /**
  * Example code illustrating the Df inconsistency measure.
  * @author Matthias Thimm

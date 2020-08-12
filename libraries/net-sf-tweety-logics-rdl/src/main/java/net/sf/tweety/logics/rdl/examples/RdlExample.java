@@ -31,7 +31,8 @@ import net.sf.tweety.logics.rdl.syntax.DefaultRule;
 import net.sf.tweety.logics.rdl.syntax.DefaultTheory;
 
 /**
- * RDL Test
+ *  Example code illustrating Reiter's default logic.
+ *  
  * @author Nils Geilen
  *
  */

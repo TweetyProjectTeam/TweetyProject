@@ -23,6 +23,9 @@ package net.sf.tweety.arg.bipolar.examples;
 import net.sf.tweety.arg.bipolar.reasoner.evidential.*;
 import net.sf.tweety.arg.bipolar.syntax.*;
 
+/**
+ * More examples for evidential argumentation frameworks.
+ */
 public class EvidentialArgumentation {
     public static void main(String[] args) {
         // Example from Polberg, Oren. Revisiting Support in Abstract Argumentation Systems. 2014

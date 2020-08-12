@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * example on how to use the OrderingSemanticsReasoner
+ * Example on how to use the OrderingSemanticsReasoner.
  *
  * @author Lars Bengel
  */

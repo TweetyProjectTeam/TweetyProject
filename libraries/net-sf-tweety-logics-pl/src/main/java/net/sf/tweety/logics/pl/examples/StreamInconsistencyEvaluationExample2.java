@@ -54,6 +54,11 @@ import net.sf.tweety.math.func.MaxFunction;
 import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.opt.solver.LpSolve;
 
+/**
+ * Illustrates stream-based inconsistency measurement.
+ * @author Matthias Thimm
+ * 
+ */
 public class StreamInconsistencyEvaluationExample2 {
 	
 	public static final int 												SIGNATURE_SIZE				= 60;//30;

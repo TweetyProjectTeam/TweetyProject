@@ -33,7 +33,7 @@ import net.sf.tweety.logics.pl.parser.PlParser;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
- * ASPIC example code.
+ * ASPIC example code that shows how to parse an ASPIC file and ask queries.
  * 
  * @author Matthias Thimm
  *

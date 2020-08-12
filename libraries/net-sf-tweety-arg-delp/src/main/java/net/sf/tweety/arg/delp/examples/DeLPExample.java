@@ -29,7 +29,8 @@ import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 
 /**
- * DeLP example code
+ * Shows how to parse and query a DeLP program.
+ * 
  * @author Matthias Thimm
  *
  */

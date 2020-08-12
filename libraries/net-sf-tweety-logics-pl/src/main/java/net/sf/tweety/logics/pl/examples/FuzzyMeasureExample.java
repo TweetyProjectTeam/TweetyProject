@@ -27,6 +27,11 @@ import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.math.func.fuzzy.ProductNorm;
 
+/**
+ * Example code illustrating fuzzy logic-based inconsistency measures.
+ * 
+ * @author Matthias Thimm
+ */
 public class FuzzyMeasureExample {
 	public static void main(String[] args) throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();

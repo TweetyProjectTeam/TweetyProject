@@ -29,7 +29,7 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
- * ASPIC example code.
+ * ASPIC example code that shows how to construct an ASPIC theory programmatically.
  * 
  * @author Matthias Thimm
  *

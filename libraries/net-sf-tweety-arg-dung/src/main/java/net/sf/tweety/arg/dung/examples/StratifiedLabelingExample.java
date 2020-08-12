@@ -26,7 +26,7 @@ import net.sf.tweety.arg.dung.syntax.Attack;
 import net.sf.tweety.arg.dung.syntax.DungTheory;
 
 /**
- * Example code for using stratified labelings by Thimm/Kern-Isberner
+ * Example code for using stratified labelings by Thimm/Kern-Isberner.
  * 
  * @author Matthias Thimm
  *

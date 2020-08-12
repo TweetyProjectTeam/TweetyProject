@@ -24,6 +24,9 @@ import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.graphs.SimpleNode;
 import net.sf.tweety.graphs.util.GraphUtil;
 
+/**
+ * Another example that shows how to construct graphs programmatically.
+ */
 public class GraphExample2 {
 	public static void main(String[] args) {
 		Graph<SimpleNode> g = new DefaultGraph<SimpleNode>();

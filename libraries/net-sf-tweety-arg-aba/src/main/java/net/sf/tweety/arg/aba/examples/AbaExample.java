@@ -38,7 +38,8 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
- * Shows some simple code for working with ABA
+ * Shows some simple code for working with ABA, including how to parse an ABA file and how to ask queries.
+ * 
  * @author Matthias Thimm
  *
  */

@@ -27,22 +27,24 @@ import net.sf.tweety.logics.pl.sat.SatSolver;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
+/**
+ * Example code illustrating the use of the SAT solver Lingeling.
+ * @author Matthias Thimm
+ */
 public class LingelingExample {
-public static void main(String[] args) throws ParserException, IOException{
-		
-		
+	public static void main(String[] args) throws ParserException, IOException {
+
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		PlParser parser = new PlParser();
-		beliefSet.add((PlFormula)parser.parseFormula("a || b || c"));
-		beliefSet.add((PlFormula)parser.parseFormula("!a || b && d"));
-		beliefSet.add((PlFormula)parser.parseFormula("a"));
-		beliefSet.add((PlFormula)parser.parseFormula("!c"));
-		
+		beliefSet.add((PlFormula) parser.parseFormula("a || b || c"));
+		beliefSet.add((PlFormula) parser.parseFormula("!a || b && d"));
+		beliefSet.add((PlFormula) parser.parseFormula("a"));
+		beliefSet.add((PlFormula) parser.parseFormula("!c"));
+
 		System.out.println(beliefSet);
-		
+
 		SatSolver solver = new LingelingSolver("/Users/mthimm/Projects/misc_bins/lingeling");
-		
-		
+
 		System.out.println(solver.getWitness(beliefSet));
 	}
 }

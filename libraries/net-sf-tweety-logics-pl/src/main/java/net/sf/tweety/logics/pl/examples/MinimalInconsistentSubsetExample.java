@@ -29,6 +29,11 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.logics.pl.syntax.PlSignature;
 import net.sf.tweety.logics.pl.util.CnfSampler;
 
+/**
+ * Example code illustrating the use of MUS enumerators.
+ * @author Matthias Thimm
+ *
+ */
 public class MinimalInconsistentSubsetExample {
 
 	public static void main(String[] args) throws ParserException, IOException{

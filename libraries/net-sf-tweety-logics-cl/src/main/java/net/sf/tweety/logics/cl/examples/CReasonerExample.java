@@ -22,6 +22,10 @@ import net.sf.tweety.logics.cl.reasoner.SimpleCReasoner;
 import net.sf.tweety.logics.cl.syntax.*;
 import net.sf.tweety.logics.pl.syntax.*;
 
+/**
+ * Shows how to construct a conditional logic knowledge base programmatically and how to query it using the C-reasoner.
+ * 
+ */
 public class CReasonerExample {
 	public static void main(String[] args){
 		Proposition f = new Proposition("f");

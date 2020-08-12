@@ -29,6 +29,11 @@ import net.sf.tweety.machinelearning.TrainingSet;
 import net.sf.tweety.machinelearning.svm.MultiClassRbfTrainer;
 import net.sf.tweety.machinelearning.svm.SupportVectorMachine;
 
+/**
+ * Illustrates the use of support vector machine learning.
+ * @author Matthias Thimm
+ *
+ */
 public class SvmExample {
 
 	public static void main(String[] args) throws IOException{

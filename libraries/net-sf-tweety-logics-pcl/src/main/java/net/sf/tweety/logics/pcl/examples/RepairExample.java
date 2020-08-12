@@ -26,6 +26,9 @@ import net.sf.tweety.logics.pcl.parser.PclParser;
 import net.sf.tweety.logics.pcl.syntax.PclBeliefSet;
 import net.sf.tweety.logics.pcl.syntax.ProbabilisticConditional;
 
+/**
+ * Example code illustrating the use of repairing approaches.
+ */
 public class RepairExample {
 
 	public static void main(String[] args) throws ParserException, IOException{

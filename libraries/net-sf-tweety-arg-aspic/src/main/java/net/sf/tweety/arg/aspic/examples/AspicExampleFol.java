@@ -33,7 +33,7 @@ import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * ASPIC example code for fol formulas.
+ * Example code for using ASPIC with first-order-logic formulas.
  * 
  * @author Anna Gessler
  *

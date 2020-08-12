@@ -35,7 +35,7 @@ import net.sf.tweety.logics.pl.sat.MaxSatSolver;
 import net.sf.tweety.logics.pl.sat.OpenWboSolver;
 
 /**
- * This example shows how the different acceptability reasoner work.
+ * This example shows how the different acceptability reasoners work.
  * 
  * @author Matthias Thimm
  */

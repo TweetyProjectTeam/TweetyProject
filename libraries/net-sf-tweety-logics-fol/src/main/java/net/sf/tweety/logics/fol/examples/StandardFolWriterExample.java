@@ -34,7 +34,8 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 import net.sf.tweety.logics.fol.writer.StandardFolWriter;
 
 /**
- * Shows how to use the StandardFolWriter
+ * Shows how to use the StandardFolWriter.
+ * 
  * @author Matthias Thimm
  *
  */

@@ -45,78 +45,91 @@ import net.sf.tweety.arg.dung.util.DefaultDungTheoryGenerator;
 import net.sf.tweety.arg.dung.util.DungTheoryGenerationParameters;
 import net.sf.tweety.arg.dung.util.DungTheoryGenerator;
 
+/**
+ * 
+ * Shows how a simulation of a multi-agent system can be set up. It defines a
+ * dialogue game between different agents, in particular one based on an action
+ * selection strategy using lotteries.
+ * 
+ * @author Matthias Thimm
+ * 
+ */
 public class LotteryDialogueTest {
-	
-	//Global parameters for simulation
+
+	// Global parameters for simulation
 	public static int frameworkSize;
 	public static double attackProbability;
 	public static boolean enforceTreeShape;
-	public static int timeout = 60*60*72; // timeout of 72 hours
-	
+	public static int timeout = 60 * 60 * 72; // timeout of 72 hours
+
 	public static int numberOfRunsEach = 100;
-	
+
 	public static Semantics semantics = Semantics.GROUNDED_SEMANTICS;
-	
-	//to ensure comparability
+
+	// to ensure comparability
 	public static long RANDOM_SEED1 = 435844589l;
 	public static long RANDOM_SEED2 = 96421389l;
 	public static long RANDOM_SEED3 = 6477568l;
 	public static long RANDOM_SEED4 = 2136455579l;
-	
-	public static void runSimulation(boolean baseline) throws ProtocolTerminatedException{
-		// We generate Dung theories with the given number of arguments and attack probability.
+
+	public static void runSimulation(boolean baseline) throws ProtocolTerminatedException {
+		// We generate Dung theories with the given number of arguments and attack
+		// probability.
 		// In every theory, the argument under consideration is guaranteed to
 		// be in the grounded extension (so under perfect information, the PRO
 		// agent should always win)
 		DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
 		params.attackProbability = LotteryDialogueTest.attackProbability;
-		params.numberOfArguments = LotteryDialogueTest.frameworkSize;	
-		params.enforceTreeShape = LotteryDialogueTest.enforceTreeShape;	
+		params.numberOfArguments = LotteryDialogueTest.frameworkSize;
+		params.enforceTreeShape = LotteryDialogueTest.enforceTreeShape;
 		DungTheoryGenerator gen = new DefaultDungTheoryGenerator(params);
 		gen.setSeed(LotteryDialogueTest.RANDOM_SEED1);
-		
+
 		// MAS generator
-		MultiAgentSystemGenerator<AbstractLotteryAgent,LotteryGameSystem> masGenerator = new LotteryGameGenerator(gen,semantics);
+		MultiAgentSystemGenerator<AbstractLotteryAgent, LotteryGameSystem> masGenerator = new LotteryGameGenerator(gen,
+				semantics);
 		masGenerator.setSeed(GroundedTest.RANDOM_SEED2);
-		List<AgentGenerator<AbstractLotteryAgent,LotteryGameSystem>> agentGenerators = new ArrayList<AgentGenerator<AbstractLotteryAgent,LotteryGameSystem>>();
-			
-		if(baseline)
+		List<AgentGenerator<AbstractLotteryAgent, LotteryGameSystem>> agentGenerators = new ArrayList<AgentGenerator<AbstractLotteryAgent, LotteryGameSystem>>();
+
+		if (baseline)
 			agentGenerators.add(new UtilityBasedAgentGenerator("BASE"));
 		else
 			agentGenerators.add(new ProbabilisticLotteryAgentGenerator("PRO"));
 		agentGenerators.add(new DummyAgentGenerator("AUDIENCE"));
 		agentGenerators.get(0).setSeed(GroundedTest.RANDOM_SEED3);
-		agentGenerators.get(1).setSeed(GroundedTest.RANDOM_SEED4);			
-			
-		ProtocolGenerator<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem> protGenerator = new DirectGameProtocolGenerator();
-		final GameSimulator<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem> sim = new GameSimulator<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem>(masGenerator,protGenerator,agentGenerators);
+		agentGenerators.get(1).setSeed(GroundedTest.RANDOM_SEED4);
+
+		ProtocolGenerator<DirectGameProtocol, AbstractLotteryAgent, LotteryGameSystem> protGenerator = new DirectGameProtocolGenerator();
+		final GameSimulator<DirectGameProtocol, AbstractLotteryAgent, LotteryGameSystem> sim = new GameSimulator<DirectGameProtocol, AbstractLotteryAgent, LotteryGameSystem>(
+				masGenerator, protGenerator, agentGenerators);
 		// Run iterated simulations and show aggregated results (with timeout)
-		Callable<String> callee = new Callable<String>(){
-		    @Override
-		    public String call() throws Exception {
-		    	SimulationResult<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem> result = sim.run(LotteryDialogueTest.numberOfRunsEach);
+		Callable<String> callee = new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				SimulationResult<DirectGameProtocol, AbstractLotteryAgent, LotteryGameSystem> result = sim
+						.run(LotteryDialogueTest.numberOfRunsEach);
 				System.out.println(result.csvDisplay());
-		        return null;
-		    }
-		};			
+				return null;
+			}
+		};
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-	    Future<String> future = executor.submit(callee);
-	    try {
-	    	future.get(LotteryDialogueTest.timeout, TimeUnit.SECONDS);	            
-	    } catch (Exception e) {
-	        System.out.println("Aborted...");
-	        e.printStackTrace();
-	    }
-	    executor.shutdownNow();
+		Future<String> future = executor.submit(callee);
+		try {
+			future.get(LotteryDialogueTest.timeout, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			System.out.println("Aborted...");
+			e.printStackTrace();
+		}
+		executor.shutdownNow();
 	}
-	
-	public static void main(String[] args) throws ProtocolTerminatedException{
+
+	public static void main(String[] args) throws ProtocolTerminatedException {
 		LotteryDialogueTest.attackProbability = 0.3;
-		LotteryDialogueTest.frameworkSize = 10;		
+		LotteryDialogueTest.frameworkSize = 10;
 		LotteryDialogueTest.enforceTreeShape = true;
-		//baseline
-		//LotteryDialogueTest.runSimulation(true);
-		//actual agent
+		// baseline
+		// LotteryDialogueTest.runSimulation(true);
+		// actual agent
 		LotteryDialogueTest.runSimulation(false);
 	}
 }

@@ -25,6 +25,9 @@ import net.sf.tweety.graphs.SimpleNode;
 import net.sf.tweety.graphs.util.GraphUtil;
 import net.sf.tweety.math.ComplexNumber;
 
+/**
+ * Example that shows how to construct graphs programmatically.
+ */
 public class GraphExample {
 	
 	public void run(){

@@ -40,8 +40,8 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class implements an example for the Genetic LpSolver
- * it uses LpSolve Version 5.5.2.5 (https://sourceforge.net/projects/lpsolve/)
+ * This class implements an example for the Genetic LpSolver.
+ * It uses LpSolve Version 5.5.2.5 (https://sourceforge.net/projects/lpsolve/)
  * @author Sebastian Franke
  */
 public class LpSolverEx {

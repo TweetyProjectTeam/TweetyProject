@@ -30,6 +30,9 @@ import net.sf.tweety.logics.rpcl.reasoner.RpclMeReasoner;
 import net.sf.tweety.logics.rpcl.semantics.AggregatingSemantics;
 import net.sf.tweety.logics.rpcl.syntax.RpclBeliefSet;
 
+/**
+ *  Example code illustrating relational probabilistic conditional logic and reasoning with it.
+ */
 public class RpclMeReasonerExample2 {
 
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{

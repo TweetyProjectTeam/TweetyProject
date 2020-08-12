@@ -5,7 +5,7 @@
   <artifactId>fol</artifactId>
   <packaging>jar</packaging>
 
-  <name>Tweety (FOL)</name>
+  <name>Tweety (First-Order-Logic)</name>
   <url>http://sourceforge.net/projects/tweety/</url>
 
   <properties>

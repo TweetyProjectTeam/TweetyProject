@@ -29,7 +29,11 @@ import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
-
+/**
+ * Example code illustrating the Pm inconsistency measure.
+ * 
+ * @author Matthias Thimm
+ */
 public class PmMeasureExample {
 	public static void main(String[] args) throws ParserException, IOException{
 		PlMusEnumerator.setDefaultEnumerator(new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"));

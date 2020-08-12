@@ -27,6 +27,11 @@ import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 
+/**
+ * Example code illustrating the use of MUS enumerators.
+ * @author Matthias Thimm
+ *
+ */
 public class MusExample {
 	public static void main(String[] args) throws ParserException, IOException{
 		PlBeliefSet beliefSet = new PlBeliefSet();

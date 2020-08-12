@@ -26,6 +26,11 @@ import net.sf.tweety.commons.util.SetTools;
 
 import java.util.*;
 
+/**
+ * Argument Learning example.
+ *
+ * @author Lars Bengel
+ */
 public class LearningExample {
     public static void main(String[] args) {
         // create graph to construct labelings

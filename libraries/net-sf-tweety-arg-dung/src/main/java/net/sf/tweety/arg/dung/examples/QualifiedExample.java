@@ -25,6 +25,11 @@ import net.sf.tweety.arg.dung.syntax.*;
 
 import java.util.*;
 
+/**
+ * Example on how to use the qualified and semi-qualified semantics reasoners.
+ *
+ * @author Lars Bengel
+ */
 public class QualifiedExample {
     public static void main(String[] args) {
         //initialize examples

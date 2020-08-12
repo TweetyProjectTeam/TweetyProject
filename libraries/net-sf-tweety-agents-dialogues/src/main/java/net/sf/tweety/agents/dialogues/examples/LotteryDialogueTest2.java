@@ -52,79 +52,90 @@ import net.sf.tweety.arg.dung.util.FileDungTheoryGenerator;
 import net.sf.tweety.commons.ParserException;
 
 /**
- * Main class for empirical evaluation in [Hunter, Thimm. 2015, to appear]
+ * Main class for empirical evaluation in [Hunter, Thimm. 2015, to appear]. Shows
+ * how a simulation of a multi-agent system can be set up. It defines a dialogue
+ * game between different agents, in particular one based on an action selection
+ * strategy using lotteries.
  * 
  * @author Matthias Thimm
  */
 public class LotteryDialogueTest2 {
-	
+
 	/** The argumentation semantics used */
 	public static Semantics semantics = Semantics.GROUNDED_SEMANTICS;
 	/** Timeout */
-	public static int timeout = 60*60*72*3; // timeout of 72*3 hours	
+	public static int timeout = 60 * 60 * 72 * 3; // timeout of 72*3 hours
 	/** Number of repetitions per file */
 	public static int rep = 1;
-	
+
 	/**
 	 * Main method for evaluation.
-	 * @param args additional arguments 
-	 * @throws ParserException if parsing failed
+	 * 
+	 * @param args additional arguments
+	 * @throws ParserException       if parsing failed
 	 * @throws FileNotFoundException if a file could not be found
-	 * @throws IOException if some general IO issue occurred
+	 * @throws IOException           if some general IO issue occurred
 	 */
-	public static void main(String[] args) throws ParserException, FileNotFoundException, IOException{
+	public static void main(String[] args) throws ParserException, FileNotFoundException, IOException {
 		String pathToApxGraphs = args[0];
-		//String pathToApxGraphs = "/Users/mthimm/Desktop/tmp";
-		
+		// String pathToApxGraphs = "/Users/mthimm/Desktop/tmp";
+
 		// Agent generators
-		List<AgentGenerator<AbstractLotteryAgent,LotteryGameSystem>> ag_gens = new ArrayList<AgentGenerator<AbstractLotteryAgent,LotteryGameSystem>>();
+		List<AgentGenerator<AbstractLotteryAgent, LotteryGameSystem>> ag_gens = new ArrayList<AgentGenerator<AbstractLotteryAgent, LotteryGameSystem>>();
 		ag_gens.add(new UtilityBasedAgentGenerator("UtilBased"));
 		ag_gens.add(new RandomLotteryAgentGenerator("Random"));
 		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotteryNaive"));
-		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySimple",ProbabilisticLotteryAgent.UPDATE_SIMPLE));
-		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky01",ProbabilisticLotteryAgent.UPDATE_STICKY,0.1));
-		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky03",ProbabilisticLotteryAgent.UPDATE_STICKY,0.3));
-		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky05",ProbabilisticLotteryAgent.UPDATE_STICKY,0.5));
-		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky07",ProbabilisticLotteryAgent.UPDATE_STICKY,0.7));
-		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky09",ProbabilisticLotteryAgent.UPDATE_STICKY,0.9));
-		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotteryRough",ProbabilisticLotteryAgent.UPDATE_ROUGH));
-		
-	
+		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySimple", ProbabilisticLotteryAgent.UPDATE_SIMPLE));
+		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky01", ProbabilisticLotteryAgent.UPDATE_STICKY,
+				0.1));
+		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky03", ProbabilisticLotteryAgent.UPDATE_STICKY,
+				0.3));
+		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky05", ProbabilisticLotteryAgent.UPDATE_STICKY,
+				0.5));
+		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky07", ProbabilisticLotteryAgent.UPDATE_STICKY,
+				0.7));
+		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotterySticky09", ProbabilisticLotteryAgent.UPDATE_STICKY,
+				0.9));
+		ag_gens.add(new ProbabilisticLotteryAgentGenerator("LotteryRough", ProbabilisticLotteryAgent.UPDATE_ROUGH));
+
 		// for every different move selection strategy
-		for(AgentGenerator<AbstractLotteryAgent,LotteryGameSystem> ag_gen: ag_gens){
+		for (AgentGenerator<AbstractLotteryAgent, LotteryGameSystem> ag_gen : ag_gens) {
 			// AAF generator
 			File[] apxFiles = new File(pathToApxGraphs).listFiles(new ApxFilenameFilter());
 			int numRuns = apxFiles.length * rep;
 			DungTheoryGenerator aaf_gen = new FileDungTheoryGenerator(apxFiles, new ApxParser(), true);
-			
+
 			// MAS generator
-			MultiAgentSystemGenerator<AbstractLotteryAgent,LotteryGameSystem> masGenerator = new LotteryGameGenerator(aaf_gen,semantics,false);
-			List<AgentGenerator<AbstractLotteryAgent,LotteryGameSystem>> agentGenerators = new ArrayList<AgentGenerator<AbstractLotteryAgent,LotteryGameSystem>>();
-				
+			MultiAgentSystemGenerator<AbstractLotteryAgent, LotteryGameSystem> masGenerator = new LotteryGameGenerator(
+					aaf_gen, semantics, false);
+			List<AgentGenerator<AbstractLotteryAgent, LotteryGameSystem>> agentGenerators = new ArrayList<AgentGenerator<AbstractLotteryAgent, LotteryGameSystem>>();
+
 			agentGenerators.add(ag_gen);
 			agentGenerators.add(new DummyAgentGenerator("Audience"));
-			
-			ProtocolGenerator<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem> protGenerator = new DirectGameProtocolGenerator();
-			final GameSimulator<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem> sim = new GameSimulator<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem>(masGenerator,protGenerator,agentGenerators);
+
+			ProtocolGenerator<DirectGameProtocol, AbstractLotteryAgent, LotteryGameSystem> protGenerator = new DirectGameProtocolGenerator();
+			final GameSimulator<DirectGameProtocol, AbstractLotteryAgent, LotteryGameSystem> sim = new GameSimulator<DirectGameProtocol, AbstractLotteryAgent, LotteryGameSystem>(
+					masGenerator, protGenerator, agentGenerators);
 			// Run iterated simulations and show aggregated results (with timeout)
-			Callable<String> callee = new Callable<String>(){
-			    @Override
-			    public String call() throws Exception {			    	
-			    	SimulationResult<DirectGameProtocol,AbstractLotteryAgent,LotteryGameSystem> result = sim.run(numRuns);			    	
-			    	System.out.println(result.csvDisplay());
-			        return null;
-			    }
-			};			
+			Callable<String> callee = new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+					SimulationResult<DirectGameProtocol, AbstractLotteryAgent, LotteryGameSystem> result = sim
+							.run(numRuns);
+					System.out.println(result.csvDisplay());
+					return null;
+				}
+			};
 			ExecutorService executor = Executors.newSingleThreadExecutor();
-		    Future<String> future = executor.submit(callee);
-		    try {
-		    	future.get(timeout, TimeUnit.SECONDS);	            
-		    } catch (Exception e) {
-		        System.out.println("Aborted...");
-		        e.printStackTrace();
-		    }
-		    executor.shutdownNow();
+			Future<String> future = executor.submit(callee);
+			try {
+				future.get(timeout, TimeUnit.SECONDS);
+			} catch (Exception e) {
+				System.out.println("Aborted...");
+				e.printStackTrace();
+			}
+			executor.shutdownNow();
 		}
-		
-	}	
+
+	}
 }
