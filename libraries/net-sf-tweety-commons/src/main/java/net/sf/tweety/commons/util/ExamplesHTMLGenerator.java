@@ -27,7 +27,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 /**
  * 
@@ -92,9 +94,10 @@ public class ExamplesHTMLGenerator {
 	 * Generates an overview of example classes and resources in the workspace with
 	 * HTML formatting.
 	 * 
-	 * @param tweety_libraries_dir path of the Tweety 'libraries' folder (can be detected automatically
-	 * if left empty)
-	 * @return String containing an overview of examples and resources with HTML formatting
+	 * @param tweety_libraries_dir path of the Tweety 'libraries' folder (can be
+	 *                             detected automatically if left empty)
+	 * @return String containing an overview of examples and resources with HTML
+	 *         formatting
 	 * @throws IOException
 	 */
 	private static String generateHTMLOverview(String tweety_libraries_dir) throws IOException {
@@ -123,9 +126,13 @@ public class ExamplesHTMLGenerator {
 		String OTHER_LIBRARIES = "";
 
 		File[] tweety_dirs = new File(tweety_libraries_dir).listFiles();
+		//this map is used to store and sort the libraries and their corresponding examples and resources
+		TreeMap<String, Pair<String, String>> library_items = new TreeMap<String, Pair<String, String>>();
 		if (tweety_dirs != null) {
 			for (File child : tweety_dirs) {
-				if (child.isDirectory() && !child.getName().contains(".settings")) {
+				if (child.isDirectory() && !child.getName().contains(".settings")
+						&& !child.getName().equals("net-sf-tweety")) {
+
 					String MODULEPATH = child.getName();
 					String MODULENAME = MODULEPATH;
 
@@ -160,10 +167,12 @@ public class ExamplesHTMLGenerator {
 							else if (file.contains("examples") && !file.contains(".class"))
 								examples.add(f);
 						});
-						
-						//sort file names alphabetically
-						Collections.sort(examples, (a, b) -> a.getFileName().toString().compareTo(b.getFileName().toString()));
-						Collections.sort(resources, (a, b) -> a.getFileName().toString().compareTo(b.getFileName().toString()));
+
+						// sort file names alphabetically
+						Collections.sort(examples,
+								(a, b) -> a.getFileName().toString().compareTo(b.getFileName().toString()));
+						Collections.sort(resources,
+								(a, b) -> a.getFileName().toString().compareTo(b.getFileName().toString()));
 
 						// Parse example descriptions from javadoc
 						for (Path p : examples) {
@@ -179,9 +188,9 @@ public class ExamplesHTMLGenerator {
 
 									// Remove comment characters and ignore lines with javadoc tags
 									for (String s : lines) {
-										if (s.contains("@"))
+										if (s.contains("@") || s.startsWith("import"))
 											continue;
-										String line = s.replaceAll("[\\*]", "").replaceAll("\\s{2,}", "");
+										String line = s.replaceAll("[\\*]", "");
 										line = line.replace("\n", " ").replace("\r", " ").replace(" /", "");
 										description += line;
 									}
@@ -189,7 +198,7 @@ public class ExamplesHTMLGenerator {
 										description = ": " + description;
 								}
 							}
-							EXAMPLES += example.replace("$DESCRIPTION", "");
+							EXAMPLES += example.replace("$DESCRIPTION", description);
 						}
 
 						for (Path p : resources)
@@ -217,41 +226,49 @@ public class ExamplesHTMLGenerator {
 					String MODULELINK = "lib-" + MODULENAME.toLowerCase().replace(" ", "-");
 					String item = index_item_template;
 					item = item.replace("$MODULENAME", MODULENAME);
-					item = item.replace("$MODULEPATH", MODULEPATH);
+					item = item.replace("$MODULEPATH", MODULEPATH.replace("-", "."));
 					item = item.replace("$MODULELINK", MODULELINK);
 					String module_item = module_template;
 					module_item = module_item.replace("$MODULENAME", MODULENAME);
-					module_item = module_item.replace("$MODULEPATH", MODULEPATH);
+					module_item = module_item.replace("$MODULEPATH", MODULEPATH.replace("-", "."));
 					module_item = module_item.replace("$MODULELINK", MODULELINK);
 					module_item = module_item.replace("$EXAMPLES", EXAMPLES);
 					module_item = module_item.replace("$RESOURCES", RESOURCES);
 
-					// sort modules into categories
-					if (MODULEPATH.contains("-logics-")) {
-						LOGIC_LIBRARIES_LIST += item;
-						LOGIC_LIBRARIES += module_item;
-					} else if (MODULEPATH.contains("-arg-")) {
-						ARG_LIBRARIES_LIST += item;
-						ARG_LIBRARIES += module_item;
-					} else if (MODULEPATH.contains("-lp-")) {
-						LP_LIBRARIES_LIST += item;
-						LP_LIBRARIES += module_item;
-					} else if (MODULEPATH.contains("-agents")) {
-						AGENT_LIBRARIES_LIST += item;
-						AGENT_LIBRARIES += module_item;
-					} else if (MODULEPATH.contains("commons") || MODULEPATH.contains("plugin")
-							|| MODULEPATH.contains("cli") || MODULEPATH.contains("math")
-							|| MODULEPATH.contains("graphs")) {
-						GENERAL_LIBRARIES_LIST += item;
-						GENERAL_LIBRARIES += module_item;
-					} else {
-						OTHER_LIBRARIES_LIST += item;
-						OTHER_LIBRARIES += module_item;
-					}
+					library_items.put(MODULEPATH, new Pair<String, String>(item, module_item));
 				}
 			}
 		} else
 			throw new IllegalArgumentException(tweety_libraries_dir + " is not a valid Tweety directory");
+
+		//Put collected libraries together
+		for (Map.Entry<String, Pair<String, String>> i : library_items.entrySet()) {
+			String MODULEPATH = i.getKey();
+			String item = i.getValue().getFirst();
+			String module_item = i.getValue().getSecond();
+
+			// sort modules into categories
+			if (MODULEPATH.contains("-logics-")) {
+				LOGIC_LIBRARIES_LIST += item;
+				LOGIC_LIBRARIES += module_item;
+			} else if (MODULEPATH.contains("-arg-")) {
+				ARG_LIBRARIES_LIST += item;
+				ARG_LIBRARIES += module_item;
+			} else if (MODULEPATH.contains("-lp-")) {
+				LP_LIBRARIES_LIST += item;
+				LP_LIBRARIES += module_item;
+			} else if (MODULEPATH.contains("-agents")) {
+				AGENT_LIBRARIES_LIST += item;
+				AGENT_LIBRARIES += module_item;
+			} else if (MODULEPATH.contains("commons") || MODULEPATH.contains("plugin") || MODULEPATH.contains("cli")
+					|| MODULEPATH.contains("math") || MODULEPATH.contains("graphs")) {
+				GENERAL_LIBRARIES_LIST += item;
+				GENERAL_LIBRARIES += module_item;
+			} else {
+				OTHER_LIBRARIES_LIST += item;
+				OTHER_LIBRARIES += module_item;
+			}
+		}
 
 		// replace keywords in HTML template
 		index = index.replace("$LOGIC_LIBRARIES_LIST", LOGIC_LIBRARIES_LIST);

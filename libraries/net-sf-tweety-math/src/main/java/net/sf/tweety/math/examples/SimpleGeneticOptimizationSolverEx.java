@@ -34,7 +34,7 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class implements an example for the Genetic Optimization Solver
+ * This class implements an example for the Genetic Optimization Solver.
  * It is natively implemented
  * @author Sebastian Franke
  */

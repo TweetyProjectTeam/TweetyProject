@@ -33,7 +33,7 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class implements an example for Simulated Annealing on optimization problems
+ * This class implements an example for Simulated Annealing on optimization problems.
  * It is natively implemented
  * @author Sebastian Franke
  */

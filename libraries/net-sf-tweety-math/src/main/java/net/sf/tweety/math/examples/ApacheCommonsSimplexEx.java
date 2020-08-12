@@ -41,7 +41,7 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class implements an example for the Apache Commons SimplexSolver
+ * This class implements an example for the Apache Commons SimplexSolver.
  * Version used is 2.0
  * @author Sebastian Franke
  */

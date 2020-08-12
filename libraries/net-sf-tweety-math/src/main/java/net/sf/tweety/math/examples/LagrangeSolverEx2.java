@@ -19,11 +19,6 @@
  */
 package net.sf.tweety.math.examples;
 
-/**
- * This class implements an example for a problem solved by the lagrange solver
- * @author Sebastian Franke
- */
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,8 +41,10 @@ import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
-
-//This class is meant to showcase more classes of the library
+/**
+ * This class implements an example for a problem solved by the lagrange solver. It is meant to showcase more classes of the library.
+ * @author Sebastian Franke
+ */
 public class LagrangeSolverEx2 {
 
 public static ConstraintSatisfactionProblem createConstraintSatProb1() {
