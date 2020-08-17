@@ -18,6 +18,10 @@
  */
 package net.sf.tweety.logics.bpm.syntax;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sf.tweety.graphs.Edge;
 import net.sf.tweety.graphs.Node;
 
 /**
@@ -25,9 +29,28 @@ import net.sf.tweety.graphs.Node;
  */
 public class BpmnNode extends BpmnElement implements Node{
 
-	public BpmnNode(String id) {
-		super(id);
+	private Map<String, Edge<BpmnNode>> incomingEdges = new HashMap<>();
+	private Map<String, Edge<BpmnNode>> outgoingEdges = new HashMap<>();
+	
+	public BpmnNode() {
+		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public void putIncomingEdge(String edgeId, Edge<BpmnNode> edge) {
+		this.incomingEdges.put(edgeId, edge);
+	}
+	
+	public void putOutgoingEdge(String edgeId, Edge<BpmnNode> edge) {
+		this.outgoingEdges.put(edgeId, edge);
+	}
+	
+	public Map<String, Edge<BpmnNode>> getIncomingEdges(){
+		return incomingEdges;
+	}
+	
+	public Map<String, Edge<BpmnNode>> getOutgoingEdges(){
+		return outgoingEdges;
 	}
 
 }

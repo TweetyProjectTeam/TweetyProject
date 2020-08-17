@@ -23,7 +23,7 @@ import net.sf.tweety.graphs.DirectedEdge;
 /**
  * @author Benedikt Knopp
  */
-public class SequenceFlow extends DirectedEdge<BpmnNode> {
+public class SequenceFlow extends DirectedEdge<BpmnNode>  {
 
 	public SequenceFlow(BpmnNode nodeA, BpmnNode nodeB) {
 		super(nodeA, nodeB);

@@ -21,12 +21,10 @@ package net.sf.tweety.logics.bpm.syntax;
 /**
  * @author Benedikt Knopp
  */
-public class Lane {
+public class Lane extends BpmnElement{
 	
-	private Pool pool;
-	
-	public Lane (Pool pool) {
-		this.pool = pool;
+	public Lane () {
+		super();
 	}
 
 }

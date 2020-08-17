@@ -24,9 +24,24 @@ package net.sf.tweety.logics.bpm.syntax;
 public abstract class BpmnElement extends BpmnFormula {
 	
 	private String id;
+	private String name;
 	
-	public BpmnElement(String id) {
+	public BpmnElement() {}
+	
+	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 }

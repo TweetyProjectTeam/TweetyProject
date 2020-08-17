@@ -23,8 +23,9 @@ package net.sf.tweety.logics.bpm.syntax;
  */
 public class Task extends Activity{
 
-	public Task(String id) {
-		super(id);
+	
+	public Task() {
+		super();
 	}
 
 }

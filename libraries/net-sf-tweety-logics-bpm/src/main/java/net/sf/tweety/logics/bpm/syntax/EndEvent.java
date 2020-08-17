@@ -23,8 +23,8 @@ package net.sf.tweety.logics.bpm.syntax;
  */
 public class EndEvent extends Event{
 
-	public EndEvent(String id) {
-		super(id);
+	public EndEvent() {
+		super();
 	}
 
 }

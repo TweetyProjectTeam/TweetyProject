@@ -23,8 +23,8 @@ package net.sf.tweety.logics.bpm.syntax;
  */
 public class Gateway extends BpmnNode{
 
-	public Gateway(String id) {
-		super(id);
+	public Gateway() {
+		super();
 	}
 
 }

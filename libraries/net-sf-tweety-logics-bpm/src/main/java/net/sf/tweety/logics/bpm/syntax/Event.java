@@ -23,8 +23,8 @@ package net.sf.tweety.logics.bpm.syntax;
  */
 public class Event extends BpmnNode{
 
-	public Event(String id) {
-		super(id);
+	public Event() {
+		super();
 	}
 
 }

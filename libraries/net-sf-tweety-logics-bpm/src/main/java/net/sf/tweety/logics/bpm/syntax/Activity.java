@@ -23,8 +23,8 @@ package net.sf.tweety.logics.bpm.syntax;
  */
 public class Activity extends BpmnNode{
 
-	public Activity(String id) {
-		super(id);
+	public Activity() {
+		super();
 	}
 
 }

@@ -26,9 +26,18 @@ import net.sf.tweety.graphs.Edge;
 public class BpmnEdge extends Edge<BpmnNode> {
 
 	private String label;
+	private String id;
 	
 	public BpmnEdge(BpmnNode nodeA, BpmnNode nodeB) {
 		super(nodeA, nodeB);
+	}
+	
+	public String getId() {
+		return id;
+	};
+	
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

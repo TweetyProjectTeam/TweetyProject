@@ -23,8 +23,8 @@ package net.sf.tweety.logics.bpm.syntax;
  */
 public class IntermediateEvent extends Event{
 
-	public IntermediateEvent(String id) {
-		super(id);
+	public IntermediateEvent() {
+		super();
 	}
 
 }
