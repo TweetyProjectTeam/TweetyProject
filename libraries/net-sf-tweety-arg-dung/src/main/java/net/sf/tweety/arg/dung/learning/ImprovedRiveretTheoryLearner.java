@@ -22,6 +22,7 @@ package net.sf.tweety.arg.dung.learning;
 
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
+import net.sf.tweety.arg.dung.syntax.WeightedDungTheory;
 
 import java.util.*;
 
@@ -29,9 +30,12 @@ import java.util.*;
  * Implementation of the algorithm for learning (grounded) labelings from with some improvements:
  * Riveret, Régis, and Guido Governatori. "On learning attacks in probabilistic abstract argumentation." 2016.
  *
+ * - improves result for argumentation frameworks with self-attacking arguments
  * - instead of stopping when no undecided attacks are left, we always use the full computational budget
  * - added additional parameter for pruning instead of pruning at 0. eg budget: 500 threshold: -10
  * - added fifth rule to capture self-attacking arguments
+ * - extended rule 3
+ * - adjusted weight updates per rule
  *
  * @author Lars Bengel
  */
@@ -64,6 +68,14 @@ public class ImprovedRiveretTheoryLearner {
         this.undecidedAttacks = arguments.size() * arguments.size();
     }
 
+    public void showWeights() {
+        for (Argument arg: this.theory) {
+            System.out.print(new Attack(arg, arg));
+            System.out.print(": ");
+            System.out.println(this.theory.getWeight(arg, arg));
+        }
+    }
+
     /**
      * learn the given label and update the weights of affected attacks according to the 4 rules
      * @param l a labeling
@@ -77,26 +89,33 @@ public class ImprovedRiveretTheoryLearner {
 
             if (lab_a == ArgumentStatus.IN && lab_b == ArgumentStatus.IN) {
                 // Rule 1
-                this.update(new Attack(b, a), -1.0);
+                this.update(new Attack(b, a), -10.0);
 
             } else if (lab_a == ArgumentStatus.IN && lab_b == ArgumentStatus.UNDECIDED) {
                 // Rule 2
                 this.update(attack, -1.0);
                 this.update(new Attack(b, a), -1.0);
-            } else if (a != b && lab_a == ArgumentStatus.UNDECIDED && lab_b == ArgumentStatus.UNDECIDED) {
+            } else if (lab_a == ArgumentStatus.UNDECIDED && lab_b == ArgumentStatus.UNDECIDED) {
                 // Rule 3
-                Set<Argument> possibleAttackers = this.theory.getAttackers(a);
-                possibleAttackers.addAll(this.theory.getAttackers(b));
                 boolean all_out_or_off = true;
-                for (Argument c: possibleAttackers) {
-                    if (c != a && c != b && !(l.get(c) == ArgumentStatus.OUT || l.get(c) == null)) {
+                for (Argument c: this.theory.getAttackers(a)) {
+                    if (c != b && !(l.get(c) == ArgumentStatus.OUT || l.get(c) == null)) {
+                        all_out_or_off = false;
+                        break;
+                    }
+                }
+                if (all_out_or_off) {
+                    this.update(new Attack(b, a), 1.0);
+                }
+                all_out_or_off = true;
+                for (Argument c: this.theory.getAttackers(b)) {
+                    if (c != a && !(l.get(c) == ArgumentStatus.OUT || l.get(c) == null)) {
                         all_out_or_off = false;
                         break;
                     }
                 }
                 if (all_out_or_off) {
                     this.update(attack, 1.0);
-                    this.update(new Attack(b, a), 1.0);
                 }
 
             } else if (lab_a == ArgumentStatus.OUT && lab_b == ArgumentStatus.IN) {
@@ -112,9 +131,6 @@ public class ImprovedRiveretTheoryLearner {
                     this.update(attack, -1.0);
                     this.update(new Attack(b, a), 1.0);
                 }
-            } else if (a == b && lab_a == ArgumentStatus.UNDECIDED) {
-                //Rule 5, handles self-attacking arguments
-                this.update(attack,1.0);
             }
 
         }

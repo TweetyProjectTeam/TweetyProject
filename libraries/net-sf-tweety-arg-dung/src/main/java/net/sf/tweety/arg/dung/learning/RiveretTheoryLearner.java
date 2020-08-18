@@ -22,6 +22,7 @@ package net.sf.tweety.arg.dung.learning;
 
 import net.sf.tweety.arg.dung.semantics.*;
 import net.sf.tweety.arg.dung.syntax.*;
+import net.sf.tweety.arg.dung.syntax.WeightedDungTheory;
 
 import java.util.*;
 
@@ -79,7 +80,7 @@ public class RiveretTheoryLearner {
                 // Rule 2
                 this.update(attack, -1.0);
                 this.update(new Attack(b, a), -1.0);
-            } else if (a != b && lab_a == ArgumentStatus.UNDECIDED && lab_b == ArgumentStatus.UNDECIDED) {
+            } else if (lab_a == ArgumentStatus.UNDECIDED && lab_b == ArgumentStatus.UNDECIDED) {
                 // Rule 3
                 Set<Argument> possibleAttackers = this.theory.getAttackers(a);
                 possibleAttackers.addAll(this.theory.getAttackers(b));
