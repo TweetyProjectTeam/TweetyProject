@@ -66,14 +66,14 @@ public enum LinkType{
 	}
 	
 	/**
-	 * @return true iff the links is attacking or supporting
+	 * @return true iff the link is attacking or supporting
 	 */
 	public boolean isBipolar() {
 		return attacking || supporting;
 	}
 	
 	public boolean isNonBipolar() {
-		return !attacking && !supporting;
+		return !isBipolar();
 	}
 
 	public static LinkType get(boolean attacking, boolean supporting) {

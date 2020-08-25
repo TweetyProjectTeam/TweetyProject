@@ -16,10 +16,16 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.parser;
+package net.sf.tweety.arg.adf.io;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,9 +41,6 @@ import net.sf.tweety.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Parser;
-import net.sf.tweety.commons.ParserException;
 
 /**
  * A parser for the input format described at
@@ -53,8 +56,8 @@ import net.sf.tweety.commons.ParserException;
  * @author Mathias Hofer
  *
  */
-public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, Formula> {
-
+public final class KppADFFormatParser {
+	
 	private static final int BUFFER_CAPACITY = 8192;
 	
 	private final boolean lazy;
@@ -70,9 +73,16 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		this.linkStrategy = linkStrategy;
 		this.lazy = lazy;
 	}
+	
+	public AbstractDialecticalFramework parse(String text) throws IOException {
+		return parse(new StringReader(text));
+	}
+	
+	public AbstractDialecticalFramework parse(File file) throws FileNotFoundException, IOException {
+		return parse(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
+	}
 
-	@Override
-	public AbstractDialecticalFramework parseBeliefBase(Reader reader) throws IOException, ParserException {
+	public AbstractDialecticalFramework parse(Reader reader) throws IOException {
 		Map<String, Argument> arguments = new HashMap<String, Argument>();
 		Map<Argument, AcceptanceCondition> accByArgument = new HashMap<Argument, AcceptanceCondition>();
 		Stack<Node> nodes = new Stack<Node>();
@@ -114,7 +124,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 						nodes.push(new IffNode());
 						break;
 					default:
-						throw new ParserException("Unknown expression: " + parsed);
+						throw new IOException("Unknown expression: " + parsed);
 					}
 				} else if (c == ',') {
 					// we only have to deal with identifiers
@@ -144,7 +154,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 					if (nodes.isEmpty()) {
 						root.parseStatement();
 					} else {
-						throw new ParserException("Unprocessed node(s) on the stack!");
+						throw new IOException("Unprocessed node(s) on the stack!");
 					}
 				} else if (!Character.isWhitespace(c)) {
 					// build token until there is something to do
@@ -155,7 +165,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		if (!nodes.isEmpty()) {
-			throw new ParserException("Unprocessed node(s) on the stack!");
+			throw new IOException("Unprocessed node(s) on the stack!");
 		}
 		
 		AbstractDialecticalFramework.Builder builder = AbstractDialecticalFramework.fromMap(accByArgument);
@@ -167,15 +177,10 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		return builder.build();
 	}
 
-	@Override
-	public Formula parseFormula(Reader reader) throws IOException, ParserException {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * Represents a node of the parse-tree.
 	 * 
-	 * Provides all necessary methods and throws ParserExceptions if they are
+	 * Provides all necessary methods and throws IOExceptions if they are
 	 * called on wrong nodes. This basically outsources error-handling to the
 	 * nodes and keeps the parser logic clean.
 	 */
@@ -187,22 +192,22 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 			this.name = name;
 		}
 
-		abstract void addNode(Node node) throws ParserException;
+		abstract void addNode(Node node);
 
-		void parseStatement() throws ParserException {
-			throw new ParserException(toString() + " neither 's' nor 'ac'!");
+		void parseStatement() throws IOException {
+			throw new IOException(toString() + " neither 's' nor 'ac'!");
 		}
 
-		AcceptanceCondition parseFormula() throws ParserException {
-			throw new ParserException(toString() + " not a formula!");
+		AcceptanceCondition parseFormula() throws IOException {
+			throw new IOException(toString() + " not a formula!");
 		}
 
-		AcceptanceCondition parseSpecialFormula() throws ParserException {
-			throw new ParserException(toString() + " neither 'v' (verum) nor 'f' (falsum)!");
+		AcceptanceCondition parseSpecialFormula() throws IOException {
+			throw new IOException(toString() + " neither 'v' (verum) nor 'f' (falsum)!");
 		}
 
-		Argument parseArgument() throws ParserException {
-			throw new ParserException(toString() + " not a proposition!");
+		Argument parseArgument() throws IOException {
+			throw new IOException(toString() + " not a proposition!");
 		}
 
 		public String getName() {
@@ -224,7 +229,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public void parseStatement() throws ParserException {
+		public void parseStatement() throws IOException {
 			// call parseArgument() just for error-handling purposes
 			// it returns null -> is absent in statements -> create new one
 			// it does not return null -> is in statements -> do nothing
@@ -244,7 +249,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public void parseStatement() throws ParserException {
+		public void parseStatement() throws IOException {
 			Argument argument = getFirst().parseArgument();
 			AcceptanceCondition acceptanceCondition = getSecond().parseFormula();
 			accByArgument.put(argument, acceptanceCondition);
@@ -259,11 +264,11 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public void addNode(Node node) throws ParserException {
+		public void addNode(Node node) {
 			if (child == null) {
 				child = node;
 			} else {
-				throw new ParserException("Cannot add node '" + node + "' to " + this);
+				throw new IllegalArgumentException("Cannot add node '" + node + "' to " + this);
 			}
 		}
 
@@ -292,7 +297,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 			} else if (second == null) {
 				second = node;
 			} else {
-				throw new ParserException("Cannot add node '" + node + "' to " + this);
+				throw new IllegalArgumentException("Cannot add node '" + node + "' to " + this);
 			}
 		}
 
@@ -319,22 +324,22 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public void addNode(Node node) throws ParserException {
-			throw new ParserException("Cannot add node '" + node + "' to " + this);
+		public void addNode(Node node) {
+			throw new IllegalArgumentException("Cannot add node '" + node + "' to " + this);
 		}
 
 		@Override
-		public Argument parseArgument() throws ParserException {
+		public Argument parseArgument() throws IOException {
 			return statements.get(getName());
 		}
 
 		@Override
-		AcceptanceCondition parseFormula() throws ParserException {
+		AcceptanceCondition parseFormula() throws IOException {
 			return parseArgument();
 		}
 
 		@Override
-		AcceptanceCondition parseSpecialFormula() throws ParserException {
+		AcceptanceCondition parseSpecialFormula() throws IOException {
 			if ("v".equals(getName())) {
 				return AcceptanceCondition.TAUTOLOGY;
 			} else if ("f".equals(getName())) {
@@ -351,7 +356,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public AcceptanceCondition parseFormula() {
+		public AcceptanceCondition parseFormula() throws IOException {
 			return getChild().parseSpecialFormula();
 		}
 	}
@@ -363,7 +368,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public AcceptanceCondition parseFormula() {
+		public AcceptanceCondition parseFormula() throws IOException {
 			return new NegationAcceptanceCondition(getChild().parseFormula());
 		}
 	}
@@ -375,7 +380,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public AcceptanceCondition parseFormula() {
+		public AcceptanceCondition parseFormula() throws IOException {
 			return new ConjunctionAcceptanceCondition(getFirst().parseFormula(), getSecond().parseFormula());
 		}
 	}
@@ -387,7 +392,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public AcceptanceCondition parseFormula() throws ParserException {
+		public AcceptanceCondition parseFormula() throws IOException {
 			return new DisjunctionAcceptanceCondition(getFirst().parseFormula(), getSecond().parseFormula());
 		}
 	}
@@ -399,7 +404,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public AcceptanceCondition parseFormula() throws ParserException {
+		public AcceptanceCondition parseFormula() throws IOException {
 			return new ImplicationAcceptanceCondition(getFirst().parseFormula(), getSecond().parseFormula());
 		}
 	}
@@ -411,7 +416,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public AcceptanceCondition parseFormula() throws ParserException {
+		public AcceptanceCondition parseFormula() throws IOException {
 			return new ExclusiveDisjunctionAcceptanceCondition(getFirst().parseFormula(), getSecond().parseFormula());
 		}
 	}
@@ -423,7 +428,7 @@ public class KppADFFormatParser extends Parser<AbstractDialecticalFramework, For
 		}
 
 		@Override
-		public AcceptanceCondition parseFormula() throws ParserException {
+		public AcceptanceCondition parseFormula() throws IOException {
 			return new EquivalenceAcceptanceCondition(getFirst().parseFormula(), getSecond().parseFormula());
 		}
 	}

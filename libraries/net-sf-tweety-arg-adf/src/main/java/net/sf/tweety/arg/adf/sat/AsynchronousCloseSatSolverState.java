@@ -20,13 +20,11 @@ package net.sf.tweety.arg.adf.sat;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
-import net.sf.tweety.commons.Interpretation;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
 
 /**
  * The cleanup after the {@link #close()} call happens (possibly) in a separate thread, depending on the provided executor.
@@ -61,15 +59,23 @@ public class AsynchronousCloseSatSolverState implements SatSolverState {
 	 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness()
 	 */
 	@Override
-	public Interpretation<PlBeliefSet, PlFormula> witness() {
+	public Set<Atom> witness() {
 		return delegate.witness();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness(java.util.Collection)
+	 */
+	@Override
+	public Set<Atom> witness(Collection<Atom> filter) {
+		return delegate.witness(filter);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.pl.syntax.Proposition, boolean)
 	 */
 	@Override
-	public void assume(Proposition proposition, boolean value) {
+	public void assume(Atom proposition, boolean value) {
 		delegate.assume(proposition, value);
 	}
 
@@ -77,16 +83,8 @@ public class AsynchronousCloseSatSolverState implements SatSolverState {
 	 * @see net.sf.tweety.arg.adf.sat.SatSolverState#add(net.sf.tweety.logics.pl.syntax.Disjunction)
 	 */
 	@Override
-	public boolean add(Disjunction clause) {
+	public boolean add(Clause clause) {
 		return delegate.add(clause);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.sat.SatSolverState#add(java.util.Collection)
-	 */
-	@Override
-	public boolean add(Collection<Disjunction> clauses) {
-		return delegate.add(clauses);
 	}
 
 	/* (non-Javadoc)

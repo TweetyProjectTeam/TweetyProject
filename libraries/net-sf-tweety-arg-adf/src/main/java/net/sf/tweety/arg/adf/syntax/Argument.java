@@ -19,7 +19,6 @@
 package net.sf.tweety.arg.adf.syntax;
 
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -93,4 +92,5 @@ public final class Argument implements AcceptanceCondition {
 	public String toString() {
 		return name;
 	}
+
 }

@@ -16,25 +16,25 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.reasoner.ordering;
+package net.sf.tweety.arg.adf.syntax.pl;
 
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
-import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.Argument;
 
 /**
- * 
  * @author Mathias Hofer
  *
- * @param <T> the type for which we establish an ordering
  */
-public interface Ordering<T> {
-
-	Ordering<T> filter(Predicate<? super T> filter);
+public interface Literal {
+		
+	boolean isPositive();
 	
-	Ordering<T> limit(int limit);
+	Atom getAtom();
 	
-	List<T> order(AbstractDialecticalFramework adf);
+	// TODO: ugly, find cleaner solution
+	default Literal map(Function<Argument, Literal> argumentMapping, Function<Literal, Literal> literalMapping) {
+		return literalMapping.apply(this);
+	}
 	
 }

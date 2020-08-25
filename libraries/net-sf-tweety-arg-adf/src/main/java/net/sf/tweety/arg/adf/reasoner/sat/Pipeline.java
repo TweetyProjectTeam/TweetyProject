@@ -112,6 +112,7 @@ public final class Pipeline {
 			this.adf = adf;
 			this.mapping = new PropositionalMapping(adf);
 			this.mainState = stateHandler.submit(() -> new AsynchronousCloseSatSolverState(initializeState(solver.createState()), stateHandler));
+//			this.mainState = new AsynchronousCloseSatSolverState(initializeState(solver.createState()), stateHandler);
 			if (verifier != null) {
 				this.verificationState = stateHandler.submit(() -> new AsynchronousCloseSatSolverState(solver.createState(), stateHandler));
 			}

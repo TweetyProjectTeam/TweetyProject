@@ -48,6 +48,12 @@ public abstract class AbstractCollector<U, D, R> implements Transformer<R>, Coll
 	
 	private final TransformerVisitor visitor = new TransformerVisitor();
 	
+	private final int topLevelPolarity;
+
+	public AbstractCollector(int topLevelPolarity) {
+		this.topLevelPolarity = topLevelPolarity;
+	}
+
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.adf.transform.Transformer#transform(net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition)
 	 */
@@ -59,11 +65,7 @@ public abstract class AbstractCollector<U, D, R> implements Transformer<R>, Coll
 	}
 	
 	protected U transform(AcceptanceCondition acc, Consumer<D> userObject) {
-		return acc.accept(visitor, new TopDownData<D>(topLevelPolarity(), userObject));
-	}
-	
-	protected int topLevelPolarity() {
-		return 1;
+		return acc.accept(visitor, new TopDownData<D>(topLevelPolarity, userObject));
 	}
 	
 	/* (non-Javadoc)

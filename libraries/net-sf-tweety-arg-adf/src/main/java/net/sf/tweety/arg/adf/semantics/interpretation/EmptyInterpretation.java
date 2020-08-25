@@ -29,7 +29,7 @@ import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
  * @author Mathias Hofer
  *
  */
-public final class EmptyInterpretation implements Interpretation {
+final class EmptyInterpretation implements Interpretation {
 
 	private final Set<Argument> undecided;
 	

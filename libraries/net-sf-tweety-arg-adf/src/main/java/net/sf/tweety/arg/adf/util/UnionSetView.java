@@ -30,11 +30,11 @@ import java.util.stream.Stream;
  *
  * @param <E> the elements
  */
-public final class UnionSetView<E> extends AbstractUnmodifiableSet<E> {
+public final class UnionSetView<E> extends AbstractUnmodifiableCollection<E> implements Set<E> {
 
-	private final Set<E> set1;
+	private final Set<? extends E> set1;
 
-	private final Set<E> set2;
+	private final Set<? extends E> set2;
 
 	/**
 	 * Expects the two sets to be disjoint, otherwise some methods, e.g.
@@ -46,12 +46,12 @@ public final class UnionSetView<E> extends AbstractUnmodifiableSet<E> {
 	 * @param set1 the first set
 	 * @param set2 the second set
 	 */
-	public UnionSetView(Set<E> set1, Set<E> set2) {
+	public UnionSetView(Set<? extends E> set1, Set<? extends E> set2) {
 		this.set1 = Set.copyOf(set1);
 		this.set2 = Set.copyOf(set2);
 	}
-	
-	public static <E> Set<E> of(Set<E> set1, Set<E> set2, Set<E> set3) {
+		
+	public static <E> Set<E> of(Set<? extends E> set1, Set<? extends E> set2, Set<? extends E> set3) {
 		return new UnionSetView<E>(set1, new UnionSetView<E>(set2, set3));
 	}
 

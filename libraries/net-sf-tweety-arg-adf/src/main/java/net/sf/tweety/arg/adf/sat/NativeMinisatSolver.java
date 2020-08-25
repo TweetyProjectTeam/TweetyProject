@@ -21,22 +21,20 @@ package net.sf.tweety.arg.adf.sat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import net.sf.tweety.commons.Interpretation;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Literal;
 
 /**
  * @author Mathias Hofer
  *
  */
-public final class NativeMinisatSolver extends IncrementalSatSolver {
+public final class NativeMinisatSolver implements IncrementalSatSolver {
 
 	private static final String DEFAULT_WIN_LIB = "/minisat.dll";
 	private static final String DEFAULT_LINUX_LIB = "/minisat.so";
@@ -90,22 +88,14 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 	private static native boolean solve(long handle, int[] assumptions, int size);
 
 	/**
-	 * Must call solve() manually beforehand.
-	 * <p>
-	 * This is especially useful if we want to call solve with assumptions.
-	 * 
-	 * @param handle
-	 * @return
-	 */
-	private static native int[] model(long handle);
-
-	/**
 	 * Calls solve() by itself before returning a witness.
 	 * 
 	 * @param handle
 	 * @return
 	 */
 	private static native int[] witness(long handle);
+	
+	private static native int[] witness(long handle, int[] filter);
 
 	/**
 	 * @param handle
@@ -123,12 +113,12 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 		/**
 		 * Maps the propositions to their native representation.
 		 */
-		private final Map<Proposition, Integer> propositionsToNative = new HashMap<Proposition, Integer>();
+		private final Map<Atom, Integer> nativeMapping = new HashMap<Atom, Integer>();
 
 		/**
 		 * The index corresponds to the native representation.
 		 */
-		private final List<Proposition> nativeToProp = new ArrayList<>();
+		private final List<Atom> nativeToProp = new ArrayList<>();
 
 		private MinisatSolverState() {
 			this.handle = init();
@@ -155,22 +145,56 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness()
 		 */
 		@Override
-		public Interpretation<PlBeliefSet, PlFormula> witness() {
+		public Set<Atom> witness() {	
 			int[] witness = NativeMinisatSolver.witness(handle);
 
 			if (witness.length > 0) {
-				Collection<Proposition> model = new ArrayList<>(witness.length);
+				Set<Atom> model = new HashSet<>();
 				for (int i = 0; i < witness.length; i++) {
 					if (witness[i] == 1) {
 						model.add(nativeToProp.get(i));
 					}
 				}
-				return new PossibleWorld(model);
+				return model;
 			}
 
 			return null;
 		}
+		
+		/* (non-Javadoc)
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness(java.util.Collection)
+		 */
+		@Override
+		public Set<Atom> witness(Collection<Atom> filter) {
+			// TODO fix
+//			if (satisfiable()) {
+//				int[] nfilter = new int[filter.size()];
+//				int i = 0;
+//				for (Atom atom : filter) {
+//					nfilter[i] = nativeMapping.get(atom);
+//					i++;
+//				}
+//				int[] witness = NativeMinisatSolver.witness(handle, nfilter);
+//				Set<Atom> model = new HashSet<>();
+//				for (int j = 0; j < witness.length; j++) {
+//					model.add(nativeToProp.get(witness[j]));
+//				}
+//				return model;
+//			}
+			if (satisfiable()) {
+				Set<Atom> witness = new HashSet<>();
+				for (Atom atom : filter) {
+					int mapping = nativeMapping.get(atom);
+					if (value(handle, mapping) == 0) {
+						witness.add(atom);
+					}
+				}
+				return witness;
+			}
 
+			return null;
+		}
+		
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -211,8 +235,8 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 		 * pl.syntax.Proposition, boolean)
 		 */
 		@Override
-		public void assume(Proposition proposition, boolean value) {
-			int mapped = mapToNative(proposition);
+		public void assume(Atom atom, boolean value) {
+			int mapped = mapToNative(atom);
 			int assumption = value ? mapped : -mapped;
 			if (assumptions == null) {
 				assumptions = new ArrayList<>();
@@ -221,52 +245,29 @@ public final class NativeMinisatSolver extends IncrementalSatSolver {
 		}
 
 		@Override
-		public boolean add(Collection<Disjunction> clauses) {
-			for (Disjunction clause : clauses) {
-				updateState(clause);
-			}
-			return true;
-		}
-
-		@Override
-		public boolean add(Disjunction clause) {
+		public boolean add(Clause clause) {
 			updateState(clause);
 			return true;
 		}
 
-		private int mapToNative(Proposition p) {
-			if (!propositionsToNative.containsKey(p)) {
+		private int mapToNative(Atom p) {
+			if (!nativeMapping.containsKey(p)) {
 				int var = newVar(handle);
-				propositionsToNative.put(p, var);
-				assert var == nativeToProp.size();
+				nativeMapping.put(p, var);
 				nativeToProp.add(p);
 			}
-			return propositionsToNative.get(p);
+			return nativeMapping.get(p);
 		}
 
-		private void updateState(Disjunction clause) {
-			int size = clause.size();
-			int[] nclause = new int[size];
-
-			// try to get the propositions of the given clause, ugly but works
-			// Note:
-			// 1. getAtoms() causes way to much overhead
-			// 2. there currently is no elegant way to deal with literals
-			for (int i = 0; i < size; i++) {
-				PlFormula literal = clause.get(i);
-				Proposition atom = null;
-				int sign = 1;
-				if (literal instanceof Proposition) {
-					atom = (Proposition) literal;
-				} else {
-					atom = (Proposition) ((Negation) literal).getFormula();
-					sign = -1;
-				}
-
+		private void updateState(Clause clause) {
+			int[] nclause = new int[clause.size()];
+			int i = 0;
+			for (Literal literal : clause) {
+				Atom atom = literal.getAtom();
 				int mapped = mapToNative(atom);
-				nclause[i] = sign * mapped;
+				nclause[i] = literal.isPositive() ? mapped : -mapped;
+				i++;
 			}
-
 			// optimization: jni calls without arrays have less overhead
 			switch (nclause.length) {
 			case 1:

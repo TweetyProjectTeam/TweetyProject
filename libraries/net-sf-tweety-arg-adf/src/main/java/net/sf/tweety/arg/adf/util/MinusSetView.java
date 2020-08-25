@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Mathias Hofer
  *
  */
-public final class MinusSetView<E> extends AbstractUnmodifiableSet<E> {
+public final class MinusSetView<E> extends AbstractUnmodifiableCollection<E> implements Set<E> {
 
 	private final Set<E> superset;
 
@@ -49,6 +49,10 @@ public final class MinusSetView<E> extends AbstractUnmodifiableSet<E> {
 	public MinusSetView(Set<E> superset, Set<E> subset) {
 		this.superset = Set.copyOf(superset);
 		this.subset = Set.copyOf(subset);
+	}
+	
+	public static <E> Set<E> of(Set<E> superset, E subtrahend) {
+		return new MinusSetView<E>(superset, Set.of(subtrahend));
 	}
 
 	/*

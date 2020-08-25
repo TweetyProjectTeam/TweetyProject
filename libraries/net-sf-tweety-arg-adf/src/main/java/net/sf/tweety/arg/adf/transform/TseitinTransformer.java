@@ -19,62 +19,67 @@
 package net.sf.tweety.arg.adf.transform;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.commons.util.Pair;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Literal;
+import net.sf.tweety.arg.adf.syntax.pl.Negation;
+import net.sf.tweety.arg.adf.util.CacheMap;
+import net.sf.tweety.arg.adf.util.Pair;
 
 /**
+ * 
  * @author Mathias Hofer
  *
  */
-public final class TseitinTransformer
-		extends AbstractCollector<Proposition, Disjunction, Pair<Proposition, Collection<Disjunction>>> {
+public final class TseitinTransformer extends AbstractCollector<Atom, Clause, Pair<Atom, Collection<Clause>>> {
 
 	private final boolean optimize;
-
-	private final Function<Argument, Proposition> argumentMapping;
-
-	private final int topLevelPolarity;
-
-	private TseitinTransformer(Builder builder) {
-		this.argumentMapping = builder.argumentMapping;
-		this.optimize = builder.optimize;
-		this.topLevelPolarity = builder.topLevelPolarity;
-	}
 	
-	public static Builder builder(Function<Argument, Proposition> argumentMapping) {
-		return new Builder(argumentMapping);
-	}
+	private final Function<Argument, Atom> mapping;
 	
-	public static Builder builder(Map<Argument, Proposition> argumentMapping) {
-		return new Builder(argumentMapping::get);
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.transform.AbstractCollector#topLevelPolarity()
+	/**
+	 * 
+	 * @param optimize
+	 * @param topLevelPolarity
 	 */
-	@Override
-	protected int topLevelPolarity() {
-		return topLevelPolarity;
+	private TseitinTransformer(Function<Argument, Atom> mapping, boolean optimize, int topLevelPolarity) {
+		super(topLevelPolarity);
+		this.mapping = Objects.requireNonNull(mapping);
+		this.optimize = optimize;
 	}
-
+	
+	public static TseitinTransformer ofPositivePolarity(boolean optimize) {
+		return ofPositivePolarity(new CacheMap<>(arg -> Atom.of(arg.getName())), optimize);
+	}
+	
+	public static TseitinTransformer ofNegativePolarity(boolean optimize) {
+		return ofNegativePolarity(new CacheMap<>(arg -> Atom.of(arg.getName())), optimize);
+	}
+	
+	public static TseitinTransformer ofPositivePolarity(Function<Argument, Atom> mapping, boolean optimize) {
+		return new TseitinTransformer(mapping, optimize, 1);
+	}
+	
+	public static TseitinTransformer ofNegativePolarity(Function<Argument, Atom> mapping, boolean optimize) {
+		return new TseitinTransformer(mapping, optimize, -1);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see net.sf.tweety.arg.adf.transform.AbstractCollector#initialize()
 	 */
 	@Override
-	protected Collection<Disjunction> initialize() {
+	protected Collection<Clause> initialize() {
 		return new LinkedList<>();
 	}
 
@@ -85,11 +90,10 @@ public final class TseitinTransformer
 	 * Object, java.util.Collection)
 	 */
 	@Override
-	protected Pair<Proposition, Collection<Disjunction>> finish(Proposition bottomUpData,
-			Collection<Disjunction> collection) {
-		return new Pair<>(bottomUpData, collection);
+	protected Pair<Atom, Collection<Clause>> finish(Atom bottomUpData, Collection<Clause> collection) {
+		return Pair.of(bottomUpData, collection);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -98,18 +102,14 @@ public final class TseitinTransformer
 	 * java.util.Collection, java.util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformDisjunction(Collection<Proposition> children, Consumer<Disjunction> clauses,
-			int polarity) {
-		Proposition name = new Proposition("or_" + children);
+	protected Atom transformDisjunction(Collection<Atom> children, Consumer<Clause> clauses, int polarity) {
+		Atom name = Atom.of("or_" + children);
 		if (polarity >= 0 || !optimize) {
-			Disjunction clause = new Disjunction();
-			clause.addAll(children);
-			clause.add(new Negation(name));
-			clauses.accept(clause);
+			clauses.accept(Clause.of(children, new Negation(name)));
 		}
 		if (polarity <= 0 || !optimize) {
-			for (Proposition p : children) {
-				clauses.accept(new Disjunction(new Negation(p), name));
+			for (Atom atom : children) {
+				clauses.accept(Clause.of(new Negation(atom), name));
 			}
 		}
 		return name;
@@ -123,21 +123,20 @@ public final class TseitinTransformer
 	 * java.util.Collection, java.util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformConjunction(Collection<Proposition> children, Consumer<Disjunction> clauses,
-			int polarity) {
-		Proposition name = new Proposition("and_" + children);
+	protected Atom transformConjunction(Collection<Atom> children, Consumer<Clause> clauses, int polarity) {
+		Atom name = Atom.of("and_" + children);
 		if (polarity >= 0 || !optimize) {
-			for (Proposition p : children) {
-				clauses.accept(new Disjunction(p, new Negation(name)));
+			for (Atom atom : children) {
+				clauses.accept(Clause.of(atom, new Negation(name)));
 			}
 		}
 		if (polarity <= 0 || !optimize) {
-			Disjunction clause = new Disjunction();
-			for (Proposition p : children) {
-				clause.add(new Negation(p));
+			Set<Literal> literals = new HashSet<>(children.size() + 1);
+			for (Atom atom : children) {
+				literals.add(new Negation(atom));
 			}
-			clause.add(name);
-			clauses.accept(clause);
+			literals.add(name);
+			clauses.accept(Clause.of(literals));
 		}
 		return name;
 	}
@@ -150,19 +149,14 @@ public final class TseitinTransformer
 	 * java.lang.Object, java.lang.Object, java.util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformImplication(Proposition left, Proposition right, Consumer<Disjunction> clauses,
-			int polarity) {
-		Proposition name = new Proposition(left.getName() + "_impl_" + right.getName());
+	protected Atom transformImplication(Atom left, Atom right, Consumer<Clause> clauses, int polarity) {
+		Atom name = Atom.of(left + "_impl_" + right);
 		if (polarity >= 0 || !optimize) {
-			Disjunction clause = new Disjunction();
-			clause.add(new Negation(name));
-			clause.add(new Negation(left));
-			clause.add(right);
-			clauses.accept(clause);
+			clauses.accept(Clause.of(new Negation(name), new Negation(left), right));
 		}
 		if (polarity <= 0 || !optimize) {
-			clauses.accept(new Disjunction(name, left));
-			clauses.accept(new Disjunction(name, new Negation(right)));
+			clauses.accept(Clause.of(name, left));
+			clauses.accept(Clause.of(name, new Negation(right)));
 		}
 		return name;
 	}
@@ -175,34 +169,31 @@ public final class TseitinTransformer
 	 * java.util.Collection, java.util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformEquivalence(Collection<Proposition> children, Consumer<Disjunction> clauses,
-			int polarity) {
+	protected Atom transformEquivalence(Collection<Atom> children, Consumer<Clause> clauses, int polarity) {
 		// we generate a circle of implications instead of pairwise equivalences
-		Proposition name = new Proposition("equiv_" + children.hashCode());
+		Atom name = Atom.of("equiv_" + children.hashCode());
 		if (polarity >= 0 || !optimize) {
-			Iterator<Proposition> iterator = children.iterator();
-			Proposition first = iterator.next();
-			Proposition left = first;
+			Iterator<Atom> iterator = children.iterator();
+			Atom first = iterator.next();
+			Atom left = first;
 			while (iterator.hasNext()) {
-				Proposition right = iterator.next();
-				clauses.accept(new Disjunction(Set.of(new Negation(name), new Negation(left), right)));
+				Atom right = iterator.next();
+				clauses.accept(Clause.of(new Negation(name), new Negation(left), right));
 				left = right;
 			}
 			// left is now the last child
 			// complete the circle
-			clauses.accept(new Disjunction(Set.of(new Negation(name), new Negation(left), first)));
+			clauses.accept(Clause.of(new Negation(name), new Negation(left), first));
 		}
 		if (polarity <= 0 || !optimize) {
-			Disjunction clause1 = new Disjunction(children);
-			clause1.add(name);
-			clauses.accept(clause1);
+			clauses.accept(Clause.of(children, name));
 
-			Disjunction clause2 = new Disjunction();
-			for (Proposition child : children) {
-				clause2.add(new Negation(child));
+			Set<Literal> literals = new HashSet<>(children.size() + 1);
+			for (Atom child : children) {
+				literals.add(new Negation(child));
 			}
-			clause2.add(name);
-			clauses.accept(clause2);
+			literals.add(name);
+			clauses.accept(Clause.of(literals));
 		}
 		return name;
 	}
@@ -215,34 +206,15 @@ public final class TseitinTransformer
 	 * java.util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformExclusiveDisjunction(Proposition left, Proposition right,
-			Consumer<Disjunction> clauses, int polarity) {
-		Proposition name = new Proposition(left.getName() + "_xor_" + right.getName());
+	protected Atom transformExclusiveDisjunction(Atom left, Atom right, Consumer<Clause> clauses, int polarity) {
+		Atom name = Atom.of(left + "_xor_" + right);
 		if (polarity >= 0 || !optimize) {
-			Disjunction clause1 = new Disjunction();
-			clause1.add(new Negation(name));
-			clause1.add(left);
-			clause1.add(right);
-			clauses.accept(clause1);
-
-			Disjunction clause2 = new Disjunction();
-			clause2.add(new Negation(name));
-			clause2.add(new Negation(left));
-			clause2.add(new Negation(right));
-			clauses.accept(clause2);
+			clauses.accept(Clause.of(new Negation(name), left, right));
+			clauses.accept(Clause.of(new Negation(name), new Negation(left), new Negation(right)));
 		}
 		if (polarity <= 0 || !optimize) {
-			Disjunction clause1 = new Disjunction();
-			clause1.add(name);
-			clause1.add(new Negation(left));
-			clause1.add(right);
-			clauses.accept(clause1);
-
-			Disjunction clause2 = new Disjunction();
-			clause2.add(name);
-			clause2.add(left);
-			clause2.add(new Negation(right));
-			clauses.accept(clause2);
+			clauses.accept(Clause.of(name, new Negation(left), right));
+			clauses.accept(Clause.of(name, left, new Negation(right)));
 		}
 		return name;
 	}
@@ -255,13 +227,13 @@ public final class TseitinTransformer
 	 * lang.Object, java.util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformNegation(Proposition child, Consumer<Disjunction> clauses, int polarity) {
-		Proposition name = new Proposition("neg_" + child.getName());
+	protected Atom transformNegation(Atom child, Consumer<Clause> clauses, int polarity) {
+		Atom name = Atom.of("neg_" + child);
 		if (polarity >= 0 || !optimize) {
-			clauses.accept(new Disjunction(new Negation(name), new Negation(child)));
+			clauses.accept(Clause.of(new Negation(name), new Negation(child)));
 		}
 		if (polarity <= 0 || !optimize) {
-			clauses.accept(new Disjunction(name, child));
+			clauses.accept(Clause.of(name, child));
 		}
 		return name;
 	}
@@ -274,8 +246,8 @@ public final class TseitinTransformer
 	 * sf.tweety.arg.adf.syntax.Argument, java.util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformArgument(Argument argument, Consumer<Disjunction> collection, int polarity) {
-		return argumentMapping.apply(argument);
+	protected Atom transformArgument(Argument argument, Consumer<Clause> collection, int polarity) {
+		return mapping.apply(argument);
 	}
 
 	/*
@@ -286,13 +258,11 @@ public final class TseitinTransformer
 	 * java.util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformContradiction(Consumer<Disjunction> clauses, int polarity) {
+	protected Atom transformContradiction(Consumer<Clause> clauses, int polarity) {
 		// TODO use same proposition
-		Proposition name = new Proposition("F");
+		Atom name = Atom.of("F");
 		// forces name to be 0
-		Disjunction clause = new Disjunction();
-		clause.add(new Negation(name));
-		clauses.accept(clause);
+		clauses.accept(Clause.of(new Negation(name)));
 		return name;
 	}
 
@@ -304,57 +274,12 @@ public final class TseitinTransformer
 	 * .util.function.Consumer, int)
 	 */
 	@Override
-	protected Proposition transformTautology(Consumer<Disjunction> clauses, int polarity) {
+	protected Atom transformTautology(Consumer<Clause> clauses, int polarity) {
 		// TODO use same proposition
-		Proposition name = new Proposition("T");
+		Atom name = Atom.of("T");
 		// forces name to be 1
-		Disjunction clause = new Disjunction();
-		clause.add(name);
-		clauses.accept(clause);
+		clauses.accept(Clause.of(name));
 		return name;
 	}
-	
-	public static final class Builder {
-		
-		private final Function<Argument, Proposition> argumentMapping;
-		
-		private boolean optimize = false;
-		
-		private int topLevelPolarity = 1;
 
-		/**
-		 * @param argumentMapping the argument to proposition mapping
-		 */
-		public Builder(Function<Argument, Proposition> argumentMapping) {
-			this.argumentMapping = Objects.requireNonNull(argumentMapping);
-		}
-		
-		/**
-		 * The optimization generates only the necessary parts of the
-		 * definitions based on the polarity of the subformulas, i.e. &lt;- or -&gt;
-		 * (or both for polarity = 0) instead of always &lt;-&gt;.
-		 * 
-		 * @param optimize
-		 *            the optimize to set
-		 * @return the builder
-		 */
-		public Builder setOptimize(boolean optimize) {
-			this.optimize = optimize;
-			return this;
-		}
-		
-		/**
-		 * @param topLevelPolarity the topLevelPolarity to set
-		 * @return the builder
-		 */
-		public Builder setTopLevelPolarity(int topLevelPolarity) {
-			this.topLevelPolarity = topLevelPolarity;
-			return this;
-		}
-		
-		public TseitinTransformer build() {
-			return new TseitinTransformer(this);
-		}
-	}
-	
 }

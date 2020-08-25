@@ -30,7 +30,7 @@ import net.sf.tweety.arg.adf.util.UnionSetView;
  * @author Mathias Hofer
  *
  */
-public final class SingleValuedInterpretation implements Interpretation {
+final class SingleValuedInterpretation implements Interpretation {
 
 	private final Argument argument;
 
@@ -137,6 +137,24 @@ public final class SingleValuedInterpretation implements Interpretation {
 	@Override
 	public Set<Argument> arguments() {
 		return new UnionSetView<Argument>(Set.of(argument), undecided);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		if (value) {
+			builder.append("t(");
+		} else {
+			builder.append("f(");
+		}
+		builder.append(argument).append(")");
+		for (Argument u : undecided) {
+			builder.append(" u(").append(u).append(")");
+		}
+		return builder.toString();
 	}
 
 }

@@ -18,21 +18,25 @@
  */
 package net.sf.tweety.arg.adf.reasoner.sat.encodings;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.semantics.link.Link;
+import net.sf.tweety.arg.adf.semantics.link.LinkType;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Literal;
+import net.sf.tweety.arg.adf.syntax.pl.Negation;
 
 /**
  * @author Mathias Hofer
  *
  */
-public class RelativeBipolarSatEncoding implements SatEncoding {
+public final class RelativeBipolarSatEncoding implements SatEncoding {
 	
 	private final Interpretation interpretation;
 	
@@ -47,48 +51,31 @@ public class RelativeBipolarSatEncoding implements SatEncoding {
 		this.link = Objects.requireNonNull(link);
 	}
 
-	public void encode(Consumer<Disjunction> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
 		Argument parent = link.getFrom();
 		Argument child = link.getTo();
 		
-		if (link.getType().isAttacking()) {
-			Disjunction clause1 = new Disjunction();
-			addRelativePart(clause1, interpretation, mapping);
-			clause1.add(new Negation(mapping.getTrue(child)));
-			clause1.add(mapping.getFalse(parent));
-			clause1.add(mapping.getLink(link));
-			consumer.accept(clause1);
-			
-			Disjunction clause2 = new Disjunction();
-			addRelativePart(clause2, interpretation, mapping);
-			clause2.add(new Negation(mapping.getFalse(child)));
-			clause2.add(mapping.getTrue(parent));
-			clause2.add(new Negation(mapping.getLink(link)));
-			consumer.accept(clause2);
-		} else if (link.getType().isSupporting()) {
-			Disjunction clause1 = new Disjunction();
-			addRelativePart(clause1, interpretation, mapping);
-			clause1.add(new Negation(mapping.getTrue(child)));
-			clause1.add(mapping.getTrue(parent));
-			clause1.add(new Negation(mapping.getLink(link)));
-			consumer.accept(clause1);
-			
-			Disjunction clause2 = new Disjunction();
-			addRelativePart(clause2, interpretation, mapping);
-			clause2.add(new Negation(mapping.getFalse(child)));
-			clause2.add(mapping.getFalse(parent));
-			clause2.add(mapping.getLink(link));
-			consumer.accept(clause2);
+		// the relative part makes sure that the clauses are only activated if the decided arguments match
+		// in other words, the clauses are always satisfiable until the current partial interpretation makes the link bipolar
+		Collection<Literal> relativePart = relativePart(interpretation, mapping);
+		if (link.getType() == LinkType.ATTACKING) {
+			consumer.accept(Clause.of(relativePart, new Negation(mapping.getTrue(child)), mapping.getFalse(parent), mapping.getLink(link)));
+			consumer.accept(Clause.of(relativePart, new Negation(mapping.getFalse(child)), mapping.getTrue(parent), new Negation(mapping.getLink(link))));
+		} else if (link.getType() == LinkType.SUPPORTING) {
+			consumer.accept(Clause.of(relativePart, new Negation(mapping.getTrue(child)), mapping.getTrue(parent), new Negation(mapping.getLink(link))));
+			consumer.accept(Clause.of(relativePart, new Negation(mapping.getFalse(child)), mapping.getFalse(parent), mapping.getLink(link)));
 		}
 	}
 	
-	private static void addRelativePart(Disjunction clause, Interpretation interpretation, PropositionalMapping mapping) {
-		for (Argument a : interpretation.satisfied()) {
-			clause.add(new Negation(mapping.getTrue(a)));
-		}
+	private static Collection<Literal> relativePart(Interpretation interpretation, PropositionalMapping mapping) {
+		Collection<Literal> literals = new LinkedList<>();
 		for (Argument a : interpretation.unsatisfied()) {
-			clause.add(new Negation(mapping.getFalse(a)));
+			literals.add(new Negation(mapping.getFalse(a)));
 		}
+		for (Argument a : interpretation.satisfied()) {
+			literals.add(new Negation(mapping.getTrue(a)));
+		}
+		return literals;
 	}
 	
 }

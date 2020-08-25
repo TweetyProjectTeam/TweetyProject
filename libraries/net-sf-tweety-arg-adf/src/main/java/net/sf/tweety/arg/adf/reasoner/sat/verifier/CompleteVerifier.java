@@ -29,8 +29,8 @@ import net.sf.tweety.arg.adf.sat.SatSolverState;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
 import net.sf.tweety.arg.adf.transform.TseitinTransformer;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * @author Mathias Hofer
@@ -65,8 +65,8 @@ public class CompleteVerifier implements Verifier {
 		new LargerInterpretationSatEncoding(candidate).encode(state::add, mapping, adf);
 		while (undecided.hasNext() && complete) {
 			Argument s = undecided.next();
-			TseitinTransformer transformer = TseitinTransformer.builder(r -> mapping.getLink(r, s)).build();
-			Proposition accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
+			TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
+			Atom accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
 			
 			// check not-taut
 			state.assume(accName, false);

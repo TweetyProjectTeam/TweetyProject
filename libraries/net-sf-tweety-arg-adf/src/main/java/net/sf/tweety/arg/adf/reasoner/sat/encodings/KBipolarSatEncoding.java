@@ -18,28 +18,32 @@
  */
 package net.sf.tweety.arg.adf.reasoner.sat.encodings;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
+import net.sf.tweety.arg.adf.semantics.interpretation.TwoValuedInterpretationIterator;
 import net.sf.tweety.arg.adf.semantics.link.Link;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Literal;
+import net.sf.tweety.arg.adf.syntax.pl.Negation;
 import net.sf.tweety.arg.adf.transform.TseitinTransformer;
-import net.sf.tweety.commons.util.DefaultSubsetIterator;
-import net.sf.tweety.commons.util.SubsetIterator;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * @author Mathias Hofer
  *
  */
 public class KBipolarSatEncoding implements SatEncoding {
-	
 
 	/*
 	 * (non-Javadoc)
@@ -49,56 +53,54 @@ public class KBipolarSatEncoding implements SatEncoding {
 	 * tweety.arg. adf.reasoner.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Disjunction> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
 		// use these propositions as a substitute for the special formulas
 		// Tautology and Contradiction
-		final Proposition TAUT = createTrue(consumer);
-		final Proposition CONT = createFalse(consumer);
-		
+		final Atom TAUT = createTrue(consumer);
+		final Atom CONT = createFalse(consumer);
+
 		final Interpretation EMPTY = Interpretation.empty(adf);
 
-		for (Argument s : adf.getArguments()) {
-			Set<Argument> undecidedDependees = dependsOnUndecided(s, EMPTY, adf);
+		for (Argument to : adf.getArguments()) {
+			Set<Argument> undecidedDependees = dependsOnUndecided(to, EMPTY, adf);
 
 			if (!undecidedDependees.isEmpty()) {
-				SubsetIterator<Argument> completionIterator = new DefaultSubsetIterator<Argument>(undecidedDependees);
+				AcceptanceCondition acc = adf.getAcceptanceCondition(to);
+				
+				Iterator<Interpretation> completionIterator = new TwoValuedInterpretationIterator(List.copyOf(undecidedDependees));				
 				while (completionIterator.hasNext()) {
 					// true if some argument is in the set, false otherwise
-					Set<Argument> completion = completionIterator.next();
-
-					// TODO make more readable
-					TseitinTransformer transformer = TseitinTransformer
-							.builder(r -> !undecidedDependees.contains(r) ? context.getLink(r, s) : (completion.contains(r) ? TAUT : CONT))
-							.build();
-					AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-
-					Proposition accName = transformer.collect(acc, consumer);
-
+					Interpretation completion = completionIterator.next();
+					
+					Function<Argument, Atom> fn = from -> !undecidedDependees.contains(from) ? mapping.getLink(from, to) : (completion.satisfied(from) ? TAUT : CONT);
+					TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(fn, false);	
+					Atom accName = transformer.collect(acc, consumer);
+					
 					// first implication
-					Disjunction clause1 = new Disjunction();
-					clause1.add(new Negation(context.getTrue(s)));
+					Collection<Literal> clause1 = new LinkedList<>();
+					clause1.add(new Negation(mapping.getTrue(to)));
 					clause1.add(accName);
 
 					// second implication
-					Disjunction clause2 = new Disjunction();
-					clause2.add(new Negation(context.getFalse(s)));
+					Collection<Literal> clause2 = new LinkedList<>();
+					clause2.add(new Negation(mapping.getFalse(to)));
 					clause2.add(new Negation(accName));
 
 					// stuff for both implications
 					for (Argument r : undecidedDependees) {
-						if (completion.contains(r)) {
-							Proposition rFalse = context.getFalse(r);
+						if (completion.satisfied(r)) {
+							Atom rFalse = mapping.getFalse(r);
 							clause1.add(rFalse);
 							clause2.add(rFalse);
 						} else {
-							Proposition rTrue = context.getTrue(r);
+							Atom rTrue = mapping.getTrue(r);
 							clause1.add(rTrue);
 							clause2.add(rTrue);
 						}
 					}
 
-					consumer.accept(clause1);
-					consumer.accept(clause2);
+					consumer.accept(Clause.of(clause1));
+					consumer.accept(Clause.of(clause2));
 				}
 			}
 		}
@@ -112,11 +114,9 @@ public class KBipolarSatEncoding implements SatEncoding {
 	 * @param encoding
 	 * @return a proposition which is true in <code>encoding</code>
 	 */
-	private static Proposition createTrue(Consumer<Disjunction> encoding) {
-		Proposition trueProp = new Proposition("T");
-		Disjunction clause = new Disjunction();
-		clause.add(trueProp);
-		encoding.accept(clause);
+	private static Atom createTrue(Consumer<Clause> encoding) {
+		Atom trueProp = Atom.of("T");
+		encoding.accept(Clause.of(trueProp));
 		return trueProp;
 	}
 
@@ -127,11 +127,9 @@ public class KBipolarSatEncoding implements SatEncoding {
 	 * @param encoding
 	 * @return a proposition which is false in <code>encoding</code>
 	 */
-	private static Proposition createFalse(Consumer<Disjunction> encoding) {
-		Proposition falseProp = new Proposition("F");
-		Disjunction clause = new Disjunction();
-		clause.add(new Negation(falseProp));
-		encoding.accept(clause);
+	private static Atom createFalse(Consumer<Clause> encoding) {
+		Atom falseProp = Atom.of("F");
+		encoding.accept(Clause.of(new Negation(falseProp)));
 		return falseProp;
 	}
 
@@ -142,14 +140,15 @@ public class KBipolarSatEncoding implements SatEncoding {
 	 * @return the arguments r s.t. there exists a dependent link (r,s) with r
 	 *         being undecided in <code>interpretation</code>
 	 */
-	private static Set<Argument> dependsOnUndecided(Argument s, Interpretation interpretation,
-			AbstractDialecticalFramework adf) {
-		return adf.linksTo(s)
-				.stream()
+	private static Set<Argument> dependsOnUndecided(Argument s, Interpretation interpretation, AbstractDialecticalFramework adf) {
+		return adf.linksTo(s).stream()
 				.filter(l -> l.getType().isDependent())
 				.map(Link::getFrom)
 				.filter(interpretation::undecided)
 				.collect(Collectors.toSet());
 	}
-
+//	
+//	private static Atom argumentMapping(Argument arg, Interpretation completion, Set<Argument> undecidedDependees) {
+//		if (undecidedDependees.contains(arg))
+//	}
 }

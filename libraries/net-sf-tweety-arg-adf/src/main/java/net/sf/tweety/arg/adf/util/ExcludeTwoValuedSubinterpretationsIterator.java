@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.arg.adf.util;
 
-import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,13 +48,14 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		Interpretation first = iterator.next();
 		this.order = arguments(first);
 		this.builder = Interpretation.builder(List.of(order));
-		this.root = new InnerNode(new BitSet(order.length), 0);
+		this.root = new InnerNode(0);
 		root.add(0, first.numDecided(), first);
 		while (iterator.hasNext()) {
 			Interpretation next = iterator.next();
 			root.add(0, next.numDecided(), next);
 		}
 		root.addLeafs();
+		root.propagateSink();
 	}
 
 	/**
@@ -98,27 +98,26 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		void buildNext(Builder builder);
 
 		void add(int offset, int remaining, Interpretation interpretation);
-
+		
 		void addLeafs();
+		
+		default Node propagateSink() {
+			return this;
+		}
 
 	}
 
 	private final class InnerNode implements Node {
 
-		private final BitSet bitSet;
-
 		private final int index;
+		
+		private boolean value;
 
 		private Node fNode;
 
 		private Node tNode;
 
-		/**
-		 * @param bitSet
-		 * @param index
-		 */
-		public InnerNode(BitSet bitSet, int index) {
-			this.bitSet = bitSet;
+		public InnerNode(int index) {
 			this.index = index;
 		}
 
@@ -128,7 +127,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		}
 
 		private Node current() {
-			if (bitSet.get(index)) {
+			if (value) {
 				return tNode;
 			} else {
 				return fNode;
@@ -139,13 +138,13 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		public void buildNext(Builder builder) {
 			Node current = current();
 			if (current.done()) {
-				bitSet.set(index);
-				current = current();
+				value = true;
+				current = tNode;
 			}
-			builder.put(order[index], bitSet.get(index));
+			builder.put(order[index], value);
 			current.buildNext(builder);
-			if (current.done() && !bitSet.get(index)) {
-				bitSet.set(index);
+			if (current.done()) {
+				value = true;
 			}
 		}
 
@@ -171,7 +170,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 
 		private Node createInnerIfNecessary(int offset, Node node) {
 			if (node == null) {
-				return new InnerNode(bitSet, offset);
+				return new InnerNode(offset);
 			}
 			return node;
 		}
@@ -181,7 +180,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 				// we should only be here if the current argument is decided
 				return SinkNode.INSTANCE;
 			} else if (node == null) {
-				return new InnerNode(bitSet, offset);
+				return new InnerNode(offset);
 			}
 			return node;
 		}
@@ -191,6 +190,16 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 			fNode = createLeaf(fNode, false);
 			tNode = createLeaf(tNode, true);
 		}
+		
+		@Override
+		public Node propagateSink() {
+			fNode = fNode.propagateSink();
+			tNode = tNode.propagateSink();
+			if (fNode == SinkNode.INSTANCE && tNode == SinkNode.INSTANCE) {
+				return SinkNode.INSTANCE;
+			}
+			return this;
+		}
 
 		private Node createLeaf(Node node, Boolean value) {
 			Node leaf = node;
@@ -198,7 +207,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 				if (index + 1 < order.length) {
 					leaf = new TailNode(index + 1);
 				} else {
-					return new LeafNode(bitSet, value);
+					return new LeafNode(value);
 				}
 			}
 			leaf.addLeafs();
@@ -262,9 +271,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 
 	private final class LeafNode implements Node {
 
-		private final BitSet bitSet;
-
-		private final Boolean value;
+		private final boolean value;
 
 		private boolean done = false;
 
@@ -272,8 +279,7 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 		 * @param bitSet
 		 * @param value
 		 */
-		public LeafNode(BitSet bitSet, Boolean value) {
-			this.bitSet = bitSet;
+		public LeafNode(boolean value) {
 			this.value = value;
 		}
 
@@ -284,18 +290,15 @@ public class ExcludeTwoValuedSubinterpretationsIterator implements Iterator<Inte
 
 		@Override
 		public void buildNext(Builder builder) {
-			bitSet.set(order.length - 1, value);
 			builder.put(order[order.length - 1], value);
 			done = true;
 		}
 
 		@Override
-		public void add(int offset, int remaining, Interpretation interpretation) {
-		}
+		public void add(int offset, int remaining, Interpretation interpretation) {}
 
 		@Override
-		public void addLeafs() {
-		}
+		public void addLeafs() {}
 
 	}
 

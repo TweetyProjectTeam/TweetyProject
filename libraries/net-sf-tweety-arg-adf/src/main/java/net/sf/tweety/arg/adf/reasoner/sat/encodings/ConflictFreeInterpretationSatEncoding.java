@@ -24,10 +24,10 @@ import net.sf.tweety.arg.adf.semantics.link.Link;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Negation;
 import net.sf.tweety.arg.adf.transform.TseitinTransformer;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * @author Mathias Hofer
@@ -43,34 +43,31 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding {
 	 * adf.reasoner.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Disjunction> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
 		for (Argument s : adf.getArguments()) {
 			AcceptanceCondition acc = adf.getAcceptanceCondition(s);
 			
-			TseitinTransformer transformer = TseitinTransformer.builder(r -> context.getLink(adf.link(r, s))).build();
-			Proposition accName = transformer.collect(acc, consumer);
+			TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> context.getLink(adf.link(r, s)), false);
+			Atom accName = transformer.collect(acc, consumer);
 			
 			// the propositions represent the assignment of s
-			Proposition trueRepr = context.getTrue(s);
-			Proposition falseRepr = context.getFalse(s);
+			Atom trueRepr = context.getTrue(s);
+			Atom falseRepr = context.getFalse(s);
 
 			// link the arguments to their acceptance conditions
-			Disjunction acSat = new Disjunction(new Negation(trueRepr), accName);
-			Disjunction acUnsat = new Disjunction(new Negation(falseRepr), new Negation(accName));
-			consumer.accept(acSat);
-			consumer.accept(acUnsat);
+			consumer.accept(Clause.of(new Negation(trueRepr), accName));
+			consumer.accept(Clause.of(new Negation(falseRepr), new Negation(accName)));
 
 			// draw connection between argument and outgoing links
 			for (Link relation : adf.linksFrom(s)) {
-				Proposition linkRepr = context.getLink(relation);
+				Atom linkRepr = context.getLink(relation);
 
-				consumer.accept(new Disjunction(new Negation(trueRepr), linkRepr));
-				consumer.accept(new Disjunction(new Negation(falseRepr), new Negation(linkRepr)));
+				consumer.accept(Clause.of(new Negation(trueRepr), linkRepr));
+				consumer.accept(Clause.of(new Negation(falseRepr), new Negation(linkRepr)));
 			}
 
 			// make sure that we never satisfy s_t and s_f at the same time
-			Disjunction preventInvalid = new Disjunction(new Negation(trueRepr), new Negation(falseRepr));
-			consumer.accept(preventInvalid);
+			consumer.accept(Clause.of(new Negation(trueRepr), new Negation(falseRepr)));
 		}
 	}
 

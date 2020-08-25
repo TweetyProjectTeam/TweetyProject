@@ -29,7 +29,7 @@ import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
  * @author Mathias Hofer
  *
  */
-public class KBipolarStateProcessor implements StateProcessor {
+public final class KBipolarStateProcessor implements StateProcessor {
 
 	private final SatEncoding bipolar = new BipolarSatEncoding();
 	

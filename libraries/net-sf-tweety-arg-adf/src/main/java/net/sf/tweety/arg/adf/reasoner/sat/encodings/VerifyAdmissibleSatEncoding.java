@@ -18,18 +18,21 @@
  */
 package net.sf.tweety.arg.adf.reasoner.sat.encodings;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Literal;
+import net.sf.tweety.arg.adf.syntax.pl.Negation;
 import net.sf.tweety.arg.adf.transform.TseitinTransformer;
 import net.sf.tweety.arg.adf.util.CacheMap;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * 
@@ -39,24 +42,13 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 public class VerifyAdmissibleSatEncoding implements SatEncoding {
 
 	private final Interpretation interpretation;
-
-	private final Proposition toggle;
 	
-	/**
-	 * @param interpretation the interpretation to verify
-	 */
-	public VerifyAdmissibleSatEncoding(Interpretation interpretation) {
-		this(interpretation, null);
-	}
-
 	/**
 	 * 
 	 * @param interpretation the interpretation to verify
-	 * @param toggle the toggle which is used to activate the encoding
 	 */
-	public VerifyAdmissibleSatEncoding(Interpretation interpretation, Proposition toggle) {
+	public VerifyAdmissibleSatEncoding(Interpretation interpretation) {
 		this.interpretation = Objects.requireNonNull(interpretation);
-		this.toggle = toggle;
 	}
 
 	/*
@@ -67,39 +59,49 @@ public class VerifyAdmissibleSatEncoding implements SatEncoding {
 	 * tweety.arg. adf.reasoner.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Disjunction> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
-		Function<Argument, Proposition> vars = new CacheMap<Argument, Proposition>(s -> new Proposition(s.getName()));
-		Disjunction accs = new Disjunction();
-		addToggle(accs);
+	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+		Set<Literal> accs = new HashSet<>();
 		
-		TseitinTransformer.Builder builder = TseitinTransformer.builder(vars).setOptimize(true);
+		Function<Argument, Atom> fn = new CacheMap<>(arg -> Atom.of(arg.getName()));
+				
+		TseitinTransformer negativeTransformer = TseitinTransformer.ofNegativePolarity(fn, true);
 		for (Argument s : interpretation.satisfied()) {
-			TseitinTransformer transformer = builder.setTopLevelPolarity(-1).build();
-			Proposition accName = transformer.collect(adf.getAcceptanceCondition(s), consumer);
-			Disjunction clause = new Disjunction();
-			clause.add(vars.apply(s));
-			addToggle(clause);
-			consumer.accept(clause);
+			Atom accName = negativeTransformer.collect(adf.getAcceptanceCondition(s), consumer);
+			consumer.accept(Clause.of(fn.apply(s)));
 			accs.add(new Negation(accName));
 		}
 		
+		TseitinTransformer positiveTransformer = TseitinTransformer.ofPositivePolarity(fn, true);
 		for (Argument s : interpretation.unsatisfied()) {
-			TseitinTransformer transformer = builder.setTopLevelPolarity(1).build();
-			Proposition accName = transformer.collect(adf.getAcceptanceCondition(s), consumer);
-			Disjunction clause = new Disjunction();
-			clause.add(new Negation(vars.apply(s)));
-			addToggle(clause);
-			consumer.accept(clause);
+			Atom accName = positiveTransformer.collect(adf.getAcceptanceCondition(s), consumer);
+			consumer.accept(Clause.of(new Negation(fn.apply(s))));
 			accs.add(accName);
 		}
-		
-		consumer.accept(accs);
+
+		consumer.accept(Clause.of(accs));
 	}
 	
-	private void addToggle(Disjunction disjunction) {
-		if (toggle != null) {
-			disjunction.add(toggle);
+	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf, Atom toggle) {
+		Set<Literal> accs = new HashSet<>();
+		accs.add(toggle);
+		
+		Function<Argument, Atom> fn = new CacheMap<>(arg -> Atom.of(arg.getName()));
+				
+		TseitinTransformer negativeTransformer = TseitinTransformer.ofNegativePolarity(fn, true);
+		for (Argument s : interpretation.satisfied()) {
+			Atom accName = negativeTransformer.collect(adf.getAcceptanceCondition(s), consumer);
+			consumer.accept(Clause.of(fn.apply(s)));
+			accs.add(new Negation(accName));
 		}
+		
+		TseitinTransformer positiveTransformer = TseitinTransformer.ofPositivePolarity(fn, true);
+		for (Argument s : interpretation.unsatisfied()) {
+			Atom accName = positiveTransformer.collect(adf.getAcceptanceCondition(s), consumer);
+			consumer.accept(Clause.of(new Negation(fn.apply(s))));
+			accs.add(accName);
+		}
+
+		consumer.accept(Clause.of(accs));
 	}
 
 }

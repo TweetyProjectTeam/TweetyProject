@@ -20,18 +20,16 @@ package net.sf.tweety.arg.adf.reasoner.sat.verifier;
 
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.VerifyAdmissibleSatEncoding;
-import net.sf.tweety.arg.adf.reasoner.sat.encodings.SatEncoding;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * @author Mathias Hofer
  *
  */
 public class AdmissibleVerifier implements Verifier {
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -52,12 +50,8 @@ public class AdmissibleVerifier implements Verifier {
 	 * net.sf.tweety.arg.adf.semantics.Interpretation)
 	 */
 	@Override
-	public boolean verify(SatSolverState state, PropositionalMapping mapping, Interpretation candidate,
-			AbstractDialecticalFramework adf) {
-		Proposition toggle = new Proposition();
-		SatEncoding encoding = new VerifyAdmissibleSatEncoding(candidate, toggle);
-		encoding.encode(state::add, mapping, adf);
-		state.assume(toggle, false);
+	public boolean verify(SatSolverState state, PropositionalMapping mapping, Interpretation candidate, AbstractDialecticalFramework adf) {
+		new VerifyAdmissibleSatEncoding(candidate).encode(state::add, mapping, adf);
 		boolean notAdmissible = state.satisfiable();
 		return !notAdmissible;
 	}
@@ -75,6 +69,6 @@ public class AdmissibleVerifier implements Verifier {
 	@Override
 	public boolean postVerification(SatSolverState state, PropositionalMapping mapping, Interpretation candidate,
 			AbstractDialecticalFramework adf, boolean verificationResult) {
-		return false;
+		return true;
 	}
 }

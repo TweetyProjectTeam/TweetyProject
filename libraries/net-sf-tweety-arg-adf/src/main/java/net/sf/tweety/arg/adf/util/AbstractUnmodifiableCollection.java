@@ -18,7 +18,7 @@
  */
 package net.sf.tweety.arg.adf.util;
 
-import java.util.AbstractSet;
+import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  *
  * @param <E> the elements
  */
-public abstract class AbstractUnmodifiableSet<E> extends AbstractSet<E>{
+public abstract class AbstractUnmodifiableCollection<E> extends AbstractCollection<E>{
 
 	/* (non-Javadoc)
 	 * @see java.util.Collection#removeIf(java.util.function.Predicate)

@@ -34,7 +34,7 @@ import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
 import net.sf.tweety.arg.adf.semantics.link.LinkType;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
-import net.sf.tweety.arg.adf.util.AbstractUnmodifiableSet;
+import net.sf.tweety.arg.adf.util.AbstractUnmodifiableCollection;
 import net.sf.tweety.arg.adf.util.LazyMap;
 
 /**
@@ -45,7 +45,7 @@ import net.sf.tweety.arg.adf.util.LazyMap;
  * @author Mathias Hofer
  *
  */
-public final class GraphAbstractDialecticalFramework implements AbstractDialecticalFramework {
+final class GraphAbstractDialecticalFramework implements AbstractDialecticalFramework {
 
 	private final Map<Argument, Node> index;
 
@@ -337,7 +337,7 @@ public final class GraphAbstractDialecticalFramework implements AbstractDialecti
 		}	
 	}
 	
-	private static abstract class LinkSet extends AbstractUnmodifiableSet<Link> {
+	private static abstract class LinkSet extends AbstractUnmodifiableCollection<Link> implements Set<Link> {
 		
 		private final Collection<Link> edges;
 			

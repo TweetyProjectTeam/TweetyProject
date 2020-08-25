@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.util.UnionSetView;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * An immutable representation of acceptance conditions for ADFs.
@@ -78,6 +77,14 @@ public interface AcceptanceCondition {
 	 */
 	<U, D> U accept(Visitor<U, D> visitor, D topDownData);
 	
+	/**
+	 * Checks if the given argument is contained in this acceptance condition.
+	 * <p>
+	 * Note that this relation is reflexive, hence each argument contains itself.
+	 * 
+	 * @param arg
+	 * @return
+	 */
 	default boolean contains(Argument arg) {
 		return getChildren()
 				.stream()

@@ -35,7 +35,7 @@ public final class DisjunctionAcceptanceCondition extends AbstractAcceptanceCond
 	/**
 	 * @param children the children of the disjunction
 	 */
-	public DisjunctionAcceptanceCondition(Collection<AcceptanceCondition> children) {
+	public DisjunctionAcceptanceCondition(Collection<? extends AcceptanceCondition> children) {
 		super(children);
 		if (children.size() < 2) {
 			throw new IllegalArgumentException("At least 2 children expected!");

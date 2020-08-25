@@ -24,10 +24,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import net.sf.tweety.arg.adf.parser.KppADFFormatParser;
+import net.sf.tweety.arg.adf.io.KppADFFormatParser;
 import net.sf.tweety.arg.adf.sat.NativeMinisatSolver;
 import net.sf.tweety.arg.adf.semantics.link.SatLinkStrategy;
-import net.sf.tweety.commons.ParserException;
 
 public class KppADFFormatParserTest {
 
@@ -35,63 +34,63 @@ public class KppADFFormatParserTest {
 
 	private KppADFFormatParser parser = new KppADFFormatParser(new SatLinkStrategy(new NativeMinisatSolver()), false);
 
-	private void parseAllInDirectory(String dir) throws ParserException, FileNotFoundException, IOException {
+	private void parseAllInDirectory(String dir) throws FileNotFoundException, IOException {
 		File[] instances = new File(dir).listFiles((File f, String name) -> name.endsWith(".adf"));
 		for (File f : instances) {
-			parser.parseBeliefBaseFromFile(f.getPath());
+			parser.parse(f);
 		}
 	}
 
 //	@Test(timeout = DEFAULT_TIMEOUT)
-	public void testAllValid() throws IOException, ParserException {
+	public void testAllValid() throws IOException {
 		parseAllInDirectory("src/test/resources/valid");
 	}
 
 //	@Test(timeout = 4000)
-	public void testAllKppADFInstances() throws IOException, ParserException {
+	public void testAllKppADFInstances() throws IOException {
 		parseAllInDirectory("src/test/resources/k++adf_instances");
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
-	public void testNoLinebreak() throws ParserException, IOException {
+	public void testNoLinebreak() throws IOException {
 		String input = "s(1). s(2). ac(1,and(1,2)).";
-		parser.parseBeliefBase(input);
+		parser.parse(input);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
-	public void testNoWhitespace() throws ParserException, IOException {
+	public void testNoWhitespace() throws IOException {
 		String input = "s(1).s(2).ac(1,and(1,2)).";
-		parser.parseBeliefBase(input);
+		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = ParserException.class)
-	public void testMissingDot4() throws ParserException, IOException {
+	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	public void testMissingDot4() throws IOException {
 		String input = "s(1) s(2) ac(1,and(1,2))";
-		parser.parseBeliefBase(input);
+		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = ParserException.class)
-	public void testMissingDot3() throws ParserException, IOException {
+	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	public void testMissingDot3() throws IOException {
 		String input = "s(1). s(2). ac(1,and(1,2))";
-		parser.parseBeliefBase(input);
+		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = ParserException.class)
-	public void testMissingDot2() throws ParserException, IOException {
+	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	public void testMissingDot2() throws IOException {
 		String input = "s(1). s(2) ac(1,and(1,2)).";
-		parser.parseBeliefBase(input);
+		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = ParserException.class)
-	public void testMissingDot1() throws ParserException, IOException {
+	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	public void testMissingDot1() throws IOException {
 		String input = "s(1) s(2). ac(1,and(1,2)).";
-		parser.parseBeliefBase(input);
+		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = ParserException.class)
-	public void testUndefinedArgumentInACC() throws ParserException, IOException {
+	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	public void testUndefinedArgumentInACC() throws IOException {
 		String input = "s(1). ac(1,and(1,2)).";
-		parser.parseBeliefBase(input);
+		parser.parse(input);
 	}
 
 }

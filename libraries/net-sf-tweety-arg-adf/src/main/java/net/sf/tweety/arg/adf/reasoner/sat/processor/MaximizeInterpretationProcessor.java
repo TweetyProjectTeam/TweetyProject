@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.arg.adf.reasoner.sat.processor;
 
+import java.util.Set;
+
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.LargerInterpretationSatEncoding;
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.RefineLargerSatEncoding;
@@ -27,8 +29,7 @@ import net.sf.tweety.arg.adf.reasoner.sat.verifier.Verifier;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
 
 /**
  * Maximizes the given interpretation and afterwards restricts the search space
@@ -64,8 +65,8 @@ public class MaximizeInterpretationProcessor implements InterpretationProcessor 
 			AbstractDialecticalFramework adf) {
 		Interpretation maximal = interpretation;
 		new LargerInterpretationSatEncoding(maximal).encode(processingState::add, mapping, adf);
-		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = null;
-		while ((witness = processingState.witness()) != null) {
+		Set<Atom> witness = null;
+		while ((witness = processingState.witness(mapping.getArguments())) != null) {
 			Interpretation larger = Interpretation.fromWitness(witness, mapping, adf);
 			SatEncoding restrict = null;
 			if (verifier == null || verifier.verify(verificationState, mapping, larger, adf)) {

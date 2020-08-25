@@ -21,59 +21,39 @@ package net.sf.tweety.arg.adf.reasoner.sat.encodings;
 import java.util.function.Consumer;
 
 import net.sf.tweety.arg.adf.semantics.link.Link;
+import net.sf.tweety.arg.adf.semantics.link.LinkType;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Negation;
 
 /**
  * @author Mathias Hofer
  *
  */
 public class BipolarSatEncoding implements SatEncoding {
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
-	 * adf.reasoner.sat.SatEncodingContext)
+	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.
+	 * tweety.arg. adf.reasoner.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Disjunction> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
 		for (Argument r : adf.getArguments()) {
-			Proposition rTrue = mapping.getTrue(r);
-			Proposition rFalse = mapping.getFalse(r);
-			for (Link l : adf.linksTo(r)) {				
-				if (l.getType().isAttacking()) {
-					// first implication
-					Disjunction clause1 = new Disjunction();
-					clause1.add(new Negation(rTrue));
-					clause1.add(mapping.getFalse(l.getFrom()));
-					clause1.add(mapping.getLink(l));
-					consumer.accept(clause1);
-
-					// second implication
-					Disjunction clause2 = new Disjunction();
-					clause2.add(new Negation(rFalse));
-					clause2.add(mapping.getTrue(l.getFrom()));
-					clause2.add(new Negation(mapping.getLink(l)));
-					consumer.accept(clause2);
-				}  else if (l.getType().isSupporting()) {
-					// first implication
-					Disjunction clause1 = new Disjunction();
-					clause1.add(new Negation(rTrue));
-					clause1.add(mapping.getTrue(l.getFrom()));
-					clause1.add(new Negation(mapping.getLink(l)));
-					consumer.accept(clause1);
-
-					// second implication
-					Disjunction clause2 = new Disjunction();
-					clause2.add(new Negation(rFalse));
-					clause2.add(mapping.getFalse(l.getFrom()));
-					clause2.add(mapping.getLink(l));
-					consumer.accept(clause2);
+			Atom rTrue = mapping.getTrue(r);
+			Atom rFalse = mapping.getFalse(r);
+			for (Link l : adf.linksTo(r)) {
+				Atom link = mapping.getLink(l);
+				if (l.getType() == LinkType.ATTACKING) {
+					consumer.accept(Clause.of(new Negation(rTrue), mapping.getFalse(l.getFrom()), link));
+					consumer.accept(Clause.of(new Negation(rFalse), mapping.getTrue(l.getFrom()), new Negation(link)));
+				} else if (l.getType() == LinkType.SUPPORTING) {
+					consumer.accept(Clause.of(new Negation(rTrue), mapping.getTrue(l.getFrom()), new Negation(link)));
+					consumer.accept(Clause.of(new Negation(rFalse), mapping.getFalse(l.getFrom()), link));
 				}
 			}
 		}

@@ -16,9 +16,10 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.arg.adf.reasoner.ordering;
+package net.sf.tweety.arg.adf.reasoner.heuristics;
 
-import java.util.stream.Stream;
+import java.util.Comparator;
+import java.util.Objects;
 
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
@@ -27,40 +28,36 @@ import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
  * @author Mathias Hofer
  *
  */
-public final class ArgumentDegreeOrdering extends AbstractOrdering<Argument> {
+public final class DegreeComparator implements Comparator<Argument> {
 
 	public static enum DegreeType {
-		INCOMING,
-		OUTGOING,
-		UNDIRECTED
+		INCOMING, OUTGOING, UNDIRECTED
 	}
-	
+
 	private final DegreeType degreeType;
 	
+	private final AbstractDialecticalFramework adf;
+
 	/**
 	 * 
-	 * @param degreeType specifies the type of the degree
+	 * @param degreeType
+	 *            specifies the type of the degree
 	 */
-	public ArgumentDegreeOrdering(DegreeType degreeType) {
-		this.degreeType = degreeType;
+	public DegreeComparator(AbstractDialecticalFramework adf, DegreeType degreeType) {
+		this.adf = Objects.requireNonNull(adf);
+		this.degreeType = Objects.requireNonNull(degreeType);
 	}
 	
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.ordering.AbstractOrdering#compare(java.
-	 * lang.Object, java.lang.Object,
-	 * net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework)
+	/* (non-Javadoc)
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	protected int compare(Argument a1, Argument a2, AbstractDialecticalFramework adf) {
+	public int compare(Argument a1, Argument a2) {
 		int degree1 = degree(a1, adf);
 		int degree2 = degree(a2, adf);
 		return Integer.compare(degree1, degree2);
 	}
-	
+
 	private int degree(Argument arg, AbstractDialecticalFramework adf) {
 		switch (degreeType) {
 		case INCOMING:
@@ -71,18 +68,6 @@ public final class ArgumentDegreeOrdering extends AbstractOrdering<Argument> {
 			return adf.incomingDegree(arg) + adf.outgoingDegree(arg);
 		}
 		throw new AssertionError();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.ordering.AbstractOrdering#stream(net.sf.
-	 * tweety.arg.adf.syntax.AbstractDialecticalFramework)
-	 */
-	@Override
-	protected Stream<Argument> stream(AbstractDialecticalFramework adf) {
-		return adf.getArguments().stream();
 	}
 
 }

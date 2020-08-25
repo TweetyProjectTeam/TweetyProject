@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.arg.adf.syntax.adf;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -29,8 +28,6 @@ import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.transform.Transformer;
-import net.sf.tweety.commons.BeliefBase;
-import net.sf.tweety.commons.SingleSetSignature;
 
 /**
  * The implementing subtypes must ensure the following properties:
@@ -48,7 +45,7 @@ import net.sf.tweety.commons.SingleSetSignature;
  * @author Mathias Hofer
  *
  */
-public interface AbstractDialecticalFramework extends BeliefBase {
+public interface AbstractDialecticalFramework {
 
 	static AbstractDialecticalFramework empty() {
 		return EmptyAbstractDialecticalFramework.INSTANCE;
@@ -67,17 +64,6 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 	}
 	
 	/**
-	 * Allows to add arguments and acceptance conditions. Throws an exception if
-	 * any other operation is performed on the ADF.
-	 * 
-	 * @param adf the ADF to extend
-	 * @return an extension builder
-	 */
-	static Builder extend(AbstractDialecticalFramework adf) {
-		return new ExtendedAbstractDialecticalFramework.ExtendedBuilder(adf);
-	}
-	
-	/**
 	 * Creates a copy of the given AbstractDialecticalFramework, which can be modified before build() is called.
 	 * 
 	 * @param adf the ADF to copy
@@ -88,6 +74,7 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 		for (Argument arg : adf.getArguments()) {
 			builder.add(arg, adf.getAcceptanceCondition(arg));
 		}
+		// TODO: rethink this, we may not want to compute links here - which may be the case if we call links()
 		for (Link link : adf.links()) {
 			builder.add(link);
 		}
@@ -202,16 +189,6 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 	 */
 	int kBipolar();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.sf.tweety.commons.BeliefBase#getMinimalSignature()
-	 */
-	@Override
-	default Signature getMinimalSignature() {
-		return new Signature(getArguments());
-	}
-
 	interface Builder {
 
 		Builder lazy(LinkStrategy linkStrategy);
@@ -227,36 +204,6 @@ public interface AbstractDialecticalFramework extends BeliefBase {
 		Builder remove(Argument arg);
 		
 		AbstractDialecticalFramework build();
-
-	}
-
-	static class Signature extends SingleSetSignature<Argument> {
-
-		public Signature(Set<Argument> formulas) {
-			super(formulas);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see net.sf.tweety.commons.Signature#add(java.lang.Object)
-		 */
-		@Override
-		public void add(Object obj) {
-			if (obj instanceof Argument) {
-				formulas.add((Argument) obj);
-			}
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see net.sf.tweety.commons.SingleSetSignature#clone()
-		 */
-		@Override
-		public SingleSetSignature<Argument> clone() {
-			return new Signature(new HashSet<>(formulas));
-		}
 
 	}
 

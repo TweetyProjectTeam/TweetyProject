@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
 import net.sf.tweety.arg.adf.util.MinusSetView;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class represents a three-valued interpretation of an Abstract
@@ -66,7 +66,7 @@ public interface Interpretation {
 	static Interpretation fromSet(Set<Argument> satisfied, AbstractDialecticalFramework adf) {
 		return new SetInterpretation(satisfied, Set.of(), new MinusSetView<>(adf.getArguments(), satisfied));
 	}
-	
+		
 	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, AbstractDialecticalFramework adf) {
 		Set<Argument> undecided = new HashSet<>();
 		for (Argument arg : adf.getArguments()) {
@@ -75,6 +75,31 @@ public interface Interpretation {
 			}
 		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
+	}
+	
+	/**
+	 * Extends the given interpretation by deciding a currently undecided argument. If the argument is not undecided in the given interpretation, an exception is thrown.
+	 * 
+	 * @param toExtend
+	 * @param argument
+	 * @param value
+	 * @return
+	 */
+	static Interpretation extend(Interpretation toExtend, Argument argument, boolean value) {
+		if (!toExtend.undecided(argument)) {
+			throw new IllegalArgumentException("Given argument must be undecided!");
+		}
+		Set<Argument> undecided = new HashSet<Argument>(toExtend.undecided());
+		undecided.remove(argument);
+		if (value) {
+			Set<Argument> satisfied = new HashSet<>(toExtend.satisfied());
+			satisfied.add(argument);
+			return new SetInterpretation(satisfied, toExtend.unsatisfied(), undecided);
+		} else {
+			Set<Argument> unsatisfied = new HashSet<>(toExtend.unsatisfied());
+			unsatisfied.add(argument);
+			return new SetInterpretation(toExtend.satisfied(), unsatisfied, undecided);
+		}
 	}
 
 	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, Set<Argument> undecided) {
@@ -90,15 +115,15 @@ public interface Interpretation {
 	 * @throws NullPointerException if any of the arguments are null
 	 * @return an ADF interpretation
 	 */
-	static Interpretation fromWitness(net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness,
+	static Interpretation fromWitness(Set<Atom> witness,
 			PropositionalMapping encodingContext, AbstractDialecticalFramework adf) {
 		Set<Argument> satisfied = new HashSet<>();
 		Set<Argument> unsatisfied = new HashSet<>();
 		Set<Argument> undecided = new HashSet<>();
 		for (Argument a : adf.getArguments()) {
-			if (witness.satisfies(encodingContext.getTrue(a))) {
+			if (witness.contains(encodingContext.getTrue(a))) {
 				satisfied.add(a);
-			} else if (witness.satisfies(encodingContext.getFalse(a))) {
+			} else if (witness.contains(encodingContext.getFalse(a))) {
 				unsatisfied.add(a);
 			} else {
 				undecided.add(a);
@@ -106,7 +131,7 @@ public interface Interpretation {
 		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
-		
+			
 	static Interpretation partial(Set<Argument> satisfied, Set<Argument> unsatisfied, AbstractDialecticalFramework adf) {
 		Set<Argument> undecided = new HashSet<Argument>();
 		for (Argument arg : adf.getArguments()) {
@@ -152,6 +177,13 @@ public interface Interpretation {
 			}
 		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
+	}
+	
+	static Interpretation restrictUndecided(Interpretation interpretation, Collection<Argument> restriction) {
+		Set<Argument> undecided = interpretation.undecided().stream()
+				.filter(restriction::contains)
+				.collect(Collectors.toSet());
+		return new SetInterpretation(interpretation.satisfied(), interpretation.unsatisfied(), undecided);
 	}
 	
 	/**
@@ -280,6 +312,14 @@ public interface Interpretation {
 	
 	default boolean containsAll(Collection<Argument> arguments) {
 		return arguments().containsAll(arguments);
+	}
+	
+	/**
+	 * 
+	 * @return true iff the argument is either satisfied or unsatisfied
+	 */
+	default boolean decided(Argument arg) {
+		return satisfied(arg) || unsatisfied(arg);
 	}
 	
 	/**

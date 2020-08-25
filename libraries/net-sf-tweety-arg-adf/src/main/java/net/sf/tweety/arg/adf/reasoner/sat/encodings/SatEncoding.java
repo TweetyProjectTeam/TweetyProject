@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.function.Consumer;
 
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
 
 /**
  * 
@@ -32,15 +32,15 @@ import net.sf.tweety.logics.pl.syntax.Disjunction;
  */
 public interface SatEncoding {
 
-	void encode(Consumer<Disjunction> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf);
+	void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf);
 	
-	default Collection<Disjunction> encode(PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		Collection<Disjunction> clauses = new LinkedList<>();
+	default Collection<Clause> encode(PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+		Collection<Clause> clauses = new LinkedList<>();
 		encode(clauses::add, mapping, adf);
 		return clauses;
 	}
 	
-	default void encode(Collection<Disjunction> collection, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+	default void encode(Collection<Clause> collection, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
 		encode(collection::add, mapping, adf);
 	}
 

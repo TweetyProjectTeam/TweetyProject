@@ -32,7 +32,7 @@ import net.sf.tweety.arg.adf.util.UnionSetView;
  * @author Mathias Hofer
  *
  */
-public final class SetInterpretation implements Interpretation {
+final class SetInterpretation implements Interpretation {
 
 	private final Set<Argument> satisfied;
 

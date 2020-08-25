@@ -36,7 +36,7 @@ public abstract class AbstractAcceptanceCondition implements AcceptanceCondition
 	 * @param children the children of this acceptance condition
 	 * @throws NullPointerException if children or one of its elements is null
 	 */
-	public AbstractAcceptanceCondition(Collection<AcceptanceCondition> children) {
+	public AbstractAcceptanceCondition(Collection<? extends AcceptanceCondition> children) {
 		this.children = Set.copyOf(children); // implicit not-null check
 	}
 
@@ -72,10 +72,7 @@ public abstract class AbstractAcceptanceCondition implements AcceptanceCondition
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((children == null) ? 0 : children.hashCode());
-		return result;
+		return Objects.hash(children);
 	}
 
 	/* (non-Javadoc)
@@ -86,7 +83,10 @@ public abstract class AbstractAcceptanceCondition implements AcceptanceCondition
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof AbstractAcceptanceCondition)) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		AbstractAcceptanceCondition other = (AbstractAcceptanceCondition) obj;

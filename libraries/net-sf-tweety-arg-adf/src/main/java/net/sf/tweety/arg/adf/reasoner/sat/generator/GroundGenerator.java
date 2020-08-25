@@ -18,7 +18,6 @@
  */
 package net.sf.tweety.arg.adf.reasoner.sat.generator;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,10 +29,10 @@ import net.sf.tweety.arg.adf.sat.SatSolverState;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Negation;
 import net.sf.tweety.arg.adf.transform.TseitinTransformer;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * @author Mathias Hofer
@@ -74,8 +73,8 @@ public final class GroundGenerator implements CandidateGenerator {
 			for (Argument s : interpretation.arguments()) {
 				new FixPartialSatEncoding(interpretation).encode(state::add, encodingContext, adf);
 
-				TseitinTransformer transformer = TseitinTransformer.builder(r -> encodingContext.getLink(r, s)).build();
-				Proposition accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
+				TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> encodingContext.getLink(r, s), false);
+				Atom accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
 
 				// check not-taut
 				state.assume(accName, false);
@@ -105,12 +104,10 @@ public final class GroundGenerator implements CandidateGenerator {
 	}
 
 
-	private void makeUnsat(SatSolverState state) {
-		Proposition p = new Proposition();
-		Disjunction clause1 = new Disjunction(Collections.singleton(p));
-		Disjunction clause2 = new Disjunction(Collections.singleton(new Negation(p)));
-		state.add(clause1);
-		state.add(clause2);
+	private static void makeUnsat(SatSolverState state) {
+		Atom p = Atom.of("unsat");
+		state.add(Clause.of(p));
+		state.add(Clause.of(new Negation(p)));
 	}
 
 }

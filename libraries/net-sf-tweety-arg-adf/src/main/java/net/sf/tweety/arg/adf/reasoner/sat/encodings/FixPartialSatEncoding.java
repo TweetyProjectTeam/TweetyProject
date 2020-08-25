@@ -24,8 +24,7 @@ import java.util.function.Consumer;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
 
 /**
  * Fixes the already assigned true/false values.
@@ -37,47 +36,24 @@ public class FixPartialSatEncoding implements SatEncoding {
 	
 	private final Interpretation interpretation;
 	
-	private final Proposition toggle;
-		
 	/**
 	 * @param interpretation the interpretation which is used to fix values
 	 */
 	public FixPartialSatEncoding(Interpretation interpretation) {
-		this(interpretation, null);
-	}
-
-	/**
-	 * @param interpretation the interpretation which is used to fix values
-	 * @param toggle the toggle to activate the encoding
-	 */
-	public FixPartialSatEncoding(Interpretation interpretation, Proposition toggle) {
 		this.interpretation = Objects.requireNonNull(interpretation);
-		this.toggle = toggle;
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Disjunction> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
 		for (Argument a : interpretation.satisfied()) {
-			Disjunction clause = new Disjunction();
-			clause.add(context.getTrue(a));
-			addToggle(clause);
-			consumer.accept(clause);
+			consumer.accept(Clause.of(context.getTrue(a)));
 		}
 
 		for (Argument a : interpretation.unsatisfied()) {
-			Disjunction clause = new Disjunction();
-			clause.add(context.getFalse(a));
-			addToggle(clause);
-			consumer.accept(clause);
-		}
-	}
-	
-	private void addToggle(Disjunction disjunction) {
-		if (toggle != null) {
-			disjunction.add(toggle);
+			consumer.accept(Clause.of(context.getFalse(a)));
 		}
 	}
 

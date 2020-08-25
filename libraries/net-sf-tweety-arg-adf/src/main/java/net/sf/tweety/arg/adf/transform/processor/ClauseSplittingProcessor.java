@@ -20,17 +20,18 @@ package net.sf.tweety.arg.adf.transform.processor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Literal;
+import net.sf.tweety.arg.adf.syntax.pl.Negation;
 
 /**
  * @author Mathias Hofer
  *
  */
-public final class ClauseSplittingProcessor implements Processor<Disjunction, Collection<Disjunction>>{
+public final class ClauseSplittingProcessor implements Processor<Set<Literal>, Collection<Set<Literal>>>{
 
 	private final int maxClauseSize;
 		
@@ -45,24 +46,25 @@ public final class ClauseSplittingProcessor implements Processor<Disjunction, Co
 	 * @see net.sf.tweety.arg.adf.transform.processor.Processor#process(java.lang.Object)
 	 */
 	@Override
-	public Collection<Disjunction> process(Disjunction clause) {
+	public Collection<Set<Literal>> process(Set<Literal> clause) {
 		int clauseSize = clause.size();
 		if (clauseSize > maxClauseSize) {
 			// divide and ceil
 			int numberOfSplits = (clauseSize + maxClauseSize - 1) / maxClauseSize;
 
-			Collection<Disjunction> splits = new ArrayList<>(numberOfSplits);
+			Collection<Set<Literal>> splits = new ArrayList<>(numberOfSplits);
 
-			Disjunction split = null;
-			Proposition glue = null;
+			Set<Literal> split = null;
+			Atom glue = null;
 			// the number of glue variables for the current split
 			// either 1 for the first and last split, or 2 for all in-between
 			int glueNum = 1;
 
-			for (int i = 0; i < clauseSize; i++) {
+			int i = 0;
+			for (Literal literal : clause) {
 				// the current clause is full, therefore create a new one
 				if (i % (maxClauseSize - glueNum) == 0) {
-					split = new Disjunction();
+					split = new HashSet<>();
 
 					// not the first split, therefore glue the splits together
 					// before we create a new glue variable
@@ -75,7 +77,7 @@ public final class ClauseSplittingProcessor implements Processor<Disjunction, Co
 						glueNum = 1;
 					} else {
 						// not the last therefore create a new glue variable
-						glue = new Proposition("glue_" + i);
+						glue = Atom.of("glue_" + i);
 						split.add(glue);
 						// the following clause contains 2 glue variables
 						glueNum = 2;
@@ -84,7 +86,8 @@ public final class ClauseSplittingProcessor implements Processor<Disjunction, Co
 					splits.add(split);
 				}
 
-				split.add(clause.get(i));
+				split.add(literal);
+				i++;
 			}
 			return splits;
 		}

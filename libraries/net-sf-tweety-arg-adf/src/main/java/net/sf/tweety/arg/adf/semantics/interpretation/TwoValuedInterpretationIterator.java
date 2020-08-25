@@ -20,28 +20,29 @@ package net.sf.tweety.arg.adf.semantics.interpretation;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.tweety.arg.adf.syntax.Argument;
-import net.sf.tweety.commons.util.DefaultSubsetIterator;
-import net.sf.tweety.commons.util.SubsetIterator;
 
 /**
  * @author Mathias Hofer
  *
  */
-public class TwoValuedInterpretationIterator implements Iterator<Interpretation> {
+public final class TwoValuedInterpretationIterator implements Iterator<Interpretation> {
 
-	private final SubsetIterator<Argument> iterator;
+	private int value;
 	
-	private final Set<Argument> arguments;
+	private final int max;
 	
-	public TwoValuedInterpretationIterator(Set<Argument> arguments) {
+	private final List<Argument> arguments;
+	
+	public TwoValuedInterpretationIterator(List<Argument> arguments) {
 		if (arguments == null || arguments.isEmpty()) {
 			throw new IllegalArgumentException("arguments must not be null or empty!");
 		}
-		this.arguments = Set.copyOf(arguments);
-		this.iterator = new DefaultSubsetIterator<Argument>(arguments);
+		this.arguments = List.copyOf(arguments);
+		this.max = 2 << arguments.size(); // 2 ^ arguments.size()
 	}
 
 	/* (non-Javadoc)
@@ -49,7 +50,11 @@ public class TwoValuedInterpretationIterator implements Iterator<Interpretation>
 	 */
 	@Override
 	public boolean hasNext() {
-		return iterator.hasNext();
+		return value < max;
+	}
+	
+	private static boolean getBit(int n, int k) {
+	    return ((n >> k) & 1) == 1;
 	}
 	
 	/* (non-Javadoc)
@@ -57,15 +62,18 @@ public class TwoValuedInterpretationIterator implements Iterator<Interpretation>
 	 */
 	@Override
 	public Interpretation next() {
-		Set<Argument> satisfied = iterator.next();
-		Set<Argument> unsatisfied = new HashSet<Argument>();
-		for (Argument argument : arguments) {
-			if (!satisfied.contains(argument)) {
-				unsatisfied.add(argument);
+		int curr = ++value;
+		Set<Argument> satisfied = new HashSet<>();
+		Set<Argument> unsatisfied = new HashSet<>();
+		for (int i = 0; i < arguments.size(); i++) {
+			Argument arg = arguments.get(i);
+			if (getBit(curr, i)) {
+				satisfied.add(arg);
+			} else {
+				unsatisfied.add(arg);
 			}
 		}
 		return Interpretation.fromSets(satisfied, unsatisfied, Set.of());
 	}
-	
 	
 }

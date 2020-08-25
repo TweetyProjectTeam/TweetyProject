@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.arg.adf.reasoner.sat.generator;
 
+import java.util.Set;
+
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.ConflictFreeInterpretationSatEncoding;
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import net.sf.tweety.arg.adf.reasoner.sat.encodings.RefineUnequalSatEncoding;
@@ -25,8 +27,7 @@ import net.sf.tweety.arg.adf.reasoner.sat.encodings.SatEncoding;
 import net.sf.tweety.arg.adf.sat.SatSolverState;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
 
 /**
  * @author Mathias Hofer
@@ -56,7 +57,7 @@ public final class ConflictFreeGenerator implements CandidateGenerator {
 	 */
 	@Override
 	public Interpretation generate(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		net.sf.tweety.commons.Interpretation<PlBeliefSet, PlFormula> witness = state.witness();
+		Set<Atom> witness = state.witness(mapping.getArguments());
 		if (witness != null) {
 			// prevent the same interpretation from being computed again
 			Interpretation conflictFree = Interpretation.fromWitness(witness, mapping, adf);

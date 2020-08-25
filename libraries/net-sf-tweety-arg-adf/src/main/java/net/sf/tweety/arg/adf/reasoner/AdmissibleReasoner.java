@@ -38,7 +38,7 @@ public class AdmissibleReasoner extends AbstractDialecticalFrameworkReasoner {
 	private static Pipeline satBased(IncrementalSatSolver solver) {
 		return Pipeline.builder(new ConflictFreeGenerator(), solver)
 				.addStateProcessor(new KBipolarStateProcessor())
-//				.addStateProcessor(RelativeKBipolarStateProcessor.relativeBounded(0.2, 10, new ArgumentDegreeOrdering(DegreeType.OUTGOING), solver))
+//				.addStateProcessor(new RelativeKBipolarStateProcessor(3, solver))
 				.setVerifier(new AdmissibleVerifier())
 				.build();
 	}

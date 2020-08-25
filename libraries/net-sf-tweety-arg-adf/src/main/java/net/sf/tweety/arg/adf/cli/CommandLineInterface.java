@@ -18,12 +18,13 @@
  */
 package net.sf.tweety.arg.adf.cli;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.sf.tweety.arg.adf.parser.KppADFFormatParser;
+import net.sf.tweety.arg.adf.io.KppADFFormatParser;
 import net.sf.tweety.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
 import net.sf.tweety.arg.adf.reasoner.AdmissibleReasoner;
 import net.sf.tweety.arg.adf.reasoner.CompleteReasoner;
@@ -35,7 +36,6 @@ import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
 import net.sf.tweety.arg.adf.semantics.link.SatLinkStrategy;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import net.sf.tweety.commons.ParserException;
 
 /**
  * @author Mathias Hofer
@@ -48,7 +48,7 @@ public class CommandLineInterface {
 	private static final Map<String, AbstractDialecticalFrameworkReasoner> reasonerBySemantics = new HashMap<String, AbstractDialecticalFrameworkReasoner>();
 
 	private static final LinkStrategy linkStrategy = new SatLinkStrategy(satSolver);
-	
+
 	private static final KppADFFormatParser parser = new KppADFFormatParser(linkStrategy, true);
 
 	private static final String prompt = "USAGE: java -jar jadf.jar <file> <sem>\r\n\nCOMMAND LINE ARGUMENTS:\r\n<file>  : Input filename for ADF instance.\r\n<sem>   : ADF semantics. <sem>={mod|nai|adm|com}";
@@ -61,7 +61,7 @@ public class CommandLineInterface {
 		reasonerBySemantics.put("com", new CompleteReasoner(satSolver));
 	}
 
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		if (args.length < 2) {
 			System.out.println(prompt);
 		} else {
@@ -69,7 +69,7 @@ public class CommandLineInterface {
 			String semantics = args[1];
 			AbstractDialecticalFrameworkReasoner reasoner = reasonerBySemantics.get(semantics);
 			try {
-				AbstractDialecticalFramework adf = parser.parseBeliefBaseFromFile(filename);
+				AbstractDialecticalFramework adf = parser.parse(new File(filename));
 				int modelCount = 0;
 				Iterator<Interpretation> modelIterator = reasoner.modelIterator(adf);
 				while (modelIterator.hasNext()) {
@@ -78,7 +78,7 @@ public class CommandLineInterface {
 					modelCount++;
 				}
 				System.out.println("Total: " + modelCount);
-			} catch (ParserException | IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

@@ -16,23 +16,8 @@
   <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.9</version>
+      <version>4.13</version>
       <scope>test</scope>
     </dependency>
-  	<dependency>
-  		<groupId>net.sf.tweety</groupId>
-  		<artifactId>commons</artifactId>
-  		<version>1.17-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>net.sf.tweety</groupId>
-  		<artifactId>math</artifactId>
-  		<version>1.17-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>net.sf.tweety.logics</groupId>
-  		<artifactId>pl</artifactId>
-  		<version>1.17-SNAPSHOT</version>
-  	</dependency>
   </dependencies>
 </project>

@@ -21,17 +21,14 @@ package net.sf.tweety.arg.adf.sat;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import net.sf.tweety.commons.Interpretation;
-import net.sf.tweety.logics.pl.semantics.PossibleWorld;
-import net.sf.tweety.logics.pl.syntax.Disjunction;
-import net.sf.tweety.logics.pl.syntax.Negation;
-import net.sf.tweety.logics.pl.syntax.PlBeliefSet;
-import net.sf.tweety.logics.pl.syntax.PlFormula;
-import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.arg.adf.syntax.pl.Atom;
+import net.sf.tweety.arg.adf.syntax.pl.Clause;
+import net.sf.tweety.arg.adf.syntax.pl.Literal;
 
 /**
  * Experimental lingeling binding
@@ -39,7 +36,7 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
  * @author Mathias Hofer
  *
  */
-public final class NativeLingelingSolver extends IncrementalSatSolver {
+public final class NativeLingelingSolver implements IncrementalSatSolver {
 
 	private static final String DEFAULT_WIN_LIB = "/lingeling.dll";
 	private static final String DEFAULT_LINUX_LIB = "/lingeling.so";
@@ -135,7 +132,7 @@ public final class NativeLingelingSolver extends IncrementalSatSolver {
 		/**
 		 * Maps the propositions to their native representation.
 		 */
-		private Map<Proposition, Integer> propositionsToNative = new HashMap<Proposition, Integer>();
+		private Map<Atom, Integer> propositionsToNative = new HashMap<Atom, Integer>();
 		
 		/**
 		 * Keeps track of the int representation of fresh propositions
@@ -154,45 +151,27 @@ public final class NativeLingelingSolver extends IncrementalSatSolver {
 		}
 
 		@Override
-		public boolean add(Collection<Disjunction> clauses) {
-			for (Disjunction clause : clauses) {
-				update(clause);
-			}
-			return true;
-		}
-
-		@Override
-		public boolean add(Disjunction clause) {
+		public boolean add(Clause clause) {
 			update(clause);
 			return true;
 		}
 
-		private void update(Disjunction clause) {			
+		private void update(Clause clause) {			
 			int size = clause.size();
 			int[] nclause = new int[size + 1];
-			for (int i = 0; i < size; i++) {
-				// try to get the propositions of the given clause, ugly but works
-				// Note: 
-				// 1. getAtoms() causes way to much overhead
-				// 2. there currently is no elegant way to deal with literals
-				PlFormula lit = clause.get(i);
-				Proposition p = null;
-				int sign = 1;
-				if (lit instanceof Proposition) {
-					p = (Proposition) lit;
-				} else {
-					p = (Proposition) ((Negation) lit).getFormula();
-					sign = -1;
-				}
-				
+			int i = 0;
+			for (Literal lit : clause) {
+				Atom p = lit.getAtom();
+			
 				if (!propositionsToNative.containsKey(p)) {
 					propositionsToNative.put(p, nextProposition);
 					NativeLingelingSolver.freeze(handle, nextProposition);
 					nextProposition += 1;
 				}
 				
-				int nprop = propositionsToNative.get(p);
-				nclause[i] = sign * nprop;
+				int mapped = propositionsToNative.get(p);
+				nclause[i] = lit.isPositive() ? mapped : -mapped;
+				i++;
 			}
 			
 			// 0 indicates end of clause
@@ -221,19 +200,28 @@ public final class NativeLingelingSolver extends IncrementalSatSolver {
 		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness()
 		 */
 		@Override
-		public Interpretation<PlBeliefSet, PlFormula> witness() {
+		public Set<Atom> witness() {
 			boolean sat = satisfiable();
 
 			if (sat) {
-				Collection<Proposition> trues = new LinkedList<Proposition>();
-				for (Entry<Proposition, Integer> entry : propositionsToNative.entrySet()) {
+				Set<Atom> trues = new HashSet<>();
+				for (Entry<Atom, Integer> entry : propositionsToNative.entrySet()) {
 					boolean isTrue = deref(handle, entry.getValue());
 					if (isTrue) {
 						trues.add(entry.getKey());
 					}
 				}
-				return new PossibleWorld(trues);
+				return trues;
 			}
+			return null;
+		}
+		
+		/* (non-Javadoc)
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness(java.util.Collection)
+		 */
+		@Override
+		public Set<Atom> witness(Collection<Atom> filter) {
+			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -255,7 +243,7 @@ public final class NativeLingelingSolver extends IncrementalSatSolver {
 		 * pl.syntax.Proposition, boolean)
 		 */
 		@Override
-		public void assume(Proposition proposition, boolean value) {
+		public void assume(Atom proposition, boolean value) {
 			if (!propositionsToNative.containsKey(proposition)) {
 				propositionsToNative.put(proposition, nextProposition);
 				nextProposition += 1;

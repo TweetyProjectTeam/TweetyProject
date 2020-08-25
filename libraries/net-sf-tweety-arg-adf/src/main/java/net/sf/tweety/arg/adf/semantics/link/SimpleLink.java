@@ -27,7 +27,7 @@ import net.sf.tweety.arg.adf.syntax.Argument;
  * 
  * @author Mathias Hofer
  */
-public final class SimpleLink implements Link {
+final class SimpleLink implements Link {
 
 	private final Argument from;
 
