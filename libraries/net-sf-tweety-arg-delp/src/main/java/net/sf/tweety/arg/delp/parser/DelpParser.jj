@@ -1,0 +1,252 @@
+/*
+ *  This file is part of "Tweety", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  Tweety is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2016 The Tweety Project Team <http://tweetyproject.org/contact/>
+ */
+options {
+  JDK_VERSION = "1.8";
+  STATIC=false;
+}
+
+PARSER_BEGIN(DelpParser)
+package net.sf.tweety.arg.delp.parser;
+
+import net.sf.tweety.arg.delp.syntax.DefeasibleLogicProgram;
+import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
+import net.sf.tweety.arg.delp.syntax.DelpFact;
+import net.sf.tweety.arg.delp.syntax.StrictRule;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Parser;
+import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.logics.commons.syntax.Constant;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
+import net.sf.tweety.logics.fol.syntax.FolAtom;
+import net.sf.tweety.logics.fol.syntax.FolFormula;
+import net.sf.tweety.logics.fol.syntax.FolSignature;
+import net.sf.tweety.logics.fol.syntax.Negation;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+  * This class implements a parser for defeasible logic programs. The BNF for defeasible
+  * logic program files is given by (start symbol is THEORY)
+  * <br>
+  * <pre>
+  * THEORY  		::== (EXPRESSION)+
+  * EXPRESSION 		::== FACT | STRICTRULE | DEFEASIBLERULE
+  * FACT 			::== LITERAL + "."
+  * STRICTRULE 		::== LITERAL + "<-" + RULEBODY + "."
+  * DEFEASIBLERULE 	::== LITERAL + "-<" + RULEBODY + "."
+  * RULEBODY 		::== LITERAL | LITERAL + "," + RULEBODY
+  * LITERAL 		::== "~" + ATOM | ATOM
+  * ATOM 			::== PREDICATE | PREDICATE + "(" + TERMLIST + ")"
+  * TERMLIST 		::== TERM | TERM + "," + TERMLIST
+  * TERM 			::== VARIABLE | CONSTANT | QUOTED_STRING
+  *
+  * PREDICATE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with a letter at the beginning.
+  * VARIABLE is a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an uppercase letter at the beginning.
+  * CONSTANT is  a sequence of symbols from {a,...,z,A,...,Z,0,...,9,_,-} with an lowercase letter at the beginning.
+  * QUOTED_STRING is all characters between double quotes.
+  * </pre>
+  */
+@SuppressWarnings("all")
+public class DelpParser extends Parser<DefeasibleLogicProgram,Formula>{
+
+	private FolSignature signature = new FolSignature();
+
+	public DelpParser() { this(new StringReader("")); }
+
+  	public DefeasibleLogicProgram parseBeliefBase(Reader reader) throws ParserException{
+  	  	try {
+  	  		ReInit(reader);
+  	  		return this.Theory(this.signature);
+  	 	} catch(ParseException e) {
+			throw new ParserException(e);
+  	 	}
+  	}
+
+    /**
+     * A formula here is a Literal, that is an Atom or a negated Atom.
+     * The class DelpQuery encapsulates the following.
+     * The Atom is either a DeLP predicate (a predicate with arity > 0) or a
+     * DeLP constant or variable (a predicate with arity == 0).
+     * In the case of a real predicate, test all arguments whether they are
+     * DeLP variables (= begin with upper case letter) or DeLP constants.
+     *
+     * All predicates and constants need to be present in the current signature to parse.
+     *
+     * @param reader the reader to parse from
+     * @return a Formula, which is always a DelpQuery in this implementation,
+     *         that has been successfully parsed with the current signature in mind
+     * @throws ParserException if the reader cannot be successfully parsed into a formula
+     */
+  	public Formula parseFormula(Reader reader) throws ParserException{
+  	  	try {
+  	  		ReInit(reader);
+  	  		FolFormula fol = this.Formula(this.signature);
+  	  		// check that formula contains only known constants and predicates:
+  	  		FolAtom atom =  (FolAtom) fol.getAtoms().iterator().next();
+            Predicate p = atom.getPredicate();
+            if (signature.getPredicate(p.getName()) == null)
+                throw new ParseException("Formula contains unknown predicate '" + p + "'");
+            if (signature.getPredicate(p.getName()).getArity() != p.getArity())
+                throw new ParseException("Formula contains predicate '" + p + "' with non-matching arity");
+            for (Term t : atom.getArguments()) {
+                if (t instanceof Constant &&
+                    signature.getConstant(((Constant) t).get()) == null)
+                        throw new ParseException("Formula constains unknown constant '" + t + "'");
+            }
+            return fol;
+  	 	} catch(ParseException e) {
+			throw new ParserException(e);
+  	 	}
+	}
+
+	public FolSignature getSignature(){
+		return this.signature;
+	}
+
+    private Constant createConstant(String image, DefeasibleLogicProgram delp, FolSignature signature) throws ParseException {
+		// treat constants also as predicates with arity = 0 to be consistent with
+		// parsing queries as formulae:
+
+        // only add constant/predicate to signature if parsing DeLP!
+        Constant constant = new Constant(image);
+        if(delp != null && !signature.containsConstant(image))
+            signature.add(constant);
+        Predicate predicate = new Predicate(image);
+        if(delp != null && !signature.containsPredicate(image))
+            signature.add(predicate);
+        if(signature.containsPredicate(image) && signature.getPredicate(image).getArity() != 0)
+            throw new ParseException("Wrong arity of predicate as constant '" + image + "'");
+        return constant;
+    }
+}
+
+PARSER_END(DelpParser)
+
+SKIP:  { " " | "\t" | "\n" | "\r" | <"%" (~["\n","\r"])* ("\n"|"\r")> }
+TOKEN: {
+    <NAME:   ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z","_","-","0"-"9"])*>
+|   <QUOTED: "\"" (
+                "\\" ~[]     //any escaped character
+             |               //or
+                ~["\"","\\"] //any character except quote or backslash
+             )* "\"" >
+}
+
+DefeasibleLogicProgram Theory(FolSignature signature) :
+{
+	DefeasibleLogicProgram delp = new DefeasibleLogicProgram();
+}
+{
+	( Expression(delp,signature) )+ <EOF>
+	{
+		return delp;
+	}
+}
+
+void Expression(DefeasibleLogicProgram delp,FolSignature signature) :
+{
+	FolFormula lit;
+	Set<FolFormula> body = new HashSet<FolFormula>();
+	FolFormula b;
+}
+{
+    lit=Literal(delp,signature)
+        (
+            "." {delp.add(new DelpFact(lit));}
+        |
+		    "<-" b=Literal(delp,signature) {body.add(b);}
+            (
+                "," b=Literal(delp,signature) {body.add(b);}
+            )* "." {delp.add(new StrictRule(lit,body));}
+        |
+		    "-<" b=Literal(delp,signature) {body.add(b);}
+		    (
+		        "," b=Literal(delp,signature) {body.add(b);}
+		    )* "." {delp.add(new DefeasibleRule(lit,body));}
+        )
+}
+
+FolFormula Formula(FolSignature signature) :
+{
+	FolFormula lit;
+}
+{
+	lit=Literal(null,signature) <EOF> {return lit;}
+}
+
+FolFormula Literal(DefeasibleLogicProgram delp,FolSignature signature) :
+{
+	FolAtom atom;
+}
+{
+	atom=Atom(delp,signature) {return atom;}
+|
+	"~" atom=Atom(delp,signature) {return new Negation(atom);}
+}
+
+FolAtom Atom(DefeasibleLogicProgram delp,FolSignature signature) :
+{
+	Token p;
+	List<Term<?>> terms = new ArrayList<Term<?>>();
+	Term<?> t;
+}
+{
+	p=<NAME>
+	    (
+	        "(" t=Term(delp,signature) {terms.add(t);}
+                ( "," t=Term(delp,signature) {terms.add(t);} )*
+	        ")"
+	    )?
+	{
+        // only add predicate to signature if parsing DeLP!
+        Predicate predicate = new Predicate(p.image,terms.size());
+        if(delp != null && !signature.containsPredicate(p.image))
+            signature.add(predicate);
+        if(signature.containsPredicate(p.image) && signature.getPredicate(p.image).getArity() != terms.size())
+	        throw new ParseException("Wrong arity of predicate '" + p.image + "'");
+        return new FolAtom(predicate,terms);
+	}
+}
+
+Term Term(DefeasibleLogicProgram delp,FolSignature signature) :
+{
+	Token t;
+}
+{
+	t=<NAME>
+	{
+		if(Character.isUpperCase(t.image.charAt(0)))
+			return new Variable(t.image);
+		return createConstant(t.image, delp, signature);
+	}
+|
+    t=<QUOTED>
+    {
+        // get rid of quotes:
+        String text = t.image.substring(1, t.image.length() - 1);
+        return createConstant(text, delp, signature);
+    }
+}
