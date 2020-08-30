@@ -208,7 +208,16 @@ public final class NativePicosatSolver implements IncrementalSatSolver {
 		 */
 		@Override
 		public Set<Atom> witness(Collection<Atom> filter) {
-			// TODO Auto-generated method stub
+			if (satisfiable()) {
+				Set<Atom> witness = new HashSet<>();
+				for (Atom atom : filter) {
+					int mapping = propositionsToNative.get(atom);
+					if (deref(handle, mapping)) {
+						witness.add(atom);
+					}
+				}
+				return witness;
+			}
 			return null;
 		}
 		
