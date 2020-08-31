@@ -34,6 +34,10 @@ public class BpmnModelParser {
 	private void handleChildNode(Node node) {
 		String tagName = node.getNodeName();
 		switch(tagName) {
+		case "collaboration":
+			CollaborationParser collaborationParser = new CollaborationParser(rootParser);
+			collaborationParser.parse(node);
+			break;
 		case "process":
 			ProcessParser processParser = new ProcessParser(rootParser);
 			Process process = processParser.parse(node);

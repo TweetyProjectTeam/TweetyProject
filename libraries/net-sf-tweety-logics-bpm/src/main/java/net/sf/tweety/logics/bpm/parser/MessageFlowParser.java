@@ -6,6 +6,7 @@ public class MessageFlowParser extends AbstractElementParser<BufferedBpmnEdge> {
 
 	public MessageFlowParser(RootParser rootParser) {
 		super(rootParser);
+		this.parsedElement = new BufferedBpmnEdge();
 		this.parsedElement.setFlowType("message");
 	}
 
