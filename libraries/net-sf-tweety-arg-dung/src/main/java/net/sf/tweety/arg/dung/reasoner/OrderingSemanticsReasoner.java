@@ -71,6 +71,7 @@ public class OrderingSemanticsReasoner {
      * @throws IllegalAccessException should never happen
      */
     public List<Collection<Collection<Argument>>> getModels(DungTheory theory) throws InvocationTargetException, IllegalAccessException {
+
         // compute "compare sets" for each subset of theory
         Map<Collection<Argument>, Collection<Argument>> exts1 = new HashMap<>();
         Map<Collection<Argument>, Collection<Argument>> exts2 = new HashMap<>();
@@ -93,10 +94,10 @@ public class OrderingSemanticsReasoner {
                 Collection<Argument> cs2_1 = exts1.get(subset2);
                 Collection<Argument> union1 = new HashSet<>(cs1_1);
                 union1.addAll(cs2_1);
-                if (union1.equals(cs1_1) && !union1.equals(cs2_1)) {
+                if ((union1.equals(cs1_1) && !union1.equals(cs2_1)) || (cs2_1.size() < cs1_1.size())) {
                     // subset2 is subset of subset1 iff the union of the compare sets equals the compare set of 1 and not 2
                     numAttacks.put(subset2, numAttacks.getOrDefault(subset2, 0) + 1);
-                } else if (!union1.equals(cs1_1) && union1.equals(cs2_1)) {
+                } else if ((!union1.equals(cs1_1) && union1.equals(cs2_1)) || (cs1_1.size() < cs2_1.size())) {
                     // subset1 is subset of subset2 iff the union of the compare sets equals the compare set of 2 and not 1
                     numAttacks.put(subset1, numAttacks.getOrDefault(subset1, 0) + 1);
                 } else if (union1.equals(cs1_1) && union1.equals(cs2_1)) {
@@ -105,10 +106,10 @@ public class OrderingSemanticsReasoner {
                     Collection<Argument> cs2_2 = exts2.get(subset2);
                     Collection<Argument> union2 = new HashSet<>(cs1_2);
                     union2.addAll(cs2_2);
-                    if (union2.equals(cs1_2) && !union2.equals(cs2_2)) {
+                    if ((union2.equals(cs1_2) && !union2.equals(cs2_2)) || (cs2_2.size() < cs1_2.size())) {
                         // subset2 is subset of subset1 in regards to the second ordering semantics
                         numAttacks.put(subset2, numAttacks.getOrDefault(subset2, 0) + 1);
-                    } else if (!union2.equals(cs1_2) && union2.equals(cs2_2)) {
+                    } else if ((!union2.equals(cs1_2) && union2.equals(cs2_2)) || (cs1_2.size() < cs2_2.size())) {
                         // subset1 is subset of subset2 in regards to the second ordering semantics
                         numAttacks.put(subset1, numAttacks.getOrDefault(subset1, 0) + 1);
                     }
