@@ -16,14 +16,14 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package net.sf.tweety.logics.bpm.syntax;
+package net.sf.tweety.logics.bpm.analysis;
 
+import net.sf.tweety.logics.bpm.syntax.BpmnModel;
 /**
  * @author Benedikt Knopp
  */
-public class Activity extends BpmnNode{
-	public Activity() {
-		super();
-	}
-
+public interface InconsistencyMeasure<T extends BpmnModel> {
+	
+	public Double inconsistencyMeasure(T processModel);
+	
 }

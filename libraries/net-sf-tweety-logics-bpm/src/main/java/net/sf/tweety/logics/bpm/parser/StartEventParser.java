@@ -30,7 +30,7 @@ public class StartEventParser extends AbstractElementParser<StartEvent> {
 
 		@Override
 		protected void handleChildNode(Node childNode) {
-			String tagName = childNode.getNodeName();
+			String tagName = rootParser.getNormalizedTagName(childNode);
 			switch(tagName) {
 			case "outgoing":
 				String outgoingEdgeId = childNode.getTextContent();

@@ -32,7 +32,7 @@ public class LaneParser extends AbstractElementParser<Lane>{
 
 	@Override
 	protected void handleChildNode(Node childNode) {
-		String tagName = childNode.getNodeName();
+		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
 		case "flowNodeRef":
 			// TODO

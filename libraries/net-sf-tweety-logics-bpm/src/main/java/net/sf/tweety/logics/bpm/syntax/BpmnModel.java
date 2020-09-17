@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.sf.tweety.commons.BeliefBase;
 import net.sf.tweety.commons.Signature;
@@ -40,8 +41,8 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	}
 
 	@Override
-	public Collection<BpmnNode> getNodes() {
-		return null;
+	public Set<BpmnNode> getNodes() {
+		return this.nodes;
 	}
 
 	@Override
@@ -60,8 +61,8 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	}
 
 	@Override
-	public Collection<? extends Edge<? extends BpmnNode>> getEdges() {
-		return null;
+	public Set<Edge<BpmnNode>> getEdges() {
+		return this.edges;
 	}
 
 	@Override
@@ -127,6 +128,46 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	@Override
 	public boolean isWeightedGraph() {
 		return false;
+	}
+	
+	public Set<Activity> getActivities(){
+		Set<Activity> activities = new HashSet<>();
+		for(BpmnNode node : nodes) {
+			if(isInstanceOf(node, Activity.class)) {
+				activities.add((Activity) node);
+			}
+		}
+		return activities;
+	}
+	
+	public Set<SequenceFlow> getSequenceFlows(){
+		Set<SequenceFlow> sequenceFlows = new HashSet<>();
+		for(Edge<BpmnNode> edge : edges) {
+			if(isInstanceOf(edge, SequenceFlow.class)) {
+				sequenceFlows.add((SequenceFlow) edge);
+			}
+		}
+		return sequenceFlows;
+	}
+	
+	public Set<BpmnNode> getNodesOfType(Class<?> c) {
+		return this.nodes.stream()
+				.filter(node -> isInstanceOf(node, c))
+				//.map(node -> (c) node)
+				.collect(Collectors.toSet());
+	}
+	
+	public Set<BpmnNode> getSequenceFlowSuccessors(BpmnNode node){
+		return this.edges.stream()
+				.filter(edge -> isInstanceOf(edge, SequenceFlow.class)
+							&& edge.getNodeA() != null 
+							&& edge.getNodeA().equals(node))
+				.map(edge -> edge.getNodeB())
+				.collect(Collectors.toSet());
+	}
+	
+	private boolean isInstanceOf(Object object, Class<?> theClass) {
+		return theClass.isAssignableFrom(object.getClass());
 	}
 
 }

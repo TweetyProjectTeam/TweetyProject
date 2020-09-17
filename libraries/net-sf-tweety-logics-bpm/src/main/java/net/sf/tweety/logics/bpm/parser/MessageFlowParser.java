@@ -31,7 +31,7 @@ public class MessageFlowParser extends AbstractElementParser<BufferedBpmnEdge> {
 
 	@Override
 	protected void handleChildNode(Node childNode) {
-		String tagName = childNode.getNodeName();
+		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
 			case "sourceRef":
 				String sourceRef = childNode.getTextContent();

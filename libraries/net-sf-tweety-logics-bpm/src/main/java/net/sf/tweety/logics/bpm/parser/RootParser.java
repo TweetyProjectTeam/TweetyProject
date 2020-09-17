@@ -45,6 +45,13 @@ public class RootParser {
 		handleNodeBuffer();
 	}
 	
+	public String getNormalizedTagName(Node node) {
+		String tagName = node.getNodeName();
+		// clear namespace prefixes
+		tagName = tagName.replace("bpmn:", "");
+		return tagName;
+	}
+	
 	public BpmnModel getBpmnModel() {
 		return this.bpmnModel;
 	}

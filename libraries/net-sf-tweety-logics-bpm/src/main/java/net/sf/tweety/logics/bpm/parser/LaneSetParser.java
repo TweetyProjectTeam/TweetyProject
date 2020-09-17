@@ -22,7 +22,7 @@ public class LaneSetParser extends AbstractElementParser<Set<Lane>> {
 
 	@Override
 	protected void handleChildNode(Node childNode) {
-		String tagName = childNode.getNodeName();
+		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
 			case "lane":
 				LaneParser laneParser = new LaneParser(rootParser);

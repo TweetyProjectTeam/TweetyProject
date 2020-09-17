@@ -26,7 +26,7 @@ public class CollaborationParser {
 	};
 
 	private void handleChildNode(Node childNode) {
-		String tagName = childNode.getNodeName();
+		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
 			case "messageFlow":
 				MessageFlowParser messageFlowParser = new MessageFlowParser(rootParser);

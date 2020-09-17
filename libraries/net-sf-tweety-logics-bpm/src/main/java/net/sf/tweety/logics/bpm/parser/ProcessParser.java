@@ -32,7 +32,7 @@ public class ProcessParser extends AbstractElementParser<Process> {
 
 	@Override
 	protected void handleChildNode(Node childNode) {
-		String tagName = childNode.getNodeName();
+		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
 		case "subProcess":
 			ProcessParser processParser = new ProcessParser(this.rootParser);
@@ -42,6 +42,12 @@ public class ProcessParser extends AbstractElementParser<Process> {
 		case "task":
 			TaskParser taskParser = new TaskParser(this.rootParser);
 			Task task = taskParser.parse(childNode);
+			this.parsedElement.addNode(task);
+			this.rootParser.putNode(task);
+			break;
+		case "userTask":
+			taskParser = new TaskParser(this.rootParser);
+			task = taskParser.parse(childNode);
 			this.parsedElement.addNode(task);
 			this.rootParser.putNode(task);
 			break;
@@ -60,6 +66,12 @@ public class ProcessParser extends AbstractElementParser<Process> {
 		case "intermediateCatchEvent":
 			IntermediateEventParser intermediateEventParser = new IntermediateEventParser(this.rootParser);
 			IntermediateEvent intermediateEvent = intermediateEventParser.parse(childNode);
+			this.parsedElement.addNode(intermediateEvent);
+			this.rootParser.putNode(intermediateEvent);
+			break;
+		case "intermediateThrowEvent":
+			intermediateEventParser = new IntermediateEventParser(this.rootParser);
+			intermediateEvent = intermediateEventParser.parse(childNode);
 			this.parsedElement.addNode(intermediateEvent);
 			this.rootParser.putNode(intermediateEvent);
 			break;

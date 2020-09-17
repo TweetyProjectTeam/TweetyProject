@@ -18,7 +18,7 @@ public class BpmnModelParser {
 	}
 	
 	public void parse(Node rootNode) throws IllegalArgumentException {
-		String tagName = rootNode.getNodeName();
+		String tagName = rootParser.getNormalizedTagName(rootNode);
 		if(!tagName.equals("definitions")) {
 			throw new IllegalArgumentException("Unexpected root element name '" + tagName + "', 'definitions' expected");
 		}
@@ -32,7 +32,7 @@ public class BpmnModelParser {
 	};
 	
 	private void handleChildNode(Node node) {
-		String tagName = node.getNodeName();
+		String tagName = rootParser.getNormalizedTagName(node);
 		switch(tagName) {
 		case "collaboration":
 			CollaborationParser collaborationParser = new CollaborationParser(rootParser);

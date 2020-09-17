@@ -30,7 +30,7 @@ public class IntermediateEventParser extends AbstractElementParser<IntermediateE
 
 	@Override
 	protected void handleChildNode(Node childNode) {
-		String tagName = childNode.getNodeName();
+		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
 		case "incoming":
 			String incomingEdgeId = childNode.getTextContent();
