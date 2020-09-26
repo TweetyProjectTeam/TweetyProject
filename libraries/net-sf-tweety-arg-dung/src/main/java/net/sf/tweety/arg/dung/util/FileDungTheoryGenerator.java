@@ -70,12 +70,13 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 	 */
 	@Override
 	public DungTheory next() {
-		if(this.idx >= this.files.length)
+		if(this.idx >= this.files.length) {
 			if(!this.loop)
 				throw new NoSuchElementException();
 			this.idx = 0;
+		}
 		try {
-			return this.parser.parseBeliefBase(new FileReader(this.files[idx++]));
+			return this.parser.parseBeliefBase(new FileReader(this.files[this.idx++]));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

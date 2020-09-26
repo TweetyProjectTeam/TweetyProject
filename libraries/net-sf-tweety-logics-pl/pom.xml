@@ -22,7 +22,7 @@
 	<dependency>
 	  <groupId>org.ow2.sat4j</groupId>
 	  <artifactId>org.ow2.sat4j.core</artifactId>
-	  <version>2.3.4</version>
+	  <version>2.3.5</version>
 	</dependency>
     <dependency>
     	<groupId>net.sf.tweety.logics</groupId>

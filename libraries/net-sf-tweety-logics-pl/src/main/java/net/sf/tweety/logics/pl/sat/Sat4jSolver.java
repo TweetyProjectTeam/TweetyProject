@@ -80,7 +80,7 @@ public class Sat4jSolver extends SatSolver{
 	 */
 	@Override
 	public boolean isSatisfiable(Collection<PlFormula> formulas) {
-		ISolver solver = SolverFactory.newLight();
+		ISolver solver = SolverFactory.newDefault();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		
 		PlSignature sig = new PlSignature();
@@ -95,7 +95,11 @@ public class Sat4jSolver extends SatSolver{
 		}
 		try{
 			for(PlFormula f: formulas){
-				Conjunction conj = f.toCnf();
+				Conjunction conj;
+				if(f.isClause()) {
+					conj = new Conjunction();
+					conj.add(f);
+				}else conj = f.toCnf();
 				for(PlFormula f2: conj){
 					Disjunction disj = (Disjunction) f2;
 					// first remove contradictions
@@ -144,7 +148,11 @@ public class Sat4jSolver extends SatSolver{
 		}
 		try{
 			for(PlFormula f: formulas){
-				Conjunction conj = f.toCnf();
+				Conjunction conj;
+				if(f.isClause()) {
+					conj = new Conjunction();
+					conj.add(f);
+				}else conj = f.toCnf();
 				for(PlFormula f2: conj){
 					Disjunction disj = (Disjunction) f2;
 					// first remove contradictions

@@ -43,12 +43,20 @@ public class Disjunction extends AssociativePlFormula {
 		super(formulas);
 	}
 	
+	public Disjunction(PlFormula... formulas){
+		super(new HashSet<>());
+		for(PlFormula f: formulas)
+			this.add(f);
+	}
+	
 	/**
 	 * Creates a new (empty) disjunction.
 	 */
 	public Disjunction(){
 		this(new HashSet<PlFormula>());
 	}
+	
+	
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()

@@ -107,7 +107,12 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 		String s = "";
 		int num_clauses = 0;
 		for(PlFormula p: formulas){
-			Conjunction conj = p.toCnf();
+			Conjunction conj;
+			if(p.isClause()) {
+				conj = new Conjunction();
+				conj.add(p);
+			}else
+				conj = p.toCnf();
 			for(PlFormula p1: conj){
 				// as conj is in CNF all formulas should be disjunctions
 				Disjunction disj = (Disjunction) p1;
@@ -145,7 +150,11 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 		List<PlFormula> clauses = new ArrayList<PlFormula>();
 		List<PlFormula> mappings = new ArrayList<PlFormula>();
 		for(PlFormula p: formulas){
-			Conjunction pcnf = p.toCnf();
+			Conjunction pcnf;
+			if(p.isClause()) {
+				pcnf = new Conjunction();
+				pcnf.add(p);
+			}else pcnf = p.toCnf();
 			for(PlFormula sub: pcnf){
 				clauses.add(sub);
 				mappings.add(p);
