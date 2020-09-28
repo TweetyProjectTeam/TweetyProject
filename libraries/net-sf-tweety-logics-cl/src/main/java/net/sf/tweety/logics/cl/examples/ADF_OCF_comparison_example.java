@@ -44,11 +44,13 @@ import net.sf.tweety.logics.cl.reasoner.ZReasoner;
 import net.sf.tweety.arg.adf.syntax.Argument;
 import net.sf.tweety.arg.adf.syntax.acc.AcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.ContradictionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition;
+import net.sf.tweety.arg.adf.syntax.acc.TautologyAcceptanceCondition;
 import net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import net.sf.tweety.arg.adf.semantics.interpretation.Interpretation;
 import net.sf.tweety.arg.adf.semantics.link.LinkStrategy;
@@ -78,34 +80,33 @@ public class ADF_OCF_comparison_example {
 	public static PlFormula getFormulaFromAcc(AcceptanceCondition ac) {
 		
 		PlFormula result = null;
-		String class_type = ac.getClass().getName();
 		
 		// Base (= terminating) cases (A)-(C)
 		// (A) Proposition (self-referencing)
-		if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.Argument")) {
+		if (ac instanceof Argument) {
 			//System.out.println(ac + " is a Proposition");
 			Argument arg = (Argument) ac;
 			result = new Proposition(arg.getName());
 		}
 		// (B) Tautology
-		else if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.acc.TautologyAcceptanceCondition")) {
+		else if (ac instanceof TautologyAcceptanceCondition) {
 			//System.out.println(ac + " is a Tautology");
 			result = new Tautology();
 		}		
 		// (C) Contradiction 
-		else if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.acc.ContradictionAcceptanceCondition")) {
+		else if (ac instanceof ContradictionAcceptanceCondition) {
 			//System.out.println(ac + " is a Contradiction");
 			result = new Contradiction();
 		}		
 		// Recursive cases (1)-(6)
 		// (1) Negation
-		else if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.acc.NegationAcceptanceCondition")) {
+		else if (ac instanceof NegationAcceptanceCondition) {
 			//System.out.println(ac + " is a Negation");
 			NegationAcceptanceCondition ac_neg = (NegationAcceptanceCondition)ac;
 			result = new Negation(getFormulaFromAcc(ac_neg.getChild()));
 		}
 		// (2) Conjunction
-		else if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.acc.ConjunctionAcceptanceCondition")) {
+		else if (ac instanceof ConjunctionAcceptanceCondition) {
 			//System.out.println(ac + " is a Conjunction");
 			ConjunctionAcceptanceCondition ac_con = (ConjunctionAcceptanceCondition)ac;
 			
@@ -125,7 +126,7 @@ public class ADF_OCF_comparison_example {
 			}
 		}
 		// (3) Disjunction
-		else if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.acc.DisjunctionAcceptanceCondition")) {
+		else if (ac instanceof DisjunctionAcceptanceCondition) {
 			//System.out.println(ac + " is a Disjunction");
 			DisjunctionAcceptanceCondition ac_dis = (DisjunctionAcceptanceCondition)ac;
 			
@@ -145,7 +146,7 @@ public class ADF_OCF_comparison_example {
 			}
 		}
 		// (4) Exclusive Disjunction
-		else if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition")) {
+		else if (ac instanceof ExclusiveDisjunctionAcceptanceCondition) {
 			//System.out.println(ac + " is an exclusive Disjunction");
 			ExclusiveDisjunctionAcceptanceCondition ac_exc = (ExclusiveDisjunctionAcceptanceCondition)ac;
 			
@@ -165,7 +166,7 @@ public class ADF_OCF_comparison_example {
 			}
 		}
 		// (5) Implication
-		else if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.acc.ImplicationAcceptanceCondition")) {
+		else if (ac instanceof ImplicationAcceptanceCondition) {
 			//System.out.println(ac + " is an Implication");
 			ImplicationAcceptanceCondition ac_imp = (ImplicationAcceptanceCondition)ac;
 			
@@ -185,7 +186,7 @@ public class ADF_OCF_comparison_example {
 			}
 		}
 		// (6) Equivalence
-		else if (class_type.contentEquals("net.sf.tweety.arg.adf.syntax.acc.EquivalenceAcceptanceCondition")) {
+		else if (ac instanceof EquivalenceAcceptanceCondition) {
 			//System.out.println(ac + " is an Equivalence");
 			EquivalenceAcceptanceCondition ac_equ = (EquivalenceAcceptanceCondition)ac;
 			
