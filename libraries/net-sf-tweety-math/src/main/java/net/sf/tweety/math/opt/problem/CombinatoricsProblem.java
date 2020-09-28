@@ -20,6 +20,7 @@
 package net.sf.tweety.math.opt.problem;
 
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,12 +28,16 @@ import java.util.List;
 
 import net.sf.tweety.math.equation.Statement;
 
+
 /**
  * This class implements a combinatorial optimization problem 
  * @author Sebastian Franke
  */
 
 public abstract class CombinatoricsProblem extends HashSet<ElementOfCombinatoricsProb>{
+	
+	/**an adjacence matrix that is supposed to show which vertices are connected to each other in a graph represantation of the problem*/
+	protected int[][] graphRepresantation; 
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -49,9 +54,9 @@ public abstract class CombinatoricsProblem extends HashSet<ElementOfCombinatoric
 	List<ElementOfCombinatoricsProb> elements;
 	Collection<Statement> constraints = new ArrayList<Statement>();
 		
-	public CombinatoricsProblem(List<ElementOfCombinatoricsProb> elements){
+	public CombinatoricsProblem(List<ElementOfCombinatoricsProb> elements, int[][] graphRepresantation){
 		super(elements);
-
+		this.graphRepresantation = graphRepresantation;
 	}
 	/**
 	 * 
@@ -65,7 +70,7 @@ public abstract class CombinatoricsProblem extends HashSet<ElementOfCombinatoric
 	    	if(!c.contains(i))
 	    			newColl.add(i);
 	    }
-	   //System.out.println("addable: " +  newColl);
+	
 	    return newColl;
 	}
 	/**
@@ -95,8 +100,43 @@ public abstract class CombinatoricsProblem extends HashSet<ElementOfCombinatoric
 
 		return result;
 	}
+	public int[][] getGraphrepresentation() {
+		return graphRepresantation;
+	}
+	
+
+	
+	/**create a solution that changes the solution currSol a little bit 
+	 * (i.e.: for TSP: swap 2 cities; for KnapSack: add a random element)
+	 * for currSol == null: create a random solution
+	 */
 	public abstract ArrayList<ElementOfCombinatoricsProb> createRandomNewSolution(ArrayList<ElementOfCombinatoricsProb> currSol);
+	
+	/**
+	 * evaluates the solution
+	 * @return the target function for @param sol
+	 */
 	public abstract double evaluate(ArrayList<ElementOfCombinatoricsProb> sol);
+	
+	/**checks if a given solution is valid under all constraints
+	 */
 	public abstract boolean isValid(ArrayList<ElementOfCombinatoricsProb> sol);
+	
+	/**for Ant optimization: give a chance between 0 and 1 for accepting @param solutionComponent to 
+	 * the solution @param sol
+	 * 
+	 * @param solutionComponent: Element to be checked
+	 * @param positionInSolution: position where @param solutionComponent should be inserted
+	 * @param getCurrentIndex: the length of the solution
+	 * @param initialReference: default starting point for the solution (the first Element in the solution)
+	 * @param sol: array represntation of a solution (needed for Ant optimization)
+	 * @return
+	 */
+	public abstract Double getHeuristicValue(ElementOfCombinatoricsProb solutionComponent,
+			Integer getCurrentIndex, ElementOfCombinatoricsProb initialReference, 
+			ElementOfCombinatoricsProb[] sol) ;
+	
+	/**for Ant optimization: represent the problem as an adjacence matrix*/
+	public abstract double[][] getRepresentation();
 
 }

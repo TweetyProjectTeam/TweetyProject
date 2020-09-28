@@ -10,7 +10,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.tweety.math.GeneralMathException;
+
 import net.sf.tweety.math.opt.problem.CombinatoricsProblem;
 import net.sf.tweety.math.opt.problem.ElementOfCombinatoricsProb;
 
