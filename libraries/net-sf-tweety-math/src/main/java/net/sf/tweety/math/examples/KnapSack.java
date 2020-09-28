@@ -34,8 +34,11 @@ import net.sf.tweety.math.opt.problem.*;
  */
 public class KnapSack extends CombinatoricsProblem {
 
+	/**since this class is not used with ant optimization, we do not need values in the array*/
+	protected static int[][] graphRepresantation;
+
 	public KnapSack(ArrayList<ElementOfCombinatoricsProb> elements, Term maxWeight) {
-		super(elements);
+		super(elements, graphRepresantation);
 		for (int i = 0; i < elements.size(); i++)
 			if (elements.get(i).size() != 2)
 				System.err.println("Elements of Knapscak need to have a value and a weight, nothing else");
@@ -132,5 +135,20 @@ public class KnapSack extends CombinatoricsProblem {
 			return -1 * sumOfValues(sol);
 		}
 
+	}
+
+	/**since this class is not used with ant optimization, we do not need this method*/
+	@Override
+	public Double getHeuristicValue(ElementOfCombinatoricsProb solutionComponent, Integer getCurrentIndex,
+			ElementOfCombinatoricsProb initialReference, ElementOfCombinatoricsProb[] sol) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**since this class is not used with ant optimization, we do not need this method*/
+	@Override
+	public double[][] getRepresentation() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
