@@ -50,6 +50,13 @@
 			<artifactId>ojalgo</artifactId>
 			<version>35.0</version>
 		</dependency>
+		<dependency>
+			<groupId>isula</groupId>
+			<artifactId>isula</artifactId>
+			<version>1.1.1</version>
+			<scope>system</scope>
+			<systemPath>C:/Users/Sebastian/.m2/repository/isula/isula/1.1.1/isula-1.1.1.jar</systemPath>
+		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>net.sf.tweety</groupId>
