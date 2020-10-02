@@ -107,7 +107,7 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 		// Read formulas and separate them with "\n" (ascii code 10)
 		try{
 			for(int c = reader.read(); c != -1; c = reader.read()){
-				if(c == 10){
+				if(c == 10 || c == 13){
 					s = s.trim();
 					if(!s.equals("")){
 						if(s.startsWith("type")) section = 1;

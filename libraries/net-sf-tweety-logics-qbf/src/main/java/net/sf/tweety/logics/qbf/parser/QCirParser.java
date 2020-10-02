@@ -116,7 +116,7 @@ public class QCirParser extends Parser<PlBeliefSet, PlFormula> {
 		// Parse each non-comment line as a formula
 		try {
 			for (int c = reader.read(); c != -1; c = reader.read()) {
-				if (c == 10) {
+				if (c == 10 || c == 13) {
 					s = s.trim();
 					if (!s.equals("") && !s.startsWith("#")) {
 						if (section == 1) // parse gate formulas

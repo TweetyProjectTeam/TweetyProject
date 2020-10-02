@@ -58,7 +58,7 @@ public class QbfParser extends PlParser {
 		// read from the reader and separate formulas by "\n"
 		try {
 			for (int c = reader.read(); c != -1; c = reader.read()) {
-				if (c == 10) {
+				if (c == 10 || c == 13) {
 					if (!s.equals(""))
 						beliefSet.add(this.parseFormula(new StringReader(s)));
 					s = "";

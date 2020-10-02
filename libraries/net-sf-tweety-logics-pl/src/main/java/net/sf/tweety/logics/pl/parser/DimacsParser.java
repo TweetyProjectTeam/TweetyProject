@@ -75,7 +75,7 @@ public class DimacsParser extends Parser<PlBeliefSet,PlFormula> {
 		// read from the reader and separate formulas by "\n"
 		try{
 			for(int c = reader.read(); c != -1; c = reader.read()){
-				if(c == 10){
+				if(c == 10 || c == 13){
 					s = s.trim();					
 					if(s.startsWith("c")) {
 						// ignore comments					

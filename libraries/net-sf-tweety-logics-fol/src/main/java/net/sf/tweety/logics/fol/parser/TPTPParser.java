@@ -138,7 +138,7 @@ public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {
 			for (int c = reader.read(); c != -1; c = reader.read()) {
 				if (c==37)  //Ignore comments (lines starting with '%')
 					lineIsComment = true;
-				else if (c == 10){	
+				else if (c == 10 || c == 13){	
 					s = s.trim();
 					if (!lineIsComment && !s.isEmpty() && !(s.endsWith(".") || s.endsWith(".\n"))) //If formulas contain linebreaks, concatenate them
 						continue;

@@ -69,7 +69,7 @@ public class RclParser extends Parser<RclBeliefSet,RelationalConditional> {
 		// read from the reader and separate formulas by "\n"
 		try{
 			for(int c = reader.read(); c != -1; c = reader.read()){
-				if(c == 10){
+				if(c == 10 || c == 13){
 					if(!s.equals("")){
 						if(s.trim().startsWith("type")) section = 1;
 						else if(section == 1) section = 2;

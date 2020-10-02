@@ -72,7 +72,7 @@ public class QdimacsParser extends DimacsParser {
 		String s = "";
 		try {
 			for (int c = reader.read(); c != -1; c = reader.read()) {
-				if (c == 10) {
+				if (c == 10 || c == 13) {
 					if (s.trim().startsWith("a") || s.trim().startsWith("e")) {
 						quantifications.add(s.trim());
 					} else

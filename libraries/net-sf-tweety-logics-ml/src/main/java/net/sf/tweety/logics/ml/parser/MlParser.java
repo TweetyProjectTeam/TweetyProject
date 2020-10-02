@@ -117,7 +117,7 @@ public class MlParser extends Parser<MlBeliefSet,RelationalFormula> {
 		
 		try{
 			for(int c = reader.read(); c != -1; c = reader.read()){
-				if(c == 10){ // read from the reader and separate formulas by "\n" (ascii code 10)
+				if(c == 10 || c == 13){ // read from the reader and separate formulas by "\n" (ascii code 10)
 					s = s.trim();
 					if(!s.equals("")){
 						if(s.startsWith("type")) section = 1;
