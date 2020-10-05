@@ -34,6 +34,15 @@ public class DirectedEdge<T extends Node> extends Edge<T> {
 	public DirectedEdge(T nodeA, T nodeB) {
 		super(nodeA, nodeB);
 	}
+
+	/** Creates a new directed edge for the given nodes.
+	 * @param nodeA some node.
+	 * @param nodeB some node.
+	 * @param label some edge label.
+	 */
+	public DirectedEdge(T nodeA, T nodeB, String label) {
+		super(nodeA, nodeB, label);
+	}
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

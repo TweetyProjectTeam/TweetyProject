@@ -33,6 +33,9 @@ public abstract class Edge<T extends Node> {
 	/** The second node of this edge. */
 	private T nodeB;
 	
+	/** (Optional) The label of the edge. */
+	private String label;
+	
 	/** Creates a new edge for the given nodes.
 	 * @param nodeA some node.
 	 * @param nodeB some node.
@@ -40,6 +43,18 @@ public abstract class Edge<T extends Node> {
 	public Edge(T nodeA, T nodeB){
 		this.nodeA = nodeA;
 		this.nodeB = nodeB;
+	}
+	 
+	/**
+	 * Creates a new edge for the given nodes.
+	 * @param nodeA some node.
+	 * @param nodeB some node.
+	 * @param label some edge label.
+	 */
+	public Edge(T nodeA, T nodeB, String label){
+		this.nodeA = nodeA;
+		this.nodeB = nodeB;
+		this.label = label;
 	}
 	
 	/**
@@ -56,6 +71,14 @@ public abstract class Edge<T extends Node> {
 	 */
 	public T getNodeB(){
 		return this.nodeB;
+	}
+	
+	/**
+	 * Returns the label of this edge.
+	 * @return the label of this edge.
+	 */
+	public String getLabel(){
+		return this.label;
 	}
 	
 	/* (non-Javadoc)
@@ -91,6 +114,11 @@ public abstract class Edge<T extends Node> {
 			if (other.nodeB != null)
 				return false;
 		} else if (!nodeB.equals(other.nodeB))
+			return false;
+		if (label == null) {
+			if(other.label != null)
+				return false;
+		} else if(!label.contentEquals(other.label))
 			return false;
 		return true;
 	}
