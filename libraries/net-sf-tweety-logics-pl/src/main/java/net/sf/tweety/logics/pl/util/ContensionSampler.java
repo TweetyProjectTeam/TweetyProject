@@ -84,14 +84,14 @@ public class ContensionSampler extends BeliefSetSampler<PlFormula,PlBeliefSet>{
 		
 		List<Proposition> props = new ArrayList<Proposition>(((PlSignature)this.getSamplerSignature()).toCollection());
 		List<PlFormula> formulas = new ArrayList<PlFormula>();
-		// first add contradictoy formulas
+		// first add contradictory formulas
 		int num = 0;		
 		for(Proposition p: props){
+			if(num + 1 > this.incvalue)
+				break;
 			formulas.add(p);
 			formulas.add(new Negation(p));
 			num++;
-			if(num + 1 > this.incvalue)
-				break;
 		}
 		// add some arbitrary formulas that cannot be inconsistent
 		Random rand = new Random();
