@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package net.sf.tweety.logics.bpm.syntax;
 
 import java.util.Collection;
@@ -14,10 +32,25 @@ import net.sf.tweety.graphs.Graph;
 import net.sf.tweety.graphs.Node;
 import net.sf.tweety.math.matrix.Matrix;
 
+/**
+ * A class to represent a BPMN Model 
+ * @author Benedikt Knopp
+ */
 public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 
+	/**
+	 * (sub) processes of this BPMN model
+	 */
 	private Set<Process> processes = new HashSet<>();
+	
+	/**
+	 * the nodes in this BPMN model
+	 */
 	private Set<BpmnNode> nodes = new HashSet<>();
+	
+	/**
+	 * the edges in this BPMN model
+	 */
 	private Set <Edge<BpmnNode>> edges = new HashSet<>();
 	
 	@Override
@@ -130,6 +163,10 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		return false;
 	}
 	
+	/**
+	 * retrieve all nodes in this BPMN model that are Activities
+	 * @return the model's Activities
+	 */
 	public Set<Activity> getActivities(){
 		Set<Activity> activities = new HashSet<>();
 		for(BpmnNode node : nodes) {
@@ -140,6 +177,10 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		return activities;
 	}
 	
+	/**
+	 * retrieve all edges in this BPMN model that are Sequence Flows
+	 * @return the model's Sequence Flows
+	 */
 	public Set<SequenceFlow> getSequenceFlows(){
 		Set<SequenceFlow> sequenceFlows = new HashSet<>();
 		for(Edge<BpmnNode> edge : edges) {
@@ -150,6 +191,11 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 		return sequenceFlows;
 	}
 	
+	/**
+	 * Retrieve all nodes in this model that are instances of a certain class
+	 * @param c the class of interest
+	 * @return the nodes that are instances of class c
+	 */
 	public Set<BpmnNode> getNodesOfType(Class<?> c) {
 		return this.nodes.stream()
 				.filter(node -> isInstanceOf(node, c))
@@ -157,6 +203,11 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 				.collect(Collectors.toSet());
 	}
 	
+	/**
+	 * For one particular nodes, retrieve all successors in the sequence flow of the BPMN model
+	 * @param node the node of interest
+	 * @return the sequence flow successors
+	 */
 	public Set<BpmnNode> getSequenceFlowSuccessors(BpmnNode node){
 		return this.edges.stream()
 				.filter(edge -> isInstanceOf(edge, SequenceFlow.class)
@@ -166,6 +217,12 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 				.collect(Collectors.toSet());
 	}
 	
+	/**
+	 * Determine whether an object is an instance of a particular class
+	 * @param object the object
+	 * @param theClass the class
+	 * @return true, iff the object is an instance of that class
+	 */
 	private boolean isInstanceOf(Object object, Class<?> theClass) {
 		return theClass.isAssignableFrom(object.getClass());
 	}

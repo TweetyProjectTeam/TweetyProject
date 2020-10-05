@@ -19,10 +19,14 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent intermediate events of all kinds in a BPMN Model
  * @author Benedikt Knopp
  */
 public class IntermediateEvent extends Event{
 
+	/**
+	 * Create a new instance
+	 */
 	public IntermediateEvent() {
 		super();
 	}

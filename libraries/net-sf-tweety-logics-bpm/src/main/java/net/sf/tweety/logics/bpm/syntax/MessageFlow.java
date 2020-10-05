@@ -21,12 +21,28 @@ package net.sf.tweety.logics.bpm.syntax;
 import net.sf.tweety.graphs.DirectedEdge;
 
 /**
+ * A class to represent edges of the message flow in a BPMN Model
  * @author Benedikt Knopp
  */
 public class MessageFlow extends DirectedEdge<BpmnNode>{
 
+	/**
+	 * Create a new edge
+	 * @param nodeA a node
+	 * @param nodeB a node
+	 */
 	public MessageFlow(BpmnNode nodeA, BpmnNode nodeB) {
 		super(nodeA, nodeB);
+	}
+	
+	/**
+	 * Create a new labeled edge
+	 * @param nodeA a node
+	 * @param nodeB a node
+	 * @param label the label
+	 */
+	public MessageFlow(BpmnNode nodeA, BpmnNode nodeB, String label) {
+		super(nodeA, nodeB, label);
 	}
 
 }

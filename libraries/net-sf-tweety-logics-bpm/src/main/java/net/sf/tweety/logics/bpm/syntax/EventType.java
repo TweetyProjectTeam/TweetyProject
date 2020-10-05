@@ -19,6 +19,7 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * Possible types of events in a BPMN model
  * @author Benedikt Knopp
  */
 public enum EventType {

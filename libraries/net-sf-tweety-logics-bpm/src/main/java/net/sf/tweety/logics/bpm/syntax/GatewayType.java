@@ -19,6 +19,7 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * Possible types of gateways in a BPMN model
  * @author Benedikt Knopp
  */
 public enum GatewayType {

@@ -19,10 +19,14 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent end events in a BPMN Model
  * @author Benedikt Knopp
  */
 public class EndEvent extends Event{
 
+	/**
+	 * Create a new instance
+	 */
 	public EndEvent() {
 		super();
 	}

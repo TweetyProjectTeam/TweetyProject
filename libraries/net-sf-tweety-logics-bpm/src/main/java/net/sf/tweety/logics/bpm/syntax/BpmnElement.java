@@ -19,27 +19,54 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent elements of a BPMN Model
  * @author Benedikt Knopp
  */
 public abstract class BpmnElement extends BpmnFormula {
 	
+	/**
+	 * the unique identifier of the BPMN element
+	 */
 	private String id;
+	
+	/**
+	 * the name of the BPMN element
+	 */
 	private String name;
 	
+	/**
+	 * Create a new BPMN element
+	 */
 	public BpmnElement() {}
 	
+	/**
+	 * set the element's ID
+	 * @param id the unique element identifier
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 	
+	/**
+	 * set the element's name
+	 * @param name the element's name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	/**
+	 * retrieve the element's ID
+	 * @return the unique element identifier
+	 */
 	public String getId() {
 		return id;
 	}
 	
+	/**
+	 * retrieve the element's name
+	 * @return the element's name
+	 */
 	public String getName() {
 		return name;
 	}

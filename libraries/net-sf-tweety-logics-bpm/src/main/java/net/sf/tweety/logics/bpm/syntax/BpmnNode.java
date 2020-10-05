@@ -25,30 +25,57 @@ import net.sf.tweety.graphs.Edge;
 import net.sf.tweety.graphs.Node;
 
 /**
+ * A class to represent all kinds of nodes in a BPMN Model
  * @author Benedikt Knopp
  */
 public class BpmnNode extends BpmnElement implements Node{
 
+	/**
+	 * all directed edges that lead to this node
+	 */
 	private Map<String, Edge<BpmnNode>> incomingEdges = new HashMap<>();
+	
+	/**
+	 * all directed edges that lead away from this node
+	 */
 	private Map<String, Edge<BpmnNode>> outgoingEdges = new HashMap<>();
 	
+	/**
+	 * Create a new instance
+	 */
 	public BpmnNode() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Add a new incoming edge
+	 * @param edgeId the id of the incoming edge
+	 * @param edge the edge
+	 */
 	public void putIncomingEdge(String edgeId, Edge<BpmnNode> edge) {
 		this.incomingEdges.put(edgeId, edge);
 	}
 	
+	/**
+	 * Add a new outgoing edge
+	 * @param edgeId the id of the outgoing edge
+	 * @param edge the edge
+	 */
 	public void putOutgoingEdge(String edgeId, Edge<BpmnNode> edge) {
 		this.outgoingEdges.put(edgeId, edge);
 	}
 	
+	/**
+	 * @return all directed edges that lead to this node
+	 */
 	public Map<String, Edge<BpmnNode>> getIncomingEdges(){
 		return incomingEdges;
 	}
 	
+	/**
+	 * @return all directed edges leading away from this node
+	 */
 	public Map<String, Edge<BpmnNode>> getOutgoingEdges(){
 		return outgoingEdges;
 	}

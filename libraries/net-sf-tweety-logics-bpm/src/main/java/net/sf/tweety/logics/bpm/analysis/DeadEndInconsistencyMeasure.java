@@ -27,12 +27,12 @@ import net.sf.tweety.logics.bpm.syntax.EndEvent;
 import net.sf.tweety.logics.bpm.syntax.BpmnModel;
 import net.sf.tweety.logics.bpm.syntax.BpmnNode;
 import net.sf.tweety.logics.bpm.syntax.SequenceFlow;
+import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 
 /**
+ * The DeadEndInconsistency value of a BPMN model is the number of activities without any successor activities
  * @author Benedikt Knopp
  */
-// number of sequence flow nodes (events and activities, apart from end-events)
-// that do not have an outgoing sequence flow
 public class DeadEndInconsistencyMeasure implements InconsistencyMeasure<BpmnModel>{
 
 	@Override

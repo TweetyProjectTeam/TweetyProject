@@ -18,15 +18,14 @@
  */
 package net.sf.tweety.logics.bpm.syntax;
 
-import java.util.Set;
-
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Signature;
 
 /**
+ * A class to represent parts of a BPMN Model as a formula
  * @author Benedikt Knopp
  */
-public class BpmnFormula implements Formula{
+public class BpmnFormula implements Formula {
 
 	@Override
 	public Signature getSignature() {

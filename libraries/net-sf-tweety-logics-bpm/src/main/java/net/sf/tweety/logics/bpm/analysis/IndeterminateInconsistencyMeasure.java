@@ -32,19 +32,30 @@ import net.sf.tweety.logics.bpm.syntax.BpmnModel;
 import net.sf.tweety.logics.bpm.syntax.BpmnNode;
 import net.sf.tweety.logics.bpm.syntax.EndEvent;
 import net.sf.tweety.logics.bpm.syntax.StartEvent;
+import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 
 /**
+ * A BPMN model has an IndeterminateInconsistency value of 1 if there is an activity in this model 
+ * a) that is reachable from a start event via the model's sequence flow
+ * b) from where no end event can possibly be reached, 
+ * and 0 otherwise
  * @author Benedikt Knopp
  */
-// 1 if there is a "dead end" in the sequence flow (including loops that can never terminate),
-// 0 otherwise
 public class IndeterminateInconsistencyMeasure implements InconsistencyMeasure<BpmnModel>{
 
+	/**
+	 * the BPMN model for which the inconsistency value is to find
+	 */
 	private BpmnModel processModel;
-	// tree spanned by process model nodes,
-	// in the end, all leaves must represent end events,
-	// only then model is consistent
+	
+	/**
+	 * for each node in the process model, remember whether an end event can possibly be reached from that node
+	 */
 	private Map<BpmnNode, Boolean> terminations = new HashMap<>();
+	
+	/**
+	 * for each node in the process model, remember which nodes may lead back to that node
+	 */
 	private Map<BpmnNode, Set<BpmnNode>> loopEntries = new HashMap<>();
 	
 	@Override
@@ -62,6 +73,11 @@ public class IndeterminateInconsistencyMeasure implements InconsistencyMeasure<B
 	} 
 	
 
+	/**
+	 * @param path the sequence of nodes visited so far in the sequence flow of the BPMN model
+	 * @return true iff an end event can always be reached from the current node,
+	 * no matter the future course
+	 */
 	private boolean terminates(LinkedList<BpmnNode> path) {
 				
 		BpmnNode current = path.getLast();

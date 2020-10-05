@@ -19,11 +19,14 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent tasks in a BPMN Model
  * @author Benedikt Knopp
  */
 public class Task extends Activity{
 
-	
+	/**
+	 * Create a new instance
+	 */
 	public Task() {
 		super();
 	}

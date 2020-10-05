@@ -19,10 +19,14 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent events of all kinds in a BPMN Model
  * @author Benedikt Knopp
  */
 public class Event extends BpmnNode{
 
+	/**
+	 * Create a new instance
+	 */
 	public Event() {
 		super();
 	}

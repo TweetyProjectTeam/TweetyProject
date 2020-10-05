@@ -19,6 +19,7 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent message objects in a BPMN Model
  * @author Benedikt Knopp
  */
 public class Message {

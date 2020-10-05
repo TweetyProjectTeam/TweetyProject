@@ -21,10 +21,16 @@ package net.sf.tweety.logics.bpm.syntax;
 import net.sf.tweety.graphs.UndirectedEdge;
 
 /**
+ * A class to represent Associations in a BPMN Model
  * @author Benedikt Knopp
  */
 public class Association extends UndirectedEdge<BpmnNode>{
 
+	/**
+	 * Create a new Association between two nodes
+	 * @param nodeA a node
+	 * @param nodeB a node
+	 */
 	public Association(BpmnNode nodeA, BpmnNode nodeB) {
 		super(nodeA, nodeB);
 	}

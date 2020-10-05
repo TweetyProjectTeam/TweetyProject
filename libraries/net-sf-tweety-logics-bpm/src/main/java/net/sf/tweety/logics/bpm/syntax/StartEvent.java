@@ -19,10 +19,14 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent the starting events of a BPMN Model
  * @author Benedikt Knopp
  */
 public class StartEvent extends Event{
 
+	/**
+	 * Create a new instance
+	 */
 	public StartEvent() {
 		super();
 	}

@@ -21,12 +21,17 @@ package net.sf.tweety.logics.bpm.syntax;
 import net.sf.tweety.graphs.DirectedEdge;
 
 /**
+ * A class to represent edges of the sequence flow in a BPMN Model
  * @author Benedikt Knopp
  */
 public class SequenceFlow extends DirectedEdge<BpmnNode>  {
 
 	public SequenceFlow(BpmnNode nodeA, BpmnNode nodeB) {
 		super(nodeA, nodeB);
+	}
+	
+	public SequenceFlow(BpmnNode nodeA, BpmnNode nodeB, String label) {
+		super(nodeA, nodeB, label);
 	}
 
 }

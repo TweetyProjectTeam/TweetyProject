@@ -19,10 +19,14 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent gateways of all kinds in a BPMN Model
  * @author Benedikt Knopp
  */
 public class Gateway extends BpmnNode{
 
+	/**
+	 * Create a new instance
+	 */
 	public Gateway() {
 		super();
 	}

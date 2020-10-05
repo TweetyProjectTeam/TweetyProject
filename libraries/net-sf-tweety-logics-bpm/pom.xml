@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-  	<groupId>net.sf.tweety</groupId>
-  	<artifactId>parent-pom</artifactId>
-    <version>1.17-SNAPSHOT</version>	
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-  <artifactId>bpm</artifactId>
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.sf.tweety</groupId>
+		<artifactId>parent-pom</artifactId>
+		<version>1.17-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>bpm</artifactId>
 
 	<dependencies>
 		<dependency>
@@ -23,15 +23,42 @@
 			<version>1.17-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+    		<groupId>net.sf.tweety.logics</groupId>
+    		<artifactId>commons</artifactId>
+    		<version>1.17-SNAPSHOT</version>
+    	</dependency>
+		<dependency>
 			<groupId>net.sf.tweety</groupId>
 			<artifactId>graphs</artifactId>
 			<version>1.17-SNAPSHOT</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jgrapht/jgrapht-ext -->
+		<dependency>
+    		<groupId>org.jgrapht</groupId>
+    		<artifactId>jgrapht-ext</artifactId>
+    		<version>1.5.0</version>
+		</dependency>
 	</dependencies>
+	
 	<name>Tweety (Business Process Modelling)</name>
 	<url>http://sourceforge.net/projects/tweety/</url>
 	<groupId>net.sf.tweety.logics</groupId>
+	<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.7.0</version>
+            <configuration>
+                <release>10</release>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<maven.compiler.source>14</maven.compiler.source>
+    	<maven.compiler.target>14</maven.compiler.target>
 	</properties>
 </project>

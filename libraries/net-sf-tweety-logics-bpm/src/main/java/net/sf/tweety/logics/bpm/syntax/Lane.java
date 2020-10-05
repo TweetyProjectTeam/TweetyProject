@@ -19,10 +19,14 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent lanes in a BPMN Model
  * @author Benedikt Knopp
  */
 public class Lane extends BpmnElement{
 	
+	/**
+	 * Create a new instance
+	 */
 	public Lane () {
 		super();
 	}

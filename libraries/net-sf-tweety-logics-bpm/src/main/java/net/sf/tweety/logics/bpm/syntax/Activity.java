@@ -19,9 +19,14 @@
 package net.sf.tweety.logics.bpm.syntax;
 
 /**
+ * A class to represent Activities in a BPMN Model
  * @author Benedikt Knopp
  */
 public class Activity extends BpmnNode{
+	
+	/**
+	 * Create a new Activity
+	 */
 	public Activity() {
 		super();
 	}
