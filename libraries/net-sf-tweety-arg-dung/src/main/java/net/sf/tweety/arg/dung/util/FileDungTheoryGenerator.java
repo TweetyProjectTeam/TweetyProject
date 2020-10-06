@@ -81,6 +81,18 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/**
+	 * Returns the file of the theory previously returned by "next()"
+	 * @return the file of the theory previously returned by "next()" (or NULL if there was none)
+	 */
+	public File getPreviousFile() {
+		if(this.idx > 0)
+			return this.files[this.idx-1];
+		if(this.loop)
+			return this.files[this.files.length-1];
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.dung.util.DungTheoryGenerator#next(net.sf.tweety.arg.dung.syntax.Argument)
