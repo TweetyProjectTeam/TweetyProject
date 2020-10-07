@@ -30,6 +30,7 @@ import net.sf.tweety.beliefdynamics.selectiverevision.MultipleTransformationFunc
 import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.AggregateHead;
 import net.sf.tweety.lp.asp.syntax.ClassicalHead;
 
 /**
@@ -74,6 +75,8 @@ public class NaiveLiteralTransformationFunction implements
 		LiteralReasoner reasoner = new LiteralReasoner(attackRelation, defenseRelation);
 		for(ASPRule r : formulas) {
 			if(r.isFact()) {
+				if (r.getConclusion() instanceof AggregateHead)
+					throw new IllegalArgumentException("Only literals are allowed as rule heads in this module.");
 				ASPLiteral head = ((ClassicalHead)r.getConclusion()).iterator().next();
 				if(reasoner.isOverruled(argkb,head.complement())) {
 					result.add(r);

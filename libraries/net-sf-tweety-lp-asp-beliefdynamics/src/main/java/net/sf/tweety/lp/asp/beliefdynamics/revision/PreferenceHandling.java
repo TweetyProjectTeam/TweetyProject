@@ -40,6 +40,7 @@ import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.ASPLiteral;
 import net.sf.tweety.lp.asp.syntax.StrictNegation;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.AggregateHead;
 import net.sf.tweety.lp.asp.syntax.ClassicalHead;
 
 import org.slf4j.Logger;
@@ -194,6 +195,8 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 				continue;
 			
 			// Create negated head of rule 1.
+			if (r1.getConclusion() instanceof AggregateHead)
+				throw new IllegalArgumentException("Only literals are allowed as rule heads in this module.");
 			ASPLiteral head1 = ((ClassicalHead)r1.getConclusion()).iterator().next();
 			ASPLiteral negHead1 = null;
 			if(head1 instanceof ASPAtom) {
@@ -210,6 +213,8 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 				ASPRule r2 = p2it.next();
 				if(r2.isConstraint())
 					continue;
+				if (r2.getConclusion() instanceof AggregateHead)
+					throw new IllegalArgumentException("Only literals are allowed as rule heads in this module.");
 				if(((ClassicalHead)r2.getConclusion()).iterator().next().equals(negHead1)) {
 					reval.add(new Pair<ASPRule, ASPRule>(r1, r2));
 				}

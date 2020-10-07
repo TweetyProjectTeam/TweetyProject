@@ -89,5 +89,15 @@ public abstract class ASPElement implements ComplexLogicalFormula {
 	public Class<? extends Predicate> getPredicateCls() {
 		return Predicate.class;
 	}
+	
+	/**
+	 * Returns a representation of this ASP element in clingo (potassco) syntax.
+	 * See https://potassco.org/ for more information.
+	 * 
+	 * @return String representation in clingo syntax
+	 */
+	public String printToClingo() {
+		return this.toString();
+	}
 
 }

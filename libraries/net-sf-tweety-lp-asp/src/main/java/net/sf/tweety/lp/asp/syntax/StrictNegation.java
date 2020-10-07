@@ -30,9 +30,8 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * 
- * This class models the strict negation of an
- * atom (as apposed to a NAF negation: 
- * {@link net.sf.tweety.lp.asp.syntax.DefaultNegation}). 
+ * This class models the strict negation of an atom (as apposed to a NAF
+ * negation: {@link net.sf.tweety.lp.asp.syntax.DefaultNegation}).
  * 
  * @author Tim Janus
  * @author Thomas Vengels
@@ -40,15 +39,16 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  *
  */
 public class StrictNegation extends ASPLiteral {
-	
+
 	/**
 	 * The atom of this strict negation.
 	 */
 	private ASPAtom atom;
-	
+
 	/**
 	 * Creates a new negation with the given atom.
-	 * @param atom an ASP atom 
+	 * 
+	 * @param atom an ASP atom
 	 */
 	public StrictNegation(ASPAtom atom) {
 		this.atom = atom;
@@ -57,32 +57,29 @@ public class StrictNegation extends ASPLiteral {
 	/**
 	 * Creates a new negation with the given predicate and terms.
 	 * 
-	 * @param p predicate of the negated atom
+	 * @param p     predicate of the negated atom
 	 * @param terms terms of the negated atom
 	 */
 	public StrictNegation(Predicate p, List<Term<?>> terms) {
-		this(new ASPAtom(p,terms));
+		this(new ASPAtom(p, terms));
 	}
 
 	/**
 	 * Copy-Constructor
+	 * 
 	 * @param other another StrictNegation
 	 */
 	public StrictNegation(StrictNegation other) {
-		this.atom = (ASPAtom)other.getAtom().clone();
+		this.atom = (ASPAtom) other.getAtom().clone();
 	}
 
 	/**
 	 * Creates a new negation with the given name.
+	 * 
 	 * @param name of the negated atom's predicate
 	 */
 	public StrictNegation(String name) {
 		this.atom = new ASPAtom(name);
-	}
-
-	@Override 
-	public String toString() {
-		return "-" +  atom.toString();
 	}
 
 	@Override
@@ -154,7 +151,7 @@ public class StrictNegation extends ASPLiteral {
 
 	@Override
 	public int compareTo(ASPLiteral o) {
-		if(o instanceof ASPAtom) {
+		if (o instanceof ASPAtom) {
 			return 1;
 		}
 		return this.toString().compareTo(o.toString());
@@ -162,7 +159,7 @@ public class StrictNegation extends ASPLiteral {
 
 	@Override
 	public ASPLiteral cloneWithAddedTerm(Term<?> term) {
-		StrictNegation reval = (StrictNegation)this.clone();
+		StrictNegation reval = (StrictNegation) this.clone();
 		reval.atom = reval.atom.cloneWithAddedTerm(term);
 		return reval;
 	}
@@ -179,23 +176,28 @@ public class StrictNegation extends ASPLiteral {
 
 	@Override
 	public StrictNegation substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		return new StrictNegation(this.atom.substitute(v,t));
+		return new StrictNegation(this.atom.substitute(v, t));
 	}
-	
-	@Override 
+
+	@Override
 	public int hashCode() {
 		return 7 + atom.hashCode();
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof StrictNegation) {
 			StrictNegation on = (StrictNegation) o;
 			// compare atom
-			return on.getAtom().equals( this.getAtom() );
+			return on.getAtom().equals(this.getAtom());
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "-" + atom.toString();
 	}
 
 }

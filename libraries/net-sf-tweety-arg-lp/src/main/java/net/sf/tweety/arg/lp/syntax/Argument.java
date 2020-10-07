@@ -61,6 +61,8 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 	public Set<ASPLiteral> getConclusions() {
 		Set<ASPLiteral> result = new HashSet<ASPLiteral>();
 		for(ASPRule r : this) {
+			if (r.getConclusion() instanceof AggregateHead)
+				throw new IllegalArgumentException("Only literals are allowed as rule heads in this module.");
 			result.add(((ClassicalHead)r.getConclusion()).iterator().next());
 		}
 		return result;
@@ -107,6 +109,8 @@ public class Argument extends LinkedList<ASPRule> implements Formula {
 				return false;
 			}
 			if(r.isFact()) {
+				if (r.getConclusion() instanceof AggregateHead)
+					throw new IllegalArgumentException("Only literals are allowed as rule heads in this module.");
 				foundLiterals.add(((ClassicalHead)r.getConclusion()).getFormulas().iterator().next());
 			}
 			for(ASPBodyElement element : r.getPremise()) {

@@ -69,11 +69,6 @@ public class ComparativeAtom extends ASPBodyElement {
 	}
 
 	@Override
-	public String toString() {
-		return left.toString() + op.toString() + right.toString();
-	}
-
-	@Override
 	public SortedSet<ASPLiteral> getLiterals() {
 		return new TreeSet<ASPLiteral>();
 	}
@@ -197,6 +192,11 @@ public class ComparativeAtom extends ASPBodyElement {
 		} else if (!right.equals(other.right))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return left.toString() + op.toString() + right.toString();
 	}
 
 }

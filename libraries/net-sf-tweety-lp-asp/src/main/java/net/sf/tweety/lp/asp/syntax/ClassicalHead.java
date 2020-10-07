@@ -330,11 +330,6 @@ public class ClassicalHead extends ASPHead implements AssociativeFormula<ASPLite
 	}
 
 	@Override
-	public String toString() {
-		return assocSupport.toString();
-	}
-
-	@Override
 	public ClassicalHead substitute(Map<? extends Term<?>, ? extends Term<?>> map)
 			throws IllegalArgumentException {
 		ClassicalHead f = this;
@@ -382,4 +377,10 @@ public class ClassicalHead extends ASPHead implements AssociativeFormula<ASPLite
 	public int hashCode() {
 		return assocSupport.hashCode() + this.getClass().hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return assocSupport.toString();
+	}
+
 }

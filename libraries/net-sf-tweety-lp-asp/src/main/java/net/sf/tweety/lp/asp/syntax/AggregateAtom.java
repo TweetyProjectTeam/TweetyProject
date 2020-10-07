@@ -185,24 +185,6 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 
 	@Override
-	public String toString() {
-		String res = "";
-		if (this.hasLeftRelation())
-			res += leftGuard.toString() + leftOp.toString();
-
-		res += function.toString() + "{";
-
-		for (int i = 0; i < aggregateElements.size() - 1; i++)
-			res += aggregateElements.get(i) + " ; ";
-		res += aggregateElements.get(aggregateElements.size() - 1) + "}";
-
-		if (this.hasRightRelation())
-			res += rightOp.toString() + rightGuard.toString();
-
-		return res;
-	}
-
-	@Override
 	public SortedSet<ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
 		for (AggregateElement a : aggregateElements)
@@ -397,6 +379,63 @@ public class AggregateAtom extends ASPBodyElement {
 	 */
 	public void setLeftGuard(Term<?> relationTerm) {
 		this.leftGuard = relationTerm;
+	}
+	
+	@Override
+	public String toString() {
+		String res = "";
+		if (this.hasLeftRelation())
+			res += leftGuard.toString() + leftOp.toString();
+
+		res += function.toString() + "{";
+
+		for (int i = 0; i < aggregateElements.size() - 1; i++)
+			res += aggregateElements.get(i) + " ; ";
+		res += aggregateElements.get(aggregateElements.size() - 1) + "}";
+
+		if (this.hasRightRelation())
+			res += rightOp.toString() + rightGuard.toString();
+
+		return res;
+	}
+	
+	@Override
+	public String printToClingo() {
+		String result = "";
+		if (this.getFunction().equals(ASPOperator.AggregateFunction.COUNT)) { 
+			if (this.hasLeftRelation())
+				result += this.getLeftGuard().toString();
+			result += " {";
+			List<AggregateElement> elements = this.getAggregateElements();
+			for (int i = 0; i < elements.size(); i++) {
+				AggregateElement e = elements.get(i);
+				List<ASPBodyElement> right = e.getRight();
+				List<Term<?>> left = e.getLeft();
+				for (int j = 0; j < right.size(); j++) {
+					if (left.size() > j)
+						result += left.get(j).toString() + ":";
+					result += right.get(j).toString();
+					if (j + 1 < right.size())
+						result += "; ";
+				}
+			}
+			result += "}";
+			if (this.hasRightRelation())
+				result += " " + this.getRightGuard().toString();
+		}
+		else {
+			if (this.hasLeftRelation())
+				result += leftGuard.toString() + leftOp.toString();
+			result += function.toString() + "{";
+
+			for (int i = 0; i < aggregateElements.size() - 1; i++)
+				result += aggregateElements.get(i) + " ; ";
+			result += aggregateElements.get(aggregateElements.size() - 1) + "}";
+
+			if (this.hasRightRelation())
+				result += rightOp.toString() + rightGuard.toString();
+		}
+		return result;
 	}
 
 }

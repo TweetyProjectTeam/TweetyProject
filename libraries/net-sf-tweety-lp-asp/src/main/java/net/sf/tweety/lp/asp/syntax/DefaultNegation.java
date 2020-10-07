@@ -66,11 +66,6 @@ public class DefaultNegation extends ASPBodyElement {
 	}
 
 	@Override
-	public String toString() {
-		return "not " + literal.toString(); 
-	}
-
-	@Override
 	public SortedSet<ASPLiteral> getLiterals() {
 		return literal.getLiterals();
 	}
@@ -154,6 +149,9 @@ public class DefaultNegation extends ASPBodyElement {
 		return true;
 	}
 
-
-
+	@Override
+	public String toString() {
+		return "not " + literal.toString(); 
+	}
+	
 }

@@ -76,25 +76,6 @@ public class AggregateElement extends ASPElement {
 	}
 
 	@Override
-	public String toString() {
-		String r = "";
-
-		if (!left.isEmpty()) {
-			for (int i = 0; i < left.size() - 1; i++)
-				r += left.get(i).toString() + ",";
-			r += left.get(left.size() - 1);
-		}
-		if (!right.isEmpty()) {
-			if (!left.isEmpty())
-				r += " : ";
-			for (int i = 0; i < right.size() - 1; i++)
-				r += right.get(i).toString() + ",";
-			r += right.get(right.size() - 1);
-		}
-		return r;
-	}
-
-	@Override
 	public boolean isLiteral() {
 		return false;
 	}
@@ -208,6 +189,25 @@ public class AggregateElement extends ASPElement {
 		for (ASPBodyElement t : right)
 			literals.addAll(t.getLiterals());
 		return literals;
+	}
+	
+	@Override
+	public String toString() {
+		String r = "";
+
+		if (!left.isEmpty()) {
+			for (int i = 0; i < left.size() - 1; i++)
+				r += left.get(i).toString() + ",";
+			r += left.get(left.size() - 1);
+		}
+		if (!right.isEmpty()) {
+			if (!left.isEmpty())
+				r += " : ";
+			for (int i = 0; i < right.size() - 1; i++)
+				r += right.get(i).toString() + ",";
+			r += right.get(right.size() - 1);
+		}
+		return r;
 	}
 
 }

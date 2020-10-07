@@ -265,43 +265,6 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		return head;
 	}
 
-	@Override
-	public String toString() {
-		String ret = "";
-		
-		if (!head.isEmpty()) {
-			if (head instanceof ClassicalHead) {
-				for (int i = 0; i < ((ClassicalHead)head).size() - 1; i++)
-					ret += ((ClassicalHead)head).get(i).toString() + ",";
-				ret += ((ClassicalHead)head).get(((ClassicalHead)head).size() - 1).toString();
-			}
-			else 
-				ret += head.toString();
-		}
-		if (!body.isEmpty()) {
-			ret += " :- " + body.get(0);
-			for (int i = 1; i < body.size(); ++i) {
-				ret += ", " + body.get(i);
-			}
-		}
-		ret += ".";
-
-		if (weight != null) {
-			ret += " [" + weight.toString();
-			if (level != null)
-				ret += "@" + level.toString();
-			if (!this.constraint_terms.isEmpty()) {
-				ret += ",";
-				for (int i = 1; i < constraint_terms.size() - 1; i++)
-					ret += constraint_terms.get(i) + ",";
-				ret += constraint_terms.get(constraint_terms.size() - 1).toString();
-			}
-			ret += "]";
-		}
-
-		return ret;
-	}
-
 	public Term<?> getWeight() {
 		return weight;
 	}
@@ -498,5 +461,41 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	public boolean isEmpty() {
 		return this.head.isEmpty() && this.body.isEmpty();
 	}
+	
+	@Override
+	public String toString() {
+		String ret = "";
+		
+		if (!head.isEmpty()) {
+			if (head instanceof ClassicalHead) {
+				for (int i = 0; i < ((ClassicalHead)head).size() - 1; i++)
+					ret += ((ClassicalHead)head).get(i).toString() + ",";
+				ret += ((ClassicalHead)head).get(((ClassicalHead)head).size() - 1).toString();
+			}
+			else 
+				ret += head.toString();
+		}
+		if (!body.isEmpty()) {
+			ret += " :- " + body.get(0);
+			for (int i = 1; i < body.size(); ++i) {
+				ret += ", " + body.get(i);
+			}
+		}
+		ret += ".";
 
+		if (weight != null) {
+			ret += " [" + weight.toString();
+			if (level != null)
+				ret += "@" + level.toString();
+			if (!this.constraint_terms.isEmpty()) {
+				ret += ",";
+				for (int i = 1; i < constraint_terms.size() - 1; i++)
+					ret += constraint_terms.get(i) + ",";
+				ret += constraint_terms.get(constraint_terms.size() - 1).toString();
+			}
+			ret += "]";
+		}
+
+		return ret;
+	}
 }

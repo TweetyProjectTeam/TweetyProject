@@ -159,19 +159,6 @@ public class ASPAtom extends ASPLiteral {
 	}
 
 	@Override
-	public String toString() {
-		String res = this.predicate.getName();
-		if (this.predicate.getArity() > 0) {
-			res += "(";
-			for (int i = 0; i < arguments.size() - 1; i++) {
-				res += arguments.get(i).toString() + ",";
-			}
-			res += arguments.get(arguments.size() - 1).toString() + ")";
-		}
-		return res;
-	}
-
-	@Override
 	public SortedSet<ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
 		literals.add(this);
@@ -325,6 +312,19 @@ public class ASPAtom extends ASPLiteral {
 	public int hashCode() {
 		return (predicate == null ? 0 : predicate.hashCode()) + 
 				arguments.hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		String res = this.predicate.getName();
+		if (this.predicate.getArity() > 0) {
+			res += "(";
+			for (int i = 0; i < arguments.size() - 1; i++) {
+				res += arguments.get(i).toString() + ",";
+			}
+			res += arguments.get(arguments.size() - 1).toString() + ")";
+		}
+		return res;
 	}
 
 }

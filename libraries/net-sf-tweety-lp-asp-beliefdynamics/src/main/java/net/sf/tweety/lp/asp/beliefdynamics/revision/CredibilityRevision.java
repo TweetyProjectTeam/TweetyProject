@@ -37,6 +37,7 @@ import net.sf.tweety.lp.asp.syntax.StrictNegation;
 import net.sf.tweety.lp.asp.syntax.ASPOperator;
 import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
+import net.sf.tweety.lp.asp.syntax.AggregateHead;
 import net.sf.tweety.lp.asp.syntax.ClassicalHead;
 import net.sf.tweety.lp.asp.syntax.ComparativeAtom;
 import net.sf.tweety.lp.asp.syntax.DefaultNegation;
@@ -272,6 +273,8 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 			Variable cred = new Variable("Cred");
 			NumberTerm indexTerm = new NumberTerm(ruleIndex);
 			
+			if (r.getConclusion() instanceof AggregateHead)
+				throw new IllegalArgumentException("Only literals are allowed as rule heads in this module.");
 			ASPLiteral originalHead = ((ClassicalHead)r.getConclusion()).iterator().next();
 			List<ASPBodyElement> originalBody = new LinkedList<ASPBodyElement>();
 			for(ASPBodyElement pe : r.getPremise()) {

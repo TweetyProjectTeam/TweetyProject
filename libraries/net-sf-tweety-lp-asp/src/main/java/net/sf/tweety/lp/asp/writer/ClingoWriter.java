@@ -24,12 +24,9 @@ import java.io.Writer;
 import java.util.List;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
-import net.sf.tweety.lp.asp.syntax.ASPOperator;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
 import net.sf.tweety.lp.asp.syntax.AggregateAtom;
-import net.sf.tweety.lp.asp.syntax.AggregateElement;
 import net.sf.tweety.lp.asp.syntax.AggregateHead;
 import net.sf.tweety.lp.asp.syntax.ClassicalHead;
 import net.sf.tweety.lp.asp.syntax.Program;
@@ -96,59 +93,27 @@ public class ClingoWriter {
 		String result = "";
 		if (!r.isConstraint()) {
 			if (r.getHead() instanceof ClassicalHead)
-				result += r.getHead().toString();
-			else 
-				result += printAggregateAtom(((AggregateHead) r.getHead()).getHead());
+				result += r.getHead().printToClingo();
+			else if (r.getHead() instanceof AggregateHead)
+				result += ((AggregateHead) r.getHead()).getHead().printToClingo();
+			else
+				throw new IllegalArgumentException(r.getHead() + "has unknown head type " + r.getHead().getClass());
 		}
 		if (!r.isFact()) {
 			result += " :- ";
 			List<ASPBodyElement> body = r.getBody();
 			for (int i = 0; i < body.size() - 1; i++) {
 				if (body.get(i) instanceof AggregateAtom)
-					result += printAggregateAtom(((AggregateAtom) body.get(i))) + ",";
+					result += ((AggregateAtom) body.get(i)).printToClingo() + ",";
 				else
-					result += body.get(i).toString() + ",";
+					result += body.get(i).printToClingo() + ",";
 			}
 			if (body.get(body.size() - 1) instanceof AggregateAtom)
-				result += printAggregateAtom(((AggregateAtom) body.get(body.size() - 1)));
+				result += ((AggregateAtom) body.get(body.size() - 1)).printToClingo();
 			else
-				result += body.get(body.size() - 1).toString();
+				result += body.get(body.size() - 1).printToClingo();
 		}
 
-		// TODO add more special elements
-		return result;
-	}
-
-	/**
-	 * Prints an aggregate atom to clingo format.
-	 * 
-	 * @param h AggregateAtom
-	 * @return String containing the atom in clingo format
-	 */
-	private String printAggregateAtom(AggregateAtom h) {
-		String result = "";
-		if (h.getFunction().equals(ASPOperator.AggregateFunction.COUNT)) {
-			if (h.hasLeftRelation())
-				result += h.getLeftGuard().toString();
-			result += " {";
-			List<AggregateElement> elements = h.getAggregateElements();
-			for (int i = 0; i < elements.size(); i++) {
-				AggregateElement e = elements.get(i);
-				List<ASPBodyElement> right = e.getRight();
-				List<Term<?>> left = e.getLeft();
-				for (int j = 0; j < right.size(); j++) {
-					if (left.size() > j)
-						result += left.get(j).toString() + ":";
-					result += right.get(j).toString();
-					if (j + 1 < right.size())
-						result += "; ";
-				}
-			}
-			result += "}";
-			if (h.hasRightRelation())
-				result += " " + h.getRightGuard().toString();
-		} else
-			throw new UnsupportedOperationException();
 		return result;
 	}
 
