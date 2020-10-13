@@ -1,15 +1,15 @@
 % This example is taken from the paper
 % Nonmonotonic Causal Theories by Enrico Giunchiglia et. al. (2004)
 :- signature
-animal = { turkey1, turkey2}
+ANIMAL = { turkey1, turkey2}
 
 fluent loaded
-fluent alive(animal)
-fluent target(animal)
+fluent alive(ANIMAL)
+fluent target(ANIMAL)
 
 action load
 action shoot
-action aim(animal)
+action aim(ANIMAL)
 
 :- rules
 inertial loaded

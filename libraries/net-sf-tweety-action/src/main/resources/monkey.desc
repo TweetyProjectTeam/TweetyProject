@@ -1,12 +1,12 @@
 :- signature
-location = {l1,l2,l3}
-object = {monkey, bananas, box}
+LOCATION = {l1,l2,l3}
+OBJECT = {monkey, bananas, box}
 
-fluent at(object,location)
+fluent at(OBJECT,LOCATION)
 fluent hasBananas
 fluent onBox
-action walk(location)
-action pushBox(location)
+action walk(LOCATION)
+action pushBox(LOCATION)
 action climbOn
 action climbOff
 action graspBananas

@@ -25,8 +25,6 @@ import net.sf.tweety.commons.Formula;
  * 
  * @author Sebastian Homann
  */
-public interface ActionQuery
-  extends Formula
-{
-  
+public interface ActionQuery extends Formula {
+
 }

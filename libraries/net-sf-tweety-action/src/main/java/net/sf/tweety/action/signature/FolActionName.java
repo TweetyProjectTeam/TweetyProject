@@ -29,50 +29,46 @@ import net.sf.tweety.logics.commons.syntax.Sort;
  * 
  * @author Sebastian Homann
  */
-public class FolActionName
-  extends Predicate
-  implements ActionName
-{
-  
-  /**
-   * Creates a new actionname predicate with the given name and arity.
-   * 
-   * @param name the name of the action
-   * @param arity the arity of the action
-   */
-  public FolActionName( String name, int arity )
-  {
-    super( name, arity );
-  }
-  
-  /**
-   * Creates a new actionname predicate with the given name and a list of
-   * argument sorts, whose element count equals the arity of this predicate.
-   * These arguments are used for grounding.
-   * 
-   * @param name a name
-   * @param arguments a list of arguments (either variables or constants)
-   */
-  public FolActionName( String name, List< Sort > arguments )
-  {
-    super( name, arguments );
-  }
-  
-  /**
-   * Creates a new action name predicate with the given name and zero-arity.
-   * 
-   * @param name a name
-   */
-  public FolActionName( String name )
-  {
-    super( name );
-  }
-  
-  /*
-   * (non-Javadoc)
-   * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#toString()
-   */
-  public String toString() {
-    return "action " + this.getName();
-  }
+public class FolActionName extends Predicate {
+
+	/**
+	 * Creates a new actionname predicate with the given name and arity.
+	 * 
+	 * @param name  the name of the action
+	 * @param arity the arity of the action
+	 */
+	public FolActionName(String name, int arity) {
+		super(name, arity);
+	}
+
+	/**
+	 * Creates a new actionname predicate with the given name and a list of argument
+	 * sorts, whose element count equals the arity of this predicate. These
+	 * arguments are used for grounding.
+	 * 
+	 * @param name      a name
+	 * @param arguments a list of arguments (either variables or constants)
+	 */
+	public FolActionName(String name, List<Sort> arguments) {
+		super(name, arguments);
+	}
+
+	/**
+	 * Creates a new action name predicate with the given name and zero-arity.
+	 * 
+	 * @param name a name
+	 */
+	public FolActionName(String name) {
+		super(name);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.logics.firstorderlogic.syntax.FolBasicStructure#toString()
+	 */
+	public String toString() {
+		return "action " + this.getName();
+	}
+	
 }

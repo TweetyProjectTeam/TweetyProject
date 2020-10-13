@@ -22,37 +22,34 @@ import java.util.Collection;
 
 import net.sf.tweety.action.signature.ActionSignature;
 import net.sf.tweety.commons.BeliefSet;
+
 /**
  * An Action Query Set consists of action queries in a specific query language
  * and provides some common functionalities for such queries.
  * 
  * @author Sebastian Homann
- * @param <T> the tyoe of ActionQuery
+ * @param <T> the type of ActionQuery
  */
-public abstract class ActionQuerySet< T extends ActionQuery >
-  extends BeliefSet< T,ActionSignature >
-{
-  
-  /**
-   * Creates a new ActionQuerySet initialized with the given collection of
-   * action queries.
-   * 
-   * @param c a collection of action queries
-   */
-  public ActionQuerySet( Collection< ? extends T > c )
-  {
-    super( c );
-  }
-  
-  /**
-   * Creates an empty ActionQuerySet
-   */
-  public ActionQuerySet()
-  {
-    super();
-  }
-  
-  @Override
+public abstract class ActionQuerySet<T extends ActionQuery> extends BeliefSet<T, ActionSignature> {
+
+	/**
+	 * Creates a new ActionQuerySet initialized with the given collection of action
+	 * queries.
+	 * 
+	 * @param c a collection of action queries
+	 */
+	public ActionQuerySet(Collection<? extends T> c) {
+		super(c);
+	}
+
+	/**
+	 * Creates an empty ActionQuerySet
+	 */
+	public ActionQuerySet() {
+		super();
+	}
+
+	@Override
 	protected ActionSignature instantiateSignature() {
 		return new ActionSignature();
 	}

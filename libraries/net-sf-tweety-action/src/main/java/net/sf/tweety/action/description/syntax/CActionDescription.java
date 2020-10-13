@@ -69,7 +69,7 @@ public class CActionDescription extends ActionDescription<CLaw> {
 	}
 
 	/**
-	 * Calculates a new action description which descibes the same transition system
+	 * Calculates a new action description which describes the same transition system
 	 * and contains only definite causal laws.
 	 * 
 	 * @return a new definite action description.
@@ -99,7 +99,7 @@ public class CActionDescription extends ActionDescription<CLaw> {
 	/**
 	 * Checks whether this action description contains any non-definite laws.
 	 * 
-	 * @return ture iff each law in this action description is definite.
+	 * @return true iff each law in this action description is definite.
 	 */
 	public boolean isDefinite() {
 		for (CLaw law : this)
@@ -109,8 +109,6 @@ public class CActionDescription extends ActionDescription<CLaw> {
 	}
 
 	/**
-	 * Returns a set of all static laws contained in this action description.
-	 * 
 	 * @return a set of all static laws contained in this action description.
 	 */
 	public Set<StaticLaw> getStaticLaws() {
@@ -123,8 +121,6 @@ public class CActionDescription extends ActionDescription<CLaw> {
 	}
 
 	/**
-	 * Returns a set of all dynamic laws contained in this action description.
-	 * 
 	 * @return a set of all dynamic laws contained in this action description.
 	 */
 	public Set<DynamicLaw> getDynamicLaws() {
@@ -161,4 +157,5 @@ public class CActionDescription extends ActionDescription<CLaw> {
 			sig.addAll(r.getFormulas());
 		return sig;
 	}
+
 }

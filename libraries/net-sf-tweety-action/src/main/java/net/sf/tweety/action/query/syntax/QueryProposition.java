@@ -30,83 +30,77 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 
 /**
  * Action queries are represented as propositional formulas with three possible
- * types of propositions: holds, always and necessarily propositions. This class
- * holds the common functionality of all these propositions.
+ * types of propositions: "holds", "always" and "necessarily" propositions. This
+ * class holds the common functionality of all these propositions.
  * 
  * @author Sebastian Homann
  */
-public abstract class QueryProposition
-  extends Proposition
-{
-  
-  protected FolFormula formula;
-  
-  /**
-   * Creates a new query proposition with the given formula and a unique name,
-   * which is used by the base class.
-   * 
-   * @param formula a state formula.
-   * @param name a unique name.
-   */
-  public QueryProposition( FolFormula formula, String name )
-  {
-    super( name );
-    this.formula = formula;
-  }
-  
-  /**
-   * Returns the inner formula of this query proposition, e.g. "F" in the case
-   * of a holds F proposition.
-   * @return the inner formula of this query proposition
-   */
-  public FolFormula getInnerFormula()
-  {
-    return formula;
-  }
-  
-  /**
-   * Returns a new action signature containing all symbols of the inner formula
-   * of this proposition.
-   * 
-   * @return a new action signature containing all symbols of the inner formula
-   *         of this proposition.
-   */
-  public ActionSignature getActionSignature()
-  {
-    ActionSignature result = new ActionSignature( formula );
-    return result;
-  }
-  
-  /**
-   * Returns the set of all actions contained in this query proposition. This is
-   * mainly a convenience function, as only necessarily propositions contain any
-   * actions.
-   * 
-   * @return the set of all actions contained in this query proposition.
-   */
-  public abstract Set< FolAction > getInnerActions();
-  
-  /**
-   * Returns a new query proposition of the same type, in which all variables in
-   * inner formulas and actions are replaced according to the given map.
-   * 
-   * @param map a map from variables to constants.
-   * @return a new query proposition.
-   */
-  public abstract QueryProposition substitute( Map<? extends Term<?>, ? extends Term<?> > map );
-  
-  /*
-   * (non-Javadoc)
-   * @see net.sf.tweety.logics.propositionallogic.syntax.Proposition#toString()
-   */
-  public abstract String toString();
-  
-  /**
-   * Returns all variables occuring in inner formulas and actions of this query
-   * proposition.
-   * 
-   * @return all variables occuring in inner formulas and actions of this query
-   *         proposition.
-   */
-  public abstract Set< Variable > getVariables();
+public abstract class QueryProposition extends Proposition {
+
+	protected FolFormula formula;
+
+	/**
+	 * Creates a new query proposition with the given formula and a unique name,
+	 * which is used by the base class.
+	 * 
+	 * @param formula a state formula.
+	 * @param name    a unique name.
+	 */
+	public QueryProposition(FolFormula formula, String name) {
+		super(name);
+		this.formula = formula;
+	}
+
+	/**
+	 * Returns the inner formula of this query proposition, e.g. "F" in the case of
+	 * a holds F proposition.
+	 * 
+	 * @return the inner formula of this query proposition
+	 */
+	public FolFormula getInnerFormula() {
+		return formula;
+	}
+
+	/**
+	 * Returns a new action signature containing all symbols of the inner formula of
+	 * this proposition.
+	 * 
+	 * @return a new action signature containing all symbols of the inner formula of
+	 *         this proposition.
+	 */
+	public ActionSignature getActionSignature() {
+		ActionSignature result = new ActionSignature(formula);
+		return result;
+	}
+
+	/**
+	 * Returns the set of all actions contained in this query proposition. This is
+	 * mainly a convenience function, as only necessarily propositions contain any
+	 * actions.
+	 * 
+	 * @return the set of all actions contained in this query proposition.
+	 */
+	public abstract Set<FolAction> getInnerActions();
+
+	/**
+	 * Returns a new query proposition of the same type, in which all variables in
+	 * inner formulas and actions are replaced according to the given map.
+	 * 
+	 * @param map a map from variables to constants.
+	 * @return a new query proposition.
+	 */
+	public abstract QueryProposition substitute(Map<? extends Term<?>, ? extends Term<?>> map);
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.Proposition#toString()
+	 */
+	public abstract String toString();
+
+	/**
+	 * @return all variables occurring in inner formulas and actions of this query
+	 *         proposition.
+	 */
+	public abstract Set<Variable> getVariables();
 }

@@ -29,86 +29,83 @@ import net.sf.tweety.logics.commons.syntax.Variable;
  * 
  * @author Sebastian Homann
  */
-public class VarConstNeqRequirement
-  implements GroundingRequirement
-{
-  
-  private Variable variable;
-  private Constant constant;
-  
-  /**
-   * Creates a new grounding requirement expressing, that the variable given may
-   * not be set to the specific constant.
-   * 
-   * @param variable a variable.
-   * @param constant a constant.
-   */
-  public VarConstNeqRequirement( Variable variable, Constant constant )
-  {
-    if ( variable == null || constant == null ) {
-      throw new NullPointerException();
-    }
-    this.variable = variable;
-    this.constant = constant;
-  }
-  
-  /*
-   * (non-Javadoc)
-   * @see
-   * net.sf.tweety.action.desc.c.syntax.GroundingRequirement#isValid(java.util
-   * .Map)
-   */
-  @Override
-  public boolean isValid( Map< Variable, Constant > assignment )
-  {
-    Constant a = assignment.get( variable );
-    if ( a == null || constant == null || !constant.equals( a ) )
-      return true;
-    return false;
-  }
-  
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( Object obj )
-  {
-    if ( this == obj )
-      return true;
-    if ( obj == null )
-      return false;
-    if ( getClass() != obj.getClass() )
-      return false;
-    VarConstNeqRequirement other = (VarConstNeqRequirement) obj;
-    if ( !variable.equals( other.variable ) )
-      return false;
-    if ( !constant.equals( other.constant ) )
-      return false;
-    return true;
-  }
-  
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode()
-  {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ( ( variable == null ) ? 0 : variable.hashCode() );
-    result = prime * result + ( ( constant == null ) ? 0 : constant.hashCode() );
-    return result;
-  }
-  
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString()
-  {
-    return variable.get() + "<>" + constant.get();
-  }
+public class VarConstNeqRequirement implements GroundingRequirement {
+
+	private Variable variable;
+	private Constant constant;
+
+	/**
+	 * Creates a new grounding requirement expressing, that the variable given may
+	 * not be set to the specific constant.
+	 * 
+	 * @param variable a variable.
+	 * @param constant a constant.
+	 */
+	public VarConstNeqRequirement(Variable variable, Constant constant) {
+		if (variable == null || constant == null) {
+			throw new NullPointerException();
+		}
+		this.variable = variable;
+		this.constant = constant;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.action.desc.c.syntax.GroundingRequirement#isValid(java.util
+	 * .Map)
+	 */
+	@Override
+	public boolean isValid(Map<Variable, Constant> assignment) {
+		Constant a = assignment.get(variable);
+		if (a == null || constant == null || !constant.equals(a))
+			return true;
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		VarConstNeqRequirement other = (VarConstNeqRequirement) obj;
+		if (!variable.equals(other.variable))
+			return false;
+		if (!constant.equals(other.constant))
+			return false;
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((variable == null) ? 0 : variable.hashCode());
+		result = prime * result + ((constant == null) ? 0 : constant.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return variable.get() + "<>" + constant.get();
+	}
 }

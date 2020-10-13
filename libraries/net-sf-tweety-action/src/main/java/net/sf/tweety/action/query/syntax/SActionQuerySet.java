@@ -28,9 +28,10 @@ import net.sf.tweety.commons.Signature;
 import net.sf.tweety.logics.pl.syntax.Conjunction;
 
 /**
- * This class models a set of action queries in the language S which is based on
- * the query language "P" discussed in the paper: Action Languages. by Michael
- * Gelfond and Vladimir Lifschitz, ETAI: Electronic Transactions on AI, 1998.
+ * This class models a set of action queries in the language "S" which is based on
+ * the query language "P" discussed in the paper: 
+ * [Gelfond, Michael and Lifschitz, Vladimir: Action Languages. 
+ * ETAI: Electronic Transactions on AI, 1998.]
  * 
  * @author Sebastian Homann
  */
@@ -52,9 +53,6 @@ public class SActionQuerySet extends ActionQuerySet<SActionQuery> {
 	}
 
 	/**
-	 * Returns a new SActionQuerySet consisting of all possible groundings of the
-	 * contained queries.
-	 * 
 	 * @return a new SActionQuerySet consisting of all possible groundings of the
 	 *         contained queries.
 	 */

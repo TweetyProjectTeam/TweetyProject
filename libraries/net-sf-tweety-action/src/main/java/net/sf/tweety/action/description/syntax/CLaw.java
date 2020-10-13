@@ -41,236 +41,205 @@ import net.sf.tweety.logics.fol.syntax.Tautology;
  * 
  * @author Sebastian Homann
  */
-public abstract class CLaw
-  implements CausalLaw
-{
-  protected FolFormula headFormula = new Contradiction();
-  protected FolFormula ifFormula = new Tautology();
-  protected Set< GroundingRequirement > requirements =
-    new HashSet< GroundingRequirement >();
-  
-  /*
-   * (non-Javadoc)
-   * @see net.sf.tweety.kr.Formula#getSignature()
-   */
-  public abstract Signature getSignature();
-  
-  /**
-   * Returns true iff this law is definite. A causal law is definite if it's
-   * head is a literal or a contradiction and all formulas are conjunctions of
-   * literals.
-   * 
-   * @return true, if this law is definite, false otherwise.
-   */
-  public abstract boolean isDefinite();
-  
-  /**
-   * Returns an equivalent definite causal law. A causal law is definite if
-   * it's head is a literal or a contradiction and all formulas are conjunctions
-   * of literals.
-   * 
-   * @return the equivalent definite causal law if one exists.
-   * @throws IllegalStateException when there is no equivalent definite causal
-   *           law.
-   */
-  public abstract Set< CLaw > toDefinite()
-    throws IllegalStateException;
-  
-  /**
-   * Returns the set of propositions in all formulas in this law.
-   * 
-   * @return the set of propositions in all formulas in this law.
-   */
-  public abstract Set< FolAtom > getAtoms();
-  
-  /**
-   * Returns the set of formulas contained in this causal law, e.g. in a static
-   * law, this contains the head formula and the if formula.
-   * 
-   * @return the set of formulas contained in this causal law.
-   */
-  public abstract Set< FolFormula > getFormulas();
-  
-  /**
-   * Creates an empty causal law.
-   */
-  public CLaw()
-  {
-  }
-  
-  /**
-   * Creates a causal law of the form caused headFormula if True
-   * 
-   * @param headFormula some FOL formula
-   */
-  public CLaw( FolFormula headFormula )
-  {
-    setHeadFormula( headFormula );
-  }
-  
-  /**
-   * Creates a causal law of the form caused headFormula if True requires
-   * requirements
-   * 
-   * @param headFormula some FOL formula
-   * @param requirements a set of requirements
-   */
-  public CLaw( FolFormula headFormula, Set< GroundingRequirement > requirements )
-  {
-    setHeadFormula( headFormula );
-    setGroundingRequirements( requirements );
-  }
-  
-  /**
-   * Creates a causal law of the form caused headFormula if ifFormula requires
-   * requirements
-   * 
-   * @param headFormula some FOL formula
-   * @param ifFormula some FOL formula
-   * @param requirements  a set of requirements
-   */
-  public CLaw( FolFormula headFormula, FolFormula ifFormula,
-    Set< GroundingRequirement > requirements )
-  {
-    setHeadFormula( headFormula );
-    setIfFormula( ifFormula );
-    setGroundingRequirements( requirements );
-  }
-  
-  /**
-   * Creates a causal law of the form caused headFormula if ifFormula
-   * 
-   * @param headFormula some FOL formula
-   * @param ifFormula  some FOL formula
-   */
-  public CLaw( FolFormula headFormula, FolFormula ifFormula )
-  {
-    setHeadFormula( headFormula );
-    setIfFormula( ifFormula );
-  }
-  
-  private void setGroundingRequirements(
-    Set< GroundingRequirement > requirements )
-  {
-    if ( requirements != null )
-      this.requirements.addAll( requirements );
-  }
-  
-  /**
-   * Sets the headFormula of this causal law
-   * 
-   * @param headFormula The new headFormula of this causal law.
-   */
-  private void setHeadFormula( FolFormula headFormula )
-  {
-    if ( headFormula == null ) {
-      this.headFormula = new Contradiction();
-      return;
-    }
-    
-    if ( !( new ActionSignature( headFormula ).isRepresentable( headFormula ) ) ) {
-      throw new IllegalArgumentException(
-        "The formula given has an illegal form" );
-    }
-    this.headFormula = (FolFormula) headFormula.collapseAssociativeFormulas();
-  }
-  
-  /**
-   * Sets the IfFormula of this causal law
-   * 
-   * @param ifFormula The new IfFormula of this causal law.
-   */
-  private void setIfFormula( FolFormula ifFormula )
-  {
-    if ( ifFormula == null ) {
-      this.ifFormula = new Tautology();
-      return;
-    }
-    if ( !( new ActionSignature( ifFormula ).isRepresentable( ifFormula ) ) ) {
-      throw new IllegalArgumentException(
-        "The formula given has an illegal form" );
-    }
-    this.ifFormula = (FolFormula) ifFormula.collapseAssociativeFormulas();
-  }
-  
-  public void addGroundingRequirement( GroundingRequirement c )
-  {
-    requirements.add( c );
-  }
-  
-  /**
-   * Returns the headFormula of this causal law.
-   * 
-   * @return the headFormula of this causal law.
-   */
-  public FolFormula getHeadFormula()
-  {
-    return headFormula;
-  }
-  
-  /**
-   * Returns the ifFormula of this causal law.
-   * 
-   * @return the ifFormula of this causal law.
-   */
-  public FolFormula getIfFormula()
-  {
-    return ifFormula;
-  }
-  
-  public boolean isGround()
-  {
-    for ( FolAtom a : getAtoms() )
-      if ( !a.isGround() )
-        return false;
-    return true;
-  }
-  
-  /**
-   * Returns the set of all grounded instances of this causal law.
-   * 
-   * @return the set of all grounded instances of this causal law.
-   */
-  public abstract Set< CLaw > getAllGrounded();
-  
-  /**
-   * Checks if a propositional formula is a valid head formula for a definite
-   * causal law, which means either a contradiction, a fluent or the negation
-   * of a fluent.
-   * 
-   * @param pl a propositional formula
-   * @return true, if pl is a valid definite head formula
-   */
-  protected boolean isValidDefiniteHead( RelationalFormula pl )
-  {
-    
-    if ( pl instanceof Contradiction )
-      return true;
-    if ( pl instanceof Negation )
-      pl = ( (Negation) pl ).getFormula();
-    if ( pl instanceof FolAtom )
-      return ( (FolAtom) pl ).getPredicate() instanceof FolFluentName;
-    return false;
-  }
-  
-  /**
-   * a conjunctive clause is either a literal or a conjunction of literals.
-   * 
-   * @param pl a propositional formula
-   * @return true, if pl is a conjunctive clause
-   */
-  protected boolean isConjunctiveClause( FolFormula pl )
-  {
-    if ( pl instanceof Conjunction ) {
-      for ( RelationalFormula p : ( (Conjunction) pl ) ) {
-        
-        if ( !( (FolFormula) p ).isLiteral() )
-          return false;
-      }
-    }
-    else if ( pl instanceof Disjunction ) {
-      return false;
-    }
-    return true;
-  }
+public abstract class CLaw implements CausalLaw {
+	protected FolFormula headFormula = new Contradiction();
+	protected FolFormula ifFormula = new Tautology();
+	protected Set<GroundingRequirement> requirements = new HashSet<GroundingRequirement>();
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.commons.Formula#getSignature()
+	 */
+	public abstract Signature getSignature();
+
+	/**
+	 * Returns true iff this law is definite. A causal law is definite if it's head
+	 * is a literal or a contradiction and all formulas are conjunctions of
+	 * literals.
+	 * 
+	 * @return true, if this law is definite, false otherwise.
+	 */
+	public abstract boolean isDefinite();
+
+	/**
+	 * Returns an equivalent definite causal law. A causal law is definite if it's
+	 * head is a literal or a contradiction and all formulas are conjunctions of
+	 * literals.
+	 * 
+	 * @return the equivalent definite causal law if one exists.
+	 * @throws IllegalStateException when there is no equivalent definite causal
+	 *                               law.
+	 */
+	public abstract Set<CLaw> toDefinite() throws IllegalStateException;
+
+	/**
+	 * @return the set of propositions in all formulas in this law.
+	 */
+	public abstract Set<FolAtom> getAtoms();
+
+	/**
+	 * Returns the set of formulas contained in this causal law, e.g. in a static
+	 * law, this contains the head formula and the if formula.
+	 * 
+	 * @return the set of formulas contained in this causal law.
+	 */
+	public abstract Set<FolFormula> getFormulas();
+
+	/**
+	 * Creates an empty causal law.
+	 */
+	public CLaw() {
+	}
+
+	/**
+	 * Creates a causal law of the form "caused headFormula if True"
+	 * 
+	 * @param headFormula some FOL formula
+	 */
+	public CLaw(FolFormula headFormula) {
+		setHeadFormula(headFormula);
+	}
+
+	/**
+	 * Creates a causal law of the form "caused headFormula if True requires
+	 * requirements"
+	 * 
+	 * @param headFormula  some FOL formula
+	 * @param requirements a set of requirements
+	 */
+	public CLaw(FolFormula headFormula, Set<GroundingRequirement> requirements) {
+		setHeadFormula(headFormula);
+		setGroundingRequirements(requirements);
+	}
+
+	/**
+	 * Creates a causal law of the form "caused headFormula if ifFormula requires
+	 * requirements"
+	 * 
+	 * @param headFormula  some FOL formula
+	 * @param ifFormula    some FOL formula
+	 * @param requirements a set of requirements
+	 */
+	public CLaw(FolFormula headFormula, FolFormula ifFormula, Set<GroundingRequirement> requirements) {
+		setHeadFormula(headFormula);
+		setIfFormula(ifFormula);
+		setGroundingRequirements(requirements);
+	}
+
+	/**
+	 * Creates a causal law of the form "caused headFormula if ifFormula"
+	 * 
+	 * @param headFormula some FOL formula
+	 * @param ifFormula   some FOL formula
+	 */
+	public CLaw(FolFormula headFormula, FolFormula ifFormula) {
+		setHeadFormula(headFormula);
+		setIfFormula(ifFormula);
+	}
+
+	private void setGroundingRequirements(Set<GroundingRequirement> requirements) {
+		if (requirements != null)
+			this.requirements.addAll(requirements);
+	}
+
+	/**
+	 * Sets the headFormula of this causal law
+	 * 
+	 * @param headFormula The new headFormula of this causal law.
+	 */
+	private void setHeadFormula(FolFormula headFormula) {
+		if (headFormula == null) {
+			this.headFormula = new Contradiction();
+			return;
+		}
+
+		if (!(new ActionSignature(headFormula).isRepresentable(headFormula))) {
+			throw new IllegalArgumentException("The formula given has an illegal form");
+		}
+		this.headFormula = (FolFormula) headFormula.collapseAssociativeFormulas();
+	}
+
+	/**
+	 * Sets the IfFormula of this causal law
+	 * 
+	 * @param ifFormula The new IfFormula of this causal law.
+	 */
+	private void setIfFormula(FolFormula ifFormula) {
+		if (ifFormula == null) {
+			this.ifFormula = new Tautology();
+			return;
+		}
+		if (!(new ActionSignature(ifFormula).isRepresentable(ifFormula))) {
+			throw new IllegalArgumentException("The formula given has an illegal form");
+		}
+		this.ifFormula = (FolFormula) ifFormula.collapseAssociativeFormulas();
+	}
+
+	public void addGroundingRequirement(GroundingRequirement c) {
+		requirements.add(c);
+	}
+
+	/**
+	 * @return the headFormula of this causal law.
+	 */
+	public FolFormula getHeadFormula() {
+		return headFormula;
+	}
+
+	/**
+	 * @return the ifFormula of this causal law.
+	 */
+	public FolFormula getIfFormula() {
+		return ifFormula;
+	}
+
+	public boolean isGround() {
+		for (FolAtom a : getAtoms())
+			if (!a.isGround())
+				return false;
+		return true;
+	}
+
+	/**
+	 * @return the set of all grounded instances of this causal law.
+	 */
+	public abstract Set<CLaw> getAllGrounded();
+
+	/**
+	 * Checks if a propositional formula is a valid head formula for a definite
+	 * causal law, which means either a contradiction, a fluent or the negation of a
+	 * fluent.
+	 * 
+	 * @param pl a propositional formula
+	 * @return true, if pl is a valid definite head formula
+	 */
+	protected boolean isValidDefiniteHead(RelationalFormula pl) {
+
+		if (pl instanceof Contradiction)
+			return true;
+		if (pl instanceof Negation)
+			pl = ((Negation) pl).getFormula();
+		if (pl instanceof FolAtom)
+			return ((FolAtom) pl).getPredicate() instanceof FolFluentName;
+		return false;
+	}
+
+	/**
+	 * Checks if the given formula is a conjunctive clause, meaning
+	 * either a literal or a conjunction of literals.
+	 * 
+	 * @param pl a propositional formula
+	 * @return true, if pl is a conjunctive clause
+	 */
+	protected boolean isConjunctiveClause(FolFormula pl) {
+		if (pl instanceof Conjunction) {
+			for (RelationalFormula p : ((Conjunction) pl)) {
+				if (!((FolFormula) p).isLiteral())
+					return false;
+			}
+		} else if (pl instanceof Disjunction) 
+			return false;
+		return true;
+	}
 }
