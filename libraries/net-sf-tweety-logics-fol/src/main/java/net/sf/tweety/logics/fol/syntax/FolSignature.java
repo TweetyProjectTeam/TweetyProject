@@ -157,6 +157,8 @@ public class FolSignature extends QuadrupleSetSignature<Constant,Predicate,Funct
 			this.addAll(((RelationalFormula)obj).getFunctors());
 			return;
 		}
+		if(obj == null)
+			return;
 		throw new IllegalArgumentException("Class " + obj.getClass() + " of parameter is unsupported.");
 	}
 	
