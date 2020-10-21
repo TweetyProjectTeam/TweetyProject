@@ -39,7 +39,8 @@ import net.sf.tweety.logics.pl.syntax.PlFormula;
 
 /**
  * This class represents an action signature consisting of a set of fluent names
- * and a set of action names. These are represented by first order predicates to
+ * (representing environment states) and a set of action names 
+ * (representing actions). They are represented by first order predicates to
  * allow for the simple implementation of a grounding mechanism.
  * 
  * @author Sebastian Homann
@@ -103,7 +104,7 @@ public class ActionSignature extends FolSignature {
 	}
 
 	/**
-	 * Checks, if a given formula is valid in the sense of an action description,
+	 * Checks if a given formula is valid in the sense of an action description,
 	 * containing only predicates that are either fluentNames or actionNames and
 	 * containing neither quantifiers nor functions.
 	 * 
@@ -235,8 +236,9 @@ public class ActionSignature extends FolSignature {
 		Set<Variable> variables = new HashSet<Variable>();
 		for (FolFluentName f : getFluentNames()) {
 			FolAtom a = new FolAtom(f);
+			int i = 0;
 			for (Sort s : f.getArgumentTypes()) {
-				Variable v = new Variable("", s);
+				Variable v = new Variable("X"+(i++), s);
 				a.addArgument(v);
 				variables.add(v);
 			}
@@ -261,10 +263,11 @@ public class ActionSignature extends FolSignature {
 	public Set<FolAtom> getAllGroundedActionNameAtoms() {
 		Set<FolAtom> atoms = new HashSet<FolAtom>();
 		Set<Variable> variables = new HashSet<Variable>();
+		int i = 0;
 		for (FolActionName f : getActionNames()) {
 			FolAtom a = new FolAtom(f);
 			for (Sort s : f.getArgumentTypes()) {
-				Variable v = new Variable("", s);
+				Variable v = new Variable("Y"+(i++), s);
 				a.addArgument(v);
 				variables.add(v);
 			}
@@ -282,6 +285,10 @@ public class ActionSignature extends FolSignature {
 
 	@Override
 	public void add(Object obj) throws IllegalArgumentException {
+		if (obj instanceof ActionSignature) {
+			this.addSignature(((ActionSignature)obj));
+			return;
+		}
 		if (obj instanceof FolFluentName) {
 			FolFluentName f = (FolFluentName) obj;
 			secondSet.add(f);

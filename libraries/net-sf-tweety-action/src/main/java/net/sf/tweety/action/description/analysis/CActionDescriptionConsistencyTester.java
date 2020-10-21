@@ -30,7 +30,7 @@ import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
 
 /**
- * This class is able to check, whether a given action description in the action
+ * This class is able to check if a given action description in the action
  * language C is consistent with regards to one simple consistency requirement:
  * The transition system described by the action description has at least one
  * state. This check is accomplished using the CTransitionSystemCalculator and
@@ -40,6 +40,9 @@ import net.sf.tweety.lp.asp.reasoner.ASPSolver;
  * @author Matthias Thimm
  */
 public class CActionDescriptionConsistencyTester implements ActionDescriptionConsistencyTester<CLaw> {
+	/**
+	 * The ASP (answer set programming) solver used to test for consistency.
+	 */
 	private ASPSolver aspsolver;
 
 	/**
@@ -52,7 +55,7 @@ public class CActionDescriptionConsistencyTester implements ActionDescriptionCon
 	}
 
 	/**
-	 * Checks, whether the given action description in the action language C is
+	 * Checks whether the given action description in the action language C is
 	 * consistent.
 	 * 
 	 * @param actionDescription an action description.

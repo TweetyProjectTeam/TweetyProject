@@ -243,8 +243,8 @@ public class SActionQuery implements ActionQuery {
 	@Override
 	public String toString() {
 		String result = formula.toString();
-		// if(!requirements.isEmpty())
-		// result += requirements.toString();
+		if(!requirements.isEmpty())
+			result += requirements.toString();
 		return result;
 	}
 }

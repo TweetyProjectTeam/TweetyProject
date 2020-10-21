@@ -19,6 +19,7 @@
 package net.sf.tweety.action.description.reasoner;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,27 +35,31 @@ import net.sf.tweety.action.signature.FolFluentName;
 import net.sf.tweety.action.transitionsystem.State;
 import net.sf.tweety.action.transitionsystem.Transition;
 import net.sf.tweety.action.transitionsystem.TransitionSystem;
-import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.fol.parser.FolParser;
 import net.sf.tweety.logics.fol.syntax.Conjunction;
 import net.sf.tweety.logics.fol.syntax.Contradiction;
 import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolFormula;
 import net.sf.tweety.logics.fol.syntax.Negation;
 import net.sf.tweety.logics.commons.syntax.RelationalFormula;
+import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.Tautology;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
+import net.sf.tweety.lp.asp.syntax.ASPLiteral;
+import net.sf.tweety.lp.asp.syntax.StrictNegation;
 
 /**
  * This class calculates the transition system as it is described by an action
  * description in the action language C using extended logic programming with an
- * approach from: Representing Transition Systems by Logic Programs. by Vladimir
- * Lifschitz and Hudson Turner, LPNMR '99: Proceedings of the 5th International
- * Conference on Logic Programming and Nonmonotonic Reasoning. Pages 92-106,
- * 1999.
+ * approach from [1].
+ * 
+ * [1] Vladimir Lifschitz and Hudson Turner. Representing Transition Systems by
+ * Logic Programs. LPNMR '99: Proceedings of the 5th International Conference on
+ * Logic Programming and Nonmonotonic Reasoning. Pages 92-106, 1999.
  * 
  * @author Sebastian Homann
  * @author Tim Janus (modifictions for asp library)
+ * @author Anna Gessler (further modifications for asp library)
  */
 public class CTransitionSystemCalculator {
 	/**
@@ -94,19 +99,14 @@ public class CTransitionSystemCalculator {
 		Set<State> states = calculateStates(actionDescription, signature);
 		if (states == null)
 			return new TransitionSystem(signature);
+
 		TransitionSystem transitionSystem = new TransitionSystem(states, signature);
-
-		String rules = getLpT(actionDescription, signature, 1);
-
-		aspsolver.getModels(rules);
-		String[] claspResult = aspsolver.getOutput().split("\\R+");
-		/*
-		 * String[] claspResult = aspsolver.calculateAnswerSets( rules );
-		 */
-		if (claspResult == null)
+		String rules = convertToLogicProgram(actionDescription, signature, 1);
+		Collection<AnswerSet> models = aspsolver.getModels(rules);
+		if (models.isEmpty())
 			return transitionSystem;
-		Set<Map<Integer, Set<FolAtom>>> answerSets = parseLpT(claspResult, signature);
 
+		Set<Map<Integer, Set<FolAtom>>> answerSets = parseLpOutput(models, signature);
 		for (Map<Integer, Set<FolAtom>> answerSet : answerSets) {
 			Set<FolAtom> sourceStateFluents = new HashSet<FolAtom>();
 			Set<FolAtom> targetStateFluents = new HashSet<FolAtom>();
@@ -125,12 +125,11 @@ public class CTransitionSystemCalculator {
 			FolAction action = new FolAction(actionNames);
 			transitionSystem.addTransition(new Transition(sourceState, action, targetState));
 		}
-
 		return transitionSystem;
 	}
 
 	/**
-	 * calculates the set of all states of the transition system described by an
+	 * Calculates the set of all states of the transition system described by an
 	 * action description.
 	 * 
 	 * @param actionDescription an action description.
@@ -146,30 +145,26 @@ public class CTransitionSystemCalculator {
 		if (!actionDescription.isDefinite())
 			throw new IllegalArgumentException(
 					"Cannot calculate transition system of non-definite action description.");
-		Set<State> result = new HashSet<State>();
-		String rules = getLpT(actionDescription, signature, 0);
-
-		aspsolver.getModels(rules);
-		String[] claspResult = aspsolver.getOutput().split("\\R+");
-		/*
-		 * String[] claspResult = aspsolver.calculateAnswerSets( rules );
-		 */
-		if (claspResult == null)
+		
+		String rules = convertToLogicProgram(actionDescription, signature, 0);
+		Collection<AnswerSet> answerSets = aspsolver.getModels(rules);
+		if (answerSets.isEmpty())
 			return null;
-		Set<Map<Integer, Set<FolAtom>>> states = parseLpT(claspResult, signature);
+
+		Set<State> result = new HashSet<State>();
+		Set<Map<Integer, Set<FolAtom>>> states = parseLpOutput(answerSets, signature);
 		for (Map<Integer, Set<FolAtom>> state : states) {
 			State s = new State(state.get(0));
 			result.add(s);
 		}
-
 		return result;
 	}
 
 	/**
-	 * Calculates an extended logic programm lp_T(D) for a given action description
-	 * D and a parameter T, which corresponds to the length of histories in the
+	 * Calculates an extended logic program lp_T(D) for a given action description D
+	 * and a parameter T, which corresponds to the length of histories in the
 	 * transition system described by D. See "Representing Transition Systems by
-	 * Logic Programs." for more information.
+	 * Logic Programs" [1] for more information.
 	 * 
 	 * @param d         an action description.
 	 * @param signature an action signature.
@@ -177,7 +172,7 @@ public class CTransitionSystemCalculator {
 	 *                  correspond to answer sets of lp_T(D).
 	 * @return an extended logic program.
 	 */
-	public String getLpT(CActionDescription d, ActionSignature signature, int T) {
+	public String convertToLogicProgram(CActionDescription d, ActionSignature signature, int T) {
 		if (T < 0)
 			throw new IllegalArgumentException("T has to be >= 0.");
 		if (!d.isDefinite())
@@ -247,8 +242,8 @@ public class CTransitionSystemCalculator {
 	}
 
 	/**
-	 * Returns rules, that enforce the existence of each atom in the given set in
-	 * all answer sets of an extended logic program.
+	 * Returns rules that enforce the existence of each atom in the given set in all
+	 * answer sets of an extended logic program.
 	 * 
 	 * @param atoms a set of atoms.
 	 * @param t     parameter to be added to each atom.
@@ -275,13 +270,13 @@ public class CTransitionSystemCalculator {
 	}
 
 	/**
-	 * Regains all illegal characters from answer sets. This regains the original
+	 * Restores all illegal characters in answer sets. This restores the original
 	 * names for each literal in an answer set.
 	 * 
 	 * @param s an atom name in lparse-compatible format.
 	 * @return the original atom name.
 	 */
-	private String regainIllegalChars(String s) {
+	private String restoreIllegalChars(String s) {
 		return s.replace("xxx1xxx", "(").replace("xxx2xxx", ")").replace("xxx3xxx", ",");
 	}
 
@@ -290,59 +285,42 @@ public class CTransitionSystemCalculator {
 	 * set is parsed as a map from integers to sets of atoms, where the integer
 	 * represents the timestamp for each atom in the corresponding set.
 	 * 
-	 * @param lines     the output of the answer set solver.
-	 * @param signature the action signature of the original description.
+	 * @param answerSets the output of the answer set solver.
+	 * @param signature  the action signature of the original description.
 	 * @return a set of maps each mapping timestamps to sets of atoms.
 	 */
-	private Set<Map<Integer, Set<FolAtom>>> parseLpT(String[] lines, ActionSignature signature) {
+	@SuppressWarnings("unchecked")
+	private Set<Map<Integer, Set<FolAtom>>> parseLpOutput(Collection<AnswerSet> answerSets, ActionSignature signature) {
 		Set<Map<Integer, Set<FolAtom>>> result = new HashSet<Map<Integer, Set<FolAtom>>>();
+		for (AnswerSet as : answerSets) {
+			Map<Integer, Set<FolAtom>> map = new HashMap<Integer, Set<FolAtom>>();
+			for (ASPLiteral l : as) {
+				int i = ((Term<Integer>) l.getTerms().iterator().next()).get();
+				if (map.get(i) == null)
+					map.put(i, new HashSet<FolAtom>());
+				if (!(l instanceof StrictNegation)) {
+					String name = l.getName();
+					name = restoreIllegalChars(name);
+					FolAtom a;
+					if (signature.getActionName(name) != null)
+						a = new FolAtom(signature.getActionName(name));
+					else
+						a = new FolAtom(signature.getFluentName(name));
+					map.get(i).add(a);
+				}
 
-		for (String line : lines) {
-			result.add(parseLpTSingleLine(line, signature));
+			}
+			result.add(map);
 		}
 		return result;
 	}
 
 	/**
-	 * Utility function parsing a single answer set to a map from timestamp to the
-	 * set of atoms with that particular timestamp.
-	 * 
-	 * @param s         a single answer set from the output of a solver.
-	 * @param signature the action signature of the original action description.
-	 * @return a map from timestamps to sets of atoms.
-	 * @throws ParserException if parsing fails
-	 */
-	private Map<Integer, Set<FolAtom>> parseLpTSingleLine(String s, ActionSignature signature) throws ParserException {
-		Map<Integer, Set<FolAtom>> map = new HashMap<Integer, Set<FolAtom>>();
-
-		String[] tokens = s.split(" ");
-		for (String token : tokens) {
-			token = token.trim();
-			int i = Integer.parseInt(token.substring(token.indexOf("(") + 1, token.indexOf(")")));
-			if (map.get(i) == null)
-				map.put(i, new HashSet<FolAtom>());
-			if (!token.startsWith("-")) {
-				FolParser p = new FolParser();
-				p.setSignature(signature);
-				FolAtom a = null;
-				try {
-					a = (FolAtom) p.parseFormula(regainIllegalChars(token.substring(0, token.indexOf("("))));
-				} catch (IOException e) {
-					// Impossible, no io involved
-					e.printStackTrace();
-				}
-				map.get(i).add(a);
-			}
-		}
-		return map;
-	}
-
-	/**
 	 * Calculates the representation of an inner formula of a causal rule according
-	 * to the translation in "Representing Transition Systems by Logic Programs.".
-	 * Since the "if"-part of a rule has to be represented by default negation and
-	 * the "after"-part by a direct translation, this function allows both kinds of
-	 * translations which may be selected by the boolean parameter "negated".
+	 * to the translation in "Representing Transition Systems by Logic Programs"
+	 * [1]. Since the "if"-part of a rule has to be represented by default negation
+	 * and the "after"-part by a direct translation, this function allows both kinds
+	 * of translations which may be selected by the boolean parameter "negated".
 	 * 
 	 * @param f       the inner formula of a causal rule.
 	 * @param t       the timestamp for this translation.
@@ -388,15 +366,14 @@ public class CTransitionSystemCalculator {
 		} else if (f instanceof Contradiction) {
 			result = "";
 		} else {
-			throw new IllegalArgumentException("Not a valid Literal.");
+			throw new IllegalArgumentException("Formula is not a valid Literal: " + f);
 		}
-
 		return result;
 	}
 
 	/**
-	 * Utility function representing a given atom, either an actionname or a
-	 * fluentname, to be used in a rule in an extended logic program.
+	 * Utility function representing a given atom, either an actionName or a
+	 * fluentName, to be used in a rule in an extended logic program.
 	 * 
 	 * @param f an atom.
 	 * @param t a timestamp.

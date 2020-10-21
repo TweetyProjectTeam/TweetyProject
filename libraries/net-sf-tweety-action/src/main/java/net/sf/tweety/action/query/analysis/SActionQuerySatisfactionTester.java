@@ -48,11 +48,12 @@ import net.sf.tweety.logics.commons.syntax.RelationalFormula;
 import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PlFormula;
 import net.sf.tweety.lp.asp.reasoner.ASPSolver;
+import net.sf.tweety.lp.asp.semantics.AnswerSet;
 
 /**
  * This class provides methods capable of checking if a given transition system
- * satisfies a set of action queries in the action query language s. This is
- * acomplished by a translation of action queries to normal logic programms
+ * satisfies a set of action queries in the action query language S. This is
+ * accomplished by a translation of action queries to normal logic programs
  * presented in [1]. 
  * 
  * [1] Bachelor thesis. Action und Change: Update von
@@ -61,6 +62,9 @@ import net.sf.tweety.lp.asp.reasoner.ASPSolver;
  * @author Sebastian Homann
  */
 public class SActionQuerySatisfactionTester implements ActionQuerySatisfactionTester {
+	/**
+	 * The ASP (answer set programming) solver used to check for satisfiability.
+	 */
 	private ASPSolver aspsolver;
 
 	/**
@@ -89,13 +93,10 @@ public class SActionQuerySatisfactionTester implements ActionQuerySatisfactionTe
 		SActionQuerySet qset = (SActionQuerySet) actionQueries;
 		program += getRules(qset);
 		program += getConstraints(qset);
-
-		// TODO: Add satisfiable term to new asp lib version:
-		boolean result = false;
-		// aspsolver.calculateSatisfiable( program ); 
-	
-		System.out.println(program);
-		return result;
+		
+		Collection<AnswerSet> models = aspsolver.getModels(program);
+		System.out.println(aspsolver.getOutput());
+		return !models.isEmpty();
 	}
 
 	/*
@@ -431,7 +432,7 @@ public class SActionQuerySatisfactionTester implements ActionQuerySatisfactionTe
 	 * @return a human readable version of the atoms in a logic program or in a
 	 *         resulting stable model.
 	 */
-	public String regainIllegalCharacters(String s) {
+	public String restoreIllegalCharacters(String s) {
 		return s.replace("xxx1xxx", "(").replace("xxx2xxx", ")").replace("xxx3xxx", ",").replace("xxx4xxx", "!")
 				.replace("xxx5xxx", "&&").replace("xxx6xxx", "||").replace("xxx7xxx", "[").replace("xxx8xxx", "]")
 				.replace("xxx9xxx", "{").replace("xxx10xxx", "}").replace("xxx11xxx", " ").replace("xxx12xxx", "+")
