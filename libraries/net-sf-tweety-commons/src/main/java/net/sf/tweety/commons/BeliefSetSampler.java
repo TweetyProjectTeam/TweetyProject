@@ -87,8 +87,8 @@ public abstract class BeliefSetSampler<T extends Formula, U extends BeliefSet<T,
 	@Override
 	public boolean hasNext() {
 		// as samplers generate random instances there are
-		// always next instances.
-		return true;
+		// always next instances unless the signature is empty.
+		return !this.getSamplerSignature().isEmpty();
 	}
 
 	/* (non-Javadoc)

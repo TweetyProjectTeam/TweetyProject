@@ -91,7 +91,7 @@ public class EnumeratingIterator implements BeliefSetIterator<PlFormula,PlBelief
 	 */
 	@Override
 	public boolean hasNext() {
-		return true;
+		return !signature.isEmpty();
 	}
 	
 	/* (non-Javadoc)
