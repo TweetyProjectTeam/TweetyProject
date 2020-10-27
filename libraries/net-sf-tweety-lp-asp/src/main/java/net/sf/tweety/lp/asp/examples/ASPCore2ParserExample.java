@@ -34,6 +34,7 @@ import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
  * Examples for parsing simple ELP programs and for using Clingo to solve them.
+ * Tested with clingo 5.2.2
  * 
  * @author Anna Gessler
  *
@@ -41,7 +42,7 @@ import net.sf.tweety.lp.asp.syntax.Program;
 public class ASPCore2ParserExample {
 
 	public static void main(String[] args) throws ParseException, FileNotFoundException {
-		ASPCore2Parser parser = new ASPCore2Parser(new StringReader(""));;
+		ASPCore2Parser parser = new ASPCore2Parser(new StringReader(""));
 		
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex5.asp"));
 		parser.ReInit(fistr);

@@ -44,19 +44,21 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	private static final long serialVersionUID = -1498770939009078101L;
 
 	/**
-	 * A single query.
+	 * A single query (optional field).
 	 */
 	private ASPLiteral query;
-	
+
 	/**
-	 * Optional field that can be used by some solvers.
-	 * If used, all atoms will be hidden 
-	 * from the output of the solver except for those with
-	 * whitelisted predicates.
-	 * This corresponds to the #show statement
-	 * of the clingo input language.
+	 * Optional field that can be used by some solvers. If used, all atoms will be
+	 * hidden from the output of the solver except for those with whitelisted
+	 * predicates. This corresponds to the '#show' statement of the clingo input
+	 * language.
 	 */
 	private Set<Predicate> output_predicate_whitelist;
+	
+	// -------------------------------------------------------------------------
+	// CONSTRUCTORS
+	// -------------------------------------------------------------------------
 
 	/**
 	 * Creates a new empty program.
@@ -77,7 +79,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 		this.query = null;
 		this.output_predicate_whitelist = this.getPredicates();
 	}
-	
+
 	/**
 	 * Creates a new program with the given rules.
 	 * 
@@ -110,12 +112,15 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	public Program(Program other) {
 		this(other.query, other);
 	}
+	
+	// -------------------------------------------------------------------------
+	// GETTERS AND SETTERS
+	// -------------------------------------------------------------------------
 
 	/**
 	 * Sets the query of the program.
 	 * 
-	 * @param query
-	 *            a literal
+	 * @param query a literal
 	 */
 	public void setQuery(ASPLiteral query) {
 		this.query = query;
@@ -125,122 +130,33 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	public void addFact(ClassicalHead fact) {
 		this.add(new ASPRule(fact));
 	}
-	
+
 	@Override
 	public void addFacts(ClassicalHead... fact) {
 		for (ClassicalHead a : fact)
 			addFact(a);
 	}
-
-	@Override
-	public FolSignature getMinimalSignature() {
-		FolSignature sig = new FolSignature();
-		for (ASPRule r : this) {
-			sig.addAll(r.getPredicates()); 
-			sig.addAll(r.getTerms(Constant.class)); 
-			}
-		if (this.query != null) {
-			sig.addAll(this.query.getPredicates()); 
-			sig.addAll(this.query.getTerms(Constant.class)); 
-			}
-		return sig;
-	}
-
-	@Override
-	public Program substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		Program reval = new Program();
-		for(ASPRule r : this) 
-			reval.add(r.substitute(t, v));
-		if (this.hasQuery())
-			reval.setQuery((ASPLiteral) this.query.substitute(t, v));
-		return reval;
-	}
-
-
-	@Override
-	public Program substitute(Map<? extends Term<?>, ? extends Term<?>> map)
-			throws IllegalArgumentException {
-		Program reval = this;
-		for(Term<?> t : map.keySet()) {
-			reval = reval.substitute(t, map.get(t));
-		}
-		return reval;
-	}
-
-	@Override
-	public Program exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
-		Program reval = new Program();
-		for(ASPRule r : this) 
-			reval.add(r.exchange(v, t));
-		if (this.hasQuery())
-			reval.setQuery((ASPLiteral) this.query.exchange(t, v));
-		return reval;
-	}
-
-	@Override
-	public String toString() {
-		String r = "{";
-		for (ASPRule a : this) {
-			r += a.toString() + " "; 
-		}
-		r = r.substring(0, r.length()-1);
-		if (this.hasQuery())
-			r += " " + query.toString() +"?";
-		r += "}";
-		return r;
-	}
-
-	public boolean isGround() {
-		for (ASPRule r : this)
-			if (!r.isGround())
-				return false;
-		if (this.hasQuery() && !query.isGround())
-			return false;
-		return true;
-	}
-
-	@Override
-	public Program clone() {
-		return new Program(this);
-	}
 	
 	/**
-	 * Sets the whitelist of predicates.
-	 * Solvers that use this option will
-	 * only show atoms over predicates 
-	 * in this set in their output.
+	 * Sets the whitelist of predicates. Solvers that use this option will only show
+	 * atoms over predicates in this set in their output.
 	 * 
 	 * @param ps set of predicates
 	 */
 	public void setOutputWhitelist(Collection<Predicate> ps) {
 		this.output_predicate_whitelist = (Set<Predicate>) ps;
 	}
-	
+
 	/**
-	 * Returns the whitelist of predicates. 
-	 * Solvers that use this option will
-	 * only show atoms over predicates 
-	 * in this set in their output.
+	 * Returns the whitelist of predicates. Solvers that use this option will only
+	 * show atoms over predicates in this set in their output.
 	 * 
 	 * @return set of whitelisted predicates
 	 */
 	public Set<Predicate> getOutputWhitelist() {
 		return this.output_predicate_whitelist;
 	}
-
-	/**
-	 * Processes the set of all predicates which appear in this program.
-	 * @return set of predicates
-	 */
-	private Set<Predicate> getPredicates() {
-		Set<Predicate> prs = new HashSet<Predicate>();
-		for (ASPRule r : this)
-			prs.addAll(r.getPredicates());
-		if (this.hasQuery())
-			prs.add(query.getPredicate());
-		return prs;
-	}
-
+	
 	/**
 	 * Returns true if the program contains a query.
 	 * 
@@ -258,6 +174,145 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	public ASPLiteral getQuery() {
 		return query;
 	}
+	
+	/**
+	 * Adds a fact to this program.
+	 * @param fact a literal
+	 */
+	public void addFact(ASPLiteral fact) {
+		this.add(new ASPRule(fact));
+	}
+
+	/**
+	 * Add the given facts to this program.
+	 * @param facts 
+	 */
+	void addFacts(ASPLiteral... facts) {
+		for (ASPLiteral l : facts)
+			this.addFact(l);
+	}
+
+	/**
+	 * Adds another program's content to the content of this program.
+	 * 
+	 * @param other Reference to the other program.
+	 */
+	public void add(Program other) {
+		for (ASPRule r : other)
+			this.add(r);
+		if (other.hasQuery())
+			if (this.hasQuery())
+				throw new IllegalArgumentException("Failed to add other program's query because this program already has a query.");
+			else
+				this.query = other.getQuery();
+	}
+	
+	// -------------------------------------------------------------------------
+	// INTERFACE METHODS AND UTILS
+	// -------------------------------------------------------------------------
+	
+	/**
+	 * Checks if the program is an extended program, meaning the heads of the
+	 * literals do not have more than one literal.
+	 * 
+	 * @return True if the program is an extended program, false otherwise.
+	 */
+	public boolean isExtendedProgram() {
+		for (ASPRule r : this) {
+			if (r.getHead().getLiterals().size() > 1)
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns true if the program is safe, i.e. if all of its rules and its query
+	 * are safe according to the definition of safety given in the ASP-Core-2 standard.
+	 * 
+	 * @return true if the program is safe, false otherwise
+	 */
+	public boolean isSafe() {
+		for (ASPRule r : this)
+			if (!r.isSafe())
+				return false;
+		return true;
+	}
+	
+	/**
+	 * Checks if the program is ground, meaning if it contains no rules
+	 * with variables. 
+	 * @return true if the program is ground, false otherwise
+	 */
+	public boolean isGround() {
+		for (ASPRule r : this)
+			if (!r.isGround())
+				return false;
+		if (this.hasQuery() && !query.isGround())
+			return false;
+		return true;
+	}
+
+	@Override
+	public FolSignature getMinimalSignature() {
+		FolSignature sig = new FolSignature();
+		for (ASPRule r : this) {
+			sig.addAll(r.getPredicates());
+			sig.addAll(r.getTerms(Constant.class));
+		}
+		if (this.query != null) {
+			sig.addAll(this.query.getPredicates());
+			sig.addAll(this.query.getTerms(Constant.class));
+		}
+		return sig;
+	}
+
+	@Override
+	public Program substitute(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		Program reval = new Program();
+		for (ASPRule r : this)
+			reval.add(r.substitute(t, v));
+		if (this.hasQuery())
+			reval.setQuery((ASPLiteral) this.query.substitute(t, v));
+		return reval;
+	}
+
+	@Override
+	public Program substitute(Map<? extends Term<?>, ? extends Term<?>> map) throws IllegalArgumentException {
+		Program reval = this;
+		for (Term<?> t : map.keySet()) {
+			reval = reval.substitute(t, map.get(t));
+		}
+		return reval;
+	}
+
+	@Override
+	public Program exchange(Term<?> v, Term<?> t) throws IllegalArgumentException {
+		Program reval = new Program();
+		for (ASPRule r : this)
+			reval.add(r.exchange(v, t));
+		if (this.hasQuery())
+			reval.setQuery((ASPLiteral) this.query.exchange(t, v));
+		return reval;
+	}
+
+	@Override
+	public Program clone() {
+		return new Program(this);
+	}
+
+	/**
+	 * Processes the set of all predicates which appear in this program.
+	 * 
+	 * @return set of predicates
+	 */
+	private Set<Predicate> getPredicates() {
+		Set<Predicate> prs = new HashSet<Predicate>();
+		for (ASPRule r : this)
+			prs.addAll(r.getPredicates());
+		if (this.hasQuery())
+			prs.add(query.getPredicate());
+		return prs;
+	}
 
 	/**
 	 * Returns the reduct of this program wrt. the given state, i.e. a program that
@@ -265,11 +320,10 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	 * all default-negated literals in the body) that do not have a default-negated
 	 * version of a literal in their body.
 	 * 
-	 * @param state
-	 *            some set of literals
+	 * @param state some set of literals
 	 * @return the reduct of this program
 	 */
-	public Program reduct(Set<ASPLiteral> state) {
+	public Program getReduct(Set<ASPLiteral> state) {
 		Program p = new Program();
 		for (ASPRule r : this) {
 			ASPRule r2 = new ASPRule();
@@ -296,20 +350,20 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	 * program p' of p adds for every Rule r in p a modified rule r_d of the form:
 	 * 'H(r) :- B(r), not -H(r).' to the program p'.
 	 * 
-	 * @param p
-	 *            The program which is not defaultificated yet
+	 * @param p The program which is not defaultificated yet
 	 * @return a program p' which is the defaultificated version of p.
 	 */
-	public static Program defaultification(Program p) {
+	public static Program getDefaultification(Program p) {
 		Program reval = new Program();
 		for (ASPRule origRule : p) {
 			ASPRule defRule = new ASPRule();
 			if (!origRule.isConstraint()) {
 				if (!(origRule.getHead() instanceof ClassicalHead))
-					throw new UnsupportedOperationException("This function is currently only supported for classical heads (disjunctions of literals)");
-				ASPLiteral head = ((ClassicalHead)origRule.getHead()).iterator().next();
+					throw new UnsupportedOperationException(
+							"This function is currently only supported for classical heads (disjunctions of literals)");
+				ASPLiteral head = ((ClassicalHead) origRule.getHead()).iterator().next();
 				StrictNegation neg = new StrictNegation(head.getAtom());
-				defRule.addPremises(origRule.getBody());
+				defRule.addPremises(origRule.getPremise());
 				DefaultNegation defaultificationLit = null;
 				if (head instanceof StrictNegation) {
 					defRule.addToHead(neg);
@@ -319,66 +373,29 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 					defaultificationLit = new DefaultNegation(neg);
 				}
 
-				if (defaultificationLit != null && !defRule.getBody().contains(defaultificationLit)) {
+				if (defaultificationLit != null && !defRule.getPremise().contains(defaultificationLit)) {
 					defRule.addPremise(defaultificationLit);
 				}
 			} else {
-				defRule.addPremises(origRule.getBody());
+				defRule.addPremises(origRule.getPremise());
 			}
 			reval.add(defRule);
 		}
 		return reval;
 	}
 
-	public void addFact(ASPLiteral fact) {
-		this.add(new ASPRule(fact));
-	}
-	
-	void addFacts(ASPLiteral... facts) {
-		for (ASPLiteral l : facts)
-			this.addFact(l);
-	}
-
-	/**
-	 * Checks if the program is an extended program, meaning the heads of the
-	 * literals do not have more than one literal.
-	 * 
-	 * @return True if the program is an extended program, false otherwise.
-	 */
-	public boolean isExtendedProgram() {
-		for (ASPRule r : this) {
-			if (r.getHead().getLiterals().size() > 1)
-				return false;
+	@Override
+	public String toString() {
+		String r = "{";
+		for (ASPRule a : this) {
+			r += a.toString() + " ";
 		}
-		return true;
+		r = r.substring(0, r.length() - 1);
+		if (this.hasQuery())
+			r += " " + query.toString() + "?";
+		r += "}";
+		return r;
 	}
 
-	/**
-	 * Adds another program's content to the content of this program.
-	 * @param other	Reference to the other program.
-	 */
-	public void add(Program other) {
-		for (ASPRule r : other)
-			this.add(r);
-		
-		if (other.hasQuery())
-			if (this.hasQuery())
-				throw new IllegalArgumentException("Program already has a query.");
-			else
-				this.query = other.getQuery();
-	}
-	
-	/**
-	 * Returns true if the program is safe, 
-	 * i.e. if all of its rules and its
-	 * query are safe.
-	 * @return true if the program is safe, false otherwise
-	 */
-	public boolean isSafe() {
-		for (ASPRule r: this)
-			if (!r.isSafe())
-				return false;
-		return true;
-	}
 
 }

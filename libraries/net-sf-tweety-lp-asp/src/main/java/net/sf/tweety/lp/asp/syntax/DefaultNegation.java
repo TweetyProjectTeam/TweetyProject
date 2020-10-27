@@ -30,10 +30,10 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  * classical atom or an aggregate atom.
  * 
  * <p>
- * In answer set programming, the body of a rule is usually composed of a
+ * Note: In answer set programming, the body of a rule is usually composed of a
  * set of positive and negative literals, where this valuation
  * refers to default negation or negation as failure. When
- * implementing a rule, there are two opportunities:</p>
+ * implementing a rule, there are two options:</p>
  * <ul>
  * <li>implement the rule with two distinct lists, representing
  *   the sets of positive and negative literals </li>
@@ -115,15 +115,20 @@ public class DefaultNegation extends ASPBodyElement {
 		return new DefaultNegation(this);
 	}
 
+	/**
+	 * @return the default negated literal
+	 */
 	public ASPBodyElement getLiteral() {
 		return literal;
 	}
-
+	/**
+	 * Set the default negated literal.
+	 * @param literal
+	 */
 	public void setLiteral(ASPBodyElement literal) {
 		this.literal = literal;
 	}
 	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -29,7 +29,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sf.tweety.logics.commons.error.LanguageException;
+import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.commons.syntax.Variable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolAtom;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
@@ -63,29 +65,27 @@ public class ASPAtom extends ASPLiteral {
 	/**
 	 * Creates a new atom with the given predicate and terms.
 	 * 
-	 * @param p
-	 *            a predicate
-	 * @param terms
-	 *            arguments of the atom
+	 * @param p     a predicate
+	 * @param terms arguments of the atom
 	 */
 	public ASPAtom(Predicate p, List<Term<?>> terms) {
 		if (p.isTyped())
-			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given predicate " + p + " is not.");
+			throw new IllegalArgumentException(
+					"Error: ASP predicates are typeless, the given predicate " + p + " is not.");
 		this.predicate = p;
 		this.arguments = terms;
 	}
-	
+
 	/**
 	 * Creates a new atom with the given predicate and terms.
 	 * 
-	 * @param p
-	 *            a predicate
-	 * @param terms
-	 *            arguments of the atom
+	 * @param p     a predicate
+	 * @param terms arguments of the atom
 	 */
 	public ASPAtom(Predicate p, Term<?>... terms) {
 		if (p.isTyped())
-			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given predicate " + p + " is not.");
+			throw new IllegalArgumentException(
+					"Error: ASP predicates are typeless, the given predicate " + p + " is not.");
 		this.predicate = p;
 		this.arguments = Arrays.asList(terms);
 	}
@@ -102,12 +102,12 @@ public class ASPAtom extends ASPLiteral {
 	/**
 	 * Copy-Constructor: Generates a deep copy of the given FOL atom.
 	 * 
-	 * @param other
-	 *            The FOL atom acting as source for the deep copy
+	 * @param other The FOL atom acting as source for the deep copy
 	 */
 	public ASPAtom(FolAtom other) {
 		if (other.getPredicate().isTyped())
-			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given atom's predicate " + other.getPredicate() + " is not.");
+			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given atom's predicate "
+					+ other.getPredicate() + " is not.");
 		this.predicate = new Predicate(other.getPredicate().getName(), other.getArguments().size());
 		for (Term<?> t : other.getArguments())
 			this.arguments.add((Term<?>) t.clone());
@@ -116,8 +116,7 @@ public class ASPAtom extends ASPLiteral {
 	/**
 	 * Copy-Constructor: Generates a deep copy of the given ASP atom.
 	 * 
-	 * @param other
-	 *            The atom acting as source for the deep copy
+	 * @param other The atom acting as source for the deep copy
 	 */
 	public ASPAtom(ASPAtom other) {
 		this.predicate = new Predicate(other.getName(), other.getPredicate().getArity());
@@ -130,10 +129,8 @@ public class ASPAtom extends ASPLiteral {
 	 * Creates an atom with the given predicate as name and the given terms as
 	 * argument
 	 * 
-	 * @param symbol
-	 *            The name of the atom
-	 * @param terms
-	 *            A list of Term&lt;?&gt; defining the arguments of the term
+	 * @param symbol The name of the atom
+	 * @param terms  A list of Term&lt;?&gt; defining the arguments of the term
 	 */
 	public ASPAtom(String symbol, Term<?>... terms) {
 		this.predicate = new Predicate(symbol, terms.length);
@@ -144,12 +141,14 @@ public class ASPAtom extends ASPLiteral {
 
 	/**
 	 * Creates a new ASPAtom with the given predicate.
+	 * 
 	 * @param p a predicate
 	 */
 	public ASPAtom(Predicate p) {
 		this();
 		if (p.isTyped())
-			throw new IllegalArgumentException("Error: ASP predicates are typeless, the given predicate " + p + " is not.");
+			throw new IllegalArgumentException(
+					"Error: ASP predicates are typeless, the given predicate " + p + " is not.");
 		this.predicate = p;
 	}
 
@@ -251,10 +250,10 @@ public class ASPAtom extends ASPLiteral {
 
 	@Override
 	public ASPAtom cloneWithAddedTerm(Term<?> term) {
-		Predicate new_predicate = new Predicate(this.predicate.getName(),this.predicate.getArity() + 1);
+		Predicate new_predicate = new Predicate(this.predicate.getName(), this.predicate.getArity() + 1);
 		List<Term<?>> args = new ArrayList<Term<?>>(this.arguments);
 		args.add(term);
-		ASPAtom reval = new ASPAtom(new_predicate,args);
+		ASPAtom reval = new ASPAtom(new_predicate, args);
 		return reval;
 	}
 
@@ -307,13 +306,12 @@ public class ASPAtom extends ASPLiteral {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return (predicate == null ? 0 : predicate.hashCode()) + 
-				arguments.hashCode();
+		return (predicate == null ? 0 : predicate.hashCode()) + arguments.hashCode();
 	}
-	
+
 	@Override
 	public String toString() {
 		String res = this.predicate.getName();
@@ -323,6 +321,31 @@ public class ASPAtom extends ASPLiteral {
 				res += arguments.get(i).toString() + ",";
 			}
 			res += arguments.get(arguments.size() - 1).toString() + ")";
+		}
+		return res;
+	}
+
+	@Override
+	public String printToClingo() {
+		String res = this.predicate.getName();
+		if (this.predicate.getArity() > 0) {
+			res += "(";
+			for (int i = 0; i < arguments.size(); i++) {
+				String termName = arguments.get(i).toString();
+				if (arguments.get(i) instanceof Constant) {
+					if (!Character.isLowerCase(termName.charAt(0))) 
+						throw new IllegalArgumentException("Invalid constant name '" + termName + "' Constants in clingo must start with a lowercase letter.");
+				} else if (arguments.get(i) instanceof Variable) {
+					//this check is unnecessary because variables in Tweety are required to start with 
+					//an uppercase letter, but just in case
+					if (!Character.isUpperCase(termName.charAt(0))) 
+						throw new IllegalArgumentException("Invalid variable name '" + termName + "' Variables in clingo must start with an uppercase letter.");
+				}
+				if (i < arguments.size() - 1)
+					res += termName + ",";
+				else
+					res += termName + ")";
+			}
 		}
 		return res;
 	}

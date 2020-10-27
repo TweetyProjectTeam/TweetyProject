@@ -26,16 +26,13 @@ import java.util.List;
 import net.sf.tweety.logics.commons.syntax.Predicate;
 import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
-import net.sf.tweety.lp.asp.syntax.AggregateAtom;
-import net.sf.tweety.lp.asp.syntax.AggregateHead;
-import net.sf.tweety.lp.asp.syntax.ClassicalHead;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
  * Prints ASP programs and single rules to the Clingo input format
  * (<a href="https://potassco.org/clingo/">https://potassco.org/clingo/</a>).
  * The Clingo input format adheres (mostly) to the ASP-Core-2 language standard.
- * Also works for the basic elements of the DLV input format.
+ * This writer also works for printing basic elements of the DLV input format.
  * 
  * @see net.sf.tweety.lp.asp.reasoner.ClingoSolver
  * @see net.sf.tweety.lp.asp.reasoner.DLVSolver
@@ -46,6 +43,11 @@ import net.sf.tweety.lp.asp.syntax.Program;
 public class ClingoWriter {
 
 	Writer writer;
+
+	/**
+	 * If set to true, irrelevant atoms are hidden from the output using clingo's
+	 * #show statement.
+	 */
 	private boolean usePredicateWhitelist = false;
 
 	/**
@@ -57,17 +59,27 @@ public class ClingoWriter {
 		this.writer = writer;
 	}
 
+	/**
+	 * Create a new ClingoWriter.
+	 */
 	public ClingoWriter() {
 		this.writer = new StringWriter();
 	}
 
-	public ClingoWriter(Writer writer, boolean b) {
+	/**
+	 * Create a new ClingoWriter with the given writer and options.
+	 * 
+	 * @param writer
+	 * @param usePredicateWhitelist if set to true, irrelevant atoms are hidden from
+	 *                              the output using clingo's #show statement.
+	 */
+	public ClingoWriter(Writer writer, boolean usePredicateWhitelist) {
 		this.writer = writer;
-		usePredicateWhitelist = b;
+		this.usePredicateWhitelist = usePredicateWhitelist;
 	}
 
 	/**
-	 * Prints program
+	 * Prints the given program in clingo format.
 	 * 
 	 * @param p a program
 	 * @throws IOException if an IO issue occurs.
@@ -84,36 +96,22 @@ public class ClingoWriter {
 	}
 
 	/**
-	 * Creates string representation of a single rule in Clingo format.
+	 * Creates string representation of a single rule in clingo format.
 	 * 
 	 * @param r an ASP rule
 	 * @return String representation of the rule
 	 */
 	private String printRule(ASPRule r) {
 		String result = "";
-		if (!r.isConstraint()) {
-			if (r.getHead() instanceof ClassicalHead)
-				result += r.getHead().printToClingo();
-			else if (r.getHead() instanceof AggregateHead)
-				result += ((AggregateHead) r.getHead()).getHead().printToClingo();
-			else
-				throw new IllegalArgumentException(r.getHead() + "has unknown head type " + r.getHead().getClass());
-		}
+		if (!r.isConstraint())
+			result += r.getHead().printToClingo();
 		if (!r.isFact()) {
 			result += " :- ";
-			List<ASPBodyElement> body = r.getBody();
-			for (int i = 0; i < body.size() - 1; i++) {
-				if (body.get(i) instanceof AggregateAtom)
-					result += ((AggregateAtom) body.get(i)).printToClingo() + ",";
-				else
-					result += body.get(i).printToClingo() + ",";
-			}
-			if (body.get(body.size() - 1) instanceof AggregateAtom)
-				result += ((AggregateAtom) body.get(body.size() - 1)).printToClingo();
-			else
-				result += body.get(body.size() - 1).printToClingo();
+			List<ASPBodyElement> body = r.getPremise();
+			for (int i = 0; i < body.size() - 1; i++)
+				result += body.get(i).printToClingo() + ",";
+			result += body.get(body.size() - 1).printToClingo();
 		}
-
 		return result;
 	}
 

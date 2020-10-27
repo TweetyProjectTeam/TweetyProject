@@ -55,7 +55,7 @@ public class ClingoTest {
 	public static void init() {
 		visitor = new InstantiateVisitor();
 		parser = new ASPCore2Parser(new StringReader(""));
-		solver = new ClingoSolver("/home/anna/sw/asp/clingo");
+		solver = new ClingoSolver("/home/anna/snap/asp/clingo");
 	}
 
 	@Test
@@ -103,7 +103,7 @@ public class ClingoTest {
 		List<AnswerSet> asl = solver.getModels(p);
 		
 		assertTrue(asl.size() == 1);
-		assertTrue(asl.get(0).size() == 6);
+		assertTrue(asl.get(0).size() == 4);
 	}
 
 }

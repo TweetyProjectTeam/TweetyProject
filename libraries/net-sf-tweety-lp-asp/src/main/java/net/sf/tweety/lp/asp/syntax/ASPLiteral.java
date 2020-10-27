@@ -23,16 +23,22 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Invertable;
 import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 
 /**
- * This interface defines common functionality for literals,
+ * This class defines common functionality for literals,
  * meaning atoms or strictly negated atoms. In the ASP-Core-2
  * standard, the formulas represented by this class are
- * also referred to as 'classical atoms'.
+ * referred to as 'classical atoms'.
  * 
  * @author Anna Gessler
  * @author Tim Janus
  *
  */
 public abstract class ASPLiteral extends ASPBodyElement implements Atom, Invertable, Comparable<ASPLiteral> {
+	
+	/**
+	 * @return The atom representing the literal.
+	 */
+	public abstract ASPAtom getAtom();
+	
 	/**
 	 * Creates a copy of the literal and adds the
 	 * given term as argument to the end of the argument
@@ -41,11 +47,6 @@ public abstract class ASPLiteral extends ASPBodyElement implements Atom, Inverta
 	 * @return A copy of the literal containing the given term as new argument.
 	 */
 	public abstract ASPLiteral cloneWithAddedTerm(Term<?> term);
-	
-	/**
-	 * @return The atom representing the literal.
-	 */
-	public abstract ASPAtom getAtom();
 	
 	@Override
 	public boolean isLiteral() {

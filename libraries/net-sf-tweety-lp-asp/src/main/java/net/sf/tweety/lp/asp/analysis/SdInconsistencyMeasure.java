@@ -95,7 +95,7 @@ public class SdInconsistencyMeasure implements InconsistencyMeasure<Program>{
 				Set<ASPLiteral> m = lit_it.next();
 				//skip inconsistent m
 				if(!this.isConsistent(m)) continue;
-				Program p = beliefBase.reduct(m);
+				Program p = beliefBase.getReduct(m);
 				Collection<AnswerSet> asl = this.solver.getModels(p);
 				if(asl.size() == 0) continue;
 				int val = (new SetTools<ASPLiteral>()).symmetricDifference(m, asl.iterator().next()).size();

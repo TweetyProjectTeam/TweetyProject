@@ -34,11 +34,10 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class models a rule in ASP. A rule consists of a head and a body. The
- * head contains n&gt;=0 classical atoms and the body contains n&gt;=0 literals.
- * Rules with non-empty heads and empty bodies are called facts, rules with
- * empty heads and non-empty bodies are called constraints.
+ * head contains 0+ classical atoms and the body contains 0+ literals. Rules
+ * with non-empty heads and empty bodies are called facts, rules with empty
+ * heads and non-empty bodies are called constraints.
  *
- * 
  * @author Anna Gessler
  * @author Tim Janus
  * @author Thomas Vengels
@@ -62,6 +61,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	private Term<?> weight;
 	private Term<?> level;
 	private List<Term<?>> constraint_terms;
+
+	// -------------------------------------------------------------------------
+	// CONSTRUCTORS
+	// -------------------------------------------------------------------------
 
 	/**
 	 * Empty constructor
@@ -203,6 +206,182 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.head = other.head;
 	}
 
+	// -------------------------------------------------------------------------
+	// GETTERS AND SETTERS
+	// some of those methods are redundant (e.g. getPremise is equivalent
+	// to getBody), they exist for convenience since some users might be more
+	// familiar with the names body/head vs premise/conclusion.
+	// -------------------------------------------------------------------------
+
+	@Override
+	public void addPremise(ASPBodyElement premise) {
+		this.body.add(premise);
+	}
+
+	@Override
+	public List<ASPBodyElement> getPremise() {
+		return body;
+	}
+
+	@Override
+	public void addPremises(Collection<? extends ASPBodyElement> premises) {
+		this.body.addAll(premises);
+	}
+
+	/**
+	 * Add the given body element to this rule.
+	 * 
+	 * @param premise
+	 */
+	public void addBody(ASPBodyElement premise) {
+		addPremise(premise);
+	}
+
+	/**
+	 * @return the body of this rule
+	 */
+	public List<ASPBodyElement> getBody() {
+		return getPremise();
+	}
+
+	/**
+	 * Add the given body elements to this rule.
+	 * 
+	 * @param premises
+	 */
+	public void addBodyElements(Collection<? extends ASPBodyElement> premises) {
+		addPremises(premises);
+	}
+
+	/**
+	 * Set this rule's body to the given ASPBodyElements.
+	 * 
+	 * @param aspBodyElements
+	 */
+	public void setBody(ASPBodyElement... aspBodyElements) {
+		List<ASPBodyElement> bes = new ArrayList<ASPBodyElement>();
+		for (ASPBodyElement a : aspBodyElements)
+			bes.add(a);
+		this.body = bes;
+	}
+
+	@Override
+	public void setConclusion(ASPHead conclusion) {
+		this.head = conclusion;
+	}
+
+	/**
+	 * Set the conclusion of this rule.
+	 * 
+	 * @param head
+	 */
+	public void setConclusion(ASPLiteral head) {
+		this.head = new ClassicalHead(head);
+	}
+
+	@Override
+	public ASPHead getConclusion() {
+		return head;
+	}
+
+	/**
+	 * Add the given literal to the head of the rule.
+	 * 
+	 * @param literal ASPLiteral
+	 */
+	public void addToHead(ASPLiteral literal) {
+		if (this.head instanceof ClassicalHead)
+			((ClassicalHead) this.head).add(literal);
+		else
+			throw new UnsupportedOperationException(
+					"This function is only supported for classical heads (disjunctions of literals)");
+	}
+
+	/**
+	 * @return head of this rule
+	 */
+	public ASPHead getHead() {
+		return getConclusion();
+	}
+
+	/**
+	 * Set the head of this rule.
+	 * 
+	 * @param head
+	 */
+	public void setHead(ASPHead head) {
+		setConclusion(head);
+	}
+
+	/**
+	 * Set the head of this rule.
+	 * 
+	 * @param head
+	 */
+	public void setHead(ASPLiteral head) {
+		setConclusion(head);
+	}
+
+	/**
+	 * @return the weight of this constraint.
+	 */
+	public Term<?> getWeight() {
+		return weight;
+	}
+
+	/**
+	 * Set the weight attribute of this constraint.
+	 * 
+	 * @param weight a term
+	 */
+	public void setWeight(Term<?> weight) {
+		this.weight = weight;
+	}
+
+	/**
+	 * @return the level attribute of this constraint.
+	 */
+	public Term<?> getLevel() {
+		return level;
+	}
+
+	/**
+	 * Set the level attribute of this constraint.
+	 * 
+	 * @param level a term
+	 */
+	public void setLevel(Term<?> level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the constraint terms of this rule.
+	 */
+	public List<Term<?>> getConstraintTerms() {
+		return constraint_terms;
+	}
+
+	// -------------------------------------------------------------------------
+	// INTERFACE METHODS AND UTILS
+	// -------------------------------------------------------------------------
+	
+	@Override
+	public boolean isFact() {
+		return (body.isEmpty() && !head.isEmpty());
+	}
+
+	@Override
+	public boolean isConstraint() {
+		return (head.isEmpty() && !body.isEmpty());
+	}
+
+	/**
+	 * @return true if the rule's head and body are both empty, false otherwise.
+	 */
+	public boolean isEmpty() {
+		return this.head.isEmpty() && this.body.isEmpty();
+	}
+
 	/**
 	 * This methods tests a rule for safety. Safety is defined as follows in the
 	 * ASP-Core-2 standard: A rule, weak constraint or query is safe, if the set V
@@ -217,108 +396,6 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		throw new UnsupportedOperationException("WIP");
 	}
 
-	@Override
-	public boolean isFact() {
-		return (body.isEmpty() && !head.isEmpty());
-	}
-
-	@Override
-	public boolean isConstraint() {
-		return (head.isEmpty() && !body.isEmpty());
-	}
-
-	@Override
-	public void addPremises(Collection<? extends ASPBodyElement> premises) {
-		this.body.addAll(premises);
-	}
-
-	@Override
-	public FolSignature getSignature() {
-		FolSignature sig = new FolSignature();
-		sig.add(head.getSignature());
-		for (ASPBodyElement a : body)
-			sig.add(a.getSignature());
-		return sig;
-	}
-
-	@Override
-	public void setConclusion(ASPHead conclusion) {
-		this.head = conclusion;
-	}
-
-	public void setConclusion(ASPLiteral head) {
-		this.head = new ClassicalHead(head);
-	}
-
-	@Override
-	public void addPremise(ASPBodyElement premise) {
-		this.body.add(premise);
-	}
-
-	@Override
-	public List<ASPBodyElement> getPremise() {
-		return body;
-	}
-
-	@Override
-	public ASPHead getConclusion() {
-		return head;
-	}
-
-	public Term<?> getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Term<?> weight) {
-		this.weight = weight;
-	}
-
-	public Term<?> getLevel() {
-		return level;
-	}
-
-	public void setLevel(Term<?> level) {
-		this.level = level;
-	}
-
-	public ASPHead getHead() {
-		return head;
-	}
-
-	public void setHead(ASPHead head) {
-		this.head = head;
-	}
-
-	/**
-	 * Add the given literal to the head of the rule.
-	 * 
-	 * @param h ASPLiteral
-	 */
-	public void addToHead(ASPLiteral h) {
-		if (this.head instanceof ClassicalHead) 
-			((ClassicalHead)this.head).add(h);
-		else throw new UnsupportedOperationException("This function is currently only supported for classical heads (disjunctions of literals)");
-	}
-
-	public List<ASPBodyElement> getBody() {
-		return body;
-	}
-
-	public void setBody(List<ASPBodyElement> body) {
-		this.body = body;
-	}
-
-	public void setBody(ASPBodyElement... aspBodyElements) {
-		List<ASPBodyElement> bes = new ArrayList<ASPBodyElement>();
-		for (ASPBodyElement a : aspBodyElements)
-			bes.add(a);
-		this.body = bes;
-	}
-
-	public List<Term<?>> getConstraintTerms() {
-		return constraint_terms;
-	}
-
 	public boolean isGround() {
 		if (!head.isGround())
 			return false;
@@ -329,58 +406,12 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	@Override
-	public int compareTo(ASPRule arg0) {
-		int comp = 0;
-
-		// facts first:
-		if (getPremise().size() == 0 && arg0.getPremise().size() != 0) {
-			return -1;
-		} else if (getPremise().size() != 0 && arg0.getPremise().size() == 0) {
-			return 1;
-		}
-
-		// then order alphabetically starting by the head.
-		comp = getConclusion().toString().compareTo(arg0.getConclusion().toString());
-		if (comp != 0)
-			return comp;
-
-		// TODO: This implementation is not compatible with equals, because
-		// the comparison depends on the order in which the elements
-		// have been added to the premise list. Ex.:
-		// compareTo(:- a,b., :- b,a.) = -1
-		// if the head is the same use the body.
-		for (int i = 0; i < body.size() && i < arg0.body.size(); ++i) {
-			comp = body.get(i).toString().compareTo(arg0.body.get(i).toString());
-			if (comp != 0)
-				return comp;
-		}
-
-		return comp;
-	}
-
-	public Collection<? extends ASPLiteral> getLiterals() {
-		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
-		literals.addAll(head.getLiterals());
-		for (ASPBodyElement pe : body) {
-			literals.addAll(pe.getLiterals());
-		}
-		return literals;
-	}
-
-	public ASPRule substitute(Term<?> v, Term<?> t) {
-		ASPRule reval = new ASPRule();
-		reval.head = (ASPHead) head.substitute(v, t);
-		for (ASPBodyElement bodyElement : body)
-			reval.body.add(bodyElement.substitute(v, t));
-		return reval;
-	}
-
-	public ASPRule exchange(Term<?> v, Term<?> t) {
-		ASPRule reval = new ASPRule();
-		reval.head = (ASPHead) head.exchange(v, t);
-		for (ASPBodyElement bodyElement : body)
-			reval.body.add((ASPBodyElement) bodyElement.exchange(v, t));
-		return reval;
+	public FolSignature getSignature() {
+		FolSignature sig = new FolSignature();
+		sig.add(head.getSignature());
+		for (ASPBodyElement a : body)
+			sig.add(a.getSignature());
+		return sig;
 	}
 
 	@Override
@@ -435,6 +466,61 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		return atoms;
 	}
 
+	public Collection<? extends ASPLiteral> getLiterals() {
+		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
+		literals.addAll(head.getLiterals());
+		for (ASPBodyElement pe : body) {
+			literals.addAll(pe.getLiterals());
+		}
+		return literals;
+	}
+
+	public ASPRule substitute(Term<?> v, Term<?> t) {
+		ASPRule reval = new ASPRule();
+		reval.head = (ASPHead) head.substitute(v, t);
+		for (ASPBodyElement bodyElement : body)
+			reval.body.add(bodyElement.substitute(v, t));
+		return reval;
+	}
+
+	public ASPRule exchange(Term<?> v, Term<?> t) {
+		ASPRule reval = new ASPRule();
+		reval.head = (ASPHead) head.exchange(v, t);
+		for (ASPBodyElement bodyElement : body)
+			reval.body.add((ASPBodyElement) bodyElement.exchange(v, t));
+		return reval;
+	}
+
+	@Override
+	public int compareTo(ASPRule arg0) {
+		int comp = 0;
+
+		// facts first:
+		if (getPremise().size() == 0 && arg0.getPremise().size() != 0) {
+			return -1;
+		} else if (getPremise().size() != 0 && arg0.getPremise().size() == 0) {
+			return 1;
+		}
+
+		// then order alphabetically starting by the head.
+		comp = getConclusion().toString().compareTo(arg0.getConclusion().toString());
+		if (comp != 0)
+			return comp;
+
+		// TODO: This implementation is not compatible with equals, because
+		// the comparison depends on the order in which the elements
+		// have been added to the premise list. Ex.:
+		// compareTo(:- a,b., :- b,a.) = -1
+		// if the head is the same use the body.
+		for (int i = 0; i < body.size() && i < arg0.body.size(); ++i) {
+			comp = body.get(i).toString().compareTo(arg0.body.get(i).toString());
+			if (comp != 0)
+				return comp;
+		}
+
+		return comp;
+	}
+
 	@Override
 	public ASPRule clone() {
 		return new ASPRule(this);
@@ -455,24 +541,16 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		return head.hashCode() + body.hashCode();
 	}
 
-	/**
-	 * @return true if the rule's head and body are both empty, false otherwise.
-	 */
-	public boolean isEmpty() {
-		return this.head.isEmpty() && this.body.isEmpty();
-	}
-	
 	@Override
 	public String toString() {
 		String ret = "";
-		
+
 		if (!head.isEmpty()) {
 			if (head instanceof ClassicalHead) {
-				for (int i = 0; i < ((ClassicalHead)head).size() - 1; i++)
-					ret += ((ClassicalHead)head).get(i).toString() + ",";
-				ret += ((ClassicalHead)head).get(((ClassicalHead)head).size() - 1).toString();
-			}
-			else 
+				for (int i = 0; i < ((ClassicalHead) head).size() - 1; i++)
+					ret += ((ClassicalHead) head).get(i).toString() + ",";
+				ret += ((ClassicalHead) head).get(((ClassicalHead) head).size() - 1).toString();
+			} else
 				ret += head.toString();
 		}
 		if (!body.isEmpty()) {
@@ -498,4 +576,41 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 		return ret;
 	}
+
+	@Override
+	public String printToClingo() {
+		String ret = "";
+
+		if (!head.isEmpty()) {
+			if (head instanceof ClassicalHead) {
+				for (int i = 0; i < ((ClassicalHead) head).size() - 1; i++)
+					ret += ((ClassicalHead) head).get(i).printToClingo() + ",";
+				ret += ((ClassicalHead) head).get(((ClassicalHead) head).size() - 1).printToClingo();
+			} else
+				ret += head.printToClingo();
+		}
+		if (!body.isEmpty()) {
+			ret += " :- " + body.get(0);
+			for (int i = 1; i < body.size(); ++i) {
+				ret += ", " + body.get(i);
+			}
+		}
+		ret += ".";
+
+		if (weight != null) {
+			ret += " [" + weight.toString();
+			if (level != null)
+				ret += "@" + level.toString();
+			if (!this.constraint_terms.isEmpty()) {
+				ret += ",";
+				for (int i = 1; i < constraint_terms.size() - 1; i++)
+					ret += constraint_terms.get(i) + ",";
+				ret += constraint_terms.get(constraint_terms.size() - 1).toString();
+			}
+			ret += "]";
+		}
+
+		return ret;
+	}
+
 }

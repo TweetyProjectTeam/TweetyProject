@@ -107,7 +107,7 @@ public class ASPCore2ParserTest {
 		String pstr = ":- <=(harry,sally).";
 		Program p = ASPCore2Parser.parseProgram(pstr);
 		ASPRule r = p.iterator().next();
-		assertTrue(r.getBody().get(0) instanceof ComparativeAtom);	
+		assertTrue(r.getPremise().get(0) instanceof ComparativeAtom);	
 		
 		parser.ReInit(new StringReader("23==23"));
 		ComparativeAtom at = (ComparativeAtom) parser.BuiltinAtom().jjtAccept(visitor, null);
@@ -129,9 +129,9 @@ public class ASPCore2ParserTest {
 		assertTrue(negFact.isFact());
 		assertTrue((negFact.getLiterals().iterator().next()) instanceof StrictNegation);
 		assertTrue(nafConstraint.isConstraint());
-		assertTrue((nafConstraint.getBody().iterator().next()) instanceof DefaultNegation);
+		assertTrue((nafConstraint.getPremise().iterator().next()) instanceof DefaultNegation);
 		assertFalse(simpleASPRule.isFact());
-		assertEquals(simpleASPRule.getBody().size(), 2);
+		assertEquals(simpleASPRule.getPremise().size(), 2);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)

@@ -30,9 +30,9 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * This class is a variant of the basic ASP rule head. It
- * allows the usage of aggregate atoms as heads 
+ * allows the usage of aggregate atoms as heads.
  * 
- * Note: this is not allowed in the ASP-Core-2 standard
+ * Note: this is not allowed in the ASP-Core-2 standard.
  * 
  * @author Anna Gessler
  */
@@ -75,16 +75,17 @@ public class AggregateHead extends ASPHead {
 	}
 
 	/**
-	 * @return the aggregate atom of this head
+	 * @return the aggregate atom that makes up this rule head.
 	 */
-	public AggregateAtom getHead() {
+	public AggregateAtom getFormula() {
 		return head;
 	}
 
 	/**
+	 * Sets the aggregate atom that makes up this rule head.
 	 * @param head the head to set
 	 */
-	public void setHead(AggregateAtom head) {
+	public void setFormula(AggregateAtom head) {
 		this.head = head;
 	}
 
@@ -141,6 +142,11 @@ public class AggregateHead extends ASPHead {
 	@Override
 	public String toString() {
 		return this.head.toString();
+	}
+	
+	@Override
+	public String printToClingo() { 
+		return this.head.printToClingo();
 	}
 	
 }

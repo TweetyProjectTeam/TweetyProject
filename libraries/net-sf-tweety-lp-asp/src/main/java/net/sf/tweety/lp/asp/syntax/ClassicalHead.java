@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import net.sf.tweety.logics.commons.LogicalSymbols;
 import net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport;
 import net.sf.tweety.logics.commons.syntax.Constant;
 import net.sf.tweety.logics.commons.syntax.AssociativeFormulaSupport.AssociativeSupportBridge;
@@ -381,6 +382,26 @@ public class ClassicalHead extends ASPHead implements AssociativeFormula<ASPLite
 	@Override
 	public String toString() {
 		return assocSupport.toString();
+	}
+	
+	@Override
+	public String printToClingo() {
+		if (this.isEmpty())
+			return this.getEmptySymbol();
+		String s = "";
+		boolean isFirst = true;
+		for (ASPLiteral f : assocSupport) {
+			if (isFirst)
+				isFirst = false;
+			else
+				s += this.getOperatorSymbol();
+			// check if parentheses are needed
+			if (f instanceof AssociativeFormula && ((AssociativeFormula<?>) f).size() > 1)
+				s += LogicalSymbols.PARENTHESES_LEFT() + f.printToClingo() + LogicalSymbols.PARENTHESES_RIGHT();
+			else
+				s += f.printToClingo();
+		}
+		return s;
 	}
 
 }

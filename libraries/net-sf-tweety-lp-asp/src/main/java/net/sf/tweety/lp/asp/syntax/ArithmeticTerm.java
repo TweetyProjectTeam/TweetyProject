@@ -25,36 +25,47 @@ import net.sf.tweety.lp.asp.syntax.ASPOperator.ArithmeticOperator;
 
 /**
  * This class represents an arithmetic term in the ASP-Core-2 format.
- * An arithmetic term is either -(t) or (t x u), where t and u 
- * are Terms and x is one of +,-,*,/
+ * An arithmetic term is either '-(t)' or 't x u', where t and u 
+ * are terms and x is one of the operators {+,-,*,/}.
  * 
  * @author Anna Gessler
  */
 public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?>,Term<?>>> {
 	
 	/**
-	 * The arithmetic operator used in the arithmetic term.
+	 * The arithmetic operator used in the arithmetic term. 
+	 * Possible operators are +,-,*,/
+	 * 
+	 * @see net.sf.tweety.lp.asp.syntax.ASPOperator.ArithmeticOperator
 	 */
 	private ASPOperator.ArithmeticOperator op;
 	
-	public ArithmeticTerm(Triple<ArithmeticOperator,Term<?>,Term<?>> triple) {
-		super(triple);
-		this.op = triple.getFirst();
-	}
-
-	public ArithmeticTerm(ArithmeticTerm other) {
-		this(other.value.getFirst(), other.value.getSecond().clone(), other.value.getThird().clone());
-		this.op = other.value.getFirst();
-	}
-
+	/**
+	 * Create a new arithmetic term with the given operator and left
+	 * and right term.
+	 * 
+	 * @param op an arithmetic operator
+	 * @param left term
+	 * @param right term
+	 */
 	public ArithmeticTerm(ArithmeticOperator op, Term<?> left, Term<?> right) {
 		super(new Triple<ArithmeticOperator,Term<?>,Term<?>>(op,left,right));
 		this.op = op;
 	}
 	
 	/**
-	 * Creates an arithmetic term of the form -(t)
-	 * @param op an operator
+	 * Creates an arithmetic term of the form '-(t)'
+	 * 
+	 * @param t a term
+	 */
+	public ArithmeticTerm(Term<?> t) {
+		this(ArithmeticOperator.MINUS,t);
+	}
+	
+	/**
+	 * Creates an arithmetic term of the form '-(t)'
+	 * 
+	 * @param op an operator, either '+' or '-'
 	 * @param t a term
 	 */
 	public ArithmeticTerm(ArithmeticOperator op, Term<?> t) {
@@ -62,6 +73,26 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 		if (op.equals(ArithmeticOperator.DIV) || op.equals(ArithmeticOperator.TIMES))
 			throw new IllegalArgumentException("Illegal Operator. Arithmetic terms with operators * and / need to have two arguments.");
 		this.op = op;
+	}
+	
+	/**
+	 * Create a new arithmetic term based on the given triple of an
+	 * arithmetic operator and two terms.
+	 * 
+	 * @param triple of arithmetic term and two terms
+	 */
+	public ArithmeticTerm(Triple<ArithmeticOperator,Term<?>,Term<?>> triple) {
+		super(triple);
+		this.op = triple.getFirst();
+	}
+
+	/**
+	 * Create a new arithmetic term that is a copy of the given arithmetic term.
+	 * @param other an arithmetic term
+	 */
+	public ArithmeticTerm(ArithmeticTerm other) {
+		this(other.value.getFirst(), other.value.getSecond().clone(), other.value.getThird().clone());
+		this.op = other.value.getFirst();
 	}
 
 	@Override
@@ -80,8 +111,7 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 	}
 	
 	/**
-	 * Returns the operator of this arithmetic term.
-	 * @return an arithmetic operator
+	 * @return the arithmetic operator of this arithmetic term.
 	 */
 	public ASPOperator.ArithmeticOperator getOperator() {
 		return op;
@@ -97,16 +127,14 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 	}
 	
 	/**
-	 * Returns the left subterm of this arithmetic term.
-	 * @return left term
+	 * @return the left subterm of this arithmetic term.
 	 */
 	public Term<?> getLeft() {
 		return this.get().getSecond();
 	}
 	
 	/**
-	 * Returns the right subterm of this arithmetic term.
-	 * @return right term
+	 * @return the right subterm of this arithmetic term.
 	 */
 	public Term<?> getRight() {
 		return this.get().getThird();

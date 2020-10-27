@@ -30,7 +30,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
  * 
- * This class models the strict negation of an atom (as apposed to a NAF
+ * This class models the strict negation of an atom (as opposed to a default
  * negation: {@link net.sf.tweety.lp.asp.syntax.DefaultNegation}).
  * 
  * @author Tim Janus

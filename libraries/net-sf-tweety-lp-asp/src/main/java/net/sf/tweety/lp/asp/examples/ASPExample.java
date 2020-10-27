@@ -38,7 +38,10 @@ import net.sf.tweety.lp.asp.syntax.Program;
 import net.sf.tweety.lp.asp.syntax.StrictNegation;
 
 /**
- * Example code for creating ASP programs and calling the clingo solver.
+ * Example code for creating ASP programs and calling the clingo solver. 
+ * See {@link net.sf.tweety.lp.asp.examples.ASPCore2ParserExample} for how to quickly
+ * parse the same examples using the parser.
+ * Tested with clingo 5.2.2
  * 
  * @author Anna Gessler
  *
@@ -72,7 +75,7 @@ public class ASPExample {
 		r2 = new ASPRule(new ClassicalHead(new ASPAtom(motive, sally)));
 		r3 = new ASPRule(new ClassicalHead(new ASPAtom(guilty, harry)));
 		r4 = new ASPRule(new ClassicalHead(new ASPAtom(innocent, Suspect)));
-		r4.setBody(new ASPAtom(motive, Suspect), new DefaultNegation(new ASPAtom(guilty, Suspect)));
+		r4.setBody(new ASPAtom(motive, Suspect), new StrictNegation(new ASPAtom(guilty, Suspect)));
 		Program p2 = new Program(r1, r2, r3, r4);
 		ASPAtom query = new ASPAtom(innocent, harry);
 		p2.setQuery(query);
@@ -84,6 +87,8 @@ public class ASPExample {
 		System.out.println("Clingo output:\n" + as + "\n");
 
 		// Shortcut for creating a cardinality rule
+		// Also see {@link net.sf.tweety.lp.asp.examples.AggregateExample} for more
+		// aggregate examples
 		System.out.println("Cardinality rules: ");
 		List<ASPBodyElement> literals = new ArrayList<ASPBodyElement>();
 		literals.add(new ASPAtom("a"));

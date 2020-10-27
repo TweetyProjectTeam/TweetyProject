@@ -48,7 +48,7 @@ public class DefaultificationTest extends TestCase {
     	onlyRule.addPremise(new ASPAtom("y"));
     	p.add(onlyRule);
     	
-    	Program dp = Program.defaultification(p);
+    	Program dp = Program.getDefaultification(p);
     	assertTrue(dp.size() == p.size());
     	ASPRule dr = dp.iterator().next();
     	
@@ -62,7 +62,7 @@ public class DefaultificationTest extends TestCase {
     	onlyRule.setConclusion(new StrictNegation(new ASPAtom("x")));
     	
     	p.add(onlyRule);
-    	dp = Program.defaultification(p);
+    	dp = Program.getDefaultification(p);
     	assertEquals(p.size(), dp.size());
     	dr = dp.iterator().next();
     	
@@ -82,7 +82,7 @@ public class DefaultificationTest extends TestCase {
     	
     	// We want the program dp look like p cause p was already
     	// defaultisated
-    	Program dp = Program.defaultification(p);
+    	Program dp = Program.getDefaultification(p);
     	ASPRule rd = dp.iterator().next();
     	assertEquals(rd, r);
     	assertEquals(dp, p);

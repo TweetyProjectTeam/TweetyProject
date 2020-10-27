@@ -107,8 +107,8 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		Program concat = new Program();
 		
 		// Defaultification of given programs.
-		Program pd1 = Program.defaultification(p1);
-		Program pd2 = Program.defaultification(p2);
+		Program pd1 = Program.getDefaultification(p1);
+		Program pd2 = Program.getDefaultification(p2);
 		
 		// list of conflicting rules of the defaultificated programs
 		List<Pair<ASPRule, ASPRule>> conflictsDef = getConflictingRules(pd1, pd2);

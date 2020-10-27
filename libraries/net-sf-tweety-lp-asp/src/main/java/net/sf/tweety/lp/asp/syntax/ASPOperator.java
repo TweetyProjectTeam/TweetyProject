@@ -23,13 +23,12 @@ package net.sf.tweety.lp.asp.syntax;
  * as well as the possible function names for aggregates.
  * 
  * @author Anna Gessler
- *
  */
 public class ASPOperator {
 	
 	/**
 	 * The arithmetic operators that are supported by the ASP-Core-2 standard
-	 * and by Tweety.
+	 * and by Tweety: PLUS (+), MINUS (-), TIMES (*), DIV (/)
 	 * 
 	 * @author Anna Gessler
 	 */
@@ -51,7 +50,7 @@ public class ASPOperator {
 	
 	/**
 	 * The binary comparative operators that are supported by the ASP-Core-2 standard
-	 * and by Tweety.
+	 * and by Tweety: LT (<), LEQ (<=), EQ (==), NEQ (!=), GT (>), GEQ (>=)
 	 * 
 	 * @author Anna Gessler
 	 */

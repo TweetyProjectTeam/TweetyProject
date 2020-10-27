@@ -18,6 +18,7 @@
  */
 package net.sf.tweety.lp.asp.syntax;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 /**
  * This class models an aggregate element, meaning a set of terms and a set of
  * naf literals (= literals or default negated literals). One or more aggregate
- * elements form an aggregate or aggregate atom.
+ * elements form an aggregate atom.
  * 
  * @see net.sf.tweety.lp.asp.syntax.AggregateAtom
  * 
@@ -42,14 +43,14 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
  */
 public class AggregateElement extends ASPElement {
 	/**
-	 * The term tuple of the aggregate element.
+	 * The term tuple of the aggregate element. 
+	 * The first element of this tuple is also known as the "weight"
+	 * of the aggregate element.
 	 */
 	private List<Term<?>> left;
 
 	/**
 	 * The literal tuple of this aggregate element.
-	 * 
-	 * TODO: Remove possibility of having AggregateAtoms in this list.
 	 */
 	private List<ASPBodyElement> right;
 
@@ -57,12 +58,72 @@ public class AggregateElement extends ASPElement {
 	 * Creates a new Aggregate Element with the given list of terms and the given
 	 * list of naf literals.
 	 * 
-	 * @param l a list of terms
-	 * @param r a list of body elements
+	 * @param terms a list of terms
+	 * @param literals a list of body elements
 	 */
-	public AggregateElement(List<Term<?>> l, List<ASPBodyElement> r) {
-		this.left = l;
-		this.right = r;
+	public AggregateElement(List<Term<?>> terms, List<ASPBodyElement> literals) {
+		this.left = terms;
+		for (ASPBodyElement elem : literals) {
+			if (elem instanceof AggregateAtom)
+				throw new IllegalArgumentException(elem + " is not a literal. Only literals are allowed in the literals tuple.");
+		}
+		this.right = literals;
+	}
+	
+	/**
+	 * Creates a new Aggregate Element with the given single term and the given
+	 * single literal.
+	 * 
+	 * @param term 
+	 * @param literal
+	 */
+	public AggregateElement(Term<?> term, ASPBodyElement literal) {
+		List<Term<?>> terms = new ArrayList<Term<?>>();
+		terms.add(term);
+		this.left = terms;
+		List<ASPBodyElement> elements = new ArrayList<ASPBodyElement>();
+		if (literal instanceof AggregateAtom)
+			throw new IllegalArgumentException(literal + " is not a literal. Only literals are allowed in the literals tuple.");
+		elements.add(literal);
+		this.right = elements;
+	}
+	
+	/**
+	 * Creates a new Aggregate Element with the given single term and the given
+	 * list of naf literals.
+	 * 
+	 * @param term 
+	 * @param literals a list of body elements
+	 */
+	public AggregateElement(Term<?> term, List<ASPBodyElement> literals) {
+		List<Term<?>> terms = new ArrayList<Term<?>>();
+		terms.add(term);
+		this.left = terms;
+		for (ASPBodyElement elem : literals) {
+			if (elem instanceof AggregateAtom)
+				throw new IllegalArgumentException(elem + " is not a literal. Only literals are allowed in the literals tuple.");
+		}
+		this.right = literals;
+	}
+	
+	/**
+	 * Creates a new Aggregate Element with the given single term and the given
+	 * naf literals.
+	 * 
+	 * @param term
+	 * @param literals 
+	 */
+	public AggregateElement(Term<?> term, ASPBodyElement ... literals) {
+		List<Term<?>> terms = new ArrayList<Term<?>>();
+		terms.add(term);
+		this.left = terms;
+		List<ASPBodyElement> elements = new ArrayList<ASPBodyElement>();
+		for (ASPBodyElement elem : literals) {
+			if (elem instanceof AggregateAtom)
+				throw new IllegalArgumentException(elem + " is not a literal. Only literals are allowed in the literals tuple.");
+			elements.add(elem);
+		}
+		this.right = elements;
 	}
 
 	/**
@@ -146,21 +207,41 @@ public class AggregateElement extends ASPElement {
 	}
 
 	/**
-	 * Returns the left part of the Aggregate element.
-	 * 
-	 * @return list of terms
+	 * @return the left part (the term tuple) of the Aggregate element.
 	 */
 	public List<Term<?>> getLeft() {
 		return left;
 	}
 
 	/**
-	 * Returns the right part of the Aggregate element.
+	 * Returns the right part (the literals tuple) of the Aggregate element.
 	 * 
 	 * @return list of naf literals (= literals or default negated literals)
 	 */
 	public List<ASPBodyElement> getRight() {
 		return right;
+	}
+
+	/**
+	 * Sets the term tuple of the aggregate element.
+	 * 
+	 * @param left the term tuple to set
+	 */
+	public void setLeft(List<Term<?>> terms) {
+		this.left = terms;
+	}
+
+	/**
+	 * Sets the literal tuple of this aggregate element.
+	 * 
+	 * @param right the literal tuple to set
+	 */
+	public void setRight(List<ASPBodyElement> literals) {
+		for (ASPBodyElement elem : literals) {
+			if (elem instanceof AggregateAtom)
+				throw new IllegalArgumentException(elem + " is not a literal. Only literals are allowed in the literals tuple.");
+		}
+		this.right = literals;
 	}
 
 	@Override
@@ -190,9 +271,28 @@ public class AggregateElement extends ASPElement {
 			literals.addAll(t.getLiterals());
 		return literals;
 	}
-	
+
 	@Override
 	public String toString() {
+		String r = "";
+
+		if (!left.isEmpty()) {
+			for (int i = 0; i < left.size() - 1; i++)
+				r += left.get(i).toString() + ",";
+			r += left.get(left.size() - 1);
+		}
+		if (!right.isEmpty()) {
+			if (!left.isEmpty())
+				r += " : ";
+			for (int i = 0; i < right.size() - 1; i++)
+				r += right.get(i).toString() + ",";
+			r += right.get(right.size() - 1);
+		}
+		return r;
+	}
+
+	@Override
+	public String printToClingo() {
 		String r = "";
 
 		if (!left.isEmpty()) {

@@ -28,8 +28,8 @@ import net.sf.tweety.logics.commons.syntax.interfaces.Term;
 import net.sf.tweety.logics.fol.syntax.FolSignature;
 
 /**
- * This class represents a comparative atom, meaning an expression of the form t x u
- * where t,u are terms and x is in {&lt;, &lt;=, ==, !=, &gt;, &gt;=}. Comparatives are
+ * This class represents a comparative atom, meaning an expression of the form 't x u'
+ * where t,u are terms and x is in {&lt;, &lt;=, ==, !=, &gt;, &gt;=}. Comparative atoms are
  * called "Built-in atoms" in the ASP-Core-2 standard.
  * 
  * @author Tim Janus
@@ -39,7 +39,7 @@ import net.sf.tweety.logics.fol.syntax.FolSignature;
 public class ComparativeAtom extends ASPBodyElement {
 
 	/** 
-	 * The comparative operator of the atom.
+	 * The comparative operator of this atom.
 	 */
 	private ASPOperator.BinaryOperator op;
 	
@@ -53,6 +53,14 @@ public class ComparativeAtom extends ASPBodyElement {
 	 */
 	private Term<?> right;
 
+	/**
+	 * Create a new comparative atom with the given operator and left and
+	 * right term.
+	 * 
+	 * @param op a binary operator
+	 * @param left term
+	 * @param right term
+	 */
 	public ComparativeAtom(ASPOperator.BinaryOperator op, Term<?> left, Term<?> right) {
 		this.op = op;
 		this.left = left;
@@ -125,7 +133,6 @@ public class ComparativeAtom extends ASPBodyElement {
 	}
 
 	/**	
-	 * Returns the comparative operator of the atom.
 	 * @return the comparative operator of the atom.
 	 */
 	public ASPOperator.BinaryOperator getOperator() {
@@ -133,7 +140,6 @@ public class ComparativeAtom extends ASPBodyElement {
 	}
 
 	/**
-	 * Returns the left (first) term of the comparative atom.
 	 * @return the left (first) term of the comparative atom.
 	 */
 	public Term<?> getLeft() {
@@ -141,7 +147,6 @@ public class ComparativeAtom extends ASPBodyElement {
 	}
 
 	/**
-	 * Returns the right (second) term of the comparative atom.
 	 * @return the right (second) term of the comparative atom.
 	 */
 	public Term<?> getRight() {
