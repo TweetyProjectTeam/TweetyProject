@@ -89,4 +89,11 @@ public class Equation extends Statement{
 	public String getRelationSymbol(){
 		return "=";
 	}
+	
+	@Override
+	public boolean isValid(Statement s) {
+		double left = s.getLeftTerm().doubleValue();
+		double right = s.getRightTerm().doubleValue();
+		return left == right ? true:false;
+	}
 }

@@ -83,7 +83,7 @@ public class GradientDescent extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem constraintSatisfactionProblem) throws GeneralMathException {
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem constraintSatisfactionProblem) throws GeneralMathException {
 		if(constraintSatisfactionProblem.size() > 0)
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
 		this.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + constraintSatisfactionProblem + "\n===END===");

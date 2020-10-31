@@ -76,8 +76,8 @@ public class LagrangeSolver extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem prob) throws GeneralMathException {
-		for(Statement s: prob)
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem prob) throws GeneralMathException {
+		for(OptProbElement s: prob)
 			if(!(s instanceof Equation))
 				throw new IllegalArgumentException("This solver expects optimizations problems without inequations.");
 		// for convenience we consider maximization problems.
@@ -96,7 +96,7 @@ public class LagrangeSolver extends Solver {
 		// and add starting points for the Lagrange multiplicators
 		int idx = 0;
 		Set<Variable> langMult = new HashSet<Variable>();
-		for(Statement s: problem){
+		for(OptProbElement s: problem){
 			Variable lm = new FloatVariable("LAMBDA" + idx++);
 			vars.add(lm);		
 			langMult.add(lm);			
@@ -104,7 +104,7 @@ public class LagrangeSolver extends Solver {
 				for(Map<Variable,Term> startingPoint: this.startingPoints)
 					startingPoint.put(lm, new FloatConstant(this.startingPointsLMult.get(s)));				
 			}
-			l = l.add(lm.mult(s.toNormalizedForm().getLeftTerm()));
+			l = l.add(lm.mult(((Statement) s).toNormalizedForm().getLeftTerm()));
 		}
 		// get the gradient
 		List<Term> partialDerivations = new ArrayList<Term>();

@@ -23,14 +23,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.sf.tweety.math.opt.problem.CombinatoricsProblem;
-import net.sf.tweety.math.opt.problem.ElementOfCombinatoricsProb;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 
 /**
  * This class implements the simulated annealing algorithm for combinatrics problems
  * It is natively implemented
  * @author Sebastian Franke
  */
-public class SimulatedAnnealing {
+public class SimulatedAnnealing extends CombinatoricsSolver {
 
 
 	 
@@ -42,8 +42,7 @@ public class SimulatedAnnealing {
 	private double decreasePerIt;
 	private int maxStepsWithNoImprove;
 	
-	public SimulatedAnnealing(CombinatoricsProblem prob, double startTemp, double decreasePerIt, int maxStepsWithNoImprove) {
-		this.prob = prob;
+	public SimulatedAnnealing(double startTemp, double decreasePerIt, int maxStepsWithNoImprove) {
 		this.startTemp = startTemp;
 		this.decreasePerIt = decreasePerIt;
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
@@ -53,7 +52,9 @@ public class SimulatedAnnealing {
 	 * @param initialSol: a starting point for the search
 	 * @return the best solution encountered
 	 */
-	public ArrayList<ElementOfCombinatoricsProb> solve(ArrayList<ElementOfCombinatoricsProb> initialSol) {
+	public ArrayList<ElementOfCombinatoricsProb> solve(CombinatoricsProblem prob) {
+		this.prob = prob;
+		ArrayList<ElementOfCombinatoricsProb> initialSol = prob.createRandomNewSolution(null);
 		ArrayList<ElementOfCombinatoricsProb> bestSol = initialSol;
 		ArrayList<ElementOfCombinatoricsProb> currSol = initialSol;
 		double temp = startTemp;

@@ -29,6 +29,7 @@ import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Difference;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 import net.sf.tweety.math.opt.problem.*;
 import net.sf.tweety.math.term.AbsoluteValue;
 
@@ -52,7 +53,7 @@ public class TravelingSalesman extends CombinatoricsProblem{
 				rep[i][j] = 1;
 		graphRepresantation = rep;
 		for(int i = 0; i < elements.size(); i++)
-			if(elements.get(i).size() != 2)
+			if(elements.get(i).components.size() != 2)
 				System.err.println("Elements of Traveling Salesman need to have an x-coordinate and a y-coordinate, nothing else");
 	}
 
@@ -65,14 +66,14 @@ public class TravelingSalesman extends CombinatoricsProblem{
 	 * @return the weight of a certain element
 	 */
 	Term weight(int i, ArrayList<ElementOfCombinatoricsProb> sol) {
-		return sol.get(i).get(1) ;
+		return sol.get(i).components.get(1) ;
 	}
 	
 	/**
 	 * @return the value of a certain element
 	 */
 	Term value(int i, ArrayList<ElementOfCombinatoricsProb> sol) {
-		return sol.get(i).get(0) ;
+		return sol.get(i).components.get(0) ;
 	}
 
 
@@ -83,7 +84,7 @@ public class TravelingSalesman extends CombinatoricsProblem{
 		ArrayList<ElementOfCombinatoricsProb> newSol = new ArrayList<ElementOfCombinatoricsProb>();
 		if(currSol == null)
 		{
-			for(ElementOfCombinatoricsProb i : this)
+			for(ElementOfCombinatoricsProb i : this.elements)
 				newSol.add(i);
 			Collections.shuffle(newSol);
 			return newSol;
@@ -112,7 +113,7 @@ public class TravelingSalesman extends CombinatoricsProblem{
 
 	@Override
 	public boolean isValid(ArrayList<ElementOfCombinatoricsProb> solution) {
-		if(solution.size()< this.size() || solution.size() > this.size())
+		if(solution.size()< this.elements.size() || solution.size() > this.elements.size())
 			return false;
 		for(ElementOfCombinatoricsProb i : solution) 
 		{
@@ -132,14 +133,14 @@ public class TravelingSalesman extends CombinatoricsProblem{
 		Term sum = new FloatConstant(0);
 		//sum from position 0 to n-1
 		for(int i = 0; i < sol.size() - 1; i++) {
-			Term x = new AbsoluteValue(new Difference(sol.get(i).get(0), sol.get(i+1).get(0)));
-			Term y = new AbsoluteValue(new Difference(sol.get(i).get(0), sol.get(i+1).get(0)));
+			Term x = new AbsoluteValue(new Difference(sol.get(i).components.get(0), sol.get(i+1).components.get(0)));
+			Term y = new AbsoluteValue(new Difference(sol.get(i).components.get(0), sol.get(i+1).components.get(0)));
 			sum = new Sum(sum, new Power(new Sum(x, y), new IntegerConstant(2)));
 		}
 		//distance from n-1 to 0
 		int lastpos = sol.size() - 1;
-		Term x = new AbsoluteValue(new Difference(sol.get(lastpos).get(0), sol.get(0).get(0)));
-		Term y = new AbsoluteValue(new Difference(sol.get(lastpos).get(1), sol.get(0).get(1)));
+		Term x = new AbsoluteValue(new Difference(sol.get(lastpos).components.get(0), sol.get(0).components.get(0)));
+		Term y = new AbsoluteValue(new Difference(sol.get(lastpos).components.get(1), sol.get(0).components.get(1)));
 		sum = new Sum(sum, new Power(new Sum(x, y), new IntegerConstant(2)));
 		//sum = new Fraction(new FloatConstant(1), sum);
 
@@ -161,8 +162,8 @@ public class TravelingSalesman extends CombinatoricsProblem{
         if (getCurrentIndex > 0) {
             lastComponent = sol[getCurrentIndex - 1];
         }
-        double distance =  Math.pow(solutionComponent.get(0).doubleValue() -lastComponent.get(0).doubleValue(), 2)
-        					+ Math.pow(solutionComponent.get(1).doubleValue() -lastComponent.get(1).doubleValue(), 2);
+        double distance =  Math.pow(solutionComponent.components.get(0).doubleValue() -lastComponent.components.get(0).doubleValue(), 2)
+        					+ Math.pow(solutionComponent.components.get(1).doubleValue() -lastComponent.components.get(1).doubleValue(), 2);
         if(distance <= 0)
         	return 1.0;
         return 1 / distance;     
@@ -172,13 +173,13 @@ public class TravelingSalesman extends CombinatoricsProblem{
 
 
 
-        double[][] representation = new double[this.size()][this.size()];
+        double[][] representation = new double[this.elements.size()][this.elements.size()];
         int i = 0;
         int j = 0;
-		for(ElementOfCombinatoricsProb k : this) {
-			for(ElementOfCombinatoricsProb h : this) {
-			representation[i][j] = Math.pow(k.get(0).doubleValue() - h.get(0).doubleValue(), 2) + 
-										Math.pow(k.get(1).doubleValue() - h.get(1).doubleValue(), 2);
+		for(ElementOfCombinatoricsProb k : this.elements) {
+			for(ElementOfCombinatoricsProb h : this.elements) {
+			representation[i][j] = Math.pow(k.components.get(0).doubleValue() - h.components.get(0).doubleValue(), 2) + 
+										Math.pow(k.components.get(1).doubleValue() - h.components.get(1).doubleValue(), 2);
 			j++;
 			}
 			j = 0;

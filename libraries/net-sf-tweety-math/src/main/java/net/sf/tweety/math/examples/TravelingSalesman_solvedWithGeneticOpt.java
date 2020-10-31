@@ -22,9 +22,10 @@ package net.sf.tweety.math.examples;
 
 import java.util.ArrayList;
 
-import net.sf.tweety.math.opt.problem.*;
 import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolverCombinatorics;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Term;
 
 /**
  * Class implementing an example for a TSP on a cartesian fully connected graph
@@ -40,22 +41,24 @@ public class TravelingSalesman_solvedWithGeneticOpt {
 		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();
 		
 		for(int i = 0; i < numberOfCities; i++) {
-			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb();
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb(new ArrayList<Term>());
+			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
 			elems.add(x);
 		}
 		//create the problem
 		TravelingSalesman test = new TravelingSalesman(elems);
 
 		//solve the problem with a genetic optimization, min 100 iterations
-		SimpleGeneticOptimizationSolverCombinatorics ts = new SimpleGeneticOptimizationSolverCombinatorics(test, 100, 200, 20, 100, 0.001);
+		SimpleGeneticOptimizationSolverCombinatorics ts = new SimpleGeneticOptimizationSolverCombinatorics(100, 200, 20, 100, 0.001);
 		ArrayList<ElementOfCombinatoricsProb> initial = new ArrayList<ElementOfCombinatoricsProb>();
 		for(ElementOfCombinatoricsProb i : elems)
 			initial.add(i);
 
-		System.out.println("Mysol:\n" + ts.solve(initial));
-		System.out.println("Orig:\n" + test.toString());
+		ArrayList<ElementOfCombinatoricsProb> mySol = ts.solve(test);
+		System.out.println("MySol: ");
+		for(ElementOfCombinatoricsProb i : mySol)
+			System.out.print(i.components + " ");
 
 		
 			

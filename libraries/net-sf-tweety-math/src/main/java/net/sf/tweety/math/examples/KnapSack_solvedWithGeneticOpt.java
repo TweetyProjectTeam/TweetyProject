@@ -21,10 +21,11 @@ package net.sf.tweety.math.examples;
 
 import java.util.ArrayList;
 
-import net.sf.tweety.math.opt.problem.*;
 import net.sf.tweety.math.opt.solver.SimpleGeneticOptimizationSolverCombinatorics;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Term;
 
 public class KnapSack_solvedWithGeneticOpt {
 	
@@ -38,17 +39,21 @@ public class KnapSack_solvedWithGeneticOpt {
 		//create a list of items defined by weight and value
 		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();	
 		for(int i = 0; i < 10; i++) {
-			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb();
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb(new ArrayList<Term>());
+			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
 			elems.add(x);
 		}
 		KnapSack test = new KnapSack(elems, maxl);
 
 		
 		//solve the problem with a genetic optimization, min 100000 iterations
-		SimpleGeneticOptimizationSolverCombinatorics ts = new SimpleGeneticOptimizationSolverCombinatorics(test, 100, 200, 20, 5000, 0.001);
-		System.out.println("MySol: " + ts.solve(new ArrayList<ElementOfCombinatoricsProb>()));
+		SimpleGeneticOptimizationSolverCombinatorics ts = new SimpleGeneticOptimizationSolverCombinatorics(100, 200, 20, 5000, 0.001);
+		ArrayList<ElementOfCombinatoricsProb> mySol = ts.solve(test);
+		System.out.println("MySol: ");
+		for(ElementOfCombinatoricsProb i : mySol)
+			System.out.print(i.components + " ");
+		 
 		
 		
 			

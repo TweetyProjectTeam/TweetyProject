@@ -29,6 +29,7 @@ import java.util.Scanner;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.util.NativeShell;
 import net.sf.tweety.math.GeneralMathException;
+import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.Solver;
@@ -65,8 +66,8 @@ public class GlpkSolver extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve(net.sf.tweety.math.opt.ConstraintSatisfactionProblem)
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem)	throws GeneralMathException {
-		if(!problem.isLinear())
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem)	throws GeneralMathException {
+		if(!((ConstraintSatisfactionProblem) problem).isLinear())
 			throw new IllegalArgumentException("The solver \"glpk\" needs linear optimization problems.");
 		//check existence of lp_solve first
 		if(!GlpkSolver.isInstalled())
@@ -97,7 +98,7 @@ public class GlpkSolver extends Solver {
 			int idx;
 			String[] tokens;
 			int i;
-			for(Variable v: problem.getVariables()){
+			for(Variable v: ((ConstraintSatisfactionProblem) problem).getVariables()){
 				idx = outputFromFile.indexOf(" " + v.getName() +  " ");
 				tokens = outputFromFile.substring(idx, outputFromFile.indexOf("\n", idx)).split("\\s");
 				for(i = 0; i < tokens.length && !Parser.isNumeric(tokens[i]); i++){ ; }

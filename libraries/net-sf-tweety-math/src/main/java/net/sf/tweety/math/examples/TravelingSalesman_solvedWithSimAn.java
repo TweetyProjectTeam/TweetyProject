@@ -22,9 +22,10 @@ package net.sf.tweety.math.examples;
 
 import java.util.ArrayList;
 
-import net.sf.tweety.math.opt.problem.*;
 import net.sf.tweety.math.opt.solver.*;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Term;
 
 /**
  * Class implementing an example for a TSP on a cartesian fully connected graph
@@ -40,21 +41,24 @@ public class TravelingSalesman_solvedWithSimAn {
 		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();
 		
 		for(int i = 0; i < numberOfCities; i++) {
-			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb();
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb(new ArrayList<Term>());
+			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
 			elems.add(x);
 		}
 		//create the problem
 		TravelingSalesman test = new TravelingSalesman(elems);
 
 		//solve the problem with Simulated Annealing
-		SimulatedAnnealing ts = new SimulatedAnnealing(test, 100000, 1, 2000);
+		SimulatedAnnealing ts = new SimulatedAnnealing(100000, 1, 2000);
 		ArrayList<ElementOfCombinatoricsProb> initial = new ArrayList<ElementOfCombinatoricsProb>();
 		for(ElementOfCombinatoricsProb i : elems)
 			initial.add(i);
 
-		System.out.println("Mysol: " + ts.solve(initial));
+		ArrayList<ElementOfCombinatoricsProb> mySol = ts.solve(test);
+		System.out.println("MySol: ");
+		for(ElementOfCombinatoricsProb i : mySol)
+			System.out.print(i.components + " ");
 
 		
 			

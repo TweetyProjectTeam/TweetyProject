@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import net.sf.tweety.math.equation.Statement;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 
 
 /**
@@ -34,7 +35,7 @@ import net.sf.tweety.math.equation.Statement;
  * @author Sebastian Franke
  */
 
-public abstract class CombinatoricsProblem extends HashSet<ElementOfCombinatoricsProb>{
+public abstract class CombinatoricsProblem extends GeneralConstraintSatisfactionProblem{
 	
 	/**an adjacence matrix that is supposed to show which vertices are connected to each other in a graph represantation of the problem*/
 	protected int[][] graphRepresantation; 
@@ -51,11 +52,12 @@ public abstract class CombinatoricsProblem extends HashSet<ElementOfCombinatoric
 	 */
 	public static final int MAXIMIZE = 1;
 	
-	List<ElementOfCombinatoricsProb> elements;
+	public List<ElementOfCombinatoricsProb> elements;
 	Collection<Statement> constraints = new ArrayList<Statement>();
 		
 	public CombinatoricsProblem(List<ElementOfCombinatoricsProb> elements, int[][] graphRepresantation){
-		super(elements);
+		//super(elements);
+		this.elements = elements;
 		this.graphRepresantation = graphRepresantation;
 	}
 	/**
@@ -66,7 +68,7 @@ public abstract class CombinatoricsProblem extends HashSet<ElementOfCombinatoric
 	public ArrayList<ElementOfCombinatoricsProb> createDifference(ArrayList<ElementOfCombinatoricsProb> c) {
 		ArrayList<ElementOfCombinatoricsProb> newColl = new ArrayList<ElementOfCombinatoricsProb>();
 		System.out.println("hi");
-	    for(ElementOfCombinatoricsProb i : this) {
+	    for(ElementOfCombinatoricsProb i : this.elements) {
 	    	if(!c.contains(i))
 	    			newColl.add(i);
 	    }

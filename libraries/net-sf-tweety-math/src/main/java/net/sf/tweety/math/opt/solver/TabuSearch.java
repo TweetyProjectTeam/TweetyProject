@@ -22,6 +22,7 @@ package net.sf.tweety.math.opt.solver;
 import java.util.ArrayList;
 
 import net.sf.tweety.math.opt.problem.*;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 
 
 /**
@@ -30,7 +31,7 @@ import net.sf.tweety.math.opt.problem.*;
  * @author Sebastian Franke
  *
  */
-public class TabuSearch {
+public class TabuSearch extends CombinatoricsSolver {
 
 	/**the forbidden solutions*/
 	private ArrayList<ArrayList<ElementOfCombinatoricsProb>> tabu = new ArrayList<ArrayList<ElementOfCombinatoricsProb>>();
@@ -41,8 +42,7 @@ public class TabuSearch {
 	private int tabuSize;
 	private int maxStepsWithNoImprove;
 	
-	public TabuSearch(CombinatoricsProblem prob, int maxIteration, int tabuSize, int maxStepsWithNoImprove) {
-		this.prob = prob;
+	public TabuSearch(int maxIteration, int tabuSize, int maxStepsWithNoImprove) {
 		this.maxIteration = maxIteration;
 		this.tabuSize = tabuSize;
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
@@ -52,9 +52,12 @@ public class TabuSearch {
 	 * @param initialSol: a starting point for the search
 	 * @return the best solution encountered
 	 */
-	public ArrayList<ElementOfCombinatoricsProb> solve(ArrayList<ElementOfCombinatoricsProb> initialSol) {
+	public ArrayList<ElementOfCombinatoricsProb> solve(CombinatoricsProblem prob) {
+		this.prob = prob;
+		ArrayList<ElementOfCombinatoricsProb> initialSol = prob.createRandomNewSolution(null);
 		ArrayList<ElementOfCombinatoricsProb> bestSol = initialSol;
 		ArrayList<ElementOfCombinatoricsProb> currSol = initialSol;
+
 
 		Integer cnt = 0;
 		int smthHappened = 0;

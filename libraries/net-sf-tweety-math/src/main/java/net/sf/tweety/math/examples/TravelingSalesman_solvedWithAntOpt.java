@@ -25,10 +25,11 @@ import java.util.ArrayList;
 import javax.naming.ConfigurationException;
 
 import isula.aco.exception.InvalidInputException;
-import net.sf.tweety.math.opt.problem.ElementOfCombinatoricsProb;
 import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.opt.problem.*;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.Term;
 
 /**
  * This class implements an example for the ant colony algorithm using isula for combinatrics problems
@@ -43,20 +44,23 @@ public class TravelingSalesman_solvedWithAntOpt {
 		ArrayList<ElementOfCombinatoricsProb> elems = new ArrayList<ElementOfCombinatoricsProb>();
 		
 		for(int i = 0; i < numberOfCities; i++) {
-			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb();
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
-			x.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			ElementOfCombinatoricsProb x = new ElementOfCombinatoricsProb(new ArrayList<Term>());
+			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
+			x.components.add(new IntegerConstant((int)(Math.random() * 10)+1));
 			elems.add(x);
 		}
 		//create the problem
 		CombinatoricsProblem test = new TravelingSalesman(elems);
-		System.out.println(test.toString());
+		System.out.println(elems.toString());
 		//solve the problem with a ant optimization
-		AntColonyOptimization ts = new AntColonyOptimization(test, 30, 0.4, 50, 2.5, 1.0);
+		AntColonyOptimization ts = new AntColonyOptimization(30, 0.4, 50, 2.5, 1.0);
 		ArrayList<ElementOfCombinatoricsProb> initial = new ArrayList<ElementOfCombinatoricsProb>();
 		for(ElementOfCombinatoricsProb i : elems)
 			initial.add(i);
 
-		System.out.println("Mysol: " + ts.solve(initial));
+		ArrayList<ElementOfCombinatoricsProb> mySol = ts.solve(test);
+		System.out.println("MySol: ");
+		for(ElementOfCombinatoricsProb i : mySol)
+			System.out.print(i.components + " ");
 	}
 }

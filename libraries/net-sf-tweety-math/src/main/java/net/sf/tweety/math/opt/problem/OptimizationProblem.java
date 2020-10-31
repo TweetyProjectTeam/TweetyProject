@@ -196,11 +196,11 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 			this.add(con5);			
 		}
 		//resolve avs in constraints
-		Stack<Statement> statements = new Stack<Statement>();
-		statements.addAll(this);
+		Stack<OptProbElement> statements = new Stack<OptProbElement>();
+		statements.addAll((HashSet<OptProbElement>) this);
 		Set<Statement> newConstraints = new HashSet<Statement>();
 		while(!statements.isEmpty()){
-			Statement s = statements.pop();
+			Statement s = (Statement) statements.pop();
 			while(!s.getAbsoluteValues().isEmpty()){
 				AbsoluteValue av = s.getAbsoluteValues().iterator().next();
 				FloatVariable tmpAbs = new FloatVariable("TMPABS" + counter);
@@ -238,23 +238,23 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		//Edit @Sebastian Franke: target function must be a single variable to fulfill the current version of LpSolve
 		result += this.targetFunction.toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "") + ";\n";
 		//result += "currentTargetFunc = "	+ this.targetFunction.toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "") + ";\n";
-		for(Statement s: this){
+		for(OptProbElement s: this){
 			// As the lp format treats "<" and "<=" both as lesser or equal (same for ">" and ">="
 			// we have to add an "epsilon" to the lesser term in order to represent "<"
 			//left and right part of the statements have to be in linear form in order for lp_solve to parse them coorectly
 			if(s instanceof Inequation && ((Inequation) s).getType() == Inequation.LESS){
-				result += s.getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")
+				result += ((Statement) s).getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")
 						+ " + " + OptimizationProblem.EPSILON 
-						+ s.getRelationSymbol() 
-						+ s.getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  + ";\n";
+						+ ((Inequation) s).getRelationSymbol() 
+						+ ((Statement) s).getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  + ";\n";
 			}else if(s instanceof Inequation && ((Inequation) s).getType() == Inequation.GREATER){
-				result += s.getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  
-						+ s.getRelationSymbol() 
-						+ s.getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  
+				result += ((Statement) s).getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  
+						+ ((Inequation) s).getRelationSymbol() 
+						+ ((Statement) s).getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  
 						+ " + " + OptimizationProblem.EPSILON + ";\n";
-			}else result += s.getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "") 
-						+ s.getRelationSymbol() 
-						+ s.getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  + ";\n";
+			}else result += ((Statement) s).getLeftTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "") 
+						+ ((Inequation) s).getRelationSymbol() 
+						+ ((Statement) s).getRightTerm().toLinearForm().toString().replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", "")  + ";\n";
 		}
 		
 		//Edit @Sebastian Franke: target function is always
@@ -292,10 +292,10 @@ public class OptimizationProblem extends ConstraintSatisfactionProblem {
 		result += this.targetFunction + "\n";
 		result += "Subject To\n";
 		Statement s2;
-		for(Statement s: this){
+		for(OptProbElement s: this){
 			// As the cplex lp format treats "<" and "<=" both as lesser or equal (same for ">" and ">="
 			// we have to add an "epsilon" to the lesser term in order to represent "<"
-			s2 = s;
+			s2 = (Statement) s;
 			if(s2 instanceof Inequation && ((Inequation) s2).getType() == Inequation.LESS){
 				result += s2.getLeftTerm() +  s2.getRelationSymbol() + s2.getRightTerm() + " - " + OptimizationProblem.EPSILON + "\n";
 			}else if(s2 instanceof Inequation && ((Inequation) s2).getType() == Inequation.GREATER){

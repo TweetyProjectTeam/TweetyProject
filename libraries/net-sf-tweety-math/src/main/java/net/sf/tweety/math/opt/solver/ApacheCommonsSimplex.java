@@ -25,6 +25,7 @@ import java.util.Set;
 
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
+import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.ProblemInconsistentException;
@@ -32,6 +33,7 @@ import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.term.Constant;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.OptProbElement;
 import net.sf.tweety.math.term.Product;
 import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
@@ -73,20 +75,20 @@ public class ApacheCommonsSimplex extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) {
-		if(!problem.isLinear())
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) {
+		if(!((ConstraintSatisfactionProblem) problem).isLinear())
 			throw new IllegalArgumentException("Simplex algorithm is for linear problems only.");
 		//this.log.info("Wrapping optimization problem for calling the Apache Commons Simplex algorithm.");				
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
-		for(Statement s: problem)
-			constraints.add(s.toNormalizedForm().toLinearForm());
+		for(OptProbElement s: problem)
+			constraints.add(((Inequation) s).toNormalizedForm().toLinearForm());
 		// 2.) for every constraint we need an extra variable
-		int numVariables = problem.getVariables().size();
+		int numVariables = ((ConstraintSatisfactionProblem) problem).getVariables().size();
 		// 3.) define mappings from variables to indices
 		int index = 0;
 		Map<Variable,Integer> origVars2Idx = new HashMap<Variable,Integer>();
-		for(Variable v: problem.getVariables())
+		for(Variable v: ((ConstraintSatisfactionProblem) problem).getVariables())
 			origVars2Idx.put(v, index++);
 		// 4.) Check for target function (for constraint satisfaction problems
 		//		its empty

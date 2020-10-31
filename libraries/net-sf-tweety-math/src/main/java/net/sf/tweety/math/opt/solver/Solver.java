@@ -168,7 +168,7 @@ public abstract class Solver {
 	 * @return a mapping from variables of the problem to terms. 
 	 * @throws GeneralMathException if something went wrong.
 	 */
-	public abstract Map<Variable,Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException;
+	public abstract Map<Variable,Term> solve(GeneralConstraintSatisfactionProblem problem) throws GeneralMathException;
 	
 	/**
 	 * Checks whether the solver of this class is actually installed, i.e. whether external binaries

@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import net.sf.tweety.commons.util.NativeShell;
+import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.Solver;
@@ -71,9 +72,9 @@ public class LpSolve extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) {
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) {
 		
-		if(!problem.isLinear())
+		if(! ((ConstraintSatisfactionProblem) problem).isLinear())
 			throw new IllegalArgumentException("The solver \"lpsolve\" needs linear optimization problems.");
 		//check existence of lp_solve first
 		if(!LpSolve.isInstalled()) {
@@ -111,7 +112,7 @@ public class LpSolve extends Solver {
 		
 		String assignments = output.substring(output.indexOf(delimiter)+delimiter.length(), output.length());
 		StringTokenizer tokenizer = new StringTokenizer(assignments,"\n");
-		Set<Variable> variables = problem.getVariables();
+		Set<Variable> variables = ((ConstraintSatisfactionProblem) problem).getVariables();
 		Map<Variable,Term> result = new HashMap<Variable,Term>();
 		while(tokenizer.hasMoreTokens()){
 			String token = tokenizer.nextToken();

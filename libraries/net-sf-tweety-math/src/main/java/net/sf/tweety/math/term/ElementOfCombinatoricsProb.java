@@ -17,17 +17,21 @@
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
-package net.sf.tweety.math.opt.problem;
+package net.sf.tweety.math.term;
 
 import java.util.ArrayList;
-import net.sf.tweety.math.term.Term;
 
 /**
  * This class implements an element for a combinatorial problem. It can be expanded later to implement more behavior
  * @author Sebastian Franke
  */
 
-public class ElementOfCombinatoricsProb extends ArrayList<Term>{
-	private static final long serialVersionUID = 1L;
+public class ElementOfCombinatoricsProb extends OptProbElement{
+	public ArrayList<Term> components;
+	
+	public ElementOfCombinatoricsProb(ArrayList<Term> elements) {
+		this.components = elements;
+	}
+
 
 }

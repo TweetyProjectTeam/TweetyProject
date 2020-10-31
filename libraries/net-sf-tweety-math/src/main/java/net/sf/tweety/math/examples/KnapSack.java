@@ -19,6 +19,7 @@
 
 package net.sf.tweety.math.examples;
 
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
@@ -40,7 +41,7 @@ public class KnapSack extends CombinatoricsProblem {
 	public KnapSack(ArrayList<ElementOfCombinatoricsProb> elements, Term maxWeight) {
 		super(elements, graphRepresantation);
 		for (int i = 0; i < elements.size(); i++)
-			if (elements.get(i).size() != 2)
+			if (elements.get(i).components.size() != 2)
 				System.err.println("Elements of Knapscak need to have a value and a weight, nothing else");
 		this.maxWeight = maxWeight;
 
@@ -56,14 +57,14 @@ public class KnapSack extends CombinatoricsProblem {
 	 * @return the weight of a certain element
 	 */
 	Term weight(int i, ArrayList<ElementOfCombinatoricsProb> sol) {
-		return sol.get(i).get(1);
+		return sol.get(i).components.get(1);
 	}
 
 	/**
 	 * @return the value of a certain element
 	 */
 	Term value(int i, ArrayList<ElementOfCombinatoricsProb> sol) {
-		return sol.get(i).get(0);
+		return sol.get(i).components.get(0);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class KnapSack extends CombinatoricsProblem {
 			return 0;
 		Term sum = new FloatConstant(0.0);
 		for (ElementOfCombinatoricsProb i : sol)
-			sum = new Sum(sum, i.get(1));
+			sum = new Sum(sum, i.components.get(1));
 
 		return sum.doubleValue();
 
@@ -83,7 +84,7 @@ public class KnapSack extends CombinatoricsProblem {
 			return 0;
 		Term sum = new FloatConstant(0.0);
 		for (ElementOfCombinatoricsProb i : sol)
-			sum = new Sum(sum, i.get(0));
+			sum = new Sum(sum, i.components.get(0));
 
 		return sum.doubleValue();
 	}
@@ -91,16 +92,15 @@ public class KnapSack extends CombinatoricsProblem {
 	@Override
 	public ArrayList<ElementOfCombinatoricsProb> createRandomNewSolution(
 			ArrayList<ElementOfCombinatoricsProb> currSol) {
-		// ArrayList<Element> addable =
-		// createDifference((ArrayList<Element>)currSol);//create a list of elements
-		// that are not in currSol
+		if(currSol == null)
+			currSol = new ArrayList<ElementOfCombinatoricsProb>();
 		ArrayList<ElementOfCombinatoricsProb> newSol = new ArrayList<ElementOfCombinatoricsProb>();
 		for (ElementOfCombinatoricsProb j : currSol)
 			newSol.add(j);
 		int random = (int) (Math.random() * this.size());
 
 		int i = 0;
-		for (ElementOfCombinatoricsProb el : this) {
+		for (ElementOfCombinatoricsProb el : this.elements) {
 			if (currSol.contains(el))
 				i = 0;
 			else if (i == random) {

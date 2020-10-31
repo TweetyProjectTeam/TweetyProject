@@ -121,15 +121,15 @@ public class TabuSearchOnConstrProb extends Solver{
 	}
 	
 	@Override
-	public Map<Variable,Term> solve(ConstraintSatisfactionProblem problem) {
+	public Map<Variable,Term> solve(GeneralConstraintSatisfactionProblem problem) {
 		// only optimization problems
-		this.prob = problem;
+		this.prob = (ConstraintSatisfactionProblem) problem;
 		if(!(this.prob instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
 		 
 		/**the current solution for the n-th iteration*/
 		Map<Variable, Term> currSol = new HashMap<Variable, Term>();
-		for(Variable i : problem.getVariables())
+		for(Variable i : ((ConstraintSatisfactionProblem) problem).getVariables())
 			currSol.put((Variable) i,  (Term) new FloatConstant((i.getUpperBound() - i.getLowerBound() / 2)));
 		double currQual = ((OptimizationProblem) this.prob).getTargetFunction().replaceAllTerms(currSol).doubleValue();
 		

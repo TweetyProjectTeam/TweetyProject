@@ -28,7 +28,7 @@ import net.sf.tweety.math.term.*;
  * This class models a general constraint satisfaction problem.
  * @author Matthias Thimm
  */
-public class ConstraintSatisfactionProblem extends HashSet<Statement>{
+public class ConstraintSatisfactionProblem extends GeneralConstraintSatisfactionProblem{//extends HashSet<Statement>{
 	
 	/**
 	 * For serialization.
@@ -57,8 +57,8 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 */
 	public ConstraintSatisfactionProblem toNormalizedForm(){
 		ConstraintSatisfactionProblem csp = new ConstraintSatisfactionProblem();
-		for(Statement s: this)
-			csp.add(s.toNormalizedForm());
+		for(OptProbElement s: this)
+			csp.add(((Statement) s).toNormalizedForm());
 		return csp;
 	}
 		
@@ -68,8 +68,8 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 */
 	public boolean isLinear(){
 		try{
-		for(Statement s: this)
-			if(!s.getLeftTerm().isLinear() || !s.getRightTerm().isLinear())
+		for(OptProbElement s: this)
+			if(!((Statement) s).getLeftTerm().isLinear() || !((Statement) s).getRightTerm().isLinear())
 				return false;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -94,10 +94,10 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 * @return "true" if this problem uses no minimum function.
 	 */
 	public boolean isMinimumFree(){
-		for(Statement s: this){
-			if(!s.getLeftTerm().getMinimums().isEmpty())
+		for(OptProbElement s: this){
+			if(!((Statement) s).getLeftTerm().getMinimums().isEmpty())
 				 return false;
-			if(!s.getRightTerm().getMinimums().isEmpty())
+			if(!((Statement) s).getRightTerm().getMinimums().isEmpty())
 				 return false;
 		}
 		return true;
@@ -112,20 +112,20 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 */
 	public void resolveMinimums(){
 		// expand all minimums		
-		for(Statement s: this)
-			s.expandAssociativeOperations();
+		for(OptProbElement s: this)
+			((Statement) s).expandAssociativeOperations();
 		// resolve minimums in statements
 		Set<Statement> newConstraints = new HashSet<Statement>();
-		for(Statement s: this){	
-			while(!s.getMinimums().isEmpty()){
-				Minimum m = s.getMinimums().iterator().next();
+		for(OptProbElement s: this){	
+			while(!((Statement) s).getMinimums().isEmpty()){
+				Minimum m = ((Statement) s).getMinimums().iterator().next();
 				Term replacement = new FloatConstant(0.5F);
 				replacement = replacement.mult(m.getTerms().get(0));
 				replacement = replacement.add((new FloatConstant(0.5F).mult(m.getTerms().get(1))));
 				replacement = replacement.minus(new AbsoluteValue(m.getTerms().get(0).minus(m.getTerms().get(1))));
-				s = s.replaceTerm(m, replacement);				
+				s = ((Statement) s).replaceTerm(m, replacement);				
 			}
-			newConstraints.add(s);
+			newConstraints.add((Statement) s);
 		}	
 		this.clear();
 		this.addAll(newConstraints);
@@ -140,20 +140,20 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 */
 	public void resolveMaximums(){
 		// expand all maximums		
-		for(Statement s: this)
-			s.expandAssociativeOperations();
+		for(OptProbElement s: this)
+			((Statement) s).expandAssociativeOperations();
 		// resolve maximums in statements
 		Set<Statement> newConstraints = new HashSet<Statement>();
-		for(Statement s: this){	
-			while(!s.getMaximums().isEmpty()){
-				Maximum m = s.getMaximums().iterator().next();
+		for(OptProbElement s: this){	
+			while(!((Statement) s).getMaximums().isEmpty()){
+				Maximum m = ((Statement) s).getMaximums().iterator().next();
 				Term replacement = new FloatConstant(0.5F);
 				replacement = replacement.mult(m.getTerms().get(0));
 				replacement = replacement.add((new FloatConstant(0.5F).mult(m.getTerms().get(1))));
 				replacement = replacement.add(new AbsoluteValue(m.getTerms().get(0).minus(m.getTerms().get(1))));
-				s = s.replaceTerm(m, replacement);				
+				s = ((Statement) s).replaceTerm(m, replacement);				
 			}
-			newConstraints.add(s);
+			newConstraints.add((Statement) s);
 		}	
 		this.clear();
 		this.addAll(newConstraints);
@@ -165,9 +165,9 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 */
 	public Set<Variable> getVariables(){
 		Set<Variable> variables = new HashSet<Variable>();
-		for(Statement s: this){
-			variables.addAll(s.getLeftTerm().getVariables());
-			variables.addAll(s.getRightTerm().getVariables());
+		for(OptProbElement s: this){
+			variables.addAll(((Statement) s).getLeftTerm().getVariables());
+			variables.addAll(((Statement) s).getRightTerm().getVariables());
 		}
 		return variables;
 	}
@@ -178,9 +178,9 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 */
 	public Set<Minimum> getMinimums(){
 		Set<Minimum> minimums = new HashSet<Minimum>();
-		for(Statement s: this){
-			minimums.addAll(s.getLeftTerm().getMinimums());
-			minimums.addAll(s.getRightTerm().getMinimums());
+		for(OptProbElement s: this){
+			minimums.addAll(((Statement) s).getLeftTerm().getMinimums());
+			minimums.addAll(((Statement) s).getRightTerm().getMinimums());
 		}
 		return minimums;
 	}
@@ -191,8 +191,8 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	 * min{min{a,b},c} becomes min{a,b,c}
 	 */
 	public void collapseAssociativeOperations(){
-		for(Statement s: this)
-			s.collapseAssociativeOperations();
+		for(OptProbElement s: this)
+			((Statement) s).collapseAssociativeOperations();
 	}
 	
 	/* (non-Javadoc)
@@ -201,7 +201,7 @@ public class ConstraintSatisfactionProblem extends HashSet<Statement>{
 	@Override
 	public String toString(){
 		String s = "";
-		for(Statement c: this)
+		for(OptProbElement c: this)
 			s += c + "\n";
 		return s;
 	}

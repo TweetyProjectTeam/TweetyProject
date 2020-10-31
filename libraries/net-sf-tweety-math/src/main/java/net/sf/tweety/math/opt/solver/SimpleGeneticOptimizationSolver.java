@@ -34,12 +34,14 @@ import org.slf4j.LoggerFactory;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
+import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
+import net.sf.tweety.math.term.OptProbElement;
 import net.sf.tweety.math.term.Power;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
@@ -120,17 +122,17 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 	 * @see net.sf.tweety.math.opt.Solver#solve(net.sf.tweety.math.opt.ConstraintSatisfactionProblem)
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) throws GeneralMathException {
 		// only optimization problems
 		if(!(problem instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
 		OptimizationProblem p = (OptimizationProblem) problem; 
 		// only box constraints allowed
 		if(!p.isEmpty()){
-			for(Statement s: p){
+			for(OptProbElement s: p){
 				if(s instanceof Inequation)
 					throw new IllegalArgumentException("Only optimization problems with box and equality constraints allowed for this solver (no inequalities).");
-				Term t = SimpleGeneticOptimizationSolver.VERY_LARGE_NUMBER.mult(new Power(s.getLeftTerm().minus(s.getRightTerm()),new IntegerConstant(2)));
+				Term t = SimpleGeneticOptimizationSolver.VERY_LARGE_NUMBER.mult(new Power(((Statement) s).getLeftTerm().minus(((Statement) s).getRightTerm()),new IntegerConstant(2)));
 				if(p.getType() == OptimizationProblem.MAXIMIZE)
 					p.setTargetFunction(p.getTargetFunction().minus(t));
 				else p.setTargetFunction(p.getTargetFunction().add(t));

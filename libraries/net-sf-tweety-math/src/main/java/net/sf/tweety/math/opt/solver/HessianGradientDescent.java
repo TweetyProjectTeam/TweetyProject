@@ -27,6 +27,7 @@ import java.util.Map;
 import net.sf.tweety.commons.util.VectorTools;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
+import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.Solver;
@@ -68,7 +69,7 @@ public class HessianGradientDescent extends Solver {
 	 * @see net.sf.tweety.math.opt.Solver#solve()
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) throws GeneralMathException {
 		System.out.println(problem.toString());
 		if(problem.size() > 0)
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");

@@ -45,16 +45,11 @@ public class SimulatedAnnealingOnConstrProbEx2 {
 		FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
 		Equation constr1 = new Equation(m1, new IntegerConstant(10));
 		Equation constr2 = new Equation(m2, new IntegerConstant(12));
-		Equation constr3 = new Equation(m1, new IntegerConstant(0));
-		Equation constr4 = new Equation(m2, new IntegerConstant(0));
+
 		Equation constr5 = new Equation(m1.add(m2), new IntegerConstant(16));
 		
 		Collection<Statement> constraints = new ArrayList<Statement>();
-		constraints.add(constr1);
-		constraints.add(constr2);
-		constraints.add(constr3);
-		constraints.add(constr4);
-		constraints.add(constr5);
+
 		OptimizationProblem prob = new OptimizationProblem(0);
 		prob.addAll(constraints);
 

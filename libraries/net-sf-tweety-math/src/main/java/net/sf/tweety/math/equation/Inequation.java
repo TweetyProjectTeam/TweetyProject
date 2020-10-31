@@ -130,5 +130,22 @@ public class Inequation extends Statement{
 			return ">=";
 		throw new IllegalArgumentException("Inequation is of unrecognized type.");
 	}
+
+	@Override
+	public boolean isValid(Statement s) {
+		double left = s.getLeftTerm().doubleValue();
+		double right = s.getRightTerm().doubleValue();
+		if(this.type == Inequation.LESS)
+			return left < right ? true:false;
+		if(this.type == Inequation.LESS_EQUAL)
+			return left <= right ? true:false;
+		if(this.type == Inequation.UNEQUAL)
+			return left != right ? true:false;
+		if(this.type == Inequation.GREATER)
+			return left > right ? true:false;
+		if(this.type == Inequation.GREATER_EQUAL)
+			return left >= right ? true:false;
+		throw new IllegalArgumentException("Inequation is of unrecognized type.");
+	}
 	
 }

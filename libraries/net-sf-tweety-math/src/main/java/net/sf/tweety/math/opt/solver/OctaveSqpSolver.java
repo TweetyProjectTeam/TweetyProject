@@ -31,11 +31,13 @@ import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
+import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.FloatVariable;
+import net.sf.tweety.math.term.OptProbElement;
 import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
@@ -68,7 +70,7 @@ public class OctaveSqpSolver extends Solver{
 	 * @see net.sf.tweety.math.opt.Solver#solve(net.sf.tweety.math.opt.ConstraintSatisfactionProblem)
 	 */
 	@Override
-	public Map<Variable, Term> solve(ConstraintSatisfactionProblem problem) throws GeneralMathException {
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) throws GeneralMathException {
 		// only optimization problems
 		if(!(problem instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
@@ -91,17 +93,17 @@ public class OctaveSqpSolver extends Solver{
 		String ineqConstraints = "function ineq = h(x)\nineq=[";
 		boolean hasEquations = false;
 		boolean hasInequations = false;
-		for(Statement s: p){
-			s = s.replaceAllTerms(old2new);
+		for(OptProbElement s: p){
+			s = ((Statement) s).replaceAllTerms(old2new);
 			if(s instanceof Equation){
-				eqConstraints += s.getLeftTerm().toString() + " - (" + s.getRightTerm() + ");";
+				eqConstraints += ((Statement) s).getLeftTerm().toString() + " - (" + ((Statement) s).getRightTerm() + ");";
 				hasEquations = true;
 			}else{
 				Inequation ineq = (Inequation) s;
 				if(ineq.getType() == Inequation.GREATER_EQUAL)
-					ineqConstraints += s.getLeftTerm().toString() + " - (" + s.getRightTerm() + ");";
+					ineqConstraints += ((Statement) s).getLeftTerm().toString() + " - (" + ((Statement) s).getRightTerm() + ");";
 				else if(ineq.getType() == Inequation.LESS_EQUAL)
-					ineqConstraints += s.getRightTerm().toString() + " - (" + s.getLeftTerm() + ");";
+					ineqConstraints += ((Statement) s).getRightTerm().toString() + " - (" + ((Statement) s).getLeftTerm() + ");";
 				else throw new IllegalArgumentException("No strict inequalities allows for Octave SQP solver.");
 				hasInequations = true;
 			}

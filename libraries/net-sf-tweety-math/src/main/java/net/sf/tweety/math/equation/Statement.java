@@ -27,7 +27,7 @@ import net.sf.tweety.math.term.*;
  * This class models a mathematical statement, i.e. an equality or an inequality.
  * @author Matthias Thimm
  */
-public abstract class Statement {
+public abstract class Statement extends OptProbElement{
 	
 	/**
 	 * The left term of this statement.
@@ -174,7 +174,12 @@ public abstract class Statement {
 	public void setRightTerm(Term t){
 		this.rightTerm = t;
 	}
-
+	/**
+	 * checks if a Statement fulfills the relation
+	 * @param s a Statement with values for all variables 
+	 * @return if the left and the right hand side are in the correct relation to each other
+	 */
+	public abstract boolean isValid(Statement s);
 	/**
 	 * Returns the relation symbol of this statement.
 	 * @return the relation symbol of this statement.

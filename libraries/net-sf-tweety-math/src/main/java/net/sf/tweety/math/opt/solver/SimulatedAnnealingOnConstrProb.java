@@ -23,8 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.opt.problem.*;
 import net.sf.tweety.math.term.FloatConstant;
+import net.sf.tweety.math.term.OptProbElement;
 import net.sf.tweety.math.term.Variable;
 import net.sf.tweety.math.term.Term;
 
@@ -66,20 +68,44 @@ public class SimulatedAnnealingOnConstrProb extends Solver{
 	 */
 	private Map<Variable,Term> createNewSol(Map<Variable,Term> ind){
 		Map<Variable,Term> mutant = new HashMap<Variable,Term>();
-		//iterate through all variables
-		for(Variable v: ind.keySet()){
-				// decide if there is a positive or negative mutation
-				if(rand.nextBoolean()){			
-					double val = ind.get(v).doubleValue();
-					val = val + rand.nextDouble() * VAR_MUTATE_STRENGTH * (v.getUpperBound() - val);
-					mutant.put(v, new FloatConstant(val));
-				}else{
-					double val = ind.get(v).doubleValue();
-					val = val - rand.nextDouble() * VAR_MUTATE_STRENGTH * (val- v.getLowerBound());
-					mutant.put(v, new FloatConstant(val));
+		
+		int numberOfFailedTries = 0;
+		boolean mutantSuccessful = false; //iterate through all variables
+		
+		while(numberOfFailedTries < 5000 && mutantSuccessful == false)
+		{
+			for(Variable v: ind.keySet()){
+	
+					// decide if there is a positive or negative mutation
+					if(rand.nextBoolean()){			
+						double val = ind.get(v).doubleValue();
+						val = val + rand.nextDouble() * VAR_MUTATE_STRENGTH * (v.getUpperBound() - val);
+						mutant.put(v, new FloatConstant(val));
+					}else{
+						double val = ind.get(v).doubleValue();
+						val = val - rand.nextDouble() * VAR_MUTATE_STRENGTH * (val- v.getLowerBound());
+						mutant.put(v, new FloatConstant(val));
+					}
+			}
+			
+			mutantSuccessful = true;
+			for(OptProbElement s : this.prob)
+			{
+				
+				if(((Statement) s).isValid(((Statement) s).replaceAllTerms(mutant)) == false)
+				{
+					numberOfFailedTries++;
+					mutantSuccessful = false;
+					
 				}
 
+			}
 		}
+		if(numberOfFailedTries == 5000) {
+			System.out.println("Wrong!");
+			return ind;
+		}
+			
 		return mutant;
 	}
 	
@@ -117,15 +143,15 @@ public class SimulatedAnnealingOnConstrProb extends Solver{
 	}
 	
 	@Override
-	public Map<Variable,Term> solve(ConstraintSatisfactionProblem problem) {
+	public Map<Variable,Term> solve(GeneralConstraintSatisfactionProblem problem) {
 		// only optimization problems
-		this.prob = problem;
+		this.prob = (ConstraintSatisfactionProblem) problem;
 		if(!(this.prob instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
 		double temp = startTemp;
 		/**the current solution for the n-th iteration*/
 		Map<Variable, Term> currSol = new HashMap<Variable, Term>();
-		for(Variable i : problem.getVariables())
+		for(Variable i : ((ConstraintSatisfactionProblem) problem).getVariables())
 			currSol.put((Variable) i,  (Term) new FloatConstant((i.getUpperBound() - i.getLowerBound() / 2)));
 		double currQual = ((OptimizationProblem) this.prob).getTargetFunction().replaceAllTerms(currSol).doubleValue();
 		

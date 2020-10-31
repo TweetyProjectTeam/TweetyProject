@@ -12,10 +12,10 @@ import org.slf4j.LoggerFactory;
 
 
 import net.sf.tweety.math.opt.problem.CombinatoricsProblem;
-import net.sf.tweety.math.opt.problem.ElementOfCombinatoricsProb;
+import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 
 
-public class SimpleGeneticOptimizationSolverCombinatorics{
+public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsSolver{
 
 	
 	/** Logger */
@@ -73,13 +73,12 @@ public class SimpleGeneticOptimizationSolverCombinatorics{
 	 * @param minIterations The minimal number of iterations
 	 * @param precision If an iteration improves less than this value the algorithm ends
 	 */
-	public SimpleGeneticOptimizationSolverCombinatorics(CombinatoricsProblem prob, int populationSize, int populationIncreaseMutation, int populationIncreaseCrossOver, int minIterations, double precision){
+	public SimpleGeneticOptimizationSolverCombinatorics( int populationSize, int populationIncreaseMutation, int populationIncreaseCrossOver, int minIterations, double precision){
 		this.populationSize = populationSize;
 		this.populationIncreaseMutation = populationIncreaseMutation;
 		this.populationIncreaseCrossOver = populationIncreaseCrossOver;
 		this.minIterations = minIterations;
 		this.precision = precision;
-		this.prob = prob;
 	}	
 	
 
@@ -166,12 +165,13 @@ public class SimpleGeneticOptimizationSolverCombinatorics{
 	 * @param initalSol the initial solution as a starting point
 	 * @return the optimal solution found in the search
 	 */
-	public ArrayList<ElementOfCombinatoricsProb> solve(ArrayList<ElementOfCombinatoricsProb> initialSol){
+	public ArrayList<ElementOfCombinatoricsProb> solve(CombinatoricsProblem prob){
+		this.prob = prob;
 
 		// create initial population
 		Set<ArrayList<ElementOfCombinatoricsProb>> currentPopulation = new HashSet<ArrayList<ElementOfCombinatoricsProb>>();
 		for(int i = 0; i < this.populationSize; i++){
-			ArrayList<ElementOfCombinatoricsProb> ind = this.prob.createRandomNewSolution(initialSol);
+			ArrayList<ElementOfCombinatoricsProb> ind = this.prob.createRandomNewSolution(null);
 			currentPopulation.add(ind);
 		}
 

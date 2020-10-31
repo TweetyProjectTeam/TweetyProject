@@ -50,7 +50,7 @@ public class LpSolverEx {
 		FloatVariable m1 = new FloatVariable("Maschine1");
 		FloatVariable m2 = new FloatVariable("Maschine2");
 		Inequation constr1 = new Inequation(m1, m2, 1);
-		Inequation constr2 = new Inequation(m2, new FloatConstant(12), 1);
+		Inequation constr2 = new Inequation(m2, new FloatConstant(11), 1);
 		Inequation constr3 = new Inequation(m1, new FloatConstant(0), 3);
 		Inequation constr4 = new Inequation(m2, new FloatConstant(0), 3);
 		
