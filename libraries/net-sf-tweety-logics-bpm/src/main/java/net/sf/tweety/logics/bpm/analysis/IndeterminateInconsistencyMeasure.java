@@ -41,7 +41,7 @@ import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
  * and 0 otherwise
  * @author Benedikt Knopp
  */
-public class IndeterminateInconsistencyMeasure implements InconsistencyMeasure<BpmnModel>{
+public class IndeterminateInconsistencyMeasure implements BpmnInconsistencyMeasure{
 
 	/**
 	 * the BPMN model for which the inconsistency value is to find

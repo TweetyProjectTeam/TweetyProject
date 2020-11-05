@@ -20,6 +20,8 @@ package net.sf.tweety.logics.bpm.parser;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -33,8 +35,13 @@ import javax.xml.parsers.SAXParserFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import net.sf.tweety.commons.BeliefBase;
+import net.sf.tweety.commons.Formula;
+import net.sf.tweety.commons.Parser;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.graphs.Edge;
 import net.sf.tweety.logics.bpm.syntax.*;
 
@@ -42,7 +49,7 @@ import net.sf.tweety.logics.bpm.syntax.*;
  * Instances of this class serve as the root of a parsing process for a BPMN XML file.
  * @author Benedikt
  */
-public class RootParser {
+public class RootParser extends Parser {
 
 	/**
 	 * The XML file to parse
@@ -67,30 +74,10 @@ public class RootParser {
 	
 	/**
 	 * Create a new instance
-	 * @param xmlFile the XML file to parse to a BPMN model
 	 */
-	public RootParser(File xmlFile) {
-		this.xmlFile = xmlFile;
+	public RootParser() {
 	}
 	
-	/**
-	 * Parse the XML file to an instance of the BpmnModel class
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 */
-	public void parse() throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder(); 
-		Document xmlDocument = db.parse(xmlFile);
-		Node rootNode = xmlDocument.getDocumentElement();
-		BpmnModelParser bpmnModelParser = new BpmnModelParser(this);
-		bpmnModelParser.parse(rootNode);
-		this.bpmnModel = bpmnModelParser.get();
-		// defer edge instantiation until node objects available after parsing
-		handleEdgeBuffer();
-		handleNodeBuffer();
-	}
 	
 	/**
 	 * @param node the node to retrieve the name for
@@ -172,6 +159,69 @@ public class RootParser {
 	 */
 	public void putBufferedEdge(BufferedBpmnEdge edge) {
 		this.edgeBuffer.put(edge.getId(), edge);
+	}
+
+	/**
+	 * Parse the XML file to an instance of the BpmnModel class
+	 * @param xmlFile the XML file to parse to a BPMN model
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	public BeliefBase parseFile(File xmlFile) throws SAXException, IOException, ParserConfigurationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder(); 
+		Document xmlDocument = db.parse(xmlFile);
+		this.parse(xmlDocument);
+		return this.bpmnModel;
+	}
+	
+	  /*
+	   * (non-Javadoc)
+	   * @see net.sf.tweety.Parser#parseBeliefBase(java.io.Reader)
+	   */
+	@Override
+	public BeliefBase parseBeliefBase(Reader reader) throws IOException, ParserException {
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    factory.setNamespaceAware(true);
+	    DocumentBuilder builder;
+		try {
+			builder = factory.newDocumentBuilder();
+			String xmlString = "";
+			int c = reader.read();
+			while( c != -1) {
+				xmlString += (char) c;
+				c = reader.read();
+			}
+			Document xmlDocument = builder.parse(new InputSource(new StringReader(xmlString)));
+			this.parse(xmlDocument);
+			return this.bpmnModel;
+		} catch (Exception e) {
+			throw new ParserException( e );
+		}
+	}
+	
+	/**
+	 * Parse the XML Document object to an instance of the BpmnModel class
+	 * @param xmlDocument the document object to parse to a BPMN model
+	 */
+	private void parse(Document xmlDocument) {
+		Node rootNode = xmlDocument.getDocumentElement();
+		BpmnModelParser bpmnModelParser = new BpmnModelParser(this);
+		bpmnModelParser.parse(rootNode);
+		this.bpmnModel = bpmnModelParser.get();
+		// defer edge instantiation until node objects available after parsing
+		handleEdgeBuffer();
+		handleNodeBuffer();		
+	}
+	
+	  /*
+	   * (non-Javadoc)
+	   * @see net.sf.tweety.Parser#parseFormula(java.io.Reader)
+	   */
+	@Override
+	public Formula parseFormula(Reader reader) throws IOException, ParserException {
+		throw new UnsupportedOperationException();
 	}
 	
 }

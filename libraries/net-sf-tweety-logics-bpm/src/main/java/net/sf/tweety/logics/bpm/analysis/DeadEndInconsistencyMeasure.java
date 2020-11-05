@@ -33,7 +33,7 @@ import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
  * The DeadEndInconsistency value of a BPMN model is the number of activities without any successor activities
  * @author Benedikt Knopp
  */
-public class DeadEndInconsistencyMeasure implements InconsistencyMeasure<BpmnModel>{
+public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 
 	@Override
 	public Double inconsistencyMeasure(BpmnModel processModel) {

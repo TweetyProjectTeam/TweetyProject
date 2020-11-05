@@ -19,6 +19,8 @@
 package net.sf.tweety.logics.bpm.examples;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +32,7 @@ import org.xml.sax.SAXException;
 import net.sf.tweety.logics.commons.analysis.InconsistencyMeasure;
 
 import net.sf.tweety.logics.bpm.analysis.IndeterminateInconsistencyMeasure;
+import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.logics.bpm.analysis.DeadEndInconsistencyMeasure;
 import net.sf.tweety.logics.bpm.parser.RootParser;
 import net.sf.tweety.logics.bpm.plotting.BpmnModelPlotter;
@@ -53,8 +56,10 @@ public class InconsistencyMeasuresExamples {
 	
 	/**
 	 * @param args
+	 * @throws IOException 
+	 * @throws ParserException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParserException, IOException {
 
 		String modelPath = System.getProperty("user.dir") + "/../net-sf-tweety-logics-bpm/src/main/resources/";
 		File unproblematic_browsing = new File(modelPath + "unproblematic_browsing.bpmn");
@@ -71,16 +76,21 @@ public class InconsistencyMeasuresExamples {
 	
 	/**
 	 * @param modelFile a BPMN file according to the BPMN XML standard
+	 * @throws IOException 
+	 * @throws ParserException 
 	 */
-	private static void runExample(File modelFile) {
-		RootParser rootParser = new RootParser(modelFile);
-		try {
-			rootParser.parse();
+	private static void runExample(File modelFile) throws ParserException, IOException {
+		RootParser rootParser = new RootParser();
+		/*try {
+			rootParser.parseFile(modelFile);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		BpmnModel model = rootParser.getBpmnModel();
+		}*/
+		
+		FileReader reader = new FileReader(modelFile);
+		BpmnModel model  =  (BpmnModel) rootParser.parseBeliefBase(reader);
+		//BpmnModel model = rootParser.getBpmnModel();
 
 		BpmnModelPlotter plotter = new BpmnModelPlotter(model);
 		plotter.addLabel(modelFile.getName());
