@@ -20,6 +20,7 @@
 package net.sf.tweety.arg.dung.equivalence;
 
 import net.sf.tweety.arg.dung.syntax.*;
+import net.sf.tweety.arg.dung.util.EnumeratingDungTheoryGenerator;
 import net.sf.tweety.commons.util.SetTools;
 
 import java.util.*;
@@ -75,8 +76,8 @@ public class StrongEquivalence {
     }
 
     /**
-     * TODO check correctness
      * compute all strongly equivalent theories for the the given theory
+     * i.e. get all useless attacks of theory and use them to create other strongly equivalent theories
      * @param theory a dung theory
      * @return the collection of strongly equivalent theories
      */
@@ -94,6 +95,38 @@ public class StrongEquivalence {
             newTheory.addAllAttacks(subset);
 
             theories.add(newTheory);
+        }
+
+        return theories;
+    }
+
+    /**
+     * compute all strongly equivalent theories for the given theory
+     * i.e. enumerate all theories and compare to the base theory
+     * @param baseTheory a dung theory
+     * @return collection of strongly equivalent theories
+     */
+    public Collection<DungTheory> getStronglyEquivalentTheoriesNaive(DungTheory baseTheory) {
+        EnumeratingDungTheoryGenerator theoryGenerator = new EnumeratingDungTheoryGenerator();
+        int numArgs = baseTheory.size();
+        DungTheory baseKernel = this.kernel.getKernel(baseTheory);
+
+        Collection<DungTheory> theories = new HashSet<>();
+        while (theoryGenerator.hasNext()) {
+            DungTheory theory = theoryGenerator.next();
+
+            if (theory.size() > numArgs) {
+                break;
+            }
+            if (theory.size() < numArgs) {
+                //continue;
+            }
+
+            DungTheory kernelTheory = this.kernel.getKernel(theory);
+
+            if (kernelTheory.getAttacks().equals(baseKernel.getAttacks())) {
+                theories.add(theory);
+            }
         }
 
         return theories;
