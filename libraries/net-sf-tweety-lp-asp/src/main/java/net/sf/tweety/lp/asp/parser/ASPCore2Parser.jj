@@ -45,24 +45,21 @@ import net.sf.tweety.lp.asp.semantics.*;
  * The EBNF grammar for ASP-Core-2 is given as follows: <br>
  * PROGRAM ::== (STATEMENT)* (QUERY)? <br>
  * QUERY ::== LITERAL "?" <br>
- * STATEMENT ::== ":-" BODY_ELEMENTS "." | HEAD (":-" BODY_ELEMENTS)? "." | ":~"
- * BODY_ELEMENTS "." | OPTIMIZE "." <br>
+ * STATEMENT ::== ":-" BODY_ELEMENTS "." | HEAD (":-" BODY_ELEMENTS)? "." | ":~" | BODY_ELEMENTS "." | OPTIMIZE "." <br>
  * HEAD ::== (LITERAL "|")* LITERAL | CHOICE <br>
  * BODY_ELEMENTS ::== (BODY_ELEMENTS ",")? BODY_ELEMENT <br>
  * BODY_ELEMENT ::== NAF_LITERAL | ("not")? AGGREGATE <br>
  * CHOICE ::== (TERM BINOP)? "{" CHOICE_ELEMENTS "}" (BINOP TERM)? <br>
  * CHOICE_ELEMENTS ::== (CHOICE_ELEMENTS ";")? CHOICE_ELEMENT <br>
  * CHOICE_ELEMENT ::== LITERAL (":" NAF_LITERALS)? <br>
- * AGGREGATE ::== (TERM BINOP)? AGGREGATE_FUNCTION "{" AGGREGATE_ELEMENTS "}"
- * (BINOP TERM)? <br>
+ * AGGREGATE ::== (TERM BINOP)? AGGREGATE_FUNCTION "{" AGGREGATE_ELEMENTS "}" (BINOP TERM)? <br>
  * AGGREGATE_ELEMENTS ::== (AGGREGATE_ELEMENTS ";")? AGGREGATE_ELEMENT <br>
  * AGGREGATE_ELEMENT ::== (Terms)? (":" NAF_LITERALS)? <br>
  * AGGREGATE_FUNCTION ::== "#max" | "#min" | "#count" | "#sum" <br>
  * OPTIMIZE ::== OPTIMIZE_FUNCTION "{" (OPTIMIZE_ELEMENTS)? "}" <br>
  * OPTIMIZE_ELEMENTS ::== (OPTIMIZE_ELEMENTS ";")? OPTIMIZE_ELEMENT <br>
  * OPTIMIZE_ELEMENT ::== WEIGHT_AT_LEVEL (":" NAF_LITERALS)? <br>
- * OPTIMIZE_FUNCTION ::== "#maximize" | "#maximise" | "#minimize"| "#minimise"
- * <br>
+ * OPTIMIZE_FUNCTION ::== "#maximize" | "#maximise" | "#minimize"| "#minimise" <br>
  * WEIGHT_AT_LEVEL ::== TERM ("@" TERM)? ("," TERMS)? <br>
  * NAF_LITERALS ::== (NAF_LITERALS ",")? NAF_LITERAL <br>
  * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
@@ -179,10 +176,10 @@ TOKEN :
 |  <LESS_OR_EQ:          "<=">
 |  <GREATER_OR_EQ:       ">=">
 |  <AGGREGATE_COUNT:     "#count">
-|  <MINIMIZE:            "#minimi[zs]e">
-|  <MAXIMIZE:            "#maximi[zs]e">
-|  <AGGREGATE_MAX:       "#max">
-|  <AGGREGATE_MIN:       "#min">
+|  <MINIMIZE:            "#minimi"["z","s"]"e">
+|  <MAXIMIZE:            "#maximi"["z","s"]"e">
+|  <AGGREGATE_MAX:       "#max"~["i"]>
+|  <AGGREGATE_MIN:       "#min"~["i"]>
 |  <AGGREGATE_SUM:       "#sum">
 |  <CLINGO_SHOW: 	     "#show " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )*) "/" ("0" | ["1"-"9"](["0"-"9"])* ".")>
 }

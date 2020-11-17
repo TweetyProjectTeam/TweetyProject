@@ -21,10 +21,8 @@ package net.sf.tweety.lp.asp.writer;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.List;
 
 import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
 import net.sf.tweety.lp.asp.syntax.ASPRule;
 import net.sf.tweety.lp.asp.syntax.Program;
 
@@ -86,7 +84,7 @@ public class ClingoWriter {
 	 */
 	public void printProgram(Program p) throws IOException {
 		for (ASPRule r : p)
-			writer.write(printRule(r) + ".\n");
+			writer.write(printRule(r) + "\n");
 
 		// Optionally suppress irrelevant atoms from output.
 		if (usePredicateWhitelist) {
@@ -102,17 +100,8 @@ public class ClingoWriter {
 	 * @return String representation of the rule
 	 */
 	private String printRule(ASPRule r) {
-		String result = "";
-		if (!r.isConstraint())
-			result += r.getHead().printToClingo();
-		if (!r.isFact()) {
-			result += " :- ";
-			List<ASPBodyElement> body = r.getPremise();
-			for (int i = 0; i < body.size() - 1; i++)
-				result += body.get(i).printToClingo() + ",";
-			result += body.get(body.size() - 1).printToClingo();
-		}
-		return result;
+		System.out.println( r.printToClingo());
+		return r.printToClingo();
 	}
 
 	public void close() throws IOException {

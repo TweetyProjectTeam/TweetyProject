@@ -107,6 +107,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @param body a list of ASPBodyElement
 	 */
 	public ASPRule(ASPHead head, List<ASPBodyElement> body) {
+		for (ASPBodyElement b : body) {
+			if (b instanceof OptimizationStatement) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		}
 		this.head = head;
 		this.body = body;
 		this.weight = null;
@@ -122,6 +126,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(ASPLiteral head, ASPBodyElement b) {
 		this(head);
+		if (b instanceof OptimizationStatement) 
+			throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
 		this.body.add(b);
 		this.weight = null;
 		this.level = null;
@@ -136,6 +142,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(ASPHead head, ASPBodyElement b) {
 		this(head);
+		if (b instanceof OptimizationStatement) 
+			throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
 		this.body.add(b);
 		this.weight = null;
 		this.level = null;
@@ -149,6 +157,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @param body a list of ASPBodyElement
 	 */
 	public ASPRule(ASPLiteral head, List<ASPBodyElement> body) {
+		for (ASPBodyElement b : body) {
+			if (b instanceof OptimizationStatement) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		}
 		this.head = new ClassicalHead(head);
 		this.body = body;
 		this.weight = null;
@@ -163,11 +175,15 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(List<ASPBodyElement> body) {
 		this();
+		for (ASPBodyElement b : body) {
+			if (b instanceof OptimizationStatement && body.size()>1) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		}
 		this.body = body;
 	}
 
 	/**
-	 * Creates a constraint with the given weight and terms.
+	 * Creates a weak constraint with the given weight and terms.
 	 * 
 	 * @param nafliterals the naf literals
 	 * @param weight      some weight
@@ -175,13 +191,17 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(List<ASPBodyElement> nafliterals, Term<?> weight, List<Term<?>> terms) {
 		this();
+		for (ASPBodyElement b : body) {
+			if (b instanceof OptimizationStatement) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		}
 		this.body = nafliterals;
 		this.weight = weight;
 		this.constraint_terms = terms;
 	}
 
 	/**
-	 * Creates a constraint with the given weight, level and terms.
+	 * Creates a weak constraint with the given weight, level (priority) and terms.
 	 * 
 	 * @param body   a list of ASPBodyElement
 	 * @param weight a term
@@ -189,11 +209,27 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @param terms  a list of terms
 	 */
 	public ASPRule(List<ASPBodyElement> body, Term<?> weight, Term<?> level, List<Term<?>> terms) {
+		for (ASPBodyElement b : body) {
+			if (b instanceof OptimizationStatement) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		}
 		this.head = new ClassicalHead();
 		this.body = body;
 		this.weight = weight;
 		this.level = level;
 		this.constraint_terms = terms;
+	}
+	
+	/**
+	 * Creates a new rule with the given optimization 
+	 * statement. 
+	 * 
+	 * @param opt OptimizationStatement
+	 */
+	public ASPRule(OptimizationStatement opt) {
+		this();
+		this.body = new LinkedList<ASPBodyElement>();
+		body.add(opt);
 	}
 
 	/**
@@ -215,6 +251,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	@Override
 	public void addPremise(ASPBodyElement premise) {
+		if (premise instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty())) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
 		this.body.add(premise);
 	}
 
@@ -225,6 +263,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	@Override
 	public void addPremises(Collection<? extends ASPBodyElement> premises) {
+		for (ASPBodyElement b : premises)
+			if (b instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty() || premises.size()>1)) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
 		this.body.addAll(premises);
 	}
 
@@ -234,6 +275,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @param premise
 	 */
 	public void addBody(ASPBodyElement premise) {
+		if (premise instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty())) 
+			throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
 		addPremise(premise);
 	}
 
@@ -250,6 +293,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @param premises
 	 */
 	public void addBodyElements(Collection<? extends ASPBodyElement> premises) {
+		for (ASPBodyElement b : premises)
+			if (b instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty() || premises.size()>1)) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
 		addPremises(premises);
 	}
 
@@ -260,8 +306,11 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public void setBody(ASPBodyElement... aspBodyElements) {
 		List<ASPBodyElement> bes = new ArrayList<ASPBodyElement>();
-		for (ASPBodyElement a : aspBodyElements)
-			bes.add(a);
+		for (ASPBodyElement a : aspBodyElements) {
+			if (a instanceof OptimizationStatement && (!head.isEmpty() || aspBodyElements.length>1)) 
+				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+			bes.add(a); 
+		}
 		this.body = bes;
 	}
 
@@ -373,6 +422,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	@Override
 	public boolean isConstraint() {
 		return (head.isEmpty() && !body.isEmpty());
+	}
+	
+	public boolean isOptimizationStatement() {
+		return (body.get(0) instanceof OptimizationStatement);
 	}
 
 	/**
@@ -554,6 +607,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 				ret += head.toString();
 		}
 		if (!body.isEmpty()) {
+			if (this.body.get(0) instanceof OptimizationStatement) {
+				return (((OptimizationStatement)this.body.get(0)).printToClingo()) + ".";
+			}
 			ret += " :- " + body.get(0);
 			for (int i = 1; i < body.size(); ++i) {
 				ret += ", " + body.get(i);
@@ -579,38 +635,39 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	@Override
 	public String printToClingo() {
-		String ret = "";
-
-		if (!head.isEmpty()) {
-			if (head instanceof ClassicalHead) {
-				for (int i = 0; i < ((ClassicalHead) head).size() - 1; i++)
-					ret += ((ClassicalHead) head).get(i).printToClingo() + ",";
-				ret += ((ClassicalHead) head).get(((ClassicalHead) head).size() - 1).printToClingo();
-			} else
-				ret += head.printToClingo();
-		}
-		if (!body.isEmpty()) {
-			ret += " :- " + body.get(0);
-			for (int i = 1; i < body.size(); ++i) {
-				ret += ", " + body.get(i);
+		String result = "";
+		if (!this.isConstraint())
+			result += this.getHead().printToClingo();
+		if (!this.isFact()) {
+			if (this.body.get(0) instanceof OptimizationStatement) {
+				return (((OptimizationStatement)this.body.get(0)).printToClingo()) + ".";
 			}
+			if (head.isEmpty() && weight != null)
+				result += ":~ ";
+			else
+				result += " :- ";
+			List<ASPBodyElement> body = this.getPremise();
+			for (int i = 0; i < body.size() - 1; i++)
+				result += body.get(i).printToClingo() + ",";
+			result += body.get(body.size() - 1).printToClingo();
 		}
-		ret += ".";
-
+		
+		result += ".";
+		
 		if (weight != null) {
-			ret += " [" + weight.toString();
+			result += " [" + weight.toString();
 			if (level != null)
-				ret += "@" + level.toString();
+				result += "@" + level.toString();
 			if (!this.constraint_terms.isEmpty()) {
-				ret += ",";
+				result += ",";
 				for (int i = 1; i < constraint_terms.size() - 1; i++)
-					ret += constraint_terms.get(i) + ",";
-				ret += constraint_terms.get(constraint_terms.size() - 1).toString();
+					result += constraint_terms.get(i) + ",";
+				result += constraint_terms.get(constraint_terms.size() - 1).toString();
 			}
-			ret += "]";
+			result += "]";
 		}
-
-		return ret;
+		
+		return result;
 	}
 
 }

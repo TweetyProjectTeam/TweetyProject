@@ -8,7 +8,7 @@ import net.sf.tweety.lp.asp.semantics.*;
  * 
  * Parser for ASP programs in the ASP-Core-2 syntax 
  * <a href="https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf">https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf</a>.
- * This parser also supports most of the (<a href="https://potassco.org/clingo/">Clingo</a>) 
+ * This parser also supports most of the (<a href=" https://potassco.org/clingo/">Clingo</a>) 
  * and <a href="http://www.dlvsystem.com/html/DLV_User_Manual.html">DLV</a>
  * input syntaxes and provides additional methods for parsing answer sets given by the DLV and Clingo solvers.
  *
@@ -17,30 +17,27 @@ import net.sf.tweety.lp.asp.semantics.*;
  * The EBNF grammar for ASP-Core-2 is given as follows: <br>
  * PROGRAM ::== (STATEMENT)* (QUERY)? <br>
  * QUERY ::== LITERAL "?" <br>
- * STATEMENT ::== ":-" BODY_ELEMENTS "." | HEAD (":-" BODY_ELEMENTS)? "." | ":~"
- * BODY_ELEMENTS "." | OPTIMIZE "." <br>
+ * STATEMENT ::== ":-" BODY_ELEMENTS "." | HEAD (":-" BODY_ELEMENTS)? "." | ":~" | BODY_ELEMENTS "." | OPTIMIZE "." <br>
  * HEAD ::== (LITERAL "|")* LITERAL | CHOICE <br>
  * BODY_ELEMENTS ::== (BODY_ELEMENTS ",")? BODY_ELEMENT <br>
  * BODY_ELEMENT ::== NAF_LITERAL | ("not")? AGGREGATE <br>
  * CHOICE ::== (TERM BINOP)? "{" CHOICE_ELEMENTS "}" (BINOP TERM)? <br>
  * CHOICE_ELEMENTS ::== (CHOICE_ELEMENTS ";")? CHOICE_ELEMENT <br>
  * CHOICE_ELEMENT ::== LITERAL (":" NAF_LITERALS)? <br>
- * AGGREGATE ::== (TERM BINOP)? AGGREGATE_FUNCTION "{" AGGREGATE_ELEMENTS "}"
- * (BINOP TERM)? <br>
+ * AGGREGATE ::== (TERM BINOP)? AGGREGATE_FUNCTION "{" AGGREGATE_ELEMENTS "}" (BINOP TERM)? <br>
  * AGGREGATE_ELEMENTS ::== (AGGREGATE_ELEMENTS ";")? AGGREGATE_ELEMENT <br>
  * AGGREGATE_ELEMENT ::== (Terms)? (":" NAF_LITERALS)? <br>
  * AGGREGATE_FUNCTION ::== "#max" | "#min" | "#count" | "#sum" <br>
  * OPTIMIZE ::== OPTIMIZE_FUNCTION "{" (OPTIMIZE_ELEMENTS)? "}" <br>
  * OPTIMIZE_ELEMENTS ::== (OPTIMIZE_ELEMENTS ";")? OPTIMIZE_ELEMENT <br>
  * OPTIMIZE_ELEMENT ::== WEIGHT_AT_LEVEL (":" NAF_LITERALS)? <br>
- * OPTIMIZE_FUNCTION ::== "#maximize" | "#maximise" | "#minimize"| "#minimise"
- * <br>
+ * OPTIMIZE_FUNCTION ::== "#maximize" | "#maximise" | "#minimize"| "#minimise" <br>
  * WEIGHT_AT_LEVEL ::== TERM ("@" TERM)? ("," TERMS)? <br>
  * NAF_LITERALS ::== (NAF_LITERALS ",")? NAF_LITERAL <br>
  * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
  * LITERAL ::== ("-")? ID ("(" Terms ")")? <br>
  * BUILTIN_ATOM ::== TERM BINOP TERM <br>
- * BINOP ::== "=" | "!=" | "&lt;&gt;" | "&lt;" | "&gt;" | "&lt;=" | "&gt;=" <br>
+ * BINOP ::== "=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" <br>
  * TERMS ::== (TERMS ",")? TERM <br>
  * TERM ::== ID ("(" TERMS ")")? | NUMBER | STRING | VARIABLE | "_" | "(" TERM
  * ")" | "-" TERM | TERM ARITHOP TERM <br>
@@ -58,11 +55,11 @@ import net.sf.tweety.lp.asp.semantics.*;
  * <br> Other Clingo meta-statements (#include, #external, #program, #script and #const)
  * are currently not supported.
  * <br>
- * <br>
+ * <br>The following constructs from DLV are supported additionally to the ASP-Core-2 syntax:
+ * <br> -  TODO
  * @author Anna Gessler
  * 
  */
-@SuppressWarnings("unused")
 public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstants, ASPCore2ParserConstants {/*@bgen(jjtree)*/
   protected JJTASPCore2ParserState jjtree = new JJTASPCore2ParserState();private static ASPCore2Parser oneThreadParser = new ASPCore2Parser(new StringReader(""));
 
@@ -101,8 +98,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return visitor.visit(oneThreadParser.AnswerSet(), null);
   }
 
-  
-final public ASTAnswerSet AnswerSet() throws ParseException {
+  final public ASTAnswerSet AnswerSet() throws ParseException {
  /*@bgen(jjtree) AnswerSet */
   ASTAnswerSet jjtn000 = new ASTAnswerSet(JJTANSWERSET);
   boolean jjtc000 = true;
@@ -2717,11 +2713,11 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
-  /* Constructor with InputStream. */
+  /** Constructor with InputStream. */
   public ASPCore2Parser(java.io.InputStream stream) {
      this(stream, null);
   }
-  /* Constructor with InputStream and supplied encoding */
+  /** Constructor with InputStream and supplied encoding */
   public ASPCore2Parser(java.io.InputStream stream, String encoding) {
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new ASPCore2ParserTokenManager(jj_input_stream);
@@ -2732,11 +2728,11 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
@@ -2748,7 +2744,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Constructor. */
+  /** Constructor. */
   public ASPCore2Parser(java.io.Reader stream) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new ASPCore2ParserTokenManager(jj_input_stream);
@@ -2759,7 +2755,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
@@ -2771,7 +2767,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Constructor with generated Token Manager. */
+  /** Constructor with generated Token Manager. */
   public ASPCore2Parser(ASPCore2ParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -2781,7 +2777,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(ASPCore2ParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -2816,8 +2812,7 @@ final public ASTAnswerSet AnswerSet() throws ParseException {
     throw generateParseException();
   }
 
-  @SuppressWarnings("serial")
-static private final class LookaheadSuccess extends java.lang.Error { }
+  static private final class LookaheadSuccess extends java.lang.Error { }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {
@@ -2841,7 +2836,7 @@ static private final class LookaheadSuccess extends java.lang.Error { }
   }
 
 
-/* Get the next Token. */
+/** Get the next Token. */
   final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -2850,7 +2845,7 @@ static private final class LookaheadSuccess extends java.lang.Error { }
     return token;
   }
 
-/* Get the specific Token. */
+/** Get the specific Token. */
   final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
@@ -2882,23 +2877,26 @@ static private final class LookaheadSuccess extends java.lang.Error { }
       for (int i = 0; i < jj_endpos; i++) {
         jj_expentry[i] = jj_lasttokens[i];
       }
-      jj_entries_loop: for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
+      boolean exists = false;
+      for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
+        exists = true;
         int[] oldentry = (int[])(it.next());
         if (oldentry.length == jj_expentry.length) {
           for (int i = 0; i < jj_expentry.length; i++) {
             if (oldentry[i] != jj_expentry[i]) {
-              continue jj_entries_loop;
+              exists = false;
+              break;
             }
           }
-          jj_expentries.add(jj_expentry);
-          break jj_entries_loop;
+          if (exists) break;
         }
       }
+      if (!exists) jj_expentries.add(jj_expentry);
       if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
     }
   }
 
-  /* Generate ParseException. */
+  /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[45];

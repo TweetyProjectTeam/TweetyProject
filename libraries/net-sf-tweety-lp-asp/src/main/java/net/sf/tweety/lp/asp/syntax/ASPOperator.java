@@ -107,4 +107,17 @@ public class ASPOperator {
 		}
 	}
 	
+	public enum OptimizeFunction {
+		MINIMIZE, MAXIMIZE;
+		
+		@Override
+		public String toString() {
+			if (this.equals(OptimizeFunction.MINIMIZE)) 
+				return "#minimize";
+			else
+				return "#maximize";
+		}
+		
+	}
+	
 }

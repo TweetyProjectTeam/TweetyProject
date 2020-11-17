@@ -45,6 +45,8 @@ import net.sf.tweety.lp.asp.syntax.AggregateElement;
 import net.sf.tweety.lp.asp.syntax.ArithmeticTerm;
 import net.sf.tweety.lp.asp.syntax.ComparativeAtom;
 import net.sf.tweety.lp.asp.syntax.DefaultNegation;
+import net.sf.tweety.lp.asp.syntax.OptimizationElement;
+import net.sf.tweety.lp.asp.syntax.OptimizationStatement;
 import net.sf.tweety.lp.asp.syntax.Program;
 
 /**
@@ -88,14 +90,14 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 				if (node.jjtGetChild(i) instanceof ASTRuleList) {
 					List<ASPRule> rules = visit((ASTRuleList) node.jjtGetChild(i), null);
 					p.addAll(rules);
-				} else if (node.jjtGetChild(i) instanceof ASTQuery) {
+				} 
+				else if (node.jjtGetChild(i) instanceof ASTQuery) {
 					if (!p.hasQuery()) {
 						ASPLiteral q = visit((ASTQuery) node.jjtGetChild(i), null);
 						p.setQuery(q);
 					} else
 						throw new ParseException(
 								"Error: Multiple queries found. There can only be one query per program.");
-
 				}
 			}
 		} catch (ParseException e) {
@@ -136,6 +138,9 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 		Term<?> weight = null;
 		Term<?> level = null;
 		List<Term<?>> rightTerms = new ArrayList<Term<?>>();
+		
+		if (node.jjtGetChild(0) instanceof ASTOpt)
+			return visit((ASTOpt) node.jjtGetChild(0), null);
 
 		if (node.jjtGetChild(0) instanceof ASTHead)
 			head = visit((ASTHead) node.jjtGetChild(0), null);
@@ -315,30 +320,27 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 	// optimization problems. One optimize statement represents
 	// a set of weak constraints.
 	@Override
-	public List<ASPRule> visit(ASTOpt node, Object data) {
-		List<ASPRule> optelements = new ArrayList<ASPRule>();
+	public ASPRule visit(ASTOpt node, Object data) {
+		List<OptimizationElement> optelements = new ArrayList<OptimizationElement>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTOptElementList) {
 				optelements.addAll(visit((ASTOptElementList) node.jjtGetChild(i), null));
 			}
 		}
-
-		// Maximize statements are minimize statements with inverse weights
-		if (((ASTOptFunc) node.jjtGetChild(0)).maximize) {
-			for (ASPRule w : optelements) {
-				Term<?> weight = w.getWeight();
-				w.setWeight(new ArithmeticTerm(ASPOperator.ArithmeticOperator.MINUS, weight));
-			}
-		}
-		return optelements;
+		OptimizationStatement opt;
+		if (((ASTOptFunc) node.jjtGetChild(0)).maximize) 
+			opt = new OptimizationStatement(ASPOperator.OptimizeFunction.MAXIMIZE, optelements);
+		else
+			opt = new OptimizationStatement(ASPOperator.OptimizeFunction.MINIMIZE, optelements);
+		return new ASPRule(opt);
 	}
 
 	@Override
-	public List<ASPRule> visit(ASTOptElementList node, Object data) {
-		List<ASPRule> optelements = new ArrayList<ASPRule>();
+	public List<OptimizationElement> visit(ASTOptElementList node, Object data) {
+		List<OptimizationElement> optelements = new ArrayList<OptimizationElement>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTOptElement) {
-				ASPRule r = visit((ASTOptElement) node.jjtGetChild(i), null);
+				OptimizationElement r = visit((ASTOptElement) node.jjtGetChild(i), null);
 				optelements.add(r);
 			}
 		}
@@ -346,11 +348,11 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 	}
 
 	@Override
-	public ASPRule visit(ASTOptElement node, Object data) {
+	public OptimizationElement visit(ASTOptElement node, Object data) {
 		List<Term<?>> terms = visit((ASTWeight) node.jjtGetChild(0), null);
 		Term<?> weight = terms.remove(0);
 		Term<?> level = null;
-		if (node.hasLevel)
+		if (((ASTWeight) node.jjtGetChild(0)).hasLevel)
 			level = terms.remove(0);
 
 		List<ASPBodyElement> nafliterals = new ArrayList<ASPBodyElement>();
@@ -360,11 +362,11 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 				nafliterals = visit((ASTNAFLiteralList) node.jjtGetChild(i), null);
 			}
 		}
-
-		ASPRule wc = new ASPRule(nafliterals, weight, terms);
+		
+		OptimizationElement opt = new OptimizationElement(weight,terms,nafliterals);
 		if (level != null)
-			wc.setLevel(level);
-		return wc;
+			opt.setLevel(level);
+		return opt;
 	}
 
 	@Override

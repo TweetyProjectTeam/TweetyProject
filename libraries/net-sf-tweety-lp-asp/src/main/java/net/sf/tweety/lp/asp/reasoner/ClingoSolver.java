@@ -69,12 +69,25 @@ public class ClingoSolver extends ASPSolver {
 	private String options = "";
 
 	/**
+	 * If the program contains an optimization problem, the optimum weight (if found) is
+	 * found in this string.
+	 */
+	private String optimum = "";
+	
+	/**
+	 * If the program contains an optimization problem, the optimum weight (if found) is
+	 * found in this string.
+	 * @return optimum
+	 */
+	public String getOptimum() {
+		return optimum;
+	}
+
+	/**
 	 * Constructs a new instance pointing to a specific Clingo solver.
 	 * 
-	 * @param path2clingo
-	 *            binary location of Clingo on the hard drive
-	 * @param bash
-	 *            shell to run commands
+	 * @param path2clingo binary location of Clingo on the hard drive
+	 * @param bash        shell to run commands
 	 */
 	public ClingoSolver(String path2clingo, Shell bash) {
 		this.pathToSolver = path2clingo;
@@ -84,8 +97,7 @@ public class ClingoSolver extends ASPSolver {
 	/**
 	 * Constructs a new instance pointing to specific a Clingo solver.
 	 * 
-	 * @param path2clingo
-	 *            binary location of Clingo on the hard drive
+	 * @param path2clingo binary location of Clingo on the hard drive
 	 */
 	public ClingoSolver(String path2clingo) {
 		this.pathToSolver = path2clingo;
@@ -116,20 +128,24 @@ public class ClingoSolver extends ASPSolver {
 	 * @param output the output string
 	 * @return AnswerSetList
 	 * @throws SolverException if the solver had an issue
-	 * @throws ParseException if parsing failed
+	 * @throws ParseException  if parsing failed
 	 */
 	private List<AnswerSet> parseResult(String output) throws SolverException, ParseException {
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		if (output.contains("UNSATISFIABLE"))
 			return result;
 		else if (!output.contains("SATISFIABLE")) {
-			int error_index = output.indexOf("error");
-			if (error_index != -1) 
-				throw new SolverException("Clingo error: " + output.substring(error_index), 1);
-			else
-				throw new SolverException("Clingo returned no output that can be interpreted: " + output, 1);
+			if (output.contains("OPTIMUM FOUND"))
+				return this.parseOptimizationResult(output);
+			else {
+				int error_index = output.indexOf("error");
+				if (error_index != -1)
+					throw new SolverException("Clingo error: " + output.substring(error_index), 1);
+				else
+					throw new SolverException("Clingo returned no output that can be interpreted: " + output, 1);
+			}
 		}
-			
+
 		String[] as = output.split("Answer:\\s*[0-9]*\n");
 
 		for (int i = 1; i < as.length - 1; i++) {
@@ -141,6 +157,31 @@ public class ClingoSolver extends ASPSolver {
 		AnswerSet a = ASPCore2Parser.parseAnswerSet(final_as[0]);
 		result.add(a);
 
+		return result;
+	}
+
+	/**
+	 * Parses the result of a program that contains optimization statements. The optimal
+	 * answer set (if found) is the first entry of the returned list. 
+	 * 
+	 * @param output clingo output string
+	 * @return list of answer sets, the first answer set is the optimum
+	 * @throws ParseException
+	 */
+	private List<AnswerSet> parseOptimizationResult(String output) throws ParseException {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
+		String[] as = output.split("Answer:\\s*[0-9]*\n");
+		String[] optLines = as[as.length - 1].split("\n");
+		AnswerSet a = ASPCore2Parser.parseAnswerSet(optLines[0]);
+		this.optimum = optLines[1].substring(optLines[1].indexOf(":") + 2);
+		result.add(a);
+		
+		//Add other models
+		for (int i = 1; i < as.length - 1; i++) {
+			String [] asLines = as[i].split("\n");
+			result.add(ASPCore2Parser.parseAnswerSet(asLines[0]));
+		}
+		
 		return result;
 	}
 
@@ -176,25 +217,25 @@ public class ClingoSolver extends ASPSolver {
 		}
 		return result;
 	}
-	
+
 	@Override
-	public Boolean query(Program beliefbase, ASPLiteral formula) {		
+	public Boolean query(Program beliefbase, ASPLiteral formula) {
 		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
 
 	public Boolean query(Program beliefbase, ASPLiteral formula, InferenceMode inferenceMode) {
 		Collection<AnswerSet> answerSets = this.getModels(beliefbase);
-		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
-			for(AnswerSet e: answerSets)
-				if(!e.contains(formula))
+		if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
+			for (AnswerSet e : answerSets)
+				if (!e.contains(formula))
 					return false;
 			return true;
 		}
-		//credulous semantics
-		for(AnswerSet e: answerSets){
-			if(e.contains(formula))
-				return true;			
-		}			
+		// credulous semantics
+		for (AnswerSet e : answerSets) {
+			if (e.contains(formula))
+				return true;
+		}
 		return false;
 	}
 
@@ -223,6 +264,7 @@ public class ClingoSolver extends ASPSolver {
 	 * activated, answer sets will only contain atoms over predicates that are part
 	 * of the whitelist. This corresponds to the #show statement of the clingo input
 	 * language.
+	 * 
 	 * @param b whether to use a whitelist of predicate
 	 */
 	public void toggleOutputWhitelist(boolean b) {

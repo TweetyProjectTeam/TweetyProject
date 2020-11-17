@@ -387,9 +387,8 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	@Override
 	public String toString() {
 		String r = "{";
-		for (ASPRule a : this) {
+		for (ASPRule a : this)
 			r += a.toString() + " ";
-		}
 		r = r.substring(0, r.length() - 1);
 		if (this.hasQuery())
 			r += " " + query.toString() + "?";
