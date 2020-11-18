@@ -79,14 +79,15 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 		for(Labeling lab: potResult){
 			ideal = true;
 			for(Labeling lab2: potResult){
-				if(lab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(lab.getArgumentsOfStatus(ArgumentStatus.IN)))
-					if(lab2.getArgumentsOfStatus(ArgumentStatus.OUT).containsAll(lab.getArgumentsOfStatus(ArgumentStatus.OUT))){
-						ideal = false;
-						break;
-					}
+				if(lab != lab2)
+					if(lab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(lab.getArgumentsOfStatus(ArgumentStatus.IN)))
+						if(lab2.getArgumentsOfStatus(ArgumentStatus.OUT).containsAll(lab.getArgumentsOfStatus(ArgumentStatus.OUT))){
+							ideal = false;
+							break;
+						}
 			}
 			if(ideal)
-				lab.getArgumentsOfStatus(ArgumentStatus.IN);			
+				return lab.getArgumentsOfStatus(ArgumentStatus.IN);			
 		}		
 		// this should not happen as there is always an ideal extension;
 		throw new RuntimeException("Ideal extension seems to be undefined.");
