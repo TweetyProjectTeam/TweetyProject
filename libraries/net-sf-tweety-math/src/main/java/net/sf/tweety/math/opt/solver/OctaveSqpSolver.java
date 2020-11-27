@@ -32,7 +32,6 @@ import net.sf.tweety.math.equation.Equation;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.Solver;
 import net.sf.tweety.math.term.FloatConstant;

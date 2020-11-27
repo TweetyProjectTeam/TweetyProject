@@ -16,22 +16,26 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-
 package net.sf.tweety.math.examples;
+
+
 
 import java.util.ArrayList;
 
-import net.sf.tweety.math.opt.solver.SimulatedAnnealing;
+import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Term;
 
-public class KnapSack_solvedWithSimAn {
-	
-	
+/**
+ * Class implementing an example for a TSP on a cartesian fully connected graph
+ *
+ * @author Sebastian Franke
+ */
+
+public class Knapsack_solvedWithStochasticLocalSearch {
 	public static void main(String args[]) {
-		
 		
 		//define the maximum weight
 		FloatConstant maxl = new FloatConstant(15);
@@ -46,15 +50,20 @@ public class KnapSack_solvedWithSimAn {
 		}
 		KnapSack test = new KnapSack(elems, maxl);
 
-		
+
 		//solve the problem with Simulated Annealing
-		SimulatedAnnealing ts = new SimulatedAnnealing(100000, 1, 2000);
+		StochasticLocalSearch ts = new StochasticLocalSearch(100000, 10000, 0.5);
+		ArrayList<ElementOfCombinatoricsProb> initial = new ArrayList<ElementOfCombinatoricsProb>();
+		for(ElementOfCombinatoricsProb i : elems)
+			initial.add(i);
+
 		ArrayList<ElementOfCombinatoricsProb> mySol = ts.solve(test);
 		System.out.println("MySol: ");
 		for(ElementOfCombinatoricsProb i : mySol)
 			System.out.print(i.components + " ");
+
+		
 			
 		
 	}
 }
-

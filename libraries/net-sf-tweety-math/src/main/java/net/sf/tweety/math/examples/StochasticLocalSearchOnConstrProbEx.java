@@ -24,7 +24,7 @@ import net.sf.tweety.math.*;
 import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
-import net.sf.tweety.math.opt.solver.TabuSearchOnConstrProb;
+import net.sf.tweety.math.opt.solver.*;
 import net.sf.tweety.math.term.FloatVariable;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Power;
@@ -33,11 +33,11 @@ import net.sf.tweety.math.term.Term;
 import net.sf.tweety.math.term.Variable;
 
 /**
- * This class implements an example for Tabu search.
+ * This class implements an example for Simulated Annealing on optimization problems.
  * It is natively implemented
  * @author Sebastian Franke
  */
-public class TabuSearchOnConstrProbEx {
+public class StochasticLocalSearchOnConstrProbEx {
 
 	public static OptimizationProblem  createConstraintSatProb1() {
 		
@@ -48,13 +48,15 @@ public class TabuSearchOnConstrProbEx {
 		Inequation constr3 = new Inequation(m1, new IntegerConstant(50), 1);
 		Inequation constr4 = new Inequation(m2, new IntegerConstant(0), 3);
 
+
 		
 		Collection<Statement> constraints = new ArrayList<Statement>();
 		constraints.add(constr1);
 		constraints.add(constr2);
 		constraints.add(constr3);
 		constraints.add(constr4);
-	
+
+		
 		OptimizationProblem prob = new OptimizationProblem(0);
 		prob.addAll(constraints);
 
@@ -75,8 +77,8 @@ public class TabuSearchOnConstrProbEx {
 		OptimizationProblem prob = createConstraintSatProb1();
 		//Create starting point; all variables start at 0
 
-		//solve via Tabu search
-		TabuSearchOnConstrProb solver = new TabuSearchOnConstrProb(10000, 10, 1000);
+		//solve via SimAn
+		StochasticLocalSearchOnConstrProb solver = new StochasticLocalSearchOnConstrProb(5000, 1000, 0.5);
 		Map<Variable, Term> solution = solver.solve(prob);
 		System.out.println(solution.toString());
 		

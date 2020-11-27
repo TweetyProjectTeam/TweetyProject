@@ -1,21 +1,3 @@
-/*
- *  This file is part of "TweetyProject", a collection of Java libraries for
- *  logical aspects of artificial intelligence and knowledge representation.
- *
- *  TweetyProject is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License version 3 as
- *  published by the Free Software Foundation.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
- */
 package net.sf.tweety.math.opt.solver;
 
 import java.util.ArrayList;
@@ -23,40 +5,35 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.equation.Statement;
-import net.sf.tweety.math.opt.problem.*;
+import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
+import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.term.FloatConstant;
 import net.sf.tweety.math.term.OptProbElement;
-import net.sf.tweety.math.term.Variable;
 import net.sf.tweety.math.term.Term;
+import net.sf.tweety.math.term.Variable;
+
+public class StochasticLocalSearchOnConstrProb extends Solver{
 
 
-
-/**
- * implements a simple Tabu Search without long term memory
- * for optimization problems
- * @author Sebastian Franke
- *
- */
-public class TabuSearchOnConstrProb extends Solver{
-
-	/**the forbidden solutions*/
-	private ArrayList<Map<Variable, Term>> tabu = new ArrayList<Map<Variable, Term>> ();
 	/**the exact problem that is to  be solved*/
 	private ConstraintSatisfactionProblem prob;
-	private int maxIteration;
-	/**number of tabu solutions*/
-	private int tabuSize;
+
 	private int maxStepsWithNoImprove;
+	private double chanceForRandomStep;
+	private int maxIteration;
 	/** For randomization */
 	private Random rand = new Random();
+	
 	/** The magnitude of changing the value of a variable in the mutation step. */
 	private static final double VAR_MUTATE_STRENGTH = 0.5;
 	
-	public TabuSearchOnConstrProb(int maxIteration, int tabuSize, int maxStepsWithNoImprove) {
+	public StochasticLocalSearchOnConstrProb(int maxIteration, int maxStepsWithNoImprove, double chanceForRandomStep) {
 		this.maxIteration = maxIteration;
-		this.tabuSize = tabuSize;
 		this.maxStepsWithNoImprove = maxStepsWithNoImprove;
+		this.chanceForRandomStep = chanceForRandomStep;
 	}
 	
 	/**
@@ -114,40 +91,55 @@ public class TabuSearchOnConstrProb extends Solver{
 	 * @param currSol: the solution that every newly created solution uses as a initial solution in createNewSol
 	 * @return the best solution that was found and is a mutant of currSol
 	 */
-	public Map<Variable,Term> chooseANeighbor(Map<Variable,Term> currSol, int minIterations, int maxIterations, double threshold, Term t)
+	public Map<Variable,Term> chooseANeighbor(Map<Variable,Term> currSol, int minIterations, int maxIterations, double threshold, Term targetFunc)
 	{
 		int cnt = 0;
 		int thresholdCnt = 0;
 		boolean thresholdSwitch = false;
-		double newQual = Double.MAX_VALUE;
-		Map<Variable,Term> result = currSol;
-		while((cnt < minIterations || thresholdCnt < 10) && cnt < maxIteration)
+		ArrayList<Map<Variable, Term>> possibleSols = new ArrayList<Map<Variable, Term>>();
+		while((cnt < minIterations || thresholdCnt < 10) && cnt < maxIterations)
 		{
 			//create a new solution
 			Map<Variable,Term> newSol = createNewSol(currSol);
-			//only evaluate if the solution is not tabu
-			if(!tabu.contains(newSol))
-			{
-			double eval = t.replaceAllTerms(newSol).doubleValue();
-			//if the new solution is better than the best solution that was created here
-			if(eval <= newQual)
-			{
-				newQual = eval;
-				result = newSol;
-			}
+			//add the new solution to the neighborhood
+			possibleSols.add(newSol);
+			double eval = targetFunc.replaceAllTerms(newSol).doubleValue();
+			
 			if(thresholdSwitch == true)
 				thresholdCnt++;
 			else if(eval >= threshold)
 				thresholdSwitch = true;
 			cnt++;
-			}
 		}
+		if(rand.nextDouble() >= this.chanceForRandomStep)
+		{
+			int solDecider = rand.nextInt(possibleSols.size());
+			//choose a random solution to return
+			return possibleSols.get(solDecider);
+		}
+		else
+		{
+			Map<Variable,Term> newSol = possibleSols.get(0);
+			Map<Variable,Term> result = newSol;
+			double newQual =  targetFunc.replaceAllTerms(newSol).doubleValue();
+			for(int i = 0; i < possibleSols.size(); i++)
+			{
+				double eval = targetFunc.replaceAllTerms(newSol).doubleValue();
+				//if the new solution is better than the best solution that was created here
+				if(eval >= newQual)
+				{
+					newQual = eval;
+					result = newSol;
+				}
+			}
+			return result;
+		}
+		
 
-		return result;
 	}
-	
+
 	@Override
-	public Map<Variable,Term> solve(GeneralConstraintSatisfactionProblem problem) {
+	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) throws GeneralMathException {
 		// only optimization problems
 		this.prob = (ConstraintSatisfactionProblem) problem;
 		if(!(this.prob instanceof OptimizationProblem))
@@ -160,36 +152,36 @@ public class TabuSearchOnConstrProb extends Solver{
 		/**the current solution for the n-th iteration*/
 		Map<Variable, Term> currSol = new HashMap<Variable, Term>();
 		for(Variable i : ((ConstraintSatisfactionProblem) problem).getVariables()) {
-			currSol.put((Variable) i,  (Term) new FloatConstant((i.getUpperBound() + i.getLowerBound() / 2)));
+			currSol.put((Variable) i,  (Term) new FloatConstant((i.getUpperBound() + i.getLowerBound() / 3)));
 			
 		}
 
 
 		
 		Map<Variable, Term> bestSol = null;
-		double bestQual = Double.MAX_VALUE;
-		 
-
-		double currQual = minT.replaceAllTerms(currSol).doubleValue();
-		
-
+		double bestQual = Double.MIN_VALUE;
+		double currSolQual = 0;
 		
 		Integer cnt = 0;
 		int smthHappened = 0;
-		//break if max amount of iterations is reached or if there are no better solutions fund in maxStepsWithNoImprove steps
-		while (cnt < maxIteration && smthHappened < maxStepsWithNoImprove) {
+		//break if temp == 0 or if there are no better solutions fund in maxStepsWithNoImprove steps
+		while (cnt < this.maxIteration && smthHappened < this.maxStepsWithNoImprove) {
 			//construct a list for between 10 and 20 neighbors for the next step
 			Map<Variable,Term> newSol = this.chooseANeighbor(currSol, 10, 20, 1.0, minT);
-			//check which one of the neighborhood is the best
-			currSol = newSol;
-			currQual = minT.replaceAllTerms(currSol).doubleValue();
-			//update the tabu list			
-			tabu.add(currSol);
-			if(tabu.size() > tabuSize)
-				tabu.remove(0);
-			if(currQual < bestQual) {
+		
+				
+			//evaluate both soluions to see if we accept the new solution
+			double newSolQual = minT.replaceAllTerms(newSol).doubleValue();
+			currSolQual = minT.replaceAllTerms(currSol).doubleValue();
+			//System.out.println(newSolQual +" " + newSol.toString() + " " + currSolQual + "  "+ currSol.toString());
+				currSol = newSol;
+				currSolQual = newSolQual;
+			//check if new optimum was found
+			if(currSolQual > bestQual) {
+				
 				smthHappened = -1;
-				bestSol = currSol;			
+				bestSol = currSol;	
+				bestQual = currSolQual;
 			}
 			
 			//System.out.println("current solution: " + currSol);

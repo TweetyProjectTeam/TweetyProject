@@ -3,7 +3,6 @@ package net.sf.tweety.math.opt.problem;
 import java.util.Collection;
 import java.util.HashSet;
 
-import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.term.OptProbElement;
 
 public abstract class GeneralConstraintSatisfactionProblem extends  HashSet<OptProbElement>{

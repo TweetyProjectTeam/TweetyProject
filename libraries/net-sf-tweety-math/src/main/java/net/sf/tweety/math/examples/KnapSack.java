@@ -25,6 +25,7 @@ import net.sf.tweety.math.term.Sum;
 import net.sf.tweety.math.term.Term;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import net.sf.tweety.math.opt.problem.*;
 
@@ -37,6 +38,7 @@ public class KnapSack extends CombinatoricsProblem {
 
 	/**since this class is not used with ant optimization, we do not need values in the array*/
 	protected static int[][] graphRepresantation;
+	Random rand = new Random();
 
 	public KnapSack(ArrayList<ElementOfCombinatoricsProb> elements, Term maxWeight) {
 		super(elements, graphRepresantation);
@@ -92,12 +94,14 @@ public class KnapSack extends CombinatoricsProblem {
 	@Override
 	public ArrayList<ElementOfCombinatoricsProb> createRandomNewSolution(
 			ArrayList<ElementOfCombinatoricsProb> currSol) {
-		if(currSol == null)
+		if(currSol == null) {
 			currSol = new ArrayList<ElementOfCombinatoricsProb>();
+			currSol.add(this.elements.get(Math.abs(rand.nextInt() % this.elements.size())));
+		}
 		ArrayList<ElementOfCombinatoricsProb> newSol = new ArrayList<ElementOfCombinatoricsProb>();
 		for (ElementOfCombinatoricsProb j : currSol)
 			newSol.add(j);
-		int random = (int) (Math.random() * this.size());
+		int random = (int) (rand.nextInt() % this.elements.size());
 
 		int i = 0;
 		for (ElementOfCombinatoricsProb el : this.elements) {
@@ -132,7 +136,7 @@ public class KnapSack extends CombinatoricsProblem {
 		if (!isValid(sol))
 			return 0;
 		else {
-			return -1 * sumOfValues(sol);
+			return -1* sumOfValues(sol);
 		}
 
 	}

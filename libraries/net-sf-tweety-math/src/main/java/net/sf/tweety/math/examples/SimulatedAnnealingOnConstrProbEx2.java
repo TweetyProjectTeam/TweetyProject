@@ -21,7 +21,7 @@ import java.util.*;
 
 import net.sf.tweety.commons.ParserException;
 import net.sf.tweety.math.*;
-import net.sf.tweety.math.equation.Equation;
+import net.sf.tweety.math.equation.Inequation;
 import net.sf.tweety.math.equation.Statement;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.opt.solver.*;
@@ -43,13 +43,20 @@ public class SimulatedAnnealingOnConstrProbEx2 {
 		
 		FloatVariable m1 = new FloatVariable("Machine 1", -100, 100);
 		FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
-		Equation constr1 = new Equation(m1, new IntegerConstant(10));
-		Equation constr2 = new Equation(m2, new IntegerConstant(12));
+		Inequation constr1 = new Inequation(m1, new IntegerConstant(10), 3);
+		Inequation constr2 = new Inequation(m2, new IntegerConstant(12), 1);
+		Inequation constr3 = new Inequation(m1, new IntegerConstant(50), 1);
+		Inequation constr4 = new Inequation(m2, new IntegerConstant(0), 3);
 
-		Equation constr5 = new Equation(m1.add(m2), new IntegerConstant(16));
+
 		
 		Collection<Statement> constraints = new ArrayList<Statement>();
+		constraints.add(constr1);
+		constraints.add(constr2);
+		constraints.add(constr3);
+		constraints.add(constr4);
 
+		
 		OptimizationProblem prob = new OptimizationProblem(0);
 		prob.addAll(constraints);
 

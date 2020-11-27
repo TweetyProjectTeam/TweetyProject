@@ -23,7 +23,6 @@ package net.sf.tweety.math.opt.problem;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import net.sf.tweety.math.equation.Statement;

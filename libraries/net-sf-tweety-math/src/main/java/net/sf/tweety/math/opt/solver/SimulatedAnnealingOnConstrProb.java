@@ -89,20 +89,20 @@ public class SimulatedAnnealingOnConstrProb extends Solver{
 			}
 			
 			mutantSuccessful = true;
-			for(OptProbElement s : this.prob)
+			l1: for(OptProbElement s : this.prob)
 			{
 				
 				if(((Statement) s).isValid(((Statement) s).replaceAllTerms(mutant)) == false)
 				{
 					numberOfFailedTries++;
 					mutantSuccessful = false;
+					break l1;
 					
 				}
 
 			}
 		}
 		if(numberOfFailedTries == 5000) {
-			System.out.println("Wrong!");
 			return ind;
 		}
 			
@@ -116,7 +116,7 @@ public class SimulatedAnnealingOnConstrProb extends Solver{
 	 * @param currSol: the solution that every newly created solution uses as a initial solution in createNewSol
 	 * @return the best solution that was found and is a mutant of currSol
 	 */
-	public Map<Variable,Term> chooseANeighbor(Map<Variable,Term> currSol, int minIterations, int maxIterations, double threshold)
+	public Map<Variable,Term> chooseANeighbor(Map<Variable,Term> currSol, int minIterations, int maxIterations, double threshold, Term targetFunc)
 	{
 		int cnt = 0;
 		int thresholdCnt = 0;
@@ -128,7 +128,7 @@ public class SimulatedAnnealingOnConstrProb extends Solver{
 			Map<Variable,Term> newSol = createNewSol(currSol);
 			//add the new solution to the neighborhood
 			possibleSols.add(newSol);
-			double eval = ((OptimizationProblem) this.prob).getTargetFunction().replaceAllTerms(newSol).doubleValue();
+			double eval = targetFunc.replaceAllTerms(newSol).doubleValue();
 			
 			if(thresholdSwitch == true)
 				thresholdCnt++;
@@ -149,38 +149,50 @@ public class SimulatedAnnealingOnConstrProb extends Solver{
 		if(!(this.prob instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
 		double temp = startTemp;
+		Term minT;
+		if(((OptimizationProblem) prob).getType() == 1)
+			minT = ((OptimizationProblem) prob).getTargetFunction().mult(new FloatConstant(-1));
+		else minT = ((OptimizationProblem) prob).getTargetFunction();
+		
 		/**the current solution for the n-th iteration*/
 		Map<Variable, Term> currSol = new HashMap<Variable, Term>();
-		for(Variable i : ((ConstraintSatisfactionProblem) problem).getVariables())
-			currSol.put((Variable) i,  (Term) new FloatConstant((i.getUpperBound() - i.getLowerBound() / 2)));
-		double currQual = ((OptimizationProblem) this.prob).getTargetFunction().replaceAllTerms(currSol).doubleValue();
+		for(Variable i : ((ConstraintSatisfactionProblem) problem).getVariables()) {
+			currSol.put((Variable) i,  (Term) new FloatConstant((i.getUpperBound() + i.getLowerBound() / 2)));
+			
+		}
+
+
 		
-		Map<Variable, Term> bestSol = currSol;
-		double bestQual = currQual;
+		Map<Variable, Term> bestSol = new HashMap<Variable, Term>();
+		double bestQual = Double.MIN_VALUE;
 		
 		Integer cnt = 0;
 		int smthHappened = 0;
 		//break if temp == 0 or if there are no better solutions fund in maxStepsWithNoImprove steps
 		while (temp > 0 && smthHappened < maxStepsWithNoImprove) {
 			//construct a list for between 10 and 20 neighbors for the next step
-			Map<Variable,Term> newSol = this.chooseANeighbor(currSol, 10, 20, 1.0);
+			Map<Variable,Term> newSol = this.chooseANeighbor(currSol, 10, 20, 1.0, minT);
 		
 				
 			double randomDecider = rand.nextDouble();
 			//evaluate both soluions to see if we accept the new solution
-			double newSolQual = ((OptimizationProblem) this.prob).getTargetFunction().replaceAllTerms(newSol).doubleValue();
-			double currSolQual = ((OptimizationProblem) this.prob).getTargetFunction().replaceAllTerms(currSol).doubleValue();
+			double newSolQual = minT.replaceAllTerms(newSol).doubleValue();
+			double currSolQual = minT.replaceAllTerms(currSol).doubleValue();
+			//System.out.println(newSolQual + " " + currSolQual);
 			//check if we accept the new solution
 			if(Math.exp(-(newSolQual - currSolQual) / temp) >= randomDecider)
+			{
 				currSol = newSol;
+				currSolQual = newSolQual;
+			}
 			//check if new optimum was found
-			if(currQual < bestQual) {
+			if(currSolQual > bestQual) {
 				smthHappened = -1;
 				bestSol = currSol;	
 				bestQual = currSolQual;
 			}
 			
-			System.out.println("current solution: " + currSol);
+			//System.out.println("current solution: " + currSol);
 			cnt++;
 			smthHappened++;
 			

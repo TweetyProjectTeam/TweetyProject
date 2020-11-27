@@ -90,7 +90,7 @@ public class TabuSearch extends CombinatoricsSolver {
 				bestSol = currSol;			
 			}
 			
-			System.out.println("current solution: " + currSol);
+			//System.out.println("current solution: " + currSol);
 			cnt++;
 			smthHappened++;
 			

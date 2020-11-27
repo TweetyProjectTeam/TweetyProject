@@ -83,7 +83,7 @@ public class SimulatedAnnealing extends CombinatoricsSolver {
 				bestSol = currSol;			
 			}
 			
-			System.out.println("current solution: " + currSol);
+			//System.out.println("current solution: " + currSol);
 			cnt++;
 			smthHappened++;
 			temp -= this.decreasePerIt;

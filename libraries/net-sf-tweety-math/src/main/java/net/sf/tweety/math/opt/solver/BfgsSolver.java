@@ -26,7 +26,6 @@ import java.util.Map;
 import net.sf.tweety.math.GeneralMathException;
 import net.sf.tweety.math.matrix.Matrix;
 import net.sf.tweety.math.opt.problem.GeneralConstraintSatisfactionProblem;
-import net.sf.tweety.math.opt.problem.ConstraintSatisfactionProblem;
 import net.sf.tweety.math.opt.problem.OptimizationProblem;
 import net.sf.tweety.math.term.IntegerConstant;
 import net.sf.tweety.math.term.Term;
