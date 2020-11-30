@@ -18,12 +18,12 @@
  */
 package net.sf.tweety.graphs;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import net.sf.tweety.commons.util.SetTools;
 import net.sf.tweety.math.matrix.Matrix;
 import net.sf.tweety.math.term.IntegerConstant;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Instance of this class represent graphs with nodes of type T
@@ -35,10 +35,10 @@ import net.sf.tweety.math.term.IntegerConstant;
 public class DefaultGraph<T extends Node> implements Graph<T> {
 
 	/** The set of nodes */
-	private Set<T> nodes;
+	protected Set<T> nodes;
 
 	/** The set of edges */
-	private Set<Edge<T>> edges;
+	protected Set<Edge<T>> edges;
 
 	/**
 	 * Creates an empty graph.
