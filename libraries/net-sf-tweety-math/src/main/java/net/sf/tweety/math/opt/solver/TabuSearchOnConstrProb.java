@@ -121,7 +121,7 @@ public class TabuSearchOnConstrProb extends Solver{
 		boolean thresholdSwitch = false;
 		double newQual = Double.MAX_VALUE;
 		Map<Variable,Term> result = currSol;
-		while((cnt < minIterations || thresholdCnt < 10) && cnt < maxIteration)
+		while((cnt < minIterations || thresholdCnt < 10) && cnt < maxIterations)
 		{
 			//create a new solution
 			Map<Variable,Term> newSol = createNewSol(currSol);

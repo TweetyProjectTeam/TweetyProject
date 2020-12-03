@@ -1,3 +1,22 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+
 package net.sf.tweety.math.opt.solver;
 
 import java.util.ArrayList;
@@ -5,6 +24,13 @@ import java.util.ArrayList;
 import net.sf.tweety.math.opt.problem.CombinatoricsProblem;
 import net.sf.tweety.math.term.ElementOfCombinatoricsProb;
 
+
+/**
+ * implements the Iterates local search algorithm
+ * for combinatorial problems
+ * @author Sebastian Franke
+ *
+ */
 public class IteratedLocalSearch extends CombinatoricsSolver{
 	
 	private CombinatoricsProblem prob;
@@ -18,6 +44,11 @@ public class IteratedLocalSearch extends CombinatoricsSolver{
 		this.maxIterations = maxIterations;
 	}
 	
+	/**
+	 * performs one step of a local search
+	 * @param currSol the current state of which we check the neighborhood
+	 * @return the best neighbor / the current state
+	 */
 	public ArrayList<ElementOfCombinatoricsProb> bestNeighbor(ArrayList<ElementOfCombinatoricsProb> currSol) {
 
 		ArrayList<ArrayList<ElementOfCombinatoricsProb>> candidateNeighbors = this.prob.formNeighborhood(currSol, 10, 20, 1.0);
@@ -34,7 +65,10 @@ public class IteratedLocalSearch extends CombinatoricsSolver{
 
 		return newSol;
 	}
-	
+	/**
+	 * changes the solution drastically to escape a local minimum
+	 * @param currSol the solution to be pertubated
+	 */
 	public ArrayList<ElementOfCombinatoricsProb> pertubate(ArrayList<ElementOfCombinatoricsProb> currSol){
 		double max = this.perturbationStrength * (double) this.prob.elements.size();
 		for(int i = 0; i < (int) max; i++)
@@ -57,6 +91,7 @@ public class IteratedLocalSearch extends CombinatoricsSolver{
 		
 		while(cnt < maxIterations) {
 			boolean localSearch = true;
+			//local search until local optimum is found
 			while(localSearch == true && cnt < maxIterations)
 			{
 				ArrayList<ElementOfCombinatoricsProb> newSol = bestNeighbor(currSol);
@@ -66,25 +101,29 @@ public class IteratedLocalSearch extends CombinatoricsSolver{
 				cnt++;
 
 			}
-
+			//check if the new optimum is a new global optimum
 			if(this.prob.evaluate(currSol) < this.prob.evaluate(bestSol))
 				bestSol = currSol;
 
 
 			localSearch = true;
-
+			/*check if the new local optimum is better than the last local optimum
+			 * if the new one is better, continue with the new one
+			 * else continue with the old optimum
+			 * */	
 			if(visitedMinima.size() == 0 ? false : 
 					this.prob.evaluate(currSol) < this.prob.evaluate(visitedMinima.get(visitedMinima.size() - 1))) {
 				restarts++;
 
 				currSol = visitedMinima.get(visitedMinima.size() - 1); 
 			}
-			
+			//add the new optimum to the visited optima
 			if(!visitedMinima.contains(currSol)){
 
 				visitedMinima.add(currSol);
 			}
 			currSol = pertubate(currSol);
+			//if the same optimum is found too often, make a fresh start
 			if(restarts == this.maxnumberOfRestarts) {
 				restarts = 0;
 				currSol = this.prob.createRandomNewSolution(null);
