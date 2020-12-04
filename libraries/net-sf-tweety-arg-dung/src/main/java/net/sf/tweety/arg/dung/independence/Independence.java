@@ -44,9 +44,15 @@ public class Independence {
      * @param argsA a set of arguments
      * @param argsB a set of arguments
      * @param argsC a set of arguments
+     * @param pruneOutAttacks a flag indicating if attacks from arguments that are always out should be pruned. default=false
      * @return true iff argsA and argsB are independent given argsC in theory
      */
-    public static boolean isIndependent(DungTheory theory, Collection<Argument> argsA, Collection<Argument> argsB, Collection<Argument> argsC) {
+    public static boolean isIndependent(DungTheory theory, Collection<Argument> argsA, Collection<Argument> argsB, Collection<Argument> argsC, boolean pruneOutAttacks) {
+        // prune theory first if the flag is set to true
+        if (pruneOutAttacks) {
+            theory = Independence.pruneTheory(theory);
+        }
+
         // transform theory into d-graph
         SimpleGraph<Argument> dGraph = Independence.computeDGraph(theory);
 
@@ -61,6 +67,56 @@ public class Independence {
     }
 
     /**
+     * compute whether args and argsB are independent given argsC in the given AF
+     * argsA, argsB and argsC are disjoint
+     * @param theory a dung theory
+     * @param argsA a set of arguments
+     * @param argsB a set of arguments
+     * @param argsC a set of arguments
+     * @return true iff argsA and argsB are independent given argsC in theory
+     */
+    public static boolean isIndependent(DungTheory theory, Collection<Argument> argsA, Collection<Argument> argsB, Collection<Argument> argsC) {
+        return Independence.isIndependent(theory, argsA, argsB, argsC, false);
+    }
+
+    /**
+     * compute the smallest set of arguments which needs to be observed so that argsA and argsB are independent in the given AF
+     * argsA and argsB are disjoint
+     * @param theory a dung theory
+     * @param argsA a set of arguments
+     * @param argsB a set of arguments
+     * @param pruneOutAttacks a flag indicating if attacks from arguments that are always out should be pruned. default=false
+     * @return the smallest set of arguments which we need to observe so that argsA and argsB are independent
+     */
+    public static Collection<Collection<Argument>> isIndependentGiven(DungTheory theory, Collection<Argument> argsA, Collection<Argument> argsB, boolean pruneOutAttacks) {
+        Collection<Collection<Argument>> result = new HashSet<>();
+        int setSize = Integer.MAX_VALUE;
+
+        // all arguments neither in argsA or argsB
+        Collection<Argument> spareArguments = new HashSet<>(theory);
+        spareArguments.removeAll(argsA);
+        spareArguments.removeAll(argsB);
+
+        // sort subsets by size
+        List<Set<Argument>> subsets = new ArrayList<>(new SetTools<Argument>().subsets(spareArguments));
+        subsets.sort(Comparator.comparing(Collection::size));
+
+        // try each subset beginning with the smallest
+        for (Collection<Argument> subset: subsets) {
+            if (subset.size() > setSize) {
+                // if the subset is bigger than the first found set, stop searching
+                break;
+            }
+            if (Independence.isIndependent(theory, argsA, argsB, subset, pruneOutAttacks)) {
+                // first subset which makes argsA and argsB independent determines the size of the sets
+                setSize = subset.size();
+                result.add(subset);
+            }
+        }
+        return result;
+    }
+
+    /**
      * compute the smallest set of arguments which needs to be observed so that argsA and argsB are independent in the given AF
      * argsA and argsB are disjoint
      * @param theory a dung theory
@@ -68,19 +124,8 @@ public class Independence {
      * @param argsB a set of arguments
      * @return the smallest set of arguments which we need to observe so that argsA and argsB are independent
      */
-    public static Collection<Argument> isIndependentGiven(DungTheory theory, Collection<Argument> argsA, Collection<Argument> argsB) {
-        //TODO fix, subsets method does not work for this
-        // all arguments neither in argsA or argsB
-        Collection<Argument> spareArguments = new HashSet<>(theory);
-        spareArguments.removeAll(argsA);
-        spareArguments.removeAll(argsB);
-
-        for (Collection<Argument> subset: new SetTools<Argument>().subsets(spareArguments)) {
-            if (Independence.isIndependent(theory, argsA, argsB, subset)) {
-                return subset;
-            }
-        }
-        return null;
+    public static Collection<Collection<Argument>> isIndependentGiven(DungTheory theory, Collection<Argument> argsA, Collection<Argument> argsB) {
+        return Independence.isIndependentGiven(theory, argsA, argsB, false);
     }
 
     /**

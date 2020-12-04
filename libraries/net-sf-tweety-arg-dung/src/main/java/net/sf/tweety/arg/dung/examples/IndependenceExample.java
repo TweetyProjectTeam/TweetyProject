@@ -86,10 +86,7 @@ public class IndependenceExample {
         System.out.println(Independence.isIndependent(theory, A, B, C));
 
         // find smallest set C, for which A and B are independent
-        // TODO not fully working as of yet
         System.out.print(A + " and " + B + " are independent, given: ");
         System.out.println(Independence.isIndependentGiven(theory, A, B));
-
-
     }
 }
