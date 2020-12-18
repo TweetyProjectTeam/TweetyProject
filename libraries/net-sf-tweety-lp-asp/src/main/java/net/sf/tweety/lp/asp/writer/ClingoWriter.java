@@ -100,7 +100,6 @@ public class ClingoWriter {
 	 * @return String representation of the rule
 	 */
 	private String printRule(ASPRule r) {
-		System.out.println( r.printToClingo());
 		return r.printToClingo();
 	}
 
