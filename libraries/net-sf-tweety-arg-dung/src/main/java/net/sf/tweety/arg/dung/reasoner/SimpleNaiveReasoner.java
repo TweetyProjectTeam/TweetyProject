@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
 package net.sf.tweety.arg.dung.reasoner;
@@ -29,7 +29,7 @@ import java.util.*;
  *
  * @author Lars Bengel
  */
-public class NaiveReasoner extends AbstractExtensionReasoner {
+public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
     public Collection<Extension> getModels(DungTheory bbase) {
         DungTheory restrictedTheory = new DungTheory(bbase);
         // remove all self-attacking arguments

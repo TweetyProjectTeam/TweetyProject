@@ -47,7 +47,7 @@ public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
             }
         }
         // we only have to consider naive extensions
-        Collection<Extension> naiveExtensions = new NaiveReasoner().getModels(bbase);
+        Collection<Extension> naiveExtensions = new SimpleNaiveReasoner().getModels(bbase);
         Collection<Extension> extensions = new HashSet<>();
         for (Extension ext: naiveExtensions) {
             boolean scooc = true;

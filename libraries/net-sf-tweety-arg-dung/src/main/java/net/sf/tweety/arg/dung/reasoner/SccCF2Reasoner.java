@@ -104,7 +104,7 @@ public class SccCF2Reasoner extends AbstractExtensionReasoner {
             subExts = this.getModels(subTheory);
         } else {
             // compute naive extensions of sub theory(scc)
-            subExts = new NaiveReasoner().getModels(subTheory);
+            subExts = new SimpleNaiveReasoner().getModels(subTheory);
         }
 
         Set<Extension> result = new HashSet<Extension>();
