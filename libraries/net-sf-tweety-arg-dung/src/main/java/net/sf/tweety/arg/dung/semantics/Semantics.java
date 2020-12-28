@@ -25,14 +25,18 @@
 public enum Semantics {
 	CF ("conflict-free semantics", "CF"),
 	ADM ("admissible semantics", "ADM"),
+	WAD ("weakly-admissible semantics", "WAD"),
 	CO ("complete semantics", "CO"),
 	GR ("grounded semantics", "GR"),
 	PR ("preferred semantics", "PR"),
 	ST ("stable semantics", "ST"),
 	STG ("stage semantics", "STG"),
+	STG2 ("stage2 semantics", "STG2"),
 	SST ("semi-stable semantics", "SST"),
 	ID ("ideal semantics", "ID"),
 	CF2 ("CF2 semantics", "CF2"),
+	SCF2 ("SCF2 semantics", "SCF2"),
+	N ("Naive semantics", "N"),
 	diverse ("diverse semantics", "div");
 	
 	public static final Semantics GROUNDED_SEMANTICS = GR,
@@ -40,11 +44,15 @@ public enum Semantics {
 		PREFERRED_SEMANTICS = PR,
 		COMPLETE_SEMANTICS = CO,
 		ADMISSIBLE_SEMANTICS = ADM,
+		WEAKLY_ADMISSIBLE_SEMANTICS = WAD,
 		CONFLICTFREE_SEMANTICS = CF,
 		SEMISTABLE_SEMANTICS = SST,
 		IDEAL_SEMANTICS = ID,
 		STAGE_SEMANTICS = STG,
-		CF2_SEMANTICS = CF2;
+		STAGE2_SEMANTICS = STG2,
+		CF2_SEMANTICS = CF2,
+		SCF2_SEMANTICS = SCF2,
+		NAIVE_SEMANTICS = N;
 		
 	/** The description of the semantics. */
 	private String description;
