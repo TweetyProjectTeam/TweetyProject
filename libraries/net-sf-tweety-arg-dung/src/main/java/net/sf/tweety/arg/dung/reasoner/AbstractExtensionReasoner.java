@@ -82,7 +82,11 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 			case SST: return new SimpleSemiStableReasoner();
 			case ID: return new SimpleIdealReasoner();
 			case STG: return new SimpleStageReasoner();
+			case STG2: return new Stage2Reasoner();
 			case CF2: return new SccCF2Reasoner();
+			case SCF2: return new SCF2Reasoner();
+			case WAD: return new WeaklyAdmissibleReasoner();
+			case N: return new SimpleNaiveReasoner();
 		default:
 			throw new IllegalArgumentException("Unknown semantics.");			
 		}		
