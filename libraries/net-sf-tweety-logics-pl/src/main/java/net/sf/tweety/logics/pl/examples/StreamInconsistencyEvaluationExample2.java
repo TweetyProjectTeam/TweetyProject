@@ -39,7 +39,7 @@ import net.sf.tweety.logics.commons.analysis.streams.WindowInconsistencyMeasurem
 //import net.sf.tweety.logics.pl.analysis.ContensionInconsistencyMeasurementProcess;
 //import net.sf.tweety.logics.pl.analysis.HsInconsistencyMeasurementProcess;
 import net.sf.tweety.logics.pl.analysis.PlWindowInconsistencyMeasurementProcess;
-import net.sf.tweety.logics.pl.sat.LingelingSolver;
+import net.sf.tweety.logics.pl.sat.CmdLineSatSolver;
 import net.sf.tweety.logics.pl.sat.MarcoMusEnumerator;
 import net.sf.tweety.logics.pl.sat.PlMusEnumerator;
 import net.sf.tweety.logics.pl.sat.SatSolver;
@@ -77,7 +77,7 @@ public class StreamInconsistencyEvaluationExample2 {
 		LpSolve.setTmpFolder(new File(TMP_FILE_FOLDER));
 		Solver.setDefaultLinearSolver(new LpSolve());
 		SatSolver.setTempFolder(new File(TMP_FILE_FOLDER));
-		SatSolver.setDefaultSolver(new LingelingSolver("/home/mthimm/strinc/lingeling/lingeling"));
+		SatSolver.setDefaultSolver(new CmdLineSatSolver("/home/mthimm/strinc/lingeling/lingeling"));
 		PlMusEnumerator.setDefaultEnumerator(new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"));
 		PlSignature signature = new PlSignature(SIGNATURE_SIZE);
 		// -----------------------------------------
