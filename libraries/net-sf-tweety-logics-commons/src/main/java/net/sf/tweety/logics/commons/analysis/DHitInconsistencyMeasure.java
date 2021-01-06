@@ -78,4 +78,13 @@ public class DHitInconsistencyMeasure<T extends Interpretation<B,S>,B extends Be
 		}
 		return val;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "hit-distance";
+	}
 }

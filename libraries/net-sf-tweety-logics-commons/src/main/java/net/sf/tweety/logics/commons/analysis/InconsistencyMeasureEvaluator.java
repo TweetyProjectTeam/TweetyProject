@@ -40,6 +40,7 @@ import net.sf.tweety.commons.BeliefSet;
 import net.sf.tweety.commons.Formula;
 import net.sf.tweety.commons.Parser;
 import net.sf.tweety.commons.ParserException;
+import net.sf.tweety.commons.util.Pair;
 
 /**
  * This class provides functionality to quickly load or generate sample datasets
@@ -57,6 +58,11 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 * The dataset used for testing. Consists of a collection of knowledge bases.
 	 */
 	private List<U> dataset = new ArrayList<U>();
+	
+	/**
+	 * Stores (file-)name of the datasat entries.
+	 */
+	private List<String> dataset_names = new ArrayList<String>();
 
 	/**
 	 * The set of inconsistency measures that will be evaluated.
@@ -66,12 +72,20 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	/**
 	 * Timeout for inconsistency value computation, in ms.
 	 */
-	private long TIMEOUT = 20000;
+	private long TIMEOUT = 60000;
 
 	/**
 	 * Time function used to measure time.
 	 */
 	private Supplier<Long> time = () -> System.nanoTime() / 1000000;
+
+	/**
+	 * Create a new empty InconsistencyMeasureEvaluator.
+	 * 
+	 * @param measure an inconsistency measure
+	 */
+	public InconsistencyMeasureEvaluator() {
+	}
 
 	/**
 	 * Create a new InconsistencyMeasureEvaluator with the given inconsistency
@@ -152,6 +166,7 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 */
 	public void addKnowledgeBase(U kb) {
 		this.dataset.add(kb);
+		this.dataset_names.add("TweetyKB"); 
 	}
 
 	/**
@@ -161,6 +176,8 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 */
 	public void addKnowledgeBases(List<U> kbs) {
 		this.dataset.addAll(kbs);
+		for (int i = 0; i < kbs.size(); i++)
+			this.dataset_names.add("TweetyKB"); 
 	}
 
 	/**
@@ -169,7 +186,7 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 * 
 	 * @param path        that contains knowledge bases (one knowledge base per
 	 *                    file)
-	 * @param appropriate parser for the format the knowledge bases are saved in
+	 * @param p			  appropriate parser for the format the knowledge bases are saved in
 	 *                    (i.e. DimacsParser for files in Dimacs format, PlParser
 	 *                    for files in Tweety pl Syntax)
 	 * @param n           maximum number of knowledge bases to parse
@@ -177,14 +194,22 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 */
 	public void parseDatasetFromPath(String path, Parser<U, T> p, int n) throws FileNotFoundException, ParserException, IOException {
 		File dir = new File(path);
+		if (dir.isFile()) {
+			U kb = p.parseBeliefBaseFromFile(dir.getAbsolutePath());
+			this.dataset.add(kb);
+			this.dataset_names.add(dir.getName());
+			return;
+		}
 		File[] directoryListing = dir.listFiles();
 		if (directoryListing != null) {
 			int i = 0;
 			for (File child : directoryListing) {
-				if (i++ > n)
+				if (i++ >= n)
 					break;
+				if (child.isFile()) {
 				U kb = p.parseBeliefBaseFromFile(child.getAbsolutePath());
 				this.dataset.add(kb);
+				this.dataset_names.add(child.getName()); }
 			}
 		}
 	}
@@ -195,11 +220,11 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 * 
 	 * @param sampler
 	 * @param n                  how many knowledge bases will be added at most
-	 * @param addConsistentBases if false, only inconsistent bases are generated
 	 */
-	public void addFromSampler(Iterator<U> sampler, int n, boolean addConsistentBases) {
+	public void addFromSampler(Iterator<U> sampler, int n) {
 		for (int i = 0; (sampler.hasNext() && i < n); i++) {
 			this.dataset.add(sampler.next());
+			this.dataset_names.add(sampler.getClass().getSimpleName());
 		}
 	}
 
@@ -219,31 +244,51 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 			list_of_results.put(i.toString(), results);
 		}
 
-		// used to implement timeout
-		ExecutorService executorService = Executors.newSingleThreadExecutor();
-		for (BeliefSet<T, ?> kb : this.dataset) {
+		for (int j = 0; j < this.dataset.size(); j++) {
+			U kb = this.dataset.get(j);
 			for (BeliefSetInconsistencyMeasure<T> i : inconsistency_measures) {
-				InconsistencyMeasureResult result;
+				ExecutorService executorService = Executors.newSingleThreadExecutor();
+				InconsistencyMeasureResult result = null;
 				long startTime = time.get();
 				Future<InconsistencyMeasureResult> task = executorService.submit(() -> InconsistencyMeasureResult.ok(i.inconsistencyMeasure(kb)));
 				try {
 					result = task.get(this.TIMEOUT, TimeUnit.MILLISECONDS);
-				} catch (InterruptedException | TimeoutException | ExecutionException e) {
+				} catch (TimeoutException e) {
 					result = InconsistencyMeasureResult.timeout();
+					task.cancel(true);
+				}  catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+					task.cancel(true);
 				}
 				long elapsedTime = time.get() - startTime;
 				result.setElapsedTime(elapsedTime);
-
 				List<InconsistencyMeasureResult> results = list_of_results.get(i.toString());
 				results.add(result);
 				list_of_results.put(i.toString(), results);
-
+				executorService.shutdownNow();
 			}
+			
 		}
-		executorService.shutdown();
 		
 		List<String> measureNames = inconsistency_measures.stream().map( e -> e.toString() ).collect( Collectors.toList() );
-		return new InconsistencyMeasureReport<T,U>(measureNames, this.dataset, list_of_results);
+		return new InconsistencyMeasureReport<T,U>(measureNames, this.dataset, this.dataset_names, list_of_results);
+	}
+	
+	/**
+	 * @return the dataset of this evaluator
+	 */
+	public List<U> getDataset() {
+		return this.dataset;
+	}
+	
+	/**
+	 * @return the dataset of this evaluator, where each entry is the (file-)name and the corresponding kb
+	 */
+	public List<Pair<String,U>> getDatasetWithNames() {
+		List<Pair<String,U>> result = new ArrayList<Pair<String,U>>();
+		for (int i = 0; i < this.dataset.size(); i++) 
+			result.add(new Pair<String,U>(this.dataset_names.get(i), this.dataset.get(i)));
+		return result;
 	}
 	
 }

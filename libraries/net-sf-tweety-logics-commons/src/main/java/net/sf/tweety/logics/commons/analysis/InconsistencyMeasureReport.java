@@ -19,10 +19,8 @@
 package net.sf.tweety.logics.commons.analysis;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +40,7 @@ import net.sf.tweety.commons.Formula;
 public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T, ?>> {
 	private Map<String, List<InconsistencyMeasureResult>> results;
 	private List<U> instances; // The dataset of belief bases.
+	private List<String> instances_names; // The dataset of belief bases.
 	private List<String> measures; // Names of all inconsistency measures that are part of this report.
 
 	/**
@@ -52,10 +51,11 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 	 * @param measures list of strings representing inconsistency measure names 
 	 * @param instances list of knowledge bases
 	 */
-	public InconsistencyMeasureReport( List<String> measures, List<U> instances, Map<String, List<InconsistencyMeasureResult>> results) {
+	public InconsistencyMeasureReport( List<String> measures, List<U> instances, List<String> instances_names, Map<String, List<InconsistencyMeasureResult>> results) {
 		this.results = results;
 		this.measures = measures;
 		this.instances = instances;
+		this.instances_names = instances_names;
 	}
 	
 	/**
@@ -66,6 +66,26 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 	 */
 	public InconsistencyMeasureResult getIthResult(String measure, int i) {
 		return results.get(measure).get(i);
+	}
+	
+	/**
+	 * Returns the result for the ith instance for the given measure.
+	 * @param measure name of inconsistency measure
+	 * @param i
+	 * @return result for ith instance for the given measure
+	 */
+	public U getIthInstance(int i) {
+		return this.instances.get(i);
+	}
+	
+	/**
+	 * Returns the result for the ith instance for the given measure.
+	 * @param measure name of inconsistency measure
+	 * @param i
+	 * @return result for ith instance for the given measure
+	 */
+	public String getIthInstanceName(int i) {
+		return this.instances_names.get(i);
 	}
 	
 	/**
@@ -104,35 +124,6 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 			}
 		}
 		return (mean >= 0) ? (mean / size) : -1;
-	}
-
-	/**
-	 * Returns the median time in the results of the given inconsistency measure,
-	 * not counting the timed out instances. Returns -1 if all instances are timed
-	 * out instances.
-	 * 
-	 * @param measure name of inconsistency measure
-	 * @return median time
-	 */
-	public double getMedianTime(String measure) {
-		ArrayList<InconsistencyMeasureResult> sortedCopy = new ArrayList<InconsistencyMeasureResult>(results.get(measure));
-		Iterator<InconsistencyMeasureResult> it = sortedCopy.iterator();
-		// remove timed out instances
-		while (it.hasNext()) {
-			InconsistencyMeasureResult r = it.next();
-			if (r.getStatus() == InconsistencyMeasureResult.Status.TIMEOUT)
-				it.remove();
-		}
-		if (sortedCopy.isEmpty())
-			return -1;
-
-		// sort results by times
-		Collections.sort(sortedCopy, (a, b) -> (int) (a.getElapsedTime() - b.getElapsedTime()));
-
-		int mid = sortedCopy.size() / 2;
-		if (mid != 0 && mid % 2 == 0)
-			return (sortedCopy.get(mid).getElapsedTime() + sortedCopy.get(mid - 1).getElapsedTime()) / 2.0;
-		return sortedCopy.get(mid).getElapsedTime();
 	}
 
 	/**
@@ -212,7 +203,6 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 		stats.put("# of instances", instances.size());
 		stats.put("# of timeouts", countTimeouts(measure));
 		stats.put("Mean time", (int) getMeanTime(measure));
-		stats.put("Median time", (int) getMedianTime(measure));
 		stats.put("Max time", (int) getMaxTime(measure));
 		stats.put("Min time", (int) getMinTime(measure));
 		return stats;
@@ -227,7 +217,6 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 		availableStats.add("# of instances");
 		availableStats.add("# of timeouts");
 		availableStats.add("Mean time");
-		availableStats.add("Median time");
 		availableStats.add("Max time");
 		availableStats.add("Min time");
 		return availableStats;
