@@ -131,6 +131,7 @@ public class ClingoSolver extends ASPSolver {
 	 * @throws ParseException  if parsing failed
 	 */
 	private List<AnswerSet> parseResult(String output) throws SolverException, ParseException {
+		this.outputData = output;
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		if (output.contains("UNSATISFIABLE"))
 			return result;
@@ -169,6 +170,7 @@ public class ClingoSolver extends ASPSolver {
 	 * @throws ParseException
 	 */
 	private List<AnswerSet> parseOptimizationResult(String output) throws ParseException {
+		this.outputData = output;
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		String[] as = output.split("Answer:\\s*[0-9]*\n");
 		String[] optLines = as[as.length - 1].split("\n");
