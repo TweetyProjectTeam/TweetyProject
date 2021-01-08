@@ -32,6 +32,7 @@ import net.sf.tweety.lp.asp.parser.ASPCore2Parser;
 import net.sf.tweety.lp.asp.parser.InstantiateVisitor;
 import net.sf.tweety.lp.asp.parser.ParseException;
 import net.sf.tweety.lp.asp.reasoner.ClingoSolver;
+import net.sf.tweety.lp.asp.reasoner.SolverException;
 import net.sf.tweety.lp.asp.semantics.AnswerSet;
 import net.sf.tweety.lp.asp.syntax.ASPAtom;
 import net.sf.tweety.lp.asp.syntax.ASPBodyElement;
@@ -51,9 +52,9 @@ import net.sf.tweety.lp.asp.syntax.Program;
  * @author Anna Gessler
  */
 public class OptimizeExample {
-	private static String CLINGO_PATH = "/your/path/to/clingo";
+	private static String CLINGO_PATH =  "/your/path/to/clingo";
 
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws IOException, ParseException, SolverException {
 		Program hotelsExample = new Program();
 
 		// Represent that we have 5 hotels
@@ -132,7 +133,7 @@ public class OptimizeExample {
 		// When using optimization statements with clingo, the optimal answer set is the
 		// first entry of the returned answer set
 		System.out.println("\nOptimal model:" + as.get(0));
-		System.out.println("Optimization:" + solver.getOptimum());
+		System.out.println("Optimization:" + solver.getOptimumString());
 		System.out.println("All models:" + as);
 
 		// Using the parser to create optimization statements

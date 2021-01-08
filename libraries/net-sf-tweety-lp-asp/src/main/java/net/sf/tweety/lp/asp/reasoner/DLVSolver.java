@@ -49,6 +49,12 @@ public class DLVSolver extends ASPSolver {
 	 * Shell to run DLV
 	 */
 	private Shell bash;
+	
+	/**
+	 * Additional command line options for DLV. 
+	 * Default value is empty.
+	 */
+	private String options = "";
 
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
@@ -68,12 +74,35 @@ public class DLVSolver extends ASPSolver {
 		this.pathToSolver = pathToDLV;
 		this.bash = bash;
 	}
-
+	
 	/**
-	 * Additional command line options for DLV. 
-	 * Default value is empty.
+	 * Returns a characterizing model (answer set) 
+	 * of the given belief base using the given 
+	 * upper integer limit.
+	 * 
+	 * @param p a program
+	 * @param maxInt the max number of models to be returned
+	 * @return AnswerSet
 	 */
-	private String options = "";
+	public Collection<AnswerSet> getModels(Program p, int maxInt) {
+		this.integerMaximum = maxInt;
+		return getModels(p);
+	}
+	
+	/**
+	 * Returns a characterizing model (answer set) 
+	 * of the given belief base using the given 
+	 * upper integer limit.
+	 * 
+	 * @param p a program
+	 * @param maxInt the max number of models to be returned
+	 * @return AnswerSet
+	 */
+	public AnswerSet getModel(Program p, int maxInt) {
+		this.integerMaximum = maxInt;
+		return getModel(p);
+	}
+
 
 	@Override
 	public List<AnswerSet> getModels(Program p) {
