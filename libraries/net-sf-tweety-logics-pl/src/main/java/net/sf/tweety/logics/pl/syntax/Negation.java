@@ -36,95 +36,111 @@ public class Negation extends PlFormula {
 	 * The formula within this negation.
 	 */
 	private PlFormula formula;
-	
+
 	/**
 	 * Creates a new negation with the given formula.
+	 * 
 	 * @param formula the formula within the negation.
 	 */
-	public Negation(PlFormula formula){
-		this.formula = formula;	
+	public Negation(PlFormula formula) {
+		this.formula = formula;
 	}
-	
+
 	/**
 	 * Returns the formula within this negation.
+	 * 
 	 * @return the formula within this negation.
 	 */
-	public PlFormula getFormula(){
+	public PlFormula getFormula() {
 		return this.formula;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#
+	 * collapseAssociativeFormulas()
 	 */
 	@Override
-	public PlFormula collapseAssociativeFormulas(){
+	public PlFormula collapseAssociativeFormulas() {
 		return new Negation(this.formula.collapseAssociativeFormulas());
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#hasLowerBindingPriority(net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#
+	 * hasLowerBindingPriority(net.sf.tweety.logics.propositionallogic.syntax.
+	 * PropositionalFormula)
 	 */
-	public boolean hasLowerBindingPriority(PlFormula other){
+	public boolean hasLowerBindingPriority(PlFormula other) {
 		// negations have the highest binding priority
 		return false;
 	}
-	
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString(){
-		if(this.formula instanceof AssociativePlFormula || this.formula instanceof Negation)			
+	public String toString() {
+		if (this.formula instanceof AssociativePlFormula || this.formula instanceof Negation)
 			return LogicalSymbols.CLASSICAL_NEGATION() + "(" + this.formula + ")";
 		return LogicalSymbols.CLASSICAL_NEGATION() + this.formula;
 	}
-	
-  /* (non-Javadoc)
-   * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
-   */
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
+	 */
 	@Override
 	public PlFormula toNnf() {
-    // remove double negation    
-    if(formula instanceof Negation)
-      return ((Negation)formula).formula.toNnf();
+		// remove double negation
+		if (formula instanceof Negation)
+			return ((Negation) formula).formula.toNnf();
+		if (formula instanceof Implication || formula instanceof Equivalence || formula instanceof ExclusiveDisjunction)
+			return (new Negation(formula.toNnf())).toNnf();
 
-     // Distribute negation inside conjunctions or disjunctions according to deMorgan's laws:
-     // -(p & q)  = -p || -q
-     // -(p || q) = -p & -q
-    if(formula instanceof Conjunction) {
-      Conjunction c = (Conjunction)formula;
-      Disjunction d = new Disjunction();
-      
-      for(PlFormula p : c) {
-        d.add( new Negation( p ).toNnf() );
-      }
-      return d;
-    }
-    
-    if(formula instanceof Disjunction) {
-       Disjunction d = (Disjunction)formula;
-       Conjunction c = new Conjunction();
-       
-       for(PlFormula p : d) {
-         c.add( new Negation( p ).toNnf() );
-       }
-       return c;
-    }
-    return this;
+		// Distribute negation inside conjunctions or disjunctions according to
+		// deMorgan's laws:
+		// -(p & q) = -p || -q
+		// -(p || q) = -p & -q
+		if (formula instanceof Conjunction) {
+			Conjunction c = (Conjunction) formula;
+			Disjunction d = new Disjunction();
+			for (PlFormula p : c) 
+				d.add(new Negation(p).toNnf());
+			return d;
+		}
+
+		if (formula instanceof Disjunction) {
+			Disjunction d = (Disjunction) formula;
+			Conjunction c = new Conjunction();
+			for (PlFormula p : d) 
+				c.add(new Negation(p).toNnf());
+			return c;
+		}
+		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
 	 */
-	public PlFormula trim(){
+	public PlFormula trim() {
 		PlFormula f = this.formula.trim();
-		if(f instanceof Negation)
-			return ((Negation)f).formula;
+		if (f instanceof Negation)
+			return ((Negation) f).formula;
 		return new Negation(f);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -135,7 +151,9 @@ public class Negation extends PlFormula {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -174,83 +192,103 @@ public class Negation extends PlFormula {
 	public boolean isLiteral() {
 		return (formula instanceof Proposition);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getLiterals()
 	 */
 	@Override
-	public Set<PlFormula> getLiterals(){
+	public Set<PlFormula> getLiterals() {
 		Set<PlFormula> result = new HashSet<PlFormula>();
-		if(this.isLiteral())			
+		if (this.isLiteral())
 			result.add(this);
-		else result.addAll(this.formula.getLiterals());
+		else
+			result.addAll(this.formula.getLiterals());
 		return result;
 	}
-	
+
 	@Override
 	public PlSignature getSignature() {
 		return formula.getSignature();
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
 	 */
 	@Override
-	public Conjunction toCnf() {	
-		if(this.formula instanceof Negation){
-			return ((Negation)this.formula).getFormula().toCnf();
-		}else if(this.formula instanceof Conjunction){
+	public Conjunction toCnf() {
+		if (this.formula instanceof Negation) {
+			return ((Negation) this.formula).getFormula().toCnf();
+		} else if (this.formula instanceof Conjunction) {
 			Disjunction disj = new Disjunction();
-			for(PlFormula f: (Conjunction) this.formula)
-				disj.add((PlFormula)f.complement());
+			for (PlFormula f : (Conjunction) this.formula)
+				disj.add((PlFormula) f.complement());
 			return disj.toCnf();
-		}else if(this.formula instanceof Disjunction){
+		} else if (this.formula instanceof Disjunction) {
 			Conjunction conj = new Conjunction();
-			for(PlFormula f: (Disjunction) this.formula)
-				conj.add((PlFormula)f.complement());
+			for (PlFormula f : (Disjunction) this.formula)
+				conj.add((PlFormula) f.complement());
 			return conj.toCnf();
-		}else if(this.formula instanceof Contradiction){
+		} else if (this.formula instanceof Contradiction) {
 			Conjunction conj = new Conjunction();
 			Disjunction disj = new Disjunction();
 			disj.add(new Tautology());
 			conj.add(disj);
 			return conj;
-		} if(this.formula instanceof Tautology){
+		} else if (this.formula instanceof Tautology) {
 			Conjunction conj = new Conjunction();
 			Disjunction disj = new Disjunction();
 			disj.add(new Contradiction());
 			conj.add(disj);
 			return conj;
-		}
+		} else if (this.formula instanceof Implication || this.formula instanceof Equivalence || this.formula instanceof ExclusiveDisjunction)
+			return new Negation(this.formula.toCnf()).toCnf();
 		Conjunction conj = new Conjunction();
 		Disjunction disj = new Disjunction();
 		disj.add(this);
 		conj.add(disj);
 		return conj;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.
+	 * logics.pl.syntax.PropositionalSignature)
 	 */
 	@Override
 	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Set<PossibleWorld> models = PossibleWorld.getAllPossibleWorlds(sig);
-		for(PossibleWorld w: this.formula.getModels(sig))
+		for (PossibleWorld w : this.formula.getModels(sig))
 			models.remove(w);
 		return models;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(net.sf.tweety.logics.pl.syntax.Proposition)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula#numberOfOccurrences(net.
+	 * sf.tweety.logics.pl.syntax.Proposition)
 	 */
-	public int numberOfOccurrences(Proposition p){
+	public int numberOfOccurrences(Proposition p) {
 		return this.formula.numberOfOccurrences(p);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.
+	 * logics.pl.syntax.Proposition,
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
 	 */
-	public PlFormula replace(Proposition p, PlFormula f, int i){
+	public PlFormula replace(Proposition p, PlFormula f, int i) {
 		return new Negation(this.formula.replace(p, f, i));
 	}
 }

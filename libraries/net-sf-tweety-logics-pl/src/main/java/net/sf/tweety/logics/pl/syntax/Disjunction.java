@@ -34,70 +34,76 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  * @author Tim Janus
  */
 public class Disjunction extends AssociativePlFormula {
-	
+
 	/**
-	 * Creates a new disjunction with the given inner formulas. 
+	 * Creates a new disjunction with the given inner formulas.
+	 * 
 	 * @param formulas a collection of formulas.
 	 */
-	public Disjunction(Collection<? extends PlFormula> formulas){
+	public Disjunction(Collection<? extends PlFormula> formulas) {
 		super(formulas);
 	}
-	
-	public Disjunction(PlFormula... formulas){
+
+	public Disjunction(PlFormula... formulas) {
 		super(new HashSet<>());
-		for(PlFormula f: formulas)
+		for (PlFormula f : formulas)
 			this.add(f);
 	}
-	
+
 	/**
 	 * Creates a new (empty) disjunction.
 	 */
-	public Disjunction(){
+	public Disjunction() {
 		this(new HashSet<PlFormula>());
 	}
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#
+	 * collapseAssociativeFormulas()
 	 */
 	@Override
-	public PlFormula collapseAssociativeFormulas(){
-		if(this.isEmpty())
+	public PlFormula collapseAssociativeFormulas() {
+		if (this.isEmpty())
 			return new Contradiction();
-		if(this.size() == 1)
+		if (this.size() == 1)
 			return this.iterator().next().collapseAssociativeFormulas();
 		Disjunction newMe = new Disjunction();
-		for(PlFormula f: this){
+		for (PlFormula f : this) {
 			PlFormula newF = f.collapseAssociativeFormulas();
-			if(newF instanceof Disjunction)
+			if (newF instanceof Disjunction)
 				newMe.addAll((Disjunction) newF);
-			else newMe.add(newF);
+			else
+				newMe.add(newF);
 		}
 		return newMe;
 	}
-	
+
 	/**
 	 * Creates a new disjunction with the two given formulae
-	 * @param first a propositional formula.
+	 * 
+	 * @param first  a propositional formula.
 	 * @param second a propositional formula.
 	 */
-	public Disjunction(PlFormula first, PlFormula second){
+	public Disjunction(PlFormula first, PlFormula second) {
 		this();
 		this.add(first);
 		this.add(second);
 	}
-	 
-  /* (non-Javadoc)
-   * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
-   */
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
+	 */
 	@Override
 	public PlFormula toNnf() {
-	  Disjunction d = new Disjunction();
-    for(PlFormula p : this) {
-      d.add( p.toNnf() );
-    }
-    return d;
+		Disjunction d = new Disjunction();
+		for (PlFormula p : this) 
+			d.add(p.toNnf());
+		return d;
 	}
 
 	@Override
@@ -118,77 +124,93 @@ public class Disjunction extends AssociativePlFormula {
 
 	@Override
 	public String getEmptySymbol() {
-		return LogicalSymbols.TAUTOLOGY();
+		return LogicalSymbols.CONTRADICTION();
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
 	 */
 	@Override
-	public Conjunction toCnf() {	
+	public Conjunction toCnf() {
 		Set<Set<PlFormula>> conjs = new HashSet<Set<PlFormula>>();
-		for(PlFormula f: this)
-			conjs.add(new HashSet<PlFormula>(f.toCnf()));				
+		for (PlFormula f : this)
+			conjs.add(new HashSet<PlFormula>(f.toCnf()));
 		Collection<PlFormula> newConjs = new HashSet<PlFormula>();
-		SetTools<PlFormula> setTools = new SetTools<PlFormula>();		
-		for(Set<PlFormula> permut: setTools.permutations(conjs)){
+		SetTools<PlFormula> setTools = new SetTools<PlFormula>();
+		for (Set<PlFormula> permut : setTools.permutations(conjs)) {
 			Disjunction disj = new Disjunction();
-			for(PlFormula f: permut)
-				disj.addAll(((Disjunction)f));
+			for (PlFormula f : permut)
+				disj.addAll(((Disjunction) f));
 			newConjs.add(disj);
-		}		
+		}
 		return (Conjunction) new Conjunction(newConjs).trim();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
 	 */
-	public PlFormula trim(){
+	public PlFormula trim() {
 		Set<PlFormula> disj = new HashSet<PlFormula>();
-		for(PlFormula f: this.support)
+		for (PlFormula f : this.support)
 			disj.add(f.trim());
 		return new Disjunction(disj);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.
+	 * logics.pl.syntax.PropositionalSignature)
 	 */
 	@Override
 	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
 		Iterator<PlFormula> it = this.support.iterator();
-		if(!it.hasNext())
+		if (!it.hasNext())
 			return PossibleWorld.getAllPossibleWorlds(sig);
 		models.addAll(it.next().getModels(sig));
-		while(it.hasNext())
+		while (it.hasNext())
 			models.addAll(it.next().getModels(sig));
 		return models;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#isClause()
 	 */
 	@Override
-	public boolean isClause(){
-		for(PlFormula f: this.getFormulas())
-			if(!f.isLiteral())
+	public boolean isClause() {
+		for (PlFormula f : this.getFormulas())
+			if (!f.isLiteral())
 				return false;
 		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.
+	 * logics.pl.syntax.Proposition,
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
 	 */
-	public PlFormula replace(Proposition p, PlFormula f, int i){
+	public PlFormula replace(Proposition p, PlFormula f, int i) {
 		int num = 0;
 		Disjunction n = new Disjunction();
-		for(PlFormula sub: this.support.getFormulas()){
-			if(num < i && num + sub.numberOfOccurrences(p) >= i ){
-				n.add(sub.replace(p, f, i-num));
-			}else n.add(sub.clone());
+		for (PlFormula sub : this.support.getFormulas()) {
+			if (num < i && num + sub.numberOfOccurrences(p) >= i) {
+				n.add(sub.replace(p, f, i - num));
+			} else
+				n.add(sub.clone());
 			num += sub.numberOfOccurrences(p);
 		}
-		return n;		
+		return n;
 	}
 }

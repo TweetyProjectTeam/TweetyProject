@@ -33,70 +33,76 @@ import net.sf.tweety.logics.pl.semantics.PossibleWorld;
  * @author Tim Janus
  */
 public class Conjunction extends AssociativePlFormula {
-		
+
 	/**
-	 * Creates a new conjunction with the given inner formulas. 
+	 * Creates a new conjunction with the given inner formulas.
+	 * 
 	 * @param formulas a collection of formulas.
 	 */
-	public Conjunction(Collection<? extends PlFormula> formulas){
+	public Conjunction(Collection<? extends PlFormula> formulas) {
 		super(formulas);
 	}
-	
+
 	/**
 	 * Creates a new (empty) conjunction.
 	 */
-	public Conjunction(){
+	public Conjunction() {
 		this(new HashSet<PlFormula>());
 	}
-	
+
 	/**
 	 * Creates a new conjunction with the two given formulae
-	 * @param first a propositional formula.
+	 * 
+	 * @param first  a propositional formula.
 	 * @param second a propositional formula.
 	 */
-	public Conjunction(PlFormula first, PlFormula second){
+	public Conjunction(PlFormula first, PlFormula second) {
 		this();
 		this.add(first);
 		this.add(second);
-	}	
+	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#collapseAssociativeFormulas()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#
+	 * collapseAssociativeFormulas()
 	 */
 	@Override
-	public PlFormula collapseAssociativeFormulas(){
-		if(this.isEmpty())
+	public PlFormula collapseAssociativeFormulas() {
+		if (this.isEmpty())
 			return new Tautology();
-		if(this.size() == 1)
+		if (this.size() == 1)
 			return this.iterator().next().collapseAssociativeFormulas();
 		Conjunction newMe = new Conjunction();
-		for(PlFormula f: this){
+		for (PlFormula f : this) {
 			PlFormula newF = f.collapseAssociativeFormulas();
-			if(newF instanceof Conjunction)
+			if (newF instanceof Conjunction)
 				newMe.addAll((Conjunction) newF);
-			else newMe.add(newF);
+			else
+				newMe.add(newF);
 		}
 		return newMe;
 	}
-		
-	
-  /* (non-Javadoc)
-   * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
-   */
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toNNF()
+	 */
 	@Override
 	public PlFormula toNnf() {
-    Conjunction c = new Conjunction();
-    for(PlFormula p : this) {
-      c.add( p.toNnf() );
-    }
-    return c;
+		Conjunction c = new Conjunction();
+		for (PlFormula p : this)
+			c.add(p.toNnf());
+		return c;
 	}
 
 	@Override
 	public Conjunction clone() {
 		return new Conjunction(support.copyHelper(this));
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -111,68 +117,86 @@ public class Conjunction extends AssociativePlFormula {
 
 	@Override
 	public String getEmptySymbol() {
-		return LogicalSymbols.CONTRADICTION();
+		return LogicalSymbols.TAUTOLOGY();
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.propositionallogic.syntax.PropositionalFormula#toCnf()
 	 */
 	@Override
 	public Conjunction toCnf() {
 		Collection<PlFormula> cnf = new HashSet<PlFormula>();
-		for(PlFormula conjunct: this)
-			for(PlFormula f: conjunct.toCnf())
-			cnf.add(f);		
+		for (PlFormula conjunct : this)
+			for (PlFormula f : conjunct.toCnf())
+				cnf.add(f);
 		return (Conjunction) new Conjunction(cnf).trim();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#trim()
 	 */
-	public PlFormula trim(){
+	public PlFormula trim() {
 		Set<PlFormula> conj = new HashSet<PlFormula>();
-		for(PlFormula f: this.support)
+		for (PlFormula f : this.support)
 			conj.add(f.trim());
 		return new Conjunction(conj);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.logics.pl.syntax.PropositionalSignature)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula#getModels(net.sf.tweety.
+	 * logics.pl.syntax.PropositionalSignature)
 	 */
 	@Override
 	public Set<PossibleWorld> getModels(PlSignature sig) {
 		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
 		Iterator<PlFormula> it = this.support.iterator();
-		if(!it.hasNext())
+		if (!it.hasNext())
 			return models;
 		models.addAll(it.next().getModels(sig));
-		while(it.hasNext())
+		while (it.hasNext())
 			models.retainAll(it.next().getModels(sig));
 		return models;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#isConjunctiveClause()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula#isConjunctiveClause()
 	 */
-	public boolean isConjunctiveClause(){
-		for(PlFormula f: this.getFormulas())
-			if(!f.isLiteral())
+	public boolean isConjunctiveClause() {
+		for (PlFormula f : this.getFormulas())
+			if (!f.isLiteral())
 				return false;
 		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.logics.pl.syntax.Proposition, net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula#replace(net.sf.tweety.
+	 * logics.pl.syntax.Proposition,
+	 * net.sf.tweety.logics.pl.syntax.PropositionalFormula, int)
 	 */
-	public PlFormula replace(Proposition p, PlFormula f, int i){
+	public PlFormula replace(Proposition p, PlFormula f, int i) {
 		int num = 0;
 		Conjunction n = new Conjunction();
-		for(PlFormula sub: this.support.getFormulas()){
-			if(num < i && num + sub.numberOfOccurrences(p) >= i ){
-				n.add(sub.replace(p, f, i-num));
-			}else n.add(sub.clone());
+		for (PlFormula sub : this.support.getFormulas()) {
+			if (num < i && num + sub.numberOfOccurrences(p) >= i) {
+				n.add(sub.replace(p, f, i - num));
+			} else
+				n.add(sub.clone());
 			num += sub.numberOfOccurrences(p);
 		}
-		return n;		
+		return n;
 	}
 }
