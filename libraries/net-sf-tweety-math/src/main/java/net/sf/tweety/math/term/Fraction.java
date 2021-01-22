@@ -117,6 +117,16 @@ public class Fraction extends Term {
 	}
 
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getSums()
+	 */
+	@Override
+	public Set<Sum> getSums() {
+		Set<Sum> result = this.nominator.getSums();
+		result.addAll(this.denominator.getSums());
+		return result;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getVariables()
 	 */
 	@Override
@@ -176,6 +186,14 @@ public class Fraction extends Term {
 	public Sum toLinearForm() throws IllegalArgumentException {
 		throw new IllegalArgumentException("This term cannot be brought into linear form.");
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#toQuadraticForm()
+	 */
+	@Override
+	public Sum toQuadraticForm() throws IllegalArgumentException{
+		throw new IllegalArgumentException("The term '" + this + "' cannot be brought into quadratic form because it is non-linear.");
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#toString()
@@ -193,6 +211,14 @@ public class Fraction extends Term {
 		double nom = (this.nominator.value() instanceof IntegerConstant)?(((IntegerConstant)this.nominator.value()).getValue()):(((FloatConstant)this.nominator.value()).getValue());
 		double denom = (this.denominator.value() instanceof IntegerConstant)?(((IntegerConstant)this.denominator.value()).getValue()):(((FloatConstant)this.denominator.value()).getValue());
 		return new FloatConstant(nom/denom);
+	}
+
+	@Override
+	public List<Term> getTerms() {
+		ArrayList<Term> result = new ArrayList<Term>();
+		result.add(this.nominator);
+		result.add(this.denominator);
+		return result;
 	}
 
 }

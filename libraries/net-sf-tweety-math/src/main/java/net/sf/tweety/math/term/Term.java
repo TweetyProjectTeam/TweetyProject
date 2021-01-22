@@ -130,6 +130,12 @@ public abstract class Term {
 	public abstract Set<Product> getProducts();
 	
 	/**
+	 * Returns all sums of this term.
+	 * @return all sums of this term.
+	 */
+	public abstract Set<Sum> getSums();
+	
+	/**
 	 * Returns all minimums of this term.
 	 * @return all minimums of this term.
 	 */
@@ -161,6 +167,8 @@ public abstract class Term {
 	 * converted into a linear normal form.
 	 */
 	public abstract Sum toLinearForm() throws IllegalArgumentException;
+	
+	public abstract Sum toQuadraticForm() throws IllegalArgumentException;
 	
 	/**
 	 * Replaces each occurrence of "toSubstitute" by "substitution" and
@@ -245,6 +253,8 @@ public abstract class Term {
 	 * @return "true" if this term is linear.
 	 */
 	public boolean isLinear(){
+//		return false;
+		
 		Set<Product> products = this.getProducts();
 		for(Product p: products){
 			boolean hasVariable = false;
@@ -253,6 +263,31 @@ public abstract class Term {
 					if(hasVariable)
 						return false;
 					else hasVariable = true;
+				}				
+			}
+		}		
+
+		return true;
+	}
+	
+	/**
+	 * Checks whether this term is quadratic.
+	 * @return "true" if this term is quadratic.
+	 */
+	public boolean isQuadratic(){
+//		this = this.simplify();
+		Set<Product> products = this.getProducts();
+		for(Product p: products){
+			boolean hasVariable1 = false;
+			boolean hasVariable2 = false;
+			for(Term t: p.getTerms()){
+				if(!t.getVariables().isEmpty()){
+					if(hasVariable1 && hasVariable2)
+						return false;
+					else if(hasVariable1)
+						hasVariable2 = true;
+					else
+						hasVariable1 = true;
 				}				
 			}
 		}		
@@ -271,6 +306,7 @@ public abstract class Term {
 	 */
 	public abstract Term simplify();
 	
+	public abstract List<Term> getTerms();
 	/**
 	 * Differentiates the term with respect to the given variable.
 	 * @param v a variable.

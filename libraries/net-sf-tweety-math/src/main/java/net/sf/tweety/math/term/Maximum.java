@@ -124,6 +124,14 @@ public class Maximum extends AssociativeOperation{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#toQuadraticForm()
+	 */
+	@Override
+	public Sum toQuadraticForm() throws IllegalArgumentException{
+		throw new IllegalArgumentException("The term '" + this + "' cannot be brought into quadratic form because it is non-linear.");
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#derive(net.sf.tweety.math.term.Variable)
 	 */
 	@Override

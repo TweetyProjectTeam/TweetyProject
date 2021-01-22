@@ -81,8 +81,9 @@ public class Sum extends AssociativeOperation{
 		if(toSubstitute == this)
 			return substitution;
 		List<Term> newTerms = new ArrayList<Term>();
-		for(Term t: this.getTerms())
+		for(Term t: this.getTerms()) {
 			newTerms.add(t.replaceTerm(toSubstitute, substitution));
+		}
 		return new Sum(newTerms);
 	}
 	
@@ -150,6 +151,105 @@ public class Sum extends AssociativeOperation{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#toLinearForm()
+	 */
+	@Override
+	public Sum toQuadraticForm() throws IllegalArgumentException{
+		if(!this.isQuadratic())
+			throw new IllegalArgumentException("The term '" + this + "' cannot be brought into quadratic form because it is non-linear.");
+		Sum sum = new Sum();
+		for(Term t: this.getTerms())
+			sum.addAllTerm(t.toQuadraticForm().getTerms());		
+		// check for variables occurring multiple times
+		Stack<Term> terms = new Stack<Term>();
+		terms.addAll(sum.getTerms());
+
+		while(!terms.isEmpty()){
+
+			AssociativeOperation p1 = (AssociativeOperation) terms.pop();			
+			for(Term t2: terms){
+				Product p2 = (Product) t2;
+				Product modified = null;
+				// distinguish cases
+				// NOTE: The products must both contain exactly two elements
+				// or each one constant
+				if(p1.size() == 1 && p2.size() == 1){
+					if(p1.getTerms().get(0) instanceof Constant && p2.getTerms().get(0) instanceof Constant){
+						// p1 and p2 consist both of single constants						
+						modified = new Product();
+						modified.addTerm(p1.getTerms().get(0).add(p2.getTerms().get(0)).value());
+					}else throw new IllegalArgumentException("Something is wrong: products are to contain either a constant and a variable or just a constant.");
+				}else if(p1.size() == 2 && p2.size() == 2){
+
+					Set<Variable> allVars = new HashSet<Variable>();
+					allVars.addAll(p1.getVariables());
+					allVars.addAll(p2.getVariables());
+					//only check if there are max 2 variables (otherwise it is not quadratic)
+					if(allVars.size() <= 2) {
+						Sum tmp = new Sum();
+						//add all the constants together
+						for(Term t : p1.getTerms()) {
+							
+							if(t instanceof Constant)
+								tmp = tmp.add(t);
+						}
+						for(Term t : p2.getTerms()) {
+							
+							if(t instanceof Constant) {//if(modified != null && t instanceof Constant && p2.getVariables().equals(modified.getVariables())) {
+								tmp = tmp.add(t);
+							}
+						}
+						//add the same variables together
+						if(p1.getVariables().equals(p2.getVariables())) {
+							modified = tmp.value().mult(new FloatConstant(1));
+							for(Variable v : p1.getVariables())
+								modified = modified.mult(v);
+						}
+					}
+														
+				}
+				if(modified != null){
+					terms.remove(p2);
+					terms.push(modified);
+					sum.removeTerm(p1);
+					sum.removeTerm(p2);
+					sum.addTerm(modified);
+					break;				
+				}
+			}
+		}
+		//construct the result
+		Sum result = new Sum();
+		ArrayList<Sum> resultList = new ArrayList<Sum>();
+		for(Sum t : sum.getSums()) {
+			if(t.getSums().size() <= 1) {
+				boolean isInList = false;
+				for(Sum s : resultList)
+				{
+
+					if(s.getVariables() == (t.getVariables())) {
+						
+						isInList = true; 
+						s.addTerm(t);
+					}
+						
+				}
+				if(isInList == false)
+					resultList.add(t);
+			}
+
+		}
+		for(Sum s : resultList) {
+			result.addTerm(s);
+		}
+
+
+		return sum;
+
+	}
+	
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#derive(net.sf.tweety.math.term.Variable)
 	 */
 	@Override
@@ -195,6 +295,16 @@ public class Sum extends AssociativeOperation{
 		if(terms.size() == 1) return terms.get(0);
 		if(terms.size() == 0) return new IntegerConstant(0);
 		return new Sum(terms);		
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getSums()
+	 */
+	@Override
+	public Set<Sum> getSums(){
+		Set<Sum> sums = super.getSums();
+		sums.add(this);
+		return sums;
 	}
 	
 	/* (non-Javadoc)

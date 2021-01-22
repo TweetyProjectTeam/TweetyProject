@@ -18,6 +18,9 @@
  */
 package net.sf.tweety.math.term;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sf.tweety.math.*;
 
 /**
@@ -94,6 +97,13 @@ public class Root extends FunctionalTerm {
 	@Override
 	public Term derive(Variable v) throws NonDifferentiableException {
 		throw new RuntimeException("Implement me");
+	}
+
+	@Override
+	public List<Term> getTerms() {
+		ArrayList<Term> result = new ArrayList<Term>();
+		result.add(this.base);
+		return result;
 	}
 
 }

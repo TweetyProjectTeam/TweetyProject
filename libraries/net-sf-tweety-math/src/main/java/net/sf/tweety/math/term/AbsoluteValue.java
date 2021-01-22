@@ -110,4 +110,8 @@ public class AbsoluteValue extends FunctionalTerm {
 		throw new IllegalArgumentException("Unrecognized atomic term type.");
 	}
 
+	@Override
+	public List<Term> getTerms() {
+		return null;
+	}
 }

@@ -18,6 +18,9 @@
  */
 package net.sf.tweety.math.term;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sf.tweety.math.*;
 
 /**
@@ -39,6 +42,7 @@ public class Power extends FunctionalTerm {
 		super(term);
 		this.power = power;
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.FunctionalTerm#replaceTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
@@ -81,6 +85,20 @@ public class Power extends FunctionalTerm {
 	}
 
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#toQuadraticForm()
+	 */
+	@Override
+	public Sum toQuadraticForm() throws IllegalArgumentException{
+		Sum quadratic = new Sum();
+		if(this.power.doubleValue() <= 2 && this.getTerm().isLinear() ||
+				this.power.doubleValue() <= 1 && this.getTerm().isQuadratic())
+			quadratic.addTerm(new Product(this.getTerm(), this.getTerm()));
+		else
+			throw new IllegalArgumentException("The term '" + this + "' cannot be brought into quadratic form because it is non-linear.");
+		return quadratic.toQuadraticForm();
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#derive(net.sf.tweety.math.term.Variable)
 	 */
 	@Override
@@ -94,6 +112,21 @@ public class Power extends FunctionalTerm {
 		if(!base.getVariables().contains(v))
 			return this.mult(new Logarithm(base));		
 		return this.mult(exponent_der.mult(new Logarithm(base)).add(exponent.mult(base_der).mult(new Fraction(new FloatConstant(1),base))));
+	}
+	
+	@Override
+	public boolean isLinear(){
+		if(this.power.doubleValue() > 1)
+			return false;
+		return true;
+	}
+
+	@Override
+	public List<Term> getTerms() {
+		ArrayList<Term> result = new ArrayList<Term>();
+		result.add(this.getTerm());
+		result.add(this.power);
+		return result;
 	}
 
 }

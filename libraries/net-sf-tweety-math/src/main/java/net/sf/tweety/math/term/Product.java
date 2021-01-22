@@ -155,6 +155,140 @@ public class Product extends AssociativeOperation{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#toLinearForm()
+	 */
+	//@Override
+	public Sum toQuadraticForm() throws IllegalArgumentException{		
+		if(!this.isQuadratic())
+			throw new IllegalArgumentException("The term '" + this + "' cannot be brought into linear form because it is non-linear.");		
+
+			boolean stop = true;
+
+
+				if(this.getSums().size() > 0)
+
+					stop = false;
+				
+			if(stop == true) {
+				Sum result = new Sum();
+				result.addTerm(this);
+				return result;		
+			}
+		
+		// check for abort condition
+		if(this.size() == 1)
+			return this.getTerms().get(0).toQuadraticForm();	
+		Sum sum = new Sum();
+		List<Term> terms = this.getTerms();
+		sum.addTerm(this.getTerms().get(0));
+		int i = 0;
+		
+		while(i+1 < this.getTerms().size()) {
+			if(terms.get(i+1) instanceof Constant || terms.get(i+1) instanceof Variable) {
+				for(int j = 0; j < sum.getTerms().size(); j++)
+				{
+					//multiplicate Var or Constant with every part of the sum
+
+					if(sum.getTerms().get(j) instanceof Variable || sum.getTerms().get(j) instanceof Constant)
+						sum = (Sum) sum.replaceTerm(sum.getTerms().get(j), sum.getTerms().get(j).mult(terms.get(i+1)));
+					else
+						for(Term t : sum.getTerms().get(j).getTerms())
+							sum = (Sum) sum.replaceTerm(t,  t.toQuadraticForm().mult(terms.get(i+1)));
+					
+				}
+			}
+			if(terms.get(i+1) instanceof Product) {
+				for(Term resultPart : sum.getTerms())
+				{
+					Product neueProdukt = new Product();
+						
+					//add the next term to the product
+					for(Term factor  : ((Product) terms.get(i+1)).getTerms()) 
+					{
+						//directly multiply variables  and constants
+						if((terms.get(i) instanceof Variable || terms.get(i) instanceof Constant) && 
+								(factor instanceof Variable || factor instanceof Constant)) {
+
+							neueProdukt.addTerm(resultPart.mult(factor));
+						}
+						//bring products or sums into quadratic form first
+						else {
+							AssociativeOperation currentTerm = ((AssociativeOperation) terms.get(i));
+							for(Term t : currentTerm.getTerms()) {	
+	
+								currentTerm = 
+										(AssociativeOperation) currentTerm.replaceTerm(t, 
+														new Product(t, 
+														((Product) terms.get(i+1))).toQuadraticForm());
+				
+							}
+							neueProdukt = new Product();
+							neueProdukt.addTerm(currentTerm);
+
+						}
+
+					}
+					sum = (Sum) sum.replaceTerm(resultPart, neueProdukt);
+					
+					
+					
+				}
+			}
+			//bring all parts of a sum into quadratic form and add them to the result
+			if(terms.get(i+1) instanceof Sum) {
+				for(Term resultPart : sum.getTerms())
+				{
+					Sum neueSumme = new Sum();
+					for(Term factor  : ((Sum) terms.get(i+1)).getTerms()) 
+					{					
+						Product part = new Product(factor, resultPart);
+
+
+						neueSumme.addTerm(part.toQuadraticForm());
+						
+					}
+
+					sum = (Sum) sum.replaceTerm(resultPart, neueSumme);
+				}
+			}
+			i++;
+		}
+		Sum result = new Sum();
+
+		ArrayList<Sum> resultList = new ArrayList<Sum>();
+		for(Sum t : sum.getSums()) {
+			if(t.getSums().size() <= 1) {
+				boolean isInList = false;
+				for(Sum s : resultList)
+				{
+					
+
+					if(s.getVariables() == (t.getVariables())) {
+						
+						isInList = true; 
+						s.addTerm(t);
+					}
+						
+				}
+				if(isInList == false)
+					resultList.add(t);
+			}
+
+		}
+		for(Sum s : resultList) {
+			result.addTerm(s);
+			
+		}
+
+
+		
+		return (Sum) sum;
+	}
+	
+
+
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#derive(net.sf.tweety.math.term.Variable)
 	 */
 	@Override

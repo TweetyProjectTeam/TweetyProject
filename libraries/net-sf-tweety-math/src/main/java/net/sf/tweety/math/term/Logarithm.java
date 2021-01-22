@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.math.term;
 
+import java.util.List;
+
 import net.sf.tweety.math.*;
 
 /**
@@ -97,6 +99,12 @@ public class Logarithm extends FunctionalTerm {
 			else return new FloatConstant((float)(Math.log(((FloatConstant)c).getValue())));
 		}
 		throw new IllegalArgumentException("Unrecognized atomic term type.");
+	}
+
+	@Override
+	public List<Term> getTerms() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

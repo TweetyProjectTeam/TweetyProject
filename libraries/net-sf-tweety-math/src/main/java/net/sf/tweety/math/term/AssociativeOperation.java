@@ -126,7 +126,18 @@ public abstract class AssociativeOperation extends Term {
 		for(Term t: this.terms)
 			products.addAll(t.getProducts());
 		return products;
-	}		
+	}	
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getSums()
+	 */
+	@Override
+	public Set<Sum> getSums(){
+		Set<Sum> sums = new HashSet<Sum>();
+		for(Term t: this.terms)
+			sums.addAll(t.getSums());
+		return sums;
+	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getProducts()

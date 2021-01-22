@@ -136,6 +136,14 @@ public abstract class Variable extends Term{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getSums()
+	 */
+	@Override
+	public Set<Sum> getSums(){
+		return new HashSet<Sum>();
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getProducts()
 	 */
 	@Override
@@ -207,6 +215,19 @@ public abstract class Variable extends Term{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#toLinearForm()
+	 */
+	@Override
+	public Sum toQuadraticForm() throws IllegalArgumentException{
+		Sum sum = new Sum();
+		Product p = new Product();
+		p.addTerm(this);
+		p.addTerm(new IntegerConstant(1));
+		sum.addTerm(p);
+		return sum;
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#derive(net.sf.tweety.math.term.Variable)
 	 */
 	@Override
@@ -222,6 +243,13 @@ public abstract class Variable extends Term{
 	@Override
 	public Term simplify(){
 		return this;
+	}
+	
+	@Override
+	public List<Term> getTerms(){
+		ArrayList<Term> result = new ArrayList<Term>();
+		result.add(this);
+		return result;
 	}
 	
 	/* (non-Javadoc)

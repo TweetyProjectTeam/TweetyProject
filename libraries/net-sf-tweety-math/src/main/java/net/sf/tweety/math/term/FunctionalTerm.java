@@ -87,6 +87,14 @@ public abstract class FunctionalTerm extends Term {
 	public Set<Product> getProducts() {
 		return this.term.getProducts();
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getSum()
+	 */
+	@Override
+	public Set<Sum> getSums() {
+		return this.term.getSums();
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getVariables()
@@ -119,6 +127,14 @@ public abstract class FunctionalTerm extends Term {
 	public Sum toLinearForm() throws IllegalArgumentException{
 		throw new IllegalArgumentException("The term '" + this + "' cannot be brought into linear form because it is non-linear.");
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#toQuadraticForm()
+	 */
+	@Override
+	public Sum toQuadraticForm() throws IllegalArgumentException{
+		throw new IllegalArgumentException("The term '" + this + "' cannot be brought into quadratic form because it is non-linear.");
+	}
 		
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#replaceTerm(net.sf.tweety.math.term.Term, net.sf.tweety.math.term.Term)
@@ -131,6 +147,11 @@ public abstract class FunctionalTerm extends Term {
 	 */
 	@Override
 	public abstract String toString();
+	
+	@Override
+	public boolean isLinear() {
+		return false;
+	}
 
 
 	/* (non-Javadoc)

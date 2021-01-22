@@ -67,6 +67,14 @@ public class Difference extends Term{
 	}
 	
 	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#toQuadraticForm()
+	 */
+	@Override
+	public Sum toQuadraticForm() throws IllegalArgumentException{
+		return new Sum(this.first, new FloatConstant(-1).mult(this.second)).toQuadraticForm();		
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#toLinearForm()
 	 */
 	@Override
@@ -128,6 +136,14 @@ public class Difference extends Term{
 		r.addAll(this.second.getProducts());
 		return r;
 	}
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.math.term.Term#getSums()
+	 */
+	@Override
+	public Set<Sum> getSums() {
+		return this.toLinearForm().getSums();
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.math.term.Term#getMinimums()
@@ -174,5 +190,13 @@ public class Difference extends Term{
 	public void collapseAssociativeOperations() {
 		this.first.collapseAssociativeOperations();
 		this.second.collapseAssociativeOperations();
+	}
+
+	@Override
+	public List<Term> getTerms() {
+		ArrayList<Term> result = new ArrayList<Term>();
+		result.add(this.first);
+		result.add(this.second);
+		return result;
 	}
 }

@@ -18,6 +18,8 @@
  */
 package net.sf.tweety.math.term;
 
+import java.util.List;
+
 import net.sf.tweety.math.*;
 
 /**
@@ -84,6 +86,12 @@ public class Exp extends FunctionalTerm {
 	@Override
 	public Term simplify() {
 		return new Exp(this.getTerm().simplify());
+	}
+
+	@Override
+	public List<Term> getTerms() {
+
+		return null;
 	}
 
 }
