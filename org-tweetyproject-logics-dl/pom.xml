@@ -30,7 +30,7 @@
     </dependency>
   </dependencies>
   <name>TweetyProject (Description Logics)</name>
-  <url>http://sourceforge.net/projects/tweety/</url>
+  <url>https://github.com/TweetyProjectTeam/TweetyProject</url>
   <groupId>org.tweetyproject.logics</groupId>
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

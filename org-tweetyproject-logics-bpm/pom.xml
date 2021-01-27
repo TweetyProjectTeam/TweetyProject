@@ -41,7 +41,7 @@
 	</dependencies>
 	
 	<name>TweetyProject (Business Process Modelling)</name>
-	<url>http://sourceforge.net/projects/tweety/</url>
+	<url>https://github.com/TweetyProjectTeam/TweetyProject</url>
 	<groupId>org.tweetyproject.logics</groupId>
 	<build>
     <plugins>

@@ -11,9 +11,9 @@
   <url>http://tweetyproject.org</url>
 
   <scm>
-  	<url>https://svn.code.sf.net/p/tweety/code/trunk/</url>
-  	<connection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</connection>
-	<developerConnection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</developerConnection>
+     <url>https://github.com/TweetyProjectTeam/TweetyProject</url>
+     <connection>scm:git:https://github.com/TweetyProjectTeam/TweetyProject.git</connection>
+     <developerConnection>scm:git:https://github.com/TweetyProjectTeam/TweetyProject.git</developerConnection> 
   </scm>
 
   <developers>

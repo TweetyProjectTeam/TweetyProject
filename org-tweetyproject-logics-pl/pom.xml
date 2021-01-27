@@ -6,7 +6,7 @@
   <packaging>jar</packaging>
 
   <name>TweetyProject (Propositional Logic)</name>
-  <url>http://sourceforge.net/projects/tweety/</url>
+  <url>https://github.com/TweetyProjectTeam/TweetyProject</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

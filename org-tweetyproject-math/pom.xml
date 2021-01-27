@@ -7,7 +7,7 @@
 	<packaging>jar</packaging>
 
 	<name>TweetyProject (Math)</name>
-	<url>http://sourceforge.net/projects/tweety/</url>
+	<url>https://github.com/TweetyProjectTeam/TweetyProject</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,7 +55,7 @@
 			<artifactId>isula</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.gurobi/gurobi-jar -->
+ 		<!-- https://mvnrepository.com/artifact/com.gurobi/gurobi-jar -->
 		<dependency>
   			  <groupId>com.gurobi</groupId>
   			  <artifactId>gurobi-jar</artifactId>
