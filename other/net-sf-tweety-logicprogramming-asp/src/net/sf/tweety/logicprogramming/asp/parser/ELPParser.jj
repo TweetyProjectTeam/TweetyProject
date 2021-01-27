@@ -1,320 +1,0 @@
-/**
- * JavaCC file
- *
- * parser script for extended logical programs
- */
-options {
-  JDK_VERSION = "1.5";
-  static = false;
-}
-
-PARSER_BEGIN(ELPParser)
-package net.sf.tweey.logicprogramming.asp.parser;
-
-import java.util.*;
-import java.util.regex.*;
-import net.sf.tweety.logicprogramming.asp.syntax.*;
-
-/**
-  * parser for extended logic programs. based
-  * on the delp parser from the tweety project,
-  * with modifications to load extended logical.
-  *
-  */
-public class ELPParser {
-
-	public static ELP parse(String filename) throws ParseException,java.io.FileNotFoundException{
-	  	ELPParser parser;
-    	parser = new ELPParser(new java.io.FileInputStream(filename));
-    	return parser.Program();
-  	}
-
-  	public static void main(String args[]) {
-  	  try  	  {  	    
-  	  	System.out.println( parse("test2.elp") );
-  	 } catch (Exception e)
-  	 {		System.out.println("error while parsing: "+e);
-  	 }  	}
-
-}
-
-PARSER_END(ELPParser)
-
-SKIP :
-{
-  " "
-| "\t"
-| "\n"
-| "\r"
-}
-
-TOKEN :
-{
-    < RAUTE : "#" >|
-  	< NOT : "not" >|
-  	< INT : "int" >|
-  	< MAXINT : "maxint" >|
-  	< AGGREG : "count"|"max"|"min"|"times"|"sum" >|
-  	< LBRA : "{" >|    < RBRA : "}" >|
-    < COLON: ":" >|
-    < PIPE: "|" >|  
-	< NAME: ["a"-"z","A"-"Z","_","0"-"9"] ( ["a"-"z","A"-"Z","_","-","0"-"9"] )* >
-}
-
-
-TOKEN :
-{	< COMP : ("<"|">"|"="|"<="|">="|"!="|"+"|"*") >
-}
-
-
-ELP Program() :
-{
-	ELP elp = new ELP();
-}
-{
-  ( Expression(elp) )* <EOF>
-  {
-  	return elp;
-  }
-}
-
-void Expression(ELP elp) :
-{
-	ELPLiteral lit = null;
-	ELPRule r = new ELPRule();
-	ELPLiteral b;
-}
-{
-		(		  lit=Literal(elp)
-		  {
-		    r.addHead(lit);		  }
-
-			(				(" v "|"|")
-				   lit=Literal(elp)
-				{
-				  r.addHead(lit);				}  
-				  
-			)*
-		)?
-  		( "."
-				{
-				  elp.add(r);
-				}
-		|
-		":-" b=Literal(elp)
-				{
-					r.addBody(b);					
-				}
-
-		( "," b=Literal(elp)
-				{
-					r.addBody(b);
-				}
-		)* "."
-				{
-					elp.add(r);
-				}
-		)
-}
-
-
-ELPLiteral Literal(ELP elp) :
-{
-	ELPAtom atom;
-	Token t0,t1,t2;
-	SymbolicSet symset;
-	String sym_rop, sym_rname;
-}
-{
-
-	< RAUTE >
-	(
-	  < INT >
-	  (		"("
-		t0 = < NAME >
-		")"
-		{
-		  return ELPAtom.Int(t0.image);		}
-	  )
-	| 		< MAXINT >
-		(			"="
-			(				t0=< NAME >
-				{				  
-					return ELPAtom.Equal("#maxint",t0.image);
-				}
-			)
-		)
-	|
-		t2=< AGGREG >
-		symset = SymSet(elp)
-		{
-			sym_rop = null;
-			sym_rname = null;
-		}
-		(
-			t0=< COMP >
-			t1=< NAME >
-			{				sym_rop = t0.image;
-				sym_rname = t1.image;
-			}
-		)?
-		{
-		  
-		  	return ELPAtom.Aggregate(t2.image,symset,sym_rop,sym_rname);		  			 
-		}
-		
-	
-	)	
-
-| 
-  
-  < NOT >
-  {
-    return new NotLiteral( Literal(elp) );  }
-  
-| 
-	atom=Atom(elp)
-	{
-		return atom;
-	}
-	|
-	("~"|"-") atom=Atom(elp)
-	{
-		return new NegLiteral(atom);
-	}
-}
-
-
-ELPAtom Atom(ELP elp) :
-{
-	Token p,op,t2,t0,t1,t3;
-	List<String> terms = new ArrayList<String>();
-	String t;
-	List<String > ops = new ArrayList<String >();
-	boolean aggregate = false;
-	SymbolicSet symset = null;
-	String sym_rop = null;
-	String sym_rname = null;
-}
-{
-	p=<NAME> ( "(" t=Term(elp)
-				{
-					terms.add(t);
-				}
-	( "," t=Term(elp)
-				{
-					terms.add(t);
-				}
-			  
-	)* ")" |
-
-	(	  
-	op=< COMP >
-	(	
-
-		  
-	  < RAUTE >
-	  	    
-	  t0 = < AGGREG >
-	  symset = SymSet(elp)
-	  (		t1 = < COMP >
-		t2 = < NAME >
-		{			sym_rop = t1.image;
-			sym_rname = t2.image;
-		}
-	  )?
-	  {		return ELPAtom.Aggregate(t0.image, p.image, op.image, sym_rname, sym_rop, symset);
-	  }
-
-	  |
-
-	t3=< NAME > 
-		{		ops.add(op.image);  
-		terms.add(t3.image);
-		}
-		(			op=< COMP >
-			t3= < NAME >
-			{				ops.add(op.image);  
-				terms.add(t3.image);
-			}
-		)?
-	)
-	
-	)
-
-
-)?
-	
-	{
-	  if (ops.size()==0)	  {	    
-	  	ELPAtom atm = new ELPAtom(p.image,terms.size());
-	  	for (int i = 0; i < terms.size(); i++)
-	  		atm.setTerm(i,terms.get(i)); 
-		return atm;
-		} else if (ops.size() == 1) {		  	
-
-		  	String op0 = ops.get(0);
-		  	if (op0.equalsIgnoreCase("<"))		  		return ELPAtom.Less(p.image, terms.get(0));
-
-		  	if (op0.equalsIgnoreCase("<="))
-		  		return ELPAtom.LessEq(p.image, terms.get(0));
-
-		  	if (op0.equalsIgnoreCase("="))
-		  		return ELPAtom.Equal(p.image, terms.get(0));
-
-		  	if (op0.equalsIgnoreCase(">="))
-		  		return ELPAtom.GtrEq(p.image, terms.get(0));
-
-		  	if (op0.equalsIgnoreCase(">"))
-		  		return ELPAtom.Gtr(p.image, terms.get(0));
-		  	
-	  		return ELPAtom.UnEq(p.image, terms.get(0));			} else if (ops.size() == 2)		{
-		  			String op1 = ops.get(1);
-			if (op1.equalsIgnoreCase("+"))
-				return ELPAtom.Plus(terms.get(0), terms.get(1), p.image);
-
-			return ELPAtom.Mul(terms.get(0), terms.get(1), p.image);			
-		}
-	}
-}
-
-SymbolicSet SymSet(ELP elp) :{
-  SymbolicSet symset = new SymbolicSet();
-  ELPAtom atm;
-  Token t0;}
-{	< LBRA >
-	(
-	  	t0=< NAME >		{			symset.addVariable(t0.image);
-		}
-		(
-		  ","
-		  t0=< NAME >
-		  {
-		    symset.addVariable(t0.image);		  }		)*
-		< COLON >
-
-		atm = Atom(elp)
-		{
-		  symset.addLiteral(atm);		  		}
-		(			","
-			atm = Atom(elp)
-			{				symset.addLiteral(atm);
-			}
-		)*		
-	)
-	< RBRA >
-	{		return symset;
-	}
-}
-
-String Term(ELP elp) :
-{
-	Token t;
-}
-{
-	t=<NAME>
-	{
-
-		return t.image;
-	}
-}

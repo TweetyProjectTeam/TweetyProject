@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.tweetyproject.logics</groupId>
+  <artifactId>rcl</artifactId>
+  <name>TweetyProject (Relational Conditional Logic Library)</name>
+  <parent>
+  <groupId>org.tweetyproject</groupId>
+  <artifactId>parent-pom</artifactId>
+  	<version>1.17-SNAPSHOT</version>
+  </parent>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.tweetyproject.logics</groupId>
+  		<artifactId>cl</artifactId>
+  		<version>1.17-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
+</project>

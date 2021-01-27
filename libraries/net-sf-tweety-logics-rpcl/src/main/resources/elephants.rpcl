@@ -1,8 +1,0 @@
-Elephant = {clyde,giddy}
-Keeper = {fred,dave}
-
-type(likes(Elephant,Keeper))
-
-(likes(X,Y))[0.6]
-(likes(X,fred))[0.4]
-(likes(clyde,fred))[0.6]

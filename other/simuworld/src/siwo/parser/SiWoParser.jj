@@ -1,496 +1,0 @@
-/**
- * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
- */options{  JDK_VERSION = "1.5";  static = false;}PARSER_BEGIN(SiWoParser)package siwo.parser;
-
-import java.util.*;
-import net.sf.tweety.logicprogramming.asplibrary.syntax.*;
-import siwo.syntax.*;
-
-public class SiWoParser{
-  public static void main(String args []) throws ParseException  {    SiWoParser parser = new SiWoParser(System.in);
-    WorldState sw = new WorldState();    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"1+(2+3)*4;\" :");      try      {        switch (parser.siwo_actionrule(sw))        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        break;
-      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(SiWoParser)SKIP :{  " "| "\r"| "\t"| "\n"
-| <"%" (~["\n"])*>
-}TOKEN : /* OPERATORS */{  < DOT : "." >
-| < COLON : ":" >
-| < LBRA : "(" >
-| < RBRA : ")" >
-| < SQLBRA : "[" >
-| < SQRBRA : "]" >
-| < CURLBRA : "{" >
-| < CURRBRA : "}" >| < PIPE : "|" >
-| < LOGIMPL : ":-" >
-//| < UNEQ : "!=" >
-//| < EQ : "=" >
-//| < RELOP : ("<"|">"|"<="|">="|"="|"!=") >
-//| < ARITHOP : (<PLUS>|<MINUS>|<MULTIPLY>|<DIVIDE>) >
-//| < OPERATOR : (<RELOP>|<ARITHOP>)>
-}TOKEN :{  < NUMBER : (< DIGIT >)+ >| < DIGIT : [ "0"-"9" ] >
-| < NOT : "not" >
-| < TEXTOR : "v" >
-//| < UCHAR : (["A"-"Z"])+ >
-| < SYMBOL : ("#")? < CHAR > (< CHAR >|< BLANK >| (["A"-"Z"])+|< DIGIT >)* >
-| < VAR : (["A"-"Z"])+ (< CHAR >|< BLANK >| (["A"-"Z"])+|< DIGIT >)* >
-| < CHAR : (["a"-"z"])+>
-| < BLANK : "_" >
-}int one_line() :{}{
-  rule()  {    return 0;
-  }}
-Atom atom() :
-{
-	Atom ret = null;
-	Token pred = null;
-	List<Term > terms = null;
-	SymbolicSet symset = null;
-}
-{
-  (    
-  	// atom with predicate  	
-  	pred = < SYMBOL >
-  	(  	    		<LBRA > terms = termlist() < RBRA >
-  	|
-  		
-  		<CURLBRA > symset = symbolicSet() < CURRBRA >
- 	)?
-|
-	pred = < VAR >
-|
-	pred = < NUMBER >
-)
-	// note: sets, multisets without denoting an aggregate predicate explicitly
-	//		 are handled in "literal()"
-	{
-	  if (symset == null)		return Atom.instantiate(pred.image, terms);
-	  else
-	  	return new Aggregate(pred.image,symset);
-	}
-}
-
-SymbolicSet symbolicSet() :
-{	Set<String >  vars = new HashSet<String >();
-	List<Literal > lits = null;
-	Token v0 = null;
-}
-{
-  (    	v0=< VAR > { vars.add(v0.image); }
-	( "," v0=< VAR > { vars.add(v0.image); } )*
-	< COLON >
-	lits = literalList()
-  )
-
-  {	return new SymbolicSet(vars,lits);
-  }}
-
-
-List<Term> termlist() :
-{	List<Term> ret = new LinkedList<Term>();
-	Token s;
-	Term t;
-}
-{
-  	t = term()
-  	{		ret.add(t);
-  	}
-  	(		","
-		t = term()
-		{			ret.add(t);
-		}
-  	)*
-
- 	{
-	  return ret;
-	}	
-}
-
-Term term() :
-{
-  Token s;
-  Term t1 = null,t2 = null;
-  List<Term> tl1 = null, tl2 = null;}
-{
-  	(s = < VAR >|s=< BLANK >)
-  	{		return new StdTerm(s.image);
-  	}
-| 	s = < SYMBOL >
-	(
-	  < LBRA >
-	  tl1 = termlist()
-	  < RBRA >
-	)?
-	{
-	  	if (tl1 == null)			return new StdTerm(s.image);
-		else
-			return Atom.instantiate(s.image,tl1);
-	}
-//|
-//	s = < UCHAR >
-//	{//		return new StdTerm(s.image);
-//	}
-|
-	s = < NUMBER >
-	{		return new StdTerm(s.image);
-	}
-|
-	< SQLBRA >
-	(	  
-		tl1 = termlist()
-		(
-			< PIPE >
-			tl2 = termlist()
-		)?
-	)?
-	< SQRBRA >
-	{		return new ListTerm( tl1, tl2 );	}
-|
-	< CURLBRA >
-	tl1 = termlist()
-	< CURRBRA >
-	{		return new SetTerm(tl1);
-	}
-	{
-	}
-}
-
-Rule rule() :
-{
-  Rule r;
-  List<Literal>	head = new LinkedList<Literal >(), body = new LinkedList<Literal >();}
-{
-
- 	head = literalListHead()
-	(	   < LOGIMPL >
-		body = literalListBody()
-	)?
-	< DOT >
-
-	{		return new Rule(head,body);
-	}	
-}
-
-List<Rule> program() :
-{	List<Rule > elp = new LinkedList<Rule >();
-	Rule r = null;
-}
-{	(		r = rule()
-		{			if (r != null) elp.add(r);
-		}	
-	)*
-
-	{		return elp;
-	}
-}
-
-List<Literal> literalList() :
-{	List<Literal>	lits = null;
-	Literal l = null;
-}
-{	(		l = literal()
-		(			","
-			lits = literalList()
-		)?
-	)?
-	{
-	  	LinkedList<Literal > ret = new LinkedList<Literal >();
-		if (l != null)
-	  		ret.add(l);
-	  	if (lits != null)
-	  		ret.addAll(lits);		return ret;
-	}
-}
-
-List<Literal > literalListBody() :
-{	List<Literal >	lits = new LinkedList<Literal>();
-	Literal l = null;	
-}
-{	(		l = LiteralExpr() { lits.add(l); }		(			","
-			l = LiteralExpr() { lits.add(l); }
-		)*		  
-	)?
-	{		return lits;
-	}
-}
-
-
-List<Literal> literalListHead() :
-{
-	List<Literal>	lits = null;
-	Literal l = null;
-}
-{
-	(
-		l = literal()
-		(
-			"|"
-			lits = literalListHead()
-		)?
-	)?
-	{
-	  	LinkedList<Literal > ret = new LinkedList<Literal >();
-		if (l != null)
-	  		ret.add(l);
-	  	if (lits != null)
-	  		ret.addAll(lits);
-		return ret;
-	}
-}
-
-Literal LiteralExpr() :
-{	Literal l0 = null, l1 = null, l2 = null;
-	String op01 = null, op12 = null;
-	Term t0 = null, t1 = null;
-}
-{
-(  	
-	l0 = literal()
-
-	(
-	  	(			"=" { op01 = "="; }
-			|"!=" { op01 = "!="; }
-			|"<=" { op01 = "<="; }
-			|"<" { op01 = "<"; }
-			|">=" { op01 = ">=";}			|">" { op01 = ">"; }				  	)		l1 = literal()
-
-		(
-		  	(
-				"=" { op12 = "="; }
-				|"!=" { op12 = "!="; }
-				|"<=" { op12 = "<="; }
-				|"<" { op12 = "<"; }
-				|"+" { op12 = "+"; }
-				|"*" { op12 = "*"; }
-				|"-" { op12 = "-"; }				
-	  		)			l2 = literal()
-		)?
-	)?
-
-)
-	{
-	  	boolean dbgOut = false;
-	  	// check what to do
-	  	if ((l0 != null) && (l1 == null) && (l2 == null))	  	{
-	  	  	if (dbgOut) System.out.println("unary");
-			return l0;
-	  	}		else if ((l0 != null) && (l1 != null) && (l2 == null))
-		{
-		  	if (dbgOut) System.out.println("binary");
-		  	
-		  	// check if one of the predicates is an aggregate
-		  	if (l0.isAggregate())		  	{
-		  	  // l1 is right guard (maybe an assignment guard?)
-		  	  Aggregate ag = (Aggregate) l0.getAtom();
-		  	  ag.setRightGuard(l1.getAtom(), op01);
-
-		  	  // was l0 default negated?
-		  	  if (l0.isDefaultNegated())
-		  	  	return new Not(ag);
-		  	  else
-		  	    return ag;
-		  	}
-		  	else if (l1.isAggregate())
-		  	{
-		  	  // l0 is left guard
-		  	  Aggregate ag = (Aggregate) l1.getAtom();
-		  	  ag.setLeftGuard(l0.getAtom(), op01);
-		  	  return ag;		  	}
-		  	else
-		  	{				// no aggregates, could be something else
-				return new Relation(op01,l0.getAtom(),l1.getAtom());
-		  	}			
-		}
-		else if ((l0 != null) && (l1 != null) && (l2 != null))
-		{
-		  	// three operators: if l1 is an aggregate, we have an
-		  	// aggregate function with lower and upper bounds.
-		  	// otherwise, we have an arithmetic operation with
-		  	// an assignment (op12 is the arithmetic operator,
-		  	// op01 must be "=" and is the assignment
-		  	if (l1.isAggregate())		  	{
-		  	  	Aggregate ag = (Aggregate) l1;
-		  	  	ag.setLeftGuard(l0.getAtom(),op01);
-		  	  	ag.setRightGuard(l2.getAtom(),op12);				return l1;
-				
-		  	}
-		  	else return new Arithmetic(op12,l1.getAtom(),l2.getAtom(),l0.getAtom());
-		}
-	}
-
-} 
-
-Literal literal() :
-{	boolean dneg = false;
-	boolean tneg = false;
-	Atom a0 = null;
-	Literal l = null;
-	Literal r = null;
-	String set_leftop = null;
-}
-{	// parse literal, regard the following expressions:
-	// atoms, possibly negated: a(t1,..,tn), -b, not c, not -d.
-	// conditions: 
-	// sets: dlv symbolic sets
-	// sets: gringo : cardinality constraints, choice rules
-	// sets: gringo : weighted sets
-	[
-		"not"		{	 	 	dneg = true;		}
-	]
-	[
-		"-"
-	 	{			tneg = true;
-		}
-	]
-	a0 = atom()
-	{		if (dneg && tneg)
-			return new Not( new Neg(a0) );
-		else if (dneg && !tneg)
-			return new Not( a0 );
-		else if (!dneg && tneg)
-			return new Neg( a0 );
-		else
-			return a0;
-	}
-}
-
-
-List<Literal > dlv_answerset() :
-{ 	List<Literal > ret = null;
-}
-{
-  	< CURLBRA >
-  	ret = literalList()
-  	< CURRBRA >
-  	 	{		return ret;
- 	} 	  
-}
-
-List<Literal > clasp_answerset() :
-{	List<Literal >  ret = new LinkedList<Literal >();
-	Literal l = null;	
-}
-{	(		l = literal()
-		{			ret.add(l);
-		}		
-	)*
-
-	{		return ret;
-	}
-}
-
-// siwo action rule 
-int siwo_actionrule(WorldState sw) :{	Token t0 = null;
-	Atom a0=null;
-	List<Literal > lC = null, lA = null, lD = null;
-}
-{	"!" a0 = atom() <CURLBRA >
-	(
-	  LOOKAHEAD( {getToken(1).kind == VAR && getToken(1).image.equals("C")} )	  	  < VAR > ":" lC = literalListBody() "."
-	)?
-	(
-	  LOOKAHEAD( {getToken(1).kind == VAR && getToken(1).image.equals("A")} )	  < VAR > ":" lA = literalListBody() "."
-	)?
-	(
-	  LOOKAHEAD( {getToken(1).kind == VAR && getToken(1).image.equals("D")} )
-	  < VAR > ":" lD = literalListBody() "."
-	)?
-	< CURRBRA >
-
-	{
-	  	ActionRule ar = new ActionRule(a0,null,null,null);
-	  	if (lC != null) ar.C.addAll(lC);
-	  	if (lA != null) for (Literal l:lA) ar.A.add(l.getAtom());
-	  	if (lD != null) for (Literal l:lD) ar.D.add(l.getAtom());
-	  	sw.A.add(ar);		return 1;
-	}
-}
-
-// siwo constraint rule
-int siwo_constraintrule(WorldState sw) :
-{	List<Literal > l = null;
-}
-{	":-" l = literalListBody() "."
-
-	{
-	  	// create a new constraint
-	  	if (l != null)	  	{			ConstraintRule cr = new ConstraintRule(null);
-			for (Literal lit : l)			{
-			  cr.C.add(lit.getAtom());			}
-			sw.C.add( cr );
-	  	}
-	  				return 1;
-	}
-}
-
-// siwo effect handler
-int siwo_effectrule(WorldState sw) :
-{	List<Literal > l = null;
-	Atom ef_name = null;
-	List<Literal > lC = null, lA = null, lD = null, lB = null;
-}
-{	"*" (ef_name = atom())? < CURLBRA >	
-	(
-	  LOOKAHEAD( {getToken(1).kind == VAR && getToken(1).image.equals("C")} )	  
-	  < VAR > ":" lC = literalListBody() "."
-	)?
-	(
-	  LOOKAHEAD( {getToken(1).kind == VAR && getToken(1).image.equals("A")} )	  
-	  < VAR > ":" lA = literalListBody() "."
-	)?
-	(
-	  LOOKAHEAD( {getToken(1).kind == VAR && getToken(1).image.equals("D")} )	  
-	  < VAR > ":" lD = literalListBody() "."
-	)?
-	(
-	  LOOKAHEAD( {getToken(1).kind == VAR && getToken(1).image.equals("B")} )	  
-	  < VAR > ":" lB = literalListBody() "."
-	)?
-	< CURRBRA >
-	
-	{		EffectRule er = new EffectRule();
-		if (lC != null)
-			er.C = lC;
-		if (lA != null) for (Literal lit : lA) er.A.add(lit.getAtom());
-		if (lD != null) for (Literal lit : lD) er.D.add(lit.getAtom());
-		if (lB != null) for (Literal lit : lB) er.B.add(lit.getAtom());
-		if ((lC != null) && ((lA != null) || (lD != null) || (lB != null)))
-			sw.E.add(er);   
-
-		
-	  return 1;
-	}
-}
-
-// siwo pre code block
-int siwo_pre(WorldState sw) :{	List<Rule > p = null;
-}
-{	"$$" < CURLBRA > p = program() < CURRBRA >
-
-	{
-	  // split program into facts an elp rules
-	  for (Rule r : p) {
-	    if (r.isFact())
-	    	sw.F.add(r.getHead().get(0).getAtom());
-	    else
-	    	sw.Rpre.add(r);	  }
-	  return 1;	}	
-}
-
-// siwo post code block
-int siwo_post(WorldState sw) :
-{	List<Rule > p = null;
-}
-{	"##" < CURLBRA > p = program() < CURRBRA >
-
-	{
-	  return 1;
-	}
-}
-
-WorldState siwo_parse() :
-{	WorldState sw = new WorldState();
-}
-{	(	  siwo_actionrule(sw) | siwo_constraintrule(sw) | siwo_pre(sw) | siwo_post(sw)
-	| siwo_effectrule(sw)
-	)*
-
-	{		return sw;
-	}
-}

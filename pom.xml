@@ -1,0 +1,217 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.tweetyproject</groupId>
+  <artifactId>parent-pom</artifactId>
+  <name>TweetyProject (Parent POM)</name>
+  <version>1.17-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <description>TweetyProject is a collection of various Java libraries that implement approaches to different areas of artificial intelligence. In particular, it provides a general interface layer for doing research and working with different knowledge representation formalisms such as classical logics, conditional logics, probabilistic logics, and argumentation. Furthermore, TweetyProject contains libraries for dealing with agents, multi-agent systems, and dialog systems for agents, as well as belief revision, preference reasoning, preference aggregation, and action languages. A series of utility libraries that deal with e.g. mathematical optimization complement the collection.</description>
+  <url>http://tweetyproject.org</url>
+
+  <scm>
+  	<url>https://svn.code.sf.net/p/tweety/code/trunk/</url>
+  	<connection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</connection>
+	<developerConnection>scm:svn:https://svn.code.sf.net/p/tweety/code/trunk/</developerConnection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>mthimm</id>
+      <name>Matthias Thimm</name>
+      <email>matthias@mthimm.de</email>
+    </developer>
+  </developers>
+
+  <!-- For third-party jars that are not in the central repository -->
+  <repositories>
+	<repository>
+	    <id>tweety-mvn</id>
+	    <name>TweetyProject MVN Repository</name>
+    	<url>https://tweetyproject.org/mvn</url>
+	</repository>
+  </repositories>
+
+  <licenses>
+    <license>
+      <name>The General Public License, Version 3.0</name>
+      <url>http://www.gnu.org/licenses/gpl-3.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <distributionManagement>
+	<snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <build>
+<!--
+  <resources>
+    <resource>
+      <directory>src/main/resources</directory>
+    </resource>
+    <resource>
+      <directory>src/main/java</directory>
+      <includes>
+        <include>**/*.java</include>
+      </includes>
+    </resource>
+  </resources>
+ -->
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>12</source>
+          <target>12</target>
+        </configuration>
+      </plugin>
+      <!-- Generate jar containing the sources of the project: -->
+      <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-source-plugin</artifactId>
+      <version>2.2.1</version>
+      <executions>
+        <execution>
+          <id>attach-sources</id>
+          <goals>
+            <goal>jar-no-fork</goal>
+          </goals>
+        </execution>
+      </executions>
+      <configuration>
+          <outputDirectory>../testBuild</outputDirectory>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+        </configuration>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <executions>
+        <execution>
+          <id>attach-javadocs</id>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+        </execution>
+      </executions>
+        <configuration>
+          <outputDirectory>../testBuild</outputDirectory>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+        </configuration>
+    </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+          <outputDirectory>../testBuild</outputDirectory>
+        </configuration>
+      </plugin>
+      <!--
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
+          <shadedClassifierName>${project.artifactId}-${project.version}-with-dependencies</shadedClassifierName>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+          <outputDirectory>../testBuild</outputDirectory>
+          <finalName>${project.groupId}.${project.artifactId}-${project.version}-with-dependencies</finalName>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+     -->
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.5</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+  	<module>org-tweetyproject-commons</module>
+  	<module>org-tweetyproject-math</module>
+  	<module>org-tweetyproject-action</module>
+  	<module>org-tweetyproject-beliefdynamics</module>
+  	<module>org-tweetyproject-cli</module>
+  	<module>org-tweetyproject-graphs</module>
+  	<module>org-tweetyproject-preferences</module>
+  	<module>org-tweetyproject-machinelearning</module>
+  	<module>org-tweetyproject-plugin</module>
+  	<module>org-tweetyproject-lp-asp</module>
+  	<module>org-tweetyproject-lp-asp-beliefdynamics</module>
+  	<module>org-tweetyproject-lp-nlp</module>
+  	<module>org-tweetyproject-logics-bpm</module>
+  	<module>org-tweetyproject-logics-commons</module>
+  	<module>org-tweetyproject-logics-cl</module>
+  	<module>org-tweetyproject-logics-fol</module>
+  	<module>org-tweetyproject-logics-pl</module>
+  	<module>org-tweetyproject-logics-ml</module>
+  	<module>org-tweetyproject-logics-mln</module>
+  	<module>org-tweetyproject-logics-pcl</module>
+    <module>org-tweetyproject-logics-qbf</module>
+  	<module>org-tweetyproject-logics-rcl</module>
+  	<module>org-tweetyproject-logics-rdl</module>
+  	<module>org-tweetyproject-logics-rpcl</module>
+  	<module>org-tweetyproject-logics-dl</module>
+  	<module>org-tweetyproject-logics-translators</module>
+  	<module>org-tweetyproject-arg-adf</module>
+  	<module>org-tweetyproject-arg-aspic</module>
+    <module>org-tweetyproject-arg-aba</module>
+    <module>org-tweetyproject-arg-bipolar</module>
+  	<module>org-tweetyproject-arg-deductive</module>
+  	<module>org-tweetyproject-arg-lp</module>
+  	<module>org-tweetyproject-arg-delp</module>
+  	<module>org-tweetyproject-arg-dung</module>
+  	<module>org-tweetyproject-arg-prob</module>
+  	<module>org-tweetyproject-arg-rankings</module>
+  	<module>org-tweetyproject-arg-saf</module>
+  	<module>org-tweetyproject-arg-social</module>
+  	<module>org-tweetyproject-agents</module>
+  	<module>org-tweetyproject-agents-dialogues</module>
+  	<module>org-tweetyproject-web</module>
+  	<module>org-tweetyproject</module>
+  </modules>
+
+</project>

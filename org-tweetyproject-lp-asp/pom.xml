@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.tweetyproject.lp</groupId>
+  <artifactId>asp</artifactId>
+  <packaging>jar</packaging>
+
+  <name>TweetyProject (ASP Library)</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.9</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.tweetyproject</groupId>
+    	<artifactId>commons</artifactId>
+    	<version>1.17-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.tweetyproject</groupId>
+    	<artifactId>beliefdynamics</artifactId>
+    	<version>1.17-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  <parent>
+  <groupId>org.tweetyproject</groupId>
+  <artifactId>parent-pom</artifactId>
+  	<version>1.17-SNAPSHOT</version>
+  	<relativePath>..</relativePath>
+  </parent>
+</project>
