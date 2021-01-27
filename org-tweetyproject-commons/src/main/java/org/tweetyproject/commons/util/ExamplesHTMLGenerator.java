@@ -41,7 +41,7 @@ import java.util.TreeMap;
  */
 public class ExamplesHTMLGenerator {
 
-	private static String sourceforge_base_path = "https://sourceforge.net/p/tweety/code/HEAD/tree/trunk/";
+	private static String git_path = "https://github.com/TweetyProjectTeam/TweetyProject/tree/main/";
 
 	/**
 	 * Generates SourceForge urls for example classes.
@@ -83,10 +83,10 @@ public class ExamplesHTMLGenerator {
 	// HTML templates for the examples and resources of individual libraries
 	private static String module_template = "\n<a name='$MODULELINK'></a><h4>$MODULENAME (<span style='font-family: Courier'>$MODULEPATH</span>)</h4>\n"
 			+ "Example code: $EXAMPLES \n Resources: $RESOURCES";
-	private static String resources_template = "\n" + "<li><a target='_blank' href='" + sourceforge_base_path
-			+ "libraries/$MODULE_SF_PATH/resources/$EXAMPLENAME'><tt>resources.$EXAMPLENAME</tt></a>$DESCRIPTION</li>";
-	private static String examples_template = "\n<li><a target='_blank' href='" + sourceforge_base_path
-			+ "libraries/$MODULE_SF_PATH/examples/$EXAMPLENAME'><tt>examples.$EXAMPLENAME</tt></a>$DESCRIPTION</li>";
+	private static String resources_template = "\n" + "<li><a target='_blank' href='" + git_path
+			+ "$MODULE_SF_PATH/resources/$EXAMPLENAME'><tt>resources.$EXAMPLENAME</tt></a>$DESCRIPTION</li>";
+	private static String examples_template = "\n<li><a target='_blank' href='" + git_path
+			+ "$MODULE_SF_PATH/examples/$EXAMPLENAME'><tt>examples.$EXAMPLENAME</tt></a>$DESCRIPTION</li>";
 	private static String resources_empty = "<p> <i>no resources available</i> </p>";
 	private static String examples_empty = "<p> <i>no example code available</i> </p>";
 
@@ -306,7 +306,7 @@ public class ExamplesHTMLGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		printExamplesToHtmlFile("/home/anna/");
+		printExamplesToHtmlFile("/home/anna/temp/");
 	}
 
 }
