@@ -19,11 +19,11 @@ Want to contribute? We appreciate it! If you find a bug or would like to request
 
 If you want to make your own contributions to the code, follow the usual steps:
 * Fork this repository 
-* Create a new branch `git checkout -b àdd-feature`
+* Create a new branch `git checkout -b wip/myfeature`
 * Make your changes 
 * Add your changes  `git add your-files`
 * Commit your changes `git commit -m "description of your feature"`
-* Push to your branch `git push origin add-feature`
+* Push to your branch `git push origin wip/myfeature`
 * Create a pull request`
 
 ## Documentation
@@ -34,11 +34,11 @@ If you want to make your own contributions to the code, follow the usual steps:
   * [Integration of optimization problem solvers](http://tweetyproject.org/doc/optimization-problem-solvers.html)
   * [Integration of solvers for determining minimal unsatisfiable subsets](http://tweetyproject.org/doc/mus-enumerators.html)
 * **Tutorials:** The slidedecks of the following tutorials give a more detailed and practical introduction into working with TweetyProject:
-  * [Implementing KR approaches with Tweety, tutorial at the the 16th International Conference on Principles of Knowledge Representation and Reasoning (KR'18) in Tempe (USA)](http://tweetyproject.org/doc/tutorials/kr2018/index.html)
-  * [Formal Argumentation Approaches in TweetyProject, tutorial at the the 4th Summer School on Argumentation (SSA'20)](http://tweetyproject.org/doc/tutorials/ssa2020/index.html)
+  * [Implementing KR approaches with Tweety, tutorial at the 16th International Conference on Principles of Knowledge Representation and Reasoning (KR'18) in Tempe (USA)](http://tweetyproject.org/doc/tutorials/kr2018/index.html)
+  * [Formal Argumentation Approaches in TweetyProject, tutorial at the 4th Summer School on Argumentation (SSA'20)](http://tweetyproject.org/doc/tutorials/ssa2020/index.html)
 * **Papers:** The following papers give a brief overview on the functionalities of TweetyProject and should also be used as a reference when citing TweetyProject in scientific papers.
-  * Matthias Thimm. "Tweety - A Comprehensive Collection of Java Libraries for Logical Aspects of Artificial Intelligence and Knowledge Representation". In Proceedings of the 14th International Conference on Principles of Knowledge Representation and Reasoning (KR'14). Vienna, July, 2014. [PDF](http://www.mthimm.de/pub/2014/Thimm_2014.pdf) [bibtex](http://www.mthimm.de/pub/2014/Thimm_2014.bib)
-  * Matthias Thimm. The Tweety Library Collection for Logical Aspects of Artificial Intelligence and Knowledge Representation. In Künstliche Intelligenz, 31(1):93-97, March 2017. [PDF](http://mthimm.de/pub/2017/Thimm_2017a.pdf) [bibtex](http://mthimm.de/pub/2017/Thimm_2017a.bib)
+  * Matthias Thimm. "Tweety - A Comprehensive Collection of Java Libraries for Logical Aspects of Artificial Intelligence and Knowledge Representation". In Proceedings of the 14th International Conference on Principles of Knowledge Representation and Reasoning (KR'14). Vienna, July 2014. [PDF](http://www.mthimm.de/pub/2014/Thimm_2014.pdf), [bibtex](http://www.mthimm.de/pub/2014/Thimm_2014.bib)
+  * Matthias Thimm. The Tweety Library Collection for Logical Aspects of Artificial Intelligence and Knowledge Representation. In Künstliche Intelligenz, 31(1):93-97, March 2017. [PDF](http://mthimm.de/pub/2017/Thimm_2017a.pdf), [bibtex](http://mthimm.de/pub/2017/Thimm_2017a.bib)
 * **[Example code and resources](http://tweetyproject.org/doc/example-code.html)**: Example code snippets that show the functionality of the library (also distributed as part of the library).
 * **[Developer guide](http://tweetyproject.org/doc/dev-guide.html)**
 
