@@ -132,7 +132,7 @@ public class ExamplesHTMLGenerator {
 		TreeMap<String, Pair<String, String>> library_items = new TreeMap<String, Pair<String, String>>();
 		if (tweety_dirs != null) {
 			for (File child : tweety_dirs) {
-				if (child.isDirectory() && !child.getName().contains(".settings")
+				if (child.isDirectory() && !child.getName().contains(".settings") && !child.getName().contains(".git") && !child.getName().contains("logo")
 						&& !child.getName().equals("org-tweetyproject")) {
 
 					String MODULEPATH = child.getName();
@@ -306,7 +306,7 @@ public class ExamplesHTMLGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		printExamplesToHtmlFile("/home/anna/temp/");
+		printExamplesToHtmlFile("/home/");
 	}
 
 }
