@@ -106,9 +106,8 @@ public class OptimizationStatement extends ASPBodyElement {
 	 * Creates a new OptimizatonStatement with the given function and single
 	 * term-literal tuple.
 	 * 
-	 * @param function
-	 * @param weight
-	 * @param tuple    AggregateElemen t
+	 * @param function	the target function 
+	 * @param element  some element
 	 */
 	public OptimizationStatement(OptimizeFunction function, OptimizationElement element) {
 		this.optimizeFunction = function;

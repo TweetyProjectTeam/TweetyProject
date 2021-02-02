@@ -47,7 +47,7 @@ public class DSumSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 	/**
 	 * Create a new DSumSatInconsistencyMeasure with the given SAT solver.
 	 * 
-	 * @param solver
+	 * @param solver  some SAT solver
 	 */
 	public DSumSatInconsistencyMeasure(SatSolver solver) {
 		super(solver);

@@ -38,7 +38,7 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * aggregate function #count one can easily express "the number of employees
  * of a department has to be greater than 0".
  * <br> An aggregate function together with the terms and literals it ranges
- * over and a comparison (like >= 0) is called an aggregate atom and can appear in the body of a rule. 
+ * over and a comparison (like &gt;= 0) is called an aggregate atom and can appear in the body of a rule. 
  * <br> If you want to use an aggregate atom as the head of a rule (as is allowed in some standards
  * like clingo), use {@link org.tweetyproject.lp.asp.syntax.AggregateHead}
  *
@@ -105,7 +105,7 @@ public class AggregateAtom extends ASPBodyElement {
 	 * Creates a new Aggregate with the given aggregate function and the given
 	 * aggregate elements.
 	 * 
-	 * @param func  an aggregate function
+	 * @param function  an aggregate function
 	 * @param elements list of aggregate elements
 	 */
 	public AggregateAtom(ASPOperator.AggregateFunction function, List<AggregateElement> elements) {
@@ -196,7 +196,7 @@ public class AggregateAtom extends ASPBodyElement {
 	
 	/**
 	 * Creates a new cardinality rule, meaning an aggregate
-	 * of the form "leftBound <= #count { elements } <= rightBound"
+	 * of the form "leftBound &lt;= #count { elements } &lt;= rightBound"
 	 * with the given literals and the given integer bounds.
 	 * 
 	 * @param literals   of the cardinality rule

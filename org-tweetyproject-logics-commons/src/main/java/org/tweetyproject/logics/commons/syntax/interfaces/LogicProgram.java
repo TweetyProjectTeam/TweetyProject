@@ -43,7 +43,7 @@ public interface LogicProgram<C extends Formula, P extends Formula, T extends Ru
 	
 	/**
 	 * Adds the given facts to the program
-	 * @param facts
+	 * @param facts some facts
 	 */
 	@SuppressWarnings("unchecked")
 	void addFacts(C... facts);

@@ -2,11 +2,11 @@
 /* JavaCCOptions: */
 package org.tweetyproject.arg.delp.parser;
 
-/** Token Manager Error. */
+/* Token Manager Error. */
 public class TokenMgrError extends Error
 {
 
-  /**
+  /*
    * The version identifier for this Serializable class.
    * Increment only if the <i>serialized</i> form of the
    * class changes.
@@ -17,33 +17,33 @@ public class TokenMgrError extends Error
    * Ordinals for various reasons why an Error of this type can be thrown.
    */
 
-  /**
+  /*
    * Lexical error occurred.
    */
   static final int LEXICAL_ERROR = 0;
 
-  /**
+  /*
    * An attempt was made to create a second instance of a static token manager.
    */
   static final int STATIC_LEXER_ERROR = 1;
 
-  /**
+  /*
    * Tried to change to an invalid lexical state.
    */
   static final int INVALID_LEXICAL_STATE = 2;
 
-  /**
+  /*
    * Detected (and bailed out of) an infinite loop in the token manager.
    */
   static final int LOOP_DETECTED = 3;
 
-  /**
+  /*
    * Indicates the reason why the exception is thrown. It will have
    * one of the above 4 values.
    */
   int errorCode;
 
-  /**
+  /*
    * Replaces unprintable characters by their escaped (or unicode escaped)
    * equivalents in the given string
    */
@@ -92,7 +92,7 @@ public class TokenMgrError extends Error
     return retval.toString();
   }
 
-  /**
+  /*
    * Returns a detailed message for the Error when it is thrown by the
    * token manager to indicate a lexical error.
    * Parameters :
@@ -112,7 +112,7 @@ public class TokenMgrError extends Error
           "after : \"" + addEscapes(errorAfter) + "\"");
   }
 
-  /**
+  /*
    * You can also modify the body of this method to customize your error messages.
    * For example, cases like LOOP_DETECTED and INVALID_LEXICAL_STATE are not
    * of end-users concern, so you can return something like :
@@ -129,17 +129,17 @@ public class TokenMgrError extends Error
    * Constructors of various flavors follow.
    */
 
-  /** No arg constructor. */
+  /* No arg constructor. */
   public TokenMgrError() {
   }
 
-  /** Constructor with message and reason. */
+  /* Constructor with message and reason. */
   public TokenMgrError(String message, int reason) {
     super(message);
     errorCode = reason;
   }
 
-  /** Full Constructor. */
+  /* Full Constructor. */
   public TokenMgrError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar, int reason) {
     this(LexicalError(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
   }

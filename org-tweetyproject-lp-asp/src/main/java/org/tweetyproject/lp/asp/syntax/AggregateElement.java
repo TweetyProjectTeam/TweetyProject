@@ -225,7 +225,7 @@ public class AggregateElement extends ASPElement {
 	/**
 	 * Sets the term tuple of the aggregate element.
 	 * 
-	 * @param left the term tuple to set
+	 * @param terms the term tuple to set
 	 */
 	public void setLeft(List<Term<?>> terms) {
 		this.left = terms;
@@ -234,7 +234,7 @@ public class AggregateElement extends ASPElement {
 	/**
 	 * Sets the literal tuple of this aggregate element.
 	 * 
-	 * @param right the literal tuple to set
+	 * @param literals the literal tuple to set
 	 */
 	public void setRight(List<ASPBodyElement> literals) {
 		for (ASPBodyElement elem : literals) {

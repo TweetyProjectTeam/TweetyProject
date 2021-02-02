@@ -110,28 +110,32 @@ public abstract class CombinatoricsProblem extends GeneralConstraintSatisfaction
 	/**create a solution that changes the solution currSol a little bit 
 	 * (i.e.: for TSP: swap 2 cities; for KnapSack: add a random element)
 	 * for currSol == null: create a random solution
+	 * @param currSol the current solution
+	 * @return the solution
 	 */
 	public abstract ArrayList<ElementOfCombinatoricsProb> createRandomNewSolution(ArrayList<ElementOfCombinatoricsProb> currSol);
 	
 	/**
 	 * evaluates the solution
-	 * @return the target function for @param sol
+	 * @param sol some solution
+	 * @return the target function for sol 
 	 */
 	public abstract double evaluate(ArrayList<ElementOfCombinatoricsProb> sol);
 	
-	/**checks if a given solution is valid under all constraints
+	/**checks if a given solution is valid under all constraints	 
+	 * @param sol some solution
+	 * @return true iff the solution is valid
 	 */
 	public abstract boolean isValid(ArrayList<ElementOfCombinatoricsProb> sol);
 	
-	/**for Ant optimization: give a chance between 0 and 1 for accepting @param solutionComponent to 
-	 * the solution @param sol
+	/**for Ant optimization: give a chance between 0 and 1 for accepting solutionComponent to 
+	 * the solution sol
 	 * 
-	 * @param solutionComponent: Element to be checked
-	 * @param positionInSolution: position where @param solutionComponent should be inserted
+	 * @param solutionComponent: Element to be checked	 * 
 	 * @param getCurrentIndex: the length of the solution
 	 * @param initialReference: default starting point for the solution (the first Element in the solution)
-	 * @param sol: array represntation of a solution (needed for Ant optimization)
-	 * @return
+	 * @param sol: array representation of a solution (needed for Ant optimization)
+	 * @return the heuristic value
 	 */
 	public abstract Double getHeuristicValue(ElementOfCombinatoricsProb solutionComponent,
 			Integer getCurrentIndex, ElementOfCombinatoricsProb initialReference, 

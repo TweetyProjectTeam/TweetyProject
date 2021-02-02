@@ -39,19 +39,19 @@ public interface Rule<C extends Formula, P extends Formula> extends Formula {
 	
 	/**
 	 * Set the conclusion of this rule.
-	 * @param conclusion
+	 * @param conclusion some formula
 	 */
 	public void setConclusion(C conclusion);
 	
 	/**
 	 * Add the given premise to this rule.
-	 * @param premise
+	 * @param premise some formula
 	 */
 	public void addPremise(P premise);
 	
 	/**
 	 * Add the given premises to this rule.
-	 * @param premise
+	 * @param premises some formulas
 	 */
 	public void addPremises(Collection<? extends P> premises);
 	

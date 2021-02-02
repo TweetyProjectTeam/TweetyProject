@@ -54,8 +54,8 @@ public class InconsistencyMeasuresExamples {
 		return measures;
 	}
 	
-	/**
-	 * @param args
+	/*
+	 * @param args 
 	 * @throws IOException 
 	 * @throws ParserException 
 	 */
@@ -74,7 +74,7 @@ public class InconsistencyMeasuresExamples {
 
 	} 
 	
-	/**
+	/*
 	 * @param modelFile a BPMN file according to the BPMN XML standard
 	 * @throws IOException 
 	 * @throws ParserException 

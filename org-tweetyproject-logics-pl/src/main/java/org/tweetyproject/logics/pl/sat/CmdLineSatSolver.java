@@ -41,11 +41,11 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * 
  * Tested with the following solvers:
  * <ul>
- * <li>CaDiCal 1.3.1 {@link (http://fmv.jku.at/cadical/)}</li>
- * <li>Kissat 1.0.3 {@link (http://fmv.jku.at/kissat/)}</li>
- * <li>Lingeling bcp {@link (http://fmv.jku.at/lingeling/)}</li>
- * <li>Slime 3.1.1 {@link https://github.com/maxtuno/slime-sat-solver}</li>
- * <ul>
+ * <li>CaDiCal 1.3.1 <a href="http://fmv.jku.at/cadical">http://fmv.jku.at/cadical</a></li>
+ * <li>Kissat 1.0.3 <a href="http://fmv.jku.at/kissat">http://fmv.jku.at/kissat</a></li>
+ * <li>Lingeling bcp <a href="http://fmv.jku.at/lingeling">href="http://fmv.jku.at/lingeling</a></li>
+ * <li>Slime 3.1.1 <a href="https://github.com/maxtuno/slime-sat-solver">https://github.com/maxtuno/slime-sat-solver</a></li>
+ * </ul>
  * 
  * @author Anna Gessler
  *
@@ -65,7 +65,7 @@ public class CmdLineSatSolver extends SatSolver {
 	/**
 	 * Creates a new SAT solver based on the given binary location.
 	 * 
-	 * @param binaryLocation
+	 * @param binaryLocation the location of the binary
 	 */
 	public CmdLineSatSolver(String binaryLocation) {
 		super();

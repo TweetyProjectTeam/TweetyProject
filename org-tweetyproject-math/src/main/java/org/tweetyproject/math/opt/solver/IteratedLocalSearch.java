@@ -68,6 +68,7 @@ public class IteratedLocalSearch extends CombinatoricsSolver{
 	/**
 	 * changes the solution drastically to escape a local minimum
 	 * @param currSol the solution to be pertubated
+	 * @return the new currSol
 	 */
 	public ArrayList<ElementOfCombinatoricsProb> pertubate(ArrayList<ElementOfCombinatoricsProb> currSol){
 		double max = this.perturbationStrength * (double) this.prob.elements.size();

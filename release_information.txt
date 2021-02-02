@@ -1,3 +1,31 @@
+02.02.2021 - TweetyProject 1.19
+  - The source repository of TweetyProject has now been moved to GitHub
+    (https://github.com/TweetyProjectTeam/TweetyProject). As a result, the main
+    package of TweetyProject has been changed from "net.sf.tweety" to
+    "org.tweetyproject".
+  New libraries: <none>
+  New functionalities:
+    - added parser, writer, and inconsistency measurement approaches to the
+      BPM library (org.tweetyproject.logics.bpm)
+    - added abstract argumentation synthesizing approach of Niskanen et al.
+      (org.tweetyproject.arg.dung)
+    - added strong equivalence check and independence check capabilities for
+      abstract argumentation (org.tweetyproject.arg.dung)
+    - added further optimisation approaches, in particular for combinatorial
+      optimisation: ant colony search, stochastic search, iterated local search,
+      binding for Gurobi (org.tweetyproject.math)
+    - added utility class for analysis performance of inconsistency measures
+      (org.tweetyproject.logics.commons)
+    - added aggregates and optimisation statements to the ASP library
+      (org.tweetyproject.lp.asp)
+  Minor changes:
+    - several improvements and bugfixes in the ADF library
+      (org.tweetyproject.arg.adf)
+    - improved bindings to satisfiability solvers (org.tweetyproject.logics.pl)
+    - bugfixes in ordering semantics for abstract argumentation
+      (org.tweetyproject.arg.dung)
+    - bugfixes in the ASP library (org.tweetyproject.lp.asp)
+29.01.2021 - TweetyProject 1.18 (not officially released)
 14.07.2020 - TweetyProject 1.17
   New libraries:
     - net.sf.tweety.logics.bpm: business process modelling library (stub)
@@ -22,7 +50,7 @@
       (net.sf.tweety.arg.adf)
   Minor changes:
     - added XOR to various logics
-    - added convenience methods for easier adding multiple formulas 
+    - added convenience methods for easier adding multiple formulas
       to belief bases
     - bugfixes in ASP (net.sf.tweety.lp.asp)
 23.01.2020 - TweetyProject 1.16

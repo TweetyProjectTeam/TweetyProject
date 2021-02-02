@@ -57,8 +57,8 @@ public final class RelativeKBipolarStateProcessor implements StateProcessor {
 	private final IncrementalSatSolver solver;
 
 	/**
-	 * @param k
-	 * @param comparatorFactory
+	 * @param maxDepth maxDepth
+	 * @param solver solver
 	 */
 	public RelativeKBipolarStateProcessor(int maxDepth, IncrementalSatSolver solver) {
 		this.maxDepth = maxDepth;

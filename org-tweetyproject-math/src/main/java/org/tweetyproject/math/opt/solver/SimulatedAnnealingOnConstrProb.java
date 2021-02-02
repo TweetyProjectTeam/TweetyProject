@@ -114,6 +114,7 @@ public class SimulatedAnnealingOnConstrProb extends Solver{
 	 * @param maxIterations: the maximum amount of solutions to be created
 	 * @param threshold: if a solution with the quality of threshold is reached we do maximum 10 more tries
 	 * @param currSol: the solution that every newly created solution uses as a initial solution in createNewSol
+	 * @param targetFunc the target function
 	 * @return the best solution that was found and is a mutant of currSol
 	 */
 	public Map<Variable,Term> chooseANeighbor(Map<Variable,Term> currSol, int minIterations, int maxIterations, double threshold, Term targetFunc)

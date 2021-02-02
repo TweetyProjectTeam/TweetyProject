@@ -294,7 +294,7 @@ public class ExamplesHTMLGenerator {
 	 * HTML formatting and writes it to a HTML file.
 	 * 
 	 * @param path where the generated file will be saved
-	 * @throws IOException
+	 * @throws IOException if an IO error occurs
 	 */
 	public static void printExamplesToHtmlFile(String path) throws IOException {
 		FileWriter writer = new FileWriter(path + "examples.html");

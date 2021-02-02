@@ -45,7 +45,7 @@ public class HsSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 	/**
 	 * Create a new HsSatInconsistencyMeasure with the given SAT solver.
 	 * 
-	 * @param solver
+	 * @param solver some SAT solver
 	 */
 	public HsSatInconsistencyMeasure(SatSolver solver) {
 		super(solver);

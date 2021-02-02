@@ -61,7 +61,7 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 	/**
 	 * Create a new SAT-based inconsistency measure with the given SAT solver.
 	 * 
-	 * @param solver
+	 * @param solver some SAT solver
 	 */
 	public SatBasedInconsistencyMeasure(SatSolver solver) {
 		this.solver = solver;

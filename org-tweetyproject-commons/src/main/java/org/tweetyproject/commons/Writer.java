@@ -43,8 +43,7 @@ public abstract class Writer {
 	}
 	
 	/**
-	 * Creates a new empty writer for the given object.
-	 * @param obj an object.
+	 * Creates a new empty writer.
 	 */
 	public Writer() {
 	}

@@ -84,6 +84,7 @@ public class BpmnModelPlotter {
 	 * @param frameHeight the height of the frame
 	 * @param nodeWidth the width of nodes in the BPMN model
 	 * @param nodeHeight the height of nodes in the BPMN model
+	 * @param fontSize the font size
 	 */
 	public void createGraph(int frameWidth, int frameHeight, double nodeWidth, double nodeHeight, int fontSize) {
         this.frame.setSize(frameWidth, frameHeight);

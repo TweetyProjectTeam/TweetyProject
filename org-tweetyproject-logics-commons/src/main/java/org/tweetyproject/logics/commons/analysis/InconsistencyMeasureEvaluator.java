@@ -81,8 +81,6 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 
 	/**
 	 * Create a new empty InconsistencyMeasureEvaluator.
-	 * 
-	 * @param measure an inconsistency measure
 	 */
 	public InconsistencyMeasureEvaluator() {
 	}
@@ -91,7 +89,7 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 * Create a new InconsistencyMeasureEvaluator with the given inconsistency
 	 * measure.
 	 * 
-	 * @param measure an inconsistency measure
+	 * @param i an inconsistency measure
 	 */
 	public InconsistencyMeasureEvaluator(BeliefSetInconsistencyMeasure<T> i) {
 		this.inconsistency_measures.add(i);
@@ -99,9 +97,9 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	
 	/**
 	 * Create a new InconsistencyMeasureEvaluator with the given inconsistency
-	 * measure.
+	 * measures.
 	 * 
-	 * @param measure an inconsistency measure
+	 * @param measures some inconsistency measures
 	 */
 	public InconsistencyMeasureEvaluator(Collection<BeliefSetInconsistencyMeasure<T>> measures) {
 		this.inconsistency_measures.addAll(measures);
@@ -112,7 +110,7 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 * given inconsistency measure.
 	 * 
 	 * @param dataset collection of belief bases
-	 * @param measure an inconsistency measure
+	 * @param i an inconsistency measure
 	 */
 	public InconsistencyMeasureEvaluator(Collection<U> dataset, BeliefSetInconsistencyMeasure<T> i) {
 		this.dataset = (List<U>) dataset;
@@ -124,7 +122,7 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 * given inconsistency measures.
 	 * 
 	 * @param dataset collection of belief bases
-	 * @param measure an inconsistency measure
+	 * @param measures some inconsistency measures
 	 */
 	public InconsistencyMeasureEvaluator(Collection<U> dataset, Collection<BeliefSetInconsistencyMeasure<T>> measures) {
 		this.dataset = (List<U>) dataset;
@@ -143,7 +141,7 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	/**
 	 * Sets the function used to measure time in ms.
 	 * 
-	 * @param timeFunction
+	 * @param timeFunction some time function
 	 */
 	public void setTimeFunction(Supplier<Long> timeFunction) {
 		this.time = timeFunction;
@@ -172,7 +170,7 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	/**
 	 * Adds the given knowledge bases to the testing dataset.
 	 * 
-	 * @param kb knowledge bases
+	 * @param kbs knowledge bases
 	 */
 	public void addKnowledgeBases(List<U> kbs) {
 		this.dataset.addAll(kbs);
@@ -190,7 +188,9 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 *                    (i.e. DimacsParser for files in Dimacs format, PlParser
 	 *                    for files in TweetyProject pl Syntax)
 	 * @param n           maximum number of knowledge bases to parse
-	 * @throws IOException, ParserException, FileNotFoundException
+	 * @throws IOException if some error occurs
+	 * @throws ParserException if some error occurs
+	 * @throws FileNotFoundException if some error occurs
 	 */
 	public void parseDatasetFromPath(String path, Parser<U, T> p, int n) throws FileNotFoundException, ParserException, IOException {
 		File dir = new File(path);
@@ -218,7 +218,7 @@ public class InconsistencyMeasureEvaluator<T extends Formula, U extends BeliefSe
 	 * Add n knowledge bases from the given iterator (e.g., a random sampler) to the
 	 * testing dataset.
 	 * 
-	 * @param sampler
+	 * @param sampler some sampler
 	 * @param n                  how many knowledge bases will be added at most
 	 */
 	public void addFromSampler(Iterator<U> sampler, int n) {

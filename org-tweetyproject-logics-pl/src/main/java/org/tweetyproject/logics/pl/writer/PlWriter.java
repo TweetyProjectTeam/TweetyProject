@@ -30,7 +30,8 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  */
 public class PlWriter extends Writer {
 	/**
-	 * Creates a new PlWriter for the given formula.
+	 * Creates a new PlWriter for the given formula.	 
+	 * @param plFormula some formula
 	 */
 	public PlWriter(PlFormula plFormula) {
 		super(plFormula);

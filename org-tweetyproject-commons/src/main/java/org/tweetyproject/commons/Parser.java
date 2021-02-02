@@ -83,11 +83,11 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 	 * Parses the file of the given filename into a list of belief bases of the given type. Belief
 	 * bases are separated by three consecutive newline characters ("\n\n\n").
 	 * 
-	 * @param text a string
+	 * @param filename a string
 	 * @return a list of belief bases in the order in which they appear in the input
 	 *         string.
-	 * @throws IOException
-	 * @throws ParserException
+	 * @throws IOException if an IO error occurs
+	 * @throws ParserException some parsing exception
 	 */
 	public List<T> parseListOfBeliefBasesFromFile(String filename) throws ParserException, IOException {
 		String text = Files.readString(Path.of(filename));
@@ -99,12 +99,12 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 	 * Parses the file of the given filename into a list of belief bases of the given type. Belief
 	 * bases are separated by the given delimiter.
 	 * 
-	 * @param text a string
+	 * @param filename a string
 	 * @param delimiter for separating belief bases
 	 * @return a list of belief bases in the order in which they appear in the input
 	 *         string.
-	 * @throws IOException
-	 * @throws ParserException
+	 * @throws IOException if an IO error occurs
+	 * @throws ParserException some parsing exception
 	 */
 	public List<T> parseListOfBeliefBasesFromFile(String filename, String delimiter) throws ParserException, IOException {
 		String text = Files.readString(Path.of(filename));
@@ -120,8 +120,8 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 	 * @param text a string
 	 * @return a list of belief bases in the order in which they appear in the input
 	 *         string.
-	 * @throws IOException
-	 * @throws ParserException
+	 * @throws IOException if an IO error occurs
+	 * @throws ParserException some parsing exception
 	 */
 	public List<T> parseListOfBeliefBases(String text) throws ParserException, IOException {
 		String[] kbs_string = text.split("\n\n\n");
@@ -141,8 +141,8 @@ public abstract class Parser<T extends BeliefBase, S extends Formula> {
 	 * @param delimiter for separating belief bases
 	 * @return a list of belief bases in the order in which they appear in the input
 	 *         string.
-	 * @throws IOException
-	 * @throws ParserException
+	 * @throws IOException if an IO error occurs
+	 * @throws ParserException some parsing exception
 	 */
 	public List<T> parseListOfBeliefBases(String text, String delimiter) throws ParserException, IOException {
 		if (delimiter.matches(".*" + illegalDelimitors + ".*"))

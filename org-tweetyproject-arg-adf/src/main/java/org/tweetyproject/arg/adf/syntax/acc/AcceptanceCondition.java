@@ -27,7 +27,7 @@ import org.tweetyproject.arg.adf.util.UnionSetView;
 /**
  * An immutable representation of acceptance conditions for ADFs.
  * <p>
- * Mirrors the structure of {@link PlFormula}.
+ * Mirrors the structure of org.tweetyproject.logics.pl.syntax.PlFormula.
  * 
  * @author Mathias Hofer
  *
@@ -82,8 +82,8 @@ public interface AcceptanceCondition {
 	 * <p>
 	 * Note that this relation is reflexive, hence each argument contains itself.
 	 * 
-	 * @param arg
-	 * @return
+	 * @param arg some argument
+	 * @return true if the argument is contained
 	 */
 	default boolean contains(Argument arg) {
 		return getChildren()

@@ -43,7 +43,7 @@ public class ExampleFinder {
     /**
      * initialize with two semantics and automatically find reasoners for them (if they exist)
      * @param semantics1 a semantics
-     * @param semantics a semantics
+     * @param semantics2 a semantics
      */
     public ExampleFinder(Semantics semantics1, Semantics semantics2) {
         this(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics1), AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics2));

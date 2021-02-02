@@ -39,7 +39,7 @@ public final class DegreeComparator implements Comparator<Argument> {
 	private final AbstractDialecticalFramework adf;
 
 	/**
-	 * 
+	 * @param adf some ADF
 	 * @param degreeType
 	 *            specifies the type of the degree
 	 */

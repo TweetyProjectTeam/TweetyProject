@@ -87,7 +87,7 @@ public class PostulateEvaluator<T extends Formula, U extends BeliefSet<T,?>>{
 	
 	/**
 	 * Adds all postulates in the given collection.
-	 * @param postulates
+	 * @param postulates some postulates
 	 */
 	public void addAllPostulates(Collection<? extends Postulate<T>> postulates) {
 		for (Postulate<T> p : postulates)
@@ -105,7 +105,7 @@ public class PostulateEvaluator<T extends Formula, U extends BeliefSet<T,?>>{
 	
 	/**
 	 * Removes all postulates in the given collection.
-	 * @param postulates
+	 * @param postulates some postulates
 	 */
 	public void removeAllPostulates(Collection<? extends Postulate<T>> postulates) {
 		for (Postulate<T> p : postulates)

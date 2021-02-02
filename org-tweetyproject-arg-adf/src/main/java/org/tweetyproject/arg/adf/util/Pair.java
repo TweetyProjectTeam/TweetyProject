@@ -31,8 +31,8 @@ public final class Pair<T1, T2> {
 	public final T2 second;
 
 	/**
-	 * @param first
-	 * @param second
+	 * @param first some element
+	 * @param second  some element
 	 */
 	public Pair(T1 first, T2 second) {
 		this.first = first;

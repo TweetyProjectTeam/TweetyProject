@@ -48,7 +48,7 @@ public class DMaxSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 	/**
 	 * Create a new DMaxSatInconsistencyMeasure with the given SAT solver.
 	 * 
-	 * @param solver
+	 * @param solver  some SAT solver
 	 */
 	public DMaxSatInconsistencyMeasure(SatSolver solver) {
 		super(solver);

@@ -155,7 +155,7 @@ public class RootParser extends Parser {
 	}
 	
 	/**
-	 * @param a prepared buffered edge
+	 * @param edge a prepared buffered edge
 	 */
 	public void putBufferedEdge(BufferedBpmnEdge edge) {
 		this.edgeBuffer.put(edge.getId(), edge);
@@ -164,9 +164,10 @@ public class RootParser extends Parser {
 	/**
 	 * Parse the XML file to an instance of the BpmnModel class
 	 * @param xmlFile the XML file to parse to a BPMN model
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
+	 * @throws ParserConfigurationException  if some error occurs
+	 * @throws SAXException if some error occurs
+	 * @throws IOException if some error occurs
+	 * @return the parsed belief base
 	 */
 	public BeliefBase parseFile(File xmlFile) throws SAXException, IOException, ParserConfigurationException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

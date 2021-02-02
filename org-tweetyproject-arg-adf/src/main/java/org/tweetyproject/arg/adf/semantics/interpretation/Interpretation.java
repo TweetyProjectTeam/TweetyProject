@@ -80,10 +80,10 @@ public interface Interpretation {
 	/**
 	 * Extends the given interpretation by deciding a currently undecided argument. If the argument is not undecided in the given interpretation, an exception is thrown.
 	 * 
-	 * @param toExtend
-	 * @param argument
-	 * @param value
-	 * @return
+	 * @param toExtend toExtend
+	 * @param argument argument
+	 * @param value value
+	 * @return return value
 	 */
 	static Interpretation extend(Interpretation toExtend, Argument argument, boolean value) {
 		if (!toExtend.undecided(argument)) {
@@ -315,7 +315,7 @@ public interface Interpretation {
 	}
 	
 	/**
-	 * 
+	 * @param arg some argument
 	 * @return true iff the argument is either satisfied or unsatisfied
 	 */
 	default boolean decided(Argument arg) {

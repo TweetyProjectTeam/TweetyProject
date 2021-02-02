@@ -47,9 +47,11 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 	 * Creates a new InconsistencyMeasureReport with the given results, the given list of measures used and the 
 	 * given list of knowledge bases used.
 	 * 
-	 * @param results map of InconsistencyMeasure names and lists of computed inconsistency values
 	 * @param measures list of strings representing inconsistency measure names 
 	 * @param instances list of knowledge bases
+	 * @param instances_names names knowledge bases
+	 * @param results map of InconsistencyMeasure names and lists of computed inconsistency values 
+	 * 
 	 */
 	public InconsistencyMeasureReport( List<String> measures, List<U> instances, List<String> instances_names, Map<String, List<InconsistencyMeasureResult>> results) {
 		this.results = results;
@@ -61,7 +63,7 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 	/**
 	 * Returns the result for the ith instance for the given measure.
 	 * @param measure name of inconsistency measure
-	 * @param i
+	 * @param i number of instance
 	 * @return result for ith instance for the given measure
 	 */
 	public InconsistencyMeasureResult getIthResult(String measure, int i) {
@@ -69,9 +71,8 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 	}
 	
 	/**
-	 * Returns the result for the ith instance for the given measure.
-	 * @param measure name of inconsistency measure
-	 * @param i
+	 * Returns the result for the ith instance for the given measure. 
+	 * @param i number of instance
 	 * @return result for ith instance for the given measure
 	 */
 	public U getIthInstance(int i) {
@@ -79,9 +80,8 @@ public class InconsistencyMeasureReport<T extends Formula, U extends BeliefSet<T
 	}
 	
 	/**
-	 * Returns the result for the ith instance for the given measure.
-	 * @param measure name of inconsistency measure
-	 * @param i
+	 * Returns the result for the ith instance for the given measure.	 * 
+	 * @param i number of instance
 	 * @return result for ith instance for the given measure
 	 */
 	public String getIthInstanceName(int i) {

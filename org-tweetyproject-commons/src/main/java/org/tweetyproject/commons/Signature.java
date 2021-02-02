@@ -94,7 +94,7 @@ public interface Signature extends Cloneable {
 	/**
 	 * Adds the given formulas to the signature.
 	 * 
-	 * @param objects
+	 * @param objects some objects to be added 
 	 */
 	public void add(Object... objects);
 	

@@ -47,7 +47,7 @@ import org.tweetyproject.lp.asp.syntax.Program;
 
 /**
  * An example for using optimization statements, taken from the clingo guide, chapter
- * 3.1.13 {@link (https://github.com/potassco/guide)}.
+ * 3.1.13 <a href="https://github.com/potassco/guide">https://github.com/potassco/guide</a>.
  * 
  * @author Anna Gessler
  */

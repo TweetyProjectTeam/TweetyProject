@@ -50,7 +50,7 @@ public class ASPOperator {
 	
 	/**
 	 * The binary comparative operators that are supported by the ASP-Core-2 standard
-	 * and by Tweety: LT (<), LEQ (<=), EQ (==), NEQ (!=), GT (>), GEQ (>=)
+	 * and by Tweety: LT (&lt;), LEQ (&lt;=), EQ (==), NEQ (!=), GT (&gt;), GEQ (&gt;=)
 	 * 
 	 * @author Anna Gessler
 	 */

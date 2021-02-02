@@ -34,7 +34,7 @@ public final class AcceptanceConditionSizeComparator implements Comparator<Argum
 	private final AbstractDialecticalFramework adf;
 	
 	/**
-	 * @param adf
+	 * @param adf some ADF
 	 */
 	public AcceptanceConditionSizeComparator(AbstractDialecticalFramework adf) {
 		this.adf = Objects.requireNonNull(adf);

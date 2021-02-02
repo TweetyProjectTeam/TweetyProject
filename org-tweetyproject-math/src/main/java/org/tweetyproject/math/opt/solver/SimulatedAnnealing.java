@@ -49,7 +49,7 @@ public class SimulatedAnnealing extends CombinatoricsSolver {
 	}
 	/**
 	 * 
-	 * @param initialSol: a starting point for the search
+	 * @param prob: the problem
 	 * @return the best solution encountered
 	 */
 	public ArrayList<ElementOfCombinatoricsProb> solve(CombinatoricsProblem prob) {

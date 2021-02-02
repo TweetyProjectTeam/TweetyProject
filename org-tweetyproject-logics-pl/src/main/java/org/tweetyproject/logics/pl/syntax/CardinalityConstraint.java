@@ -50,7 +50,7 @@ public class CardinalityConstraint extends PlFormula {
 	 * Create a new at-most-n cardinality constraint with the given set of
 	 * atoms and the given n.
 	 * 
-	 * @param atoms
+	 * @param atoms the atoms
 	 * @param atMost n 
 	 */
 	public CardinalityConstraint(Collection<Proposition> atoms, int atMost) {
@@ -82,8 +82,8 @@ public class CardinalityConstraint extends PlFormula {
 	/**
 	 * Returns a naive SAT encoding of the given cardinality constraint.
 	 * 
-	 * @param atoms
-	 * @param atMost
+	 * @param atoms the atoms
+	 * @param atMost the maximal number of true atoms
 	 * @return sat encoding
 	 */
 	public static PlBeliefSet getBinomialEncoding(Collection<Proposition> atoms, int atMost) {
@@ -103,8 +103,8 @@ public class CardinalityConstraint extends PlFormula {
 	 * [Sinz. "Towards an Optimal {CNF} Encoding of Boolean Cardinality Constraints."
 	 * Principles and Practice of Constraint Programming, Springer 2005]. 
 	 * 
-	 * @param atoms
-	 * @param atMost
+	 * @param atoms the atoms
+	 * @param atMost the maximal number of true atoms
 	 * @param name for auxiliary variables
 	 * @return SAT encoding of constraint
 	 */
@@ -166,7 +166,7 @@ public class CardinalityConstraint extends PlFormula {
 	
 	/**
 	 * Returns a naive at-most-1 encoding for the given set of atoms.
-	 * @param atoms
+	 * @param atoms the atoms
 	 * @return at-most-1 encoding
 	 */
 	public static Conjunction getNaiveAtMostOneEncoding(Collection<Proposition> atoms) {

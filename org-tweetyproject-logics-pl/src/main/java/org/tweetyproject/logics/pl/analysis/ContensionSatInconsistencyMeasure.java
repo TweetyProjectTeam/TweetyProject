@@ -48,7 +48,7 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
 public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 	/**
 	 * Create a new ContensionSatInconsistencyMeasure with the given SAT solver.
-	 * @param solver
+	 * @param solver some SAT solver
 	 */
 	public ContensionSatInconsistencyMeasure(SatSolver solver) {
 		super(solver);

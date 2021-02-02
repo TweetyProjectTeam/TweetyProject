@@ -53,6 +53,12 @@ public class TabuSearchOnConstrProb extends Solver{
 	/** The magnitude of changing the value of a variable in the mutation step. */
 	private static final double VAR_MUTATE_STRENGTH = 0.5;
 	
+	/**
+	 * Constructor
+	 * @param maxIteration max iterations
+	 * @param tabuSize tabu size
+	 * @param maxStepsWithNoImprove max steps with no improvement
+	 */
 	public TabuSearchOnConstrProb(int maxIteration, int tabuSize, int maxStepsWithNoImprove) {
 		this.maxIteration = maxIteration;
 		this.tabuSize = tabuSize;

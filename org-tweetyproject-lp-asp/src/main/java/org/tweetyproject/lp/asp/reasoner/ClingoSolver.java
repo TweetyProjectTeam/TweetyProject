@@ -132,7 +132,6 @@ public class ClingoSolver extends ASPSolver {
 	 * Note: This methods calculates only the optimum and returns no answer sets.
 	 *
 	 * @param p ASP program
-	 * @throws SolverException if the solver had an issue or no optimum was found
 	 * @return list of calculated optima
 	 */
 	public List<Integer> getOptimum(Program p) {

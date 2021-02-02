@@ -65,8 +65,7 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 	}	
 	
 	/**
-	 * Creates a new simple genetic optimization solver.
-	 * @param prob the instance of the combinatorics problem
+	 * Creates a new simple genetic optimization solver. 
 	 * @param populationSize The size of the population
 	 * @param populationIncreaseMutation How many new individuals are created by mutation (per individual)
 	 * @param populationIncreaseCrossOver How many new individuals are created by cross-over (per pair of individuals)
@@ -162,7 +161,7 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 	/**
 	 * Returns the solution according the problem; problem has to be minimizing
 	 * (which only contains variables with defined upper and lower bounds).
-	 * @param initalSol the initial solution as a starting point
+	 * @param prob the problem
 	 * @return the optimal solution found in the search
 	 */
 	public ArrayList<ElementOfCombinatoricsProb> solve(CombinatoricsProblem prob){

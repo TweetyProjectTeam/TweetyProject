@@ -50,7 +50,7 @@ public class NiskanenTheorySynthesizer {
      * @param args a set of arguments
      * @param semantics a semantics
      * @param solverLocation path to the open wbo solver binary
-     * @throws NoSuchMethodException
+     * @throws NoSuchMethodException if the given semantics is not implemented
      */
     public NiskanenTheorySynthesizer(Collection<Argument> args, Semantics semantics, String solverLocation) throws NoSuchMethodException {
         this.arguments = args;
@@ -77,7 +77,9 @@ public class NiskanenTheorySynthesizer {
      * @param positiveExamples a map of positive examples and their weights
      * @param negativeExamples a map of negative examples and their weights
      * @return a argumentation framework inferred from the given examples
-     * @throws IOException
+     * @throws IOException if an error occurs
+     * @throws InvocationTargetException if an error occurs
+     * @throws IllegalAccessException if an error occurs
      */
     public DungTheory learnExamples(Map<Extension, Integer> positiveExamples, Map<Extension, Integer> negativeExamples) throws IOException, InvocationTargetException, IllegalAccessException {
         DungTheory theory = new DungTheory();

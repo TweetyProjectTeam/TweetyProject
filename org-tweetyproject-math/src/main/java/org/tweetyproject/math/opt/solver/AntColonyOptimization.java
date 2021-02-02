@@ -70,7 +70,12 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 		
 	}
 	/**solves the problem and connects the config and initializes the rest
-	 * @throws IOException */
+	 * @param prob some problem
+	 * @return the solution 
+	 * @throws ConfigurationException if some error occurs
+	 * @throws InvalidInputException if some error occurs
+	 * @throws IOException if some error occurs
+	 */
 	public ArrayList<ElementOfCombinatoricsProb> solve(CombinatoricsProblem prob) throws ConfigurationException, InvalidInputException, IOException {
 
 		this.problem = prob;
@@ -95,7 +100,10 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	        	
 			return bestSol;
 	}
-	/**Ant colony*/
+	/**Ant colony
+     * @param configurationProvider a configuration provider
+     * @return the ant colony
+     */
     public AntColony<ElementOfCombinatoricsProb, AntCol_Environment> getAntColony(final ConfigurationProvider configurationProvider) {
         return new AntColony<ElementOfCombinatoricsProb, AntCol_Environment>(configurationProvider.getNumberOfAnts()) {
             @Override

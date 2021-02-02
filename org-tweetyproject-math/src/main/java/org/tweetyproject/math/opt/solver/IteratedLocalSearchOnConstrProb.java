@@ -128,6 +128,7 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 	 * @param maxIterations: the maximum amount of solutions to be created
 	 * @param threshold: if a solution with the quality of threshold is reached we do maximum 10 more tries
 	 * @param currSol: the solution that every newly created solution uses as a initial solution in createNewSol
+	 * @param t: some term
 	 * @return the best solution that was found and is a mutant of currSol
 	 */
 	public Map<Variable,Term> bestNeighbor(Map<Variable,Term> currSol, int minIterations, int maxIterations, double threshold, Term t)
@@ -164,6 +165,7 @@ public class IteratedLocalSearchOnConstrProb extends Solver{
 	/**
 	 * changes the solution drastically to escape a local minimum
 	 * @param currSol the solution to be pertubated
+	 * @return a new mapping
 	 */
 	public Map<Variable,Term> pertubate(Map<Variable,Term> currSol){
 		double max = this.perturbationStrength * this.prob.size();

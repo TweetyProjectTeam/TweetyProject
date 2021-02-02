@@ -29,7 +29,7 @@ public final class Negation implements Literal {
 	private final Literal literal;
 	
 	/**
-	 * @param literal
+	 * @param literal some literal
 	 */
 	public Negation(Literal literal) {
 		this.literal = Objects.requireNonNull(literal);
