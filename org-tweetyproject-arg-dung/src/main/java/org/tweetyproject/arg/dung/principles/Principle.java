@@ -34,8 +34,18 @@ import java.util.Collection;
  */
 public abstract class Principle implements Postulate<Argument> {
 
+    /** The I-maximality principle **/
+    public static final Principle I_MAXIMALITY = new IMaximalityPrinciple();
     /** The admissibility principle **/
     public static final Principle ADMISSIBILITY = new AdmissibilityPrinciple();
+    /** The strong admissibility principle **/
+    public static final Principle STRONG_ADMISSIBILITY = new StrongAdmissibilityPrinciple();
+    /** The reinstatement principle **/
+    public static final Principle REINSTATEMENT = new ReinstatementPrinciple();
+    /** The weak reinstatement principle **/
+    public static final Principle WEAK_REINSTATEMENT = new WeakReinstatementPrinciple();
+    /** The naivety principle **/
+    public static final Principle NAIVETY = new NaivetyPrinciple();
 
     /* (non-Javadoc)
      * @see org.tweetyproject.commons.postulates.Postulate#isApplicable(java.util.Collection)
