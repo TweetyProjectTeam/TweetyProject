@@ -27,19 +27,18 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * Admissibility Principle
- * A semantics satisfies admissibility if for all extensions E it holds that:
- * every argument in E is defended by E
+ * CF-Reinstatement Principle
+ * A semantics satisfies cf-reinstatement if for all extensions E it holds that:
+ * for all arguments a, if E u {a} is conflict-free and E defends a, then a is in E
  *
  * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */
-public class AdmissibilityPrinciple extends Principle {
-
+public class CFReinstatementPrinciple extends Principle {
     @Override
     public String getName() {
-        return "Admissibility";
+        return "CF-Reinstatement";
     }
 
     @Override
@@ -47,14 +46,24 @@ public class AdmissibilityPrinciple extends Principle {
         return ((kb instanceof DungTheory) && kb.size()>=2 );
     }
 
+
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension> exts = ev.getModels(theory);
 
         for (Extension ext: exts) {
-            if (!ext.isAdmissable(theory)) {
-                return false;
+            for (Argument a: theory) {
+                if (ext.contains(a)) {
+                    continue;
+                }
+
+                // for all arguments a in theory \ E, iff E u {a} is conflict-free and E defends a, then cf-reinstatement is violated
+                Extension extWithA = new Extension(ext);
+                extWithA.add(a);
+                if (extWithA.isConflictFree(theory) && ext.isAcceptable(a, theory)) {
+                    return false;
+                }
             }
         }
         return true;

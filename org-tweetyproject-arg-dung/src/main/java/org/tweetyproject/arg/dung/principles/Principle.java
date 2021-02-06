@@ -36,6 +36,8 @@ public abstract class Principle implements Postulate<Argument> {
 
     /** The I-maximality principle **/
     public static final Principle I_MAXIMALITY = new IMaximalityPrinciple();
+    /** The conflict-free principle **/
+    public static final Principle CONFLICT_FREE = new ConflictFreePrinciple();
     /** The admissibility principle **/
     public static final Principle ADMISSIBILITY = new AdmissibilityPrinciple();
     /** The strong admissibility principle **/
@@ -44,6 +46,12 @@ public abstract class Principle implements Postulate<Argument> {
     public static final Principle REINSTATEMENT = new ReinstatementPrinciple();
     /** The weak reinstatement principle **/
     public static final Principle WEAK_REINSTATEMENT = new WeakReinstatementPrinciple();
+    /** The CF-reinstatement principle **/
+    public static final Principle CF_REINSTATEMENT = new CFReinstatementPrinciple();
+    /** The directionality principle **/
+    public static final Principle DIRECTIONALITY = new DirectionalityPrinciple();
+
+
     /** The naivety principle **/
     public static final Principle NAIVETY = new NaivetyPrinciple();
 

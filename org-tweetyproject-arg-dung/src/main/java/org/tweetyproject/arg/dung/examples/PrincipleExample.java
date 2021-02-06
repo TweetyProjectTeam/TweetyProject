@@ -21,12 +21,15 @@ public class PrincipleExample {
 
     public static void main(String[] args) {
         all_principles = new HashSet<>();
+        all_principles.add(Principle.CONFLICT_FREE);
         all_principles.add(Principle.ADMISSIBILITY);
         all_principles.add(Principle.NAIVETY);
         all_principles.add(Principle.STRONG_ADMISSIBILITY);
         all_principles.add(Principle.I_MAXIMALITY);
         all_principles.add(Principle.REINSTATEMENT);
         all_principles.add(Principle.WEAK_REINSTATEMENT);
+        all_principles.add(Principle.CF_REINSTATEMENT);
+        all_principles.add(Principle.DIRECTIONALITY);
 
         AdmissibleExample();
         GroundedExample();

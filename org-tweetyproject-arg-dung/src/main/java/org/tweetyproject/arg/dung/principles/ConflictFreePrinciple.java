@@ -27,19 +27,20 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * Admissibility Principle
- * A semantics satisfies admissibility if for all extensions E it holds that:
- * every argument in E is defended by E
+ * Conflict-free Principle
+ * A semantics satisfies conflict-freeness if for all extensions E it holds that:
+ * E is conflict-free
+ * trivial property satisfied by practically all semantics
  *
  * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */
-public class AdmissibilityPrinciple extends Principle {
+public class ConflictFreePrinciple extends Principle {
 
     @Override
     public String getName() {
-        return "Admissibility";
+        return "Conflict-Free";
     }
 
     @Override
@@ -47,15 +48,15 @@ public class AdmissibilityPrinciple extends Principle {
         return ((kb instanceof DungTheory) && kb.size()>=2 );
     }
 
+
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension> exts = ev.getModels(theory);
 
         for (Extension ext: exts) {
-            if (!ext.isAdmissable(theory)) {
+            if (!ext.isConflictFree(theory))
                 return false;
-            }
         }
         return true;
     }
