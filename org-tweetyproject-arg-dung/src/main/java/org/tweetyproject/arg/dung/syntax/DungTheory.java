@@ -830,6 +830,22 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return DefaultGraph.containsCycle(this);
 	}
 
+	/**
+	 * Checks whether there is at least on eodd cycle in this DungTheory.
+	 * A directed graph has an odd-length cycle if and only if at least one of its SCCs is non-bipartite
+	 * @param <S> the type of nodes
+	 * @return "true" if there is a cycle with odd length in this theory
+	 */
+	public <S extends Node> boolean containsOddCycle() {
+		Collection<Collection<Argument>> sccs = this.getStronglyConnectedComponents();
+		for (Collection<Argument> scc : sccs) {
+			Graph<Argument> scc_g = this.getRestriction(scc);
+			if (!DefaultGraph.isBipartite(scc_g))
+				return true;
+		}
+		return false;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.graphs.DefaultGraph#getComponents()
 	 */
