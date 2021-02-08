@@ -5,3 +5,5 @@ bin/
 .project
 *.class
 
+.idea/
+*.iml

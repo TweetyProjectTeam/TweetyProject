@@ -664,5 +664,50 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		
 		return resultingInducedSubgraphs;
 	}
+
+	/**
+	 * checks whether the given graph is bipartite or not
+	 * the algorithm starts at a random node and colors adjacent nodes in alternating colors
+	 * if two adjacent nodes have the same color, the graph is no bipartite
+	 * This method only works if the given graph is connected
+	 * @param g a graph
+	 * @param <S> the type of nodes
+	 * @return "true" if g is bipartite
+	 */
+	public static <S extends Node> boolean isBipartite(Graph<S> g) {
+		Map<S, Integer> colors = new HashMap<>();
+
+		// select a node to start
+		S startNode = g.iterator().next();
+		colors.put(startNode, 1);
+
+		LinkedList<S> q = new LinkedList<>();
+		q.add(startNode);
+
+		// iterate the graph starting at node startNode
+		while (q.size() != 0) {
+			S node = q.poll();
+			Integer color_node = colors.get(node);
+
+			// if there is a self loop, then the graph is not bipartite
+			if (g.areAdjacent(node, node)) {
+				return false;
+			}
+
+			for (S neighbor: g.getNeighbors(node)) {
+				Integer ret = colors.putIfAbsent(neighbor, 1 - color_node);
+				// if neighbor had no color yet, set color and add to queue
+				if (ret == null) {
+					q.add(neighbor);
+				}
+				// if neighbor has the same color as node, the graph is not bipartite
+				else if (ret.equals(color_node)){
+					return false;
+				}
+			}
+		}
+		return true;
+
+	}
 	
 }
