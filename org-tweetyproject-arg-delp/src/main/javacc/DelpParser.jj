@@ -22,23 +22,23 @@ options {
 }
 
 PARSER_BEGIN(DelpParser)
-package net.sf.tweety.arg.delp.parser;
+package org.tweetyproject.arg.delp.parser;
 
-import net.sf.tweety.arg.delp.syntax.DefeasibleLogicProgram;
-import net.sf.tweety.arg.delp.syntax.DefeasibleRule;
-import net.sf.tweety.arg.delp.syntax.DelpFact;
-import net.sf.tweety.arg.delp.syntax.StrictRule;
-import net.sf.tweety.commons.Formula;
-import net.sf.tweety.commons.Parser;
-import net.sf.tweety.commons.ParserException;
-import net.sf.tweety.logics.commons.syntax.Constant;
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.commons.syntax.Variable;
-import net.sf.tweety.logics.commons.syntax.interfaces.Term;
-import net.sf.tweety.logics.fol.syntax.FolAtom;
-import net.sf.tweety.logics.fol.syntax.FolFormula;
-import net.sf.tweety.logics.fol.syntax.FolSignature;
-import net.sf.tweety.logics.fol.syntax.Negation;
+import org.tweetyproject.arg.delp.syntax.DefeasibleLogicProgram;
+import org.tweetyproject.arg.delp.syntax.DefeasibleRule;
+import org.tweetyproject.arg.delp.syntax.DelpFact;
+import org.tweetyproject.arg.delp.syntax.StrictRule;
+import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.Parser;
+import org.tweetyproject.commons.ParserException;
+import org.tweetyproject.logics.commons.syntax.Constant;
+import org.tweetyproject.logics.commons.syntax.Predicate;
+import org.tweetyproject.logics.commons.syntax.Variable;
+import org.tweetyproject.logics.commons.syntax.interfaces.Term;
+import org.tweetyproject.logics.fol.syntax.FolAtom;
+import org.tweetyproject.logics.fol.syntax.FolFormula;
+import org.tweetyproject.logics.fol.syntax.FolSignature;
+import org.tweetyproject.logics.fol.syntax.Negation;
 
 import java.io.Reader;
 import java.io.StringReader;

@@ -38,7 +38,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;;
 public class CnfWriter extends AbstractDungWriter{
 
 	/* (non-Javadoc)
-	 * @see net.sf.probo.writer.Writer#write(org.tweetyproject.arg.dung.DungTheory, java.io.File)
+	 * @see org.tweetyproject.arg.dung.writer.AbstractDungWriter#write(org.tweetyproject.arg.dung.DungTheory, java.io.File)
 	 */
 	@Override
 	public void write(DungTheory aaf, File f) throws IOException {

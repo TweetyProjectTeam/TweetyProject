@@ -125,8 +125,7 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#link(net.sf
-	 * .tweety.arg.adf.syntax.Argument, org.tweetyproject.arg.adf.syntax.Argument)
+	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#link(org.tweetyproject.arg.adf.syntax.Argument, org.tweetyproject.arg.adf.syntax.Argument)
 	 */
 	@Override
 	public Link link(Argument parent, Argument child) {
@@ -171,8 +170,7 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#parents(net
-	 * .sf.tweety.arg.adf.syntax.Argument)
+	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#parents(org.tweetyproject.arg.adf.syntax.Argument)
 	 */
 	@Override
 	public Set<Argument> parents(Argument child) {

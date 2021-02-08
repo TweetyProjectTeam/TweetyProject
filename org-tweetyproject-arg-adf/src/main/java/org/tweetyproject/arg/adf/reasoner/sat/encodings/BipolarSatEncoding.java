@@ -38,8 +38,7 @@ public class BipolarSatEncoding implements SatEncoding {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.
-	 * tweety.arg. adf.reasoner.sat.SatEncodingContext)
+	 * org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(org.tweetyproject.arg.adf.reasoner.sat.SatEncodingContext)
 	 */
 	@Override
 	public void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {

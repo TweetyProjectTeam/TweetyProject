@@ -21,16 +21,16 @@ options {
 }
 
 PARSER_BEGIN(RpclCondensedProbabilityDistributionParser)
-package net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.rpclcondensedprobabilitydistributionparser;
+package org.tweetyproject.logics.rpcl.parser.rpclcondensedprobabilitydistributionparser;
 
 import java.io.*;
 import java.util.*;
-import net.sf.tweety.*;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
-import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
-import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
-import net.sf.tweety.util.*;
-import net.sf.tweety.math.probability.*;
+import org.tweetyproject.*;
+import org.tweetyproject.logics.firstorderlogic.syntax.*;
+import org.tweetyproject.logics.relationalprobabilisticconditionallogic.*;
+import org.tweetyproject.logics.relationalprobabilisticconditionallogic.semantics.*;
+import org.tweetyproject.util.*;
+import org.tweetyproject.math.probability.*;
 
 /**
  * This class implements a parser for condensed relational probability distributions. The BNF for 

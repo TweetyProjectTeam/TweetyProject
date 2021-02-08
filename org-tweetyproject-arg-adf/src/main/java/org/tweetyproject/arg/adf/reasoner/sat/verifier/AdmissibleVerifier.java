@@ -34,8 +34,7 @@ public class AdmissibleVerifier implements Verifier {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier#prepareState(net.sf.
-	 * tweety.arg.adf.sat.SatSolverState,
+	 * org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier#prepareState(org.tweetyproject.arg.adf.sat.SatSolverState,
 	 * org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping,
 	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework)
 	 */
@@ -60,8 +59,7 @@ public class AdmissibleVerifier implements Verifier {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier#postVerification(net
-	 * .sf.tweety.arg.adf.sat.SatSolverState,
+	 * org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier#postVerification(org.tweetyproject.arg.adf.sat.SatSolverState,
 	 * org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping,
 	 * org.tweetyproject.arg.adf.semantics.interpretation.Interpretation,
 	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework, boolean)

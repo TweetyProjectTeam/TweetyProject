@@ -50,7 +50,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class CnfParser extends AbstractDungParser {
 
 	/* (non-Javadoc)
-	 * @see net.sf.probo.parser.Parser#parse(java.io.File)
+	 * @see org.tweetyproject.arg.dung.parser.AbstractDungParser#parse(java.io.File)
 	 */
 	@Override
 	public DungTheory parse(Reader reader) throws IOException {

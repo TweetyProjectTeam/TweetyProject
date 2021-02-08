@@ -26,10 +26,10 @@ options {
 
 PARSER_BEGIN(ASPCore2Parser)
 
-package net.sf.tweety.lp.asp.parser;
+package org.tweetyproject.lp.asp.parser;
 import java.io.*;
-import net.sf.tweety.lp.asp.syntax.*;
-import net.sf.tweety.lp.asp.semantics.*;
+import org.tweetyproject.lp.asp.syntax.*;
+import org.tweetyproject.lp.asp.semantics.*;
 
 /**
  * 

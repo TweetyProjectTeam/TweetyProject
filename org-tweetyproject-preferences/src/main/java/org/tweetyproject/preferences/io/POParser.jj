@@ -21,10 +21,25 @@
  * parser script for preference orders
  * 
  *
- */options{  JDK_VERSION = "1.6";  STATIC = false;}PARSER_BEGIN(POParser)package net.sf.tweety.preferences.io;import java.io.File;
-import java.util.*;import net.sf.tweety.preferences.*;import net.sf.tweety.util.Triple;
-@SuppressWarnings("all")public class POParser{
-public POParser(){
+ */
+options
+{
+  JDK_VERSION = "1.6";
+  STATIC = false;
+}
+
+PARSER_BEGIN(POParser)
+package org.tweetyproject.preferences.io;
+import java.io.File;
+import java.util.*;
+import org.tweetyproject.preferences.*;
+import org.tweetyproject.util.Triple;
+
+@SuppressWarnings("all")
+public class POParser
+{
+public POParser()
+{
 }
   
   public static PreferenceOrder < String > parse(File file) throws ParseException, java.io.FileNotFoundException
@@ -33,7 +48,97 @@ public POParser(){
     parser = new POParser(new java.io.FileInputStream(file));
     return parser.StringPreferenceOrder();
   }
-    public static PreferenceOrder < String > parse(String filename) throws ParseException, java.io.FileNotFoundException  {    POParser parser;    parser = new POParser(new java.io.FileInputStream(filename));    return parser.StringPreferenceOrder();  }  public static void main(String args [])  {    try    {      PreferenceOrder < String > TestPO = new PreferenceOrder < String > ();      // Error with reading in file, path has to be edited manually
-      TestPO = parse("test.po");      System.out.println(TestPO);      System.out.println(TestPO.getDomainElements());      TestPO.addPair("g", "h", Relation.LESS);      System.out.println(TestPO.getDomainElements());      System.out.println(TestPO);    }    catch (Exception e)    {      System.out.println("error while parsing: " + e);    }  }}PARSER_END(POParser)SKIP :{  " "}TOKEN :{  < LBRA : "{" >| < RBRA : "}" >| < ELEMENT : ([ "a"-"z", "A"-"Z", "0"-"9" ])+ >| < REL :    "<"  | "<=" >| < EOL :    "\n"  | "\r\n"  | "\t" >}PreferenceOrder < String > StringPreferenceOrder() :{  Token t;  Token t0, t1, t2;  Set < String > singleElements = new HashSet < String > ();  Set < Triple < String, String, Relation > > entries = new HashSet < Triple < String, String, Relation > > ();}{  (    < LBRA >    (      t = < ELEMENT >      {        singleElements.add(t.image);      }      (",")?    )+    < RBRA >  )  < EOL >  (    t0 = < ELEMENT > t2 = < REL > t1 = < ELEMENT >    {      if (t2.image.equals("<="))      {        Triple < String, String, Relation > ent = new Triple < String, String, Relation > (t0.image, t1.image, Relation.LESS_EQUAL);		entries.add(ent);
-      }      else if (t2.image.equals("<"))      {        Triple < String, String, Relation > ent = new Triple < String, String, Relation > (t0.image, t1.image, Relation.LESS);		entries.add(ent);
-      } else      {        continue;      }          }    < EOL >  )+  {    PreferenceOrder < String > n = new PreferenceOrder < String > (entries);    return n;  }}
+  
+  public static PreferenceOrder < String > parse(String filename) throws ParseException, java.io.FileNotFoundException
+  {
+    POParser parser;
+    parser = new POParser(new java.io.FileInputStream(filename));
+    return parser.StringPreferenceOrder();
+  }
+
+  public static void main(String args [])
+  {
+    try
+    {
+      PreferenceOrder < String > TestPO = new PreferenceOrder < String > ();
+      // Error with reading in file, path has to be edited manually
+      TestPO = parse("test.po");
+      System.out.println(TestPO);
+      System.out.println(TestPO.getDomainElements());
+      TestPO.addPair("g", "h", Relation.LESS);
+      System.out.println(TestPO.getDomainElements());
+      System.out.println(TestPO);
+    }
+    catch (Exception e)
+    {
+      System.out.println("error while parsing: " + e);
+    }
+  }
+}
+
+PARSER_END(POParser)
+
+SKIP :
+{
+  " "
+}
+
+TOKEN :
+{
+  < LBRA : "{" >
+| < RBRA : "}" >
+| < ELEMENT : ([ "a"-"z", "A"-"Z", "0"-"9" ])+ >
+| < REL :
+    "<"
+  | "<=" >
+| < EOL :
+    "\n"
+  | "\r\n"
+  | "\t" >
+}
+
+PreferenceOrder < String > StringPreferenceOrder() :
+{
+  Token t;
+  Token t0, t1, t2;
+  Set < String > singleElements = new HashSet < String > ();
+  Set < Triple < String, String, Relation > > entries = new HashSet < Triple < String, String, Relation > > ();
+}
+{
+  (
+    < LBRA >
+    (
+      t = < ELEMENT >
+      {
+        singleElements.add(t.image);
+      }
+      (",")?
+    )+
+    < RBRA >
+  )
+  < EOL >
+  (
+    t0 = < ELEMENT > t2 = < REL > t1 = < ELEMENT >
+    {
+      if (t2.image.equals("<="))
+      {
+        Triple < String, String, Relation > ent = new Triple < String, String, Relation > (t0.image, t1.image, Relation.LESS_EQUAL);
+		entries.add(ent);
+      }
+      else if (t2.image.equals("<"))
+      {
+        Triple < String, String, Relation > ent = new Triple < String, String, Relation > (t0.image, t1.image, Relation.LESS);
+		entries.add(ent);
+      } else
+      {
+        continue;
+      }
+      
+    }
+    < EOL >
+  )+
+  {
+    PreferenceOrder < String > n = new PreferenceOrder < String > (entries);
+    return n;
+  }
+}

@@ -41,8 +41,7 @@ public enum ContradictionAcceptanceCondition implements AcceptanceCondition {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#contains(net.sf.
-	 * tweety.arg.adf.syntax.Argument)
+	 * org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#contains(org.tweetyproject.arg.adf.syntax.Argument)
 	 */
 	@Override
 	public boolean contains(Argument arg) {

@@ -21,17 +21,17 @@ options {
 }
 
 PARSER_BEGIN(RpclProbabilityDistributionParser)
-package net.sf.tweety.logics.relationalprobabilisticconditionallogic.parser.rpclprobabilitydistributionparser;
+package org.tweetyproject.logics.rpcl.parser.rpclprobabilitydistributionparser;
 
 import java.io.*;
 import java.util.*;
-import net.sf.tweety.*;
-import net.sf.tweety.logics.firstorderlogic.syntax.*;
-import net.sf.tweety.logics.firstorderlogic.semantics.*;
-import net.sf.tweety.logics.relationalprobabilisticconditionallogic.*;
-import net.sf.tweety.logics.relationalprobabilisticconditionallogic.semantics.*;
-import net.sf.tweety.util.*;
-import net.sf.tweety.math.probability.*;
+import org.tweetyproject.*;
+import org.tweetyproject.logics.firstorderlogic.syntax.*;
+import org.tweetyproject.logics.firstorderlogic.semantics.*;
+import org.tweetyproject.logics.relationalprobabilisticconditionallogic.*;
+import org.tweetyproject.logics.relationalprobabilisticconditionallogic.semantics.*;
+import org.tweetyproject.util.*;
+import org.tweetyproject.math.probability.*;
 
 /**
  * This class implements a parser for relational probability distributions. The BNF for 
@@ -59,7 +59,8 @@ public class RpclProbabilityDistributionParser {
 	private FolSignature signature = null;
 
 	public RpclProbabilityDistributionParser(){
-	}	
+	}
+	
 	public RpclProbabilityDistributionParser(RpclSemantics semantics){
 		this(semantics,null);		
 	}
@@ -70,7 +71,8 @@ public class RpclProbabilityDistributionParser {
 	}
 
 	public void setSemantics(RpclSemantics semantics){
-	 	this.semantics = semantics;	}	  
+	 	this.semantics = semantics;
+	}	  
 
 	public void setSignature(FolSignature signature){
 	 	this.signature = signature;
