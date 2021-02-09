@@ -31,8 +31,6 @@ import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.Node;
-import org.tweetyproject.logics.bpm.syntax.BpmnNode;
-import org.tweetyproject.logics.bpm.syntax.SequenceFlow;
 import org.tweetyproject.logics.petri.syntax.PetriNet;
 import org.tweetyproject.logics.petri.syntax.Place;
 import org.tweetyproject.math.matrix.Matrix;
