@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.bpm.syntax;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -226,5 +227,43 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	private boolean isInstanceOf(Object object, Class<?> theClass) {
 		return theClass.isAssignableFrom(object.getClass());
 	}
-
+	
+	public enum BpmnNodeType {
+		START_EVENT, END_EVENT, EVENT, ACTIVITY, EXCLUSIVE_GATEWAY, INCLUSIVE_GATEWAY
+	}
+	
+	public Map<BpmnNodeType, Set<BpmnNode>> getSortedNodes() {
+		Map<BpmnNodeType, Set<BpmnNode>> sortedNodes = new HashMap<>();
+		for(BpmnNodeType type : BpmnNodeType.values()) {
+			sortedNodes.put(type, new HashSet<>());
+		}
+		nodes.forEach( node -> {
+			BpmnNodeType type = getType(node);
+			sortedNodes.get(type).add(node);
+		});
+		return sortedNodes;
+	}
+	
+	private BpmnNodeType getType(BpmnNode node) {
+		if(StartEvent.class.isAssignableFrom(node.getClass())) {
+			return BpmnNodeType.START_EVENT;
+		}
+		if(EndEvent.class.isAssignableFrom(node.getClass())) {
+			return BpmnNodeType.END_EVENT;
+		}
+		if(Event.class.isAssignableFrom(node.getClass())) {
+			return BpmnNodeType.EVENT;
+		}
+		if(Activity.class.isAssignableFrom(node.getClass())) {
+			return BpmnNodeType.ACTIVITY;
+		}
+		if(ExclusiveGateway.class.isAssignableFrom(node.getClass())) {
+			return BpmnNodeType.EXCLUSIVE_GATEWAY;
+		}
+		if(InclusiveGateway.class.isAssignableFrom(node.getClass())) {
+			return BpmnNodeType.INCLUSIVE_GATEWAY;
+		}
+		return null;
+	}
+	
 }

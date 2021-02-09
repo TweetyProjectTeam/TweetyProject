@@ -16,7 +16,7 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.bpm.parser;
+package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
 /**
  * This is a helper class for parsing edges in a BPMN Model

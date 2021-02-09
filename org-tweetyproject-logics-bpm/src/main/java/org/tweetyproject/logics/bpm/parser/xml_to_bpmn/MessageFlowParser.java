@@ -16,25 +16,24 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.bpm.parser;
+package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
 import org.w3c.dom.Node;
 
-import org.tweetyproject.logics.bpm.syntax.IntermediateEvent;
-
 /**
- * Parse intermediate events in a BPMN model
+ * Parse an edge of the message flow in a BPMN model
  * @author Benedikt Knopp
  */
-public class IntermediateEventParser extends AbstractElementParser<IntermediateEvent>{
+public class MessageFlowParser extends AbstractElementParser<BufferedBpmnEdge> {
 
 	/**
 	 * Create a new instance
 	 * @param rootParser the root parser of the BPMN model
 	 */
-	public IntermediateEventParser(RootParser rootParser) {
+	public MessageFlowParser(RootParser rootParser) {
 		super(rootParser);
-		this.parsedElement = new IntermediateEvent();
+		this.parsedElement = new BufferedBpmnEdge();
+		this.parsedElement.setFlowType("message");
 	}
 
 	@Override
@@ -42,12 +41,17 @@ public class IntermediateEventParser extends AbstractElementParser<IntermediateE
 		String attributeName = attribute.getNodeName();
 		String attributeValue = attribute.getTextContent();
 		switch(attributeName) {
-		// generic attributes
 		case "id":
 			this.parsedElement.setId(attributeValue);
 			break;
 		case "name":
 			this.parsedElement.setName(attributeValue);
+			break;
+		case "sourceRef":
+			this.parsedElement.setSourceRef(attributeValue);
+			break;
+		case "targetRef":
+			this.parsedElement.setTargetRef(attributeValue);
 			break;
 		default:
 			return;
@@ -58,15 +62,15 @@ public class IntermediateEventParser extends AbstractElementParser<IntermediateE
 	protected void handleChildNode(Node childNode) {
 		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
-		case "incoming":
-			String incomingEdgeId = childNode.getTextContent();
-			this.parsedElement.putIncomingEdge(incomingEdgeId, null);
-			break;
-		case "outgoing":
-			String outgoingEdgeId = childNode.getTextContent();
-			this.parsedElement.putIncomingEdge(outgoingEdgeId, null);
-			break;
-		}
+			case "sourceRef":
+				String sourceRef = childNode.getTextContent();
+				this.parsedElement.setSourceRef(sourceRef);
+				break;
+			case "targetRef":
+				String targetRef = childNode.getTextContent();
+				this.parsedElement.setTargetRef(targetRef);
+				break;
+		}	
 	}
 
 }

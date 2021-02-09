@@ -16,24 +16,30 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.bpm.parser;
+package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
+
+import java.util.Set;
 
 import org.w3c.dom.Node;
 
+import org.tweetyproject.logics.bpm.syntax.Lane;
+import org.tweetyproject.logics.bpm.syntax.SequenceFlow;
+import org.tweetyproject.logics.bpm.syntax.Task;
+
 /**
- * Parse an edge of the message flow in a BPMN model
+ * Parse an edge of the sequence flow in a BPMN model
  * @author Benedikt Knopp
  */
-public class MessageFlowParser extends AbstractElementParser<BufferedBpmnEdge> {
+public class SequenceFlowParser extends AbstractElementParser<BufferedBpmnEdge> {
 
 	/**
 	 * Create a new instance
 	 * @param rootParser the root parser of the BPMN model
 	 */
-	public MessageFlowParser(RootParser rootParser) {
+	public SequenceFlowParser(RootParser rootParser) {
 		super(rootParser);
 		this.parsedElement = new BufferedBpmnEdge();
-		this.parsedElement.setFlowType("message");
+		this.parsedElement.setFlowType("sequence");
 	}
 
 	@Override
@@ -72,5 +78,4 @@ public class MessageFlowParser extends AbstractElementParser<BufferedBpmnEdge> {
 				break;
 		}	
 	}
-
 }

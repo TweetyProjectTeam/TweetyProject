@@ -28,10 +28,20 @@
     		<version>1.19-SNAPSHOT</version>
     	</dependency>
 		<dependency>
+    		<groupId>org.tweetyproject.logics</groupId>
+    		<artifactId>petri</artifactId>
+    		<version>1.19-SNAPSHOT</version>
+    	</dependency>    	
+		<dependency>
 			<groupId>org.tweetyproject</groupId>
 			<artifactId>graphs</artifactId>
 			<version>1.19-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.tweetyproject</groupId>
+			<artifactId>math</artifactId>
+			<version>1.19-SNAPSHOT</version>
+		</dependency>		
 		<!-- https://mvnrepository.com/artifact/org.jgrapht/jgrapht-ext -->
 		<dependency>
     		<groupId>org.jgrapht</groupId>

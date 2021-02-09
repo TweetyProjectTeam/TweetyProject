@@ -16,7 +16,7 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.bpm.parser;
+package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
 import org.tweetyproject.logics.bpm.syntax.*;
 import org.tweetyproject.logics.bpm.syntax.Process;
@@ -106,7 +106,7 @@ public class ProcessParser extends AbstractElementParser<Process> {
 			ExclusiveGateway exclusiveGateway = exclusiveGatewayParser.parse(childNode);
 			this.rootParser.putNode(exclusiveGateway);
 			break;
-		case "inclusiveGateway":
+		case "parallelGateway":
 			InclusiveGatewayParser inclusiveGatewayParser = new InclusiveGatewayParser(this.rootParser);
 			InclusiveGateway inclusiveGateway = inclusiveGatewayParser.parse(childNode);
 			this.rootParser.putNode(inclusiveGateway);

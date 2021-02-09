@@ -16,26 +16,26 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.bpm.parser;
+package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
 import org.w3c.dom.Node;
 
-import org.tweetyproject.logics.bpm.syntax.ExclusiveGateway;
-import org.tweetyproject.logics.bpm.syntax.InclusiveGateway;
+import org.tweetyproject.logics.bpm.syntax.Lane;
 
 /**
- * Parse inclusive gateways in a BPMN model
+ * Parse lanes in a BPMN model
  * @author Benedikt Knopp
  */
-public class InclusiveGatewayParser extends AbstractElementParser<InclusiveGateway>{
+public class LaneParser extends AbstractElementParser<Lane>{
 
+	
 	/**
 	 * Create a new instance
 	 * @param rootParser the root parser of the BPMN model
 	 */
-	public InclusiveGatewayParser(RootParser rootParser) {
+	public LaneParser(RootParser rootParser) {
 		super(rootParser);
-		this.parsedElement = new InclusiveGateway();
+		this.parsedElement = new Lane();
 	}
 
 	@Override
@@ -54,20 +54,18 @@ public class InclusiveGatewayParser extends AbstractElementParser<InclusiveGatew
 			return;
 		}
 	}
-	
+
 	@Override
 	protected void handleChildNode(Node childNode) {
 		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
-		case "incoming":
-			String incomingEdgeId = childNode.getTextContent();
-			this.parsedElement.putIncomingEdge(incomingEdgeId, null);
+		case "flowNodeRef":
+			// TODO
+			String laneId = childNode.getTextContent();
 			break;
-		case "outgoing":
-			String outgoingEdgeId = childNode.getTextContent();
-			this.parsedElement.putOutgoingEdge(outgoingEdgeId, null);
-			break;
+		default:
+			return;
 		}
 	}
-
+	
 }
