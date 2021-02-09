@@ -16,27 +16,28 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.bpm.parser;
+package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
 import org.w3c.dom.Node;
 
-import org.tweetyproject.logics.bpm.syntax.ExclusiveGateway;
+import org.tweetyproject.logics.bpm.syntax.BpmnModel;
+import org.tweetyproject.logics.bpm.syntax.Task;
 
 /**
- * Parse exclusive gateways in a BPMN model
+ * Parse a task of a BPMN model
  * @author Benedikt Knopp
  */
-public class ExclusiveGatewayParser extends AbstractElementParser<ExclusiveGateway>{
+public class TaskParser extends AbstractElementParser<Task>{
 
 	/**
 	 * Create a new instance
 	 * @param rootParser the root parser of the BPMN model
 	 */
-	public ExclusiveGatewayParser(RootParser rootParser) {
+	public TaskParser(RootParser rootParser) {
 		super(rootParser);
-		this.parsedElement = new ExclusiveGateway();
+		this.parsedElement = new Task();
 	}
-
+	
 	@Override
 	protected void handleAttribute(Node attribute) {
 		String attributeName = attribute.getNodeName();
@@ -53,7 +54,7 @@ public class ExclusiveGatewayParser extends AbstractElementParser<ExclusiveGatew
 			return;
 		}
 	}
-	
+
 	@Override
 	protected void handleChildNode(Node childNode) {
 		String tagName = rootParser.getNormalizedTagName(childNode);

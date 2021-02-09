@@ -16,47 +16,57 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.bpm.parser;
-
-import java.util.HashSet;
-import java.util.Set;
+package org.tweetyproject.logics.bpm.parser.xml_to_bpmn;
 
 import org.w3c.dom.Node;
-
-import org.tweetyproject.logics.bpm.syntax.Lane;
-import org.tweetyproject.logics.bpm.syntax.Task;
+import org.w3c.dom.NodeList;
 
 /**
- * Parse a set of lanes in a BPMN model
+ * A parser for the "collaboration" element in a XML tree of a BPMN model
  * @author Benedikt Knopp
+ *
  */
-public class LaneSetParser extends AbstractElementParser<Set<Lane>> {
+public class CollaborationParser {
+	
+	/**
+	 * the root parser of the BPMN model
+	 */
+	private RootParser rootParser;
 
 	/**
 	 * Create a new instance
 	 * @param rootParser the root parser of the BPMN model
 	 */
-	public LaneSetParser(RootParser rootParser) {
-		super(rootParser);
-		this.parsedElement = new HashSet<>();
+	public CollaborationParser(RootParser rootParser) {
+		this.rootParser = rootParser;
 	}
 
-	@Override
-	protected void handleAttribute(Node attribute) {
+	/**
+	 * @param node the XML representation of the element to parse
+	 */
+	public void parse(Node node) throws IllegalArgumentException {
+		NodeList children = node.getChildNodes();
+		int numberOfChildren = children.getLength();
+		for(int i = 0; i < numberOfChildren; i++) {
+			Node child = children.item(i);
+			handleChildNode(child);
+		}
 		return;
-	}
+	};
 
-	@Override
-	protected void handleChildNode(Node childNode) {
+	/**
+	 * handle child nodes of the XML element
+	 * @param childNode the XML child element
+	 */
+	private void handleChildNode(Node childNode) {
 		String tagName = rootParser.getNormalizedTagName(childNode);
 		switch(tagName) {
-			case "lane":
-				LaneParser laneParser = new LaneParser(rootParser);
-				Lane lane = laneParser.parse(childNode);
-				this.parsedElement.add(lane);
+			case "messageFlow":
+				MessageFlowParser messageFlowParser = new MessageFlowParser(rootParser);
+				BufferedBpmnEdge bufferedMessageFlow = messageFlowParser.parse(childNode);
+				this.rootParser.putBufferedEdge(bufferedMessageFlow);
 			default:
 				return;
 		}
 	}
-
 }

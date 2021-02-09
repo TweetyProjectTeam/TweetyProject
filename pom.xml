@@ -183,6 +183,7 @@
   	<module>org-tweetyproject-lp-asp-beliefdynamics</module>
   	<module>org-tweetyproject-lp-nlp</module>
   	<module>org-tweetyproject-logics-bpm</module>
+	<module>org-tweetyproject-logics-petri</module>
   	<module>org-tweetyproject-logics-commons</module>
   	<module>org-tweetyproject-logics-cl</module>
   	<module>org-tweetyproject-logics-fol</module>
