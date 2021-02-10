@@ -24,8 +24,30 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
+import org.tweetyproject.arg.adf.io.KppADFFormatParser;
+import org.tweetyproject.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
+import org.tweetyproject.arg.adf.reasoner.GroundReasoner;
+import org.tweetyproject.arg.adf.reasoner.ModelReasoner;
+import org.tweetyproject.arg.adf.reasoner.PreferredReasoner;
+import org.tweetyproject.arg.adf.reasoner.StableReasoner;
+import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
+import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
+import org.tweetyproject.arg.adf.syntax.Argument;
+import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.ContradictionAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.NegationAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.TautologyAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.commons.ParserException;
-
+import org.tweetyproject.logics.cl.reasoner.ZReasoner;
+import org.tweetyproject.logics.cl.semantics.RankingFunction;
 import org.tweetyproject.logics.cl.syntax.ClBeliefSet;
 import org.tweetyproject.logics.cl.syntax.Conditional;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
@@ -38,30 +60,6 @@ import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.syntax.Tautology;
-import org.tweetyproject.logics.cl.semantics.RankingFunction;
-import org.tweetyproject.logics.cl.reasoner.ZReasoner;
-
-import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.acc.ContradictionAcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.acc.NegationAcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.acc.TautologyAcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
-import org.tweetyproject.arg.adf.io.KppADFFormatParser;
-import org.tweetyproject.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
-import org.tweetyproject.arg.adf.reasoner.GroundReasoner;
-import org.tweetyproject.arg.adf.reasoner.ModelReasoner;
-import org.tweetyproject.arg.adf.reasoner.PreferredReasoner;
-import org.tweetyproject.arg.adf.reasoner.StableReasoner;
-import org.tweetyproject.arg.adf.sat.NativeMinisatSolver;
 
 /**
  *  Example code illustrating the translation from Abstract Dialectical Frameworks (ADFs) to Conditional logics 
