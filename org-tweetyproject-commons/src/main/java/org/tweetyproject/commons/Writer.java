@@ -101,7 +101,7 @@ public abstract class Writer {
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
 			out.write(s);
 			out.close();
-			System.out.println("Success: Wrote object to " + newFilename);
+			//System.out.println("Success: Wrote object to " + newFilename);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
