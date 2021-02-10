@@ -16,7 +16,7 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.sat;
+package org.tweetyproject.arg.adf.sat.solver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
+import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
@@ -54,7 +55,7 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.tweetyproject.arg.adf.sat.IncrementalSatSolver#createState()
+	 * @see net.sf.tweety.arg.adf.sat.IncrementalSatSolver#createState()
 	 */
 	@Override
 	public SatSolverState createState() {
@@ -113,12 +114,9 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 		/**
 		 * Maps the propositions to their native representation.
 		 */
-		private final Map<Atom, Integer> nativeMapping = new HashMap<Atom, Integer>();
-
-		/**
-		 * The index corresponds to the native representation.
-		 */
-		private final List<Atom> nativeToProp = new ArrayList<>();
+		private final Map<Literal, Integer> nonTransientMapping = new HashMap<Literal, Integer>();
+		
+		private Map<Literal, Integer> transientMapping = new HashMap<Literal, Integer>();
 
 		private MinisatSolverState() {
 			this.handle = init();
@@ -126,7 +124,6 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 			// represent negative literals as negative numbers, but we cannot
 			// distinguish -0 and +0
 			newVar(handle);
-			nativeToProp.add(null); // adjust index
 		}
 
 		/*
@@ -142,49 +139,22 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.tweetyproject.arg.adf.sat.SatSolverState#witness()
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness()
 		 */
 		@Override
-		public Set<Atom> witness() {	
-			int[] witness = NativeMinisatSolver.witness(handle);
-
-			if (witness.length > 0) {
-				Set<Atom> model = new HashSet<>();
-				for (int i = 0; i < witness.length; i++) {
-					if (witness[i] == 1) {
-						model.add(nativeToProp.get(i));
-					}
-				}
-				return model;
-			}
-
-			return null;
+		public Set<Literal> witness() {	
+			return witness(nonTransientMapping.keySet());
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.sat.SatSolverState#witness(java.util.Collection)
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness(java.util.Collection)
 		 */
 		@Override
-		public Set<Atom> witness(Collection<Atom> filter) {
-			// TODO fix
-//			if (satisfiable()) {
-//				int[] nfilter = new int[filter.size()];
-//				int i = 0;
-//				for (Atom atom : filter) {
-//					nfilter[i] = nativeMapping.get(atom);
-//					i++;
-//				}
-//				int[] witness = NativeMinisatSolver.witness(handle, nfilter);
-//				Set<Atom> model = new HashSet<>();
-//				for (int j = 0; j < witness.length; j++) {
-//					model.add(nativeToProp.get(witness[j]));
-//				}
-//				return model;
-//			}
+		public Set<Literal> witness(Collection<? extends Literal> filter) {
 			if (satisfiable()) {
-				Set<Atom> witness = new HashSet<>();
-				for (Atom atom : filter) {
-					int mapping = nativeMapping.get(atom);
+				Set<Literal> witness = new HashSet<>();
+				for (Literal atom : filter) {
+					int mapping = nonTransientMapping.get(atom);
 					if (value(handle, mapping) == 0) {
 						witness.add(atom);
 					}
@@ -198,10 +168,11 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.tweetyproject.arg.adf.sat.SatSolverState#satisfiable()
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#satisfiable()
 		 */
 		@Override
 		public boolean satisfiable() {
+			transientMapping = new HashMap<>();
 			if (assumptions != null) {
 				boolean sat = false;
 				int size = assumptions.size();
@@ -231,13 +202,13 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * org.tweetyproject.arg.adf.sat.SatSolverState#assume(org.tweetyproject.logics.
+		 * net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.
 		 * pl.syntax.Proposition, boolean)
 		 */
 		@Override
-		public void assume(Atom atom, boolean value) {
-			int mapped = mapToNative(atom);
-			int assumption = value ? mapped : -mapped;
+		public void assume(Literal literal) {
+			int mapped = mapToNative(literal.getAtom());
+			int assumption = literal.isPositive() ? mapped : -mapped;
 			if (assumptions == null) {
 				assumptions = new ArrayList<>();
 			}
@@ -250,20 +221,23 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 			return true;
 		}
 
-		private int mapToNative(Atom p) {
-			if (!nativeMapping.containsKey(p)) {
-				int var = newVar(handle);
-				nativeMapping.put(p, var);
-				nativeToProp.add(p);
+		private int mapToNative(Literal atom) {
+			Map<Literal, Integer> map = atom.isTransient() ? transientMapping : nonTransientMapping;
+
+			if (map.containsKey(atom)) {
+				return map.get(atom);
 			}
-			return nativeMapping.get(p);
+			
+			int mapping = newVar(handle);
+			map.put(atom, mapping);			
+			return mapping;
 		}
 
 		private void updateState(Clause clause) {
 			int[] nclause = new int[clause.size()];
 			int i = 0;
 			for (Literal literal : clause) {
-				Atom atom = literal.getAtom();
+				Literal atom = literal.getAtom();
 				int mapped = mapToNative(atom);
 				nclause[i] = literal.isPositive() ? mapped : -mapped;
 				i++;

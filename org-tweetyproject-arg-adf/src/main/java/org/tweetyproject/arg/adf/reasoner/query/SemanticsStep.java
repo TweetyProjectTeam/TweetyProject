@@ -16,19 +16,32 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.reasoner.sat;
+package org.tweetyproject.arg.adf.reasoner.query;
 
-import org.tweetyproject.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Semantics;
 
 /**
- * 
  * @author Mathias Hofer
  *
  */
-class PipelineReasoner extends AbstractDialecticalFrameworkReasoner {
+public interface SemanticsStep {
 
-	public PipelineReasoner(Pipeline computationPipeline) {
-		super(computationPipeline);
-	}
+	ConditionlessTaskStep conflictFree();
+	
+	ConditionlessTaskStep naive();
+	
+	ConditionlessTaskStep admissible();
+	
+	ConditionlessTaskStep preferred();
+	
+	ConditionlessTaskStep stable();
+	
+	ConditionlessTaskStep complete();
+	
+	ConditionlessTaskStep model();
+	
+	ConditionlessTaskStep ground();
+
+	ConditionlessTaskStep custom(Semantics semantics);
 	
 }

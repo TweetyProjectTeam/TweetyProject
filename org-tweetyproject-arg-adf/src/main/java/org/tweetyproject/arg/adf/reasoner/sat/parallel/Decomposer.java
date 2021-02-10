@@ -16,49 +16,24 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.syntax.pl;
+package org.tweetyproject.arg.adf.reasoner.sat.parallel;
 
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.Collection;
+
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
  *
  */
-class SingletonClause implements Clause{
-
-	private final Literal literal;
+public interface Decomposer {
 	
 	/**
-	 * @param literal
+	 * 
+	 * @param adf
+	 * @param count the preferred number of decompositions, can be ignored by the implementation if the given adf cannot be decomposed into enough parts
+	 * @return
 	 */
-	public SingletonClause(Literal literal) {
-		this.literal = Objects.requireNonNull(literal);
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Iterable#iterator()
-	 */
-	@Override
-	public Iterator<Literal> iterator() {
-		return Stream.of(literal).iterator();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Clause#stream()
-	 */
-	@Override
-	public Stream<Literal> stream() {
-		return Stream.of(literal);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Clause#size()
-	 */
-	@Override
-	public int size() {
-		return 1;
-	}
+	Collection<AbstractDialecticalFramework> decompose(AbstractDialecticalFramework adf, int count);
 
 }

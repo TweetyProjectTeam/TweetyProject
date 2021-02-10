@@ -27,21 +27,20 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.BipolarSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.RelativeBipolarSatEncoding;
-import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
-import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
 import org.tweetyproject.arg.adf.semantics.link.LinkType;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.util.InterpretationTrieSet;
 
 /**
@@ -54,34 +53,28 @@ public final class RelativeKBipolarStateProcessor implements StateProcessor {
 
 	private final int maxDepth;
 
-	private final IncrementalSatSolver solver;
+	private final LinkStrategy linkStrategy;
 
 	/**
 	 * @param maxDepth maxDepth
 	 * @param solver solver
 	 */
-	public RelativeKBipolarStateProcessor(int maxDepth, IncrementalSatSolver solver) {
+	public RelativeKBipolarStateProcessor(int maxDepth, LinkStrategy linkStrategy) {
 		this.maxDepth = maxDepth;
-		this.solver = Objects.requireNonNull(solver);
+		this.linkStrategy = Objects.requireNonNull(linkStrategy);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor#process(net.
-	 * sf.tweety.arg.adf.sat.SatSolverState,
-	 * org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncodingContext,
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework)
+	
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.reasoner.sat.processor.StateProcessor#process(java.util.function.Consumer, net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping, net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework)
 	 */
 	@Override
-	public void process(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		new BipolarSatEncoding().encode(state::add, mapping, adf);
+	public void process(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+		new BipolarSatEncoding().encode(consumer, adf, mapping);
 		Map<Link, Set<Interpretation>> bipolarIn = checkLinks(adf);
 		for (Entry<Link, Set<Interpretation>> entry : bipolarIn.entrySet()) {
 			Link link = entry.getKey();
 			for (Interpretation interpretation : entry.getValue()) {
-				new RelativeBipolarSatEncoding(interpretation, link).encode(state::add, mapping, adf);
+				new RelativeBipolarSatEncoding(interpretation, link).encode(consumer, adf, mapping);
 			}
 		}
 	}
@@ -107,13 +100,12 @@ public final class RelativeKBipolarStateProcessor implements StateProcessor {
 		List<Argument> arguments = acc.arguments().collect(Collectors.toList());
 		
 		// use this set to eliminate symmetries, e.g. {t(a), t(b)} and {t(b), t(a)} are equivalent interpretations
-		InterpretationTrieSet prefixes = new InterpretationTrieSet();
+		Set<Interpretation> prefixes = new InterpretationTrieSet();
 		
 		Queue<Interpretation> guesses = initializeGuesses(arguments, adf);
 		while (!guesses.isEmpty()) {
 			Interpretation guess = guesses.poll();
-			LinkStrategy strategy = new SatLinkStrategy(solver, guess);
-			LinkType type = strategy.compute(link.getFrom(), acc);
+			LinkType type = linkStrategy.compute(link.getFrom(), acc, guess);
 			
 			if (!type.isDependent()) {
 				Link bipolarized = Link.of(link.getFrom(), link.getTo(), type);
@@ -140,9 +132,11 @@ public final class RelativeKBipolarStateProcessor implements StateProcessor {
 	
 	private static Queue<Interpretation> initializeGuesses(List<Argument> arguments, AbstractDialecticalFramework adf) {
 		Queue<Interpretation> guesses = new LinkedList<>();
-		for (Argument arg : arguments) {
-			guesses.add(Interpretation.singleValued(arg, true, adf));
-			guesses.add(Interpretation.singleValued(arg, false, adf));
+		if (arguments.size() > 1) {
+			for (Argument arg : arguments) {
+				guesses.add(Interpretation.singleValued(arg, true, adf));
+				guesses.add(Interpretation.singleValued(arg, false, adf));
+			}			
 		}
 		return guesses;
 	}

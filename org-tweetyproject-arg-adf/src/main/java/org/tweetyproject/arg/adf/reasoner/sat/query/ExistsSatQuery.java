@@ -16,16 +16,31 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.sat;
+package org.tweetyproject.arg.adf.reasoner.sat.query;
+
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Execution;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Semantics;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
  *
  */
-public interface SatSolverStatePool {
+final class ExistsSatQuery extends SatQuery<Boolean> {
 
-	SatSolverState reusable();
-		
-	SatSolverState usableOnce();
+	public ExistsSatQuery(AbstractDialecticalFramework adf, Semantics semantics, Configuration configuration) {
+		super(adf, semantics, configuration);
+	}
 	
+	@Override
+	public SatQuery<Boolean> configure(Configuration configuration) {
+		return new ExistsSatQuery(adf, semantics, configuration);
+	}
+
+	@Override
+	Boolean execute(Execution execution) {
+		return new ModelIterator(execution).hasNext();
+	}
+
 }

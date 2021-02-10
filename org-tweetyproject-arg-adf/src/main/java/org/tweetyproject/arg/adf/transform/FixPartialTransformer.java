@@ -86,6 +86,10 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	@Override
 	protected AcceptanceCondition transformDisjunction(Collection<AcceptanceCondition> children, Void topDownData,
 			int polarity) {
+		if (children.size() == 1) {
+			return children.iterator().next();
+		}
+		
 		Collection<AcceptanceCondition> filtered = new LinkedList<AcceptanceCondition>();
 		for (AcceptanceCondition child : children) {
 			if (child == TAUTOLOGY) {
@@ -110,6 +114,10 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	@Override
 	protected AcceptanceCondition transformConjunction(Collection<AcceptanceCondition> children, Void topDownData,
 			int polarity) {
+		if (children.size() == 1) {
+			return children.iterator().next();
+		}
+		
 		Collection<AcceptanceCondition> filtered = new LinkedList<AcceptanceCondition>();
 		for (AcceptanceCondition child : children) {
 			if (child == CONTRADICTION) {

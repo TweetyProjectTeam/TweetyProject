@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,12 +36,13 @@ import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
 import org.tweetyproject.arg.adf.semantics.link.LinkType;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
+import org.tweetyproject.arg.adf.transform.Transformer;
 import org.tweetyproject.arg.adf.util.AbstractUnmodifiableCollection;
 import org.tweetyproject.arg.adf.util.LazyMap;
 
 /**
  * Internally represented as a graph-like structure. This allows for efficient
- * queries at the cost of a bit more memory overhead, since every argument
+ * traversal at the cost of a bit more memory overhead, since every argument
  * maintains references to its parents and children.
  * 
  * @author Mathias Hofer
@@ -81,39 +84,51 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#
-	 * getArguments()
-	 */
+	@Override
+	public AbstractDialecticalFramework transform(Function<AcceptanceCondition, AcceptanceCondition> transformer) {
+		Builder builder = new Builder();
+		for (Argument arg : index.keySet()) {
+			AcceptanceCondition acc = getAcceptanceCondition(arg);
+			builder.add(arg, transformer.apply(acc));
+		}
+		return builder.lazy(linkStrategy).build();
+	}
+	
+	@Override
+	public AbstractDialecticalFramework transform(Transformer<AcceptanceCondition> transformer) {
+		Builder builder = new Builder();
+		for (Argument arg : index.keySet()) {
+			AcceptanceCondition acc = getAcceptanceCondition(arg);
+			builder.add(arg, transformer.transform(acc));
+		}
+		return builder.lazy(linkStrategy).build();
+	}
+	
+	@Override
+	public AbstractDialecticalFramework transform(BiFunction<Argument, AcceptanceCondition, AcceptanceCondition> transformer) {
+		Builder builder = new Builder();
+		for (Argument arg : index.keySet()) {
+			AcceptanceCondition acc = getAcceptanceCondition(arg);
+			builder.add(arg, transformer.apply(arg, acc));
+		}
+		return builder.lazy(linkStrategy).build();
+	}
+	
 	@Override
 	public Set<Argument> getArguments() {
 		return Collections.unmodifiableSet(index.keySet());
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#size()
-	 */
 	@Override
 	public int size() {
 		return index.size();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#getLinks()
-	 */
 	@Override
 	public Set<Link> links() {
 		return linksStream().collect(Collectors.toUnmodifiableSet());
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#linksStream()
-	 */
 	@Override
 	public Stream<Link> linksStream() {
 		return index.values()
@@ -121,96 +136,46 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 				.flatMap(n -> n.parents.values().stream());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#link(org.tweetyproject.arg.adf.syntax.Argument, org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Link link(Argument parent, Argument child) {
 		return node(child).parents.get(parent);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#contains(
-	 * org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public boolean contains(Argument arg) {
 		return index.get(arg) != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#
-	 * linksFromParents(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Set<Link> linksTo(Argument child) {
 		return new ParentSet(child, node(child).parents);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#
-	 * linksToChildren(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Set<Link> linksFrom(Argument parent) {
 		return new ChildrenSet(parent, node(parent).children);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#parents(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Set<Argument> parents(Argument child) {
 		return Collections.unmodifiableSet(node(child).parents.keySet());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#children(
-	 * org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Set<Argument> children(Argument parent) {
 		return Collections.unmodifiableSet(node(parent).children.keySet());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#
-	 * getAcceptanceCondition(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public AcceptanceCondition getAcceptanceCondition(Argument argument) {
 		return node(argument).acc;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#incomingDegree(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
+
 	@Override
 	public int incomingDegree(Argument arg) {
 		return node(arg).parents.size();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#outgoingDegree(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public int outgoingDegree(Argument arg) {
 		return node(arg).children.size();
@@ -230,13 +195,6 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 		return node;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#kBipolar(
-	 * int)
-	 */
 	@Override
 	public int kBipolar() {
 		if (this.k < 0) {
@@ -249,9 +207,6 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 		return k;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -260,9 +215,6 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -442,9 +394,6 @@ final class GraphAbstractDialecticalFramework implements AbstractDialecticalFram
 
 	static final class Builder extends AbstractBuilder {
 
-		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework.Builder#build()
-		 */
 		@Override
 		public AbstractDialecticalFramework build() {
 			return new GraphAbstractDialecticalFramework(this);

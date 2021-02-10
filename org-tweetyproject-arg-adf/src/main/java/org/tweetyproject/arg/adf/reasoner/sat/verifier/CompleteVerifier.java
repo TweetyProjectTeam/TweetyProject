@@ -29,7 +29,7 @@ import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 
 /**
@@ -41,53 +41,44 @@ public class CompleteVerifier implements Verifier {
 	private final SatEncoding conflictFree = new ConflictFreeInterpretationSatEncoding();
 	
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier#prepareState(org.tweetyproject.arg.adf.sat.SatSolverState, org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping, org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework)
+	 * @see net.sf.tweety.arg.adf.reasoner.sat.verifier.Verifier#prepareState(net.sf.tweety.arg.adf.sat.SatSolverState, net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping, net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework)
 	 */
 	@Override
 	public void prepareState(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		conflictFree.encode(state::add, mapping, adf);
+		conflictFree.encode(state::add, adf, mapping);
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.verifier.Verifier#verify(java.lang.Object,
-	 * org.tweetyproject.arg.adf.semantics.Interpretation,
-	 * org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework)
+	 * net.sf.tweety.arg.adf.reasoner.verifier.Verifier#verify(java.lang.Object,
+	 * net.sf.tweety.arg.adf.semantics.Interpretation,
+	 * net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework)
 	 */
 	@Override
 	public boolean verify(SatSolverState state, PropositionalMapping mapping, Interpretation candidate,
 			AbstractDialecticalFramework adf) {
 		boolean complete = true;
 		Iterator<Argument> undecided = candidate.undecided().iterator();
-		new FixPartialSatEncoding(candidate).encode(state::add, mapping, adf);
-		new LargerInterpretationSatEncoding(candidate).encode(state::add, mapping, adf);
+		new FixPartialSatEncoding(candidate).encode(state::add, adf, mapping);
+		new LargerInterpretationSatEncoding(candidate).encode(state::add, adf, mapping);
 		while (undecided.hasNext() && complete) {
 			Argument s = undecided.next();
 			TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
-			Atom accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
+			Literal accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
 			
 			// check not-taut
-			state.assume(accName, false);
+			state.assume(accName.neg());
 			boolean notTaut = state.satisfiable();
 
 			// check not-unsat
-			state.assume(accName, true);
+			state.assume(accName);
 			boolean notUnsat = state.satisfiable();
 
 			complete = notTaut && notUnsat;
 		}
 		return complete;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier#postVerification(org.tweetyproject.arg.adf.sat.SatSolverState, org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping, org.tweetyproject.arg.adf.semantics.interpretation.Interpretation, org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework, boolean)
-	 */
-	@Override
-	public boolean postVerification(SatSolverState state, PropositionalMapping mapping, Interpretation candidate,
-			AbstractDialecticalFramework adf, boolean verificationResult) {
-		return true;
 	}
 
 }

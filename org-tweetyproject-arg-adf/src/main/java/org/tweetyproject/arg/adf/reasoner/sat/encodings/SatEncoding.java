@@ -18,8 +18,6 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.encodings;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
@@ -32,16 +30,6 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public interface SatEncoding {
 
-	void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf);
-	
-	default Collection<Clause> encode(PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		Collection<Clause> clauses = new LinkedList<>();
-		encode(clauses::add, mapping, adf);
-		return clauses;
-	}
-	
-	default void encode(Collection<Clause> collection, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		encode(collection::add, mapping, adf);
-	}
+	void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping);
 
 }

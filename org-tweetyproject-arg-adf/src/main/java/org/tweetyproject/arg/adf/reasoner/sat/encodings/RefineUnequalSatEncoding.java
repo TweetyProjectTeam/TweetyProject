@@ -28,7 +28,6 @@ import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
 
 /**
  * @author Mathias Hofer
@@ -46,21 +45,21 @@ public class RefineUnequalSatEncoding implements SatEncoding {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(org.tweetyproject.arg.
+	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
 	 * adf.reasoner.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		Set<Literal> clause = new HashSet<>();
 		for (Argument arg : interpretation.satisfied()) {
-			clause.add(new Negation(context.getTrue(arg)));
+			clause.add(mapping.getTrue(arg).neg());
 		}
 		for (Argument arg : interpretation.unsatisfied()) {
-			clause.add(new Negation(context.getFalse(arg)));
+			clause.add(mapping.getFalse(arg).neg());
 		}
 		for (Argument arg : interpretation.undecided()) {
-			clause.add(context.getTrue(arg));
-			clause.add(context.getFalse(arg));
+			clause.add(mapping.getTrue(arg));
+			clause.add(mapping.getFalse(arg));
 		}
 		consumer.accept(Clause.of(clause));
 	}

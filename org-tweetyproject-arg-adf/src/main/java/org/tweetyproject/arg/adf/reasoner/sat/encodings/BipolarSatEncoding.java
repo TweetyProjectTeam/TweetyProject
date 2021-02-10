@@ -24,9 +24,8 @@ import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.semantics.link.LinkType;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
  * @author Mathias Hofer
@@ -34,25 +33,19 @@ import org.tweetyproject.arg.adf.syntax.pl.Negation;
  */
 public class BipolarSatEncoding implements SatEncoding {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(org.tweetyproject.arg.adf.reasoner.sat.SatEncodingContext)
-	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		for (Argument r : adf.getArguments()) {
-			Atom rTrue = mapping.getTrue(r);
-			Atom rFalse = mapping.getFalse(r);
+			Literal rTrue = mapping.getTrue(r);
+			Literal rFalse = mapping.getFalse(r);
 			for (Link l : adf.linksTo(r)) {
-				Atom link = mapping.getLink(l);
+				Literal link = mapping.getLink(l);
 				if (l.getType() == LinkType.ATTACKING) {
-					consumer.accept(Clause.of(new Negation(rTrue), mapping.getFalse(l.getFrom()), link));
-					consumer.accept(Clause.of(new Negation(rFalse), mapping.getTrue(l.getFrom()), new Negation(link)));
+					consumer.accept(Clause.of(rTrue.neg(), mapping.getFalse(l.getFrom()), link));
+					consumer.accept(Clause.of(rFalse.neg(), mapping.getTrue(l.getFrom()), link.neg()));
 				} else if (l.getType() == LinkType.SUPPORTING) {
-					consumer.accept(Clause.of(new Negation(rTrue), mapping.getTrue(l.getFrom()), new Negation(link)));
-					consumer.accept(Clause.of(new Negation(rFalse), mapping.getFalse(l.getFrom()), link));
+					consumer.accept(Clause.of(rTrue.neg(), mapping.getTrue(l.getFrom()), link.neg()));
+					consumer.accept(Clause.of(rFalse.neg(), mapping.getFalse(l.getFrom()), link));
 				}
 			}
 		}

@@ -44,16 +44,16 @@ public class FixPartialSatEncoding implements SatEncoding {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncodingContext)
+	 * @see net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		for (Argument a : interpretation.satisfied()) {
-			consumer.accept(Clause.of(context.getTrue(a)));
+			consumer.accept(Clause.of(mapping.getTrue(a)));
 		}
 
 		for (Argument a : interpretation.unsatisfied()) {
-			consumer.accept(Clause.of(context.getFalse(a)));
+			consumer.accept(Clause.of(mapping.getFalse(a)));
 		}
 	}
 

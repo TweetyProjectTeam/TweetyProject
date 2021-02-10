@@ -16,47 +16,37 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.syntax.pl;
+package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
 
-import java.util.Objects;
+import java.util.Collection;
+
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
+ * Encapsulates the state of a query execution.
+ * 
  * @author Mathias Hofer
  *
  */
-public final class Negation implements Literal {
+public interface Execution extends AutoCloseable {
+
+	Interpretation computeCandidate();
 	
-	private final Literal literal;
+	boolean verify(Interpretation candidate);
+	
+	Interpretation processModel(Interpretation model);
+	
+	boolean addClause( Clause clause );
 	
 	/**
-	 * @param literal some literal
+	 * 
+	 * @param clauses
+	 * @return true iff all of the clauses were successfully added
 	 */
-	public Negation(Literal literal) {
-		this.literal = Objects.requireNonNull(literal);
-	}
+	boolean addClauses( Collection<? extends Clause> clauses);
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Literal#getAtom()
-	 */
 	@Override
-	public Atom getAtom() {
-		return literal.getAtom();
-	}
+	void close();
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Literal#isPositive()
-	 */
-	@Override
-	public boolean isPositive() {
-		return !literal.isPositive();
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "!" + literal;
-	}
-
 }

@@ -31,7 +31,7 @@ import org.tweetyproject.arg.adf.reasoner.CompleteReasoner;
 import org.tweetyproject.arg.adf.reasoner.ModelReasoner;
 import org.tweetyproject.arg.adf.reasoner.NaiveReasoner;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
-import org.tweetyproject.arg.adf.sat.NativeMinisatSolver;
+import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
 import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;

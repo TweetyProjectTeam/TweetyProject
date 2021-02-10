@@ -26,9 +26,8 @@ import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 import org.tweetyproject.arg.adf.util.CacheMap;
 
@@ -42,46 +41,29 @@ public final class SatLinkStrategy implements LinkStrategy {
 
 	private final IncrementalSatSolver solver;
 
-	private final Interpretation assumption;
-
 	public SatLinkStrategy(IncrementalSatSolver solver) {
-		this(solver, null);
-	}
-
-	/**
-	 * Computes the link type based on the two-valued assignments of the given
-	 * assumption.
-	 * 
-	 * @param solver the incremental sat solver to be used
-	 * @param assumption the assumption on which the link type is computed
-	 */
-	public SatLinkStrategy(IncrementalSatSolver solver, Interpretation assumption) {
 		this.solver = Objects.requireNonNull(solver);
-		this.assumption = assumption;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.semantics.LinkStrategy#link(org.tweetyproject.arg.adf.
-	 * syntax.Argument, org.tweetyproject.arg.adf.syntax.Argument,
-	 * org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition)
-	 */
 	@Override
 	public LinkType compute(Argument parent, AcceptanceCondition childAcc) {
+		return compute(parent, childAcc, null);
+	}
+
+	@Override
+	public LinkType compute(Argument parent, AcceptanceCondition childAcc, Interpretation assumption) {
 		if (!childAcc.contains(parent)) {
 			throw new IllegalArgumentException("The parent does not occur in the child acceptance condition!");
 		}
 
-		Function<Argument, Atom> mapping = new CacheMap<>(arg -> Atom.of(arg.getName()));
-		
+		Function<Argument, Literal> mapping = new CacheMap<>(arg -> Literal.create(arg.getName()));
+
 		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(mapping, false);
-		
+
 		try (SatSolverState state = solver.createState()) {
-			Atom childAccName = transformer.collect(childAcc, state::add);
-			
-			state.add(Clause.of(new Negation(childAccName)));
+			Literal childAccName = transformer.collect(childAcc, state::add);
+
+			state.add(Clause.of(childAccName.neg()));
 
 			// compute the link type relative to the assumption
 			if (assumption != null) {
@@ -89,25 +71,25 @@ public final class SatLinkStrategy implements LinkStrategy {
 					state.add(Clause.of(mapping.apply(arg)));
 				}
 				for (Argument arg : assumption.unsatisfied()) {
-					state.add(Clause.of(new Negation(mapping.apply(arg))));
+					state.add(Clause.of(mapping.apply(arg).neg()));
 				}
 			}
 
 			// used to activate either attacking or supporting check
-			Atom toggle = Atom.of("toggle");
+			Literal toggle = Literal.create("toggle");
 
-			Clause attackingClause = Clause.of(childAccName, new Negation(mapping.apply(parent)), toggle);
+			Clause attackingClause = Clause.of(childAccName, mapping.apply(parent).neg(), toggle);
 			state.add(attackingClause);
 
-			Clause supportingClause = Clause.of(childAccName, mapping.apply(parent), new Negation(toggle));				
+			Clause supportingClause = Clause.of(childAccName, mapping.apply(parent), toggle.neg());
 			state.add(supportingClause);
-			
+
 			// satisfies attackingClause, thus deactivates the attacking check
-			state.assume(toggle, true);
+			state.assume(toggle);
 			boolean supporting = !state.satisfiable();
-			
+
 			// satisfies supportingClause, thus deactivates the supporting check
-			state.assume(toggle, false);
+			state.assume(toggle.neg());
 			boolean attacking = !state.satisfiable();
 
 			return LinkType.get(attacking, supporting);

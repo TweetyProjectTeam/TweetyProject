@@ -19,74 +19,68 @@
 package org.tweetyproject.arg.adf.syntax.pl;
 
 import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Stream;
+
+import org.tweetyproject.arg.adf.syntax.pl.Clauses.Clause0;
+import org.tweetyproject.arg.adf.syntax.pl.Clauses.Clause1;
+import org.tweetyproject.arg.adf.syntax.pl.Clauses.Clause2;
+import org.tweetyproject.arg.adf.syntax.pl.Clauses.Clause3;
+import org.tweetyproject.arg.adf.syntax.pl.Clauses.ClauseN;
+import org.tweetyproject.arg.adf.syntax.pl.Clauses.ExtendedClause;
 
 /**
  * @author Mathias Hofer
  *
  */
 public interface Clause extends Iterable<Literal> {
-	
-	static Clause of(Set<Literal> literals) {
-		return new SetClause(literals);
-	}
-	
-	static Clause of(Collection<? extends Literal> literals, Literal... additional) {
-		Literal[] array = new Literal[literals.size() + additional.length];
-		copyTo(array, literals, 0);
-		copyTo(array, additional, literals.size());
-		return new ArrayClause(array);
-	}
-	
-	static Clause of(Clause clause, Literal... additional) {
-		Literal[] array = new Literal[clause.size() + additional.length];
-		copyTo(array, clause, 0);
-		copyTo(array, additional, clause.size());		
-		return new ArrayClause(array);
-	}
-	
-	static Clause of() {
-		return EmptyClause.INSTANCE;
-	}
-	
-	static Clause of(Literal l) {
-		return new SingletonClause(l);
-	}
-	
-	static Clause of(Literal l1, Literal l2) {
-		Objects.requireNonNull(l1);
-		Objects.requireNonNull(l2);
-		return new ArrayClause(new Literal[] {l1, l2});
-	}
-	
-	static Clause of(Literal l1, Literal l2, Literal l3) {
-		Objects.requireNonNull(l1);
-		Objects.requireNonNull(l2);
-		Objects.requireNonNull(l3);
-		return new ArrayClause(new Literal[] {l1, l2, l3});
-	}
-	
-	static Clause lazyMapping(Clause clause, Function<Literal, Literal> mapping) {
-		return new MappedClause(clause, mapping);
-	}
-	
+
 	Stream<Literal> stream();
-	
+
 	int size();
-	
-	private static void copyTo(Literal[] dst, Iterable<? extends Literal> src, int offset) {
-		for (Literal literal : src) {
-			dst[offset++] = literal;
-		}
+
+	static Clause of() {
+		return Clause0.INSTANCE;
 	}
-	
-	private static void copyTo(Literal[] dst, Literal[] src, int offset) {
-		for (Literal literal : src) {
-			dst[offset++] = literal;
-		}
+
+	static Clause of(Literal l) {
+		return new Clause1(l);
 	}
-	
+
+	static Clause of(Literal l1, Literal l2) {
+		return new Clause2(l1, l2);
+	}
+
+	static Clause of(Literal l1, Literal l2, Literal l3) {
+		return new Clause3(l1, l2, l3);
+	}
+
+	static Clause of(Clause c, Literal l) {
+		return new ExtendedClause(c, l);
+	}
+
+	static Clause of(Collection<? extends Literal> literals) {
+		return new ClauseN(literals.toArray(new Literal[0]));
+	}
+
+	static Clause of(Collection<? extends Literal> literals, Literal l) {
+		Literal[] array = literals.toArray(new Literal[literals.size() + 1]);
+		array[array.length - 1] = l;
+		return new ClauseN(array);
+	}
+
+	static Clause of(Collection<? extends Literal> literals, Literal l1, Literal l2) {
+		Literal[] array = literals.toArray(new Literal[literals.size() + 2]);
+		array[array.length - 2] = l1;
+		array[array.length - 1] = l2;
+		return new ClauseN(array);
+	}
+
+	static Clause of(Collection<? extends Literal> literals, Literal l1, Literal l2, Literal l3) {
+		Literal[] array = literals.toArray(new Literal[literals.size() + 3]);
+		array[array.length - 3] = l1;
+		array[array.length - 2] = l2;
+		array[array.length - 1] = l3;
+		return new ClauseN(array);
+	}
+
 }

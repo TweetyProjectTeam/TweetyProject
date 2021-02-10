@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.adf.reasoner.sat.generator;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.ConflictFreeInterpretationSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
@@ -27,7 +28,8 @@ import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.syntax.pl.Clause;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
  * @author Mathias Hofer
@@ -36,32 +38,29 @@ import org.tweetyproject.arg.adf.syntax.pl.Atom;
 public final class ConflictFreeGenerator implements CandidateGenerator {
 
 	private final SatEncoding conflictFree = new ConflictFreeInterpretationSatEncoding();
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.generator.CandidateGenerator#initialize()
+
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.reasoner.sat.generator.CandidateGenerator#initialize(java.util.function.Consumer, net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping, net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework)
 	 */
 	@Override
-	public void initialize(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		conflictFree.encode(state::add, mapping, adf);
+	public void initialize(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+		conflictFree.encode(consumer, adf, mapping);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.generator.CandidateGenerator#generate(java
+	 * net.sf.tweety.arg.adf.reasoner.generator.CandidateGenerator#generate(java
 	 * .lang.Object)
 	 */
 	@Override
 	public Interpretation generate(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		Set<Atom> witness = state.witness(mapping.getArguments());
+		Set<Literal> witness = state.witness(mapping.getArguments());
 		if (witness != null) {
 			// prevent the same interpretation from being computed again
 			Interpretation conflictFree = Interpretation.fromWitness(witness, mapping, adf);
-			new RefineUnequalSatEncoding(conflictFree).encode(state::add, mapping, adf);
+			new RefineUnequalSatEncoding(conflictFree).encode(state::add, adf, mapping);
 			return conflictFree;
 		}
 		return null;

@@ -30,7 +30,6 @@ import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
 
 /**
  * @author Mathias Hofer
@@ -51,29 +50,29 @@ public final class RelativeBipolarSatEncoding implements SatEncoding {
 		this.link = Objects.requireNonNull(link);
 	}
 
-	public void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		Argument parent = link.getFrom();
 		Argument child = link.getTo();
-		
+
 		// the relative part makes sure that the clauses are only activated if the decided arguments match
 		// in other words, the clauses are always satisfiable until the current partial interpretation makes the link bipolar
 		Collection<Literal> relativePart = relativePart(interpretation, mapping);
 		if (link.getType() == LinkType.ATTACKING) {
-			consumer.accept(Clause.of(relativePart, new Negation(mapping.getTrue(child)), mapping.getFalse(parent), mapping.getLink(link)));
-			consumer.accept(Clause.of(relativePart, new Negation(mapping.getFalse(child)), mapping.getTrue(parent), new Negation(mapping.getLink(link))));
+			consumer.accept(Clause.of(relativePart, mapping.getTrue(child).neg(), mapping.getFalse(parent), mapping.getLink(link)));
+			consumer.accept(Clause.of(relativePart, mapping.getFalse(child).neg(), mapping.getTrue(parent), mapping.getLink(link).neg()));
 		} else if (link.getType() == LinkType.SUPPORTING) {
-			consumer.accept(Clause.of(relativePart, new Negation(mapping.getTrue(child)), mapping.getTrue(parent), new Negation(mapping.getLink(link))));
-			consumer.accept(Clause.of(relativePart, new Negation(mapping.getFalse(child)), mapping.getFalse(parent), mapping.getLink(link)));
+			consumer.accept(Clause.of(relativePart, mapping.getTrue(child).neg(), mapping.getTrue(parent), mapping.getLink(link).neg()));
+			consumer.accept(Clause.of(relativePart, mapping.getFalse(child).neg(), mapping.getFalse(parent), mapping.getLink(link)));
 		}
 	}
 	
 	private static Collection<Literal> relativePart(Interpretation interpretation, PropositionalMapping mapping) {
 		Collection<Literal> literals = new LinkedList<>();
 		for (Argument a : interpretation.unsatisfied()) {
-			literals.add(new Negation(mapping.getFalse(a)));
+			literals.add(mapping.getFalse(a).neg());
 		}
 		for (Argument a : interpretation.satisfied()) {
-			literals.add(new Negation(mapping.getTrue(a)));
+			literals.add(mapping.getTrue(a).neg());
 		}
 		return literals;
 	}

@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.adf.semantics.interpretation;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,11 +42,11 @@ public class InterpretationIterator implements Iterator<Interpretation> {
 	/**
 	 * @param arguments the arguments for which the possible interpretations are computed
 	 */
-	public InterpretationIterator(List<Argument> arguments) {
+	public InterpretationIterator(Collection<Argument> arguments) {
 		if (arguments == null || arguments.size() <= 0) {
 			throw new IllegalArgumentException("arguments must not be null!");
 		}
-		this.arguments = arguments;
+		this.arguments = List.copyOf(arguments);
 		this.current = new ThreeValuedBitSet(arguments.size());
 	}
 

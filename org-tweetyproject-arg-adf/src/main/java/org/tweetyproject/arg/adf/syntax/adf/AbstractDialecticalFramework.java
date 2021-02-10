@@ -18,13 +18,23 @@
  */
 package org.tweetyproject.arg.adf.syntax.adf;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.tweetyproject.arg.adf.io.KppADFFormatParser;
+import org.tweetyproject.arg.adf.reasoner.query.SemanticsStep;
+import org.tweetyproject.arg.adf.reasoner.sat.query.SatQueryBuilder;
+import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
+import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.transform.Transformer;
@@ -54,6 +64,10 @@ public interface AbstractDialecticalFramework {
 	static Builder builder() {
 		return new GraphAbstractDialecticalFramework.Builder();
 	}
+	
+	static AbstractDialecticalFramework fromFile(File file) throws FileNotFoundException, IOException {
+		return new KppADFFormatParser(new SatLinkStrategy(new NativeMinisatSolver()), true).parse(file);
+	}
 
 	static Builder fromMap(Map<Argument, AcceptanceCondition> map) {
 		Builder builder = new GraphAbstractDialecticalFramework.Builder();
@@ -62,40 +76,27 @@ public interface AbstractDialecticalFramework {
 		}
 		return builder;
 	}
-	
-	/**
-	 * Creates a copy of the given AbstractDialecticalFramework, which can be modified before build() is called.
-	 * 
-	 * @param adf the ADF to copy
-	 * @return the builder initialized with the values of the original ADF
-	 */
-	static Builder copy(AbstractDialecticalFramework adf) {
-		Builder builder = new GraphAbstractDialecticalFramework.Builder();
-		for (Argument arg : adf.getArguments()) {
-			builder.add(arg, adf.getAcceptanceCondition(arg));
-		}
-		// TODO: rethink this, we may not want to compute links here - which may be the case if we call links()
-		for (Link link : adf.links()) {
-			builder.add(link);
-		}
-		return builder;
-	}
 
 	/**
 	 * Creates a new {@link AbstractDialecticalFramework} with transformed acceptance conditions.
 	 * 
-	 * @param adf the ADF
-	 * @param transformer the transformed to use
-	 * @return the builder which is initialized with the transformed acceptance conditions
+	 * @param transformer the transformer to use
+	 * @return a new ADF with transformed acceptance conditions
 	 */
-	static Builder transform(AbstractDialecticalFramework adf,
-			Transformer<AcceptanceCondition> transformer) {
-		Builder builder = new GraphAbstractDialecticalFramework.Builder();
-		for (Argument arg : adf.getArguments()) {
-			AcceptanceCondition acc = adf.getAcceptanceCondition(arg);
-			builder.add(arg, transformer.transform(acc));
-		}
-		return builder;
+	AbstractDialecticalFramework transform(Function<AcceptanceCondition, AcceptanceCondition> transformer);
+	
+	AbstractDialecticalFramework transform(BiFunction<Argument, AcceptanceCondition, AcceptanceCondition> transformer);
+	
+	/**
+	 * Creates a new {@link AbstractDialecticalFramework} with transformed acceptance conditions.
+	 * 
+	 * @param transformer the transformer to use
+	 * @return a new ADF with transformed acceptance conditions
+	 */
+	AbstractDialecticalFramework transform(Transformer<AcceptanceCondition> transformer);
+	
+	default SemanticsStep query() {
+		return new SatQueryBuilder(this).defaultConfiguration();
 	}
 	
 	default int size() {

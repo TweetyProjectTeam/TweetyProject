@@ -23,9 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Test;
-
 import org.tweetyproject.arg.adf.io.KppADFFormatParser;
-import org.tweetyproject.arg.adf.sat.NativeMinisatSolver;
+import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
 
 public class KppADFFormatParserTest {

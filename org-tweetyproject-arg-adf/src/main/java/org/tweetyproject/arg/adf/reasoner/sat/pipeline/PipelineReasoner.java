@@ -16,33 +16,20 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.syntax.pl;
+package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
+
+import org.tweetyproject.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
 
 /**
+ * 
  * @author Mathias Hofer
  *
  */
-class SimpleAtom implements Atom{
+@Deprecated( forRemoval = true, since = "1.19" )
+class PipelineReasoner extends AbstractDialecticalFrameworkReasoner {
 
-	private final String name;
-	
-	public SimpleAtom(String name) {
-		this.name = name;
+	public PipelineReasoner(Pipeline computationPipeline) {
+		super(computationPipeline);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Atom#getName()
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return getName();
-	}
 }

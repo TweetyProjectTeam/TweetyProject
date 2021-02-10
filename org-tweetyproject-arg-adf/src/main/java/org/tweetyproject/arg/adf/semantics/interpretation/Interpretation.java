@@ -29,9 +29,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.EmptyInterpretation;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.SetInterpretation;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.SingleValuedInterpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.util.MinusSetView;
 
 /**
@@ -115,7 +118,7 @@ public interface Interpretation {
 	 * @throws NullPointerException if any of the arguments are null
 	 * @return an ADF interpretation
 	 */
-	static Interpretation fromWitness(Set<Atom> witness,
+	static Interpretation fromWitness(Set<Literal> witness,
 			PropositionalMapping encodingContext, AbstractDialecticalFramework adf) {
 		Set<Argument> satisfied = new HashSet<>();
 		Set<Argument> unsatisfied = new HashSet<>();
@@ -157,7 +160,7 @@ public interface Interpretation {
 	}
 	
 	/**
-	 * Creates a new interpretation with the same assignments as in the given arguments, but only uses the arguments contained in <code>restriction</code>.
+	 * Creates a new interpretation with the same assignments as in the given interpretation, but only uses the arguments contained in <code>restriction</code>.
 	 * 
 	 * @param interpretation the interpretation to restrict
 	 * @param restriction the arguments that act as a restriction/filter
@@ -230,7 +233,7 @@ public interface Interpretation {
 			private final Iterator<Interpretation> iter = new InterpretationIterator(arguments);
 			
 			/* (non-Javadoc)
-			 * @see org.tweetyproject.arg.adf.semantics.interpretation.InterpretationIterator#next()
+			 * @see net.sf.tweety.arg.adf.semantics.interpretation.InterpretationIterator#next()
 			 */
 			@Override
 			public Interpretation next() {

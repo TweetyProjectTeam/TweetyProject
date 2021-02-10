@@ -16,29 +16,33 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.sat;
+package org.tweetyproject.arg.adf.sat.solver;
 
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
+import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
+ * Experimental lingeling binding
+ * 
  * @author Mathias Hofer
  *
  */
-public final class NativePicosatSolver implements IncrementalSatSolver {
+public final class NativeLingelingSolver implements IncrementalSatSolver {
 
-	private static final String DEFAULT_WIN_LIB = "/picosat.dll";
-	private static final String DEFAULT_LINUX_LIB = "/picosat.so";
+	private static final String DEFAULT_WIN_LIB = "/lingeling.dll";
+	private static final String DEFAULT_LINUX_LIB = "/lingeling.so";
 
-	public NativePicosatSolver() {
+	public NativeLingelingSolver() {
 		String osName = System.getProperty("os.name").toLowerCase();
 		String lib = null;
 		if (osName.contains("win")) {
@@ -49,21 +53,19 @@ public final class NativePicosatSolver implements IncrementalSatSolver {
 		String path = getClass().getResource(lib).getPath();
 		System.load(path);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.sat.IncrementalSatSolver#createState()
-	 */
+
 	@Override
 	public SatSolverState createState() {
-		return new PicosatSolverState();
+		return new LingelingSolverState();
 	}
-	
+
+
 	private static native void addClause(long handle, int lit);
 
 	private static native void addClause(long handle, int lit1, int lit2);
 
 	private static native void addClause(long handle, int lit1, int lit2, int lit3);
-	
+
 	private static native void addClause(long handle, int[] clause);
 	
 	/**
@@ -83,42 +85,58 @@ public final class NativePicosatSolver implements IncrementalSatSolver {
 	 * @param size
 	 */
 	private static native void addBuffer(long handle, ByteBuffer buf, int size);
-	
-	private static native int[] witness(long handle);
-	
+
 	/*
-	 * The following methods directly correspond to picosat calls as defined
-	 * in picosat.h
+	 * The following methods directly correspond to lingeling calls as defined
+	 * in handleib.h
 	 */
 	private static native long init();
 
-	private static native void reset(long handle);
-	
+	private static native void release(long handle);
+
 	private static native void add(long handle, int lit);
-	
-	private static native void addAdoLit(long handle, int lit);
 
 	private static native void assume(long handle, int lit);
-	
-	private static native void setPropagationLimit(long handle, long limit);
-	
-	private static native boolean sat(long handle, long limit);
-	
+
+	private static native boolean sat(long handle);
+
 	private static native boolean deref(long handle, int lit);
-	
-	private static native boolean derefPartial(long handle, int lit);
-	
+
+	private static native boolean fixed(long handle, int lit);
+
+	private static native boolean failed(long handle, int lit);
+
 	private static native boolean inconsistent(long handle);
-		
-	private static final class PicosatSolverState implements SatSolverState {
+
+	private static native boolean changed(long handle);
+
+	private static native void reduceCache(long handle);
+
+	private static native void flushCache(long handle);
+
+	private static native void freeze(long handle, int lit);
+
+	private static native boolean frozen(long handle, int lit);
+
+	private static native void melt(long handle, int lit);
+
+	private static native void meltAll(long handle);
+
+	private static native boolean usable(long handle, int lit);
+
+	private static native boolean reusable(long handle, int lit);
+
+	private static native void reuse(long handle, int lit);
+
+	private static final class LingelingSolverState implements SatSolverState {
 
 		/**
 		 * Maps the propositions to their native representation.
 		 */
-		private final Map<Atom, Integer> propositionsToNative = new HashMap<Atom, Integer>();
+		private final Map<Literal, Integer> nonTransientMapping = new HashMap<Literal, Integer>();
 		
-		private static final int NO_DECISION_LIMIT = -1;
-				
+		private Map<Literal, Integer> transientMapping = new HashMap<Literal, Integer>();
+		
 		/**
 		 * Keeps track of the int representation of fresh propositions
 		 */
@@ -126,47 +144,56 @@ public final class NativePicosatSolver implements IncrementalSatSolver {
 
 		private final long handle;
 				
-		private PicosatSolverState() {
+		private LingelingSolverState() {
 			this.handle = init();
-		}
+		}		
 
 		@Override
 		public void close() {			
-			NativePicosatSolver.reset(handle);
-		}
-
-		private boolean isTrue(Atom p) {
-			return NativePicosatSolver.deref(handle, propositionsToNative.get(p));
+			release(handle);
 		}
 
 		@Override
 		public boolean add(Clause clause) {
-			updateState(clause);
+			update(clause);
 			return true;
 		}
-
-		private void updateState(Clause clause) {
+		
+		private int nativeMapping(Literal atom) {
+			Map<Literal, Integer> map = atom.isTransient() ? transientMapping : nonTransientMapping;
+					
+			if (map.containsKey(atom)) {
+				return map.get(atom);
+			}
+			
+			int mapping = nextProposition++;
+			map.put(atom, mapping);
+			if (!atom.isTransient()) {
+				NativeLingelingSolver.freeze(handle, mapping);					
+			}
+			return mapping;
+		}
+		
+		private int[] nativeMapping(Clause clause) {
 			int size = clause.size();
 			int[] nclause = new int[size + 1];
 			int i = 0;
-			for (Literal lit : clause) {
-				Atom p = lit.getAtom();
-				
-				if (!propositionsToNative.containsKey(p)) {
-					propositionsToNative.put(p, nextProposition);
-					nextProposition += 1;
-				}
-				
-				int mapped = propositionsToNative.get(p);
+			for (Literal lit : clause) {	
+				int mapped = nativeMapping(lit.getAtom());
 				nclause[i] = lit.isPositive() ? mapped : -mapped;
 				i++;
 			}
 			
 			// 0 indicates end of clause
 			nclause[size] = 0;
+			return nclause;
+		}
+
+		private void update(Clause clause) {
+			int[] nclause = nativeMapping(clause);
 			
 			// optimization: jni calls without arrays have less overhead
-			switch (size) {
+			switch (clause.size()) {
 			case 1:
 				addClause(handle, nclause[0]);
 				break;
@@ -181,21 +208,22 @@ public final class NativePicosatSolver implements IncrementalSatSolver {
 				break;
 			}
 		}
-	
+		
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.tweetyproject.arg.adf.sat.SatSolverState#witness()
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness()
 		 */
 		@Override
-		public Set<Atom> witness() {
+		public Set<Literal> witness() {
 			boolean sat = satisfiable();
 
 			if (sat) {
-				Set<Atom> trues = new HashSet<>();
-				for (Atom p : propositionsToNative.keySet()) {
-					if (isTrue(p)) {
-						trues.add(p);
+				Set<Literal> trues = new HashSet<>();
+				for (Entry<Literal, Integer> entry : nonTransientMapping.entrySet()) {
+					boolean isTrue = deref(handle, entry.getValue());
+					if (isTrue) {
+						trues.add(entry.getKey());
 					}
 				}
 				return trues;
@@ -204,50 +232,47 @@ public final class NativePicosatSolver implements IncrementalSatSolver {
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.tweetyproject.arg.adf.sat.SatSolverState#witness(java.util.Collection)
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness(java.util.Collection)
 		 */
 		@Override
-		public Set<Atom> witness(Collection<Atom> filter) {
+		public Set<Literal> witness(Collection<? extends Literal> filter) {
 			if (satisfiable()) {
-				Set<Atom> witness = new HashSet<>();
-				for (Atom atom : filter) {
-					int mapping = propositionsToNative.get(atom);
+				Set<Literal> witness = new HashSet<>();
+				for (Literal atom : filter) {
+					int mapping = nonTransientMapping.get(atom);
 					if (deref(handle, mapping)) {
 						witness.add(atom);
 					}
 				}
 				return witness;
 			}
+			
 			return null;
 		}
-		
+
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.tweetyproject.arg.adf.sat.SatSolverState#satisfiable()
+		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#satisfiable()
 		 */
 		@Override
 		public boolean satisfiable() {
-			return NativePicosatSolver.sat(handle, NO_DECISION_LIMIT);
+			transientMapping = new HashMap<>();
+			return NativeLingelingSolver.sat(handle);
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * org.tweetyproject.arg.adf.sat.SatSolverState#assume(org.tweetyproject.logics.
+		 * net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.
 		 * pl.syntax.Proposition, boolean)
 		 */
 		@Override
-		public void assume(Atom proposition, boolean value) {
-			if (!propositionsToNative.containsKey(proposition)) {
-				propositionsToNative.put(proposition, nextProposition);
-				nextProposition += 1;
-			}
-			int lit = value ? propositionsToNative.get(proposition) : -propositionsToNative.get(proposition);
-			NativePicosatSolver.assume(handle, lit);
+		public void assume(Literal literal) {		
+			int mapped = nativeMapping(literal.getAtom());
+			int lit = literal.isPositive() ? mapped : -mapped;
+			NativeLingelingSolver.assume(handle, lit);
 		}
-		
 	}
-
 }
