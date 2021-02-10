@@ -50,7 +50,10 @@ public abstract class Principle implements Postulate<Argument> {
     public static final Principle CF_REINSTATEMENT = new CFReinstatementPrinciple();
     /** The directionality principle **/
     public static final Principle DIRECTIONALITY = new DirectionalityPrinciple();
-
+    /** The Irrelevance of Necessarily Rejected Arguments (INRA) principle **/
+    public static final Principle INRA = new INRAPrinciple();
+    /** The Strong Completeness Outside Odd Cycles (SCOOC) principle **/
+    public static final Principle SCOOC = new SCOOCPrinciple();
 
     /** The naivety principle **/
     public static final Principle NAIVETY = new NaivetyPrinciple();

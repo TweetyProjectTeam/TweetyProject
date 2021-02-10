@@ -30,6 +30,8 @@ public class PrincipleExample {
         all_principles.add(Principle.WEAK_REINSTATEMENT);
         all_principles.add(Principle.CF_REINSTATEMENT);
         all_principles.add(Principle.DIRECTIONALITY);
+        all_principles.add(Principle.INRA);
+        //all_principles.add(Principle.SCOOC);
 
         AdmissibleExample();
         GroundedExample();
@@ -37,7 +39,7 @@ public class PrincipleExample {
         PreferredExample();
         StableExample();
         NaiveExample();
-        StronglyAdmissibleExample();
+        //SCF2Example();
     }
 
     public static void AdmissibleExample() {
@@ -88,10 +90,10 @@ public class PrincipleExample {
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }
 
-    private static void StronglyAdmissibleExample() {
+    private static void SCF2Example() {
         DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
         PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
-                new StronglyAdmissibleReasoner());
+                new SCF2Reasoner());
         evaluator.addAllPostulates(all_principles);
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }
