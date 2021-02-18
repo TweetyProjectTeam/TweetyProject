@@ -40,4 +40,4 @@ public interface ASPCore2ParserVisitor
   public Object visit(ASTID node, Object data);
   public Object visit(ASTString node, Object data);
 }
-/* JavaCC - OriginalChecksum=a969f9341d22b4b733e2ee1d3f729b44 (do not edit this line) */
+/* JavaCC - OriginalChecksum=6e9eecda0e205d68028a167e830dfccd (do not edit this line) */

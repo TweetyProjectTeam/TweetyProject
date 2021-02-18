@@ -116,21 +116,35 @@ public class OptimizationStatement extends ASPBodyElement {
 	}
 
 	/**
+	 * Sets the optimization elements of this optimization statement.
+	 * 
+	 * @param the optimization elements
+	 */
+	public void setElements(List<OptimizationElement> elements) {
+		this.optElements = elements;
+	}
+	
+	/**
+	 * @return the optimization elements of this optimization statement
+	 */
+	public List<OptimizationElement> getElements() {
+		return optElements;
+	}
+
+	/**
+	 * @return the optimize function of this optimization statement
+	 */
+	public OptimizeFunction getOptimizeFunction() {
+		return optimizeFunction;
+	}
+	
+	/**
 	 * Sets the optimization function.
 	 * 
 	 * @param function
 	 */
 	public void setOptimizeFunction(OptimizeFunction function) {
 		this.optimizeFunction = function;
-	}
-	
-	/**
-	 * Sets the optimization elements.
-	 * 
-	 * @param elements
-	 */
-	public void setElements(List<OptimizationElement> elements) {
-		this.optElements = elements;
 	}
 
 	@Override

@@ -167,9 +167,9 @@ public class AggregateAtom extends ASPBodyElement {
 		this.aggregateElements = elements;
 		this.function = function;
 		this.rightOp = rightRelation;
-		this.rightGuard = leftBound;
+		this.rightGuard = rightBound;
 		this.leftOp = leftRelation;
-		this.leftGuard = rightBound;
+		this.leftGuard = leftBound;
 	}
 	
 	/**
@@ -220,8 +220,8 @@ public class AggregateAtom extends ASPBodyElement {
 	 * @param other another AggregateAtom
 	 */
 	public AggregateAtom(AggregateAtom other) {
-		this(other.getFunction(), other.getAggregateElements(), other.getRightOperator(), other.getRightGuard(),
-				other.getLeftOperator(), other.getLeftGuard());
+		this(other.getFunction(), other.getAggregateElements(), other.getLeftOperator(), other.getLeftGuard(),
+				other.getRightOperator(), other.getRightGuard());
 	}
 
 	@Override
@@ -409,7 +409,7 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 
 	/**
-	 * Get the left relation term (right guard).
+	 * Get the left relation term (left guard).
 	 * 
 	 * @return Term
 	 */
@@ -449,8 +449,8 @@ public class AggregateAtom extends ASPBodyElement {
 			res += aggregateElements.get(i) + " ; ";
 		res += aggregateElements.get(aggregateElements.size() - 1) + "}";
 
-		if (this.hasRightRelation())
-			res += rightOp.toString() + rightGuard.toString();
+		if (this.hasRightRelation()) 
+			res += rightOp.toString() + rightGuard.toString(); 
 
 		return res;
 	}
