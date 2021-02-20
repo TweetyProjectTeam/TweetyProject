@@ -533,7 +533,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 					blocked.put(i, false);
 					b.put(i, new HashSet<S>());
 				}
-				
+
 				DefaultGraph.circuit(s, stack, blocked, ag, b, s, results);
 			}
 		}
@@ -669,7 +669,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 * checks whether the given graph is bipartite or not
 	 * the algorithm starts at a random node and colors adjacent nodes in alternating colors
 	 * if two adjacent nodes have the same color, the graph is no bipartite
-	 * This method only works if the given graph is connected
+	 * NOTE: This method only works if the given graph is connected
 	 * @param g a graph
 	 * @param <S> the type of nodes
 	 * @return "true" if g is bipartite
