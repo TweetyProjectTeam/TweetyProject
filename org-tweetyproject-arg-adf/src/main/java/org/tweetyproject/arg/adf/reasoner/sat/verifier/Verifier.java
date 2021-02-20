@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.verifier;
 
-import org.tweetyproject.arg.adf.reasoner.sat.Pipeline;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
@@ -46,7 +45,7 @@ public interface Verifier {
 	void prepareState(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf);
 
 	/**
-	 * Gets called by the {@link Pipeline} to verify if the computed candidate {@link Interpretation} asserts a certain property.
+	 * Verifies if the computed candidate {@link Interpretation} asserts a certain property.
 	 * 
 	 * @param state the initialized and perhaps shared state
 	 * @param mapping the propositional mapping of the ADF
@@ -57,20 +56,5 @@ public interface Verifier {
 	boolean verify(SatSolverState state, PropositionalMapping mapping, Interpretation candidate,
 			AbstractDialecticalFramework adf);
 
-	/**
-	 * Gets called after every
-	 * {@link #verify(SatSolverState, PropositionalMapping, Interpretation, AbstractDialecticalFramework)
-	 * verify} call.
-	 * 
-	 * @param state the state used by the previous verify call
-	 * @param mapping the propositional mapping of the ADF
-	 * @param candidate the candidate of the previous verify call
-	 * @param adf the ADF
-	 * @param verificationResult the return value of the previous verify call
-	 * @return true if the state was consumed, hence we need a new one for the
-	 *         subsequent verifications, false if we can reuse the state
-	 */
-	boolean postVerification(SatSolverState state, PropositionalMapping mapping, Interpretation candidate,
-			AbstractDialecticalFramework adf, boolean verificationResult);
 
 }

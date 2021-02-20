@@ -23,9 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
 
 /**
  * @author Mathias Hofer
@@ -43,7 +41,7 @@ public final class ClauseSplittingProcessor implements Processor<Set<Literal>, C
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.processor.Processor#process(java.lang.Object)
+	 * @see net.sf.tweety.arg.adf.transform.processor.Processor#process(java.lang.Object)
 	 */
 	@Override
 	public Collection<Set<Literal>> process(Set<Literal> clause) {
@@ -55,7 +53,7 @@ public final class ClauseSplittingProcessor implements Processor<Set<Literal>, C
 			Collection<Set<Literal>> splits = new ArrayList<>(numberOfSplits);
 
 			Set<Literal> split = null;
-			Atom glue = null;
+			Literal glue = null;
 			// the number of glue variables for the current split
 			// either 1 for the first and last split, or 2 for all in-between
 			int glueNum = 1;
@@ -69,7 +67,7 @@ public final class ClauseSplittingProcessor implements Processor<Set<Literal>, C
 					// not the first split, therefore glue the splits together
 					// before we create a new glue variable
 					if (glue != null) {
-						split.add(new Negation(glue));
+						split.add(glue.neg());
 					}
 
 					if (i > (clauseSize - maxClauseSize)) {
@@ -77,7 +75,7 @@ public final class ClauseSplittingProcessor implements Processor<Set<Literal>, C
 						glueNum = 1;
 					} else {
 						// not the last therefore create a new glue variable
-						glue = Atom.of("glue_" + i);
+						glue = Literal.create("glue_" + i);
 						split.add(glue);
 						// the following clause contains 2 glue variables
 						glueNum = 2;

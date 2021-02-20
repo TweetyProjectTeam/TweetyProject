@@ -16,58 +16,61 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.syntax.pl;
+package org.tweetyproject.arg.adf.reasoner.sat.query;
 
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Stream;
+
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Execution;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**
- * Lazily applies a mapping to a given clause.
- * 
  * @author Mathias Hofer
  *
  */
-final class MappedClause implements Clause {
-	
-	private final Clause clause;
-	
-	private final Function<? super Literal, ? extends Literal> mapping;
+final class CandidateIterator implements Iterator<Interpretation>{
 
-	/**
+	private final Execution execution;
+
+	private Interpretation next;
+
+	private boolean end;
+
+	public CandidateIterator(Execution execution) {
+		this.execution = Objects.requireNonNull(execution);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param clause
-	 * @param mapping
+	 * @see java.util.Iterator#hasNext()
 	 */
-	public MappedClause(Clause clause, Function<? super Literal, ? extends Literal> mapping) {
-		this.clause = Objects.requireNonNull(clause);
-		this.mapping = Objects.requireNonNull(mapping);
+	@Override
+	public boolean hasNext() {
+		if (!end && next == null) {
+			// we do not know if we have already reached the end
+			next = execution.computeCandidate();
+		}
+		return next != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Clause#stream()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.util.Iterator#next()
 	 */
 	@Override
-	public Stream<Literal> stream() {
-		return clause.stream().map(mapping);
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Iterable#iterator()
-	 */
-	@Override
-	public Iterator<Literal> iterator() {
-		return stream().iterator();
-	}
+	public Interpretation next() {
+		Interpretation result = next;
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Clause#size()
-	 */
-	@Override
-	public int size() {
-		return clause.size();
+		if (result != null) {
+			next = null;
+		} else if (!end) {
+			result = execution.computeCandidate();
+			end = result == null;
+		}
+
+		return result;
 	}
-	
 	
 }

@@ -44,6 +44,7 @@ import org.tweetyproject.lp.asp.syntax.AggregateElement;
 import org.tweetyproject.lp.asp.syntax.ArithmeticTerm;
 import org.tweetyproject.lp.asp.syntax.ComparativeAtom;
 import org.tweetyproject.lp.asp.syntax.DefaultNegation;
+import org.tweetyproject.lp.asp.syntax.OptimizationStatement;
 import org.tweetyproject.lp.asp.syntax.Program;
 import org.tweetyproject.lp.asp.syntax.StrictNegation;
 
@@ -136,21 +137,51 @@ public class ASPCore2ParserTest {
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void AggregateTest() throws ParseException {
-		parser.ReInit(new StringReader("#sum{ I : brotherOf(harry,X)}"));
+		parser.ReInit(new StringReader("1<=#count{:guilty(jon),guilty(eva),guilty(sam)}<=1."));
 		AggregateAtom a = (AggregateAtom) parser.Aggregate().jjtAccept(visitor, null);
-		assertEquals(a.getFunction(), ASPOperator.AggregateFunction.SUM);
+		assertEquals(a.getFunction(), ASPOperator.AggregateFunction.COUNT);
 		List<AggregateElement> elems = a.getAggregateElements();
 		ASPLiteral lit = elems.get(0).getLiterals().first();
 		assertEquals(elems.size(), 1);
-		assertEquals(lit.getName(), "brotherOf");
-		assertEquals(elems.get(0).getLeft().size(), 1);
-
-		parser.ReInit(new StringReader("X = #min{ I : age(harry) ; I : wealth(harry)} != 20"));
+		assertEquals(lit.getName(), "guilty");
+		assertEquals(elems.get(0).getRight().size(), 3);
+		
+		parser.ReInit(new StringReader("1<=#min{3:price(apple); 2:price(tomato); 8:price(banana)}!=20." ));
 		a = (AggregateAtom) parser.Aggregate().jjtAccept(visitor, null);
+		assertEquals(a.getFunction(), ASPOperator.AggregateFunction.MIN);
+		assertEquals(a.getLeftOperator(), ASPOperator.BinaryOperator.LEQ);
 		assertEquals(a.getRightOperator(), ASPOperator.BinaryOperator.NEQ);
 		assertEquals(a.getRightGuard(), new NumberTerm(20));
-		assertEquals(a.getLeftGuard(), new Variable("X"));
-		assertEquals(a.getAggregateElements().size(), 2);
+		assertEquals(a.getLeftGuard(), new NumberTerm(1));
+		assertEquals(a.getAggregateElements().size(), 3);
+		
+		parser.ReInit(new StringReader("1<=#max{3:price(apple); 2:price(tomato); 8:price(banana)}!=20." ));
+		a = (AggregateAtom) parser.Aggregate().jjtAccept(visitor, null);
+		assertEquals(a.getFunction(), ASPOperator.AggregateFunction.MAX);
+		assertEquals(a.getAggregateElements().size(), 3);
+		
+		parser.ReInit(new StringReader("1<=#sum{3:price(apple); 2:price(tomato); 8:price(banana)}!=20." ));
+		a = (AggregateAtom) parser.Aggregate().jjtAccept(visitor, null);
+		assertEquals(a.getFunction(), ASPOperator.AggregateFunction.SUM);
+		assertEquals(a.getAggregateElements().size(), 3);
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void OptimizationStatementTest() throws ParseException {
+		parser.ReInit(new StringReader("#minimize { Y@1, X: hotel(X), star(X,Y) } .\n"));
+		ASPRule o = (ASPRule) parser.Optimize().jjtAccept(visitor, null);
+		OptimizationStatement o2 = (OptimizationStatement) o.getBody().get(0);
+		assertEquals(o2.getOptimizeFunction(),ASPOperator.OptimizeFunction.MINIMIZE);
+		assertTrue(o2.getLiterals().contains(new ASPAtom(new Predicate("hotel",1),new Variable("X"))));
+		assertTrue(o2.getLiterals().contains(new ASPAtom(new Predicate("star",2),new Variable("X"),new Variable("Y"))));
+		assertEquals(o2.getElements().get(0).getWeight(),new Variable("Y"));
+		assertEquals(o2.getElements().get(0).getLevel(),new NumberTerm(1));
+
+		parser.ReInit(new StringReader("#maximize { Y@1, X: hotel(X), star(X,Y); Z,X: hotel(X), recommends(Z,X) } .\n"));
+		o = (ASPRule) parser.Optimize().jjtAccept(visitor, null);
+		o2 = (OptimizationStatement) o.getBody().get(0);
+		assertEquals(o2.getOptimizeFunction(),ASPOperator.OptimizeFunction.MAXIMIZE);
+		assertEquals(o2.getElements().size(),2);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)

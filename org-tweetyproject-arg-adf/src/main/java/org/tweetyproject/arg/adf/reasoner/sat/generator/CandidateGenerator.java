@@ -18,10 +18,13 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.generator;
 
+import java.util.function.Consumer;
+
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
  * 
@@ -37,7 +40,11 @@ public interface CandidateGenerator {
 	 * @param mapping the propositional mapping of the ADF
 	 * @param adf the ADF
 	 */
-	public void initialize(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf);
+	default void initialize(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+		initialize(state::add, mapping, adf);
+	}
+	
+	void initialize(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf);
 
 	/**
 	 * Does not return the same candidate on two calls on the same instance.
@@ -47,6 +54,6 @@ public interface CandidateGenerator {
 	 * @param adf the ADF
 	 * @return the generated interpretation
 	 */
-	public Interpretation generate(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf);
+	Interpretation generate(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf);
 
 }

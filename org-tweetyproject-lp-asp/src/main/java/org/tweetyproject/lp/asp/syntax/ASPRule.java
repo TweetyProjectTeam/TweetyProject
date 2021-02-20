@@ -29,6 +29,7 @@ import java.util.TreeSet;
 
 import org.tweetyproject.commons.util.rules.Rule;
 import org.tweetyproject.logics.commons.syntax.Predicate;
+import org.tweetyproject.logics.commons.syntax.Variable;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
@@ -108,8 +109,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(ASPHead head, List<ASPBodyElement> body) {
 		for (ASPBodyElement b : body) {
-			if (b instanceof OptimizationStatement) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+			if (b instanceof OptimizationStatement)
+				throw new IllegalArgumentException(
+						"A rule that contains an optimization statement can have no other elements.");
 		}
 		this.head = head;
 		this.body = body;
@@ -126,8 +128,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(ASPLiteral head, ASPBodyElement b) {
 		this(head);
-		if (b instanceof OptimizationStatement) 
-			throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		if (b instanceof OptimizationStatement)
+			throw new IllegalArgumentException(
+					"A rule that contains an optimization statement can have no other elements.");
 		this.body.add(b);
 		this.weight = null;
 		this.level = null;
@@ -142,8 +145,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(ASPHead head, ASPBodyElement b) {
 		this(head);
-		if (b instanceof OptimizationStatement) 
-			throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		if (b instanceof OptimizationStatement)
+			throw new IllegalArgumentException(
+					"A rule that contains an optimization statement can have no other elements.");
 		this.body.add(b);
 		this.weight = null;
 		this.level = null;
@@ -158,8 +162,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(ASPLiteral head, List<ASPBodyElement> body) {
 		for (ASPBodyElement b : body) {
-			if (b instanceof OptimizationStatement) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+			if (b instanceof OptimizationStatement)
+				throw new IllegalArgumentException(
+						"A rule that contains an optimization statement can have no other elements.");
 		}
 		this.head = new ClassicalHead(head);
 		this.body = body;
@@ -176,8 +181,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	public ASPRule(List<ASPBodyElement> body) {
 		this();
 		for (ASPBodyElement b : body) {
-			if (b instanceof OptimizationStatement && body.size()>1) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+			if (b instanceof OptimizationStatement && body.size() > 1)
+				throw new IllegalArgumentException(
+						"A rule that contains an optimization statement can have no other elements.");
 		}
 		this.body = body;
 	}
@@ -192,8 +198,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	public ASPRule(List<ASPBodyElement> nafliterals, Term<?> weight, List<Term<?>> terms) {
 		this();
 		for (ASPBodyElement b : body) {
-			if (b instanceof OptimizationStatement) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+			if (b instanceof OptimizationStatement)
+				throw new IllegalArgumentException(
+						"A rule that contains an optimization statement can have no other elements.");
 		}
 		this.body = nafliterals;
 		this.weight = weight;
@@ -210,8 +217,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public ASPRule(List<ASPBodyElement> body, Term<?> weight, Term<?> level, List<Term<?>> terms) {
 		for (ASPBodyElement b : body) {
-			if (b instanceof OptimizationStatement) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+			if (b instanceof OptimizationStatement)
+				throw new IllegalArgumentException(
+						"A rule that contains an optimization statement can have no other elements.");
 		}
 		this.head = new ClassicalHead();
 		this.body = body;
@@ -219,10 +227,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.level = level;
 		this.constraint_terms = terms;
 	}
-	
+
 	/**
-	 * Creates a new rule with the given optimization 
-	 * statement. 
+	 * Creates a new rule with the given optimization statement.
 	 * 
 	 * @param opt OptimizationStatement
 	 */
@@ -251,8 +258,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 
 	@Override
 	public void addPremise(ASPBodyElement premise) {
-		if (premise instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty())) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		if (premise instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty()))
+			throw new IllegalArgumentException(
+					"A rule that contains an optimization statement can have no other elements.");
 		this.body.add(premise);
 	}
 
@@ -264,8 +272,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	@Override
 	public void addPremises(Collection<? extends ASPBodyElement> premises) {
 		for (ASPBodyElement b : premises)
-			if (b instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty() || premises.size()>1)) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+			if (b instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty() || premises.size() > 1))
+				throw new IllegalArgumentException(
+						"A rule that contains an optimization statement can have no other elements.");
 		this.body.addAll(premises);
 	}
 
@@ -275,8 +284,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @param premise
 	 */
 	public void addBody(ASPBodyElement premise) {
-		if (premise instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty())) 
-			throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+		if (premise instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty()))
+			throw new IllegalArgumentException(
+					"A rule that contains an optimization statement can have no other elements.");
 		addPremise(premise);
 	}
 
@@ -294,8 +304,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public void addBodyElements(Collection<? extends ASPBodyElement> premises) {
 		for (ASPBodyElement b : premises)
-			if (b instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty() || premises.size()>1)) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
+			if (b instanceof OptimizationStatement && (!head.isEmpty() || !body.isEmpty() || premises.size() > 1))
+				throw new IllegalArgumentException(
+						"A rule that contains an optimization statement can have no other elements.");
 		addPremises(premises);
 	}
 
@@ -307,9 +318,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	public void setBody(ASPBodyElement... aspBodyElements) {
 		List<ASPBodyElement> bes = new ArrayList<ASPBodyElement>();
 		for (ASPBodyElement a : aspBodyElements) {
-			if (a instanceof OptimizationStatement && (!head.isEmpty() || aspBodyElements.length>1)) 
-				throw new IllegalArgumentException("A rule that contains an optimization statement can have no other elements.");
-			bes.add(a); 
+			if (a instanceof OptimizationStatement && (!head.isEmpty() || aspBodyElements.length > 1))
+				throw new IllegalArgumentException(
+						"A rule that contains an optimization statement can have no other elements.");
+			bes.add(a);
 		}
 		this.body = bes;
 	}
@@ -413,7 +425,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	// -------------------------------------------------------------------------
 	// INTERFACE METHODS AND UTILS
 	// -------------------------------------------------------------------------
-	
+
 	@Override
 	public boolean isFact() {
 		return (body.isEmpty() && !head.isEmpty());
@@ -423,7 +435,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	public boolean isConstraint() {
 		return (head.isEmpty() && !body.isEmpty());
 	}
-	
+
 	public boolean isOptimizationStatement() {
 		return (body.get(0) instanceof OptimizationStatement);
 	}
@@ -436,17 +448,89 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	/**
-	 * This methods tests a rule for safety. Safety is defined as follows in the
-	 * ASP-Core-2 standard: A rule, weak constraint or query is safe, if the set V
-	 * of global variables
+	 * This method tests a rule for safety. Solvers (such as clingo) usually do not
+	 * accept unsafe rules.
+	 * 
+	 * A rule is safe if all of its variables occur in a positive literal (classical atom) in
+	 * the body of the rule, or as part of one side u of a comparative atom u = t if all
+	 * variables in t are safe (analogously for switched u and t). A more detailed
+	 * description can be found in the ASP-2-Core standard description.
 	 * 
 	 * @return true if the rule is safe, false otherwise
 	 */
 	public Boolean isSafe() {
 		// Get all variables in the rule
-		// Set<Variable> vars = this.getTerms(Variable.class);
-		// TODO
-		throw new UnsupportedOperationException("WIP");
+		Set<Variable> all_vars = this.getTerms(Variable.class);
+		if (all_vars.isEmpty())
+			return true;
+		Set<Variable> bound_vars = new HashSet<Variable>();
+		// collects u=t atoms and aggregate atoms with = operators
+		Set<ASPBodyElement> equals_atoms = new HashSet<ASPBodyElement>(); 
+		for (ASPBodyElement b : this.body) {
+			if (b instanceof ASPLiteral)
+				bound_vars.addAll(b.getTerms(Variable.class));
+			if (b instanceof AggregateAtom) {
+				if (((AggregateAtom) b).getRightOperator() == ASPOperator.BinaryOperator.EQ
+						|| ((AggregateAtom) b).getLeftOperator() == ASPOperator.BinaryOperator.EQ)
+					equals_atoms.add(b);
+				for (AggregateElement ba : ((AggregateAtom) b).getAggregateElements()) {
+					for (ASPBodyElement literal : ba.getRight()) {
+						if (literal instanceof ASPLiteral)
+							bound_vars.addAll(literal.getTerms(Variable.class));
+						if (literal instanceof ComparativeAtom
+								&& ((ComparativeAtom) literal).getOperator() == ASPOperator.BinaryOperator.EQ)
+							equals_atoms.add((ComparativeAtom) literal);
+					}
+				}
+			}
+			if (b instanceof OptimizationStatement) {
+				for (OptimizationElement oe : ((OptimizationStatement) b).getElements()) 
+					for (ASPBodyElement literal : oe.getOptLiterals()) 
+						bound_vars.addAll(literal.getTerms(Variable.class));
+			}
+			if (b instanceof ComparativeAtom && ((ComparativeAtom) b).getOperator() == ASPOperator.BinaryOperator.EQ)
+				equals_atoms.add((ComparativeAtom) b);
+		}
+
+		boolean changed = false;
+		do {
+			changed = false;
+			for (ASPBodyElement x : equals_atoms) {
+				if (x instanceof ComparativeAtom) {
+					ComparativeAtom c = (ComparativeAtom) x;
+					Set<Variable> left = c.getLeft().getTerms(Variable.class);
+					Set<Variable> right = c.getRight().getTerms(Variable.class);
+					if (bound_vars.containsAll(left) && !bound_vars.containsAll(right)) {
+						bound_vars.addAll(right);
+						changed = true;
+					}
+					if (bound_vars.containsAll(right) && !bound_vars.containsAll(left)) {
+						bound_vars.addAll(left);
+						changed = true;
+					}
+				} else if (x instanceof AggregateAtom) {
+					AggregateAtom c = (AggregateAtom) x;
+					List<AggregateElement> elems = c.getAggregateElements();
+					Set<Variable> aggregate_vars = new HashSet<Variable>();
+					for (AggregateElement e : elems)
+						aggregate_vars.addAll(e.getTerms(Variable.class));
+					Set<Variable> term_vars = new HashSet<Variable>();
+					if (c.getLeftOperator() == ASPOperator.BinaryOperator.EQ && c.getLeftGuard() != null) {
+						term_vars.addAll(c.getLeftGuard().getTerms(Variable.class));
+					} else if (c.getRightOperator() == ASPOperator.BinaryOperator.EQ && c.getRightGuard() != null)
+						term_vars.addAll(c.getRightGuard().getTerms(Variable.class));
+					if (bound_vars.containsAll(aggregate_vars) && !bound_vars.containsAll(term_vars)) {
+						bound_vars.addAll(term_vars);
+						changed = true;
+					}
+					if (bound_vars.containsAll(term_vars) && !bound_vars.containsAll(aggregate_vars)) {
+						bound_vars.addAll(aggregate_vars);
+						changed = true;
+					}
+				}
+			}
+		} while (changed);
+		return bound_vars.containsAll(all_vars);
 	}
 
 	public boolean isGround() {
@@ -608,7 +692,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		}
 		if (!body.isEmpty()) {
 			if (this.body.get(0) instanceof OptimizationStatement) {
-				return (((OptimizationStatement)this.body.get(0)).printToClingo()) + ".";
+				return (((OptimizationStatement) this.body.get(0)).printToClingo()) + ".";
 			}
 			ret += " :- " + body.get(0);
 			for (int i = 1; i < body.size(); ++i) {
@@ -640,7 +724,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 			result += this.getHead().printToClingo();
 		if (!this.isFact()) {
 			if (this.body.get(0) instanceof OptimizationStatement) {
-				return (((OptimizationStatement)this.body.get(0)).printToClingo()) + ".";
+				return (((OptimizationStatement) this.body.get(0)).printToClingo()) + ".";
 			}
 			if (head.isEmpty() && weight != null)
 				result += ":~ ";
@@ -651,9 +735,9 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 				result += body.get(i).printToClingo() + ",";
 			result += body.get(body.size() - 1).printToClingo();
 		}
-		
+
 		result += ".";
-		
+
 		if (weight != null) {
 			result += " [" + weight.toString();
 			if (level != null)
@@ -666,7 +750,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 			}
 			result += "]";
 		}
-		
+
 		return result;
 	}
 

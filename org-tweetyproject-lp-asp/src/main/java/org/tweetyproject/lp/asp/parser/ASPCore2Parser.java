@@ -8,7 +8,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * 
  * Parser for ASP programs in the ASP-Core-2 syntax 
  * <a href="https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf">https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf</a>.
- * This parser also supports most of the (<a href="https://potassco.org/clingo/">Clingo</a>) 
+ * This parser also supports most of the (<a href=" https://potassco.org/clingo/">Clingo</a>) 
  * and <a href="http://www.dlvsystem.com/html/DLV_User_Manual.html">DLV</a>
  * input syntaxes and provides additional methods for parsing answer sets given by the DLV and Clingo solvers.
  *
@@ -37,7 +37,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
  * LITERAL ::== ("-")? ID ("(" Terms ")")? <br>
  * BUILTIN_ATOM ::== TERM BINOP TERM <br>
- * BINOP ::== "=" | "!=" | "&lt;&gt;" | "&lt;" | "&gt;" | "&lt;=" | "&gt;=" <br>
+ * BINOP ::== "=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" <br>
  * TERMS ::== (TERMS ",")? TERM <br>
  * TERM ::== ID ("(" TERMS ")")? | NUMBER | STRING | VARIABLE | "_" | "(" TERM
  * ")" | "-" TERM | TERM ARITHOP TERM <br>
@@ -55,8 +55,6 @@ import org.tweetyproject.lp.asp.semantics.*;
  * <br> Other Clingo meta-statements (#include, #external, #program, #script and #const)
  * are currently not supported.
  * <br>
- * <br>The following constructs from DLV are supported additionally to the ASP-Core-2 syntax:
- * <br> -  TODO
  * @author Anna Gessler
  * 
  */
@@ -1883,6 +1881,11 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     finally { jj_save(12, xla); }
   }
 
+  private boolean jj_3R_55() {
+    if (jj_3R_78()) return true;
+    return false;
+  }
+
   private boolean jj_3R_77() {
     if (jj_scan_token(MAXIMIZE)) return true;
     return false;
@@ -1893,7 +1896,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     xsp = jj_scanpos;
     if (jj_3R_77()) {
     jj_scanpos = xsp;
-    if (jj_scan_token(39)) return true;
+    if (jj_scan_token(41)) return true;
     }
     return false;
   }
@@ -1972,9 +1975,9 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     xsp = jj_scanpos;
     if (jj_scan_token(38)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(41)) {
+    if (jj_scan_token(39)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(42)) {
+    if (jj_scan_token(40)) {
     jj_scanpos = xsp;
     if (jj_scan_token(43)) return true;
     }
@@ -2680,11 +2683,6 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return false;
   }
 
-  private boolean jj_3R_55() {
-    if (jj_3R_78()) return true;
-    return false;
-  }
-
   /** Generated Token Manager. */
   public ASPCore2ParserTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -2707,17 +2705,17 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
       jj_la1_0 = new int[] {0x400100,0x400100,0x4401f80,0x4401f80,0x80000,0x4401f80,0x44581f00,0x400100,0x80,0x4401f80,0x4401f00,0x400100,0x0,0x4401f80,0x10000,0x4401f00,0x0,0x4401f00,0x4401f80,0x10000,0x0,0x4401f00,0x4401f80,0x10000,0x0,0x2000000,0x4000,0x80,0x400180,0x400000,0x4401f00,0x4000000,0x4401f00,0x0,0x4401f00,0x4000000,0x4401f00,0x1e00000,0x1200,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0xe7f,0xe7f,0x0,0xe7f,0x1180,0x0,0x0,0x3f,0x0,0x0,0x3f,0x3f,0x0,0x0,0x3f,0x0,0x3f,0x0,0xe40,0x0,0x3f,0x0,0x180,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3f,0x3f,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_1 = new int[] {0x0,0x0,0x9ff,0x9ff,0x0,0x9ff,0x1600,0x0,0x0,0x3f,0x0,0x0,0x3f,0x3f,0x0,0x0,0x3f,0x0,0x3f,0x0,0x9c0,0x0,0x3f,0x0,0x600,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3f,0x3f,0x0,0x0,0x0,0x0,0x0,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[13];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
-  /* Constructor with InputStream. */
+  /** Constructor with InputStream. */
   public ASPCore2Parser(java.io.InputStream stream) {
      this(stream, null);
   }
-  /* Constructor with InputStream and supplied encoding */
+  /** Constructor with InputStream and supplied encoding */
   public ASPCore2Parser(java.io.InputStream stream, String encoding) {
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new ASPCore2ParserTokenManager(jj_input_stream);
@@ -2728,11 +2726,11 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
@@ -2744,7 +2742,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Constructor. */
+  /** Constructor. */
   public ASPCore2Parser(java.io.Reader stream) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new ASPCore2ParserTokenManager(jj_input_stream);
@@ -2755,7 +2753,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
@@ -2767,7 +2765,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Constructor with generated Token Manager. */
+  /** Constructor with generated Token Manager. */
   public ASPCore2Parser(ASPCore2ParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -2777,7 +2775,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  /* Reinitialise. */
+  /** Reinitialise. */
   public void ReInit(ASPCore2ParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -2836,7 +2834,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
   }
 
 
-/* Get the next Token. */
+/** Get the next Token. */
   final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -2845,7 +2843,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return token;
   }
 
-/* Get the specific Token. */
+/** Get the specific Token. */
   final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
@@ -2896,7 +2894,7 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     }
   }
 
-  /* Generate ParseException. */
+  /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[45];
@@ -2933,11 +2931,11 @@ public class ASPCore2Parser/*@bgen(jjtree)*/implements ASPCore2ParserTreeConstan
     return new ParseException(token, exptokseq, tokenImage);
   }
 
-  /* Enable tracing. */
+  /** Enable tracing. */
   final public void enable_tracing() {
   }
 
-  /* Disable tracing. */
+  /** Disable tracing. */
   final public void disable_tracing() {
   }
 

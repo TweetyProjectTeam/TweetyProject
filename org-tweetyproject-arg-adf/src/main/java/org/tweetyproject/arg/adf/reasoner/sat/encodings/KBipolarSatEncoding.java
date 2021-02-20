@@ -33,10 +33,8 @@ import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 
 /**
@@ -45,18 +43,12 @@ import org.tweetyproject.arg.adf.transform.TseitinTransformer;
  */
 public class KBipolarSatEncoding implements SatEncoding {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(org.tweetyproject.arg.adf.reasoner.sat.SatEncodingContext)
-	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		// use these propositions as a substitute for the special formulas
 		// Tautology and Contradiction
-		final Atom TAUT = createTrue(consumer);
-		final Atom CONT = createFalse(consumer);
+		final Literal TAUT = createTrue(consumer);
+		final Literal CONT = createFalse(consumer);
 
 		final Interpretation EMPTY = Interpretation.empty(adf);
 
@@ -65,34 +57,33 @@ public class KBipolarSatEncoding implements SatEncoding {
 
 			if (!undecidedDependees.isEmpty()) {
 				AcceptanceCondition acc = adf.getAcceptanceCondition(to);
-				
-				Iterator<Interpretation> completionIterator = new TwoValuedInterpretationIterator(List.copyOf(undecidedDependees));				
+											
+				Iterator<Interpretation> completionIterator = new TwoValuedInterpretationIterator(List.copyOf(undecidedDependees));
 				while (completionIterator.hasNext()) {
-					// true if some argument is in the set, false otherwise
 					Interpretation completion = completionIterator.next();
 					
-					Function<Argument, Atom> fn = from -> !undecidedDependees.contains(from) ? mapping.getLink(from, to) : (completion.satisfied(from) ? TAUT : CONT);
+					Function<Argument, Literal> fn = from -> !undecidedDependees.contains(from) ? mapping.getLink(from, to) : (completion.satisfied(from) ? TAUT : CONT);
 					TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(fn, false);	
-					Atom accName = transformer.collect(acc, consumer);
-					
+					Literal accName = transformer.collect(acc, consumer);
+
 					// first implication
 					Collection<Literal> clause1 = new LinkedList<>();
-					clause1.add(new Negation(mapping.getTrue(to)));
+					clause1.add(mapping.getTrue(to).neg());
 					clause1.add(accName);
 
 					// second implication
 					Collection<Literal> clause2 = new LinkedList<>();
-					clause2.add(new Negation(mapping.getFalse(to)));
-					clause2.add(new Negation(accName));
+					clause2.add(mapping.getFalse(to).neg());
+					clause2.add(accName.neg());
 
 					// stuff for both implications
 					for (Argument r : undecidedDependees) {
 						if (completion.satisfied(r)) {
-							Atom rFalse = mapping.getFalse(r);
+							Literal rFalse = mapping.getFalse(r);
 							clause1.add(rFalse);
 							clause2.add(rFalse);
 						} else {
-							Atom rTrue = mapping.getTrue(r);
+							Literal rTrue = mapping.getTrue(r);
 							clause1.add(rTrue);
 							clause2.add(rTrue);
 						}
@@ -113,8 +104,8 @@ public class KBipolarSatEncoding implements SatEncoding {
 	 * @param encoding
 	 * @return a proposition which is true in <code>encoding</code>
 	 */
-	private static Atom createTrue(Consumer<Clause> encoding) {
-		Atom trueProp = Atom.of("T");
+	private static Literal createTrue(Consumer<Clause> encoding) {
+		Literal trueProp = Literal.create("T");
 		encoding.accept(Clause.of(trueProp));
 		return trueProp;
 	}
@@ -126,9 +117,9 @@ public class KBipolarSatEncoding implements SatEncoding {
 	 * @param encoding
 	 * @return a proposition which is false in <code>encoding</code>
 	 */
-	private static Atom createFalse(Consumer<Clause> encoding) {
-		Atom falseProp = Atom.of("F");
-		encoding.accept(Clause.of(new Negation(falseProp)));
+	private static Literal createFalse(Consumer<Clause> encoding) {
+		Literal falseProp = Literal.create("F");
+		encoding.accept(Clause.of(falseProp.neg()));
 		return falseProp;
 	}
 
@@ -146,8 +137,5 @@ public class KBipolarSatEncoding implements SatEncoding {
 				.filter(interpretation::undecided)
 				.collect(Collectors.toSet());
 	}
-//	
-//	private static Atom argumentMapping(Argument arg, Interpretation completion, Set<Argument> undecidedDependees) {
-//		if (undecidedDependees.contains(arg))
-//	}
+
 }

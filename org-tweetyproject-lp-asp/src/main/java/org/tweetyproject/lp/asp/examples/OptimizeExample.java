@@ -138,10 +138,8 @@ public class OptimizeExample {
 
 		// Using the parser to create optimization statements
 		ASPCore2Parser parser = new ASPCore2Parser(new StringReader(""));
-		StringReader s = new StringReader("#minimize { Y@1, X: hotel(X), star(X,Y) } .\n");
-		parser.ReInit(s);
-		InstantiateVisitor visitor = new InstantiateVisitor();
-		Program pr1 = visitor.visit(parser.Program(), null);
+		parser.ReInit(new StringReader("#minimize { Y@1, X: hotel(X), star(X,Y) }.\n"));
+		Program pr1 = new InstantiateVisitor().visit(parser.Program(), null);
 		System.out.println("\nParsed optimization statement:\n" + pr1);
 	}
 }

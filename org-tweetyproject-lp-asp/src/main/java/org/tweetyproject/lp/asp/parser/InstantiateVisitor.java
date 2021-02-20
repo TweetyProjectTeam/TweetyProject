@@ -262,14 +262,14 @@ public class InstantiateVisitor implements ASPCore2ParserVisitor {
 			agg_elements = visit((ASTAggrElementList) node.jjtGetChild(i), null);
 			i++;
 		}
-
+		
 		// Add right guard
 		if ((node.jjtGetNumChildren() > i) && node.jjtGetChild(i + 1) instanceof ASTTerm) {
 			right_op = evaluateBinop(visit((ASTBinop) node.jjtGetChild(i), null));
 			rightTerm = visit((ASTTerm) node.jjtGetChild(i + 1), null);
 		}
 
-		return new AggregateAtom(result_func, agg_elements, right_op, rightTerm, left_op, leftTerm);
+		return new AggregateAtom(result_func, agg_elements, left_op, leftTerm, right_op, rightTerm);
 	}
 
 	public static ASPOperator.AggregateFunction evaluateAggrFunc(String func) {

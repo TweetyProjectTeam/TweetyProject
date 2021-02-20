@@ -16,60 +16,42 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.syntax.pl;
+package org.tweetyproject.arg.adf.reasoner.sat.query;
 
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Stream;
+import org.tweetyproject.arg.adf.reasoner.query.Query;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
 
 /**
- * Backed by a set of literals.
- * 
  * @author Mathias Hofer
  *
  */
-final class SetClause implements Clause {
+final class ConstantQuery<T> implements Query<T> {
 
-	private final Set<Literal> literals;
+	private final T value;
 	
-	/**
-	 * @param literals
-	 */
-	public SetClause(Set<Literal> literals) {
-		this.literals = Objects.requireNonNull(literals);
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return literals.toString();
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Iterable#iterator()
-	 */
-	@Override
-	public Iterator<Literal> iterator() {
-		return literals.iterator();
+	public ConstantQuery(T value) {
+		this.value = value; // explicitly allow null
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Clause#stream()
-	 */
 	@Override
-	public Stream<Literal> stream() {
-		return literals.stream();
+	public Query<T> configure(Configuration configuration) {
+		return this;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Clause#size()
+	 * @see net.sf.tweety.arg.adf.reasoner.query.Query#execute()
 	 */
 	@Override
-	public int size() {
-		return literals.size();
+	public T execute() {
+		return value;
 	}
 
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.reasoner.query.Query#executeParallel()
+	 */
+	@Override
+	public T executeParallel() {
+		return value;
+	}	
+	
 }

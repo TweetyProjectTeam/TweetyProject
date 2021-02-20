@@ -6,8 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-
-import org.tweetyproject.arg.adf.sat.NativeMinisatSolver;
+import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
 import org.tweetyproject.arg.adf.semantics.link.LinkType;

@@ -27,7 +27,7 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.util.Pair;
 import org.tweetyproject.arg.adf.util.UnionCollectionView;
 
@@ -49,11 +49,11 @@ import org.tweetyproject.arg.adf.util.UnionCollectionView;
  */
 public final class PropositionalMapping {
 
-	private final Map<Argument, Atom> falses = new HashMap<>();
+	private final Map<Argument, Literal> falses = new HashMap<>();
 
-	private final Map<Argument, Atom> trues = new HashMap<>();
+	private final Map<Argument, Literal> trues = new HashMap<>();
 
-	private final Map<Pair<Argument, Argument>, Atom> links = new HashMap<>();
+	private final Map<Pair<Argument, Argument>, Literal> links = new HashMap<>();
 
 	/**
 	 * Creates propositional representations for the arguments and links of the
@@ -71,8 +71,8 @@ public final class PropositionalMapping {
 	 */
 	public PropositionalMapping(AbstractDialecticalFramework adf) {
 		for (Argument child : adf.getArguments()) {
-			falses.put(child, Atom.of(child.getName() + "_f"));
-			trues.put(child, Atom.of(child.getName() + "_t"));
+			falses.put(child, Literal.create(child.getName() + "_f"));
+			trues.put(child, Literal.create(child.getName() + "_t"));
 			Set<Argument> parents = adf.parents(child);
 			for (Argument parent : parents) {
 				links.put(Pair.of(parent, child), linkToProposition(parent, child));
@@ -80,15 +80,15 @@ public final class PropositionalMapping {
 		}
 	}
 
-	private static Atom linkToProposition(Argument from, Argument to) {
+	private static Literal linkToProposition(Argument from, Argument to) {
 		StringBuilder name = new StringBuilder("p_")
 				.append(from.getName())
 				.append("_")
 				.append(to.getName());
-		return Atom.of(name.toString());
+		return Literal.create(name.toString());
 	}
 
-	public Atom getFalse(Argument argument) {
+	public Literal getFalse(Argument argument) {
 		if (!falses.containsKey(argument)) {
 			throw new IllegalArgumentException("The given argument is unknown to this mapping.");
 		}
@@ -96,7 +96,7 @@ public final class PropositionalMapping {
 		return falses.get(argument);
 	}
 
-	public Atom getTrue(Argument argument) {
+	public Literal getTrue(Argument argument) {
 		if (!trues.containsKey(argument)) {
 			throw new IllegalArgumentException("The given argument is unknown to this mapping.");
 		}
@@ -104,7 +104,7 @@ public final class PropositionalMapping {
 		return trues.get(argument);
 	}
 
-	public Atom getLink(Argument from, Argument to) {
+	public Literal getLink(Argument from, Argument to) {
 		Pair<Argument, Argument> pair = Pair.of(from, to);
 		if (!links.containsKey(pair)) {
 			throw new IllegalArgumentException("The given link is unknown to this mapping.");
@@ -112,15 +112,15 @@ public final class PropositionalMapping {
 		return links.get(pair);
 	}
 	
-	public Collection<Atom> getLinks() {
+	public Collection<Literal> getLinks() {
 		return Collections.unmodifiableCollection(links.values());
 	}
 	
-	public Collection<Atom> getArguments() {
+	public Collection<Literal> getArguments() {
 		return new UnionCollectionView<>(falses.values(), trues.values());
 	}
 
-	public Atom getLink(Link link) {
+	public Literal getLink(Link link) {
 		return getLink(link.getFrom(), link.getTo());
 	}
 

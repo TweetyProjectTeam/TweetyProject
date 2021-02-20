@@ -16,31 +16,14 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.syntax.pl;
+package org.tweetyproject.arg.adf.reasoner.query;
 
 /**
  * @author Mathias Hofer
  *
  */
-public interface Atom extends Literal {
+public interface ConditionalTaskStep extends TaskStep {
 	
-	static Atom of(String name) {
-		return new SimpleAtom(name);
-	}
-
-	String getName();
+	Query<Boolean> forAll();
 	
-	@Override
-	default Atom getAtom() {
-		return this;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Literal#isPositive()
-	 */
-	@Override
-	default boolean isPositive() {
-		return true;
-	}
-
 }

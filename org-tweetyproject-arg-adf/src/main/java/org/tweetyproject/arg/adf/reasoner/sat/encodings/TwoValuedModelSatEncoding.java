@@ -22,9 +22,8 @@ import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 
 /**
@@ -37,18 +36,18 @@ public class TwoValuedModelSatEncoding implements SatEncoding {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(org.tweetyproject.arg.
+	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
 	 * adf.reasoner.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(mapping::getTrue, false);
 		for (Argument arg : adf.getArguments()) {			
-			Atom accName = transformer.collect(adf.getAcceptanceCondition(arg), consumer);
+			Literal accName = transformer.collect(adf.getAcceptanceCondition(arg), consumer);
 			
 			// arg = true iff the acceptance condition holds
-			consumer.accept(Clause.of(new Negation(accName), mapping.getTrue(arg)));
-			consumer.accept(Clause.of(accName, new Negation(mapping.getTrue(arg))));
+			consumer.accept(Clause.of(accName.neg(), mapping.getTrue(arg)));
+			consumer.accept(Clause.of(accName, mapping.getTrue(arg).neg()));
 
 			// arg != true implies arg = false
 			consumer.accept(Clause.of(mapping.getTrue(arg), mapping.getFalse(arg)));

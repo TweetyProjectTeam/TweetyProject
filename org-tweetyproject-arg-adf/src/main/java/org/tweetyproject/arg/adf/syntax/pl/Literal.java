@@ -18,23 +18,65 @@
  */
 package org.tweetyproject.arg.adf.syntax.pl;
 
-import java.util.function.Function;
-
-import org.tweetyproject.arg.adf.syntax.Argument;
+import org.tweetyproject.arg.adf.syntax.pl.Literals.NamedAtom;
+import org.tweetyproject.arg.adf.syntax.pl.Literals.TransientAtom;
+import org.tweetyproject.arg.adf.syntax.pl.Literals.UnnamedAtom;
 
 /**
  * @author Mathias Hofer
  *
  */
 public interface Literal {
-		
+
+	boolean isTransient();
+
 	boolean isPositive();
-	
-	Atom getAtom();
-	
-	// TODO: ugly, find cleaner solution
-	default Literal map(Function<Argument, Literal> argumentMapping, Function<Literal, Literal> literalMapping) {
-		return literalMapping.apply(this);
+
+	/**
+	 * @return this if it is an atom, or else the encapsulated atom if the
+	 *         literal is a negation
+	 */
+	Literal getAtom();
+
+	/**
+	 * @return the name of the literal, can be null
+	 */
+	String getName();
+
+	/**
+	 * Returns the negation of this literal.
+	 * <p>
+	 * The following properties hold for every literal l:
+	 * <p>
+	 * <ul>
+	 * <li>l.neg().neg() == l
+	 * <li>l.neg().atom() == l
+	 * </ul>
+	 * <p>
+	 * The following must however not hold for every literal l:
+	 * <p>
+	 * <ul>
+	 * <li>l.neg() == l.neg()
+	 * </ul>
+	 * <p>
+	 * 
+	 * @return the negation of this literal
+	 */
+	Literal neg();
+
+	static Literal create() {
+		return new UnnamedAtom();
+	}
+
+	static Literal create(String name) {
+		if (name == null) {
+			return new UnnamedAtom();
+		}
+		return new NamedAtom(name);
 	}
 	
+	static Literal createTransient() {
+		return new TransientAtom();
+	}
+
 }

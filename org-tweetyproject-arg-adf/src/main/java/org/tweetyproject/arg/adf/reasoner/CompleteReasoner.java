@@ -18,8 +18,8 @@
  */
 package org.tweetyproject.arg.adf.reasoner;
 
-import org.tweetyproject.arg.adf.reasoner.sat.Pipeline;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.ConflictFreeGenerator;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Pipeline;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
@@ -28,6 +28,7 @@ import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
  * @author Mathias Hofer
  *
  */
+@Deprecated( forRemoval = true, since = "1.19" )
 public class CompleteReasoner extends AbstractDialecticalFrameworkReasoner {
 
 	/**

@@ -18,12 +18,14 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.processor;
 
+import java.util.function.Consumer;
+
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.BipolarSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.KBipolarSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
-import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
  * @author Mathias Hofer
@@ -35,18 +37,14 @@ public final class KBipolarStateProcessor implements StateProcessor {
 	
 	private final SatEncoding kBipolar = new KBipolarSatEncoding();
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.processor.StateProcessor#process(java.lang
-	 * .Object, org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework)
+	/* (non-Javadoc)
+	 * @see net.sf.tweety.arg.adf.reasoner.sat.processor.StateProcessor#process(java.util.function.Consumer, net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping, net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework)
 	 */
 	@Override
-	public void process(SatSolverState state, PropositionalMapping encodingContext, AbstractDialecticalFramework adf) {
-		bipolar.encode(state::add, encodingContext, adf);
+	public void process(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+		bipolar.encode(consumer, adf, mapping);
 		if (!adf.bipolar()) {
-			kBipolar.encode(state::add, encodingContext, adf);
+			kBipolar.encode(consumer, adf, mapping);
 		}
 	}
 

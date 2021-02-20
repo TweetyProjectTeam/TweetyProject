@@ -47,11 +47,15 @@ public class RefineLargerSatEncoding implements SatEncoding {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(org.tweetyproject.arg.
+	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
 	 * adf.reasoner.sat.SatEncodingContext)
 	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping context) {
+		encode(interpretation, consumer, context, adf);
+	}
+	
+	public static void encode(Interpretation interpretation, Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
 		Set<Literal> clause = new HashSet<>();
 		for (Argument arg : interpretation.satisfied()) {
 			clause.add(context.getFalse(arg));

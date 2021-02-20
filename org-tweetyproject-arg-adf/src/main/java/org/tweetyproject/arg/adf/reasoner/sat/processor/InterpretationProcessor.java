@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.processor;
 
-import org.tweetyproject.arg.adf.reasoner.sat.Pipeline;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
@@ -32,7 +31,7 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  * generate clauses to compute larger interpretations until we reach a maximum.
  * Usually we do not want to pollute the shared state with these generated
  * clauses, because it may cut off other solutions. In such cases we can tell
- * the {@link Pipeline} to create a new state on which we perform the processing
+ * the pipeline to create a new state on which we perform the processing
  * and which is only used by this processor.
  * <p>
  * As a consequence the implementation of the

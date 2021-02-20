@@ -18,11 +18,14 @@
  */
 package org.tweetyproject.arg.adf.semantics.link;
 
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 
 public interface LinkStrategy {
-	
+		
 	LinkType compute(Argument parent, AcceptanceCondition childAcc);
+	
+	LinkType compute(Argument parent, AcceptanceCondition childAcc, Interpretation assumption);
 		
 }

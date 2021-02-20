@@ -16,18 +16,19 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.sat;
+package org.tweetyproject.arg.adf.sat.state;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
- * The cleanup after the {@link #close()} call happens (possibly) in a separate thread, depending on the provided executor.
+ * The {@link #close()} call is handled by the provided executor. This allows asynchronous cleanup.
  * 
  * @author Mathias Hofer
  *
@@ -47,49 +48,31 @@ public class AsynchronousCloseSatSolverState implements SatSolverState {
 		this.executor = Objects.requireNonNull(executor);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.sat.SatSolverState#satisfiable()
-	 */
 	@Override
 	public boolean satisfiable() {
 		return delegate.satisfiable();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.sat.SatSolverState#witness()
-	 */
 	@Override
-	public Set<Atom> witness() {
+	public Set<Literal> witness() {
 		return delegate.witness();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.sat.SatSolverState#witness(java.util.Collection)
-	 */
 	@Override
-	public Set<Atom> witness(Collection<Atom> filter) {
+	public Set<Literal> witness(Collection<? extends Literal> filter) {
 		return delegate.witness(filter);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.sat.SatSolverState#assume(org.tweetyproject.logics.pl.syntax.Proposition, boolean)
-	 */
 	@Override
-	public void assume(Atom proposition, boolean value) {
-		delegate.assume(proposition, value);
+	public void assume(Literal literal) {
+		delegate.assume(literal);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.sat.SatSolverState#add(org.tweetyproject.logics.pl.syntax.Disjunction)
-	 */
 	@Override
 	public boolean add(Clause clause) {
 		return delegate.add(clause);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.sat.SatSolverState#close()
-	 */
 	@Override
 	public void close() {
 		executor.execute(delegate::close);

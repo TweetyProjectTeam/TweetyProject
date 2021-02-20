@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Objects;
 
-import org.tweetyproject.arg.adf.reasoner.sat.Pipeline;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Pipeline;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
@@ -31,8 +31,9 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 /**
  * Ancestor class for all adf reasoner
  * 
- * @author Mathias Hofer
+ * @deprecated use {@link AbstractDialecticalFramework#query()} instead
  */
+@Deprecated( forRemoval = true, since = "1.19" )
 public abstract class AbstractDialecticalFrameworkReasoner {
 
 	private final Pipeline computationPipeline;

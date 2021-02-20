@@ -48,9 +48,6 @@ public final class DegreeComparator implements Comparator<Argument> {
 		this.degreeType = Objects.requireNonNull(degreeType);
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public int compare(Argument a1, Argument a2) {
 		int degree1 = degree(a1, adf);

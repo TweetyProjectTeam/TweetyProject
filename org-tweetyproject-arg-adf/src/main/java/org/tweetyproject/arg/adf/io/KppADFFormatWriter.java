@@ -19,7 +19,8 @@
 package org.tweetyproject.arg.adf.io;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -45,36 +46,50 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 public class KppADFFormatWriter {
 
-	public static void writeToFile(AbstractDialecticalFramework adf, File file) throws IOException {
+	private static void write(AbstractDialecticalFramework adf, PrintWriter writer) {
+		// 1. write arguments
+		Map<Argument, String> nameMap = new HashMap<>();
+		int nameCounter = 1; // use an incrementing integer if some argument name is null
+		for (Argument arg : adf.getArguments()) {
+			String name = arg.getName();
+			if (name == null) {
+				name = String.valueOf(nameCounter++);
+			}
+			nameMap.put(arg, name);
+
+			writer.print("s(");
+			writer.print(name);
+			writer.println(").");
+		}
+		writer.flush();
+
+		// 2. write acceptance conditions
+		AccStringFormatVisitor formatter = new AccStringFormatVisitor(nameMap);
+		for (Argument arg : adf.getArguments()) {
+			AcceptanceCondition acc = adf.getAcceptanceCondition(arg);
+			String str = acc.accept(formatter, null);
+			writer.print("ac(");
+			writer.print(nameMap.get(arg));
+			writer.print(",");
+			writer.print(str);
+			writer.println(").");
+		}
+		writer.flush();
+	}
+	
+	/**
+	 * The OutputStream is not closed by this method, it is up to the caller.
+	 * 
+	 * @param adf
+	 * @param out
+	 */
+	public static void writeTo(AbstractDialecticalFramework adf, OutputStream out) {
+		write(adf, new PrintWriter(out));
+	}
+
+	public static void writeToFile(AbstractDialecticalFramework adf, File file) throws FileNotFoundException {
 		try (PrintWriter writer = new PrintWriter(file)) {
-			// 1. write arguments
-			Map<Argument, String> nameMap = new HashMap<>();
-			int nameCounter = 1; // use an incrementing integer if some argument name is null
-			for (Argument arg : adf.getArguments()) {
-				String name = arg.getName();
-				if (name == null) {
-					name = String.valueOf(nameCounter++);
-				}
-				nameMap.put(arg, name);
-				
-				writer.print("s(");
-				writer.print(name);
-				writer.println(").");
-			}
-			writer.flush();
-			
-			// 2. write acceptance conditions
-			AccStringFormatVisitor formatter = new AccStringFormatVisitor(nameMap);
-			for (Argument arg : adf.getArguments()) {
-				AcceptanceCondition acc = adf.getAcceptanceCondition(arg);
-				String str = acc.accept(formatter, null);
-				writer.print("ac(");
-				writer.print(nameMap.get(arg));
-				writer.print(",");
-				writer.print(str);
-				writer.println(").");
-				writer.flush();
-			}
+			write(adf, writer);
 		}
 	}
 
@@ -84,11 +99,10 @@ public class KppADFFormatWriter {
 
 		/**
 		 * 
-		 * @param nameMap
-		 *            We cannot just use the getName() method of the arguments,
-		 *            since null values are allowed. In order to be consistent
-		 *            with the naming throughout the different accs we need a
-		 *            global name map.
+		 * @param nameMap We cannot just use the getName() method of the arguments,
+		 *                since null values are allowed. In order to be consistent with
+		 *                the naming throughout the different accs we need a global name
+		 *                map.
 		 */
 		public AccStringFormatVisitor(Map<Argument, String> nameMap) {
 			this.nameMap = nameMap;

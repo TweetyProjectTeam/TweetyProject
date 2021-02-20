@@ -29,7 +29,7 @@ import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
  * Maximizes the given interpretation and afterwards restricts the search space
@@ -57,15 +57,15 @@ public class MaximizeInterpretationProcessor implements InterpretationProcessor 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.processor.InterpretationProcessor#process(
-	 * java.lang. Object, org.tweetyproject.arg.adf.semantics.Interpretation)
+	 * net.sf.tweety.arg.adf.reasoner.processor.InterpretationProcessor#process(
+	 * java.lang. Object, net.sf.tweety.arg.adf.semantics.Interpretation)
 	 */
 	@Override
 	public Interpretation process(SatSolverState processingState, SatSolverState verificationState, PropositionalMapping mapping, Interpretation interpretation,
 			AbstractDialecticalFramework adf) {
 		Interpretation maximal = interpretation;
-		new LargerInterpretationSatEncoding(maximal).encode(processingState::add, mapping, adf);
-		Set<Atom> witness = null;
+		LargerInterpretationSatEncoding.encode(maximal, processingState::add, mapping, adf);
+		Set<Literal> witness = null;
 		while ((witness = processingState.witness(mapping.getArguments())) != null) {
 			Interpretation larger = Interpretation.fromWitness(witness, mapping, adf);
 			SatEncoding restrict = null;
@@ -78,7 +78,7 @@ public class MaximizeInterpretationProcessor implements InterpretationProcessor 
 				// computed again
 				restrict = new RefineUnequalSatEncoding(larger);
 			}
-			restrict.encode(processingState::add, mapping, adf);
+			restrict.encode(processingState::add, adf, mapping);
 		}
 
 		return maximal;
@@ -87,16 +87,16 @@ public class MaximizeInterpretationProcessor implements InterpretationProcessor 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.tweetyproject.arg.adf.reasoner.processor.InterpretationProcessor#
-	 * updateState(org.tweetyproject.arg.adf.reasoner.SatReasonerContext,
-	 * org.tweetyproject.arg.adf.semantics.Interpretation,
-	 * org.tweetyproject.arg.adf.syntax.AbstractDialecticalFramework)
+	 * @see net.sf.tweety.arg.adf.reasoner.processor.InterpretationProcessor#
+	 * updateState(net.sf.tweety.arg.adf.reasoner.SatReasonerContext,
+	 * net.sf.tweety.arg.adf.semantics.Interpretation,
+	 * net.sf.tweety.arg.adf.syntax.AbstractDialecticalFramework)
 	 */
 	@Override
 	public void updateState(SatSolverState state, PropositionalMapping mapping, Interpretation maximal, AbstractDialecticalFramework adf) {
 		// we maximized the given interpretation, now prevent all smaller ones
 		// from being computed in future by the given state
-		new RefineLargerSatEncoding(maximal).encode(state::add, mapping, adf);
+		RefineLargerSatEncoding.encode(maximal, state::add, mapping, adf);
 	}
 
 }

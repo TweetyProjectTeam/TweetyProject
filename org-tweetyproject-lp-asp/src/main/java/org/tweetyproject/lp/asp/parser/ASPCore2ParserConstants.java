@@ -79,13 +79,13 @@ public interface ASPCore2ParserConstants {
   /** RegularExpression Id. */
   int AGGREGATE_COUNT = 38;
   /** RegularExpression Id. */
-  int MINIMIZE = 39;
+  int AGGREGATE_MAX = 39;
   /** RegularExpression Id. */
-  int MAXIMIZE = 40;
+  int AGGREGATE_MIN = 40;
   /** RegularExpression Id. */
-  int AGGREGATE_MAX = 41;
+  int MINIMIZE = 41;
   /** RegularExpression Id. */
-  int AGGREGATE_MIN = 42;
+  int MAXIMIZE = 42;
   /** RegularExpression Id. */
   int AGGREGATE_SUM = 43;
   /** RegularExpression Id. */
@@ -135,10 +135,10 @@ public interface ASPCore2ParserConstants {
     "\"<=\"",
     "\">=\"",
     "\"#count\"",
+    "\"#max\"",
+    "\"#min\"",
     "<MINIMIZE>",
     "<MAXIMIZE>",
-    "<AGGREGATE_MAX>",
-    "<AGGREGATE_MIN>",
     "\"#sum\"",
     "<CLINGO_SHOW>",
   };

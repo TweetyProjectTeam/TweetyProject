@@ -1,285 +1,250 @@
-/*
- *  This file is part of "TweetyProject", a collection of Java libraries for
- *  logical aspects of artificial intelligence and knowledge representation.
- *
- *  TweetyProject is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License version 3 as
- *  published by the Free Software Foundation.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
- */
 package org.tweetyproject.arg.adf.transform;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.ContradictionAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.EquivalenceAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.ExclusiveDisjunctionAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.ImplicationAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.NegationAcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.TautologyAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
 import org.tweetyproject.arg.adf.util.CacheMap;
 import org.tweetyproject.arg.adf.util.Pair;
 
-/**
- * 
- * @author Mathias Hofer
- *
- */
-public final class TseitinTransformer extends AbstractCollector<Atom, Clause, Pair<Atom, Collection<Clause>>> {
+public class TseitinTransformer implements Collector<Literal, Clause>, Transformer<Pair<Literal, Collection<Clause>>> {
 
 	private final boolean optimize;
 	
-	private final Function<Argument, Atom> mapping;
+	private final Function<Argument, Literal> mapping;
 	
-	/**
-	 * 
-	 * @param optimize
-	 * @param topLevelPolarity
-	 */
-	private TseitinTransformer(Function<Argument, Atom> mapping, boolean optimize, int topLevelPolarity) {
-		super(topLevelPolarity);
+	private final int rootPolarity;
+	
+	private final Literal TRUE = Literal.create("T");
+	
+	private final Literal FALSE = TRUE.neg();
+
+	private TseitinTransformer(Function<Argument, Literal> mapping, boolean optimize, int rootPolarity) {
 		this.mapping = Objects.requireNonNull(mapping);
 		this.optimize = optimize;
+		this.rootPolarity = rootPolarity;
 	}
 	
 	public static TseitinTransformer ofPositivePolarity(boolean optimize) {
-		return ofPositivePolarity(new CacheMap<>(arg -> Atom.of(arg.getName())), optimize);
+		return ofPositivePolarity(new CacheMap<>(arg -> Literal.create(arg.getName())), optimize);
 	}
 	
 	public static TseitinTransformer ofNegativePolarity(boolean optimize) {
-		return ofNegativePolarity(new CacheMap<>(arg -> Atom.of(arg.getName())), optimize);
+		return ofNegativePolarity(new CacheMap<>(arg -> Literal.create(arg.getName())), optimize);
 	}
 	
-	public static TseitinTransformer ofPositivePolarity(Function<Argument, Atom> mapping, boolean optimize) {
+	public static TseitinTransformer ofPositivePolarity(Function<Argument, Literal> mapping, boolean optimize) {
 		return new TseitinTransformer(mapping, optimize, 1);
 	}
 	
-	public static TseitinTransformer ofNegativePolarity(Function<Argument, Atom> mapping, boolean optimize) {
+	public static TseitinTransformer ofNegativePolarity(Function<Argument, Literal> mapping, boolean optimize) {
 		return new TseitinTransformer(mapping, optimize, -1);
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.transform.AbstractCollector#initialize()
-	 */
+
 	@Override
-	protected Collection<Clause> initialize() {
-		return new LinkedList<>();
+	public Literal collect(AcceptanceCondition acc, Consumer<Clause> clauses) {
+		clauses.accept(Clause.of(TRUE)); // fix truth value
+		return define(acc, clauses);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.transform.AbstractCollector#finish(java.lang.
-	 * Object, java.util.Collection)
-	 */
 	@Override
-	protected Pair<Atom, Collection<Clause>> finish(Atom bottomUpData, Collection<Clause> collection) {
-		return Pair.of(bottomUpData, collection);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.transform.AbstractCollector#transformDisjunction(
-	 * java.util.Collection, java.util.function.Consumer, int)
-	 */
-	@Override
-	protected Atom transformDisjunction(Collection<Atom> children, Consumer<Clause> clauses, int polarity) {
-		Atom name = Atom.of("or_" + children);
-		if (polarity >= 0 || !optimize) {
-			clauses.accept(Clause.of(children, new Negation(name)));
-		}
-		if (polarity <= 0 || !optimize) {
-			for (Atom atom : children) {
-				clauses.accept(Clause.of(new Negation(atom), name));
-			}
-		}
-		return name;
+	public Pair<Literal, Collection<Clause>> transform(AcceptanceCondition acc) {
+		List<Clause> clauses = new LinkedList<>();
+		Literal name = collect(acc, clauses);
+		return Pair.of(name, clauses);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.transform.AbstractCollector#transformConjunction(
-	 * java.util.Collection, java.util.function.Consumer, int)
-	 */
-	@Override
-	protected Atom transformConjunction(Collection<Atom> children, Consumer<Clause> clauses, int polarity) {
-		Atom name = Atom.of("and_" + children);
+	private void defineConjunction(Literal name, Collection<Literal> children, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
-			for (Atom atom : children) {
-				clauses.accept(Clause.of(atom, new Negation(name)));
+			for (Literal atom : children) {
+				clauses.accept(Clause.of(atom, name.neg()));
 			}
 		}
 		if (polarity <= 0 || !optimize) {
 			Set<Literal> literals = new HashSet<>(children.size() + 1);
-			for (Atom atom : children) {
-				literals.add(new Negation(atom));
+			for (Literal atom : children) {
+				literals.add(atom.neg());
 			}
 			literals.add(name);
 			clauses.accept(Clause.of(literals));
 		}
-		return name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.transform.AbstractCollector#transformImplication(
-	 * java.lang.Object, java.lang.Object, java.util.function.Consumer, int)
-	 */
-	@Override
-	protected Atom transformImplication(Atom left, Atom right, Consumer<Clause> clauses, int polarity) {
-		Atom name = Atom.of(left + "_impl_" + right);
+	private void defineDisjunction(Literal name, Collection<Literal> children, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
-			clauses.accept(Clause.of(new Negation(name), new Negation(left), right));
+			clauses.accept(Clause.of(children, name.neg()));
+		}
+		if (polarity <= 0 || !optimize) {
+			for (Literal atom : children) {
+				clauses.accept(Clause.of(atom.neg(), name));
+			}
+		}
+	}
+	
+	private void defineImplication(Literal name, Literal left, Literal right, Consumer<Clause> clauses, int polarity) {
+		if (polarity >= 0 || !optimize) {
+			clauses.accept(Clause.of(name.neg(), left.neg(), right));
 		}
 		if (polarity <= 0 || !optimize) {
 			clauses.accept(Clause.of(name, left));
-			clauses.accept(Clause.of(name, new Negation(right)));
+			clauses.accept(Clause.of(name, right.neg()));
 		}
-		return name;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.transform.AbstractCollector#transformEquivalence(
-	 * java.util.Collection, java.util.function.Consumer, int)
-	 */
-	@Override
-	protected Atom transformEquivalence(Collection<Atom> children, Consumer<Clause> clauses, int polarity) {
+	
+	private void defineEquivalence(Literal name, Collection<Literal> children, Consumer<Clause> clauses, int polarity) {
 		// we generate a circle of implications instead of pairwise equivalences
-		Atom name = Atom.of("equiv_" + children.hashCode());
 		if (polarity >= 0 || !optimize) {
-			Iterator<Atom> iterator = children.iterator();
-			Atom first = iterator.next();
-			Atom left = first;
+			Iterator<Literal> iterator = children.iterator();
+			Literal first = iterator.next();
+			Literal left = first;
 			while (iterator.hasNext()) {
-				Atom right = iterator.next();
-				clauses.accept(Clause.of(new Negation(name), new Negation(left), right));
+				Literal right = iterator.next();
+				clauses.accept(Clause.of(name.neg(), left.neg(), right));
 				left = right;
 			}
 			// left is now the last child
 			// complete the circle
-			clauses.accept(Clause.of(new Negation(name), new Negation(left), first));
+			clauses.accept(Clause.of(name.neg(), left.neg(), first));
 		}
 		if (polarity <= 0 || !optimize) {
 			clauses.accept(Clause.of(children, name));
 
 			Set<Literal> literals = new HashSet<>(children.size() + 1);
-			for (Atom child : children) {
-				literals.add(new Negation(child));
+			for (Literal child : children) {
+				literals.add(child.neg());
 			}
 			literals.add(name);
 			clauses.accept(Clause.of(literals));
 		}
-		return name;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.transform.AbstractCollector#
-	 * transformExclusiveDisjunction(java.lang.Object, java.lang.Object,
-	 * java.util.function.Consumer, int)
-	 */
-	@Override
-	protected Atom transformExclusiveDisjunction(Atom left, Atom right, Consumer<Clause> clauses, int polarity) {
-		Atom name = Atom.of(left + "_xor_" + right);
+	
+	private void defineExclusiveDisjunction(Literal name, Literal left, Literal right, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
-			clauses.accept(Clause.of(new Negation(name), left, right));
-			clauses.accept(Clause.of(new Negation(name), new Negation(left), new Negation(right)));
+			clauses.accept(Clause.of(name.neg(), left, right));
+			clauses.accept(Clause.of(name.neg(), left.neg(), right.neg()));
 		}
 		if (polarity <= 0 || !optimize) {
-			clauses.accept(Clause.of(name, new Negation(left), right));
-			clauses.accept(Clause.of(name, left, new Negation(right)));
+			clauses.accept(Clause.of(name, left.neg(), right));
+			clauses.accept(Clause.of(name, left, right.neg()));
 		}
-		return name;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.transform.AbstractCollector#transformNegation(java.
-	 * lang.Object, java.util.function.Consumer, int)
-	 */
-	@Override
-	protected Atom transformNegation(Atom child, Consumer<Clause> clauses, int polarity) {
-		Atom name = Atom.of("neg_" + child);
+	
+	private void defineNegation(Literal name, Literal child, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
-			clauses.accept(Clause.of(new Negation(name), new Negation(child)));
+			clauses.accept(Clause.of(name.neg(), child.neg()));
 		}
 		if (polarity <= 0 || !optimize) {
 			clauses.accept(Clause.of(name, child));
 		}
+	}
+	
+	private Literal define(AcceptanceCondition acc, Consumer<Clause> clauses) {
+		Literal name = createRootName(acc);
+		define(name, acc, clauses, rootPolarity);
 		return name;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Works as a replacement to the Visitor-Pattern approach, since it is expected
+	 * to be faster. The goal is to replace it with pattern matching, once it is available in a future java release.
 	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.transform.AbstractCollector#transformArgument(net.
-	 * sf.tweety.arg.adf.syntax.Argument, java.util.function.Consumer, int)
+	 * @param name
+	 * @param acc
+	 * @param clauses
+	 * @param polarity
 	 */
-	@Override
-	protected Atom transformArgument(Argument argument, Consumer<Clause> collection, int polarity) {
-		return mapping.apply(argument);
+	private void define(Literal name, AcceptanceCondition acc, Consumer<Clause> clauses, int polarity) {
+		if (acc instanceof ConjunctionAcceptanceCondition) {
+			Map<Literal, AcceptanceCondition> children = new HashMap<Literal, AcceptanceCondition>();
+			for (AcceptanceCondition child : acc.getChildren()) {
+				children.put(createName(child), child);
+			}
+			defineConjunction(name, children.keySet(), clauses, polarity);
+			for (Entry<Literal, AcceptanceCondition> entry : children.entrySet()) {
+				define(entry.getKey(), entry.getValue(), clauses, polarity);
+			}
+		} else if (acc instanceof DisjunctionAcceptanceCondition) {
+			Map<Literal, AcceptanceCondition> children = new HashMap<Literal, AcceptanceCondition>();
+			for (AcceptanceCondition child : acc.getChildren()) {
+				children.put(createName(child), child);
+			}
+			defineDisjunction(name, children.keySet(), clauses, polarity);
+			for (Entry<Literal, AcceptanceCondition> entry : children.entrySet()) {
+				define(entry.getKey(), entry.getValue(), clauses, polarity);
+			}
+		} else if (acc instanceof ImplicationAcceptanceCondition) {
+			ImplicationAcceptanceCondition impl = (ImplicationAcceptanceCondition) acc;
+			Literal left = createName(impl.getLeft());
+			Literal right = createName(impl.getRight());
+			defineImplication(name, left, right, clauses, polarity);
+			define(left, impl.getLeft(), clauses, -polarity);
+			define(right, impl.getRight(), clauses, polarity);
+		} else if (acc instanceof EquivalenceAcceptanceCondition) {
+			Map<Literal, AcceptanceCondition> children = new HashMap<Literal, AcceptanceCondition>();
+			for (AcceptanceCondition child : acc.getChildren()) {
+				children.put(createName(child), child);
+			}
+			defineEquivalence(name, children.keySet(), clauses, polarity);
+			for (Entry<Literal, AcceptanceCondition> entry : children.entrySet()) {
+				define(entry.getKey(), entry.getValue(), clauses, polarity);
+			}
+		} else if (acc instanceof ExclusiveDisjunctionAcceptanceCondition) {
+			ExclusiveDisjunctionAcceptanceCondition xor = (ExclusiveDisjunctionAcceptanceCondition) acc;
+			Literal left = createName(xor.getLeft());
+			Literal right = createName(xor.getRight());
+			defineExclusiveDisjunction(name, left, right, clauses, polarity);
+			define(left, xor.getLeft(), clauses, polarity);
+			define(right, xor.getRight(), clauses, polarity);
+		} else if (acc instanceof NegationAcceptanceCondition) {
+			Literal child = createName(((NegationAcceptanceCondition) acc).getChild());
+			defineNegation(name, child, clauses, polarity);
+			define(child, ((NegationAcceptanceCondition) acc).getChild(), clauses, -polarity);
+		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.transform.AbstractCollector#transformContradiction(
-	 * java.util.function.Consumer, int)
-	 */
-	@Override
-	protected Atom transformContradiction(Consumer<Clause> clauses, int polarity) {
-		// TODO use same proposition
-		Atom name = Atom.of("F");
-		// forces name to be 0
-		clauses.accept(Clause.of(new Negation(name)));
-		return name;
+	
+	private Literal createName(AcceptanceCondition acc) {
+		if (acc instanceof Argument) {
+			return mapping.apply((Argument) acc);
+		} else if (acc instanceof TautologyAcceptanceCondition) {
+			return TRUE;
+		} else if (acc instanceof ContradictionAcceptanceCondition) {
+			return FALSE;
+		} else {
+			return Literal.createTransient();
+		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.transform.AbstractCollector#transformTautology(java
-	 * .util.function.Consumer, int)
-	 */
-	@Override
-	protected Atom transformTautology(Consumer<Clause> clauses, int polarity) {
-		// TODO use same proposition
-		Atom name = Atom.of("T");
-		// forces name to be 1
-		clauses.accept(Clause.of(name));
-		return name;
+	
+	private Literal createRootName(AcceptanceCondition acc) {
+		if (acc instanceof Argument) {
+			return mapping.apply((Argument) acc);
+		} else if (acc instanceof TautologyAcceptanceCondition) {
+			return TRUE;
+		} else if (acc instanceof ContradictionAcceptanceCondition) {
+			return FALSE;
+		} else {
+			return Literal.create();
+		}
 	}
 
 }

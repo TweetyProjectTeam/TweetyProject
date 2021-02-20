@@ -18,17 +18,17 @@
  */
 package org.tweetyproject.arg.adf.reasoner;
 
-import org.tweetyproject.arg.adf.reasoner.sat.Pipeline;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.GroundGenerator;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.ModelGenerator;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Pipeline;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.GrounderStableVerifier;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
 
 /**
  * @author Mathias Hofer
  *
  */
+@Deprecated( forRemoval = true, since = "1.19" )
 public class StableReasoner extends AbstractDialecticalFrameworkReasoner {
 	
 	/**
@@ -40,7 +40,7 @@ public class StableReasoner extends AbstractDialecticalFrameworkReasoner {
 	
 	private static Pipeline satBased(IncrementalSatSolver solver) {
 		return Pipeline.builder(new ModelGenerator(), solver)
-				.setVerifier(new GrounderStableVerifier(new GroundGenerator(), new SatLinkStrategy(solver)))
+				.setVerifier(new GrounderStableVerifier(new GroundGenerator()))
 				.build();
 	}
 

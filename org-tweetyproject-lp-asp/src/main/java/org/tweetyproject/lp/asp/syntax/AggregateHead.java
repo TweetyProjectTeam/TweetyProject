@@ -69,8 +69,7 @@ public class AggregateHead extends ASPHead {
 		List<AggregateElement> agg_elements = new ArrayList<AggregateElement>();
 		agg_elements.add(new AggregateElement(new ArrayList<Term<?>>(), literals));
 		AggregateAtom agg = new AggregateAtom(ASPOperator.AggregateFunction.COUNT, agg_elements,
-				ASPOperator.BinaryOperator.LEQ, new NumberTerm(rightBound), ASPOperator.BinaryOperator.LEQ,
-				new NumberTerm(leftBound));
+				ASPOperator.BinaryOperator.LEQ, new NumberTerm(leftBound), ASPOperator.BinaryOperator.LEQ, new NumberTerm(rightBound));
 		this.head = agg;
 	}
 

@@ -29,6 +29,7 @@ import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
  *
  * @param <R> the result of the transformation
  */
+@FunctionalInterface
 public interface Transformer<R> {
 
 	/**

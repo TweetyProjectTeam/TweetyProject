@@ -3,8 +3,8 @@ package org.tweetyproject.arg.adf.sat;
 import java.util.Collection;
 import java.util.Set;
 
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
  * A high level representation of a sat solver state.
@@ -36,21 +36,18 @@ public interface SatSolverState extends AutoCloseable {
 	 * 
 	 * @return a witness if the state is sat, else returns <code>null</code>
 	 */
-	Set<Atom> witness();
+	Set<Literal> witness();
 	
-	Set<Atom> witness(Collection<Atom> filter);
+	Set<Literal> witness(Collection<? extends Literal> filter);
 
 	/**
 	 * Assumes the truth value of the given proposition for the next call to
 	 * {@link #satisfiable()}. There can be multiple assumptions, all of them
 	 * are gone after the next {@link #satisfiable()} call.
 	 * 
-	 * @param atom
-	 *            the atom for which we assume a value
-	 * @param value
-	 *            the value we assume
+	 * @param literal the atom for which we assume a value
 	 */
-	void assume(Atom atom, boolean value);
+	void assume(Literal literal);
 
 	/**
 	 * Adds the given clause to the solver state.

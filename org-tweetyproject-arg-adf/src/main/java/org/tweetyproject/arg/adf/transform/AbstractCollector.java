@@ -73,6 +73,7 @@ public abstract class AbstractCollector<U, D, R> implements Transformer<R>, Coll
 	 */
 	@Override
 	public U collect(AcceptanceCondition acc, Consumer<D> consumer) {
+		for (D data : initialize()) consumer.accept(data);
 		return transform(acc, consumer);
 	}
 

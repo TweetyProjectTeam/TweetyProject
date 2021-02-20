@@ -60,7 +60,7 @@ public class OptimizationElement extends ASPElement {
 	private List<ASPBodyElement> right = new ArrayList<ASPBodyElement>();
 
 	/**
-	 * Create a new optimization statement with the given weight, terms and
+	 * Creates a new optimization element with the given weight, terms and
 	 * literals.
 	 * 
 	 * @param weight
@@ -74,7 +74,7 @@ public class OptimizationElement extends ASPElement {
 	}
 
 	/**
-	 * Create a new optimization statement with the given single weight, term and
+	 * Creates a new optimization element with the given single weight, term and
 	 * literal.
 	 * 
 	 * @param weight
@@ -88,7 +88,7 @@ public class OptimizationElement extends ASPElement {
 	}
 
 	/**
-	 * Create a new optimization statement with the given weight, priority, terms
+	 * Creates a new optimization element with the given weight, priority, terms
 	 * and literals.
 	 * 
 	 * @param weight
@@ -104,7 +104,7 @@ public class OptimizationElement extends ASPElement {
 	}
 
 	/**
-	 * Create a new optimization statement with the given weight, priority, terms
+	 * Creates a new optimization element with the given weight, priority, terms
 	 * and literals.
 	 * 
 	 * @param weight
@@ -217,7 +217,7 @@ public class OptimizationElement extends ASPElement {
 	}
 
 	/**
-	 * Set the term tuple of this optimization element.
+	 * Sets the term tuple of this optimization element.
 	 * @param terms
 	 */
 	public void setOptTerms(List<Term<?>> terms) {
@@ -225,7 +225,7 @@ public class OptimizationElement extends ASPElement {
 	}
 
 	/**
-	 * Set the literals tuple of this optimization element.
+	 * Sets the literals tuple of this optimization element.
 	 * @param literals
 	 */
 	public void setOptLiterals(List<ASPBodyElement> literals) {
@@ -262,7 +262,7 @@ public class OptimizationElement extends ASPElement {
 	
 	public SortedSet<ASPLiteral> getLiterals() {
 		SortedSet<ASPLiteral> literals = new TreeSet<ASPLiteral>();
-		for (ASPBodyElement t : literals)
+		for (ASPBodyElement t : right)
 			literals.addAll(t.getLiterals());
 		return literals;
 	}

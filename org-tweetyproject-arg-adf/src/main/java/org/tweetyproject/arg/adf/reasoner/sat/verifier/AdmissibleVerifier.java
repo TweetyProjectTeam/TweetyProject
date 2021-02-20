@@ -30,43 +30,14 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 public class AdmissibleVerifier implements Verifier {
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier#prepareState(org.tweetyproject.arg.adf.sat.SatSolverState,
-	 * org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping,
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework)
-	 */
 	@Override
 	public void prepareState(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.verifier.Verifier#verify(java.lang.Object,
-	 * org.tweetyproject.arg.adf.semantics.Interpretation)
-	 */
 	@Override
 	public boolean verify(SatSolverState state, PropositionalMapping mapping, Interpretation candidate, AbstractDialecticalFramework adf) {
-		new VerifyAdmissibleSatEncoding(candidate).encode(state::add, mapping, adf);
+		VerifyAdmissibleSatEncoding.encode(candidate, state::add, mapping, adf);
 		boolean notAdmissible = state.satisfiable();
 		return !notAdmissible;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier#postVerification(org.tweetyproject.arg.adf.sat.SatSolverState,
-	 * org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping,
-	 * org.tweetyproject.arg.adf.semantics.interpretation.Interpretation,
-	 * org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework, boolean)
-	 */
-	@Override
-	public boolean postVerification(SatSolverState state, PropositionalMapping mapping, Interpretation candidate,
-			AbstractDialecticalFramework adf, boolean verificationResult) {
-		return true;
-	}
 }

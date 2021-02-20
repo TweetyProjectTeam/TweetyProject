@@ -19,10 +19,13 @@
 package org.tweetyproject.arg.adf.syntax.adf;
 
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
+import org.tweetyproject.arg.adf.transform.Transformer;
 
 /**
  * An ADF without arguments, acceptance conditions or links.
@@ -33,108 +36,83 @@ import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 enum EmptyAbstractDialecticalFramework implements AbstractDialecticalFramework {
 	INSTANCE;
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#getArguments()
-	 */
 	@Override
 	public Set<Argument> getArguments() {
 		return Set.of();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#getLinks()
-	 */
 	@Override
 	public Set<Link> links() {
 		return Set.of();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#link(org.tweetyproject.arg.adf.syntax.Argument, org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Link link(Argument parent, Argument child) {
 		throw new IllegalArgumentException();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#linksFromParents(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Set<Link> linksTo(Argument child) {
 		return Set.of();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#size()
-	 */
 	@Override
 	public int size() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#linksToChildren(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Set<Link> linksFrom(Argument parent) {
 		return Set.of();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#parents(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Set<Argument> parents(Argument child) {
 		return Set.of();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#children(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public Set<Argument> children(Argument parent) {
 		return Set.of();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#kBipolar(int)
-	 */
 	@Override
 	public int kBipolar() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#getAcceptanceCondition(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public AcceptanceCondition getAcceptanceCondition(Argument argument) {
 		throw new IllegalArgumentException();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#incomingDegree(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public int incomingDegree(Argument arg) {
 		return 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#outgoingDegree(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public int outgoingDegree(Argument arg) {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework#contains(org.tweetyproject.arg.adf.syntax.Argument)
-	 */
 	@Override
 	public boolean contains(Argument arg) {
 		return false;
+	}
+	@Override
+	public AbstractDialecticalFramework transform(Function<AcceptanceCondition, AcceptanceCondition> transformer) {
+		return this;
+	}
+	
+	@Override
+	public AbstractDialecticalFramework transform(BiFunction<Argument, AcceptanceCondition, AcceptanceCondition> transformer) {
+		return this;
+	}
+	
+	@Override
+	public AbstractDialecticalFramework transform(Transformer<AcceptanceCondition> transformer) {
+		return this;
 	}
 
 }

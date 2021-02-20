@@ -24,8 +24,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Objects;
 
 import org.junit.Test;
-
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
+import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.util.Pair;
 
 /**
@@ -41,29 +40,29 @@ public class PairTest {
 	
 	@Test
 	public void testAtomPairEquality1() {
-		Atom a = Atom.of(null);
-		Atom b = Atom.of(null);
+		Literal a = Literal.create();
+		Literal b = Literal.create();
 		assertTrue(Objects.equals(Pair.of(a, b), Pair.of(a, b)));
 	}
 	
 	@Test
 	public void testAtomPairEquality2() {
-		Atom a = Atom.of("a");
-		Atom b = Atom.of("b");
+		Literal a = Literal.create("a");
+		Literal b = Literal.create("b");
 		assertTrue(Objects.equals(Pair.of(a, b), Pair.of(a, b)));
 	}
 	
 	@Test
 	public void testAtomPairUnquality1() {
-		Atom a = Atom.of(null);
-		Atom b = Atom.of(null);
+		Literal a = Literal.create(null);
+		Literal b = Literal.create(null);
 		assertFalse(Objects.equals(Pair.of(b, a), Pair.of(a, b)));
 	}
 	
 	@Test
 	public void testAtomPairUnquality2() {
-		Atom a = Atom.of("a");
-		Atom b = Atom.of("a");
+		Literal a = Literal.create("a");
+		Literal b = Literal.create("a");
 		assertFalse(Objects.equals(Pair.of(b, a), Pair.of(a, b)));
 	}
 

@@ -27,10 +27,8 @@ import java.util.function.Function;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Atom;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
-import org.tweetyproject.arg.adf.syntax.pl.Negation;
 import org.tweetyproject.arg.adf.transform.TseitinTransformer;
 import org.tweetyproject.arg.adf.util.CacheMap;
 
@@ -51,52 +49,27 @@ public class VerifyAdmissibleSatEncoding implements SatEncoding {
 		this.interpretation = Objects.requireNonNull(interpretation);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.reasoner.strategy.sat.SatEncoding#encode(org.tweetyproject.arg. adf.reasoner.sat.SatEncodingContext)
-	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
-		Set<Literal> accs = new HashSet<>();
-		
-		Function<Argument, Atom> fn = new CacheMap<>(arg -> Atom.of(arg.getName()));
-				
-		TseitinTransformer negativeTransformer = TseitinTransformer.ofNegativePolarity(fn, true);
-		for (Argument s : interpretation.satisfied()) {
-			Atom accName = negativeTransformer.collect(adf.getAcceptanceCondition(s), consumer);
-			consumer.accept(Clause.of(fn.apply(s)));
-			accs.add(new Negation(accName));
-		}
-		
-		TseitinTransformer positiveTransformer = TseitinTransformer.ofPositivePolarity(fn, true);
-		for (Argument s : interpretation.unsatisfied()) {
-			Atom accName = positiveTransformer.collect(adf.getAcceptanceCondition(s), consumer);
-			consumer.accept(Clause.of(new Negation(fn.apply(s))));
-			accs.add(accName);
-		}
-
-		consumer.accept(Clause.of(accs));
+	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping context) {
+		encode(interpretation, consumer, context, adf);
 	}
 	
-	public void encode(Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf, Atom toggle) {
+	public static void encode(Interpretation interpretation, Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
 		Set<Literal> accs = new HashSet<>();
-		accs.add(toggle);
 		
-		Function<Argument, Atom> fn = new CacheMap<>(arg -> Atom.of(arg.getName()));
+		Function<Argument, Literal> fn = new CacheMap<>(arg -> Literal.create(arg.getName()));
 				
 		TseitinTransformer negativeTransformer = TseitinTransformer.ofNegativePolarity(fn, true);
 		for (Argument s : interpretation.satisfied()) {
-			Atom accName = negativeTransformer.collect(adf.getAcceptanceCondition(s), consumer);
+			Literal accName = negativeTransformer.collect(adf.getAcceptanceCondition(s), consumer);
 			consumer.accept(Clause.of(fn.apply(s)));
-			accs.add(new Negation(accName));
+			accs.add(accName.neg());
 		}
 		
 		TseitinTransformer positiveTransformer = TseitinTransformer.ofPositivePolarity(fn, true);
 		for (Argument s : interpretation.unsatisfied()) {
-			Atom accName = positiveTransformer.collect(adf.getAcceptanceCondition(s), consumer);
-			consumer.accept(Clause.of(new Negation(fn.apply(s))));
+			Literal accName = positiveTransformer.collect(adf.getAcceptanceCondition(s), consumer);
+			consumer.accept(Clause.of(fn.apply(s).neg()));
 			accs.add(accName);
 		}
 

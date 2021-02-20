@@ -16,49 +16,31 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.syntax.pl;
+package org.tweetyproject.arg.adf.reasoner.query;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.stream.Stream;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
 
 /**
+ * 
+ * 
  * @author Mathias Hofer
  *
  */
-enum EmptyClause implements Clause {
-	INSTANCE;
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Clause#stream()
-	 */
-	@Override
-	public Stream<Literal> stream() {
-		return Stream.empty();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.pl.Clause#size()
-	 */
-	@Override
-	public int size() {
-		return 0;
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Enum#toString()
-	 */
-	@Override
-	public String toString() {
-		return "[]";
-	}
+public interface Query<T> {
 
-	/* (non-Javadoc)
-	 * @see java.lang.Iterable#iterator()
+	T execute();
+	
+	/**
+	 * @deprecated still work in progress
+	 * @return
 	 */
-	@Override
-	public Iterator<Literal> iterator() {
-		return Collections.emptyIterator();
-	}
-
+	@Deprecated(forRemoval = false)
+	T executeParallel();
+	
+	/**
+	 * @param configuration
+	 * @return a copy of this query but with the new configuration applied
+	 */
+	Query<T> configure(Configuration configuration);
+	
 }
