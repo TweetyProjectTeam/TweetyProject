@@ -31,7 +31,8 @@ public class PrincipleExample {
         all_principles.add(Principle.CF_REINSTATEMENT);
         all_principles.add(Principle.DIRECTIONALITY);
         all_principles.add(Principle.INRA);
-        //all_principles.add(Principle.SCOOC);
+        all_principles.add(Principle.MODULARIZATION);
+        all_principles.add(Principle.REDUCT_ADM);
 
         AdmissibleExample();
         GroundedExample();

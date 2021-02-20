@@ -54,7 +54,10 @@ public abstract class Principle implements Postulate<Argument> {
     public static final Principle INRA = new INRAPrinciple();
     /** The Strong Completeness Outside Odd Cycles (SCOOC) principle **/
     public static final Principle SCOOC = new SCOOCPrinciple();
-
+    /** The modularization principle **/
+    public static final Principle MODULARIZATION = new ModularizationPrinciple();
+    /** The reduct admissibility principle **/
+    public static final Principle REDUCT_ADM = new ReductAdmissibilityPrinciple();
     /** The naivety principle **/
     public static final Principle NAIVETY = new NaivetyPrinciple();
 
