@@ -16,7 +16,7 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.reasoner.sat.parallel;
+package org.tweetyproject.arg.adf.reasoner.sat.decomposer;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,12 +42,9 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  *
  */
 public final class UniformKDecomposer extends AbstractDecomposer {
-	
+
 	private final LinkStrategy linkStrategy;
 	
-	/**
-	 * @param satSolver
-	 */
 	public UniformKDecomposer(LinkStrategy linkStrategy) {
 		this.linkStrategy = Objects.requireNonNull(linkStrategy);
 	}

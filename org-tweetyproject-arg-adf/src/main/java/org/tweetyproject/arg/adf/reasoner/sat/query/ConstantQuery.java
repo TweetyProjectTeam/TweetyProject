@@ -38,17 +38,11 @@ final class ConstantQuery<T> implements Query<T> {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.query.Query#execute()
-	 */
 	@Override
 	public T execute() {
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.query.Query#executeParallel()
-	 */
 	@Override
 	public T executeParallel() {
 		return value;

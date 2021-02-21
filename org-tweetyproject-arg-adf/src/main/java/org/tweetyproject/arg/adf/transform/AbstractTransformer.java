@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.adf.transform;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,13 +76,13 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 	protected abstract R finish(U bottomUpData, D topDownData);
 
-	protected abstract U transformDisjunction(Collection<U> children, D topDownData, int polarity);
+	protected abstract U transformDisjunction(Set<U> children, D topDownData, int polarity);
 
-	protected abstract U transformConjunction(Collection<U> children, D topDownData, int polarity);
+	protected abstract U transformConjunction(Set<U> children, D topDownData, int polarity);
 
 	protected abstract U transformImplication(U left, U right, D topDownData, int polarity);
 
-	protected abstract U transformEquivalence(Collection<U> children, D topDownData, int polarity);
+	protected abstract U transformEquivalence(Set<U> children, D topDownData, int polarity);
 
 	protected abstract U transformExclusiveDisjunction(U left, U right, D topDownData, int polarity);
 

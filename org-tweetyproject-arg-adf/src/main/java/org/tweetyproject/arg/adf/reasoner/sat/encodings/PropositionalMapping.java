@@ -112,12 +112,12 @@ public final class PropositionalMapping {
 		return links.get(pair);
 	}
 	
-	public Collection<Literal> getLinks() {
-		return Collections.unmodifiableCollection(links.values());
+	public Collection<Literal> getArgumentLiterals() {
+		return new UnionCollectionView<>(falses.values(), trues.values());
 	}
 	
-	public Collection<Literal> getArguments() {
-		return new UnionCollectionView<>(falses.values(), trues.values());
+	public Set<Argument> getArguments() {
+		return Collections.unmodifiableSet(trues.keySet()); // could also return falses.keySet(), does not matter
 	}
 
 	public Literal getLink(Link link) {

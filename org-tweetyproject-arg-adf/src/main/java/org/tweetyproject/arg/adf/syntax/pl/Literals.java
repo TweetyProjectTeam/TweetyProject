@@ -53,6 +53,11 @@ class Literals {
 			return new Negation(this);
 		}
 		
+		@Override
+		public String toString() {
+			return "~";
+		}
+		
 	}
 	
 	static final class NamedAtom implements Literal {
@@ -122,6 +127,11 @@ class Literals {
 			return new Negation(this);
 		}
 		
+		@Override
+		public String toString() {
+			return "_";
+		}
+		
 	}
 	
 	static final class Negation implements Literal {
@@ -155,6 +165,11 @@ class Literals {
 		@Override
 		public Literal neg() {
 			return atom;
+		}
+		
+		@Override
+		public String toString() {
+			return getName();
 		}
 		
 	}

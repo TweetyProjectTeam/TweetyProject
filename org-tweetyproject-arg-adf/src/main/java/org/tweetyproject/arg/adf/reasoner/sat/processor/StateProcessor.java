@@ -20,9 +20,7 @@ package org.tweetyproject.arg.adf.reasoner.sat.processor;
 
 import java.util.function.Consumer;
 
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
@@ -32,10 +30,10 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public interface StateProcessor {
 
-	default void process(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		process(state::add, mapping, adf);
+	default void process(SatSolverState state) {
+		process(state::add);
 	}
 	
-	void process(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf);
+	void process(Consumer<Clause> consumer);
 	
 }

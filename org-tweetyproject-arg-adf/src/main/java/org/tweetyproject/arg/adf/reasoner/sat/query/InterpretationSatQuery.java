@@ -39,9 +39,6 @@ final class InterpretationSatQuery extends SatQuery<Interpretation>{
 		return new InterpretationSatQuery(adf, semantics, configuration);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.sat.query.SatQuery#execute(net.sf.tweety.arg.adf.reasoner.sat.pipeline.Execution)
-	 */
 	@Override
 	Interpretation execute(Execution execution) {
 		return new ModelIterator(execution).next();

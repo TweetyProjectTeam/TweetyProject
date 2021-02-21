@@ -18,176 +18,86 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Supplier;
 
+import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.CandidateGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.generator.ConflictFreeGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.generator.GroundGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.generator.ModelGenerator;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.AdmissibleSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.CompleteSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.ConflictFreeSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.GroundSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.ModelSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.NaiveSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.PreferredSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.StableSemantics;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.InterpretationProcessor;
-import org.tweetyproject.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
-import org.tweetyproject.arg.adf.reasoner.sat.processor.MaximizeInterpretationProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.GrounderStableVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
+import org.tweetyproject.arg.adf.sat.SatSolverState;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * Represents the computational building blocks of SAT based ADF semantics.
+ * Provides access to the computational building blocks of SAT based ADF
+ * semantics.
  * 
  * @author Mathias Hofer
  *
  */
-public final class Semantics {
-	
-	private final List<StateProcessor> stateProcessors;
+public interface Semantics {
 
-	private final CandidateGenerator candidateGenerator;
+	CandidateGenerator createCandidateGenerator();
 
-	private final Verifier verifier;
+	List<StateProcessor> createStateProcessors();
 
-	private final List<InterpretationProcessor> modelProcessors;
+	Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier);
 
-	private Semantics(Builder builder) {
-		this.candidateGenerator = builder.candidateGenerator;
-		this.stateProcessors = List.copyOf(builder.stateProcessors);
-		this.verifier = builder.verifier;
-		this.modelProcessors = List.copyOf(builder.modelProcessors);
-	}
+	List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier);
 
-	public static Builder builder(CandidateGenerator candidateGenerator) {
-		return new Builder(candidateGenerator);
-	}
+	PropositionalMapping getPropositionalMapping();
 
 	/**
-	 * @return the candidateGenerator
+	 * Creates a new instance of the current semantics for the provided ADF. The
+	 * provided ADF is expected to be a reduct of the original one, hence it
+	 * contains at most the original arguments. This allows for the original
+	 * {@link PropositionalMapping} to be used.
+	 * 
+	 * @param adf
+	 * @return a new {@link Semantics} instance
 	 */
-	public CandidateGenerator getCandidateGenerator() {
-		return candidateGenerator;
+	Semantics forReduct(AbstractDialecticalFramework adf);
+
+	static Semantics conflictFree(AbstractDialecticalFramework adf) {
+		return new ConflictFreeSemantics(adf);
 	}
 
-	/**
-	 * @return the stateProcessors
-	 */
-	public List<StateProcessor> getStateProcessors() {
-		return stateProcessors;
+	static Semantics naive(AbstractDialecticalFramework adf) {
+		return new NaiveSemantics(adf);
 	}
 
-	/**
-	 * @return the verifier
-	 */
-	public Verifier getVerifier() {
-		return verifier;
+	static Semantics admissible(AbstractDialecticalFramework adf) {
+		return new AdmissibleSemantics(adf);
 	}
 
-	/**
-	 * @return the modelProcessors
-	 */
-	public List<InterpretationProcessor> getModelProcessors() {
-		return modelProcessors;
+	static Semantics preferred(AbstractDialecticalFramework adf) {
+		return new PreferredSemantics(adf);
 	}
 
-	public boolean hasVerifier() {
-		return verifier != null;
-	}
-	
-	public boolean hasStateProcessors() {
-		return !stateProcessors.isEmpty();
-	}
-	
-	public boolean hasModelProcessors() {
-		return !modelProcessors.isEmpty();
-	}
-		
-	public static final class Builder {
-
-		private final CandidateGenerator candidateGenerator;
-
-		private final List<StateProcessor> stateProcessors = new LinkedList<>();
-
-		private Verifier verifier;
-
-		private final List<InterpretationProcessor> modelProcessors = new LinkedList<>();
-
-		/**
-		 * @param candidateGenerator
-		 */
-		Builder(CandidateGenerator candidateGenerator) {
-			this.candidateGenerator = Objects.requireNonNull(candidateGenerator);
-		}
-
-		public Builder addStateProcessor(StateProcessor stateProcessor) {
-			this.stateProcessors.add(Objects.requireNonNull(stateProcessor));
-			return this;
-		}
-
-		public Builder addModelProcessor(InterpretationProcessor modelProcessor) {
-			this.modelProcessors.add(Objects.requireNonNull(modelProcessor));
-			return this;
-		}
-
-		public Builder setVerifier(Verifier verifier) {
-			this.verifier = Objects.requireNonNull(verifier);
-			return this;
-		}
-
-		public Semantics build() {
-			return new Semantics(this);
-		}
-	}
-	
-	/*
-	 * Default configurations:
-	 */
-	
-	public static Semantics conflictFree() {
-		return Semantics.builder(new ConflictFreeGenerator()).build();
+	static Semantics stable(AbstractDialecticalFramework adf) {
+		return new StableSemantics(adf);
 	}
 
-	public static Semantics naive() {
-		return Semantics.builder(new ConflictFreeGenerator())
-				.addModelProcessor(new MaximizeInterpretationProcessor())
-				.build();
+	static Semantics complete(AbstractDialecticalFramework adf) {
+		return new CompleteSemantics(adf);
 	}
 
-	public static Semantics admissible() {
-		return Semantics.builder(new ConflictFreeGenerator())
-				.addStateProcessor(new KBipolarStateProcessor())
-				.setVerifier(new AdmissibleVerifier())
-				.build();
-	}
-	
-	public static Semantics preferred() {
-		Verifier admissibleVerifier = new AdmissibleVerifier();
-		return Semantics.builder(new ConflictFreeGenerator())
-				.addStateProcessor(new KBipolarStateProcessor())
-				.setVerifier(admissibleVerifier)
-				.addModelProcessor(new MaximizeInterpretationProcessor(admissibleVerifier))
-				.build();
-	}
-	
-	public static Semantics stable() {
-		return Semantics.builder(new ModelGenerator())
-				.setVerifier(new GrounderStableVerifier(new GroundGenerator()))
-				.build();
+	static Semantics model(AbstractDialecticalFramework adf) {
+		return new ModelSemantics(adf);
 	}
 
-	public static Semantics complete() {
-		return Semantics.builder(new ConflictFreeGenerator())
-				.addStateProcessor(new KBipolarStateProcessor())
-				.setVerifier(new CompleteVerifier())
-				.build();
-	}
-
-	public static Semantics model() {
-		return Semantics.builder(new ModelGenerator()).build();
-	}
-
-	public static Semantics ground() {
-		return Semantics.builder(new GroundGenerator()).build();
+	static Semantics ground(AbstractDialecticalFramework adf) {
+		return new GroundSemantics(adf);
 	}
 
 }

@@ -54,21 +54,27 @@ public final class RelativeKBipolarStateProcessor implements StateProcessor {
 	private final int maxDepth;
 
 	private final LinkStrategy linkStrategy;
+	
+	private final AbstractDialecticalFramework adf;
+	
+	private final PropositionalMapping mapping;
 
 	/**
 	 * @param maxDepth maxDepth
 	 * @param solver solver
 	 */
-	public RelativeKBipolarStateProcessor(int maxDepth, LinkStrategy linkStrategy) {
+	public RelativeKBipolarStateProcessor(int maxDepth, LinkStrategy linkStrategy, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.maxDepth = maxDepth;
 		this.linkStrategy = Objects.requireNonNull(linkStrategy);
+		this.adf = Objects.requireNonNull(adf);
+		this.mapping = Objects.requireNonNull(mapping);
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sf.tweety.arg.adf.reasoner.sat.processor.StateProcessor#process(java.util.function.Consumer, net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping, net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework)
 	 */
 	@Override
-	public void process(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
+	public void process(Consumer<Clause> consumer) {
 		new BipolarSatEncoding().encode(consumer, adf, mapping);
 		Map<Link, Set<Interpretation>> bipolarIn = checkLinks(adf);
 		for (Entry<Link, Set<Interpretation>> entry : bipolarIn.entrySet()) {

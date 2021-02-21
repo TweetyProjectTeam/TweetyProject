@@ -20,9 +20,8 @@ package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Objects;
+import java.util.List;
 
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.CandidateGenerator;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.InterpretationProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
@@ -41,67 +40,47 @@ public final class SequentialExecution implements Execution {
 
 	private final SatSolverState state;
 	
-	private final IncrementalSatSolver satSolver;
-		
-	private final PropositionalMapping mapping;
+	private final CandidateGenerator generator;
 	
-	private final AbstractDialecticalFramework adf;
-			
-	private final Semantics semantics;
+	private final Verifier verifier;
 	
-	private final Collection<Clause> encoding;
-		
+	private final List<InterpretationProcessor> modelProcessors;
+	
 	public SequentialExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver) {
-		this.adf = Objects.requireNonNull(adf);
-		this.mapping = new PropositionalMapping(adf);
-		this.semantics = Objects.requireNonNull(semantics);
-		this.satSolver = Objects.requireNonNull(satSolver);
-				
-		this.encoding = new LinkedList<Clause>();
-		semantics.getCandidateGenerator().initialize(encoding::add, mapping, adf);
-		for (StateProcessor processor : semantics.getStateProcessors()) {
-			processor.process(encoding::add, mapping, adf);
+		this.generator = semantics.createCandidateGenerator();
+		this.verifier = semantics.createVerifier(satSolver::createState).orElse(null);
+		
+		Collection<Clause> encoding = new LinkedList<Clause>();
+		generator.prepare(encoding::add);
+		for (StateProcessor processor : semantics.createStateProcessors()) {
+			processor.process(encoding::add);
 		}
 		
-		this.state = satSolver.createState();
+		this.state = createState(satSolver, encoding);	
+		this.modelProcessors = semantics.createModelProcessors(() -> createState(satSolver, encoding));
+
+		if (verifier != null) {
+			this.verifier.prepare();			
+		}
+	}
+	
+	private static SatSolverState createState(IncrementalSatSolver satSolver, Collection<Clause> encoding) {
+		SatSolverState state = satSolver.createState();
 		for (Clause clause : encoding) {
-			this.state.add(clause);
+			state.add(clause);
 		}
-	}
-	
-	private SatSolverState processingState() {
-		if (semantics.hasModelProcessors()) {
-			SatSolverState state = satSolver.createState();
-			for (Clause clause : encoding) {
-				state.add(clause);
-			}
-			return state;
-		}
-		return null;
-	}
-	
-	private SatSolverState verificationState() {
-		if (semantics.hasVerifier()) {
-			SatSolverState state = satSolver.createState();
-			semantics.getVerifier().prepareState(state, mapping, adf);
-			return state;
-		}
-		return null;
+		return state;
 	}
 
 	@Override
 	public Interpretation computeCandidate() {
-		CandidateGenerator generator = semantics.getCandidateGenerator();
-		return generator.generate(state, mapping, adf);
+		return generator.generate(state);
 	}
 
 	@Override
 	public boolean verify(Interpretation candidate) {
-		Verifier verifier = semantics.getVerifier();
 		if (verifier != null) {
-			try (SatSolverState verificationState = verificationState()) {
-				return verifier.verify(verificationState, mapping, candidate, adf);			
-			}
+			return verifier.verify(candidate);			
 		}
 		return true;
 	}
@@ -109,12 +88,9 @@ public final class SequentialExecution implements Execution {
 	@Override
 	public Interpretation processModel(Interpretation model) {
 		Interpretation processed = model;
-		for (InterpretationProcessor processor : semantics.getModelProcessors()) {
-			try (SatSolverState processingState = processingState();
-				 SatSolverState verificationState = verificationState()) {
-				processed = processor.process(processingState, verificationState, mapping, processed, adf);
-				processor.updateState(state, mapping, processed, adf);
-			}
+		for (InterpretationProcessor processor : modelProcessors) {
+			processed = processor.process(processed);
+			processor.updateState(state, processed);
 		}
 		return processed;
 	}
@@ -127,6 +103,9 @@ public final class SequentialExecution implements Execution {
 	@Override
 	public void close() {
 		state.close();
+		if (verifier != null) {
+			verifier.close();			
+		}
 	}
 
 	@Override

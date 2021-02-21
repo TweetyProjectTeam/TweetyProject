@@ -22,9 +22,11 @@ import static org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition.CONTRADIC
 import static org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition.TAUTOLOGY;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Set;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
@@ -84,56 +86,59 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformDisjunction(java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
-	protected AcceptanceCondition transformDisjunction(Collection<AcceptanceCondition> children, Void topDownData,
-			int polarity) {
-		if (children.size() == 1) {
-			return children.iterator().next();
+	protected AcceptanceCondition transformDisjunction(Set<AcceptanceCondition> children, Void topDownData, int polarity) {
+		if (children.contains(TAUTOLOGY)) {
+			return TAUTOLOGY;
 		}
 		
-		Collection<AcceptanceCondition> filtered = new LinkedList<AcceptanceCondition>();
-		for (AcceptanceCondition child : children) {
-			if (child == TAUTOLOGY) {
-				// propagate the constant further, since the disjunction is a tautology
-				return child;
+		if (children.contains(CONTRADICTION)) {
+			Set<AcceptanceCondition> reduced = new HashSet<>();
+			for (AcceptanceCondition acc : children) {
+				if (acc != CONTRADICTION) {
+					reduced.add(acc);
+				}
 			}
-			if (child != CONTRADICTION) {
-				filtered.add(child);
+			
+			if (reduced.isEmpty()) { // conjunction only contained CONTRADICTION
+				return CONTRADICTION;
+			} else if (reduced.size() > 1) {
+				return new ConjunctionAcceptanceCondition(reduced);
+			} else { // size == 1
+				return reduced.iterator().next();
 			}
 		}
 		
-		if (filtered.size() == 1) {
-			return filtered.iterator().next();
-		}
-		
-		return new DisjunctionAcceptanceCondition(filtered);
+		return new DisjunctionAcceptanceCondition(children);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformConjunction(java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
-	protected AcceptanceCondition transformConjunction(Collection<AcceptanceCondition> children, Void topDownData,
+	protected AcceptanceCondition transformConjunction(Set<AcceptanceCondition> children, Void topDownData,
 			int polarity) {
-		if (children.size() == 1) {
-			return children.iterator().next();
+		if (children.contains(CONTRADICTION)) {
+			return CONTRADICTION;
 		}
-		
-		Collection<AcceptanceCondition> filtered = new LinkedList<AcceptanceCondition>();
-		for (AcceptanceCondition child : children) {
-			if (child == CONTRADICTION) {
-				// propagate the constant further, since the conjunction is a contradiction 
-				return child;
+
+		if (children.contains(TAUTOLOGY)) {
+			Set<AcceptanceCondition> reduced = new HashSet<>();
+			for (AcceptanceCondition acc : children) {
+				if (acc != TAUTOLOGY) {
+					reduced.add(acc);
+				}
 			}
-			if (child != TAUTOLOGY) {
-				filtered.add(child);
+			
+			if (reduced.isEmpty()) { // conjunction only contained TAUTOLOGY
+				return TAUTOLOGY;
+			} else if (reduced.size() > 1) {
+				return new ConjunctionAcceptanceCondition(reduced);
+			} else { // size == 1
+				return reduced.iterator().next();
 			}
 		}
 		
-		if (filtered.size() == 1) {
-			return filtered.iterator().next();
-		}
-		
-		return new ConjunctionAcceptanceCondition(filtered);
+		return new ConjunctionAcceptanceCondition(children);
 	}
 
 	/* (non-Javadoc)
@@ -158,7 +163,7 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformEquivalence(java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
-	protected AcceptanceCondition transformEquivalence(Collection<AcceptanceCondition> children, Void topDownData,
+	protected AcceptanceCondition transformEquivalence(Set<AcceptanceCondition> children, Void topDownData,
 			int polarity) {
 		Iterator<AcceptanceCondition> iterator = children.iterator();
 		AcceptanceCondition first = iterator.next();

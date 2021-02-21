@@ -2,10 +2,10 @@ package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
 
 import java.util.Objects;
 
-import org.tweetyproject.arg.adf.reasoner.sat.parallel.Decomposer;
-import org.tweetyproject.arg.adf.reasoner.sat.parallel.RandomDecomposer;
+import org.tweetyproject.arg.adf.reasoner.sat.decomposer.Decomposer;
+import org.tweetyproject.arg.adf.reasoner.sat.decomposer.RandomDecomposer;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
-import org.tweetyproject.arg.adf.sat.solver.NativePicosatSolver;
+import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 
 public final class Configuration {
 
@@ -39,7 +39,7 @@ public final class Configuration {
 	
 	public static final class Builder {
 		
-		private IncrementalSatSolver satSolver = new NativePicosatSolver();
+		private IncrementalSatSolver satSolver = new NativeMinisatSolver();
 		
 		private int parallelism = Runtime.getRuntime().availableProcessors();
 		

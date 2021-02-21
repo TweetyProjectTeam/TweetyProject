@@ -126,29 +126,16 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 			newVar(handle);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.AutoCloseable#close()
-		 */
 		@Override
 		public void close() {
 			delete(handle);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness()
-		 */
 		@Override
 		public Set<Literal> witness() {	
 			return witness(nonTransientMapping.keySet());
 		}
 		
-		/* (non-Javadoc)
-		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#witness(java.util.Collection)
-		 */
 		@Override
 		public Set<Literal> witness(Collection<? extends Literal> filter) {
 			if (satisfiable()) {
@@ -165,11 +152,6 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 			return null;
 		}
 		
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see net.sf.tweety.arg.adf.sat.SatSolverState#satisfiable()
-		 */
 		@Override
 		public boolean satisfiable() {
 			transientMapping = new HashMap<>();
@@ -198,13 +180,6 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 			return solve(handle);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * net.sf.tweety.arg.adf.sat.SatSolverState#assume(net.sf.tweety.logics.
-		 * pl.syntax.Proposition, boolean)
-		 */
 		@Override
 		public void assume(Literal literal) {
 			int mapped = mapToNative(literal.getAtom());

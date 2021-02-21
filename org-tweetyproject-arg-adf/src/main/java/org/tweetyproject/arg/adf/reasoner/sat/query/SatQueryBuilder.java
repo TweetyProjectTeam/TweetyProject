@@ -61,42 +61,42 @@ public final class SatQueryBuilder {
 
 		@Override
 		public ConditionlessTaskStep conflictFree() {
-			return new DefaultConditionlessSatTask(Semantics.conflictFree());
+			return new DefaultConditionlessSatTask(Semantics.conflictFree(adf));
 		}
 
 		@Override
 		public ConditionlessTaskStep naive() {
-			return new DefaultConditionlessSatTask(Semantics.naive());
+			return new DefaultConditionlessSatTask(Semantics.naive(adf));
 		}
 
 		@Override
 		public ConditionlessTaskStep admissible() {
-			return new DefaultConditionlessSatTask(Semantics.admissible());
+			return new DefaultConditionlessSatTask(Semantics.admissible(adf));
 		}
 
 		@Override
 		public ConditionlessTaskStep preferred() {
-			return new DefaultConditionlessSatTask(Semantics.preferred());
+			return new DefaultConditionlessSatTask(Semantics.preferred(adf));
 		}
 
 		@Override
 		public ConditionlessTaskStep stable() {
-			return new DefaultConditionlessSatTask(Semantics.stable());
+			return new DefaultConditionlessSatTask(Semantics.stable(adf));
 		}
 
 		@Override
 		public ConditionlessTaskStep complete() {
-			return new DefaultConditionlessSatTask(Semantics.complete());
+			return new DefaultConditionlessSatTask(Semantics.complete(adf));
 		}
 
 		@Override
 		public ConditionlessTaskStep model() {
-			return new DefaultConditionlessSatTask(Semantics.model());
+			return new DefaultConditionlessSatTask(Semantics.model(adf));
 		}
 
 		@Override
 		public ConditionlessTaskStep ground() {
-			return new DefaultConditionlessSatTask(Semantics.ground());
+			return new DefaultConditionlessSatTask(Semantics.ground(adf));
 		}
 
 		@Override

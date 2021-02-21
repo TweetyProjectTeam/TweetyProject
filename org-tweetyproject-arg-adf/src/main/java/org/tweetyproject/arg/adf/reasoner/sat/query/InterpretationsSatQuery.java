@@ -45,7 +45,7 @@ final class InterpretationsSatQuery extends SatQuery<Stream<Interpretation>>{
 	Stream<Interpretation> execute(Execution execution) {
 		int characteristics = Spliterator.DISTINCT | Spliterator.IMMUTABLE | Spliterator.NONNULL | Spliterator.SIZED | Spliterator.SUBSIZED;
 		Spliterator<Interpretation> spliterator = Spliterators.spliteratorUnknownSize(new ModelIterator(execution), characteristics);
-		return StreamSupport.stream(spliterator, false);
+		return StreamSupport.stream(spliterator, false).onClose(execution::close);
 	}
 	
 	@Override

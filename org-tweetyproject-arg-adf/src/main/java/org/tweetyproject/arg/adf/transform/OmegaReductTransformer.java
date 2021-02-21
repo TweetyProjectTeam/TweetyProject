@@ -18,8 +18,8 @@
  */
 package org.tweetyproject.arg.adf.transform;
 
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
@@ -66,7 +66,7 @@ public class OmegaReductTransformer extends AbstractTransformer<AcceptanceCondit
 	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformDisjunction(java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
-	protected AcceptanceCondition transformDisjunction(Collection<AcceptanceCondition> children, Void topDownData,
+	protected AcceptanceCondition transformDisjunction(Set<AcceptanceCondition> children, Void topDownData,
 			int polarity) {
 		if (children.size() > 1) {
 			return new DisjunctionAcceptanceCondition(children);			
@@ -78,7 +78,7 @@ public class OmegaReductTransformer extends AbstractTransformer<AcceptanceCondit
 	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformConjunction(java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
-	protected AcceptanceCondition transformConjunction(Collection<AcceptanceCondition> children, Void topDownData,
+	protected AcceptanceCondition transformConjunction(Set<AcceptanceCondition> children, Void topDownData,
 			int polarity) {
 		if (children.size() > 1) {
 			return new ConjunctionAcceptanceCondition(children);			
@@ -99,7 +99,7 @@ public class OmegaReductTransformer extends AbstractTransformer<AcceptanceCondit
 	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformEquivalence(java.util.Collection, java.lang.Object, int)
 	 */
 	@Override
-	protected AcceptanceCondition transformEquivalence(Collection<AcceptanceCondition> children, Void topDownData,
+	protected AcceptanceCondition transformEquivalence(Set<AcceptanceCondition> children, Void topDownData,
 			int polarity) {
 		return new EquivalenceAcceptanceCondition(children);
 	}

@@ -20,12 +20,12 @@ package org.tweetyproject.arg.adf.reasoner.sat.generator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.ConflictFreeInterpretationSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.FixPartialSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
@@ -39,26 +39,27 @@ import org.tweetyproject.arg.adf.transform.TseitinTransformer;
  *
  */
 public final class GroundGenerator implements CandidateGenerator {
-
-	private final SatEncoding conflictFree = new ConflictFreeInterpretationSatEncoding();
 	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.sat.generator.CandidateGenerator#initialize(java.util.function.Consumer, net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping, net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework)
+	private final AbstractDialecticalFramework adf;
+	
+	private final PropositionalMapping mapping;
+	
+	/**
+	 * @param adf
+	 * @param mapping
 	 */
-	@Override
-	public void initialize(Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
-		conflictFree.encode(consumer, adf, mapping);
+	public GroundGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+		this.adf = Objects.requireNonNull(adf);
+		this.mapping = Objects.requireNonNull(mapping);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.generator.CandidateGenerator#generate(java
-	 * .lang.Object)
-	 */
 	@Override
-	public Interpretation generate(SatSolverState state, PropositionalMapping encodingContext, AbstractDialecticalFramework adf) {
+	public void prepare(Consumer<Clause> consumer) {
+		new ConflictFreeInterpretationSatEncoding().encode(consumer, adf, mapping);
+	}
+
+	@Override
+	public Interpretation generate(SatSolverState state) {
 		if (!state.satisfiable()) {
 			return null;
 		}
@@ -67,9 +68,9 @@ public final class GroundGenerator implements CandidateGenerator {
 		while (true) {
 			Map<Argument, Boolean> valMap = new HashMap<Argument, Boolean>();
 			for (Argument s : interpretation.arguments()) {
-				new FixPartialSatEncoding(interpretation).encode(state::add, adf, encodingContext);
+				new FixPartialSatEncoding(interpretation).encode(state::add, adf, mapping);
 
-				TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> encodingContext.getLink(r, s), false);
+				TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
 				Literal accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
 
 				// check not-taut

@@ -18,11 +18,12 @@
  */
 package org.tweetyproject.arg.adf.reasoner;
 
-import org.tweetyproject.arg.adf.reasoner.sat.generator.ConflictFreeGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Pipeline;
-import org.tweetyproject.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
+import java.util.stream.Stream;
+
+import org.tweetyproject.arg.adf.reasoner.query.Query;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -35,14 +36,12 @@ public class CompleteReasoner extends AbstractDialecticalFrameworkReasoner {
 	 * @param solver the solver to use
 	 */
 	public CompleteReasoner(IncrementalSatSolver solver) {
-		super(satBased(solver));
+		super(solver);
 	}
-
-	private static Pipeline satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new ConflictFreeGenerator(), solver)
-				.addStateProcessor(new KBipolarStateProcessor())
-				.setVerifier(new CompleteVerifier())
-				.build();
+	
+	@Override
+	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+		return adf.query().complete().interpretations();
 	}
 		
 }
