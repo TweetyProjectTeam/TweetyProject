@@ -32,6 +32,9 @@ import java.util.HashSet;
  * Reduct-Admissibility Principle
  * A semantics satisfies reduct admissibility iff for every AF F and every extension E we have:
  * For all arguments a in E: if an argument b attacks a, then b is in no extension of the E-reduct of F
+ *
+ * see: Dauphin, Jeremie, Tjitze Rienstra, and Leendert Van Der Torre. "A Principle-Based Analysis of Weakly Admissible Semantics." 2020
+ *
  * @author Lars Bengel
  */
 public class ReductAdmissibilityPrinciple extends Principle {
@@ -42,7 +45,7 @@ public class ReductAdmissibilityPrinciple extends Principle {
 
     @Override
     public boolean isApplicable(Collection<Argument> kb) {
-        return ((kb instanceof DungTheory) && kb.size()>=2 );
+        return (kb instanceof DungTheory);
     }
 
     @Override

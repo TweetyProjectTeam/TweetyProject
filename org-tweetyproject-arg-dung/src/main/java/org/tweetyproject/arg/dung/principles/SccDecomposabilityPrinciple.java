@@ -20,6 +20,7 @@
 package org.tweetyproject.arg.dung.principles;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.SimpleSccRecursiveReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -27,20 +28,20 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * Conflict-free Principle
- * A semantics satisfies conflict-freeness if for all extensions E it holds that:
- * E is conflict-free
- * trivial property satisfied by practically all semantics
+ * SCC Decomposability Principle
+ * also: SCC-Recursiveness
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * A semantics satisfies SCC decomposability iff for all AFs we have:
+ * The extensions of F are the same as computing the extensions of each SCC individually and combining the result
+ *
+ * see: Pietro Baroni et al. “On the input/output behavior of argumentation frameworks” 2014
  *
  * @author Lars Bengel
  */
-public class ConflictFreePrinciple extends Principle {
-
+public class SccDecomposabilityPrinciple extends Principle {
     @Override
     public String getName() {
-        return "Conflict-Free";
+        return "SCC Decomposability";
     }
 
     @Override
@@ -48,16 +49,14 @@ public class ConflictFreePrinciple extends Principle {
         return (kb instanceof DungTheory);
     }
 
-
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension> exts = ev.getModels(theory);
 
-        for (Extension ext: exts) {
-            if (!ext.isConflictFree(theory))
-                return false;
-        }
-        return true;
+        AbstractExtensionReasoner scc_reasoner = new SimpleSccRecursiveReasoner(ev);
+        Collection<Extension> exts_sccs = scc_reasoner.getModels(theory);
+
+        return exts.equals(exts_sccs);
     }
 }

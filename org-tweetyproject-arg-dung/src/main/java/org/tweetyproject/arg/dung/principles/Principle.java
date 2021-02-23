@@ -58,6 +58,10 @@ public abstract class Principle implements Postulate<Argument> {
     public static final Principle MODULARIZATION = new ModularizationPrinciple();
     /** The reduct admissibility principle **/
     public static final Principle REDUCT_ADM = new ReductAdmissibilityPrinciple();
+    /** The semi qualified admissibility principle **/
+    public static final Principle SEMIQUAL_ADM = new SemiQualifiedAdmissibilityPrinciple();
+    /** The SCC decomposability principle **/
+    public static final Principle SCC_DECOMPOSABILITY = new SccDecomposabilityPrinciple();
     /** The naivety principle **/
     public static final Principle NAIVETY = new NaivetyPrinciple();
 

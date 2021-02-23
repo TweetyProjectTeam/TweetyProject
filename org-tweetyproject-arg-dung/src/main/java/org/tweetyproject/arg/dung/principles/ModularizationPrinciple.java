@@ -32,6 +32,9 @@ import java.util.Collection;
  * A semantics s satisfies modularization iff for every AF F we have: if E1 is a s-extension of F and E2 is a
  * s-extension of the E1-reduct of F, then (E1 u E2) is a s-extension of F
  *
+ * see: Baumann et. al. "Comparing Weak Admissibility Semantics to their Dung-style Counterparts--Reduct,
+ *          Modularization, and Strong Equivalence in Abstract Argumentation." 2020
+ *
  * @author Lars Bengel
  */
 public class ModularizationPrinciple extends Principle {
@@ -42,7 +45,7 @@ public class ModularizationPrinciple extends Principle {
 
     @Override
     public boolean isApplicable(Collection<Argument> kb) {
-        return ((kb instanceof DungTheory) && kb.size()>=2 );
+        return (kb instanceof DungTheory);
     }
 
     @Override
