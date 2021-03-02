@@ -18,10 +18,7 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.verifier;
 
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
-import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * Is used to verify a certain property of an {@link Interpretation}, e.g.
@@ -30,31 +27,16 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  * @author Mathias Hofer
  * 
  */
-public interface Verifier {
-
+public interface Verifier extends AutoCloseable {
+	
 	/**
-	 * Gets called exactly once for each {@link SatSolverState} before the first
-	 * use in
-	 * {@link #verify(SatSolverState, PropositionalMapping, Interpretation, AbstractDialecticalFramework)
-	 * verify}. This method exists to perform initializations on each state.
-	 * 
-	 * @param state the state on which we perform initializations
-	 * @param mapping the propositional mapping of the ADF
-	 * @param adf the ADF
+	 * Performs initializations and must be called before the first {@link #verify(Interpretation)} call.
 	 */
-	void prepareState(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf);
+	void prepare();
 
-	/**
-	 * Verifies if the computed candidate {@link Interpretation} asserts a certain property.
-	 * 
-	 * @param state the initialized and perhaps shared state
-	 * @param mapping the propositional mapping of the ADF
-	 * @param candidate the candidate to verify
-	 * @param adf the ADF
-	 * @return true if we could verify the property for <code>candidate</code>, false otherwise
-	 */
-	boolean verify(SatSolverState state, PropositionalMapping mapping, Interpretation candidate,
-			AbstractDialecticalFramework adf);
-
+	boolean verify(Interpretation interpretation);
+	
+	@Override
+	void close();
 
 }

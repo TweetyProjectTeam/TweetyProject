@@ -28,7 +28,7 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
 import org.tweetyproject.arg.adf.util.CacheMap;
 import org.tweetyproject.arg.adf.util.Pair;
 
-public class TseitinTransformer implements Collector<Literal, Clause>, Transformer<Pair<Literal, Collection<Clause>>> {
+public final class TseitinTransformer implements Collector<Literal, Clause>, Transformer<Pair<Literal, Collection<Clause>>> {
 
 	private final boolean optimize;
 	

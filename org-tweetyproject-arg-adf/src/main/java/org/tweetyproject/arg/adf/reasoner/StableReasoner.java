@@ -18,11 +18,12 @@
  */
 package org.tweetyproject.arg.adf.reasoner;
 
-import org.tweetyproject.arg.adf.reasoner.sat.generator.GroundGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.generator.ModelGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Pipeline;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.GrounderStableVerifier;
+import java.util.stream.Stream;
+
+import org.tweetyproject.arg.adf.reasoner.query.Query;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -35,13 +36,12 @@ public class StableReasoner extends AbstractDialecticalFrameworkReasoner {
 	 * @param solver the underlying sat solver
 	 */
 	public StableReasoner(IncrementalSatSolver solver) {
-		super(satBased(solver));
+		super(solver);
 	}
 	
-	private static Pipeline satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new ModelGenerator(), solver)
-				.setVerifier(new GrounderStableVerifier(new GroundGenerator()))
-				.build();
+	@Override
+	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+		return adf.query().stable().interpretations();
 	}
 
 }

@@ -50,7 +50,7 @@ class Clauses {
 
 		@Override
 		public String toString() {
-			return "[]";
+			return "()";
 		}
 	}
 
@@ -75,6 +75,11 @@ class Clauses {
 		@Override
 		public int size() {
 			return 1;
+		}
+		
+		@Override
+		public String toString() {
+			return "(" + l1 + ")";
 		}
 	}
 
@@ -102,6 +107,12 @@ class Clauses {
 		public int size() {
 			return 2;
 		}
+
+		@Override
+		public String toString() {
+			return "(" + l1 + ", " + l2 + ")";
+		}
+		
 	}
 
 	static final class Clause3 implements Clause {
@@ -129,6 +140,11 @@ class Clauses {
 		@Override
 		public int size() {
 			return 3;
+		}
+
+		@Override
+		public String toString() {
+			return "(" + l1 + ", " + l2 + ", " + l3 + ")";
 		}
 	}
 

@@ -22,8 +22,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.stream.Stream;
 
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Pipeline;
+import org.tweetyproject.arg.adf.reasoner.query.Query;
+import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
+import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
@@ -35,15 +38,14 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 @Deprecated( forRemoval = true, since = "1.19" )
 public abstract class AbstractDialecticalFrameworkReasoner {
-
-	private final Pipeline computationPipeline;
+	
+	private final IncrementalSatSolver solver;
 
 	/**
-	 * @param computationPipeline
-	 *            the pipeline which is used to compute the models
+	 * @param solver
 	 */
-	public AbstractDialecticalFrameworkReasoner(Pipeline computationPipeline) {
-		this.computationPipeline = Objects.requireNonNull(computationPipeline);
+	public AbstractDialecticalFrameworkReasoner(IncrementalSatSolver solver) {
+		this.solver = Objects.requireNonNull(solver);
 	}
 
 	public boolean skepticalQuery(AbstractDialecticalFramework adf, Argument argument) {
@@ -86,6 +88,11 @@ public abstract class AbstractDialecticalFrameworkReasoner {
 	}
 
 	public Iterator<Interpretation> modelIterator(AbstractDialecticalFramework adf) {
-		return computationPipeline.iterator(adf);
+		return query(adf)
+				.configure(Configuration.builder().setSatSolver(solver).build())
+				.execute()
+				.iterator();
 	}
+	
+	abstract Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf);
 }

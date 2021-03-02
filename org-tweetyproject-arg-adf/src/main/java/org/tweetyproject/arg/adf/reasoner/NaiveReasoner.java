@@ -18,10 +18,12 @@
  */
 package org.tweetyproject.arg.adf.reasoner;
 
-import org.tweetyproject.arg.adf.reasoner.sat.generator.ConflictFreeGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Pipeline;
-import org.tweetyproject.arg.adf.reasoner.sat.processor.MaximizeInterpretationProcessor;
+import java.util.stream.Stream;
+
+import org.tweetyproject.arg.adf.reasoner.query.Query;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 @Deprecated( forRemoval = true, since = "1.19" )
 public class NaiveReasoner extends AbstractDialecticalFrameworkReasoner {
@@ -32,13 +34,12 @@ public class NaiveReasoner extends AbstractDialecticalFrameworkReasoner {
 	 *            the underlying sat solver
 	 */
 	public NaiveReasoner(IncrementalSatSolver solver) {
-		super(satBased(solver));
+		super(solver);
 	}
 
-	private static Pipeline satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new ConflictFreeGenerator(), solver)
-				.addModelProcessor(new MaximizeInterpretationProcessor())
-				.build();
+	@Override
+	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+		return adf.query().naive().interpretations();
 	}
 
 }

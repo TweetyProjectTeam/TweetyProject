@@ -44,7 +44,7 @@ public class IMaximalityPrinciple extends Principle{
 
     @Override
     public boolean isApplicable(Collection<Argument> kb) {
-        return ((kb instanceof DungTheory) && kb.size()>=2 );
+        return (kb instanceof DungTheory);
     }
 
 

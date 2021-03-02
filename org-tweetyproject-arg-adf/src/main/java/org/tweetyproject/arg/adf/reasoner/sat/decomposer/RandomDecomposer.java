@@ -1,4 +1,4 @@
-package org.tweetyproject.arg.adf.reasoner.sat.parallel;
+package org.tweetyproject.arg.adf.reasoner.sat.decomposer;
 
 import java.util.ArrayList;
 import java.util.Collections;

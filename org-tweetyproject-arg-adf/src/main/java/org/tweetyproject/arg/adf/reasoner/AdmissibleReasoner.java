@@ -18,11 +18,12 @@
  */
 package org.tweetyproject.arg.adf.reasoner;
 
-import org.tweetyproject.arg.adf.reasoner.sat.generator.ConflictFreeGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Pipeline;
-import org.tweetyproject.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
+import java.util.stream.Stream;
+
+import org.tweetyproject.arg.adf.reasoner.query.Query;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * 
@@ -31,16 +32,14 @@ import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
  */
 @Deprecated( forRemoval = true, since = "1.19" )
 public class AdmissibleReasoner extends AbstractDialecticalFrameworkReasoner {
-
+	
 	public AdmissibleReasoner(IncrementalSatSolver solver) {
-		super(satBased(solver));
+		super(solver);
+	}
+	
+	@Override
+	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
+		return adf.query().admissible().interpretations();
 	}
 
-	private static Pipeline satBased(IncrementalSatSolver solver) {
-		return Pipeline.builder(new ConflictFreeGenerator(), solver)
-				.addStateProcessor(new KBipolarStateProcessor())
-//				.addStateProcessor(new RelativeKBipolarStateProcessor(3, solver))
-				.setVerifier(new AdmissibleVerifier())
-				.build();
-	}
 }

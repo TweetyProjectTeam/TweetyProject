@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.EmptyInterpretation;
@@ -113,20 +112,18 @@ public interface Interpretation {
 	 * Constructs a three-valued ADF interpretation from a witness of a propositional sat encoding.
 	 * 
 	 * @param witness the propositional sat witness
-	 * @param encodingContext the mapping of the propositional variables and the adf
-	 * @param adf the ADF for which we construct the interpretation
+	 * @param mapping the mapping of the propositional variables and the adf
 	 * @throws NullPointerException if any of the arguments are null
 	 * @return an ADF interpretation
 	 */
-	static Interpretation fromWitness(Set<Literal> witness,
-			PropositionalMapping encodingContext, AbstractDialecticalFramework adf) {
+	static Interpretation fromWitness(Set<Literal> witness,	PropositionalMapping mapping) {
 		Set<Argument> satisfied = new HashSet<>();
 		Set<Argument> unsatisfied = new HashSet<>();
 		Set<Argument> undecided = new HashSet<>();
-		for (Argument a : adf.getArguments()) {
-			if (witness.contains(encodingContext.getTrue(a))) {
+		for (Argument a : mapping.getArguments()) {
+			if (witness.contains(mapping.getTrue(a))) {
 				satisfied.add(a);
-			} else if (witness.contains(encodingContext.getFalse(a))) {
+			} else if (witness.contains(mapping.getFalse(a))) {
 				unsatisfied.add(a);
 			} else {
 				undecided.add(a);
@@ -182,13 +179,6 @@ public interface Interpretation {
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
 	
-	static Interpretation restrictUndecided(Interpretation interpretation, Collection<Argument> restriction) {
-		Set<Argument> undecided = interpretation.undecided().stream()
-				.filter(restriction::contains)
-				.collect(Collectors.toSet());
-		return new SetInterpretation(interpretation.satisfied(), interpretation.unsatisfied(), undecided);
-	}
-	
 	/**
 	 * Checks if, and only if, the two valued assignments for both of the
 	 * interpretations are the same, ignores differences in the undecided
@@ -232,9 +222,6 @@ public interface Interpretation {
 			
 			private final Iterator<Interpretation> iter = new InterpretationIterator(arguments);
 			
-			/* (non-Javadoc)
-			 * @see net.sf.tweety.arg.adf.semantics.interpretation.InterpretationIterator#next()
-			 */
 			@Override
 			public Interpretation next() {
 				Interpretation partial = iter.next();
@@ -315,6 +302,10 @@ public interface Interpretation {
 	
 	default boolean containsAll(Collection<Argument> arguments) {
 		return arguments().containsAll(arguments);
+	}
+	
+	default boolean contains(Argument argument) {
+		return arguments().contains(argument);
 	}
 	
 	/**

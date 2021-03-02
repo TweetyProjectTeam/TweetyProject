@@ -115,7 +115,7 @@ final class Interpretations {
 
 		@Override
 		public String toString() {
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder("{");
 			Iterator<Argument> iterator = undecided.iterator();
 			builder.append("u(");
 			builder.append(iterator.next());
@@ -125,6 +125,7 @@ final class Interpretations {
 				builder.append(iterator.next());
 				builder.append(")");
 			}
+			builder.append("}");
 			return builder.toString();
 		}
 	}
@@ -214,7 +215,7 @@ final class Interpretations {
 		}
 
 		public String toString() {
-			StringBuilder s = new StringBuilder();
+			StringBuilder s = new StringBuilder("{");
 			boolean first = true;
 			for (Argument a : satisfied) {
 				if (first) {
@@ -229,6 +230,7 @@ final class Interpretations {
 			for (Argument a : undecided) {
 				s.append(" u(" + a + ")");
 			}
+			s.append("}");
 			return s.toString();
 		}
 	}
@@ -315,7 +317,7 @@ final class Interpretations {
 
 		@Override
 		public String toString() {
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder("{");
 			if (value) {
 				builder.append("t(");
 			} else {
@@ -325,6 +327,7 @@ final class Interpretations {
 			for (Argument u : undecided) {
 				builder.append(" u(").append(u).append(")");
 			}
+			builder.append("}");
 			return builder.toString();
 		}
 

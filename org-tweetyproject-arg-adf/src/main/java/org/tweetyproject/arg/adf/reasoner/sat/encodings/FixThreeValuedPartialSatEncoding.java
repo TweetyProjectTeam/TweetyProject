@@ -45,10 +45,12 @@ public final class FixThreeValuedPartialSatEncoding implements SatEncoding {
 	public static void encode(Interpretation partial, Consumer<Clause> consumer, PropositionalMapping mapping, AbstractDialecticalFramework adf) {
 		for (Argument a : partial.satisfied()) {
 			consumer.accept(Clause.of(mapping.getTrue(a)));
+			consumer.accept(Clause.of(mapping.getFalse(a).neg()));
 		}
 
 		for (Argument a : partial.unsatisfied()) {
 			consumer.accept(Clause.of(mapping.getFalse(a)));
+			consumer.accept(Clause.of(mapping.getTrue(a).neg()));
 		}
 
 		for (Argument a : partial.undecided()) {

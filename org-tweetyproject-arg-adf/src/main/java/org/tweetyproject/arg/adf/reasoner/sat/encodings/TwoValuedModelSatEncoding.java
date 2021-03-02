@@ -31,14 +31,7 @@ import org.tweetyproject.arg.adf.transform.TseitinTransformer;
  *
  */
 public class TwoValuedModelSatEncoding implements SatEncoding {
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
-	 * adf.reasoner.sat.SatEncodingContext)
-	 */
+
 	@Override
 	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(mapping::getTrue, false);

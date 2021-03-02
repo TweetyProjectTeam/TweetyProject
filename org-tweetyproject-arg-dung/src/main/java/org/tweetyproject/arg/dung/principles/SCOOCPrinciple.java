@@ -23,22 +23,25 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.graphs.DefaultGraph;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.Stack;
 
 /**
- * CF-Reinstatement Principle
- * A semantics satisfies cf-reinstatement if for all extensions E it holds that:
- * for all arguments a, if E u {a} is conflict-free and E defends a, then a is in E
+ * Strong Complete Completeness Outside Odd Cycles Principle (SCOOC)
+ * A semantics satisfied SCOOC if for every extension E it holds that:
+ * for every argument a, if neither a nor its attackers are in an odd cycle and E does not attack a, then a is in E.
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Cramer, M., & van der Torre, L. (2019). SCF2-an argumentation semantics for rational human judgments on argument acceptability.
  *
  * @author Lars Bengel
  */
-public class CFReinstatementPrinciple extends Principle {
+public class SCOOCPrinciple extends Principle {
     @Override
     public String getName() {
-        return "CF-Reinstatement";
+        return "Strong Completeness Outside Odd Cycles";
     }
 
     @Override
@@ -46,24 +49,40 @@ public class CFReinstatementPrinciple extends Principle {
         return (kb instanceof DungTheory);
     }
 
-
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension> exts = ev.getModels(theory);
 
+        Set<Stack<Argument>> cycles = DefaultGraph.getCyclesIncludingSelfLoops(theory);
+
         for (Extension ext: exts) {
             for (Argument a: theory) {
-                if (ext.contains(a)) {
+                // if a is in ext or ext attacks a, we can ignore it since the premise is violated
+                if (ext.contains(a) || theory.isAttacked(a, ext)) {
                     continue;
                 }
+                for (Stack<Argument> cycle: cycles) {
+                    // if the number of arguments in the cycle is even, skip
+                    // the cycle contains the "starting" node twice, so even number of arguments means odd cycle
+                    if (cycle.size() % 2 != 0) {
+                        continue;
+                    }
 
-                // for all arguments a in theory \ E, iff E u {a} is conflict-free and E defends a, then cf-reinstatement is violated
-                Extension extWithA = new Extension(ext);
-                extWithA.add(a);
-                if (extWithA.isConflictFree(theory) && ext.isAcceptable(a, theory)) {
-                    return false;
+                    boolean outsideOddCycle = true;
+                    if (cycle.contains(a)) {
+                        outsideOddCycle = false;
+                    }
+                    for (Argument b: theory.getAttackers(a)) {
+                        if (cycle.contains(b)) {
+                            outsideOddCycle = false;
+                        }
+                    }
+                    if (outsideOddCycle) {
+                        return false;
+                    }
                 }
+
             }
         }
         return true;

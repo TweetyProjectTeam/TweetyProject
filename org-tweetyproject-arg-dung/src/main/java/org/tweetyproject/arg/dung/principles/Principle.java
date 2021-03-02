@@ -50,8 +50,18 @@ public abstract class Principle implements Postulate<Argument> {
     public static final Principle CF_REINSTATEMENT = new CFReinstatementPrinciple();
     /** The directionality principle **/
     public static final Principle DIRECTIONALITY = new DirectionalityPrinciple();
-
-
+    /** The Irrelevance of Necessarily Rejected Arguments (INRA) principle **/
+    public static final Principle INRA = new INRAPrinciple();
+    /** The Strong Completeness Outside Odd Cycles (SCOOC) principle **/
+    public static final Principle SCOOC = new SCOOCPrinciple();
+    /** The modularization principle **/
+    public static final Principle MODULARIZATION = new ModularizationPrinciple();
+    /** The reduct admissibility principle **/
+    public static final Principle REDUCT_ADM = new ReductAdmissibilityPrinciple();
+    /** The semi qualified admissibility principle **/
+    public static final Principle SEMIQUAL_ADM = new SemiQualifiedAdmissibilityPrinciple();
+    /** The SCC decomposability principle **/
+    public static final Principle SCC_DECOMPOSABILITY = new SccDecomposabilityPrinciple();
     /** The naivety principle **/
     public static final Principle NAIVETY = new NaivetyPrinciple();
 

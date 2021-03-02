@@ -25,22 +25,22 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
- * Conflict-free Principle
- * A semantics satisfies conflict-freeness if for all extensions E it holds that:
- * E is conflict-free
- * trivial property satisfied by practically all semantics
+ * Irrelevance of Necessarily Rejected Arguments (INRA) Principle
+ * A semantics s satisfies INRA if for every AF F it holds that:
+ * for every argument a in F, if every s-extension attacks a, then s(F) = s(F\{a})
+ * i.e if an argument is attacked by every extension, then it does not influence the computation of extensions and can be ignored
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Cramer, M., & van der Torre, L. (2019). SCF2-an argumentation semantics for rational human judgments on argument acceptability.
  *
  * @author Lars Bengel
  */
-public class ConflictFreePrinciple extends Principle {
-
+public class INRAPrinciple extends Principle {
     @Override
     public String getName() {
-        return "Conflict-Free";
+        return "Irrelevance of Necessarily Rejected Arguments (INRA)";
     }
 
     @Override
@@ -48,15 +48,30 @@ public class ConflictFreePrinciple extends Principle {
         return (kb instanceof DungTheory);
     }
 
-
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension> exts = ev.getModels(theory);
 
-        for (Extension ext: exts) {
-            if (!ext.isConflictFree(theory))
-                return false;
+        for (Argument a: theory) {
+            // check if an argument is attacked by all extensions
+            boolean attackedByAll = true;
+            for (Extension ext: exts) {
+                if (!theory.isAttacked(a, ext)) {
+                    attackedByAll = false;
+                    break;
+                }
+            }
+            // if a is attacked by all extensions, check if it can be ignored without losing information
+            if (attackedByAll) {
+                Collection<Argument> argsWithoutA = new HashSet<>(theory);
+                argsWithoutA.remove(a);
+                DungTheory theoryWithoutA = (DungTheory) theory.getRestriction(argsWithoutA);
+                Collection<Extension> extsWithoutA = ev.getModels(theoryWithoutA);
+                if (!exts.equals(extsWithoutA)) {
+                    return false;
+                }
+            }
         }
         return true;
     }

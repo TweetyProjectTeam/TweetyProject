@@ -30,7 +30,7 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  *
  */
 public interface Execution extends AutoCloseable {
-
+	
 	Interpretation computeCandidate();
 	
 	boolean verify(Interpretation candidate);

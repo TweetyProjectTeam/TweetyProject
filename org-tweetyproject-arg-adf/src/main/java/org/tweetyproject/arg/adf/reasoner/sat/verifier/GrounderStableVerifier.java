@@ -19,9 +19,11 @@
 package org.tweetyproject.arg.adf.reasoner.sat.verifier;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.CandidateGenerator;
+import org.tweetyproject.arg.adf.reasoner.sat.generator.GroundGenerator;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
@@ -35,28 +37,40 @@ import org.tweetyproject.arg.adf.transform.OmegaReductTransformer;
  *
  */
 public final class GrounderStableVerifier implements Verifier {
-
-	private final CandidateGenerator groundGenerator;
+	
+	private final Supplier<SatSolverState> stateSupplier;
+	
+	private final AbstractDialecticalFramework adf;
+	
+	private final PropositionalMapping mapping;
 
 	/**
-	 * @param groundGenerator
-	 *            the generator which is used to compute the ground
-	 *            interpretation
+	 * @param stateSupplier
+	 * @param adf
+	 * @param mapping
 	 */
-	public GrounderStableVerifier(CandidateGenerator groundGenerator) {
-		this.groundGenerator = Objects.requireNonNull(groundGenerator);
+	public GrounderStableVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+		this.stateSupplier = Objects.requireNonNull(stateSupplier);
+		this.adf = Objects.requireNonNull(adf);
+		this.mapping = Objects.requireNonNull(mapping);
 	}
 
 	@Override
-	public void prepareState(SatSolverState state, PropositionalMapping mapping, AbstractDialecticalFramework adf) {}
+	public void prepare() {}
 
 	@Override
-	public boolean verify(SatSolverState state, PropositionalMapping mapping, Interpretation candidate, AbstractDialecticalFramework adf) {
-		AbstractDialecticalFramework reduct = adf.transform(new OmegaReductTransformer(candidate));
-		groundGenerator.initialize(state, mapping, reduct);
-		Interpretation ground = groundGenerator.generate(state, mapping, reduct);
-		boolean stable = candidate.equals(ground);
-		return stable;
+	public boolean verify(Interpretation candidate) {
+		try (SatSolverState state = stateSupplier.get()) {
+			AbstractDialecticalFramework reduct = adf.transform(new OmegaReductTransformer(candidate));
+			CandidateGenerator groundGenerator = new GroundGenerator(reduct, mapping);
+			groundGenerator.prepare(state);
+			Interpretation ground = groundGenerator.generate(state);
+			boolean stable = candidate.equals(ground);
+			return stable;
+		}
 	}
+	
+	@Override
+	public void close() {}
 
 }

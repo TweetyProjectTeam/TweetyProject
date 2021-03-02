@@ -25,22 +25,21 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
- * Conflict-free Principle
- * A semantics satisfies conflict-freeness if for all extensions E it holds that:
- * E is conflict-free
- * trivial property satisfied by practically all semantics
+ * Semi-Qualified Admissibility Principle
+ * A semantics s satisfies semi-qualified admissibility iff for every AF F and every s-extension E we have:
+ * For all arguments a in E: if an argument b attacks a and b is in any s-extension, then E attacks b
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Dauphin, Jeremie, Tjitze Rienstra, and Leendert Van Der Torre. "A Principle-Based Analysis of Weakly Admissible Semantics." 2020
  *
  * @author Lars Bengel
  */
-public class ConflictFreePrinciple extends Principle {
-
+public class SemiQualifiedAdmissibilityPrinciple extends Principle{
     @Override
     public String getName() {
-        return "Conflict-Free";
+        return "Semi-Qualified Admissibility";
     }
 
     @Override
@@ -48,15 +47,24 @@ public class ConflictFreePrinciple extends Principle {
         return (kb instanceof DungTheory);
     }
 
-
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension> exts = ev.getModels(theory);
 
+        Collection<Argument> union = new HashSet<>();
         for (Extension ext: exts) {
-            if (!ext.isConflictFree(theory))
-                return false;
+            union.addAll(ext);
+        }
+
+        for (Extension ext: exts) {
+            for (Argument a: ext) {
+                for (Argument b: theory.getAttackers(a)) {
+                    if (union.contains(b) && !theory.isAttacked(b, ext)) {
+                        return false;
+                    }
+                }
+            }
         }
         return true;
     }

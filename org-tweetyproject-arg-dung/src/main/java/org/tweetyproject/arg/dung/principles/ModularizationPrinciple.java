@@ -20,6 +20,7 @@
 package org.tweetyproject.arg.dung.principles;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.WeaklyAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -27,20 +28,19 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import java.util.Collection;
 
 /**
- * Conflict-free Principle
- * A semantics satisfies conflict-freeness if for all extensions E it holds that:
- * E is conflict-free
- * trivial property satisfied by practically all semantics
+ * Modularization Principle
+ * A semantics s satisfies modularization iff for every AF F we have: if E1 is a s-extension of F and E2 is a
+ * s-extension of the E1-reduct of F, then (E1 u E2) is a s-extension of F
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Baumann et. al. "Comparing Weak Admissibility Semantics to their Dung-style Counterparts--Reduct,
+ *          Modularization, and Strong Equivalence in Abstract Argumentation." 2020
  *
  * @author Lars Bengel
  */
-public class ConflictFreePrinciple extends Principle {
-
+public class ModularizationPrinciple extends Principle {
     @Override
     public String getName() {
-        return "Conflict-Free";
+        return "Modularization";
     }
 
     @Override
@@ -48,15 +48,21 @@ public class ConflictFreePrinciple extends Principle {
         return (kb instanceof DungTheory);
     }
 
-
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension> exts = ev.getModels(theory);
 
-        for (Extension ext: exts) {
-            if (!ext.isConflictFree(theory))
-                return false;
+        for (Extension ext1: exts) {
+            DungTheory reduct = new WeaklyAdmissibleReasoner().getReduct(theory, ext1);
+            Collection<Extension> exts_reduct = ev.getModels(reduct);
+            for (Extension ext2: exts_reduct) {
+                Extension union = new Extension(ext1);
+                union.addAll(ext2);
+                if (!exts.contains(union)) {
+                    return false;
+                }
+            }
         }
         return true;
     }

@@ -16,20 +16,19 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
+package org.tweetyproject.arg.adf.reasoner.sat.decomposer;
 
-import org.tweetyproject.arg.adf.reasoner.AbstractDialecticalFrameworkReasoner;
+import java.util.Collection;
+
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
- * 
  * @author Mathias Hofer
  *
  */
-@Deprecated( forRemoval = true, since = "1.19" )
-class PipelineReasoner extends AbstractDialecticalFrameworkReasoner {
-
-	public PipelineReasoner(Pipeline computationPipeline) {
-		super(computationPipeline);
-	}
+public interface Decomposer {
+	
+	Collection<Interpretation> decompose(AbstractDialecticalFramework adf, int desired);
 	
 }

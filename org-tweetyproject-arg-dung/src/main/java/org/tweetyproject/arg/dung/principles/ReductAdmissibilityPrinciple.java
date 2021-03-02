@@ -20,27 +20,27 @@
 package org.tweetyproject.arg.dung.principles;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.WeaklyAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
- * Conflict-free Principle
- * A semantics satisfies conflict-freeness if for all extensions E it holds that:
- * E is conflict-free
- * trivial property satisfied by practically all semantics
+ * Reduct-Admissibility Principle
+ * A semantics satisfies reduct admissibility iff for every AF F and every extension E we have:
+ * For all arguments a in E: if an argument b attacks a, then b is in no extension of the E-reduct of F
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Dauphin, Jeremie, Tjitze Rienstra, and Leendert Van Der Torre. "A Principle-Based Analysis of Weakly Admissible Semantics." 2020
  *
  * @author Lars Bengel
  */
-public class ConflictFreePrinciple extends Principle {
-
+public class ReductAdmissibilityPrinciple extends Principle {
     @Override
     public String getName() {
-        return "Conflict-Free";
+        return "Reduct Admissibility";
     }
 
     @Override
@@ -48,15 +48,28 @@ public class ConflictFreePrinciple extends Principle {
         return (kb instanceof DungTheory);
     }
 
-
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension> exts = ev.getModels(theory);
 
         for (Extension ext: exts) {
-            if (!ext.isConflictFree(theory))
-                return false;
+            // get union of all extensions of the E-reduct
+            DungTheory reduct = new WeaklyAdmissibleReasoner().getReduct(theory, ext);
+            Collection<Extension> exts_reduct = ev.getModels(reduct);
+            Collection<Argument> union = new HashSet<>();
+            for (Extension ext_r: exts_reduct) {
+                union.addAll(ext_r);
+            }
+            for (Argument a: ext) {
+                Collection<Argument> attackers = theory.getAttackers(a);
+                // if any attacker
+                for (Argument b: attackers) {
+                    if (union.contains(b)) {
+                        return false;
+                    }
+                }
+            }
         }
         return true;
     }
