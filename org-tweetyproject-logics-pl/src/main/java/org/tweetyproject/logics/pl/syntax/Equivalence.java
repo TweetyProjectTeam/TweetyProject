@@ -151,17 +151,18 @@ public class Equivalence extends PlFormula {
 
 	@Override
 	public PlFormula replace(Proposition p, PlFormula f, int i) {
-		Pair<PlFormula,PlFormula> n = new Pair<PlFormula,PlFormula>();
+		PlFormula new_first = formulas.getFirst();
+		PlFormula new_second = formulas.getSecond();
 		PlFormula first = formulas.getFirst();
 		if (first.numberOfOccurrences(p) >= i) {
-			n.setFirst(first.replace(p, f, i)); 
+			new_first  = first.replace(p, f, i); 
 		} else {
 			int num = first.numberOfOccurrences(p);
 			PlFormula second = formulas.getSecond();
 			if (num + second.numberOfOccurrences(p) >= i) 
-				n.setSecond(second.replace(p, f, i-num));
+				new_second = second.replace(p, f, i-num);
 		}
-		return new Equivalence(n);
+		return new Equivalence(new Pair<PlFormula,PlFormula>(new_first,new_second));
 	}
 
 	/* (non-Javadoc)
