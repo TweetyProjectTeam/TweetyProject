@@ -78,11 +78,6 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		}		
 	}
 	
-	public DungTheory clone() {
-		DungTheory result = new DungTheory(this);
-		return result;
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.kr.BeliefBase#getSignature()
 	 */
@@ -597,33 +592,6 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 			}
 		}
 		return attacks;
-	}
-	
-	/**
-	 * Returns all bidirectional attacks of this theory.
-	 * @return all bidirectional attacks of this theory.
-	 */
-	public Set<Attack> getBidirectionalAttacks() {
-		Stack<Attack> allAttacks = new Stack<Attack>();
-		Set<Attack> bidirectional = new HashSet<Attack>();
-		for(Attack a : this.getAttacks()) {
-			allAttacks.add(a);
-		}
-		while(allAttacks.size() > 0) {
-			//get first argument and remove it
-			Attack top = allAttacks.pop();
-			l1 : for(Attack a : allAttacks) {
-				//add if attack is not on the node itself and the nodes of 2 attacks are identical
-				if(top.getAttacked() != top.getAttacker() && 
-						(top.getAttacked() == a.getAttacker() && top.getAttacker() == a.getAttacked())) {
-					bidirectional.add(a);
-					break l1;
-				}
-			}
-			
-		}
-		return bidirectional;
-		
 	}
 	
 	/* (non-Javadoc)
