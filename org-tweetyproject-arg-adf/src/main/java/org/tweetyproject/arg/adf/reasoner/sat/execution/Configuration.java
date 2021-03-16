@@ -1,9 +1,7 @@
-package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
+package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
 import java.util.Objects;
 
-import org.tweetyproject.arg.adf.reasoner.sat.decomposer.Decomposer;
-import org.tweetyproject.arg.adf.reasoner.sat.decomposer.RandomDecomposer;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 
@@ -13,12 +11,9 @@ public final class Configuration {
 	
 	private final int parallelism;
 	
-	private final Decomposer decomposer;
-
 	private Configuration(Builder builder) {
 		this.satSolver = builder.satSolver;
 		this.parallelism = builder.parallelism;
-		this.decomposer = builder.decomposer;
 	}
 	
 	public static Builder builder() {
@@ -32,19 +27,13 @@ public final class Configuration {
 	public int getParallelism() {
 		return parallelism;
 	}
-	
-	public Decomposer getDecomposer() {
-		return decomposer;
-	}
-	
+
 	public static final class Builder {
 		
 		private IncrementalSatSolver satSolver = new NativeMinisatSolver();
 		
 		private int parallelism = Runtime.getRuntime().availableProcessors();
-		
-		private Decomposer decomposer = new RandomDecomposer();
-		
+				
 		public Builder setSatSolver(IncrementalSatSolver satSolver) {
 			this.satSolver = Objects.requireNonNull(satSolver);
 			return this;
@@ -59,11 +48,6 @@ public final class Configuration {
 				throw new IllegalArgumentException("Parallelism level must be > 1");
 			}
 			this.parallelism = parallelism;
-			return this;
-		}
-		
-		public Builder setDecomposer(Decomposer decomposer) {
-			this.decomposer = Objects.requireNonNull(decomposer);
 			return this;
 		}
 		

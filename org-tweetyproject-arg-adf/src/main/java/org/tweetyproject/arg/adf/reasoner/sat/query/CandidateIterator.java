@@ -21,7 +21,7 @@ package org.tweetyproject.arg.adf.reasoner.sat.query;
 import java.util.Iterator;
 import java.util.Objects;
 
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Execution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**
@@ -40,11 +40,6 @@ final class CandidateIterator implements Iterator<Interpretation>{
 		this.execution = Objects.requireNonNull(execution);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		if (!end && next == null) {
@@ -54,11 +49,6 @@ final class CandidateIterator implements Iterator<Interpretation>{
 		return next != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public Interpretation next() {
 		Interpretation result = next;

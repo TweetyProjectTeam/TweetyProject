@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
@@ -33,23 +32,16 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
  * @author Mathias Hofer
  *
  */
-public class RefineUnequalSatEncoding implements SatEncoding {
-	
-	private final Interpretation interpretation;
+public class RefineUnequalSatEncoding implements RelativeSatEncoding {
 
-	public RefineUnequalSatEncoding(Interpretation interpretation) {
-		this.interpretation = Objects.requireNonNull(interpretation);
+	private final PropositionalMapping mapping;
+
+	public RefineUnequalSatEncoding(PropositionalMapping mapping) {
+		this.mapping = Objects.requireNonNull(mapping);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
-	 * adf.reasoner.sat.SatEncodingContext)
-	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
 		Set<Literal> clause = new HashSet<>();
 		for (Argument arg : interpretation.satisfied()) {
 			clause.add(mapping.getTrue(arg).neg());

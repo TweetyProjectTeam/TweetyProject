@@ -21,7 +21,7 @@ package org.tweetyproject.arg.adf.reasoner.sat.query;
 import java.util.Iterator;
 import java.util.Objects;
 
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Execution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**

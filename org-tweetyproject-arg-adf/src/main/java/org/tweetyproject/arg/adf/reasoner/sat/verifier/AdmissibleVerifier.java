@@ -56,6 +56,7 @@ public final class AdmissibleVerifier implements Verifier {
 
 	@Override
 	public void prepare() {
+		// use an arbitrary literal mapping, as long as prepare() and verify() use the same literals we could also use mapping:getFalse or something else
 		TseitinTransformer tseitin = TseitinTransformer.ofPositivePolarity(mapping::getTrue, false);
 		for (Argument arg : adf.getArguments()) {
 			AcceptanceCondition acc = adf.getAcceptanceCondition(arg);

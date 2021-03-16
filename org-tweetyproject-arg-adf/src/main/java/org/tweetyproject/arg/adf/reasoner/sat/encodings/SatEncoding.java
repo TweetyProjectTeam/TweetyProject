@@ -20,7 +20,6 @@ package org.tweetyproject.arg.adf.reasoner.sat.encodings;
 
 import java.util.function.Consumer;
 
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
@@ -30,6 +29,6 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public interface SatEncoding {
 
-	void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping);
+	void encode(Consumer<Clause> consumer);
 
 }

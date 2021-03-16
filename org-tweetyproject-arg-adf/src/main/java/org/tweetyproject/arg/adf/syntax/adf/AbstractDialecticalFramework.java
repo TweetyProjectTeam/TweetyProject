@@ -158,7 +158,7 @@ public interface AbstractDialecticalFramework {
 	Set<Argument> parents(Argument child);
 
 	Set<Argument> children(Argument parent);
-	
+		
 	int outgoingDegree(Argument arg);
 	
 	int incomingDegree(Argument arg);

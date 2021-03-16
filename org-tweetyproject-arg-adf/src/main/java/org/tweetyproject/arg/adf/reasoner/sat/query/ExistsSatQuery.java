@@ -18,9 +18,9 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.query;
 
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Execution;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Semantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**

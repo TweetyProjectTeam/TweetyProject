@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
@@ -32,22 +31,19 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  * @author Mathias Hofer
  *
  */
-public class FixPartialSatEncoding implements SatEncoding {
+public class FixPartialSatEncoding implements RelativeSatEncoding {
 	
-	private final Interpretation interpretation;
+	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param interpretation the interpretation which is used to fix values
+	 * @param mapping
 	 */
-	public FixPartialSatEncoding(Interpretation interpretation) {
-		this.interpretation = Objects.requireNonNull(interpretation);
+	public FixPartialSatEncoding(PropositionalMapping mapping) {
+		this.mapping = Objects.requireNonNull(mapping);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncodingContext)
-	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
 		for (Argument a : interpretation.satisfied()) {
 			consumer.accept(Clause.of(mapping.getTrue(a)));
 		}

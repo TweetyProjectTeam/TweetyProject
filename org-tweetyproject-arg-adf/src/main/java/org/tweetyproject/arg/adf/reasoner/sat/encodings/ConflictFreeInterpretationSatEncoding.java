@@ -18,8 +18,10 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.encodings;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
@@ -32,42 +34,104 @@ import org.tweetyproject.arg.adf.transform.TseitinTransformer;
  * @author Mathias Hofer
  *
  */
-public class ConflictFreeInterpretationSatEncoding implements SatEncoding {
+public class ConflictFreeInterpretationSatEncoding implements SatEncoding, RelativeSatEncoding {
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
-	 * adf.reasoner.sat.SatEncodingContext)
+	private final AbstractDialecticalFramework adf;
+	
+	private final PropositionalMapping mapping;
+	
+	/**
+	 * @param adf
+	 * @param mapping
 	 */
+	public ConflictFreeInterpretationSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+		this.adf = Objects.requireNonNull(adf);
+		this.mapping = Objects.requireNonNull(mapping);
+	}
+
 	@Override
-	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping context) {
+	public void encode(Consumer<Clause> consumer) {
 		for (Argument s : adf.getArguments()) {
-			AcceptanceCondition acc = adf.getAcceptanceCondition(s);
-			
-			TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> context.getLink(adf.link(r, s)), false);
-			Literal accName = transformer.collect(acc, consumer);
-			
-			// the propositions represent the assignment of s
-			Literal trueRepr = context.getTrue(s);
-			Literal falseRepr = context.getFalse(s);
-
-			// link the arguments to their acceptance conditions
-			consumer.accept(Clause.of(trueRepr.neg(), accName));
-			consumer.accept(Clause.of(falseRepr.neg(), accName.neg()));
-
-			// draw connection between argument and outgoing links
-			for (Link relation : adf.linksFrom(s)) {
-				Literal linkRepr = context.getLink(relation);
-
-				consumer.accept(Clause.of(trueRepr.neg(), linkRepr));
-				consumer.accept(Clause.of(falseRepr.neg(), linkRepr.neg()));
-			}
-
-			// make sure that we never satisfy s_t and s_f at the same time
-			consumer.accept(Clause.of(trueRepr.neg(), falseRepr.neg()));
+			handleUnfixed(consumer, s);
 		}
+	}
+	
+	@Override
+	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {		
+		for (Argument s : adf.getArguments()) {
+			if (interpretation.satisfied(s)) {
+				handleSatisfied(consumer, s);
+			} else if (interpretation.unsatisfied(s)) {
+				handleUnsatisfied(consumer, s);
+			} else if (interpretation.undecided(s)) {
+				handleUndecided(consumer, s);
+			} else {
+				handleUnfixed(consumer, s);
+			}
+		}
+	}
+	
+	private void handleUnfixed(Consumer<Clause> consumer, Argument s) {
+		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
+		
+		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(adf.link(r, s)), false);
+		Literal accName = transformer.collect(acc, consumer);
+		
+		// the propositions represent the assignment of s
+		Literal trueRepr = mapping.getTrue(s);
+		Literal falseRepr = mapping.getFalse(s);
+
+		// link the arguments to their acceptance conditions
+		consumer.accept(Clause.of(trueRepr.neg(), accName));
+		consumer.accept(Clause.of(falseRepr.neg(), accName.neg()));
+
+		// draw connection between argument and outgoing links
+		for (Link relation : adf.linksFrom(s)) {
+			Literal linkRepr = mapping.getLink(relation);
+
+			consumer.accept(Clause.of(trueRepr.neg(), linkRepr));
+			consumer.accept(Clause.of(falseRepr.neg(), linkRepr.neg()));
+		}
+
+		// make sure that we never satisfy s_t and s_f at the same time
+		consumer.accept(Clause.of(trueRepr.neg(), falseRepr.neg()));
+	}
+	
+	private void handleSatisfied(Consumer<Clause> consumer, Argument s) {
+		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
+		
+		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(adf.link(r, s)), true);
+		Literal accName = transformer.collect(acc, consumer);
+
+		consumer.accept(Clause.of(accName));
+		
+		consumer.accept(Clause.of(mapping.getTrue(s)));
+		consumer.accept(Clause.of(mapping.getFalse(s).neg()));
+		
+		for (Link relation : adf.linksFrom(s)) {
+			consumer.accept(Clause.of(mapping.getLink(relation)));
+		}
+	}
+	
+	private void handleUnsatisfied(Consumer<Clause> consumer, Argument s) {
+		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
+		
+		TseitinTransformer transformer = TseitinTransformer.ofNegativePolarity(r -> mapping.getLink(adf.link(r, s)), true);
+		Literal accName = transformer.collect(acc, consumer);
+
+		consumer.accept(Clause.of(accName.neg()));
+		
+		consumer.accept(Clause.of(mapping.getTrue(s).neg()));
+		consumer.accept(Clause.of(mapping.getFalse(s)));
+		
+		for (Link relation : adf.linksFrom(s)) {
+			consumer.accept(Clause.of(mapping.getLink(relation).neg()));
+		}
+	}
+	
+	private void handleUndecided(Consumer<Clause> consumer, Argument s) {
+		consumer.accept(Clause.of(mapping.getTrue(s).neg()));
+		consumer.accept(Clause.of(mapping.getFalse(s).neg()));
 	}
 
 }

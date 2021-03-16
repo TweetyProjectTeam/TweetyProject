@@ -20,7 +20,6 @@ package org.tweetyproject.arg.adf.reasoner.sat.processor;
 
 import java.util.function.Consumer;
 
-import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
@@ -29,10 +28,6 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  *
  */
 public interface StateProcessor {
-
-	default void process(SatSolverState state) {
-		process(state::add);
-	}
 	
 	void process(Consumer<Clause> consumer);
 	

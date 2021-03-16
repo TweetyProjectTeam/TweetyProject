@@ -21,11 +21,11 @@ package org.tweetyproject.arg.adf.reasoner.sat.query;
 import java.util.Objects;
 
 import org.tweetyproject.arg.adf.reasoner.query.Query;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Execution;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.ParallelExecution;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Semantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.SequentialExecution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.ParallelExecution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.SequentialExecution;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
@@ -60,7 +60,7 @@ abstract class SatQuery<T> implements Query<T> {
 
 	@Override
 	public T executeParallel() {
-		try (Execution execution = new ParallelExecution(adf, semantics, configuration.getSatSolver(), configuration.getDecomposer(), configuration.getParallelism())) {
+		try (Execution execution = new ParallelExecution(adf, semantics, configuration.getSatSolver(), configuration.getParallelism())) {
 			return execute(execution);
 		}
 	}

@@ -16,16 +16,13 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
+package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -35,25 +32,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.tweetyproject.arg.adf.reasoner.sat.decomposer.Decomposer;
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.FixThreeValuedPartialSatEncoding;
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.CandidateGenerator;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.InterpretationProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
-import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 import org.tweetyproject.arg.adf.sat.state.SynchronizedSatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
-import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework.Builder;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
-import org.tweetyproject.arg.adf.transform.FixPartialTransformer;
-import org.tweetyproject.arg.adf.transform.Transformer;
 
 /**
  * @author Mathias Hofer
@@ -61,7 +49,7 @@ import org.tweetyproject.arg.adf.transform.Transformer;
  */
 public final class ParallelExecution implements Execution {
 					
-	private final ExecutorService executor = Executors.newFixedThreadPool(8);
+	private final ExecutorService executor = Executors.newWorkStealingPool();
 	
 	private final IncrementalSatSolver satSolver;
 	
@@ -79,13 +67,13 @@ public final class ParallelExecution implements Execution {
 	
 	private BlockingQueue<Candidate> candidates;
 	
-	private Set<Branch> branches;
+	private Map<Branch, Interpretation> branches;
 	
-	public ParallelExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver, Decomposer decomposer, int parallelism) {
+	public ParallelExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver, int parallelism) {
 		this.satSolver = Objects.requireNonNull(satSolver);
 		this.adf = Objects.requireNonNull(adf);
 		this.semantics = Objects.requireNonNull(semantics);
-		this.decomposer = Objects.requireNonNull(decomposer);
+		this.decomposer = semantics.createDecomposer();
 		this.parallelism = parallelism;
 	}
 	
@@ -94,14 +82,14 @@ public final class ParallelExecution implements Execution {
 		int numDecompositions = decompositions.size();
 		this.verifications = new ConcurrentHashMap<>(numDecompositions);
 		this.models = new ConcurrentHashMap<>(numDecompositions);
-		this.branches = Collections.synchronizedSet(new HashSet<>(numDecompositions));
+		this.branches = new ConcurrentHashMap<>(numDecompositions);
 		this.candidates = new LinkedBlockingQueue<>(numDecompositions);
 		
 		for (Interpretation prefix : decompositions) {
-			this.branches.add(new Branch(prefix));
+			this.branches.put(new Branch(prefix, semantics, satSolver), prefix);
 		}
 		
-		for (Branch source : this.branches) {
+		for (Branch source : this.branches.keySet()) {
 			executor.execute(() -> {
 				source.prepare();
 				Interpretation candidate = source.computeCandidate();
@@ -183,7 +171,7 @@ public final class ParallelExecution implements Execution {
 	@Override
 	public void close() {
 		executor.shutdownNow();
-		for (Execution branch : branches) {
+		for (Execution branch : branches.keySet()) {
 			branch.close();
 		}
 	}
@@ -191,7 +179,7 @@ public final class ParallelExecution implements Execution {
 	@Override
 	public boolean addClause(Clause clause) {
 		boolean successful = true;
-		for (Execution branch : branches) {
+		for (Execution branch : branches.keySet()) {
 			successful &= branch.addClause(clause);
 		}
 		return successful;
@@ -200,7 +188,7 @@ public final class ParallelExecution implements Execution {
 	@Override
 	public boolean addClauses(Collection<? extends Clause> clauses) {
 		boolean successful = true;
-		for (Execution branch : branches) {
+		for (Execution branch : branches.keySet()) {
 			successful &= branch.addClauses(clauses);
 		}
 		return successful;
@@ -219,87 +207,67 @@ public final class ParallelExecution implements Execution {
 		
 	}
 	
-	private final class Branch implements Execution {
+	private static final class Branch implements Execution {
+		
+		private final List<StateProcessor> stateProcessors;
+		
+		private final CandidateGenerator generator;
+		
+		private final List<InterpretationProcessor> candidateProcessors;
+		
+		private final Optional<Verifier> verifier;
 
+		private final List<InterpretationProcessor> modelProcessors;
+		
+		private final IncrementalSatSolver satSolver;
+	
 		private SatSolverState state;
-								
-		private CandidateGenerator generator;
 				
-		private final Verifier verifier;
-		
-		private List<InterpretationProcessor> modelProcessors;
-		
-		private final Interpretation prefix;
-						
-		/**
-		 * @param prefix
-		 */
-		public Branch( Interpretation prefix ) {
-			this.prefix = prefix;
-			this.verifier = semantics.createVerifier(() -> new SynchronizedSatSolverState(satSolver.createState())).orElse(null);
+		public Branch( Interpretation prefix, Semantics semantics, IncrementalSatSolver satSolver ) {
+			Semantics prefixSemantics = semantics.withPrefix(prefix);
+			this.satSolver = satSolver;
+			this.stateProcessors = prefixSemantics.createStateProcessors();
+			this.generator = prefixSemantics.createCandidateGenerator();
+			this.candidateProcessors = prefixSemantics.createCandidateProcessor(satSolver::createState);
+			this.verifier = prefixSemantics.createVerifier(() -> new SynchronizedSatSolverState(satSolver.createState()));
+			this.modelProcessors = prefixSemantics.createModelProcessors(satSolver::createState);
 		}
 		
 		private void prepare() {
-			AbstractDialecticalFramework reduct = reduct(prefix);
-			Semantics branchSemantics = semantics.forReduct(reduct);
-			this.generator = branchSemantics.createCandidateGenerator();
-			PropositionalMapping mapping = branchSemantics.getPropositionalMapping();
-			Collection<Clause> encoding = new LinkedList<Clause>();
-			generator.prepare(encoding::add);
-			FixThreeValuedPartialSatEncoding.encode(prefix, encoding::add, mapping, reduct);
-			
-			for (StateProcessor processor : branchSemantics.createStateProcessors()) {
-				processor.process(encoding::add);
-			}
-			
-			this.state = new SynchronizedSatSolverState(createState(satSolver, encoding));
-			this.modelProcessors = branchSemantics.createModelProcessors(() -> createState(satSolver, encoding));
-
-			if (verifier != null) {
-				this.verifier.prepare();			
-			}
-		}
-		
-		private AbstractDialecticalFramework reduct(Interpretation interpretation) {
-			Transformer<AcceptanceCondition> fixPartials = new FixPartialTransformer(interpretation);		
-			Builder builder = AbstractDialecticalFramework.builder().eager(new SatLinkStrategy(new NativeMinisatSolver()));
-			for (Argument arg : adf.getArguments()) {
-				if (!interpretation.decided(arg)) {
-					builder.add(arg, fixPartials.transform(adf.getAcceptanceCondition(arg)));
-				}
-			}
-			return builder.build();
-		}
-		
-		private SatSolverState createState(IncrementalSatSolver satSolver, Collection<Clause> encoding) {
 			SatSolverState state = satSolver.createState();
-			for (Clause clause : encoding) {
-				state.add(clause);
-			}
-			return state;
-		}
+			generator.prepare(state::add);
 
+			for (StateProcessor processor : stateProcessors) {
+				processor.process(state::add);
+			}
+
+			this.state = new SynchronizedSatSolverState(state);
+
+			verifier.ifPresent(Verifier::prepare);
+		}
+		
 		@Override
 		public Interpretation computeCandidate() {
-			return generator.generate(state);
-//			if (candidate == null) return null;
-//			
-//			System.out.println("prefix: " + prefix + ", candidate: " + candidate);
-//			Set<Argument> satisfied = new HashSet<>(prefix.satisfied());
-//			satisfied.addAll(candidate.satisfied());
-//			Set<Argument> unsatisfied = new HashSet<>(prefix.unsatisfied());
-//			unsatisfied.addAll(candidate.unsatisfied());
-//			Set<Argument> undecided = new HashSet<>(prefix.undecided());
-//			undecided.addAll(candidate.undecided());
-//			return Interpretation.fromSets(satisfied, unsatisfied, undecided);
+			Interpretation candidate = generator.generate(state);
+			if (candidate != null) {
+				return processCandidate(candidate);
+			}
+			return null;
+		}
+		
+		private Interpretation processCandidate(Interpretation candidate) {
+			Interpretation processed = candidate;
+			for (InterpretationProcessor processor : candidateProcessors) {
+				processed = processor.process(processed);
+				processor.updateState(state, processed);
+			}
+			return processed;
 		}
 
 		@Override
 		public boolean verify(Interpretation candidate) {
-			if (verifier != null) {
-				return verifier.verify(candidate);			
-			}
-			return true;
+			return verifier.map(v -> v.verify(candidate))
+						   .orElse(true);
 		}
 		
 		@Override
@@ -320,8 +288,12 @@ public final class ParallelExecution implements Execution {
 		@Override
 		public void close() {
 			state.close();
-			if (verifier != null) {
-				verifier.close();				
+			verifier.ifPresent(Verifier::close);
+			for (InterpretationProcessor processor : modelProcessors) {
+				processor.close();
+			}
+			for (InterpretationProcessor processor : candidateProcessors) {
+				processor.close();
 			}
 		}
 

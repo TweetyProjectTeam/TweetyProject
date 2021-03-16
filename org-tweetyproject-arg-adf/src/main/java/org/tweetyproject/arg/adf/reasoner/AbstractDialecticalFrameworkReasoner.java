@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.tweetyproject.arg.adf.reasoner.query.Query;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;

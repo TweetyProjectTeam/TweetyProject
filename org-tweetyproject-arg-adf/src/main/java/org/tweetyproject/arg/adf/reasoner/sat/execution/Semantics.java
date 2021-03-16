@@ -16,26 +16,27 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
+package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
+import org.tweetyproject.arg.adf.reasoner.sat.decomposer.Decomposer;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.DefaultSemantics.AdmissibleSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.DefaultSemantics.CompleteSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.DefaultSemantics.ConflictFreeSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.DefaultSemantics.GroundSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.DefaultSemantics.ModelSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.DefaultSemantics.NaiveSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.DefaultSemantics.PreferredSemantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.DefaultSemantics.StableSemantics;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.CandidateGenerator;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.AdmissibleSemantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.CompleteSemantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.ConflictFreeSemantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.GroundSemantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.ModelSemantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.NaiveSemantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.PreferredSemantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.DefaultSemantics.StableSemantics;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.InterpretationProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
@@ -46,27 +47,25 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  *
  */
 public interface Semantics {
+	
+	Decomposer createDecomposer();
 
 	CandidateGenerator createCandidateGenerator();
 
 	List<StateProcessor> createStateProcessors();
+	
+	List<InterpretationProcessor> createCandidateProcessor(Supplier<SatSolverState> stateSupplier);
 
 	Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier);
 
 	List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier);
 
-	PropositionalMapping getPropositionalMapping();
-
 	/**
-	 * Creates a new instance of the current semantics for the provided ADF. The
-	 * provided ADF is expected to be a reduct of the original one, hence it
-	 * contains at most the original arguments. This allows for the original
-	 * {@link PropositionalMapping} to be used.
 	 * 
-	 * @param adf
+	 * @param prefix
 	 * @return a new {@link Semantics} instance
 	 */
-	Semantics forReduct(AbstractDialecticalFramework adf);
+	Semantics withPrefix(Interpretation prefix);
 
 	static Semantics conflictFree(AbstractDialecticalFramework adf) {
 		return new ConflictFreeSemantics(adf);

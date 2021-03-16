@@ -19,7 +19,7 @@
 package org.tweetyproject.arg.adf.reasoner.sat.query;
 
 import org.tweetyproject.arg.adf.reasoner.query.Query;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 
 /**
  * @author Mathias Hofer

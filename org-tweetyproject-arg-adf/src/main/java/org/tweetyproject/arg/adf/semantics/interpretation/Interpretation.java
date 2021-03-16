@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.adf.semantics.interpretation;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -76,6 +77,29 @@ public interface Interpretation {
 				undecided.add(arg);
 			}
 		}
+		return new SetInterpretation(satisfied, unsatisfied, undecided);
+	}
+	
+	/**
+	 * Creates the union of two disjunct interpretations.
+	 * 
+	 * @param i1
+	 * @param i2
+	 * @return
+	 * @throws IllegalArgumentException if the two interpretations are not disjunct
+	 */
+	static Interpretation union(Interpretation i1, Interpretation i2) {
+		if (!Collections.disjoint(i1.arguments(), i2.arguments())) throw new IllegalArgumentException("The given interpretations are not disjunct!");
+		
+		Set<Argument> satisfied = new HashSet<>(i1.satisfied());
+		satisfied.addAll(i2.satisfied());
+		
+		Set<Argument> unsatisfied = new HashSet<>(i1.unsatisfied());
+		unsatisfied.addAll(i2.unsatisfied());
+		
+		Set<Argument> undecided = new HashSet<>(i1.undecided());
+		undecided.addAll(i2.undecided());
+		
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
 	}
 	

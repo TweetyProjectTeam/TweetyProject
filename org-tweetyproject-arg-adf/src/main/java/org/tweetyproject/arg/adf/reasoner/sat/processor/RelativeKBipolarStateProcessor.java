@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.BipolarSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.RelativeBipolarSatEncoding;
+import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.semantics.link.LinkStrategy;
@@ -58,7 +59,9 @@ public final class RelativeKBipolarStateProcessor implements StateProcessor {
 	private final AbstractDialecticalFramework adf;
 	
 	private final PropositionalMapping mapping;
-
+	
+	private final SatEncoding bipolar;
+	
 	/**
 	 * @param maxDepth maxDepth
 	 * @param solver solver
@@ -68,19 +71,17 @@ public final class RelativeKBipolarStateProcessor implements StateProcessor {
 		this.linkStrategy = Objects.requireNonNull(linkStrategy);
 		this.adf = Objects.requireNonNull(adf);
 		this.mapping = Objects.requireNonNull(mapping);
+		this.bipolar = new BipolarSatEncoding(adf, mapping);
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sf.tweety.arg.adf.reasoner.sat.processor.StateProcessor#process(java.util.function.Consumer, net.sf.tweety.arg.adf.reasoner.sat.encodings.PropositionalMapping, net.sf.tweety.arg.adf.syntax.adf.AbstractDialecticalFramework)
-	 */
+
 	@Override
 	public void process(Consumer<Clause> consumer) {
-		new BipolarSatEncoding().encode(consumer, adf, mapping);
+		bipolar.encode(consumer);
 		Map<Link, Set<Interpretation>> bipolarIn = checkLinks(adf);
 		for (Entry<Link, Set<Interpretation>> entry : bipolarIn.entrySet()) {
 			Link link = entry.getKey();
 			for (Interpretation interpretation : entry.getValue()) {
-				new RelativeBipolarSatEncoding(interpretation, link).encode(consumer, adf, mapping);
+				new RelativeBipolarSatEncoding(interpretation, link, mapping).encode(consumer);
 			}
 		}
 	}

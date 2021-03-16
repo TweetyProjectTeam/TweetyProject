@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.adf.reasoner.query;
 
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Semantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 
 /**
  * @author Mathias Hofer

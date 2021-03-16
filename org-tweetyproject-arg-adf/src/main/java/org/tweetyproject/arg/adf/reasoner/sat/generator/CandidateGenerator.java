@@ -34,12 +34,8 @@ public interface CandidateGenerator {
 	/**
 	 * Performs initializations on the state.
 	 * 
-	 * @param state the state to initialize
-	 */
-	default void prepare(SatSolverState state) {
-		prepare(state::add);
-	}
-	
+	 * @param consumer
+	 */	
 	void prepare(Consumer<Clause> consumer);
 
 	/**

@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.adf.semantics.interpretation;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -37,12 +38,12 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 	
 	private final List<Argument> arguments;
 	
-	public TwoValuedInterpretationIterator(List<Argument> arguments) {
+	public TwoValuedInterpretationIterator(Collection<Argument> arguments) {
 		if (arguments == null || arguments.isEmpty()) {
 			throw new IllegalArgumentException("arguments must not be null or empty!");
 		}
 		this.arguments = List.copyOf(arguments);
-		this.max = 2 << arguments.size(); // 2 ^ arguments.size()
+		this.max = 1 << arguments.size(); // 2 ^ arguments.size()
 	}
 
 	/* (non-Javadoc)

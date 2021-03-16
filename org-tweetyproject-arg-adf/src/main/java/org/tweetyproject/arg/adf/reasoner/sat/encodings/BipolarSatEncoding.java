@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.encodings;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.semantics.link.Link;
@@ -33,8 +34,21 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
  */
 public class BipolarSatEncoding implements SatEncoding {
 
+	private final AbstractDialecticalFramework adf;
+	
+	private final PropositionalMapping mapping;
+	
+	/**
+	 * @param adf
+	 * @param mapping
+	 */
+	public BipolarSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+		this.adf = Objects.requireNonNull(adf);
+		this.mapping = Objects.requireNonNull(mapping);
+	}
+	
 	@Override
-	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+	public void encode(Consumer<Clause> consumer) {
 		for (Argument r : adf.getArguments()) {
 			Literal rTrue = mapping.getTrue(r);
 			Literal rFalse = mapping.getFalse(r);
@@ -43,7 +57,8 @@ public class BipolarSatEncoding implements SatEncoding {
 				if (l.getType() == LinkType.ATTACKING) {
 					consumer.accept(Clause.of(rTrue.neg(), mapping.getFalse(l.getFrom()), link));
 					consumer.accept(Clause.of(rFalse.neg(), mapping.getTrue(l.getFrom()), link.neg()));
-				} else if (l.getType() == LinkType.SUPPORTING) {
+				} 
+				if (l.getType() == LinkType.SUPPORTING) {
 					consumer.accept(Clause.of(rTrue.neg(), mapping.getTrue(l.getFrom()), link.neg()));
 					consumer.accept(Clause.of(rFalse.neg(), mapping.getFalse(l.getFrom()), link));
 				}

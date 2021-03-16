@@ -27,7 +27,6 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.semantics.link.Link;
 import org.tweetyproject.arg.adf.semantics.link.LinkType;
 import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
@@ -40,17 +39,20 @@ public final class RelativeBipolarSatEncoding implements SatEncoding {
 	private final Interpretation interpretation;
 	
 	private final Link link;
+	
+	private final PropositionalMapping mapping;
 		
 	/**
 	 * @param interpretation the interpretation which makes the link bipolar
 	 * @param link the bipolarized link
 	 */
-	public RelativeBipolarSatEncoding(Interpretation interpretation, Link link) {
+	public RelativeBipolarSatEncoding(Interpretation interpretation, Link link, PropositionalMapping mapping) {
 		this.interpretation = Objects.requireNonNull(interpretation);
 		this.link = Objects.requireNonNull(link);
+		this.mapping = Objects.requireNonNull(mapping);
 	}
 
-	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+	public void encode(Consumer<Clause> consumer) {
 		Argument parent = link.getFrom();
 		Argument child = link.getTo();
 

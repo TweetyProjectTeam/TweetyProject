@@ -16,7 +16,7 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
+package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
 import java.util.Collection;
 
@@ -32,7 +32,7 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
 public interface Execution extends AutoCloseable {
 	
 	Interpretation computeCandidate();
-	
+		
 	boolean verify(Interpretation candidate);
 	
 	Interpretation processModel(Interpretation model);

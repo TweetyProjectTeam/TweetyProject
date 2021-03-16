@@ -23,11 +23,11 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Configuration;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Execution;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.ParallelExecution;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.Semantics;
-import org.tweetyproject.arg.adf.reasoner.sat.pipeline.SequentialExecution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.ParallelExecution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.SequentialExecution;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
@@ -60,7 +60,7 @@ final class InterpretationsSatQuery extends SatQuery<Stream<Interpretation>>{
 	
 	@Override
 	public Stream<Interpretation> executeParallel() {
-		return execute(new ParallelExecution(adf, semantics, configuration.getSatSolver(), configuration.getDecomposer(), configuration.getParallelism()));
+		return execute(new ParallelExecution(adf, semantics, configuration.getSatSolver(), configuration.getParallelism()));
 	}
 
 }

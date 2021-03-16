@@ -16,10 +16,9 @@
  *
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.adf.reasoner.sat.pipeline;
+package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.tweetyproject.arg.adf.reasoner.sat.generator.CandidateGenerator;
@@ -42,39 +41,33 @@ public final class SequentialExecution implements Execution {
 	
 	private final CandidateGenerator generator;
 	
+	private final List<InterpretationProcessor> candidateProcessors;
+	
 	private final Verifier verifier;
 	
 	private final List<InterpretationProcessor> modelProcessors;
 	
 	public SequentialExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver) {
 		this.generator = semantics.createCandidateGenerator();
+		this.candidateProcessors = semantics.createCandidateProcessor(satSolver::createState);
 		this.verifier = semantics.createVerifier(satSolver::createState).orElse(null);
+		this.state = satSolver.createState();
 		
-		Collection<Clause> encoding = new LinkedList<Clause>();
-		generator.prepare(encoding::add);
 		for (StateProcessor processor : semantics.createStateProcessors()) {
-			processor.process(encoding::add);
+			processor.process(state::add);
 		}
 		
-		this.state = createState(satSolver, encoding);	
-		this.modelProcessors = semantics.createModelProcessors(() -> createState(satSolver, encoding));
+		generator.prepare(state::add);
+		this.modelProcessors = semantics.createModelProcessors(satSolver::createState); // TODO do not add encoding by default here
 
 		if (verifier != null) {
 			this.verifier.prepare();			
 		}
 	}
-	
-	private static SatSolverState createState(IncrementalSatSolver satSolver, Collection<Clause> encoding) {
-		SatSolverState state = satSolver.createState();
-		for (Clause clause : encoding) {
-			state.add(clause);
-		}
-		return state;
-	}
 
 	@Override
 	public Interpretation computeCandidate() {
-		return generator.generate(state);
+		return processCandidate(generator.generate(state));
 	}
 
 	@Override
@@ -83,6 +76,15 @@ public final class SequentialExecution implements Execution {
 			return verifier.verify(candidate);			
 		}
 		return true;
+	}
+	
+	private Interpretation processCandidate(Interpretation candidate) {
+		Interpretation processed = candidate;
+		for (InterpretationProcessor processor : candidateProcessors) {
+			processed = processor.process(processed);
+			processor.updateState(state, processed);
+		}
+		return processed;
 	}
 	
 	@Override

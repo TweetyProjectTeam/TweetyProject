@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -42,9 +43,22 @@ import org.tweetyproject.arg.adf.transform.TseitinTransformer;
  *
  */
 public class KBipolarSatEncoding implements SatEncoding {
+	
+	private final AbstractDialecticalFramework adf;
+	
+	private final PropositionalMapping mapping;
+	
+	/**
+	 * @param adf
+	 * @param mapping
+	 */
+	public KBipolarSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+		this.adf = Objects.requireNonNull(adf);
+		this.mapping = Objects.requireNonNull(mapping);
+	}
 
 	@Override
-	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+	public void encode(Consumer<Clause> consumer) {
 		// use these propositions as a substitute for the special formulas
 		// Tautology and Contradiction
 		final Literal TAUT = createTrue(consumer);

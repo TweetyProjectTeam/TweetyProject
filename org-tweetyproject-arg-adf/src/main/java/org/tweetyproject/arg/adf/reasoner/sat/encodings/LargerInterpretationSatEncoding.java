@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
@@ -35,45 +34,35 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
  * @author Mathias Hofer
  *
  */
-public class LargerInterpretationSatEncoding implements SatEncoding {
+public class LargerInterpretationSatEncoding implements RelativeSatEncoding {
 	
-	private final Interpretation interpretation;
+	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param interpretation the interpretation which is used as a lower bound
+	 * @param mapping
 	 */
-	public LargerInterpretationSatEncoding(Interpretation interpretation) {
-		this.interpretation = Objects.requireNonNull(interpretation);
+	public LargerInterpretationSatEncoding(PropositionalMapping mapping) {
+		this.mapping = Objects.requireNonNull(mapping);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
-	 * adf.reasoner.sat.SatEncodingContext)
-	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping context) {
-		encode(interpretation, consumer, context, adf);
-	}
-	
-	public static void encode(Interpretation interpretation, Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
 		// fix the already decided arguments
 		for (Argument a : interpretation.satisfied()) {
-			consumer.accept(Clause.of(context.getTrue(a)));
+			consumer.accept(Clause.of(mapping.getTrue(a)));
 		}
 		for (Argument a : interpretation.unsatisfied()) {
-			consumer.accept(Clause.of(context.getFalse(a)));
+			consumer.accept(Clause.of(mapping.getFalse(a)));
 		}
 
 		// guess a not yet decided argument
 		Set<Literal> undecided = new HashSet<>();
 		for (Argument a : interpretation.undecided()) {
-			undecided.add(context.getTrue(a));
-			undecided.add(context.getFalse(a));
+			undecided.add(mapping.getTrue(a));
+			undecided.add(mapping.getFalse(a));
 		}
 		consumer.accept(Clause.of(undecided));
 	}
+	
 
 }

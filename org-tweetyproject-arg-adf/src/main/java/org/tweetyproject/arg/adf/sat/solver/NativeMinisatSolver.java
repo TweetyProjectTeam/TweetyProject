@@ -140,7 +140,7 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 		public Set<Literal> witness(Collection<? extends Literal> filter) {
 			if (satisfiable()) {
 				Set<Literal> witness = new HashSet<>();
-				for (Literal atom : filter) {
+				for (Literal atom : filter) {					
 					int mapping = nonTransientMapping.get(atom);
 					if (value(handle, mapping) == 0) {
 						witness.add(atom);

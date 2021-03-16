@@ -62,8 +62,8 @@ public final class GrounderStableVerifier implements Verifier {
 	public boolean verify(Interpretation candidate) {
 		try (SatSolverState state = stateSupplier.get()) {
 			AbstractDialecticalFramework reduct = adf.transform(new OmegaReductTransformer(candidate));
-			CandidateGenerator groundGenerator = new GroundGenerator(reduct, mapping);
-			groundGenerator.prepare(state);
+			CandidateGenerator groundGenerator = GroundGenerator.withoutPrefix(reduct, mapping);
+			groundGenerator.prepare(state::add);
 			Interpretation ground = groundGenerator.generate(state);
 			boolean stable = candidate.equals(ground);
 			return stable;

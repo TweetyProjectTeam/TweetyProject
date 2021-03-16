@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
@@ -35,37 +34,29 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
  * @author Mathias Hofer
  *
  */
-public class RefineLargerSatEncoding implements SatEncoding {
+public class RefineLargerSatEncoding implements RelativeSatEncoding {
 	
-	private final Interpretation interpretation;
+	private final PropositionalMapping mapping;
 	
-	public RefineLargerSatEncoding(Interpretation interpretation) {
-		this.interpretation = Objects.requireNonNull(interpretation);
+	/**
+	 * @param mapping
+	 */
+	public RefineLargerSatEncoding(PropositionalMapping mapping) {
+		this.mapping = Objects.requireNonNull(mapping);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.sf.tweety.arg.adf.reasoner.strategy.sat.SatEncoding#encode(net.sf.tweety.arg.
-	 * adf.reasoner.sat.SatEncodingContext)
-	 */
 	@Override
-	public void encode(Consumer<Clause> consumer, AbstractDialecticalFramework adf, PropositionalMapping context) {
-		encode(interpretation, consumer, context, adf);
-	}
-	
-	public static void encode(Interpretation interpretation, Consumer<Clause> consumer, PropositionalMapping context, AbstractDialecticalFramework adf) {
+	public void encode(Consumer<Clause> consumer, Interpretation interpretation) {
 		Set<Literal> clause = new HashSet<>();
 		for (Argument arg : interpretation.satisfied()) {
-			clause.add(context.getFalse(arg));
+			clause.add(mapping.getFalse(arg));
 		}
 		for (Argument arg : interpretation.unsatisfied()) {
-			clause.add(context.getTrue(arg));
+			clause.add(mapping.getTrue(arg));
 		}
 		for (Argument arg : interpretation.undecided()) {
-			clause.add(context.getTrue(arg));
-			clause.add(context.getFalse(arg));
+			clause.add(mapping.getTrue(arg));
+			clause.add(mapping.getFalse(arg));
 		}
 		consumer.accept(Clause.of(clause));
 	}

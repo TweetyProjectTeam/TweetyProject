@@ -26,6 +26,8 @@ import org.tweetyproject.arg.adf.reasoner.sat.encodings.ConflictFreeInterpretati
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.FixPartialSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.LargerInterpretationSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
+import org.tweetyproject.arg.adf.reasoner.sat.encodings.RelativeSatEncoding;
+import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
@@ -45,6 +47,12 @@ public final class CompleteVerifier implements Verifier {
 	
 	private final PropositionalMapping mapping;
 	
+	private final SatEncoding conflictFree;
+	
+	private final RelativeSatEncoding fixPartial;
+	
+	private final RelativeSatEncoding larger;
+	
 	/**
 	 * @param stateSupplier
 	 * @param adf
@@ -54,6 +62,9 @@ public final class CompleteVerifier implements Verifier {
 		this.stateSupplier = Objects.requireNonNull(stateSupplier);
 		this.adf = Objects.requireNonNull(adf);
 		this.mapping = Objects.requireNonNull(mapping);
+		this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
+		this.fixPartial = new FixPartialSatEncoding(mapping);
+		this.larger = new LargerInterpretationSatEncoding(mapping);
 	}
 
 	@Override
@@ -62,12 +73,12 @@ public final class CompleteVerifier implements Verifier {
 	@Override
 	public boolean verify(Interpretation candidate) {
 		try(SatSolverState state = stateSupplier.get()) {
-			new ConflictFreeInterpretationSatEncoding().encode(state::add, adf, mapping);
+			conflictFree.encode(state::add);
 			
 			boolean complete = true;
 			Iterator<Argument> undecided = candidate.undecided().iterator();
-			new FixPartialSatEncoding(candidate).encode(state::add, adf, mapping);
-			new LargerInterpretationSatEncoding(candidate).encode(state::add, adf, mapping);
+			fixPartial.encode(state::add, candidate);
+			larger.encode(state::add, candidate);
 			while (undecided.hasNext() && complete) {
 				Argument s = undecided.next();
 				TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
