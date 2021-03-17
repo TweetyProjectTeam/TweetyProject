@@ -57,9 +57,9 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.gurobi/gurobi-jar -->
 		<dependency>
-  			  <groupId>com.gurobi</groupId>
-  			  <artifactId>gurobi-jar</artifactId>
-   			 <version>7.5.1</version>
+  			  <groupId>gurobi</groupId>
+			<artifactId>gurobi</artifactId>
+			<version>9.1.0</version>
 		</dependency>	
 	</dependencies>
 	<parent>
