@@ -50,7 +50,7 @@ public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 			b = false;
 			for(Extension ext2: extUndec.keySet()){
 				if(ext != ext2){
-					if(extUndec.get(ext).containsAll(extUndec.get(ext2))){
+					if(extUndec.get(ext).containsAll(extUndec.get(ext2)) && !extUndec.get(ext2).containsAll(extUndec.get(ext))){
 						exts.remove(ext);
 						b = true;
 					}

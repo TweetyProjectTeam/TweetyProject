@@ -82,6 +82,7 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 			case CF: return new SimpleConflictFreeReasoner();
 			case SST: return new SimpleSemiStableReasoner();
 			case ID: return new SimpleIdealReasoner();
+			case EA: return new SimpleEagerReasoner();
 			case STG: return new SimpleStageReasoner();
 			case STG2: return new Stage2Reasoner();
 			case CF2: return new SccCF2Reasoner();
