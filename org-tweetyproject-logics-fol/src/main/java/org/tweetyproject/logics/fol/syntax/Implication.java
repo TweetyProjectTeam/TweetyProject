@@ -85,6 +85,46 @@ public class Implication extends FolFormula {
 		this.formulas = new Pair<RelationalFormula, RelationalFormula>(left, right);
 	}
 	
+	/**
+	 * Sets the left side formula of the implication
+	 * left =&gt; right
+	 * 
+	 * @param left formula.
+	 */
+	public void setFirstFormula(RelationalFormula left) {
+		this.formulas.setFirst(left);
+	}
+	
+	/**
+	 * Sets the right side formula of the implication
+	 * left =&gt; right
+	 * 
+	 * @param right formula.
+	 */
+	public void setSecondFormula(RelationalFormula right) {
+		this.formulas.setSecond(right);
+	}
+	
+	/**
+	 * Get the left side formula of the implication
+	 * left =&gt; right.
+	 * 
+	 * @param left formula
+	 */
+	public RelationalFormula getFirstFormula() {
+		return this.formulas.getFirst();
+	}
+	
+	/**
+	 * Get the right side formula of the implication
+	 * left =&gt; right
+	 * 
+	 * @param right formula.
+	 */
+	public RelationalFormula getSecondFormula() {
+		return this.formulas.getSecond();
+	}
+	
 	@Override
 	public Set<? extends Predicate> getPredicates() {
 		Set<Predicate> predicates = new HashSet<Predicate>();
