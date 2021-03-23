@@ -63,20 +63,20 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
-		Argument a_old = it.next();
+		Argument argOld = it.next();
 
 		// clone argument and relations
-		Argument a_clone = new Argument("clone");
-		dt.add(a_clone);
-		for (Argument attacker : dt.getAttackers(a_old)) {
-			if (attacker.equals(a_old))
-				dt.add(new Attack(a_clone, a_clone));
+		Argument argClone = new Argument("clone");
+		dt.add(argClone);
+		for (Argument attacker : dt.getAttackers(argOld)) {
+			if (attacker.equals(argOld))
+				dt.add(new Attack(argClone, argClone));
 			else
-				dt.add(new Attack(attacker, a_clone));
+				dt.add(new Attack(attacker, argClone));
 		}
-		for (Argument attacked : dt.getAttacked(a_old)) {
-			if (!attacked.equals(a_old)) 
-				dt.add(new Attack(a_clone, attacked));
+		for (Argument attacked : dt.getAttacked(argOld)) {
+			if (!attacked.equals(argOld)) 
+				dt.add(new Attack(argClone, attacked));
 		}
 		
 		// add new defense branch
@@ -84,11 +84,11 @@ public class RaStrictAdditionOfDefenseBranch extends RankingPostulate {
 		Argument t2 = new Argument("t2");
 		dt.add(t1);
 		dt.add(t2);
-		dt.add(new Attack(t1, a_clone));
+		dt.add(new Attack(t1, argClone));
 		dt.add(new Attack(t2, t1));
 		
 		ArgumentRanking ranking = ev.getModel(dt);
-		return ranking.isStrictlyMoreAcceptableThan(a_clone, a_old);
+		return ranking.isStrictlyMoreAcceptableThan(argClone, argOld);
 	}
 
 }

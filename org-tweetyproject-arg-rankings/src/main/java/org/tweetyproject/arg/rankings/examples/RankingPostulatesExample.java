@@ -30,17 +30,20 @@ import org.tweetyproject.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CountingRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.DiscussionBasedRankingReasoner;
-import org.tweetyproject.arg.rankings.reasoner.MTRankingReasoner;
+import org.tweetyproject.arg.rankings.reasoner.PropagationRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.SAFRankingReasoner;
+import org.tweetyproject.arg.rankings.reasoner.StrategyBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.TuplesRankingReasoner;
 import org.tweetyproject.commons.postulates.PostulateEvaluator;
 
 /**
- * Example code for postulates for ranking semantics.
+ * Example code for evaluating ranking semantics in regard
+ * to postulates. Each postulate represents a single property
+ * that characterizes how the semantics ranks arguments.
  * 
  * @author Anna Gessler
  */
-public class RaPostulateExample {
+public class RankingPostulatesExample {
 	private static Collection<RankingPostulate> all_postulates;
 
 	public static void main(String[] args) {
@@ -68,9 +71,10 @@ public class RaPostulateExample {
 		BurdenExample();
 		DiscussionExample();
 		TuplesExample();
-		MTExample();
+		StrategyBasedExample();
 		SAFExample();
 		CountingExample();
+		PropagationExample();
 	}
 
 	public static void CategorizerExample() {
@@ -105,10 +109,10 @@ public class RaPostulateExample {
 		System.out.println(evaluator.evaluate(4000, false).prettyPrint());
 	}
 
-	public static void MTExample() {
+	public static void StrategyBasedExample() {
 		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
 		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
-				new MTRankingReasoner());
+				new StrategyBasedRankingReasoner());
 		evaluator.addAllPostulates(all_postulates);
 		System.out.println(evaluator.evaluate(10, false).prettyPrint());
 	}
@@ -126,7 +130,16 @@ public class RaPostulateExample {
 		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
 				new CountingRankingReasoner());
 		evaluator.addAllPostulates(all_postulates);
-		System.out.println(evaluator.evaluate(200, false).prettyPrint());
+		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
+	}
+	
+	public static void PropagationExample() {
+		DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
+		PropagationRankingReasoner propagation_reasoner = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
+		PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<Argument, DungTheory>(dg,
+				propagation_reasoner);
+		evaluator.addAllPostulates(all_postulates);
+		System.out.println(evaluator.evaluate(2000, false).prettyPrint());
 	}
 
 }

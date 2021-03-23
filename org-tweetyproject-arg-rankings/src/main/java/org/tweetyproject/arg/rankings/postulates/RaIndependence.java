@@ -31,7 +31,7 @@ import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
  * The "independence" postulate for ranking semantics as proposed in [Amgoud,
  * Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: The
  * ranking between to arguments a and b should be independent of any argument
- * that is neither connected to a nor to b.
+ * that is connected to neither a nor to b.
  * 
  * @author Anna Gessler
  *

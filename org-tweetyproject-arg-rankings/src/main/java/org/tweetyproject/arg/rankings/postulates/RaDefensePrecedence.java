@@ -60,9 +60,9 @@ public class RaDefensePrecedence extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		Set<Argument> attackers_a = dt.getAttackers(a);
-		Set<Argument> attackers_b = dt.getAttackers(b);
-		if (attackers_a.size() != attackers_b.size())
+		Set<Argument> attackersA = dt.getAttackers(a);
+		Set<Argument> attackersB = dt.getAttackers(b);
+		if (attackersA.size() != attackersB.size())
 			return true;
 
 		if (dt.isAttacked(new Extension(dt.getAttackers(a)), new Extension(kb))

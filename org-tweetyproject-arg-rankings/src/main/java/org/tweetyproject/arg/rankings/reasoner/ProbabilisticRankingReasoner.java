@@ -32,7 +32,8 @@ import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * Implements a graded semantics reasoner based on the ideas from [Thimm, Cerutti, Rienstra; 2018].
+ * Implements a graded semantics reasoner based on the ideas from 
+ * [Thimm, Cerutti, Rienstra. Probabilistic Graded Semantics. COMMA 2018].
  * 
  * @author Matthias Thimm
  */
@@ -51,7 +52,7 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 	private Probability p;
 	
 	/**
-	 * The classical semantics used for evaluating subgraphs 
+	 * The classical semantics used for evaluating subgraphs.
 	 */
 	private Semantics sem;
 			
@@ -61,7 +62,7 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 	private boolean exactInference = false;
 	
 	/**
-	 * Creates a new reasoner.
+	 * Creates a new ProbabilisticRankingReasoner.
 	 * @param sem The classical semantics used for evaluating subgraphs
 	 * @param p The probability used for all arguments to instantiate a probabilistic argumentation framework
 	 * @param exactInference Whether to use exact inference. 

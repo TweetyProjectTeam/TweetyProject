@@ -30,21 +30,33 @@ import org.tweetyproject.arg.social.semantics.SocialMapping;
 import org.tweetyproject.arg.social.syntax.SocialAbstractArgumentationFramework;
 
 /**
- * This class implements the ranking-based "SAF" semantics approach as proposed
+ * This class implements the social abstract argumentation approach as proposed
  * by [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
  * Semantics for Abstract Argumentation. AAAI 2016]. It uses social abstract argumentation 
- * frameworks and the simple product semantic which were introduced by 
+ * frameworks and the simple product semantics which were introduced by 
  * [Leite, Martins. Social abstract argumentation. IJCAI 2011].
  * 
  * @author Anna Gessler
  */
 public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
-	
 	/**
-	 * Parameters for the simple product semantic.
+	 * Parameter for the simple vote aggregation function of the
+	 * simple product semantics.
+	 * @see org.tweetyproject.arg.social.semantics.SimpleProductSemantics
 	 */
 	private double epsilon;
-	private double precision;
+	
+	/**
+	 * Precision of comparisons between values of the simple product semantics.
+	 * @see org.tweetyproject.arg.social.semantics.SimpleProductSemantics
+	 */
+	private double precision; 
+	
+	/**
+	 * The tolerance of the "Iterative Successive Substitution" algorithm
+	 * used by the reasoner.
+	 * @see org.tweetyproject.arg.social.reasoner.IssReasoner
+	 */
 	private double tolerance;
 	
 	/**
@@ -58,7 +70,7 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	
 	/**
 	 * Create a new SAFRankingReasoner with the given epsilon 
-	 * for the SimpleProductSemantic.
+	 * for the SimpleProductSemantics.
 	 * @param epsilon must be non-negative
 	 */
 	public SAFRankingReasoner(double epsilon) {
@@ -68,9 +80,9 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	
 	/**
 	 * Create a new SAFRankingReasoner with the given epsilon 
-	 * and the given tolerance for the SimpleProductSemantic.
-	 * @param epsilon TODO add description
-	 * @param tolerance TODO add description
+	 * and the given tolerance for the SimpleProductSemantics.
+	 * @param epsilon 
+	 * @param tolerance 
 	 */
 	public SAFRankingReasoner(double epsilon, double tolerance) {
 		this();
@@ -80,10 +92,10 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 
 	/**
 	 * Create a new SAFRankingReasoner with the given epsilon, the given precision 
-	 * and the given tolerance for the SimpleProductSemantic.
-	 * @param epsilon TODO add description
-	 * @param precision TODO add description
-	 * @param tolerance TODO add description
+	 * and the given tolerance for the SimpleProductSemantics.
+	 * @param epsilon 
+	 * @param precision 
+	 * @param tolerance 
 	 */
 	public SAFRankingReasoner(double epsilon, double precision, double tolerance) {
 		this.epsilon = epsilon;

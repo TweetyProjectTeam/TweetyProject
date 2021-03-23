@@ -31,10 +31,12 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
- * This class provides a acceptability interpretation of arguments by assigning
- * them real values where larger values indicate more acceptability.
+ * This class provides an acceptability interpretation of arguments by assigning
+ * them real values. Often larger values indicate more acceptability, but some
+ * semantics use other ways of ranking the values.
  * 
  * @author Matthias Thimm
+ * @author Anna Gessler
  */
 public class NumericalArgumentRanking extends ArgumentRanking implements Map<Argument, Double> {
 
@@ -43,10 +45,15 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	public static double PRECISION = 0.0001;
 
+	/**
+	 * The method used for ordering the numerical
+	 * values according to acceptability.
+	 */
 	public SortingType sortingType;
 
 	/**
 	 * Possible sorting types for the numerical values.
+	 * "Ascending" is the default.
 	 * <ul>
 	 * <li>{@link #DESCENDING}</li>
 	 * <li>{@link #ASCENDING}</li>
@@ -55,39 +62,42 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	public enum SortingType {
 		/**
-		 * largest ranking value is ranked first
+		 * the largest ranking value is ranked first
 		 */
 		DESCENDING,
 		/**
-		 * smallest ranking value is ranked first
+		 * the smallest ranking value is ranked first
 		 */
 		ASCENDING,
 		/**
-		 * first ranking value when sorted lexicographically is ranked first
+		 * the first ranking value when sorted lexicographically is ranked first
 		 */
 		LEXICOGRAPHIC;
 	}
 
-	/** The actual map used for storing acceptability values */
-	private Map<Argument, Double> theMap;
+	/** The map used for storing acceptability values */
+	private Map<Argument, Double> argumentToValue;
 
-	/** Creates a new empty argument ranking */
+	/**
+	 * Creates a new empty numerical argument ranking.
+	 */
 	public NumericalArgumentRanking() {
-		this.theMap = new HashMap<>();
+		this.argumentToValue = new HashMap<>();
 		this.sortingType = SortingType.ASCENDING;
 	}
 
 	/**
-	 * Creates a new argument ranking. All arguments given are assigned the given
-	 * initial value.
+	 * Creates a new argument ranking with the given set of
+	 * arguments and the given initial ranking value. 
 	 * 
 	 * @param args         some set of arguments
-	 * @param initialvalue an initial value for all arguments
+	 * @param initialvalue an initial value that will be 
+	 * assigned to all arguments
 	 */
 	public NumericalArgumentRanking(Collection<Argument> args, double initialvalue) {
 		this();
 		for (Argument arg : args)
-			this.theMap.put(arg, initialvalue);
+			this.argumentToValue.put(arg, initialvalue);
 	}
 
 	/*
@@ -100,15 +110,15 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	@Override
 	public boolean isStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
 		if (sortingType == SortingType.LEXICOGRAPHIC) {
-			BigDecimal bda = new BigDecimal((Double) (this.theMap.get(a)));
-			BigDecimal bdb = new BigDecimal((Double) (this.theMap.get(b)));
+			BigDecimal bda = new BigDecimal((Double) (this.argumentToValue.get(a)));
+			BigDecimal bdb = new BigDecimal((Double) (this.argumentToValue.get(b)));
 			bda = bda.setScale(5, RoundingMode.HALF_UP);
 			bdb = bdb.setScale(5, RoundingMode.HALF_UP);
 			return (bda.toString().compareTo(bdb.toString()) >= 0.0);
 		} else if (sortingType == SortingType.ASCENDING)
-			return this.theMap.get(b) <= this.theMap.get(a) + NumericalArgumentRanking.PRECISION;
+			return this.argumentToValue.get(b) <= this.argumentToValue.get(a) + NumericalArgumentRanking.PRECISION;
 		else if (sortingType == SortingType.DESCENDING)
-			return this.theMap.get(a) <= this.theMap.get(b) + NumericalArgumentRanking.PRECISION;
+			return this.argumentToValue.get(a) <= this.argumentToValue.get(b) + NumericalArgumentRanking.PRECISION;
 		else
 			throw new IllegalArgumentException("Unknown sorting type " + sortingType);
 
@@ -141,7 +151,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public String toString() {
-		return this.theMap.toString();
+		return this.argumentToValue.toString();
 	}
 
 	/*
@@ -151,7 +161,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public void clear() {
-		this.theMap.clear();
+		this.argumentToValue.clear();
 	}
 
 	/*
@@ -161,7 +171,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public boolean containsKey(Object arg0) {
-		return this.theMap.containsKey(arg0);
+		return this.argumentToValue.containsKey(arg0);
 	}
 
 	/*
@@ -171,7 +181,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public boolean containsValue(Object arg0) {
-		return this.theMap.containsValue(arg0);
+		return this.argumentToValue.containsValue(arg0);
 	}
 
 	/*
@@ -181,7 +191,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public Set<java.util.Map.Entry<Argument, Double>> entrySet() {
-		return this.theMap.entrySet();
+		return this.argumentToValue.entrySet();
 	}
 
 	/*
@@ -191,7 +201,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public Double get(Object arg0) {
-		return this.theMap.get(arg0);
+		return this.argumentToValue.get(arg0);
 	}
 
 	/*
@@ -201,7 +211,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public boolean isEmpty() {
-		return this.theMap.isEmpty();
+		return this.argumentToValue.isEmpty();
 	}
 
 	/*
@@ -211,7 +221,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public Set<Argument> keySet() {
-		return this.theMap.keySet();
+		return this.argumentToValue.keySet();
 	}
 
 	/*
@@ -221,7 +231,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public Double put(Argument arg0, Double arg1) {
-		return this.theMap.put(arg0, arg1);
+		return this.argumentToValue.put(arg0, arg1);
 	}
 
 	/*
@@ -231,7 +241,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public void putAll(Map<? extends Argument, ? extends Double> arg0) {
-		this.theMap.putAll(arg0);
+		this.argumentToValue.putAll(arg0);
 	}
 
 	/*
@@ -241,7 +251,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public Double remove(Object arg0) {
-		return this.theMap.remove(arg0);
+		return this.argumentToValue.remove(arg0);
 	}
 
 	/*
@@ -251,7 +261,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public int size() {
-		return this.theMap.size();
+		return this.argumentToValue.size();
 	}
 
 	/*
@@ -261,11 +271,11 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 */
 	@Override
 	public Collection<Double> values() {
-		return this.theMap.values();
+		return this.argumentToValue.values();
 	}
 
 	/**
-	 * @return sorting type of ranking values (descending, ascending or sorted
+	 * @return the sorting type that is used for ranking values (descending, ascending or sorted
 	 *         lexicographically)
 	 */
 	public SortingType getSortingType() {
@@ -276,10 +286,11 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * Set the sorting type for ranking values. For example, the "ascending" type
 	 * means that smaller values signify a higher ranking than bigger values.
 	 * 
-	 * @param order TODO add description
+	 * @param sortingType see {@link org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking#sortingType} for a description of
+	 * the available sorting methods
 	 */
-	public void setSortingType(SortingType order) {
-		this.sortingType = order;
+	public void setSortingType(SortingType sortingType) {
+		this.sortingType = sortingType;
 	}
 
 	@Override
@@ -289,8 +300,8 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 
 	@Override
 	public boolean containsIncomparableArguments() {
-		for (Argument a : this.theMap.keySet()) 
-			for (Argument b : this.theMap.keySet()) 
+		for (Argument a : this.argumentToValue.keySet()) 
+			for (Argument b : this.argumentToValue.keySet()) 
 				if (this.isIncomparable(a, b)) 
 					return true;
 		return false;

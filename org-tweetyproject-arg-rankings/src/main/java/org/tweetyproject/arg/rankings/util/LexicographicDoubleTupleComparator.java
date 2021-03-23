@@ -21,7 +21,7 @@ package org.tweetyproject.arg.rankings.util;
 import java.util.Comparator;
 
 /**
- * Compares two double vectors according to the lexicographic ordering.
+ * This comparator compares two vectors of double values according to the lexicographic ordering.
  * 
  * @author Anna Gessler
  *

@@ -50,11 +50,11 @@ public class RaIncreaseOfDefenseBranch extends RankingPostulate {
 			return false;
 		else if (kb.size() < 1)
 			return false;
-		Argument a_old = ((DungTheory) kb).iterator().next();
-		return (!((DungTheory) kb).getAttackers(a_old).isEmpty() && !kb.contains(new Argument("t1"))
+		Argument argOld = ((DungTheory) kb).iterator().next();
+		return (!((DungTheory) kb).getAttackers(argOld).isEmpty() && !kb.contains(new Argument("t1"))
 				&& !kb.contains(new Argument("t2")) && !kb.contains(new Argument("t3"))
-				&& !kb.contains(new Argument("t4")) && !kb.contains(new Argument(a_old.getName() + "clone"))
-				&& !kb.contains(new Argument(a_old.getName() + "clone2")));
+				&& !kb.contains(new Argument("t4")) && !kb.contains(new Argument(argOld.getName() + "clone"))
+				&& !kb.contains(new Argument(argOld.getName() + "clone2")));
 	}
 
 	@Override
@@ -66,26 +66,26 @@ public class RaIncreaseOfDefenseBranch extends RankingPostulate {
 		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
-		Argument a_old = it.next();
+		Argument argOld = it.next();
 
 		// clone argument and relations
-		Argument a_clone = new Argument(a_old.getName() + "clone");
-		Argument a_clone2 = new Argument(a_old.getName() + "clone2");
-		dt.add(a_clone);
-		dt.add(a_clone2);
-		for (Argument attacker : dt.getAttackers(a_old)) {
-			if (attacker.equals(a_old)) {
-				dt.add(new Attack(a_clone, a_clone));
-				dt.add(new Attack(a_clone2, a_clone2));
+		Argument argClone = new Argument(argOld.getName() + "clone");
+		Argument argClone2 = new Argument(argOld.getName() + "clone2");
+		dt.add(argClone);
+		dt.add(argClone2);
+		for (Argument attacker : dt.getAttackers(argOld)) {
+			if (attacker.equals(argOld)) {
+				dt.add(new Attack(argClone, argClone));
+				dt.add(new Attack(argClone2, argClone2));
 			} else {
-				dt.add(new Attack(attacker, a_clone));
-				dt.add(new Attack(attacker, a_clone2));
+				dt.add(new Attack(attacker, argClone));
+				dt.add(new Attack(attacker, argClone2));
 			}
 		}
-		for (Argument attacked : dt.getAttacked(a_old)) {
-			if (!attacked.equals(a_old)) {
-				dt.add(new Attack(a_clone, attacked));
-				dt.add(new Attack(a_clone2, attacked)); }
+		for (Argument attacked : dt.getAttacked(argOld)) {
+			if (!attacked.equals(argOld)) {
+				dt.add(new Attack(argClone, attacked));
+				dt.add(new Attack(argClone2, attacked)); }
 		}
 
 		// add new defense branch
@@ -97,15 +97,15 @@ public class RaIncreaseOfDefenseBranch extends RankingPostulate {
 		dt.add(t2);
 		dt.add(t3);
 		dt.add(t4);
-		dt.add(new Attack(t3, a_clone));
+		dt.add(new Attack(t3, argClone));
 		dt.add(new Attack(t4, t3));
 		// add increased defense branch
-		dt.add(new Attack(t1, a_clone2));
+		dt.add(new Attack(t1, argClone2));
 		dt.add(new Attack(t2, t1));
 		dt.add(new Attack(t3, t2));
 		dt.add(new Attack(t4, t3));
 
 		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
-		return ranking.isStrictlyLessAcceptableThan(a_clone2, a_clone);
+		return ranking.isStrictlyLessAcceptableThan(argClone2, argClone);
 	}
 }

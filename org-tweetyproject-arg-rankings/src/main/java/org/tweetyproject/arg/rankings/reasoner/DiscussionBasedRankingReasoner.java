@@ -51,18 +51,18 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 
 	@Override
 	public LatticeArgumentRanking getModel(DungTheory kb) {
-		int i_max = 6; // Treshold for maximum length of linear discussions (paths)
+		int iMax = 6; // Treshold for maximum length of linear discussions (paths)
 
 		Map<Argument, ArrayList<Double>> discussionCounts = new HashMap<Argument, ArrayList<Double>>();
-		for (int i = 2; i <= i_max+1; i++) { //Start with paths of length i=2 (discussion_count for length 1 would be -1 for all arguments)
+		for (int i = 2; i <= iMax+1; i++) { //Start with paths of length i=2 (discussion_count for length 1 would be -1 for all arguments)
 			for (Argument a : kb) {
-				double discussion_count = getNumberOfPathsOfLength(kb, a, i);
+				double discussionCount = getNumberOfPathsOfLength(kb, a, i);
 				if ((i & 1) != 0)
-					discussion_count = -discussion_count; // odd value => negative discussion count
+					discussionCount = -discussionCount; // odd value => negative discussion count
 				ArrayList<Double> argumentDiscussionCounts = discussionCounts.get(a);
 				if (argumentDiscussionCounts == null)
 					argumentDiscussionCounts = new ArrayList<Double>();
-				argumentDiscussionCounts.add(discussion_count + 0.0);
+				argumentDiscussionCounts.add(discussionCount + 0.0);
 				discussionCounts.put(a, argumentDiscussionCounts);
 			}
 		}
@@ -70,20 +70,20 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 		LatticeArgumentRanking resultRanking = new LatticeArgumentRanking(kb.getNodes());
 		for (Argument a : kb) {
 			for (Argument b : kb) {
-				Boolean args_equal = true;
-				for (int i = 0; i < i_max && args_equal; i++) {
+				Boolean argsEqual = true;
+				for (int i = 0; i < iMax && argsEqual; i++) {
 					NumericalArgumentRanking tempRanking = new NumericalArgumentRanking();
 					tempRanking.put(a, discussionCounts.get(a).get(i));
 					tempRanking.put(b, discussionCounts.get(b).get(i));
 					if (tempRanking.isStrictlyLessAcceptableThan(a, b)) {
 						resultRanking.setStrictlyLessOrEquallyAcceptableThan(a, b);
-						args_equal = false;
+						argsEqual = false;
 					} else if (tempRanking.isStrictlyLessAcceptableThan(b, a)) {
 						resultRanking.setStrictlyLessOrEquallyAcceptableThan(b, a);
-						args_equal = false;
+						argsEqual = false;
 					}
 				}
-				if (args_equal) {
+				if (argsEqual) {
 					resultRanking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 					resultRanking.setStrictlyLessOrEquallyAcceptableThan(a, b);
 				}

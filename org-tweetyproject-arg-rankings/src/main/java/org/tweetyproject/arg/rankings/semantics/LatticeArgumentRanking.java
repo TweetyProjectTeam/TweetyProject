@@ -39,7 +39,7 @@ import org.tweetyproject.graphs.orders.Order;
  */
 public class LatticeArgumentRanking extends ArgumentRanking {
 
-	/** The actual order */
+	/** The actual order of arguments */
 	private Order<Argument> order;
 
 	/**
@@ -53,7 +53,8 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	}
 
 	/**
-	 * Defines "a" to be strictly less or equally acceptable than "b".
+	 * Defines argument "a" to be strictly less or equally acceptable than
+	 * argument "b".
 	 * 
 	 * @param a some argument
 	 * @param b some argument

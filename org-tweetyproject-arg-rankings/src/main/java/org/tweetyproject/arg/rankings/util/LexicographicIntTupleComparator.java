@@ -21,7 +21,7 @@ package org.tweetyproject.arg.rankings.util;
 import java.util.Comparator;
 
 /**
- *  Compares tuples of integers according to the lexicographic ordering as described in 
+ *  This comparator compares tuples of integers according to the lexicographic ordering as described in 
  *  [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005].
  * 
  * @author Anna Gessler

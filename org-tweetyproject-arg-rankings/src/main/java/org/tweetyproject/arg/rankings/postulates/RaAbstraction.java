@@ -30,7 +30,7 @@ import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
 /**
  *  The "abstraction" postulate for ranking semantics as proposed in
  *  [Amgoud, Ben-Naim. Ranking-based semantics for argumentation frameworks. 2013]: 
- *  The ranking on an abstract argumentation framework A should be defined only on the
+ *  The ranking on an abstract argumentation framework should be defined only on the
  *  basics of the attacks between arguments.
  *  
  * @author Anna Gessler
@@ -60,23 +60,23 @@ public class RaAbstraction extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		
-		DungTheory iso_dt = new DungTheory(dt);
-		iso_dt.remove(a);
-		Argument iso_a = new Argument("iso");
-		iso_dt.add(iso_a);
+		DungTheory isoDt = new DungTheory(dt);
+		isoDt.remove(a);
+		Argument isoArg = new Argument("iso");
+		isoDt.add(isoArg);
 		
 		for (Argument f: dt.getAttackers(a)) 
 			if (f.equals(a))
-				iso_dt.add(new Attack(iso_a, iso_a));
+				isoDt.add(new Attack(isoArg, isoArg));
 			else
-				iso_dt.add(new Attack(f, iso_a));
+				isoDt.add(new Attack(f, isoArg));
 		
 		for (Argument f: dt.getAttacked(a)) 
 			if (!f.equals(a))
-				iso_dt.add(new Attack(iso_a, f));
+				isoDt.add(new Attack(isoArg, f));
 		
 		ArgumentRanking ranking = ev.getModel(dt);
-		ArgumentRanking iso_ranking = ev.getModel(iso_dt);
-		return ranking.compare(a, b) == iso_ranking.compare(iso_a, b);
+		ArgumentRanking isoRanking = ev.getModel(isoDt);
+		return ranking.compare(a, b) == isoRanking.compare(isoArg, b);
 	}
 }

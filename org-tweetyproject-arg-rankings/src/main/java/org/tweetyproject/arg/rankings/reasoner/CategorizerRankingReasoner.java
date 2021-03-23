@@ -71,14 +71,14 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 		Matrix directAttackMatrix = base.getAdjacencyMatrix().transpose(); //The matrix of direct attackers
 		int n = directAttackMatrix.getXDimension();
 		double valuations[] = new double[n];	 //Stores valuations of the current iteration
-		double valuations_old[] = new double[n]; //Stores valuations of the last iteration
+		double valuationsOld[] = new double[n]; //Stores valuations of the last iteration
 		
 		//Keep computing valuations until the values stop changing much or converge 
 		do {
-			valuations_old = valuations.clone();
+			valuationsOld = valuations.clone();
 			for (int i = 0; i < n; i++) 
-				valuations[i] = calculateCategorizerFunction(valuations_old,directAttackMatrix,i);
-		} while (getDistance(valuations_old, valuations) > this.epsilon);
+				valuations[i] = calculateCategorizerFunction(valuationsOld,directAttackMatrix,i);
+		} while (getDistance(valuationsOld, valuations) > this.epsilon);
 	
 		//Use computed valuations as values for argument ranking
 		//Note: The order of valuations v[i] is the same as the order of DungTheory.iterator()
@@ -92,15 +92,15 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 
 	/**
 	 * Computes the h-Categorizer function.
-	 * @param v_old array of double valuations that were computed in the previous iteration
+	 * @param vOld array of double valuations that were computed in the previous iteration
 	 * @param directAttackMatrix complete matrix of direct attacks
 	 * @param i row of the attack matrix that will be used in the calculation
 	 * @return categorizer valuation
 	 */
-	private double calculateCategorizerFunction(double[] v_old, Matrix directAttackMatrix, int i) {
+	private double calculateCategorizerFunction(double[] vOld, Matrix directAttackMatrix, int i) {
 		double c = 1.0;
 		for (int j = 0; j < directAttackMatrix.getXDimension(); j++) {
-			c += v_old[j] * directAttackMatrix.getEntry(i,j).doubleValue();
+			c += vOld[j] * directAttackMatrix.getEntry(i,j).doubleValue();
 		}
 		return (1.0 / c);
 		
@@ -108,14 +108,14 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 
 	/**
 	 * Computes the Euclidean distance between to the given arrays.
-	 * @param v_old first array
+	 * @param vOld first array
 	 * @param v second array
-	 * @return distance between v and v_old
+	 * @return distance between v and vOld
 	 */
-	private double getDistance(double[] v_old, double[] v) {
+	private double getDistance(double[] vOld, double[] v) {
 		double sum = 0.0;
 		for (int i = 0; i < v.length; i++) {
-			sum += Math.pow(v[i]-v_old[i],2.0);
+			sum += Math.pow(v[i]-vOld[i],2.0);
 		}
 		return Math.sqrt(sum);
 	}
