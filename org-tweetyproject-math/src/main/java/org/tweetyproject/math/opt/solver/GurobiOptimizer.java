@@ -35,10 +35,10 @@ import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.math.term.*;
 
 /**
- * This class is a wrapper for the Apache Commons Math3 CMAES optimizer 
- * (<a href="https://commons.apache.org/proper/commons-math/">https://commons.apache.org/proper/commons-math/</a>).
+ * This class is a wrapper for the Gurobi optimizer 
+ * (<a href="https://www.gurobi.com">https://www.gurobi.com</a>). Works with Gurobi 9.1.0
  *   
- * @author Matthias Thimm
+ * @author Sebastian Franke, Matthias Thimm
  */
 public class GurobiOptimizer extends Solver{
 
