@@ -149,7 +149,10 @@ public class ClingoSolver extends ASPSolver {
 				throw new SolverException("Clingo found no optimum.", 1); 
 			}
 			String[] as = output.split("Optimization : ");
-			this.optimum = as[1].substring(0,1);
+			int endOfLine = as[1].indexOf("\n");
+			if (endOfLine == -1)
+				throw new SolverException("Clingo returned no output that can be interpreted: " + output, 1);
+			this.optimum = as[1].substring(0,endOfLine);
 			for (String oi : this.optimum.split("\\s"))
 				optima.add(Integer.valueOf(oi));
 		} catch (Exception e) {
