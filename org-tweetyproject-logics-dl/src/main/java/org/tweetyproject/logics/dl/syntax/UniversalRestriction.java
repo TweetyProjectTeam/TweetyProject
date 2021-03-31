@@ -52,24 +52,21 @@ public class UniversalRestriction extends ComplexConcept {
 	}
 	
 	/**
-	 * Get the role and concept that are part of the universal restriction.
-	 * @return an atomic role and a concept
+	 * @return the (atomic) role and the concept that are part of the universal restriction.
 	 */
 	public Pair<AtomicRole,ComplexConcept> getFormulas() {
 		return this.formulas;	
 	}
 	
 	/**
-	 * Get the role of the universal restriction.
-	 * @return an atomic role
+	 * @return the (atomic) role of the universal restriction.
 	 */
 	public AtomicRole getRole() {
 		return this.formulas.getFirst();
 	}
 	
 	/**
-	 * Get the concept of the universal restriction.
-	 * @return a concept
+	 * @return the concept of the universal restriction.
 	 */
 	public ComplexConcept getConcept() {
 		return this.formulas.getSecond();

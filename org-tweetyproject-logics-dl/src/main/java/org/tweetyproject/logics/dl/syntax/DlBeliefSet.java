@@ -28,18 +28,18 @@ import org.tweetyproject.commons.Signature;
 /**
  * This class models a knowledge base for description logics.
  * 
- * <br> A knowledge base for description logic distinguishes between:
+ * <br> A knowledge base of a description logic distinguishes between:
  * <ul>
- * <li>the TBox (terminological axioms, i.e. properties of and relations between concepts). 
+ * <li>the TBox: terminological axioms, i.e. properties of and relations between concepts. 
  * In the description logic ALC, the TBox consists of equivalence axioms (GCUs). 
- * <li>and the ABox (assertional axioms, i.e. ground assertions about individuals and what concepts and roles they belong to).
+ * <li>the ABox: assertional axioms, i.e. ground assertions about individuals and what concepts and roles they belong to).
  * </ul>
  * 
  * @author Anna Gessler
  */
 public class DlBeliefSet extends BeliefSet<DlAxiom,DlSignature> {
 	/**
-	 * Creates a new and empty description logics knowledge base.
+	 * Creates a new empty description logics knowledge base.
 	 */
 	public DlBeliefSet(){
 		super();
@@ -61,9 +61,7 @@ public class DlBeliefSet extends BeliefSet<DlAxiom,DlSignature> {
 	}
 	
 	/**
-	 * Returns the TBox section of the knowledge.
-	 * 
-	 * @return a set of TBox formulas
+	 * @return the TBox section of the knowledge, which is a set of equivalence axioms
 	 */
 	public Set<DlAxiom> getTBox() {
 		Set<DlAxiom> TBox = new HashSet<DlAxiom>();
@@ -75,9 +73,7 @@ public class DlBeliefSet extends BeliefSet<DlAxiom,DlSignature> {
 	}
 	
 	/**
-	 * Returns the ABox section of the knowledge.
-	 * 
-	 * @return a set of ABox formulas
+	 * @return the ABox section of the knowledge, which is a set of concept assertions and role assertions
 	 */
 	public Set<DlAxiom> getABox() {
 		Set<DlAxiom> ABox = new HashSet<DlAxiom>();

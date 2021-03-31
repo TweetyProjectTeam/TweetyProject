@@ -38,7 +38,7 @@ import org.tweetyproject.logics.dl.syntax.ConceptAssertion;
 import org.tweetyproject.logics.dl.syntax.DlAxiom;
 
 /**
- * Naive reasoner for the description logic ALC (as represented by this library).
+ * Naive reasoner for the description logic ALC.
  * 
  * @author Anna Gessler
  *

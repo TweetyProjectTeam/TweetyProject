@@ -352,8 +352,6 @@ public class DlParser extends Parser<DlBeliefSet, DlAxiom> {
 	}
 
 	/**
-	 * Returns the signature of this parser.
-	 * 
 	 * @return the signature of this parser.
 	 */
 	public DlSignature getSignature() {

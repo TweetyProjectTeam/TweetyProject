@@ -27,7 +27,7 @@ import org.tweetyproject.logics.commons.syntax.Predicate;
  * 
  * This class models a concept assertion in description logic, i.e. an
  * expression of the form "a : C" (a is in the extension of C) where a
- * is an Individual and C is a concept.
+ * is an individual and C is a concept.
  * 
  * @author Anna Gessler
  */
@@ -52,7 +52,6 @@ public class ConceptAssertion extends AssertionalAxiom {
 	}
 	
 	/**
-	 * 
 	 * Initializes a role assertion with the given concept and Individual.
 	 * 
 	 * @param i
@@ -67,7 +66,6 @@ public class ConceptAssertion extends AssertionalAxiom {
 	}
 
 	/**
-	 * 
 	 * Initializes a role assertion with the given atomic concept and Individual.
 	 * 
 	 * @param i
@@ -141,18 +139,16 @@ public class ConceptAssertion extends AssertionalAxiom {
 	}
 
 	/**
-	 * Get the individual of this assertional axiom (= the individual that
+	 * @return the individual of this assertional axiom (= the individual that
 	 * is an instance of this axiom's concept)
-	 * @return the individual
 	 */
 	public Individual getIndividual() {
 		return individual;
 	}
 	
 	/**
-	 * Get the concept of this assertional axiom (= the concept that the 
+	 * @return the concept of this assertional axiom (= the concept that the 
 	 * individual is an instance of).
-	 * @return the concept of this assertional axiom
 	 */
 	public ComplexConcept getConcept() {
 		return concept;

@@ -47,7 +47,7 @@ public class Intersection extends AssociativeDlFormula {
 	}
 
 	/**
-	 * Creates a new intersection with the two given formulae
+	 * Creates a new intersection with the two given formulas.
 	 * 
 	 * @param first
 	 *            a relational formula.

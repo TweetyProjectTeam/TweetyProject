@@ -26,9 +26,9 @@ import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
  * 
- * This class models an equivalence axiom, also known as general concept inclusion (GCU),
- * meaning an expression of the form "C is a subset of or equal to D" with C and D as Concepts.
- * This can also be read as "C implies D". If C implies D and C implies C, the
+ * This class models an equivalence axiom, also known as "general concept inclusion" (GCU),
+ * meaning an expression of the form "C is a subset of or equal to D" where C and D are concepts.
+ * This can also be read as "C implies D". If "C implies D" and "C implies C", then the
  * two concepts are equivalent.
  * 
  * <br> Equivalence axioms are used in the TBox of a DL knowledge base to model relationships 
