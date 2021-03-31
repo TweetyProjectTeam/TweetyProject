@@ -37,7 +37,7 @@ import org.tweetyproject.math.term.*;
 
 import org.tweetyproject.math.term.Variable;
 public class GurobiTest {
-	
+//test comment	
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		FloatVariable m1 = new FloatVariable("Machine 1", -100 ,100);
 		FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
