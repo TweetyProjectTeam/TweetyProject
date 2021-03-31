@@ -182,8 +182,6 @@ public class ForallQuantifiedFormula extends FolFormula {
 			support.setQuantifierVariables(variables);
 		}
 		
-		
-
 		@SuppressWarnings("unchecked")
 		@Override
 		public Set<FolAtom> getAtoms() {

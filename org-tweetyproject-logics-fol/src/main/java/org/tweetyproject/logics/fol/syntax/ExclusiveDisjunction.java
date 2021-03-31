@@ -74,16 +74,16 @@ public class ExclusiveDisjunction extends AssociativeFolFormula{
 		if (!this.isEmpty()) {
 			if (!(this.get(0) instanceof FolFormula))
 				throw new IllegalStateException("Can not convert conjunctions containing non-first-order formulae to NNF.");
-			FolFormula temp_left = ((FolFormula)this.get(0)).toNnf();
+			FolFormula tempLeft = ((FolFormula)this.get(0)).toNnf();
 			for (int i = 1; i < this.size(); i++) {
 				if (!(this.get(i) instanceof FolFormula))
 					throw new IllegalStateException("Can not convert conjunctions containing non-first-order formulae to NNF.");
-				FolFormula temp_right = ((FolFormula)this.get(i)).toNnf();
-				Conjunction left = new Conjunction(new Negation(temp_left), temp_right);
-				Conjunction right = new Conjunction(temp_left, new Negation(temp_right));
-				temp_left = new Disjunction(left, right);
+				FolFormula tempRight = ((FolFormula)this.get(i)).toNnf();
+				Conjunction left = new Conjunction(new Negation(tempLeft), tempRight);
+				Conjunction right = new Conjunction(tempLeft, new Negation(tempRight));
+				tempLeft = new Disjunction(left, right);
 			}
-			return (Disjunction) temp_left;
+			return (Disjunction) tempLeft;
 		} else
 			return new Disjunction();
   }

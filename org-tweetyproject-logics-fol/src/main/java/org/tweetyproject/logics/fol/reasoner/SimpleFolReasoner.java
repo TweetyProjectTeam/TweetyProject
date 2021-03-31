@@ -29,8 +29,8 @@ import org.tweetyproject.logics.fol.syntax.ForallQuantifiedFormula;
 
 /**
  * Uses a naive brute force search procedure for theorem proving.
+ * 
  * @author Matthias Thimm
- *
  */
 public class SimpleFolReasoner extends FolReasoner {
 

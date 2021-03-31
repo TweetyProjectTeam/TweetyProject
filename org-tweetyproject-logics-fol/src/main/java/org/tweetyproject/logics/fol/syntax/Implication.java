@@ -42,7 +42,6 @@ public class Implication extends FolFormula {
 	 */
 	private Pair<RelationalFormula,RelationalFormula> formulas;
 	
-
 	/**
 	 * Creates a new implication a=&gt;b with the two given formulas
 	 * @param a a relational formula.
@@ -266,6 +265,5 @@ public class Implication extends FolFormula {
 			return false;
 		return true;
 	}
-
 
 }

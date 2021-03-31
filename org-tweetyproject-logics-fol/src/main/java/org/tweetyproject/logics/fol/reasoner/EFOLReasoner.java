@@ -32,7 +32,9 @@ import org.tweetyproject.logics.fol.writer.TPTPWriter;
  * Invokes E (<a href="http://eprover.org">http://eprover.org</a>), 
  * an automated theorem prover for first-order logic, and returns its results.
  * 
- * @author Bastian Wolf, Nils Geilen, Matthias Thimm
+ * @author Bastian Wolf
+ * @author Nils Geilen
+ * @author Matthias Thimm
  *
  */
 public class EFOLReasoner extends FolReasoner {
@@ -145,7 +147,6 @@ public class EFOLReasoner extends FolReasoner {
 	}
 
 	/**
-	 * Returns the path of the EProver binary.
 	 * @return the path of the EProver binary
 	 */
 	public String getBinaryLocation() {

@@ -92,8 +92,6 @@ import org.tweetyproject.logics.fol.syntax.Tautology;
  * <br> Equality: = (TODO soon to be added)
  * <br> Inequality: != (TODO soon to be added)
  * 
- * 
- * 
  * @author Anna Gessler
  */
 public class TPTPParser extends Parser<FolBeliefSet,FolFormula> {

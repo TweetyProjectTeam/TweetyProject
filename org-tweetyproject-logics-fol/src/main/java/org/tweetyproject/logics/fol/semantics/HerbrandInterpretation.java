@@ -35,13 +35,14 @@ import org.tweetyproject.logics.fol.syntax.*;
  * stating all ground atoms that are true in the interpretation.
  * <br>
  * NOTE: We only allow Herbrand interpretations for signatures without
- *   function symbols.
+ * function symbols.
+ * 
  * @author Matthias Thimm
  */
 public class HerbrandInterpretation extends InterpretationSet<FolAtom,FolBeliefSet,FolFormula> {
 	
 	/**
-	 * Creates a new empty Herbrand interpretation
+	 * Creates a new empty Herbrand interpretation.
 	 */
 	public HerbrandInterpretation(){
 		this(new HashSet<FolAtom>());
@@ -66,8 +67,8 @@ public class HerbrandInterpretation extends InterpretationSet<FolAtom,FolBeliefS
 	@Override
 	public boolean satisfies(FolFormula formula) throws IllegalArgumentException{
 		FolFormula f = (FolFormula) formula;
-		if(!f.isClosed()) throw new IllegalArgumentException("FolFormula " + f + " is not closed.");
-		
+		if(!f.isClosed()) 
+			throw new IllegalArgumentException("FolFormula " + f + " is not closed.");
 		if(f instanceof Tautology){
 			return true;
 		}			
