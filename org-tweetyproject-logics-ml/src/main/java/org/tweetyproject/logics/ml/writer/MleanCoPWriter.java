@@ -92,15 +92,15 @@ public class MleanCoPWriter {
 	private String printFormula(RelationalFormula f) {
 		if (f instanceof Possibility) {
 			Possibility p = (Possibility) f;
-			return parens("* " + parens(printFormula(p.getFormula())));
+			return parentheses("* " + parentheses(printFormula(p.getFormula())));
 		}
 		else if (f instanceof Necessity) {
 			Necessity n = (Necessity) f;
-			return parens("# " + parens(printFormula(n.getFormula())));
+			return parentheses("# " + parentheses(printFormula(n.getFormula())));
 		}
 		else if (f instanceof Negation) {
 			Negation n = (Negation) f;
-			return parens("~ " + parens(printFormula(n.getFormula())));
+			return parentheses("~ " + parentheses(printFormula(n.getFormula())));
 		}
 		else if (f instanceof ForallQuantifiedFormula || f instanceof ExistsQuantifiedFormula) {
 			FolFormula fqf = (FolFormula) f;
@@ -121,15 +121,15 @@ public class MleanCoPWriter {
 			String delimiter = (f instanceof Conjunction) ? " , " : " ; ";
 			while (i.hasNext())
 				result += delimiter + printFormula(i.next());
-			return parens(result);
+			return parentheses(result);
 		}	
 		else if (f instanceof Implication) {
 			Implication i = (Implication) f;
-			return parens(printFormula(i.getFormulas().getFirst()) + "=>" + parens(printFormula(i.getFormulas().getSecond())));
+			return parentheses(printFormula(i.getFormulas().getFirst()) + "=>" + parentheses(printFormula(i.getFormulas().getSecond())));
 		}
 		else if (f instanceof Equivalence) {
 			Equivalence i = (Equivalence) f;
-			return parens(printFormula(i.getFormulas().getFirst()) + "<=>" + parens(printFormula(i.getFormulas().getSecond())));
+			return parentheses(printFormula(i.getFormulas().getFirst()) + "<=>" + parentheses(printFormula(i.getFormulas().getSecond())));
 		}
 		return f.toString();
 	}
@@ -141,7 +141,7 @@ public class MleanCoPWriter {
 	 *            a string
 	 * @return (str)
 	 */
-	private String parens(String str) {
+	private String parentheses(String str) {
 		return "(" + str + ")";
 	}
 	

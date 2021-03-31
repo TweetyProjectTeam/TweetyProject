@@ -85,7 +85,7 @@ import org.tweetyproject.logics.ml.syntax.Possibility;
  * <br> is a sequence of symbols from {a,...,z,A,...,Z,0,...,9} with an uppercase letter at the beginning.
  * <br>
  * <br> Note: Equality/Inequality predicates ("==" and "/==") can only be parsed if the parser is given a FolSignature 
- * <br> with equality (which is not the case by default).
+ * <br> with the containsEquality attribute enabled (which is not the case by default).
  * 
  * @author Matthias Thimm
  * @author Anna Gessler

@@ -54,7 +54,6 @@ public class SimpleMlReasoner extends AbstractMlReasoner {
 		if(!formula.isClosed())
 			throw new IllegalArgumentException("The given formula " + formula + " is not closed.");	
 
-		
 		//A Kripke model consists of a set of worlds and an accessibility relation that defines which of those worlds are accessible to each other.
 		//To construct all possible Kripke models for the knowledge base, we need to find all possible sets of worlds for the knowledge base
 		//and all possible accessibility relations for each of those sets.

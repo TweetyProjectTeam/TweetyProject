@@ -31,7 +31,6 @@ import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
 import org.tweetyproject.logics.ml.writer.SPASSWriter;
 
 /**
- * 
  * Invokes SPASS (<a href="http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/"
  * >http://www.mpi-inf.mpg.de/departments/automation-of-logic/software/spass-workbench/</a>), 
  * an automated theorem prover for first-order logic, modal logic and description logics.

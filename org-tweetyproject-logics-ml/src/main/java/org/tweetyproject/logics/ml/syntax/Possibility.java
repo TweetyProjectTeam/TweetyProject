@@ -30,7 +30,7 @@ public class Possibility extends MlFormula {
 
 	/**
 	 * Creates a new possibility formula with the
-	 * given inner formula
+	 * given inner formula.
 	 * @param formula a formula, either a modal formula or a first-order formula.
 	 */
 	public Possibility(RelationalFormula formula){

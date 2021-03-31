@@ -44,8 +44,9 @@ public class MleanCoPReasoner extends AbstractMlReasoner {
 	 * String representation of the mleancop.sh path. 
 	 * This shell script specifies the prolog system, prover location and modal logic (D, T, S4 or S5)
 	 * and domain (constant, cumulative or varying) that will be used.
-	 * <br><b>NOTE:</b> Make sure to set the PROVER_PATH variable in the mleancop.sh script to the location
- * of the mleancop files (= the prolog files).
+	 * <br>
+	 * <b>NOTE:</b> Make sure to set the PROVER_PATH variable in the mleancop.sh script to the location
+	 * * of the mleancop files (= the prolog files).
 	 */
 	private String scriptLocation;
 	
@@ -98,7 +99,7 @@ public class MleanCoPReasoner extends AbstractMlReasoner {
 	 */
 	@Override
 	public Boolean query(MlBeliefSet beliefbase, FolFormula formula) {
-		// check whether beliefbase => query is a theorem
+		//check whether beliefbase => query is a theorem
 		FolFormula complete = formula;
 		for(RelationalFormula f: beliefbase)
 			complete = complete.combineWithOr(new Negation(f));

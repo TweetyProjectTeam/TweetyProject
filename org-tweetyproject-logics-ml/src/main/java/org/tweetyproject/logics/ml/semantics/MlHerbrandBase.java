@@ -31,7 +31,8 @@ import org.tweetyproject.logics.fol.syntax.*;
  * given first-order logic.
  * <br>
  * NOTE: We only allow to define a Herbrand base for signatures without
- *   function symbols.
+ * function symbols.
+ * 
  * @author Matthias Thimm
  * @author Anna Gessler
  * @see org.tweetyproject.logics.fol.semantics.HerbrandBase
@@ -44,9 +45,8 @@ public class MlHerbrandBase {
 	 * Creates a new Herbrand base for the given signature.
      * <br>
      * NOTE: We only allow to define a Herbrand base for signatures without
-     *   function symbols.
-	 * @param sig the underlying first-order signature for
-	 * 	this Herbrand base. There should be no functors defined in "sig"
+     * function symbols.
+	 * @param sig the underlying first-order signature for this Herbrand base
 	 * @throws IllegalArgumentException if "sig" contains a functor.
 	 * @see org.tweetyproject.logics.fol.semantics.HerbrandBase#HerbrandBase(FolSignature sig)
 	 */
@@ -56,8 +56,6 @@ public class MlHerbrandBase {
 	
 
 	/**
-	 * Computes all possible Herbrand interpretations of this Herbrand
-	 * base, i.e. all possible subsets of this Herbrand base.
 	 * @return all possible Herbrand interpretations of this Herbrand
 	 * base, i.e. all possible subsets of this Herbrand base.
 	 */
@@ -70,7 +68,6 @@ public class MlHerbrandBase {
 	}
 	
 	/**
-	 * Returns all atoms of this Herbrand base.
 	 * @return all atoms of this Herbrand base.
 	 * @see org.tweetyproject.logics.fol.semantics.HerbrandBase#getAtoms()
 	 */

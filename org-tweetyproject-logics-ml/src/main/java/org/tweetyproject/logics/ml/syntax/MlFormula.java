@@ -54,6 +54,10 @@ public abstract class MlFormula extends FolFormula {
 	 */
 	private RelationalFormula formula;
 
+	/**
+	 * Creates a new modal formula with the given inner formula.
+	 * @param formula a modal formula or first-order formula
+	 */
 	public MlFormula(RelationalFormula formula) {
 		if (!(formula instanceof MlFormula) && !(formula instanceof FolFormula))
 			throw new IllegalArgumentException("Expecting first-order formula or modal formula for inner formula.");
@@ -102,8 +106,6 @@ public abstract class MlFormula extends FolFormula {
 	}
 
 	/**
-	 * Returns the inner formula of this modal formula.
-	 * 
 	 * @return the inner formula of this modal formula.
 	 */
 	public RelationalFormula getFormula() {

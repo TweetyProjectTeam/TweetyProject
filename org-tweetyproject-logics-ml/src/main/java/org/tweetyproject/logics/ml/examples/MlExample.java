@@ -41,12 +41,14 @@ public class MlExample {
 		MlBeliefSet b1 = parser.parseBeliefBaseFromFile("src/main/resources/examplebeliefbase2.mlogic");
 		FolFormula f1 = (FolFormula) parser.parseFormula("<>(A&&B)");
 		System.out.println("Parsed belief base:" + b1 + "\nSignature of belief base:" + b1.getMinimalSignature());
+		System.out.println("Parsed formula:" + f1);
 
 		// Parse simple BeliefBase from string
 		parser = new MlParser();
 		MlBeliefSet b2 = parser.parseBeliefBase("Animal = {penguin,eagle} \n type(Flies(Animal)) \n (Flies(eagle))");
 		FolFormula f2 = (FolFormula) parser.parseFormula("(Flies(penguin)) || (!(Flies(penguin)))");
 		System.out.println("Parsed belief base:" + b2);
+		System.out.println("Parsed formula:" + f2);
 
 		// Parse more complex BeliefBase from file
 		parser = new MlParser();
