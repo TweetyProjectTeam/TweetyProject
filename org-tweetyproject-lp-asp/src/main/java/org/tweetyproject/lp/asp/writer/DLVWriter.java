@@ -22,60 +22,40 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.tweetyproject.logics.commons.syntax.Predicate;
 import org.tweetyproject.lp.asp.syntax.ASPRule;
 import org.tweetyproject.lp.asp.syntax.Program;
 
 /**
- * Prints ASP programs and single rules to the Clingo input format
- * (<a href="https://potassco.org/clingo/">https://potassco.org/clingo/</a>).
- * The Clingo input format adheres (mostly) to the ASP-Core-2 language standard.
+ * Prints ASP programs and single rules to the DLV input format
+ * (<a href="http://www.dlvsystem.com/html/DLV_User_Manual.html">http://www.dlvsystem.com/html/DLV_User_Manual.html</a>).
  * 
- * @see org.tweetyproject.lp.asp.reasoner.ClingoSolver
+ * @see org.tweetyproject.lp.asp.reasoner.DLVSolver
  * 
  * @author Anna Gessler
  */
 
-public class ClingoWriter {
+public class DLVWriter {
 
 	Writer writer;
-
+	
 	/**
-	 * If set to true, irrelevant atoms are hidden from the output using clingo's
-	 * #show statement.
-	 */
-	private boolean usePredicateWhitelist = false;
-
-	/**
-	 * Create a new ClingoWriter with the given writer.
+	 * Create a new DLVWriter with the given writer.
 	 * 
 	 * @param writer a writer
 	 */
-	public ClingoWriter(Writer writer) {
+	public DLVWriter(Writer writer) {
 		this.writer = writer;
 	}
 
 	/**
-	 * Create a new ClingoWriter.
+	 * Create a new DLVWriter.
 	 */
-	public ClingoWriter() {
+	public DLVWriter() {
 		this.writer = new StringWriter();
 	}
 
 	/**
-	 * Create a new ClingoWriter with the given writer and options.
-	 * 
-	 * @param writer
-	 * @param usePredicateWhitelist if set to true, irrelevant atoms are hidden from
-	 *                              the output using clingo's #show statement.
-	 */
-	public ClingoWriter(Writer writer, boolean usePredicateWhitelist) {
-		this.writer = writer;
-		this.usePredicateWhitelist = usePredicateWhitelist;
-	}
-
-	/**
-	 * Prints the given program in clingo format.
+	 * Prints the given program in DLV format.
 	 * 
 	 * @param p a program
 	 * @throws IOException if an IO issue occurs.
@@ -88,30 +68,20 @@ public class ClingoWriter {
 		
 		for (ASPRule r : p)
 			writer.write(printRule(r) + "\n");
-
-		// Optionally suppress irrelevant atoms from output.
-		if (usePredicateWhitelist) {
-			for (Predicate pr : p.getOutputWhitelist())
-				writer.write("\n #show " + pr.getName() + "/" + pr.getArity() + ".\n");
-		}
 	}
 
 	/**
-	 * Creates string representation of a single rule in clingo format.
+	 * Creates string representation of a single rule in DLV format.
 	 * 
 	 * @param r an ASP rule
 	 * @return String representation of the rule
 	 */
 	private String printRule(ASPRule r) {
-		return r.printToClingo();
+		return r.printToDLV();
 	}
 
 	public void close() throws IOException {
 		this.writer.close();
-	}
-
-	public void usePredicateWhitelist(boolean b) {
-		this.usePredicateWhitelist = b;
 	}
 
 }

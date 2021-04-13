@@ -203,5 +203,30 @@ public class ComparativeAtom extends ASPBodyElement {
 	public String toString() {
 		return left.toString() + op.toString() + right.toString();
 	}
+	
+	public String printToDLV() {
+		String result = "";
+		if (this.containsTermsOfType(ArithmeticTerm.class))  {
+			if (op == ASPOperator.BinaryOperator.EQ) {
+				{
+					if (this.left instanceof ArithmeticTerm && !(this.right instanceof ArithmeticTerm)) {
+						ArithmeticTerm arit = (ArithmeticTerm) this.left;
+						ASPOperator.ArithmeticOperator op = arit.getOperator();
+						result = op.toString() + "(" + arit.getLeft().toString() + "," + arit.getRight().toString() + "," + this.right.toString() + ")";
+					}
+					if (this.right instanceof ArithmeticTerm && !(this.left instanceof ArithmeticTerm)) {
+						ArithmeticTerm arit = (ArithmeticTerm) this.right;
+						ASPOperator.ArithmeticOperator op = arit.getOperator();
+						result = op.toString() + "(" + arit.getLeft().toString() + "," + arit.getRight().toString() + "," + this.left.toString() + ")";
+					}
+				}
+			}
+			else
+				return this.printToClingo();
+		}
+		else
+			return this.printToClingo();
+		return result;
+	}
 
 }

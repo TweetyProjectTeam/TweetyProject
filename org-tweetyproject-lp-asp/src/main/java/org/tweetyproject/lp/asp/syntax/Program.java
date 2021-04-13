@@ -54,7 +54,16 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	 * predicates. This corresponds to the '#show' statement of the clingo input
 	 * language.
 	 */
-	private Set<Predicate> output_predicate_whitelist;
+	private Set<Predicate> outputPredicateWhitelist;
+	
+	/**
+	 * Can be used to store additional commands for solvers such
+	 * as #const (Clingo, DLV) and #maxint (DLV). If the program is given to 
+	 * a solver, the commands will be appended to the input file if they
+	 * are available in the chosen solver's input format. 
+	 * The commands should be in the format "option=value".
+	 */
+	private Set<String> additionalOptions;
 	
 	// -------------------------------------------------------------------------
 	// CONSTRUCTORS
@@ -66,7 +75,8 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	public Program() {
 		super();
 		this.query = null;
-		this.output_predicate_whitelist = new HashSet<Predicate>();
+		this.outputPredicateWhitelist = new HashSet<Predicate>();
+		this.additionalOptions = new HashSet<String>();
 	}
 
 	/**
@@ -77,7 +87,8 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	public Program(Collection<ASPRule> rules) {
 		super(rules);
 		this.query = null;
-		this.output_predicate_whitelist = this.getPredicates();
+		this.outputPredicateWhitelist = this.getPredicates();
+		this.additionalOptions = new HashSet<String>();
 	}
 
 	/**
@@ -88,7 +99,8 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	public Program(ASPRule... rules) {
 		super();
 		this.query = null;
-		this.output_predicate_whitelist = this.getPredicates();
+		this.outputPredicateWhitelist = this.getPredicates();
+		this.additionalOptions = new HashSet<String>();
 		this.addAll(Arrays.asList(rules));
 	}
 
@@ -101,7 +113,8 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	public Program(ASPLiteral query, Set<ASPRule> rules) {
 		super(rules);
 		this.query = query;
-		this.output_predicate_whitelist = this.getPredicates();
+		this.outputPredicateWhitelist = this.getPredicates();
+		this.additionalOptions = new HashSet<String>();
 	}
 
 	/**
@@ -144,7 +157,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	 * @param ps set of predicates
 	 */
 	public void setOutputWhitelist(Collection<Predicate> ps) {
-		this.output_predicate_whitelist = (Set<Predicate>) ps;
+		this.outputPredicateWhitelist = (Set<Predicate>) ps;
 	}
 
 	/**
@@ -154,7 +167,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	 * @return set of whitelisted predicates
 	 */
 	public Set<Predicate> getOutputWhitelist() {
-		return this.output_predicate_whitelist;
+		return this.outputPredicateWhitelist;
 	}
 	
 	/**
@@ -396,5 +409,20 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 		return r;
 	}
 
+	/**
+	 * @return additional options for solvers
+	 */
+	public Set<String> getAdditionalOptions() {
+		return additionalOptions;
+	}
+
+	 /**
+	  * Set additional options for solvers. 
+	  * 
+	  * @param commandLineArguments in the format "option=value"
+	  */
+	public void setAdditionalOptions(Set<String> additionalOptions) {
+		this.additionalOptions = additionalOptions;
+	}
 
 }

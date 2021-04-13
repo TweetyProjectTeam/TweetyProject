@@ -35,6 +35,7 @@ import org.tweetyproject.logics.commons.syntax.Variable;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.fol.syntax.FolAtom;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
+import org.tweetyproject.lp.asp.syntax.ASPOperator.DLVPredicate;
 
 /**
  * This class models an atom, which is a basic structure for building literals
@@ -250,10 +251,10 @@ public class ASPAtom extends ASPLiteral {
 
 	@Override
 	public ASPAtom cloneWithAddedTerm(Term<?> term) {
-		Predicate new_predicate = new Predicate(this.predicate.getName(), this.predicate.getArity() + 1);
+		Predicate newPredicate = new Predicate(this.predicate.getName(), this.predicate.getArity() + 1);
 		List<Term<?>> args = new ArrayList<Term<?>>(this.arguments);
 		args.add(term);
-		ASPAtom reval = new ASPAtom(new_predicate, args);
+		ASPAtom reval = new ASPAtom(newPredicate, args);
 		return reval;
 	}
 
@@ -328,6 +329,9 @@ public class ASPAtom extends ASPLiteral {
 	@Override
 	public String printToClingo() {
 		String res = this.predicate.getName();
+		if (this.predicate instanceof DLVPredicate) 
+			throw new IllegalArgumentException("Rule contains DLVPredicate " + this.predicate + " that is not supported by Clingo");
+		
 		if (this.predicate.getArity() > 0) {
 			res += "(";
 			for (int i = 0; i < arguments.size(); i++) {
@@ -338,8 +342,33 @@ public class ASPAtom extends ASPLiteral {
 				} else if (arguments.get(i) instanceof Variable) {
 					//this check is unnecessary because variables in TweetyProject are required to start with 
 					//an uppercase letter, but just in case
-					if (!Character.isUpperCase(termName.charAt(0))) 
-						throw new IllegalArgumentException("Invalid variable name '" + termName + "' Variables in clingo must start with an uppercase letter.");
+					if (!Character.isUpperCase(termName.charAt(0)) && termName.charAt(0)!='_') 
+						throw new IllegalArgumentException("Invalid variable name '" + termName + "' Variables in clingo must start with an uppercase letter (exception: '_').");
+				}
+				if (i < arguments.size() - 1)
+					res += termName + ",";
+				else
+					res += termName + ")";
+			}
+		}
+		return res;
+	}
+	
+	@Override
+	public String printToDLV() {
+		String res = this.predicate.getName();
+		if (this.predicate.getArity() > 0) {
+			res += "(";
+			for (int i = 0; i < arguments.size(); i++) {
+				String termName = arguments.get(i).toString();
+				if (arguments.get(i) instanceof Constant) {
+					if (!Character.isLowerCase(termName.charAt(0))) 
+						throw new IllegalArgumentException("Invalid constant name '" + termName + "' Constants in DLV must start with a lowercase letter");
+				} else if (arguments.get(i) instanceof Variable) {
+					//this check is unnecessary because variables in TweetyProject are required to start with 
+					//an uppercase letter, but just in case
+					if (!Character.isUpperCase(termName.charAt(0)) && termName.charAt(0)!='_') 
+						throw new IllegalArgumentException("Invalid variable name '" + termName + "' Variables in DLV must start with an uppercase letter (exception: '_').");
 				}
 				if (i < arguments.size() - 1)
 					res += termName + ",";

@@ -159,4 +159,14 @@ public class DefaultNegation extends ASPBodyElement {
 		return "not " + literal.toString(); 
 	}
 	
+	@Override
+	public String printToClingo() {
+		return "not " + literal.printToClingo(); 
+	}
+	
+	@Override
+	public String printToDLV() {
+		return "not " + literal.printToDLV(); 
+	}
+	
 }

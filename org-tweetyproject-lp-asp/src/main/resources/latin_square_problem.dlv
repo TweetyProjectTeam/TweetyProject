@@ -1,0 +1,32 @@
+% A DLV encoding for the latin square problem.
+% By Wolfgang Faber <wf@wfaber.com>.
+% Input:
+% num(N) - available symbols and implicit square dimension
+% preassigned(R,C,V) - field (row R, column C) with predetermined symbol V
+% Output:
+% square(R,C,V) - field (row R, column C) with associated symbol V
+
+% Assignment of the pre-assigned squares.
+square(R,C,V) :- preassigned(R,C,V).
+
+% Guess values only for non-preassigned squares.
+preassignedsquare(R,C) :- preassigned(R,C,V).
+square(R,C,V) v nsquare(R,C,V) :- num(R), num(C), num(V), not preassignedsquare(R,C).
+
+% Each square has exactly one symbol.
+:- num(R), num(C), not #count{ V: square(R,C,V) } = 1.
+
+% Each symbol occurs exactly once in each row.
+:- num(C), num(V), not #count{ R: square(R,C,V) } = 1.
+
+% Each symbol occurs exactly once in each column
+:- num(R), num(V), not #count{ C: square(R,C,V) } = 1.
+
+% Example input
+num(1).
+num(2).
+num(3).
+preassigned(1,1,1).
+preassigned(1,2,2).
+preassigned(1,3,3).
+

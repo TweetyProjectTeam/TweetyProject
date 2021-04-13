@@ -31,7 +31,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.parser.InstantiateVisitor;
 import org.tweetyproject.lp.asp.reasoner.ClingoSolver;
 import org.tweetyproject.lp.asp.semantics.AnswerSet;
@@ -41,11 +41,12 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * Test class for Clingo.
  * 
  * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Anna Gessler
  *
  */
 public class ClingoTest {
 	
-	static ASPCore2Parser parser;
+	static ASPParser parser;
 	
 	static InstantiateVisitor visitor;
 	
@@ -54,8 +55,8 @@ public class ClingoTest {
 	@BeforeClass
 	public static void init() {
 		visitor = new InstantiateVisitor();
-		parser = new ASPCore2Parser(new StringReader(""));
-		solver = new ClingoSolver("/home/anna/snap/asp/clingo");
+		parser = new ASPParser(new StringReader(""));
+		solver = new ClingoSolver("/your/path/to/clingo");
 	}
 
 	@Test
@@ -101,6 +102,7 @@ public class ClingoTest {
 			
 		Program p = visitor.visit(parser.Program(), null);
 		List<AnswerSet> asl = solver.getModels(p);
+		System.out.println(asl);
 		
 		assertTrue(asl.size() == 1);
 		assertTrue(asl.get(0).size() == 4);
