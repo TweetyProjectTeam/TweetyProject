@@ -52,10 +52,11 @@ public class ASPOperator {
 			if (this.equals(ArithmeticOperator.DIV))
 				return "/";
 			if (this.equals(ArithmeticOperator.MODULO))
-				return "\\\\";
+				return "\\";
 			else
 				throw new IllegalArgumentException("Unknown arithmetic operator");
 		}
+		
 	}
 
 	/**

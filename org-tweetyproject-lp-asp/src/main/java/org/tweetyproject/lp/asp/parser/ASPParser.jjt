@@ -170,6 +170,7 @@ TOKEN :
 |  <MINUS:               "-">
 |  <TIMES:               "*">
 |  <DIV:                 "/">
+|  <MODULO:				 "\\">
 |  <AT:                  "@">
 |  <PAREN_OPEN:          "(">
 |  <PAREN_CLOSE:         ")">
@@ -504,6 +505,7 @@ String Arithop() #Arithop:
   | <MINUS>
   | <TIMES>
   | <DIV>
+  | <MODULO>
   )
   { 
     jjtThis.op(this.token.image);

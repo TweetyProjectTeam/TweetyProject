@@ -51,59 +51,61 @@ public interface ASPParserConstants {
   /** RegularExpression Id. */
   int DIV = 24;
   /** RegularExpression Id. */
-  int AT = 25;
+  int MODULO = 25;
   /** RegularExpression Id. */
-  int PAREN_OPEN = 26;
+  int AT = 26;
   /** RegularExpression Id. */
-  int PAREN_CLOSE = 27;
+  int PAREN_OPEN = 27;
   /** RegularExpression Id. */
-  int SQUARE_OPEN = 28;
+  int PAREN_CLOSE = 28;
   /** RegularExpression Id. */
-  int SQUARE_CLOSE = 29;
+  int SQUARE_OPEN = 29;
   /** RegularExpression Id. */
-  int CURLY_OPEN = 30;
+  int SQUARE_CLOSE = 30;
   /** RegularExpression Id. */
-  int CURLY_CLOSE = 31;
+  int CURLY_OPEN = 31;
   /** RegularExpression Id. */
-  int EQUAL = 32;
+  int CURLY_CLOSE = 32;
   /** RegularExpression Id. */
-  int UNEQUAL = 33;
+  int EQUAL = 33;
   /** RegularExpression Id. */
-  int LESS = 34;
+  int UNEQUAL = 34;
   /** RegularExpression Id. */
-  int GREATER = 35;
+  int LESS = 35;
   /** RegularExpression Id. */
-  int LESS_OR_EQ = 36;
+  int GREATER = 36;
   /** RegularExpression Id. */
-  int GREATER_OR_EQ = 37;
+  int LESS_OR_EQ = 37;
   /** RegularExpression Id. */
-  int AGGREGATE_COUNT = 38;
+  int GREATER_OR_EQ = 38;
   /** RegularExpression Id. */
-  int AGGREGATE_MAX = 39;
+  int AGGREGATE_COUNT = 39;
   /** RegularExpression Id. */
-  int AGGREGATE_MIN = 40;
+  int AGGREGATE_MAX = 40;
   /** RegularExpression Id. */
-  int MINIMIZE = 41;
+  int AGGREGATE_MIN = 41;
   /** RegularExpression Id. */
-  int MAXIMIZE = 42;
+  int MINIMIZE = 42;
   /** RegularExpression Id. */
-  int AGGREGATE_SUM = 43;
+  int MAXIMIZE = 43;
   /** RegularExpression Id. */
-  int AGGREGATE_SUM_PLUS = 44;
+  int AGGREGATE_SUM = 44;
   /** RegularExpression Id. */
-  int AGGREGATE_TIMES = 45;
+  int AGGREGATE_SUM_PLUS = 45;
   /** RegularExpression Id. */
-  int CLINGO_SHOW = 46;
+  int AGGREGATE_TIMES = 46;
   /** RegularExpression Id. */
-  int META_MAXINT = 47;
+  int CLINGO_SHOW = 47;
   /** RegularExpression Id. */
-  int META_CONST = 48;
+  int META_MAXINT = 48;
   /** RegularExpression Id. */
-  int DLV_ARITHMETIC_ID = 49;
+  int META_CONST = 49;
   /** RegularExpression Id. */
-  int DLV_ID = 50;
+  int DLV_ARITHMETIC_ID = 50;
   /** RegularExpression Id. */
-  int META_OTHER = 51;
+  int DLV_ID = 51;
+  /** RegularExpression Id. */
+  int META_OTHER = 52;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -135,6 +137,7 @@ public interface ASPParserConstants {
     "\"-\"",
     "\"*\"",
     "\"/\"",
+    "\"\\\\\"",
     "\"@\"",
     "\"(\"",
     "\")\"",

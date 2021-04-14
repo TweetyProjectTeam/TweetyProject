@@ -212,12 +212,18 @@ public class ComparativeAtom extends ASPBodyElement {
 					if (this.left instanceof ArithmeticTerm && !(this.right instanceof ArithmeticTerm)) {
 						ArithmeticTerm arit = (ArithmeticTerm) this.left;
 						ASPOperator.ArithmeticOperator op = arit.getOperator();
-						result = op.toString() + "(" + arit.getLeft().toString() + "," + arit.getRight().toString() + "," + this.right.toString() + ")";
+						String opString = op.toString();
+						if (op == ASPOperator.ArithmeticOperator.MODULO)
+							opString = "#mod";
+						result = opString + "(" + arit.getLeft().toString() + "," + arit.getRight().toString() + "," + this.right.toString() + ")";
 					}
 					if (this.right instanceof ArithmeticTerm && !(this.left instanceof ArithmeticTerm)) {
 						ArithmeticTerm arit = (ArithmeticTerm) this.right;
 						ASPOperator.ArithmeticOperator op = arit.getOperator();
-						result = op.toString() + "(" + arit.getLeft().toString() + "," + arit.getRight().toString() + "," + this.left.toString() + ")";
+						String opString = op.toString();
+						if (op == ASPOperator.ArithmeticOperator.MODULO)
+							opString = "#mod";
+						result = opString + "(" + arit.getLeft().toString() + "," + arit.getRight().toString() + "," + this.left.toString() + ")";
 					}
 				}
 			}

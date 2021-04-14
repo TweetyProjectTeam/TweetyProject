@@ -641,7 +641,7 @@ public class InstantiateVisitor implements ASPParserVisitor {
 			return ASPOperator.ArithmeticOperator.DIV;
 		else if (sop.equals("*"))
 			return ASPOperator.ArithmeticOperator.TIMES;
-		else if (sop.equals("\\\\"))
+		else if (sop.equals("\\"))
 			return ASPOperator.ArithmeticOperator.MODULO;
 		else if (sop.equals(""))
 			return null;
