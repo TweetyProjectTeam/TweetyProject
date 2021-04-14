@@ -61,9 +61,11 @@ import org.tweetyproject.lp.asp.semantics.*;
  * <br>
  * <br> The grammar given above is mostly equivalent to the ASP-Core-2 grammar. The main differences are that some variations in symbols are
  * supported (such as DLV using "v" instead of "|") and that special constructs from Clingo and DLV are allowed:
- * <br> - #show statements (Clingo)
+ * <br> - #show statements (Clingo): The whitelisted atoms are added to the program's outputPredicateWhitelist and can be used by ClingoSolver if enabled
+ * with ClingoSolver.toggleOutputWhitelist(true)
  * <br> - #succ, #prec, #mod predicates, +(X,Y,Z), -(X,Y,Z), *(X,Y,Z), /(X,Y,Z) (DLV): They are converted into equivalent built-in atoms (clingo syntax)
  * <br> - #maxint statements: They are used in place of the integerMaximum parameter when calling solvers
+ * <br> - #const constants: They are added to the program's additionalOptions and are automatically used by ClingoSolver and DLVSolver
  * <br> - other arithmetic predicates (such as #int) and list predicates (such as #append) from DLV: They are parsed as special predicates 
  * that can only be used with the DLV solver but not with Clingo
  * <br> Other Clingo/DLV meta-statements (such as #include, #external, #program, #script) are ignored.
@@ -1404,23 +1406,22 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case NAF:
+        jj_consume_token(NAF);
+          jjtn000.nafneg(true);
+        break;
+      default:
+        jj_la1[28] = jj_gen;
+        ;
+      }
       if (jj_2_12(2147483647)) {
         BuiltinAtom();
       } else {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case NAF:
         case ID:
         case MINUS:
         case DLV_ID:
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case NAF:
-            jj_consume_token(NAF);
-          jjtn000.nafneg(true);
-            break;
-          default:
-            jj_la1[28] = jj_gen;
-            ;
-          }
           ClassicalLiteral();
           break;
         default:
@@ -2073,27 +2074,27 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(14, xla); }
   }
 
-  private boolean jj_3R_51() {
+  private boolean jj_3R_52() {
     if (jj_scan_token(DLV_ARITHMETIC_ID)) return true;
     return false;
   }
 
   private boolean jj_3R_31() {
-    if (jj_3R_61()) return true;
+    if (jj_3R_62()) return true;
     if (jj_scan_token(CURLY_OPEN)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_62()) jj_scanpos = xsp;
+    if (jj_3R_63()) jj_scanpos = xsp;
     if (jj_scan_token(CURLY_CLOSE)) return true;
     return false;
   }
 
-  private boolean jj_3R_70() {
+  private boolean jj_3R_71() {
     if (jj_scan_token(DLV_ID)) return true;
     return false;
   }
 
-  private boolean jj_3R_66() {
+  private boolean jj_3R_67() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(47)) {
@@ -2115,12 +2116,12 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_73() {
+  private boolean jj_3R_74() {
     if (jj_3R_93()) return true;
     return false;
   }
 
-  private boolean jj_3R_69() {
+  private boolean jj_3R_70() {
     if (jj_scan_token(ID)) return true;
     return false;
   }
@@ -2129,7 +2130,15 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     if (jj_scan_token(COLON)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_73()) jj_scanpos = xsp;
+    if (jj_3R_74()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_26() {
+    if (jj_3R_29()) return true;
+    if (jj_scan_token(PAREN_OPEN)) return true;
+    if (jj_3R_27()) return true;
+    if (jj_scan_token(COMMA)) return true;
     return false;
   }
 
@@ -2155,15 +2164,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_26() {
-    if (jj_3R_29()) return true;
-    if (jj_scan_token(PAREN_OPEN)) return true;
-    if (jj_3R_27()) return true;
-    if (jj_scan_token(COMMA)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_72() {
+  private boolean jj_3R_73() {
     if (jj_3R_93()) return true;
     return false;
   }
@@ -2175,7 +2176,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   private boolean jj_3R_45() {
-    if (jj_3R_52()) return true;
+    if (jj_3R_53()) return true;
     return false;
   }
 
@@ -2213,11 +2214,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     if (jj_scan_token(COLON)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_72()) jj_scanpos = xsp;
+    if (jj_3R_73()) jj_scanpos = xsp;
     return false;
   }
 
-  private boolean jj_3R_67() {
+  private boolean jj_3R_68() {
     if (jj_scan_token(NAF)) return true;
     return false;
   }
@@ -2243,13 +2244,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_71() {
-    if (jj_3R_52()) return true;
+  private boolean jj_3R_72() {
+    if (jj_3R_53()) return true;
     return false;
   }
 
   private boolean jj_3R_97() {
-    if (jj_3R_52()) return true;
+    if (jj_3R_53()) return true;
     return false;
   }
 
@@ -2259,7 +2260,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_68() {
+  private boolean jj_3R_69() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_90()) jj_scanpos = xsp;
@@ -2309,7 +2310,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     if (jj_scan_token(PAREN_OPEN)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_71()) jj_scanpos = xsp;
+    if (jj_3R_72()) jj_scanpos = xsp;
     if (jj_scan_token(PAREN_CLOSE)) return true;
     return false;
   }
@@ -2352,7 +2353,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_58() {
+  private boolean jj_3R_59() {
     if (jj_scan_token(MINUS)) return true;
     if (jj_3R_27()) return true;
     if (jj_3R_81()) return true;
@@ -2365,7 +2366,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_57() {
+  private boolean jj_3R_58() {
     if (jj_scan_token(PAREN_OPEN)) return true;
     if (jj_3R_27()) return true;
     if (jj_scan_token(PAREN_CLOSE)) return true;
@@ -2379,13 +2380,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_56() {
+  private boolean jj_3R_57() {
     if (jj_3R_84()) return true;
     if (jj_3R_81()) return true;
     return false;
   }
 
-  private boolean jj_3R_55() {
+  private boolean jj_3R_56() {
     if (jj_3R_83()) return true;
     if (jj_3R_81()) return true;
     return false;
@@ -2417,18 +2418,18 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   private boolean jj_3R_42() {
-    if (jj_3R_70()) return true;
+    if (jj_3R_71()) return true;
     return false;
   }
 
-  private boolean jj_3R_54() {
+  private boolean jj_3R_55() {
     if (jj_3R_82()) return true;
     if (jj_3R_81()) return true;
     return false;
   }
 
-  private boolean jj_3R_53() {
-    if (jj_3R_69()) return true;
+  private boolean jj_3R_54() {
+    if (jj_3R_70()) return true;
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_80()) jj_scanpos = xsp;
@@ -2439,8 +2440,6 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   private boolean jj_3R_27() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_53()) {
-    jj_scanpos = xsp;
     if (jj_3R_54()) {
     jj_scanpos = xsp;
     if (jj_3R_55()) {
@@ -2449,7 +2448,9 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     jj_scanpos = xsp;
     if (jj_3R_57()) {
     jj_scanpos = xsp;
-    if (jj_3R_58()) return true;
+    if (jj_3R_58()) {
+    jj_scanpos = xsp;
+    if (jj_3R_59()) return true;
     }
     }
     }
@@ -2484,21 +2485,21 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  private boolean jj_3R_25() {
+    if (jj_3R_52()) return true;
+    if (jj_scan_token(PAREN_OPEN)) return true;
+    if (jj_3R_53()) return true;
+    if (jj_scan_token(PAREN_CLOSE)) return true;
+    return false;
+  }
+
   private boolean jj_3R_79() {
     if (jj_3R_27()) return true;
     if (jj_scan_token(COMMA)) return true;
     return false;
   }
 
-  private boolean jj_3R_25() {
-    if (jj_3R_51()) return true;
-    if (jj_scan_token(PAREN_OPEN)) return true;
-    if (jj_3R_52()) return true;
-    if (jj_scan_token(PAREN_CLOSE)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_52() {
+  private boolean jj_3R_53() {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -2509,7 +2510,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   private boolean jj_3R_41() {
-    if (jj_3R_69()) return true;
+    if (jj_3R_70()) return true;
     return false;
   }
 
@@ -2527,8 +2528,8 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   private boolean jj_3R_38() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_67()) jj_scanpos = xsp;
-    if (jj_3R_68()) return true;
+    if (jj_3R_68()) jj_scanpos = xsp;
+    if (jj_3R_69()) return true;
     return false;
   }
 
@@ -2547,9 +2548,9 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_75() {
+  private boolean jj_3R_76() {
     if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_52()) return true;
+    if (jj_3R_53()) return true;
     return false;
   }
 
@@ -2629,15 +2630,15 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   private boolean jj_3R_95() {
-    if (jj_3R_51()) return true;
-    if (jj_scan_token(PAREN_OPEN)) return true;
     if (jj_3R_52()) return true;
+    if (jj_scan_token(PAREN_OPEN)) return true;
+    if (jj_3R_53()) return true;
     if (jj_scan_token(PAREN_CLOSE)) return true;
     return false;
   }
 
-  private boolean jj_3R_60() {
-    if (jj_3R_68()) return true;
+  private boolean jj_3R_61() {
+    if (jj_3R_69()) return true;
     return false;
   }
 
@@ -2656,13 +2657,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_59() {
-    if (jj_3R_85()) return true;
+  private boolean jj_3R_66() {
+    if (jj_3R_88()) return true;
     return false;
   }
 
-  private boolean jj_3R_65() {
-    if (jj_3R_88()) return true;
+  private boolean jj_3R_60() {
+    if (jj_3R_85()) return true;
     return false;
   }
 
@@ -2673,7 +2674,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_77() {
+  private boolean jj_3R_78() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_13()) {
@@ -2692,17 +2693,17 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   private boolean jj_3R_30() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_59()) {
+    if (jj_3R_60()) {
     jj_scanpos = xsp;
     if (jj_3_4()) {
     jj_scanpos = xsp;
-    if (jj_3R_60()) return true;
+    if (jj_3R_61()) return true;
     }
     }
     return false;
   }
 
-  private boolean jj_3R_64() {
+  private boolean jj_3R_65() {
     if (jj_scan_token(CONS)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -2715,37 +2716,14 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_63() {
+  private boolean jj_3R_64() {
     if (jj_3R_88()) return true;
     return false;
   }
 
   private boolean jj_3R_36() {
-    if (jj_3R_66()) return true;
+    if (jj_3R_67()) return true;
     if (jj_scan_token(DOT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_40() {
-    if (jj_scan_token(MINUS)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_35() {
-    if (jj_3R_31()) return true;
-    if (jj_scan_token(DOT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_34() {
-    if (jj_scan_token(WCONS)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_65()) jj_scanpos = xsp;
-    if (jj_scan_token(DOT)) return true;
-    if (jj_scan_token(SQUARE_OPEN)) return true;
-    if (jj_3R_47()) return true;
-    if (jj_scan_token(SQUARE_CLOSE)) return true;
     return false;
   }
 
@@ -2753,20 +2731,6 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     if (jj_3R_27()) return true;
     if (jj_3R_28()) return true;
     if (jj_3R_27()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_18() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_40()) jj_scanpos = xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_41()) {
-    jj_scanpos = xsp;
-    if (jj_3R_42()) return true;
-    }
-    xsp = jj_scanpos;
-    if (jj_3R_43()) jj_scanpos = xsp;
     return false;
   }
 
@@ -2786,11 +2750,48 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
+  private boolean jj_3R_40() {
+    if (jj_scan_token(MINUS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_35() {
+    if (jj_3R_31()) return true;
+    if (jj_scan_token(DOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_34() {
+    if (jj_scan_token(WCONS)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_66()) jj_scanpos = xsp;
+    if (jj_scan_token(DOT)) return true;
+    if (jj_scan_token(SQUARE_OPEN)) return true;
+    if (jj_3R_47()) return true;
+    if (jj_scan_token(SQUARE_CLOSE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_18() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_40()) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_41()) {
+    jj_scanpos = xsp;
+    if (jj_3R_42()) return true;
+    }
+    xsp = jj_scanpos;
+    if (jj_3R_43()) jj_scanpos = xsp;
+    return false;
+  }
+
   private boolean jj_3R_33() {
     if (jj_3R_30()) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_64()) jj_scanpos = xsp;
+    if (jj_3R_65()) jj_scanpos = xsp;
     if (jj_scan_token(DOT)) return true;
     return false;
   }
@@ -2799,7 +2800,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     if (jj_scan_token(CONS)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_63()) jj_scanpos = xsp;
+    if (jj_3R_64()) jj_scanpos = xsp;
     if (jj_scan_token(DOT)) return true;
     return false;
   }
@@ -2823,15 +2824,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_78() {
-    if (jj_scan_token(NAF)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_50() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_78()) jj_scanpos = xsp;
+  private boolean jj_3R_51() {
     if (jj_3R_18()) return true;
     return false;
   }
@@ -2848,16 +2841,23 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   private boolean jj_3R_49() {
-    if (jj_3R_77()) return true;
+    if (jj_scan_token(NAF)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_50() {
+    if (jj_3R_78()) return true;
     return false;
   }
 
   private boolean jj_3R_22() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_49()) {
+    if (jj_3R_49()) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_50()) {
     jj_scanpos = xsp;
-    if (jj_3R_50()) return true;
+    if (jj_3R_51()) return true;
     }
     return false;
   }
@@ -2890,13 +2890,13 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_74() {
+  private boolean jj_3R_75() {
     if (jj_scan_token(AT)) return true;
     if (jj_3R_27()) return true;
     return false;
   }
 
-  private boolean jj_3R_76() {
+  private boolean jj_3R_77() {
     if (jj_3R_93()) return true;
     return false;
   }
@@ -2921,9 +2921,9 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     if (jj_3R_27()) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_74()) jj_scanpos = xsp;
-    xsp = jj_scanpos;
     if (jj_3R_75()) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_76()) jj_scanpos = xsp;
     return false;
   }
 
@@ -2931,11 +2931,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     if (jj_scan_token(COLON)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_76()) jj_scanpos = xsp;
+    if (jj_3R_77()) jj_scanpos = xsp;
     return false;
   }
 
-  private boolean jj_3R_62() {
+  private boolean jj_3R_63() {
     if (jj_3R_87()) return true;
     return false;
   }
@@ -2945,7 +2945,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     return false;
   }
 
-  private boolean jj_3R_61() {
+  private boolean jj_3R_62() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_86()) {
@@ -3009,7 +3009,7 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x400200,0x400200,0xbe03e80,0xbe03e80,0x80000,0xbe03e80,0x88583e00,0x8403e00,0x80,0xbe03e80,0x8403e00,0x400200,0x0,0xbe03e80,0x20000,0x8403e00,0x0,0x8403e00,0xbe03e80,0x20000,0x0,0x0,0x8403e00,0xbe03e80,0x20000,0x0,0x4000000,0x8000,0x80,0x400280,0x400000,0x200,0x8403e00,0x8000000,0x3e00000,0x0,0x8403e00,0x8000000,0x8403e00,0x3e00000,0x2400,};
+      jj_la1_0 = new int[] {0x400200,0x400200,0xbe03e80,0xbe03e80,0x80000,0xbe03e80,0x88583e00,0x8403e00,0x80,0xbe03e80,0x8403e00,0x400200,0x0,0xbe03e80,0x20000,0x8403e00,0x0,0x8403e00,0xbe03e80,0x20000,0x0,0x0,0x8403e00,0xbe03e80,0x20000,0x0,0x4000000,0x8000,0x80,0x400200,0x400000,0x200,0x8403e00,0x8000000,0x3e00000,0x0,0x8403e00,0x8000000,0x8403e00,0x3e00000,0x2400,};
    }
    private static void jj_la1_init_1() {
       jj_la1_1 = new int[] {0x80000,0x80000,0xc73fe,0xc73fe,0x0,0xc73fe,0x1bff80,0x7380,0x0,0xc007e,0x0,0x80000,0x7e,0xc007e,0x0,0x0,0x7e,0x0,0xc007e,0x0,0x7380,0x138000,0x0,0xc007e,0x0,0xc00,0x0,0x0,0x0,0x80000,0x0,0x80000,0x0,0x0,0x4007e,0x7e,0x0,0x0,0x0,0x0,0x0,};

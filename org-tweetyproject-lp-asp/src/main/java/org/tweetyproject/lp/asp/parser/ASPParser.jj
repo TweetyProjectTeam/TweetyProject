@@ -89,9 +89,11 @@ import org.tweetyproject.lp.asp.semantics.*;
  * <br>
  * <br> The grammar given above is mostly equivalent to the ASP-Core-2 grammar. The main differences are that some variations in symbols are
  * supported (such as DLV using "v" instead of "|") and that special constructs from Clingo and DLV are allowed:
- * <br> - #show statements (Clingo)
+ * <br> - #show statements (Clingo): The whitelisted atoms are added to the program's outputPredicateWhitelist and can be used by ClingoSolver if enabled
+ * with ClingoSolver.toggleOutputWhitelist(true)
  * <br> - #succ, #prec, #mod predicates, +(X,Y,Z), -(X,Y,Z), *(X,Y,Z), /(X,Y,Z) (DLV): They are converted into equivalent built-in atoms (clingo syntax)
  * <br> - #maxint statements: They are used in place of the integerMaximum parameter when calling solvers
+ * <br> - #const constants: They are added to the program's additionalOptions and are automatically used by ClingoSolver and DLVSolver
  * <br> - other arithmetic predicates (such as #int) and list predicates (such as #append) from DLV: They are parsed as special predicates 
  * that can only be used with the DLV solver but not with Clingo
  * <br> Other Clingo/DLV meta-statements (such as #include, #external, #program, #script) are ignored.
@@ -198,7 +200,7 @@ TOKEN :
 |  <AGGREGATE_TIMES:     "#times">
 |  <CLINGO_SHOW: 	     "#show " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )*) "/" ("0" | ["1"-"9"](["0"-"9"])*)>
 |  <META_MAXINT: 	     "#maxint" " = " ("0" | ["1"-"9"](["0"-"9"])*)>
-|  <META_CONST: 	     "#const " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) " = " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )+)>
+|  <META_CONST: 	     "#const " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) " = " (( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) >
 |  <DLV_ARITHMETIC_ID:	 "#"("succ"|"prec"|"mod")>
 |  <DLV_ID: 			 "#"("rand"|"int"|"absdiff"|"append"|"delnth"|"flatten"|"getnth"|"head"|"insLast"|"insnth"|"last"|"length"|"member"|"reverse"|"subList"|"tail")>
 |  <META_OTHER:			 "#"(["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_","="] )*)>
@@ -1102,9 +1104,9 @@ ASTNAFLiteral NAFLiteral()            :
 {/*@bgen(jjtree) NAFLiteral */
  try {
 /*@egen*/
- ( 
- LOOKAHEAD((Term() Binop() Term()) | (Binop()) | (DlvArithmeticPredicate() <PAREN_OPEN> Terms() <PAREN_CLOSE>) | Arithop() <PAREN_OPEN> Term() <COMMA>) BuiltinAtom()
- | [<NAF>{jjtn000.nafneg(true);}] ClassicalLiteral()
+ ( [<NAF>{jjtn000.nafneg(true);}] 
+  (LOOKAHEAD((Term() Binop() Term()) | (Binop()) | (DlvArithmeticPredicate() <PAREN_OPEN> Terms() <PAREN_CLOSE>) | Arithop() <PAREN_OPEN> Term() <COMMA>) BuiltinAtom()
+ | ClassicalLiteral() )
  )/*@bgen(jjtree)*/
   {
     jjtree.closeNodeScope(jjtn000, true);

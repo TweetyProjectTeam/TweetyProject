@@ -449,8 +449,11 @@ public class InstantiateVisitor implements ASPParserVisitor {
 	public ASPBodyElement visit(ASTNAFLiteral node, Object data) {
 		ASPBodyElement at = null;
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
-			if (node.jjtGetChild(i) instanceof ASTBuiltInAtom)
-				at = visit((ASTBuiltInAtom) node.jjtGetChild(i), null);
+			if (node.jjtGetChild(i) instanceof ASTBuiltInAtom) {
+				at = visit((ASTBuiltInAtom) node.jjtGetChild(i), null); 
+				if (node.nafneg)
+					return new DefaultNegation(at);
+			}
 			else if (node.jjtGetChild(i) instanceof ASTLiteral) {
 				at = visit((ASTLiteral) node.jjtGetChild(i), null);
 				if (node.nafneg)

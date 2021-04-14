@@ -30,6 +30,7 @@ import java.util.TreeSet;
 
 import org.tweetyproject.logics.commons.error.LanguageException;
 import org.tweetyproject.logics.commons.syntax.Constant;
+import org.tweetyproject.logics.commons.syntax.NumberTerm;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 import org.tweetyproject.logics.commons.syntax.Variable;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
@@ -329,9 +330,16 @@ public class ASPAtom extends ASPLiteral {
 	@Override
 	public String printToClingo() {
 		String res = this.predicate.getName();
-		if (this.predicate instanceof DLVPredicate) 
-			throw new IllegalArgumentException("Rule contains DLVPredicate " + this.predicate + " that is not supported by Clingo");
-		
+		if (this.predicate instanceof DLVPredicate) {
+			if (this.predicate.getName().equals("#int") && this.arguments.size() == 3) {
+				//#int(X, Y, Z) is true, iff X<=Z<=Y holds
+				ComparativeAtom i1 = new ComparativeAtom(ASPOperator.BinaryOperator.LEQ, this.arguments.get(0), this.arguments.get(2));
+				ComparativeAtom i2 = new ComparativeAtom(ASPOperator.BinaryOperator.LEQ, this.arguments.get(2), this.arguments.get(1));
+				return i1.printToClingo() + "\n" + i2.printToClingo();
+			}
+			else
+				throw new IllegalArgumentException("Rule contains DLVPredicate " + this.predicate + " that is not supported by Clingo");
+		} 
 		if (this.predicate.getArity() > 0) {
 			res += "(";
 			for (int i = 0; i < arguments.size(); i++) {
