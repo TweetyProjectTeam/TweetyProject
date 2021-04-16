@@ -46,3 +46,6 @@ A manual on how to use TweetyProject in your programs is currently in developmen
 
 ## License
 All parts of the TweetyProject available on this website are licensed under the [GNU Lesser General Public License](http://www.gnu.org/licenses/#LGPL) version 3 (beginning with TweetyProject version 1.6, the versions before are licensed under the [GNU General Public License](http://www.gnu.org/licenses/#GPL) version 3) except when this is noted otherwise. Use and modification of the libraries is encouraged but please give credit by referring to this repository. Please note that some libraries make also use of other third-party libraries such as Apache Commons. 
+
+# About this fork
+Implement and test additional features for the Tweety Library
