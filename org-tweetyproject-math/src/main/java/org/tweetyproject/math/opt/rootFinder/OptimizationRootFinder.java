@@ -74,8 +74,8 @@ public abstract class OptimizationRootFinder extends RootFinder {
 		
 		for(Term f: this.getFunctions())
 			if(target == null)
-				target = f;
-				//target = f.mult(f);
+				//target = f;
+				target = f.mult(f);
 			else target = target.add(f.mult(f));
 			
 		problem.setTargetFunction(target);
