@@ -41,6 +41,9 @@ import org.tweetyproject.math.opt.solver.Solver;
  */
 public class MaxEntExample {
 	public static void main(String[] args) throws ParserException, IOException{
+		/**
+		 * @TODO: change your path to Octave
+		 */
 		OctaveSqpSolver.setPathToOctave("/Users/Jonas/Desktop/TU/Hiwi/octave-5.2.0-w64/mingw64/bin/octave-cli-5.2.0.exe");
 		// Check if solver is installed: 
 		// System.out.println(OctaveSqpSolver.isInstalled());
@@ -63,8 +66,8 @@ public class MaxEntExample {
 		System.out.println(prob);
 
 		System.out.println("Probability of selected propositions: ");
-		System.out.println(prob.probability(new Proposition("k")));
-		System.out.println(prob.probability(new Proposition("g")));
-		System.out.println(prob.probability(new Proposition("s")));
+		System.out.println("P(k)" + prob.probability(new Proposition("k")));
+		System.out.println("P(g)" + prob.probability(new Proposition("g")));
+		System.out.println("P(s)" + prob.probability(new Proposition("s")));
 	}
 }
