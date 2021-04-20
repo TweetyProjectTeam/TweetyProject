@@ -131,7 +131,6 @@ public class ClingoSolver extends ASPSolver {
 
 	@Override
 	public List<AnswerSet> getModels(Program p) {
-		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			ClingoWriter writer = new ClingoWriter(new PrintWriter(file), usePredicateWhitelist);
@@ -139,11 +138,13 @@ public class ClingoSolver extends ASPSolver {
 			writer.close();
 			
 			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
-			result = parseResult(bash.run(cmd));
+			List<AnswerSet> result = parseResult(bash.run(cmd));
+			if (!result.isEmpty())
+				return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return null;
 	}
 	
 	/**
@@ -217,6 +218,7 @@ public class ClingoSolver extends ASPSolver {
 		String[] finalAs = as[as.length - 1].split("\n");
 		AnswerSet a = ASPParser.parseAnswerSet(finalAs[0]);
 		result.add(a);
+		
 		return result;
 	}
 
@@ -248,7 +250,6 @@ public class ClingoSolver extends ASPSolver {
 
 	@Override
 	public List<AnswerSet> getModels(String s) {
-		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			PrintWriter writer = new PrintWriter(file);
@@ -256,24 +257,27 @@ public class ClingoSolver extends ASPSolver {
 			writer.close();
 			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
 			this.outputData = (bash.run(cmd));
-			result = parseResult(outputData);
+			List<AnswerSet> result = parseResult(outputData);
+			if (!result.isEmpty())
+				return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return null;
 	}
 
 	@Override
 	public List<AnswerSet> getModels(File file) {
-		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
 			this.outputData = (bash.run(cmd));
-			result = parseResult(outputData);
+			List<AnswerSet> result = parseResult(outputData);
+			if (!result.isEmpty())
+				return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return null;
 	}
 
 	@Override
@@ -299,7 +303,6 @@ public class ClingoSolver extends ASPSolver {
 
 	@Override
 	public AnswerSet getModel(Program p) {
-		AnswerSet result = new AnswerSet();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			ClingoWriter writer = new ClingoWriter(new PrintWriter(file), usePredicateWhitelist);
@@ -307,12 +310,13 @@ public class ClingoSolver extends ASPSolver {
 			writer.close();
 			String cmd = pathToSolver + "/clingo " + options + " " + file.getAbsolutePath();
 			this.outputData = (bash.run(cmd));
-			result = parseResult(outputData).get(0);
+			List<AnswerSet> models = parseResult(outputData);
+			if (!models.isEmpty())
+				return models.get(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return result;
+		return null;
 	}
 
 	/**
