@@ -294,17 +294,32 @@ public class AggregateElement extends ASPElement {
 	@Override
 	public String printToClingo() {
 		String r = "";
-
 		if (!left.isEmpty()) {
 			for (int i = 0; i < left.size() - 1; i++)
 				r += left.get(i).toString() + ",";
 			r += left.get(left.size() - 1);
 		}
 		if (!right.isEmpty()) {
-			if (!left.isEmpty())
-				r += " : ";
+			r += " : ";
 			for (int i = 0; i < right.size() - 1; i++)
-				r += right.get(i).toString() + ",";
+				r += right.get(i).printToClingo() + ",";
+			r += right.get(right.size() - 1);
+		}
+		return r;
+	}
+	
+	@Override
+	public String printToDLV() {
+		String r = "";
+		if (!left.isEmpty()) {
+			for (int i = 0; i < left.size() - 1; i++)
+				r += left.get(i).toString() + ",";
+			r += left.get(left.size() - 1);
+		}
+		if (!right.isEmpty()) {
+			r += " : ";
+			for (int i = 0; i < right.size() - 1; i++)
+				r += right.get(i).printToDLV() + ",";
 			r += right.get(right.size() - 1);
 		}
 		return r;

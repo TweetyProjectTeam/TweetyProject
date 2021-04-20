@@ -28,7 +28,7 @@ import org.tweetyproject.logics.commons.syntax.NumberTerm;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 import org.tweetyproject.logics.commons.syntax.Variable;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.parser.InstantiateVisitor;
 import org.tweetyproject.lp.asp.parser.ParseException;
 import org.tweetyproject.lp.asp.reasoner.ClingoSolver;
@@ -49,10 +49,13 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * An example for using optimization statements, taken from the clingo guide, chapter
  * 3.1.13 <a href="https://github.com/potassco/guide">https://github.com/potassco/guide</a>.
  * 
+ * <br> Tested with clingo 5.4.0
+ * 
  * @author Anna Gessler
  */
 public class OptimizeExample {
-	private static String CLINGO_PATH =  "/your/path/to/clingo";
+	
+	private static String CLINGO_PATH = "your/path/to/clingo";
 
 	public static void main(String[] args) throws IOException, ParseException, SolverException {
 		Program hotelsExample = new Program();
@@ -80,7 +83,7 @@ public class OptimizeExample {
 		Predicate star = new Predicate("star", 2);
 		Predicate cost = new Predicate("cost", 2);
 		Predicate noisy = new Predicate("noisy");
-		Predicate main_street = new Predicate("main_street", 1);
+		Predicate mainStreet = new Predicate("main_street", 1);
 		hotelsExample.add(new ASPRule(new ASPAtom(star, h1, new NumberTerm(5))));
 		hotelsExample.add(new ASPRule(new ASPAtom(star, h2, new NumberTerm(4))));
 		hotelsExample.add(new ASPRule(new ASPAtom(star, h3, new NumberTerm(3))));
@@ -91,14 +94,14 @@ public class OptimizeExample {
 		hotelsExample.add(new ASPRule(new ASPAtom(cost, h3, new NumberTerm(90))));
 		hotelsExample.add(new ASPRule(new ASPAtom(cost, h4, new NumberTerm(75))));
 		hotelsExample.add(new ASPRule(new ASPAtom(cost, h5, new NumberTerm(60))));
-		hotelsExample.add(new ASPRule(new ASPAtom(main_street, h4)));
+		hotelsExample.add(new ASPRule(new ASPAtom(mainStreet, h4)));
 		ASPRule noisyRule = new ASPRule();
 		Variable X = new Variable("X");
 		Variable Y = new Variable("Y");
 		Variable Z = new Variable("Z");
 		noisyRule.setHead(new ASPAtom(noisy));
 		noisyRule.addBody(new ASPAtom(hotel, X));
-		noisyRule.addBody(new ASPAtom(main_street, X));
+		noisyRule.addBody(new ASPAtom(mainStreet, X));
 		hotelsExample.add(noisyRule);
 
 		// Optimization statements that represent priorities about how much we want cost
@@ -137,7 +140,7 @@ public class OptimizeExample {
 		System.out.println("All models:" + as);
 
 		// Using the parser to create optimization statements
-		ASPCore2Parser parser = new ASPCore2Parser(new StringReader(""));
+		ASPParser parser = new ASPParser(new StringReader(""));
 		parser.ReInit(new StringReader("#minimize { Y@1, X: hotel(X), star(X,Y) }.\n"));
 		Program pr1 = new InstantiateVisitor().visit(parser.Program(), null);
 		System.out.println("\nParsed optimization statement:\n" + pr1);

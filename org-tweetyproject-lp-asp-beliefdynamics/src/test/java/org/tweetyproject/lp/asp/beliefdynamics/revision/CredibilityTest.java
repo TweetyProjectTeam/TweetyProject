@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.parser.InstantiateVisitor;
 import org.tweetyproject.lp.asp.parser.ParseException;
 import org.tweetyproject.lp.asp.reasoner.DLVSolver;
@@ -36,7 +36,6 @@ import org.tweetyproject.lp.asp.syntax.Program;
 import org.tweetyproject.lp.asp.syntax.ASPAtom;
 import org.tweetyproject.lp.asp.syntax.StrictNegation;
 import org.tweetyproject.lp.asp.syntax.ASPRule;
-import org.tweetyproject.lp.asp.beliefdynamics.revision.CredibilityRevision;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -79,7 +78,7 @@ public class CredibilityTest {
 		}
 		
 		
-		ASPCore2Parser parser = new ASPCore2Parser(stream); //TODO test with new parser
+		ASPParser parser = new ASPParser(stream); //TODO test with new parser
 		InstantiateVisitor visitor = new InstantiateVisitor();
 		Program reval = new Program();
 		try {

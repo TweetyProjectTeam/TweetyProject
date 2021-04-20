@@ -1,0 +1,11 @@
+% Formalization taken from the DLV tutorial 
+% https://www.dbai.tuwien.ac.at/proj/dlv/tutorial/
+
+true.
+fibonacci(1, 1) :- true.
+fibonacci(1, 2) :- true.
+fibonacci(F, Index) :- +(F1, F2, F),
+                       fibonacci(F1, Index1),
+                       fibonacci(F2, Index2),
+                       #succ(Index1, Index2),
+                       #succ(Index2, Index).

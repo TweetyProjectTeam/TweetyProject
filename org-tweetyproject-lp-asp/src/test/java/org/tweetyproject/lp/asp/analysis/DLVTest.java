@@ -31,7 +31,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.parser.InstantiateVisitor;
 import org.tweetyproject.lp.asp.reasoner.DLVSolver;
 import org.tweetyproject.lp.asp.semantics.AnswerSet;
@@ -46,7 +46,7 @@ import org.tweetyproject.lp.asp.syntax.Program;
  */
 public class DLVTest {
 	
-	static ASPCore2Parser parser;
+	static ASPParser parser;
 	
 	static InstantiateVisitor visitor;
 	
@@ -55,8 +55,8 @@ public class DLVTest {
 	@BeforeClass
 	public static void init() {
 		visitor = new InstantiateVisitor();
-		parser = new ASPCore2Parser(new StringReader(""));
-		solver = new DLVSolver("/home/anna/sw/asp/dlv");
+		parser = new ASPParser(new StringReader(""));
+		solver = new DLVSolver("/your/path/to/dlv");
 	}
 
 	@Test

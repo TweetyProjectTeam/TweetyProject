@@ -28,7 +28,7 @@ import java.util.Set;
 import org.tweetyproject.beliefdynamics.BaseRevisionOperator;
 import org.tweetyproject.beliefdynamics.MultipleBaseRevisionOperator;
 import org.tweetyproject.commons.Formula;
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.parser.ParseException;
 import org.tweetyproject.lp.asp.reasoner.ASPSolver;
 import org.tweetyproject.lp.asp.semantics.AnswerSet;
@@ -124,25 +124,25 @@ public class SimpleRevisionCompareModel {
 	 */
 	public void setBeliefbase(String beliefBase) throws ParseException {
 		Program old = this.beliefBase;
-		this.beliefBase = ASPCore2Parser.parseProgram(beliefBase); //TODO test with new parser
+		this.beliefBase = ASPParser.parseProgram(beliefBase); //TODO test with new parser
 		change.firePropertyChange("beliefBase", old, beliefBase);
 	}
 	
 	public void setBeliefbase(Reader beliefBase) throws ParseException {
 		Program old = this.beliefBase;
-		this.beliefBase = ASPCore2Parser.parseProgram(beliefBase);
+		this.beliefBase = ASPParser.parseProgram(beliefBase);
 		change.firePropertyChange("beliefBase", old, this.beliefBase.toString());
 	}
 
 	public void setNewBeliefs(String newBeliefs) throws ParseException {
 		Program old = this.newBeliefs;
-		this.newBeliefs =  ASPCore2Parser.parseProgram(newBeliefs);
+		this.newBeliefs =  ASPParser.parseProgram(newBeliefs);
 		change.firePropertyChange("newbeliefs", old, newBeliefs);
 	}
 	
 	public void setNewBeliefs(Reader newBeliefs) throws ParseException {
 		Program old = this.newBeliefs;
-		this.newBeliefs =  ASPCore2Parser.parseProgram(newBeliefs);
+		this.newBeliefs =  ASPParser.parseProgram(newBeliefs);
 		change.firePropertyChange("newbeliefs", old, this.newBeliefs.toString());
 	}
 	

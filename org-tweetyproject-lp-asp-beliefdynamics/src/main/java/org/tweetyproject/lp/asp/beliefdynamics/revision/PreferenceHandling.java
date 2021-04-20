@@ -29,7 +29,7 @@ import java.util.Set;
 
 import org.tweetyproject.beliefdynamics.CredibilityRevisionIterative;
 import org.tweetyproject.commons.util.Pair;
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.parser.InstantiateVisitor;
 import org.tweetyproject.lp.asp.parser.ParseException;
 import org.tweetyproject.lp.asp.reasoner.ASPSolver;
@@ -237,7 +237,7 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		DLVSolver dlv = new DLVSolver("/home/janus/workspace/angerona/software/test/src/main/tools/solver/asp/dlv/dlv.bin");
 		
 		InstantiateVisitor visitor = new InstantiateVisitor();
-		ASPCore2Parser parser = new ASPCore2Parser(new StringReader(program1)); //TODO test with new parser
+		ASPParser parser = new ASPParser(new StringReader(program1)); //TODO test with new parser
 		Program p1 = visitor.visit(parser.Program(), null);
 		parser.ReInit(new StringReader(program2));
 		Program p2 = visitor.visit(parser.Program(), null);

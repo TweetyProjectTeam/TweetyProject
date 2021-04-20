@@ -39,17 +39,17 @@ import org.tweetyproject.lp.asp.syntax.Program;
 
 /**
  * Some more examples on how aggregates work. Note that you can
- * also parse aggregates using the ASP2CoreParser, which is
+ * also parse aggregates using ASPParser, which is
  * easier than manually creating them for bigger examples.
  * 
- * Tested with clingo 5.2.2
+ * <br> Tested with clingo 5.4.0
  * 
  * @author Anna Gessler
  *
  */
 public class AggregateExample {
 
-	private static String CLINGO_PATH = "/your/path/to/clingo";
+	private static String CLINGO_PATH = "your/path/to/clingo";
 
 	public static void main(String[] args) throws IOException, ParseException {
 		/**

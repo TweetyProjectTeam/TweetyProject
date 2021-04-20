@@ -26,7 +26,7 @@ import org.tweetyproject.lp.asp.syntax.ASPOperator.ArithmeticOperator;
 /**
  * This class represents an arithmetic term in the ASP-Core-2 format.
  * An arithmetic term is either '-(t)' or 't x u', where t and u 
- * are terms and x is one of the operators {+,-,*,/}.
+ * are terms and x is one of the operators {+,-,*,/,\}.
  * 
  * @author Anna Gessler
  */
@@ -34,7 +34,7 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 	
 	/**
 	 * The arithmetic operator used in the arithmetic term. 
-	 * Possible operators are +,-,*,/
+	 * Possible operators are +,-,*,/,\
 	 * 
 	 * @see org.tweetyproject.lp.asp.syntax.ASPOperator.ArithmeticOperator
 	 */
