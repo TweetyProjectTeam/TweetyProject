@@ -130,59 +130,69 @@ public class ClingoSolver extends ASPSolver {
 	}
 
 	@Override
-	public List<AnswerSet> getModels(Program p) {
+	public AnswerSet getModel(Program p) {
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			ClingoWriter writer = new ClingoWriter(new PrintWriter(file), usePredicateWhitelist);
 			writer.printProgram(p);
 			writer.close();
-			
-			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
-			List<AnswerSet> result = parseResult(bash.run(cmd));
-			if (!result.isEmpty())
-				return result;
+			String cmd = pathToSolver + "/clingo " + options + " " + file.getAbsolutePath();
+			this.outputData = (bash.run(cmd));
+			List<AnswerSet> models = parseResult(outputData);
+			if (!models.isEmpty())
+				return models.get(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	/**
-	 * Computes the optimum of a program that contains optimization statements, if there is
-	 * one.
-	 * 
-	 * Note: This methods calculates only the optimum and returns no answer sets.
-	 *
-	 * @param p ASP program
-	 * @return list of calculated optima
-	 */
-	public List<Integer> getOptimum(Program p) {
-		List<Integer> optima = new ArrayList<Integer>();
+	@Override
+	public List<AnswerSet> getModels(Program p) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
 			ClingoWriter writer = new ClingoWriter(new PrintWriter(file), usePredicateWhitelist);
 			writer.printProgram(p);
 			writer.close();
-			String cmd = pathToSolver + "/clingo -q " + options + " " + file.getAbsolutePath();
-			String output = bash.run(cmd);
-			this.outputData = output;
-			if (!output.contains("OPTIMUM FOUND")) {
-				this.optimum = null;
-				throw new SolverException("Clingo found no optimum.", 1); 
-			}
-			String[] as = output.split("Optimization : ");
-			int endOfLine = as[1].indexOf("\n");
-			if (endOfLine == -1)
-				throw new SolverException("Clingo returned no output that can be interpreted: " + output, 1);
-			this.optimum = as[1].substring(0,endOfLine);
-			for (String oi : this.optimum.split("\\s"))
-				optima.add(Integer.valueOf(oi));
+			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
+			result = parseResult(bash.run(cmd));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return optima;
+		return result;
 	}
 
+	@Override
+	public List<AnswerSet> getModels(String s) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
+		try {
+			File file = File.createTempFile("tmp", ".txt");
+			PrintWriter writer = new PrintWriter(file);
+			writer.write(s);
+			writer.close();
+			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
+			this.outputData = (bash.run(cmd));
+			result = parseResult(outputData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<AnswerSet> getModels(File file) {
+		List<AnswerSet> result = new ArrayList<AnswerSet>();
+		try {
+			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
+			this.outputData = (bash.run(cmd));
+			result = parseResult(outputData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	/**
 	 * Parses output from Clingo solver to AnswerSetList.
 	 * 
@@ -221,6 +231,43 @@ public class ClingoSolver extends ASPSolver {
 		
 		return result;
 	}
+	
+
+	/**
+	 * Computes the optimum of a program that contains optimization statements, if there is
+	 * one.
+	 * 
+	 * Note: This methods calculates only the optimum and returns no answer sets.
+	 *
+	 * @param p ASP program
+	 * @return list of calculated optima
+	 */
+	public List<Integer> getOptimum(Program p) {
+		List<Integer> optima = new ArrayList<Integer>();
+		try {
+			File file = File.createTempFile("tmp", ".txt");
+			ClingoWriter writer = new ClingoWriter(new PrintWriter(file), usePredicateWhitelist);
+			writer.printProgram(p);
+			writer.close();
+			String cmd = pathToSolver + "/clingo -q " + options + " " + file.getAbsolutePath();
+			String output = bash.run(cmd);
+			this.outputData = output;
+			if (!output.contains("OPTIMUM FOUND")) {
+				this.optimum = null;
+				throw new SolverException("Clingo found no optimum.", 1); 
+			}
+			String[] as = output.split("Optimization : ");
+			int endOfLine = as[1].indexOf("\n");
+			if (endOfLine == -1)
+				throw new SolverException("Clingo returned no output that can be interpreted: " + output, 1);
+			this.optimum = as[1].substring(0,endOfLine);
+			for (String oi : this.optimum.split("\\s"))
+				optima.add(Integer.valueOf(oi));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return optima;
+	}
 
 	/**
 	 * Parses the result of a program that contains optimization statements. The optimal
@@ -249,38 +296,6 @@ public class ClingoSolver extends ASPSolver {
 	}
 
 	@Override
-	public List<AnswerSet> getModels(String s) {
-		try {
-			File file = File.createTempFile("tmp", ".txt");
-			PrintWriter writer = new PrintWriter(file);
-			writer.write(s);
-			writer.close();
-			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
-			this.outputData = (bash.run(cmd));
-			List<AnswerSet> result = parseResult(outputData);
-			if (!result.isEmpty())
-				return result;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public List<AnswerSet> getModels(File file) {
-		try {
-			String cmd = pathToSolver + "/clingo -n " + this.maxNumOfModels + " " + options + " " + file.getAbsolutePath();
-			this.outputData = (bash.run(cmd));
-			List<AnswerSet> result = parseResult(outputData);
-			if (!result.isEmpty())
-				return result;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
 	public Boolean query(Program beliefbase, ASPLiteral formula) {
 		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
@@ -299,24 +314,6 @@ public class ClingoSolver extends ASPSolver {
 				return true;
 		}
 		return false;
-	}
-
-	@Override
-	public AnswerSet getModel(Program p) {
-		try {
-			File file = File.createTempFile("tmp", ".txt");
-			ClingoWriter writer = new ClingoWriter(new PrintWriter(file), usePredicateWhitelist);
-			writer.printProgram(p);
-			writer.close();
-			String cmd = pathToSolver + "/clingo " + options + " " + file.getAbsolutePath();
-			this.outputData = (bash.run(cmd));
-			List<AnswerSet> models = parseResult(outputData);
-			if (!models.isEmpty())
-				return models.get(0);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	/**
