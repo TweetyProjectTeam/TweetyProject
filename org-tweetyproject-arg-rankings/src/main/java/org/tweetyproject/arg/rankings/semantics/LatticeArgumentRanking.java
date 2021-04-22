@@ -41,6 +41,14 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 
 	/** The actual order of arguments */
 	private Order<Argument> order;
+	private Collection<Argument> args;
+	
+	public Order<Argument> getOrder(){
+		return this.order;
+	}
+	public Collection<Argument> getArgs(){
+		return this.args;
+	}
 
 	/**
 	 * Creates a new argument ranking with the given arguments which are initially
@@ -50,6 +58,7 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 */
 	public LatticeArgumentRanking(Collection<Argument> args) {
 		this.order = new Order<>(args);
+		this.args = args;
 	}
 
 	/**
@@ -105,6 +114,18 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 		undec.removeAll(this.getMaximallyAcceptedArguments(this.order.getElements()));
 		undec.removeAll(this.getMinimallyAcceptedArguments(this.order.getElements()));
 		return new Extension(undec);
+	}
+	
+	public boolean isSame(LatticeArgumentRanking ra) {
+		if(!this.getArgs().equals(ra.getArgs()))
+			return false;
+		for(Argument a: this.getArgs()) {
+			for(Argument b: this.getArgs()) {
+				if(ra.compare(a, b) != this.compare(a,  b))
+					return false;
+			}
+		}
+		return true;
 	}
 
 	/*
