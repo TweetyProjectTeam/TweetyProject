@@ -73,6 +73,9 @@ public class GringoGrounder extends ASPGrounder {
 			writer.close();
 			String cmd = pathToGrounder + "/gringo --text --warn=none " + options + " " + file.getAbsolutePath();
 			String output = bash.run(cmd);
+			if (output.isBlank()) 
+				return result;
+			
 			ASPParser parser = new ASPParser(new StringReader(""));
 			parser.ReInit(new StringReader(output));
 			InstantiateVisitor visitor = new InstantiateVisitor();

@@ -402,7 +402,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 		String r = "{";
 		for (ASPRule a : this)
 			r += a.toString() + " ";
-		r = r.substring(0, r.length() - 1);
+		r = r.strip();
 		if (this.hasQuery())
 			r += " " + query.toString() + "?";
 		r += "}";

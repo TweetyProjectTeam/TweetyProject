@@ -131,6 +131,8 @@ public class InstantiateVisitor implements ASPParserVisitor {
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTRule) {
 				ASPRule a = visit((ASTRule) node.jjtGetChild(i), null);
+				if (a == null)
+					continue; //ignore empty rules (caused by solitary "." in input programs)
 				if (!a.isEmpty())
 					elements.add(a);
 			}
@@ -140,6 +142,8 @@ public class InstantiateVisitor implements ASPParserVisitor {
 
 	@Override
 	public ASPRule visit(ASTRule node, Object data)  {
+		if (node.jjtGetNumChildren() == 0)
+			return null; //ignore empty rules (caused by solitary "." in input programs)
 		ASPHead head;
 		if (node.jjtGetChild(0) instanceof ASTAggregate) {
 			AggregateAtom aggregate = visit((ASTAggregate) node.jjtGetChild(0), null); 
