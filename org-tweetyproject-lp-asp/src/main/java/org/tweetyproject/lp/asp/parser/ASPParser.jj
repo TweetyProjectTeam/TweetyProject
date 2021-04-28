@@ -377,6 +377,7 @@ ASTRule Statement()      :
   | (<WCONS> [Body()] <DOT> <SQUARE_OPEN> WeightAtLevel() <SQUARE_CLOSE>)
   | (Optimize() <DOT>)
   | (MetaStatement() <DOT>)
+  | <DOT>
   )/*@bgen(jjtree)*/
   {
     jjtree.closeNodeScope(jjtn000, true);

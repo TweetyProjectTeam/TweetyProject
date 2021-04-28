@@ -243,6 +243,7 @@ ASTRule Statement() #Rule:
   | (<WCONS> [Body()] <DOT> <SQUARE_OPEN> WeightAtLevel() <SQUARE_CLOSE>)
   | (Optimize() <DOT>)
   | (MetaStatement() <DOT>)
+  | <DOT>
   )
   
   { return jjtThis; }
