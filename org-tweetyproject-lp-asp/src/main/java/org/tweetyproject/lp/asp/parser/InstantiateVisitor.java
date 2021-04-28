@@ -45,6 +45,8 @@ import org.tweetyproject.lp.asp.syntax.AggregateAtom;
 import org.tweetyproject.lp.asp.syntax.AggregateElement;
 import org.tweetyproject.lp.asp.syntax.AggregateHead;
 import org.tweetyproject.lp.asp.syntax.ArithmeticTerm;
+import org.tweetyproject.lp.asp.syntax.ChoiceElement;
+import org.tweetyproject.lp.asp.syntax.ChoiceHead;
 import org.tweetyproject.lp.asp.syntax.ComparativeAtom;
 import org.tweetyproject.lp.asp.syntax.DefaultNegation;
 import org.tweetyproject.lp.asp.syntax.OptimizationElement;
@@ -140,13 +142,17 @@ public class InstantiateVisitor implements ASPParserVisitor {
 
 	@Override
 	public ASPRule visit(ASTRule node, Object data)  {
-		ASPHead head;
-		if (node.jjtGetChild(0) instanceof ASTAggregate) {
-			AggregateAtom aggregate = visit((ASTAggregate) node.jjtGetChild(0), null); 
-			head = new AggregateHead(aggregate);
-		}
-		else
-			head = new ClassicalHead();
+		ASPHead head = new ClassicalHead();
+//		if (node.jjtGetChild(0) instanceof ASTAggregate) {
+//			AggregateAtom aggregate = visit((ASTAggregate) node.jjtGetChild(0), null); 
+//			head = new AggregateHead(aggregate);
+//		}
+//		else if (node.jjtGetChild(0) instanceof ASTChoice) {
+//			ChoiceHead choice = visit((ASTChoice) node.jjtGetChild(0), null); 
+//			head = choice;
+//		}
+//		else
+//			head = new ClassicalHead();
 		List<ASPBodyElement> body = new LinkedList<ASPBodyElement>();
 		Term<?> weight = null;
 		Term<?> level = null;
@@ -193,14 +199,24 @@ public class InstantiateVisitor implements ASPParserVisitor {
 	}
 
 	@Override
-	public ClassicalHead visit(ASTHead node, Object data) {
-		List<ASPLiteral> head_atoms = new ArrayList<ASPLiteral>();
+	public ASPHead visit(ASTHead node, Object data) {
+		List<ASPLiteral> headAtoms = new ArrayList<ASPLiteral>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
-			if (node.jjtGetChild(i) instanceof ASTHeadElementsList) {
-				head_atoms = visit((ASTHeadElementsList) node.jjtGetChild(i), null);
+			if (node.jjtGetChild(i) instanceof ASTAggregate){
+				AggregateAtom aggregate = visit((ASTAggregate) node.jjtGetChild(0), null); 
+				return new AggregateHead(aggregate);
 			}
+			else if (node.jjtGetChild(i) instanceof ASTChoice) {
+				ChoiceHead choice = visit((ASTChoice) node.jjtGetChild(0), null); 
+				return choice;
+			}
+			else if (node.jjtGetChild(i) instanceof ASTHeadElementsList) {
+				headAtoms = visit((ASTHeadElementsList) node.jjtGetChild(i), null);
+			}
+			else
+				continue;
 		}
-		return new ClassicalHead(head_atoms);
+		return new ClassicalHead(headAtoms);
 	}
 
 	@Override
@@ -217,59 +233,41 @@ public class InstantiateVisitor implements ASPParserVisitor {
 
 	@Override
 	public List<ASPBodyElement> visit(ASTBodyList node, Object data) {
-		List<ASPBodyElement> rule_bodies = new ArrayList<ASPBodyElement>();
+		List<ASPBodyElement> ruleBodies = new ArrayList<ASPBodyElement>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTBody) {
 				List<ASPBodyElement> rule_body = visit((ASTBody) node.jjtGetChild(i), null);
-				rule_bodies.addAll(rule_body);
+				ruleBodies.addAll(rule_body);
 			}
 		}
-		return rule_bodies;
+		return ruleBodies;
 	}
 
 	@Override
 	public List<ASPBodyElement> visit(ASTBody node, Object data) {
-		List<ASPBodyElement> rule_body = new ArrayList<ASPBodyElement>();
+		List<ASPBodyElement> ruleBody = new ArrayList<ASPBodyElement>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTNAFLiteral) {
 				ASPBodyElement l = visit((ASTNAFLiteral) node.jjtGetChild(i), null);
-				rule_body.add(l);
+				ruleBody.add(l);
 			} else if (node.jjtGetChild(i) instanceof ASTAggregate) {
 				AggregateAtom l = visit((ASTAggregate) node.jjtGetChild(i), null);
 				if (node.nafneg) {
 					DefaultNegation nafl = new DefaultNegation(l); 
-					rule_body.add(nafl);
+					ruleBody.add(nafl);
 				}
 				else
-					rule_body.add(l);
+					ruleBody.add(l);
 			}
 		}
-		return rule_body;
-	}
-
-	// TODO Add parsing for choice rules
-	@Override
-	public Object visit(ASTChoice node, Object data) {
-		throw new UnsupportedOperationException("Choice rules are not currently supported by this parser.");
+		return ruleBody;
 	}
 
 	@Override
-	public List<ASPRule> visit(ASTChoiceElementList node, Object data) {
-		// TODO
-		throw new UnsupportedOperationException("Choice rules are not currently supported by this parser.");
-	}
-
-	@Override
-	public ASPRule visit(ASTChoiceElement node, Object data) {
-		// TODO
-		throw new UnsupportedOperationException("Choice rules are not currently supported by this parser.");
-	}
-
-	@Override
-	public AggregateAtom visit(ASTAggregate node, Object data) {
-		List<AggregateElement> agg_elements = new LinkedList<AggregateElement>();
-		ASPOperator.BinaryOperator right_op = null;
-		ASPOperator.BinaryOperator left_op = null;
+	public ChoiceHead visit(ASTChoice node, Object data) {
+		List<ChoiceElement> choiceElements = new LinkedList<ChoiceElement>();
+		ASPOperator.BinaryOperator rightOp = null;
+		ASPOperator.BinaryOperator leftOp = null;
 		Term<?> leftTerm = null;
 		Term<?> rightTerm = null;
 
@@ -278,9 +276,81 @@ public class InstantiateVisitor implements ASPParserVisitor {
 		if (node.jjtGetChild(0) instanceof ASTTerm) {
 			leftTerm = visit((ASTTerm) node.jjtGetChild(i), null);
 			try {
-				left_op = evaluateBinop(visit((ASTBinop) node.jjtGetChild(i + 1), null));
+				leftOp = evaluateBinop(visit((ASTBinop) node.jjtGetChild(i + 1), null));
 			} catch (ParseException e) {
-				left_op = null;
+				leftOp = null;
+				e.printStackTrace();
+			}
+			i += 2;
+		}
+
+		// Add choice elements
+		if (node.jjtGetChild(i) instanceof ASTChoiceElementList) {
+			choiceElements = visit((ASTChoiceElementList) node.jjtGetChild(i), null);
+			i++;
+		}
+
+		// Add right guard
+		if ((node.jjtGetNumChildren() > i) && node.jjtGetChild(i + 1) instanceof ASTTerm) {
+			try {
+				rightOp = evaluateBinop(visit((ASTBinop) node.jjtGetChild(i), null));
+			} catch (ParseException e) {
+				rightOp = null;
+				e.printStackTrace();
+			}
+			rightTerm = visit((ASTTerm) node.jjtGetChild(i + 1), null);
+		}
+
+		ChoiceHead head = new ChoiceHead(choiceElements);
+		if (leftOp != null) {
+			head.setLeftOperator(leftOp);
+			head.setLeftGuard(leftTerm);
+		}
+		if (rightOp != null) {
+			head.setRightOperator(rightOp);
+			head.setRightGuard(rightTerm);
+		}
+		return head;
+	}
+
+	@Override
+	public List<ChoiceElement> visit(ASTChoiceElementList node, Object data) {
+		List<ChoiceElement> choiceElementList = new LinkedList<ChoiceElement>();
+		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
+			if (node.jjtGetChild(i) instanceof ASTChoiceElement) {
+				ChoiceElement a = visit((ASTChoiceElement) node.jjtGetChild(i), null);
+				choiceElementList.add(a);
+			}
+		}
+		return choiceElementList;
+	}
+
+	@Override
+	public ChoiceElement visit(ASTChoiceElement node, Object data) {
+		ASPLiteral a = visit((ASTLiteral) node.jjtGetChild(0), null);
+		List<ASPBodyElement> nafliterals = new ArrayList<ASPBodyElement>();
+		if (node.jjtGetNumChildren()>1 && node.jjtGetChild(1) instanceof ASTNAFLiteralList) {
+			nafliterals = visit((ASTNAFLiteralList) node.jjtGetChild(1), null);
+		}
+		return new ChoiceElement(a,nafliterals);
+	}
+
+	@Override
+	public AggregateAtom visit(ASTAggregate node, Object data) {
+		List<AggregateElement> aggElements = new LinkedList<AggregateElement>();
+		ASPOperator.BinaryOperator rightOp = null;
+		ASPOperator.BinaryOperator leftOp = null;
+		Term<?> leftTerm = null;
+		Term<?> rightTerm = null;
+
+		int i = 0;
+		// Add left guard
+		if (node.jjtGetChild(0) instanceof ASTTerm) {
+			leftTerm = visit((ASTTerm) node.jjtGetChild(i), null);
+			try {
+				leftOp = evaluateBinop(visit((ASTBinop) node.jjtGetChild(i + 1), null));
+			} catch (ParseException e) {
+				leftOp = null;
 				e.printStackTrace();
 			}
 			i += 2;
@@ -297,53 +367,53 @@ public class InstantiateVisitor implements ASPParserVisitor {
 
 		// Add aggregate elements
 		if (node.jjtGetChild(i) instanceof ASTAggrElementList) {
-			agg_elements = visit((ASTAggrElementList) node.jjtGetChild(i), null);
+			aggElements = visit((ASTAggrElementList) node.jjtGetChild(i), null);
 			i++;
 		}
 
 		// Add right guard
 		if ((node.jjtGetNumChildren() > i) && node.jjtGetChild(i + 1) instanceof ASTTerm) {
 			try {
-				right_op = evaluateBinop(visit((ASTBinop) node.jjtGetChild(i), null));
+				rightOp = evaluateBinop(visit((ASTBinop) node.jjtGetChild(i), null));
 			} catch (ParseException e) {
-				right_op = null;
+				rightOp = null;
 				e.printStackTrace();
 			}
 			rightTerm = visit((ASTTerm) node.jjtGetChild(i + 1), null);
 		}
 
-		return new AggregateAtom(result_func, agg_elements, left_op, leftTerm, right_op, rightTerm);
+		return new AggregateAtom(result_func, aggElements, leftOp, leftTerm, rightOp, rightTerm);
 	}
 
 	public static ASPOperator.AggregateFunction evaluateAggrFunc(String func) throws ParseException {
-		ASPOperator.AggregateFunction result_func = null;
+		ASPOperator.AggregateFunction resultFunc = null;
 		if (func.equals("#count"))
-			result_func = ASPOperator.AggregateFunction.COUNT;
+			resultFunc = ASPOperator.AggregateFunction.COUNT;
 		else if (func.equals("#max"))
-			result_func = ASPOperator.AggregateFunction.MAX;
+			resultFunc = ASPOperator.AggregateFunction.MAX;
 		else if (func.equals("#min"))
-			result_func = ASPOperator.AggregateFunction.MIN;
+			resultFunc = ASPOperator.AggregateFunction.MIN;
 		else if (func.equals("#sum"))
-			result_func = ASPOperator.AggregateFunction.SUM;
+			resultFunc = ASPOperator.AggregateFunction.SUM;
 		else if (func.equals("#sum+"))
-			result_func = ASPOperator.AggregateFunction.SUM_PLUS;
+			resultFunc = ASPOperator.AggregateFunction.SUM_PLUS;
 		else if (func.equals("#times"))
-			result_func = ASPOperator.AggregateFunction.TIMES;
+			resultFunc = ASPOperator.AggregateFunction.TIMES;
 		else
 			throw new ParseException("Parser returned unknown operator");
-		return result_func;
+		return resultFunc;
 	}
 
 	@Override
 	public List<AggregateElement> visit(ASTAggrElementList node, Object data) {
-		List<AggregateElement> agg_elem_list = new LinkedList<AggregateElement>();
+		List<AggregateElement> aggElementList = new LinkedList<AggregateElement>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTAggrElement) {
 				AggregateElement a = visit((ASTAggrElement) node.jjtGetChild(i), null);
-				agg_elem_list.add(a);
+				aggElementList.add(a);
 			}
 		}
-		return agg_elem_list;
+		return aggElementList;
 	}
 
 	@Override
@@ -364,30 +434,30 @@ public class InstantiateVisitor implements ASPParserVisitor {
 	// a set of weak constraints.
 	@Override
 	public ASPRule visit(ASTOpt node, Object data) {
-		List<OptimizationElement> optelements = new ArrayList<OptimizationElement>();
+		List<OptimizationElement> optElements = new ArrayList<OptimizationElement>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTOptElementList) {
-				optelements.addAll(visit((ASTOptElementList) node.jjtGetChild(i), null));
+				optElements.addAll(visit((ASTOptElementList) node.jjtGetChild(i), null));
 			}
 		}
 		OptimizationStatement opt;
 		if (((ASTOptFunc) node.jjtGetChild(0)).maximize)
-			opt = new OptimizationStatement(ASPOperator.OptimizeFunction.MAXIMIZE, optelements);
+			opt = new OptimizationStatement(ASPOperator.OptimizeFunction.MAXIMIZE, optElements);
 		else
-			opt = new OptimizationStatement(ASPOperator.OptimizeFunction.MINIMIZE, optelements);
+			opt = new OptimizationStatement(ASPOperator.OptimizeFunction.MINIMIZE, optElements);
 		return new ASPRule(opt);
 	}
 
 	@Override
 	public List<OptimizationElement> visit(ASTOptElementList node, Object data) {
-		List<OptimizationElement> optelements = new ArrayList<OptimizationElement>();
+		List<OptimizationElement> optElements = new ArrayList<OptimizationElement>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTOptElement) {
 				OptimizationElement r = visit((ASTOptElement) node.jjtGetChild(i), null);
-				optelements.add(r);
+				optElements.add(r);
 			}
 		}
-		return optelements;
+		return optElements;
 	}
 
 	@Override
@@ -550,46 +620,46 @@ public class InstantiateVisitor implements ASPParserVisitor {
 				op = visit((ASTBinop) node.jjtGetChild(1), null);
 				t1 = visit((ASTTerm) node.jjtGetChild(0), null);
 			}
-			ASPOperator.BinaryOperator result_op;
+			ASPOperator.BinaryOperator resultOp;
 			try {
-				result_op = evaluateBinop(op);
+				resultOp = evaluateBinop(op);
 			} catch (ParseException e) {
-				result_op = ASPOperator.BinaryOperator.EQ;
+				resultOp = ASPOperator.BinaryOperator.EQ;
 				e.printStackTrace();
 			}
-			return new ComparativeAtom(result_op, t1, t2);
+			return new ComparativeAtom(resultOp, t1, t2);
 		}
 	}
 
 	public static ASPOperator.BinaryOperator evaluateBinop(String op) throws ParseException {
-		ASPOperator.BinaryOperator result_op = ASPOperator.BinaryOperator.EQ;
+		ASPOperator.BinaryOperator resultOp = ASPOperator.BinaryOperator.EQ;
 		if (op.equals("=") || op.equals("=="))
-			result_op = ASPOperator.BinaryOperator.EQ;
+			resultOp = ASPOperator.BinaryOperator.EQ;
 		else if (op.equals("<>") || op.equals("!="))
-			result_op = ASPOperator.BinaryOperator.NEQ;
+			resultOp = ASPOperator.BinaryOperator.NEQ;
 		else if (op.equals("<"))
-			result_op = ASPOperator.BinaryOperator.LT;
+			resultOp = ASPOperator.BinaryOperator.LT;
 		else if (op.equals(">"))
-			result_op = ASPOperator.BinaryOperator.GT;
+			resultOp = ASPOperator.BinaryOperator.GT;
 		else if (op.equals("<="))
-			result_op = ASPOperator.BinaryOperator.LEQ;
+			resultOp = ASPOperator.BinaryOperator.LEQ;
 		else if (op.equals(">="))
-			result_op = ASPOperator.BinaryOperator.GEQ;
+			resultOp = ASPOperator.BinaryOperator.GEQ;
 		else
 			throw new ParseException("Parser returned unknown operator");
-		return result_op;
+		return resultOp;
 	}
 
 	@Override
 	public List<Term<?>> visit(ASTTermList node, Object data) {
-		List<Term<?>> term_list = new LinkedList<Term<?>>();
+		List<Term<?>> termList = new LinkedList<Term<?>>();
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTTerm) {
 				Term<?> a = visit((ASTTerm) node.jjtGetChild(i), null);
-				term_list.add(a);
+				termList.add(a);
 			}
 		}
-		return term_list;
+		return termList;
 	}
 
 	@Override

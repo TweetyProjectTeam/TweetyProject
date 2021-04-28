@@ -105,7 +105,7 @@ public class AggregateHead extends ASPHead {
 
 	@Override
 	public ASPElement substitute(Term<?> t, Term<?> v) {
-		return this.head.substitute(t, v);
+		return new AggregateHead(this.head.substitute(t, v));
 	}
 
 	@Override

@@ -159,6 +159,17 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	public void setOutputWhitelist(Collection<Predicate> ps) {
 		this.outputPredicateWhitelist = (Set<Predicate>) ps;
 	}
+	
+	/**
+	 * Adds the given predicate to the whitelist of predicates. Solvers that use this option will only show
+	 * atoms over predicates in this set in their output.
+	 * 
+	 * @param p a Predicate
+	 * @return if the whitelist did not already contain the specified element
+	 */
+	public boolean addToOutputWhitelist(Predicate p) {
+		return this.outputPredicateWhitelist.add(p);
+	}
 
 	/**
 	 * Returns the whitelist of predicates. Solvers that use this option will only
@@ -218,6 +229,22 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 				throw new IllegalArgumentException("Failed to add other program's query because this program already has a query.");
 			else
 				this.query = other.getQuery();
+	}
+	
+	/**
+	 * @return additional options for solvers
+	 */
+	public Set<String> getAdditionalOptions() {
+		return additionalOptions;
+	}
+
+	 /**
+	  * Set additional options for solvers. 
+	  * 
+	  * @param commandLineArguments in the format "option=value"
+	  */
+	public void setAdditionalOptions(Set<String> additionalOptions) {
+		this.additionalOptions = additionalOptions;
 	}
 	
 	// -------------------------------------------------------------------------
@@ -402,27 +429,11 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 		String r = "{";
 		for (ASPRule a : this)
 			r += a.toString() + " ";
-		r = r.substring(0, r.length() - 1);
+		r = r.strip();
 		if (this.hasQuery())
 			r += " " + query.toString() + "?";
 		r += "}";
 		return r;
-	}
-
-	/**
-	 * @return additional options for solvers
-	 */
-	public Set<String> getAdditionalOptions() {
-		return additionalOptions;
-	}
-
-	 /**
-	  * Set additional options for solvers. 
-	  * 
-	  * @param commandLineArguments in the format "option=value"
-	  */
-	public void setAdditionalOptions(Set<String> additionalOptions) {
-		this.additionalOptions = additionalOptions;
 	}
 
 }

@@ -86,6 +86,19 @@ public class OptimizationElement extends ASPElement {
 		this.left.add(term);
 		this.right.add(literal);
 	}
+	
+	/**
+	 * Creates a new optimization element with the given single term and
+	 * literal.
+	 * 
+	 * @param weight
+	 * @param term
+	 * @param literal
+	 */
+	public OptimizationElement(Term<?> term, ASPBodyElement literal) {
+		this.left.add(term);
+		this.right.add(literal);
+	}
 
 	/**
 	 * Creates a new optimization element with the given weight, priority, terms

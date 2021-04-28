@@ -214,7 +214,7 @@ ASTAnswerSet AnswerSet() #AnswerSet:
 ASTProgram Program() #Program:
 {}
   {
-     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT> | <CLINGO_SHOW> | <META_MAXINT> | <META_CONST> | <META_OTHER>) Statements()] 
+     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT> | <CLINGO_SHOW> | <META_MAXINT> | <META_CONST> | <META_OTHER> | <DOT>) Statements()] 
      [Query()]
      <EOF>)
      { return jjtThis; }
@@ -252,9 +252,9 @@ ASTHead Head() #Head:
 {}
 {
   (
-  LOOKAHEAD([Term() Binop()] <CURLY_OPEN>) (Choice())
-  | LOOKAHEAD(3)(Disjunction())
-  | (Aggregate())
+  LOOKAHEAD([Term() Binop()] <CURLY_OPEN> [ChoiceElements()] <CURLY_CLOSE>) (Choice())
+  | LOOKAHEAD([Term() Binop()] AggregateFunction() <CURLY_OPEN>) (Aggregate())
+  | (Disjunction())
   )
   
   { return jjtThis; }
