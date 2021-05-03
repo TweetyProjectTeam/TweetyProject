@@ -19,6 +19,7 @@
 package org.tweetyproject.lp.asp.syntax;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -180,24 +181,25 @@ public class StrictNegation extends ASPLiteral {
 	}
 
 	@Override
-	public int hashCode() {
-		return 7 + atom.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof StrictNegation) {
-			StrictNegation on = (StrictNegation) o;
-			// compare atom
-			return on.getAtom().equals(this.getAtom());
-		} else {
-			return false;
-		}
-	}
-
-	@Override
 	public String toString() {
 		return "-" + atom.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(atom);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StrictNegation other = (StrictNegation) obj;
+		return Objects.equals(atom, other.atom);
 	}
 
 }

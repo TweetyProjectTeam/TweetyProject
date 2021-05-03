@@ -70,7 +70,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * WEIGHT_AT_LEVEL ::== TERM ("@" TERM)? ("," TERMS)? <br>
  * NAF_LITERALS ::== (NAF_LITERALS ",")? NAF_LITERAL <br>
  * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
- * LITERAL ::== ("-")? (ID | DLV_ID) ("(" Terms ")")? <br>
+ * LITERAL ::== ("-")? (ID | DLV_ID | CLINGO_ID) ("(" Terms ")")? <br>
  * BUILTIN_ATOM ::== TERM BINOP TERM | DLV_ARITHMETIC_ID "(" Terms ")" | ARITHOP "(" TERM "," TERM "," TERM ")" <br>
  * BINOP ::== "=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" <br>
  * TERMS ::== (TERMS ",")? TERM <br>
@@ -79,6 +79,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * ARITHOP ::== "+" | "-" | "*" | "/" | "\" <br>
  * DLV_ARITHMETIC_ID ::== "#succ" | "#int" | "#prec" | "#mod" <br>
  * DLV_ID ::== "#rand"|"#int"|"#absdiff"|"#append"|"#delnth"|"#flatten"|"#getnth"|"#head"|"#insLast"|"#insnth"|"#last"|"#length"|"#member"|"#reverse"|"#subList"|"#tail" <br>
+ * CLINGO_ID ::== "#true"|"#false" <br>
  * <br>
  * where ID is a sequence of letters, numbers, and "_" that starts with a
  * lowercase letter, VARIABLE is a sequence of letters, numbers, and "_" that
@@ -199,6 +200,7 @@ TOKEN :
 |  <META_CONST: 	     "#const " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) " = " (( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) >
 |  <DLV_ARITHMETIC_ID:	 "#"("succ"|"prec"|"mod")>
 |  <DLV_ID: 			 "#"("rand"|"int"|"absdiff"|"append"|"delnth"|"flatten"|"getnth"|"head"|"insLast"|"insnth"|"last"|"length"|"member"|"reverse"|"subList"|"tail")>
+|  <CLINGO_ID:			 "#"("true"|"false")>
 |  <META_OTHER:			 "#"(["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_","="] )*)>
 }
 
@@ -214,7 +216,7 @@ ASTAnswerSet AnswerSet() #AnswerSet:
 ASTProgram Program() #Program:
 {}
   {
-     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT> | <CLINGO_SHOW> | <META_MAXINT> | <META_CONST> | <META_OTHER> | <DOT>) Statements()] 
+     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT> | <CLINGO_SHOW> | <META_MAXINT> | <META_CONST> | <META_OTHER>) Statements()] 
      [Query()]
      <EOF>)
      { return jjtThis; }
@@ -243,7 +245,6 @@ ASTRule Statement() #Rule:
   | (<WCONS> [Body()] <DOT> <SQUARE_OPEN> WeightAtLevel() <SQUARE_CLOSE>)
   | (Optimize() <DOT>)
   | (MetaStatement() <DOT>)
-  | <DOT>
   )
   
   { return jjtThis; }
@@ -435,7 +436,7 @@ ASTLiteral ClassicalLiteral() #Literal:
 {}
 {
   ( 
-  [(<MINUS>{jjtThis.neg(true);})] (Identifier() | DlvIdentifier()) [<PAREN_OPEN> [Terms()] <PAREN_CLOSE>] 
+  [(<MINUS>{jjtThis.neg(true);})] (Identifier() | DlvIdentifier() | ClingoIdentifier()) [<PAREN_OPEN> [Terms()] <PAREN_CLOSE>] 
   )
   { return jjtThis; }
 }
@@ -550,6 +551,17 @@ void DlvIdentifier() #DlvID :
 } 
 {
 	(t=<DLV_ID>)
+	{
+		jjtThis.name(t.image);
+	}
+}
+
+void ClingoIdentifier() #ClingoID : 
+{
+	Token t;
+} 
+{
+	(t=<CLINGO_ID>)
 	{
 		jjtThis.name(t.image);
 	}

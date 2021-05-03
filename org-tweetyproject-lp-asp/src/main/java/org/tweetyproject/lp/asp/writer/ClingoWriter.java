@@ -86,14 +86,17 @@ public class ClingoWriter {
 				writer.write(cmd + ".");
 		}
 		
-		for (ASPRule r : p)
-			writer.write(printRule(r) + "\n");
+		for (ASPRule r : p) {
+			writer.write(printRule(r) + "\n"); 
+		}
 
 		// Optionally suppress irrelevant atoms from output.
 		if (usePredicateWhitelist) {
 			for (Predicate pr : p.getOutputWhitelist())
 				writer.write("\n #show " + pr.getName() + "/" + pr.getArity() + ".\n");
 		}
+		
+		writer.flush();
 	}
 
 	/**

@@ -18,6 +18,8 @@
  */
 package org.tweetyproject.lp.asp.syntax;
 
+import java.util.Objects;
+
 import org.tweetyproject.commons.util.Triple;
 import org.tweetyproject.logics.commons.syntax.TermAdapter;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
@@ -31,7 +33,7 @@ import org.tweetyproject.lp.asp.syntax.ASPOperator.ArithmeticOperator;
  * @author Anna Gessler
  */
 public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?>,Term<?>>> {
-	
+
 	/**
 	 * The arithmetic operator used in the arithmetic term. 
 	 * Possible operators are +,-,*,/,\
@@ -139,4 +141,25 @@ public class ArithmeticTerm extends TermAdapter<Triple<ArithmeticOperator,Term<?
 	public Term<?> getRight() {
 		return this.get().getThird();
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(op);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ArithmeticTerm other = (ArithmeticTerm) obj;
+		return op == other.op;
+	}
+
 }

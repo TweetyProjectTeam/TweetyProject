@@ -20,6 +20,7 @@ package org.tweetyproject.lp.asp.syntax;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.tweetyproject.logics.commons.syntax.Predicate;
@@ -147,5 +148,21 @@ public class AggregateHead extends ASPHead {
 	public String printToDLV() { 
 		return this.head.printToDLV();
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(head);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AggregateHead other = (AggregateHead) obj;
+		return Objects.equals(head, other.head);
+	}
 }

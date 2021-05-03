@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.lp.asp.syntax;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -128,31 +129,6 @@ public class DefaultNegation extends ASPBodyElement {
 	public void setLiteral(ASPBodyElement literal) {
 		this.literal = literal;
 	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((literal == null) ? 0 : literal.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DefaultNegation other = (DefaultNegation) obj;
-		if (literal == null) {
-			if (other.literal != null)
-				return false;
-		} else if (!literal.equals(other.literal))
-			return false;
-		return true;
-	}
 
 	@Override
 	public String toString() {
@@ -167,6 +143,23 @@ public class DefaultNegation extends ASPBodyElement {
 	@Override
 	public String printToDLV() {
 		return "not " + literal.printToDLV(); 
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(literal);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DefaultNegation other = (DefaultNegation) obj;
+		return Objects.equals(literal, other.literal);
 	}
 	
 }

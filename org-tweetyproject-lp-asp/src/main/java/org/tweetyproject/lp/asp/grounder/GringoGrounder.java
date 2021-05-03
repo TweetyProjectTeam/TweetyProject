@@ -20,11 +20,9 @@ package org.tweetyproject.lp.asp.grounder;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.io.StringReader;
 
 import org.tweetyproject.commons.util.Shell;
-import org.tweetyproject.lp.asp.parser.ASPParser;
-import org.tweetyproject.lp.asp.parser.InstantiateVisitor;
+import org.tweetyproject.lp.asp.parser.AspifParser;
 import org.tweetyproject.lp.asp.syntax.Program;
 import org.tweetyproject.lp.asp.writer.ClingoWriter;
 
@@ -45,22 +43,67 @@ public class GringoGrounder extends ASPGrounder {
 	 * Shell to run Gringo
 	 */
 	private Shell bash;
-	
+
 	/**
 	 * Additional command line arguments for Gringo.
 	 */
 	private String options;
+
+	/**
+	 * Output of the previous gringo call, in aspif format.
+	 */
+	private String aspifOutput;
 	
 	public GringoGrounder(String path, Shell shell) {
 		this.pathToGrounder = path;
 		this.bash = shell;
 		this.options = "";
 	}
-	
+
 	public GringoGrounder(String path) {
 		this.pathToGrounder = path;
 		this.bash = Shell.getNativeShell();
 		this.options = "";
+	}
+
+	/**
+	 * @return the path to the gringo binary
+	 */
+	public String getPathToGrounder() {
+		return pathToGrounder;
+	}
+
+	/**
+	 * Set the path to the gringo binary
+	 * 
+	 * @param pathToGrounder
+	 */
+	public void setPathToGrounder(String pathToGrounder) {
+		this.pathToGrounder = pathToGrounder;
+	}
+
+	/**
+	 * @return additional command line options for gringo
+	 */
+	public String getOptions() {
+		return options;
+	}
+
+	/**
+	 * Set additional command line options for gringo.
+	 * 
+	 * @param options
+	 */
+	public void setOptions(String options) {
+		this.options = options;
+	}
+
+	/**
+	 * @return output of last gringo call, in aspif format. Can be piped directly to
+	 *         clasp.
+	 */
+	public String getOutput() {
+		return aspifOutput;
 	}
 
 	@Override
@@ -71,49 +114,19 @@ public class GringoGrounder extends ASPGrounder {
 			ClingoWriter writer = new ClingoWriter(new PrintWriter(file), false);
 			writer.printProgram(p);
 			writer.close();
-			String cmd = pathToGrounder + "/gringo --text --warn=none " + options + " " + file.getAbsolutePath();
+			String cmd = pathToGrounder + "/gringo --warn=none " + options + " " + file.getAbsolutePath();
 			String output = bash.run(cmd);
-			if (output.isBlank()) 
+			this.aspifOutput = output;
+
+			if (output.isBlank())
 				return result;
 			
-			ASPParser parser = new ASPParser(new StringReader(""));
-			parser.ReInit(new StringReader(output));
-			InstantiateVisitor visitor = new InstantiateVisitor();
-			result = visitor.visit(parser.Program(), null);
+			AspifParser parser = new AspifParser();
+			result = parser.parseProgram(output);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
-	}
-	
-	/** 
-	 * @return the path to the gringo binary
-	 */
-	public String getPathToGrounder() {
-		return pathToGrounder;
-	}
-
-	/**
-	 * Set the path to the gringo binary
-	 * @param pathToGrounder
-	 */
-	public void setPathToGrounder(String pathToGrounder) {
-		this.pathToGrounder = pathToGrounder;
-	}
-	
-	/**
-	 * @return additional command line options for gringo
-	 */
-	public String getOptions() {
-		return options;
-	}
-
-	/**
-	 * Set additional command line options for gringo.
-	 * @param options
-	 */
-	public void setOptions(String options) {
-		this.options = options;
 	}
 
 }

@@ -39,7 +39,8 @@ public interface ASPParserVisitor
   public Object visit(ASTVar node, Object data);
   public Object visit(ASTID node, Object data);
   public Object visit(ASTDlvID node, Object data);
+  public Object visit(ASTClingoID node, Object data);
   public Object visit(ASTDlvArithmeticID node, Object data);
   public Object visit(ASTString node, Object data);
 }
-/* JavaCC - OriginalChecksum=25a23a09e0efa787eda8ff9b43321a16 (do not edit this line) */
+/* JavaCC - OriginalChecksum=e515ecb09463a4c035c8b45eaed6aa20 (do not edit this line) */

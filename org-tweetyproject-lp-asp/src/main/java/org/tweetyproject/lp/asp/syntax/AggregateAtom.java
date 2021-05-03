@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -310,8 +311,19 @@ public class AggregateAtom extends ASPBodyElement {
 		return terms;
 	}
 
+	/**
+	 * @return the elements that the aggregate ranges over. 
+	 */
 	public List<AggregateElement> getAggregateElements() {
 		return aggregateElements;
+	}
+	
+	/**
+	 * Set the elements that the aggregate ranges over. 
+	 * @param aggregateElements
+	 */
+	public void setAggregateElements(List<AggregateElement> aggregateElements) {
+		this.aggregateElements = aggregateElements;
 	}
 
 	/**
@@ -385,6 +397,15 @@ public class AggregateAtom extends ASPBodyElement {
 	public void setRightGuard(Term<?> relationTerm) {
 		this.rightGuard = relationTerm;
 	}
+	
+	/**
+	 * Set the right relation term (right guard).
+	 * 
+	 * @param relationTerm some integer
+	 */
+	public void setRightGuard(int relationTerm) {
+		this.rightGuard = new NumberTerm(relationTerm);
+	}
 
 	/**
 	 * Set the right relation term and operator.
@@ -394,6 +415,18 @@ public class AggregateAtom extends ASPBodyElement {
 	 */
 	public void setRight(Term<?> term, ASPOperator.BinaryOperator op) {
 		this.setRightGuard(term);
+		this.setRightOperator(op);
+	}
+	
+
+	/**
+	 * Set the right relation term and operator.
+	 * 
+	 * @param term, an integer
+	 * @param op
+	 */
+	public void setRight(int term, ASPOperator.BinaryOperator op) {
+		this.setRightGuard(new NumberTerm(term));
 		this.setRightOperator(op);
 	}
 
@@ -425,13 +458,23 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 
 	/**
-	 * Set the left relation term (right guard).
+	 * Set the left relation term (left guard).
 	 * 
 	 * @param relationTerm some term
 	 */
 	public void setLeftGuard(Term<?> relationTerm) {
 		this.leftGuard = relationTerm;
 	}
+	
+	/**
+	 * Set the left relation term (left guard).
+	 * 
+	 * @param relationTerm some integer
+	 */
+	public void setLeftGuard(int relationTerm) {
+		this.leftGuard = new NumberTerm(relationTerm);
+	}
+
 
 	/**
 	 * Set the left relation term and operator.
@@ -443,23 +486,36 @@ public class AggregateAtom extends ASPBodyElement {
 		this.setLeftGuard(term);
 		this.setLeftOperator(op);
 	}
+	
+	/**
+	 * Set the left relation term and operator.
+	 * 
+	 * @param term, an integer
+	 * @param op
+	 */
+	public void setLeft(int term, ASPOperator.BinaryOperator op) {
+		this.setLeftGuard(new NumberTerm(term));
+		this.setLeftOperator(op);
+	}
 
 	@Override
 	public String toString() {
-		String res = "";
+		String result = "";
 		if (this.hasLeftRelation())
-			res += leftGuard.toString() + leftOp.toString();
+			result += leftGuard.toString() + leftOp.toString();
 
-		res += function.toString() + "{";
-
-		for (int i = 0; i < aggregateElements.size() - 1; i++)
-			res += aggregateElements.get(i) + " ; ";
-		res += aggregateElements.get(aggregateElements.size() - 1) + "}";
+		result += function.toString() + "{";
+		if (!aggregateElements.isEmpty()) {
+			for (int i = 0; i < aggregateElements.size() - 1; i++)
+				result += aggregateElements.get(i) + " ; ";
+			result += aggregateElements.get(aggregateElements.size() - 1); 
+		}
+		result += "}";
 
 		if (this.hasRightRelation())
-			res += rightOp.toString() + rightGuard.toString();
+			result += rightOp.toString() + rightGuard.toString();
 
-		return res;
+		return result;
 	}
 
 	@Override
@@ -469,9 +525,12 @@ public class AggregateAtom extends ASPBodyElement {
 			result += leftGuard.toString() + leftOp.toString();
 		result += function.toString() + "{";
 
-		for (int i = 0; i < aggregateElements.size() - 1; i++)
-			result += aggregateElements.get(i).printToClingo() + " ; ";
-		result += aggregateElements.get(aggregateElements.size() - 1).printToClingo() + "}";
+		if (!aggregateElements.isEmpty()) {
+			for (int i = 0; i < aggregateElements.size() - 1; i++)
+				result += aggregateElements.get(i).printToClingo() + " ; ";
+			result += aggregateElements.get(aggregateElements.size() - 1).printToClingo();
+		}
+		result += "}";
 
 		if (this.hasRightRelation())
 			result += rightOp.toString() + rightGuard.toString();
@@ -503,6 +562,25 @@ public class AggregateAtom extends ASPBodyElement {
 		if (this.hasRightRelation())
 			result += rightOpDLV+ rightGuard.toString();
 		return result;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(aggregateElements, function, leftGuard, leftOp, rightGuard, rightOp);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AggregateAtom other = (AggregateAtom) obj;
+		return Objects.equals(aggregateElements, other.aggregateElements) && function == other.function
+				&& Objects.equals(leftGuard, other.leftGuard) && leftOp == other.leftOp
+				&& Objects.equals(rightGuard, other.rightGuard) && rightOp == other.rightOp;
 	}
 
 }

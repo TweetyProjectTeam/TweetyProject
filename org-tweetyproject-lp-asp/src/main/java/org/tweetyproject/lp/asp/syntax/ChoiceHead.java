@@ -21,6 +21,7 @@ package org.tweetyproject.lp.asp.syntax;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -322,17 +323,47 @@ public class ChoiceHead extends ASPHead {
 			result += c.toString() + ";";
 		}
 		result = result.substring(0, result.length()-1);
-		return result + "}" + this.rightOp + this.rightGuard;
+		result += "}";
+		
+		if (this.rightOp != ASPOperator.BinaryOperator.GEQ || !this.rightGuard.equals(new NumberTerm(0)))
+			return result + this.rightOp + this.rightGuard;
+		else return result;
 	}
 	
 	@Override
 	public String printToClingo() { 
-		return this.toString();
+		String result = "";
+		if (leftOp != null)
+			result += leftGuard + leftOp.toString();
+		result += "{";
+		for (ChoiceElement c : elements) {
+			result += c.toString() + ";";
+		}
+		result = result.substring(0, result.length()-1);
+		return result + "}";
 	}
 	
 	@Override
-	public String printToDLV() { 
-		return this.toString();
+	public String printToDLV() {
+		throw new IllegalArgumentException("Choice Rules are not supported by DLV.");
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(elements, leftGuard, leftOp, rightGuard, rightOp);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ChoiceHead other = (ChoiceHead) obj;
+		return Objects.equals(elements, other.elements) && Objects.equals(leftGuard, other.leftGuard)
+				&& leftOp == other.leftOp && Objects.equals(rightGuard, other.rightGuard) && rightOp == other.rightOp;
 	}
 	
 }

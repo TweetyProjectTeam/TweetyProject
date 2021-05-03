@@ -21,6 +21,7 @@ package org.tweetyproject.lp.asp.syntax;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -158,6 +159,28 @@ public class ChoiceElement extends ASPElement {
 			result = result.substring(0, result.length()-1);
 		}
 		return result;
+	}
+	
+	@Override
+	public String printToDLV() {
+		throw new IllegalArgumentException("Choice Rules are not supported by DLV.");
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(atom, literals);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ChoiceElement other = (ChoiceElement) obj;
+		return Objects.equals(atom, other.atom) && Objects.equals(literals, other.literals);
 	}
 
 }

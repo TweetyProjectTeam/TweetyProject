@@ -24,18 +24,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.tweetyproject.logics.commons.error.LanguageException;
 import org.tweetyproject.logics.commons.syntax.Constant;
-import org.tweetyproject.logics.commons.syntax.NumberTerm;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 import org.tweetyproject.logics.commons.syntax.Variable;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.fol.syntax.FolAtom;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
+import org.tweetyproject.lp.asp.syntax.ASPOperator.ClingoPredicate;
 import org.tweetyproject.lp.asp.syntax.ASPOperator.DLVPredicate;
 
 /**
@@ -288,33 +289,6 @@ public class ASPAtom extends ASPLiteral {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof ASPAtom) {
-			ASPAtom oa = (ASPAtom) o;
-
-			if (oa.predicate != null) {
-				if (!oa.predicate.equals(this.predicate)) {
-					return false;
-				}
-			} else if (this.predicate != null) {
-				return false;
-			}
-
-			if (!oa.arguments.equals(arguments))
-				return false;
-
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return (predicate == null ? 0 : predicate.hashCode()) + arguments.hashCode();
-	}
-
-	@Override
 	public String toString() {
 		String res = this.predicate.getName();
 		if (this.predicate.getArity() > 0) {
@@ -365,6 +339,14 @@ public class ASPAtom extends ASPLiteral {
 	@Override
 	public String printToDLV() {
 		String res = this.predicate.getName();
+		if (this.predicate instanceof ClingoPredicate) {
+			if (this.predicate.getName().equals("#true") && arguments.size()==0) 
+				return "true";
+			else if (this.predicate.getName().equals("#false") && arguments.size()==0) 
+				return "false";
+			else
+				throw new IllegalArgumentException("Rule contains ClingoPredicate " + this.predicate + " that is not supported by DLV");
+		} 
 		if (this.predicate.getArity() > 0) {
 			res += "(";
 			for (int i = 0; i < arguments.size(); i++) {
@@ -387,4 +369,21 @@ public class ASPAtom extends ASPLiteral {
 		return res;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(arguments, predicate);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ASPAtom other = (ASPAtom) obj;
+		return Objects.equals(arguments, other.arguments) && Objects.equals(predicate, other.predicate);
+	}
+	
 }

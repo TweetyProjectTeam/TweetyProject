@@ -105,7 +105,9 @@ public interface ASPParserConstants {
   /** RegularExpression Id. */
   int DLV_ID = 51;
   /** RegularExpression Id. */
-  int META_OTHER = 52;
+  int CLINGO_ID = 52;
+  /** RegularExpression Id. */
+  int META_OTHER = 53;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -164,6 +166,7 @@ public interface ASPParserConstants {
     "<META_CONST>",
     "<DLV_ARITHMETIC_ID>",
     "<DLV_ID>",
+    "<CLINGO_ID>",
     "<META_OTHER>",
   };
 

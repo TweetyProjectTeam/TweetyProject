@@ -203,6 +203,7 @@ TOKEN :
 |  <META_CONST: 	     "#const " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) " = " (( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) >
 |  <DLV_ARITHMETIC_ID:	 "#"("succ"|"prec"|"mod")>
 |  <DLV_ID: 			 "#"("rand"|"int"|"absdiff"|"append"|"delnth"|"flatten"|"getnth"|"head"|"insLast"|"insnth"|"last"|"length"|"member"|"reverse"|"subList"|"tail")>
+|  <CLINGO_ID:			 "#"("true"|"false")>
 |  <META_OTHER:			 "#"(["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_","="] )*)>
 }
 
@@ -255,7 +256,7 @@ ASTProgram Program()         :
   {/*@bgen(jjtree) Program */
      try {
 /*@egen*/
-     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT> | <CLINGO_SHOW> | <META_MAXINT> | <META_CONST> | <META_OTHER> | <DOT>) Statements()] 
+     ([LOOKAHEAD(<CONS> | <WCONS> | Head() | Optimize() <DOT> | <CLINGO_SHOW> | <META_MAXINT> | <META_CONST> | <META_OTHER>) Statements()] 
      [Query()]
      <EOF>)/*@bgen(jjtree)*/
      {
@@ -377,7 +378,6 @@ ASTRule Statement()      :
   | (<WCONS> [Body()] <DOT> <SQUARE_OPEN> WeightAtLevel() <SQUARE_CLOSE>)
   | (Optimize() <DOT>)
   | (MetaStatement() <DOT>)
-  | <DOT>
   )/*@bgen(jjtree)*/
   {
     jjtree.closeNodeScope(jjtn000, true);
@@ -1147,7 +1147,7 @@ ASTLiteral ClassicalLiteral()         :
   try {
 /*@egen*/
   ( 
-  [(<MINUS>{jjtn000.neg(true);})] (Identifier() | DlvIdentifier()) [<PAREN_OPEN> [Terms()] <PAREN_CLOSE>] 
+  [(<MINUS>{jjtn000.neg(true);})] (Identifier() | DlvIdentifier() | ClingoIdentifier()) [<PAREN_OPEN> [Terms()] <PAREN_CLOSE>] 
   )/*@bgen(jjtree)*/
   {
     jjtree.closeNodeScope(jjtn000, true);
@@ -1502,6 +1502,34 @@ void DlvIdentifier()        :
         try {
 /*@egen*/
 	(t=<DLV_ID>)/*@bgen(jjtree)*/
+        {
+          jjtree.closeNodeScope(jjtn000, true);
+          jjtc000 = false;
+        }
+/*@egen*/
+	{
+		jjtn000.name(t.image);
+	}/*@bgen(jjtree)*/
+        } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+        }
+/*@egen*/
+}
+
+void ClingoIdentifier()           : 
+{/*@bgen(jjtree) ClingoID */
+        ASTClingoID jjtn000 = new ASTClingoID(JJTCLINGOID);
+        boolean jjtc000 = true;
+        jjtree.openNodeScope(jjtn000);
+/*@egen*/
+	Token t;
+} 
+{/*@bgen(jjtree) ClingoID */
+        try {
+/*@egen*/
+	(t=<CLINGO_ID>)/*@bgen(jjtree)*/
         {
           jjtree.closeNodeScope(jjtn000, true);
           jjtc000 = false;

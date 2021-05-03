@@ -38,8 +38,9 @@ public interface ASPParserTreeConstants
   public int JJTVAR = 32;
   public int JJTID = 33;
   public int JJTDLVID = 34;
-  public int JJTDLVARITHMETICID = 35;
-  public int JJTSTRING = 36;
+  public int JJTCLINGOID = 35;
+  public int JJTDLVARITHMETICID = 36;
+  public int JJTSTRING = 37;
 
 
   public String[] jjtNodeName = {
@@ -78,8 +79,9 @@ public interface ASPParserTreeConstants
     "Var",
     "ID",
     "DlvID",
+    "ClingoID",
     "DlvArithmeticID",
     "String",
   };
 }
-/* JavaCC - OriginalChecksum=72dc47c4ad4dfddeb6d60cbdc7b85c1e (do not edit this line) */
+/* JavaCC - OriginalChecksum=2affaba627330272523fe63ea44cb6e1 (do not edit this line) */

@@ -539,6 +539,7 @@ public class InstantiateVisitor implements ASPParserVisitor {
 		List<Term<?>> terms = new ArrayList<Term<?>>();
 		
 		boolean isDlvID = false;
+		boolean isClingoID = false;
 		for (int i = 0; i < node.jjtGetNumChildren(); ++i) {
 			if (node.jjtGetChild(i) instanceof ASTTermList)
 				terms = visit((ASTTermList) node.jjtGetChild(i), null);
@@ -548,11 +549,17 @@ public class InstantiateVisitor implements ASPParserVisitor {
 				name = visit((ASTDlvID) node.jjtGetChild(i), null);
 				isDlvID = true;
 			} 
+			if (node.jjtGetChild(i) instanceof ASTClingoID) {
+				name = visit((ASTClingoID) node.jjtGetChild(i), null);
+				isClingoID = true;
+			} 
 		}
 		
 		ASPAtom at;
 		if (isDlvID) 
 			at =  new ASPAtom(new ASPOperator.DLVPredicate(name, terms.size()), terms); 
+		else if (isClingoID) 
+			at =  new ASPAtom(new ASPOperator.ClingoPredicate(name, terms.size()), terms); 
 		else
 			at = new ASPAtom(new Predicate(name, terms.size()), terms);
 		if (node.neg)
@@ -784,6 +791,11 @@ public class InstantiateVisitor implements ASPParserVisitor {
 	@Override
 	public String visit(ASTClingoMeta node, Object data) {
 		return node.statement;
+	}
+	
+	@Override
+	public String visit(ASTClingoID node, Object data) {
+		return node.name;
 	}
 
 }

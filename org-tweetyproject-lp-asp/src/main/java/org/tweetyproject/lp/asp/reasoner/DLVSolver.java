@@ -136,7 +136,7 @@ public class DLVSolver extends ASPSolver {
 						String integerMaximum = o.substring(o.indexOf("=") + 1).strip();
 						this.integerMaximum = Integer.parseInt(integerMaximum);
 					} catch (NumberFormatException e) {
-						System.out.println("Warning: Failed to parse #maxint statement in program. Using default integer maximum " + this.integerMaximum);
+						System.err.println("Warning: Failed to parse #maxint statement in program. Using default integer maximum " + this.integerMaximum);
 					}
 				}
 			}
@@ -167,7 +167,7 @@ public class DLVSolver extends ASPSolver {
 					String integerMaximum = o.substring(o.indexOf("=") + 1).strip();
 					this.integerMaximum = Integer.parseInt(integerMaximum);
 				} catch (NumberFormatException e) {
-					System.out.println("Warning: Failed to parse #maxint statement in program. Using default integer maximum " + this.integerMaximum);
+					System.err.println("Warning: Failed to parse #maxint statement in program. Using default integer maximum " + this.integerMaximum);
 				}
 			}
 

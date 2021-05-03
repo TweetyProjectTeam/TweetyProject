@@ -423,5 +423,7 @@ public class ClassicalHead extends ASPHead implements AssociativeFormula<ASPLite
 		}
 		return s;
 	}
+	
+	
 
 }

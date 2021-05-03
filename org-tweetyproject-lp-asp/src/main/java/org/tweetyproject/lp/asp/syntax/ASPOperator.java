@@ -60,25 +60,6 @@ public class ASPOperator {
 	}
 
 	/**
-	 * Additional special predicates of the DLV syntax that have no direct 
-	 * representation in the Clingo or ASP-Core-2 format.
-	 * 
-	 * @author Anna Gessler
-	 */
-	public static class DLVPredicate extends Predicate {
-		final Set<String> NAMES = Set.of("#int", "#rand", "#absdiff", "#append", "#delnth", "#flatten", "#getnth",
-				"#head", "#insLast", "#insnth", "#last", "#length", "#member", "#reverse", "#subList", "#tail");
-
-		public DLVPredicate(String name, int arity) {
-			super(name,arity);
-			if (!NAMES.contains(name))
-				throw new IllegalArgumentException(name + " is not a known DLVPredicate.");
-			if (arity == 0 || arity > 3)
-				throw new IllegalArgumentException("Arity for DLVPredicates is expected to be between 1 and 3, given arity is " + arity);
-		}
-	}
-
-	/**
 	 * The binary comparative operators that are supported by the ASP-Core-2
 	 * standard and by Tweety: LT (&lt;), LEQ (&lt;=), EQ (==), NEQ (!=), GT (&gt;),
 	 * GEQ (&gt;=)
@@ -159,6 +140,50 @@ public class ASPOperator {
 				throw new IllegalArgumentException("Unknown optimize function");
 		}
 
+	}
+	
+
+	/**
+	 * Additional special predicates of the DLV syntax that have no direct 
+	 * representation in the Clingo or ASP-Core-2 format.
+	 * 
+	 * @author Anna Gessler
+	 */
+	public static class DLVPredicate extends Predicate {
+		final Set<String> NAMES = Set.of("#int", "#rand", "#absdiff", "#append", "#delnth", "#flatten", "#getnth",
+				"#head", "#insLast", "#insnth", "#last", "#length", "#member", "#reverse", "#subList", "#tail");
+
+		public DLVPredicate(String name, int arity) {
+			super(name,arity);
+			if (!NAMES.contains(name))
+				throw new IllegalArgumentException(name + " is not a known DLVPredicate.");
+			if (arity == 0 || arity > 3)
+				throw new IllegalArgumentException("Arity for DLVPredicates is expected to be between 1 and 3, given arity is " + arity);
+		}
+	}
+	
+	/**
+	 * Additional special predicates of the clingo syntax that have no direct 
+	 * representation in the DLV or ASP-Core-2 format.
+	 * 
+	 * @author Anna Gessler
+	 */
+	public static class ClingoPredicate extends Predicate {
+		final Set<String> NAMES = Set.of("#true", "#false");
+		
+		public ClingoPredicate(String name, int arity) {
+			super(name,arity);
+			if (!NAMES.contains(name))
+				throw new IllegalArgumentException(name + " is not a known DLVPredicate.");
+			if (arity != 0)
+				throw new IllegalArgumentException("Arity for ClingoPredicates is expected to be 0, given arity is " + arity);
+		}
+
+		public ClingoPredicate(String name) {
+			super(name);
+			if (!NAMES.contains(name))
+				throw new IllegalArgumentException(name + " is not a known ClingoPredicate.");
+		}
 	}
 
 }

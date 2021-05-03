@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -323,6 +324,28 @@ public class AggregateElement extends ASPElement {
 			r += right.get(right.size() - 1);
 		}
 		return r;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((left == null) ? 0 : left.hashCode());
+		result = prime * result + ((right == null) ? 0 : right.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o)
+	        return true;
+	    if (o == null)
+	        return false;
+	    if (getClass() != o.getClass())
+	        return false;
+	    AggregateElement other = (AggregateElement) o;
+	    return Objects.equals(left, other.left)
+	            && Objects.equals(right, other.right);
 	}
 
 }

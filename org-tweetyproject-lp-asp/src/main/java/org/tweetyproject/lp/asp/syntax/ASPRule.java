@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -66,6 +67,10 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	// -------------------------------------------------------------------------
 	// CONSTRUCTORS
 	// -------------------------------------------------------------------------
+
+	public void setConstraintTerms(List<Term<?>> constraintTerms) {
+		this.constraintTerms = constraintTerms;
+	}
 
 	/**
 	 * Empty constructor
@@ -664,21 +669,6 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	@Override
-	public boolean equals(Object other) {
-		if (!(other instanceof Rule))
-			return false;
-		ASPRule or = (ASPRule) other;
-
-		boolean reval = this.head.equals(or.head) && this.body.equals(or.body);
-		return reval;
-	}
-
-	@Override
-	public int hashCode() {
-		return head.hashCode() + body.hashCode();
-	}
-
-	@Override
 	public String toString() {
 		String ret = "";
 
@@ -793,6 +783,25 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		}
 
 		return result;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(body, constraintTerms, head, level, weight);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ASPRule other = (ASPRule) obj;
+		return Objects.equals(body, other.body) && Objects.equals(constraintTerms, other.constraintTerms)
+				&& Objects.equals(head, other.head) && Objects.equals(level, other.level)
+				&& Objects.equals(weight, other.weight);
 	}
 
 }
