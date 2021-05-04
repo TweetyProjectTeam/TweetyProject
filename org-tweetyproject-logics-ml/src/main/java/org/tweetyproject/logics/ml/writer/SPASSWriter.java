@@ -30,7 +30,6 @@ import org.tweetyproject.logics.ml.syntax.Necessity;
 import org.tweetyproject.logics.ml.syntax.Possibility;
 
 /**
- * 
  * This class prints single first-order modal logic formulas and knowledge bases to 
  * the SPASS format.
  * <p>
@@ -41,6 +40,7 @@ import org.tweetyproject.logics.ml.syntax.Possibility;
  * <li> Axioms: a list of formulas
  * <li> Conjectures: a list of formulas
  * </ul>
+ * 
  * SPASS attempts to prove that the conjunction of all axioms implies the
  * disjunction of all conjectures.
  * 
@@ -107,8 +107,8 @@ public class SPASSWriter {
 	
 	/**
 	 * Prints the symbols declaration for a SPASS input file.
-	 * First-order quantifiers and operators are do not need to be declared. All declared
-	 * symbols have to be different from each other.
+	 * First-order quantifiers and operators do not need to be declared. All declared
+	 * symbols have to be unique.
 	 * 
 	 * @param signature FolSignature of the problem
 	 * @return a string containing the signature declaration
@@ -200,9 +200,8 @@ public class SPASSWriter {
 		//For SPASS Version 3.9, "eml" has to be used instead
 		String axioms = "list_of_special_formulae(axioms,EML).\n";
 		
-		for (Object f : kb) {
+		for (Object f : kb) 
 			axioms += "prop_formula(" + printFormula((RelationalFormula) f) + ").\n";
-		}
 		
 		String conjectures = "list_of_special_formulae(conjectures,EML).\n";
 		conjectures += "prop_formula(" + printFormula(formula) + ").\n";

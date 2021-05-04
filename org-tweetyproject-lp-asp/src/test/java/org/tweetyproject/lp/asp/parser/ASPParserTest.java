@@ -53,36 +53,35 @@ import org.tweetyproject.lp.asp.syntax.StrictNegation;
  * combination with InstantiateVisitor, which is responsible for walking through
  * the parse-tree and generating in-memory classes of the parsed ASP program.
  *
- * TODO: Add choice ASPRules and optimize statements (as they are completed in the
- * parser)
+ * TODO: Add Choice rules
  * 
  * @author Anna Gessler
  * @author Tim Janus
  *
  */
-public class ASPCore2ParserTest {
+public class ASPParserTest {
 
-	static ASPCore2Parser parser;
+	static ASPParser parser;
 	static InstantiateVisitor visitor;
 	public static final int DEFAULT_TIMEOUT = 5000;
 
 	@BeforeClass
 	public static void init() {
 		visitor = new InstantiateVisitor();
-		parser = new ASPCore2Parser(new StringReader(""));
+		parser = new ASPParser(new StringReader(""));
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ProgramTest() throws ParseException {
 		String pstr = "motive(harry). \n" + "motive(sally). \n" + "guilty(harry). \n"
 				+ "innocent(Suspect) :- motive(Suspect), not guilty(Suspect). \n";
-		Program p1 = ASPCore2Parser.parseProgram(pstr);
+		Program p1 = ASPParser.parseProgram(pstr);
 		assertEquals(p1.size(), 4);
 		assertFalse(p1.hasQuery());
 
 		String pstr2 = "motive(harry). \n" + "motive(sally). \n" + "guilty(harry). \n"
 				+ "innocent(Suspect) :- motive(Suspect), not guilty(Suspect). \n guilty(sally)?";
-		Program p2 = ASPCore2Parser.parseProgram(pstr2);
+		Program p2 = ASPParser.parseProgram(pstr2);
 		assertTrue(p2.hasQuery());
 	}
 	
@@ -92,13 +91,13 @@ public class ASPCore2ParserTest {
 				+ "innocent(Suspect) :- motive(Suspect), not guilty(Suspect)."
 				+ "#show innocent/1."
 				+ "#show test/2.";
-		Program p = ASPCore2Parser.parseProgram(pstr);
+		Program p = ASPParser.parseProgram(pstr);
 		Set<Predicate> pwl = p.getOutputWhitelist();
 		assertEquals(pwl.size(),2);
 		
 		String pstr2 = "motive(harry)."
 				+ "#show test/3.";
-		Program p2 = ASPCore2Parser.parseProgram(pstr2);
+		Program p2 = ASPParser.parseProgram(pstr2);
 		Predicate wp = p2.getOutputWhitelist().iterator().next();
 		assertEquals(wp.getArity(),3);
 	}
@@ -106,7 +105,7 @@ public class ASPCore2ParserTest {
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void DLVTest() throws ParseException {
 		String pstr = ":- <=(harry,sally).";
-		Program p = ASPCore2Parser.parseProgram(pstr);
+		Program p = ASPParser.parseProgram(pstr);
 		ASPRule r = p.iterator().next();
 		assertTrue(r.getPremise().get(0) instanceof ComparativeAtom);	
 		
@@ -117,10 +116,10 @@ public class ASPCore2ParserTest {
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleASPRulesTest() throws ParseException {
-		ASPRule fact = ASPCore2Parser.parseRule("motive(harry).");
-		ASPRule negFact = ASPCore2Parser.parseRule("-guilty(sally).");
-		ASPRule nafConstraint = ASPCore2Parser.parseRule(":- not guilty(sally), guilty(harry).");
-		ASPRule simpleASPRule = ASPCore2Parser.parseRule("innocent(Suspect) :- motive(Suspect), not guilty(Suspect).");
+		ASPRule fact = ASPParser.parseRule("motive(harry).");
+		ASPRule negFact = ASPParser.parseRule("-guilty(sally).");
+		ASPRule nafConstraint = ASPParser.parseRule(":- not guilty(sally), guilty(harry).");
+		ASPRule simpleASPRule = ASPParser.parseRule("innocent(Suspect) :- motive(Suspect), not guilty(Suspect).");
 
 		ASPLiteral l1 = fact.getLiterals().iterator().next();
 		Constant c = (Constant) l1.getArguments().iterator().next();
@@ -186,7 +185,7 @@ public class ASPCore2ParserTest {
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void WeightAtLevelTest() throws ParseException {
-		ASPRule r1 = ASPCore2Parser.parseRule(":~ guilty(sally). [4@2,23,X,-2]");
+		ASPRule r1 = ASPParser.parseRule(":~ guilty(sally). [4@2,23,X,-2]");
 		NumberTerm w = (NumberTerm) r1.getWeight();
 		NumberTerm l = (NumberTerm) r1.getLevel();
 		List<Term<?>> terms = r1.getConstraintTerms();

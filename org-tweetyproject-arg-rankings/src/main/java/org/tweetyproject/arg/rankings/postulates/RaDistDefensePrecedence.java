@@ -65,26 +65,26 @@ public class RaDistDefensePrecedence extends RankingPostulate {
 		
 		if (dt.getAttackers(a).size() != dt.getAttackers(b).size())
 			return true;
-		Set<Argument> defenders_a = new HashSet<Argument>();
-		Set<Argument> defenders_b = new HashSet<Argument>();
+		Set<Argument> defendersA = new HashSet<Argument>();
+		Set<Argument> defendersB = new HashSet<Argument>();
 		for (Argument at : dt.getAttackers(a))
-			defenders_a.addAll(dt.getAttackers(at));
+			defendersA.addAll(dt.getAttackers(at));
 		for (Argument bt : dt.getAttackers(b))
-			defenders_b.addAll(dt.getAttackers(bt));
-		if (defenders_a.size() != defenders_b.size())
+			defendersB.addAll(dt.getAttackers(bt));
+		if (defendersA.size() != defendersB.size())
 			return true;
 	
 		// check if defense of a and b is simple
-		for (Argument defender : defenders_a) {
-			Set<Argument> attackers_a = new HashSet<Argument>(dt.getAttackers(a));
-			attackers_a.retainAll(dt.getAttacked(defender));
-			if (attackers_a.size() > 1)
+		for (Argument defender : defendersA) {
+			Set<Argument> attackersA = new HashSet<Argument>(dt.getAttackers(a));
+			attackersA.retainAll(dt.getAttacked(defender));
+			if (attackersA.size() > 1)
 				return true;
 		}
-		for (Argument defender : defenders_b) {
-			Set<Argument> attackers_b = new HashSet<Argument>(dt.getAttackers(b));
-			attackers_b.retainAll(dt.getAttacked(defender));
-			if (attackers_b.size() > 1)
+		for (Argument defender : defendersB) {
+			Set<Argument> attackersB = new HashSet<Argument>(dt.getAttackers(b));
+			attackersB.retainAll(dt.getAttacked(defender));
+			if (attackersB.size() > 1)
 				return true;
 		}
 

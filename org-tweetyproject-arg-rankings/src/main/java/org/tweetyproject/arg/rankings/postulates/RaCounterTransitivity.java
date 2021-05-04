@@ -60,17 +60,17 @@ public class RaCounterTransitivity extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		Set<Argument> attackers_a = dt.getAttackers(a);
-		Set<Argument> attackers_b = dt.getAttackers(b);
+		Set<Argument> attackersA = dt.getAttackers(a);
+		Set<Argument> attackersB = dt.getAttackers(b);
 
-		if (attackers_b.size() < attackers_a.size())
+		if (attackersB.size() < attackersA.size())
 			return true;
 
 		Set<Argument> toRemove = new HashSet<Argument>();
 		ArgumentRanking ranking = ev.getModel(dt);
-		for (Argument ax : attackers_a) {
+		for (Argument ax : attackersA) {
 			boolean flag = false;
-			Set<Argument> tempSet = new HashSet<Argument>(attackers_b);
+			Set<Argument> tempSet = new HashSet<Argument>(attackersB);
 			tempSet.removeAll(toRemove);
 			for (Argument bx : tempSet) {
 				if (ranking.isStrictlyMoreOrEquallyAcceptableThan(bx, ax)) {

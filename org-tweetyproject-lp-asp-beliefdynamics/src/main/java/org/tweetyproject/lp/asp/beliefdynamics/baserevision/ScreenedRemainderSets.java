@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.parser.ParseException;
 import org.tweetyproject.lp.asp.reasoner.ASPSolver;
 import org.tweetyproject.lp.asp.reasoner.DLVSolver;
@@ -173,7 +173,7 @@ public class ScreenedRemainderSets extends RemainderSets<ASPRule> {
 		String pathToSolver = "";
 		ASPSolver solver = new DLVSolver(pathToSolver);
 		
-		Program p = ASPCore2Parser.parseProgram(input); //TODO test with new parser
+		Program p = ASPParser.parseProgram(input); //TODO test with new parser
 		ScreenedRemainderSets srs = new ScreenedRemainderSets(p, new Program(), solver);
 		System.out.println("P = " + p + "\n\nScreened Remainder Sets: " + srs.size());
 		int i = 1;

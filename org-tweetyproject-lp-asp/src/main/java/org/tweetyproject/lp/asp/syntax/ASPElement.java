@@ -99,5 +99,16 @@ public abstract class ASPElement implements ComplexLogicalFormula {
 	public String printToClingo() {
 		return this.toString();
 	}
+	
+	/**
+	 * Returns a representation of this ASP element in DLV syntax.
+	 * See http://www.dlvsystem.com/html/DLV_User_Manual.html for more information.
+	 * 
+	 * @return String representation in DLV syntax
+	 */
+	public String printToDLV() {
+		//print to Clingo by default because the DLV syntax is often similar to the Clingo syntax
+		return this.printToClingo();
+	}
 
 }

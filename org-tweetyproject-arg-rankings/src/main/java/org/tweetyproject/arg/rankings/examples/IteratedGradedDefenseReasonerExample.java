@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
- package org.tweetyproject.arg.rankings.examples;
+package org.tweetyproject.arg.rankings.examples;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
@@ -24,7 +24,8 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.IteratedGradedDefenseReasoner;
 
 /**
- * Example code for using the iterated graded semantics by Grossi/Modgil.
+ * Example code for using the iterated graded semantics from
+ * [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015].
  * 
  * @author Matthias Thimm
  *
@@ -32,8 +33,8 @@ import org.tweetyproject.arg.rankings.reasoner.IteratedGradedDefenseReasoner;
 public class IteratedGradedDefenseReasonerExample {
 
 	public static void main(String[] args){
-		// See [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015]
-		// This is Figure 3
+		// Taken from Figure 3 in 
+		// [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015]
 		DungTheory theory = new DungTheory();
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");

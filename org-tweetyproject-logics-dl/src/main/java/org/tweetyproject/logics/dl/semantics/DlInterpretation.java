@@ -1,5 +1,5 @@
 /*
- *  This file is part of "Tweety", a collection of Java libraries for
+ *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
  *  TweetyProject is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.logics.dl.semantics;
 
@@ -48,19 +48,19 @@ import org.tweetyproject.logics.dl.syntax.UniversalRestriction;
  * interpretation consists of a domain (a set of individuals) and a 
  * mapping of each concept name to a subset of the domain
  * and of each role name to a binary relation on the domain 
- * (the mapping is often referred to as the interpretation function in literature).
+ * (this mapping is often referred to as the interpretation function in literature).
  *
  * @author Anna Gessler
  */
 public class DlInterpretation extends InterpretationSet<AssertionalAxiom, DlBeliefSet, DlAxiom> {
 	/**
-	 * The domain of this interpetation.
+	 * The domain of this interpretation.
 	 */
 	private Set<Individual> domain;
 
 	/**
 	 * Create a new DL interpretation with the given set of concept
-	 * and role assertions  that represent the mapping
+	 * and role assertions that represent the mapping
 	 * of concept names and role names to the domain. 
 	 * 
 	 * @param assertions collection of AssertionalAxiom
@@ -99,8 +99,7 @@ public class DlInterpretation extends InterpretationSet<AssertionalAxiom, DlBeli
 
 	
 	/**
-	 * Returns the domain of this interpretation.
-	 * @return this interpretation's domain (individuals).
+	 * @return the domain of this interpretation (individuals).
 	 */
 	private Set<Individual> getDomain() {
 		DlSignature sig = new DlSignature();
@@ -111,7 +110,7 @@ public class DlInterpretation extends InterpretationSet<AssertionalAxiom, DlBeli
 	
 	/**
 	 * Checks whether a concept is subsumed by another concept
-	 * (c1 =&gt; c2) wrt to this interpretation
+	 * (c1 =&gt; c2) wrt to this interpretation.
 	 * @param c1 a concept
 	 * @param c2 a concept
 	 * @return "true" if c1 is subsumed by c2, "false" otherwise
@@ -127,7 +126,7 @@ public class DlInterpretation extends InterpretationSet<AssertionalAxiom, DlBeli
 	}
 
 	/**
-	 * Returns the subset of the domain that belongs to the given role (the
+	 * Returns the subset of the domain that belongs to the given role (i.e. the
 	 * extension of the role).
 	 * 
 	 * @param r role
@@ -147,7 +146,7 @@ public class DlInterpretation extends InterpretationSet<AssertionalAxiom, DlBeli
 	}
 
 	/**
-	 * Returns the subset of the domain that belongs to the given concept (the
+	 * Returns the subset of the domain that belongs to the given concept (i.e. the
 	 * extension of the concept).
 	 * 
 	 * @param c concept

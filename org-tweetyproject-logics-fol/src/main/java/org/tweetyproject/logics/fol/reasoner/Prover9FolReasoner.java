@@ -34,7 +34,6 @@ import org.tweetyproject.logics.fol.writer.Prover9Writer;
  * 
  * @author Nils Geilen
  * @author Matthias Thimm
- *
  */
 
 public class Prover9FolReasoner extends FolReasoner {
@@ -124,11 +123,8 @@ public class Prover9FolReasoner extends FolReasoner {
 	 */
 	private boolean eval(File file) throws Exception {
 		String cmd = binaryLocation + " -f " + file.getAbsolutePath();
-		//System.out.println(cmd);
 		String output = null;
 		output = bash.run(cmd);
-		// output = Exec.invokeExecutable(cmd, -1, true);
-		//System.out.print(output);
 		if (Pattern.compile("Exiting with .+ proof").matcher(output).find())
 			return true;
 		if (Pattern.compile("Exiting with failure").matcher(output).find())
@@ -137,9 +133,7 @@ public class Prover9FolReasoner extends FolReasoner {
 	}
 
 	/**
-	 * Returns the path of the Prover9 binaries.
-	 * 
-	 * @return binary location of Prover9
+	 * @return the path of the Prover9 binaries.
 	 */
 	public String getBinaryLocation() {
 		return binaryLocation;

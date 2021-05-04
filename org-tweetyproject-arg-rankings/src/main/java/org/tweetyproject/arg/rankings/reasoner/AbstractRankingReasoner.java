@@ -25,7 +25,11 @@ import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
 /**
- * Common abstract class for ranking reasoners for abstract argumentation.
+ * Common abstract class for ranking reasoners for abstract argumentation. Currently,
+ * the available ranking types are:
+ * <br> - Numerical Ranking: Arguments are assigned numerical values. Acceptability follows from some order
+ * that is opposed on those values.
+ * <br> - Lattice Ranking: The acceptability of the arguments is represented by a graph-based structure.
  * 
  * @author Anna Gessler
  *

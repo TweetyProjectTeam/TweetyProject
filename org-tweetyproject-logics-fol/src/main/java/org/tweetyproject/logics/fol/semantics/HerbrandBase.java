@@ -31,8 +31,9 @@ import org.tweetyproject.logics.fol.syntax.*;
  * The Herbrand base is the set of all possible ground atoms of some
  * given first-order logic.
  * <br>
- * NOTE: We only allow to define a Herbrand base for signatures without
- *   function symbols.
+ * NOTE: We only allow to define a Herbrand base for signatures without 
+ * function symbols.
+ * 
  * @author Matthias Thimm
  */
 public class HerbrandBase {
@@ -45,10 +46,8 @@ public class HerbrandBase {
 	/**
 	 * Creates a new Herbrand base for the given signature.
      * <br>
-     * NOTE: We only allow to define a Herbrand base for signatures without
-     *   function symbols.
-	 * @param sig the underlying first-order signature for
-	 * 	this Herbrand base. There should be no functors defined in "sig"
+     * NOTE: We only allow to define a Herbrand base for signatures without function symbols.
+	 * @param sig the underlying first-order signature for this Herbrand base.
 	 * @throws IllegalArgumentException if "sig" contains a functor.
 	 */
 	public HerbrandBase(FolSignature sig) throws IllegalArgumentException{
@@ -87,8 +86,6 @@ public class HerbrandBase {
 	}
 		
 	/**
-	 * Computes all possible Herbrand interpretations of this Herbrand
-	 * base, i.e. all possible subsets of this Herbrand base.
 	 * @return all possible Herbrand interpretations of this Herbrand
 	 * base, i.e. all possible subsets of this Herbrand base.
 	 */
@@ -101,7 +98,6 @@ public class HerbrandBase {
 	}
 	
 	/**
-	 * Returns all atoms of this Herbrand base.
 	 * @return all atoms of this Herbrand base.
 	 */
 	public Set<FolAtom> getAtoms(){

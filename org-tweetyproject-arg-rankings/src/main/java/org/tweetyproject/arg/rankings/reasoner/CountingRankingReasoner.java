@@ -46,7 +46,7 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	 * for Abstract Argumentation. CoRR 2015], for most applications it is best to choose a 
 	 * value in [0.9, 0.98]
 	 */
-	double damping_factor;
+	double dampingFactor;
 
 	/**
 	 * The algorithm terminates when the change between two iterations is below this
@@ -58,7 +58,7 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	 * Create a new CountingRankingReasoner with default parameters.
 	 */
 	public CountingRankingReasoner() {
-		this.damping_factor = 0.9;
+		this.dampingFactor = 0.9;
 		this.epsilon = 0.001;
 	}
 
@@ -69,7 +69,7 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	 * @param epsilon TODO add description
 	 */
 	public CountingRankingReasoner(double damping_factor, double epsilon) {
-		this.damping_factor = damping_factor;
+		this.dampingFactor = damping_factor;
 		this.epsilon = epsilon;
 	}
 	
@@ -79,10 +79,9 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	 * @param damping_factor must be in (0,1)
 	 */
 	public CountingRankingReasoner(double damping_factor) {
-		this.damping_factor = damping_factor;
+		this.dampingFactor = damping_factor;
 		this.epsilon = 0.001;
 	}
-
 
 	@Override
 	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
@@ -93,17 +92,17 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 
 	@Override
 	public NumericalArgumentRanking getModel(DungTheory kb) {
-		Matrix adjacency_matrix = kb.getAdjacencyMatrix();
+		Matrix adjacencyMatrix = kb.getAdjacencyMatrix();
 		
 		// Apply matrix norm to guarantee that the argument strength scale is bounded
-		adjacency_matrix = adjacency_matrix.mult((1.0 / getInfiniteNormalizationFactor(adjacency_matrix)));
+		adjacencyMatrix = adjacencyMatrix.mult((1.0 / getInfiniteNormalizationFactor(adjacencyMatrix)));
 
 		// Apply damping factor
-		adjacency_matrix = adjacency_matrix.mult(this.damping_factor).simplify();
+		adjacencyMatrix = adjacencyMatrix.mult(this.dampingFactor).simplify();
 		
 		int n = kb.getNumberOfNodes();
 		Matrix valuations = new Matrix(1, n); // Stores values of the current iteration
-		Matrix valuations_old = new Matrix(1, n); // Stores values of the last iteration
+		Matrix valuationsOld = new Matrix(1, n); // Stores values of the last iteration
 		
 		Matrix e = new Matrix(1, n); // column vector of all ones
 		for (int i = 0; i < n; i++) {
@@ -113,9 +112,9 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 		valuations = e; 
 		
 		do {
-			valuations_old = valuations;
-			valuations = e.minus(adjacency_matrix.mult(valuations_old)).simplify();
-		} while (getDistance(valuations_old, valuations) > epsilon);
+			valuationsOld = valuations;
+			valuations = e.minus(adjacencyMatrix.mult(valuationsOld)).simplify();
+		} while (getDistance(valuationsOld, valuations) > epsilon);
 		
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
@@ -134,28 +133,28 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	 * @return infinite matrix norm of the matrix
 	 */
 	private double getInfiniteNormalizationFactor(Matrix matrix) {
-		double max_sum = 0.0;
+		double maxSum = 0.0;
 		for (int y = 0; y < matrix.getXDimension(); y++) {
 			double sum = 0.0;
 			for (int x = 0; x < matrix.getYDimension(); x++)
 				sum += matrix.getEntry(x, y).doubleValue();
-			if (sum > max_sum)
-				max_sum = sum;
+			if (sum > maxSum)
+				maxSum = sum;
 		}
-		return max_sum;
+		return maxSum;
 	}
 
 	/**
 	 * Computes the Euclidean distance between to the given column vectors.
 	 * 
-	 * @param v_old first column vector
+	 * @param vOld first column vector
 	 * @param v     second column vector
 	 * @return distance between v and v_old
 	 */
-	private double getDistance(Matrix v_old, Matrix v) {
+	private double getDistance(Matrix vOld, Matrix v) {
 		double sum = 0.0;
 		for (int i = 0; i < v.getYDimension(); i++) {
-			sum += Math.pow(v.getEntry(0, i).doubleValue() - v_old.getEntry(0, i).doubleValue(), 2.0);
+			sum += Math.pow(v.getEntry(0, i).doubleValue() - vOld.getEntry(0, i).doubleValue(), 2.0);
 		}
 		return Math.sqrt(sum);
 	}

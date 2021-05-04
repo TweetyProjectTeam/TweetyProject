@@ -45,7 +45,7 @@ public class AspInconsistencyMeasureTest {
 	
 	@BeforeClass
 	public static void init() {
-		solver = new ClingoSolver("C:/app/clingo/clingo.exe");
+		solver = new ClingoSolver("/your/path/to/clingo");
 		mpm = new PmInconsistencyMeasure(solver);
 		msd = new SdInconsistencyMeasure(solver);
 	}

@@ -111,10 +111,10 @@ public class TPTPParserExample {
 		System.out.println("Parsed signature: " + tptp.getSignature());
 		
 		//Optional: set a signature for TPTPParser before parsing
-				//FolParser folparser = new FolParser();
-				//FolSignature sig = folparser.parseSignature("Thing = {a, b, c}\n"
-				//		+ "type(p(Thing)) \n type(q(Thing)) \n type(r)");
-				//tptp.setSignature(sig); 
+		//FolParser folparser = new FolParser();
+		//FolSignature sig = folparser.parseSignature("Thing = {a, b, c}\n"
+		//		+ "type(p(Thing)) \n type(q(Thing)) \n type(r)");
+		//tptp.setSignature(sig); 
 	}
 
 }

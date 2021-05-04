@@ -1,5 +1,5 @@
 /*
- *  This file is part of "Tweety", a collection of Java libraries for
+ *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
  *  TweetyProject is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.logics.dl.syntax;
 
@@ -152,10 +152,10 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	}
 
 	/**
-	 * Checks whether the signature contains an Individual of the given name.
+	 * Checks whether the signature contains an individual of the given name.
 	 * 
 	 * @param s the name of the Individual
-	 * @return true if the the signature contains an Individual of the given name,
+	 * @return true if the the signature contains an individual of the given name,
 	 *         false otherwise
 	 */
 	public boolean containsIndividual(String s) {
@@ -185,7 +185,7 @@ public class DlSignature extends TripleSetSignature<AtomicConcept, AtomicRole, I
 	}
 
 	/**
-	 * Returns signature as string in the order individuals - concept names - role
+	 * Returns the signature as a string in the order individuals - concept names - role
 	 * names.
 	 * 
 	 * @return a String

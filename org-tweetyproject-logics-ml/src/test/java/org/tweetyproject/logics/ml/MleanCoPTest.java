@@ -16,7 +16,7 @@ import org.tweetyproject.logics.ml.reasoner.MleanCoPReasoner;
 import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
 
 /**
- * JUnit Test class for MleanCoP.
+ * JUnit Test class for the MleanCoP reasoner.
  * 
  * @author Anna Gessler
  */

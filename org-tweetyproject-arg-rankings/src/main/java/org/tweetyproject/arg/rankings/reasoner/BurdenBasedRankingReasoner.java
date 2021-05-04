@@ -48,29 +48,29 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeA
 	@Override
 	public LatticeArgumentRanking getModel(DungTheory base) {
 		// Number of steps
-		int i_max = 6;
+		int iMax = 6;
 		// Map for storing burden numbers of previous steps
 		Map<Argument, double[]> burdenNumbers = new HashMap<Argument, double[]>();
 
 		// Initialize burden numbers array
 		for (Argument a : base) {
-			double[] initial_numbers = new double[i_max + 1];
-			initial_numbers[0] = 1.0; // burden number for step 0 is 1.0 for all arguments
-			burdenNumbers.put(a, initial_numbers);
+			double[] initialNumbers = new double[iMax + 1];
+			initialNumbers[0] = 1.0; // burden number for step 0 is 1.0 for all arguments
+			burdenNumbers.put(a, initialNumbers);
 		}
 
 		// Compute burden numbers for all steps i
-		for (int i = 1; i <= i_max; i++) {
+		for (int i = 1; i <= iMax; i++) {
 			for (Argument a : base) {
 				Set<Argument> attackers = base.getAttackers(a);
-				double new_burden = 1.0;
+				double newBurden = 1.0;
 				for (Argument b : attackers) {
-					double[] attacker_burden_numbers = burdenNumbers.get(b);
-					new_burden += 1.0 / (attacker_burden_numbers[i - 1]);
+					double[] attackerBurdenNumbers = burdenNumbers.get(b);
+					newBurden += 1.0 / (attackerBurdenNumbers[i - 1]);
 				}
-				double[] burden_numbers = burdenNumbers.get(a);
-				burden_numbers[i] = new_burden;
-				burdenNumbers.put(a, burden_numbers);
+				double[] burdenNumbersTemp = burdenNumbers.get(a);
+				burdenNumbersTemp[i] = newBurden;
+				burdenNumbers.put(a, burdenNumbersTemp);
 			}
 		}
 
@@ -79,9 +79,9 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeA
 		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
 		for (Argument a : base) {
 			for (Argument b : base) {
-				double[] burdens_a = burdenNumbers.get(a);
-				double[] burdens_b = burdenNumbers.get(b);
-				int res = c.compare(burdens_a, burdens_b);
+				double[] burdensA = burdenNumbers.get(a);
+				double[] burdensB = burdenNumbers.get(b);
+				int res = c.compare(burdensA, burdensB);
 				if (res < 0)
 					ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 				else if (res > 0)

@@ -50,7 +50,7 @@ import org.tweetyproject.math.term.Variable;
  * 
  * @author Anna Gessler
  */
-public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
+public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
 
 	@Override
 	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
@@ -82,16 +82,16 @@ public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgument
 		 * The value of the game is the solution to a linear optimization problem
 		*/
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MAXIMIZE);
-		Variable target_var = new FloatVariable("PMAX");
-		problem.setTargetFunction(target_var);
+		Variable targetVar = new FloatVariable("PMAX");
+		problem.setTargetFunction(targetVar);
 		
 		//Generate strategies of the proponent and opponent of the zero-sum strategic game
-		Set<Collection<Argument>> proponent_strategies = new HashSet<Collection<Argument>>();
-		Set<Collection<Argument>> opponent_strategies = new HashSet<Collection<Argument>>();
+		Set<Collection<Argument>> proponentStrategies = new HashSet<Collection<Argument>>();
+		Set<Collection<Argument>> opponentStrategies = new HashSet<Collection<Argument>>();
 		for (Set<Argument> p : subsets) {
-			opponent_strategies.add(p);
+			opponentStrategies.add(p);
 			if (p.contains(a)) 
-				proponent_strategies.add(p);
+				proponentStrategies.add(p);
 		}
 
 		/*
@@ -99,25 +99,25 @@ public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgument
 		 * See [Matt, Toni. A game-theoretic measure of argument strength for abstract argumentation.
 		 * JELIA 2008] for details
 		 */
-		List<FloatVariable> probability_variables = new ArrayList<FloatVariable>();
-		for (int count = 1; count <= proponent_strategies.size(); count++) { 
-			FloatVariable p_i = new FloatVariable("P" + count);
-			probability_variables.add(p_i);
-			problem.add(new Inequation(p_i, new FloatConstant(0.0), Inequation.GREATER_EQUAL));
+		List<FloatVariable> probabilityVariables = new ArrayList<FloatVariable>();
+		for (int count = 1; count <= proponentStrategies.size(); count++) { 
+			FloatVariable pI = new FloatVariable("P" + count);
+			probabilityVariables.add(pI);
+			problem.add(new Inequation(pI, new FloatConstant(0.0), Inequation.GREATER_EQUAL));
 		}
-		problem.add(new Inequation(target_var, new FloatConstant(0.0), Inequation.GREATER_EQUAL));
+		problem.add(new Inequation(targetVar, new FloatConstant(0.0), Inequation.GREATER_EQUAL));
 		
-		for (Collection<Argument> j : opponent_strategies) {
+		for (Collection<Argument> j : opponentStrategies) {
 			List<Term> products = new ArrayList<Term>(); 
 			int pi = 0;
-			for (Collection<Argument> i : proponent_strategies) {
-				FloatConstant rewards_ij = new FloatConstant(computeRewards(i, j, kb));
-				products.add(new Product(rewards_ij, probability_variables.get(pi++)));
+			for (Collection<Argument> i : proponentStrategies) {
+				FloatConstant rewardsIj = new FloatConstant(computeRewards(i, j, kb));
+				products.add(new Product(rewardsIj, probabilityVariables.get(pi++)));
 			}
-			problem.add( new Inequation(new Sum(products).minus(target_var), new FloatConstant(0.0),
+			problem.add( new Inequation(new Sum(products).minus(targetVar), new FloatConstant(0.0),
 					Inequation.GREATER_EQUAL));
 		}
-		problem.add(new Equation(new Sum(probability_variables), new FloatConstant(1.0)));
+		problem.add(new Equation(new Sum(probabilityVariables), new FloatConstant(1.0)));
 
 		/*
 		 * Solve problem with simplex algorithm
@@ -126,7 +126,7 @@ public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgument
 		solver.onlyPositive = true;
 		try {
 			Map<Variable, Term> solution = solver.solve(problem);
-			return solution.get(target_var).doubleValue();
+			return solution.get(targetVar).doubleValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -158,22 +158,22 @@ public class MTRankingReasoner extends AbstractRankingReasoner<NumericalArgument
 	 * @return degree of acceptability of A wrt. B.
 	 */
 	public double computeDegreeOfAcceptability(Collection<Argument> A, Collection<Argument> B, DungTheory kb) {
-		int attacks_from_A_to_B = 0;
+		int attacksFromAtoB = 0;
 		for (Argument b : B) {
 			Set<Argument> attacks = kb.getAttackers(b);
 			attacks.retainAll(A);
-			attacks_from_A_to_B += attacks.size();
+			attacksFromAtoB += attacks.size();
 		}
-		int attacks_from_B_to_A = 0;
+		int attacksFromBtoA = 0;
 		for (Argument a : A) {
 			Set<Argument> attacks = kb.getAttackers(a);
 			attacks.retainAll(B);
-			attacks_from_B_to_A += attacks.size();
+			attacksFromBtoA += attacks.size();
 		}
 
 		double result = 1.0;
-		result += 1.0 - (1.0 / (attacks_from_A_to_B + 1.0));
-		result -= 1.0 - (1.0 / (attacks_from_B_to_A + 1.0));
+		result += 1.0 - (1.0 / (attacksFromAtoB + 1.0));
+		result -= 1.0 - (1.0 / (attacksFromBtoA + 1.0));
 		return 0.5 * result;
 	}
 

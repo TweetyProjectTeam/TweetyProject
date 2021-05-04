@@ -18,12 +18,11 @@
  */
 package org.tweetyproject.lp.asp.syntax;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
-import org.tweetyproject.logics.commons.syntax.NumberTerm;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
@@ -66,10 +65,7 @@ public class AggregateHead extends ASPHead {
 	 * @param rightBound of the cardinality rule
 	 */
 	public AggregateHead(List<ASPBodyElement> literals, int leftBound, int rightBound) {
-		List<AggregateElement> agg_elements = new ArrayList<AggregateElement>();
-		agg_elements.add(new AggregateElement(new ArrayList<Term<?>>(), literals));
-		AggregateAtom agg = new AggregateAtom(ASPOperator.AggregateFunction.COUNT, agg_elements,
-				ASPOperator.BinaryOperator.LEQ, new NumberTerm(leftBound), ASPOperator.BinaryOperator.LEQ, new NumberTerm(rightBound));
+		AggregateAtom agg = new AggregateAtom(literals, leftBound, rightBound);
 		this.head = agg;
 	}
 
@@ -110,7 +106,7 @@ public class AggregateHead extends ASPHead {
 
 	@Override
 	public ASPElement substitute(Term<?> t, Term<?> v) {
-		return this.head.substitute(t, v);
+		return new AggregateHead(this.head.substitute(t, v));
 	}
 
 	@Override
@@ -148,4 +144,25 @@ public class AggregateHead extends ASPHead {
 		return this.head.printToClingo();
 	}
 	
+	@Override
+	public String printToDLV() { 
+		return this.head.printToDLV();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(head);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AggregateHead other = (AggregateHead) obj;
+		return Objects.equals(head, other.head);
+	}
 }

@@ -20,6 +20,7 @@ package org.tweetyproject.lp.asp.semantics;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.tweetyproject.commons.InterpretationSet;
@@ -101,12 +102,33 @@ public class AnswerSet extends InterpretationSet<ASPLiteral,Program,ASPRule> {
 	@Override
 	public boolean satisfies(Program beliefBase) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException("");
 	}
 
 	@Override
 	public boolean satisfies(ASPRule formula) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException("");
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(level, weight);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AnswerSet other = (AnswerSet) obj;
+		return level == other.level && weight == other.weight;
+	}
+	
 }

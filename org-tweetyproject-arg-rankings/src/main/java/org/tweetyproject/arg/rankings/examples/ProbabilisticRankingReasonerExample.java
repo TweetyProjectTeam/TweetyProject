@@ -26,9 +26,10 @@ import org.tweetyproject.arg.rankings.reasoner.ProbabilisticRankingReasoner;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * Example code for using graded semantics reasoner based on the ideas from [Thimm, Cerutti, Rienstra; 2018].
+ * Example code for using the probabilistic ranking reasoner based on the ideas from 
+ * [Thimm, Cerutti, Rienstra. Probabilistic Graded Semantics. COMMA 2018].
+ * 
  * @author Matthias Thimm
- *
  */
 public class ProbabilisticRankingReasonerExample {
 	public static void main(String[] args){

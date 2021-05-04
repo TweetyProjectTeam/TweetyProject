@@ -1,5 +1,5 @@
 /*
- *  This file is part of "Tweety", a collection of Java libraries for
+ *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
  *  TweetyProject is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.logics.dl.examples;
 

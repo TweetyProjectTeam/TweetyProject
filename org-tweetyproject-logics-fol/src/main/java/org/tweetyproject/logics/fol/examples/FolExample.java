@@ -47,22 +47,22 @@ public class FolExample {
 		FolSignature sig = new FolSignature(true); 
 		
 		//Add sort
-		Sort s_animal = new Sort("Animal");
-		sig.add(s_animal); 
+		Sort sortAnimal = new Sort("Animal");
+		sig.add(sortAnimal); 
 		
 		//Add constants
-		Constant c_penguin = new Constant("penguin",s_animal);
-		Constant c_kiwi = new Constant("kiwi",s_animal);
-		sig.add(c_penguin, c_kiwi);
+		Constant constantPenguin = new Constant("penguin",sortAnimal);
+		Constant constantKiwi = new Constant("kiwi",sortAnimal);
+		sig.add(constantPenguin, constantKiwi);
 
 		//Add predicates
-		List<Sort> predicate_list = new ArrayList<Sort>();
-		predicate_list.add(s_animal);
-		Predicate p = new Predicate("Flies",predicate_list);
-		List<Sort> predicate_list2 = new ArrayList<Sort>();
-		predicate_list2.add(s_animal);
-		predicate_list2.add(s_animal);
-		Predicate p2 = new Predicate("Knows",predicate_list2); //Add Predicate Knows(Animal,Animal) 
+		List<Sort> predicateList = new ArrayList<Sort>();
+		predicateList.add(sortAnimal);
+		Predicate p = new Predicate("Flies",predicateList);
+		List<Sort> predicateList2 = new ArrayList<Sort>();
+		predicateList2.add(sortAnimal);
+		predicateList2.add(sortAnimal);
+		Predicate p2 = new Predicate("Knows",predicateList2); //Add Predicate Knows(Animal,Animal) 
 		sig.add(p, p2); 
 		System.out.println("Signature: " + sig);
 		
@@ -81,9 +81,9 @@ public class FolExample {
 		System.out.println("\nParsed BeliefBase: " + bs);
 		
 		//Note that belief bases can have signatures larger (but not smaller) than their formulas' signature
-		FolSignature sig_larger = bs.getSignature();
-		sig_larger.add(new Constant("archaeopteryx",s_animal));
-		bs.setSignature(sig_larger);
+		FolSignature sigLarger = bs.getSignature();
+		sigLarger.add(new Constant("archaeopteryx",sortAnimal));
+		bs.setSignature(sigLarger);
 		System.out.println(bs);
 		System.out.println("Minimal signature: " + bs.getMinimalSignature());
 

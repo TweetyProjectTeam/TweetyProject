@@ -60,34 +60,33 @@ public class RaStrictCounterTransitivity extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		Set<Argument> attackers_a = dt.getAttackers(a);
-		Set<Argument> attackers_b = dt.getAttackers(b);
+		Set<Argument> attackersA = dt.getAttackers(a);
+		Set<Argument> attackersB = dt.getAttackers(b);
 
-		if (attackers_b.size() < attackers_a.size())
+		if (attackersB.size() < attackersA.size())
 			return true;
 
 		Set<Argument> toRemove = new HashSet<Argument>();
 		ArgumentRanking ranking = ev.getModel(dt);
-		boolean strict_flag = false;
-		for (Argument ax : attackers_a) {
+		boolean strictFlag = false;
+		for (Argument ax : attackersA) {
 			boolean flag = false;
-			Set<Argument> tempSet = new HashSet<Argument>(attackers_b);
+			Set<Argument> tempSet = new HashSet<Argument>(attackersB);
 			tempSet.removeAll(toRemove);
 			for (Argument bx : tempSet) {
 				if (ranking.isStrictlyMoreAcceptableThan(bx, ax))
-					strict_flag = true;
+					strictFlag = true;
 				if (ranking.isStrictlyMoreOrEquallyAcceptableThan(bx, ax)) {
 					flag = true;
 					toRemove.add(bx);
 					break;
 				}
-
 			}
 			if (!flag)
 				return true;
 		}
 
-		if ((attackers_a.size() < attackers_b.size()) || strict_flag)
+		if ((attackersA.size() < attackersB.size()) || strictFlag)
 			return ranking.isStrictlyMoreAcceptableThan(a, b);
 		return true;
 	}

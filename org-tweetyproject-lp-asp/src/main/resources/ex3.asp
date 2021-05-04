@@ -3,4 +3,4 @@ obj(l).
 
 usable(X) :- obj(X), not broken(X).
 -usable(X) :- broken(X).
-broken(r) ; broken(l).
+broken(r) | broken(l).

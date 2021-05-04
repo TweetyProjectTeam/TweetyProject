@@ -56,22 +56,22 @@ public class FolParserTest {
 	public void initParser() {
 		parser = new FolParser();
 		FolSignature sig = new FolSignature(true); //Create new signature with equality
-		Sort s_animal = new Sort("Animal");
-		sig.add(s_animal); 
-		Constant c_penguin = new Constant("penguin",s_animal);
-		Constant c_kiwi = new Constant("kiwi",s_animal);
-		sig.add(c_penguin);
-		sig.add(c_kiwi);
+		Sort sortAnimal = new Sort("Animal");
+		sig.add(sortAnimal); 
+		Constant constantPenguin = new Constant("penguin",sortAnimal);
+		Constant constantKiwi = new Constant("kiwi",sortAnimal);
+		sig.add(constantPenguin);
+		sig.add(constantKiwi);
 		Predicate p1 = new Predicate("SunIsShining");
 		sig.add(p1);
-		List<Sort> predicate_list = new ArrayList<Sort>();
-		predicate_list.add(s_animal);
-		Predicate p2 = new Predicate("Flies",predicate_list);
+		List<Sort> predicateList = new ArrayList<Sort>();
+		predicateList.add(sortAnimal);
+		Predicate p2 = new Predicate("Flies",predicateList);
 		sig.add(p2); 
-		List<Sort> predicate_list2 = new ArrayList<Sort>();
-		predicate_list2.add(s_animal);
-		predicate_list2.add(s_animal);
-		Predicate p3 = new Predicate("Knows",predicate_list2);
+		List<Sort> predicateList2 = new ArrayList<Sort>();
+		predicateList2.add(sortAnimal);
+		predicateList2.add(sortAnimal);
+		Predicate p3 = new Predicate("Knows",predicateList2);
 		sig.add(p3); 
 		parser.setSignature(sig);
 	}

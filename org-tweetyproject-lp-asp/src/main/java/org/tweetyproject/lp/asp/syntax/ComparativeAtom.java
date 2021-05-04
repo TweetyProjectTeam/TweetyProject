@@ -19,6 +19,7 @@
 package org.tweetyproject.lp.asp.syntax;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -162,14 +163,44 @@ public class ComparativeAtom extends ASPBodyElement {
 	}
 	
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((left == null) ? 0 : left.hashCode());
-		result = prime * result
-				+ ((op == null) ? 0 : op.hashCode());
-		result = prime * result + ((right == null) ? 0 : right.hashCode());
+	public String toString() {
+		return left.toString() + op.toString() + right.toString();
+	}
+	
+	public String printToDLV() {
+		String result = "";
+		if (this.containsTermsOfType(ArithmeticTerm.class))  {
+			if (op == ASPOperator.BinaryOperator.EQ) {
+				{
+					if (this.left instanceof ArithmeticTerm && !(this.right instanceof ArithmeticTerm)) {
+						ArithmeticTerm arit = (ArithmeticTerm) this.left;
+						ASPOperator.ArithmeticOperator op = arit.getOperator();
+						String opString = op.toString();
+						if (op == ASPOperator.ArithmeticOperator.MODULO)
+							opString = "#mod";
+						result = opString + "(" + arit.getLeft().toString() + "," + arit.getRight().toString() + "," + this.right.toString() + ")";
+					}
+					if (this.right instanceof ArithmeticTerm && !(this.left instanceof ArithmeticTerm)) {
+						ArithmeticTerm arit = (ArithmeticTerm) this.right;
+						ASPOperator.ArithmeticOperator op = arit.getOperator();
+						String opString = op.toString();
+						if (op == ASPOperator.ArithmeticOperator.MODULO)
+							opString = "#mod";
+						result = opString + "(" + arit.getLeft().toString() + "," + arit.getRight().toString() + "," + this.left.toString() + ")";
+					}
+				}
+			}
+			else
+				return this.printToClingo();
+		}
+		else
+			return this.printToClingo();
 		return result;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(left, op, right);
 	}
 
 	@Override
@@ -181,27 +212,7 @@ public class ComparativeAtom extends ASPBodyElement {
 		if (getClass() != obj.getClass())
 			return false;
 		ComparativeAtom other = (ComparativeAtom) obj;
-		if (left == null) {
-			if (other.left != null)
-				return false;
-		} else if (!left.equals(other.left))
-			return false;
-		if (op == null) {
-			if (other.op != null)
-				return false;
-		} else if (!op.equals(other.op))
-			return false;
-		if (right == null) {
-			if (other.right != null)
-				return false;
-		} else if (!right.equals(other.right))
-			return false;
-		return true;
-	}
-	
-	@Override
-	public String toString() {
-		return left.toString() + op.toString() + right.toString();
+		return Objects.equals(left, other.left) && op == other.op && Objects.equals(right, other.right);
 	}
 
 }

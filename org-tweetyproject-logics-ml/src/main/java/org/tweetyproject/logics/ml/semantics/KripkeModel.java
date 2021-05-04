@@ -65,9 +65,8 @@ public class KripkeModel extends AbstractInterpretation<MlBeliefSet,FolFormula> 
 		for (Interpretation<FolBeliefSet,FolFormula> i : this.possibleWorlds) {
 			if (formula instanceof Necessity) {
 				for (Interpretation<FolBeliefSet,FolFormula> j : this.accRelation.getSuccessors(i)) {
-					if (!j.satisfies((FolFormula) ((MlFormula) formula).getFormula())) {
-						return false; }
-
+					if (!j.satisfies((FolFormula) ((MlFormula) formula).getFormula())) 
+						return false; 
 				}
 			} else if (formula instanceof Possibility) {
 				boolean satisfied = false;
@@ -77,14 +76,13 @@ public class KripkeModel extends AbstractInterpretation<MlBeliefSet,FolFormula> 
 						break;
 					}
 				}
-				if (!satisfied) {
-					return false; }
+				if (!satisfied) 
+					return false; 
 			}
-
 			else if (formula instanceof FolFormula) {
 				MlHerbrandInterpretation h = (MlHerbrandInterpretation) i;
-				if (!h.satisfies(formula,this.accRelation.getSuccessors(i))) {
-					return false; }
+				if (!h.satisfies(formula,this.accRelation.getSuccessors(i))) 
+					return false; 
 			}
 		}
 		return true;

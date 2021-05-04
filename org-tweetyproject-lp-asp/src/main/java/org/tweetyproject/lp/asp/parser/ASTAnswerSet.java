@@ -19,20 +19,22 @@
  *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.lp.asp.parser;
-public
-class ASTAnswerSet extends SimpleNode {
-  public ASTAnswerSet(int id) {
-    super(id);
-  }
 
-  public ASTAnswerSet(ASPCore2Parser p, int id) {
-    super(p, id);
-  }
+public class ASTAnswerSet extends SimpleNode {
+	public ASTAnswerSet(int id) {
+		super(id);
+	}
 
+	public ASTAnswerSet(ASPParser p, int id) {
+		super(p, id);
+	}
 
-  /** Accept the visitor. **/
-  public Object jjtAccept(ASPCore2ParserVisitor visitor, Object data) {
-    return visitor.visit(this, data);
-  }
+	/** Accept the visitor. **/
+	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
+		return visitor.visit(this, data);
+	}
 }
-/* JavaCC - OriginalChecksum=1ee8da0794859816044a3225afe7edfa (do not edit this line) */
+/*
+ * JavaCC - OriginalChecksum=1ee8da0794859816044a3225afe7edfa (do not edit this
+ * line)
+ */

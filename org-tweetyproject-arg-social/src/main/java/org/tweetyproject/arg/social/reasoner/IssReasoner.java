@@ -29,7 +29,7 @@ import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.QuantitativeReasoner;
 
 /**
- * This reasoner provides is an implementation of the "Iterative Successive Subsitution Algorithm"
+ * This reasoner provides is an implementation of the "Iterative Successive Substitution Algorithm"
  * from [Marco Correia and Jorge Cruz and João Leite. On the Efficient Implementation of Social Abstract Argumentation. ECAI2014]
  * for determining a model of a social abstract argumentation framework according to the simple
  * product semantics.

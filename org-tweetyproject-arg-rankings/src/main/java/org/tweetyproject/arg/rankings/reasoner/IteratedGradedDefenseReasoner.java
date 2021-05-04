@@ -69,11 +69,11 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	public Collection<Argument> gradedDefense(DungTheory theory, Collection<Argument> args, int m, int n){
 		Collection<Argument> result = new HashSet<>();
 		for(Argument arg: theory){
-			int num_attackers = 0;
+			int numAttackers = 0;
 			for(Argument attacker: theory.getAttackers(arg))
 				if(this.numOfAttackers(theory,attacker, args) < n)
-					num_attackers++;
-			if(num_attackers < m)
+					numAttackers++;
+			if(numAttackers < m)
 				result.add(arg);
 		}
 		return result;
@@ -304,19 +304,19 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 		for(Argument a: bbase)
 			for(Argument b: bbase)
 				if(a != b){
-					boolean a_implies_b = true;
-					boolean b_implies_a = true;
+					boolean aImpliesB = true;
+					boolean bImpliesA = true;
 					for(Collection<Extension> exts: allExt.values()){
 						if(this.isContainedInAll(a, exts) && !this.isContainedInAll(b, exts))
-							a_implies_b = false;
+							aImpliesB = false;
 						if(this.isContainedInAll(b, exts) && !this.isContainedInAll(a, exts))
-							b_implies_a = false;
-						if(!a_implies_b && !b_implies_a)
+							bImpliesA = false;
+						if(!aImpliesB && !bImpliesA)
 							break;
 					}
-					if(a_implies_b)
+					if(aImpliesB)
 						ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
-					if(b_implies_a)
+					if(bImpliesA)
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 				}
 		return ranking;

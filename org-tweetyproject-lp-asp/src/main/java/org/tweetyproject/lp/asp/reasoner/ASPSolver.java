@@ -49,12 +49,12 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	
 	/**
 	 * The maximum number of models to be generated.
+	 * Default: 100
 	 */
 	protected int maxNumOfModels = 100;
 	
 	/**
-	 * Get the maximum number of models to be generated.
-	 * @return maximum number
+	 * @return the maximum number of models to be generated.
 	 */
 	public int getMaxNumOfModels() {
 		return maxNumOfModels;

@@ -62,11 +62,11 @@ public class ClassicalHead extends ASPHead implements AssociativeFormula<ASPLite
 	/**
 	 * Creates a new head with the given elements.
 	 * 
-	 * @param head_elements
+	 * @param headElements
 	 *            list of literals
 	 */
-	public ClassicalHead(List<ASPLiteral> head_elements) {
-		this.addAll(head_elements);
+	public ClassicalHead(List<ASPLiteral> headElements) {
+		this.addAll(headElements);
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class ClassicalHead extends ASPHead implements AssociativeFormula<ASPLite
 
 	@Override
 	public String getOperatorSymbol() {
-		return ";";
+		return "|";
 	}
 
 	@Override
@@ -394,7 +394,7 @@ public class ClassicalHead extends ASPHead implements AssociativeFormula<ASPLite
 			if (isFirst)
 				isFirst = false;
 			else
-				s += this.getOperatorSymbol();
+				s += " " + this.getOperatorSymbol() + " ";
 			// check if parentheses are needed
 			if (f instanceof AssociativeFormula && ((AssociativeFormula<?>) f).size() > 1)
 				s += LogicalSymbols.PARENTHESES_LEFT() + f.printToClingo() + LogicalSymbols.PARENTHESES_RIGHT();
@@ -403,5 +403,27 @@ public class ClassicalHead extends ASPHead implements AssociativeFormula<ASPLite
 		}
 		return s;
 	}
+	
+	@Override
+	public String printToDLV() {
+		if (this.isEmpty())
+			return this.getEmptySymbol();
+		String s = "";
+		boolean isFirst = true;
+		for (ASPLiteral f : assocSupport) {
+			if (isFirst)
+				isFirst = false;
+			else
+				s += " v ";
+			// check if parentheses are needed
+			if (f instanceof AssociativeFormula && ((AssociativeFormula<?>) f).size() > 1)
+				s += LogicalSymbols.PARENTHESES_LEFT() + f.printToClingo() + LogicalSymbols.PARENTHESES_RIGHT();
+			else
+				s += f.printToDLV();
+		}
+		return s;
+	}
+	
+	
 
 }

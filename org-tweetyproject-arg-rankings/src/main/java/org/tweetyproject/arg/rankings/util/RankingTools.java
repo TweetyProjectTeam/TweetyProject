@@ -32,7 +32,7 @@ import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 
 /**
- * Common utility methods for ranking reasoners.
+ * This class contains common utility methods for ranking reasoners.
  * 
  * @author Anna Gessler
  */
@@ -42,13 +42,13 @@ public class RankingTools {
 	 * Given a set of argument paths of length i-1, this method returns a set of
 	 * argument paths of length i for the given DungTheory.
 	 * 
-	 * @param old_paths set of paths of length i-1
+	 * @param oldPaths set of paths of length i-1
 	 * @param base      the DungTheory
 	 * @return a set of paths of length i
 	 */
-	public static HashSet<ArrayList<Argument>> getPathsOfHigherSize(HashSet<ArrayList<Argument>> old_paths, DungTheory base) {
+	public static HashSet<ArrayList<Argument>> getPathsOfHigherSize(HashSet<ArrayList<Argument>> oldPaths, DungTheory base) {
 		HashSet<ArrayList<Argument>> new_paths = new HashSet<ArrayList<Argument>>();
-		for (ArrayList<Argument> path : old_paths) {
+		for (ArrayList<Argument> path : oldPaths) {
 			Argument tail = path.get(path.size() - 1);
 			for (Argument attacker : base.getAttackers(tail)) {
 					ArrayList<Argument> new_path = new ArrayList<Argument>();
@@ -69,14 +69,14 @@ public class RankingTools {
 	 */
 	public static ArgumentRanking roundRanking(NumericalArgumentRanking ranking, int n) {
 		Iterator<Entry<Argument, Double>> it = ranking.entrySet().iterator();
-		NumericalArgumentRanking reval = new NumericalArgumentRanking();
+		NumericalArgumentRanking roundedRanking = new NumericalArgumentRanking();
 		while (it.hasNext()) {
 			Map.Entry<Argument, Double> pair = (Map.Entry<Argument, Double>) it.next();
 			Argument a = pair.getKey();
-			reval.put(a, round(pair.getValue(), n));
+			roundedRanking.put(a, round(pair.getValue(), n));
 			it.remove();
 		}
-		return reval;
+		return roundedRanking;
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class RankingTools {
 	 */
 	private static double round(double value, int n) {
 		if (n < 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("A value cannot be rounded to less than 0 decimals.");
 		BigDecimal bd = new BigDecimal(Double.toString(value));
 		bd = bd.setScale(n, RoundingMode.HALF_UP);
 		return bd.doubleValue();

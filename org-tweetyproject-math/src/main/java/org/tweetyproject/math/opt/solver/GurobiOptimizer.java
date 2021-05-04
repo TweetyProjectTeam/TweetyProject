@@ -18,6 +18,9 @@
  */
 package org.tweetyproject.math.opt.solver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,10 +38,10 @@ import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.math.term.*;
 
 /**
- * This class is a wrapper for the Apache Commons Math3 CMAES optimizer 
- * (<a href="https://commons.apache.org/proper/commons-math/">https://commons.apache.org/proper/commons-math/</a>).
+ * This class is a wrapper for the Gurobi optimizer 
+ * (<a href="https://www.gurobi.com">https://www.gurobi.com</a>). Works with Gurobi 9.1.0
  *   
- * @author Matthias Thimm
+ * @author Sebastian Franke, Matthias Thimm
  */
 public class GurobiOptimizer extends Solver{
 
@@ -58,9 +61,7 @@ public class GurobiOptimizer extends Solver{
 	 * @throws GRBException 
 	 */
 	public GurobiOptimizer() throws GRBException{
-		this.env = new GRBEnv("mip1.log");
-		this.model = new GRBModel(env);
-		
+
 		
 	}
 	
@@ -182,6 +183,22 @@ public class GurobiOptimizer extends Solver{
 	 */
 	@Override
 	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem problem) throws GeneralMathException{
+		if(!isInstalled()) {
+			System.out.println("The solver seems not be implmented on your device. "
+					+ "Please check, if your license is valid and you have Gurobi installed");
+			return null;
+		}
+
+		try {
+			this.env = new GRBEnv("mip1.log");
+			env.set(GRB.IntParam.LogToConsole, 0);
+			this.model = new GRBModel(env);
+			
+
+		} catch (GRBException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		// only optimization problems
 		if(!(problem instanceof OptimizationProblem))
 			throw new IllegalArgumentException("Only optimization problems allowed for this solver.");
@@ -311,7 +328,36 @@ public class GurobiOptimizer extends Solver{
 	 * @see org.tweetyproject.math.opt.Solver#isInstalled()
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
-		// as this is a native implementation it is always installed
+		Runtime rt = Runtime.getRuntime();
+		String[] commands = {"gurobi_cl"};
+		Process proc;
+		try {
+			proc = rt.exec(commands);
+
+
+		BufferedReader stdInput = new BufferedReader(new 
+		     InputStreamReader(proc.getInputStream()));
+
+		BufferedReader stdError = new BufferedReader(new 
+		     InputStreamReader(proc.getErrorStream()));
+		if(stdError.readLine() != null)
+			return false;
+
+		// Read the output from the command
+		String s = null;
+		while ((s = stdInput.readLine()) != null) {
+		    if(s.contains("Error")) {
+		    	System.out.println(s);
+		    	return false;
+		    }
+		    	
+		    
+		}
+		
+		} catch (IOException e) {
+			System.out.println("Something went wrong");
+			e.printStackTrace();
+		}
 		return true;
 	}
 

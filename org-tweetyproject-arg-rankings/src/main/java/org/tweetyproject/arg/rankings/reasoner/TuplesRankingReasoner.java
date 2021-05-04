@@ -37,7 +37,7 @@ import org.tweetyproject.commons.util.Pair;
  * This class implements the "tuples*" argument ranking approach as proposed by
  * [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005]. It takes into
  * account all the ancestors branches of an arguument stored in tupled values. 
- * Some arguments are incomparable using this approach, i.e. it generates
+ * Some arguments are incomparable using this approach; this means that it returns
  * partial rankings.
  * 
  * <br>
@@ -52,7 +52,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 	/**
 	 * Stores the tupled values computed by this reasoner for lookup.
 	 */
-	private Map<Argument, Pair<int[], int[]>> tupled_values = new HashMap<Argument, Pair<int[], int[]>>();
+	private Map<Argument, Pair<int[], int[]>> tupledValues = new HashMap<Argument, Pair<int[], int[]>>();
 
 
 	@Override
@@ -71,9 +71,9 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 			return null;
 
 		// Compute lookup table for tupled values
-		this.tupled_values = new HashMap<Argument, Pair<int[], int[]>>();
+		this.tupledValues = new HashMap<Argument, Pair<int[], int[]>>();
 		for (Argument a : kb)
-			this.tupled_values.put(a, computeTupledValue(a, kb));
+			this.tupledValues.put(a, computeTupledValue(a, kb));
 
 		// Tuples* Algorithm
 		// Compare lengths of attack/defense branches
@@ -81,35 +81,35 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		LexicographicIntTupleComparator c = new LexicographicIntTupleComparator();
 
 		for (Argument a : kb) {
-			Pair<int[], int[]> tv_a = this.tupled_values.get(a);
-			int[] a_defense_tuple = tv_a.getFirst();
-			int[] a_attack_tuple = tv_a.getSecond();
-			double a_defense_tuple_size = getTrueTupleSize(a_defense_tuple);
-			double a_attack_tuple_size = getTrueTupleSize(a_attack_tuple);
+			Pair<int[], int[]> tvA = this.tupledValues.get(a);
+			int[] aDefenseTuple = tvA.getFirst();
+			int[] aAttackTuple = tvA.getSecond();
+			double aDefenseTupleSize = getTrueTupleSize(aDefenseTuple);
+			double aAttackTupleSize = getTrueTupleSize(aAttackTuple);
 			for (Argument b : kb) {
-				Pair<int[], int[]> tv_b = this.tupled_values.get(b);
-				if (tv_a.equals(tv_b)) {
+				Pair<int[], int[]> tvB = this.tupledValues.get(b);
+				if (tvA.equals(tvB)) {
 					ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
 					ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 					continue;
 				}
-				int[] b_defense_tuple = tv_b.getFirst();
-				int[] b_attack_tuple = tv_b.getSecond();
-				double b_defense_tuple_size = getTrueTupleSize(b_defense_tuple);
-				double b_attack_tuple_size = getTrueTupleSize(b_attack_tuple);
+				int[] bDefenseTuple = tvB.getFirst();
+				int[] bAttackTuple = tvB.getSecond();
+				double bDefenseTupleSize = getTrueTupleSize(bDefenseTuple);
+				double bAttackTupleSize = getTrueTupleSize(bAttackTuple);
 				
-				if (a_attack_tuple_size == b_attack_tuple_size && a_defense_tuple_size == b_defense_tuple_size) {
-					if ((c.compare(a_defense_tuple, b_defense_tuple) <= 0) && (c.compare(a_attack_tuple, b_attack_tuple) >= 0)) {
+				if (aAttackTupleSize == bAttackTupleSize && aDefenseTupleSize == bDefenseTupleSize) {
+					if ((c.compare(aDefenseTuple, bDefenseTuple) <= 0) && (c.compare(aAttackTuple, bAttackTuple) >= 0)) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
-					} else if ((c.compare(a_defense_tuple, b_defense_tuple) >= 0) && (c.compare(a_attack_tuple, b_attack_tuple) <= 0)) {
+					} else if ((c.compare(aDefenseTuple, bDefenseTuple) >= 0) && (c.compare(aAttackTuple, bAttackTuple) <= 0)) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
 					}
 					// else: incomparable
 
 				} else {
-					if (a_attack_tuple_size >= b_attack_tuple_size && a_defense_tuple_size <= b_defense_tuple_size) {
+					if (aAttackTupleSize >= bAttackTupleSize && aDefenseTupleSize <= bDefenseTupleSize) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
-					} else if (a_attack_tuple_size <= b_attack_tuple_size && a_defense_tuple_size >= b_defense_tuple_size) {
+					} else if (aAttackTupleSize <= bAttackTupleSize && aDefenseTupleSize >= bDefenseTupleSize) {
 						ranking.setStrictlyLessOrEquallyAcceptableThan(b, a);
 					}
 					// else: incomparable
@@ -177,7 +177,7 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 	 *         getModels
 	 */
 	public Map<Argument, Pair<int[], int[]>> getTupledValues() {
-		return this.tupled_values;
+		return this.tupledValues;
 	}
 
 	/**
@@ -186,11 +186,11 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 	 * @return a string representation of the tuples
 	 */
 	public String prettyPrintTupledValues() {
-		Set<Argument> args = this.tupled_values.keySet();
+		Set<Argument> args = this.tupledValues.keySet();
 		String tv = "";
 		for (Argument a : args)
-			tv += ", v(" + a + ") = [" + Arrays.toString(tupled_values.get(a).getFirst()) + ","
-					+ Arrays.toString(tupled_values.get(a).getSecond()) + "]";
+			tv += ", v(" + a + ") = [" + Arrays.toString(tupledValues.get(a).getFirst()) + ","
+					+ Arrays.toString(tupledValues.get(a).getSecond()) + "]";
 		if (tv.length() > 2)
 			tv = tv.substring(2);
 		return tv;

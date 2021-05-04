@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -61,11 +62,15 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	private Term<?> weight;
 	private Term<?> level;
-	private List<Term<?>> constraint_terms;
+	private List<Term<?>> constraintTerms;
 
 	// -------------------------------------------------------------------------
 	// CONSTRUCTORS
 	// -------------------------------------------------------------------------
+
+	public void setConstraintTerms(List<Term<?>> constraintTerms) {
+		this.constraintTerms = constraintTerms;
+	}
 
 	/**
 	 * Empty constructor
@@ -75,7 +80,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.body = new LinkedList<ASPBodyElement>();
 		this.weight = null;
 		this.level = null;
-		this.constraint_terms = new LinkedList<Term<?>>();
+		this.constraintTerms = new LinkedList<Term<?>>();
 	}
 
 	/**
@@ -88,7 +93,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.body = new LinkedList<ASPBodyElement>();
 		this.weight = null;
 		this.level = null;
-		this.constraint_terms = new LinkedList<Term<?>>();
+		this.constraintTerms = new LinkedList<Term<?>>();
 	}
 
 	/**
@@ -117,7 +122,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.body = body;
 		this.weight = null;
 		this.level = null;
-		this.constraint_terms = new LinkedList<Term<?>>();
+		this.constraintTerms = new LinkedList<Term<?>>();
 	}
 
 	/**
@@ -134,7 +139,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.body.add(b);
 		this.weight = null;
 		this.level = null;
-		this.constraint_terms = new LinkedList<Term<?>>();
+		this.constraintTerms = new LinkedList<Term<?>>();
 	}
 
 	/**
@@ -151,7 +156,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.body.add(b);
 		this.weight = null;
 		this.level = null;
-		this.constraint_terms = new LinkedList<Term<?>>();
+		this.constraintTerms = new LinkedList<Term<?>>();
 	}
 
 	/**
@@ -170,7 +175,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.body = body;
 		this.weight = null;
 		this.level = null;
-		this.constraint_terms = new LinkedList<Term<?>>();
+		this.constraintTerms = new LinkedList<Term<?>>();
 	}
 
 	/**
@@ -204,7 +209,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		}
 		this.body = nafliterals;
 		this.weight = weight;
-		this.constraint_terms = terms;
+		this.constraintTerms = terms;
 	}
 
 	/**
@@ -225,7 +230,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 		this.body = body;
 		this.weight = weight;
 		this.level = level;
-		this.constraint_terms = terms;
+		this.constraintTerms = terms;
 	}
 
 	/**
@@ -245,7 +250,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @param other another ASPRule
 	 */
 	public ASPRule(ASPRule other) {
-		this(other.body, other.weight, other.level, other.constraint_terms);
+		this(other.body, other.weight, other.level, other.constraintTerms);
 		this.head = other.head;
 	}
 
@@ -419,7 +424,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 * @return the constraint terms of this rule.
 	 */
 	public List<Term<?>> getConstraintTerms() {
-		return constraint_terms;
+		return constraintTerms;
 	}
 
 	// -------------------------------------------------------------------------
@@ -460,77 +465,77 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	 */
 	public Boolean isSafe() {
 		// Get all variables in the rule
-		Set<Variable> all_vars = this.getTerms(Variable.class);
-		if (all_vars.isEmpty())
+		Set<Variable> allVars = this.getTerms(Variable.class);
+		if (allVars.isEmpty())
 			return true;
-		Set<Variable> bound_vars = new HashSet<Variable>();
+		Set<Variable> boundVars = new HashSet<Variable>();
 		// collects u=t atoms and aggregate atoms with = operators
-		Set<ASPBodyElement> equals_atoms = new HashSet<ASPBodyElement>(); 
+		Set<ASPBodyElement> equalsAtoms = new HashSet<ASPBodyElement>(); 
 		for (ASPBodyElement b : this.body) {
 			if (b instanceof ASPLiteral)
-				bound_vars.addAll(b.getTerms(Variable.class));
+				boundVars.addAll(b.getTerms(Variable.class));
 			if (b instanceof AggregateAtom) {
 				if (((AggregateAtom) b).getRightOperator() == ASPOperator.BinaryOperator.EQ
 						|| ((AggregateAtom) b).getLeftOperator() == ASPOperator.BinaryOperator.EQ)
-					equals_atoms.add(b);
+					equalsAtoms.add(b);
 				for (AggregateElement ba : ((AggregateAtom) b).getAggregateElements()) {
 					for (ASPBodyElement literal : ba.getRight()) {
 						if (literal instanceof ASPLiteral)
-							bound_vars.addAll(literal.getTerms(Variable.class));
+							boundVars.addAll(literal.getTerms(Variable.class));
 						if (literal instanceof ComparativeAtom
 								&& ((ComparativeAtom) literal).getOperator() == ASPOperator.BinaryOperator.EQ)
-							equals_atoms.add((ComparativeAtom) literal);
+							equalsAtoms.add((ComparativeAtom) literal);
 					}
 				}
 			}
 			if (b instanceof OptimizationStatement) {
 				for (OptimizationElement oe : ((OptimizationStatement) b).getElements()) 
 					for (ASPBodyElement literal : oe.getOptLiterals()) 
-						bound_vars.addAll(literal.getTerms(Variable.class));
+						boundVars.addAll(literal.getTerms(Variable.class));
 			}
 			if (b instanceof ComparativeAtom && ((ComparativeAtom) b).getOperator() == ASPOperator.BinaryOperator.EQ)
-				equals_atoms.add((ComparativeAtom) b);
+				equalsAtoms.add((ComparativeAtom) b);
 		}
 
 		boolean changed = false;
 		do {
 			changed = false;
-			for (ASPBodyElement x : equals_atoms) {
+			for (ASPBodyElement x : equalsAtoms) {
 				if (x instanceof ComparativeAtom) {
 					ComparativeAtom c = (ComparativeAtom) x;
 					Set<Variable> left = c.getLeft().getTerms(Variable.class);
 					Set<Variable> right = c.getRight().getTerms(Variable.class);
-					if (bound_vars.containsAll(left) && !bound_vars.containsAll(right)) {
-						bound_vars.addAll(right);
+					if (boundVars.containsAll(left) && !boundVars.containsAll(right)) {
+						boundVars.addAll(right);
 						changed = true;
 					}
-					if (bound_vars.containsAll(right) && !bound_vars.containsAll(left)) {
-						bound_vars.addAll(left);
+					if (boundVars.containsAll(right) && !boundVars.containsAll(left)) {
+						boundVars.addAll(left);
 						changed = true;
 					}
 				} else if (x instanceof AggregateAtom) {
 					AggregateAtom c = (AggregateAtom) x;
 					List<AggregateElement> elems = c.getAggregateElements();
-					Set<Variable> aggregate_vars = new HashSet<Variable>();
+					Set<Variable> aggregateVars = new HashSet<Variable>();
 					for (AggregateElement e : elems)
-						aggregate_vars.addAll(e.getTerms(Variable.class));
-					Set<Variable> term_vars = new HashSet<Variable>();
+						aggregateVars.addAll(e.getTerms(Variable.class));
+					Set<Variable> termVars = new HashSet<Variable>();
 					if (c.getLeftOperator() == ASPOperator.BinaryOperator.EQ && c.getLeftGuard() != null) {
-						term_vars.addAll(c.getLeftGuard().getTerms(Variable.class));
+						termVars.addAll(c.getLeftGuard().getTerms(Variable.class));
 					} else if (c.getRightOperator() == ASPOperator.BinaryOperator.EQ && c.getRightGuard() != null)
-						term_vars.addAll(c.getRightGuard().getTerms(Variable.class));
-					if (bound_vars.containsAll(aggregate_vars) && !bound_vars.containsAll(term_vars)) {
-						bound_vars.addAll(term_vars);
+						termVars.addAll(c.getRightGuard().getTerms(Variable.class));
+					if (boundVars.containsAll(aggregateVars) && !boundVars.containsAll(termVars)) {
+						boundVars.addAll(termVars);
 						changed = true;
 					}
-					if (bound_vars.containsAll(term_vars) && !bound_vars.containsAll(aggregate_vars)) {
-						bound_vars.addAll(aggregate_vars);
+					if (boundVars.containsAll(termVars) && !boundVars.containsAll(aggregateVars)) {
+						boundVars.addAll(aggregateVars);
 						changed = true;
 					}
 				}
 			}
 		} while (changed);
-		return bound_vars.containsAll(all_vars);
+		return boundVars.containsAll(allVars);
 	}
 
 	public boolean isGround() {
@@ -566,7 +571,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 			terms.addAll(level.getTerms());
 		if (weight != null)
 			terms.addAll(weight.getTerms());
-		terms.addAll(constraint_terms);
+		terms.addAll(constraintTerms);
 		return terms;
 	}
 
@@ -580,7 +585,7 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 			terms.addAll(level.getTerms(cls));
 		if (weight != null)
 			terms.addAll(weight.getTerms(cls));
-		for (Term<?> t : constraint_terms)
+		for (Term<?> t : constraintTerms)
 			terms.addAll(t.getTerms(cls));
 		return terms;
 	}
@@ -664,21 +669,6 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 	}
 
 	@Override
-	public boolean equals(Object other) {
-		if (!(other instanceof Rule))
-			return false;
-		ASPRule or = (ASPRule) other;
-
-		boolean reval = this.head.equals(or.head) && this.body.equals(or.body);
-		return reval;
-	}
-
-	@Override
-	public int hashCode() {
-		return head.hashCode() + body.hashCode();
-	}
-
-	@Override
 	public String toString() {
 		String ret = "";
 
@@ -705,11 +695,11 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 			ret += " [" + weight.toString();
 			if (level != null)
 				ret += "@" + level.toString();
-			if (!this.constraint_terms.isEmpty()) {
+			if (!this.constraintTerms.isEmpty()) {
 				ret += ",";
-				for (int i = 1; i < constraint_terms.size() - 1; i++)
-					ret += constraint_terms.get(i) + ",";
-				ret += constraint_terms.get(constraint_terms.size() - 1).toString();
+				for (int i = 1; i < constraintTerms.size() - 1; i++)
+					ret += constraintTerms.get(i) + ",";
+				ret += constraintTerms.get(constraintTerms.size() - 1).toString();
 			}
 			ret += "]";
 		}
@@ -728,6 +718,8 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 			}
 			if (head.isEmpty() && weight != null)
 				result += ":~ ";
+			else if (head.isEmpty())
+				result += ":- ";
 			else
 				result += " :- ";
 			List<ASPBodyElement> body = this.getPremise();
@@ -742,16 +734,74 @@ public class ASPRule extends ASPElement implements Rule<ASPHead, ASPBodyElement>
 			result += " [" + weight.toString();
 			if (level != null)
 				result += "@" + level.toString();
-			if (!this.constraint_terms.isEmpty()) {
+			if (!this.constraintTerms.isEmpty()) {
 				result += ",";
-				for (int i = 1; i < constraint_terms.size() - 1; i++)
-					result += constraint_terms.get(i) + ",";
-				result += constraint_terms.get(constraint_terms.size() - 1).toString();
+				for (int i = 1; i < constraintTerms.size() - 1; i++)
+					result += constraintTerms.get(i) + ",";
+				result += constraintTerms.get(constraintTerms.size() - 1).toString();
 			}
 			result += "]";
 		}
 
 		return result;
+	}
+	
+	@Override
+	public String printToDLV() {
+		String result = "";
+		if (!this.isConstraint())
+			result += this.getHead().printToDLV();
+		if (!this.isFact()) {
+			if (this.body.get(0) instanceof OptimizationStatement) {
+				throw new IllegalArgumentException("Optimization statements are not supported by the DLV syntax");
+			}
+			if (head.isEmpty() && weight != null)
+				result += ":~ ";
+			else if (head.isEmpty())
+				result += ":- ";
+			else
+				result += " :- ";
+			List<ASPBodyElement> body = this.getPremise();
+			for (int i = 0; i < body.size() - 1; i++)
+				result += body.get(i).printToDLV() + ",";
+			result += body.get(body.size() - 1).printToDLV();
+		}
+
+		result += ".";
+
+		if (weight != null) {
+			result += " [" + weight.toString();
+			if (level != null)
+				result += "@" + level.toString();
+			if (!this.constraintTerms.isEmpty()) {
+				result += ",";
+				for (int i = 1; i < constraintTerms.size() - 1; i++)
+					result += constraintTerms.get(i) + ",";
+				result += constraintTerms.get(constraintTerms.size() - 1).toString();
+			}
+			result += "]";
+		}
+
+		return result;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(body, constraintTerms, head, level, weight);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ASPRule other = (ASPRule) obj;
+		return Objects.equals(body, other.body) && Objects.equals(constraintTerms, other.constraintTerms)
+				&& Objects.equals(head, other.head) && Objects.equals(level, other.level)
+				&& Objects.equals(weight, other.weight);
 	}
 
 }

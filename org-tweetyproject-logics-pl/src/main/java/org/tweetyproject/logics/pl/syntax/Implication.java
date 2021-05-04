@@ -103,6 +103,26 @@ public class Implication extends PlFormula {
 	public void setSecondFormula(PlFormula right) {
 		this.formulas.setSecond(right);
 	}
+	
+	/**
+	 * Get the left side formula of the implication
+	 * left =&gt; right.
+	 * 
+	 * @param left formula
+	 */
+	public PlFormula getFirstFormula() {
+		return this.formulas.getFirst();
+	}
+	
+	/**
+	 * Get the right side formula of the implication
+	 * left =&gt; right
+	 * 
+	 * @param right formula.
+	 */
+	public PlFormula getSecondFormula() {
+		return this.formulas.getSecond();
+	}
 
 	@Override
 	public Set<Proposition> getAtoms() {

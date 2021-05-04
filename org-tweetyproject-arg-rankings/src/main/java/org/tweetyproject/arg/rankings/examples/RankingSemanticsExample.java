@@ -26,15 +26,27 @@ import org.tweetyproject.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.DiscussionBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.IteratedGradedDefenseReasoner;
-import org.tweetyproject.arg.rankings.reasoner.MTRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.ProbabilisticRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.SAFRankingReasoner;
+import org.tweetyproject.arg.rankings.reasoner.StrategyBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.TuplesRankingReasoner;
 import org.tweetyproject.arg.rankings.util.RankingTools;
 import org.tweetyproject.math.probability.Probability;
 
 /**
- * Example code for ranking semantics.
+ * Example code for the following ranking semantics:
+ * <br> - Categorizer [Besnard, Hunter. A logic-based theory of deductive arguments. 2001]
+ * <br> - Burden-Based [Amgoud, Ben-Naim. Ranking-based semantics for argumentation
+ * frameworks. 2013]
+ * <br> - Discussion-Based [Amgoud, Ben-Naim. Ranking-based semantics for argumentation
+ * frameworks. 2013]
+ * <br> - Tuples [Cayrol, Lagasquie-Schiex. Graduality in argumentation. 2005]
+ * <br> - Strategy-Based [Matt, Toni. A
+ * game-theoretic measure of argument strength for abstract argumentation. JELIA 2008]
+ * <br> - Social Abstract Argumentation with simple product semantics [Bonzon, Delobelle, Konieczny, Maudet. A Comparative Study of Ranking-Based 
+ * Semantics for Abstract Argumentation. AAAI 2016]
+ * <br> - Iterated Graded Defense [Grossi, Modgil. On the Graded Acceptability of Arguments. IJCAI 2015]
+ * <br> - Probabilistic Graded Semantics [Thimm, Cerutti, Rienstra. Probabilistic Graded Semantics. COMMA 2018].
  * 
  * @author Anna Gessler
  */
@@ -131,8 +143,8 @@ public class RankingSemanticsExample {
 		example4c.add(new Attack(e, f), new Attack(e, e), new Attack(e, b));
 		example4c.add(new Attack(f, e), new Attack(f, b));
 		
-		//Example 5, taken from taken from Figure 2.4 in 
-		//[Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
+		// Example 5, taken from taken from Figure 2.4 in 
+		// [Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
 		DungTheory example5 = new DungTheory();
 		Argument h = new Argument("h");
 		Argument i = new Argument("i");
@@ -172,8 +184,8 @@ public class RankingSemanticsExample {
 		System.out.println(reasoner4.getModel(example3));
 		System.out.println(reasoner4.prettyPrintTupledValues());
 		
-		// Matt & Toni ranking semantics
-		MTRankingReasoner reasoner5 = new MTRankingReasoner();
+		// Strategy based ranking semantics (Matt & Toni)
+		StrategyBasedRankingReasoner reasoner5 = new StrategyBasedRankingReasoner();
 		System.out.println(reasoner5.getClass().getSimpleName());
 		System.out.println(RankingTools.roundRanking(reasoner5.getModel(example1),2));
 		System.out.println(RankingTools.roundRanking(reasoner5.getModel(example4a),3));

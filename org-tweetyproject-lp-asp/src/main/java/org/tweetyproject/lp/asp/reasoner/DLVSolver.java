@@ -26,15 +26,14 @@ import java.util.List;
 
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.util.Shell;
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.semantics.AnswerSet;
 import org.tweetyproject.lp.asp.syntax.ASPLiteral;
 import org.tweetyproject.lp.asp.syntax.Program;
-import org.tweetyproject.lp.asp.writer.ClingoWriter;
+import org.tweetyproject.lp.asp.writer.DLVWriter;
 
 /**
- * Wrapper class for the DLV answer set solver command line
- * utility.
+ * Wrapper class for the DLV answer set solver command line utility.
  * 
  * @author Thomas Vengels, Tim Janus, Anna Gessler
  *
@@ -44,43 +43,63 @@ public class DLVSolver extends ASPSolver {
 	 * String representation of DLV binary path.
 	 */
 	private String pathToSolver;
-	
-	/** 
+
+	/**
 	 * Shell to run DLV
 	 */
 	private Shell bash;
-	
+
 	/**
-	 * Additional command line options for DLV. 
-	 * Default value is empty.
+	 * Additional command line options for DLV. Default value is empty.
 	 */
 	private String options = "";
 
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
-	 * @param pathToDLV binary location of DLV on the hard drive
+	 * 
+	 * @param pathToDLV binary location of DLV on the hard drive. The given location
+	 *                  has to contain a binary called "dlv". Do not include the
+	 *                  binary itself in the path.
 	 */
 	public DLVSolver(String pathToDLV) {
 		this.pathToSolver = pathToDLV;
 		this.bash = Shell.getNativeShell();
 	}
-	
+
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
-	 * @param pathToDLV binary location of DLV on the hard drive
-	 * @param bash shell to run commands
+	 * 
+	 * @param pathToDLV binary location of DLV on the hard drive. The given location
+	 *                  has to contain a binary called "dlv". Do not include the
+	 *                  binary itself in the path.
+	 * @param bash      shell to run commands
 	 */
 	public DLVSolver(String pathToDLV, Shell bash) {
 		this.pathToSolver = pathToDLV;
 		this.bash = bash;
 	}
-	
+
 	/**
-	 * Returns a characterizing model (answer set) 
-	 * of the given belief base using the given 
-	 * upper integer limit.
+	 * Constructs a new instance pointing to a specific DLV solver.
 	 * 
-	 * @param p a program
+	 * @param path2clingo    binary location of Clingo on the hard drive. The given
+	 *                       location has to contain a binary called "clingo". Do
+	 *                       not include the binary itself in the path.
+	 * @param maxNOfModels   the maximum number of models that DLV will compute.
+	 * @param integerMaximum the integer maximum ("-N" parameter) that DLV will use
+	 */
+	public DLVSolver(String pathToDLV, int maxNOfModels, int integerMaximum) {
+		this.pathToSolver = pathToDLV;
+		this.bash = Shell.getNativeShell();
+		this.maxNumOfModels = maxNOfModels;
+		this.integerMaximum = integerMaximum;
+	}
+
+	/**
+	 * Returns a characterizing model (answer set) of the given belief base using
+	 * the given upper integer limit.
+	 * 
+	 * @param p      a program
 	 * @param maxInt the max number of models to be returned
 	 * @return AnswerSet
 	 */
@@ -88,13 +107,12 @@ public class DLVSolver extends ASPSolver {
 		this.integerMaximum = maxInt;
 		return getModels(p);
 	}
-	
+
 	/**
-	 * Returns a characterizing model (answer set) 
-	 * of the given belief base using the given 
-	 * upper integer limit.
+	 * Returns a characterizing model (answer set) of the given belief base using
+	 * the given upper integer limit.
 	 * 
-	 * @param p a program
+	 * @param p      a program
 	 * @param maxInt the max number of models to be returned
 	 * @return AnswerSet
 	 */
@@ -103,23 +121,33 @@ public class DLVSolver extends ASPSolver {
 		return getModel(p);
 	}
 
-
 	@Override
 	public List<AnswerSet> getModels(Program p) {
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
 			File file = File.createTempFile("tmp", ".txt");
-			ClingoWriter writer = new ClingoWriter(new PrintWriter(file));
+			DLVWriter writer = new DLVWriter(new PrintWriter(file));
 			writer.printProgram(p);
 			writer.close();
-			
+
+			for (String o : p.getAdditionalOptions()) {
+				if (o.startsWith("#maxint")) {
+					try {
+						String integerMaximum = o.substring(o.indexOf("=") + 1).strip();
+						this.integerMaximum = Integer.parseInt(integerMaximum);
+					} catch (NumberFormatException e) {
+						System.err.println("Warning: Failed to parse #maxint statement in program. Using default integer maximum " + this.integerMaximum);
+					}
+				}
+			}
+
 			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
-			this.outputData =( bash.run(cmd));	
+			this.outputData = (bash.run(cmd));
 			result = parseResult(outputData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
@@ -131,31 +159,43 @@ public class DLVSolver extends ASPSolver {
 			PrintWriter writer = new PrintWriter(file);
 			writer.write(p);
 			writer.close();
-			
+
+			if (p.contains("#maxint")) {
+				String o = p.substring(p.indexOf("#maxint"));
+				o = p.substring(0, p.indexOf("."));
+				try {
+					String integerMaximum = o.substring(o.indexOf("=") + 1).strip();
+					this.integerMaximum = Integer.parseInt(integerMaximum);
+				} catch (NumberFormatException e) {
+					System.err.println("Warning: Failed to parse #maxint statement in program. Using default integer maximum " + this.integerMaximum);
+				}
+			}
+
 			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
-			this.outputData =( bash.run(cmd));
+			this.outputData = (bash.run(cmd));
 			result = parseResult(outputData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public List<AnswerSet> getModels(File file) {
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		try {
-			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N=" + Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
-			this.outputData =( bash.run(cmd));
+			String cmd = pathToSolver + "/dlv -silent" + " -n=" + this.maxNumOfModels + " -N="
+					+ Integer.toString(this.integerMaximum) + " " + options + " " + file.getAbsolutePath();
+			this.outputData = (bash.run(cmd));
 			result = parseResult(outputData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public AnswerSet getModel(Program p) {
 		return this.getModels(p).iterator().next();
@@ -166,27 +206,33 @@ public class DLVSolver extends ASPSolver {
 	 * 
 	 * @param s String containing DLV output
 	 * @return AnswerSet
+	 * @throws SolverException 
 	 */
-	protected List<AnswerSet> parseResult(String s) {
+	protected List<AnswerSet> parseResult(String s) throws SolverException {
 		List<AnswerSet> result = new ArrayList<AnswerSet>();
 		String[] temp = s.split("}");
 		
+		if (s.contains("errors")) {
+			throw new SolverException("DLV error: " + s, 1);
+		}
 		try {
-			for (int i = 0; i < temp.length-1; i++)	{
-				String toParse = temp[i].trim().substring(1).replaceAll(",", "");
-				AnswerSet as = ASPCore2Parser.parseAnswerSet(toParse);
+			for (int i = 0; i < temp.length - 1; i++) {
+				//DLV answer sets consist of literals separated by commas
+				//Remove commas that are not inside parentheses to achieve the format
+				//expected by ASPParser (literals separated by spaces)
+				String toParse = temp[i].trim().substring(1).replaceAll(",(?![^()]*\\))", ""); 	
+				AnswerSet as = ASPParser.parseAnswerSet(toParse);
 				result.add(as);
 			}
-			
 		} catch (Exception e) {
-			System.err.println("DLV error: Failed to parse answer sets from DLV output");
-			e.printStackTrace();
+			throw new SolverException("DLV returned no output that can be interpreted: " + s, 1);
 		}
 		return result;
 	}
 
 	/**
 	 * Set additional command line options for DLV.
+	 * 
 	 * @param options a string of options
 	 */
 	public void setOptions(String options) {
@@ -195,30 +241,31 @@ public class DLVSolver extends ASPSolver {
 
 	/**
 	 * Sets the location of the DLV solver on the hard drive.
+	 * 
 	 * @param pathToDLV path to DLV
 	 */
 	public void setPathToDLV(String pathToDLV) {
 		this.pathToSolver = pathToDLV;
 	}
-	
+
 	@Override
-	public Boolean query(Program beliefbase, ASPLiteral formula) {		
+	public Boolean query(Program beliefbase, ASPLiteral formula) {
 		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
 
 	public Boolean query(Program beliefbase, ASPLiteral formula, InferenceMode inferenceMode) {
 		Collection<AnswerSet> answerSets = this.getModels(beliefbase);
-		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
-			for(AnswerSet e: answerSets)
-				if(!e.contains(formula))
+		if (inferenceMode.equals(InferenceMode.SKEPTICAL)) {
+			for (AnswerSet e : answerSets)
+				if (!e.contains(formula))
 					return false;
 			return true;
 		}
-		//credulous semantics
-		for(AnswerSet e: answerSets){
-			if(e.contains(formula))
-				return true;			
-		}			
+		// credulous semantics
+		for (AnswerSet e : answerSets) {
+			if (e.contains(formula))
+				return true;
+		}
 		return false;
 	}
 

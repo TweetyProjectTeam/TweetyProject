@@ -30,10 +30,8 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * Prints ASP programs and single rules to the Clingo input format
  * (<a href="https://potassco.org/clingo/">https://potassco.org/clingo/</a>).
  * The Clingo input format adheres (mostly) to the ASP-Core-2 language standard.
- * This writer also works for printing basic elements of the DLV input format.
  * 
  * @see org.tweetyproject.lp.asp.reasoner.ClingoSolver
- * @see org.tweetyproject.lp.asp.reasoner.DLVSolver
  * 
  * @author Anna Gessler
  */
@@ -83,14 +81,22 @@ public class ClingoWriter {
 	 * @throws IOException if an IO issue occurs.
 	 */
 	public void printProgram(Program p) throws IOException {
-		for (ASPRule r : p)
-			writer.write(printRule(r) + "\n");
+		for (String cmd : p.getAdditionalOptions()) {
+			if (cmd.startsWith("#const"))
+				writer.write(cmd + ".");
+		}
+		
+		for (ASPRule r : p) {
+			writer.write(printRule(r) + "\n"); 
+		}
 
 		// Optionally suppress irrelevant atoms from output.
 		if (usePredicateWhitelist) {
 			for (Predicate pr : p.getOutputWhitelist())
 				writer.write("\n #show " + pr.getName() + "/" + pr.getArity() + ".\n");
 		}
+		
+		writer.flush();
 	}
 
 	/**

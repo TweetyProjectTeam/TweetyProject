@@ -26,7 +26,11 @@ import org.tweetyproject.arg.rankings.reasoner.PropagationRankingReasoner;
 import org.tweetyproject.arg.rankings.util.RankingTools;
 
 /**
- * Example code for even more ranking semantics.
+ * Example code for even more ranking semantics:
+ * <br> - Counting Semantics [Pu, Zhang, G.Luo, J.Luo. Attacker and Defender Counting Approach 
+ * for Abstract Argumentation. CoRR 2015].
+ * <br> - The three variations of the Propagation Semantics 
+ * [Delobelle. Ranking-based Semantics for Abstract Argumentation. Thesis, 2017])
  * 
  * @author Anna Gessler
  */
@@ -48,7 +52,7 @@ public class RankingSemanticsExample2 {
 		example1.add(new Attack(b, c), new Attack(b, a));
 		
 		// Example 2, taken from Figure 1.a in [Pu, Zhang, G.Luo, J.Luo.
-		//Attacker and Defender Counting Approach for Abstract Argumentation. CoRR 2015]
+		// Attacker and Defender Counting Approach for Abstract Argumentation. CoRR 2015]
 		DungTheory example2 = new DungTheory();
 		Argument x1 = new Argument("x1");
 		Argument x2 = new Argument("x2");
@@ -59,8 +63,8 @@ public class RankingSemanticsExample2 {
 		example2.add(new Attack(x3, x2), new Attack(x3, x3));
 		example2.add(new Attack(x4, x2));
 		
-		//Example 3, taken from Figure 2.4 in 
-		//[Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
+		// Example 3, taken from Figure 2.4 in 
+		// [Delobelle, Jerome. Ranking-based Semantics for Abstract Argumentation. 2017]
 		DungTheory example3 = new DungTheory();
 		Argument f = new Argument("f");
 		Argument g = new Argument("g");
@@ -83,14 +87,15 @@ public class RankingSemanticsExample2 {
 		reasoner = new CountingRankingReasoner(0.9, 0.001);
 		System.out.println(RankingTools.roundRanking(reasoner.getModel(example3), 3));
 		
-		//Propagation semantics (examples from chapter 3.3 in 
-		//[Delobelle. Ranking-based Semantics for Abstract Argumentation. Thesis, 2017])
+		// Propagation semantics (examples from chapter 3.3 in 
+		// [Delobelle. Ranking-based Semantics for Abstract Argumentation. Thesis, 2017])
 		System.out.println("Propagation semantics epsilon:");
 		PropagationRankingReasoner propagation_reasoner_1 = new PropagationRankingReasoner(0.75, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
 		System.out.println("S,0.75:" + propagation_reasoner_1.getModel(example3));
 		propagation_reasoner_1 = new PropagationRankingReasoner(0.3, false, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
 		System.out.println("S,0.3:" + propagation_reasoner_1.getModel(example3));
 		propagation_reasoner_1 = new PropagationRankingReasoner(0.75, true, PropagationRankingReasoner.PropagationSemantics.PROPAGATION1);
+		// Example that uses the multiset variant
 		System.out.println("M:" + propagation_reasoner_1.getModel(example3));
 		
 		System.out.println("Propagation semantics 1+epsilon:");

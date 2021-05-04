@@ -1,5 +1,5 @@
 /*
- *  This file is part of "Tweety", a collection of Java libraries for
+ *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
  *  TweetyProject is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018 The TweetyProject Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.logics.dl.syntax;
 
@@ -26,7 +26,7 @@ import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
  * This class models an existential restriction in description logics, 
- * i.e. an expression of the form "exists R.C" for a role R and a Concept C.
+ * i.e. an expression of the form "exists R.C" for a role R and a concept C.
  * 
  * @author Anna Gessler
  *
@@ -58,24 +58,21 @@ public class ExistentialRestriction extends ComplexConcept  {
 	}
 
 	/**
-	 * Get the role and concept that are part of the existential restriction.
-	 * @return an atomic role and a concept
+	 * @return the (atomic) role and the concept that are part of the existential restriction.
 	 */
 	public Pair<AtomicRole,ComplexConcept> getFormulas() {
 	 return this.formulas;	
 	}
 	
 	/**
-	 * Get the role of the existential restriction.
-	 * @return an atomic role
+	 * @return the (atomic) role of the existential restriction.
 	 */
 	public AtomicRole getRole() {
 		return this.formulas.getFirst();
 	}
 	
 	/**
-	 * Get the concept of the existential restriction.
-	 * @return a concept
+	 * @return the concept of the existential restriction.
 	 */
 	public ComplexConcept getConcept() {
 		return this.formulas.getSecond();

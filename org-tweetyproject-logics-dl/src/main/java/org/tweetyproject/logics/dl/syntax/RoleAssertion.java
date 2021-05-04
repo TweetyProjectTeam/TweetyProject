@@ -1,5 +1,5 @@
 /*
- *  This file is part of "Tweety", a collection of Java libraries for
+ *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
  *  TweetyProject is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018 The TweetyProject Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.logics.dl.syntax;
 
@@ -55,7 +55,6 @@ public class RoleAssertion extends AssertionalAxiom {
 	}
 	
 	/**
-	 * 
 	 * Initializes a role assertion with the given individuals and role.
 	 * 
 	 * @param a
@@ -72,7 +71,6 @@ public class RoleAssertion extends AssertionalAxiom {
 	}
 
 	/**
-	 * 
 	 * Initializes a role assertion with the given individuals and role.
 	 * 
 	 * @param args
@@ -89,7 +87,6 @@ public class RoleAssertion extends AssertionalAxiom {
 	}
 
 	/**
-	 * 
 	 * Initializes a role assertion with the given role and individuals.
 	 * 
 	 * @param args
@@ -164,18 +161,16 @@ public class RoleAssertion extends AssertionalAxiom {
 	}
 	
 	/**
-	 * Get the individuals of this assertional axiom (= the individuals that
+	 * @return the individuals of this assertional axiom (= the individuals that
 	 * are instances of the role)
-	 * @return individuals
 	 */
 	public Pair<Individual,Individual> getIndividuals() {
 		return individuals;
 	}
 	
 	/**
-	 * Get the role that the individuals of this assertional axiom are 
+	 * @return the role that the individuals of this assertional axiom are 
 	 * instances of.
-	 * @return role
 	 */
 	public AtomicRole getRole() {
 		return role;

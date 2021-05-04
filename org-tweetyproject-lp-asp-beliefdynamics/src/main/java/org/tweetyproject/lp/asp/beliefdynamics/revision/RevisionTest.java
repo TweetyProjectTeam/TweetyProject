@@ -33,7 +33,7 @@ import org.tweetyproject.beliefdynamics.gui.RevisionComparePresenter;
 import org.tweetyproject.beliefdynamics.gui.RevisionComparePresenter.FileHandler;
 import org.tweetyproject.beliefdynamics.gui.RevisionCompareView;
 import org.tweetyproject.commons.Formula;
-import org.tweetyproject.lp.asp.parser.ASPCore2Parser;
+import org.tweetyproject.lp.asp.parser.ASPParser;
 import org.tweetyproject.lp.asp.parser.InstantiateVisitor;
 import org.tweetyproject.lp.asp.parser.ParseException;
 import org.tweetyproject.lp.asp.reasoner.DLVSolver;
@@ -59,7 +59,7 @@ public class RevisionTest {
 				if(file == null)
 					return null;
 				try {
-					ASPCore2Parser parser = new ASPCore2Parser(new FileInputStream(file)); //TODO test with new parser
+					ASPParser parser = new ASPParser(new FileInputStream(file)); //TODO test with new parser
 					InstantiateVisitor visitor = new InstantiateVisitor();
 					return (Program)parser.Program().jjtAccept(visitor, null);
 				} catch (FileNotFoundException e) {

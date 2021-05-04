@@ -44,7 +44,7 @@ import org.tweetyproject.logics.dl.syntax.Union;
 import org.tweetyproject.logics.dl.syntax.UniversalRestriction;
 
 /**
- * JUnit Test class for description logics parser.
+ * JUnit test class for the description logics parser.
  * 
  *  @author Anna Gessler
  */

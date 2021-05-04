@@ -25,6 +25,7 @@ import java.util.List;
 import org.tweetyproject.logics.commons.syntax.Constant;
 import org.tweetyproject.logics.commons.syntax.Predicate;
 import org.tweetyproject.logics.commons.syntax.Variable;
+import org.tweetyproject.lp.asp.grounder.GringoGrounder;
 import org.tweetyproject.lp.asp.reasoner.ClingoSolver;
 import org.tweetyproject.lp.asp.semantics.AnswerSet;
 import org.tweetyproject.lp.asp.syntax.AggregateHead;
@@ -38,17 +39,18 @@ import org.tweetyproject.lp.asp.syntax.Program;
 import org.tweetyproject.lp.asp.syntax.StrictNegation;
 
 /**
- * Example code for creating ASP programs and calling the clingo solver. 
- * See {@link org.tweetyproject.lp.asp.examples.ASPCore2ParserExample} for how to quickly
+ * Example code for creating basic ASP programs and calling solvers and grounders.
+ * See {@link org.tweetyproject.lp.asp.examples.ASPParserExample} for how to quickly
  * parse the same examples using the parser.
- * Tested with clingo 5.2.2
+ * 
+ * <br> Tested with clingo 5.4.0
  * 
  * @author Anna Gessler
  *
  */
 public class ASPExample {
 
-	private static String CLINGO_PATH = "/your/path/to/clingo";
+	private static String CLINGO_PATH = "your/path/to/clingo";
 
 	public static void main(String[] args) throws IOException {
 		// Recreating src/main/resources/ex1.asp manually
@@ -85,6 +87,11 @@ public class ASPExample {
 		ClingoSolver solver = new ClingoSolver(CLINGO_PATH);
 		List<AnswerSet> as = solver.getModels(p2);
 		System.out.println("Clingo output:\n" + as + "\n");
+		
+		// Calling grounder 
+		GringoGrounder grounder = new GringoGrounder(CLINGO_PATH);
+		Program groundP2 = grounder.getGroundProgram(p2);
+		System.out.println("ground program:"+groundP2);
 
 		// Shortcut for creating a cardinality rule
 		// Also see {@link org.tweetyproject.lp.asp.examples.AggregateExample} for more

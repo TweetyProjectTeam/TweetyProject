@@ -42,7 +42,6 @@ public class Implication extends FolFormula {
 	 */
 	private Pair<RelationalFormula,RelationalFormula> formulas;
 	
-
 	/**
 	 * Creates a new implication a=&gt;b with the two given formulas
 	 * @param a a relational formula.
@@ -83,6 +82,46 @@ public class Implication extends FolFormula {
 	 */
 	public void setFormulas(RelationalFormula left, RelationalFormula right) {
 		this.formulas = new Pair<RelationalFormula, RelationalFormula>(left, right);
+	}
+	
+	/**
+	 * Sets the left side formula of the implication
+	 * left =&gt; right
+	 * 
+	 * @param left formula.
+	 */
+	public void setFirstFormula(RelationalFormula left) {
+		this.formulas.setFirst(left);
+	}
+	
+	/**
+	 * Sets the right side formula of the implication
+	 * left =&gt; right
+	 * 
+	 * @param right formula.
+	 */
+	public void setSecondFormula(RelationalFormula right) {
+		this.formulas.setSecond(right);
+	}
+	
+	/**
+	 * Get the left side formula of the implication
+	 * left =&gt; right.
+	 * 
+	 * @param left formula
+	 */
+	public RelationalFormula getFirstFormula() {
+		return this.formulas.getFirst();
+	}
+	
+	/**
+	 * Get the right side formula of the implication
+	 * left =&gt; right
+	 * 
+	 * @param right formula.
+	 */
+	public RelationalFormula getSecondFormula() {
+		return this.formulas.getSecond();
 	}
 	
 	@Override
@@ -226,6 +265,5 @@ public class Implication extends FolFormula {
 			return false;
 		return true;
 	}
-
 
 }

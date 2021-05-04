@@ -26,6 +26,7 @@ import java.util.Stack;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.*;
+import org.tweetyproject.commons.util.SetTools;
 
 /**
  * This reasoner for Dung theories performs inference on the resolution-based family of semantics.
@@ -39,50 +40,52 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 	/**
 	 *  choose a member of family of the resolution-based semantics
 	 */
-	public SimpleResolutionBasedReasoner(Semantics semantics) {
-		this.semantic = getSimpleReasonerForSemantics(semantics);
-	}
-	
-	/**
-	 * computes all permutations of the DungTheory @param start, where birdirectional attacks have been resolved to unidirectonal ones
-	 */
-	public Set<DungTheory> computeFRAF(DungTheory start){
-		Set<Attack> bidir = start.getBidirectionalAttacks();
-		Stack<Attack> bidir1 = new Stack<Attack>();
-		//add all bidirectional attacks to the stack
-		for(Attack a : bidir)
-			bidir1.add(a);
-		//use the helper function
-		return computeFRAF(start, bidir1);
+	public SimpleResolutionBasedReasoner(AbstractExtensionReasoner semantics) {
+		this.semantic = semantics;
 	}
 	
 
+	
 	/**
 	 * helper function
 	 * computes all permutations of the DungTheory @param start, where birdirectional attacks have been resolved to unidirectonal ones
 	 * @param start DungTheory to start with
 	 * @param bidir all the bidirectional attacks left
 	 */
-	public Set<DungTheory> computeFRAF(DungTheory start, Stack<Attack> bidir){
-		Set<DungTheory> result = new HashSet<DungTheory>();
-		//if there are no bidirectional attacks left, we are done
-		if(bidir.size() == 0) {
-			result.add(start);
-			return result;
+	public Set<DungTheory> computeFRAF(DungTheory start){
+		//get all bidirectional attacks
+		Set<Attack> bidir = start.getBidirectionalAttacks();
+		Set<Set<Attack>> permutations = new HashSet<Set<Attack>>();
+		//structure the bidirectional attacks in a set of tuples containing both ways of attack
+		//also delete the bidirectional attacks from the AF to only add the permutations later on
+		for(Attack a : bidir) {
+			
+			Attack b = new Attack(a.getAttacked(), a.getAttacker());
+			Set<Attack> temp = new HashSet<Attack>();
+			temp.add(a);
+			temp.add(b);
+			permutations.add(temp);
+			start.removeAll(temp);
 		}
-		//get the next bidirectional attack
-		Attack a = bidir.pop();
-		//add the other way of the attack
-		Attack b = new Attack(a.getAttacked(), a.getAttacker());
-		DungTheory removeA = start.clone();
-		removeA.remove(a);
-		//add both attacks to their respective branches
-		result.addAll(this.computeFRAF(removeA, (Stack<Attack>)bidir.clone()));
-		DungTheory removeB = start.clone();
-		removeB.remove(b);
-		result.addAll(this.computeFRAF(removeB, (Stack<Attack>) bidir.clone()));
+		
+		SetTools<Attack> s = new SetTools<Attack>();
+		//compute the permutations of the bidirectional attacks
+		permutations = s.permutations(permutations);
+		//create all the permutations
+		Set<DungTheory> result = new HashSet<DungTheory>();
+		for(Set<Attack> i : permutations) {
+			DungTheory start1 = start.clone();
+			start1.addAllAttacks(i);
+			result.add(start1);
+		}
+		
+
+		
 		return result;
 	}
+
+
+
 	
 	/**
 	 * compute the extension with the base semantics of this.semantic
@@ -119,14 +122,10 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 
 	@Override
 	public Extension getModel(DungTheory bbase) {
-		Set<Attack> bidir = bbase.getBidirectionalAttacks();
-		//remove one way of every bidrectional attack
-		for(Attack a : bidir) {
-			bbase.remove(a);
-		}
-		//compute one extension with the chosen semantic
-		AbstractExtensionReasoner reasoner = this.semantic;
-		return reasoner.getModel(bbase);
+		
+		for(Extension e : this.getModels(bbase))
+			return e;
+		return null;
 	}
 
 }

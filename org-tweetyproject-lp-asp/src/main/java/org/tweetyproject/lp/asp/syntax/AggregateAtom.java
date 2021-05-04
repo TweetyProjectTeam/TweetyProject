@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -35,12 +36,14 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
 /**
  * This class represents an aggregate. Aggregates are functions that range over
  * sets of terms and literals and evaluate to some value. For example, using the
- * aggregate function #count one can easily express "the number of employees
- * of a department has to be greater than 0".
- * <br> An aggregate function together with the terms and literals it ranges
- * over and a comparison (like &gt;= 0) is called an aggregate atom and can appear in the body of a rule. 
- * <br> If you want to use an aggregate atom as the head of a rule (as is allowed in some standards
- * like clingo), use {@link org.tweetyproject.lp.asp.syntax.AggregateHead}
+ * aggregate function #count one can easily express "the number of employees of
+ * a department has to be greater than 0". <br>
+ * An aggregate function together with the terms and literals it ranges over and
+ * a comparison (like &gt;= 0) is called an aggregate atom and can appear in the
+ * body of a rule. <br>
+ * If you want to use an aggregate atom as the head of a rule (as is allowed in
+ * some standards like clingo), use
+ * {@link org.tweetyproject.lp.asp.syntax.AggregateHead}
  *
  * @author Tim Janus
  * @author Thomas Vengels
@@ -52,14 +55,13 @@ public class AggregateAtom extends ASPBodyElement {
 	 * The aggregate function of this aggregate.
 	 * 
 	 * @see {@link org.tweetyproject.lp.asp.syntax.ASPOperator.AggregateFunction}
-	 * list of supported functions
+	 *      list of supported functions
 	 */
 	private ASPOperator.AggregateFunction function;
 
 	/**
-	 * The elements that the aggregate ranges over.
-	 * Each element consists of a tuple of terms and
-	 * a tuple of literals.
+	 * The elements that the aggregate ranges over. Each element consists of a tuple
+	 * of terms and a tuple of literals.
 	 * 
 	 * @see org.tweetyproject.lp.asp.syntax.AggregateElement
 	 */
@@ -105,7 +107,7 @@ public class AggregateAtom extends ASPBodyElement {
 	 * Creates a new Aggregate with the given aggregate function and the given
 	 * aggregate elements.
 	 * 
-	 * @param function  an aggregate function
+	 * @param function an aggregate function
 	 * @param elements list of aggregate elements
 	 */
 	public AggregateAtom(ASPOperator.AggregateFunction function, List<AggregateElement> elements) {
@@ -115,14 +117,14 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 
 	/**
-	 * Creates a new Aggregate of the form "#func { elements } op rightBound"
-	 * with the given aggregate function #func, the given
-	 * aggregate elements, the given aggregate relation op and the given rightBound.
+	 * Creates a new Aggregate of the form "#func { elements } op rightBound" with
+	 * the given aggregate function #func, the given aggregate elements, the given
+	 * aggregate relation op and the given rightBound.
 	 * 
-	 * @param function an aggregate function
-	 * @param elements list of aggregate elements
+	 * @param function      an aggregate function
+	 * @param elements      list of aggregate elements
 	 * @param rightRelation the relation
-	 * @param rightBound some term
+	 * @param rightBound    some term
 	 */
 	public AggregateAtom(ASPOperator.AggregateFunction function, List<AggregateElement> elements,
 			ASPOperator.BinaryOperator rightRelation, Term<?> rightBound) {
@@ -131,16 +133,16 @@ public class AggregateAtom extends ASPBodyElement {
 		this.rightOp = rightRelation;
 		this.rightGuard = rightBound;
 	}
-	
+
 	/**
-	 * Creates a new Aggregate of the form "#func { elements } op rightBound"
-	 * with the given aggregate function #func, the given
-	 * aggregate elements, the given aggregate relation op and the given rightBound.
+	 * Creates a new Aggregate of the form "#func { elements } op rightBound" with
+	 * the given aggregate function #func, the given aggregate elements, the given
+	 * aggregate relation op and the given rightBound.
 	 * 
-	 * @param function an aggregate function
-	 * @param elements list of aggregate elements
+	 * @param function      an aggregate function
+	 * @param elements      list of aggregate elements
 	 * @param rightRelation the relation
-	 * @param rightBound integer
+	 * @param rightBound    integer
 	 */
 	public AggregateAtom(ASPOperator.AggregateFunction function, List<AggregateElement> elements,
 			ASPOperator.BinaryOperator rightRelation, int rightBound) {
@@ -151,19 +153,20 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 
 	/**
-	 * Creates a new Aggregate of the form "leftBound leftOp #func { elements } rightOp rightBound"
-	 * with the given aggregate function, the given
-	 * aggregate elements, and the given left and right aggregate relations and bounds.
+	 * Creates a new Aggregate of the form "leftBound leftOp #func { elements }
+	 * rightOp rightBound" with the given aggregate function, the given aggregate
+	 * elements, and the given left and right aggregate relations and bounds.
 	 * 
-	 * @param function an aggregate function
-	 * @param elements list of aggregate elements
-	 * @param leftRelation 
-	 * @param leftBound term
+	 * @param function      an aggregate function
+	 * @param elements      list of aggregate elements
+	 * @param leftRelation
+	 * @param leftBound     term
 	 * @param rightRelation
-	 * @param rightBound term
+	 * @param rightBound    term
 	 */
 	public AggregateAtom(ASPOperator.AggregateFunction function, List<AggregateElement> elements,
-			ASPOperator.BinaryOperator leftRelation, Term<?> leftBound, ASPOperator.BinaryOperator rightRelation, Term<?> rightBound) {
+			ASPOperator.BinaryOperator leftRelation, Term<?> leftBound, ASPOperator.BinaryOperator rightRelation,
+			Term<?> rightBound) {
 		this.aggregateElements = elements;
 		this.function = function;
 		this.rightOp = rightRelation;
@@ -171,21 +174,22 @@ public class AggregateAtom extends ASPBodyElement {
 		this.leftOp = leftRelation;
 		this.leftGuard = leftBound;
 	}
-	
+
 	/**
-	 * Creates a new Aggregate of the form "leftBound op #func { elements } op rightBound" 
-	 * with the given aggregate function, the given
-	 * aggregate elements, and the given left and right aggregate relations and integer bounds.
+	 * Creates a new Aggregate of the form "leftBound op #func { elements } op
+	 * rightBound" with the given aggregate function, the given aggregate elements,
+	 * and the given left and right aggregate relations and integer bounds.
 	 * 
-	 * @param function an aggregate function
-	 * @param elements list of aggregate elements
-	 * @param leftRelation 
-	 * @param leftBound integer
+	 * @param function      an aggregate function
+	 * @param elements      list of aggregate elements
+	 * @param leftRelation
+	 * @param leftBound     integer
 	 * @param rightRelation
-	 * @param rightBound integer
+	 * @param rightBound    integer
 	 */
 	public AggregateAtom(ASPOperator.AggregateFunction function, List<AggregateElement> elements,
-			ASPOperator.BinaryOperator leftRelation, int leftBound, ASPOperator.BinaryOperator rightRelation, int rightBound) {
+			ASPOperator.BinaryOperator leftRelation, int leftBound, ASPOperator.BinaryOperator rightRelation,
+			int rightBound) {
 		this.aggregateElements = elements;
 		this.function = function;
 		this.rightOp = rightRelation;
@@ -193,11 +197,11 @@ public class AggregateAtom extends ASPBodyElement {
 		this.leftOp = leftRelation;
 		this.leftGuard = new NumberTerm(leftBound);
 	}
-	
+
 	/**
-	 * Creates a new cardinality rule, meaning an aggregate
-	 * of the form "leftBound &lt;= #count { elements } &lt;= rightBound"
-	 * with the given literals and the given integer bounds.
+	 * Creates a new cardinality rule, meaning an aggregate of the form "leftBound
+	 * &lt;= #count { elements } &lt;= rightBound" with the given literals and the
+	 * given integer bounds.
 	 * 
 	 * @param literals   of the cardinality rule
 	 * @param leftBound  of the cardinality rule
@@ -205,7 +209,10 @@ public class AggregateAtom extends ASPBodyElement {
 	 */
 	public AggregateAtom(List<ASPBodyElement> literals, int leftBound, int rightBound) {
 		List<AggregateElement> elements = new ArrayList<AggregateElement>();
-		elements.add(new AggregateElement(new ArrayList<Term<?>>(), literals));
+		for (ASPBodyElement l : literals) {
+			List<ASPBodyElement> list = new ArrayList<ASPBodyElement>();
+			list.add(l);
+			elements.add(new AggregateElement(new ArrayList<Term<?>>(),list)); }
 		this.aggregateElements = elements;
 		this.function = ASPOperator.AggregateFunction.COUNT;
 		this.rightOp = ASPOperator.BinaryOperator.LEQ;
@@ -251,9 +258,9 @@ public class AggregateAtom extends ASPBodyElement {
 	@Override
 	public AggregateAtom substitute(Term<?> t, Term<?> v) {
 		AggregateAtom reval = new AggregateAtom(this);
-		if(t.equals(leftGuard)) 
+		if (t.equals(leftGuard))
 			reval.leftGuard = v;
-		if(t.equals(rightGuard)) 
+		if (t.equals(rightGuard))
 			reval.rightGuard = v;
 		return reval;
 	}
@@ -304,15 +311,26 @@ public class AggregateAtom extends ASPBodyElement {
 		return terms;
 	}
 
+	/**
+	 * @return the elements that the aggregate ranges over. 
+	 */
 	public List<AggregateElement> getAggregateElements() {
 		return aggregateElements;
 	}
+	
+	/**
+	 * Set the elements that the aggregate ranges over. 
+	 * @param aggregateElements
+	 */
+	public void setAggregateElements(List<AggregateElement> aggregateElements) {
+		this.aggregateElements = aggregateElements;
+	}
 
 	/**
-	 * Returns true if the aggregate has a left 
-	 * aggregate relation (meaning a term
-	 * that the aggregate's resulting value will
-	 * be compared to using a comparative operator).
+	 * Returns true if the aggregate has a left aggregate relation (meaning a term
+	 * that the aggregate's resulting value will be compared to using a comparative
+	 * operator).
+	 * 
 	 * @return true if aggregate has left aggregate relation
 	 */
 	public boolean hasLeftRelation() {
@@ -320,10 +338,10 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 
 	/**
-	 * Returns true if the aggregate has a right 
-	 * aggregate relation (meaning a term
-	 * that the aggregate's resulting value will
-	 * be compared to using a comparative operator).
+	 * Returns true if the aggregate has a right aggregate relation (meaning a term
+	 * that the aggregate's resulting value will be compared to using a comparative
+	 * operator).
+	 * 
 	 * @return true if aggregate has right aggregate relation
 	 */
 	public boolean hasRightRelation() {
@@ -381,12 +399,34 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 	
 	/**
+	 * Set the right relation term (right guard).
+	 * 
+	 * @param relationTerm some integer
+	 */
+	public void setRightGuard(int relationTerm) {
+		this.rightGuard = new NumberTerm(relationTerm);
+	}
+
+	/**
 	 * Set the right relation term and operator.
+	 * 
 	 * @param term
 	 * @param op
 	 */
 	public void setRight(Term<?> term, ASPOperator.BinaryOperator op) {
 		this.setRightGuard(term);
+		this.setRightOperator(op);
+	}
+	
+
+	/**
+	 * Set the right relation term and operator.
+	 * 
+	 * @param term, an integer
+	 * @param op
+	 */
+	public void setRight(int term, ASPOperator.BinaryOperator op) {
+		this.setRightGuard(new NumberTerm(term));
 		this.setRightOperator(op);
 	}
 
@@ -418,7 +458,7 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 
 	/**
-	 * Set the left relation term (right guard).
+	 * Set the left relation term (left guard).
 	 * 
 	 * @param relationTerm some term
 	 */
@@ -427,7 +467,18 @@ public class AggregateAtom extends ASPBodyElement {
 	}
 	
 	/**
+	 * Set the left relation term (left guard).
+	 * 
+	 * @param relationTerm some integer
+	 */
+	public void setLeftGuard(int relationTerm) {
+		this.leftGuard = new NumberTerm(relationTerm);
+	}
+
+
+	/**
 	 * Set the left relation term and operator.
+	 * 
 	 * @param term
 	 * @param op
 	 */
@@ -435,63 +486,101 @@ public class AggregateAtom extends ASPBodyElement {
 		this.setLeftGuard(term);
 		this.setLeftOperator(op);
 	}
-
 	
+	/**
+	 * Set the left relation term and operator.
+	 * 
+	 * @param term, an integer
+	 * @param op
+	 */
+	public void setLeft(int term, ASPOperator.BinaryOperator op) {
+		this.setLeftGuard(new NumberTerm(term));
+		this.setLeftOperator(op);
+	}
+
 	@Override
 	public String toString() {
-		String res = "";
+		String result = "";
 		if (this.hasLeftRelation())
-			res += leftGuard.toString() + leftOp.toString();
+			result += leftGuard.toString() + leftOp.toString();
 
-		res += function.toString() + "{";
+		result += function.toString() + "{";
+		if (!aggregateElements.isEmpty()) {
+			for (int i = 0; i < aggregateElements.size() - 1; i++)
+				result += aggregateElements.get(i) + " ; ";
+			result += aggregateElements.get(aggregateElements.size() - 1); 
+		}
+		result += "}";
 
-		for (int i = 0; i < aggregateElements.size() - 1; i++)
-			res += aggregateElements.get(i) + " ; ";
-		res += aggregateElements.get(aggregateElements.size() - 1) + "}";
+		if (this.hasRightRelation())
+			result += rightOp.toString() + rightGuard.toString();
 
-		if (this.hasRightRelation()) 
-			res += rightOp.toString() + rightGuard.toString(); 
-
-		return res;
+		return result;
 	}
-	
+
 	@Override
 	public String printToClingo() {
 		String result = "";
-		if (this.getFunction().equals(ASPOperator.AggregateFunction.COUNT)) { 
-			if (this.hasLeftRelation())
-				result += this.getLeftGuard().toString();
-			result += " {";
-			List<AggregateElement> elements = this.getAggregateElements();
-			for (int i = 0; i < elements.size(); i++) {
-				AggregateElement e = elements.get(i);
-				List<ASPBodyElement> right = e.getRight();
-				List<Term<?>> left = e.getLeft();
-				for (int j = 0; j < right.size(); j++) {
-					if (left.size() > j)
-						result += left.get(j).toString() + ":";
-					result += right.get(j).toString();
-					if (j + 1 < right.size())
-						result += "; ";
-				}
-			}
-			result += "}";
-			if (this.hasRightRelation())
-				result += " " + this.getRightGuard().toString();
-		}
-		else {
-			if (this.hasLeftRelation())
-				result += leftGuard.toString() + leftOp.toString();
-			result += function.toString() + "{";
+		if (this.hasLeftRelation())
+			result += leftGuard.toString() + leftOp.toString();
+		result += function.toString() + "{";
 
+		if (!aggregateElements.isEmpty()) {
 			for (int i = 0; i < aggregateElements.size() - 1; i++)
-				result += aggregateElements.get(i) + " ; ";
-			result += aggregateElements.get(aggregateElements.size() - 1) + "}";
-
-			if (this.hasRightRelation())
-				result += rightOp.toString() + rightGuard.toString();
+				result += aggregateElements.get(i).printToClingo() + " ; ";
+			result += aggregateElements.get(aggregateElements.size() - 1).printToClingo();
 		}
+		result += "}";
+
+		if (this.hasRightRelation())
+			result += rightOp.toString() + rightGuard.toString();
 		return result;
+	}
+
+	@Override
+	public String printToDLV() {
+		String result = "";
+		String leftOpDLV = "";
+		String rightOpDLV = "";
+		if (leftOp != null && leftOp.toString() == "==")
+			leftOpDLV = "=";
+		else if (leftOp != null)
+			leftOpDLV = leftOp.toString();
+		if (rightOp != null && rightOp.toString() == "==")
+			rightOpDLV = "=";
+		else if (rightOp != null)
+			rightOpDLV = rightOp.toString();
+		
+		if (this.hasLeftRelation())
+			result += leftGuard.toString() + leftOpDLV;
+		result += function.toString() + "{";
+
+		for (int i = 0; i < aggregateElements.size() - 1; i++)
+			result += aggregateElements.get(i).printToDLV() + " ; ";
+		result += aggregateElements.get(aggregateElements.size() - 1).printToDLV() + "}";
+
+		if (this.hasRightRelation())
+			result += rightOpDLV+ rightGuard.toString();
+		return result;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(aggregateElements, function, leftGuard, leftOp, rightGuard, rightOp);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AggregateAtom other = (AggregateAtom) obj;
+		return Objects.equals(aggregateElements, other.aggregateElements) && function == other.function
+				&& Objects.equals(leftGuard, other.leftGuard) && leftOp == other.leftOp
+				&& Objects.equals(rightGuard, other.rightGuard) && rightOp == other.rightOp;
 	}
 
 }

@@ -21,6 +21,7 @@ package org.tweetyproject.lp.asp.syntax;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -232,6 +233,23 @@ public class OptimizationStatement extends ASPBodyElement {
 		}
 		result = result.substring(0, result.length() - 2);
 		return result + " }";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(optElements, optimizeFunction);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OptimizationStatement other = (OptimizationStatement) obj;
+		return Objects.equals(optElements, other.optElements) && optimizeFunction == other.optimizeFunction;
 	}
 
 }

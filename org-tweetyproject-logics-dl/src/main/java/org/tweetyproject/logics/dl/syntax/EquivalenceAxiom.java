@@ -1,5 +1,5 @@
 /*
- *  This file is part of "Tweety", a collection of Java libraries for
+ *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
  *  TweetyProject is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018 The TweetyProject Project Team <http://tweetyproject.org/contact/>
+ *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.logics.dl.syntax;
 
@@ -26,9 +26,9 @@ import org.tweetyproject.logics.commons.syntax.Predicate;
 
 /**
  * 
- * This class models an equivalence axiom, also known as general concept inclusion (GCU),
- * meaning an expression of the form "C is a subset of or equal to D" with C and D as Concepts.
- * This can also be read as "C implies D". If C implies D and C implies C, the
+ * This class models an equivalence axiom, also known as "general concept inclusion" (GCU),
+ * meaning an expression of the form "C is a subset of or equal to D" where C and D are concepts.
+ * This can also be read as "C implies D". If "C implies D" and "C implies C", then the
  * two concepts are equivalent.
  * 
  * <br> Equivalence axioms are used in the TBox of a DL knowledge base to model relationships 

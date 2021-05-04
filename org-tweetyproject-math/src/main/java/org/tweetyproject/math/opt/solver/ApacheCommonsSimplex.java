@@ -29,7 +29,6 @@ import org.tweetyproject.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.ConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.OptimizationProblem;
 import org.tweetyproject.math.opt.ProblemInconsistentException;
-import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.math.term.Constant;
 import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.IntegerConstant;
@@ -82,7 +81,7 @@ public class ApacheCommonsSimplex extends Solver {
 		// 1.) bring all constraints in linear and normalized form
 		Set<Statement> constraints = new HashSet<Statement>();
 		for(OptProbElement s: problem)
-			constraints.add(((Inequation) s).toNormalizedForm().toLinearForm());
+			constraints.add(((Statement) s).toNormalizedForm().toLinearForm());
 		// 2.) for every constraint we need an extra variable
 		int numVariables = ((ConstraintSatisfactionProblem) problem).getVariables().size();
 		// 3.) define mappings from variables to indices

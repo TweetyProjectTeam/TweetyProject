@@ -53,10 +53,10 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 			return false;
 		else if (kb.size() < 1)
 			return false;
-		Argument a_old = ((DungTheory) kb).iterator().next();
-		return (!((DungTheory) kb).getAttackers(a_old).isEmpty() && !kb.contains(new Argument("t1"))
+		Argument argOld = ((DungTheory) kb).iterator().next();
+		return (!((DungTheory) kb).getAttackers(argOld).isEmpty() && !kb.contains(new Argument("t1"))
 				&& !kb.contains(new Argument("t2")) && !kb.contains(new Argument("t3"))
-				&& !kb.contains(new Argument(a_old.getName() + "clone")));
+				&& !kb.contains(new Argument(argOld.getName() + "clone")));
 	}
 
 	@Override
@@ -68,20 +68,20 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 		
 		DungTheory dt = new DungTheory((DungTheory) kb);
 		Iterator<Argument> it = dt.iterator();
-		Argument a_old = it.next();
+		Argument argOld = it.next();
 
 		// clone argument and relations
-		Argument a_clone = new Argument(a_old.getName() + "clone");
-		dt.add(a_clone);
-		for (Argument attacker : dt.getAttackers(a_old)) {
-			if (attacker.equals(a_old))
-				dt.add(new Attack(a_clone, a_clone));
+		Argument argClone = new Argument(argOld.getName() + "clone");
+		dt.add(argClone);
+		for (Argument attacker : dt.getAttackers(argOld)) {
+			if (attacker.equals(argOld))
+				dt.add(new Attack(argClone, argClone));
 			else
-				dt.add(new Attack(attacker, a_clone));
+				dt.add(new Attack(attacker, argClone));
 		}
-		for (Argument attacked : dt.getAttacked(a_old)) {
-			if (!attacked.equals(a_old)) 
-				dt.add(new Attack(a_clone, attacked));
+		for (Argument attacked : dt.getAttacked(argOld)) {
+			if (!attacked.equals(argOld)) 
+				dt.add(new Attack(argClone, attacked));
 		}
 		
 		// add new attack branch
@@ -91,12 +91,12 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 		dt.add(t1);
 		dt.add(t2);
 		dt.add(t3);
-		dt.add(new Attack(t1, a_clone));
+		dt.add(new Attack(t1, argClone));
 		dt.add(new Attack(t2, t1));
 		dt.add(new Attack(t3, t2));
 
 		ArgumentRanking ranking = ev.getModel(dt);
-		return ranking.isStrictlyLessAcceptableThan(a_clone, a_old);
+		return ranking.isStrictlyLessAcceptableThan(argClone, argOld);
 	}
 
 }

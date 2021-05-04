@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -294,20 +295,57 @@ public class AggregateElement extends ASPElement {
 	@Override
 	public String printToClingo() {
 		String r = "";
-
 		if (!left.isEmpty()) {
 			for (int i = 0; i < left.size() - 1; i++)
 				r += left.get(i).toString() + ",";
 			r += left.get(left.size() - 1);
 		}
 		if (!right.isEmpty()) {
-			if (!left.isEmpty())
-				r += " : ";
+			r += " : ";
 			for (int i = 0; i < right.size() - 1; i++)
-				r += right.get(i).toString() + ",";
+				r += right.get(i).printToClingo() + ",";
 			r += right.get(right.size() - 1);
 		}
 		return r;
+	}
+	
+	@Override
+	public String printToDLV() {
+		String r = "";
+		if (!left.isEmpty()) {
+			for (int i = 0; i < left.size() - 1; i++)
+				r += left.get(i).toString() + ",";
+			r += left.get(left.size() - 1);
+		}
+		if (!right.isEmpty()) {
+			r += " : ";
+			for (int i = 0; i < right.size() - 1; i++)
+				r += right.get(i).printToDLV() + ",";
+			r += right.get(right.size() - 1);
+		}
+		return r;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((left == null) ? 0 : left.hashCode());
+		result = prime * result + ((right == null) ? 0 : right.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o)
+	        return true;
+	    if (o == null)
+	        return false;
+	    if (getClass() != o.getClass())
+	        return false;
+	    AggregateElement other = (AggregateElement) o;
+	    return Objects.equals(left, other.left)
+	            && Objects.equals(right, other.right);
 	}
 
 }

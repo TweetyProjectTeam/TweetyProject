@@ -56,8 +56,8 @@ public class MlReasonerTest {
 		MlParser parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("type(p) \n p");
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();		
-		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("<>(p)"));
-		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("[](p)"));
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("<>(p)"));
+		Boolean a2 = reasoner.query(b,(FolFormula) parser.parseFormula("[](p)"));
 		assertFalse(a1);
 		assertTrue(a2);
 	}
@@ -67,8 +67,8 @@ public class MlReasonerTest {
 		MlParser parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();
-		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("Flies(duffy)"));
-		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))"));
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("Flies(duffy)"));
+		Boolean a2 = reasoner.query(b,(FolFormula) parser.parseFormula("(Flies(duffy)) || (!(Flies(duffy)))"));
 		assertFalse(a1);
 		assertTrue(a2);
 	}
@@ -78,7 +78,7 @@ public class MlReasonerTest {
 		MlParser parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n Flies(martin)\n Flies(duffy)");
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();
-		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("forall X:(Flies(X))"));
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("forall X:(Flies(X))"));
 		assertTrue(a1);
 	}
 	
@@ -87,10 +87,10 @@ public class MlReasonerTest {
 		MlParser parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("type(p) \n type(q) \n p \n !p||q");
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();		
-		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("p<=>p"));
-		Boolean  a2 = reasoner.query(b,(FolFormula) parser.parseFormula("!p=>!p"));
-		Boolean  a3 = reasoner.query(b,(FolFormula) parser.parseFormula("!p=>p"));
-		Boolean  a4 = reasoner.query(b,(FolFormula) parser.parseFormula("p=>q"));
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("p<=>p"));
+		Boolean a2 = reasoner.query(b,(FolFormula) parser.parseFormula("!p=>!p"));
+		Boolean a3 = reasoner.query(b,(FolFormula) parser.parseFormula("!p=>p"));
+		Boolean a4 = reasoner.query(b,(FolFormula) parser.parseFormula("p=>q"));
 		assertTrue(a1);
 		assertTrue(a2);
 		assertTrue(a3);
@@ -102,7 +102,7 @@ public class MlReasonerTest {
 		MlParser parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();
-		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("+"));
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("+"));
 		assertEquals(a1,true);
 	}
 	
@@ -111,7 +111,7 @@ public class MlReasonerTest {
 		MlParser parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();
-		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("-"));
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("-"));
 		assertEquals(a1,false);
 	}
 	
@@ -120,7 +120,7 @@ public class MlReasonerTest {
 		MlParser parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("");
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();
-		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("+"));
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("+"));
 		assertEquals(a1,true);
 	}
 	
@@ -129,9 +129,8 @@ public class MlReasonerTest {
 		MlParser parser = new MlParser();
 		MlBeliefSet b = parser.parseBeliefBase("Animal = {duffy,martin} \n type(Flies(Animal)) \n <>(Flies(martin))");
 		SimpleMlReasoner reasoner = new SimpleMlReasoner();
-		Boolean  a1 = reasoner.query(b,(FolFormula) parser.parseFormula("Knows(duffy,martin)"));
+		Boolean a1 = reasoner.query(b,(FolFormula) parser.parseFormula("Knows(duffy,martin)"));
 		assertEquals(a1,true);
 	}
-	
 	
 }

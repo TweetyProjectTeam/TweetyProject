@@ -40,7 +40,8 @@ import org.tweetyproject.logics.ml.syntax.Possibility;
  * stating all ground atoms that are true in the interpretation.
  * <br>
  * NOTE: We only allow Herbrand interpretations for signatures without
- *   function symbols.
+ * function symbols.
+ * 
  * @author Matthias Thimm
  * @author Anna Gessler
  * @see org.tweetyproject.logics.fol.semantics.HerbrandInterpretation
