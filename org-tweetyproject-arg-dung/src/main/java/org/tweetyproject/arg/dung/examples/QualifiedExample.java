@@ -83,7 +83,5 @@ public class QualifiedExample {
         System.out.println("complete Extensions: " + exts_c);
         System.out.println("q-complete Extensions: " + exts_q_c);
         System.out.println("sq-complete Extensions: " + exts_sq_c);
-
-
     }
 }

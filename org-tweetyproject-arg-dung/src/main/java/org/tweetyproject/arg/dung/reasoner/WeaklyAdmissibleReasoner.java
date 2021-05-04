@@ -32,6 +32,8 @@ import java.util.*;
  * contains only arguments relevant to E and itself.
  * An argument is considered relevant to E iff it attacks any argument in the same component as E.
  *
+ * see: Baumann, Brewka, Ulbricht:  Revisiting  the  foundations  of  abstract argumentation-semantics based on weak admissibility and weak defense.
+ *
  * @author Lars Bengel
  */
 public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
