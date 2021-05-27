@@ -480,14 +480,14 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	public static <S extends Node> Set<Stack<S>> getCyclesExcludingSelfLoops(Graph<S> g) {
 		Set<Stack<S>> results = new HashSet<Stack<S>>();
 		results.addAll(DefaultGraph.getCyclesIncludingSelfLoops(g));
-		Collection<? extends Edge<? extends S>> edges = g.getEdges();
+		Collection<? extends GeneralEdge<? extends S>> edges = g.getEdges();
 		
 		// removing all self-loops
-		for(Edge<? extends S> singleEdge : edges) {
-			if(singleEdge.getNodeA().equals(singleEdge.getNodeB())) {
+		for(GeneralEdge<? extends S> singleEdge : edges) {
+			if(((Edge<? extends S>) singleEdge).getNodeA().equals(((Edge<? extends S>) singleEdge).getNodeB())) {
 				Stack<S> removeFromResults = new Stack<S>();
-				removeFromResults.push(singleEdge.getNodeA());
-				removeFromResults.push(singleEdge.getNodeA());
+				removeFromResults.push(((Edge<? extends S>) singleEdge).getNodeA());
+				removeFromResults.push(((Edge<? extends S>) singleEdge).getNodeA());
 				results.remove(removeFromResults);
 			}
 		}
@@ -709,5 +709,15 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		return true;
 
 	}
+
+	@Override
+	public boolean add(GeneralEdge<T> edge) {
+		if(edge instanceof  Edge<?>)
+			return this.add((Edge<T>) edge);
+		else
+			return false;
+	}
+
+
 	
 }

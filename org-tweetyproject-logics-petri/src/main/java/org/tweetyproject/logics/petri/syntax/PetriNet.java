@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.tweetyproject.graphs.Edge;
+import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.Node;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.Marking;
@@ -80,7 +81,6 @@ public class PetriNet implements Graph<PetriNetNode>{
 		return transitions.add(transition);
 	}
 
-	@Override
 	public boolean add(Edge<PetriNetNode> edge) {
 		return edges.add(edge);
 	}
@@ -269,6 +269,13 @@ public class PetriNet implements Graph<PetriNetNode>{
 		this.getPlaces().forEach(place -> {
 			place.setTokens(marking.getTokens(place));
 		});
+	}
+
+	@Override
+	public boolean add(GeneralEdge<PetriNetNode> edge) {
+		if(edge instanceof Edge)
+			return this.add((Edge) edge);
+		return false;
 	}
 
 }

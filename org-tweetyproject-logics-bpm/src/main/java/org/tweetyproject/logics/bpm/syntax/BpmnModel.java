@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.Edge;
+import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.Node;
 import org.tweetyproject.math.matrix.Matrix;
@@ -66,8 +67,8 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	}
 
 	@Override
-	public boolean add(Edge<BpmnNode> edge) {
-		return this.edges.add(edge);
+	public boolean add(GeneralEdge<BpmnNode> edge) {
+		return this.edges.add((Edge) edge);
 	}
 	
 	public boolean add(Process process) {

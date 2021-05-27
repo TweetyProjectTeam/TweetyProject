@@ -16,16 +16,32 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.syntax;
+package org.tweetyproject.arg.setaf.syntax;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
+import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
-import org.tweetyproject.arg.dung.semantics.*;
-import org.tweetyproject.commons.*;
-import org.tweetyproject.graphs.*;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungSignature;
+import org.tweetyproject.arg.setaf.semantics.SetafExtension;
+import org.tweetyproject.commons.BeliefSet;
+import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.Signature;
+import org.tweetyproject.graphs.DefaultGraph;
+import org.tweetyproject.graphs.Edge;
+import org.tweetyproject.graphs.Graph;
+import org.tweetyproject.graphs.Node;
 import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.term.IntegerConstant;
 
@@ -42,23 +58,23 @@ import org.tweetyproject.math.term.IntegerConstant;
  * @author Matthias Thimm, Tjitze Rienstra
  *
  */
-public class DungTheory extends BeliefSet<Argument,DungSignature> implements Graph<Argument>, Comparable<DungTheory> {
+public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements Graph<Argument>, Comparable<SetafTheory> {
 
 	/**
 	 * For archiving sub graphs 
 	 */
-	private static Map<DungTheory, Collection<Graph<Argument>>> archivedSubgraphs = new HashMap<DungTheory, Collection<Graph<Argument>>>();
+	private static Map<SetafTheory, Collection<Graph<Argument>>> archivedSubgraphs = new HashMap<SetafTheory, Collection<Graph<Argument>>>();
 
 	/**
 	 * explicit listing of direct attackers and attackees (for efficiency reasons) 
 	 */
-	private Map<Argument,Set<Argument>> parents = new HashMap<Argument,Set<Argument>>();
+	private Map<Set<Argument>,Set<Argument>> parents = new HashMap<Set<Argument>,Set<Argument>>();
 	private Map<Argument,Set<Argument>> children= new HashMap<Argument,Set<Argument>>();
 	
 	/**
 	 * Default constructor; initializes empty sets of arguments and attacks
 	 */
-	public DungTheory(){
+	public SetafTheory(){
 		super();
 	}
 	
@@ -66,20 +82,20 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * Creates a new theory from the given graph.
 	 * @param graph some graph
 	 */
-	public DungTheory(Graph<Argument> graph){
+	public SetafTheory(Graph<Argument> graph){
 		super(graph.getNodes());
-		for(GeneralEdge<? extends Argument> e: graph.getEdges()) {
-			if(!parents.containsKey(((Edge<? extends Argument>) e).getNodeB()))
-				parents.put(((Edge<? extends Argument>) e).getNodeB(), new HashSet<Argument>());
-			parents.get(((Edge<? extends Argument>) e).getNodeB()).add(((Edge<? extends Argument>) e).getNodeA());
-			if(!children.containsKey(((Edge<? extends Argument>) e).getNodeA()))
-				children.put(((Edge<? extends Argument>) e).getNodeA(), new HashSet<Argument>());
-			children.get(((Edge<? extends Argument>) e).getNodeA()).add(((Edge<? extends Argument>) e).getNodeB());
+		for(Edge<? extends Argument> e: graph.getEdges()) {
+			if(!parents.containsKey(e.getNodeB()))
+				parents.put((Set<Argument>) e.getNodeB(), new HashSet<Argument>());
+			parents.get(e.getNodeB()).add(e.getNodeA());
+			if(!children.containsKey(e.getNodeA()))
+				children.put(e.getNodeA(), new HashSet<Argument>());
+			children.get(e.getNodeA()).add(e.getNodeB());
 		}		
 	}
 	
-	public DungTheory clone() {
-		DungTheory result = new DungTheory(this);
+	public SetafTheory clone() {
+		SetafTheory result = new SetafTheory(this);
 		return result;
 	}
 	
@@ -87,7 +103,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @see org.tweetyproject.kr.BeliefBase#getSignature()
 	 */
 	public Signature getMinimalSignature(){
-		return new DungSignature(this);
+		return new SetafSignature(this);
 	}
 
 	/**
@@ -95,7 +111,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param ext An extension contains a set of arguments.
 	 * @return true if <code>arguments</code> attack all other arguments in the theory
 	 */
-	public boolean isAttackingAllOtherArguments(Extension ext){
+	public boolean isAttackingAllOtherArguments(SetafExtension ext){
 		for(Argument a: this) {
 			if(ext.contains(a))
 				continue;
@@ -137,8 +153,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	private boolean dfs(int i, List<Argument> arguments, boolean[] dfn, boolean[] inProgress){
 		dfn[i] = true;
 		inProgress[i] = true;
-		Set<Argument> attackers = getAttackers(arguments.get(i));
-		Iterator<Argument> it = attackers.iterator();
+		Set<Set<Argument>> attackers = getAttackers(arguments.get(i));
+		Iterator<Set<Argument>> it = attackers.iterator();
 		while(it.hasNext()){
 			Argument argument = (Argument) it.next();
 			if(inProgress[arguments.indexOf(argument)])
@@ -151,77 +167,55 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return false;
 	}
 
-	/**
-	 * Determines if the theory is coherent, i.e., if each preferred extension is stable
-	 * @return true if the theory is coherent
-	 */
-	public boolean isCoherent(){
-		Collection<Extension> preferredExtensions = new SimplePreferredReasoner().getModels(this);
-		Collection<Extension> stableExtensions = new SimpleStableReasoner().getModels(this);
-		stableExtensions.retainAll(preferredExtensions);
-		return preferredExtensions.size() == stableExtensions.size();
-	}
 
-	/**
-	 * Determines if the theory is relatively coherent, i.e., if the grounded extension coincides with the intersection of all preferred extensions
-	 * @return true if the theory is relatively coherent
-	 */
-	public boolean isRelativelyCoherent(){
-		Extension groundedExtension = new SimpleGroundedReasoner().getModel(this);
-		Collection<Extension> preferredExtensions = new SimplePreferredReasoner().getModels(this);
-		Extension cut = new Extension(preferredExtensions.iterator().next());
-		for(Extension e: preferredExtensions)
-			cut.retainAll(e);
-		return groundedExtension.equals(cut);
-	}
 
 	/**
 	 * Computes the set {A | (A,argument) in attacks}.
 	 * @param argument an argument
 	 * @return the set of all arguments that attack <code>argument</code>.
 	 */
-	public Set<Argument> getAttackers(Argument argument){
+	public Set<Set<Argument>> getAttackers(Argument argument){
 		if(!this.parents.containsKey(argument))
-			return new HashSet<Argument>();
-		return new HashSet<Argument>(this.parents.get(argument));		
+			return new HashSet<Set<Argument>>();
+		return new HashSet<Set<Argument>>((Collection<? extends Set<Argument>>) this.parents.get(argument));		
 	}
 	
 	/**
 	 * Computes the set {A | (argument,A) in attacks}.
-	 * @param argument an argument
+	 * @param node an argument
 	 * @return the set of all arguments that are attacked by <code>argument</code>.
 	 */
-	public Set<Argument> getAttacked(Argument argument){
-		if(!this.children.containsKey(argument))
+	public Set<Argument> getAttacked(Argument node){
+		if(!this.children.containsKey(node))
 			return new HashSet<Argument>();
-		return new HashSet<Argument>(this.children.get(argument));	
+		return new HashSet<Argument>(this.children.get(node));	
 	}
 
 	/**
 	 * returns true if some argument of <code>ext</code> attacks argument.
-	 * @param argument an argument
-	 * @param ext an extension, ie. a set of arguments
+	 * @param a an argument
+	 * @param setafExtension an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
-	public boolean isAttacked(Argument argument, Extension ext){
-		if(!this.parents.containsKey(argument))
+	public boolean isAttacked(Argument a, SetafExtension setafExtension){
+		if(!this.parents.containsKey(a))
 			return false;
-		for(Argument attacker: this.parents.get(argument))
-			if(ext.contains(attacker))
+		for(Argument attacker: this.parents.get(a))
+			if(setafExtension.contains(attacker))
 				return true;
 		return false;
 	}
 	
 	/**
 	 * returns true if some argument of <code>ext</code> is attacked by argument.
-	 * @param argument an argument
+	 * @param arg2 an argument
 	 * @param ext an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> is attacked by argument.
 	 */
-	public boolean isAttackedBy(Argument argument, Collection<Argument> ext){
-		if(!this.children.containsKey(argument))
+	public boolean isAttackedBy(Set<Argument> arg2, Collection<Argument> ext){
+		if(!this.children.containsKey(arg2))
 			return false;
-		for(Argument attacked: this.children.get(argument))
+		for(Argument attacked: this.children.get(arg2))
 			if(ext.contains(attacked))
 				return true;
 		return false;
@@ -235,7 +229,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return true if some argument of <code>ext2</code> attacks some argument
 	 * in <code>ext1</code>
 	 */
-	public boolean isAttacked(Extension ext1, Extension ext2){
+	public boolean isAttacked(SetafExtension ext1, SetafExtension ext2){
 		for(Argument a: ext1)
 			if(this.isAttacked(a, ext2)) return true;
 		return false;
@@ -246,7 +240,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param e some extension
 	 * @return "true" iff the extension is stable.
 	 */
-	public boolean isStable(Extension e) {
+	public boolean isStable(SetafExtension e) {
 		for(Argument a: this) {
 			if(e.contains(a)) { 
 				if(this.isAttacked(a, e))
@@ -264,8 +258,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param extension an extension (a set of arguments).
 	 * @return an extension (a set of arguments).
 	 */
-	public Extension faf(Extension extension){
-		Extension newExtension = new Extension();
+	public SetafExtension faf(SetafExtension extension){
+		SetafExtension newExtension = new SetafExtension();
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext()){
 			Argument argument = it.next();
@@ -287,129 +281,11 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return this.parents.get(arg1).contains(arg2);
 	}
 	
-	/**
-	 * Checks whether "arg1" indirectly attacks "arg2", i.e. whether there
-	 * is an odd-length path from "arg1" to "arg2".
-	 * @param arg1 an AbstractArgument.
-	 * @param arg2 an AbstractArgument.
-	 * @return "true" iff "arg1" indirectly attacks "arg2".
-	 */
-	public boolean isIndirectAttack(Argument arg1, Argument arg2){
-		return this.isIndirectAttack(arg1, arg2, new HashSet<Argument>());
-	}
+
 	
-	/**
-	 * Checks whether "arg1" indirectly attacks "arg2", i.e. whether there
-	 * is an odd-length path from "arg1" to "arg2".
-	 * @param arg1 an AbstractArgument.
-	 * @param arg2 an AbstractArgument.
-	 * @param visited already visited arguments.
-	 * @return "true" iff "arg1" indirectly attacks "arg2".
-	 */
-	private boolean isIndirectAttack(Argument arg1, Argument arg2, Set<Argument> visited){
-		if(this.isAttackedBy(arg2,arg1)) return true;
-		visited.add(arg1);
-		Set<Argument> attackedArguments = this.getAttacked(arg1);
-		attackedArguments.removeAll(visited);
-		for(Argument attacked : attackedArguments){
-			if(this.isSupport(attacked, arg2))
-				return true;
-		}
-		return false;
-	}
+
 	
-	/**
-	 * Checks whether "arg1" supports "arg2", i.e. whether there
-	 * is an even-length path from "arg1" to "arg2".
-	 * @param arg1 an AbstractArgument.
-	 * @param arg2 an AbstractArgument.
-	 * @return "true" iff "arg1" supports "arg2".
-	 */
-	public boolean isSupport(Argument arg1, Argument arg2){
-		return this.isSupport(arg1, arg2, new HashSet<Argument>());
-	}
-	
-	/**
-	 * Checks whether "arg1" supports "arg2", i.e. whether there
-	 * is an even-length path from "arg1" to "arg2".
-	 * @param arg1 an AbstractArgument.
-	 * @param arg2 an AbstractArgument.
-	 * @param visited already visited arguments.
-	 * @return "true" iff "arg1" supports "arg2".
-	 */
-	private boolean isSupport(Argument arg1, Argument arg2, Set<Argument> visited){
-		if(arg1.equals(arg2)) return true;
-		visited.add(arg1);
-		Set<Argument> attackedArguments = this.getAttacked(arg1);
-		attackedArguments.removeAll(visited);
-		for(Argument attacked : attackedArguments){
-			if(this.isIndirectAttack(attacked, arg2))
-				return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks whether the path from b to a is an attack branch,
-	 * i.e. whether b is a non-attacked (indirect) attacker of a.
-	 * @param a an Argument
-	 * @param b an Argument
-	 * @return true iff the path from a to b is an attack branch, false otherwise
-	 */
-	public boolean isAttackBranch(Argument a, Argument b) {
-		if (!this.getAttackers(b).isEmpty())
-			return false;
-		return isIndirectAttack(b,a);
-	}
-	
-	/**
-	 * Checks whether the path from b to a is a defense branch,
-	 * i.e. whether b is a non-attacked (indirect) defender of a.
-	 * @param a an Argument
-	 * @param b an Argument
-	 * @return true iff the path from a to b is a defense branch, false otherwise
-	 */
-	public boolean isDefenseBranch(Argument a, Argument b) {
-		if (!this.getAttackers(b).isEmpty())
-			return false;
-		return isSupport(b,a);
-	}
-	
-	/**
-	 * If this graph is acyclic, this method checks if the given
-	 * argument has an attack branch, i.e. if it is (indirectly) attacked
-	 * by a non-attacked argument.
-	 * @param a an Argument
-	 * @return true iff this graph is acyclic and a has an attack branch, false otherwise
-	 */
-	public boolean hasAttackBranch(Argument a) {
-		if (this.containsCycle())
-			return false;
-		for (Argument b : this.getNodes()) {
-			if (isAttackBranch(a,b))
-				return true;
-		}
-		
-		return false;
-	}
-	
-	
-	/**
-	 * If this graph is acyclic, this method checks if the given
-	 * argument has a defense branch, i.e. if it is supported
-	 * by a non-attacked argument.
-	 * @param a an Argument
-	 * @return true iff this graph is acyclic and a has a defense branch, false otherwise
-	 */
-	public boolean hasDefenseBranch(Argument a) {
-		if (this.containsCycle())
-			return false;
-		for (Argument b : this.getNodes()) {
-			if (isDefenseBranch(b,a))
-				return true;
-		}
-		return false;
-	}
+
 	
 	// Misc methods
 
@@ -423,7 +299,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		while(it.hasNext())
 			output += "argument("+it.next().toString()+").\n";
 		output += "\n";
-		Iterator<Attack> it2 = this.getAttacks().iterator();
+		Iterator<? extends Edge<? extends Argument>> it2 = this.getAttacks().iterator();
 		while(it2.hasNext())
 			output += "attack"+it2.next().toString()+".\n";
 		return output;
@@ -441,8 +317,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param attack an attack
 	 * @return "true" if the set of attacks has been modified.
 	 */
-	public boolean add(Attack attack){
-		return this.addAttack(attack.getAttacker(), attack.getAttacked()); 
+	public boolean add(SetafAttack attack){
+		return this.addAttack(attack.getAttackers(), attack.getAttacked()); 
 	}
 	
 	/**
@@ -450,9 +326,9 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param attacks some attacks
 	 * @return "true" if the set of attacks has been modified.
 	 */
-	public boolean add(Attack... attacks){
+	public boolean add(SetafAttack... attacks){
 		boolean result = true;
-		for (Attack f : attacks) {
+		for (SetafAttack f : attacks) {
 			boolean sub = this.add(f);
 			result = result && sub;
 		}
@@ -461,18 +337,21 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	
 	/**
 	 * Adds an attack from the first argument to the second to thisDdung theory.
-	 * @param attacker some argument
+	 * @param hashSet some argument
 	 * @param attacked some argument
 	 * @return "true" if the set of attacks has been modified.
 	 */
-	public boolean addAttack(Argument attacker, Argument attacked){
+	public boolean addAttack(HashSet<Argument> hashSet, Argument attacked){
 		boolean result = false;
-		if(!parents.containsKey(attacked))
-			parents.put(attacked, new HashSet<Argument>());
-		result |= parents.get(attacked).add(attacker);
-		if(!children.containsKey(attacker))
-			children.put(attacker, new HashSet<Argument>());
-		result |= children.get(attacker).add(attacked);		
+		if(!parents.containsKey(attacked)) {
+			HashSet<Argument> att = new HashSet<Argument>();
+			att.add(attacked);
+			parents.put(att, new HashSet<Argument>());
+		}
+		result |= parents.get(attacked).addAll(hashSet);
+		if(!children.containsKey(hashSet))
+			children.put(attacked, hashSet);
+		result |= children.get(hashSet).add(attacked);		
 		return result; 
 	}
 	
@@ -481,12 +360,12 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param attack an attack
 	 * @return "true" if the set of attacks has been modified.
 	 */
-	public boolean remove(Attack attack){
+	public boolean remove(SetafAttack attack){
 		boolean result = false;
 		if(parents.containsKey(attack.getAttacked()))		
-			result |= parents.get(attack.getAttacked()).remove(attack.getAttacker());
-		if(children.containsKey(attack.getAttacker()))
-			result |= children.get(attack.getAttacker()).remove(attack.getAttacked());
+			result |= parents.get(attack.getAttacked()).remove(attack.getAttackers());
+		if(children.containsKey(attack.getAttackers()))
+			result |= children.get(attack.getAttackers()).remove(attack.getAttacked());
 		return result; 
 	}
 	
@@ -517,8 +396,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		for(Object a: c)
 			if(a instanceof Argument)
 				result |= this.remove((Argument)a);
-			else if(a instanceof Attack)
-				result |= this.remove((Attack)a);
+			else if(a instanceof SetafAttack)
+				result |= this.remove((SetafAttack)a);
 		return result;
 	}
 	
@@ -529,8 +408,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	public boolean contains(Object o){
 		if(o instanceof Argument)
 			return super.contains(o);
-		if(o instanceof Attack)
-			return this.containsAttack((Attack)o);
+		if(o instanceof SetafAttack)
+			return this.containsAttack((SetafAttack)o);
 		return false;
 	}
 	
@@ -550,20 +429,20 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param att some attack
 	 * @return "true" iff this theory contains the given attack.
 	 */
-	public boolean containsAttack(Attack att) {
+	public boolean containsAttack(SetafAttack att) {
 		if(this.parents.get(att.getAttacked()) == null)
 			return false;
-		return this.parents.get(att.getAttacked()).contains(att.getAttacker());
+		return this.parents.get(att.getAttacked()).contains(att.getAttackers());
 	}		
 	
 	/**
 	 * Adds the set of attacks to this Dung theory.
-	 * @param c a collection of attacks
+	 * @param collection a collection of attacks
 	 * @return "true" if this Dung theory has been modified.
 	 */
-	public boolean addAllAttacks(Collection<? extends Attack> c){
+	public boolean addAllAttacks(Collection<SetafAttack> collection){
 		boolean result = false;
-		for(Attack att: c)
+		for(SetafAttack att: collection)
 			result |= this.add(att);
 		return result;
 	}
@@ -574,7 +453,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param theory some Dung theory
 	 * @return "true" if this Dung Theory has been modified 
 	 */
-	public boolean add(DungTheory theory){
+	public boolean add(SetafTheory theory){
 		boolean b1 = this.addAll(theory);
 		boolean b2 = this.addAllAttacks(theory.getAttacks());
 		return b1 || b2 ;		
@@ -588,56 +467,20 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * Returns all attacks of this theory.
 	 * @return all attacks of this theory.
 	 */
-	public Set<Attack> getAttacks(){
-		Set<Attack> attacks = new HashSet<Attack>();
-		for(Argument a: this) {
+	public Collection<SetafAttack> getAttacks(){
+		Set<SetafAttack> attacks = new HashSet<SetafAttack>();
+		for(Set<Argument> a: this) {
 			if(this.children.containsKey(a)) {
 				for(Argument b: this.children.get(a))
-					attacks.add(new Attack(a,b));
+					attacks.add(new SetafAttack(a,b));
 			}
 		}
 		return attacks;
 	}
 	
-	/**
-	 * Returns all bidirectional attacks of this theory.
-	 * @return all bidirectional attacks of this theory.
-	 */
-	public Set<Attack> getBidirectionalAttacks() {
-		Stack<Attack> allAttacks = new Stack<Attack>();
-		Set<Attack> bidirectional = new HashSet<Attack>();
-		for(Attack a : this.getAttacks()) {
-			allAttacks.add(a);
-		}
-		while(allAttacks.size() > 0) {
-			//get first argument and remove it
-			Attack top = allAttacks.pop();
-			l1 : for(Attack a : allAttacks) {
-				//add if attack is not on the node itself and the nodes of 2 attacks are identical
-				if(top.getAttacked() != top.getAttacker() && 
-						(top.getAttacked() == a.getAttacker() && top.getAttacker() == a.getAttacked())) {
-					bidirectional.add(a);
-					break l1;
-				}
-			}
-			
-		}
-		return bidirectional;
-		
-	}
+
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getRestriction(java.util.Collection)
-	 */
-	@Override
-	public Graph<Argument> getRestriction(Collection<Argument> arguments) {
-		DungTheory theory = new DungTheory();
-		theory.addAll(arguments);
-		for (Attack attack: this.getAttacks())
-			if(arguments.contains(attack.getAttacked()) && arguments.contains(attack.getAttacker()))
-				theory.add(attack);
-		return theory;
-	}
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -661,7 +504,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DungTheory other = (DungTheory) obj;
+		SetafTheory other = (SetafTheory) obj;
 		if (this.parents == null) {
 			if (other.parents != null)
 				return false;
@@ -674,7 +517,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @see org.tweetyproject.graphs.Graph#add(org.tweetyproject.graphs.Edge)
 	 */
 	@Override
-	public boolean add(GeneralEdge<Argument> edge) {
+	public boolean add(Edge<Argument> edge) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -745,7 +588,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	public Collection<Argument> getNeighbors(Argument node) {
 		Set<Argument> neighbours = new HashSet<Argument>();
 		neighbours.addAll(this.getAttacked(node));
-		neighbours.addAll(this.getAttackers(node));
+		neighbours.addAll((Collection<? extends Argument>) this.getAttackers(node));
 		return neighbours;
 	}
 
@@ -771,8 +614,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @see org.tweetyproject.graphs.Graph#getComplementGraph(int)
 	 */
 	@Override
-	public DungTheory getComplementGraph(int selfloops) {
-		DungTheory comp = new DungTheory();
+	public SetafTheory getComplementGraph(int selfloops) {
+		SetafTheory comp = new SetafTheory();
 		for(Argument node: this)
 			comp.add(node);
 		for(Argument node1: this)
@@ -780,13 +623,13 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 				if(node1 == node2){
 					if(selfloops == Graph.INVERT_SELFLOOPS){
 						if(!this.isAttackedBy(node2, node1))
-							comp.add(new Attack(node1, node2));
+							comp.add(new SetafAttack(node1, node2));
 					}else if(selfloops == Graph.IGNORE_SELFLOOPS){
 						if(this.isAttackedBy(node2, node1))
-							comp.add(new Attack(node1, node2));						
+							comp.add(new SetafAttack(node1, node2));						
 					}
 				}else if(!this.isAttackedBy(node2, node1))
-					comp.add(new Attack(node1, node2));
+					comp.add(new SetafAttack(node1, node2));
 		return comp;
 	}
 
@@ -807,7 +650,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	@Override
 	public Edge<Argument> getEdge(Argument a, Argument b) {
 		if(this.isAttackedBy(b, a))
-			return new Attack(a, b);
+			return new SetafAttack(a, b);
 		return null;
 	}
 
@@ -832,16 +675,16 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 */
 	@Override
 	public Collection<Graph<Argument>> getSubgraphs() {	
-		if(!DungTheory.archivedSubgraphs.containsKey(this))			
-			DungTheory.archivedSubgraphs.put(this, DefaultGraph.<Argument>getSubgraphs(this));		
-		return DungTheory.archivedSubgraphs.get(this);
+		if(!SetafTheory.archivedSubgraphs.containsKey(this))			
+			SetafTheory.archivedSubgraphs.put(this, DefaultGraph.<Argument>getSubgraphs(this));		
+		return SetafTheory.archivedSubgraphs.get(this);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
-	public int compareTo(DungTheory o) {
+	public int compareTo(SetafTheory o) {
 		// DungTheory implements Comparable in order to 
 		// have a fixed (but arbitrary) order among all theories
 		// for that purpose we just use the hash code.
@@ -890,6 +733,12 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 */
 	public Collection<Graph<Argument>> getInducedSubgraphs() {
 		return DefaultGraph.getInducedSubgraphs(this);
+	}
+
+	@Override
+	public Graph<Argument> getRestriction(Collection<Argument> nodes) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

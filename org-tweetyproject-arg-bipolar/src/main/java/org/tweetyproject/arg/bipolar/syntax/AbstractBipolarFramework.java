@@ -334,7 +334,7 @@ public abstract class AbstractBipolarFramework extends BeliefSet<BArgument, Dung
     }
 
     @Override
-    public boolean add(Edge<BArgument> edge) {
+    public boolean add(GeneralEdge<BArgument> edge) {
         throw new UnsupportedOperationException();
     }
 
