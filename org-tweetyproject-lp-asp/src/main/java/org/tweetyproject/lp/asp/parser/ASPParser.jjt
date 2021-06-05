@@ -197,7 +197,7 @@ TOKEN :
 |  <AGGREGATE_TIMES:     "#times">
 |  <CLINGO_SHOW: 	     "#show " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )*) "/" ("0" | ["1"-"9"](["0"-"9"])*)>
 |  <META_MAXINT: 	     "#maxint" " = " ("0" | ["1"-"9"](["0"-"9"])*)>
-|  <META_CONST: 	     "#const " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) " = " (( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) >
+|  <META_CONST: 	     "#const " ["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* " = " ((["A"-"Z", "a"-"z", "0"-"9","_","(",")",","])+) >
 |  <DLV_ARITHMETIC_ID:	 "#"("succ"|"prec"|"mod")>
 |  <DLV_ID: 			 "#"("rand"|"int"|"absdiff"|"append"|"delnth"|"flatten"|"getnth"|"head"|"insLast"|"insnth"|"last"|"length"|"member"|"reverse"|"subList"|"tail")>
 |  <CLINGO_ID:			 "#"("true"|"false")>

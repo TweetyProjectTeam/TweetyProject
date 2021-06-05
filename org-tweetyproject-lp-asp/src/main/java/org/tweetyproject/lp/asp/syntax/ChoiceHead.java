@@ -320,9 +320,9 @@ public class ChoiceHead extends ASPHead {
 			result += leftGuard + leftOp.toString();
 		result += "{";
 		for (ChoiceElement c : elements) {
-			result += c.toString() + ";";
+			result += c.toString() + "; ";
 		}
-		result = result.substring(0, result.length()-1);
+		result = result.substring(0, result.length()-2);
 		result += "}";
 		
 		if (this.rightOp != ASPOperator.BinaryOperator.GEQ || !this.rightGuard.equals(new NumberTerm(0)))

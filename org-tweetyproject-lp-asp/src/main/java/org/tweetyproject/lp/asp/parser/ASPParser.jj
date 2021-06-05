@@ -71,7 +71,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * WEIGHT_AT_LEVEL ::== TERM ("@" TERM)? ("," TERMS)? <br>
  * NAF_LITERALS ::== (NAF_LITERALS ",")? NAF_LITERAL <br>
  * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
- * LITERAL ::== ("-")? (ID | DLV_ID) ("(" Terms ")")? <br>
+ * LITERAL ::== ("-")? (ID | DLV_ID | CLINGO_ID) ("(" Terms ")")? <br>
  * BUILTIN_ATOM ::== TERM BINOP TERM | DLV_ARITHMETIC_ID "(" Terms ")" | ARITHOP "(" TERM "," TERM "," TERM ")" <br>
  * BINOP ::== "=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" <br>
  * TERMS ::== (TERMS ",")? TERM <br>
@@ -80,6 +80,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * ARITHOP ::== "+" | "-" | "*" | "/" | "\" <br>
  * DLV_ARITHMETIC_ID ::== "#succ" | "#int" | "#prec" | "#mod" <br>
  * DLV_ID ::== "#rand"|"#int"|"#absdiff"|"#append"|"#delnth"|"#flatten"|"#getnth"|"#head"|"#insLast"|"#insnth"|"#last"|"#length"|"#member"|"#reverse"|"#subList"|"#tail" <br>
+ * CLINGO_ID ::== "#true"|"#false" <br>
  * <br>
  * where ID is a sequence of letters, numbers, and "_" that starts with a
  * lowercase letter, VARIABLE is a sequence of letters, numbers, and "_" that
@@ -200,7 +201,7 @@ TOKEN :
 |  <AGGREGATE_TIMES:     "#times">
 |  <CLINGO_SHOW: 	     "#show " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )*) "/" ("0" | ["1"-"9"](["0"-"9"])*)>
 |  <META_MAXINT: 	     "#maxint" " = " ("0" | ["1"-"9"](["0"-"9"])*)>
-|  <META_CONST: 	     "#const " (["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) " = " (( ["A"-"Z", "a"-"z", "0"-"9","_"] )+) >
+|  <META_CONST: 	     "#const " ["a"-"z"] ( ["A"-"Z", "a"-"z", "0"-"9","_"] )* " = " ((["A"-"Z", "a"-"z", "0"-"9","_","(",")",","])+) >
 |  <DLV_ARITHMETIC_ID:	 "#"("succ"|"prec"|"mod")>
 |  <DLV_ID: 			 "#"("rand"|"int"|"absdiff"|"append"|"delnth"|"flatten"|"getnth"|"head"|"insLast"|"insnth"|"last"|"length"|"member"|"reverse"|"subList"|"tail")>
 |  <CLINGO_ID:			 "#"("true"|"false")>

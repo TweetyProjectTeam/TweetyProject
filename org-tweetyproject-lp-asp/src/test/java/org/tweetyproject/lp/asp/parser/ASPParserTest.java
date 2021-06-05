@@ -42,6 +42,7 @@ import org.tweetyproject.lp.asp.syntax.ASPRule;
 import org.tweetyproject.lp.asp.syntax.AggregateAtom;
 import org.tweetyproject.lp.asp.syntax.AggregateElement;
 import org.tweetyproject.lp.asp.syntax.ArithmeticTerm;
+import org.tweetyproject.lp.asp.syntax.ChoiceHead;
 import org.tweetyproject.lp.asp.syntax.ComparativeAtom;
 import org.tweetyproject.lp.asp.syntax.DefaultNegation;
 import org.tweetyproject.lp.asp.syntax.OptimizationStatement;
@@ -53,7 +54,6 @@ import org.tweetyproject.lp.asp.syntax.StrictNegation;
  * combination with InstantiateVisitor, which is responsible for walking through
  * the parse-tree and generating in-memory classes of the parsed ASP program.
  *
- * TODO: Add Choice rules
  * 
  * @author Anna Gessler
  * @author Tim Janus
@@ -181,6 +181,28 @@ public class ASPParserTest {
 		o2 = (OptimizationStatement) o.getBody().get(0);
 		assertEquals(o2.getOptimizeFunction(),ASPOperator.OptimizeFunction.MAXIMIZE);
 		assertEquals(o2.getElements().size(),2);
+	}
+	
+	@Test(timeout = DEFAULT_TIMEOUT)
+	public void ChoiceTest() throws ParseException {
+		ASPRule r1 = ASPParser.parseRule("{a; b}.");
+		assertTrue(r1.getHead() instanceof ChoiceHead);
+		ChoiceHead h1 = (ChoiceHead) r1.getHead();
+		assertEquals(h1.getElements().size(),2);
+		assertEquals(h1.getAtoms().size(),2);
+		assertTrue(h1.getAtoms().contains(new ASPAtom("a")));
+		assertTrue(h1.getAtoms().contains(new ASPAtom("b")));
+		ASPRule r2 = ASPParser.parseRule("{p(a) : not b}.");
+		assertTrue(r2.getHead() instanceof ChoiceHead);
+		ChoiceHead h2 = (ChoiceHead) r2.getHead();
+		assertEquals(h2.getElements().size(),1);
+		assertEquals(h2.getAtoms().size(),2);
+		ASPRule r3 = ASPParser.parseRule("{a : c; b} :- d.");
+		System.out.println(r3);
+		assertTrue(r3.getHead() instanceof ChoiceHead);
+		ChoiceHead h3 = (ChoiceHead) r3.getHead();
+		assertEquals(h3.getElements().size(),2);
+		assertEquals(h3.getAtoms().size(),3);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)

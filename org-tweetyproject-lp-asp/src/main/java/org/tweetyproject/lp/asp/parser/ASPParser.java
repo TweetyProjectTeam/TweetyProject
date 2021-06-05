@@ -43,7 +43,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * WEIGHT_AT_LEVEL ::== TERM ("@" TERM)? ("," TERMS)? <br>
  * NAF_LITERALS ::== (NAF_LITERALS ",")? NAF_LITERAL <br>
  * NAF_LITERAL ::== ("not")? LITERAL | BUILTIN_ATOM <br>
- * LITERAL ::== ("-")? (ID | DLV_ID) ("(" Terms ")")? <br>
+ * LITERAL ::== ("-")? (ID | DLV_ID | CLINGO_ID) ("(" Terms ")")? <br>
  * BUILTIN_ATOM ::== TERM BINOP TERM | DLV_ARITHMETIC_ID "(" Terms ")" | ARITHOP "(" TERM "," TERM "," TERM ")" <br>
  * BINOP ::== "=" | "!=" | "<>" | "<" | ">" | "<=" | ">=" <br>
  * TERMS ::== (TERMS ",")? TERM <br>
@@ -52,6 +52,7 @@ import org.tweetyproject.lp.asp.semantics.*;
  * ARITHOP ::== "+" | "-" | "*" | "/" | "\" <br>
  * DLV_ARITHMETIC_ID ::== "#succ" | "#int" | "#prec" | "#mod" <br>
  * DLV_ID ::== "#rand"|"#int"|"#absdiff"|"#append"|"#delnth"|"#flatten"|"#getnth"|"#head"|"#insLast"|"#insnth"|"#last"|"#length"|"#member"|"#reverse"|"#subList"|"#tail" <br>
+ * CLINGO_ID ::== "#true"|"#false" <br>
  * <br>
  * where ID is a sequence of letters, numbers, and "_" that starts with a
  * lowercase letter, VARIABLE is a sequence of letters, numbers, and "_" that
@@ -2097,11 +2098,6 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     finally { jj_save(14, xla); }
   }
 
-  private boolean jj_3R_76() {
-    if (jj_scan_token(CLINGO_ID)) return true;
-    return false;
-  }
-
   private boolean jj_3R_32() {
     if (jj_3R_65()) return true;
     if (jj_scan_token(CURLY_OPEN)) return true;
@@ -3046,6 +3042,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
       if (jj_3R_108()) { jj_scanpos = xsp; break; }
     }
     if (jj_3R_22()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_76() {
+    if (jj_scan_token(CLINGO_ID)) return true;
     return false;
   }
 
