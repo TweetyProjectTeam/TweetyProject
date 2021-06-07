@@ -183,6 +183,10 @@ public class ExamplesHTMLGenerator {
 							@SuppressWarnings("resource")
 							String doc = new Scanner(p).useDelimiter("\\Z").next();
 							if (doc.contains("public class")) {
+								if (doc.indexOf("Copyright") == -1)
+								{
+									throw new IllegalArgumentException("The following class file is missing its license comment, please fix this first: " + p);
+								}
 								doc = doc.substring(doc.indexOf("Copyright"), doc.indexOf("public class")).strip();
 								if (doc.contains("/**")) {
 									String spl = doc.substring(doc.indexOf("/**") + 1).strip();
