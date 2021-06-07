@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.tweetyproject.logics.pl.sat.SatSolver;
-import org.tweetyproject.logics.pl.syntax.CardinalityConstraint;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.Equivalence;
@@ -32,6 +31,7 @@ import org.tweetyproject.logics.pl.syntax.Implication;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.Proposition;
+import org.tweetyproject.logics.pl.util.CardinalityConstraintEncoder;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
 
@@ -85,15 +85,11 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 		PlBeliefSet encoding = new PlBeliefSet();
 		// For each atom, create 3 new atoms representing the 3 truth values
 		// of three-valued logic.
-		PlBeliefSet atomsTvl = new PlBeliefSet();
 		Set<Proposition> bAtoms = new HashSet<Proposition>(); // collect B atoms separately
 		for (Proposition a : atoms) {
 			Proposition a_T = new Proposition( "Tx" + a.getName() + "__T");
 			Proposition a_B = new Proposition( "Tx"  +a.getName() + "__B");
 			Proposition a_F = new Proposition( "Tx"  + a.getName() + "__F");
-			atomsTvl.add(a_T);
-			atomsTvl.add(a_B);
-			atomsTvl.add(a_F);
 			bAtoms.add(a_B);
 
 			// Then create a formula that represents that for each atom exactly one of the
@@ -120,7 +116,7 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 			encoding.add(tvModels);
 		}
 
-		CardinalityConstraint c = new CardinalityConstraint(bAtoms, upper_bound);
+		CardinalityConstraintEncoder c = new CardinalityConstraintEncoder(bAtoms, upper_bound);
 		PlBeliefSet cardinality_constraints = c.getSatEncoding();
 		encoding.addAll(cardinality_constraints.toCnf());
 		return encoding;
@@ -156,7 +152,7 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 			PlFormula first = it.next();
 			rest.remove(first);
 			Proposition firstT = new Proposition(generateFormulaAlias(first) + "__T");
-			Proposition firstB = new Proposition(generateFormulaAlias(first) + "__b");
+			Proposition firstB = new Proposition(generateFormulaAlias(first) + "__B");
 			Proposition firstF = new Proposition(generateFormulaAlias(first) + "__F");
 			result.addAll(encodeSubformulas(first));
 			if (rest.isEmpty()) {

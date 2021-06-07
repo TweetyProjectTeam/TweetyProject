@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.tweetyproject.logics.pl.sat.SatSolver;
-import org.tweetyproject.logics.pl.syntax.CardinalityConstraint;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.Implication;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.Proposition;
+import org.tweetyproject.logics.pl.util.CardinalityConstraintEncoder;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
@@ -132,7 +132,7 @@ public class DMaxSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 
 		int ki = 0;
 		for (Set<Proposition> k : inverters) {
-			CardinalityConstraint c = new CardinalityConstraint(k, upper_bound);
+			CardinalityConstraintEncoder c = new CardinalityConstraintEncoder(k, upper_bound);
 			PlBeliefSet cardinality_constraints = c.getSatEncoding("COUNT_" + ki++);
 			encoding.addAll(cardinality_constraints);
 		}

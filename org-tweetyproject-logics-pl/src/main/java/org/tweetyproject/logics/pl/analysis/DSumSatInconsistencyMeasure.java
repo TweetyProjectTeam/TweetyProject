@@ -26,13 +26,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.tweetyproject.logics.pl.sat.SatSolver;
-import org.tweetyproject.logics.pl.syntax.CardinalityConstraint;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.Implication;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.Proposition;
+import org.tweetyproject.logics.pl.util.CardinalityConstraintEncoder;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
@@ -124,7 +124,7 @@ public class DSumSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 			for (int i = 0; i < atoms.size(); i++) 
 				inverters.add(new Proposition("j" + i + j));
 		
-		CardinalityConstraint c = new CardinalityConstraint(inverters, upper_bound);
+		CardinalityConstraintEncoder c = new CardinalityConstraintEncoder(inverters, upper_bound);
 		PlBeliefSet cardinality_constraints = c.getSatEncoding();
 		encoding.addAll(cardinality_constraints);
 		return encoding;

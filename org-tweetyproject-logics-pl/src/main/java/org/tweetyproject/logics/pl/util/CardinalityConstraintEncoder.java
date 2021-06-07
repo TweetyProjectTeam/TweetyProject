@@ -16,26 +16,30 @@
  *
  *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.pl.syntax;
+package org.tweetyproject.logics.pl.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.tweetyproject.commons.util.SetTools;
-import org.tweetyproject.logics.pl.semantics.PossibleWorld;
+import org.tweetyproject.logics.pl.syntax.Conjunction;
+import org.tweetyproject.logics.pl.syntax.Disjunction;
+import org.tweetyproject.logics.pl.syntax.Negation;
+import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
+import org.tweetyproject.logics.pl.syntax.PlFormula;
+import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
- * This class represents a cardinality constraint, i.e. a constraint of the form 
+ * This class generates SAT encodings for cardinality constraints.
+ * A cardinality constraint is a constraint of the form 
  * "at most n out of {a1,...,ak} are true", where a1 ... ak are propositions and n is an integer. 
- * It also includes methods that generate SAT encodings for cardinality constraints.
  * 
  * @author Anna Gessler
  *
  */
-public class CardinalityConstraint extends PlFormula {
+public class CardinalityConstraintEncoder {
 	/**
 	 * The atoms the cardinality constraint ranges over.
 	 */
@@ -53,7 +57,7 @@ public class CardinalityConstraint extends PlFormula {
 	 * @param atoms the atoms
 	 * @param atMost n 
 	 */
-	public CardinalityConstraint(Collection<Proposition> atoms, int atMost) {
+	public CardinalityConstraintEncoder(Collection<Proposition> atoms, int atMost) {
 		this.atoms = atoms;
 		this.atMost = atMost;
 	}
@@ -184,93 +188,6 @@ public class CardinalityConstraint extends PlFormula {
 	}
 
 	@Override
-	public Set<Proposition> getAtoms() {
-		return (Set<Proposition>) atoms;
-	}
-
-	@Override
-	public Set<PlFormula> getLiterals() {
-		Set<PlFormula> res = new HashSet<PlFormula>();
-		res.addAll(this.getAtoms());
-		return res;
-	}
-
-	@Override
-	public PlFormula collapseAssociativeFormulas() {
-		return this;
-	}
-
-	@Override
-	public Set<PlPredicate> getPredicates() {
-		Set<PlPredicate> res = new HashSet<PlPredicate>();
-		for (Proposition p : atoms)
-			res.addAll(p.getPredicates());
-		return res;
-	}
-
-	@Override
-	public PlFormula trim() {
-		return this;
-	}
-
-	@Override
-	public PlFormula toNnf() {
-		return this.toCnf().toNnf();
-	}
-
-	@Override
-	public Conjunction toCnf() {
-		return getSatEncoding("N").toCnf();
-	}
-
-	@Override
-	public Set<PossibleWorld> getModels(PlSignature sig) {
-		Set<PossibleWorld> models = new HashSet<PossibleWorld>();
-		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds(sig);
-		if (sig.isEmpty())  
-			worlds = PossibleWorld.getAllPossibleWorlds(new PlSignature(atoms)); 
-		Set<Set<Proposition>> bigger_worlds = new SetTools<Proposition>().subsets(atoms, atMost+1);
-		for (PossibleWorld w : worlds) {
-			if (w.size()<=atMost)
-				models.add(w);
-			else {
-				boolean found = false;
-				for (Set<Proposition> bw : bigger_worlds) {
-					Set<Proposition> wx = new HashSet<Proposition>(w);
-					if (wx.containsAll(bw)) {
-						found = true; 
-						break;
-					}
-				}
-				if (!found)
-					models.add(w);
-			}
-		}
-		return models;
-	}
-
-	@Override
-	public int numberOfOccurrences(Proposition p) {
-		int res = 0;
-		for (Proposition px : atoms)
-			res += px.numberOfOccurrences(p);
-		return res;
-	}
-
-	@Override
-	public CardinalityConstraint replace(Proposition p, PlFormula f, int i) {
-		if (!(f instanceof Proposition))
-			throw new UnsupportedOperationException();
-		Set<Proposition> res = new HashSet<Proposition>();
-		for (Proposition a : atoms)
-			if (a.equals(p))
-				res.add((Proposition)f);
-			else
-				res.add(a);
-		return new CardinalityConstraint(res,atMost);
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -278,7 +195,7 @@ public class CardinalityConstraint extends PlFormula {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CardinalityConstraint other = (CardinalityConstraint) obj;
+		CardinalityConstraintEncoder other = (CardinalityConstraintEncoder) obj;
 		if (atoms == null) {
 			if (other.atoms != null)
 				return false;
@@ -295,11 +212,6 @@ public class CardinalityConstraint extends PlFormula {
 		int result = 1;
 		result = prime * result + ((atoms == null) ? 0 : atoms.hashCode());
 		return result;
-	}
-
-	@Override
-	public PlFormula clone() {
-		return new CardinalityConstraint(atoms, atMost);
 	}
 	
 	@Override

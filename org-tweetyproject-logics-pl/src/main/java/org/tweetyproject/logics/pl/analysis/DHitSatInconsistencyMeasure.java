@@ -23,10 +23,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.tweetyproject.logics.pl.sat.SatSolver;
-import org.tweetyproject.logics.pl.syntax.CardinalityConstraint;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.Proposition;
+import org.tweetyproject.logics.pl.util.CardinalityConstraintEncoder;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
@@ -97,7 +97,7 @@ public class DHitSatInconsistencyMeasure extends SatBasedInconsistencyMeasure {
 			hi++;
 		}
 		
-		CardinalityConstraint c = new CardinalityConstraint(hits, upper_bound);
+		CardinalityConstraintEncoder c = new CardinalityConstraintEncoder(hits, upper_bound);
 		PlBeliefSet cardinality_constraints = c.getSatEncoding();
 		encoding.addAll(cardinality_constraints);
 		return encoding;
