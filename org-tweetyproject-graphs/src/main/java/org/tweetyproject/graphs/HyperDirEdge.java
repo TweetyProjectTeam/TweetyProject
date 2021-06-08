@@ -21,6 +21,8 @@ package org.tweetyproject.graphs;
 import java.util.Set;
 
 
+
+
 /**
  * Instances of this class represent abstract edges.
  * 
@@ -96,6 +98,23 @@ public class HyperDirEdge<T extends Node> extends GeneralEdge{
 		return result;
 	}
 
+	public void remove(T arg) {
+		if(!this.nodeA.contains(arg) && !arg.equals(nodeB)) {
+			return;
+		}
+		if(this.nodeA.contains(arg)) {
+			nodeA.remove(arg);
+		}
+		if(arg.equals(nodeB)) {
+			nodeB = null;
+		}
+		
+		return;
+			
+
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

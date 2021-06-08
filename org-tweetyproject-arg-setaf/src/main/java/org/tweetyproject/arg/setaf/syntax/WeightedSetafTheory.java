@@ -29,9 +29,9 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * Minimalistic Implementation of a weighted argumentation theory
  * used for learning argumentation theories from labelings
  *
- * @author Lars Bengel
+ * @author  Sebastian Franke
  */
-public class WeightedDungTheory extends DungTheory {
+public class WeightedSetafTheory extends DungTheory {
 
     /**
      * listing of weights of every edge in the argumentation graph
@@ -41,7 +41,7 @@ public class WeightedDungTheory extends DungTheory {
     /**
      * initialize a new weighted argumentation theory
      */
-    public WeightedDungTheory() {
+    public WeightedSetafTheory() {
         super();
         weights = new HashMap<>();
     }

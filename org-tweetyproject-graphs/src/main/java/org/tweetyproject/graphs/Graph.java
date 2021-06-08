@@ -32,7 +32,7 @@ import org.tweetyproject.math.matrix.Matrix;
  * 
  * @param <T> The type of the node.
  */
-public interface Graph<T extends Node> extends Iterable<T>{
+public interface Graph<T extends Node> extends GeneralGraph<T>{
 
 	/** When inverting a graph, ignore self loops (don't add and don't remove) */
 	public static final int IGNORE_SELFLOOPS = 1;

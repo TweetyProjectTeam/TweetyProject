@@ -16,19 +16,23 @@
  *
  *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.reasoner;
+package org.tweetyproject.arg.setaf.reasoners;
 
 import java.util.*;
 
 import org.tweetyproject.arg.dung.semantics.*;
+import org.tweetyproject.arg.setaf.reasoners.*;
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.setaf.semantics.SetafExtension;
+import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 
 
 /**
- * This reasoner for Dung theories performs inference on the grounded extension.
+ * This reasoner for Setaf theories performs inference on the grounded extension.
  * Computes the (unique) grounded extension, i.e., the least fixpoint of the characteristic function faf.
  * 
- * @author Sebastian Franke
+ * @author  Sebastian Franke
  *
  */
 public class SimpleGroundedReasoner extends AbstractExtensionReasoner {
@@ -38,8 +42,8 @@ public class SimpleGroundedReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
-		Collection<Extension> extensions = new HashSet<Extension>();
+	public Collection<SetafExtension> getModels(SetafTheory bbase) {
+		Collection<SetafExtension> extensions = new HashSet<SetafExtension>();
 		extensions.add(this.getModel(bbase));
 		return extensions;
 	}
@@ -48,13 +52,15 @@ public class SimpleGroundedReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
-		Extension ext = new Extension();
+	public SetafExtension getModel(SetafTheory bbase) {
+		SetafExtension ext = new SetafExtension();
 		int size;
 		do{
 			size = ext.size();			
 			ext = bbase.faf(ext);			
 		}while(size!=ext.size());		
 		return ext;
-	}	
+	}
+
+
 }

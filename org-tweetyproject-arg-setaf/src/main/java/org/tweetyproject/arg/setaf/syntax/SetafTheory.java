@@ -28,26 +28,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
-import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungSignature;
 import org.tweetyproject.arg.setaf.semantics.SetafExtension;
 import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Signature;
-import org.tweetyproject.graphs.DefaultGraph;
-import org.tweetyproject.graphs.Edge;
-import org.tweetyproject.graphs.Graph;
+import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.graphs.DirHyperGraph;
+import org.tweetyproject.graphs.GeneralEdge;
+import org.tweetyproject.graphs.HyperDirEdge;
+import org.tweetyproject.graphs.HyperGraph;
 import org.tweetyproject.graphs.Node;
 import org.tweetyproject.math.matrix.Matrix;
-import org.tweetyproject.math.term.IntegerConstant;
 
 
 /**
- * This class implements an abstract argumentation theory in the sense of Dung.
+ * This class implements an abstract argumentation theory in the sense of Dung om Setafs.
  * <br>
  * <br>See
  * <br>
@@ -55,44 +51,27 @@ import org.tweetyproject.math.term.IntegerConstant;
  * In Artificial Intelligence, Volume 77(2):321-358. 1995
  *
  *
- * @author Matthias Thimm, Tjitze Rienstra
+ * @author  Sebastian Franke
  *
  */
-public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements Graph<Argument>, Comparable<SetafTheory> {
+public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements DirHyperGraph<Argument>, Comparable<SetafTheory> {
 
 	/**
-	 * For archiving sub graphs 
+	 * For archiving sub DirHyperGraphs 
 	 */
-	private static Map<SetafTheory, Collection<Graph<Argument>>> archivedSubgraphs = new HashMap<SetafTheory, Collection<Graph<Argument>>>();
+	private static Map<SetafTheory, Collection<DirHyperGraph<Argument>>> archivedSubDirHyperGraphs = new HashMap<SetafTheory, Collection<DirHyperGraph<Argument>>>();
 
-	/**
-	 * explicit listing of direct attackers and attackees (for efficiency reasons) 
-	 */
-	private Map<Set<Argument>,Set<Argument>> parents = new HashMap<Set<Argument>,Set<Argument>>();
-	private Map<Argument,Set<Argument>> children= new HashMap<Argument,Set<Argument>>();
+
 	
 	/**
-	 * Default constructor; initializes empty sets of arguments and attacks
+	 * Creates a new theory from the given DirHyperGraph.
+	 * @param DirHyperGraph some DirHyperGraph
 	 */
-	public SetafTheory(){
-		super();
+	public SetafTheory(SetafTheory DirHyperGraph){
+		super(DirHyperGraph);		
 	}
 	
-	/**
-	 * Creates a new theory from the given graph.
-	 * @param graph some graph
-	 */
-	public SetafTheory(Graph<Argument> graph){
-		super(graph.getNodes());
-		for(Edge<? extends Argument> e: graph.getEdges()) {
-			if(!parents.containsKey(e.getNodeB()))
-				parents.put((Set<Argument>) e.getNodeB(), new HashSet<Argument>());
-			parents.get(e.getNodeB()).add(e.getNodeA());
-			if(!children.containsKey(e.getNodeA()))
-				children.put(e.getNodeA(), new HashSet<Argument>());
-			children.get(e.getNodeA()).add(e.getNodeB());
-		}		
-	}
+
 	
 	public SetafTheory clone() {
 		SetafTheory result = new SetafTheory(this);
@@ -174,10 +153,13 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @param argument an argument
 	 * @return the set of all arguments that attack <code>argument</code>.
 	 */
-	public Set<Set<Argument>> getAttackers(Argument argument){
-		if(!this.parents.containsKey(argument))
-			return new HashSet<Set<Argument>>();
-		return new HashSet<Set<Argument>>((Collection<? extends Set<Argument>>) this.parents.get(argument));		
+	public Set<Set<Argument>> getAttackers(Argument node){
+		HashSet<Set<Argument>> s = new HashSet<Set<Argument>>();
+		for(SetafAttack e : this.edges) {
+			if(e.getNodeB().equals(node))
+				s.add(e.getNodeA());
+		}
+		return s;
 	}
 	
 	/**
@@ -186,9 +168,12 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @return the set of all arguments that are attacked by <code>argument</code>.
 	 */
 	public Set<Argument> getAttacked(Argument node){
-		if(!this.children.containsKey(node))
-			return new HashSet<Argument>();
-		return new HashSet<Argument>(this.children.get(node));	
+		HashSet<Argument> s = new HashSet<Argument>();
+		for(SetafAttack e : this.edges) {
+			if(e.getNodeA().contains(node))
+				s.add(e.getNodeB());
+		}
+		return s;
 	}
 
 	/**
@@ -198,12 +183,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
 	public boolean isAttacked(Argument a, SetafExtension setafExtension){
-		if(!this.parents.containsKey(a))
-			return false;
-		for(Argument attacker: this.parents.get(a))
-			if(setafExtension.contains(attacker))
-				return true;
-		return false;
+		return this.isAttackedBy(a, setafExtension);
 	}
 	
 	/**
@@ -212,12 +192,15 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @param ext an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> is attacked by argument.
 	 */
-	public boolean isAttackedBy(Set<Argument> arg2, Collection<Argument> ext){
-		if(!this.children.containsKey(arg2))
-			return false;
-		for(Argument attacked: this.children.get(arg2))
-			if(ext.contains(attacked))
-				return true;
+	public boolean isAttackedBy(Argument arg2, Collection<Argument> ext){
+		for(SetafAttack e: this.edges) {
+			if(arg2.equals(e.getNodeB())) {
+				for(Argument a : ext) {
+					if(e.getNodeA().contains(a))
+						return true;
+				}
+			}
+		}
 		return false;
 	}
 	
@@ -276,9 +259,11 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @return "true" if arg1 is attacked by arg2
 	 */
 	public boolean isAttackedBy(Argument arg1, Argument arg2){
-		if(!this.parents.containsKey(arg1))
-			return false;
-		return this.parents.get(arg1).contains(arg2);
+		for(SetafAttack e: this.edges) {
+			if(e.getNodeB().equals(arg1) && e.getNodeA().contains(arg2))
+				return true;
+		}
+		return false;
 	}
 	
 
@@ -289,51 +274,15 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	
 	// Misc methods
 
-	
-	/** Pretty print of the theory.
-	 * @return the pretty print of the theory.
-	 */
-	public String prettyPrint(){
-		String output = new String();
-		Iterator<Argument> it = this.iterator();
-		while(it.hasNext())
-			output += "argument("+it.next().toString()+").\n";
-		output += "\n";
-		Iterator<? extends Edge<? extends Argument>> it2 = this.getAttacks().iterator();
-		while(it2.hasNext())
-			output += "attack"+it2.next().toString()+".\n";
-		return output;
+	public boolean add(Argument arg){
+		this.nodes.add(arg);
+		return true; 
 	}
+
+
+
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){		
-		return "<" + super.toString() + "," + this.getAttacks() + ">";
-	}
-	
-	/**
-	 * Adds the given attack to this dung theory.
-	 * @param attack an attack
-	 * @return "true" if the set of attacks has been modified.
-	 */
-	public boolean add(SetafAttack attack){
-		return this.addAttack(attack.getAttackers(), attack.getAttacked()); 
-	}
-	
-	/**
-	 * Adds the given attacks to this dung theory.
-	 * @param attacks some attacks
-	 * @return "true" if the set of attacks has been modified.
-	 */
-	public boolean add(SetafAttack... attacks){
-		boolean result = true;
-		for (SetafAttack f : attacks) {
-			boolean sub = this.add(f);
-			result = result && sub;
-		}
-		return result;
-	}
+
 	
 	/**
 	 * Adds an attack from the first argument to the second to thisDdung theory.
@@ -342,17 +291,9 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @return "true" if the set of attacks has been modified.
 	 */
 	public boolean addAttack(HashSet<Argument> hashSet, Argument attacked){
-		boolean result = false;
-		if(!parents.containsKey(attacked)) {
-			HashSet<Argument> att = new HashSet<Argument>();
-			att.add(attacked);
-			parents.put(att, new HashSet<Argument>());
-		}
-		result |= parents.get(attacked).addAll(hashSet);
-		if(!children.containsKey(hashSet))
-			children.put(attacked, hashSet);
-		result |= children.get(hashSet).add(attacked);		
-		return result; 
+		SetafAttack s = new SetafAttack(hashSet, attacked);
+		this.edges.add(s);
+		return true; 
 	}
 	
 	/**
@@ -361,12 +302,8 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @return "true" if the set of attacks has been modified.
 	 */
 	public boolean remove(SetafAttack attack){
-		boolean result = false;
-		if(parents.containsKey(attack.getAttacked()))		
-			result |= parents.get(attack.getAttacked()).remove(attack.getAttackers());
-		if(children.containsKey(attack.getAttackers()))
-			result |= children.get(attack.getAttackers()).remove(attack.getAttacked());
-		return result; 
+		this.edges.remove(attack);
+		return true;
 	}
 	
 	/**
@@ -375,17 +312,18 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @return true if this structure has been changed
 	 */
 	public boolean remove(Argument a){
-		if(this.parents.get(a) != null){
-			for(Argument b: this.parents.get(a))
-				this.children.get(b).remove(a);
-			this.parents.remove(a);
+
+		
+		for (Iterator<SetafAttack> i = this.edges.iterator(); i.hasNext();) {			
+			SetafAttack e = i.next();
+			e.remove(a);
+			if(e.getNodeA().isEmpty() || e.getNodeB() == null) {
+		        i.remove();
+		    }
 		}
-		if(this.children.get(a) != null){
-			for(Argument b: this.children.get(a))
-				this.parents.get(b).remove(a);
-			this.children.remove(a);
-		}		
-		return super.remove(a);
+
+		this.nodes.remove(a);
+		return true;
 	}
 	
 	/* (non-Javadoc)
@@ -401,18 +339,8 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 		return result;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.kr.BeliefSet#contains(java.lang.Object)
-	 */
-	@Override
-	public boolean contains(Object o){
-		if(o instanceof Argument)
-			return super.contains(o);
-		if(o instanceof SetafAttack)
-			return this.containsAttack((SetafAttack)o);
-		return false;
-	}
-	
+
+
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.kr.BeliefSet#containsAll(java.util.Collection)
 	 */
@@ -430,19 +358,17 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 * @return "true" iff this theory contains the given attack.
 	 */
 	public boolean containsAttack(SetafAttack att) {
-		if(this.parents.get(att.getAttacked()) == null)
-			return false;
-		return this.parents.get(att.getAttacked()).contains(att.getAttackers());
+		return this.edges.contains(att);
 	}		
 	
 	/**
 	 * Adds the set of attacks to this Dung theory.
-	 * @param collection a collection of attacks
+	 * @param edges2 a collection of attacks
 	 * @return "true" if this Dung theory has been modified.
 	 */
-	public boolean addAllAttacks(Collection<SetafAttack> collection){
+	public boolean addAllAttacks(Set<SetafAttack> edges2){
 		boolean result = false;
-		for(SetafAttack att: collection)
+		for(SetafAttack att: edges2)
 			result |= this.add(att);
 		return result;
 	}
@@ -455,29 +381,12 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	 */
 	public boolean add(SetafTheory theory){
 		boolean b1 = this.addAll(theory);
-		boolean b2 = this.addAllAttacks(theory.getAttacks());
+		boolean b2 = this.addAllAttacks(theory.edges);
 		return b1 || b2 ;		
 	}
 	
-	public boolean add(Argument argument) {
-		return super.add(argument);
-	}
-	
-	/**
-	 * Returns all attacks of this theory.
-	 * @return all attacks of this theory.
-	 */
-	public Collection<SetafAttack> getAttacks(){
-		Set<SetafAttack> attacks = new HashSet<SetafAttack>();
-		for(Set<Argument> a: this) {
-			if(this.children.containsKey(a)) {
-				for(Argument b: this.children.get(a))
-					attacks.add(new SetafAttack(a,b));
-			}
-		}
-		return attacks;
-	}
-	
+
+
 
 	
 
@@ -489,7 +398,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((this.parents == null) ? 0 : this.parents.hashCode());
+		result = prime * result + ((this.edges == null) ? 0 : this.edges.hashCode());
 		return result;
 	}
 
@@ -500,185 +409,17 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SetafTheory other = (SetafTheory) obj;
-		if (this.parents == null) {
-			if (other.parents != null)
-				return false;
-		} else if (!this.parents.equals(other.parents))
+		if(!this.equals(obj))
 			return false;
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#add(org.tweetyproject.graphs.Edge)
-	 */
-	@Override
-	public boolean add(Edge<Argument> edge) {
-		throw new UnsupportedOperationException();
-	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getNodes()
-	 */
-	@Override
-	public Collection<Argument> getNodes() {		
-		return this;
-	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getNumberOfNodes()
-	 */
-	@Override
-	public int getNumberOfNodes() {
-		return this.size();
-	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#areAdjacent(org.tweetyproject.graphs.Node, org.tweetyproject.graphs.Node)
-	 */
-	@Override
-	public boolean areAdjacent(Argument a, Argument b) {
-		return this.isAttackedBy(b, a);
-	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getEdges()
-	 */
-	@Override
-	public Collection<? extends Edge<? extends Argument>> getEdges() {
-		return this.getAttacks();		
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getChildren(org.tweetyproject.graphs.Node)
-	 */
-	@Override
-	public Collection<Argument> getChildren(Node node) {
-		if(!(node instanceof Argument))
-			throw new IllegalArgumentException("Node of type argument expected");
-		return this.getAttacked((Argument)node);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getParents(org.tweetyproject.graphs.Node)
-	 */
-	@Override
-	public Collection<Argument> getParents(Node node) {
-		if(!(node instanceof Argument))
-			throw new IllegalArgumentException("Node of type argument expected");
-		return this.getAttackers((Argument)node);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#existsDirectedPath(org.tweetyproject.graphs.Node, org.tweetyproject.graphs.Node)
-	 */
-	@Override
-	public boolean existsDirectedPath(Argument node1, Argument node2) {
-		return DefaultGraph.existsDirectedPath(this, node1, node2);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getNeighbors(org.tweetyproject.graphs.Node)
-	 */
-	@Override
-	public Collection<Argument> getNeighbors(Argument node) {
-		Set<Argument> neighbours = new HashSet<Argument>();
-		neighbours.addAll(this.getAttacked(node));
-		neighbours.addAll((Collection<? extends Argument>) this.getAttackers(node));
-		return neighbours;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getAdjancyMatrix()
-	 */
-	@Override
-	public Matrix getAdjacencyMatrix() {
-		Matrix m = new Matrix(this.getNumberOfNodes(), this.getNumberOfNodes());
-		int i = 0, j;
-		for(Argument a: this){
-			j = 0;
-			for(Argument b : this){
-				m.setEntry(i, j, new IntegerConstant(this.areAdjacent(a, b) ? 1 : 0));				
-				j++;
-			}
-			i++;
-		}
-		return m;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getComplementGraph(int)
-	 */
-	@Override
-	public SetafTheory getComplementGraph(int selfloops) {
-		SetafTheory comp = new SetafTheory();
-		for(Argument node: this)
-			comp.add(node);
-		for(Argument node1: this)
-			for(Argument node2: this)
-				if(node1 == node2){
-					if(selfloops == Graph.INVERT_SELFLOOPS){
-						if(!this.isAttackedBy(node2, node1))
-							comp.add(new SetafAttack(node1, node2));
-					}else if(selfloops == Graph.IGNORE_SELFLOOPS){
-						if(this.isAttackedBy(node2, node1))
-							comp.add(new SetafAttack(node1, node2));						
-					}
-				}else if(!this.isAttackedBy(node2, node1))
-					comp.add(new SetafAttack(node1, node2));
-		return comp;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#hasSelfLoops()
-	 */
-	@Override
-	public boolean hasSelfLoops() {
-		for(Argument a: this)
-			if(this.isAttackedBy(a, a))
-				return true;
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getEdge(org.tweetyproject.graphs.Node, org.tweetyproject.graphs.Node)
-	 */
-	@Override
-	public Edge<Argument> getEdge(Argument a, Argument b) {
-		if(this.isAttackedBy(b, a))
-			return new SetafAttack(a, b);
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#isWeightedGraph()
-	 */
-	@Override
-	public boolean isWeightedGraph() {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getStronglyConnectedComponents()
-	 */
-	@Override
-	public Collection<Collection<Argument>> getStronglyConnectedComponents() {
-		return DefaultGraph.getStronglyConnectedComponents(this);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.Graph#getSubgraphs()
-	 */
-	@Override
-	public Collection<Graph<Argument>> getSubgraphs() {	
-		if(!SetafTheory.archivedSubgraphs.containsKey(this))			
-			SetafTheory.archivedSubgraphs.put(this, DefaultGraph.<Argument>getSubgraphs(this));		
-		return SetafTheory.archivedSubgraphs.get(this);
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -692,53 +433,320 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements G
 	}
 
 	@Override
-	protected DungSignature instantiateSignature() {
-		return new DungSignature();
+	protected SetafSignature instantiateSignature() {
+		return new SetafSignature();
 	}
 	
-	/**
-	 * Checks whether there is at least one cycle in this DungTheory.
-	 * @return "true" if there is a cycle in this DungTheory, "false" otherwise
-	 * @param <S> the type of nodes
-	 */
-	public <S extends Node> boolean containsCycle() {
-		return DefaultGraph.containsCycle(this);
+
+
+	
+	
+	/** The set of nodes */
+	protected Set<Argument> nodes;
+
+	/** The set of edges */
+	protected Set<SetafAttack> edges;
+	
+	public SetafTheory(){
+		this.nodes = new HashSet<Argument>();
+		this.edges = new HashSet<SetafAttack>();
 	}
 
-	/**
-	 * Checks whether there is at least on eodd cycle in this DungTheory.
-	 * A directed graph has an odd-length cycle if and only if at least one of its SCCs is non-bipartite
-	 * @param <S> the type of nodes
-	 * @return "true" if there is a cycle with odd length in this theory
-	 */
-	public <S extends Node> boolean containsOddCycle() {
-		Collection<Collection<Argument>> sccs = this.getStronglyConnectedComponents();
-		for (Collection<Argument> scc : sccs) {
-			Graph<Argument> scc_g = this.getRestriction(scc);
-			if (!DefaultGraph.isBipartite(scc_g))
+
+
+
+	public boolean add(SetafAttack edge) {
+		for(Argument e: edge.getNodeA())
+			if(!this.nodes.contains(e))
+				throw new IllegalArgumentException("The edge connects node that are not in this graph.");
+		
+		if (!this.nodes.contains(edge.getNodeB()))
+			throw new IllegalArgumentException("The edge connects node that are not in this graph.");
+		this.edges.add(edge);
+		return true;
+	}
+
+	@Override
+	public Collection<Argument> getNodes() {
+		return this.nodes;
+	}
+
+	@Override
+	public int getNumberOfNodes() {
+		return this.nodes.size();
+	}
+
+	@Override
+	public boolean areAdjacent(Argument a, Argument b) {
+		for(HyperDirEdge<Argument> e : this.edges) {
+			if((e.getNodeA().contains(a) && e.getNodeB().equals(b)) ||
+					(e.getNodeA().contains(b) && e.getNodeB().equals(a))) {
 				return true;
+			}
 		}
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.DefaultGraph#getComponents()
-	 */
-	public Collection<Graph<Argument>> getComponents() {
-		return DefaultGraph.getComponents(this);
+	@Override
+	public SetafAttack getEdge(Argument a, Argument b) {
+		System.err.println("an edge in a hypergraph is comprised of a set of Elements in Node A and an Element in Node B");
+		return null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.graphs.DefaultGraph#getInducedSubgraphs()
-	 */
-	public Collection<Graph<Argument>> getInducedSubgraphs() {
-		return DefaultGraph.getInducedSubgraphs(this);
+	public SetafAttack getDirEdge(Set<Argument> node1, Node b) {
+		for(SetafAttack e : this.edges) {
+			if(e.getNodeA().equals(node1) && e.getNodeB().equals(b))
+				return e;
+		}
+
+		return null;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public Collection getEdges() {
+		return this.edges;
+	}
+
+
+
+	@Override
+	public boolean contains(Object obj) {
+		if(obj instanceof Argument)
+			if(this.nodes.contains((Argument) obj)){
+				return true;
+			}
+			else {
+				return false;
+			}
+		if(obj instanceof HyperDirEdge)
+			if(this.edges.contains((SetafAttack) obj)){
+				return true;
+			}
+			else {
+				return false;
+			}
+		return false;
+	}
+
+	
+	public Collection<Argument> getChildren(Set<Argument> node) {
+		HashSet<Argument> result = new HashSet<Argument>();
+		for(SetafAttack e : this.edges) {
+			if(e.getNodeA().equals(node)) {
+				result.add((Argument) e.getNodeB());
+			}
+		}
+		return result;
+		
 	}
 
 	@Override
-	public Graph<Argument> getRestriction(Collection<Argument> nodes) {
+	public Collection<Argument> getParents(Node node) {
+		System.err.println("The return type for getParents in Setafs is Collection<Set<Argument>>");
+		return null;
+	}
+	public Collection<Set<Argument>> getParents(Argument node) {
+		HashSet<Set<Argument>> result = new HashSet<Set<Argument>>();
+		for(SetafAttack e : this.edges) {
+			if(e.getNodeB().equals(node)) {
+				result.add(e.getNodeA());
+			}
+		}
+		return result;
+	}
+
+	
+	public static <S extends Node> boolean existsDirectedPath(SetafTheory hyperGraph, Argument node1, Argument node2) {
+		if (!hyperGraph.getNodes().contains(node1) || !hyperGraph.getNodes().contains(node2))
+			throw new IllegalArgumentException("The nodes are not in this graph.");
+		if (node1.equals(node2))
+			return true;
+		// we perform a DFS.
+		Stack<Argument> stack = new Stack<Argument>();
+		Collection<Argument> visited = new HashSet<Argument>();
+		stack.add((Argument) node1);
+		while (!stack.isEmpty()) {
+			Argument node = stack.pop();
+			visited.add(node);
+			if (node.equals(node2))
+				return true;
+			stack.addAll(hyperGraph.getChildren(node));
+			stack.removeAll(visited);
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean existsDirectedPath(Argument node1, Argument node2) {
+		return SetafTheory.existsDirectedPath(this, node1, node2);
+	}
+	
+
+
+	@Override
+	public Collection<Argument> getNeighbors(Argument node) {
+		HashSet<Argument> result = new HashSet<Argument>();
+		for(SetafAttack a : this.edges) {
+			if(a.getNodeB().equals(node)) {
+				result.addAll(a.getNodeA());
+			}
+			if(a.getNodeA().contains(node)) {
+				result.add((Argument) a.getNodeB());
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Matrix getAdjacencyMatrix() {
+		// A matrix representation o a hypergraph is not known to me
+		return null;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @return the powerset of @param originalSet
+	 */
+	public Set<Set<Argument>> powerSet(Set<Argument> originalSet) {
+	    HashSet<Set<Argument>> sets = new HashSet<Set<Argument>>();
+	    if (originalSet.isEmpty()) {
+	        sets.add(new HashSet<Argument>());
+	        return sets;
+	    }
+	    ArrayList<Argument> list = new ArrayList<Argument>(originalSet);
+	    Argument head = list.get(0);
+	    HashSet<Argument> rest = new HashSet<Argument>(list.subList(1, list.size())); 
+	    for (Set<Argument> set : powerSet(rest)) {
+	        Set<Argument> newSet = new HashSet<Argument>();
+	        newSet.add(head);
+	        newSet.addAll(set);
+	        sets.add(newSet);
+	        sets.add(set);
+	    }  
+
+	    return sets;
+	}  
+
+	
+
+	public SetafTheory getComplementGraph(int selfloops) {
+		//very inefficient
+		Set<Set<Argument>> myPowerSet = new HashSet<Set<Argument>>();
+		myPowerSet = powerSet(this.nodes);
+		
+		SetafTheory comp = new SetafTheory();
+		for (Argument node : this.nodes)
+			comp.add(node);
+		//iterate over powerset and add every edge that is not in the original graph
+		//this can make the String represtnattion extremly log
+		//and it may not be able to be shown in 1 line with the toString() method
+		for (Set<Argument> node1 : myPowerSet)
+			for (Argument node2 : this.nodes)
+				if (node1.contains(node2)) {
+					if (selfloops == HyperGraph.INVERT_SELFLOOPS) {
+						if (this.getDirEdge(node1, node2) != null) 						
+							comp.add(new SetafAttack(node1, node2)); 
+					} else if (selfloops == HyperGraph.IGNORE_SELFLOOPS) {
+						if (this.getDirEdge(node1, node2) != null)
+							comp.add(new SetafAttack(node1, node2));
+					}
+				} else if (this.getDirEdge(node1, node2) == null) {
+					comp.add(new SetafAttack(node1, node2));
+				}
+
+
+		return comp;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public Collection getStronglyConnectedComponents() {
+		// TODO Auto-generated method stub
+		//algorithm yet to be implemented, not important for the next time
+		return null;
+	}
+
+	
+
+	
+	/**
+	 * Returns the set of sub graphs of the given graph.
+	 * @param g a graph
+	 * @param <S> the type of nodes
+	 * 
+	 * @return the set of sub graphs of the given graph.
+	 */
+	public Collection<SetafTheory> getSubgraphs(SetafTheory g) {
+		
+		// not very efficient but will do for now
+		Collection<SetafTheory> result = new HashSet<SetafTheory>();
+		Set<Set<Argument>> subNodes = new SetTools<Argument>().subsets(g.getNodes());
+		for (Set<Argument> nodes : subNodes) {
+			@SuppressWarnings("unchecked")
+			Set<Set<SetafAttack>> edges = new SetTools<SetafAttack>()
+					.subsets((Set<SetafAttack>) g.getRestriction(nodes).getEdges());
+			for (Set<SetafAttack> es : edges) {
+				SetafTheory newg = new SetafTheory();
+				newg.nodes.addAll(nodes);
+				newg.edges.addAll(es);
+				result.add(newg);
+			}
+		}
+		
+		return result;
+	}
+
+	@Override
+	public SetafTheory getRestriction(Collection<Argument> nodes) {
+		SetafTheory graph = new SetafTheory();
+		graph.nodes.addAll(nodes);
+		for (HyperDirEdge<Argument> e : this.edges)
+			if (nodes.contains(e.getNodeA()) && nodes.contains(e.getNodeB()))
+				graph.add(e);
+		return graph;
+	}
+
+	@Override
+	public boolean hasSelfLoops() {
+		for (Argument node1 : this.nodes)
+			if (this.areAdjacent(node1, node1))
+				return true;
+		return false;
+	}
+
+	@Override
+	public boolean isWeightedGraph() {
+		return false;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean add(GeneralEdge edge) {
+		return this.edges.add((SetafAttack)edge);
+	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "<" + this.nodes.toString() + "," + this.edges.toString() + ">";
+	}
+
+	@Override
+	public Collection<Argument> getChildren(Node node) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Collection<DirHyperGraph<Argument>> getSubGraphs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	
 }
