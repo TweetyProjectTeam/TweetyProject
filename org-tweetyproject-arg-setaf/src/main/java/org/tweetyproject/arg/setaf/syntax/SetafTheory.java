@@ -61,7 +61,14 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 */
 	private static Map<SetafTheory, Collection<DirHyperGraph<Argument>>> archivedSubDirHyperGraphs = new HashMap<SetafTheory, Collection<DirHyperGraph<Argument>>>();
 
-
+	@Override
+	public int size(){
+		return this.nodes.size();
+	}
+	@Override
+	public Iterator<Argument> iterator(){
+		return this.nodes.iterator();
+	}
 	
 	/**
 	 * Creates a new theory from the given DirHyperGraph.
@@ -249,6 +256,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 			if(extension.isAcceptable(argument, this))
 				newExtension.add(argument);
 		}
+		System.out.println("ext: " + newExtension);
 		return newExtension;
 	}
 	

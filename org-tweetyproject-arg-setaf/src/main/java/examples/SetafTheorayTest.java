@@ -6,7 +6,10 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.setaf.syntax.SetafAttack;
 import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.arg.setaf.reasoners.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.setaf.reasoners.SimpleGroundedReasoner;
+import org.tweetyproject.arg.setaf.semantics.SetafExtension;
 
 public class SetafTheorayTest {
 	
@@ -22,7 +25,6 @@ public class SetafTheorayTest {
 		s.add(d);
 		
 		Set<Argument> a1 = new HashSet<Argument>();
-		a1.add(a);
 		a1.add(b);
 		a1.add(d);
 		
@@ -33,11 +35,16 @@ public class SetafTheorayTest {
 		
 		s.add(new SetafAttack(a1, a));
 		s.add(new SetafAttack(a2, c));
-		s.remove(a);
+		//s.remove(a);
 		System.out.println(s.toString());
-		System.out.println(s.getComplementGraph(0));
+		//System.out.println(s.getComplementGraph(0));
 		SimpleGroundedReasoner gr = new SimpleGroundedReasoner();
+		SimpleAdmissibleReasoner ad = new SimpleAdmissibleReasoner();
 		System.out.println(gr.getModel(s));
+		System.out.println(ad.getModels(s));
+		
+
+
 	}
 
 }

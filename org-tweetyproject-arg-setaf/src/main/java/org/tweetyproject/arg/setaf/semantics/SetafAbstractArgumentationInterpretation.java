@@ -59,17 +59,20 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	 * accepted argument wrt. the given theory.
 	 */
 	public boolean isAcceptable(Argument argument, SetafTheory setafTheory){
+		if(setafTheory.isAttackedBy(argument, argument))
+			return false;
 		Set<Set<Argument>> attackers = setafTheory.getAttackers(argument);
 		Iterator<Set<Argument>> it = attackers.iterator();
 		while (it.hasNext()) {
 			boolean allArgsAttacked = true;
 			for(Argument a : it.next()) {
-	
+				
 				if(!setafTheory.isAttackedBy(a,this.getArgumentsOfStatus(ArgumentStatus.IN))) {
+					
 					allArgsAttacked = false;
 				}
 			}
-			if(allArgsAttacked == true)
+			if(allArgsAttacked == false)
 				return false;
 		}	
 		return true;
