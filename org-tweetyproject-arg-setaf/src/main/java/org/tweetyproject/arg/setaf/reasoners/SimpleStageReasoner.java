@@ -18,42 +18,49 @@
  */
 package org.tweetyproject.arg.setaf.reasoners;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.tweetyproject.arg.setaf.semantics.*;
-import org.tweetyproject.arg.setaf.syntax.*;
-import org.tweetyproject.arg.dung.syntax.Argument;
-
+import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
+import org.tweetyproject.arg.setaf.semantics.SetafExtension;
+import org.tweetyproject.arg.setaf.semantics.Labeling;
+import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 
 /**
- * This reasoner for Dung theories performs inference on the preferred extensions.
- * Computes the set of all preferred extensions, i.e., all maximal admissable sets.
- * It does so by first computing all complete extensions and then check for
- * set maximality.
- * 
+ * This reasoner for Dung theories performs inference on the stage extensions.
  * @author Matthias Thimm
  *
  */
-public class SimplePreferredReasoner extends AbstractExtensionReasoner {	
+public class SimpleStageReasoner extends AbstractExtensionReasoner {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
 	public Collection<SetafExtension> getModels(SetafTheory bbase) {
-		Collection<SetafExtension> completeExtensions = new SimpleCompleteReasoner().getModels(bbase);
+		// A stage extension is a conflict-free set with minimal undecided arguments
+		Collection<SetafExtension> cfExt = new SimpleConflictFreeReasoner().getModels(bbase);
+		Set<Labeling> cfLab = new HashSet<Labeling>();
+		for(SetafExtension e: cfExt)
+			cfLab.add(new Labeling(bbase,e));
 		Set<SetafExtension> result = new HashSet<SetafExtension>();
-		boolean maximal;
-		for(SetafExtension e1: completeExtensions){
-			maximal = true;
-			for(SetafExtension e2: completeExtensions)
-				if(e1 != e2 && e2.containsAll(e1)){
-					maximal = false;
-					break;
+		boolean stage;
+		for(Labeling lab: cfLab){
+			stage = true;
+			for(Labeling lab2: cfLab){
+				if(lab != lab2){
+					if(lab.getArgumentsOfStatus(ArgumentStatus.UNDECIDED).containsAll(lab2.getArgumentsOfStatus(ArgumentStatus.UNDECIDED)) &&
+							!lab.getArgumentsOfStatus(ArgumentStatus.UNDECIDED).equals(lab2.getArgumentsOfStatus(ArgumentStatus.UNDECIDED)) ){
+						stage = false;
+						break;
+					}
 				}
-			if(maximal)
-				result.add(e1);			
-		}		
+			}
+			if(stage){
+				result.add(lab.getArgumentsOfStatus(ArgumentStatus.IN));
+			}
+		}
 		return result;
 	}
 
@@ -62,20 +69,7 @@ public class SimplePreferredReasoner extends AbstractExtensionReasoner {
 	 */
 	@Override
 	public SetafExtension getModel(SetafTheory bbase) {
-		// just return the first found preferred extension
-		Collection<SetafExtension> completeExtensions = new SimpleCompleteReasoner().getModels(bbase);
-		boolean maximal;
-		for(SetafExtension e1: completeExtensions){
-			maximal = true;
-			for(SetafExtension e2: completeExtensions)
-				if(e1 != e2 && e2.containsAll(e1)){
-					maximal = false;
-					break;
-				}
-			if(maximal)
-				return e1;			
-		}		
-		// this should not happen
-		throw new RuntimeException("Hmm, did not find a maximal set in a finite number of sets. Should not happen.");
+		// just return the first one
+		return this.getModels(bbase).iterator().next();
 	}
 }

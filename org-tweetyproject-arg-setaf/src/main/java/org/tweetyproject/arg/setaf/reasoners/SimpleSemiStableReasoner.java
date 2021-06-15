@@ -18,33 +18,47 @@
  */
 package org.tweetyproject.arg.setaf.reasoners;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.tweetyproject.arg.setaf.semantics.*;
-import org.tweetyproject.arg.setaf.syntax.*;
+import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
+import org.tweetyproject.arg.setaf.semantics.SetafExtension;
+import org.tweetyproject.arg.setaf.semantics.Labeling;
+import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+
 
 /**
- * This reasoner for Dung theories performs inference on the stable extensions.
- * Computes the set of all stable extensions, i.e., all conflict-free sets that attack each other argument.
- * For that, it uses the SimpleSccCompleteReasoner to first compute all complete extensions, and
- * then filters out the non-stable ones.
+ * This reasoner for Dung theories performs inference on the semi-stable extensions.
  * @author Matthias Thimm
  *
  */
-public class SimpleStableReasoner extends AbstractExtensionReasoner {
-
-
+public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
+	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
 	public Collection<SetafExtension> getModels(SetafTheory bbase) {
-		Collection<SetafExtension> completeExtensions = new SimpleCompleteReasoner().getModels(bbase);
-		Set<SetafExtension> result = new HashSet<SetafExtension>();
-		for(SetafExtension e: completeExtensions)
-			if(bbase.isAttackingAllOtherArguments(e))
-				result.add(e);
-		return result;	
+		// check all complete extensions and remove those sets with non-mininal set of undecided arguments
+		Collection<SetafExtension> exts = new SimpleCompleteReasoner().getModels(bbase);
+		Map<SetafExtension,SetafExtension> extUndec = new HashMap<SetafExtension,SetafExtension>();
+		for(SetafExtension ext: exts)
+			extUndec.put(ext, new Labeling(bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+		boolean b;
+		for(SetafExtension ext: extUndec.keySet()){
+			b = false;
+			for(SetafExtension ext2: extUndec.keySet()){
+				if(ext != ext2){
+					if(extUndec.get(ext).containsAll(extUndec.get(ext2)) && !extUndec.get(ext2).containsAll(extUndec.get(ext))){
+						exts.remove(ext);
+						b = true;
+					}
+				}			
+				if(b) break;
+			}			
+		}
+		return exts;
 	}
 
 	/* (non-Javadoc)
@@ -52,11 +66,7 @@ public class SimpleStableReasoner extends AbstractExtensionReasoner {
 	 */
 	@Override
 	public SetafExtension getModel(SetafTheory bbase) {
-		// returns the first found stable extension
-		Collection<SetafExtension> completeExtensions = new SimpleCompleteReasoner().getModels(bbase);
-		for(SetafExtension e: completeExtensions)
-			if(bbase.isAttackingAllOtherArguments(e))
-				return e;
-		return null;	
-	}		
+		// just return the first one (which is always defined)
+		return this.getModels(bbase).iterator().next();
+	}
 }

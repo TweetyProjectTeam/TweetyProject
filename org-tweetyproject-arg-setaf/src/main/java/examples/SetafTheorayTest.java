@@ -7,9 +7,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.setaf.syntax.SetafAttack;
 import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 import org.tweetyproject.commons.util.SetTools;
-import org.tweetyproject.arg.setaf.reasoners.SimpleAdmissibleReasoner;
-import org.tweetyproject.arg.setaf.reasoners.SimpleGroundedReasoner;
-import org.tweetyproject.arg.setaf.semantics.SetafExtension;
+import org.tweetyproject.arg.setaf.reasoners.*;
 
 public class SetafTheorayTest {
 	
@@ -40,9 +38,10 @@ public class SetafTheorayTest {
 		//System.out.println(s.getComplementGraph(0));
 		SimpleGroundedReasoner gr = new SimpleGroundedReasoner();
 		SimpleAdmissibleReasoner ad = new SimpleAdmissibleReasoner();
+		SimplePreferredReasoner pr = new SimplePreferredReasoner();
 		System.out.println(gr.getModel(s));
 		System.out.println(ad.getModels(s));
-		
+		System.out.println(pr.getModels(s));
 
 
 	}
