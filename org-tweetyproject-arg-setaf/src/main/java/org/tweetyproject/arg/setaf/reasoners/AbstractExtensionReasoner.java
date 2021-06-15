@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.reasoners;
 
@@ -22,9 +22,7 @@ import java.util.Collection;
 
 import org.tweetyproject.arg.setaf.semantics.SetafExtension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.setaf.reasoners.AbstractSetafReasoner;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;

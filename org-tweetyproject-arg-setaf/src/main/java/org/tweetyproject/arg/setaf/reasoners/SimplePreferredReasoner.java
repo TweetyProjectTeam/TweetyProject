@@ -22,22 +22,21 @@ import java.util.*;
 
 import org.tweetyproject.arg.setaf.semantics.*;
 import org.tweetyproject.arg.setaf.syntax.*;
-import org.tweetyproject.arg.dung.syntax.Argument;
 
 
 /**
- * This reasoner for Dung theories performs inference on the preferred extensions.
- * Computes the set of all preferred extensions, i.e., all maximal admissable sets.
+ * This reasoner for setaf theories performs inference on the preferred extensions.
+ * Computes the set of all preferred extensions, i.e., all maximal admissible sets.
  * It does so by first computing all complete extensions and then check for
  * set maximality.
  * 
- * @author Matthias Thimm
+ * @author Matthias Thimm, Sebastian Franke
  *
  */
 public class SimplePreferredReasoner extends AbstractExtensionReasoner {	
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public Collection<SetafExtension> getModels(SetafTheory bbase) {
@@ -58,7 +57,7 @@ public class SimplePreferredReasoner extends AbstractExtensionReasoner {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public SetafExtension getModel(SetafTheory bbase) {

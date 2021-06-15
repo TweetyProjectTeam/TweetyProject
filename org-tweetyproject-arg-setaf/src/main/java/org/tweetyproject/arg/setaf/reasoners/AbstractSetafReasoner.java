@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.reasoners;
 
@@ -23,7 +23,7 @@ import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 import org.tweetyproject.commons.QualitativeReasoner;
 
 /**
- * Ancestor class for all AAF reasoners.
+ * Ancestor class for all Setaf reasoners.
  * 
  * @author Sebastian Franke
  *

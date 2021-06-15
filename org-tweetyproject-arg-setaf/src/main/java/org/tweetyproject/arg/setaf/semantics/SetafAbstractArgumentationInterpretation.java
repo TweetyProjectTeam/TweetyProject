@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.semantics;
 
@@ -54,7 +54,7 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	 * returns true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 * @param argument an argument
-	 * @param dungTheory a Dung theory (the knowledge base)
+	 * @param dungTheory a setaf theory (the knowledge base)
 	 * @return true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 */
@@ -81,7 +81,7 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	/**
 	 * returns true if no accepted argument attacks another accepted one in
 	 * this interpretation wrt. the given theory.
-	 * @param dungTheory a Dung theory.
+	 * @param dungTheory a setaf theory.
 	 * @return true if no accepted argument attacks another accepted one in
 	 * this interpretation wrt. the given theory.
 	 */
@@ -95,10 +95,10 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	
 	/**
 	 * returns true if every accepted argument of this is defended by some accepted
-	 * argument wrt. the given Dung theory.
-	 * @param dungTheory a Dung theory. 
+	 * argument wrt. the given setaf theory.
+	 * @param dungTheory a setaf theory. 
 	 * @return true if every accepted argument of this is defended by some accepted
-	 * argument wrt. the given Dung theory.
+	 * argument wrt. the given setaf theory.
 	 */
 	public boolean isAdmissable(SetafTheory setafTheory){
 		if(!this.isConflictFree(setafTheory)) return false;

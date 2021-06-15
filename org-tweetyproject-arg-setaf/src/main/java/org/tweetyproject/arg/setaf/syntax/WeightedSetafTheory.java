@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
 package org.tweetyproject.arg.setaf.syntax;
@@ -22,8 +22,8 @@ package org.tweetyproject.arg.setaf.syntax;
 import java.util.*;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.Attack;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.setaf.syntax.SetafAttack;
+import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 
 /**
  * Minimalistic Implementation of a weighted argumentation theory
@@ -31,12 +31,12 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  *
  * @author  Sebastian Franke
  */
-public class WeightedSetafTheory extends DungTheory {
+public class WeightedSetafTheory extends SetafTheory {
 
     /**
      * listing of weights of every edge in the argumentation graph
      */
-    public Map<Attack, Double> weights;
+    public Map<SetafAttack, Double> weights;
 
     /**
      * initialize a new weighted argumentation theory
@@ -53,7 +53,7 @@ public class WeightedSetafTheory extends DungTheory {
      * @return weight of the attack
      */
     public Double getWeight(Argument attacker, Argument attacked) {
-        return this.getWeight(new Attack(attacker, attacked));
+        return this.getWeight(new SetafAttack(attacker, attacked));
     }
 
     /**
@@ -61,7 +61,7 @@ public class WeightedSetafTheory extends DungTheory {
      * @param attack an attack
      * @return weight of attack
      */
-    public Double getWeight(Attack attack) {
+    public Double getWeight(SetafAttack attack) {
         return this.weights.getOrDefault(attack, 0.0);
     }
 
@@ -71,7 +71,7 @@ public class WeightedSetafTheory extends DungTheory {
      * @param weight new value for the weight
      * @return null or the previously associated value of attack
      */
-    public Double setWeight(Attack attack, double weight) {
+    public Double setWeight(SetafAttack attack, double weight) {
         return this.weights.put(attack, weight);
     }
 
@@ -81,29 +81,29 @@ public class WeightedSetafTheory extends DungTheory {
      * @param weight new value for the weight
      * @return previously associated value of attack
      */
-    public Double updateWeight(Attack attack, double weight) {
+    public Double updateWeight(SetafAttack attack, double weight) {
         double old = this.getWeight(attack);
         this.weights.put(attack, old + weight);
         return old;
     }
 
     /**
-     * compute Dung Theory only containing attacks with weights greater than zero
-     * @return computed Dung Theory
+     * compute setaf Theory only containing attacks with weights greater than zero
+     * @return computed setaf Theory
      */
-    public DungTheory getDungTheory() {
-        return getDungTheory(0);
+    public SetafTheory getSetafTheory() {
+        return getSetafTheory(0);
     }
 
     /**
-     * compute Dung Theory only containing attacks with weight above the given threshold
-     * @param threshold cutoff for attacks
-     * @return Dung Theory wrt. given threshold
+     * compute setaf Theory only containing attacks with weight above the given threshold
+     * @param setaf cutoff for attacks
+     * @return setaf Theory wrt. given threshold
      */
-    public DungTheory getDungTheory(double threshold) {
-        DungTheory theory = new DungTheory();
+    public SetafTheory getSetafTheory(double threshold) {
+        SetafTheory theory = new SetafTheory();
         theory.addAll(this);
-        for (Attack attack: this.getAttacks()) {
+        for (SetafAttack attack: this.getAttacks()) {
             if (this.getWeight(attack) > threshold) {
                 theory.add(attack);
             }
@@ -120,7 +120,7 @@ public class WeightedSetafTheory extends DungTheory {
      */
     public boolean addAttack(Argument attacker, Argument attacked, double weight) {
         //TODO secure statement
-        this.setWeight(new Attack(attacker, attacked), weight);
+        this.setWeight(new SetafAttack(attacker, attacked), weight);
         return super.addAttack(attacker, attacked);
     }
 
@@ -141,7 +141,7 @@ public class WeightedSetafTheory extends DungTheory {
      * @return "true" if attack successfully removed
      */
     @Override
-    public boolean remove(Attack attack) {
+    public boolean remove(SetafAttack attack) {
         //TODO secure statement
         this.weights.remove(attack);
         return super.remove(attack);
@@ -154,7 +154,7 @@ public class WeightedSetafTheory extends DungTheory {
      */
     public boolean removeDiscardedAttacks(int threshold) {
         boolean result = true;
-        for (Attack att: this.getAttacks()) {
+        for (SetafAttack att: this.getAttacks()) {
             if (this.getWeight(att) < threshold) {
                 result &= this.remove(att);
             }

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.reasoners;
 
@@ -26,9 +26,9 @@ import org.tweetyproject.arg.dung.syntax.*;
 
 
 /**
- * This reasoner for Dung theories performs inference on the complete extensions.
+ * This reasoner for Setaf theories performs inference on the complete extensions.
  * Computes the set of all complete extensions, i.e., all admissible sets that contain all their acceptable arguments.
- * @author Matthias Thimm
+ * @author Matthias Thimm, Sebastian Franke
  *
  */
 public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
@@ -41,7 +41,7 @@ public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 		return this.getCompleteExtensions(bbase,groundedExtension,remaining);	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public SetafExtension getModel(SetafTheory bbase) {
@@ -51,7 +51,7 @@ public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 		
 	/**
 	 * Auxiliary method to compute all complete extensions
-	 * @param dungTheory a Dung theory
+	 * @param setafTheory a Setaf theory
 	 * @param ext some extension
 	 * @param remaining arguments that still have to be considered to be part of an extension
 	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>

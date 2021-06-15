@@ -14,16 +14,12 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.reasoners;
 
 import java.util.*;
 
-import org.tweetyproject.arg.dung.semantics.*;
-import org.tweetyproject.arg.setaf.reasoners.*;
-import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.setaf.semantics.SetafExtension;
 import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 
@@ -32,14 +28,14 @@ import org.tweetyproject.arg.setaf.syntax.SetafTheory;
  * This reasoner for Setaf theories performs inference on the grounded extension.
  * Computes the (unique) grounded extension, i.e., the least fixpoint of the characteristic function faf.
  * 
- * @author  Sebastian Franke
+ * @author  Matthias Thimm, Sebastian Franke
  *
  */
 public class SimpleGroundedReasoner extends AbstractExtensionReasoner {
 
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public Collection<SetafExtension> getModels(SetafTheory bbase) {
@@ -49,7 +45,7 @@ public class SimpleGroundedReasoner extends AbstractExtensionReasoner {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public SetafExtension getModel(SetafTheory bbase) {

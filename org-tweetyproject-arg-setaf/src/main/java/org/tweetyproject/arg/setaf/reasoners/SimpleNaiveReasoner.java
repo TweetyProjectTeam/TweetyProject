@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2020 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
 package org.tweetyproject.arg.setaf.reasoners;
@@ -28,7 +28,7 @@ import java.util.*;
 /**
  * Reasoner for naive extensions. naive extensions are maximal conflict-free sets
  *
- * @author Lars Bengel
+ * @author Lars Bengel, Sebastian Franke
  */
 public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
     public Collection<SetafExtension> getModels(SetafTheory bbase) {

@@ -43,7 +43,7 @@ import org.tweetyproject.math.matrix.Matrix;
 
 
 /**
- * This class implements an abstract argumentation theory in the sense of Dung om Setafs.
+ * This class implements an abstract argumentation theory in the sense of Dung on Setafs.
  * <br>
  * <br>See
  * <br>
@@ -275,11 +275,6 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	}
 	
 
-	
-
-	
-
-	
 	// Misc methods
 
 	public boolean add(Argument arg){
@@ -293,8 +288,8 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 
 	
 	/**
-	 * Adds an attack from the first argument to the second to thisDdung theory.
-	 * @param hashSet some argument
+	 * Adds an attack from the first argument to the second to this Setaf theory.
+	 * @param hashSet some arguments
 	 * @param attacked some argument
 	 * @return "true" if the set of attacks has been modified.
 	 */
@@ -305,7 +300,19 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	}
 	
 	/**
-	 * Removes the given attack from this Dung theory.
+	 * Adds an attack from the first argument to the second to this Setaf theory.
+	 * @param attacker
+	 * @param attacked some argument
+	 * @return "true" if the set of attacks has been modified.
+	 */
+	public boolean addAttack(Argument hashSet, Argument attacked){
+		SetafAttack s = new SetafAttack(hashSet, attacked);
+		this.edges.add(s);
+		return true; 
+	}
+	
+	/**
+	 * Removes the given attack from this Setaf theory.
 	 * @param attack an attack
 	 * @return "true" if the set of attacks has been modified.
 	 */
@@ -370,9 +377,9 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	}		
 	
 	/**
-	 * Adds the set of attacks to this Dung theory.
+	 * Adds the set of attacks to this Setaf theory.
 	 * @param edges2 a collection of attacks
-	 * @return "true" if this Dung theory has been modified.
+	 * @return "true" if this Setaf theory has been modified.
 	 */
 	public boolean addAllAttacks(Set<SetafAttack> edges2){
 		boolean result = false;
@@ -384,8 +391,8 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	/**
 	 * Adds all arguments and attacks of the given theory to
 	 * this theory
-	 * @param theory some Dung theory
-	 * @return "true" if this Dung Theory has been modified 
+	 * @param theory some Setaf theory
+	 * @return "true" if this Setaf Theory has been modified 
 	 */
 	public boolean add(SetafTheory theory){
 		boolean b1 = this.addAll(theory);
@@ -434,7 +441,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 */
 	@Override
 	public int compareTo(SetafTheory o) {
-		// DungTheory implements Comparable in order to 
+		// SetafTheory implements Comparable in order to 
 		// have a fixed (but arbitrary) order among all theories
 		// for that purpose we just use the hash code.
 		return this.hashCode() - o.hashCode();
@@ -499,6 +506,11 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	public SetafAttack getEdge(Argument a, Argument b) {
 		System.err.println("an edge in a hypergraph is comprised of a set of Elements in Node A and an Element in Node B");
 		return null;
+	}
+	
+
+	public Set<SetafAttack> getAttacks() {
+		return this.edges;
 	}
 	
 	public SetafAttack getDirEdge(Set<Argument> node1, Node b) {
@@ -745,8 +757,12 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 
 	@Override
 	public Collection<Argument> getChildren(Node node) {
-		// TODO Auto-generated method stub
-		return null;
+		HashSet<Argument> children = new HashSet<Argument>();
+		for(SetafAttack att : this.edges) {
+			if(att.getNodeA().contains(node))
+				children.add(att.getNodeB());
+		}
+		return children;
 	}
 
 	@Override

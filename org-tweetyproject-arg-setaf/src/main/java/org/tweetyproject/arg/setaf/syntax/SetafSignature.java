@@ -14,14 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.syntax;
 
 import java.util.*;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungSignature;
 import org.tweetyproject.commons.*;
 
 
@@ -34,7 +33,7 @@ import org.tweetyproject.commons.*;
 public class SetafSignature extends SingleSetSignature<Argument>{
 
 	/**
- 	  * Creates a new (empty) Dung signature.
+ 	  * Creates a new (empty) setaf signature.
  	  */
 	public SetafSignature(){
 		super();

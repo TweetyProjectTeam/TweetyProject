@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.reasoners;
 
@@ -28,15 +28,15 @@ import org.tweetyproject.arg.setaf.semantics.Labeling;
 import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 
 /**
- * This reasoner for Dung theories performs inference on the ideal extension.
- * @author Matthias Thimm
+ * This reasoner for setaf theories performs inference on the ideal extension.
+ * @author Matthias Thimm, Sebastian Franke
  *
  */
 public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public Collection<SetafExtension> getModels(SetafTheory bbase) {
@@ -46,7 +46,7 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
+	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
 	public SetafExtension getModel(SetafTheory bbase) {

@@ -14,10 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.graphs;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -26,7 +27,7 @@ import java.util.Set;
 /**
  * Instances of this class represent abstract edges.
  * 
- * @author Matthias Thimm
+ * @author Sebastian Franke
  *
  * @param <T> The type of the nodes this edge connects
  */
@@ -47,6 +48,17 @@ public class HyperDirEdge<T extends Node> extends GeneralEdge{
 	 */
 	public HyperDirEdge(Set<T> attackers, T nodeB){
 		this.nodeA = attackers;
+		this.nodeB = nodeB;
+	}
+	
+	/** Creates a new edge for the given nodes.
+	 * @param attackers some node.
+	 * @param nodeB some node.
+	 */
+	public HyperDirEdge(T attackers, T nodeB){
+		HashSet<T> att = new HashSet<T>();
+		att.add(attackers);
+		this.nodeA = att;
 		this.nodeB = nodeB;
 	}
 	 

@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * simple reasoner for eager semantics
  *
- * @author Lars Bengel
+ * @author Lars Bengel, Sebastian Franke
  */
 public class SimpleEagerReasoner extends AbstractExtensionReasoner {
     @Override

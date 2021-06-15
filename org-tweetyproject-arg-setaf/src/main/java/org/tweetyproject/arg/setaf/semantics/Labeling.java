@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.semantics;
 
@@ -32,7 +32,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
  * This class models a labeling of an abstract argumentation framework, i.e.
  * a function mapping arguments to values "in", "out", "undec".
  * 
- * @author Matthias Thimm
+ * @author Sebastian Franke
  */
 public class Labeling extends SetafAbstractArgumentationInterpretation implements Map<Argument,ArgumentStatus> {
 
@@ -49,7 +49,7 @@ public class Labeling extends SetafAbstractArgumentationInterpretation implement
 	/**
 	 * Creates a new labeling from the given extension wrt. the given theory (this only gives
 	 * a valid labeling wrt. some semantics if the semantics is admissibility-based).
-	 * @param theory some Dung theory.
+	 * @param theory some setaf theory.
 	 * @param ext an extension
 	 */
 	public Labeling(SetafTheory theory, SetafExtension ext){
@@ -168,7 +168,7 @@ public class Labeling extends SetafAbstractArgumentationInterpretation implement
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.argumentation.dung.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.dung.semantics.ArgumentStatus)
+	 * @see org.tweetyproject.argumentation.setaf.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.dung.semantics.ArgumentStatus)
 	 */
 	@Override
 	public SetafExtension getArgumentsOfStatus(ArgumentStatus status) {
@@ -180,7 +180,7 @@ public class Labeling extends SetafAbstractArgumentationInterpretation implement
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.argumentation.dung.semantics.AbstractArgumentationInterpretation#toString()
+	 * @see org.tweetyproject.argumentation.setaf.semantics.AbstractArgumentationInterpretation#toString()
 	 */
 	@Override
 	public String toString() {

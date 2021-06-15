@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.setaf.syntax;
 
@@ -27,7 +27,6 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungEntity;
 import org.tweetyproject.arg.dung.syntax.DungSignature;
 import org.tweetyproject.commons.*;
-import org.tweetyproject.graphs.DirectedEdge;
 import org.tweetyproject.graphs.HyperDirEdge;
 
 /**
@@ -48,7 +47,19 @@ public class SetafAttack extends HyperDirEdge<Argument>   implements DungEntity 
 			super(attackers, attacked);
 
 	}
+	
+	/**
+	 * Default constructor; initializes the two arguments used in this attack relation
+	 * @param attacker the attacking argument
+	 * @param attacked the attacked argument
+	 */
+	public SetafAttack(Argument attacker, Argument attacked){
+		super(attacker, attacked);
+		
+	}
 
+
+	
 	/**
 	 * returns true if one arguments in <code>arguments</code> attacks another within this attack relation.
 	 * @param arguments a list of arguments
@@ -136,7 +147,7 @@ public class SetafAttack extends HyperDirEdge<Argument>   implements DungEntity 
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.syntax.DungEntity#getLdoFormula()
+	 * @see org.tweetyproject.arg.setaf.syntax.DungEntity#getLdoFormula()
 	 */
 	@Override
 	public LdoFormula getLdoFormula() {
