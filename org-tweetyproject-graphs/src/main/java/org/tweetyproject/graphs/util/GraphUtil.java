@@ -262,7 +262,6 @@ public abstract class GraphUtil {
 	public static <T extends Node> double globalclusteringcoefficient(Graph<T> g){
 		double numClosedTriplets = 0;
 		double numTriplets = 0;
-		byte numEdges;
 		for(T a: g){
 			for(T b: g){
 				if(b.equals(a))
@@ -270,18 +269,13 @@ public abstract class GraphUtil {
 				for(T c:g){
 					if(c.equals(a)|| c.equals(b))
 						continue;
-					numEdges = 0;
-					if(g.areAdjacent(a, b) || g.areAdjacent(b, a))
-						numEdges++;
+					if(!g.areAdjacent(a, b) && !g.areAdjacent(b, a))
+						continue;
+					if(!g.areAdjacent(b, c) && !g.areAdjacent(c, b))
+						continue;
+					numTriplets++;
 					if(g.areAdjacent(a, c) || g.areAdjacent(c, a))
-						numEdges++;
-					if(g.areAdjacent(b, c) || g.areAdjacent(c, b))
-						numEdges++;
-					// note that we count every set {a,b,c} six times
-					if(numEdges >= 2)
-						numTriplets += 1d/6;
-					if(numEdges == 3)
-						numClosedTriplets += 1d/6;
+						numClosedTriplets++;					
 				}	
 			}
 		}

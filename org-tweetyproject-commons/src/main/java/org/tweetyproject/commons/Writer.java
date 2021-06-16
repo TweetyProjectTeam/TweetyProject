@@ -79,24 +79,6 @@ public abstract class Writer {
 		String s = this.writeToString();
 		try {
 			File file = new File(filename);
-			
-			String newFilename = filename;
-			//If the file already exists, create a new file instead of overwriting
-			if (file.exists()) {
-				String newFilenameFormat;
-				int index = filename.lastIndexOf(".");
-				if (index != -1) 
-					newFilenameFormat = filename.substring(0, index) + "%03d" + filename.substring(index);
-				else 
-					newFilenameFormat = filename + "%03d";
-				int fileNumber = 0;
-				while (file.exists()) {
-					newFilename = String.format(newFilenameFormat, fileNumber);
-					file = new File(newFilename);
-					fileNumber++;
-				  }
-			}
-			
 			//Write object to file
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
 			out.write(s);
