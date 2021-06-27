@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.Edge;
+import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.Node;
 import org.tweetyproject.logics.petri.syntax.PetriNet;
@@ -99,7 +100,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	}
 	
 	@Override
-	public boolean add(Edge<Marking> edge) {
+	public boolean add(GeneralEdge<Marking> edge) {
 		return false;
 	}
 

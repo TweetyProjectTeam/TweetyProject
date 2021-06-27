@@ -68,13 +68,13 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 */
 	public DungTheory(Graph<Argument> graph){
 		super(graph.getNodes());
-		for(Edge<? extends Argument> e: graph.getEdges()) {
-			if(!parents.containsKey(e.getNodeB()))
-				parents.put(e.getNodeB(), new HashSet<Argument>());
-			parents.get(e.getNodeB()).add(e.getNodeA());
-			if(!children.containsKey(e.getNodeA()))
-				children.put(e.getNodeA(), new HashSet<Argument>());
-			children.get(e.getNodeA()).add(e.getNodeB());
+		for(GeneralEdge<? extends Argument> e: graph.getEdges()) {
+			if(!parents.containsKey(((Edge<? extends Argument>) e).getNodeB()))
+				parents.put(((Edge<? extends Argument>) e).getNodeB(), new HashSet<Argument>());
+			parents.get(((Edge<? extends Argument>) e).getNodeB()).add(((Edge<? extends Argument>) e).getNodeA());
+			if(!children.containsKey(((Edge<? extends Argument>) e).getNodeA()))
+				children.put(((Edge<? extends Argument>) e).getNodeA(), new HashSet<Argument>());
+			children.get(((Edge<? extends Argument>) e).getNodeA()).add(((Edge<? extends Argument>) e).getNodeB());
 		}		
 	}
 	
@@ -674,7 +674,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @see org.tweetyproject.graphs.Graph#add(org.tweetyproject.graphs.Edge)
 	 */
 	@Override
-	public boolean add(Edge<Argument> edge) {
+	public boolean add(GeneralEdge<Argument> edge) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -92,7 +92,7 @@ public class GraphExample {
 //		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[3]));
 //		g.add(new DirectedEdge<SimpleNode>(nodes[4],nodes[2]));
 		
-		System.out.println(g);
+		System.out.println(g.toString());
 		System.out.println();
 		for(ComplexNumber d: GraphUtil.eigenvalues(g))
 			System.out.println(d);

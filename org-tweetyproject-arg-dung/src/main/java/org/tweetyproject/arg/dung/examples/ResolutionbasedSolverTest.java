@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.examples;
 
+import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleResolutionBasedReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -46,9 +47,10 @@ public class ResolutionbasedSolverTest {
         ex1.addAttack(a, c);
 
 
-        SimpleResolutionBasedReasoner re= new SimpleResolutionBasedReasoner(new SimplePreferredReasoner());
-
-        System.out.println(re.getModels(ex1));
+       // SimpleResolutionBasedReasoner re= new SimpleResolutionBasedReasoner(new SimplePreferredReasoner());
+//SimpleAdmissibleReasoner ad = new SimpleAdmissibleReasoner();
+        //System.out.println(re.getModels(ex1));
+       // System.out.println(ad.getModels(ex1));
         
 
 

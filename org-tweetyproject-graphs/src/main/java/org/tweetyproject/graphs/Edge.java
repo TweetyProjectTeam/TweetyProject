@@ -25,7 +25,7 @@ package org.tweetyproject.graphs;
  *
  * @param <T> The type of the nodes this edge connects
  */
-public abstract class Edge<T extends Node> {
+public abstract class Edge<T extends Node> extends GeneralEdge<T>{
 
 	/** The first node of this edge. */
 	private T nodeA;

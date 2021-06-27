@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
+import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.Node;
 
@@ -42,7 +43,7 @@ import com.mxgraph.view.mxGraph;
  * @param <T> the node class of the graph which is to plot
  * @param <S> the edge class of the grpah which is to plot
  */
-public abstract class GraphPlotter<T extends Node, S extends Edge<T>>  {
+public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	
 	/**
 	 * the ground plotter which may accommodate multiple plots
@@ -129,8 +130,8 @@ public abstract class GraphPlotter<T extends Node, S extends Edge<T>>  {
             objectLabels.put(node, vertexName);
         });
         edges.forEach(edge -> {
-        	Node nodeA = edge.getNodeA();
-        	Node nodeB = edge.getNodeB();
+        	Node nodeA = ((Edge) edge).getNodeA();
+        	Node nodeB = ((Edge) edge).getNodeB();
         	String vertexNameA = objectLabels.get(nodeA);
         	String vertexNameB = objectLabels.get(nodeB);
         	Object vertexObjectA = vertexObjects.get(vertexNameA);

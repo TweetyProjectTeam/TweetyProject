@@ -32,7 +32,7 @@ import org.tweetyproject.math.matrix.Matrix;
  * 
  * @param <T> The type of the node.
  */
-public interface Graph<T extends Node> extends Iterable<T>{
+public interface Graph<T extends Node> extends GeneralGraph<T>{
 
 	/** When inverting a graph, ignore self loops (don't add and don't remove) */
 	public static final int IGNORE_SELFLOOPS = 1;
@@ -55,7 +55,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * @param edge some edge.
 	 * @return "true" iff the edge has been added successfully.
 	 */
-	public boolean add(Edge<T> edge);
+	public boolean add(GeneralEdge<T> edge);
 	
 	/**
 	 * Returns the nodes of this graph.
@@ -86,13 +86,13 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 * @param b some node
 	 * @return the edge (a,b) or null.
 	 */
-	public Edge<T> getEdge(T a, T b);
+	public GeneralEdge<T> getEdge(T a, T b);
 	
 	/**
 	 * Returns the edges of this graph.
 	 * @return the edges of this graph.
 	 */
-	public Collection<? extends Edge<? extends T>> getEdges();
+	public Collection<? extends GeneralEdge<? extends T>> getEdges();
 
 	/* (non-Javadoc)
 	 * @see java.lang.Iterable#iterator()
@@ -178,13 +178,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 */
 	public Collection<Graph<T>> getSubgraphs();
 	
-	/**
-	 * Returns copy of this graph consisting only of the given 
-	 * nodes and all corresponding edges. 
-	 * @param nodes a set of nodes
-	 * @return a graph.
-	 */
-	public Graph<T> getRestriction(Collection<T> nodes);
+
 
 	/**
 	 * Returns "true" iff the graph has a self loop (an edge from a node to itself).

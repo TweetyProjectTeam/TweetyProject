@@ -358,7 +358,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.tweetyproject.graphs.Graph#getSubgraphs()
+	 * @see org.tweetyproject.graphs.GeneralGraph#getSubgraphs()
 	 */
 	public Collection<Graph<T>> getSubgraphs() {
 		return DefaultGraph.<T>getSubgraphs(this);
@@ -371,7 +371,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 * 
 	 * @return the set of sub graphs of the given graph.
 	 */
-	public static <S extends Node> Collection<Graph<S>> getSubgraphs(Graph<S> g) {
+	public static <S extends Node> Collection<Graph<S>> getSubgraphs(GeneralGraph<S> g) {
 		// not very efficient but will do for now
 		Collection<Graph<S>> result = new HashSet<Graph<S>>();
 		Set<Set<S>> subNodes = new SetTools<S>().subsets(g.getNodes());
@@ -480,14 +480,14 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	public static <S extends Node> Set<Stack<S>> getCyclesExcludingSelfLoops(Graph<S> g) {
 		Set<Stack<S>> results = new HashSet<Stack<S>>();
 		results.addAll(DefaultGraph.getCyclesIncludingSelfLoops(g));
-		Collection<? extends Edge<? extends S>> edges = g.getEdges();
+		Collection<? extends GeneralEdge<? extends S>> edges = g.getEdges();
 		
 		// removing all self-loops
-		for(Edge<? extends S> singleEdge : edges) {
-			if(singleEdge.getNodeA().equals(singleEdge.getNodeB())) {
+		for(GeneralEdge<? extends S> singleEdge : edges) {
+			if(((Edge<? extends S>) singleEdge).getNodeA().equals(((Edge<? extends S>) singleEdge).getNodeB())) {
 				Stack<S> removeFromResults = new Stack<S>();
-				removeFromResults.push(singleEdge.getNodeA());
-				removeFromResults.push(singleEdge.getNodeA());
+				removeFromResults.push(((Edge<? extends S>) singleEdge).getNodeA());
+				removeFromResults.push(((Edge<? extends S>) singleEdge).getNodeA());
 				results.remove(removeFromResults);
 			}
 		}
@@ -709,5 +709,15 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 		return true;
 
 	}
+
+	@Override
+	public boolean add(GeneralEdge<T> edge) {
+		if(edge instanceof  Edge<?>)
+			return this.add((Edge<T>) edge);
+		else
+			return false;
+	}
+
+
 	
 }

@@ -44,6 +44,7 @@ public class SetTools<E> {
 			subsets.add(new HashSet<E>());
 		}else{
 			E element = elements.iterator().next();
+			
 			Set<E> remainingElements = new HashSet<E>(elements);
 			remainingElements.remove(element);
 			Set<Set<E>> subsubsets = this.subsets(remainingElements);
