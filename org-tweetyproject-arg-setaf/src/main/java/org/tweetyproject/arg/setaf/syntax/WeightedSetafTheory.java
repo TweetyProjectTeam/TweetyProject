@@ -22,8 +22,7 @@ package org.tweetyproject.arg.setaf.syntax;
 import java.util.*;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.setaf.syntax.SetafAttack;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+
 
 /**
  * Minimalistic Implementation of a weighted argumentation theory

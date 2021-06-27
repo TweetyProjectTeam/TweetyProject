@@ -358,7 +358,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.tweetyproject.graphs.Graph#getSubgraphs()
+	 * @see org.tweetyproject.graphs.GeneralGraph#getSubgraphs()
 	 */
 	public Collection<Graph<T>> getSubgraphs() {
 		return DefaultGraph.<T>getSubgraphs(this);
@@ -371,7 +371,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 * 
 	 * @return the set of sub graphs of the given graph.
 	 */
-	public static <S extends Node> Collection<Graph<S>> getSubgraphs(Graph<S> g) {
+	public static <S extends Node> Collection<Graph<S>> getSubgraphs(GeneralGraph<S> g) {
 		// not very efficient but will do for now
 		Collection<Graph<S>> result = new HashSet<Graph<S>>();
 		Set<Set<S>> subNodes = new SetTools<S>().subsets(g.getNodes());

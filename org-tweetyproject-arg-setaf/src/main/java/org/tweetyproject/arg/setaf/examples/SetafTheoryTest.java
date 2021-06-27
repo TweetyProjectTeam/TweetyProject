@@ -1,4 +1,4 @@
-package examples;
+package org.tweetyproject.arg.setaf.examples;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +9,7 @@ import org.tweetyproject.arg.setaf.syntax.SetafTheory;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.arg.setaf.reasoners.*;
 
-public class SetafTheorayTest {
+public class SetafTheoryTest {
 	
 	public static void main(String[] args) {
 		SetafTheory s = new SetafTheory();
@@ -39,9 +39,9 @@ public class SetafTheorayTest {
 		SimpleGroundedReasoner gr = new SimpleGroundedReasoner();
 		SimpleAdmissibleReasoner ad = new SimpleAdmissibleReasoner();
 		SimplePreferredReasoner pr = new SimplePreferredReasoner();
-		System.out.println(gr.getModel(s));
-		System.out.println(ad.getModels(s));
-		System.out.println(pr.getModels(s));
+		System.out.println("grounded: " + gr.getModel(s));
+		System.out.println("admissible: " + ad.getModels(s));
+		System.out.println("preferred: " + pr.getModels(s));
 
 
 	}

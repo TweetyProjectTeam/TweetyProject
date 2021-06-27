@@ -29,12 +29,15 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.setaf.semantics.SetafExtension;
 import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.commons.util.SetTools;
+import org.tweetyproject.graphs.DefaultGraph;
 import org.tweetyproject.graphs.DirHyperGraph;
+import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.HyperDirEdge;
 import org.tweetyproject.graphs.HyperGraph;
@@ -59,7 +62,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	/**
 	 * For archiving sub DirHyperGraphs 
 	 */
-	private static Map<SetafTheory, Collection<DirHyperGraph<Argument>>> archivedSubDirHyperGraphs = new HashMap<SetafTheory, Collection<DirHyperGraph<Argument>>>();
+	private static Map<SetafTheory, Collection<DirHyperGraph<Argument>>> archivedSubgraphs = new HashMap<SetafTheory, Collection<DirHyperGraph<Argument>>>();
 
 	@Override
 	public int size(){
@@ -256,7 +259,6 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 			if(extension.isAcceptable(argument, this))
 				newExtension.add(argument);
 		}
-		System.out.println("ext: " + newExtension);
 		return newExtension;
 	}
 	
@@ -767,9 +769,29 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 
 	@Override
 	public Collection<DirHyperGraph<Argument>> getSubGraphs() {
-		// TODO Auto-generated method stub
-		return null;
+		if(!SetafTheory.archivedSubgraphs.containsKey(this))			
+			SetafTheory.archivedSubgraphs.put(this, this.getSubgraphsHelper(this));		
+		return SetafTheory.archivedSubgraphs.get(this);
 	}
+
+	public static Collection<DirHyperGraph<Argument>> getSubgraphsHelper(SetafTheory g) {
+		// not very efficient but will do for now
+		Collection<DirHyperGraph<Argument>> result = new HashSet<DirHyperGraph<Argument>>();
+		Set<Set<Argument>> subNodes = new SetTools<Argument>().subsets(g.getNodes());
+		for (Set<Argument> nodes : subNodes) {
+			@SuppressWarnings("unchecked")
+			Set<Set<SetafAttack>> edges = new SetTools<SetafAttack>()
+					.subsets((Set<SetafAttack>) g.getRestriction(nodes).getEdges());
+			for (Set<SetafAttack> es : edges) {
+				SetafTheory newg = new SetafTheory();
+				newg.nodes.addAll(nodes);
+				newg.edges.addAll(es);
+				result.add(newg);
+			}
+		}
+		return result;
+	}
+
 
 
 	

@@ -1,11 +1,15 @@
 package org.tweetyproject.graphs;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
+import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.math.matrix.Matrix;
 
 public interface DirHyperGraph<T extends Node> extends GeneralGraph<T>{
+
 
 	/** When inverting a DirHyperGraph, ignore self loops (don't add and don't remove) */
 	public static final int IGNORE_SELFLOOPS = 1;
@@ -175,6 +179,7 @@ public interface DirHyperGraph<T extends Node> extends GeneralGraph<T>{
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString();
+
 	
 	
 }

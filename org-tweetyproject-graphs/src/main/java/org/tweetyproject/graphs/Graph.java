@@ -32,7 +32,7 @@ import org.tweetyproject.math.matrix.Matrix;
  * 
  * @param <T> The type of the node.
  */
-public interface Graph<T extends Node> extends Iterable<T>{
+public interface Graph<T extends Node> extends GeneralGraph<T>{
 
 	/** When inverting a graph, ignore self loops (don't add and don't remove) */
 	public static final int IGNORE_SELFLOOPS = 1;
@@ -178,13 +178,7 @@ public interface Graph<T extends Node> extends Iterable<T>{
 	 */
 	public Collection<Graph<T>> getSubgraphs();
 	
-	/**
-	 * Returns copy of this graph consisting only of the given 
-	 * nodes and all corresponding edges. 
-	 * @param nodes a set of nodes
-	 * @return a graph.
-	 */
-	public Graph<T> getRestriction(Collection<T> nodes);
+
 
 	/**
 	 * Returns "true" iff the graph has a self loop (an edge from a node to itself).
