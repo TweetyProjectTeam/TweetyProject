@@ -74,6 +74,11 @@
   		<artifactId>saf</artifactId>
   		<version>1.19-SNAPSHOT</version>
   	</dependency>
+        <dependency>
+                <groupId>org.tweetyproject.arg</groupId>
+                <artifactId>setaf</artifactId>
+                <version>1.19-SNAPSHOT</version>
+        </dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>social</artifactId>
