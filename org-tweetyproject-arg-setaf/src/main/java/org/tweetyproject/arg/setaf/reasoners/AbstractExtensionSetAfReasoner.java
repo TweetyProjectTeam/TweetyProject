@@ -20,26 +20,26 @@ package org.tweetyproject.arg.setaf.reasoners;
 
 import java.util.Collection;
 
-import org.tweetyproject.arg.setaf.semantics.SetafExtension;
+import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
 /**
- * Ancestor class for all Setaf-extension-based reasoners.
+ * Ancestor class for all SetAf-extension-based reasoners.
  * 
  * @author Sebastian Franke
  */
-public abstract class AbstractExtensionReasoner extends AbstractSetafReasoner implements ModelProvider<Argument,SetafTheory,SetafExtension>, PostulateEvaluatable<Argument> {
+public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReasoner implements ModelProvider<Argument,SetAf,SetAfExtension>, PostulateEvaluatable<Argument> {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractDungReasoner#query(org.tweetyproject.arg.dung.syntax.DungTheory, org.tweetyproject.arg.dung.syntax.Argument)
 	 */
 	@Override
-	public Boolean query(SetafTheory beliefbase, Argument formula) {		
+	public Boolean query(SetAf beliefbase, Argument formula) {		
 		return this.query(beliefbase, formula, InferenceMode.SKEPTICAL);
 	}
 
@@ -51,16 +51,16 @@ public abstract class AbstractExtensionReasoner extends AbstractSetafReasoner im
 	 * @param inferenceMode either InferenceMode.SKEPTICAL or InferenceMode.CREDULOUS
 	 * @return "true" if the argument is accepted
 	 */
-	public Boolean query(SetafTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
-		Collection<SetafExtension> extensions = this.getModels(beliefbase);
+	public Boolean query(SetAf beliefbase, Argument formula, InferenceMode inferenceMode) {
+		Collection<SetAfExtension> extensions = this.getModels(beliefbase);
 		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
-			for(SetafExtension e: extensions)
+			for(SetAfExtension e: extensions)
 				if(!e.contains(formula))
 					return false;
 			return true;
 		}
 		// so its credulous semantics
-		for(SetafExtension e: extensions){
+		for(SetAfExtension e: extensions){
 			if(e.contains(formula))
 				return true;			
 		}			
@@ -72,23 +72,19 @@ public abstract class AbstractExtensionReasoner extends AbstractSetafReasoner im
 	 * @param semantics a semantics
 	 * @return a reasoner for the given Dung theory, inference type, and semantics
 	 */
-	public static AbstractExtensionReasoner getSimpleReasonerForSemantics(Semantics semantics){
+	public static AbstractExtensionSetAfReasoner getSimpleReasonerForSemantics(Semantics semantics){
 		switch(semantics){
-			/*case CO: return new SimpleCompleteReasoner();
-			case GR: return new SimpleGroundedReasoner();
-			case PR: return new SimplePreferredReasoner();
-			case ST: return new SimpleStableReasoner();
-			case ADM: return new SimpleAdmissibleReasoner();
-			case CF: return new SimpleConflictFreeReasoner();
-			case SST: return new SimpleSemiStableReasoner();
-			case ID: return new SimpleIdealReasoner();
-			case EA: return new SimpleEagerReasoner();
-			case STG: return new SimpleStageReasoner();
-			case STG2: return new Stage2Reasoner();
-			case CF2: return new SccCF2Reasoner();
-			case SCF2: return new SCF2Reasoner();
-			case WAD: return new WeaklyAdmissibleReasoner();
-			case N: return new SimpleNaiveReasoner();*/
+			case CO: return new SimpleCompleteSetAfReasoner();
+			case GR: return new SimpleGroundedSetAfReasoner();
+			case PR: return new SimplePreferredSetAfReasoner();
+			case ST: return new SimpleStableSetAfReasoner();
+			case ADM: return new SimpleAdmissibleSetAfReasoner();
+			case CF: return new SimpleConflictFreeSetAfReasoner();
+			case SST: return new SimpleSemiStableSetAfReasoner();
+			case ID: return new SimpleIdealSetAfReasoner();
+			case EA: return new SimpleEagerSetAfReasoner();
+			case STG: return new SimpleStageSetAfReasoner();
+			case N: return new SimpleNaiveSetAfReasoner();
 		default:
 			throw new IllegalArgumentException("Unknown semantics.");			
 		}		
@@ -98,11 +94,11 @@ public abstract class AbstractExtensionReasoner extends AbstractSetafReasoner im
 	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public abstract Collection<SetafExtension> getModels(SetafTheory bbase);
+	public abstract Collection<SetAfExtension> getModels(SetAf bbase);
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public abstract SetafExtension getModel(SetafTheory bbase);
+	public abstract SetAfExtension getModel(SetAf bbase);
 }

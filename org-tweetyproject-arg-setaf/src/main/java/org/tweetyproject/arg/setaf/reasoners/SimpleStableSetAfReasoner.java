@@ -20,43 +20,43 @@ package org.tweetyproject.arg.setaf.reasoners;
 
 import java.util.*;
 
-import org.tweetyproject.arg.setaf.semantics.SetafExtension;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
-
+import org.tweetyproject.arg.setaf.semantics.*;
+import org.tweetyproject.arg.setaf.syntax.*;
 
 /**
- * This reasoner for Setaf theories performs inference on the grounded extension.
- * Computes the (unique) grounded extension, i.e., the least fixpoint of the characteristic function faf.
- * 
- * @author  Matthias Thimm, Sebastian Franke
+ * This reasoner for setaf theories performs inference on the stable extensions.
+ * Computes the set of all stable extensions, i.e., all conflict-free sets that attack each other argument.
+ * For that, it uses the SimpleSccCompleteReasoner to first compute all complete extensions, and
+ * then filters out the non-stable ones.
+ * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleGroundedReasoner extends AbstractExtensionReasoner {
+public class SimpleStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<SetafExtension> getModels(SetafTheory bbase) {
-		Collection<SetafExtension> extensions = new HashSet<SetafExtension>();
-		extensions.add(this.getModel(bbase));
-		return extensions;
+	public Collection<SetAfExtension> getModels(SetAf bbase) {
+		Collection<SetAfExtension> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		Set<SetAfExtension> result = new HashSet<SetAfExtension>();
+		for(SetAfExtension e: completeExtensions)
+			if(bbase.isAttackingAllOtherArguments(e))
+				result.add(e);
+		return result;	
 	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public SetafExtension getModel(SetafTheory bbase) {
-		SetafExtension ext = new SetafExtension();
-		int size;
-		do{
-			size = ext.size();			
-			ext = bbase.faf(ext);			
-		}while(size!=ext.size());		
-		return ext;
-	}
-
-
+	public SetAfExtension getModel(SetAf bbase) {
+		// returns the first found stable extension
+		Collection<SetAfExtension> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		for(SetAfExtension e: completeExtensions)
+			if(bbase.isAttackingAllOtherArguments(e))
+				return e;
+		return null;	
+	}		
 }

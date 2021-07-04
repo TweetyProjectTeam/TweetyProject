@@ -18,12 +18,15 @@
  */
 package org.tweetyproject.arg.dung.examples;
 
-import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleResolutionBasedReasoner;
-import org.tweetyproject.arg.dung.semantics.Semantics;
+
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+
+/**
+ * 
+ * @author Sebastian Franke
+ *
+ */
 
 public class ResolutionbasedSolverTest {
 

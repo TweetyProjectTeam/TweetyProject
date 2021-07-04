@@ -29,15 +29,12 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.setaf.semantics.SetafExtension;
+import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
 import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.commons.util.SetTools;
-import org.tweetyproject.graphs.DefaultGraph;
 import org.tweetyproject.graphs.DirHyperGraph;
-import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.GeneralEdge;
 import org.tweetyproject.graphs.HyperDirEdge;
 import org.tweetyproject.graphs.HyperGraph;
@@ -46,7 +43,7 @@ import org.tweetyproject.math.matrix.Matrix;
 
 
 /**
- * This class implements an abstract argumentation theory in the sense of Dung on Setafs.
+ * This class implements an abstract argumentation theory in the sense of Dung on SetAfs.
  * <br>
  * <br>See
  * <br>
@@ -57,12 +54,12 @@ import org.tweetyproject.math.matrix.Matrix;
  * @author  Sebastian Franke
  *
  */
-public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements DirHyperGraph<Argument>, Comparable<SetafTheory> {
+public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHyperGraph<Argument>, Comparable<SetAf> {
 
 	/**
 	 * For archiving sub DirHyperGraphs 
 	 */
-	private static Map<SetafTheory, Collection<DirHyperGraph<Argument>>> archivedSubgraphs = new HashMap<SetafTheory, Collection<DirHyperGraph<Argument>>>();
+	private static Map<SetAf, Collection<DirHyperGraph<Argument>>> archivedSubgraphs = new HashMap<SetAf, Collection<DirHyperGraph<Argument>>>();
 
 	@Override
 	public int size(){
@@ -77,14 +74,14 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * Creates a new theory from the given DirHyperGraph.
 	 * @param DirHyperGraph some DirHyperGraph
 	 */
-	public SetafTheory(SetafTheory DirHyperGraph){
+	public SetAf(SetAf DirHyperGraph){
 		super(DirHyperGraph);		
 	}
 	
 
 	
-	public SetafTheory clone() {
-		SetafTheory result = new SetafTheory(this);
+	public SetAf clone() {
+		SetAf result = new SetAf(this);
 		return result;
 	}
 	
@@ -92,7 +89,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @see org.tweetyproject.kr.BeliefBase#getSignature()
 	 */
 	public Signature getMinimalSignature(){
-		return new SetafSignature(this);
+		return new SetAfSignature(this);
 	}
 
 	/**
@@ -100,7 +97,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @param ext An extension contains a set of arguments.
 	 * @return true if <code>arguments</code> attack all other arguments in the theory
 	 */
-	public boolean isAttackingAllOtherArguments(SetafExtension ext){
+	public boolean isAttackingAllOtherArguments(SetAfExtension ext){
 		for(Argument a: this) {
 			if(ext.contains(a))
 				continue;
@@ -165,7 +162,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 */
 	public Set<Set<Argument>> getAttackers(Argument node){
 		HashSet<Set<Argument>> s = new HashSet<Set<Argument>>();
-		for(SetafAttack e : this.edges) {
+		for(SetAttack e : this.edges) {
 			if(e.getNodeB().equals(node))
 				s.add(e.getNodeA());
 		}
@@ -179,7 +176,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 */
 	public Set<Argument> getAttacked(Argument node){
 		HashSet<Argument> s = new HashSet<Argument>();
-		for(SetafAttack e : this.edges) {
+		for(SetAttack e : this.edges) {
 			if(e.getNodeA().contains(node))
 				s.add(e.getNodeB());
 		}
@@ -189,11 +186,11 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	/**
 	 * returns true if some argument of <code>ext</code> attacks argument.
 	 * @param a an argument
-	 * @param setafExtension an extension, ie. a set of arguments
+	 * @param SetAfExtension an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
-	public boolean isAttacked(Argument a, SetafExtension setafExtension){
-		return this.isAttackedBy(a, setafExtension);
+	public boolean isAttacked(Argument a, SetAfExtension setAfExtension){
+		return this.isAttackedBy(a, setAfExtension);
 	}
 	
 	/**
@@ -203,7 +200,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @return true if some argument of <code>ext</code> is attacked by argument.
 	 */
 	public boolean isAttackedBy(Argument arg2, Collection<Argument> ext){
-		for(SetafAttack e: this.edges) {
+		for(SetAttack e: this.edges) {
 			if(arg2.equals(e.getNodeB())) {
 				for(Argument a : ext) {
 					if(e.getNodeA().contains(a))
@@ -222,7 +219,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @return true if some argument of <code>ext2</code> attacks some argument
 	 * in <code>ext1</code>
 	 */
-	public boolean isAttacked(SetafExtension ext1, SetafExtension ext2){
+	public boolean isAttacked(SetAfExtension ext1, SetAfExtension ext2){
 		for(Argument a: ext1)
 			if(this.isAttacked(a, ext2)) return true;
 		return false;
@@ -233,7 +230,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @param e some extension
 	 * @return "true" iff the extension is stable.
 	 */
-	public boolean isStable(SetafExtension e) {
+	public boolean isStable(SetAfExtension e) {
 		for(Argument a: this) {
 			if(e.contains(a)) { 
 				if(this.isAttacked(a, e))
@@ -251,8 +248,8 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @param extension an extension (a set of arguments).
 	 * @return an extension (a set of arguments).
 	 */
-	public SetafExtension faf(SetafExtension extension){
-		SetafExtension newExtension = new SetafExtension();
+	public SetAfExtension faf(SetAfExtension extension){
+		SetAfExtension newExtension = new SetAfExtension();
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext()){
 			Argument argument = it.next();
@@ -269,7 +266,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @return "true" if arg1 is attacked by arg2
 	 */
 	public boolean isAttackedBy(Argument arg1, Argument arg2){
-		for(SetafAttack e: this.edges) {
+		for(SetAttack e: this.edges) {
 			if(e.getNodeB().equals(arg1) && e.getNodeA().contains(arg2))
 				return true;
 		}
@@ -290,35 +287,35 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 
 	
 	/**
-	 * Adds an attack from the first argument to the second to this Setaf theory.
+	 * Adds an attack from the first argument to the second to this SetAf theory.
 	 * @param hashSet some arguments
 	 * @param attacked some argument
 	 * @return "true" if the set of attacks has been modified.
 	 */
 	public boolean addAttack(HashSet<Argument> hashSet, Argument attacked){
-		SetafAttack s = new SetafAttack(hashSet, attacked);
+		SetAttack s = new SetAttack(hashSet, attacked);
 		this.edges.add(s);
 		return true; 
 	}
 	
 	/**
-	 * Adds an attack from the first argument to the second to this Setaf theory.
+	 * Adds an attack from the first argument to the second to this SetAf theory.
 	 * @param attacker
 	 * @param attacked some argument
 	 * @return "true" if the set of attacks has been modified.
 	 */
 	public boolean addAttack(Argument hashSet, Argument attacked){
-		SetafAttack s = new SetafAttack(hashSet, attacked);
+		SetAttack s = new SetAttack(hashSet, attacked);
 		this.edges.add(s);
 		return true; 
 	}
 	
 	/**
-	 * Removes the given attack from this Setaf theory.
+	 * Removes the given attack from this SetAf theory.
 	 * @param attack an attack
 	 * @return "true" if the set of attacks has been modified.
 	 */
-	public boolean remove(SetafAttack attack){
+	public boolean remove(SetAttack attack){
 		this.edges.remove(attack);
 		return true;
 	}
@@ -331,8 +328,8 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	public boolean remove(Argument a){
 
 		
-		for (Iterator<SetafAttack> i = this.edges.iterator(); i.hasNext();) {			
-			SetafAttack e = i.next();
+		for (Iterator<SetAttack> i = this.edges.iterator(); i.hasNext();) {			
+			SetAttack e = i.next();
 			e.remove(a);
 			if(e.getNodeA().isEmpty() || e.getNodeB() == null) {
 		        i.remove();
@@ -351,8 +348,8 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 		for(Object a: c)
 			if(a instanceof Argument)
 				result |= this.remove((Argument)a);
-			else if(a instanceof SetafAttack)
-				result |= this.remove((SetafAttack)a);
+			else if(a instanceof SetAttack)
+				result |= this.remove((SetAttack)a);
 		return result;
 	}
 	
@@ -374,18 +371,18 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @param att some attack
 	 * @return "true" iff this theory contains the given attack.
 	 */
-	public boolean containsAttack(SetafAttack att) {
+	public boolean containsAttack(SetAttack att) {
 		return this.edges.contains(att);
 	}		
 	
 	/**
-	 * Adds the set of attacks to this Setaf theory.
+	 * Adds the set of attacks to this SetAf theory.
 	 * @param edges2 a collection of attacks
-	 * @return "true" if this Setaf theory has been modified.
+	 * @return "true" if this SetAf theory has been modified.
 	 */
-	public boolean addAllAttacks(Set<SetafAttack> edges2){
+	public boolean addAllAttacks(Set<SetAttack> edges2){
 		boolean result = false;
-		for(SetafAttack att: edges2)
+		for(SetAttack att: edges2)
 			result |= this.add(att);
 		return result;
 	}
@@ -393,10 +390,10 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	/**
 	 * Adds all arguments and attacks of the given theory to
 	 * this theory
-	 * @param theory some Setaf theory
-	 * @return "true" if this Setaf Theory has been modified 
+	 * @param theory some SetAf theory
+	 * @return "true" if this SetAf Theory has been modified 
 	 */
-	public boolean add(SetafTheory theory){
+	public boolean add(SetAf theory){
 		boolean b1 = this.addAll(theory);
 		boolean b2 = this.addAllAttacks(theory.edges);
 		return b1 || b2 ;		
@@ -442,16 +439,16 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
-	public int compareTo(SetafTheory o) {
-		// SetafTheory implements Comparable in order to 
+	public int compareTo(SetAf o) {
+		// SetAfTheory implements Comparable in order to 
 		// have a fixed (but arbitrary) order among all theories
 		// for that purpose we just use the hash code.
 		return this.hashCode() - o.hashCode();
 	}
 
 	@Override
-	protected SetafSignature instantiateSignature() {
-		return new SetafSignature();
+	protected SetAfSignature instantiateSignature() {
+		return new SetAfSignature();
 	}
 	
 
@@ -462,17 +459,17 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	protected Set<Argument> nodes;
 
 	/** The set of edges */
-	protected Set<SetafAttack> edges;
+	protected Set<SetAttack> edges;
 	
-	public SetafTheory(){
+	public SetAf(){
 		this.nodes = new HashSet<Argument>();
-		this.edges = new HashSet<SetafAttack>();
+		this.edges = new HashSet<SetAttack>();
 	}
 
 
 
 
-	public boolean add(SetafAttack edge) {
+	public boolean add(SetAttack edge) {
 		for(Argument e: edge.getNodeA())
 			if(!this.nodes.contains(e))
 				throw new IllegalArgumentException("The edge connects node that are not in this graph.");
@@ -505,18 +502,18 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	}
 
 	@Override
-	public SetafAttack getEdge(Argument a, Argument b) {
+	public SetAttack getEdge(Argument a, Argument b) {
 		System.err.println("an edge in a hypergraph is comprised of a set of Elements in Node A and an Element in Node B");
 		return null;
 	}
 	
 
-	public Set<SetafAttack> getAttacks() {
+	public Set<SetAttack> getAttacks() {
 		return this.edges;
 	}
 	
-	public SetafAttack getDirEdge(Set<Argument> node1, Node b) {
-		for(SetafAttack e : this.edges) {
+	public SetAttack getDirEdge(Set<Argument> node1, Node b) {
+		for(SetAttack e : this.edges) {
 			if(e.getNodeA().equals(node1) && e.getNodeB().equals(b))
 				return e;
 		}
@@ -542,7 +539,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 				return false;
 			}
 		if(obj instanceof HyperDirEdge)
-			if(this.edges.contains((SetafAttack) obj)){
+			if(this.edges.contains((SetAttack) obj)){
 				return true;
 			}
 			else {
@@ -554,7 +551,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	
 	public Collection<Argument> getChildren(Set<Argument> node) {
 		HashSet<Argument> result = new HashSet<Argument>();
-		for(SetafAttack e : this.edges) {
+		for(SetAttack e : this.edges) {
 			if(e.getNodeA().equals(node)) {
 				result.add((Argument) e.getNodeB());
 			}
@@ -565,12 +562,12 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 
 	@Override
 	public Collection<Argument> getParents(Node node) {
-		System.err.println("The return type for getParents in Setafs is Collection<Set<Argument>>");
+		System.err.println("The return type for getParents in SetAfs is Collection<Set<Argument>>");
 		return null;
 	}
 	public Collection<Set<Argument>> getParents(Argument node) {
 		HashSet<Set<Argument>> result = new HashSet<Set<Argument>>();
-		for(SetafAttack e : this.edges) {
+		for(SetAttack e : this.edges) {
 			if(e.getNodeB().equals(node)) {
 				result.add(e.getNodeA());
 			}
@@ -579,7 +576,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	}
 
 	
-	public static <S extends Node> boolean existsDirectedPath(SetafTheory hyperGraph, Argument node1, Argument node2) {
+	public static <S extends Node> boolean existsDirectedPath(SetAf hyperGraph, Argument node1, Argument node2) {
 		if (!hyperGraph.getNodes().contains(node1) || !hyperGraph.getNodes().contains(node2))
 			throw new IllegalArgumentException("The nodes are not in this graph.");
 		if (node1.equals(node2))
@@ -601,7 +598,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	
 	@Override
 	public boolean existsDirectedPath(Argument node1, Argument node2) {
-		return SetafTheory.existsDirectedPath(this, node1, node2);
+		return SetAf.existsDirectedPath(this, node1, node2);
 	}
 	
 
@@ -609,7 +606,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	@Override
 	public Collection<Argument> getNeighbors(Argument node) {
 		HashSet<Argument> result = new HashSet<Argument>();
-		for(SetafAttack a : this.edges) {
+		for(SetAttack a : this.edges) {
 			if(a.getNodeB().equals(node)) {
 				result.addAll(a.getNodeA());
 			}
@@ -653,12 +650,12 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 
 	
 
-	public SetafTheory getComplementGraph(int selfloops) {
+	public SetAf getComplementGraph(int selfloops) {
 		//very inefficient
 		Set<Set<Argument>> myPowerSet = new HashSet<Set<Argument>>();
 		myPowerSet = powerSet(this.nodes);
 		
-		SetafTheory comp = new SetafTheory();
+		SetAf comp = new SetAf();
 		for (Argument node : this.nodes)
 			comp.add(node);
 		//iterate over powerset and add every edge that is not in the original graph
@@ -669,13 +666,13 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 				if (node1.contains(node2)) {
 					if (selfloops == HyperGraph.INVERT_SELFLOOPS) {
 						if (this.getDirEdge(node1, node2) != null) 						
-							comp.add(new SetafAttack(node1, node2)); 
+							comp.add(new SetAttack(node1, node2)); 
 					} else if (selfloops == HyperGraph.IGNORE_SELFLOOPS) {
 						if (this.getDirEdge(node1, node2) != null)
-							comp.add(new SetafAttack(node1, node2));
+							comp.add(new SetAttack(node1, node2));
 					}
 				} else if (this.getDirEdge(node1, node2) == null) {
-					comp.add(new SetafAttack(node1, node2));
+					comp.add(new SetAttack(node1, node2));
 				}
 
 
@@ -700,17 +697,17 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	 * 
 	 * @return the set of sub graphs of the given graph.
 	 */
-	public Collection<SetafTheory> getSubgraphs(SetafTheory g) {
+	public Collection<SetAf> getSubgraphs(SetAf g) {
 		
 		// not very efficient but will do for now
-		Collection<SetafTheory> result = new HashSet<SetafTheory>();
+		Collection<SetAf> result = new HashSet<SetAf>();
 		Set<Set<Argument>> subNodes = new SetTools<Argument>().subsets(g.getNodes());
 		for (Set<Argument> nodes : subNodes) {
 			@SuppressWarnings("unchecked")
-			Set<Set<SetafAttack>> edges = new SetTools<SetafAttack>()
-					.subsets((Set<SetafAttack>) g.getRestriction(nodes).getEdges());
-			for (Set<SetafAttack> es : edges) {
-				SetafTheory newg = new SetafTheory();
+			Set<Set<SetAttack>> edges = new SetTools<SetAttack>()
+					.subsets((Set<SetAttack>) g.getRestriction(nodes).getEdges());
+			for (Set<SetAttack> es : edges) {
+				SetAf newg = new SetAf();
 				newg.nodes.addAll(nodes);
 				newg.edges.addAll(es);
 				result.add(newg);
@@ -721,11 +718,11 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	}
 
 	@Override
-	public SetafTheory getRestriction(Collection<Argument> nodes) {
-		SetafTheory graph = new SetafTheory();
+	public SetAf getRestriction(Collection<Argument> nodes) {
+		SetAf graph = new SetAf();
 		graph.nodes.addAll(nodes);
 		for (HyperDirEdge<Argument> e : this.edges)
-			if (nodes.contains(e.getNodeA()) && nodes.contains(e.getNodeB()))
+			if (nodes.containsAll(e.getNodeA()) && nodes.contains(e.getNodeB()))
 				graph.add(e);
 		return graph;
 	}
@@ -746,7 +743,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean add(GeneralEdge edge) {
-		return this.edges.add((SetafAttack)edge);
+		return this.edges.add((SetAttack)edge);
 	}
 	/*
 	 * (non-Javadoc)
@@ -760,7 +757,7 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 	@Override
 	public Collection<Argument> getChildren(Node node) {
 		HashSet<Argument> children = new HashSet<Argument>();
-		for(SetafAttack att : this.edges) {
+		for(SetAttack att : this.edges) {
 			if(att.getNodeA().contains(node))
 				children.add(att.getNodeB());
 		}
@@ -769,21 +766,21 @@ public class SetafTheory extends BeliefSet<Argument,SetafSignature> implements D
 
 	@Override
 	public Collection<DirHyperGraph<Argument>> getSubGraphs() {
-		if(!SetafTheory.archivedSubgraphs.containsKey(this))			
-			SetafTheory.archivedSubgraphs.put(this, this.getSubgraphsHelper(this));		
-		return SetafTheory.archivedSubgraphs.get(this);
+		if(!SetAf.archivedSubgraphs.containsKey(this))			
+			SetAf.archivedSubgraphs.put(this, getSubgraphsHelper(this));		
+		return SetAf.archivedSubgraphs.get(this);
 	}
 
-	public static Collection<DirHyperGraph<Argument>> getSubgraphsHelper(SetafTheory g) {
+	public static Collection<DirHyperGraph<Argument>> getSubgraphsHelper(SetAf g) {
 		// not very efficient but will do for now
 		Collection<DirHyperGraph<Argument>> result = new HashSet<DirHyperGraph<Argument>>();
 		Set<Set<Argument>> subNodes = new SetTools<Argument>().subsets(g.getNodes());
 		for (Set<Argument> nodes : subNodes) {
 			@SuppressWarnings("unchecked")
-			Set<Set<SetafAttack>> edges = new SetTools<SetafAttack>()
-					.subsets((Set<SetafAttack>) g.getRestriction(nodes).getEdges());
-			for (Set<SetafAttack> es : edges) {
-				SetafTheory newg = new SetafTheory();
+			Set<Set<SetAttack>> edges = new SetTools<SetAttack>()
+					.subsets((Set<SetAttack>) g.getRestriction(nodes).getEdges());
+			for (Set<SetAttack> es : edges) {
+				SetAf newg = new SetAf();
 				newg.nodes.addAll(nodes);
 				newg.edges.addAll(es);
 				result.add(newg);

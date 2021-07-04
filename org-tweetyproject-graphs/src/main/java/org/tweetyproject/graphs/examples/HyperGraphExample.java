@@ -1,15 +1,36 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
+
 package org.tweetyproject.graphs.examples;
 
 import java.util.HashSet;
 
-import org.tweetyproject.graphs.DefaultGraph;
-import org.tweetyproject.graphs.DirectedEdge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.HyperDirEdge;
 import org.tweetyproject.graphs.HyperGraph;
 import org.tweetyproject.graphs.SimpleNode;
-import org.tweetyproject.graphs.util.GraphUtil;
-import org.tweetyproject.math.ComplexNumber;
+
+/**
+ * 
+ * @author Sebastian Franke
+ *
+ */
 
 public class HyperGraphExample {
 	public void run(){
@@ -46,9 +67,9 @@ public class HyperGraphExample {
 		a3.add(nodes[6]);
 		a3.add(nodes[7]);
 		a3.add(nodes[3]);
-		g.add(new HyperDirEdge(a1, nodes[0]));
-		g.add(new HyperDirEdge(a2, nodes[10]));
-		g.add(new HyperDirEdge(a3, nodes[4]));
+		g.add(new HyperDirEdge<SimpleNode>(a1, nodes[0]));
+		g.add(new HyperDirEdge<SimpleNode>(a2, nodes[10]));
+		g.add(new HyperDirEdge<SimpleNode>(a3, nodes[4]));
 		
 		Graph<SimpleNode> tmp = g.getComplementGraph(0);
 		//System.out.println(g.toString());

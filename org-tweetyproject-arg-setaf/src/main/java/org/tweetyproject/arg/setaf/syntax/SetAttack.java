@@ -31,19 +31,19 @@ import org.tweetyproject.graphs.HyperDirEdge;
 
 /**
  * This class models an attack between two arguments. It comprises of two attributes of <code>Argument</code> and is mainly used by
- * abstract argumentation theories as e.g. <code>SetafTheory</code>.
+ * abstract argumentation theories as e.g. <code>SetAfTheory</code>.
  *
  * @author  Sebastian Franke
  *
  */
-public class SetafAttack extends HyperDirEdge<Argument>   implements DungEntity {
+public class SetAttack extends HyperDirEdge<Argument>   implements DungEntity {
 
 	/**
 	 * Default constructor; initializes the two arguments used in this attack relation
 	 * @param attacker the attacking argument
 	 * @param attacked the attacked argument
 	 */
-	public SetafAttack(Set<Argument> attackers, Argument attacked){
+	public SetAttack(Set<Argument> attackers, Argument attacked){
 			super(attackers, attacked);
 
 	}
@@ -53,7 +53,7 @@ public class SetafAttack extends HyperDirEdge<Argument>   implements DungEntity 
 	 * @param attacker the attacking argument
 	 * @param attacked the attacked argument
 	 */
-	public SetafAttack(Argument attacker, Argument attacked){
+	public SetAttack(Argument attacker, Argument attacked){
 		super(attacker, attacked);
 		
 	}
@@ -70,10 +70,8 @@ public class SetafAttack extends HyperDirEdge<Argument>   implements DungEntity 
 		while(it.hasNext()){
 			Argument arg = (Argument) it.next();
 			if(arg.equals(this.getAttacked())){
-				Iterator<? extends Argument> it2 = arguments.iterator();
 
-				Set<Argument> arg2 = this.getNodeA();
-				if(!arguments.contains(arg2))
+				if(!arguments.containsAll(this.getNodeA()))
 					return false;
 						
 				}
@@ -133,8 +131,8 @@ public class SetafAttack extends HyperDirEdge<Argument>   implements DungEntity 
 	 */
 	public boolean equals(Object o){
 		if(!o.getClass().equals(this.getClass())) return false;
-		if(!this.getAttackers().equals(((SetafAttack)o).getAttackers())) return false;
-		if(!this.getAttacked().equals(((SetafAttack)o).getAttacked())) return false;
+		if(!this.getAttackers().equals(((SetAttack)o).getAttackers())) return false;
+		if(!this.getAttacked().equals(((SetAttack)o).getAttacked())) return false;
 		return true;
 	}
 	
@@ -147,7 +145,7 @@ public class SetafAttack extends HyperDirEdge<Argument>   implements DungEntity 
 	}
 
 	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.setaf.syntax.DungEntity#getLdoFormula()
+	 * @see org.tweetyproject.arg.SetAf.syntax.DungEntity#getLdoFormula()
 	 */
 	@Override
 	public LdoFormula getLdoFormula() {

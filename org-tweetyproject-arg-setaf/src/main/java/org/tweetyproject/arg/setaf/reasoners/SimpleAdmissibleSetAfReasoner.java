@@ -22,30 +22,30 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.tweetyproject.arg.setaf.semantics.SetafExtension;
+import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.commons.util.SetTools;
 
 /**
- * This reasoner for Setaf theories performs inference on the admissible extensions.
+ * This reasoner for SetAf theories performs inference on the admissible extensions.
  * Extensions are determined by checking all possible sets for admissibility.
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleAdmissibleReasoner extends AbstractExtensionReasoner {
+public class SimpleAdmissibleSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<SetafExtension> getModels(SetafTheory bbase) {
-		Set<SetafExtension> extensions = new HashSet<SetafExtension>();
+	public Collection<SetAfExtension> getModels(SetAf bbase) {
+		Set<SetAfExtension> extensions = new HashSet<SetAfExtension>();
 		// Check all subsets
 		
 		for(Set<Argument> ext: new SetTools<Argument>().subsets(bbase)) {
-			if(new SetafExtension(ext).isAdmissable(bbase))
-				extensions.add(new SetafExtension(ext));
+			if(new SetAfExtension(ext).isAdmissable(bbase))
+				extensions.add(new SetAfExtension(ext));
 		}
 		return extensions;
 	}
@@ -54,8 +54,8 @@ public class SimpleAdmissibleReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public SetafExtension getModel(SetafTheory bbase) {
+	public SetAfExtension getModel(SetAf bbase) {
 		// As the empty set is always admissible, we just return that one
-		return new SetafExtension();
+		return new SetAfExtension();
 	}
 }

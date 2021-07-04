@@ -16,24 +16,24 @@
  *
  *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.setaf.syntax;
+package org.tweetyproject.arg.setaf.reasoners;
 
-import org.tweetyproject.arg.dung.ldo.syntax.LdoFormula;
-import org.tweetyproject.commons.Formula;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
+import org.tweetyproject.commons.QualitativeReasoner;
 
 /**
- * This interface captures common methods of arguments and attacks of
- * abstract argumentation theories.
+ * Ancestor class for all Setaf reasoners.
  * 
  * @author Sebastian Franke
  *
  */
-public interface SetafEntity extends Formula{
-	
-	/**
-	 * Returns a logical representation of this entity in LDO
-	 * (Logic of dialectical outcomes, cf. [Hunter, Thimm, 2015])
-	 * @return the logical formula of this entity.
+public abstract class AbstractSetAfReasoner implements QualitativeReasoner<SetAf,Argument>{
+
+	/* (non-Javadoc)
+	 * @see org.tweetyproject.commons.QualitativeReasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
 	 */
-	public LdoFormula getLdoFormula();
+	@Override
+	public abstract Boolean query(SetAf beliefbase, Argument formula);
+
 }

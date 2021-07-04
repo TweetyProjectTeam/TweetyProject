@@ -26,16 +26,16 @@ import org.tweetyproject.arg.dung.syntax.*;
 
 
 /**
- * This reasoner for Setaf theories performs inference on the complete extensions.
+ * This reasoner for SetAf theories performs inference on the complete extensions.
  * Computes the set of all complete extensions, i.e., all admissible sets that contain all their acceptable arguments.
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
+public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
 	@Override
-	public Collection<SetafExtension> getModels(SetafTheory bbase) {
-		SetafExtension groundedExtension = new SimpleGroundedReasoner().getModel(bbase);
+	public Collection<SetAfExtension> getModels(SetAf bbase) {
+		SetAfExtension groundedExtension = new SimpleGroundedSetAfReasoner().getModel(bbase);
 		Set<Argument> remaining = new HashSet<Argument>(bbase);
 		remaining.removeAll(groundedExtension);
 		return this.getCompleteExtensions(bbase,groundedExtension,remaining);	}
@@ -44,20 +44,20 @@ public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public SetafExtension getModel(SetafTheory bbase) {
+	public SetAfExtension getModel(SetAf bbase) {
 		// as the grounded extension is also complete, we return that one
-		return new SimpleGroundedReasoner().getModel(bbase);
+		return new SimpleGroundedSetAfReasoner().getModel(bbase);
 	}
 		
 	/**
 	 * Auxiliary method to compute all complete extensions
-	 * @param setafTheory a Setaf theory
+	 * @param setafTheory a SetAf theory
 	 * @param ext some extension
 	 * @param remaining arguments that still have to be considered to be part of an extension
 	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>
 	 */
-	private Set<SetafExtension> getCompleteExtensions(SetafTheory dungTheory, SetafExtension ext, Collection<Argument> remaining){
-		Set<SetafExtension> extensions = new HashSet<SetafExtension>();
+	private Set<SetAfExtension> getCompleteExtensions(SetAf dungTheory, SetAfExtension ext, Collection<Argument> remaining){
+		Set<SetAfExtension> extensions = new HashSet<SetAfExtension>();
 		if(ext.isConflictFree(dungTheory)){
 			if(dungTheory.faf(ext).equals(ext))
 				extensions.add(ext);
@@ -66,7 +66,7 @@ public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 				Collection<Argument> remaining2 = new HashSet<Argument>(remaining);
 				remaining2.remove(arg);
 				extensions.addAll(this.getCompleteExtensions(dungTheory,ext, remaining2));
-				SetafExtension ext2 = new SetafExtension(ext);
+				SetAfExtension ext2 = new SetAfExtension(ext);
 				ext2.add(arg);
 				extensions.addAll(this.getCompleteExtensions(dungTheory,ext2, remaining2));
 			}

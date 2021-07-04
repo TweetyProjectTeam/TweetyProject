@@ -67,6 +67,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 			throw new IllegalArgumentException("The edge connects node that are not in this graph.");
 		return this.edges.add(edge);
 	}
+	
 
 	/*
 	 * (non-Javadoc)

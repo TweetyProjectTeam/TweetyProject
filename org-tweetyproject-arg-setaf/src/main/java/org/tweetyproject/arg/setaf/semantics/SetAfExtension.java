@@ -30,7 +30,7 @@ import org.tweetyproject.arg.dung.syntax.*;
  * @author  Sebastian Franke
  *
  */
-public class SetafExtension extends SetafAbstractArgumentationInterpretation implements Collection<Argument>, Comparable<SetafExtension> {
+public class SetAfExtension extends SetAfAbstractArgumentationInterpretation implements Collection<Argument>, Comparable<SetAfExtension> {
 	
 	/**
 	 * The arguments in the extension
@@ -40,7 +40,7 @@ public class SetafExtension extends SetafAbstractArgumentationInterpretation imp
 	/**
 	 * Creates a new empty extension.
 	 */
-	public SetafExtension(){
+	public SetAfExtension(){
 		this(new HashSet<Argument>());
 	}
 
@@ -48,7 +48,7 @@ public class SetafExtension extends SetafAbstractArgumentationInterpretation imp
 	 * Creates a new extension with the given set of arguments.
 	 * @param arguments a set of arguments
 	 */
-	public SetafExtension(Collection<? extends Argument> arguments){
+	public SetAfExtension(Collection<? extends Argument> arguments){
 		this.arguments = new HashSet<Argument>(arguments);
 	}
 
@@ -83,7 +83,7 @@ public class SetafExtension extends SetafAbstractArgumentationInterpretation imp
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SetafExtension other = (SetafExtension) obj;
+		SetAfExtension other = (SetAfExtension) obj;
 		if (arguments == null) {
 			if (other.arguments != null)
 				return false;
@@ -96,7 +96,7 @@ public class SetafExtension extends SetafAbstractArgumentationInterpretation imp
 	 * @see org.tweetyproject.argumentation.setaf.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.setaf.semantics.ArgumentStatus)
 	 */
 	@Override
-	public SetafExtension getArgumentsOfStatus(ArgumentStatus status) {
+	public SetAfExtension getArgumentsOfStatus(ArgumentStatus status) {
 		if(status.equals(ArgumentStatus.IN)) return this;
 		throw new IllegalArgumentException("Arguments of status different from \"IN\" cannot be determined from an extension alone");
 	}
@@ -209,7 +209,7 @@ public class SetafExtension extends SetafAbstractArgumentationInterpretation imp
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
-	public int compareTo(SetafExtension arg0) {
+	public int compareTo(SetAfExtension arg0) {
 		if(this.hashCode() < arg0.hashCode())
 			return -1;
 		if(this.hashCode() > arg0.hashCode())

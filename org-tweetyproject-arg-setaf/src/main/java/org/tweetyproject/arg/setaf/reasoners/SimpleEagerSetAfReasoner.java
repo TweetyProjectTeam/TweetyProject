@@ -20,9 +20,9 @@
 package org.tweetyproject.arg.setaf.reasoners;
 
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
-import org.tweetyproject.arg.setaf.semantics.SetafExtension;
-import org.tweetyproject.arg.setaf.semantics.Labeling;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
+import org.tweetyproject.arg.setaf.semantics.SetAfLabeling;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -33,27 +33,27 @@ import java.util.Set;
  *
  * @author Lars Bengel, Sebastian Franke
  */
-public class SimpleEagerReasoner extends AbstractExtensionReasoner {
+public class SimpleEagerSetAfReasoner extends AbstractExtensionSetAfReasoner {
     @Override
-    public Collection<SetafExtension> getModels(SetafTheory bbase) {
-        Collection<SetafExtension> exts = new HashSet<SetafExtension>();
+    public Collection<SetAfExtension> getModels(SetAf bbase) {
+        Collection<SetAfExtension> exts = new HashSet<SetAfExtension>();
         exts.add(this.getModel(bbase));
         return exts;
     }
 
     @Override
-    public SetafExtension getModel(SetafTheory bbase) {
-        Collection<SetafExtension> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
-        Collection<SetafExtension> sstExt = new SimpleSemiStableReasoner().getModels(bbase);
-        Set<Labeling> potResult = new HashSet<Labeling>();
+    public SetAfExtension getModel(SetAf bbase) {
+        Collection<SetAfExtension> admExt = new SimpleAdmissibleSetAfReasoner().getModels(bbase);
+        Collection<SetAfExtension> sstExt = new SimpleSemiStableSetAfReasoner().getModels(bbase);
+        Set<SetAfLabeling> potResult = new HashSet<SetAfLabeling>();
         boolean potEager;
-        for(SetafExtension ext: admExt){
-            Labeling extLab = new Labeling(bbase,ext);
+        for(SetAfExtension ext: admExt){
+            SetAfLabeling extLab = new SetAfLabeling(bbase,ext);
             // ext is eager if
             // 1. for every semi-stable labeling L both in and out are subsets of that sets in L
             potEager = true;
-            for(SetafExtension ext2: sstExt){
-                Labeling extLab2 = new Labeling(bbase, ext2);
+            for(SetAfExtension ext2: sstExt){
+                SetAfLabeling extLab2 = new SetAfLabeling(bbase, ext2);
                 if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
                     potEager = false;
                     break;
@@ -69,9 +69,9 @@ public class SimpleEagerReasoner extends AbstractExtensionReasoner {
         // get the one which maximizes in and out
         // Note that there is only one eager extension
         boolean eager;
-        for(Labeling lab: potResult){
+        for(SetAfLabeling lab: potResult){
             eager = true;
-            for(Labeling lab2: potResult){
+            for(SetAfLabeling lab2: potResult){
                 if(lab != lab2)
                     if(lab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(lab.getArgumentsOfStatus(ArgumentStatus.IN)))
                         if(lab2.getArgumentsOfStatus(ArgumentStatus.OUT).containsAll(lab.getArgumentsOfStatus(ArgumentStatus.OUT))){

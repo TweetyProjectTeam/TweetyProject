@@ -25,17 +25,17 @@ import org.tweetyproject.commons.*;
 
 
 /**
- * This class captures the signature of a Setaf theory,
+ * This class captures the signature of a SetAf theory,
  * i.e. a set of arguments.
  * 
  * @author  Sebastian Franke
  */
-public class SetafSignature extends SingleSetSignature<Argument>{
+public class SetAfSignature extends SingleSetSignature<Argument>{
 
 	/**
- 	  * Creates a new (empty) setaf signature.
+ 	  * Creates a new (empty) SetAf signature.
  	  */
-	public SetafSignature(){
+	public SetAfSignature(){
 		super();
 	}
 
@@ -43,7 +43,7 @@ public class SetafSignature extends SingleSetSignature<Argument>{
 	 * Creates a new signature with the single given argument.
 	 * @param argument an argument.
 	 */
-	public SetafSignature(Argument argument){
+	public SetAfSignature(Argument argument){
 		this();
 		this.add(argument);
 	}
@@ -52,7 +52,7 @@ public class SetafSignature extends SingleSetSignature<Argument>{
 	 * Creates a new signature with the given set of arguments.
 	 * @param arguments a set of arguments.
 	 */
-	public SetafSignature(Collection<? extends Argument> arguments){
+	public SetAfSignature(Collection<? extends Argument> arguments){
 		this();
 		this.addAll(arguments);
 	}
@@ -67,8 +67,8 @@ public class SetafSignature extends SingleSetSignature<Argument>{
 	}	
 	
 	@Override
-	public SetafSignature clone() {
-		return new SetafSignature(this.formulas);
+	public SetAfSignature clone() {
+		return new SetAfSignature(this.formulas);
 	}
 	
 }

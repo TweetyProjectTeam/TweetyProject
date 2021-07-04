@@ -33,19 +33,19 @@ import org.tweetyproject.arg.setaf.syntax.*;
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimplePreferredReasoner extends AbstractExtensionReasoner {	
+public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner {	
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<SetafExtension> getModels(SetafTheory bbase) {
-		Collection<SetafExtension> completeExtensions = new SimpleCompleteReasoner().getModels(bbase);
-		Set<SetafExtension> result = new HashSet<SetafExtension>();
+	public Collection<SetAfExtension> getModels(SetAf bbase) {
+		Collection<SetAfExtension> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		Set<SetAfExtension> result = new HashSet<SetAfExtension>();
 		boolean maximal;
-		for(SetafExtension e1: completeExtensions){
+		for(SetAfExtension e1: completeExtensions){
 			maximal = true;
-			for(SetafExtension e2: completeExtensions)
+			for(SetAfExtension e2: completeExtensions)
 				if(e1 != e2 && e2.containsAll(e1)){
 					maximal = false;
 					break;
@@ -60,13 +60,13 @@ public class SimplePreferredReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public SetafExtension getModel(SetafTheory bbase) {
+	public SetAfExtension getModel(SetAf bbase) {
 		// just return the first found preferred extension
-		Collection<SetafExtension> completeExtensions = new SimpleCompleteReasoner().getModels(bbase);
+		Collection<SetAfExtension> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
 		boolean maximal;
-		for(SetafExtension e1: completeExtensions){
+		for(SetAfExtension e1: completeExtensions){
 			maximal = true;
-			for(SetafExtension e2: completeExtensions)
+			for(SetAfExtension e2: completeExtensions)
 				if(e1 != e2 && e2.containsAll(e1)){
 					maximal = false;
 					break;

@@ -23,7 +23,7 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.commons.AbstractInterpretation;
 
 /**
@@ -32,7 +32,7 @@ import org.tweetyproject.commons.AbstractInterpretation;
  * 
  * @author  Sebastian Franke
  */
-public abstract class SetafAbstractArgumentationInterpretation extends AbstractInterpretation<SetafTheory,Argument> {
+public abstract class SetAfAbstractArgumentationInterpretation extends AbstractInterpretation<SetAf,Argument> {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.Interpretation#satisfies(org.tweetyproject.Formula)
@@ -46,7 +46,7 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	 * @see org.tweetyproject.Interpretation#satisfies(org.tweetyproject.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(SetafTheory beliefBase) throws IllegalArgumentException {
+	public boolean satisfies(SetAf beliefBase) throws IllegalArgumentException {
 		throw new IllegalArgumentException("Satisfaction of belief bases by extensions is undefined.");
 	}
 
@@ -58,7 +58,7 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	 * @return true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 */
-	public boolean isAcceptable(Argument argument, SetafTheory setafTheory){
+	public boolean isAcceptable(Argument argument, SetAf setafTheory){
 		if(setafTheory.isAttackedBy(argument, argument))
 			return false;
 		Set<Set<Argument>> attackers = setafTheory.getAttackers(argument);
@@ -85,7 +85,7 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	 * @return true if no accepted argument attacks another accepted one in
 	 * this interpretation wrt. the given theory.
 	 */
-	public boolean isConflictFree(SetafTheory dungTheory){
+	public boolean isConflictFree(SetAf dungTheory){
 		for(Argument a: this.getArgumentsOfStatus(ArgumentStatus.IN))
 			for(Argument b: this.getArgumentsOfStatus(ArgumentStatus.IN))
 				if(dungTheory.isAttackedBy(a, b))
@@ -100,7 +100,7 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	 * @return true if every accepted argument of this is defended by some accepted
 	 * argument wrt. the given setaf theory.
 	 */
-	public boolean isAdmissable(SetafTheory setafTheory){
+	public boolean isAdmissable(SetAf setafTheory){
 		if(!this.isConflictFree(setafTheory)) return false;
 		Iterator<Argument> it = this.getArgumentsOfStatus(ArgumentStatus.IN).iterator();
 		while(it.hasNext()){			
@@ -115,7 +115,7 @@ public abstract class SetafAbstractArgumentationInterpretation extends AbstractI
 	 * @param status the status of the arguments to be returned.
 	 * @return the set of arguments with the given status.
 	 */
-	public abstract SetafExtension getArgumentsOfStatus(ArgumentStatus status);
+	public abstract SetAfExtension getArgumentsOfStatus(ArgumentStatus status);
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

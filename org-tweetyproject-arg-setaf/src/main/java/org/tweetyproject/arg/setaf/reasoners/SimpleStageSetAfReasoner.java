@@ -23,32 +23,32 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
-import org.tweetyproject.arg.setaf.semantics.SetafExtension;
-import org.tweetyproject.arg.setaf.semantics.Labeling;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
+import org.tweetyproject.arg.setaf.semantics.SetAfLabeling;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 /**
  * This reasoner for setaf theories performs inference on the stage extensions.
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleStageReasoner extends AbstractExtensionReasoner {
+public class SimpleStageSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<SetafExtension> getModels(SetafTheory bbase) {
+	public Collection<SetAfExtension> getModels(SetAf bbase) {
 		// A stage extension is a conflict-free set with minimal undecided arguments
-		Collection<SetafExtension> cfExt = new SimpleConflictFreeReasoner().getModels(bbase);
-		Set<Labeling> cfLab = new HashSet<Labeling>();
-		for(SetafExtension e: cfExt)
-			cfLab.add(new Labeling(bbase,e));
-		Set<SetafExtension> result = new HashSet<SetafExtension>();
+		Collection<SetAfExtension> cfExt = new SimpleConflictFreeSetAfReasoner().getModels(bbase);
+		Set<SetAfLabeling> cfLab = new HashSet<SetAfLabeling>();
+		for(SetAfExtension e: cfExt)
+			cfLab.add(new SetAfLabeling(bbase,e));
+		Set<SetAfExtension> result = new HashSet<SetAfExtension>();
 		boolean stage;
-		for(Labeling lab: cfLab){
+		for(SetAfLabeling lab: cfLab){
 			stage = true;
-			for(Labeling lab2: cfLab){
+			for(SetAfLabeling lab2: cfLab){
 				if(lab != lab2){
 					if(lab.getArgumentsOfStatus(ArgumentStatus.UNDECIDED).containsAll(lab2.getArgumentsOfStatus(ArgumentStatus.UNDECIDED)) &&
 							!lab.getArgumentsOfStatus(ArgumentStatus.UNDECIDED).equals(lab2.getArgumentsOfStatus(ArgumentStatus.UNDECIDED)) ){
@@ -68,7 +68,7 @@ public class SimpleStageReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public SetafExtension getModel(SetafTheory bbase) {
+	public SetAfExtension getModel(SetAf bbase) {
 		// just return the first one
 		return this.getModels(bbase).iterator().next();
 	}

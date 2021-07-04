@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
-import org.tweetyproject.arg.setaf.semantics.Labeling;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+import org.tweetyproject.arg.setaf.semantics.SetAfLabeling;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
 /**
@@ -34,7 +34,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
  * 
  * @author Sebastian Franke
  */
-public class Labeling extends SetafAbstractArgumentationInterpretation implements Map<Argument,ArgumentStatus> {
+public class SetAfLabeling extends SetAfAbstractArgumentationInterpretation implements Map<Argument,ArgumentStatus> {
 
 	/** The actual labeling. */
 	private Map<Argument,ArgumentStatus> labeling;
@@ -42,7 +42,7 @@ public class Labeling extends SetafAbstractArgumentationInterpretation implement
 	/**
 	 * Creates a new labeling.
 	 */
-	public Labeling(){
+	public SetAfLabeling(){
 		this.labeling = new HashMap<Argument,ArgumentStatus>();
 	}
 	
@@ -52,13 +52,13 @@ public class Labeling extends SetafAbstractArgumentationInterpretation implement
 	 * @param theory some setaf theory.
 	 * @param ext an extension
 	 */
-	public Labeling(SetafTheory theory, SetafExtension ext){
+	public SetAfLabeling(SetAf theory, SetAfExtension ext){
 		this();
 		for(Argument a: ext)
 			this.labeling.put(a, ArgumentStatus.IN);
 		if(!theory.containsAll(ext))
 			throw new IllegalArgumentException("The arguments of the given extension are not all in the given theory.");
-		SetafExtension ext2 = new SetafExtension();
+		SetAfExtension ext2 = new SetAfExtension();
 		for(Argument a: theory){
 			if(!ext.contains(a))
 				if(theory.isAttacked(a, ext))
@@ -171,8 +171,8 @@ public class Labeling extends SetafAbstractArgumentationInterpretation implement
 	 * @see org.tweetyproject.argumentation.setaf.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.dung.semantics.ArgumentStatus)
 	 */
 	@Override
-	public SetafExtension getArgumentsOfStatus(ArgumentStatus status) {
-		SetafExtension ext = new SetafExtension();
+	public SetAfExtension getArgumentsOfStatus(ArgumentStatus status) {
+		SetAfExtension ext = new SetAfExtension();
 		for(Argument a: this.labeling.keySet())
 			if(this.labeling.get(a).equals(status))
 				ext.add(a);
@@ -210,7 +210,7 @@ public class Labeling extends SetafAbstractArgumentationInterpretation implement
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Labeling other = (Labeling) obj;
+		SetAfLabeling other = (SetAfLabeling) obj;
 		if (labeling == null) {
 			if (other.labeling != null)
 				return false;

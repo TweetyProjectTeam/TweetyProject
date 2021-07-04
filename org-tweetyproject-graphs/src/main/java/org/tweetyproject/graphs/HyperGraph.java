@@ -37,7 +37,7 @@ import org.tweetyproject.math.matrix.Matrix;
  *
  */
 
-public class HyperGraph<T extends Node> implements Graph{
+public class HyperGraph<T extends Node> implements Graph<T>{
 	
 	/** The set of nodes */
 	protected Set<T> nodes;
@@ -51,7 +51,7 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 
 	@Override
-	public boolean add(Node node) {
+	public boolean add(T node) {
 		return this.nodes.add((T) node);
 	}
 
@@ -67,7 +67,7 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 
 	@Override
-	public Collection getNodes() {
+	public Collection<T> getNodes() {
 		return this.nodes;
 	}
 
@@ -88,13 +88,13 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 
 	@Override
-	public Edge getEdge(Node a, Node b) {
+	public Edge<T> getEdge(Node a, Node b) {
 		System.err.println("an edge in a hypergraph is comprised of a set of Elements in Node A and an Element in Node B");
 		return null;
 	}
 	
-	public HyperDirEdge getDirEdge(Set<T> node1, Node b) {
-		for(HyperDirEdge e : this.edges) {
+	public HyperDirEdge<T> getDirEdge(Set<T> node1, Node b) {
+		for(HyperDirEdge<T> e : this.edges) {
 			if(e.getNodeA().equals(node1) && e.getNodeB().equals(b))
 				return e;
 		}
@@ -103,12 +103,12 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 
 	@Override
-	public Collection getEdges() {
+	public Collection<HyperDirEdge<T>> getEdges() {
 		return this.edges;
 	}
 
 	@Override
-	public Iterator iterator() {
+	public Iterator<T> iterator() {
 		return this.nodes.iterator();
 	}
 
@@ -122,7 +122,7 @@ public class HyperGraph<T extends Node> implements Graph{
 				return false;
 			}
 		if(obj instanceof HyperDirEdge)
-			if(this.edges.contains((HyperDirEdge) obj)){
+			if(this.edges.contains(obj)){
 				return true;
 			}
 			else {
@@ -132,15 +132,15 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 
 	@Override
-	public Collection getChildren(Node node) {
+	public Collection<T> getChildren(Node node) {
 		System.err.println("an edge in a hypergraph is comprised of a set of Elements in Node A and an Element in Node B."
 				+ "Please choose a set of Nodes to find the set's children");
 		return null;
 	}
 	
-	public Collection getChildren(Set<Node> node) {
-		HashSet<Node> result = new HashSet<Node>();
-		for(HyperDirEdge e : this.edges) {
+	public Collection<T> getChildren(Set<T> node) {
+		HashSet<T> result = new HashSet<T>();
+		for(HyperDirEdge<T> e : this.edges) {
 			if(e.getNodeA().equals(node)) {
 				result.add(e.getNodeB());
 			}
@@ -149,29 +149,34 @@ public class HyperGraph<T extends Node> implements Graph{
 		
 	}
 
+	/**
+	 * returns all parents without taking indivdual attacks into account
+	 */
 	@Override
-	public Collection getParents(Node node) {
-		HashSet<Set<Node>> result = new HashSet<Set<Node>>();
-		for(HyperDirEdge e : this.edges) {
+	public Collection<T> getParents(Node node) {
+		HashSet<T> result = new HashSet<T>();
+		for(HyperDirEdge<T> e : this.edges) {
 			if(e.getNodeB().equals(node)) {
-				result.add(e.getNodeA());
+				result.addAll(e.getNodeA());
 			}
 		}
 		return result;
 	}
 
-	
-	public static <S extends Node> boolean existsDirectedPath(HyperGraph<S> hyperGraph, Node node1, Node node2) {
+	/**
+	 * @return checks if there is a direct path from node 1 to node 2
+	 */
+	public boolean existsDirectedPath(HyperGraph<T> hyperGraph, T node1, T node2) {
 		if (!hyperGraph.getNodes().contains(node1) || !hyperGraph.getNodes().contains(node2))
 			throw new IllegalArgumentException("The nodes are not in this graph.");
 		if (node1.equals(node2))
 			return true;
 		// we perform a DFS.
-		Stack<S> stack = new Stack<S>();
-		Collection<S> visited = new HashSet<S>();
-		stack.add((S) node1);
+		Stack<T> stack = new Stack<T>();
+		Collection<T> visited = new HashSet<T>();
+		stack.add((T) node1);
 		while (!stack.isEmpty()) {
-			S node = stack.pop();
+			T node = stack.pop();
 			visited.add(node);
 			if (node.equals(node2))
 				return true;
@@ -182,16 +187,16 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 	
 	@Override
-	public boolean existsDirectedPath(Node node1, Node node2) {
+	public boolean existsDirectedPath(T node1, T node2) {
 		return this.existsDirectedPath(this, node1, node2);
 	}
 	
 
 
 	@Override
-	public Collection getNeighbors(Node node) {
-		HashSet<Node> result = new HashSet<Node>();
-		for(HyperDirEdge a : this.edges) {
+	public Collection<T> getNeighbors(Node node) {
+		HashSet<T> result = new HashSet<T>();
+		for(HyperDirEdge<T> a : this.edges) {
 			if(a.getNodeB().equals(node)) {
 				result.addAll(a.getNodeA());
 			}
@@ -235,7 +240,7 @@ public class HyperGraph<T extends Node> implements Graph{
 
 	
 	@Override
-	public HyperGraph getComplementGraph(int selfloops) {
+	public HyperGraph<T> getComplementGraph(int selfloops) {
 		//very inefficient
 		Set<Set<T>> myPowerSet = new HashSet<Set<T>>();
 		myPowerSet = powerSet(this.nodes);
@@ -265,20 +270,20 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 
 	@Override
-	public Collection getStronglyConnectedComponents() {
+	public Collection<Collection<T>> getStronglyConnectedComponents() {
 		// TODO Auto-generated method stub
 		//algorithm yet to be implemented, not important for the next time
-		return null;
+		throw new UnsupportedOperationException("not yet implemented");
 	}
 
 	
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.tweetyproject.graphs.Graph#getSubgraphs()
+	 * @see org.tweetyproject.graphs.GeneralGraph#getSubgraphs()
 	 */
 	public Collection<Graph<T>> getSubgraphs() {
-		return this.<T>getSubgraphs(this);
+		return this.getSubgraphs(this);
 	}
 	
 	/**
@@ -288,13 +293,12 @@ public class HyperGraph<T extends Node> implements Graph{
 	 * 
 	 * @return the set of sub graphs of the given graph.
 	 */
-	public Collection getSubgraphs(HyperGraph<T> g) {
+	public Collection<Graph<T>> getSubgraphs(HyperGraph<T> g) {
 		
 		// not very efficient but will do for now
-		Collection<HyperGraph<T>> result = new HashSet<HyperGraph<T>>();
+		Collection<Graph<T>> result = new HashSet<Graph<T>>();
 		Set<Set<T>> subNodes = new SetTools<T>().subsets(g.getNodes());
 		for (Set<T> nodes : subNodes) {
-			@SuppressWarnings("unchecked")
 			Set<Set<HyperDirEdge<T>>> edges = new SetTools<HyperDirEdge<T>>()
 					.subsets((Set<HyperDirEdge<T>>) g.getRestriction(nodes).getEdges());
 			for (Set<HyperDirEdge<T>> es : edges) {
@@ -309,11 +313,11 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 
 	@Override
-	public HyperGraph getRestriction(Collection nodes) {
+	public HyperGraph<T> getRestriction(Collection<T> nodes) {
 		HyperGraph<T> graph = new HyperGraph<T>();
 		graph.nodes.addAll(nodes);
 		for (HyperDirEdge<T> e : this.edges)
-			if (nodes.contains(e.getNodeA()) && nodes.contains(e.getNodeB()))
+			if (nodes.containsAll(e.getNodeA()) && nodes.contains(e.getNodeB()))
 				graph.add(e);
 		return graph;
 	}
@@ -332,8 +336,8 @@ public class HyperGraph<T extends Node> implements Graph{
 	}
 
 	@Override
-	public boolean add(GeneralEdge edge) {
-		return this.add((HyperDirEdge) edge);
+	public boolean add(GeneralEdge<T> edge) {
+		return this.add((HyperDirEdge<T>) edge);
 	}
 	/*
 	 * (non-Javadoc)

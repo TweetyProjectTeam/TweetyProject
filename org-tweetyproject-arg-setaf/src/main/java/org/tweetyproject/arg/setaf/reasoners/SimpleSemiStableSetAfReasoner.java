@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
-import org.tweetyproject.arg.setaf.semantics.SetafExtension;
-import org.tweetyproject.arg.setaf.semantics.Labeling;
-import org.tweetyproject.arg.setaf.syntax.SetafTheory;
+import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
+import org.tweetyproject.arg.setaf.semantics.SetAfLabeling;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 
 /**
@@ -33,22 +33,22 @@ import org.tweetyproject.arg.setaf.syntax.SetafTheory;
  * @author Matthias Thimm, Sebastian Franke
  *
  */
-public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
+public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<SetafExtension> getModels(SetafTheory bbase) {
+	public Collection<SetAfExtension> getModels(SetAf bbase) {
 		// check all complete extensions and remove those sets with non-mininal set of undecided arguments
-		Collection<SetafExtension> exts = new SimpleCompleteReasoner().getModels(bbase);
-		Map<SetafExtension,SetafExtension> extUndec = new HashMap<SetafExtension,SetafExtension>();
-		for(SetafExtension ext: exts)
-			extUndec.put(ext, new Labeling(bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+		Collection<SetAfExtension> exts = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		Map<SetAfExtension,SetAfExtension> extUndec = new HashMap<SetAfExtension,SetAfExtension>();
+		for(SetAfExtension ext: exts)
+			extUndec.put(ext, new SetAfLabeling(bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
 		boolean b;
-		for(SetafExtension ext: extUndec.keySet()){
+		for(SetAfExtension ext: extUndec.keySet()){
 			b = false;
-			for(SetafExtension ext2: extUndec.keySet()){
+			for(SetAfExtension ext2: extUndec.keySet()){
 				if(ext != ext2){
 					if(extUndec.get(ext).containsAll(extUndec.get(ext2)) && !extUndec.get(ext2).containsAll(extUndec.get(ext))){
 						exts.remove(ext);
@@ -65,7 +65,7 @@ public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public SetafExtension getModel(SetafTheory bbase) {
+	public SetAfExtension getModel(SetAf bbase) {
 		// just return the first one (which is always defined)
 		return this.getModels(bbase).iterator().next();
 	}

@@ -31,7 +31,7 @@ import java.util.Set;
  *
  * @param <T> The type of the nodes this edge connects
  */
-public class HyperDirEdge<T extends Node> extends GeneralEdge{
+public class HyperDirEdge<T extends Node> extends GeneralEdge<T>{
 
 	/** The first node of this edge. */
 	private Set<T> nodeA;

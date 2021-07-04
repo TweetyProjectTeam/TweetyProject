@@ -38,7 +38,7 @@ public class SimpleGraph<T extends Node> extends DefaultGraph<T> implements Grap
     public SimpleGraph(Graph<T> graph) {
         super();
         this.addAll(new HashSet<>(graph.getNodes()));
-        this.addAllEdges(new HashSet<>((Collection<? extends Edge<T>>) graph.getEdges()));
+        this.addAllEdges(new HashSet<>(((DefaultGraph<T>) graph).getEdges()));
     }
 
     /**
@@ -48,6 +48,7 @@ public class SimpleGraph<T extends Node> extends DefaultGraph<T> implements Grap
         super();
     }
 
+    
     /**
      * add all nodes to the graph
      * @param c a collection of nodes
