@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.arg.rankings.util.LexicographicIntTupleComparator;
@@ -56,37 +57,37 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory kb) {
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(kb.getNodes());
+	public LatticeArgumentRanking getModel(ArgumentationFramework kb) {
+		LatticeArgumentRanking ranking = new LatticeArgumentRanking(((DungTheory)kb).getNodes());
 
 		// Check if kb is acyclic
-		if (kb.containsCycle())
+		if (((DungTheory)kb).containsCycle())
 			return null;
 
 		// Compute lookup table for tupled values
 		this.tupledValues = new HashMap<Argument, Pair<int[], int[]>>();
-		for (Argument a : kb)
-			this.tupledValues.put(a, computeTupledValue(a, kb));
+		for (Argument a : ((DungTheory)kb))
+			this.tupledValues.put(a, computeTupledValue(a, ((DungTheory)kb)));
 
 		// Tuples* Algorithm
 		// Compare lengths of attack/defense branches
 		// In case of a tie, compare values inside tuples
 		LexicographicIntTupleComparator c = new LexicographicIntTupleComparator();
 
-		for (Argument a : kb) {
+		for (Argument a : ((DungTheory)kb)) {
 			Pair<int[], int[]> tvA = this.tupledValues.get(a);
 			int[] aDefenseTuple = tvA.getFirst();
 			int[] aAttackTuple = tvA.getSecond();
 			double aDefenseTupleSize = getTrueTupleSize(aDefenseTuple);
 			double aAttackTupleSize = getTrueTupleSize(aAttackTuple);
-			for (Argument b : kb) {
+			for (Argument b : ((DungTheory)kb)) {
 				Pair<int[], int[]> tvB = this.tupledValues.get(b);
 				if (tvA.equals(tvB)) {
 					ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);

@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
@@ -58,8 +59,8 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {		
-		PlBeliefSet prop = this.getPropositionalCharacterisation(bbase);
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {		
+		PlBeliefSet prop = this.getPropositionalCharacterisation((DungTheory) bbase);
 		// get some labeling from the solver, then add the negation of this to the program and repeat
 		// to obtain all labelings
 		Set<Extension> result = new HashSet<Extension>();
@@ -131,9 +132,9 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// returns the first found model
-		PlBeliefSet prop = this.getPropositionalCharacterisation(bbase);
+		PlBeliefSet prop = this.getPropositionalCharacterisation((DungTheory) bbase);
 		PossibleWorld w = (PossibleWorld) this.solver.getWitness(prop);
 		if(w == null)
 			return null;

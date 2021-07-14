@@ -22,6 +22,7 @@ package org.tweetyproject.arg.dung.reasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -36,7 +37,7 @@ import java.util.HashSet;
  */
 public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(DungTheory bbase) {
+    public Collection<Extension> getModels(ArgumentationFramework bbase) {
         // check all admissible extensions of bbase
         Collection<Extension> admExts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADM).getModels(bbase);
         Collection<Extension> exts = new HashSet<>();
@@ -45,8 +46,8 @@ public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
             for (Argument a: ext) {
                 Extension extWithoutArg = new Extension(ext);
                 extWithoutArg.remove(a);
-                for (Argument c: bbase.getAttackers(a)) {
-                    if (!bbase.isAttacked(c, extWithoutArg)) {
+                for (Argument c: ((DungTheory) bbase).getAttackers(a)) {
+                    if (!((DungTheory) bbase).isAttacked(c, extWithoutArg)) {
                         undefended = true;
                         break;
                     }
@@ -61,7 +62,7 @@ public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(DungTheory bbase) {
+    public Extension getModel(ArgumentationFramework bbase) {
         return this.getModels(bbase).iterator().next();
     }
 }

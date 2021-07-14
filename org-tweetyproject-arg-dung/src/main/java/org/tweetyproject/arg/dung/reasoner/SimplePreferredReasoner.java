@@ -39,7 +39,7 @@ public class SimplePreferredReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
 		Collection<Extension> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
 		Set<Extension> result = new HashSet<Extension>();
 		boolean maximal;
@@ -60,7 +60,7 @@ public class SimplePreferredReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// just return the first found preferred extension
 		Collection<Extension> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
 		boolean maximal;

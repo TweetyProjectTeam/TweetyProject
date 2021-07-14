@@ -33,17 +33,17 @@ import org.tweetyproject.arg.dung.syntax.*;
 public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
 		Extension groundedExtension = new SimpleGroundedReasoner().getModel(bbase);
-		Set<Argument> remaining = new HashSet<Argument>(bbase);
+		Set<Argument> remaining = new HashSet<Argument>((DungTheory) bbase);
 		remaining.removeAll(groundedExtension);
-		return this.getCompleteExtensions(bbase,groundedExtension,remaining);	}
+		return this.getCompleteExtensions((DungTheory) bbase,groundedExtension,remaining);	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// as the grounded extension is also complete, we return that one
 		return new SimpleGroundedReasoner().getModel(bbase);
 	}
@@ -57,7 +57,7 @@ public class SimpleCompleteReasoner extends AbstractExtensionReasoner {
 	 */
 	private Set<Extension> getCompleteExtensions(DungTheory dungTheory, Extension ext, Collection<Argument> remaining){
 		Set<Extension> extensions = new HashSet<Extension>();
-		if(ext.isConflictFree(dungTheory)){
+		if(dungTheory.isConflictFree(ext)){
 			if(dungTheory.faf(ext).equals(ext))
 				extensions.add(ext);
 			if(!remaining.isEmpty()){

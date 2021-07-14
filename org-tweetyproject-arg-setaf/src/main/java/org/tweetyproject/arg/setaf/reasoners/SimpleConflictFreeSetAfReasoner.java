@@ -22,8 +22,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -38,12 +39,12 @@ public class SimpleConflictFreeSetAfReasoner extends AbstractExtensionSetAfReaso
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.SetAfTheory)
 	 */
 	@Override
-	public Collection<SetAfExtension> getModels(SetAf bbase) {
-		Set<SetAfExtension> extensions = new HashSet<SetAfExtension>();
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
+		Set<Extension> extensions = new HashSet<Extension>();
 		// Check all subsets
-		for(Set<Argument> ext: new SetTools<Argument>().subsets(bbase))
-			if(new SetAfExtension(ext).isConflictFree(bbase))
-				extensions.add(new SetAfExtension(ext));
+		for(Set<Argument> ext: new SetTools<Argument>().subsets(((SetAf)bbase)))
+			if(((SetAf)bbase).isConflictFree(new Extension(ext)))
+				extensions.add(new Extension(ext));
 		return extensions;
 	}
 
@@ -51,8 +52,8 @@ public class SimpleConflictFreeSetAfReasoner extends AbstractExtensionSetAfReaso
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.SetAfTheory)
 	 */
 	@Override
-	public SetAfExtension getModel(SetAf bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// as the empty set is always conflict-free we return that one.
-		return new SetAfExtension();
+		return new Extension();
 	}
 }

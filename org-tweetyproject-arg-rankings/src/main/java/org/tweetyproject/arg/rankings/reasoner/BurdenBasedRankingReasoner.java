@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
@@ -39,21 +40,21 @@ import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
 public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory base) {
+	public LatticeArgumentRanking getModel(ArgumentationFramework base) {
 		// Number of steps
 		int iMax = 6;
 		// Map for storing burden numbers of previous steps
 		Map<Argument, double[]> burdenNumbers = new HashMap<Argument, double[]>();
 
 		// Initialize burden numbers array
-		for (Argument a : base) {
+		for (Argument a : (DungTheory) base) {
 			double[] initialNumbers = new double[iMax + 1];
 			initialNumbers[0] = 1.0; // burden number for step 0 is 1.0 for all arguments
 			burdenNumbers.put(a, initialNumbers);
@@ -61,8 +62,8 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeA
 
 		// Compute burden numbers for all steps i
 		for (int i = 1; i <= iMax; i++) {
-			for (Argument a : base) {
-				Set<Argument> attackers = base.getAttackers(a);
+			for (Argument a : (DungTheory) base) {
+				Set<Argument> attackers = ( (DungTheory) base).getAttackers(a);
 				double newBurden = 1.0;
 				for (Argument b : attackers) {
 					double[] attackerBurdenNumbers = burdenNumbers.get(b);
@@ -75,10 +76,10 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeA
 		}
 
 		// Use the lexicographical order of the burden numbers as ranking
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(base.getNodes());
+		LatticeArgumentRanking ranking = new LatticeArgumentRanking( ((DungTheory) base).getNodes());
 		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
-		for (Argument a : base) {
-			for (Argument b : base) {
+		for (Argument a :  (DungTheory) base) {
+			for (Argument b :  (DungTheory) base) {
 				double[] burdensA = burdenNumbers.get(a);
 				double[] burdensB = burdenNumbers.get(b);
 				int res = c.compare(burdensA, burdensB);

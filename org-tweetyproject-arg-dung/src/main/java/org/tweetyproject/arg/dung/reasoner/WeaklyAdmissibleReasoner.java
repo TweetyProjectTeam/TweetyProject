@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
@@ -43,10 +44,10 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param bbase an argumentation framework
      * @return the weakly admissible sets of bbase
      */
-    public Collection<Extension> getModels(DungTheory bbase) {
-        DungTheory restrictedTheory = new DungTheory(bbase);
+    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+        DungTheory restrictedTheory = new DungTheory((DungTheory) bbase);
         // remove all self-attacking arguments
-        for (Argument argument: bbase) {
+        for (Argument argument: (DungTheory) bbase) {
             if (restrictedTheory.isAttackedBy(argument, argument)) {
                 restrictedTheory.remove(argument);
             }
@@ -67,7 +68,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param bbase an argumentation framework
      * @return a weakly admissible set
      */
-    public Extension getModel(DungTheory bbase) {
+    public Extension getModel(ArgumentationFramework bbase) {
         // empty set is always weakly admissible
         return new Extension();
     }

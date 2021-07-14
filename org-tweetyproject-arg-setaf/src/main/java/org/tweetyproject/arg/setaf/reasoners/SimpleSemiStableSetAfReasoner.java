@@ -23,8 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
-import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
-import org.tweetyproject.arg.setaf.semantics.SetAfLabeling;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Labeling;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 
@@ -39,16 +40,16 @@ public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasone
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<SetAfExtension> getModels(SetAf bbase) {
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
 		// check all complete extensions and remove those sets with non-mininal set of undecided arguments
-		Collection<SetAfExtension> exts = new SimpleCompleteSetAfReasoner().getModels(bbase);
-		Map<SetAfExtension,SetAfExtension> extUndec = new HashMap<SetAfExtension,SetAfExtension>();
-		for(SetAfExtension ext: exts)
-			extUndec.put(ext, new SetAfLabeling(bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+		Collection<Extension> exts = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		Map<Extension,Extension> extUndec = new HashMap<Extension,Extension>();
+		for(Extension ext: exts)
+			extUndec.put(ext, new Labeling((SetAf)bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
 		boolean b;
-		for(SetAfExtension ext: extUndec.keySet()){
+		for(Extension ext: extUndec.keySet()){
 			b = false;
-			for(SetAfExtension ext2: extUndec.keySet()){
+			for(Extension ext2: extUndec.keySet()){
 				if(ext != ext2){
 					if(extUndec.get(ext).containsAll(extUndec.get(ext2)) && !extUndec.get(ext2).containsAll(extUndec.get(ext))){
 						exts.remove(ext);
@@ -65,7 +66,7 @@ public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasone
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public SetAfExtension getModel(SetAf bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// just return the first one (which is always defined)
 		return this.getModels(bbase).iterator().next();
 	}

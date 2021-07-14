@@ -24,7 +24,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
+
+
+
 
 /**
  * This class models a labeling of an abstract argumentation framework, i.e.
@@ -50,24 +53,29 @@ public class Labeling extends AbstractArgumentationInterpretation implements Map
 	 * @param theory some Dung theory.
 	 * @param ext an extension
 	 */
-	public Labeling(DungTheory theory, Extension ext){
+	public Labeling(ArgumentationFramework theory, Extension ext){
 		this();
 		for(Argument a: ext)
 			this.labeling.put(a, ArgumentStatus.IN);
 		if(!theory.containsAll(ext))
 			throw new IllegalArgumentException("The arguments of the given extension are not all in the given theory.");
 		Extension ext2 = new Extension();
-		for(Argument a: theory){
+		for(Argument a: theory.getNodes()){
 			if(!ext.contains(a))
 				if(theory.isAttacked(a, ext))
 					ext2.add(a);
 		}
 		for(Argument a: ext2)
 			this.labeling.put(a, ArgumentStatus.OUT);
-		for(Argument a: theory)
+		for(Argument a: theory.getNodes())
 			if(!this.labeling.containsKey(a))
 				this.labeling.put(a, ArgumentStatus.UNDECIDED);	
 	}
+	
+
+	
+
+
 	
 	/* (non-Javadoc)
 	 * @see java.util.Map#containsKey(java.lang.Object)

@@ -216,4 +216,10 @@ public class Extension extends AbstractArgumentationInterpretation implements Co
 		return 0;
 	}
 
+	@Override
+	public boolean satisfies(ArgumentationFramework beliefBase) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

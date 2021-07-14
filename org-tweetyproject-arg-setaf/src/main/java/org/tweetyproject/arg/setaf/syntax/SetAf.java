@@ -28,8 +28,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Signature;
@@ -54,7 +56,7 @@ import org.tweetyproject.math.matrix.Matrix;
  * @author  Sebastian Franke
  *
  */
-public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHyperGraph<Argument>, Comparable<SetAf> {
+public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHyperGraph<Argument>, Comparable<SetAf>, ArgumentationFramework {
 
 	/**
 	 * For archiving sub DirHyperGraphs 
@@ -97,7 +99,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param ext An extension contains a set of arguments.
 	 * @return true if <code>arguments</code> attack all other arguments in the theory
 	 */
-	public boolean isAttackingAllOtherArguments(SetAfExtension ext){
+	public boolean isAttackingAllOtherArguments(Extension ext){
 		for(Argument a: this) {
 			if(ext.contains(a))
 				continue;
@@ -125,6 +127,89 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 			if(!dfn[i])
 				if(dfs(i,arguments,dfn,inProgress))
 					return false;		
+		return true;
+	}
+	
+	/**
+	 * returns true if one arguments in <code>arguments</code> attacks another within this attack relation.
+	 * @param arguments a list of arguments
+	 * @return returns true if one arguments in <code>arguments</code> attacks another.
+	 */
+	public boolean isConflictFree(Collection<? extends Argument> arguments){
+		Iterator<? extends Argument> it = arguments.iterator();
+		while(it.hasNext()){
+			Argument arg = (Argument) it.next();
+			for(SetAttack att : this.edges) {
+				if(arg.equals(att.getAttacked())){
+	
+					if(arguments.containsAll(att.getNodeA()))
+						return false;
+							
+					}
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * returns true if every attacker on <code>argument</code> is attacked by some 
+	 * accepted argument wrt. the given theory.
+	 * @param argument an argument
+	 * @param dungTheory a setaf theory (the knowledge base)
+	 * @return true if every attacker on <code>argument</code> is attacked by some 
+	 * accepted argument wrt. the given theory.
+	 */
+	public boolean isAcceptable(Argument argument, Extension ext){
+		if(this.isAttackedBy(argument, argument))
+			return false;
+		Set<Set<Argument>> attackers = this.getAttackers(argument);
+		Iterator<Set<Argument>> it = attackers.iterator();
+		while (it.hasNext()) {
+			boolean allArgsAttacked = true;
+			for(Argument a : it.next()) {
+				
+				if(!this.isAttackedBy(a,ext.getArgumentsOfStatus(ArgumentStatus.IN))) {
+					
+					allArgsAttacked = false;
+				}
+			}
+			if(allArgsAttacked == false)
+				return false;
+		}	
+		return true;
+	}
+	
+	
+	/**
+	 * returns true if no accepted argument attacks another accepted one in
+	 * this interpretation wrt. the given theory.
+	 * @param dungTheory a setaf theory.
+	 * @return true if no accepted argument attacks another accepted one in
+	 * this interpretation wrt. the given theory.
+	 */
+	public boolean isConflictFree(Extension ext){
+		for(Argument a: ext.getArgumentsOfStatus(ArgumentStatus.IN))
+			for(Argument b: ext.getArgumentsOfStatus(ArgumentStatus.IN))
+				if(this.isAttackedBy(a, b))
+					return false;
+		return true;
+	}
+	
+	/**
+	 * returns true if every accepted argument of this is defended by some accepted
+	 * argument wrt. the given setaf theory.
+	 * @param dungTheory a setaf theory. 
+	 * @return true if every accepted argument of this is defended by some accepted
+	 * argument wrt. the given setaf theory.
+	 */
+	public boolean isAdmissable(Extension ext){
+		if(!this.isConflictFree(ext)) return false;
+		Iterator<Argument> it = ext.getArgumentsOfStatus(ArgumentStatus.IN).iterator();
+		while(it.hasNext()){			
+			if(!this.isAcceptable(it.next(),ext))
+				return false;
+		}
 		return true;
 	}
 
@@ -189,7 +274,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param SetAfExtension an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
-	public boolean isAttacked(Argument a, SetAfExtension setAfExtension){
+	public boolean isAttacked(Argument a, Extension setAfExtension){
 		return this.isAttackedBy(a, setAfExtension);
 	}
 	
@@ -219,7 +304,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @return true if some argument of <code>ext2</code> attacks some argument
 	 * in <code>ext1</code>
 	 */
-	public boolean isAttacked(SetAfExtension ext1, SetAfExtension ext2){
+	public boolean isAttacked(Extension ext1, Extension ext2){
 		for(Argument a: ext1)
 			if(this.isAttacked(a, ext2)) return true;
 		return false;
@@ -230,7 +315,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param e some extension
 	 * @return "true" iff the extension is stable.
 	 */
-	public boolean isStable(SetAfExtension e) {
+	public boolean isStable(Extension e) {
 		for(Argument a: this) {
 			if(e.contains(a)) { 
 				if(this.isAttacked(a, e))
@@ -248,12 +333,12 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param extension an extension (a set of arguments).
 	 * @return an extension (a set of arguments).
 	 */
-	public SetAfExtension faf(SetAfExtension extension){
-		SetAfExtension newExtension = new SetAfExtension();
+	public Extension faf(Extension extension){
+		Extension newExtension = new Extension();
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext()){
 			Argument argument = it.next();
-			if(extension.isAcceptable(argument, this))
+			if(this.isAcceptable(argument, extension))
 				newExtension.add(argument);
 		}
 		return newExtension;

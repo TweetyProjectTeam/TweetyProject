@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 import org.tweetyproject.arg.social.reasoner.IssReasoner;
@@ -104,17 +105,17 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	}
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<NumericalArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory kb) {
+	public NumericalArgumentRanking getModel(ArgumentationFramework kb) {
 		SocialAbstractArgumentationFramework saf = new SocialAbstractArgumentationFramework();
-		saf.add(kb);
-		for (Argument a : kb) {
+		saf.add((DungTheory)kb);
+		for (Argument a : (DungTheory)kb) {
 			saf.voteUp(a, 1);
 			saf.voteDown(a, 1); 
 		}
@@ -122,7 +123,7 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 		SocialMapping<Double> result = reasoner6.getModel(saf);
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
-		for (Argument a : kb)
+		for (Argument a : (DungTheory)kb)
 			ranking.put(a, result.get(a));
 		return ranking;
 	}

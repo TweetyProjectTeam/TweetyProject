@@ -25,6 +25,7 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -38,12 +39,12 @@ public class SimpleStageReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
 		// A stage extension is a conflict-free set with minimal undecided arguments
 		Collection<Extension> cfExt = new SimpleConflictFreeReasoner().getModels(bbase);
 		Set<Labeling> cfLab = new HashSet<Labeling>();
 		for(Extension e: cfExt)
-			cfLab.add(new Labeling(bbase,e));
+			cfLab.add(new Labeling((DungTheory) bbase,e));
 		Set<Extension> result = new HashSet<Extension>();
 		boolean stage;
 		for(Labeling lab: cfLab){
@@ -68,7 +69,7 @@ public class SimpleStageReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// just return the first one
 		return this.getModels(bbase).iterator().next();
 	}

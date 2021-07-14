@@ -36,8 +36,8 @@ public class SimpleSccCompleteReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
-		List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(bbase.getStronglyConnectedComponents());		
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
+		List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(((DungTheory)bbase).getStronglyConnectedComponents());		
 		// order SCCs in a DAG
 		boolean[][] dag = new boolean[sccs.size()][sccs.size()];
 		for(int i = 0; i < sccs.size(); i++){
@@ -47,7 +47,7 @@ public class SimpleSccCompleteReasoner extends AbstractExtensionReasoner {
 		for(int i = 0; i < sccs.size(); i++)
 			for(int j = 0; j < sccs.size(); j++)
 				if(i != j)
-					if(bbase.isAttacked(new Extension(sccs.get(i)), new Extension(sccs.get(j))))
+					if(((DungTheory)bbase).isAttacked(new Extension(sccs.get(i)), new Extension(sccs.get(j))))
 						dag[i][j] = true;						
 		// order SCCs topologically
 		List<Collection<Argument>> sccs_ordered = new ArrayList<Collection<Argument>>();
@@ -68,14 +68,14 @@ public class SimpleSccCompleteReasoner extends AbstractExtensionReasoner {
 				}
 			}
 		}		
-		return this.computeExtensionsViaSccs(bbase, sccs_ordered, 0, new HashSet<Argument>(), new HashSet<Argument>(), new HashSet<Argument>());
+		return this.computeExtensionsViaSccs((DungTheory)bbase, sccs_ordered, 0, new HashSet<Argument>(), new HashSet<Argument>(), new HashSet<Argument>());
 	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// Returns the first found complete extension
 		Collection<Extension> exts = this.getModels(bbase);
 		if(exts.isEmpty())

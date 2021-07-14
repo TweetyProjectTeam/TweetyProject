@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.commons.util.SetTools;
@@ -284,7 +285,7 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
@@ -294,15 +295,15 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory bbase) {
+	public LatticeArgumentRanking getModel(ArgumentationFramework bbase) {
 		// compute all mn-complete extensions for all m,n
 		Map<Point,Collection<Extension>> allExt = new HashMap<>();
-		for(int m = 1; m < bbase.size(); m++)
-			for(int n=1; n < bbase.size(); n++)
-				allExt.put(new Point(m,n), this.getAllMNCompleteExtensions(bbase, m, n));
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(bbase);
-		for(Argument a: bbase)
-			for(Argument b: bbase)
+		for(int m = 1; m < ((DungTheory)bbase).size(); m++)
+			for(int n=1; n < ((DungTheory)bbase).size(); n++)
+				allExt.put(new Point(m,n), this.getAllMNCompleteExtensions(((DungTheory)bbase), m, n));
+		LatticeArgumentRanking ranking = new LatticeArgumentRanking(((DungTheory)bbase));
+		for(Argument a: ((DungTheory)bbase))
+			for(Argument b: ((DungTheory)bbase))
 				if(a != b){
 					boolean aImpliesB = true;
 					boolean bImpliesA = true;

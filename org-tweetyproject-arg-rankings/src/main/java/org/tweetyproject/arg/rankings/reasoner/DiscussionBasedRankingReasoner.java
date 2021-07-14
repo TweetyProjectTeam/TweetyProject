@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
@@ -43,20 +44,20 @@ import org.tweetyproject.arg.rankings.util.RankingTools;
 public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory kb) {
+	public LatticeArgumentRanking getModel(ArgumentationFramework kb) {
 		int iMax = 6; // Treshold for maximum length of linear discussions (paths)
 
 		Map<Argument, ArrayList<Double>> discussionCounts = new HashMap<Argument, ArrayList<Double>>();
 		for (int i = 2; i <= iMax+1; i++) { //Start with paths of length i=2 (discussion_count for length 1 would be -1 for all arguments)
-			for (Argument a : kb) {
-				double discussionCount = getNumberOfPathsOfLength(kb, a, i);
+			for (Argument a : (DungTheory) kb) {
+				double discussionCount = getNumberOfPathsOfLength((DungTheory) kb, a, i);
 				if ((i & 1) != 0)
 					discussionCount = -discussionCount; // odd value => negative discussion count
 				ArrayList<Double> argumentDiscussionCounts = discussionCounts.get(a);
@@ -67,9 +68,9 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 			}
 		}
 
-		LatticeArgumentRanking resultRanking = new LatticeArgumentRanking(kb.getNodes());
-		for (Argument a : kb) {
-			for (Argument b : kb) {
+		LatticeArgumentRanking resultRanking = new LatticeArgumentRanking(((DungTheory) kb).getNodes());
+		for (Argument a : (DungTheory) kb) {
+			for (Argument b : (DungTheory) kb) {
 				Boolean argsEqual = true;
 				for (int i = 0; i < iMax && argsEqual; i++) {
 					NumericalArgumentRanking tempRanking = new NumericalArgumentRanking();

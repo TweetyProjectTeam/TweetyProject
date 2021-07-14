@@ -20,8 +20,6 @@
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.learning.ExampleFinder;
-import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleSccCompleteReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;

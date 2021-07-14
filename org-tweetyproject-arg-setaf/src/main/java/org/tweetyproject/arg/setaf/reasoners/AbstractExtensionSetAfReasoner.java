@@ -20,9 +20,10 @@ package org.tweetyproject.arg.setaf.reasoners;
 
 import java.util.Collection;
 
-import org.tweetyproject.arg.setaf.semantics.SetAfExtension;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;
@@ -33,7 +34,7 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  * 
  * @author Sebastian Franke
  */
-public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReasoner implements ModelProvider<Argument,SetAf,SetAfExtension>, PostulateEvaluatable<Argument> {
+public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReasoner implements ModelProvider<Argument, ArgumentationFramework, Extension>, PostulateEvaluatable<Argument> {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractDungReasoner#query(org.tweetyproject.arg.dung.syntax.DungTheory, org.tweetyproject.arg.dung.syntax.Argument)
@@ -52,15 +53,15 @@ public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReason
 	 * @return "true" if the argument is accepted
 	 */
 	public Boolean query(SetAf beliefbase, Argument formula, InferenceMode inferenceMode) {
-		Collection<SetAfExtension> extensions = this.getModels(beliefbase);
+		Collection<Extension> extensions = this.getModels(beliefbase);
 		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
-			for(SetAfExtension e: extensions)
+			for(Extension e: extensions)
 				if(!e.contains(formula))
 					return false;
 			return true;
 		}
 		// so its credulous semantics
-		for(SetAfExtension e: extensions){
+		for(Extension e: extensions){
 			if(e.contains(formula))
 				return true;			
 		}			
@@ -90,15 +91,5 @@ public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReason
 		}		
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
-	 */
-	@Override
-	public abstract Collection<SetAfExtension> getModels(SetAf bbase);
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
-	 */
-	@Override
-	public abstract SetAfExtension getModel(SetAf bbase);
 }

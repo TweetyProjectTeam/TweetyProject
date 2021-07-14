@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -33,27 +34,27 @@ import org.tweetyproject.commons.util.SetTools;
  * @author Matthias Thimm
  *
  */
+
+
 public class SimpleAdmissibleReasoner extends AbstractExtensionReasoner {
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
-	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
 		Set<Extension> extensions = new HashSet<Extension>();
 		// Check all subsets
-		for(Set<Argument> ext: new SetTools<Argument>().subsets(bbase))
-			if(new Extension(ext).isAdmissable(bbase))
+		for(Set<Argument> ext: new SetTools<Argument>().subsets(((DungTheory) bbase)))
+			if(((DungTheory) bbase).isAdmissable(new Extension(ext)))
 				extensions.add(new Extension(ext));
 		return extensions;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
-	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// As the empty set is always admissible, we just return that one
 		return new Extension();
 	}
+
+
+
+
 }

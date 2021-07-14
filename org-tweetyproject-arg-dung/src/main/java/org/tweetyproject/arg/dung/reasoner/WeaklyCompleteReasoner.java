@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -40,7 +41,7 @@ import java.util.Set;
 public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
 
     @Override
-    public Collection<Extension> getModels(DungTheory bbase) {
+    public Collection<Extension> getModels(ArgumentationFramework bbase) {
         Collection<Extension> wad_exts = new WeaklyAdmissibleReasoner().getModels(bbase);
 
         Collection<Extension> result = new HashSet<>();
@@ -48,14 +49,14 @@ public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
         // check all w-admissible extensions of bbase
         for (Extension ext: wad_exts) {
             boolean w_complete = true;
-            for (Set<Argument> S : new SetTools<Argument>().subsets(bbase)) {
+            for (Set<Argument> S : new SetTools<Argument>().subsets((DungTheory) bbase)) {
                 // S is a superset of ext
                 if (!ext.equals(new Extension(S)) && S.containsAll(ext)) {
                     // S is w-defended by ext
                     System.out.println("Ext:" + ext);
                     System.out.println("Superset:" + S);
-                    System.out.println("DEFENDS: " + isWeaklyDefendedBy(S, ext, bbase));
-                    if (this.isWeaklyDefendedBy(S, ext, bbase)) {
+                    System.out.println("DEFENDS: " + isWeaklyDefendedBy(S, ext, (DungTheory) bbase));
+                    if (this.isWeaklyDefendedBy(S, ext, (DungTheory) bbase)) {
                         w_complete = false;
                         break;
                     }
@@ -69,7 +70,7 @@ public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(DungTheory bbase) {
+    public Extension getModel(ArgumentationFramework bbase) {
         return this.getModels(bbase).iterator().next();
     }
 

@@ -61,7 +61,7 @@ public class CFReinstatementPrinciple extends Principle {
                 // for all arguments a in theory \ E, iff E u {a} is conflict-free and E defends a, then cf-reinstatement is violated
                 Extension extWithA = new Extension(ext);
                 extWithA.add(a);
-                if (extWithA.isConflictFree(theory) && ext.isAcceptable(a, theory)) {
+                if (theory.isConflictFree(extWithA) && theory.isAcceptable(a, ext)) {
                     return false;
                 }
             }

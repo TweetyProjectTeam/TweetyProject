@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 import org.tweetyproject.math.matrix.Matrix;
@@ -60,15 +61,15 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 	}
 	
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<NumericalArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory base) {
-		Matrix directAttackMatrix = base.getAdjacencyMatrix().transpose(); //The matrix of direct attackers
+	public NumericalArgumentRanking getModel(ArgumentationFramework base) {
+		Matrix directAttackMatrix = ((DungTheory)base).getAdjacencyMatrix().transpose(); //The matrix of direct attackers
 		int n = directAttackMatrix.getXDimension();
 		double valuations[] = new double[n];	 //Stores valuations of the current iteration
 		double valuationsOld[] = new double[n]; //Stores valuations of the last iteration
@@ -85,7 +86,7 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
 		int i = 0;
-		for (Argument a : base) 
+		for (Argument a : ((DungTheory)base)) 
 			ranking.put(a, valuations[i++]);
 		return ranking;
 	}

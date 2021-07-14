@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 import org.tweetyproject.math.matrix.Matrix;
@@ -84,15 +85,15 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	}
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<NumericalArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory kb) {
-		Matrix adjacencyMatrix = kb.getAdjacencyMatrix();
+	public NumericalArgumentRanking getModel(ArgumentationFramework kb) {
+		Matrix adjacencyMatrix = ((DungTheory)kb).getAdjacencyMatrix();
 		
 		// Apply matrix norm to guarantee that the argument strength scale is bounded
 		adjacencyMatrix = adjacencyMatrix.mult((1.0 / getInfiniteNormalizationFactor(adjacencyMatrix)));
@@ -100,7 +101,7 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 		// Apply damping factor
 		adjacencyMatrix = adjacencyMatrix.mult(this.dampingFactor).simplify();
 		
-		int n = kb.getNumberOfNodes();
+		int n = ((DungTheory)kb).getNumberOfNodes();
 		Matrix valuations = new Matrix(1, n); // Stores values of the current iteration
 		Matrix valuationsOld = new Matrix(1, n); // Stores values of the last iteration
 		
@@ -119,7 +120,7 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
 		int i = 0;
-		for (Argument a : kb) 
+		for (Argument a : ((DungTheory)kb)) 
 			ranking.put(a, valuations.getEntry(0, i++).doubleValue());
 
 		return ranking;

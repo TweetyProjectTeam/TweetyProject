@@ -27,7 +27,6 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungSignature;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.graphs.GeneralGraph;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.logics.commons.syntax.interfaces.ClassicalFormula;
 import org.tweetyproject.logics.commons.syntax.interfaces.Conjunctable;

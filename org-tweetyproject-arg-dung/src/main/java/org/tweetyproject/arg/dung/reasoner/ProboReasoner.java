@@ -27,6 +27,7 @@ import org.tweetyproject.arg.dung.parser.FileFormat;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.writer.AbstractDungWriter;
 import org.tweetyproject.commons.InferenceMode;
@@ -143,7 +144,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
 		// first check whether the solver supports the problem
 		ProboProblem problem = ProboProblem.getProblem("EE-" + this.semantics.abbreviation());
 		if(!this.supportedProblems().contains(problem))
@@ -157,7 +158,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 		try {
 			File temp = File.createTempFile("aaf-", "." + format.extension());
 			AbstractDungWriter writer = AbstractDungWriter.getWriter(format);
-			writer.write(bbase, temp);
+			writer.write((DungTheory) bbase, temp);
 			Collection<Extension> result = new HashSet<Extension>();			
 			for(Collection<Argument> ext: AbstractDungParser.parseExtensionList(this.bash.run(this.path_to_exec + " -p " + problem.toString() + " -fo " + format.toString() + " -f " + temp.getAbsolutePath())))
 				result.add(new Extension(ext));
@@ -172,7 +173,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// first check whether the solver supports the problem
 		ProboProblem problem = ProboProblem.getProblem("SE-" + this.semantics.abbreviation());
 		if(!this.supportedProblems().contains(problem))
@@ -186,7 +187,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 		try {
 			File temp = File.createTempFile("aaf-", "." + format.extension());
 			AbstractDungWriter writer = AbstractDungWriter.getWriter(format);
-			writer.write(bbase, temp);			
+			writer.write((DungTheory) bbase, temp);			
 			String result = this.bash.run(this.path_to_exec + " -p " + problem.toString() + " -fo " + format.toString() + " -f " + temp.getAbsolutePath());			
 			temp.delete();			
 			if(result.trim().toLowerCase().equals("no"))

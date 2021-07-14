@@ -25,6 +25,7 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -39,7 +40,7 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
 		Collection<Extension> exts = new HashSet<Extension>();
 		exts.add(this.getModel(bbase));
 		return exts;
@@ -49,18 +50,18 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		Collection<Extension> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
 		Collection<Extension> prefExt = new SimplePreferredReasoner().getModels(bbase);
 		Set<Labeling> potResult = new HashSet<Labeling>();
 		boolean potIdeal; 
 		for(Extension ext: admExt){
-			Labeling extLab = new Labeling(bbase,ext);
+			Labeling extLab = new Labeling((DungTheory)bbase,ext);
 			// ext is ideal if
 			// 1. for every preferred labeling L both in and out are subsets of that sets in L
 			potIdeal = true;
 			for(Extension ext2: prefExt){
-				Labeling extLab2 = new Labeling(bbase, ext2);
+				Labeling extLab2 = new Labeling((DungTheory)bbase, ext2);
 				if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
 					potIdeal = false;
 					break;

@@ -75,7 +75,7 @@ public class ArgumentStructure extends Argument implements Collection<BasicArgum
 	 * @return "true" iff this argument structure is valid.
 	 */
 	public boolean isValid(StructuredArgumentationFramework saf){		
-		boolean isConflictFree = new Extension(this).isConflictFree(saf);
+		boolean isConflictFree = saf.isConflictFree(new Extension(this));
 		boolean isFounded = this.derivation.isFounded();
 		boolean isMinimal = this.derivation.isMinimal();
 		return  isConflictFree && isFounded && isMinimal;

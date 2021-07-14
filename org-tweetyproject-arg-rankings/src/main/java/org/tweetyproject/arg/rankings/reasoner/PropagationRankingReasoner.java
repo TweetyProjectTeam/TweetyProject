@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.arg.rankings.util.RankingTools;
@@ -113,24 +114,24 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	}
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory kb) {
-		if (kb.containsCycle())
+	public LatticeArgumentRanking getModel(ArgumentationFramework kb) {
+		if (((DungTheory)kb).containsCycle())
 			return null;
 		
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(kb.getNodes());
+		LatticeArgumentRanking ranking = new LatticeArgumentRanking(((DungTheory)kb).getNodes());
 		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
-		Map<Argument, List<Double>> pv = calculatePropagationVector(kb, this.attacked_arguments_influence);
+		Map<Argument, List<Double>> pv = calculatePropagationVector(((DungTheory)kb), this.attacked_arguments_influence);
 
 		if (this.semantics == PropagationSemantics.PROPAGATION1) {
-			for (Argument a : kb) {
-				for (Argument b : kb) {
+			for (Argument a : ((DungTheory)kb)) {
+				for (Argument b : ((DungTheory)kb)) {
 					double[] pvA = pv.get(a).stream().mapToDouble(d -> d).toArray();
 					double[] pvB = pv.get(b).stream().mapToDouble(d -> d).toArray();
 					int res = c.compare(pvA, pvB);
@@ -146,9 +147,9 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 			}
 			
 		} else if (this.semantics == PropagationSemantics.PROPAGATION2) {
-			Map<Argument, List<Double>> pv0 = calculatePropagationVector(kb, 0.0);
-			for (Argument a : kb) {
-				for (Argument b : kb) {
+			Map<Argument, List<Double>> pv0 = calculatePropagationVector(((DungTheory)kb), 0.0);
+			for (Argument a : ((DungTheory)kb)) {
+				for (Argument b : ((DungTheory)kb)) {
 					double[] pvA = pv.get(a).stream().mapToDouble(d -> d).toArray();
 					double[] pvA0 = pv0.get(a).stream().mapToDouble(d -> d).toArray();
 					pvA = shufflePropagationVectors(pvA0, pvA);
@@ -168,9 +169,9 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 			}
 			
 		} else if (this.semantics == PropagationSemantics.PROPAGATION3) {
-			Map<Argument, List<Double>> pv0 = calculatePropagationVector(kb, 0.0);
-			for (Argument a : kb) {
-				for (Argument b : kb) {
+			Map<Argument, List<Double>> pv0 = calculatePropagationVector(((DungTheory)kb), 0.0);
+			for (Argument a : ((DungTheory)kb)) {
+				for (Argument b : ((DungTheory)kb)) {
 					double[] pvA = pv0.get(a).stream().mapToDouble(d -> d).toArray();
 					double[] pvB = pv0.get(b).stream().mapToDouble(d -> d).toArray();
 					int res = c.compare(pvA, pvB);

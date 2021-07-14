@@ -53,7 +53,7 @@ public class AdmissibilityPrinciple extends Principle {
         Collection<Extension> exts = ev.getModels(theory);
 
         for (Extension ext: exts) {
-            if (!ext.isAdmissable(theory)) {
+            if (!theory.isAdmissable(ext)) {
                 return false;
             }
         }

@@ -30,18 +30,18 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
-    public Collection<Extension> getModels(DungTheory bbase) {
-        DungTheory restrictedTheory = new DungTheory(bbase);
+    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+        DungTheory restrictedTheory = new DungTheory((DungTheory)bbase);
         // remove all self-attacking arguments
-        for (Argument argument: bbase) {
+        for (Argument argument: (DungTheory)bbase) {
             if (restrictedTheory.isAttackedBy(argument, argument)) {
                 restrictedTheory.remove(argument);
             }
         }
-        return this.getMaximalConflictFreeSets(bbase, restrictedTheory);
+        return this.getMaximalConflictFreeSets((DungTheory)bbase, restrictedTheory);
     }
 
-    public Extension getModel(DungTheory bbase) {
+    public Extension getModel(ArgumentationFramework bbase) {
         Collection<Extension> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }

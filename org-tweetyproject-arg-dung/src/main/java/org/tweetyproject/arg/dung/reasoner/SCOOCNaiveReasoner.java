@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.DefaultGraph;
 
@@ -37,8 +38,8 @@ import java.util.*;
  */
 public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(DungTheory bbase) {
-        Set<Stack<Argument>> cycles = DefaultGraph.getCyclesIncludingSelfLoops(bbase);
+    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+        Set<Stack<Argument>> cycles = DefaultGraph.getCyclesIncludingSelfLoops((DungTheory) bbase);
         Collection<Argument> cycleArguments = new HashSet<>();
         // store all arguments which are part of an odd cycle in a collection for efficiency reasons
         for (Stack<Argument> cycle: cycles) {
@@ -51,14 +52,14 @@ public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
         Collection<Extension> extensions = new HashSet<>();
         for (Extension ext: naiveExtensions) {
             boolean scooc = true;
-            Collection<Argument> remainingArguments = new HashSet<>(bbase);
+            Collection<Argument> remainingArguments = new HashSet<>((DungTheory) bbase);
             remainingArguments.removeAll(ext);
             // if there is any argument, not attacked by ext and not part of an odd cycle, ext is not scooc
             for (Argument a: remainingArguments) {
-                if (bbase.isAttacked(a, ext)) {
+                if (((DungTheory) bbase).isAttacked(a, ext)) {
                     continue;
                 }
-                Collection<Argument> args = bbase.getAttackers(a);
+                Collection<Argument> args = ((DungTheory) bbase).getAttackers(a);
                 args.add(a);
                 args.retainAll(cycleArguments);
                 if (args.isEmpty()) {
@@ -74,7 +75,7 @@ public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(DungTheory bbase) {
+    public Extension getModel(ArgumentationFramework bbase) {
         Collection<Extension> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }

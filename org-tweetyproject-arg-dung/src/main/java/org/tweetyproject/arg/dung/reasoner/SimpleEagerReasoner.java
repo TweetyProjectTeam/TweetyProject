@@ -22,6 +22,7 @@ package org.tweetyproject.arg.dung.reasoner;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -35,25 +36,25 @@ import java.util.Set;
  */
 public class SimpleEagerReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(DungTheory bbase) {
+    public Collection<Extension> getModels(ArgumentationFramework bbase) {
         Collection<Extension> exts = new HashSet<Extension>();
         exts.add(this.getModel(bbase));
         return exts;
     }
 
     @Override
-    public Extension getModel(DungTheory bbase) {
+    public Extension getModel(ArgumentationFramework bbase) {
         Collection<Extension> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
         Collection<Extension> sstExt = new SimpleSemiStableReasoner().getModels(bbase);
         Set<Labeling> potResult = new HashSet<Labeling>();
         boolean potEager;
         for(Extension ext: admExt){
-            Labeling extLab = new Labeling(bbase,ext);
+            Labeling extLab = new Labeling((DungTheory)bbase,ext);
             // ext is eager if
             // 1. for every semi-stable labeling L both in and out are subsets of that sets in L
             potEager = true;
             for(Extension ext2: sstExt){
-                Labeling extLab2 = new Labeling(bbase, ext2);
+                Labeling extLab2 = new Labeling((DungTheory)bbase, ext2);
                 if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
                     potEager = false;
                     break;

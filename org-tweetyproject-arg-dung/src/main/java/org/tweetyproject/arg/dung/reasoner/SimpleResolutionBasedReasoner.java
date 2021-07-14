@@ -90,10 +90,10 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 	/**
 	 * compute the extension with the base semantics of this.semantic
 	 */
-	public Collection<Extension> getModels(DungTheory bbase){
+	public Collection<Extension> getModels(ArgumentationFramework bbase){
 		if(this.semantic== null)
 			System.err.print("Please select a semantics as a base for this solver");
-		Set<DungTheory> fraf = computeFRAF(bbase);
+		Set<DungTheory> fraf = computeFRAF((DungTheory)bbase);
 		Set<Extension> exts = new HashSet<Extension>();
 		AbstractExtensionReasoner reasoner = this.semantic;
 		//add all extensions of the new DungTheories
@@ -121,7 +121,7 @@ public class SimpleResolutionBasedReasoner extends AbstractExtensionReasoner{
 	}
 
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		
 		for(Extension e : this.getModels(bbase))
 			return e;

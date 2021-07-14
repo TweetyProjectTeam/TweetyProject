@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -37,12 +38,12 @@ import java.util.HashSet;
  */
 public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(DungTheory bbase) {
+    public Collection<Extension> getModels(ArgumentationFramework bbase) {
         Collection<Extension> result = new HashSet<>();
 
         Collection<Extension> conflictFreeSets = new SimpleConflictFreeReasoner().getModels(bbase);
         for (Extension ext: conflictFreeSets) {
-            Collection<Argument> solidlyDefended = this.getSolidlyDefended(ext, bbase);
+            Collection<Argument> solidlyDefended = this.getSolidlyDefended(ext, (DungTheory) bbase);
             if (solidlyDefended.containsAll(ext)) {
                 result.add(ext);
             }
@@ -51,7 +52,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(DungTheory bbase) {
+    public Extension getModel(ArgumentationFramework bbase) {
         return this.getModels(bbase).iterator().next();
     }
 

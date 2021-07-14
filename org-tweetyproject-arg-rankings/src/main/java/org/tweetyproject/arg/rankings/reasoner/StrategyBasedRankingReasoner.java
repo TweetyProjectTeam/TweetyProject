@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 import org.tweetyproject.commons.util.SetTools;
@@ -53,19 +54,19 @@ import org.tweetyproject.math.term.Variable;
 public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<NumericalArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory kb) {
+	public NumericalArgumentRanking getModel(ArgumentationFramework kb) {
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
-		Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(kb.getNodes());
-		for (Argument a : kb) 
-			ranking.put(a, computeStrengthOfArgument(a, kb, subsets)); 
+		Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(((DungTheory)kb).getNodes());
+		for (Argument a : ((DungTheory)kb)) 
+			ranking.put(a, computeStrengthOfArgument(a, ((DungTheory)kb), subsets)); 
 		return ranking;
 	}
 

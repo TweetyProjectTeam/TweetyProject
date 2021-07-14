@@ -42,7 +42,7 @@ import org.tweetyproject.math.term.IntegerConstant;
  * @author Matthias Thimm, Tjitze Rienstra
  *
  */
-public class DungTheory extends BeliefSet<Argument,DungSignature> implements Graph<Argument>, Comparable<DungTheory> {
+public class DungTheory extends BeliefSet<Argument,DungSignature> implements Graph<Argument>, Comparable<DungTheory>, ArgumentationFramework {
 
 	/**
 	 * For archiving sub graphs 
@@ -126,6 +126,55 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return true;
 	}
 
+	/**
+	 * returns true if every attacker on <code>argument</code> is attacked by some 
+	 * accepted argument wrt. the given theory.
+	 * @param argument an argument
+	 * @param dungTheory a Dung theory (the knowledge base)
+	 * @return true if every attacker on <code>argument</code> is attacked by some 
+	 * accepted argument wrt. the given theory.
+	 */
+	public boolean isAcceptable(Argument argument, Extension ext){
+		Set<Argument> attackers = this.getAttackers(argument);
+		Iterator<Argument> it = attackers.iterator();
+		while (it.hasNext())			
+			if(!this.isAttacked(it.next(),ext.getArgumentsOfStatus(ArgumentStatus.IN)))
+				return false;		
+		return true;
+	}
+	
+	/**
+	 * returns true if no accepted argument attacks another accepted one in
+	 * this interpretation wrt. the given theory.
+	 * @param dungTheory a Dung theory.
+	 * @return true if no accepted argument attacks another accepted one in
+	 * this interpretation wrt. the given theory.
+	 */
+	public boolean isConflictFree(Extension ext){
+		for(Argument a: ext.getArgumentsOfStatus(ArgumentStatus.IN))
+			for(Argument b: ext.getArgumentsOfStatus(ArgumentStatus.IN))
+				if(this.isAttackedBy(a, b))
+					return false;
+		return true;
+	}
+	
+	/**
+	 * returns true if every accepted argument of this is defended by some accepted
+	 * argument wrt. the given Dung theory.
+	 * @param dungTheory a Dung theory. 
+	 * @return true if every accepted argument of this is defended by some accepted
+	 * argument wrt. the given Dung theory.
+	 */
+	public boolean isAdmissable(Extension ext){
+		if(!this.isConflictFree(ext)) return false;
+		Iterator<Argument> it = ext.getArgumentsOfStatus(ArgumentStatus.IN).iterator();
+		while(it.hasNext()){			
+			if(!this.isAcceptable(it.next(),ext))
+				return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * Depth-First-Search to find a cycle in the theory. Auxiliary method to determine if the theory is well-founded
 	 * @param i current node
@@ -269,7 +318,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext()){
 			Argument argument = it.next();
-			if(extension.isAcceptable(argument, this))
+			if(this.isAcceptable(argument, extension))
 				newExtension.add(argument);
 		}
 		return newExtension;
@@ -891,5 +940,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	public Collection<Graph<Argument>> getInducedSubgraphs() {
 		return DefaultGraph.getInducedSubgraphs(this);
 	}
+
+
 	
 }

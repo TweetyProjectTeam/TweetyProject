@@ -55,7 +55,7 @@ public class ConflictFreePrinciple extends Principle {
         Collection<Extension> exts = ev.getModels(theory);
 
         for (Extension ext: exts) {
-            if (!ext.isConflictFree(theory))
+            if (!theory.isConflictFree(ext))
                 return false;
         }
         return true;

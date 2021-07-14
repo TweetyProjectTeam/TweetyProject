@@ -25,6 +25,7 @@ import java.util.Map;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
@@ -39,12 +40,12 @@ public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(DungTheory bbase) {
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
 		// check all complete extensions and remove those sets with non-mininal set of undecided arguments
 		Collection<Extension> exts = new SimpleCompleteReasoner().getModels(bbase);
 		Map<Extension,Extension> extUndec = new HashMap<Extension,Extension>();
 		for(Extension ext: exts)
-			extUndec.put(ext, new Labeling(bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+			extUndec.put(ext, new Labeling((DungTheory)bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
 		boolean b;
 		for(Extension ext: extUndec.keySet()){
 			b = false;
@@ -65,7 +66,7 @@ public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(DungTheory bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// just return the first one (which is always defined)
 		return this.getModels(bbase).iterator().next();
 	}

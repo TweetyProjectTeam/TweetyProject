@@ -20,8 +20,8 @@ package org.tweetyproject.arg.setaf.reasoners;
 
 import java.util.*;
 
-import org.tweetyproject.arg.setaf.semantics.*;
 import org.tweetyproject.arg.setaf.syntax.*;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.*;
 
 
@@ -34,17 +34,17 @@ import org.tweetyproject.arg.dung.syntax.*;
 public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner {
 
 	@Override
-	public Collection<SetAfExtension> getModels(SetAf bbase) {
-		SetAfExtension groundedExtension = new SimpleGroundedSetAfReasoner().getModel(bbase);
-		Set<Argument> remaining = new HashSet<Argument>(bbase);
+	public Collection<Extension> getModels(ArgumentationFramework bbase) {
+		Extension groundedExtension = new SimpleGroundedSetAfReasoner().getModel(bbase);
+		Set<Argument> remaining = new HashSet<Argument>((SetAf)bbase);
 		remaining.removeAll(groundedExtension);
-		return this.getCompleteExtensions(bbase,groundedExtension,remaining);	}
+		return this.getCompleteExtensions((SetAf)bbase,groundedExtension,remaining);	}
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public SetAfExtension getModel(SetAf bbase) {
+	public Extension getModel(ArgumentationFramework bbase) {
 		// as the grounded extension is also complete, we return that one
 		return new SimpleGroundedSetAfReasoner().getModel(bbase);
 	}
@@ -56,9 +56,9 @@ public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner 
 	 * @param remaining arguments that still have to be considered to be part of an extension
 	 * @return all complete extensions that are supersets of an argument in <source>arguments</source>
 	 */
-	private Set<SetAfExtension> getCompleteExtensions(SetAf dungTheory, SetAfExtension ext, Collection<Argument> remaining){
-		Set<SetAfExtension> extensions = new HashSet<SetAfExtension>();
-		if(ext.isConflictFree(dungTheory)){
+	private Set<Extension> getCompleteExtensions(SetAf dungTheory, Extension ext, Collection<Argument> remaining){
+		Set<Extension> extensions = new HashSet<Extension>();
+		if(dungTheory.isConflictFree(ext)){
 			if(dungTheory.faf(ext).equals(ext))
 				extensions.add(ext);
 			if(!remaining.isEmpty()){
@@ -66,7 +66,7 @@ public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner 
 				Collection<Argument> remaining2 = new HashSet<Argument>(remaining);
 				remaining2.remove(arg);
 				extensions.addAll(this.getCompleteExtensions(dungTheory,ext, remaining2));
-				SetAfExtension ext2 = new SetAfExtension(ext);
+				Extension ext2 = new Extension(ext);
 				ext2.add(arg);
 				extensions.addAll(this.getCompleteExtensions(dungTheory,ext2, remaining2));
 			}

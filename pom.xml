@@ -204,11 +204,12 @@
   	<module>org-tweetyproject-arg-deductive</module>
   	<module>org-tweetyproject-arg-lp</module>
   	<module>org-tweetyproject-arg-delp</module>
+  		<module>org-tweetyproject-arg-setaf</module>
   	<module>org-tweetyproject-arg-dung</module>
   	<module>org-tweetyproject-arg-prob</module>
   	<module>org-tweetyproject-arg-rankings</module>
   	<module>org-tweetyproject-arg-saf</module>
-	<module>org-tweetyproject-arg-setaf</module>
+
   	<module>org-tweetyproject-arg-social</module>
   	<module>org-tweetyproject-agents</module>
   	<module>org-tweetyproject-agents-dialogues</module>

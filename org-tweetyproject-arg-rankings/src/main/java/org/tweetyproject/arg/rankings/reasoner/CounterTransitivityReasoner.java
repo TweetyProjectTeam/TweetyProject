@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 
@@ -51,7 +52,7 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	}
 	
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
+	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		
@@ -60,21 +61,21 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory bbase) {
+	public LatticeArgumentRanking getModel(ArgumentationFramework bbase) {
 		//switch the type of solver chosen in the constructor
 		switch(this.sol) {
 			case cardinality:
-				return cardinality(bbase);
+				return cardinality((DungTheory)bbase);
 			case gfpCardinality:
-				return gfpCardinality(bbase);
+				return gfpCardinality((DungTheory)bbase);
 			case quality:
-				return quality(bbase, this.rank);
+				return quality((DungTheory)bbase, this.rank);
 			case qualityFirst:
-				return qualityFirst(bbase, this.rank);
+				return qualityFirst((DungTheory)bbase, this.rank);
 			case cardinalityFirst:
-				return cardinalityFirst(bbase, rank);
+				return cardinalityFirst((DungTheory)bbase, rank);
 			case simpleDominance:
-				return simpleDominance(bbase, rank);
+				return simpleDominance((DungTheory)bbase, rank);
 			default:{
 				System.out.println("The chosen function does not exist.");
 			}

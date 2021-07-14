@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
@@ -36,10 +37,10 @@ import java.util.*;
  */
 public class SCF2Reasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(DungTheory bbase) {
-        DungTheory restrictedTheory = new DungTheory(bbase);
+    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+        DungTheory restrictedTheory = new DungTheory((DungTheory) bbase);
         // remove all self-attacking arguments
-        for (Argument argument: bbase) {
+        for (Argument argument: (DungTheory) bbase) {
             if (restrictedTheory.isAttackedBy(argument, argument)) {
                 restrictedTheory.remove(argument);
             }
@@ -80,7 +81,7 @@ public class SCF2Reasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(DungTheory bbase) {
+    public Extension getModel(ArgumentationFramework bbase) {
         Collection<Extension> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }

@@ -23,6 +23,7 @@ import java.util.Collection;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;
@@ -33,7 +34,7 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractExtensionReasoner extends AbstractDungReasoner implements ModelProvider<Argument,DungTheory,Extension>, PostulateEvaluatable<Argument> {
+public abstract class AbstractExtensionReasoner extends AbstractDungReasoner implements ModelProvider<Argument,ArgumentationFramework,Extension>, PostulateEvaluatable<Argument> {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractDungReasoner#query(org.tweetyproject.arg.dung.syntax.DungTheory, org.tweetyproject.arg.dung.syntax.Argument)
@@ -94,15 +95,5 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 		}		
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
-	 */
-	@Override
-	public abstract Collection<Extension> getModels(DungTheory bbase);
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
-	 */
-	@Override
-	public abstract Extension getModel(DungTheory bbase);
 }
