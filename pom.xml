@@ -25,13 +25,13 @@
   </developers>
 
   <!-- For third-party jars that are not in the central repository -->
-  <repositories>
+<repositories>
 	<repository>
 	    <id>tweety-mvn</id>
 	    <name>TweetyProject MVN Repository</name>
     	<url>https://tweetyproject.org/mvn</url>
 	</repository>
-  </repositories>
+</repositories>
 
   <licenses>
     <license>
@@ -72,8 +72,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>12</source>
-          <target>12</target>
+          <source>15</source>
+          <target>15</target>
         </configuration>
       </plugin>
       <!-- Generate jar containing the sources of the project: -->
