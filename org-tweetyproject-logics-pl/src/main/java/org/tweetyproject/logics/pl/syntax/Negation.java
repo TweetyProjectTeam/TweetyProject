@@ -73,6 +73,11 @@ public class Negation extends PlFormula {
 	 * hasLowerBindingPriority(org.tweetyproject.logics.propositionallogic.syntax.
 	 * PropositionalFormula)
 	 */
+	/**
+	 * 
+	 * @param other another formula
+	 * @return whether the formula has a lower binding priority
+	 */
 	public boolean hasLowerBindingPriority(PlFormula other) {
 		// negations have the highest binding priority
 		return false;

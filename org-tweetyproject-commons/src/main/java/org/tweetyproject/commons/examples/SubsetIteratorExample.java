@@ -24,7 +24,15 @@ import java.util.Set;
 import org.tweetyproject.commons.util.IncreasingSubsetIterator;
 import org.tweetyproject.commons.util.SubsetIterator;
 
+/** 
+ * Class SubsetIteratorExample
+ *
+ */
+
 public class SubsetIteratorExample {
+	/** 
+	 * @param args String
+	 */
 	public static void main(String[] args){
 		Set<Integer> set = new HashSet<Integer>();
 		for(int i = 0; i < 5; i++) set.add(i);

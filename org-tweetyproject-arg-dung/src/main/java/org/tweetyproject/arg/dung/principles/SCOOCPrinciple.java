@@ -34,7 +34,7 @@ import java.util.Stack;
  * A semantics satisfied SCOOC if for every extension E it holds that:
  * for every argument a, if neither a nor its attackers are in an odd cycle and E does not attack a, then a is in E.
  *
- * see: Cramer, M., & van der Torre, L. (2019). SCF2-an argumentation semantics for rational human judgments on argument acceptability.
+ * see: Cramer, M., and van der Torre, L. (2019). SCF2-an argumentation semantics for rational human judgments on argument acceptability.
  *
  * @author Lars Bengel
  */

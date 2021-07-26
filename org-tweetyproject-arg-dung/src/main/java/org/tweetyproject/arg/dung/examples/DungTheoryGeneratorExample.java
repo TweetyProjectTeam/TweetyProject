@@ -35,6 +35,11 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  * @author Anna Gessler
  */
 public class DungTheoryGeneratorExample {
+	/**
+	 * 
+	 * @param args string
+	 * @throws IOException Exception
+	 */
 	public static void main(String[] args) throws IOException{
 		ApxWriter writer = new ApxWriter();
 		String path = "/home/anna/";

@@ -78,8 +78,8 @@ public class Equivalence extends FolFormula  {
 	
 	/**
 	 * Sets the formulas of the equivalence.
-	 * @param formula1
-	 * @param formula2
+	 * @param formula1 1st formula
+	 * @param formula2 2nd formula
 	 */
 	public void setFormulas(RelationalFormula formula1, RelationalFormula formula2) {
 		this.formulas = new Pair<RelationalFormula, RelationalFormula>(formula1, formula2);

@@ -29,6 +29,10 @@ import org.tweetyproject.math.term.Term;
  *
  */
 public interface SimpleRealValuedFunction extends SimpleFunction<Vector<Double>,Double>{
-	
+	/**
+	 * getTerm
+	 * @param element elements
+	 * @return Term
+	 */
 	public Term getTerm(Vector<Term> element);
 }

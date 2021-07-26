@@ -23,8 +23,12 @@ package org.tweetyproject.logics.bpm.syntax;
  * @author Benedikt Knopp
  */
 public enum GatewayType {
+	/** Exclusive */
 	Exclusive,
+	/** Inclusive */
 	Inclusive,
+	/** EventBased */
 	EventBased,
+	/** Parallel */
 	Parallel
 }

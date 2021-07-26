@@ -81,6 +81,11 @@ public class PetriNet implements Graph<PetriNetNode>{
 		return transitions.add(transition);
 	}
 
+	/**
+	 * 
+	 * @param edge add
+	 * @return add
+	 */
 	public boolean add(Edge<PetriNetNode> edge) {
 		return edges.add(edge);
 	}
@@ -215,6 +220,10 @@ public class PetriNet implements Graph<PetriNetNode>{
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param transition fire
+	 */
 	public void fire(Transition transition) {
 		
 	}

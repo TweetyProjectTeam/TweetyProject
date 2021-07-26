@@ -30,16 +30,22 @@ public class PlParserFactory {
 	
 	/** An enumeration of all available knowledge base formats. */
 	public enum Format{
+		/**TWEETY*/
 		TWEETY ("tweety", "TweetyProject Propositional Beliefset Format");
-		
+		/**ID*/
 		public String id;
+		/**label*/
 		public String label;
 		
 		Format(String id, String label){
 			this.id = id;
 			this.label = label;
 		}
-		
+		/**
+		 * 
+		 * @param id ID
+		 * @return format
+		 */
 		public static Format getFormat(String id){
 			for(Format f: Format.values())
 				if(f.id.equals(id))

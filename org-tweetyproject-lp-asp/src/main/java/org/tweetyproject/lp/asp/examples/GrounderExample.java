@@ -40,10 +40,21 @@ import org.tweetyproject.lp.asp.syntax.Program;
  * @author Anna Gessler
  *
  */
+/**
+ * 
+ * @author Anna Gessler
+ *
+ */
 public class GrounderExample {
 
 	private static String CLINGO_PATH = "your/path/to/clingo";
 
+	/**
+	 * 
+	 * @param args IOException
+	 * @throws IOException IOException
+	 * @throws ParseException ParseException
+	 */
 	public static void main(String[] args) throws IOException, ParseException {
 		ASPParser parser = new ASPParser(new FileInputStream(new File("src/main/resources/puzzle5.dlv")));
 		Program p = new InstantiateVisitor().visit(parser.Program(), null);

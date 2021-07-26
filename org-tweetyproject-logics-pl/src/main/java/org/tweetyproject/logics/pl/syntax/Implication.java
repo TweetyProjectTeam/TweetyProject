@@ -105,10 +105,10 @@ public class Implication extends PlFormula {
 	}
 	
 	/**
-	 * Get the left side formula of the implication
+	 * 	 * Get the left side formula of the implication
 	 * left =&gt; right.
 	 * 
-	 * @param left formula
+	 * @return left formula
 	 */
 	public PlFormula getFirstFormula() {
 		return this.formulas.getFirst();
@@ -118,7 +118,7 @@ public class Implication extends PlFormula {
 	 * Get the right side formula of the implication
 	 * left =&gt; right
 	 * 
-	 * @param right formula.
+	 * @return right formula.
 	 */
 	public PlFormula getSecondFormula() {
 		return this.formulas.getSecond();

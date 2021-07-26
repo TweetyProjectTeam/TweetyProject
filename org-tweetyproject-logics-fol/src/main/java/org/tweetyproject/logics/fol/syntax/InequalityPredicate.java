@@ -33,7 +33,9 @@ import org.tweetyproject.logics.commons.syntax.Sort;
  *
  */
 public class InequalityPredicate extends Predicate {
-	
+	/**
+	 * constructor
+	 */
 	public InequalityPredicate() {
 		super("/==",Arrays.asList(Sort.ANY,Sort.ANY));	
 	}

@@ -13,6 +13,11 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public interface RelativeSatEncoding {
 
+	/**
+	 * 
+	 * @param consumer consumer
+	 * @param interpretation interpretation
+	 */
 	void encode(Consumer<Clause> consumer, Interpretation interpretation);
 	
 }

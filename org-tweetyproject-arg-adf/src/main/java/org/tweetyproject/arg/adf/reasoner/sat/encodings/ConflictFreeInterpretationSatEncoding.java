@@ -41,8 +41,8 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding, Relat
 	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param adf
-	 * @param mapping
+	 * @param adf adf
+	 * @param mapping mapping
 	 */
 	public ConflictFreeInterpretationSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.adf = Objects.requireNonNull(adf);

@@ -53,7 +53,10 @@ public class BfgsSolver extends Solver {
 	 * The starting point for the solver.
 	 */
 	private Map<Variable,Term> startingPoint;
-	
+	/**
+	 * 
+	 * @param startingPoint startingPoint
+	 */
 	public BfgsSolver(Map<Variable,Term> startingPoint) {
 		this.startingPoint = startingPoint;
 	}
@@ -110,7 +113,14 @@ public class BfgsSolver extends Solver {
 			result.put(v, currentGuess.getEntry(0, idx++));
 		return result;
 	}
-	
+	/**
+	 * 
+	 * @param currentGuess current guess
+	 * @param searchDirection search direction
+	 * @param gradient gradient
+	 * @param variables variables
+	 * @return next best step
+	 */
 	private double nextBestStep(Matrix currentGuess, Matrix searchDirection, Matrix gradient, List<Variable> variables){
 		double currentStep = 0.001;		
 		Matrix s, newGuess, y;
@@ -124,7 +134,13 @@ public class BfgsSolver extends Solver {
 			if(currentStep < BfgsSolver.PRECISION) return -1;
 		}while(true);
 	}
-	
+	/**
+	 * 
+	 * @param gradient gradient
+	 * @param currentGuess current guess
+	 * @param variables variables
+	 * @return evaluation
+	 */
 	private Matrix evaluate(Matrix gradient, Matrix currentGuess, List<Variable> variables){
 		Matrix result = new Matrix(1,variables.size());
 		for(int i = 0; i < gradient.getYDimension(); i++){
@@ -136,8 +152,10 @@ public class BfgsSolver extends Solver {
 		return result;	
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.opt.Solver#isInstalled()
+	/**
+	 * 
+	 * @return if solver is installed
+	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		// as this is a native implementation it is always installed

@@ -32,6 +32,10 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class LearningExample {
+	/**
+	 * 
+	 * @param args string
+	 */
     public static void main(String[] args) {
         // create graph to construct labelings
         DungTheory dt = new DungTheory();

@@ -27,9 +27,17 @@ import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.IntegerConstant;
 import org.tweetyproject.math.term.Term;
 
+/**
+ * example of KnapSack via Tabu Search
+ * @author Sebastian Franke
+ *
+ */
 public class KnapSack_solvedWithTabuSearch {
 	
-	
+	/**
+	 * main method
+	 * @param args arguments
+	 */
 	public static void main(String args[]) {
 		
 		

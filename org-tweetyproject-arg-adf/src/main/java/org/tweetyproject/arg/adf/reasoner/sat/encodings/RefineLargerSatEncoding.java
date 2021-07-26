@@ -39,7 +39,7 @@ public class RefineLargerSatEncoding implements RelativeSatEncoding {
 	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param mapping
+	 * @param mapping mapping
 	 */
 	public RefineLargerSatEncoding(PropositionalMapping mapping) {
 		this.mapping = Objects.requireNonNull(mapping);

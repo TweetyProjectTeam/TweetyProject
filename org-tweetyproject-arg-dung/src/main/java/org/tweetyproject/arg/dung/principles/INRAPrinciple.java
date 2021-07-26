@@ -33,7 +33,7 @@ import java.util.HashSet;
  * for every argument a in F, if every s-extension attacks a, then s(F) = s(F\{a})
  * i.e if an argument is attacked by every extension, then it does not influence the computation of extensions and can be ignored
  *
- * see: Cramer, M., & van der Torre, L. (2019). SCF2-an argumentation semantics for rational human judgments on argument acceptability.
+ * see: Cramer, M., and van der Torre, L. (2019). SCF2-an argumentation semantics for rational human judgments on argument acceptability.
  *
  * @author Lars Bengel
  */

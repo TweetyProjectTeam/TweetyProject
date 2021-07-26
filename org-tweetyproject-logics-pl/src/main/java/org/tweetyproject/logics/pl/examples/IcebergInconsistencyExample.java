@@ -32,6 +32,12 @@ import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
  * @author Anna Gessler
  */
 public class IcebergInconsistencyExample {
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		/**
 		 * Examples with different consequence operations

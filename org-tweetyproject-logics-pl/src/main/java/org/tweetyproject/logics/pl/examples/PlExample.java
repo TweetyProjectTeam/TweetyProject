@@ -40,6 +40,12 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  *
  */
 public class PlExample {
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		//Manually create formulas and belief base
 		PlBeliefSet beliefSet = new PlBeliefSet();

@@ -66,10 +66,13 @@ public class BpmnModelPlotter extends GraphPlotter<BpmnNode, Edge<BpmnNode>>{
 		return "";
 	}
 	
+	/*
+	 * prettyName the pretty name of the element by which the element class is derived
+	 */
 	/**
-	 * @param prettyName the pretty name of the element by which the element class is derived
 	 * @return a string formatted to carry style information for mxGraph cells
 	 */
+	
 	@Override
 	protected String getStyle(BpmnNode node) {
 		String styleString = "";

@@ -43,10 +43,12 @@ public final class AdmissibleVerifier implements Verifier {
 	
 	private final PropositionalMapping mapping;
 		
+
 	/**
-	 * @param state
-	 * @param mapping
-	 * @param adf
+	 * 
+	 * @param stateSupplier stateSupplier
+	 * @param adf adf
+	 * @param mapping mapping
 	 */
 	public AdmissibleVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.state = stateSupplier.get();

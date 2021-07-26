@@ -30,6 +30,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 public class ResolutionbasedSolverTest {
 
+	/**
+	 * 
+	 * @param args arguments
+	 */
 	public static void main(String[] args) {
         DungTheory ex1 = new DungTheory();
 

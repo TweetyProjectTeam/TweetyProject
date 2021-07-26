@@ -787,11 +787,17 @@ public class FolParser extends Parser<FolBeliefSet,FolFormula> {
 	public FolSignature getSignature(){
 		return this.signature;
 	}
-
+	/**
+	 * returns variables
+	 * @return variables
+	 */
 	public Map<String, Variable> getVariables() {
 		return variables;
 	}
-
+	/**
+	 * sets variables 
+	 * @param variables variables to be set
+	 */
 	public void setVariables(Map<String, Variable> variables) {
 		this.variables = variables;
 	}

@@ -88,7 +88,12 @@ public class Order<T> {
 		OrderNode node2 = this.nodes.get(object2);
 		return this.defaultGraph.existsDirectedPath(node1, node2);
 	}
-	
+	/**
+	 * 
+	 * @param object1 1st object
+	 * @param object2 2nd object
+	 * @return whether the objects are comparable
+	 */
 	public boolean isComparable(T object1, T object2) {
 		OrderNode node1 = this.nodes.get(object1);
 		OrderNode node2 = this.nodes.get(object2);

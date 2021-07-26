@@ -46,6 +46,12 @@ public final class RelativeBipolarSatEncoding implements SatEncoding {
 	 * @param interpretation the interpretation which makes the link bipolar
 	 * @param link the bipolarized link
 	 */
+	/**
+	 * 
+	 * @param interpretation interpretation
+	 * @param link link
+	 * @param mapping mapping
+	 */
 	public RelativeBipolarSatEncoding(Interpretation interpretation, Link link, PropositionalMapping mapping) {
 		this.interpretation = Objects.requireNonNull(interpretation);
 		this.link = Objects.requireNonNull(link);

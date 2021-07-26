@@ -52,7 +52,10 @@ public class Proposition extends PlFormula implements Atom, Comparable<Propositi
 	public Proposition(String name){
 		this.predicate = new PlPredicate(name);
 	}
-	
+	/**
+	 * constructor
+	 * @param other another proposition
+	 */
 	public Proposition(Proposition other) {
 		this.predicate = new PlPredicate(other.getName());
 	}

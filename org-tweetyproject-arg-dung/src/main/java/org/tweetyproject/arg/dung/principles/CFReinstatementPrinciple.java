@@ -31,7 +31,7 @@ import java.util.Collection;
  * A semantics satisfies cf-reinstatement if for all extensions E it holds that:
  * for all arguments a, if E u {a} is conflict-free and E defends a, then a is in E
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */

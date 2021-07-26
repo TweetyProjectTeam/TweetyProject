@@ -40,7 +40,10 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class BfgsSolverEx {
-
+	/**
+	 * constructor
+	 * @return problem
+	 */
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		FloatVariable m1 = new FloatVariable("Machine 1");
 		FloatVariable m2 = new FloatVariable("Machine 2");
@@ -55,7 +58,13 @@ public class BfgsSolverEx {
 		
 	}
 	
-
+	/**
+	 * main method
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 * @throws GeneralMathException GeneralMathException
+	 */
 	public static void main(String[] args) throws ParserException, IOException, GeneralMathException{
 		//Create toy problem
 		ConstraintSatisfactionProblem prob = createConstraintSatProb1();

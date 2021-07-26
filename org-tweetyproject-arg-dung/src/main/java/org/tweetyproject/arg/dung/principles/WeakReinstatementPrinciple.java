@@ -32,7 +32,7 @@ import java.util.Collection;
  * if E strongly defends an argument a, then a is in E
  * An argument a is strongly defended by E iff some argument in E \ {a} defends a
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */

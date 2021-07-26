@@ -158,6 +158,10 @@ public class WeightedDungTheory extends DungTheory {
         return result;
     }
 
+    /**
+     * 
+     * @return removeDiscardedAttacks
+     */
     public boolean removeDiscardedAttacks() {
         return this.removeDiscardedAttacks(0);
     }

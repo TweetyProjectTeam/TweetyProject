@@ -31,6 +31,10 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class ExtendedExampleFinderExample {
+	/**
+	 * 
+	 * @param args string
+	 */
     public static void main(String[] args) {
         // initialize with admissible and complete semantics
         ExtendedExampleFinder finder = new ExtendedExampleFinder(Semantics.CF, Semantics.ADM, Semantics.CO);

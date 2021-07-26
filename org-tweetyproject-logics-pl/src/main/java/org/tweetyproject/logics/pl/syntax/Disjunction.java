@@ -43,7 +43,10 @@ public class Disjunction extends AssociativePlFormula {
 	public Disjunction(Collection<? extends PlFormula> formulas) {
 		super(formulas);
 	}
-
+	/**
+	 * constructor
+	 * @param formulas formulas
+	 */
 	public Disjunction(PlFormula... formulas) {
 		super(new HashSet<>());
 		for (PlFormula f : formulas)

@@ -31,6 +31,10 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class QualifiedExample {
+	/**
+	 * 
+	 * @param args arguments
+	 */
     public static void main(String[] args) {
         //initialize examples
         DungTheory ex1 = new DungTheory();

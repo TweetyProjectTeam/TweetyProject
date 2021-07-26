@@ -33,6 +33,12 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  */
 public class MusExample {
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		PlParser parser = new PlParser();

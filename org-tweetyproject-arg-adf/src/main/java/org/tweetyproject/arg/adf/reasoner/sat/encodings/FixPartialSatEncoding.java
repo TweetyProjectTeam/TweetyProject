@@ -36,7 +36,7 @@ public class FixPartialSatEncoding implements RelativeSatEncoding {
 	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param mapping
+	 * @param mapping mapping
 	 */
 	public FixPartialSatEncoding(PropositionalMapping mapping) {
 		this.mapping = Objects.requireNonNull(mapping);

@@ -266,7 +266,10 @@ public class SPASSWriter {
 		}
 		return f.toString();
 	}
-
+	/**
+	 * 
+	 * @throws IOException IOException
+	 */
 	public void close() throws IOException {
 		writer.close();
 	}

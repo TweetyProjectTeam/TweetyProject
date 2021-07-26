@@ -33,6 +33,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class StratifiedLabelingExample {
 
+	/**
+	 * 
+	 * @param args arguments
+	 */
 	public static void main(String[] args){
 		// create some Dung theory
 		DungTheory theory = new DungTheory();

@@ -54,12 +54,21 @@ public class GringoGrounder extends ASPGrounder {
 	 */
 	private String aspifOutput;
 	
+	/**
+	 * 
+	 * @param path GringoGrounder
+	 * @param shell GringoGrounder
+	 */
 	public GringoGrounder(String path, Shell shell) {
 		this.pathToGrounder = path;
 		this.bash = shell;
 		this.options = "";
 	}
 
+	/**
+	 * 
+	 * @param path GringoGrounder
+	 */
 	public GringoGrounder(String path) {
 		this.pathToGrounder = path;
 		this.bash = Shell.getNativeShell();
@@ -76,7 +85,7 @@ public class GringoGrounder extends ASPGrounder {
 	/**
 	 * Set the path to the gringo binary
 	 * 
-	 * @param pathToGrounder
+	 * @param pathToGrounder setPathToGrounder
 	 */
 	public void setPathToGrounder(String pathToGrounder) {
 		this.pathToGrounder = pathToGrounder;
@@ -92,7 +101,7 @@ public class GringoGrounder extends ASPGrounder {
 	/**
 	 * Set additional command line options for gringo.
 	 * 
-	 * @param options
+	 * @param options setOptions
 	 */
 	public void setOptions(String options) {
 		this.options = options;

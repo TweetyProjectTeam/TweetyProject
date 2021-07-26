@@ -34,7 +34,12 @@ import org.tweetyproject.math.func.FracAggrFunction;
  * @author Matthias Thimm
  */
 public class DfInconsistencyMeasureExample {
-
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		// Create some knowledge base
 		PlBeliefSet kb = new PlBeliefSet();

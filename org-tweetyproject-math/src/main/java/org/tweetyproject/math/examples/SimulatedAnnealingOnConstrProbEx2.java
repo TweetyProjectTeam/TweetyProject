@@ -38,7 +38,10 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class SimulatedAnnealingOnConstrProbEx2 {
-
+	/**
+	 * constrcutor
+	 * @return problem
+	 */
 	public static OptimizationProblem  createConstraintSatProb1() {
 		
 		FloatVariable m1 = new FloatVariable("Machine 1", -100, 100);
@@ -71,7 +74,13 @@ public class SimulatedAnnealingOnConstrProbEx2 {
 		
 	}
 	
+	/**
 
+	 * main method
+	 * @param args arguments
+	 *
+	 * @throws GeneralMathException GeneralMathException
+	 */
 	public static void main(String[] args) throws ParserException, GeneralMathException{
 		//Create toy problem
 		OptimizationProblem prob = createConstraintSatProb1();

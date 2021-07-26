@@ -35,6 +35,12 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @author Matthias Thimm
  */
 public class PmMeasureExample {
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		PlMusEnumerator.setDefaultEnumerator(new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py"));
 		// Create some knowledge base

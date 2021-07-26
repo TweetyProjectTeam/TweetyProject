@@ -28,6 +28,10 @@ import org.tweetyproject.graphs.util.GraphUtil;
  * Another example that shows how to construct graphs programmatically.
  */
 public class GraphExample2 {
+	/**
+	 * main
+	 * @param args arguments
+	 */
 	public static void main(String[] args) {
 		Graph<SimpleNode> g = new DefaultGraph<SimpleNode>();
 		SimpleNode[] nodes = new SimpleNode[6];

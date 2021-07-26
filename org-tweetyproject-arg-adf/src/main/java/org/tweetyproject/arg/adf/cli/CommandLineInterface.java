@@ -61,6 +61,10 @@ public class CommandLineInterface {
 		reasonerBySemantics.put("com", new CompleteReasoner(satSolver));
 	}
 
+	/**
+	 * 
+	 * @param args args
+	 */
 	public static void main(String[] args) {
 		if (args.length < 2) {
 			System.out.println(prompt);

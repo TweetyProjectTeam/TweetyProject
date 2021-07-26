@@ -39,7 +39,7 @@ public class LargerInterpretationSatEncoding implements RelativeSatEncoding {
 	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param mapping
+	 * @param mapping mapping
 	 */
 	public LargerInterpretationSatEncoding(PropositionalMapping mapping) {
 		this.mapping = Objects.requireNonNull(mapping);

@@ -40,7 +40,7 @@ public class SetAttack extends HyperDirEdge<Argument>   implements DungEntity {
 
 	/**
 	 * Default constructor; initializes the two arguments used in this attack relation
-	 * @param attacker the attacking argument
+	 * @param attackers the attacking argument
 	 * @param attacked the attacked argument
 	 */
 	public SetAttack(Set<Argument> attackers, Argument attacked){

@@ -26,6 +26,19 @@ package org.tweetyproject.commons;
  * @author Matthias Thimm
  *
  */
+
+/**
+ * enum fr Inference
+ *
+ */
 public enum InferenceMode {
-	SKEPTICAL, CREDULOUS
+	//skeptical, credulous
+	/**
+	 * SKEPTICAL
+	 */
+	SKEPTICAL,
+	/**
+	 * CREDULOUS
+	 */
+	CREDULOUS
 }

@@ -18,8 +18,17 @@
  */
 package org.tweetyproject.arg.dung.ldo.syntax;
 
+/**
+ * 
+ * @author Matthias Thimm
+ *
+ */
 public class LdoBoxModality extends AbstractLdoModality {
 
+	/**
+	 * 
+	 * @param innerFormula innerFormula
+	 */
 	public LdoBoxModality(LdoFormula innerFormula) {
 		super(innerFormula);
 	}

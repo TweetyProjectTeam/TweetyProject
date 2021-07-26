@@ -235,7 +235,11 @@ public class NicePossibleWorld extends InterpretationSet<Proposition,PlBeliefSet
 		// but we priorize alphabetically ordering:
 		return reval;
 	}
-	
+	/**
+	 * 
+	 * @param signature collection of propositions
+	 * @return all possible nice worlds
+	 */
 	public static Set<NicePossibleWorld> getAllPossibleWorlds(Collection<Proposition> signature){
 		Set<PossibleWorld> base = PossibleWorld.getAllPossibleWorlds(signature);
 		Set<NicePossibleWorld> reval = new HashSet<NicePossibleWorld>();

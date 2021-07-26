@@ -32,7 +32,9 @@ import org.tweetyproject.logics.commons.syntax.Sort;
  *
  */
 public class EqualityPredicate extends Predicate {
-	
+	/**
+	 * constructor
+	 */
 	public EqualityPredicate() {
 		super("==",Arrays.asList(Sort.ANY,Sort.ANY));	
 	}

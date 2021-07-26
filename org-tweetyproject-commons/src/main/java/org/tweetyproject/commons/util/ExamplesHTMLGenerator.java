@@ -309,6 +309,10 @@ public class ExamplesHTMLGenerator {
 		writer.close();
 	}
 
+	/** 
+	 * @param args String
+	 * @throws IOException throws
+	 */
 	public static void main(String[] args) throws IOException {
 		printExamplesToHtmlFile("/home/");
 	}

@@ -29,6 +29,10 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public interface SatEncoding {
 
+	/**
+	 * 
+	 * @param consumer consumer
+	 */
 	void encode(Consumer<Clause> consumer);
 
 }

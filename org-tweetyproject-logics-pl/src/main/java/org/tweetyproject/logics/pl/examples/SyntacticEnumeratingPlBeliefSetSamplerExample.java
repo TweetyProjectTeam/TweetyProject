@@ -29,7 +29,11 @@ import org.tweetyproject.logics.pl.util.SyntacticEnumeratingIterator;
  * @author Matthias Thimm
  */
 public class SyntacticEnumeratingPlBeliefSetSamplerExample {
-
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws IOException{
 		// generates all syntactic variations of propositional belief sets 
 		//  each formula has maximal length 4, and 4 propositions		

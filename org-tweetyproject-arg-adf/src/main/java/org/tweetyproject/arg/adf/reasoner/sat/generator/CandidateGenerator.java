@@ -34,7 +34,7 @@ public interface CandidateGenerator {
 	/**
 	 * Performs initializations on the state.
 	 * 
-	 * @param consumer
+	 * @param consumer consumer
 	 */	
 	void prepare(Consumer<Clause> consumer);
 

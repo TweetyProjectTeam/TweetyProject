@@ -242,7 +242,7 @@ public class Program extends RuleSet<ASPRule> implements LogicProgram<ClassicalH
 	 /**
 	  * Set additional options for solvers. 
 	  * 
-	  * @param commandLineArguments in the format "option=value"
+	  * @param additionalOptions commandLineArguments in the format "option=value"
 	  */
 	public void setAdditionalOptions(Set<String> additionalOptions) {
 		this.additionalOptions = additionalOptions;

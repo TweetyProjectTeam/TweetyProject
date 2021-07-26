@@ -46,6 +46,12 @@ public class ASPParserExample {
 	private static String CLINGO_PATH = "your/path/to/clingo";
 	private static String DLV_PATH = "your/path/to/dlv";
 	
+	/**
+	 * 
+	 * @param args ParseException
+	 * @throws ParseException ParseException
+	 * @throws FileNotFoundException FileNotFoundException
+	 */
 	public static void main(String[] args) throws ParseException, FileNotFoundException {
 		/**
 		 * The same parser is used to parse programs in ASP-Core-2, Clingo and DLV syntax

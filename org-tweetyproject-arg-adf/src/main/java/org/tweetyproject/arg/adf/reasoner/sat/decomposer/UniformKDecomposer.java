@@ -45,6 +45,10 @@ public final class UniformKDecomposer extends AbstractDecomposer {
 
 	private final LinkStrategy linkStrategy;
 	
+	/**
+	 * 
+	 * @param linkStrategy link Strategy 
+	 */
 	public UniformKDecomposer(LinkStrategy linkStrategy) {
 		this.linkStrategy = Objects.requireNonNull(linkStrategy);
 	}

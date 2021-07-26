@@ -32,7 +32,7 @@ import java.util.HashSet;
  * a set of arguments E solid-defends an argument a, iff for all attackers b of a it holds that
  * all arguments c which attack b are in E
  *
- * see: Liu, X., & Chen, W. Solid semantics and extension aggregation using quota rules under integrity constraints. (2021)
+ * see: Liu, X., and Chen, W. Solid semantics and extension aggregation using quota rules under integrity constraints. (2021)
  *
  * @author Lars Bengel
  */
@@ -56,6 +56,13 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
         return this.getModels(bbase).iterator().next();
     }
 
+    /**
+     * 
+     * @param arg arg
+     * @param ext ext
+     * @param theory theory
+     * @return isSolidlyDefendedBy
+     */
     public boolean isSolidlyDefendedBy(Argument arg, Extension ext, DungTheory theory) {
         Collection<Argument> defenders = new HashSet<>();
         for (Argument attacker: theory.getAttackers(arg)) {
@@ -64,6 +71,12 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
         return ext.containsAll(defenders);
     }
 
+    /**
+     * 
+     * @param ext ext
+     * @param theory theory
+     * @return DungTheory
+     */
     public Collection<Argument> getSolidlyDefended(Extension ext, DungTheory theory) {
         Collection<Argument> defended = new HashSet<>();
         for (Argument arg: theory) {

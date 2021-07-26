@@ -12,6 +12,12 @@ public class ASPParserTokenManager implements ASPParserConstants
   public  java.io.PrintStream debugStream = System.out;
   /** Set debug output. */
   public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
+  /**
+   * 
+   * @param pos position
+   * @param active0 long
+   * @return int
+   */
 private final int jjStopStringLiteralDfa_0(int pos, long active0)
 {
    switch (pos)
@@ -1460,11 +1466,21 @@ static final long[] jjtoToken = {
 static final long[] jjtoSkip = {
    0x7eL, 
 };
+/**
+ * protected SimpleCharStream input_stream
+ */
 protected SimpleCharStream input_stream;
 private final int[] jjrounds = new int[177];
 private final int[] jjstateSet = new int[354];
+/**
+ * proteced char curChar
+ */
 protected char curChar;
 /** Constructor. */
+/**
+ * 
+ * @param stream ASPParserTokenManager
+ */
 public ASPParserTokenManager(SimpleCharStream stream){
    if (SimpleCharStream.staticFlag)
       throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
@@ -1472,12 +1488,21 @@ public ASPParserTokenManager(SimpleCharStream stream){
 }
 
 /** Constructor. */
+/**
+ * 
+ * @param stream ASPParser
+ * @param lexState ASPParser
+ */
 public ASPParserTokenManager(SimpleCharStream stream, int lexState){
    this(stream);
    SwitchTo(lexState);
 }
 
 /** Reinitialise parser. */
+/**
+ * 
+ * @param stream ReInit
+ */
 public void ReInit(SimpleCharStream stream)
 {
    jjmatchedPos = jjnewStateCnt = 0;
@@ -1494,6 +1519,11 @@ private void ReInitRounds()
 }
 
 /** Reinitialise parser. */
+/**
+ * 
+ * @param stream ReInit
+ * @param lexState ReInit
+ */
 public void ReInit(SimpleCharStream stream, int lexState)
 {
    ReInit(stream);
@@ -1501,6 +1531,10 @@ public void ReInit(SimpleCharStream stream, int lexState)
 }
 
 /** Switch to specified lex state. */
+/**
+ * 
+ * @param lexState SwitchTo
+ */
 public void SwitchTo(int lexState)
 {
    if (lexState >= 1 || lexState < 0)
@@ -1509,6 +1543,10 @@ public void SwitchTo(int lexState)
       curLexState = lexState;
 }
 
+/**
+ * 
+ * @return jjFillToken
+ */
 protected Token jjFillToken()
 {
    final Token t;
@@ -1541,6 +1579,10 @@ int jjmatchedPos;
 int jjmatchedKind;
 
 /** Get the next Token. */
+/**
+ * 
+ * @return getNextToken
+ */
 public Token getNextToken() 
 {
   Token matchedToken;

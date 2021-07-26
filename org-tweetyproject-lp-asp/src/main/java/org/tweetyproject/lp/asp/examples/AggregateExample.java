@@ -51,6 +51,12 @@ public class AggregateExample {
 
 	private static String CLINGO_PATH = "your/path/to/clingo";
 
+	/**
+	 * 
+	 * @param args IOException
+	 * @throws IOException IOException
+	 * @throws ParseException ParseException
+	 */
 	public static void main(String[] args) throws IOException, ParseException {
 		/**
 		 * Course selection example

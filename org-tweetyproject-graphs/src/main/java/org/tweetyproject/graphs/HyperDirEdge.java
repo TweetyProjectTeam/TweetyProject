@@ -109,7 +109,10 @@ public class HyperDirEdge<T extends Node> extends GeneralEdge<T>{
 		result = prime * result + ((nodeB == null) ? 0 : nodeB.hashCode());
 		return result;
 	}
-
+	/**
+	 * 
+	 * @param arg argument to be removed
+	 */
 	public void remove(T arg) {
 		if(!this.nodeA.contains(arg) && !arg.equals(nodeB)) {
 			return;

@@ -17,7 +17,11 @@
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.graphs;
-
+/**
+ * an interface for a general Node
+ * @author Matthias Thimm
+ *
+ */
 public interface Node {
 
 }

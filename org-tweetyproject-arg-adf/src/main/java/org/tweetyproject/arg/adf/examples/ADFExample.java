@@ -49,6 +49,12 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 public class ADFExample {
 
+	/**
+	 * 
+	 * @param args args
+	 * @throws FileNotFoundException File Not Found Exception
+	 * @throws IOException IO Exception
+	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		
 		// Parse ADF from text file

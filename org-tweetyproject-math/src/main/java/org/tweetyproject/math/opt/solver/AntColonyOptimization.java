@@ -47,9 +47,13 @@ import org.tweetyproject.math.term.ElementOfCombinatoricsProb;
 public class AntColonyOptimization extends CombinatoricsSolver {
 	/**configuration data*/
 	 public int NumberOfAnts;
+	 /**Evaporation Ratio*/
      public double EvaporationRatio;
+     /**Number Of Iterations*/
      public int NumberOfIterations;
+     /**Heuristic Importance*/
      public double HeuristicImportance;
+     /**Pheromone Importance*/
      public double PheromoneImportance;
 	//end of configuration data
 	
@@ -58,6 +62,15 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	protected CombinatoricsProblem problem;
 	/**ajacence array representation of graph*/
 	double[][] problemRepresentation;
+	/**
+	 * constructor
+	 * @param NumberOfAnts nr of ants
+	 * @param EvaporationRatio evaporation ratio
+	 * @param NumberOfIterations nr of iteraions
+	 * @param HeuristicImportance importance of heuristics
+	 * @param PheromoneImportance importance of pheromons
+	 * @throws IOException IOException
+	 */
 	public AntColonyOptimization(int NumberOfAnts, double EvaporationRatio, 
 			int NumberOfIterations, double HeuristicImportance, 
 			double PheromoneImportance) throws IOException {
@@ -122,7 +135,10 @@ public class AntColonyOptimization extends CombinatoricsSolver {
         };
 
     }
-	
+	/**
+	 * 
+	 * @return daemon action
+	 */
     private static DaemonAction<ElementOfCombinatoricsProb, AntCol_Environment> getPheromoneUpdatePolicy() {
         return new OfflinePheromoneUpdate<ElementOfCombinatoricsProb, AntCol_Environment>() {
             @Override
@@ -136,7 +152,12 @@ public class AntColonyOptimization extends CombinatoricsSolver {
             }
         };
     }
-
+	/**
+	 * 
+	 * @param prob problem
+	 * @return represntation
+	 * @throws  IOException IOException
+	 */
     public static double[][] getRepresentation(CombinatoricsProblem prob) throws IOException {
 
         return prob.getRepresentation();
@@ -144,7 +165,10 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	/**config data*/
 	class ProblemConfiguration implements ConfigurationProvider {
 		private double initialPheromoneValue;
-		
+		/**
+		 * 
+		 * @param problemRepresentation representation
+		 */
 		public ProblemConfiguration(double[][] problemRepresentation) {
 	        ArrayList<ElementOfCombinatoricsProb> randomSolution = 
 	        		AntColonyOptimization.this.problem.createRandomNewSolution(null);
@@ -152,6 +176,7 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	        
 	        this.initialPheromoneValue = numberOfCities / AntColonyOptimization.this.problem.sumOfWeights(randomSolution);
 		}
+
         public int getNumberOfAnts() {
             return AntColonyOptimization.this.NumberOfAnts;
         }
@@ -184,6 +209,11 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	public class AntCol_Environment extends Environment{
 		/**represent elements in a given order to access the graphRepresantation better*/
 		protected ElementOfCombinatoricsProb[] members = new ElementOfCombinatoricsProb[AntColonyOptimization.this.problem.elements.size()];
+		/**
+		 * 
+		 * @param problemRepresentation problem
+		 * @throws InvalidInputException InvalidInputException
+		 */
 		public AntCol_Environment(double[][] problemRepresentation) throws InvalidInputException {
 			super(problemRepresentation);			
 			int i = 0;

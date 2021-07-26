@@ -26,10 +26,15 @@ import org.tweetyproject.math.term.*;
  */
 public class Inequation extends Statement{
 
+	/**less*/
 	public static final int LESS = 0;
+	/**less or equal*/
 	public static final int LESS_EQUAL = 1;
+	/**greater*/
 	public static final int GREATER = 2;
+	/**greater or equal*/
 	public static final int GREATER_EQUAL = 3;
+	/**unequal*/
 	public static final int UNEQUAL = 4;
 	
 	private int type;

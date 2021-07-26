@@ -35,6 +35,10 @@ import java.util.*;
  */
 
 public class IndependenceExample {
+	/**
+	 * 
+	 * @param args string
+	 */
     public static void main(String[] args) {
         // create theory from figure 2
         DungTheory theory = new DungTheory();

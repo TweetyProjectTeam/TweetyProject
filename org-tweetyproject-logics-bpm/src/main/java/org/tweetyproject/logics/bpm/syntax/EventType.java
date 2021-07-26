@@ -23,17 +23,30 @@ package org.tweetyproject.logics.bpm.syntax;
  * @author Benedikt Knopp
  */
 public enum EventType {
+	/** NONE */
 	None,
+	/** Message */
 	Message,
+	/** Timer */
 	Timer,
+	/** Escalation */
 	Escalation,
+	/** Conditional */
 	Conditional,
+	/** Link */
 	Link,
+	/** Error */
 	Error,
+	/** Cancel */
 	Cancel,
+	/** Compensation */
 	Compensation,
+	/** Signal */
 	Signal,
+	/** Multiple */
 	Multiple,
+	/** ParallelMultiple */
 	ParallelMultiple,
+	/** Terminate */
 	Terminate
 }

@@ -51,7 +51,12 @@ public class SatSolverExample {
 	private static String cadical_path = "/home/anna/snap/sat/cadical/build/cadical";
 	private static String kissat_path = "/home/anna/snap/sat/kissat/build/kissat";
 	private static String slime_path = "/home/anna/snap/sat/slime/slime/bin/slime_cli";
-
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		// Creating a belief base manually
 		PlBeliefSet kb1 = new PlBeliefSet();

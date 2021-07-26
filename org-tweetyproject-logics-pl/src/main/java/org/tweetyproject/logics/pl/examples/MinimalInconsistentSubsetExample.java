@@ -35,7 +35,12 @@ import org.tweetyproject.logics.pl.util.CnfSampler;
  *
  */
 public class MinimalInconsistentSubsetExample {
-
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		PlSignature sig = new PlSignature();
 		for(int i = 0; i < 5; i++)

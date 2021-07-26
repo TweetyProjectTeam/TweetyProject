@@ -39,6 +39,7 @@ public class PlWriter extends Writer {
 	
 	/**
 	 * Creates a new PlWriter for the given belief set.
+	 * @param plBeliefSet belief set
 	 */
 	public PlWriter(PlBeliefSet plBeliefSet) {
 		super(plBeliefSet);

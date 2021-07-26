@@ -40,6 +40,12 @@ import org.tweetyproject.logics.fol.writer.StandardFolWriter;
  *
  */
 public class StandardFolWriterExample {
+	/**
+	 * 
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		String filename = "/Users/mthimm/Desktop/test.fol";
 				

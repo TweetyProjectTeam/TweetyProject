@@ -49,25 +49,51 @@ public class PriestWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 
 	/** The three truth values. */
 	public enum TruthValue {
-		TRUE, FALSE, BOTH;
+		/**true*/
+		TRUE, 
+		/**false*/
+		FALSE, 
+		/**both*/
+		BOTH;
+		/**
+		 * 
+		 * @return negation
+		 */
 		public TruthValue neg(){
 			if(this.equals(TRUE)) return FALSE;
 			if(this.equals(FALSE)) return TRUE;
 			return BOTH;
-		}		
+		}	
+		/**
+		 * 
+		 * @return classical value
+		 */
 		public boolean getClassical(){
 			return this.equals(BOTH) || this.equals(TRUE);
 		}
+		/**
+		 * 
+		 * @param v truth value
+		 * @return AND
+		 */
 		public TruthValue and(TruthValue v){
 			if(this.equals(FALSE) || v.equals(FALSE)) return FALSE;
 			if(this.equals(BOTH) || v.equals(BOTH)) return BOTH;
 			return TRUE;
 		}
+		/**
+		 * 
+		 * @param v truth value
+		 * @return OR
+		 */
 		public TruthValue or(TruthValue v){
 			if(this.equals(TRUE) || v.equals(TRUE)) return TRUE;
 			if(this.equals(BOTH) || v.equals(BOTH)) return BOTH;
 			return FALSE;
 		}
+		/**
+		 * to string
+		 */
 		public String toString(){
 			if(this.equals(TRUE)) return "T";
 			if(this.equals(FALSE)) return "F";

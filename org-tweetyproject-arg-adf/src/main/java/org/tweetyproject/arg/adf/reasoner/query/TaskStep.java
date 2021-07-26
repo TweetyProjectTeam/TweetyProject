@@ -28,10 +28,22 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
  */
 public interface TaskStep {
 
+	/**
+	 * 
+	 * @return interpretations
+	 */
 	Query<Stream<Interpretation>> interpretations();
 	
+	/**
+	 * 
+	 * @return interpretation
+	 */
 	Query<Interpretation> interpretation();
 
+	/**
+	 * 
+	 * @return exists
+	 */
 	Query<Boolean> exists();
 	
 }

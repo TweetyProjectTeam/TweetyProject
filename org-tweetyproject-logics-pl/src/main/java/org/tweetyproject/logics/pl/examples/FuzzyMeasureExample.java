@@ -33,6 +33,12 @@ import org.tweetyproject.math.func.fuzzy.ProductNorm;
  * @author Matthias Thimm
  */
 public class FuzzyMeasureExample {
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();

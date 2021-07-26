@@ -23,11 +23,18 @@ package org.tweetyproject.logics.bpm.syntax;
  * @author Benedikt Knopp
  */
 public enum TaskType {
+	/**Send*/
 	Send,
+	/**Receive*/
 	Receive,
+	/**User*/
 	User,
+	/**Manual*/
 	Manual,
+	/**BusinessRule*/
 	BusinessRule,
+	/**Service*/
 	Service,
+	/**Script*/
 	Script
 }

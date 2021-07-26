@@ -31,7 +31,7 @@ import java.util.Collection;
  * A semantics satisfies strong admissibility iff for every extensions E in every AF it holds that:
  * all arguments in E are strongly defended by E, i.e. the argument is defended by some other argument in E
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */

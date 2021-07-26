@@ -31,17 +31,36 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public interface Execution extends AutoCloseable {
 	
+	/**
+	 * 
+	 * @return computeCandidate
+	 */
 	Interpretation computeCandidate();
-		
+	
+	/**
+	 * 
+	 * @param candidate candidate
+	 * @return verify
+	 */
 	boolean verify(Interpretation candidate);
 	
+	/**
+	 * 
+	 * @param model model
+	 * @return processModel
+	 */
 	Interpretation processModel(Interpretation model);
 	
+	/**
+	 * 
+	 * @param clause clause
+	 * @return addClause
+	 */ 
 	boolean addClause( Clause clause );
 	
 	/**
 	 * 
-	 * @param clauses
+	 * @param clauses clauses
 	 * @return true iff all of the clauses were successfully added
 	 */
 	boolean addClauses( Collection<? extends Clause> clauses);

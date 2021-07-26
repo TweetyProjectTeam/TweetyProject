@@ -46,6 +46,10 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class ApacheCommonsSimplexEx {
+	/**
+	 * constructor
+	 * @return the problem
+	 */
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		//Define the constraints (all are equations)
 				IntegerVariable m1 = new IntegerVariable("Maschine 1");
@@ -75,7 +79,14 @@ public class ApacheCommonsSimplexEx {
 		
 	}
 	
-
+	/**
+	 * 
+	 * main method
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 * @throws GeneralMathException GeneralMathException
+	 */
 	public static void main(String[] args) throws ParserException, IOException, GeneralMathException{
 		//Create toy problem
 		ConstraintSatisfactionProblem prob = createConstraintSatProb1();

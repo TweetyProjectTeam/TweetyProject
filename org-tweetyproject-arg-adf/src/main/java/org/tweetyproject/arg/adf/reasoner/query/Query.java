@@ -28,17 +28,21 @@ import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
  */
 public interface Query<T> {
 
+	/**
+	 * 
+	 * @return execute
+	 */
 	T execute();
 	
 	/**
 	 * @deprecated still work in progress
-	 * @return
+	 * @return return
 	 */
 	@Deprecated(forRemoval = false)
 	T executeParallel();
 	
 	/**
-	 * @param configuration
+	 * @param configuration configuration
 	 * @return a copy of this query but with the new configuration applied
 	 */
 	Query<T> configure(Configuration configuration);

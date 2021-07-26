@@ -77,8 +77,8 @@ public class Implication extends FolFormula {
 	
 	/**
 	 * Sets the formulas of the implication.
-	 * @param left
-	 * @param right
+	 * @param left left formula
+	 * @param right right formula
 	 */
 	public void setFormulas(RelationalFormula left, RelationalFormula right) {
 		this.formulas = new Pair<RelationalFormula, RelationalFormula>(left, right);
@@ -108,7 +108,7 @@ public class Implication extends FolFormula {
 	 * Get the left side formula of the implication
 	 * left =&gt; right.
 	 * 
-	 * @param left formula
+	 * @return the 1st relational formula
 	 */
 	public RelationalFormula getFirstFormula() {
 		return this.formulas.getFirst();
@@ -117,8 +117,7 @@ public class Implication extends FolFormula {
 	/**
 	 * Get the right side formula of the implication
 	 * left =&gt; right
-	 * 
-	 * @param right formula.
+	 * @return the second relational formula
 	 */
 	public RelationalFormula getSecondFormula() {
 		return this.formulas.getSecond();

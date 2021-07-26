@@ -8,6 +8,11 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
+/**
+ * 
+ * @author Sebastian Matthias Thimm
+ *
+ */
 public final class RandomDecomposer extends AbstractDecomposer {
 
 	@Override

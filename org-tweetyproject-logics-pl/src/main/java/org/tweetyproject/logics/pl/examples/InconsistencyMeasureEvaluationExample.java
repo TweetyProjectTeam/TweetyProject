@@ -46,7 +46,12 @@ import org.tweetyproject.logics.pl.util.ContensionSampler;
 public class InconsistencyMeasureEvaluationExample {
 
 	private static String solverPath = "/home/anna/snap/sat/kissat/build/kissat";
-
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		SatSolver.setDefaultSolver(new CmdLineSatSolver(solverPath));
 		InconsistencyMeasureEvaluator<PlFormula, PlBeliefSet> ev = new InconsistencyMeasureEvaluator<PlFormula, PlBeliefSet>();

@@ -134,18 +134,28 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 	protected Conjunction getCnfEncoding(PlBeliefSet f) {
 		return new TseitinTransformer().transformFormula(f);
 	}
-	
+	/**
+	 * Transformer for Tseitin
+	 * @author Anna Gessler
+	 *
+	 */
 	protected class TseitinTransformer {
 		private int i = 0;
 		private Map<PlFormula,Integer> mappings = new HashMap<PlFormula,Integer>();
 		private PlBeliefSet equivalences = new PlBeliefSet();
-		
+		/**
+		 * constructor
+		 */
 		public TseitinTransformer() {
 			i = 0;
 			mappings = new HashMap<PlFormula,Integer>();
 			equivalences = new PlBeliefSet();
 		}
-		
+		/**
+		 * 
+		 * @param kb belief set
+		 * @return conjunction
+		 */
 		public Conjunction transformFormula(PlBeliefSet kb) { 
 			Conjunction res = new Conjunction();
 			for (PlFormula f : kb) 
@@ -153,7 +163,11 @@ public abstract class SatBasedInconsistencyMeasure  extends BeliefSetInconsisten
 			res.addAll(this.equivalences);
 			return res;
 		}
-		
+		/**
+		 * 
+		 * @param f Pl formula
+		 * @return Pl formula
+		 */
 		private PlFormula transformSubformula(PlFormula f) { 
 			if (f instanceof Proposition) 
 				return f; 

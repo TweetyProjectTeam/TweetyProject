@@ -54,6 +54,11 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class ApacheCommonsSimplexEx2 {
+	/**
+	 * constructor
+	 * @return problem
+	 * @throws GeneralMathException GeneralMathException
+	 */
 	public static OptimizationProblem createConstraintSatProb1() throws GeneralMathException {
 		// ***********************create a 2nd problem.
 		// ***********************The root of this problem is a constraint for the main
@@ -104,7 +109,13 @@ public class ApacheCommonsSimplexEx2 {
 		return prob;
 
 	}
-
+	/**
+	 * main method
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 * @throws GeneralMathException GeneralMathException
+	 */
 	public static void main(String[] args) throws ParserException, IOException, GeneralMathException {
 		// Create toy problem
 		OptimizationProblem prob = createConstraintSatProb1();

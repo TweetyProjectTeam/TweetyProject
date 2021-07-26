@@ -24,14 +24,26 @@ package org.tweetyproject.arg.dung.semantics;
  * @author Lars Bengel
  */
 public enum OrderingSemantics {
+	/** CF */
     CF ("conflict-free semantics", "CF"),
+    /** AD */
     AD ("admissible semantics", "AD"),
+    /** ST */
     ST ("stable semantics", "ST"),
+    /** DN */
     DN ("defended not in semantics", "DN");
 
+	/**
+	 * CONFLICTFREE_SEMANTICS 
+	 */
     public static final OrderingSemantics CONFLICTFREE_SEMANTICS = CF,
+    		/** ADMISSIBLE_SEMANTICS */
             ADMISSIBLE_SEMANTICS = AD,
+            /** STABLE_SEMANTICS */
             STABLE_SEMANTICS = ST,
+            /** 
+             * DEFENDED_NOT__IN_SEMATICS
+             */
             DEFENDED_NOT_IN_SEMANTICS = DN;
 
     /** The description of the ordering semantics. */

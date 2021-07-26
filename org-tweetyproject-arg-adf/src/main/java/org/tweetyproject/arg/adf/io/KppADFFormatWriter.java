@@ -78,15 +78,23 @@ public class KppADFFormatWriter {
 	}
 	
 	/**
+	 * 
 	 * The OutputStream is not closed by this method, it is up to the caller.
 	 * 
-	 * @param adf
-	 * @param out
+	 *
+	 * @param adf adf
+	 * @param out out
 	 */
 	public static void writeTo(AbstractDialecticalFramework adf, OutputStream out) {
 		write(adf, new PrintWriter(out));
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @param file file
+	 * @throws FileNotFoundException File Not Found Exception
+	 */
 	public static void writeToFile(AbstractDialecticalFramework adf, File file) throws FileNotFoundException {
 		try (PrintWriter writer = new PrintWriter(file)) {
 			write(adf, writer);

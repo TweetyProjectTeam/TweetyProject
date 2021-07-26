@@ -37,6 +37,13 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  *
  */
 public class TPTPParserExample {
+	/**
+	 * 
+	 * @param args arguments
+	 * @throws FileNotFoundException FileNotFoundException
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		TPTPParser tptp = new TPTPParser();
 		

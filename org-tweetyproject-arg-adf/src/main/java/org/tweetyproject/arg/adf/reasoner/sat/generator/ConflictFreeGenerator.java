@@ -54,10 +54,10 @@ public abstract class ConflictFreeGenerator implements CandidateGenerator {
 	/**
 	 * The resulting {@link CandidateGenerator} only computes conflict free interpretations which are extensions of the defined prefix.
 	 * 
-	 * @param adf
-	 * @param mapping
+	 * @param adf adf
+	 * @param mapping mapping
 	 * @param prefix the fixed prefix
-	 * @return
+	 * @return CandidateGeneratorwithPrefix
 	 */
 	public static CandidateGenerator withPrefix(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
 		return new PrefixConflictFreeGenerator(adf, mapping, prefix);
@@ -66,9 +66,9 @@ public abstract class ConflictFreeGenerator implements CandidateGenerator {
 	/**
 	 * The resulting {@link CandidateGenerator} computes all conflict free interpretations.
 	 * 
-	 * @param adf
-	 * @param mapping
-	 * @return
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @return CandidateGeneratorwithoutPrefix
 	 */
 	public static CandidateGenerator withoutPrefix(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		return new WithoutPrefixConflictFreeGenerator(adf, mapping);

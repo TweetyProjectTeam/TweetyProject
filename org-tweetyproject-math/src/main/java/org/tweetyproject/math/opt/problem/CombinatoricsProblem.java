@@ -51,9 +51,16 @@ public abstract class CombinatoricsProblem extends GeneralConstraintSatisfaction
 	 */
 	public static final int MAXIMIZE = 1;
 	
+    /**elements*/
 	public List<ElementOfCombinatoricsProb> elements;
+	/**constraints*/
 	Collection<Statement> constraints = new ArrayList<Statement>();
 		
+	/**
+	 * constructor
+	 * @param elements elements
+	 * @param graphRepresantation problem
+	 */
 	public CombinatoricsProblem(List<ElementOfCombinatoricsProb> elements, int[][] graphRepresantation){
 		//super(elements);
 		this.elements = elements;
@@ -80,6 +87,14 @@ public abstract class CombinatoricsProblem extends GeneralConstraintSatisfaction
 	 */
 	public abstract double sumOfWeights(ArrayList<ElementOfCombinatoricsProb> sol);
 	
+	/**
+	 * 
+	 * @param currSol current solution
+	 * @param minIterations minimum iterations
+	 * @param maxIteration maximum iterations
+	 * @param threshold threshold
+	 * @return neighborhood
+	 */
 	public ArrayList<ArrayList<ElementOfCombinatoricsProb>> formNeighborhood(ArrayList<ElementOfCombinatoricsProb> currSol, int minIterations, int maxIteration, double threshold)
 	{
 		int cnt = 0;
@@ -101,6 +116,10 @@ public abstract class CombinatoricsProblem extends GeneralConstraintSatisfaction
 
 		return result;
 	}
+	/**
+	 * 
+	 * @return Graph representation
+	 */
 	public int[][] getGraphrepresentation() {
 		return graphRepresantation;
 	}
@@ -141,7 +160,10 @@ public abstract class CombinatoricsProblem extends GeneralConstraintSatisfaction
 			Integer getCurrentIndex, ElementOfCombinatoricsProb initialReference, 
 			ElementOfCombinatoricsProb[] sol) ;
 	
-	/**for Ant optimization: represent the problem as an adjacence matrix*/
+	/**
+	 * for Ant optimization: represent the problem as an adjacence matrix
+	 * @return representation
+	 */
 	public abstract double[][] getRepresentation();
 
 }

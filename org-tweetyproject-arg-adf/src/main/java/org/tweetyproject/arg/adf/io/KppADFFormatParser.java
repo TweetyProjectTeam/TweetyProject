@@ -74,14 +74,33 @@ public final class KppADFFormatParser {
 		this.lazy = lazy;
 	}
 	
+	/**
+	 * 
+	 * @param text text
+	 * @return parse
+	 * @throws IOException IO Exception
+	 */
 	public AbstractDialecticalFramework parse(String text) throws IOException {
 		return parse(new StringReader(text));
 	}
 	
+	/**
+	 * 
+	 * @param file file
+	 * @return parse
+	 * @throws FileNotFoundException File Not Found Exception
+	 * @throws IOException IO Exception
+	 */
 	public AbstractDialecticalFramework parse(File file) throws FileNotFoundException, IOException {
 		return parse(new BufferedReader(new InputStreamReader(new FileInputStream(file))));
 	}
 
+	/**
+	 * 
+	 * @param reader reader
+	 * @return parse
+	 * @throws IOException IO Exception
+	 */
 	public AbstractDialecticalFramework parse(Reader reader) throws IOException {
 		Map<String, Argument> arguments = new HashMap<String, Argument>();
 		Map<Argument, AcceptanceCondition> accByArgument = new HashMap<Argument, AcceptanceCondition>();

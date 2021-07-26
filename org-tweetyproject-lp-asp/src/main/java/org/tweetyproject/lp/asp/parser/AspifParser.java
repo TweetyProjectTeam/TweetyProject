@@ -79,9 +79,9 @@ public class AspifParser {
 	 * Parses output in the aspif format 
 	 * and returns the resulting program.
 	 *
-	 * @param output
+	 * @param output parseProgram
 	 * @return ASP Program
-	 * @throws ParseException
+	 * @throws ParseException parseProgram
 	 */
 	public Program parseProgram(String output) throws ParseException {
 		if (!output.strip().endsWith("0"))
@@ -172,7 +172,7 @@ public class AspifParser {
 	 * @return a belief base
 	 * @throws FileNotFoundException if the file is not found
 	 * @throws IOException           if some IO issue occurred.
-	 * @throws ParseException       
+	 * @throws ParseException parseProgramFile      
 	 */
 	public Program parseProgramFile(String filename) throws FileNotFoundException, IOException, ParseException {
 		String content = Files.readString(Path.of(filename));

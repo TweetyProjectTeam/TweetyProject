@@ -24,6 +24,10 @@ package org.tweetyproject.arg.adf.reasoner.query;
  */
 public interface ConditionalTaskStep extends TaskStep {
 	
+	/**
+	 * 
+	 * @return forAll
+	 */
 	Query<Boolean> forAll();
 	
 }

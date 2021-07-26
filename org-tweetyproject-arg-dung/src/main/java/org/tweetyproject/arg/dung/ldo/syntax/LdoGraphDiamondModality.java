@@ -20,8 +20,21 @@ package org.tweetyproject.arg.dung.ldo.syntax;
 
 import java.util.Set;
 
+
+/**
+ * 
+ * @author Matthias Thimm
+ *
+ */
 public class LdoGraphDiamondModality extends AbstractGraphLdoModality{
 	
+	
+	/**
+	 * 
+	 * @param innerFormula inner Formula
+	 * @param lowerReferenceArguments lower Reference Arguments
+	 * @param upperReferenceArguments upper Reference Arguments
+	 */
 	public LdoGraphDiamondModality(LdoFormula innerFormula,	Set<LdoArgument> lowerReferenceArguments, Set<LdoArgument> upperReferenceArguments) {
 		super(innerFormula, lowerReferenceArguments,upperReferenceArguments);
 	}

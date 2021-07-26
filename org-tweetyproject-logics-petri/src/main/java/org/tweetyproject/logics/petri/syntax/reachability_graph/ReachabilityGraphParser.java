@@ -30,6 +30,11 @@ import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.petri.syntax.PetriNet;
 import org.tweetyproject.logics.petri.syntax.Transition;
 
+/**
+ * 
+ * @author Matthias Thimm
+ *
+ */
 public class ReachabilityGraphParser extends Parser{
 
 	/**

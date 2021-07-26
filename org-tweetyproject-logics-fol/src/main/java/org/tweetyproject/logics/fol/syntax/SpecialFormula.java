@@ -132,22 +132,27 @@ public abstract class SpecialFormula extends FolFormula {
 		return new HashSet<Functor>();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getQuantifiedFormulas()
+	/**
+	 * 
+	 * @return formulas
 	 */
 	public Set<FolFormula> getQuantifiedFormulas(){
 		return new HashSet<FolFormula>();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getDisjunctions()
+
+	/**
+	 * 
+	 * @return disjunction
 	 */
 	public Set<Disjunction> getDisjunctions(){
 		return new HashSet<Disjunction>();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.logics.firstorderlogic.syntax.FolFormula#getConjunctions()
+
+	/**
+	 * 
+	 * @return conjunctions
 	 */
 	public Set<Conjunction> getConjunctions(){
 		return new HashSet<Conjunction>();

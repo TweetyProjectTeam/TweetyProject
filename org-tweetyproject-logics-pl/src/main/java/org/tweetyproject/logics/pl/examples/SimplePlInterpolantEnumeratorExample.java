@@ -34,6 +34,12 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  */
 public class SimplePlInterpolantEnumeratorExample {
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		PlParser parser = new PlParser();
 		

@@ -28,6 +28,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Lars Bengel
  */
 public class StrongAdmissibleExample {
+	/**
+	 * 
+	 * @param args arguments
+	 */
     public static void main(String[] args) {
         DungTheory theory = new DungTheory();
         Argument a = new Argument("a");

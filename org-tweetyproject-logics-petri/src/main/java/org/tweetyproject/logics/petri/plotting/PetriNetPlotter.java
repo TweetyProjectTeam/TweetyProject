@@ -44,8 +44,10 @@ public class PetriNetPlotter extends GraphPlotter<PetriNetNode, Ark> {
 	
 	/**
 	 * Create a new instance for plotting the BpmnModel
-	 * @param bpmnModel the model of interest
-	 */
+     * 
+     * @param plotter PetriNetPlotter
+     * @param petriNet PetriNetPlotter 
+     */
 	public PetriNetPlotter(Plotter plotter, PetriNet petriNet) {
 		super(plotter, petriNet);
 	}

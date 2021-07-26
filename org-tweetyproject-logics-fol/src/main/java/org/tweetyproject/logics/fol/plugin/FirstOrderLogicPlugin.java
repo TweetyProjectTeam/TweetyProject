@@ -53,7 +53,10 @@ public class FirstOrderLogicPlugin extends AbstractTweetyPlugin {
 	private static final String FOLOGIC__CALL_PARAMETER = "fol";
 		
 //	private static final String FOL__PLUGIN_DESCRIPTION = "";
-	
+	/**
+	 * 
+	 * @return String representation of capabilities
+	 */
 	@Capabilities
 	public String[] capabilities() { return new String[] {"TweetyProject Plugin", FOLOGIC__CALL_PARAMETER}; }
 	

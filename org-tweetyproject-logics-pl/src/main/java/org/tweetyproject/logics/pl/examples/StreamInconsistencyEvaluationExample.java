@@ -58,18 +58,31 @@ import org.tweetyproject.math.opt.solver.LpSolve;
  * 
  */
 public class StreamInconsistencyEvaluationExample {
-	
+	/**SIGNATURE SIZE*/
 	public static final int 												SIGNATURE_SIZE				= 60;//30;
+	/**CNF RATIO*/
 	public static final double 												CNF_RATIO					= 1/8d;
+	/**NUMBER OF ITERATIONS*/
 	public static final int 												NUMBER_OF_ITERATIONS 		= 100;
+	/**SIZE OF KNOWLEDGEBASES*/
 	public static final int 												SIZE_OF_KNOWLEDGEBASES 		= 5000;
+	/**STANDARD SMOOTHING FACTOR*/
 	public static final double 												STANDARD_SMOOTHING_FACTOR  	= 0.75;
+	/**STANDARD EVENTS*/
 	public static final int													STANDARD_EVENTS				= 1000000;//40000;
+	/**RESULT PATH*/
 	public static final String 												RESULT_PATH					= "/home/mthimm/strinc";//"/Users/mthimm/Desktop";
+	/**BELIEFSET PATH*/
 	public static final String												BELIEFSET_PATH				= "/home/mthimm/strinc/beliefsets.txt";//"/Users/mthimm/Desktop/beliefsets.txt";
+	/**TMP FILE FOLDER*/
 	public static final String												TMP_FILE_FOLDER				= "/home/mthimm/strinc/tmp";//"/Users/mthimm/Desktop/tmp";
+	/**TIMEOUT*/
 	public static final long												TIMEOUT						= -1;//120; //2 minutes
-	
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws InterruptedException InterruptedException
+	 */
 	public static void main(String[] args) throws InterruptedException{
 		LpSolve.setBinary("/home/mthimm/strinc/lpsolve/lp_solve");
 		LpSolve.setTmpFolder(new File(TMP_FILE_FOLDER));

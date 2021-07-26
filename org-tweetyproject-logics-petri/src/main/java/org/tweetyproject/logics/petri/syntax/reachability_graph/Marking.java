@@ -86,17 +86,27 @@ public class Marking implements Node, Comparable<Marking> {
 	/**
 	 * Specify the number of tokens at the place at this marking
 	 * 
-	 * @param placeId the id of the place
+	 * @param place the id of the place
 	 * @param token   the token
 	 */
+	
 	public void putTokens(Place place, int token) {
 		this.tokensByPlace.put(place, token);
 	}
 
+	/**
+	 * 
+	 * @param place hasPlace
+	 * @return hasPlace
+	 */
 	public boolean hasPlace(Place place) {
 		return this.tokensByPlace.containsKey(place);
 	}
 
+	/**
+	 * 
+	 * @return getPlaces
+	 */
 	public Set<Place> getPlaces() {
 		return tokensByPlace.keySet();
 	}

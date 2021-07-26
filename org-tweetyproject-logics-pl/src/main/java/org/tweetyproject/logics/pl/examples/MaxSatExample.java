@@ -36,6 +36,12 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  */
 public class MaxSatExample {
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		MaxSatSolver solver = new OpenWboSolver("/Users/mthimm/Projects/misc_bins/open-wbo_2.1");
 		

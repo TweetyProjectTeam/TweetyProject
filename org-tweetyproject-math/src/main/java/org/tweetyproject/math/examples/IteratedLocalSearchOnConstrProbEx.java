@@ -38,7 +38,10 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class IteratedLocalSearchOnConstrProbEx {
-
+	/**
+	 * constructor
+	 * @return problem
+	 */
 	public static OptimizationProblem  createConstraintSatProb1() {
 		
 		FloatVariable m1 = new FloatVariable("Machine 1", -100, 100);
@@ -69,7 +72,12 @@ public class IteratedLocalSearchOnConstrProbEx {
 		
 	}
 	
-
+	/**
+	 * main method
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws GeneralMathException GeneralMathException
+	 */
 	public static void main(String[] args) throws ParserException, GeneralMathException{
 		//Create toy problem
 		OptimizationProblem prob = createConstraintSatProb1();

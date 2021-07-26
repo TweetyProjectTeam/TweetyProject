@@ -45,8 +45,10 @@ public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implem
 		return this.eval(obj);		
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.norm.Norm#norm(java.lang.Object)
+	/**
+	 *  norm
+	 * @param prob problem
+	 * @return Probability Vector As Doubles
 	 */
 	public double norm(ProbabilityFunction<T> prob) {
 		return this.norm(prob.getProbabilityVectorAsDoubles());
@@ -90,8 +92,11 @@ public class EntropyNorm<T extends Comparable<T>> extends EntropyFunction implem
 		return distance;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.norm.Norm#distance(java.lang.Object, java.lang.Object)
+	/**
+	 * distance between problems
+	 * @param prob1 problem 1
+	 * @param prob2 problem 2
+	 * @return distance
 	 */
 	public double distance(ProbabilityFunction<T> prob1, ProbabilityFunction<T> prob2) {
 		return this.distance(prob1.getProbabilityVectorAsDoubles(), prob2.getProbabilityVectorAsDoubles());

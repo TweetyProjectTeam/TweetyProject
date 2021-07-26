@@ -17,7 +17,13 @@
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.graphs;
-
+/**
+ * 
+ * @author Lars Bengel, Sebastian Franke
+ *
+ * @param <S> a Node
+ * @param <T> a number
+ */
 public class WeightedDirectedEdge<S extends Node,T extends Number> extends DirectedEdge<S> implements WeightedEdge<S,T>{
 
 	/** The weight of this edge. */
@@ -43,8 +49,8 @@ public class WeightedDirectedEdge<S extends Node,T extends Number> extends Direc
 	}
 	
 	/**
-	 * TODO
-	 * @param number
+	 * 
+	 * @param number a number for the weight
 	 */
 	public void setWeight(T number) {
 		this.weight = number;

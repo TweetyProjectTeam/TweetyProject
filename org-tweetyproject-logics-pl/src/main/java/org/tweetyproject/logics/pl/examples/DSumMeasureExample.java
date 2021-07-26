@@ -40,7 +40,12 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
  * @author Matthias Thimm
  */
 public class DSumMeasureExample {
-
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		Collection<PlFormula> c = new HashSet<PlFormula>();
 		PlParser parser = new PlParser();

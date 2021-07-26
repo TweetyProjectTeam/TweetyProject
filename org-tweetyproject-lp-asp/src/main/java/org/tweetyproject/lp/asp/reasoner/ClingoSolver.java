@@ -80,7 +80,7 @@ public class ClingoSolver extends ASPSolver {
 	 * 
 	 * @return optimum of previously solved program in string format, i.e. numbers separated
 	 * by spaces
-	 * @throws SolverException 
+	 * @throws SolverException  SolverException
 	 */
 	public String getOptimumString() throws SolverException {
 		if (optimum == null)
@@ -93,7 +93,7 @@ public class ClingoSolver extends ASPSolver {
 	 * The maximum number of models that Clingo will compute is set
 	 * to the default value (see {@link org.tweetyproject.lp.asp.reasoner.ASPSolver#maxNumOfModels}).
 	 * 
-	 * @param path2clingo binary location of Clingo on the hard drive. The given location has to contain
+	 * @param pathToClingo binary location of Clingo on the hard drive. The given location has to contain
 	 * a binary called "clingo". Do not include the binary itself in the path.
 	 * @param bash        shell to run commands
 	 */
@@ -107,7 +107,7 @@ public class ClingoSolver extends ASPSolver {
 	 * The maximum number of models that Clingo will compute is set
 	 * to the default value (see {@link org.tweetyproject.lp.asp.reasoner.ASPSolver#maxNumOfModels}).
 	 * 
-	 * @param path2clingo binary location of Clingo on the hard drive. The given location has to contain
+	 * @param pathToClingo binary location of Clingo on the hard drive. The given location has to contain
 	 * a binary called "clingo". Do not include the binary itself in the path.
 	 */
 	public ClingoSolver(String pathToClingo) {
@@ -118,7 +118,7 @@ public class ClingoSolver extends ASPSolver {
 	/**
 	 * Constructs a new instance pointing to a specific Clingo solver.
 	 * 
-	 * @param path2clingo binary location of Clingo on the hard drive. The given location has to contain
+	 * @param pathToClingo binary location of Clingo on the hard drive. The given location has to contain
 	 * a binary called "clingo". Do not include the binary itself in the path.
 	 * @param maxNOfModels the maximum number of models that Clingo will compute. Set it to 0 if
 	 * you want all models.

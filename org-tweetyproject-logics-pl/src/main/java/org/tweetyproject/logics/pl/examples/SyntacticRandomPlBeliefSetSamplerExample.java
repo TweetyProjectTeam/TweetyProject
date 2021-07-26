@@ -27,7 +27,10 @@ import org.tweetyproject.math.probability.Probability;
  * @author Matthias Thimm
  */
 public class SyntacticRandomPlBeliefSetSamplerExample {
-
+	/**
+	 * main
+	 * @param args arguments
+	 */
 	public static void main(String[] args){
 		PlSignature sig = new PlSignature(4);
 		SyntacticRandomSampler sampler = new SyntacticRandomSampler(sig,new Probability(0.2),new Probability(0.35),new Probability(0.35),0.5,1, 1);

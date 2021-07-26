@@ -46,9 +46,9 @@ public class Example {
 	/**
 	 * Specify BPMN models for which the functionalities of inconsistency analysis
 	 * are to be visualized
-	 * @param args
-	 * @throws ParserException
-	 * @throws IOException
+	 * @param args args
+	 * @throws ParserException ParserException
+	 * @throws IOException IOExeption
 	 */
 	public static void main(String[] args) throws ParserException, IOException {
 

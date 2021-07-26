@@ -19,12 +19,24 @@
  *  Copyright 2018 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.lp.asp.parser;
-
+/**
+ * 
+ * @author Anna Gessler
+ *
+ */
 public class ASTAnswerSet extends SimpleNode {
+	/**
+	 * 
+	 * @param id ID
+	 */
 	public ASTAnswerSet(int id) {
 		super(id);
 	}
-
+/**
+ * 
+ * @param p parser
+ * @param id ID
+ */
 	public ASTAnswerSet(ASPParser p, int id) {
 		super(p, id);
 	}

@@ -44,7 +44,9 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 
 	/** The set of edges */
 	protected Set<HyperDirEdge<T>> edges;
-	
+	/**
+	 * constructor
+	 */
 	public HyperGraph(){
 		this.nodes = new HashSet<T>();
 		this.edges = new HashSet<HyperDirEdge<T>>();
@@ -55,7 +57,11 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 		return this.nodes.add((T) node);
 	}
 
-
+	/**
+	 * 
+	 * @param edge an edge
+	 * @return whether the operation was successful
+	 */
 	public boolean add(HyperDirEdge<T> edge) {
 		for(T e: edge.getNodeA())
 			if(!this.nodes.contains(e))
@@ -92,7 +98,12 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 		System.err.println("an edge in a hypergraph is comprised of a set of Elements in Node A and an Element in Node B");
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param node1 a set of nodes (attacker)
+	 * @param b a node (attacked)
+	 * @return a directed Hyper Edge
+	 */
 	public HyperDirEdge<T> getDirEdge(Set<T> node1, Node b) {
 		for(HyperDirEdge<T> e : this.edges) {
 			if(e.getNodeA().equals(node1) && e.getNodeB().equals(b))
@@ -137,7 +148,11 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 				+ "Please choose a set of Nodes to find the set's children");
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param node a node
+	 * @return the children of the node
+	 */
 	public Collection<T> getChildren(Set<T> node) {
 		HashSet<T> result = new HashSet<T>();
 		for(HyperDirEdge<T> e : this.edges) {
@@ -164,6 +179,10 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	}
 
 	/**
+	 * 
+	 * @param hyperGraph a hypergraph
+	 * @param node1 1st node
+	 * @param node2 2nd node
 	 * @return checks if there is a direct path from node 1 to node 2
 	 */
 	public boolean existsDirectedPath(HyperGraph<T> hyperGraph, T node1, T node2) {
@@ -215,7 +234,7 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	
 	/**
 	 * 
-	 * 
+	 * @param originalSet original set
 	 * @return the powerset of @param originalSet
 	 */
 	public Set<Set<T>> powerSet(Set<T> originalSet) {
@@ -289,7 +308,6 @@ public class HyperGraph<T extends Node> implements Graph<T>{
 	/**
 	 * Returns the set of sub graphs of the given graph.
 	 * @param g a graph
-	 * @param <S> the type of nodes
 	 * 
 	 * @return the set of sub graphs of the given graph.
 	 */

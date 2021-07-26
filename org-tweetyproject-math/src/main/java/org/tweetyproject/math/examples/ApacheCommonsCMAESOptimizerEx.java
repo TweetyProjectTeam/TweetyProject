@@ -40,6 +40,10 @@ import org.tweetyproject.math.term.Variable;
  */
 
 public class ApacheCommonsCMAESOptimizerEx {
+/**
+ * constructor
+ * @return the problem
+ */
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		FloatVariable m1 = new FloatVariable("Machine 1", -50, 100);
 		FloatVariable m2 = new FloatVariable("Machine 2", -50, 100);
@@ -54,7 +58,16 @@ public class ApacheCommonsCMAESOptimizerEx {
 		
 	}
 	
+	/**
+	 * main method
+	 * @param args arguments
 
+	 * @throws ParserException parserEx
+	 * @throws IOException IOException
+	 * @throws GeneralMathException GeneralMathException
+	 */
+	 
+	 
 	public static void main(String[] args) throws ParserException, IOException, GeneralMathException{
 		//Create toy problem
 		ConstraintSatisfactionProblem prob = createConstraintSatProb1();

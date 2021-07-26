@@ -209,8 +209,9 @@ public abstract class GraphUtil {
 	}
 	
 	/**
-	 * Returns the (undirected) diameter of the graph, i.e. the longest shortest
+	 * 	 * Returns the (undirected) diameter of the graph, i.e. the longest shortest
 	 * path in the undirected version of the graph. 
+	 * @param <T> a Node
 	 * @param g some graph
 	 * @return the (undirected) diameter of the graph
 	 */
@@ -256,6 +257,7 @@ public abstract class GraphUtil {
 	/**
 	 * Returns the global clustering coefficient of the graph (if it is directed it is interpreted
 	 * as an undirected version).
+     * @param <T> a Node
 	 * @param g some graph
 	 * @return the clustering coefficient
 	 */
@@ -286,6 +288,7 @@ public abstract class GraphUtil {
 	 * Enumerates all chordless circuits of the given graph, i.e. all circuits a1,...,an
 	 * where there is no edge connecting any ak with aj unless k=j+1 or k=j-1. The algorithm 
 	 * of this method is adapted from [Bisdorff, On enumerating chordless circuits in directed graphs, 2010].
+	 * @param <T> a Node
 	 * @param g some graph
 	 * @return the set of chordless circuits
 	 */
@@ -347,6 +350,7 @@ public abstract class GraphUtil {
 	 * going through each node. The value is normalised by subtracting the minimum number (min) of such shortest
 	 * paths and dividing by (max-min).
 	 *  
+	 * @param <T> a Node
 	 * @param graph some graph
 	 * @return a map mapping each node to its betweenness centrality.
 	 */

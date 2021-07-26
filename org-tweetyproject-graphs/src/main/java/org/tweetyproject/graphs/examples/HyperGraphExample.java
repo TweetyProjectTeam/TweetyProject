@@ -27,18 +27,19 @@ import org.tweetyproject.graphs.HyperGraph;
 import org.tweetyproject.graphs.SimpleNode;
 
 /**
- * 
+ * example for a hypergraph
  * @author Sebastian Franke
  *
  */
 
 public class HyperGraphExample {
-	public void run(){
-
-	}
-	
 
 	
+
+	/**
+	 * main
+	 * @param args arguments
+	 */
 	public static void main(String[] args){
 		Graph<SimpleNode> g = new HyperGraph<SimpleNode>();
 		SimpleNode[] nodes = new SimpleNode[11];

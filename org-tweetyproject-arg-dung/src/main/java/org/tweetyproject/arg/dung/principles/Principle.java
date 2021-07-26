@@ -84,5 +84,12 @@ public abstract class Principle implements Postulate<Argument> {
     /* (non-Javadoc)
      * @see org.tweetyproject.commons.postulates.Postulate#isSatisfied(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.postulates.PostulateEvaluatable)
      */
+    
+    /**
+     * 
+     * @param kb kb
+     * @param ev ev
+     * @return is Satisfied
+     */
     public abstract boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev);
 }

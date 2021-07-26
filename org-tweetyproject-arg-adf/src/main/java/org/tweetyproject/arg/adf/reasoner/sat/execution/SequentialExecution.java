@@ -47,6 +47,12 @@ public final class SequentialExecution implements Execution {
 	
 	private final List<InterpretationProcessor> modelProcessors;
 	
+	/**
+	 * 
+	 * @param adf adf 
+	 * @param semantics semantics
+	 * @param satSolver satSolver
+	 */
 	public SequentialExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver) {
 		this.generator = semantics.createCandidateGenerator();
 		this.candidateProcessors = semantics.createCandidateProcessor(satSolver::createState);

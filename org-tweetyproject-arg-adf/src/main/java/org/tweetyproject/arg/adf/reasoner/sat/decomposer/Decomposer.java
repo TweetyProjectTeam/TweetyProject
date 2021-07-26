@@ -29,6 +29,12 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 public interface Decomposer {
 	
+	/**
+	 * 
+	 * @param adf adf 
+	 * @param desired desired
+	 * @return decompose
+	 */
 	Collection<Interpretation> decompose(AbstractDialecticalFramework adf, int desired);
 	
 }

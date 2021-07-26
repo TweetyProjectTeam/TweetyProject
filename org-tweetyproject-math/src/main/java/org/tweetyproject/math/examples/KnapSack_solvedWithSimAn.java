@@ -27,9 +27,17 @@ import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.IntegerConstant;
 import org.tweetyproject.math.term.Term;
 
+/**
+ * example for KnaSack via SimAn
+ * @author Sebastian Franke
+ *
+ */
 public class KnapSack_solvedWithSimAn {
 	
-	
+	/**
+	 * main method
+	 * @param args arguments
+	 */
 	public static void main(String args[]) {
 		
 		

@@ -142,8 +142,10 @@ public class LagrangeSolver extends Solver {
 		throw new GeneralMathException("No feasible solution.");		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.opt.Solver#isInstalled()
+	/**
+	 * 
+	 * @return if solver is installed
+	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		// as this is a native implementation it is always installed

@@ -61,7 +61,10 @@ public class PlPlugin extends AbstractTweetyPlugin {
 	
 	// option capabilities
 //	private static final OptionCapabilities PROPLOGIC__OPTIONS = new OptionCapabilities("TweetyProject Plugin", PROPLOGIC__CALL_PARAMETER);
-	
+	/**
+	 * 
+	 * @return capabilities representation
+	 */
 	@Capabilities
 	public String[] capabilities() { return new String[] {"TweetyProject Plugin", PROPLOGIC__CALL_PARAMETER}; }
 	

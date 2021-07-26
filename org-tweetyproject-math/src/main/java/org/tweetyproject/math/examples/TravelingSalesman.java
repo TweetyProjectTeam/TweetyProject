@@ -44,7 +44,10 @@ public class TravelingSalesman extends CombinatoricsProblem{
 
 
 	
-	
+	/**
+	 * constructor
+	 * @param elements elements in TSP
+	 */
 	public TravelingSalesman(ArrayList<ElementOfCombinatoricsProb> elements) {
 		super(elements, null);
 		int[][] rep = new int[elements.size()][elements.size()];
@@ -56,7 +59,7 @@ public class TravelingSalesman extends CombinatoricsProblem{
 			if(elements.get(i).components.size() != 2)
 				System.err.println("Elements of Traveling Salesman need to have an x-coordinate and a y-coordinate, nothing else");
 	}
-
+	/**version nr*/
 	private static final long serialVersionUID = 1L;
 
 	Term maxWeight;

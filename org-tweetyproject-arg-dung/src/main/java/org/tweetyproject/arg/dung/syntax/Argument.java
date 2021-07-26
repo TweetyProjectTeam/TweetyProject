@@ -96,6 +96,10 @@ public class Argument implements DungEntity, Node{
 		return getLdoArgument();
 	}
 	
+	/**
+	 * 
+	 * @return getLdoArgument
+	 */
 	public LdoArgument getLdoArgument(){
 		return new LdoArgument(this.name);
 	}

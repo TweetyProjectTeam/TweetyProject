@@ -32,7 +32,6 @@ import org.tweetyproject.math.GeneralMathException;
 import org.tweetyproject.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.ConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.OptimizationProblem;
-import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
@@ -50,8 +49,10 @@ public class GlpkSolver extends Solver {
 	/** For temporary files. */
 	private static File tmpFolder = null;
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.opt.Solver#isInstalled()
+	/**
+	 * 
+	 * @return if solver is installed
+	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		try {

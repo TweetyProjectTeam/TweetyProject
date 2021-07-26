@@ -92,6 +92,12 @@ public abstract class ImPostulate implements Postulate<PlFormula>{
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.postulates.Postulate#isSatisfied(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.postulates.PostulateEvaluatable)
 	 */
+	/**
+	 * 
+	 * @param kb collection of formulas
+	 * @param ev BeliefSet Inconsistency Measure
+	 * @return whether the formulas are satisfied
+	 */
 	public abstract boolean isSatisfied(Collection<PlFormula> kb, BeliefSetInconsistencyMeasure<PlFormula> ev);
 	
 	/**

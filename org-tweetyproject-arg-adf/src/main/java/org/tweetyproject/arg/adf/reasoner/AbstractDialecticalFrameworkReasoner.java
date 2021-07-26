@@ -42,12 +42,18 @@ public abstract class AbstractDialecticalFrameworkReasoner {
 	private final IncrementalSatSolver solver;
 
 	/**
-	 * @param solver
+	 * @param solver solver
 	 */
 	public AbstractDialecticalFrameworkReasoner(IncrementalSatSolver solver) {
 		this.solver = Objects.requireNonNull(solver);
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @param argument argument
+	 * @return skepticalQuery
+	 */
 	public boolean skepticalQuery(AbstractDialecticalFramework adf, Argument argument) {
 		Iterator<Interpretation> iterator = modelIterator(adf);
 		while (iterator.hasNext()) {
@@ -59,6 +65,12 @@ public abstract class AbstractDialecticalFrameworkReasoner {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @param argument argument
+	 * @return credulousQuery
+	 */
 	public boolean credulousQuery(AbstractDialecticalFramework adf, Argument argument) {
 		Iterator<Interpretation> iterator = modelIterator(adf);
 		while (iterator.hasNext()) {
@@ -70,6 +82,11 @@ public abstract class AbstractDialecticalFrameworkReasoner {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param adf adf 
+	 * @return getModels
+	 */
 	public Collection<Interpretation> getModels(AbstractDialecticalFramework adf) {
 		Collection<Interpretation> models = new LinkedList<Interpretation>();
 		Iterator<Interpretation> modelIterator = modelIterator(adf);
@@ -79,6 +96,11 @@ public abstract class AbstractDialecticalFrameworkReasoner {
 		return models;
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return getModel
+	 */
 	public Interpretation getModel(AbstractDialecticalFramework adf) {
 		Iterator<Interpretation> modelIterator = modelIterator(adf);
 		if (modelIterator.hasNext()) {
@@ -87,6 +109,11 @@ public abstract class AbstractDialecticalFrameworkReasoner {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param adf adf 
+	 * @return modelIterator
+	 */
 	public Iterator<Interpretation> modelIterator(AbstractDialecticalFramework adf) {
 		return query(adf)
 				.configure(Configuration.builder().setSatSolver(solver).build())

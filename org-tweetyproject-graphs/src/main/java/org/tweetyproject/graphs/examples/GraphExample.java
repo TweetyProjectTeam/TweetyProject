@@ -29,7 +29,9 @@ import org.tweetyproject.math.ComplexNumber;
  * Example that shows how to construct graphs programmatically.
  */
 public class GraphExample {
-	
+	/**
+	 * 1st run method
+	 */
 	public void run(){
 		Graph<SimpleNode> g = new DefaultGraph<SimpleNode>();
 		SimpleNode[] nodes = new SimpleNode[11];
@@ -68,7 +70,9 @@ public class GraphExample {
 			System.out.println(n + "\t" + GraphUtil.pageRank(g, n, 0.85, 0.00001));
 		}
 	}
-	
+	/**
+	 * 2nd run method
+	 */
 	public void run2(){
 		Graph<SimpleNode> g = new DefaultGraph<SimpleNode>();
 		SimpleNode[] nodes = new SimpleNode[5];
@@ -97,7 +101,10 @@ public class GraphExample {
 		for(ComplexNumber d: GraphUtil.eigenvalues(g))
 			System.out.println(d);
 	}
-	
+	/**
+	 * main
+	 * @param args arguments
+	 */
 	public static void main(String[] args){
 		new GraphExample().run();		
 	}	

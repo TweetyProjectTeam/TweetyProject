@@ -55,6 +55,10 @@ public class LdoArgument extends LdoFormula implements Atom, Comparable<LdoArgum
 		this.predicate = new PlPredicate(name);
 	}
 	
+	/**
+	 * 
+	 * @param other other
+	 */
 	public LdoArgument(LdoArgument other) {
 		this.predicate = new PlPredicate(other.getName());
 	}

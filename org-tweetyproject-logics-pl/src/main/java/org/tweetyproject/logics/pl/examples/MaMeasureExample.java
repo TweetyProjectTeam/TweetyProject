@@ -33,7 +33,12 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @author Matthias Thimm
  */
 public class MaMeasureExample {
-
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		// Create some knowledge base
 		PlBeliefSet kb = new PlBeliefSet();

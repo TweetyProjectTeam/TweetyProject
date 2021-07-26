@@ -38,6 +38,10 @@ import org.tweetyproject.logics.pl.util.RandomSampler;
  * @author Matthias Thimm
  */
 public class ImPostulateEvaluationExample {
+	/**
+	 * main
+	 * @param args arguments
+	 */
 	public static void main(String[] args) {
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		PlMusEnumerator.setDefaultEnumerator(new NaiveMusEnumerator<PlFormula>(SatSolver.getDefaultSolver()));

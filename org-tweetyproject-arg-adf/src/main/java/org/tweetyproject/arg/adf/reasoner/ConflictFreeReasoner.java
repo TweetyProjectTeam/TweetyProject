@@ -32,6 +32,10 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 @Deprecated( forRemoval = true, since = "1.19" )
 public class ConflictFreeReasoner extends AbstractDialecticalFrameworkReasoner {
 
+	/**
+	 * 
+	 * @param solver solver
+	 */
 	public ConflictFreeReasoner(IncrementalSatSolver solver) {
 		super(solver);
 	}

@@ -31,9 +31,21 @@ import java.util.Collection;
  */
 public abstract class EquivalenceKernel {
 
+	/**
+	 * STABLE
+	 */
     public static final EquivalenceKernel STABLE = new StableKernel();
+    /**
+     * COMPLETE
+     */
     public static final EquivalenceKernel COMPLETE = new CompleteKernel();
+    /**
+     * GROUNDED
+     */
     public static final EquivalenceKernel GROUNDED = new GroundedKernel();
+    /**
+     * ADMISSIBLE
+     */
     public static final EquivalenceKernel ADMISSIBLE = new AdmissibleKernel();
 
     /**

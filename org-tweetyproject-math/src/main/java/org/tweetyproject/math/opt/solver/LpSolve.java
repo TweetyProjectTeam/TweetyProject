@@ -31,7 +31,6 @@ import org.tweetyproject.commons.util.NativeShell;
 import org.tweetyproject.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.ConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.OptimizationProblem;
-import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.math.term.Constant;
 import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.FloatVariable;
@@ -56,8 +55,10 @@ public class LpSolve extends Solver {
 	/** For temporary files. */
 	private static File tmpFolder = new File("D:\\Uni\\Semester6\\HiWi\\tmpVonSebi");
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.opt.Solver#isInstalled()
+	/**
+	 * 
+	 * @return if solver is installed
+	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		try {

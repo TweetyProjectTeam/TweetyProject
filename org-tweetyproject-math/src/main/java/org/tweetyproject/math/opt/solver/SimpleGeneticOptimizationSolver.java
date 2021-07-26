@@ -36,7 +36,6 @@ import org.tweetyproject.math.equation.Inequation;
 import org.tweetyproject.math.equation.Statement;
 import org.tweetyproject.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.OptimizationProblem;
-import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.FloatVariable;
 import org.tweetyproject.math.term.IntegerConstant;
@@ -263,8 +262,10 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 		return result;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.opt.Solver#isInstalled()
+	/**
+	 * 
+	 * @return if solver is installed
+	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		// as this is a native implementation it is always installed

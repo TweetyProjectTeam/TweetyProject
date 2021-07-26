@@ -40,6 +40,13 @@ import org.tweetyproject.logics.pl.sat.OpenWboSolver;
  * @author Matthias Thimm
  */
 public class AcceptabilityReasonerExample {
+	/**
+	 * 
+	 * @param args string
+	 * @throws FileNotFoundException Exception
+	 * @throws ParserException Exception
+	 * @throws IOException Exception
+	 */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 		// load some example AF
 		TgfParser parser = new TgfParser();

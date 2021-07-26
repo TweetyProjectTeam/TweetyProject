@@ -28,7 +28,20 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+/**
+ * 
+ * @author Matthias Thimm
+ *
+ */
 public class NiskanenExample {
+	/**
+	 * 
+	 * @param args arguments
+	 * @throws IOException Exception
+	 * @throws NoSuchMethodException Exception
+	 * @throws InvocationTargetException Exception
+	 * @throws IllegalAccessException Exception
+	 */
     public static void main(String[] args) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         // create graph to construct examples
         DungTheory dt = new DungTheory();

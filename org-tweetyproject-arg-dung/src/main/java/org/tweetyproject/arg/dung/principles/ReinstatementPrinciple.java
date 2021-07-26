@@ -32,7 +32,7 @@ import java.util.Collection;
  * for all arguments a, if E defends a, then a is in E
  * i.e E is a complete extension
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */

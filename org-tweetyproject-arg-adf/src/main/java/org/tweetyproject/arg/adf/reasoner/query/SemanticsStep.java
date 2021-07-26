@@ -26,22 +26,59 @@ import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
  */
 public interface SemanticsStep {
 
+	/**
+	 * 
+	 * @return conflictFree
+	 */
 	ConditionlessTaskStep conflictFree();
 	
+	/**
+	 * 
+	 * @return naive
+	 */
 	ConditionlessTaskStep naive();
 	
+	/**
+	 * 
+	 * @return admissible
+	 */
 	ConditionlessTaskStep admissible();
 	
+	/**
+	 * 
+	 * @return preferred
+	 */
 	ConditionlessTaskStep preferred();
 	
+	/**
+	 * 
+	 * @return stable
+	 */
 	ConditionlessTaskStep stable();
 	
+	/**
+	 * 
+	 * @return complete
+	 */
 	ConditionlessTaskStep complete();
 	
+	/**
+	 * 
+	 * @return model
+	 */
 	ConditionlessTaskStep model();
 	
+	/**
+	 * 
+	 * @return ground
+	 */
 	ConditionlessTaskStep ground();
 
+	/**
+	 * 
+	 * @param semantics semantics
+	 * @return custom
+	 */
 	ConditionlessTaskStep custom(Semantics semantics);
 	
 }

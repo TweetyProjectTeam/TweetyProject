@@ -69,14 +69,20 @@ public class ForallQuantifiedFormula extends FolFormula {
 		support = new QuantifiedFormulaSupport<FolFormula>((FolFormula) folFormula, variables);
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 	}
-	
+	/**
+	 * 
+	 * @param other another formula
+	 */
 	public ForallQuantifiedFormula(ForallQuantifiedFormula other) {
 		if(!(other.getFormula() instanceof FolFormula))
 			throw new IllegalArgumentException("Formula must be first-order formula.");
 		support = new QuantifiedFormulaSupport<FolFormula>(other.getFormula(), other.getQuantifierVariables());
 		if(!this.isWellFormed()) throw new IllegalArgumentException("FolFormula not well-formed.");
 	}
-	
+	/**
+	 * 
+	 * @return the FolFormulas
+	 */
 	public Set<FolFormula> getQuantifiedFormulas(){
 		Set<FolFormula> qf = new HashSet<FolFormula>();
 		if(this.getFormula() instanceof AssociativeFolFormula) {
@@ -165,19 +171,29 @@ public class ForallQuantifiedFormula extends FolFormula {
 	//-------------------------------------------------------------------------
 	//	METHODS IMPLEMENTED IN QuantifiedFormulaSupport:
 	//-------------------------------------------------------------------------
-		
+		/**
+		 * returns formula
+		 */
 		public FolFormula getFormula() {
 			return support.getFormula();
 		}
-		
+		/**
+		 * returns variables 
+		 */
 		public Set<Variable> getQuantifierVariables() {
 			return support.getQuantifierVariables();
 		}
-		
+		/**
+		 * sets formula
+		 * @param formula formula
+		 */
 		public void setFormula(FolFormula formula) {
 			support.setFormula(formula);
 		}
-		
+		/**
+		 * sets vairables
+		 * @param variables variables 
+		 */
 		public void setQuantifierVariables(Set<Variable> variables) {
 			support.setQuantifierVariables(variables);
 		}

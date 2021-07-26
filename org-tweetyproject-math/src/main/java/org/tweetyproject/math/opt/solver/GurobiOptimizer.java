@@ -34,7 +34,6 @@ import org.tweetyproject.math.equation.*;
 import org.tweetyproject.math.opt.problem.ConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.GeneralConstraintSatisfactionProblem;
 import org.tweetyproject.math.opt.problem.OptimizationProblem;
-import org.tweetyproject.math.opt.solver.Solver;
 import org.tweetyproject.math.term.*;
 
 /**
@@ -49,7 +48,7 @@ public class GurobiOptimizer extends Solver{
 	GRBModel model;
 	HashMap<Variable, GRBVar> vars = new HashMap<Variable, GRBVar>();
 
-	/**
+	/*
 	 * Parameters from org.apache.commons.math3.optim.nonlinear.scalar.noderiv.CMAESOptimizer:
 	 * @param populationSize the population size
 	 * @param maxIterations Maximal number of iterations.
@@ -60,6 +59,11 @@ public class GurobiOptimizer extends Solver{
 	 * @param precision the precision of the optimization
 	 * @throws GRBException 
 	 */
+	
+	/**
+	 * 
+	 * @throws GRBException GRBException
+	 */
 	public GurobiOptimizer() throws GRBException{
 
 		
@@ -67,8 +71,8 @@ public class GurobiOptimizer extends Solver{
 	
 	/**
 	 * takes all Variables from a tweety problem and maps them to GRB Varaibles
-	 * @param prob
-	 * @throws GRBException
+	 * @param prob problem
+	 * @throws GRBException GRBException
 	 */
 	public void parseVars(OptimizationProblem prob) throws GRBException{
 		
@@ -87,8 +91,8 @@ public class GurobiOptimizer extends Solver{
 	/**
 	 * parses a term from tweety to GRB
 	 * the input term needs to be linear or quadratic
-	 * @param term
-	 * @return
+	 * @param term term
+	 * @return gurobi expression
 	 */
 	public GRBExpr parseTerm(Term term) {
 
@@ -150,7 +154,7 @@ public class GurobiOptimizer extends Solver{
 	 * parses a statement into a gurobi constrant and adds it to the model
 	 * @param s statement to be added
 	 * @param i running number of the constraint to be put into the Gurobi name of the constraint
-	 * @throws GRBException
+	 * @throws GRBException GRBException
 	 */
 	public void addStatementToGurobi(Statement s, Integer i) throws GRBException{
 		GRBExpr left = parseTerm(((Statement) s).getLeftTerm());
@@ -246,7 +250,7 @@ public class GurobiOptimizer extends Solver{
 	 * @param optimization_type one of OptimizationProblem.MAXIMIZE, OptimizationProblem.MINIMIZE 
 	 * @return the optimal variable assignment
 	 * @throws GeneralMathException if there is some issue in the computation
-	 * @throws GRBException 
+	 * @throws GRBException  GRBException
 	 */
 	public Map<Variable, Term> solve(Term t, int optimization_type) throws GeneralMathException, GRBException{
 		OptimizationProblem p = new OptimizationProblem(optimization_type);
@@ -324,8 +328,10 @@ public class GurobiOptimizer extends Solver{
 		return resultList;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.opt.Solver#isInstalled()
+	/**
+	 * 
+	 * @return if solver is installed
+	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		Runtime rt = Runtime.getRuntime();

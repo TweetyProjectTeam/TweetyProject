@@ -61,6 +61,9 @@ public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 	private Matrix transitionMatrix;
 	
 	
+	/**
+	 * DeadEndInconsistencyMeasure
+	 */
 	public DeadEndInconsistencyMeasure() {}
 	
 	@Override

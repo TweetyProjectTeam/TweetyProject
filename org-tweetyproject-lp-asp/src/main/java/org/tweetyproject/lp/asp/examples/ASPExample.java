@@ -52,6 +52,11 @@ public class ASPExample {
 
 	private static String CLINGO_PATH = "your/path/to/clingo";
 
+	/** 
+	 * 
+	 * @param args IOException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws IOException {
 		// Recreating src/main/resources/ex1.asp manually
 		ASPAtom p = new ASPAtom("p");

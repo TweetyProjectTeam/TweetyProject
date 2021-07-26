@@ -62,6 +62,11 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 * 
 	 * @see org.tweetyproject.graphs.Graph#add(org.tweetyproject.graphs.Edge)
 	 */
+	/**
+	 * 
+	 * @param edge an edge
+	 * @return whether the operation was successful
+	 */
 	public boolean add(Edge<T> edge) {
 		if (!this.nodes.contains(edge.getNodeA()) || !this.nodes.contains(edge.getNodeB()))
 			throw new IllegalArgumentException("The edge connects node that are not in this graph.");
@@ -334,12 +339,13 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	}
 
 	/**
-	 * Returns the strongly connected components of the given graph. A set of nodes
+	 * 	 * Returns the strongly connected components of the given graph. A set of nodes
 	 * is strongly connected, if there is a path from each node to each other. A set
 	 * of nodes is called strongly connected component if it is strongly connected
 	 * and maximal with respect to set inclusion. The strongly connected components
 	 * are computed using Tarjan's algorithm
 	 * 
+	 * @param <S> a Node
 	 * @param g some graph
 	 * @return the strongly connected components of the graph.
 	 */
@@ -409,6 +415,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	 * Checks whether there is a (directed) path from node1 to node2 in the given
 	 * graph.
 	 * 
+	 * @param <S> a Node
 	 * @param g     some graph.
 	 * @param node1 some node.
 	 * @param node2 some node.
@@ -437,6 +444,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	/**
 	 * Checks whether there is at least one cycle in the given graph.
 	 * 
+	 * @param <S> a Node
 	 * @param g some graph
 	 * @return "true" if there is a cycle in the graph, "false" if the graph is acyclic
 	 */
@@ -452,6 +460,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	/**
 	 * Helper method for detecting cycles using depth-first search.
 	 * 
+	 * @param <S> a Node
 	 * @param parent      current node
 	 * @param states map of states of nodes
 	 * @param g      some graph
@@ -475,6 +484,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	
 	/**
 	 * Finds the cycles of an graph order-sensitively, excluding self-loops (cycles of length one).
+	 * @param <S> a Node
 	 * @param g The graph to be searched.
 	 * @return An stack of nodes with the order indicating the direction of the cycle (assuming an directed graph).
 	 */
@@ -498,6 +508,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	
 	/**
 	 * Finds the cycles of an graph order-sensitively, including self-loops (cycles of length one).
+	 * @param <S> a Node
 	 * @param g The graph to be searched.
 	 * @return An stack of nodes with the order indicating the direction of the cycle (assuming an directed graph).
 	 */
@@ -585,6 +596,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	
 	/**
 	 * Finds all components of a graph.
+	 * @param <S> a Node
 	 * @param g The graph which components should be found.
 	 * @return A collection of the components as separate graphs.
 	 */
@@ -638,6 +650,7 @@ public class DefaultGraph<T extends Node> implements Graph<T> {
 	
 	/**
 	 * Finds all induced subgraphs.
+	 * @param <S> a Node
 	 * @param g The graph which induced subgraphs should be found.
 	 * @return A collection of graphs representing the induced subgraphs.
 	 */

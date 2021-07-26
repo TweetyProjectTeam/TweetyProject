@@ -34,7 +34,10 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 public class Negation extends FolFormula {
 	
 	private FolFormula folFormula;
-	
+	/**
+	 * 
+	 * @param formula relational formula to be negated
+	 */
 	public Negation(RelationalFormula formula){
 		if(!formula.isWellFormed())
 			throw new IllegalArgumentException("FolFormula not well-formed.");		

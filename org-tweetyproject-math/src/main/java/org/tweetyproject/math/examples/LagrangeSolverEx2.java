@@ -46,7 +46,10 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class LagrangeSolverEx2 {
-
+	/**
+	 * constructor
+	 * @return problem
+	 */
 public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		
 	
@@ -76,7 +79,13 @@ public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		
 		return prob;
 	}
-	
+/**
+	 * main method
+	 * @param args arguments
+ * @throws ParserException ParserException
+ * @throws IOException IOException
+ * @throws GeneralMathException GeneralMathException
+ */
 	public static void main(String[] args) throws ParserException, IOException, GeneralMathException{
 		ConstraintSatisfactionProblem prob = createConstraintSatProb1();
 		//Set a starting point (all variables are 0)

@@ -75,44 +75,92 @@ import org.tweetyproject.lp.asp.semantics.*;
  * @author Anna Gessler
  * 
  */
+
+/**
+ * 
+ * @author Anna Gessler
+ *
+ */
 public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPParserConstants {/*@bgen(jjtree)*/
+	/**parser state	 */
   protected JJTASPParserState jjtree = new JJTASPParserState();private static ASPParser oneThreadParser = new ASPParser(new StringReader(""));
 
  private static InstantiateVisitor visitor = new InstantiateVisitor();
 
+ /**
+  * 
+  * @param program StringReader
+  * @return StringReader
+  * @throws ParseException StringReader
+  */
  public static Program parseProgram(String program) throws ParseException
   {
     return parseProgram(new StringReader(program));
   }
 
+ /**
+  * 
+  * @param reader Reader
+  * @return Reader
+  * @throws ParseException Reader
+  */
  public static Program parseProgram(Reader reader) throws ParseException
   {
     oneThreadParser.ReInit(reader);
     return visitor.visit(oneThreadParser.Program(), null);
   }
 
+ /**
+  * 
+  * @param rule ASPRule
+  * @return ASPRule
+  * @throws ParseException ASPRule
+  */
    public static ASPRule parseRule(String rule) throws ParseException
   {
     return parseRule(new StringReader(rule));
   }
 
+   /**
+    * 
+    * @param reader ASPRule
+    * @return ASPRule
+    * @throws ParseException ASPRule
+    */
  public static ASPRule parseRule(Reader reader) throws ParseException
   {
     oneThreadParser.ReInit(reader);
     return visitor.visit(oneThreadParser.Statement(), null);
   }
 
+ /**
+  * 
+  * @param answerSet AnswerSet
+  * @return AnswerSet
+  * @throws ParseException AnswerSet
+  */
     public static AnswerSet parseAnswerSet(String answerSet) throws ParseException
   {
     return parseAnswerSet(new StringReader(answerSet));
   }
 
+    /**
+     * 
+     * @param reader AnswerSet
+     * @return AnswerSet
+     * @throws ParseException AnswerSet
+     */
   public static AnswerSet parseAnswerSet(Reader reader) throws ParseException
   {
     oneThreadParser.ReInit(reader);
     return visitor.visit(oneThreadParser.AnswerSet(), null);
   }
 
+  /**
+   * 
+   * @return AnswerSet
+   * @throws ParseException AnwerSet
+   */
   final public ASTAnswerSet AnswerSet() throws ParseException {
  /*@bgen(jjtree) AnswerSet */
   ASTAnswerSet jjtn000 = new ASTAnswerSet(JJTANSWERSET);
@@ -159,6 +207,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Program
+   * @throws ParseException Program
+   */
   final public ASTProgram Program() throws ParseException {
  /*@bgen(jjtree) Program */
   ASTProgram jjtn000 = new ASTProgram(JJTPROGRAM);
@@ -207,6 +260,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return RuleList
+   * @throws ParseException RuleList
+   */
   final public ASTRuleList Statements() throws ParseException {
  /*@bgen(jjtree) RuleList */
   ASTRuleList jjtn000 = new ASTRuleList(JJTRULELIST);
@@ -247,6 +305,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Query
+   * @throws ParseException Query
+   */
   final public ASTQuery Query() throws ParseException {
  /*@bgen(jjtree) Query */
   ASTQuery jjtn000 = new ASTQuery(JJTQUERY);
@@ -280,6 +343,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Rule
+   * @throws ParseException Rule
+   */
   final public ASTRule Statement() throws ParseException {
  /*@bgen(jjtree) Rule */
   ASTRule jjtn000 = new ASTRule(JJTRULE);
@@ -469,6 +537,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Head
+   * @throws ParseException Head
+   */
   final public ASTHead Head() throws ParseException {
  /*@bgen(jjtree) Head */
   ASTHead jjtn000 = new ASTHead(JJTHEAD);
@@ -518,6 +591,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return BodyList
+   * @throws ParseException BodyList
+   */
   final public ASTBodyList Body() throws ParseException {
  /*@bgen(jjtree) BodyList */
   ASTBodyList jjtn000 = new ASTBodyList(JJTBODYLIST);
@@ -560,6 +638,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Body
+   * @throws ParseException Body
+   */
   final public ASTBody Body1() throws ParseException {
                         /*@bgen(jjtree) Body */
   ASTBody jjtn000 = new ASTBody(JJTBODY);
@@ -633,6 +716,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return HeadElementsList
+   * @throws ParseException HeadElementsList
+   */
   final public ASTHeadElementsList Disjunction() throws ParseException {
  /*@bgen(jjtree) HeadElementsList */
   ASTHeadElementsList jjtn000 = new ASTHeadElementsList(JJTHEADELEMENTSLIST);
@@ -675,6 +763,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Choice
+   * @throws ParseException Choise
+   */
   final public ASTChoice Choice() throws ParseException {
  /*@bgen(jjtree) Choice */
   ASTChoice jjtn000 = new ASTChoice(JJTCHOICE);
@@ -748,6 +841,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return ChoiceElementList
+   * @throws ParseException ChoiseElementList
+   */
   final public ASTChoiceElementList ChoiceElements() throws ParseException {
  /*@bgen(jjtree) ChoiceElementList */
   ASTChoiceElementList jjtn000 = new ASTChoiceElementList(JJTCHOICEELEMENTLIST);
@@ -790,6 +888,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return ChoiceElement
+   * @throws ParseException ChoiceElement
+   */
   final public ASTChoiceElement ChoiceElement() throws ParseException {
  /*@bgen(jjtree) ChoiceElement */
   ASTChoiceElement jjtn000 = new ASTChoiceElement(JJTCHOICEELEMENT);
@@ -858,6 +961,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Aggregate
+   * @throws ParseException Aggregate
+   */
   final public ASTAggregate Aggregate() throws ParseException {
  /*@bgen(jjtree) Aggregate */
   ASTAggregate jjtn000 = new ASTAggregate(JJTAGGREGATE);
@@ -922,6 +1030,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return AggrElementList
+   * @throws ParseException AggrElementList
+   */
   final public ASTAggrElementList AggregateElements() throws ParseException {
  /*@bgen(jjtree) AggrElementList */
   ASTAggrElementList jjtn000 = new ASTAggrElementList(JJTAGGRELEMENTLIST);
@@ -964,6 +1077,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return AggrElement
+   * @throws ParseException AggrElement
+   */
   final public ASTAggrElement AggregateElement() throws ParseException {
  /*@bgen(jjtree) AggrElement */
   ASTAggrElement jjtn000 = new ASTAggrElement(JJTAGGRELEMENT);
@@ -1045,6 +1163,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return AggrFunc
+   * @throws ParseException AggrFunc
+   */
   final public String AggregateFunction() throws ParseException {
  /*@bgen(jjtree) AggrFunc */
   ASTAggrFunc jjtn000 = new ASTAggrFunc(JJTAGGRFUNC);
@@ -1087,6 +1210,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @throws ParseException ClingoMeta
+   */
   final public void MetaStatement() throws ParseException {
  /*@bgen(jjtree) ClingoMeta */
   ASTClingoMeta jjtn000 = new ASTClingoMeta(JJTCLINGOMETA);
@@ -1121,6 +1248,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     }
   }
 
+  /**
+   * 
+   * @return Opt
+   * @throws ParseException Opt
+   */
   final public ASTOpt Optimize() throws ParseException {
  /*@bgen(jjtree) Opt */
   ASTOpt jjtn000 = new ASTOpt(JJTOPT);
@@ -1169,6 +1301,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return OptElementList
+   * @throws ParseException OptElementList
+   */
   final public ASTOptElementList OptimizeElements() throws ParseException {
  /*@bgen(jjtree) OptElementList */
   ASTOptElementList jjtn000 = new ASTOptElementList(JJTOPTELEMENTLIST);
@@ -1211,6 +1348,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return OptElement
+   * @throws ParseException OptElement
+   */
   final public ASTOptElement OptimizeElement() throws ParseException {
  /*@bgen(jjtree) OptElement */
   ASTOptElement jjtn000 = new ASTOptElement(JJTOPTELEMENT);
@@ -1279,6 +1421,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return OptFunc
+   * @throws ParseException OptFunc
+   */
   final public String OptimizeFunction() throws ParseException {
  /*@bgen(jjtree) OptFunc */
   ASTOptFunc jjtn000 = new ASTOptFunc(JJTOPTFUNC);
@@ -1310,6 +1457,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Weight
+   * @throws ParseException Weight
+   */
   final public ASTWeight WeightAtLevel() throws ParseException {
  /*@bgen(jjtree) Weight */
   ASTWeight jjtn000 = new ASTWeight(JJTWEIGHT);
@@ -1361,6 +1513,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return NAFLiteralList
+   * @throws ParseException NAFLiteralList
+   */
   final public ASTNAFLiteralList NAFLiterals() throws ParseException {
  /*@bgen(jjtree) NAFLiteralList */
   ASTNAFLiteralList jjtn000 = new ASTNAFLiteralList(JJTNAFLITERALLIST);
@@ -1403,6 +1560,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return ASTNAFLiteral
+   * @throws ParseException ASTNAFLiteral
+   */
   final public ASTNAFLiteral NAFLiteral() throws ParseException {
  /*@bgen(jjtree) NAFLiteral */
   ASTNAFLiteral jjtn000 = new ASTNAFLiteral(JJTNAFLITERAL);
@@ -1459,6 +1621,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return ASTLiteral
+   * @throws ParseException ASTListeral
+   */
   final public ASTLiteral ClassicalLiteral() throws ParseException {
  /*@bgen(jjtree) Literal */
   ASTLiteral jjtn000 = new ASTLiteral(JJTLITERAL);
@@ -1537,6 +1704,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return ASTBuiltInAtom
+   * @throws ParseException ASTBuiltInAtom
+   */
   final public ASTBuiltInAtom BuiltinAtom() throws ParseException {
  /*@bgen(jjtree) BuiltInAtom */
   ASTBuiltInAtom jjtn000 = new ASTBuiltInAtom(JJTBUILTINATOM);
@@ -1613,6 +1785,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Binop
+   * @throws ParseException Binop
+   */
   final public String Binop() throws ParseException {
  /*@bgen(jjtree) Binop */
   ASTBinop jjtn000 = new ASTBinop(JJTBINOP);
@@ -1655,6 +1832,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return ASTTermList
+   * @throws ParseException ASTTermList
+   */
   final public ASTTermList Terms() throws ParseException {
  /*@bgen(jjtree) TermList */
   ASTTermList jjtn000 = new ASTTermList(JJTTERMLIST);
@@ -1697,6 +1879,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return ASTTerm
+   * @throws ParseException ASTTerm
+   */
   final public ASTTerm Term() throws ParseException {
  /*@bgen(jjtree) Term */
   ASTTerm jjtn000 = new ASTTerm(JJTTERM);
@@ -1786,6 +1973,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Ariterm
+   * @throws ParseException Ariterm
+   */
   final public ASTAriTerm AriTerm() throws ParseException {
  /*@bgen(jjtree) AriTerm */
   ASTAriTerm jjtn000 = new ASTAriTerm(JJTARITERM);
@@ -1824,6 +2016,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @return Arithop
+   * @throws ParseException Arithop
+   */
   final public String Arithop() throws ParseException {
  /*@bgen(jjtree) Arithop */
   ASTArithop jjtn000 = new ASTArithop(JJTARITHOP);
@@ -1863,6 +2060,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     throw new Error("Missing return statement in function");
   }
 
+  /**
+   * 
+   * @throws ParseException ParseException
+   */
   final public void Number() throws ParseException {
  /*@bgen(jjtree) Number */
         ASTNumber jjtn000 = new ASTNumber(JJTNUMBER);
@@ -1880,6 +2081,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     }
   }
 
+  /**
+   * 
+   * @throws ParseException ParseException
+   */
   final public void Variable() throws ParseException {
  /*@bgen(jjtree) Var */
   ASTVar jjtn000 = new ASTVar(JJTVAR);
@@ -1908,6 +2113,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     }
   }
 
+  /**
+   * 
+   * @throws ParseException Identifier
+   */
   final public void Identifier() throws ParseException {
  /*@bgen(jjtree) ID */
         ASTID jjtn000 = new ASTID(JJTID);
@@ -1925,6 +2134,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     }
   }
 
+  /**
+   * 
+   * @throws ParseException DlvIdentifier
+   */
   final public void DlvIdentifier() throws ParseException {
  /*@bgen(jjtree) DlvID */
         ASTDlvID jjtn000 = new ASTDlvID(JJTDLVID);
@@ -1942,6 +2155,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     }
   }
 
+  /**
+   * 
+   * @throws ParseException Parse Exception
+   */
   final public void ClingoIdentifier() throws ParseException {
  /*@bgen(jjtree) ClingoID */
         ASTClingoID jjtn000 = new ASTClingoID(JJTCLINGOID);
@@ -1959,6 +2176,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     }
   }
 
+  /**
+   * 
+   * @throws ParseException ParseException
+   */
   final public void DlvArithmeticPredicate() throws ParseException {
  /*@bgen(jjtree) DlvArithmeticID */
         ASTDlvArithmeticID jjtn000 = new ASTDlvArithmeticID(JJTDLVARITHMETICID);
@@ -1976,6 +2197,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
     }
   }
 
+  /**
+   * 
+   * @throws ParseException ParseException
+   */
   final public void String() throws ParseException {
  /*@bgen(jjtree) String */
         ASTString jjtn000 = new ASTString(JJTSTRING);
@@ -3079,10 +3304,19 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   private int jj_gc = 0;
 
   /** Constructor with InputStream. */
+  /**
+   * 
+   * @param stream InputStream
+   */
   public ASPParser(java.io.InputStream stream) {
      this(stream, null);
   }
   /** Constructor with InputStream and supplied encoding */
+  /**
+   * 
+   * @param stream encoding
+   * @param encoding encoding
+   */
   public ASPParser(java.io.InputStream stream, String encoding) {
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new ASPParserTokenManager(jj_input_stream);
@@ -3094,10 +3328,20 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /** Reinitialise. */
+  /**
+   * 
+   * @param stream java.io.Input.Stream
+   */
+  
   public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
   /** Reinitialise. */
+  /**
+   * 
+   * @param stream java.io.InputStream
+   * @param encoding java.io.InputStream
+   */
   public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
@@ -3110,6 +3354,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /** Constructor. */
+  /**
+   * 
+   * @param stream java.io.Reader
+   */
   public ASPParser(java.io.Reader stream) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new ASPParserTokenManager(jj_input_stream);
@@ -3121,6 +3369,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /** Reinitialise. */
+  /**
+   * 
+   * @param stream java.io.Reader
+   */
   public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
@@ -3133,6 +3385,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /** Constructor with generated Token Manager. */
+  /**
+   * 
+   * @param tm ASPParser TokenManager
+   */
   public ASPParser(ASPParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -3143,6 +3399,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /** Reinitialise. */
+  /**
+   * 
+   * @param tm ReInit
+   */
   public void ReInit(ASPParserTokenManager tm) {
     token_source = tm;
     token = new Token();
@@ -3202,6 +3462,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
 
 
 /** Get the next Token. */
+  /**
+   * 
+   * @return getNextToken
+   */
   final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -3211,6 +3475,11 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
 /** Get the specific Token. */
+  /**
+   * 
+   * @param index getToken
+   * @return getToken
+   */
   final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
@@ -3262,6 +3531,10 @@ public class ASPParser/*@bgen(jjtree)*/implements ASPParserTreeConstants, ASPPar
   }
 
   /** Generate ParseException. */
+  /**
+   * 
+   * @return generateParseException
+   */
   public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[54];

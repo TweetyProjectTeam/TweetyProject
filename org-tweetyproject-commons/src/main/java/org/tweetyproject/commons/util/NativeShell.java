@@ -34,6 +34,9 @@ public class NativeShell extends Shell {
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.util.Shell#run(java.lang.String)
 	 */
+	/**
+	 * return 
+	 */
 	@Override
 	public String run(String cmd) throws InterruptedException, IOException {
 		 return NativeShell.invokeExecutable(cmd, -1, true);
@@ -47,9 +50,20 @@ public class NativeShell extends Shell {
 	 * @throws InterruptedException if some interruption occurred.
 	 */
 	public static String invokeExecutable(String commandline) throws IOException, InterruptedException{
+		/**
+		 * NativeShell
+		 */
 		return NativeShell.invokeExecutable(commandline, -1);
 	}
 	
+	/** 
+	 * invokeExecutable
+	 * @param commandline String
+	 * @param maxLines String
+	 * @return NativeShell
+	 * @throws IOException throws
+	 * @throws InterruptedException throws
+	 */
 	public static String invokeExecutable(String commandline, long maxLines) throws IOException, InterruptedException{
 		return NativeShell.invokeExecutable(commandline, maxLines, false);
 	}

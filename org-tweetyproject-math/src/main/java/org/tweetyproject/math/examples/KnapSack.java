@@ -38,8 +38,13 @@ public class KnapSack extends CombinatoricsProblem {
 
 	/**since this class is not used with ant optimization, we do not need values in the array*/
 	protected static int[][] graphRepresantation;
+	/**random number*/
 	Random rand = new Random();
-
+/**
+ * constructor
+ * @param elements elements in sack
+ * @param maxWeight max weight of sack
+ */
 	public KnapSack(ArrayList<ElementOfCombinatoricsProb> elements, Term maxWeight) {
 		super(elements, graphRepresantation);
 		for (int i = 0; i < elements.size(); i++)
@@ -48,7 +53,7 @@ public class KnapSack extends CombinatoricsProblem {
 		this.maxWeight = maxWeight;
 
 	}
-
+	/**version nr*/
 	private static final long serialVersionUID = 1L;
 
 	Term maxWeight;
@@ -80,7 +85,11 @@ public class KnapSack extends CombinatoricsProblem {
 		return sum.doubleValue();
 
 	}
-
+	/**
+	 * calculates sum of values
+	 * @param sol values
+	 * @return sum
+	 */
 	public double sumOfValues(ArrayList<ElementOfCombinatoricsProb> sol) {
 		if (sol == null)
 			return 0;

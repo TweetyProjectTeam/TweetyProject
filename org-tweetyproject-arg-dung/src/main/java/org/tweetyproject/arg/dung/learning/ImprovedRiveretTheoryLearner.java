@@ -69,6 +69,9 @@ public class ImprovedRiveretTheoryLearner {
         this.undecidedAttacks = arguments.size() * arguments.size();
     }
 
+    /**
+     * show Weights
+     */
     public void showWeights() {
         for (Argument arg: this.theory) {
             System.out.print(new Attack(arg, arg));

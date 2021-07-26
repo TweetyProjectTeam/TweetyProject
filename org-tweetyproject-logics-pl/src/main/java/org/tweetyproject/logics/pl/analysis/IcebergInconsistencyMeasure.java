@@ -67,8 +67,22 @@ public class IcebergInconsistencyMeasure extends BeliefSetInconsistencyMeasure<P
 	 *
 	 */
 	public enum ConsequenceOperation {
-		IDENTITY, CONJUNCTS, SMALLEST_CONJUNCTS, MODULAR_CLASSICAL_CONSEQUENCE, MODUS_PONENS, PRIME_IMPLICATE,
-		OPPOSITE_LITERALS, DALAL;
+		/**identity*/
+		IDENTITY, 
+		/**conjuncts*/
+		CONJUNCTS, 
+		/**smallest conjuncts*/
+		SMALLEST_CONJUNCTS, 
+		/**modular classical consequence*/
+		MODULAR_CLASSICAL_CONSEQUENCE, 
+		/**modus ponens*/
+		MODUS_PONENS,
+		/**prime implicate*/
+		PRIME_IMPLICATE,
+		/**opposite literals*/
+		OPPOSITE_LITERALS, 
+		/**dalal*/
+		DALAL;
 	}
 
 	/**

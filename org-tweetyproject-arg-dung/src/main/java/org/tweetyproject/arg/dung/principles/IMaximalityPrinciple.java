@@ -31,7 +31,7 @@ import java.util.Collection;
  * A semantics satisfies I-Maximality iff for all pairs of extensions E1, E2 it holds that:
  * if E1 is a subset of E2, then E1 = E2
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */

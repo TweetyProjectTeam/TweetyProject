@@ -26,6 +26,10 @@ abstract class AbstractDecomposer implements Decomposer {
 		return prefixes;
 	}
 	
+	/**
+	 * 
+	 * @return asTwoValued
+	 */
 	public Decomposer asTwoValued() {
 		return new TwoValuedDecomposer();
 	}

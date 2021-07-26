@@ -34,6 +34,13 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @author Matthias Thimm
  */
 public class ContensionExample {
+	/**
+	 * main
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 * @throws InterruptedException InterruptedException
+	 */
 	public static void main(String[] args) throws ParserException, IOException, InterruptedException{
 		// Set SAT solver
 		SatSolver.setDefaultSolver(new Sat4jSolver());

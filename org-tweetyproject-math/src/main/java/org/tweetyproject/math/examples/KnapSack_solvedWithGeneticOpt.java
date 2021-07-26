@@ -26,10 +26,17 @@ import org.tweetyproject.math.term.ElementOfCombinatoricsProb;
 import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.IntegerConstant;
 import org.tweetyproject.math.term.Term;
-
+/**
+ * example for KnapSack via GenOpt
+ * @author Sebastian Franke
+ *
+ */
 public class KnapSack_solvedWithGeneticOpt {
 	
-	
+	/**
+	 * main method
+	 * @param args arguments
+	 */
 	public static void main(String args[]) {
 		
 		

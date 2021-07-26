@@ -26,6 +26,11 @@ import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
  */
 public interface ConditionlessTaskStep extends TaskStep {
 
+	/**
+	 * 
+	 * @param condition condition
+	 * @return where
+	 */
 	ConditionalTaskStep where(AcceptanceCondition condition);
 
 }

@@ -131,8 +131,12 @@ public abstract class SingleSetSignature<T> implements Signature, Iterable<T> {
 	public void removeAll(Collection<?> c) {
 		for (Object obj : c)
 			this.remove(obj);
-	}
 	
+	}
+	/** retainAll
+	 * 	
+	 * @param c Collection
+	 */
 	public void retainAll(Collection<?> c) {
 		Collection<Object> toBeRemoved = new HashSet<Object>();
 		for(Object obj: this)

@@ -31,7 +31,7 @@ import java.util.Collection;
  * A semantics satisfies admissibility if for all extensions E it holds that:
  * every argument in E is defended by E
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */

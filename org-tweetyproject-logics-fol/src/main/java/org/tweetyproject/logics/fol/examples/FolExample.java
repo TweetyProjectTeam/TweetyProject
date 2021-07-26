@@ -38,7 +38,12 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * 
  */
 public class FolExample {
-	
+	/**
+	 * 
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 */
 	public static void main(String[] args) throws ParserException, IOException{
 		/*
 		 * Example 1: Add sorts, constants and predicates to a first-order logic signature

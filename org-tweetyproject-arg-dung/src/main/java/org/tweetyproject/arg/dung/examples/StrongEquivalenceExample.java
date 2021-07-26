@@ -33,6 +33,10 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class StrongEquivalenceExample {
+	/**
+	 * 
+	 * @param args arguments
+	 */
     public static void main(String[] args) {
         Argument a = new Argument("a");
         Argument b = new Argument("b");

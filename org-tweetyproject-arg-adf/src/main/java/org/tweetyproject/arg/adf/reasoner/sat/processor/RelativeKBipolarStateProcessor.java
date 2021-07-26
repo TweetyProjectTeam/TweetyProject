@@ -66,6 +66,13 @@ public final class RelativeKBipolarStateProcessor implements StateProcessor {
 	 * @param maxDepth maxDepth
 	 * @param solver solver
 	 */
+	/**
+	 * 
+	 * @param maxDepth maxDepth
+	 * @param linkStrategy linkStrategy
+	 * @param adf adf
+	 * @param mapping mapping
+	 */
 	public RelativeKBipolarStateProcessor(int maxDepth, LinkStrategy linkStrategy, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.maxDepth = maxDepth;
 		this.linkStrategy = Objects.requireNonNull(linkStrategy);

@@ -29,9 +29,18 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  *
  */
 public final class DegreeComparator implements Comparator<Argument> {
-
+	/**
+	 * 
+	 * @author Mathias Hofer
+	 *
+	 */
 	public static enum DegreeType {
-		INCOMING, OUTGOING, UNDIRECTED
+		/**INCOMING*/
+		INCOMING, 
+		/**OUTGOING*/
+		OUTGOING, 
+		/**UNDIRECTED*/
+		UNDIRECTED
 	}
 
 	private final DegreeType degreeType;

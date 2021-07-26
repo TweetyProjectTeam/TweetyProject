@@ -61,7 +61,11 @@ public class FolAtom extends FolFormula implements Atom {
 	public FolAtom(Predicate predicate){
 		this(predicate,new ArrayList<Term<?>>());
 	}
-	
+	/**
+	 * constructs FolAtom
+	 * @param predicate predicate
+	 * @param terms terms
+	 */
 	public FolAtom(Predicate predicate, Term<?>... terms) {
 		this(predicate, Arrays.asList(terms));
 	}
@@ -77,7 +81,10 @@ public class FolAtom extends FolFormula implements Atom {
 		for(Term<?> t: arguments)
 			this.addArgument(t);		
 	}
-	
+	/**
+	 * 
+	 * @param other another Atom
+	 */
 	public FolAtom(FolAtom other) {
 		this.predicate = other.predicate;
 		for(Term<?> term : other.getArguments()) {

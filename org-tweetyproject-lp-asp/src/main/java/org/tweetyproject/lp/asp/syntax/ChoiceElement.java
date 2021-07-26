@@ -34,7 +34,7 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * This class represents an element of a choice atom. Choice
  * elements consist of an atom (required) and a tuple of literals (optional).
  * 
- * @see {@link org.tweetyproject.lp.asp.syntax.ChoiceHead}
+ * {@link org.tweetyproject.lp.asp.syntax.ChoiceHead}
  * 
  * @author Anna Gessler
  */

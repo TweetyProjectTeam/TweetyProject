@@ -82,7 +82,7 @@ public class DLVSolver extends ASPSolver {
 	/**
 	 * Constructs a new instance pointing to a specific DLV solver.
 	 * 
-	 * @param path2clingo    binary location of Clingo on the hard drive. The given
+	 * @param pathToDLV    binary location of Clingo on the hard drive. The given
 	 *                       location has to contain a binary called "clingo". Do
 	 *                       not include the binary itself in the path.
 	 * @param maxNOfModels   the maximum number of models that DLV will compute.

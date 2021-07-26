@@ -43,7 +43,14 @@ public class Ark extends Edge<PetriNetNode> {
 	 */
 	private Transition transition;
 	
+	/**
+	 * 
+	 * @author Matthias Timm
+	 *
+	 */
 	public enum Direction {
+		/** PLACE_TO_TRANSITION */
+		/** TRANSITION_TO_PLACE */
 		PLACE_TO_TRANSITION, TRANSITION_TO_PLACE
 	}
 	
@@ -131,8 +138,10 @@ public class Ark extends Edge<PetriNetNode> {
 		return weight;
 	}
 
+	
 	/**
-	 * @param the ark weight
+	 * 
+	 * @param weight setWeight
 	 */
 	public void setWeight(int weight) {
 		this.weight = weight;

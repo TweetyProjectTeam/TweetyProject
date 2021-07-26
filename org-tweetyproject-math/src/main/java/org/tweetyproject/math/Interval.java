@@ -38,11 +38,19 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	private S upperBound;
 	
 	
-	
+	/**
+	 * interval
+	 * @param interval the interval to be constructed
+	 */
 	public Interval(NumberSet<S> interval){
 		this.intervalset = interval;
 	}
 	
+	/**
+	 *  interval
+	 * @param lower lower bound
+	 * @param upper upper bound
+	 */
 	public Interval(S lower, S upper) {
 		this.lowerBound = lower;
 		this.upperBound = upper;
@@ -57,25 +65,43 @@ public class Interval<S extends Number> implements NumberSet<S> {
 	public S getLowerBound() {
 		return lowerBound;
 	}
+	/**
+	 * sets lower bound 
+	 * @param lowerBound lower bound
+	 */
 
 	public void setLowerBound(S lowerBound) {
 		this.lowerBound = lowerBound;
 		updateIntervallSetOnChange();
 	}
-
+	/**
+	 * 
+	 * @return upperBound
+	 */
 	public S getUpperBound() {
 		return upperBound;
 	}
-
+	/**
+	 * 
+	 * @param upperBound the upper bound
+	 */
 	public void setUpperBound(S upperBound) {
 		this.upperBound = upperBound;
 		updateIntervallSetOnChange();
 	}
 
+	/**
+	 * 
+	 * @return interval set
+	 */
 	public NumberSet<S> getIntervalset() {
 		return intervalset;
 	}
 
+	/**
+	 * 
+	 * @param intervalset to be set
+	 */
 	public void setIntervalset(NumberSet<S> intervalset) {
 		this.intervalset = intervalset;
 	}

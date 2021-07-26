@@ -36,8 +36,16 @@ import org.tweetyproject.math.opt.solver.*;
 import org.tweetyproject.math.term.*;
 
 import org.tweetyproject.math.term.Variable;
+/**
+ * test for gurobi
+ * @author Sebastian Franke
+ *
+ */
 public class GurobiTest {
-//test comment	
+	/**
+	 * constructor
+	 * @return problem
+	 */
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		FloatVariable m1 = new FloatVariable("Machine 1", -100 ,100);
 		FloatVariable m2 = new FloatVariable("Machine 2", -100, 100);
@@ -61,7 +69,14 @@ public class GurobiTest {
 		
 	}
 	
-
+	/**
+	 * main method
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 * @throws GeneralMathException GeneralMathException
+	 * @throws GRBException GRBException
+	 */
 	public static void main(String[] args) throws ParserException, IOException, GeneralMathException, GRBException{
 		//Create toy problem
 		ConstraintSatisfactionProblem prob = createConstraintSatProb1();

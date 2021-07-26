@@ -32,7 +32,7 @@ import java.util.Collection;
  * E is conflict-free
  * trivial property satisfied by practically all semantics
  *
- * see: Baroni, P., & Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
+ * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
  * @author Lars Bengel
  */

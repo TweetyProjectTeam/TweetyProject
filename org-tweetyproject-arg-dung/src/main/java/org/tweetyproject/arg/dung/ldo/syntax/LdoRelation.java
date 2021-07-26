@@ -34,15 +34,32 @@ public class LdoRelation extends LdoFormula {
 	private LdoFormula left;
 	private LdoFormula right;
 	
+	
+	/**
+	 * 
+	 * @param left left
+	 * @param right right
+	 */
 	public LdoRelation(LdoFormula left, LdoFormula right){
 		this.left = left;
 		this.right = right;
 	}
 	
+	
+	/**
+	 * 
+	 * @return return
+	 */
+	
 	public LdoFormula getLeft(){
 		return this.left;
 	}
 	
+	
+	/**
+	 * 
+	 * @return return
+	 */
 	public LdoFormula getRight(){
 		return this.right;
 	}

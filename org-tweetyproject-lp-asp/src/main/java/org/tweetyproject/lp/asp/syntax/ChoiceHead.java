@@ -38,7 +38,7 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  * atoms consist of choice elements and a binary operator
  * and term.
  * 
- * @see {@link org.tweetyproject.lp.asp.syntax.ChoiceElement}
+ * {@link org.tweetyproject.lp.asp.syntax.ChoiceElement}
  * 
  * @author Anna Gessler
  */
@@ -71,15 +71,17 @@ public class ChoiceHead extends ASPHead {
 	 */
 	private Term<?> rightGuard;
 	
-	/**
-	 * Create a new ChoiceHead with the given choice elements C, binary operators <>l and <>r and
-	 * comparison terms l and r, forming a choice atom "l <>l C <>r r".
-	 * 
+	
+	 /*
+	 * Create a new ChoiceHead with the given choice elements C, binary operators l and r and
+	 * comparison terms l and r, forming a choice atom l      l C      r r.
+	 */
+	 /** 
 	 * @param elements list of ChoiceElements
 	 * @param leftOp a BinaryOperator
-	 * @param leftTerm
+	 * @param leftTerm left Term
 	 * @param rightOp a BinaryOperator
-	 * @param rightTerm
+	 * @param rightTerm right Term
 	 */
 	public ChoiceHead(List<ChoiceElement> elements, ASPOperator.BinaryOperator leftOp, Term<?> leftTerm, ASPOperator.BinaryOperator rightOp, Term<?> rightTerm) {
 		this.elements = elements;
@@ -89,13 +91,14 @@ public class ChoiceHead extends ASPHead {
 		this.rightGuard = rightTerm;
 	}
 	
-	/**
-	 * Create a new ChoiceHead C with the given choice elements and right binary operator <> and
-	 * comparison term t, forming a choice atom "C <> t".
-	 * 
-	 * @param elements list of ChoiceElements
+	/*
+	 * Create a new ChoiceHead C with the given choice elements and right binary operator  and
+	 * comparison term t, forming a choice atom C     t.
+	 */ 
+	 /**
+	  *  @param elements list of ChoiceElements
 	 * @param rightOp a BinaryOperator
-	 * @param rightTerm
+	 * @param rightTerm right Term
 	 */
 	public ChoiceHead(List<ChoiceElement> elements, ASPOperator.BinaryOperator rightOp, Term<?> rightTerm) {
 		this.elements = elements;
@@ -105,12 +108,13 @@ public class ChoiceHead extends ASPHead {
 		this.leftGuard = null;
 	}
 	
-	/**
+	/*
 	 * Create a new ChoiceHead C with the given choice element
 	 * and the default operator and term, forming a
-	 * choice atom "C >= 0".
-	 * 
-	 * @param elements list of ChoiceElements
+	 * choice atom C >= 0.
+	 */
+	 /** 
+	 * @param e list of ChoiceElements
 	 */
 	public ChoiceHead(ChoiceElement e) {
 		this.elements = new ArrayList<ChoiceElement>();
@@ -121,12 +125,12 @@ public class ChoiceHead extends ASPHead {
 		this.leftGuard = null;
 	}
 	
-	/**
+	/*
 	 * Create a new ChoiceHead C with the given choice elements
 	 * and the default operator and term, forming a
 	 * choice atom "C >= 0".
-	 * 
-	 * @param elements list of ChoiceElements
+	 */
+	 /** @param elements list of ChoiceElements
 	 */
 	public ChoiceHead(List<ChoiceElement> elements) {
 		this.elements = elements;
@@ -136,13 +140,14 @@ public class ChoiceHead extends ASPHead {
 		this.leftGuard = null;
 	}
 	
-	/**
+	/*
 	 * Create a new ChoiceHead C with the given choice element, binary operator <> and
 	 * comparison term l, forming the choice atom "C <> l".
-	 * 
+	 * */
+	 /** 
 	 * @param e a ChoiceElement
-	 * @param op a BinaryOperator
-	 * @param term
+	 * @param rightOp a BinaryOperator
+	 * @param rightTerm a term
 	 */
 	public ChoiceHead(ChoiceElement e, ASPOperator.BinaryOperator rightOp, Term<?> rightTerm) {
 		this.elements = new ArrayList<ChoiceElement>();
@@ -277,7 +282,7 @@ public class ChoiceHead extends ASPHead {
 
 	/**
 	 * Set the right comparison operator.
-	 * @param leftOp
+	 * @param rightOp Operation
 	 */
 	public void setRightOperator(ASPOperator.BinaryOperator rightOp) {
 		this.rightOp = rightOp;

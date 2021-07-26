@@ -170,8 +170,10 @@ public class ApacheCommonsSimplex extends Solver {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.math.opt.Solver#isInstalled()
+	/**
+	 * 
+	 * @return if solver is installed
+	 * @throws UnsupportedOperationException UnsupportedOperationException
 	 */
 	public static boolean isInstalled() throws UnsupportedOperationException{
 		// as Apache commons is included as a Maven dependency, this solver

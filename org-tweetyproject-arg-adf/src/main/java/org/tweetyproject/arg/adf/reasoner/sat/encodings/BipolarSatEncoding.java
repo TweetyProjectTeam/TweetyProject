@@ -39,8 +39,8 @@ public class BipolarSatEncoding implements SatEncoding {
 	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param adf
-	 * @param mapping
+	 * @param adf adf
+	 * @param mapping mapping
 	 */
 	public BipolarSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.adf = Objects.requireNonNull(adf);

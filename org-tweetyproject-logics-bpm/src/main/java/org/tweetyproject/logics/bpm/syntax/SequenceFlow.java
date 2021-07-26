@@ -26,10 +26,21 @@ import org.tweetyproject.graphs.DirectedEdge;
  */
 public class SequenceFlow extends DirectedEdge<BpmnNode>  {
 
+	/**
+	 * 
+	 * @param nodeA SequenceFlow
+	 * @param nodeB SequenceFlow
+	 */
 	public SequenceFlow(BpmnNode nodeA, BpmnNode nodeB) {
 		super(nodeA, nodeB);
 	}
 	
+	/**
+	 * 
+	 * @param nodeA SequenceFlow
+	 * @param nodeB SequenceFlow
+	 * @param label SequenceFlow
+	 */
 	public SequenceFlow(BpmnNode nodeA, BpmnNode nodeB, String label) {
 		super(nodeA, nodeB, label);
 	}

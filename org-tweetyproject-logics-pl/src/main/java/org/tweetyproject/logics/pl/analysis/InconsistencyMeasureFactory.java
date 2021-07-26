@@ -37,35 +37,60 @@ public abstract class InconsistencyMeasureFactory {
 
 	/** An enumeration of all available inconsistency measures. */
 	public enum Measure{
+		/**DRASTIC*/
 		DRASTIC ("drastic", "Drastic Inconsistency Measure"),
+		/**MI*/
 		MI ("mi", "MI Inconsistency Measure"),
+		/**MIC*/
 		MIC ("mic", "MIC Inconsistency Measure"),
+		/**ETA*/
 		ETA ("eta", "Eta Inconsistency Measure"),
+		/**CONTENSION*/
 		CONTENSION ("contension", "Contension Inconsistency Measure"),
+		/**MC*/
 		MC ("mc", "MaxCons Inconsistency Measure"),
+		/**PR*/
 		PR ("pr", "P Inconsistency Measure"),
+		/**HS*/
 		HS ("hs", "Hitting Set Inconsistency Measure"),
+		/**DALALSUM*/
 		DALALSUM ("dalalsum", "Dalal-Sum Inconsistency Measure"),
+		/**DALALMAX*/
 		DALALMAX ("dalalmax", "Dalal-Max Inconsistency Measure"),
+		/**DALALHIT*/
 		DALALHIT ("dalalhit", "Dalal-Hit Inconsistency Measure"),
+		/**DF*/
 		DF ("df", "Df Inconsistency Measure"),
+		/**PM*/
 		PM ("pm", "Pm Inconsistency Measure"),
+		/**MV*/
 		MV ("mv", "MusVar Inconsistency Measure"),
+		/**NC*/
 		NC ("nc", "NCons Inconsistency Measure"),
+		/**MCSC*/
 		MCSC ("mcsc", "MCSC Inconsistency Measure"),
+		/**CC*/
 		CC ("cc","CC Inconsistency Measure"),
+		/**CSP*/
 		CSP ("csp","CSP Inconsistency Measure"),
+		/**FB*/
 		FB ("fb", "Forgetting-based Inconsistency Measure"),
+		/**IS*/
 		IS ("is", "Independent set-based Inconsistency Measure");
-		
+		/**id*/
 		public String id;
+		/**label*/
 		public String label;
 		
 		Measure(String id, String label){
 			this.id = id;
 			this.label = label;			
 		}
-		
+		/**
+		 * 
+		 * @param id ID
+		 * @return the measure
+		 */
 		public static Measure getMeasure(String id){
 			for(Measure m: Measure.values())
 				if(m.id.equals(id))

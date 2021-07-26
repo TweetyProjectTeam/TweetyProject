@@ -69,6 +69,13 @@ public final class ParallelExecution implements Execution {
 	
 	private Map<Branch, Interpretation> branches;
 	
+	/**
+	 * 
+	 * @param adf adf 
+	 * @param semantics semantics
+	 * @param satSolver satSolver
+	 * @param parallelism parallelism
+	 */
 	public ParallelExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver, int parallelism) {
 		this.satSolver = Objects.requireNonNull(satSolver);
 		this.adf = Objects.requireNonNull(adf);

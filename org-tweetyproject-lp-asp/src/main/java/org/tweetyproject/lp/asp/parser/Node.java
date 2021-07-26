@@ -59,7 +59,13 @@ public interface Node {
 	/* Return the number of children the node has. */
 	public int jjtGetNumChildren();
 
-	/* Accept the visitor. **/
+	/* Accept the visitor. */
+	/**
+	 * 
+	 * @param visitor parser visitor
+	 * @param data object
+	 * @return a new object
+	 */
 	public Object jjtAccept(ASPParserVisitor visitor, Object data) ;
 }
 /*

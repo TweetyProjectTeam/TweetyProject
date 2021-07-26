@@ -35,6 +35,10 @@ import java.util.Collection;
  * @author Lars Bengel
  */
 public class WeakSemanticsExample {
+	/**
+	 * 
+	 * @param args arguments
+	 */
     public static void main(String[] args) {
         //initialize example
         DungTheory ex1 = new DungTheory();

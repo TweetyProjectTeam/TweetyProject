@@ -57,6 +57,13 @@ public class OptimizeExample {
 	
 	private static String CLINGO_PATH = "your/path/to/clingo";
 
+	/**
+	 * 
+	 * @param args IOException
+	 * @throws IOException IOException
+	 * @throws ParseException ParseException
+	 * @throws SolverException SolverException
+	 */
 	public static void main(String[] args) throws IOException, ParseException, SolverException {
 		Program hotelsExample = new Program();
 

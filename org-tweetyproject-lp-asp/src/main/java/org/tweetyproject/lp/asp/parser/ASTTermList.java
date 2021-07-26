@@ -33,8 +33,7 @@ public class ASTTermList extends SimpleNode {
 	/**
 	 * Accept the visitor.
 	 * 
-	 * @throws ParseException
-	 **/
+	 */
 	public Object jjtAccept(ASPParserVisitor visitor, Object data) {
 		return visitor.visit(this, data);
 	}

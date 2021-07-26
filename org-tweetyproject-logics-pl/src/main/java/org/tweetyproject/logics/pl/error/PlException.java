@@ -31,11 +31,18 @@ public class PlException extends LanguageException {
 	
 	/** kill warning */
 	private static final long serialVersionUID = 843894579984076905L;
-
+	/**
+	 * 
+	 * @param reason LanguageExceptionReason
+	 */
 	public PlException(LanguageExceptionReason reason) {
 		this(reason, "");
 	}
-	
+	/**
+	 * 
+	 * @param reason LanguageExceptionReason
+	 * @param info info
+	 */
 	public PlException(LanguageExceptionReason reason, String info) {
 		super("Propositional-Logic", reason, info);
 	}

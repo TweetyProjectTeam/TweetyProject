@@ -37,6 +37,13 @@ import org.tweetyproject.math.term.Term;
  */
 
 public class TravelingSalesman_solvedWithAntOpt {
+	/**
+	 * main method
+	 * @param args arguments
+	 * @throws IOException IOException
+	 * @throws ConfigurationException ConfigurationException
+	 * @throws InvalidInputException InvalidInputException
+	 */
 	public static void main(String args[]) throws IOException, ConfigurationException, InvalidInputException {
 		
 		int numberOfCities = 20;

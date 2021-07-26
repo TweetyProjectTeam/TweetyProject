@@ -27,8 +27,11 @@ import java.util.StringTokenizer;
  * @author Matthias Thimm
  */
 public enum FileFormat {
+	/**tgf*/
 	TGF ("tgf", "Trivial Graph format"),
+	/**apx*/
 	APX ("apx", "Aspartix format"),
+	/**cnf*/
 	CNF ("cnf", "Conjunctive Normal Form format");
 	//LPG ("lpg", "Logic Programming format"),
 	//AIF ("aif", "Argument Interchange format"),	

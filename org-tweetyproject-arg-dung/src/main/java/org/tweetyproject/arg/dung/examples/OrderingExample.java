@@ -33,6 +33,13 @@ import java.util.List;
  * @author Lars Bengel
  */
 public class OrderingExample {
+	/**
+	 * 
+	 * @param args arguments
+	 * @throws NoSuchMethodException Exception
+	 * @throws IllegalAccessException Exception
+	 * @throws InvocationTargetException Exception
+	 */
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         DungTheory theory = new DungTheory();
         Argument a = new Argument("1");

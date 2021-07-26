@@ -45,6 +45,10 @@ import org.tweetyproject.math.term.Variable;
  * @author Sebastian Franke
  */
 public class LpSolverEx {
+	/**
+	 * constructor
+	 * @return problem
+	 */
 	public static ConstraintSatisfactionProblem createConstraintSatProb1() {
 		//Define the constraints (all are equations)
 		FloatVariable m1 = new FloatVariable("Maschine1");
@@ -74,7 +78,13 @@ public class LpSolverEx {
 		
 	}
 	
-
+	/**
+	 * main method
+	 * @param args arguments
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
+	 * @throws GeneralMathException GeneralMathException
+	 */
 	public static void main(String[] args) throws ParserException, IOException, GeneralMathException{
 		//Create toy problem
 		ConstraintSatisfactionProblem prob = createConstraintSatProb1();

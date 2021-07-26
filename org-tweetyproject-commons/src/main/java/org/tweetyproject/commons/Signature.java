@@ -128,6 +128,10 @@ public interface Signature extends Cloneable {
 	 */
 	public void clear();
 	
+	/**
+	 * clones signature
+	 * @return clone
+	 */
 	public Signature clone();
 
 }

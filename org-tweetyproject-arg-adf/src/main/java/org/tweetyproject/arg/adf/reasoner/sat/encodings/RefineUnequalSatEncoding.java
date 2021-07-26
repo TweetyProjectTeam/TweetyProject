@@ -36,6 +36,10 @@ public class RefineUnequalSatEncoding implements RelativeSatEncoding {
 
 	private final PropositionalMapping mapping;
 
+	/**
+	 * 
+	 * @param mapping mapping
+	 */
 	public RefineUnequalSatEncoding(PropositionalMapping mapping) {
 		this.mapping = Objects.requireNonNull(mapping);
 	}

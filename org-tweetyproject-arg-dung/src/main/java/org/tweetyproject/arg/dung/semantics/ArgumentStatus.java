@@ -23,7 +23,10 @@ package org.tweetyproject.arg.dung.semantics;
  * @author Matthias Thimm
  */
 public enum ArgumentStatus {
+	/** IN */
 	IN,
+	/** OUT */
 	OUT,
+	/** UNDECIDED */
 	UNDECIDED
 }

@@ -156,7 +156,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * returns true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 * @param argument an argument
-	 * @param dungTheory a setaf theory (the knowledge base)
+	 * @param ext an extension (the knowledge base)
 	 * @return true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 */
@@ -184,7 +184,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	/**
 	 * returns true if no accepted argument attacks another accepted one in
 	 * this interpretation wrt. the given theory.
-	 * @param dungTheory a setaf theory.
+	 * @param ext an extension.
 	 * @return true if no accepted argument attacks another accepted one in
 	 * this interpretation wrt. the given theory.
 	 */
@@ -199,7 +199,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	/**
 	 * returns true if every accepted argument of this is defended by some accepted
 	 * argument wrt. the given setaf theory.
-	 * @param dungTheory a setaf theory. 
+	 * @param ext an extension. 
 	 * @return true if every accepted argument of this is defended by some accepted
 	 * argument wrt. the given setaf theory.
 	 */
@@ -242,7 +242,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
 	/**
 	 * Computes the set {A | (A,argument) in attacks}.
-	 * @param argument an argument
+	 * @param node an argument
 	 * @return the set of all arguments that attack <code>argument</code>.
 	 */
 	public Set<Set<Argument>> getAttackers(Argument node){
@@ -271,7 +271,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	/**
 	 * returns true if some argument of <code>ext</code> attacks argument.
 	 * @param a an argument
-	 * @param SetAfExtension an extension, ie. a set of arguments
+	 * @param setAfExtension an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
 	public boolean isAttacked(Argument a, Extension setAfExtension){
@@ -385,12 +385,12 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	
 	/**
 	 * Adds an attack from the first argument to the second to this SetAf theory.
-	 * @param attacker
+	 * @param attacker some argument
 	 * @param attacked some argument
 	 * @return "true" if the set of attacks has been modified.
 	 */
-	public boolean addAttack(Argument hashSet, Argument attacked){
-		SetAttack s = new SetAttack(hashSet, attacked);
+	public boolean addAttack(Argument attacker, Argument attacked){
+		SetAttack s = new SetAttack(attacker, attacked);
 		this.edges.add(s);
 		return true; 
 	}
@@ -546,6 +546,9 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	/** The set of edges */
 	protected Set<SetAttack> edges;
 	
+	/**
+	 * constructor
+	 */
 	public SetAf(){
 		this.nodes = new HashSet<Argument>();
 		this.edges = new HashSet<SetAttack>();
@@ -553,7 +556,11 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 
 
 
-
+/**
+ * 
+ * @param edge attack
+ * @return whether the atttack was added or not
+ */
 	public boolean add(SetAttack edge) {
 		for(Argument e: edge.getNodeA())
 			if(!this.nodes.contains(e))
@@ -592,11 +599,19 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 		return null;
 	}
 	
-
+	/**
+	 * 
+	 * @return all attacks
+	 */
 	public Set<SetAttack> getAttacks() {
 		return this.edges;
 	}
-	
+	/**
+	 * 
+	 * @param node1 an attacking set
+	 * @param b an argument
+	 * @return the edge between the two
+	 */
 	public SetAttack getDirEdge(Set<Argument> node1, Node b) {
 		for(SetAttack e : this.edges) {
 			if(e.getNodeA().equals(node1) && e.getNodeB().equals(b))
@@ -633,7 +648,11 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 		return false;
 	}
 
-	
+	/**
+	 * 
+	 * @param node the node
+	 * @return the children of the node
+	 */
 	public Collection<Argument> getChildren(Set<Argument> node) {
 		HashSet<Argument> result = new HashSet<Argument>();
 		for(SetAttack e : this.edges) {
@@ -645,11 +664,17 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 		
 	}
 
+
 	@Override
 	public Collection<Argument> getParents(Node node) {
 		System.err.println("The return type for getParents in SetAfs is Collection<Set<Argument>>");
 		return null;
 	}
+	/**
+	 * 
+	 * @param node an argument
+	 * @return the arguments' parents
+	 */
 	public Collection<Set<Argument>> getParents(Argument node) {
 		HashSet<Set<Argument>> result = new HashSet<Set<Argument>>();
 		for(SetAttack e : this.edges) {
@@ -660,7 +685,14 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 		return result;
 	}
 
-	
+	/**
+	 * 
+	 * @param <S> a node
+	 * @param hyperGraph a setAf
+	 * @param node1 an argument
+	 * @param node2 an argument
+	 * @return whether the path exists
+	 */
 	public static <S extends Node> boolean existsDirectedPath(SetAf hyperGraph, Argument node1, Argument node2) {
 		if (!hyperGraph.getNodes().contains(node1) || !hyperGraph.getNodes().contains(node2))
 			throw new IllegalArgumentException("The nodes are not in this graph.");
@@ -710,8 +742,8 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	
 	/**
 	 * 
-	 * 
-	 * @return the powerset of @param originalSet
+	 * @param originalSet original set
+	 * @return the powerset of 
 	 */
 	public Set<Set<Argument>> powerSet(Set<Argument> originalSet) {
 	    HashSet<Set<Argument>> sets = new HashSet<Set<Argument>>();
@@ -778,7 +810,6 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	/**
 	 * Returns the set of sub graphs of the given graph.
 	 * @param g a graph
-	 * @param <S> the type of nodes
 	 * 
 	 * @return the set of sub graphs of the given graph.
 	 */
@@ -855,7 +886,11 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 			SetAf.archivedSubgraphs.put(this, getSubgraphsHelper(this));		
 		return SetAf.archivedSubgraphs.get(this);
 	}
-
+	/**
+	 * 
+	 * @param g the SetAf
+	 * @return the subgraphs of the SetAf
+	 */
 	public static Collection<DirHyperGraph<Argument>> getSubgraphsHelper(SetAf g) {
 		// not very efficient but will do for now
 		Collection<DirHyperGraph<Argument>> result = new HashSet<DirHyperGraph<Argument>>();

@@ -30,6 +30,10 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Matthias Thimm
  */
 public class CF2Example {
+	/**
+	 * 
+	 * @param args string
+	 */
 	public static void main(String[] args){
 		// create some Dung theory
 		DungTheory theory = new DungTheory();

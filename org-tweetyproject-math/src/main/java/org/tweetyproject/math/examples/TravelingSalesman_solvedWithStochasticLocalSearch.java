@@ -34,6 +34,10 @@ import org.tweetyproject.math.term.Term;
  */
 
 public class TravelingSalesman_solvedWithStochasticLocalSearch {
+	/**
+	 * main method
+	 * @param args arguments
+	 */
 	public static void main(String args[]) {
 		
 		int numberOfCities = 20;

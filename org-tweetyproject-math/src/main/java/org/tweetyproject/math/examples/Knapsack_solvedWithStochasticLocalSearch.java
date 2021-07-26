@@ -35,6 +35,10 @@ import org.tweetyproject.math.term.Term;
  */
 
 public class Knapsack_solvedWithStochasticLocalSearch {
+	/**
+	 * main method
+	 * @param args arguments
+	 */
 	public static void main(String args[]) {
 		
 		//define the maximum weight

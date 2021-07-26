@@ -37,6 +37,10 @@ import java.util.HashSet;
 public class PrincipleExample {
     private static Collection<Principle> all_principles;
 
+    /**
+     * 
+     * @param args arguments
+     */
     public static void main(String[] args) {
         all_principles = new HashSet<>();
         all_principles.add(Principle.CONFLICT_FREE);
@@ -63,6 +67,9 @@ public class PrincipleExample {
         CF2Example();
     }
 
+    /**
+     * AdmissibleExample
+     */
     public static void AdmissibleExample() {
         DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
         PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
@@ -71,6 +78,9 @@ public class PrincipleExample {
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }
 
+    /**
+     * GroundedExample
+     */
     public static void GroundedExample() {
         DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
         PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
@@ -79,6 +89,9 @@ public class PrincipleExample {
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }
 
+    /**
+     * CompleteExample
+     */
     public static void CompleteExample() {
         DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
         PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
@@ -87,6 +100,9 @@ public class PrincipleExample {
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }
 
+    /**
+     * PreferredExample
+     */
     public static void PreferredExample() {
         DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
         PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
@@ -95,6 +111,9 @@ public class PrincipleExample {
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }
 
+    /**
+     * StableExample
+     */
     public static void StableExample() {
         DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
         PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,
@@ -103,6 +122,9 @@ public class PrincipleExample {
         System.out.println(evaluator.evaluate(4000, false).prettyPrint());
     }
 
+    /**
+     * NaiveExample
+     */
     public static void NaiveExample() {
         DungTheoryGenerator dg = new EnumeratingDungTheoryGenerator();
         PostulateEvaluator<Argument, DungTheory> evaluator = new PostulateEvaluator<>(dg,

@@ -39,11 +39,29 @@ public interface TweetyConfiguration {
 	 * @author Matthias Thimm
 	 */
 	public enum LogLevel{
+		/** 
+		 * TRACE
+		 */
 	    TRACE (5, "trace"),
+	    /** 
+	     * DEBUG
+	     */
 	    DEBUG (4, "debug"),
+	    /** 
+	     * INFO
+	     */
 	    INFO (3, "info"),
+	    /** 
+	     * WARN
+	     */
 	    WARN (2, "warn"),
+	    /** 
+	     * ERROR
+	     */
 	    ERROR (1, "error"),
+	    /** 
+	     * FATAL
+	     */
 	    FATAL (0, "fatal");
 	    
 	    /** The log level as integer */
@@ -51,20 +69,31 @@ public interface TweetyConfiguration {
 	    /** The log level as string */
 	    private final String levelAsString;
 	    
-	    /* Creates a new LogLevel */
+	    /** Creates a new LogLevel */
 	    LogLevel(int levelAsInt, String levelAsString) {
+	    	/** levelAsInt */
 	        this.levelAsInt = levelAsInt;
+	        /** levelAsString */
 	        this.levelAsString = levelAsString;
 	    }
 	    
-	    /* Returns the log level as integer */
+/**
+ * Returns the log level as integer 
+ * @return levelAsInt
+ */
+	   
 	    public int levelAsInt(){ return this.levelAsInt; }
 	    
-	    /* Returns the log level as string */
+	    /** 
+	     * Returns the log level as string
+	     * @return log level as string
+	     */
 	    public String levelAsString(){ return this.levelAsString; }
 	    
-	    /*
-	     * Returns the log level described by the given string. 
+	    /**
+	     * Returns the log level described by the given string
+	     * @param s string describing log level
+	     * @return the log level described by the given string
 	     */
 	    public static LogLevel getLogLevel(String s){
 	    	for(LogLevel l: LogLevel.values()){

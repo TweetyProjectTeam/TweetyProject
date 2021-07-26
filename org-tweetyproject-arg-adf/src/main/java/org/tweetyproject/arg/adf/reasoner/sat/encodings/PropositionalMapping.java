@@ -88,6 +88,11 @@ public final class PropositionalMapping {
 		return Literal.create(name.toString());
 	}
 
+	/**
+	 * 
+	 * @param argument argument
+	 * @return getFalse
+	 */
 	public Literal getFalse(Argument argument) {
 		if (!falses.containsKey(argument)) {
 			throw new IllegalArgumentException("The given argument is unknown to this mapping.");
@@ -96,6 +101,11 @@ public final class PropositionalMapping {
 		return falses.get(argument);
 	}
 
+	/**
+	 * 
+	 * @param argument argument
+	 * @return getTrue
+	 */
 	public Literal getTrue(Argument argument) {
 		if (!trues.containsKey(argument)) {
 			throw new IllegalArgumentException("The given argument is unknown to this mapping.");
@@ -104,6 +114,12 @@ public final class PropositionalMapping {
 		return trues.get(argument);
 	}
 
+	/**
+	 * 
+	 * @param from from
+	 * @param to to
+	 * @return getLink
+	 */
 	public Literal getLink(Argument from, Argument to) {
 		Pair<Argument, Argument> pair = Pair.of(from, to);
 		if (!links.containsKey(pair)) {
@@ -112,14 +128,27 @@ public final class PropositionalMapping {
 		return links.get(pair);
 	}
 	
+	/**
+	 * 
+	 * @return getArgumentLiterals
+	 */
 	public Collection<Literal> getArgumentLiterals() {
 		return new UnionCollectionView<>(falses.values(), trues.values());
 	}
 	
+	/**
+	 * 
+	 * @return getArguments
+	 */
 	public Set<Argument> getArguments() {
 		return Collections.unmodifiableSet(trues.keySet()); // could also return falses.keySet(), does not matter
 	}
 
+	/**
+	 * 
+	 * @param link link
+	 * @return getLink
+	 */
 	public Literal getLink(Link link) {
 		return getLink(link.getFrom(), link.getTo());
 	}

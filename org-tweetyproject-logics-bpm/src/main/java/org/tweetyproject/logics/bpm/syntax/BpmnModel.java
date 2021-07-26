@@ -228,11 +228,25 @@ public class BpmnModel implements Graph<BpmnNode>, BeliefBase{
 	private boolean isInstanceOf(Object object, Class<?> theClass) {
 		return theClass.isAssignableFrom(object.getClass());
 	}
-	
+	/**
+	 * 
+	 * @author Matthias Thimm
+	 *
+	 */
 	public enum BpmnNodeType {
+		/** START_EVENT */
+		/** END_EVENT */
+		/** EVENT */
+		/** ACTIVITY */
+		/** EXCLUSIVE_GATEWAY */
+		/** INCLUSIVE_GATEWAY */
 		START_EVENT, END_EVENT, EVENT, ACTIVITY, EXCLUSIVE_GATEWAY, INCLUSIVE_GATEWAY
 	}
 	
+	/**
+	 * 
+	 * @return getSortedNodes
+	 */
 	public Map<BpmnNodeType, Set<BpmnNode>> getSortedNodes() {
 		Map<BpmnNodeType, Set<BpmnNode>> sortedNodes = new HashMap<>();
 		for(BpmnNodeType type : BpmnNodeType.values()) {

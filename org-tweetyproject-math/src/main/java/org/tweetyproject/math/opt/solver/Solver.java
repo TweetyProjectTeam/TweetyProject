@@ -22,7 +22,6 @@ import java.util.*;
 
 import org.tweetyproject.math.GeneralMathException;
 import org.tweetyproject.math.opt.problem.*;
-import org.tweetyproject.math.opt.solver.ApacheCommonsSimplex;
 import org.tweetyproject.math.term.*;
 
 

@@ -39,8 +39,8 @@ public class TwoValuedModelSatEncoding implements SatEncoding, RelativeSatEncodi
 	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param adf
-	 * @param mapping
+	 * @param adf adf
+	 * @param mapping mapping
 	 */
 	public TwoValuedModelSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.adf = Objects.requireNonNull(adf);

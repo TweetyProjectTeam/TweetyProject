@@ -33,8 +33,15 @@ import org.tweetyproject.commons.*;
  */
 public interface Rule<C extends Formula, P extends Formula> extends Formula {
 
+	/**
+	 * isFact
+	 * @return  whether the rule is a fact
+	 */
 	public boolean isFact();
-	
+/**
+ * isConstraint
+ * @return whether the rule is a constraint
+ */
 	public boolean isConstraint();
 	
 	/**

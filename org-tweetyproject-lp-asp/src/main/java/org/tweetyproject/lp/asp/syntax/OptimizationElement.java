@@ -64,9 +64,9 @@ public class OptimizationElement extends ASPElement {
 	 * Creates a new optimization element with the given weight, terms and
 	 * literals.
 	 * 
-	 * @param weight
-	 * @param terms
-	 * @param literals
+	 * @param weight weight
+	 * @param terms terms
+	 * @param literals literals
 	 */
 	public OptimizationElement(Term<?> weight, List<Term<?>> terms, List<ASPBodyElement> literals) {
 		this.weight = weight;
@@ -78,9 +78,9 @@ public class OptimizationElement extends ASPElement {
 	 * Creates a new optimization element with the given single weight, term and
 	 * literal.
 	 * 
-	 * @param weight
-	 * @param term
-	 * @param literal
+	 * @param weight weight
+	 * @param term term
+	 * @param literal literal
 	 */
 	public OptimizationElement(Term<?> weight, Term<?> term, ASPBodyElement literal) {
 		this.weight = weight;
@@ -92,9 +92,8 @@ public class OptimizationElement extends ASPElement {
 	 * Creates a new optimization element with the given single term and
 	 * literal.
 	 * 
-	 * @param weight
-	 * @param term
-	 * @param literal
+	 * @param term term
+	 * @param literal literal
 	 */
 	public OptimizationElement(Term<?> term, ASPBodyElement literal) {
 		this.left.add(term);
@@ -105,10 +104,10 @@ public class OptimizationElement extends ASPElement {
 	 * Creates a new optimization element with the given weight, priority, terms
 	 * and literals.
 	 * 
-	 * @param weight
+	 * @param weight weight
 	 * @param priority an integer
-	 * @param terms
-	 * @param literals
+	 * @param terms terms
+	 * @param literals literals
 	 */
 	public OptimizationElement(Term<?> weight, int priority, List<Term<?>> terms, List<ASPBodyElement> literals) {
 		this.weight = weight;
@@ -121,10 +120,10 @@ public class OptimizationElement extends ASPElement {
 	 * Creates a new optimization element with the given weight, priority, terms
 	 * and literals.
 	 * 
-	 * @param weight
-	 * @param priority
-	 * @param terms
-	 * @param literals
+	 * @param weight weight
+	 * @param priority priority
+	 * @param terms terms
+	 * @param literals literals
 	 */
 	public OptimizationElement(Term<?> weight, Term<?> priority, List<Term<?>> terms, List<ASPBodyElement> literals) {
 		this.weight = weight;

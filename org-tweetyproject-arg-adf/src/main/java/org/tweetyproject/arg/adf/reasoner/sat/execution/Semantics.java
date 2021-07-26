@@ -48,53 +48,120 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 public interface Semantics {
 	
+	/**
+	 * 
+	 * @return createDecomposer
+	 */
 	Decomposer createDecomposer();
 
+	/**
+	 * 
+	 * @return createCandidateGenerator
+	 */
 	CandidateGenerator createCandidateGenerator();
 
+	/**
+	 * 
+	 * @return createStateProcessors
+	 */
 	List<StateProcessor> createStateProcessors();
 	
+	/**
+	 * 
+	 * @param stateSupplier stateSupplier
+	 * @return createCandidateProcessor
+	 */
 	List<InterpretationProcessor> createCandidateProcessor(Supplier<SatSolverState> stateSupplier);
 
+	/**
+	 * 
+	 * @param stateSupplier stateSupplier
+	 * @return createVerifier
+	 */
 	Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier);
 
+	/**
+	 * 
+	 * @param stateSupplier stateSupplier
+	 * @return createModelProcessors
+	 */
 	List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier);
 
 	/**
 	 * 
-	 * @param prefix
+	 * @param prefix prefix
 	 * @return a new {@link Semantics} instance
 	 */
 	Semantics withPrefix(Interpretation prefix);
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return conflictFree
+	 */
 	static Semantics conflictFree(AbstractDialecticalFramework adf) {
 		return new ConflictFreeSemantics(adf);
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return naive
+	 */
 	static Semantics naive(AbstractDialecticalFramework adf) {
 		return new NaiveSemantics(adf);
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return admissible
+	 */
 	static Semantics admissible(AbstractDialecticalFramework adf) {
 		return new AdmissibleSemantics(adf);
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return preferred
+	 */
 	static Semantics preferred(AbstractDialecticalFramework adf) {
 		return new PreferredSemantics(adf);
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return stable
+	 */
 	static Semantics stable(AbstractDialecticalFramework adf) {
 		return new StableSemantics(adf);
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return complete
+	 */
 	static Semantics complete(AbstractDialecticalFramework adf) {
 		return new CompleteSemantics(adf);
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return model
+	 */
 	static Semantics model(AbstractDialecticalFramework adf) {
 		return new ModelSemantics(adf);
 	}
 
+	/**
+	 * 
+	 * @param adf adf
+	 * @return ground
+	 */
 	static Semantics ground(AbstractDialecticalFramework adf) {
 		return new GroundSemantics(adf);
 	}
