@@ -30,7 +30,7 @@ public class PriestWorldIterator implements InterpretationIterator<PlFormula,PlB
 
 	/** The signature used for creating possible worlds. */
 	private PlSignature sig = null;
-	
+
 	private List<Proposition> set;
 	
 	private ThreeValuedBitSet currentItem;

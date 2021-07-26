@@ -56,6 +56,11 @@ public class Indecision extends PlFormula {
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#hasLowerBindingPriority(org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula)
 	 */
+	/**
+	 * 
+	 * @param other a formula
+	 * @return returns false
+	 */
 	public boolean hasLowerBindingPriority(PlFormula other){
 		// negations have the highest binding priority
 		return false;

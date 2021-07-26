@@ -21,6 +21,7 @@ public class RankingFunctionThreeValued extends AbstractInterpretation<ClBeliefS
 	/**
 	 * Integer used to define infinity.
 	 */
+
 	public static final Integer INFINITY = Integer.MAX_VALUE;
 	
 	/**

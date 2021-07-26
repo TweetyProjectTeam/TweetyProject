@@ -30,9 +30,9 @@ public class PreferredRevisionerADF {
 	
 	/**
 	 * Revise an ADF with a Propositional Formula information-modular preorders
-	 * @param args
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @param args arguments
+	 * @throws FileNotFoundException FileNotFoundException
+	 * @throws IOException IOException
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// Set path to ADF and psi

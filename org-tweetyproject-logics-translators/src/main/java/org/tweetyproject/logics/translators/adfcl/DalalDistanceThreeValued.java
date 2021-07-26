@@ -15,9 +15,15 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
  */
 public class DalalDistanceThreeValued {
 
-	/* 
+	/**
+	 * 	  
 	 * Based on new version of PriestWorld_adapted
+	 *
+	 * @param a PriestWorldAdapted
+	 * @param b PriestWorldAdapted
+	 * @return distnace between the 2 worlds
 	 */
+
 	public double distance(PriestWorldAdapted a, PriestWorldAdapted b) {
 		double n = 0;
 		PlSignature sig = new PlSignature();
@@ -45,6 +51,12 @@ public class DalalDistanceThreeValued {
 		}
 		return n;
 	}
+	/**
+	 * 
+	 * @param coll multiple PriestWorlds
+	 * @param b a PriestWorldAdapted
+	 * @return the distance 
+	 */
 	public double distance(Collection<PriestWorldAdapted> coll, PriestWorldAdapted b) {
 		double n = b.getSignature().size();
 		

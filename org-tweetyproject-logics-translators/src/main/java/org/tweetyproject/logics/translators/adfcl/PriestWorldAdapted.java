@@ -33,43 +33,64 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 
 	/** The three truth values. */
 	public enum TruthValue {
-		TRUE, FALSE, BOTH;
+		/**TRUE*/
+		TRUE, 
+		/**FALSE*/
+		FALSE, 
+		/**BOTH*/
+		BOTH;
 		
 		/*
 		 * J: Strong negation
+		 */
+		/**
+		 * 
+		 * @return a Truthvalue
 		 */
 		public TruthValue neg(){
 			if(this.equals(TRUE)) return FALSE;
 			if(this.equals(FALSE)) return TRUE;
 			return BOTH;
 		}	
-		/*
+		/**
 		 * J: Weak negation
-		 * return false, if interpretation is true
-		 * return true in all other case 
+		 * @return false, if interpretation is true, true in all other case 
 		 */
 		public TruthValue weakNeg(){
 			if(this.equals(TRUE)) return FALSE;
 			return TRUE;
 		}
 		
-		/*
+
+		/**
 		 * J: Return "True" iff TruthValue is True  
-		 * (!) Compared to the original PriestWorld, return False if value is Both/Undecided (!)
+		 * (!) Compared to the original PriestWorld, return False if value is Both/Undecided (!) 
+		 * @return whether this is equal to TRUE
 		 */
 		public boolean getClassical(){
 			return this.equals(TRUE);
 		}
+		/**
+		 * 
+		 * @param v a truth value
+		 * @return TruthValue
+		 */
 		public TruthValue and(TruthValue v){
 			if(this.equals(FALSE) || v.equals(FALSE)) return FALSE;
 			if(this.equals(BOTH) || v.equals(BOTH)) return BOTH;
 			return TRUE;
 		}
+		/**
+		 * 
+		 * @param v a truth value
+		 * @return TruthValue
+		 */
 		public TruthValue or(TruthValue v){
 			if(this.equals(TRUE) || v.equals(TRUE)) return TRUE;
 			if(this.equals(BOTH) || v.equals(BOTH)) return BOTH;
 			return FALSE;
 		}
+
 		public String toString(){
 			if(this.equals(TRUE)) return "T";
 			if(this.equals(FALSE)) return "F";
