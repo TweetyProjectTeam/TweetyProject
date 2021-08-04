@@ -15,20 +15,20 @@ Step-by-step guides can be found here:
 * [Installing the snapshot version of TweetyProject](http://tweetyproject.org/doc/install-snapshot.html)
 
 ## Contributing
-Want to contribute? We appreciate it! If you find a bug or would like to request a feature, please open an issue here. For bug reports, include steps to recreate the bug and screenshots, if possible. 
+Want to contribute? We appreciate it! If you find a bug or would like to request a feature, please open an issue here. For bug reports, include steps to recreate the bug and screenshots, if possible.
 
 If you want to make your own contributions to the code, follow the usual steps:
-* Fork this repository 
+* Fork this repository
 * Create a new branch `git checkout -b wip/myfeature`
-* Make your changes 
+* Make your changes
 * Add your changes  `git add your-files`
 * Commit your changes `git commit -m "description of your feature"`
 * Push to your branch `git push origin wip/myfeature`
 * Create a pull request`
 
 ## Documentation
-* **API:** The most recent version of the technical documentation for all TweetyProject libraries in form of the JavaDoc API can be found here: [TweetyProject API 1.19](http://tweetyproject.org/api/1.19/index.html)
-* **Integration of third-party solvers:** The following pages give some more detailed information on how third-party products such as SAT solvers and optimization solvers can be integrated in TweetyProject: 
+* **API:** The most recent version of the technical documentation for all TweetyProject libraries in form of the JavaDoc API can be found here: [TweetyProject API 1.20](http://tweetyproject.org/api/1.20/index.html)
+* **Integration of third-party solvers:** The following pages give some more detailed information on how third-party products such as SAT solvers and optimization solvers can be integrated in TweetyProject:
    * [Integration of SAT Solvers](http://tweetyproject.org/doc/sat-solvers.html)
   * [Integration of first-order logic theorem provers](http://tweetyproject.org/doc/fol-provers.html)
   * [Integration of optimization problem solvers](http://tweetyproject.org/doc/optimization-problem-solvers.html)
@@ -45,4 +45,4 @@ If you want to make your own contributions to the code, follow the usual steps:
 A manual on how to use TweetyProject in your programs is currently in development.
 
 ## License
-All parts of the TweetyProject available on this website are licensed under the [GNU Lesser General Public License](http://www.gnu.org/licenses/#LGPL) version 3 (beginning with TweetyProject version 1.6, the versions before are licensed under the [GNU General Public License](http://www.gnu.org/licenses/#GPL) version 3) except when this is noted otherwise. Use and modification of the libraries is encouraged but please give credit by referring to this repository. Please note that some libraries make also use of other third-party libraries such as Apache Commons. 
+All parts of the TweetyProject available on this website are licensed under the [GNU Lesser General Public License](http://www.gnu.org/licenses/#LGPL) version 3 (beginning with TweetyProject version 1.6, the versions before are licensed under the [GNU General Public License](http://www.gnu.org/licenses/#GPL) version 3) except when this is noted otherwise. Use and modification of the libraries is encouraged but please give credit by referring to this repository. Please note that some libraries make also use of other third-party libraries such as Apache Commons.

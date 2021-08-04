@@ -1,3 +1,29 @@
+04.08.2021 - TweetyProject 1.20
+  New libraries:
+    - org.tweetyproject.logics.petri: Petri nets with reasoning capabilities and
+      inconsistency measures
+    - org.tweetyproject.arg.setaf: abstract argumentation framworks with
+      collective attacks (SetAFs), including several reasoner
+  New functionalities:
+    - added principles for abstract argumentation and a tool that checks
+      compliance with principles for arbitrary reasoner
+      (org.tweetyproject.arg.dung)
+    - added reasoner for strong admissibility semantics, eager semantics,
+      weakly complete semantics, weakly grounded semantics, weakly preferred
+      semantics, solid admissibility semantics (org.tweetyproject.arg.dung)
+    - added query API for ADFs (org.tweetyproject.arg.adf)
+    - added grounding capabilities to ASP (org.tweetyproject.lp.asp)
+    - new reasoner for ranking semantics for abstract argumentation
+      (org.tweetyproject.arg.rankings)
+    - added hypergraph datastructures to graph library
+     (org.tweetyproject.graphs)
+    - added transformation functionalities between ADFs and conditional
+      logics (org.tweetyproject.logics.translators)
+  Minor changes:
+    - Bugfixes and improvements for ASP (org.tweetyproject.lp.asp)
+    - Bugfixes and improvements for ranking semantics for abstract argumentation
+      (org.tweetyproject.arg.rankings)
+    - Improved JavaDoc throughout the project
 02.02.2021 - TweetyProject 1.19
   - The source repository of TweetyProject has now been moved to GitHub
     (https://github.com/TweetyProjectTeam/TweetyProject). As a result, the main
