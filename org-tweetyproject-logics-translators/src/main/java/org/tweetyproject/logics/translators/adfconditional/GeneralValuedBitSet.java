@@ -45,7 +45,7 @@ public final class GeneralValuedBitSet {
 	/**
 	 * get the value of the bit at position i
 	 * @param i = position
-	 * @return
+	 * @return the value of the position
 	 */
 	public int get(int i) {
 		return bitSet[i];
@@ -61,8 +61,8 @@ public final class GeneralValuedBitSet {
 	}
 	
 	/**
-	 * returns true, if all values are set to max value
-	 * @return
+	 *
+	 * @return true, if all values are set to max value
 	 */
 	public boolean allTrue() {
 		for (int i = 0; i < bitSet.length; i++) {

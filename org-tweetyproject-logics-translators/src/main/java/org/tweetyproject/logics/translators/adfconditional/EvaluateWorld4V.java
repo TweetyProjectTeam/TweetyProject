@@ -13,7 +13,10 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * @author Jonas Schumacher
  */
 public class EvaluateWorld4V {
-
+/**
+ * 
+ * @param args arguments
+ */
 	public static void main(String[] args) {
 		
 		/*

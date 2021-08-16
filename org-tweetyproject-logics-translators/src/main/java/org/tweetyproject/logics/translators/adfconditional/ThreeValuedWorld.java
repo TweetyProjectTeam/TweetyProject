@@ -24,12 +24,22 @@ public class ThreeValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormu
 
 	/** The three truth values. */
 	public enum TruthValue {
-		TRUE, FALSE, UNDECIDED;
+		/**true*/
+		TRUE, 
+		/**false*/
+		FALSE, 
+		/**undecided*/
+		UNDECIDED;
 		
-		// Return "TRUE" iff 3-valued TruthValue is also "TRUE"  
+		
+		/**
+		 * 
+		 * @return"TRUE" iff 3-valued TruthValue is also "TRUE"  
+		 */
 		public boolean getClassical(){
 			return this.equals(TRUE);
 		}
+		
 		public String toString(){
 			if(this.equals(TRUE)) return "T";
 			if(this.equals(FALSE)) return "F";

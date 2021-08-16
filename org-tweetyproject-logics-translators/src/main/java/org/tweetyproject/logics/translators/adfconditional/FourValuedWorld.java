@@ -23,9 +23,20 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
 public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
 
 	public enum TruthValue {
-		TRUE, FALSE, UNDECIDED, INCONSISTENT;
+		/**true*/
+		TRUE, 
+		/**false*/
+		FALSE, 
+		/**undecided*/
+		UNDECIDED, 
+		/**inconsistent*/
+		INCONSISTENT;
 		
-		// Return "TRUE" iff 4-valued TruthValue is also "TRUE"  
+		
+		/**
+		 * 
+		 * @returnReturn "TRUE" iff 4-valued TruthValue is also "TRUE"  
+		 */
 		public boolean getClassical(){
 			return this.equals(TRUE);
 		}
@@ -355,7 +366,10 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 	public String toString(){
 		return this.values.toString();
 	}
-	
+	/**
+	 * 
+	 * @return values as string
+	 */
 	public String printValues() {
 		String pureValues = "";
 		for (TruthValue val : this.values.values()) {
@@ -363,7 +377,11 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		}
 		return pureValues;
 	}
-	
+	/**
+	 * 
+	 * @param coll worlds
+	 * @return the string representation
+	 */
 	public static String printCollection(Collection<FourValuedWorld> coll) {
 		String output = "{";
 		for (FourValuedWorld world : coll) {

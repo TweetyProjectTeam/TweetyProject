@@ -1,3 +1,4 @@
+
 package org.tweetyproject.logics.translators.adfpossibilistic;
 
 import java.io.File;
@@ -65,9 +66,9 @@ public class PossibilisticGammaOperator {
 	 * Implements the Gamma Operator:
 	 * Input: Old Possibility Distribution and ADF
 	 * Output: New Possibility Distribution
-	 * @param args
-	 * @throws ParserException
-	 * @throws IOException
+	 * @param args arguments
+	 * @throws ParserException parserexception
+	 * @throws IOException ioexception
 	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		

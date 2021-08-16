@@ -20,16 +20,18 @@ import org.tweetyproject.logics.pl.syntax.Tautology;
  *
  */
 public class CADFSemantics {
-	
+	/**
+	 * all possible wworlds
+	 */
 	public static Collection<FourValuedWorld> allPossibleWorlds;
 	
 	/**
 	 * Implementation of the gamma operator: calculate a new set of (output) interpretations given a cADF and an (input) interpretation
-	 * @param statementFormulas
-	 * @param acceptanceFormulas
-	 * @param sig
-	 * @param worldInput
-	 * @return
+	 * @param statementFormulas statement Formulas
+	 * @param acceptanceFormulas acceptance formulas 
+	 * @param sig signature
+	 * @param worldInput input world
+	 * @return a collection of worlds
 	 */
 	public static Collection<FourValuedWorld> gammaOperator(ArrayList<PlFormula> statementFormulas, ArrayList<PlFormula> acceptanceFormulas, PlSignature sig, FourValuedWorld worldInput) {
 		FourValuedWorldIterator iteratorInner = new FourValuedWorldIterator(sig);
@@ -66,11 +68,11 @@ public class CADFSemantics {
 	/**
 	 * Implementation of the Gamma Prime Operator: 
 	 * Calculate the union of the Gamma Operator of all input worlds and then reduce those worlds to the least informative ones
-	 * @param inputCollection
-	 * @param statementFormulas
-	 * @param acceptanceFormulas
-	 * @param sig
-	 * @return
+	 * @param inputCollection iput
+	 * @param statementFormulas statement Formulas
+	 * @param acceptanceFormulas acceptance Formulas
+	 * @param sig signature
+	 * @return worlds
 	 */
 	public static Collection<FourValuedWorld> gammaPrimeOperator(Collection<FourValuedWorld> inputCollection, ArrayList<PlFormula> statementFormulas, ArrayList<PlFormula> acceptanceFormulas, PlSignature sig) {
 		Collection<FourValuedWorld> bigUnion = new HashSet<FourValuedWorld>();
@@ -85,7 +87,7 @@ public class CADFSemantics {
 	 * Check whether a given world constitutes an admissible interpretation
 	 * @param inputWorld
 	 * @param outputWorlds
-	 * @return
+	 * @return whether the worlds are admissible
 	 */
 	public static boolean isAdmissible(FourValuedWorld inputWorld, Collection<FourValuedWorld> outputWorlds) {
 		for (FourValuedWorld outputWorld : outputWorlds) {
@@ -102,7 +104,7 @@ public class CADFSemantics {
 	 * @param outputWorlds
 	 * @param statementFormulas
 	 * @param acceptanceFormulas
-	 * @return
+	 * @return  whether the worlds are complete
 	 */
 	public static boolean isComplete(FourValuedWorld inputWorld, Collection<FourValuedWorld> outputWorlds, ArrayList<PlFormula> statementFormulas, ArrayList<PlFormula> acceptanceFormulas) {
 		// Iterate over all output worlds
@@ -119,7 +121,7 @@ public class CADFSemantics {
 	 * Input an ADF, calculate all possible 4-valued interpretations, apply the gamma operator
 	 * Check whether the interpretations are admissible, complete, grounded, preferred or 2-valued  
 	 * 
-	 * @param args
+	 * @param args arguments
 	 */
 	public static void main(String[] args) {
 		

@@ -16,9 +16,10 @@ import org.tweetyproject.logics.pl.syntax.*;
 public class PossibilityDistribution {
 	
 	/**
-	 * Upper and lower bound
+	 * lower bound
 	 */
 	public static final double LOWER_BOUND = 0.0;
+	/**upper bound*/
 	public static final double UPPER_BOUND = 1.0;
 	
 	/**
