@@ -1,4 +1,4 @@
-package org.tweetyproject.logics.translators.adfcl;
+package org.tweetyproject.logics.translators.adfrevision;
 
 import java.util.Collection;
 
@@ -21,7 +21,7 @@ public class DalalDistanceThreeValued {
 	 *
 	 * @param a PriestWorldAdapted
 	 * @param b PriestWorldAdapted
-	 * @return distnace between the 2 worlds
+	 * @return distance between the 2 worlds
 	 */
 
 	public double distance(PriestWorldAdapted a, PriestWorldAdapted b) {
@@ -54,8 +54,8 @@ public class DalalDistanceThreeValued {
 	/**
 	 * 
 	 * @param coll multiple PriestWorlds
-	 * @param b a PriestWorldAdapted
-	 * @return the distance 
+	 * @param b single PriestWorldAdapted
+	 * @return resulting distance 
 	 */
 	public double distance(Collection<PriestWorldAdapted> coll, PriestWorldAdapted b) {
 		double n = b.getSignature().size();

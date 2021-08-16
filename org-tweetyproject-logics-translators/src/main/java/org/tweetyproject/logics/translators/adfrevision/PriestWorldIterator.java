@@ -1,4 +1,4 @@
-package org.tweetyproject.logics.translators.adfcl;
+package org.tweetyproject.logics.translators.adfrevision;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,9 +11,7 @@ import org.tweetyproject.commons.InterpretationIterator;
 import org.tweetyproject.commons.Signature;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.Proposition;
-
-import org.tweetyproject.logics.translators.adfcl.PriestWorldAdapted.TruthValue;
-
+import org.tweetyproject.logics.translators.adfrevision.PriestWorldAdapted.TruthValue;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
 

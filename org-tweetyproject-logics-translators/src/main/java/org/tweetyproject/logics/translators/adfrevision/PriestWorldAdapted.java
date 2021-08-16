@@ -1,4 +1,4 @@
-package org.tweetyproject.logics.translators.adfcl;
+package org.tweetyproject.logics.translators.adfrevision;
 
 import java.util.Collection;
 import java.util.HashMap;

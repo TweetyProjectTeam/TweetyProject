@@ -1,0 +1,6 @@
+s(a).
+s(b).
+s(c).
+ac(a,and(neg(b),neg(c))).
+ac(b,neg(a)).
+ac(c,c).
