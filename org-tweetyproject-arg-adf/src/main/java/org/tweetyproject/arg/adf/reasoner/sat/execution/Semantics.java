@@ -54,45 +54,30 @@ public interface Semantics {
 	 */
 	Decomposer createDecomposer();
 
-	/**
-	 * 
-	 * @return createCandidateGenerator
-	 */
-	CandidateGenerator createCandidateGenerator();
+	CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier);
 
-	/**
-	 * 
-	 * @return createStateProcessors
-	 */
+	boolean hasStateProcessors();
+	
 	List<StateProcessor> createStateProcessors();
 	
-	/**
-	 * 
-	 * @param stateSupplier stateSupplier
-	 * @return createCandidateProcessor
-	 */
-	List<InterpretationProcessor> createCandidateProcessor(Supplier<SatSolverState> stateSupplier);
+	boolean hasCandidateProcessors();
+	
+	List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier);
 
-	/**
-	 * 
-	 * @param stateSupplier stateSupplier
-	 * @return createVerifier
-	 */
+	boolean hasVerifier();
+	
 	Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier);
 
-	/**
-	 * 
-	 * @param stateSupplier stateSupplier
-	 * @return createModelProcessors
-	 */
+	boolean hasModelProcessors();
+	
 	List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier);
 
 	/**
 	 * 
-	 * @param prefix prefix
+	 * @param partial
 	 * @return a new {@link Semantics} instance
 	 */
-	Semantics withPrefix(Interpretation prefix);
+	Semantics restrict(Interpretation partial);
 
 	/**
 	 * 

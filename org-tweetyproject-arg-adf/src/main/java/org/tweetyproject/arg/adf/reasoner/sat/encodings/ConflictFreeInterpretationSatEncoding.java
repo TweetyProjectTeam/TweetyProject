@@ -74,7 +74,7 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding, Relat
 	private void handleUnfixed(Consumer<Clause> consumer, Argument s) {
 		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
 		
-		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(adf.link(r, s)), false);
+		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
 		Literal accName = transformer.collect(acc, consumer);
 		
 		// the propositions represent the assignment of s
@@ -100,7 +100,7 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding, Relat
 	private void handleSatisfied(Consumer<Clause> consumer, Argument s) {
 		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
 		
-		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(adf.link(r, s)), true);
+		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), true);
 		Literal accName = transformer.collect(acc, consumer);
 
 		consumer.accept(Clause.of(accName));
@@ -116,7 +116,7 @@ public class ConflictFreeInterpretationSatEncoding implements SatEncoding, Relat
 	private void handleUnsatisfied(Consumer<Clause> consumer, Argument s) {
 		AcceptanceCondition acc = adf.getAcceptanceCondition(s);
 		
-		TseitinTransformer transformer = TseitinTransformer.ofNegativePolarity(r -> mapping.getLink(adf.link(r, s)), true);
+		TseitinTransformer transformer = TseitinTransformer.ofNegativePolarity(r -> mapping.getLink(r, s), true);
 		Literal accName = transformer.collect(acc, consumer);
 
 		consumer.accept(Clause.of(accName.neg()));

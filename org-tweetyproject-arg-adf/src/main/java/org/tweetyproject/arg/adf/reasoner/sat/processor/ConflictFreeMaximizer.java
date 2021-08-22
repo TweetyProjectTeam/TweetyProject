@@ -34,12 +34,12 @@ public abstract class ConflictFreeMaximizer implements InterpretationProcessor {
 		this.refineLarger = new RefineLargerSatEncoding(mapping);
 	}
 	
-	public static InterpretationProcessor withPrefix(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
-		return new WithPrefixConflictFreeMaximizer(stateSupplier, adf, mapping, prefix);
+	public static InterpretationProcessor restricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
+		return new RestrictedConflictFreeMaximizer(stateSupplier, adf, mapping, prefix);
 	}
 	
-	public static InterpretationProcessor withoutPrefix(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
-		return new WithoutPrefixConflictFreeMaximizer(stateSupplier, adf, mapping);
+	public static InterpretationProcessor unrestricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+		return new UnrestrictedConflictFreeMaximizer(stateSupplier, adf, mapping);
 	}
 	
 	protected abstract SatSolverState createState();
@@ -68,13 +68,13 @@ public abstract class ConflictFreeMaximizer implements InterpretationProcessor {
 	@Override
 	public void close() {}
 	
-	private static final class WithoutPrefixConflictFreeMaximizer extends ConflictFreeMaximizer {
+	private static final class UnrestrictedConflictFreeMaximizer extends ConflictFreeMaximizer {
 
 		private final Supplier<SatSolverState> stateSupplier;
 		
 		private final SatEncoding conflictFree;
 		
-		public WithoutPrefixConflictFreeMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+		public UnrestrictedConflictFreeMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 			super(mapping);
 			this.stateSupplier = Objects.requireNonNull(stateSupplier);
 			this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
@@ -89,25 +89,25 @@ public abstract class ConflictFreeMaximizer implements InterpretationProcessor {
 		
 	}
 	
-	private static final class WithPrefixConflictFreeMaximizer extends ConflictFreeMaximizer {
+	private static final class RestrictedConflictFreeMaximizer extends ConflictFreeMaximizer {
 
 		private final Supplier<SatSolverState> stateSupplier;
 		
 		private final RelativeSatEncoding conflictFree;
 				
-		private final Interpretation prefix;
+		private final Interpretation partial;
 		
-		public WithPrefixConflictFreeMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
+		public RestrictedConflictFreeMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
 			super(mapping);
 			this.stateSupplier = Objects.requireNonNull(stateSupplier);
 			this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
-			this.prefix = Objects.requireNonNull(prefix);			
+			this.partial = Objects.requireNonNull(partial);			
 		}
 		
 		@Override
 		protected SatSolverState createState() {
 			SatSolverState state = stateSupplier.get();
-			conflictFree.encode(state::add, prefix);
+			conflictFree.encode(state::add, partial);
 			return state;
 		}
 

@@ -23,6 +23,7 @@ import java.util.Objects;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
+import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
@@ -49,12 +50,15 @@ final class ForAllSatQuery extends SatQuery<Boolean> {
 
 	@Override
 	Boolean execute(Execution execution) {
+		execution.update(this::applyCondition);
+		return execution.stream().findAny().isEmpty();
+	}
+	
+	private void applyCondition(SatSolverState state) {
 		// check if there is a model that does not satisfy the condition
 		TseitinTransformer transformer = TseitinTransformer.ofNegativePolarity(true);
-		Literal name = transformer.collect(condition, execution::addClause);
-		execution.addClause(Clause.of(name.neg()));
-		boolean hasModel = new ModelIterator(execution).hasNext();
-		return !hasModel;
+		Literal name = transformer.collect(condition, state::add);
+		state.add(Clause.of(name.neg()));
 	}
 
 }

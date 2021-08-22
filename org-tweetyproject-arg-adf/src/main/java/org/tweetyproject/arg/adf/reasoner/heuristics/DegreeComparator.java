@@ -26,8 +26,9 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
- *
+ * @deprecated not used anymore
  */
+@Deprecated(forRemoval = true)
 public final class DegreeComparator implements Comparator<Argument> {
 	/**
 	 * 

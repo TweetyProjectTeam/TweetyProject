@@ -41,7 +41,7 @@ final class InterpretationSatQuery extends SatQuery<Interpretation>{
 
 	@Override
 	Interpretation execute(Execution execution) {
-		return new ModelIterator(execution).next();
+		return execution.stream().findAny().get();
 	}
 	
 }

@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
+import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
@@ -56,10 +57,14 @@ final class ConditionalQuery<T> extends SatQuery<T>{
 
 	@Override
 	T execute(Execution execution) {
-		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(true);
-		Literal name = transformer.collect(condition, execution::addClause);
-		execution.addClause(Clause.of(name));
+		execution.update(this::applyCondition);
 		return query.execute(execution);
+	}
+	
+	private void applyCondition(SatSolverState state) {
+		TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(true);
+		Literal name = transformer.collect(condition, state::add);
+		state.add(Clause.of(name));
 	}
 
 }

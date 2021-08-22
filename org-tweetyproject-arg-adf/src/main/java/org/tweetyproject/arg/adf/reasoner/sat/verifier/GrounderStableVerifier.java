@@ -37,11 +37,11 @@ import org.tweetyproject.arg.adf.transform.OmegaReductTransformer;
  *
  */
 public final class GrounderStableVerifier implements Verifier {
-	
+
 	private final Supplier<SatSolverState> stateSupplier;
-	
+
 	private final AbstractDialecticalFramework adf;
-	
+
 	private final PropositionalMapping mapping;
 
 	/**
@@ -49,7 +49,8 @@ public final class GrounderStableVerifier implements Verifier {
 	 * @param adf
 	 * @param mapping
 	 */
-	public GrounderStableVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+	public GrounderStableVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf,
+			PropositionalMapping mapping) {
 		this.stateSupplier = Objects.requireNonNull(stateSupplier);
 		this.adf = Objects.requireNonNull(adf);
 		this.mapping = Objects.requireNonNull(mapping);
@@ -60,16 +61,14 @@ public final class GrounderStableVerifier implements Verifier {
 
 	@Override
 	public boolean verify(Interpretation candidate) {
-		try (SatSolverState state = stateSupplier.get()) {
-			AbstractDialecticalFramework reduct = adf.transform(new OmegaReductTransformer(candidate));
-			CandidateGenerator groundGenerator = GroundGenerator.withoutPrefix(reduct, mapping);
-			groundGenerator.prepare(state::add);
-			Interpretation ground = groundGenerator.generate(state);
+		AbstractDialecticalFramework reduct = adf.transform(new OmegaReductTransformer(candidate));
+		try (CandidateGenerator groundGenerator = GroundGenerator.unrestricted(reduct, mapping, stateSupplier)) {
+			Interpretation ground = groundGenerator.generate();
 			boolean stable = candidate.equals(ground);
 			return stable;
 		}
 	}
-	
+
 	@Override
 	public void close() {}
 

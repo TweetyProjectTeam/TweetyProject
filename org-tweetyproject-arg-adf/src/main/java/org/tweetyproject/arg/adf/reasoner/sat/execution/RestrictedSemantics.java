@@ -21,20 +21,41 @@ import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.GrounderStableVerifier;
+import org.tweetyproject.arg.adf.reasoner.sat.verifier.NaiveVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
+import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
+import org.tweetyproject.arg.adf.syntax.Argument;
+import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
+import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework.Builder;
+import org.tweetyproject.arg.adf.transform.FixPartialTransformer;
+import org.tweetyproject.arg.adf.transform.Transformer;
 
-abstract class DefaultSemantics implements Semantics {
-	
+/**
+ * 
+ * Only computes interpretations that extend the provided partial interpretation.
+ * 
+ * @author Mathias
+ * 
+ */
+abstract class RestrictedSemantics implements Semantics {
+
 	final AbstractDialecticalFramework adf;
 	
+	final AbstractDialecticalFramework reduct;
+	
 	final PropositionalMapping mapping;
+	
+	final Interpretation partial;
 
-	private DefaultSemantics(AbstractDialecticalFramework adf) {
+	RestrictedSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
 		this.adf = Objects.requireNonNull(adf);
-		this.mapping = new PropositionalMapping(adf);
+		this.reduct = reduct(adf, partial);
+		this.mapping = Objects.requireNonNull(mapping);
+		this.partial = Objects.requireNonNull(partial);
 	}
 	
 	@Override
@@ -42,15 +63,24 @@ abstract class DefaultSemantics implements Semantics {
 		return new MostBipolarParentsDecomposer();
 	}
 	
-	static final class ConflictFreeSemantics extends DefaultSemantics {
+	private static AbstractDialecticalFramework reduct(AbstractDialecticalFramework adf, Interpretation interpretation) {
+		Transformer<AcceptanceCondition> fixPartials = new FixPartialTransformer(interpretation);		
+		Builder builder = AbstractDialecticalFramework.builder().eager(new SatLinkStrategy(new NativeMinisatSolver())); // TODO fix
+		for (Argument arg : adf.getArguments()) {
+			builder.add(arg, fixPartials.transform(adf.getAcceptanceCondition(arg)));
+		}
+		return builder.build();
+	}
+	
+	static final class ConflictFreeSemantics extends RestrictedSemantics {
 
-		public ConflictFreeSemantics(AbstractDialecticalFramework adf) {
-			super(adf);
+		public ConflictFreeSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, partial);
 		}
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.unrestricted(adf, mapping, stateSupplier);
+			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
 		}
 
 		@Override
@@ -74,8 +104,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public Semantics restrict(Interpretation prefix) {
-			return new RestrictedSemantics.ConflictFreeSemantics(adf, mapping, prefix);
+		public Semantics restrict(Interpretation partial) {
+			return new ConflictFreeSemantics(adf, mapping, Interpretation.union(this.partial, partial));			
 		}
 
 		@Override
@@ -96,19 +126,19 @@ abstract class DefaultSemantics implements Semantics {
 		@Override
 		public boolean hasModelProcessors() {
 			return false;
-		}		
+		}
 	
 	}
 	
-	static final class NaiveSemantics extends DefaultSemantics {
+	static final class NaiveSemantics extends RestrictedSemantics {
 		
-		public NaiveSemantics(AbstractDialecticalFramework adf) {
-			super(adf);
+		public NaiveSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, partial);
 		}
 		
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.unrestricted(adf, mapping, stateSupplier);
+			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
 		}
 
 		@Override
@@ -118,22 +148,22 @@ abstract class DefaultSemantics implements Semantics {
 		
 		@Override
 		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+			return List.of(ConflictFreeMaximizer.restricted(stateSupplier, reduct, mapping, partial));
 		}
 
 		@Override
 		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.empty();
+			return Optional.of(new NaiveVerifier(stateSupplier, adf, mapping));
 		}
 
 		@Override
 		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of(ConflictFreeMaximizer.unrestricted(stateSupplier, adf, mapping));
+			return List.of();
 		}
 		
 		@Override
-		public Semantics restrict(Interpretation prefix) {
-			return new RestrictedSemantics.NaiveSemantics(adf, mapping, prefix);
+		public Semantics restrict(Interpretation partial) {
+			return new NaiveSemantics(adf, mapping, Interpretation.union(this.partial, partial));			
 		}
 
 		@Override
@@ -143,65 +173,7 @@ abstract class DefaultSemantics implements Semantics {
 
 		@Override
 		public boolean hasCandidateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasModelProcessors() {
 			return true;
-		}
-		
-	}
-	
-	static final class AdmissibleSemantics extends DefaultSemantics {
-		
-		public AdmissibleSemantics(AbstractDialecticalFramework adf) {
-			super(adf);
-		}
-
-		@Override
-		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.unrestricted(adf, mapping, stateSupplier);
-		}
-
-		@Override
-		public List<StateProcessor> createStateProcessors() {
-			return List.of(new KBipolarStateProcessor(adf, mapping));
-		}
-		
-		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
-		}
-
-		@Override
-		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(new AdmissibleVerifier(stateSupplier, adf, mapping));
-		}
-
-		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
-		}
-		
-		@Override
-		public Semantics restrict(Interpretation prefix) {
-			return new RestrictedSemantics.AdmissibleSemantics(adf, mapping, prefix);
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return true;
-		}
-
-		@Override
-		public boolean hasCandidateProcessors() {
-			return false;
 		}
 
 		@Override
@@ -213,23 +185,23 @@ abstract class DefaultSemantics implements Semantics {
 		public boolean hasModelProcessors() {
 			return false;
 		}
-	
+		
 	}
 	
-	static final class PreferredSemantics extends DefaultSemantics {
-		
-		public PreferredSemantics(AbstractDialecticalFramework adf) {
-			super(adf);
+	static final class AdmissibleSemantics extends RestrictedSemantics {
+
+		public AdmissibleSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, partial);
 		}
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.unrestricted(adf, mapping, stateSupplier);
+			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
 		}
 
 		@Override
 		public List<StateProcessor> createStateProcessors() {
-			return List.of(new KBipolarStateProcessor(adf, mapping));
+			return List.of(new KBipolarStateProcessor(reduct, mapping));
 		}
 		
 		@Override
@@ -244,12 +216,70 @@ abstract class DefaultSemantics implements Semantics {
 
 		@Override
 		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of(AdmissibleMaximizer.unrestricted(stateSupplier, adf, mapping));
+			return List.of();
+		}
+
+		@Override
+		public Semantics restrict(Interpretation partial) {
+			return new AdmissibleSemantics(adf, mapping, Interpretation.union(this.partial, partial));			
+		}
+
+		@Override
+		public boolean hasStateProcessors() {
+			return true;
+		}
+
+		@Override
+		public boolean hasCandidateProcessors() {
+			return false;
+		}
+
+		@Override
+		public boolean hasVerifier() {
+			return true;
+		}
+
+		@Override
+		public boolean hasModelProcessors() {
+			return false;
+		}
+	
+	}
+	
+	static final class PreferredSemantics extends RestrictedSemantics {
+		
+		public PreferredSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, partial);
+		}
+
+		@Override
+		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
+			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
+		}
+
+		@Override
+		public List<StateProcessor> createStateProcessors() {
+			return List.of(new KBipolarStateProcessor(reduct, mapping));
 		}
 		
 		@Override
-		public Semantics restrict(Interpretation prefix) {
-			return new RestrictedSemantics.PreferredSemantics(adf, mapping, prefix);
+		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
+			return List.of();
+		}
+
+		@Override
+		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
+			return Optional.of(new AdmissibleVerifier(stateSupplier, adf, mapping));
+		}
+
+		@Override
+		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
+			return List.of(AdmissibleMaximizer.restricted(stateSupplier, adf, reduct, mapping, partial));
+		}
+		
+		@Override
+		public Semantics restrict(Interpretation partial) {
+			return new PreferredSemantics(adf, mapping, Interpretation.union(this.partial, partial));
 		}
 
 		@Override
@@ -274,10 +304,68 @@ abstract class DefaultSemantics implements Semantics {
 		
 	}
 	
-	static final class StableSemantics extends DefaultSemantics {
+	static final class CompleteSemantics extends RestrictedSemantics {
 		
-		public StableSemantics(AbstractDialecticalFramework adf) {
-			super(adf);
+		public CompleteSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, partial);
+		}
+
+		@Override
+		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
+			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
+		}
+
+		@Override
+		public List<StateProcessor> createStateProcessors() {
+			return List.of(new KBipolarStateProcessor(reduct, mapping));
+		}
+		
+		@Override
+		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
+			return List.of();
+		}
+
+		@Override
+		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
+			return Optional.of(new CompleteVerifier(stateSupplier, adf, mapping));
+		}
+
+		@Override
+		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
+			return List.of();
+		}
+		
+		@Override
+		public Semantics restrict(Interpretation partial) {
+			return new CompleteSemantics(adf, mapping, Interpretation.union(this.partial, partial));
+		}
+
+		@Override
+		public boolean hasStateProcessors() {
+			return true;
+		}
+
+		@Override
+		public boolean hasCandidateProcessors() {
+			return false;
+		}
+
+		@Override
+		public boolean hasVerifier() {
+			return true;
+		}
+
+		@Override
+		public boolean hasModelProcessors() {
+			return false;
+		}
+		
+	}
+	
+	static final class ModelSemantics extends RestrictedSemantics {
+		
+		public ModelSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, partial);
 		}
 		
 		@Override
@@ -287,7 +375,70 @@ abstract class DefaultSemantics implements Semantics {
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ModelGenerator.unrestricted(adf, mapping, stateSupplier);
+			return ModelGenerator.restricted(reduct, mapping, partial, stateSupplier);
+		}
+
+		@Override
+		public List<StateProcessor> createStateProcessors() {
+			return List.of();
+		}
+		
+		@Override
+		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
+			return List.of();
+		}
+
+		@Override
+		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
+		}
+
+		@Override
+		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
+			return List.of();
+		}
+		
+		@Override
+		public Semantics restrict(Interpretation partial) {
+			return new ModelSemantics(adf, mapping, Interpretation.union(this.partial, partial));
+		}
+
+		@Override
+		public boolean hasStateProcessors() {
+			return false;
+		}
+
+		@Override
+		public boolean hasCandidateProcessors() {
+			return false;
+		}
+
+		@Override
+		public boolean hasVerifier() {
+			return false;
+		}
+
+		@Override
+		public boolean hasModelProcessors() {
+			return false;
+		}
+		
+	}
+	
+	static final class StableSemantics extends RestrictedSemantics {
+		
+		public StableSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, partial);
+		}
+		
+		@Override
+		public Decomposer createDecomposer() {
+			return new RandomDecomposer().asTwoValued();
+		}
+
+		@Override
+		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
+			return ModelGenerator.restricted(reduct, mapping, partial, stateSupplier);
 		}
 
 		@Override
@@ -311,8 +462,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public Semantics restrict(Interpretation prefix) {
-			return new RestrictedSemantics.StableSemantics(adf, mapping, prefix);
+		public Semantics restrict(Interpretation partial) {
+			return new StableSemantics(adf, mapping, Interpretation.union(this.partial, partial));
 		}
 
 		@Override
@@ -337,78 +488,15 @@ abstract class DefaultSemantics implements Semantics {
 		
 	}
 	
-	static final class CompleteSemantics extends DefaultSemantics {
-		
-		public CompleteSemantics(AbstractDialecticalFramework adf) {
-			super(adf);
-		}
+	static final class GroundSemantics extends RestrictedSemantics {
 
+		public GroundSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, partial);
+		}
+		
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.unrestricted(adf, mapping, stateSupplier);
-		}
-
-		@Override
-		public List<StateProcessor> createStateProcessors() {
-			return List.of(new KBipolarStateProcessor(adf, mapping));
-		}
-		
-		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
-		}
-
-		@Override
-		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(new CompleteVerifier(stateSupplier, adf, mapping));
-		}
-
-		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
-		}
-		
-		@Override
-		public Semantics restrict(Interpretation prefix) {
-			return new RestrictedSemantics.CompleteSemantics(adf, mapping, prefix);
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return true;
-		}
-
-		@Override
-		public boolean hasCandidateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return true;
-		}
-
-		@Override
-		public boolean hasModelProcessors() {
-			return false;
-		}
-		
-	}
-
-	static final class ModelSemantics extends DefaultSemantics {
-
-		public ModelSemantics(AbstractDialecticalFramework adf) {
-			super(adf);
-		}
-		
-		@Override
-		public Decomposer createDecomposer() {
-			return new RandomDecomposer().asTwoValued();
-		}
-
-		@Override
-		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ModelGenerator.unrestricted(adf, mapping, stateSupplier);
+			return GroundGenerator.restricted(adf, mapping, partial, stateSupplier);
 		}
 
 		@Override
@@ -432,66 +520,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public Semantics restrict(Interpretation prefix) {
-			return new RestrictedSemantics.ModelSemantics(adf, mapping, prefix);
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasCandidateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasModelProcessors() {
-			return false;
-		}
-	
-	}
-	
-	static final class GroundSemantics extends DefaultSemantics {
-
-		public GroundSemantics(AbstractDialecticalFramework adf) {
-			super(adf);
-		}
-		
-		@Override
-		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return GroundGenerator.unrestricted(adf, mapping, stateSupplier);
-		}
-
-		@Override
-		public List<StateProcessor> createStateProcessors() {
-			return List.of();
-		}
-		
-		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
-		}
-
-		@Override
-		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.empty();
-		}
-
-		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
-		}
-		
-		@Override
-		public Semantics restrict(Interpretation prefix) {
-			return new RestrictedSemantics.GroundSemantics(adf, mapping, prefix);
+		public Semantics restrict(Interpretation partial) {
+			return new GroundSemantics(adf, mapping, Interpretation.union(this.partial, partial));
 		}
 
 		@Override
@@ -515,4 +545,5 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 	}
+	
 }

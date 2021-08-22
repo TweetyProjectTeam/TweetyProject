@@ -22,28 +22,29 @@ import java.util.function.Consumer;
 
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
  * 
  * @author Mathias Hofer
  *
  */
-public interface CandidateGenerator {
-
-	/**
-	 * Performs initializations on the state.
-	 * 
-	 * @param consumer consumer
-	 */	
-	void prepare(Consumer<Clause> consumer);
+public interface CandidateGenerator extends AutoCloseable {
 
 	/**
 	 * Does not return the same candidate on two calls on the same instance.
 	 * 
-	 * @param state the initialized state
 	 * @return the generated interpretation
 	 */
-	Interpretation generate(SatSolverState state);
+	Interpretation generate();
+
+	/**
+	 * Updates the internal state of the generator with the provided function.
+	 * 
+	 * @param updateFunction the function to apply on its internal state.
+	 */
+	void update(Consumer<SatSolverState> updateFunction);
+
+	@Override
+	void close();
 
 }

@@ -27,8 +27,9 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
- *
+ * @deprecated not used anymore
  */
+@Deprecated(forRemoval = true)
 public final class AcceptanceConditionSizeComparator implements Comparator<Argument>{
 
 	private final AbstractDialecticalFramework adf;

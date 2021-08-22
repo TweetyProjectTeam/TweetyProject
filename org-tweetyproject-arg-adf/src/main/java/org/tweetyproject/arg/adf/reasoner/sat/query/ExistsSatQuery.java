@@ -40,7 +40,7 @@ final class ExistsSatQuery extends SatQuery<Boolean> {
 
 	@Override
 	Boolean execute(Execution execution) {
-		return new ModelIterator(execution).hasNext();
+		return execution.stream().findAny().isPresent();
 	}
 
 }

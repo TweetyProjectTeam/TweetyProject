@@ -20,7 +20,7 @@ package org.tweetyproject.arg.adf.reasoner.sat.generator;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.ConflictFreeInterpretationSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
@@ -30,48 +30,54 @@ import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
 
 /**
  * @author Mathias Hofer
  *
  */
-public abstract class ConflictFreeGenerator implements CandidateGenerator {
-		
+public abstract class ConflictFreeGenerator extends AbstractCandidateGenerator {
+
 	private final PropositionalMapping mapping;
-	
+
 	private final RelativeSatEncoding refineUnequal;
-	
+
 	/**
+	 * 
+	 * @param stateSupplier
 	 * @param mapping
 	 */
-	private ConflictFreeGenerator(PropositionalMapping mapping) {
+	private ConflictFreeGenerator(Supplier<SatSolverState> stateSupplier, PropositionalMapping mapping) {
+		super(stateSupplier);
 		this.mapping = Objects.requireNonNull(mapping);
 		this.refineUnequal = new RefineUnequalSatEncoding(mapping);
 	}
-	
+
 	/**
-	 * The resulting {@link CandidateGenerator} only computes conflict free interpretations which are extensions of the defined prefix.
+	 * The resulting {@link CandidateGenerator} only computes conflict free
+	 * interpretations which are extensions of the defined partial interpretation.
 	 * 
-	 * @param adf adf
-	 * @param mapping mapping
-	 * @param prefix the fixed prefix
-	 * @return CandidateGeneratorwithPrefix
+	 * @param adf
+	 * @param mapping
+	 * @param partial
+	 * @return a candidate generator that only computes interpretations that extend
+	 *         the given partial interpretation.
 	 */
-	public static CandidateGenerator withPrefix(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
-		return new PrefixConflictFreeGenerator(adf, mapping, prefix);
+	public static CandidateGenerator restricted(AbstractDialecticalFramework adf, PropositionalMapping mapping,
+			Interpretation partial, Supplier<SatSolverState> stateSupplier) {
+		return new RestrictedConflictFreeGenerator(adf, mapping, partial, stateSupplier);
 	}
-	
+
 	/**
-	 * The resulting {@link CandidateGenerator} computes all conflict free interpretations.
+	 * The resulting {@link CandidateGenerator} computes all conflict free
+	 * interpretations.
 	 * 
 	 * @param adf adf
 	 * @param mapping mapping
 	 * @return CandidateGeneratorwithoutPrefix
 	 */
-	public static CandidateGenerator withoutPrefix(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
-		return new WithoutPrefixConflictFreeGenerator(adf, mapping);
+	public static CandidateGenerator unrestricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
+		return new UnrestrictedConflictFreeGenerator(adf, mapping, stateSupplier);
 	}
 
 	@Override
@@ -86,39 +92,40 @@ public abstract class ConflictFreeGenerator implements CandidateGenerator {
 		return null;
 	}
 
-	private static final class WithoutPrefixConflictFreeGenerator extends ConflictFreeGenerator {
-		
+	private static final class UnrestrictedConflictFreeGenerator extends ConflictFreeGenerator {
+
 		private final SatEncoding conflictFree;
-		
-		private WithoutPrefixConflictFreeGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
-			super(mapping);
+
+		private UnrestrictedConflictFreeGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
+			super(stateSupplier, mapping);
 			this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
 		}
 
 		@Override
-		public void prepare(Consumer<Clause> consumer) {
-			conflictFree.encode(consumer);
+		public void prepare(SatSolverState state) {
+			conflictFree.encode(state::add);
 		}
-		
+
 	}
-	
-	private static final class PrefixConflictFreeGenerator extends ConflictFreeGenerator {
+
+	private static final class RestrictedConflictFreeGenerator extends ConflictFreeGenerator {
 
 		private final Interpretation prefix;
-		
+
 		private final RelativeSatEncoding conflictFree;
-		
-		private PrefixConflictFreeGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
-			super(mapping);
+
+		private RestrictedConflictFreeGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping,
+				Interpretation prefix, Supplier<SatSolverState> stateSupplier) {
+			super(stateSupplier, mapping);
 			this.prefix = Objects.requireNonNull(prefix);
-			this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);	
+			this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
 		}
-		
+
 		@Override
-		public void prepare(Consumer<Clause> consumer) {
-			conflictFree.encode(consumer, prefix);
+		public void prepare(SatSolverState state) {
+			conflictFree.encode(state::add, prefix);
 		}
-		
+
 	}
-	
+
 }

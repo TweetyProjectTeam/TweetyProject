@@ -18,10 +18,11 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
-import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
+import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
  * Encapsulates the state of a query execution.
@@ -31,41 +32,21 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public interface Execution extends AutoCloseable {
 	
+	Stream<Interpretation> stream();
+	
 	/**
+	 * Registers an update functions that is called on the internal state that
+	 * represents the search space.
+	 * <p>
+	 * There are no guarantees on when this function is called. If it is called
+	 * during the execution there is not even guaranteed that it is called.
 	 * 
-	 * @return computeCandidate
+	 * @param updateFunction
+	 * @return
 	 */
-	Interpretation computeCandidate();
-	
-	/**
-	 * 
-	 * @param candidate candidate
-	 * @return verify
-	 */
-	boolean verify(Interpretation candidate);
-	
-	/**
-	 * 
-	 * @param model model
-	 * @return processModel
-	 */
-	Interpretation processModel(Interpretation model);
-	
-	/**
-	 * 
-	 * @param clause clause
-	 * @return addClause
-	 */ 
-	boolean addClause( Clause clause );
-	
-	/**
-	 * 
-	 * @param clauses clauses
-	 * @return true iff all of the clauses were successfully added
-	 */
-	boolean addClauses( Collection<? extends Clause> clauses);
-	
+	void update(Consumer<SatSolverState> updateFunction);
+
 	@Override
 	void close();
-	
+
 }

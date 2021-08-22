@@ -14,7 +14,7 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  *
  */
 public final class RandomDecomposer extends AbstractDecomposer {
-
+	
 	@Override
 	Set<Argument> partition(AbstractDialecticalFramework adf, int count) {
 		List<Argument> list = new ArrayList<>(adf.getArguments());

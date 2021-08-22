@@ -18,8 +18,12 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.Spliterators.AbstractSpliterator;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.tweetyproject.arg.adf.reasoner.sat.generator.CandidateGenerator;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.InterpretationProcessor;
@@ -29,21 +33,18 @@ import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Clause;
 
 /**
  * @author Mathias Hofer
  *
  */
 public final class SequentialExecution implements Execution {
-
-	private final SatSolverState state;
 	
 	private final CandidateGenerator generator;
 	
 	private final List<InterpretationProcessor> candidateProcessors;
 	
-	private final Verifier verifier;
+	private final Optional<Verifier> verifier;
 	
 	private final List<InterpretationProcessor> modelProcessors;
 	
@@ -54,76 +55,97 @@ public final class SequentialExecution implements Execution {
 	 * @param satSolver satSolver
 	 */
 	public SequentialExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver) {
-		this.generator = semantics.createCandidateGenerator();
-		this.candidateProcessors = semantics.createCandidateProcessor(satSolver::createState);
-		this.verifier = semantics.createVerifier(satSolver::createState).orElse(null);
-		this.state = satSolver.createState();
-		
+		this.generator = semantics.createCandidateGenerator(() -> createState(satSolver, semantics));	
+		this.candidateProcessors = semantics.createCandidateProcessors(satSolver::createState);
+		this.verifier = semantics.createVerifier(satSolver::createState);
+		this.modelProcessors = semantics.createModelProcessors(satSolver::createState);
+		this.verifier.ifPresent(Verifier::prepare);
+	}
+	
+	@Override
+	public Stream<Interpretation> stream() {
+		return StreamSupport.stream(new InterpretationSpliterator(), false)
+				.onClose(this::close);
+	}
+	
+	private static SatSolverState createState(IncrementalSatSolver satSolver, Semantics semantics) {
+		SatSolverState state = satSolver.createState();		
 		for (StateProcessor processor : semantics.createStateProcessors()) {
 			processor.process(state::add);
-		}
-		
-		generator.prepare(state::add);
-		this.modelProcessors = semantics.createModelProcessors(satSolver::createState); // TODO do not add encoding by default here
-
-		if (verifier != null) {
-			this.verifier.prepare();			
-		}
+		}	
+		return state;
 	}
 
-	@Override
-	public Interpretation computeCandidate() {
-		return processCandidate(generator.generate(state));
-	}
-
-	@Override
-	public boolean verify(Interpretation candidate) {
-		if (verifier != null) {
-			return verifier.verify(candidate);			
-		}
-		return true;
+	private boolean verify(Interpretation candidate) {
+		return verifier.map(v -> v.verify(candidate)).orElse(true);
 	}
 	
-	private Interpretation processCandidate(Interpretation candidate) {
+	private Interpretation process(Interpretation candidate, List<InterpretationProcessor> processors) {
 		Interpretation processed = candidate;
-		for (InterpretationProcessor processor : candidateProcessors) {
-			processed = processor.process(processed);
-			processor.updateState(state, processed);
+		for (InterpretationProcessor processor : processors) {
+			final Interpretation intermediate = processor.process(processed);
+			generator.update(state -> processor.updateState(state, intermediate));
+			processed = intermediate;
 		}
 		return processed;
 	}
-	
-	@Override
-	public Interpretation processModel(Interpretation model) {
-		Interpretation processed = model;
-		for (InterpretationProcessor processor : modelProcessors) {
-			processed = processor.process(processed);
-			processor.updateState(state, processed);
-		}
-		return processed;
-	}
-	
-	@Override
-	public boolean addClause(Clause clause) {
-		return state.add(clause);
-	}
-	
+
 	@Override
 	public void close() {
-		state.close();
-		if (verifier != null) {
-			verifier.close();			
+		generator.close();
+		verifier.ifPresent(Verifier::close);
+		for (InterpretationProcessor processor : modelProcessors) {
+			processor.close();
+		}
+		for (InterpretationProcessor processor : candidateProcessors) {
+			processor.close();
 		}
 	}
 
 	@Override
-	public boolean addClauses(Collection<? extends Clause> clauses) {
-		for (Clause clause : clauses) {
-			if(!state.add(clause)) {
-				return false;
-			}
+	public void update(Consumer<SatSolverState> updateFunction) {
+		generator.update(updateFunction);
+	}
+	
+	private final class InterpretationSpliterator extends AbstractSpliterator<Interpretation> {
+
+		protected InterpretationSpliterator() {
+			super(Long.MAX_VALUE, DISTINCT | IMMUTABLE | NONNULL | SIZED | SUBSIZED);
 		}
-		return true;
-	}	
+		
+		private Interpretation nextCandidate() {
+			Interpretation candidate = generator.generate();
+			if (candidate != null) {
+				return process(candidate, candidateProcessors);
+			}
+			return null;
+		}
+		
+		private Interpretation nextModel() {
+			Interpretation candidate = nextCandidate();
+			boolean isModel = false;
+			while (candidate != null && !isModel) {
+				isModel = verify(candidate);
+				if (!isModel) {
+					candidate = nextCandidate();
+				}
+			}
+			if (candidate != null) {
+				return process(candidate, modelProcessors);
+			}
+			return null;
+		}
+
+		@Override
+		public boolean tryAdvance(Consumer<? super Interpretation> action) {
+			Interpretation next = nextModel();
+			if (next != null) {
+				action.accept(next);
+				return true;
+			}			
+			return false;
+		}
+		
+	}
 	
 }

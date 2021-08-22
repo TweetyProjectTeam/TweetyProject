@@ -18,10 +18,7 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.query;
 
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
@@ -43,9 +40,7 @@ final class InterpretationsSatQuery extends SatQuery<Stream<Interpretation>>{
 
 	@Override
 	Stream<Interpretation> execute(Execution execution) {
-		int characteristics = Spliterator.DISTINCT | Spliterator.IMMUTABLE | Spliterator.NONNULL | Spliterator.SIZED | Spliterator.SUBSIZED;
-		Spliterator<Interpretation> spliterator = Spliterators.spliteratorUnknownSize(new ModelIterator(execution), characteristics);
-		return StreamSupport.stream(spliterator, false).onClose(execution::close);
+		return execution.stream();
 	}
 	
 	@Override
