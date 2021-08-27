@@ -45,12 +45,12 @@ import org.tweetyproject.math.matrix.Matrix;
 
 
 /**
- * This class implements an abstract argumentation theory in the sense of Dung on SetAfs.
+ * This class implements a SetAF in the sense of Nielson/Parson:
  * <br>
  * <br>See
  * <br>
- * <br>Phan Minh Dung. On the Acceptability of Arguments and its Fundamental Role in Nonmonotonic Reasoning, Logic Programming and n-Person Games.
- * In Artificial Intelligence, Volume 77(2):321-358. 1995
+ * <br>Nielsen, Soren Holbech and Parsons, Simon. A Generalization of Dung's Abstract Framework for Argumentation: Arguing with Sets of Attacking Arguments.
+ * Argumentation in Multi-Agent Systems: Third International Workshop, ArgMAS 2006.
  *
  *
  * @author  Sebastian Franke
