@@ -8,21 +8,21 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.*;
 
-public class ClaimBasedInheritedReasoner{
+public class SimpleClInheritedReasoner{
 	private static AbstractExtensionReasoner reasoner;
 	
 	/**
 	 * constructor for direct initialization of semantics
 	 * @param semantics the Dung semantics
 	 */
-	public ClaimBasedInheritedReasoner(Semantics semantics) {
+	public SimpleClInheritedReasoner(Semantics semantics) {
 		setSemantics(semantics);
 		
 	}
 	/**
 	 * empty constructor
 	 */
-	public ClaimBasedInheritedReasoner() {
+	public SimpleClInheritedReasoner() {
 		
 	}
 	/**
@@ -38,7 +38,7 @@ public class ClaimBasedInheritedReasoner{
 		for(Extension e : ext) {
 			Set<String> extensionClaims = new HashSet<String>();
 			for(Argument a : e) {
-				extensionClaims.add(((ClaimBasedTheory2) bbase).getClaimMap().get(a));
+				extensionClaims.add(((ClaimBasedTheory) bbase).getClaimMap().get(a));
 			}
 			claims.add(extensionClaims);
 		}
@@ -55,7 +55,7 @@ public class ClaimBasedInheritedReasoner{
 	
 		Set<String> extensionClaims = new HashSet<String>();
 		for(Argument a : ext) {
-			extensionClaims.add(((ClaimBasedTheory2) bbase).getClaimMap().get(a));
+			extensionClaims.add(((ClaimBasedTheory) bbase).getClaimMap().get(a));
 		}
 			
 		

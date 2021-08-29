@@ -10,7 +10,7 @@ import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 public class SimpleClNaiveReasoner {
 	public Set<Set<String>> getModels(ArgumentationFramework<Argument> bbase) {
 		Semantics cf = Semantics.CF;
-		ClaimBasedInheritedReasoner reasoner = new ClaimBasedInheritedReasoner(cf);
+		SimpleClInheritedReasoner reasoner = new SimpleClInheritedReasoner(cf);
 		Set<Set<String>> completeExtensions = reasoner.getModels(bbase);
 		Set<Set<String>> result = new HashSet<Set<String>>();
 		boolean maximal;
@@ -34,7 +34,7 @@ public class SimpleClNaiveReasoner {
 	public Set<String> getModel(ArgumentationFramework<Argument> bbase) {
 		// just return the first found preferred extension
 		Semantics cf = Semantics.CF;
-		ClaimBasedInheritedReasoner reasoner = new ClaimBasedInheritedReasoner(cf);
+		SimpleClInheritedReasoner reasoner = new SimpleClInheritedReasoner(cf);
 		Set<Set<String>> completeExtensions = reasoner.getModels(bbase);
 		boolean maximal;
 		for(Set<String> e1: completeExtensions){
@@ -50,4 +50,6 @@ public class SimpleClNaiveReasoner {
 		// this should not happen
 		throw new RuntimeException("Hmm, did not find a maximal set in a finite number of sets. Should not happen.");
 	}
+	
+	
 }

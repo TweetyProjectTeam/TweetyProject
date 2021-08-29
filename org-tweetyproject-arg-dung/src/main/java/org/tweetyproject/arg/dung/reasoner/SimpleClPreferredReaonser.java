@@ -11,7 +11,7 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 public class SimpleClPreferredReaonser {
 	public Set<Set<String>> getModels(ArgumentationFramework<Argument> bbase) {
 		Semantics co = Semantics.CO;
-		ClaimBasedInheritedReasoner reasoner = new ClaimBasedInheritedReasoner(co);
+		SimpleClInheritedReasoner reasoner = new SimpleClInheritedReasoner(co);
 		Set<Set<String>> completeExtensions = reasoner.getModels(bbase);
 		Set<Set<String>> result = new HashSet<Set<String>>();
 		boolean maximal;
@@ -35,7 +35,7 @@ public class SimpleClPreferredReaonser {
 	public Set<String> getModel(ArgumentationFramework<Argument> bbase) {
 		// just return the first found preferred extension
 		Semantics co = Semantics.CO;
-		ClaimBasedInheritedReasoner reasoner = new ClaimBasedInheritedReasoner(co);
+		SimpleClInheritedReasoner reasoner = new SimpleClInheritedReasoner(co);
 		Set<Set<String>> completeExtensions = reasoner.getModels(bbase);
 		boolean maximal;
 		for(Set<String> e1: completeExtensions){

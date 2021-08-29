@@ -42,7 +42,7 @@ import org.tweetyproject.math.term.IntegerConstant;
  * @author Matthias Thimm, Tjitze Rienstra
  *
  */
-public class ClaimBasedTheory2 extends DungTheory {
+public class ClaimBasedTheory extends DungTheory {
 
 	
 	private HashMap<Argument, String> claimMap;
@@ -52,9 +52,10 @@ public class ClaimBasedTheory2 extends DungTheory {
 	public void setClaimMap(HashMap<Argument, String> claimMap) {
 		this.claimMap = claimMap;
 		for(Argument a : claimMap.keySet()) {
-			if(!this.claims.contains(claimMap.get(a))){
-				this.claims.add(claimMap.get(a));
-			}
+			if(this.claims == null)
+				this.claims = new HashSet<String>();
+			this.claims.add(claimMap.get(a));
+
 		}
 	}
 	private HashSet<String> claims;
@@ -65,10 +66,24 @@ public class ClaimBasedTheory2 extends DungTheory {
 	public void setClaims(HashSet<String> claims) {
 		this.claims = claims;
 	}
+	public void setClaims(HashMap<Argument, String> claimMap ) {
+		this.claimMap = claimMap;
+		this.claims = new HashSet<String>();
+		for(Argument a : claimMap.keySet()) {
+			this.claims.add(claimMap.get(a));
+		}
+	}
+	
 	/**
 	 * Default constructor; initializes empty sets of arguments and attacks
 	 */
-	public ClaimBasedTheory2(HashMap<Argument, String> claimMap){
+	public ClaimBasedTheory(){
+		super();
+	}
+	/**
+	 * Default constructor; initializes empty sets of arguments and attacks
+	 */
+	public ClaimBasedTheory(HashMap<Argument, String> claimMap){
 		super();
 		this.claimMap = claimMap;
 		for(Argument a : claimMap.keySet()) {
@@ -78,21 +93,36 @@ public class ClaimBasedTheory2 extends DungTheory {
 		}
 	}
 	
-	public boolean defeats(Extension ext, String claim) {
+	public Set<String> getClaims(Extension ext) {
+		HashSet<String> cl = new HashSet<String>();
+		for(Argument arg : ext) {
+			cl.add(this.claimMap.get(arg));
+		}
+		return cl;
+	}
+	
+	
+	
+	public Set<String> defeats(Extension ext) {
 		HashSet<Argument> argsWithClaim = new HashSet<Argument>();
-		//add al arguments with the given claim to the set
-		for(Argument a : this) {
-			if(claimMap.get(a).equals(claim))
-				argsWithClaim.add(a);
+		HashSet<String> defeated = new HashSet<String>();
+		for(String claim : claims) {
+			//add al arguments with the given claim to the set
+			for(Argument a : this) {
+				if(claimMap.get(a).equals(claim))
+					argsWithClaim.add(a);
+			}
+			//build a second set of all arguments in the claim set attacked by the extension
+			HashSet<Argument> argsWithClaimAttackedByExt = new HashSet<Argument>();
+			for(Argument arg : argsWithClaim) {
+				if(this.isAttacked(arg, ext))
+					argsWithClaimAttackedByExt.add(arg);
+					
+			}
+			if(argsWithClaimAttackedByExt.equals(argsWithClaim))
+				defeated.add(claim);
 		}
-		//build a second set of all arguments in the claim set attacked by the extension
-		HashSet<Argument> argsWithClaimAttackedByExt = new HashSet<Argument>();
-		for(Argument arg : argsWithClaim) {
-			if(this.isAttacked(arg, ext))
-				argsWithClaimAttackedByExt.add(arg);
-				
-		}
-		return argsWithClaimAttackedByExt.equals(argsWithClaim);
+		return defeated;
 	}
 	
 	

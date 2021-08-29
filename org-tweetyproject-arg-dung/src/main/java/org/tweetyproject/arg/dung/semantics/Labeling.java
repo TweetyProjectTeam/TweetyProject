@@ -53,7 +53,7 @@ public class Labeling extends AbstractArgumentationInterpretation implements Map
 	 * @param theory some Dung theory.
 	 * @param ext an extension
 	 */
-	public Labeling(ArgumentationFramework theory, Extension ext){
+	public Labeling(ArgumentationFramework<Argument> theory, Extension ext){
 		this();
 		for(Argument a: ext)
 			this.labeling.put(a, ArgumentStatus.IN);
