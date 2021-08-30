@@ -20,8 +20,9 @@ import org.tweetyproject.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.GrounderStableVerifier;
+import org.tweetyproject.arg.adf.reasoner.sat.verifier.StableVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.NaiveVerifier;
+import org.tweetyproject.arg.adf.reasoner.sat.verifier.PreferredVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
@@ -89,8 +90,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -99,8 +100,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -114,7 +115,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -124,7 +125,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 	
@@ -147,8 +148,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of(ConflictFreeMaximizer.restricted(stateSupplier, reduct, mapping, partial));
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.of(ConflictFreeMaximizer.restricted(stateSupplier, reduct, mapping, partial));
 		}
 
 		@Override
@@ -157,8 +158,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -172,7 +173,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return true;
 		}
 
@@ -182,7 +183,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 		
@@ -205,8 +206,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -215,8 +216,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -230,7 +231,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -240,7 +241,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 	
@@ -263,18 +264,18 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.of(AdmissibleMaximizer.restricted(stateSupplier, reduct, mapping, partial));
 		}
 
 		@Override
 		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(new AdmissibleVerifier(stateSupplier, adf, mapping));
+			return Optional.of(new PreferredVerifier(stateSupplier, adf, mapping));
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of(AdmissibleMaximizer.restricted(stateSupplier, adf, reduct, mapping, partial));
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -288,8 +289,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
-			return false;
+		public boolean hasUnverifiedProcessor() {
+			return true;
 		}
 
 		@Override
@@ -298,8 +299,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
-			return true;
+		public boolean hasVerifiedProcessor() {
+			return false;
 		}
 		
 	}
@@ -321,8 +322,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -331,8 +332,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -346,7 +347,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -356,7 +357,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 		
@@ -384,8 +385,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -394,8 +395,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -409,7 +410,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -419,7 +420,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 		
@@ -447,18 +448,18 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
 		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(new GrounderStableVerifier(stateSupplier, adf, mapping));
+			return Optional.of(new StableVerifier(stateSupplier, adf, mapping));
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -472,7 +473,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -482,7 +483,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 		
@@ -505,8 +506,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -515,8 +516,8 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -530,7 +531,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -540,7 +541,7 @@ abstract class RestrictedSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 

@@ -36,7 +36,7 @@ import org.tweetyproject.arg.adf.transform.OmegaReductTransformer;
  * @author Mathias Hofer
  *
  */
-public final class GrounderStableVerifier implements Verifier {
+public final class StableVerifier implements Verifier {
 
 	private final Supplier<SatSolverState> stateSupplier;
 
@@ -49,7 +49,7 @@ public final class GrounderStableVerifier implements Verifier {
 	 * @param adf
 	 * @param mapping
 	 */
-	public GrounderStableVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf,
+	public StableVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf,
 			PropositionalMapping mapping) {
 		this.stateSupplier = Objects.requireNonNull(stateSupplier);
 		this.adf = Objects.requireNonNull(adf);
@@ -62,10 +62,8 @@ public final class GrounderStableVerifier implements Verifier {
 	@Override
 	public boolean verify(Interpretation candidate) {
 		AbstractDialecticalFramework reduct = adf.transform(new OmegaReductTransformer(candidate));
-		try (CandidateGenerator groundGenerator = GroundGenerator.unrestricted(reduct, mapping, stateSupplier)) {
-			Interpretation ground = groundGenerator.generate();
-			boolean stable = candidate.equals(ground);
-			return stable;
+		try (CandidateGenerator groundGenerator = GroundGenerator.restricted(reduct, mapping, candidate, stateSupplier)) {
+			return groundGenerator.generate() != null;
 		}
 	}
 

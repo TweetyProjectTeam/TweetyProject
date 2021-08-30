@@ -20,7 +20,7 @@ import org.tweetyproject.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.GrounderStableVerifier;
+import org.tweetyproject.arg.adf.reasoner.sat.verifier.StableVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
@@ -59,8 +59,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -69,8 +69,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -84,7 +84,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -94,7 +94,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}		
 	
@@ -117,8 +117,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -127,8 +127,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of(ConflictFreeMaximizer.unrestricted(stateSupplier, adf, mapping));
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.of(ConflictFreeMaximizer.unrestricted(stateSupplier, adf, mapping));
 		}
 		
 		@Override
@@ -142,7 +142,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -152,7 +152,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return true;
 		}
 		
@@ -175,8 +175,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -185,8 +185,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -200,7 +200,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -210,7 +210,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 	
@@ -233,8 +233,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -243,8 +243,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of(AdmissibleMaximizer.unrestricted(stateSupplier, adf, mapping));
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.of(AdmissibleMaximizer.unrestricted(stateSupplier, adf, mapping));
 		}
 		
 		@Override
@@ -258,7 +258,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -268,7 +268,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return true;
 		}
 		
@@ -296,18 +296,18 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
 		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(new GrounderStableVerifier(stateSupplier, adf, mapping));
+			return Optional.of(new StableVerifier(stateSupplier, adf, mapping));
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -321,7 +321,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -331,7 +331,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 		
@@ -354,8 +354,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -364,8 +364,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -379,7 +379,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -389,7 +389,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 		
@@ -417,8 +417,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -427,8 +427,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -442,7 +442,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -452,7 +452,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 	
@@ -475,8 +475,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 		
 		@Override
-		public List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 
 		@Override
@@ -485,8 +485,8 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier) {
-			return List.of();
+		public Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier) {
+			return Optional.empty();
 		}
 		
 		@Override
@@ -500,7 +500,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasCandidateProcessors() {
+		public boolean hasUnverifiedProcessor() {
 			return false;
 		}
 
@@ -510,7 +510,7 @@ abstract class DefaultSemantics implements Semantics {
 		}
 
 		@Override
-		public boolean hasModelProcessors() {
+		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 

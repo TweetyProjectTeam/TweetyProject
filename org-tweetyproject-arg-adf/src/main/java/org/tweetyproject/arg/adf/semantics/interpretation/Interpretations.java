@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.adf.semantics.interpretation;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
@@ -147,18 +148,20 @@ final class Interpretations {
 		private final Set<Argument> undecided;
 
 		/**
+		 * Note: Only wraps the parameters in unmodifiable views, it is therefore up to
+		 * the caller that the given sets cannot be modified from somewhere else.
 		 * 
-		 * @param satisfied the satisfied arguments
+		 * @param satisfied   the satisfied arguments
 		 * @param unsatisfied the unsatisfied arguments
-		 * @param undecided the undecided arguments
+		 * @param undecided   the undecided arguments
 		 */
 		SetInterpretation(Set<Argument> satisfied, Set<Argument> unsatisfied, Set<Argument> undecided) {
 			if (satisfied.isEmpty() && unsatisfied.isEmpty() && undecided.isEmpty()) {
 				throw new IllegalArgumentException("There must be at least one non-empty set!");
 			}
-			this.satisfied = Set.copyOf(satisfied);
-			this.unsatisfied = Set.copyOf(unsatisfied);
-			this.undecided = Set.copyOf(undecided);
+			this.satisfied = Collections.unmodifiableSet(satisfied);
+			this.unsatisfied = Collections.unmodifiableSet(unsatisfied);
+			this.undecided = Collections.unmodifiableSet(undecided);
 		}
 
 		@Override

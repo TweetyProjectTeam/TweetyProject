@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.function.Consumer;
@@ -42,11 +41,11 @@ public final class SequentialExecution implements Execution {
 	
 	private final CandidateGenerator generator;
 	
-	private final List<InterpretationProcessor> candidateProcessors;
+	private final Optional<InterpretationProcessor> candidateProcessor;
 	
 	private final Optional<Verifier> verifier;
 	
-	private final List<InterpretationProcessor> modelProcessors;
+	private final Optional<InterpretationProcessor> modelProcessor;
 	
 	/**
 	 * 
@@ -56,9 +55,9 @@ public final class SequentialExecution implements Execution {
 	 */
 	public SequentialExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver) {
 		this.generator = semantics.createCandidateGenerator(() -> createState(satSolver, semantics));	
-		this.candidateProcessors = semantics.createCandidateProcessors(satSolver::createState);
+		this.candidateProcessor = semantics.createUnverifiedProcessor(satSolver::createState);
 		this.verifier = semantics.createVerifier(satSolver::createState);
-		this.modelProcessors = semantics.createModelProcessors(satSolver::createState);
+		this.modelProcessor = semantics.createVerifiedProcessor(satSolver::createState);
 		this.verifier.ifPresent(Verifier::prepare);
 	}
 	
@@ -75,31 +74,25 @@ public final class SequentialExecution implements Execution {
 		}	
 		return state;
 	}
+	
+	private Interpretation process(Interpretation candidate, Optional<InterpretationProcessor> optional) {
+		return optional.map( processor -> {
+			Interpretation processed = processor.process(candidate);		
+			generator.update(state -> processor.updateState(state, processed));
+			return processed;
+		}).orElse(candidate);
+	}
 
 	private boolean verify(Interpretation candidate) {
 		return verifier.map(v -> v.verify(candidate)).orElse(true);
-	}
-	
-	private Interpretation process(Interpretation candidate, List<InterpretationProcessor> processors) {
-		Interpretation processed = candidate;
-		for (InterpretationProcessor processor : processors) {
-			final Interpretation intermediate = processor.process(processed);
-			generator.update(state -> processor.updateState(state, intermediate));
-			processed = intermediate;
-		}
-		return processed;
 	}
 
 	@Override
 	public void close() {
 		generator.close();
 		verifier.ifPresent(Verifier::close);
-		for (InterpretationProcessor processor : modelProcessors) {
-			processor.close();
-		}
-		for (InterpretationProcessor processor : candidateProcessors) {
-			processor.close();
-		}
+		modelProcessor.ifPresent(InterpretationProcessor::close);
+		candidateProcessor.ifPresent(InterpretationProcessor::close);
 	}
 
 	@Override
@@ -116,7 +109,7 @@ public final class SequentialExecution implements Execution {
 		private Interpretation nextCandidate() {
 			Interpretation candidate = generator.generate();
 			if (candidate != null) {
-				return process(candidate, candidateProcessors);
+				return process(candidate, candidateProcessor);
 			}
 			return null;
 		}
@@ -131,7 +124,7 @@ public final class SequentialExecution implements Execution {
 				}
 			}
 			if (candidate != null) {
-				return process(candidate, modelProcessors);
+				return process(candidate, modelProcessor);
 			}
 			return null;
 		}

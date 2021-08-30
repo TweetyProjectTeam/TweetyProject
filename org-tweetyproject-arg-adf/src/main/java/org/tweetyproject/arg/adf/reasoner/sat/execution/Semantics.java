@@ -60,17 +60,35 @@ public interface Semantics {
 	
 	List<StateProcessor> createStateProcessors();
 	
-	boolean hasCandidateProcessors();
+	boolean hasUnverifiedProcessor();
 	
-	List<InterpretationProcessor> createCandidateProcessors(Supplier<SatSolverState> stateSupplier);
+	/**
+	 * Is applied to interpretations before they are verified.
+	 * 
+	 * @param stateSupplier
+	 * @return
+	 */
+	Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier);
 
 	boolean hasVerifier();
 	
+	/**
+	 * Creates a verifier, which acts as a filter.
+	 * 
+	 * @param stateSupplier
+	 * @return
+	 */
 	Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier);
 
-	boolean hasModelProcessors();
+	boolean hasVerifiedProcessor();
 	
-	List<InterpretationProcessor> createModelProcessors(Supplier<SatSolverState> stateSupplier);
+	/**
+	 * Is applied to interpretations after they are verified.
+	 * 
+	 * @param stateSupplier
+	 * @return
+	 */
+	Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier);
 
 	/**
 	 * 

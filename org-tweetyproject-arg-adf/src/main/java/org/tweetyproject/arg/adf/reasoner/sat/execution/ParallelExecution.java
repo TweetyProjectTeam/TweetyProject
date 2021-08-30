@@ -64,7 +64,7 @@ public final class ParallelExecution implements Execution {
 	private final Queue<Branch> branches = new ConcurrentLinkedQueue<>();
 
 	private final BlockingQueue<Interpretation> interpretations;
-		
+
 	public ParallelExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver,
 			int parallelism) {
 		this.satSolver = Objects.requireNonNull(satSolver);
@@ -73,7 +73,7 @@ public final class ParallelExecution implements Execution {
 		this.parallelism = parallelism;
 		this.interpretations = new LinkedBlockingQueue<>(parallelism);
 	}
-	
+
 	private void start() {
 		Decomposer decomposer = semantics.createDecomposer();
 		Collection<Interpretation> decompositions = decomposer.decompose(adf, parallelism);
@@ -83,13 +83,13 @@ public final class ParallelExecution implements Execution {
 			branch.start();
 		}
 	}
-	
+
 	@Override
 	public Stream<Interpretation> stream() {
 		start();
-		return StreamSupport.stream(new InterpretationSpliterator(), false);
+		return StreamSupport.stream(new InterpretationSpliterator(), false).onClose(this::close);
 	}
-	
+
 	@Override
 	public void close() {
 		executor.shutdownNow();
@@ -104,7 +104,7 @@ public final class ParallelExecution implements Execution {
 			branch.generator.update(updateFunction);
 		}
 	}
-	
+
 	private final class InterpretationSpliterator extends AbstractSpliterator<Interpretation> {
 
 		protected InterpretationSpliterator() {
@@ -120,66 +120,75 @@ public final class ParallelExecution implements Execution {
 						action.accept(next);
 						return true;
 					}
-				} catch (InterruptedException e) {}
-			}			
+				} catch (InterruptedException e) {
+				}
+			}
 			return false;
 		}
-		
+
 	}
-	
+
+	private interface Node extends AutoCloseable, Consumer<Interpretation> {
+
+		@Override
+		void close();
+
+	}
+
 	private final class Branch implements AutoCloseable {
-		
+
 		private final Semantics semantics;
-		
+
 		private final GeneratorNode generator;
-		
+
 		private final AtomicInteger currentlyInPipeline = new AtomicInteger(1);
-		
+
 		Branch(Semantics semantics) {
 			this.semantics = Objects.requireNonNull(semantics);
 			this.generator = buildPipeline();
 		}
-		
+
 		private GeneratorNode buildPipeline() {
-			Supplier<SatSolverState> stateSupplier = semantics.hasStateProcessors() ? new StateProcessorNode() : satSolver::createState;
-			
-			Consumer<Interpretation> last = new EndNode();
-			if (semantics.hasModelProcessors()) {
-				last = new ProcessingNode(last, semantics.createModelProcessors(satSolver::createState));
+			Supplier<SatSolverState> stateSupplier = semantics.hasStateProcessors() ? new ProcessedStateSupplier()
+					: satSolver::createState;
+
+			Node last = new EndNode();
+			if (semantics.hasVerifiedProcessor()) {
+				last = new ProcessingNode(last, semantics.createVerifiedProcessor(satSolver::createState).orElseThrow());
 			}
-			
+
 			if (semantics.hasVerifier()) {
 				last = new VerificationNode(last);
 			}
-			
-			if (semantics.hasCandidateProcessors()) {
-				last = new ProcessingNode(last, semantics.createCandidateProcessors(satSolver::createState));
+
+			if (semantics.hasUnverifiedProcessor()) {
+				last = new ProcessingNode(last, semantics.createUnverifiedProcessor(satSolver::createState).orElseThrow());
 			}
-					
+
 			return new GeneratorNode(stateSupplier, last);
 		}
-		
+
 		private void decreaseCount() {
 			if (currentlyInPipeline.decrementAndGet() == 0) {
 				branches.remove(this);
 				close();
 			}
 		}
-		
+
 		public void start() {
 			generator.generate();
 		}
 
 		@Override
 		public void close() {
-			generator.generator.close();
+			generator.close();
 		}
-		
-		private final class StateProcessorNode implements Supplier<SatSolverState> {
-			
+
+		private final class ProcessedStateSupplier implements Supplier<SatSolverState> {
+
 			private final List<StateProcessor> processors;
-			
-			public StateProcessorNode() {
+
+			public ProcessedStateSupplier() {
 				this.processors = semantics.createStateProcessors();
 			}
 
@@ -191,12 +200,12 @@ public final class ParallelExecution implements Execution {
 				}
 				return state;
 			}
-			
+
 		}
 
-		private final class GeneratorNode {
+		private final class GeneratorNode implements AutoCloseable {
 
-			private final Consumer<Interpretation> next;
+			private final Node next;
 
 			/**
 			 * Collects the pending updates of the interpretation processors. We cannot
@@ -207,21 +216,23 @@ public final class ParallelExecution implements Execution {
 			private final Queue<Consumer<SatSolverState>> pendingUpdates = new ConcurrentLinkedQueue<>();
 
 			private final CandidateGenerator generator;
-			
-			public GeneratorNode(Supplier<SatSolverState> stateSupplier, Consumer<Interpretation> next) {
+
+			public GeneratorNode(Supplier<SatSolverState> stateSupplier, Node next) {
 				this.next = next;
 				this.generator = semantics.createCandidateGenerator(stateSupplier);
 			}
 
 			public void generate() {
 				executor.execute(() -> {
+					applyPendingUpdates();
 					Interpretation candidate = null;
-					while ((candidate = generator.generate()) != null) {
-						applyPendingUpdates();
+					if ((candidate = generator.generate()) != null) {
 						currentlyInPipeline.incrementAndGet();
 						next.accept(candidate);
+						generate();
+					} else {
+						decreaseCount(); // initialized with 1, so it can only become 0 if we are done
 					}
-					decreaseCount(); // initialized with 1, so it can only become 0 if we are done
 				});
 			}
 
@@ -236,66 +247,77 @@ public final class ParallelExecution implements Execution {
 				}
 			}
 
+			@Override
+			public void close() {
+				generator.close();
+				next.close();
+			}
+
 		}
 
-		private final class VerificationNode implements Consumer<Interpretation> {
+		private final class VerificationNode implements Node {
 
-			private final Consumer<Interpretation> next;
+			private final Node next;
 
-			private final ThreadLocal<Verifier> verifier = ThreadLocal.withInitial(() -> {
-				Verifier v = semantics.createVerifier(satSolver::createState).get();
-				v.prepare();
-				return v;
-			});
+			private final Verifier verifier;
 
-			public VerificationNode(Consumer<Interpretation> next) {
+			public VerificationNode(Node next) {
 				this.next = Objects.requireNonNull(next);
+				this.verifier = semantics.createVerifier(satSolver::createState).orElseThrow();
+				this.verifier.prepare();
 			}
 
 			@Override
 			public void accept(Interpretation interpretation) {
 				executor.execute(() -> {
-					if (verifier.get().verify(interpretation)) {
+					boolean verified;
+					synchronized(verifier) {
+						verified = verifier.verify(interpretation);
+					}
+					if (verified) {
 						next.accept(interpretation);
 					} else {
 						decreaseCount();
 					}
 				});
 			}
-			
+
+			@Override
+			public void close() {
+				verifier.close();
+				next.close();
+			}
+
 		}
 
-		private final class ProcessingNode implements Consumer<Interpretation>, AutoCloseable {
+		private final class ProcessingNode implements Node {
 
-			private final Consumer<Interpretation> next;
+			private final Node next;
 
-			private final List<InterpretationProcessor> processors;
+			private final InterpretationProcessor processor;
 
-			public ProcessingNode(Consumer<Interpretation> next, List<InterpretationProcessor> processors) {
+			public ProcessingNode(Node next, InterpretationProcessor processor) {
 				this.next = Objects.requireNonNull(next);
-				this.processors = Objects.requireNonNull(processors);
+				this.processor = Objects.requireNonNull(processor);
 			}
 
 			public void accept(Interpretation interpretation) {
-				Interpretation processed = interpretation;
-				for (InterpretationProcessor processor : processors) {
-					final Interpretation intermediate = processor.process(processed);
-					generator.update(state -> processor.updateState(state, intermediate));
-					processed = intermediate;
-				}
-				next.accept(processed);
+				executor.execute(() -> {
+					Interpretation processed = processor.process(interpretation);
+					generator.update(state -> processor.updateState(state, processed));
+					next.accept(processed);						
+				});
 			}
 
 			@Override
 			public void close() {
-				for (InterpretationProcessor processor : processors) {
-					processor.close();
-				}
+				processor.close();
+				next.close();
 			}
 
 		}
-		
-		private final class EndNode implements Consumer<Interpretation> {
+
+		private final class EndNode implements Node {
 
 			@Override
 			public void accept(Interpretation t) {
@@ -306,9 +328,12 @@ public final class ParallelExecution implements Execution {
 					decreaseCount();
 				}
 			}
-			
+
+			@Override
+			public void close() {}
+
 		}
-		
+
 	}
 
 }

@@ -33,18 +33,21 @@ public interface Query<T> {
 	 * @return execute
 	 */
 	T execute();
-	
+
 	/**
-	 * @deprecated still work in progress
+	 * Computes the query in parallel.
+	 * 
+	 * Note: this is only recommended for "hard"
+	 * queries, otherwise the parallelization overhead exceeds the solving time.
+	 * 
 	 * @return return
 	 */
-	@Deprecated(forRemoval = false)
 	T executeParallel();
-	
+
 	/**
 	 * @param configuration configuration
 	 * @return a copy of this query but with the new configuration applied
 	 */
 	Query<T> configure(Configuration configuration);
-	
+
 }

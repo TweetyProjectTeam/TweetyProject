@@ -11,7 +11,6 @@ import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.RefineLargerSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.RefineUnequalSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.RelativeSatEncoding;
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
@@ -29,53 +28,49 @@ import org.tweetyproject.arg.adf.syntax.pl.Literal;
  */
 public abstract class AdmissibleMaximizer implements InterpretationProcessor {
 		
+	private final AbstractDialecticalFramework adf;
+	
 	private final PropositionalMapping mapping;
-			
-	private final RelativeSatEncoding larger;
-
-	private final RelativeSatEncoding refineUnequal;
+	
+	private final Supplier<SatSolverState> stateSupplier;
 	
 	private final RelativeSatEncoding refineLarger;
 		
 	/**
+	 * @param adf
 	 * @param mapping
+	 * @param stateSupplier
 	 */
-	private AdmissibleMaximizer( PropositionalMapping mapping ) {
-		this.mapping = Objects.requireNonNull(mapping);
-		this.larger = new LargerInterpretationSatEncoding(mapping);
-		this.refineUnequal = new RefineUnequalSatEncoding(mapping);
+	private AdmissibleMaximizer(AbstractDialecticalFramework adf, PropositionalMapping mapping,
+			Supplier<SatSolverState> stateSupplier) {
+		this.adf = adf;
+		this.mapping = mapping;
+		this.stateSupplier = stateSupplier;
 		this.refineLarger = new RefineLargerSatEncoding(mapping);
 	}
-	
-	public static InterpretationProcessor restricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, AbstractDialecticalFramework reduct, PropositionalMapping mapping, Interpretation prefix) {
-		return new RestrictedAdmissibleMaximizer(stateSupplier, adf, reduct, mapping, prefix);
+
+	public static InterpretationProcessor restricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
+		return new RestrictedAdmissibleMaximizer(stateSupplier, adf, mapping, prefix);
 	}
 	
 	public static InterpretationProcessor unrestricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		return new UnrestrictedAdmissibleMaximizer(stateSupplier, adf, mapping);
 	}
 
-	protected abstract SatSolverState createState();
+	protected abstract SatSolverState prepareState(SatSolverState state, AbstractDialecticalFramework adf);
+		
+	private Verifier createVerifier() {
+		Verifier verifier = new AdmissibleVerifier(stateSupplier, adf, mapping);
+		verifier.prepare();
+		return verifier;
+	}
 	
-	protected abstract boolean verify(Interpretation interpretation);
+	protected abstract Interpretation process( Interpretation interpretation, SatSolverState state, Verifier verifier );
 	
 	@Override
 	public Interpretation process( Interpretation interpretation ) {
-		try(SatSolverState state = createState()) {
-			Interpretation maximal = interpretation;
-			larger.encode(state::add, maximal);
-			Set<Literal> witness = null;
-			while ((witness = state.witness(mapping.getArgumentLiterals())) != null) {
-				Interpretation maxCandidate = Interpretation.fromWitness(witness, mapping);
-				if (verify(maxCandidate)) {
-					maximal = maxCandidate;
-					larger.encode(state::add, maximal);
-				} else {
-					refineUnequal.encode(state::add, maxCandidate); // prevent the candidate from being computed again
-				}
-			}
-
-			return maximal;
+		try (SatSolverState state = prepareState(stateSupplier.get(), adf); Verifier verifier = createVerifier()) {
+			return process(interpretation, state, verifier);
 		}
 	}
 
@@ -86,85 +81,69 @@ public abstract class AdmissibleMaximizer implements InterpretationProcessor {
 		refineLarger.encode(state::add, maximal);			
 	}
 	
+	@Override
+	public void close() {}
+	
 	private static final class UnrestrictedAdmissibleMaximizer extends AdmissibleMaximizer {
+		
+		private final PropositionalMapping mapping;
+		
+		private final RelativeSatEncoding larger;
 
-		private final Supplier<SatSolverState> stateSupplier;
-		
-		private final Verifier verifier;
-		
-		private final SatEncoding conflictFree;
-		
-		private final KBipolarStateProcessor processor;
+		private final RelativeSatEncoding refineUnequal;
 				
-		public UnrestrictedAdmissibleMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
-			super(mapping);
-			this.stateSupplier = Objects.requireNonNull(stateSupplier);
-			this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
-			this.processor = new KBipolarStateProcessor(adf, mapping);
-			this.verifier = new AdmissibleVerifier(stateSupplier, adf, mapping);
-			this.verifier.prepare();
+		UnrestrictedAdmissibleMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+			super(adf, mapping, stateSupplier);
+			this.mapping = mapping;
+			this.larger = new LargerInterpretationSatEncoding(mapping);
+			this.refineUnequal = new RefineUnequalSatEncoding(mapping);
 		}
 		
 		@Override
-		protected boolean verify(Interpretation interpretation) {
-			return verifier.verify(interpretation);
-		}
-		
-		@Override
-		protected SatSolverState createState() {
-			SatSolverState state = stateSupplier.get();
-			processor.process(state::add);
-			conflictFree.encode(state::add);
+		protected SatSolverState prepareState(SatSolverState state, AbstractDialecticalFramework adf) {
+			new KBipolarStateProcessor(adf, mapping).process(state::add);
+			new ConflictFreeInterpretationSatEncoding(adf, mapping).encode(state::add);
 			return state;
 		}
 		
 		@Override
-		public void close() {
-			verifier.close();
+		protected Interpretation process(Interpretation interpretation, SatSolverState state, Verifier verifier) {
+			Interpretation maximal = interpretation;
+			larger.encode(state::add, maximal);
+			Set<Literal> witness = null;
+			while ((witness = state.witness(mapping.getArgumentLiterals())) != null) {
+				Interpretation maxCandidate = Interpretation.fromWitness(witness, mapping);
+				if (verifier.verify(maxCandidate)) {
+					maximal = maxCandidate;
+					larger.encode(state::add, maximal);
+				} else {
+					refineUnequal.encode(state::add, maxCandidate); // prevent the candidate from being computed again
+				}
+			}
+
+			return maximal;
 		}
 		
 	}
 	
 	private static final class RestrictedAdmissibleMaximizer extends AdmissibleMaximizer {
-
-		private final Supplier<SatSolverState> stateSupplier;
-		
-		private final RelativeSatEncoding conflictFree;
-		
-		private final Verifier verifier;
-				
-		private final Interpretation prefix;
+								
+		private final Interpretation partial;
 		
 		private final RelativeSatEncoding refineUnequal;
 		
 		private final PropositionalMapping mapping;
-		
-		public RestrictedAdmissibleMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, AbstractDialecticalFramework reduct, PropositionalMapping mapping, Interpretation prefix) {
-			super(mapping);
+				
+		RestrictedAdmissibleMaximizer(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
+			super(adf, mapping, stateSupplier);
 			this.mapping = Objects.requireNonNull(mapping);
-			this.stateSupplier = Objects.requireNonNull(stateSupplier);
-			this.conflictFree = new ConflictFreeInterpretationSatEncoding(reduct, mapping);
-			this.prefix = Objects.requireNonNull(prefix);
+			this.partial = Objects.requireNonNull(partial);
 			this.refineUnequal = new RefineUnequalSatEncoding(mapping);
-			this.verifier = new AdmissibleVerifier(stateSupplier, adf, mapping);
-			this.verifier.prepare();
-		}
-		
-		@Override
-		protected boolean verify(Interpretation interpretation) {
-			return verifier.verify(interpretation);
-		}
-		
-		@Override
-		protected SatSolverState createState() {
-			SatSolverState state = stateSupplier.get();
-			conflictFree.encode(state::add, prefix);
-			return state;
 		}
 		
 		private void encodeLarger( Interpretation interpretation, SatSolverState state) {
 			Set<Argument> toDecide = new HashSet<>(interpretation.undecided());
-			toDecide.removeAll(prefix.arguments());
+			toDecide.removeAll(partial.arguments());
 						
 			// fix the already decided arguments
 			for (Argument a : interpretation.satisfied()) {
@@ -174,7 +153,7 @@ public abstract class AdmissibleMaximizer implements InterpretationProcessor {
 				state.add(Clause.of(mapping.getFalse(a)));
 			}
 			
-			// guess a not yet decided argument
+			// guess a not yet decided argument which is not in partial
 			Set<Literal> undecided = new HashSet<>();
 			for (Argument a : toDecide) {
 				undecided.add(mapping.getTrue(a));
@@ -182,30 +161,29 @@ public abstract class AdmissibleMaximizer implements InterpretationProcessor {
 			}
 			state.add(Clause.of(undecided));
 		}
-				
+		
 		@Override
-		public Interpretation process( Interpretation interpretation ) {
-			try(SatSolverState state = createState()) {
-				Interpretation maximal = interpretation;
-				encodeLarger(maximal, state);
-				Set<Literal> witness = null;
-				while ((witness = state.witness(mapping.getArgumentLiterals())) != null) {
-					Interpretation maxCandidate = Interpretation.fromWitness(witness, mapping);
-					if (verify(maxCandidate)) {
-						maximal = maxCandidate;
-						encodeLarger(maximal, state);
-					} else {
-						refineUnequal.encode(state::add, maxCandidate); // prevent the candidate from being computed again
-					}
-				}
-
-				return maximal;
-			}
+		protected SatSolverState prepareState(SatSolverState state, AbstractDialecticalFramework adf) {
+			new KBipolarStateProcessor(adf, mapping).process(state::add);
+			new ConflictFreeInterpretationSatEncoding(adf, mapping).encode(state::add, partial);
+			return state;
 		}
 		
 		@Override
-		public void close() {
-			verifier.close();
+		protected Interpretation process(Interpretation interpretation, SatSolverState state, Verifier verifier) {
+			Interpretation maximal = interpretation;
+			encodeLarger(maximal, state);
+			Set<Literal> witness = null;
+			while ((witness = state.witness(mapping.getArgumentLiterals())) != null) {
+				Interpretation maxCandidate = Interpretation.fromWitness(witness, mapping);
+				if (verifier.verify(maxCandidate)) {
+					maximal = maxCandidate;
+					encodeLarger(maximal, state);
+				} else {
+					refineUnequal.encode(state::add, maxCandidate); // prevent the candidate from being computed again
+				}
+			}
+			return maximal;
 		}
 
 	}

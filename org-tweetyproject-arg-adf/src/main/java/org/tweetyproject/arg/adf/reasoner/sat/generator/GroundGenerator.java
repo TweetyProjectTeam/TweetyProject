@@ -19,21 +19,15 @@
 package org.tweetyproject.arg.adf.reasoner.sat.generator;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.ConflictFreeInterpretationSatEncoding;
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.FixPartialSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.RelativeSatEncoding;
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
@@ -48,11 +42,7 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 	private final AbstractDialecticalFramework adf;
 	
 	private final PropositionalMapping mapping;
-		
-	private final RelativeSatEncoding fixPartial;
-	
-	private final SatEncoding conflictFree;
-
+			
 	/**
 	 * @param adf
 	 * @param mapping
@@ -61,8 +51,6 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 		super(stateSupplier);
 		this.adf = Objects.requireNonNull(adf);
 		this.mapping = Objects.requireNonNull(mapping);
-		this.fixPartial = new FixPartialSatEncoding(mapping);
-		this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
 	}
 	
 	/**
@@ -74,7 +62,7 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 	 * @return
 	 */
 	public static CandidateGenerator restricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix, Supplier<SatSolverState> stateSupplier) {
-		return new PrefixGroundGenerator(adf, mapping, prefix, stateSupplier);
+		return new RestrictedGroundGenerator(adf, mapping, prefix, stateSupplier);
 	}
 	
 	/**
@@ -84,13 +72,13 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 	 * @param mapping
 	 * @return
 	 */
-	public static GroundGenerator unrestricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
-		return new WithoutPrefixGroundGenerator(adf, mapping, stateSupplier);
+	public static CandidateGenerator unrestricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
+		return new UnrestrictedGroundGenerator(adf, mapping, stateSupplier);
 	}
 	
 	@Override
 	public void prepare(SatSolverState state) {
-		conflictFree.encode(state::add);
+		new ConflictFreeInterpretationSatEncoding(adf, mapping).encode(state::add);
 	}
 	
 	/**
@@ -102,12 +90,7 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 	Interpretation compute(SatSolverState state) {
 		Interpretation oldInterpretation = null;
 		Interpretation newInterpretation = Interpretation.empty(adf);
-		
-		Map<Argument, Boolean> valMap = new HashMap<>();
-		for (Argument arg : adf.getArguments()) {
-			valMap.put(arg, null);
-		}
-		
+				
 		Map<Argument, Literal> accNameByArgument = new HashMap<>();
 		for (Argument s : adf.getArguments()) {
 			TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
@@ -115,33 +98,35 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 			accNameByArgument.put(s, accName);
 		}
 		
+		Interpretation.Builder builder = Interpretation.builder(adf);
 		do {
 			oldInterpretation = newInterpretation;
-			fixPartial.encode(state::add, oldInterpretation);
 			
-			for (Argument s : oldInterpretation.undecided()) {
-				Literal accName = accNameByArgument.get(s);
+			for (Argument arg : oldInterpretation.undecided()) {
+				Literal accName = accNameByArgument.get(arg);
 				
 				// if -acc is satisfiable -> acc not a tautology
 				state.assume(accName.neg());
 				boolean notTaut = state.satisfiable();
 				
 				if (!notTaut) {
-					valMap.put(s, true);
+					builder.satisfied(arg);
+					state.add(Clause.of(mapping.getTrue(arg)));
 				} else {
 					// if acc is satisfiable -> acc not unsat
 					state.assume(accName);
 					boolean notUnsat = state.satisfiable();
 					
 					if (!notUnsat) {
-						valMap.put(s, false);
+						builder.unsatisfied(arg);
+						state.add(Clause.of(mapping.getFalse(arg)));
 					} else {
-						valMap.put(s, null);
+						builder.undecided(arg);
 					}
 				}
 			}
 			
-			newInterpretation = Interpretation.fromMap(valMap);
+			newInterpretation = builder.build();
 		} while (!newInterpretation.equals(oldInterpretation));
 		
 		return newInterpretation;
@@ -163,85 +148,100 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 		state.add(Clause.of(p.neg()));
 	}
 	
-	private static final class WithoutPrefixGroundGenerator extends GroundGenerator {
+	private static final class UnrestrictedGroundGenerator extends GroundGenerator {
 
-		private WithoutPrefixGroundGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
+		private UnrestrictedGroundGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
 			super(adf, mapping, stateSupplier);
 		}	
 		
 	}
 	
-	private static final class PrefixGroundGenerator extends GroundGenerator {
+	private static final class RestrictedGroundGenerator extends GroundGenerator {
 		
-		private final Interpretation prefix;
+		private final Interpretation partial;
 		
 		private final AbstractDialecticalFramework adf;
 		
 		private final PropositionalMapping mapping;
 								
-		private PrefixGroundGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix, Supplier<SatSolverState> stateSupplier) {
+		private RestrictedGroundGenerator(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial, Supplier<SatSolverState> stateSupplier) {
 			super(adf, mapping, stateSupplier);
 			this.adf = adf;
 			this.mapping = mapping;
-			this.prefix = Objects.requireNonNull(prefix);
+			this.partial = Objects.requireNonNull(partial);
 		}
 		
 		@Override
 		public Interpretation generate(SatSolverState state) {
-			Set<Argument> evaluated = new HashSet<>();
+			if (!state.satisfiable()) return null;
 			
-			for (Argument arg : prefix.arguments()) {
-				evaluate(arg, evaluated, state);
-			}
+			Interpretation.Builder builder = Interpretation.builder(adf);
 			
-			for (Argument arg : adf.getArguments()) {
-				evaluate(arg, evaluated, state);
-			}
-			
-			Set<Literal> witness = state.witness();
-			
-			makeUnsat(state); // signal the execution framework that we are done by returning null for subsequent calls
-			
-			if (witness == null) return null;
-			
-			return Interpretation.fromWitness(witness, mapping);
-		}
-		
-		private void evaluate(Argument arg, Set<Argument> evaluated, SatSolverState state) {
-			if (!evaluated.add(arg)) return; // handle graph cycles
-			
-			AcceptanceCondition acc = adf.getAcceptanceCondition(arg);
-			
-			if (acc == AcceptanceCondition.CONTRADICTION) {
-				state.add(Clause.of(mapping.getFalse(arg)));
-			} else if (acc == AcceptanceCondition.TAUTOLOGY) {
-				state.add(Clause.of(mapping.getTrue(arg)));
-			} else {
-				acc.arguments().forEach(parent -> evaluate(parent, evaluated, state));
-
-				TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(parent -> mapping.getLink(parent, arg), false);
-				Literal accName = transformer.collect(acc, state::add);
-				
-				state.assume(accName.neg());
-				boolean notTaut = state.satisfiable();
-				
-				if (!notTaut) {
-					state.add(Clause.of(mapping.getTrue(arg)));
-				} else {
-					state.assume(accName);
-					boolean notUnsat = state.satisfiable();
+			Interpretation oldInterpretation = null;
+			Interpretation newInterpretation = builder.build();
 					
-					if (!notUnsat) {
-						state.add(Clause.of(mapping.getFalse(arg)));						
+			Map<Argument, Literal> accNameByArgument = new HashMap<>();
+			for (Argument s : adf.getArguments()) {
+				TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
+				Literal accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
+				accNameByArgument.put(s, accName);
+			}
+			
+			do {
+				oldInterpretation = newInterpretation;
+				
+				for (Argument arg : oldInterpretation.undecided()) {
+					Literal accName = accNameByArgument.get(arg);
+					
+					// if -acc is satisfiable -> acc not a tautology
+					state.assume(accName.neg());
+					boolean notTaut = state.satisfiable();
+					
+					if (!notTaut) {
+						if (partial.unsatisfied(arg) || partial.undecided(arg)) {
+							makeUnsat(state);
+							return null;
+						}
+						
+						builder.satisfied(arg);
+						state.add(Clause.of(mapping.getTrue(arg)));
 					} else {
-						state.add(Clause.of(mapping.getTrue(arg).neg()));
-						state.add(Clause.of(mapping.getFalse(arg).neg()));
+						// if acc is satisfiable -> acc not unsat
+						state.assume(accName);
+						boolean notUnsat = state.satisfiable();
+						
+						if (!notUnsat) {
+							if (partial.satisfied(arg) || partial.undecided(arg)) {
+								makeUnsat(state);
+								return null;
+							}
+							
+							builder.unsatisfied(arg);
+							state.add(Clause.of(mapping.getFalse(arg)));
+						} else {
+							builder.undecided(arg);
+						}
 					}
 				}
+				
+				newInterpretation = builder.build();				
+			} while (!newInterpretation.equals(oldInterpretation));
+
+			makeUnsat(state);
+			
+			if (!isConsistent(newInterpretation)) {
+				return null;
 			}
+									
+			return newInterpretation;		
+		}
+		
+		private boolean isConsistent(Interpretation result) {
+			return result.satisfied().containsAll(partial.satisfied()) &&
+					result.unsatisfied().containsAll(partial.unsatisfied()) &&
+					result.undecided().containsAll(partial.undecided());
 		}
 		
 	}
-	
 
 }

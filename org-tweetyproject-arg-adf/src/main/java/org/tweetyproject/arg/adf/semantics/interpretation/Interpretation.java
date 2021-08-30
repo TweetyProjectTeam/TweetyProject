@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
@@ -35,7 +36,6 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.Single
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
-import org.tweetyproject.arg.adf.util.MinusSetView;
 
 /**
  * This class represents a three-valued interpretation of an Abstract
@@ -54,20 +54,17 @@ public interface Interpretation {
 		Set<Argument> satisfied = new HashSet<>();
 		Set<Argument> unsatisfied = new HashSet<>();
 		Set<Argument> undecided = new HashSet<>();
-		for (Argument arg : assignment.keySet()) {
-			if (assignment.get(arg) == null) {
-				undecided.add(arg);
-			} else if (assignment.get(arg)) {
-				satisfied.add(arg);
+		for (Entry<Argument, Boolean> entry : assignment.entrySet()) {
+			Boolean value = entry.getValue();
+			if (value == null) {
+				undecided.add(entry.getKey());
+			} else if (value) {
+				satisfied.add(entry.getKey());
 			} else {
-				unsatisfied.add(arg);
+				unsatisfied.add(entry.getKey());
 			}
 		}
 		return new SetInterpretation(satisfied, unsatisfied, undecided);
-	}
-	
-	static Interpretation fromSet(Set<Argument> satisfied, AbstractDialecticalFramework adf) {
-		return new SetInterpretation(satisfied, Set.of(), new MinusSetView<>(adf.getArguments(), satisfied));
 	}
 		
 	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, AbstractDialecticalFramework adf) {
@@ -77,7 +74,7 @@ public interface Interpretation {
 				undecided.add(arg);
 			}
 		}
-		return new SetInterpretation(satisfied, unsatisfied, undecided);
+		return new SetInterpretation(Set.copyOf(satisfied), Set.copyOf(unsatisfied), undecided);
 	}
 	
 	/**
@@ -120,16 +117,16 @@ public interface Interpretation {
 		if (value) {
 			Set<Argument> satisfied = new HashSet<>(toExtend.satisfied());
 			satisfied.add(argument);
-			return new SetInterpretation(satisfied, toExtend.unsatisfied(), undecided);
+			return new SetInterpretation(satisfied, Set.copyOf(toExtend.unsatisfied()), undecided);
 		} else {
 			Set<Argument> unsatisfied = new HashSet<>(toExtend.unsatisfied());
 			unsatisfied.add(argument);
-			return new SetInterpretation(toExtend.satisfied(), unsatisfied, undecided);
+			return new SetInterpretation(Set.copyOf(toExtend.satisfied()), unsatisfied, undecided);
 		}
 	}
 
 	static Interpretation fromSets(Set<Argument> satisfied, Set<Argument> unsatisfied, Set<Argument> undecided) {
-		return new SetInterpretation(satisfied, unsatisfied, undecided);
+		return new SetInterpretation(Set.copyOf(satisfied), Set.copyOf(unsatisfied), Set.copyOf(undecided));
 	}
 	
 	/**
@@ -163,7 +160,7 @@ public interface Interpretation {
 				undecided.add(arg);
 			}
 		}
-		return new SetInterpretation(satisfied, unsatisfied, undecided);
+		return new SetInterpretation(Set.copyOf(satisfied), Set.copyOf(unsatisfied), undecided);
 	}
 
 	static Map<Argument, Boolean> toMap(Interpretation interpretation) {
@@ -273,8 +270,7 @@ public interface Interpretation {
 		
 		private Builder(Collection<Argument> arguments) {
 			for (Argument arg : arguments) {
-				// initialize as undecided
-				assignment.put(arg, null);
+				assignment.put(arg, null); // initialize as undecided
 			}
 		}
 				
@@ -288,6 +284,18 @@ public interface Interpretation {
 			}
 			assignment.put(arg, value);
 			return this;
+		}
+		
+		public Builder satisfied(Argument arg) {
+			return put(arg, true);
+		}
+		
+		public Builder unsatisfied(Argument arg) {
+			return put(arg, false);
+		}
+		
+		public Builder undecided(Argument arg) {
+			return put(arg, null);
 		}
 		
 		public Interpretation build() {
