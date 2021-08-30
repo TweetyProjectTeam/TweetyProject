@@ -85,7 +85,6 @@ public class StreamInconsistencyEvaluationExample {
 	 */
 	public static void main(String[] args) throws InterruptedException{
 		LpSolve.setBinary("/home/mthimm/strinc/lpsolve/lp_solve");
-		LpSolve.setTmpFolder(new File(TMP_FILE_FOLDER));
 		Solver.setDefaultLinearSolver(new LpSolve());
 		SatSolver.setTempFolder(new File(TMP_FILE_FOLDER));
 		SatSolver.setDefaultSolver(new CmdLineSatSolver("/home/mthimm/strinc/lingeling/lingeling"));
