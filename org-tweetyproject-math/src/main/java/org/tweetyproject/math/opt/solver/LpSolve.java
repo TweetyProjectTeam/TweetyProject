@@ -50,10 +50,7 @@ public class LpSolve extends Solver {
 	
 	/**Path to the binary or lp_solve*/
 	
-	private static String binary = "D:\\Uni\\Semester6\\HiWi\\lp_solve\\lp_solve.exe";
-	
-	/** For temporary files. */
-	private static File tmpFolder = new File("D:\\Uni\\Semester6\\HiWi\\tmpVonSebi");
+	private static String binary = "lp_solve";
 	
 	/**
 	 * 
@@ -85,7 +82,7 @@ public class LpSolve extends Solver {
 		//String error = "";
 		
 		try{
-			File lpFile = File.createTempFile("lptmp", null, LpSolve.tmpFolder);
+			File lpFile = File.createTempFile("lptmp", null);
 //			File lpFile = new File("lptmp2");
 			// Delete temp file when program exits.
 			//lpFile.deleteOnExit();    
@@ -149,13 +146,5 @@ public class LpSolve extends Solver {
 	 */
 	public static void setBinary(String binary){
 		LpSolve.binary = binary;
-	}
-	
-	/**
-	 * Sets the path for the temporary folder.
-	 * @param path some path.
-	 */
-	public static void setTmpFolder(File path){
-		LpSolve.tmpFolder = path;
-	}
+	}	
 }

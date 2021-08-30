@@ -138,7 +138,7 @@ public class LevelingFunction<T> extends Functions<T> {
 		}
 
 		try {
-			Map<Variable, Term> solution = Solver.getDefaultLinearSolver().solve(opt);
+			Map<Variable, Term> solution = Solver.getDefaultIntegerLinearSolver().solve(opt);
 			Map<T, Integer> sol = new HashMap<T, Integer>();
 			for (Entry<Variable, Term> e : solution.entrySet()) {
 				//TODO: check the following cast
