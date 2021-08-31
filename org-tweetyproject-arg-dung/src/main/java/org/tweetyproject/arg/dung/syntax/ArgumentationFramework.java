@@ -10,7 +10,7 @@ import org.tweetyproject.commons.BeliefBase;
  * @author Matthias Thimm
  *
  */
-public interface ArgumentationFramework extends BeliefBase{
+public interface ArgumentationFramework<Arg> extends BeliefBase{
 	/**
 	 * 
 	 * @param c parameter
@@ -23,8 +23,8 @@ public interface ArgumentationFramework extends BeliefBase{
 	 * @param ext parameter
 	 * @return isAttacked
 	 */
-	boolean isAttacked(Argument a, Extension ext);
-	Collection<Argument> getNodes();
+	boolean isAttacked(Arg a, Extension ext);
+	Collection<Arg> getNodes();
 
 
 }

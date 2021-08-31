@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.reasoner;
 
@@ -30,14 +30,16 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
 /**
- * This reasoner for Dung theories performs inference on the semi-stable extensions.
- * @author Matthias Thimm
+ * This reasoner calculates claim based semi stable extensions
+ * @author Sebastian Franke
  *
  */
 public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
+	/**
+	 * 
+	 * @param bbase the claim based thory
+	 * @return all extensions of the semantics
 	 */
 	@Override
 	public Collection<Extension> getModels(ArgumentationFramework bbase) {
@@ -62,8 +64,10 @@ public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 		return exts;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
+	/**
+	 * 
+	 * @param bbase the claim based thory
+	 * @return an extensions of the semantics
 	 */
 	@Override
 	public Extension getModel(ArgumentationFramework bbase) {

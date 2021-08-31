@@ -56,7 +56,7 @@ import org.tweetyproject.math.matrix.Matrix;
  * @author  Sebastian Franke
  *
  */
-public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHyperGraph<Argument>, Comparable<SetAf>, ArgumentationFramework {
+public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHyperGraph<Argument>, Comparable<SetAf>, ArgumentationFramework<Argument> {
 
 	/**
 	 * For archiving sub DirHyperGraphs 

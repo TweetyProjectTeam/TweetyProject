@@ -42,7 +42,7 @@ import org.tweetyproject.math.term.IntegerConstant;
  * @author Matthias Thimm, Tjitze Rienstra
  *
  */
-public class DungTheory extends BeliefSet<Argument,DungSignature> implements Graph<Argument>, Comparable<DungTheory>, ArgumentationFramework {
+public class DungTheory extends BeliefSet<Argument,DungSignature> implements Graph<Argument>, Comparable<DungTheory>, ArgumentationFramework<Argument> {
 
 	/**
 	 * For archiving sub graphs 

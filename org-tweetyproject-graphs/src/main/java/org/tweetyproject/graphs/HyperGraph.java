@@ -32,7 +32,7 @@ import org.tweetyproject.math.matrix.Matrix;
 
 /**
  * This class implements a simple directed hypergraph
- * 
+ *  
  * @author Sebastian Franke
  *
  */
