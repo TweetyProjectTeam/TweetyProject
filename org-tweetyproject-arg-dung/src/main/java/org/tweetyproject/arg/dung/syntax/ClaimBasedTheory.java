@@ -14,41 +14,40 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.syntax;
 
 import java.util.*;
-
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
-import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
 import org.tweetyproject.arg.dung.semantics.*;
-import org.tweetyproject.commons.*;
-import org.tweetyproject.graphs.*;
-import org.tweetyproject.math.matrix.Matrix;
-import org.tweetyproject.math.term.IntegerConstant;
 
 
 /**
- * This class implements an abstract argumentation theory in the sense of Dung.
- * <br>
- * <br>See
- * <br>
- * <br>Phan Minh Dung. On the Acceptability of Arguments and its Fundamental Role in Nonmonotonic Reasoning, Logic Programming and n-Person Games.
- * In Artificial Intelligence, Volume 77(2):321-358. 1995
+ *implements claim based theory
+ *see: The Complexity Landscape of Claim-Augmented
+Argumentation Frameworks (Wolfgang Dvoˇr´ak  Alexander Greßler 
+Anna Rapberger  StefanWoltran )
  *
- *
- * @author Matthias Thimm, Tjitze Rienstra
+ * @author Sebastian Franke
  *
  */
 public class ClaimBasedTheory extends DungTheory {
 
-	
+	/**maps claims to arguments*/
 	private HashMap<Argument, String> claimMap;
+	/**all claims*/
+	private HashSet<String> claims;
+	/**
+	 * 
+	 * @return the claim map
+	 */
 	public HashMap<Argument, String> getClaimMap() {
 		return claimMap;
 	}
+	/**
+	 * 
+	 * @param claimMap the new claimMap
+	 */
 	public void setClaimMap(HashMap<Argument, String> claimMap) {
 		this.claimMap = claimMap;
 		for(Argument a : claimMap.keySet()) {
@@ -58,14 +57,25 @@ public class ClaimBasedTheory extends DungTheory {
 
 		}
 	}
-	private HashSet<String> claims;
-	
+
+	/**
+	 * 
+	 * @return the claims
+	 */
 	public HashSet<String> getClaims() {
 		return claims;
 	}
+	/**
+	 * 
+	 * @param claims the claims to e set
+	 */
 	public void setClaims(HashSet<String> claims) {
 		this.claims = claims;
 	}
+	/**
+	 * 
+	 * @param claimMap the claimMap to be set
+	 */
 	public void setClaims(HashMap<Argument, String> claimMap ) {
 		this.claimMap = claimMap;
 		this.claims = new HashSet<String>();
@@ -92,7 +102,11 @@ public class ClaimBasedTheory extends DungTheory {
 			}
 		}
 	}
-	
+	/**
+	 * get all calims of a given extension
+	 * @param ext extension
+	 * @return the extension's claims
+	 */
 	public Set<String> getClaims(Extension ext) {
 		HashSet<String> cl = new HashSet<String>();
 		for(Argument arg : ext) {
@@ -102,7 +116,11 @@ public class ClaimBasedTheory extends DungTheory {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @param ext the extension
+	 * @return all claims defeated by the extension (extension defeat all arguments of a claim => claim defeated)
+	 */
 	public Set<String> defeats(Extension ext) {
 		HashSet<Argument> argsWithClaim = new HashSet<Argument>();
 		HashSet<String> defeated = new HashSet<String>();
