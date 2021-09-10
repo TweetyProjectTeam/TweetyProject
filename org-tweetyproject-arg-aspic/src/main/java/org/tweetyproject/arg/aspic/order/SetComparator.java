@@ -52,7 +52,7 @@ public class SetComparator<T> implements Comparator<Collection<T>> {
 		this.elitist = elitist;
 	}
 
-	private boolean is_smaller(Collection<T> gamma1, Collection<T> gamma2) {
+	private boolean is_smaller_or_equal(Collection<T> gamma1, Collection<T> gamma2) {
 		if (elitist) {
 			for (T t : gamma1) {
 				int i = 0;
@@ -95,12 +95,14 @@ public class SetComparator<T> implements Comparator<Collection<T>> {
 		if (gamma2.isEmpty() && !gamma1.isEmpty())
 			return 1;
 		
-		if(is_smaller(gamma1, gamma2))
-			return -1;
-		if(is_smaller(gamma2, gamma1))
-			return 1;
+		boolean soe = is_smaller_or_equal(gamma1, gamma2);
+		boolean goe = is_smaller_or_equal(gamma2, gamma1);
 		
-		return 0;
+		if(soe && goe)
+			return 0;
+		if(soe)
+			return -1;
+		return 1;		
 	}
 
 }
