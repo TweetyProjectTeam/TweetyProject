@@ -18,55 +18,21 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 
-import java.util.Set;
-
-public final class ExclusiveDisjunctionAcceptanceCondition extends AbstractAcceptanceCondition {
-
-	private final AcceptanceCondition left;
-
-	private final AcceptanceCondition right;
+public final class ExclusiveDisjunctionAcceptanceCondition extends BinaryAcceptanceCondition {
 
 	/**
 	 * @param left the left side of the xor
 	 * @param right the right side of the xor
 	 */
 	public ExclusiveDisjunctionAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
-		super(Set.of(left, right));
-		this.left = left;
-		this.right = right;
+		super(left, right);
 	}
 
-	/**
-	 * @return the left
-	 */
-	public AcceptanceCondition getLeft() {
-		return left;
-	}
-
-	/**
-	 * @return the right
-	 */
-	public AcceptanceCondition getRight() {
-		return right;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#accept(org.tweetyproject
-	 * .arg.adf.syntax.acc.Visitor, java.lang.Object)
-	 */
 	@Override
 	public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
 		return visitor.visit(this, topDownData);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#getName()
-	 */
 	@Override
 	public String getName() {
 		return "xor";

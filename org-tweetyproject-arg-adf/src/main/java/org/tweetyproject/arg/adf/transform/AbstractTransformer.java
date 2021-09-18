@@ -18,9 +18,6 @@
  */
 package org.tweetyproject.arg.adf.transform;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
@@ -76,13 +73,13 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 
 	protected abstract R finish(U bottomUpData, D topDownData);
 
-	protected abstract U transformDisjunction(Set<U> children, D topDownData, int polarity);
+	protected abstract U transformDisjunction(U left, U right, D topDownData, int polarity);
 
-	protected abstract U transformConjunction(Set<U> children, D topDownData, int polarity);
+	protected abstract U transformConjunction(U left, U right, D topDownData, int polarity);
 
 	protected abstract U transformImplication(U left, U right, D topDownData, int polarity);
 
-	protected abstract U transformEquivalence(Set<U> children, D topDownData, int polarity);
+	protected abstract U transformEquivalence(U left, U right, D topDownData, int polarity);
 
 	protected abstract U transformExclusiveDisjunction(U left, U right, D topDownData, int polarity);
 
@@ -133,12 +130,9 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 		 */
 		@Override
 		public U visit(ConjunctionAcceptanceCondition acc, TopDownData<D> topDownData) {
-			Set<AcceptanceCondition> children = acc.getChildren();
-			Set<U> transformedChildren = new HashSet<>(children.size());
-			for (AcceptanceCondition child : children) {
-				transformedChildren.add(child.accept(this, topDownData));
-			}
-			return transformConjunction(transformedChildren, topDownData.userObject, topDownData.polarity);
+			U transformedLeft = acc.getLeft().accept(this, topDownData);
+			U transformedRight = acc.getRight().accept(this, topDownData);
+			return transformConjunction(transformedLeft, transformedRight, topDownData.userObject, topDownData.polarity);
 		}
 
 		/*
@@ -150,12 +144,9 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 		 */
 		@Override
 		public U visit(DisjunctionAcceptanceCondition acc, TopDownData<D> topDownData) {
-			Set<AcceptanceCondition> children = acc.getChildren();
-			Set<U> transformedChildren = new HashSet<>(children.size());
-			for (AcceptanceCondition child : children) {
-				transformedChildren.add(child.accept(this, topDownData));
-			}
-			return transformDisjunction(transformedChildren, topDownData.userObject, topDownData.polarity);
+			U transformedLeft = acc.getLeft().accept(this, topDownData);
+			U transformedRight = acc.getRight().accept(this, topDownData);
+			return transformDisjunction(transformedLeft, transformedRight, topDownData.userObject, topDownData.polarity);
 		}
 
 		/*
@@ -167,12 +158,9 @@ public abstract class AbstractTransformer<U, D, R> implements Transformer<R> {
 		 */
 		@Override
 		public U visit(EquivalenceAcceptanceCondition acc, TopDownData<D> topDownData) {
-			Set<AcceptanceCondition> children = acc.getChildren();
-			Set<U> transformedChildren = new HashSet<>(children.size());
-			for (AcceptanceCondition child : children) {
-				transformedChildren.add(child.accept(this, new TopDownData<D>(0, topDownData.userObject)));
-			}
-			return transformEquivalence(transformedChildren, topDownData.userObject, topDownData.polarity);
+			U transformedLeft = acc.getLeft().accept(this, new TopDownData<D>(0, topDownData.userObject));
+			U transformedRight = acc.getRight().accept(this, new TopDownData<D>(0, topDownData.userObject));
+			return transformEquivalence(transformedLeft, transformedRight, topDownData.userObject, topDownData.polarity);
 		}
 
 		/*

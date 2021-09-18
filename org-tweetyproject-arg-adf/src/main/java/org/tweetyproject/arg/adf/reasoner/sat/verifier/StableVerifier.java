@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.adf.reasoner.sat.verifier;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
@@ -27,7 +28,7 @@ import org.tweetyproject.arg.adf.reasoner.sat.generator.GroundGenerator;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.transform.OmegaReductTransformer;
+import org.tweetyproject.arg.adf.transform.FixPartialTransformer;
 
 /**
  * Verifies if a given interpretation is stable by comparing it with the ground
@@ -61,12 +62,13 @@ public final class StableVerifier implements Verifier {
 
 	@Override
 	public boolean verify(Interpretation candidate) {
-		AbstractDialecticalFramework reduct = adf.transform(new OmegaReductTransformer(candidate));
+		Interpretation unsatisfied = Interpretation.fromSets(Set.of(), candidate.unsatisfied(), Set.of());
+		AbstractDialecticalFramework reduct = adf.transform(new FixPartialTransformer(unsatisfied));
 		try (CandidateGenerator groundGenerator = GroundGenerator.restricted(reduct, mapping, candidate, stateSupplier)) {
 			return groundGenerator.generate() != null;
 		}
 	}
-
+	
 	@Override
 	public void close() {}
 

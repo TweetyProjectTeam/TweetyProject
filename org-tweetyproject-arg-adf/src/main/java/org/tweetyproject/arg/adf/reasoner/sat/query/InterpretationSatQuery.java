@@ -22,7 +22,6 @@ import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -30,13 +29,13 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 final class InterpretationSatQuery extends SatQuery<Interpretation>{
 
-	public InterpretationSatQuery(AbstractDialecticalFramework adf, Semantics semantics, Configuration configuration) {
-		super(adf, semantics, configuration);
+	public InterpretationSatQuery(Semantics semantics, Configuration configuration) {
+		super(semantics, configuration);
 	}
 	
 	@Override
 	public SatQuery<Interpretation> configure(Configuration configuration) {
-		return new InterpretationSatQuery(adf, semantics, configuration);
+		return new InterpretationSatQuery(semantics, configuration);
 	}
 
 	@Override

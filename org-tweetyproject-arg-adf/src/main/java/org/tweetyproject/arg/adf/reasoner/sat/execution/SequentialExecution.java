@@ -31,7 +31,6 @@ import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -48,12 +47,10 @@ public final class SequentialExecution implements Execution {
 	private final Optional<InterpretationProcessor> modelProcessor;
 	
 	/**
-	 * 
-	 * @param adf adf 
 	 * @param semantics semantics
 	 * @param satSolver satSolver
 	 */
-	public SequentialExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver) {
+	public SequentialExecution(Semantics semantics, IncrementalSatSolver satSolver) {
 		this.generator = semantics.createCandidateGenerator(() -> createState(satSolver, semantics));	
 		this.candidateProcessor = semantics.createUnverifiedProcessor(satSolver::createState);
 		this.verifier = semantics.createVerifier(satSolver::createState);
@@ -93,11 +90,6 @@ public final class SequentialExecution implements Execution {
 		verifier.ifPresent(Verifier::close);
 		modelProcessor.ifPresent(InterpretationProcessor::close);
 		candidateProcessor.ifPresent(InterpretationProcessor::close);
-	}
-
-	@Override
-	public void update(Consumer<SatSolverState> updateFunction) {
-		generator.update(updateFunction);
 	}
 	
 	private final class InterpretationSpliterator extends AbstractSpliterator<Interpretation> {

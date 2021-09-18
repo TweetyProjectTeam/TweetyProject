@@ -42,36 +42,49 @@ import org.tweetyproject.arg.adf.transform.TseitinTransformer;
  * @author Mathias Hofer
  *
  */
-public final class KBipolarSatEncoding implements SatEncoding {
+public final class RestrictedKBipolarSatEncoding implements SatEncoding {
 	
 	private final AbstractDialecticalFramework adf;
 	
 	private final PropositionalMapping mapping;
 	
+	private final Interpretation partial;
+	
 	/**
 	 * @param adf adf
 	 * @param mapping mapping
 	 */
-	public KBipolarSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping) {
+	public RestrictedKBipolarSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
 		this.adf = Objects.requireNonNull(adf);
 		this.mapping = Objects.requireNonNull(mapping);
+		this.partial = Objects.requireNonNull(partial);
 	}
 
 	@Override
 	public void encode(Consumer<Clause> consumer) {
 		for (Argument to : adf.getArguments()) {
+			if (partial.undecided(to)) continue;
+			
 			Set<Argument> undecidedDependees = dependsOn(to);
 
 			if (!undecidedDependees.isEmpty()) {				
 				Iterator<Interpretation> completionIterator = new TwoValuedInterpretationIterator(List.copyOf(undecidedDependees));
-				
+
 				while (completionIterator.hasNext()) {
 					Interpretation completion = completionIterator.next();
+					
+					if(checkCompletion(completion)) continue; // clauses trivially true
 
 					AcceptanceCondition acc = adf.getAcceptanceCondition(to);
 					AcceptanceCondition simplified = new FixPartialTransformer(completion).transform(acc);
 
 					TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(from -> mapping.getLink(from, to), false);
+					if (partial.satisfied(to)) {
+						transformer = TseitinTransformer.ofPositivePolarity(from -> mapping.getLink(from, to), true);
+					} else if (partial.unsatisfied(to)) {
+						transformer = TseitinTransformer.ofNegativePolarity(from -> mapping.getLink(from, to), true);
+					}
+
 					Literal accName = transformer.collect(simplified, consumer);
 									
 					// the condition when the checks are active, they are trivially satisfied if the current interpretation does not match the completion
@@ -85,14 +98,27 @@ public final class KBipolarSatEncoding implements SatEncoding {
 					}
 
 					// the check for s^t
-					consumer.accept(Clause.of(condition, mapping.getTrue(to).neg(), accName));
+					if (!partial.unsatisfied(to)) {
+						consumer.accept(Clause.of(condition, mapping.getTrue(to).neg(), accName));						
+					}
 					
 					// the check for s^f
-					consumer.accept(Clause.of(condition, mapping.getFalse(to).neg(), accName.neg()));
+					if (!partial.satisfied(to)) {
+						consumer.accept(Clause.of(condition, mapping.getFalse(to).neg(), accName.neg()));						
+					}
 				}
 			}
 		}
 
+	}
+	
+	private boolean checkCompletion(Interpretation completion) {
+		for (Argument arg : partial.arguments()) {
+			if (partial.satisfied(arg) && completion.unsatisfied(arg) || partial.unsatisfied(arg) && completion.satisfied(arg)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

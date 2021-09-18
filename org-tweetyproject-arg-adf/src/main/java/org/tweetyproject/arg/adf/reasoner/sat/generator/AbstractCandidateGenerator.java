@@ -46,7 +46,7 @@ public abstract class AbstractCandidateGenerator implements CandidateGenerator {
 	@Override
 	public void close() {
 		if (state != null) {
-			state.close();			
+			state.close();
 		}
 	}
 

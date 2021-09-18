@@ -18,10 +18,8 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 
 /**
@@ -32,19 +30,12 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
  */
 public interface Execution extends AutoCloseable {
 	
-	Stream<Interpretation> stream();
-	
 	/**
-	 * Registers an update functions that is called on the internal state that
-	 * represents the search space.
-	 * <p>
-	 * There are no guarantees on when this function is called. If it is called
-	 * during the execution there is not even guaranteed that it is called.
+	 * Must only be called once, it is up to the implementation what happens it is called more than once.
 	 * 
-	 * @param updateFunction
 	 * @return
 	 */
-	void update(Consumer<SatSolverState> updateFunction);
+	Stream<Interpretation> stream();
 
 	@Override
 	void close();

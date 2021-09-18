@@ -43,7 +43,6 @@ import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -59,16 +58,12 @@ public final class ParallelExecution implements Execution {
 
 	private final int parallelism;
 
-	private final AbstractDialecticalFramework adf;
-
 	private final Queue<Branch> branches = new ConcurrentLinkedQueue<>();
 
 	private final BlockingQueue<Interpretation> interpretations;
 
-	public ParallelExecution(AbstractDialecticalFramework adf, Semantics semantics, IncrementalSatSolver satSolver,
-			int parallelism) {
+	public ParallelExecution(Semantics semantics, IncrementalSatSolver satSolver, int parallelism) {
 		this.satSolver = Objects.requireNonNull(satSolver);
-		this.adf = Objects.requireNonNull(adf);
 		this.semantics = Objects.requireNonNull(semantics);
 		this.parallelism = parallelism;
 		this.interpretations = new LinkedBlockingQueue<>(parallelism);
@@ -76,7 +71,7 @@ public final class ParallelExecution implements Execution {
 
 	private void start() {
 		Decomposer decomposer = semantics.createDecomposer();
-		Collection<Interpretation> decompositions = decomposer.decompose(adf, parallelism);
+		Collection<Interpretation> decompositions = decomposer.decompose(parallelism);
 		for (Interpretation partial : decompositions) {
 			Branch branch = new Branch(semantics.restrict(partial));
 			branches.add(branch);
@@ -98,13 +93,6 @@ public final class ParallelExecution implements Execution {
 		}
 	}
 
-	@Override
-	public void update(Consumer<SatSolverState> updateFunction) {
-		for (Branch branch : branches) {
-			branch.generator.update(updateFunction);
-		}
-	}
-
 	private final class InterpretationSpliterator extends AbstractSpliterator<Interpretation> {
 
 		protected InterpretationSpliterator() {
@@ -115,7 +103,7 @@ public final class ParallelExecution implements Execution {
 		public boolean tryAdvance(Consumer<? super Interpretation> action) {
 			while (!branches.isEmpty() || !interpretations.isEmpty()) {
 				try {
-					Interpretation next = interpretations.poll(10, TimeUnit.MILLISECONDS);
+					Interpretation next = interpretations.poll(20, TimeUnit.MILLISECONDS);
 					if (next != null) {
 						action.accept(next);
 						return true;
@@ -142,7 +130,7 @@ public final class ParallelExecution implements Execution {
 		private final GeneratorNode generator;
 
 		private final AtomicInteger currentlyInPipeline = new AtomicInteger(1);
-
+		
 		Branch(Semantics semantics) {
 			this.semantics = Objects.requireNonNull(semantics);
 			this.generator = buildPipeline();
@@ -169,7 +157,8 @@ public final class ParallelExecution implements Execution {
 		}
 
 		private void decreaseCount() {
-			if (currentlyInPipeline.decrementAndGet() == 0) {
+			// initialized with 1, so it can only become 0 if we are done
+			if (currentlyInPipeline.decrementAndGet() <= 0) {
 				branches.remove(this);
 				close();
 			}
@@ -231,7 +220,7 @@ public final class ParallelExecution implements Execution {
 						next.accept(candidate);
 						generate();
 					} else {
-						decreaseCount(); // initialized with 1, so it can only become 0 if we are done
+						decreaseCount();
 					}
 				});
 			}
@@ -244,7 +233,7 @@ public final class ParallelExecution implements Execution {
 				Consumer<SatSolverState> updateFunction = null;
 				while ((updateFunction = pendingUpdates.poll()) != null) {
 					generator.update(updateFunction);
-				}
+				}				
 			}
 
 			@Override

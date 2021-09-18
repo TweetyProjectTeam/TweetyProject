@@ -18,10 +18,7 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 
-import java.util.Collection;
-import java.util.Set;
-
-public final class DisjunctionAcceptanceCondition extends AbstractAcceptanceCondition {
+public final class DisjunctionAcceptanceCondition extends BinaryAcceptanceCondition {
 	
 	/**
 	 * 
@@ -29,34 +26,16 @@ public final class DisjunctionAcceptanceCondition extends AbstractAcceptanceCond
 	 * @param right the right side of the disjunction
 	 */
 	public DisjunctionAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
-		super(Set.of(left, right));
+		super(left, right);
 	}
 
-	/**
-	 * @param children the children of the disjunction
-	 */
-	public DisjunctionAcceptanceCondition(Collection<? extends AcceptanceCondition> children) {
-		super(children);
-		if (children.size() < 2) {
-			throw new IllegalArgumentException("At least 2 children expected!");
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#accept(org.tweetyproject.arg.adf.syntax.acc.Visitor, java.lang.Object)
-	 */
 	@Override
 	public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
 		return visitor.visit(this, topDownData);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#getName()
-	 */
 	@Override
-	public String getName() {
+	protected String getName() {
 		return "or";
 	}
 

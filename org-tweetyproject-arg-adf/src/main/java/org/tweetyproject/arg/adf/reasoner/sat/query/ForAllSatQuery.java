@@ -20,45 +20,60 @@ package org.tweetyproject.arg.adf.reasoner.sat.query;
 
 import java.util.Objects;
 
+import org.tweetyproject.arg.adf.reasoner.query.Query;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.ParallelExecution;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
-import org.tweetyproject.arg.adf.sat.SatSolverState;
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.pl.Clause;
-import org.tweetyproject.arg.adf.syntax.pl.Literal;
-import org.tweetyproject.arg.adf.transform.TseitinTransformer;
+import org.tweetyproject.arg.adf.reasoner.sat.execution.SequentialExecution;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
  * @author Mathias Hofer
  *
  */
-final class ForAllSatQuery extends SatQuery<Boolean> {
+final class ForAllSatQuery implements Query<Boolean> {
 	
-	private final AcceptanceCondition condition;
+	private final Semantics semantics;
 
-	public ForAllSatQuery(AbstractDialecticalFramework adf, Semantics semantics, Configuration configuration, AcceptanceCondition condition) {
-		super(adf, semantics, configuration);
+	private final Configuration configuration;
+	
+	private final Argument condition;
+
+	public ForAllSatQuery(Semantics semantics, Configuration configuration, Argument condition) {
+		this.semantics = Objects.requireNonNull(semantics);
+		this.configuration = Objects.requireNonNull(configuration);
 		this.condition = Objects.requireNonNull(condition);
 	}
 	
 	@Override
-	public SatQuery<Boolean> configure(Configuration configuration) {
-		return new ForAllSatQuery(adf, semantics, configuration, condition);
+	public Query<Boolean> configure(Configuration configuration) {
+		return new ForAllSatQuery(semantics, configuration, condition);
 	}
 
 	@Override
-	Boolean execute(Execution execution) {
-		execution.update(this::applyCondition);
-		return execution.stream().findAny().isEmpty();
+	public Boolean execute() {
+		try (Execution execution = new SequentialExecution(semantics.restrict(Interpretation.ofUnsatisfied(condition)), configuration.getSatSolver())) {
+			if (execution.stream().findAny().isPresent()) {
+				return false;
+			}
+		}
+		try (Execution execution = new SequentialExecution(semantics.restrict(Interpretation.ofUndecided(condition)), configuration.getSatSolver())) {
+			return execution.stream().findAny().isEmpty();
+		}
 	}
-	
-	private void applyCondition(SatSolverState state) {
-		// check if there is a model that does not satisfy the condition
-		TseitinTransformer transformer = TseitinTransformer.ofNegativePolarity(true);
-		Literal name = transformer.collect(condition, state::add);
-		state.add(Clause.of(name.neg()));
+
+	@Override
+	public Boolean executeParallel() {
+		try (Execution execution = new ParallelExecution(semantics.restrict(Interpretation.ofUnsatisfied(condition)), configuration.getSatSolver(), configuration.getParallelism())) {
+			if (execution.stream().findAny().isPresent()) {
+				return false;
+			}
+		}
+		try (Execution execution = new ParallelExecution(semantics.restrict(Interpretation.ofUndecided(condition)), configuration.getSatSolver(), configuration.getParallelism())) {
+			return execution.stream().findAny().isEmpty();
+		}
 	}
 
 }

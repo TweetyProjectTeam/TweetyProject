@@ -32,7 +32,9 @@ import java.util.Set;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.EmptyInterpretation;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.SetInterpretation;
-import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.SingleValuedInterpretation;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.SingleSatisfiedInterpretation;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.SingleUndecidedInterpretation;
+import org.tweetyproject.arg.adf.semantics.interpretation.Interpretations.SingleUnsatisfiedInterpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
@@ -215,18 +217,16 @@ public interface Interpretation {
 				i1.unsatisfied().containsAll(i2.unsatisfied()) && i2.unsatisfied().containsAll(i1.unsatisfied()));
 	}
 	
-	/**
-	 * Returns an interpretation relative to <code>adf</code> with a single truth value decided.
-	 * <p>
-	 * This may be useful for some decision-level based algorithms.
-	 * 
-	 * @param argument the argument to decide
-	 * @param value the value of the argument
-	 * @param adf the contextual ADF
-	 * @return an interpretation with a single argument decided
-	 */
-	static Interpretation singleValued(Argument argument, boolean value, AbstractDialecticalFramework adf) {
-		return new SingleValuedInterpretation(argument, value, adf);
+	static Interpretation ofSatisfied(Argument argument) {
+		return new SingleSatisfiedInterpretation(argument);
+	}
+	
+	static Interpretation ofUnsatisfied(Argument argument) {
+		return new SingleUnsatisfiedInterpretation(argument);
+	}
+	
+	static Interpretation ofUndecided(Argument argument) {
+		return new SingleUndecidedInterpretation(argument);
 	}
 	
 	/**

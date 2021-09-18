@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
@@ -14,8 +15,14 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 abstract class AbstractDecomposer implements Decomposer {
 	
+	private final AbstractDialecticalFramework adf;
+	
+	protected AbstractDecomposer(AbstractDialecticalFramework adf) {
+		this.adf = Objects.requireNonNull(adf);
+	}
+		
 	@Override
-	public Collection<Interpretation> decompose(AbstractDialecticalFramework adf, int desired) {
+	public Collection<Interpretation> decompose(int desired) {
 		Set<Argument> arguments = partition(adf, arguments(adf, desired, 3));
 		Iterator<Interpretation> interpretations = new InterpretationIterator(arguments);
 		
@@ -43,7 +50,7 @@ abstract class AbstractDecomposer implements Decomposer {
 	private final class TwoValuedDecomposer implements Decomposer {
 			
 		@Override
-		public Collection<Interpretation> decompose(AbstractDialecticalFramework adf, int desired) {
+		public Collection<Interpretation> decompose(int desired) {
 			Set<Argument> arguments = partition(adf, arguments(adf, desired, 2));
 			Iterator<Interpretation> interpretations = new TwoValuedInterpretationIterator(arguments);
 			

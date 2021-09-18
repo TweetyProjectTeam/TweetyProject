@@ -21,7 +21,6 @@ package org.tweetyproject.arg.adf.reasoner.sat.query;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Execution;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -29,13 +28,13 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 final class ExistsSatQuery extends SatQuery<Boolean> {
 
-	public ExistsSatQuery(AbstractDialecticalFramework adf, Semantics semantics, Configuration configuration) {
-		super(adf, semantics, configuration);
+	public ExistsSatQuery(Semantics semantics, Configuration configuration) {
+		super(semantics, configuration);
 	}
 	
 	@Override
 	public SatQuery<Boolean> configure(Configuration configuration) {
-		return new ExistsSatQuery(adf, semantics, configuration);
+		return new ExistsSatQuery(semantics, configuration);
 	}
 
 	@Override

@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.adf.reasoner.query;
 
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
  * @author Mathias Hofer
@@ -31,6 +31,6 @@ public interface ConditionlessTaskStep extends TaskStep {
 	 * @param condition condition
 	 * @return where
 	 */
-	ConditionalTaskStep where(AcceptanceCondition condition);
+	ConditionalTaskStep where(Argument condition);
 
 }

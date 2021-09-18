@@ -16,24 +16,17 @@ import org.tweetyproject.arg.adf.reasoner.sat.generator.ModelGenerator;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.AdmissibleMaximizer;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.ConflictFreeMaximizer;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.InterpretationProcessor;
-import org.tweetyproject.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
+import org.tweetyproject.arg.adf.reasoner.sat.processor.RestrictedKBipolarStateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.StableVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.NaiveVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.PreferredVerifier;
+import org.tweetyproject.arg.adf.reasoner.sat.verifier.StableVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
-import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.semantics.link.SatLinkStrategy;
-import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework.Builder;
-import org.tweetyproject.arg.adf.transform.FixPartialTransformer;
-import org.tweetyproject.arg.adf.transform.Transformer;
 
 /**
  * 
@@ -45,32 +38,20 @@ import org.tweetyproject.arg.adf.transform.Transformer;
 abstract class RestrictedSemantics implements Semantics {
 
 	final AbstractDialecticalFramework adf;
-	
-	final AbstractDialecticalFramework reduct;
-	
+		
 	final PropositionalMapping mapping;
 	
 	final Interpretation partial;
 
 	RestrictedSemantics(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
 		this.adf = Objects.requireNonNull(adf);
-		this.reduct = reduct(adf, partial);
 		this.mapping = Objects.requireNonNull(mapping);
 		this.partial = Objects.requireNonNull(partial);
 	}
 	
 	@Override
 	public Decomposer createDecomposer() {
-		return new MostBipolarParentsDecomposer();
-	}
-	
-	private static AbstractDialecticalFramework reduct(AbstractDialecticalFramework adf, Interpretation interpretation) {
-		Transformer<AcceptanceCondition> fixPartials = new FixPartialTransformer(interpretation);		
-		Builder builder = AbstractDialecticalFramework.builder().eager(new SatLinkStrategy(new NativeMinisatSolver())); // TODO fix
-		for (Argument arg : adf.getArguments()) {
-			builder.add(arg, fixPartials.transform(adf.getAcceptanceCondition(arg)));
-		}
-		return builder.build();
+		return new MostBipolarParentsDecomposer(adf);
 	}
 	
 	static final class ConflictFreeSemantics extends RestrictedSemantics {
@@ -81,7 +62,7 @@ abstract class RestrictedSemantics implements Semantics {
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
+			return ConflictFreeGenerator.restricted(adf, mapping, partial, stateSupplier);
 		}
 
 		@Override
@@ -139,7 +120,7 @@ abstract class RestrictedSemantics implements Semantics {
 		
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
+			return ConflictFreeGenerator.restricted(adf, mapping, partial, stateSupplier);
 		}
 
 		@Override
@@ -149,7 +130,7 @@ abstract class RestrictedSemantics implements Semantics {
 		
 		@Override
 		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(ConflictFreeMaximizer.restricted(stateSupplier, reduct, mapping, partial));
+			return Optional.of(ConflictFreeMaximizer.restricted(stateSupplier, adf, mapping, partial));
 		}
 
 		@Override
@@ -197,12 +178,12 @@ abstract class RestrictedSemantics implements Semantics {
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
+			return ConflictFreeGenerator.restricted(adf, mapping, partial, stateSupplier);
 		}
 
 		@Override
 		public List<StateProcessor> createStateProcessors() {
-			return List.of(new KBipolarStateProcessor(reduct, mapping));
+			return List.of(new RestrictedKBipolarStateProcessor(adf, mapping, partial));
 		}
 		
 		@Override
@@ -255,17 +236,17 @@ abstract class RestrictedSemantics implements Semantics {
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
+			return ConflictFreeGenerator.restricted(adf, mapping, partial, stateSupplier);
 		}
 
 		@Override
 		public List<StateProcessor> createStateProcessors() {
-			return List.of(new KBipolarStateProcessor(reduct, mapping));
+			return List.of(new RestrictedKBipolarStateProcessor(adf, mapping, partial));
 		}
 		
 		@Override
 		public Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(AdmissibleMaximizer.restricted(stateSupplier, reduct, mapping, partial));
+			return Optional.of(AdmissibleMaximizer.restricted(stateSupplier, adf, mapping, partial));
 		}
 
 		@Override
@@ -313,12 +294,12 @@ abstract class RestrictedSemantics implements Semantics {
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ConflictFreeGenerator.restricted(reduct, mapping, partial, stateSupplier);
+			return ConflictFreeGenerator.restricted(adf, mapping, partial, stateSupplier);
 		}
 
 		@Override
 		public List<StateProcessor> createStateProcessors() {
-			return List.of(new KBipolarStateProcessor(reduct, mapping));
+			return List.of(new RestrictedKBipolarStateProcessor(adf, mapping, partial));
 		}
 		
 		@Override
@@ -371,12 +352,12 @@ abstract class RestrictedSemantics implements Semantics {
 		
 		@Override
 		public Decomposer createDecomposer() {
-			return new RandomDecomposer().asTwoValued();
+			return new RandomDecomposer(adf).asTwoValued();
 		}
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ModelGenerator.restricted(reduct, mapping, partial, stateSupplier);
+			return ModelGenerator.restricted(adf, mapping, partial, stateSupplier);
 		}
 
 		@Override
@@ -434,12 +415,12 @@ abstract class RestrictedSemantics implements Semantics {
 		
 		@Override
 		public Decomposer createDecomposer() {
-			return new RandomDecomposer().asTwoValued();
+			return new RandomDecomposer(adf).asTwoValued();
 		}
 
 		@Override
 		public CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
-			return ModelGenerator.restricted(reduct, mapping, partial, stateSupplier);
+			return ModelGenerator.restricted(adf, mapping, partial, stateSupplier);
 		}
 
 		@Override

@@ -19,9 +19,13 @@
 package org.tweetyproject.arg.adf.semantics.interpretation;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
@@ -36,45 +40,109 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 	
 	private final int max;
 	
-	private final List<Argument> arguments;
+	private final Map<Argument, Integer> arguments;
 	
 	public TwoValuedInterpretationIterator(Collection<Argument> arguments) {
 		if (arguments == null || arguments.isEmpty()) {
 			throw new IllegalArgumentException("arguments must not be null or empty!");
 		}
-		this.arguments = List.copyOf(arguments);
+		this.arguments = toIndexMap(arguments);
 		this.max = 1 << arguments.size(); // 2 ^ arguments.size()
 	}
+	
+	private static Map<Argument, Integer> toIndexMap(Collection<Argument> arguments) {
+		Map<Argument, Integer> indexMap = new HashMap<>();
+		int i = 0;
+		for (Argument arg : arguments) {
+			indexMap.put(arg, i++);
+		}
+		return Collections.unmodifiableMap(indexMap);
+	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		return value < max;
 	}
-	
-	private static boolean getBit(int n, int k) {
-	    return ((n >> k) & 1) == 1;
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.util.Iterator#next()
-	 */
+
 	@Override
 	public Interpretation next() {
-		int curr = ++value;
-		Set<Argument> satisfied = new HashSet<>();
-		Set<Argument> unsatisfied = new HashSet<>();
-		for (int i = 0; i < arguments.size(); i++) {
-			Argument arg = arguments.get(i);
-			if (getBit(curr, i)) {
-				satisfied.add(arg);
-			} else {
-				unsatisfied.add(arg);
+		return new TwoValuedInterpretation(arguments, value++);
+	}
+	
+	private static final class TwoValuedInterpretation implements Interpretation {
+
+		private final Map<Argument, Integer> indexMap;
+		
+		private final int bits;
+		
+		private Set<Argument> satisfied;
+		
+		private Set<Argument> unsatisfied;
+
+		public TwoValuedInterpretation(Map<Argument, Integer> indexMap, int bits) {
+			this.indexMap = Objects.requireNonNull(indexMap);
+			this.bits = bits;
+		}
+		
+		private boolean getBit(int index) {
+		    return ((bits >> index) & 1) == 1;
+		}
+
+		@Override
+		public boolean satisfied(Argument arg) {
+			Integer index = indexMap.get(arg);
+			return index != null && getBit(index);
+		}
+
+		@Override
+		public boolean unsatisfied(Argument arg) {
+			Integer index = indexMap.get(arg);
+			return index != null && !getBit(index);
+		}
+
+		@Override
+		public boolean undecided(Argument arg) {
+			return false;
+		}
+		
+		private void createSets() {
+			if (satisfied == null) {
+				Set<Argument> satisfied = new HashSet<>();
+				Set<Argument> unsatisfied = new HashSet<>();
+				for (Entry<Argument, Integer> entry : indexMap.entrySet()) {
+					if (getBit(entry.getValue())) {
+						satisfied.add(entry.getKey());
+					} else {
+						unsatisfied.add(entry.getKey());
+					}
+				}
+				this.satisfied = Collections.unmodifiableSet(satisfied);
+				this.unsatisfied = Collections.unmodifiableSet(unsatisfied);
 			}
 		}
-		return Interpretation.fromSets(satisfied, unsatisfied, Set.of());
+
+		@Override
+		public Set<Argument> satisfied() {
+			createSets();
+			return satisfied;
+		}
+
+		@Override
+		public Set<Argument> unsatisfied() {
+			createSets();
+			return unsatisfied;
+		}
+
+		@Override
+		public Set<Argument> undecided() {
+			return Set.of();
+		}
+
+		@Override
+		public Set<Argument> arguments() {
+			return indexMap.keySet();
+		}
+		
 	}
 	
 }

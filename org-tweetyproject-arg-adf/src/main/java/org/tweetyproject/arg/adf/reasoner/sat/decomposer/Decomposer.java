@@ -21,7 +21,6 @@ package org.tweetyproject.arg.adf.reasoner.sat.decomposer;
 import java.util.Collection;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -35,6 +34,6 @@ public interface Decomposer {
 	 * @param desired desired
 	 * @return decompose
 	 */
-	Collection<Interpretation> decompose(AbstractDialecticalFramework adf, int desired);
+	Collection<Interpretation> decompose(int desired);
 	
 }

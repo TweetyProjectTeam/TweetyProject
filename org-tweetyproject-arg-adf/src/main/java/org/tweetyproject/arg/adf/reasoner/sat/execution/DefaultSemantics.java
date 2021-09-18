@@ -39,7 +39,7 @@ abstract class DefaultSemantics implements Semantics {
 	
 	@Override
 	public Decomposer createDecomposer() {
-		return new MostBipolarParentsDecomposer();
+		return new MostBipolarParentsDecomposer(adf);
 	}
 	
 	static final class ConflictFreeSemantics extends DefaultSemantics {
@@ -282,7 +282,7 @@ abstract class DefaultSemantics implements Semantics {
 		
 		@Override
 		public Decomposer createDecomposer() {
-			return new RandomDecomposer().asTwoValued();
+			return new RandomDecomposer(adf).asTwoValued();
 		}
 
 		@Override
@@ -403,7 +403,7 @@ abstract class DefaultSemantics implements Semantics {
 		
 		@Override
 		public Decomposer createDecomposer() {
-			return new RandomDecomposer().asTwoValued();
+			return new RandomDecomposer(adf).asTwoValued();
 		}
 
 		@Override

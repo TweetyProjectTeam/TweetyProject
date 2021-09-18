@@ -18,9 +18,10 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 
+import java.util.Objects;
 import java.util.Set;
 
-public final class NegationAcceptanceCondition extends AbstractAcceptanceCondition {
+public final class NegationAcceptanceCondition implements AcceptanceCondition {
 
 	private final AcceptanceCondition child;
 	
@@ -29,8 +30,7 @@ public final class NegationAcceptanceCondition extends AbstractAcceptanceConditi
 	 * @param child the child of the negation
 	 */
 	public NegationAcceptanceCondition(AcceptanceCondition child) {
-		super(Set.of(child));
-		this.child = child;
+		this.child = Objects.requireNonNull(child);
 	}
 	
 	/**
@@ -39,23 +39,43 @@ public final class NegationAcceptanceCondition extends AbstractAcceptanceConditi
 	public AcceptanceCondition getChild() {
 		return child;
 	}
+	
+	@Override
+	public Set<AcceptanceCondition> getChildren() {
+		return Set.of(child);
+	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#accept(org.tweetyproject.arg.adf.syntax.acc.Visitor, java.lang.Object)
-	 */
 	@Override
 	public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
 		return visitor.visit(this, topDownData);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#getName()
-	 */
 	@Override
-	public String getName() {
-		return "neg";
+	public int hashCode() {
+		return Objects.hash(child);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		NegationAcceptanceCondition other = (NegationAcceptanceCondition) obj;
+		return Objects.equals(child, other.child);
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder("neg(")
+				.append(child)
+				.append(")")
+				.toString();
 	}
 
 }

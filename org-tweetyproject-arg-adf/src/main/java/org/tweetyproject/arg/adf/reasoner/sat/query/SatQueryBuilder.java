@@ -28,7 +28,7 @@ import org.tweetyproject.arg.adf.reasoner.query.SemanticsStep;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Configuration;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
@@ -114,21 +114,21 @@ public final class SatQueryBuilder {
 
 			@Override
 			public Query<Stream<Interpretation>> interpretations() {
-				return new InterpretationsSatQuery(adf, semantics, configuration);
+				return new InterpretationsSatQuery(semantics, configuration);
 			}
 
 			@Override
 			public Query<Interpretation> interpretation() {
-				return new InterpretationSatQuery(adf, semantics, configuration);
+				return new InterpretationSatQuery(semantics, configuration);
 			}
 
 			@Override
 			public Query<Boolean> exists() {
-				return new ExistsSatQuery(adf, semantics, configuration);
+				return new ExistsSatQuery(semantics, configuration);
 			}
 
 			@Override
-			public ConditionalTaskStep where(AcceptanceCondition condition) {
+			public ConditionalTaskStep where(Argument condition) {
 				return new DefaultConditionalSatTask(semantics, condition);
 			}
 	
@@ -138,31 +138,31 @@ public final class SatQueryBuilder {
 
 			private final Semantics semantics;
 			
-			private final AcceptanceCondition condition;
+			private final Argument condition;
 
-			public DefaultConditionalSatTask(Semantics semantics, AcceptanceCondition condition) {
+			public DefaultConditionalSatTask(Semantics semantics, Argument condition) {
 				this.semantics = Objects.requireNonNull(semantics);
 				this.condition = Objects.requireNonNull(condition);
 			}
 
 			@Override
 			public Query<Stream<Interpretation>> interpretations() {
-				return new ConditionalQuery<>(new InterpretationsSatQuery(adf, semantics, configuration), condition);
+				return new InterpretationsSatQuery(semantics.restrict(Interpretation.ofSatisfied(condition)), configuration);
 			}
 
 			@Override
 			public Query<Interpretation> interpretation() {
-				return new ConditionalQuery<>(new InterpretationSatQuery(adf, semantics, configuration), condition);
+				return new InterpretationSatQuery(semantics.restrict(Interpretation.ofSatisfied(condition)), configuration);
 			}
 
 			@Override
 			public Query<Boolean> exists() {
-				return new ConditionalQuery<>(new ExistsSatQuery(adf, semantics, configuration), condition);
+				return new ExistsSatQuery(semantics.restrict(Interpretation.ofSatisfied(condition)), configuration);
 			}
 
 			@Override
 			public Query<Boolean> forAll() {
-				return new ForAllSatQuery(adf, semantics, configuration, condition);
+				return new ForAllSatQuery(semantics, configuration, condition);
 			}
 			
 		}

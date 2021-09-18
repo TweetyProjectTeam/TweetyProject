@@ -21,16 +21,12 @@ package org.tweetyproject.arg.adf.transform;
 import static org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition.CONTRADICTION;
 import static org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition.TAUTOLOGY;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Set;
 
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.BinaryAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.ContradictionAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
@@ -55,7 +51,7 @@ import org.tweetyproject.arg.adf.syntax.acc.TautologyAcceptanceCondition;
  * @author Mathias Hofer
  *
  */
-public final class FixPartialTransformer extends AbstractTransformer<AcceptanceCondition, Void, AcceptanceCondition>{
+public final class FixPartialTransformer implements Transformer<AcceptanceCondition>{
 
 	private final Interpretation interpretation;
 	
@@ -65,217 +61,82 @@ public final class FixPartialTransformer extends AbstractTransformer<AcceptanceC
 	public FixPartialTransformer(Interpretation interpretation) {
 		this.interpretation = Objects.requireNonNull(interpretation);
 	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#initialize()
-	 */
+	
 	@Override
-	protected Void initialize() {
-		return null;
+	public AcceptanceCondition transform(AcceptanceCondition acc) {
+		if (acc instanceof BinaryAcceptanceCondition) {
+			BinaryAcceptanceCondition bin = (BinaryAcceptanceCondition) acc;
+			AcceptanceCondition left = transform(bin.getLeft());
+			AcceptanceCondition right = transform(bin.getRight());
+			if (acc instanceof ConjunctionAcceptanceCondition) {
+				return transformConjunction(left, right);
+			} else if (acc instanceof DisjunctionAcceptanceCondition) {
+				return transformDisjunction(left, right);
+			} else if (acc instanceof ImplicationAcceptanceCondition) {
+				return transformImplication(left, right);
+			} else if (acc instanceof EquivalenceAcceptanceCondition) {
+				return transformEquivalence(left, right);
+			} else if (acc instanceof ExclusiveDisjunctionAcceptanceCondition) {
+				return transformExclusiveDisjunction(left, right);
+			}
+		} else if (acc instanceof NegationAcceptanceCondition) {
+			AcceptanceCondition child = transform(((NegationAcceptanceCondition) acc).getChild());
+			return transformNegation(child);
+		} else if (acc instanceof Argument) {
+			return transformArgument((Argument)acc);
+		}
+		return acc; // constants
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#finish(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	protected AcceptanceCondition finish(AcceptanceCondition bottomUpData, Void topDownData) {
-		return bottomUpData;
+	private AcceptanceCondition transformDisjunction(AcceptanceCondition left, AcceptanceCondition right) {
+		if (left == TAUTOLOGY || right == TAUTOLOGY) return TAUTOLOGY;
+		if (left == CONTRADICTION) return right;
+		if (right == CONTRADICTION) return left;
+		return new DisjunctionAcceptanceCondition(left, right);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformDisjunction(java.util.Collection, java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformDisjunction(Set<AcceptanceCondition> children, Void topDownData, int polarity) {
-		if (children.contains(TAUTOLOGY)) {
-			return TAUTOLOGY;
-		}
-		
-		if (children.contains(CONTRADICTION)) {
-			Set<AcceptanceCondition> reduced = new HashSet<>();
-			for (AcceptanceCondition acc : children) {
-				if (acc != CONTRADICTION) {
-					reduced.add(acc);
-				}
-			}
-			
-			if (reduced.isEmpty()) { // conjunction only contained CONTRADICTION
-				return CONTRADICTION;
-			} else if (reduced.size() > 1) {
-				return new ConjunctionAcceptanceCondition(reduced);
-			} else { // size == 1
-				return reduced.iterator().next();
-			}
-		}
-		
-		return new DisjunctionAcceptanceCondition(children);
+	private AcceptanceCondition transformConjunction(AcceptanceCondition left, AcceptanceCondition right) {
+		if (left == CONTRADICTION || right == CONTRADICTION) return CONTRADICTION;
+		if (left == TAUTOLOGY) return right;
+		if (right == TAUTOLOGY) return left;
+		return new ConjunctionAcceptanceCondition(left, right);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformConjunction(java.util.Collection, java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformConjunction(Set<AcceptanceCondition> children, Void topDownData,
-			int polarity) {
-		if (children.contains(CONTRADICTION)) {
-			return CONTRADICTION;
-		}
-
-		if (children.contains(TAUTOLOGY)) {
-			Set<AcceptanceCondition> reduced = new HashSet<>();
-			for (AcceptanceCondition acc : children) {
-				if (acc != TAUTOLOGY) {
-					reduced.add(acc);
-				}
-			}
-			
-			if (reduced.isEmpty()) { // conjunction only contained TAUTOLOGY
-				return TAUTOLOGY;
-			} else if (reduced.size() > 1) {
-				return new ConjunctionAcceptanceCondition(reduced);
-			} else { // size == 1
-				return reduced.iterator().next();
-			}
-		}
-		
-		return new ConjunctionAcceptanceCondition(children);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformImplication(java.lang.Object, java.lang.Object, java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformImplication(AcceptanceCondition left, AcceptanceCondition right,
-			Void topDownData, int polarity) {
-		if (left == CONTRADICTION || right == TAUTOLOGY) {
-			return TAUTOLOGY;
-		} else if (left == TAUTOLOGY && right == CONTRADICTION) {
-			return CONTRADICTION;
-		} else if (left == TAUTOLOGY) {
-			return right;
-		} else if (right == CONTRADICTION) {
-			return new NegationAcceptanceCondition(left);
-		}
+	private AcceptanceCondition transformImplication(AcceptanceCondition left, AcceptanceCondition right) {
+		if (left == CONTRADICTION || right == TAUTOLOGY) return TAUTOLOGY;
+		if (left == TAUTOLOGY) return right;
+		if (right == CONTRADICTION) return new NegationAcceptanceCondition(left);
 		return new ImplicationAcceptanceCondition(left, right);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformEquivalence(java.util.Collection, java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformEquivalence(Set<AcceptanceCondition> children, Void topDownData,
-			int polarity) {
-		Iterator<AcceptanceCondition> iterator = children.iterator();
-		AcceptanceCondition first = iterator.next();
-		boolean containsContradiction = first == CONTRADICTION;
-		boolean containsTautology = first == TAUTOLOGY;
-		boolean allEqual = true;
-		while (iterator.hasNext()) {
-			AcceptanceCondition child = iterator.next();
-			
-			// if everything is equal to the first element, then everything is equal
-			if (!first.equals(child)) {
-				allEqual = false;
-			}
-			
-			// the further rewriting depends on the existence and type of the logical constant
-			if (child == CONTRADICTION) {
-				containsContradiction = true;
-			} else if (child == TAUTOLOGY) {
-				containsTautology = true;
-			}
-		}
-		
-		// all the children are syntactical equivalent
-		if (allEqual) {
-			return TAUTOLOGY;
-		}
-		
-		// if we contain both constants, we are clearly contradicting
-		if (containsContradiction && containsTautology) {
-			return CONTRADICTION;
-		}
-		
-		// if we contain neither constant, we cannot rewrite anything
-		if (!containsContradiction && !containsTautology) {
-			return new EquivalenceAcceptanceCondition(children);
-		}
-
-		// now we know how to rewrite the children
-		Collection<AcceptanceCondition> filtered = new LinkedList<AcceptanceCondition>();
-		for (AcceptanceCondition child : children) {
-			if (containsContradiction) {
-				filtered.add(new NegationAcceptanceCondition(child));
-			} else if (containsTautology) {
-				filtered.add(child);
-			}
-		}
-		
-		return new ConjunctionAcceptanceCondition(filtered);
+	private AcceptanceCondition transformEquivalence(AcceptanceCondition left, AcceptanceCondition right) {
+		if (left == right) return TAUTOLOGY;
+		if (left == TAUTOLOGY) return right;
+		if (right == TAUTOLOGY) return left;
+		if (left == CONTRADICTION) return new NegationAcceptanceCondition(right);
+		if (right == CONTRADICTION) return new NegationAcceptanceCondition(left);
+		return new ConjunctionAcceptanceCondition(left, right);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformExclusiveDisjunction(java.lang.Object, java.lang.Object, java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformExclusiveDisjunction(AcceptanceCondition left, AcceptanceCondition right,
-			Void topDownData, int polarity) {
-		if (left.equals(right)) {
-			return CONTRADICTION;
-		} else if ((left == CONTRADICTION && right == TAUTOLOGY) || (left == TAUTOLOGY && right == CONTRADICTION)) {
-			return TAUTOLOGY;
-		} else if (left == CONTRADICTION) {
-			return right;
-		} else if (right == CONTRADICTION) {
-			return left;
-		} else if (left == TAUTOLOGY) {
-			return new NegationAcceptanceCondition(right);
-		} else if (right == TAUTOLOGY) {
-			return new NegationAcceptanceCondition(left);
-		}
+	private AcceptanceCondition transformExclusiveDisjunction(AcceptanceCondition left, AcceptanceCondition right) {
+		if (left == right) return CONTRADICTION;
+		if (left == CONTRADICTION) return right;
+		if (right == CONTRADICTION) return left;
+		if (left == TAUTOLOGY) return new NegationAcceptanceCondition(right);
+		if (right == TAUTOLOGY) return new NegationAcceptanceCondition(left);
 		return new ExclusiveDisjunctionAcceptanceCondition(left, right);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformNegation(java.lang.Object, java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformNegation(AcceptanceCondition child, Void topDownData, int polarity) {
-		if (child == CONTRADICTION) {
-			return TAUTOLOGY;
-		} else if (child == TAUTOLOGY) {
-			return CONTRADICTION;
-		}
+	private AcceptanceCondition transformNegation(AcceptanceCondition child) {
+		if (child == CONTRADICTION) return TAUTOLOGY;
+		if (child == TAUTOLOGY) return CONTRADICTION;
 		return new NegationAcceptanceCondition(child);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformArgument(org.tweetyproject.arg.adf.syntax.Argument, java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformArgument(Argument argument, Void topDownData, int polarity) {
-		if (interpretation.satisfied(argument)) {
-			return TAUTOLOGY;
-		} else if (interpretation.unsatisfied(argument)) {
-			return CONTRADICTION;
-		}
+	private AcceptanceCondition transformArgument(Argument argument) {
+		if (interpretation.unsatisfied(argument)) return CONTRADICTION;
+		if (interpretation.satisfied(argument)) return TAUTOLOGY;
 		return argument;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformContradiction(java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformContradiction(Void topDownData, int polarity) {
-		return CONTRADICTION;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.transform.AbstractTransformer#transformTautology(java.lang.Object, int)
-	 */
-	@Override
-	protected AcceptanceCondition transformTautology(Void topDownData, int polarity) {
-		return TAUTOLOGY;
 	}
 
 }

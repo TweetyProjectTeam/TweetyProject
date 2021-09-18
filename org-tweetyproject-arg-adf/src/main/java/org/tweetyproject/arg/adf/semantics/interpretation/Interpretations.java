@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
-import org.tweetyproject.arg.adf.util.MinusSetView;
 import org.tweetyproject.arg.adf.util.UnionSetView;
 
 /**
@@ -238,54 +237,42 @@ final class Interpretations {
 		}
 	}
 	
-	static final class SingleValuedInterpretation implements Interpretation {
+	static final class SingleSatisfiedInterpretation implements Interpretation {
 
 		private final Argument argument;
 
-		private final boolean value;
-
-		private final Set<Argument> undecided;
-
-		/**
-		 * 
-		 * @param argument the argument with the value
-		 * @param value the value of the argument
-		 * @param adf the contextual ADF
-		 */
-		SingleValuedInterpretation(Argument argument, boolean value, AbstractDialecticalFramework adf) {
-			this.argument = argument;
-			this.value = value;
-			this.undecided = new MinusSetView<Argument>(adf.getArguments(), Set.of(argument));
+		SingleSatisfiedInterpretation(Argument argument) {
+			this.argument = Objects.requireNonNull(argument);
 		}
 
 		@Override
 		public boolean satisfied(Argument arg) {
-			return value && arg.equals(argument); // implicit null-check
+			return arg.equals(argument); // implicit null-check
 		}
 
 		@Override
 		public boolean unsatisfied(Argument arg) {
-			return !value && arg.equals(argument); // implicit null-check
+			return false;
 		}
 
 		@Override
 		public boolean undecided(Argument arg) {
-			return undecided.contains(arg);
+			return false;
 		}
 
 		@Override
 		public Set<Argument> satisfied() {
-			return value ? Set.of(argument) : Set.of();
+			return Set.of(argument);
 		}
 
 		@Override
 		public Set<Argument> unsatisfied() {
-			return value ? Set.of() : Set.of(argument);
+			return Set.of();
 		}
 
 		@Override
 		public Set<Argument> undecided() {
-			return undecided;
+			return Set.of();
 		}
 		
 		@Override
@@ -295,12 +282,12 @@ final class Interpretations {
 
 		@Override
 		public Set<Argument> arguments() {
-			return new UnionSetView<Argument>(Set.of(argument), undecided);
+			return Set.of(argument);
 		}
 		
 		@Override
 		public int hashCode() {
-			return Objects.hash(argument, undecided, value);
+			return Objects.hash(argument);
 		}
 
 		@Override
@@ -312,29 +299,155 @@ final class Interpretations {
 				return false;
 			}
 			Interpretation other = (Interpretation) obj;
-			if (other.size() != 1) {
-				return false;
-			}
-			return (value && other.satisfied(argument)) || (!value && other.unsatisfied(argument));
+			return other.size() == 1 && other.satisfied(argument);
 		}
 
 		@Override
 		public String toString() {
-			StringBuilder builder = new StringBuilder("{");
-			if (value) {
-				builder.append("t(");
-			} else {
-				builder.append("f(");
-			}
-			builder.append(argument).append(")");
-			for (Argument u : undecided) {
-				builder.append(" u(").append(u).append(")");
-			}
-			builder.append("}");
-			return builder.toString();
+			return new StringBuilder("{t(").append("argument").append(")}").toString();
+		}
+	}
+	
+	static final class SingleUnsatisfiedInterpretation implements Interpretation {
+
+		private final Argument argument;
+
+		SingleUnsatisfiedInterpretation(Argument argument) {
+			this.argument = Objects.requireNonNull(argument);
 		}
 
+		@Override
+		public boolean satisfied(Argument arg) {
+			return false;
+		}
+
+		@Override
+		public boolean unsatisfied(Argument arg) {
+			return arg.equals(argument);
+		}
+
+		@Override
+		public boolean undecided(Argument arg) {
+			return false;
+		}
+
+		@Override
+		public Set<Argument> satisfied() {
+			return Set.of();
+		}
+
+		@Override
+		public Set<Argument> unsatisfied() {
+			return Set.of(argument);
+		}
+
+		@Override
+		public Set<Argument> undecided() {
+			return Set.of();
+		}
+		
+		@Override
+		public int numDecided() {
+			return 1;
+		}
+
+		@Override
+		public Set<Argument> arguments() {
+			return Set.of(argument);
+		}
+		
+		@Override
+		public int hashCode() {
+			return Objects.hash(argument);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof Interpretation)) {
+				return false;
+			}
+			Interpretation other = (Interpretation) obj;
+			return other.size() == 1 && other.unsatisfied(argument);
+		}
+
+		@Override
+		public String toString() {
+			return new StringBuilder("{f(").append("argument").append(")}").toString();
+		}
+	}
+	
+	static final class SingleUndecidedInterpretation implements Interpretation {
+
+		private final Argument argument;
+
+		SingleUndecidedInterpretation(Argument argument) {
+			this.argument = Objects.requireNonNull(argument);
+		}
+
+		@Override
+		public boolean satisfied(Argument arg) {
+			return false;
+		}
+
+		@Override
+		public boolean unsatisfied(Argument arg) {
+			return false;
+		}
+
+		@Override
+		public boolean undecided(Argument arg) {
+			return arg.equals(argument);
+		}
+
+		@Override
+		public Set<Argument> satisfied() {
+			return Set.of();
+		}
+
+		@Override
+		public Set<Argument> unsatisfied() {
+			return Set.of();
+		}
+
+		@Override
+		public Set<Argument> undecided() {
+			return Set.of(argument);
+		}
+		
+		@Override
+		public int numDecided() {
+			return 0;
+		}
+
+		@Override
+		public Set<Argument> arguments() {
+			return Set.of(argument);
+		}
+		
+		@Override
+		public int hashCode() {
+			return Objects.hash(argument);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (!(obj instanceof Interpretation)) {
+				return false;
+			}
+			Interpretation other = (Interpretation) obj;
+			return other.size() == 1 && other.undecided(argument);
+		}
+
+		@Override
+		public String toString() {
+			return new StringBuilder("{u(").append("argument").append(")}").toString();
+		}
 	}
 
-	
 }

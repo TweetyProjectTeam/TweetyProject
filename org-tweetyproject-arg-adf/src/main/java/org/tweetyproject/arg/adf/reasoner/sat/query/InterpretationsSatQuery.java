@@ -26,7 +26,6 @@ import org.tweetyproject.arg.adf.reasoner.sat.execution.ParallelExecution;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.Semantics;
 import org.tweetyproject.arg.adf.reasoner.sat.execution.SequentialExecution;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 
 /**
  * @author Mathias Hofer
@@ -34,8 +33,8 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  */
 final class InterpretationsSatQuery extends SatQuery<Stream<Interpretation>>{
 
-	public InterpretationsSatQuery(AbstractDialecticalFramework adf, Semantics semantics, Configuration configuration) {
-		super(adf, semantics, configuration);
+	public InterpretationsSatQuery(Semantics semantics, Configuration configuration) {
+		super(semantics, configuration);
 	}
 
 	@Override
@@ -45,17 +44,17 @@ final class InterpretationsSatQuery extends SatQuery<Stream<Interpretation>>{
 	
 	@Override
 	public SatQuery<Stream<Interpretation>> configure(Configuration configuration) {
-		return new InterpretationsSatQuery(adf, semantics, configuration);
+		return new InterpretationsSatQuery(semantics, configuration);
 	}
 	
 	@Override
 	public Stream<Interpretation> execute() {
-		return execute(new SequentialExecution(adf, semantics, configuration.getSatSolver()));
+		return execute(new SequentialExecution(semantics, configuration.getSatSolver()));
 	}
 	
 	@Override
 	public Stream<Interpretation> executeParallel() {
-		return execute(new ParallelExecution(adf, semantics, configuration.getSatSolver(), configuration.getParallelism()));
+		return execute(new ParallelExecution(semantics, configuration.getSatSolver(), configuration.getParallelism()));
 	}
 
 }

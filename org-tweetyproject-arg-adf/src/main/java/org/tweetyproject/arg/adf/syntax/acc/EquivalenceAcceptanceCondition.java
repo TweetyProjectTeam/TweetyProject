@@ -18,42 +18,21 @@
  */
 package org.tweetyproject.arg.adf.syntax.acc;
 
-import java.util.Collection;
-import java.util.Set;
-
-public final class EquivalenceAcceptanceCondition extends AbstractAcceptanceCondition {
+public final class EquivalenceAcceptanceCondition extends BinaryAcceptanceCondition {
 	
 	/**
 	 * @param left the left side of the equivalence
 	 * @param right the right side of the equivalence
 	 */
 	public EquivalenceAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
-		super(Set.of(left, right));
+		super(left, right);
 	}
 	
-	/**
-	 * Asserts all children to be pairwise equivalent.
-	 * 
-	 * @param children the children of the equivalence
-	 */
-	public EquivalenceAcceptanceCondition(Collection<AcceptanceCondition> children) {
-		super(children);
-		if (children.size() < 2) {
-			throw new IllegalArgumentException("At least 2 children expected!");
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#accept(org.tweetyproject.arg.adf.syntax.acc.Visitor, java.lang.Object)
-	 */
 	@Override
 	public <U, D> U accept(Visitor<U, D> visitor, D topDownData) {
 		return visitor.visit(this, topDownData);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition#getName()
-	 */
 	@Override
 	public String getName() {
 		return "iff";

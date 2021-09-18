@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
-import org.tweetyproject.arg.adf.util.UnionSetView;
 
 /**
  * An immutable representation of acceptance conditions for ADFs.
@@ -115,7 +114,9 @@ public interface AcceptanceCondition {
 		}
 		
 		public Builder and(AcceptanceCondition... accs) {
-			this.left = new ConjunctionAcceptanceCondition(new UnionSetView<>(Set.of(left), Set.of(accs)));
+			for (AcceptanceCondition acc : accs) {
+				this.left = new ConjunctionAcceptanceCondition(left, acc);				
+			}
 			return this;
 		}
 		
@@ -125,7 +126,9 @@ public interface AcceptanceCondition {
 		}
 		
 		public Builder or(AcceptanceCondition... accs) {
-			this.left = new DisjunctionAcceptanceCondition(new UnionSetView<>(Set.of(left), Set.of(accs)));
+			for (AcceptanceCondition acc : accs) {
+				this.left = new DisjunctionAcceptanceCondition(left, acc);				
+			}
 			return this;
 		}
 		
@@ -140,7 +143,9 @@ public interface AcceptanceCondition {
 		}
 		
 		public Builder equiv(AcceptanceCondition... accs) {
-			this.left = new DisjunctionAcceptanceCondition(new UnionSetView<>(Set.of(left), Set.of(accs)));
+			for (AcceptanceCondition acc : accs) {
+				this.left = new EquivalenceAcceptanceCondition(left, acc);				
+			}
 			return this;
 		}
 		

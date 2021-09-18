@@ -1,20 +1,15 @@
 package org.tweetyproject.arg.adf.transform;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.acc.AcceptanceCondition;
+import org.tweetyproject.arg.adf.syntax.acc.BinaryAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.ConjunctionAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.ContradictionAcceptanceCondition;
 import org.tweetyproject.arg.adf.syntax.acc.DisjunctionAcceptanceCondition;
@@ -31,10 +26,10 @@ import org.tweetyproject.arg.adf.util.Pair;
 public final class TseitinTransformer implements Collector<Literal, Clause>, Transformer<Pair<Literal, Collection<Clause>>> {
 
 	private final boolean optimize;
+		
+	private final int rootPolarity;
 	
 	private final Function<Argument, Literal> mapping;
-	
-	private final int rootPolarity;
 	
 	private final Literal TRUE = Literal.create("T");
 	
@@ -75,30 +70,23 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 		return Pair.of(name, clauses);
 	}
 
-	private void defineConjunction(Literal name, Collection<Literal> children, Consumer<Clause> clauses, int polarity) {
+	private void defineConjunction(Literal name, Literal left, Literal right, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
-			for (Literal atom : children) {
-				clauses.accept(Clause.of(atom, name.neg()));
-			}
+			clauses.accept(Clause.of(left, name.neg()));
+			clauses.accept(Clause.of(right, name.neg()));
 		}
 		if (polarity <= 0 || !optimize) {
-			Set<Literal> literals = new HashSet<>(children.size() + 1);
-			for (Literal atom : children) {
-				literals.add(atom.neg());
-			}
-			literals.add(name);
-			clauses.accept(Clause.of(literals));
+			clauses.accept(Clause.of(left.neg(), right.neg(), name));
 		}
 	}
 
-	private void defineDisjunction(Literal name, Collection<Literal> children, Consumer<Clause> clauses, int polarity) {
+	private void defineDisjunction(Literal name, Literal left, Literal right, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
-			clauses.accept(Clause.of(children, name.neg()));
+			clauses.accept(Clause.of(left, right, name.neg()));
 		}
 		if (polarity <= 0 || !optimize) {
-			for (Literal atom : children) {
-				clauses.accept(Clause.of(atom.neg(), name));
-			}
+			clauses.accept(Clause.of(left.neg(), name));
+			clauses.accept(Clause.of(right.neg(), name));
 		}
 	}
 	
@@ -112,30 +100,14 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 		}
 	}
 	
-	private void defineEquivalence(Literal name, Collection<Literal> children, Consumer<Clause> clauses, int polarity) {
-		// we generate a circle of implications instead of pairwise equivalences
+	private void defineEquivalence(Literal name, Literal left, Literal right, Consumer<Clause> clauses, int polarity) {
 		if (polarity >= 0 || !optimize) {
-			Iterator<Literal> iterator = children.iterator();
-			Literal first = iterator.next();
-			Literal left = first;
-			while (iterator.hasNext()) {
-				Literal right = iterator.next();
-				clauses.accept(Clause.of(name.neg(), left.neg(), right));
-				left = right;
-			}
-			// left is now the last child
-			// complete the circle
-			clauses.accept(Clause.of(name.neg(), left.neg(), first));
+			clauses.accept(Clause.of(name.neg(), left, right.neg()));
+			clauses.accept(Clause.of(name.neg(), left.neg(), right));
 		}
 		if (polarity <= 0 || !optimize) {
-			clauses.accept(Clause.of(children, name));
-
-			Set<Literal> literals = new HashSet<>(children.size() + 1);
-			for (Literal child : children) {
-				literals.add(child.neg());
-			}
-			literals.add(name);
-			clauses.accept(Clause.of(literals));
+			clauses.accept(Clause.of(left, right, name));
+			clauses.accept(Clause.of(left.neg(), right.neg(), name));
 		}
 	}
 	
@@ -175,57 +147,41 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 	 * @param polarity
 	 */
 	private void define(Literal name, AcceptanceCondition acc, Consumer<Clause> clauses, int polarity) {
-		if (acc instanceof ConjunctionAcceptanceCondition) {
-			Map<Literal, AcceptanceCondition> children = new HashMap<Literal, AcceptanceCondition>();
-			for (AcceptanceCondition child : acc.getChildren()) {
-				children.put(createName(child), child);
-			}
-			defineConjunction(name, children.keySet(), clauses, polarity);
-			for (Entry<Literal, AcceptanceCondition> entry : children.entrySet()) {
-				define(entry.getKey(), entry.getValue(), clauses, polarity);
-			}
-		} else if (acc instanceof DisjunctionAcceptanceCondition) {
-			Map<Literal, AcceptanceCondition> children = new HashMap<Literal, AcceptanceCondition>();
-			for (AcceptanceCondition child : acc.getChildren()) {
-				children.put(createName(child), child);
-			}
-			defineDisjunction(name, children.keySet(), clauses, polarity);
-			for (Entry<Literal, AcceptanceCondition> entry : children.entrySet()) {
-				define(entry.getKey(), entry.getValue(), clauses, polarity);
-			}
-		} else if (acc instanceof ImplicationAcceptanceCondition) {
-			ImplicationAcceptanceCondition impl = (ImplicationAcceptanceCondition) acc;
-			Literal left = createName(impl.getLeft());
-			Literal right = createName(impl.getRight());
-			defineImplication(name, left, right, clauses, polarity);
-			define(left, impl.getLeft(), clauses, -polarity);
-			define(right, impl.getRight(), clauses, polarity);
-		} else if (acc instanceof EquivalenceAcceptanceCondition) {
-			Map<Literal, AcceptanceCondition> children = new HashMap<Literal, AcceptanceCondition>();
-			for (AcceptanceCondition child : acc.getChildren()) {
-				children.put(createName(child), child);
-			}
-			defineEquivalence(name, children.keySet(), clauses, polarity);
-			for (Entry<Literal, AcceptanceCondition> entry : children.entrySet()) {
-				define(entry.getKey(), entry.getValue(), clauses, polarity);
-			}
-		} else if (acc instanceof ExclusiveDisjunctionAcceptanceCondition) {
-			ExclusiveDisjunctionAcceptanceCondition xor = (ExclusiveDisjunctionAcceptanceCondition) acc;
-			Literal left = createName(xor.getLeft());
-			Literal right = createName(xor.getRight());
-			defineExclusiveDisjunction(name, left, right, clauses, polarity);
-			define(left, xor.getLeft(), clauses, polarity);
-			define(right, xor.getRight(), clauses, polarity);
+		if (acc instanceof BinaryAcceptanceCondition) {
+			BinaryAcceptanceCondition bin = (BinaryAcceptanceCondition) acc;
+			Literal left = createName(bin.getLeft());
+			Literal right = createName(bin.getRight());
+			if (acc instanceof ConjunctionAcceptanceCondition) {
+				defineConjunction(name, left, right, clauses, polarity);
+				define(left, bin.getLeft(), clauses, polarity);
+				define(right, bin.getRight(), clauses, polarity);
+			} else if (acc instanceof DisjunctionAcceptanceCondition) {
+				defineDisjunction(name, left, right, clauses, polarity);
+				define(left, bin.getLeft(), clauses, polarity);
+				define(right, bin.getRight(), clauses, polarity);
+			} else if (acc instanceof ImplicationAcceptanceCondition) {
+				defineImplication(name, left, right, clauses, polarity);
+				define(left, bin.getLeft(), clauses, -polarity);
+				define(right, bin.getRight(), clauses, polarity);
+			} else if (acc instanceof EquivalenceAcceptanceCondition) {
+				defineEquivalence(name, left, right, clauses, polarity);
+				define(left, bin.getLeft(), clauses, polarity);
+				define(right, bin.getRight(), clauses, polarity);
+			} else if (acc instanceof ExclusiveDisjunctionAcceptanceCondition) {
+				defineExclusiveDisjunction(name, left, right, clauses, polarity);
+				define(left, bin.getLeft(), clauses, polarity);
+				define(right, bin.getRight(), clauses, polarity);
+			} 
 		} else if (acc instanceof NegationAcceptanceCondition) {
 			Literal child = createName(((NegationAcceptanceCondition) acc).getChild());
 			defineNegation(name, child, clauses, polarity);
 			define(child, ((NegationAcceptanceCondition) acc).getChild(), clauses, -polarity);
 		}
 	}
-	
+		
 	private Literal createName(AcceptanceCondition acc) {
 		if (acc instanceof Argument) {
-			return mapping.apply((Argument) acc);
+			return mapping.apply((Argument)acc);
 		} else if (acc instanceof TautologyAcceptanceCondition) {
 			return TRUE;
 		} else if (acc instanceof ContradictionAcceptanceCondition) {
@@ -237,7 +193,7 @@ public final class TseitinTransformer implements Collector<Literal, Clause>, Tra
 	
 	private Literal createRootName(AcceptanceCondition acc) {
 		if (acc instanceof Argument) {
-			return mapping.apply((Argument) acc);
+			return mapping.apply((Argument)acc);
 		} else if (acc instanceof TautologyAcceptanceCondition) {
 			return TRUE;
 		} else if (acc instanceof ContradictionAcceptanceCondition) {

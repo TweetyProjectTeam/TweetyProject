@@ -17,6 +17,10 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  *
  */
 public class MostBipolarParentsDecomposer extends AbstractDecomposer {
+	
+	public MostBipolarParentsDecomposer(AbstractDialecticalFramework adf) {
+		super(adf);
+	}
 
 	@Override
 	Set<Argument> partition(AbstractDialecticalFramework adf, int size) {
