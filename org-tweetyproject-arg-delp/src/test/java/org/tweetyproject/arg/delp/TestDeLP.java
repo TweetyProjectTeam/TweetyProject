@@ -110,7 +110,8 @@ public final class TestDeLP {
     }
 
     private File createBatchFile(List<String> queries) throws IOException {
-        File tempFile = tempFolder.newFile();
+        //File tempFile = tempFolder.newFile();
+    	File tempFile = new File(tempFolder.getRoot() + File.separator + "newFile.txt");
         Files.write(tempFile.toPath(), queries);
         return tempFile;
     }

@@ -43,6 +43,7 @@ public final class NativeLingelingSolver implements IncrementalSatSolver {
 	private static final String DEFAULT_LINUX_LIB = "/lingeling.so";
 
 	public NativeLingelingSolver() {
+		try {
 		String osName = System.getProperty("os.name").toLowerCase();
 		String lib = null;
 		if (osName.contains("win")) {
@@ -52,6 +53,10 @@ public final class NativeLingelingSolver implements IncrementalSatSolver {
 		}
 		String path = getClass().getResource(lib).getPath();
 		System.load(path);
+		}
+		catch(Exception e) {
+			System.err.println("The solver did not load");
+		}
 	}
 
 	@Override
@@ -275,4 +280,15 @@ public final class NativeLingelingSolver implements IncrementalSatSolver {
 			NativeLingelingSolver.assume(handle, lit);
 		}
 	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
 }

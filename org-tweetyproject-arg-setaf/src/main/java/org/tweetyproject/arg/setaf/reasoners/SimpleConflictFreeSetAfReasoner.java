@@ -56,4 +56,9 @@ public class SimpleConflictFreeSetAfReasoner extends AbstractExtensionSetAfReaso
 		// as the empty set is always conflict-free we return that one.
 		return new Extension();
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

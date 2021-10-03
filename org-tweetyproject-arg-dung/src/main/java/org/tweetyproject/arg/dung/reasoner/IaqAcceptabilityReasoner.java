@@ -57,4 +57,11 @@ public class IaqAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 				result.add(a);
 		return result;
 	}	
+    /**
+     * this method always returns true because the solver is native
+     */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

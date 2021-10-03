@@ -92,4 +92,10 @@ public class OpenWboSolver extends MaxSatSolver {
 		}
 	}
 
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

@@ -70,6 +70,8 @@ public class SPASSMlReasoner extends AbstractMlReasoner {
 	public SPASSMlReasoner(String binaryLocation, Shell bash) {
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
+		if(!isInstalled())
+			System.err.println("The solver is not in the specified location");
 	}
 	
 	/**
@@ -157,6 +159,15 @@ public class SPASSMlReasoner extends AbstractMlReasoner {
 		if (Pattern.compile("SPASS beiseite: Ran out of time").matcher(output).find())
 			throw new RuntimeException("Failure: SPASS timeout.");
 		throw new RuntimeException("Failure: SPASS returned no result which can be interpreted.");
+	}
+	
+	@Override
+	public boolean isInstalled() {
+		File f = new File(this.binaryLocation);
+		if(f.exists() && !f.isDirectory()) { 
+			return true;
+		}
+		return false;
 	}
 
 }

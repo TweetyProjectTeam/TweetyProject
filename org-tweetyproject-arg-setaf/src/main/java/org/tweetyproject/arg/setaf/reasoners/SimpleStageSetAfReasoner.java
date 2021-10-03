@@ -72,4 +72,9 @@ public class SimpleStageSetAfReasoner extends AbstractExtensionSetAfReasoner {
 		// just return the first one
 		return this.getModels(bbase).iterator().next();
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

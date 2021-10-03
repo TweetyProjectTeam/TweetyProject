@@ -101,4 +101,10 @@ public class CadetSolver extends QbfSolver {
 		}
 	}
 
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

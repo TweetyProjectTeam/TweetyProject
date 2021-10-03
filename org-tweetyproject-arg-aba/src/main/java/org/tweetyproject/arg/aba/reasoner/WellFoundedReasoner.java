@@ -53,4 +53,12 @@ public class WellFoundedReasoner<T extends Formula> extends GeneralAbaReasoner<T
 		result.add(ext);
 		return result;
 	}
+	
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

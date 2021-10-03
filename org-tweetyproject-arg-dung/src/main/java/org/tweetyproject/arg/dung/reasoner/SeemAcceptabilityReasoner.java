@@ -118,4 +118,12 @@ public class SeemAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 		}		
 		return result;
 	}	
+	
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return this.maxSatSolver.isInstalled();
+	}
 }

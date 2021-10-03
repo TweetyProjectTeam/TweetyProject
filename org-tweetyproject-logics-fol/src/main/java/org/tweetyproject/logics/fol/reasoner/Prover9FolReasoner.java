@@ -60,6 +60,8 @@ public class Prover9FolReasoner extends FolReasoner {
 	public Prover9FolReasoner(String binaryLocation, Shell bash) {
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
+		if(!isInstalled())
+			System.err.println("The solver is not in the specified location");
 	}
 
 	/**
@@ -147,6 +149,15 @@ public class Prover9FolReasoner extends FolReasoner {
 	 */
 	public void setBinaryLocation(String binaryLocation) {
 		this.binaryLocation = binaryLocation;
+	}
+	
+	@Override
+	public boolean isInstalled() {
+		File f = new File(this.binaryLocation);
+		if(f.exists() && !f.isDirectory()) { 
+			return true;
+		}
+		return false;
 	}
 
 }

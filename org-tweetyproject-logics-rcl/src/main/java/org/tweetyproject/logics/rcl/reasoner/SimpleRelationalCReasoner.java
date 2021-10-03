@@ -259,4 +259,10 @@ public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefS
 		candidate.normalize();
 		return candidate;
 	}
+
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

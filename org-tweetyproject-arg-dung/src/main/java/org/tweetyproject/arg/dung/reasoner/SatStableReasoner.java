@@ -71,4 +71,11 @@ public class SatStableReasoner extends AbstractSatExtensionReasoner{
 		}
 		return beliefSet;
 	}
+    /**
+     * this method always returns true because the solver is native
+     */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

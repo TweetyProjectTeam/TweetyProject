@@ -94,4 +94,9 @@ public class SimpleDeductiveReasoner extends AbstractDeductiveArgumentationReaso
 		}
 		return argTree;
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

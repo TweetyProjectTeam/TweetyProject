@@ -78,6 +78,8 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 		this.path_to_exec = path_to_exec;
 		this.bash = bash;
 		this.semantics = semantics;
+		if(!isInstalled())
+			System.err.println("The solver is not installed / callable on the given path");
 	}
 	
 	/**
@@ -196,5 +198,19 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} 	
+	}
+	
+    /**
+     * this method always returns true because the solver is native
+     */
+	@Override
+	public boolean isInstalled() {
+		try {
+			@SuppressWarnings("unused")
+			String str = bash.run(path_to_exec + " --formats");
+			return true;
+		}catch(Exception e) {
+			return false;
+		}
 	}
 }

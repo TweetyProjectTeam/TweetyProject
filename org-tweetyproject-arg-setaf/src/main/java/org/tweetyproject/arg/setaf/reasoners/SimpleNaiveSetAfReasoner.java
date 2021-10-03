@@ -81,4 +81,9 @@ public class SimpleNaiveSetAfReasoner extends AbstractExtensionSetAfReasoner {
         }
         return cfSubsets;
     }
+    
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

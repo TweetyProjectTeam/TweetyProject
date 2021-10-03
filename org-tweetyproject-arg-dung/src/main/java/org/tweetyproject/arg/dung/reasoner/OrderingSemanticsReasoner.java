@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-
+ 
 /**
  * Reasoner for ordering semantics
  *
@@ -287,4 +287,11 @@ public class OrderingSemanticsReasoner {
             }
         }
     }
+    
+    /**
+     * this method always returns true because the solver is native
+     */
+	public boolean isInstalled() {
+		return true;
+	}
 }

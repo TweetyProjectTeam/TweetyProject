@@ -19,6 +19,8 @@
 package org.tweetyproject.arg.dung.syntax;
 
 import java.util.*;
+
+import org.ojalgo.matrix.store.SuperimposedStore;
 import org.tweetyproject.arg.dung.semantics.*;
 
 
@@ -33,69 +35,44 @@ Anna Rapberger  StefanWoltran )
  */
 public class ClaimBasedTheory extends DungTheory {
 
-	/**maps claims to arguments*/
-	private HashMap<Argument, String> claimMap;
-	/**all claims*/
-	private HashSet<String> claims;
-	/**
-	 * 
-	 * @return the claim map
-	 */
-	public HashMap<Argument, String> getClaimMap() {
-		return claimMap;
-	}
-	/**
-	 * 
-	 * @param claimMap the new claimMap
-	 */
-	public void setClaimMap(HashMap<Argument, String> claimMap) {
-		this.claimMap = claimMap;
-		for(Argument a : claimMap.keySet()) {
-			if(this.claims == null)
-				this.claims = new HashSet<String>();
-			this.claims.add(claimMap.get(a));
 
-		}
+	/**all claims*/
+	private HashSet<Claim> claims;
+	public void add(ClaimArgument arg) {
+		super.add(arg);
+		this.claims.add(arg.claim);
+		return;
 	}
+
 
 	/**
 	 * 
 	 * @return the claims
 	 */
-	public HashSet<String> getClaims() {
+	public HashSet<Claim> getClaims() {
 		return claims;
 	}
 	/**
 	 * 
 	 * @param claims the claims to e set
 	 */
-	public void setClaims(HashSet<String> claims) {
+	public void setClaims(HashSet<Claim> claims) {
 		this.claims = claims;
 	}
-	/**
-	 * 
-	 * @param claimMap the claimMap to be set
-	 */
-	public void setClaims(HashMap<Argument, String> claimMap ) {
-		this.claimMap = claimMap;
-		this.claims = new HashSet<String>();
-		for(Argument a : claimMap.keySet()) {
-			this.claims.add(claimMap.get(a));
-		}
-	}
+
 	
 	/**
 	 * Default constructor; initializes empty sets of arguments and attacks
 	 */
 	public ClaimBasedTheory(){
 		super();
+		this.claims = new HashSet<Claim>();
 	}
 	/**
 	 * Default constructor; initializes empty sets of arguments and attacks
 	 */
-	public ClaimBasedTheory(HashMap<Argument, String> claimMap){
+	public ClaimBasedTheory(HashMap<ClaimArgument, Claim> claimMap){
 		super();
-		this.claimMap = claimMap;
 		for(Argument a : claimMap.keySet()) {
 			if(!this.claims.contains(claimMap.get(a))){
 				this.claims.add(claimMap.get(a));
@@ -103,14 +80,14 @@ public class ClaimBasedTheory extends DungTheory {
 		}
 	}
 	/**
-	 * get all calims of a given extension
+	 * get all claims of a given extension
 	 * @param ext extension
 	 * @return the extension's claims
 	 */
-	public Set<String> getClaims(Extension ext) {
-		HashSet<String> cl = new HashSet<String>();
+	public Set<Claim> getClaims(Extension ext) {
+		HashSet<Claim> cl = new HashSet<Claim>();
 		for(Argument arg : ext) {
-			cl.add(this.claimMap.get(arg));
+			cl.add(((ClaimArgument)arg).claim);
 		}
 		return cl;
 	}
@@ -121,24 +98,24 @@ public class ClaimBasedTheory extends DungTheory {
 	 * @param ext the extension
 	 * @return all claims defeated by the extension (extension defeat all arguments of a claim => claim defeated)
 	 */
-	public Set<String> defeats(Extension ext) {
-		HashSet<Argument> argsWithClaim = new HashSet<Argument>();
-		HashSet<String> defeated = new HashSet<String>();
-		for(String claim : claims) {
+	public ClaimSet defeats(Extension ext) {
+		HashSet<ClaimArgument> argsWithClaim = new HashSet<ClaimArgument>();
+		ClaimSet defeated = new ClaimSet();
+		for(Claim claim : claims) {
 			//add al arguments with the given claim to the set
 			for(Argument a : this) {
-				if(claimMap.get(a).equals(claim))
-					argsWithClaim.add(a);
+				if(((ClaimArgument)a).claim.equals(claim))
+					argsWithClaim.add((ClaimArgument) a);
 			}
 			//build a second set of all arguments in the claim set attacked by the extension
-			HashSet<Argument> argsWithClaimAttackedByExt = new HashSet<Argument>();
-			for(Argument arg : argsWithClaim) {
+			HashSet<ClaimArgument> argsWithClaimAttackedByExt = new HashSet<ClaimArgument>();
+			for(ClaimArgument arg : argsWithClaim) {
 				if(this.isAttacked(arg, ext))
 					argsWithClaimAttackedByExt.add(arg);
 					
 			}
 			if(argsWithClaimAttackedByExt.equals(argsWithClaim))
-				defeated.add(claim);
+				defeated.addAll(argsWithClaimAttackedByExt);
 		}
 		return defeated;
 	}

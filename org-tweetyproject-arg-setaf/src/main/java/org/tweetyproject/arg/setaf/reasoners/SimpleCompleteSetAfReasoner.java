@@ -73,4 +73,9 @@ public class SimpleCompleteSetAfReasoner extends AbstractExtensionSetAfReasoner 
 		}
 		return extensions;		
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

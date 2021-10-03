@@ -60,7 +60,10 @@ public class SimpleAdmissibleSetAfReasoner extends AbstractExtensionSetAfReasone
 		return new Extension();
 	}
 
-
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 
 }

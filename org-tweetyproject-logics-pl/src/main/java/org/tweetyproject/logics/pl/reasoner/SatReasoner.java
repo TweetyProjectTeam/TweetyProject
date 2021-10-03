@@ -43,4 +43,9 @@ public class SatReasoner extends AbstractPlReasoner {
 		return !SatSolver.getDefaultSolver().isConsistent(formulas);
 	}
 
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
+
 }

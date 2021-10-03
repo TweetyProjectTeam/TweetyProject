@@ -51,4 +51,10 @@ public class NaiveQbfReasoner extends AbstractPlReasoner {
 		return true;
 	}
 
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

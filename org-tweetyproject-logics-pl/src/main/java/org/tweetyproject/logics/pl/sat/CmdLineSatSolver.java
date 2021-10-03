@@ -156,4 +156,10 @@ public class CmdLineSatSolver extends SatSolver {
 	public void setOptions(String options) {
 		this.options = options.strip();
 	}
+
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

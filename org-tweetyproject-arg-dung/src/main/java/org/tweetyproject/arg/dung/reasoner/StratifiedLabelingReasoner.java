@@ -126,4 +126,12 @@ public class StratifiedLabelingReasoner extends AbstractDungReasoner implements 
 		}			
 		return false;
 	}
+	
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

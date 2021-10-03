@@ -22,9 +22,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
+import org.tweetyproject.arg.dung.syntax.Claim;
+import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 
 public class SimpleClSemistableReasoner extends AbstractClaimBasedReasoner{
@@ -35,19 +38,21 @@ public class SimpleClSemistableReasoner extends AbstractClaimBasedReasoner{
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
-	public Set<Set<String>> getModels(ArgumentationFramework<Argument> bbase) {
+	public Set<ClaimSet> getModels(ClaimBasedTheory bbase) {
 
 		Collection<Extension> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
-		Set<Set<String>> result = new HashSet<Set<String>>();
+		Set<ClaimSet> result = new HashSet<ClaimSet>();
 		for(Extension e: admissibleExtensions) {
-			Set<String> defeatedPlusExtension = ((ClaimBasedTheory) bbase).defeats(e);
-			defeatedPlusExtension.addAll(((ClaimBasedTheory) bbase).getClaims(e));
+			ClaimSet defeatedPlusExtension = ((ClaimBasedTheory) bbase).defeats(e);
+			for(Argument arg : e) {
+				defeatedPlusExtension.add((ClaimArgument) arg);
+			}
 			result.add(defeatedPlusExtension);
 
 		}
-		Set<Set<String>>resultClone = new HashSet<Set<String>>(result);
-		for(Set<String> a : result) {
-			for(Set<String> b : result) {
+		Set<ClaimSet>resultClone = new HashSet<ClaimSet>(result);
+		for(ClaimSet a : result) {
+			for(ClaimSet b : result) {
 			if(!a.equals(b) && b.containsAll(a))
 				resultClone.remove(a);
 			}
@@ -60,24 +65,14 @@ public class SimpleClSemistableReasoner extends AbstractClaimBasedReasoner{
 	 * @param bbase the claim based thory
 	 * @return one extensions of the semantics
 	 */
-	public Set<String> getModel(ArgumentationFramework<Argument> bbase) {
+	public ClaimSet getModel(ClaimBasedTheory bbase) {
 
-		Collection<Extension> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
-		Set<Set<String>> result = new HashSet<Set<String>>();
-		for(Extension e: admissibleExtensions) {
-			Set<String> defeatedPlusExtension = ((ClaimBasedTheory) bbase).defeats(e);
-			defeatedPlusExtension.addAll(((ClaimBasedTheory) bbase).getClaims(e));
-			result.add(defeatedPlusExtension);
+		return getModels(bbase).iterator().next();	
+	}
 
-		}
-		Set<Set<String>>resultClone = new HashSet<Set<String>>(result);
-		for(Set<String> a : result) {
-			for(Set<String> b : result) {
-			if(!a.equals(b) && b.containsAll(a))
-				resultClone.remove(a);
-			}
-		}
-		return resultClone.iterator().next();	
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}
 
 	

@@ -360,4 +360,6 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 	public Interpretation<PlBeliefSet, PlFormula> getWitness(BeliefSet<PlFormula, ?> bs) {
 		return this.getWitness((Collection<PlFormula>) bs);
 	}
+
+	public abstract boolean isInstalled();
 }

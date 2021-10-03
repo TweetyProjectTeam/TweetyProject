@@ -50,4 +50,9 @@ public class ModuleBasedAspicReasoner<T extends Invertable> extends AbstractAspi
 		module.addAll(aat.getSyntacticModule(query));
 		return module.asDungTheory();
 	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

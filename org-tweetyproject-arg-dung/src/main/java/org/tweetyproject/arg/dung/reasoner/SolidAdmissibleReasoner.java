@@ -86,4 +86,12 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
         }
         return defended;
     }
+    
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

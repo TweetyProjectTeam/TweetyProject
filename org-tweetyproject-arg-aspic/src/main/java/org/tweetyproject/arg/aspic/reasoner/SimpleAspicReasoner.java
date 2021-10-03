@@ -46,5 +46,10 @@ public class SimpleAspicReasoner<T extends Invertable> extends AbstractAspicReas
 	public DungTheory getDungTheory(AspicArgumentationTheory<T> aat, T query) {		
 		return aat.asDungTheory();
 	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 	
 }

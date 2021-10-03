@@ -53,13 +53,17 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 	 * @param size the number of states
 	 */
 	private PooledIncrementalSatSolver(Builder builder) {
-		this.satSolver = builder.satSolver;
-		this.executor = builder.executor;
-		this.stateDecorator = builder.stateDecorator;
-		this.states = new LinkedBlockingQueue<SatSolverState>(builder.poolSize);
-		for (int i = 0; i < builder.poolSize; i++) {
-			executor.execute(() -> states.offer(createDecoratedState()));
-		}
+
+			this.satSolver = builder.satSolver;
+			this.executor = builder.executor;
+			this.stateDecorator = builder.stateDecorator;
+			this.states = new LinkedBlockingQueue<SatSolverState>(builder.poolSize);
+			for (int i = 0; i < builder.poolSize; i++) {
+				executor.execute(() -> states.offer(createDecoratedState()));
+			}
+
+
+		
 	}
 	
 	public static Builder builder(IncrementalSatSolver satSolver) {

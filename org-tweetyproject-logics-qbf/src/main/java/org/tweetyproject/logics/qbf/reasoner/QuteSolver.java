@@ -98,4 +98,10 @@ public class QuteSolver extends QbfSolver {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

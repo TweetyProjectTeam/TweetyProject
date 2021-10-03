@@ -348,4 +348,17 @@ public class ClingoSolver extends ASPSolver {
 		this.pathToSolver = path;
 	}
 
+	@Override
+	public boolean isInstalled() {
+		
+	    try {
+	            @SuppressWarnings("unused")
+				Process process = Runtime.getRuntime().exec("clingo");
+	            return true;
+	    } catch (Exception e) {
+	            return false;
+	    }
+		
+	}
+
 }

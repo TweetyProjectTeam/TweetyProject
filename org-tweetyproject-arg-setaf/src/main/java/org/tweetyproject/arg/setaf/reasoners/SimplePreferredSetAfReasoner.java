@@ -77,4 +77,9 @@ public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner
 		// this should not happen
 		throw new RuntimeException("Hmm, did not find a maximal set in a finite number of sets. Should not happen.");
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

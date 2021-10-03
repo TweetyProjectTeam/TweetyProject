@@ -105,7 +105,8 @@ public final class TestKBParsing {
         Random rng = new Random();
         for (int i = 0; i < 5000; i++)
             facts.add(generateString(rng, "abcdefghijklmnopqrstuvwxyz", 10)+".");
-        File tempFile = tempFolder.newFile();
+        //File tempFile = tempFolder.newFile();
+        File tempFile = new File(tempFolder.getRoot() + File.separator + "newFile.txt");
         Files.write(tempFile.toPath(), facts);
         new DelpParser().parseBeliefBase(new FileReader(tempFile));
     }

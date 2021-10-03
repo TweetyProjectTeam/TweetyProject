@@ -195,6 +195,14 @@ public class ZReasoner extends AbstractConditionalLogicReasoner {
 		
 		return ocf;
 	}
+	
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }
 		

@@ -68,4 +68,12 @@ public class IdealReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 		}
 		return result2;
 	}
+	
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

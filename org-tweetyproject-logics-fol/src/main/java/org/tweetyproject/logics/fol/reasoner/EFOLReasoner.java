@@ -65,6 +65,8 @@ public class EFOLReasoner extends FolReasoner {
 	public EFOLReasoner(String binaryLocation, Shell bash) {
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
+		if(!isInstalled())
+			System.err.println("The solver does not exist at the specified place");
 	}
 
 	/**
@@ -159,6 +161,15 @@ public class EFOLReasoner extends FolReasoner {
 	 */
 	public void setBinaryLocation(String binaryLocation) {
 		this.binaryLocation = binaryLocation;
+	}
+
+	@Override
+	public boolean isInstalled() {
+		File f = new File(this.binaryLocation);
+		if(f.exists() && !f.isDirectory()) { 
+			return true;
+		}
+		return false;
 	}
 }
 

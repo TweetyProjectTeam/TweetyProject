@@ -107,5 +107,13 @@ public class NaiveDlReasoner implements QualitativeReasoner<DlBeliefSet,DlAxiom>
 		return atoms;
 	}
 	
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
+	
 
 }

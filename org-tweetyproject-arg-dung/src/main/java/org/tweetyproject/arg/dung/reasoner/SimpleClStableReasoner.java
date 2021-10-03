@@ -22,9 +22,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
+import org.tweetyproject.arg.dung.syntax.Claim;
+import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 /**
  * a claim based stable reaonser
@@ -39,16 +42,18 @@ public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
-	public Set<Set<String>> getModels(ArgumentationFramework<Argument> bbase) {
+	public Set<ClaimSet> getModels(ClaimBasedTheory bbase) {
 
 		Collection<Extension> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
-		Set<Set<String>> result = new HashSet<Set<String>>();
+		Set<ClaimSet> result = new HashSet<ClaimSet>();
 		for(Extension e: admissibleExtensions) {
-			Set<String> defeatedByExtension = ((ClaimBasedTheory) bbase).defeats(e);
-			HashSet<String> allClaims = ((ClaimBasedTheory) bbase).getClaims();
+			ClaimSet defeatedByExtension = ((ClaimBasedTheory) bbase).defeats(e);
+			HashSet<Claim> allClaims = ((ClaimBasedTheory) bbase).getClaims();
 			allClaims.removeAll(defeatedByExtension);
 			if(allClaims.equals(((ClaimBasedTheory)bbase).getClaims(e)))
-					result.add(((ClaimBasedTheory)bbase).getClaims(e));
+				for(Argument arg : e) {
+					defeatedByExtension.add((ClaimArgument) arg);
+				}
 		}
 				
 		return result;	
@@ -59,17 +64,28 @@ public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 	 * @param bbase the claim based thory
 	 * @return an extensions of the semantics
 	 */
-	public Set<String> getModel(ArgumentationFramework<Argument> bbase) {
+	public ClaimSet getModel(ClaimBasedTheory bbase) {
 		Collection<Extension> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
 
 		for(Extension e: admissibleExtensions) {
-			Set<String> defeatedByExtension = ((ClaimBasedTheory) bbase).defeats(e);
-			HashSet<String> allClaims = ((ClaimBasedTheory) bbase).getClaims();
+			ClaimSet defeatedByExtension = ((ClaimBasedTheory) bbase).defeats(e);
+			HashSet<Claim> allClaims = ((ClaimBasedTheory) bbase).getClaims();
 			allClaims.removeAll(defeatedByExtension);
-			if(allClaims.equals(((ClaimBasedTheory)bbase).getClaims(e)))
-					return ((ClaimBasedTheory)bbase).getClaims(e);
+			if(allClaims.equals(((ClaimBasedTheory)bbase).getClaims(e))) {
+				ClaimSet result = new ClaimSet();
+				for(Argument arg : e) {
+					result.add((ClaimArgument) arg);
+					return result;
+				}
+			}
+					
 		}
 		return null;	
+	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}
 
 	

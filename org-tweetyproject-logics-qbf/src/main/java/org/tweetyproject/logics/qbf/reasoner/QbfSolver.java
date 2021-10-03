@@ -70,4 +70,5 @@ public abstract class QbfSolver implements BeliefSetConsistencyTester<PlFormula>
 		formulas.add(formula);
 		return this.isSatisfiable(formulas);
 	}
+	public abstract boolean isInstalled();
 }

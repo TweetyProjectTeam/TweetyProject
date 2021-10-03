@@ -116,4 +116,9 @@ public class IssReasoner implements QuantitativeReasoner<SocialAbstractArgumenta
 		}while(this.dist(mapping, newmapping,bbase) > this.tolerance);
 		return newmapping;
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

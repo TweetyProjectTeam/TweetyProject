@@ -96,4 +96,10 @@ public class OutputReasoner implements QualitativeReasoner<StructuredArgumentati
 	public Boolean query(StructuredArgumentationFramework beliefbase, Proposition formula) {
 		return this.getOutput(beliefbase).contains(formula);
 	}
+
+
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

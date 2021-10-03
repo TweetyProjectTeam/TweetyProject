@@ -48,5 +48,10 @@ public class SimplePlReasoner extends AbstractPlReasoner {
 					return false;
 		return true;
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

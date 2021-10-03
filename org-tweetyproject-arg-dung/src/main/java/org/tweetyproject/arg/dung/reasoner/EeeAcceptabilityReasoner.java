@@ -59,4 +59,11 @@ public class EeeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 			result.retainAll(extension);
 		return result;
 	}	
+    /**
+     * this method always returns true because the solver is native
+     */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

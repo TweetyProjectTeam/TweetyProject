@@ -58,6 +58,11 @@ public class SimpleGroundedSetAfReasoner extends AbstractExtensionSetAfReasoner 
 		}while(size!=ext.size());		
 		return ext;
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 
 }

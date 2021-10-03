@@ -76,4 +76,9 @@ public class MonteCarloPafReasoner extends AbstractPafReasoner{
 		}
 		return ((double)count)/this.numberOfTrials;
 	}	
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

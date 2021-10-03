@@ -125,4 +125,12 @@ public class MleanCoPReasoner extends AbstractMlReasoner {
 		}
 	}
 
+	@Override
+	public boolean isInstalled() {
+		File f = new File(scriptLocation);
+		if(f.exists() && !f.isDirectory())
+			return true;
+		return false;
+	}
+
 }

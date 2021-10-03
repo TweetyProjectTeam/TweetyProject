@@ -236,4 +236,9 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 	public String toString() {
 		return "dirRand-" + this.prob;
 	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

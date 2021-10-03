@@ -59,5 +59,10 @@ public class SimpleStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 			if(((SetAf)bbase).isAttackingAllOtherArguments(e))
 				return e;
 		return null;	
-	}		
+	}	
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

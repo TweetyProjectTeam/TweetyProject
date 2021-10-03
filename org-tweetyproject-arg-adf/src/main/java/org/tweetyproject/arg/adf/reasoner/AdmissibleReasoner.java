@@ -45,5 +45,7 @@ public class AdmissibleReasoner extends AbstractDialecticalFrameworkReasoner {
 	Query<Stream<Interpretation>> query(AbstractDialecticalFramework adf) {
 		return adf.query().admissible().interpretations();
 	}
+	
+	
 
 }

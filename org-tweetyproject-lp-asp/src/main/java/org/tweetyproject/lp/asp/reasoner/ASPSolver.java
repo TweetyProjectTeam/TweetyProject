@@ -154,4 +154,7 @@ public abstract class ASPSolver implements QualitativeReasoner<Program,ASPLitera
 	@Override
 	public abstract Boolean query(Program beliefbase, ASPLiteral formula);
 
+	
+	
+
 }

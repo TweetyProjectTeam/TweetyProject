@@ -93,4 +93,9 @@ public class SimpleIdealSetAfReasoner extends AbstractExtensionSetAfReasoner {
 		// this should not happen as there is always an ideal extension;
 		throw new RuntimeException("Ideal extension seems to be undefined.");
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

@@ -86,4 +86,9 @@ public class SimpleEagerSetAfReasoner extends AbstractExtensionSetAfReasoner {
         // this should not happen as there is always an eager extension;
         throw new RuntimeException("Eager extension seems to be undefined.");
     }
+    
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

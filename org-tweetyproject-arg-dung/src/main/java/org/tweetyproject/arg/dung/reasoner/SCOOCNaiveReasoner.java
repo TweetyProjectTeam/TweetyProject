@@ -79,4 +79,12 @@ public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
         Collection<Extension> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }
+    
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

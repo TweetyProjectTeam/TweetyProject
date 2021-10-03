@@ -81,4 +81,9 @@ public class SimplePafReasoner extends AbstractPafReasoner{
 		}
 		return prob;
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

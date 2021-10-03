@@ -149,4 +149,9 @@ public class SimpleDpllSolver extends SatSolver {
 		return this.getWitness(formulas) != null;
 	}
 
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
+
 }

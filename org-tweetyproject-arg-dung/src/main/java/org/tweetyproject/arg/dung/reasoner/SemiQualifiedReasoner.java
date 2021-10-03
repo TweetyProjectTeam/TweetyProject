@@ -175,4 +175,12 @@ public class SemiQualifiedReasoner extends AbstractExtensionReasoner {
         }
         return result;
     }
+    
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

@@ -54,5 +54,10 @@ public class CompilationReasoner extends AbstractDeductiveArgumentationReasoner 
 	 */
 	protected  ArgumentTree getArgumentTree(DeductiveKnowledgeBase kb, DeductiveArgument arg){
 		return new Compilation(kb).getArgumentTree(arg);
+	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}	
 }

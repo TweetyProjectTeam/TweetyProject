@@ -28,5 +28,5 @@ package org.tweetyproject.commons;
  * @param <F> the type of formulas that can be queries
  */
 public interface QuantitativeReasoner<B extends BeliefBase,F extends Formula> extends Reasoner<Double,B,F> {
-
+	public abstract boolean isInstalled();
 }

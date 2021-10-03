@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.logics.fol.reasoner;
 
+import java.io.File;
 import java.util.Set;
 
 import org.tweetyproject.logics.fol.semantics.HerbrandBase;
@@ -73,4 +74,8 @@ public class SimpleFolReasoner extends FolReasoner {
 					return false;
 		return true;
 	}	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

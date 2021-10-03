@@ -21,29 +21,30 @@ package org.tweetyproject.arg.dung.reasoner;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
+import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 /**
  * calculates claim based naive extensions
  * @author Sebastian Franke
  *
  */
-public class SimpleClNaiveReasoner {
+public class SimpleClNaiveReasoner extends AbstractClaimBasedReasoner{
+	
 	/**
 	 * 
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
-	public Set<Set<String>> getModels(ArgumentationFramework<Argument> bbase) {
+	public Set<ClaimSet> getModels(ClaimBasedTheory bbase) {
 		Semantics cf = Semantics.CF;
 		SimpleClInheritedReasoner reasoner = new SimpleClInheritedReasoner(cf);
-		Set<Set<String>> completeExtensions = reasoner.getModels(bbase);
-		Set<Set<String>> result = new HashSet<Set<String>>();
+		Set<ClaimSet> completeExtensions = reasoner.getModels(bbase);
+		Set<ClaimSet> result = new HashSet<ClaimSet>();
 		boolean maximal;
-		for(Set<String> e1: completeExtensions){
+		for(ClaimSet e1: completeExtensions){
 			maximal = true;
-			for(Set<String> e2: completeExtensions)
+			for(ClaimSet e2: completeExtensions)
 				if(e1 != e2 && e2.containsAll(e1)){
 					maximal = false;
 					break;
@@ -59,15 +60,15 @@ public class SimpleClNaiveReasoner {
 	 * @param bbase the claim based thory
 	 * @return an extensions of the semantics
 	 */
-	public Set<String> getModel(ArgumentationFramework<Argument> bbase) {
+	public ClaimSet getModel(ClaimBasedTheory bbase) {
 		// just return the first found preferred extension
 		Semantics cf = Semantics.CF;
 		SimpleClInheritedReasoner reasoner = new SimpleClInheritedReasoner(cf);
-		Set<Set<String>> completeExtensions = reasoner.getModels(bbase);
+		Set<ClaimSet> completeExtensions = reasoner.getModels(bbase);
 		boolean maximal;
-		for(Set<String> e1: completeExtensions){
+		for(ClaimSet e1: completeExtensions){
 			maximal = true;
-			for(Set<String> e2: completeExtensions)
+			for(ClaimSet e2: completeExtensions)
 				if(e1 != e2 && e2.containsAll(e1)){
 					maximal = false;
 					break;
@@ -77,6 +78,11 @@ public class SimpleClNaiveReasoner {
 		}		
 		// this should not happen
 		throw new RuntimeException("Hmm, did not find a maximal set in a finite number of sets. Should not happen.");
+	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}
 	
 	

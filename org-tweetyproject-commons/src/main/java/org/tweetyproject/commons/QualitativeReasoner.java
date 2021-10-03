@@ -32,4 +32,5 @@ public interface QualitativeReasoner<B extends BeliefBase,F extends Formula> ext
 	 * @see org.tweetyproject.commons.Reasoner#query(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.Formula)
 	 */
 	public Boolean query(B beliefbase, F formula);
+	public abstract boolean isInstalled();
 }

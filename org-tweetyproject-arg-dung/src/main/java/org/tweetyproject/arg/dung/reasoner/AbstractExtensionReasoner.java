@@ -95,5 +95,13 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 		}		
 	}
 	
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
+	
 
 }

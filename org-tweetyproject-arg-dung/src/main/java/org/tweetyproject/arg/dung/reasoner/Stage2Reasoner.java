@@ -127,4 +127,12 @@ public class Stage2Reasoner extends AbstractExtensionReasoner {
         }
         return result;
     }
+    
+	/**
+	 * the solver is natively installed and is therefore always installed
+	 */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

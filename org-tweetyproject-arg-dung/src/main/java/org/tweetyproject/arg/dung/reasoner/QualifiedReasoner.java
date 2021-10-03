@@ -147,4 +147,11 @@ public class QualifiedReasoner extends AbstractExtensionReasoner {
         }
         return result;
     }
+    /**
+     * this method always returns true because the solver is native
+     */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

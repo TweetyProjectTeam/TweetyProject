@@ -67,6 +67,8 @@ public class SpassFolReasoner extends FolReasoner {
 	public SpassFolReasoner(String binaryLocation, Shell bash) {
 		this.binaryLocation = binaryLocation;
 		this.bash = bash;
+		if(!isInstalled())
+			System.err.println("The solver is not in the specified location");
 	}
 	
 	/**
@@ -172,6 +174,15 @@ public class SpassFolReasoner extends FolReasoner {
 				return true;
 		} catch (InterruptedException | IOException e) {
 			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean isInstalled() {
+		File f = new File(this.binaryLocation);
+		if(f.exists() && !f.isDirectory()) { 
+			return true;
 		}
 		return false;
 	}

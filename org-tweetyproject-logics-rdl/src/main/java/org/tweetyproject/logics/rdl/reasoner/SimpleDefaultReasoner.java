@@ -85,5 +85,11 @@ public class SimpleDefaultReasoner implements QualitativeReasoner<DefaultTheory,
 		}
 		return false;		
 	}
+
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

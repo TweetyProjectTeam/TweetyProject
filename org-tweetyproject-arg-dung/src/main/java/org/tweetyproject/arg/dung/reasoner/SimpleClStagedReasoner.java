@@ -22,16 +22,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
+import org.tweetyproject.arg.dung.syntax.Claim;
+import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 /**
  * calculates claim based staged extensions
  * @author Sebastian Franke
  *
  */
-public class SimpleClStagedReasoner {
+public class SimpleClStagedReasoner extends AbstractClaimBasedReasoner{
 
 
 	/**
@@ -39,19 +42,21 @@ public class SimpleClStagedReasoner {
 	 * @param bbase the claim based thory
 	 * @return all extensions of the semantics
 	 */
-	public Set<Set<String>> getModels(ArgumentationFramework<Argument> bbase) {
+	public Set<ClaimSet> getModels(ClaimBasedTheory bbase) {
 
 		Collection<Extension> cfExtensions = new SimpleConflictFreeReasoner().getModels(bbase);
-		Set<Set<String>> result = new HashSet<Set<String>>();
+		Set<ClaimSet> result = new HashSet<ClaimSet>();
 		for(Extension e: cfExtensions) {
-			Set<String> defeatedPlusExtension = ((ClaimBasedTheory) bbase).defeats(e);
-			defeatedPlusExtension.addAll(((ClaimBasedTheory) bbase).getClaims(e));
+			ClaimSet defeatedPlusExtension = ((ClaimBasedTheory) bbase).defeats(e);
+			for(Argument arg : e) {
+				defeatedPlusExtension.add((ClaimArgument) arg);
+			}
 			result.add(defeatedPlusExtension);
 
 		}
-		Set<Set<String>>resultClone = new HashSet<Set<String>>(result);
-		for(Set<String> a : result) {
-			for(Set<String> b : result) {
+		Set<ClaimSet>resultClone = new HashSet<ClaimSet>(result);
+		for(ClaimSet a : result) {
+			for(ClaimSet b : result) {
 			if(!a.equals(b) && b.containsAll(a))
 				resultClone.remove(a);
 			}
@@ -64,8 +69,14 @@ public class SimpleClStagedReasoner {
 	 * @param bbase the claim based theory
 	 * @return an extensions of the semantics
 	 */
-	public Set<String> getModel(ArgumentationFramework<Argument> bbase) {
-		Set<Set<String>> result = getModels(bbase);
+	public ClaimSet getModel(ClaimBasedTheory bbase) {
+		Set<ClaimSet> result = getModels(bbase);
 		return result.iterator().next();	
-	}		
+	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
+	
 }

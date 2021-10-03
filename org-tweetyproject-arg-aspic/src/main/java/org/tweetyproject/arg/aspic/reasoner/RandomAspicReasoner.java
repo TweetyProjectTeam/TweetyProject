@@ -181,4 +181,9 @@ public class RandomAspicReasoner<T extends Invertable> extends AbstractAspicReas
 	public String toString() {
 		return "rand-" + this.maxArguments +"-"+this.maxDuplicates;
 	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

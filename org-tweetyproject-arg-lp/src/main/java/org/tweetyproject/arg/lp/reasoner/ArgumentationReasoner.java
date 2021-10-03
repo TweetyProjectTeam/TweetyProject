@@ -192,4 +192,10 @@ public class ArgumentationReasoner implements QualitativeReasoner<ArgumentationK
 		return true;
 	}
 
+
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
+
 }

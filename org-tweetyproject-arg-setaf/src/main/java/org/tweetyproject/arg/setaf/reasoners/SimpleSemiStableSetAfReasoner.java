@@ -70,4 +70,9 @@ public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasone
 		// just return the first one (which is always defined)
 		return this.getModels(bbase).iterator().next();
 	}
+	
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

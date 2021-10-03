@@ -186,5 +186,10 @@ public class Sat4jSolver extends SatSolver{
 		} catch (TimeoutException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}	
 }

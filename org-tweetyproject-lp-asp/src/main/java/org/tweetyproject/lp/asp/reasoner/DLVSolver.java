@@ -269,4 +269,17 @@ public class DLVSolver extends ASPSolver {
 		return false;
 	}
 
+	@Override
+	public boolean isInstalled() {
+		
+	    try {
+	            @SuppressWarnings("unused")
+				Process process = Runtime.getRuntime().exec("DLV");
+	            return true;
+	    } catch (Exception e) {
+	            return false;
+	    }
+		
+	}
+
 }

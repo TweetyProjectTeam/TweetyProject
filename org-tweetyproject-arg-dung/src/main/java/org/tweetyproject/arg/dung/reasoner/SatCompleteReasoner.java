@@ -101,4 +101,11 @@ public class SatCompleteReasoner  extends AbstractSatExtensionReasoner {
 			return false;
 		return true;
 	}
+    /**
+     * this method always returns true because the solver is native
+     */
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }
