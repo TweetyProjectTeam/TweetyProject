@@ -85,5 +85,11 @@ public class SimpleSamplingMlnReasoner extends AbstractMlnReasoner{
 		return currentProb;
 	}
 
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }

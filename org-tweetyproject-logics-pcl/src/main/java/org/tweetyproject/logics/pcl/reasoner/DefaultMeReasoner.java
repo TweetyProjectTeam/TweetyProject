@@ -162,4 +162,10 @@ public class DefaultMeReasoner extends AbstractPclReasoner {
 			throw new RuntimeException("Fatal error: Optimization problem to compute the ME-distribution is not feasible although the knowledge base seems to be consistent.");
 		}		
 	}
+
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

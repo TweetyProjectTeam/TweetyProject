@@ -227,4 +227,10 @@ public class SimpleMlnReasoner extends AbstractMlnReasoner {
 		}
 		return new HerbrandInterpretation(atoms);
 	}
+
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

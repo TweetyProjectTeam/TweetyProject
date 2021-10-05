@@ -320,4 +320,50 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 		throw new IllegalArgumentException("Functional expressions not supported by Alchemy.");
 	}
 
+	@Override
+	public boolean isInstalled() {
+		try {
+        ProcessBuilder processBuilder = new ProcessBuilder(processCommandsList);
+        processBuilder.redirectErrorStream(true);
+        final Process process;
+        process = processBuilder.start();
+        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "";
+        while (true) {
+            line = br.readLine();
+            if (line == null) {
+                break;
+            }
+        }
+    	process.waitFor();
+        String resultString = "";
+        BufferedReader resultReader = new BufferedReader(new FileReader(resultFile));
+        line = "";
+        while(line != null) {	        		
+            line = resultReader.readLine();
+            resultString += line != null ? line + "\n" : "";
+        }
+        resultReader.close();
+        StringTokenizer tokenizer = new StringTokenizer(resultString);
+        String token = null;
+        while(tokenizer.hasMoreTokens())
+        	token = tokenizer.nextToken();
+        if(token == null)
+        	throw new RuntimeException();	        	       
+		return Double.parseDouble(token);
+	}catch(Exception e) {
+		System.err.println("Could not find or missing rights to execute Alchemy binary 'infer'. "
+				+ "If 'infer' is not in your PATH please specify its location using the "
+				+ "'setAlchemyInferenceCommand(String)' method of 'AlchemyMlnReasoner'. "
+				+ "Installation instructions for Alchemy can be found at "
+				+ "http://alchemy.cs.washington.edu. If you do not wish to use Alchemy "
+				+ "you can choose e.g. 'SimpleSamplingMlnReasoner' as an alternative that is less "
+				+ "accurate but does not depend on third-party projects.\n\nThe application will "
+				+ "now terminate.");
+		System.exit(1);
+		return -1;
+	}	
+		return false;
+	}
+
 }

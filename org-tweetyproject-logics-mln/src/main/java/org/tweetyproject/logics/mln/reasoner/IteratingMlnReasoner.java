@@ -60,4 +60,11 @@ public class IteratingMlnReasoner extends AbstractMlnReasoner{
 		return result;
 	}
 
+
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

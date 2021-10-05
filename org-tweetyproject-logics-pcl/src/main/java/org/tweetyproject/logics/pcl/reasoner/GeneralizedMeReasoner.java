@@ -222,6 +222,12 @@ public class GeneralizedMeReasoner extends AbstractPclReasoner {
 			// This should not happen as the optimization problem is guaranteed to be feasible (the knowledge base is consistent)
 			throw new RuntimeException("Fatal error: Optimization problem to compute the ME-distribution is not feasible.");
 		}
+	}
+
+	@Override
+	public boolean isInstalled() {
+		// TODO Auto-generated method stub
+		return false;
 	}	
 	
 }
