@@ -52,17 +52,17 @@ public class KppADFFormatParserTest {
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void testNoLinebreak() throws IOException {
-		String input = "s(1). s(2). ac(1,and(1,2)).";
+		String input = "s(1). s(2). ac(1,and(1,2)). ac(2,c(v)).";
 		parser.parse(input);
 	}
 
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void testNoWhitespace() throws IOException {
-		String input = "s(1).s(2).ac(1,and(1,2)).";
+		String input = "s(1).s(2).ac(1,and(1,2)).ac(2,c(v).";
 		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	@Test(timeout = DEFAULT_TIMEOUT, expected = Exception.class)
 	public void testMissingDot4() throws IOException {
 		String input = "s(1) s(2) ac(1,and(1,2))";
 		parser.parse(input);
@@ -74,19 +74,19 @@ public class KppADFFormatParserTest {
 		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	@Test(timeout = DEFAULT_TIMEOUT, expected = Exception.class)
 	public void testMissingDot2() throws IOException {
 		String input = "s(1). s(2) ac(1,and(1,2)).";
 		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	@Test(timeout = DEFAULT_TIMEOUT, expected = Exception.class)
 	public void testMissingDot1() throws IOException {
 		String input = "s(1) s(2). ac(1,and(1,2)).";
 		parser.parse(input);
 	}
 
-	@Test(timeout = DEFAULT_TIMEOUT, expected = IOException.class)
+	@Test(timeout = DEFAULT_TIMEOUT, expected = NullPointerException.class)
 	public void testUndefinedArgumentInACC() throws IOException {
 		String input = "s(1). ac(1,and(1,2)).";
 		parser.parse(input);

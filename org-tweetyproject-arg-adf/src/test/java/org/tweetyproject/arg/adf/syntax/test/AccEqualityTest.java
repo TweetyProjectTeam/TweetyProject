@@ -54,15 +54,6 @@ public class AccEqualityTest {
 	}
 	
 	@Test
-	public void testEquality3() {
-		Argument a = new Argument("a");
-		Argument b = new Argument("b");
-		AcceptanceCondition acc1 = new EquivalenceAcceptanceCondition(a, b);
-		AcceptanceCondition acc2 = new EquivalenceAcceptanceCondition(b, a);
-		assertTrue(acc1.equals(acc2));
-	}
-	
-	@Test
 	public void testUnequality1() {
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");

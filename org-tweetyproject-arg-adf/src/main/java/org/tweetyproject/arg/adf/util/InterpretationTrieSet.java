@@ -33,7 +33,7 @@ import org.tweetyproject.arg.adf.syntax.Argument;
  * This is a monotone collection, hence you can only add elements to it, but not remove them.
  * 
  * @author Mathias Hofer
- *
+ * @deprecated Was written for failed experiments and is not maintained anymore.
  */
 public final class InterpretationTrieSet extends AbstractSet<Interpretation> {
 
