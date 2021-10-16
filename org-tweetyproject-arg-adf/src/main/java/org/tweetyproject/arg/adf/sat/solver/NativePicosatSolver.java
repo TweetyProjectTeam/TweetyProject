@@ -40,20 +40,15 @@ public final class NativePicosatSolver implements IncrementalSatSolver {
 	private static final String DEFAULT_LINUX_LIB = "/picosat.so";
 
 	public NativePicosatSolver() {
-		try {
-			String osName = System.getProperty("os.name").toLowerCase();
-			String lib = null;
-			if (osName.contains("win")) {
-				lib = DEFAULT_WIN_LIB;
-			} else if (osName.contains("nux")) {
-				lib = DEFAULT_LINUX_LIB;
-			}
-			String path = getClass().getResource(lib).getPath();
-			System.load(path);
+		String osName = System.getProperty("os.name").toLowerCase();
+		String lib = null;
+		if (osName.contains("win")) {
+			lib = DEFAULT_WIN_LIB;
+		} else if (osName.contains("nux")) {
+			lib = DEFAULT_LINUX_LIB;
 		}
-		catch(Exception e) {
-			System.err.println("The solver did not load)");
-		}
+		String path = getClass().getResource(lib).getPath();
+		System.load(path);
 	}
 	
 	/* (non-Javadoc)
