@@ -18,13 +18,11 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.verifier;
 
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.ConflictFreeInterpretationSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.FixPartialSatEncoding;
-import org.tweetyproject.arg.adf.reasoner.sat.encodings.LargerInterpretationSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.RelativeSatEncoding;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.SatEncoding;
@@ -50,9 +48,7 @@ public final class CompleteVerifier implements Verifier {
 	private final SatEncoding conflictFree;
 	
 	private final RelativeSatEncoding fixPartial;
-	
-	private final RelativeSatEncoding larger;
-	
+		
 	/**
 	 * @param stateSupplier
 	 * @param adf
@@ -64,7 +60,6 @@ public final class CompleteVerifier implements Verifier {
 		this.mapping = Objects.requireNonNull(mapping);
 		this.conflictFree = new ConflictFreeInterpretationSatEncoding(adf, mapping);
 		this.fixPartial = new FixPartialSatEncoding(mapping);
-		this.larger = new LargerInterpretationSatEncoding(mapping);
 	}
 
 	@Override
@@ -73,28 +68,25 @@ public final class CompleteVerifier implements Verifier {
 	@Override
 	public boolean verify(Interpretation candidate) {
 		try(SatSolverState state = stateSupplier.get()) {
-			conflictFree.encode(state::add);
-			
-			boolean complete = true;
-			Iterator<Argument> undecided = candidate.undecided().iterator();
+			conflictFree.encode(state::add);			
 			fixPartial.encode(state::add, candidate);
-			larger.encode(state::add, candidate);
-			while (undecided.hasNext() && complete) {
-				Argument s = undecided.next();
+			for (Argument s : candidate.undecided()) {
 				TseitinTransformer transformer = TseitinTransformer.ofPositivePolarity(r -> mapping.getLink(r, s), false);
 				Literal accName = transformer.collect(adf.getAcceptanceCondition(s), state::add);
 				
 				// check not-taut
 				state.assume(accName.neg());
 				boolean notTaut = state.satisfiable();
+				
+				if (!notTaut) return false;
 
 				// check not-unsat
 				state.assume(accName);
 				boolean notUnsat = state.satisfiable();
 
-				complete = notTaut && notUnsat;
+				if (!notUnsat) return false;
 			}
-			return complete;
+			return true;
 		}
 	}
 	

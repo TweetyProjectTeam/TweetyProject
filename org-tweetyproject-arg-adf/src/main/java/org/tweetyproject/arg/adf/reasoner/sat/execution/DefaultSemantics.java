@@ -18,7 +18,6 @@ import org.tweetyproject.arg.adf.reasoner.sat.processor.ConflictFreeMaximizer;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.InterpretationProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.KBipolarStateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.StableVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
@@ -181,7 +180,7 @@ abstract class DefaultSemantics implements Semantics {
 
 		@Override
 		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(new AdmissibleVerifier(stateSupplier, adf, mapping));
+			return Optional.empty();
 		}
 
 		@Override
@@ -206,7 +205,7 @@ abstract class DefaultSemantics implements Semantics {
 
 		@Override
 		public boolean hasVerifier() {
-			return true;
+			return false;
 		}
 
 		@Override
@@ -239,7 +238,7 @@ abstract class DefaultSemantics implements Semantics {
 
 		@Override
 		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(new AdmissibleVerifier(stateSupplier, adf, mapping));
+			return Optional.empty();
 		}
 
 		@Override
@@ -264,7 +263,7 @@ abstract class DefaultSemantics implements Semantics {
 
 		@Override
 		public boolean hasVerifier() {
-			return true;
+			return false;
 		}
 
 		@Override

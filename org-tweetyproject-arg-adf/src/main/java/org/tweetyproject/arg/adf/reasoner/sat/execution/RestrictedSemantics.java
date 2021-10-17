@@ -18,7 +18,6 @@ import org.tweetyproject.arg.adf.reasoner.sat.processor.ConflictFreeMaximizer;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.InterpretationProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.RestrictedKBipolarStateProcessor;
 import org.tweetyproject.arg.adf.reasoner.sat.processor.StateProcessor;
-import org.tweetyproject.arg.adf.reasoner.sat.verifier.AdmissibleVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.CompleteVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.NaiveVerifier;
 import org.tweetyproject.arg.adf.reasoner.sat.verifier.PreferredVerifier;
@@ -193,7 +192,7 @@ abstract class RestrictedSemantics implements Semantics {
 
 		@Override
 		public Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier) {
-			return Optional.of(new AdmissibleVerifier(stateSupplier, adf, mapping));
+			return Optional.empty();
 		}
 
 		@Override
@@ -218,7 +217,7 @@ abstract class RestrictedSemantics implements Semantics {
 
 		@Override
 		public boolean hasVerifier() {
-			return true;
+			return false;
 		}
 
 		@Override

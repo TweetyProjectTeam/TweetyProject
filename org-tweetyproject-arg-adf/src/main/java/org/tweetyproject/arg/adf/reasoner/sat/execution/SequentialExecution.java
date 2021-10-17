@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.adf.reasoner.sat.execution;
 
-import java.util.Optional;
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -40,11 +39,11 @@ public final class SequentialExecution implements Execution {
 	
 	private final CandidateGenerator generator;
 	
-	private final Optional<InterpretationProcessor> candidateProcessor;
+	private final InterpretationProcessor candidateProcessor;
 	
-	private final Optional<Verifier> verifier;
+	private final Verifier verifier;
 	
-	private final Optional<InterpretationProcessor> modelProcessor;
+	private final InterpretationProcessor modelProcessor;
 	
 	/**
 	 * @param semantics semantics
@@ -52,10 +51,10 @@ public final class SequentialExecution implements Execution {
 	 */
 	public SequentialExecution(Semantics semantics, IncrementalSatSolver satSolver) {
 		this.generator = semantics.createCandidateGenerator(() -> createState(satSolver, semantics));	
-		this.candidateProcessor = semantics.createUnverifiedProcessor(satSolver::createState);
-		this.verifier = semantics.createVerifier(satSolver::createState);
-		this.modelProcessor = semantics.createVerifiedProcessor(satSolver::createState);
-		this.verifier.ifPresent(Verifier::prepare);
+		this.candidateProcessor = semantics.createUnverifiedProcessor(satSolver::createState).orElse(new NoInterpretationProcessor());
+		this.verifier = semantics.createVerifier(satSolver::createState).orElse(new NoVerifier());
+		this.modelProcessor = semantics.createVerifiedProcessor(satSolver::createState).orElse(new NoInterpretationProcessor());
+		this.verifier.prepare();
 	}
 	
 	@Override
@@ -71,25 +70,13 @@ public final class SequentialExecution implements Execution {
 		}	
 		return state;
 	}
-	
-	private Interpretation process(Interpretation candidate, Optional<InterpretationProcessor> optional) {
-		return optional.map( processor -> {
-			Interpretation processed = processor.process(candidate);		
-			generator.update(state -> processor.updateState(state, processed));
-			return processed;
-		}).orElse(candidate);
-	}
-
-	private boolean verify(Interpretation candidate) {
-		return verifier.map(v -> v.verify(candidate)).orElse(true);
-	}
 
 	@Override
 	public void close() {
 		generator.close();
-		verifier.ifPresent(Verifier::close);
-		modelProcessor.ifPresent(InterpretationProcessor::close);
-		candidateProcessor.ifPresent(InterpretationProcessor::close);
+		verifier.close();
+		modelProcessor.close();
+		candidateProcessor.close();
 	}
 	
 	private final class InterpretationSpliterator extends AbstractSpliterator<Interpretation> {
@@ -101,7 +88,9 @@ public final class SequentialExecution implements Execution {
 		private Interpretation nextCandidate() {
 			Interpretation candidate = generator.generate();
 			if (candidate != null) {
-				return process(candidate, candidateProcessor);
+				Interpretation processed = candidateProcessor.process(candidate);		
+				generator.update(state -> candidateProcessor.updateState(state, processed));
+				return processed;
 			}
 			return null;
 		}
@@ -110,13 +99,15 @@ public final class SequentialExecution implements Execution {
 			Interpretation candidate = nextCandidate();
 			boolean isModel = false;
 			while (candidate != null && !isModel) {
-				isModel = verify(candidate);
+				isModel = verifier.verify(candidate);
 				if (!isModel) {
 					candidate = nextCandidate();
 				}
 			}
 			if (candidate != null) {
-				return process(candidate, modelProcessor);
+				Interpretation processed = modelProcessor.process(candidate);		
+				generator.update(state -> modelProcessor.updateState(state, processed));
+				return processed;
 			}
 			return null;
 		}
@@ -131,6 +122,34 @@ public final class SequentialExecution implements Execution {
 			return false;
 		}
 		
+	}
+	
+	private static final class NoVerifier implements Verifier {
+
+		@Override
+		public void prepare() {}
+
+		@Override
+		public boolean verify(Interpretation interpretation) {
+			return true;
+		}
+
+		@Override
+		public void close() {}
+	}
+	
+	private static final class NoInterpretationProcessor implements InterpretationProcessor {
+
+		@Override
+		public Interpretation process(Interpretation interpretation) {
+			return interpretation;
+		}
+
+		@Override
+		public void updateState(SatSolverState state, Interpretation processed) {}		
+
+		@Override
+		public void close() {}
 	}
 	
 }
