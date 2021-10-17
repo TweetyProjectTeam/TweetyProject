@@ -109,8 +109,30 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 
 		for (PlFormula f : kb) {
 			encoding.addAll(encodeSubformulas(f.clone()));
-			String nT = generateFormulaAlias(f) + "__T";
-			String nB = generateFormulaAlias(f) + "__B";
+			String nT;
+			String nB;
+			if (f instanceof Implication) {
+				Implication i = (Implication) f;
+				Disjunction di = new Disjunction();
+				di.add(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond());
+				nT = generateFormulaAlias(di) + "__T";
+				nB = generateFormulaAlias(di) + "__B";
+			}
+			else if (f instanceof Equivalence) {
+				Equivalence i = (Equivalence) f;
+				Disjunction d_left = new Disjunction();
+				d_left.add(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond());
+				Disjunction d_right = new Disjunction();
+				d_right.add(new Negation(i.getFormulas().getSecond()), i.getFormulas().getFirst());
+				Conjunction c = new Conjunction();
+				c.add(d_left,d_right);
+				nT = generateFormulaAlias(c) + "__T";
+				nB = generateFormulaAlias(c) + "__B";
+			}
+			else {
+				nT = generateFormulaAlias(f) + "__T";
+				nB = generateFormulaAlias(f) + "__B";
+			}
 			Disjunction tvModels = new Disjunction();
 			tvModels.add(new Proposition(nT), new Proposition(nB));
 			encoding.add(tvModels);
@@ -221,6 +243,16 @@ public class ContensionSatInconsistencyMeasure extends SatBasedInconsistencyMeas
 			Disjunction di = new Disjunction();
 			di.add(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond());
 			result.addAll(encodeSubformulas(di));
+			return result;
+		} else if (f instanceof Equivalence) {
+			Equivalence i = (Equivalence) f;
+			Disjunction d_left = new Disjunction();
+			d_left.add(new Negation(i.getFormulas().getFirst()), i.getFormulas().getSecond());
+			Disjunction d_right = new Disjunction();
+			d_right.add(new Negation(i.getFormulas().getSecond()), i.getFormulas().getFirst());
+			Conjunction c = new Conjunction();
+			c.add(d_left,d_right);
+			result.addAll(encodeSubformulas(c));
 			return result;
 		}
 		else
