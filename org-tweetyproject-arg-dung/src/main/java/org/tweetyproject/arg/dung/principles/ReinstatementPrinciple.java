@@ -51,9 +51,9 @@ public class ReinstatementPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        for (Extension ext: exts) {
+        for (Extension<DungTheory> ext: exts) {
             // if the characteristic function of ext does not return ext(or a subset of ext), reinstatement is not satisfied i.e. ext defends some argument not in ext
             if (!ext.containsAll(theory.faf(ext))) {
                 return false;

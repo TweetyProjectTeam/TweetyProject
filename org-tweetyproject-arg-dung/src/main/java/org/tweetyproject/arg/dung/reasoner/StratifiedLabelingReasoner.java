@@ -59,8 +59,8 @@ public class StratifiedLabelingReasoner extends AbstractDungReasoner implements 
 	public Collection<StratifiedLabeling> getModels(DungTheory bbase) {
 		Set<StratifiedLabeling> labelings = new HashSet<StratifiedLabeling>();
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(this.semantics);
-		Collection<Extension> extensions = reasoner.getModels(bbase);
-		for(Extension extension: extensions){
+		Collection<Extension<DungTheory>> extensions = reasoner.getModels(bbase);
+		for(Extension<DungTheory> extension: extensions){
 			StratifiedLabeling labeling = new StratifiedLabeling();
 			if(extension.isEmpty()){
 				for(Argument arg: bbase)
@@ -69,7 +69,7 @@ public class StratifiedLabelingReasoner extends AbstractDungReasoner implements 
 			}else{
 				for(Argument arg: extension)
 					labeling.put(arg, 0);
-				Extension remainingArguments = new Extension(bbase);
+				Extension<DungTheory> remainingArguments = new Extension<DungTheory>(bbase);
 				remainingArguments.removeAll(extension);
 				DungTheory remainingTheory = new DungTheory(bbase.getRestriction(remainingArguments));
 				StratifiedLabelingReasoner sReasoner = new StratifiedLabelingReasoner(this.semantics);

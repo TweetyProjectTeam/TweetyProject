@@ -51,10 +51,10 @@ public class IMaximalityPrinciple extends Principle{
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        for (Extension ext1: exts) {
-            for (Extension ext2: exts) {
+        for (Extension<DungTheory> ext1: exts) {
+            for (Extension<DungTheory> ext2: exts) {
                 // if ext2 is a subset of ext1 and ext1 != ext2, then the principle is violated
                 if (ext1.equals(ext2)) {
                     continue;

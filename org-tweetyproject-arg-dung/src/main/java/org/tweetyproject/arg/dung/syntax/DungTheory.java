@@ -95,7 +95,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param ext An extension contains a set of arguments.
 	 * @return true if <code>arguments</code> attack all other arguments in the theory
 	 */
-	public boolean isAttackingAllOtherArguments(Extension ext){
+	public boolean isAttackingAllOtherArguments(Extension<? extends ArgumentationFramework<Argument>> ext){
 		for(Argument a: this) {
 			if(ext.contains(a))
 				continue;
@@ -135,7 +135,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * accepted argument wrt. the given theory.
 	 */
 
-	public boolean isAcceptable(Argument argument, Extension ext){
+	public boolean isAcceptable(Argument argument, Extension<DungTheory> ext){
 		Set<Argument> attackers = this.getAttackers(argument);
 		Iterator<Argument> it = attackers.iterator();
 		while (it.hasNext())			
@@ -156,7 +156,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param ext parameter
 	 * @return isConflictFree
 	 */
-	public boolean isConflictFree(Extension ext){
+	public boolean isConflictFree(Extension<DungTheory> ext){
 		for(Argument a: ext.getArgumentsOfStatus(ArgumentStatus.IN))
 			for(Argument b: ext.getArgumentsOfStatus(ArgumentStatus.IN))
 				if(this.isAttackedBy(a, b))
@@ -176,7 +176,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param ext parameter
 	 * @return isAdmissable
 	 */
-	public boolean isAdmissable(Extension ext){
+	public boolean isAdmissable(Extension<DungTheory> ext){
 		if(!this.isConflictFree(ext)) return false;
 		Iterator<Argument> it = ext.getArgumentsOfStatus(ArgumentStatus.IN).iterator();
 		while(it.hasNext()){			
@@ -216,8 +216,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return true if the theory is coherent
 	 */
 	public boolean isCoherent(){
-		Collection<Extension> preferredExtensions = new SimplePreferredReasoner().getModels(this);
-		Collection<Extension> stableExtensions = new SimpleStableReasoner().getModels(this);
+		Collection<Extension<DungTheory>> preferredExtensions = new SimplePreferredReasoner().getModels(this);
+		Collection<Extension<DungTheory>> stableExtensions = new SimpleStableReasoner().getModels(this);
 		stableExtensions.retainAll(preferredExtensions);
 		return preferredExtensions.size() == stableExtensions.size();
 	}
@@ -227,10 +227,10 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return true if the theory is relatively coherent
 	 */
 	public boolean isRelativelyCoherent(){
-		Extension groundedExtension = new SimpleGroundedReasoner().getModel(this);
-		Collection<Extension> preferredExtensions = new SimplePreferredReasoner().getModels(this);
-		Extension cut = new Extension(preferredExtensions.iterator().next());
-		for(Extension e: preferredExtensions)
+		Extension<DungTheory> groundedExtension = new SimpleGroundedReasoner().getModel(this);
+		Collection<Extension<DungTheory>> preferredExtensions = new SimplePreferredReasoner().getModels(this);
+		Extension<DungTheory> cut = new Extension<DungTheory>(preferredExtensions.iterator().next());
+		for(Extension<DungTheory> e: preferredExtensions)
 			cut.retainAll(e);
 		return groundedExtension.equals(cut);
 	}
@@ -263,7 +263,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param ext an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
-	public boolean isAttacked(Argument argument, Extension ext){
+	public boolean isAttacked(Argument argument, Extension<? extends ArgumentationFramework> ext){
 		if(!this.parents.containsKey(argument))
 			return false;
 		for(Argument attacker: this.parents.get(argument))
@@ -295,7 +295,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @return true if some argument of <code>ext2</code> attacks some argument
 	 * in <code>ext1</code>
 	 */
-	public boolean isAttacked(Extension ext1, Extension ext2){
+	public boolean isAttacked(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
 		for(Argument a: ext1)
 			if(this.isAttacked(a, ext2)) return true;
 		return false;
@@ -306,7 +306,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param e some extension
 	 * @return "true" iff the extension is stable.
 	 */
-	public boolean isStable(Extension e) {
+	public boolean isStable(Extension<DungTheory> e) {
 		for(Argument a: this) {
 			if(e.contains(a)) { 
 				if(this.isAttacked(a, e))
@@ -324,8 +324,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param extension an extension (a set of arguments).
 	 * @return an extension (a set of arguments).
 	 */
-	public Extension faf(Extension extension){
-		Extension newExtension = new Extension();
+	public Extension<DungTheory> faf(Extension<DungTheory> extension){
+		Extension<DungTheory> newExtension = new Extension<DungTheory>();
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext()){
 			Argument argument = it.next();
@@ -959,6 +959,10 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	public Collection<Graph<Argument>> getInducedSubgraphs() {
 		return DefaultGraph.getInducedSubgraphs(this);
 	}
+
+
+
+
 
 
 	

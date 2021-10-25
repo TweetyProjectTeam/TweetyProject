@@ -38,7 +38,7 @@ public class ExampleFinder {
     private AbstractExtensionReasoner reasoner2;
 
     // map object to store examples
-    private Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>> examples;
+    private Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>> examples;
 
     /**
      * initialize with two semantics and automatically find reasoners for them (if they exist)
@@ -69,9 +69,9 @@ public class ExampleFinder {
      * @param maxArgs maximum number of arguments for the theories
      * @return a map with examples
      */
-    public Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>> getExamples(int minArgs, int maxArgs) {
+    public Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>> getExamples(int minArgs, int maxArgs) {
         EnumeratingDungTheoryGenerator theoryGenerator = new EnumeratingDungTheoryGenerator();
-        Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>> examples = new HashMap<>();
+        Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>> examples = new HashMap<>();
 
         // iterate over all possible theories and compute extensions and categorize them wrt. the extensions
         while (theoryGenerator.hasNext()) {
@@ -84,11 +84,11 @@ public class ExampleFinder {
             }
 
             // get extensions
-            Collection<Extension> extensions1 = this.reasoner1.getModels(theory);
-            Collection<Extension> extensions2 = this.reasoner2.getModels(theory);
+            Collection<Extension<DungTheory>> extensions1 = this.reasoner1.getModels(theory);
+            Collection<Extension<DungTheory>> extensions2 = this.reasoner2.getModels(theory);
 
             //categorize theories
-            Map<Collection<Extension>, Collection<DungTheory>> subExamples = examples.getOrDefault(extensions1, new HashMap<>());
+            Map<Collection<Extension<DungTheory>>, Collection<DungTheory>> subExamples = examples.getOrDefault(extensions1, new HashMap<>());
             Collection<DungTheory> exampleTheories = subExamples.getOrDefault(extensions2, new HashSet<>());
             exampleTheories.add(theory);
             subExamples.put(extensions2, exampleTheories);
@@ -96,9 +96,9 @@ public class ExampleFinder {
         }
 
         // filter out cases where there is only one set of extensions wrt the second semantics
-        Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>> result = new HashMap<>();
-        for (Collection<Extension> exts1: examples.keySet()) {
-            Map<Collection<Extension>, Collection<DungTheory>> subExamples = examples.get(exts1);
+        Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>> result = new HashMap<>();
+        for (Collection<Extension<DungTheory>> exts1: examples.keySet()) {
+            Map<Collection<Extension<DungTheory>>, Collection<DungTheory>> subExamples = examples.get(exts1);
             if (subExamples.size() > 1) {
                 result.put(exts1, subExamples);
             }
@@ -112,13 +112,13 @@ public class ExampleFinder {
      * prints an overview over all found examples
      */
     public void showOverview() {
-        for (Collection<Extension> exts1: examples.keySet()) {
-            Map<Collection<Extension>, Collection<DungTheory>> subExamples = examples.get(exts1);
+        for (Collection<Extension<DungTheory>> exts1: examples.keySet()) {
+            Map<Collection<Extension<DungTheory>>, Collection<DungTheory>> subExamples = examples.get(exts1);
 
             System.out.print("\nADM: "+ exts1.toString() + ": ");
             System.out.print(examples.get(exts1).size());
             System.out.println(" different sets of complete extensions");
-            for (Collection<Extension> exts2: subExamples.keySet()) {
+            for (Collection<Extension<DungTheory>> exts2: subExamples.keySet()) {
                 System.out.print("\t CO: "+ exts2.toString() + "");
                 System.out.print("\t nr. of AFs: ");
                 System.out.println(subExamples.get(exts2).size());
@@ -132,12 +132,12 @@ public class ExampleFinder {
      * for the first semantics
      * @param extensions the set of extensions wrt the first semantics
      */
-    public void showExamples(Collection<Extension> extensions) {
+    public void showExamples(Collection<Extension<DungTheory>> extensions) {
         System.out.println("Showing examples for: ");
         System.out.println("Admissible Extensions: " + extensions.toString() + "\n");
         System.out.println("========================================");
-        Map<Collection<Extension>, Collection<DungTheory>> subExamples = examples.get(extensions);
-        for (Collection<Extension> extensions2: subExamples.keySet()) {
+        Map<Collection<Extension<DungTheory>>, Collection<DungTheory>> subExamples = examples.get(extensions);
+        for (Collection<Extension<DungTheory>> extensions2: subExamples.keySet()) {
             Collection<DungTheory> theories = subExamples.get(extensions2);
             // take the first AF that produces extensions to wrt the second semantics
             DungTheory theory = theories.iterator().next();

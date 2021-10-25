@@ -37,14 +37,14 @@ import java.util.HashSet;
  */
 public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         // check all admissible extensions of bbase
-        Collection<Extension> admExts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADM).getModels(bbase);
-        Collection<Extension> exts = new HashSet<>();
-        for (Extension ext: admExts) {
+        Collection<Extension<DungTheory>> admExts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADM).getModels(bbase);
+        Collection<Extension<DungTheory>> exts = new HashSet<>();
+        for (Extension<DungTheory> ext: admExts) {
             boolean undefended = false;
             for (Argument a: ext) {
-                Extension extWithoutArg = new Extension(ext);
+                Extension<DungTheory> extWithoutArg = new Extension<DungTheory>(ext);
                 extWithoutArg.remove(a);
                 for (Argument c: ((DungTheory) bbase).getAttackers(a)) {
                     if (!((DungTheory) bbase).isAttacked(c, extWithoutArg)) {
@@ -62,7 +62,7 @@ public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
+    public Extension<DungTheory> getModel(DungTheory bbase) {
         return this.getModels(bbase).iterator().next();
     }
     

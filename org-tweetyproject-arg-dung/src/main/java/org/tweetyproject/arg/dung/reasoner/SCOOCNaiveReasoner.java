@@ -38,7 +38,7 @@ import java.util.*;
  */
 public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         Set<Stack<Argument>> cycles = DefaultGraph.getCyclesIncludingSelfLoops((DungTheory) bbase);
         Collection<Argument> cycleArguments = new HashSet<>();
         // store all arguments which are part of an odd cycle in a collection for efficiency reasons
@@ -48,9 +48,9 @@ public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
             }
         }
         // we only have to consider naive extensions
-        Collection<Extension> naiveExtensions = new SimpleNaiveReasoner().getModels(bbase);
-        Collection<Extension> extensions = new HashSet<>();
-        for (Extension ext: naiveExtensions) {
+        Collection<Extension<DungTheory>> naiveExtensions = new SimpleNaiveReasoner().getModels(bbase);
+        Collection<Extension<DungTheory>> extensions = new HashSet<>();
+        for (Extension<DungTheory> ext: naiveExtensions) {
             boolean scooc = true;
             Collection<Argument> remainingArguments = new HashSet<>((DungTheory) bbase);
             remainingArguments.removeAll(ext);
@@ -75,8 +75,8 @@ public class SCOOCNaiveReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
-        Collection<Extension> extensions = this.getModels(bbase);
+    public Extension<DungTheory> getModel(DungTheory bbase) {
+        Collection<Extension<DungTheory>> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }
     

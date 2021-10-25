@@ -43,13 +43,13 @@ public class ExampleFinderExample {
         // ExampleFinder finder = new ExampleFinder(new SimpleAdmissibleReasoner(), new SimpleSccCompleteReasoner());
 
         // get example AFs with min. 3 arguments and max. three arguments
-        Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>> examples = finder.getExamples(3, 3);
+        Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>> examples = finder.getExamples(3, 3);
 
         // print an overview over all computed examples
         finder.showOverview();
 
         // print theories that have "exts" as their set of admissible extensions and produce different complete extensions
-        Collection<Extension> exts = examples.keySet().iterator().next();
+        Collection<Extension<DungTheory>> exts = examples.keySet().iterator().next();
         finder.showExamples(exts);
     }
 }

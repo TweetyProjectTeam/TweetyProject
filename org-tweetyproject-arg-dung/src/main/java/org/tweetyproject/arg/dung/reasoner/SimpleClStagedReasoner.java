@@ -25,10 +25,9 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
-import org.tweetyproject.arg.dung.syntax.Claim;
 import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 /**
  * calculates claim based staged extensions
  * @author Sebastian Franke
@@ -44,9 +43,9 @@ public class SimpleClStagedReasoner extends AbstractClaimBasedReasoner{
 	 */
 	public Set<ClaimSet> getModels(ClaimBasedTheory bbase) {
 
-		Collection<Extension> cfExtensions = new SimpleConflictFreeReasoner().getModels(bbase);
+		Collection<Extension<DungTheory>> cfExtensions = new SimpleConflictFreeReasoner().getModels(bbase);
 		Set<ClaimSet> result = new HashSet<ClaimSet>();
-		for(Extension e: cfExtensions) {
+		for(Extension<DungTheory> e: cfExtensions) {
 			ClaimSet defeatedPlusExtension = ((ClaimBasedTheory) bbase).defeats(e);
 			for(Argument arg : e) {
 				defeatedPlusExtension.add((ClaimArgument) arg);

@@ -50,16 +50,16 @@ public class CFReinstatementPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        for (Extension ext: exts) {
+        for (Extension<DungTheory> ext: exts) {
             for (Argument a: theory) {
                 if (ext.contains(a)) {
                     continue;
                 }
 
                 // for all arguments a in theory \ E, iff E u {a} is conflict-free and E defends a, then cf-reinstatement is violated
-                Extension extWithA = new Extension(ext);
+                Extension<DungTheory> extWithA = new Extension<DungTheory>(ext);
                 extWithA.add(a);
                 if (theory.isConflictFree(extWithA) && theory.isAcceptable(a, ext)) {
                     return false;

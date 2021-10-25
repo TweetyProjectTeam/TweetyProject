@@ -30,7 +30,7 @@ import org.tweetyproject.commons.AbstractInterpretation;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractArgumentationInterpretation extends AbstractInterpretation<ArgumentationFramework,Argument> {
+public abstract class AbstractArgumentationInterpretation <T extends ArgumentationFramework<Argument>> extends AbstractInterpretation<T,Argument> {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.Interpretation#satisfies(org.tweetyproject.Formula)
@@ -44,7 +44,7 @@ public abstract class AbstractArgumentationInterpretation extends AbstractInterp
 	 * @see org.tweetyproject.Interpretation#satisfies(org.tweetyproject.BeliefBase)
 	 */
 	@Override
-	public boolean satisfies(ArgumentationFramework beliefBase) throws IllegalArgumentException {
+	public boolean satisfies(T beliefBase) throws IllegalArgumentException {
 		throw new IllegalArgumentException("Satisfaction of belief bases by extensions is undefined.");
 	}
 

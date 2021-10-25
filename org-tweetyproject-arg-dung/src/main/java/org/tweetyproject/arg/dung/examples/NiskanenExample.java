@@ -56,15 +56,15 @@ public class NiskanenExample {
         dt.addAttack(d, c);
 
         // create positive examples
-        Collection<Extension> extensions = new SimpleStableReasoner().getModels(dt);
-        Map<Extension, Integer> posExamples = new HashMap<>();
-        for (Extension ext: extensions) {
+        Collection<Extension<DungTheory>> extensions = new SimpleStableReasoner().getModels(dt);
+        Map<Extension<DungTheory>, Integer> posExamples = new HashMap<>();
+        for (Extension<DungTheory> ext: extensions) {
             posExamples.put(ext, 2);
         }
 
         //create negative example
-        Map<Extension, Integer> negExamples = new HashMap<>();
-        Extension ext = new Extension();
+        Map<Extension<DungTheory>, Integer> negExamples = new HashMap<>();
+        Extension<DungTheory> ext = new Extension<DungTheory>();
         ext.add(b);
         ext.add(c);
         negExamples.put(ext, 4);

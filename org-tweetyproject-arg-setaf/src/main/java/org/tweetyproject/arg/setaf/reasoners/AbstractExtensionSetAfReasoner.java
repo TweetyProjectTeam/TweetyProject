@@ -34,7 +34,7 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  * 
  * @author Sebastian Franke
  */
-public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReasoner implements ModelProvider<Argument, ArgumentationFramework, Extension>, PostulateEvaluatable<Argument> {
+public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReasoner implements ModelProvider<Argument, SetAf, Extension<SetAf>>, PostulateEvaluatable<Argument> {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractDungReasoner#query(org.tweetyproject.arg.dung.syntax.DungTheory, org.tweetyproject.arg.dung.syntax.Argument)
@@ -53,7 +53,7 @@ public abstract class AbstractExtensionSetAfReasoner extends AbstractSetAfReason
 	 * @return "true" if the argument is accepted
 	 */
 	public Boolean query(SetAf beliefbase, Argument formula, InferenceMode inferenceMode) {
-		Collection<Extension> extensions = this.getModels(beliefbase);
+		Collection<Extension<SetAf>> extensions = this.getModels(beliefbase);
 		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
 			for(Extension e: extensions)
 				if(!e.contains(formula))

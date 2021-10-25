@@ -21,7 +21,6 @@ package org.tweetyproject.arg.dung.reasoner;
 import java.util.*;
 
 import org.tweetyproject.arg.dung.semantics.*;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
@@ -39,8 +38,8 @@ public class SimpleGroundedReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Collection<Extension> extensions = new HashSet<Extension>();
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+		Collection<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
 		extensions.add(this.getModel(bbase));
 		return extensions;
 	}
@@ -49,8 +48,8 @@ public class SimpleGroundedReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
-		Extension ext = new Extension();
+	public Extension<DungTheory> getModel(DungTheory bbase) {
+		Extension<DungTheory> ext = new Extension<DungTheory>();
 		int size;
 		do{
 			size = ext.size();			

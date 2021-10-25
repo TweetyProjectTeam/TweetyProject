@@ -29,6 +29,7 @@ import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.Claim;
 import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 /**
  * a claim based stable reaonser
  * @author Sebastian Franke
@@ -44,9 +45,9 @@ public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 	 */
 	public Set<ClaimSet> getModels(ClaimBasedTheory bbase) {
 
-		Collection<Extension> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
+		Collection<Extension<DungTheory>> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
 		Set<ClaimSet> result = new HashSet<ClaimSet>();
-		for(Extension e: admissibleExtensions) {
+		for(Extension<DungTheory> e: admissibleExtensions) {
 			ClaimSet defeatedByExtension = ((ClaimBasedTheory) bbase).defeats(e);
 			HashSet<Claim> allClaims = ((ClaimBasedTheory) bbase).getClaims();
 			allClaims.removeAll(defeatedByExtension);
@@ -65,9 +66,9 @@ public class SimpleClStableReasoner extends AbstractClaimBasedReasoner{
 	 * @return an extensions of the semantics
 	 */
 	public ClaimSet getModel(ClaimBasedTheory bbase) {
-		Collection<Extension> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
+		Collection<Extension<DungTheory>> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
 
-		for(Extension e: admissibleExtensions) {
+		for(Extension<DungTheory> e: admissibleExtensions) {
 			ClaimSet defeatedByExtension = ((ClaimBasedTheory) bbase).defeats(e);
 			HashSet<Claim> allClaims = ((ClaimBasedTheory) bbase).getClaims();
 			allClaims.removeAll(defeatedByExtension);

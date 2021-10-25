@@ -25,10 +25,9 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.ClaimSet;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
-import org.tweetyproject.arg.dung.syntax.Claim;
 import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 public class SimpleClSemistableReasoner extends AbstractClaimBasedReasoner{
 
@@ -40,9 +39,9 @@ public class SimpleClSemistableReasoner extends AbstractClaimBasedReasoner{
 	 */
 	public Set<ClaimSet> getModels(ClaimBasedTheory bbase) {
 
-		Collection<Extension> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
+		Collection<Extension<DungTheory>> admissibleExtensions = new SimpleAdmissibleReasoner().getModels(bbase);
 		Set<ClaimSet> result = new HashSet<ClaimSet>();
-		for(Extension e: admissibleExtensions) {
+		for(Extension<DungTheory> e: admissibleExtensions) {
 			ClaimSet defeatedPlusExtension = ((ClaimBasedTheory) bbase).defeats(e);
 			for(Argument arg : e) {
 				defeatedPlusExtension.add((ClaimArgument) arg);

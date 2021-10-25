@@ -39,19 +39,19 @@ import org.tweetyproject.commons.util.SetTools;
 public class SimpleAdmissibleReasoner extends AbstractExtensionReasoner {
 
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Set<Extension> extensions = new HashSet<Extension>();
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
 		// Check all subsets
 		for(Set<Argument> ext: new SetTools<Argument>().subsets(((DungTheory) bbase)))
-			if(((DungTheory) bbase).isAdmissable(new Extension(ext)))
-				extensions.add(new Extension(ext));
+			if(((DungTheory) bbase).isAdmissable(new Extension<DungTheory>(ext)))
+				extensions.add(new Extension<DungTheory>(ext));
 		return extensions;
 	}
 
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<DungTheory> getModel(DungTheory bbase) {
 		// As the empty set is always admissible, we just return that one
-		return new Extension();
+		return new Extension<DungTheory>();
 	}
 
 

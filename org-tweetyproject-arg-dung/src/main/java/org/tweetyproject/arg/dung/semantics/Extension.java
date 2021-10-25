@@ -29,7 +29,7 @@ import org.tweetyproject.arg.dung.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class Extension extends AbstractArgumentationInterpretation implements Collection<Argument>, Comparable<Extension> {
+public class Extension <T extends ArgumentationFramework<Argument>> extends AbstractArgumentationInterpretation<T> implements Collection<Argument>, Comparable<Extension<T>> {
 	
 	/**
 	 * The arguments in the extension
@@ -82,7 +82,7 @@ public class Extension extends AbstractArgumentationInterpretation implements Co
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Extension other = (Extension) obj;
+		Extension<T> other = (Extension<T>) obj;
 		if (arguments == null) {
 			if (other.arguments != null)
 				return false;
@@ -95,7 +95,7 @@ public class Extension extends AbstractArgumentationInterpretation implements Co
 	 * @see org.tweetyproject.argumentation.dung.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.dung.semantics.ArgumentStatus)
 	 */
 	@Override
-	public Extension getArgumentsOfStatus(ArgumentStatus status) {
+	public Extension<T> getArgumentsOfStatus(ArgumentStatus status) {
 		if(status.equals(ArgumentStatus.IN)) return this;
 		throw new IllegalArgumentException("Arguments of status different from \"IN\" cannot be determined from an extension alone");
 	}
@@ -208,7 +208,7 @@ public class Extension extends AbstractArgumentationInterpretation implements Co
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
-	public int compareTo(Extension arg0) {
+	public int compareTo(Extension<T> arg0) {
 		if(this.hashCode() < arg0.hashCode())
 			return -1;
 		if(this.hashCode() > arg0.hashCode())

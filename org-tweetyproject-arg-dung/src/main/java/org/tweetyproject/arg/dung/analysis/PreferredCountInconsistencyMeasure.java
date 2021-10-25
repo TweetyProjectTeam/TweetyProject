@@ -32,7 +32,7 @@ public class PreferredCountInconsistencyMeasure<T extends DungTheory> implements
 
 	@Override
 	public Double inconsistencyMeasure(T argumentationFramework) {
-		Collection<Extension> preferredExtensions = new SimplePreferredReasoner().getModels(argumentationFramework);
+		Collection<Extension<DungTheory>> preferredExtensions = new SimplePreferredReasoner().getModels(argumentationFramework);
 		Double preferredCount = (Double) ((double) preferredExtensions.size());
 		return preferredCount - 1.0;
 	}

@@ -22,7 +22,6 @@ package org.tweetyproject.arg.dung.learning;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 
@@ -40,7 +39,7 @@ public class ExtendedExampleFinder {
     private AbstractExtensionReasoner reasoner3;
 
     // map object to store examples
-    private Map<Collection<Extension>, Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>>> examples;
+    private Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>>> examples;
 
     /**
      * initialize with three semantics and automatically find reasoners for them (if they exist)
@@ -74,9 +73,9 @@ public class ExtendedExampleFinder {
      * @param maxArgs maximum number of arguments for the theories
      * @return a map with examples
      */
-    public Map<Collection<Extension>, Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>>> getExamples(int minArgs, int maxArgs) {
+    public Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>>> getExamples(int minArgs, int maxArgs) {
         EnumeratingDungTheoryGenerator theoryGenerator = new EnumeratingDungTheoryGenerator();
-        Map<Collection<Extension>, Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>>> examples = new HashMap<>();
+        Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>>> examples = new HashMap<>();
 
         // iterate over all possible theories and compute extensions and categorize them wrt. the extensions
         while (theoryGenerator.hasNext()) {
@@ -90,14 +89,14 @@ public class ExtendedExampleFinder {
             }
 
             // get extensions
-            Collection<Extension> extensions1 = this.reasoner1.getModels(theory);
-            Collection<Extension> extensions2 = this.reasoner2.getModels(theory);
-            Collection<Extension> extensions3 = this.reasoner3.getModels(theory);
+            Collection<Extension<DungTheory>> extensions1 = this.reasoner1.getModels(theory);
+            Collection<Extension<DungTheory>> extensions2 = this.reasoner2.getModels(theory);
+            Collection<Extension<DungTheory>> extensions3 = this.reasoner3.getModels(theory);
 
 
             //categorize theories
-            Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>> subExamples = examples.getOrDefault(extensions1, new HashMap<>());
-            Map<Collection<Extension>, Collection<DungTheory>> subSubExamples = subExamples.getOrDefault(extensions2, new HashMap<>());
+            Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>> subExamples = examples.getOrDefault(extensions1, new HashMap<>());
+            Map<Collection<Extension<DungTheory>>, Collection<DungTheory>> subSubExamples = subExamples.getOrDefault(extensions2, new HashMap<>());
             Collection<DungTheory> exampleTheories = subSubExamples.getOrDefault(extensions3, new HashSet<>());
             exampleTheories.add(theory);
             subSubExamples.put(extensions3, exampleTheories);
@@ -106,11 +105,11 @@ public class ExtendedExampleFinder {
         }
 
         // filter out cases where there is only one set of extensions wrt the second semantics
-        Map<Collection<Extension>, Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>>> result = new HashMap<>();
-        for (Collection<Extension> exts1: examples.keySet()) {
-            Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>> subExamples = examples.get(exts1);
-            for (Collection<Extension> exts2: subExamples.keySet()) {
-                Map<Collection<Extension>, Collection<DungTheory>> subSubExamples = subExamples.get(exts2);
+        Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>>> result = new HashMap<>();
+        for (Collection<Extension<DungTheory>> exts1: examples.keySet()) {
+            Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>> subExamples = examples.get(exts1);
+            for (Collection<Extension<DungTheory>> exts2: subExamples.keySet()) {
+                Map<Collection<Extension<DungTheory>>, Collection<DungTheory>> subSubExamples = subExamples.get(exts2);
                 if (subSubExamples.size() > 1) {
                     result.putIfAbsent(exts1, new HashMap<>());
                     result.get(exts1).put(exts2, subSubExamples);
@@ -127,19 +126,19 @@ public class ExtendedExampleFinder {
      */
     public void showOverview() {
         System.out.println("Overview: ");
-        for (Collection<Extension> exts1: examples.keySet()) {
-            Map<Collection<Extension>, Map<Collection<Extension>, Collection<DungTheory>>> subExamples = examples.get(exts1);
+        for (Collection<Extension<DungTheory>> exts1: examples.keySet()) {
+            Map<Collection<Extension<DungTheory>>, Map<Collection<Extension<DungTheory>>, Collection<DungTheory>>> subExamples = examples.get(exts1);
             System.out.print("\nCF: "+ exts1.toString() + ": ");
             System.out.print(examples.get(exts1).size());
             System.out.println(" different sets of admissible extensions");
 
-            for (Collection<Extension> exts2: subExamples.keySet()) {
-                Map<Collection<Extension>, Collection<DungTheory>> subSubExamples = subExamples.get(exts2);
+            for (Collection<Extension<DungTheory>> exts2: subExamples.keySet()) {
+                Map<Collection<Extension<DungTheory>>, Collection<DungTheory>> subSubExamples = subExamples.get(exts2);
                 System.out.print("\tADM: "+ exts2.toString() + ": ");
                 System.out.print(subExamples.get(exts2).size());
                 System.out.println(" different sets of complete extensions");
 
-                for (Collection<Extension> exts3: subSubExamples.keySet()) {
+                for (Collection<Extension<DungTheory>> exts3: subSubExamples.keySet()) {
                     System.out.print("\t\t CO: " + exts3.toString() + "");
                     System.out.print("\t\t nr. of AFs: ");
                     System.out.println(subSubExamples.get(exts3).size());
@@ -155,13 +154,13 @@ public class ExtendedExampleFinder {
      * @param extensions1 the set of extensions wrt the first semantics
      * @param extensions2 the set of extensions wrt the second semantics
      */
-    public void showExamples(Collection<Extension> extensions1, Collection<Extension> extensions2) {
+    public void showExamples(Collection<Extension<DungTheory>> extensions1, Collection<Extension<DungTheory>> extensions2) {
         System.out.println("Showing examples for: ");
         System.out.println("Conflict-Free Extensions: " + extensions1.toString() + "\n");
         System.out.println("Admissible Extensions: " + extensions2.toString() + "\n");
         System.out.println("========================================");
-        Map<Collection<Extension>, Collection<DungTheory>> subExamples = examples.get(extensions1).get(extensions2);
-        for (Collection<Extension> extensions3: subExamples.keySet()) {
+        Map<Collection<Extension<DungTheory>>, Collection<DungTheory>> subExamples = examples.get(extensions1).get(extensions2);
+        for (Collection<Extension<DungTheory>> extensions3: subExamples.keySet()) {
             Collection<DungTheory> theories = subExamples.get(extensions3);
             // take the first AF that produces extensions to wrt the third semantics
             DungTheory theory = theories.iterator().next();

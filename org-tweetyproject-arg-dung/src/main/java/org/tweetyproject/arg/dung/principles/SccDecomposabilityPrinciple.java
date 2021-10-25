@@ -52,10 +52,10 @@ public class SccDecomposabilityPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
         AbstractExtensionReasoner scc_reasoner = new SimpleSccRecursiveReasoner(ev);
-        Collection<Extension> exts_sccs = scc_reasoner.getModels(theory);
+        Collection<Extension<DungTheory>> exts_sccs = scc_reasoner.getModels(theory);
 
         return exts.equals(exts_sccs);
     }

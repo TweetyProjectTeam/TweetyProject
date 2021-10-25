@@ -20,7 +20,6 @@
 package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -39,14 +38,14 @@ import java.util.Set;
  */
 public class WeaklyGroundedReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
-        Collection<Extension> w_complete = new WeaklyCompleteReasoner().getModels(bbase);
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+        Collection<Extension<DungTheory>> w_complete = new WeaklyCompleteReasoner().getModels(bbase);
 
-        Set<Extension> result = new HashSet<>();
+        Set<Extension<DungTheory>> result = new HashSet<>();
         boolean minimal;
-        for(Extension e1: w_complete){
+        for(Extension<DungTheory> e1: w_complete){
             minimal = true;
-            for(Extension e2: w_complete)
+            for(Extension<DungTheory> e2: w_complete)
                 if(e1 != e2 && e1.containsAll(e2)){
                     minimal = false;
                     break;
@@ -58,7 +57,7 @@ public class WeaklyGroundedReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
+    public Extension<DungTheory> getModel(DungTheory bbase) {
         return this.getModels(bbase).iterator().next();
     }
 }

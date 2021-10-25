@@ -99,7 +99,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param ext An extension contains a set of arguments.
 	 * @return true if <code>arguments</code> attack all other arguments in the theory
 	 */
-	public boolean isAttackingAllOtherArguments(Extension ext){
+	public boolean isAttackingAllOtherArguments(Extension<SetAf> ext){
 		for(Argument a: this) {
 			if(ext.contains(a))
 				continue;
@@ -160,7 +160,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @return true if every attacker on <code>argument</code> is attacked by some 
 	 * accepted argument wrt. the given theory.
 	 */
-	public boolean isAcceptable(Argument argument, Extension ext){
+	public boolean isAcceptable(Argument argument, Extension<SetAf> ext){
 		if(this.isAttackedBy(argument, argument))
 			return false;
 		Set<Set<Argument>> attackers = this.getAttackers(argument);
@@ -188,7 +188,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @return true if no accepted argument attacks another accepted one in
 	 * this interpretation wrt. the given theory.
 	 */
-	public boolean isConflictFree(Extension ext){
+	public boolean isConflictFree(Extension<SetAf> ext){
 		for(Argument a: ext.getArgumentsOfStatus(ArgumentStatus.IN))
 			for(Argument b: ext.getArgumentsOfStatus(ArgumentStatus.IN))
 				if(this.isAttackedBy(a, b))
@@ -203,7 +203,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @return true if every accepted argument of this is defended by some accepted
 	 * argument wrt. the given setaf theory.
 	 */
-	public boolean isAdmissable(Extension ext){
+	public boolean isAdmissable(Extension<SetAf> ext){
 		if(!this.isConflictFree(ext)) return false;
 		Iterator<Argument> it = ext.getArgumentsOfStatus(ArgumentStatus.IN).iterator();
 		while(it.hasNext()){			
@@ -274,7 +274,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param setAfExtension an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
-	public boolean isAttacked(Argument a, Extension setAfExtension){
+	public boolean isAttacked(Argument a, Extension<SetAf> setAfExtension){
 		return this.isAttackedBy(a, setAfExtension);
 	}
 	
@@ -304,7 +304,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @return true if some argument of <code>ext2</code> attacks some argument
 	 * in <code>ext1</code>
 	 */
-	public boolean isAttacked(Extension ext1, Extension ext2){
+	public boolean isAttacked(Extension<SetAf> ext1, Extension<SetAf> ext2){
 		for(Argument a: ext1)
 			if(this.isAttacked(a, ext2)) return true;
 		return false;
@@ -315,7 +315,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param e some extension
 	 * @return "true" iff the extension is stable.
 	 */
-	public boolean isStable(Extension e) {
+	public boolean isStable(Extension<SetAf> e) {
 		for(Argument a: this) {
 			if(e.contains(a)) { 
 				if(this.isAttacked(a, e))
@@ -333,8 +333,8 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param extension an extension (a set of arguments).
 	 * @return an extension (a set of arguments).
 	 */
-	public Extension faf(Extension extension){
-		Extension newExtension = new Extension();
+	public Extension<SetAf> faf(Extension<SetAf> extension){
+		Extension<SetAf> newExtension = new Extension<SetAf>();
 		Iterator<Argument> it = this.iterator();
 		while(it.hasNext()){
 			Argument argument = it.next();

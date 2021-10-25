@@ -35,10 +35,10 @@ public class NonGroundedCountInconsistencyMeasure<T extends DungTheory> implemen
 
 	@Override
 	public Double inconsistencyMeasure(T argumentationFramework) {
-	 Collection<Extension> groundedExtensions = new SimpleGroundedReasoner().getModels(argumentationFramework);
+	 Collection<Extension<DungTheory>> groundedExtensions = new SimpleGroundedReasoner().getModels(argumentationFramework);
 	 Set<Argument> groundedArguments = new HashSet<Argument>();
 	 
-	 for(Extension singleExtension : groundedExtensions)
+	 for(Extension<DungTheory> singleExtension : groundedExtensions)
 		 for(Argument singleArgument : singleExtension)
 			 groundedArguments.add(singleArgument);
 	 

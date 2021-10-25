@@ -51,18 +51,18 @@ public class DirectionalityPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        Collection<Extension> unattackedSets = this.getUnattackedSets(theory);
-        for (Extension set: unattackedSets) {
+        Collection<Extension<DungTheory>> unattackedSets = this.getUnattackedSets(theory);
+        for (Extension<DungTheory> set: unattackedSets) {
             // calculate extensions of the theory restricted to set
             DungTheory theory_set = (DungTheory) theory.getRestriction(set);
-            Collection<Extension> exts_set = ev.getModels(theory_set);
+            Collection<Extension<DungTheory>> exts_set = ev.getModels(theory_set);
 
             // get intersections of the extensions of theory with set
-            Collection<Extension> exts_2 = new HashSet<>();
-            for (Extension ext: exts) {
-                Extension new_ext = new Extension(ext);
+            Collection<Extension<DungTheory>> exts_2 = new HashSet<>();
+            for (Extension<DungTheory> ext: exts) {
+                Extension<DungTheory> new_ext = new Extension<DungTheory>(ext);
                 new_ext.retainAll(set);
                 exts_2.add(new_ext);
             }
@@ -80,7 +80,7 @@ public class DirectionalityPrinciple extends Principle {
      * @param theory a dung theory
      * @return the unattacked sets
      */
-    private Collection<Extension> getUnattackedSets(DungTheory theory) {
+    private Collection<Extension<DungTheory>> getUnattackedSets(DungTheory theory) {
 
         // store attackers of each argument
         Map<Argument, Collection<Argument>> attackers = new HashMap<>();
@@ -90,7 +90,7 @@ public class DirectionalityPrinciple extends Principle {
 
         // check all subsets
         Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
-        Collection<Extension> unattackedSets = new HashSet<>();
+        Collection<Extension<DungTheory>> unattackedSets = new HashSet<>();
         for (Set<Argument> subset: subsets) {
             boolean attacked = false;
             for (Argument a: subset) {
@@ -100,7 +100,7 @@ public class DirectionalityPrinciple extends Principle {
                 }
             }
             if (!attacked)
-                unattackedSets.add(new Extension(subset));
+                unattackedSets.add(new Extension<DungTheory>(subset));
 
         }
         return unattackedSets;

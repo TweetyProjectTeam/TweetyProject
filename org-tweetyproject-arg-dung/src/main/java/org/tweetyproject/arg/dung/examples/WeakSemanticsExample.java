@@ -63,10 +63,10 @@ public class WeakSemanticsExample {
 
         // show extensions for all weak semantics
         System.out.println(ex1.prettyPrint());
-        Collection<Extension> exts_wad = new WeaklyAdmissibleReasoner().getModels(ex1);
-        Collection<Extension> exts_wco = new WeaklyCompleteReasoner().getModels(ex1);
-        Collection<Extension> exts_wgr = new WeaklyGroundedReasoner().getModels(ex1);
-        Collection<Extension> exts_wpr = new WeaklyPreferredReasoner().getModels(ex1);
+        Collection<Extension<DungTheory>> exts_wad = new WeaklyAdmissibleReasoner().getModels(ex1);
+        Collection<Extension<DungTheory>> exts_wco = new WeaklyCompleteReasoner().getModels(ex1);
+        Collection<Extension<DungTheory>> exts_wgr = new WeaklyGroundedReasoner().getModels(ex1);
+        Collection<Extension<DungTheory>> exts_wpr = new WeaklyPreferredReasoner().getModels(ex1);
         System.out.println("w-admissible Extensions: " + exts_wad);
         System.out.println("w-complete Extensions: " + exts_wco);
         System.out.println("w-grounded Extensions: " + exts_wgr);

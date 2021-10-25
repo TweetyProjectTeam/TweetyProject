@@ -50,9 +50,9 @@ public class AdmissibilityPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        for (Extension ext: exts) {
+        for (Extension<DungTheory> ext: exts) {
             if (!theory.isAdmissable(ext)) {
                 return false;
             }

@@ -21,7 +21,6 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -41,17 +40,17 @@ import java.util.Set;
 public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
 
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
-        Collection<Extension> wad_exts = new WeaklyAdmissibleReasoner().getModels(bbase);
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+        Collection<Extension<DungTheory>> wad_exts = new WeaklyAdmissibleReasoner().getModels(bbase);
 
-        Collection<Extension> result = new HashSet<>();
+        Collection<Extension<DungTheory>> result = new HashSet<>();
 
         // check all w-admissible extensions of bbase
-        for (Extension ext: wad_exts) {
+        for (Extension<DungTheory> ext: wad_exts) {
             boolean w_complete = true;
             for (Set<Argument> S : new SetTools<Argument>().subsets((DungTheory) bbase)) {
                 // S is a superset of ext
-                if (!ext.equals(new Extension(S)) && S.containsAll(ext)) {
+                if (!ext.equals(new Extension<DungTheory>(S)) && S.containsAll(ext)) {
                     // S is w-defended by ext
                     System.out.println("Ext:" + ext);
                     System.out.println("Superset:" + S);
@@ -70,7 +69,7 @@ public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
+    public Extension<DungTheory> getModel(DungTheory bbase) {
         return this.getModels(bbase).iterator().next();
     }
 
@@ -88,14 +87,14 @@ public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
     public boolean isWeaklyDefendedBy(Collection<Argument> X, Collection<Argument> E, DungTheory theory) {
 
         // compute the set of arguments that are in a w-ad extension of the E-reduct of F
-        DungTheory e_reduct = new WeaklyAdmissibleReasoner().getReduct(theory, new Extension(E));
-        Collection<Extension> reduct_exts = new WeaklyAdmissibleReasoner().getModels(e_reduct);
+        DungTheory e_reduct = new WeaklyAdmissibleReasoner().getReduct(theory, new Extension<DungTheory>(E));
+        Collection<Extension<DungTheory>> reduct_exts = new WeaklyAdmissibleReasoner().getModels(e_reduct);
         Collection<Argument> wad_arguments = new HashSet<>();
-        for (Extension ext: reduct_exts) {
+        for (Extension<DungTheory> ext: reduct_exts) {
             wad_arguments.addAll(ext);
         }
 
-        Collection<Extension> wad_exts = new WeaklyAdmissibleReasoner().getModels(theory);
+        Collection<Extension<DungTheory>> wad_exts = new WeaklyAdmissibleReasoner().getModels(theory);
         Collection<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
 
         boolean superset_wad = false;
@@ -103,7 +102,7 @@ public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
             // S is a superset of X
             if (S.containsAll(X)) {
                 // S is w-admissible in F
-                if (wad_exts.contains(new Extension(S))) {
+                if (wad_exts.contains(new Extension<DungTheory>(S))) {
                     superset_wad = true;
                     break;
                 }
@@ -115,7 +114,7 @@ public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
 
         for (Argument y: new WeaklyAdmissibleReasoner().getAttackers(theory, X)) {
             // E attacks y
-            if (theory.isAttacked(y, new Extension(E))) {
+            if (theory.isAttacked(y, new Extension<DungTheory>(E))) {
                 continue;
             }
 

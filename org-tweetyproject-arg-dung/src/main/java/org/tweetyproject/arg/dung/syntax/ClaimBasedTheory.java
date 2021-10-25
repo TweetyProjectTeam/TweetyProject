@@ -84,7 +84,7 @@ public class ClaimBasedTheory extends DungTheory {
 	 * @param ext extension
 	 * @return the extension's claims
 	 */
-	public Set<Claim> getClaims(Extension ext) {
+	public Set<Claim> getClaims(Extension<DungTheory> ext) {
 		HashSet<Claim> cl = new HashSet<Claim>();
 		for(Argument arg : ext) {
 			cl.add(((ClaimArgument)arg).claim);

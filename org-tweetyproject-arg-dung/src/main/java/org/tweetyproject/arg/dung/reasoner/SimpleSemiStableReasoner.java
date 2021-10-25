@@ -42,16 +42,16 @@ public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 	 * @return all extensions of the semantics
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
 		// check all complete extensions and remove those sets with non-mininal set of undecided arguments
-		Collection<Extension> exts = new SimpleCompleteReasoner().getModels(bbase);
-		Map<Extension,Extension> extUndec = new HashMap<Extension,Extension>();
-		for(Extension ext: exts)
-			extUndec.put(ext, new Labeling((DungTheory)bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+		Collection<Extension<DungTheory>> exts = new SimpleCompleteReasoner().getModels(bbase);
+		Map<Extension<DungTheory>,Extension<DungTheory>> extUndec = new HashMap<Extension<DungTheory>,Extension<DungTheory>>();
+		for(Extension<DungTheory> ext: exts)
+			extUndec.put(ext, (Extension<DungTheory>) new Labeling(bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
 		boolean b;
-		for(Extension ext: extUndec.keySet()){
+		for(Extension<DungTheory> ext: extUndec.keySet()){
 			b = false;
-			for(Extension ext2: extUndec.keySet()){
+			for(Extension<DungTheory> ext2: extUndec.keySet()){
 				if(ext != ext2){
 					if(extUndec.get(ext).containsAll(extUndec.get(ext2)) && !extUndec.get(ext2).containsAll(extUndec.get(ext))){
 						exts.remove(ext);
@@ -70,7 +70,7 @@ public class SimpleSemiStableReasoner extends AbstractExtensionReasoner {
 	 * @return an extensions of the semantics
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<DungTheory> getModel(DungTheory bbase) {
 		// just return the first one (which is always defined)
 		return this.getModels(bbase).iterator().next();
 	}

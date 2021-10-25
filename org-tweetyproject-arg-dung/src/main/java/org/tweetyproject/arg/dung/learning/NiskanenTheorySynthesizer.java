@@ -81,7 +81,7 @@ public class NiskanenTheorySynthesizer {
      * @throws InvocationTargetException if an error occurs
      * @throws IllegalAccessException if an error occurs
      */
-    public DungTheory learnExamples(Map<Extension, Integer> positiveExamples, Map<Extension, Integer> negativeExamples) throws IOException, InvocationTargetException, IllegalAccessException {
+    public DungTheory learnExamples(Map<Extension<DungTheory>, Integer> positiveExamples, Map<Extension<DungTheory>, Integer> negativeExamples) throws IOException, InvocationTargetException, IllegalAccessException {
         DungTheory theory = new DungTheory();
         theory.addAll(this.arguments);
         PlBeliefSet hardClauses = new PlBeliefSet();
@@ -89,7 +89,7 @@ public class NiskanenTheorySynthesizer {
 
         // create hard and soft clauses for each positive example
         int nr = 0;
-        for (Extension ext: positiveExamples.keySet()) {
+        for (Extension<DungTheory> ext: positiveExamples.keySet()) {
             PlFormula ext_prop = new Proposition("E_" + nr);
             // create hard clause
             Object[] parameters = new Object[2];
@@ -104,7 +104,7 @@ public class NiskanenTheorySynthesizer {
         }
 
         // create hard and soft clauses for each negative example
-        for (Extension ext: negativeExamples.keySet()) {
+        for (Extension<DungTheory> ext: negativeExamples.keySet()) {
             PlFormula ext_prop = new Proposition("E_" + nr);
             // create hard clause
             Object[] parameters = new Object[2];
@@ -144,7 +144,7 @@ public class NiskanenTheorySynthesizer {
      * @return a formula encoding the conflict-freeness of the extension
      * @throws IOException
      */
-    private PlFormula getConflictFreeClause(DungTheory theory, Extension ext) throws IOException {
+    private PlFormula getConflictFreeClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
         Collection<PlFormula> formulas = new HashSet<>();
         for (Argument a: ext) {
             for (Argument b: ext) {
@@ -161,7 +161,7 @@ public class NiskanenTheorySynthesizer {
      * @return formula representing the admissibility of ext
      * @throws IOException
      */
-    private PlFormula getAdmissibleClause(DungTheory theory, Extension ext) throws IOException {
+    private PlFormula getAdmissibleClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
         Collection<PlFormula> formulas = new HashSet<>();
         formulas.add(this.getConflictFreeClause(theory, ext));
         for (Argument a: ext) {
@@ -186,7 +186,7 @@ public class NiskanenTheorySynthesizer {
      * @return formula representing the stability of ext
      * @throws IOException
      */
-    private PlFormula getStableClause(DungTheory theory, Extension ext) throws IOException {
+    private PlFormula getStableClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
         Collection<PlFormula> formulas = new HashSet<>();
         formulas.add(this.getConflictFreeClause(theory, ext));
         for (Argument a: theory) {
@@ -209,7 +209,7 @@ public class NiskanenTheorySynthesizer {
      * @return formula representing the completeness of ext
      * @throws IOException
      */
-    private PlFormula getCompleteClause(DungTheory theory, Extension ext) throws IOException {
+    private PlFormula getCompleteClause(DungTheory theory, Extension<DungTheory> ext) throws IOException {
         Collection<PlFormula> formulas = new HashSet<>();
         formulas.add(this.getAdmissibleClause(theory, ext));
         for (Argument a: theory) {
