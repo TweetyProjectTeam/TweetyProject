@@ -21,7 +21,6 @@ package org.tweetyproject.arg.setaf.reasoners;
 import java.util.*;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 
@@ -39,8 +38,8 @@ public class SimpleGroundedSetAfReasoner extends AbstractExtensionSetAfReasoner 
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Collection<Extension> extensions = new HashSet<Extension>();
+	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
+		Collection<Extension<SetAf>> extensions = new HashSet<Extension<SetAf>>();
 		extensions.add(this.getModel(bbase));
 		return extensions;
 	}
@@ -49,8 +48,8 @@ public class SimpleGroundedSetAfReasoner extends AbstractExtensionSetAfReasoner 
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
-		Extension ext = new Extension();
+	public Extension<SetAf> getModel(SetAf bbase) {
+		Extension<SetAf> ext = new Extension<SetAf>();
 		int size;
 		do{
 			size = ext.size();			

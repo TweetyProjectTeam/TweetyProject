@@ -22,7 +22,6 @@ package org.tweetyproject.arg.setaf.reasoners;
 import org.tweetyproject.arg.setaf.syntax.*;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 
 import java.util.*;
 
@@ -32,7 +31,7 @@ import java.util.*;
  * @author Lars Bengel, Sebastian Franke
  */
 public class SimpleNaiveSetAfReasoner extends AbstractExtensionSetAfReasoner {
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+    public Collection<Extension<SetAf>> getModels(SetAf bbase) {
         SetAf restrictedTheory = new SetAf((SetAf) bbase);
         // remove all self-attacking arguments
         for (Argument argument: (SetAf) bbase) {
@@ -43,8 +42,8 @@ public class SimpleNaiveSetAfReasoner extends AbstractExtensionSetAfReasoner {
         return this.getMaximalConflictFreeSets((SetAf) bbase, restrictedTheory);
     }
 
-    public Extension getModel(ArgumentationFramework bbase) {
-        Collection<Extension> extensions = this.getModels(bbase);
+    public Extension<SetAf> getModel(SetAf bbase) {
+        Collection<Extension<SetAf>> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }
 
@@ -54,10 +53,10 @@ public class SimpleNaiveSetAfReasoner extends AbstractExtensionSetAfReasoner {
      * @param candidates a set of arguments
      * @return conflict-free sets in bbase
      */
-    public Collection<Extension> getMaximalConflictFreeSets(SetAf bbase, Collection<Argument> candidates) {
-        Collection<Extension> cfSubsets = new HashSet<Extension>();
+    public Collection<Extension<SetAf>> getMaximalConflictFreeSets(SetAf bbase, Collection<Argument> candidates) {
+        Collection<Extension<SetAf>> cfSubsets = new HashSet<Extension<SetAf>>();
         if (candidates.size() == 0 || bbase.size() == 0) {
-            cfSubsets.add(new Extension());
+            cfSubsets.add(new Extension<SetAf>());
         } else {
             for (Argument element: candidates) {
             	SetAf remainingTheory = new SetAf(bbase);
@@ -70,12 +69,12 @@ public class SimpleNaiveSetAfReasoner extends AbstractExtensionSetAfReasoner {
                 for(Set<Argument> att : bbase.getAttackers(element))
                 	remainingCandidates.removeAll(att);
 
-                Collection<Extension> subsubsets = this.getMaximalConflictFreeSets(remainingTheory, remainingCandidates);
+                Collection<Extension<SetAf>> subsubsets = this.getMaximalConflictFreeSets(remainingTheory, remainingCandidates);
 
-                for (Extension subsubset : subsubsets) {
+                for (Extension<SetAf> subsubset : subsubsets) {
                     //cfSubsets.add(new Extension(subsubset));
                     subsubset.add(element);
-                    cfSubsets.add(new Extension(subsubset));
+                    cfSubsets.add(new Extension<SetAf>(subsubset));
                 }
             }
         }

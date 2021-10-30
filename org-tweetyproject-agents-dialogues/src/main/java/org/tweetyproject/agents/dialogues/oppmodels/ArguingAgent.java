@@ -27,6 +27,7 @@ import org.tweetyproject.agents.dialogues.DialogueTrace;
 import org.tweetyproject.agents.dialogues.ArgumentationEnvironment;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * This class represent a general arguing agent with an belief state. 
@@ -87,7 +88,7 @@ public class ArguingAgent extends Agent {
 	 * @param trace a dialogue trace
 	 * @return the utility of this agent for this dialog trace
 	 */
-	protected double getUtility(DialogueTrace<Argument,Extension> trace){
+	protected double getUtility(DialogueTrace<Argument,Extension<DungTheory>> trace){
 		return this.beliefState.getUtilityFunction().getUtility(trace);
 	}
 

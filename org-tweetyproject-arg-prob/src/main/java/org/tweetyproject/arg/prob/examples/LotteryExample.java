@@ -56,7 +56,7 @@ public class LotteryExample {
 		
 		// Instantiate reasoner
 		AbstractExtensionReasoner r = new SimpleGroundedReasoner();
-		Collection<Extension> exts = r.getModels(theory);
+		Collection<Extension<DungTheory>> exts = r.getModels(theory);
 		
 		// print theory
 		System.out.println("AAF: " + theory);
@@ -64,7 +64,7 @@ public class LotteryExample {
 		// print extensions
 		System.out.println();
 		System.out.println("Extensions: ");
-		for(Extension e: exts)
+		for(Extension<DungTheory> e: exts)
 			System.out.println(e);
 		
 		// print divisions
@@ -83,27 +83,27 @@ public class LotteryExample {
 		System.out.println();
 		System.out.println("Probabilities of some divisions: ");
 		//---
-		Extension a1 = new Extension(); Extension a2 = new Extension();
+		Extension<DungTheory> a1 = new Extension<DungTheory>(); Extension<DungTheory> a2 = new Extension<DungTheory>();
 		a1.add(a); a2.add(b);
 		Division d1 = new Division(a1,a2);
 		System.out.println("\t" + d1 + "\t=\t" + prob.getAcceptanceProbability(d1, Semantics.GROUNDED_SEMANTICS));
 		//---
-		a1 = new Extension(); a2 = new Extension();
+		a1 = new Extension<DungTheory>(); a2 = new Extension<DungTheory>();
 		a1.add(a);
 		d1 = new Division(a1,a2);
 		System.out.println("\t" + d1 + "\t=\t" + prob.getAcceptanceProbability(d1, Semantics.GROUNDED_SEMANTICS));
 		//---
-		a1 = new Extension(); a2 = new Extension();
+		a1 = new Extension<DungTheory>(); a2 = new Extension<DungTheory>();
 		a1.add(a); a1.add(b);
 		d1 = new Division(a1,a2);
 		System.out.println("\t" + d1 + "\t=\t" + prob.getAcceptanceProbability(d1, Semantics.GROUNDED_SEMANTICS));
 		//---
-		a1 = new Extension(); a2 = new Extension();
+		a1 = new Extension<DungTheory>(); a2 = new Extension<DungTheory>();
 		a1.add(a); a1.add(c); a2.add(b); a2.add(a);
 		d1 = new Division(a1,a2);
 		System.out.println("\t" + d1 + "\t=\t" + prob.getAcceptanceProbability(d1, Semantics.GROUNDED_SEMANTICS));
 		//---
-		a1 = new Extension(); a2 = new Extension();
+		a1 = new Extension<DungTheory>(); a2 = new Extension<DungTheory>();
 		a1.add(a); a1.add(c); a2.add(b);
 		d1 = new Division(a1,a2);
 		System.out.println("\t" + d1 + "\t=\t" + prob.getAcceptanceProbability(d1, Semantics.GROUNDED_SEMANTICS));

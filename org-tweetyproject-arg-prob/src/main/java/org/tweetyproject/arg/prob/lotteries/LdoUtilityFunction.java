@@ -65,10 +65,10 @@ public class LdoUtilityFunction extends HashMap<LdoFormula,Double>{
 	 */
 	public Double getUtility(DungTheory theory, Semantics semantics){
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
-		Collection<Extension> extensions = reasoner.getModels(theory);
+		Collection<Extension<DungTheory>> extensions = reasoner.getModels(theory);
 		//average utility across extensions
 		double util = 0;
-		for(Extension e: extensions){
+		for(Extension<DungTheory> e: extensions){
 			for(LdoFormula f: this.keySet()){
 				LdoInterpretation i = new LdoInterpretation(theory,e,semantics);
 				if(i.satisfies(f))

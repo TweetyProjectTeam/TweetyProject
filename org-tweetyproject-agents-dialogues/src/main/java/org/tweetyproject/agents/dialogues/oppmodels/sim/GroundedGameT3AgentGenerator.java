@@ -66,7 +66,7 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 	 */
 	@Override
 	protected BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params) {
-		T3BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension)params.get(this.getFaction()),this.getFaction());
+		T3BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension<DungTheory>)params.get(this.getFaction()),this.getFaction());
 		log.info("Generated a T3-belief state for " + this.getFaction() + " agent: ");
 		log.info("=========\n" + state.display() + "\n=========");
 		return state;
@@ -81,7 +81,7 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 	 * @param faction the faction of the model to be generated.
 	 * @return a T3-belief state
 	 */
-	private T3BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params, int depth, Extension arguments, GroundedGameSystem.AgentFaction faction) {
+	private T3BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params, int depth, Extension<DungTheory> arguments, GroundedGameSystem.AgentFaction faction) {
 		ProbabilityFunction<T3BeliefState> prob = new ProbabilityFunction<T3BeliefState>();
 		Map<T3BeliefState,Double> mass = new HashMap<T3BeliefState,Double>();
 		double totalMass = 0;
@@ -93,7 +93,7 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 		// virtualize arguments
 		// For simplicity we only consider the case that no more
 		// than one virtual argument is mapped to a real one.
-		Extension arguments2 = new Extension();
+		Extension<DungTheory> arguments2 = new Extension<DungTheory>();
 		for(Argument arg: arguments){
 			// do not virtualize the argument of the dialog
 			if(params.get(GroundedGameGenerator.PARAM_ARGUMENT).equals(arg))
@@ -136,7 +136,7 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 		//leave the probability function "empty" 
 		if(depth >= 0)
 			for(int i = 0; i < this.config.maxRecursionWidth; i++){			
-				Extension subView = new Extension();				
+				Extension<DungTheory> subView = new Extension<DungTheory>();				
 				for(Argument a: arguments)
 					if(this.getRandom().nextDouble() >= this.config.probRecursionDecay)				
 						subView.add(a);				

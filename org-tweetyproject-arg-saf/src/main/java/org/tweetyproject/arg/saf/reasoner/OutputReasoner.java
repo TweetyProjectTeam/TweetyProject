@@ -65,11 +65,11 @@ public class OutputReasoner implements QualitativeReasoner<StructuredArgumentati
 	 */
 	public Set<Proposition> getOutput(StructuredArgumentationFramework saf){
 		if(this.output == null){
-			Collection<Extension> extensions = this.reasoner.getModels(saf.toDungTheory());			
+			Collection<Extension<DungTheory>> extensions = this.reasoner.getModels(saf.toDungTheory());			
 			this.output = new HashSet<Proposition>();			
 			for(Proposition p: saf.getAllPropositions()){
 				boolean isOutput = true;
-				for(Extension e: extensions){
+				for(Extension<DungTheory> e: extensions){
 					boolean isInExtension = false;
 					for(Argument a: e){
 						ArgumentStructure arg = (ArgumentStructure) a; 

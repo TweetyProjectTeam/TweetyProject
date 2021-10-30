@@ -55,7 +55,7 @@ public class PAInconsistencyMeasureExample {
 		
 		System.out.println(mes.inconsistencyMeasure(ppa));
 		
-		ChangeOperator op = new PAUpdateOperator(new CoherentPASemantics(), new EntropyNorm<Extension>(), new EntropyFunction());
+		ChangeOperator op = new PAUpdateOperator(new CoherentPASemantics(), new EntropyNorm<Extension<DungTheory>>(), new EntropyFunction());
 		
 		System.out.println(op.change(ppa, theory));
 	}

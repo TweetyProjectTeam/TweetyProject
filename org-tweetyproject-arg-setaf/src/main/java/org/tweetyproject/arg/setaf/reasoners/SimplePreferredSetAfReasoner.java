@@ -21,7 +21,7 @@ package org.tweetyproject.arg.setaf.reasoners;
 import java.util.*;
 
 import org.tweetyproject.arg.dung.semantics.*;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
+import org.tweetyproject.arg.setaf.syntax.SetAf;
 
 
 /**
@@ -39,13 +39,13 @@ public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Collection<Extension> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
-		Set<Extension> result = new HashSet<Extension>();
+	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
+		Collection<Extension<SetAf>> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		Set<Extension<SetAf>> result = new HashSet<Extension<SetAf>>();
 		boolean maximal;
-		for(Extension e1: completeExtensions){
+		for(Extension<SetAf> e1: completeExtensions){
 			maximal = true;
-			for(Extension e2: completeExtensions)
+			for(Extension<SetAf> e2: completeExtensions)
 				if(e1 != e2 && e2.containsAll(e1)){
 					maximal = false;
 					break;
@@ -60,13 +60,13 @@ public class SimplePreferredSetAfReasoner extends AbstractExtensionSetAfReasoner
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<SetAf> getModel(SetAf bbase) {
 		// just return the first found preferred extension
-		Collection<Extension> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		Collection<Extension<SetAf>> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
 		boolean maximal;
-		for(Extension e1: completeExtensions){
+		for(Extension<SetAf> e1: completeExtensions){
 			maximal = true;
-			for(Extension e2: completeExtensions)
+			for(Extension<SetAf> e2: completeExtensions)
 				if(e1 != e2 && e2.containsAll(e1)){
 					maximal = false;
 					break;

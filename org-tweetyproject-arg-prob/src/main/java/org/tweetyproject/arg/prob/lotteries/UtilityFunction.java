@@ -64,13 +64,13 @@ public class UtilityFunction extends HashMap<Division,Double>{
 	 */
 	public Double getUtility(DungTheory theory, Semantics semantics){
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
-		Collection<Extension> extensions = reasoner.getModels(theory);
+		Collection<Extension<DungTheory>> extensions = reasoner.getModels(theory);
 		//average utility across extensions
 		double util = 0;
-		for(Extension e: extensions){
+		for(Extension<DungTheory> e: extensions){
 			for(Division d: this.keySet()){
 				if(e.containsAll(d.getFirst())){
-					Extension tmp = new Extension(e);
+					Extension<DungTheory> tmp = new Extension<DungTheory>(e);
 					tmp.retainAll(d.getSecond());
 					if(tmp.size() == 0){
 						util += this.get(d);

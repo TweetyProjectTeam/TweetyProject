@@ -40,8 +40,8 @@ public class SimpleIdealSetAfReasoner extends AbstractExtensionSetAfReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Collection<Extension> exts = new HashSet<Extension>();
+	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
+		Collection<Extension<SetAf>> exts = new HashSet<Extension<SetAf>>();
 		exts.add(this.getModel(bbase));
 		return exts;
 	}
@@ -50,17 +50,17 @@ public class SimpleIdealSetAfReasoner extends AbstractExtensionSetAfReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
-		Collection<Extension> admExt = new SimpleAdmissibleSetAfReasoner().getModels(bbase);
-		Collection<Extension> prefExt = new SimplePreferredSetAfReasoner().getModels(bbase);
+	public Extension<SetAf> getModel(SetAf bbase) {
+		Collection<Extension<SetAf>> admExt = new SimpleAdmissibleSetAfReasoner().getModels(bbase);
+		Collection<Extension<SetAf>> prefExt = new SimplePreferredSetAfReasoner().getModels(bbase);
 		Set<Labeling> potResult = new HashSet<Labeling>();
 		boolean potIdeal; 
-		for(Extension ext: admExt){
+		for(Extension<SetAf> ext: admExt){
 			Labeling extLab = new Labeling(bbase,ext);
 			// ext is ideal if
 			// 1. for every preferred labeling L both in and out are subsets of that sets in L
 			potIdeal = true;
-			for(Extension ext2: prefExt){
+			for(Extension<SetAf> ext2: prefExt){
 				Labeling extLab2 = new  Labeling((SetAf)bbase, ext2);
 				if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
 					potIdeal = false;
@@ -88,7 +88,7 @@ public class SimpleIdealSetAfReasoner extends AbstractExtensionSetAfReasoner {
 						}
 			}
 			if(ideal)
-				return lab.getArgumentsOfStatus(ArgumentStatus.IN);			
+				return (Extension<SetAf>) lab.getArgumentsOfStatus(ArgumentStatus.IN);			
 		}		
 		// this should not happen as there is always an ideal extension;
 		throw new RuntimeException("Ideal extension seems to be undefined.");

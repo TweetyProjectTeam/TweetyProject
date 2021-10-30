@@ -40,16 +40,16 @@ public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasone
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
+	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
 		// check all complete extensions and remove those sets with non-mininal set of undecided arguments
-		Collection<Extension> exts = new SimpleCompleteSetAfReasoner().getModels(bbase);
-		Map<Extension,Extension> extUndec = new HashMap<Extension,Extension>();
-		for(Extension ext: exts)
-			extUndec.put(ext, new Labeling((SetAf)bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+		Collection<Extension<SetAf>> exts = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		Map<Extension<SetAf>,Extension<SetAf>> extUndec = new HashMap<Extension<SetAf>,Extension<SetAf>>();
+		for(Extension<SetAf> ext: exts)
+			extUndec.put(ext, (Extension<SetAf>) new Labeling((SetAf)bbase,ext).getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
 		boolean b;
-		for(Extension ext: extUndec.keySet()){
+		for(Extension<SetAf> ext: extUndec.keySet()){
 			b = false;
-			for(Extension ext2: extUndec.keySet()){
+			for(Extension<SetAf> ext2: extUndec.keySet()){
 				if(ext != ext2){
 					if(extUndec.get(ext).containsAll(extUndec.get(ext2)) && !extUndec.get(ext2).containsAll(extUndec.get(ext))){
 						exts.remove(ext);
@@ -66,7 +66,7 @@ public class SimpleSemiStableSetAfReasoner extends AbstractExtensionSetAfReasone
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<SetAf> getModel(SetAf bbase) {
 		// just return the first one (which is always defined)
 		return this.getModels(bbase).iterator().next();
 	}

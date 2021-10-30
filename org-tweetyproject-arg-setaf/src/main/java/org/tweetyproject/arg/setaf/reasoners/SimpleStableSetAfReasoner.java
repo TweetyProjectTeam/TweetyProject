@@ -21,7 +21,6 @@ package org.tweetyproject.arg.setaf.reasoners;
 import java.util.*;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.setaf.syntax.*;
 
 /**
@@ -39,10 +38,10 @@ public class SimpleStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Collection<Extension> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
-		Set<Extension> result = new HashSet<Extension>();
-		for(Extension e: completeExtensions)
+	public Collection<Extension<SetAf>> getModels(SetAf bbase) {
+		Collection<Extension<SetAf>> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		Set<Extension<SetAf>> result = new HashSet<Extension<SetAf>>();
+		for(Extension<SetAf> e: completeExtensions)
 			if(((SetAf)bbase).isAttackingAllOtherArguments(e))
 				result.add(e);
 		return result;	
@@ -52,10 +51,10 @@ public class SimpleStableSetAfReasoner extends AbstractExtensionSetAfReasoner {
 	 * @see org.tweetyproject.arg.setaf.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.setaf.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<SetAf> getModel(SetAf bbase) {
 		// returns the first found stable extension
-		Collection<Extension> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
-		for(Extension e: completeExtensions)
+		Collection<Extension<SetAf>> completeExtensions = new SimpleCompleteSetAfReasoner().getModels(bbase);
+		for(Extension<SetAf> e: completeExtensions)
 			if(((SetAf)bbase).isAttackingAllOtherArguments(e))
 				return e;
 		return null;	

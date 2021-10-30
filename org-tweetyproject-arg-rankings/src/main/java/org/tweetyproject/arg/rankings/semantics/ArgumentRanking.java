@@ -24,6 +24,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.AbstractArgumentationInterpretation;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * This abstract class is the common ancestor for semantical approaches to
@@ -32,7 +33,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
  * 
  * @author Matthias Thimm
  */
-public abstract class ArgumentRanking extends AbstractArgumentationInterpretation implements Comparator<Argument> {
+public abstract class ArgumentRanking extends AbstractArgumentationInterpretation<DungTheory> implements Comparator<Argument> {
 
 	/*
 	 * (non-Javadoc)

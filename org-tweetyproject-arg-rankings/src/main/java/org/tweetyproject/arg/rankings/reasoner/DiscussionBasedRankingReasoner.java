@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
@@ -44,14 +43,14 @@ import org.tweetyproject.arg.rankings.util.RankingTools;
 public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(ArgumentationFramework kb) {
+	public LatticeArgumentRanking getModel(DungTheory kb) {
 		int iMax = 6; // Treshold for maximum length of linear discussions (paths)
 
 		Map<Argument, ArrayList<Double>> discussionCounts = new HashMap<Argument, ArrayList<Double>>();

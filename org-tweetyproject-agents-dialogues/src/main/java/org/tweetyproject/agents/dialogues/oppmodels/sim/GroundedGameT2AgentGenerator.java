@@ -62,7 +62,7 @@ public class GroundedGameT2AgentGenerator extends GroundedGameAgentGenerator {
 	 */
 	@Override
 	protected BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params) {
-		T2BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension)params.get(this.getFaction()),this.getFaction());
+		T2BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension<DungTheory>)params.get(this.getFaction()),this.getFaction());
 		log.info("Generated a T2-belief state for " + this.getFaction() + " agent: ");
 		log.info("=========\n" + state.display() + "\n=========");
 		return state;
@@ -77,7 +77,7 @@ public class GroundedGameT2AgentGenerator extends GroundedGameAgentGenerator {
 	 * @param faction the faction of the model to be generated.
 	 * @return a T2-belief state
 	 */
-	private T2BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params, int depth, Extension arguments, GroundedGameSystem.AgentFaction faction) {
+	private T2BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params, int depth, Extension<DungTheory> arguments, GroundedGameSystem.AgentFaction faction) {
 		ProbabilityFunction<T2BeliefState> prob = new ProbabilityFunction<T2BeliefState>();
 		Map<T2BeliefState,Double> mass = new HashMap<T2BeliefState,Double>();
 		double totalMass = 0;
@@ -85,7 +85,7 @@ public class GroundedGameT2AgentGenerator extends GroundedGameAgentGenerator {
 		//leave the probability function "empty" 
 		if(depth >= 0)
 			for(int i = 0; i < this.config.maxRecursionWidth; i++){			
-				Extension subView = new Extension();
+				Extension<DungTheory> subView = new Extension<DungTheory>();
 				for(Argument a: arguments)
 					if(this.getRandom().nextDouble() >= this.config.probRecursionDecay)				
 						subView.add(a);				

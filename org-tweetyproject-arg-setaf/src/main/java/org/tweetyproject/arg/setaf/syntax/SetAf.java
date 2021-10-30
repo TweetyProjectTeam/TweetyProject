@@ -274,7 +274,8 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 	 * @param setAfExtension an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
-	public boolean isAttacked(Argument a, Extension<SetAf> setAfExtension){
+	@SuppressWarnings("rawtypes")
+	public boolean isAttacked(Argument a, Extension<? extends ArgumentationFramework> setAfExtension){
 		return this.isAttackedBy(a, setAfExtension);
 	}
 	
@@ -908,6 +909,7 @@ public class SetAf extends BeliefSet<Argument,SetAfSignature> implements DirHype
 		}
 		return result;
 	}
+
 
 
 

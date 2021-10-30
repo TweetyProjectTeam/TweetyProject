@@ -41,7 +41,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class ArgumentationEnvironment implements Environment, Perceivable {
 
 	/** The current dialogue trace. */
-	private DialogueTrace<Argument,Extension> trace;
+	private DialogueTrace<Argument,Extension<DungTheory>> trace;
 	/** The universal Dung theory used for argumentation. */
 	private DungTheory universalTheory;
 	
@@ -50,7 +50,7 @@ public class ArgumentationEnvironment implements Environment, Perceivable {
 	 * @param universalTheory the universal Dung theory used for argumentation.
 	 */
 	public ArgumentationEnvironment(DungTheory universalTheory){
-		this.trace = new DialogueTrace<Argument,Extension>();
+		this.trace = new DialogueTrace<Argument,Extension<DungTheory>>();
 		this.universalTheory = universalTheory;
 	}
 	
@@ -95,7 +95,7 @@ public class ArgumentationEnvironment implements Environment, Perceivable {
 	 * Returns the current dialogue trace.
 	 * @return the current dialogue trace.
 	 */
-	public DialogueTrace<Argument,Extension> getDialogueTrace(){
+	public DialogueTrace<Argument,Extension<DungTheory>> getDialogueTrace(){
 		return this.trace;
 	}
 	
@@ -103,7 +103,7 @@ public class ArgumentationEnvironment implements Environment, Perceivable {
 	 * @see org.tweetyproject.agents.Environment#reset()
 	 */
 	public boolean reset(){
-		this.trace = new DialogueTrace<Argument,Extension>();
+		this.trace = new DialogueTrace<Argument,Extension<DungTheory>>();
 		return true;
 	}
 	
@@ -113,7 +113,7 @@ public class ArgumentationEnvironment implements Environment, Perceivable {
 	 * @param arguments a set of arguments.
 	 * @return the projection of the universal theory.
 	 */
-	public DungTheory getPerceivedDungTheory(Extension arguments){
+	public DungTheory getPerceivedDungTheory(Extension<DungTheory> arguments){
 		return new DungTheory(this.universalTheory.getRestriction(arguments));
 	}
 }

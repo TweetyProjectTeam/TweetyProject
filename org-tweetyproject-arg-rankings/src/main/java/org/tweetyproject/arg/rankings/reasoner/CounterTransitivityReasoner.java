@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 
@@ -52,7 +51,7 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	}
 	
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		
@@ -61,7 +60,7 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(ArgumentationFramework bbase) {
+	public LatticeArgumentRanking getModel(DungTheory bbase) {
 		//switch the type of solver chosen in the constructor
 		switch(this.sol) {
 			case cardinality:

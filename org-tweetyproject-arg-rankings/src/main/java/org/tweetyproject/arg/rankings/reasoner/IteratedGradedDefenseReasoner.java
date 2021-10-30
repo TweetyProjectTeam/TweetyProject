@@ -169,7 +169,7 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @return "true" iff args is mn-grounded
 	 */
 	public boolean isMNGrounded(DungTheory theory, Collection<Argument> args, int m, int n){
-		return this.getAllMNGroundedExtensions(theory, m, n).contains(new Extension(args));
+		return this.getAllMNGroundedExtensions(theory, m, n).contains(new Extension<DungTheory>(args));
 	}
 	
 	/**
@@ -182,7 +182,7 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @return "true" iff args is mn-preferred
 	 */
 	public boolean isMNPreferred(DungTheory theory, Collection<Argument> args, int m, int n){
-		return this.getAllMNPreferredExtensions(theory, m, n).contains(new Extension(args));
+		return this.getAllMNPreferredExtensions(theory, m, n).contains(new Extension<DungTheory>(args));
 	}
 	
 	/**
@@ -192,11 +192,11 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @param n some integer
 	 * @return all mn-complete extensions.
 	 */
-	public Collection<Extension> getAllMNCompleteExtensions(DungTheory theory, int m, int n){
-		Collection<Extension> result = new HashSet<>();
+	public Collection<Extension<DungTheory>> getAllMNCompleteExtensions(DungTheory theory, int m, int n){
+		Collection<Extension<DungTheory>> result = new HashSet<>();
 		for(Collection<Argument> set : new SetTools<Argument>().subsets(theory)){
 			if(this.isMNComplete(theory, set, m, n))
-				result.add(new Extension(set));
+				result.add(new Extension<DungTheory>(set));
 		}
 		return result;
 	}
@@ -208,12 +208,12 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @param n some integer
 	 * @return all mn-preferred extensions.
 	 */
-	public Collection<Extension> getAllMNPreferredExtensions(DungTheory theory, int m, int n){
-		Collection<Extension> result = new HashSet<>();
-		Collection<Extension> complete_extensions  = this.getAllMNCompleteExtensions(theory, m, n);
-		for(Extension ext1: complete_extensions){
+	public Collection<Extension<DungTheory>> getAllMNPreferredExtensions(DungTheory theory, int m, int n){
+		Collection<Extension<DungTheory>> result = new HashSet<>();
+		Collection<Extension<DungTheory>> complete_extensions  = this.getAllMNCompleteExtensions(theory, m, n);
+		for(Extension<DungTheory> ext1: complete_extensions){
 			boolean isMaximal = true;
-			for(Extension ext2: complete_extensions)
+			for(Extension<DungTheory> ext2: complete_extensions)
 				if(ext1 != ext2){
 					if(ext2.containsAll(ext1)){
 						isMaximal = false;
@@ -233,12 +233,12 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @param n some integer
 	 * @return all mn-grounded extensions.
 	 */
-	public Collection<Extension> getAllMNGroundedExtensions(DungTheory theory, int m, int n){
-		Collection<Extension> result = new HashSet<>();
-		Collection<Extension> complete_extensions  = this.getAllMNCompleteExtensions(theory, m, n);
-		for(Extension ext1: complete_extensions){
+	public Collection<Extension<DungTheory>> getAllMNGroundedExtensions(DungTheory theory, int m, int n){
+		Collection<Extension<DungTheory>> result = new HashSet<>();
+		Collection<Extension<DungTheory>> complete_extensions  = this.getAllMNCompleteExtensions(theory, m, n);
+		for(Extension<DungTheory> ext1: complete_extensions){
 			boolean isMinimal = true;
-			for(Extension ext2: complete_extensions)
+			for(Extension<DungTheory> ext2: complete_extensions)
 				if(ext1 != ext2){
 					if(ext1.containsAll(ext2)){
 						isMinimal = false;
@@ -257,11 +257,11 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @param m some integer
 	 * @return all m-stable extensions.
 	 */
-	public Collection<Extension> getAllMStableExtensions(DungTheory theory, int m){
-		Collection<Extension> result = new HashSet<>();
+	public Collection<Extension<DungTheory>> getAllMStableExtensions(DungTheory theory, int m){
+		Collection<Extension<DungTheory>> result = new HashSet<>();
 		for(Collection<Argument> set : new SetTools<Argument>().subsets(theory)){
 			if(this.isMStable(theory, set, m))
-				result.add(new Extension(set));
+				result.add(new Extension<DungTheory>(set));
 		}
 		return result;
 	}
@@ -274,7 +274,7 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @return "true" iff the given argument "y" is contained in all sets of arguments
 	 * in "args". 
 	 */
-	private boolean isContainedInAll(Argument y, Collection<Extension> exts){
+	private boolean isContainedInAll(Argument y, Collection<Extension<DungTheory>> exts){
 		for(Collection<Argument> set: exts)
 			if(!set.contains(y))
 				return false;
@@ -285,7 +285,7 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
@@ -295,9 +295,9 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public LatticeArgumentRanking getModel(ArgumentationFramework bbase) {
+	public LatticeArgumentRanking getModel(DungTheory bbase) {
 		// compute all mn-complete extensions for all m,n
-		Map<Point,Collection<Extension>> allExt = new HashMap<>();
+		Map<Point,Collection<Extension<DungTheory>>> allExt = new HashMap<>();
 		for(int m = 1; m < ((DungTheory)bbase).size(); m++)
 			for(int n=1; n < ((DungTheory)bbase).size(); n++)
 				allExt.put(new Point(m,n), this.getAllMNCompleteExtensions(((DungTheory)bbase), m, n));
@@ -307,7 +307,7 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 				if(a != b){
 					boolean aImpliesB = true;
 					boolean bImpliesA = true;
-					for(Collection<Extension> exts: allExt.values()){
+					for(Collection<Extension<DungTheory>> exts: allExt.values()){
 						if(this.isContainedInAll(a, exts) && !this.isContainedInAll(b, exts))
 							aImpliesB = false;
 						if(this.isContainedInAll(b, exts) && !this.isContainedInAll(a, exts))

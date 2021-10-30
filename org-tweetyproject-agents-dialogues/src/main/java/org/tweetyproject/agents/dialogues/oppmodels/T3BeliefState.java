@@ -27,6 +27,7 @@ import org.tweetyproject.agents.dialogues.ArgumentationEnvironment;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.Pair;
 import org.tweetyproject.math.probability.Probability;
 import org.tweetyproject.math.probability.ProbabilityFunction;
@@ -58,7 +59,7 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 	 * @param rec the recognition function
 	 * @param prob the probability function over opponent models.
 	 */
-	public T3BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction, Set<Argument> virtualArguments, Set<Attack> virtualAttacks, RecognitionFunction rec, ProbabilityFunction<T3BeliefState> prob){
+	public T3BeliefState(Extension<DungTheory> knownArguments, UtilityFunction<Argument,Extension<DungTheory>> utilityFunction, Set<Argument> virtualArguments, Set<Attack> virtualAttacks, RecognitionFunction rec, ProbabilityFunction<T3BeliefState> prob){
 		super(knownArguments, utilityFunction);
 		this.virtualArguments = virtualArguments;
 		this.virtualAttacks = virtualAttacks;
@@ -70,7 +71,7 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.BeliefState#update(org.tweetyproject.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public void update(DialogueTrace<Argument,Extension> trace) {
+	public void update(DialogueTrace<Argument,Extension<DungTheory>> trace) {
 		this.getKnownArguments().addAll(trace.getElements());
 		for(Argument a: trace.getElements())
 			if(this.rec.get(a) != null)
@@ -95,13 +96,13 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.BeliefState#doMove(org.tweetyproject.agents.argumentation.oppmodels.GroundedEnvironment, org.tweetyproject.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	protected Pair<Double, Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension> trace) {
+	protected Pair<Double, Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension<DungTheory>> trace) {
 		double bestEU = this.getUtilityFunction().getUtility(env.getDialogueTrace(), this.virtualArguments, this.virtualAttacks);
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
 		bestMoves.add(new ExecutableExtension());
 		/* For every legal move newMove ... */		
 		for(ExecutableExtension newMove: this.getLegalMoves(env,trace)){			
-			DialogueTrace<Argument,Extension> t2 = trace.addAndCopy(newMove);
+			DialogueTrace<Argument,Extension<DungTheory>> t2 = trace.addAndCopy(newMove);
 			double newMoveEU = 0;			
 			/* For all possible opponent states oppState ... */
 			if(this.prob.isEmpty())
@@ -126,7 +127,7 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 								newMoveEU += this.getUtilityFunction().getUtility(t2, this.virtualArguments, this.virtualAttacks) * oppStateProb.doubleValue() * oppResponseProb;
 								continue;
 							}
-							DialogueTrace<Argument,Extension> t3 = t2.addAndCopy(oppResponse);		
+							DialogueTrace<Argument,Extension<DungTheory>> t3 = t2.addAndCopy(oppResponse);		
 							/* Get best response to oppResponse */
 							Pair<Double, Set<ExecutableExtension>> r = this.doMove(env, t3);						
 							/* Expected utility is utility of best response times probability of 
@@ -163,11 +164,11 @@ public class T3BeliefState extends BeliefState implements Comparable<T3BeliefSta
 	 */
 	public Object clone(){
 		if(this.prob.isEmpty())
-			return new T3BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction(), new HashSet<Argument>(this.virtualArguments), new HashSet<Attack>(this.virtualAttacks),this.rec, new ProbabilityFunction<T3BeliefState>());
+			return new T3BeliefState(new Extension<DungTheory>(this.getKnownArguments()), this.getUtilityFunction(), new HashSet<Argument>(this.virtualArguments), new HashSet<Attack>(this.virtualAttacks),this.rec, new ProbabilityFunction<T3BeliefState>());
 		ProbabilityFunction<T3BeliefState> prob = new ProbabilityFunction<T3BeliefState>();
 		for(java.util.Map.Entry<T3BeliefState, Probability> entry: this.prob.entrySet())
 			prob.put((T3BeliefState)entry.getKey().clone(), entry.getValue());
-		return new T3BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction(), new HashSet<Argument>(this.virtualArguments), new HashSet<Attack>(this.virtualAttacks),this.rec, prob);
+		return new T3BeliefState(new Extension<DungTheory>(this.getKnownArguments()), this.getUtilityFunction(), new HashSet<Argument>(this.virtualArguments), new HashSet<Attack>(this.virtualAttacks),this.rec, prob);
 	}
 	
 	/* (non-Javadoc)

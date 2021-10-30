@@ -27,7 +27,6 @@ import java.util.Map;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.arg.rankings.util.RankingTools;
@@ -114,14 +113,14 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	}
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(ArgumentationFramework kb) {
+	public LatticeArgumentRanking getModel(DungTheory kb) {
 		if (((DungTheory)kb).containsCycle())
 			return null;
 		
@@ -304,7 +303,7 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	 * @return the initial valuation of the given argument
 	 */
 	private double getInitialValuation(Argument a, DungTheory kb, double epsilon) {
-		if (kb.isAttacked(a, new Extension(kb)))
+		if (kb.isAttacked(a, new Extension<DungTheory>(kb)))
 			return epsilon;
 		return 1.0;
 	}

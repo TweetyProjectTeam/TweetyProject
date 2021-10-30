@@ -36,25 +36,25 @@ import java.util.Set;
  */
 public class SimpleEagerSetAfReasoner extends AbstractExtensionSetAfReasoner {
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
-        Collection<Extension> exts = new HashSet<Extension>();
+    public Collection<Extension<SetAf>> getModels(SetAf bbase) {
+        Collection<Extension<SetAf>> exts = new HashSet<Extension<SetAf>>();
         exts.add(this.getModel(bbase));
         return exts;
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
-        Collection<Extension> admExt = new SimpleAdmissibleSetAfReasoner().getModels(bbase);
-        Collection<Extension> sstExt = new SimpleSemiStableSetAfReasoner().getModels(bbase);
+    public Extension<SetAf> getModel(SetAf bbase) {
+        Collection<Extension<SetAf>> admExt = new SimpleAdmissibleSetAfReasoner().getModels(bbase);
+        Collection<Extension<SetAf>> sstExt = new SimpleSemiStableSetAfReasoner().getModels(bbase);
         Set<Labeling> potResult = new HashSet<Labeling>();
         boolean potEager;
-        for(Extension ext: admExt){
+        for(Extension<SetAf> ext: admExt){
         	Labeling extLab = new Labeling((SetAf)bbase,ext);
             // ext is eager if
             // 1. for every semi-stable labeling L both in and out are subsets of that sets in L
             potEager = true;
-            for(Extension ext2: sstExt){
-            	Extension extLab2 = new Extension(ext2);
+            for(Extension<SetAf> ext2: sstExt){
+            	Extension<SetAf> extLab2 = new Extension<SetAf>(ext2);
                 if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
                     potEager = false;
                     break;
@@ -81,7 +81,7 @@ public class SimpleEagerSetAfReasoner extends AbstractExtensionSetAfReasoner {
                         }
             }
             if(eager)
-                return lab.getArgumentsOfStatus(ArgumentStatus.IN);
+                return (Extension<SetAf>) lab.getArgumentsOfStatus(ArgumentStatus.IN);
         }
         // this should not happen as there is always an eager extension;
         throw new RuntimeException("Eager extension seems to be undefined.");
