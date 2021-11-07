@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.qbf.reasoner;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.regex.Pattern;
@@ -106,7 +107,12 @@ public class GhostQSolver extends QbfSolver {
 
 	@Override
 	public boolean isInstalled() {
-		// TODO Auto-generated method stub
-		return false;
+		String cmd = binaryLocation + "target/release/ghostq --help ";
+		try {
+			bash.run(cmd);
+		} catch (InterruptedException | IOException e) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -158,5 +158,11 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 		}
 		return Math.sqrt(sum);
 	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

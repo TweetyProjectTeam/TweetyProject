@@ -195,5 +195,11 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 			tv = tv.substring(2);
 		return tv;
 	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

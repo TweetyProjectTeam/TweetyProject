@@ -126,5 +126,11 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 			ranking.put(a, result.get(a));
 		return ranking;
 	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.qbf.reasoner;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.regex.Pattern;
@@ -101,7 +102,17 @@ public class QuteSolver extends QbfSolver {
 
 	@Override
 	public boolean isInstalled() {
-		// TODO Auto-generated method stub
-		return false;
+		String cmd = binaryLocation + "/qute -h";
+		try {
+			bash.run(cmd);
+		}
+		catch(RuntimeException e) {
+			return false;
+		} catch (InterruptedException e) {
+			return false;
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 }

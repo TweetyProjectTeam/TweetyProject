@@ -176,5 +176,11 @@ public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<Numeri
 		result -= 1.0 - (1.0 / (attacksFromBtoA + 1.0));
 		return 0.5 * result;
 	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

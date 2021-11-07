@@ -119,5 +119,11 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 		}
 		return Math.sqrt(sum);
 	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

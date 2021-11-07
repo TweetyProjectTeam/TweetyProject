@@ -262,7 +262,6 @@ public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefS
 
 	@Override
 	public boolean isInstalled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }

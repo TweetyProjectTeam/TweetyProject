@@ -297,7 +297,6 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 
 	@Override
 	public boolean isInstalled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }

@@ -299,6 +299,10 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 		return result;
 	}
 
-
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

@@ -323,4 +323,9 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 		return ranking;
 	}
 
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }

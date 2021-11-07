@@ -124,5 +124,11 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 		}
 		return paths.size();
 	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

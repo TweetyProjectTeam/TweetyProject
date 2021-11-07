@@ -326,5 +326,11 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 		}
 		return shuffled_list.stream().mapToDouble(d -> d).toArray();
 	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 
 }

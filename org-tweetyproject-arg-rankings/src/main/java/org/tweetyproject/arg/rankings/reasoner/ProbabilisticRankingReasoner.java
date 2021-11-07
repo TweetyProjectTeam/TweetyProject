@@ -105,4 +105,10 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 			ranking.put(a, reasoner.query(paf,a));
 		return ranking;
 	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 }
