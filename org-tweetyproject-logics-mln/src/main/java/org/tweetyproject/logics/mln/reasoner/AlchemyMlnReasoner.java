@@ -323,5 +323,5 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 	@Override
 	public boolean isInstalled() {
 		return true;
-
+	}
 }
