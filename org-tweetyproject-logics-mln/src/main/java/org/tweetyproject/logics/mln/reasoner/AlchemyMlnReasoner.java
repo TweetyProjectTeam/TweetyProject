@@ -322,11 +322,7 @@ public class AlchemyMlnReasoner extends AbstractMlnReasoner {
 
 	@Override
 	public boolean isInstalled() {
-		File f = new File(this.binaryLocation);
-		if(f.exists() && !f.isDirectory()) { 
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 }
