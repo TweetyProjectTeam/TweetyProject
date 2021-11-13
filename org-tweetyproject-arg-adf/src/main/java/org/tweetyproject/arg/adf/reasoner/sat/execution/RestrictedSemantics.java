@@ -6,8 +6,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.reasoner.sat.decomposer.Decomposer;
-import org.tweetyproject.arg.adf.reasoner.sat.decomposer.MostBipolarParentsDecomposer;
-import org.tweetyproject.arg.adf.reasoner.sat.decomposer.RandomDecomposer;
+import org.tweetyproject.arg.adf.reasoner.sat.decomposer.MostComplexAcceptanceConditionDecomposer;
 import org.tweetyproject.arg.adf.reasoner.sat.encodings.PropositionalMapping;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.CandidateGenerator;
 import org.tweetyproject.arg.adf.reasoner.sat.generator.ConflictFreeGenerator;
@@ -50,7 +49,7 @@ abstract class RestrictedSemantics implements Semantics {
 	
 	@Override
 	public Decomposer createDecomposer() {
-		return new MostBipolarParentsDecomposer(adf);
+		return new MostComplexAcceptanceConditionDecomposer(adf);
 	}
 	
 	static final class ConflictFreeSemantics extends RestrictedSemantics {
@@ -335,6 +334,11 @@ abstract class RestrictedSemantics implements Semantics {
 		public boolean hasVerifier() {
 			return true;
 		}
+		
+		@Override
+		public boolean hasStatefulVerifier() {
+			return false;
+		}
 
 		@Override
 		public boolean hasVerifiedProcessor() {
@@ -351,7 +355,7 @@ abstract class RestrictedSemantics implements Semantics {
 		
 		@Override
 		public Decomposer createDecomposer() {
-			return new RandomDecomposer(adf).asTwoValued();
+			return new MostComplexAcceptanceConditionDecomposer(adf).asTwoValued();
 		}
 
 		@Override
@@ -414,7 +418,7 @@ abstract class RestrictedSemantics implements Semantics {
 		
 		@Override
 		public Decomposer createDecomposer() {
-			return new RandomDecomposer(adf).asTwoValued();
+			return new MostComplexAcceptanceConditionDecomposer(adf).asTwoValued();
 		}
 
 		@Override

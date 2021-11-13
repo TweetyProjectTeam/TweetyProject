@@ -72,6 +72,10 @@ public interface Semantics {
 
 	boolean hasVerifier();
 	
+	default boolean hasStatefulVerifier() {
+		return true; // safe option
+	}
+	
 	/**
 	 * Creates a verifier, which acts as a filter.
 	 * 

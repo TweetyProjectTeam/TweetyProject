@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -131,6 +132,8 @@ public final class ParallelExecution implements Execution {
 
 		private final AtomicInteger currentlyInPipeline = new AtomicInteger(1);
 		
+		private final AtomicBoolean closed = new AtomicBoolean(false);
+		
 		Branch(Semantics semantics) {
 			this.semantics = Objects.requireNonNull(semantics);
 			this.generator = buildPipeline();
@@ -146,7 +149,11 @@ public final class ParallelExecution implements Execution {
 			}
 
 			if (semantics.hasVerifier()) {
-				last = new VerificationNode(last);
+				if (semantics.hasStatefulVerifier()) {
+					last = new SynchronizedVerificationNode(last);					
+				} else {
+					last = new VerificationNode(last);
+				}
 			}
 
 			if (semantics.hasUnverifiedProcessor()) {
@@ -170,7 +177,9 @@ public final class ParallelExecution implements Execution {
 
 		@Override
 		public void close() {
-			generator.close();
+			if (closed.compareAndSet(false, true)) {
+				generator.close();				
+			}
 		}
 
 		private final class ProcessedStateSupplier implements Supplier<SatSolverState> {
@@ -249,7 +258,7 @@ public final class ParallelExecution implements Execution {
 			private final Node next;
 
 			private final Verifier verifier;
-
+			
 			public VerificationNode(Node next) {
 				this.next = Objects.requireNonNull(next);
 				this.verifier = semantics.createVerifier(satSolver::createState).orElseThrow();
@@ -259,6 +268,39 @@ public final class ParallelExecution implements Execution {
 			@Override
 			public void accept(Interpretation interpretation) {
 				executor.execute(() -> {
+					if (closed.get()) return;
+					if (verifier.verify(interpretation)) {
+						next.accept(interpretation);
+					} else {
+						decreaseCount();
+					}						
+				});
+			}
+
+			@Override
+			public void close() {
+				verifier.close();
+				next.close();
+			}
+
+		}
+		
+		private final class SynchronizedVerificationNode implements Node {
+
+			private final Node next;
+
+			private final Verifier verifier;
+			
+			public SynchronizedVerificationNode(Node next) {
+				this.next = Objects.requireNonNull(next);
+				this.verifier = semantics.createVerifier(satSolver::createState).orElseThrow();
+				this.verifier.prepare();
+			}
+
+			@Override
+			public void accept(Interpretation interpretation) {
+				executor.execute(() -> {
+					if (closed.get()) return;
 					boolean verified;
 					synchronized(verifier) {
 						verified = verifier.verify(interpretation);
@@ -267,7 +309,7 @@ public final class ParallelExecution implements Execution {
 						next.accept(interpretation);
 					} else {
 						decreaseCount();
-					}
+					}						
 				});
 			}
 
@@ -292,6 +334,7 @@ public final class ParallelExecution implements Execution {
 
 			public void accept(Interpretation interpretation) {
 				executor.execute(() -> {
+					if (closed.get()) return;
 					Interpretation processed = processor.process(interpretation);
 					generator.update(state -> processor.updateState(state, processed));
 					next.accept(processed);						
