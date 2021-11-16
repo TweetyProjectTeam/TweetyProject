@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.ml.reasoner;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
@@ -127,10 +128,12 @@ public class MleanCoPReasoner extends AbstractMlReasoner {
 
 	@Override
 	public boolean isInstalled() {
-		File f = new File(scriptLocation);
-		if(f.exists() && !f.isDirectory())
-			return true;
-		return false;
+		try {
+			bash.run(scriptLocation);
+		} catch (InterruptedException | IOException e) {
+			return false;
+		}
+		return true;
 	}
 
 }

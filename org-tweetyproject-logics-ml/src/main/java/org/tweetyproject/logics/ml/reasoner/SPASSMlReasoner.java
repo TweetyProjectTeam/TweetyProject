@@ -163,11 +163,12 @@ public class SPASSMlReasoner extends AbstractMlReasoner {
 	
 	@Override
 	public boolean isInstalled() {
-		File f = new File(this.binaryLocation);
-		if(f.exists() && !f.isDirectory()) { 
-			return true;
+		try {
+			bash.run(binaryLocation);
+		} catch (InterruptedException | IOException e) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 }
