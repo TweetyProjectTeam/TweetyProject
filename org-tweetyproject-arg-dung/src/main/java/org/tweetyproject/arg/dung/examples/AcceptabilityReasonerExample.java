@@ -28,6 +28,7 @@ import org.tweetyproject.arg.dung.reasoner.IaqAcceptabilityReasoner;
 import org.tweetyproject.arg.dung.reasoner.SatCompleteReasoner;
 import org.tweetyproject.arg.dung.reasoner.SeeAcceptabilityReasoner;
 import org.tweetyproject.arg.dung.reasoner.SeemAcceptabilityReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ParserException;
@@ -53,13 +54,13 @@ public class AcceptabilityReasonerExample {
 		DungTheory af = parser.parseBeliefBaseFromFile("src/main/resources/ex3.tgf");
 		
 		// instantiate (Max)SAT solver (provide path to open-wbo_2.1)
-		MaxSatSolver solver = new OpenWboSolver("/Users/mthimm/Projects/misc_bins/open-wbo_2.1");
+		MaxSatSolver solver = new OpenWboSolver("/Users/mthimm/Documents/software/misc_bins/open-wbo_2.1");
 		
 		// instantiate acceptability reasoner for credulous complete reasoning
 		AbstractAcceptabilityReasoner iaq  = new IaqAcceptabilityReasoner(new SatCompleteReasoner(solver), InferenceMode.CREDULOUS);
 		AbstractAcceptabilityReasoner eee  = new EeeAcceptabilityReasoner(new SatCompleteReasoner(solver), InferenceMode.CREDULOUS);
-		AbstractAcceptabilityReasoner see  = new SeeAcceptabilityReasoner(solver);
-		AbstractAcceptabilityReasoner seem = new SeemAcceptabilityReasoner(solver);
+		AbstractAcceptabilityReasoner see  = new SeeAcceptabilityReasoner(solver, Semantics.CO, InferenceMode.CREDULOUS);
+		AbstractAcceptabilityReasoner seem = new SeemAcceptabilityReasoner(solver, Semantics.CO, InferenceMode.CREDULOUS);
 		
 		// apply reasoner to af
 		System.out.println("Acceptable arguments (according to IAQ): " + iaq.getAcceptableArguments(af));

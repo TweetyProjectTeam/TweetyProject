@@ -27,7 +27,7 @@ import org.tweetyproject.commons.InferenceMode;
 
 /**
  * Implements the IAQ approach ("iterative acceptability queries") to
- * determine the set of acceptable arguments of an AF, cf. [Thimm, Cerutti, Vallati; 2020, in preparation].
+ * determine the set of acceptable arguments of an AF, cf. [Thimm, Cerutti, Vallati; COMMA 2020].
  * It uses another extension-based reasoner to query for each argument
  * separately whether it is accepted.
  * 

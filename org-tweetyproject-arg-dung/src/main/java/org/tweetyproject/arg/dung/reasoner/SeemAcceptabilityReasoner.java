@@ -23,8 +23,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.logics.pl.sat.MaxSatSolver;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
@@ -36,7 +38,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 /**
  * Implements the SEEM approach ("selective extension enumeration with MaxSAT") to
  * determine the set of credulously acceptable arguments of an AF
- * wrt. complete semantics, cf. [Thimm, Cerutti, Vallati; 2020, in preparation].
+ * wrt. complete semantics, cf. [Thimm, Cerutti, Vallati; COMMA 2020].
  * It iteratively calls a MaxSAT solver to discover new acceptable arguments.
  * 
  * @author Matthias Thimm
@@ -46,12 +48,24 @@ public class SeemAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 
 	private MaxSatSolver maxSatSolver;
 		
+	private Semantics semantics;
+	
+	private InferenceMode inferenceMode;
+	
 	/**
 	 * Creates a new IaqAcceptabilityReasoner.
 	 * @param maxSatSolver some MaxSATSolver.
+	 * @param semantics either Semantics.CO, Semantics.PR, or Semantics.ST
+	 * @param inferenceMode either InferenceMode.CREDULOUS or InferenceMode.SKEPTICAL (only stable semantics)
 	 */
-	public SeemAcceptabilityReasoner(MaxSatSolver maxSatSolver) {
+	public SeemAcceptabilityReasoner(MaxSatSolver maxSatSolver,  Semantics semantics, InferenceMode inferenceMode) {
+		if(!semantics.equals(Semantics.CO) && !semantics.equals(Semantics.PR) && !semantics.equals(Semantics.ST))
+			throw new IllegalArgumentException("Semantics must be CO, PR, or ST");
+		if(inferenceMode.equals(InferenceMode.SKEPTICAL) && !semantics.equals(Semantics.ST))
+			throw new IllegalArgumentException("Skeptical reasoning only supported for stable semantics");
 		this.maxSatSolver = maxSatSolver;
+		this.semantics = semantics;
+		this.inferenceMode = inferenceMode;
 	}
 	
 	@Override
@@ -87,35 +101,68 @@ public class SeemAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 				}
 				beliefSet.add(((PlFormula)out.get(a).complement()).combineWithOr(new Disjunction(attackersOr)));
 				beliefSet.add(((PlFormula)in.get(a).complement()).combineWithOr(new Conjunction(attackersAnd)));
-				beliefSet.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Conjunction(attackersNotAnd)));
-				beliefSet.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Disjunction(attackersNotOr)));
+				// for stable semantics, no argument can be undec
+				if(this.semantics.equals(Semantics.ST)) {
+					beliefSet.add((PlFormula)undec.get(a).complement());
+				}else {
+					beliefSet.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Conjunction(attackersNotAnd)));
+					beliefSet.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Disjunction(attackersNotOr)));
+				}
 			}
 		}
 		//====================
 		Collection<Argument> result = new HashSet<Argument>();
-		Map<PlFormula,Integer> softConstraints = new HashMap<>();
-		for(Argument a: aaf)
-			softConstraints.put(in.get(a),1);
-		boolean changed;
-		while(!softConstraints.isEmpty()) {
-			PossibleWorld w =(PossibleWorld) this.maxSatSolver.getWitness(beliefSet,softConstraints);
-			if(w == null)
-				break;
-			else {
-				changed = false;
-				for(Proposition p: w){
-					if(p.getName().startsWith("in_")) {
-						Argument b = new Argument(p.getName().substring(3));
-						result.add(b);												
-						if(softConstraints.containsKey(in.get(b))) {
-							softConstraints.remove(in.get(b));
-							changed = true;
-						}							
-					}
-				}				
-				if(!changed) break;
-			}			
-		}		
+		if(this.inferenceMode.equals(InferenceMode.CREDULOUS)) {
+			Map<PlFormula,Integer> softConstraints = new HashMap<>();
+			for(Argument a: aaf)
+				softConstraints.put(in.get(a),1);
+			boolean changed;
+			while(!softConstraints.isEmpty()) {
+				PossibleWorld w =(PossibleWorld) this.maxSatSolver.getWitness(beliefSet,softConstraints);
+				if(w == null)
+					break;
+				else {
+					changed = false;
+					for(Proposition p: w){
+						if(p.getName().startsWith("in_")) {
+							Argument b = new Argument(p.getName().substring(3));
+							result.add(b);												
+							if(softConstraints.containsKey(in.get(b))) {
+								softConstraints.remove(in.get(b));
+								changed = true;
+							}							
+						}
+					}				
+					if(!changed) break;
+				}			
+			}		
+		}else {
+			Map<PlFormula,Integer> softConstraints = new HashMap<>();
+			for(Argument a: aaf) {
+				softConstraints.put(out.get(a),1);
+				result.add(a);
+			}
+			boolean changed;
+			while(!softConstraints.isEmpty()) {
+				PossibleWorld w =(PossibleWorld) this.maxSatSolver.getWitness(beliefSet,softConstraints);
+				if(w == null)
+					break;
+				else {
+					changed = false;
+					for(Proposition p: w){
+						if(p.getName().startsWith("out_")) {
+							Argument b = new Argument(p.getName().substring(4));
+							result.remove(b);												
+							if(softConstraints.containsKey(out.get(b))) {
+								softConstraints.remove(out.get(b));
+								changed = true;
+							}							
+						}
+					}				
+					if(!changed) break;
+				}			
+			}
+		}
 		return result;
 	}	
 	
