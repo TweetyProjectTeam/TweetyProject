@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.tweetyproject.commons.Interpretation;
 import org.tweetyproject.commons.util.NativeShell;
@@ -87,12 +85,10 @@ public class CmdLineSatSolver extends SatSolver {
 			f.delete();
 			if (output.indexOf("UNSATISFIABLE") != -1)
 				return null;
-			// parse the model by looking for dimacs output strings, e.g. "v -1 2 3 0"
-			Pattern pattern = Pattern.compile("[^a-zA-Z]v\\s(-?[1-9]+\\s)+0");
-			Matcher matcher = pattern.matcher(output.trim());
-			if (matcher.find()) {
-				String model = output.substring(matcher.start(), matcher.end()).trim();
-				model = model.replaceAll("v ", "");
+			// parse the model by looking for dimacs output string ("v -1 2 3 0")
+			if (output.indexOf("\nv") > -1) {
+				String model = output.substring(output.indexOf("\nv")+1).trim();
+				model = model.replaceAll("v", "");				
 				StringTokenizer tokenizer = new StringTokenizer(model, " ");
 				PossibleWorld w = new PossibleWorld();
 				while (tokenizer.hasMoreTokens()) {
@@ -100,7 +96,8 @@ public class CmdLineSatSolver extends SatSolver {
 					Integer i = Integer.parseInt(s);
 					if (i > 0) {
 						w.add(props.get(i - 1));
-					}
+					}else if(i == 0)
+						break;
 				}
 				return w;
 			} else
