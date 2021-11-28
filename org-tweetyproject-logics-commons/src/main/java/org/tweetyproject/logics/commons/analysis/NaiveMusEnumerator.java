@@ -118,6 +118,11 @@ public class NaiveMusEnumerator<S extends Formula> extends AbstractMusEnumerator
 				 }
 		 return result;
 	}
+
+	@Override
+	public boolean isInstalled() {
+		return true;
+	}
 	
 	//Deprecated, slower version to compute minimal inconsistent subsets
 	//public Collection<Collection<S>> minimalInconsistentSubsets(T beliefSet){

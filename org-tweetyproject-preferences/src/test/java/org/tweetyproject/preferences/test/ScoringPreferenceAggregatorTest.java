@@ -120,11 +120,10 @@ public class ScoringPreferenceAggregatorTest {
 //	}
 
 
-
 	@Test
 	public void testBordaScoringPreferenceAggregator_1()
 		throws Exception {
-
+		System.out.println(orders.iterator().next().getDomainElements().size());
 		BordaScoringPreferenceAggregator<String> resultAggr = new BordaScoringPreferenceAggregator<String>(orders.iterator().next().getDomainElements().size());
 
 		PreferenceOrder<String> result = resultAggr.aggregate(orders);

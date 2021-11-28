@@ -159,7 +159,12 @@ public class CmdLineSatSolver extends SatSolver {
 
 	@Override
 	public boolean isInstalled() {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			NativeShell.invokeExecutable(this.binaryLocation + " -h");
+			return true;
+		}
+		catch(Exception e) {
+			return false;
+		}
 	}
 }
