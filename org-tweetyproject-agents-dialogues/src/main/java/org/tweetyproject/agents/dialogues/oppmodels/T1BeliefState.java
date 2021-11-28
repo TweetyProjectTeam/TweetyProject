@@ -26,6 +26,7 @@ import org.tweetyproject.agents.dialogues.ExecutableExtension;
 import org.tweetyproject.agents.dialogues.ArgumentationEnvironment;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.Pair;
 
 /**
@@ -46,7 +47,7 @@ public class T1BeliefState extends BeliefState {
 	 * @param utilityFunction the utility function of the agent.
 	 * @param oppModel the opponent model of the agent (null if no further model is given).
 	 */
-	public T1BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction, T1BeliefState oppModel){
+	public T1BeliefState(Extension<DungTheory> knownArguments, UtilityFunction<Argument,Extension<DungTheory>> utilityFunction, T1BeliefState oppModel){
 		super(knownArguments, utilityFunction);
 		this.oppModel = oppModel;
 	}
@@ -56,7 +57,7 @@ public class T1BeliefState extends BeliefState {
 	 * @param knownArguments the set of arguments known by the agent.
 	 * @param utilityFunction the utility function of the agent.	 
 	 */
-	public T1BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction){
+	public T1BeliefState(Extension<DungTheory> knownArguments, UtilityFunction<Argument,Extension<DungTheory>> utilityFunction){
 		this(knownArguments, utilityFunction, null);
 	}
 	
@@ -64,7 +65,7 @@ public class T1BeliefState extends BeliefState {
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.BeliefState#update(org.tweetyproject.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public void update(DialogueTrace<Argument,Extension> trace) {
+	public void update(DialogueTrace<Argument,Extension<DungTheory>> trace) {
 		this.getKnownArguments().addAll(trace.getElements());
 		if(this.oppModel != null)
 			this.oppModel.update(trace);
@@ -74,7 +75,7 @@ public class T1BeliefState extends BeliefState {
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.BeliefState#doMove(org.tweetyproject.agents.argumentation.oppmodels.GroundedEnvironment, org.tweetyproject.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public Pair<Double,Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension> trace) {
+	public Pair<Double,Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension<DungTheory>> trace) {
 		double maxUtility = this.getUtilityFunction().getUtility(trace);
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
 		Set<ExecutableExtension> ee = this.getLegalMoves(env, trace);		
@@ -111,8 +112,8 @@ public class T1BeliefState extends BeliefState {
 	 */
 	public Object clone(){
 		if(this.oppModel != null)
-			return new T1BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction(), (T1BeliefState) this.oppModel.clone());
-		return new T1BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction());
+			return new T1BeliefState(new Extension<DungTheory>(this.getKnownArguments()), this.getUtilityFunction(), (T1BeliefState) this.oppModel.clone());
+		return new T1BeliefState(new Extension<DungTheory>(this.getKnownArguments()), this.getUtilityFunction());
 	}
 	
 	/* (non-Javadoc)

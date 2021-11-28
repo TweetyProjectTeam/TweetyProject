@@ -79,7 +79,7 @@ public class FlatAbaReasoner<T extends Formula> extends GeneralAbaReasoner<T> {
 		DungTheory dt = abat.asDungTheory();
 		AbstractExtensionReasoner aer = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
 		Collection<AbaExtension<T>> result = new HashSet<>();
-		for (Extension ext : aer.getModels(dt)) {
+		for (Extension<DungTheory> ext : aer.getModels(dt)) {
 			AbaExtension<T> abaext = new AbaExtension<T>();
 			for (Argument arg : ext) {
 				for (Assumption<T> ass : abat.getAssumptions()) {

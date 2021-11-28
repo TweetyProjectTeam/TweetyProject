@@ -27,6 +27,7 @@ import org.tweetyproject.agents.dialogues.ExecutableExtension;
 import org.tweetyproject.agents.dialogues.ArgumentationEnvironment;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.Pair;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -39,16 +40,16 @@ import org.tweetyproject.commons.util.SetTools;
 public abstract class BeliefState {
 	
 	/** The set of arguments known by the agent. */
-	private Extension knownArguments;
+	private Extension<DungTheory> knownArguments;
 	/** The utility function of the agent. */
-	private UtilityFunction<Argument,Extension> utilityFunction;
+	private UtilityFunction<Argument,Extension<DungTheory>> utilityFunction;
 	
 	/**
 	 * Creates a new belief-state with the given parameters. 
 	 * @param knownArguments the set of arguments known by the agent.
 	 * @param utilityFunction the utility function of the agent.
 	 */
-	public BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction){
+	public BeliefState(Extension<DungTheory> knownArguments, UtilityFunction<Argument,Extension<DungTheory>> utilityFunction){
 		this.knownArguments = knownArguments;
 		this.utilityFunction = utilityFunction;
 	}
@@ -61,11 +62,11 @@ public abstract class BeliefState {
 	 * @param move a possible move
 	 * @return "true" if the given move is legal.
 	 */
-	private boolean isLegal(ArgumentationEnvironment env, DialogueTrace<Argument,Extension> trace, Set<Argument> move) {		
+	private boolean isLegal(ArgumentationEnvironment env, DialogueTrace<Argument,Extension<DungTheory>> trace, Set<Argument> move) {		
 		/* Moves of size 1 */
 		if(move.size() != 1) return false;	
 		/* Enforce that all but first move attacks a previous move */
-		if(!trace.isEmpty() && !env.getPerceivedDungTheory(new Extension(trace.addAndCopy(new ExecutableExtension(move)).getElements())).isAttacked(new Extension(trace.getElements()),new Extension(move)))
+		if(!trace.isEmpty() && !env.getPerceivedDungTheory(new Extension<DungTheory>(trace.addAndCopy(new ExecutableExtension(move)).getElements())).isAttacked(new Extension(trace.getElements()),new Extension(move)))
 			return false;		
 		/* Enforce conflict free moves */
 		//if(env.getPerceivedDungTheory(trace.getArguments()).isAttacked(new Extension(move), new Extension(move))) return false;		
@@ -78,7 +79,7 @@ public abstract class BeliefState {
 	 * @param trace the trace to be considered.
 	 * @return the set of possible moves in the given situation.
 	 */
-	protected Set<ExecutableExtension> getLegalMoves(ArgumentationEnvironment env, DialogueTrace<Argument,Extension> trace){
+	protected Set<ExecutableExtension> getLegalMoves(ArgumentationEnvironment env, DialogueTrace<Argument,Extension<DungTheory>> trace){
 		Set<ExecutableExtension> moves = new HashSet<ExecutableExtension>();
 		Set<Argument> arguments = new HashSet<Argument>(this.knownArguments);
 		arguments.removeAll(trace.getElements());
@@ -93,7 +94,7 @@ public abstract class BeliefState {
 	 * Returns the set of known arguments.
 	 * @return the set of known arguments.
 	 */
-	protected Extension getKnownArguments(){
+	protected Extension<DungTheory> getKnownArguments(){
 		return this.knownArguments;
 	}	
 	
@@ -101,7 +102,7 @@ public abstract class BeliefState {
 	 * Returns the utility function of this belief state.
 	 * @return the utility function of this belief state.
 	 */
-	protected UtilityFunction<Argument,Extension> getUtilityFunction(){
+	protected UtilityFunction<Argument,Extension<DungTheory>> getUtilityFunction(){
 		return this.utilityFunction;
 	}
 	
@@ -110,7 +111,7 @@ public abstract class BeliefState {
 	 * the given dialogue trace.
 	 * @param trace a dialogue trace
 	 */
-	public abstract void update(DialogueTrace<Argument,Extension> trace);
+	public abstract void update(DialogueTrace<Argument,Extension<DungTheory>> trace);
 	
 	/**
 	 * Gives the set of all best next moves with their expected utility
@@ -119,7 +120,7 @@ public abstract class BeliefState {
 	 * @param trace the dialogue trace.
 	 * @return the set of all best next moves with their expected utility
 	 */
-	protected abstract Pair<Double,Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension> trace);
+	protected abstract Pair<Double,Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension<DungTheory>> trace);
 	
 	/**
 	 * Pretty print of this belief state.

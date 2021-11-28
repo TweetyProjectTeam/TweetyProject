@@ -57,7 +57,7 @@ public class GroundedGameT1AgentGenerator extends GroundedGameAgentGenerator {
 	 */
 	@Override
 	protected BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params) {
-		BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension)params.get(this.getFaction()),this.getFaction());
+		BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension<DungTheory>)params.get(this.getFaction()),this.getFaction());
 		log.info("Generated a T1-belief state for " + this.getFaction() + " agent: " + state);
 		return state;	
 	}
@@ -71,15 +71,15 @@ public class GroundedGameT1AgentGenerator extends GroundedGameAgentGenerator {
 	 * @param faction the faction of the model to be generated.
 	 * @return a T1-belief state
 	 */
-	private T1BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params, int depth, Extension arguments, GroundedGameSystem.AgentFaction faction) {
+	private T1BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params, int depth, Extension<DungTheory> arguments, GroundedGameSystem.AgentFaction faction) {
 		// end of recursion
 		if(depth < 0 || arguments.isEmpty())
 			return null;
-		Extension subView = new Extension();
+		Extension<DungTheory> subView = new Extension<DungTheory>();
 		for(Argument a: arguments){
 			if(this.getRandom().nextDouble() >= this.config.probRecursionDecay){
 				if(this.config.oppModelCorrect)
-					if(!((Extension)params.get(this.getFaction().getComplement())).contains(a))
+					if(!((Extension<DungTheory>)params.get(this.getFaction().getComplement())).contains(a))
 						continue;				
 				subView.add(a);
 			}

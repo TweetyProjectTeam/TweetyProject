@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 import org.tweetyproject.math.matrix.Matrix;
@@ -85,14 +84,14 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	}
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
 		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(ArgumentationFramework kb) {
+	public NumericalArgumentRanking getModel(DungTheory kb) {
 		Matrix adjacencyMatrix = ((DungTheory)kb).getAdjacencyMatrix();
 		
 		// Apply matrix norm to guarantee that the argument strength scale is bounded
@@ -158,6 +157,12 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 			sum += Math.pow(v.getEntry(0, i).doubleValue() - vOld.getEntry(0, i).doubleValue(), 2.0);
 		}
 		return Math.sqrt(sum);
+	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}
 
 }

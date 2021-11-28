@@ -31,7 +31,7 @@ import org.tweetyproject.math.probability.*;
  * 
  * @author Matthias Thimm
  */
-public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
+public class ProbabilisticExtension extends ProbabilityFunction<Extension<DungTheory>>{
 
 	/**
 	 * Creates a new probabilistic extension for the given theory.
@@ -47,7 +47,7 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	 */
 	public Probability probability(Argument a){
 		Probability p = new Probability(0d);
-		for(Extension e: this.keySet())
+		for(Extension<DungTheory> e: this.keySet())
 			if(e.contains(a))
 				p = p.add(this.probability(e));
 		return p;
@@ -57,9 +57,9 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	 * Returns the set of all arguments appearing.
 	 * @return the set of all arguments appearing.
 	 */
-	public Extension getAllArguments(){
-		Extension e = new Extension();
-		for(Extension ex: this.keySet())
+	public Extension<DungTheory> getAllArguments(){
+		Extension<DungTheory> e = new Extension<DungTheory>();
+		for(Extension<DungTheory> ex: this.keySet())
 			e.addAll(ex);
 		return e;
 	}
@@ -70,8 +70,8 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	 * @param delta some threshold.
 	 * @return the set of arguments that have probability &gt;= delta.
 	 */
-	public Extension getUpperCut(DungTheory theory, double delta){
-		Extension e = new Extension();
+	public Extension<DungTheory> getUpperCut(DungTheory theory, double delta){
+		Extension<DungTheory> e = new Extension<DungTheory>();
 		for(Argument arg: theory)
 			if(this.probability(arg).doubleValue() >= delta)
 				e.add(arg);
@@ -84,8 +84,8 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	 * @param delta some threshold.
 	 * @return the set of arguments that have probability &lt;= delta.
 	 */
-	public Extension geLowerCut(DungTheory theory, double delta){
-		Extension e = new Extension();
+	public Extension<DungTheory> geLowerCut(DungTheory theory, double delta){
+		Extension<DungTheory> e = new Extension<DungTheory>();
 		for(Argument arg: theory)
 			if(this.probability(arg).doubleValue() <= delta)
 				e.add(arg);
@@ -138,14 +138,14 @@ public class ProbabilisticExtension extends ProbabilityFunction<Extension>{
 	 */
 	public static ProbabilisticExtension getCharacteristicProbabilisticExtension(DungTheory theory, AbstractArgumentationInterpretation i){
 		ProbabilisticExtension pe = new ProbabilisticExtension();
-		Extension in = new Extension(i.getArgumentsOfStatus(ArgumentStatus.IN));
-		Extension undec = new Extension(i.getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
+		Extension<DungTheory> in = new Extension<DungTheory>(i.getArgumentsOfStatus(ArgumentStatus.IN));
+		Extension<DungTheory> undec = new Extension<DungTheory>(i.getArgumentsOfStatus(ArgumentStatus.UNDECIDED));
 		if(undec.isEmpty()){
 			pe.put(in, new Probability(1d));
 			return pe;
 		}
 		pe.put(in, new Probability(0.5));
-		Extension e = new Extension(in);
+		Extension<DungTheory> e = new Extension<DungTheory>(in);
 		e.addAll(undec);
 		pe.put(e, new Probability(0.5));		
 		return pe;

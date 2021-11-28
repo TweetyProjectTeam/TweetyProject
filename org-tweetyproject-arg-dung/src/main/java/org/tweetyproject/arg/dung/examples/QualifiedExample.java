@@ -81,9 +81,9 @@ public class QualifiedExample {
 
         // complete semantics
         System.out.println(ex2.prettyPrint());
-        Collection<Extension> exts_c = new SimpleSccCompleteReasoner().getModels(ex2);
-        Collection<Extension> exts_q_c = new QualifiedReasoner(Semantics.CO).getModels(ex2);
-        Collection<Extension> exts_sq_c = new SemiQualifiedReasoner(Semantics.CO).getModels(ex2);
+        Collection<Extension<DungTheory>> exts_c = new SimpleSccCompleteReasoner().getModels(ex2);
+        Collection<Extension<DungTheory>> exts_q_c = new QualifiedReasoner(Semantics.CO).getModels(ex2);
+        Collection<Extension<DungTheory>> exts_sq_c = new SemiQualifiedReasoner(Semantics.CO).getModels(ex2);
         System.out.println("complete Extensions: " + exts_c);
         System.out.println("q-complete Extensions: " + exts_q_c);
         System.out.println("sq-complete Extensions: " + exts_sq_c);

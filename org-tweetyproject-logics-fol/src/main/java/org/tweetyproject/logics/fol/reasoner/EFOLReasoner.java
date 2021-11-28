@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.fol.reasoner;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
@@ -165,11 +166,13 @@ public class EFOLReasoner extends FolReasoner {
 
 	@Override
 	public boolean isInstalled() {
-		File f = new File(this.binaryLocation);
-		if(f.exists() && !f.isDirectory()) { 
+		try {
+			bash.run(binaryLocation + " --version");
 			return true;
+		} catch (InterruptedException | IOException e) {
+			return false;
 		}
-		return false;
+
 	}
 }
 

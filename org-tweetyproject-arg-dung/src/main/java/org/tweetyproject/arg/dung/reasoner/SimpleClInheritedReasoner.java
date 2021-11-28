@@ -55,10 +55,10 @@ public class SimpleClInheritedReasoner extends AbstractClaimBasedReasoner{
 	 */
 	public Set<ClaimSet> getModels(ClaimBasedTheory bbase) {
 		
-		Collection<Extension> ext = reasoner.getModels(bbase);
+		Collection<Extension<DungTheory>> ext = reasoner.getModels(bbase);
 		
 		Set<ClaimSet> claims = new HashSet<ClaimSet>();
-		for(Extension e : ext) {
+		for(Extension<DungTheory> e : ext) {
 			ClaimSet extensionClaims = new ClaimSet();
 			for(Argument a : e) {
 				if(a instanceof ClaimArgument)
@@ -75,7 +75,7 @@ public class SimpleClInheritedReasoner extends AbstractClaimBasedReasoner{
 	 * @return the claim set
 	 */
 	public ClaimSet getModel(ClaimBasedTheory bbase) {
-		Extension ext = reasoner.getModel(bbase);		
+		Extension<DungTheory> ext = reasoner.getModel(bbase);		
 	
 		ClaimSet extensionClaims = new ClaimSet();
 		for(Argument a : ext) {

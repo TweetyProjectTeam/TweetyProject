@@ -39,13 +39,13 @@ public class SimplePreferredReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Collection<Extension> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
-		Set<Extension> result = new HashSet<Extension>();
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+		Collection<Extension<DungTheory>> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
+		Set<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
 		boolean maximal;
-		for(Extension e1: completeExtensions){
+		for(Extension<DungTheory> e1: completeExtensions){
 			maximal = true;
-			for(Extension e2: completeExtensions)
+			for(Extension<DungTheory> e2: completeExtensions)
 				if(e1 != e2 && e2.containsAll(e1)){
 					maximal = false;
 					break;
@@ -60,13 +60,13 @@ public class SimplePreferredReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<DungTheory> getModel(DungTheory bbase) {
 		// just return the first found preferred extension
-		Collection<Extension> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
+		Collection<Extension<DungTheory>> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
 		boolean maximal;
-		for(Extension e1: completeExtensions){
+		for(Extension<DungTheory> e1: completeExtensions){
 			maximal = true;
-			for(Extension e2: completeExtensions)
+			for(Extension<DungTheory> e2: completeExtensions)
 				if(e1 != e2 && e2.containsAll(e1)){
 					maximal = false;
 					break;

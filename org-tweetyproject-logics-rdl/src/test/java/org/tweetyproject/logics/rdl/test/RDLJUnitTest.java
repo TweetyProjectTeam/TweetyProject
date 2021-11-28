@@ -118,11 +118,11 @@ public class RDLJUnitTest {
 		RdlParser parser = new RdlParser();
 		DefaultTheory theory = parser.parseBeliefBase(bsp);
 		SimpleDefaultReasoner ndr = new SimpleDefaultReasoner();
-		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("a")));
-		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("c")));
-		assertTrue(ndr.query(theory,(FolFormula) parser.parseFormula("d")));
+		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("a")));
+		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("c")));
+		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("d")));
 		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("b")));
-		assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("!b")));
+	    assertFalse(ndr.query(theory,(FolFormula) parser.parseFormula("!b")));
 		assertTrue(ndr.getModels(theory).size()==2);
 	}
 

@@ -352,8 +352,8 @@ public class ClingoSolver extends ASPSolver {
 	public boolean isInstalled() {
 		
 	    try {
-	            @SuppressWarnings("unused")
-				Process process = Runtime.getRuntime().exec("clingo");
+	            String cmd = pathToSolver + "/clingo --version";
+				bash.run(cmd);
 	            return true;
 	    } catch (Exception e) {
 	            return false;

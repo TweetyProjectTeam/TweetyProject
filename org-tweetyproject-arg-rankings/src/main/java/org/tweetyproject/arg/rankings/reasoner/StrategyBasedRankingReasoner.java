@@ -27,7 +27,6 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 import org.tweetyproject.commons.util.SetTools;
@@ -54,14 +53,14 @@ import org.tweetyproject.math.term.Variable;
 public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
 		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(ArgumentationFramework kb) {
+	public NumericalArgumentRanking getModel(DungTheory kb) {
 		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
 		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
 		Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(((DungTheory)kb).getNodes());
@@ -143,9 +142,9 @@ public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<Numeri
 	 * @return rewards of A
 	 */
 	public double computeRewards(Collection<Argument> A, Collection<Argument> B, DungTheory kb) {
-		if (kb.isAttacked(new Extension(A), new Extension(A)))
+		if (kb.isAttacked(new Extension<DungTheory>(A), new Extension<DungTheory>(A)))
 			return 0.0;
-		else if (kb.isAttacked(new Extension(A), new Extension(B)))
+		else if (kb.isAttacked(new Extension<DungTheory>(A), new Extension<DungTheory>(B)))
 			return computeDegreeOfAcceptability(A, B, kb);
 		return 1.0;
 	}
@@ -176,6 +175,12 @@ public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<Numeri
 		result += 1.0 - (1.0 / (attacksFromAtoB + 1.0));
 		result -= 1.0 - (1.0 / (attacksFromBtoA + 1.0));
 		return 0.5 * result;
+	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}
 
 }

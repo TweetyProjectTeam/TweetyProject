@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * @author Tjitze Rienstra, Matthias Thimm
  *
  */
-public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extension> {
+public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extension<DungTheory>> {
 	
 	/** Logger */
 	static private Logger log = LoggerFactory.getLogger(GroundedGameUtilityFunction.class);
@@ -72,7 +72,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 	 * @param trace some trace
 	 * @return a utility
 	 */
-	private double getUtility(Extension groundedExtension, DialogueTrace<Argument,Extension> trace){
+	private double getUtility(Extension<DungTheory> groundedExtension, DialogueTrace<Argument,Extension<DungTheory>> trace){
 		double utility = 0;
 		switch(this.faction){
 			case PRO:
@@ -96,9 +96,9 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.UtilityFunction#getUtility(org.tweetyproject.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public double getUtility(DialogueTrace<Argument,Extension> trace) {		
+	public double getUtility(DialogueTrace<Argument,Extension<DungTheory>> trace) {		
 		DungTheory theory = new DungTheory(this.theory.getRestriction(trace.getElements()));
-		Extension groundedExtension = new SimpleGroundedReasoner().getModel(theory);
+		Extension<DungTheory> groundedExtension = new SimpleGroundedReasoner().getModel(theory);
 		return this.getUtility(groundedExtension, trace);
 	}
 
@@ -106,11 +106,11 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.UtilityFunction#getUtility(org.tweetyproject.agents.argumentation.DialogueTrace, java.util.Set, java.util.Set)
 	 */
 	@Override
-	public double getUtility(DialogueTrace<Argument,Extension> trace, Set<Argument> additionalArguments, Set<Attack> additionalAttacks){
+	public double getUtility(DialogueTrace<Argument,Extension<DungTheory>> trace, Set<Argument> additionalArguments, Set<Attack> additionalAttacks){
 		DungTheory theory = new DungTheory(this.theory.getRestriction(trace.getElements()));
 		theory.addAll(additionalArguments);
 		theory.addAllAttacks(additionalAttacks);
-		Extension groundedExtension = new SimpleGroundedReasoner().getModel(theory);
+		Extension<DungTheory> groundedExtension = new SimpleGroundedReasoner().getModel(theory);
 		return this.getUtility(groundedExtension, trace);
 	}
 	

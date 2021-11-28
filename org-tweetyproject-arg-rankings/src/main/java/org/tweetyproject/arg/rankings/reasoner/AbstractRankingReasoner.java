@@ -19,7 +19,6 @@
 package org.tweetyproject.arg.rankings.reasoner;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
 import org.tweetyproject.commons.ModelProvider;
@@ -36,5 +35,6 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  *
  * @param <R> the type of ranking 
  */
-public abstract class AbstractRankingReasoner<R extends ArgumentRanking> implements ModelProvider<Argument,ArgumentationFramework,R>,  PostulateEvaluatable<Argument>  {
+public abstract class AbstractRankingReasoner<R extends ArgumentRanking> implements ModelProvider<Argument,DungTheory,R>,  PostulateEvaluatable<Argument>  {
+	public abstract boolean isInstalled();
 }

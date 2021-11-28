@@ -59,17 +59,17 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {		
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {		
 		PlBeliefSet prop = this.getPropositionalCharacterisation((DungTheory) bbase);
 		// get some labeling from the solver, then add the negation of this to the program and repeat
 		// to obtain all labelings
-		Set<Extension> result = new HashSet<Extension>();
-		Extension ext;
+		Set<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
+		Extension<DungTheory> ext;
 		do{
 			PossibleWorld w = (PossibleWorld) this.solver.getWitness(prop);
 			if(w == null)
 				break;
-			ext = new Extension();
+			ext = new Extension<DungTheory>();
 			for(Proposition p: w){
 				if(p.getName().startsWith("in_"))
 					ext.add(new Argument(p.getName().substring(3)));				
@@ -132,13 +132,13 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<DungTheory> getModel(DungTheory bbase) {
 		// returns the first found model
 		PlBeliefSet prop = this.getPropositionalCharacterisation((DungTheory) bbase);
 		PossibleWorld w = (PossibleWorld) this.solver.getWitness(prop);
 		if(w == null)
 			return null;
-		Extension ext = new Extension();
+		Extension<DungTheory> ext = new Extension<DungTheory>();
 		for(Proposition p: w){
 			if(p.getName().startsWith("in_"))
 				ext.add(new Argument(p.getName().substring(3)));				

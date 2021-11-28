@@ -23,7 +23,6 @@ import java.util.Collection;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.commons.ModelProvider;
@@ -34,7 +33,7 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  * 
  * @author Matthias Thimm
  */
-public abstract class AbstractExtensionReasoner extends AbstractDungReasoner implements ModelProvider<Argument,ArgumentationFramework,Extension>, PostulateEvaluatable<Argument> {
+public abstract class AbstractExtensionReasoner extends AbstractDungReasoner implements ModelProvider<Argument,DungTheory,Extension<DungTheory>>, PostulateEvaluatable<Argument> {
 
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractDungReasoner#query(org.tweetyproject.arg.dung.syntax.DungTheory, org.tweetyproject.arg.dung.syntax.Argument)
@@ -53,15 +52,15 @@ public abstract class AbstractExtensionReasoner extends AbstractDungReasoner imp
 	 * @return "true" if the argument is accepted
 	 */
 	public Boolean query(DungTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
-		Collection<Extension> extensions = this.getModels(beliefbase);
+		Collection<Extension<DungTheory>> extensions = this.getModels(beliefbase);
 		if(inferenceMode.equals(InferenceMode.SKEPTICAL)){
-			for(Extension e: extensions)
+			for(Extension<DungTheory> e: extensions)
 				if(!e.contains(formula))
 					return false;
 			return true;
 		}
 		// so its credulous semantics
-		for(Extension e: extensions){
+		for(Extension<DungTheory> e: extensions){
 			if(e.contains(formula))
 				return true;			
 		}			

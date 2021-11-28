@@ -50,7 +50,7 @@ public class SimpleSccRecursiveReasoner extends AbstractExtensionReasoner {
      * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
      */
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(((DungTheory)bbase).getStronglyConnectedComponents());
         // order SCCs in a DAG
         boolean[][] dag = new boolean[sccs.size()][sccs.size()];
@@ -61,7 +61,7 @@ public class SimpleSccRecursiveReasoner extends AbstractExtensionReasoner {
         for(int i = 0; i < sccs.size(); i++)
             for(int j = 0; j < sccs.size(); j++)
                 if(i != j)
-                    if(((DungTheory)bbase).isAttacked(new Extension(sccs.get(i)), new Extension(sccs.get(j))))
+                    if(((DungTheory)bbase).isAttacked(new Extension<DungTheory>(sccs.get(i)), new Extension<DungTheory>(sccs.get(j))))
                         dag[i][j] = true;
         // order SCCs topologically
         List<Collection<Argument>> sccs_ordered = new ArrayList<Collection<Argument>>();
@@ -89,7 +89,7 @@ public class SimpleSccRecursiveReasoner extends AbstractExtensionReasoner {
      * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
      */
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
+    public Extension<DungTheory> getModel(DungTheory bbase) {
         return this.getModels(bbase).iterator().next();
     }
 
@@ -103,10 +103,10 @@ public class SimpleSccRecursiveReasoner extends AbstractExtensionReasoner {
      * @param undec all arguments currently undecided
      * @return the set of extensions
      */
-    private Set<Extension> computeExtensionsViaSccs(DungTheory theory, List<Collection<Argument>> sccs, int idx, Collection<Argument> in, Collection<Argument> out, Collection<Argument> undec){
+    private Set<Extension<DungTheory>> computeExtensionsViaSccs(DungTheory theory, List<Collection<Argument>> sccs, int idx, Collection<Argument> in, Collection<Argument> out, Collection<Argument> undec){
         if(idx >= sccs.size()){
-            Set<Extension> result = new HashSet<Extension>();
-            result.add(new Extension(in));
+            Set<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
+            result.add(new Extension<DungTheory>(in));
             return result;
         }
         // construct theory
@@ -119,13 +119,13 @@ public class SimpleSccRecursiveReasoner extends AbstractExtensionReasoner {
         subTheory.add(aux);
         subTheory.add(new Attack(aux,aux));
         for(Argument a: subTheory)
-            if(theory.isAttacked(a, new Extension(undec)))
+            if(theory.isAttacked(a, new Extension<DungTheory>(undec)))
                 subTheory.add(new Attack(aux,a));
         // compute complete extensions of sub theory
-        Collection<Extension> subExt = baseReasoner.getModels(subTheory);
-        Set<Extension> result = new HashSet<Extension>();
+        Collection<Extension<DungTheory>> subExt = baseReasoner.getModels(subTheory);
+        Set<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
         Collection<Argument> new_in, new_out, new_undec, attacked;
-        for(Extension ext: subExt){
+        for(Extension<DungTheory> ext: subExt){
             new_in = new HashSet<Argument>(in);
             new_out = new HashSet<Argument>(out);
             new_undec = new HashSet<Argument>(undec);

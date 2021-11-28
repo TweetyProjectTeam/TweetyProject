@@ -22,6 +22,7 @@ package org.tweetyproject.arg.bipolar.syntax;
 import org.tweetyproject.arg.dung.ldo.syntax.LdoFormula;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.Signature;
 
 import java.util.Collection;
@@ -41,7 +42,7 @@ public class ArgumentSet implements BipolarEntity, Collection<BArgument>, Compar
         this(new HashSet<>());
     }
 
-    public ArgumentSet(Extension ext) {
+    public ArgumentSet(Extension<DungTheory> ext) {
         this();
         for (Argument argument: ext)
             this.add((new BArgument(argument)));

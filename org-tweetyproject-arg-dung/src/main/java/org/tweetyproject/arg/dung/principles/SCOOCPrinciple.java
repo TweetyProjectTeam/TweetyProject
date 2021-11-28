@@ -52,11 +52,11 @@ public class SCOOCPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
         Set<Stack<Argument>> cycles = DefaultGraph.getCyclesIncludingSelfLoops(theory);
 
-        for (Extension ext: exts) {
+        for (Extension<DungTheory> ext: exts) {
             for (Argument a: theory) {
                 // if a is in ext or ext attacks a, we can ignore it since the premise is violated
                 if (ext.contains(a) || theory.isAttacked(a, ext)) {

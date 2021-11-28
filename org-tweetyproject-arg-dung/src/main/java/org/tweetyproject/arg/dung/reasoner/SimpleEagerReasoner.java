@@ -22,7 +22,6 @@ package org.tweetyproject.arg.dung.reasoner;
 import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -36,24 +35,24 @@ import java.util.Set;
  */
 public class SimpleEagerReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
-        Collection<Extension> exts = new HashSet<Extension>();
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+        Collection<Extension<DungTheory>> exts = new HashSet<Extension<DungTheory>>();
         exts.add(this.getModel(bbase));
         return exts;
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
-        Collection<Extension> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
-        Collection<Extension> sstExt = new SimpleSemiStableReasoner().getModels(bbase);
+    public Extension<DungTheory> getModel(DungTheory bbase) {
+        Collection<Extension<DungTheory>> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
+        Collection<Extension<DungTheory>> sstExt = new SimpleSemiStableReasoner().getModels(bbase);
         Set<Labeling> potResult = new HashSet<Labeling>();
         boolean potEager;
-        for(Extension ext: admExt){
+        for(Extension<DungTheory> ext: admExt){
             Labeling extLab = new Labeling((DungTheory)bbase,ext);
             // ext is eager if
             // 1. for every semi-stable labeling L both in and out are subsets of that sets in L
             potEager = true;
-            for(Extension ext2: sstExt){
+            for(Extension<DungTheory> ext2: sstExt){
                 Labeling extLab2 = new Labeling((DungTheory)bbase, ext2);
                 if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
                     potEager = false;
@@ -81,7 +80,7 @@ public class SimpleEagerReasoner extends AbstractExtensionReasoner {
                         }
             }
             if(eager)
-                return lab.getArgumentsOfStatus(ArgumentStatus.IN);
+                return (Extension<DungTheory>) lab.getArgumentsOfStatus(ArgumentStatus.IN);
         }
         // this should not happen as there is always an eager extension;
         throw new RuntimeException("Eager extension seems to be undefined.");

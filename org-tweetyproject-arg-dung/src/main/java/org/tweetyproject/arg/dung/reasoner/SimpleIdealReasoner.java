@@ -40,8 +40,8 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Collection<Extension> exts = new HashSet<Extension>();
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+		Collection<Extension<DungTheory>> exts = new HashSet<Extension<DungTheory>>();
 		exts.add(this.getModel(bbase));
 		return exts;
 	}
@@ -50,17 +50,17 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
-		Collection<Extension> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
-		Collection<Extension> prefExt = new SimplePreferredReasoner().getModels(bbase);
+	public Extension<DungTheory> getModel(DungTheory bbase) {
+		Collection<Extension<DungTheory>> admExt = new SimpleAdmissibleReasoner().getModels(bbase);
+		Collection<Extension<DungTheory>> prefExt = new SimplePreferredReasoner().getModels(bbase);
 		Set<Labeling> potResult = new HashSet<Labeling>();
 		boolean potIdeal; 
-		for(Extension ext: admExt){
-			Labeling extLab = new Labeling((DungTheory)bbase,ext);
+		for(Extension<DungTheory> ext: admExt){
+			Labeling extLab = new Labeling(bbase,ext);
 			// ext is ideal if
 			// 1. for every preferred labeling L both in and out are subsets of that sets in L
 			potIdeal = true;
-			for(Extension ext2: prefExt){
+			for(Extension<DungTheory> ext2: prefExt){
 				Labeling extLab2 = new Labeling((DungTheory)bbase, ext2);
 				if(!extLab2.getArgumentsOfStatus(ArgumentStatus.IN).containsAll(extLab.getArgumentsOfStatus(ArgumentStatus.IN))){
 					potIdeal = false;
@@ -88,7 +88,7 @@ public class SimpleIdealReasoner extends AbstractExtensionReasoner {
 						}
 			}
 			if(ideal)
-				return lab.getArgumentsOfStatus(ArgumentStatus.IN);			
+				return (Extension<DungTheory>) lab.getArgumentsOfStatus(ArgumentStatus.IN);			
 		}		
 		// this should not happen as there is always an ideal extension;
 		throw new RuntimeException("Ideal extension seems to be undefined.");

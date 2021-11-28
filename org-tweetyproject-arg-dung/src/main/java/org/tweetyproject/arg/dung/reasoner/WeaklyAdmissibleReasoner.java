@@ -21,7 +21,6 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
@@ -44,7 +43,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param bbase an argumentation framework
      * @return the weakly admissible sets of bbase
      */
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         DungTheory restrictedTheory = new DungTheory((DungTheory) bbase);
         // remove all self-attacking arguments
         for (Argument argument: (DungTheory) bbase) {
@@ -53,10 +52,10 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
             }
         }
 
-        Collection<Extension> extensions = new HashSet<>();
+        Collection<Extension<DungTheory>> extensions = new HashSet<>();
         Set<Set<Argument>> cfSets = this.getConflictFreeSets(restrictedTheory, new HashSet<>(restrictedTheory));
         for (Set<Argument> args: cfSets) {
-            Extension ext = new Extension(args);
+            Extension<DungTheory> ext = new Extension<DungTheory>(args);
             if (isWeaklyAdmissible(restrictedTheory, ext))
                 extensions.add(ext);
         }
@@ -68,9 +67,9 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param bbase an argumentation framework
      * @return a weakly admissible set
      */
-    public Extension getModel(ArgumentationFramework bbase) {
+    public Extension<DungTheory> getModel(DungTheory bbase) {
         // empty set is always weakly admissible
-        return new Extension();
+        return new Extension<DungTheory>();
     }
 
     /**
@@ -79,7 +78,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param ext an extension
      * @return "true" if ext is weakly admissible in bbase
      */
-    protected boolean isWeaklyAdmissible(DungTheory bbase, Extension ext) {
+    protected boolean isWeaklyAdmissible(DungTheory bbase, Extension<DungTheory> ext) {
         // empty set is always weakly admissible
         if (ext.isEmpty()) {
             return true;
@@ -87,7 +86,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
 
         Set<Set<Argument>> subsets = this.getAttackingCandidates(bbase, ext);
         for (Set<Argument> args: subsets) {
-            Extension subExt = new Extension(args);
+            Extension<DungTheory> subExt = new Extension<DungTheory>(args);
 
             // if we find one weakly admissible attacker in the reduct, then subExt is not weakly admissible
             if (isWeaklyAdmissible(this.getReduct(bbase, ext), subExt))
@@ -107,7 +106,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
         // only consider attackers which are not deactivated by ext
         Collection<Argument> attackers = this.getAttackers(bbase, ext);
         attackers.removeAll(getAttacked(bbase, ext));
-        DungTheory reduct_ext = this.getReduct(bbase, new Extension(ext));
+        DungTheory reduct_ext = this.getReduct(bbase, new Extension<DungTheory>(ext));
         for (Argument attacker: attackers) {
             DungTheory reduct = new DungTheory(reduct_ext);
             reduct.remove(attacker);
@@ -261,7 +260,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param ext an extension
      * @return the reduct of bbase wrt. ext
      */
-    public DungTheory getReduct(DungTheory bbase, Extension ext) {
+    public DungTheory getReduct(DungTheory bbase, Extension<DungTheory> ext) {
         DungTheory reduct = new DungTheory(bbase);
 
         reduct.removeAll(ext);

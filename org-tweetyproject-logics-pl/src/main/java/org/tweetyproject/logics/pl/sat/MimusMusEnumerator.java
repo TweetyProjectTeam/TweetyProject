@@ -84,4 +84,17 @@ public class MimusMusEnumerator extends PlMusEnumerator  {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public boolean isInstalled() {
+		try {
+			NativeShell.invokeExecutable("python -h");
+			NativeShell.invokeExecutable(this.pathToMimus + " -h");
+		}
+		catch(Exception e) {
+			return false;
+		}
+		return true;
+	
+	}
 }

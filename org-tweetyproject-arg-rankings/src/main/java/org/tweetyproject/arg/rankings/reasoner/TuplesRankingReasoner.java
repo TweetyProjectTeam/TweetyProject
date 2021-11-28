@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.arg.rankings.util.LexicographicIntTupleComparator;
@@ -57,14 +56,14 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(ArgumentationFramework kb) {
+	public LatticeArgumentRanking getModel(DungTheory kb) {
 		LatticeArgumentRanking ranking = new LatticeArgumentRanking(((DungTheory)kb).getNodes());
 
 		// Check if kb is acyclic
@@ -195,6 +194,12 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 		if (tv.length() > 2)
 			tv = tv.substring(2);
 		return tv;
+	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}
 
 }

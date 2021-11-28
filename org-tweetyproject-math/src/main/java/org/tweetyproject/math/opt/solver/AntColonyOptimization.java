@@ -369,7 +369,9 @@ public class AntColonyOptimization extends CombinatoricsSolver {
 	        }
 	    }
 
-
+	    public boolean isInstalled() {
+	    	return true;
+	    }
 		
 		
 	}

@@ -94,8 +94,13 @@ public class OpenWboSolver extends MaxSatSolver {
 
 	@Override
 	public boolean isInstalled() {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			NativeShell.invokeExecutable(this.binaryLocation);
+			return true;
+		}
+		catch(Exception e) {
+			return false;
+		}
 	}
 
 }

@@ -180,11 +180,13 @@ public class SpassFolReasoner extends FolReasoner {
 	
 	@Override
 	public boolean isInstalled() {
-		File f = new File(this.binaryLocation);
-		if(f.exists() && !f.isDirectory()) { 
-			return true;
+		try {
+			bash.run(binaryLocation);
+		} catch (InterruptedException | IOException e) {
+			return false;
 		}
-		return false;
+		return true;
 	}
+
 
 }

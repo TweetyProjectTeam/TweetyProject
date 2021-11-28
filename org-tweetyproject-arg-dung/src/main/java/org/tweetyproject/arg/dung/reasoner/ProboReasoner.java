@@ -146,7 +146,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
 		// first check whether the solver supports the problem
 		ProboProblem problem = ProboProblem.getProblem("EE-" + this.semantics.abbreviation());
 		if(!this.supportedProblems().contains(problem))
@@ -161,9 +161,9 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 			File temp = File.createTempFile("aaf-", "." + format.extension());
 			AbstractDungWriter writer = AbstractDungWriter.getWriter(format);
 			writer.write((DungTheory) bbase, temp);
-			Collection<Extension> result = new HashSet<Extension>();			
+			Collection<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();			
 			for(Collection<Argument> ext: AbstractDungParser.parseExtensionList(this.bash.run(this.path_to_exec + " -p " + problem.toString() + " -fo " + format.toString() + " -f " + temp.getAbsolutePath())))
-				result.add(new Extension(ext));
+				result.add(new Extension<DungTheory>(ext));
 			temp.delete();
 			return result;
 		} catch (Exception e) {
@@ -175,7 +175,7 @@ public class ProboReasoner extends AbstractExtensionReasoner{
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension getModel(DungTheory bbase) {
 		// first check whether the solver supports the problem
 		ProboProblem problem = ProboProblem.getProblem("SE-" + this.semantics.abbreviation());
 		if(!this.supportedProblems().contains(problem))

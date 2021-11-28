@@ -37,7 +37,7 @@ public class ConflictFreeReasoner {
         DungTheory theory = bbase.getCompleteAssociatedDungTheory();
 
         Collection<ArgumentSet> result = new HashSet<>();
-        for (Extension ext: new SimpleConflictFreeReasoner().getModels(theory)) {
+        for (Extension<DungTheory> ext: new SimpleConflictFreeReasoner().getModels(theory)) {
             result.add(new ArgumentSet(ext));
         }
         return result;

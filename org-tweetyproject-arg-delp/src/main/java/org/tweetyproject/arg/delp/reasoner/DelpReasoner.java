@@ -188,4 +188,8 @@ public class DelpReasoner implements Reasoner<DelpAnswer.Type,DefeasibleLogicPro
 			return Type.UNDECIDED;
 		}		
 	}	
+	
+	public boolean isInstalled() {
+		return true;
+	}
 }

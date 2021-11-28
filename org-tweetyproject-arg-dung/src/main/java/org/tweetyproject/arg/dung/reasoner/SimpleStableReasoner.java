@@ -38,10 +38,10 @@ public class SimpleStableReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Collection<Extension> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
-		Set<Extension> result = new HashSet<Extension>();
-		for(Extension e: completeExtensions)
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+		Collection<Extension<DungTheory>> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
+		Set<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
+		for(Extension<DungTheory> e: completeExtensions)
 			if(((DungTheory)bbase).isAttackingAllOtherArguments(e))
 				result.add(e);
 		return result;	
@@ -51,10 +51,10 @@ public class SimpleStableReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<DungTheory> getModel(DungTheory bbase) {
 		// returns the first found stable extension
-		Collection<Extension> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
-		for(Extension e: completeExtensions)
+		Collection<Extension<DungTheory>> completeExtensions = new SimpleSccCompleteReasoner().getModels(bbase);
+		for(Extension<DungTheory> e: completeExtensions)
 			if(((DungTheory)bbase).isAttackingAllOtherArguments(e))
 				return e;
 		return null;	

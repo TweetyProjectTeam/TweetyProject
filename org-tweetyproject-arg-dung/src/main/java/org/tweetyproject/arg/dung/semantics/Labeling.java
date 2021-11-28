@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
 
@@ -53,13 +54,13 @@ public class Labeling extends AbstractArgumentationInterpretation implements Map
 	 * @param theory some Dung theory.
 	 * @param ext an extension
 	 */
-	public Labeling(ArgumentationFramework<Argument> theory, Extension ext){
+	public Labeling(ArgumentationFramework<Argument> theory, Extension<? extends ArgumentationFramework<Argument>> ext){
 		this();
 		for(Argument a: ext)
 			this.labeling.put(a, ArgumentStatus.IN);
 		if(!theory.containsAll(ext))
 			throw new IllegalArgumentException("The arguments of the given extension are not all in the given theory.");
-		Extension ext2 = new Extension();
+		Extension<ArgumentationFramework<Argument>> ext2 = new Extension<ArgumentationFramework<Argument>>();
 		for(Argument a: theory.getNodes()){
 			if(!ext.contains(a))
 				if(theory.isAttacked(a, ext))
@@ -177,8 +178,8 @@ public class Labeling extends AbstractArgumentationInterpretation implements Map
 	 * @see org.tweetyproject.argumentation.dung.semantics.AbstractArgumentationInterpretation#getArgumentsOfStatus(org.tweetyproject.argumentation.dung.semantics.ArgumentStatus)
 	 */
 	@Override
-	public Extension getArgumentsOfStatus(ArgumentStatus status) {
-		Extension ext = new Extension();
+	public Extension<? extends ArgumentationFramework<Argument>> getArgumentsOfStatus(ArgumentStatus status) {
+		Extension<ArgumentationFramework<Argument>> ext = new Extension<ArgumentationFramework<Argument>>();
 		for(Argument a: this.labeling.keySet())
 			if(this.labeling.get(a).equals(status))
 				ext.add(a);

@@ -51,13 +51,13 @@ public class ModularizationPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        for (Extension ext1: exts) {
+        for (Extension<DungTheory> ext1: exts) {
             DungTheory reduct = new WeaklyAdmissibleReasoner().getReduct(theory, ext1);
-            Collection<Extension> exts_reduct = ev.getModels(reduct);
-            for (Extension ext2: exts_reduct) {
-                Extension union = new Extension(ext1);
+            Collection<Extension<DungTheory>> exts_reduct = ev.getModels(reduct);
+            for (Extension<DungTheory> ext2: exts_reduct) {
+                Extension<DungTheory> union = new Extension<DungTheory>(ext1);
                 union.addAll(ext2);
                 if (!exts.contains(union)) {
                     return false;

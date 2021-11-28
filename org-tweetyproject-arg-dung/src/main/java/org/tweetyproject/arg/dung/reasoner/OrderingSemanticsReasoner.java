@@ -19,6 +19,7 @@
 
 package org.tweetyproject.arg.dung.reasoner;
 
+
 import org.tweetyproject.arg.dung.semantics.*;
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.commons.util.SetTools;
@@ -80,7 +81,7 @@ public class OrderingSemanticsReasoner {
         Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
         for (Collection<Argument> subset: subsets) {
             Object[] parameters = new Object[2];
-            parameters[0] = new Extension(subset);
+            parameters[0] = new Extension<DungTheory>(subset);
             parameters[1] = theory;
             exts1.put(subset, (Collection<Argument>) this.getCompareSet1.invoke(this, parameters));
             exts2.put(subset, (Collection<Argument>) this.getCompareSet2.invoke(this, parameters));
@@ -177,7 +178,7 @@ public class OrderingSemanticsReasoner {
      * @param theory a dung theory
      * @return set of conflict in ext
      */
-    public Collection<Argument> getConflicts(Extension ext, DungTheory theory) {
+    public Collection<Argument> getConflicts(Extension<DungTheory> ext, DungTheory theory) {
         Collection<Argument> conflicts = new HashSet<>();
         for (Attack att: theory.getAttacks()) {
             if (ext.contains(att.getAttacker()) && ext.contains(att.getAttacked())) {
@@ -193,7 +194,7 @@ public class OrderingSemanticsReasoner {
      * @param theory a dung theory
      * @return set of arguments in ext which are not defended by ext
      */
-    public Collection<Argument> getUndefended(Extension ext, DungTheory theory) {
+    public Collection<Argument> getUndefended(Extension<DungTheory> ext, DungTheory theory) {
         Collection<Argument> undefended = new HashSet<>();
         for (Argument arg: ext) {
             for (Argument attacker: theory.getAttackers(arg)) {
@@ -212,7 +213,7 @@ public class OrderingSemanticsReasoner {
      * @param theory a dung theory
      * @return set of arguments in theory \ ext which are not attacked by ext
      */
-    public Collection<Argument> getUnattacked(Extension ext, DungTheory theory) {
+    public Collection<Argument> getUnattacked(Extension<DungTheory> ext, DungTheory theory) {
         Collection<Argument> unattacked = new HashSet<>();
         for (Argument arg: theory) {
             if (!ext.contains(arg) && !theory.isAttacked(arg, ext)) {
@@ -228,7 +229,7 @@ public class OrderingSemanticsReasoner {
      * @param theory a dung theory
      * @return set of arguments in theory \ ext which are defended by ext
      */
-    public Collection<Argument> getDefendedNotIn(Extension ext, DungTheory theory) {
+    public Collection<Argument> getDefendedNotIn(Extension<DungTheory> ext, DungTheory theory) {
         Collection<Argument> defendedNotIn = new HashSet<>();
         Collection<Argument> args = new HashSet<>(theory);
         args.removeAll(ext);
@@ -263,7 +264,7 @@ public class OrderingSemanticsReasoner {
         Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
         for (Collection<Argument> subset: subsets) {
             Object[] parameters = new Object[2];
-            parameters[0] = new Extension(subset);
+            parameters[0] = new Extension<DungTheory>(subset);
             parameters[1] = theory;
             exts1.put(subset, (Collection<Argument>) this.getCompareSet1.invoke(this, parameters));
             exts2.put(subset, (Collection<Argument>) this.getCompareSet2.invoke(this, parameters));

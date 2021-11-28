@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -39,12 +38,12 @@ public class SimpleConflictFreeReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Collection<Extension> getModels(ArgumentationFramework bbase) {
-		Set<Extension> extensions = new HashSet<Extension>();
+	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+		Set<Extension<DungTheory>> extensions = new HashSet<Extension<DungTheory>>();
 		// Check all subsets
 		for(Set<Argument> ext: new SetTools<Argument>().subsets((DungTheory)bbase))
-			if(((DungTheory)bbase).isConflictFree(new Extension(ext)))
-				extensions.add(new Extension(ext));
+			if(((DungTheory)bbase).isConflictFree(new Extension<DungTheory>(ext)))
+				extensions.add(new Extension<DungTheory>(ext));
 		return extensions;
 	}
 
@@ -52,8 +51,8 @@ public class SimpleConflictFreeReasoner extends AbstractExtensionReasoner {
 	 * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModel(org.tweetyproject.arg.dung.syntax.DungTheory)
 	 */
 	@Override
-	public Extension getModel(ArgumentationFramework bbase) {
+	public Extension<DungTheory> getModel(DungTheory bbase) {
 		// as the empty set is always conflict-free we return that one.
-		return new Extension();
+		return new Extension<DungTheory>();
 	}
 }

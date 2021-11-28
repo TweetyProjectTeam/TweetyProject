@@ -39,7 +39,7 @@ import org.tweetyproject.graphs.Graph;
  * 
  * @author Matthias Thimm
  */
-public class Division extends Pair<Extension,Extension>{
+public class Division extends Pair<Extension<DungTheory>,Extension<DungTheory>>{
 	private static final long serialVersionUID = -4217044135734274436L;
 
 	/** archive of requested divisions. */
@@ -50,7 +50,7 @@ public class Division extends Pair<Extension,Extension>{
 	 * @param p some set of arguments.
 	 * @param v some set of arguments
 	 */
-	public Division(Extension p, Extension v){
+	public Division(Extension<DungTheory> p, Extension<DungTheory> v){
 		super(p,v);
 	}
 	
@@ -59,8 +59,8 @@ public class Division extends Pair<Extension,Extension>{
 	 * @param exts a collection of extensions.
 	 * @return "true" if this division is valid.
 	 */
-	public boolean isValid(Collection<Extension> exts){
-		for(Extension e: exts)
+	public boolean isValid(Collection<Extension<DungTheory>> exts){
+		for(Extension<DungTheory> e: exts)
 			if(this.isValid(e))
 				return true;
 		return false;
@@ -71,7 +71,7 @@ public class Division extends Pair<Extension,Extension>{
 	 * @param ext some extension
 	 * @return "true" iff this division is valid.
 	 */
-	public boolean isValid(Extension ext){
+	public boolean isValid(Extension<DungTheory> ext){
 		if(!ext.containsAll(this.getFirst()))
 			return false;
 		Set<Argument> tmp = new HashSet<Argument>(ext);
@@ -95,7 +95,7 @@ public class Division extends Pair<Extension,Extension>{
 			DungTheory sub = new DungTheory(g);
 			for(Division d: Division.getDivisions(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics).getModels(sub), sub)){
 				if(d.getFirst().equals(this.getFirst())){
-					Extension e = new Extension(this.getSecond());
+					Extension<DungTheory> e = new Extension<DungTheory>(this.getSecond());
 					e.retainAll(sub);
 					if(e.equals(d.getSecond()))
 						result.add(sub);					
@@ -111,9 +111,9 @@ public class Division extends Pair<Extension,Extension>{
 	 * @param aaf a Dung theory
 	 * @return the set of divisions of all extensions returned by the given reasoner.
 	 */
-	public static Collection<Division> getDivisions(Collection<Extension> exts, DungTheory aaf){
+	public static Collection<Division> getDivisions(Collection<Extension<DungTheory>> exts, DungTheory aaf){
 		Collection<Division> result = new HashSet<Division>();
-		for(Extension e: exts)
+		for(Extension<DungTheory> e: exts)
 			result.addAll(Division.getDivisions(e, aaf));
 		return result;
 	}
@@ -124,7 +124,7 @@ public class Division extends Pair<Extension,Extension>{
 	 * @param aaf some Dung theory
 	 * @return the set of divisions of aaf that arise from the given extension.
 	 */
-	public static Collection<Division> getDivisions(Extension ext, DungTheory aaf){
+	public static Collection<Division> getDivisions(Extension<DungTheory> ext, DungTheory aaf){
 		Collection<Division> result = new HashSet<Division>();
 		Collection<Argument> remaining = new HashSet<Argument>(aaf);
 		remaining.removeAll(ext);
@@ -133,7 +133,7 @@ public class Division extends Pair<Extension,Extension>{
 		Set<Set<Argument>> subsetsRem = setTools.subsets(remaining);		
 		for(Set<Argument> p: subsetsExt)
 			for(Set<Argument> v: subsetsRem)
-				result.add(new Division(new Extension(p),new Extension(v)));
+				result.add(new Division(new Extension<DungTheory>(p),new Extension<DungTheory>(v)));
 		return result;		
 	}
 	
@@ -193,7 +193,7 @@ public class Division extends Pair<Extension,Extension>{
 		for(Set<Argument> args: new SetTools<Argument>().subsets(theory)){
 			Collection<Argument> retainer = new HashSet<Argument>(theory);
 			retainer.removeAll(args);
-			result.add(new Division(new Extension(args), new Extension(retainer)));
+			result.add(new Division(new Extension<DungTheory>(args), new Extension<DungTheory>(retainer)));
 		}
 		Division.archivedDivisons.put(theory, result);
 		return result;

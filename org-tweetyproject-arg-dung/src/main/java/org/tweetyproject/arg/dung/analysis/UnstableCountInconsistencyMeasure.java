@@ -38,7 +38,7 @@ public class UnstableCountInconsistencyMeasure<T extends DungTheory> implements 
 	@Override
 	public Double inconsistencyMeasure(T argumentationFramework) {
 		//Check if there is already a stable extension; if yes then then the inconsistency is measured as 0
-		Collection<Extension> stableExtensions = new SimpleStableReasoner().getModels(argumentationFramework);
+		Collection<Extension<DungTheory>> stableExtensions = new SimpleStableReasoner().getModels(argumentationFramework);
 		if(!stableExtensions.isEmpty()) {
 			return 0d;
 		}
@@ -61,7 +61,7 @@ public class UnstableCountInconsistencyMeasure<T extends DungTheory> implements 
 			if(maxNumberOfNodes >= subTheory.size())
 				continue;
 			
-			Collection<Extension> subTheoryStableExtensions = new SimpleStableReasoner().getModels(subTheory);
+			Collection<Extension<DungTheory>> subTheoryStableExtensions = new SimpleStableReasoner().getModels(subTheory);
 			if(subTheoryStableExtensions.size() > 0)
 				if(maxNumberOfNodes < subTheory.size()) {
 					maxNumberOfNodes = subTheory.size();

@@ -143,7 +143,6 @@ public class ApproximateNaiveMlnReasoner extends AbstractMlnReasoner{
 
 	@Override
 	public boolean isInstalled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }

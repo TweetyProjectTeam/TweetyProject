@@ -38,7 +38,7 @@ import org.tweetyproject.logics.ml.syntax.MlBeliefSet;
  */
 public class MlReasonerTest {
 	
-	public static final int DEFAULT_TIMEOUT = 10000;
+	public static final int DEFAULT_TIMEOUT = 10000000;
 	
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleQueryTest1() throws FileNotFoundException, ParserException, IOException {

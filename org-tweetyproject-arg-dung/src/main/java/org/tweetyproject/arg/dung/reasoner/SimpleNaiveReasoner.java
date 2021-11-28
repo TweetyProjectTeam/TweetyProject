@@ -30,7 +30,7 @@ import java.util.*;
  * @author Lars Bengel
  */
 public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         DungTheory restrictedTheory = new DungTheory((DungTheory)bbase);
         // remove all self-attacking arguments
         for (Argument argument: (DungTheory)bbase) {
@@ -41,8 +41,8 @@ public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
         return this.getMaximalConflictFreeSets((DungTheory)bbase, restrictedTheory);
     }
 
-    public Extension getModel(ArgumentationFramework bbase) {
-        Collection<Extension> extensions = this.getModels(bbase);
+    public Extension<DungTheory> getModel(DungTheory bbase) {
+        Collection<Extension<DungTheory>> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }
 
@@ -52,10 +52,10 @@ public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
      * @param candidates a set of arguments
      * @return conflict-free sets in bbase
      */
-    public Collection<Extension> getMaximalConflictFreeSets(DungTheory bbase, Collection<Argument> candidates) {
-        Collection<Extension> cfSubsets = new HashSet<Extension>();
+    public Collection<Extension<DungTheory>> getMaximalConflictFreeSets(DungTheory bbase, Collection<Argument> candidates) {
+        Collection<Extension<DungTheory>> cfSubsets = new HashSet<Extension<DungTheory>>();
         if (candidates.size() == 0 || bbase.size() == 0) {
-            cfSubsets.add(new Extension());
+            cfSubsets.add(new Extension<DungTheory>());
         } else {
             for (Argument element: candidates) {
                 DungTheory remainingTheory = new DungTheory(bbase);
@@ -67,12 +67,12 @@ public class SimpleNaiveReasoner extends AbstractExtensionReasoner {
                 remainingCandidates.removeAll(bbase.getAttacked(element));
                 remainingCandidates.removeAll(bbase.getAttackers(element));
 
-                Collection<Extension> subsubsets = this.getMaximalConflictFreeSets(remainingTheory, remainingCandidates);
+                Collection<Extension<DungTheory>> subsubsets = this.getMaximalConflictFreeSets(remainingTheory, remainingCandidates);
 
-                for (Extension subsubset : subsubsets) {
+                for (Extension<DungTheory> subsubset : subsubsets) {
                     //cfSubsets.add(new Extension(subsubset));
                     subsubset.add(element);
-                    cfSubsets.add(new Extension(subsubset));
+                    cfSubsets.add(new Extension<DungTheory>(subsubset));
                 }
             }
         }

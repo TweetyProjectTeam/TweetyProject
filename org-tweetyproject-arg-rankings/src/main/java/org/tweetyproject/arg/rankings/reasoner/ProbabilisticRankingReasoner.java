@@ -23,7 +23,6 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner;
 import org.tweetyproject.arg.prob.reasoner.MonteCarloPafReasoner;
@@ -78,7 +77,7 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
 		Collection<NumericalArgumentRanking> models = new HashSet<NumericalArgumentRanking>();
 		models.add(this.getModel(bbase));
 		return models;
@@ -88,7 +87,7 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public NumericalArgumentRanking getModel(ArgumentationFramework aaf) {
+	public NumericalArgumentRanking getModel(DungTheory aaf) {
 		// construct PAF
 		ProbabilisticArgumentationFramework paf = new ProbabilisticArgumentationFramework((DungTheory)aaf);
 		// set probabilities
@@ -105,5 +104,11 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 		for(Argument a: (DungTheory)aaf)
 			ranking.put(a, reasoner.query(paf,a));
 		return ranking;
+	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}
 }

@@ -153,11 +153,15 @@ public class Prover9FolReasoner extends FolReasoner {
 	
 	@Override
 	public boolean isInstalled() {
-		File f = new File(this.binaryLocation);
-		if(f.exists() && !f.isDirectory()) { 
+		try {
+			String cmd = binaryLocation;
+			bash.run(cmd);
 			return true;
 		}
-		return false;
+		catch(Exception e) {
+			return false;
+		}
+		
 	}
 
 }

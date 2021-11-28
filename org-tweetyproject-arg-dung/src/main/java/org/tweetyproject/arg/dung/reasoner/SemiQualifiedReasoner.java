@@ -46,7 +46,7 @@ public class SemiQualifiedReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
         List<Collection<Argument>> sccs = new ArrayList<Collection<Argument>>(((DungTheory)bbase).getStronglyConnectedComponents());
         // order SCCs in a DAG
         boolean[][] dag = new boolean[sccs.size()][sccs.size()];
@@ -57,7 +57,7 @@ public class SemiQualifiedReasoner extends AbstractExtensionReasoner {
         for(int i = 0; i < sccs.size(); i++)
             for(int j = 0; j < sccs.size(); j++)
                 if(i != j)
-                    if(((DungTheory)bbase).isAttacked(new Extension(sccs.get(i)), new Extension(sccs.get(j))))
+                    if(((DungTheory)bbase).isAttacked(new Extension<DungTheory>(sccs.get(i)), new Extension<DungTheory>(sccs.get(j))))
                         dag[i][j] = true;
         // order SCCs topologically
         List<Collection<Argument>> sccs_ordered = new ArrayList<Collection<Argument>>();
@@ -82,8 +82,8 @@ public class SemiQualifiedReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
-        Collection<Extension> extensions = this.getModels(bbase);
+    public Extension<DungTheory> getModel(DungTheory bbase) {
+        Collection<Extension<DungTheory>> extensions = this.getModels(bbase);
         return extensions.iterator().next();
     }
 
@@ -97,10 +97,10 @@ public class SemiQualifiedReasoner extends AbstractExtensionReasoner {
      * @param undec all arguments currently undecided
      * @return the set of extensions
      */
-    private Set<Extension> computeExtensionsViaSccs(DungTheory theory, List<Collection<Argument>> sccs, int idx, Collection<Argument> in, Collection<Argument> out, Collection<Argument> undec) {
+    private Set<Extension<DungTheory>> computeExtensionsViaSccs(DungTheory theory, List<Collection<Argument>> sccs, int idx, Collection<Argument> in, Collection<Argument> out, Collection<Argument> undec) {
         if (idx >= sccs.size()) {
-            Set<Extension> result = new HashSet<>();
-            result.add(new Extension(in));
+            Set<Extension<DungTheory>> result = new HashSet<>();
+            result.add(new Extension<DungTheory>(in));
             return result;
         }
 
@@ -130,7 +130,7 @@ public class SemiQualifiedReasoner extends AbstractExtensionReasoner {
         }
 
         Collection<Collection<Argument>> subSccs = subTheory.getStronglyConnectedComponents();
-        Collection<Extension> subExts;
+        Collection<Extension<DungTheory>> subExts;
         // if the sub theory is no longer a scc after removing out arguments,
         // apply algorithm recursively on sub-sccs
         if (!out.isEmpty() && subSccs.size() > 1) { //TODO better condition
@@ -140,16 +140,16 @@ public class SemiQualifiedReasoner extends AbstractExtensionReasoner {
             subExts = this.baseReasoner.getModels(subTheory);
         }
 
-        Set<Extension> result = new HashSet<Extension>();
+        Set<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
         Collection<Argument> new_in, new_out, new_undec, attacked;
 
         // compute set of arguments S { a | a element of some extension of the theory}
         Collection<Argument> in_arguments = new HashSet<>();
-        for (Extension ext: subExts) {
+        for (Extension<DungTheory> ext: subExts) {
             in_arguments.addAll(ext);
         }
 
-        for(Extension ext: subExts){
+        for(Extension<DungTheory> ext: subExts){
             new_in = new HashSet<>(in);
             new_out = new HashSet<>(out);
             new_undec = new HashSet<>(undec);

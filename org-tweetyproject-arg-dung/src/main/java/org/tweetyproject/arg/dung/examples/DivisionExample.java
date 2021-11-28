@@ -55,7 +55,7 @@ public class DivisionExample {
 		
 		// Instantiate reasoner
 		AbstractExtensionReasoner r = new SimpleGroundedReasoner();
-		Collection<Extension> exts = r.getModels(theory);
+		Collection<Extension<DungTheory>> exts = r.getModels(theory);
 		
 		// print theory
 		System.out.println("AAF: " + theory);
@@ -63,7 +63,7 @@ public class DivisionExample {
 		// print extensions
 		System.out.println();
 		System.out.println("Extensions: ");
-		for(Extension e: exts)
+		for(Extension<DungTheory> e: exts)
 			System.out.println(e);
 		
 		// print divisions

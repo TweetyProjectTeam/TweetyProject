@@ -22,6 +22,7 @@ import org.tweetyproject.arg.bipolar.syntax.*;
 import org.tweetyproject.arg.dung.reasoner.SimpleConflictFreeReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
 
@@ -39,7 +40,7 @@ public class SafetyReasoner  {
         Set<ArgumentSet> extensions = new HashSet<>();
         // Check only conflict-free subsets
         SimpleConflictFreeReasoner cfReasoner = new SimpleConflictFreeReasoner();
-        for(Extension ext: cfReasoner.getModels(bbase.getCompleteAssociatedDungTheory())){
+        for(Extension<DungTheory> ext: cfReasoner.getModels(bbase.getCompleteAssociatedDungTheory())){
             ArgumentSet argSet = new ArgumentSet(ext);
             Set<BArgument> supported = bbase.getSupported(argSet);
             supported.removeAll(argSet);

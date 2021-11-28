@@ -20,7 +20,6 @@
 package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -36,14 +35,14 @@ import java.util.Set;
  */
 public class WeaklyPreferredReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
-        Collection<Extension> w_adm_exts = new WeaklyAdmissibleReasoner().getModels(bbase);
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+        Collection<Extension<DungTheory>> w_adm_exts = new WeaklyAdmissibleReasoner().getModels(bbase);
 
-        Set<Extension> result = new HashSet<>();
+        Set<Extension<DungTheory>> result = new HashSet<>();
         boolean maximal;
-        for(Extension e1: w_adm_exts){
+        for(Extension<DungTheory> e1: w_adm_exts){
             maximal = true;
-            for(Extension e2: w_adm_exts)
+            for(Extension<DungTheory> e2: w_adm_exts)
                 if(e1 != e2 && e2.containsAll(e1)){
                     maximal = false;
                     break;
@@ -55,7 +54,7 @@ public class WeaklyPreferredReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
+    public Extension<DungTheory> getModel(DungTheory bbase) {
         return this.getModels(bbase).iterator().next();
     }
 }

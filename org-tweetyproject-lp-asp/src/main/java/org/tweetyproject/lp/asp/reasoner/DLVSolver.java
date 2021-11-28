@@ -273,8 +273,9 @@ public class DLVSolver extends ASPSolver {
 	public boolean isInstalled() {
 		
 	    try {
-	            @SuppressWarnings("unused")
-				Process process = Runtime.getRuntime().exec("DLV");
+
+	            String cmd = pathToSolver + "/dlv";
+				this.outputData = (bash.run(cmd));
 	            return true;
 	    } catch (Exception e) {
 	            return false;

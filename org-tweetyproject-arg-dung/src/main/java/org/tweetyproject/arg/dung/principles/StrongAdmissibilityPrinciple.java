@@ -51,12 +51,12 @@ public class StrongAdmissibilityPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
         // check all extensions
-        for (Extension ext: exts) {
+        for (Extension<DungTheory> ext: exts) {
             for (Argument a: ext) {
-                Extension extWithoutArg = new Extension(ext);
+                Extension<DungTheory> extWithoutArg = new Extension<DungTheory>(ext);
                 extWithoutArg.remove(a);
                 for (Argument c: theory.getAttackers(a)) {
                     if (!theory.isAttacked(c, extWithoutArg)) {

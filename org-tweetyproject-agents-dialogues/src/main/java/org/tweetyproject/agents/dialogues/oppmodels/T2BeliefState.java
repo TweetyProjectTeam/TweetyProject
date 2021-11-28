@@ -26,6 +26,7 @@ import org.tweetyproject.agents.dialogues.ExecutableExtension;
 import org.tweetyproject.agents.dialogues.ArgumentationEnvironment;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.util.Pair;
 import org.tweetyproject.math.probability.Probability;
 import org.tweetyproject.math.probability.ProbabilityFunction;
@@ -47,7 +48,7 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @param utilityFunction the utility function of the agent.
 	 * @param prob the probability function over opponent models.
 	 */
-	public T2BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction, ProbabilityFunction<T2BeliefState> prob){
+	public T2BeliefState(Extension<DungTheory> knownArguments, UtilityFunction<Argument,Extension<DungTheory>> utilityFunction, ProbabilityFunction<T2BeliefState> prob){
 		super(knownArguments, utilityFunction);
 		this.prob = prob;
 	}
@@ -57,7 +58,7 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @param knownArguments the set of arguments known by the agent.
 	 * @param utilityFunction the utility function of the agent.	 
 	 */
-	public T2BeliefState(Extension knownArguments, UtilityFunction<Argument,Extension> utilityFunction){
+	public T2BeliefState(Extension<DungTheory> knownArguments, UtilityFunction<Argument,Extension<DungTheory>> utilityFunction){
 		this(knownArguments, utilityFunction, new ProbabilityFunction<T2BeliefState>());		
 	}
 	
@@ -65,7 +66,7 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.BeliefState#update(org.tweetyproject.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	public void update(DialogueTrace<Argument,Extension> trace) {
+	public void update(DialogueTrace<Argument,Extension<DungTheory>> trace) {
 		this.getKnownArguments().addAll(trace.getElements());
 		ProbabilityFunction<T2BeliefState> newProb = new ProbabilityFunction<T2BeliefState>();
 		for(T2BeliefState state: this.prob.keySet()){
@@ -95,13 +96,13 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 * @see org.tweetyproject.agents.argumentation.oppmodels.BeliefState#doMove(org.tweetyproject.agents.argumentation.oppmodels.GroundedEnvironment, org.tweetyproject.agents.argumentation.DialogueTrace)
 	 */
 	@Override
-	protected Pair<Double, Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension> trace) {
+	protected Pair<Double, Set<ExecutableExtension>> doMove(ArgumentationEnvironment env, DialogueTrace<Argument,Extension<DungTheory>> trace) {
 		double bestEU = this.getUtilityFunction().getUtility(env.getDialogueTrace());
 		Set<ExecutableExtension> bestMoves = new HashSet<ExecutableExtension>();
 		bestMoves.add(new ExecutableExtension());
 		/* For every legal move newMove ... */		
 		for(ExecutableExtension newMove: this.getLegalMoves(env,trace)){			
-			DialogueTrace<Argument,Extension> t2 = trace.addAndCopy(newMove);
+			DialogueTrace<Argument,Extension<DungTheory>> t2 = trace.addAndCopy(newMove);
 			double newMoveEU = 0;			
 			/* For all possible opponent states oppState ... */
 			if(this.prob.isEmpty())
@@ -126,7 +127,7 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 								newMoveEU += this.getUtilityFunction().getUtility(t2) * oppStateProb.doubleValue() * oppResponseProb;
 								continue;
 							}
-							DialogueTrace<Argument,Extension> t3 = t2.addAndCopy(oppResponse);		
+							DialogueTrace<Argument,Extension<DungTheory>> t3 = t2.addAndCopy(oppResponse);		
 							/* Get best response to oppResponse */
 							Pair<Double, Set<ExecutableExtension>> r = this.doMove(env, t3);						
 							/* Expected utility is utility of best response times probability of 
@@ -186,11 +187,11 @@ public class T2BeliefState extends BeliefState implements Comparable<T2BeliefSta
 	 */
 	public Object clone(){
 		if(this.prob.isEmpty())
-			return new T2BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction());
+			return new T2BeliefState(new Extension<DungTheory>(this.getKnownArguments()), this.getUtilityFunction());
 		ProbabilityFunction<T2BeliefState> prob = new ProbabilityFunction<T2BeliefState>();
 		for(java.util.Map.Entry<T2BeliefState, Probability> entry: this.prob.entrySet())
 			prob.put((T2BeliefState)entry.getKey().clone(), entry.getValue());
-		return new T2BeliefState(new Extension(this.getKnownArguments()), this.getUtilityFunction(), prob);
+		return new T2BeliefState(new Extension<DungTheory>(this.getKnownArguments()), this.getUtilityFunction(), prob);
 	}
 	
 	/* (non-Javadoc)

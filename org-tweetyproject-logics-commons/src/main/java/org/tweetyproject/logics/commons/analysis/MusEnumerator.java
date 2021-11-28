@@ -83,4 +83,9 @@ public interface MusEnumerator<S extends Formula> extends BeliefSetConsistencyTe
 	 * @see org.tweetyproject.logics.commons.analysis.BeliefSetConsistencyTester#isConsistent(org.tweetyproject.Formula)
 	 */
 	public boolean isConsistent(S formula);
+	/**
+	 * 
+	 * @return whether the consistency measure is installed
+	 */
+	public boolean isInstalled();
 }

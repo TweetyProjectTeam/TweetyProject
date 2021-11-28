@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
 import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
@@ -40,14 +39,14 @@ import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
 public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(ArgumentationFramework bbase) {
+	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
 		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(ArgumentationFramework base) {
+	public LatticeArgumentRanking getModel(DungTheory base) {
 		// Number of steps
 		int iMax = 6;
 		// Map for storing burden numbers of previous steps
@@ -94,6 +93,12 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeA
 			}
 		}
 		return ranking;
+	}
+	
+	/**natively installed*/
+	@Override
+	public boolean isInstalled() {
+		return true;
 	}
 
 }

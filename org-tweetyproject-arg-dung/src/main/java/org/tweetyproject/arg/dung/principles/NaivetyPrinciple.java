@@ -52,9 +52,9 @@ public class NaivetyPrinciple extends Principle {
     @Override
     public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
         DungTheory theory = (DungTheory) kb;
-        Collection<Extension> exts = ev.getModels(theory);
+        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        Collection<Extension> naiveExts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.NAIVE_SEMANTICS).getModels(theory);
+        Collection<Extension<DungTheory>> naiveExts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.NAIVE_SEMANTICS).getModels(theory);
 
         return naiveExts.containsAll(exts);
     }

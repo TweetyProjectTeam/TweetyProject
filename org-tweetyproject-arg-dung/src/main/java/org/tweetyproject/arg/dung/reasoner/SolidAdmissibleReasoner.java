@@ -38,11 +38,11 @@ import java.util.HashSet;
  */
 public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
     @Override
-    public Collection<Extension> getModels(ArgumentationFramework bbase) {
-        Collection<Extension> result = new HashSet<>();
+    public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
+        Collection<Extension<DungTheory>> result = new HashSet<>();
 
-        Collection<Extension> conflictFreeSets = new SimpleConflictFreeReasoner().getModels(bbase);
-        for (Extension ext: conflictFreeSets) {
+        Collection<Extension<DungTheory>> conflictFreeSets = new SimpleConflictFreeReasoner().getModels(bbase);
+        for (Extension<DungTheory> ext: conflictFreeSets) {
             Collection<Argument> solidlyDefended = this.getSolidlyDefended(ext, (DungTheory) bbase);
             if (solidlyDefended.containsAll(ext)) {
                 result.add(ext);
@@ -52,7 +52,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
     }
 
     @Override
-    public Extension getModel(ArgumentationFramework bbase) {
+    public Extension<DungTheory> getModel(DungTheory bbase) {
         return this.getModels(bbase).iterator().next();
     }
 
@@ -63,7 +63,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param theory theory
      * @return isSolidlyDefendedBy
      */
-    public boolean isSolidlyDefendedBy(Argument arg, Extension ext, DungTheory theory) {
+    public boolean isSolidlyDefendedBy(Argument arg, Extension<DungTheory> ext, DungTheory theory) {
         Collection<Argument> defenders = new HashSet<>();
         for (Argument attacker: theory.getAttackers(arg)) {
             defenders.addAll(theory.getAttackers(attacker));
@@ -77,7 +77,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
      * @param theory theory
      * @return DungTheory
      */
-    public Collection<Argument> getSolidlyDefended(Extension ext, DungTheory theory) {
+    public Collection<Argument> getSolidlyDefended(Extension<DungTheory> ext, DungTheory theory) {
         Collection<Argument> defended = new HashSet<>();
         for (Argument arg: theory) {
             if (this.isSolidlyDefendedBy(arg, ext, theory)) {
