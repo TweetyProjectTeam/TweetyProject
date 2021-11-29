@@ -247,6 +247,19 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	/**
+	 * Computes the set {A | (A,arg) in attacks for some arg in args}.
+	 * @param args a set of arguments
+	 * @return the set of all arguments that attack some argument
+	 *  in <code>args</code>.
+	 */
+	public Collection<Argument> getAttackers(Collection<Argument> args){
+		Collection<Argument> attackers = new HashSet<Argument>();
+		for(Argument a: args)
+			attackers.addAll(this.getAttackers(a));
+		return attackers;
+	}
+	
+	/**
 	 * Computes the set {A | (argument,A) in attacks}.
 	 * @param argument an argument
 	 * @return the set of all arguments that are attacked by <code>argument</code>.
@@ -255,6 +268,19 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		if(!this.children.containsKey(argument))
 			return new HashSet<Argument>();
 		return new HashSet<Argument>(this.children.get(argument));	
+	}
+	
+	/**
+	 * Computes the set {A | (arg,A) in attacks for some arg in args}.
+	 * @param args a set of arguments
+	 * @return the set of all arguments that are attacked by some argument
+	 *  in <code>args</code>.
+	 */
+	public Collection<Argument> getAttacked(Collection<Argument> args){
+		Collection<Argument> attacked = new HashSet<Argument>();
+		for(Argument a: args)
+			attacked.addAll(this.getAttacked(a));
+		return attacked;
 	}
 
 	/**
