@@ -51,12 +51,15 @@ public class EeeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 	
 	@Override
 	public Collection<Argument> getAcceptableArguments(DungTheory aaf) {
-		Collection<Argument> result = new HashSet<Argument>(aaf);
+		Collection<Argument> result = new HashSet<Argument>();
 		if(this.inferenceMode.equals(InferenceMode.CREDULOUS))
 			for(Collection<Argument> extension: this.reasoner.getModels(aaf))
 				result.addAll(extension);
-		else for(Collection<Argument> extension: this.reasoner.getModels(aaf))
-			result.retainAll(extension);
+		else {
+			result.addAll(aaf);
+			for(Collection<Argument> extension: this.reasoner.getModels(aaf))
+				result.retainAll(extension);			
+		}			
 		return result;
 	}	
     /**
