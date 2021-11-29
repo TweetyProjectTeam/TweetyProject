@@ -20,6 +20,7 @@ package org.tweetyproject.arg.dung.analysis;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
