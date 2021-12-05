@@ -74,27 +74,7 @@ abstract class DefaultSemantics implements Semantics {
 		@Override
 		public Semantics restrict(Interpretation prefix) {
 			return new RestrictedSemantics.ConflictFreeSemantics(adf, mapping, prefix);
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}		
+		}	
 	
 	}
 	
@@ -132,26 +112,6 @@ abstract class DefaultSemantics implements Semantics {
 		@Override
 		public Semantics restrict(Interpretation prefix) {
 			return new RestrictedSemantics.NaiveSemantics(adf, mapping, prefix);
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return true;
 		}
 		
 	}
@@ -191,26 +151,6 @@ abstract class DefaultSemantics implements Semantics {
 		public Semantics restrict(Interpretation prefix) {
 			return new RestrictedSemantics.AdmissibleSemantics(adf, mapping, prefix);
 		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return true;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}
 	
 	}
 	
@@ -248,26 +188,6 @@ abstract class DefaultSemantics implements Semantics {
 		@Override
 		public Semantics restrict(Interpretation prefix) {
 			return new RestrictedSemantics.PreferredSemantics(adf, mapping, prefix);
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return true;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return true;
 		}
 		
 	}
@@ -312,26 +232,6 @@ abstract class DefaultSemantics implements Semantics {
 		public Semantics restrict(Interpretation prefix) {
 			return new RestrictedSemantics.StableSemantics(adf, mapping, prefix);
 		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return true;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}
 		
 	}
 	
@@ -369,26 +269,6 @@ abstract class DefaultSemantics implements Semantics {
 		@Override
 		public Semantics restrict(Interpretation prefix) {
 			return new RestrictedSemantics.CompleteSemantics(adf, mapping, prefix);
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return true;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return true;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
 		}
 		
 	}
@@ -433,26 +313,6 @@ abstract class DefaultSemantics implements Semantics {
 		public Semantics restrict(Interpretation prefix) {
 			return new RestrictedSemantics.ModelSemantics(adf, mapping, prefix);
 		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}
 	
 	}
 	
@@ -490,26 +350,6 @@ abstract class DefaultSemantics implements Semantics {
 		@Override
 		public Semantics restrict(Interpretation prefix) {
 			return new RestrictedSemantics.GroundSemantics(adf, mapping, prefix);
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
 		}
 
 	}

@@ -55,13 +55,9 @@ public interface Semantics {
 	Decomposer createDecomposer();
 
 	CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier);
-
-	boolean hasStateProcessors();
 	
 	List<StateProcessor> createStateProcessors();
-	
-	boolean hasUnverifiedProcessor();
-	
+		
 	/**
 	 * Is applied to interpretations before they are verified.
 	 * 
@@ -69,8 +65,6 @@ public interface Semantics {
 	 * @return
 	 */
 	Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier);
-
-	boolean hasVerifier();
 	
 	default boolean hasStatefulVerifier() {
 		return true; // safe option
@@ -83,8 +77,6 @@ public interface Semantics {
 	 * @return
 	 */
 	Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier);
-
-	boolean hasVerifiedProcessor();
 	
 	/**
 	 * Is applied to interpretations after they are verified.
