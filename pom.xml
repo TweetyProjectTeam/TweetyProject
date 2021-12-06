@@ -43,7 +43,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+   <maven.compiler.source>1.16</maven.compiler.source>
+   <maven.compiler.target>1.16</maven.compiler.target>
+</properties>
 
   <distributionManagement>
 	<snapshotRepository>
