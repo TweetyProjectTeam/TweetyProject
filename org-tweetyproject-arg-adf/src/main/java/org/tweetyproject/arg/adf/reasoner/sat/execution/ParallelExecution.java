@@ -21,6 +21,7 @@ package org.tweetyproject.arg.adf.reasoner.sat.execution;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.concurrent.BlockingQueue;
@@ -29,8 +30,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -117,50 +119,52 @@ public final class ParallelExecution implements Execution {
 
 	}
 
-	private interface Node extends AutoCloseable, Consumer<Interpretation> {
+	private interface Step extends AutoCloseable, Consumer<Interpretation> {
 
 		@Override
 		void close();
 
 	}
-
+	
 	private final class Branch implements AutoCloseable {
 
 		private final Semantics semantics;
 
-		private final GeneratorNode generator;
+		private final GeneratorStep generator;
 
 		private final AtomicInteger currentlyInPipeline = new AtomicInteger(1);
-		
-		private final AtomicBoolean closed = new AtomicBoolean(false);
-		
+				
 		Branch(Semantics semantics) {
 			this.semantics = Objects.requireNonNull(semantics);
 			this.generator = buildPipeline();
 		}
 
-		private GeneratorNode buildPipeline() {
-			Supplier<SatSolverState> stateSupplier = semantics.hasStateProcessors() ? new ProcessedStateSupplier()
-					: satSolver::createState;
-
-			Node last = new EndNode();
-			if (semantics.hasVerifiedProcessor()) {
-				last = new ProcessingNode(last, semantics.createVerifiedProcessor(satSolver::createState).orElseThrow());
+		private GeneratorStep buildPipeline() {
+			Step last = new EndStep();
+			
+			Optional<InterpretationProcessor> verifiedProcessor = semantics.createVerifiedProcessor(satSolver::createState);
+			if (verifiedProcessor.isPresent()) {
+				last = new ProcessingStep(verifiedProcessor.orElseThrow(), last);
 			}
-
-			if (semantics.hasVerifier()) {
+			
+			Optional<Verifier> verifier = semantics.createVerifier(satSolver::createState);
+			if (verifier.isPresent()) {
 				if (semantics.hasStatefulVerifier()) {
-					last = new SynchronizedVerificationNode(last);					
+					last = new SynchronizedVerificationStep(verifier.orElseThrow(), last);
 				} else {
-					last = new VerificationNode(last);
+					last = new VerificationStep(verifier.orElseThrow(), last);
 				}
 			}
-
-			if (semantics.hasUnverifiedProcessor()) {
-				last = new ProcessingNode(last, semantics.createUnverifiedProcessor(satSolver::createState).orElseThrow());
+			
+			Optional<InterpretationProcessor> unverifiedProcessor = semantics.createUnverifiedProcessor(satSolver::createState);
+			if (unverifiedProcessor.isPresent()) {
+				last = new ProcessingStep(unverifiedProcessor.orElseThrow(), last);
 			}
+			
+			List<StateProcessor> stateProcessors = semantics.createStateProcessors();
+			Supplier<SatSolverState> stateSupplier = stateProcessors.isEmpty() ? satSolver::createState : new ProcessedStateSupplier(stateProcessors);
 
-			return new GeneratorNode(stateSupplier, last);
+			return new GeneratorStep(semantics.createCandidateGenerator(stateSupplier), last);
 		}
 
 		private void decreaseCount() {
@@ -172,22 +176,67 @@ public final class ParallelExecution implements Execution {
 		}
 
 		public void start() {
-			generator.generate();
+			generator.accept(null);
 		}
 
 		@Override
 		public void close() {
-			if (closed.compareAndSet(false, true)) {
-				generator.close();				
+			generator.close();
+		}
+		
+		private abstract class AbstractStep<R extends AutoCloseable> implements Step {
+
+			private final R resource;
+			
+			private final Step next;
+						
+			private final ReadWriteLock lock = new ReentrantReadWriteLock();
+			
+			AbstractStep(R resource, Step next) {
+				this.resource = Objects.requireNonNull(resource);
+				this.next = Objects.requireNonNull(next);
 			}
+
+			@Override
+			public void accept(Interpretation interpretation) {
+				executor.execute(() -> {
+					if (lock.readLock().tryLock()) {
+						try {
+							execute(resource, interpretation).ifPresentOrElse(this::nextStep, Branch.this::decreaseCount);
+						} finally {
+							lock.readLock().unlock();
+						}
+					}
+				});
+			}
+			
+			abstract Optional<Interpretation> execute(R resource, Interpretation interpretation);
+			
+			void nextStep(Interpretation interpretation) {
+				next.accept(interpretation);
+			}
+
+			@Override
+			public void close() {
+				if (lock.writeLock().tryLock()) { // never released, since it also indicates a closed state
+					try {
+						resource.close();
+					} catch (Exception e) {
+						// TODO does it make sense to handle something here?
+					} finally {
+						next.close();
+					}
+				}
+			}
+			
 		}
 
 		private final class ProcessedStateSupplier implements Supplier<SatSolverState> {
 
 			private final List<StateProcessor> processors;
 
-			public ProcessedStateSupplier() {
-				this.processors = semantics.createStateProcessors();
+			public ProcessedStateSupplier(List<StateProcessor> processors) {
+				this.processors = Objects.requireNonNull(processors);
 			}
 
 			@Override
@@ -200,11 +249,9 @@ public final class ParallelExecution implements Execution {
 			}
 
 		}
-
-		private final class GeneratorNode implements AutoCloseable {
-
-			private final Node next;
-
+		
+		private final class GeneratorStep extends AbstractStep<CandidateGenerator> {
+		
 			/**
 			 * Collects the pending updates of the interpretation processors. We cannot
 			 * immediately apply them, since this would require synchronization and
@@ -212,144 +259,89 @@ public final class ParallelExecution implements Execution {
 			 * next candidate while the the current is still in processing.
 			 */
 			private final Queue<Consumer<SatSolverState>> pendingUpdates = new ConcurrentLinkedQueue<>();
-
-			private final CandidateGenerator generator;
-
-			public GeneratorNode(Supplier<SatSolverState> stateSupplier, Node next) {
-				this.next = next;
-				this.generator = semantics.createCandidateGenerator(stateSupplier);
+			
+			GeneratorStep(CandidateGenerator resource, Step next) {
+				super(resource, next);
 			}
 
-			public void generate() {
-				executor.execute(() -> {
-					applyPendingUpdates();
-					Interpretation candidate = null;
-					if ((candidate = generator.generate()) != null) {
-						currentlyInPipeline.incrementAndGet();
-						next.accept(candidate);
-						generate();
-					} else {
-						decreaseCount();
-					}
-				});
+			@Override
+			Optional<Interpretation> execute(CandidateGenerator generator, Interpretation interpretation) {
+				applyPendingUpdates(generator);
+				return Optional.ofNullable(generator.generate());
 			}
-
+			
+			@Override
+			void nextStep(Interpretation interpretation) {
+				currentlyInPipeline.incrementAndGet();
+				this.accept(interpretation); // keep generating until search space is exhausted
+				super.nextStep(interpretation);
+			}
+			
 			public void update(Consumer<SatSolverState> updateFunction) {
-				this.pendingUpdates.add(updateFunction);
-			}
-
-			private void applyPendingUpdates() {
+				this.pendingUpdates.offer(updateFunction);
+			}			
+			
+			private void applyPendingUpdates(CandidateGenerator generator) {
 				Consumer<SatSolverState> updateFunction = null;
 				while ((updateFunction = pendingUpdates.poll()) != null) {
 					generator.update(updateFunction);
 				}				
 			}
-
-			@Override
-			public void close() {
-				generator.close();
-				next.close();
-			}
-
-		}
-
-		private final class VerificationNode implements Node {
-
-			private final Node next;
-
-			private final Verifier verifier;
 			
-			public VerificationNode(Node next) {
-				this.next = Objects.requireNonNull(next);
-				this.verifier = semantics.createVerifier(satSolver::createState).orElseThrow();
-				this.verifier.prepare();
-			}
-
-			@Override
-			public void accept(Interpretation interpretation) {
-				executor.execute(() -> {
-					if (closed.get()) return;
-					if (verifier.verify(interpretation)) {
-						next.accept(interpretation);
-					} else {
-						decreaseCount();
-					}						
-				});
-			}
-
-			@Override
-			public void close() {
-				verifier.close();
-				next.close();
-			}
-
 		}
 		
-		private final class SynchronizedVerificationNode implements Node {
+		private final class VerificationStep extends AbstractStep<Verifier> {
+	
+			VerificationStep(Verifier verifier, Step next) {
+				super(verifier, next);
+				verifier.prepare();
+			}
 
-			private final Node next;
-
-			private final Verifier verifier;
+			@Override
+			Optional<Interpretation> execute(Verifier verifier, Interpretation interpretation) {
+				if (verifier.verify(interpretation)) {
+					return Optional.of(interpretation);
+				}
+				return Optional.empty();
+			}
 			
-			public SynchronizedVerificationNode(Node next) {
-				this.next = Objects.requireNonNull(next);
-				this.verifier = semantics.createVerifier(satSolver::createState).orElseThrow();
-				this.verifier.prepare();
+		}
+		
+		private final class SynchronizedVerificationStep extends AbstractStep<Verifier> {
+			
+			SynchronizedVerificationStep(Verifier verifier, Step next) {
+				super(verifier, next);
+				verifier.prepare();
 			}
 
 			@Override
-			public void accept(Interpretation interpretation) {
-				executor.execute(() -> {
-					if (closed.get()) return;
-					boolean verified;
-					synchronized(verifier) {
-						verified = verifier.verify(interpretation);
+			Optional<Interpretation> execute(Verifier verifier, Interpretation interpretation) {
+				synchronized (verifier) {
+					if (verifier.verify(interpretation)) {
+						return Optional.of(interpretation);
 					}
-					if (verified) {
-						next.accept(interpretation);
-					} else {
-						decreaseCount();
-					}						
-				});
+				}
+				return Optional.empty();
+			}
+			
+		}
+		
+		private final class ProcessingStep extends AbstractStep<InterpretationProcessor> {
+
+			ProcessingStep(InterpretationProcessor processor, Step next) {
+				super(processor, next);
 			}
 
 			@Override
-			public void close() {
-				verifier.close();
-				next.close();
+			Optional<Interpretation> execute(InterpretationProcessor processor, Interpretation interpretation) {
+				Interpretation processed = processor.process(interpretation);
+				generator.update(state -> processor.updateState(state, processed));
+				return Optional.of(processed);
 			}
-
+			
 		}
-
-		private final class ProcessingNode implements Node {
-
-			private final Node next;
-
-			private final InterpretationProcessor processor;
-
-			public ProcessingNode(Node next, InterpretationProcessor processor) {
-				this.next = Objects.requireNonNull(next);
-				this.processor = Objects.requireNonNull(processor);
-			}
-
-			public void accept(Interpretation interpretation) {
-				executor.execute(() -> {
-					if (closed.get()) return;
-					Interpretation processed = processor.process(interpretation);
-					generator.update(state -> processor.updateState(state, processed));
-					next.accept(processed);						
-				});
-			}
-
-			@Override
-			public void close() {
-				processor.close();
-				next.close();
-			}
-
-		}
-
-		private final class EndNode implements Node {
+		
+		private final class EndStep implements Step {
 
 			@Override
 			public void accept(Interpretation t) {
@@ -363,7 +355,7 @@ public final class ParallelExecution implements Execution {
 
 			@Override
 			public void close() {}
-
+			
 		}
 
 	}

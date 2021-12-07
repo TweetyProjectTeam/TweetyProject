@@ -87,27 +87,7 @@ abstract class RestrictedSemantics implements Semantics {
 		public Semantics restrict(Interpretation partial) {
 			return new ConflictFreeSemantics(adf, mapping, Interpretation.union(this.partial, partial));			
 		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}
-	
+		
 	}
 	
 	static final class NaiveSemantics extends RestrictedSemantics {
@@ -146,26 +126,6 @@ abstract class RestrictedSemantics implements Semantics {
 			return new NaiveSemantics(adf, mapping, Interpretation.union(this.partial, partial));			
 		}
 
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return true;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return true;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}
-		
 	}
 	
 	static final class AdmissibleSemantics extends RestrictedSemantics {
@@ -202,26 +162,6 @@ abstract class RestrictedSemantics implements Semantics {
 		@Override
 		public Semantics restrict(Interpretation partial) {
 			return new AdmissibleSemantics(adf, mapping, Interpretation.union(this.partial, partial));			
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return true;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
 		}
 	
 	}
@@ -261,26 +201,6 @@ abstract class RestrictedSemantics implements Semantics {
 		public Semantics restrict(Interpretation partial) {
 			return new PreferredSemantics(adf, mapping, Interpretation.union(this.partial, partial));
 		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return true;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return true;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return true;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}
 		
 	}
 	
@@ -319,29 +239,9 @@ abstract class RestrictedSemantics implements Semantics {
 		public Semantics restrict(Interpretation partial) {
 			return new CompleteSemantics(adf, mapping, Interpretation.union(this.partial, partial));
 		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return true;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return true;
-		}
 		
 		@Override
 		public boolean hasStatefulVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
 			return false;
 		}
 		
@@ -388,26 +288,6 @@ abstract class RestrictedSemantics implements Semantics {
 			return new ModelSemantics(adf, mapping, Interpretation.union(this.partial, partial));
 		}
 
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}
-		
 	}
 	
 	static final class StableSemantics extends RestrictedSemantics {
@@ -450,26 +330,6 @@ abstract class RestrictedSemantics implements Semantics {
 		public Semantics restrict(Interpretation partial) {
 			return new StableSemantics(adf, mapping, Interpretation.union(this.partial, partial));
 		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return true;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
-		}
 		
 	}
 	
@@ -507,26 +367,6 @@ abstract class RestrictedSemantics implements Semantics {
 		@Override
 		public Semantics restrict(Interpretation partial) {
 			return new GroundSemantics(adf, mapping, Interpretation.union(this.partial, partial));
-		}
-
-		@Override
-		public boolean hasStateProcessors() {
-			return false;
-		}
-
-		@Override
-		public boolean hasUnverifiedProcessor() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifier() {
-			return false;
-		}
-
-		@Override
-		public boolean hasVerifiedProcessor() {
-			return false;
 		}
 
 	}
