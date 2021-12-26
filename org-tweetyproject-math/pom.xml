@@ -41,11 +41,6 @@
 			<version>1.0.3</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.26</version>
-		</dependency>
-		<dependency>
 			<groupId>org.ojalgo</groupId>
 			<artifactId>ojalgo</artifactId>
 			<version>35.0</version>

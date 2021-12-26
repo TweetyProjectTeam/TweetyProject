@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.tweetyproject.commons.ParserException;
-import org.tweetyproject.commons.TweetyConfiguration;
-import org.tweetyproject.commons.TweetyLogging;
 import org.tweetyproject.commons.Writer;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.syntax.FolFormula;
@@ -169,17 +167,14 @@ public class TweetyCli {
 					System.err.println("At the moment TweetyCLI only supports reasoning with RPCL.");
 					System.exit(1);
 				}
-			}else if(args[i].equals(ARG__LOG_LEVEL) || args[i].equals(ARG__LOG_LEVEL_SHORT))
-				TweetyLogging.logLevel = TweetyConfiguration.LogLevel.getLogLevel(args[++i]);
-			else if(args[i].equals(ARG__LOG_FILE) || args[i].equals(ARG__LOG_FILE_SHORT))
-				TweetyLogging.logFile = args[++i];
+			}
 			else if(args[i].equals(ARG__OPTIONS) || args[i].equals(ARG__OPTIONS_SHORT))
 				options = args[++i];
 			if(args[i].equals(ARG__QUERY) || args[i].equals(ARG__QUERY_SHORT))
 				query = args[++i];
 		}
 		
-		TweetyLogging.initLogging();
+
 		
 		log.info("Start logging.");
 		

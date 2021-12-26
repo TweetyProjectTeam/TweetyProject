@@ -18,9 +18,12 @@
  */
 package org.tweetyproject.commons.examples;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.jupiter.api.Test;
 import org.tweetyproject.commons.util.IncreasingSubsetIterator;
 import org.tweetyproject.commons.util.SubsetIterator;
 
@@ -33,13 +36,18 @@ public class SubsetIteratorExample {
 	/** 
 	 * @param args String
 	 */
-	public static void main(String[] args){
+	@Test
+	public void iterator(){
 		Set<Integer> set = new HashSet<Integer>();
 		for(int i = 0; i < 5; i++) set.add(i);
 		
 		SubsetIterator<Integer> it = new IncreasingSubsetIterator<Integer>(set);
-		
-		while(it.hasNext())
-			System.out.println(it.next());
+		String result = "";
+		while(it.hasNext()) {
+			result += (it.next().toString());
+		}	
+
+		assertTrue(result.equals("[][1][3][0, 1][0, 3][1, 2][1, 4][2, 4][0, 1, 2][0, 1, 4][0, 2, 4][1, 2, 3][1, 3, 4][0, 1, 2, 3][0, 1, 3, 4][1, 2, 3, 4]"));
+
 	}
 }

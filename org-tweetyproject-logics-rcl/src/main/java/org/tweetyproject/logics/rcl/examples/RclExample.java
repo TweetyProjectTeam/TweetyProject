@@ -37,8 +37,7 @@ import org.tweetyproject.logics.rcl.syntax.RclBeliefSet;
 public class RclExample {
 
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.DEBUG;
-		TweetyLogging.initLogging();
+
 		
 		RclParser parser = new RclParser();
 		RclBeliefSet bs = (RclBeliefSet) parser.parseBeliefBaseFromFile(args[0]);

@@ -46,7 +46,6 @@ import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
 import org.tweetyproject.commons.TweetyConfiguration;
-import org.tweetyproject.commons.TweetyLogging;
 
 /**
  * 
@@ -145,7 +144,7 @@ public class GroundedTest {
 			executor.shutdownNow();
 		}
 	}
-
+//T1;T1;10;0.3;tree;T1-3;PRO;58;CONTRA;42;PRO;(0.14080000000000006, 0.9995124848484855);CONTRA;(-0.17920000000000003, 0.9693225858585856);
 	/**
 	 * Same as runSimulationT1()
 	 * 
@@ -335,8 +334,7 @@ public class GroundedTest {
 
 	public static void main(String[] args) throws ProtocolTerminatedException {
 		// set logging level to "TRACE" to get detailed descriptions
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
-		TweetyLogging.initLogging();
+
 		GroundedTest.attackProbability = 0.3;
 		GroundedTest.frameworkSize = 10;
 

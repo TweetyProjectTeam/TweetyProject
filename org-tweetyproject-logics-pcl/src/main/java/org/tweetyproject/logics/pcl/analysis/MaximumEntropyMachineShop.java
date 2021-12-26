@@ -164,8 +164,7 @@ public class MaximumEntropyMachineShop implements BeliefBaseMachineShop {
 		PclBeliefSet kb = (PclBeliefSet) new PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/R4.pcl");
 		System.out.println("INITIAL: " + kb);
 		
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.FATAL;
-		TweetyLogging.initLogging();
+
 		
 		System.out.println();
 		System.out.println();

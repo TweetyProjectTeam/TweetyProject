@@ -69,6 +69,10 @@ public class SimplePlLogicExample {
 		for (Attack att : af.getAttacks()){
 			System.out.println(att);
 		}
+		if(k.getAF().toString().equals("<{ <[[a, t] -> b, [b] -> c, t, a],c>, <[[d] -> !a, d],!a>, <[[d] -> !c, d],!c>, <[[a, t] -> b, t, a],b> },[(<[[a, t] -> b, [b] -> c, t, a],c>,<[[d] -> !c, d],!c>), (<[[d] -> !a, d],!a>,<[[a, t] -> b, [b] -> c, t, a],c>), (<[[d] -> !c, d],!c>,<[[a, t] -> b, [b] -> c, t, a],c>), (<[[d] -> !a, d],!a>,<[[a, t] -> b, t, a],b>)]>")){
+			System.out.println("hurrah");
+		
+		}
 	}
 
 }

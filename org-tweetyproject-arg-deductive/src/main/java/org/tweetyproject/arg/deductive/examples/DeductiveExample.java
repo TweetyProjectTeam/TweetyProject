@@ -41,8 +41,6 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 public class DeductiveExample {
 
 	public static void main(String[] args) throws ParserException, IOException{
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
-		TweetyLogging.initLogging();
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		DeductiveKnowledgeBase kb = new DeductiveKnowledgeBase();
 		

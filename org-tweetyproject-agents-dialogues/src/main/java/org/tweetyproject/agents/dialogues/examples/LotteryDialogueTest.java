@@ -133,3 +133,4 @@ public class LotteryDialogueTest {
 		LotteryDialogueTest.runSimulation(false);
 	}
 }
+

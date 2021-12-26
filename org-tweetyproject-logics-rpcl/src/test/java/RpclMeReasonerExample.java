@@ -16,8 +16,9 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.logics.rpcl.examples;
 
+
+import org.junit.jupiter.api.Test;
 import org.tweetyproject.commons.TweetyConfiguration;
 import org.tweetyproject.logics.commons.syntax.Constant;
 import org.tweetyproject.logics.commons.syntax.Predicate;
@@ -33,7 +34,9 @@ import org.tweetyproject.math.probability.*;
  *  Example code illustrating relational probabilistic conditional logic and reasoning with it.
  */
 public class RpclMeReasonerExample {
-	public static void main(String[] args){
+	@Test
+	public void main(String[] args){
+
 		OctaveSqpSolver.setPathToOctave("/usr/local/octave/3.8.0/bin/octave");
 		Solver.setDefaultGeneralSolver(new OctaveSqpSolver());
 		Predicate a = new Predicate("a", 1);
