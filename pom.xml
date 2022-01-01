@@ -217,6 +217,7 @@
   	<module>org-tweetyproject-agents-dialogues</module>
   	<module>org-tweetyproject-web</module>
   	<module>org-tweetyproject</module>
+  	<module>org-tweetyproject-sat</module>
   </modules>
 
 </project>
