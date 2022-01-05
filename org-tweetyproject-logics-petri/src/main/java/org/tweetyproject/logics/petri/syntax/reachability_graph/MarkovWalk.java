@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.logics.petri.syntax.reachability_graph;
 
+import org.tweetyproject.logics.petri.syntax.PetriNet;
 import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.term.FloatConstant;
 import org.tweetyproject.math.term.Term;
@@ -33,13 +34,30 @@ public class MarkovWalk {
 	 */
 	private ReachabilityGraph graph;
 	/**
-	 * the transition matrix of that graph, featuring the probabilities
+	 * the |T|x|T| transition matrix of that graph, featuring the probabilities
 	 */
 	private Matrix transitionMatrix;
 	/**
-	 * the current state (probabiltiy distribution) during the stochastic walk
+	 * the |M|x|T| control matrix of that graph, where |M| is the number of markings
+	 */
+	private Matrix controlMatrix;
+	/**
+	 * the |1|x|T| control vector of that graph
+	 */
+	private Matrix controlVector;
+	/**
+	 * the |1|x|T| normalized control vector of that graph
+	 */
+	private Matrix normalizedControlVector;	
+	
+	/**
+	 * the current state (probability distribution) during the stochastic walk
 	 */
 	private Matrix currentState;
+	/**
+	 * the mean state (probability distribution) during the stochastic walk
+	 */
+	private Matrix currentMeanState;
 	/**
 	 * an upper limit of the number of discrete steps to take
 	 */
@@ -63,11 +81,14 @@ public class MarkovWalk {
 	 */
 	public void initializeWalk() {
 		this.transitionMatrix = graph.getTransitionMatrix();
+		this.controlMatrix = graph.getControlMatrix();
 		setupInitialState();
 	}
 	
 	private void setupInitialState() {
-		this.currentState = new Matrix(1, transitionMatrix.getXDimension());
+		this.currentState = new Matrix( graph.getNumberOfNodes(), 1);
+		this.currentMeanState = new Matrix(graph.getNumberOfNodes(), 1);
+		this.controlVector = new Matrix(graph.getPetriNet().getTransitions().size(), 1);
 		int numberOfInitialMarkings = graph.getInitialMarkings().size();
 		if(numberOfInitialMarkings == 0) {
 			throw new IllegalStateException("The number of designated initial markings in this graph is zero.");
@@ -76,28 +97,59 @@ public class MarkovWalk {
 		int i = 0;
 		for(Marking marking : graph.getNodes()) {
 			if(graph.isInitial(marking)) {
-				currentState.setEntry(0, i, probability);
+				currentState.setEntry(i,0, probability);
+				currentMeanState.setEntry(i,0, probability);
 			} else {
-				currentState.setEntry(0, i, new FloatConstant(0));
+				currentState.setEntry(i, 0, new FloatConstant(0));
+				currentMeanState.setEntry(i, 0, new FloatConstant(0));
 			}
 			i++;
+		}
+		i = 0;
+		for(; i < controlVector.getXDimension(); i++) {
+			controlVector.setEntry(i, 0, new FloatConstant(0));
 		}
 	}
 	
 	/**
-	 * Walk the network until a stationary distribution is reached 
+	 * Walk the network until a stationary distribution is figured out 
 	 */
 	public void performWalk() {
 		Matrix newState;
+		Matrix newMean;
 		long iteration = 0;
 		double delta = TOLERANCE + 1d;
 		while(iteration < MAX_ITERATIONS &&  delta > TOLERANCE) {
-			newState = this.transitionMatrix.mult(currentState).simplify();
-			delta = getVectorDelta(currentState, newState);
-			currentState = newState;
 			iteration++;
+			newState = currentState.mult(transitionMatrix).simplify();
+			// newMean = 1/(it+1)*(it*oldMean + newState)
+			newMean = (currentMeanState.mult(iteration).add(newState)).mult(1/(iteration+1d)).simplify();
+			delta = getVectorDelta(currentMeanState, newMean);
+			currentState = newState;
+			currentMeanState = newMean;
 		}
 	}
+	
+	public void performShortCircuitWalk() {
+		Matrix newState;
+		Matrix newMean;
+		Matrix controlVectorDelta;	
+		long iteration = 0;
+		double delta = TOLERANCE + 1d;
+		while(iteration < MAX_ITERATIONS &&  delta > TOLERANCE) {
+			iteration++;
+			newState = currentState.mult(transitionMatrix).simplify();
+			// newMean = 1/(it+1)*(it*oldMean + newState)
+			newMean = (currentMeanState.mult(iteration).add(newState)).mult(1/(iteration+1d)).simplify();
+			delta = getVectorDelta(currentMeanState, newMean);
+			controlVectorDelta = currentState.mult(controlMatrix);
+			controlVector = controlVector.add(controlVectorDelta).simplify();
+			currentState = newState;
+			currentMeanState = newMean;
+			normalizedControlVector = controlVector.mult(1/(iteration+0d)).simplify();
+		}
+	}
+	
 	
 	/**
 	 * Calculate the distance between two vectors
@@ -115,14 +167,27 @@ public class MarkovWalk {
 	public Matrix getCurrentState() {
 		return currentState;
 	}
-
+	
 	/**
-	 * @param currentState the currentState to set
+	 * @return the mean state
 	 */
-	public void setCurrentState(Matrix currentState) {
-		this.currentState = currentState;
+	public Matrix getMeanState() {
+		return currentMeanState;
 	}
 
+	/**
+	 * @return the controlVector
+	 */
+	public Matrix getControlVector() {
+		return controlVector;
+	}
+
+	/**
+	 * @return the normalized control vector
+	 */
+	public Matrix getNormalizedControlVector() {
+		return normalizedControlVector;
+	}
 
 	
 }

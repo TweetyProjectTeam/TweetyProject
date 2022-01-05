@@ -34,6 +34,7 @@ import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.Node;
 import org.tweetyproject.logics.petri.syntax.PetriNet;
 import org.tweetyproject.logics.petri.syntax.Place;
+import org.tweetyproject.logics.petri.syntax.Transition;
 import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.probability.Probability;
 import org.tweetyproject.math.probability.ProbabilityFunction;
@@ -272,7 +273,7 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 			int i = markings.indexOf(markingA);
 			int j = markings.indexOf(markingB);
 			Probability p = probabilityFunction.get(markingEdge);
-			transitionMatrix.setEntry(i, j, new FloatConstant(p.getValue()));
+			transitionMatrix.setEntry(j, i, new FloatConstant(p.getValue()));
 		});
 		for(int i = 0; i < n; i++) {
 			for(int j = 0; j < n; j++) {
@@ -282,6 +283,38 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 			}
 		}
 		return transitionMatrix;		
+	}
+	
+	/**
+	 * Retrieve a matrix that specifies for each pair of marking and transition how likely that transition 
+	 * is going to occur at that marking, based on the probability function that describes this graph.
+	 * @return the control matrix
+	 * @throws IllegalStateException iff the probability function of this graph is invalid
+	 */
+	public Matrix getControlMatrix() {
+		if(!this.hasValidProbabilityFunction()) {
+			throw new IllegalStateException("The probability function of this graph is invalid.");
+		}
+		List<Transition> transitions = this.getPetriNet().getTransitions();
+		int n = this.getNumberOfNodes();
+		int m = transitions.size();
+		Matrix controlMatrix = new Matrix(m,n);
+		this.edges.forEach(markingEdge -> {
+			Marking marking = markingEdge.getNodeA();
+			Transition transition = markingEdge.getTransition();
+			int i = markings.indexOf(marking);
+			int j = transitions.indexOf(transition);
+			Probability p = probabilityFunction.get(markingEdge);
+			controlMatrix.setEntry(j, i, new FloatConstant(p.getValue()));
+		});
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < m; j++) {
+				if(controlMatrix.getEntry(j, i) == null) {
+					controlMatrix.setEntry(j, i, new FloatConstant(0));
+				}
+			}
+		}		
+		return controlMatrix;
 	}
 	
 
@@ -393,44 +426,6 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	}
 	
 	/**
-	 * Build and return some strings that describes the markings of this graph
-	 * This comprises 1) an ordered list of places and 2) the markings as token distributions 
-	 * with respect to that ordering
-	 * @return the info strings
-	 */
-	public List<String> getMarkingsInfoStrings() {
-		List<String> infoStrings = new ArrayList<String>();
-		if(!checkConsistency()) {
-			throw new IllegalStateException("Error: The markings of this graph do not describe the same set of places.");
-		}
-		if(markings.size() == 0 || markings.get(0).getPlaces().size() == 0) {
-			return infoStrings;
-		}
-		List<Place> places = markings.get(0).getPlaces().stream().collect(Collectors.toList());
-		String infoString = "";
-		infoString += "<br>Places: <br>";
-		infoString += places.stream().map(place -> place.getName()).collect(Collectors.joining(",<br>"));
-		infoString += "<br>";
-		infoStrings.add(infoString);
-		
-		infoString = "";
-		infoString += "Markings (w.r.t place ordering above):";
-		infoStrings.add(infoString);
-		List<Marking> orderedMarkings = markings.stream().sorted( (m,n) -> m.getId().compareTo(n.getId()))
-				.collect(Collectors.toList());
-		for(Marking marking : orderedMarkings) {
-			infoString = "";
-			infoString += marking.getId() + ": (";
-			infoString += places.stream().map(place -> String.valueOf(marking.getTokens(place)))
-				.collect(Collectors.joining(", "));
-			infoString += ")\n";
-			infoStrings.add(infoString);
-		}
-		infoStrings.add("<br>");
-		return infoStrings;
-	}
-
-	/**
 	 * check if all nodes (markings) of this graph describe the same Petri net, i.e. the same set of places
 	 * @return true iff all markings describe the same set of places
 	 */
@@ -472,6 +467,14 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	 */
 	public boolean isInitial(Marking marking) {
 		return this.petriNet.isInitial(marking);
+	}
+
+	/**
+	 * Retrieve the markings
+	 * @return markings
+	 */
+	public List<Marking> getMarkings() {
+		return this.markings;
 	}
 
 	

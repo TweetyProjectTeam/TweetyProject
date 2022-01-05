@@ -1,5 +1,7 @@
 package org.tweetyproject.logics.bpm.analysis;
 
+import java.util.List;
+
 import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.ReachabilityGraph;
 
@@ -9,5 +11,5 @@ import org.tweetyproject.logics.petri.syntax.reachability_graph.ReachabilityGrap
  *
  */
 public interface BpmnInconsistencyMeasure extends InconsistencyMeasure<ReachabilityGraph>{
-
+	public List<String> getInfoStrings();
 }

@@ -27,6 +27,8 @@ import java.util.List;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.logics.bpm.analysis.DeadEndInconsistencyMeasure;
+import org.tweetyproject.logics.bpm.analysis.DeadTransitionInconsistencyMeasure;
+import org.tweetyproject.logics.bpm.analysis.UnlivenessInconsistencyMeasure;
 import org.tweetyproject.logics.bpm.parser.bpmn_to_petri.PetriNetParser;
 import org.tweetyproject.logics.bpm.parser.xml_to_bpmn.RootParser;
 import org.tweetyproject.logics.bpm.plotting.BpmnModelPlotter;
@@ -60,7 +62,7 @@ public class Example {
 		File problematic_with_inclusive_gateways = new File(modelPath + "problematic_with_inclusive_gateways.bpmn");
 		
 		runExample(unproblematic_browsing);
-		runExample(unproblematic_dinner);
+		//runExample(unproblematic_dinner);
 		runExample(problematic_hit);
 		runExample(problematic_basketball);
 		runExample(problematic_with_inclusive_gateways);
@@ -86,6 +88,7 @@ public class Example {
 		petriNetParser.setProvideInitialTokensAtStartEvents(true);
 		petriNetParser.construct();
 		petriNet = petriNetParser.get();
+		petriNet.transformToShortCircuit();
 		
 		ReachabilityGraphParser rg_parser = new ReachabilityGraphParser(petriNet);
 		rg_parser.construct();
@@ -106,12 +109,16 @@ public class Example {
 		new ReachabilityGraphPlotter(groundPlotter, reachabilityGraph);
 		rg_plotter.createGraph();
 		
+		//DeadEndInconsistencyMeasure measure = new DeadEndInconsistencyMeasure();
+		//measure.inconsistencyMeasure(reachabilityGraph);
+//		measure.inconsistencyMeasure(reachabilityGraph);
+		DeadTransitionInconsistencyMeasure measure = new DeadTransitionInconsistencyMeasure();
+		measure.inconsistencyMeasure(reachabilityGraph);
+		
 		List<String> labels = new ArrayList<>();
 		labels.add(modelFile.getName());
-		labels.addAll(reachabilityGraph.getMarkingsInfoStrings());
-		DeadEndInconsistencyMeasure deadEndMeasure = new DeadEndInconsistencyMeasure();
-		double inconsistencyValue = deadEndMeasure.inconsistencyMeasure(reachabilityGraph);
-		labels.add("<i>---Dead-end inconsistency: " + inconsistencyValue + "---</i>");
+		labels.addAll(measure.getInfoStrings());
+
 		groundPlotter.addLabels(labels);
 		groundPlotter.show();
 	}

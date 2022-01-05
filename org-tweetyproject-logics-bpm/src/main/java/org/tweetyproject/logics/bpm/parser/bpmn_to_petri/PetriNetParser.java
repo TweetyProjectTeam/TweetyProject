@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -143,7 +144,7 @@ public class PetriNetParser extends Parser {
 			parseStartEvent(startEvent);
 		}
 		for (BpmnNode endEvent : sortedNodes.get(BpmnNodeType.END_EVENT)) {
-			parseEndEvent(endEvent);
+			parseEndEvent(endEvent, true);
 		}
 		for (BpmnNode event : sortedNodes.get(BpmnNodeType.EVENT)) {
 			parseEvent(event);
@@ -226,9 +227,16 @@ public class PetriNetParser extends Parser {
 	 * Conduct steps to parse a BPMN end event to elements of the Petri net
 	 * @param endEvent the node to parse
 	 */
-	private void parseEndEvent(BpmnNode endEvent) {
+	private void parseEndEvent(BpmnNode endEvent, boolean addFinalTransition) {
 		Place place = createPlace(endEvent);
 		place.setFinal();
+		if(!addFinalTransition) {
+			return;
+		}
+		Transition finalTransition = createTransition(endEvent);
+		finalTransition.setFinal();
+		createArk(place, finalTransition);
+		createArk(finalTransition, place);
 	}
 	
 	/**
@@ -298,12 +306,13 @@ public class PetriNetParser extends Parser {
 	 * e.g. the transition for an inclusive gateway
 	 * @param node the associated node
 	 */
-	private void createTransition(BpmnNode node) {
+	private Transition createTransition(BpmnNode node) {
 		String id = "t_" + node.getId();
 		String name = node.getName() != null ? ("t_" + node.getName()) : id;
 		Transition transition = new Transition(id, name);
 		transitionMap.put(node, transition);
 		petriNet.add(transition);
+		return transition;
 	}
 	
 	/**
@@ -313,9 +322,6 @@ public class PetriNetParser extends Parser {
 	 * @param nodeB the second associated node
 	 */
 	private Transition createTransition(BpmnNode nodeA, BpmnNode nodeB) {
-		if(nodeB == null) {
-			System.out.println("nono");
-		}
 		String id = "t_" + nodeA.getId() + "_" + nodeB.getId();
 		String name = "t_" 
 				+ (nodeA.getName() != null ? nodeA.getName() : nodeA.getId()) 
@@ -356,7 +362,7 @@ public class PetriNetParser extends Parser {
 	 * identify the initial markings after constructing all places
 	 */
 	private void setInitialMarkings() {
-		Set<Place> places = this.petriNet.getPlaces();
+		List<Place> places = this.petriNet.getPlaces();
 		for(Place place : places) {
 			if(!place.isInitial()) {
 				continue;

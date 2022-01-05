@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.petri.syntax.reachability_graph;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class Marking implements Node, Comparable<Marking> {
 	 * 
 	 * @param places the places that this marking does describe
 	 */
-	public Marking(Set<Place> places) {
+	public Marking(List<Place> places) {
 		this.tokensByPlace = new HashMap<>();
 		places.forEach(place -> {
 			tokensByPlace.put(place, 0);

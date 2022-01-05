@@ -34,6 +34,7 @@ import org.tweetyproject.logics.bpm.syntax.EndEvent;
 import org.tweetyproject.logics.bpm.syntax.StartEvent;
 import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
 import org.tweetyproject.logics.petri.syntax.PetriNet;
+import org.tweetyproject.logics.petri.syntax.Place;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.Marking;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.MarkingEdge;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.MarkovWalk;
@@ -56,15 +57,11 @@ public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 	private ReachabilityGraph reachabilityGraph;
 	
 	/**
-	 * the transition matrix of the reachability graph, based on the graph's probability function
-	 */
-	private Matrix transitionMatrix;
-	
-	
-	/**
 	 * DeadEndInconsistencyMeasure
 	 */
 	public DeadEndInconsistencyMeasure() {}
+	
+	private Double inconsistencyValue;
 	
 	@Override
 	public Double inconsistencyMeasure(ReachabilityGraph reachabilityGraph) {
@@ -72,11 +69,12 @@ public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 		MarkovWalk randomWalk = new MarkovWalk(reachabilityGraph);
 		randomWalk.initializeWalk();
 		randomWalk.performWalk();
-		Matrix limit = randomWalk.getCurrentState();
-		return calculateInconsistencyValue(limit);
+		Matrix limit = randomWalk.getMeanState();
+		calculateInconsistencyValue(limit);
+		return inconsistencyValue;
 	} 
 	
-	private Double calculateInconsistencyValue(Matrix limit) {
+	private void calculateInconsistencyValue(Matrix limit) {
 		double inconsistencyValue = 0;
 		for(int i = 0; i < limit.getYDimension(); i++) {
 			Marking marking = reachabilityGraph.getNodes().get(i);
@@ -84,7 +82,46 @@ public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 			int nonFinals = marking.getSumOfTokensAtNonFinalPlaces();
 			inconsistencyValue += markingProbability*nonFinals;
 		}
-		return inconsistencyValue;
+		this.inconsistencyValue = inconsistencyValue;
 	}
-	
+
+	@Override
+	/**
+	 * Build and return some strings that describe the graph and its inconsistency value 
+	 * This comprises 1) an ordered list of places and 2) the markings as token distributions 
+	 * with respect to that ordering and 3) the calculated inconsistency value
+	 * @return the info strings
+	 */
+	public List<String> getInfoStrings() {
+		List<String> infoStrings = new ArrayList<String>();
+		List<Marking> markings = reachabilityGraph.getMarkings();
+		if(markings.size() == 0 || markings.get(0).getPlaces().size() == 0) {
+			return infoStrings;
+		}
+		List<Place> places = markings.get(0).getPlaces().stream().collect(Collectors.toList());
+		String infoString = "";
+		infoString += "<br>Places: <br>";
+		infoString += places.stream().map(place -> place.getName()).collect(Collectors.joining(",<br>"));
+		infoString += "<br>";
+		infoStrings.add(infoString);
+		
+		infoString = "";
+		infoString += "Markings (w.r.t place ordering above):";
+		infoStrings.add(infoString);
+		List<Marking> orderedMarkings = markings.stream().sorted( (m,n) -> m.getId().compareTo(n.getId()))
+				.collect(Collectors.toList());
+		for(Marking marking : orderedMarkings) {
+			infoString = "";
+			infoString += marking.getId() + ": (";
+			infoString += places.stream().map(place -> String.valueOf(marking.getTokens(place)))
+				.collect(Collectors.joining(", "));
+			infoString += ")\n";
+			infoStrings.add(infoString);
+		}
+		infoStrings.add("<br>");
+		double roundOff = Math.round(inconsistencyValue * 100.0) / 100.0;
+		infoStrings.add("<i>---Dead-end inconsistency: " + roundOff + "---</i>");
+		return infoStrings;
+	}
+
 }

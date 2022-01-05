@@ -18,9 +18,11 @@
  */
 package org.tweetyproject.logics.petri.syntax;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,12 +42,12 @@ public class PetriNet implements Graph<PetriNetNode>{
 	/**
 	 * the places in this Petri net
 	 */
-	private Set<Place> places = new HashSet<>();
+	private List<Place> places = new ArrayList<>();
 	
 	/**
 	 * the places in this Petri net
 	 */
-	private Set<Transition> transitions = new HashSet<>();
+	private List<Transition> transitions = new ArrayList<>();
 	
 	/**
 	 * the edges in this Petri net
@@ -56,6 +58,11 @@ public class PetriNet implements Graph<PetriNetNode>{
 	 * (optional) some designated initial markings (usually one)
 	 */
 	private Set <Marking> initialMarkings = new HashSet<>();
+
+	/**
+	 * specifies if this net is considered to be a short circuit
+	 */
+	private boolean isShortCircuit = false;
 	
 	
 	@Override
@@ -124,14 +131,22 @@ public class PetriNet implements Graph<PetriNetNode>{
 	/**
 	 * @return the places
 	 */
-	public Set<Place> getPlaces() {
+	public List<Place> getPlaces() {
 		return places;
 	}
+	
+	/**
+	 * @return the transitions
+	 */
+	public List<Transition> getTransitions() {
+		return transitions;
+	}
+
 
 	/**
 	 * @param places the places to set
 	 */
-	public void setPlaces(Set<Place> places) {
+	public void setPlaces(List<Place> places) {
 		this.places = places;
 	}
 
@@ -283,8 +298,104 @@ public class PetriNet implements Graph<PetriNetNode>{
 	@Override
 	public boolean add(GeneralEdge<PetriNetNode> edge) {
 		if(edge instanceof Edge)
-			return this.add((Edge) edge);
+			return this.add((Edge<PetriNetNode>) edge);
 		return false;
 	}
+
+	/**
+	 * Add a transition which is enabled at the specified marking and does not change the marking
+	 * @param marking the marking
+	 */
+	public Transition createEmptyTransition(Marking marking) {
+		Transition transition = new Transition(marking.getId(), "eps" );
+		for(Place place : this.places) {
+			int tokensAtPlace = marking.getTokens(place);
+			if(tokensAtPlace == 0) {
+				continue;
+			}
+			Edge<PetriNetNode> ark1 = new Ark(place, transition, tokensAtPlace);
+			Edge<PetriNetNode> ark2 = new Ark(transition, place, tokensAtPlace);
+			this.edges.add(ark1);
+			this.edges.add(ark2);
+		}
+		this.transitions.add(transition);
+		return transition;
+	}
+
+	public void transformToShortCircuit() throws IllegalStateException {
+		if(this.checkShortCircuit()) {
+			return;
+		}
+		List<Place> finalPlaces = places.stream().filter(
+				place -> place.isFinal()
+				).collect(Collectors.toList());
+		List<Place> initialPlaces = places.stream().filter(
+				place -> place.isInitial()
+				).collect(Collectors.toList());
+		// filter out the final transition (should be exactly one, but unchecked)
+		transitions = transitions.stream().filter(
+				transition -> !transition.isFinal()
+				).collect(Collectors.toList());
+		// filter out edges involving the final transition and the final place
+		edges = edges.stream().filter(
+				edge -> {
+					return !edge.getNodeA().isFinal() || !edge.getNodeB().isFinal();
+				}).collect(Collectors.toSet());
+
+		// add and wire short circuit transition
+		Transition circuitTransition = new Transition("shortCircuit","shortCircuit");
+		transitions.add(circuitTransition);
+		Place initialPlace = initialPlaces.get(0);
+		Place finalPlace = finalPlaces.get(0);
+		Ark circuitEdge1 = new Ark(finalPlace, circuitTransition);
+		Ark circuitEdge2 = new Ark(circuitTransition, initialPlace);
+		circuitTransition.addIncomingArk(circuitEdge1);
+		circuitTransition.addOutgoingArk(circuitEdge2);
+		edges.add(circuitEdge1);
+		edges.add(circuitEdge2);
+	}
+
+	public void setEdges(Set<Edge<PetriNetNode>> edges) {
+		this.edges = edges;
+	}
+
+	public void setTransitions(List<Transition> transitions) {
+		this.transitions = transitions;
+	}
+
+	public boolean checkShortCircuit() {	
+		int numberOfInitialPlaces = 0;
+		int numberOfFinalPlaces = 0;
+		for(Place place: places) {
+			if(place.isInitial()) {
+				numberOfInitialPlaces++;
+			}
+			if(place.isFinal()) {
+				numberOfFinalPlaces++;
+			}
+		}
+		if(numberOfInitialPlaces != 1 || numberOfFinalPlaces != 1) {
+			throw new IllegalStateException("No or more than one inital places or final places were found");
+		}
+		Transition initialPlaceIncomingTransition = null, finalPlaceOutgoingTransition = null;
+		int initialPlaceIncomingArks = 0;
+		int finalPlaceOutgoingArks = 0;
+		for(Edge<PetriNetNode> edge : edges) {
+			PetriNetNode nodeA = edge.getNodeA();
+			PetriNetNode nodeB = edge.getNodeB();
+			if( nodeB instanceof Place && ((Place) nodeB).isInitial() ) {
+				initialPlaceIncomingArks++;
+				initialPlaceIncomingTransition = (Transition) nodeA;
+			}
+			if( nodeA instanceof Place && ((Place) nodeA).isFinal() ) {
+				finalPlaceOutgoingArks++;
+				finalPlaceOutgoingTransition = (Transition) nodeB;
+			}
+		}
+		return initialPlaceIncomingArks == 1 
+				&& finalPlaceOutgoingArks == 1  
+				&& initialPlaceIncomingTransition.equals(finalPlaceOutgoingTransition);
+	}
+
 
 }

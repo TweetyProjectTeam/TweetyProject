@@ -35,6 +35,10 @@ public class Transition extends PetriNetNode {
 	 * the arks leading from this transition to its postset
 	 */
 	private List<Ark> outgoingArks = new ArrayList<>();
+	/**
+	 *  Specify whether a transition is "final", that is, it fixes the final state
+	 */
+	private boolean isFinal;
 	
 	/**
 	 * Create a new transition
@@ -112,6 +116,20 @@ public class Transition extends PetriNetNode {
 		for(Ark ark: this.outgoingArks) {
 			ark.revertFire();
 		}
+	}
+
+	/**
+	 * Mark a transition as "final", that is, it fixes the final state
+	 */
+	public void setFinal() {
+		this.isFinal = true;
+	}
+	
+	/**
+	 * Check if a transition is "final", that is, it fixes the final state
+	 */
+	public boolean isFinal() {
+		return this.isFinal;
 	}
 	
 	

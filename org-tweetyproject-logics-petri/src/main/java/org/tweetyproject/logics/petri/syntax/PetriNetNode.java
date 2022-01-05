@@ -34,7 +34,7 @@ public abstract class PetriNetNode implements Node {
 	 * a pretty name
 	 */
 	String name;
-
+	
 	/**
 	 * Create a new instance
 	 * @param id a unique identifier
@@ -80,6 +80,12 @@ public abstract class PetriNetNode implements Node {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * 
+	 * @return true iff this node is final
+	 */
+	protected abstract boolean isFinal();
 	
 }
 	

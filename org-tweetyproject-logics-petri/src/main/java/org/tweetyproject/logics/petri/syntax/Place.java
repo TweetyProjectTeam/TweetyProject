@@ -130,7 +130,7 @@ public class Place extends PetriNetNode implements Comparable<Place> {
 	 * @return true if this number can be added with respect to the token limit and the current number of tokens
 	 */	
 	public boolean canAddTokens(int tokens) {
-		return this.maxtokens == -1 || this.tokens + tokens <= this.maxtokens;
+		return this.maxtokens == this.INFINITY|| this.tokens + tokens <= this.maxtokens;
 	}
 
 	/**
