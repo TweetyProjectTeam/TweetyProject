@@ -43,13 +43,9 @@ import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.probability.ProbabilityFunction;
 
 /**
- * A BPMN model has an IndeterminateInconsistency value of 1 if there is an activity in this model 
- * a) that is reachable from a start event via the model's sequence flow
- * b) from where no end event can possibly be reached, 
- * and 0 otherwise
  * @author Benedikt Knopp
  */
-public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
+public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 
 	/**
 	 * the ReachabilityGraph for which the inconsistency value is to find
@@ -59,9 +55,16 @@ public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 	/**
 	 * DeadEndInconsistencyMeasure
 	 */
-	public DeadEndInconsistencyMeasure() {}
+	public DeadEndMeasure() {}
+	
+	private boolean tokenSensitive = false;
 	
 	private Double inconsistencyValue;
+	
+	private Map<Place, Double> placeCulpabilities = new HashMap<>();
+	
+	private Map<Marking, Double> markingCulpabilities = new HashMap<>();
+	
 	
 	@Override
 	public Double inconsistencyMeasure(ReachabilityGraph reachabilityGraph) {
@@ -76,11 +79,29 @@ public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 	
 	private void calculateInconsistencyValue(Matrix limit) {
 		double inconsistencyValue = 0;
-		for(int i = 0; i < limit.getYDimension(); i++) {
-			Marking marking = reachabilityGraph.getNodes().get(i);
-			double markingProbability = limit.getEntry(0, i).doubleValue();
-			int nonFinals = marking.getSumOfTokensAtNonFinalPlaces();
-			inconsistencyValue += markingProbability*nonFinals;
+		for(Place place : reachabilityGraph.getPetriNet().getPlaces()) {
+			placeCulpabilities.put(place, 0d);
+		}
+		for(int j = 0; j < limit.getXDimension(); j++) {
+			Marking marking = reachabilityGraph.getNodes().get(j);
+			Double markingCulpability = 0d;
+			double markingProbability = limit.getEntry(j, 0).doubleValue();
+			if(Math.abs(markingProbability) < MEASURE_TOLERANCE) {
+				markingCulpabilities.put(marking, markingCulpability);
+				continue;
+			}
+			for(Place place : marking.getPlaces()) {
+				int tokensAtPlace = marking.getTokensByPlace(place);
+				if(place.isFinal() || tokensAtPlace == 0) {
+					continue;
+				}
+				double placeCulpability = placeCulpabilities.get(place);
+				placeCulpability += tokenSensitive? markingProbability*tokensAtPlace : markingProbability;
+				markingCulpability += tokenSensitive ? markingProbability*tokensAtPlace : markingProbability;
+				placeCulpabilities.put(place, placeCulpability);
+			}
+			markingCulpabilities.put(marking, markingCulpability);
+			inconsistencyValue += markingCulpability;
 		}
 		this.inconsistencyValue = inconsistencyValue;
 	}
@@ -100,13 +121,15 @@ public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 		}
 		List<Place> places = markings.get(0).getPlaces().stream().collect(Collectors.toList());
 		String infoString = "";
-		infoString += "<br>Places: <br>";
-		infoString += places.stream().map(place -> place.getName()).collect(Collectors.joining(",<br>"));
+		infoString += "<br>Places / Culpabilities: <br>";
+		infoString += places.stream()
+				.map(place -> place.getName() + " / " + Math.round(placeCulpabilities.get(place) * 100.0) / 100.0)
+				.collect(Collectors.joining(",<br>"));
 		infoString += "<br>";
 		infoStrings.add(infoString);
 		
 		infoString = "";
-		infoString += "Markings (w.r.t place ordering above):";
+		infoString += "Markings (w.r.t place ordering above) / Culpabilities:";
 		infoStrings.add(infoString);
 		List<Marking> orderedMarkings = markings.stream().sorted( (m,n) -> m.getId().compareTo(n.getId()))
 				.collect(Collectors.toList());
@@ -115,13 +138,27 @@ public class DeadEndInconsistencyMeasure implements BpmnInconsistencyMeasure{
 			infoString += marking.getId() + ": (";
 			infoString += places.stream().map(place -> String.valueOf(marking.getTokens(place)))
 				.collect(Collectors.joining(", "));
-			infoString += ")\n";
+			infoString += ") / " + Math.round(markingCulpabilities.get(marking) * 100.0) / 100.0 + "\n";
 			infoStrings.add(infoString);
 		}
 		infoStrings.add("<br>");
-		double roundOff = Math.round(inconsistencyValue * 100.0) / 100.0;
-		infoStrings.add("<i>---Dead-end inconsistency: " + roundOff + "---</i>");
+		String sensitivityInfo = "Token Sensitivity: " ;
+		sensitivityInfo += tokenSensitive ? "Yes" : "No";
+		infoStrings.add(sensitivityInfo);
+		infoStrings.add("<i>---Dead-end inconsistency: " + Math.round(inconsistencyValue * 100.0) / 100.0 + "---</i>");
 		return infoStrings;
+	}
+	
+	public void setTokenSensitivity(boolean tokenSensitive) {
+		this.tokenSensitive = tokenSensitive;
+	}
+	
+	public Double getPlaceCulpability(Place place) {
+		return this.placeCulpabilities.get(place);
+	}
+	
+	public Double getMarkingCulpability(Marking marking) {
+		return this.markingCulpabilities.get(marking);
 	}
 
 }

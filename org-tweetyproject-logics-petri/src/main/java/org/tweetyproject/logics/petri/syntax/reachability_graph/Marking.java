@@ -132,16 +132,9 @@ public class Marking implements Node, Comparable<Marking> {
 		return true;
 	}
 	
-	/**
-	 * Sum up the number of tokens at all non-final places at this marking
-	 * @return the sum
-	 */
-	public int getSumOfTokensAtNonFinalPlaces() {
-		return this.tokensByPlace.entrySet().stream().filter(entry -> {
-			return !entry.getKey().isFinal();
-		}).map(entry -> {
-			return entry.getValue();
-		}).reduce(0, Integer::sum);
+	
+	public int getTokensByPlace(Place place) {
+		return this.tokensByPlace.get(place);
 	}
 
 	@Override

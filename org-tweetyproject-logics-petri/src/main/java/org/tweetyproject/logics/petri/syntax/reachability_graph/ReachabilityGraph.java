@@ -222,6 +222,30 @@ public class ReachabilityGraph implements Graph<Marking>, BeliefBase {
 	}
 	
 	/**
+	 * Initialize a probability function over the edges of this graph according to 
+	 * a stochastic walk. For multiple outgoing edges, exactly one edge receives a probability of 1
+	 * and all other edges a probability of 0. This may turn some transitions dead.	
+	 */
+	public void initializeIrregularProbabilityFunction() {
+		probabilityFunction = new ProbabilityFunction<MarkingEdge>();
+		for(Marking marking : this.getNodes()) {
+			List<MarkingEdge> successorEdges = this.getOutgoing(marking)
+					.stream().collect(Collectors.toList());
+			int numberOfSuccessors = successorEdges.size();
+			int activeEdgeIndex = (int) Math.round((numberOfSuccessors-1)*Math.random());
+			MarkingEdge edge;
+			double probabilityValue;
+			int index = 0;
+			while(index < numberOfSuccessors ){
+				edge = successorEdges.get(index);
+				probabilityValue = index == activeEdgeIndex ? 1.0 : 0.0;
+				probabilityFunction.put(edge, new Probability(probabilityValue));
+				index++;
+			}
+		}
+	}
+	
+	/**
 	 * specifies if the probability function of this graph is 
 	 * 1. initialized, and 2. assigns for each marking a total 
 	 * (summed up) probability of 1 for all successor edges.

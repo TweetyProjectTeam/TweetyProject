@@ -1,16 +1,16 @@
 package org.tweetyproject.logics.bpm.analysis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.tweetyproject.logics.petri.syntax.Transition;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.MarkovWalk;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.ReachabilityGraph;
 import org.tweetyproject.math.matrix.Matrix;
 
-
-public class DeadTransitionInconsistencyMeasure implements BpmnInconsistencyMeasure {
-
+public class UnfairnessEntropyMeasure implements BpmnInconsistencyMeasure {
 	/**
 	 * the ReachabilityGraph for which the inconsistency value is to find
 	 */
@@ -21,12 +21,7 @@ public class DeadTransitionInconsistencyMeasure implements BpmnInconsistencyMeas
 	private MarkovWalk markovWalk;
 	private double inconsistencyValue;
 	
-	/**
-	 * a lower limit to specify when a control vector entry should be considered as zero
-	 */
-	private final double TOLERANCE = 0.001;
 	
-
 	@Override
 	public Double inconsistencyMeasure(ReachabilityGraph reachabilityGraph) {
 		if(!reachabilityGraph.getPetriNet().checkShortCircuit()) {
@@ -36,22 +31,21 @@ public class DeadTransitionInconsistencyMeasure implements BpmnInconsistencyMeas
 		this.markovWalk = new MarkovWalk(reachabilityGraph);
 		markovWalk.initializeWalk();
 		markovWalk.performShortCircuitWalk();
-		return calculateInconsistencyValue(markovWalk);
+		calculateInconsistencyValue(markovWalk);
+		return this.inconsistencyValue;
 	}
-	
-	private double calculateInconsistencyValue(MarkovWalk markovWalk) {
-		Matrix controlVector = markovWalk.getControlVector();
-		int zeros = 0;
+
+	private void calculateInconsistencyValue(MarkovWalk markovWalk) {
+		Matrix normalizedControlVector = markovWalk.getNormalizedControlVector();
 		double entry;
-		int dimension = controlVector.getXDimension();
+		double delta;
+		int dimension = normalizedControlVector.getXDimension();
+		inconsistencyValue = 1;
 		for(int j = 0; j < dimension; j++) {
-			entry = controlVector.getEntry(j,0).simplify().doubleValue();
-			if(Math.abs(entry) < TOLERANCE) {
-				zeros++;
-			}
+			entry = normalizedControlVector.getEntry(j,0).simplify().doubleValue();
+			delta = entry == 0.0d? 0.0d : entry*Math.log(entry)/Math.log(dimension);
+			inconsistencyValue += delta;
 		}
-		inconsistencyValue = (zeros + 0d)/(dimension + 0d);
-		return inconsistencyValue;
 	}
 
 	@Override
@@ -60,23 +54,22 @@ public class DeadTransitionInconsistencyMeasure implements BpmnInconsistencyMeas
 		List<Transition> transitions = reachabilityGraph.getPetriNet().getTransitions();
 		String infoString = "";
 		
-		Matrix controlVector = markovWalk.getControlVector();
+		Matrix normalizedControlVector = markovWalk.getNormalizedControlVector();
 		int dimension = transitions.size();
-		infoString += "<br>Transitions/ Control Vector Entries: ";
+		double mean = Math.round(1/(0.0d+dimension) * 100.0)/100.0;
+		infoString += "<br>Mean: " + mean  + " (for " + dimension + " transitions)";
+		infoString += "<br>Transitions / Normalized Control Vector Entries";
 		infoStrings.add(infoString);
 		for(int j = 0; j < dimension; j++) {
+			Transition transition = transitions.get(j);
 			infoString = "";
-			infoString += transitions.get(j).getName() + ":    ";
-			infoString += Math.round(controlVector.getEntry(j, 0).doubleValue() * 100.0) / 100.0;
+			infoString += transition.getName() + " / ";
+			infoString += Math.round(normalizedControlVector.getEntry(j, 0).doubleValue() * 100.0) / 100.0;
 			infoStrings.add(infoString);
 		}
-		
-		double roundOff = Math.round(inconsistencyValue * 100.0) / 100.0;
-		infoStrings.add("<br><i>---Dead Transition Inconsistency: " + roundOff + "---</i>");
+		double roundOff = Math.round(this.inconsistencyValue * 100.0) / 100.0;
+		infoStrings.add("<br><i>---Entropy-based Unfairness inconsistency: " + roundOff + "---</i>");
 		return infoStrings;
 	}
-	
-	
-	
-}
 
+}

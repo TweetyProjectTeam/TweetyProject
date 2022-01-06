@@ -26,9 +26,11 @@ import java.util.List;
 
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.commons.Plotter;
-import org.tweetyproject.logics.bpm.analysis.DeadEndInconsistencyMeasure;
-import org.tweetyproject.logics.bpm.analysis.DeadTransitionInconsistencyMeasure;
-import org.tweetyproject.logics.bpm.analysis.UnlivenessInconsistencyMeasure;
+import org.tweetyproject.logics.bpm.analysis.DeadEndMeasure;
+import org.tweetyproject.logics.bpm.analysis.DeadTransitionMeasure;
+import org.tweetyproject.logics.bpm.analysis.UnfairnessEntropyMeasure;
+import org.tweetyproject.logics.bpm.analysis.UnfairnessMeasure;
+import org.tweetyproject.logics.bpm.analysis.UnlivenessMeasure;
 import org.tweetyproject.logics.bpm.parser.bpmn_to_petri.PetriNetParser;
 import org.tweetyproject.logics.bpm.parser.xml_to_bpmn.RootParser;
 import org.tweetyproject.logics.bpm.plotting.BpmnModelPlotter;
@@ -56,15 +58,15 @@ public class Example {
 
 		String modelPath = System.getProperty("user.dir") + "/../org-tweetyproject-logics-bpm/src/main/resources/";
 		File unproblematic_browsing = new File(modelPath + "unproblematic_browsing.bpmn");
-		File unproblematic_dinner = new File(modelPath + "unproblematic_dinner.bpmn");
+		//File unproblematic_dinner = new File(modelPath + "unproblematic_dinner.bpmn");
 		File problematic_hit = new File(modelPath + "problematic_hit.bpmn");
-		File problematic_basketball = new File(modelPath + "problematic_basketball.bpmn");
+		//File problematic_basketball = new File(modelPath + "problematic_basketball.bpmn");
 		File problematic_with_inclusive_gateways = new File(modelPath + "problematic_with_inclusive_gateways.bpmn");
 		
 		runExample(unproblematic_browsing);
-		//runExample(unproblematic_dinner);
+//		runExample(unproblematic_dinner);
 		runExample(problematic_hit);
-		runExample(problematic_basketball);
+		//runExample(problematic_basketball);
 		runExample(problematic_with_inclusive_gateways);
 
 	} 
@@ -94,7 +96,8 @@ public class Example {
 		rg_parser.construct();
 		reachabilityGraph = rg_parser.get();
 		//reachabilityGraph.initializeDefaultProbabilityFunction();
-		reachabilityGraph.initializeRandomProbabilityFunction();
+		//reachabilityGraph.initializeRandomProbabilityFunction();
+		reachabilityGraph.initializeIrregularProbabilityFunction();
 
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(2000, 1000);
@@ -109,10 +112,10 @@ public class Example {
 		new ReachabilityGraphPlotter(groundPlotter, reachabilityGraph);
 		rg_plotter.createGraph();
 		
-		//DeadEndInconsistencyMeasure measure = new DeadEndInconsistencyMeasure();
-		//measure.inconsistencyMeasure(reachabilityGraph);
-//		measure.inconsistencyMeasure(reachabilityGraph);
-		DeadTransitionInconsistencyMeasure measure = new DeadTransitionInconsistencyMeasure();
+//		DeadEndMeasure measure = new DeadEndMeasure();
+//		DeadTransitionMeasure measure = new DeadTransitionMeasure();
+//		UnfairnessMeasure measure = new UnfairnessMeasure();
+		UnfairnessEntropyMeasure measure = new UnfairnessEntropyMeasure();
 		measure.inconsistencyMeasure(reachabilityGraph);
 		
 		List<String> labels = new ArrayList<>();

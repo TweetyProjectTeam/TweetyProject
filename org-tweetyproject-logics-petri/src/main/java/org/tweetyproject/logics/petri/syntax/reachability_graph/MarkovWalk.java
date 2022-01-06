@@ -65,7 +65,7 @@ public class MarkovWalk {
 	/**
 	 * a lower limit to specify when a walk should be canceled due to minimal change in the state
 	 */
-	private final double TOLERANCE = 0.000001;
+	private final double TOLERANCE = 0.0001;
 	
 	/**
 	 * Create a new instance
@@ -112,7 +112,8 @@ public class MarkovWalk {
 	}
 	
 	/**
-	 * Walk the network until a stationary distribution is figured out 
+	 * Walk the network until a stationary distribution is figured out
+	 * This neglects control vectors 
 	 */
 	public void performWalk() {
 		Matrix newState;
@@ -130,6 +131,10 @@ public class MarkovWalk {
 		}
 	}
 	
+	/**
+	 * Walk the network until a stationary distribution is figured out 
+	 * This also yields control vectors
+	 */
 	public void performShortCircuitWalk() {
 		Matrix newState;
 		Matrix newMean;
