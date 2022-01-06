@@ -59,11 +59,6 @@ public class PetriNet implements Graph<PetriNetNode>{
 	 */
 	private Set <Marking> initialMarkings = new HashSet<>();
 
-	/**
-	 * specifies if this net is considered to be a short circuit
-	 */
-	private boolean isShortCircuit = false;
-	
 	
 	@Override
 	public boolean add(PetriNetNode node) {
@@ -322,6 +317,11 @@ public class PetriNet implements Graph<PetriNetNode>{
 		return transition;
 	}
 
+	/**
+	 * Transform the Petri net to the short-circuited version, where the final place and initial place are linked via 
+	 * a transition
+	 * @throws IllegalStateException if the transformation is not possible due to violations of syntactical requirements
+	 */
 	public void transformToShortCircuit() throws IllegalStateException {
 		if(this.checkShortCircuit()) {
 			return;
@@ -355,15 +355,26 @@ public class PetriNet implements Graph<PetriNetNode>{
 		edges.add(circuitEdge2);
 	}
 
+	/**
+	 * @param edges the arks (edges)
+	 */
 	public void setEdges(Set<Edge<PetriNetNode>> edges) {
 		this.edges = edges;
 	}
 
+	/**
+	 * @param transitions the transitions
+	 */
 	public void setTransitions(List<Transition> transitions) {
 		this.transitions = transitions;
 	}
 
-	public boolean checkShortCircuit() {	
+	/**
+	 * check if this Petri net is short-circuited
+	 * @return true if this Petri net is short-circuited
+	 * @throws IllegalStateException if the number of initial and final places in this net is not equal to 1
+	 */
+	public boolean checkShortCircuit() throws IllegalStateException {	
 		int numberOfInitialPlaces = 0;
 		int numberOfFinalPlaces = 0;
 		for(Place place: places) {
@@ -375,7 +386,7 @@ public class PetriNet implements Graph<PetriNetNode>{
 			}
 		}
 		if(numberOfInitialPlaces != 1 || numberOfFinalPlaces != 1) {
-			throw new IllegalStateException("No or more than one inital places or final places were found");
+			throw new IllegalStateException("No or more than one initial places or final places were found");
 		}
 		Transition initialPlaceIncomingTransition = null, finalPlaceOutgoingTransition = null;
 		int initialPlaceIncomingArks = 0;

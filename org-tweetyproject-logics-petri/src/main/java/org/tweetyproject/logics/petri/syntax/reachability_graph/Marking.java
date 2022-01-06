@@ -132,16 +132,21 @@ public class Marking implements Node, Comparable<Marking> {
 		return true;
 	}
 	
-	
+	/**
+	 * Retrieve the number of tokens at the specified place at this marking
+	 * @param place the place
+	 * @return the number of tokens at the place
+	 */
 	public int getTokensByPlace(Place place) {
 		return this.tokensByPlace.get(place);
 	}
 
 	@Override
+	/**
+	 * Marking implements Comparable in order to have a fixed (but arbitrary) order among all edges 
+	 * For that purpose we just use the hash code.
+	 */
 	public int compareTo(Marking that) {
-		// Marking implements Comparable in order to
-		// have a fixed (but arbitrary) order among all edges
-		// for that purpose we just use the hash code.
 		return this.hashCode() - that.hashCode();
 	}
 

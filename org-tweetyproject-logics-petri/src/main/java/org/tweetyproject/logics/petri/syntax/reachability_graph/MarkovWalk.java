@@ -49,7 +49,6 @@ public class MarkovWalk {
 	 * the |1|x|T| normalized control vector of that graph
 	 */
 	private Matrix normalizedControlVector;	
-	
 	/**
 	 * the current state (probability distribution) during the stochastic walk
 	 */
@@ -85,6 +84,10 @@ public class MarkovWalk {
 		setupInitialState();
 	}
 	
+	/**
+	 * Set up relevant vectors for the conduction and evaluation of the Markov walk, 
+	 * i.e. (mean) states and control vectors
+	 */
 	private void setupInitialState() {
 		this.currentState = new Matrix( graph.getNumberOfNodes(), 1);
 		this.currentMeanState = new Matrix(graph.getNumberOfNodes(), 1);

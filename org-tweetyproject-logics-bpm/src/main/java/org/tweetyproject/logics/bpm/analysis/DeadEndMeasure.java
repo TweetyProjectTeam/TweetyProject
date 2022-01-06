@@ -14,33 +14,21 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.logics.bpm.analysis;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.tweetyproject.logics.bpm.syntax.BpmnModel;
-import org.tweetyproject.logics.bpm.syntax.BpmnNode;
-import org.tweetyproject.logics.bpm.syntax.EndEvent;
-import org.tweetyproject.logics.bpm.syntax.StartEvent;
-import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
-import org.tweetyproject.logics.petri.syntax.PetriNet;
 import org.tweetyproject.logics.petri.syntax.Place;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.Marking;
-import org.tweetyproject.logics.petri.syntax.reachability_graph.MarkingEdge;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.MarkovWalk;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.ReachabilityGraph;
 import org.tweetyproject.math.matrix.Matrix;
-import org.tweetyproject.math.probability.ProbabilityFunction;
 
 /**
  * @author Benedikt Knopp
@@ -57,12 +45,24 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 	 */
 	public DeadEndMeasure() {}
 	
+	/**
+	 * A token sensitive measure assigns higher inconsistency values if more tokens remain in non-final places
+	 */
 	private boolean tokenSensitive = false;
 	
+	/**
+	 * the inconsistency value, calculated after performing the Markov walk
+	 */
 	private Double inconsistencyValue;
 	
+	/**
+	 * the responsibilities of individual places for the global inconsistency value, calculated after performing the Markov walk
+	 */
 	private Map<Place, Double> placeCulpabilities = new HashMap<>();
-	
+
+	/**
+	 * the responsibilities of individual states for the global inconsistency value, calculated after performing the Markov walk
+	 */
 	private Map<Marking, Double> markingCulpabilities = new HashMap<>();
 	
 	
@@ -77,6 +77,10 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 		return inconsistencyValue;
 	} 
 	
+	/**
+	 * calculates the inconsistency and culpabilities after performing the Markov walk
+	 * @param limit the mean state limit of the Markov walk
+	 */
 	private void calculateInconsistencyValue(Matrix limit) {
 		double inconsistencyValue = 0;
 		for(Place place : reachabilityGraph.getPetriNet().getPlaces()) {
@@ -149,14 +153,31 @@ public class DeadEndMeasure implements BpmnInconsistencyMeasure{
 		return infoStrings;
 	}
 	
+	/**
+	 * specify before determining the values whether the value should be token sensitive
+	 * A token sensitive measure assigns higher inconsistency values if more tokens remain in non-final places
+	 * @param tokenSensitive
+	 */
 	public void setTokenSensitivity(boolean tokenSensitive) {
 		this.tokenSensitive = tokenSensitive;
 	}
 	
+	/**
+	 * Retrieve for a particular (non-final) place its local culpability for the global inconsistency
+	 * A high culpability means that many tokens remain in that place with a high probability 
+	 * @param place the place
+	 * @return the place culpability
+	 */
 	public Double getPlaceCulpability(Place place) {
 		return this.placeCulpabilities.get(place);
 	}
-	
+
+	/**
+	 * Retrieve for a particular (non-final) state its local culpability for the global inconsistency
+	 * A high culpability means that this state features many tokens in non-final places and the state is entered with a high probability
+	 * @param marking the state
+	 * @return the state culpability
+	 */
 	public Double getMarkingCulpability(Marking marking) {
 		return this.markingCulpabilities.get(marking);
 	}
