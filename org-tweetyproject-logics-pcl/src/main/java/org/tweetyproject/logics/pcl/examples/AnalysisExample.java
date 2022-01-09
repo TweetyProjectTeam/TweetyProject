@@ -32,8 +32,7 @@ import org.tweetyproject.math.opt.rootFinder.OptimizationRootFinder;
  */
 public class AnalysisExample {
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
-		//TweetyLogging.logLevel = TweetyConfiguration.LogLevel.ERROR;
-		//TweetyLogging.initLogging();
+
 
 		PclBeliefSet beliefSet = (PclBeliefSet) new org.tweetyproject.logics.pcl.parser.PclParser().parseBeliefBaseFromFile("/Users/mthimm/Desktop/test.pcl");
 

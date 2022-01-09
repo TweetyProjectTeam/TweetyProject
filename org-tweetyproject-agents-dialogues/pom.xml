@@ -14,6 +14,12 @@
   </parent>
   
   <dependencies>
+     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.9</version>
+      <scope>test</scope>
+    </dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>agents</artifactId>

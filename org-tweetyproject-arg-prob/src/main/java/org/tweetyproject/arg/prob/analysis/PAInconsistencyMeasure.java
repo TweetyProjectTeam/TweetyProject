@@ -119,9 +119,7 @@ public class PAInconsistencyMeasure implements InconsistencyMeasure<PartialProba
 		// Target function
 		problem.setTargetFunction(this.norm.distanceTerm(varsCompVector,varsSemVector));		
 		// Do the optimization
-//		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.FATAL;
-//		TweetyLogging.initLogging();
-//		System.out.println(problem);
+
 		try{			
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			//for(Variable v: solution.keySet())

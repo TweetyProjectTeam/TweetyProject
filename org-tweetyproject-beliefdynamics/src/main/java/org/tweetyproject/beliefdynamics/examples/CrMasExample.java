@@ -40,8 +40,7 @@ import org.tweetyproject.logics.pl.syntax.*;
 public class CrMasExample {
 
 	public static void main(String[] args) throws ParserException, IOException{		
-		//TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
-		//TweetyLogging.initLogging();
+
 		PlParser parser = new PlParser();
 		
 		// some agents

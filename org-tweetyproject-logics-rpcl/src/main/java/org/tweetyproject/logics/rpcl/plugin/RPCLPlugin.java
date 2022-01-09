@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import org.tweetyproject.commons.ParserException;
-import org.tweetyproject.commons.TweetyLogging;
 import org.tweetyproject.commons.Writer;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.semantics.HerbrandInterpretation;
@@ -303,10 +302,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 		
 		// </collect parameter>
 		
-		// logging
-		TweetyLogging.initLogging();
-		
-		log.info("Start logging.");
+
 		
 		// set all collected parameters
 		// parser

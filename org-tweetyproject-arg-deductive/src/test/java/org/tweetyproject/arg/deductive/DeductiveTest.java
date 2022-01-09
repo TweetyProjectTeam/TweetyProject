@@ -18,7 +18,6 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.commons.TweetyConfiguration;
-import org.tweetyproject.commons.TweetyLogging;
 import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.sat.Sat4jSolver;
 import org.tweetyproject.logics.pl.sat.SatSolver;
@@ -28,8 +27,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 public class DeductiveTest {
     @Test
     public void PreferredReasoning() throws ParserException, IOException {
-		TweetyLogging.logLevel = TweetyConfiguration.LogLevel.TRACE;
-		TweetyLogging.initLogging();
+
 		SatSolver.setDefaultSolver(new Sat4jSolver());
 		DeductiveKnowledgeBase kb = new DeductiveKnowledgeBase();
 		
