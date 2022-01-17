@@ -299,7 +299,10 @@ public class PriestWorldAdapted extends AbstractInterpretation<PlBeliefSet,PlFor
 			return false;
 		return true;
 	}
-	
+	/**
+	 * 
+	 * @return countUndecided
+	 */
 	/*
 	 * J: Count number of propositions with interpretation "BOTH"
 	 */

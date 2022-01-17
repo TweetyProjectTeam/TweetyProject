@@ -17,7 +17,11 @@
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.adf.syntax.acc;
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 public final class ExclusiveDisjunctionAcceptanceCondition extends BinaryAcceptanceCondition {
 
 	/**

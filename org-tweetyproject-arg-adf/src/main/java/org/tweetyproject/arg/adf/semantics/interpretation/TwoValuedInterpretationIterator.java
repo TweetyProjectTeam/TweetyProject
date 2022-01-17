@@ -41,7 +41,10 @@ public final class TwoValuedInterpretationIterator implements Iterator<Interpret
 	private final int max;
 	
 	private final Map<Argument, Integer> arguments;
-	
+	/**
+	 * 
+	 * @param arguments arguments
+	 */
 	public TwoValuedInterpretationIterator(Collection<Argument> arguments) {
 		if (arguments == null || arguments.isEmpty()) {
 			throw new IllegalArgumentException("arguments must not be null or empty!");

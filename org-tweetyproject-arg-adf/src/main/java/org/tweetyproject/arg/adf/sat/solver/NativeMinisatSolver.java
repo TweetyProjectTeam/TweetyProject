@@ -40,7 +40,9 @@ public final class NativeMinisatSolver implements IncrementalSatSolver {
 
 	private static final String DEFAULT_WIN_LIB = "/minisat.dll";
 	private static final String DEFAULT_LINUX_LIB = "/minisat.so";
-
+/**
+ * NativeMinisatSolver
+ */
 	public NativeMinisatSolver() {
 		String osName = System.getProperty("os.name").toLowerCase();
 		String lib = null;

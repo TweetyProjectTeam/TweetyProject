@@ -32,7 +32,9 @@ public class FourValuedWorldIterator implements InterpretationIterator<PlFormula
 	
 	// 4-valued means there are values among [0, 1, 2, 3]
 	private final int maxValue = 3;
-
+/**
+ * FourValuedWorldIterator
+ */
 	public FourValuedWorldIterator(){
 	}
 	

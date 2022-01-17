@@ -28,9 +28,10 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 @Deprecated( forRemoval = true, since = "1.19" )
 /**
  * 
- * @author Sebastian Mattias Thimm
+ * @author Mattias Thimm
  *
  */
+
 public class NaiveReasoner extends AbstractDialecticalFrameworkReasoner {
 
 	/**

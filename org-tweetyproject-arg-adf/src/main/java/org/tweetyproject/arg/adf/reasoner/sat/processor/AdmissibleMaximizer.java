@@ -33,9 +33,9 @@ public abstract class AdmissibleMaximizer implements InterpretationProcessor {
 	private final RelativeSatEncoding larger;
 	
 	/**
-	 * @param adf
-	 * @param mapping
-	 * @param stateSupplier
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @param stateSupplier stateSupplier
 	 */
 	protected AdmissibleMaximizer(AbstractDialecticalFramework adf, PropositionalMapping mapping,
 			Supplier<SatSolverState> stateSupplier) {
@@ -45,15 +45,33 @@ public abstract class AdmissibleMaximizer implements InterpretationProcessor {
 		this.refineLarger = new RefineLargerSatEncoding(mapping);
 		this.larger = new LargerInterpretationSatEncoding(mapping);
 	}
-
+/**
+ * 
+ * @param stateSupplier stateSupplier
+ * @param adf adf
+ * @param mapping mapping
+ * @param prefix prefix
+ * @return InterpretationProcessor restricted
+ */
 	public static InterpretationProcessor restricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
 		return new RestrictedAdmissibleMaximizer(stateSupplier, adf, mapping, prefix);
 	}
-	
+	/**
+	 * 
+	 * @param stateSupplier stateSupplier
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @return InterpretationProcessor unrestricted
+	 */
 	public static InterpretationProcessor unrestricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		return new UnrestrictedAdmissibleMaximizer(stateSupplier, adf, mapping);
 	}
-
+/**
+ * 
+ * @param state state
+ * @param adf adf
+ * @return SatSolverState prepareState
+ */
 	protected abstract SatSolverState prepareState(SatSolverState state, AbstractDialecticalFramework adf);
 		
 	@Override

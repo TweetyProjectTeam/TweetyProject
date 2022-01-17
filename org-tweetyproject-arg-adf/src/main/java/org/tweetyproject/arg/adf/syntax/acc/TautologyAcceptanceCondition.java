@@ -22,8 +22,13 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 public enum TautologyAcceptanceCondition implements AcceptanceCondition {
+	/**Instance*/
 	INSTANCE;
 	
 	/* (non-Javadoc)

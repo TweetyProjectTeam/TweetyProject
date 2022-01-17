@@ -68,17 +68,26 @@ public abstract class Translator {
 	/** reference to the logback logger instance */
 	private static Logger LOG = LoggerFactory.getLogger(Translator.class);
 
+	/**TT_Predicate*/
 	public static final int TT_PREDICATE 	= -1;
+	/**TT_Atom*/
 	public static final int TT_ATOM 		= -2;
+	/**TT_Assoc*/
 	public static final int TT_ASSOC		= -3;
+	/**TT_Rule*/
 	public static final int TT_RULE			= -4;
 	
 	Map<Class<?>, Pair<Integer, Class<?>>>	translateMap;
-	
+	/**
+	 * Translator
+	 */
 	public Translator() {
 		translateMap = createTranslateMap();
 	}
-	
+	/**
+	 * 
+	 * @return Map
+	 */
 	protected abstract Map<Class<?>, Pair<Integer, Class<?>>> createTranslateMap();
 	
 	/**
@@ -143,11 +152,19 @@ public abstract class Translator {
 		}
 		return dest;
 	}
-	
+	/**
+	 * 
+	 * @param cls cls
+	 * @return Pair
+	 */
 	protected Pair<Integer, Class<?>> getTranslateInfo(Class<?> cls) {
 		return translateMap.get(cls);
 	}
-	
+	/**
+	 * 
+	 * @param source source
+	 * @return SimpleLogicalFormula translateUsingMap
+	 */
 	public SimpleLogicalFormula translateUsingMap(SimpleLogicalFormula source) {
 		Pair<Integer, Class<?>> translateInfo = getTranslateInfo(source.getClass());
 		if(translateInfo != null) {
@@ -169,7 +186,12 @@ public abstract class Translator {
 		}
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param source source
+	 * @param ruleCls ruleCls
+	 * @return Rule
+	 */
 	public Rule<?,?> translateRule(Rule<? extends SimpleLogicalFormula, ? extends SimpleLogicalFormula> source, Class<?> ruleCls) {
 		@SuppressWarnings("unchecked")
 		Rule<SimpleLogicalFormula, SimpleLogicalFormula> dest = (Rule<SimpleLogicalFormula, SimpleLogicalFormula>) createInstance(ruleCls);
@@ -180,7 +202,13 @@ public abstract class Translator {
 		
 		return dest;
 	}
-	
+	/**
+	 * 
+	 * @param <T> T
+	 * @param cls cls
+	 * @return T createInstance
+	 * @throws LanguageException LanguageException
+	 */
 	@SuppressWarnings("deprecation")
 	protected static <T> T createInstance(Class<T> cls) throws LanguageException {
 		T reval = null;

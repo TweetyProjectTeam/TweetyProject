@@ -41,7 +41,9 @@ public final class NativeLingelingSolver implements IncrementalSatSolver {
 
 	private static final String DEFAULT_WIN_LIB = "/lingeling.dll";
 	private static final String DEFAULT_LINUX_LIB = "/lingeling.so";
-
+/**
+ * NativeLingelingSolver
+ */
 	public NativeLingelingSolver() {
 		String osName = System.getProperty("os.name").toLowerCase();
 		String lib = null;

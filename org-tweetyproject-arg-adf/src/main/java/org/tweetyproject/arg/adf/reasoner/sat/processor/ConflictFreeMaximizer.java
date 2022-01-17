@@ -34,14 +34,32 @@ public abstract class ConflictFreeMaximizer implements InterpretationProcessor {
 		this.refineLarger = new RefineLargerSatEncoding(mapping);
 	}
 	
+	/**
+	 * 
+	 * @param stateSupplier stateSupplier
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @param prefix prefix
+	 * @return InterpretationProcessor restricted
+	 */
 	public static InterpretationProcessor restricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix) {
 		return new RestrictedConflictFreeMaximizer(stateSupplier, adf, mapping, prefix);
 	}
 	
+	/**
+	 * 
+	 * @param stateSupplier stateSupplier
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @return InterpretationProcessor unrestricted
+	 */
 	public static InterpretationProcessor unrestricted(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		return new UnrestrictedConflictFreeMaximizer(stateSupplier, adf, mapping);
 	}
-	
+	/**
+	 * 
+	 * @return SatSolverState
+	 */
 	protected abstract SatSolverState createState();
 
 	@Override

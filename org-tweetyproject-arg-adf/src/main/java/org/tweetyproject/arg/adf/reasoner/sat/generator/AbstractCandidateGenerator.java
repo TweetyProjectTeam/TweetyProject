@@ -6,7 +6,11 @@ import java.util.function.Supplier;
 
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 public abstract class AbstractCandidateGenerator implements CandidateGenerator {
 
 	private final Supplier<SatSolverState> stateSupplier;
@@ -14,14 +18,21 @@ public abstract class AbstractCandidateGenerator implements CandidateGenerator {
 	private SatSolverState state;
 
 	/**
-	 * @param stateSupplier
+	 * @param stateSupplier stateSupplier
 	 */
 	public AbstractCandidateGenerator(Supplier<SatSolverState> stateSupplier) {
 		this.stateSupplier = Objects.requireNonNull(stateSupplier);
 	}
-
+/**
+ * 
+ * @param state SatSolverState
+ */
 	protected abstract void prepare(SatSolverState state);
-
+/**
+ * 
+ * @param state atSolverState
+ * @return protected abstract
+ */
 	protected abstract Interpretation generate(SatSolverState state);
 
 	@Override

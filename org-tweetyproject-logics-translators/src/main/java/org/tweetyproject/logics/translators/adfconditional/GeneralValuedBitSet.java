@@ -15,6 +15,7 @@ public final class GeneralValuedBitSet {
 	 * Creates a new bitset with the specified size and all values set to 0
 	 * 
 	 * @param size the fixed size of the bitset
+	 * @param maxValue maxValue
 	 */
 	public GeneralValuedBitSet(int size, int maxValue) {
 		if (size <= 0) {
@@ -80,7 +81,10 @@ public final class GeneralValuedBitSet {
 	public void clear(int index) {
 		bitSet[index] = 0;
 	}
-	
+	/**
+	 * 
+	 * @return size
+	 */
 	public int size() {
 		return bitSet.length;
 	}

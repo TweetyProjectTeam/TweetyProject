@@ -50,9 +50,9 @@ public final class CompleteVerifier implements Verifier {
 	private final RelativeSatEncoding fixPartial;
 		
 	/**
-	 * @param stateSupplier
-	 * @param adf
-	 * @param mapping
+	 * @param stateSupplier stateSupplier
+	 * @param adf adf
+	 * @param mapping mapping
 	 */
 	public CompleteVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.stateSupplier = Objects.requireNonNull(stateSupplier);

@@ -56,19 +56,35 @@ import org.tweetyproject.arg.adf.transform.Transformer;
  *
  */
 public interface AbstractDialecticalFramework {
-
+/**
+ * 
+ * @return AbstractDialecticalFramework empty
+ */
 	static AbstractDialecticalFramework empty() {
 		return EmptyAbstractDialecticalFramework.INSTANCE;
 	}
-
+/**
+ * 
+ * @return Builder builder
+ */
 	static Builder builder() {
 		return new GraphAbstractDialecticalFramework.Builder();
 	}
-	
+	/**
+	 * 
+	 * @param file file
+	 * @return AbstractDialecticalFramework fromFile
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	static AbstractDialecticalFramework fromFile(File file) throws FileNotFoundException, IOException {
 		return new KppADFFormatParser(new SatLinkStrategy(new NativeMinisatSolver()), true).parse(file);
 	}
-
+/**
+ * 
+ * @param map map
+ * @return Builder fromMap
+ */
 	static Builder fromMap(Map<Argument, AcceptanceCondition> map) {
 		Builder builder = new GraphAbstractDialecticalFramework.Builder();
 		for (Entry<Argument, AcceptanceCondition> entry : map.entrySet()) {
@@ -84,7 +100,11 @@ public interface AbstractDialecticalFramework {
 	 * @return a new ADF with transformed acceptance conditions
 	 */
 	AbstractDialecticalFramework transform(Function<AcceptanceCondition, AcceptanceCondition> transformer);
-	
+	/**
+	 * 
+	 * @param transformer transformer
+	 * @return AbstractDialecticalFramework transform
+	 */
 	AbstractDialecticalFramework transform(BiFunction<Argument, AcceptanceCondition, AcceptanceCondition> transformer);
 	
 	/**
@@ -94,11 +114,17 @@ public interface AbstractDialecticalFramework {
 	 * @return a new ADF with transformed acceptance conditions
 	 */
 	AbstractDialecticalFramework transform(Transformer<AcceptanceCondition> transformer);
-	
+	/**
+	 * 
+	 * @return SemanticsStep query
+	 */
 	default SemanticsStep query() {
 		return new SatQueryBuilder(this).defaultConfiguration();
 	}
-	
+	/**
+	 * 
+	 * @return size
+	 */
 	default int size() {
 		return getArguments().size();
 	}
@@ -154,15 +180,35 @@ public interface AbstractDialecticalFramework {
 	 * @return a set of links (parent, child)
 	 */
 	Set<Link> linksFrom(Argument parent);
-
+/**
+ * 
+ * @param child child
+ * @return Set
+ */
 	Set<Argument> parents(Argument child);
-
+/**
+ * 
+ * @param parent parent
+ * @return Set
+ */
 	Set<Argument> children(Argument parent);
-		
+		/**
+		 * 
+		 * @param arg arg
+		 * @return outgoingDegree
+		 */
 	int outgoingDegree(Argument arg);
-	
+	/**
+	 * 
+	 * @param arg arg
+	 * @return incomingDegree
+	 */
 	int incomingDegree(Argument arg);
-	
+	/**
+	 * 
+	 * @param arg arg
+	 * @return contains
+	 */
 	boolean contains(Argument arg);
 
 	/**
@@ -189,7 +235,11 @@ public interface AbstractDialecticalFramework {
 	 * @return k
 	 */
 	int kBipolar();
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 	interface Builder {
 
 		Builder lazy(LinkStrategy linkStrategy);
@@ -197,13 +247,25 @@ public interface AbstractDialecticalFramework {
 		Builder provided();
 
 		Builder eager(LinkStrategy linkStrategy);
-
+/**
+ * 
+ * @param arg arg
+ * @param acc acc
+ * @return Builder add
+ */
 		Builder add(Argument arg, AcceptanceCondition acc);
-		
+	/**
+	 * 	
+	 * @param link link
+	 * @return Builder add
+	 */
 		Builder add(Link link);
 		
 		Builder remove(Argument arg);
-		
+		/**
+		 * 
+		 * @return AbstractDialecticalFramework build
+		 */
 		AbstractDialecticalFramework build();
 
 	}

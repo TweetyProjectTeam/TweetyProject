@@ -2,7 +2,11 @@ package org.tweetyproject.arg.adf.syntax.acc;
 
 import java.util.Objects;
 import java.util.Set;
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 
 	private final AcceptanceCondition left;
@@ -10,8 +14,8 @@ public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 	private final AcceptanceCondition right;
 
 	/**
-	 * @param left
-	 * @param right
+	 * @param left left
+	 * @param right right
 	 */
 	public BinaryAcceptanceCondition(AcceptanceCondition left, AcceptanceCondition right) {
         if (left.equals(Objects.requireNonNull(right))) {
@@ -25,15 +29,24 @@ public abstract class BinaryAcceptanceCondition implements AcceptanceCondition {
 	public Set<AcceptanceCondition> getChildren() {
 		return Set.of(left, right);
 	}
-	
+	/**
+	 * 
+	 * @return AcceptanceCondition getLeft
+	 */
 	public AcceptanceCondition getLeft() {
 		return left;
 	}
-	
+	/**
+	 * 
+	 * @return AcceptanceCondition getRight
+	 */
 	public AcceptanceCondition getRight() {
 		return right;
 	}
-	
+	/**
+	 * 
+	 * @return String getName
+	 */
 	protected abstract String getName();
 
 	@Override

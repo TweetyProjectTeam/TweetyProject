@@ -29,10 +29,10 @@ import org.tweetyproject.arg.adf.sat.solver.NativeMinisatSolver;
 public class CompareInference {
 	/**
 	 * Compare inference behavior of an ADF with that of an OCF induced by translation function Theta
-	 * @param args
-	 * @throws FileNotFoundException
-	 * @throws ParserException
-	 * @throws IOException
+	 * @param args args
+	 * @throws FileNotFoundException FileNotFoundException
+	 * @throws ParserException ParserException
+	 * @throws IOException IOException
 	 */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException {
 		

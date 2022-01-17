@@ -18,7 +18,10 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  *
  */
 public class MostComplexAcceptanceConditionDecomposer extends AbstractDecomposer {
-
+/**
+ * 
+ * @param adf AbstractDialecticalFramework
+ */
 	public MostComplexAcceptanceConditionDecomposer(AbstractDialecticalFramework adf) {
 		super(adf);
 	}

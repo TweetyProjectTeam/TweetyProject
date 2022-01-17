@@ -20,7 +20,7 @@ public final class SynchronizedSatSolverState implements SatSolverState {
 	
 	/**
 	 * 
-	 * @param delegate
+	 * @param delegate delegate
 	 */
 	public SynchronizedSatSolverState(SatSolverState delegate) {
 		this.delegate = Objects.requireNonNull(delegate);

@@ -17,20 +17,27 @@
  *  Copyright 2019 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.adf.semantics.link;
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 public enum LinkType{
-
+	/** Dependent*/
 	DEPENDENT(false, false), 
+	/** Supporting*/
 	SUPPORTING(false, true), 
+	/** Attacking*/
 	ATTACKING(true, false), 
+	/**Redundant*/
 	REDUNDANT(true, true);
 	
 	private final boolean attacking;
 	private final boolean supporting;
 	
 	/**
-	 * @param attacking
-	 * @param supporting
+	 * @param attacking attacking
+	 * @param supporting supporting
 	 */
 	private LinkType(boolean attacking, boolean supporting) {
 		this.attacking = attacking;
@@ -71,11 +78,19 @@ public enum LinkType{
 	public boolean isBipolar() {
 		return attacking || supporting;
 	}
-	
+	/**
+	 * 
+	 * @return isNonBipolar
+	 */
 	public boolean isNonBipolar() {
 		return !isBipolar();
 	}
-
+/**
+ * 
+ * @param attacking attacking
+ * @param supporting supporting
+ * @return
+ */
 	public static LinkType get(boolean attacking, boolean supporting) {
 		if (attacking && supporting) {
 			return REDUNDANT;

@@ -38,15 +38,25 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 public final class SatQueryBuilder {
 	
 	private final AbstractDialecticalFramework adf;
-	
+	/**
+	 * 
+	 * @param adf adf
+	 */
 	public SatQueryBuilder(AbstractDialecticalFramework adf) {
 		this.adf = Objects.requireNonNull(adf);
 	}
-	
+	/**
+	 * 
+	 * @return SemanticsStep defaultConfiguration()
+	 */
 	public SemanticsStep defaultConfiguration() {
 		return configure(Configuration.builder().build());
 	}
-	
+	/**
+	 * 
+	 * @param configuration configuration
+	 * @return SemanticsStep configure
+	 */
 	public SemanticsStep configure(Configuration configuration) {
 		return new SatSemanticsStep(configuration);
 	}

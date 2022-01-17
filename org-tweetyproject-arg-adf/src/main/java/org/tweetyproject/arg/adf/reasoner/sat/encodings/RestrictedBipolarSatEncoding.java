@@ -43,7 +43,8 @@ public class RestrictedBipolarSatEncoding implements SatEncoding {
 	
 	/**
 	 * @param adf adf
-	 * @param mapping mapping
+	 * @param mapping mapping 
+	 * @param partial Interpretation
 	 */
 	public RestrictedBipolarSatEncoding(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
 		this.adf = Objects.requireNonNull(adf);

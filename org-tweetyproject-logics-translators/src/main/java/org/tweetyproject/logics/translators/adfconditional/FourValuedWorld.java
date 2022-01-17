@@ -21,7 +21,11 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
  * @author Jonas Schumacher
  */
 public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormula>{
-
+/**
+ * 
+ * @author Jonas Schumacher
+ *
+ */
 	public enum TruthValue {
 		/**true*/
 		TRUE, 
@@ -35,7 +39,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 		
 		/**
 		 * 
-		 * @returnReturn "TRUE" iff 4-valued TruthValue is also "TRUE"  
+		 * @return Return "TRUE" iff 4-valued TruthValue is also "TRUE"  
 		 */
 		public boolean getClassical(){
 			return this.equals(TRUE);
@@ -99,7 +103,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 	
 	/**
 	 * Decide whether this world is two-valued or not
-	 * @return
+	 * @return isTwoValued
 	 */
 	public boolean isTwoValued() {
 		for (Proposition p : this.getSignature()) {
@@ -112,8 +116,8 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 	
 	/**
 	 * This method puts the 4 truth values into an information order
-	 * @param firstTruthValue
-	 * @param secondTruthValue
+	 * @param firstTruthValue firstTruthValue
+	 * @param secondTruthValue secondTruthValue
 	 * @return true, if the first TruthValue is at least as informative as the second one
 	 */
 	public static boolean informationOrder(TruthValue firstTruthValue, TruthValue secondTruthValue) {
@@ -163,6 +167,7 @@ public class FourValuedWorld extends AbstractInterpretation<PlBeliefSet,PlFormul
 	 * This method returns the least informative world among a collection of FourValuedWorlds
 	 * @param coll = possible input worlds
 	 * @return = least informative worlds
+	 * @param getMostInformative getMostInformative
 	 */
 	public static Collection<FourValuedWorld> reduceToLeastInformativeWorlds(Collection<FourValuedWorld> coll, boolean getMostInformative) {
 		if (coll.isEmpty()) {

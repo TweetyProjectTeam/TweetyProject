@@ -46,9 +46,9 @@ public final class StableVerifier implements Verifier {
 	private final PropositionalMapping mapping;
 
 	/**
-	 * @param stateSupplier
-	 * @param adf
-	 * @param mapping
+	 * @param stateSupplier stateSupplier
+	 * @param adf adf
+	 * @param mapping mapping
 	 */
 	public StableVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf,
 			PropositionalMapping mapping) {

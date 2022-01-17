@@ -69,7 +69,11 @@ public class AspNlpTranslator extends AspFolTranslator
 		}
 		return reval;
 	}
-	
+	/**
+	 * 
+	 * @param program program
+	 * @return NLPProgram toNLP
+	 */
 	public NLPProgram toNLP(Program program) {
 		NLPProgram reval = new NLPProgram();
 		for(ASPRule rule : program) {

@@ -65,7 +65,11 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 
 		
 	}
-	
+	/**
+	 * 
+	 * @param satSolver satSolver
+	 * @return Builder builder
+	 */
 	public static Builder builder(IncrementalSatSolver satSolver) {
 		return new Builder(satSolver);
 	}
@@ -91,7 +95,9 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 			throw new RuntimeException(e);
 		}
 	}
-
+/**
+ * close
+ */
 	public void close() {
 		if (closed) {
 			throw new IllegalStateException("State pool already closed!");
@@ -102,7 +108,11 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 		}
 		states.clear();
 	}
-	
+	/**
+	 * 
+	 * @author Sebastian
+	 *
+	 */
 	public static final class Builder {
 		
 		private final IncrementalSatSolver satSolver;
@@ -123,6 +133,7 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 		 * As a default {@link Executors#newSingleThreadExecutor()} is used.
 		 * 
 		 * @param executor the executor to set
+		 * @return Builder setExecutor
 		 */
 		public Builder setExecutor(Executor executor) {
 			this.executor = Objects.requireNonNull(executor);
@@ -131,6 +142,7 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 		
 		/**
 		 * @param poolSize the poolSize to set
+		 * @return Builder setPoolSize
 		 */
 		public Builder setPoolSize(int poolSize) {
 			if (poolSize < 1) {
@@ -142,6 +154,7 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 		
 		/**
 		 * @param stateDecorator the stateDecorator to set
+		 * @return Builder setStateDecorator
 		 */
 		public Builder setStateDecorator(Function<SatSolverState, SatSolverState> stateDecorator) {
 			if (stateDecorator == null) {
@@ -151,7 +164,10 @@ public final class PooledIncrementalSatSolver implements IncrementalSatSolver {
 			}
 			return this;
 		}
-		
+		/**
+		 * 
+		 * @return PooledIncrementalSatSolver
+		 */
 		public PooledIncrementalSatSolver build() {
 			return new PooledIncrementalSatSolver(this);
 		}

@@ -254,9 +254,9 @@ public class ConverterADF2CL {
 	
 	/**
 	 * Compare the inference behavior of ADF "adf" and Ranking function "kappa"
-	 * @param adf
-	 * @param reasoner_adf
-	 * @param kappa
+	 * @param adf adf
+	 * @param reasoner_adf reasoner_adf
+	 * @param kappa kappa
 	 */
 	public void compareInference(AbstractDialecticalFramework adf, AbstractDialecticalFrameworkReasoner reasoner_adf, RankingFunction kappa) {
 		

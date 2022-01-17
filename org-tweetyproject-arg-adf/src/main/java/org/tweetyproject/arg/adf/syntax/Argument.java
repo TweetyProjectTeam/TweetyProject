@@ -37,7 +37,9 @@ import org.tweetyproject.arg.adf.syntax.acc.Visitor;
 public final class Argument implements AcceptanceCondition {
 
 	private final String name;
-
+/**
+ * Argument
+ */
 	public Argument() {
 		this(null);
 	}

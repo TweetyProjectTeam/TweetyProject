@@ -51,7 +51,11 @@ public class WeakNegation extends PlFormula {
 	public PlFormula collapseAssociativeFormulas(){
 		return new WeakNegation(this.formula.collapseAssociativeFormulas());
 	}
-	
+	/**
+	 * 
+	 * @param other other
+	 * @return hasLowerBindingPriority
+	 */
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula#hasLowerBindingPriority(org.tweetyproject.logics.propositionallogic.syntax.PropositionalFormula)
 	 */

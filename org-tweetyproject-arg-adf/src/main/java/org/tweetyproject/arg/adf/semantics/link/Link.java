@@ -25,15 +25,30 @@ import org.tweetyproject.arg.adf.syntax.Argument;
  *
  */
 public interface Link {
-	
+	/**
+	 * 
+	 * @param from from
+	 * @param to to
+	 * @param type type
+	 * @return Link of
+	 */
 	static Link of(Argument from, Argument to, LinkType type) {
 		return new SimpleLink(from, to, type);
 	}
-	
+	/**
+	 * 
+	 * @return Argument getFrom
+	 */
 	Argument getFrom();
-	
+	/**
+	 * 
+	 * @return Argument getTo
+	 */
 	Argument getTo();
-	
+	/**
+	 * 
+	 * @return LinkType getTyp
+	 */
 	LinkType getType();
 
 }

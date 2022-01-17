@@ -99,7 +99,11 @@ public interface AcceptanceCondition {
 	static Builder builder(AcceptanceCondition acc) {
 		return new Builder(acc);
 	}
-	
+	/**
+	 * 
+	 * @author Sebastian
+	 *
+	 */
 	static final class Builder {
 		
 		private AcceptanceCondition left;
@@ -107,58 +111,96 @@ public interface AcceptanceCondition {
 		private Builder(AcceptanceCondition left) {
 			this.left = left;
 		}
-		
+		/**
+		 * 
+		 * @param acc acc
+		 * @return Builder and
+		 */
 		public Builder and(AcceptanceCondition acc) {
 			this.left = new ConjunctionAcceptanceCondition(left, acc);
 			return this;
 		}
-		
+	/**
+	 * 	
+	 * @param accs accs
+	 * @return Builder and
+	 */
 		public Builder and(AcceptanceCondition... accs) {
 			for (AcceptanceCondition acc : accs) {
 				this.left = new ConjunctionAcceptanceCondition(left, acc);				
 			}
 			return this;
 		}
-		
+	/**
+	 * 	
+	 * @param acc acc
+	 * @return Builder or
+	 */
 		public Builder or(AcceptanceCondition acc) {
 			this.left = new DisjunctionAcceptanceCondition(left, acc);
 			return this;
 		}
-		
+		/**
+		 * 
+		 * @param accs accs
+		 * @return Builder or
+		 */
 		public Builder or(AcceptanceCondition... accs) {
 			for (AcceptanceCondition acc : accs) {
 				this.left = new DisjunctionAcceptanceCondition(left, acc);				
 			}
 			return this;
 		}
-		
+		/**
+		 * 
+		 * @param acc acc
+		 * @return Builder implies
+		 */
 		public Builder implies(AcceptanceCondition acc) {
 			this.left = new ImplicationAcceptanceCondition(left, acc);
 			return this;
 		}
-		
+	/**
+	 * 	
+	 * @param acc acc
+	 * @return Builder equiv
+	 */
 		public Builder equiv(AcceptanceCondition acc) {
 			this.left = new EquivalenceAcceptanceCondition(left, acc);
 			return this;
 		}
-		
+		/**
+		 * 
+		 * @param accs accs
+		 * @return Builder equiv
+		 */
 		public Builder equiv(AcceptanceCondition... accs) {
 			for (AcceptanceCondition acc : accs) {
 				this.left = new EquivalenceAcceptanceCondition(left, acc);				
 			}
 			return this;
 		}
-		
+/**
+ * 		
+ * @param acc acc
+ * @return Builder xor
+ */
 		public Builder xor(AcceptanceCondition acc) {
 			this.left = new ExclusiveDisjunctionAcceptanceCondition(left, acc);
 			return this;
 		}
-		
+		/**
+		 * 
+		 * @return Builder neg
+		 */
 		public Builder neg() {
 			this.left = new NegationAcceptanceCondition(left);
 			return this;
 		}
-		
+		/**
+		 * 
+		 * @return AcceptanceCondition build
+		 */
 		public AcceptanceCondition build() {
 			return left;
 		}

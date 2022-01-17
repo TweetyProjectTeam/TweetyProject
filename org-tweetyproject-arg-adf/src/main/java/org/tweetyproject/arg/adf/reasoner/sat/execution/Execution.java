@@ -33,7 +33,7 @@ public interface Execution extends AutoCloseable {
 	/**
 	 * Must only be called once, it is up to the implementation what happens it is called more than once.
 	 * 
-	 * @return
+	 * @return Stream
 	 */
 	Stream<Interpretation> stream();
 

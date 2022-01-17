@@ -42,8 +42,9 @@ public final class RestrictedKBipolarStateProcessor implements StateProcessor {
 	private final SatEncoding kBipolar;
 	
 	/**
-	 * @param adf
-	 * @param mapping
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @param partial Interpretation
 	 */
 	public RestrictedKBipolarStateProcessor(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation partial) {
 		this.adf = Objects.requireNonNull(adf);

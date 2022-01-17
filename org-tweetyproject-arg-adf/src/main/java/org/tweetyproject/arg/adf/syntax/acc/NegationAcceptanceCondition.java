@@ -20,7 +20,11 @@ package org.tweetyproject.arg.adf.syntax.acc;
 
 import java.util.Objects;
 import java.util.Set;
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 public final class NegationAcceptanceCondition implements AcceptanceCondition {
 
 	private final AcceptanceCondition child;

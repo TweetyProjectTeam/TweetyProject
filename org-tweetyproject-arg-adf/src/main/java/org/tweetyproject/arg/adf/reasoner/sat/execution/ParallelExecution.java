@@ -64,7 +64,12 @@ public final class ParallelExecution implements Execution {
 	private final Queue<Branch> branches = new ConcurrentLinkedQueue<>();
 
 	private final BlockingQueue<Interpretation> interpretations;
-
+/**
+ * 
+ * @param semantics Semantics
+ * @param satSolver IncrementalSatSolver
+ * @param parallelism int
+ */
 	public ParallelExecution(Semantics semantics, IncrementalSatSolver satSolver, int parallelism) {
 		this.satSolver = Objects.requireNonNull(satSolver);
 		this.semantics = Objects.requireNonNull(semantics);

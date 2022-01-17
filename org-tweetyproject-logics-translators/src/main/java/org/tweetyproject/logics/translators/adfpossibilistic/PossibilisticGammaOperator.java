@@ -40,7 +40,7 @@ import org.tweetyproject.logics.translators.adfcl.ConverterADF2CL;
 public class PossibilisticGammaOperator {
 	/**
 	 * Convert an unsorted Map to a map sorted by value in ascending order
-	 * @param map
+	 * @param map map
 	 * @return map sorted by value in ascending order
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })

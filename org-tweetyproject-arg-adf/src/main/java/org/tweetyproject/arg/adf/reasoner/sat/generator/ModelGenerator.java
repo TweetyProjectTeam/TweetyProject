@@ -55,10 +55,11 @@ public abstract class ModelGenerator extends AbstractCandidateGenerator {
 	 * The resulting {@link CandidateGenerator} only computes two-valued models
 	 * which are extensions of the defined prefix.
 	 * 
-	 * @param adf
-	 * @param mapping
+	 * @param adf adf
+	 * @param mapping mapping
 	 * @param prefix  the fixed prefix
-	 * @return
+	 * @param stateSupplier Supplier
+	 * @return CandidateGenerator
 	 */
 	public static CandidateGenerator restricted(AbstractDialecticalFramework adf, PropositionalMapping mapping,
 			Interpretation prefix, Supplier<SatSolverState> stateSupplier) {
@@ -69,9 +70,10 @@ public abstract class ModelGenerator extends AbstractCandidateGenerator {
 	 * The resulting {@link CandidateGenerator} computes all two-valued model
 	 * interpretations.
 	 * 
-	 * @param adf
-	 * @param mapping
-	 * @return
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @param stateSupplier Supplier
+	 * @return CandidateGenerator
 	 */
 	public static CandidateGenerator unrestricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
 		return new UnrestrictedModelGenerator(adf, mapping, stateSupplier);

@@ -21,7 +21,6 @@ package org.tweetyproject.arg.bipolar.reasoner.deductive;
 import org.tweetyproject.arg.bipolar.syntax.*;
 import org.tweetyproject.arg.dung.reasoner.SimpleConflictFreeReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;

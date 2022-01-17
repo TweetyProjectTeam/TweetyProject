@@ -13,7 +13,11 @@ import org.tweetyproject.arg.adf.syntax.Argument;
 import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
 import org.tweetyproject.arg.adf.syntax.pl.Clause;
 import org.tweetyproject.arg.adf.syntax.pl.Literal;
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 public final class PreferredVerifier implements Verifier {
 
 	private final SatSolverState state;
@@ -23,9 +27,9 @@ public final class PreferredVerifier implements Verifier {
 	private final PropositionalMapping mapping;
 	
 	/**
-	 * @param stateSupplier
-	 * @param adf
-	 * @param mapping
+	 * @param stateSupplier stateSupplier
+	 * @param adf adf
+	 * @param mapping mapping
 	 */
 	public PreferredVerifier(Supplier<SatSolverState> stateSupplier, AbstractDialecticalFramework adf, PropositionalMapping mapping) {
 		this.state = stateSupplier.get();

@@ -57,11 +57,13 @@ public abstract class ConflictFreeGenerator extends AbstractCandidateGenerator {
 	 * The resulting {@link CandidateGenerator} only computes conflict free
 	 * interpretations which are extensions of the defined partial interpretation.
 	 * 
-	 * @param adf
-	 * @param mapping
-	 * @param partial
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @param partial partial
 	 * @return a candidate generator that only computes interpretations that extend
 	 *         the given partial interpretation.
+	 * @param mapping Propositional  
+	 * @param stateSupplier  Supplier
 	 */
 	public static CandidateGenerator restricted(AbstractDialecticalFramework adf, PropositionalMapping mapping,
 			Interpretation partial, Supplier<SatSolverState> stateSupplier) {
@@ -75,6 +77,7 @@ public abstract class ConflictFreeGenerator extends AbstractCandidateGenerator {
 	 * @param adf adf
 	 * @param mapping mapping
 	 * @return CandidateGeneratorwithoutPrefix
+	 * @param stateSupplier Supplier
 	 */
 	public static CandidateGenerator unrestricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
 		return new UnrestrictedConflictFreeGenerator(adf, mapping, stateSupplier);

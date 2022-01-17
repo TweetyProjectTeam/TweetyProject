@@ -29,6 +29,10 @@ import org.tweetyproject.arg.adf.syntax.pl.Clause;
  */
 public interface StateProcessor {
 	
+	/**
+	 * 
+	 * @param consumer consumer
+	 */
 	void process(Consumer<Clause> consumer);
 	
 }

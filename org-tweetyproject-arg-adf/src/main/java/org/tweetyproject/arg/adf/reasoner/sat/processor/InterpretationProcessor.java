@@ -30,8 +30,17 @@ import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
  */
 public interface InterpretationProcessor extends AutoCloseable {
 	
+	/**
+	 * 
+	 * @param interpretation interpretation
+	 * @return Interpretation process
+	 */
 	Interpretation process(Interpretation interpretation);
-
+/**
+ * 
+ * @param state state
+ * @param processed processed
+ */
 	void updateState(SatSolverState state, Interpretation processed);
 	
 	@Override

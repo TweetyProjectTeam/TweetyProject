@@ -116,7 +116,7 @@ public class LotteryArgumentationEnvironment implements Environment, Perceivable
 	 * @param arguments a set of arguments.
 	 * @return the projection of the universal theory.
 	 */
-	public DungTheory getPerceivedDungTheory(Extension arguments){
+	public DungTheory getPerceivedDungTheory(Extension<?> arguments){
 		return new DungTheory(this.universalTheory.getRestriction(arguments));
 	}
 }

@@ -117,7 +117,11 @@ public class FOLPropTranslator extends Translator {
 		return (org.tweetyproject.logics.pl.syntax.Conjunction)
 				this.translateAssociative(conjunction, org.tweetyproject.logics.pl.syntax.Conjunction.class);
 	}
-	
+	/**
+	 * 
+	 * @param propFormula propFormula
+	 * @return FolFormula toFOL
+	 */
 	public FolFormula toFOL(PlFormula propFormula) {
 		if(propFormula instanceof Tautology) {
 			return new org.tweetyproject.logics.fol.syntax.Tautology();
@@ -147,7 +151,11 @@ public class FOLPropTranslator extends Translator {
 		}
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param folFormula folFormula
+	 * @return PlFormula toPropositional
+	 */
 	public PlFormula toPropositional(FolFormula folFormula) {
 		if(folFormula instanceof org.tweetyproject.logics.fol.syntax.Contradiction) {
 			return new Contradiction();

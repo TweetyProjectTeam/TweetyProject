@@ -17,7 +17,10 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  *
  */
 public class MostBipolarParentsDecomposer extends AbstractDecomposer {
-	
+	/**
+	 * 
+	 * @param adf AbstractDialecticalFramework
+	 */
 	public MostBipolarParentsDecomposer(AbstractDialecticalFramework adf) {
 		super(adf);
 	}

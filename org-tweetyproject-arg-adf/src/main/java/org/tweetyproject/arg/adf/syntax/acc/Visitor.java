@@ -29,23 +29,68 @@ import org.tweetyproject.arg.adf.syntax.Argument;
  * @param <D> the top-down information
  */
 public interface Visitor<U, D> {
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(TautologyAcceptanceCondition acc, D topDownData);
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(ContradictionAcceptanceCondition acc, D topDownData);
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(ConjunctionAcceptanceCondition acc, D topDownData);
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(DisjunctionAcceptanceCondition acc, D topDownData);
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(EquivalenceAcceptanceCondition acc, D topDownData);
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(ExclusiveDisjunctionAcceptanceCondition acc, D topDownData);
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(ImplicationAcceptanceCondition acc, D topDownData);
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(NegationAcceptanceCondition acc, D topDownData);
-
+/**
+ * 
+ * @param acc acc
+ * @param topDownData topDownData
+ * @return visit
+ */
 	U visit(Argument acc, D topDownData);
 
 }

@@ -37,7 +37,11 @@ public interface SatSolverState extends AutoCloseable {
 	 * @return a witness if the state is sat, else returns <code>null</code>
 	 */
 	Set<Literal> witness();
-	
+	/**
+	 * 
+	 * @param filter filter
+	 * @return Set
+	 */
 	Set<Literal> witness(Collection<? extends Literal> filter);
 
 	/**

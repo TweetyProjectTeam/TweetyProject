@@ -40,7 +40,10 @@ import org.tweetyproject.arg.adf.util.CacheMap;
 public final class SatLinkStrategy implements LinkStrategy {
 
 	private final IncrementalSatSolver solver;
-
+/**
+ * 
+ * @param solver solver
+ */
 	public SatLinkStrategy(IncrementalSatSolver solver) {
 		this.solver = Objects.requireNonNull(solver);
 	}

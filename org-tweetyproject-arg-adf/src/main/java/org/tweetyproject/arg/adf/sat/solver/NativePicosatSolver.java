@@ -38,7 +38,9 @@ public final class NativePicosatSolver implements IncrementalSatSolver {
 
 	private static final String DEFAULT_WIN_LIB = "/picosat.dll";
 	private static final String DEFAULT_LINUX_LIB = "/picosat.so";
-
+/**
+ * NativePicosatSolver
+ */
 	public NativePicosatSolver() {
 		String osName = System.getProperty("os.name").toLowerCase();
 		String lib = null;

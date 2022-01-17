@@ -19,10 +19,7 @@
 package org.tweetyproject.arg.dung.analysis;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;

@@ -38,19 +38,32 @@ import org.tweetyproject.logics.fol.syntax.Negation;
  */
 public class AspFolTranslator extends Translator
 {
+	/**TT_Negation*/
 	public static final int TT_NEGATION = 1;
 	
 	/** Default-Ctor */
 	public AspFolTranslator() {}
-	
+	/**
+	 * 
+	 * @param source source
+	 * @return FolAtom toFOL 
+	 */
 	public FolAtom toFOL(ASPAtom source) {
 		return (FolAtom) this.translateAtom(source, FolAtom.class);
 	}
-	
+	/**
+	 * 
+	 * @param source source
+	 * @return ASPAtom toASP
+	 */
 	public ASPAtom toASP(FolAtom source) {
 		return (ASPAtom) this.translateAtom(source, ASPAtom.class);
 	}
-
+/**
+ * 
+ * @param source source
+ * @return ASPLiteral toASP
+ */
 	public ASPLiteral toASP(FolFormula source) {
 		if(source instanceof FolAtom) {
 			return toASP((FolAtom)source);
@@ -59,17 +72,29 @@ public class AspFolTranslator extends Translator
 		} 
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param source source
+	 * @return Negation toFOL
+	 */
 	public Negation toFOL(StrictNegation source) {
 		return new Negation((FolAtom) 
 				this.translateAtom(source.getAtom(), FolAtom.class));
 	}
-
+/**
+ * 
+ * @param source source
+ * @return StrictNegation toASP
+ */
 	public StrictNegation toASP(Negation source) {
 		return new StrictNegation((ASPAtom) this.translateAtom(
 				source.getAtoms().iterator().next(), ASPAtom.class));
 	}
-	
+	/**
+	 * 
+	 * @param source source
+	 * @return FolFormula toFOL
+	 */
 	public FolFormula toFOL(ASPLiteral source) {
 		if(source instanceof ASPAtom) {
 			return toFOL((ASPAtom)source);
@@ -78,11 +103,19 @@ public class AspFolTranslator extends Translator
 		}
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param source source
+	 * @return Disjunction toFOL
+	 */
 	public Disjunction toFOL(ClassicalHead source) {
 		return (Disjunction) this.translateAssociative(source, Disjunction.class);
 	}
-	
+	/**
+	 * 
+	 * @param source source
+	 * @return ClassicalHead toASP
+	 */
 	public ClassicalHead toASP(Disjunction source) {
 		return (ClassicalHead) this.translateAssociative(source, ClassicalHead.class);
 	}

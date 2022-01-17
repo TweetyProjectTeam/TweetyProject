@@ -23,8 +23,13 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.tweetyproject.arg.adf.syntax.Argument;
-
+/**
+ * 
+ * @author Sebastian
+ *
+ */
 public enum ContradictionAcceptanceCondition implements AcceptanceCondition {
+	/**Instance*/
 	INSTANCE;
 	
 	/*

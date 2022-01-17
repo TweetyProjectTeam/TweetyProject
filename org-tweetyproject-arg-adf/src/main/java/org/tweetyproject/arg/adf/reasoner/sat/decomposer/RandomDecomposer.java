@@ -14,7 +14,10 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  *
  */
 public final class RandomDecomposer extends AbstractDecomposer {
-	
+	/**
+	 * 
+	 * @param adf AbstractDialecticalFramework
+	 */
 	public RandomDecomposer(AbstractDialecticalFramework adf) {
 		super(adf);
 	}

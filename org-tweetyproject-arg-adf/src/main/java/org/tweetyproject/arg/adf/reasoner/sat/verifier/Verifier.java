@@ -33,7 +33,11 @@ public interface Verifier extends AutoCloseable {
 	 * Performs initializations and must be called before the first {@link #verify(Interpretation)} call.
 	 */
 	void prepare();
-
+/**
+ * 
+ * @param interpretation interpretation
+ * @return verify
+ */
 	boolean verify(Interpretation interpretation);
 	
 	@Override

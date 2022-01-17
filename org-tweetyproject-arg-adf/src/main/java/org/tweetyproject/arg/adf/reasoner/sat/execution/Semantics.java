@@ -53,19 +53,29 @@ public interface Semantics {
 	 * @return createDecomposer
 	 */
 	Decomposer createDecomposer();
-
+/**
+ * 
+ * @param stateSupplier Supplier
+ * @return CandidateGenerator
+ */
 	CandidateGenerator createCandidateGenerator(Supplier<SatSolverState> stateSupplier);
-	
+	/**
+	 * 
+	 * @return List
+	 */
 	List<StateProcessor> createStateProcessors();
 		
 	/**
 	 * Is applied to interpretations before they are verified.
 	 * 
-	 * @param stateSupplier
-	 * @return
+	 * @param stateSupplier stateSupplier
+	 * @return Optional
 	 */
 	Optional<InterpretationProcessor> createUnverifiedProcessor(Supplier<SatSolverState> stateSupplier);
-	
+	/**
+	 * 
+	 * @return boolean hasStatefulVerifier()
+	 */
 	default boolean hasStatefulVerifier() {
 		return true; // safe option
 	}
@@ -73,22 +83,22 @@ public interface Semantics {
 	/**
 	 * Creates a verifier, which acts as a filter.
 	 * 
-	 * @param stateSupplier
-	 * @return
+	 * @param stateSupplier stateSupplier
+	 * @return Optional
 	 */
 	Optional<Verifier> createVerifier(Supplier<SatSolverState> stateSupplier);
 	
 	/**
 	 * Is applied to interpretations after they are verified.
 	 * 
-	 * @param stateSupplier
-	 * @return
+	 * @param stateSupplier stateSupplier
+	 * @return Optional
 	 */
 	Optional<InterpretationProcessor> createVerifiedProcessor(Supplier<SatSolverState> stateSupplier);
 
 	/**
 	 * 
-	 * @param partial
+	 * @param partial partial
 	 * @return a new {@link Semantics} instance
 	 */
 	Semantics restrict(Interpretation partial);

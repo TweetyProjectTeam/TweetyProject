@@ -56,10 +56,11 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 	/**
 	 * The resulting {@link CandidateGenerator} only computes the ground interpretation if it extends the given prefix.
 	 * 
-	 * @param adf
-	 * @param mapping
+	 * @param adf adf
+	 * @param mapping mapping
 	 * @param prefix the fixed prefix
-	 * @return
+	 * @param stateSupplier Supplier
+	 * @return CandidateGenerator
 	 */
 	public static CandidateGenerator restricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Interpretation prefix, Supplier<SatSolverState> stateSupplier) {
 		return new RestrictedGroundGenerator(adf, mapping, prefix, stateSupplier);
@@ -68,9 +69,10 @@ public abstract class GroundGenerator extends AbstractCandidateGenerator {
 	/**
 	 * The resulting {@link CandidateGenerator} computes the ground interpretation.
 	 * 
-	 * @param adf
-	 * @param mapping
-	 * @return
+	 * @param adf adf
+	 * @param mapping mapping
+	 * @param stateSupplier Supplier
+	 * @return CandidateGenerator
 	 */
 	public static CandidateGenerator unrestricted(AbstractDialecticalFramework adf, PropositionalMapping mapping, Supplier<SatSolverState> stateSupplier) {
 		return new UnrestrictedGroundGenerator(adf, mapping, stateSupplier);

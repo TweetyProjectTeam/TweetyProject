@@ -85,8 +85,8 @@ public class CADFSemantics {
 	
 	/**
 	 * Check whether a given world constitutes an admissible interpretation
-	 * @param inputWorld
-	 * @param outputWorlds
+	 * @param inputWorld inputWorld
+	 * @param outputWorlds outputWorlds
 	 * @return whether the worlds are admissible
 	 */
 	public static boolean isAdmissible(FourValuedWorld inputWorld, Collection<FourValuedWorld> outputWorlds) {
@@ -100,10 +100,10 @@ public class CADFSemantics {
 	
 	/**
 	 * Check whether a given world constitutes a complete interpretation
-	 * @param inputWorld
-	 * @param outputWorlds
-	 * @param statementFormulas
-	 * @param acceptanceFormulas
+	 * @param inputWorld inputWorld
+	 * @param outputWorlds outputWorlds
+	 * @param statementFormulas statementFormulas
+	 * @param acceptanceFormulas cceptanceFormulas
 	 * @return  whether the worlds are complete
 	 */
 	public static boolean isComplete(FourValuedWorld inputWorld, Collection<FourValuedWorld> outputWorlds, ArrayList<PlFormula> statementFormulas, ArrayList<PlFormula> acceptanceFormulas) {
