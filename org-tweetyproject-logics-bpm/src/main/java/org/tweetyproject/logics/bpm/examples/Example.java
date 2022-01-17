@@ -26,7 +26,12 @@ import java.util.List;
 
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.commons.Plotter;
-import org.tweetyproject.logics.bpm.analysis.DeadEndInconsistencyMeasure;
+import org.tweetyproject.logics.bpm.analysis.BpmnInconsistencyMeasure;
+import org.tweetyproject.logics.bpm.analysis.DeadEndMeasure;
+import org.tweetyproject.logics.bpm.analysis.DeadTransitionMeasure;
+import org.tweetyproject.logics.bpm.analysis.UnfairnessEntropyMeasure;
+import org.tweetyproject.logics.bpm.analysis.UnfairnessMeasure;
+import org.tweetyproject.logics.bpm.analysis.UnlivenessMeasure;
 import org.tweetyproject.logics.bpm.parser.bpmn_to_petri.PetriNetParser;
 import org.tweetyproject.logics.bpm.parser.xml_to_bpmn.RootParser;
 import org.tweetyproject.logics.bpm.plotting.BpmnModelPlotter;
@@ -52,20 +57,44 @@ public class Example {
 	 */
 	public static void main(String[] args) throws ParserException, IOException {
 
+		DeadEndMeasure deadEndMeasure = new DeadEndMeasure();
+		DeadTransitionMeasure deadTransitionMeasure = new DeadTransitionMeasure();
+		UnlivenessMeasure unlivenessMeasure = new UnlivenessMeasure();
+		UnfairnessMeasure unfairnessMeasure = new UnfairnessMeasure();
+		UnfairnessEntropyMeasure unfairnessEntropyMeasure = new UnfairnessEntropyMeasure();
+		
+		
 		String modelPath = System.getProperty("user.dir") + "/../org-tweetyproject-logics-bpm/src/main/resources/";
 		File unproblematic_browsing = new File(modelPath + "unproblematic_browsing.bpmn");
 		File unproblematic_dinner = new File(modelPath + "unproblematic_dinner.bpmn");
 		File problematic_hit = new File(modelPath + "problematic_hit.bpmn");
-		File problematic_basketball = new File(modelPath + "problematic_basketball.bpmn");
 		File problematic_with_inclusive_gateways = new File(modelPath + "problematic_with_inclusive_gateways.bpmn");
 		
-		runExample(unproblematic_browsing);
-		runExample(unproblematic_dinner);
-		runExample(problematic_hit);
-		runExample(problematic_basketball);
-		runExample(problematic_with_inclusive_gateways);
+		runExample(unproblematic_browsing, false, ProbabilityFunctionType.RANDOM, deadEndMeasure);
+		runExample(unproblematic_dinner, false, ProbabilityFunctionType.RANDOM, deadEndMeasure);
+		runExample(unproblematic_browsing, true, ProbabilityFunctionType.RANDOM, deadTransitionMeasure);
+		runExample(problematic_with_inclusive_gateways, true, ProbabilityFunctionType.IRREGULAR, deadTransitionMeasure);
+		runExample(problematic_hit, true, ProbabilityFunctionType.RANDOM, unlivenessMeasure);
+		runExample(problematic_with_inclusive_gateways, true, ProbabilityFunctionType.IRREGULAR, unlivenessMeasure);
+		runExample(problematic_hit, true, ProbabilityFunctionType.RANDOM, unfairnessMeasure);
+		runExample(problematic_with_inclusive_gateways, true, ProbabilityFunctionType.IRREGULAR, unfairnessEntropyMeasure);		
 
 	} 
+	
+	private enum ProbabilityFunctionType {
+		/**
+		 * An equal distribution
+		 */
+		DEFAULT, 
+		/**
+		 * A Probability Function with random behaviour
+		 */
+		RANDOM,
+		/**
+		 * A deterministic function (each probability is either 0 or 1)
+		 */
+		IRREGULAR
+	}
 	
 	/**
 	 * Run the visualization for a particular BPMN model
@@ -73,7 +102,7 @@ public class Example {
 	 * @throws ParserException
 	 * @throws IOException
 	 */
-	private static void runExample(File modelFile) throws ParserException, IOException {
+	private static void runExample(File modelFile, boolean useShortCircuit, ProbabilityFunctionType pftype, BpmnInconsistencyMeasure measure) throws ParserException, IOException {
 		BpmnModel bpmnModel;
 		PetriNet petriNet;
 		ReachabilityGraph reachabilityGraph;
@@ -86,12 +115,20 @@ public class Example {
 		petriNetParser.setProvideInitialTokensAtStartEvents(true);
 		petriNetParser.construct();
 		petriNet = petriNetParser.get();
+		if(useShortCircuit) {
+			petriNet.transformToShortCircuit();
+		}
 		
 		ReachabilityGraphParser rg_parser = new ReachabilityGraphParser(petriNet);
 		rg_parser.construct();
 		reachabilityGraph = rg_parser.get();
-		//reachabilityGraph.initializeDefaultProbabilityFunction();
-		reachabilityGraph.initializeRandomProbabilityFunction();
+		if(pftype == ProbabilityFunctionType.RANDOM ) {
+			reachabilityGraph.initializeRandomProbabilityFunction();
+		} else if (pftype == ProbabilityFunctionType.DEFAULT) {
+			reachabilityGraph.initializeDefaultProbabilityFunction();			
+		} else {
+			reachabilityGraph.initializeIrregularProbabilityFunction();			
+		}
 
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(2000, 1000);
@@ -106,12 +143,12 @@ public class Example {
 		new ReachabilityGraphPlotter(groundPlotter, reachabilityGraph);
 		rg_plotter.createGraph();
 		
+		measure.inconsistencyMeasure(reachabilityGraph);
+		
 		List<String> labels = new ArrayList<>();
 		labels.add(modelFile.getName());
-		labels.addAll(reachabilityGraph.getMarkingsInfoStrings());
-		DeadEndInconsistencyMeasure deadEndMeasure = new DeadEndInconsistencyMeasure();
-		double inconsistencyValue = deadEndMeasure.inconsistencyMeasure(reachabilityGraph);
-		labels.add("<i>---Dead-end inconsistency: " + inconsistencyValue + "---</i>");
+		labels.addAll(measure.getInfoStrings());
+
 		groundPlotter.addLabels(labels);
 		groundPlotter.show();
 	}

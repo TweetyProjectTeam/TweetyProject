@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,22 +30,15 @@ import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
-import org.tweetyproject.graphs.Edge;
-import org.tweetyproject.logics.bpm.syntax.Activity;
 import org.tweetyproject.logics.bpm.syntax.BpmnModel;
 import org.tweetyproject.logics.bpm.syntax.BpmnModel.BpmnNodeType;
 import org.tweetyproject.logics.bpm.syntax.BpmnNode;
-import org.tweetyproject.logics.bpm.syntax.EndEvent;
-import org.tweetyproject.logics.bpm.syntax.Event;
-import org.tweetyproject.logics.bpm.syntax.ExclusiveGateway;
 import org.tweetyproject.logics.bpm.syntax.InclusiveGateway;
 import org.tweetyproject.logics.petri.syntax.Ark;
 import org.tweetyproject.logics.petri.syntax.PetriNet;
 import org.tweetyproject.logics.petri.syntax.Place;
 import org.tweetyproject.logics.petri.syntax.Transition;
 import org.tweetyproject.logics.petri.syntax.reachability_graph.Marking;
-
-import ch.qos.logback.core.joran.event.StartEvent;
 
 /**
  * A class to map a BPMN model to a Petri net
@@ -143,7 +137,7 @@ public class PetriNetParser extends Parser {
 			parseStartEvent(startEvent);
 		}
 		for (BpmnNode endEvent : sortedNodes.get(BpmnNodeType.END_EVENT)) {
-			parseEndEvent(endEvent);
+			parseEndEvent(endEvent, true);
 		}
 		for (BpmnNode event : sortedNodes.get(BpmnNodeType.EVENT)) {
 			parseEvent(event);
@@ -225,10 +219,19 @@ public class PetriNetParser extends Parser {
 	/**
 	 * Conduct steps to parse a BPMN end event to elements of the Petri net
 	 * @param endEvent the node to parse
+	 * @param addFinalTransition true iff the Petri net should receive a transition that fixes the final state,
+	 * i.e. a transition with exactly one outgoing and one incoming ark to and from the final place corresponding to the endEvent
 	 */
-	private void parseEndEvent(BpmnNode endEvent) {
+	private void parseEndEvent(BpmnNode endEvent, boolean addFinalTransition) {
 		Place place = createPlace(endEvent);
 		place.setFinal();
+		if(!addFinalTransition) {
+			return;
+		}
+		Transition finalTransition = createTransition(endEvent);
+		finalTransition.setFinal();
+		createArk(place, finalTransition);
+		createArk(finalTransition, place);
 	}
 	
 	/**
@@ -297,13 +300,15 @@ public class PetriNetParser extends Parser {
 	 * Create a transition that is associated with one node of the BPMN model
 	 * e.g. the transition for an inclusive gateway
 	 * @param node the associated node
+	 * @return the created transition
 	 */
-	private void createTransition(BpmnNode node) {
+	private Transition createTransition(BpmnNode node) {
 		String id = "t_" + node.getId();
 		String name = node.getName() != null ? ("t_" + node.getName()) : id;
 		Transition transition = new Transition(id, name);
 		transitionMap.put(node, transition);
 		petriNet.add(transition);
+		return transition;
 	}
 	
 	/**
@@ -311,11 +316,9 @@ public class PetriNetParser extends Parser {
 	 * e.g. between two activities
 	 * @param nodeA the first associated node
 	 * @param nodeB the second associated node
+	 * @return the created transition
 	 */
 	private Transition createTransition(BpmnNode nodeA, BpmnNode nodeB) {
-		if(nodeB == null) {
-			System.out.println("nono");
-		}
 		String id = "t_" + nodeA.getId() + "_" + nodeB.getId();
 		String name = "t_" 
 				+ (nodeA.getName() != null ? nodeA.getName() : nodeA.getId()) 
@@ -356,7 +359,7 @@ public class PetriNetParser extends Parser {
 	 * identify the initial markings after constructing all places
 	 */
 	private void setInitialMarkings() {
-		Set<Place> places = this.petriNet.getPlaces();
+		List<Place> places = this.petriNet.getPlaces();
 		for(Place place : places) {
 			if(!place.isInitial()) {
 				continue;

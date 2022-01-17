@@ -107,8 +107,9 @@ public class ReachabilityGraphParser extends Parser{
 	private void search() {
 		Set<Transition> enabledTransitions = petriNet.getEnabledTransitions();
 		if(enabledTransitions.isEmpty()) {
-			// add empty self-loop (without transition)
-			addEdge(currentMarking, currentMarking, null);
+			// add empty self-loop (with silent transition)
+			Transition transition = petriNet.createEmptyTransition(currentMarking);
+			addEdge(currentMarking, currentMarking, transition);
 			return;
 		}
 		Marking newMarking;

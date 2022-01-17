@@ -83,6 +83,19 @@ public class FileDungTheoryGenerator implements DungTheoryGenerator {
 	}
 	
 	/**
+	 * Returns the absolute path of the next file
+	 * @return the absolute path of the next file
+	 */
+	public String getAbsolutePathOfNext() {
+		if(this.idx >= this.files.length) {
+			if(!this.loop)
+				throw new NoSuchElementException();
+			return this.files[0].getAbsolutePath();
+		}
+		return this.files[this.idx].getAbsolutePath();
+	}
+	
+	/**
 	 * Returns the file of the theory previously returned by "next()"
 	 * @return the file of the theory previously returned by "next()" (or NULL if there was none)
 	 */

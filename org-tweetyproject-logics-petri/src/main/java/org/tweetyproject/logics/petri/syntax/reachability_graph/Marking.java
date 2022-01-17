@@ -19,6 +19,7 @@
 package org.tweetyproject.logics.petri.syntax.reachability_graph;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class Marking implements Node, Comparable<Marking> {
 	 * 
 	 * @param places the places that this marking does describe
 	 */
-	public Marking(Set<Place> places) {
+	public Marking(List<Place> places) {
 		this.tokensByPlace = new HashMap<>();
 		places.forEach(place -> {
 			tokensByPlace.put(place, 0);
@@ -132,22 +133,20 @@ public class Marking implements Node, Comparable<Marking> {
 	}
 	
 	/**
-	 * Sum up the number of tokens at all non-final places at this marking
-	 * @return the sum
+	 * Retrieve the number of tokens at the specified place at this marking
+	 * @param place the place
+	 * @return the number of tokens at the place
 	 */
-	public int getSumOfTokensAtNonFinalPlaces() {
-		return this.tokensByPlace.entrySet().stream().filter(entry -> {
-			return !entry.getKey().isFinal();
-		}).map(entry -> {
-			return entry.getValue();
-		}).reduce(0, Integer::sum);
+	public int getTokensByPlace(Place place) {
+		return this.tokensByPlace.get(place);
 	}
 
 	@Override
+	/**
+	 * Marking implements Comparable in order to have a fixed (but arbitrary) order among all edges 
+	 * For that purpose we just use the hash code.
+	 */
 	public int compareTo(Marking that) {
-		// Marking implements Comparable in order to
-		// have a fixed (but arbitrary) order among all edges
-		// for that purpose we just use the hash code.
 		return this.hashCode() - that.hashCode();
 	}
 
