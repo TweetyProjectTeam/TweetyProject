@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -46,6 +46,7 @@ import org.tweetyproject.arg.adf.reasoner.sat.verifier.Verifier;
 import org.tweetyproject.arg.adf.sat.IncrementalSatSolver;
 import org.tweetyproject.arg.adf.sat.SatSolverState;
 import org.tweetyproject.arg.adf.semantics.interpretation.Interpretation;
+import org.tweetyproject.arg.adf.syntax.Argument;
 
 /**
  * @author Mathias Hofer
@@ -83,6 +84,8 @@ public final class ParallelExecution implements Execution {
 		for (Interpretation partial : decompositions) {
 			Branch branch = new Branch(semantics.restrict(partial));
 			branches.add(branch);
+		}
+		for (Branch branch : branches) {
 			branch.start();
 		}
 	}
@@ -109,16 +112,13 @@ public final class ParallelExecution implements Execution {
 
 		@Override
 		public boolean tryAdvance(Consumer<? super Interpretation> action) {
-			while (!branches.isEmpty() || !interpretations.isEmpty()) {
-				try {
-					Interpretation next = interpretations.poll(20, TimeUnit.MILLISECONDS);
-					if (next != null) {
-						action.accept(next);
-						return true;
-					}
-				} catch (InterruptedException e) {
+			try {
+				Interpretation next = interpretations.take();
+				if (next != Done.INSTANCE) {
+					action.accept(next);
+					return true;
 				}
-			}
+			} catch (InterruptedException e) {}
 			return false;
 		}
 
@@ -130,7 +130,7 @@ public final class ParallelExecution implements Execution {
 		void close();
 
 	}
-	
+
 	private final class Branch implements AutoCloseable {
 
 		private final Semantics semantics;
@@ -138,7 +138,7 @@ public final class ParallelExecution implements Execution {
 		private final GeneratorStep generator;
 
 		private final AtomicInteger currentlyInPipeline = new AtomicInteger(1);
-				
+
 		Branch(Semantics semantics) {
 			this.semantics = Objects.requireNonNull(semantics);
 			this.generator = buildPipeline();
@@ -146,12 +146,12 @@ public final class ParallelExecution implements Execution {
 
 		private GeneratorStep buildPipeline() {
 			Step last = new EndStep();
-			
+
 			Optional<InterpretationProcessor> verifiedProcessor = semantics.createVerifiedProcessor(satSolver::createState);
 			if (verifiedProcessor.isPresent()) {
 				last = new ProcessingStep(verifiedProcessor.orElseThrow(), last);
 			}
-			
+
 			Optional<Verifier> verifier = semantics.createVerifier(satSolver::createState);
 			if (verifier.isPresent()) {
 				if (semantics.hasStatefulVerifier()) {
@@ -160,14 +160,15 @@ public final class ParallelExecution implements Execution {
 					last = new VerificationStep(verifier.orElseThrow(), last);
 				}
 			}
-			
+
 			Optional<InterpretationProcessor> unverifiedProcessor = semantics.createUnverifiedProcessor(satSolver::createState);
 			if (unverifiedProcessor.isPresent()) {
 				last = new ProcessingStep(unverifiedProcessor.orElseThrow(), last);
 			}
-			
+
 			List<StateProcessor> stateProcessors = semantics.createStateProcessors();
-			Supplier<SatSolverState> stateSupplier = stateProcessors.isEmpty() ? satSolver::createState : new ProcessedStateSupplier(stateProcessors);
+			Supplier<SatSolverState> stateSupplier = stateProcessors.isEmpty() ? satSolver::createState
+					: new ProcessedStateSupplier(stateProcessors);
 
 			return new GeneratorStep(semantics.createCandidateGenerator(stateSupplier), last);
 		}
@@ -177,6 +178,12 @@ public final class ParallelExecution implements Execution {
 			if (currentlyInPipeline.decrementAndGet() <= 0) {
 				branches.remove(this);
 				close();
+				while (branches.isEmpty()) {
+					try {
+						interpretations.put(Done.INSTANCE);
+						break;
+					} catch (InterruptedException e) { /* retry */ }
+				}
 			}
 		}
 
@@ -188,15 +195,15 @@ public final class ParallelExecution implements Execution {
 		public void close() {
 			generator.close();
 		}
-		
+
 		private abstract class AbstractStep<R extends AutoCloseable> implements Step {
 
 			private final R resource;
-			
+
 			private final Step next;
-						
+
 			private final ReadWriteLock lock = new ReentrantReadWriteLock();
-			
+
 			AbstractStep(R resource, Step next) {
 				this.resource = Objects.requireNonNull(resource);
 				this.next = Objects.requireNonNull(next);
@@ -214,9 +221,9 @@ public final class ParallelExecution implements Execution {
 					}
 				});
 			}
-			
+
 			abstract Optional<Interpretation> execute(R resource, Interpretation interpretation);
-			
+
 			void nextStep(Interpretation interpretation) {
 				next.accept(interpretation);
 			}
@@ -233,7 +240,7 @@ public final class ParallelExecution implements Execution {
 					}
 				}
 			}
-			
+
 		}
 
 		private final class ProcessedStateSupplier implements Supplier<SatSolverState> {
@@ -254,9 +261,9 @@ public final class ParallelExecution implements Execution {
 			}
 
 		}
-		
+
 		private final class GeneratorStep extends AbstractStep<CandidateGenerator> {
-		
+
 			/**
 			 * Collects the pending updates of the interpretation processors. We cannot
 			 * immediately apply them, since this would require synchronization and
@@ -264,7 +271,7 @@ public final class ParallelExecution implements Execution {
 			 * next candidate while the the current is still in processing.
 			 */
 			private final Queue<Consumer<SatSolverState>> pendingUpdates = new ConcurrentLinkedQueue<>();
-			
+
 			GeneratorStep(CandidateGenerator resource, Step next) {
 				super(resource, next);
 			}
@@ -274,29 +281,29 @@ public final class ParallelExecution implements Execution {
 				applyPendingUpdates(generator);
 				return Optional.ofNullable(generator.generate());
 			}
-			
+
 			@Override
 			void nextStep(Interpretation interpretation) {
 				currentlyInPipeline.incrementAndGet();
 				this.accept(interpretation); // keep generating until search space is exhausted
 				super.nextStep(interpretation);
 			}
-			
+
 			public void update(Consumer<SatSolverState> updateFunction) {
 				this.pendingUpdates.offer(updateFunction);
-			}			
-			
+			}
+
 			private void applyPendingUpdates(CandidateGenerator generator) {
 				Consumer<SatSolverState> updateFunction = null;
 				while ((updateFunction = pendingUpdates.poll()) != null) {
 					generator.update(updateFunction);
-				}				
+				}
 			}
-			
+
 		}
-		
+
 		private final class VerificationStep extends AbstractStep<Verifier> {
-	
+
 			VerificationStep(Verifier verifier, Step next) {
 				super(verifier, next);
 				verifier.prepare();
@@ -309,11 +316,11 @@ public final class ParallelExecution implements Execution {
 				}
 				return Optional.empty();
 			}
-			
+
 		}
-		
+
 		private final class SynchronizedVerificationStep extends AbstractStep<Verifier> {
-			
+
 			SynchronizedVerificationStep(Verifier verifier, Step next) {
 				super(verifier, next);
 				verifier.prepare();
@@ -328,9 +335,9 @@ public final class ParallelExecution implements Execution {
 				}
 				return Optional.empty();
 			}
-			
+
 		}
-		
+
 		private final class ProcessingStep extends AbstractStep<InterpretationProcessor> {
 
 			ProcessingStep(InterpretationProcessor processor, Step next) {
@@ -343,9 +350,9 @@ public final class ParallelExecution implements Execution {
 				generator.update(state -> processor.updateState(state, processed));
 				return Optional.of(processed);
 			}
-			
+
 		}
-		
+
 		private final class EndStep implements Step {
 
 			@Override
@@ -359,10 +366,53 @@ public final class ParallelExecution implements Execution {
 			}
 
 			@Override
-			public void close() {}
-			
+			public void close() {
+			}
+
 		}
 
+	}
+
+	/**
+	 * Works as a signal to avoid constant polling.
+	 */
+	private static enum Done implements Interpretation {
+		INSTANCE;
+
+		@Override
+		public boolean satisfied(Argument arg) {
+			return false;
+		}
+
+		@Override
+		public boolean unsatisfied(Argument arg) {
+			return false;
+		}
+
+		@Override
+		public boolean undecided(Argument arg) {
+			return false;
+		}
+
+		@Override
+		public Set<Argument> satisfied() {
+			return Set.of();
+		}
+
+		@Override
+		public Set<Argument> unsatisfied() {
+			return Set.of();
+		}
+
+		@Override
+		public Set<Argument> undecided() {
+			return Set.of();
+		}
+
+		@Override
+		public Set<Argument> arguments() {
+			return Set.of();
+		}
 	}
 
 }
