@@ -27,7 +27,7 @@ If you want to make your own contributions to the code, follow the usual steps:
 * Create a pull request`
 
 ## Documentation
-* **API:** The most recent version of the technical documentation for all TweetyProject libraries in form of the JavaDoc API can be found here: [TweetyProject API 1.20](http://tweetyproject.org/api/1.20/index.html)
+* **API:** The most recent version of the technical documentation for all TweetyProject libraries in form of the JavaDoc API can be found here: [TweetyProject API 1.21](http://tweetyproject.org/api/1.21/index.html)
 * **Integration of third-party solvers:** The following pages give some more detailed information on how third-party products such as SAT solvers and optimization solvers can be integrated in TweetyProject:
    * [Integration of SAT Solvers](http://tweetyproject.org/doc/sat-solvers.html)
   * [Integration of first-order logic theorem provers](http://tweetyproject.org/doc/fol-provers.html)
