@@ -5,29 +5,29 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  <version>1.20-SNAPSHOT</version>
+  <version>1.21-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
   	<dependency>
 		<groupId>org.tweetyproject</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.20-SNAPSHOT</version>
+  		<version>1.21-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>fol</artifactId>
-  		<version>1.20-SNAPSHOT</version>
+  		<version>1.21-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.lp</groupId>
   		<artifactId>asp</artifactId>
-  		<version>1.20-SNAPSHOT</version>
+  		<version>1.21-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>commons</artifactId>
-  		<version>1.20-SNAPSHOT</version>
+  		<version>1.21-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

@@ -164,7 +164,7 @@ public class ExamplesHTMLGenerator {
 						List<Path> resources = new ArrayList<Path>();
 						Files.walk(Paths.get(c.getAbsolutePath())).filter(Files::isRegularFile).forEach((f) -> {
 							String file = f.toString();
-							if (file.contains("resources") && !file.contains(".prefs"))
+							if (file.contains("resources") && !file.contains(".prefs") && !file.contains("javadoc-options-javadoc-resources.xml"))
 								resources.add(f);
 							else if (file.contains("examples") && !file.contains(".class"))
 								examples.add(f);

@@ -1,3 +1,24 @@
+20.01.2021 - TweetyProject 1.21
+  New libraries:
+    - org.tweetyproject.sat: dedicated library for SAT solving 
+  New functionalities:
+    - added further transformation functionalities between ADFs and conditional
+      logics (org.tweetyproject.logics.translators)
+    - added claim-based argumentation frameworks (CAFs) to
+      org.tweetyproject.arg.dung (syntax, semantics, and reasoners)
+    - added parallel query execution of ADFs to org.tweetyproject.arg.adf
+    - added missing JUnit tests for all libraries
+    - added and improved acceptability reasoner in org.tweetyproject.arg.dung
+    - added further inconsistency measures and examples to
+      org.tweetyproject.logics.bpm and org.tweetyproject.logics.petri
+  Minor changes:
+    - bugfixes in LpSolve bridge
+    - bugfixes and improvements for ADFs (org.tweetyproject.arg.adf)
+    - bridges to external solvers now offer a method "isInstalled" for checking
+      existence of solvers
+    - bugfixes in existing JUnit tests
+    - refactoring of extension handling in org.tweetyproject.arg.dung
+    - removed log4j security issues
 04.08.2021 - TweetyProject 1.20
   New libraries:
     - org.tweetyproject.logics.petri: Petri nets with reasoning capabilities and
