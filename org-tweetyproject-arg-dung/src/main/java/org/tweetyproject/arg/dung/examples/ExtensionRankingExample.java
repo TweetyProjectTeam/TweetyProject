@@ -101,12 +101,12 @@ public class ExtensionRankingExample {
 
         ExtensionRankingReasoner cf_reasoner = new ExtensionRankingReasoner(ExtensionRankingSemantics.R_CF);
         System.out.println();
-        List<List<Extension>> cf_result = cf_reasoner.getModels(theory);
+        List<List<Extension<DungTheory>>> cf_result = cf_reasoner.getModels(theory);
         System.out.println("r-cf ranks:");
-        for (List<Extension> level: cf_result) {
+        for (List<Extension<DungTheory>> level: cf_result) {
             System.out.println(level);
         }
-        Extension ext1 = new Extension();
+        Extension<DungTheory> ext1 = new Extension<DungTheory>();
 
 
 
@@ -114,42 +114,42 @@ public class ExtensionRankingExample {
         System.out.println();
         ExtensionRankingReasoner ad_reasoner = new ExtensionRankingReasoner(ExtensionRankingSemantics.R_AD);
         System.out.println();
-        List<List<Extension>> ad_result = ad_reasoner.getModels(theory);
+        List<List<Extension<DungTheory>>> ad_result = ad_reasoner.getModels(theory);
         System.out.println("r-ad ranks:");
-        for (List<Extension> level: ad_result) {
+        for (List<Extension<DungTheory>> level: ad_result) {
             System.out.println(level);
         }
         System.out.println();
 
 
         ExtensionRankingReasoner co_reasoner = new ExtensionRankingReasoner(ExtensionRankingSemantics.R_CO);
-        List<List<Extension>> co_result = co_reasoner.getModels(theory);
+        List<List<Extension<DungTheory>>> co_result = co_reasoner.getModels(theory);
         System.out.println("r-co ranks:");
-        for (List<Extension> level: co_result) {
+        for (List<Extension<DungTheory>> level: co_result) {
             System.out.println(level);
         }
         System.out.println();
 
         ExtensionRankingReasoner gr_reasoner = new ExtensionRankingReasoner(ExtensionRankingSemantics.R_GR);
-        List<List<Extension>> gr_result = gr_reasoner.getModels(theory);
+        List<List<Extension<DungTheory>>> gr_result = gr_reasoner.getModels(theory);
         System.out.println("r-gr ranks:");
-        for (List<Extension> level: gr_result) {
+        for (List<Extension<DungTheory>> level: gr_result) {
             System.out.println(level);
         }
         System.out.println();
 
         ExtensionRankingReasoner pr_reasoner = new ExtensionRankingReasoner(ExtensionRankingSemantics.R_PR);
-        List<List<Extension>> pr_result = pr_reasoner.getModels(theory);
+        List<List<Extension<DungTheory>>> pr_result = pr_reasoner.getModels(theory);
         System.out.println("r-pr ranks:");
-        for (List<Extension> level: pr_result) {
+        for (List<Extension<DungTheory>> level: pr_result) {
             System.out.println(level);
         }
         System.out.println();
 
         ExtensionRankingReasoner sst_reasoner = new ExtensionRankingReasoner(ExtensionRankingSemantics.R_SST);
-        List<List<Extension>> sst_result = sst_reasoner.getModels(theory);
+        List<List<Extension<DungTheory>>> sst_result = sst_reasoner.getModels(theory);
         System.out.println("r-sst ranks:");
-        for (List<Extension> level: sst_result) {
+        for (List<Extension<DungTheory>> level: sst_result) {
             System.out.println(level);
         }
 

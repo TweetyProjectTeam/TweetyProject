@@ -40,7 +40,7 @@ import java.util.*;
 public class ExtensionRankingReasoner {
     private final ExtensionRankingSemantics semantics;
     private final List<Method> baseFunctions;
-    private Map<List<Extension>, Character> comparisonMap;
+    private Map<List<Extension<DungTheory>>, Character> comparisonMap;
 //    public final  Extension debug = new Extension();
 //    public final  Extension debug2 = new Extension();
 
@@ -86,9 +86,9 @@ public class ExtensionRankingReasoner {
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    public List<Extension> getModel(DungTheory theory) throws InvocationTargetException, IllegalAccessException{
+    public List<Extension<DungTheory>> getModel(DungTheory theory) throws InvocationTargetException, IllegalAccessException{
         //return the best rank
-        List<List<Extension>> ranks = getModels(theory);
+        List<List<Extension<DungTheory>>> ranks = getModels(theory);
         return  ranks.get(ranks.size()-1);
     }/**
      * compute the ordering over all subsets of theory wrt. to the ordering semantics
@@ -102,13 +102,13 @@ public class ExtensionRankingReasoner {
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    public List<List<Extension>> getModels(DungTheory theory) throws InvocationTargetException, IllegalAccessException {
+    public List<List<Extension<DungTheory>>> getModels(DungTheory theory) throws InvocationTargetException, IllegalAccessException {
         //returns partitioned list of ranked extensions partitioned into ranks
         Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
 
-        List<Extension> extensions = new LinkedList<>();
+        List<Extension<DungTheory>> extensions = new LinkedList<>();
         for(Set<Argument> set : subsets){
-            Extension ext = new Extension(set);
+            Extension<DungTheory> ext = new Extension<DungTheory>(set);
             extensions.add(ext);
         }
         Collections.reverse(extensions);
@@ -128,17 +128,17 @@ public class ExtensionRankingReasoner {
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    private Map<List<Extension>,Character> getComparisonSigns(List<Extension> argumentSubsets, DungTheory theory) throws InvocationTargetException, IllegalAccessException {
+    private Map<List<Extension<DungTheory>>,Character> getComparisonSigns(List<Extension<DungTheory>> argumentSubsets, DungTheory theory) throws InvocationTargetException, IllegalAccessException {
         // < if better ranked, can also be read as an "arrow" in a directed graph ( ext1 "<"---- ext2 )
         // > if worse ranked
         // = if equal, means that both extensions have matching parents in graph terms
         // null if incomparable, no graph edge between extensions
-        Map<List<Extension>, Character> subsetToSignMap = new HashMap<>();
+        Map<List<Extension<DungTheory>>, Character> subsetToSignMap = new HashMap<>();
         for (int i = 0; i<argumentSubsets.size(); i++){
-            Extension ss1 = argumentSubsets.get(i);
+            Extension<DungTheory> ss1 = argumentSubsets.get(i);
             for(int j = i+1; j<argumentSubsets.size(); j++){
-                Extension ss2 = argumentSubsets.get(j);
-                ArrayList<Extension> comparison = new ArrayList<>();
+                Extension<DungTheory> ss2 = argumentSubsets.get(j);
+                ArrayList<Extension<DungTheory>> comparison = new ArrayList<>();
                 comparison.add(ss1); comparison.add(ss2);
                 putCompareSignInMap(comparison, subsetToSignMap,theory);
             }
@@ -155,16 +155,16 @@ public class ExtensionRankingReasoner {
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    private void putCompareSignInMap(ArrayList<Extension> comparison,Map<List<Extension>,Character> map, DungTheory theory) throws InvocationTargetException, IllegalAccessException {
+    private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison,Map<List<Extension<DungTheory>>,Character> map, DungTheory theory) throws InvocationTargetException, IllegalAccessException {
         putCompareSignInMap(comparison, map, theory, 0);
-    }private void putCompareSignInMap(ArrayList<Extension> comparison, Map<List<Extension>, Character> map, DungTheory theory, int iteration) throws InvocationTargetException, IllegalAccessException {
+    }private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison, Map<List<Extension<DungTheory>>, Character> map, DungTheory theory, int iteration) throws InvocationTargetException, IllegalAccessException {
         if(iteration == baseFunctions.size()){
             //no more baseFunctions:
             // if preferred or grounded semantic:
             //  compare subsets themselves
 
-            Extension cs1 = new Extension(comparison.get(0));
-            Extension cs2 = new Extension(comparison.get(1));
+            Extension<DungTheory> cs1 = new Extension<DungTheory>(comparison.get(0));
+            Extension<DungTheory> cs2 = new Extension<DungTheory>(comparison.get(1));
             switch(semantics) {
                 case R_GR:
                     if (isStrictSubsetOf(cs1, cs2)){
@@ -190,14 +190,14 @@ public class ExtensionRankingReasoner {
         }
         else {
             Method compareMethod = baseFunctions.get(iteration);
-            Extension subset1 = comparison.get(0);
+            Extension<DungTheory> subset1 = comparison.get(0);
             Object[] parameters = new Object[2];
             parameters[0] = subset1;
             parameters[1] = theory;
-            Extension cs1 = (Extension) compareMethod.invoke(this, parameters);
-            Extension subset2 = comparison.get(1);
+            Extension<DungTheory> cs1 = (Extension<DungTheory>) compareMethod.invoke(this, parameters);
+            Extension<DungTheory> subset2 = comparison.get(1);
             parameters[0] = subset2;
-            Extension cs2 = (Extension) compareMethod.invoke(this, parameters);
+            Extension<DungTheory> cs2 = (Extension<DungTheory>) compareMethod.invoke(this, parameters);
             if (isStrictSubsetOf(cs1, cs2)) {
                 map.put(comparison, '<');
             } else if (isStrictSupersetOf(cs1, cs2)) {
@@ -220,7 +220,7 @@ public class ExtensionRankingReasoner {
      * @param ext2 second extension
      * @return true if ext1 is strict subset of ext2, false otherwise (equal or superset)
      */
-    private boolean isStrictSubsetOf(Extension ext1, Extension ext2){
+    private boolean isStrictSubsetOf(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
         Set<Argument> subset = new HashSet<>(ext1);
         Set<Argument> superset = new HashSet<>(ext2);
         // subset is a strict-subset of superset iff the union of the compare sets equals the compare set of subset and not superset
@@ -234,7 +234,7 @@ public class ExtensionRankingReasoner {
      * @param ext2 second extension
      * @return true if ext1 is strict superset of ext2, false otherwise (equal or subset)
      */
-    private boolean isStrictSupersetOf(Extension ext1, Extension ext2){
+    private boolean isStrictSupersetOf(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
         return isStrictSubsetOf(ext2,ext1);
     }
 
@@ -244,13 +244,13 @@ public class ExtensionRankingReasoner {
      * @param extensions list of extensions to sort split into ranks
      * @return a list of ranks containing extensions
      */
-    private List<List<Extension>> getRanksFromList(List<Extension> extensions){
+    private List<List<Extension<DungTheory>>> getRanksFromList(List<Extension<DungTheory>> extensions){
         //put extensions in correct topological order list and partition it into respective ranks
         extensions = rankWithQueue(extensions);
-        List<List<Extension>> ranks = new ArrayList<>();
-        List<Extension> rank = new ArrayList<>();
+        List<List<Extension<DungTheory>>> ranks = new ArrayList<>();
+        List<Extension<DungTheory>> rank = new ArrayList<>();
 
-        for(Extension e: extensions){
+        for(Extension<DungTheory> e: extensions){
             Character rankSign = getRankSign(rank,e);
             if(rankSign != null && rankSign == '>'){
                 ranks.add(new ArrayList<>(rank));
@@ -270,30 +270,30 @@ public class ExtensionRankingReasoner {
      * @return topologically sorted list of extensions
      */
 
-    private List<Extension> rankWithQueue(List<Extension> extensions) {
+    private List<Extension<DungTheory>> rankWithQueue(List<Extension<DungTheory>> extensions) {
 
         //implementation is done by following Kahn's algorithm so topologically sort extensions based on their rankings
         //ranking arrows ("<", ">") between two extensions can be interpreted as directed edges ("<--", "-->")
 
         //root of graph: extension with all arguments, ALWAYS ranked worst
         //make sure it is the root element.
-        List<Extension> queue = new ArrayList<>();
-        Extension root = extensions.get(0);
-        for (Extension e:extensions){
+        List<Extension<DungTheory>> queue = new ArrayList<>();
+        Extension<DungTheory> root = extensions.get(0);
+        for (Extension<DungTheory> e:extensions){
             if(e.size()>root.size()){
                 root = e;
             }
         }
         queue.add(extensions.remove(extensions.indexOf(root)));
 
-        List<Extension> result = new ArrayList<>();
+        List<Extension<DungTheory>> result = new ArrayList<>();
 
         while (queue.size() > 0) {
-            Extension currentQueueElem = queue.remove(0);
+            Extension<DungTheory> currentQueueElem = queue.remove(0);
 
             result.add(currentQueueElem);
-            List<Extension> queueElemChildren = getChildrenByRank(currentQueueElem);
-            for (Extension child : queueElemChildren) {
+            List<Extension<DungTheory>> queueElemChildren = getChildrenByRank(currentQueueElem);
+            for (Extension<DungTheory> child : queueElemChildren) {
 
                 if (!hasOtherParent(child, result)) {
                     queue.add(child);
@@ -309,11 +309,11 @@ public class ExtensionRankingReasoner {
      * @param node an extension
      * @return all extensions ranked better than node
      */
-    private List<Extension> getChildrenByRank(Extension node){
+    private List<Extension<DungTheory>> getChildrenByRank(Extension<DungTheory> node){
         //get all children of input extension
-        List<Extension> children = new ArrayList<>();
-        Set<List<Extension>> comparisons = comparisonMap.keySet();
-        for(List<Extension> comparison : comparisons){
+        List<Extension<DungTheory>> children = new ArrayList<>();
+        Set<List<Extension<DungTheory>>> comparisons = comparisonMap.keySet();
+        for(List<Extension<DungTheory>> comparison : comparisons){
             if(comparison.contains(node)){
                 int index = comparison.indexOf(node);
                 Character sign = comparisonMap.get(comparison);
@@ -333,21 +333,21 @@ public class ExtensionRankingReasoner {
      * true if there is any other parent that is not on the ignoreList
      * false if all parents are in the ignorelist
      * @param node an extension
-     * @param ignoreList list of all extensions that are already removed from the queue and placed into the result in Kahn's algorithm
+     * @param result list of all extensions that are already removed from the queue and placed into the result in Kahn's algorithm
      * @return true if node has no further parents outside ignoreList
      */
-    private boolean hasOtherParent(Extension node, List<Extension> ignoreList){
+    private boolean hasOtherParent(Extension<DungTheory> node, List<Extension<DungTheory>> result){
         //go through all extensions and check if it is a parent of node
         //if one such parent is found, return true
-        Set<List<Extension>> comparisons = comparisonMap.keySet();
-        for(List<Extension> comparison : comparisons){
+        Set<List<Extension<DungTheory>>> comparisons = comparisonMap.keySet();
+        for(List<Extension<DungTheory>> comparison : comparisons){
             if(comparison.contains(node)){
                 int index = comparison.indexOf(node);
                 Character sign = comparisonMap.get(comparison);
-                if(index == 0 && sign != null && sign == '<' && !ignoreList.contains(comparison.get(1))){
+                if(index == 0 && sign != null && sign == '<' && !result.contains(comparison.get(1))){
                     return true;
                 }
-                else if(index == 1 && sign != null && sign == '>' && !ignoreList.contains(comparison.get(0))){
+                else if(index == 1 && sign != null && sign == '>' && !result.contains(comparison.get(0))){
                     return true;
                 }
 
@@ -367,11 +367,11 @@ public class ExtensionRankingReasoner {
      * @param node an extension
      * @return the relationship of the rank to the node
      */
-    private Character getRankSign(List<Extension>compareToRank,Extension node) {
+    private Character getRankSign(List<Extension<DungTheory>>compareToRank,Extension<DungTheory> node) {
         //compare an extension to a single rank
         //if there is at least one parent in rank, extension is "child of whole rank
         char bestSign = 'x';
-        for (Extension ext : compareToRank) {
+        for (Extension<DungTheory> ext : compareToRank) {
             Character sign = getSign(ext, node);
             Character signRev = getSign(node, ext);
             if ((sign != null && sign == '>') || (signRev != null && signRev == '<')) {
@@ -392,8 +392,8 @@ public class ExtensionRankingReasoner {
      * @param ext2 extension on the right side
      * @return the current sign between two extensions
      */
-    private Character getSign(Extension ext1, Extension ext2){
-        List<Extension> comparison = new ArrayList<>();
+    private Character getSign(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
+        List<Extension<DungTheory>> comparison = new ArrayList<>();
         comparison.add(ext1);
         comparison.add(ext2);
         return comparisonMap.get(comparison);
@@ -440,8 +440,8 @@ public class ExtensionRankingReasoner {
      * @param theory a dung theory
      * @return set of conflict in ext
      */
-    public Extension getConflicts(Extension ext, DungTheory theory) {
-        Extension conflicts = new Extension();
+    public Extension<DungTheory> getConflicts(Extension<DungTheory> ext, DungTheory theory) {
+        Extension<DungTheory> conflicts = new Extension<DungTheory>();
         for (Attack att: theory.getAttacks()) {
             if (ext.contains(att.getAttacker()) && ext.contains(att.getAttacked())) {
                 conflicts.add(new Argument(att.toString()));
@@ -456,8 +456,8 @@ public class ExtensionRankingReasoner {
      * @param theory a dung theory
      * @return set of arguments in ext which are not defended by ext
      */
-    public Extension getUndefended(Extension ext, DungTheory theory) {
-        Extension undefended = new Extension();
+    public Extension<DungTheory> getUndefended(Extension<DungTheory> ext, DungTheory theory) {
+        Extension<DungTheory> undefended = new Extension<DungTheory>();
         for (Argument arg: ext) {
             for (Argument attacker: theory.getAttackers(arg)) {
                 if (!ext.contains(attacker) && !theory.isAttacked(attacker, ext)) {
@@ -475,8 +475,8 @@ public class ExtensionRankingReasoner {
      * @param theory a dung theory
      * @return set of arguments in theory \ ext which are not attacked by ext
      */
-    public Extension getUnattacked(Extension ext, DungTheory theory) {
-        Extension unattacked = new Extension();
+    public Extension<DungTheory> getUnattacked(Extension<DungTheory> ext, DungTheory theory) {
+        Extension<DungTheory> unattacked = new Extension<DungTheory>();
         for (Argument arg: theory) {
             if (!ext.contains(arg) && !theory.isAttacked(arg, ext)) {
                 unattacked.add(arg);
@@ -491,24 +491,24 @@ public class ExtensionRankingReasoner {
      * @param theory a dung theory
      * @return set of arguments in theory \ ext which are defended by ext
      */
-    public Extension getDefendedNotIn(Extension ext, DungTheory theory) {
+    public Extension<DungTheory> getDefendedNotIn(Extension<DungTheory> ext, DungTheory theory) {
 
         //calculate attackers of extension
-        Extension extMinus = new Extension();
+        Extension<DungTheory> extMinus = new Extension<DungTheory>();
         for(Argument arg:ext){
             extMinus.addAll(theory.getAttackers(arg));
         }
 
 
         //calculate fafStar recursively
-        Extension fafStar = new Extension(ext);
+        Extension<DungTheory> fafStar = new Extension<DungTheory>(ext);
         boolean hasChanged = true;
         while(hasChanged){
 
             //calculate faf of fafStar
-            Extension fafFafStar = theory.faf(fafStar);
+            Extension<DungTheory> fafFafStar = theory.faf(fafStar);
             //execute formula
-            Extension newFafStar= new Extension(fafStar);
+            Extension<DungTheory> newFafStar= new Extension<DungTheory>(fafStar);
             newFafStar.addAll(fafFafStar);
             newFafStar.removeAll(extMinus);
             //check if further iterations necessary
@@ -516,11 +516,11 @@ public class ExtensionRankingReasoner {
                 hasChanged = false;
             }
             else{
-                fafStar = new Extension(newFafStar);
+                fafStar = new Extension<DungTheory>(newFafStar);
             }
         }
         //finalize
-        Extension defendedNotIn = fafStar;
+        Extension<DungTheory> defendedNotIn = fafStar;
         defendedNotIn.removeAll(ext);
         return defendedNotIn;
 
