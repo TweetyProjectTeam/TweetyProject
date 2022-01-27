@@ -26,12 +26,10 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
-import org.tweetyproject.logics.pl.syntax.Conjunction;
-import org.tweetyproject.logics.pl.syntax.Negation;
+import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
@@ -79,8 +77,8 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 			// so the next witness cannot be the same
 			Collection<PlFormula> f = new HashSet<PlFormula>();
 			for(Proposition p: w)
-				f.add(p);
-			prop.add(new Negation(new Conjunction(f)));
+				f.add((PlFormula)p.complement());
+			prop.add(new Disjunction(f));
 		}while(true);
 		return result;
 	}
@@ -107,10 +105,10 @@ public abstract class AbstractSatExtensionReasoner extends AbstractExtensionReas
 			out.put(a, new Proposition("out_" + a.getName()));
 			undec.put(a, new Proposition("undec_" + a.getName()));
 			// for every argument only one of in/out/undec can be true
-			beliefSet.add(in.get(a).combineWithOr(out.get(a).combineWithOr(undec.get(a))));
-			beliefSet.add((PlFormula)in.get(a).combineWithAnd(out.get(a)).complement());
-			beliefSet.add((PlFormula)in.get(a).combineWithAnd(undec.get(a)).complement());
-			beliefSet.add((PlFormula)out.get(a).combineWithAnd(undec.get(a)).complement());
+			beliefSet.add(in.get(a).combineWithOr(out.get(a)).combineWithOr(undec.get(a)));
+			beliefSet.add((PlFormula)in.get(a).complement().combineWithOr(out.get(a).complement()));
+			beliefSet.add((PlFormula)in.get(a).complement().combineWithOr(undec.get(a).complement()));
+			beliefSet.add((PlFormula)out.get(a).complement().combineWithOr(undec.get(a).complement()));
 		}
 		beliefSet.addAll(this.getPropositionalCharacterisationBySemantics(aaf,in,out,undec));
 		return beliefSet;

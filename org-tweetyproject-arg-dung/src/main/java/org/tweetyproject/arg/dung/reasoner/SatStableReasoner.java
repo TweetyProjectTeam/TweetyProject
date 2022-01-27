@@ -25,7 +25,6 @@ import java.util.Map;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.logics.pl.sat.SatSolver;
-import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.Proposition;
@@ -59,19 +58,16 @@ public class SatStableReasoner extends AbstractSatExtensionReasoner{
 			if(aaf.getAttackers(a).isEmpty()){
 				beliefSet.add(((PlFormula)in.get(a)));
 			}else{
-				Collection<PlFormula> attackersAnd = new HashSet<PlFormula>();//new Tautology();
+				beliefSet.add((PlFormula)undec.get(a).complement());
 				Collection<PlFormula> attackersOr = new HashSet<PlFormula>();//new Contradiction();
-				Collection<PlFormula> attackersNotAnd = new HashSet<PlFormula>();//new Tautology();
 				Collection<PlFormula> attackersNotOr = new HashSet<PlFormula>();//new Contradiction();
 				for(Argument b: aaf.getAttackers(a)){
-					attackersAnd.add(out.get(b));
 					attackersOr.add(in.get(b));
-					attackersNotAnd.add((PlFormula)in.get(b).complement());
-					attackersNotOr.add((PlFormula)out.get(b).complement());
+					attackersNotOr.add((PlFormula)out.get(b).complement());					
+					beliefSet.add(((PlFormula)in.get(a).complement()).combineWithOr((PlFormula)out.get(b)));
 				}
-				beliefSet.add(((PlFormula)out.get(a).complement()).combineWithOr(new Disjunction(attackersOr)));
-				beliefSet.add(((PlFormula)in.get(a).complement()).combineWithOr(new Conjunction(attackersAnd)));
-				beliefSet.add((PlFormula)undec.get(a).complement());
+				beliefSet.add(new Disjunction(attackersOr).combineWithOr((PlFormula)out.get(a).complement()));
+				beliefSet.add(new Disjunction(attackersNotOr).combineWithOr((PlFormula)in.get(a)));		
 			}
 		}
 		return beliefSet;

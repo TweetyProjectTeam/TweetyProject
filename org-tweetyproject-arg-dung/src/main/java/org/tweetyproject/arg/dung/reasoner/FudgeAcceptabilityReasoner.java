@@ -27,7 +27,6 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
-import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
@@ -85,14 +84,14 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 			out2.put(a, new Proposition("out2_" + a.getName()));
 			undec2.put(a, new Proposition("undec2_" + a.getName()));
 			// for every argument only one of in/out/undec can be true
-			this.baseFormulas.add(in.get(a).combineWithOr(out.get(a).combineWithOr(undec.get(a))));
-			this.baseFormulas.add((PlFormula)in.get(a).combineWithAnd(out.get(a)).complement());
-			this.baseFormulas.add((PlFormula)in.get(a).combineWithAnd(undec.get(a)).complement());
-			this.baseFormulas.add((PlFormula)out.get(a).combineWithAnd(undec.get(a)).complement());
-			this.baseFormulas2.add(in2.get(a).combineWithOr(out2.get(a).combineWithOr(undec2.get(a))));
-			this.baseFormulas2.add((PlFormula)in2.get(a).combineWithAnd(out2.get(a)).complement());
-			this.baseFormulas2.add((PlFormula)in2.get(a).combineWithAnd(undec2.get(a)).complement());
-			this.baseFormulas2.add((PlFormula)out2.get(a).combineWithAnd(undec2.get(a)).complement());
+			this.baseFormulas.add(in.get(a).combineWithOr(out.get(a)).combineWithOr(undec.get(a)));
+			this.baseFormulas.add((PlFormula)in.get(a).complement().combineWithOr(out.get(a).complement()));
+			this.baseFormulas.add((PlFormula)in.get(a).complement().combineWithOr(undec.get(a).complement()));
+			this.baseFormulas.add((PlFormula)out.get(a).complement().combineWithOr(undec.get(a).complement()));
+			this.baseFormulas2.add(in2.get(a).combineWithOr(out2.get(a)).combineWithOr(undec2.get(a)));
+			this.baseFormulas2.add((PlFormula)in2.get(a).complement().combineWithOr(out2.get(a).complement()));
+			this.baseFormulas2.add((PlFormula)in2.get(a).complement().combineWithOr(undec2.get(a).complement()));
+			this.baseFormulas2.add((PlFormula)out2.get(a).complement().combineWithOr(undec2.get(a).complement()));
 		}	
 		// an argument is in iff all attackers are out
 		this.attackFormulas = new PlBeliefSet();
@@ -103,37 +102,27 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 				this.baseFormulas.add(((PlFormula)in.get(a)));
 				this.baseFormulas2.add(((PlFormula)in2.get(a)));
 			}else{
-				Collection<PlFormula> attackersAnd = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersOr = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersNotAnd = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersNotOr = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersAnd2 = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersOr2 = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersNotAnd2 = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersNotOr2 = new HashSet<PlFormula>();
+				Collection<PlFormula> attackersOr = new HashSet<PlFormula>();//new Contradiction();
+				Collection<PlFormula> attackersNotOr = new HashSet<PlFormula>();//new Contradiction();
+				Collection<PlFormula> attackersOr2 = new HashSet<PlFormula>();//new Contradiction();
+				Collection<PlFormula> attackersNotOr2 = new HashSet<PlFormula>();//new Contradiction();
 				for(Argument b: af.getAttackers(a)){
-					attackersAnd.add(out.get(b));
 					attackersOr.add(in.get(b));
-					attackersNotAnd.add((PlFormula)in.get(b).complement());
-					attackersNotOr.add((PlFormula)out.get(b).complement());
-					attackersAnd2.add(out2.get(b));
+					attackersNotOr.add((PlFormula)out.get(b).complement());					
+					this.baseFormulas.add(((PlFormula)in.get(a).complement()).combineWithOr((PlFormula)out.get(b)));
 					attackersOr2.add(in2.get(b));
-					attackersNotAnd2.add((PlFormula)in2.get(b).complement());
-					attackersNotOr2.add((PlFormula)out2.get(b).complement());
+					attackersNotOr2.add((PlFormula)out2.get(b).complement());					
+					this.baseFormulas2.add(((PlFormula)in2.get(a).complement()).combineWithOr((PlFormula)out2.get(b)));
 					Proposition attack = new Proposition("r" + b.getName() + "_" + a.getName());
 					oneAttack.add(attack);
 					this.attackFormulas.add(new Negation(attack).combineWithOr(this.in.get(b)));
 					this.attackFormulas.add(new Negation(attack).combineWithOr(this.in2.get(a)));
 					this.attackFormulas.add(attack.combineWithOr(new Negation(this.in2.get(a))).combineWithOr(new Negation(this.in.get(b))));
 				}
-				this.baseFormulas.add(((PlFormula)out.get(a).complement()).combineWithOr(new Disjunction(attackersOr)));
-				this.baseFormulas.add(((PlFormula)in.get(a).complement()).combineWithOr(new Conjunction(attackersAnd)));
-				this.baseFormulas.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Conjunction(attackersNotAnd)));
-				this.baseFormulas.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Disjunction(attackersNotOr)));
-				this.baseFormulas2.add(((PlFormula)out2.get(a).complement()).combineWithOr(new Disjunction(attackersOr2)));
-				this.baseFormulas2.add(((PlFormula)in2.get(a).complement()).combineWithOr(new Conjunction(attackersAnd2)));
-				this.baseFormulas2.add(((PlFormula)undec2.get(a).complement()).combineWithOr(new Conjunction(attackersNotAnd2)));
-				this.baseFormulas2.add(((PlFormula)undec2.get(a).complement()).combineWithOr(new Disjunction(attackersNotOr2)));
+				this.baseFormulas.add(new Disjunction(attackersOr).combineWithOr((PlFormula)out.get(a).complement()));
+				this.baseFormulas.add(new Disjunction(attackersNotOr).combineWithOr((PlFormula)in.get(a)));	
+				this.baseFormulas2.add(new Disjunction(attackersOr2).combineWithOr((PlFormula)out2.get(a).complement()));
+				this.baseFormulas2.add(new Disjunction(attackersNotOr2).combineWithOr((PlFormula)in2.get(a)));
 			}
 		}
 	}

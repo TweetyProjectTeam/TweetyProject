@@ -62,14 +62,22 @@ public abstract class PlFormula implements ClassicalFormula {
 	public Conjunction combineWithAnd(Conjunctable f) {
 		if (!(f instanceof PlFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a propositional formula.");
-		return new Conjunction(this, (PlFormula) f);
+		if(this instanceof Conjunction) {
+			Conjunction c = new Conjunction(((Conjunction)this).getFormulas());
+			c.add((PlFormula)f);
+			return c;
+		}else return new Conjunction(this, (PlFormula) f);
 	}
 
 	@Override
 	public Disjunction combineWithOr(Disjunctable f) {
 		if (!(f instanceof PlFormula))
 			throw new IllegalArgumentException("The given formula " + f + " is not a propositional formula.");
-		return new Disjunction(this, (PlFormula) f);
+		if(this instanceof Disjunction) {
+			Disjunction d = new Disjunction(((Disjunction)this).getFormulas());
+			d.add((PlFormula)f);
+			return d;
+		}else return new Disjunction(this, (PlFormula) f);
 	}
 
 	/**

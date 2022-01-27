@@ -29,7 +29,6 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.InferenceMode;
 import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
-import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
@@ -80,34 +79,28 @@ public class SeeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 			out.put(a, new Proposition("out_" + a.getName()));
 			undec.put(a, new Proposition("undec_" + a.getName()));
 			// for every argument only one of in/out/undec can be true
-			beliefSet.add(in.get(a).combineWithOr(out.get(a).combineWithOr(undec.get(a))));
-			beliefSet.add((PlFormula)in.get(a).combineWithAnd(out.get(a)).complement());
-			beliefSet.add((PlFormula)in.get(a).combineWithAnd(undec.get(a)).complement());
-			beliefSet.add((PlFormula)out.get(a).combineWithAnd(undec.get(a)).complement());
+			beliefSet.add(in.get(a).combineWithOr(out.get(a)).combineWithOr(undec.get(a)));
+			beliefSet.add((PlFormula)in.get(a).complement().combineWithOr(out.get(a).complement()));
+			beliefSet.add((PlFormula)in.get(a).complement().combineWithOr(undec.get(a).complement()));
+			beliefSet.add((PlFormula)out.get(a).complement().combineWithOr(undec.get(a).complement()));
 		}		
 		// an argument is in iff all attackers are out
 		for(Argument a: aaf){
 			if(aaf.getAttackers(a).isEmpty()){
 				beliefSet.add(((PlFormula)in.get(a)));
 			}else{
-				Collection<PlFormula> attackersAnd = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersOr = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersNotAnd = new HashSet<PlFormula>();
-				Collection<PlFormula> attackersNotOr = new HashSet<PlFormula>();
+				Collection<PlFormula> attackersOr = new HashSet<PlFormula>();//new Contradiction();
+				Collection<PlFormula> attackersNotOr = new HashSet<PlFormula>();//new Contradiction();
 				for(Argument b: aaf.getAttackers(a)){
-					attackersAnd.add(out.get(b));
 					attackersOr.add(in.get(b));
-					attackersNotAnd.add((PlFormula)in.get(b).complement());
-					attackersNotOr.add((PlFormula)out.get(b).complement());
+					attackersNotOr.add((PlFormula)out.get(b).complement());					
+					beliefSet.add(((PlFormula)in.get(a).complement()).combineWithOr((PlFormula)out.get(b)));
 				}
-				beliefSet.add(((PlFormula)out.get(a).complement()).combineWithOr(new Disjunction(attackersOr)));
-				beliefSet.add(((PlFormula)in.get(a).complement()).combineWithOr(new Conjunction(attackersAnd)));
+				beliefSet.add(new Disjunction(attackersOr).combineWithOr((PlFormula)out.get(a).complement()));
+				beliefSet.add(new Disjunction(attackersNotOr).combineWithOr((PlFormula)in.get(a)));		
 				// for stable semantics, no argument can be undec
 				if(this.semantics.equals(Semantics.ST)) {
 					beliefSet.add((PlFormula)undec.get(a).complement());
-				}else {
-					beliefSet.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Conjunction(attackersNotAnd)));
-					beliefSet.add(((PlFormula)undec.get(a).complement()).combineWithOr(new Disjunction(attackersNotOr)));
 				}
 			}
 		}
