@@ -138,6 +138,11 @@ public class Disjunction extends AssociativePlFormula {
 	 */
 	@Override
 	public Conjunction toCnf() {
+		if(this.isClause()) {
+			Conjunction c = new Conjunction();
+			c.add(this);
+			return c;
+		}
 		Set<Set<PlFormula>> conjs = new HashSet<Set<PlFormula>>();
 		for (PlFormula f : this)
 			conjs.add(new HashSet<PlFormula>(f.toCnf()));
