@@ -23,9 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This class models a round robin protocol for multi-agent systems.
  * This protocol assumes some order of the agents and asks each agent
@@ -44,8 +41,6 @@ import org.slf4j.LoggerFactory;
  */
 public class RoundRobinProtocol extends RigidProtocol {
 
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(RoundRobinProtocol.class);
 	
 	/** The ordering of the agents. */
 	private List<Agent> agentsOrdered;	
@@ -94,7 +89,6 @@ public class RoundRobinProtocol extends RigidProtocol {
 	protected Set<ActionEvent> doStep() throws ProtocolTerminatedException{
 		Environment environment = this.getMultiAgentSystem().getEnvironment();
 		Executable action = this.agentsOrdered.get(this.currendIdx).next(environment.getPercepts(this.agentsOrdered.get(this.currendIdx)));
-		log.trace("Action of agent " + this.agentsOrdered.get(this.currendIdx) + ": " + action);
 		if(!action.isNoOperation()){
 			environment.execute(action);
 			this.setHasPerformedNoOperation(this.agentsOrdered.get(this.currendIdx));

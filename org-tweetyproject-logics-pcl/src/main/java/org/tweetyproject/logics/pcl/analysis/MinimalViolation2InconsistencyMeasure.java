@@ -26,8 +26,6 @@ import org.ojalgo.matrix.PrimitiveMatrix;
 import org.ojalgo.optimisation.Expression;
 import org.ojalgo.optimisation.ExpressionsBasedModel;
 import org.ojalgo.optimisation.Variable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.tweetyproject.logics.commons.analysis.BeliefSetInconsistencyMeasure;
 import org.tweetyproject.logics.pcl.syntax.PclBeliefSet;
@@ -45,10 +43,6 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
 public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistencyMeasure<ProbabilisticConditional> {
 
 
-	/**
-	 * Logger.
-	 */
-	static protected Logger log = LoggerFactory.getLogger(MinimalViolation2InconsistencyMeasure.class);
 
 
 	@Override
@@ -58,16 +52,11 @@ public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistenc
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getMinimalSignature());
 		int noWorlds = worlds.size();
 		
-		
 
-		log.debug("Create expression based model.");
 		
 		Variable[] tmpVariables = OjAlgoPclUtils.createVariables(noWorlds);				
 		ExpressionsBasedModel tmpModel = new ExpressionsBasedModel(tmpVariables);
 		
-		
-		
-		log.debug("Create objective.");
 		
 		//Objective is x' Q x + C' x
 		//Q = A' A for constraint matrix A, C' = 0 
@@ -87,19 +76,14 @@ public class MinimalViolation2InconsistencyMeasure extends BeliefSetInconsistenc
 		tmpExpr.weight(BigMath.ONE);
 		
 		
-		
-		log.debug("Create normalization constraint.");
-		
 		OjAlgoPclUtils.addProbabilityNormalizationConstraint(tmpModel);
 		
-		
 
-		log.debug("Solve.");
 		
 		long time = System.currentTimeMillis();
 		//by construction, the correct solution is the square root of the computed solution
 		double inc = Math.sqrt(tmpModel.minimise().getValue());
-		log.info("Finished computation after "+(System.currentTimeMillis()-time)+" ms.");
+
 		
 		return inc;
 		

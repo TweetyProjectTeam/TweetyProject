@@ -35,8 +35,6 @@ import org.tweetyproject.logics.rcl.semantics.RelationalRankingFunction;
 import org.tweetyproject.logics.rcl.syntax.RclBeliefSet;
 import org.tweetyproject.logics.rcl.syntax.RelationalConditional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class models a relational brute force c-reasoner for relational conditional logic. Reasoning is performed
@@ -60,8 +58,6 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefSet,FolFormula>,ModelProvider<RelationalConditional,RclBeliefSet,RelationalRankingFunction> {
 
-	/** Logger. */
-	static private Logger log = LoggerFactory.getLogger(SimpleRelationalCReasoner.class);
 	
 	/**
 	 * indicates whether the computed c-representation is simple.
@@ -254,7 +250,6 @@ public class SimpleRelationalCReasoner implements QualitativeReasoner<RclBeliefS
 				}
 				debugMessage += "]";
 			}				
-			log.debug(debugMessage);
 		}		
 		candidate.normalize();
 		return candidate;

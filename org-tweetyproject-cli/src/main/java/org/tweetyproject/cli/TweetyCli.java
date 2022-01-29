@@ -43,8 +43,6 @@ import org.tweetyproject.logics.rpcl.writers.DefaultProbabilityDistributionWrite
 import org.tweetyproject.math.opt.ProblemInconsistentException;
 import org.tweetyproject.math.probability.Probability;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a simple command line interface for accessing
@@ -54,10 +52,6 @@ import org.slf4j.LoggerFactory;
  */
 public class TweetyCli {
 
-	/**
-	 * Logger.
-	 */
-	private static Logger log = LoggerFactory.getLogger(TweetyCli.class);
 	
 	/** The argument name for the input file(s) */
 	public static final String ARG__INPUT_FILES = "--input";
@@ -174,9 +168,6 @@ public class TweetyCli {
 				query = args[++i];
 		}
 		
-
-		
-		log.info("Start logging.");
 		
 		// parse options
 		// TODO generalize this (at the moment, only "rpcl.semantics={averaging,aggregating}"
@@ -205,7 +196,6 @@ public class TweetyCli {
 				FolParser folParser = new FolParser();
 				folParser.setSignature(((RpclParser) inputParser[0]).getSignature());
 				Probability result = p.probability((FolFormula) folParser.parseFormula(query));
-				log.info("Probability of '" + query + "' on knowledge base '" + kb + "'  is: " + result.getValue());
 				System.out.println(result.getValue());
 				System.exit(0);
 			}else if(inputParser[1] instanceof RpclCondensedProbabilityDistributionParser) {
@@ -215,20 +205,19 @@ public class TweetyCli {
 				FolParser folParser = new FolParser();
 				folParser.setSignature(((RpclParser) inputParser[0]).getSignature());
 				Probability result = p.probability((FolFormula)folParser.parseFormula(query));
-				log.info("Probability of '" + query + "' on knowledge base '" + kb + "' is: " + result.getValue());
 				System.out.println(result.getValue());
 				System.exit(0);
-			}else log.error("Wrong parser");
+			}else {}
 		} catch (FileNotFoundException e) {
-			log.error(e.getMessage());			
+			
 		} catch (ParserException e) {
-			log.error(e.getMessage());
+
 		} catch (IOException e) {
-			log.error(e.getMessage());
+
 		} catch (ProblemInconsistentException e){
-			log.error(e.getMessage());
+
 		}
-		log.info("Application terminated with errors.");
+
 		System.err.println("Error: see log for details.");
 		System.exit(1);
 	}

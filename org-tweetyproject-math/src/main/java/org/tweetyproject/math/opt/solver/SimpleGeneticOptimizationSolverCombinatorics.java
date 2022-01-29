@@ -7,9 +7,6 @@ import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import org.tweetyproject.math.opt.problem.CombinatoricsProblem;
 import org.tweetyproject.math.term.ElementOfCombinatoricsProb;
@@ -17,9 +14,7 @@ import org.tweetyproject.math.term.ElementOfCombinatoricsProb;
 
 public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsSolver{
 
-	
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(SimpleGeneticOptimizationSolver.class);
+
 	
 	/** The probability of changing the value of a variable in the mutation step. */
 	private static final double VAR_MUTATE_PROB = 0.2; 
@@ -204,7 +199,6 @@ public class SimpleGeneticOptimizationSolverCombinatorics extends CombinatoricsS
 			currentPopulation.clear();			
 			for(int i = 0; i < this.populationSize; i++)
 				currentPopulation.add(p.poll());
-			log.info("Optimizating... current value of target function: " + current_val);
 		}while(previous_val - current_val > this.precision || it++ < this.minIterations);
 		//choose the result
 		ArrayList<ElementOfCombinatoricsProb> result = new ArrayList<ElementOfCombinatoricsProb>();

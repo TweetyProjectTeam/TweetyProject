@@ -61,9 +61,7 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getMinimalSignature());
 		int noWorlds = worlds.size();
 		
-		
-		
-		log.debug("Create constraint matrix and objective.");
+
 		
 		PrimitiveMatrix tmpM = OjAlgoPclUtils.createConstraintMatrix(beliefSet, worlds);
 		
@@ -73,25 +71,19 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 		
 		PrimitiveDenseStore tmpC = PrimitiveDenseStore.FACTORY.makeZero(noWorlds, 1);
 
-		
 
-		log.debug("Create normalization constraint.");
 		//Equations AE x = BE
 		
 		PrimitiveMatrix tmpAE = OjAlgoMathUtils.getOnes(1, noWorlds);
 		SingleStore<Double> tmpBE = SingleStore.makePrimitive(1.0);
 
-		
-		
-		log.debug("Create non-negativity constraints.");
+
 		//Inequalities AI x <= BI
 
 		PrimitiveMatrix tmpAI = OjAlgoMathUtils.getUnityMultiple(noWorlds, -1);
 		PrimitiveDenseStore tmpBI = PrimitiveDenseStore.FACTORY.makeZero(noWorlds, 1);
 		
-		
 
-		log.debug("Create solver.");
 
 		//by construction, the correct solution is the square root of the computed solution
 		QuadraticSolver qSolver = new QuadraticSolver.Builder(tmpQ.toPrimitiveStore(), tmpC)
@@ -102,11 +94,8 @@ public class MinimalViolationEuclideanMachineShopOjAlgoMatrix extends MinimalVio
 		
 		long time = System.currentTimeMillis();
 		Optimisation.Result tmpResult = qSolver.solve();
-		log.info("Finished computation after "+(System.currentTimeMillis()-time)+" ms. State: "+tmpResult.getState());
+
 		
-		
-		
-		log.debug("Repair knowledge base.");
 		
 		PhysicalStore<Double> result = BigMatrix.FACTORY.columns(tmpResult).toPrimitiveStore();
 		ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getMinimalSignature());

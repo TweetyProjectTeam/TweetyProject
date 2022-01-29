@@ -42,8 +42,6 @@ import org.tweetyproject.logics.fol.syntax.Negation;
 import org.tweetyproject.logics.commons.syntax.RelationalFormula;
 import org.tweetyproject.logics.fol.syntax.Tautology;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -54,10 +52,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ReferenceWorld extends AbstractInterpretation<FolBeliefSet,FolFormula> implements Map<Predicate,InstanceAssignment>{
 
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(ReferenceWorld.class); 
+
 	
 	/**
 	 * The instance assignments of this reference worlds
@@ -166,7 +161,6 @@ public class ReferenceWorld extends AbstractInterpretation<FolBeliefSet,FolFormu
 				result *= MathTools.binomial(
 						equivalenceClass.size()-this.getNumberOfOccurences(f, p, equivalenceClass, true)-this.getNumberOfOccurences(f, p, equivalenceClass, false),
 						this.get(p, equivalenceClass)-this.getNumberOfOccurences(f, p, equivalenceClass, true));
-		log.debug("Determined multiplicator for formula '" + f + "': " + result);
 		return result;
 	}
 	
@@ -198,7 +192,6 @@ public class ReferenceWorld extends AbstractInterpretation<FolBeliefSet,FolFormu
 			}			
 		}else 
 			throw new IllegalArgumentException("The given formula is neither a literal nor a conjunction.");
-		log.debug("Determined number of occurences of '" + f + "' in reference world '" + this + "' in " + ((positive)?("positive"):("negative")) + " form: " + result );
 		return result;
 	}
 		

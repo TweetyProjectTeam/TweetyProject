@@ -45,8 +45,6 @@ import org.tweetyproject.math.term.IntegerConstant;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class is capable of restoring consistency of a possible inconsistent probabilistic
@@ -58,11 +56,7 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 
 	private OptimizationRootFinder rootFinder;
 	
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(PclBeliefSetQuadraticErrorMinimizationMachineShop.class);
-	
+
 	/**
 	 * The culpability measure this machine shop bases on.
 	 */
@@ -89,7 +83,6 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 		// check whether the belief set is already consistent
 		if(new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet))
 			return beliefSet;
-		log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem to restore consistency.");
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal
 		// distance to a consistent belief set.
@@ -167,7 +160,6 @@ public class PclBeliefSetQuadraticErrorMinimizationMachineShop implements Belief
 		problem.setTargetFunction(targetFunction);		
 		try{
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
-			log.trace("Problem solved, modifying belief set.");
 			// Modify belief set
 			PclBeliefSet newBeliefSet = new PclBeliefSet();
 			for(ProbabilisticConditional pc: beliefSet){

@@ -30,8 +30,6 @@ import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.math.probability.Probability;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,10 +46,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PclParser extends Parser<PclBeliefSet,ProbabilisticConditional>{
 
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(PclParser.class);
+
 	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.kr.Parser#parseBeliefBase(java.io.Reader)
@@ -91,7 +86,7 @@ public class PclParser extends Parser<PclBeliefSet,ProbabilisticConditional>{
 		}catch(Exception e){
 			throw new ParserException(e);
 		}
-		log.trace("Parsing conditional '" + s + "'");
+
 		// check probability 
 		if(!s.contains("[")) throw new ParserException("Missing '[' in conditional definition.");
 		if(!s.contains("]")) throw new ParserException("Missing ']' in conditional definition.");

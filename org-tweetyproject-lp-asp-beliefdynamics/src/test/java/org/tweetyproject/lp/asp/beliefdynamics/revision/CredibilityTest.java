@@ -39,8 +39,7 @@ import org.tweetyproject.lp.asp.syntax.ASPRule;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * Tests the revision method described in Kruempelmann et al. 2008. 
@@ -49,8 +48,6 @@ import org.slf4j.LoggerFactory;
  */
 public class CredibilityTest {
 
-	/** The logger used for output in the angerona Framework */
-	static private Logger LOG = LoggerFactory.getLogger(CredibilityTest.class);
 	
 	private CredibilityRevision revision;
 	
@@ -64,16 +61,14 @@ public class CredibilityTest {
 				revision = new CredibilityRevision(
 						new DLVSolver(path)); //TODO should be DLVComplex
 			}
-		} else {
-			LOG.error("Cannot initalize ASP unit tests, missing environment variable 'DLVCOMPLEX_PATH', skipping tests");
-		}
+		} 
 	}
 	
 	private Program loadFromJar(String filename) {
 		String jarPath = pre + filename;
 		InputStream stream = getClass().getResourceAsStream(jarPath);
 		if(stream == null) {
-			LOG.error("Cannot find: '{}', skipping test", jarPath);
+			
 			return null;
 		}
 		
@@ -84,7 +79,7 @@ public class CredibilityTest {
 		try {
 			reval = visitor.visit(parser.Program(), null);
 		} catch (ParseException e) {
-			LOG.error("Cannot parse: '{}' by reason: '{}', skipping test", jarPath, e.getMessage());
+			
 		}
 		return reval;
 	}

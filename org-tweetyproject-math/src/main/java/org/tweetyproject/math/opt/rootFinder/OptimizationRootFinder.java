@@ -27,8 +27,6 @@ import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 import org.tweetyproject.math.opt.problem.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,11 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class OptimizationRootFinder extends RootFinder {
 
-	/**
-	 * Logger.
-	 */
-	/** reference to the logback logger instance */
-	private static Logger LOG = LoggerFactory.getLogger(OptimizationRootFinder.class);
+
 	
 	
 	/**
@@ -68,7 +62,6 @@ public abstract class OptimizationRootFinder extends RootFinder {
 	 * @return an optimization problem for the task of root finding.
 	 */
 	protected OptimizationProblem buildOptimizationProblem(){
-		LOG.trace("Constructing optimization problem to find a root of the function '" + this.getFunctions() + "'.");
 		OptimizationProblem problem = new OptimizationProblem(OptimizationProblem.MINIMIZE);
 		Term target = null;
 		
@@ -79,7 +72,6 @@ public abstract class OptimizationRootFinder extends RootFinder {
 			else target = target.add(f.mult(f));
 			
 		problem.setTargetFunction(target);
-		LOG.trace("Constructing optimization problem finished; the target function is '" + target + "'.");
 		return problem;
 	}
 	

@@ -36,8 +36,6 @@ import org.tweetyproject.math.term.IntegerConstant;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,10 +46,6 @@ import org.slf4j.LoggerFactory;
  */
 public class HessianGradientDescent extends Solver {
 
-	/**
-	 * Logger.
-	 */
-	private Logger log = LoggerFactory.getLogger(HessianGradientDescent.class);
 	
 	private static final double PRECISION = 0.00001;
 	
@@ -72,7 +66,7 @@ public class HessianGradientDescent extends Solver {
 		System.out.println(problem.toString());
 		if(problem.size() > 0)
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
-		this.log.trace("Solving the following optimization problem using hessian gradient descent:\n===BEGIN===\n" + problem + "\n===END===");
+		
 		Term func = ((OptimizationProblem)problem).getTargetFunction();
 		if(((OptimizationProblem)problem).getType() == OptimizationProblem.MAXIMIZE)
 			func = new IntegerConstant(-1).mult(func);	
@@ -98,11 +92,9 @@ public class HessianGradientDescent extends Solver {
 		double[] dir = new double[variables.size()];
 		double[] evaluatedGradient = new double[variables.size()];
 		double distance;
-		this.log.trace("Starting optimization.");
 		while(true){
 			evaluatedGradient = Term.evaluateVector(gradient, currentGuess, variables);
 			distance = VectorTools.manhattanDistanceToZero(evaluatedGradient);
-			this.log.trace("Current manhattan distance of gradient to zero: " + distance);
 			if(distance < HessianGradientDescent.PRECISION)
 				break;
 			evaluatedHessian = Term.evaluateMatrix(hessian, currentGuess, variables);
@@ -113,7 +105,6 @@ public class HessianGradientDescent extends Solver {
 		idx = 0;
 		for(Variable v: variables)
 			result.put(v, new FloatConstant(currentGuess[idx++]));
-		this.log.trace("Optimum found: " + result);
 		return result;
 	}
 

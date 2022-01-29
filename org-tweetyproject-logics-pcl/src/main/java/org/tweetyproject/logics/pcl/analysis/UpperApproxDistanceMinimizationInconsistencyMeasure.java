@@ -41,8 +41,6 @@ import org.tweetyproject.math.term.Logarithm;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class models an approximation from above to the distance minimization inconsistency measure as proposed in [Thimm,UAI,2009], see [PhD thesis, Thimm].
@@ -57,10 +55,6 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		this.rootFinder = rootFinder;
 	}
 	
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(DistanceMinimizationInconsistencyMeasure.class);
 	
 	/**
 	 * For archiving.
@@ -73,18 +67,15 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 	@Override
 	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {
 		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
-		log.trace("Starting to compute minimal distance inconsistency measure for '" + beliefSet + "'.");
 		// check archive
 		if(this.archive.containsKey(beliefSet))
 			return this.archive.get(beliefSet);
 		// first check whether the belief set is consistent		
-		log.trace("Checking whether '" + beliefSet + "' is inconsistent.");
 		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet)){
 			// update archive
 			this.archive.put(beliefSet, 0d);
 			return 0d;
 		}
-		log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem for computing the measure.");
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal
 		// distance to a consistent belief set.
@@ -157,7 +148,7 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 		try{			
 			Map<Variable,Term> solution = Solver.getDefaultGeneralSolver().solve(problem);
 			// transform into eta values
-			String values = "Eta-values for the solution:\n===BEGIN===\n";
+
 			Double result = 0d;
 			for(ProbabilisticConditional pc: beliefSet){
 				Double eta = solution.get(mus.get(pc)).doubleValue() - solution.get(nus.get(pc)).doubleValue();
@@ -171,12 +162,11 @@ public class UpperApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 						eta /= denom;
 					else eta = 0d;
 				}
-				values += pc + "\t: " + eta + "\t -- \t(" + solution.get(mus.get(pc)).doubleValue() + " - " + solution.get(nus.get(pc)).doubleValue() + ") / " + denom + "\n";
+				
 				result += Math.abs(eta);
 			}
-			values += "===END===";
-			log.debug(values);
-			log.debug("Problem solved, the measure is '" + result + "'.");
+
+
 			// update archive
 			this.archive.put(beliefSet, result);
 			// return value of target function

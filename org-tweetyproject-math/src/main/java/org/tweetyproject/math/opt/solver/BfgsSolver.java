@@ -31,8 +31,6 @@ import org.tweetyproject.math.term.IntegerConstant;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,10 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BfgsSolver extends Solver {
 
-	/**
-	 * Logger.
-	 */
-	private Logger log = LoggerFactory.getLogger(BfgsSolver.class);
+
 	
 	private static final double PRECISION = 0.000000000000000001;
 	
@@ -88,7 +83,6 @@ public class BfgsSolver extends Solver {
 		while(true){
 			evaluatedGradient = this.evaluate(gradient, currentGuess, variables);
 			distanceToZero = evaluatedGradient.distanceToZero();
-			this.log.trace("Current manhattan distance of gradient to zero: " + distanceToZero);
 			if(distanceToZero < actualPrecision)
 				break;
 			searchDirection = approxInverseHessian.mult(evaluatedGradient.mult(new IntegerConstant(-1))).simplify();			

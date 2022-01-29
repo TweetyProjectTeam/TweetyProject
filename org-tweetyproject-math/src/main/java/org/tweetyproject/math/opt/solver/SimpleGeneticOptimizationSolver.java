@@ -28,9 +28,6 @@ import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.tweetyproject.math.GeneralMathException;
 import org.tweetyproject.math.equation.Inequation;
 import org.tweetyproject.math.equation.Statement;
@@ -52,9 +49,7 @@ import org.tweetyproject.math.term.Variable;
  * @author Matthias Thimm
  */
 public class SimpleGeneticOptimizationSolver extends Solver{
-	
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(SimpleGeneticOptimizationSolver.class);
+
 	
 	/** The probability of changing the value of a variable in the mutation step. */
 	private static final double VAR_MUTATE_PROB = 0.2; 
@@ -251,7 +246,6 @@ public class SimpleGeneticOptimizationSolver extends Solver{
 			currentPopulation.clear();			
 			for(int i = 0; i < this.populationSize; i++)
 				currentPopulation.add(p.poll());
-			log.info("Optimizating... current value of target function: " + current_val);
 		}while(previous_val - current_val > this.precision || it++ < this.minIterations);
 		// convert map again
 		Map<Variable,Term> result = new HashMap<Variable,Term>();

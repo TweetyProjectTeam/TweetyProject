@@ -27,8 +27,6 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Generates agents of type T1.
@@ -36,8 +34,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GroundedGameT1AgentGenerator extends GroundedGameAgentGenerator {
 
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(GroundedGameT1AgentGenerator.class);
 	
 	/** The configuration for generating agents. */
 	private T1Configuration config;
@@ -58,7 +54,6 @@ public class GroundedGameT1AgentGenerator extends GroundedGameAgentGenerator {
 	@Override
 	protected BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params) {
 		BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension<DungTheory>)params.get(this.getFaction()),this.getFaction());
-		log.info("Generated a T1-belief state for " + this.getFaction() + " agent: " + state);
 		return state;	
 	}
 	

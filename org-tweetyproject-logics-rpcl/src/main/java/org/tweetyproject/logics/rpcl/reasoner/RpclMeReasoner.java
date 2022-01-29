@@ -54,8 +54,6 @@ import org.tweetyproject.math.term.Logarithm;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * General ME-reasoner for RPCL.
@@ -64,10 +62,6 @@ import org.slf4j.LoggerFactory;
  */
 public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFormula>, ModelProvider<RelationalProbabilisticConditional,RpclBeliefSet,RpclProbabilityDistribution<?>> {
 	
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(RpclMeReasoner.class);
 	
 	/**
 	 * Integer constant for standard inference.
@@ -96,7 +90,6 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 	 */
 	public RpclMeReasoner(RpclSemantics semantics, int inferenceType){
 		if(inferenceType != RpclMeReasoner.STANDARD_INFERENCE && inferenceType != RpclMeReasoner.LIFTED_INFERENCE){
-			log.error("The inference type must be either 'standard' or 'lifted'.");
 			throw new IllegalArgumentException("The inference type must be either 'standard' or 'lifted'.");
 		}
 		this.semantics = semantics;
@@ -166,18 +159,16 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 	 */
 	public RpclProbabilityDistribution<?> getModel(RpclBeliefSet kb, FolSignature signature) {
 		if(!kb.getMinimalSignature().isSubSignature(signature)){
-			log.error("Signature must be super-signature of the belief set's signature.");
 			throw new IllegalArgumentException("Signature must be super-signature of the belief set's signature.");
 		}
 		if(inferenceType == RpclMeReasoner.LIFTED_INFERENCE)
 			for(Predicate p: ((FolSignature)kb.getMinimalSignature()).getPredicates())
 				if(p.getArity()>1){
-					log.error("Lifted inference only applicable for signatures containing only unary predicates.");
 					throw new IllegalArgumentException("Lifted inference only applicable for signatures containing only unary predicates.");
 				}
-		log.info("Computing ME-distribution using \"" + this.semantics.toString() + "\" and " + ((this.inferenceType==RpclMeReasoner.LIFTED_INFERENCE)?("lifted"):("standard")) + " inference for the knowledge base " + kb.toString() + ".");
+
 		// TODO extract common parts from the following if/else
-		log.info("Constructing optimization problem for finding the ME-distribution.");
+
 		if(this.inferenceType == RpclMeReasoner.LIFTED_INFERENCE){
 			// determine equivalence classes of the knowledge base
 			Set<Set<Constant>> equivalenceClasses = kb.getEquivalenceClasses(signature);
@@ -237,7 +228,6 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 				}
 				return p;
 			}catch(GeneralMathException e){
-				log.error("The knowledge base " + kb + " is inconsistent.");
 				throw new ProblemInconsistentException();				
 			}
 		}else{
@@ -289,7 +279,6 @@ public class RpclMeReasoner implements QuantitativeReasoner<RpclBeliefSet,FolFor
 				}
 				return p;
 			}catch(GeneralMathException e){
-				log.error("The knowledge base " + kb + " is inconsistent.");
 				throw new ProblemInconsistentException();				
 			}
 		}

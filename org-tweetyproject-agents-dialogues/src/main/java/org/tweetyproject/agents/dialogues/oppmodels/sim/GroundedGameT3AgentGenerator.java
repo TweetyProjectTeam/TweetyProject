@@ -36,8 +36,6 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.math.probability.Probability;
 import org.tweetyproject.math.probability.ProbabilityFunction;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Generates agents of type T3.
@@ -45,8 +43,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(GroundedGameT3AgentGenerator.class);
 	
 	/** The configuration for generating agents. */
 	private T3Configuration config;
@@ -67,8 +63,6 @@ public class GroundedGameT3AgentGenerator extends GroundedGameAgentGenerator {
 	@Override
 	protected BeliefState generateBeliefState(GroundedGameSystem mas, SimulationParameters params) {
 		T3BeliefState state = this.generateBeliefState(mas,params,this.config.maxRecursionDepth,(Extension<DungTheory>)params.get(this.getFaction()),this.getFaction());
-		log.info("Generated a T3-belief state for " + this.getFaction() + " agent: ");
-		log.info("=========\n" + state.display() + "\n=========");
 		return state;
 	}
 

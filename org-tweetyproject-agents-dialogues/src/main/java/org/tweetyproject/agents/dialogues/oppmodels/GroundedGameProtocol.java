@@ -23,8 +23,6 @@ import org.tweetyproject.agents.RoundRobinProtocol;
 import org.tweetyproject.agents.dialogues.ArgumentationEnvironment;
 import org.tweetyproject.agents.sim.GameProtocol;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a round robin protocol for the grounded game.
@@ -33,8 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GroundedGameProtocol extends RoundRobinProtocol implements GameProtocol{
 
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(GroundedGameProtocol.class);
+
 	
 	/**
 	 * Creates a new grounded game protocol for the given grounded game systems.
@@ -66,7 +63,7 @@ public class GroundedGameProtocol extends RoundRobinProtocol implements GameProt
 				maxUtility = util; 
 			}				
 		}
-		log.info("Winner: " + maxAgent + ", dialogue trace: " + ((ArgumentationEnvironment)this.getMultiAgentSystem().getEnvironment()).getDialogueTrace());				
+
 		return maxAgent;
 	}
 

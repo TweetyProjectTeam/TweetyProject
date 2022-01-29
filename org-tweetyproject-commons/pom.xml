@@ -18,16 +18,7 @@
         <artifactId>junit-jupiter</artifactId>
         <version>5.8.2</version>
     </dependency>
-    <dependency>
-    	<groupId>ch.qos.logback</groupId>
-    	<artifactId>logback-core</artifactId>
-    	<version>0.9.30</version>
-    </dependency>
-    <dependency>
-    	<groupId>ch.qos.logback</groupId>
-    	<artifactId>logback-classic</artifactId>
-    	<version>0.9.30</version>
-    </dependency>
+
   </dependencies>
   <parent>
   <groupId>org.tweetyproject</groupId>

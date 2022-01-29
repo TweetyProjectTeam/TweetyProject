@@ -28,8 +28,6 @@ import org.tweetyproject.math.opt.solver.*;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -40,9 +38,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class GradientDescentRootFinder extends OptimizationRootFinder {
-	
-	/** reference to the logback logger instance */
-	private static Logger LOG = LoggerFactory.getLogger(GradientDescentRootFinder.class);
+
 	
 	/**
 	 * The precision of the approximation.
@@ -70,7 +66,6 @@ public class GradientDescentRootFinder extends OptimizationRootFinder {
 		super.functions = new LinkedList<Term>();
 		this.functions.addAll(functions);
 		this.startingPoint = startingPoint;
-		LOG.trace("Determining a random root of the function '" + this.getFunctions() + "' using the gradient descent root finder.");
 		GradientDescent solver = new GradientDescent(this.getStartingPoint());
 		solver.precision = this.precision;
 		return solver.solve((ConstraintSatisfactionProblem) this.buildOptimizationProblem());

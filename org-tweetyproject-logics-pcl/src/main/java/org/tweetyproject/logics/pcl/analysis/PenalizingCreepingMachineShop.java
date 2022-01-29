@@ -27,8 +27,6 @@ import org.tweetyproject.logics.pcl.syntax.ProbabilisticConditional;
 import org.tweetyproject.math.opt.rootFinder.OptimizationRootFinder;
 import org.tweetyproject.math.probability.Probability;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class is capable of restoring consistency of a possible inconsistent probabilistic
@@ -58,10 +56,7 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 	 */
 	private Map<ProbabilisticConditional,Double> culpVector;
 	
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(PenalizingCreepingMachineShop.class);
+
 	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.BeliefBaseMachineShop#repair(org.tweetyproject.BeliefBase)
@@ -71,14 +66,12 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 		if(!(beliefBase instanceof PclBeliefSet))
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		PclBeliefSet beliefSet = (PclBeliefSet) beliefBase;
-		log.debug("Determining culpability vector of '" + beliefSet + "'.");
 		DistanceMinimizationInconsistencyMeasure inconMeasure = new DistanceMinimizationInconsistencyMeasure(this.rootFinder);
 		MeanDistanceCulpabilityMeasure agMeasure = new MeanDistanceCulpabilityMeasure(this.rootFinder,false);
 		this.culpVector = new HashMap<ProbabilisticConditional,Double>();
 		for(ProbabilisticConditional pc: beliefSet){
 			this.culpVector.put(pc, agMeasure.sign(beliefSet, pc) * agMeasure.culpabilityMeasure(beliefSet, pc));
-		}
-		log.debug("Finished determining culpability vector of '" + beliefSet + "'.");		
+		}	
 		double delta = this.getLowerBound();
 		double upperBound = this.getUpperBound();
 		double deltaInconMeasure = inconMeasure.inconsistencyMeasure(this.characteristicFunction(beliefSet, this.getValues(delta, beliefSet)));
@@ -88,7 +81,6 @@ public class PenalizingCreepingMachineShop extends AbstractCreepingMachineShop {
 		while(delta <= upperBound){
 			newDelta = delta + stepLength;
 			newDeltaInconMeasure = inconMeasure.inconsistencyMeasure(this.characteristicFunction(beliefSet, this.getValues(newDelta, beliefSet)));
-			log.debug("Current delta is '" + newDelta + "' with measure '" + newDeltaInconMeasure + "' (step length is '" + stepLength + "').");			
 			if(newDeltaInconMeasure < AbstractCreepingMachineShop.PRECISION && newDeltaInconMeasure > -AbstractCreepingMachineShop.PRECISION)
 				if(Math.abs(newDelta - delta) < AbstractCreepingMachineShop.PRECISION)
 					return this.characteristicFunction(beliefSet, this.getValues(newDelta, beliefSet));

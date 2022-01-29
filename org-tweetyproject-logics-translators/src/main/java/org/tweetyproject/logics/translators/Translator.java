@@ -31,8 +31,7 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Atom;
 import org.tweetyproject.logics.commons.syntax.interfaces.SimpleLogicalFormula;
 import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * Allows translation between different logic languages, sub classes
@@ -65,8 +64,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Translator {
 	
-	/** reference to the logback logger instance */
-	private static Logger LOG = LoggerFactory.getLogger(Translator.class);
+
 
 	/**TT_Predicate*/
 	public static final int TT_PREDICATE 	= -1;
@@ -219,12 +217,12 @@ public abstract class Translator {
 			ex = new LanguageException("", LanguageExceptionReason.LER_INSTANTIATION,
 					e.getMessage());
 			e.printStackTrace();
-			LOG.debug(e.getMessage());
+
 		} catch (IllegalAccessException e) {
 			ex = new LanguageException("", LanguageExceptionReason.LER_ILLEGAL_ACCESSS,
 					e.getMessage());
 			e.printStackTrace();
-			LOG.debug(e.getMessage());
+
 		}
 		if(ex != null) {
 			throw ex;

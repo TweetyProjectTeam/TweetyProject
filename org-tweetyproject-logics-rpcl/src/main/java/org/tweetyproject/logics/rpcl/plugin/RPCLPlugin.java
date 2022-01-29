@@ -24,8 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.commons.Writer;
@@ -66,11 +64,7 @@ import net.xeoh.plugins.base.options.getplugin.OptionCapabilities;
 @SuppressWarnings("unused")
 @PluginImplementation
 public class RPCLPlugin extends AbstractTweetyPlugin {
-	
-	/**
-	 * Logger.
-	 */
-	private static Logger log = LoggerFactory.getLogger(RPCLPlugin.class);
+
 	
 	// necessary
 	private static final String RPCLOGIC__CALL_PARAMETER = "rpcl";
@@ -294,9 +288,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 				FileListCommandParameter tmp = (FileListCommandParameter) tmpComParam; 
 				if(tmp.getValue().length == 1){
 					outputFile = tmp.getValue()[0].getAbsolutePath();
-				} else {
-					log.error("More or less than one plugin output file given.");
-				}
+				} 
 			}
 		}
 		
@@ -313,9 +305,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 			sem = new AveragingSemantics();
 		} else if (semantics == 1){
 			sem = new AggregatingSemantics();
-		} else {
-			log.error("Invalid semantics argument");
-		}
+		} 
 		if(query != null){
 			folParser.setSignature(parser.getSignature());
 		}
@@ -350,14 +340,12 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 					if(outputFile == null){
 						System.out.println("query: " + query + queryResult);
 					} else {
-						log.info("Output written to file " + outputFile);
+
 						// TODO: Write output to file
 						probOutWriter.setObjectToBePrinted(p);
 						probOutWriter.writeToFile(outputFile);
 						System.out.println("Write plugin output into file " + outputFile);
 					}
-				}else{
-					log.info("No query given with knowledge base");
 				}
 				
 				
@@ -376,9 +364,7 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 					Probability res = p.probability((FolFormula) folParser.parseFormula(query));
 					pout.addField( "Probability (Standard)", res.toString());
 					// TODO: res and p to file?
-				} else {
-					log.info("No query given with standard probability distribution");
-				}
+				} 
 					
 				if(probOutFile != null){	
 					probOutWriter.setObjectToBePrinted(p);
@@ -398,8 +384,6 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 					pout.addField( "Query:", query);
 					Probability res = p.probability((FolFormula)folParser.parseFormula(query));
 					pout.addField( "Probability (Condensed):", res.toString());
-				}else {
-					log.info("No query given with lifted probability distribution");
 				}
 				
 				if(probOutFile != null){	
@@ -410,14 +394,13 @@ public class RPCLPlugin extends AbstractTweetyPlugin {
 			}
 			
 		} catch (FileNotFoundException e) {
-			log.error(e.getMessage());
+
 			
 		} catch (ParserException e) {
-			
-			log.error(e.getMessage());
+
 		} catch (IOException e) {
 			
-			log.error(e.getMessage());
+
 		}
 		
 		// returns plugin output

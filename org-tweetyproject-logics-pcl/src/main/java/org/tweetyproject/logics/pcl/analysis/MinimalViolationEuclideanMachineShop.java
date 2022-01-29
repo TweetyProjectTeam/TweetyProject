@@ -22,8 +22,6 @@ import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.BeliefBaseMachineShop;
 import org.tweetyproject.logics.pcl.syntax.PclBeliefSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Repairs a probabilistic belief base by taking the probabilities from the probability function
@@ -33,10 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class MinimalViolationEuclideanMachineShop implements BeliefBaseMachineShop {
 
-	/**
-	 * Logger.
-	 */
-	static protected Logger log = LoggerFactory.getLogger(MinimalViolationEuclideanMachineShop.class);
+
 
 
 	
@@ -46,10 +41,8 @@ public abstract class MinimalViolationEuclideanMachineShop implements BeliefBase
 	@Override
 	public BeliefBase repair(BeliefBase beliefBase) {
 
-		log.info("Start repair.");
 		
 		if(!(beliefBase instanceof PclBeliefSet)) {
-			log.debug("Belief base is not an instance of PCLBeliefSet.");
 			throw new IllegalArgumentException("Belief base of type 'PclBeliefSet' expected.");
 		}
 		

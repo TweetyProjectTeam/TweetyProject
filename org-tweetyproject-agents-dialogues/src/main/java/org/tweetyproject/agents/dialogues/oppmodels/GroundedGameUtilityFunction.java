@@ -27,8 +27,6 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The grounded game utility function u_a^g. See definition in paper.
@@ -40,8 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extension<DungTheory>> {
 	
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(GroundedGameUtilityFunction.class);
 	
 	/** The argument which is played for or against. */
 	private final Argument argument;
@@ -88,7 +84,7 @@ public class GroundedGameUtilityFunction extends UtilityFunction<Argument,Extens
 					utility = 1d - (this.epsilon * (float)trace.size());			
 				break;
 		}
-		log.trace("Utility of " + this.faction + " for " + trace + ": " + utility);
+
 		return utility;
 	}
 	

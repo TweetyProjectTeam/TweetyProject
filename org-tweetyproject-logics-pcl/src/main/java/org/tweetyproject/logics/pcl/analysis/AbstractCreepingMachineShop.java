@@ -27,8 +27,6 @@ import org.tweetyproject.logics.pcl.syntax.ProbabilisticConditional;
 import org.tweetyproject.math.opt.rootFinder.OptimizationRootFinder;
 import org.tweetyproject.math.probability.Probability;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The common ancestor vor creeping machine shops, see [Diss, Thimm] for details.
@@ -43,10 +41,7 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 		this.rootFinder = rootFinder;
 	}
 	
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(AbstractCreepingMachineShop.class);
+
 	
 	/**
 	 * The precision for finding the minimal consistent knowledge base.
@@ -69,7 +64,6 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 		PclDefaultConsistencyTester tester = new PclDefaultConsistencyTester(this.rootFinder);
 		if(tester.isConsistent(beliefSet))
 			return beliefSet;		
-		log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem to restore consistency.");
 		this.init(beliefSet);
 		double lowerBound = this.getLowerBound();
 		double upperBound = this.getUpperBound();		
@@ -78,7 +72,6 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 		int cnt = 0;
 		while(upperBound - lowerBound > AbstractCreepingMachineShop.PRECISION){
 			double delta = (upperBound + lowerBound)/2;
-			log.debug("Current delta: " + delta);
 			Map<ProbabilisticConditional,Probability> values = this.getValues(delta,beliefSet);
 			newBeliefSet = this.characteristicFunction(beliefSet, values);
 			if(tester.isConsistent(newBeliefSet)){
@@ -91,7 +84,6 @@ public abstract class AbstractCreepingMachineShop implements BeliefBaseMachineSh
 			if(cnt >= AbstractCreepingMachineShop.MAX_ITERATIONS)
 				throw new RuntimeException("Consistent knowledge base cannot be found for '" + beliefBase + "'.");
 		}
-		log.debug("Repair complete, final knowledge base: " + lastConsistentBeliefSet);
 		return lastConsistentBeliefSet;
 	}
 	

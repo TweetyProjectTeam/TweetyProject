@@ -32,8 +32,6 @@ import org.tweetyproject.math.term.IntegerConstant;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,10 +43,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GradientDescent extends Solver {
 	
-	/**
-	 * Logger.
-	 */
-	private Logger log = LoggerFactory.getLogger(GradientDescent.class);
 	
 	/**
 	 * The precision of the approximation.
@@ -86,7 +80,7 @@ public class GradientDescent extends Solver {
 	public Map<Variable, Term> solve(GeneralConstraintSatisfactionProblem constraintSatisfactionProblem) throws GeneralMathException {
 		if(constraintSatisfactionProblem.size() > 0)
 			throw new IllegalArgumentException("The gradient descent method works only for optimization problems without constraints.");
-		this.log.trace("Solving the following optimization problem using gradient descent:\n===BEGIN===\n" + constraintSatisfactionProblem + "\n===END===");
+		
 		Term f = ((OptimizationProblem)constraintSatisfactionProblem).getTargetFunction();
 		if(((OptimizationProblem)constraintSatisfactionProblem).getType() == OptimizationProblem.MAXIMIZE)
 			f = new IntegerConstant(-1).mult(f);	
@@ -102,7 +96,7 @@ public class GradientDescent extends Solver {
 		double actualPrecision = this.precision * variables.size();
 		int idx;
 		double step,val;
-		this.log.trace("Starting optimization.");
+
 		do{
 			// find the best step length
 			step = GradientDescent.MAX_STEP_LENGTH;			
@@ -126,9 +120,9 @@ public class GradientDescent extends Solver {
 				if(step < GradientDescent.MIN_STEP_LENGTH)
 					throw new GeneralMathException();
 			}			
-			this.log.trace("Current manhattan distance of gradient to zero: " + VectorTools.manhattanDistanceToZero(currentGradient));
+			
 		}while(VectorTools.manhattanDistanceToZero(currentGradient) > actualPrecision);
-		this.log.trace("Optimum found: " + currentGuess);
+
 		return currentGuess;
 	}
 

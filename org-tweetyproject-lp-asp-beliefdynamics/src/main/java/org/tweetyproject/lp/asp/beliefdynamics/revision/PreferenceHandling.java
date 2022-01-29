@@ -43,8 +43,6 @@ import org.tweetyproject.lp.asp.syntax.ASPRule;
 import org.tweetyproject.lp.asp.syntax.AggregateHead;
 import org.tweetyproject.lp.asp.syntax.ClassicalHead;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -65,8 +63,6 @@ import org.slf4j.LoggerFactory;
  **/
 public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 	
-	/** reference to the logback logger instance */
-	private Logger LOG = LoggerFactory.getLogger(PreferenceHandling.class);
 	
 	private int maxInt;
 	
@@ -139,7 +135,6 @@ public class PreferenceHandling extends CredibilityRevisionIterative<ASPRule> {
 		try {
 			asDefault = solver.getModels(concat, maxInt);
 		} catch (Exception e) {
-			LOG.error("Cannot solve combined program:\n{}", concat.toString());
 			e.printStackTrace();
 			return null;
 		}

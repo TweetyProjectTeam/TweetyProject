@@ -40,8 +40,6 @@ import org.tweetyproject.math.term.IntegerConstant;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class models an approximation from below to the distance minimization inconsistency measure as proposed in [Thimm,UAI,2009], see [PhD thesis, Thimm].
@@ -55,11 +53,7 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 	public LowerApproxDistanceMinimizationInconsistencyMeasure(OptimizationRootFinder rootFinder) {
 		this.rootFinder = rootFinder;
 	}
-	
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(DistanceMinimizationInconsistencyMeasure.class);
+
 	
 	/**
 	 * For archiving.
@@ -72,18 +66,17 @@ public class LowerApproxDistanceMinimizationInconsistencyMeasure extends BeliefS
 	@Override
 	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {	
 		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
-		log.trace("Starting to compute minimal distance inconsistency measure for '" + beliefSet + "'.");
 		// check archive
 		if(this.archive.containsKey(beliefSet))
 			return this.archive.get(beliefSet);
 		// first check whether the belief set is consistent		
-		log.trace("Checking whether '" + beliefSet + "' is inconsistent.");
+
 		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet)){
 			// update archive
 			this.archive.put(beliefSet, 0d);
 			return 0d;
 		}
-		log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem for computing the measure.");
+	
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal
 		// distance to a consistent belief set.

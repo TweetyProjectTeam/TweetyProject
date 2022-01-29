@@ -45,8 +45,6 @@ import org.tweetyproject.logics.commons.syntax.Constant;
 import org.tweetyproject.logics.commons.syntax.NumberTerm;
 import org.tweetyproject.logics.commons.syntax.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implements the credibility revision approach for ASP described in
@@ -86,13 +84,12 @@ public class CredibilityRevision extends CredibilityRevisionNonIterative<ASPRule
 	 *
 	 */
 	public static class DefaultBehavior implements AnswersetProcessing {
-		/** reference to the logback logger instance */
-		private static Logger LOG = LoggerFactory.getLogger(DefaultBehavior.class);
+
 		
 		@Override
 		public Program process(List<Program> orderedPrograms, Collection<AnswerSet> answersets) {
 			if(answersets.size() > 1) {
-				LOG.warn("The actual version of credibility revision for ASP does not support multiple program versions and uses the first answer set.");
+				
 			}
 			AnswerSet as = answersets.iterator().next();
 			

@@ -58,16 +58,13 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 		Set<PossibleWorld> worlds = PossibleWorld.getAllPossibleWorlds((PlSignature) beliefSet.getMinimalSignature());
 		int noWorlds = worlds.size();
 		
-		
 
-		log.debug("Create expression based model.");
 		
 		Variable[] tmpVariables = OjAlgoPclUtils.createVariables(noWorlds);				
 		ExpressionsBasedModel tmpModel = new ExpressionsBasedModel(tmpVariables);
 		
 		
-		
-		log.debug("Create objective.");
+
 		
 		//Objective is x' Q x + C' x
 		//Q = A' A for constraint matrix A, C' = 0
@@ -87,23 +84,15 @@ public class MinimalViolationEuclideanMachineShopOjAlgoExpression extends Minima
 		tmpExpr.weight(BigMath.ONE);
 		
 		
-		
-		log.debug("Create normalization constraint.");
-		
 		OjAlgoPclUtils.addProbabilityNormalizationConstraint(tmpModel);
 		
-		
-
-		log.debug("Solve.");
+	
 		
 		long time = System.currentTimeMillis();
 		//by construction, the correct solution is the square root of the computed solution
 		double tmpObjFuncVal = Math.sqrt(2 * tmpModel.minimise().getValue());
-		log.info("Finished computation after "+(System.currentTimeMillis()-time)+" ms. Inconsistency value: "+tmpObjFuncVal);
 		
-		
-
-		log.debug("Repair knowledge base.");
+	
 		
 		ProbabilityDistribution<PossibleWorld> p = new ProbabilityDistribution<PossibleWorld>(beliefSet.getMinimalSignature());
 		int k=0;

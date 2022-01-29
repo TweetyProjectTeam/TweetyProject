@@ -41,8 +41,6 @@ import org.tweetyproject.math.term.Power;
 import org.tweetyproject.math.term.Term;
 import org.tweetyproject.math.term.Variable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -55,10 +53,7 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 
 	private OptimizationRootFinder rootFinder;
 		
-	/**
-	 * Logger.
-	 */
-	static private Logger log = LoggerFactory.getLogger(DistanceMinimizationInconsistencyMeasure.class);
+
 	
 	/**
 	 * The p-norm parameter.
@@ -110,18 +105,15 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 	@Override
 	public Double inconsistencyMeasure(Collection<ProbabilisticConditional> formulas) {	
 		PclBeliefSet beliefSet = new PclBeliefSet(formulas);
-		log.trace("Starting to compute minimal " + this.p + "-distance inconsistency measure for '" + beliefSet + "'.");
 		// check archive
 		if(this.archive.containsKey(beliefSet))
 			return this.archive.get(beliefSet);
 		// first check whether the belief set is consistent		
-		log.trace("Checking whether '" + beliefSet + "' is inconsistent.");
 		if(beliefSet.size() == 0 || new PclDefaultConsistencyTester(this.rootFinder).isConsistent(beliefSet)){
 			// update archive
 			this.archive.put(beliefSet, 0d);
 			return 0d;
 		}
-		log.trace("'" + beliefSet + "' is inconsistent, preparing optimization problem for computing the measure.");
 		// Create variables for the probability of each possible world and
 		// set up the optimization problem for computing the minimal
 		// distance to a consistent belief set.
@@ -193,15 +185,12 @@ public class DistanceMinimizationInconsistencyMeasure extends BeliefSetInconsist
 			Double result = targetFunction.replaceAllTerms(solution).doubleValue();
 			if(this.p > 1)
 				result = Math.pow(result, 1d/this.p);
-			log.debug("Problem solved, the measure is '" + result + "'.");
-			String values = "Eta/Tau-values for the solution:\n===BEGIN===\n";
+
 			this.archiveDevs.put(beliefSet, new HashMap<ProbabilisticConditional,Double>());
 			for(ProbabilisticConditional pc: beliefSet){
-				values += pc + "\teta: " + solution.get(etas.get(pc)) + "\ttau: " + solution.get(taus.get(pc)) +  "\n";
 				this.archiveDevs.get(beliefSet).put(pc, solution.get(etas.get(pc)).doubleValue() - solution.get(taus.get(pc)).doubleValue() );
 			}
-			values += "===END===";
-			log.debug(values);
+
 			// update archive
 			this.archive.put(beliefSet, result);
 			// return value of target function

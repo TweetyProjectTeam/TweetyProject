@@ -29,17 +29,13 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Generates grounded games.
  * @author Matthias Thimm
  */
 public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingAgent,GroundedGameSystem> {
 
-	/** Logger */
-	static private Logger log = LoggerFactory.getLogger(GroundedGameGenerator.class);
+
 	
 	/** Key for the simulation parameter which refers to the universal theory generated. */
 	public static final int PARAM_UNIVERSALTHEORY = 0;
@@ -74,12 +70,10 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 	 */
 	@Override
 	public GroundedGameSystem generate(SimulationParameters params) {
-		log.info("Starting to generate a grounded game system");
+
 		Argument arg = new Argument("A");
 		DungTheory theory = this.gen.next(arg);		
-		log.trace("Generated Dung theory with " + this.gen + ":\n" +
-				"=========\n" + theory.toString() + "\n=========");		
-		log.trace("Central argument of dialog is: " + arg);		
+	
 		params.put(GroundedGameGenerator.PARAM_UNIVERSALTHEORY, theory);
 		params.put(GroundedGameGenerator.PARAM_ARGUMENT, arg);
 		// generate each agent view
@@ -96,11 +90,7 @@ public class GroundedGameGenerator implements MultiAgentSystemGenerator<ArguingA
 		}
 		params.put(GroundedGameSystem.AgentFaction.PRO, proView);
 		params.put(GroundedGameSystem.AgentFaction.CONTRA, conView);
-		log.trace("Arguments in the view of agent PRO are:\n" +
-				"=========\n" + proView + "\n=========");
-		log.trace("Arguments in the view of agent CON are:\n" +
-				"=========\n" + conView + "\n=========");
-		log.info("Ending to generate a grounded game system");
+
 		return new GroundedGameSystem(theory);
 	}
 
