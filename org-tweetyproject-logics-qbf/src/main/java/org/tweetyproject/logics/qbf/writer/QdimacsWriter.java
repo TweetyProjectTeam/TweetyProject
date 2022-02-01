@@ -21,11 +21,11 @@ package org.tweetyproject.logics.qbf.writer;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-import org.tweetyproject.logics.pl.sat.SatSolver;
+import org.tweetyproject.logics.pl.sat.DimacsSatSolver;
 import org.tweetyproject.logics.pl.syntax.Conjunction;
 import org.tweetyproject.logics.pl.syntax.Contradiction;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
@@ -84,10 +84,12 @@ public class QdimacsWriter {
 
 	public String printBase(PlBeliefSet kb) throws IOException {
 		// Map the literals to numbers (indices of the list)
-		List<Proposition> mappings = new ArrayList<Proposition>();
+		Map<Proposition,Integer> mappings = new HashMap<Proposition,Integer>();
+		int index = 1;
 		for (PlFormula f : kb) {
-			mappings.removeAll(f.getAtoms());
-			mappings.addAll(f.getAtoms());
+			for(Proposition p: f.getAtoms())
+				if(!mappings.containsKey(p))
+					mappings.put(p, index++);
 		}
 
 		// Collect nested quantifications
@@ -151,7 +153,7 @@ public class QdimacsWriter {
 		}
 		
 		// Collect clauses with standard dimacs converter
-		String dimacs_clauses = SatSolver.convertToDimacs(simplified_cnf, mappings);
+		String dimacs_clauses = DimacsSatSolver.convertToDimacs(simplified_cnf, mappings, "", 0);
 		int first_line_end = dimacs_clauses.indexOf("\n");
 		String preamble = dimacs_clauses.substring(0, first_line_end) + " 0\n";
 		if (DISABLE_PREAMBLE_ZERO)
@@ -258,10 +260,10 @@ public class QdimacsWriter {
 		return finalFormula;
 	}
 
-	public String printVariables(Set<Proposition> vars, List<Proposition> mappings) {
+	public String printVariables(Set<Proposition> vars, Map<Proposition,Integer> mappings) {
 		String result = "";
 		for (Proposition v : vars)
-			result += " " + (mappings.indexOf(v) + 1);
+			result += " " + (mappings.get(v));
 		return result;
 	}
 

@@ -63,7 +63,7 @@ public class MarcoMusEnumerator extends PlMusEnumerator {
 			for(PlFormula f: formulas)
 				props.addAll(f.getAtoms());			
 			// create temporary file in Dimacs CNF format.
-			Pair<File,List<PlFormula>> p = SatSolver.createTmpDimacsFile(formulas);
+			Pair<File,List<PlFormula>> p = PlMusEnumerator.createTmpDimacsFileAndIndex(formulas);
 			// we only read a maximum number of 1000 lines from MARCO (TODO: this should be parameterized) as we bias on MUSes and the rest
 			// of the lines contains the description of the MCSes
 			String output = NativeShell.invokeExecutable(this.pathToMarco + " -v -b MUSes " + p.getFirst().getAbsolutePath(), 1000);

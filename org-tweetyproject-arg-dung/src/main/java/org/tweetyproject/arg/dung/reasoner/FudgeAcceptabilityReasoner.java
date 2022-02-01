@@ -25,12 +25,10 @@ import java.util.Map;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.logics.pl.sat.SatSolver;
+import org.tweetyproject.logics.pl.sat.DimacsSatSolver;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 import org.tweetyproject.logics.pl.syntax.Disjunction;
-import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
-import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
@@ -43,7 +41,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  */
 public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 
-	private SatSolver satSolver;
+	private DimacsSatSolver satSolver;
 	
 	private Map<Argument,Proposition> in;
 	private Map<Argument,Proposition> out;
@@ -51,16 +49,41 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 	private Map<Argument,Proposition> in2;
 	private Map<Argument,Proposition> out2;
 	private Map<Argument,Proposition> undec2;
-	private PlBeliefSet baseFormulas;
-	private PlBeliefSet baseFormulas2;
-	private PlBeliefSet attackFormulas;
+
+	private String cnf_baseFormulas; 
+	private int num_cnf_baseFormulas;
+	private String cnf_baseFormulas2;
+	private int num_cnf_baseFormulas2;
+	private String cnf_attackFormulas;
+	private int num_cnf_attackFormulas;
+	
+	// the next index used for generating propositions
+	private int index;
+	// maps propositions to the number used by the SAT solver
+	private Map<Proposition,Integer> prop_index;
+	// maps numbers used by the SAT solver to propositions
+	private Map<Integer,Proposition> prop_inverted_index;
 	
 	/**
 	 * Creates a new FudgeAcceptabilityReasoner.
-	 * @param satSolver some SatSolver.	 * 
+	 * @param satSolver some DimacsSatSolver.	 * 
 	 */
-	public FudgeAcceptabilityReasoner(SatSolver satSolver){
+	public FudgeAcceptabilityReasoner(DimacsSatSolver satSolver){
 		this.satSolver = satSolver;
+	}
+	
+	/**
+	 * Creates a new proposition and indexes it in this objects
+	 * indices
+	 * @param prop_name the name of the proposition
+	 * @return the proposition (side effect: proposition is added to this
+	 *   object's indices)
+	 */
+	private Proposition createAndIndexProposition(String prop_name) {
+		Proposition p = new Proposition(prop_name);
+		this.prop_index.put(p, this.index);
+		this.prop_inverted_index.put(this.index++, p);
+		return p;
 	}
 	
 	/**
@@ -68,63 +91,90 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 	 * @param af some AF
 	 */
 	private void initBaseFormulas(DungTheory af) {
+		this.prop_index = new HashMap<>();
+		this.prop_inverted_index = new HashMap<>();
+		this.index = 1;
 		this.in = new HashMap<Argument,Proposition>();
 		this.out = new HashMap<Argument,Proposition>();
 		this.undec = new HashMap<Argument,Proposition>();
-		this.baseFormulas = new PlBeliefSet();
+		this.cnf_baseFormulas = "";
+		this.num_cnf_baseFormulas = 0;
 		this.in2 = new HashMap<Argument,Proposition>();
 		this.out2 = new HashMap<Argument,Proposition>();
 		this.undec2 = new HashMap<Argument,Proposition>();
-		this.baseFormulas2 = new PlBeliefSet();
+		this.cnf_baseFormulas2 = "";
+		this.num_cnf_baseFormulas2 = 0;
 		for(Argument a: af){
-			in.put(a, new Proposition("in_" + a.getName()));
-			out.put(a, new Proposition("out_" + a.getName()));
-			undec.put(a, new Proposition("undec_" + a.getName()));
-			in2.put(a, new Proposition("in2_" + a.getName()));
-			out2.put(a, new Proposition("out2_" + a.getName()));
-			undec2.put(a, new Proposition("undec2_" + a.getName()));
+			in.put(a, this.createAndIndexProposition("in_" + a.getName()));
+			out.put(a, this.createAndIndexProposition("out_" + a.getName()));
+			undec.put(a, this.createAndIndexProposition("undec_" + a.getName()));
+			in2.put(a, this.createAndIndexProposition("in2_" + a.getName()));
+			out2.put(a, this.createAndIndexProposition("out2_" + a.getName()));
+			undec2.put(a, this.createAndIndexProposition("undec2_" + a.getName()));
 			// for every argument only one of in/out/undec can be true
-			this.baseFormulas.add(in.get(a).combineWithOr(out.get(a)).combineWithOr(undec.get(a)));
-			this.baseFormulas.add((PlFormula)in.get(a).complement().combineWithOr(out.get(a).complement()));
-			this.baseFormulas.add((PlFormula)in.get(a).complement().combineWithOr(undec.get(a).complement()));
-			this.baseFormulas.add((PlFormula)out.get(a).complement().combineWithOr(undec.get(a).complement()));
-			this.baseFormulas2.add(in2.get(a).combineWithOr(out2.get(a)).combineWithOr(undec2.get(a)));
-			this.baseFormulas2.add((PlFormula)in2.get(a).complement().combineWithOr(out2.get(a).complement()));
-			this.baseFormulas2.add((PlFormula)in2.get(a).complement().combineWithOr(undec2.get(a).complement()));
-			this.baseFormulas2.add((PlFormula)out2.get(a).complement().combineWithOr(undec2.get(a).complement()));
+			this.cnf_baseFormulas += prop_index.get(in.get(a)) + " " +  prop_index.get(out.get(a)) + " " + prop_index.get(undec.get(a)) + " 0\n";
+			this.num_cnf_baseFormulas++;
+			this.cnf_baseFormulas += "-" + prop_index.get(in.get(a)) + " -" + prop_index.get(out.get(a)) + " 0\n";
+			this.num_cnf_baseFormulas++;
+			this.cnf_baseFormulas += "-" + prop_index.get(in.get(a)) + " -" + prop_index.get(undec.get(a)) + " 0\n";
+			this.num_cnf_baseFormulas++;
+			this.cnf_baseFormulas += "-" + prop_index.get(out.get(a)) + " -" + prop_index.get(undec.get(a)) + " 0\n";
+			this.num_cnf_baseFormulas++;
+			
+			this.cnf_baseFormulas2 += prop_index.get(in2.get(a)) + " " +  prop_index.get(out2.get(a)) + " " + prop_index.get(undec2.get(a)) + " 0\n";
+			this.num_cnf_baseFormulas2++;
+			this.cnf_baseFormulas2 += "-" + prop_index.get(in2.get(a)) + " -" + prop_index.get(out2.get(a)) + " 0\n";
+			this.num_cnf_baseFormulas2++;
+			this.cnf_baseFormulas2 += "-" + prop_index.get(in2.get(a)) + " -" + prop_index.get(undec2.get(a)) + " 0\n";
+			this.num_cnf_baseFormulas2++;
+			this.cnf_baseFormulas2 += "-" + prop_index.get(out2.get(a)) + " -" + prop_index.get(undec2.get(a)) + " 0\n";
+			this.num_cnf_baseFormulas2++;
 		}	
 		// an argument is in iff all attackers are out
-		this.attackFormulas = new PlBeliefSet();
-		Disjunction oneAttack = new Disjunction();
-		this.attackFormulas.add(oneAttack);
+		this.cnf_attackFormulas = "";	
+		this.num_cnf_attackFormulas = 0;
+		String cnf_oneAttack = "";
 		for(Argument a: af){
 			if(af.getAttackers(a).isEmpty()){
-				this.baseFormulas.add(((PlFormula)in.get(a)));
-				this.baseFormulas2.add(((PlFormula)in2.get(a)));
+				this.cnf_baseFormulas += prop_index.get(in.get(a)) + " 0\n";
+				this.num_cnf_baseFormulas++;
+				this.cnf_baseFormulas2 += prop_index.get(in2.get(a)) + " 0\n";
+				this.num_cnf_baseFormulas2++;
 			}else{
-				Collection<PlFormula> attackersOr = new HashSet<PlFormula>();//new Contradiction();
-				Collection<PlFormula> attackersNotOr = new HashSet<PlFormula>();//new Contradiction();
-				Collection<PlFormula> attackersOr2 = new HashSet<PlFormula>();//new Contradiction();
-				Collection<PlFormula> attackersNotOr2 = new HashSet<PlFormula>();//new Contradiction();
+				String cnf_attackersOr = "";
+				String cnf_attackersNotOr = "";
+				String cnf_attackersOr2 = "";
+				String cnf_attackersNotOr2 = "";
 				for(Argument b: af.getAttackers(a)){
-					attackersOr.add(in.get(b));
-					attackersNotOr.add((PlFormula)out.get(b).complement());					
-					this.baseFormulas.add(((PlFormula)in.get(a).complement()).combineWithOr((PlFormula)out.get(b)));
-					attackersOr2.add(in2.get(b));
-					attackersNotOr2.add((PlFormula)out2.get(b).complement());					
-					this.baseFormulas2.add(((PlFormula)in2.get(a).complement()).combineWithOr((PlFormula)out2.get(b)));
-					Proposition attack = new Proposition("r" + b.getName() + "_" + a.getName());
-					oneAttack.add(attack);
-					this.attackFormulas.add(new Negation(attack).combineWithOr(this.in.get(b)));
-					this.attackFormulas.add(new Negation(attack).combineWithOr(this.in2.get(a)));
-					this.attackFormulas.add(attack.combineWithOr(new Negation(this.in2.get(a))).combineWithOr(new Negation(this.in.get(b))));
+					cnf_attackersOr += prop_index.get(in.get(b)) + " ";
+					cnf_attackersNotOr += "-"+prop_index.get(out.get(b)) + " ";
+					this.cnf_baseFormulas += "-" + prop_index.get(in.get(a)) + " " + prop_index.get(out.get(b)) + " 0\n";
+					this.num_cnf_baseFormulas++;
+					cnf_attackersOr2 += prop_index.get(in2.get(b)) + " ";
+					cnf_attackersNotOr2 += "-"+prop_index.get(out2.get(b)) + " ";
+					this.cnf_baseFormulas2 += "-" + prop_index.get(in2.get(a)) + " " + prop_index.get(out2.get(b)) + " 0\n";
+					this.num_cnf_baseFormulas2++;
+					Proposition attack = this.createAndIndexProposition("r" + b.getName() + "_" + a.getName());
+					cnf_oneAttack += prop_index.get(attack) + " ";
+					this.cnf_attackFormulas += "-" + prop_index.get(attack) + " " + prop_index.get(this.in.get(b)) + " 0\n";
+					this.num_cnf_attackFormulas++;
+					this.cnf_attackFormulas += "-" + prop_index.get(attack) + " " + prop_index.get(this.in2.get(a)) + " 0\n";
+					this.num_cnf_attackFormulas++;
+					this.cnf_attackFormulas += prop_index.get(attack) + " -" + prop_index.get(this.in2.get(a)) + " -" + prop_index.get(this.in.get(b)) + " 0\n";
+					this.num_cnf_attackFormulas++;
 				}
-				this.baseFormulas.add(new Disjunction(attackersOr).combineWithOr((PlFormula)out.get(a).complement()));
-				this.baseFormulas.add(new Disjunction(attackersNotOr).combineWithOr((PlFormula)in.get(a)));	
-				this.baseFormulas2.add(new Disjunction(attackersOr2).combineWithOr((PlFormula)out2.get(a).complement()));
-				this.baseFormulas2.add(new Disjunction(attackersNotOr2).combineWithOr((PlFormula)in2.get(a)));
+				this.cnf_baseFormulas += cnf_attackersOr + "-" + prop_index.get(out.get(a)) + " 0\n";
+				this.num_cnf_baseFormulas++;
+				this.cnf_baseFormulas += cnf_attackersNotOr + "" + prop_index.get(in.get(a)) + " 0\n";
+				this.num_cnf_baseFormulas++;
+				this.cnf_baseFormulas2 += cnf_attackersOr2 + "-" + prop_index.get(out2.get(a)) + " 0\n";
+				this.num_cnf_baseFormulas2++;
+				this.cnf_baseFormulas2 += cnf_attackersNotOr2 + "" + prop_index.get(in2.get(a)) + " 0\n";
+				this.num_cnf_baseFormulas2++;
 			}
 		}
+		this.cnf_attackFormulas += cnf_oneAttack + " 0\n";
+		this.num_cnf_attackFormulas++;
 	}
 	
 	/**
@@ -136,7 +186,7 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 	 */
 	private Collection<Argument> admExt(DungTheory af, Collection<Argument> t, Collection<Argument> s){
 		PlBeliefSet beliefSet = new PlBeliefSet();
-		beliefSet.addAll(this.baseFormulas);
+		//beliefSet.addAll(this.baseFormulas);
 		// enforce that all argument of t are in
 		for(Argument a: t)
 			beliefSet.add(in.get(a));
@@ -145,7 +195,7 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 		for(Argument a: s)
 			d.add(this.in.get(a));
 		beliefSet.add(d);
-		PossibleWorld w = (PossibleWorld) this.satSolver.getWitness(beliefSet);
+		PossibleWorld w = (PossibleWorld) this.satSolver.getWitness(beliefSet,this.prop_index,this.prop_inverted_index,this.cnf_baseFormulas,this.num_cnf_baseFormulas);
 		if(w == null)
 			return null;
 		Collection<Argument> args = new HashSet<Argument>();
@@ -163,11 +213,11 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 	 */
 	private Collection<Argument> admExt(DungTheory af, Collection<Argument> t){
 		PlBeliefSet beliefSet = new PlBeliefSet();
-		beliefSet.addAll(this.baseFormulas);
+		//beliefSet.addAll(this.baseFormulas);
 		// enforce that all argument of t are in
 		for(Argument a: t)
 			beliefSet.add(in.get(a));
-		PossibleWorld w = (PossibleWorld) this.satSolver.getWitness(beliefSet);
+		PossibleWorld w = (PossibleWorld) this.satSolver.getWitness(beliefSet,this.prop_index,this.prop_inverted_index,this.cnf_baseFormulas,this.num_cnf_baseFormulas);
 		if(w == null)
 			return null;
 		Collection<Argument> args = new HashSet<Argument>();
@@ -191,23 +241,23 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 	private Collection<Argument> admExtAtt(DungTheory af, Collection<Argument> s, Collection<Collection<Argument>> u){
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		// set S'
-		beliefSet.addAll(this.baseFormulas);
+		//beliefSet.addAll(this.baseFormulas);
 		// set S''
-		beliefSet.addAll(this.baseFormulas2);
+		//beliefSet.addAll(this.baseFormulas2);
 		//(1) S is a subset of S''		
 		for(Argument a: s)
 			beliefSet.add(this.in2.get(a));
 		// (2)S' attacks S''
-		beliefSet.addAll(this.attackFormulas);
+		//beliefSet.addAll(this.attackFormulas);
 		// (3)S' is not a subset of t for all t in u
 		for(Collection<Argument> t: u) {
 			Disjunction d = new Disjunction();
 			for(Argument a: af)
 				if(!t.contains(a))
-				d.add(in.get(a));
+					d.add(in.get(a));
 			beliefSet.add(d);
 		}
-		PossibleWorld w = (PossibleWorld) this.satSolver.getWitness(beliefSet);
+		PossibleWorld w = (PossibleWorld) this.satSolver.getWitness(beliefSet,this.prop_index,this.prop_inverted_index, this.cnf_baseFormulas + this.cnf_baseFormulas2 + this.cnf_attackFormulas, this.num_cnf_baseFormulas+this.num_cnf_baseFormulas2+this.num_cnf_attackFormulas);
 		if(w == null)
 			return null;
 		Collection<Argument> args = new HashSet<Argument>();
@@ -225,7 +275,7 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 //		\State $T$ $:=$ $\emptyset$ 
 		Collection<Argument> t = new HashSet<Argument>();
 //		\While{\textsc{True}}
-		while(true) {
+		while(true) {			
 //		    \If{$C$ $=$ $\emptyset$}
 //   		    \State\Return $T$
 //    		\EndIf
@@ -247,7 +297,7 @@ public class FudgeAcceptabilityReasoner extends AbstractAcceptabilityReasoner {
 //    		    \State $S$ $:=$ $\emptyset$
 				Collection<Collection<Argument>> s = new HashSet<Collection<Argument>>();
 //    		    \While{\textsc{True}}
-				while(true) {
+				while(true) {				
 //    		        \State $E'$ $:=$ $\textsf{AdmExtAtt}(\AF,T\cup\{a\},S)$
 					Collection<Argument> tp = new HashSet<Argument>(t);
 					tp.add(a);

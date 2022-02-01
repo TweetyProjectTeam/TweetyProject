@@ -20,9 +20,8 @@ package org.tweetyproject.logics.pl.sat;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.tweetyproject.commons.Interpretation;
@@ -48,7 +47,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * @author Anna Gessler
  *
  */
-public class CmdLineSatSolver extends SatSolver {
+public class CmdLineSatSolver extends DimacsSatSolver {
 	/**
 	 * The binary location of the solver.
 	 */
@@ -71,15 +70,10 @@ public class CmdLineSatSolver extends SatSolver {
 	}
 
 	@Override
-	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas) {
-		try {
-			List<Proposition> props = new ArrayList<Proposition>();
-			for (PlFormula f : formulas) {
-				props.removeAll(f.getAtoms());
-				props.addAll(f.getAtoms());
-			}
+	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, String additional_clauses, int num_additional_clauses) {
+		try {			
 			// create temporary file in Dimacs CNF format.
-			File f = SatSolver.createTmpDimacsFile(formulas, props);
+			File f = DimacsSatSolver.createTmpDimacsFile(formulas, prop_index, additional_clauses, num_additional_clauses);
 			String output = NativeShell
 					.invokeExecutable(this.binaryLocation + " " + options + " " + f.getAbsolutePath());
 			f.delete();
@@ -87,7 +81,8 @@ public class CmdLineSatSolver extends SatSolver {
 				return null;
 			// parse the model by looking for dimacs output string ("v -1 2 3 0")
 			if (output.indexOf("\nv") > -1) {
-				String model = output.substring(output.indexOf("\nv")+1).trim();
+				String model = output.substring(output.indexOf("\nv")+1);
+				model = model.substring(0, model.indexOf(" 0")).trim();
 				model = model.replaceAll("v", "");				
 				StringTokenizer tokenizer = new StringTokenizer(model, " ");
 				PossibleWorld w = new PossibleWorld();
@@ -95,7 +90,7 @@ public class CmdLineSatSolver extends SatSolver {
 					String s = tokenizer.nextToken().trim();
 					Integer i = Integer.parseInt(s);
 					if (i > 0) {
-						w.add(props.get(i - 1));
+						w.add(prop_inverted_index.get(i));
 					}else if(i == 0)
 						break;
 				}
@@ -109,15 +104,10 @@ public class CmdLineSatSolver extends SatSolver {
 	}
 
 	@Override
-	public boolean isSatisfiable(Collection<PlFormula> formulas) {
-		try {
-			List<Proposition> props = new ArrayList<Proposition>();
-			for (PlFormula f : formulas) {
-				props.removeAll(f.getAtoms());
-				props.addAll(f.getAtoms());
-			}
+	public boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, String additional_clauses, int num_additional_clauses) {
+		try {			
 			// create temporary file in Dimacs CNF format.
-			File f = SatSolver.createTmpDimacsFile(formulas, props);
+			File f = DimacsSatSolver.createTmpDimacsFile(formulas, prop_index, additional_clauses, num_additional_clauses);
 			String output = NativeShell
 					.invokeExecutable(this.binaryLocation + " " + options + " " + f.getAbsolutePath());
 			// delete file

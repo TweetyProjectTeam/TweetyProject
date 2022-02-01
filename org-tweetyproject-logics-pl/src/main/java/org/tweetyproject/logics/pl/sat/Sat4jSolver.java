@@ -19,7 +19,6 @@
 package org.tweetyproject.logics.pl.sat;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.tweetyproject.commons.Interpretation;
@@ -31,7 +30,6 @@ import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
-import org.tweetyproject.logics.pl.syntax.PlSignature;
 import org.tweetyproject.logics.pl.syntax.Tautology;
 
 import org.sat4j.core.VecInt;
@@ -45,7 +43,7 @@ import org.sat4j.specs.TimeoutException;
  * @author Matthias Thimm
  *
  */
-public class Sat4jSolver extends SatSolver{
+public class Sat4jSolver extends DimacsSatSolver{
 
 	/** Default value for max number of variables for asolver. */
 	private static final int MAXVAR = 1000000;
@@ -73,26 +71,15 @@ public class Sat4jSolver extends SatSolver{
 	public Sat4jSolver(){
 		this(Sat4jSolver.MAXVAR, Sat4jSolver.NBCLAUSES);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.logics.pl.sat.SatSolver#isSatisfiable(java.util.Collection)
-	 */
+
 	@Override
-	public boolean isSatisfiable(Collection<PlFormula> formulas) {
+	public boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, String additional_clauses, int num_additional_clauses) {
+		if(num_additional_clauses > 0)
+			throw new IllegalArgumentException("Sat4j does not suppport additional clauses in text form due to native implementation.");
 		ISolver solver = SolverFactory.newDefault();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		
-		PlSignature sig = new PlSignature();
-		for(PlFormula f: formulas)
-			sig.addAll(f.getAtoms());		
-		Map<Proposition, Integer> prop2Idx = new HashMap<Proposition, Integer>();
-		Proposition[] idx2Prop = new Proposition[sig.size()];
-		int i = 0;
-		for(Proposition p: sig){
-			prop2Idx.put(p, i);
-			idx2Prop[i++] = p;
-		}
+		int i;		
 		try{
 			for(PlFormula f: formulas){
 				Conjunction conj;
@@ -109,9 +96,9 @@ public class Sat4jSolver extends SatSolver{
 					boolean taut = false;
 					for(PlFormula f3: disj){
 						if(f3 instanceof Proposition){
-							clause[i++] = prop2Idx.get(f3) + 1; 
+							clause[i++] = prop_index.get(f3); 
 						}else if(f3 instanceof Negation){
-							clause[i++] = - prop2Idx.get(((Negation)f3).getFormula()) - 1;
+							clause[i++] = - prop_index.get(((Negation)f3).getFormula());
 						}else if(f3 instanceof Tautology){
 							taut = true;
 							break;
@@ -128,24 +115,14 @@ public class Sat4jSolver extends SatSolver{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.tweetyproject.logics.pl.sat.SatSolver#getWitness(java.util.Collection)
-	 */
 	@Override
-	public Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas) {
+	public Interpretation<PlBeliefSet,PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, String additional_clauses, int num_additional_clauses) {
+		if(num_additional_clauses > 0)
+			throw new IllegalArgumentException("Sat4j does not suppport additional clauses in text form due to native implementation.");
 		ISolver solver = SolverFactory.newLight();
 		solver.newVar(this.maxvar);
 		solver.setExpectedNumberOfClauses(this.nbclauses);		
-		PlSignature sig = new PlSignature();
-		for(PlFormula f: formulas)
-			sig.addAll(f.getAtoms());		
-		Map<Proposition, Integer> prop2Idx = new HashMap<Proposition, Integer>();
-		Proposition[] idx2Prop = new Proposition[sig.size()];
-		int i = 0;
-		for(Proposition p: sig){
-			prop2Idx.put(p, i);
-			idx2Prop[i++] = p;
-		}
+		int i = 0;		
 		try{
 			for(PlFormula f: formulas){
 				Conjunction conj;
@@ -162,9 +139,9 @@ public class Sat4jSolver extends SatSolver{
 					boolean taut = false;
 					for(PlFormula f3: disj){
 						if(f3 instanceof Proposition){
-							clause[i++] = prop2Idx.get(f3) + 1; 
+							clause[i++] = prop_index.get(f3) + 1; 
 						}else if(f3 instanceof Negation){
-							clause[i++] = - prop2Idx.get(((Negation)f3).getFormula()) - 1;
+							clause[i++] = - prop_index.get(((Negation)f3).getFormula()) - 1;
 						}else if(f3 instanceof Tautology){
 							taut = true;
 							break;
@@ -179,7 +156,7 @@ public class Sat4jSolver extends SatSolver{
 			PossibleWorld w = new PossibleWorld();
 			for(i = 0; i < model.length; i++)
 				if(model[i]>0)
-					w.add(idx2Prop[model[i]-1]);				
+					w.add(prop_inverted_index.get(model[i]));				
 			return w;
 		}catch(ContradictionException e){
 			return null;

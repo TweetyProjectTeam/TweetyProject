@@ -43,7 +43,7 @@ public class MaxSatExample {
 	 * @throws IOException IOException
 	 */
 	public static void main(String[] args) throws ParserException, IOException {
-		MaxSatSolver solver = new OpenWboSolver("/Users/mthimm/Projects/misc_bins/open-wbo_2.1");
+		MaxSatSolver solver = new OpenWboSolver("/Users/mthimm/Documents/software/misc_bins/open-wbo_2.1");
 		
 		PlBeliefSet bs = new PlBeliefSet();
 		PlParser parser = new PlParser();

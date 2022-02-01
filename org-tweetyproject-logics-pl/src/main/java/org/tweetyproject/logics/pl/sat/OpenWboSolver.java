@@ -20,9 +20,8 @@ package org.tweetyproject.logics.pl.sat;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -40,7 +39,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * 
  * @author Matthias Thimm
  */
-public class OpenWboSolver extends MaxSatSolver {
+public class OpenWboSolver extends DimacsMaxSatSolver {
 
 	/** The binary location of open-wbo. */
 	private String binaryLocation;
@@ -53,25 +52,16 @@ public class OpenWboSolver extends MaxSatSolver {
 	public OpenWboSolver(String binaryLocation){
 		this.binaryLocation = binaryLocation;
 	}
-	
+
 	@Override
-	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> hardConstraints, Map<PlFormula, Integer> softConstraints) {
+	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> hardConstraints, Map<PlFormula,Integer> softConstraints, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index) {
 		try {
-			List<Proposition> props = new ArrayList<Proposition>();
-			for(PlFormula f: hardConstraints){
-				props.removeAll(f.getAtoms());
-				props.addAll(f.getAtoms());	
-			}
-			for(PlFormula f: softConstraints.keySet()){
-				props.removeAll(f.getAtoms());
-				props.addAll(f.getAtoms());	
-			}
 			// create temporary file in Dimacs WCNF format.
-			File f = MaxSatSolver.createTmpDimacsWcnfFile(hardConstraints,softConstraints,props);
+			File f = DimacsMaxSatSolver.createTmpDimacsWcnfFile(hardConstraints,softConstraints,prop_index);
 			String output = NativeShell.invokeExecutable(this.binaryLocation + " " + f.getAbsolutePath());
 			f.delete();
 			if(output.indexOf("UNSATISFIABLE") != -1)
-				return null;
+				return null;			
 			// parse the model	
 			String model = output.substring(output.indexOf("\nv")+1).trim();
 			model = model.replaceAll("v", "");
@@ -81,7 +71,7 @@ public class OpenWboSolver extends MaxSatSolver {
 				String s = tokenizer.nextToken().trim();				
 				Integer i = Integer.parseInt(s);
 				if(i > 0){
-					w.add(props.get(i-1));
+					w.add(prop_inverted_index.get(i));
 				}
 			}
 			return w;			
@@ -103,4 +93,20 @@ public class OpenWboSolver extends MaxSatSolver {
 		}
 	}
 
+	@Override
+	public boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition, Integer> prop_index) {
+		try {
+			// create temporary file in Dimacs WCNF format.
+			File f = DimacsMaxSatSolver.createTmpDimacsWcnfFile(formulas,new HashMap<PlFormula,Integer>(),prop_index);
+			String output = NativeShell.invokeExecutable(this.binaryLocation + " " + f.getAbsolutePath());
+			f.delete();
+			if(output.indexOf("UNSATISFIABLE") != -1)
+				return false;
+			return true;					
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);						
+		}
+	}
 }

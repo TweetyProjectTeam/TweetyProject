@@ -19,16 +19,14 @@
 package org.tweetyproject.logics.pl.examples;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.tweetyproject.commons.ParserException;
-import org.tweetyproject.commons.util.Pair;
 import org.tweetyproject.logics.pl.parser.DimacsParser;
 import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.sat.CmdLineSatSolver;
+import org.tweetyproject.logics.pl.sat.DimacsSatSolver;
 import org.tweetyproject.logics.pl.sat.SatSolver;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
-import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
  * Example code illustrating the use of external SAT solvers such as Lingeling
@@ -70,8 +68,8 @@ public class SatSolverExample {
 
 		// The conversion into dimacs format is done automatically by CmdLineSatSolver,
 		// but the method can also be called manually:
-		Pair<String, List<PlFormula>> re = SatSolver.convertToDimacs(kb1);
-		System.out.println(re.getFirst());
+		String re = DimacsSatSolver.convertToDimacs(kb1);
+		System.out.println(re);
 
 		// Parsing a belief base in dimacs format
 		DimacsParser dimacsParser = new DimacsParser();
