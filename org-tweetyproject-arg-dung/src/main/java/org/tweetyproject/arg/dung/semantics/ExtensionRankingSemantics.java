@@ -46,6 +46,10 @@ public enum ExtensionRankingSemantics {
      */
     R_PR("preferred", "R_PR"),
     /**
+     * R_CO_PR
+     */
+    R_CO_PR("complete-preferred", "R_PR"),
+    /**
      * R_SST
      */
     R_SST("semi-stable", "R_SST");
@@ -56,18 +60,21 @@ public enum ExtensionRankingSemantics {
             CONFLICT_FREE_SEMANTICS = R_CF,
             /** ADMISSIBLE */
             ADMISSIBLE_SEMANTICS = R_AD,
-    /** COMPLETE */
-    COMPLETE_SEMANTICS = R_CO,
+            /** COMPLETE */
+            COMPLETE_SEMANTICS = R_CO,
 
-    /** GROUNDED */
-    GROUNDED_SEMANTICS = R_GR,
+            /** GROUNDED */
+            GROUNDED_SEMANTICS = R_GR,
 
 
-    /** PREFERRED */
-    PREFERRED_SEMANTICS = R_PR,
+            /** PREFERRED */
+            PREFERRED_SEMANTICS = R_PR,
 
-    /** SEMI_STABLE */
-    SEMI_STABLE_SEMANTICS = R_SST;
+            /** COMPLETE-PREFERRED */
+            COMPLETE_PREFERRED_SEMANTICS = R_CO_PR,
+
+            /** SEMI_STABLE */
+            SEMI_STABLE_SEMANTICS = R_SST;
 
 
 

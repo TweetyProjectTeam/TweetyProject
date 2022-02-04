@@ -32,7 +32,7 @@ import java.util.*;
 
 
 /**
- * Reasoner for ordering semantics
+ * Reasoner for ordering semantics.
  *
  * @author Lars Bengel
  * @author Daniel Letkemann
@@ -41,12 +41,12 @@ public class ExtensionRankingReasoner {
     private final ExtensionRankingSemantics semantics;
     private final List<Method> baseFunctions;
     private Map<List<Extension<DungTheory>>, Character> comparisonMap;
-//    public final  Extension debug = new Extension();
-//    public final  Extension debug2 = new Extension();
+//    public final  Extension<DungTheory> debug = new Extension<DungTheory>();
+//    public final  Extension<DungTheory> debug2 = new Extension<DungTheory>();
 
 
     /**
-     * create a reasoner for the given ordering semantics
+     * Creates a reasoner for the given ordering semantics.
      * @param semantics an ordering semantics
      * @throws NoSuchMethodException if an error occurs
      */
@@ -71,8 +71,8 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     *get the semantic of OrderingSemanticsReasoner instance
-     * @return OrderingSemantics enum that was used for creating the reasoner
+     * Returns the semantic of ExtensionRankingReasoner instance.
+     * @return ExtensionRankingSemantics (enum) of the reasoner
      */
     public ExtensionRankingSemantics getSemantics(){
         return this.semantics;
@@ -80,29 +80,32 @@ public class ExtensionRankingReasoner {
 
 
     /**
-     * returns the lowest rank of the "getModels" method
+     * Returns the strongest rank of the "getModels" method.
      * @param theory a dung theory
+     *@param cardinalityMode if true, extensions are ranked by cardinality of BF results rather than subset relations
      * @return the list of extensions in the best rank
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    public List<Extension<DungTheory>> getModel(DungTheory theory) throws InvocationTargetException, IllegalAccessException{
+    public List<Extension<DungTheory>> getModel(DungTheory theory, boolean cardinalityMode) throws InvocationTargetException, IllegalAccessException{
         //return the best rank
-        List<List<Extension<DungTheory>>> ranks = getModels(theory);
+        List<List<Extension<DungTheory>>> ranks = getModels(theory, cardinalityMode);
         return  ranks.get(ranks.size()-1);
-    }/**
-     * compute the ordering over all subsets of theory wrt. to the ordering semantics
-     * this is done by making several comparisons (in lexicographic order) of Base Functions applied to Extensions
-     * this implies a total order that is sorted and split into ranks in the end.
-     * LOWER levels are ranked BETTER (Ascending order)
-     * !!!two extensions in one rank are either equally ranked or incomparable.
-     * !!!thus an extension placed in a better rank does not necessarily mean it is better than all the extensions in the rank below
+    }
+    /**
+     * Computes the ordering over all subsets of theory wrt. to the ordering semantics.
+     * This is done by making several comparisons (in lexicographic order) of Base Functions applied to Extensions
+     * and implies a total order that is sorted and split into ranks in the end.
+     * LOWER levels are ranked BETTER (Ascending order).
+     * Two extensions in one rank are either equally ranked or incomparable,
+     * thus an extension placed in a better rank does not necessarily mean it is better than all the extensions in the ranks above
      * @param theory a dung theory
+     * @param cardinalityMode if true, extensions are ranked by cardinality of BF results rather than subset relations
      * @return a list representing the ordering of all subsets of the given graph wrt. the ordering semantics (ascending order)
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    public List<List<Extension<DungTheory>>> getModels(DungTheory theory) throws InvocationTargetException, IllegalAccessException {
+    public List<List<Extension<DungTheory>>> getModels(DungTheory theory, boolean cardinalityMode) throws InvocationTargetException, IllegalAccessException {
         //returns partitioned list of ranked extensions partitioned into ranks
         Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
 
@@ -114,21 +117,37 @@ public class ExtensionRankingReasoner {
         Collections.reverse(extensions);
         //puts the extension containing all arguments at the first index, root of ranks-graph
 
-        this.comparisonMap = getComparisonSigns(extensions,theory);
+        this.comparisonMap = getComparisonSigns(extensions,theory,cardinalityMode);
         return getRanksFromList(extensions);
+    }
+    /**
+     * cardinalityMode is set to false if using this one-parameter method
+     * Computes the ordering over all subsets of theory wrt. to the ordering semantics.
+     * This is done by making several comparisons (in lexicographic order) of Base Functions applied to Extensions
+     * and implies a total order that is sorted and split into ranks in the end.
+     * LOWER levels are ranked BETTER (Ascending order).
+     * Two extensions in one rank are either equally ranked or incomparable,
+     * thus an extension placed in a better rank does not necessarily mean it is better than all the extensions in the ranks above
+     * @param theory a dung theory
+     * @return a list representing the ordering of all subsets of the given graph wrt. the ordering semantics (ascending order)
+     * @throws InvocationTargetException should never happen
+     * @throws IllegalAccessException should never happen
+     */
+    public List<List<Extension<DungTheory>>> getModels(DungTheory theory) throws InvocationTargetException, IllegalAccessException {
+        return getModels(theory,false);
     }
 
     /**
-     * gets the correct comparison sign for two extensions by using the base functions in correct order
-     * (lexicographic) if two sets are equal reg. base function -> use next one in the base function order
-     * !!! if ext1 (sign) ext2 is stored in the map, then ext2 (sign) ext1 is not
+     * Returns the correct comparison sign for two extensions by using the base functions in correct order.
+     * Lexicographic: if two sets are equal regarding the base function -> use next base function in the order for further comparisons.
      * @param argumentSubsets sets to get all comparisons of
      * @param theory attacks/defenses used for base function calculations
+     * @param cardinalityMode if true, extensions are ranked by cardinality of BF results rather than subset relations
      * @return map of comparison signs for a list of two extensions
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    private Map<List<Extension<DungTheory>>,Character> getComparisonSigns(List<Extension<DungTheory>> argumentSubsets, DungTheory theory) throws InvocationTargetException, IllegalAccessException {
+    private Map<List<Extension<DungTheory>>,Character> getComparisonSigns(List<Extension<DungTheory>> argumentSubsets, DungTheory theory, boolean cardinalityMode) throws InvocationTargetException, IllegalAccessException {
         // < if better ranked, can also be read as an "arrow" in a directed graph ( ext1 "<"---- ext2 )
         // > if worse ranked
         // = if equal, means that both extensions have matching parents in graph terms
@@ -140,24 +159,26 @@ public class ExtensionRankingReasoner {
                 Extension<DungTheory> ss2 = argumentSubsets.get(j);
                 ArrayList<Extension<DungTheory>> comparison = new ArrayList<>();
                 comparison.add(ss1); comparison.add(ss2);
-                putCompareSignInMap(comparison, subsetToSignMap,theory);
+                putCompareSignInMap(comparison, subsetToSignMap,theory, cardinalityMode);
+                // ext1 (sign) ext2 is stored in the map, ext2 (sign) ext1 is not
             }
         }
         return subsetToSignMap;
     }
 
     /**
-     * "iteratively" calculate base functions of two extensions and compare the outcome,
-     * if they are equal, recursively calculate sign for the next base function for the corresponding semantic
+     * "Lexicographically" calculate base functions of two extensions and compare the outcome,
+     * if they are equal, recursively calculate sign for the next base function in the order of the corresponding semantic.
      * @param comparison list of TWO extensions, first index of list corresponds to extension on the "left"
      * @param map map to store comparison sign for comparison
      * @param theory attacks/defenses for base function calculations
+     * @param cardinalityMode if true, extensions are ranked by cardinality of BF results rather than subset relations
      * @throws InvocationTargetException should never happen
      * @throws IllegalAccessException should never happen
      */
-    private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison,Map<List<Extension<DungTheory>>,Character> map, DungTheory theory) throws InvocationTargetException, IllegalAccessException {
-        putCompareSignInMap(comparison, map, theory, 0);
-    }private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison, Map<List<Extension<DungTheory>>, Character> map, DungTheory theory, int iteration) throws InvocationTargetException, IllegalAccessException {
+    private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison,Map<List<Extension<DungTheory>>,Character> map, DungTheory theory, boolean cardinalityMode) throws InvocationTargetException, IllegalAccessException {
+        putCompareSignInMap(comparison, map, theory, cardinalityMode,0);
+    }private void putCompareSignInMap(ArrayList<Extension<DungTheory>> comparison, Map<List<Extension<DungTheory>>, Character> map, DungTheory theory, boolean cardinalityMode, int iteration) throws InvocationTargetException, IllegalAccessException {
         if(iteration == baseFunctions.size()){
             //no more baseFunctions:
             // if preferred or grounded semantic:
@@ -167,25 +188,26 @@ public class ExtensionRankingReasoner {
             Extension<DungTheory> cs2 = new Extension<DungTheory>(comparison.get(1));
             switch(semantics) {
                 case R_GR:
-                    if (isStrictSubsetOf(cs1, cs2)){
+                    if (isStrictlySmaller(cs1, cs2,false)){
                         map.put(comparison, '<');
-                    } else if (isStrictSupersetOf(cs1, cs2)) {
+                    } else if (isStrictlyBigger(cs1, cs2,false)) {
                         map.put(comparison, '>');
                     }
                     else{
                         map.put(comparison,null);
                     }
                     break;
-                case R_PR:
-                    if (isStrictSubsetOf(cs1, cs2)) {
+                case R_PR, R_CO_PR:
+                    if (isStrictlySmaller(cs1, cs2,false)) {
                         map.put(comparison, '>');
-                    } else if (isStrictSupersetOf(cs1, cs2)) {
+                    } else if (isStrictlyBigger(cs1, cs2,false)) {
                         map.put(comparison, '<');
                     }
                     else{
                         map.put(comparison,null);
                     }
                     break;
+
             }
         }
         else {
@@ -198,14 +220,14 @@ public class ExtensionRankingReasoner {
             Extension<DungTheory> subset2 = comparison.get(1);
             parameters[0] = subset2;
             Extension<DungTheory> cs2 = (Extension<DungTheory>) compareMethod.invoke(this, parameters);
-            if (isStrictSubsetOf(cs1, cs2)) {
+            if (isStrictlySmaller(cs1, cs2,cardinalityMode)) {
                 map.put(comparison, '<');
-            } else if (isStrictSupersetOf(cs1, cs2)) {
+            } else if (isStrictlyBigger(cs1, cs2,cardinalityMode)) {
                 map.put(comparison, '>');
             } else if (cs1.equals(cs2)) {
                 //recurse
                 map.put(comparison, '=');
-                putCompareSignInMap(comparison, map, theory, iteration + 1);
+                putCompareSignInMap(comparison, map, theory, cardinalityMode,iteration + 1);
             }
             else{
                 map.put(comparison, null);
@@ -215,32 +237,43 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * true if ext1 < ext2
+     * Returns true if ext1 < ext2.
+     * If cardinalityMode = true -> Returns true if ext1 has striclty less elements than ext2.
      * @param ext1 first extension
      * @param ext2 second extension
+     * @param cardinalityMode if true, extensions are ranked by cardinality of BF results rather than subset relations
      * @return true if ext1 is strict subset of ext2, false otherwise (equal or superset)
      */
-    private boolean isStrictSubsetOf(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
-        Set<Argument> subset = new HashSet<>(ext1);
-        Set<Argument> superset = new HashSet<>(ext2);
-        // subset is a strict-subset of superset iff the union of the compare sets equals the compare set of subset and not superset
-        Collection<Argument> union = new HashSet<>(subset);
-        union.addAll(superset);
-        return(!union.equals(subset) && union.equals(superset));
+    private boolean isStrictlySmaller(Extension<DungTheory> ext1, Extension<DungTheory> ext2, boolean cardinalityMode){
+        Set<Argument> set1 = new HashSet<>(ext1);
+        Set<Argument> set2 = new HashSet<>(ext2);
+        // set1 is a strict-subset of set2 iff the union of the compare sets equals the compare set of set1 and not set2
+        if(!cardinalityMode) {
+            Collection<Argument> union = new HashSet<>(set1);
+            union.addAll(set2);
+            return (!union.equals(set1) && union.equals(set2));
+        }
+        //cardinalityMode true, go by compareset sizes only
+        else{
+            return (set1.size() < set2.size());
+        }
     }
     /**
-     * true if ext1 > ext2
+     * Returns true if ext1 > ext2.
+     * If cardinalityMode = true -> Returns true if ext1 has strictly more elements than ext2.
      * @param ext1 first extension
      * @param ext2 second extension
+     * @param cardinalityMode if true, extensions are ranked by cardinality of BF results rather than subset relations
      * @return true if ext1 is strict superset of ext2, false otherwise (equal or subset)
      */
-    private boolean isStrictSupersetOf(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
-        return isStrictSubsetOf(ext2,ext1);
+    private boolean isStrictlyBigger(Extension<DungTheory> ext1, Extension<DungTheory> ext2, boolean cardinalityMode){
+        //flip set parameters
+        return isStrictlySmaller(ext2,ext1,cardinalityMode);
     }
 
 
     /**
-     * takes a list of extensions, sorts them by use of a map and splits them into individual ranks
+     * Takes a list of extensions, sorts them by use of a map and splits them into individual ranks.
      * @param extensions list of extensions to sort split into ranks
      * @return a list of ranks containing extensions
      */
@@ -263,9 +296,8 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * sorts a list of extensions topologically.
-     * Adjusted Kahn Algorithm
-     * Map entries interpreted as Graph edges
+     * Sorts a list of extensions topologically.
+     * Implementation is following Kahn's Algorithm, with map entries being interpreted as edges in a graph.
      * @param extensions list of extensions to sort
      * @return topologically sorted list of extensions
      */
@@ -304,8 +336,7 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * returns all children of node
-     * simply all extensions that are ranked better than node
+     * Returns all children of an extension, or rather all extensions that are ranked better than the input extension.
      * @param node an extension
      * @return all extensions ranked better than node
      */
@@ -330,13 +361,13 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * true if there is any other parent that is not on the ignoreList
-     * false if all parents are in the ignorelist
+     * true if there is any other parent that is not contained in the ignoreList.
+     * false if all parents are contained in the ignorelist.
      * @param node an extension
-     * @param result list of all extensions that are already removed from the queue and placed into the result in Kahn's algorithm
+     * @param ignoreList list of all extensions that are already removed from the queue and placed into the result in Kahn's algorithm
      * @return true if node has no further parents outside ignoreList
      */
-    private boolean hasOtherParent(Extension<DungTheory> node, List<Extension<DungTheory>> result){
+    private boolean hasOtherParent(Extension<DungTheory> node, List<Extension<DungTheory>> ignoreList){
         //go through all extensions and check if it is a parent of node
         //if one such parent is found, return true
         Set<List<Extension<DungTheory>>> comparisons = comparisonMap.keySet();
@@ -344,10 +375,10 @@ public class ExtensionRankingReasoner {
             if(comparison.contains(node)){
                 int index = comparison.indexOf(node);
                 Character sign = comparisonMap.get(comparison);
-                if(index == 0 && sign != null && sign == '<' && !result.contains(comparison.get(1))){
+                if(index == 0 && sign != null && sign == '<' && !ignoreList.contains(comparison.get(1))){
                     return true;
                 }
-                else if(index == 1 && sign != null && sign == '>' && !result.contains(comparison.get(0))){
+                else if(index == 1 && sign != null && sign == '>' && !ignoreList.contains(comparison.get(0))){
                     return true;
                 }
 
@@ -358,11 +389,11 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * returns the "strongest" sign for all extensions inside a rank compared to  node
-     * i.e. if node is a child to any extension inside the rank, the whole rank is a parent to node
-     * if for all extensions in the rank it is either incomparable or equal, then it should be inside that rank later
+     * Returns the "strongest" sign for all extensions inside a rank compared to an extension,
+     * i.e. if node is a child to any extension inside the rank, the whole rank is a parent to that extension.
+     * If for all extensions in the rank it is either incomparable or equal, then it should be inside that rank later.
      *
-     * used to partition the final order result into individual ranks
+     * This is used to partition the final order result into individual ranks.
      * @param compareToRank rank to compare node to
      * @param node an extension
      * @return the relationship of the rank to the node
@@ -386,8 +417,8 @@ public class ExtensionRankingReasoner {
 
 
     /**
-     * get the ordering sign between two extensions
-     * !!! may require two calls, as signs are stored in one direction only
+     * Returns the ordering sign between two extensions.
+     * May require two calls, as signs are stored in <strong> one </strong> direction only.
      * @param ext1 extension on the left side
      * @param ext2 extension on the right side
      * @return the current sign between two extensions
@@ -400,7 +431,7 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * return the corresponding base function methods for each ordering semantics in their lexicographic order
+     * Returns the corresponding base function methods for each ordering semantics in their lexicographic order.
      * @param semantics an ordering semantic
      * @return the corresponding method
      * @throws NoSuchMethodException should never happen
@@ -417,7 +448,7 @@ public class ExtensionRankingReasoner {
                 methods.add(ExtensionRankingReasoner.class.getMethod("getConflicts", Extension.class, DungTheory.class));
                 methods.add(ExtensionRankingReasoner.class.getMethod("getUndefended", Extension.class, DungTheory.class));
             }
-            case R_CO, R_GR-> {
+            case R_CO, R_GR, R_CO_PR-> {
                 methods.add(ExtensionRankingReasoner.class.getMethod("getConflicts", Extension.class, DungTheory.class));
                 methods.add(ExtensionRankingReasoner.class.getMethod("getUndefended", Extension.class, DungTheory.class));
                 methods.add(ExtensionRankingReasoner.class.getMethod("getDefendedNotIn", Extension.class, DungTheory.class));
@@ -435,7 +466,7 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * computes the set of conflicts occurring inside ext
+     * Computes the set of conflicts occurring inside ext.
      * @param ext an extension
      * @param theory a dung theory
      * @return set of conflict in ext
@@ -451,7 +482,7 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * computes the set of arguments in ext, which are not defended by ext against outside attackers
+     * Computes the set of arguments in ext, which are not defended by ext against outside attackers.
      * @param ext an extension
      * @param theory a dung theory
      * @return set of arguments in ext which are not defended by ext
@@ -470,7 +501,7 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * computes the set of arguments outside of ext, which are not attacked by ext
+     * Computes the set of arguments outside of ext, which are not attacked by ext.
      * @param ext an extension
      * @param theory a dung theory
      * @return set of arguments in theory \ ext which are not attacked by ext
@@ -486,7 +517,7 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * computes the set of arguments outside of ext, which are defended by ext
+     * Computes the set of arguments outside of ext, which are defended by ext.
      * @param ext an extension
      * @param theory a dung theory
      * @return set of arguments in theory \ ext which are defended by ext
@@ -527,7 +558,7 @@ public class ExtensionRankingReasoner {
 
     }
     /**
-     * this method always returns true because the solver is native
+     * This method always returns true because the solver is native
      */
 	public boolean isInstalled() {
 		return true;
