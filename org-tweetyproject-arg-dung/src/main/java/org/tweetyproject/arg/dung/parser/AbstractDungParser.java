@@ -21,7 +21,9 @@
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +32,7 @@ import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Labeling;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.Parser;
@@ -172,6 +175,38 @@ public abstract class AbstractDungParser extends Parser<DungTheory,Formula> {
 		for (Argument arg : undec)
 			lab.put(arg, ArgumentStatus.UNDECIDED);
 		return lab;
+	}
+	
+	/**
+	 * Parses a representation of the form "\lt; {a,b,c},[(a,b),(b,c)]\gt;" which is 
+	 * given by DungTheory.toString();
+	 * @param str some String
+	 * @return the Dung theory represented by str
+	 */
+	public static DungTheory parseJavaStringRepresentation(String str) {
+		DungTheory af = new DungTheory();
+		String argumentlist = str.substring(str.indexOf("{")+1, str.indexOf("}"));
+		Map<String,Argument> args = new HashMap<>();
+		StringTokenizer st = new StringTokenizer(argumentlist, ",");
+		while(st.hasMoreTokens()) {
+			String t = st.nextToken().trim();
+			Argument a = new Argument(t); 
+			args.put(t, a);
+			af.add(a);
+		}
+		String attacklist = str.substring(str.indexOf("[")+1, str.indexOf("]")).trim();
+		// the following could be made nicer
+		while(true) {
+			String first = attacklist.substring(1, attacklist.indexOf(",")).trim();
+			attacklist = attacklist.substring(attacklist.indexOf(",")+1).trim();
+			String second = attacklist.substring(0,attacklist.indexOf(")")).trim();
+			attacklist = attacklist.substring(attacklist.indexOf(")")+1).trim();	
+			af.add(new Attack(args.get(first),args.get(second)));
+			if(!attacklist.equals(""))
+				attacklist = attacklist.substring(1).trim();
+			else break;
+		}		
+		return af;
 	}
 
 	/**
