@@ -90,6 +90,13 @@ public class SetTrie<T extends Comparable<T>> {
 				n += node.actualSize();
 			return n;
 		}
+		
+		public int numberOfNodes() {
+			int n = 1;
+			for(SetTrieNode node: this.children.values())
+				n += node.numberOfNodes();
+			return n;
+		}
 	}
 	
 	private SetTrieNode root;
@@ -123,6 +130,10 @@ public class SetTrie<T extends Comparable<T>> {
 	
 	public int actualSize() {
 		return this.root.actualSize();	
+	}
+	
+	public int numberOfNodes() {
+		return this.root.numberOfNodes();	
 	}
 	
 	/**
