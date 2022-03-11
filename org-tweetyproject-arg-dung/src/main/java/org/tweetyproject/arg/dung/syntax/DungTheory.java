@@ -361,6 +361,9 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return newExtension;
 	}
 	
+
+	
+	
 	/**
 	 * Checks whether arg1 is attacked by arg2.
 	 * @param arg1 an argument.
