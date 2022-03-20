@@ -48,7 +48,7 @@ public class IncompleteReasoner{
 	 */
 	public Collection<Collection<Extension<DungTheory>>> getAllModels(IncompleteTheory theory){
 		Collection<Collection<Extension<DungTheory>>> models = new HashSet<Collection<Extension<DungTheory>>>();
-		Set<Set<Argument>> powerSet = theory.powerSet(theory.possibleArguments);
+		Set<Set<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
 		for(Set<Argument> instance : powerSet) {
 			Collection<Extension<DungTheory>> instanceModels = new HashSet<Extension<DungTheory>>();
 			theory.optimisticCompletion(instance);
@@ -64,21 +64,21 @@ public class IncompleteReasoner{
 	 * @param arg argument to be checked
 	 * @return if the argument is part of all extensions of all instances 
 	 */
-	public boolean necessary(IncompleteTheory theory, Argument arg) {
+	public boolean VerificationNecessary(IncompleteTheory theory, Set<Argument> arg) {
 		
 		Set<Argument> possibleArgsWithoutArg = new HashSet<Argument>();
-		possibleArgsWithoutArg.addAll(theory.possibleArguments);
+		possibleArgsWithoutArg.addAll(theory.uncertainArgument);
 
-		possibleArgsWithoutArg.remove(arg);
+		possibleArgsWithoutArg.removeAll(arg);
 		Set<Set<Argument>> power = theory.powerSet(possibleArgsWithoutArg);
 		
 		for(Set<Argument> set : power) {
-			set.add(arg);
+			set.addAll(arg);
 
 			theory.optimisticCompletion(set);
 			Collection<Extension<DungTheory>> ext = reasoner.getModels((DungTheory) theory);
 			for(Extension<DungTheory> e : ext) {
-				if(!e.contains(arg))
+				if(!e.containsAll(arg))
 					return false;
 			}
 
@@ -91,21 +91,57 @@ public class IncompleteReasoner{
 	 * @param arg argument to be checked
 	 * @return if the argument is part of any extensions of all instances 
 	 */
-	public boolean Notnecessary(IncompleteTheory theory, Argument arg) {
-		Set<Argument> possibleArgsWithoutArg = theory.possibleArguments;
-		possibleArgsWithoutArg.remove(arg);
+	public boolean VerificationPossible(IncompleteTheory theory, Set<Argument> arg) {
+		Set<Argument> possibleArgsWithoutArg = theory.uncertainArgument;
+		possibleArgsWithoutArg.removeAll(arg);
 		Set<Set<Argument>> power = theory.powerSet(possibleArgsWithoutArg);
 		for(Set<Argument> set : power) {
-			set.add(arg);
+			set.addAll(arg);
 			theory.optimisticCompletion(set);
 			Collection<Extension<DungTheory>> ext = reasoner.getModels((DungTheory) theory);
 			for(Extension<DungTheory> e : ext) {
-				if(e.contains(arg))
+				if(e.containsAll(arg))
 					return true;
 			}
 
 		}
 		return false;		
+	}
+	
+	public boolean credulousAcceptance(IncompleteTheory theory, Argument arg) {
+		Collection<Collection<Extension<DungTheory>>> models = this.getAllModels(theory);
+		for(Collection<Extension<DungTheory>> i : models) {
+			for(Extension<DungTheory> j : i) {
+				if(j.contains(arg)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean skepticalAcceptance(IncompleteTheory theory, Argument arg) {
+		Collection<Collection<Extension<DungTheory>>> models = this.getAllModels(theory);
+		for(Collection<Extension<DungTheory>> i : models) {
+			for(Extension<DungTheory> j : i) {
+				if(!j.contains(arg)) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public boolean existence(IncompleteTheory theory) {
+		Collection<Collection<Extension<DungTheory>>> models = this.getAllModels(theory);
+		if(models.isEmpty()) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 
 

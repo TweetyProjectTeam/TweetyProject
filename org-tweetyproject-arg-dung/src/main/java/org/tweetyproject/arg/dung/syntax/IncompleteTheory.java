@@ -33,16 +33,16 @@ public class IncompleteTheory extends DungTheory{
 	
 	public HashSet<Argument> definiteArguments;
 	public HashSet<Attack> definiteAttacks;
-	public HashSet<Argument> possibleArguments;
-	public HashSet<Attack> possibleAttacks;
+	public HashSet<Argument> uncertainArgument;
+	public HashSet<Attack> uncertainAttacks;
 	/**
 	 * costructor
 	 */
 	public IncompleteTheory() {
 		definiteArguments = new HashSet<Argument>();
-		possibleArguments = new HashSet<Argument>();
+		uncertainArgument = new HashSet<Argument>();
 		definiteAttacks = new HashSet<Attack>();
-		possibleAttacks = new HashSet<Attack>();
+		uncertainAttacks = new HashSet<Attack>();
 	}
 	/**
 	 * adds definite argument
@@ -56,7 +56,7 @@ public class IncompleteTheory extends DungTheory{
 	 * @param arg argument
 	 */
 	public void addPossibleArgument(Argument arg) {
-		this.possibleArguments.add(arg);
+		this.uncertainArgument.add(arg);
 	}
 	/**
 	 * adds definite attack
@@ -70,7 +70,7 @@ public class IncompleteTheory extends DungTheory{
 	 * @param att attack
 	 */
 	public void addDefiniteAttack(Argument arg1, Argument arg2) {
-		this.possibleAttacks.add(new Attack(arg1, arg2));
+		this.uncertainAttacks.add(new Attack(arg1, arg2));
 	}
 	/**
 	 * instantiates some possible arguments and attacks
@@ -78,8 +78,8 @@ public class IncompleteTheory extends DungTheory{
 	 * @param usedPossibleAttacks attacks from this.possibleAttacks
 	 */
 	public void instantiate(Set<Argument> usedPossibleArguments, Set<Attack> usedPossibleAttacks) {
-		if((!this.possibleAttacks.containsAll(usedPossibleAttacks) || 
-				!this.possibleArguments.containsAll(usedPossibleArguments)) && 
+		if((!this.uncertainAttacks.containsAll(usedPossibleAttacks) || 
+				!this.uncertainArgument.containsAll(usedPossibleArguments)) && 
 				(!this.definiteAttacks.containsAll(usedPossibleAttacks) || 
 						!this.definiteArguments.containsAll(usedPossibleArguments)) ) {
 			//TODO: error case
@@ -120,7 +120,7 @@ public class IncompleteTheory extends DungTheory{
 			if(isInAllTheories == true)
 				this.definiteArguments.add(arg);
 			else
-				this.possibleArguments.add(arg);
+				this.uncertainArgument.add(arg);
 		}
 		
 		Set<Attack> attacks = theories.iterator().next().getAttacks();
@@ -135,7 +135,7 @@ public class IncompleteTheory extends DungTheory{
 			if(isInAllTheories == true)
 				this.definiteAttacks.add(att);
 			else
-				this.possibleAttacks.add(att);
+				this.uncertainAttacks.add(att);
 		}
 	}
 	/**
@@ -170,7 +170,7 @@ public class IncompleteTheory extends DungTheory{
 	 */
 	public void optimisticCompletion(Set<Argument> s) {
 		HashSet<Attack> usedAttacks = new HashSet<Attack>();
-		for(Attack att : this.possibleAttacks) {
+		for(Attack att : this.uncertainAttacks) {
 			if((this.definiteArguments.contains(att.getAttacker()) || s.contains(att.getAttacker())) &&
 					(this.definiteArguments.contains(att.getAttacked()) || s.contains(att.getAttacked()))) {
 				usedAttacks.add(att);
@@ -186,14 +186,14 @@ public class IncompleteTheory extends DungTheory{
 	 */
 	public void pessimisticCompletion(Set<Argument> s) {
 		HashSet<Attack> usedAttacks = new HashSet<Attack>();
-		for(Attack att : this.possibleAttacks) {
+		for(Attack att : this.uncertainAttacks) {
 			if(!(this.definiteArguments.contains(att.getAttacker()) || s.contains(att.getAttacker())) &&
 					!(this.definiteArguments.contains(att.getAttacked()) || s.contains(att.getAttacked()))) {
 				usedAttacks.add(att);
 			}
 			
 		}
-		HashSet<Argument> newArgs = (HashSet<Argument>) this.possibleArguments.clone();
+		HashSet<Argument> newArgs = (HashSet<Argument>) this.uncertainArgument.clone();
 		newArgs.removeAll(s);
 		this.instantiate(newArgs, usedAttacks);
 	}
