@@ -20,7 +20,7 @@
 package org.tweetyproject.arg.dung.examples;
 
 import java.util.HashSet;
-
+import java.util.Set;
 
 import org.tweetyproject.arg.dung.reasoner.IncompleteReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleCompleteReasoner;
@@ -72,7 +72,9 @@ public class IncompleteReasonerExample {
 	        argSet.add(d);
 	        IncompleteReasoner re2 = new IncompleteReasoner(Semantics.CO);
 	        
-	        System.out.println("necessary for {d}: "  + re2.necessary(ex, d));
+	        Set<Argument> arg = new HashSet<Argument>();
+	        arg.add(d);
+	        System.out.println("necessary for {d}: "  + re2.VerificationNecessary(ex, arg));
 	        SimpleCompleteReasoner re = new SimpleCompleteReasoner();
 	        ex.optimisticCompletion(argSet);
 	        

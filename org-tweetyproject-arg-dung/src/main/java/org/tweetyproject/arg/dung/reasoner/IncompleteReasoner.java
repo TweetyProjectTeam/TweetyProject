@@ -65,6 +65,16 @@ public class IncompleteReasoner{
 	 * @return if the argument is part of all extensions of all instances 
 	 */
 	public boolean VerificationNecessary(IncompleteTheory theory, Set<Argument> arg) {
+		//return true if all of arg is definite
+		boolean allOfArgIsDefinite = true;
+		for(Argument a : arg) {
+			if(!theory.definiteArguments.contains(a)) {
+				allOfArgIsDefinite = false;
+				break;
+			}
+		}
+		if(allOfArgIsDefinite)
+			return true;
 		
 		Set<Argument> possibleArgsWithoutArg = new HashSet<Argument>();
 		possibleArgsWithoutArg.addAll(theory.uncertainArgument);
@@ -76,6 +86,7 @@ public class IncompleteReasoner{
 			set.addAll(arg);
 
 			theory.optimisticCompletion(set);
+			System.out.println(theory.toString());
 			Collection<Extension<DungTheory>> ext = reasoner.getModels((DungTheory) theory);
 			for(Extension<DungTheory> e : ext) {
 				if(!e.containsAll(arg))
