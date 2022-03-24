@@ -26,6 +26,7 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.IncompleteTheory;
 
@@ -47,17 +48,32 @@ public class IncompleteReasoner{
 	 * @return all possible models
 	 */
 	public Collection<Collection<Extension<DungTheory>>> getAllModels(IncompleteTheory theory){
+		
 		Collection<Collection<Extension<DungTheory>>> models = new HashSet<Collection<Extension<DungTheory>>>();
 		Set<Set<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
 		for(Set<Argument> instance : powerSet) {
 			Collection<Extension<DungTheory>> instanceModels = new HashSet<Extension<DungTheory>>();
-			theory.optimisticCompletion(instance);
-			instanceModels = this.reasoner.getModels(theory);
+			//uncertain attacks that can occur in this instance
+			HashSet<Attack> uncertainAttacksInInstance = new HashSet<Attack>();
+			for(Attack att : theory.uncertainAttacks) {
+				//only add attack to possible attacks if both parties appear in instance
+				if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+						(theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+					uncertainAttacksInInstance.add(att);
+				}				
+			}
+			Set<Set<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+			//create new instance for each member of the power set and evaluate it
+			for(Set<Attack> j : powerSetAttacks) {
+				theory.instantiate(instance, j);
+				instanceModels.addAll(this.reasoner.getModels(theory));
+			}
+
 			models.add(instanceModels);
 		}
 		return models;
 	}
-	
+
 	/**
 	 * 
 	 * @param theory incomplete theory

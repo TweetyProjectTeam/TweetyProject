@@ -63,14 +63,15 @@ public class IncompleteTheory extends DungTheory{
 	 * @param att attack
 	 */
 	public void addPossibleAttack(Argument arg1, Argument arg2) {
-		this.definiteAttacks.add(new Attack(arg1, arg2));
+		this.uncertainAttacks.add(new Attack(arg1, arg2));
+		
 	}
 	/**
 	 * adds possible attack
 	 * @param att attack
 	 */
 	public void addDefiniteAttack(Argument arg1, Argument arg2) {
-		this.uncertainAttacks.add(new Attack(arg1, arg2));
+		this.definiteAttacks.add(new Attack(arg1, arg2));
 	}
 	/**
 	 * instantiates some possible arguments and attacks
@@ -87,8 +88,11 @@ public class IncompleteTheory extends DungTheory{
 			return;
 		}
 
+		for(Attack att : this.getAttacks())
+			this.remove(att);
 
 		this.clear();
+
 		for(Argument i : this.definiteArguments) {
 			this.add(i);
 		}
