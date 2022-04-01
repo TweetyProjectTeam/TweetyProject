@@ -263,28 +263,22 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * sorts a list of extensions topologically.
-     * Adjusted Kahn Algorithm
-     * Map entries interpreted as Graph edges
+     * Sorts a list of extensions topologically.
+     * Implementation is following Kahn's Algorithm, with map entries being interpreted as edges in a graph.
      * @param extensions list of extensions to sort
      * @return topologically sorted list of extensions
      */
 
     private List<Extension<DungTheory>> rankWithQueue(List<Extension<DungTheory>> extensions) {
-
         //implementation is done by following Kahn's algorithm so topologically sort extensions based on their rankings
         //ranking arrows ("<", ">") between two extensions can be interpreted as directed edges ("<--", "-->")
 
-        //root of graph: extension with all arguments, ALWAYS ranked worst
-        //make sure it is the root element.
+        //root of graph: extensions that have no parent/ are ranked worst .
         List<Extension<DungTheory>> queue = new ArrayList<>();
-        Extension<DungTheory> root = extensions.get(0);
-        for (Extension<DungTheory> e:extensions){
-            if(e.size()>root.size()){
-                root = e;
-            }
+        List<Extension<DungTheory>> root = getRoot(extensions);
+        for(Extension<DungTheory> r : root){
+            queue.add(extensions.remove(extensions.indexOf(r)));
         }
-        queue.add(extensions.remove(extensions.indexOf(root)));
 
         List<Extension<DungTheory>> result = new ArrayList<>();
 
@@ -304,8 +298,22 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * returns all children of node
-     * simply all extensions that are ranked better than node
+     * Returns the root elements for topological sorting. These are all subsets of arguments that have no less plausible rank in comparison.
+     * @param extensions list of all subsets
+     * @return list of least plausible arguments
+     */
+    private List<Extension<DungTheory>> getRoot(List<Extension<DungTheory>> extensions) {
+        List<Extension<DungTheory>> root = new ArrayList<>();
+        for(Extension<DungTheory> possibleRootElem : extensions) {
+            if(!hasParent(possibleRootElem)){
+                root.add(possibleRootElem);
+            }
+        }
+        return root;
+    }
+
+    /**
+     * Returns all children of an extension, or rather all extensions that are ranked better than the input extension.
      * @param node an extension
      * @return all extensions ranked better than node
      */
@@ -330,24 +338,24 @@ public class ExtensionRankingReasoner {
     }
 
     /**
-     * true if there is any other parent that is not on the ignoreList
-     * false if all parents are in the ignorelist
+     * true if there is any other parent that is not contained in the ignoreList.
+     * false if it has no parents or all parents are contained in the ignorelist.
      * @param node an extension
-     * @param result list of all extensions that are already removed from the queue and placed into the result in Kahn's algorithm
+     * @param ignoreList list of all extensions that are already removed from the queue and placed into the result in Kahn's algorithm
      * @return true if node has no further parents outside ignoreList
      */
-    private boolean hasOtherParent(Extension<DungTheory> node, List<Extension<DungTheory>> result){
-        //go through all extensions and check if it is a parent of node
+    private boolean hasOtherParent(Extension<DungTheory> node, List<Extension<DungTheory>> ignoreList){
+        //go through all extensions and check if it is a parent of node and not on ignoreList
         //if one such parent is found, return true
         Set<List<Extension<DungTheory>>> comparisons = comparisonMap.keySet();
         for(List<Extension<DungTheory>> comparison : comparisons){
             if(comparison.contains(node)){
                 int index = comparison.indexOf(node);
                 Character sign = comparisonMap.get(comparison);
-                if(index == 0 && sign != null && sign == '<' && !result.contains(comparison.get(1))){
+                if(index == 0 && sign != null && sign == '<' && !ignoreList.contains(comparison.get(1))){
                     return true;
                 }
-                else if(index == 1 && sign != null && sign == '>' && !result.contains(comparison.get(0))){
+                else if(index == 1 && sign != null && sign == '>' && !ignoreList.contains(comparison.get(0))){
                     return true;
                 }
 
@@ -356,6 +364,17 @@ public class ExtensionRankingReasoner {
         return false;
 
     }
+
+    /**
+     * true if there is any parent to the input node.
+     * false if it has no parent.
+     * @param node an extension
+     * @return true if node has a parent
+     */
+    private boolean hasParent(Extension<DungTheory> node){
+        return hasOtherParent(node, new ArrayList<>());
+    }
+
 
     /**
      * returns the "strongest" sign for all extensions inside a rank compared to  node
