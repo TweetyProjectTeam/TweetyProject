@@ -372,13 +372,13 @@ public class ExtensionRankingReasoner {
 
     /**
      * true if there is any other parent that is not contained in the ignoreList.
-     * false if all parents are contained in the ignorelist.
+     * false if it has no parents or all parents are contained in the ignorelist.
      * @param node an extension
      * @param ignoreList list of all extensions that are already removed from the queue and placed into the result in Kahn's algorithm
      * @return true if node has no further parents outside ignoreList
      */
     private boolean hasOtherParent(Extension<DungTheory> node, List<Extension<DungTheory>> ignoreList){
-        //go through all extensions and check if it is a parent of node
+        //go through all extensions and check if it is a parent of node and not on ignoreList
         //if one such parent is found, return true
         Set<List<Extension<DungTheory>>> comparisons = comparisonMap.keySet();
         for(List<Extension<DungTheory>> comparison : comparisons){
@@ -397,6 +397,13 @@ public class ExtensionRankingReasoner {
         return false;
 
     }
+
+    /**
+     * true if there is any parent to the input node.
+     * false if it has no parent.
+     * @param node an extension
+     * @return true if node has a parent
+     */
     private boolean hasParent(Extension<DungTheory> node){
         return hasOtherParent(node, new ArrayList<>());
     }
