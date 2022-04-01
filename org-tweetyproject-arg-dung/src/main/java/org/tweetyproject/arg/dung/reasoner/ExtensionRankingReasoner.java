@@ -111,7 +111,7 @@ public class ExtensionRankingReasoner {
 
         List<Extension<DungTheory>> extensions = new LinkedList<>();
         for(Set<Argument> set : subsets){
-            Extension<DungTheory> ext = new Extension<DungTheory>(set);
+            Extension<DungTheory> ext = new Extension<>(set);
             extensions.add(ext);
         }
         Collections.reverse(extensions);
@@ -184,8 +184,8 @@ public class ExtensionRankingReasoner {
             // if preferred or grounded semantic:
             //  compare subsets themselves
 
-            Extension<DungTheory> cs1 = new Extension<DungTheory>(comparison.get(0));
-            Extension<DungTheory> cs2 = new Extension<DungTheory>(comparison.get(1));
+            Extension<DungTheory> cs1 = new Extension<>(comparison.get(0));
+            Extension<DungTheory> cs2 = new Extension<>(comparison.get(1));
             switch(semantics) {
                 case R_GR:
                     if (isStrictlySmaller(cs1, cs2,false)){
@@ -303,20 +303,15 @@ public class ExtensionRankingReasoner {
      */
 
     private List<Extension<DungTheory>> rankWithQueue(List<Extension<DungTheory>> extensions) {
-
         //implementation is done by following Kahn's algorithm so topologically sort extensions based on their rankings
         //ranking arrows ("<", ">") between two extensions can be interpreted as directed edges ("<--", "-->")
 
-        //root of graph: extension with all arguments, ALWAYS ranked worst
-        //make sure it is the root element.
+        //root of graph: extensions that have no parent/ are ranked worst .
         List<Extension<DungTheory>> queue = new ArrayList<>();
-        Extension<DungTheory> root = extensions.get(0);
-        for (Extension<DungTheory> e:extensions){
-            if(e.size()>root.size()){
-                root = e;
-            }
+        List<Extension<DungTheory>> root = getRoot(extensions);
+        for(Extension<DungTheory> r : root){
+            queue.add(extensions.remove(extensions.indexOf(r)));
         }
-        queue.add(extensions.remove(extensions.indexOf(root)));
 
         List<Extension<DungTheory>> result = new ArrayList<>();
 
@@ -333,6 +328,21 @@ public class ExtensionRankingReasoner {
             }
         }
         return result;
+    }
+
+    /**
+     * Returns the root elements for topological sorting. These are all subsets of arguments that have no less plausible rank in comparison.
+     * @param extensions list of all subsets
+     * @return list of least plausible arguments
+     */
+    private List<Extension<DungTheory>> getRoot(List<Extension<DungTheory>> extensions) {
+        List<Extension<DungTheory>> root = new ArrayList<>();
+        for(Extension<DungTheory> possibleRootElem : extensions) {
+            if(!hasParent(possibleRootElem)){
+                root.add(possibleRootElem);
+            }
+        }
+        return root;
     }
 
     /**
@@ -387,6 +397,11 @@ public class ExtensionRankingReasoner {
         return false;
 
     }
+    private boolean hasParent(Extension<DungTheory> node){
+        return hasOtherParent(node, new ArrayList<>());
+    }
+
+
 
     /**
      * Returns the "strongest" sign for all extensions inside a rank compared to an extension,
@@ -472,7 +487,7 @@ public class ExtensionRankingReasoner {
      * @return set of conflict in ext
      */
     public Extension<DungTheory> getConflicts(Extension<DungTheory> ext, DungTheory theory) {
-        Extension<DungTheory> conflicts = new Extension<DungTheory>();
+        Extension<DungTheory> conflicts = new Extension<>();
         for (Attack att: theory.getAttacks()) {
             if (ext.contains(att.getAttacker()) && ext.contains(att.getAttacked())) {
                 conflicts.add(new Argument(att.toString()));
@@ -488,7 +503,7 @@ public class ExtensionRankingReasoner {
      * @return set of arguments in ext which are not defended by ext
      */
     public Extension<DungTheory> getUndefended(Extension<DungTheory> ext, DungTheory theory) {
-        Extension<DungTheory> undefended = new Extension<DungTheory>();
+        Extension<DungTheory> undefended = new Extension<>();
         for (Argument arg: ext) {
             for (Argument attacker: theory.getAttackers(arg)) {
                 if (!ext.contains(attacker) && !theory.isAttacked(attacker, ext)) {
@@ -507,7 +522,7 @@ public class ExtensionRankingReasoner {
      * @return set of arguments in theory \ ext which are not attacked by ext
      */
     public Extension<DungTheory> getUnattacked(Extension<DungTheory> ext, DungTheory theory) {
-        Extension<DungTheory> unattacked = new Extension<DungTheory>();
+        Extension<DungTheory> unattacked = new Extension<>();
         for (Argument arg: theory) {
             if (!ext.contains(arg) && !theory.isAttacked(arg, ext)) {
                 unattacked.add(arg);
@@ -525,21 +540,21 @@ public class ExtensionRankingReasoner {
     public Extension<DungTheory> getDefendedNotIn(Extension<DungTheory> ext, DungTheory theory) {
 
         //calculate attackers of extension
-        Extension<DungTheory> extMinus = new Extension<DungTheory>();
+        Extension<DungTheory> extMinus = new Extension<>();
         for(Argument arg:ext){
             extMinus.addAll(theory.getAttackers(arg));
         }
 
 
         //calculate fafStar recursively
-        Extension<DungTheory> fafStar = new Extension<DungTheory>(ext);
+        Extension<DungTheory> fafStar = new Extension<>(ext);
         boolean hasChanged = true;
         while(hasChanged){
 
             //calculate faf of fafStar
             Extension<DungTheory> fafFafStar = theory.faf(fafStar);
             //execute formula
-            Extension<DungTheory> newFafStar= new Extension<DungTheory>(fafStar);
+            Extension<DungTheory> newFafStar= new Extension<>(fafStar);
             newFafStar.addAll(fafFafStar);
             newFafStar.removeAll(extMinus);
             //check if further iterations necessary
@@ -547,7 +562,7 @@ public class ExtensionRankingReasoner {
                 hasChanged = false;
             }
             else{
-                fafStar = new Extension<DungTheory>(newFafStar);
+                fafStar = new Extension<>(newFafStar);
             }
         }
         //finalize
