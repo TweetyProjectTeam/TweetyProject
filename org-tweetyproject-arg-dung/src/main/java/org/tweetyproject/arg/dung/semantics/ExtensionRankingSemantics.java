@@ -26,7 +26,7 @@ package org.tweetyproject.arg.dung.semantics;
  */
 public enum ExtensionRankingSemantics {
     /**
-     * R_AD
+     * R_CF
      */
     R_CF("conflict-free", "R_CF"),
     /**
@@ -56,7 +56,7 @@ public enum ExtensionRankingSemantics {
 
 
     public static final ExtensionRankingSemantics
-            /** ADMISSIBLE */
+            /** CONFLICT_FREE */
             CONFLICT_FREE_SEMANTICS = R_CF,
             /** ADMISSIBLE */
             ADMISSIBLE_SEMANTICS = R_AD,
@@ -70,7 +70,7 @@ public enum ExtensionRankingSemantics {
             /** PREFERRED */
             PREFERRED_SEMANTICS = R_PR,
 
-            /** COMPLETE-PREFERRED */
+            /** COMPLETE_PREFERRED */
             COMPLETE_PREFERRED_SEMANTICS = R_CO_PR,
 
             /** SEMI_STABLE */
