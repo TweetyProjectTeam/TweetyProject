@@ -31,6 +31,8 @@ import java.util.Map;
  * Basic Implementation of a reasoner for initial sets
  * A set of arguments S is considered initial iff it is non-empty and minimal among the non-empty admissible sets
  *
+ * see: Yuming Xu and Claudette Cayrol. Initial sets in abstract argumentation frameworks.
+ *
  * @author Lars Bengel
  */
 public class SimpleInitialReasoner extends AbstractExtensionReasoner {
@@ -72,7 +74,7 @@ public class SimpleInitialReasoner extends AbstractExtensionReasoner {
 
         // method is only supposed to be used with initial sets
         if (!initExtensions.contains(ext)) {
-            throw new IllegalArgumentException("Extensions must be an inital set of theory");
+            throw new IllegalArgumentException("Extensions must be an initial set of theory");
         }
 
         // If any argument a in the extension S has an attacker, then S is not unattacked
@@ -96,7 +98,7 @@ public class SimpleInitialReasoner extends AbstractExtensionReasoner {
 
         // method is only supposed to be used with initial sets
         if (!initExtensions.contains(ext)) {
-            throw new IllegalArgumentException("Extensions must be an inital set of theory");
+            throw new IllegalArgumentException("Extensions must be an initial set of theory");
         }
 
         for (Extension<DungTheory> ext2: initExtensions) {
@@ -144,7 +146,7 @@ public class SimpleInitialReasoner extends AbstractExtensionReasoner {
                 }
                 attackers.retainAll(initialAttackers);
 
-                // if the intersection is empty, then S is unchallenged. Otherwise it is challenged
+                // if the intersection is empty, then S is unchallenged. Otherwise, it is challenged
                 if (attackers.isEmpty()) {
                     unchallenged.add(ext);
                 } else {
