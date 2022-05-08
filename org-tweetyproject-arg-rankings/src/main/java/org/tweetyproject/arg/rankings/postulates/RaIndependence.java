@@ -25,7 +25,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
+import org.tweetyproject.comparator.TweetyComparator;
 
 /**
  * The "independence" postulate for ranking semantics as proposed in [Amgoud,
@@ -50,7 +50,7 @@ public class RaIndependence extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -60,7 +60,7 @@ public class RaIndependence extends RankingPostulate {
 		Iterator<Argument> it = dt.iterator();
 		Argument a = it.next();
 		Argument b = it.next();
-		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
+		TweetyComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
 		
 		//add new arguments that are not connected to a or b
 		Argument t1 = new Argument("t");
@@ -68,7 +68,7 @@ public class RaIndependence extends RankingPostulate {
 		dt.add(t1);
 		dt.add(t2);
 		dt.add(new Attack(t1, t2));
-		ArgumentRanking ranking2 = ev.getModel((DungTheory) dt);
+		TweetyComparator<Argument, DungTheory> ranking2 = ev.getModel((DungTheory) dt);
 		
 		return ranking.compare(a, b) == ranking2.compare(a, b);
 	}

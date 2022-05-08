@@ -26,7 +26,7 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
 
 /**
@@ -36,17 +36,17 @@ import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
  * 
  * @author Anna Gessler
  */
-public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
+public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticePartialOrder<Argument, DungTheory>> {
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
-		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
+	public Collection<LatticePartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<LatticePartialOrder<Argument, DungTheory>> ranks = new HashSet<LatticePartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory base) {
+	public LatticePartialOrder<Argument, DungTheory> getModel(DungTheory base) {
 		// Number of steps
 		int iMax = 6;
 		// Map for storing burden numbers of previous steps
@@ -75,7 +75,8 @@ public class BurdenBasedRankingReasoner extends AbstractRankingReasoner<LatticeA
 		}
 
 		// Use the lexicographical order of the burden numbers as ranking
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking( ((DungTheory) base).getNodes());
+		LatticePartialOrder<Argument, DungTheory> ranking 
+			= new LatticePartialOrder<Argument, DungTheory>( ((DungTheory) base).getNodes());
 		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
 		for (Argument a :  (DungTheory) base) {
 			for (Argument b :  (DungTheory) base) {

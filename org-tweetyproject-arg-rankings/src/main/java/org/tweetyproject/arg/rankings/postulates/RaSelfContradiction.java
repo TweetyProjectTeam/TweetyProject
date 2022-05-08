@@ -24,7 +24,7 @@ import java.util.Iterator;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
+import org.tweetyproject.comparator.TweetyComparator;
 
 /**
  *  The "self-contradiction" postulate for ranking semantics as proposed 
@@ -50,7 +50,7 @@ public class RaSelfContradiction extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -61,7 +61,7 @@ public class RaSelfContradiction extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
+		TweetyComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory)dt);
 		if (dt.isAttackedBy(a, a) && !dt.isAttackedBy(b, b)) 
 			return ranking.isStrictlyLessAcceptableThan(a, b); 
 		return true;

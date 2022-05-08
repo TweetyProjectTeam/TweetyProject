@@ -29,7 +29,7 @@ import java.util.Set;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.arg.rankings.util.LexicographicIntTupleComparator;
 import org.tweetyproject.commons.util.Pair;
 
@@ -47,7 +47,7 @@ import org.tweetyproject.commons.util.Pair;
  * 
  * @author Anna Gessler
  */
-public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
+public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticePartialOrder<Argument, DungTheory>> {
 
 	/**
 	 * Stores the tupled values computed by this reasoner for lookup.
@@ -56,15 +56,15 @@ public class TuplesRankingReasoner extends AbstractRankingReasoner<LatticeArgume
 
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
-		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
+	public Collection<LatticePartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<LatticePartialOrder<Argument, DungTheory>> ranks = new HashSet<LatticePartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory kb) {
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(((DungTheory)kb).getNodes());
+	public LatticePartialOrder<Argument, DungTheory> getModel(DungTheory kb) {
+		LatticePartialOrder<Argument, DungTheory> ranking = new LatticePartialOrder<Argument, DungTheory>(((DungTheory)kb).getNodes());
 
 		// Check if kb is acyclic
 		if (((DungTheory)kb).containsCycle())

@@ -25,7 +25,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
 
 
 /**
@@ -35,9 +35,9 @@ import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
  * 
  * @author Sebastian Franke
  */
-public class CounterTransitivityReasoner  extends AbstractRankingReasoner<LatticeArgumentRanking>{
+public class CounterTransitivityReasoner  extends AbstractRankingReasoner<LatticePartialOrder<Argument, DungTheory>>{
 	
-	LatticeArgumentRanking rank;
+	LatticePartialOrder<Argument, DungTheory> rank;
 	solver sol;
 	public enum solver {
 	   quality, cardinality, qualityFirst, cardinalityFirst, gfpCardinality, simpleDominance
@@ -45,14 +45,14 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	
 	
 	
-	public CounterTransitivityReasoner(solver sol, LatticeArgumentRanking rank) {
+	public CounterTransitivityReasoner(solver sol, LatticePartialOrder<Argument, DungTheory> rank) {
 		this.sol= sol;
 		this.rank = rank;
 	}
 	
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
-		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
+	public Collection<LatticePartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<LatticePartialOrder<Argument, DungTheory>> ranks = new HashSet<LatticePartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		
 			
@@ -60,7 +60,7 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory bbase) {
+	public LatticePartialOrder<Argument, DungTheory> getModel(DungTheory bbase) {
 		//switch the type of solver chosen in the constructor
 		switch(this.sol) {
 			case cardinality:
@@ -86,8 +86,8 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	 * orders arguments after the amount of attackers they have.
 	 * The less attackers, the higher the rank
 	 */
-	public LatticeArgumentRanking cardinality(DungTheory af) {
-		LatticeArgumentRanking card = new LatticeArgumentRanking(af);
+	public LatticePartialOrder<Argument, DungTheory> cardinality(DungTheory af) {
+		LatticePartialOrder<Argument, DungTheory> card = new LatticePartialOrder<Argument, DungTheory>(af);
 		//compare every argument to every argument
 		for(Argument arg1 : af) {
 			for(Argument arg2 : af) {
@@ -117,10 +117,10 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	 * ranks arguments according to a given ranking. It decides the highest ranked attacker of each argument wrt the underlying ranking
 	 * and then ranks them after their best attacker
 	 */
-	public LatticeArgumentRanking quality(DungTheory af, LatticeArgumentRanking ra) {
+	public LatticePartialOrder<Argument, DungTheory> quality(DungTheory af, LatticePartialOrder<Argument, DungTheory> ra) {
 
 		
-		LatticeArgumentRanking mostValueableAttacker = new LatticeArgumentRanking(af);
+		LatticePartialOrder<Argument, DungTheory> mostValueableAttacker = new LatticePartialOrder<Argument, DungTheory>(af);
 		HashMap<Argument, Argument> maxAttacker = new HashMap<Argument, Argument>();
 		//find the strongest attacker of each argument
 		for(Argument arg : af) {
@@ -176,10 +176,10 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	/**
 	 * ranks arguments according to the quality function. If 2 arguments have the same avlue according to quality, the decsision is left to cardinality
 	 */
-	public LatticeArgumentRanking qualityFirst(DungTheory af, LatticeArgumentRanking ra) {
-		LatticeArgumentRanking qual = quality(af, ra);
-		LatticeArgumentRanking card = cardinality(af);
-		LatticeArgumentRanking result = new LatticeArgumentRanking(af);
+	public LatticePartialOrder<Argument, DungTheory> qualityFirst(DungTheory af, LatticePartialOrder<Argument, DungTheory> ra) {
+		LatticePartialOrder<Argument, DungTheory> qual = quality(af, ra);
+		LatticePartialOrder<Argument, DungTheory> card = cardinality(af);
+		LatticePartialOrder<Argument, DungTheory> result = new LatticePartialOrder<Argument, DungTheory>(af);
 		//compare every argument to every argument
 		for(Argument arg1 : af) {
 			for(Argument arg2 : af) {
@@ -213,10 +213,10 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	/**
 	 * ranks arguments according to the cardinality function. If 2 arguments have the same value according to cardinality, the decision is left to quality
 	 */
-	public LatticeArgumentRanking cardinalityFirst(DungTheory af, LatticeArgumentRanking ra) {
-		LatticeArgumentRanking qual = quality(af, ra);
-		LatticeArgumentRanking card = cardinality(af);
-		LatticeArgumentRanking result = new LatticeArgumentRanking(af);
+	public LatticePartialOrder<Argument, DungTheory> cardinalityFirst(DungTheory af, LatticePartialOrder<Argument, DungTheory> ra) {
+		LatticePartialOrder<Argument, DungTheory> qual = quality(af, ra);
+		LatticePartialOrder<Argument, DungTheory> card = cardinality(af);
+		LatticePartialOrder<Argument, DungTheory> result = new LatticePartialOrder<Argument, DungTheory>(af);
 		//compare every argument to every argument
 		for(Argument arg1 : af) {
 			for(Argument arg2 : af) {
@@ -253,9 +253,9 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	 * Based on this ranking a cardinality first ranking  is constructed. Based on this new ranking a quality ranking is constructed.
 	 * This process is repeated until two consecutive iterations of cardinality first reach the same conclusion
 	 */
-	public LatticeArgumentRanking gfpCardinality(DungTheory af) {
+	public LatticePartialOrder<Argument, DungTheory> gfpCardinality(DungTheory af) {
 		
-		LatticeArgumentRanking ra = new LatticeArgumentRanking(af);
+		LatticePartialOrder<Argument, DungTheory> ra = new LatticePartialOrder<Argument, DungTheory>(af);
 		//set the rank in which only not attacked arguments are ranked higehr
 		for(Argument a : af) {
 			for(Argument b : af) {
@@ -265,10 +265,10 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 			}
 		}
 		
-		LatticeArgumentRanking quality = this.quality(af, ra);
-		LatticeArgumentRanking card = this.cardinalityFirst(af, ra);
+		LatticePartialOrder<Argument, DungTheory> quality = this.quality(af, ra);
+		LatticePartialOrder<Argument, DungTheory> card = this.cardinalityFirst(af, ra);
 		
-		LatticeArgumentRanking card2 = new LatticeArgumentRanking(af);
+		LatticePartialOrder<Argument, DungTheory> card2 = new LatticePartialOrder<Argument, DungTheory>(af);
 		//check if the last iteraions yield the same result
 		while(!card.isSame(card2)) {
 			
@@ -283,10 +283,10 @@ public class CounterTransitivityReasoner  extends AbstractRankingReasoner<Lattic
 	/**
 	 * only ranks two arguments if one is better according to quality and cardinality
 	 */
-	public LatticeArgumentRanking simpleDominance(DungTheory af, LatticeArgumentRanking ra) {
-		LatticeArgumentRanking card = this.cardinality(af);
-		LatticeArgumentRanking qual = this.quality(af, ra);
-		LatticeArgumentRanking result = new LatticeArgumentRanking(af);
+	public LatticePartialOrder<Argument, DungTheory> simpleDominance(DungTheory af, LatticePartialOrder<Argument, DungTheory> ra) {
+		LatticePartialOrder<Argument, DungTheory> card = this.cardinality(af);
+		LatticePartialOrder<Argument, DungTheory> qual = this.quality(af, ra);
+		LatticePartialOrder<Argument, DungTheory> result = new LatticePartialOrder<Argument, DungTheory>(af);
 		//compare every argument to every argument
 		for(Argument a : af) {
 			for(Argument b : af) {

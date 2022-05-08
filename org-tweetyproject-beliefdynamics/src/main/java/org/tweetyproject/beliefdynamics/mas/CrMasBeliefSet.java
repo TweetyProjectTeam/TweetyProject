@@ -20,7 +20,7 @@ package org.tweetyproject.beliefdynamics.mas;
 
 import org.tweetyproject.agents.*;
 import org.tweetyproject.commons.*;
-import org.tweetyproject.graphs.orders.*;
+import org.tweetyproject.comparator.Order;
 
 /**
  * This class represents belief sets for credibility-based agents multi-agent

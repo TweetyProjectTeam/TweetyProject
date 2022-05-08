@@ -24,7 +24,7 @@ import java.util.Iterator;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
+import org.tweetyproject.comparator.TweetyComparator;
 
 /**
  *  The "quality precedence" postulate for ranking semantics as proposed in
@@ -49,7 +49,7 @@ public class RaQualityPrecedence extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -64,7 +64,7 @@ public class RaQualityPrecedence extends RankingPostulate {
 			return true;
 		
 		Argument c = dt.getAttackers(b).iterator().next();
-		ArgumentRanking ranking = ev.getModel((DungTheory)dt);
+		TweetyComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory)dt);
 		for (Argument f: dt.getAttackers(a)) 
 			if (!ranking.isStrictlyMoreAcceptableThan(c,f))
 				return true;
