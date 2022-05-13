@@ -103,14 +103,14 @@ public class ExtensionRankingExample {
         figure3.add(a);
         figure3.add(b);
         figure3.add(c);
-        Argument d = new Argument("d");
-        figure3.add(d);
+//        Argument d = new Argument("d");
+//        figure3.add(d);
         figure3.addAttack(a,b);
         figure3.addAttack(b,c);
-        figure3.addAttack(c,d);
-        figure3.addAttack(d,c);
+//        figure3.addAttack(c,d);
+//        figure3.addAttack(d,c);
 
-        final DungTheory theory = figure3;
+        final DungTheory theory = figure1;
 
         //see Base Function results for all theory subsets/extensions
         printBFResults(theory);

@@ -218,6 +218,9 @@
   	<module>org-tweetyproject-web</module>
   	<module>org-tweetyproject</module>
   	<module>org-tweetyproject-sat</module>
+      <module>voting-rules</module>
+      <module>org-tweetyproject-votingrules</module>
+      <module>org-tweetyproject-votingrules</module>
   </modules>
 
 </project>

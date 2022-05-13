@@ -1,4 +1,4 @@
-% This example is taken from the paper
+% This examples is taken from the paper
 % Nonmonotonic Causal Theories by Enrico Giunchiglia et. al. (2004)
 :- signature
 ANIMAL = { turkey1, turkey2}

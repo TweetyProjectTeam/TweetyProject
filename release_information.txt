@@ -173,7 +173,7 @@
     - Approximative reasoning for ASPIC+ (arg.aspic.reasoner.RandomAspicReasoner)
     - TPTP format support in logics.fol; added support for equality
     - Added classes for automatic postulate evaluation (see commons.postulates
-      for the framework and logics.pl.postulates for an example)
+      for the framework and logics.pl.postulates for an examples)
     - Added a new graded semantics for abstract argumentation (see
       arg.prob.reasoner.ProbabilisticRankingReasoner)
     - Added a simple DPLL implementation in Java in logics.pl
@@ -189,5 +189,5 @@
     - removed arg.simpledeductive library, integrated functionalities into
       net.sf.tweety.arg.deductive
     - almost every library comes now with an "examples" package containing
-      example code
+      examples code
     - general bugfixing

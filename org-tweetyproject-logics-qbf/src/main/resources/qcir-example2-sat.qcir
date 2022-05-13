@@ -1,5 +1,5 @@
 #QCIR-G14 46
-#mvs2y.sat example, taken from the QBFEVAL19 dataset
+#mvs2y.sat examples, taken from the QBFEVAL19 dataset
 forall(1,2,3,4,5)
 exists(6,7,8,9,10)
 output(11)

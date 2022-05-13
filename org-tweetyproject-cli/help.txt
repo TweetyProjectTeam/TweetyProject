@@ -11,7 +11,7 @@ e.g. "-i test.txt" reads file test.txt
 (if not present, output is written to the console)
 e.g. "-o output.txt" writes output in file "output.txt"
  
-complete example:
+complete examples:
 "-p preferences -i testA.po testB.po -o result.po -aggr plurality"
 calls plugin "preferences" with the two given "*.po" files, aggregates
 them with the rule "plurality" and writes the output into the file

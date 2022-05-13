@@ -1,5 +1,5 @@
 #QCIR-G14 46
-#mvs2y.unsat example, taken from the QBFEVAL19 dataset
+#mvs2y.unsat examples, taken from the QBFEVAL19 dataset
 exists(1,2,3,4,5)
 forall(6)
 exists(7,8,9,10)
