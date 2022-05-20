@@ -16,7 +16,7 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.graphs.orders;
+package org.tweetyproject.comparator;
 
 import java.util.*;
 

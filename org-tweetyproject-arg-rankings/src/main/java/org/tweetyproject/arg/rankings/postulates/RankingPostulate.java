@@ -21,8 +21,9 @@ package org.tweetyproject.arg.rankings.postulates;
 import java.util.Collection;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
+import org.tweetyproject.comparator.TweetyComparator;
 import org.tweetyproject.commons.postulates.Postulate;
 import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
@@ -85,13 +86,13 @@ public abstract class RankingPostulate implements Postulate<Argument> {
 	@Override
 	public boolean isSatisfied(Collection<Argument> kb, PostulateEvaluatable<Argument> ev) {
 		if(ev instanceof AbstractRankingReasoner<?>)
-			return this.isSatisfied(kb, (AbstractRankingReasoner<ArgumentRanking>) ev);
+			return this.isSatisfied(kb, (AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>>) ev);
 		throw new RuntimeException("PostulateEvaluatable of type AbstractRankingReasoner expected.");
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.commons.postulates.Postulate#isSatisfied(org.tweetyproject.commons.BeliefBase, org.tweetyproject.commons.postulates.PostulateEvaluatable)
 	 */
-	public abstract boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev);
+	public abstract boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev);
 	
 }

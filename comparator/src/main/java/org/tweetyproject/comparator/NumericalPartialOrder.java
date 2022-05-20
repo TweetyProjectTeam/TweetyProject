@@ -16,19 +16,18 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.rankings.semantics;
+package org.tweetyproject.comparator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.commons.BeliefBase;
+import org.tweetyproject.commons.Formula;
+
 
 /**
  * This class provides an acceptability interpretation of arguments by assigning
@@ -38,7 +37,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
  * @author Matthias Thimm
  * @author Anna Gessler
  */
-public class NumericalArgumentRanking extends ArgumentRanking implements Map<Argument, Double> {
+public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> extends TweetyComparator<T, R> implements Map<T, Double> {
 
 	/**
 	 * Precision for comparing values.
@@ -76,12 +75,12 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	}
 
 	/** The map used for storing acceptability values */
-	private Map<Argument, Double> argumentToValue;
+	private Map<T, Double> argumentToValue;
 
 	/**
 	 * Creates a new empty numerical argument ranking.
 	 */
-	public NumericalArgumentRanking() {
+	public NumericalPartialOrder() {
 		this.argumentToValue = new HashMap<>();
 		this.sortingType = SortingType.ASCENDING;
 	}
@@ -94,9 +93,9 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * @param initialvalue an initial value that will be 
 	 * assigned to all arguments
 	 */
-	public NumericalArgumentRanking(Collection<Argument> args, double initialvalue) {
+	public NumericalPartialOrder(Collection<T> args, double initialvalue) {
 		this();
-		for (Argument arg : args)
+		for (T arg : args)
 			this.argumentToValue.put(arg, initialvalue);
 	}
 
@@ -108,7 +107,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * org.tweetyproject.arg.dung.syntax.Argument)
 	 */
 	@Override
-	public boolean isStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
+	public boolean isStrictlyLessOrEquallyAcceptableThan(T a, T b) {
 		if (sortingType == SortingType.LEXICOGRAPHIC) {
 			BigDecimal bda = new BigDecimal((Double) (this.argumentToValue.get(a)));
 			BigDecimal bdb = new BigDecimal((Double) (this.argumentToValue.get(b)));
@@ -116,31 +115,15 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 			bdb = bdb.setScale(5, RoundingMode.HALF_UP);
 			return (bda.toString().compareTo(bdb.toString()) >= 0.0);
 		} else if (sortingType == SortingType.ASCENDING)
-			return this.argumentToValue.get(b) <= this.argumentToValue.get(a) + NumericalArgumentRanking.PRECISION;
+			return this.argumentToValue.get(b) <= this.argumentToValue.get(a) + NumericalPartialOrder.PRECISION;
 		else if (sortingType == SortingType.DESCENDING)
-			return this.argumentToValue.get(a) <= this.argumentToValue.get(b) + NumericalArgumentRanking.PRECISION;
+			return this.argumentToValue.get(a) <= this.argumentToValue.get(b) + NumericalPartialOrder.PRECISION;
 		else
 			throw new IllegalArgumentException("Unknown sorting type " + sortingType);
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.tweetyproject.arg.dung.semantics.AbstractArgumentationInterpretation#
-	 * getArgumentsOfStatus(org.tweetyproject.arg.dung.semantics.ArgumentStatus)
-	 */
-	@Override
-	public Extension getArgumentsOfStatus(ArgumentStatus status) {
-		if (status.equals(ArgumentStatus.IN))
-			return new Extension(this.getMaximallyAcceptedArguments(this.keySet()));
-		if (status.equals(ArgumentStatus.OUT))
-			return new Extension(this.getMinimallyAcceptedArguments(this.keySet()));
-		Collection<Argument> undec = new HashSet<>(this.keySet());
-		undec.removeAll(this.getMaximallyAcceptedArguments(this.keySet()));
-		undec.removeAll(this.getMinimallyAcceptedArguments(this.keySet()));
-		return new Extension(undec);
-	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -190,7 +173,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * @see java.util.Map#entrySet()
 	 */
 	@Override
-	public Set<java.util.Map.Entry<Argument, Double>> entrySet() {
+	public Set<java.util.Map.Entry<T, Double>> entrySet() {
 		return this.argumentToValue.entrySet();
 	}
 
@@ -220,7 +203,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * @see java.util.Map#keySet()
 	 */
 	@Override
-	public Set<Argument> keySet() {
+	public Set<T> keySet() {
 		return this.argumentToValue.keySet();
 	}
 
@@ -230,7 +213,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Double put(Argument arg0, Double arg1) {
+	public Double put(T arg0, Double arg1) {
 		return this.argumentToValue.put(arg0, arg1);
 	}
 
@@ -240,7 +223,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
 	@Override
-	public void putAll(Map<? extends Argument, ? extends Double> arg0) {
+	public void putAll(Map<? extends T, ? extends Double> arg0) {
 		this.argumentToValue.putAll(arg0);
 	}
 
@@ -286,7 +269,7 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	 * Set the sorting type for ranking values. For example, the "ascending" type
 	 * means that smaller values signify a higher ranking than bigger values.
 	 * 
-	 * @param sortingType see {@link org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking#sortingType} for a description of
+	 * @param sortingType see {@link org.tweetyproject.arg.rankings.semantics.NumericalPartialOrder#sortingType} for a description of
 	 * the available sorting methods
 	 */
 	public void setSortingType(SortingType sortingType) {
@@ -294,16 +277,28 @@ public class NumericalArgumentRanking extends ArgumentRanking implements Map<Arg
 	}
 
 	@Override
-	public boolean isIncomparable(Argument a, Argument b) {
+	public boolean isIncomparable(T a, T b) {
 		return (!(isStrictlyLessOrEquallyAcceptableThan(a, b) || isStrictlyLessOrEquallyAcceptableThan(b, a)));
 	}
 
 	@Override
 	public boolean containsIncomparableArguments() {
-		for (Argument a : this.argumentToValue.keySet()) 
-			for (Argument b : this.argumentToValue.keySet()) 
+		for (T a : this.argumentToValue.keySet()) 
+			for (T b : this.argumentToValue.keySet()) 
 				if (this.isIncomparable(a, b)) 
 					return true;
+		return false;
+	}
+
+	@Override
+	public boolean satisfies(T formula) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean satisfies(R beliefBase) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
 		return false;
 	}
 }

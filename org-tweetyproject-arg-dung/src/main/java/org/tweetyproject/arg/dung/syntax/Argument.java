@@ -28,7 +28,7 @@ import org.tweetyproject.graphs.Node;
  * @author Matthias Thimm
  *
  */
-public class Argument implements DungEntity, Node{
+public class Argument implements DungEntity, Node, Comparable<Argument>{
 	/**
 	 * The name of the argument.
 	 */
@@ -102,5 +102,10 @@ public class Argument implements DungEntity, Node{
 	 */
 	public LdoArgument getLdoArgument(){
 		return new LdoArgument(this.name);
+	}
+
+	@Override
+	public int compareTo(Argument o) {
+		return this.name.compareTo(o.name);
 	}
 }

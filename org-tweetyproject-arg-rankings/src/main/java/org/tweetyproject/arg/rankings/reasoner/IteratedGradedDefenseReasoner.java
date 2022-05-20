@@ -26,9 +26,8 @@ import java.util.Map;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.commons.util.SetTools;
 
 /**
@@ -39,7 +38,7 @@ import org.tweetyproject.commons.util.SetTools;
  *  
  * @author Matthias Thimm
  */
-public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<LatticeArgumentRanking>{
+public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<LatticePartialOrder<Argument, DungTheory>>{
 
 	/**
 	 * Determines the number of attackers from x to y.
@@ -285,8 +284,8 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
-		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
+	public Collection<LatticePartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<LatticePartialOrder<Argument, DungTheory>> ranks = new HashSet<LatticePartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
@@ -295,13 +294,13 @@ public class IteratedGradedDefenseReasoner extends AbstractRankingReasoner<Latti
 	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory bbase) {
+	public LatticePartialOrder<Argument, DungTheory> getModel(DungTheory bbase) {
 		// compute all mn-complete extensions for all m,n
 		Map<Point,Collection<Extension<DungTheory>>> allExt = new HashMap<>();
 		for(int m = 1; m < ((DungTheory)bbase).size(); m++)
 			for(int n=1; n < ((DungTheory)bbase).size(); n++)
 				allExt.put(new Point(m,n), this.getAllMNCompleteExtensions(((DungTheory)bbase), m, n));
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(((DungTheory)bbase));
+		LatticePartialOrder<Argument, DungTheory> ranking = new LatticePartialOrder<Argument, DungTheory>(((DungTheory)bbase));
 		for(Argument a: ((DungTheory)bbase))
 			for(Argument b: ((DungTheory)bbase))
 				if(a != b){

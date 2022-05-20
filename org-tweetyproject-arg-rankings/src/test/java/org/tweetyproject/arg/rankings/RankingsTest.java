@@ -26,8 +26,8 @@ import org.junit.Test;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 
 /**
  * Test class for basic ranking functionalities.
@@ -44,8 +44,8 @@ public class RankingsTest {
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");
 		Argument c = new Argument("c");
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.setSortingType(NumericalArgumentRanking.SortingType.ASCENDING);
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+		ranking.setSortingType(NumericalPartialOrder.SortingType.ASCENDING);
 		ranking.put(a, -1.0);
 		ranking.put(b, 0.0);
 		ranking.put(c, 1.0);
@@ -60,8 +60,8 @@ public class RankingsTest {
 		Argument a = new Argument("a");
 		Argument b = new Argument("b");
 		Argument c = new Argument("c");
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+		ranking.setSortingType(NumericalPartialOrder.SortingType.DESCENDING);
 		ranking.put(a, -1.0);
 		ranking.put(b, 0.0);
 		ranking.put(c, 1.0);
@@ -79,8 +79,8 @@ public class RankingsTest {
 		Argument d = new Argument("d");
 		Argument e = new Argument("e");
 		Argument f = new Argument("f");
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.setSortingType(NumericalArgumentRanking.SortingType.LEXICOGRAPHIC);
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+		ranking.setSortingType(NumericalPartialOrder.SortingType.LEXICOGRAPHIC);
 		ranking.put(a, -1.0);
 		ranking.put(d, -2.0);
 		ranking.put(b, 0.0);
@@ -101,10 +101,10 @@ public class RankingsTest {
 		Argument b = new Argument("b");
 		dt.add(a);
 		dt.add(b);
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
 		ranking.put(a, -1.0);
 		ranking.put(b, 0.0);
-		NumericalArgumentRanking ranking2 = new NumericalArgumentRanking();
+		NumericalPartialOrder<Argument, DungTheory> ranking2 = new NumericalPartialOrder<Argument, DungTheory>();
 		ranking2.put(a, -1.0);
 		ranking2.put(b, 0.0);
 		
@@ -121,9 +121,9 @@ public class RankingsTest {
 		Argument b = new Argument("b");
 		dt.add(a);
 		dt.add(b);
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking = new LatticePartialOrder<Argument, DungTheory>(dt);
 		ranking.setStrictlyLessOrEquallyAcceptableThan(a, b);
-		LatticeArgumentRanking ranking2 = new LatticeArgumentRanking(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking2 = new LatticePartialOrder<Argument, DungTheory>(dt);
 		ranking2.setStrictlyLessOrEquallyAcceptableThan(a, b);
 		
 		assertTrue(ranking.isEquivalent(ranking2, dt));	
@@ -139,7 +139,7 @@ public class RankingsTest {
 		Argument b = new Argument("b");
 		dt.add(a);
 		dt.add(b);
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking = new LatticePartialOrder<Argument, DungTheory>(dt);
 		assertTrue(ranking.isIncomparable(a, b));
 		assertFalse(ranking.isEquallyAcceptableThan(a, b));
 		assertFalse(ranking.isStrictlyLessAcceptableThan(a, b));

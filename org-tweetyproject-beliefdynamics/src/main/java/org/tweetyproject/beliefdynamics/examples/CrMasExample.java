@@ -27,10 +27,10 @@ import org.tweetyproject.beliefdynamics.kernels.*;
 import org.tweetyproject.beliefdynamics.mas.*;
 import org.tweetyproject.beliefdynamics.operators.*;
 import org.tweetyproject.commons.*;
-import org.tweetyproject.graphs.orders.*;
 import org.tweetyproject.logics.pl.parser.*;
 import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
 import org.tweetyproject.logics.pl.syntax.*;
+import org.tweetyproject.comparator.Order;
 
 /**
  * Example code on using belief operators in multi-agent settings.

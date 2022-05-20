@@ -55,7 +55,8 @@
   			  <groupId>gurobi</groupId>
 			<artifactId>gurobi</artifactId>
 			<version>9.1.0</version>
-		</dependency>	
+		</dependency>
+
 	</dependencies>
 	<parent>
 		<groupId>org.tweetyproject</groupId>

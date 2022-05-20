@@ -75,6 +75,7 @@ public class KwtDungTheoryGenerator implements DungTheoryGenerator {
 		this.p_cred_args_attacked = p_cred_args_attacked;
 		this.p_cred_args_attack_back = p_cred_args_attack_back;
 		this.p_other_attacks = p_other_attacks;
+		this.rand = new Random();
 	}
 	
 	

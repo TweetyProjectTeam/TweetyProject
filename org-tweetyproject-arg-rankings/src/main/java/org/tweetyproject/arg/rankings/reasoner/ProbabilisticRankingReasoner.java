@@ -28,7 +28,7 @@ import org.tweetyproject.arg.prob.reasoner.AbstractPafReasoner;
 import org.tweetyproject.arg.prob.reasoner.MonteCarloPafReasoner;
 import org.tweetyproject.arg.prob.reasoner.SimplePafReasoner;
 import org.tweetyproject.arg.prob.syntax.ProbabilisticArgumentationFramework;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.math.probability.Probability;
 
 /**
@@ -37,7 +37,7 @@ import org.tweetyproject.math.probability.Probability;
  * 
  * @author Matthias Thimm
  */
-public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking>{
+public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<NumericalPartialOrder<Argument, DungTheory>>{
 
 	/**
 	 * Number of trials for the used monte carlo search (this is a factor
@@ -77,8 +77,8 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 	 * @see org.tweetyproject.commons.ModelProvider#getModels(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
-		Collection<NumericalArgumentRanking> models = new HashSet<NumericalArgumentRanking>();
+	public Collection<NumericalPartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<NumericalPartialOrder<Argument, DungTheory>> models = new HashSet<NumericalPartialOrder<Argument, DungTheory>>();
 		models.add(this.getModel(bbase));
 		return models;
 	}
@@ -87,7 +87,7 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 	 * @see org.tweetyproject.commons.ModelProvider#getModel(org.tweetyproject.commons.BeliefBase)
 	 */
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory aaf) {
+	public NumericalPartialOrder<Argument, DungTheory> getModel(DungTheory aaf) {
 		// construct PAF
 		ProbabilisticArgumentationFramework paf = new ProbabilisticArgumentationFramework((DungTheory)aaf);
 		// set probabilities
@@ -99,8 +99,8 @@ public class ProbabilisticRankingReasoner extends AbstractRankingReasoner<Numeri
 			reasoner = new SimplePafReasoner(this.sem);
 		else
 			reasoner = new MonteCarloPafReasoner(this.sem, ProbabilisticRankingReasoner.NUMBER_OF_TRIALS * paf.size());
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.sortingType = NumericalArgumentRanking.SortingType.DESCENDING;
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+		ranking.sortingType = NumericalPartialOrder.SortingType.DESCENDING;
 		for(Argument a: (DungTheory)aaf)
 			ranking.put(a, reasoner.query(paf,a));
 		return ranking;

@@ -23,7 +23,7 @@ import java.util.Collection;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
+import org.tweetyproject.comparator.TweetyComparator;
 
 /**
  * The "total" postulate for ranking semantics as proposed in [Bonzon,
@@ -46,13 +46,13 @@ public class RaTotal extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
 			return true;
 		DungTheory dt = new DungTheory((DungTheory) kb);
-		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
+		TweetyComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
 		for (Argument a : dt) {
 			for (Argument b : dt) {
 				if (ranking.isIncomparable(a, b)) 

@@ -22,7 +22,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.CounterTransitivityReasoner;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
 
 public class CounterTransitivityReasonerExample {
 
@@ -53,7 +53,7 @@ public class CounterTransitivityReasonerExample {
 		theory.add(new Attack(a3,a5));
 		theory.add(new Attack(a6,a3));
 		
-		LatticeArgumentRanking lat = new LatticeArgumentRanking(theory);
+		LatticePartialOrder<Argument, DungTheory> lat = new LatticePartialOrder<Argument, DungTheory>(theory);
 		
 		lat.setStrictlyLessOrEquallyAcceptableThan(a2, a5);
 		lat.setStrictlyLessOrEquallyAcceptableThan(a5, a2);

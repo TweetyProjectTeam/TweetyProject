@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
+import org.tweetyproject.comparator.TweetyComparator;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -52,7 +52,7 @@ public class RaDistDefensePrecedence extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -103,7 +103,7 @@ public class RaDistDefensePrecedence extends RankingPostulate {
 		if (defenseIsDistributed)
 			return true;
 
-		ArgumentRanking ranking = ev.getModel(dt);
+		TweetyComparator<Argument, DungTheory> ranking = ev.getModel(dt);
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 
