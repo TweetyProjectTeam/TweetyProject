@@ -24,7 +24,7 @@ import java.util.Iterator;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.comparator.TweetyComparator;
+import org.tweetyproject.comparator.GeneralComparator;
 
 /**
  * The "attack vs full defense" postulate for ranking semantics as proposed in
@@ -49,7 +49,7 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -70,7 +70,7 @@ public class RaAttackVsFullDefense extends RankingPostulate {
 		if (dt.hasAttackBranch(a))
 			return true;
 
-		TweetyComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
+		GeneralComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
 		return ranking.isStrictlyMoreAcceptableThan(a, b);
 	}
 

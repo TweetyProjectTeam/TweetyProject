@@ -30,12 +30,12 @@ import org.tweetyproject.commons.Formula;
 
 /**
  * This abstract class is the common ancestor for semantical approaches to
- * argument ranking, i.e. relations that allow a more fine-grained comparison by
+ * ranking, i.e. relations that allow a more fine-grained comparison by
  * e.g. utilizing numerical values for arguments.
  * 
  * @author Matthias Thimm
  */
-public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> extends AbstractInterpretation<R,T> implements Comparator<T> {
+public abstract class GeneralComparator<T extends Formula, R extends BeliefBase> extends AbstractInterpretation<R,T> implements Comparator<T> {
 
 	/*
 	 * (non-Javadoc)
@@ -54,11 +54,10 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 	}
 
 	/**
-	 * Returns "true" iff a is strictly more acceptable than b, i.e. a &lt; b (least
-	 * arguments are maximally acceptable arguments)
+	 * Returns "true" iff a is strictly more acceptable than b, i.e. a &lt; b 
 	 * 
-	 * @param a some argument
-	 * @param b some argument
+	 * @param a some comparable element
+	 * @param b some comparable element
 	 * @return "true" iff a is strictly more acceptable than b
 	 */
 	public boolean isStrictlyMoreAcceptableThan(T a, T b) {
@@ -66,11 +65,10 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 	}
 
 	/**
-	 * Returns "true" iff a is strictly less acceptable than b, i.e. a &gt; b (least
-	 * arguments are maximally acceptable arguments)
+	 * Returns "true" iff a is strictly less acceptable than b, i.e. a &gt; b 
 	 * 
-	 * @param a some argument
-	 * @param b some argument
+	 * @param a some comparable element
+	 * @param b some comparable element
 	 * @return "true" iff a is strictly less acceptable than b
 	 */
 	public boolean isStrictlyLessAcceptableThan(T a, T b) {
@@ -81,10 +79,9 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 	/**
 	 * Returns "true" iff a is strictly more acceptable than b or a is equally
 	 * acceptable as b, i.e. a &lt;= b (or a ~ b)
-	 * (least arguments are maximally acceptable arguments)
 	 * 
-	 * @param a some argument
-	 * @param b some argument
+	 * @param a some comparable element
+	 * @param b some comparable element
 	 * @return "true" iff a is strictly more acceptable than b or a is equally
 	 *         acceptable as b, "false" otherwise or if a and b are incomparable
 	 */
@@ -94,11 +91,10 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 
 	/**
 	 * Returns "true" iff a is equally acceptable as b, 
-	 * i.e. a = b (or a ~ b) (least arguments are maximally acceptable
-	 * arguments)
+	 * i.e. a = b (or a ~ b) 
 	 * 
-	 * @param a some argument
-	 * @param b some argument
+	 * @param a some comparable element
+	 * @param b some comparable element
 	 * @return "true" iff a is equally acceptable as b, "false" otherwise or if a and b are incomparable
 	 */
 	public boolean isEquallyAcceptableThan(T a, T b) {
@@ -106,12 +102,12 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 	}
 
 	/**
-	 * Returns the set of all arguments a from the given set that are maximally
-	 * accepted, i.e. where there is no other argument that is strictly more
+	 * Returns the set of all comparable elements a from the given set that are maximally
+	 * accepted, i.e. where there is no other comparable element that is strictly more
 	 * acceptable.
 	 * 
-	 * @param args a set of arguments
-	 * @return the set of all arguments a that are maximally accepted
+	 * @param args a set of comparable element
+	 * @return the set of all comparable element a that are maximally accepted
 	 */
 	public Collection<T> getMaximallyAcceptedArguments(Collection<T> args) {
 		Collection<T> result = new HashSet<T>();
@@ -129,12 +125,12 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 	}
 
 	/**
-	 * Returns the set of all arguments a from the given set that are minimally
-	 * accepted, i.e. where there is no other argument that is strictly less
+	 * Returns the set of all comparable elements a from the given set that are minimally
+	 * accepted, i.e. where there is no other comparable element that is strictly less
 	 * acceptable.
 	 * 
-	 * @param args a set of arguments
-	 * @return the set of all arguments a that are minimalle accepted
+	 * @param args a set of comparable elements
+	 * @return the set of all comparable elements a that are minimally accepted
 	 */
 	public Collection<T> getMinimallyAcceptedArguments(Collection<T> args) {
 		Collection<T> result = new HashSet<T>();
@@ -153,13 +149,13 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 
 	/**
 	 * Checks whether this ranking is equivalent to the other one wrt. the given set
-	 * of arguments.
+	 * of comparable elements.
 	 * 
 	 * @param other some ranking
-	 * @param args  some arguments
+	 * @param args  some comparable elements
 	 * @return "true" if both rankings are equivalent.
 	 */
-	public boolean isEquivalent(TweetyComparator<T,R> other, Collection<T> args) {
+	public boolean isEquivalent(GeneralComparator<T,R> other, Collection<T> args) {
 		for (T a : args)
 			for (T b : args) {
 				if (this.isStrictlyLessOrEquallyAcceptableThan(a, b)
@@ -175,10 +171,9 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 	/**
 	 * Returns "true" iff a is strictly less acceptable than b or a is equally
 	 * acceptable as b or a and b are not comparable, i.e. a &gt;= b (or a ~ b)
-	 * (least arguments are maximally acceptable arguments)
 	 * 
-	 * @param a some argument
-	 * @param b some argument
+	 * @param a some comparable element
+	 * @param b some comparable element
 	 * @return "true" iff a is strictly less acceptable than b or a is equally
 	 *         acceptable as b
 	 */
@@ -188,8 +183,8 @@ public abstract class TweetyComparator<T extends Formula, R extends BeliefBase> 
 	 * Returns "true" iff a and b are incomparable (i.e. this ranking is a partial
 	 * ranking).
 	 * 
-	 * @param a Argument
-	 * @param b Argument
+	 * @param a comparable element
+	 * @param b comparable element
 	 * @return "true" iff a and b are incomparable
 	 */
 	public abstract boolean isIncomparable(T a, T b);

@@ -23,7 +23,7 @@ import java.util.Comparator;
 
 import org.tweetyproject.arg.aspic.syntax.AspicArgumentationTheory;
 import org.tweetyproject.commons.Formula;
-import org.tweetyproject.comparator.TweetyComparator;
+import org.tweetyproject.comparator.GeneralComparator;
 
 /**
  * @author Nils Geilen

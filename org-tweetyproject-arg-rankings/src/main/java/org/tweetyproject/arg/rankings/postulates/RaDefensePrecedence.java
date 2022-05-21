@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.comparator.TweetyComparator;
+import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -50,7 +50,7 @@ public class RaDefensePrecedence extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -67,7 +67,7 @@ public class RaDefensePrecedence extends RankingPostulate {
 
 		if (dt.isAttacked(new Extension(dt.getAttackers(a)), new Extension(kb))
 				&& !dt.isAttacked(new Extension(dt.getAttackers(b)), new Extension(kb))) {
-			TweetyComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
+			GeneralComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
 			return ranking.isStrictlyMoreAcceptableThan(a, b);
 		}
 		return true;

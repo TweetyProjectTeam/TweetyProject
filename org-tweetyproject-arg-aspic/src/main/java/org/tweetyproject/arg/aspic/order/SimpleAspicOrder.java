@@ -25,7 +25,7 @@ import java.util.List;
 import org.tweetyproject.arg.aspic.syntax.AspicArgument;
 import org.tweetyproject.arg.aspic.syntax.AspicArgumentationTheory;
 import org.tweetyproject.arg.aspic.syntax.InferenceRule;
-import org.tweetyproject.comparator.TweetyComparator;
+import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
 
 /**
@@ -35,7 +35,7 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
  * 
  * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
-public class SimpleAspicOrder<T extends Invertable> extends TweetyComparator<AspicArgument<T>, AspicArgumentationTheory<T>> {
+public class SimpleAspicOrder<T extends Invertable> extends GeneralComparator<AspicArgument<T>, AspicArgumentationTheory<T>> {
 	
 	Comparator<InferenceRule<T>> rule_comp = new RuleComparator<T>(new ArrayList<>());
 	
