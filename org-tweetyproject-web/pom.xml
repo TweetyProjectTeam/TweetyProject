@@ -10,7 +10,7 @@
   		<artifactId>parent-pom</artifactId>
   		<version>1.21-SNAPSHOT</version>
   	</parent>
-  
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -76,7 +76,9 @@
 
 
     <properties>
-        <jersey.version>2.29</jersey.version>
+		<maven.compiler.release>7</maven.compiler.release>
+        <jersey.version>2.35</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
 </project>
