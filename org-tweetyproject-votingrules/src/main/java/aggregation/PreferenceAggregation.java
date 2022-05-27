@@ -1,9 +1,11 @@
 package aggregation;
 
 import functions.SocialWelfareFunction;
+import org.tweetyproject.commons.Formula;
+
 import java.util.*;
 
-public class PreferenceAggregation<A> {
+public class PreferenceAggregation<A extends Formula> {
     private final SocialWelfareFunction<A> swf;
     private List<List<A>> preferenceRanking;
     public PreferenceAggregation(SocialWelfareFunction<A> swf){

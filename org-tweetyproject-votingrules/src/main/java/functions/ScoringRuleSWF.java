@@ -1,14 +1,14 @@
 package functions;
 
 import aggregation.Profile;
+import org.tweetyproject.commons.Formula;
 
 import java.util.List;
 import java.util.Map;
 
-public abstract class ScoringRuleSWF<A> implements SocialWelfareFunction<A>{
+public abstract class ScoringRuleSWF<A extends Formula> implements SocialWelfareFunction<A>{
     protected A altType;
     protected Map<A, Float> scores;
-    protected List<List<A>> ranks;
 //    protected abstract Map<A, Float> calculateScores(List<Profile<A>> profiles);
 
     public abstract List<Float> getScoringVector(Integer length);
@@ -18,4 +18,8 @@ public abstract class ScoringRuleSWF<A> implements SocialWelfareFunction<A>{
      * @return a ranking of alternatives
      */
    public abstract List<List<A>> calculateRanks(List<Profile<A>> profiles);
+
+   public A getType(){
+       return altType;
+   }
 }

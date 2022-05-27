@@ -1,10 +1,11 @@
 package functions;
 
 import aggregation.Profile;
+import org.tweetyproject.commons.Formula;
 
 import java.util.*;
 
-public abstract class CondorcetSWF<A> implements SocialWelfareFunction<A>{
+public abstract class CondorcetSWF<A extends Formula> implements SocialWelfareFunction<A>{
     protected A altType;
     protected Map<A, Float> scores;
     protected List<List<A>> ranks;

@@ -1,10 +1,11 @@
 package functions;
 
 import aggregation.Profile;
+import org.tweetyproject.commons.Formula;
 
 import java.util.*;
 
-public class BordaCount<A> extends ScoringRuleSWF<A>{
+public class BordaCount<A extends Formula> extends ScoringRuleSWF<A>{
     @Override
     public List<Float> getScoringVector(Integer length) {
         ArrayList<Float> scoringVector = new ArrayList<>();
@@ -18,6 +19,7 @@ public class BordaCount<A> extends ScoringRuleSWF<A>{
         ArrayList<Float> scoringVector = (ArrayList<Float>) getScoringVector(length);
         for(int i=0; i<profiles.size(); i++){
             ArrayList<A> tiedAlternatives = (ArrayList<A>) profiles.get(i);
+            //two alternatives inside one rank means that the scoringvector needs to be averaged on the according indexes
             if(tiedAlternatives.size()>1){
                 average(scoringVector,i,i+tiedAlternatives.size());
             }
@@ -27,7 +29,8 @@ public class BordaCount<A> extends ScoringRuleSWF<A>{
 
     private void average(ArrayList<Float> scoringVector, int startIndex, int endIndex) {
         float average = 0;
-        for(int i=startIndex;i<endIndex;i++){
+        //set arithmetic mean for indexes
+        for(int i=startIndex;i<endIndex;i++) {
             average += scoringVector.get(i);
         }
         average /= (endIndex-startIndex);

@@ -19,7 +19,10 @@
 
 package org.tweetyproject.arg.dung.syntax;
 
+import org.tweetyproject.arg.dung.semantics.Extension;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -75,13 +78,13 @@ public class IncompleteTheory extends DungTheory{
 	}
 	/**
 	 * instantiates some possible arguments and attacks
-	 * @param usedPossibleArguments arguments from this.possibleArguments	
+	 * @param usedPossibleArguments arguments from this.possibleArguments
 	 * @param usedPossibleAttacks attacks from this.possibleAttacks
 	 */
 	public void instantiate(Set<Argument> usedPossibleArguments, Set<Attack> usedPossibleAttacks) {
-		if((!this.uncertainAttacks.containsAll(usedPossibleAttacks) || 
-				!this.uncertainArgument.containsAll(usedPossibleArguments)) && 
-				(!this.definiteAttacks.containsAll(usedPossibleAttacks) || 
+		if((!this.uncertainAttacks.containsAll(usedPossibleAttacks) ||
+				!this.uncertainArgument.containsAll(usedPossibleArguments)) &&
+				(!this.definiteAttacks.containsAll(usedPossibleAttacks) ||
 						!this.definiteArguments.containsAll(usedPossibleArguments)) ) {
 			//TODO: error case
 			System.out.println("error case");
@@ -106,6 +109,41 @@ public class IncompleteTheory extends DungTheory{
 			this.add(i);
 		}
 		return;
+	}
+	/**
+	 * returns a new instance of a Theory with possible arguments and attacks
+	 * @param usedPossibleArguments arguments from this.possibleArguments
+	 * @param usedPossibleAttacks attacks from this.possibleAttacks
+	 */
+	public DungTheory getInstance(Set<Argument> usedPossibleArguments, Set<Attack> usedPossibleAttacks) {
+		DungTheory theory = new DungTheory(this);
+		if((!this.uncertainAttacks.containsAll(usedPossibleAttacks) ||
+				!this.uncertainArgument.containsAll(usedPossibleArguments)) &&
+				(!this.definiteAttacks.containsAll(usedPossibleAttacks) ||
+						!this.definiteArguments.containsAll(usedPossibleArguments)) ) {
+			//TODO: error case
+			System.out.println("error case");
+			return theory;
+		}
+
+		for(Attack att : theory.getAttacks())
+			theory.remove(att);
+
+		this.clear();
+
+		for(Argument i : this.definiteArguments) {
+			theory.add(i);
+		}
+		for(Attack i : definiteAttacks) {
+			theory.add(i);
+		}
+		for(Argument i : usedPossibleArguments) {
+			theory.add(i);
+		}
+		for(Attack i : usedPossibleAttacks) {
+			theory.add(i);
+		}
+		return theory;
 	}
 	/**
 	 * megres DungTheories to one incomplete theory
@@ -200,6 +238,31 @@ public class IncompleteTheory extends DungTheory{
 		HashSet<Argument> newArgs = (HashSet<Argument>) this.uncertainArgument.clone();
 		newArgs.removeAll(s);
 		this.instantiate(newArgs, usedAttacks);
+	}
+
+	public Collection<DungTheory> getAllCompletions(){
+		IncompleteTheory theory = this;
+		Collection<DungTheory> completions = new HashSet<DungTheory>();
+		Set<Set<Argument>> powerSet = theory.powerSet(theory.uncertainArgument);
+		for(Set<Argument> instance : powerSet) {
+			Collection<DungTheory> instanceTheory = new HashSet<DungTheory>();
+			//uncertain attacks that can occur in this instance
+			HashSet<Attack> uncertainAttacksInInstance = new HashSet<Attack>();
+			for(Attack att : theory.uncertainAttacks) {
+				//only add attack to possible attacks if both parties appear in instance
+				if((theory.definiteArguments.contains(att.getAttacker()) || instance.contains(att.getAttacker())) &&
+						(theory.definiteArguments.contains(att.getAttacked()) || instance.contains(att.getAttacked()))) {
+					uncertainAttacksInInstance.add(att);
+				}
+			}
+			Set<Set<Attack>> powerSetAttacks = theory.powerSet(uncertainAttacksInInstance);
+			//create new instance for each member of the power set and evaluate it
+			for(Set<Attack> j : powerSetAttacks) {
+				DungTheory completion = theory.getInstance(instance,j);
+				completions.add(completion);
+			}
+		}
+		return completions;
 	}
 
 }
