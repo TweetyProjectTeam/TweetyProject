@@ -25,7 +25,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.comparator.TweetyComparator;
+import org.tweetyproject.comparator.GeneralComparator;
 
 /**
  *  The "abstraction" postulate for ranking semantics as proposed in
@@ -49,7 +49,7 @@ public class RaAbstraction extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -75,8 +75,8 @@ public class RaAbstraction extends RankingPostulate {
 			if (!f.equals(a))
 				isoDt.add(new Attack(isoArg, f));
 		
-		TweetyComparator<Argument, DungTheory> ranking = ev.getModel(dt);
-		TweetyComparator<Argument, DungTheory> isoRanking = ev.getModel(isoDt);
+		GeneralComparator<Argument, DungTheory> ranking = ev.getModel(dt);
+		GeneralComparator<Argument, DungTheory> isoRanking = ev.getModel(isoDt);
 		return ranking.compare(a, b) == isoRanking.compare(isoArg, b);
 	}
 }

@@ -28,7 +28,7 @@ import java.util.Map.Entry;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.comparator.TweetyComparator;
+import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.comparator.NumericalPartialOrder;
 
 /**
@@ -67,7 +67,7 @@ public class RankingTools {
 	 * @param n       decimals
 	 * @return rounded NumericalArgumentRanking
 	 */
-	public static TweetyComparator<Argument, DungTheory> roundRanking(NumericalPartialOrder<Argument, DungTheory> ranking, int n) {
+	public static GeneralComparator<Argument, DungTheory> roundRanking(NumericalPartialOrder<Argument, DungTheory> ranking, int n) {
 		Iterator<Entry<Argument, Double>> it = ranking.entrySet().iterator();
 		NumericalPartialOrder<Argument, DungTheory> roundedRanking = new NumericalPartialOrder<Argument, DungTheory>();
 		while (it.hasNext()) {

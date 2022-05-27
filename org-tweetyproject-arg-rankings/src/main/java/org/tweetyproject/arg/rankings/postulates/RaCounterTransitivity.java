@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.comparator.TweetyComparator;
+import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -50,7 +50,7 @@ public class RaCounterTransitivity extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -67,7 +67,7 @@ public class RaCounterTransitivity extends RankingPostulate {
 			return true;
 
 		Set<Argument> toRemove = new HashSet<Argument>();
-		TweetyComparator<Argument, DungTheory> ranking = ev.getModel(dt);
+		GeneralComparator<Argument, DungTheory> ranking = ev.getModel(dt);
 		for (Argument ax : attackersA) {
 			boolean flag = false;
 			Set<Argument> tempSet = new HashSet<Argument>(attackersB);

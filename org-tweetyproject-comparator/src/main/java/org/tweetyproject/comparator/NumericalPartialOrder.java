@@ -37,7 +37,7 @@ import org.tweetyproject.commons.Formula;
  * @author Matthias Thimm
  * @author Anna Gessler
  */
-public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> extends TweetyComparator<T, R> implements Map<T, Double> {
+public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> extends GeneralComparator<T, R> implements Map<T, Double> {
 
 	/**
 	 * Precision for comparing values.
@@ -75,28 +75,28 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	}
 
 	/** The map used for storing acceptability values */
-	private Map<T, Double> argumentToValue;
+	private Map<T, Double> objectToValue;
 
 	/**
 	 * Creates a new empty numerical argument ranking.
 	 */
 	public NumericalPartialOrder() {
-		this.argumentToValue = new HashMap<>();
+		this.objectToValue = new HashMap<>();
 		this.sortingType = SortingType.ASCENDING;
 	}
 
 	/**
-	 * Creates a new argument ranking with the given set of
+	 * Creates a new ranking with the given set of
 	 * arguments and the given initial ranking value. 
 	 * 
-	 * @param args         some set of arguments
+	 * @param args         some set of comparable elements
 	 * @param initialvalue an initial value that will be 
-	 * assigned to all arguments
+	 * assigned to all comparable elements
 	 */
 	public NumericalPartialOrder(Collection<T> args, double initialvalue) {
 		this();
 		for (T arg : args)
-			this.argumentToValue.put(arg, initialvalue);
+			this.objectToValue.put(arg, initialvalue);
 	}
 
 	/*
@@ -109,15 +109,15 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	@Override
 	public boolean isStrictlyLessOrEquallyAcceptableThan(T a, T b) {
 		if (sortingType == SortingType.LEXICOGRAPHIC) {
-			BigDecimal bda = new BigDecimal((Double) (this.argumentToValue.get(a)));
-			BigDecimal bdb = new BigDecimal((Double) (this.argumentToValue.get(b)));
+			BigDecimal bda = new BigDecimal((Double) (this.objectToValue.get(a)));
+			BigDecimal bdb = new BigDecimal((Double) (this.objectToValue.get(b)));
 			bda = bda.setScale(5, RoundingMode.HALF_UP);
 			bdb = bdb.setScale(5, RoundingMode.HALF_UP);
 			return (bda.toString().compareTo(bdb.toString()) >= 0.0);
 		} else if (sortingType == SortingType.ASCENDING)
-			return this.argumentToValue.get(b) <= this.argumentToValue.get(a) + NumericalPartialOrder.PRECISION;
+			return this.objectToValue.get(b) <= this.objectToValue.get(a) + NumericalPartialOrder.PRECISION;
 		else if (sortingType == SortingType.DESCENDING)
-			return this.argumentToValue.get(a) <= this.argumentToValue.get(b) + NumericalPartialOrder.PRECISION;
+			return this.objectToValue.get(a) <= this.objectToValue.get(b) + NumericalPartialOrder.PRECISION;
 		else
 			throw new IllegalArgumentException("Unknown sorting type " + sortingType);
 
@@ -134,7 +134,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public String toString() {
-		return this.argumentToValue.toString();
+		return this.objectToValue.toString();
 	}
 
 	/*
@@ -144,7 +144,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public void clear() {
-		this.argumentToValue.clear();
+		this.objectToValue.clear();
 	}
 
 	/*
@@ -154,7 +154,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public boolean containsKey(Object arg0) {
-		return this.argumentToValue.containsKey(arg0);
+		return this.objectToValue.containsKey(arg0);
 	}
 
 	/*
@@ -164,7 +164,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public boolean containsValue(Object arg0) {
-		return this.argumentToValue.containsValue(arg0);
+		return this.objectToValue.containsValue(arg0);
 	}
 
 	/*
@@ -174,7 +174,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public Set<java.util.Map.Entry<T, Double>> entrySet() {
-		return this.argumentToValue.entrySet();
+		return this.objectToValue.entrySet();
 	}
 
 	/*
@@ -184,7 +184,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public Double get(Object arg0) {
-		return this.argumentToValue.get(arg0);
+		return this.objectToValue.get(arg0);
 	}
 
 	/*
@@ -194,7 +194,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public boolean isEmpty() {
-		return this.argumentToValue.isEmpty();
+		return this.objectToValue.isEmpty();
 	}
 
 	/*
@@ -204,7 +204,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public Set<T> keySet() {
-		return this.argumentToValue.keySet();
+		return this.objectToValue.keySet();
 	}
 
 	/*
@@ -214,7 +214,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public Double put(T arg0, Double arg1) {
-		return this.argumentToValue.put(arg0, arg1);
+		return this.objectToValue.put(arg0, arg1);
 	}
 
 	/*
@@ -224,7 +224,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public void putAll(Map<? extends T, ? extends Double> arg0) {
-		this.argumentToValue.putAll(arg0);
+		this.objectToValue.putAll(arg0);
 	}
 
 	/*
@@ -234,7 +234,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public Double remove(Object arg0) {
-		return this.argumentToValue.remove(arg0);
+		return this.objectToValue.remove(arg0);
 	}
 
 	/*
@@ -244,7 +244,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public int size() {
-		return this.argumentToValue.size();
+		return this.objectToValue.size();
 	}
 
 	/*
@@ -254,7 +254,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 */
 	@Override
 	public Collection<Double> values() {
-		return this.argumentToValue.values();
+		return this.objectToValue.values();
 	}
 
 	/**
@@ -283,8 +283,8 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	@Override
 	public boolean containsIncomparableArguments() {
-		for (T a : this.argumentToValue.keySet()) 
-			for (T b : this.argumentToValue.keySet()) 
+		for (T a : this.objectToValue.keySet()) 
+			for (T b : this.objectToValue.keySet()) 
 				if (this.isIncomparable(a, b)) 
 					return true;
 		return false;
@@ -292,13 +292,11 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 
 	@Override
 	public boolean satisfies(T formula) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean satisfies(R beliefBase) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

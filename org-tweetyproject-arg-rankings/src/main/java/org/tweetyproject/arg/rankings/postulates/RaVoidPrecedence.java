@@ -24,7 +24,7 @@ import java.util.Iterator;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.comparator.TweetyComparator;
+import org.tweetyproject.comparator.GeneralComparator;
 
 /**
  * The "void precedence" postulate for ranking semantics as proposed by [Amgoud,
@@ -47,7 +47,7 @@ public class RaVoidPrecedence extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<TweetyComparator<Argument, DungTheory>> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -58,7 +58,7 @@ public class RaVoidPrecedence extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 		
-		TweetyComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
+		GeneralComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
 		if (dt.getAttackers(a).isEmpty() && !dt.getAttackers(b).isEmpty()) 
 			return (ranking.isStrictlyMoreAcceptableThan(a, b)); 
 		return true;

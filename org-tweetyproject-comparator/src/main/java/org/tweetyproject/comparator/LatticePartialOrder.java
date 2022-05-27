@@ -28,16 +28,16 @@ import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Formula;
 
 /**
- * This class models argument ranking by representing the acceptability of
- * arguments in a graph-based structure.
+ * This class models comparable element ranking by representing the acceptability of
+ * comparable elements in a graph-based structure.
  * 
  * @author Matthias Thimm
  * @param <T>
  *
  */
-public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extends TweetyComparator<T, R> {
+public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extends GeneralComparator<T, R> {
 
-	/** The actual order of arguments */
+	/** The actual order of comparable elements */
 	private Order<T> order;
 	private Collection<T> args;
 	
@@ -49,7 +49,7 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 	}
 
 	/**
-	 * Creates a new argument ranking with the given arguments which are initially
+	 * Creates a new argument ranking with the given comparable elements which are initially
 	 * all incomparable.
 	 * 
 	 * @param args a set of arguments
@@ -60,11 +60,11 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 	}
 
 	/**
-	 * Defines argument "a" to be strictly less or equally acceptable than
-	 * argument "b".
+	 * Defines comparable element "a" to be strictly less or equally acceptable than
+	 * comparable element "b".
 	 * 
-	 * @param a some argument
-	 * @param b some argument
+	 * @param a some comparable element
+	 * @param b some comparable element
 	 */
 	public void setStrictlyLessOrEquallyAcceptableThan(T a, T b) {
 		this.order.setOrderedBefore(a, b);
@@ -190,12 +190,12 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 
 	@Override
 	public boolean satisfies(T formula) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 	@Override
 	public boolean satisfies(R beliefBase) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 
