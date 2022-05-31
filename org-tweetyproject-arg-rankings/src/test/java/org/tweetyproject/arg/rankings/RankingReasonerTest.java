@@ -32,8 +32,8 @@ import org.tweetyproject.arg.rankings.reasoner.TuplesRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.DiscussionBasedRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 
 /**
  * Test class for checking counterexamples for some postulates.
@@ -81,7 +81,7 @@ public class RankingReasonerTest {
 		dt.add(new Attack(b3,b)); 
 		
 		TuplesRankingReasoner reasonerTuples = new TuplesRankingReasoner();
-		LatticeArgumentRanking ranking = reasonerTuples.getModel(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking = reasonerTuples.getModel(dt);
 		assertFalse(ranking.isStrictlyMoreAcceptableThan(b, a));
 	}
 
@@ -130,11 +130,11 @@ public class RankingReasonerTest {
 		DiscussionBasedRankingReasoner reasonerDiscussion = new DiscussionBasedRankingReasoner();
 		CategorizerRankingReasoner reasonerCat = new CategorizerRankingReasoner();
 		StrategyBasedRankingReasoner reasonerMt = new StrategyBasedRankingReasoner();
-		LatticeArgumentRanking ranking = reasonerTuples.getModel(dt);
-		NumericalArgumentRanking ranking2 = reasonerSaf.getModel(dt);
-		LatticeArgumentRanking ranking3 = reasonerBurden.getModel(dt);
-		LatticeArgumentRanking ranking4 = reasonerDiscussion.getModel(dt);
-		NumericalArgumentRanking ranking5 = reasonerCat.getModel(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking = reasonerTuples.getModel(dt);
+		NumericalPartialOrder<Argument, DungTheory> ranking2 = reasonerSaf.getModel(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking3 = reasonerBurden.getModel(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking4 = reasonerDiscussion.getModel(dt);
+		NumericalPartialOrder<Argument, DungTheory> ranking5 = reasonerCat.getModel(dt);
 //		NumericalArgumentRanking ranking6 = reasonerMt.getModel(dt); //causes timeout
 		assertFalse(ranking.isStrictlyMoreAcceptableThan(a, b));
 		assertFalse(ranking2.isStrictlyMoreAcceptableThan(a, b));
@@ -176,7 +176,7 @@ public class RankingReasonerTest {
 		dt.add(new Attack(b1,b));
 		
 		SAFRankingReasoner reasonerSaf = new SAFRankingReasoner();
-		NumericalArgumentRanking ranking = reasonerSaf.getModel(dt);
+		NumericalPartialOrder<Argument, DungTheory> ranking = reasonerSaf.getModel(dt);
 		assertFalse(ranking.isStrictlyMoreAcceptableThan(a, b));
 	}
 	
@@ -218,8 +218,8 @@ public class RankingReasonerTest {
 		dt.add(new Attack(j,b));
 		dt.add(new Attack(i,b));
 	
-		LatticeArgumentRanking ranking_burden = reasonerBurden.getModel(dt);
-		LatticeArgumentRanking ranking_discussion = reasonerDiscussion.getModel(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking_burden = reasonerBurden.getModel(dt);
+		LatticePartialOrder<Argument, DungTheory> ranking_discussion = reasonerDiscussion.getModel(dt);
 		assertTrue(ranking_burden.isStrictlyMoreAcceptableThan(a, b));
 		assertFalse(ranking_discussion.isStrictlyMoreAcceptableThan(a,b));
 	}

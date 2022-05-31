@@ -23,7 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.term.FloatConstant;
 
@@ -38,7 +38,7 @@ import org.tweetyproject.math.term.FloatConstant;
  * 
  * @author Anna Gessler
  */
-public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
+public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalPartialOrder<Argument, DungTheory>> {
 
 	/**
 	 * This parameter influences whether shorter/longer attackers/defender lines are
@@ -84,14 +84,14 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 	}
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
-		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
+	public Collection<NumericalPartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<NumericalPartialOrder<Argument, DungTheory>> ranks = new HashSet<NumericalPartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory kb) {
+	public NumericalPartialOrder<Argument, DungTheory> getModel(DungTheory kb) {
 		Matrix adjacencyMatrix = ((DungTheory)kb).getAdjacencyMatrix();
 		
 		// Apply matrix norm to guarantee that the argument strength scale is bounded
@@ -116,8 +116,8 @@ public class CountingRankingReasoner extends AbstractRankingReasoner<NumericalAr
 			valuations = e.minus(adjacencyMatrix.mult(valuationsOld)).simplify();
 		} while (getDistance(valuationsOld, valuations) > epsilon);
 		
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+		ranking.setSortingType(NumericalPartialOrder.SortingType.DESCENDING);
 		int i = 0;
 		for (Argument a : ((DungTheory)kb)) 
 			ranking.put(a, valuations.getEntry(0, i++).doubleValue());

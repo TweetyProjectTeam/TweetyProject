@@ -44,7 +44,6 @@ import org.tweetyproject.beliefdynamics.mas.InformationObject;
 import org.tweetyproject.beliefdynamics.operators.CrMasArgumentativeRevisionOperator;
 import org.tweetyproject.beliefdynamics.operators.CrMasSimpleRevisionOperator;
 import org.tweetyproject.commons.ParserException;
-import org.tweetyproject.graphs.orders.Order;
 import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
 import org.tweetyproject.logics.pl.sat.SatSolver;
@@ -52,6 +51,7 @@ import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.PlSignature;
+import org.tweetyproject.comparator.Order;
 
 /**
  * Example code for applying belief dynamics on abstract argumentation frameworks.

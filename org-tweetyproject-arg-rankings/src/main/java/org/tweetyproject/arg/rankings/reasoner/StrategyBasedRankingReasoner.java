@@ -28,7 +28,7 @@ import java.util.Set;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.math.equation.Equation;
 import org.tweetyproject.math.equation.Inequation;
@@ -50,19 +50,19 @@ import org.tweetyproject.math.term.Variable;
  * 
  * @author Anna Gessler
  */
-public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
+public class StrategyBasedRankingReasoner extends AbstractRankingReasoner<NumericalPartialOrder<Argument, DungTheory>> {
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
-		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
+	public Collection<NumericalPartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<NumericalPartialOrder<Argument, DungTheory>> ranks = new HashSet<NumericalPartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory kb) {
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
+	public NumericalPartialOrder<Argument, DungTheory> getModel(DungTheory kb) {
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+		ranking.setSortingType(NumericalPartialOrder.SortingType.DESCENDING);
 		Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(((DungTheory)kb).getNodes());
 		for (Argument a : ((DungTheory)kb)) 
 			ranking.put(a, computeStrengthOfArgument(a, ((DungTheory)kb), subsets)); 

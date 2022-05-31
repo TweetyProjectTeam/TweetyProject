@@ -44,7 +44,7 @@ public class ClassicalCategorizer implements Categorizer {
 	public double categorize(ArgumentTree argumentTree) {
 		return this.categorize(argumentTree, null, argumentTree.getRoot());
 	}
-	
+
 	/**
 	 * Performs the bottom-up search.
 	 * @param argumentTree some argument tree.
