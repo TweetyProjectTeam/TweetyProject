@@ -4,10 +4,15 @@ import functions.SocialWelfareFunction;
 import org.tweetyproject.commons.Formula;
 
 import java.util.*;
-
+/**
+ *
+ * @author Daniel Letkemann
+ * Preference aggregation from SWF's
+ * (WIP, may be redundant)
+ */
 public class PreferenceAggregation<A extends Formula> {
     private final SocialWelfareFunction<A> swf;
-    private List<List<A>> preferenceRanking;
+    public List<List<A>> preferenceRanking;
     public PreferenceAggregation(SocialWelfareFunction<A> swf){
         this.swf = swf;
 

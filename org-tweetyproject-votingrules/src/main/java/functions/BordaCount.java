@@ -4,22 +4,35 @@ import aggregation.Profile;
 import org.tweetyproject.commons.Formula;
 
 import java.util.*;
-
+/**
+ *
+ * @author Daniel Letkemann
+ * scoring based on Borda Count
+ *
+ */
 public class BordaCount<A extends Formula> extends ScoringRuleSWF<A>{
     @Override
-    public List<Float> getScoringVector(Integer length) {
-        ArrayList<Float> scoringVector = new ArrayList<>();
+    public Vector<Float> getScoringVector(Integer length) {
+        Vector<Float> scoringVector = new Vector<>();
         for(float i=length-1; i>=0; i--){
             scoringVector.add(i);
         }
         return scoringVector;
     }
 
-    public List<Float> getAveragedScoringVector(Integer length,List<List<A>> profiles) {
-        ArrayList<Float> scoringVector = (ArrayList<Float>) getScoringVector(length);
+    /**
+     * Return a scoring vector of certain length, averaged on indexes where alternatives are tied.
+     * This allows a free prioritization of alternatives anywhere on a vote/ballot.
+     * ('Averaging' as in "Nina Narodytska and Toby Walsh, "The Computational Impact of Partial Votes on Strategic Voting" (2014)")
+     * @param length length of the averaged scoring vector
+     * @param profiles partitions of list of votes/ballots where: priority of elements inside list -1 = partition index
+     * @return an averaged scoring vector for the list of
+     */
+    private Vector<Float> getAveragedScoringVector(Integer length, List<List<A>> profiles) {
+        Vector<Float> scoringVector = (Vector<Float>) getScoringVector(length);
         for(int i=0; i<profiles.size(); i++){
             ArrayList<A> tiedAlternatives = (ArrayList<A>) profiles.get(i);
-            //two alternatives inside one rank means that the scoringvector needs to be averaged on the according indexes
+            //more than one alternative inside one rank means that the scoring vector needs to be averaged on the according indexes
             if(tiedAlternatives.size()>1){
                 average(scoringVector,i,i+tiedAlternatives.size());
             }
@@ -27,7 +40,13 @@ public class BordaCount<A extends Formula> extends ScoringRuleSWF<A>{
         return scoringVector;
     }
 
-    private void average(ArrayList<Float> scoringVector, int startIndex, int endIndex) {
+    /** Averages input scoring vector between startIndex (incl.) and endIndex (excl.).
+     * 'Averaging' as in "Nina Narodytska and Toby Walsh, "The Computational Impact of Partial Votes on Strategic Voting" (2014)"
+     * @param scoringVector scoring vector to average out (in-place)
+     * @param startIndex index of starting element
+     * @param endIndex index after the last element
+     */
+    private void average(Vector<Float> scoringVector, int startIndex, int endIndex) {
         float average = 0;
         //set arithmetic mean for indexes
         for(int i=startIndex;i<endIndex;i++) {
@@ -44,8 +63,13 @@ public class BordaCount<A extends Formula> extends ScoringRuleSWF<A>{
         return null;
     }
 
+    /**
+     * Returns a map of Borda scores for each alternative
+     * @param profiles list of all Profiles / Ballots / Votes
+     * @return map of alternative -> Borda score
+     */
     public Map<A, Float>  calculateScores(List<Profile<A>> profiles) {
-        scores = new HashMap<A, Float>();
+        scores = new HashMap<>();
         LinkedList<A> alternatives = new LinkedList<>(profiles.get(0).keySet());
 
 
@@ -66,10 +90,9 @@ public class BordaCount<A extends Formula> extends ScoringRuleSWF<A>{
                 int priority = profile.get(alt);
                 profileOrder.get(priority-1).add(alt);
             }
-            List<Float> scoringVector = getAveragedScoringVector(n,profileOrder);
+            Vector<Float> scoringVector = getAveragedScoringVector(n,profileOrder);
             int count = 0;
-            for(int i=0;i<profileOrder.size();i++){
-                List<A> altList = profileOrder.get(i);
+            for (List<A> altList : profileOrder) {
                 for (A alt : altList) {
                     scores.put(alt, scores.get(alt) + scoringVector.get(count));
                     count++;

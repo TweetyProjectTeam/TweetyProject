@@ -61,17 +61,20 @@ public class IncompleteTheory extends DungTheory{
 	public void addPossibleArgument(Argument arg) {
 		this.uncertainArgument.add(arg);
 	}
+
 	/**
-	 * adds definite attack
-	 * @param att attack
+	 * adds possible attack
+	 * @param arg1 attack source
+	 * @param arg2 attack destination
 	 */
 	public void addPossibleAttack(Argument arg1, Argument arg2) {
 		this.uncertainAttacks.add(new Attack(arg1, arg2));
 		
 	}
 	/**
-	 * adds possible attack
-	 * @param att attack
+	 * adds definite attack
+	 * @param arg1 attack source
+	 * @param arg2 attack destination
 	 */
 	public void addDefiniteAttack(Argument arg1, Argument arg2) {
 		this.definiteAttacks.add(new Attack(arg1, arg2));
@@ -240,6 +243,12 @@ public class IncompleteTheory extends DungTheory{
 		this.instantiate(newArgs, usedAttacks);
 	}
 
+	/**
+	 * returns all possible completions as a collection of DungTheories
+	 * @return all possible completions
+	 * @author Daniel Letkemann: copied and adjusted from IncompleteReasoner.getAllModels
+	 * @author Sebastian Franke: base code and suggestion for this implementation
+	 */
 	public Collection<DungTheory> getAllCompletions(){
 		IncompleteTheory theory = this;
 		Collection<DungTheory> completions = new HashSet<DungTheory>();

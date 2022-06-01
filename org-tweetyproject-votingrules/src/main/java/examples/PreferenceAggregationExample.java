@@ -1,5 +1,6 @@
 package examples;
 
+import aggregation.PreferenceAggregation;
 import aggregation.Profile;
 import functions.BordaCount;
 import functions.CopelandSolution;
@@ -7,12 +8,16 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.IncompleteTheory;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
-import org.tweetyproject.comparator.NumericalPartialOrder;
 
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+/**
+ * example based on Example 10 from
+ * "Gradual and Ranking-based Semantics for Incomplete Argumentation Frameworks" by Skiba et al. (2022)
+ * (ranking completions of Figure 2 by ranking completions with a categorizer function and using voting rules to aggregate
+ * the ranking for each completion)
+ * @author Daniel Letkemann
+ */
 public class PreferenceAggregationExample {
     public static void main(String[] args){
         Argument a = new Argument("a");
@@ -52,22 +57,29 @@ public class PreferenceAggregationExample {
         Collection<DungTheory> completions = iTheory.getAllCompletions();
         System.out.println("Completions:" + completions.toString());
 
-        CategorizerRankingReasoner cat = new CategorizerRankingReasoner();
-
+        CategorizerRankingReasoner crr = new CategorizerRankingReasoner();
 
         List<Profile<Argument>> profiles = new ArrayList<>();
         for(DungTheory comp: completions){
-            NumericalPartialOrder<Argument,DungTheory> order = cat.getModel(comp);
-            profiles.add(new Profile<Argument>(order,alternatives));
+            profiles.add(new Profile<Argument>(crr.getModel(comp),alternatives));
         }
 
+
+        //how to get individual scores:
         CopelandSolution<Argument> copeland = new CopelandSolution<>();
         Map<Argument,Float> copelandScoreMap = copeland.calculateScores(profiles);
         System.out.println(copelandScoreMap.toString());
+        System.out.println("Condorcet Winner:" + copeland.getCondorcetWinner(profiles));
 
         BordaCount<Argument> borda = new BordaCount<>();
         Map<Argument,Float> bordaScoreMap = borda.calculateScores(profiles);
         System.out.println(bordaScoreMap.toString());
+
+        //rankings:
+        // returns null only for now, will fully implement later
+        //aggregation class may be redundant
+        PreferenceAggregation<Argument>  copelandPA = new PreferenceAggregation<Argument>(copeland);
+        copelandPA.getPreferenceRanking(profiles);
 
 
 
