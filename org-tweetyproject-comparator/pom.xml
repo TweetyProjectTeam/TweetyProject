@@ -2,16 +2,14 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+  <name>TweetyProject (Comparator Library)</name>
   <parent>
     <groupId>org.tweetyproject</groupId>
     <artifactId>parent-pom</artifactId>
     <version>1.21-SNAPSHOT</version>
-  </parent>
-  <groupId>org.tweetyproject</groupId>
+  </parent>  
   <artifactId>comparator</artifactId>
   <version>1.21-SNAPSHOT</version>
-  <name>Archetype - comparator</name>
-  <url>http://maven.apache.org</url>
   <dependencies>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
