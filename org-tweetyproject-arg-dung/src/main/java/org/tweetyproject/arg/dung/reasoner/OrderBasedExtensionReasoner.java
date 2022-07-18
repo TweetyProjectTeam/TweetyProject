@@ -41,10 +41,10 @@ public class OrderBasedExtensionReasoner {
             Set<Extension<DungTheory>> newExtensionSet = aggregatedVectorToExtensionSetMap.get(aggregatedVec);
             newExtensionSet.add(ext);
             aggregatedVectorToExtensionSetMap.put(aggregatedVec, newExtensionSet);
-
-            if (aggregatedVec.get(0) > argmax.get(0)) {
+            if(magnitude(aggregatedVec) > magnitude(argmax)){
                 argmax = aggregatedVec;
             }
+
         }
         return aggregatedVectorToExtensionSetMap.get(argmax);
     }
@@ -141,8 +141,14 @@ public class OrderBasedExtensionReasoner {
 
     private Vector<Integer> getSupportVector(Extension<DungTheory> ext, DungTheory theory) throws Exception {
         Vector<Integer> vsupp = new Vector<>();
-        for(Argument arg: ext){
-            vsupp.add(getNumberOfContainsInExtensions(arg,theory));
+//      TODO: what happens with empty Extension?
+        if(ext.isEmpty()){
+            vsupp.add(0);
+        }
+        else {
+            for (Argument arg : ext) {
+                vsupp.add(getNumberOfContainsInExtensions(arg, theory));
+            }
         }
         return vsupp;
     }
@@ -150,11 +156,61 @@ public class OrderBasedExtensionReasoner {
     private Vector<Integer> aggregate(Vector<Integer> vector){
         //switch case for all aggregation types
         Vector<Integer> returnVec = new Vector<>();
-        int sum = 0;
-        for(Integer x: vector){
-            sum += x;
+        switch(Objects.requireNonNull(aggregationFunction)){
+
+            case SUM -> {
+                int sum = 0;
+                for(Integer x: vector){
+                    sum += x;
+                }
+                returnVec.add(sum);
+            }
+            case MAX -> {
+                int max = 0;
+                for(Integer x: vector){
+                    if(x>max) {
+                        max = x;
+                    }
+                }
+                returnVec.add(max);
+            }
+            case MIN -> {
+                int min = Integer.MAX_VALUE;
+                for (Integer x : vector) {
+                    if(x<min){
+                        min = x;
+                    }
+                }
+                returnVec.add(min);
+            }
+            case LEXIMAX -> {
+                returnVec = vector;
+                returnVec.sort(Collections.reverseOrder());
+                return returnVec;
+            }
+            case LEXIMIN -> {
+                returnVec = vector;
+                Collections.sort(returnVec);
+                return returnVec;
+            }
         }
-        returnVec.add(sum);
         return returnVec;
+    }
+
+    private Integer compare(Vector<Integer> v1, Vector<Integer> v2){
+        Integer[] arr1 = new Integer[v1.size()];
+        v1.toArray(arr1);
+        Integer[] arr2 = new Integer[v2.size()];
+        v1.toArray(arr2);
+        return Arrays.compare(arr1, arr2);
+
+    }
+
+    private Double magnitude(Vector<Integer> vec){
+        int sum = 0;
+        for(int x: vec){
+            sum += (x*x);
+        }
+        return Math.sqrt(sum);
     }
 }

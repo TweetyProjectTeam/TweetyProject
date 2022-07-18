@@ -1,6 +1,7 @@
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.reasoner.OrderBasedExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.OrderBasedExtensionReasonerAggregationFunction;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -36,10 +37,17 @@ public class OrderBasedExtensionReasonerExample {
         example3.addAttack(d,c);
         example3.addAttack(c,d);
 
-        OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(Semantics.PREFERRED_SEMANTICS);
-        System.out.println("OBE_pr:" + OBER.getModels(example3));
-        OBER = new OrderBasedExtensionReasoner(Semantics.ADMISSIBLE_SEMANTICS);
-        System.out.println("OBE_ad:" + OBER.getModels(example3));
+        OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(Semantics.PREFERRED_SEMANTICS, OrderBasedExtensionReasonerAggregationFunction.SUM);
+        System.out.println("OBE_pr,sum:" + OBER.getModels(example3));
+        OBER = new OrderBasedExtensionReasoner(Semantics.PREFERRED_SEMANTICS, OrderBasedExtensionReasonerAggregationFunction.MAX);
+        System.out.println("OBE_pr,max:" + OBER.getModels(example3));
+        OBER = new OrderBasedExtensionReasoner(Semantics.PREFERRED_SEMANTICS, OrderBasedExtensionReasonerAggregationFunction.MIN);
+        System.out.println("OBE_pr,min:" + OBER.getModels(example3));
+        OBER = new OrderBasedExtensionReasoner(Semantics.PREFERRED_SEMANTICS, OrderBasedExtensionReasonerAggregationFunction.LEXIMAX);
+        System.out.println("OBE_pr,leximax:" + OBER.getModels(example3));
+        OBER = new OrderBasedExtensionReasoner(Semantics.PREFERRED_SEMANTICS, OrderBasedExtensionReasonerAggregationFunction.LEXIMIN);
+        System.out.println("OBE_pr,leximin:" + OBER.getModels(example3));
+
 
     }
 
