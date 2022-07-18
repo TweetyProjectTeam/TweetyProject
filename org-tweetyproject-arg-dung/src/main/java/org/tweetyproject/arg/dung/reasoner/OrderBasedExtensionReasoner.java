@@ -27,7 +27,6 @@ public class OrderBasedExtensionReasoner {
     }
     public Collection<Extension<DungTheory>> getModels(DungTheory theory) throws Exception {
         Collection<Extension<DungTheory>> allExtensions = getExtensions(theory);
-        allExtensions.add(new Extension<>());
         HashMap<Vector<Integer>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = new HashMap<>();
         Vector<Integer> argmax = new Vector<>();
         argmax.add(0);
@@ -38,7 +37,7 @@ public class OrderBasedExtensionReasoner {
             Set<Extension<DungTheory>> newExtensionSet = aggregatedVectorToExtensionSetMap.get(aggregatedVec);
             newExtensionSet.add(ext);
             aggregatedVectorToExtensionSetMap.put(aggregatedVec, newExtensionSet);
-            if(magnitude(aggregatedVec) > magnitude(argmax)){
+            if(argmaxValue(aggregatedVec) > argmaxValue(argmax)){
                 argmax = aggregatedVec;
             }
 
@@ -157,7 +156,7 @@ public class OrderBasedExtensionReasoner {
                 returnVec.add(sum);
             }
             case MAX -> {
-                int max = 0;
+                int max = Integer.MIN_VALUE;
                 for(Integer x: vector){
                     if(x>max) {
                         max = x;
@@ -197,10 +196,18 @@ public class OrderBasedExtensionReasoner {
 
     }
 
-    private Double magnitude(Vector<Integer> vec){
+    private Double argmaxValue(Vector<Integer> vec){
         int sum = 0;
         for(int x: vec){
-            sum += (x*x);
+            if(x == Integer.MAX_VALUE){
+                return Double.POSITIVE_INFINITY;
+            }
+            else if(x == Integer.MIN_VALUE){
+                return Double.NEGATIVE_INFINITY;
+            }
+            else{
+                sum += (x*x);
+            }
         }
         return Math.sqrt(sum);
     }
