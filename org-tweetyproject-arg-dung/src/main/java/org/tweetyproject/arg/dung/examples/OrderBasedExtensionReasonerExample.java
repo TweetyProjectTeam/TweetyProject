@@ -1,11 +1,12 @@
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.reasoner.OrderBasedExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 public class OrderBasedExtensionReasonerExample {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         DungTheory example3 = new DungTheory();
         Argument a = new Argument("a");
@@ -35,8 +36,10 @@ public class OrderBasedExtensionReasonerExample {
         example3.addAttack(d,c);
         example3.addAttack(c,d);
 
-        OrderBasedExtensionReasoner arr = new OrderBasedExtensionReasoner();
-        System.out.println(arr.getModels(example3));
+        OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(Semantics.PREFERRED_SEMANTICS);
+        System.out.println("OBE_pr:" + OBER.getModels(example3));
+        OBER = new OrderBasedExtensionReasoner(Semantics.ADMISSIBLE_SEMANTICS);
+        System.out.println("OBE_ad:" + OBER.getModels(example3));
 
     }
 
