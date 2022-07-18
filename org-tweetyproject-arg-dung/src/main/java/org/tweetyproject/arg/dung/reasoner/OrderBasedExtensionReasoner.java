@@ -25,12 +25,9 @@ public class OrderBasedExtensionReasoner {
         this.semantics = semantics;
         this.aggregationFunction = aggregationFunction;
     }
-    public OrderBasedExtensionReasoner(Semantics semantics) {
-        this.semantics = semantics;
-        this.aggregationFunction = null;
-    }
     public Collection<Extension<DungTheory>> getModels(DungTheory theory) throws Exception {
         Collection<Extension<DungTheory>> allExtensions = getExtensions(theory);
+        allExtensions.add(new Extension<>());
         HashMap<Vector<Integer>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = new HashMap<>();
         Vector<Integer> argmax = new Vector<>();
         argmax.add(0);
@@ -141,14 +138,8 @@ public class OrderBasedExtensionReasoner {
 
     private Vector<Integer> getSupportVector(Extension<DungTheory> ext, DungTheory theory) throws Exception {
         Vector<Integer> vsupp = new Vector<>();
-//      TODO: what happens with empty Extension?
-        if(ext.isEmpty()){
-            vsupp.add(0);
-        }
-        else {
-            for (Argument arg : ext) {
-                vsupp.add(getNumberOfContainsInExtensions(arg, theory));
-            }
+        for (Argument arg : ext) {
+            vsupp.add(getNumberOfContainsInExtensions(arg, theory));
         }
         return vsupp;
     }
