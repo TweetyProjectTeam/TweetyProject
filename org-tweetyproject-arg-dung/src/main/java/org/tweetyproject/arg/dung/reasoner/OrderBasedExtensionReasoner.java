@@ -25,6 +25,13 @@ public class OrderBasedExtensionReasoner {
         this.semantics = semantics;
         this.aggregationFunction = aggregationFunction;
     }
+
+    /**
+     * Returns the order-based extensions for specified semantics and aggregation fucntion (OBE_sigma_gamma)
+     * @param theory a Dung theory
+     * @return order-based extension of specified semantic and aggregation
+     * @throws Exception unsupported/undefined semantics
+     */
     public Collection<Extension<DungTheory>> getModels(DungTheory theory) throws Exception {
         Collection<Extension<DungTheory>> allExtensions = getExtensions(theory);
         HashMap<Vector<Integer>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = new HashMap<>();
@@ -119,10 +126,23 @@ public class OrderBasedExtensionReasoner {
         throw new Exception("Illegal Semantics.");
     }
 
+    /**
+     * Returns a collection of all arguments specified in a theory.
+     * @param theory a dung theory
+     * @return collection of arguments
+     */
     private Collection<Argument> getAllArguments(DungTheory theory){
         return theory.getNodes();
     }
 
+    /**
+     * Returns the number of extensions (of reasoners semantic) arg appears in.
+     * (ne_semantic(arg,theory)
+     * @param arg an argument
+     * @param theory a dung theory
+     * @return number of extensions (of reasoners semantic) arg appears in.
+     * @throws Exception unsupported/undefined semantics
+     */
     private Integer getNumberOfContainsInExtensions(Argument arg, DungTheory theory) throws Exception {
         Collection<Extension<DungTheory>> allExtensions = getExtensions(theory);
         int count = 0;
@@ -135,6 +155,13 @@ public class OrderBasedExtensionReasoner {
         return count;
     }
 
+    /**
+     * Returns a vector with the number of every of ext arguments appearances in all extensions.
+     * @param ext an extension (from all extensions of this reasoners semantic)
+     * @param theory a dung theory
+     * @return support vector "vsupp"
+     * @throws Exception unsupported/undefined semantics
+     */
     private Vector<Integer> getSupportVector(Extension<DungTheory> ext, DungTheory theory) throws Exception {
         Vector<Integer> vsupp = new Vector<>();
         for (Argument arg : ext) {
@@ -143,6 +170,13 @@ public class OrderBasedExtensionReasoner {
         return vsupp;
     }
 
+    /**
+     * Returns the aggregated version of a vector based on the selected aggregation function of reasoner.
+     *
+     * Used for calculating: aggregate(vsupp(ext,theory))
+     * @param vector a vector of Integers
+     * @return aggregation function applied to vector
+     */
     private Vector<Integer> aggregate(Vector<Integer> vector){
         //switch case for all aggregation types
         Vector<Integer> returnVec = new Vector<>();
@@ -187,6 +221,12 @@ public class OrderBasedExtensionReasoner {
         return returnVec;
     }
 
+    /**
+     * DEPRECATED: compares two vectors lexicographically, used to compute argmax(aggr(vsupp))
+     * @param v1 first vector to compare
+     * @param v2 second vector to compare
+     * @return see Arrays.compare(int[],int[]);
+     */
     private Integer compare(Vector<Integer> v1, Vector<Integer> v2){
         Integer[] arr1 = new Integer[v1.size()];
         v1.toArray(arr1);
@@ -196,6 +236,12 @@ public class OrderBasedExtensionReasoner {
 
     }
 
+    /**
+     * Returns a value for finding the argmax from all vsupp vectors for given semantic. This is the Euclidic magnitude in most cases.
+     * If the vector is empty (vsupp({},theory)) and the aggregation func is MAX / MIN, returns negative/positive infinity respectively.
+     * @param vec a vector of integers
+     * @return magnitude of vector, OR +/- infinity in edge cases
+     */
     private Double argmaxValue(Vector<Integer> vec){
         int sum = 0;
         for(int x: vec){
