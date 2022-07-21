@@ -44,7 +44,7 @@ public class OrderBasedExtensionReasoner {
             Set<Extension<DungTheory>> newExtensionSet = aggregatedVectorToExtensionSetMap.get(aggregatedVec);
             newExtensionSet.add(ext);
             aggregatedVectorToExtensionSetMap.put(aggregatedVec, newExtensionSet);
-            if(argmaxValue(aggregatedVec) > argmaxValue(argmax)){
+            if(compare(aggregatedVec, argmax) > 0){
                 argmax = aggregatedVec;
             }
 
@@ -124,15 +124,6 @@ public class OrderBasedExtensionReasoner {
             case diverse -> throw new Exception("Semantics type not defined for this usage.");
         }
         throw new Exception("Illegal Semantics.");
-    }
-
-    /**
-     * Returns a collection of all arguments specified in a theory.
-     * @param theory a dung theory
-     * @return collection of arguments
-     */
-    private Collection<Argument> getAllArguments(DungTheory theory){
-        return theory.getNodes();
     }
 
     /**
@@ -222,27 +213,43 @@ public class OrderBasedExtensionReasoner {
     }
 
     /**
-     * DEPRECATED: compares two vectors lexicographically, used to compute argmax(aggr(vsupp))
+     * Compares two vectors by size (if aggrfunc = SUM,MAX,MIN).
+     * Otherwise (LEXI*) compares two vectors lexicographically.
+     * Used to compute argmax(aggr(vsupp))
      * @param v1 first vector to compare
      * @param v2 second vector to compare
      * @return see Arrays.compare(int[],int[]);
      */
-    private Integer compare(Vector<Integer> v1, Vector<Integer> v2){
-        Integer[] arr1 = new Integer[v1.size()];
-        v1.toArray(arr1);
-        Integer[] arr2 = new Integer[v2.size()];
-        v1.toArray(arr2);
-        return Arrays.compare(arr1, arr2);
+    public Integer compare(Vector<Integer> v1, Vector<Integer> v2) throws Exception {
+        int returnInt;
+        switch(aggregationFunction){
+
+            case SUM, MAX, MIN -> {
+                returnInt = Integer.compare(v1.get(0),v2.get(0));
+                return returnInt;
+            }
+            case LEXIMAX,LEXIMIN -> {
+                Integer[] arr1 = new Integer[v1.size()];
+                v1.toArray(arr1);
+                Integer[] arr2 = new Integer[v2.size()];
+                v2.toArray(arr2);
+                returnInt = Arrays.compare(arr1, arr2);
+                return returnInt;
+            }
+        }
+        throw new Exception("something went wrong");
+
 
     }
 
     /**
+     * DEPRECATED
      * Returns a value for finding the argmax from all vsupp vectors for given semantic. This is the Euclidic magnitude in most cases.
      * If the vector is empty (vsupp({},theory)) and the aggregation func is MAX / MIN, returns negative/positive infinity respectively.
      * @param vec a vector of integers
      * @return magnitude of vector, OR +/- infinity in edge cases
      */
-    private Double argmaxValue(Vector<Integer> vec){
+    public Double argmaxValue(Vector<Integer> vec){
         int sum = 0;
         for(int x: vec){
             if(x == Integer.MAX_VALUE){
