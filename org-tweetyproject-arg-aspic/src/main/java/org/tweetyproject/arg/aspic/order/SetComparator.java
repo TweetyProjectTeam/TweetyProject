@@ -31,7 +31,6 @@ import org.tweetyproject.comparator.GeneralComparator;
  * A comparator for sets of T according to def.3.19 in Mogdil and Prakken
  * 
  * @param <T>	type of the compared sets' elements
- * @param <R>
  */
 public class SetComparator<T> implements Comparator<Collection<T>> {
 

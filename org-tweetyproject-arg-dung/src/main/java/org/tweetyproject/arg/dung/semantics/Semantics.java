@@ -55,8 +55,12 @@ public enum Semantics {
 	N ("Naive semantics", "N"),
 	/** diverse */
 	diverse ("diverse semantics", "div");
-	
-	public static final Semantics GROUNDED_SEMANTICS = GR,
+	/**
+	 * all semantics
+	 */
+	public static final Semantics 
+		/** GROUNDED SEMANTICS*/
+		GROUNDED_SEMANTICS = GR,
 		/** STABLE_SEMANTICS */	
 		STABLE_SEMANTICS = ST,
 		/** PREFERRED_SEMANTICS */

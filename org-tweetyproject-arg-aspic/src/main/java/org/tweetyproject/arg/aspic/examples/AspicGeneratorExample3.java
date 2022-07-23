@@ -40,6 +40,11 @@ import org.tweetyproject.logics.pl.syntax.PlSignature;
  * @author Matthias Thimm
  */
 public class AspicGeneratorExample3 {
+	/**
+	 * 
+	 * @param args args
+	 * @throws IOException exception
+	 */
 	public static void main(String[] args) throws IOException {
 		int numberOfAFs = 100;
 		int[] l_numberAtoms = {5,10,15};//{10,15,20,25,30};

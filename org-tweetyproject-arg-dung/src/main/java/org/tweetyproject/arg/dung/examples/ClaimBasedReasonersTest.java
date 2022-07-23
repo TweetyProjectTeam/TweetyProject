@@ -83,7 +83,12 @@ public class ClaimBasedReasonersTest {
         
         
 	}
-	
+
+	/**
+	 * 
+	 * @param input input for pretty print
+	 * @return the printe version
+	 */
 	public static Set<Set<String>> print(Set<ClaimSet> input) {
 		HashSet<Set<String>> result = new HashSet<Set<String>>();
 		for(ClaimSet set : input) {

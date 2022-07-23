@@ -30,10 +30,21 @@ import java.util.Set;
  *
  */
 public class IncompleteTheory extends DungTheory{
-	
+	/**
+	 * definite arguments
+	 */
 	public HashSet<Argument> definiteArguments;
+	/**
+	 * definite attacks
+	 */
 	public HashSet<Attack> definiteAttacks;
+	/**
+	 * uncertin arguments
+	 */
 	public HashSet<Argument> uncertainArgument;
+	/**
+	 * uncertain attacks
+	 */
 	public HashSet<Attack> uncertainAttacks;
 	/**
 	 * costructor
@@ -58,17 +69,21 @@ public class IncompleteTheory extends DungTheory{
 	public void addPossibleArgument(Argument arg) {
 		this.uncertainArgument.add(arg);
 	}
+
 	/**
-	 * adds definite attack
-	 * @param att attack
+	 * adds uncertain argument
+	 * @param arg1 argument 1
+	 * @param arg2 argument 2
 	 */
 	public void addPossibleAttack(Argument arg1, Argument arg2) {
 		this.uncertainAttacks.add(new Attack(arg1, arg2));
 		
 	}
+
 	/**
-	 * adds possible attack
-	 * @param att attack
+	 * adds definiet attack
+	 * @param arg1 argument 1
+	 * @param arg2 argument 2
 	 */
 	public void addDefiniteAttack(Argument arg1, Argument arg2) {
 		this.definiteAttacks.add(new Attack(arg1, arg2));
@@ -108,8 +123,8 @@ public class IncompleteTheory extends DungTheory{
 		return;
 	}
 	/**
-	 * megres DungTheories to one incomplete theory
-	 * @param theories
+	 * merges DungTheories to one incomplete theory
+	 * @param theories the theories to merge
 	 */
 	public void merge(HashSet<DungTheory> theories) {
 		

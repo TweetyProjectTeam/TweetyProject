@@ -269,7 +269,7 @@ public class NumericalPartialOrder<T extends Formula, R extends BeliefBase> exte
 	 * Set the sorting type for ranking values. For example, the "ascending" type
 	 * means that smaller values signify a higher ranking than bigger values.
 	 * 
-	 * @param sortingType see {@link org.tweetyproject.arg.rankings.semantics.NumericalPartialOrder#sortingType} for a description of
+	 * @param sortingType see {@link org.tweetyproject.comparator.NumericalPartialOrder#sortingType} for a description of
 	 * the available sorting methods
 	 */
 	public void setSortingType(SortingType sortingType) {

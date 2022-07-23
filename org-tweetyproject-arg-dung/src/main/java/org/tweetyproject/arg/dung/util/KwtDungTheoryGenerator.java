@@ -49,7 +49,21 @@ public class KwtDungTheoryGenerator implements DungTheoryGenerator {
 	private double p_cred_args_attacked;
 	private double p_cred_args_attack_back;
 	private double p_other_attacks;
-	
+	/**
+	 * 
+	 * @param num_arguments nr of args
+	 * @param num_skept_arguments nr of skeptical args
+	 * @param size_ideal_extension size of ideal extension
+	 * @param num_cred_arguments nr of credulous args
+	 * @param num_pref_exts nums of preferred extensions
+	 * @param p_ideal_attacked idel attacked
+	 * @param p_ideal_attack_back ideal aattcked back
+	 * @param p_other_skept_args_attacked skeptical attacked back
+	 * @param p_other_skept_args_attack_back skeptical attacked args back
+	 * @param p_cred_args_attacked credulous args attacked
+	 * @param p_cred_args_attack_back creduous args attack back
+	 * @param p_other_attacks other attack
+	 */
 	public KwtDungTheoryGenerator(
 			int num_arguments,
 			int num_skept_arguments,

@@ -28,9 +28,19 @@ import org.tweetyproject.arg.dung.semantics.Extension;
  * @author Lars Bengel
  */
 public class TransitionState {
+	/**
+	 * theory
+	 */
     private DungTheory theory;
+    /**
+     * extension
+     */
     private Extension<DungTheory> extension;
-
+    /**
+     * 
+     * @param theory a dung theory
+     * @param extension an extension
+     */
     public TransitionState(DungTheory theory, Extension<DungTheory> extension) {
         this.theory = theory;
         this.extension = extension;
@@ -48,11 +58,17 @@ public class TransitionState {
 
         return new TransitionState(reduct, newExt);
     }
-
+    /**
+     * 
+     * @return the theory
+     */
     public DungTheory getTheory() {
         return theory;
     }
-
+    /**
+     * 
+     * @return the extension
+     */
     public Extension<DungTheory> getExtension() {
         return extension;
     }

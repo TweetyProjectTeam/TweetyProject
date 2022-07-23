@@ -384,7 +384,10 @@ public class AspicArgument<T extends Invertable> extends Argument {
 				}
 		return false;
 	}
-	
+	/**
+	 * 
+	 * @return a shallow copy
+	 */
 	public AspicArgument<T> shallowCopy() {
 		AspicArgument<T> copy = new AspicArgument<T>(toprule);
 		directsubs.forEach(sub -> copy.addDirectSub(sub));

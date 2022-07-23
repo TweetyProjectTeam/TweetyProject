@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2021 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.dung.semantics;
 
 import java.util.Collection;
@@ -12,20 +30,41 @@ import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.AbstractInterpretation;
-
+/**
+ * a set of claims
+ * @author Sebastian Franke
+ *
+ */
 public class ClaimSet extends AbstractInterpretation<ClaimBasedTheory,ClaimArgument>  implements Collection<ClaimArgument>, Comparable<ClaimSet>{
 
+	/**
+	 * constructor
+	 */
 	public ClaimSet() {
 		this.claims = new HashSet<ClaimArgument>();
 	}
+	/**
+	 * constructor
+	 * @param c a claimset
+	 */
 	public ClaimSet(ClaimSet c) {
 		this.claims = new HashSet<ClaimArgument>(c);
 	}
+	/**
+	 * constructor
+	 * @param c claimset
+	 */
 	public ClaimSet(Set<ClaimArgument> c) {
 		this.claims = new HashSet<ClaimArgument>(c);
 	}
+	/**
+	 * the claims
+	 */
 	HashSet<ClaimArgument> claims;
-	
+	/**
+	 * 
+	 * @return the claims
+	 */
 	public HashSet<ClaimArgument> getClaims(){
 		return this.claims;
 	}
@@ -141,7 +180,11 @@ public class ClaimSet extends AbstractInterpretation<ClaimBasedTheory,ClaimArgum
 
 
 
-	
+	/**
+	 * 
+	 * @param status like IN or OUT
+	 * @return the claimset with the given status
+	 */
 	public ClaimSet getArgumentsOfStatus(ArgumentStatus status) {
 		if(status.equals(ArgumentStatus.IN)) return this;
 		throw new IllegalArgumentException("Arguments of status different from \"IN\" cannot be determined from an extension alone");

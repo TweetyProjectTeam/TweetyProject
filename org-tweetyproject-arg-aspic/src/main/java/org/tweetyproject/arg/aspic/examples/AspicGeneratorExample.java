@@ -39,6 +39,10 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  */
 public class AspicGeneratorExample {
+	/**
+	 * 
+	 * @param args command line args
+	 */
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {		 
 		int repetitions = 50;

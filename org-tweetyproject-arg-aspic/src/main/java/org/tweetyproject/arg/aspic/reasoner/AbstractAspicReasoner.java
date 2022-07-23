@@ -84,7 +84,14 @@ public abstract class AbstractAspicReasoner<T extends Invertable>
 	public final Boolean query(AspicArgumentationTheory<T> aat, T query, InferenceMode inferenceMode) {
 		return query(getDungTheory(aat, query), query, inferenceMode);
 	}
-
+	/**
+	 * 
+	 * @param dt dung theory
+	 * @param query a formula
+	 * @param inferenceMode either Semantics.SCEPTICAL_INFERENCE or
+	 *                      Semantics.CREDULOUS_INFERENCE
+	 * @return "true" if the formula is accepted
+	 */
 	public final Boolean query(DungTheory dt, T query, InferenceMode inferenceMode) {
 		for (Argument arg : dt)
 			if (((AspicArgument<?>) arg).getConclusion().equals(query))

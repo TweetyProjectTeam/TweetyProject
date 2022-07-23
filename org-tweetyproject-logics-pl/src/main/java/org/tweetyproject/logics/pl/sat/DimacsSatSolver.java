@@ -72,16 +72,14 @@ public abstract class DimacsSatSolver extends SatSolver{
 		return DimacsSatSolver.convertToDimacs(formulas, DimacsSatSolver.getDefaultIndices(formulas).getFirst(),"",0);
 	}
 	
+
 	/**
-	 * Converts the given set of formulas to their string representation in Dimacs
-	 * CNF. Note that a single formula may be represented as multiple clauses, so
-	 * there is no simple correspondence between the formulas of the set and the
-	 * Dimacs representation. Use <code>convertToDimacs(.)</code> for obtaining a
-	 * map between those.
 	 * 
 	 * @param formulas a collection of formulas
 	 * @param prop_index a map mapping propositions (=signature) to the indices that are
 	 *                 used for writing the clauses.
+	 * @param additional_clauses additional clauses to be considered
+	 * @param num_additional_clauses number of additional clauses
 	 * @return a string in Dimacs CNF.
 	 */
 	public static String convertToDimacs(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, String additional_clauses, int num_additional_clauses) {

@@ -32,7 +32,7 @@ import org.tweetyproject.commons.Formula;
  * comparable elements in a graph-based structure.
  * 
  * @author Matthias Thimm
- * @param <T>
+ * @param <T> some formula
  *
  */
 public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extends GeneralComparator<T, R> {
@@ -40,10 +40,17 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 	/** The actual order of comparable elements */
 	private Order<T> order;
 	private Collection<T> args;
-	
+	/**
+	 * 
+	 * @return the order
+	 */
 	public Order<T> getOrder(){
 		return this.order;
 	}
+	/**
+	 * 
+	 * @return the arguments
+	 */
 	public Collection<T> getArgs(){
 		return this.args;
 	}
@@ -103,7 +110,11 @@ public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extend
 	 * getArgumentsOfStatus(org.tweetyproject.arg.dung.semantics.ArgumentStatus)
 	 */
 
-	
+	/**
+	 * 
+	 * @param ra some artial order
+	 * @return if they are the same
+	 */
 	public boolean isSame(LatticePartialOrder<T,R> ra) {
 		if(!this.getArgs().equals(ra.getArgs()))
 			return false;

@@ -51,13 +51,18 @@ public enum ExtensionRankingSemantics {
     R_SST("semi-stable", "R_SST");
 
 
+	/**
+	 * class for extension rnking semantics
+	 */
     public static final ExtensionRankingSemantics
-            /** ADMISSIBLE */
-            CONFLICT_FREE_SEMANTICS = R_CF,
-            /** ADMISSIBLE */
-            ADMISSIBLE_SEMANTICS = R_AD,
-    /** COMPLETE */
-    COMPLETE_SEMANTICS = R_CO,
+     /** conflict free */
+    CONFLICT_FREE_SEMANTICS = R_CF,
+     /** ADMISSIBLE */
+     ADMISSIBLE_SEMANTICS = R_AD,
+     /**
+      * COMPLETE
+      */
+     COMPLETE_SEMANTICS = R_CO,
 
     /** GROUNDED */
     GROUNDED_SEMANTICS = R_GR,

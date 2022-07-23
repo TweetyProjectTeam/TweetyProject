@@ -35,6 +35,11 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @author Matthias Thimm
  */
 public class AspicGeneratorExample2 {
+	/**
+	 * 
+	 * @param args command lien args
+	 * @throws IOException exception
+	 */
 	public static void main(String[] args) throws IOException {
 		int numberAtoms = 18;
 		int numberFormulas = 80;

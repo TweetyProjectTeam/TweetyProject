@@ -43,6 +43,10 @@ public interface ArgumentationFramework<Arg> extends BeliefBase{
 	 * @return isAttacked
 	 */
 	boolean isAttacked(Arg a, Extension<? extends ArgumentationFramework> ext);
+	/**
+	 * 
+	 * @return returns all the nodes
+	 */
 	Collection<Arg> getNodes();
 
 

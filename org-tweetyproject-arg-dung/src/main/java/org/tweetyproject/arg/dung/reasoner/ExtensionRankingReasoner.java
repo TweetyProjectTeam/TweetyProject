@@ -545,8 +545,10 @@ public class ExtensionRankingReasoner {
 
 
     }
+
     /**
-     * this method always returns true because the solver is native
+     * 
+     * @return this method always returns true because the solver is native
      */
 	public boolean isInstalled() {
 		return true;
