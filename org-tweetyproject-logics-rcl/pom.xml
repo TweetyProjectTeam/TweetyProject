@@ -6,13 +6,13 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.21-SNAPSHOT</version>
+  	<version>1.22-SNAPSHOT</version>
   </parent>
   <dependencies>
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>cl</artifactId>
-  		<version>1.21-SNAPSHOT</version>
+  		<version>1.22-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>
