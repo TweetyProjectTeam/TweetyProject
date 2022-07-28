@@ -1,7 +1,6 @@
 package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -12,33 +11,31 @@ import java.util.*;
  * Based on "On Supported Inference and Extension Selection in Abstract Argumentation Frameworks" (S. Konieczny et al., 2015)
  */
 public class OrderBasedExtensionReasoner {
-    private final Semantics semantics;
-    private final OrderBasedExtensionReasonerAggregationFunction aggregationFunction;
+
+    private OrderBasedExtensionReasonerAggregationFunction aggregationFunction;
 
     /**
-     * Create reasoner for specific semantic.
+     * Create reasoner with specific aggregation function and input extensions.
      *
-     * @param semantics           a semantic
      * @param aggregationFunction type of aggregation to use
      */
-    public OrderBasedExtensionReasoner(Semantics semantics, OrderBasedExtensionReasonerAggregationFunction aggregationFunction) {
-        this.semantics = semantics;
+    public OrderBasedExtensionReasoner(OrderBasedExtensionReasonerAggregationFunction aggregationFunction) {
         this.aggregationFunction = aggregationFunction;
     }
 
     /**
-     * Returns the order-based extensions for specified semantics and aggregation fucntion (OBE_sigma_gamma)
-     * @param theory a Dung theory
-     * @return order-based extension of specified semantic and aggregation
-     * @throws Exception unsupported/undefined semantics
+     * Returns the order-based extensions, which are a subset of the Extensions given at creation of this reasoner.
+     * Result depends on the chosen Aggregation Function.
+     * Aggregation with MIN/MAX of the empty Extension is interpreted as +Infinity/0 respectively.
+     * @return order-based extension subset of Extensions for specified aggregation function
+     * @throws Exception invalid argumentation Function
      */
-    public Collection<Extension<DungTheory>> getModels(DungTheory theory) throws Exception {
-        Collection<Extension<DungTheory>> allExtensions = getExtensions(theory);
+    public Collection<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions) throws Exception {
         HashMap<Vector<Integer>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = new HashMap<>();
         Vector<Integer> argmax = new Vector<>();
         argmax.add(0);
-        for(Extension<DungTheory> ext : allExtensions) {
-            Vector<Integer> aggregatedVec = aggregate(getSupportVector(ext, theory));
+        for(Extension<DungTheory> ext : extensions) {
+            Vector<Integer> aggregatedVec = aggregate(getSupportVector(ext, extensions));
 
             aggregatedVectorToExtensionSetMap.computeIfAbsent(aggregatedVec, k -> new HashSet<>());
             Set<Extension<DungTheory>> newExtensionSet = aggregatedVectorToExtensionSetMap.get(aggregatedVec);
@@ -53,91 +50,27 @@ public class OrderBasedExtensionReasoner {
     }
 
     /**
-     * Returns a collection of all Extensions for predefined reasoner semantic
-     * @param theory a Dung Theory
-     * @return collection of Extensions
+     * Set a new aggregation function.
+     * @param af an aggregation function.
      */
-    private Collection<Extension<DungTheory>> getExtensions(DungTheory theory) throws Exception {
-        //make switch statement for all possible semantics
-
-        switch (Objects.requireNonNull(semantics)){
-            case CF -> {
-                SimpleConflictFreeReasoner reasoner = new SimpleConflictFreeReasoner();
-                return reasoner.getModels(theory);
-            }
-            case ADM -> {
-                SimpleAdmissibleReasoner reasoner = new SimpleAdmissibleReasoner();
-                return reasoner.getModels(theory);
-            }
-            case WAD -> {
-                WeaklyAdmissibleReasoner reasoner = new WeaklyAdmissibleReasoner();
-                return reasoner.getModels(theory);
-            }
-            case CO -> {
-                SimpleCompleteReasoner reasoner = new SimpleCompleteReasoner();
-                return reasoner.getModels(theory);
-            }
-            case GR -> {
-                SimpleGroundedReasoner reasoner = new SimpleGroundedReasoner();
-                return reasoner.getModels(theory);
-            }
-            case PR -> {
-                SimplePreferredReasoner reasoner = new SimplePreferredReasoner();
-                return reasoner.getModels(theory);
-            }
-            case ST -> {
-                SimpleStableReasoner reasoner = new SimpleStableReasoner();
-                return reasoner.getModels(theory);
-            }
-            case STG -> {
-                SimpleStageReasoner reasoner = new SimpleStageReasoner();
-                return reasoner.getModels(theory);
-            }
-            case STG2 -> {
-                Stage2Reasoner reasoner = new Stage2Reasoner();
-                return reasoner.getModels(theory);
-            }
-            case SST -> {
-                SimpleSemiStableReasoner reasoner = new SimpleSemiStableReasoner();
-                return reasoner.getModels(theory);
-            }
-            case ID -> {
-                SimpleIdealReasoner reasoner = new SimpleIdealReasoner();
-                return reasoner.getModels(theory);
-            }
-            case EA -> {
-                SimpleEagerReasoner reasoner = new SimpleEagerReasoner();
-                return reasoner.getModels(theory);
-            }
-            case CF2 -> {
-                SccCF2Reasoner reasoner = new SccCF2Reasoner();
-                return reasoner.getModels(theory);
-            }
-            case SCF2 -> {
-                SCF2Reasoner reasoner = new SCF2Reasoner();
-                return reasoner.getModels(theory);
-            }
-            case N -> {
-                SimpleNaiveReasoner reasoner = new SimpleNaiveReasoner();
-                return reasoner.getModels(theory);
-            }
-            case diverse -> throw new Exception("Semantics type not defined for this usage.");
-        }
-        throw new Exception("Illegal Semantics.");
-    }
+    public void setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction af){this.aggregationFunction=af;}
 
     /**
-     * Returns the number of extensions (of reasoners semantic) arg appears in.
+     * Get the current aggregation function.
+     * @return aggregation function.
+     */
+    public OrderBasedExtensionReasonerAggregationFunction getAggregationFunction(){return this.aggregationFunction;}
+
+  
+    /**
+     * Returns the number of predefined Extensions in which arg is contained.
      * (ne_semantic(arg,theory)
      * @param arg an argument
-     * @param theory a dung theory
-     * @return number of extensions (of reasoners semantic) arg appears in.
-     * @throws Exception unsupported/undefined semantics
+     * @return number of Extensions that arg appears in.
      */
-    private Integer getNumberOfContainsInExtensions(Argument arg, DungTheory theory) throws Exception {
-        Collection<Extension<DungTheory>> allExtensions = getExtensions(theory);
+    private Integer getNumberOfContainsInExtensions(Argument arg, Collection<Extension<DungTheory>> extensions){
         int count = 0;
-        for (Extension<DungTheory> ext: allExtensions) {
+        for (Extension<DungTheory> ext: extensions) {
             if(ext.contains(arg)){
                 count++;
             }
@@ -147,26 +80,27 @@ public class OrderBasedExtensionReasoner {
     }
 
     /**
-     * Returns a vector with the number of every of ext arguments appearances in all extensions.
+     * Returns a vector with the number of every of ext arguments appearances in predefined Extensions.
      * @param ext an extension (from all extensions of this reasoners semantic)
-     * @param theory a dung theory
      * @return support vector "vsupp"
-     * @throws Exception unsupported/undefined semantics
      */
-    private Vector<Integer> getSupportVector(Extension<DungTheory> ext, DungTheory theory) throws Exception {
+    private Vector<Integer> getSupportVector(Extension<DungTheory> ext, Collection<Extension<DungTheory>> extensions){
         Vector<Integer> vsupp = new Vector<>();
         for (Argument arg : ext) {
-            vsupp.add(getNumberOfContainsInExtensions(arg, theory));
+            vsupp.add(getNumberOfContainsInExtensions(arg, extensions));
         }
         return vsupp;
     }
+// TODO: print support vector (collection of extensions)
 
     /**
      * Returns the aggregated version of a vector based on the selected aggregation function of reasoner.
-     *
+     * For SUM/MIN/MAX returns a 1D vector.
+     * For LEXIMIN/LEXIMAX dimensions are equal to input vector.
+     * For max/min of an empty vector, returns a 1D vector with 0/+inf respectively.
      * Used for calculating: aggregate(vsupp(ext,theory))
      * @param vector a vector of Integers
-     * @return aggregation function applied to vector
+     * @return vector aggregated by function
      */
     private Vector<Integer> aggregate(Vector<Integer> vector){
         //switch case for all aggregation types
@@ -181,7 +115,7 @@ public class OrderBasedExtensionReasoner {
                 returnVec.add(sum);
             }
             case MAX -> {
-                int max = Integer.MIN_VALUE;
+                int max = 0;
                 for(Integer x: vector){
                     if(x>max) {
                         max = x;
@@ -190,6 +124,7 @@ public class OrderBasedExtensionReasoner {
                 returnVec.add(max);
             }
             case MIN -> {
+                //acts like positive infinity
                 int min = Integer.MAX_VALUE;
                 for (Integer x : vector) {
                     if(x<min){
@@ -213,8 +148,9 @@ public class OrderBasedExtensionReasoner {
     }
 
     /**
-     * Compares two vectors by size (if aggrfunc = SUM,MAX,MIN).
-     * Otherwise (LEXI*) compares two vectors lexicographically.
+     * For SUM/MAX/MIN, compares two vectors by size of their single element.
+     * Otherwise, for LEXIMIN/LEXIMAX compares two vectors lexicographically.
+     * Result returned as in Arrays.compare(int[],int[]).
      * Used to compute argmax(aggr(vsupp))
      * @param v1 first vector to compare
      * @param v2 second vector to compare
@@ -250,17 +186,12 @@ public class OrderBasedExtensionReasoner {
      * @return magnitude of vector, OR +/- infinity in edge cases
      */
     public Double argmaxValue(Vector<Integer> vec){
+        if(vec.get(0) == Integer.MAX_VALUE){
+            return Double.POSITIVE_INFINITY;
+        }
         int sum = 0;
         for(int x: vec){
-            if(x == Integer.MAX_VALUE){
-                return Double.POSITIVE_INFINITY;
-            }
-            else if(x == Integer.MIN_VALUE){
-                return Double.NEGATIVE_INFINITY;
-            }
-            else{
                 sum += (x*x);
-            }
         }
         return Math.sqrt(sum);
     }
