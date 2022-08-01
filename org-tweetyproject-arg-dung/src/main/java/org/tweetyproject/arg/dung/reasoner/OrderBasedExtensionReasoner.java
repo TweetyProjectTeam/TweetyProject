@@ -1,16 +1,17 @@
 package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.syntax.AggregationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
 
 /**
- * Reasoner for ranking arguments pairwise.
+ * Reasoner for refining extension based semantics.
  * Based on "On Supported Inference and Extension Selection in Abstract Argumentation Frameworks" (S. Konieczny et al., 2015)
  */
-public class OrderBasedExtensionReasoner {
+public class OrderBasedExtensionReasoner{
 
     private AggregationFunction aggregationFunction;
 
@@ -148,7 +149,7 @@ public class OrderBasedExtensionReasoner {
     }
 
     /**
-     * For SUM/MAX/MIN, compares two vectors by size of their single element.
+     * For SUM/MAX/MIN, compares two vectors using the value of their single element.
      * Otherwise, for LEXIMIN/LEXIMAX compares two vectors lexicographically.
      * Result returned as in Arrays.compare(int[],int[]).
      * Used to compute argmax(aggr(vsupp))
@@ -173,7 +174,7 @@ public class OrderBasedExtensionReasoner {
                 return returnInt;
             }
         }
-        throw new Exception("something went wrong");
+        throw new Exception("Unsupported aggregation function");
 
 
     }

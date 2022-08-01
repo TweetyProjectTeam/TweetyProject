@@ -277,7 +277,7 @@ public class ExtensionRankingReasoner {
      * @param extensions list of extensions to sort split into ranks
      * @return a list of ranks containing extensions
      */
-    private List<List<Extension<DungTheory>>> getRanksFromList(List<Extension<DungTheory>> extensions){
+    public List<List<Extension<DungTheory>>> getRanksFromList(List<Extension<DungTheory>> extensions){
         //put extensions in correct topological order list and partition it into respective ranks
         extensions = rankWithQueue(extensions);
         List<List<Extension<DungTheory>>> ranks = new ArrayList<>();
