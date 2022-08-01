@@ -3,7 +3,7 @@ package org.tweetyproject.arg.dung.reasoner;
 /** This enum lists different types of aggregation types for aggregating a support vector of Order-based extensions.
  * see "On Supported Inference and Extension Selection in Abstract Argumentation Frameworks (S. Konieczny et al., 2015): Definition 4
  */
-public enum OrderBasedExtensionReasonerAggregationFunction {
+public enum AggregationFunction {
     /** SUM */
     SUM ("returns 1D vector with SUM of all elements of the support vector"),
     /**MAX*/
@@ -15,7 +15,7 @@ public enum OrderBasedExtensionReasonerAggregationFunction {
     /**LEXIMIN*/
     LEXIMIN("returns vector with the elements of the support vector re-arranged in INCREASING order");
 
-    OrderBasedExtensionReasonerAggregationFunction(String description){
+    AggregationFunction(String description){
         this.description = description;
     }
 

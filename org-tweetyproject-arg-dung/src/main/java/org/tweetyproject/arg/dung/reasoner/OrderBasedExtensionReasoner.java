@@ -12,14 +12,14 @@ import java.util.*;
  */
 public class OrderBasedExtensionReasoner {
 
-    private OrderBasedExtensionReasonerAggregationFunction aggregationFunction;
+    private AggregationFunction aggregationFunction;
 
     /**
      * Create reasoner with specific aggregation function and input extensions.
      *
      * @param aggregationFunction type of aggregation to use
      */
-    public OrderBasedExtensionReasoner(OrderBasedExtensionReasonerAggregationFunction aggregationFunction) {
+    public OrderBasedExtensionReasoner(AggregationFunction aggregationFunction) {
         this.aggregationFunction = aggregationFunction;
     }
 
@@ -50,16 +50,29 @@ public class OrderBasedExtensionReasoner {
     }
 
     /**
+     * Returns a vector with the number of every of ext arguments appearances in predefined Extensions.
+     * @param ext an extension (from all extensions of this reasoners semantic)
+     * @return support vector "vsupp"
+     */
+    public Vector<Integer> getSupportVector(Extension<DungTheory> ext, Collection<Extension<DungTheory>> extensions){
+        Vector<Integer> vsupp = new Vector<>();
+        for (Argument arg : ext) {
+            vsupp.add(getNumberOfContainsInExtensions(arg, extensions));
+        }
+        return vsupp;
+    }
+
+    /**
      * Set a new aggregation function.
      * @param af an aggregation function.
      */
-    public void setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction af){this.aggregationFunction=af;}
+    public void setAggregationFunction(AggregationFunction af){this.aggregationFunction=af;}
 
     /**
      * Get the current aggregation function.
      * @return aggregation function.
      */
-    public OrderBasedExtensionReasonerAggregationFunction getAggregationFunction(){return this.aggregationFunction;}
+    public AggregationFunction getAggregationFunction(){return this.aggregationFunction;}
 
   
     /**
@@ -79,19 +92,6 @@ public class OrderBasedExtensionReasoner {
         return count;
     }
 
-    /**
-     * Returns a vector with the number of every of ext arguments appearances in predefined Extensions.
-     * @param ext an extension (from all extensions of this reasoners semantic)
-     * @return support vector "vsupp"
-     */
-    private Vector<Integer> getSupportVector(Extension<DungTheory> ext, Collection<Extension<DungTheory>> extensions){
-        Vector<Integer> vsupp = new Vector<>();
-        for (Argument arg : ext) {
-            vsupp.add(getNumberOfContainsInExtensions(arg, extensions));
-        }
-        return vsupp;
-    }
-// TODO: print support vector (collection of extensions)
 
     /**
      * Returns the aggregated version of a vector based on the selected aggregation function of reasoner.

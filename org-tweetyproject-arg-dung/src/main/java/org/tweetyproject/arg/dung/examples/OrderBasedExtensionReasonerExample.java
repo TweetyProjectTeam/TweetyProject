@@ -2,16 +2,14 @@ package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.OrderBasedExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.OrderBasedExtensionReasonerAggregationFunction;
+import org.tweetyproject.arg.dung.reasoner.AggregationFunction;
 import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.commons.util.SetTools;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class OrderBasedExtensionReasonerExample {
     public static void main(String[] args) throws Exception {
@@ -77,30 +75,30 @@ public class OrderBasedExtensionReasonerExample {
 //            Extension<DungTheory> ext = new Extension<>(set);
 //            extensions.add(ext);
 //        }
-        OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(OrderBasedExtensionReasonerAggregationFunction.SUM);
+        OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(AggregationFunction.SUM);
         System.out.println("OBE_pr,sum:" + OBER.getModels(prExtensions));
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.MAX);
+        OBER.setAggregationFunction(AggregationFunction.MAX);
         System.out.println("OBE_pr,max:" + OBER.getModels(prExtensions));
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.MIN);
+        OBER.setAggregationFunction(AggregationFunction.MIN);
         System.out.println("OBE_pr,min:" + OBER.getModels(prExtensions));
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.LEXIMAX);
+        OBER.setAggregationFunction(AggregationFunction.LEXIMAX);
         System.out.println("OBE_pr,leximax:" + OBER.getModels(prExtensions));
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.LEXIMIN);
+        OBER.setAggregationFunction(AggregationFunction.LEXIMIN);
         System.out.println("OBE_pr,leximin:" + OBER.getModels(prExtensions));
 
         System.out.println();
 
         Collection<Extension<DungTheory>> adExtensions = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADMISSIBLE_SEMANTICS).getModels(example3);
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.SUM);
+        OBER.setAggregationFunction(AggregationFunction.SUM);
 
         System.out.println("OBE_ad,sum:" + OBER.getModels(adExtensions));
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.MAX);
+        OBER.setAggregationFunction(AggregationFunction.MAX);
         System.out.println("OBE_ad,max:" + OBER.getModels(adExtensions));
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.MIN);
+        OBER.setAggregationFunction(AggregationFunction.MIN);
         System.out.println("OBE_ad,min:" + OBER.getModels(adExtensions));
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.LEXIMAX);
+        OBER.setAggregationFunction(AggregationFunction.LEXIMAX);
         System.out.println("OBE_ad,leximax:" + OBER.getModels(adExtensions));
-        OBER.setAggregationFunction(OrderBasedExtensionReasonerAggregationFunction.LEXIMIN);
+        OBER.setAggregationFunction(AggregationFunction.LEXIMIN);
         System.out.println("OBE_ad,leximin:" + OBER.getModels(adExtensions));
 
 
