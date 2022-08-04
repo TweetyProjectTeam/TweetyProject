@@ -1,6 +1,18 @@
-20.01.2021 - TweetyProject 1.21
+25.07.2022 - TweetyProject 1.22
   New libraries:
-    - org.tweetyproject.sat: dedicated library for SAT solving 
+    - org.tweetyproject.comparator: library for various comparators such as
+      partial orders
+  New functionalities:
+    - Added extension ranking semantics (org.tweetyproject.arg.dung)
+    - Added reasoner for serialisable semantics (org.tweetyproject.arg.dung)
+    - Added support for incomplete argumentation frameworks (org.tweetyproject.arg.dung)
+    - Added KWT generator for abstract argumentation frameworks (org.tweetyproject.arg.dung)
+  Minor changes:
+    - Encoding optimsations for SAT-based argumentation solvers (org.tweetyproject.arg.dung)
+    - Bugfix web interface (note that http://tweetyproject.org/w/ is usable again)
+20.01.2022 - TweetyProject 1.21
+  New libraries:
+    - org.tweetyproject.sat: dedicated library for SAT solving
   New functionalities:
     - added further transformation functionalities between ADFs and conditional
       logics (org.tweetyproject.logics.translators)

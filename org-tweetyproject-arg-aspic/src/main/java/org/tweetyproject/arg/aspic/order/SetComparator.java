@@ -21,6 +21,10 @@
 import java.util.Collection;
 import java.util.Comparator;
 
+import org.tweetyproject.arg.aspic.syntax.AspicArgumentationTheory;
+import org.tweetyproject.commons.Formula;
+import org.tweetyproject.comparator.GeneralComparator;
+
 /**
  * @author Nils Geilen
  * 
@@ -52,7 +56,7 @@ public class SetComparator<T> implements Comparator<Collection<T>> {
 		this.elitist = elitist;
 	}
 
-	private boolean is_smaller_or_equal(Collection<T> gamma1, Collection<T> gamma2) {
+	private boolean isStrictlyLessOrEquallyAcceptableThan(Collection<T> gamma1, Collection<T> gamma2) {
 		if (elitist) {
 			for (T t : gamma1) {
 				int i = 0;
@@ -95,8 +99,8 @@ public class SetComparator<T> implements Comparator<Collection<T>> {
 		if (gamma2.isEmpty() && !gamma1.isEmpty())
 			return 1;
 		
-		boolean soe = is_smaller_or_equal(gamma1, gamma2);
-		boolean goe = is_smaller_or_equal(gamma2, gamma1);
+		boolean soe = isStrictlyLessOrEquallyAcceptableThan(gamma1, gamma2);
+		boolean goe = isStrictlyLessOrEquallyAcceptableThan(gamma2, gamma1);
 		
 		if(soe && goe)
 			return 0;
@@ -104,5 +108,7 @@ public class SetComparator<T> implements Comparator<Collection<T>> {
 			return -1;
 		return 1;		
 	}
+
+
 
 }

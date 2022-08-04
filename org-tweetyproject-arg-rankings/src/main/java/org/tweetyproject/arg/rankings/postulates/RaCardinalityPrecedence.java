@@ -24,7 +24,7 @@ import java.util.Iterator;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
+import org.tweetyproject.comparator.GeneralComparator;
 
 /**
  * The "cardinality precedence" postulate for ranking semantics as proposed in
@@ -48,7 +48,7 @@ public class RaCardinalityPrecedence extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb)) 
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -59,7 +59,7 @@ public class RaCardinalityPrecedence extends RankingPostulate {
 		Argument a = it.next();
 		Argument b = it.next();
 
-		ArgumentRanking ranking = ev.getModel((DungTheory) dt);
+		GeneralComparator<Argument, DungTheory> ranking = ev.getModel((DungTheory) dt);
 		if (dt.getAttackers(a).size() < dt.getAttackers(b).size()) 
 			return ranking.isStrictlyMoreAcceptableThan(a, b);
 		return true;

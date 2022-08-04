@@ -28,8 +28,8 @@ import java.util.Map.Entry;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.GeneralComparator;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 
 /**
  * This class contains common utility methods for ranking reasoners.
@@ -67,9 +67,9 @@ public class RankingTools {
 	 * @param n       decimals
 	 * @return rounded NumericalArgumentRanking
 	 */
-	public static ArgumentRanking roundRanking(NumericalArgumentRanking ranking, int n) {
+	public static GeneralComparator<Argument, DungTheory> roundRanking(NumericalPartialOrder<Argument, DungTheory> ranking, int n) {
 		Iterator<Entry<Argument, Double>> it = ranking.entrySet().iterator();
-		NumericalArgumentRanking roundedRanking = new NumericalArgumentRanking();
+		NumericalPartialOrder<Argument, DungTheory> roundedRanking = new NumericalPartialOrder<Argument, DungTheory>();
 		while (it.hasNext()) {
 			Map.Entry<Argument, Double> pair = (Map.Entry<Argument, Double>) it.next();
 			Argument a = pair.getKey();

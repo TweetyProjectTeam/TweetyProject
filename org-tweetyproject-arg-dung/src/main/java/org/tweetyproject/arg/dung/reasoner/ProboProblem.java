@@ -398,8 +398,10 @@ public enum ProboProblem {
 		return problems;
 	}	
 
+
 	/**
-	 * isJustificationProblem
+	 * 
+	 * @return if problem is justified
 	 */
 	public boolean isJustificationProblem() {
 		return subProblem.isJustificationProblem();

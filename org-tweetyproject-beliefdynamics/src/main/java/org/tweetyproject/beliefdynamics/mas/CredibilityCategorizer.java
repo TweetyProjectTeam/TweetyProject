@@ -23,8 +23,8 @@ import java.util.*;
 import org.tweetyproject.agents.*;
 import org.tweetyproject.arg.deductive.categorizer.*;
 import org.tweetyproject.arg.deductive.semantics.*;
-import org.tweetyproject.graphs.orders.*;
 import org.tweetyproject.logics.pl.syntax.*;
+import org.tweetyproject.comparator.Order;
 
 /**
  * This class implements a credibility-based categorizer that works like

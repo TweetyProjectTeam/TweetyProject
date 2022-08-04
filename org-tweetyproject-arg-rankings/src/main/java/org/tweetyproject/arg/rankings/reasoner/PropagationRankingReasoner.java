@@ -28,7 +28,7 @@ import java.util.Map;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.arg.rankings.util.RankingTools;
 import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
 
@@ -47,7 +47,7 @@ import org.tweetyproject.arg.rankings.util.LexicographicDoubleTupleComparator;
  * 
  * @author Anna Gessler
  */
-public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
+public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticePartialOrder<Argument, DungTheory>> {
 	/**
 	 * Determines the influence of attacked arguments. The smaller this value is,
 	 * the more important is the influence of the non-attacked arguments.
@@ -113,18 +113,18 @@ public class PropagationRankingReasoner extends AbstractRankingReasoner<LatticeA
 	}
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
-		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
+	public Collection<LatticePartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<LatticePartialOrder<Argument, DungTheory>> ranks = new HashSet<LatticePartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory kb) {
+	public LatticePartialOrder<Argument, DungTheory> getModel(DungTheory kb) {
 		if (((DungTheory)kb).containsCycle())
 			return null;
 		
-		LatticeArgumentRanking ranking = new LatticeArgumentRanking(((DungTheory)kb).getNodes());
+		LatticePartialOrder<Argument, DungTheory> ranking = new LatticePartialOrder<Argument, DungTheory>(((DungTheory)kb).getNodes());
 		LexicographicDoubleTupleComparator c = new LexicographicDoubleTupleComparator();
 		Map<Argument, List<Double>> pv = calculatePropagationVector(((DungTheory)kb), this.attacked_arguments_influence);
 

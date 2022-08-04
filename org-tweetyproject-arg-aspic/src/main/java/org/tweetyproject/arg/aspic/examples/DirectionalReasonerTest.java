@@ -47,6 +47,10 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  */
 public class DirectionalReasonerTest {
+	/**
+	 * 
+	 * @param args args
+	 */
 	public static void main(String[] args) {		 
 		int repetitions = 5000;
 		int numberAtoms = 65;
@@ -122,7 +126,15 @@ public class DirectionalReasonerTest {
 //			System.out.println("att: " + a);
 //		}
 //	}
-	
+  /**
+   * 
+   * @param <T> some callable object
+   * @param callable callable object
+   * @param timeout timeout for runtime
+   * @param timeUnit unit for timeout
+   * @return directional reasoner result
+   * @throws Exception exception
+   */
   public static <T> T runWithTimeout(Callable<T> callable, long timeout, TimeUnit timeUnit) throws Exception {
     final ExecutorService executor = Executors.newSingleThreadExecutor();
     final Future<T> future = executor.submit(callable);

@@ -158,5 +158,9 @@ public abstract class SatSolver implements BeliefSetConsistencyTester<PlFormula>
 		return this.getWitness((Collection<PlFormula>) bs);
 	}
 
+	/**
+	 * 
+	 * @return whether the solve ris installed
+	 */
 	public abstract boolean isInstalled();
 }

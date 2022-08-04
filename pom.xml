@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
   <name>TweetyProject (Parent POM)</name>
-  <version>1.21-SNAPSHOT</version>
+  <version>1.22-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <description>TweetyProject is a collection of various Java libraries that implement approaches to different areas of artificial intelligence. In particular, it provides a general interface layer for doing research and working with different knowledge representation formalisms such as classical logics, conditional logics, probabilistic logics, and argumentation. Furthermore, TweetyProject contains libraries for dealing with agents, multi-agent systems, and dialog systems for agents, as well as belief revision, preference reasoning, preference aggregation, and action languages. A series of utility libraries that deal with e.g. mathematical optimization complement the collection.</description>
@@ -43,8 +44,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-   <maven.compiler.source>1.8</maven.compiler.source>
-   <maven.compiler.target>1.8</maven.compiler.target>
+   <maven.compiler.source>15</maven.compiler.source>
+   <maven.compiler.target>15</maven.compiler.target>
 </properties>
 
   <distributionManagement>
@@ -67,7 +68,7 @@
       </includes>
     </resource>
   </resources>
-  -->
+   -->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -121,7 +122,7 @@
           <outputDirectory>../testBuild</outputDirectory>
         </configuration>
       </plugin>
-    <!-- 
+    <!--
      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -142,7 +143,7 @@
           </execution>
         </executions>
       </plugin>
-    -->
+  -->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -218,6 +219,7 @@
   	<module>org-tweetyproject-web</module>
   	<module>org-tweetyproject</module>
   	<module>org-tweetyproject-sat</module>
+    <module>org-tweetyproject-comparator</module>
   </modules>
 
 </project>

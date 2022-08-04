@@ -48,7 +48,7 @@ public class SolidAdmissibleReasoner extends AbstractExtensionReasoner {
                 result.add(ext);
             }
         }
-        return null;
+        return result;
     }
 
     @Override

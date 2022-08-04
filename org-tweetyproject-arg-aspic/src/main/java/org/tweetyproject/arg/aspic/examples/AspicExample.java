@@ -35,6 +35,10 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  */
 public class AspicExample {
+	/**
+	 * 
+	 * @param args command line arguments
+	 */
 	public static void main(String[] args){
 		Proposition a = new Proposition("a");
 		Proposition b = new Proposition("b");

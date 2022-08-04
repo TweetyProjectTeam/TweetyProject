@@ -25,7 +25,7 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.AbstractRankingReasoner;
-import org.tweetyproject.arg.rankings.semantics.ArgumentRanking;
+import org.tweetyproject.comparator.GeneralComparator;
 
 /**
  * The "addition of attack branch" postulate for ranking semantics as formalized
@@ -60,7 +60,7 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 	}
 
 	@Override
-	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<ArgumentRanking> ev) {
+	public boolean isSatisfied(Collection<Argument> kb, AbstractRankingReasoner<GeneralComparator<Argument, DungTheory>> ev) {
 		if (!this.isApplicable(kb))
 			return true;
 		if (ev.getModel((DungTheory) kb) == null)
@@ -95,7 +95,7 @@ public class RaAdditionOfAttackBranch extends RankingPostulate {
 		dt.add(new Attack(t2, t1));
 		dt.add(new Attack(t3, t2));
 
-		ArgumentRanking ranking = ev.getModel(dt);
+		GeneralComparator<Argument, DungTheory> ranking = ev.getModel(dt);
 		return ranking.isStrictlyLessAcceptableThan(argClone, argOld);
 	}
 

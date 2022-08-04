@@ -28,7 +28,11 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.ClaimArgument;
 import org.tweetyproject.arg.dung.syntax.ClaimBasedTheory;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-
+/**
+ *  a simple claimbased semi stable reasoner
+ * @author Sebastian Franke
+ *
+ */
 public class SimpleClSemistableReasoner extends AbstractClaimBasedReasoner{
 
 

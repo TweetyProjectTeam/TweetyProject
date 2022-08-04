@@ -16,59 +16,64 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.rankings.semantics;
+package org.tweetyproject.comparator;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
-import org.tweetyproject.arg.dung.semantics.ArgumentStatus;
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.graphs.orders.Order;
+import org.tweetyproject.commons.BeliefBase;
+import org.tweetyproject.commons.Formula;
 
 /**
- * This class models argument ranking by representing the acceptability of
- * arguments in a graph-based structure.
+ * This class models comparable element ranking by representing the acceptability of
+ * comparable elements in a graph-based structure.
  * 
  * @author Matthias Thimm
+ * @param <T> some formula
  *
  */
-public class LatticeArgumentRanking extends ArgumentRanking {
+public class LatticePartialOrder<T extends Formula, R extends BeliefBase> extends GeneralComparator<T, R> {
 
-	/** The actual order of arguments */
-	private Order<Argument> order;
-	private Collection<Argument> args;
-	
-	public Order<Argument> getOrder(){
+	/** The actual order of comparable elements */
+	private Order<T> order;
+	private Collection<T> args;
+	/**
+	 * 
+	 * @return the order
+	 */
+	public Order<T> getOrder(){
 		return this.order;
 	}
-	public Collection<Argument> getArgs(){
+	/**
+	 * 
+	 * @return the arguments
+	 */
+	public Collection<T> getArgs(){
 		return this.args;
 	}
 
 	/**
-	 * Creates a new argument ranking with the given arguments which are initially
+	 * Creates a new argument ranking with the given comparable elements which are initially
 	 * all incomparable.
 	 * 
 	 * @param args a set of arguments
 	 */
-	public LatticeArgumentRanking(Collection<Argument> args) {
+	public LatticePartialOrder(Collection<T> args) {
 		this.order = new Order<>(args);
 		this.args = args;
 	}
 
 	/**
-	 * Defines argument "a" to be strictly less or equally acceptable than
-	 * argument "b".
+	 * Defines comparable element "a" to be strictly less or equally acceptable than
+	 * comparable element "b".
 	 * 
-	 * @param a some argument
-	 * @param b some argument
+	 * @param a some comparable element
+	 * @param b some comparable element
 	 */
-	public void setStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
+	public void setStrictlyLessOrEquallyAcceptableThan(T a, T b) {
 		this.order.setOrderedBefore(a, b);
 	}
 
@@ -80,19 +85,19 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 * org.tweetyproject.arg.dung.syntax.Argument)
 	 */
 	@Override
-	public boolean isStrictlyLessOrEquallyAcceptableThan(Argument a, Argument b) {
+	public boolean isStrictlyLessOrEquallyAcceptableThan(T a, T b) {
 		return !isIncomparable(a, b) && this.order.isOrderedBefore(a, b);
 	}
 
 	@Override
-	public boolean isIncomparable(Argument a, Argument b) {
+	public boolean isIncomparable(T a, T b) {
 		return !this.order.isComparable(a, b);
 	}
 
 	@Override
 	public boolean containsIncomparableArguments() {
-		for (Argument a : this.order.getElements()) 
-			for (Argument b : this.order.getElements()) 
+		for (T a : this.order.getElements()) 
+			for (T b : this.order.getElements()) 
 				if (this.isIncomparable(a, b)) 
 					return true;
 		return false;
@@ -104,23 +109,17 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 * @see org.tweetyproject.arg.dung.semantics.AbstractArgumentationInterpretation#
 	 * getArgumentsOfStatus(org.tweetyproject.arg.dung.semantics.ArgumentStatus)
 	 */
-	@Override
-	public Extension getArgumentsOfStatus(ArgumentStatus status) {
-		if (status.equals(ArgumentStatus.IN))
-			return new Extension(this.getMaximallyAcceptedArguments(this.order.getElements()));
-		if (status.equals(ArgumentStatus.OUT))
-			return new Extension(this.getMinimallyAcceptedArguments(this.order.getElements()));
-		Collection<Argument> undec = new HashSet<>(this.order.getElements());
-		undec.removeAll(this.getMaximallyAcceptedArguments(this.order.getElements()));
-		undec.removeAll(this.getMinimallyAcceptedArguments(this.order.getElements()));
-		return new Extension(undec);
-	}
-	
-	public boolean isSame(LatticeArgumentRanking ra) {
+
+	/**
+	 * 
+	 * @param ra some artial order
+	 * @return if they are the same
+	 */
+	public boolean isSame(LatticePartialOrder<T,R> ra) {
 		if(!this.getArgs().equals(ra.getArgs()))
 			return false;
-		for(Argument a: this.getArgs()) {
-			for(Argument b: this.getArgs()) {
+		for(T a: this.getArgs()) {
+			for(T b: this.getArgs()) {
 				if(ra.compare(a, b) != this.compare(a,  b))
 					return false;
 			}
@@ -139,11 +138,11 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	public String toString() {
 		String result = "[";
 		if (!this.containsIncomparableArguments()) {
-			List<Argument> args = new ArrayList<Argument>(this.order.getElements());
+			List<T> args = new ArrayList<T>(this.order.getElements());
 			Collections.sort(args, new LatticeComparator(this));
 			for (int i = args.size() - 1; i > 0; i--) {
-				Argument a = args.get(i);
-				Argument b = args.get(i - 1);
+				T a = args.get(i);
+				T b = args.get(i - 1);
 				if (i == args.size() - 1)
 					result += a;
 				if (this.isEquallyAcceptableThan(a, b))
@@ -153,8 +152,8 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 			}
 		} else {
 			String incomparables = "";
-			for (Argument a : this.order.getElements()) {
-				for (Argument b : this.order.getElements()) {
+			for (T a : this.order.getElements()) {
+				for (T b : this.order.getElements()) {
 					if (this.isStrictlyMoreAcceptableThan(a, b))
 						result += "" + a + ">" + b + ", ";
 					else if (this.isEquallyAcceptableThan(a, b) && !a.equals(b))
@@ -177,18 +176,18 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 	 * @author Anna Gessler
 	 *
 	 */
-	private class LatticeComparator implements Comparator<Argument> {
+	private class LatticeComparator implements Comparator<T> {
 		/**
 		 * The ranking that is associated with this comparator.
 		 */
-		private LatticeArgumentRanking order;
+		private LatticePartialOrder<T,R> order;
 
-		public LatticeComparator(LatticeArgumentRanking order) {
+		public LatticeComparator(LatticePartialOrder<T,R> order) {
 			this.order = order;
 		}
 
 		@Override
-		public int compare(Argument a, Argument b) {
+		public int compare(T a, T b) {
 			if (order.isIncomparable(a, b))
 				throw new IllegalArgumentException("Incomparable arguments " + a + ", " + b);
 			else if (order.isStrictlyLessAcceptableThan(a, b))
@@ -199,5 +198,18 @@ public class LatticeArgumentRanking extends ArgumentRanking {
 				return 0;
 		}
 	}
+
+	@Override
+	public boolean satisfies(T formula) throws IllegalArgumentException {
+
+		return false;
+	}
+	@Override
+	public boolean satisfies(R beliefBase) throws IllegalArgumentException {
+
+		return false;
+	}
+
+
 
 }

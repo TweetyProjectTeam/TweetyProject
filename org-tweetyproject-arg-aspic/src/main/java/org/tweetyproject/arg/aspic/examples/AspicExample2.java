@@ -39,6 +39,13 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  */
 public class AspicExample2 {
+	/**
+	 * 
+	 * @param args command lone arguments
+	 * @throws FileNotFoundException exception
+	 * @throws ParserException exception
+	 * @throws IOException exception
+	 */
 	public static void main(String[] args) throws FileNotFoundException, ParserException, IOException{
 		PlParser plparser = new PlParser();
 		AspicParser<PlFormula> parser = new AspicParser<>(plparser, new PlFormulaGenerator());

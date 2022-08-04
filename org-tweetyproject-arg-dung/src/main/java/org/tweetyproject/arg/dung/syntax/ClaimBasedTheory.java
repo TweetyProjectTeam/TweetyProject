@@ -38,6 +38,10 @@ public class ClaimBasedTheory extends DungTheory {
 
 	/**all claims*/
 	private HashSet<Claim> claims;
+	/**
+	 * 
+	 * @param arg argument
+	 */
 	public void add(ClaimArgument arg) {
 		super.add(arg);
 		this.claims.add(arg.claim);
@@ -68,8 +72,10 @@ public class ClaimBasedTheory extends DungTheory {
 		super();
 		this.claims = new HashSet<Claim>();
 	}
+
 	/**
 	 * Default constructor; initializes empty sets of arguments and attacks
+	 * @param claimMap the map if arguments to claims
 	 */
 	public ClaimBasedTheory(HashMap<ClaimArgument, Claim> claimMap){
 		super();

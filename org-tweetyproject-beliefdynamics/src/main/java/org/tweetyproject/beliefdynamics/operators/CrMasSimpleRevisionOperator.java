@@ -24,9 +24,9 @@ import org.tweetyproject.agents.*;
 import org.tweetyproject.beliefdynamics.*;
 import org.tweetyproject.beliefdynamics.mas.*;
 import org.tweetyproject.commons.KernelProvider;
-import org.tweetyproject.graphs.orders.*;
 import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
 import org.tweetyproject.logics.pl.syntax.*;
+import org.tweetyproject.comparator.Order;
 
 /**
  * This revision operator accepts only those pieces of information for revision where the credibility

@@ -23,7 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.arg.social.reasoner.IssReasoner;
 import org.tweetyproject.arg.social.semantics.SimpleProductSemantics;
 import org.tweetyproject.arg.social.semantics.SocialMapping;
@@ -38,7 +38,7 @@ import org.tweetyproject.arg.social.syntax.SocialAbstractArgumentationFramework;
  * 
  * @author Anna Gessler
  */
-public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
+public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalPartialOrder<Argument, DungTheory>> {
 	/**
 	 * Parameter for the simple vote aggregation function of the
 	 * simple product semantics.
@@ -104,14 +104,14 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 	}
 
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
-		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
+	public Collection<NumericalPartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<NumericalPartialOrder<Argument, DungTheory>> ranks = new HashSet<NumericalPartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory kb) {
+	public NumericalPartialOrder<Argument, DungTheory> getModel(DungTheory kb) {
 		SocialAbstractArgumentationFramework saf = new SocialAbstractArgumentationFramework();
 		saf.add((DungTheory)kb);
 		for (Argument a : (DungTheory)kb) {
@@ -120,8 +120,8 @@ public class SAFRankingReasoner extends AbstractRankingReasoner<NumericalArgumen
 		}
 		IssReasoner reasoner6 = new IssReasoner(new SimpleProductSemantics(this.epsilon, this.precision), this.tolerance);
 		SocialMapping<Double> result = reasoner6.getModel(saf);
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+		ranking.setSortingType(NumericalPartialOrder.SortingType.DESCENDING);
 		for (Argument a : (DungTheory)kb)
 			ranking.put(a, result.get(a));
 		return ranking;

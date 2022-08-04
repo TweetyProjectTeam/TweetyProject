@@ -249,7 +249,11 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>,
 	public T getConclusion() {
 		return conclusion;
 	}
-
+	/**
+	 * 
+	 * @param constants constans
+	 * @return all ground instances
+	 */
 	public Set<InferenceRule<T>> allGroundInstances(Set<Constant> constants) {
 		Set<Map<Variable, Term<?>>> maps = this.allSubstitutions(constants);
 		Set<InferenceRule<T>> result = new HashSet<InferenceRule<T>>();
@@ -302,7 +306,10 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>,
 		}
 		return new MapTools<Variable, Term<?>>().allMaps(relations);
 	}
-	
+	/**
+	 * 
+	 * @return the unbound variables
+	 */
 	public Set<Variable> getUnboundVariables() {
 		return this.getTerms(Variable.class);
 	}

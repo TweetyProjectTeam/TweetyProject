@@ -172,7 +172,10 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 		}
 		return dung_theory2;
 	}
-
+	/**
+	 * 
+	 * @return a set of ground fol rules 
+	 */
 	public Set<InferenceRule<T>> groundFolRules() {
 		Signature sig = this.getMinimalSignature();
 		if (!(sig instanceof FolSignature)) 

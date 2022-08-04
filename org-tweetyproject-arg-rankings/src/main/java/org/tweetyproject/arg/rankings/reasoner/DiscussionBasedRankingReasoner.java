@@ -26,8 +26,8 @@ import java.util.Map;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.LatticeArgumentRanking;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.LatticePartialOrder;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.arg.rankings.util.RankingTools;
 
 /**
@@ -40,17 +40,17 @@ import org.tweetyproject.arg.rankings.util.RankingTools;
  * 
  * @author Anna Gessler
  */
-public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<LatticeArgumentRanking> {
+public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<LatticePartialOrder<Argument, DungTheory>> {
 
 	@Override
-	public Collection<LatticeArgumentRanking> getModels(DungTheory bbase) {
-		Collection<LatticeArgumentRanking> ranks = new HashSet<LatticeArgumentRanking>();
+	public Collection<LatticePartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<LatticePartialOrder<Argument, DungTheory>> ranks = new HashSet<LatticePartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public LatticeArgumentRanking getModel(DungTheory kb) {
+	public LatticePartialOrder<Argument, DungTheory> getModel(DungTheory kb) {
 		int iMax = 6; // Treshold for maximum length of linear discussions (paths)
 
 		Map<Argument, ArrayList<Double>> discussionCounts = new HashMap<Argument, ArrayList<Double>>();
@@ -67,12 +67,12 @@ public class DiscussionBasedRankingReasoner extends AbstractRankingReasoner<Latt
 			}
 		}
 
-		LatticeArgumentRanking resultRanking = new LatticeArgumentRanking(((DungTheory) kb).getNodes());
+		LatticePartialOrder<Argument, DungTheory> resultRanking = new LatticePartialOrder<Argument, DungTheory>(((DungTheory) kb).getNodes());
 		for (Argument a : (DungTheory) kb) {
 			for (Argument b : (DungTheory) kb) {
 				Boolean argsEqual = true;
 				for (int i = 0; i < iMax && argsEqual; i++) {
-					NumericalArgumentRanking tempRanking = new NumericalArgumentRanking();
+					NumericalPartialOrder<Argument, DungTheory> tempRanking = new NumericalPartialOrder<Argument, DungTheory>();
 					tempRanking.put(a, discussionCounts.get(a).get(i));
 					tempRanking.put(b, discussionCounts.get(b).get(i));
 					if (tempRanking.isStrictlyLessAcceptableThan(a, b)) {

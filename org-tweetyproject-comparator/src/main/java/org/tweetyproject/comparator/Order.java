@@ -16,11 +16,15 @@
  *
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.graphs.orders;
+package org.tweetyproject.comparator;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.tweetyproject.graphs.*;
+import org.tweetyproject.graphs.DefaultGraph;
+import org.tweetyproject.graphs.DirectedEdge;
+import org.tweetyproject.graphs.Node;
 
 /**
  * This class represents an order among some objects.

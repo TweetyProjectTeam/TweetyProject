@@ -21,8 +21,8 @@ package org.tweetyproject.beliefdynamics.mas;
 import java.util.*;
 
 import org.tweetyproject.agents.*;
-import org.tweetyproject.graphs.orders.*;
 import org.tweetyproject.logics.pl.syntax.*;
+import org.tweetyproject.comparator.Order;
 
 /**
  * This class provides for auxiliary functions used to compare

@@ -41,6 +41,11 @@ import org.tweetyproject.commons.InferenceMode;
  *
  */
 public class KwtGeneratorExample {
+	/**
+	 * 
+	 * @param args command line arguments
+	 * @throws IOException when Input goes wrong
+	 */
 	public static void main(String[] args) throws IOException {
 		String path = args[0]; // enter path where graphs and solutions should be stored
 		// add path of any ICCMA-compliant solver supporting DS-PR

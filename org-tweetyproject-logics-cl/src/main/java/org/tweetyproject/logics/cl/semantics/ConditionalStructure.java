@@ -160,7 +160,6 @@ public class ConditionalStructure implements Comparator<NicePossibleWorld>{
 	 * @param conditionals	A collection of conditionals that shall form the 
 	 * 						ConditionalStructure
 	 * @param comparator	An implementation for sorting the world data 
-	 * 						if null is given the default sorting behavior is used.
 	 */
 	public ConditionalStructure(Collection<Conditional> conditionals, Comparator<NicePossibleWorld> comparator) {
 		this.worldSorting = comparator == null ? this : comparator;

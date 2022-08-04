@@ -271,7 +271,7 @@ public class ExamplesHTMLGenerator {
 			} else if (MODULEPATH.contains("-agents")) {
 				AGENT_LIBRARIES_LIST += item;
 				AGENT_LIBRARIES += module_item;
-			} else if (MODULEPATH.contains("commons") || MODULEPATH.contains("plugin") || MODULEPATH.contains("cli")
+			} else if (MODULEPATH.contains("commons") || MODULEPATH.contains("plugin") || MODULEPATH.contains("cli") || MODULEPATH.contains("comparator")
 					|| MODULEPATH.contains("math") || MODULEPATH.contains("graphs")) {
 				GENERAL_LIBRARIES_LIST += item;
 				GENERAL_LIBRARIES += module_item;

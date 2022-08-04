@@ -23,7 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 import org.tweetyproject.math.matrix.Matrix;
 
 /**
@@ -37,7 +37,7 @@ import org.tweetyproject.math.matrix.Matrix;
  * 
  * @author Anna Gessler
  */
-public class CategorizerRankingReasoner extends AbstractRankingReasoner<NumericalArgumentRanking> {
+public class CategorizerRankingReasoner extends AbstractRankingReasoner<NumericalPartialOrder<Argument, DungTheory>> {
 	
 	private double epsilon;
 	
@@ -60,14 +60,15 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 	}
 	
 	@Override
-	public Collection<NumericalArgumentRanking> getModels(DungTheory bbase) {
-		Collection<NumericalArgumentRanking> ranks = new HashSet<NumericalArgumentRanking>();
+	public Collection<NumericalPartialOrder<Argument, DungTheory>> getModels(DungTheory bbase) {
+		Collection<NumericalPartialOrder<Argument, DungTheory>> ranks 
+			= new HashSet<NumericalPartialOrder<Argument, DungTheory>>();
 		ranks.add(this.getModel(bbase));
 		return ranks;
 	}
 
 	@Override
-	public NumericalArgumentRanking getModel(DungTheory base) {
+	public NumericalPartialOrder<Argument, DungTheory> getModel(DungTheory base) {
 		Matrix directAttackMatrix = ((DungTheory)base).getAdjacencyMatrix().transpose(); //The matrix of direct attackers
 		int n = directAttackMatrix.getXDimension();
 		double valuations[] = new double[n];	 //Stores valuations of the current iteration
@@ -82,8 +83,8 @@ public class CategorizerRankingReasoner extends AbstractRankingReasoner<Numerica
 	
 		//Use computed valuations as values for argument ranking
 		//Note: The order of valuations v[i] is the same as the order of DungTheory.iterator()
-		NumericalArgumentRanking ranking = new NumericalArgumentRanking();
-		ranking.setSortingType(NumericalArgumentRanking.SortingType.DESCENDING);
+		NumericalPartialOrder<Argument, DungTheory> ranking = new NumericalPartialOrder<Argument, DungTheory>();
+		ranking.setSortingType(NumericalPartialOrder.SortingType.DESCENDING);
 		int i = 0;
 		for (Argument a : ((DungTheory)base)) 
 			ranking.put(a, valuations[i++]);

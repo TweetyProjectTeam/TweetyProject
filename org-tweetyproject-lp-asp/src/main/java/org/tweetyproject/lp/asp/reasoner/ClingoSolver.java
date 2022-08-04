@@ -114,7 +114,38 @@ public class ClingoSolver extends ASPSolver {
 		this.pathToSolver = pathToClingo;
 		this.bash = Shell.getNativeShell();
 	}
-	
+	/**
+	 * 
+	 * @param p problem to be solved
+	 * @return optima
+	 */
+	public List<Integer> getOptimum(String p) {
+        List<Integer> optima = new ArrayList<Integer>();
+        try {
+            File file = File.createTempFile("tmp", ".txt");
+            PrintWriter writer = new PrintWriter(file);
+            writer.write(p);
+            writer.close();
+            String cmd = this.pathToSolver + "/clingo -q " + this.options + " " + file.getAbsolutePath();
+            String output = bash.run(cmd);
+            this.outputData = output;
+
+            if (!output.contains("OPTIMUM FOUND")) {
+                this.optimum = null;
+                throw new SolverException("Clingo found no optimum.", 1);
+            }
+            String[] as = output.split("Optimization : ");
+            int endOfLine = as[1].indexOf("\n");
+            if (endOfLine == -1)
+                throw new SolverException("Clingo returned no output that can be interpreted: " + output, 1);
+            this.optimum = as[1].substring(0,endOfLine);
+            for (String oi : this.optimum.split("\\s"))
+                optima.add(Integer.valueOf(oi));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return optima;
+    }
 	/**
 	 * Constructs a new instance pointing to a specific Clingo solver.
 	 * 

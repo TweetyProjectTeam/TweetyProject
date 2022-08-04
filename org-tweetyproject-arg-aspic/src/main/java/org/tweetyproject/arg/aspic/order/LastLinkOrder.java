@@ -24,7 +24,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.tweetyproject.arg.aspic.syntax.AspicArgument;
+import org.tweetyproject.arg.aspic.syntax.AspicArgumentationTheory;
 import org.tweetyproject.arg.aspic.syntax.InferenceRule;
+import org.tweetyproject.comparator.GeneralComparator;
 import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
 
 /**
@@ -34,7 +36,7 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
  * 
  * @param <T>	is the type of the language that the ASPIC theory's rules range over 
  */
-public class LastLinkOrder <T extends Invertable> implements Comparator<AspicArgument<T>> {
+public class LastLinkOrder <T extends Invertable> extends GeneralComparator<AspicArgument<T>, AspicArgumentationTheory<T>> {
 	
 
 	
@@ -78,6 +80,46 @@ public class LastLinkOrder <T extends Invertable> implements Comparator<AspicArg
 		Collection<InferenceRule<T>> alir = a.getListLastDefeasibleRules();
 		Collection<InferenceRule<T>> blir = b.getListLastDefeasibleRules();
 		return ruleset_comp.compare(alir, blir);
+	}
+
+
+
+	@Override
+	public boolean satisfies(AspicArgument<T> formula) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean satisfies(AspicArgumentationTheory<T> beliefBase) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean isStrictlyLessOrEquallyAcceptableThan(AspicArgument<T> a, AspicArgument<T> b) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean isIncomparable(AspicArgument<T> a, AspicArgument<T> b) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean containsIncomparableArguments() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

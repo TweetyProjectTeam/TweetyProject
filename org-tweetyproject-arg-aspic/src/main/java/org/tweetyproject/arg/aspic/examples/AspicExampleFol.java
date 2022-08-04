@@ -39,6 +39,12 @@ import org.tweetyproject.logics.fol.syntax.FolSignature;
  *
  */
 public class AspicExampleFol {
+	/**
+	 * 
+	 * @param args command line arguments
+	 * @throws ParserException exception
+	 * @throws IOException exception
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		// FOL Example
 		FolParser folparser = new FolParser();
