@@ -36,7 +36,7 @@ public class OrderBasedExtensionReasoner{
         Vector<Integer> argmax = new Vector<>();
         argmax.add(0);
         for(Extension<DungTheory> ext : extensions) {
-            Vector<Integer> aggregatedVec = aggregate(getSupportVector(ext, extensions));
+            Vector<Integer> aggregatedVec = getSupportVector(ext, extensions,true);
 
             aggregatedVectorToExtensionSetMap.computeIfAbsent(aggregatedVec, k -> new HashSet<>());
             Set<Extension<DungTheory>> newExtensionSet = aggregatedVectorToExtensionSetMap.get(aggregatedVec);
@@ -53,14 +53,21 @@ public class OrderBasedExtensionReasoner{
     /**
      * Returns a vector with the number of every of ext arguments appearances in predefined Extensions.
      * @param ext an extension (from all extensions of this reasoners semantic)
+     * @param extensions a collection of Extensions for reasoner
+     * @param aggregate raw support vector if false, otherwise returns vector aggregated with the currently assigned aggregation function
      * @return support vector "vsupp"
      */
-    public Vector<Integer> getSupportVector(Extension<DungTheory> ext, Collection<Extension<DungTheory>> extensions){
+    public Vector<Integer> getSupportVector(Extension<DungTheory> ext, Collection<Extension<DungTheory>> extensions, boolean aggregate){
         Vector<Integer> vsupp = new Vector<>();
         for (Argument arg : ext) {
             vsupp.add(getNumberOfContainsInExtensions(arg, extensions));
         }
-        return vsupp;
+        if(aggregate){
+            return aggregate(vsupp);
+        }
+        else {
+            return vsupp;
+        }
     }
 
     /**
