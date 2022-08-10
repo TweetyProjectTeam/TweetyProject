@@ -20,6 +20,7 @@ package org.tweetyproject.machinelearning.examples;
 
 import java.util.*;
 
+import org.tweetyproject.machinelearning.assoc.AprioriMiner;
 import org.tweetyproject.machinelearning.assoc.FpGrowthMiner;
 /**
  * An example for the FP-Growth algorithm
@@ -41,6 +42,9 @@ public class FpGrowthExample {
 		
 		FpGrowthMiner<String> miner = new FpGrowthMiner<>(3d/5);
 		System.out.println(miner.mineFrequentSets(database));
+		// Apriori miner gives the same result
+		AprioriMiner<String> miner2 = new AprioriMiner<>(3d/5,1);
+		System.out.println(miner2.mineFrequentSets(database));
 	}
 
 }

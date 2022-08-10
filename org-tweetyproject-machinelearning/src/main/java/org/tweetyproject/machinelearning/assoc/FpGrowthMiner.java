@@ -56,7 +56,11 @@ public class FpGrowthMiner<T extends Object> implements FrequentPatternMiner<T> 
 	public Collection<Collection<T>> mineFrequentSets(Collection<Collection<T>> database, int maxsize) {
 		// create FP-Tree
 		FrequentPatternTree<T> fptree = new FrequentPatternTree<>(database,this.minsupport);
-		// extract patterns
-		return fptree.extractFrequentPatterns();
+		// extract patterns (filter longer sets out, this could be made more efficient)
+		Collection<Collection<T>> result = new HashSet<>();
+		for(Collection<T> t: fptree.extractFrequentPatterns())
+			if(t.size() <= maxsize)
+				result.add(t);
+		return result;
 	}
 }
