@@ -94,15 +94,15 @@ public class AprioriMiner<T> extends AbstractAssociationRuleMiner<T> {
 		return rules;
 	}
 			
-	/**
-	 * Extracts all sets of items from database with support at least
-	 * <code>minsupport</code>.
-	 * @param database some database
-	 * @param maxsize the maximal size of mined item sets
-	 * @return all sets of items from database with support at least
-	 * <code>minsupport</code>.
-	 */
-	private Collection<Collection<T>> mineFrequentSets(Collection<Collection<T>> database, int maxsize){
+	public Collection<Collection<T>> mineFrequentSets(Collection<Collection<T>> database){
+		// determine max number of items
+		Collection<T> items = new HashSet<T>();
+		for(Collection<T> t: database)
+			items.addAll(t);
+		return mineFrequentSets(database,items.size());
+	}
+	
+	public Collection<Collection<T>> mineFrequentSets(Collection<Collection<T>> database, int maxsize){
 		Collection<Collection<T>> sets = new HashSet<Collection<T>>();
 		Collection<T> items = new HashSet<T>();
 		for(Collection<T> t: database)

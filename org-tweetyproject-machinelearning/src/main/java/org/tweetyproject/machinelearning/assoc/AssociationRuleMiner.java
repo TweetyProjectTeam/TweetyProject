@@ -27,8 +27,8 @@ import java.util.Collection;
  *
  * @param <T> the type of items
  */
-public interface AssociationRuleMiner<T extends Object> {
-
+public interface AssociationRuleMiner<T extends Object> extends FrequentPatternMiner<T>{	
+	
 	/**
 	 * Mines a set of association rules from the given database.
 	 * @param database some database
