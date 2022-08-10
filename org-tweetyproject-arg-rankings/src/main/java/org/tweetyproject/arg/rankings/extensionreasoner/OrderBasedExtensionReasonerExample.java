@@ -1,8 +1,8 @@
-package org.tweetyproject.arg.dung.examples;
+package org.tweetyproject.arg.rankings.extensionreasoner;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.OrderBasedExtensionReasoner;
-import org.tweetyproject.arg.dung.syntax.AggregationFunction;
+import org.tweetyproject.arg.rankings.extensionreasoner.OrderBasedExtensionReasoner;
+import org.tweetyproject.arg.rankings.extensionreasoner.AggregationFunction;
 import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;

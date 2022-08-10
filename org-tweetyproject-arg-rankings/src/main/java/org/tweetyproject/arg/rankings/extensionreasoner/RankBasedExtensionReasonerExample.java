@@ -1,14 +1,12 @@
-package org.tweetyproject.arg.dung.examples;
+package org.tweetyproject.arg.rankings.extensionreasoner;
 
 import org.tweetyproject.arg.dung.reasoner.*;
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.syntax.AggregationFunction;
+import org.tweetyproject.arg.rankings.extensionreasoner.AggregationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
 
+import org.tweetyproject.arg.rankings.extensionreasoner.RankBasedExtensionReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.semantics.NumericalArgumentRanking;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -115,7 +113,7 @@ public class RankBasedExtensionReasonerExample {
 //
     }
 
-    public static Map<Argument,Integer> getRankMapFromCategorizerRanking(NumericalArgumentRanking catRanking){
+    public static Map<Argument,Integer> getRankMapFromCategorizerRanking(Map<Argument,Double> catRanking){
         Map<Argument,Integer> rankMap = new HashMap<>();
 
         Collection<Double> values = catRanking.values();

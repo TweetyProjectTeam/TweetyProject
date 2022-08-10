@@ -1,6 +1,5 @@
-package org.tweetyproject.arg.dung.reasoner;
+package org.tweetyproject.arg.rankings.extensionreasoner;
 
-import org.tweetyproject.arg.dung.syntax.AggregationFunction;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;

@@ -17,12 +17,11 @@
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
-package org.tweetyproject.arg.dung.examples;
+package org.tweetyproject.arg.rankings.extensionreasoner;
 
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.ArgumentUtils;
-import org.tweetyproject.arg.dung.reasoner.ExtensionRankingReasoner;
+import org.tweetyproject.arg.rankings.extensionreasoner.ExtensionRankingReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.ExtensionRankingSemantics;
+import org.tweetyproject.arg.rankings.extensionreasoner.ExtensionRankingSemantics;
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.commons.util.SetTools;
 

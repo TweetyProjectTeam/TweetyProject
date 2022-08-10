@@ -45,12 +45,6 @@
   		<artifactId>pl</artifactId>
   		<version>1.22-SNAPSHOT</version>
   	</dependency>
-      <dependency>
-          <groupId>org.tweetyproject.arg</groupId>
-          <artifactId>rankings</artifactId>
-          <version>1.21-SNAPSHOT</version>
-          <scope>compile</scope>
-      </dependency>
   </dependencies>
 </project>
 

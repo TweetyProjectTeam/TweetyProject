@@ -1,4 +1,4 @@
-package org.tweetyproject.arg.dung.syntax;
+package org.tweetyproject.arg.rankings.extensionreasoner;
 
 /** This enum lists different types of aggregation types for aggregating a support vector of Order-based extensions.
  * see "On Supported Inference and Extension Selection in Abstract Argumentation Frameworks (S. Konieczny et al., 2015): Definition 4

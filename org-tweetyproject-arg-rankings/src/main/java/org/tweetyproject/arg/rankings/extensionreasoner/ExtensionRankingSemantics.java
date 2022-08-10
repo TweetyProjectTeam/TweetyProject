@@ -17,7 +17,7 @@
  *  Copyright 2016 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 
-package org.tweetyproject.arg.dung.semantics;
+package org.tweetyproject.arg.rankings.extensionreasoner;
 
 /**
  * This enum lists ordering semantics.
