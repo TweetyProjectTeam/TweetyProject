@@ -55,9 +55,8 @@ public class FpGrowthMiner<T extends Object> implements FrequentPatternMiner<T> 
 	@Override
 	public Collection<Collection<T>> mineFrequentSets(Collection<Collection<T>> database, int maxsize) {
 		// create FP-Tree
-		FrequentPatternTree<T> fptree = new FrequentPatternTree<>(database,this.minsupport); 
-		// TODO Auto-generated method stub
-		return null;
+		FrequentPatternTree<T> fptree = new FrequentPatternTree<>(database,this.minsupport);
+		// extract patterns
+		return fptree.extractFrequentPatterns();
 	}
-
 }

@@ -76,14 +76,39 @@ public class FrequentPatternTree<T extends Object> {
 			return null;
 		}
 		
+		/**
+		 * Adds the child to this node
+		 * @param node some node
+		 */
 		public void addChild(FrequentPatternTreeNode<S> node) {
 			this.children.put(node.item, node);
 		}
 		
+		@Override
 		public String toString() {
 			return this.toString(0);
 		}
 		
+		/**
+		 * Checks whether the tree rooted at this node
+		 * is a single path
+		 * @return "true" if the tree rooted at this node
+		 * is a single path
+		 */
+		public boolean isSinglePath() {
+			if(this.children.size() == 0)
+				return true;
+			if(this.children.size() > 1)
+				return false;
+			return this.children.get(0).isSinglePath();
+		}
+		
+		/**
+		 * Returns a string representation of the node
+		 * with <code>2*indent</code> leading white spaces
+		 * @param indent some indent
+		 * @return a string representation of the node
+		 */
 		public String toString(int indent) {
 			String s = "";
 			for(int i = 0; i < indent; i++) s+=" ";
@@ -175,6 +200,12 @@ public class FrequentPatternTree<T extends Object> {
 		//	else System.out.println(this.items.get(i).getFirst() + ":" + this.items_first_node.get(i).id);
 	}
 	
+	/**
+	 * Inserts the given transaction (which only lists frequent items ordered by frequency) into the tree
+	 * @param freq_trans a transaction (which only lists frequent items ordered by frequency)
+	 * @param node the current node of the tree
+	 * @param indexOf maps items to the index in the order
+	 */
 	private void insert_tree(List<T> freq_trans, FrequentPatternTreeNode<T> node, Map<T,Integer> indexOf) {
 		while(freq_trans.size() != 0) {
 			T next_item = freq_trans.get(0);
@@ -194,6 +225,32 @@ public class FrequentPatternTree<T extends Object> {
 			}
 			next_node.freq_abs++;
 			node = next_node;	
+		}
+	}
+
+	/**
+	 * Extracts all frequent patterns from this tree.
+	 * @return the set of all frequent patterns from this tree 
+	 */
+	public Collection<Collection<T>> extractFrequentPatterns(){
+		return this.extractFrequentPatterns(new HashSet<T>());
+	}
+	
+	/**
+	 * Extracts all frequent patterns from this tree plus the elements in <code>prefix</code>
+	 * @param prefix the set of elements this tree is conditioned on.
+	 * @return the set of all frequent patterns from this tree plus the elements in <code>prefix</code> 
+	 */
+	public Collection<Collection<T>> extractFrequentPatterns(Collection<T> prefix){
+		if(this.root.isSinglePath()) {
+			//TODO
+			return null;
+		}else {
+			for(int i = this.items.size()-1; i >= 0; i--) {
+				T a = this.items.get(i).getFirst();
+				//TODO
+			}
+			return null;
 		}
 	}
 }
