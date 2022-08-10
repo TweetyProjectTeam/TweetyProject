@@ -3,6 +3,8 @@ package org.tweetyproject.arg.rankings.extensionreasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.comparator.GeneralComparator;
+import org.tweetyproject.comparator.NumericalPartialOrder;
 
 import java.util.*;
 /**
@@ -35,8 +37,8 @@ public class RankBasedExtensionReasoner {
      * @return order-based extension subset of Extensions for specified aggregation function
      * @throws Exception invalid argumentation Function
      */
-    public Collection<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions, Map<Argument,Integer> rankMap) throws Exception {
-        Map<Vector<Double>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = getAggregatedVectorToExtensionMap(extensions,rankMap);
+    public Collection<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions, GeneralComparator<Argument,DungTheory> argumentRanks, DungTheory theory) throws Exception {
+        Map<Vector<Double>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = getAggregatedVectorToExtensionMap(extensions,argumentRanks,theory);
         Vector<Double> argmin = aggregatedVectorToExtensionSetMap.keySet().stream().findFirst().orElseThrow();
         for(Vector<Double> vec: aggregatedVectorToExtensionSetMap.keySet()){
             if(argmin == null){
@@ -51,12 +53,45 @@ public class RankBasedExtensionReasoner {
         return aggregatedVectorToExtensionSetMap.get(argmin);
     }
 
-    public Map<Vector<Double>,Set<Extension<DungTheory>>> getAggregatedVectorToExtensionMap(Collection<Extension<DungTheory>> extensions, Map<Argument,Integer> rankMap){
+    private Map<Argument, Integer> getIntegerRankMap(GeneralComparator<Argument, DungTheory> argumentRanks, DungTheory theory) {
+        Map<Argument,Integer> rankMap = new HashMap<>();
+
+        Collection<Argument> arguments = theory.clone().getNodes();
+
+        int rank = 0;
+        while(!arguments.isEmpty()){
+//            double max = 0;
+//            for(Argument arg: arguments){
+//                if(catRanking.get(arg)>max){
+//                    max = catRanking.get(arg);
+//                    maxArgs.clear();
+//                    maxArgs.add(arg);
+//                }
+//                else if(catRanking.get(arg) == max){
+//                    maxArgs.add(arg);
+//                }
+//            }
+            Collection<Argument> maxArgs = argumentRanks.getMaximallyAcceptedArguments(arguments);
+            for(Argument maxArg: maxArgs){
+                rankMap.put(maxArg,rank);
+                arguments.remove(maxArg);
+            }
+            ++rank;
+            maxArgs.clear();
+
+
+        }
+        return rankMap;
+    }
+
+    public Map<Vector<Double>,Set<Extension<DungTheory>>> getAggregatedVectorToExtensionMap(Collection<Extension<DungTheory>> extensions,GeneralComparator<Argument,DungTheory> argumentRanks, DungTheory theory){
+
+        Map<Argument,Integer> integerRankMap = getIntegerRankMap(argumentRanks,theory);
         Map<Vector<Double>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = new HashMap<>();
         for(Extension<DungTheory> ext : extensions) {
             Vector<Double> extRankingVec = new Vector<>(ext.size());
             for (Argument arg : ext) {
-                double val = rankMap.get(arg);
+                double val = (double) integerRankMap.get(arg);
                 extRankingVec.add(val);
             }
             Vector<Double> aggregatedVec = aggregate(extRankingVec);
