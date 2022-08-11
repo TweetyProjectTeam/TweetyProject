@@ -31,16 +31,16 @@ public class OrderBasedExtensionReasonerExample {
         example3.add(f);
         example3.add(g);
         example3.add(h);
-        example3.addAttack(a,b);
-        example3.addAttack(b,a);
-        example3.addAttack(e,f);
-        example3.addAttack(f,e);
-        example3.addAttack(b,g);
-        example3.addAttack(f,g);
-        example3.addAttack(g,h);
-        example3.addAttack(h,d);
-        example3.addAttack(d,c);
-        example3.addAttack(c,d);
+        example3.addAttack(a, b);
+        example3.addAttack(b, a);
+        example3.addAttack(e, f);
+        example3.addAttack(f, e);
+        example3.addAttack(b, g);
+        example3.addAttack(f, g);
+        example3.addAttack(g, h);
+        example3.addAttack(h, d);
+        example3.addAttack(d, c);
+        example3.addAttack(c, d);
 
         DungTheory figure1 = new DungTheory();
         Argument a1 = new Argument("1");
@@ -57,16 +57,16 @@ public class OrderBasedExtensionReasonerExample {
         figure1.add(a5);
         figure1.add(a6);
         figure1.add(a7);
-        figure1.addAttack(a1,a2);
-        figure1.addAttack(a2,a3);
-        figure1.addAttack(a3,a4);
-        figure1.addAttack(a3,a5);
-        figure1.addAttack(a3,a6);
-        figure1.addAttack(a4,a3);
-        figure1.addAttack(a4,a6);
-        figure1.addAttack(a5,a5);
-        figure1.addAttack(a6,a7);
-        figure1.addAttack(a7,a6);
+        figure1.addAttack(a1, a2);
+        figure1.addAttack(a2, a3);
+        figure1.addAttack(a3, a4);
+        figure1.addAttack(a3, a5);
+        figure1.addAttack(a3, a6);
+        figure1.addAttack(a4, a3);
+        figure1.addAttack(a4, a6);
+        figure1.addAttack(a5, a5);
+        figure1.addAttack(a6, a7);
+        figure1.addAttack(a7, a6);
 
 
         Collection<Extension<DungTheory>> prExtensions = new SimplePreferredReasoner().getModels(example3);
@@ -100,7 +100,6 @@ public class OrderBasedExtensionReasonerExample {
         System.out.println("OBE_ad,leximax:" + OBER.getModels(adExtensions));
         OBER.setAggregationFunction(AggregationFunction.LEXIMIN);
         System.out.println("OBE_ad,leximin:" + OBER.getModels(adExtensions));
-
 
 
     }
