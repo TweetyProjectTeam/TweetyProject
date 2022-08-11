@@ -36,18 +36,18 @@ public class RankBasedExtensionReasonerExample {
         example.add(e);
         example.add(f);
         example.add(g);
-        example.addAttack(a,d);
-        example.addAttack(a,e);
-        example.addAttack(a,f);
-        example.addAttack(b,a);
-        example.addAttack(c,b);
-        example.addAttack(c,g);
-        example.addAttack(d,c);
-        example.addAttack(d,e);
-        example.addAttack(e,c);
-        example.addAttack(e,d);
-        example.addAttack(f,g);
-        example.addAttack(g,f);
+        example.addAttack(a, d);
+        example.addAttack(a, e);
+        example.addAttack(a, f);
+        example.addAttack(b, a);
+        example.addAttack(c, b);
+        example.addAttack(c, g);
+        example.addAttack(d, c);
+        example.addAttack(d, e);
+        example.addAttack(e, c);
+        example.addAttack(e, d);
+        example.addAttack(f, g);
+        example.addAttack(g, f);
 
         DungTheory figure1 = new DungTheory();
         Argument a1 = new Argument("1");
@@ -64,30 +64,30 @@ public class RankBasedExtensionReasonerExample {
         figure1.add(a5);
         figure1.add(a6);
         figure1.add(a7);
-        figure1.addAttack(a1,a2);
-        figure1.addAttack(a2,a3);
-        figure1.addAttack(a3,a4);
-        figure1.addAttack(a3,a5);
-        figure1.addAttack(a3,a6);
-        figure1.addAttack(a4,a3);
-        figure1.addAttack(a4,a6);
-        figure1.addAttack(a5,a5);
-        figure1.addAttack(a6,a7);
-        figure1.addAttack(a7,a6);
+        figure1.addAttack(a1, a2);
+        figure1.addAttack(a2, a3);
+        figure1.addAttack(a3, a4);
+        figure1.addAttack(a3, a5);
+        figure1.addAttack(a3, a6);
+        figure1.addAttack(a4, a3);
+        figure1.addAttack(a4, a6);
+        figure1.addAttack(a5, a5);
+        figure1.addAttack(a6, a7);
+        figure1.addAttack(a7, a6);
 
         RankBasedExtensionReasoner RBER = new RankBasedExtensionReasoner(AggregationFunction.AVG);
 //        Map<Argument,Integer> argumentRankMap = getRankMapFromCategorizerRanking(new CategorizerRankingReasoner().getModel(example));
         Collection<Extension<DungTheory>> prExtensions = new SimplePreferredReasoner().getModels(example);
 
-        NumericalPartialOrder<Argument,DungTheory> catOrder = new CategorizerRankingReasoner().getModel(example);
+        NumericalPartialOrder<Argument, DungTheory> catOrder = new CategorizerRankingReasoner().getModel(example);
         System.out.println("RBE_pr,avg,CAT:" + RBER.getModels(prExtensions, catOrder, example));
         System.out.println("RBE_pr,avg,CAT aggregation result:" + RBER.getAggregatedVectorToExtensionMap(prExtensions, catOrder, example));
         RBER.setAggregationFunction(AggregationFunction.LEXIMIN);
-        System.out.println("RBE_pr,CAT leximin:" + RBER.getModels( new SimplePreferredReasoner().getModels(example),new CategorizerRankingReasoner().getModel(example), example));
+        System.out.println("RBE_pr,CAT leximin:" + RBER.getModels(new SimplePreferredReasoner().getModels(example), new CategorizerRankingReasoner().getModel(example), example));
         System.out.println("RBE_pr,CAT leximin aggregation result:" + RBER.getAggregatedVectorToExtensionMap(new SimplePreferredReasoner().getModels(example), new CategorizerRankingReasoner().getModel(example), example));
 
 
-        LatticePartialOrder<Argument,DungTheory> bbrOrder = new BurdenBasedRankingReasoner().getModel(example);
+        LatticePartialOrder<Argument, DungTheory> bbrOrder = new BurdenBasedRankingReasoner().getModel(example);
         System.out.println("RBE_pr,avg,BBR:" + RBER.getModels(prExtensions, bbrOrder, example));
         System.out.println("RBE_pr,avg,BBR aggregation result:" + RBER.getAggregatedVectorToExtensionMap(prExtensions, bbrOrder, example));
 //        Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(figure1);
@@ -124,6 +124,7 @@ public class RankBasedExtensionReasonerExample {
 //
 //
     }
+/* DEPRECATED
 
     public static Map<Argument,Integer> getRankMapFromCategorizerRanking(Map<Argument,Double> catRanking){
         Map<Argument,Integer> rankMap = new HashMap<>();
@@ -155,5 +156,7 @@ public class RankBasedExtensionReasonerExample {
         }
         return rankMap;
     }
+
+ */
 
 }
