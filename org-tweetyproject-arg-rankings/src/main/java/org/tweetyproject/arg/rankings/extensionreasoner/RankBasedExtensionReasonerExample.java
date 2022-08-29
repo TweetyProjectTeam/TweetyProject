@@ -10,13 +10,11 @@ import org.tweetyproject.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.TuplesRankingReasoner;
+import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.comparator.NumericalPartialOrder;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class RankBasedExtensionReasonerExample {
     public static void main(String[] args) throws Exception {
@@ -82,6 +80,7 @@ public class RankBasedExtensionReasonerExample {
         NumericalPartialOrder<Argument, DungTheory> catOrder = new CategorizerRankingReasoner().getModel(example);
         System.out.println("RBE_pr,avg,CAT:" + RBER.getModels(prExtensions, catOrder, example));
         System.out.println("RBE_pr,avg,CAT aggregation result:" + RBER.getAggregatedVectorToExtensionMap(prExtensions, catOrder, example));
+
         RBER.setAggregationFunction(AggregationFunction.LEXIMIN);
         System.out.println("RBE_pr,CAT leximin:" + RBER.getModels(new SimplePreferredReasoner().getModels(example), new CategorizerRankingReasoner().getModel(example), example));
         System.out.println("RBE_pr,CAT leximin aggregation result:" + RBER.getAggregatedVectorToExtensionMap(new SimplePreferredReasoner().getModels(example), new CategorizerRankingReasoner().getModel(example), example));
@@ -90,11 +89,20 @@ public class RankBasedExtensionReasonerExample {
         LatticePartialOrder<Argument, DungTheory> bbrOrder = new BurdenBasedRankingReasoner().getModel(example);
         System.out.println("RBE_pr,avg,BBR:" + RBER.getModels(prExtensions, bbrOrder, example));
         System.out.println("RBE_pr,avg,BBR aggregation result:" + RBER.getAggregatedVectorToExtensionMap(prExtensions, bbrOrder, example));
-//        Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(figure1);
-//        for(Set<Argument> set : subsets){
-//            Extension<DungTheory> ext = new Extension<>(set);
-//            extensions.add(ext);
-//        }
+
+
+        Set<Set<Argument>> subsetsFigure1 = new SetTools<Argument>().subsets(figure1);
+        Collection<Extension<DungTheory>> powerSetFigure1 = new HashSet<>();
+        for(Set<Argument> set : subsetsFigure1){
+            Extension<DungTheory> ext = new Extension<>(set);
+            powerSetFigure1.add(ext);
+        }
+        NumericalPartialOrder<Argument, DungTheory> catPowerSetFigure1 = new CategorizerRankingReasoner().getModel(figure1);
+        RBER.setAggregationFunction(AggregationFunction.AVG);
+        System.out.println("RBE_powerset,avg,CAT:" + RBER.getModels(powerSetFigure1, catPowerSetFigure1, figure1));
+        System.out.println("RBE_pr,avg,CAT aggregation result:" + RBER.getAggregatedVectorToExtensionMap(powerSetFigure1, catPowerSetFigure1, figure1));
+
+
 //        OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(AggregationFunction.SUM);
 //        System.out.println("OBE_pr,sum:" + OBER.getModels(prExtensions));
 //        OBER.setAggregationFunction(AggregationFunction.MAX);

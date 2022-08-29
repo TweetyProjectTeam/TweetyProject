@@ -74,7 +74,7 @@ public class RankBasedExtensionReasoner {
     /**
      * Return a map of arguments to their respective rank as integers. Lower value means better rank.
      *
-     * @param argumentRanks rgument ranks as returned by argument ranking Reasoners "getModel" method
+     * @param argumentRanks argument ranks as returned by argument ranking Reasoners "getModel" method
      * @param theory        a dung theory
      * @return argument to rank map
      */

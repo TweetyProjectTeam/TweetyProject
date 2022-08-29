@@ -6,10 +6,13 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
+import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.comparator.NumericalPartialOrder;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AcceptabilityBasedExtensionReasonerExample {
     public static void main(String[] args) throws Exception {
@@ -69,7 +72,6 @@ public class AcceptabilityBasedExtensionReasonerExample {
         figure1.addAttack(a7, a6);
 
         AcceptabilityBasedExtensionReasoner ABER = new AcceptabilityBasedExtensionReasoner();
-//        Map<Argument,Integer> argumentRankMap = getRankMapFromCategorizerRanking(new CategorizerRankingReasoner().getModel(example));
         Collection<Extension<DungTheory>> prExtensions = new SimplePreferredReasoner().getModels(example);
 
         NumericalPartialOrder<Argument, DungTheory> catOrder = new CategorizerRankingReasoner().getModel(example);
@@ -77,40 +79,18 @@ public class AcceptabilityBasedExtensionReasonerExample {
 
         LatticePartialOrder<Argument, DungTheory> bbrOrder = new BurdenBasedRankingReasoner().getModel(example);
         System.out.println("ABE_pr,BBR:" + ABER.getModels(prExtensions, bbrOrder, example));
-        System.out.print(ABER.getScoreMap(prExtensions, catOrder, example));
+        System.out.println(ABER.getScoreToExtensionsMap(prExtensions, catOrder, example));
 
-//        Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(figure1);
-//        for(Set<Argument> set : subsets){
-//            Extension<DungTheory> ext = new Extension<>(set);
-//            extensions.add(ext);
-//        }
-//        OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(AggregationFunction.SUM);
-//        System.out.println("OBE_pr,sum:" + OBER.getModels(prExtensions));
-//        OBER.setAggregationFunction(AggregationFunction.MAX);
-//        System.out.println("OBE_pr,max:" + OBER.getModels(prExtensions));
-//        OBER.setAggregationFunction(AggregationFunction.MIN);
-//        System.out.println("OBE_pr,min:" + OBER.getModels(prExtensions));
-//        OBER.setAggregationFunction(AggregationFunction.LEXIMAX);
-//        System.out.println("OBE_pr,leximax:" + OBER.getModels(prExtensions));
-//        OBER.setAggregationFunction(AggregationFunction.LEXIMIN);
-//        System.out.println("OBE_pr,leximin:" + OBER.getModels(prExtensions));
-//
-//        System.out.println();
-//
-//        Collection<Extension<DungTheory>> adExtensions = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADMISSIBLE_SEMANTICS).getModels(example);
-//        OBER.setAggregationFunction(AggregationFunction.SUM);
-//
-//        System.out.println("OBE_ad,sum:" + OBER.getModels(adExtensions));
-//        OBER.setAggregationFunction(AggregationFunction.MAX);
-//        System.out.println("OBE_ad,max:" + OBER.getModels(adExtensions));
-//        OBER.setAggregationFunction(AggregationFunction.MIN);
-//        System.out.println("OBE_ad,min:" + OBER.getModels(adExtensions));
-//        OBER.setAggregationFunction(AggregationFunction.LEXIMAX);
-//        System.out.println("OBE_ad,leximax:" + OBER.getModels(adExtensions));
-//        OBER.setAggregationFunction(AggregationFunction.LEXIMIN);
-//        System.out.println("OBE_ad,leximin:" + OBER.getModels(adExtensions));
-//
-//
-//
+        //Powerset example
+
+        Set<Set<Argument>> powerset = new SetTools<Argument>().subsets(figure1);
+        Set<Extension<DungTheory>> extensions = new HashSet<>();
+        for(Set<Argument> set : powerset){
+            Extension<DungTheory> ext = new Extension<>(set);
+            extensions.add(ext);
+        }
+        NumericalPartialOrder<Argument, DungTheory> catOrderFigure1 = new CategorizerRankingReasoner().getModel(figure1);
+        System.out.println("ABE_2^n,CAT:" + ABER.getModels(extensions, catOrderFigure1, figure1));
+        System.out.println(ABER.getScoreToExtensionsMap(extensions, catOrderFigure1, figure1));
     }
 }
