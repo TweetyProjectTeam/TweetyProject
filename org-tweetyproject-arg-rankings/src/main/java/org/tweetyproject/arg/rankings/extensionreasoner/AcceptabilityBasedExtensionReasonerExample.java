@@ -6,10 +6,13 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
+import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.comparator.NumericalPartialOrder;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AcceptabilityBasedExtensionReasonerExample {
     public static void main(String[] args) throws Exception {
@@ -77,13 +80,19 @@ public class AcceptabilityBasedExtensionReasonerExample {
 
         LatticePartialOrder<Argument, DungTheory> bbrOrder = new BurdenBasedRankingReasoner().getModel(example);
         System.out.println("ABE_pr,BBR:" + ABER.getModels(prExtensions, bbrOrder, example));
-        System.out.print(ABER.getScoreMap(prExtensions, catOrder, example));
+        System.out.println(ABER.getScoreToExtensionsMap(prExtensions, catOrder, example));
 
-//        Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(figure1);
-//        for(Set<Argument> set : subsets){
-//            Extension<DungTheory> ext = new Extension<>(set);
-//            extensions.add(ext);
-//        }
+        //Powerset example
+
+        Set<Set<Argument>> powerset = new SetTools<Argument>().subsets(figure1);
+        Set<Extension<DungTheory>> extensions = new HashSet<>();
+        for(Set<Argument> set : powerset){
+            Extension<DungTheory> ext = new Extension<>(set);
+            extensions.add(ext);
+        }
+        NumericalPartialOrder<Argument, DungTheory> catOrderFigure1 = new CategorizerRankingReasoner().getModel(figure1);
+        System.out.println("ABE_2^n,CAT:" + ABER.getModels(extensions, catOrderFigure1, figure1));
+        System.out.println(ABER.getScoreToExtensionsMap(extensions, catOrderFigure1, figure1));
 //        OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(AggregationFunction.SUM);
 //        System.out.println("OBE_pr,sum:" + OBER.getModels(prExtensions));
 //        OBER.setAggregationFunction(AggregationFunction.MAX);
