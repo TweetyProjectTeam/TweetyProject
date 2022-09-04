@@ -41,7 +41,7 @@ public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
      * @param supporter the supporting set of arguments
      * @param supported the supported argument
      */
-    public SetSupport(ArgumentSet supporter, BArgument supported){
+    public SetSupport(ArgumentSet supporter, ArgumentSet supported){
         super(supporter, supported);
     }
 
@@ -50,8 +50,8 @@ public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
      * @param supporter a collection of arguments
      * @param supported some argument
      */
-    public SetSupport(Collection<BArgument> supporter, BArgument supported) {
-        this(new ArgumentSet(supporter), supported);
+    public SetSupport(Collection<BArgument> supporter, Collection<BArgument> supported) {
+        this(new ArgumentSet(supporter), new ArgumentSet(supported));
     }
 
     /**
