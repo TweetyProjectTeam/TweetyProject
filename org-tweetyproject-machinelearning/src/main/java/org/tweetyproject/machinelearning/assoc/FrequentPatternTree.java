@@ -189,7 +189,7 @@ public class FrequentPatternTree<T extends Object> {
 				freq_items.add(item);
 			}
 		// sort this.items in descending order
-		this.items.sort(new PairComparator());
+		this.items.sort(new PairComparator());		
 		// BEGIN just to get the same tree as in the paper
 		//Pair<T,Integer> a = this.items.get(0);
 		//this.items.set(0, this.items.get(1));
@@ -322,6 +322,11 @@ public class FrequentPatternTree<T extends Object> {
 			}
 			return result;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return this.root.toString();
 	}
 	
 }
