@@ -18,57 +18,49 @@
  */
 package org.tweetyproject.machinelearning.rl.mdp.algorithms;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.tweetyproject.machinelearning.rl.mdp.Action;
+import org.tweetyproject.machinelearning.rl.mdp.FixedPolicy;
 import org.tweetyproject.machinelearning.rl.mdp.MarkovDecisionProcess;
 import org.tweetyproject.machinelearning.rl.mdp.Policy;
 import org.tweetyproject.machinelearning.rl.mdp.State;
 
 /**
- * The value iteration algorithm for determining optimal policies
+ * The policy iteration algorithm for determining optimal policies
  * @author Matthias Thimm
  *
- * @param <S> The type of states
- * @param <A> The type of actions
+ * @param <S> The type of states 
+ * @param <A> The type of actions 
  */
-public class ValueIteration<S extends State, A extends Action> extends OfflineAlgorithm<S,A>{
-	private long num_iterations;
+public class PolicyIteration<S extends State, A extends Action> extends OfflineAlgorithm<S,A>{
+	private PolicyEvaluation<S,A> pe;
 	
 	/**
-	 * Creates a new value iteration algorithm
-	 * @param num_iterations the given number of num_iterations
+	 * Creates a new instance of the policy iteration algorithm,
+	 * which uses the given policy evaluation algorithm.
+	 * @param pe some policy evaluation algorithm.
 	 */
-	public ValueIteration(long num_iterations) {
-		this.num_iterations = num_iterations;
+	public PolicyIteration(PolicyEvaluation<S,A> pe) {
+		this.pe = pe;
 	}
-
+	
 	@Override
 	public Policy<S, A> getPolicy(MarkovDecisionProcess<S, A> mdp, double gamma) {
-		Map<S,Double> utilities = new HashMap<>();
+		Policy<S,A> pi = new FixedPolicy<S,A>();
+		// initialise arbitrarily
 		for(S s: mdp.getStates())
-			utilities.put(s, 0d);
-		for(int i = 0; i < this.num_iterations; i++) {
-			Map<S,Double> new_utilities = new HashMap<>();			
-			for(S s: mdp.getStates()) {
-				if(mdp.isTerminal(s))
-					new_utilities.put(s, 0d);
-				else {
-					double max_util = Double.NEGATIVE_INFINITY;
-					for(A a: mdp.getActions()) {
-						double util = 0;
-						for(S sp: mdp.getStates()) {
-							util += mdp.getProb(s, a, sp) * ( mdp.getReward(s, a, sp) + gamma * utilities.get(sp));
-						}
-						if(util > max_util)
-							max_util = util;
-					}
-					new_utilities.put(s, max_util);					
-				}				
-			}
-			utilities = new_utilities;
-		}
-		return this.getPolicy(utilities,mdp,gamma);
-	}	
+			((FixedPolicy<S,A>)pi).set(s, mdp.getActions().iterator().next());
+		do {
+			System.out.println(pi);
+			Map<S,Double> util = this.pe.getUtilities(mdp, pi, gamma);
+			System.out.println(util);
+			Policy<S,A> pip = this.getPolicy(util, mdp, gamma);
+			if(!pip.equals(pi))
+				pi = pip;
+			else break;
+		}while(true);
+		return pi;
+	}
+
 }

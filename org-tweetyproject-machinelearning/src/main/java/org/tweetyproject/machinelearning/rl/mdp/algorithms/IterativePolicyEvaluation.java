@@ -27,25 +27,25 @@ import org.tweetyproject.machinelearning.rl.mdp.Policy;
 import org.tweetyproject.machinelearning.rl.mdp.State;
 
 /**
- * The value iteration algorithm for determining optimal policies
+ * Determines utilities iteratively.
+ *  
  * @author Matthias Thimm
- *
  * @param <S> The type of states
  * @param <A> The type of actions
  */
-public class ValueIteration<S extends State, A extends Action> extends OfflineAlgorithm<S,A>{
+public class IterativePolicyEvaluation<S extends State, A extends Action> implements PolicyEvaluation<S,A>{
 	private long num_iterations;
 	
 	/**
-	 * Creates a new value iteration algorithm
+	 * Creates a new policy evaluation algorithm
 	 * @param num_iterations the given number of num_iterations
 	 */
-	public ValueIteration(long num_iterations) {
+	public IterativePolicyEvaluation(long num_iterations) {
 		this.num_iterations = num_iterations;
 	}
-
+	
 	@Override
-	public Policy<S, A> getPolicy(MarkovDecisionProcess<S, A> mdp, double gamma) {
+	public Map<S, Double> getUtilities(MarkovDecisionProcess<S, A> mdp, Policy<S, A> pi, double gamma) {
 		Map<S,Double> utilities = new HashMap<>();
 		for(S s: mdp.getStates())
 			utilities.put(s, 0d);
@@ -55,20 +55,15 @@ public class ValueIteration<S extends State, A extends Action> extends OfflineAl
 				if(mdp.isTerminal(s))
 					new_utilities.put(s, 0d);
 				else {
-					double max_util = Double.NEGATIVE_INFINITY;
-					for(A a: mdp.getActions()) {
-						double util = 0;
-						for(S sp: mdp.getStates()) {
-							util += mdp.getProb(s, a, sp) * ( mdp.getReward(s, a, sp) + gamma * utilities.get(sp));
-						}
-						if(util > max_util)
-							max_util = util;
+					double util = 0;
+					for(S sp: mdp.getStates()) {
+						util += mdp.getProb(s, pi.execute(s), sp) * ( mdp.getReward(s, pi.execute(s), sp) + gamma * utilities.get(sp));
 					}
-					new_utilities.put(s, max_util);					
+					new_utilities.put(s, util);					
 				}				
 			}
 			utilities = new_utilities;
 		}
-		return this.getPolicy(utilities,mdp,gamma);
-	}	
+		return utilities;
+	}
 }

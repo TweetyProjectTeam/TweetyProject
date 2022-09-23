@@ -16,55 +16,30 @@
  *
  *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.machinelearning.rl.mdp;
+package org.tweetyproject.machinelearning.rl.mdp.algorithms;
 
-import java.util.Objects;
+import java.util.Map;
+
+import org.tweetyproject.machinelearning.rl.mdp.Action;
+import org.tweetyproject.machinelearning.rl.mdp.MarkovDecisionProcess;
+import org.tweetyproject.machinelearning.rl.mdp.Policy;
+import org.tweetyproject.machinelearning.rl.mdp.State;
 
 /**
- * An action in a Markov Decision Process that is solely characterized
- * through its name.
- * 
  * @author Matthias Thimm
  *
+ * @param <S> The type of states 
+ * @param <A> The type of actions 
  */
-public class NamedAction implements Action{
-	private String name;
+public interface PolicyEvaluation<S extends State, A extends Action> {
 	
 	/**
-	 * Creates a new NamedAction.
-	 * @param name some name
+	 * Determines the utilities of the states in the MDP wrt. the 
+	 * given policy.
+	 * @param mdp some MDP
+	 * @param pi some policy
+	 * @param gamma the discount factor
+	 * @return the utilities of the states of the MDP.
 	 */
-	public NamedAction(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * Returns the name of this action
-	 * @return the name of this action
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public String toString() {
-		return this.name;
-	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(name);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		NamedAction other = (NamedAction) obj;
-		return Objects.equals(name, other.name);
-	}
+	public Map<S,Double> getUtilities(MarkovDecisionProcess<S,A> mdp, Policy<S,A> pi, double gamma);
 }

@@ -26,6 +26,8 @@ import org.tweetyproject.machinelearning.rl.mdp.MarkovDecisionProcess;
 import org.tweetyproject.machinelearning.rl.mdp.NamedAction;
 import org.tweetyproject.machinelearning.rl.mdp.NamedState;
 import org.tweetyproject.machinelearning.rl.mdp.Policy;
+import org.tweetyproject.machinelearning.rl.mdp.algorithms.IterativePolicyEvaluation;
+import org.tweetyproject.machinelearning.rl.mdp.algorithms.PolicyIteration;
 import org.tweetyproject.machinelearning.rl.mdp.algorithms.ValueIteration;
 
 /**
@@ -182,10 +184,16 @@ public class MdpExample {
 		pi2.set(s100, charge);
 		pi2.set(s200, move);
 		
+		// value iteration		
 		Policy<NamedState,NamedAction> pi3 = new ValueIteration<NamedState,NamedAction>(100).getPolicy(mdp, 0.9);
 		System.out.println(pi3);
 		System.out.println(mdp.expectedUtility(pi, 10000, 0.9));
 		System.out.println(mdp.expectedUtility(pi2, 10000, 0.9));
 		System.out.println(mdp.expectedUtility(pi3, 10000, 0.9));
+		
+		System.out.println();
+		// policy iteration
+		Policy<NamedState,NamedAction> pi4 = new PolicyIteration<NamedState,NamedAction>(new IterativePolicyEvaluation<NamedState,NamedAction>(10000)).getPolicy(mdp, 0.9);
+		System.out.println(pi4);
 	}
 }

@@ -21,6 +21,7 @@ package org.tweetyproject.machinelearning.rl.mdp;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A fixed policy for MDPs, i.e., a simple map from states to actions.
@@ -72,4 +73,21 @@ public class FixedPolicy<S extends State, A extends Action> implements Policy<S,
 		return this.map.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(map);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FixedPolicy other = (FixedPolicy) obj;
+		return Objects.equals(map, other.map);
+	}	
 }
