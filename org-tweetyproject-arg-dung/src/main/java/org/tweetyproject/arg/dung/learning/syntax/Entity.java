@@ -79,9 +79,9 @@ public class Entity {
      * @param sem some semantics
      */
     private void computeExamplesForSemantics(Semantics sem) {
-        Collection<Extension> exts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(sem).getModels(this.hiddenFramework);
+        Collection<Extension<DungTheory>> exts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(sem).getModels(this.hiddenFramework);
         List<Input> examples_sem = new LinkedList<>();
-        for (Extension ext: exts) {
+        for (Extension<DungTheory> ext: exts) {
             Input ex = new Input(this.hiddenFramework, ext, sem);
             examples_sem.add(ex);
         }
@@ -128,12 +128,12 @@ public class Entity {
      */
     public boolean verifyFramework(DungTheory theory, Collection<Input> inputs) {
         for (Semantics sem: this.examples.keySet()) {
-            Collection<Extension> exts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(sem).getModels(theory);
+            Collection<Extension<DungTheory>> exts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(sem).getModels(theory);
             for (Input input: inputs) {
                 if (!sem.equals(input.getSemantics())) {
                     continue;
                 }
-                Extension ext = new Extension(input.getArgumentsOfStatus(ArgumentStatus.IN));
+                Extension<DungTheory> ext = new Extension<DungTheory>(input.getArgumentsOfStatus(ArgumentStatus.IN));
                 if (!exts.contains(ext)) {
                     return false;
                 }
