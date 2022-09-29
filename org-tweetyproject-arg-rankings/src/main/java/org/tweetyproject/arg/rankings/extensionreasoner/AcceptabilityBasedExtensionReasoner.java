@@ -8,13 +8,13 @@ import org.tweetyproject.comparator.GeneralComparator;
 
 import java.util.*;
 
+/**
+ * Reasoner for refining extension based semantics based on acceptability of arguments.
+ * Based on 'Def. 28' from "Combining Extension-Based Semantics and Ranking-Based Semantics for Abstract Argumentation" (E. Bonzon et al, KR 2018)
+ * * @author Daniel Letkemann
+ */
 public class AcceptabilityBasedExtensionReasoner {
-    /**
-     * Reasoner for refining extension based semantics based on acceptability of arguments.
-     * Based on 'Def. 28' from "Combining Extension-Based Semantics and Ranking-Based Semantics for Abstract Argumentation" (E. Bonzon et al, KR 2018)
-     * * @author Daniel Letkemann
-     */
-    private AggregationFunction aggregationFunction;
+
 
 
     /**
@@ -32,12 +32,6 @@ public class AcceptabilityBasedExtensionReasoner {
         List<Integer> scores = new LinkedList<>(scoreToExtensionsMap.keySet());
         Collections.sort(scores);
         int argmaxIndex = scores.get(scores.size() - 1);
-//        Extension<DungTheory> argmax = scoreToExtensionsMap.keySet().stream().findFirst().orElseThrow();
-//        for (Extension<DungTheory> ext : scoreToExtensionsMap.keySet()) {
-//            if (scoreToExtensionsMap.get(ext)>scoreToExtensionsMap.get(argmax)) {
-//                argmax = ext;
-//            }
-//        }
 
         return scoreToExtensionsMap.get(argmaxIndex);
     }
@@ -53,7 +47,7 @@ public class AcceptabilityBasedExtensionReasoner {
      */
     public Map<Integer, Collection<Extension<DungTheory>>> getScoreToExtensionsMap(Collection<Extension<DungTheory>> extensions, GeneralComparator<Argument, DungTheory> argumentRanks, DungTheory theory) {
 
-        Map<Extension<DungTheory>, Integer> extensionToScoreMap = getExtensionToScoreMap(extensions, argumentRanks, theory);
+        Map<Extension<DungTheory>, Integer> extensionToScoreMap = getExtensionToScoreMap(extensions, argumentRanks);
         Map<Integer, Collection<Extension<DungTheory>>> scoreToExtensionsMap = new HashMap<>();
 
         for (Extension<DungTheory> ext : extensionToScoreMap.keySet()) {
@@ -70,17 +64,16 @@ public class AcceptabilityBasedExtensionReasoner {
      *
      * @param extensions    a collection of extensions
      * @param argumentRanks argument ranks as returned by argument ranking Reasoners "getModel" method
-     * @param theory        a dung theory
      * @return extension-to-score map
      */
-    public Map<Extension<DungTheory>, Integer> getExtensionToScoreMap(Collection<Extension<DungTheory>> extensions, GeneralComparator<Argument, DungTheory> argumentRanks, DungTheory theory) {
+    public Map<Extension<DungTheory>, Integer> getExtensionToScoreMap(Collection<Extension<DungTheory>> extensions, GeneralComparator<Argument, DungTheory> argumentRanks) {
         Map<Pair<Extension<DungTheory>, Extension<DungTheory>>, Pair<Integer, Integer>> matchupWins = new HashMap<>();
         Map<Extension<DungTheory>, Integer> extensionToScoreMap = new HashMap<>();
 
         List<Extension<DungTheory>> extensionList = new LinkedList<>(extensions);
         List<Pair<Extension<DungTheory>, Extension<DungTheory>>> matchups = new LinkedList<>();
 
-        // initialize map with all alternatives having score '0
+        // initialize map with all alternatives having score '0'
         int n = extensionList.size();
         for (int i = 0; i < n; i++) {
 //            Argument arg1 = arguments.get(i);

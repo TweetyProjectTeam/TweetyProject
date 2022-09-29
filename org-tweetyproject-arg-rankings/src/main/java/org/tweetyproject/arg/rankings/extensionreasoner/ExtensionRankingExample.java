@@ -19,9 +19,7 @@
 
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
-import org.tweetyproject.arg.rankings.extensionreasoner.ExtensionRankingReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.rankings.extensionreasoner.ExtensionRankingSemantics;
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.commons.util.SetTools;
 
@@ -30,8 +28,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * Example on how to use the OrderingSemanticsReasoner.
+ * Example on how to use the ExtensionRankingReasoner.
  *
+ * @author Daniel Letkemann
  * @author Lars Bengel
  */
 public class ExtensionRankingExample {

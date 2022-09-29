@@ -2,20 +2,20 @@ package org.tweetyproject.arg.rankings.extensionreasoner;
 
 import org.tweetyproject.arg.dung.reasoner.*;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.rankings.extensionreasoner.AggregationFunction;
 import org.tweetyproject.arg.dung.syntax.Argument;
-
-import org.tweetyproject.arg.rankings.extensionreasoner.RankBasedExtensionReasoner;
 import org.tweetyproject.arg.rankings.reasoner.BurdenBasedRankingReasoner;
 import org.tweetyproject.arg.rankings.reasoner.CategorizerRankingReasoner;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.rankings.reasoner.TuplesRankingReasoner;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.comparator.LatticePartialOrder;
 import org.tweetyproject.comparator.NumericalPartialOrder;
 
 import java.util.*;
-
+/**
+ * Example on how to utilize the "RankBasedExtensionReasoner".
+ *
+ * @author Daniel Letkemann
+ */
 public class RankBasedExtensionReasonerExample {
     public static void main(String[] args) throws Exception {
 

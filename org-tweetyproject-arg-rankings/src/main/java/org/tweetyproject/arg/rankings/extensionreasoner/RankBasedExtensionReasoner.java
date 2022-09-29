@@ -4,7 +4,6 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.comparator.GeneralComparator;
-import org.tweetyproject.comparator.NumericalPartialOrder;
 
 import java.util.*;
 
@@ -80,22 +79,11 @@ public class RankBasedExtensionReasoner {
      */
     private Map<Argument, Integer> getIntegerRankMap(GeneralComparator<Argument, DungTheory> argumentRanks, DungTheory theory) {
         Map<Argument, Integer> rankMap = new HashMap<>();
-
+        //copy of all of theory's arguments.
         Collection<Argument> arguments = theory.clone().getNodes();
 
         int rank = 0;
         while (!arguments.isEmpty()) {
-//            double max = 0;
-//            for(Argument arg: arguments){
-//                if(catRanking.get(arg)>max){
-//                    max = catRanking.get(arg);
-//                    maxArgs.clear();
-//                    maxArgs.add(arg);
-//                }
-//                else if(catRanking.get(arg) == max){
-//                    maxArgs.add(arg);
-//                }
-//            }
             Collection<Argument> maxArgs = argumentRanks.getMaximallyAcceptedArguments(arguments);
             for (Argument maxArg : maxArgs) {
                 rankMap.put(maxArg, rank);

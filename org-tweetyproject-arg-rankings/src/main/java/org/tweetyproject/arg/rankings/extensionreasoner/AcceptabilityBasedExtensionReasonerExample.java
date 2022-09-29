@@ -14,6 +14,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Example on how to utilize the "AcceptabilityBasedExtensionReasoner".
+ *
+ * @author Daniel Letkemann
+ */
 public class AcceptabilityBasedExtensionReasonerExample {
     public static void main(String[] args) throws Exception {
 

@@ -31,11 +31,12 @@ import java.util.*;
 
 
 /**
- * Reasoner for ordering semantics.
+ * Reasoner using ranking semantics.
  *
  * @author Lars Bengel
  * @author Daniel Letkemann
  */
+//TODO: rework class to use classes from "comparator" module (e.g. LatticePartialOrder) instead of weird "Comparison -> Character [<,>,=,null] Map.
 public class ExtensionRankingReasoner {
     private final ExtensionRankingSemantics semantics;
     private final List<Method> baseFunctions;
