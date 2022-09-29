@@ -25,7 +25,7 @@ public class CopelandSolution<A extends Formula> extends CondorcetSWF<A> {
             return null;
         }
         scores = calculateScores(profiles);
-        List<Float> vals = new ArrayList<Float>(scores.values());
+        List<Float> vals = new ArrayList<>(scores.values());
         Collections.sort(vals);
         Collections.reverse(vals);
         float maxVal = vals.get(0);

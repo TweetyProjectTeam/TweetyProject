@@ -10,7 +10,7 @@ public interface SocialWelfareFunction<A extends Formula>{
     /**
      *returns a ranked list of alternatives for a list of votes/ballots. The lower the index of the list, the better ranked it is.
      * @param profiles a list of votes/ballots for alternatives of type "A"
-     * @return a ranking of alternativesyu
+     * @return a ranking of alternatives
      */
-   public List<List<A>> calculateRanks(List<Profile<A>> profiles);
+    List<List<A>> calculateRanks(List<Profile<A>> profiles);
 }

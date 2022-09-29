@@ -8,13 +8,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Simple implementation of a Profile or voting ballots.
+ * @author Daniel Letkemann
+ * @param <A> currently only really supported for type "Argument"
+ */
 public class Profile<A extends Formula> extends HashMap<A,Integer> {
 
     public Profile(){
 
     }
-    public Profile(NumericalPartialOrder<A,DungTheory> npo, Collection<A> alternatives){
 
+    /**
+     * Creates a Profile from a ranking order over alternatives for any collection of alternatives.
+     * @param npo a NumericalPartialOrder over a DungTheory
+     * @param alternatives a Collection of alternatives
+     */
+    public Profile(NumericalPartialOrder<A,DungTheory> npo, Collection<A> alternatives){
+    //get best alternatives from the full collection, map them to the currently best priority.
         int priority = 1;
          Set<A> orderedAlternatives = npo.keySet();
          while(!orderedAlternatives.isEmpty()) {
@@ -25,6 +36,7 @@ public class Profile<A extends Formula> extends HashMap<A,Integer> {
              ++priority;
              orderedAlternatives.removeAll(bestAlternatives);
          }
+         // alternatives that are not voted for receive the worst priority
          for(A alt: alternatives){
              this.putIfAbsent(alt,priority);
          }

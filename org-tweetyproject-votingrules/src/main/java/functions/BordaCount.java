@@ -29,7 +29,7 @@ public class BordaCount<A extends Formula> extends ScoringRuleSWF<A>{
      * @return an averaged scoring vector for the list of
      */
     private Vector<Float> getAveragedScoringVector(Integer length, List<List<A>> profiles) {
-        Vector<Float> scoringVector = (Vector<Float>) getScoringVector(length);
+        Vector<Float> scoringVector = getScoringVector(length);
         for(int i=0; i<profiles.size(); i++){
             ArrayList<A> tiedAlternatives = (ArrayList<A>) profiles.get(i);
             //more than one alternative inside one rank means that the scoring vector needs to be averaged on the according indexes
