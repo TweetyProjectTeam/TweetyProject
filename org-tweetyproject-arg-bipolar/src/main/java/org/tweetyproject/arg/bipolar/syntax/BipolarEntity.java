@@ -29,6 +29,6 @@ import org.tweetyproject.graphs.Node;
  * @author Lars Bengel
  *
  */
-public interface BipolarEntity extends DungEntity, Node {
+public interface BipolarEntity extends DungEntity, Node, Iterable<BArgument> {
     boolean contains(Object o);
 }

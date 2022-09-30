@@ -35,7 +35,7 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     /**
      * Attacks stored in a list
      */
-    protected ArrayList<EAttack> attacks = new ArrayList<>();
+    protected ArrayList<Attack> attacks = new ArrayList<>();
 
     /**
      * Add an argument
@@ -82,17 +82,25 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     }
 
     /**
-     * Add an attack with indices
+     * Add an attack with sets
      *
-     * @param fromIndices indices of arguments that originates the attack
-     * @param toIndices   indices of arguments that receive the attack
+     * @param froms arguments that originates the attack
+     * @param tos   arguments that receive the attack
      */
-    public void addAttack(int[] fromIndices, int[] toIndices) {
-        Set<BArgument> froms = createEmptyArgSet(fromIndices);
-        Set<BArgument> tos = createEmptyArgSet(toIndices);
-
+    @SuppressWarnings("unchecked")
+	public void addAttack(BipolarEntity froms, BipolarEntity tos) {
         int identifier = attacks.size();
-        EAttack attack = this.createAttack(Integer.toString(identifier), froms, tos);
+        HashSet<BArgument> fromSet = new HashSet<BArgument>();
+        HashSet<BArgument> toSet = new HashSet<BArgument>();
+        if(froms instanceof BArgument)
+        	fromSet.add((BArgument) froms);
+        if(froms instanceof HashSet<?>)
+        	fromSet = (HashSet<BArgument>) froms;
+        if(tos instanceof BArgument)
+        	toSet.add((BArgument) tos);
+        if(tos instanceof HashSet<?>)
+        	toSet = (HashSet<BArgument>) tos;
+        EAttack attack = this.createAttack(Integer.toString(identifier), fromSet, toSet);
         this.addAttack(attack);
     }
 
@@ -120,7 +128,7 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
         if (tos.contains(eta)) {
             throw new RuntimeException("Argument eta can't be attacked.");
         }
-        EAttack attack = new EAttack(froms, tos);
+        EAttack attack = new EAttack( froms, tos);
 
         return attack;
     }

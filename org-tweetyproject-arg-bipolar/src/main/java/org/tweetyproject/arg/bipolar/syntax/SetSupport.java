@@ -26,6 +26,7 @@ import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.DirectedEdge;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * This class models a support between a set of arguments and an argument. It comprises of a set of <code>BArgument</code> and is used by
@@ -135,4 +136,9 @@ public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
         sig.add(this.getSupporter());
         return sig;
     }
+
+	@Override
+	public Iterator<BArgument> iterator() {
+		return null;
+	}
 }

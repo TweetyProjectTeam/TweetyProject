@@ -70,8 +70,8 @@ public class PEAFTheory extends AbstractEAFTheory<WeightedSetSupport> {
      * @param fromIndex the index of the EArgument that originates the attack
      * @param toIndex   the index of the EArgument that receieves the attack
      */
-    public void addAttack(int fromIndex, int toIndex) {
-        this.addAttack(new int[]{fromIndex}, new int[]{toIndex});
+    public void addAttack(BipolarEntity froms, BipolarEntity tos) {
+        this.addAttack(froms, tos);
     }
 
     /**
@@ -114,9 +114,7 @@ public class PEAFTheory extends AbstractEAFTheory<WeightedSetSupport> {
 
 	@Override
 	public boolean add(Attack attack) {
-		this.attackParents.put(attack.getAttacker());
-		
-		// TODO Auto-generated method stub
+		this.attacks.add((EAttack) attack);
 		return true;
 	}
 

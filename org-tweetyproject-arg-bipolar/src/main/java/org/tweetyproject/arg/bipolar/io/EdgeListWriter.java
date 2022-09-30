@@ -78,7 +78,7 @@ public class EdgeListWriter {
             FileWriter writer = new FileWriter(path);
 
             for (Support o : eafTheory.getSupports()) {
-                StringBuilder builder = getStringBuilder(o.getSupporter(), o.getSupported());
+                StringBuilder builder = getStringBuilder((ArgumentSet) o.getSupporter(), (ArgumentSet) o.getSupported());
                 if (builder != null) {
                     builder.append(" {'color': 'green'}");
                     writer.write(builder.toString());
@@ -87,8 +87,8 @@ public class EdgeListWriter {
             }
 
 
-            for (EAttack o : eafTheory.getAttacks()) {
-                StringBuilder builder = getStringBuilder(o.getAttacker(), o.getAttacked());
+            for (Attack o : eafTheory.getAttacks()) {
+                StringBuilder builder = getStringBuilder((ArgumentSet) o.getAttacker(), (ArgumentSet) o.getAttacked());
                 if (builder != null) {
                     builder.append(" {'color': 'red'}");
                     writer.write(builder.toString());
@@ -150,7 +150,7 @@ public class EdgeListWriter {
      */
     private static void write(PEAFTheory peafTheory, FileWriter writer) throws IOException {
         for (Support o : peafTheory.getSupports()) {
-            StringBuilder builder = getStringBuilder(o.getSupporter(), o.getSupported());
+            StringBuilder builder = getStringBuilder((ArgumentSet) o.getSupporter(), (ArgumentSet) o.getSupported());
             if (builder != null) {
                 builder.append(" {'color': 'green', 'weight': ").append(o.getConditionalProbability()).append("  }");
                 writer.write(builder.toString());
@@ -158,7 +158,7 @@ public class EdgeListWriter {
             }
         }
         for (Attack o : peafTheory.getAttacks()) {
-            StringBuilder builder = getStringBuilder(o.getAttacker(), o.getAttacked());
+            StringBuilder builder = getStringBuilder((ArgumentSet) o.getAttacker(), (ArgumentSet) o.getAttacked());
             if (builder != null) {
                 builder.append(" {'color': 'red' }");
                 writer.write(builder.toString());

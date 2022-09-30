@@ -19,6 +19,8 @@
 
 package org.tweetyproject.arg.bipolar.syntax;
 
+import java.util.Iterator;
+
 import org.tweetyproject.arg.dung.ldo.syntax.LdoFormula;
 import org.tweetyproject.arg.dung.ldo.syntax.LdoNegation;
 import org.tweetyproject.arg.dung.ldo.syntax.LdoRelation;
@@ -108,4 +110,11 @@ public class BinaryAttack extends DirectedEdge<BArgument> implements Attack {
         sig.add(this.getAttacker());
         return sig;
     }
+
+	@Override
+	public Iterator<BArgument> iterator() {
+		return null;
+	}
+
+
 }
