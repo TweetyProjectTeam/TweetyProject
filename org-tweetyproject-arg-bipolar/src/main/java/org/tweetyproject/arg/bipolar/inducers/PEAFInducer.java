@@ -1,6 +1,6 @@
-package org.tweetyproject.arg.peaf.inducers;
+package org.tweetyproject.arg.bipolar.inducers;
 
-import org.tweetyproject.arg.peaf.syntax.InducibleEAF;
+import org.tweetyproject.arg.bipolar.syntax.InducibleEAF;
 
 import java.util.function.Consumer;
 

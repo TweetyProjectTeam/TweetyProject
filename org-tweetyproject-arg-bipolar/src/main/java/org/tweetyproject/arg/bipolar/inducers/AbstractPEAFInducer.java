@@ -102,10 +102,10 @@ public abstract class AbstractPEAFInducer implements PEAFInducer {
 
         visited.put(arg, true);
         recStack.put(arg, true);
-        Set<Support> set = arg.getSupports();
+        Set<Support> set = peafTheory.getSupports(arg);
 
         for (Support c : set) {
-            for (BArgument to : c.getTos()) {
+            for (BArgument to : c.getSupported()) {
                 if (isCyclicUtil(to, visited, recStack))
                     return true;
             }

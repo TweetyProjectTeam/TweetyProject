@@ -87,7 +87,7 @@ public class InducibleEAF {
         EAFTheory eafTheory = new EAFTheory();
         Set<BArgument> arguments = new HashSet<BArgument>();
 
-        arguments.addAll(this.arguments);
+        arguments.addAll(this.getArguments());
 
         for (Support support : supports) {
             eafTheory.addSupport(support);
@@ -100,8 +100,8 @@ public class InducibleEAF {
         List<BArgument> argsSorted = new ArrayList<BArgument>();
         argsSorted.addAll(arguments);
         argsSorted.sort(Comparator.comparing(BArgument::getName));
-
-        for (BArgument argument : argsSorted) {
+        System.out.println(this.getArguments());
+        for (BArgument argument : arguments) {
             eafTheory.addArgument(argument);
         }
 
@@ -118,8 +118,8 @@ public class InducibleEAF {
         sortedArgs.addAll(this.arguments);
         sortedArgs.sort(Comparator.comparing(BArgument::getName));
 
-        for (BArgument argument : sortedArgs) {
-            builder.append(argument.getName());
+        for (BipolarEntity argument : sortedArgs) {
+            builder.append(argument.toString());
             if (i != arguments.size() - 1) {
                 builder.append(",");
             }
@@ -197,7 +197,7 @@ public class InducibleEAF {
         Set<BArgument> args = new HashSet<BArgument>();
         args.addAll(this.getArguments());
 
-        for (BArgument arg : args) {
+        for (BipolarEntity arg : args) {
             for (Attack attack : this.attacks) {
             	if(attack.contains(arg)) {
 	                BipolarEntity froms = attack.getAttacker();

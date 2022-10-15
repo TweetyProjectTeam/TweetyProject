@@ -22,19 +22,33 @@ public class MeetingPEAFExample {
         for (int i = 0; i < numOfArgs; i++) {
             peafTheory.addArgument(i);
         }
-
-        peafTheory.addSupport((BipolarEntity) new HashSet<BArgument>(), (BipolarEntity) peafTheory.getArguments().get(0), 1.0);
-        peafTheory.addSupport(new int[]{0}, new int[]{2}, 1.0);
-        peafTheory.addSupport(new int[]{0}, new int[]{1}, 1.0);
-        peafTheory.addSupport(new int[]{0}, new int[]{3}, 1.0);
-        peafTheory.addSupport(new int[]{0}, new int[]{4}, 1.0);
-        peafTheory.addSupport(new int[]{3}, new int[]{5}, 1.0);
+        HashSet<BArgument> arg0 = new HashSet<BArgument>();
+        arg0.add(peafTheory.getArguments().get(0));
+        HashSet<BArgument> arg1 = new HashSet<BArgument>();
+        arg1.add(peafTheory.getArguments().get(1));
+        HashSet<BArgument> arg2 = new HashSet<BArgument>();
+        arg2.add(peafTheory.getArguments().get(2));
+        HashSet<BArgument> arg3 = new HashSet<BArgument>();
+        arg3.add(peafTheory.getArguments().get(3));
+        HashSet<BArgument> arg4 = new HashSet<BArgument>();
+        arg4.add(peafTheory.getArguments().get(4));
+        HashSet<BArgument> arg5 = new HashSet<BArgument>();
+        arg5.add(peafTheory.getArguments().get(5));
+        HashSet<BArgument> arg6 = new HashSet<BArgument>();
+        arg6.add(peafTheory.getArguments().get(6));
+        
+        peafTheory.addSupport(new HashSet<BArgument>(), arg0 , 1.0);
+        peafTheory.addSupport(arg0, arg2, 1.0);
+        peafTheory.addSupport(arg0, arg1, 1.0);
+        peafTheory.addSupport(arg0, arg3, 1.0);
+        peafTheory.addSupport(arg0, arg4, 1.0);
+        peafTheory.addSupport(arg3, arg5, 1.0);
 //        peafTheory.addSupport(new int[]{3, 4}, new int[]{6}, 0.9);
 
-        peafTheory.addAttack(new int[]{5}, new int[]{2});
-        peafTheory.addAttack(new int[]{5}, new int[]{1});
-        peafTheory.addAttack(new int[]{1}, new int[]{5});
-        peafTheory.addAttack(new int[]{1}, new int[]{6});
+        peafTheory.addAttack(arg5, arg2);
+        peafTheory.addAttack(arg5, arg1);
+        peafTheory.addAttack(arg1, arg5);
+        peafTheory.addAttack(arg1, arg6);
 
 
         List<BArgument> args = peafTheory.getArguments();

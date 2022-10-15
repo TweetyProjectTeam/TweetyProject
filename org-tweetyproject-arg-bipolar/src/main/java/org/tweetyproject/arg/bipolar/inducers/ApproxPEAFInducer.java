@@ -1,9 +1,11 @@
-package org.tweetyproject.arg.peaf.inducers;
+package org.tweetyproject.arg.bipolar.inducers;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import org.tweetyproject.arg.peaf.syntax.*;
+import org.tweetyproject.arg.bipolar.syntax.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -25,24 +27,24 @@ public class ApproxPEAFInducer extends AbstractPEAFInducer {
         /**
          * Arguments of the EAF
          */
-        Set<EArgument> eArguments;
+        Set<BArgument> eArguments;
         /**
          * Supports of the EAF
          */
-        Set<ESupport> eSupports;
+        Set<Support> eSupports;
         /**
          * The next arguments to add to the EAF
          */
-        Set<EArgument> newEArguments;
+        Set<BArgument> newEArguments;
 
         /**
          * @param eArguments
          * @param eSupports
          * @param newEArguments
          */
-        public EAF_F(Set<EArgument> eArguments,
-                     Set<ESupport> eSupports,
-                     Set<EArgument> newEArguments) {
+        public EAF_F(Set<BArgument> eArguments,
+                     Set<Support> eSupports,
+                     Set<BArgument> newEArguments) {
             this.eArguments = eArguments;
             this.eSupports = eSupports;
             this.newEArguments = newEArguments;
@@ -55,15 +57,19 @@ public class ApproxPEAFInducer extends AbstractPEAFInducer {
          * @see InducibleEAF
          */
         public InducibleEAF convertToInducible() {
-            List<PSupport> supportList = Lists.newArrayList();
-            for (ESupport eSupport : eSupports) {
-                supportList.add((PSupport) eSupport);
+            List<Support> supportList = new ArrayList<Support>();
+            for (Support eSupport : eSupports) {
+                supportList.add((Support) eSupport);
             }
+            HashSet<BArgument> args = new HashSet<>();
+            HashSet<List<Support>> lists = new HashSet<List<Support>>();
+            args.addAll(eArguments);
+            lists.add( supportList);
 
-            InducibleEAF inducibleEAF = new InducibleEAF(Sets.newHashSet(eArguments),
-                    Sets.newHashSet(supportList),
-                    Sets.newHashSet(),
-                    Sets.newHashSet(),
+            InducibleEAF inducibleEAF = new InducibleEAF(args,
+                    new HashSet(supportList),
+                    new HashSet<>(),
+                    new HashSet<>(),
                     0, 0);
 
             inducibleEAF.addAttackLinks();
@@ -100,7 +106,7 @@ public class ApproxPEAFInducer extends AbstractPEAFInducer {
         Stack<EAF_F> stack = new Stack<>();
 
         // eta is added, Algorithm 8 Line 2 EAF_F <- {eta}, {}, {}
-        stack.push(new EAF_F(Sets.newHashSet(), Sets.newHashSet(peafTheory.getSupports().get(0)), Sets.newHashSet(peafTheory.getArguments().get(0))));
+        stack.push(new EAF_F(new HashSet(), new HashSet<Support>(new ArrayList<Support>(Arrays.asList(peafTheory.getSupports().iterator().next()))), new HashSet<BArgument>(new ArrayList<BArgument>(Arrays.asList(peafTheory.getArguments().get(0))))));
 
         // Turn recursive random induce to sequential
         while (!stack.isEmpty()) {
@@ -109,11 +115,11 @@ public class ApproxPEAFInducer extends AbstractPEAFInducer {
             // compute expanding supports (ES)
             // if ES.isEmpty
             //     return eaf;
-            Set<ESupport> expandingSupports = Sets.newHashSet();
-            for (EArgument newEArgument : eaf.newEArguments) {
+            Set<Support> expandingSupports = new HashSet<Support>();
+            for (BArgument newArgument : eaf.newEArguments) {
                 // These new arguments have these supports
 //                System.out.println(newEArgument.getSupports());
-                expandingSupports.addAll(newEArgument.getSupports());
+                expandingSupports.addAll(this.peafTheory.getSupports(newArgument));
             }
             // these are cleared such that new ones can be added
             //       System.out.println("Add new arguments: " + eaf.newEArguments);
@@ -129,13 +135,13 @@ public class ApproxPEAFInducer extends AbstractPEAFInducer {
             EAF_F eaf_c = eaf.copy();
 
             // Line 8-14
-            for (ESupport eSupport : expandingSupports) {
+            for (Support eSupport : expandingSupports) {
                 double r = ThreadLocalRandom.current().nextDouble();
-                if (r <= ((PSupport) eSupport).getConditionalProbability()) {
+                if (r <= ((SetSupport) eSupport).getConditionalProbability()) {
                     eaf_c.eSupports.add(eSupport);
 
                     // This is to eliminate visiting same nodes again
-                    for (EArgument to : eSupport.getTos()) {
+                    for (BArgument to : eSupport.getSupported()) {
                         if (!eaf_c.eArguments.contains(to)) {
                             eaf_c.newEArguments.add(to);
                         }

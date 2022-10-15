@@ -31,5 +31,7 @@ public interface Support extends BipolarEntity{
 
     BipolarEntity getSupporter();
 
+	public void setConditionality(double c);
+	public double getConditionalProbability();
     String toString();
 }

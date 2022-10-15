@@ -1,10 +1,12 @@
-package org.tweetyproject.arg.peaf.inducers;
+package org.tweetyproject.arg.bipolar.inducers;
 
-import com.google.common.collect.Sets;
-import org.tweetyproject.arg.peaf.syntax.EArgument;
-import org.tweetyproject.arg.peaf.syntax.InducibleEAF;
-import org.tweetyproject.arg.peaf.syntax.PEAFTheory;
-import org.tweetyproject.arg.peaf.syntax.PSupport;
+
+import org.tweetyproject.arg.bipolar.syntax.ArgumentSet;
+import org.tweetyproject.arg.bipolar.syntax.BArgument;
+import org.tweetyproject.arg.bipolar.syntax.BipolarEntity;
+import org.tweetyproject.arg.bipolar.syntax.InducibleEAF;
+import org.tweetyproject.arg.bipolar.syntax.PEAFTheory;
+import org.tweetyproject.arg.bipolar.syntax.Support;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -43,10 +45,10 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
      */
     @Deprecated
     public void induce(Consumer<InducibleEAF> consumer) {
-        InducibleEAF f = new InducibleEAF(Sets.newHashSet(),
-                Sets.newHashSet(),
-                Sets.newHashSet(),
-                Sets.newHashSet(), Math.log(1.0), Math.log(1.0));
+        InducibleEAF f = new InducibleEAF(new HashSet(),
+                new HashSet(),
+                new HashSet(),
+                new HashSet(), Math.log(1.0), Math.log(1.0));
 
         // Store inducible that need to expand
         List<InducibleEAF> expansion = new ArrayList<>();
@@ -58,10 +60,11 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
             InducibleEAF toExpand = expansion.remove(0);
             // Before accepting explore all the attacks and add these links (traverse all the tree)
             toExpand.addAttackLinks();
+            System.out.println(toExpand.arguments.toString());
             consumer.accept(toExpand);
 
 
-            Map<Set<EArgument>, Map<String, Object>> expandingArgs = expand(toExpand);
+            Map<Set<BArgument>, Map<String, Object>> expandingArgs = expand(toExpand);
 
             if (expandingArgs.isEmpty()) {
                 continue;
@@ -71,38 +74,38 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
             int noCombinations = 1 << expandingArgs.size();
 
             for (int i = 1; i < noCombinations; i++) {
-                List<EArgument> newArgs = new ArrayList<>();
-                List<PSupport> supports = new ArrayList<>();
+                List<BArgument> newArgs = new ArrayList<>();
+                List<Support> supports = new ArrayList<>();
 
                 double pInside = toExpand.getpInside();
                 int n = i;
 
-                for (Map.Entry<Set<EArgument>, Map<String, Object>> entry : expandingArgs.entrySet()) {
-                    Set<EArgument> argIds = entry.getKey();
+                for (Map.Entry<Set<BArgument>, Map<String, Object>> entry : expandingArgs.entrySet()) {
+                	Set<BArgument> argIds = entry.getKey();
                     Map<String, Object> map = entry.getValue();
 
                     if ((n & 1) == 1) {
                         newArgs.addAll(argIds);
-                        supports.addAll((Collection<? extends PSupport>) map.get("supports"));
+                        supports.addAll((Collection<? extends Support>) map.get("supports"));
                         pInside += Math.log(1.0 - Math.exp((double) map.get("pro")));
                     }
                     n = n >> 1;
                 }
-                List<EArgument> args = new ArrayList<>();
+                List<BipolarEntity> args = new ArrayList<>();
                 args.addAll(toExpand.getArguments());
                 args.addAll(newArgs);
                 supports.addAll(toExpand.getSupports());
 
                 double pOutside = Math.log(1.0);
 
-                for (PSupport sr : this.peafTheory.getSupports()) {
+                for (Support sr : this.peafTheory.getSupports()) {
                     if (supports.contains(sr)) {
                         continue;
                     }
 
-                    EArgument notIn = null;
+                    BArgument notIn = null;
 
-                    for (EArgument fa : sr.getFroms()) {
+                    for (BArgument fa : sr.getSupporter()) {
                         if (!args.contains(fa)) {
                             notIn = fa;
                             break;
@@ -116,7 +119,7 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
                 }
 
                 double induceP = pInside + pOutside;
-                InducibleEAF indu = new InducibleEAF(Sets.newHashSet(args), Sets.newHashSet(supports), Sets.newHashSet(), Sets.newHashSet(newArgs), pInside, induceP);
+                InducibleEAF indu = new InducibleEAF(new HashSet(args), new HashSet(supports), new HashSet(), new HashSet(newArgs), pInside, induceP);
 
                 expansion.add(indu);
                 z++;
@@ -132,10 +135,10 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
      * @param indu an InducibleEAF object
      * @return a map of all possible ways that the InducibleEAF can be expanded
      */
-    private Map<Set<EArgument>, Map<String, Object>> expand(InducibleEAF indu) {
-        Map<Set<EArgument>, Map<String, Object>> expandable = new HashMap<>();
+    private Map<Set<BArgument>, Map<String, Object>> expand(InducibleEAF indu) {
+        Map<Set<BArgument>, Map<String, Object>> expandable = new HashMap<>();
 
-        for (PSupport sr : this.peafTheory.getSupports()) {
+        for (Support sr : this.peafTheory.getSupports()) {
 
             // next if indu.supports.include?(sr.id)
             if (indu.getSupports().contains(sr)) {
@@ -151,7 +154,7 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
             //        break if found_not_in
             //        found_new_sup = true if indu.new_args.include?(fa.id)
             //  }
-            for (EArgument fa : sr.getFroms()) {
+            for (BArgument fa : sr.getSupporter()) {
                 if (!indu.getArguments().contains(fa)) {
                     foundNotIn = true;
                     break;
@@ -170,21 +173,21 @@ public class LiExactPEAFInducer extends AbstractPEAFInducer {
             //        end
             //      end
             if (!foundNotIn && (foundNewSup || indu.getNewArguments().isEmpty())) {
-                if (expandable.containsKey(sr.getTos())) {
-                    Map<String, Object> map = expandable.get(sr.getTos());
+                if (expandable.containsKey(sr.getSupported())) {
+                    Map<String, Object> map = expandable.get(sr.getSupported());
 
-                    List<PSupport> supports = (List<PSupport>) map.get("supports");
+                    List<Support> supports = (List<Support>) map.get("supports");
                     supports.add(sr);
 
                     double probability = (double) map.get("pro");
                     map.replace("pro", probability + Math.log(1.0 - sr.getConditionalProbability()));
                 } else {
                     Map<String, Object> map = new HashMap<>();
-                    List<PSupport> supports = new ArrayList<>();
+                    List<Support> supports = new ArrayList<>();
                     supports.add(sr);
                     map.put("supports", supports);
                     map.put("pro", Math.log(1.0 - sr.getConditionalProbability()));
-                    expandable.put(sr.getTos(), map);
+                    expandable.put(  ((ArgumentSet) sr.getSupported()).getArguments(), map);
                 }
 
             }

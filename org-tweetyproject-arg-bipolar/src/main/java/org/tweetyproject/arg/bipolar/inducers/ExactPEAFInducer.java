@@ -1,9 +1,11 @@
-package org.tweetyproject.arg.peaf.inducers;
+package org.tweetyproject.arg.bipolar.inducers;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import org.tweetyproject.arg.peaf.syntax.*;
+import org.tweetyproject.arg.bipolar.syntax.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -43,7 +45,7 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
     public void induce(Consumer<InducibleEAF> consumer) {
         Stack<EAF_F> stack = new Stack<>();
 
-        stack.push(new EAF_F(Sets.newHashSet(), Sets.newHashSet(peafTheory.getSupports().get(0)), Sets.newHashSet(peafTheory.getEta()), 1.0));
+        stack.push(new EAF_F(new HashSet(), new HashSet<Support>( peafTheory.getSupports()), new HashSet(new ArrayList(Arrays.asList(peafTheory.getEta()))), 1.0));
 
         while (!stack.isEmpty()) {
             EAF_F eaf = stack.pop();
@@ -54,20 +56,20 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
             // FIXME: This query can be improved by reducing this set at each iteration
             // FIXME: This can be done by storing NAS inside iEAF object
 
-            Set<PSupport> supportsLeft = Sets.newHashSet(peafTheory.getSupports());
+            Set<Support> supportsLeft = new HashSet<Support>(peafTheory.getSupports());
             supportsLeft.removeAll(eaf.eSupports);
-            Set<EArgument> args = Sets.newHashSet();
+            Set<BArgument> args = new HashSet<BArgument>();
             args.addAll(eaf.eArguments);
             args.addAll(eaf.newEArguments);
 
-            for (PSupport support : supportsLeft) {
-                if (support.getName().equals("0") && eaf.eArguments.size() == 1) {
+            for (Support support : supportsLeft) {
+                if ( eaf.eArguments.size() == 1) {
                     continue;
                 }
 
-                EArgument notIn = null;
+                BArgument notIn = null;
 
-                for (EArgument from : support.getFroms()) {
+                for (BArgument from : support.getSupporter()) {
                     // R_S - R_S^F
                     if (!args.contains(from)) {
                         notIn = from;
@@ -92,11 +94,11 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
             eaf.pi = eaf.pi * po;
 
             debugPrint("eaf pi (after): " + eaf.pi);
-            Set<ESupport> expandingSupports = Sets.newHashSet();
+            Set<Support> expandingSupports = new HashSet<Support>();
             debugPrint(" New arguments: " + eaf.newEArguments);
 
-            for (EArgument newEArgument : eaf.newEArguments) {
-                expandingSupports.addAll(newEArgument.getSupports());
+            for (BArgument newEArgument : eaf.newEArguments) {
+                expandingSupports.addAll(this.peafTheory.getSupports(newEArgument));
             }
 
             eaf.eArguments.addAll(eaf.newEArguments);
@@ -106,21 +108,21 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
 
             debugPrint(eaf.convertToInducible());
 
-            for (Set<ESupport> eSupports : Sets.powerSet(expandingSupports)) {
+            for (Set<Support> eSupports : this.peafTheory.powerSet(expandingSupports)) {
 
                 EAF_F eaf_c = eaf.copy();
                 double xpi = npi;
-                for (ESupport eSupport : eSupports) {
+                for (Support eSupport : eSupports) {
                     eaf_c.eSupports.add(eSupport);
 
                     // This is to eliminate visiting same nodes again
-                    for (EArgument to : eSupport.getTos()) {
+                    for (BArgument to : eSupport.getSupported()) {
                         if (!eaf_c.eArguments.contains(to)) {
                             eaf_c.newEArguments.add(to);
                         }
                     }
 
-                    xpi *= ((PSupport) eSupport).getConditionalProbability();
+                    xpi *= ((Support) eSupport).getConditionalProbability();
                 }
 
                 if (!eSupports.isEmpty()) {
@@ -151,19 +153,19 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
         /**
          * Arguments of the EAF
          */
-        Set<EArgument> eArguments;
+        Set<BArgument> eArguments;
         /**
          * Supports of the EAF
          */
-        Set<ESupport> eSupports;
+        Set<Support> eSupports;
         /**
          * The next arguments to add to the EAF
          */
-        Set<EArgument> newEArguments;
+        Set<BArgument> newEArguments;
         /**
          * Reference to EAFs that originate this EAF
          */
-        List<EAF_F> createdFrom = Lists.newArrayList();
+        List<EAF_F> createdFrom = new ArrayList<EAF_F>();
         /**
          * The result value of the EAF (notation from the thesis)
          */
@@ -177,9 +179,9 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
          * @param newEArguments the new arguments after this EAF
          * @param pi            the result value
          */
-        public EAF_F(Set<EArgument> eArguments,
-                     Set<ESupport> eSupports,
-                     Set<EArgument> newEArguments, double pi) {
+        public EAF_F(Set<BArgument> eArguments,
+                     Set<Support> eSupports,
+                     Set<BArgument> newEArguments, double pi) {
             this.eArguments = eArguments;
             this.eSupports = eSupports;
             this.newEArguments = newEArguments;
@@ -193,16 +195,16 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
          * @see InducibleEAF
          */
         public InducibleEAF convertToInducible() {
-            List<PSupport> supportList = Lists.newArrayList();
-            for (ESupport eSupport : eSupports) {
-                supportList.add((PSupport) eSupport);
+            List<Support> supportList = new ArrayList<Support>();
+            for (Support eSupport : eSupports) {
+                supportList.add((Support) eSupport);
             }
 
 
-            InducibleEAF inducibleEAF = new InducibleEAF(Sets.newHashSet(eArguments),
-                    Sets.newHashSet(supportList),
-                    Sets.newHashSet(),
-                    Sets.newHashSet(),
+            InducibleEAF inducibleEAF = new InducibleEAF(new HashSet(eArguments),
+                    new HashSet(supportList),
+                    new HashSet(),
+                    new HashSet(),
                     0, Math.log(this.pi));
 
 
@@ -217,7 +219,7 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
          * @return a copied EAF_F
          */
         public EAF_F copy() {
-            EAF_F i = new EAF_F(Sets.newHashSet(this.eArguments), Sets.newHashSet(this.eSupports), Sets.newHashSet(this.newEArguments), this.pi);
+            EAF_F i = new EAF_F(new HashSet(this.eArguments), new HashSet(this.eSupports), new HashSet(this.newEArguments), this.pi);
             i.createdFrom.add(this);
             return i;
         }

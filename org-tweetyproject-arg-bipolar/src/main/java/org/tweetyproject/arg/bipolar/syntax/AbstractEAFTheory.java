@@ -4,6 +4,7 @@ package org.tweetyproject.arg.bipolar.syntax;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -22,7 +23,7 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     /**
      * Arguments stored in a set
      */
-    protected Set<BArgument> argumentsSet;
+    protected Set<BArgument> argumentsSet = new HashSet<BArgument>();
 
     /**
      * Arguments stored in a list
@@ -183,6 +184,20 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
     public Set<Support> getSupports() {
         return new HashSet<Support>(supports);
     }
+    
+    /**
+     * Get all supports invloving argument arg
+     * @param arg an argument
+     * @return a list of supports
+     */
+    public Set<Support> getSupports(BArgument arg) {
+        HashSet<Support> result = new HashSet<Support>();
+        for(Support s : this.getSupports()) {
+        	if(s.contains(arg))
+        		result.add(s);
+        }
+    	return result;
+    }
 
     /**
      * Get all attacks
@@ -193,6 +208,24 @@ public abstract class AbstractEAFTheory<S extends Support> extends AbstractBipol
         return new HashSet<Attack>(attacks);
     }
 
+    public <T> Set<Set<T>> powerSet(Set<T> originalSet) {
+        Set<Set<T>> sets = new HashSet<Set<T>>();
+        if (originalSet.isEmpty()) {
+            sets.add(new HashSet<T>());
+            return sets;
+        }
+        List<T> list = new ArrayList<T>(originalSet);
+        T head = list.get(0);
+        Set<T> rest = new HashSet<T>(list.subList(1, list.size())); 
+        for (Set<T> set : powerSet(rest)) {
+            Set<T> newSet = new HashSet<T>();
+            newSet.add(head);
+            newSet.addAll(set);
+            sets.add(newSet);
+            sets.add(set);
+        }       
+        return sets;
+    } 
     /**
      * Pretty print of the EAFTheory
      */

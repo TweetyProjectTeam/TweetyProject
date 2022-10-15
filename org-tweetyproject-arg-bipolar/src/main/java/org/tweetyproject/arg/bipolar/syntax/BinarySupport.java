@@ -113,4 +113,16 @@ public class BinarySupport extends DirectedEdge<BArgument> implements Support{
 	public Iterator<BArgument> iterator() {
 		return null;
 	}
+
+	@Override
+	public void setConditionality(double c) {
+		//this class has not conditionality
+		
+	}
+
+	@Override
+	public double getConditionalProbability() {
+		//this class has not conditionality
+		return 0;
+	}
 }

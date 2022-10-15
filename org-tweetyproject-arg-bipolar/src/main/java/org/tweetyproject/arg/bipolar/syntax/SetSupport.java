@@ -37,6 +37,14 @@ import java.util.Iterator;
  */
 public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
 
+	private double getConditionalProbability = 1.0;
+	
+	public void setConditionality(double c){
+		this.getConditionalProbability = c;
+	}
+	public double getConditionalProbability(){
+		return this.getConditionalProbability;
+	}
     /**
      * Default constructor; initializes the arguments used in this support relation
      * @param supporter the supporting set of arguments
@@ -68,16 +76,16 @@ public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
      * returns the supported argument of this support relation.
      * @return the supported argument of this support relation.
      */
-    public BArgument getSupported() {
-        return (BArgument) this.getNodeB();
+    public BipolarEntity getSupported() {
+        return  this.getNodeB();
     }
 
     /**
      * returns the supporting set of arguments of this support relation.
      * @return the supporting set of arguments of this support relation.
      */
-    public ArgumentSet getSupporter() {
-        return (ArgumentSet) this.getNodeA();
+    public BipolarEntity getSupporter() {
+        return  this.getNodeA();
     }
 
     /**
