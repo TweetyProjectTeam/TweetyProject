@@ -23,7 +23,7 @@ public class EAFToDAFConverter {
         Map<BArgument, Set<Argument>> mapping = new HashMap<BArgument, Set<Argument>>();
 
         BArgument startingPoint = eafTheory.getEta();
-        bfsTraverse(dungTheory, startingPoint, discovered, mapping);
+        bfsTraverse(dungTheory, startingPoint, discovered, mapping, eafTheory);
 
         // Once the traversal is finished
         System.out.println(mapping);
@@ -33,7 +33,7 @@ public class EAFToDAFConverter {
             	if(attack.contains(from)) {
 	                Set<BArgument> edgeArguments = new HashSet<BArgument>();
 	
-	                findEdgeNodes(attack.getAttacked(), edgeArguments);
+	                findEdgeNodes(attack.getAttacked(), edgeArguments, eafTheory);
 	
 	                Set<Argument> dafAttackers = mapping.get(from);
 	
@@ -70,29 +70,81 @@ public class EAFToDAFConverter {
         return dungTheory;
     }
 
-    private static void findEdgeNodes(BipolarEntity bipolarEntity, Set<BArgument> edgeArguments) {
+    private static void findEdgeNodes(BipolarEntity bipolarEntity, Set<BArgument> edgeArguments, EAFTheory eafTheory) {
         Map<BArgument, Set<Support>> supportsToArgs = new HashMap<BArgument, Set<Support>>();
-        for(Support s : )
+
+        for(Support s : eafTheory.getSupports()) {
+        	for(BArgument a : eafTheory.getArguments()) {
+        		if(s.contains(a)) {
+        			if(supportsToArgs.get(a) != null) {
+        				supportsToArgs.get(a).add(s);
+        				
+        			}
+        			else {
+        				supportsToArgs.put(a, new HashSet<Support>(new ArrayList<Support>(Arrays.asList(s))));
+        			}
+        		}
+        	}
+        	
+        }
     	for (BArgument child : bipolarEntity) {
-            if (child.getSupports().size() == 0) {
+            if (supportsToArgs.get(child).size() == 0) {
                 edgeArguments.add(child);
             } else {
                 edgeArguments.add(child);
-                for (Support support : child.getSupports()) {
-                    findEdgeNodes(support.getSupported(), edgeArguments);
+                for (Support support : supportsToArgs.get(child)) {
+                    findEdgeNodes(support.getSupported(), edgeArguments, eafTheory);
                 }
             }
         }
     }
 
-    private static void bfsTraverse(DungTheory dungTheory, BArgument startingPoint, Set<BArgument> discovered, Map<BArgument, Set<Argument>> mapping) {
-        Queue<Pair<BArgument, List<BArgument>>> queue = new LinkedList<>();
+    private static void bfsTraverse(DungTheory dungTheory, BArgument startingPoint, Set<BArgument> discovered, Map<BArgument, Set<Argument>> mapping, EAFTheory eafTheory) {
+        Map<BArgument, Set<Support>> supportsToArgs = new HashMap<BArgument, Set<Support>>();
+        Map<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>> attacksToArgs = new HashMap<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>>();
+        Map<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>> incomingAttacksToArgs = new HashMap<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>>();
+        
+    	for(BArgument a : eafTheory.getArguments()) {
+    		for(Support s : eafTheory.getSupports()) {
+        		if(s.contains(a)) {
+        			if(supportsToArgs.get(a) != null) {
+        				supportsToArgs.get(a).add(s);
+        				
+        			}
+        			else {
+        				supportsToArgs.put(a, new HashSet<Support>(new ArrayList<Support>(Arrays.asList(s))));
+        			}
+        		}
+        	}
+    		for(org.tweetyproject.arg.bipolar.syntax.Attack s : eafTheory.getAttacks()) {
+        		if(s.contains(a)) {
+        			if(attacksToArgs.get(a) != null) {
+        				attacksToArgs.get(a).add( s);
+        				
+        			}
+        			else {
+        				attacksToArgs.put(a, new HashSet<org.tweetyproject.arg.bipolar.syntax.Attack>(new ArrayList<org.tweetyproject.arg.bipolar.syntax.Attack>(Arrays.asList(s))));
+        			}
+        		}
+        		if(s.getAttacked().contains(a)) {
+        			if(incomingAttacksToArgs.get(a) != null) {
+        				incomingAttacksToArgs.get(a).add( s);
+        				
+        			}
+        			else {
+        				incomingAttacksToArgs.put(a, new HashSet<org.tweetyproject.arg.bipolar.syntax.Attack>(new ArrayList<org.tweetyproject.arg.bipolar.syntax.Attack>(Arrays.asList(s))));
+        			}
+        		}
+        	}
+        	
+        }
+    	Queue<Pair<BArgument, List<BArgument>>> queue = new LinkedList<>();
 
         if (discovered.contains(startingPoint)) {
             return;
         }
         discovered.add(startingPoint);
-        queue.add(new Pair<>(startingPoint, new ArrayList(startingPoint)));
+        queue.add(new Pair<>(startingPoint, new ArrayList<BArgument>(Arrays.asList(startingPoint))));
         
 
         while (!queue.isEmpty()) {
@@ -100,8 +152,8 @@ public class EAFToDAFConverter {
             BArgument v = pair.getFirst();
 
             System.out.println("h1: " + pair.getSecond());
-            if (v.getSupports().size() > 0) {
-                for (Support support : v.getSupports()) {
+            if (supportsToArgs.get(v).size() > 0) {
+                for (Support support : supportsToArgs.get(v)) {
                     for (BArgument to : support.getSupported()) {
 //  FIXME: since the support structure is a tree perhaps we can avoid this
 //                        if (!discovered.contains(to)) {
@@ -117,12 +169,12 @@ public class EAFToDAFConverter {
                 addDAFArgument(dungTheory, mapping, pair);
             }
 
-            if (v.getAttacks().size() > 0) {
+            if (attacksToArgs.get(v).size() > 0) {
 //                System.out.println("h2: " + pair.getSecond());
                 addDAFArgument(dungTheory, mapping, pair);
             }
 
-            if (v.getIncomingAttacks().size() > 0) {
+            if (incomingAttacksToArgs.get(v).size() > 0) {
                 addDAFArgument(dungTheory, mapping, pair);
             }
 
