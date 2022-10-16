@@ -153,7 +153,7 @@ public class EAFTheory extends AbstractEAFTheory<Support> {
                 for (Attack xAttack : this.getAttacks()) { // Line 8
                     for (BArgument a : xAttack.getAttacked()) { // Line 8
                         for (Set<BArgument> D : dungArguments) { // Line 9
-                            if (D.containsAll((HashSet<BArgument>)X)) { // Line 9: check X is subset of D
+                            if (D.contains(X)) { // Line 9: check X is subset of D
                                 for (Set<BArgument> A : dungArguments) { // Line 9
                                     if (A.contains(a)) { // Line 9: check if a is in A, when A is in DARGS
                                         dungAttacks.add(new Pair<>(D, A));
