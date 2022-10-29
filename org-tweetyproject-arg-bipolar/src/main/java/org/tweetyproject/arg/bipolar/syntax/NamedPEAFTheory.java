@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.bipolar.syntax;
 
 import java.util.ArrayList;
@@ -119,10 +137,18 @@ public class NamedPEAFTheory extends PEAFTheory {
         return res;
     }
 
+    /**
+     * prints string reprsentation without names
+     */
     public void prettyPrintWithoutNames() {
         super.prettyPrint();
     }
 
+    /**
+     * 
+     * @param args aruments
+     * @return copy of thory without args
+     */
     public NamedPEAFTheory createCopyWithoutArguments(Set<BArgument> args) {
         NamedPEAFTheory newPEAFTheory = new NamedPEAFTheory();
 
@@ -168,6 +194,12 @@ public class NamedPEAFTheory extends PEAFTheory {
         return newPEAFTheory;
     }
 
+    /**
+     * 
+     * @param originalArgs original arguments
+     * @param newPEAFTheory new peaf theory
+     * @return set of arguments
+     */
     private Set<BArgument> convert(Set<BArgument> originalArgs, NamedPEAFTheory newPEAFTheory) {
     	Set<BArgument> conversions = new HashSet<BArgument>();
 
@@ -180,6 +212,12 @@ public class NamedPEAFTheory extends PEAFTheory {
         return conversions;
     }
 
+    /**
+     * 
+     * @param originalArgs original arguments
+     * @param filter arguments for filtering
+     * @return a set of arguments
+     */
     private Set<BArgument> filter(BipolarEntity originalArgs, Set<BArgument> filter) {
     	Set<BArgument> filteredSet = new HashSet<BArgument>();
 
@@ -192,6 +230,11 @@ public class NamedPEAFTheory extends PEAFTheory {
         return filteredSet;
     }
 
+    /**
+     * 
+     * @param e an argument
+     * @return string reprentation of argument
+     */
     public String getIdentifier(BArgument e) {
         return this.aifMap.get(e);
     }

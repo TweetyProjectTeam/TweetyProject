@@ -1,20 +1,46 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.bipolar.io.eaf;
 
 
 import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.bipolar.syntax.EAFTheory;
 import org.tweetyproject.arg.bipolar.syntax.BArgument;
 import org.tweetyproject.arg.bipolar.syntax.BipolarEntity;
-import org.tweetyproject.arg.bipolar.syntax.EAttack;
 import org.tweetyproject.arg.bipolar.syntax.Support;
 import org.tweetyproject.commons.util.Pair;
 
 import java.util.*;
 
+/**
+ * converts EAF to DAF
+ * @author Sebastian Franke
+ *
+ */
 public class EAFToDAFConverter {
 
+	/**
+	 * 
+	 * @param eafTheory a theory
+	 * @return a dungtheory version of the input
+	 */
     public static DungTheory convert(EAFTheory eafTheory) {
         DungTheory dungTheory = new DungTheory();
         // Keeping track of which arguments are discovered
@@ -70,6 +96,12 @@ public class EAFToDAFConverter {
         return dungTheory;
     }
 
+    /**
+     * 
+     * @param bipolarEntity an argument
+     * @param edgeArguments an edge argument
+     * @param eafTheory the eafTheory
+     */
     private static void findEdgeNodes(BipolarEntity bipolarEntity, Set<BArgument> edgeArguments, EAFTheory eafTheory) {
         Map<BArgument, Set<Support>> supportsToArgs = new HashMap<BArgument, Set<Support>>();
 
@@ -99,6 +131,14 @@ public class EAFToDAFConverter {
         }
     }
 
+    /**
+     * 
+     * @param dungTheory a dungtheory
+     * @param startingPoint an argument to start at
+     * @param discovered a set of arguments
+     * @param mapping mapping of Arguments to sets of arguments
+     * @param eafTheory a theory
+     */
     private static void bfsTraverse(DungTheory dungTheory, BArgument startingPoint, Set<BArgument> discovered, Map<BArgument, Set<Argument>> mapping, EAFTheory eafTheory) {
         Map<BArgument, Set<Support>> supportsToArgs = new HashMap<BArgument, Set<Support>>();
         Map<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>> attacksToArgs = new HashMap<BArgument, Set<org.tweetyproject.arg.bipolar.syntax.Attack>>();
@@ -182,7 +222,13 @@ public class EAFToDAFConverter {
         }
 
     }
-
+    
+    /**
+     * 
+     * @param dungTheory a theory
+     * @param mapping a mapping of argument to sets of arguments
+     * @param pair argument and lis of arguments
+     */
     private static void addDAFArgument(DungTheory dungTheory, Map<BArgument, Set<Argument>> mapping, Pair<BArgument, List<BArgument>> pair) {
         List<String> args = new ArrayList<String>();
         for (BArgument eArgument : pair.getSecond()) {

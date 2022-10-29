@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.bipolar.syntax;
 
 
@@ -63,26 +81,50 @@ public class InducibleEAF {
         this.inducePro = inducePro;
     }
 
+    /**
+     * 
+     * @return the arguments
+     */
     public Set<BArgument> getArguments() {
         return arguments;
     }
 
+    /**
+     * 
+     * @return the supports
+     */
     public Set<Support> getSupports() {
         return supports;
     }
 
+    /**
+     * 
+     * @return new arguments
+     */
     public Set<BArgument> getNewArguments() {
         return newArguments;
     }
 
+    /**
+     * 
+     * @return pINside
+     */
     public double getpInside() {
         return pInside;
     }
 
+    /**
+     * 
+     * @return InducePro
+     */
     public double getInducePro() {
         return Math.exp(inducePro);
     }
 
+    /**
+     * 
+     * @return a new EAFTheory
+     */
     public EAFTheory toNewEAFTheory() {
         EAFTheory eafTheory = new EAFTheory();
         Set<BArgument> arguments = new HashSet<BArgument>();
@@ -192,6 +234,9 @@ public class InducibleEAF {
         return Objects.hash(all.toArray());
     }
 
+    /**
+     * adds atack links
+     */
     public void addAttackLinks() {
         this.attacks.clear();
         Set<BArgument> args = new HashSet<BArgument>();
