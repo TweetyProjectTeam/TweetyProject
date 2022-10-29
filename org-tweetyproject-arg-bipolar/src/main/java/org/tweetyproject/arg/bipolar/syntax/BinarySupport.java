@@ -19,6 +19,8 @@
 
 package org.tweetyproject.arg.bipolar.syntax;
 
+import java.util.Iterator;
+
 import org.tweetyproject.arg.dung.ldo.syntax.LdoFormula;
 import org.tweetyproject.arg.dung.ldo.syntax.LdoRelation;
 import org.tweetyproject.arg.dung.syntax.DungSignature;
@@ -106,4 +108,21 @@ public class BinarySupport extends DirectedEdge<BArgument> implements Support{
     public boolean contains(Object o) {
         return this.getSupported().equals(o) || this.getSupporter().equals(o);
     }
+
+	@Override
+	public Iterator<BArgument> iterator() {
+		return null;
+	}
+
+	@Override
+	public void setConditionality(double c) {
+		//this class has not conditionality
+		
+	}
+
+	@Override
+	public double getConditionalProbability() {
+		//this class has not conditionality
+		return 0;
+	}
 }

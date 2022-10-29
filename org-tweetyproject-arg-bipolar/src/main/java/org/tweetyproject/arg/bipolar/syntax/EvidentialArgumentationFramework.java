@@ -365,7 +365,7 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
         for(BArgument a: this) {
             if(this.supportParents.containsKey(a)) {
                 for(BipolarEntity b: this.supportParents.get(a))
-                    supports.add(new SetSupport((ArgumentSet) b, a));
+                    supports.add(new SetSupport((ArgumentSet) b, new ArgumentSet(a)));
             }
         }
         return supports;
@@ -524,7 +524,7 @@ public class EvidentialArgumentationFramework extends AbstractBipolarFramework i
                         nonEmptyIntersect &= !(new SetTools<BArgument>().hasEmptyIntersection(intersect));
                     }
                     if (nonEmptyIntersect) {
-                        Support supp = new SetSupport(supportingSet, argument);
+                        Support supp = new SetSupport(supportingSet, new ArgumentSet(argument));
                         naf.add(supp);
                     }
                 }

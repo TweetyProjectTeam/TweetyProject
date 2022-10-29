@@ -18,6 +18,8 @@
  */
 package org.tweetyproject.arg.bipolar.examples;
 
+import java.util.HashSet;
+
 import org.tweetyproject.arg.bipolar.reasoner.necessity.*;
 import org.tweetyproject.arg.bipolar.syntax.*;
 
@@ -47,7 +49,9 @@ public class NecessityArgumentation {
         Attack att3 = new BinaryAttack(c, d);
         Support supp1 = new BinarySupport(a, c);
         Support supp2 = new BinarySupport(b, b);
-        Support supp3 = new SetSupport(aS1, e);
+        HashSet<BArgument> eSet = new HashSet<BArgument>();
+        eSet.add(e);
+        Support supp3 = new SetSupport(aS1, eSet);
         nt.add(att1);
         nt.add(att2);
         nt.add(att3);

@@ -26,6 +26,7 @@ import org.tweetyproject.commons.Signature;
 import org.tweetyproject.graphs.DirectedEdge;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * This class models a support between a set of arguments and an argument. It comprises of a set of <code>BArgument</code> and is used by
@@ -36,12 +37,20 @@ import java.util.Collection;
  */
 public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
 
+	private double getConditionalProbability = 1.0;
+	
+	public void setConditionality(double c){
+		this.getConditionalProbability = c;
+	}
+	public double getConditionalProbability(){
+		return this.getConditionalProbability;
+	}
     /**
      * Default constructor; initializes the arguments used in this support relation
      * @param supporter the supporting set of arguments
      * @param supported the supported argument
      */
-    public SetSupport(ArgumentSet supporter, BArgument supported){
+    public SetSupport(ArgumentSet supporter, ArgumentSet supported){
         super(supporter, supported);
     }
 
@@ -50,8 +59,8 @@ public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
      * @param supporter a collection of arguments
      * @param supported some argument
      */
-    public SetSupport(Collection<BArgument> supporter, BArgument supported) {
-        this(new ArgumentSet(supporter), supported);
+    public SetSupport(Collection<BArgument> supporter, Collection<BArgument> supported) {
+        this(new ArgumentSet(supporter), new ArgumentSet(supported));
     }
 
     /**
@@ -67,16 +76,16 @@ public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
      * returns the supported argument of this support relation.
      * @return the supported argument of this support relation.
      */
-    public BArgument getSupported() {
-        return (BArgument) this.getNodeB();
+    public BipolarEntity getSupported() {
+        return  this.getNodeB();
     }
 
     /**
      * returns the supporting set of arguments of this support relation.
      * @return the supporting set of arguments of this support relation.
      */
-    public ArgumentSet getSupporter() {
-        return (ArgumentSet) this.getNodeA();
+    public BipolarEntity getSupporter() {
+        return  this.getNodeA();
     }
 
     /**
@@ -135,4 +144,9 @@ public class SetSupport extends DirectedEdge<BipolarEntity> implements Support {
         sig.add(this.getSupporter());
         return sig;
     }
+
+	@Override
+	public Iterator<BArgument> iterator() {
+		return null;
+	}
 }

@@ -328,18 +328,18 @@ public class DeductiveArgumentationFramework extends AbstractBipolarFramework im
 
     /**
      * Adds a support from the first argument to the second to this bipolar argumentation framework.
-     * @param supporter some argument
+     * @param bipolarEntity some argument
      * @param supported some argument
      * @return "true" if the set of supports has been modified.
      */
-    public boolean addSupport(BArgument supporter, BArgument supported){
+    public boolean addSupport(BipolarEntity bipolarEntity, BArgument supported){
         boolean result = false;
         if(!supportParents.containsKey(supported))
             supportParents.put(supported, new HashSet<>());
-        result |= supportParents.get(supported).add(supporter);
-        if(!supportChildren.containsKey(supporter))
-            supportChildren.put(supporter, new HashSet<>());
-        result |= supportChildren.get(supporter).add(supported);
+        result |= supportParents.get(supported).add(bipolarEntity);
+        if(!supportChildren.containsKey(bipolarEntity))
+            supportChildren.put(bipolarEntity, new HashSet<>());
+        result |= supportChildren.get(bipolarEntity).add(supported);
         return result;
     }
 

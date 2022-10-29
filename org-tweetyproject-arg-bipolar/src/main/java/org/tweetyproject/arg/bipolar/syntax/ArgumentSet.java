@@ -103,6 +103,9 @@ public class ArgumentSet implements BipolarEntity, Collection<BArgument>, Compar
         }
     }
 
+    public Set<BArgument> getArguments(){
+    	return this.arguments;
+    }
     public boolean add(BArgument arg0) {
         return this.arguments.add(arg0);
     }

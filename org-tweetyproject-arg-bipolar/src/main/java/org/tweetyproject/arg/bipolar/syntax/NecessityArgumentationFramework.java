@@ -332,7 +332,7 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
         for(BArgument a: this) {
             if(this.supportParents.containsKey(a)) {
                 for(BipolarEntity b: this.supportParents.get(a))
-                    supports.add(new SetSupport((ArgumentSet) b, a));
+                    supports.add(new SetSupport((ArgumentSet) b, new ArgumentSet(a)));
             }
         }
         return supports;
@@ -375,7 +375,7 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
                     supportingSets.add(new HashSet<>((ArgumentSet)bipolarEntity));
                 }
                 for (Set<BArgument> supporter: new SetTools<BArgument>().permutations(supportingSets)) {
-                    Support supp = new SetSupport(supporter, argument);
+                    Support supp = new SetSupport(supporter, new ArgumentSet(argument));
                     eaf.add(supp);
                 }
             }
@@ -417,7 +417,7 @@ public class NecessityArgumentationFramework extends AbstractBipolarFramework im
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
-        int prime = 1;
+
         int result = super.hashCode();
         result = 31 * result + (this.attackParents == null ? 0 : this.attackParents.hashCode());
         result = 37 * result + (this.supportParents == null ? 0 : this.supportParents.hashCode());
