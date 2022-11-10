@@ -38,6 +38,9 @@ import org.tweetyproject.arg.dung.syntax.Argument;;
  */
 public class Iccma23Writer extends AbstractDungWriter{
 
+	private Map<Argument,Integer> map;
+	private Argument[] rev_map;
+	
 	/* (non-Javadoc)
 	 * @see org.tweetyproject.arg.dung.writer.AbstractDungWriter#write(org.tweetyproject.arg.dung.DungTheory, java.io.File)
 	 */
@@ -45,12 +48,35 @@ public class Iccma23Writer extends AbstractDungWriter{
 	public void write(DungTheory aaf, File f) throws IOException {
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
 		writer.println("p af " + aaf.size());
-		Map<Argument,Integer> map = new HashMap<Argument,Integer>();
+		this.map = new HashMap<Argument,Integer>();
+		this.rev_map = new Argument[aaf.size()];
 		int idx = 1;
-		for(Argument arg: aaf)
-			map.put(arg, idx++);
+		for(Argument arg: aaf) {
+			this.rev_map[idx-1] = arg;
+			this.map.put(arg, idx++);			
+		}
 		for(Attack att: aaf.getAttacks())
-			writer.println(map.get(att.getAttacker()) + " " + map.get(att.getAttacked()));		
+			writer.println(this.map.get(att.getAttacker()) + " " + this.map.get(att.getAttacked()));		
 		writer.close();		
+	}
+	
+	/**
+	 * Returns the mapping of the given argument wrt. the last
+	 * written file.
+	 * @param arg some argument
+	 * @return the argument id
+	 */
+	public int getArgumentId(Argument arg) {
+		return this.map.get(arg);			
+	}
+	
+	/**
+	 * Returns the argument mapped to the given integer wrt.
+	 * the last written file
+	 * @param i some index
+	 * @return the argument
+	 */
+	public Argument getArgument(int i) {
+		return this.rev_map[i-1];
 	}
 }

@@ -346,6 +346,19 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	/**
+	 * Checks whether the given extension is complete wrt. this theory.
+	 * @param e some extension
+	 * @return "true" iff the extension is complete.
+	 */
+	public boolean isComplete(Extension<DungTheory> e) {
+		for(Argument a: this)
+			if(!e.contains(a))
+				if(this.isAcceptable(a, e))
+					return false;
+		return true;				
+	}
+	
+	/**
 	 * The characteristic function of an abstract argumentation framework: F_AF(S) = {A|A is acceptable wrt. S}.
 	 * @param extension an extension (a set of arguments).
 	 * @return an extension (a set of arguments).
