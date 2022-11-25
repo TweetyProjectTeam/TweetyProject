@@ -750,8 +750,9 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
      */
     public DungTheory getReduct(Collection<Argument> arguments) {
     	Collection<Argument> restriction = new HashSet<>();
+    	Extension<DungTheory> ext = new Extension<>(arguments);
     	for(Argument a: this)
-    		if(!arguments.contains(a) && !this.isAttackedBy(a, arguments))
+    		if(!arguments.contains(a) && !this.isAttacked(a, ext))
     			restriction.add(a);        
         return (DungTheory) this.getRestriction(restriction);
     }
