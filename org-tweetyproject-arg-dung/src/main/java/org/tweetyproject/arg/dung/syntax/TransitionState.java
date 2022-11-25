@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.dung.syntax;
 
-import org.tweetyproject.arg.dung.reasoner.WeaklyAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 
 /**
@@ -52,7 +51,7 @@ public class TransitionState {
      * @return the successor state
      */
     public TransitionState getNext(Extension<DungTheory> ext) {
-        DungTheory reduct = new WeaklyAdmissibleReasoner().getReduct(this.theory, ext);
+        DungTheory reduct = this.theory.getReduct(ext);
         Extension<DungTheory> newExt = new Extension<>(this.extension);
         newExt.addAll(ext);
 

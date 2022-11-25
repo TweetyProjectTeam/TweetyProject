@@ -20,7 +20,6 @@
 package org.tweetyproject.arg.dung.principles;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.WeaklyAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -54,7 +53,7 @@ public class ModularizationPrinciple extends Principle {
         Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
         for (Extension<DungTheory> ext1: exts) {
-            DungTheory reduct = new WeaklyAdmissibleReasoner().getReduct(theory, ext1);
+            DungTheory reduct = theory.getReduct(ext1);
             Collection<Extension<DungTheory>> exts_reduct = ev.getModels(reduct);
             for (Extension<DungTheory> ext2: exts_reduct) {
                 Extension<DungTheory> union = new Extension<DungTheory>(ext1);

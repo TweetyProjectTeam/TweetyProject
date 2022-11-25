@@ -89,7 +89,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
             Extension<DungTheory> subExt = new Extension<DungTheory>(args);
 
             // if we find one weakly admissible attacker in the reduct, then subExt is not weakly admissible
-            if (isWeaklyAdmissible(this.getReduct(bbase, ext), subExt))
+            if (isWeaklyAdmissible(bbase.getReduct(ext), subExt))
                 return false;
         }
         return true;
@@ -106,7 +106,7 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
         // only consider attackers which are not deactivated by ext
         Collection<Argument> attackers = this.getAttackers(bbase, ext);
         attackers.removeAll(getAttacked(bbase, ext));
-        DungTheory reduct_ext = this.getReduct(bbase, new Extension<DungTheory>(ext));
+        DungTheory reduct_ext = bbase.getReduct(ext);
         for (Argument attacker: attackers) {
             DungTheory reduct = new DungTheory(reduct_ext);
             reduct.remove(attacker);
@@ -251,21 +251,6 @@ public class WeaklyAdmissibleReasoner extends AbstractExtensionReasoner {
         }
 
         return subsets;
-    }
-
-    /**
-     * computes the reduct of bbase wrt. ext
-     * ie. removes all arguments from bbase which are either in ext or are attacked by any element of ext
-     * @param bbase an argumentation framework
-     * @param ext an extension
-     * @return the reduct of bbase wrt. ext
-     */
-    public DungTheory getReduct(DungTheory bbase, Extension<DungTheory> ext) {
-        DungTheory reduct = new DungTheory(bbase);
-
-        reduct.removeAll(ext);
-        reduct.removeAll(getAttacked(bbase, ext));
-        return reduct;
     }
 
     /**

@@ -20,7 +20,6 @@
 package org.tweetyproject.arg.dung.principles;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.WeaklyAdmissibleReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -55,7 +54,7 @@ public class ReductAdmissibilityPrinciple extends Principle {
 
         for (Extension<DungTheory> ext: exts) {
             // get union of all extensions of the E-reduct
-            DungTheory reduct = new WeaklyAdmissibleReasoner().getReduct(theory, ext);
+            DungTheory reduct = theory.getReduct(ext);
             Collection<Extension<DungTheory>> exts_reduct = ev.getModels(reduct);
             Collection<Argument> union = new HashSet<>();
             for (Extension<DungTheory> ext_r: exts_reduct) {

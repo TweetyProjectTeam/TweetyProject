@@ -87,7 +87,7 @@ public class WeaklyCompleteReasoner extends AbstractExtensionReasoner {
     public boolean isWeaklyDefendedBy(Collection<Argument> X, Collection<Argument> E, DungTheory theory) {
 
         // compute the set of arguments that are in a w-ad extension of the E-reduct of F
-        DungTheory e_reduct = new WeaklyAdmissibleReasoner().getReduct(theory, new Extension<DungTheory>(E));
+        DungTheory e_reduct = theory.getReduct(E);
         Collection<Extension<DungTheory>> reduct_exts = new WeaklyAdmissibleReasoner().getModels(e_reduct);
         Collection<Argument> wad_arguments = new HashSet<>();
         for (Extension<DungTheory> ext: reduct_exts) {

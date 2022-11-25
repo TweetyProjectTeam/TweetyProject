@@ -740,6 +740,21 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 				theory.add(attack);
 		return theory;
 	}
+	
+	/**
+     * computes the reduct of bbase wrt. ext
+     * ie. removes all arguments from bbase which are either in ext or are attacked by any element of ext
+     * @param bbase an argumentation framework
+     * @param ext an extension
+     * @return the reduct of bbase wrt. ext
+     */
+    public DungTheory getReduct(Collection<Argument> arguments) {
+    	Collection<Argument> restriction = new HashSet<>();
+    	for(Argument a: this)
+    		if(!arguments.contains(a) && !this.isAttackedBy(a, arguments))
+    			restriction.add(a);        
+        return (DungTheory) this.getRestriction(restriction);
+    }
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
