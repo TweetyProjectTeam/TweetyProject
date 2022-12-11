@@ -306,4 +306,23 @@ public class SetTools<E> {
 		}
 		return it.next();
 	}
+	
+	public static <E> Set<Set<E>> powerSet(Set<E> originalSet) {
+	    Set<Set<E>> sets = new HashSet<Set<E>>();
+	    if (originalSet.isEmpty()) {
+	        sets.add(new HashSet<E>());
+	        return sets;
+	    }
+	    List<E> list = new ArrayList<E>(originalSet);
+	    E head = list.get(0);
+	    Set<E> rest = new HashSet<E>(list.subList(1, list.size())); 
+	    for (Set<E> set : powerSet(rest)) {
+	        Set<E> newSet = new HashSet<E>();
+	        newSet.add(head);
+	        newSet.addAll(set);
+	        sets.add(newSet);
+	        sets.add(set);
+	    }       
+	    return sets;
+	} 
 }
