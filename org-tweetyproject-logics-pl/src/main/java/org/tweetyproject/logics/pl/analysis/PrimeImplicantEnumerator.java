@@ -20,24 +20,21 @@ package org.tweetyproject.logics.pl.analysis;
 
 import java.util.Set;
 
-import org.tweetyproject.commons.BeliefBase;
-import org.tweetyproject.commons.Formula;
-import org.tweetyproject.commons.InterpretationSet;
+import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
+import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
  * 
  * @author Sebastian Franke
  *
- * @param <A> a formula
- * @param <B> a beliefbase
- * @param <C> a formula
  */
-public interface MinimalModelProvider<A extends Formula,B extends BeliefBase,C extends Formula> {
+public abstract class PrimeImplicantEnumerator {
+
 	/**
 	 * 
-	 * @param f a beliefbase
-	 * @return the minimal models
+	 * @param forms formulas
+	 * @return the prime implicants
 	 */
-	public Set<InterpretationSet<A,B,C>> getMinModels(B f);
-	
+	public abstract Set<Set<PlFormula>> getPrimeImplicants(PlBeliefSet forms);
+
 }

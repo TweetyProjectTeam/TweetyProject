@@ -33,16 +33,22 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * @author Sebastian Franke
  *
  */
-public class SimplePrimeImplicantEnumerator {
+public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
+	public MinimalModelProvider<Proposition,PlBeliefSet,PlFormula> minModelProvider;
+	public SimplePrimeImplicantEnumerator(MinimalModelProvider<Proposition,PlBeliefSet,PlFormula> minModelProvider) {
+		this.minModelProvider = minModelProvider;
+	}
 	/**
 	 * 
 	 * @param minModels the minimal models from which the prime implicants are computed
 	 * @param forms the formulas to be based upon
 	 * @return the prime implicants of forms
 	 */
-	public Set<Set<PlFormula>> getPrimeImplicants(Set<InterpretationSet<Proposition,PlBeliefSet,PlFormula>> minModels, PlBeliefSet forms){
+	@Override
+	public Set<Set<PlFormula>> getPrimeImplicants( PlBeliefSet forms){
+		
 		Set<Set<PlFormula>> primeImplicants = new HashSet<Set<PlFormula>>();
-		for(InterpretationSet<Proposition,PlBeliefSet,PlFormula> inter : minModels) {
+		for(InterpretationSet<Proposition,PlBeliefSet,PlFormula> inter : this.minModelProvider.getMinModels(forms)) {
 			Set<PlFormula> newModel = new HashSet<PlFormula>();
 			
 

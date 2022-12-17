@@ -23,7 +23,7 @@ import java.util.Set;
 
 import org.tweetyproject.commons.InterpretationSet;
 import org.tweetyproject.commons.ParserException;
-import org.tweetyproject.logics.pl.analysis.MinimalModelProvider;
+import org.tweetyproject.logics.pl.analysis.SimpleMinimalModelProvider;
 import org.tweetyproject.logics.pl.analysis.SimplePrimeImplicantEnumerator;
 import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.sat.SimpleModelEnumerator;
@@ -51,8 +51,9 @@ public class PrimeImplicantTest {
 		System.out.println("all models: " + Models.toString());
 //		for(InterpretationSet<Proposition,PlBeliefSet,PlFormula> m : Models)
 //			System.out.println(m.toString() + " " + m.satisfies(beliefSet));
-		System.out.println("minimal models: " + new MinimalModelProvider().getMinModels(Models).toString());
-		Set<Set<PlFormula>> aa = new SimplePrimeImplicantEnumerator().getPrimeImplicants(new MinimalModelProvider().getMinModels(Models), beliefSet);
+		
+		System.out.println("minimal models: " + new SimpleMinimalModelProvider(new SimpleModelEnumerator()).getMinModels(beliefSet).toString());
+		Set<Set<PlFormula>> aa = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator())).getPrimeImplicants(beliefSet);
 		System.out.println("prime implicants: " + aa.toString());
 		
 	}
