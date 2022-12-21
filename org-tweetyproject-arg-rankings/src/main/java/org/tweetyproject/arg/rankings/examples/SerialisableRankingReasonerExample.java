@@ -28,19 +28,34 @@ public class SerialisableRankingReasonerExample {
 		// Construct AAF
 		DungTheory aaf = new DungTheory();
 		Argument a = new Argument("a");
-		Argument b = new Argument("b");
+		Argument b1 = new Argument("b1");
+		Argument b2 = new Argument("b2");
 		Argument c = new Argument("c");
 		Argument d = new Argument("d");
 		Argument e = new Argument("e");
+		Argument f = new Argument("f");
+		Argument g = new Argument("g");
+		Argument h = new Argument("h");
 		aaf.add(a);
-		aaf.add(b);
+		aaf.add(b1);
+		aaf.add(b2);
 		aaf.add(c);
 		aaf.add(d);
 		aaf.add(e);
-		aaf.add(new Attack(a,b));
-		aaf.add(new Attack(b,c));
+		aaf.add(f);
+		aaf.add(g);
+		aaf.add(h);
+		aaf.add(new Attack(a,b1));
+		aaf.add(new Attack(a,b2));
+		aaf.add(new Attack(b1,c));
+		aaf.add(new Attack(b2,c));
 		aaf.add(new Attack(c,d));
-		aaf.add(new Attack(d,e));
+		aaf.add(new Attack(d,a));
+		aaf.add(new Attack(c,e));
+		aaf.add(new Attack(e,f));
+		aaf.add(new Attack(g,h));
+		aaf.add(new Attack(h,f));
+		
 		
 		SerialisableRankingReasoner reasoner = new SerialisableRankingReasoner();
 		
