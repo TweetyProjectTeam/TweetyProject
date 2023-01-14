@@ -18,12 +18,16 @@
  */
 package org.tweetyproject.logics.pl.analysis;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 import org.tweetyproject.commons.InterpretationSet;
 import org.tweetyproject.logics.pl.semantics.PossibleWorld;
+import org.tweetyproject.logics.pl.syntax.Disjunction;
+import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
@@ -35,8 +39,40 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  */
 public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
 	public MinimalModelProvider<Proposition,PlBeliefSet,PlFormula> minModelProvider;
+	/**
+	 * 
+	 * @param minModelProvider a minimal model rpovider
+	 */
 	public SimplePrimeImplicantEnumerator(MinimalModelProvider<Proposition,PlBeliefSet,PlFormula> minModelProvider) {
 		this.minModelProvider = minModelProvider;
+	}
+	/**
+	 * 
+	 * @param primeImplicants
+	 * @return
+	 */
+	public Set<PlFormula> compressPrimeImplicants(Set<Set<PlFormula>> primeImplicants){
+		Set<PlFormula> result = new HashSet<PlFormula>();
+		PlFormula disjunction = new Disjunction();
+		for(Set<PlFormula> p : primeImplicants) {
+			for(PlFormula form : p) {
+				boolean addToDisjunction = false;
+				for(Set<PlFormula> p1 : primeImplicants) {
+					//if a literal is mot mandatory for all models, it can be substituted by another non mandatory one
+					if(!p1.contains(form)) {
+						addToDisjunction = true;
+						disjunction = new Disjunction(disjunction, form);
+					}
+						
+				}
+				if(addToDisjunction == false) {
+					result.add(form);
+				}
+			}
+		}
+		if(disjunction.getAtoms().size() > 0)
+			result.add(disjunction.toCnf());
+		return result;
 	}
 	/**
 	 * 
@@ -45,28 +81,45 @@ public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
 	 * @return the prime implicants of forms
 	 */
 	@Override
-	public Set<Set<PlFormula>> getPrimeImplicants( PlBeliefSet forms){
+	public List<Set<PlFormula>> getPrimeImplicants( PlBeliefSet forms){
 		
-		Set<Set<PlFormula>> primeImplicants = new HashSet<Set<PlFormula>>();
-		for(InterpretationSet<Proposition,PlBeliefSet,PlFormula> inter : this.minModelProvider.getMinModels(forms)) {
-			Set<PlFormula> newModel = new HashSet<PlFormula>();
-			
+		ArrayList<Set<PlFormula>> primeImplicants = new ArrayList<Set<PlFormula>>();
+		//check prime implicats for each formula individually
+		for(PlFormula curr: forms) {
+			Set<Set<PlFormula>> primeImplicantOfCurr = new  HashSet<Set<PlFormula>>();
+			Set<PossibleWorld> modelsOfCurrInterpretationSet = curr.toCnf().getModels();
+						
+			//iterate through all possible models f the formula
+			for(PossibleWorld model : modelsOfCurrInterpretationSet) {
+				Set<PlFormula> newModel = new HashSet<PlFormula>();
+				//try to remove each literal from he model indiviually and see if the model still works
+				for(PlFormula toDelete : curr.getLiterals()) {
+					//build a new world which is identical to model, but where todDelete has been flipped
+					InterpretationSet<Proposition,PlBeliefSet,PlFormula> newWorld = new PossibleWorld();
+					if(!model.contains(toDelete)) {
+						if(toDelete instanceof Negation) {
+							newWorld.add(toDelete.getAtoms().iterator().next());
+						}
+					}
+					for(PlFormula v : model) {
+						if(!v.equals(toDelete)) {
 
-			for(PlFormula toDelete : inter) {
-				InterpretationSet<Proposition,PlBeliefSet,PlFormula> curr = new PossibleWorld();
-				for(PlFormula v : inter) {
-					if(!v.equals(toDelete))
-						if(v instanceof Proposition)
-							curr.add((Proposition) v);
+							if(v instanceof Proposition)
+								newWorld.add((Proposition) v);
+						}
+					}
+					//if the model fails without toDelete, toDelete is part of the prime implicants
+					if(!newWorld.satisfies(curr)) {
+						newModel.addAll(toDelete.getLiterals());
+					}
+					
 				}
-
-				if(!curr.satisfies(forms)) {
-					newModel.addAll(toDelete.getLiterals());
-				}
-				
+				primeImplicantOfCurr.add(newModel);
 			}
-			primeImplicants.add(newModel);
+			//compress all prime implicants that only appear in some models to a disjunction
+			primeImplicants.add(this.compressPrimeImplicants(primeImplicantOfCurr));
 		}
+		
 		return primeImplicants;
 	}
 	

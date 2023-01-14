@@ -19,17 +19,17 @@
 package org.tweetyproject.logics.pl.examples;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
-import org.tweetyproject.commons.InterpretationSet;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.pl.analysis.SimpleMinimalModelProvider;
 import org.tweetyproject.logics.pl.analysis.SimplePrimeImplicantEnumerator;
+import org.tweetyproject.logics.pl.analysis.PrimeImplicantBasedInconsitencyMeasure;
 import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.sat.SimpleModelEnumerator;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
-import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
  * 
@@ -42,19 +42,17 @@ public class PrimeImplicantTest {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		PlParser parser = new PlParser();
 
-		beliefSet.add((PlFormula)parser.parseFormula("!a1 && !a2 "));
-		beliefSet.add((PlFormula)parser.parseFormula("!a3 || !a4"));
-		beliefSet.add((PlFormula)parser.parseFormula("(!a3 || !a4) && a5"));
+
+		beliefSet.add((PlFormula)parser.parseFormula("p && r "));
+		beliefSet.add((PlFormula)parser.parseFormula("!p && (q || !r) "));
+		beliefSet.add((PlFormula)parser.parseFormula("!q"));
 		System.out.println("beliefSet: " + beliefSet.toString());
 		
-		Set<InterpretationSet<Proposition,PlBeliefSet,PlFormula>> Models = (Set<InterpretationSet<Proposition, PlBeliefSet, PlFormula>>) new SimpleModelEnumerator().getModels(beliefSet);
-		System.out.println("all models: " + Models.toString());
-//		for(InterpretationSet<Proposition,PlBeliefSet,PlFormula> m : Models)
-//			System.out.println(m.toString() + " " + m.satisfies(beliefSet));
-		
-		System.out.println("minimal models: " + new SimpleMinimalModelProvider(new SimpleModelEnumerator()).getMinModels(beliefSet).toString());
-		Set<Set<PlFormula>> aa = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator())).getPrimeImplicants(beliefSet);
+		List<Set<PlFormula>> aa = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator())).getPrimeImplicants(beliefSet);
 		System.out.println("prime implicants: " + aa.toString());
+		PrimeImplicantBasedInconsitencyMeasure incons = new PrimeImplicantBasedInconsitencyMeasure();
+		System.out.println("conflicts of prime implicants: " + incons.getConflicts(beliefSet));
+		System.out.println("inconsistency: " + incons.inconsistencyMeasure(beliefSet));
 		
 	}
 }

@@ -23,6 +23,7 @@ import java.util.Set;
 import org.tweetyproject.commons.BeliefBase;
 import org.tweetyproject.commons.Formula;
 import org.tweetyproject.commons.InterpretationSet;
+import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 
 /**
  * 
@@ -39,5 +40,6 @@ public interface MinimalModelProvider<A extends Formula,B extends BeliefBase,C e
 	 * @return the minimal models
 	 */
 	public Set<InterpretationSet<A,B,C>> getMinModels(B f);
+	public Set<PossibleWorld> getMinModels(C f);
 	
 }

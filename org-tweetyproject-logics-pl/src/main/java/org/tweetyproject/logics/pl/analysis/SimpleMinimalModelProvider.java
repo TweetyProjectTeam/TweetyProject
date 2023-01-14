@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.tweetyproject.commons.InterpretationSet;
 import org.tweetyproject.commons.ModelProvider;
+import org.tweetyproject.logics.pl.semantics.PossibleWorld;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
@@ -51,6 +52,26 @@ public class SimpleMinimalModelProvider implements MinimalModelProvider<Proposit
 			for(InterpretationSet<Proposition,PlBeliefSet,PlFormula> j : allModels) {
 				if(i.containsAll(j) && !i.equals(j) && j.size() > 0)
 					isMinimal = false;
+			}
+			if(isMinimal == true) {
+				minModels.add(i);
+			}
+		}
+		return minModels;
+	}
+	
+	public Set<PossibleWorld> getMinModels(PlFormula f){
+		Set<PossibleWorld> allModels = f.getModels();
+		Set<PossibleWorld> minModels = new HashSet<PossibleWorld>();
+		for(PossibleWorld i : allModels) {
+			boolean isMinimal = true;
+			for(PossibleWorld j : allModels) {
+				System.out.println(i+ " " + j + " " + i.containsAll(j));
+				if(i.containsAll(j) && !i.equals(j) && j.size() > 0) {
+					isMinimal = false;
+				}
+				System.out.println(isMinimal);
+					
 			}
 			if(isMinimal == true) {
 				minModels.add(i);

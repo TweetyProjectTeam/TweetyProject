@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.logics.pl.analysis;
 
+import java.util.List;
 import java.util.Set;
 
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
@@ -35,6 +36,6 @@ public abstract class PrimeImplicantEnumerator {
 	 * @param forms formulas
 	 * @return the prime implicants
 	 */
-	public abstract Set<Set<PlFormula>> getPrimeImplicants(PlBeliefSet forms);
+	public abstract List<Set<PlFormula>> getPrimeImplicants(PlBeliefSet forms);
 
 }
