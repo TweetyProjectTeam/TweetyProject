@@ -18,8 +18,6 @@
  */
 package org.tweetyproject.arg.aspic.ruleformulagenerator;
 
-
-
 import java.util.Collections;
 
 import org.tweetyproject.arg.aspic.syntax.DefeasibleInferenceRule;
@@ -30,29 +28,25 @@ import org.tweetyproject.logics.fol.syntax.FolAtom;
 import org.tweetyproject.logics.fol.syntax.FolFormula;
 
 /**
- * @author Nils Geilen
- * 
  * Implements <code>RuleFormulaGenerator</code> for first order logic.
  * If a rule has been given a name, it is employed as an identifier.
+ *
+ * @author Nils Geilen
  */
 public class FolFormulaGenerator extends RuleFormulaGenerator<FolFormula> {
-	
-	
+
 	/**
-	 * Constants needed for atom creation 
+	 * Constants needed for atom creation
 	 */
 	final static Sort sort = new Sort("Rule");
-	final static Predicate RULE_PREDICATE = new Predicate("__rule", Collections.singletonList(sort) );
-	
+	final static Predicate RULE_PREDICATE = new Predicate("__rule", Collections.singletonList(sort));
 
 	/* (non-Javadoc)
 	 * @see ruleformulagenerator.RuleFormulaGenerator#getRuleFormula(org.tweetyproject.arg.aspic.syntax.InferenceRule)
 	 */
 	@Override
-	public FolFormula getRuleFormula(DefeasibleInferenceRule<FolFormula> r)  {		
-		Constant rcons = new Constant( r.getIdentifier() , sort);
+	public FolFormula getRuleFormula(DefeasibleInferenceRule<FolFormula> r) {
+		Constant rcons = new Constant(r.getIdentifier(), sort);
 		return new FolAtom(RULE_PREDICATE, rcons);
 	}
-
-
 }

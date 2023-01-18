@@ -29,11 +29,10 @@ import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
 
 /**
- * @author Nils Geilen
- * 
  * Checks whether an argument defeats another argument
- * 
- * @param <T>	is the type of the language that the ASPIC theory's rules range over 
+ *
+ * @param <T> is the type of the language that the ASPIC theory's rules range over
+ * @author Nils Geilen
  */
 public class AspicAttack<T extends Invertable> extends Attack {
 	
@@ -56,11 +55,11 @@ public class AspicAttack<T extends Invertable> extends Attack {
 	 */
 	public static <T extends Invertable> Collection<AspicAttack<T>> determineAttackRelations(Collection<AspicArgument<T>> args, Comparator<AspicArgument<T>> order, RuleFormulaGenerator<T> rfgen) {
 		Collection<AspicAttack<T>> successfull = new ArrayList<>();
-		for (AspicArgument<T> active : args) 
+		for (AspicArgument<T> active : args)
 			for (AspicArgument<T> passive : args)
 				if (active != passive) {
 					if(AspicAttack.isAttack(active,passive,rfgen,order)) {
-						successfull.add(new AspicAttack<T>(active, passive));
+						successfull.add(new AspicAttack<>(active, passive));
 					}
 				}
 		return successfull;
@@ -79,12 +78,7 @@ public class AspicAttack<T extends Invertable> extends Attack {
 		Collection<AspicArgument<T>> defargs = passive.getDefeasibleSubs();		
 		// default order
 		if(order == null)
-			order = new Comparator<AspicArgument<T>>() {
-				@Override
-				public int compare(AspicArgument<T> o1, AspicArgument<T> o2) {
-					return 0;
-				}
-			};		
+			order = (o1, o2) -> 0;
 		/*
 		 * Undercutting
 		 */

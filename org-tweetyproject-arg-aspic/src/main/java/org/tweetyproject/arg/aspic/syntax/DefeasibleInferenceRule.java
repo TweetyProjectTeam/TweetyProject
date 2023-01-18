@@ -27,12 +27,11 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
- * @author Nils Geilen
- * 
- *         Defeasible implementation of <code>InferenceRule&lt;T&gt;</code>
+ * Defeasible implementation of <code>InferenceRule&lt;T&gt;</code>
  *
  * @param <T> is the type of the language that the ASPIC theory's rules range
  *            over
+ * @author Nils Geilen
  */
 public class DefeasibleInferenceRule<T extends Invertable> extends InferenceRule<T> {
 
@@ -64,7 +63,7 @@ public class DefeasibleInferenceRule<T extends Invertable> extends InferenceRule
 
 	@Override
 	public DefeasibleInferenceRule<T> clone() {
-		DefeasibleInferenceRule<T> rule = new DefeasibleInferenceRule<T>();
+		DefeasibleInferenceRule<T> rule = new DefeasibleInferenceRule<>();
 		rule.addPremises(this.getPremise());
 		rule.setConclusion(this.getConclusion());
 		return rule;
@@ -76,7 +75,7 @@ public class DefeasibleInferenceRule<T extends Invertable> extends InferenceRule
 		DefeasibleInferenceRule<T> n = this.clone();
 		Signature sig = this.getSignature();
 		if (sig instanceof FolSignature) {
-			n = new DefeasibleInferenceRule<T>();
+			n = new DefeasibleInferenceRule<>();
 			RelationalFormula c2 = ((RelationalFormula) this.getConclusion()).substitute(v, t);
 			for (T x : this.getPremise()) {
 				RelationalFormula p2 = ((RelationalFormula) x).substitute(v, t);

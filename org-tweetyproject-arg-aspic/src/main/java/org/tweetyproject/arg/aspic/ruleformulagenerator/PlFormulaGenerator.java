@@ -23,10 +23,10 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * @author Nils Geilen
- * 
  * Implements <code>RuleFormulaGenerator</code> for propositional logic.
  * If a rule has been given a name, it is employed as an identifier.
+ *
+ * @author Nils Geilen
  */
 public class PlFormulaGenerator extends RuleFormulaGenerator<PlFormula> {
 

@@ -42,12 +42,11 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
- * @author Nils Geilen
- * 
  * This stands for an inference rule or for a premise if premises has length 0.
  * If this is a premise and defeasible it is an ordinary premise else it is an axiom.
- * 
- * @param <T>	is the type of the language that the ASPIC theory's rules range over 
+ *
+ * @param <T> is the type of the language that the ASPIC theory's rules range over
+ * @author Nils Geilen
  */
 public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>, ComplexLogicalFormula {
 	
@@ -75,11 +74,8 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>,
 		} else if (!conclusion.equals(other.conclusion))
 			return false;
 		if (premises == null) {
-			if (other.premises != null)
-				return false;
-		} else if (!premises.equals(other.premises))
-			return false;
-		return true;
+			return other.premises == null;
+		} else return premises.equals(other.premises);
 	}
 	/**
 	 * The rule's conclusion
@@ -256,7 +252,7 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>,
 	 */
 	public Set<InferenceRule<T>> allGroundInstances(Set<Constant> constants) {
 		Set<Map<Variable, Term<?>>> maps = this.allSubstitutions(constants);
-		Set<InferenceRule<T>> result = new HashSet<InferenceRule<T>>();
+		Set<InferenceRule<T>> result = new HashSet<>();
 		for (Map<Variable, Term<?>> map : maps)
 			result.add(this.substitute(map));
 		return result;
@@ -289,16 +285,16 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>,
 			throws IllegalArgumentException {
 		Set<Variable> variables = this.getUnboundVariables();
 		// partition variables by sorts
-		Map<Sort, Set<Variable>> sorts_variables = new HashMap<Sort, Set<Variable>>();
+		Map<Sort, Set<Variable>> sorts_variables = new HashMap<>();
 		for (Variable v : variables) {
 			if (!sorts_variables.containsKey(v.getSort()))
-				sorts_variables.put(v.getSort(), new HashSet<Variable>());
+				sorts_variables.put(v.getSort(), new HashSet<>());
 			sorts_variables.get(v.getSort()).add(v);
 		}
 		// partition terms by sorts
 		Map<Sort, Set<Term<?>>> sorts_terms = Sort.sortTerms(terms);
 		// combine the partitions
-		Map<Set<Variable>, Set<Term<?>>> relations = new HashMap<Set<Variable>, Set<Term<?>>>();
+		Map<Set<Variable>, Set<Term<?>>> relations = new HashMap<>();
 		for (Sort s : sorts_variables.keySet()) {
 			if (!sorts_terms.containsKey(s))
 				throw new IllegalArgumentException("There is no term of sort " + s + " to substitute.");
@@ -351,18 +347,18 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>,
 	
 	@Override
 	public Set<? extends Predicate> getPredicates() {
-		Set<Predicate> predicates = new HashSet<Predicate>();
+		Set<Predicate> predicates = new HashSet<>();
 		Signature sig = this.getSignature();
 		if (sig instanceof FolSignature) {
 			predicates.addAll(((RelationalFormula) this.getPremise()).getPredicates());
-			predicates.addAll(((RelationalFormula) this.getConclusion()).getPredicates());
+			predicates.addAll(this.getConclusion().getPredicates());
 		}
 		return predicates;
 	}
 	
 	@Override
 	public Set<Term<?>> getTerms() {
-		Set<Term<?>> reval = new HashSet<Term<?>>();
+		Set<Term<?>> reval = new HashSet<>();
 		Signature sig = this.getSignature();
 		if (sig instanceof FolSignature) {
 			for (T x : this.getPremise())
@@ -374,7 +370,7 @@ public abstract class InferenceRule<T extends Invertable> implements Rule<T, T>,
 
 	@Override
 	public <C extends Term<?>> Set<C> getTerms(Class<C> cls) {
-		Set<C> reval = new HashSet<C>();
+		Set<C> reval = new HashSet<>();
 		Signature sig = this.getSignature();
 		if (sig instanceof FolSignature) {
 			for (Term<?> arg : this.getTerms()) {

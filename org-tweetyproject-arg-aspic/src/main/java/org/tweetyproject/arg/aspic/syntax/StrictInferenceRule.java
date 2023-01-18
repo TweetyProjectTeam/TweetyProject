@@ -27,12 +27,11 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Term;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
- * @author Nils Geilen
- * 
- *         Indefeasible implementation of <code>InferenceRule&lt;T&gt;</code>
+ * Indefeasible implementation of <code>InferenceRule&lt;T&gt;</code>
  *
  * @param <T> is the type of the language that the ASPIC theory's rules range
  *            over
+ * @author Nils Geilen
  */
 public class StrictInferenceRule<T extends Invertable> extends InferenceRule<T> {
 
@@ -64,7 +63,7 @@ public class StrictInferenceRule<T extends Invertable> extends InferenceRule<T> 
 
 	@Override
 	public StrictInferenceRule<T> clone() {
-		StrictInferenceRule<T> rule = new StrictInferenceRule<T>();
+		StrictInferenceRule<T> rule = new StrictInferenceRule<>();
 		rule.addPremises(this.getPremise());
 		rule.setConclusion(this.getConclusion());
 		return rule;
@@ -76,7 +75,7 @@ public class StrictInferenceRule<T extends Invertable> extends InferenceRule<T> 
 		StrictInferenceRule<T> n = this.clone();
 		Signature sig = this.getSignature();
 		if (sig instanceof FolSignature) {
-			n = new StrictInferenceRule<T>();
+			n = new StrictInferenceRule<>();
 			RelationalFormula c2 = ((RelationalFormula) this.getConclusion()).substitute(v, t);
 			for (T x : this.getPremise()) {
 				RelationalFormula p2 = ((RelationalFormula) x).substitute(v, t);

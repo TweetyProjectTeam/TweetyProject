@@ -20,25 +20,18 @@ package org.tweetyproject.commons;
 
 /**
  * Enum constants for the two classical inference models of skeptical inference (assess
- * a formula as true iff it is contained in every model) and credoulous inference
+ * a formula as true iff it is contained in every model) and credulous inference
  * (assess a formula as true iff it is contained in some model).
  * 
  * @author Matthias Thimm
- *
- */
-
-/**
- * enum fr Inference
- *
  */
 public enum InferenceMode {
-	//skeptical, credulous
 	/**
-	 * SKEPTICAL
+	 * Skeptical inference assesses a formula as true iff it is contained in <strong>every</strong> model
 	 */
 	SKEPTICAL,
 	/**
-	 * CREDULOUS
+	 * Credulous inference assesses a formula as true iff it is contained in <strong>some</strong> model
 	 */
 	CREDULOUS
 }
