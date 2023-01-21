@@ -35,7 +35,17 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @author Sebastian Franke
  *
  */
-public class PrimeImplicantBasedInconsitencyMeasure extends BeliefSetInconsistencyMeasure<PlFormula> {
+public class PrimeImplicantBasedInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlFormula> {
+	
+	public PrimeImplicantEnumerator primeImp;
+	
+	public PrimeImplicantBasedInconsistencyMeasure(PrimeImplicantEnumerator primeImp) {
+		this.primeImp = primeImp;
+	}
+	public PrimeImplicantBasedInconsistencyMeasure() {
+		this.primeImp = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator()));
+	}
+	
 	/**
 	 * 
 	 * @param beliefSet the bleiefSet of which the conflicts of prime implicants are calculated
@@ -43,7 +53,7 @@ public class PrimeImplicantBasedInconsitencyMeasure extends BeliefSetInconsisten
 	 */
 	public Set<PlFormula> getConflicts(PlBeliefSet beliefSet){
 		Set<PlFormula> conflicts = new HashSet<PlFormula>();
-		List<Set<PlFormula>> primeImplicates = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator())).getPrimeImplicants(beliefSet);
+		List<Set<PlFormula>> primeImplicates = this.primeImp.getPrimeImplicants(beliefSet); 
 		for(Set<PlFormula> primeImplicate1 : primeImplicates) {
 			for(Set<PlFormula> primeImplicate2 : primeImplicates) {
 				for(PlFormula a : primeImplicate1) {

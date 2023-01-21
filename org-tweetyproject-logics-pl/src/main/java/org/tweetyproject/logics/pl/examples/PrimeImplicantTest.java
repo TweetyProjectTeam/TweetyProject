@@ -25,7 +25,7 @@ import java.util.Set;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.pl.analysis.SimpleMinimalModelProvider;
 import org.tweetyproject.logics.pl.analysis.SimplePrimeImplicantEnumerator;
-import org.tweetyproject.logics.pl.analysis.PrimeImplicantBasedInconsitencyMeasure;
+import org.tweetyproject.logics.pl.analysis.PrimeImplicantBasedInconsistencyMeasure;
 import org.tweetyproject.logics.pl.parser.PlParser;
 import org.tweetyproject.logics.pl.sat.SimpleModelEnumerator;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
@@ -50,7 +50,7 @@ public class PrimeImplicantTest {
 		
 		List<Set<PlFormula>> aa = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator())).getPrimeImplicants(beliefSet);
 		System.out.println("prime implicants: " + aa.toString());
-		PrimeImplicantBasedInconsitencyMeasure incons = new PrimeImplicantBasedInconsitencyMeasure();
+		PrimeImplicantBasedInconsistencyMeasure incons = new PrimeImplicantBasedInconsistencyMeasure();
 		System.out.println("conflicts of prime implicants: " + incons.getConflicts(beliefSet));
 		System.out.println("inconsistency: " + incons.inconsistencyMeasure(beliefSet));
 		
