@@ -40,18 +40,27 @@ import org.tweetyproject.lp.asp.syntax.Program;
 /**
  * Test class for DLV.
  * 
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen geilenn(at)uni-koblenz.de
  * @author Anna Gessler
  *
  */
 public class DLVTest {
-	
+	/**
+	 * parser
+	 */
 	static ASPParser parser;
-	
+	/**
+	 * visitor
+	 */
 	static InstantiateVisitor visitor;
-	
+	/**
+	 * solver
+	 */
 	static DLVSolver solver;
 	
+	/**
+	 * initialzes values
+	 */
 	@BeforeClass
 	public static void init() {
 		visitor = new InstantiateVisitor();
@@ -59,6 +68,10 @@ public class DLVTest {
 		solver = new DLVSolver("/your/path/to/dlv");
 	}
 
+	/**
+	 * example 1
+	 * @throws Exception any exception
+	 */
 	@Test
 	public void Example1() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex1.asp"));
@@ -70,6 +83,10 @@ public class DLVTest {
 		assertTrue(asl.get(0).size() == 3);
 	}
 	
+	/**
+	 * ex 2
+	 * @throws Exception any exception
+	 */
 	@Test
 	public void Example2() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex2.asp"));
@@ -84,6 +101,10 @@ public class DLVTest {
 		assertTrue(asl.get(1).size() == 5);
 	}
 	
+	/**
+	 * ex 4
+	 * @throws Exception any exception
+	 */
 	@Test
 	public void Example4() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex4.asp"));

@@ -22,6 +22,12 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+/**
+ * 
+ * Defaultification test
+ * @author Matthias Thimm
+ *
+ */
 public class DefaultificationTest extends TestCase {
 	/**
      * Create the test case
@@ -40,7 +46,9 @@ public class DefaultificationTest extends TestCase {
     {
         return new TestSuite( DefaultificationTest.class );
     }
-    
+    /**
+     * defaultification test
+     */
     public void testSimpleDefaultifcation() {
     	Program p = new Program();
     	ASPRule onlyRule = new ASPRule();
@@ -71,6 +79,9 @@ public class DefaultificationTest extends TestCase {
     	assertEquals(true, dr.getPremise().contains(defNot));
     }
     
+    /**
+     * defaultification of already defaultified test
+     */
     public void testDefaultificationOfAlreadyDefaulticated() {
     	Program p = new Program();
     	ASPRule r = new ASPRule();

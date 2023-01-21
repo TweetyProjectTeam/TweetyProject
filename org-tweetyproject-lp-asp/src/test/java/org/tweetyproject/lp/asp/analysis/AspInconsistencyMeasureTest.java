@@ -38,11 +38,21 @@ import org.tweetyproject.lp.asp.syntax.DefaultNegation;
  *
  */
 public class AspInconsistencyMeasureTest {
-	
+	/**
+	 * solver
+	 */
 	public static ASPSolver solver;
+	/**
+	 * inconsistency measurer
+	 */
 	public static PmInconsistencyMeasure mpm;
+	/**
+	 * inconsistency measurer
+	 */
 	public static SdInconsistencyMeasure msd;
-	
+	/**
+	 * initializes values
+	 */
 	@BeforeClass
 	public static void init() {
 		solver = new ClingoSolver("/your/path/to/clingo");
@@ -50,6 +60,10 @@ public class AspInconsistencyMeasureTest {
 		msd = new SdInconsistencyMeasure(solver);
 	}
 	
+	/**
+	 * example
+	 * @throws SolverException a solver exception
+	 */
 	@Test
 	public void test1() throws SolverException{
 		// Ex. 1a of [Ulbricht, Thimm, Brewka. Measuring Inconsistency in Answer Set Programs. JELIA 2016]

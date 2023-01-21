@@ -38,9 +38,16 @@ import org.tweetyproject.lp.asp.syntax.Program;
  *
  */
 public class AspifParserTest {
-	
+	/**
+	 * default timeout
+	 */
 	public static final int DEFAULT_TIMEOUT = 5000;
-	
+	/**
+	 * 
+	 * @throws ParseException parsing exception
+	 * @throws FileNotFoundException file not found
+	 * @throws IOException ioexception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleProgramTest() throws ParseException, FileNotFoundException, IOException {
 		AspifParser aspifParser = new AspifParser();

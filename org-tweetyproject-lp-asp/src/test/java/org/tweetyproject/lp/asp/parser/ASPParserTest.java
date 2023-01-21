@@ -61,16 +61,32 @@ import org.tweetyproject.lp.asp.syntax.StrictNegation;
  */
 public class ASPParserTest {
 
+	/**
+	 * parser
+	 */
 	static ASPParser parser;
+	/**
+	 * visitor
+	 */
 	static InstantiateVisitor visitor;
+	/**
+	 * default timeout
+	 */
 	public static final int DEFAULT_TIMEOUT = 5000;
 
+	/**
+	 * initializes values
+	 */
 	@BeforeClass
 	public static void init() {
 		visitor = new InstantiateVisitor();
 		parser = new ASPParser(new StringReader(""));
 	}
 
+	/**
+	 * test 1 
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ProgramTest() throws ParseException {
 		String pstr = "motive(harry). \n" + "motive(sally). \n" + "guilty(harry). \n"
@@ -85,6 +101,10 @@ public class ASPParserTest {
 		assertTrue(p2.hasQuery());
 	}
 	
+	/**
+	 * cling test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ClingoTest() throws ParseException {
 		String pstr = "motive(harry). \n" + "motive(sally). \n" + "guilty(harry). \n"
@@ -102,6 +122,10 @@ public class ASPParserTest {
 		assertEquals(wp.getArity(),3);
 	}
 	
+	/**
+	 * dlv test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void DLVTest() throws ParseException {
 		String pstr = ":- <=(harry,sally).";
@@ -114,6 +138,10 @@ public class ASPParserTest {
 		assertEquals(at.getOperator(), ASPOperator.BinaryOperator.EQ);
 	}
 
+	/**
+	 * asp rules test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleASPRulesTest() throws ParseException {
 		ASPRule fact = ASPParser.parseRule("motive(harry).");
@@ -134,6 +162,10 @@ public class ASPParserTest {
 		assertEquals(simpleASPRule.getPremise().size(), 2);
 	}
 
+	/**
+	 * aggregation test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void AggregateTest() throws ParseException {
 		parser.ReInit(new StringReader("1<=#count{:guilty(jon),guilty(eva),guilty(sam)}<=1."));
@@ -164,7 +196,10 @@ public class ASPParserTest {
 		assertEquals(a.getFunction(), ASPOperator.AggregateFunction.SUM);
 		assertEquals(a.getAggregateElements().size(), 3);
 	}
-	
+	/**
+	 * optimization statement test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void OptimizationStatementTest() throws ParseException {
 		parser.ReInit(new StringReader("#minimize { Y@1, X: hotel(X), star(X,Y) } .\n"));
@@ -183,6 +218,10 @@ public class ASPParserTest {
 		assertEquals(o2.getElements().size(),2);
 	}
 	
+	/**
+	 * choice test
+	 * @throws ParseException üarsing test
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ChoiceTest() throws ParseException {
 		ASPRule r1 = ASPParser.parseRule("{a; b}.");
@@ -205,6 +244,10 @@ public class ASPParserTest {
 		assertEquals(h3.getAtoms().size(),3);
 	}
 
+	/**
+	 * weight at level test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void WeightAtLevelTest() throws ParseException {
 		ASPRule r1 = ASPParser.parseRule(":~ guilty(sally). [4@2,23,X,-2]");
@@ -216,6 +259,10 @@ public class ASPParserTest {
 		assertEquals(terms.size(), 3);
 	}
 
+	/**
+	 * term test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void SimpleTermTest() throws ParseException {
 		parser.ReInit(new StringReader("42"));
@@ -264,6 +311,10 @@ public class ASPParserTest {
 		assertTrue(at.getRight() instanceof NumberTerm);
 	}
 
+	/**
+	 * term test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ComplexTermTest() throws ParseException {
 		parser.ReInit(new StringReader("(age(peter) - V)*(12-23)"));
@@ -274,6 +325,10 @@ public class ASPParserTest {
 		assertEquals(((ArithmeticTerm) t.getLeft()).getOperator(), ASPOperator.ArithmeticOperator.MINUS);
 	}
 
+	/**
+	 * comparative test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void ComparativeTest() throws ParseException {
 		parser.ReInit(new StringReader("23=23"));
@@ -293,6 +348,10 @@ public class ASPParserTest {
 		assertEquals(at.getOperator(), ASPOperator.BinaryOperator.LT);
 	}
 
+	/**
+	 * literal test
+	 * @throws ParseException parsing exception
+	 */
 	@Test(timeout = DEFAULT_TIMEOUT)
 	public void LiteralTest() throws ParseException {
 		parser.ReInit(new StringReader("a"));

@@ -40,18 +40,27 @@ import org.tweetyproject.lp.asp.syntax.Program;
 /**
  * Test class for Clingo.
  * 
- * @author Nils Geilen <geilenn@uni-koblenz.de>
+ * @author Nils Geilen geilenn(at)uni-koblenz.de
  * @author Anna Gessler
  *
  */
 public class ClingoTest {
-	
+	/**
+	 * parser
+	 */
 	static ASPParser parser;
-	
+	/**
+	 * visitor
+	 */
 	static InstantiateVisitor visitor;
-	
+	/**
+	 *  solver
+	 */
 	static ClingoSolver solver;
 	
+	/**
+	 * initializes values
+	 */
 	@BeforeClass
 	public static void init() {
 		visitor = new InstantiateVisitor();
@@ -59,6 +68,10 @@ public class ClingoTest {
 		solver = new ClingoSolver("/your/path/to/clingo");
 	}
 
+	/**
+	 * basic test 1
+	 * @throws Exception any exception
+	 */
 	@Test
 	public void BasicExampleTest1() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex1.asp"));
@@ -71,6 +84,10 @@ public class ClingoTest {
 		assertTrue(asl.get(0).size() == 3);
 	}
 	
+	/**
+	 * basic test 2
+	 * @throws Exception any exception
+	 */
 	@Test
 	public void BasicExampleTest2() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex2.asp"));
@@ -83,6 +100,10 @@ public class ClingoTest {
 		assertTrue(asl.get(0).size() == 5);
 	}
 	
+	/**
+	 * basic example 3
+	 * @throws Exception any exception
+	 */
 	@Test
 	public void BasicExampleTest3() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex4.asp"));
@@ -95,6 +116,10 @@ public class ClingoTest {
 		assertTrue(asl.get(0).size() == 5);
 	}
 	
+	/**
+	 * basic test 4
+	 * @throws Exception any exception
+	 */
 	@Test
 	public void BasicExampleTest4() throws Exception {
 		FileInputStream fistr = new FileInputStream(new File("src/main/resources/ex5.asp"));

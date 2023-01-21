@@ -31,7 +31,15 @@ import org.tweetyproject.logics.commons.syntax.Variable;
 
 import org.junit.Test;
 
+/**
+ * tests equality
+ * @author Matthias Thimm
+ *
+ */
 public class EqualsTester {
+	/**
+	 * elp atom test
+	 */
 	@Test
 	public void testELPAtom() {
 		ASPAtom a1 = new ASPAtom("test", new NumberTerm(1));
@@ -41,14 +49,18 @@ public class EqualsTester {
 		assertEquals(true, a1.equals(new ASPAtom("test", new NumberTerm(1))));
 		assertEquals(false, a1.equals(new ASPAtom("test", new NumberTerm(2))));
 	}
-	
+	/**
+	 * clone equals test
+	 */
 	@Test
 	public void testCloneEqualAtom() {
 		ASPAtom atom = new ASPAtom("blub", new Variable("X"), new Constant("y"), 
 				new FunctionalTerm(new Functor("test"), new NumberTerm(1), new Variable("X"), new Constant("x")));
 		assertEquals(true, atom.equals(atom.clone())); 
 	}
-	
+	/**
+	 * rule test
+	 */
 	@Test
 	public void testRule() {
 		ASPRule r1 = new ASPRule();
@@ -57,7 +69,9 @@ public class EqualsTester {
 		ASPRule r2 = new ASPRule(new ASPAtom("test"), new ASPAtom("not_released"));
 		assertEquals(false, r1.equals(r2));
 	}
-	
+	/**
+	 * program test
+	 */
 	@Test
 	public void testProgram() {
 		Program p1 = new Program();
@@ -67,7 +81,9 @@ public class EqualsTester {
 		p1.add(new ASPRule(new ASPAtom("test")));
 		assertEquals(false, p1.equals(p2));
 	}
-	
+	/**
+	 * add all test
+	 */
 	@Test
 	public void testAddAll() {
 		ASPRule r1 = new ASPRule(new ASPAtom("a1"));
