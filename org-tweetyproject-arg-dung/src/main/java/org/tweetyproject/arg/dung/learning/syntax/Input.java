@@ -46,6 +46,9 @@ public class Input extends Labeling{
         this.semantics = semantics;
     }
 
+    /**
+     * simple constructor
+     */
     public Input() {
         super();
     }

@@ -37,10 +37,12 @@ public class Episode<S extends State, A extends Action> {
 	private List<S> states;
 	private List<A> actions;
 	
-	/**
+
+	 /**
 	 * Creates a new empty episode
-	 * for the given starting state
-	 */
+	 * for the given starting state 
+	  * @param s MDP use
+	  */
 	public Episode(S s) {
 		this.states = new ArrayList<>();
 		this.actions = new ArrayList<>();

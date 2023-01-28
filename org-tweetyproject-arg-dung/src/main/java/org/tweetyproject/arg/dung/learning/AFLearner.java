@@ -59,5 +59,10 @@ public interface AFLearner {
      * @return number of afs that produce all processed input labelings
      */
     long getNumberOfFrameworks();
+    /**
+     * 
+     * @param shortcut whether shortcut is applied
+     * @return number of frameworks
+     */
     long getNumberOfFrameworks(boolean shortcut);
 }

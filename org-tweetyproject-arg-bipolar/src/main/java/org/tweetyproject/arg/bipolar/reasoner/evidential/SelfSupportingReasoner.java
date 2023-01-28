@@ -48,6 +48,11 @@ public class SelfSupportingReasoner {
         return extensions;
     }
 
+    /**
+     * 
+     * @param bbase arg framework
+     * @return a model
+     */
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         // as the empty set is always self-supporting we return that one.
         return new ArgumentSet();

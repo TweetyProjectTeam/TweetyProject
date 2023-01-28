@@ -32,6 +32,11 @@ import java.util.*;
  * a set of arguments is conflict-free iff it is conflict-free in regards to the complex attacks in the framework
  */
 public class ConflictFreeReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(DeductiveArgumentationFramework bbase) {
         // get a dung theory containing all direct and complex attacks in the given bipolar argumentation framework
         DungTheory theory = bbase.getCompleteAssociatedDungTheory();

@@ -31,7 +31,7 @@ import java.util.HashSet;
  * Notation:
  * for each acceptance condition we also store the argument a it is associated with
  * In the condition itself we then use !b and b to represent !r_(ba) and r_(ba) respectively
- * e.g. the condition C_a = !a && !c && b means a is not attacked by a and c, but must be attacked by b
+ * e.g. the condition C_a = !a and !c and b means a is not attacked by a and c, but must be attacked by b
  *
  * @author Lars Bengel
  */

@@ -25,22 +25,41 @@ import org.tweetyproject.logics.pl.syntax.*;
 
 import java.util.Collection;
 import java.util.HashSet;
-
+/**
+ * This class models a clausal attack constraint
+ * @author Matthias Thimm
+ *
+ */
 public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFormula>> {
-    private Argument argument;
-
+    /**argument*/
+	private Argument argument;
+	/**clauses*/
     private Collection<PlFormula> clauses;
-
+    /**
+     * simple constructor
+     * 
+     * @param arg Argument
+     */
     public ClausalAttackConstraint(Argument arg) {
         this.argument = arg;
         this.clauses = new HashSet<>();
     }
 
+    /**
+     * 
+     * @param arg argument
+     * @param input input
+     */
     public ClausalAttackConstraint(Argument arg, Input input) {
         this.argument = arg;
         this.clauses = this.getConditionForArgument(arg, input);
     }
 
+    /**
+     * 
+     * @param condition1 condition 1 
+     * @param condition2 condition 2
+     */
     public ClausalAttackConstraint(ClausalAttackConstraint condition1, ClausalAttackConstraint condition2) {
         if (condition1.getArgument() != condition2.getArgument()) {
             throw new IllegalArgumentException("Should not happen");
@@ -51,14 +70,25 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
         this.clauses.addAll(condition2.getCondition());
     }
 
+    /**
+     * returns condition
+     */
     public Collection<PlFormula> getCondition() {
         return this.clauses;
     }
-
+    /**
+     * returns the argument
+     */
     public Argument getArgument() {
         return this.argument;
     }
 
+    /**
+     * 
+     * @param arg argument
+     * @param input input
+     * @return a collection of formulas 
+     */
     private Collection<PlFormula> getConditionForArgument(Argument arg, Input input) {
         return switch (input.getSemantics()) {
             case CF -> this.getConditionForArgumentCF(arg, input);
@@ -69,6 +99,12 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
         };
     }
 
+    /**
+     * 
+     * @param arg argument
+     * @param input input
+     * @return the condition for the argument
+     */
     private Collection<PlFormula> getConditionForArgumentCF(Argument arg, Input input) {
         Collection<PlFormula> formula = new HashSet<>();
         switch (input.get(arg)) {
@@ -89,6 +125,12 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
         return formula;
     }
 
+    /**
+     * 
+     * @param arg argument
+     * @param input an input
+     * @return the condition for the argument admissible
+     */
     private Collection<PlFormula> getConditionForArgumentADM(Argument arg, Input input) {
         Collection<PlFormula> formula = new HashSet<>();
         switch (input.get(arg)) {
@@ -118,6 +160,12 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
         return formula;
     }
 
+    /**
+     * 
+     * @param arg argument
+     * @param input input
+     * @return the condition for the argument completness
+     */
     private Collection<PlFormula> getConditionForArgumentCO(Argument arg, Input input) {
         Collection<PlFormula> formula = new HashSet<>();
         switch (input.get(arg)) {
@@ -153,6 +201,12 @@ public class ClausalAttackConstraint implements AttackConstraint<Collection<PlFo
         return formula;
     }
 
+    /**
+     * 
+     * @param arg argument
+     * @param input input
+     * @return conditon for argument (stable)
+     */
     private Collection<PlFormula> getConditionForArgumentST(Argument arg, Input input) {
         if (!input.getArgumentsOfStatus(ArgumentStatus.UNDECIDED).isEmpty())
             throw new IllegalArgumentException("Labeling is not stable");

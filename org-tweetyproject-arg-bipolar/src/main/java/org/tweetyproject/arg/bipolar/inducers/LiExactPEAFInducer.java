@@ -31,14 +31,10 @@ import java.util.function.Consumer;
 
 /**
  * This is a direct re-implementation of the Hengfei Li's ruby code in Java.
- * </br>
- * </br>See
- * </br>
- * </br> Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
- * <p>
+ * see  Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
  * The comments also have the ruby code equivalent.
  * LiExactPEAFInducer generates all possible EAFs that can be generated from a PEAF.
- * <p>
+
  * FIXME: This is to be used in @see Runner of the module. It is a great reference implementation.
  *
  * @author Taha Dogan Gunes

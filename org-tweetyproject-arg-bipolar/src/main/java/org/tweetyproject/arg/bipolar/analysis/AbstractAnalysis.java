@@ -46,6 +46,10 @@ public abstract class AbstractAnalysis implements Analysis {
     }
 
 
+    /**
+     * 
+     * @param peafTheory theory
+     */
     public void setPEAFTheory(PEAFTheory peafTheory) {
         this.peafTheory = peafTheory;
     }

@@ -10,10 +10,7 @@ import java.util.Set;
 /**
  * This class implements approximate probabilistic justification of a set of queries using Monte Carlo Sampling of
  * induced EAFs from a PEAF.
- * </br>
- * </br>See
- * </br>
- * </br> Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
+ * see  Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
  *
  * @author Taha Dogan Gunes
  */
@@ -41,7 +38,6 @@ public class ApproxAnalysis extends AbstractAnalysis implements ProbabilisticJus
     /**
      * Computes approximately what is probabilistic justification of the given set of arguments in the PEAF given error
      * level
-     * @param <AnalysisResult>
      *
      * @param args the set of arguments necessary for the query
      * @return the result of the analysis

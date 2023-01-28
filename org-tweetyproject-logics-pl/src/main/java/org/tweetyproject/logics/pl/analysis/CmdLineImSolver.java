@@ -79,6 +79,10 @@ public class CmdLineImSolver extends BeliefSetInconsistencyMeasure<PlFormula>{
 	}
 	
 
+	/**
+	 * 
+	 * @return if the solver is installed
+	 */
 	public boolean isInstalled() {
 		try {
 			String cmd = binaryLocation;

@@ -30,6 +30,9 @@ package org.tweetyproject.arg.dung.reasoner;
  *
  */
 public class StronglyUndisputedReasoner extends VacuousReductReasoner{
+	/**
+	 * simple constructor
+	 */
 	public StronglyUndisputedReasoner() {
 		super(new SimpleConflictFreeReasoner(), new UndisputedReasoner());
 	}

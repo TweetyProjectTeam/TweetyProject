@@ -29,6 +29,10 @@ import org.tweetyproject.machinelearning.assoc.FpGrowthMiner;
  *
  */
 public class FpGrowthExample {
+	/**
+	 * 
+	 * @param args arguments
+	 */
 	public static void main(String[] args) {
 		// this is the example from
 		// [Jiawei Han, Jian Pei, Yiwen Yin. Mining frequent patterns without candidate generation.

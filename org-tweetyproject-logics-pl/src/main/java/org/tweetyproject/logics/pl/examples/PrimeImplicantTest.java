@@ -38,6 +38,12 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  */
 public class PrimeImplicantTest {
 
+	/**
+	 * 
+	 * @param args command line arguments
+	 * @throws ParserException a parser exception
+	 * @throws IOException io exception
+	 */
 	public static void main(String[] args) throws ParserException, IOException {
 		PlBeliefSet beliefSet = new PlBeliefSet();
 		PlParser parser = new PlParser();

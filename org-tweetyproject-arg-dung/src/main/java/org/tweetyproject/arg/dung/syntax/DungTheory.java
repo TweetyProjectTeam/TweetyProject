@@ -53,6 +53,9 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * explicit listing of direct attackers and attackees (for efficiency reasons) 
 	 */
 	private Map<Argument,Set<Argument>> parents = new HashMap<Argument,Set<Argument>>();
+	/**
+	 *  explicit listing of direct attackers and attackees (for efficiency reasons)
+	 */
 	private Map<Argument,Set<Argument>> children= new HashMap<Argument,Set<Argument>>();
 	
 	/**
@@ -744,9 +747,8 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	/**
      * computes the reduct of bbase wrt. ext
      * ie. removes all arguments from bbase which are either in ext or are attacked by any element of ext
-     * @param bbase an argumentation framework
-     * @param ext an extension
-     * @return the reduct of bbase wrt. ext
+	 * @param arguments the arguments
+	 * @return the reduct
      */
     public DungTheory getReduct(Collection<Argument> arguments) {
     	Collection<Argument> restriction = new HashSet<>();

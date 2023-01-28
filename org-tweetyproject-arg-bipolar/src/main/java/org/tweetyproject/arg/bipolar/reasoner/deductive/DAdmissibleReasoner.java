@@ -28,6 +28,11 @@ import java.util.*;
  * a set of arguments is d-admissible iff it is admissible wrt. the complex attacks in the framework
  */
 public class DAdmissibleReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(DeductiveArgumentationFramework bbase) {
         Collection<ArgumentSet> extensions = new HashSet<>();
         for (ArgumentSet ext: new ConflictFreeReasoner().getModels(bbase)) {

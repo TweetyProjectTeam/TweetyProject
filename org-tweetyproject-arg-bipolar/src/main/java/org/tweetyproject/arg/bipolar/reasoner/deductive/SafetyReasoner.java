@@ -35,6 +35,11 @@ import java.util.*;
  */
 public class SafetyReasoner  {
 
+	/**
+	 * 
+	 * @param bbase arg framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(DeductiveArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<>();
         // Check only conflict-free subsets
@@ -59,6 +64,11 @@ public class SafetyReasoner  {
         return extensions;
     }
 
+    /**
+     * 
+     * @param bbase arg framework
+     * @return model
+     */
     public ArgumentSet getModel(DeductiveArgumentationFramework bbase) {
         // as the empty set is always safe we return that one.
         return new ArgumentSet();

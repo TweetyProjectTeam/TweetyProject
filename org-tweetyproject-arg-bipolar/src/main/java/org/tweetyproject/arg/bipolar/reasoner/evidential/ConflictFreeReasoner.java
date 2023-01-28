@@ -35,9 +35,14 @@ import java.util.Set;
  *
  */
 public class ConflictFreeReasoner {
+	/**constructor*/
     public ConflictFreeReasoner() {
     }
-
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<>();
         Set<Set<BArgument>> subsets = new SetTools<BArgument>().subsets(bbase);
@@ -61,7 +66,11 @@ public class ConflictFreeReasoner {
 
         return extensions;
     }
-
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return model
+	 */
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         return new ArgumentSet();
     }

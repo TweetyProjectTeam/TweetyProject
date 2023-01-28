@@ -49,7 +49,6 @@ public class EAttack implements Attack{
     /**
      * The default constructor that creates EAttack object
      *
-     * @param name  the name of the attack
      * @param froms the arguments that originate this attack
      * @param tos   the arguments that receive this attack
      */

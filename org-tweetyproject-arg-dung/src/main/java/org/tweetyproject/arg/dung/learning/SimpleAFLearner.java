@@ -39,9 +39,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SimpleAFLearner implements AFLearner {
 
-    /* the set of all arguments */
+    /** the set of all arguments */
     protected Collection<Argument> args;
-    /* structure for storing the acceptance condition of each argument */
+    /** structure for storing the acceptance condition of each argument */
     protected Map<Argument, SimpleAttackConstraint> conditions;
 
     /**
@@ -121,6 +121,7 @@ public class SimpleAFLearner implements AFLearner {
 
     /**
      * TODO is this still necessary?
+     * @return the partial attack relations
      */
     public Map<Argument, Collection<Collection<Attack>>> computePartialAttackRelations() {
         Map<Argument, Collection<Collection<Attack>>> attackRelationMap = new HashMap<>();

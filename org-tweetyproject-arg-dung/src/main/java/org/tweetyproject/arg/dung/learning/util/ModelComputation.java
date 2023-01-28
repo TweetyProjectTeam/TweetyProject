@@ -32,7 +32,7 @@ import java.util.HashSet;
  */
 public class ModelComputation {
     /**
-     * compute the model of a formula in atomic CNF e.g. a && b && !c
+     * compute the model of a formula in atomic CNF e.g. a and b and !c
      * @param condition some formula which is a conjunction of literals
      * @return the model of this formula
      */

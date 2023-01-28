@@ -26,5 +26,10 @@ package org.tweetyproject.machinelearning.rl.mdp;
  * @param <A> The type of actions
  */
 public interface Policy<S extends State, A extends Action> {
+	/**
+	 * 
+	 * @param s state
+	 * @return action
+	 */
 	public A execute(S s); 
 }

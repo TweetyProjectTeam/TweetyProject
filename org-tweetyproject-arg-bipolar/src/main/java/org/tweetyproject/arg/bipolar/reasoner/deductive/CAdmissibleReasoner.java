@@ -29,6 +29,11 @@ import java.util.*;
  * the support relation
  */
 public class CAdmissibleReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(DeductiveArgumentationFramework bbase) {
         Collection<ArgumentSet> extensions = new HashSet<>();
         for (ArgumentSet ext: new DAdmissibleReasoner().getModels(bbase)) {

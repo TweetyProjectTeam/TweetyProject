@@ -31,6 +31,11 @@ import java.util.Set;
  *
  */
 public class PreferredReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
         Collection<ArgumentSet> completeExtensions = new CompleteReasoner().getModels(bbase);
         Set<ArgumentSet> result = new HashSet<ArgumentSet>();
@@ -48,6 +53,11 @@ public class PreferredReasoner {
         return result;
     }
 
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return model
+	 */
     public ArgumentSet getModel(NecessityArgumentationFramework bbase) {
         // just return the first found preferred extension
         Collection<ArgumentSet> completeExtensions = new CompleteReasoner().getModels(bbase);

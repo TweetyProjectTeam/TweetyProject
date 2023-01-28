@@ -26,10 +26,7 @@ import java.util.Set;
 /**
  * This class implements an abstract argumentation theory
  * in the sense of Probabilistic Evidential Argumentation Frameworks (PrEAF).
- * </br>
- * </br>See
- * </br>
- * </br> Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
+ * see Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
  *
  * @author Taha Dogan Gunes
  */
@@ -85,8 +82,8 @@ public class PEAFTheory extends AbstractEAFTheory<WeightedSetSupport> {
     /**
      * Add attack between arguments with indices
      *
-     * @param fromIndex the index of the EArgument that originates the attack
-     * @param toIndex   the index of the EArgument that receieves the attack
+     * @param froms the index of the EArgument that originates the attack
+     * @param tos   the index of the EArgument that receieves the attack
      */
     public void addAttack(BipolarEntity froms, BipolarEntity tos) {
         this.addAttack(froms, tos);

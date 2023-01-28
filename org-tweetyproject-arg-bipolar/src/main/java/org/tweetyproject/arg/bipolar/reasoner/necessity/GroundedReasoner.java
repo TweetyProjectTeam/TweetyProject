@@ -30,12 +30,22 @@ import java.util.HashSet;
  *
  */
 public class GroundedReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
         Collection<ArgumentSet> extensions = new HashSet<>();
         extensions.add(this.getModel(bbase));
         return extensions;
     }
 
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return model
+	 */
     public ArgumentSet getModel(NecessityArgumentationFramework bbase) {
         ArgumentSet ext = new ArgumentSet();
         int size;

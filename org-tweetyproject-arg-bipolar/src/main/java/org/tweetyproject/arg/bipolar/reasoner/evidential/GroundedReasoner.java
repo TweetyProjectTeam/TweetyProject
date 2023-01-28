@@ -29,13 +29,21 @@ import java.util.*;
  *
  */
 public class GroundedReasoner {
-
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Collection<ArgumentSet> extensions = new HashSet<>();
         extensions.add(this.getModel(bbase));
         return extensions;
     }
-
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return model
+	 */
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         ArgumentSet ext = new ArgumentSet();
         int size;

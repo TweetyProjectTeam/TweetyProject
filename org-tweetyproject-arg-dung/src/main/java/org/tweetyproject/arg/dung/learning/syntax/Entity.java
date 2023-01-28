@@ -69,6 +69,11 @@ public class Entity {
         //System.out.println("ST: " + examples.get(Semantics.ST).size());
     }
 
+    /**
+     * 
+     * @param theory a DUng theory
+     * @param inputs inputs
+     */
     public Entity(DungTheory theory, List<Input> inputs) {
         hiddenFramework = theory;
         allInputs = inputs;
@@ -102,6 +107,10 @@ public class Entity {
         return examplesSem.remove(id);
     }
 
+    /**
+     * 
+     * @return any labeling
+     */
     public Input getAnyLabeling() {
         Random rnd = new Random();
         int id = rnd.nextInt(this.allInputs.size());

@@ -31,10 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * This class implements an abstract argumentation theory
  * in the sense of Probabilistic Extended Evidential Argumentation Frameworks (PrEEAF).
- * </br>
- * </br>See
- * </br>
- * </br> Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
+ * see Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
  *
  * @author Taha Dogan Gunes
  */

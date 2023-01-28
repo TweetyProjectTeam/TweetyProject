@@ -40,6 +40,11 @@ public interface MinimalModelProvider<A extends Formula,B extends BeliefBase,C e
 	 * @return the minimal models
 	 */
 	public Set<InterpretationSet<A,B,C>> getMinModels(B f);
+	/**
+	 * 
+	 * @param f a beliefbase
+	 * @return a set of possible worlds
+	 */
 	public Set<PossibleWorld> getMinModels(C f);
 	
 }

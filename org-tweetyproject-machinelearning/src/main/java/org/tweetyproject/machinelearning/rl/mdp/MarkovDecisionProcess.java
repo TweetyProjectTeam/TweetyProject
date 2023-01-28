@@ -45,10 +45,14 @@ public class MarkovDecisionProcess<S extends State, A extends Action> {
 	private Collection<S> terminal_states;
 	
 	private Random rand;
+
 	/**
 	 * Creates a new Markov Decision Process with the given states and actions
+	 * 
 	 * @param states some states 
-	 * @param actions some actions
+	 * @param initial_state initial state
+	 * @param terminal_states terminal state
+	 * @param actions some action
 	 */
 	public MarkovDecisionProcess(Collection<S> states, S initial_state, Collection<S> terminal_states, Collection<A> actions) {
 		if(!states.contains(initial_state))
@@ -242,12 +246,15 @@ public class MarkovDecisionProcess<S extends State, A extends Action> {
 		}
 		return utility;
 	}
-	
+
 	/**
+	 * 
 	 * Approximates the expected utility of the given policy within this MPD using
 	 * Monte Carlo search (which uses the given number of episodes)
+	 * 
 	 * @param pi some policy
-	 * @param num_episode
+	 * @param num_episodes number of epsiodes
+	 * @param gamma gamma for utitlity
 	 * @return the expected utility of the policy (approximated)
 	 */
 	public double expectedUtility(Policy<S,A> pi, int num_episodes, double gamma) {

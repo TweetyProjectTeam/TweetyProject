@@ -29,8 +29,19 @@ import org.tweetyproject.machinelearning.TrainingSet;
 import org.tweetyproject.machinelearning.svm.MultiClassRbfTrainer;
 import org.tweetyproject.machinelearning.svm.SupportVectorMachine;
 
+/**
+ * tests SVM
+ * 
+ * @author Matthias Thimm
+ *
+ */
 public class SVMTest {
 
+	/**
+	 * 
+	 * @param args command line argumnts
+	 * @throws IOException and IOException
+	 */
 	public static void main(String[] args) throws IOException{
 		TrainingSet<DefaultObservation,DoubleCategory> trainingSet = TrainingSet.loadLibsvmTrainingFile(new File("/Users/mthimm/Desktop/train.1.txt"));
 		MultiClassRbfTrainer trainer = new MultiClassRbfTrainer();

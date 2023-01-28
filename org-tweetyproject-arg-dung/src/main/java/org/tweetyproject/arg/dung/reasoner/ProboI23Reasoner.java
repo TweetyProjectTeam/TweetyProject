@@ -120,7 +120,13 @@ public class ProboI23Reasoner extends AbstractExtensionReasoner{
 			throw new RuntimeException(e);
 		} 
 	}
-	
+	/**
+	 * 
+	 * @param beliefbase a beliefbase
+	 * @param formula a formula
+	 * @param inferenceMode the inference mode
+	 * @return the queried W
+	 */
 	public Pair<Boolean,Extension<DungTheory>> queryW(DungTheory beliefbase, Argument formula, InferenceMode inferenceMode) {
 		// first check whether the solver supports the problem
 		String inf;

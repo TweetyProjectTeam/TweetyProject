@@ -27,7 +27,7 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
  * 
- * @author Federico Cerutti (federico.cerutti@acm.org)
+ * @author Federico Cerutti (federico.cerutti(at)acm.org)
  *
  * Argument structure as defined in 
  * http://www0.cs.ucl.ac.uk/staff/a.hunter/papers/ac13t.pdf
@@ -35,9 +35,13 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  */
 public class SimplePlLogicArgument extends Argument{
 
+	/**
+	 * support
+	 */
 	private Collection<SimplePlRule> support = null;
+	/**claim*/
 	private PlFormula claim = null;
-
+	/**constructor*/
 	public SimplePlLogicArgument(Collection<SimplePlRule> _support,
 			PlFormula _claim) {
 		super(null);
@@ -55,15 +59,25 @@ public class SimplePlLogicArgument extends Argument{
 		this.support = new HashSet<SimplePlRule>(derivation);
 		this.claim = (PlFormula) derivation.getConclusion();
 	}
-
+	/**
+	 * 
+	 * @return support
+	 */
 	public Collection<? extends SimplePlRule> getSupport() {
 		return this.support;
 	}
 
+	/**
+	 * 
+	 * @return claim
+	 */
 	public PlFormula getClaim() {
 		return this.claim;
 	}
 
+	/**
+	 * prints String representation
+	 */
 	public String toString() {
 		return "<" + this.support.toString() + "," + this.claim.toString()
 				+ ">";

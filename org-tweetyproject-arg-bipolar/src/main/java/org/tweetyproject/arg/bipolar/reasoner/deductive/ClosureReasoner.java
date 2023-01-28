@@ -31,9 +31,11 @@ import java.util.*;
  */
 public class ClosureReasoner {
 
-    /* (non-Javadoc)
-     * @see org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner#getModels(org.tweetyproject.arg.baf.syntax.syntax.BipolarArgFramework)
-     */
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(DeductiveArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<>();
         // Check all subsets

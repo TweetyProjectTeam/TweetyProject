@@ -27,6 +27,11 @@ import org.tweetyproject.arg.dung.syntax.Argument;
  * @author Lars Bengel
  */
 public interface AttackConstraint<T> {
+	/**returns condition*/
     public T getCondition();
+    /**
+     * 
+     * @return return argument
+     */
     public Argument getArgument();
 }

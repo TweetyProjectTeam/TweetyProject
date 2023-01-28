@@ -41,9 +41,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class OptimizedParallelAFLearner implements AFLearner {
 
-    /* the set of all arguments */
+    /** the set of all arguments */
     private Collection<Argument> args;
-    /* structure for storing the acceptance condition of each argument */
+    /** structure for storing the acceptance condition of each argument */
     private Map<Argument, ClausalAttackConstraint> conditions;
 
     /**
@@ -82,6 +82,11 @@ public class OptimizedParallelAFLearner implements AFLearner {
     }
 
     // TODO: doesnt work like this probably. need an add function for the ClausalAttackConstraint
+    /**
+     * 
+     * @param inputs inputs
+     * @return the learned labels
+     */
     public boolean learnLabelings(Collection<Input> inputs) {
         //inputs.parallelStream().forEach(this::learnLabeling);
         return true;
@@ -126,12 +131,17 @@ public class OptimizedParallelAFLearner implements AFLearner {
         return attacks;
     }
 
+    /**
+     * prints status
+     */
     public void printStatus() {
         this.printStatus(false);
     }
 
+
     /**
      * print the current status of the acceptance conditions
+     * @param dnf whether dnf holds
      */
     public void printStatus(boolean dnf) {
         for (Argument arg: this.args) {

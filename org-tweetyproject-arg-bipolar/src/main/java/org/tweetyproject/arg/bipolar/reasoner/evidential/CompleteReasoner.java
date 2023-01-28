@@ -28,6 +28,11 @@ import java.util.*;
  *
  */
 public class CompleteReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all admissible subsets
@@ -47,7 +52,11 @@ public class CompleteReasoner {
         }
         return extensions;
     }
-
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return model
+	 */
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         // as the set only containing epsilon is always complete we return that one.
         ArgumentSet ext = new ArgumentSet();

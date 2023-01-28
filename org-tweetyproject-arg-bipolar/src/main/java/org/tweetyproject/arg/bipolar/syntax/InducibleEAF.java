@@ -60,12 +60,12 @@ public class InducibleEAF {
     public final double inducePro;
 
     /**
-     * @param arguments
-     * @param supports
-     * @param attacks
-     * @param newArguments
-     * @param pInside
-     * @param inducePro
+     * @param arguments arguments
+     * @param supports supports
+     * @param attacks attacks
+     * @param newArguments new arguments
+     * @param pInside pInside
+     * @param inducePro induce pro
      */
     public InducibleEAF(Set<BArgument> arguments,
                         Set<Support> supports,

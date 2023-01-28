@@ -14,48 +14,48 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public enum AnalysisType {
     /**
-     * @see ExactAnalysis
+     * see ExactAnalysis
      */
     EXACT("exact"),
     /**
-     * @see ApproxAnalysis
+     * see ApproxAnalysis
      */
     APPROX("approx"),
     /**
-     * @see ConcurrentApproxAnalysis
+     * see ConcurrentApproxAnalysis
      */
     CONCURRENT_APPROX("con_approx"),
     /**
-     * @see ConcurrentExactAnalysis
+     * see ConcurrentExactAnalysis
      */
     CONCURRENT_EXACT("con_exact"),
     /**
-     * @see PreferredAnalysis
+     * see PreferredAnalysis
      */
     PREFERRED("preferred"),
 
     /**
-     * @see GroundedAnalysis
+     * see GroundedAnalysis
      */
     GROUNDED("grounded"),
 
     /**
-     * @see org.tweetyproject.arg.peaf.analysis.voi.TargetOutputAnalysis
+     * see org.tweetyproject.arg.peaf.analysis.voi.TargetOutputAnalysis
      */
     VOI_TARGET_OUTPUT("voi_target_output"),
 
     /**
-     * @see org.tweetyproject.arg.peaf.analysis.voi.MinimiseEntropyAnalysis
+     * see org.tweetyproject.arg.peaf.analysis.voi.MinimiseEntropyAnalysis
      */
     VOI_MINIMISE_ENTROPY("voi_min_entropy"),
 
     /**
-     * @see org.tweetyproject.arg.peaf.analysis.voi.MaximiseChangeAnalysis
+     * see org.tweetyproject.arg.peaf.analysis.voi.MaximiseChangeAnalysis
      */
     VOI_MAXIMISE_CHANGE("voi_max_change"),
 
     /**
-     * @see org.tweetyproject.arg.peaf.analysis.voi.KLDivergenceAnalysis
+     * see org.tweetyproject.arg.peaf.analysis.voi.KLDivergenceAnalysis
      */
     VOI_KL_DIVERGENCE("voi_kl_divergence");
 

@@ -29,10 +29,7 @@ import java.util.stream.Collectors;
 
 /**
  * This class implements an abstract argumentation theory in the sense of Evidential Argumentation Frameworks (EAF).
- * </br>
- * </br>See
- * </br>
- * </br> Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
+ * see Li, Hengfei. Probabilistic argumentation. 2015. PhD Thesis. Aberdeen University.
  *
  * @author Taha Dogan Gunes
  */
@@ -108,8 +105,8 @@ public class EAFTheory extends AbstractEAFTheory<Support> {
     /**
      * Add a support with index arrays (froms and tos)
      *
-     * @param fromIndices integer array with argument, represents indices of arguments
-     * @param toIndices   integer array with argument, represents indices of arguments
+     * @param froms integer array with argument, represents indices of arguments
+     * @param tos   integer array with argument, represents indices of arguments
      */
     public void addSupport(HashSet<BArgument> froms, HashSet<BArgument> tos) {
 

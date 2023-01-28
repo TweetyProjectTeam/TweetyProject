@@ -30,6 +30,11 @@ import java.util.*;
  *
  */
 public class AdmissibleReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         Set<Set<BArgument>> subsets = new SetTools<BArgument>().subsets(bbase);
@@ -51,6 +56,11 @@ public class AdmissibleReasoner {
         return extensions;
     }
 
+    /**
+     * 
+     * @param bbase argumentation framework
+     * @return model
+     */
     public ArgumentSet getModel(NecessityArgumentationFramework bbase) {
         // as the empty set is always self-supporting we return that one.
         return new ArgumentSet();

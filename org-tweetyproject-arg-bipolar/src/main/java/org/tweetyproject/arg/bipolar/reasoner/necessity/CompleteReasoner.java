@@ -31,6 +31,11 @@ import java.util.Set;
  *
  */
 public class CompleteReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(NecessityArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all admissible subsets
@@ -50,7 +55,11 @@ public class CompleteReasoner {
         }
         return extensions;
     }
-
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return model
+	 */
     public ArgumentSet getModel(NecessityArgumentationFramework bbase) {
         // as the empty set is always complete we return that one.
         ArgumentSet ext = new ArgumentSet();

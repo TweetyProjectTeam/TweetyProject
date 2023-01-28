@@ -30,6 +30,11 @@ import java.util.*;
  *
  */
 public class PreferredReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Collection<ArgumentSet> completeExtensions = new CompleteReasoner().getModels(bbase);
         Set<ArgumentSet> result = new HashSet<>();
@@ -46,7 +51,11 @@ public class PreferredReasoner {
         }
         return result;
     }
-
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return model
+	 */
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         // just return the first found preferred extension
         Collection<ArgumentSet> completeExtensions = new CompleteReasoner().getModels(bbase);

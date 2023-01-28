@@ -33,7 +33,6 @@ import java.util.function.Consumer;
  * ExactPEAFInducer generates all possible EAFs that can be generated from a PEAF.
  * Computationally, this implementation is not great since the all variations of EAFs increase by the number of
  * arguments and links exponentially. It is good to use for small PEAFs.
- * <p>
  * FIXME: In some instances, probabilities are found to be more than 1.
  *
  * @author Taha Dogan Gunes
@@ -42,7 +41,6 @@ public class ExactPEAFInducer extends AbstractPEAFInducer {
 
     /**
      * Used internally for debugging the inducer
-     * <p>
      * TODO: Could be removed and migrated to a proper logging module.
      *
      * @param message a string

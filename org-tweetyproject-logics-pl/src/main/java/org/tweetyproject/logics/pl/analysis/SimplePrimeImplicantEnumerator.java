@@ -38,6 +38,9 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  *
  */
 public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
+	/**
+	 * minimal model provider
+	 */
 	public MinimalModelProvider<Proposition,PlBeliefSet,PlFormula> minModelProvider;
 	/**
 	 * 
@@ -49,7 +52,7 @@ public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
 	/**
 	 * 
 	 * @param primeImplicants
-	 * @return
+	 * @return the compressed prime implicants
 	 */
 	public Set<PlFormula> compressPrimeImplicants(Set<Set<PlFormula>> primeImplicants){
 		Set<PlFormula> result = new HashSet<PlFormula>();
@@ -76,7 +79,6 @@ public class SimplePrimeImplicantEnumerator extends PrimeImplicantEnumerator{
 	}
 	/**
 	 * 
-	 * @param minModels the minimal models from which the prime implicants are computed
 	 * @param forms the formulas to be based upon
 	 * @return the prime implicants of forms
 	 */

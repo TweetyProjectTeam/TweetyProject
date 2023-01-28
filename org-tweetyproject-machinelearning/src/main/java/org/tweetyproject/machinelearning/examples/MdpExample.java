@@ -36,6 +36,10 @@ import org.tweetyproject.machinelearning.rl.mdp.algorithms.ValueIteration;
  *
  */
 public class MdpExample {
+	/**
+	 * 
+	 * @param args arguments
+	 */
 	public static void main(String[] args) {
 		// states
 		Collection<NamedState> states = new HashSet<>();

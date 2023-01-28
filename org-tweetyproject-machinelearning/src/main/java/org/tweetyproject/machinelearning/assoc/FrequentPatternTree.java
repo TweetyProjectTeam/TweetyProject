@@ -43,7 +43,12 @@ public class FrequentPatternTree<T extends Object> {
 	private List<FrequentPatternTreeNode<T>> items_first_node = new ArrayList<>();
 	private List<FrequentPatternTreeNode<T>> items_last_node = new ArrayList<>();
 	private Map<T,Integer> indexOf = new HashMap<>();
-	
+	/**
+	 * a node of the tree
+	 * @author Matthias Thimm
+	 *
+	 * @param <S> any object
+	 */
 	public class FrequentPatternTreeNode<S extends Object>{		
 		private int id;
 		private S item;
@@ -58,6 +63,7 @@ public class FrequentPatternTree<T extends Object> {
 		 * given frequency of the path up to this item.
 		 * @param item some item
 		 * @param freq_abs the frequency of the path up to this item (as absolute value).
+		 * @param parent the parent of the node
 		 */
 		public FrequentPatternTreeNode(S item, int freq_abs, FrequentPatternTreeNode<S> parent) {
 			this.id = FrequentPatternTree.next_id++;

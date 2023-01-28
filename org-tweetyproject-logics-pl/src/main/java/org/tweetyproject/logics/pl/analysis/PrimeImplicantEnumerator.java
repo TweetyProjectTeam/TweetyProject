@@ -25,7 +25,7 @@ import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
- * 
+ * prime implicant enumerator
  * @author Sebastian Franke
  *
  */

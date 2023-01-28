@@ -36,12 +36,18 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  *
  */
 public class PrimeImplicantBasedInconsistencyMeasure extends BeliefSetInconsistencyMeasure<PlFormula> {
-	
+	/**prime implicant enumerator*/
 	public PrimeImplicantEnumerator primeImp;
-	
+	/**
+	 * 
+	 * @param primeImp prime implicant inconsistency measure
+	 */
 	public PrimeImplicantBasedInconsistencyMeasure(PrimeImplicantEnumerator primeImp) {
 		this.primeImp = primeImp;
 	}
+	/**
+	 * constructor
+	 */
 	public PrimeImplicantBasedInconsistencyMeasure() {
 		this.primeImp = new SimplePrimeImplicantEnumerator(new SimpleMinimalModelProvider(new SimpleModelEnumerator()));
 	}

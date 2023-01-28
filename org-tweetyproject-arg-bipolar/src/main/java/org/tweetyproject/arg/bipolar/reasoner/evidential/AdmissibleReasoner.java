@@ -31,6 +31,11 @@ import java.util.*;
  *
  */
 public class AdmissibleReasoner {
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return models
+	 */
     public Collection<ArgumentSet> getModels(EvidentialArgumentationFramework bbase) {
         Set<ArgumentSet> extensions = new HashSet<ArgumentSet>();
         // Check all conflict-free subsets
@@ -52,7 +57,11 @@ public class AdmissibleReasoner {
         }
         return extensions;
     }
-
+	/**
+	 * 
+	 * @param bbase argumentation framework
+	 * @return model
+	 */
     public ArgumentSet getModel(EvidentialArgumentationFramework bbase) {
         // as the empty set is always admissible we return that one.
         return new ArgumentSet();

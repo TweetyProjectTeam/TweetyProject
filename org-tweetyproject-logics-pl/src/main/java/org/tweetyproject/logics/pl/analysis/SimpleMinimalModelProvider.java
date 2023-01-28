@@ -34,7 +34,14 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  *
  */
 public class SimpleMinimalModelProvider implements MinimalModelProvider<Proposition,PlBeliefSet,PlFormula> {
+	/**
+	 * model provider
+	 */
 	public ModelProvider<?, PlBeliefSet, InterpretationSet<Proposition, PlBeliefSet, PlFormula>> modelProvider;
+	/**
+	 * standard constructor with model provider
+	 * @param modelProvider a model provider
+	 */
 	public SimpleMinimalModelProvider(ModelProvider<?, PlBeliefSet, InterpretationSet<Proposition, PlBeliefSet, PlFormula>> modelProvider) {
 		this.modelProvider = modelProvider;
 	}
