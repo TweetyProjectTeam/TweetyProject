@@ -37,20 +37,18 @@ import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
 import org.tweetyproject.logics.fol.syntax.FolSignature;
 
 /**
- * @author Nils Geilen
- * @author Matthias Thimm
- *
- *         According to Modgil and Prakken
- *         (http://www.cs.uu.nl/groups/IS/archive/henry/ASPICtutorial.pdf) this
- *         represents an argumentation theory (AS, KB) with - AS argumentation
- *         system (e.g. inference rules) - KB knowledge base and/or a
- *         corresponding structured argumentation framework (A,C,&lt;=) with - A
- *         set of arguments - C set of attacks - &lt;= order on the arguments
- *         and/or a corresponding abstract argumentation framework (A, D) with -
- *         A set of arguments - D defeat relationship
+ * According to  <a href="http://www.cs.uu.nl/groups/IS/archive/henry/ASPICtutorial.pdf">Modgil and Prakken</a>,
+ * this represents an argumentation theory (AS, KB) with - AS argumentation
+ * system (e.g. inference rules) - KB knowledge base and/or a
+ * corresponding structured argumentation framework (A,C,&lt;=) with - A
+ * set of arguments - C set of attacks - &lt;= order on the arguments
+ * and/or a corresponding abstract argumentation framework (A, D) with -
+ * A set of arguments - D defeat relationship
  *
  * @param <T> is the type of the language that the ASPIC theory's rules range
  *            over
+ * @author Nils Geilen
+ * @author Matthias Thimm
  */
 public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<InferenceRule<T>> implements BeliefBase {
 
@@ -68,7 +66,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 
 	/**
 	 * Constructs a new ASPIC argumentation theory
-	 * 
+	 *
 	 * @param rfgen function to map defeasible rules to labels
 	 */
 	public AspicArgumentationTheory(RuleFormulaGenerator<T> rfgen) {
@@ -79,7 +77,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	/**
 	 * Set a new generator to transform rules into words of the language they range
 	 * over
-	 * 
+	 *
 	 * @param rfg is the new formula generator
 	 */
 	public void setRuleFormulaGenerator(RuleFormulaGenerator<T> rfg) {
@@ -89,7 +87,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	/**
 	 * Returns the generator to transform rules into words of the language they
 	 * range over
-	 * 
+	 *
 	 * @return the formula generator
 	 */
 	public RuleFormulaGenerator<T> getRuleFormulaGenerator() {
@@ -97,8 +95,8 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	}
 
 	/**
-	 * Adds an additional inference rule
-	 * 
+	 * Adds an inference rule
+	 *
 	 * @param rule the rule to be added
 	 */
 	public void addRule(InferenceRule<T> rule) {
@@ -106,8 +104,8 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	}
 
 	/**
-	 * Adds an additional axiom, i.e. a strict rule without premise
-	 * 
+	 * Adds an axiom, i.e. a strict rule without premise
+	 *
 	 * @param axiom the axiom's conclusion
 	 */
 	public void addAxiom(T axiom) {
@@ -117,8 +115,8 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	}
 
 	/**
-	 * Adds an additional ordinary, i.e. a defeasible inference rule without premise
-	 * 
+	 * Adds an ordinary premise, i.e. a defeasible inference rule without premise
+	 *
 	 * @param prem the premise's conclusion
 	 */
 	public void addOrdinaryPremise(T prem) {
@@ -130,9 +128,9 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	/**
 	 * This method transfers this Aspic+ theory into a Dung style argumentation
 	 * system
-	 * 
+	 *
 	 * @return a dung theory constructed out of this system's arguments and their
-	 *         defeat relation according to order
+	 * defeat relation according to order
 	 */
 	public DungTheory asDungTheory() {
 		return this.asDungTheory(false);
@@ -141,7 +139,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	/**
 	 * This method transfers this Aspic+ theory into a Dung style argumentation
 	 * system
-	 * 
+	 *
 	 * @param simplifyArgumentStructure whether the argument class should be
 	 *                                  simplified; if "false" then
 	 *                                  <code>AspicArgument</code> is used as the
@@ -150,7 +148,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 	 *                                  argument (the structure of the arguments is
 	 *                                  therefore lost).
 	 * @return a dung theory constructed out of this system's arguments and their
-	 *         defeat relation according to order
+	 * defeat relation according to order
 	 */
 	public DungTheory asDungTheory(boolean simplifyArgumentStructure) {
 		Collection<AspicArgument<T>> args = getArguments();
@@ -172,38 +170,38 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 		}
 		return dung_theory2;
 	}
+
 	/**
-	 * 
-	 * @return a set of ground fol rules 
+	 * @return a set of ground fol rules
 	 */
 	public Set<InferenceRule<T>> groundFolRules() {
 		Signature sig = this.getMinimalSignature();
-		if (!(sig instanceof FolSignature)) 
+		if (!(sig instanceof FolSignature))
 			return this;
-		
+
 		FolSignature fsig = (FolSignature) sig;
-		Set<InferenceRule<T>> ground_rules = new HashSet<InferenceRule<T>>();
+		Set<InferenceRule<T>> ground_rules = new HashSet<>();
 		for (InferenceRule<T> r : this) {
-			ground_rules.addAll((Set<InferenceRule<T>>) r.allGroundInstances(fsig.getConstants()));
+			ground_rules.addAll(r.allGroundInstances(fsig.getConstants()));
 		}
 		return ground_rules;
 	}
 
 	/**
-	 * Expands this systems's inference rules into a tree arguments
-	 * 
-	 * @return the arguments constructed from this systems's inference rules
+	 * Expands this system's inference rules into a tree arguments
+	 *
+	 * @return the arguments constructed from this system's inference rules
 	 */
 	public Collection<AspicArgument<T>> getArguments() {
 		Collection<AspicArgument<T>> args = new HashSet<>();
 		Collection<Collection<AspicArgument<T>>> subs = new HashSet<>();
 		Collection<Collection<AspicArgument<T>>> new_subs = new HashSet<>();
 		Collection<AspicArgument<T>> argsForPrem = new HashSet<>();
-		
+
 		Set<InferenceRule<T>> rules = this.groundFolRules();
 		for (InferenceRule<T> rule : rules) {
-			if (rule.isFact()) 
-				args.add(new AspicArgument<T>(rule));
+			if (rule.isFact())
+				args.add(new AspicArgument<>(rule));
 		}
 		boolean changed;
 		do {
@@ -223,7 +221,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 					} else {
 						if (subs.isEmpty()) {
 							for (AspicArgument<T> subarg : argsForPrem) {
-								Collection<AspicArgument<T>> subargset = new HashSet<AspicArgument<T>>();
+								Collection<AspicArgument<T>> subargset = new HashSet<>();
 								subargset.add(subarg);
 								subs.add(subargset);
 							}
@@ -244,7 +242,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 				if (continueWithNextRule)
 					continue;
 				for (Collection<AspicArgument<T>> subargset : subs)
-					changed = args.add(new AspicArgument<T>(rule, subargset)) || changed;
+					changed = args.add(new AspicArgument<>(rule, subargset)) || changed;
 			}
 		} while (changed);
 		return args;
@@ -252,7 +250,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 
 	/**
 	 * Sets a new order over the arguments
-	 * 
+	 *
 	 * @param order the new order
 	 */
 	public void setOrder(Comparator<AspicArgument<T>> order) {
@@ -268,7 +266,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -278,7 +276,7 @@ public class AspicArgumentationTheory<T extends Invertable> extends RuleSet<Infe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.tweetyproject.commons.BeliefBase#getSignature()
 	 */
 	@Override

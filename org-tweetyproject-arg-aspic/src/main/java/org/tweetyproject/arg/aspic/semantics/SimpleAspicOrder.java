@@ -27,11 +27,10 @@ import org.tweetyproject.arg.aspic.syntax.AspicArgument;
 import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
 
 /**
- * @author Nils Geilen
- * 
  * A simple comparator for Aspic Arguments, that compares their top rules according to a given list of rules
- * 
- * @param <T>	is the type of the language that the ASPIC theory's rules range over 
+ *
+ * @param <T> is the type of the language that the ASPIC theory's rules range over
+ * @author Nils Geilen
  */
 public class SimpleAspicOrder<T extends Invertable> implements Comparator<AspicArgument<T>> {
 	

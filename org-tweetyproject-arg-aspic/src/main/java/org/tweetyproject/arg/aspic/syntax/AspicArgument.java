@@ -18,35 +18,26 @@
  */
 package org.tweetyproject.arg.aspic.syntax;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.tweetyproject.arg.aspic.ruleformulagenerator.RuleFormulaGenerator;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.logics.commons.syntax.interfaces.Invertable;
 
-/**
- * 
- * @author Nils Geilen
- *
- * An argument according to the ASPIC+ specification
- * 
- * @param <T>	is the type of the language that the ASPIC theory's rules range over 
- */
+import java.util.*;
 
+/**
+ * An argument according to the ASPIC+ specification
+ * @param <T> is the type of the language that the ASPIC theory's rules range over
+ *
+ * @author Nils Geilen
+ */
 public class AspicArgument<T extends Invertable> extends Argument {
 	
 	/** The conclusion of the argument's top rule **/
-	private T conc = null;;
+	private T conc;
 	/** The argument's direct children, whose conclusions fit its prerequisites **/
 	private List<AspicArgument<T>> directsubs = new ArrayList<>();
 	/** The srgument's top rule **/
-	private InferenceRule<T> toprule = null;
+	private InferenceRule<T> toprule;
 	
 	
 	/**
@@ -58,7 +49,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		super(null);
 		this.toprule = toprule;
 		conc = toprule.getConclusion();	
-		this.directsubs = new LinkedList<AspicArgument<T>>(directsubs);
+		this.directsubs = new LinkedList<>(directsubs);
 		
 		generateName();
 	}
@@ -80,12 +71,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 * and is used to determine equality 
 	 */
 	private void generateName() {
-		Collections.sort(directsubs, new Comparator<AspicArgument<T>>() {
-			@Override
-			public int compare(AspicArgument<T> o1, AspicArgument<T> o2) {
-				return o1.hashCode() - o2.hashCode();
-			}
-		});
+		directsubs.sort(Comparator.comparingInt(AspicArgument::hashCode));
 		setName(toprule + (directsubs.isEmpty()  ? "": " "+directsubs ));
 	}
 		
@@ -294,11 +280,8 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		} else if (!directsubs.equals(other.directsubs))
 			return false;
 		if (toprule == null) {
-			if (other.toprule != null)
-				return false;
-		} else if (!toprule.equals(other.toprule))
-			return false;
-		return true;
+			return other.toprule == null;
+		} else return toprule.equals(other.toprule);
 	}
 
 	/**
@@ -350,12 +333,7 @@ public class AspicArgument<T extends Invertable> extends Argument {
 		Collection<AspicArgument<T>> defargs = passive.getDefeasibleSubs();		
 		// default order
 		if(order == null)
-			order = new Comparator<AspicArgument<T>>() {
-				@Override
-				public int compare(AspicArgument<T> o1, AspicArgument<T> o2) {
-					return 0;
-				}
-			};		
+			order = (o1, o2) -> 0;
 		/*
 		 * Undercutting
 		 */
@@ -389,8 +367,8 @@ public class AspicArgument<T extends Invertable> extends Argument {
 	 * @return a shallow copy
 	 */
 	public AspicArgument<T> shallowCopy() {
-		AspicArgument<T> copy = new AspicArgument<T>(toprule);
-		directsubs.forEach(sub -> copy.addDirectSub(sub));
+		AspicArgument<T> copy = new AspicArgument<>(toprule);
+		directsubs.forEach(copy::addDirectSub);
 		return copy;
 	}
 

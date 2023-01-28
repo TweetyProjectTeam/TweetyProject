@@ -116,10 +116,10 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 
 	private Set<AspicArgument<T>> constructArgsWithConclusion(AspicArgumentationTheory<T> aat, T conc, Set<T> conclusions) {
 	
-		conclusions = new HashSet<T>(conclusions);
+		conclusions = new HashSet<>(conclusions);
 		conclusions.add(conc);
 
-		Set<AspicArgument<T>> result = new LinkedHashSet<AspicArgument<T>>();
+		Set<AspicArgument<T>> result = new LinkedHashSet<>();
 		outer: for (InferenceRule<T> rule: aat.getRulesWithConclusion(conc)) {
 			// Skip rules where conclusion is repeated as premise
 			for (T premise: rule.getPremise()) {
@@ -128,9 +128,9 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 				}
 			}
 			// Set up list of partial args (i.e. may not contain necessary sub args)
-			Set<AspicArgument<T>> newPartialArgs = new LinkedHashSet<AspicArgument<T>>();
-			Set<AspicArgument<T>> partialArgs = new LinkedHashSet<AspicArgument<T>>();
-			partialArgs.add(new AspicArgument<T>(rule));
+			Set<AspicArgument<T>> newPartialArgs = new LinkedHashSet<>();
+			Set<AspicArgument<T>> partialArgs = new LinkedHashSet<>();
+			partialArgs.add(new AspicArgument<>(rule));
 
 			// For each premise ...
 			for (T premise: rule.getPremise()) {
@@ -138,7 +138,6 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 				Set<AspicArgument<T>> subArgs = constructArgsWithConclusion(aat, premise, conclusions);
 				
 				// Update and replace all partial args
-				newPartialArgs.clear();
 				for (AspicArgument<T> partialArg: partialArgs) {
 					for (AspicArgument<T> subArg: subArgs) {
 						AspicArgument<T> partialArgCopy = partialArg.shallowCopy();
@@ -164,16 +163,14 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 	 * @return	arguments with given conclusion plus recursively all attackers 
 	 */
 	private Collection<AspicArgument<T>> getArgsRec(AspicArgumentationTheory<T> aat, T conc) {
-			
 		
 		Random r = new Random();
 		
-		Set<AspicArgument<T>> newArgs = new LinkedHashSet<AspicArgument<T>>();
-		Set<AspicArgument<T>> args = new LinkedHashSet<AspicArgument<T>>();
-		Set<AspicArgument<T>> argsDone = new HashSet<AspicArgument<T>>();
-		Set<T> conclusionsDone = new HashSet<T>();
+		Set<AspicArgument<T>> newArgs = new LinkedHashSet<>();
+		Set<AspicArgument<T>> argsDone = new HashSet<>();
+		Set<T> conclusionsDone = new HashSet<>();
 
-		args.addAll(constructArgsWithConclusion(aat, conc, new HashSet<T>()));
+		Set<AspicArgument<T>> args = new LinkedHashSet<>(constructArgsWithConclusion(aat, conc, new HashSet<>()));
 		conclusionsDone.add(conc);
 		
 		boolean repeat = true;
@@ -187,7 +184,7 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 					for (T conclusion: getAttackingConclusions(argument, aat.getRuleFormulaGenerator())) {
 						if (!conclusionsDone.contains(conclusion)) {
 							conclusionsDone.add(conclusion);
-							newArgs.addAll(constructArgsWithConclusion(aat, conclusion, new HashSet<T>()));
+							newArgs.addAll(constructArgsWithConclusion(aat, conclusion, new HashSet<>()));
 						}
 					}
 				}
@@ -213,7 +210,7 @@ public class DirectionalAspicReasoner<T extends Invertable> extends AbstractAspi
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<T> getAttackingConclusions(AspicArgument<T> arg, RuleFormulaGenerator<T> rfgen) {
-		Collection<T> cs = new ArrayList<T>();
+		Collection<T> cs = new ArrayList<>();
 		Objects.requireNonNull(rfgen);
 		// Add undercutters
 		for (InferenceRule<T> dr: arg.getDefeasibleRules()) {
