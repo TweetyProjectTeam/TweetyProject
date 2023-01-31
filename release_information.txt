@@ -1,3 +1,18 @@
+23.01.2023 - TweetyProject 1.23
+  New libraries: <none>
+  New functionalities:
+    - Added FPGrowth algorithm for frequent pattern mining (org.tweetyproject.machinelearning)
+    - Added basic functionalities for reinforcement learning such as MDPs, policy evaluation,
+      policy iteration, and value iteration algorithms (org.tweetyproject.machinelearning)
+    - Added algorithm for learning AFs from labelings (org.tweetyproject.arg.dung)
+    - Added command line interface for inconsistency measures (org.tweetyproject.logics.pl)
+    - Added probabilistic evidential argumentation frameworks (org.tweetyproject.arg.bipolar)
+    - Added support for ICCMA23 abstract argumentation solvers (org.tweetyproject.arg.dung)
+    - Added vacuous reduct semantics for abstract argumentation (org.tweetyproject.arg.dung)
+    - Added serialisable ranking reasoner (org.tweetyproject.arg.ranking)
+    - Added inconsistency measure based on prime implicants (org.tweetyproject.logics.pl)
+  Minor changes:
+    - Fixed JavaDoc
 25.07.2022 - TweetyProject 1.22
   New libraries:
     - org.tweetyproject.comparator: library for various comparators such as
@@ -8,7 +23,7 @@
     - Added support for incomplete argumentation frameworks (org.tweetyproject.arg.dung)
     - Added KWT generator for abstract argumentation frameworks (org.tweetyproject.arg.dung)
   Minor changes:
-    - Encoding optimsations for SAT-based argumentation solvers (org.tweetyproject.arg.dung)
+    - Encoding optimisations for SAT-based argumentation solvers (org.tweetyproject.arg.dung)
     - Bugfix web interface (note that http://tweetyproject.org/w/ is usable again)
 20.01.2022 - TweetyProject 1.21
   New libraries:

@@ -46,7 +46,6 @@ import org.tweetyproject.arg.adf.syntax.adf.AbstractDialecticalFramework;
  * @author Jonas Schumacher
  *
  */
-
 public class ADFExample {
 
 	/**

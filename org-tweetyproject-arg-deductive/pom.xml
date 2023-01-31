@@ -9,7 +9,7 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.22-SNAPSHOT</version>
+  	<version>1.23-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
   <dependencies>
@@ -22,17 +22,17 @@
   	<dependency>
   		<groupId>org.tweetyproject.logics</groupId>
   		<artifactId>pl</artifactId>
-  		<version>1.22-SNAPSHOT</version>
+  		<version>1.23-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject</groupId>
   		<artifactId>graphs</artifactId>
-  		<version>1.22-SNAPSHOT</version>
+  		<version>1.23-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>org.tweetyproject.arg</groupId>
   		<artifactId>dung</artifactId>
-  		<version>1.22-SNAPSHOT</version>
+  		<version>1.23-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

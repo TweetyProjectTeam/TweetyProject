@@ -16,17 +16,17 @@
     <dependency>
     	<groupId>org.tweetyproject</groupId>
     	<artifactId>commons</artifactId>
-    	<version>1.22-SNAPSHOT</version>
+    	<version>1.23-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>org.tweetyproject.logics</groupId>
     	<artifactId>pl</artifactId>
-    	<version>1.22-SNAPSHOT</version>
+    	<version>1.23-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>org.tweetyproject</groupId>
     	<artifactId>math</artifactId>
-    	<version>1.22-SNAPSHOT</version>
+    	<version>1.23-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>junit</groupId>
@@ -37,13 +37,13 @@
     <dependency>
    		<groupId>org.tweetyproject.arg</groupId>
     	<artifactId>adf</artifactId>
-    	<version>1.22-SNAPSHOT</version>
+    	<version>1.23-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.22-SNAPSHOT</version>
+  	<version>1.23-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>

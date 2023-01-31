@@ -8,13 +8,13 @@
   	<dependency>
 		<groupId>org.tweetyproject</groupId>
 		<artifactId>commons</artifactId>
-  		<version>1.22-SNAPSHOT</version>
+  		<version>1.23-SNAPSHOT</version>
   	</dependency>
   </dependencies>
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.22-SNAPSHOT</version>
+  	<version>1.23-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>

@@ -23,7 +23,7 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-  	<version>1.22-SNAPSHOT</version>
+  	<version>1.23-SNAPSHOT</version>
   	<relativePath>..</relativePath>
   </parent>
 </project>
