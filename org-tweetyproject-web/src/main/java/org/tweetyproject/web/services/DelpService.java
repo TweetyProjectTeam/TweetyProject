@@ -25,6 +25,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.json.*;
 
 import org.tweetyproject.arg.delp.parser.DelpParser;
 import org.tweetyproject.arg.delp.reasoner.DelpReasoner;
@@ -40,8 +41,10 @@ import org.tweetyproject.logics.fol.syntax.FolFormula;
 import org.tweetyproject.logics.fol.syntax.Negation;
 import org.tweetyproject.web.TweetyServer;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+
+
+import org.json.JSONObject;
+import org.json.JSONException;
 
 /**
  * Web service for defeasible logic programming.

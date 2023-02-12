@@ -33,6 +33,10 @@ import org.tweetyproject.arg.dung.learning.syntax.Input;
  * @author Lars Bengel
  */
 public class AFLearnerExample {
+	/**
+	 * main method
+	 * @param args command line arguments
+	 */
     public static void main(String[] args ) {
 
         // create a hidden argumentation framework that we will try to learn
