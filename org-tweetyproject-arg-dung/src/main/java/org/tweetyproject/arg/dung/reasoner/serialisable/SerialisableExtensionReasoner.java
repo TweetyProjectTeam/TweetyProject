@@ -74,12 +74,17 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
         }
 
         // compute the candidate sets S' via the selection function
+        // compute all initial sets, sorted in the three categories unattacked, unchallenged, challenged
         Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(state.getTheory());
+        // select initial sets according to given specific semantic
         Collection<Extension<DungTheory>> newExts = this.selectionFunction(initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
-
+        
         // compute the successor states and recursively proceed for each successor
+        // iterate through all initial sets and add depth-first all states inclusive found final extensions
         for (Extension<DungTheory> newExt: newExts) {
+            // reduct framework of the current state by transforming to new state for given initial set newExt
             TransitionState newState = state.getNext(newExt);
+            // compute possible extension resulting from the reduced framework in the new state
             result.addAll(this.getModelsRecursive(newState, result));
         }
         return result;
