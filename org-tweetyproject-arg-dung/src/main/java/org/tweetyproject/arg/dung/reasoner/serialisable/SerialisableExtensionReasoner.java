@@ -45,7 +45,10 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
      * @param challenged the set of challenged initial sets
      * @return a subset of the initial sets of the theory, selected via a specific criteria
      */
-    public abstract Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged);
+    public abstract Collection<Extension<DungTheory>> selectionFunction(
+    		Collection<Extension<DungTheory>> unattacked, 
+    		Collection<Extension<DungTheory>> unchallenged, 
+    		Collection<Extension<DungTheory>> challenged);
 
     /**
      * Checks whether the current state satisfies some condition, i.e. its extension can be accepted by the corresponding semantics
@@ -69,26 +72,48 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
      */
     protected Collection<Extension<DungTheory>> getModelsRecursive(TransitionState state, Collection<Extension<DungTheory>> result) {
         // check whether the current state is acceptable, if yes add to results
-        if (this.terminationFunction(state)) {
+        if (checkTerminationFunction(state)) {
             result.add(state.getExtension());
         }
 
-        // compute the candidate sets S' via the selection function
-        // compute all initial sets, sorted in the three categories unattacked, unchallenged, challenged
-        Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(state.getTheory());
-        // select initial sets according to given specific semantic
-        Collection<Extension<DungTheory>> newExts = this.selectionFunction(initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
+        Collection<Extension<DungTheory>> newExts = selectInitialSetsForReduction(state);
         
         // compute the successor states and recursively proceed for each successor
-        // iterate through all initial sets and add depth-first all states inclusive found final extensions
+        // iterate depth-first through all reductions and add all found final extensions
         for (Extension<DungTheory> newExt: newExts) {
-            // reduct framework of the current state by transforming to new state for given initial set newExt
+            // reduct framework of the current state by transforming to new state for given extension newExt
             TransitionState newState = state.getNext(newExt);
             // compute possible extension resulting from the reduced framework in the new state
             result.addAll(this.getModelsRecursive(newState, result));
         }
         return result;
     }
+
+	/**
+	 * Selects, by using the specified selection function of the reasoner, those initial sets which should be used to reduct the framework
+	 * in order to transit to a new state
+	 * 
+	 * @param state current transition state of the process
+	 * @return candidate sets S' via the selection function
+	 */
+	protected Collection<Extension<DungTheory>> selectInitialSetsForReduction(TransitionState state) {
+		// compute the candidate sets S' via the selection function
+        // compute all initial sets, sorted in the three categories unattacked, unchallenged, challenged
+        Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(state.getTheory());
+        // select initial sets according to given specific semantic
+        Collection<Extension<DungTheory>> newExts = this.selectionFunction(initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
+		return newExts;
+	}
+
+	/**
+	 * Checks if the specified termination function of the reasoner is fulfilled.
+	 * 
+	 * @param state current transition state of the process
+	 * @return true if state is acceptable
+	 */
+	protected boolean checkTerminationFunction(TransitionState state) {
+		return this.terminationFunction(state);
+	}
 
     @Override
     public Extension<DungTheory> getModel(DungTheory bbase) {
