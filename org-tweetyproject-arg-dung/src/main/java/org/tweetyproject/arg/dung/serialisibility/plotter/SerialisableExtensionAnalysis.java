@@ -41,7 +41,7 @@ import org.tweetyproject.graphs.*;
 public class SerialisableExtensionAnalysis {
 	
 	private DungTheory examinedFramework; 
-	private Semantics usedSemantic;
+	private Semantics usedSemantics;
 	private SimpleGraph<ExtensionNode> resultingGraph;
 	private ExtensionNode root;
 	private Collection<Extension<DungTheory>> foundExtensions;
@@ -51,7 +51,7 @@ public class SerialisableExtensionAnalysis {
 	 * Creates an object containing all relevant findings from examining the given framework for serialisable extensions.
 	 * 
 	 * @param examinedFramework Argumentation framework, which has been examined.
-	 * @param usedSemantic Semantic used to generate the extensions found during the examination.
+	 * @param usedSemantics Semantics used to generate the extensions found during the examination.
 	 * @param resultingGraph Graph visualizing the build paths, which lead to the finally found extensions.
 	 * @param root Node with whom the processing of the examined framework started
 	 * @param foundExtensions Extensions, which can be generated using the concept of serialisibility.
@@ -59,7 +59,7 @@ public class SerialisableExtensionAnalysis {
 	 */
 	public SerialisableExtensionAnalysis(
 			DungTheory examinedFramework, 
-			Semantics usedSemantic,
+			Semantics usedSemantics,
 			SimpleGraph<ExtensionNode> resultingGraph, 
 			ExtensionNode root,
 			Collection<Extension<DungTheory>> foundExtensions,
@@ -75,7 +75,7 @@ public class SerialisableExtensionAnalysis {
 		}
 				
 		this.examinedFramework = examinedFramework;
-		this.usedSemantic = usedSemantic;
+		this.usedSemantics = usedSemantics;
 		this.resultingGraph = resultingGraph;
 		this.root = root;
 		this.foundExtensions = foundExtensions;
@@ -92,10 +92,10 @@ public class SerialisableExtensionAnalysis {
 	}
 	
 	/**
-	 * @return Semantic used to generate the extensions found during the examination.
+	 * @return Semantics used to generate the extensions found during the examination.
 	 */
-	public Semantics getSemantic() {
-		return usedSemantic;
+	public Semantics getSemantics() {
+		return usedSemantics;
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class SerialisableExtensionAnalysis {
 	 */
 	public String toString(){
 		String printedResult = "Argumentation Framework: " + this.examinedFramework.toString() + "\n"
-				+ "Semantic: " + this.usedSemantic.toString() + "\n"
+				+ "Semantic: " + this.usedSemantics.toString() + "\n"
 				+ "Extensions: " + this.foundExtensions.toString() + "\n"
 				+ "Root: " + this.root.toString() + "\n"
 				+ "Graph: " + this.resultingGraph.toString();

@@ -29,7 +29,7 @@ import org.tweetyproject.graphs.Graph;
 
 /**
  * This class represents a specialization of {@link GraphPlotter GraphPlotters} used 
- * to visualize the process of generation extensions by serialising sets of arguments, 
+ * to visualize the process of generating extensions by serialising sets of arguments, 
  * as realised in {@link SerialisableExtensionReasonerWithAnalysis}.
  * <br>
  * The class defines the layout specifications of the visualization:

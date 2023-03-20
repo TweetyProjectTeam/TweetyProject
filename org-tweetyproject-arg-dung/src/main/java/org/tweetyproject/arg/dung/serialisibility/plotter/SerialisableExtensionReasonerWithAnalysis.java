@@ -52,28 +52,28 @@ import org.tweetyproject.graphs.*;
  */
 public abstract class SerialisableExtensionReasonerWithAnalysis extends SerialisableExtensionReasoner {
 
-	protected Semantics usedSemantic;
+	protected Semantics usedSemantics;
 	
 	/**
-	 * @param usedSemantic Semantic used to generate the extensions found during the examination.
+	 * @param usedSemantics Semantics used to generate the extensions found during the examination.
 	 */
-	public SerialisableExtensionReasonerWithAnalysis(Semantics usedSemantic) {
+	public SerialisableExtensionReasonerWithAnalysis(Semantics usedSemantics) {
 		super();
-		this.usedSemantic = usedSemantic;
+		this.usedSemantics = usedSemantics;
 	}
 
 	/**
-	 * @return Semantic used to generate the extensions found during the examination.
+	 * @return Semantics used to generate the extensions found during the examination.
 	 */
 	public Semantics getSemantic() {
-		return usedSemantic;
+		return usedSemantics;
 	}
 
 	/**
-	 * @param semantic Semantic used to generate the extensions found during the examination.
+	 * @param semantics Semantics used to generate the extensions found during the examination.
 	 */
-	protected void setSemantic(Semantics semantic) {
-		this.usedSemantic = semantic;
+	protected void setSemantic(Semantics semantics) {
+		this.usedSemantics = semantics;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	
 	/**
      * Creates a reasoner for the given semantic.
-     * @param semantics Semantic
+     * @param semantics Semantics, according to which the reasoner shall derive the extensions
      * @return a reasoner for the given Dung theory, inference type, and semantics
      */
     public static SerialisableExtensionReasonerWithAnalysis getSerialisableReasonerForSemantics(Semantics semantics){
@@ -148,7 +148,7 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			currentGraph = addSubGraph(currentGraph, root, subGraph, subRoot, newExt);
 		}
 
-		return new SerialisableExtensionAnalysis(state.getTheory(), this.usedSemantic, currentGraph, root, foundExtensions, subAnalyses);
+		return new SerialisableExtensionAnalysis(state.getTheory(), this.usedSemantics, currentGraph, root, foundExtensions, subAnalyses);
 	}
 
 	/**
