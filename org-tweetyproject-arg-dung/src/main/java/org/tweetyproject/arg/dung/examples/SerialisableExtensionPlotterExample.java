@@ -1,17 +1,21 @@
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.graphs.Graph;
+import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
+import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionAnalysisNode;
 import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionPlotter;
+import org.tweetyproject.arg.dung.serialisibility.*;
+import org.tweetyproject.graphs.*;
 
 import java.util.HashSet;
 
 public class SerialisableExtensionPlotterExample {
 
 	private static void plotExamplesForReasoner(Semantics semantic, DungTheory[] examples) {
+		/*
 		HashSet<Graph<SerialisableExtensionAnalysisNode>> graphs = new HashSet<Graph<SerialisableExtensionAnalysisNode>>();
 		for (DungTheory example : examples) {
 			graphs.add(
@@ -21,12 +25,29 @@ public class SerialisableExtensionPlotterExample {
 					);
 		}
 		SerialisableExtensionPlotter.plotGraph(graphs, 2000, 1000);
+		*/
 		
+		for (DungTheory example : examples) {
+			Plotter groundPlotter = new Plotter();
+			groundPlotter.createFrame(2000, 1000);
+			DungTheoryPlotter.plotFramework(example, groundPlotter);
+			SerialisableExtensionAnalysis analysis = SerialisableExtensionReasonerWithAnalysis
+					.getSerialisableReasonerForSemantics(semantic)
+					.getModelsWithAnalysis(example);
+			SimpleGraph<SerialisableExtensionAnalysisNode> graph = analysis.getGraph();
+			SerialisableExtensionPlotter.plotGraph(graph, groundPlotter);
+			groundPlotter.show();
+			System.out.println("================================================================================");
+			System.out.println(analysis.toString());
+			System.out.println("================================================================================");
+			System.out.println("");
+			
+		}
 	}
 	
 	
 	public static void main(String[] args) {
-		System.out.println("======================================== all Examples ========================================");
+		//System.out.println("======================================== all Examples ========================================");
 		plotExamplesForReasoner(Semantics.CO, new DungTheory[] {
 				SerialisableExtensionReasonerWithAnalysisExample.buildExample1(),
 				SerialisableExtensionReasonerWithAnalysisExample.buildExample2(),

@@ -126,9 +126,8 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
-		for (Graph<SerialisableExtensionAnalysisNode> af : graphs) {
-			SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, af);
-			sePlotter.createGraph();
+		for (Graph<SerialisableExtensionAnalysisNode> graph : graphs) {
+			plotGraph(graph, groundPlotter);
 		}
 		
 		groundPlotter.show();
@@ -137,7 +136,7 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 	/**
 	 * Plots the specified graph in a new created frame.
 	 * 
-	 * @param frameworks Graph of a generation process of serialisable extensions
+	 * @param graph Graph of a generation process of serialisable extensions
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
 	 */
@@ -146,10 +145,20 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
-		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, graph);
-		sePlotter.createGraph();
+		plotGraph(graph, groundPlotter);
 		
 		groundPlotter.show();
+	}
+
+	/**
+	 * Plots the specified graph in the frame of the specified plotter 
+	 * 
+	 * @param graph Graph of a generation process of serialisable extensions
+	 * @param groundPlotter Plotter, which creates the frame
+	 */
+	public static void plotGraph(Graph<SerialisableExtensionAnalysisNode> graph, Plotter groundPlotter) {
+		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, graph);
+		sePlotter.createGraph();
 	}
 
 }

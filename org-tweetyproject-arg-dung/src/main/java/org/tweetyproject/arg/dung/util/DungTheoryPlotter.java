@@ -128,8 +128,7 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 		groundPlotter.createFrame(width, height);
 		
 		for (DungTheory af : frameworks) {
-			DungTheoryPlotter afPlotter = new DungTheoryPlotter(groundPlotter, af);
-			afPlotter.createGraph();
+			plotFramework(af, groundPlotter);
 		}
 		
 		groundPlotter.show();
@@ -147,10 +146,20 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
-		DungTheoryPlotter afPlotter = new DungTheoryPlotter(groundPlotter, framework);
-		afPlotter.createGraph();
+		plotFramework(framework, groundPlotter);
 		
 		groundPlotter.show();
+	}
+
+	/**
+	 * Plots the specified framework in the frame of the specified plotter.
+	 * 
+	 * @param framework Argumentation framework to plot
+	 * @param groundPlotter Plotter, that creates the frame
+	 */
+	public static void plotFramework(DungTheory framework, Plotter groundPlotter) {
+		DungTheoryPlotter afPlotter = new DungTheoryPlotter(groundPlotter, framework);
+		afPlotter.createGraph();
 	}
 
 }
