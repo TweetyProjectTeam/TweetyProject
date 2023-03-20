@@ -16,9 +16,8 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility;
+package org.tweetyproject.arg.dung.examples;
 
-import org.tweetyproject.arg.dung.examples.SerialisableExtensionReasonerExample;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedAdmissibleReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedCompleteReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedGroundedReasoner;
@@ -26,6 +25,7 @@ import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedPreferredReaso
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedStableReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedUnchallengedReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**

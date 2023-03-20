@@ -1,10 +1,11 @@
-package org.tweetyproject.arg.dung.serialisibility.plotter;
+package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
-import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysisExample;
+import org.tweetyproject.arg.dung.serialisibility.plotter.ExtensionNode;
+import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionPlotter;
 
 import java.util.HashSet;
 
