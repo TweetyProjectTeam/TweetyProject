@@ -71,4 +71,17 @@ public class TransitionState {
     public Extension<DungTheory> getExtension() {
         return extension;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TransitionState other = (TransitionState) obj;
+    	
+    	return this.extension.equals(other.extension) && this.theory.equals(other.theory);
+    }
 }

@@ -18,8 +18,8 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.plotter;
 
-import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.serialisibility.*;
+import org.tweetyproject.arg.dung.syntax.TransitionState;
 import org.tweetyproject.graphs.Node;
 
 
@@ -30,30 +30,43 @@ import org.tweetyproject.graphs.Node;
  * @version TweetyProject 1.23
  *
  */
-public class ExtensionNode implements Node {
+public class SerialisableExtensionAnalysisNode implements Node {
 	
-	private Extension<DungTheory> extension;
+	private TransitionState state;
+	private SerialisableExtensionAnalysis analysis;
+	
 
 	/**
-	 * @param extension Collection of extensions, which are to be represented by this node.
+	 * @param state State, which is to be represented by this node.
 	 */
-	public ExtensionNode(Extension<DungTheory> extension) {
+	public SerialisableExtensionAnalysisNode(TransitionState state) {
 		super();
-		this.extension = extension;
+		this.state = state;
 	}
 
 	/**
-	 * @return extension, which is to be represented by this node.
+	 * @return State, which is to be represented by this node.
 	 */
-	public Extension<DungTheory> getExtension() {
-		return extension;
+	public TransitionState getState() {
+		return state;
 	}
-	
+
+	/**
+	 * @return Analysis, which results from examining the framework of this state.
+	 */
+	public SerialisableExtensionAnalysis getAnalysis() {
+		return analysis;
+	}
+
+	public void setAnalysis(SerialisableExtensionAnalysis analysis) {
+		this.analysis = analysis;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		return this.extension.toString();
+		return this.state.getExtension().toString();
 	}
 
 	public String getName() {

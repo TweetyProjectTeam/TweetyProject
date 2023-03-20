@@ -23,7 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotter.ExtensionNode;
+import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionAnalysisNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.*;
 
@@ -43,8 +43,8 @@ public class SerialisableExtensionAnalysis {
 	
 	private DungTheory examinedFramework; 
 	private Semantics usedSemantics;
-	private SimpleGraph<ExtensionNode> resultingGraph;
-	private ExtensionNode root;
+	private SimpleGraph<SerialisableExtensionAnalysisNode> resultingGraph;
+	private SerialisableExtensionAnalysisNode root;
 	private Collection<Extension<DungTheory>> foundExtensions;
 	private HashSet<SerialisableExtensionAnalysis> subAnalyses;
 	
@@ -61,8 +61,8 @@ public class SerialisableExtensionAnalysis {
 	public SerialisableExtensionAnalysis(
 			DungTheory examinedFramework, 
 			Semantics usedSemantics,
-			SimpleGraph<ExtensionNode> resultingGraph, 
-			ExtensionNode root,
+			SimpleGraph<SerialisableExtensionAnalysisNode> resultingGraph, 
+			SerialisableExtensionAnalysisNode root,
 			Collection<Extension<DungTheory>> foundExtensions,
 			HashSet<SerialisableExtensionAnalysis> subAnalyses) {
 		super();
@@ -102,7 +102,7 @@ public class SerialisableExtensionAnalysis {
 	/**
 	 * @return Graph visualizing the build paths, which lead to the finally found extensions.
 	 */
-	public SimpleGraph<ExtensionNode> getGraph() {
+	public SimpleGraph<SerialisableExtensionAnalysisNode> getGraph() {
 		return resultingGraph;
 	}
 
@@ -116,7 +116,7 @@ public class SerialisableExtensionAnalysis {
 	/**
 	 * @return Node with whom the processing of the examined framework started
 	 */
-	public ExtensionNode getRoot() {
+	public SerialisableExtensionAnalysisNode getRoot() {
 		return root;
 	}
 	

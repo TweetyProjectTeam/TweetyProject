@@ -4,7 +4,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
-import org.tweetyproject.arg.dung.serialisibility.plotter.ExtensionNode;
+import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionAnalysisNode;
 import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionPlotter;
 
 import java.util.HashSet;
@@ -12,7 +12,7 @@ import java.util.HashSet;
 public class SerialisableExtensionPlotterExample {
 
 	private static void plotExamplesForReasoner(Semantics semantic, DungTheory[] examples) {
-		HashSet<Graph<ExtensionNode>> graphs = new HashSet<Graph<ExtensionNode>>();
+		HashSet<Graph<SerialisableExtensionAnalysisNode>> graphs = new HashSet<Graph<SerialisableExtensionAnalysisNode>>();
 		for (DungTheory example : examples) {
 			graphs.add(
 					SerialisableExtensionReasonerWithAnalysis
@@ -27,7 +27,7 @@ public class SerialisableExtensionPlotterExample {
 	
 	public static void main(String[] args) {
 		System.out.println("======================================== all Examples ========================================");
-		plotExamplesForReasoner(Semantics.UC, new DungTheory[] {
+		plotExamplesForReasoner(Semantics.CO, new DungTheory[] {
 				SerialisableExtensionReasonerWithAnalysisExample.buildExample1(),
 				SerialisableExtensionReasonerWithAnalysisExample.buildExample2(),
 				SerialisableExtensionReasonerWithAnalysisExample.buildExample3()
