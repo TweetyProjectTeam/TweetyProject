@@ -70,16 +70,15 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 		HashSet<Extension<DungTheory>> foundExtensions = new HashSet<Extension<DungTheory>>();
 		HashSet<SerialisableExtensionAnalysis> subAnalyses = new HashSet<SerialisableExtensionAnalysis>();
 
-		// [TERMINATION CONDITION] check whether the current state is acceptable
+		// check whether a construction of an extension is ﬁnished
 		if (this.checkTerminationFunction(state)) {
 			// found final extension
 			foundExtensions.add(state.getExtension());
-			return new SerialisableExtensionAnalysis(state.getTheory(), currentGraph, root, foundExtensions, subAnalyses);
 		}
 
 		Collection<Extension<DungTheory>> newExtensions = selectInitialSetsForReduction(state);
 
-		// iterate depth-first through all reductions
+		// [TERMINATION CONDITION] - terminates if newExtensions empty -  iterate depth-first through all reductions
 		for (Extension<DungTheory> newExt : newExtensions) {
 			// reduct framework of the current state by transforming to new state for given extension
 			TransitionState newState = state.getNext(newExt);

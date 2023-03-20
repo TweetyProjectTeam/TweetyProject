@@ -14,13 +14,16 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
+ *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+
+import java.util.Iterator;
+
 import org.tweetyproject.arg.dung.reasoner.serialisable.*;
 
 /**
@@ -45,10 +48,10 @@ import org.tweetyproject.arg.dung.reasoner.serialisable.*;
 public class SerialisableExtensionReasonerExample {
 
 	/**
-	 * 
-	 * @param reasoner Reasoner for a specific type of serialisable semantics (e.g. {@link SerialisedAdmissibleReasoner})
+	 * Builds an example argumentation framework
+	 * @return AF: ({a,b,c,d,e,f},{(a,a),(a,b),(b,a),(b,d),(d,c),(e,c),(e,f),(f,e)})
 	 */
-	public static void example1(SerialisableExtensionReasoner reasoner) {
+	public static DungTheory buildExample1() {
 		// AF: ({a,b,c,d,e,f},{(a,a),(a,b),(b,a),(b,d),(d,c),(e,c),(e,f),(f,e)})
 		DungTheory af = new DungTheory();
 		Argument a = new Argument("a");
@@ -72,14 +75,14 @@ public class SerialisableExtensionReasonerExample {
 		af.add(new Attack(e,f));
 		af.add(new Attack(f,e));
 		
-		System.out.println("AF: " + af);
-		System.out.println("Extensions: " + reasoner.getModels(af));
+		return af;
 	}
+	
 	/**
-	 * 
-	 * @param reasoner Reasoner for a specific type of serialisable semantics (e.g. {@link SerialisedAdmissibleReasoner})
+	 * Builds an example argumentation framework
+	 * @return AF: ({a,b,c,d,e,f},{(a,b),(a,c),(b,a),(b,c),(c,e),(d,e),(e,d),(e,f),(f,e)})
 	 */
-	public static void example2(SerialisableExtensionReasoner reasoner) {
+	public static DungTheory buildExample2() {
 		// AF: ({a,b,c,d,e,f},{(a,b),(a,c),(b,a),(b,c),(c,e),(d,e),(e,d),(e,f),(f,e)})
 		DungTheory af = new DungTheory();
 		Argument a = new Argument("a");
@@ -104,15 +107,14 @@ public class SerialisableExtensionReasonerExample {
 		af.add(new Attack(e,f));
 		af.add(new Attack(f,e));
 		
-		System.out.println("AF: " + af);
-		System.out.println("Extensions: " + reasoner.getModels(af));
+		return af;
 	}
 	
 	/**
-	 * 
-	 * @param reasoner Reasoner for a specific type of serialisable semantics (e.g. {@link SerialisedAdmissibleReasoner})
+	 * Builds an example argumentation framework
+	 * @return AF: ({a,b,c,d},{(a,b),(b,a),(c,d),(d,b)})
 	 */
-	public static void example3(SerialisableExtensionReasoner reasoner) {
+	public static DungTheory buildExample3() {
 		// AF: ({a,b,c,d},{(a,b),(b,a),(c,d),(d,b)})
 		DungTheory af = new DungTheory();
 		Argument a = new Argument("a");
@@ -128,9 +130,37 @@ public class SerialisableExtensionReasonerExample {
 		af.add(new Attack(c,d));
 		af.add(new Attack(d,b));
 
-		
-		System.out.println("AF: " + af);
-		System.out.println("Extensions: " + reasoner.getModels(af));
+		return af;
+	}
+	
+	/**
+	 * Uses the specified reasoner to deduce all extensions within the specified frameworks of the described semantic 
+	 * and prints these findings in uniform style and layout.
+	 * 
+	 * @param reasoner Reasoner used to generate the extension of the example's framework.
+	 * @param description Description of the semantics, which will be derived by the reasoner.
+	 * @param examples Exemplary argumentation frameworks, to demonstrate the validity of the reasoning.
+	 */
+	protected static void executeExamplesInUniformLayout(SerialisableExtensionReasoner reasoner, String description, DungTheory[] examples) {
+		System.out.println(description + ":");
+		for (int i = 0; i < examples.length-1; i++) {
+			examineFrameworkWithReasonerInUniformLayout(examples[i], reasoner);
+			System.out.println("");
+		}
+		examineFrameworkWithReasonerInUniformLayout(examples[examples.length-1], reasoner);
+		System.out.println("======================================================================================================");
+		System.out.println("");
+	}
+	
+	/**
+	 * Uses the specified reasoner to deduce all extensions within the specified framework.
+	 * 
+	 * @param frameWork Problem instance, for which all extensions of the semantic, specified by the choice of reasoner, shall be found.
+	 * @param reasoner Reasoner of a specific semantic, to generate all extension, using the concept of serialisability.
+	 */
+	protected static void examineFrameworkWithReasonerInUniformLayout(DungTheory frameWork, SerialisableExtensionReasoner reasoner) {
+		System.out.println("AF: " + frameWork);
+		System.out.println("Extensions: " + reasoner.getModels(frameWork));
 	}
 	
 	/**
@@ -138,64 +168,24 @@ public class SerialisableExtensionReasonerExample {
 	 * @param args No input required.
 	 */
 	public static void main(String[] args) {
+		DungTheory[] examples = new DungTheory[] {buildExample1(), buildExample2(), buildExample3()};
+		
 		SerialisedAdmissibleReasoner admReasoner = new SerialisedAdmissibleReasoner();
-		System.out.println("Admissible Semantics:");
-		example1(admReasoner);
-		System.out.println("");
-		example2(admReasoner);
-		System.out.println("");
-		example3(admReasoner);
-		System.out.println("======================================================================================================");
-		System.out.println("");
+		executeExamplesInUniformLayout(admReasoner, "Admissible Semantics", examples);
 		
 		SerialisedCompleteReasoner coReasoner = new SerialisedCompleteReasoner();
-		System.out.println("Complete Semantics:");
-		example1(coReasoner);
-		System.out.println("");
-		example2(coReasoner);
-		System.out.println("");
-		example3(coReasoner);
-		System.out.println("======================================================================================================");
-		System.out.println("");
+		executeExamplesInUniformLayout(coReasoner, "Complete Semantics", examples);
 		
 		SerialisedGroundedReasoner grReasoner = new SerialisedGroundedReasoner();
-		System.out.println("Grounded Semantics:");
-		example1(grReasoner);
-		System.out.println("");
-		example2(grReasoner);
-		System.out.println("");
-		example3(grReasoner);
-		System.out.println("======================================================================================================");
-		System.out.println("");
+		executeExamplesInUniformLayout(grReasoner, "Grounded Semantics", examples);
 		
 		SerialisedPreferredReasoner prReasoner = new SerialisedPreferredReasoner();
-		System.out.println("Preferred Semantics:");
-		example1(prReasoner);
-		System.out.println("");
-		example2(prReasoner);
-		System.out.println("");
-		example3(prReasoner);
-		System.out.println("======================================================================================================");
-		System.out.println("");
+		executeExamplesInUniformLayout(prReasoner, "Preferred Semantics", examples);
 		
 		SerialisedStableReasoner stReasoner = new SerialisedStableReasoner();
-		System.out.println("Stable Semantics:");
-		example1(stReasoner);
-		System.out.println("");
-		example2(stReasoner);
-		System.out.println("");
-		example3(stReasoner);
-		System.out.println("======================================================================================================");
-		System.out.println("");
+		executeExamplesInUniformLayout(stReasoner, "Stable Semantics", examples);
 		
 		SerialisedUnchallengedReasoner ucReasoner = new SerialisedUnchallengedReasoner();
-		System.out.println("Unchallenged Semantics:");
-		example1(ucReasoner);
-		System.out.println("");
-		example2(ucReasoner);
-		System.out.println("");
-		example3(ucReasoner);
-		System.out.println("======================================================================================================");
-		System.out.println("");
-	}
+		executeExamplesInUniformLayout(ucReasoner, "Unchallenged Semantics", examples);
+	}	
 }

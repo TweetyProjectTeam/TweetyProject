@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.*;
 
@@ -52,14 +53,14 @@ public class SerialisableExtensionAnalysis {
 	 * @param resultingGraph Graph visualizing the build paths, which lead to the finally found extensions.
 	 * @param root Node with whom the processing of the examined framework started
 	 * @param foundExtensions Extensions, which can be generated using the concept of serialisibility.
-	 * @param subAnalysis Analyses, done in reducted sub-frameworks of the current framework.
+	 * @param subAnalyses Analyses, done in reducted sub-frameworks of the current framework.
 	 */
 	public SerialisableExtensionAnalysis(
 			DungTheory examinedFramework, 
 			SimpleGraph<ExtensionNode> resultingGraph, 
 			ExtensionNode root,
 			Collection<Extension<DungTheory>> foundExtensions,
-			HashSet<SerialisableExtensionAnalysis> subAnalysis) {
+			HashSet<SerialisableExtensionAnalysis> subAnalyses) {
 		super();
 		
 		{
@@ -74,7 +75,7 @@ public class SerialisableExtensionAnalysis {
 		this.resultingGraph = resultingGraph;
 		this.root = root;
 		this.foundExtensions = foundExtensions;
-		this.subAnalyses = subAnalysis;
+		this.subAnalyses = subAnalyses;
 	}
 	
 	
@@ -122,5 +123,14 @@ public class SerialisableExtensionAnalysis {
 	 */
 	public boolean addSubAnalysis(SerialisableExtensionAnalysis newSubAnalysis) {
 		return this.subAnalyses.add(newSubAnalysis);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString(){
+		String printedResult ="Extensions: " + this.foundExtensions.toString();
+		//printedResult = printedResult + " Graph: " + this.resultingGraph.toString();
+		return printedResult;
 	}
 }
