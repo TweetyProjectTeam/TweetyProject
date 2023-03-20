@@ -25,6 +25,7 @@ import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedGroundedReason
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedPreferredReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedStableReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedUnchallengedReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**

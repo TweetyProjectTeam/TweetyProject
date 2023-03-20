@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.TransitionState;
@@ -32,7 +33,13 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class SerialisedAdmissibleReasoner extends SerialisableExtensionReasonerWithAnalysis {
-    @Override
+    
+	
+	public SerialisedAdmissibleReasoner() {
+		super(Semantics.ADM);
+	}
+
+	@Override
     public Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
         // select all initial sets as possible successors
         Collection<Extension<DungTheory>> result = new HashSet<>(unattacked);

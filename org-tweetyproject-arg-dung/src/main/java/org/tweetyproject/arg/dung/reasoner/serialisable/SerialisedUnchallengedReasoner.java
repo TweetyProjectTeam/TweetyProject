@@ -20,6 +20,7 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.TransitionState;
@@ -35,7 +36,12 @@ import java.util.Map;
  * @author Lars Bengel
  */
 public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasonerWithAnalysis {
-    /**
+    	
+	public SerialisedUnchallengedReasoner() {
+		super(Semantics.UC);
+	}
+
+	/**
      * a selection function that simply returns all unattacked and unchallenged sets
      * @param unattacked the set of unattacked initial sets
      * @param unchallenged the set of unchallenged initial sets

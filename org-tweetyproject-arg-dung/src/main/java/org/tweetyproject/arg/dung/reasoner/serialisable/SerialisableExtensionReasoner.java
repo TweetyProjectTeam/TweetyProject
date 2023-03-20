@@ -133,6 +133,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
             case PR -> new SerialisedPreferredReasoner();
             case ST -> new SerialisedStableReasoner();
             case ADM -> new SerialisedAdmissibleReasoner();
+            case UC -> new SerialisedUnchallengedReasoner();
             default -> throw new IllegalArgumentException("Unknown semantics.");
         };
     }

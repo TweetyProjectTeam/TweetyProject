@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.*;
 
@@ -41,6 +41,7 @@ import org.tweetyproject.graphs.*;
 public class SerialisableExtensionAnalysis {
 	
 	private DungTheory examinedFramework; 
+	private Semantics usedSemantic;
 	private SimpleGraph<ExtensionNode> resultingGraph;
 	private ExtensionNode root;
 	private Collection<Extension<DungTheory>> foundExtensions;
@@ -50,6 +51,7 @@ public class SerialisableExtensionAnalysis {
 	 * Creates an object containing all relevant findings from examining the given framework for serialisable extensions.
 	 * 
 	 * @param examinedFramework Argumentation framework, which has been examined.
+	 * @param usedSemantic Semantic used to generate the extensions found during the examination.
 	 * @param resultingGraph Graph visualizing the build paths, which lead to the finally found extensions.
 	 * @param root Node with whom the processing of the examined framework started
 	 * @param foundExtensions Extensions, which can be generated using the concept of serialisibility.
@@ -57,6 +59,7 @@ public class SerialisableExtensionAnalysis {
 	 */
 	public SerialisableExtensionAnalysis(
 			DungTheory examinedFramework, 
+			Semantics usedSemantic,
 			SimpleGraph<ExtensionNode> resultingGraph, 
 			ExtensionNode root,
 			Collection<Extension<DungTheory>> foundExtensions,
@@ -72,6 +75,7 @@ public class SerialisableExtensionAnalysis {
 		}
 				
 		this.examinedFramework = examinedFramework;
+		this.usedSemantic = usedSemantic;
 		this.resultingGraph = resultingGraph;
 		this.root = root;
 		this.foundExtensions = foundExtensions;
@@ -85,6 +89,13 @@ public class SerialisableExtensionAnalysis {
 	 */
 	public DungTheory getFramework() {
 		return examinedFramework;
+	}
+	
+	/**
+	 * @return Semantic used to generate the extensions found during the examination.
+	 */
+	public Semantics getSemantic() {
+		return usedSemantic;
 	}
 
 	/**
@@ -114,7 +125,7 @@ public class SerialisableExtensionAnalysis {
 	public SerialisableExtensionAnalysis[] getSubAnalysis() {
 		return subAnalyses.toArray(new SerialisableExtensionAnalysis[0]);
 	}
-	
+
 	/**
 	 * Adds an analysis to the set of subAnalyses of this analysis.
 	 * 

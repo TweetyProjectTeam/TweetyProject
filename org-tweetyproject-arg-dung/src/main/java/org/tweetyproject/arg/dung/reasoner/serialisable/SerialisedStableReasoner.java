@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.reasoner.serialisable;
 
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.TransitionState;
 
 
@@ -27,7 +28,13 @@ import org.tweetyproject.arg.dung.syntax.TransitionState;
  * @author Lars Bengel
  */
 public class SerialisedStableReasoner extends SerialisedAdmissibleReasoner {
-    /**
+    	
+	public SerialisedStableReasoner() {
+		super();
+		setSemantic(Semantics.ST);
+	}
+
+	/**
      * A set S is accepted iff the AF of the state is empty
      * @param state the current state
      * @return true, iff the AF has  no arguments or attacks

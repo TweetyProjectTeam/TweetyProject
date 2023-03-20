@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.TransitionState;
 
 
@@ -28,7 +29,13 @@ import org.tweetyproject.arg.dung.syntax.TransitionState;
  * @author Lars Bengel
  */
 public class SerialisedPreferredReasoner extends SerialisedAdmissibleReasoner {
-    /**
+    
+	public SerialisedPreferredReasoner() {
+		super();
+		setSemantic(Semantics.PR);
+	}
+
+	/**
      * a set S is accepted, iff the AF of the state has no initial extensions
      * @param state the current state
      * @return true, iff the AF has no initial extensions

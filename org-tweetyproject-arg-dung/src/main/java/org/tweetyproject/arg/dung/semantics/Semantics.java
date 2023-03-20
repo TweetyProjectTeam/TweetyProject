@@ -53,6 +53,8 @@ public enum Semantics {
 	SCF2 ("SCF2 semantics", "SCF2"),
 	/** N */
 	N ("Naive semantics", "N"),
+	/** UC */
+	UC("Unchallenged semantics", "UC"),
 	/** diverse */
 	diverse ("diverse semantics", "div");
 	/**
@@ -88,7 +90,9 @@ public enum Semantics {
 		/** SCF2_SEMANTICS */
 		SCF2_SEMANTICS = SCF2,
 		/** NAIVE_SEMANTICS */
-		NAIVE_SEMANTICS = N;
+		NAIVE_SEMANTICS = N,
+		/** UNCHALLENGED_SEMANTICS */
+		UNCHALLENGED_SEMANTICS = UC;
 		
 	/** The description of the semantics. */
 	private String description;

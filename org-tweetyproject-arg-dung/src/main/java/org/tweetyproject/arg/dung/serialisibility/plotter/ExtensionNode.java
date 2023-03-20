@@ -55,6 +55,10 @@ public class ExtensionNode implements Node {
 	public String toString(){
 		return this.extension.toString();
 	}
+
+	public String getName() {
+		return toString();
+	}
 	
 	
 

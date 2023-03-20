@@ -23,6 +23,7 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.TransitionState;
 import org.tweetyproject.graphs.*;
@@ -45,6 +46,36 @@ import org.tweetyproject.graphs.*;
  */
 public abstract class SerialisableExtensionReasonerWithAnalysis extends SerialisableExtensionReasoner {
 
+	protected Semantics usedSemantic;
+	
+	/**
+	 * @param usedSemantic Semantic used to generate the extensions found during the examination.
+	 */
+	public SerialisableExtensionReasonerWithAnalysis(Semantics usedSemantic) {
+		super();
+		this.usedSemantic = usedSemantic;
+	}
+
+	/**
+	 * @return Semantic used to generate the extensions found during the examination.
+	 */
+	public Semantics getSemantic() {
+		return usedSemantic;
+	}
+
+	/**
+	 * @param semantic Semantic used to generate the extensions found during the examination.
+	 */
+	protected void setSemantic(Semantics semantic) {
+		this.usedSemantic = semantic;
+	}
+
+	/**
+	 * Examines the specified framework and computes all extensions, according to this object's semantic.
+	 * 
+	 * @param framework Argumentation framework, for which the extensions shall be computed.
+	 * @return Analysis of the framework, containing all found extensions and further information e.g. derivation graph.
+	 */
 	public SerialisableExtensionAnalysis getModelsWithAnalysis(DungTheory framework) {
 
 		Extension<DungTheory> initExtension = new Extension<DungTheory>();
@@ -94,7 +125,7 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			currentGraph = addSubGraph(currentGraph, root, subGraph, subRoot, newExt);
 		}
 
-		return new SerialisableExtensionAnalysis(state.getTheory(), currentGraph, root, foundExtensions, subAnalyses);
+		return new SerialisableExtensionAnalysis(state.getTheory(), this.usedSemantic, currentGraph, root, foundExtensions, subAnalyses);
 	}
 
 	/**
