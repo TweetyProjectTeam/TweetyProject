@@ -141,6 +141,7 @@ public class SerialisableExtensionAnalysis {
 	 */
 	public String toString(){
 		String printedResult = "Argumentation Framework: " + this.examinedFramework.toString() + "\n"
+				+ "Semantic: " + this.usedSemantic.toString() + "\n"
 				+ "Extensions: " + this.foundExtensions.toString() + "\n"
 				+ "Root: " + this.root.toString() + "\n"
 				+ "Graph: " + this.resultingGraph.toString();
