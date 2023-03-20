@@ -19,7 +19,6 @@
 package org.tweetyproject.arg.dung.serialisibility.plotter;
 
 import org.tweetyproject.arg.dung.examples.SerialisableExtensionReasonerExample;
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedAdmissibleReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedCompleteReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedGroundedReasoner;
@@ -60,7 +59,6 @@ public class SerialisableExtensionReasonerWithAnalysisExample extends Serialisab
 	
 	
 	protected static void examineFrameworkWithReasonerInUniformLayout(DungTheory frameWork, SerialisableExtensionReasonerWithAnalysis reasoner) {
-		System.out.println("AF: " + frameWork);
 		System.out.println(reasoner.getModelsWithAnalysis(frameWork));
 	}
 	

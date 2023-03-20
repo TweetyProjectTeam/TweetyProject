@@ -129,8 +129,10 @@ public class SerialisableExtensionAnalysis {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		String printedResult ="Extensions: " + this.foundExtensions.toString();
-		//printedResult = printedResult + " Graph: " + this.resultingGraph.toString();
+		String printedResult = "Argumentation Framework: " + this.examinedFramework.toString() + "\n"
+				+ "Extensions: " + this.foundExtensions.toString() + "\n"
+				+ "Root: " + this.root.toString() + "\n"
+				+ "Graph: " + this.resultingGraph.toString();
 		return printedResult;
 	}
 }
