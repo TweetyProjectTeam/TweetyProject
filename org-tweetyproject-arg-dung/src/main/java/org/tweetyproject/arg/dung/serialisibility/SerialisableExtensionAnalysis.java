@@ -16,13 +16,14 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.plotter;
+package org.tweetyproject.arg.dung.serialisibility;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisibility.plotter.ExtensionNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.*;
 

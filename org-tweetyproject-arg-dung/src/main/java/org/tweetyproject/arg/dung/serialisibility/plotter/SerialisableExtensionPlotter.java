@@ -22,6 +22,7 @@ import com.mxgraph.util.mxConstants;
 
 import java.util.Collection;
 
+import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.util.GraphPlotter;
 import org.tweetyproject.graphs.Edge;

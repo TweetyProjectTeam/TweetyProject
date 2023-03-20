@@ -16,7 +16,7 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.plotter;
+package org.tweetyproject.arg.dung.serialisibility;
 
 import org.tweetyproject.arg.dung.examples.SerialisableExtensionReasonerExample;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedAdmissibleReasoner;

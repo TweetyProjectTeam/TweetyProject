@@ -16,7 +16,7 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.plotter;
+package org.tweetyproject.arg.dung.serialisibility;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,6 +30,7 @@ import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedStableReasoner
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedUnchallengedReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisibility.plotter.ExtensionNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.TransitionState;
 import org.tweetyproject.graphs.*;
