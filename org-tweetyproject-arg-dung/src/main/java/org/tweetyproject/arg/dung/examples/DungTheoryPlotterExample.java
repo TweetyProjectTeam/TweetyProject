@@ -18,6 +18,8 @@
  */
 package org.tweetyproject.arg.dung.examples;
 
+import java.util.HashSet;
+
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.commons.Plotter;
@@ -109,43 +111,22 @@ public class DungTheoryPlotterExample {
 	}
 	
 		
-	public static void executeExamples(DungTheory[] afs) {
-		
-		Plotter groundPlotter = new Plotter();
-		groundPlotter.createFrame(2000, 1000);
-		
-		for (DungTheory af : afs) {
-			DungTheoryPlotter afPlotter = new DungTheoryPlotter(groundPlotter, af);
-			afPlotter.createGraph();
-		}
-		
-		
-		groundPlotter.show();
-	}
-	
-public static void executeExample(DungTheory af) {
-		
-		Plotter groundPlotter = new Plotter();
-		groundPlotter.createFrame(2000, 1000);
-		
-		DungTheoryPlotter afPlotter = new DungTheoryPlotter(groundPlotter, af);
-		afPlotter.createGraph();
-		
-		groundPlotter.show();
-	}
-	
-	
 	public static void main(String[] args) {
+		HashSet<DungTheory> examples = new HashSet<DungTheory>();
+		examples.add(example1());
+		examples.add(example2());
+		examples.add(example3());
+		
 		System.out.println("======================================== all Examples ========================================");
-		executeExamples(new DungTheory[]{example1(),example2(),example3()});
+		DungTheoryPlotter.plotFramework(examples, 2000, 1000);
 		System.out.println("");
 		/*
 		System.out.println("======================================== Example 2 ========================================");
-		executeExample(example2());
+		DungTheoryPlotter.plotFramework(example2(), 2000, 1000);
 		System.out.println("");
 		
 		System.out.println("======================================== Example 3 ========================================");
-		executeExample(example3());
+		DungTheoryPlotter.plotFramework(example3(), 2000, 1000);
 		System.out.println("");
 		*/
 	}

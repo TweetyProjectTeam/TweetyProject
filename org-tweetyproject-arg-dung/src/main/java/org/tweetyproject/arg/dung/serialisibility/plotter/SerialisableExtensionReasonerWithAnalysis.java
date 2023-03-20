@@ -22,6 +22,12 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedAdmissibleReasoner;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedCompleteReasoner;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedGroundedReasoner;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedPreferredReasoner;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedStableReasoner;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedUnchallengedReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -83,6 +89,23 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 
 		return getModelsRecursiveWithAnalysis(initState);
 	}
+	
+	/**
+     * Creates a reasoner for the given semantic.
+     * @param semantics Semantic
+     * @return a reasoner for the given Dung theory, inference type, and semantics
+     */
+    public static SerialisableExtensionReasonerWithAnalysis getSerialisableReasonerForSemantics(Semantics semantics){
+        return switch (semantics) {
+            case CO -> new SerialisedCompleteReasoner();
+            case GR -> new SerialisedGroundedReasoner();
+            case PR -> new SerialisedPreferredReasoner();
+            case ST -> new SerialisedStableReasoner();
+            case ADM -> new SerialisedAdmissibleReasoner();
+            case UC -> new SerialisedUnchallengedReasoner();
+            default -> throw new IllegalArgumentException("Unknown semantics.");
+        };
+    }
 
 	/**
 	 * Examines recursively the specified state and all states that can be reducted from this one, 

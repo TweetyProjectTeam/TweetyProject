@@ -18,11 +18,12 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.plotter;
 
-import org.tweetyproject.commons.Plotter;
-import org.tweetyproject.graphs.util.GraphPlotter;
-
 import com.mxgraph.util.mxConstants;
 
+import java.util.Collection;
+
+import org.tweetyproject.commons.Plotter;
+import org.tweetyproject.graphs.util.GraphPlotter;
 import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.Graph;
 
@@ -112,6 +113,42 @@ public class SerialisableExtensionPlotter extends GraphPlotter<ExtensionNode, Ed
 		return VERTEX_SPACING;
 	}
 	
+	/**
+	 * Plots the specified graphs in a new created frame.
+	 * 
+	 * @param graphs Graphs of generation processes of serialisable extensions
+	 * @param width Width of the new frame created.
+	 * @param height Height of the new frame created.
+	 */
+	public static void plotGraph(Collection<Graph<ExtensionNode>> graphs, int width, int height) {
+		
+		Plotter groundPlotter = new Plotter();
+		groundPlotter.createFrame(width, height);
+		
+		for (Graph<ExtensionNode> af : graphs) {
+			SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, af);
+			sePlotter.createGraph();
+		}
+		
+		groundPlotter.show();
+	}
 	
+	/**
+	 * Plots the specified graph in a new created frame.
+	 * 
+	 * @param frameworks Graph of a generation process of serialisable extensions
+	 * @param width Width of the new frame created.
+	 * @param height Height of the new frame created.
+	 */
+	public static void plotGraph(Graph<ExtensionNode> graph, int width, int height) {
+		
+		Plotter groundPlotter = new Plotter();
+		groundPlotter.createFrame(width, height);
+		
+		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, graph);
+		sePlotter.createGraph();
+		
+		groundPlotter.show();
+	}
 
 }

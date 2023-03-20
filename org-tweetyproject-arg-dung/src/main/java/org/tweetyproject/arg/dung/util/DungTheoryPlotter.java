@@ -24,6 +24,9 @@ import org.tweetyproject.graphs.util.GraphPlotter;
 import com.mxgraph.util.mxConstants;
 
 import org.tweetyproject.graphs.Edge;
+
+import java.util.Collection;
+
 import org.tweetyproject.arg.dung.syntax.*;
 
 /**
@@ -110,6 +113,44 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 	@Override
 	protected int getVertexSpacing() {
 		return VERTEX_SPACING;
+	}
+	
+	/**
+	 * Plots the specified frameworks in a new created frame.
+	 * 
+	 * @param frameworks Argumentation framework to plot
+	 * @param width Width of the new frame created.
+	 * @param height Height of the new frame created.
+	 */
+	public static void plotFramework(Collection<DungTheory> frameworks, int width, int height) {
+		
+		Plotter groundPlotter = new Plotter();
+		groundPlotter.createFrame(width, height);
+		
+		for (DungTheory af : frameworks) {
+			DungTheoryPlotter afPlotter = new DungTheoryPlotter(groundPlotter, af);
+			afPlotter.createGraph();
+		}
+		
+		groundPlotter.show();
+	}
+	
+	/**
+	 * Plots the specified framework in a new created frame.
+	 * 
+	 * @param frameworks Argumentation framework to plot
+	 * @param width Width of the new frame created.
+	 * @param height Height of the new frame created.
+	 */
+	public static void plotFramework(DungTheory framework, int width, int height) {
+		
+		Plotter groundPlotter = new Plotter();
+		groundPlotter.createFrame(width, height);
+		
+		DungTheoryPlotter afPlotter = new DungTheoryPlotter(groundPlotter, framework);
+		afPlotter.createGraph();
+		
+		groundPlotter.show();
 	}
 
 }
