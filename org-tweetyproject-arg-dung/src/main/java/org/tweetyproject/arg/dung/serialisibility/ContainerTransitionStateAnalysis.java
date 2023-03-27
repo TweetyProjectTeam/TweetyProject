@@ -108,6 +108,7 @@ public class ContainerTransitionStateAnalysis {
 		this.root = root;
 		this.extensionsFound = foundExtensions;
 		this.analysesSuccessive = subAnalyses;
+		this.setInitial = initialSet;
 	}
 
 	/**
@@ -207,7 +208,7 @@ public class ContainerTransitionStateAnalysis {
 		this.analysesSuccessive.add(subAnalysis);
 		this.extensionsFound.addAll(subAnalysis.getExtensionsFound());
 		try {
-			this.graphResulting.addSubGraph(this.root, subAnalysis.getGraphResulting(), subAnalysis.getRoot(), this.setInitial.toString());
+			this.graphResulting.addSubGraph(this.root, subAnalysis.getGraphResulting(), subAnalysis.getRoot(), subAnalysis.setInitial.toString());
 		} catch (NoSuchObjectException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

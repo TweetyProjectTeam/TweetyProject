@@ -130,13 +130,18 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			return analysis;
 		}
 
-		var subAnalyses = new HashSet<ContainerTransitionStateAnalysis>();
 		var foundExtensions = new HashSet<Extension<DungTheory>>();
 		var root = new TransitionStateNode(state);
 		var graphGenerationProcess = new SimpleGraph<TransitionStateNode>();
 		graphGenerationProcess.add(root);
 		var currentAnalysis = new ContainerTransitionStateAnalysis(
-				state, this.usedSemantics, graphGenerationProcess, root, foundExtensions, subAnalyses, setInitial);
+				state, 
+				this.usedSemantics, 
+				graphGenerationProcess, 
+				root, 
+				foundExtensions, 
+				new HashSet<ContainerTransitionStateAnalysis>(), 
+				setInitial);
 		consistencyCheckSet.add(currentAnalysis);
 
 		// check whether a construction of an extension is finished
