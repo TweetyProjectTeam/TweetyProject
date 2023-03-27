@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisibility;
 
+import java.rmi.NoSuchObjectException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -159,7 +160,12 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			foundExtensions.addAll(subAnalysis.getExtensions());
 			SimpleGraph<TransitionStateNode> subGraph = subAnalysis.getGraph();
 			TransitionStateNode subRoot = subAnalysis.getRoot();
-			currentGraph = currentGraph.addSubGraph(currentGraph, root, subGraph, subRoot, newExt.toString());
+			try {
+				currentGraph.addSubGraph(root, subGraph, subRoot, newExt.toString());
+			} catch (NoSuchObjectException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
 		}
 
 		TransitionStateAnalysis currentAnalysis = new TransitionStateAnalysis(

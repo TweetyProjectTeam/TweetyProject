@@ -19,6 +19,7 @@
 
 package org.tweetyproject.graphs;
 
+import java.rmi.NoSuchObjectException;
 import java.util.*;
 
 /**
@@ -135,20 +136,19 @@ public class SimpleGraph<T extends Node> extends DefaultGraph<T> implements Grap
     }
     
     /**
-	 *  Adds a graph as a subgraph in a superior graph
+	 *  Adds a graph as a subgraph
 	 * 
-	 * @param superGraph Graph in which the sub-graph will be added.
-	 * @param superExit Node of the super-graph, under which the new graph will be anchored
+	 * @param superExit Node of the this graph, under which the new graph will be anchored
 	 * @param subGraph Graph, which will be added to the super-graph
 	 * @param subRoot Root of the sub-graph
 	 * @param label Label of the newly created edge, from the superExit node to the subRoot node
+     * @throws NoSuchObjectException Thrown if superExit is not a node of this graph
 	 */
-    public SimpleGraph<T> addSubGraph(SimpleGraph<T> superGraph, T superExit,
-			SimpleGraph<T> subGraph, T subRoot, String label ) {
-		superGraph.addAll(subGraph.getNodes());
-		superGraph.addAllEdges( (Collection<Edge<T>>) subGraph.getEdges());
-		superGraph.add(new DirectedEdge<T>(superExit,subRoot,label));
-		
-		return superGraph;
+    public boolean addSubGraph(T superExit,
+			SimpleGraph<T> subGraph, T subRoot, String label ) throws NoSuchObjectException {
+    	if(!this.getNodes().contains(superExit)) throw new NoSuchObjectException(superExit.toString() + " is not a node of this graph");
+		this.addAll(subGraph.getNodes());
+		this.addAllEdges( (Collection<Edge<T>>) subGraph.getEdges());
+		return this.add(new DirectedEdge<T>(superExit,subRoot,label));
 	}
 }
