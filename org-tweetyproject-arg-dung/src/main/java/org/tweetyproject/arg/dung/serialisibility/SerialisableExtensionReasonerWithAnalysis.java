@@ -105,6 +105,13 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	}
 
 	/**
+	 * @param semantics Semantics used to generate the extensions found during the examination.
+	 */
+	protected void setSemantic(Semantics semantics) {
+		this.usedSemantics = semantics;
+	}
+
+	/**
 	 * Examines recursively the specified state and all states that can be reducted from this one,
 	 * until the termination function is satisfied.
 	 *
