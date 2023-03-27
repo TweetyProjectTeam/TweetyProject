@@ -18,7 +18,6 @@
  */
 package org.tweetyproject.arg.dung.serialisibility;
 
-import java.rmi.NoSuchObjectException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -87,13 +86,13 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	 * @param framework Argumentation framework, for which the extensions shall be computed.
 	 * @return Analysis of the framework, containing all found extensions and further information e.g. derivation graph.
 	 */
-	public TransitionStateAnalysis getModelsWithAnalysis(DungTheory framework) {
+	public ContainerTransitionStateAnalysis getModelsWithAnalysis(DungTheory framework) {
 
 		Extension<DungTheory> initExtension = new Extension<>();
 		TransitionState initState = new TransitionState(framework, initExtension);
 
 		return this.getModelsRecursiveWithAnalysis(
-				new HashSet<TransitionStateAnalysis>(),
+				new HashSet<ContainerTransitionStateAnalysis>(),
 				initState,
 				null);
 	}
@@ -121,24 +120,23 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	 * @return Analysis of the current state.
 	 */
 	@SuppressWarnings("unchecked")
-	private TransitionStateAnalysis getModelsRecursiveWithAnalysis(
-			HashSet<TransitionStateAnalysis> consistencyCheckSet,
+	private ContainerTransitionStateAnalysis getModelsRecursiveWithAnalysis(
+			HashSet<ContainerTransitionStateAnalysis> consistencyCheckSet,
 			TransitionState state,
 			Extension<DungTheory> setInitial) {
 
-		// if this state (and all of subordinates) has already been examined abort function
-		var analysis = TransitionStateAnalysis.getAnalysisByState(consistencyCheckSet, state);
+		var analysis = ContainerTransitionStateAnalysis.getAnalysisByState(consistencyCheckSet, state);
 		if(analysis != null ) {
 			return analysis;
 		}
 
-		var subAnalyses = new HashSet<TransitionStateAnalysis>();
+		var subAnalyses = new HashSet<ContainerTransitionStateAnalysis>();
 		var foundExtensions = new HashSet<Extension<DungTheory>>();
 		var root = new TransitionStateNode(state);
 		var graphGenerationProcess = new SimpleGraph<TransitionStateNode>();
 		graphGenerationProcess.add(root);
-		var currentAnalysis = new TransitionStateAnalysis(
-				state.getTheory(), state.getExtension(), this.usedSemantics, graphGenerationProcess, root, foundExtensions, subAnalyses, setInitial);
+		var currentAnalysis = new ContainerTransitionStateAnalysis(
+				state, this.usedSemantics, graphGenerationProcess, root, foundExtensions, subAnalyses, setInitial);
 		consistencyCheckSet.add(currentAnalysis);
 
 		// check whether a construction of an extension is finished
@@ -154,14 +152,15 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			TransitionState newState = state.transitToNewState(newExt);
 
 			// [RECURSIVE CALL] examine reduced framework
-			TransitionStateAnalysis subAnalysis = this.getModelsRecursiveWithAnalysis(consistencyCheckSet, newState, newExt);
+			ContainerTransitionStateAnalysis subAnalysis = this.getModelsRecursiveWithAnalysis(consistencyCheckSet, newState, newExt);
 
 			currentAnalysis.integrateSubAnalysis(subAnalysis);
 		}
+
 		return currentAnalysis;
 	}
 
-	
+
 
 
 }

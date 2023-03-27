@@ -31,10 +31,10 @@ public class SerialisableExtensionPlotterExample {
 			Plotter groundPlotter = new Plotter();
 			groundPlotter.createFrame(2000, 1000);
 			DungTheoryPlotter.plotFramework(example, groundPlotter);
-			TransitionStateAnalysis analysis = SerialisableExtensionReasonerWithAnalysis
+			ContainerTransitionStateAnalysis analysis = SerialisableExtensionReasonerWithAnalysis
 					.getSerialisableReasonerForSemantics(semantic)
 					.getModelsWithAnalysis(example);
-			SimpleGraph<TransitionStateNode> graph = analysis.getGraph();
+			SimpleGraph<TransitionStateNode> graph = analysis.getGraphResulting();
 			SerialisableExtensionPlotter.plotGraph(graph, groundPlotter);
 			groundPlotter.show();
 			System.out.println("================================================================================");

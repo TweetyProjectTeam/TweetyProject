@@ -104,7 +104,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 * @param result all states obtained so far, i.e. all extensions that resulted from the transitions
 	 * @return the set of all obtained states (extensions)
 	 */
-	protected Collection<Extension<DungTheory>> getModelsRecursive(TransitionState state, Collection<Extension<DungTheory>> result) {
+	private Collection<Extension<DungTheory>> getModelsRecursive(TransitionState state, Collection<Extension<DungTheory>> result) {
 		// check whether the current state is acceptable, if yes add to results
 		if (this.checkTerminationFunction(state)) {
 			result.add(state.getExtension());
