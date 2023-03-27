@@ -24,42 +24,30 @@ import org.tweetyproject.graphs.Node;
 
 
 /**
- * This class represents a node, representing a extension of an argumentation framework.
+ * This class represents a node, visualizing in a graph extension of a {@link TransitionState}.
  * 
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public class SerialisableExtensionAnalysisNode implements Node {
+public class TransitionStateNode implements Node {
 	
 	private TransitionState state;
-	private SerialisableExtensionAnalysis analysis;
 	
 
 	/**
-	 * @param state State, which is to be represented by this node.
+	 * @param state TransitionState, which is to be represented by this node.
 	 */
-	public SerialisableExtensionAnalysisNode(TransitionState state) {
+	public TransitionStateNode(TransitionState state) {
 		super();
 		this.state = state;
 	}
 
 	/**
-	 * @return State, which is to be represented by this node.
+	 * @return State represented by this node.
 	 */
 	public TransitionState getState() {
 		return state;
-	}
-
-	/**
-	 * @return Analysis, which results from examining the framework of this state.
-	 */
-	public SerialisableExtensionAnalysis getAnalysis() {
-		return analysis;
-	}
-
-	public void setAnalysis(SerialisableExtensionAnalysis analysis) {
-		this.analysis = analysis;
 	}
 
 	/* (non-Javadoc)

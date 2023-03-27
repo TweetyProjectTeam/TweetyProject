@@ -5,7 +5,7 @@ import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
-import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionAnalysisNode;
+import org.tweetyproject.arg.dung.serialisibility.plotter.TransitionStateNode;
 import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionPlotter;
 import org.tweetyproject.arg.dung.serialisibility.*;
 import org.tweetyproject.graphs.*;
@@ -31,10 +31,10 @@ public class SerialisableExtensionPlotterExample {
 			Plotter groundPlotter = new Plotter();
 			groundPlotter.createFrame(2000, 1000);
 			DungTheoryPlotter.plotFramework(example, groundPlotter);
-			SerialisableExtensionAnalysis analysis = SerialisableExtensionReasonerWithAnalysis
+			TransitionStateAnalysis analysis = SerialisableExtensionReasonerWithAnalysis
 					.getSerialisableReasonerForSemantics(semantic)
 					.getModelsWithAnalysis(example);
-			SimpleGraph<SerialisableExtensionAnalysisNode> graph = analysis.getGraph();
+			SimpleGraph<TransitionStateNode> graph = analysis.getGraph();
 			SerialisableExtensionPlotter.plotGraph(graph, groundPlotter);
 			groundPlotter.show();
 			System.out.println("================================================================================");

@@ -23,13 +23,14 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionAnalysisNode;
+import org.tweetyproject.arg.dung.serialisibility.plotter.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.syntax.TransitionState;
 import org.tweetyproject.graphs.*;
 
 /**
- * This class represents the analysis result of an argumentation framework (called {@link org.tweetyproject.arg.dung.syntax.DungTheory}),
- * which has been examined for serialisable extensions.
+ * This class represents a transition state {@link Transitionstate} which has been further analyzed, 
+ * regarding the possible serializing of extensions rooted from this state.
  * 
  * 
  * @see Matthias Thimm. Revisiting initial sets in abstract argumentation. Argument & Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
@@ -39,57 +40,47 @@ import org.tweetyproject.graphs.*;
  * @version TweetyProject 1.23
  *
  */
-public class SerialisableExtensionAnalysis {
+public class TransitionStateAnalysis extends TransitionState {
 	
-	private DungTheory examinedFramework; 
 	private Semantics usedSemantics;
-	private SimpleGraph<SerialisableExtensionAnalysisNode> resultingGraph;
-	private SerialisableExtensionAnalysisNode root;
+	private SimpleGraph<TransitionStateNode> resultingGraph;
+	private TransitionStateNode root;
 	private Collection<Extension<DungTheory>> foundExtensions;
-	private HashSet<SerialisableExtensionAnalysis> subAnalyses;
+	private HashSet<TransitionStateAnalysis> subAnalyses;
 	
 	/**
 	 * Creates an object containing all relevant findings from examining the given framework for serialisable extensions.
 	 * 
 	 * @param examinedFramework Argumentation framework, which has been examined.
+	 * @param stateOfConstructedExtension Extension, which is about to be constructed.
 	 * @param usedSemantics Semantics used to generate the extensions found during the examination.
 	 * @param resultingGraph Graph visualizing the build paths, which lead to the finally found extensions.
 	 * @param root Node with whom the processing of the examined framework started
 	 * @param foundExtensions Extensions, which can be generated using the concept of serialisibility.
 	 * @param subAnalyses Analyses, done in reducted sub-frameworks of the current framework.
 	 */
-	public SerialisableExtensionAnalysis(
+	public TransitionStateAnalysis(
 			DungTheory examinedFramework, 
+			Extension<DungTheory> stateOfConstructedExtension,
 			Semantics usedSemantics,
-			SimpleGraph<SerialisableExtensionAnalysisNode> resultingGraph, 
-			SerialisableExtensionAnalysisNode root,
+			SimpleGraph<TransitionStateNode> resultingGraph, 
+			TransitionStateNode root,
 			Collection<Extension<DungTheory>> foundExtensions,
-			HashSet<SerialisableExtensionAnalysis> subAnalyses) {
-		super();
+			HashSet<TransitionStateAnalysis> subAnalyses) {
+		super(examinedFramework, stateOfConstructedExtension);
 		
 		{
-			if(examinedFramework == null) throw new NullPointerException("examinedFramework");
 			if(resultingGraph == null) throw new NullPointerException("resultingGraph");
 			if(root == null) throw new NullPointerException("root");
 			if(foundExtensions == null) throw new NullPointerException("foundExtensions");
 			if(subAnalyses == null) throw new NullPointerException("subAnalyses");
 		}
 				
-		this.examinedFramework = examinedFramework;
 		this.usedSemantics = usedSemantics;
 		this.resultingGraph = resultingGraph;
 		this.root = root;
 		this.foundExtensions = foundExtensions;
 		this.subAnalyses = subAnalyses;
-	}
-	
-	
-
-	/**
-	 * @return Argumentation framework, which has been examined.
-	 */
-	public DungTheory getFramework() {
-		return examinedFramework;
 	}
 	
 	/**
@@ -102,7 +93,7 @@ public class SerialisableExtensionAnalysis {
 	/**
 	 * @return Graph visualizing the build paths, which lead to the finally found extensions.
 	 */
-	public SimpleGraph<SerialisableExtensionAnalysisNode> getGraph() {
+	public SimpleGraph<TransitionStateNode> getGraph() {
 		return resultingGraph;
 	}
 
@@ -116,15 +107,15 @@ public class SerialisableExtensionAnalysis {
 	/**
 	 * @return Node with whom the processing of the examined framework started
 	 */
-	public SerialisableExtensionAnalysisNode getRoot() {
+	public TransitionStateNode getRoot() {
 		return root;
 	}
 	
 	/**
 	 * @return Analyses, done in reducted sub-frameworks of the current framework.
 	 */
-	public SerialisableExtensionAnalysis[] getSubAnalysis() {
-		return subAnalyses.toArray(new SerialisableExtensionAnalysis[0]);
+	public TransitionStateAnalysis[] getSubAnalysis() {
+		return subAnalyses.toArray(new TransitionStateAnalysis[0]);
 	}
 
 	/**
@@ -133,7 +124,7 @@ public class SerialisableExtensionAnalysis {
 	 * @param newSubAnalysis Analysis, done in reducted sub-frameworks of the current framework.
 	 * @return
 	 */
-	public boolean addSubAnalysis(SerialisableExtensionAnalysis newSubAnalysis) {
+	public boolean addSubAnalysis(TransitionStateAnalysis newSubAnalysis) {
 		return this.subAnalyses.add(newSubAnalysis);
 	}
 	
@@ -141,11 +132,48 @@ public class SerialisableExtensionAnalysis {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		String printedResult = "Argumentation Framework: " + this.examinedFramework.toString() + "\n"
+		String printedResult = "Argumentation Framework: " + this.getTheory().toString() + "\n"
 				+ "Semantic: " + this.usedSemantics.toString() + "\n"
 				+ "Extensions: " + this.foundExtensions.toString() + "\n"
 				+ "Root: " + this.root.toString() + "\n"
 				+ "Graph: " + this.resultingGraph.toString();
 		return printedResult;
 	}
+	
+	@Override
+    public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if(obj.getClass() == super.getClass()) {
+			return super.equals(obj);
+		}
+		if (getClass() != obj.getClass())
+			return false;
+		TransitionStateAnalysis other = (TransitionStateAnalysis) obj;
+    	
+    	return  this.usedSemantics.equals(other.usedSemantics) &&
+    			this.resultingGraph.equals(other.resultingGraph) &&
+    			this.root.equals(other.root) &&
+    			this.foundExtensions.equals(other.foundExtensions) && 
+    			this.subAnalyses.equals(other.subAnalyses) &&
+    			super.equals(other);
+	}
+	
+	/**
+	 * Searches in a specified set for a analysis of the specified transition state.
+	 * 
+	 * @param setOfAnalyses Set, which is to check if it contains a analysis of the specified transition state.
+	 * @param state Transition state, which is used as a condition to find the analysis to search for.
+	 * @return NULL or the analysis of the specified state this transition state.
+	 */
+	public static TransitionStateAnalysis getAnalysisByState(HashSet<TransitionStateAnalysis> setOfAnalyses, TransitionState state) {
+		for (TransitionStateAnalysis analysis : setOfAnalyses) {
+			if(analysis.equals(state)) return analysis;
+		}
+		return null;
+	}
+	
 }

@@ -133,4 +133,22 @@ public class SimpleGraph<T extends Node> extends DefaultGraph<T> implements Grap
 
         return undirectedGraph;
     }
+    
+    /**
+	 *  Adds a graph as a subgraph in a superior graph
+	 * 
+	 * @param superGraph Graph in which the sub-graph will be added.
+	 * @param superExit Node of the super-graph, under which the new graph will be anchored
+	 * @param subGraph Graph, which will be added to the super-graph
+	 * @param subRoot Root of the sub-graph
+	 * @param label Label of the newly created edge, from the superExit node to the subRoot node
+	 */
+    public SimpleGraph<T> addSubGraph(SimpleGraph<T> superGraph, T superExit,
+			SimpleGraph<T> subGraph, T subRoot, String label ) {
+		superGraph.addAll(subGraph.getNodes());
+		superGraph.addAllEdges( (Collection<Edge<T>>) subGraph.getEdges());
+		superGraph.add(new DirectedEdge<T>(superExit,subRoot,label));
+		
+		return superGraph;
+	}
 }

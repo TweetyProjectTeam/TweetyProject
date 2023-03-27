@@ -30,7 +30,7 @@ import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedStableReasoner
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedUnchallengedReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionAnalysisNode;
+import org.tweetyproject.arg.dung.serialisibility.plotter.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.syntax.TransitionState;
 import org.tweetyproject.graphs.*;
@@ -83,12 +83,15 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	 * @param framework Argumentation framework, for which the extensions shall be computed.
 	 * @return Analysis of the framework, containing all found extensions and further information e.g. derivation graph.
 	 */
-	public SerialisableExtensionAnalysis getModelsWithAnalysis(DungTheory framework) {
+	public TransitionStateAnalysis getModelsWithAnalysis(DungTheory framework) {
 
 		Extension<DungTheory> initExtension = new Extension<DungTheory>();
 		TransitionState initState = new TransitionState(framework, initExtension);
 
-		return getModelsRecursiveWithAnalysis(new HashSet<SerialisableExtensionAnalysisNode>(), initState);
+		return getModelsRecursiveWithAnalysis(
+				new HashSet<TransitionState>(),
+				new HashSet<TransitionStateAnalysis>(),
+				initState);
 	}
 	
 	/**
@@ -117,28 +120,26 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	 * @return Analysis of the current state.
 	 */
 	@SuppressWarnings("unchecked")
-	private SerialisableExtensionAnalysis getModelsRecursiveWithAnalysis(
-			HashSet<SerialisableExtensionAnalysisNode> consistencyCheckSet,
+	private TransitionStateAnalysis getModelsRecursiveWithAnalysis(
+			HashSet<TransitionState> consistencyCheckSet,
+			HashSet<TransitionStateAnalysis> computedAnalyses,
 			TransitionState state) {
 
-		SimpleGraph<SerialisableExtensionAnalysisNode> currentGraph = new SimpleGraph<SerialisableExtensionAnalysisNode>();
-		
-		SerialisableExtensionAnalysisNode root = getNodeByState(consistencyCheckSet, state);
-		// if this state (and all of subordinates) has already been examined, and is hence a node in the set, abort function
-		if(root != null) {
-			if(root.getAnalysis() != null) return root.getAnalysis(); // theoretical case: root is called from one of it's children, hence root has no analysis yet.
-			else return null; // return null, to break circle (see theoretical case above)
-		}
-		else {
-			root = new SerialisableExtensionAnalysisNode(state);
-			consistencyCheckSet.add(root);
-		}
-		currentGraph.add(root);
-		
+		SimpleGraph<TransitionStateNode> currentGraph = new SimpleGraph<TransitionStateNode>();
+		TransitionStateNode root;
 		HashSet<Extension<DungTheory>> foundExtensions = new HashSet<Extension<DungTheory>>();
-		HashSet<SerialisableExtensionAnalysis> subAnalyses = new HashSet<SerialisableExtensionAnalysis>();
-
-		// check whether a construction of an extension is ﬁnished
+		HashSet<TransitionStateAnalysis> subAnalyses = new HashSet<TransitionStateAnalysis>();
+		
+		// if this state (and all of subordinates) has already been examined abort function
+		if(consistencyCheckSet.contains(state)) {
+			return TransitionStateAnalysis.getAnalysisByState(computedAnalyses, state); //return NULL, if state was already visited, but analysis was not yet computed
+		}
+		
+		root = new TransitionStateNode(state);
+		currentGraph.add(root);
+		consistencyCheckSet.add(state);
+		
+		// check whether a construction of an extension is finished
 		if (this.checkTerminationFunction(state)) {
 			// found final extension
 			foundExtensions.add(state.getExtension());
@@ -152,50 +153,21 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			TransitionState newState = state.getNext(newExt);
 
 			// [RECURSIVE CALL] examine reduced framework
-			SerialisableExtensionAnalysis subAnalysis = getModelsRecursiveWithAnalysis(consistencyCheckSet, newState);
+			TransitionStateAnalysis subAnalysis = getModelsRecursiveWithAnalysis(consistencyCheckSet, computedAnalyses, newState);
 
 			// integrate findings of sub-level in this level's analysis
 			subAnalyses.add(subAnalysis);
 			foundExtensions.addAll(subAnalysis.getExtensions());
-			SimpleGraph<SerialisableExtensionAnalysisNode> subGraph = subAnalysis.getGraph();
-			SerialisableExtensionAnalysisNode subRoot = subAnalysis.getRoot();
-			currentGraph = addSubGraph(currentGraph, root, subGraph, subRoot, newExt);
+			SimpleGraph<TransitionStateNode> subGraph = subAnalysis.getGraph();
+			TransitionStateNode subRoot = subAnalysis.getRoot();
+			currentGraph = currentGraph.addSubGraph(currentGraph, root, subGraph, subRoot, newExt.toString());
 		}
 		
-		SerialisableExtensionAnalysis currentAnalysis = new SerialisableExtensionAnalysis(
-				state.getTheory(), this.usedSemantics, currentGraph, root, foundExtensions, subAnalyses);
-		root.setAnalysis(currentAnalysis);
+		TransitionStateAnalysis currentAnalysis = new TransitionStateAnalysis(
+				state.getTheory(), state.getExtension(), this.usedSemantics, currentGraph, root, foundExtensions, subAnalyses);
+		computedAnalyses.add(currentAnalysis);
 		return currentAnalysis;
 	}
-
-	/**
-	 *  Adds a graph as a subgraph in a superior graph
-	 * 
-	 * @param superGraph Graph in which the sub-graph will be added.
-	 * @param superRoot Root of the super-graph
-	 * @param subGraph Graph, which will be added to the super-graph
-	 * @param subRoot Root of the sub-graph
-	 */
-	private SimpleGraph<SerialisableExtensionAnalysisNode> addSubGraph(SimpleGraph<SerialisableExtensionAnalysisNode> superGraph, SerialisableExtensionAnalysisNode superRoot,
-			SimpleGraph<SerialisableExtensionAnalysisNode> subGraph, SerialisableExtensionAnalysisNode subRoot, Extension<DungTheory> reductExtension ) {
-		superGraph.addAll(subGraph.getNodes());
-		superGraph.addAllEdges( (Collection<Edge<SerialisableExtensionAnalysisNode>>) subGraph.getEdges());
-		superGraph.add(new DirectedEdge<SerialisableExtensionAnalysisNode>(superRoot,subRoot,reductExtension.toString()));
-		
-		return superGraph;
-	}
 	
-	/**
-	 * Searches in a specified set for a node, which holds the specified transition state.
-	 * 
-	 * @param setOfNodes Set, which is to check if it contains a node with the specified transition state.
-	 * @param state Transition state, which is used as a condition to find the node to search for.
-	 * @return NULL or the node in the specified graph, which contains this transition state.
-	 */
-	private SerialisableExtensionAnalysisNode getNodeByState(HashSet<SerialisableExtensionAnalysisNode> setOfNodes, TransitionState state) {
-		for (SerialisableExtensionAnalysisNode node : setOfNodes) {
-			if(node.getState().equals(state)) return node;
-		}
-		return null;
-	}
+	
 }

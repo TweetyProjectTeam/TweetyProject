@@ -52,7 +52,7 @@ import org.tweetyproject.graphs.Graph;
  * @author Julian Sander
  * @version TweetyProject 1.23
  */
-public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExtensionAnalysisNode, Edge<SerialisableExtensionAnalysisNode>> {
+public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNode, Edge<TransitionStateNode>> {
 
 	private final String LABEL_DEFAULT_NODE = "N.A.";
 	private final String LABEL_DEFAULT_EDGE = "";
@@ -63,12 +63,12 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 	private final int VERTEX_SPACING = 50;
 	private final int FONTSIZE = 14;
 	
-	public SerialisableExtensionPlotter(Plotter plotter, Graph<SerialisableExtensionAnalysisNode> graph) {
+	public SerialisableExtensionPlotter(Plotter plotter, Graph<TransitionStateNode> graph) {
 		super(plotter, graph);
 	}
 
 	@Override
-	protected String getPrettyName(SerialisableExtensionAnalysisNode node) {
+	protected String getPrettyName(TransitionStateNode node) {
 		String name = node.getName();
 		if(name == null|| name.isEmpty()) {
 			name = LABEL_DEFAULT_NODE;
@@ -77,7 +77,7 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 	}
 
 	@Override
-	protected String getPrettyName(Edge<SerialisableExtensionAnalysisNode> edge) {
+	protected String getPrettyName(Edge<TransitionStateNode> edge) {
 		String label = edge.getLabel();
 		if(label == null || label.isEmpty()) {
 			label = LABEL_DEFAULT_EDGE;
@@ -86,7 +86,7 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 	}
 
 	@Override
-	protected String getStyle(SerialisableExtensionAnalysisNode node) {
+	protected String getStyle(TransitionStateNode node) {
 		String styleString = "";
 		styleString += mxConstants.STYLE_FONTSIZE + "=" + FONTSIZE + ";"; 
 		return  styleString
@@ -121,12 +121,12 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
 	 */
-	public static void plotGraph(Collection<Graph<SerialisableExtensionAnalysisNode>> graphs, int width, int height) {
+	public static void plotGraph(Collection<Graph<TransitionStateNode>> graphs, int width, int height) {
 		
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
-		for (Graph<SerialisableExtensionAnalysisNode> graph : graphs) {
+		for (Graph<TransitionStateNode> graph : graphs) {
 			plotGraph(graph, groundPlotter);
 		}
 		
@@ -140,7 +140,7 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
 	 */
-	public static void plotGraph(Graph<SerialisableExtensionAnalysisNode> graph, int width, int height) {
+	public static void plotGraph(Graph<TransitionStateNode> graph, int width, int height) {
 		
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
@@ -156,7 +156,7 @@ public class SerialisableExtensionPlotter extends GraphPlotter<SerialisableExten
 	 * @param graph Graph of a generation process of serialisable extensions
 	 * @param groundPlotter Plotter, which creates the frame
 	 */
-	public static void plotGraph(Graph<SerialisableExtensionAnalysisNode> graph, Plotter groundPlotter) {
+	public static void plotGraph(Graph<TransitionStateNode> graph, Plotter groundPlotter) {
 		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, graph);
 		sePlotter.createGraph();
 	}
