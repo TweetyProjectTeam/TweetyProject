@@ -112,6 +112,15 @@ public class ContainerTransitionStateAnalysis {
 	}
 
 	/**
+	 * Adds a completly serialized extension to the set of found extensions of the transition state associated with this object.
+	 * @param newFinishedExtension Extension, which process of serializing is finished.
+	 * @return True if the extension could be added to the set.
+	 */
+	public boolean addExtensionFound(Extension<DungTheory> newFinishedExtension) {
+		return this.extensionsFound.add(newFinishedExtension);
+	}
+
+	/**
 	 * Adds an analysis to the set of subAnalyses of this analysis.
 	 *
 	 * @param newSubAnalysis Analysis, done in reducted sub-frameworks of the current framework.
@@ -124,8 +133,9 @@ public class ContainerTransitionStateAnalysis {
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (!(obj instanceof ContainerTransitionStateAnalysis))
-            return false;
+		if (!(obj instanceof ContainerTransitionStateAnalysis)) {
+			return false;
+		}
 		if (this == obj) {
 			return true;
 		}

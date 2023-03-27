@@ -130,7 +130,6 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			return analysis;
 		}
 
-		var foundExtensions = new HashSet<Extension<DungTheory>>();
 		var root = new TransitionStateNode(state);
 		var graphGenerationProcess = new SimpleGraph<TransitionStateNode>();
 		graphGenerationProcess.add(root);
@@ -139,7 +138,7 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 				this.usedSemantics, 
 				graphGenerationProcess, 
 				root, 
-				foundExtensions, 
+				new HashSet<Extension<DungTheory>>(), 
 				new HashSet<ContainerTransitionStateAnalysis>(), 
 				setInitial);
 		consistencyCheckSet.add(currentAnalysis);
@@ -147,7 +146,7 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 		// check whether a construction of an extension is finished
 		if (this.checkTerminationFunction(state)) {
 			// found final extension
-			foundExtensions.add(state.getExtension());
+			currentAnalysis.addExtensionFound(state.getExtension());
 		}
 
 		Collection<Extension<DungTheory>> newExtensions = this.selectInitialSetsForReduction(state);
