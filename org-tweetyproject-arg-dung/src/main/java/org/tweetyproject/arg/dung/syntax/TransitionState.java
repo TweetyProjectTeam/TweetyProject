@@ -47,11 +47,10 @@ public class TransitionState {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof TransitionState))
+            return false;
 		if (this == obj) {
 			return true;
-		}
-		if ((obj == null) || (this.getClass() != obj.getClass())) {
-			return false;
 		}
 		TransitionState other = (TransitionState) obj;
 

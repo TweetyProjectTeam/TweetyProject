@@ -50,7 +50,7 @@ public class ContainerTransitionStateAnalysis {
 	 */
 	public static ContainerTransitionStateAnalysis getAnalysisByState(HashSet<ContainerTransitionStateAnalysis> setOfAnalyses, TransitionState state) {
 		for (ContainerTransitionStateAnalysis analysis : setOfAnalyses) {
-			if(analysis.equals(state)) {
+			if(analysis.getStateExamined().equals(state)) {
 				return analysis;
 			}
 		}
@@ -124,17 +124,10 @@ public class ContainerTransitionStateAnalysis {
 	@Override
 	public boolean equals(Object obj)
 	{
+		if (!(obj instanceof ContainerTransitionStateAnalysis))
+            return false;
 		if (this == obj) {
 			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if(obj.getClass() == super.getClass()) {
-			return super.equals(obj);
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
 		}
 		ContainerTransitionStateAnalysis other = (ContainerTransitionStateAnalysis) obj;
 
