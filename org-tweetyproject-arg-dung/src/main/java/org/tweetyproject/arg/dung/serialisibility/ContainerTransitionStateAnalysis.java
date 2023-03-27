@@ -112,7 +112,7 @@ public class ContainerTransitionStateAnalysis {
 	}
 
 	/**
-	 * Adds a completly serialized extension to the set of found extensions of the transition state associated with this object.
+	 * Adds a completely serialized extension to the set of found extensions of the transition state associated with this object.
 	 * @param newFinishedExtension Extension, which process of serializing is finished.
 	 * @return True if the extension could be added to the set.
 	 */
