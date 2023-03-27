@@ -30,58 +30,60 @@ public class TransitionState {
 	/**
 	 * theory
 	 */
-    private DungTheory theory;
-    /**
-     * extension
-     */
-    private Extension<DungTheory> extension;
-    /**
-     * 
-     * @param theory a dung theory
-     * @param extension an extension
-     */
-    public TransitionState(DungTheory theory, Extension<DungTheory> extension) {
-        this.theory = theory;
-        this.extension = extension;
-    }
+	private DungTheory theory;
+	/**
+	 * extension
+	 */
+	private Extension<DungTheory> extension;
+	/**
+	 *
+	 * @param theory a dung theory
+	 * @param extension an extension
+	 */
+	public TransitionState(DungTheory theory, Extension<DungTheory> extension) {
+		this.theory = theory;
+		this.extension = extension;
+	}
 
-    /**
-     * compute the successor state for the given extension
-     * @param ext a set of arguments that has been selected by a selection function
-     * @return the successor state
-     */
-    public TransitionState getNext(Extension<DungTheory> ext) {
-        DungTheory reduct = this.theory.getReduct(ext);
-        Extension<DungTheory> newExt = new Extension<>(this.extension);
-        newExt.addAll(ext);
-
-        return new TransitionState(reduct, newExt);
-    }
-    /**
-     * 
-     * @return the theory
-     */
-    public DungTheory getTheory() {
-        return theory;
-    }
-    /**
-     * 
-     * @return the extension
-     */
-    public Extension<DungTheory> getExtension() {
-        return extension;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-    	if (this == obj)
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if ((obj == null) || (this.getClass() != obj.getClass())) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		TransitionState other = (TransitionState) obj;
-    	
-    	return this.extension.equals(other.extension) && this.theory.equals(other.theory);
-    }
+
+		return this.extension.equals(other.extension) && this.theory.equals(other.theory);
+	}
+	/**
+	 *
+	 * @return the extension
+	 */
+	public Extension<DungTheory> getExtension() {
+		return this.extension;
+	}
+
+	/**
+	 *
+	 * @return the theory
+	 */
+	public DungTheory getTheory() {
+		return this.theory;
+	}
+	
+	/**
+	 * Compute a transition state by reducting the framework of this state by a specified extension
+	 *
+	 * @param transitionSet Set of arguments, used to reduct framework
+	 * @return
+	 */
+	public TransitionState transitToNewState(Extension<DungTheory> transitionSet) {
+		// reduct framework of the current state by the given extension newExt
+		DungTheory reduct = this.theory.getReduct(transitionSet);
+		Extension<DungTheory> newStateExtension = new Extension<>(this.extension);
+		newStateExtension.addAll(transitionSet);
+		return new TransitionState(reduct, newStateExtension);
+	}
 }
