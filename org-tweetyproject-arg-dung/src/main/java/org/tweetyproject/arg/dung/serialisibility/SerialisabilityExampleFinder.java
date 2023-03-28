@@ -18,9 +18,12 @@
  */
 package org.tweetyproject.arg.dung.serialisibility;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
-import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.semantics.*;
+import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 
@@ -181,6 +184,31 @@ public class SerialisabilityExampleFinder {
 			}
 		}
 		return results.toArray(new ContainerTransitionStateAnalysis[0]);
+	}
+	
+	/**
+	 * Creates for each example generated one analysis per specified semantics.
+	 * @param semanticsForSerializing Array of semantics, used to create the different analyses.
+	 * @param numberOfExamples Number of exemplary frameworks, which will be generated.
+	 * @return Frameworks mapped to the associated analyses using different semantics
+	 */
+	public HashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExamplesArrayForDifferentSemantics(Semantics[] semanticsForSerializing, int numberOfExamples){
+		HashMap<DungTheory, ContainerTransitionStateAnalysis[]> results = new HashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
+		
+		for (int i = 0; i < numberOfExamples; i++) {
+			DungTheory framework = this.generator.next();
+			ContainerTransitionStateAnalysis[] analysesForDiffSemantics = new ContainerTransitionStateAnalysis[semanticsForSerializing.length];
+			
+			for (int j = 0; j < semanticsForSerializing.length; j++) {
+				analysesForDiffSemantics[j] = SerialisableExtensionReasonerWithAnalysis
+						.getSerialisableReasonerForSemantics(semanticsForSerializing[j])
+						.getModelsWithAnalysis(framework);
+			}
+			
+			results.put(framework, analysesForDiffSemantics);
+		}
+		
+		return results;
 	}
 
 	/**

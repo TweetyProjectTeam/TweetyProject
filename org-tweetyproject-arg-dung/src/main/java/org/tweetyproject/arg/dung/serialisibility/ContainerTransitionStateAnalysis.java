@@ -63,6 +63,7 @@ public class ContainerTransitionStateAnalysis {
 	private Collection<Extension<DungTheory>> extensionsFound;
 	private HashSet<ContainerTransitionStateAnalysis> analysesSuccessive;
 	private Extension<DungTheory> setInitial;
+	private String title;
 
 	/**
 	 * Creates an object containing all relevant findings from examining the given framework for serialisable extensions.
@@ -149,7 +150,6 @@ public class ContainerTransitionStateAnalysis {
 				super.equals(other);
 	}
 
-
 	/**
 	 * @return Analyses, done in reducted sub-frameworks of the current framework.
 	 */
@@ -165,6 +165,7 @@ public class ContainerTransitionStateAnalysis {
 		result.addAll(this.extensionsFound);
 		return result;
 	}
+
 
 	/**
 	 * @return Graph visualizing the build paths, which lead to the finally found extensions.
@@ -202,6 +203,14 @@ public class ContainerTransitionStateAnalysis {
 	}
 
 	/**
+	 *
+	 * @return Title, that describes the analysis.
+	 */
+	public String getTitle() {
+		return this.title != null ? this.title : "Serializability Analysis";
+	}
+
+	/**
 	 * Adds an analysis of a successive transition state and integrates its values in this objects fields
 	 *
 	 * @param subAnalysis Analysis of a successive transition state
@@ -216,6 +225,14 @@ public class ContainerTransitionStateAnalysis {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 *
+	 * @param title Title, that describes the analysis.
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	/* (non-Javadoc)

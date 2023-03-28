@@ -39,11 +39,14 @@ public class SerialisabilityExampleFinderExample {
 
 	public static void main(String[] args) {
 		
-		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(5, 0.2, false);
-		Semantics semanticsUsed = Semantics.CO;
+		int numberOfArguments = 12;
 		int numberOfExamples = 3;
+		double attackProbability = 0.2;
+		boolean avoidSelfAttack = false;
+		Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.GR, Semantics.UC};
 		
+		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack);
 		
-		SerialisableExtensionPlotterExample.plotExamplesForReasoner(semanticsUsed, exampleFinder.findExampleArray(semanticsUsed, numberOfExamples));
+		SerialisableExtensionPlotterExample.plotExamplesForReasoner(exampleFinder.findExamplesArrayForDifferentSemantics(semanticsUsed, numberOfExamples));
 	}
 }
