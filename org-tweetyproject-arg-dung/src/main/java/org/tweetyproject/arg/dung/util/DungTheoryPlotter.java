@@ -25,6 +25,7 @@ import com.mxgraph.util.mxConstants;
 
 import org.tweetyproject.graphs.Edge;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.tweetyproject.arg.dung.syntax.*;
@@ -123,12 +124,13 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 	 * @param height Height of the new frame created.
 	 */
 	public static void plotFramework(Collection<DungTheory> frameworks, int width, int height) {
-		
+		int index = 0;
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
 		for (DungTheory af : frameworks) {
-			plotFramework(af, groundPlotter);
+			plotFramework(af, groundPlotter, "Graph " + index);
+			index++;
 		}
 		
 		groundPlotter.show();
@@ -140,13 +142,14 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 	 * @param frameworks Argumentation framework to plot
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
+	 * @param titleGraph Title of the graph to be shown.
 	 */
-	public static void plotFramework(DungTheory framework, int width, int height) {
+	public static void plotFramework(DungTheory framework, int width, int height, String titleGraph) {
 		
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
-		plotFramework(framework, groundPlotter);
+		plotFramework(framework, groundPlotter, titleGraph);
 		
 		groundPlotter.show();
 	}
@@ -156,10 +159,16 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 	 * 
 	 * @param framework Argumentation framework to plot
 	 * @param groundPlotter Plotter, that creates the frame
+	 * @param titleGraph Title of the graph to be shown.
 	 */
-	public static void plotFramework(DungTheory framework, Plotter groundPlotter) {
+	public static void plotFramework(DungTheory framework, Plotter groundPlotter, String titleGraph) {
 		DungTheoryPlotter afPlotter = new DungTheoryPlotter(groundPlotter, framework);
 		afPlotter.createGraph();
+		var lstLabels = new ArrayList<String>();
+		lstLabels.add(titleGraph);
+		lstLabels.add("Argumentation Framework");
+		lstLabels.add(framework.toString());
+		groundPlotter.addLabels(lstLabels);
 	}
 
 }

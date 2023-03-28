@@ -26,22 +26,23 @@ public class SerialisableExtensionPlotterExample {
 		}
 		SerialisableExtensionPlotter.plotGraph(graphs, 2000, 1000);
 		*/
-		
+		int index = 0;
 		for (DungTheory example : examples) {
 			Plotter groundPlotter = new Plotter();
 			groundPlotter.createFrame(2000, 1000);
-			DungTheoryPlotter.plotFramework(example, groundPlotter);
+			DungTheoryPlotter.plotFramework(example, groundPlotter, "Example " + index);
 			ContainerTransitionStateAnalysis analysis = SerialisableExtensionReasonerWithAnalysis
 					.getSerialisableReasonerForSemantics(semantic)
 					.getModelsWithAnalysis(example);
 			SimpleGraph<TransitionStateNode> graph = analysis.getGraphResulting();
-			SerialisableExtensionPlotter.plotGraph(graph, groundPlotter);
+			SerialisableExtensionPlotter.plotGraph(graph, groundPlotter, "Analysis " + index);
 			groundPlotter.show();
 			System.out.println("================================================================================");
 			System.out.println(analysis.toString());
 			System.out.println("================================================================================");
 			System.out.println("");
 			
+			index++;
 		}
 	}
 	

@@ -20,6 +20,7 @@ package org.tweetyproject.arg.dung.serialisibility.plotter;
 
 import com.mxgraph.util.mxConstants;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
@@ -122,12 +123,13 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * @param height Height of the new frame created.
 	 */
 	public static void plotGraph(Collection<Graph<TransitionStateNode>> graphs, int width, int height) {
-		
+		int index = 0;
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
 		for (Graph<TransitionStateNode> graph : graphs) {
-			plotGraph(graph, groundPlotter);
+			plotGraph(graph, groundPlotter, "Graph " + index);
+			index++;
 		}
 		
 		groundPlotter.show();
@@ -139,13 +141,14 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * @param graph Graph of a generation process of serialisable extensions
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
+	 * @param titleGraph Title of the graph to be shown.
 	 */
-	public static void plotGraph(Graph<TransitionStateNode> graph, int width, int height) {
+	public static void plotGraph(Graph<TransitionStateNode> graph, int width, int height, String titleGraph) {
 		
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
-		plotGraph(graph, groundPlotter);
+		plotGraph(graph, groundPlotter, titleGraph);
 		
 		groundPlotter.show();
 	}
@@ -155,10 +158,16 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * 
 	 * @param graph Graph of a generation process of serialisable extensions
 	 * @param groundPlotter Plotter, which creates the frame
+	 * @param titleGraph Title of the graph to be shown.
 	 */
-	public static void plotGraph(Graph<TransitionStateNode> graph, Plotter groundPlotter) {
+	public static void plotGraph(Graph<TransitionStateNode> graph, Plotter groundPlotter, String titleGraph) {
 		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, graph);
 		sePlotter.createGraph();
+		var lstLabels = new ArrayList<String>();
+		lstLabels.add(titleGraph);
+		lstLabels.add("Serializing Sets");
+		lstLabels.add(graph.toString());
+		groundPlotter.addLabels(lstLabels);
 	}
 
 }
