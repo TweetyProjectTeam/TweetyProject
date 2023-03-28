@@ -34,9 +34,9 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * This specialization of the reasoner gives access to all interim results of
  * the computation.
  * 
- * @see Matthias Thimm. Revisiting initial sets in abstract argumentation.
+ * @see source Matthias Thimm. Revisiting initial sets in abstract argumentation.
  *      Argument & Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
- * @see Lars Bengel and Matthias Thimm. Serialisable Semantics for Abstract
+ * @see source Lars Bengel and Matthias Thimm. Serialisable Semantics for Abstract
  *      Argumentation. Computational Models of Argument (2022) DOI:
  *      10.3233/FAIA220143
  * 

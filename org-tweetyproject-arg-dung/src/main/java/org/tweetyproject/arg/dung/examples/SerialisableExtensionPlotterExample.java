@@ -31,7 +31,7 @@ import org.tweetyproject.graphs.*;
 import java.util.HashSet;
 
 /**
- * This class summarises examples displaying the usage of {@link org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionPlotter} 
+ * This class summarises examples displaying the usage of {@link SerialisableExtensionPlotter} 
  * for a chosen type of serialisable semantics.
  * <br>
  * <br> See
@@ -51,25 +51,42 @@ import java.util.HashSet;
  */
 public class SerialisableExtensionPlotterExample {
 
-	private static void plotExamplesForReasoner(Semantics semantic, DungTheory[] examples) {
+	/**
+	 * Plots specified frameworks and their associated analysis of the serializing generation of extensions
+	 * @param semantics Semantics of the extension created
+	 * @param examples Analyses, which framework and graph should be plotted
+	 */
+	public static void plotExamplesForReasoner(Semantics semantics, ContainerTransitionStateAnalysis[] examples) {
 		int index = 0;
-		for (DungTheory example : examples) {
+		for (ContainerTransitionStateAnalysis example : examples) {
 			Plotter groundPlotter = new Plotter();
 			groundPlotter.createFrame(2000, 1000);
-			DungTheoryPlotter.plotFramework(example, groundPlotter, "Example " + index);
-			ContainerTransitionStateAnalysis analysis = SerialisableExtensionReasonerWithAnalysis
-					.getSerialisableReasonerForSemantics(semantic)
-					.getModelsWithAnalysis(example);
-			SimpleGraph<TransitionStateNode> graph = analysis.getGraphResulting();
+			DungTheoryPlotter.plotFramework(example.getStateExamined().getTheory(), groundPlotter, "Example " + index);
+			SimpleGraph<TransitionStateNode> graph = example.getGraphResulting();
 			SerialisableExtensionPlotter.plotGraph(graph, groundPlotter, "Analysis " + index);
 			groundPlotter.show();
 			System.out.println("================================================================================");
-			System.out.println(analysis.toString());
+			System.out.println(example.toString());
 			System.out.println("================================================================================");
 			System.out.println("");
 			
 			index++;
 		}
+	}
+	
+	/**
+	 * Plots specified frameworks and their associated analysis of the serializing generation of extensions
+	 * @param semantics Semantics of the extension created
+	 * @param examples Frameworks, for which the extensions should be found.
+	 */
+	public static void plotExamplesForReasoner(Semantics semantics, DungTheory[] examples) {
+		ContainerTransitionStateAnalysis[] analyses = new ContainerTransitionStateAnalysis[examples.length];
+		for (int i = 0; i < examples.length; i++) {
+			analyses[i] = SerialisableExtensionReasonerWithAnalysis
+					.getSerialisableReasonerForSemantics(semantics)
+					.getModelsWithAnalysis(examples[i]);
+		}
+		plotExamplesForReasoner(semantics, analyses);
 	}
 	
 	
