@@ -63,7 +63,7 @@ public class SerialisableExtensionPlotterExample {
 			groundPlotter.createFrame(2000, 1000);
 			DungTheoryPlotter.plotFramework(example.getStateExamined().getTheory(), groundPlotter, "Example " + index);
 			SimpleGraph<TransitionStateNode> graph = example.getGraphResulting();
-			SerialisableExtensionPlotter.plotGraph(graph, groundPlotter, "Analysis " + index);
+			SerialisableExtensionPlotter.plotGraph(graph, groundPlotter, "Analysis " + index, semantics);
 			groundPlotter.show();
 			System.out.println("================================================================================");
 			System.out.println(example.toString());

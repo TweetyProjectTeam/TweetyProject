@@ -23,6 +23,7 @@ import com.mxgraph.util.mxConstants;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.util.GraphPlotter;
@@ -121,14 +122,15 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * @param graphs Graphs of generation processes of serialisable extensions
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
+	 * @param semanticsUsed Semantics of the extensions created in the graph to plot.
 	 */
-	public static void plotGraph(Collection<Graph<TransitionStateNode>> graphs, int width, int height) {
+	public static void plotGraph(Collection<Graph<TransitionStateNode>> graphs, int width, int height, Semantics semanticsUsed) {
 		int index = 0;
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
 		for (Graph<TransitionStateNode> graph : graphs) {
-			plotGraph(graph, groundPlotter, "Graph " + index);
+			plotGraph(graph, groundPlotter, "Graph " + index, semanticsUsed);
 			index++;
 		}
 		
@@ -142,13 +144,14 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
 	 * @param titleGraph Title of the graph to be shown.
+	 * @param semanticsUsed Semantics of the extensions created in the graph to plot.
 	 */
-	public static void plotGraph(Graph<TransitionStateNode> graph, int width, int height, String titleGraph) {
+	public static void plotGraph(Graph<TransitionStateNode> graph, int width, int height, String titleGraph, Semantics semanticsUsed) {
 		
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 		
-		plotGraph(graph, groundPlotter, titleGraph);
+		plotGraph(graph, groundPlotter, titleGraph, semanticsUsed);
 		
 		groundPlotter.show();
 	}
@@ -159,12 +162,14 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * @param graph Graph of a generation process of serialisable extensions
 	 * @param groundPlotter Plotter, which creates the frame
 	 * @param titleGraph Title of the graph to be shown.
+	 * @param semanticsUsed Semantics of the extensions created in the graph to plot.
 	 */
-	public static void plotGraph(Graph<TransitionStateNode> graph, Plotter groundPlotter, String titleGraph) {
+	public static void plotGraph(Graph<TransitionStateNode> graph, Plotter groundPlotter, String titleGraph, Semantics semanticsUsed) {
 		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, graph);
 		sePlotter.createGraph();
 		var lstLabels = new ArrayList<String>();
 		lstLabels.add(titleGraph);
+		lstLabels.add(semanticsUsed.description());
 		lstLabels.add("Serializing Sets");
 		sePlotter.addLabels(lstLabels);
 	}
