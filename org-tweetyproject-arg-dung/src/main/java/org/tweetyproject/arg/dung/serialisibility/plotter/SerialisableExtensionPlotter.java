@@ -166,8 +166,7 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 		var lstLabels = new ArrayList<String>();
 		lstLabels.add(titleGraph);
 		lstLabels.add("Serializing Sets");
-		lstLabels.add(graph.toString());
-		groundPlotter.addLabels(lstLabels);
+		sePlotter.addLabels(lstLabels);
 	}
 
 }
