@@ -49,7 +49,7 @@ public class SerialisabilityExampleFinderExample {
 		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack);
 		
 		SerialisableExtensionPlotter.plotAnalyses(
-				exampleFinder.findExamplesArrayForDifferentSemantics(semanticsUsed, numberOfExamples), 
+				exampleFinder.findExampleArrayForDifferentSemantics(semanticsUsed, numberOfExamples), 
 				"Example",
 				2000, 1000);
 	}
