@@ -20,7 +20,7 @@ package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.SerialisabilityExampleFinder;
-import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionPlotter;
+import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisabilityAnalysisPlotter;
 
 /**
  * This class summarises examples displaying the usage of {@link SerialisabilityExampleFinder} 
@@ -50,7 +50,7 @@ public class SerialisabilityExampleFinderExample {
 		
 		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack);
 		
-		SerialisableExtensionPlotter.plotAnalyses(
+		SerialisabilityAnalysisPlotter.plotAnalyses(
 				exampleFinder.findExampleArrayForDifferentSemantics(semanticsUsed, numberOfExamples), 
 				/*exampleFinder.findExampleArrayForDifferentSemantics(
 						semanticsUsed, 
