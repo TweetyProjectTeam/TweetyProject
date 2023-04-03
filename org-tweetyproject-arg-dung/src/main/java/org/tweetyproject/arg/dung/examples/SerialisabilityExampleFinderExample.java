@@ -40,7 +40,7 @@ public class SerialisabilityExampleFinderExample {
 
 	public static void main(String[] args) {
 		
-		int numberOfArguments = 12;
+		int numberOfArguments = 6;
 		int numberOfExamples = 3;
 		double attackProbability = 0.2;
 		boolean avoidSelfAttack = false;
