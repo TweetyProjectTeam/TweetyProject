@@ -41,7 +41,9 @@ public class SerialisabilityExampleFinderExample {
 	public static void main(String[] args) {
 		
 		int numberOfArguments = 6;
-		int numberOfExamples = 3;
+		int numberOfArgumentsAtStart = 3;
+		int incrementOfArguments = 1;
+		int numberOfExamples = 2;
 		double attackProbability = 0.2;
 		boolean avoidSelfAttack = false;
 		Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.GR, Semantics.UC};
@@ -50,6 +52,13 @@ public class SerialisabilityExampleFinderExample {
 		
 		SerialisableExtensionPlotter.plotAnalyses(
 				exampleFinder.findExampleArrayForDifferentSemantics(semanticsUsed, numberOfExamples), 
+				/*exampleFinder.findExampleArrayForDifferentSemantics(
+						semanticsUsed, 
+						numberOfArgumentsAtStart, 
+						numberOfArguments, 
+						numberOfExamples, 
+						incrementOfArguments),
+						*/
 				"Example",
 				2000, 1000);
 	}
