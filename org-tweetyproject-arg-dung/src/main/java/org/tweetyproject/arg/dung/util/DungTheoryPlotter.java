@@ -167,7 +167,7 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 		var lstLabels = new ArrayList<String>();
 		lstLabels.add(titleGraph);
 		lstLabels.add("Argumentation Framework");
-		lstLabels.add(framework.toString());
+		//lstLabels.add(framework.toString());
 		afPlotter.addLabels(lstLabels);
 	}
 
