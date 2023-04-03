@@ -163,12 +163,12 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	
 	private final String LABEL_DEFAULT_NODE = "N.A.";
 	private final String LABEL_DEFAULT_EDGE = "";
-	private final String STYLE_NODE_FILLCOLOR = "=lightblue;";
+	private final String STYLE_NODE_FILLCOLOR = "=turquoise;";
 	private final String STYLE_NODE_ROUNDED = "=true;";
-	private final int VERTEX_WIDTH = 30;
+	private final int VERTEX_WIDTH = 90;
 	private final int VERTEX_HEIGHT = 30;
-	private final int VERTEX_SPACING = 50;
-	private final int FONTSIZE = 14;
+	private final int VERTEX_SPACING = 90;
+	private final int FONTSIZE = 10;
 
 	public SerialisableExtensionPlotter(Plotter plotter, Graph<TransitionStateNode> graph) {
 		super(plotter, graph);
