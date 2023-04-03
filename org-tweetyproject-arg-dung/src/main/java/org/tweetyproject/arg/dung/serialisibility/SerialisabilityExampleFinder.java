@@ -192,7 +192,7 @@ public class SerialisabilityExampleFinder {
 	 * @param numberOfExamples Number of exemplary frameworks, which will be generated.
 	 * @return Frameworks mapped to the associated analyses using different semantics
 	 */
-	public HashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExamplesArrayForDifferentSemantics(Semantics[] semanticsForSerializing, int numberOfExamples){
+	public HashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleArrayForDifferentSemantics(Semantics[] semanticsForSerializing, int numberOfExamples){
 		HashMap<DungTheory, ContainerTransitionStateAnalysis[]> results = new HashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
 		
 		for (int i = 0; i < numberOfExamples; i++) {
