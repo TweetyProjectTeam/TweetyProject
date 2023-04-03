@@ -18,9 +18,16 @@
  */
 package org.tweetyproject.arg.dung.examples;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
 import org.tweetyproject.arg.dung.serialisibility.SerialisabilityExampleFinder;
 import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisabilityAnalysisPlotter;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.writer.ApxWriter;
 
 /**
  * This class summarises examples displaying the usage of {@link SerialisabilityExampleFinder} 
@@ -48,18 +55,38 @@ public class SerialisabilityExampleFinderExample {
 		boolean avoidSelfAttack = false;
 		Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.GR, Semantics.UC};
 		
-		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack);
+		ApxWriter writer = new ApxWriter();
+		String path = System.getProperty("user.home") 
+				+ File.separator + "Documents" 
+				+ File.separator + "TweetyProject"
+				+ File.separator + "SerialisabilityExampleFinderExample";
+		createDir(path);
 		
-		SerialisabilityAnalysisPlotter.plotAnalyses(
-				exampleFinder.findExampleArrayForDifferentSemantics(semanticsUsed, numberOfExamples), 
-				/*exampleFinder.findExampleArrayForDifferentSemantics(
-						semanticsUsed, 
-						numberOfArgumentsAtStart, 
-						numberOfArguments, 
-						numberOfExamples, 
-						incrementOfArguments),
-						*/
-				"Example",
-				2000, 1000);
+		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack);
+		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples = exampleFinder.findExampleArrayForDifferentSemantics(semanticsUsed, numberOfExamples); //exampleFinder.findExampleArrayForDifferentSemantics(
+		/*							semanticsUsed, 
+									numberOfArgumentsAtStart, 
+									numberOfArguments, 
+									numberOfExamples, 
+									incrementOfArguments),
+		*/
+		
+		int index = 0;
+		for (DungTheory framework : examples.keySet()) {
+			File file = new File(path + File.separator +  "Example_" + index + ".apx");
+			try {
+				writer.write(framework, file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+			index++;
+		}
+		
+		SerialisabilityAnalysisPlotter.plotAnalyses( examples, "Example_", 2000, 1000);
+	}
+	
+	private static void createDir(String path) {
+		File customDir = new File(path);
+		customDir.mkdirs();
 	}
 }

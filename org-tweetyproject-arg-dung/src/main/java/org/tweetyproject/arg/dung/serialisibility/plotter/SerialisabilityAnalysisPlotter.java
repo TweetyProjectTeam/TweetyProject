@@ -75,10 +75,11 @@ public class SerialisabilityAnalysisPlotter {
 		int index = 0;
 		for (DungTheory exampleFramework : mapAFtoAnalyses.keySet()) {
 			Plotter groundPlotter = new Plotter();
+			String titleToSet = title + " " + index;
 			groundPlotter.createFrame(width, height);
-			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, "Example " + index);
+			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, titleToSet);
 			for (ContainerTransitionStateAnalysis analysis : mapAFtoAnalyses.get(exampleFramework)) {
-				analysis.setTitle(analysis.getTitle() + " " + title + " " + index);
+				analysis.setTitle(analysis.getTitle() + " " + titleToSet);
 				SimpleGraph<TransitionStateNode> graph = analysis.getGraphResulting();
 				SerialisableExtensionPlotter.plotAnalysis(analysis, groundPlotter);
 			}
