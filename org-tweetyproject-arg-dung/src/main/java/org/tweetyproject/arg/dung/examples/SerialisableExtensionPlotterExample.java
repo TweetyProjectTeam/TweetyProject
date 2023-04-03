@@ -49,62 +49,6 @@ import java.util.HashMap;
  *
  */
 public class SerialisableExtensionPlotterExample {
-
-	/**
-	 * Plots specified frameworks and their associated analyses of the serializing generation of extensions in one frame
-	 * @param examples Frameworks mapped to the associated analyses using different semantics
-	 */
-	public static void plotExamplesForReasoner(HashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples) {
-		int index = 0;
-		for (DungTheory exampleFramework : examples.keySet()) {
-			Plotter groundPlotter = new Plotter();
-			groundPlotter.createFrame(2000, 1000);
-			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, "Example " + index);
-			for (ContainerTransitionStateAnalysis analysis : examples.get(exampleFramework)) {
-				analysis.setTitle(analysis.getTitle() + " Example " + index);
-				SimpleGraph<TransitionStateNode> graph = analysis.getGraphResulting();
-				SerialisableExtensionPlotter.plotGraph(analysis, groundPlotter);
-			}
-			groundPlotter.show();
-			index++;
-		}
-	}
-	
-	
-	/**
-	 * Plots specified frameworks and their associated analysis of the serializing generation of extensions
-	 * @param examples Analyses, which framework and graph should be plotted
-	 */
-	public static void plotExamplesForReasoner(ContainerTransitionStateAnalysis[] examples) {
-		HashMap<DungTheory, ContainerTransitionStateAnalysis[]> convExamples = new HashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
-		
-		for (ContainerTransitionStateAnalysis analysis : examples) {
-			convExamples.put(analysis.getStateExamined().getTheory(), new ContainerTransitionStateAnalysis[] {analysis});
-		}
-		
-		plotExamplesForReasoner(convExamples);
-	}
-	
-	/**
-	 * Plots specified frameworks and their associated analysis of the serializing generation of extensions
-	 * @param semantics Semantics of the extension created
-	 * @param examples Frameworks, for which the extensions should be found.
-	 */
-	public static void plotExamplesForReasoner(Semantics[] semantics, DungTheory[] examples) {
-		HashMap<DungTheory, ContainerTransitionStateAnalysis[]> convExamples = new HashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
-		
-		for (DungTheory example : examples) {
-			ContainerTransitionStateAnalysis[] analyses = new ContainerTransitionStateAnalysis[semantics.length];
-			for (int i = 0; i < analyses.length; i++) {
-				analyses[i] = SerialisableExtensionReasonerWithAnalysis
-						.getSerialisableReasonerForSemantics(semantics[i])
-						.getModelsWithAnalysis(example);
-			}
-			convExamples.put(example, analyses);
-		}
-				
-		plotExamplesForReasoner(convExamples);
-	}
 	
 	
 	public static void main(String[] args) {
@@ -117,7 +61,7 @@ public class SerialisableExtensionPlotterExample {
 		
 		
 		//System.out.println("======================================== all Examples ========================================");
-		plotExamplesForReasoner(semanticsUsed, exampleFrameworks);
+		SerialisableExtensionPlotter.plotAnalyses(semanticsUsed, exampleFrameworks, "Example", 2000, 1000);
 		System.out.println("");
 	}
 
