@@ -44,19 +44,24 @@ public class SerialisabilityExampleFinder {
 
 	private DefaultDungTheoryGenerator generator;
 	private DungTheoryGenerationParameters parameters;
-	private HashMap<Principle, AbstractExtensionReasoner> conditionsFramework = new HashMap<Principle, AbstractExtensionReasoner>();
+	private HashMap<Principle, AbstractExtensionReasoner> conditionsFramework = new HashMap<>();
+	private int maxNumberTryGenerate = 10;
 
 	/**
 	 *
 	 * @param numberOfArguments {@link DungTheoryGenerationParameters#numberOfArguments}
 	 * @param attackProbability {@link DungTheoryGenerationParameters#attackProbability}
 	 * @param avoidSelfAttacks {@link DungTheoryGenerationParameters#avoidSelfAttacks}
+	 * @param maxNumberTryGenerate Number how often the generator can retry to generate a framework complied to the conditions, before aborting the process.
 	 */
-	public SerialisabilityExampleFinder(int numberOfArguments, double attackProbability, boolean avoidSelfAttacks) {
+	public SerialisabilityExampleFinder(int numberOfArguments, double attackProbability, boolean avoidSelfAttacks, int maxNumberTryGenerate) {
 		this.parameters = new DungTheoryGenerationParameters();
 		this.changeParameterNumberOfArguments(numberOfArguments);
 		this.changeParameterAttackProbability(attackProbability);
 		this.changeParameterSelfAttacks(avoidSelfAttacks);
+		if(maxNumberTryGenerate > 0) {
+			this.maxNumberTryGenerate = maxNumberTryGenerate;
+		}
 
 		this.generator = new DefaultDungTheoryGenerator(this.parameters);
 	}
@@ -108,8 +113,9 @@ public class SerialisabilityExampleFinder {
 	 *
 	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
 	 * @return Analysis result of a randomly generated exemplary problem.
+	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
-	public ContainerTransitionStateAnalysis findExample(Semantics semanticsForSerializing) {
+	public ContainerTransitionStateAnalysis findExample(Semantics semanticsForSerializing) throws ExceptionNotSatisfiedPostulate {
 
 		DungTheory generatedFramework = this.generateFramework();
 
@@ -122,8 +128,9 @@ public class SerialisabilityExampleFinder {
 	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
 	 * @param numberOfExamples Number of examples generated.
 	 * @return Array of analysis results, analyzing each a different randomly generated exemplary argumentation framework.
+	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
-	public ContainerTransitionStateAnalysis[] findExample(Semantics semanticsForSerializing, int numberOfExamples) {
+	public ContainerTransitionStateAnalysis[] findExample(Semantics semanticsForSerializing, int numberOfExamples) throws ExceptionNotSatisfiedPostulate {
 		ContainerTransitionStateAnalysis[] results = new ContainerTransitionStateAnalysis[numberOfExamples];
 		for (int i = 0; i < results.length; i++) {
 			results[i] = this.findExample(semanticsForSerializing);
@@ -143,13 +150,14 @@ public class SerialisabilityExampleFinder {
 	 * @param numberOfExamplesPerIncrement Number of examples created with the same number of arguments.
 	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased each time.
 	 * @return Array of analysis results, analyzing each a different randomly generated exemplary argumentation framework.
+	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
 	public  ContainerTransitionStateAnalysis[] findExample(
 			Semantics semanticsForSerializing,
 			int numberOfArgumentsStart,
 			int maxNumberOfArguments,
 			int numberOfExamplesPerIncrement,
-			int incrementForNumberOfArguments) {
+			int incrementForNumberOfArguments) throws ExceptionNotSatisfiedPostulate {
 		HashSet<ContainerTransitionStateAnalysis> results = new HashSet<>();
 		for (int i = numberOfArgumentsStart; i <= maxNumberOfArguments; i += incrementForNumberOfArguments) {
 			this.changeParameterNumberOfArguments(i);
@@ -165,10 +173,11 @@ public class SerialisabilityExampleFinder {
 	 * @param semanticsForSerializing Array of semantics, used to create the different analyses.
 	 * @param numberOfExamples Number of exemplary frameworks, which will be generated.
 	 * @return Frameworks mapped to the associated analyses using different semantics
+	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
 	public LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleForDifferentSemantics(
 			Semantics[] semanticsForSerializing,
-			int numberOfExamples){
+			int numberOfExamples) throws ExceptionNotSatisfiedPostulate{
 		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> results = new LinkedHashMap<>();
 
 		for (int i = 0; i < numberOfExamples; i++) {
@@ -199,13 +208,14 @@ public class SerialisabilityExampleFinder {
 	 * @param numberOfExamplesPerIncrement Number of examples created with the same number of arguments.
 	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased each time.
 	 * @return Frameworks mapped to the associated analyses using different semantics
+	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
 	public  LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleForDifferentSemantics(
 			Semantics[] semanticsForSerializing,
 			int numberOfArgumentsStart,
 			int maxNumberOfArguments,
 			int numberOfExamplesPerIncrement,
-			int incrementForNumberOfArguments)
+			int incrementForNumberOfArguments) throws ExceptionNotSatisfiedPostulate
 	{
 		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> output = new LinkedHashMap<>();
 
@@ -219,12 +229,17 @@ public class SerialisabilityExampleFinder {
 
 	/**
 	 * Generates a framework, which complies to the specified conditions
+	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if the generated frameworks couldn't satisfy the condition within the specified number of allowed attempts
 	 */
-	private DungTheory generateFramework() {
+	private DungTheory generateFramework() throws ExceptionNotSatisfiedPostulate {
 		DungTheory generatedFramework;
 
 		boolean mustRepeat = false;
+		int numTryLeft = this.maxNumberTryGenerate;
 		do {
+			if(numTryLeft == 0) {
+				throw new ExceptionNotSatisfiedPostulate();
+			}
 			generatedFramework = this.generator.next();
 
 
@@ -234,6 +249,7 @@ public class SerialisabilityExampleFinder {
 					mustRepeat = true;
 				}
 			}
+			numTryLeft--;
 		} while (mustRepeat);
 		return generatedFramework;
 	}

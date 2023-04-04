@@ -20,8 +20,9 @@ package org.tweetyproject.arg.dung.examples;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
-import java.time.*;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
@@ -31,7 +32,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 
 /**
- * This class summarises examples displaying the usage of {@link SerialisabilityExampleFinder} 
+ * This class summarises examples displaying the usage of {@link SerialisabilityExampleFinder}
  * for a chosen type of serialisable semantics.
  *
  * @see source Matthias Thimm. Revisiting initial sets in abstract argumentation.
@@ -47,54 +48,58 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
 public class SerialisabilityExampleFinderExample {
 
 	public static void main(String[] args) {
-		
-		int numberOfArguments = 6;
-		int numberOfArgumentsAtStart = 3;
-		int incrementOfArguments = 1;
-		int numberOfExamples = 2;
-		double attackProbability = 0.2;
-		boolean avoidSelfAttack = false;
-		Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.GR, Semantics.UC};
-		
-		ApxWriter writer = new ApxWriter();
-		String path = System.getProperty("user.home") 
-				+ File.separator + "Documents" 
-				+ File.separator + "TweetyProject"
-				+ File.separator + "SerialisabilityExampleFinderExample";
-		createDir(path);
 
-		ZoneId z = ZoneId.of( "Europe/Berlin" );
-		ZonedDateTime now = ZonedDateTime.now( z );
-		
-		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack);
-		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples = exampleFinder.findExampleForDifferentSemantics(semanticsUsed, numberOfExamples); //exampleFinder.findExampleArrayForDifferentSemantics(
-		/*							semanticsUsed, 
-									numberOfArgumentsAtStart, 
-									numberOfArguments, 
-									numberOfExamples, 
+		try {
+			int numberOfArguments = 6;
+			int numberOfArgumentsAtStart = 3;
+			int incrementOfArguments = 1;
+			int numberOfExamples = 2;
+			double attackProbability = 0.2;
+			boolean avoidSelfAttack = false;
+			Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.GR, Semantics.UC};
+
+			ApxWriter writer = new ApxWriter();
+			String path = System.getProperty("user.home")
+					+ File.separator + "Documents"
+					+ File.separator + "TweetyProject"
+					+ File.separator + "SerialisabilityExampleFinderExample";
+			SerialisabilityExampleFinderExample.createDir(path);
+
+			ZoneId z = ZoneId.of( "Europe/Berlin" );
+			ZonedDateTime now = ZonedDateTime.now( z );
+
+			SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack, 10);
+			LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples = exampleFinder.findExampleForDifferentSemantics(semanticsUsed, numberOfExamples); //exampleFinder.findExampleArrayForDifferentSemantics(
+			/*							semanticsUsed,
+									numberOfArgumentsAtStart,
+									numberOfArguments,
+									numberOfExamples,
 									incrementOfArguments),
-		*/
-		
-		int index = 0;
-		for (DungTheory framework : examples.keySet()) {
-			File file = new File(path + File.separator +
-					now.getYear() + "_" + 
-					now.getMonthValue() + "_" + 
-					now.getDayOfMonth() + "_" + 
-					now.getHour() + "h" + 
-					now.getMinute() + "_" +
-					"Example_" + index + ".apx");
-			try {
-				writer.write(framework, file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} 
-			index++;
+			 */
+
+			int index = 0;
+			for (DungTheory framework : examples.keySet()) {
+				File file = new File(path + File.separator +
+						now.getYear() + "_" +
+						now.getMonthValue() + "_" +
+						now.getDayOfMonth() + "_" +
+						now.getHour() + "h" +
+						now.getMinute() + "_" +
+						"Example_" + index + ".apx");
+				try {
+					writer.write(framework, file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				index++;
+			}
+
+			SerialisabilityAnalysisPlotter.plotAnalyses( examples, "Example_", 2000, 1000);
+		}catch(Exception e) {
+
 		}
-		
-		SerialisabilityAnalysisPlotter.plotAnalyses( examples, "Example_", 2000, 1000);
 	}
-	
+
 	private static void createDir(String path) {
 		File customDir = new File(path);
 		customDir.mkdirs();
