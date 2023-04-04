@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.examples;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.time.*;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
@@ -61,6 +62,9 @@ public class SerialisabilityExampleFinderExample {
 				+ File.separator + "TweetyProject"
 				+ File.separator + "SerialisabilityExampleFinderExample";
 		createDir(path);
+
+		ZoneId z = ZoneId.of( "Europe/Berlin" );
+		ZonedDateTime now = ZonedDateTime.now( z );
 		
 		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack);
 		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples = exampleFinder.findExampleArrayForDifferentSemantics(semanticsUsed, numberOfExamples); //exampleFinder.findExampleArrayForDifferentSemantics(
@@ -73,7 +77,13 @@ public class SerialisabilityExampleFinderExample {
 		
 		int index = 0;
 		for (DungTheory framework : examples.keySet()) {
-			File file = new File(path + File.separator +  "Example_" + index + ".apx");
+			File file = new File(path + File.separator +
+					now.getYear() + "_" + 
+					now.getMonthValue() + "_" + 
+					now.getDayOfMonth() + "_" + 
+					now.getHour() + "h" + 
+					now.getMinute() + "_" +
+					"Example_" + index + ".apx");
 			try {
 				writer.write(framework, file);
 			} catch (IOException e) {
