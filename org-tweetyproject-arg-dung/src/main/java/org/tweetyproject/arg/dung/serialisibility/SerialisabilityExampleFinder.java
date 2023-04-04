@@ -44,7 +44,7 @@ public class SerialisabilityExampleFinder {
 
 	private DefaultDungTheoryGenerator generator;
 	private DungTheoryGenerationParameters parameters;
-	private HashMap<Principle, AbstractExtensionReasoner> conditionsFramework = new HashMap<>();
+	private HashMap<Principle, AbstractExtensionReasoner> conditionsFramework = new HashMap<Principle, AbstractExtensionReasoner>();
 	private int maxNumberTryGenerate = 10;
 
 	/**
@@ -158,7 +158,7 @@ public class SerialisabilityExampleFinder {
 			int maxNumberOfArguments,
 			int numberOfExamplesPerIncrement,
 			int incrementForNumberOfArguments) throws ExceptionNotSatisfiedPostulate {
-		HashSet<ContainerTransitionStateAnalysis> results = new HashSet<>();
+		HashSet<ContainerTransitionStateAnalysis> results = new HashSet<ContainerTransitionStateAnalysis>();
 		for (int i = numberOfArgumentsStart; i <= maxNumberOfArguments; i += incrementForNumberOfArguments) {
 			this.changeParameterNumberOfArguments(i);
 			for (int j = 0; j < numberOfExamplesPerIncrement; j++) {
@@ -178,7 +178,7 @@ public class SerialisabilityExampleFinder {
 	public LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleForDifferentSemantics(
 			Semantics[] semanticsForSerializing,
 			int numberOfExamples) throws ExceptionNotSatisfiedPostulate{
-		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> results = new LinkedHashMap<>();
+		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> results = new LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
 
 		for (int i = 0; i < numberOfExamples; i++) {
 			DungTheory framework = this.generateFramework();
@@ -217,7 +217,7 @@ public class SerialisabilityExampleFinder {
 			int numberOfExamplesPerIncrement,
 			int incrementForNumberOfArguments) throws ExceptionNotSatisfiedPostulate
 	{
-		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> output = new LinkedHashMap<>();
+		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> output = new LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
 
 		for (int i = numberOfArgumentsStart; i <= maxNumberOfArguments; i += incrementForNumberOfArguments) {
 			this.changeParameterNumberOfArguments(i);
