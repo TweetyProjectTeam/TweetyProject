@@ -252,6 +252,6 @@ public class SerialisabilityExampleFinder {
 	 */
 	public ContainerTransitionStateAnalysis findExampleEnumerating(Semantics semanticsForSerializing, int incrementForNumberOfArguments) {
 		this.changeParameterNumberOfArguments(this.parameters.numberOfArguments + incrementForNumberOfArguments);
-		return SerialisableExtensionReasonerWithAnalysis.getSerialisableReasonerForSemantics(semanticsForSerializing).getModelsWithAnalysis(this.generator.next());
+		return this.findExample(semanticsForSerializing);
 	}
 }
