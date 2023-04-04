@@ -67,7 +67,7 @@ public class SerialisabilityExampleFinderExample {
 		ZonedDateTime now = ZonedDateTime.now( z );
 		
 		SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack);
-		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples = exampleFinder.findExampleArrayForDifferentSemantics(semanticsUsed, numberOfExamples); //exampleFinder.findExampleArrayForDifferentSemantics(
+		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples = exampleFinder.findExampleForDifferentSemantics(semanticsUsed, numberOfExamples); //exampleFinder.findExampleArrayForDifferentSemantics(
 		/*							semanticsUsed, 
 									numberOfArgumentsAtStart, 
 									numberOfArguments, 

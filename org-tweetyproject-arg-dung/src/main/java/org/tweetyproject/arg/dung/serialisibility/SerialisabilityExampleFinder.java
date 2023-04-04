@@ -18,8 +18,6 @@
  */
 package org.tweetyproject.arg.dung.serialisibility;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
@@ -40,28 +38,8 @@ import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
  */
 public class SerialisabilityExampleFinder {
 
-	private static final int DEFAULT_NUMBER_OF_ARGUMENTS = 5;
-	private static final double DEFAULT_ATTACK_PROBABILITY = 0.5;
-
 	private DefaultDungTheoryGenerator generator;
 	private DungTheoryGenerationParameters parameters;
-
-	/**
-	 *
-	 * @param avoidSelfAttacks {@link DungTheoryGenerationParameters#avoidSelfAttacks}
-	 */
-	public SerialisabilityExampleFinder(boolean avoidSelfAttacks) {
-		this(SerialisabilityExampleFinder.DEFAULT_NUMBER_OF_ARGUMENTS, SerialisabilityExampleFinder.DEFAULT_ATTACK_PROBABILITY, avoidSelfAttacks);
-	}
-
-	/**
-	 *
-	 * @param numberOfArguments {@link DungTheoryGenerationParameters#numberOfArguments}
-	 * @param avoidSelfAttacks {@link DungTheoryGenerationParameters#avoidSelfAttacks}
-	 */
-	public SerialisabilityExampleFinder(int numberOfArguments, boolean avoidSelfAttacks) {
-		this(numberOfArguments, SerialisabilityExampleFinder.DEFAULT_ATTACK_PROBABILITY, avoidSelfAttacks);
-	}
 
 	/**
 	 *
@@ -121,43 +99,18 @@ public class SerialisabilityExampleFinder {
 	}
 
 	/**
-	 * Creates an exemplary serializability analysis with the specified number of arguments in the generated framework.
-	 *
-	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
-	 * @param numberOfArguments Number of Arguments of the framework, which will be generated as an example.
-	 * @return Analysis result of a randomly generated exemplary argumentation framework.
-	 */
-	public ContainerTransitionStateAnalysis findExample(Semantics semanticsForSerializing, int numberOfArguments) {
-		this.changeParameterNumberOfArguments(numberOfArguments);
-		return this.findExample(semanticsForSerializing);
-	}
-
-	/**
 	 * Creates exemplary serializability analyses of generated argumentation frameworks.
 	 *
 	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
 	 * @param numberOfExamples Number of examples generated.
 	 * @return Array of analysis results, analyzing each a different randomly generated exemplary argumentation framework.
 	 */
-	public ContainerTransitionStateAnalysis[] findExampleArray(Semantics semanticsForSerializing, int numberOfExamples) {
+	public ContainerTransitionStateAnalysis[] findExample(Semantics semanticsForSerializing, int numberOfExamples) {
 		ContainerTransitionStateAnalysis[] results = new ContainerTransitionStateAnalysis[numberOfExamples];
 		for (int i = 0; i < results.length; i++) {
 			results[i] = this.findExample(semanticsForSerializing);
 		}
 		return results;
-	}
-
-	/**
-	 * Creates exemplary serializability analyses with a specified number of arguments in the generated frameworks
-	 *
-	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
-	 * @param numberOfExamples Number of examples generated.
-	 * @param numberOfArguments Number of Arguments of the framework, which will be generated as an example.
-	 * @return Array of analysis results, analyzing each a different randomly generated exemplary argumentation framework.
-	 */
-	public ContainerTransitionStateAnalysis[] findExampleArray(Semantics semanticsForSerializing, int numberOfExamples, int numberOfArguments) {
-		this.changeParameterNumberOfArguments(numberOfArguments);
-		return this.findExampleArray(semanticsForSerializing, numberOfExamples);
 	}
 
 	/**
@@ -173,7 +126,7 @@ public class SerialisabilityExampleFinder {
 	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased each time.
 	 * @return Array of analysis results, analyzing each a different randomly generated exemplary argumentation framework.
 	 */
-	public  ContainerTransitionStateAnalysis[] findExampleArray(
+	public  ContainerTransitionStateAnalysis[] findExample(
 			Semantics semanticsForSerializing,
 			int numberOfArgumentsStart,
 			int maxNumberOfArguments,
@@ -181,8 +134,9 @@ public class SerialisabilityExampleFinder {
 			int incrementForNumberOfArguments) {
 		HashSet<ContainerTransitionStateAnalysis> results = new HashSet<>();
 		for (int i = numberOfArgumentsStart; i <= maxNumberOfArguments; i += incrementForNumberOfArguments) {
+			this.changeParameterNumberOfArguments(i);
 			for (int j = 0; j < numberOfExamplesPerIncrement; j++) {
-				results.add(this.findExample(semanticsForSerializing, i));
+				results.add(this.findExample(semanticsForSerializing));
 			}
 		}
 		return results.toArray(new ContainerTransitionStateAnalysis[0]);
@@ -194,7 +148,9 @@ public class SerialisabilityExampleFinder {
 	 * @param numberOfExamples Number of exemplary frameworks, which will be generated.
 	 * @return Frameworks mapped to the associated analyses using different semantics
 	 */
-	public LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleArrayForDifferentSemantics(Semantics[] semanticsForSerializing, int numberOfExamples){
+	public LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleForDifferentSemantics(
+			Semantics[] semanticsForSerializing, 
+			int numberOfExamples){
 		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> results = new LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
 		
 		for (int i = 0; i < numberOfExamples; i++) {
@@ -226,7 +182,7 @@ public class SerialisabilityExampleFinder {
 	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased each time.
 	 * @return Frameworks mapped to the associated analyses using different semantics
 	 */
-	public  LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleArrayForDifferentSemantics(
+	public  LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleForDifferentSemantics(
 			Semantics[] semanticsForSerializing,
 			int numberOfArgumentsStart,
 			int maxNumberOfArguments,
@@ -237,21 +193,9 @@ public class SerialisabilityExampleFinder {
 		
 		for (int i = numberOfArgumentsStart; i <= maxNumberOfArguments; i += incrementForNumberOfArguments) {
 			changeParameterNumberOfArguments(i);
-			output.putAll(this.findExampleArrayForDifferentSemantics(semanticsForSerializing, numberOfExamplesPerIncrement));
+			output.putAll(this.findExampleForDifferentSemantics(semanticsForSerializing, numberOfExamplesPerIncrement));
 		}
 		
 		return output;
-	}
-
-	/**
-	 * Creates an exemplary serializability analysis, for which the number of arguments, with regards to the last analysis created by this object, is increased by the specified increment.
-	 *
-	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
-	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased.
-	 * @return Analysis result of a randomly generated exemplary argumentation framework.
-	 */
-	public ContainerTransitionStateAnalysis findExampleEnumerating(Semantics semanticsForSerializing, int incrementForNumberOfArguments) {
-		this.changeParameterNumberOfArguments(this.parameters.numberOfArguments + incrementForNumberOfArguments);
-		return this.findExample(semanticsForSerializing);
 	}
 }
