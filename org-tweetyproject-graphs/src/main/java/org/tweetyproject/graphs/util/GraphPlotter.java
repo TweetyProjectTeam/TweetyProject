@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
@@ -112,6 +113,15 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	 */
 	public void createGraph() {
 		
+		createGraph(true);
+	}
+
+	/**
+	 * Parse the elements of the graph to visual elements and align them
+	 * in a hierarchical layout in a specified orientation
+	 * @param isVertical If TRUE layout of graph is "top-to-bottom", if FALSE, layout is "left-to-right"
+	 */
+	public void createGraph(boolean isVertical) {
 		this.panel = new JPanel();
 		int width = plotter.getFrame().getMaximumSize().width;
 		int height = plotter.getFrame().getMaximumSize().height;
@@ -139,7 +149,13 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
         	String edgeLabel = getPrettyName(edge);
         	graphPlot.insertEdge(parent, null, edgeLabel, vertexObjectA, vertexObjectB);
         });
-        layout = new mxHierarchicalLayout(graphPlot);
+        if(isVertical) {
+        	layout = new mxHierarchicalLayout(graphPlot, SwingConstants.NORTH);
+        }
+        else {
+        	layout = new mxHierarchicalLayout(graphPlot, SwingConstants.WEST);
+        }
+        
         layout.setIntraCellSpacing(vertexSpacing);
         layout.execute(graphPlot.getDefaultParent());
         graphPlot.getModel().endUpdate();

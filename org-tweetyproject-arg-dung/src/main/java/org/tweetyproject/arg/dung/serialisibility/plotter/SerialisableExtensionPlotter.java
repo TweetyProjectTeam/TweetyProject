@@ -80,7 +80,7 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 */
 	public static void plotAnalysis(ContainerTransitionStateAnalysis analysis, Plotter groundPlotter) {
 		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, analysis.getGraphResulting());
-		sePlotter.createGraph();
+		sePlotter.createGraph(false);
 		var lstLabels = new ArrayList<String>();
 		lstLabels.add(analysis.getTitle());
 		lstLabels.add(analysis.getSemanticsUsed().description());
