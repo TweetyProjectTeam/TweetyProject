@@ -18,16 +18,23 @@
  */
 package org.tweetyproject.arg.dung.serialisibility;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.tweetyproject.arg.dung.principles.Principle;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.syntax.TransitionState;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
+import org.tweetyproject.commons.postulates.Postulate;
+import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
 /**
  * This class represents a generator for exemplary frameworks with serialisable extensions.
@@ -45,22 +52,25 @@ public class SerialisabilityExampleFinder {
 	private DefaultDungTheoryGenerator generator;
 	private DungTheoryGenerationParameters parameters;
 	private HashMap<Principle, AbstractExtensionReasoner> conditionsFramework = new HashMap<Principle, AbstractExtensionReasoner>();
-	private int maxNumberTryGenerate = 10;
+	private int maxNumberTryGenerateFramework = 10;
+	private HashMap<Postulate<Argument>, PostulateEvaluatable<Argument>> conditionsAnalysis = new HashMap<Postulate<Argument>, PostulateEvaluatable<Argument>>();
+	//private HashMap<Postulate<Extension<Argument>>, PostulateEvaluatable<Extension<Argument>>> conditionsAnalysis = new HashMap<Postulate<Extension<Argument>>, PostulateEvaluatable<Extension<Argument>>>();
+	//private HashMap<Postulate<TransitionState>, PostulateEvaluatable<TransitionState>> conditionsAnalysis = new HashMap<Postulate<TransitionState>, PostulateEvaluatable<TransitionState>>();
 
 	/**
 	 *
 	 * @param numberOfArguments {@link DungTheoryGenerationParameters#numberOfArguments}
 	 * @param attackProbability {@link DungTheoryGenerationParameters#attackProbability}
 	 * @param avoidSelfAttacks {@link DungTheoryGenerationParameters#avoidSelfAttacks}
-	 * @param maxNumberTryGenerate Number how often the generator can retry to generate a framework complied to the conditions, before aborting the process.
+	 * @param maxNumberTryGenerateFramework Number how often the generator can retry to generate a framework complied to the conditions, before aborting the process.
 	 */
-	public SerialisabilityExampleFinder(int numberOfArguments, double attackProbability, boolean avoidSelfAttacks, int maxNumberTryGenerate) {
+	public SerialisabilityExampleFinder(int numberOfArguments, double attackProbability, boolean avoidSelfAttacks, int maxNumberTryGenerateFramework) {
 		this.parameters = new DungTheoryGenerationParameters();
 		this.changeParameterNumberOfArguments(numberOfArguments);
 		this.changeParameterAttackProbability(attackProbability);
 		this.changeParameterSelfAttacks(avoidSelfAttacks);
-		if(maxNumberTryGenerate > 0) {
-			this.maxNumberTryGenerate = maxNumberTryGenerate;
+		if(maxNumberTryGenerateFramework > 0) {
+			this.maxNumberTryGenerateFramework = maxNumberTryGenerateFramework;
 		}
 
 		this.generator = new DefaultDungTheoryGenerator(this.parameters);
@@ -74,6 +84,16 @@ public class SerialisabilityExampleFinder {
 	 */
 	public void addConditionForFramework(Principle condition, AbstractExtensionReasoner reasonerToCheck) {
 		this.conditionsFramework.put(condition, reasonerToCheck);
+	}
+	
+	/**
+	 * Adds a specified postulate as a condition, which is satisfied by all analyses of the serialisable extensions 
+	 * wrt the specified semantics, for all generated frameworks. The parameter evaluation is used to verify the condition.
+	 * @param condition condition, which is satisfied by all analyses, or rather the graph resulting from the analysis
+	 * @param evaluation Used to verify if the condition is satisfied by a analysis or rather the graph resulting from the analysis
+	 */
+	public void addCOnditionForAnalysis(Postulate<Argument> condition, PostulateEvaluatable<Argument> evaluation) {
+		this.conditionsAnalysis.put(condition, evaluation);
 	}
 
 	/**
@@ -112,30 +132,54 @@ public class SerialisabilityExampleFinder {
 	 * Creates an exemplary serializability analysis of a generated argumentation frameworks..
 	 *
 	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, returns NULL if no framework can be generated.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, returns NULL if analysis doesn't satisfies conditions.
 	 * @return Analysis result of a randomly generated exemplary problem.
 	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
-	public ContainerTransitionStateAnalysis findExample(Semantics semanticsForSerializing) throws ExceptionNotSatisfiedPostulate {
+	public ContainerTransitionStateAnalysis findExample(
+			Semantics semanticsForSerializing, 
+			boolean abortFrameworkNotComply, 
+			boolean abortAnalysisNotComply) throws ExceptionNotSatisfiedPostulate {
 
-		DungTheory generatedFramework = this.generateFramework();
-
-		return SerialisableExtensionReasonerWithAnalysis.getSerialisableReasonerForSemantics(semanticsForSerializing).getModelsWithAnalysis(generatedFramework);
+		DungTheory generatedFramework = this.generateFramework(abortFrameworkNotComply);
+		
+		if(generatedFramework != null) {
+			return deriveAnalysis(semanticsForSerializing, generatedFramework, abortAnalysisNotComply);
+		}
+		else {
+			return null;
+		}
 	}
+
+	
 
 	/**
 	 * Creates exemplary serializability analyses of generated argumentation frameworks.
 	 *
 	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
 	 * @param numberOfExamples Number of examples generated.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, skips settings for non compliant frameworks and returns less output.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, skips non compliant analysis and returns less output.
 	 * @return Array of analysis results, analyzing each a different randomly generated exemplary argumentation framework.
 	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
-	public ContainerTransitionStateAnalysis[] findExample(Semantics semanticsForSerializing, int numberOfExamples) throws ExceptionNotSatisfiedPostulate {
-		ContainerTransitionStateAnalysis[] results = new ContainerTransitionStateAnalysis[numberOfExamples];
-		for (int i = 0; i < results.length; i++) {
-			results[i] = this.findExample(semanticsForSerializing);
-		}
-		return results;
+	public ContainerTransitionStateAnalysis[] findExample(
+			Semantics semanticsForSerializing, 
+			int numberOfExamples,
+			boolean abortFrameworkNotComply, 
+			boolean abortAnalysisNotComply) throws ExceptionNotSatisfiedPostulate {
+		
+		int numberExamplesLeft =  numberOfExamples;
+		HashSet<ContainerTransitionStateAnalysis> results = new HashSet<ContainerTransitionStateAnalysis>();
+		
+		do {
+			ContainerTransitionStateAnalysis analysis = this.findExample(semanticsForSerializing, abortFrameworkNotComply, abortAnalysisNotComply);
+			if(analysis != null) results.add(analysis);
+			numberExamplesLeft--;
+		} while (numberExamplesLeft > 0);
+		
+		return results.toArray(new ContainerTransitionStateAnalysis[0]);
 	}
 
 	/**
@@ -149,6 +193,8 @@ public class SerialisabilityExampleFinder {
 	 * @param maxNumberOfArguments Maximum number of arguments of any framework generated by this method.
 	 * @param numberOfExamplesPerIncrement Number of examples created with the same number of arguments.
 	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased each time.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, skips settings for non compliant frameworks and returns less output.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, skips non compliant analysis and returns less output.
 	 * @return Array of analysis results, analyzing each a different randomly generated exemplary argumentation framework.
 	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
@@ -157,12 +203,17 @@ public class SerialisabilityExampleFinder {
 			int numberOfArgumentsStart,
 			int maxNumberOfArguments,
 			int numberOfExamplesPerIncrement,
-			int incrementForNumberOfArguments) throws ExceptionNotSatisfiedPostulate {
-		HashSet<ContainerTransitionStateAnalysis> results = new HashSet<ContainerTransitionStateAnalysis>();
+			int incrementForNumberOfArguments,
+			boolean abortFrameworkNotComply, 
+			boolean abortAnalysisNotComply) throws ExceptionNotSatisfiedPostulate {
+		
+		ArrayList<ContainerTransitionStateAnalysis> results = new ArrayList<ContainerTransitionStateAnalysis>();
+		
 		for (int i = numberOfArgumentsStart; i <= maxNumberOfArguments; i += incrementForNumberOfArguments) {
 			this.changeParameterNumberOfArguments(i);
 			for (int j = 0; j < numberOfExamplesPerIncrement; j++) {
-				results.add(this.findExample(semanticsForSerializing));
+				ContainerTransitionStateAnalysis analysis = this.findExample(semanticsForSerializing, abortFrameworkNotComply, abortAnalysisNotComply);
+				if(analysis != null) results.add(analysis);
 			}
 		}
 		return results.toArray(new ContainerTransitionStateAnalysis[0]);
@@ -172,27 +223,34 @@ public class SerialisabilityExampleFinder {
 	 * Generates argumentation frameworks and analyzes their serialisable extensions regarding the specified semantics.
 	 * @param semanticsForSerializing Array of semantics, used to create the different analyses.
 	 * @param numberOfExamples Number of exemplary frameworks, which will be generated.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, skips settings for non compliant frameworks and returns less output.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, skips non compliant analysis and returns less output.
 	 * @return Frameworks mapped to the associated analyses using different semantics
 	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
 	public LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExampleForDifferentSemantics(
 			Semantics[] semanticsForSerializing,
-			int numberOfExamples) throws ExceptionNotSatisfiedPostulate{
+			int numberOfExamples,
+			boolean abortFrameworkNotComply, 
+			boolean abortAnalysisNotComply) throws ExceptionNotSatisfiedPostulate{
+		
 		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> results = new LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
 
 		for (int i = 0; i < numberOfExamples; i++) {
-			DungTheory framework = this.generateFramework();
-			ContainerTransitionStateAnalysis[] analysesForDiffSemantics = new ContainerTransitionStateAnalysis[semanticsForSerializing.length];
+			DungTheory generatedFramework = this.generateFramework(abortFrameworkNotComply);
+			if(generatedFramework != null)
+			{
+				ArrayList<ContainerTransitionStateAnalysis> analysesForDiffSemantics = new ArrayList<ContainerTransitionStateAnalysis>();
 
-			for (int j = 0; j < semanticsForSerializing.length; j++) {
-				analysesForDiffSemantics[j] = SerialisableExtensionReasonerWithAnalysis
-						.getSerialisableReasonerForSemantics(semanticsForSerializing[j])
-						.getModelsWithAnalysis(framework);
+				for (int j = 0; j < semanticsForSerializing.length; j++) {
+					ContainerTransitionStateAnalysis analysis = deriveAnalysis(semanticsForSerializing[j], generatedFramework, abortAnalysisNotComply);
+					 if(analysis != null)analysesForDiffSemantics.add(analysis);
+				}
+				
+				if(analysesForDiffSemantics.isEmpty() == false)
+					results.put(generatedFramework, analysesForDiffSemantics.toArray(new ContainerTransitionStateAnalysis[0]));
 			}
-
-			results.put(framework, analysesForDiffSemantics);
 		}
-
 		return results;
 	}
 
@@ -207,6 +265,8 @@ public class SerialisabilityExampleFinder {
 	 * @param maxNumberOfArguments Maximum number of arguments of any framework generated by this method.
 	 * @param numberOfExamplesPerIncrement Number of examples created with the same number of arguments.
 	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased each time.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, skips settings for non compliant frameworks and returns less output.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, skips non compliant analysis and returns less output.
 	 * @return Frameworks mapped to the associated analyses using different semantics
 	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
 	 */
@@ -215,13 +275,15 @@ public class SerialisabilityExampleFinder {
 			int numberOfArgumentsStart,
 			int maxNumberOfArguments,
 			int numberOfExamplesPerIncrement,
-			int incrementForNumberOfArguments) throws ExceptionNotSatisfiedPostulate
+			int incrementForNumberOfArguments,
+			boolean abortFrameworkNotComply, 
+			boolean abortAnalysisNotComply) throws ExceptionNotSatisfiedPostulate
 	{
 		LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> output = new LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
 
 		for (int i = numberOfArgumentsStart; i <= maxNumberOfArguments; i += incrementForNumberOfArguments) {
 			this.changeParameterNumberOfArguments(i);
-			output.putAll(this.findExampleForDifferentSemantics(semanticsForSerializing, numberOfExamplesPerIncrement));
+			output.putAll(this.findExampleForDifferentSemantics(semanticsForSerializing, numberOfExamplesPerIncrement, abortFrameworkNotComply, abortAnalysisNotComply));
 		}
 
 		return output;
@@ -231,14 +293,15 @@ public class SerialisabilityExampleFinder {
 	 * Generates a framework, which complies to the specified conditions
 	 * @throws ExceptionNotSatisfiedPostulate Throws an exception, if the generated frameworks couldn't satisfy the condition within the specified number of allowed attempts
 	 */
-	private DungTheory generateFramework() throws ExceptionNotSatisfiedPostulate {
+	private DungTheory generateFramework(boolean abortFrameworkNotComply) throws ExceptionNotSatisfiedPostulate {
 		DungTheory generatedFramework;
 
 		boolean mustRepeat = false;
-		int numTryLeft = this.maxNumberTryGenerate;
+		int numTryLeft = this.maxNumberTryGenerateFramework;
 		do {
 			if(numTryLeft == 0) {
-				throw new ExceptionNotSatisfiedPostulate();
+				if(abortFrameworkNotComply)throw new ExceptionNotSatisfiedPostulate();
+				else return null;
 			}
 			generatedFramework = this.generator.next();
 
@@ -252,5 +315,33 @@ public class SerialisabilityExampleFinder {
 			numTryLeft--;
 		} while (mustRepeat);
 		return generatedFramework;
+	}
+	
+	/**
+	 * 
+	 * @param semanticsForSerializing Semantics used to serialize the extensions
+	 * @param framework Argumentation framework, in which the extension will be searched
+	 * @return Analysis of the serialisable extensions.
+	 * @throws ExceptionNotSatisfiedPostulate Throws the exception if the derived analysis, couldn't satisfy the condition
+	 */
+	private ContainerTransitionStateAnalysis deriveAnalysis(
+			Semantics semanticsForSerializing,
+			DungTheory framework,
+			boolean abortAnalysisNotComply) throws ExceptionNotSatisfiedPostulate {
+		
+		ContainerTransitionStateAnalysis output = SerialisableExtensionReasonerWithAnalysis.
+				getSerialisableReasonerForSemantics(semanticsForSerializing).getModelsWithAnalysis(framework);
+		
+		boolean analysisAccepted = true;
+		for (Postulate<Argument> condition : this.conditionsAnalysis.keySet()) {
+			//boolean conditionIsSatisfied = condition.isSatisfied(output.getGraphResulting().getNodes(), this.conditionsAnalysis.get(condition));
+			//if(conditionIsSatisfied == false) analysisAccepted = false;
+		}
+		if(analysisAccepted == false) {
+			if(abortAnalysisNotComply)throw new ExceptionNotSatisfiedPostulate();
+			else return null;
+		}
+		
+		return output;
 	}
 }
