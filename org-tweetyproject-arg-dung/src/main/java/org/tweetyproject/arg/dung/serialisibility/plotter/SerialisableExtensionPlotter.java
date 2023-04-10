@@ -24,7 +24,6 @@ import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalys
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
-import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.util.GraphPlotter;
 
 import com.mxgraph.util.mxConstants;
@@ -54,7 +53,7 @@ import com.mxgraph.util.mxConstants;
  * @version TweetyProject 1.23
  */
 public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNode, Edge<TransitionStateNode>> {
-	
+
 	/**
 	 * Plots the specified analysis in a new created frame.
 	 *
@@ -71,7 +70,7 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 
 		groundPlotter.show();
 	}
-	
+
 	/**
 	 * Plots the specified analysis in the frame of the specified plotter
 	 *
@@ -79,28 +78,55 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * @param groundPlotter Plotter, which creates the frame
 	 */
 	public static void plotAnalysis(ContainerTransitionStateAnalysis analysis, Plotter groundPlotter) {
-		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, analysis.getGraphResulting());
+		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, analysis);
 		sePlotter.createGraph(false);
 		var lstLabels = new ArrayList<String>();
 		lstLabels.add(analysis.getTitle());
 		lstLabels.add(analysis.getSemanticsUsed().description());
-		lstLabels.add("Found Extensions:");
-		lstLabels.add(analysis.getExtensionsFound().toString());
+		lstLabels.add("Green: found Extensions");
+		//lstLabels.add("Found Extensions (shown in green):");
+		//lstLabels.add(analysis.getExtensionsFound().toString());
 		sePlotter.addLabels(lstLabels);
 	}
-	
+
 	private final String LABEL_DEFAULT_NODE = "N.A.";
 	private final String LABEL_DEFAULT_EDGE = "";
-	private final String STYLE_NODE_FILLCOLOR = "=turquoise;";
+	private final String STYLE_NODE_FILLCOLOR = "=lightblue;";
 	private final String STYLE_NODE_ROUNDED = "=true;";
+	private final String STYLE_NODE_HIGHLIGHTED_FILLCOLOR = "=lightgreen;";
+	private final String STYLE_NODE_HIGHLIGHTED_ROUNDED = "=true;";
 	private final int VERTEX_WIDTH = 90;
 	private final int VERTEX_HEIGHT = 30;
 	private final int VERTEX_SPACING = 90;
 	private final int FONTSIZE = 10;
 
-	public SerialisableExtensionPlotter(Plotter plotter, Graph<TransitionStateNode> graph) {
-		super(plotter, graph);
+	private ContainerTransitionStateAnalysis analysis;
+
+	public SerialisableExtensionPlotter(Plotter plotter, ContainerTransitionStateAnalysis analysis) {
+		super(plotter, analysis.getGraphResulting());
+
+		this.analysis = analysis;
 	}
+
+	@Override
+	public void createGraph(boolean isVertical) {
+		super.createGraph(isVertical);
+	}
+
+	@Override
+	public String getStyle(TransitionStateNode node) {
+		boolean isHighlighted = this.analysis.getExtensionsFound().contains(node.getState().getExtension());
+		String style;
+
+		if(isHighlighted) {
+			style = this.getStyleNodeHighlighted(node);
+		}else {
+			style = this.getStyleNode(node);
+		}
+
+		return style;
+	}
+
 
 	@Override
 	protected int getFontSize() {
@@ -125,8 +151,12 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 		return name;
 	}
 
-	@Override
-	protected String getStyle(TransitionStateNode node) {
+	/**
+	 * Defines the layout style of a regular node.
+	 * @param node Node, that shall be represented.
+	 * @return String describing the layout of the regular node.
+	 */
+	protected String getStyleNode(TransitionStateNode node) {
 		String styleString = "";
 		styleString += mxConstants.STYLE_FONTSIZE + "=" + this.FONTSIZE + ";";
 		return  styleString
@@ -134,11 +164,24 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 				+ mxConstants.STYLE_ROUNDED + this.STYLE_NODE_ROUNDED;
 	}
 
+
+	/**
+	 * Defines the layout style of a node to highlight.
+	 * @param node Node, that shall be represented as highlighted.
+	 * @return String describing the layout of the highlighted node.
+	 */
+	protected String getStyleNodeHighlighted(TransitionStateNode node) {
+		String styleString = "";
+		styleString += mxConstants.STYLE_FONTSIZE + "=" + this.FONTSIZE + ";";
+		return  styleString
+				+ mxConstants.STYLE_FILLCOLOR + this.STYLE_NODE_HIGHLIGHTED_FILLCOLOR
+				+ mxConstants.STYLE_ROUNDED + this.STYLE_NODE_HIGHLIGHTED_ROUNDED;
+	}
+
 	@Override
 	protected double getVertexHeight() {
 		return this.VERTEX_HEIGHT;
 	}
-
 
 	@Override
 	protected int getVertexSpacing() {
