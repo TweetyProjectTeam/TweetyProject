@@ -66,7 +66,7 @@ public class TheoryEqToSerialEqExFinderExample {
 		String path = System.getProperty("user.home")
 				+ File.separator + "Documents"
 				+ File.separator + "TweetyProject"
-				+ File.separator + "StrongEqToSerialEqExFinder";
+				+ File.separator + "TheoryEqToSerialEqExFinderExample";
 		createDir(path);
 
 		ZoneId z = ZoneId.of( "Europe/Berlin" );
@@ -93,12 +93,12 @@ public class TheoryEqToSerialEqExFinderExample {
 							"frameworkEQ_" + theoryBeEqual + "_" +
 							"graphEQ_" + serialGraphBeEqual + "_" +
 							semanticsUsed.abbreviation() + "_" +
-							"Example_Pair" + i + "_" + index + 
+							"Example_Pair" + i + "_" + index + "_" +
 							now.getYear() + "_" +
 							now.getMonthValue() + "_" +
 							now.getDayOfMonth() + "_" +
 							now.getHour() + "h" +
-							now.getMinute() + "_" +
+							now.getMinute() +
 							".apx");
 					try {
 						writer.write(framework, file);

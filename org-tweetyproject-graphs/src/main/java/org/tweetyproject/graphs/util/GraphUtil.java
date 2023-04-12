@@ -190,7 +190,15 @@ public abstract class GraphUtil {
 	public static boolean isIsomorphic(Graph<? extends Node> g1, Graph<? extends Node> g2){
 		// NOTE: we simply try out every possible permutation (note that this is an NP-hard problem anyway)
 		MapTools<Node, Node> mapTools = new MapTools<Node,Node>();
-		for(Map<Node,Node> isomorphism: mapTools.allBijections(new HashSet<Node>(g1.getNodes()), new HashSet<Node>(g2.getNodes()))){
+		Set<Map<Node,Node>> bijections;
+		
+		try {
+			bijections = mapTools.allBijections(new HashSet<Node>(g1.getNodes()), new HashSet<Node>(g2.getNodes()));
+		} catch (IllegalArgumentException e) {
+			return false; // cannot be isomorphic, if number of nodes in both graphs are different
+		}
+		
+		for(Map<Node,Node> isomorphism: bijections){
 			boolean isomorphic = true;
 			for(Node a: g1){
 				for(Node b: g1.getChildren(a)){
