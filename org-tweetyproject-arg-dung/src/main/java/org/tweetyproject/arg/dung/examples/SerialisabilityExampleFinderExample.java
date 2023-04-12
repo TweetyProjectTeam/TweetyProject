@@ -54,6 +54,7 @@ public class SerialisabilityExampleFinderExample {
 			int numberOfArgumentsAtStart = 3;
 			int incrementOfArguments = 1;
 			int numberOfExamples = 4;
+			int maxNumberTryGenerateFramework = 10;
 			double attackProbability = 0.2;
 			boolean avoidSelfAttack = false;
 			Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.GR, Semantics.UC};
@@ -68,7 +69,7 @@ public class SerialisabilityExampleFinderExample {
 			ZoneId z = ZoneId.of( "Europe/Berlin" );
 			ZonedDateTime now = ZonedDateTime.now( z );
 
-			SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack, 10);
+			SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack, maxNumberTryGenerateFramework);
 			LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples = exampleFinder.findExampleForDifferentSemantics(semanticsUsed, numberOfExamples, false, false); //exampleFinder.findExampleArrayForDifferentSemantics(
 			/*							semanticsUsed,
 									numberOfArgumentsAtStart,

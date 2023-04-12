@@ -30,7 +30,7 @@ import java.util.*;
  *
  * @author Lars Bengel
  */
-public class StrongEquivalence {
+public class StrongEquivalence implements ITheoryComparator {
 
     private EquivalenceKernel kernel;
 
@@ -43,12 +43,12 @@ public class StrongEquivalence {
     }
 
     /**
-     * compute whether the given theories are equivalent wrt. the kernel
+     * compute whether the given theories are strongly equivalent wrt. the kernel
      * @param theory1 a dung theory
      * @param theory2 a dung theory
      * @return true if both theories are equivalent wrt. to the kernel
      */
-    public boolean isStronglyEquivalent(DungTheory theory1, DungTheory theory2) {
+    public boolean isEquivalent(DungTheory theory1, DungTheory theory2) {
         DungTheory kernelTheory1 = this.kernel.getKernel(theory1);
         DungTheory kernelTheory2 = this.kernel.getKernel(theory2);
 
@@ -57,11 +57,11 @@ public class StrongEquivalence {
     }
 
     /**
-     * compute whether the given theories are equivalent wrt. the kernel
+     * compute whether the given theories are strongly equivalent wrt. the kernel
      * @param theories a collection of dung theories
      * @return true if all theories are equivalent wrt. to the kernel
      */
-    public boolean isStronglyEquivalent(Collection<DungTheory> theories) {
+    public boolean isEquivalent(Collection<DungTheory> theories) {
         Collection<DungTheory> kernelTheories = new HashSet<>();
         for (DungTheory theory: theories) {
             kernelTheories.add(this.kernel.getKernel(theory));
@@ -81,7 +81,7 @@ public class StrongEquivalence {
      * @param theory a dung theory
      * @return the collection of strongly equivalent theories
      */
-    public Collection<DungTheory> getStronglyEquivalentTheories(DungTheory theory) {
+    public Collection<DungTheory> getEquivalentTheories(DungTheory theory) {
         Collection<Attack> uselessAttacks = this.kernel.getUselessAttacks(theory);
 
         DungTheory kernelTheory = this.kernel.getKernel(theory);
@@ -106,7 +106,7 @@ public class StrongEquivalence {
      * @param baseTheory a dung theory
      * @return collection of strongly equivalent theories
      */
-    public Collection<DungTheory> getStronglyEquivalentTheoriesNaive(DungTheory baseTheory) {
+    public Collection<DungTheory> getEquivalentTheoriesNaive(DungTheory baseTheory) {
         EnumeratingDungTheoryGenerator theoryGenerator = new EnumeratingDungTheoryGenerator();
         int numArgs = baseTheory.size();
         DungTheory baseKernel = this.kernel.getKernel(baseTheory);

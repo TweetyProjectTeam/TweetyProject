@@ -70,18 +70,18 @@ public class StrongEquivalenceExample {
         StrongEquivalence checker = new StrongEquivalence(EquivalenceKernel.STABLE);
 
         System.out.print("Equivalence of Theory1 and Theory2: ");
-        System.out.println(checker.isStronglyEquivalent(theory1, theory2));
+        System.out.println(checker.isEquivalent(theory1, theory2));
         System.out.print("Equivalence of Theory1 and Theory3: ");
-        System.out.println(checker.isStronglyEquivalent(theory1, theory3));
+        System.out.println(checker.isEquivalent(theory1, theory3));
         System.out.print("Equivalence of Theory2 and Theory3: ");
-        System.out.println(checker.isStronglyEquivalent(theory2, theory3));
+        System.out.println(checker.isEquivalent(theory2, theory3));
         System.out.print("Equivalence of all Theories: ");
-        System.out.println(checker.isStronglyEquivalent(theories));
+        System.out.println(checker.isEquivalent(theories));
 
         // get all strongly equivalent theories of theory1
-        Collection<DungTheory> seTheories = checker.getStronglyEquivalentTheories(theory1);
+        Collection<DungTheory> seTheories = checker.getEquivalentTheories(theory1);
         System.out.println();
-        System.out.println(checker.isStronglyEquivalent(seTheories));
+        System.out.println(checker.isEquivalent(seTheories));
         System.out.println(seTheories.size());
         System.out.println(seTheories);
 
