@@ -30,7 +30,7 @@ import org.tweetyproject.graphs.util.GraphPlotter;
 
 /**
  * This class summarizes static methods used to plot serialisability analyses, 
- * consisting of plotting the underlying argumentation framework and the serialised generation process of their extensions regarding to specified semantics.
+ * consisting of plotting the underlying argumentation framework and the serialisation graphs regarding the specified semantics.
  * 
  * @see SerialisationGraphPlotter
  * @see org.tweetyproject.arg.dung.util.DungTheoryPlotter
@@ -47,40 +47,38 @@ public class SerialisationAnalysisPlotter {
 
 	/**
 	 * Plots specified analyses of the serializing generation of extensions, each in a separate frame.
-	 * @param analyses Analyses, which framework and graph should be plotted
-	 * @param title Title, common to all specified analyses to plot
+	 * @param graphs Graphs of the serialisation process.
+	 * @param title Title, common to all specified  serialisation graphs  to plot
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
 	 */
-	public static void plotAnalyses(SerialisationGraph[] analyses, String title, int width, int height) {
+	public static void plotAnalyses(DungTheory framework, SerialisationGraph[] graphs, String title, int width, int height) {
 		HashMap<DungTheory, SerialisationGraph[]> convExamples = new HashMap<>();
 
-		for (SerialisationGraph analysis : analyses) {
-			convExamples.put(analysis.getStateExamined().getTheory(), new SerialisationGraph[] {analysis});
+		for (SerialisationGraph analysis : graphs) {
+			convExamples.put(framework, new SerialisationGraph[] {analysis});
 		}
 
 		SerialisationAnalysisPlotter.plotAnalyses(convExamples, title, width, height);
 	}
 	
 	/**
-	 * Plots specified frameworks and their associated analyses of the serializing generation of extensions
+	 * Plots specified frameworks and their associated serialisation graphs 
 	 * for the specified semantics in one frame per framework.
-	 * @param mapAFtoAnalyses Frameworks mapped to the associated analyses using different semantics
+	 * @param mapAFtoGraphs Frameworks mapped to the associated serialisation graphs using different semantics
 	 * @param title Title, common to all specified analyses to plot
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
 	 */
-	public static void plotAnalyses(HashMap<DungTheory, SerialisationGraph[]> mapAFtoAnalyses, String title, int width, int height) {
+	public static void plotAnalyses(HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String title, int width, int height) {
 		int index = 0;
-		for (DungTheory exampleFramework : mapAFtoAnalyses.keySet()) {
+		for (DungTheory exampleFramework : mapAFtoGraphs.keySet()) {
 			Plotter groundPlotter = new Plotter();
 			String titleToSet = title + " " + index;
 			groundPlotter.createFrame(width, height);
 			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, titleToSet);
-			for (SerialisationGraph analysis : mapAFtoAnalyses.get(exampleFramework)) {
-				analysis.setTitle(analysis.getTitle() + " " + titleToSet);
-				SimpleGraph<TransitionStateNode> graph = analysis.getGraphResulting();
-				SerialisationGraphPlotter.plotAnalysis(analysis, groundPlotter);
+			for (SerialisationGraph graph : mapAFtoGraphs.get(exampleFramework)) {
+				SerialisationGraphPlotter.plotGraph(graph, groundPlotter, titleToSet);
 			}
 			groundPlotter.show();
 			index++;
@@ -88,11 +86,11 @@ public class SerialisationAnalysisPlotter {
 	}
 	
 	/**
-	 * Plots specified frameworks and their associated analyses of the serializing generation of extensions
+	 * Plots specified frameworks and their associated serialisation graphs 
 	 * for the specified semantics in one frame per framework.
 	 * @param semantics Semantics of the extension created
 	 * @param frameworks Frameworks, for which the extensions should be found.
-	 * @param title Title, common to all specified analyses to plot
+	 * @param title Title, common to all specified  serialisation graphs to plot
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
 	 */
@@ -100,13 +98,13 @@ public class SerialisationAnalysisPlotter {
 		HashMap<DungTheory, SerialisationGraph[]> convExamples = new HashMap<>();
 
 		for (DungTheory example : frameworks) {
-			SerialisationGraph[] analyses = new SerialisationGraph[semantics.length];
-			for (int i = 0; i < analyses.length; i++) {
-				analyses[i] = SerialisableExtensionReasonerWithAnalysis
+			SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];
+			for (int i = 0; i < graphs.length; i++) {
+				graphs[i] = SerialisableExtensionReasonerWithAnalysis
 						.getSerialisableReasonerForSemantics(semantics[i])
-						.getModelsWithAnalysis(example);
+						.getModelsGraph(example);
 			}
-			convExamples.put(example, analyses);
+			convExamples.put(example, graphs);
 		}
 
 		SerialisationAnalysisPlotter.plotAnalyses(convExamples, title, width, height);

@@ -100,9 +100,9 @@ public class TheoryEqToSerialEqExFinder {
 
 			if(frameworkComparator.isEquivalent(generatedFramework1, generatedFramework2) == theoryBeEqual) {
 				SerialisationGraph analysis1 = SerialisableExtensionReasonerWithAnalysis
-						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsWithAnalysis(generatedFramework1);
+						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsGraph(generatedFramework1);
 				SerialisationGraph analysis2 = SerialisableExtensionReasonerWithAnalysis
-						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsWithAnalysis(generatedFramework2);
+						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsGraph(generatedFramework2);
 
 				if(analysisComparator.isEquivalent(analysis1, analysis2) == serialGraphBeEqual) {
 					var output = new LinkedHashMap<DungTheory, SerialisationGraph[]>();

@@ -60,7 +60,7 @@ public class SerialisableExtensionReasonerWithAnalysisExample extends Serialisab
 	
 	
 	protected static void examineFrameworkWithReasonerInUniformLayout(DungTheory frameWork, SerialisableExtensionReasonerWithAnalysis reasoner) {
-		System.out.println(reasoner.getModelsWithAnalysis(frameWork));
+		System.out.println(reasoner.getModelsGraph(frameWork));
 	}
 	
 	

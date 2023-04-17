@@ -26,18 +26,19 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.tweetyproject.arg.dung.examples.SerialisableExtensionReasonerExample;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Tests to verify the code in the class {@link SerialisableExtensionReasonerWithAnalysis}.
+ * Tests to verify the code in the class {@link SerialisableExtensionReasoner}.
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-class SerialisableExtensionReasonerWithAnalysis_Tests {
+class SerialisableExtensionReasoner_Tests {
 
 	/**
 	 * This test, verifies that the method "getModelsWithAnalysis" works correctly, 
@@ -51,7 +52,7 @@ class SerialisableExtensionReasonerWithAnalysis_Tests {
 		//Arrange
 		//Semantics semantics = Semantics.ADM;
 				
-		var reasonerToTest = SerialisableExtensionReasonerWithAnalysis.getSerialisableReasonerForSemantics(semantics);
+		var reasonerToTest = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics);
 		var reasonerVerified = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
 		var frameworks = new DungTheory[3];
 		frameworks[0] = SerialisableExtensionReasonerExample.buildExample1();
@@ -61,7 +62,7 @@ class SerialisableExtensionReasonerWithAnalysis_Tests {
 		for (int i = 0; i < frameworks.length; i++) {
 			
 			//Act	
-			Collection<Extension<DungTheory>> extensionsActual = reasonerToTest.getModelsWithAnalysis(frameworks[i]).getExtensionsFound();
+			Collection<Extension<DungTheory>> extensionsActual = reasonerToTest.getModels(frameworks[i]);
 			Collection<Extension<DungTheory>> extensionsExpected = reasonerVerified.getModels(frameworks[i]);
 			
 			//Assert

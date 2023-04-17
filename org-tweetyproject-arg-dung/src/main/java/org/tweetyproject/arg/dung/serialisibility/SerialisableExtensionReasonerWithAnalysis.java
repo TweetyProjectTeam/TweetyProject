@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisibility;
 
+import java.rmi.NoSuchObjectException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -33,7 +34,6 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
 import org.tweetyproject.arg.dung.serialisibility.graph.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.graphs.SimpleGraph;
 
 /**
  * {@inheritDoc}
@@ -81,20 +81,20 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	}
 
 	/**
-	 * Examines the specified framework and computes all extensions, according to this object's semantic.
+	 * Creates a graph, visualizing the transition states of the serialisation process, which creates all serialisable extensions 
+	 * according to the specified semantics of the specified framework.
 	 *
 	 * @param framework Argumentation framework, for which the extensions shall be computed.
-	 * @return Analysis of the framework, containing all found extensions and further information e.g. derivation graph.
+	 * @return Graph showing the serialisation process.
 	 */
-	public SerialisationGraph getModelsWithAnalysis(DungTheory framework) {
+	public SerialisationGraph getModelsGraph(DungTheory framework) {
 
 		Extension<DungTheory> initExtension = new Extension<>();
 		TransitionState initState = new TransitionState(framework, initExtension);
 
-		return this.getModelsRecursiveWithAnalysis(
+		return this.getModelsRecursiveGraph(
 				new HashSet<SerialisationGraph>(),
-				initState,
-				null);
+				initState);
 	}
 
 	/**
@@ -115,39 +115,27 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	 * Examines recursively the specified state and all states that can be reducted from this one,
 	 * until the termination function is satisfied.
 	 *
-	 * @param consistencyCheckSet Set of all analysis, computed during the process
-	 * @param state Current transition state of the serialising process.
-	 * @return Analysis of the current state.
+	 * @param consistencyCheckSet Set of all graphs, computed during the process
+	 * @param state Current transition state of the serialisation process.
+	 * @return Graph showing the serialisation process, starting with the current state.
 	 */
-	@SuppressWarnings("unchecked")
-	private SerialisationGraph getModelsRecursiveWithAnalysis(
+	private SerialisationGraph getModelsRecursiveGraph(
 			HashSet<SerialisationGraph> consistencyCheckSet,
-			TransitionState state,
-			Extension<DungTheory> setInitial) {
-
-		var analysis = SerialisationGraph.getAnalysisByState(consistencyCheckSet, state);
-		if(analysis != null ) {
-			return analysis;
+			TransitionState state) {
+		
+		for (SerialisationGraph existingGraph : consistencyCheckSet) {
+			if(existingGraph.getRoot().getState() == state) return existingGraph;
 		}
 
-		var root = new TransitionStateNode(state);
-		var graphGenerationProcess = new SimpleGraph<TransitionStateNode>();
-		graphGenerationProcess.add(root);
-		var currentAnalysis = new SerialisationGraph(
-				state, 
-				this.usedSemantics, 
-				graphGenerationProcess, 
-				root, 
-				new HashSet<Extension<DungTheory>>(), 
-				new HashSet<SerialisationGraph>(), 
-				setInitial);
-		consistencyCheckSet.add(currentAnalysis);
+		var graph = new SerialisationGraph(new TransitionStateNode(state), this.usedSemantics);
+		consistencyCheckSet.add(graph);
 
 		// check whether a construction of an extension is finished
-		if (this.checkTerminationFunction(state)) {
-			// found final extension
-			currentAnalysis.addExtensionFound(state.getExtension());
-		}
+		  if (this.checkTerminationFunction(state)) { 
+			  // found final extension
+			  graph.addExtension(state.getExtension());
+		  }
+		 
 
 		Collection<Extension<DungTheory>> newExtensions = this.selectInitialSetsForReduction(state);
 
@@ -156,15 +144,48 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			TransitionState newState = state.transitToNewState(newExt);
 
 			// [RECURSIVE CALL] examine reduced framework
-			SerialisationGraph subAnalysis = this.getModelsRecursiveWithAnalysis(consistencyCheckSet, newState, newExt);
+			SerialisationGraph subGraph = this.getModelsRecursiveGraph(consistencyCheckSet, newState);
 
-			currentAnalysis.integrateSubAnalysis(subAnalysis);
+			try {
+				graph.addSubGraph(graph.getRoot(), subGraph, subGraph.getRoot(), newExt.toString());
+			} catch (NoSuchObjectException e) {
+				// not possible
+				e.printStackTrace();
+				throw new RuntimeException();
+			}
 		}
 
-		return currentAnalysis;
+		return graph;
 	}
 
+	
+	
 
-
+	/**
+	 * Adds an analysis of a successive transition state and integrates its values in this objects fields
+	 *
+	 * @param subAnalysis Analysis of a successive transition state
+	 */
+	/*
+	 * public void integrateSubAnalysis(SerialisationGraph subAnalysis) { //
+	 * integrate findings of sub-level in this level's analysis
+	 * this.analysesSuccessive.add(subAnalysis);
+	 * this.extensionsFound.addAll(subAnalysis.getExtensionsFound()); try {
+	 * this.graphResulting } catch (NoSuchObjectException e) {
+	 * System.out.println(e.getMessage()); e.printStackTrace(); } }
+	 */
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	//@Override
+	/*public String toString(){
+		String printedResult = "Argumentation Framework: " + this.stateExamined.getTheory().toString() + "\n"
+				+ "Semantic: " + this.semanticsUsed.toString() + "\n"
+				+ "Extensions: " + this.extensionsFound.toString() + "\n"
+				+ "Root: " + this.root.toString() + "\n"
+				+ "Graph: " + this.graphResulting.toString();
+		return printedResult;
+	}*/
 
 }

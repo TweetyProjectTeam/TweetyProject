@@ -20,17 +20,18 @@ package org.tweetyproject.arg.dung.serialisibility.graph;
 
 import java.util.ArrayList;
 
-import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.util.GraphPlotter;
+import org.tweetyproject.arg.dung.reasoner.serialisable.*;
 
 import com.mxgraph.util.mxConstants;
 
 /**
  * This class represents a specialization of {@link GraphPlotter GraphPlotters} used
  * to visualize the process of generating extensions by serialising sets of arguments,
- * as realised in {@link SerialisableExtensionReasonerWithAnalysis}.
+ * as realised in {@link SerialisableExtensionReasoner}.
  * <br>
  * The class defines the layout specifications of the visualization:
  * <ul>
@@ -54,34 +55,36 @@ import com.mxgraph.util.mxConstants;
 public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode, Edge<TransitionStateNode>> {
 
 	/**
-	 * Plots the specified analysis in a new created frame.
+	 * Plots the specified graph in a new created frame.
 	 *
-	 * @param analysis Analysis of a generation process of serialisable extensions
+	 * @param graph Graph of a generation process of serialisable extensions
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
+	 * @param title Title of the Graph to plot.
 	 */
-	public static void plotAnalysis(SerialisationGraph analysis, int width, int height) {
+	public static void plotGraph(SerialisationGraph graph, int width, int height, String title) {
 
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 
-		SerialisationGraphPlotter.plotAnalysis(analysis, groundPlotter);
+		SerialisationGraphPlotter.plotGraph(graph, groundPlotter, title);
 
 		groundPlotter.show();
 	}
 
 	/**
-	 * Plots the specified analysis in the frame of the specified plotter
+	 * Plots the specified graph in the frame of the specified plotter
 	 *
-	 * @param analysis Analysis of a generation process of serialisable extensions
+	 * @param graph Graph of a generation process of serialisable extensions
 	 * @param groundPlotter Plotter, which creates the frame
+	 * @param title Title of the Graph to plot.
 	 */
-	public static void plotAnalysis(SerialisationGraph analysis, Plotter groundPlotter) {
-		SerialisationGraphPlotter sePlotter = new SerialisationGraphPlotter(groundPlotter, analysis);
+	public static void plotGraph(SerialisationGraph graph, Plotter groundPlotter, String title) {
+		SerialisationGraphPlotter sePlotter = new SerialisationGraphPlotter(groundPlotter, graph);
 		sePlotter.createGraph(false);
 		var lstLabels = new ArrayList<String>();
-		lstLabels.add(analysis.getTitle());
-		lstLabels.add(analysis.getSemanticsUsed().description());
+		lstLabels.add(title);
+		lstLabels.add(graph.getSemantics().description());
 		lstLabels.add("Green: found Extensions");
 		//lstLabels.add("Found Extensions (shown in green):");
 		//lstLabels.add(analysis.getExtensionsFound().toString());
@@ -99,12 +102,12 @@ public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode,
 	private final int VERTEX_SPACING = 90;
 	private final int FONTSIZE = 10;
 
-	private SerialisationGraph analysis;
+	private SerialisationGraph graph;
 
-	public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph analysis) {
-		super(plotter, analysis.getGraphResulting());
+	public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph graph) {
+		super(plotter, graph);
 
-		this.analysis = analysis;
+		this.graph = graph;
 	}
 
 	@Override
@@ -114,7 +117,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode,
 
 	@Override
 	public String getStyle(TransitionStateNode node) {
-		boolean isHighlighted = this.analysis.getExtensionsFound().contains(node.getState().getExtension());
+		boolean isHighlighted = this.graph.getExtensions().contains(node.getState().getExtension());
 		String style;
 
 		if(isHighlighted) {

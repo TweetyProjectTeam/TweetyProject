@@ -22,7 +22,7 @@ import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
 import org.tweetyproject.graphs.util.GraphUtil;
 
 /**
- * This class represents an comparator, which defines if 2 analysis are equivalent, by comparing their graphs wrt to isomorphism. 
+ * This class represents an comparator, which defines if 2 graphs are equivalent, by comparing if they're isomorphic. 
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
@@ -31,8 +31,8 @@ import org.tweetyproject.graphs.util.GraphUtil;
 public class IsomorphEquivalence implements ISerializingComparator {
 
 	@Override
-	public boolean isEquivalent(SerialisationGraph analysis1, SerialisationGraph analysis2) {
-		return GraphUtil.isIsomorphic(analysis1.getGraphResulting(), analysis2.getGraphResulting());
+	public boolean isEquivalent(SerialisationGraph graph1, SerialisationGraph graph2) {
+		return GraphUtil.isIsomorphic(graph1, graph2);
 	}
 
 }
