@@ -29,12 +29,12 @@ import org.tweetyproject.arg.dung.equivalence.ITheoryComparator;
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
 import org.tweetyproject.arg.dung.equivalence.EquivalenceKernel;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
-import org.tweetyproject.arg.dung.serialisibility.equivalence.ExceptionNoExampleFound;
+import org.tweetyproject.arg.dung.serialisibility.NoExampleFoundException;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.ISerializingComparator;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.IsomorphEquivalence;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.TheoryEqToSerialEqExFinder;
-import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisabilityAnalysisPlotter;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationAnalysisPlotter;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 
@@ -82,7 +82,7 @@ public class TheoryEqToSerialEqExFinderExample {
 						attackProbability, 
 						avoidSelfAttacks, 
 						maxNumberTryFindExample);
-				LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples;
+				LinkedHashMap<DungTheory, SerialisationGraph[]> examples;
 
 				examples = exampleFinder.
 						findExamples(semanticsUsed, theoryBeEqual, serialGraphBeEqual);
@@ -109,9 +109,9 @@ public class TheoryEqToSerialEqExFinderExample {
 					index++;
 				}
 
-				SerialisabilityAnalysisPlotter.plotAnalyses( examples, "Example_", 2000, 1000);
+				SerialisationAnalysisPlotter.plotAnalyses( examples, "Example_", 2000, 1000);
 			}
-		} catch (ExceptionNoExampleFound e1) {
+		} catch (NoExampleFoundException e1) {
 			System.out.println("No Example found.");
 			e1.printStackTrace();
 		}

@@ -16,11 +16,10 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.plotter;
+package org.tweetyproject.arg.dung.serialisibility.graph;
 
 import java.util.ArrayList;
 
-import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
@@ -52,7 +51,7 @@ import com.mxgraph.util.mxConstants;
  * @author Julian Sander
  * @version TweetyProject 1.23
  */
-public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNode, Edge<TransitionStateNode>> {
+public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode, Edge<TransitionStateNode>> {
 
 	/**
 	 * Plots the specified analysis in a new created frame.
@@ -61,12 +60,12 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * @param width Width of the new frame created.
 	 * @param height Height of the new frame created.
 	 */
-	public static void plotAnalysis(ContainerTransitionStateAnalysis analysis, int width, int height) {
+	public static void plotAnalysis(SerialisationGraph analysis, int width, int height) {
 
 		Plotter groundPlotter = new Plotter();
 		groundPlotter.createFrame(width, height);
 
-		SerialisableExtensionPlotter.plotAnalysis(analysis, groundPlotter);
+		SerialisationGraphPlotter.plotAnalysis(analysis, groundPlotter);
 
 		groundPlotter.show();
 	}
@@ -77,8 +76,8 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	 * @param analysis Analysis of a generation process of serialisable extensions
 	 * @param groundPlotter Plotter, which creates the frame
 	 */
-	public static void plotAnalysis(ContainerTransitionStateAnalysis analysis, Plotter groundPlotter) {
-		SerialisableExtensionPlotter sePlotter = new SerialisableExtensionPlotter(groundPlotter, analysis);
+	public static void plotAnalysis(SerialisationGraph analysis, Plotter groundPlotter) {
+		SerialisationGraphPlotter sePlotter = new SerialisationGraphPlotter(groundPlotter, analysis);
 		sePlotter.createGraph(false);
 		var lstLabels = new ArrayList<String>();
 		lstLabels.add(analysis.getTitle());
@@ -100,9 +99,9 @@ public class SerialisableExtensionPlotter extends GraphPlotter<TransitionStateNo
 	private final int VERTEX_SPACING = 90;
 	private final int FONTSIZE = 10;
 
-	private ContainerTransitionStateAnalysis analysis;
+	private SerialisationGraph analysis;
 
-	public SerialisableExtensionPlotter(Plotter plotter, ContainerTransitionStateAnalysis analysis) {
+	public SerialisationGraphPlotter(Plotter plotter, SerialisationGraph analysis) {
 		super(plotter, analysis.getGraphResulting());
 
 		this.analysis = analysis;

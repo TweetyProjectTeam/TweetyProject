@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
-import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
 import org.tweetyproject.graphs.util.GraphUtil;
 
 /**
@@ -31,7 +31,7 @@ import org.tweetyproject.graphs.util.GraphUtil;
 public class IsomorphEquivalence implements ISerializingComparator {
 
 	@Override
-	public boolean isEquivalent(ContainerTransitionStateAnalysis analysis1, ContainerTransitionStateAnalysis analysis2) {
+	public boolean isEquivalent(SerialisationGraph analysis1, SerialisationGraph analysis2) {
 		return GraphUtil.isIsomorphic(analysis1.getGraphResulting(), analysis2.getGraphResulting());
 	}
 

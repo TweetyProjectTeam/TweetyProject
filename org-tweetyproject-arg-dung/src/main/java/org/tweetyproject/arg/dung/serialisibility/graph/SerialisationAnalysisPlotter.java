@@ -16,12 +16,11 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.plotter;
+package org.tweetyproject.arg.dung.serialisibility.graph;
 
 import java.util.HashMap;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
@@ -33,7 +32,7 @@ import org.tweetyproject.graphs.util.GraphPlotter;
  * This class summarizes static methods used to plot serialisability analyses, 
  * consisting of plotting the underlying argumentation framework and the serialised generation process of their extensions regarding to specified semantics.
  * 
- * @see SerialisableExtensionPlotter
+ * @see SerialisationGraphPlotter
  * @see org.tweetyproject.arg.dung.util.DungTheoryPlotter
  * @see Matthias Thimm. Revisiting initial sets in abstract argumentation.
  *      Argument & Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
@@ -44,7 +43,7 @@ import org.tweetyproject.graphs.util.GraphPlotter;
  * @author Julian Sander
  * @version TweetyProject 1.23
  */
-public class SerialisabilityAnalysisPlotter {
+public class SerialisationAnalysisPlotter {
 
 	/**
 	 * Plots specified analyses of the serializing generation of extensions, each in a separate frame.
@@ -53,14 +52,14 @@ public class SerialisabilityAnalysisPlotter {
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
 	 */
-	public static void plotAnalyses(ContainerTransitionStateAnalysis[] analyses, String title, int width, int height) {
-		HashMap<DungTheory, ContainerTransitionStateAnalysis[]> convExamples = new HashMap<>();
+	public static void plotAnalyses(SerialisationGraph[] analyses, String title, int width, int height) {
+		HashMap<DungTheory, SerialisationGraph[]> convExamples = new HashMap<>();
 
-		for (ContainerTransitionStateAnalysis analysis : analyses) {
-			convExamples.put(analysis.getStateExamined().getTheory(), new ContainerTransitionStateAnalysis[] {analysis});
+		for (SerialisationGraph analysis : analyses) {
+			convExamples.put(analysis.getStateExamined().getTheory(), new SerialisationGraph[] {analysis});
 		}
 
-		SerialisabilityAnalysisPlotter.plotAnalyses(convExamples, title, width, height);
+		SerialisationAnalysisPlotter.plotAnalyses(convExamples, title, width, height);
 	}
 	
 	/**
@@ -71,17 +70,17 @@ public class SerialisabilityAnalysisPlotter {
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
 	 */
-	public static void plotAnalyses(HashMap<DungTheory, ContainerTransitionStateAnalysis[]> mapAFtoAnalyses, String title, int width, int height) {
+	public static void plotAnalyses(HashMap<DungTheory, SerialisationGraph[]> mapAFtoAnalyses, String title, int width, int height) {
 		int index = 0;
 		for (DungTheory exampleFramework : mapAFtoAnalyses.keySet()) {
 			Plotter groundPlotter = new Plotter();
 			String titleToSet = title + " " + index;
 			groundPlotter.createFrame(width, height);
 			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, titleToSet);
-			for (ContainerTransitionStateAnalysis analysis : mapAFtoAnalyses.get(exampleFramework)) {
+			for (SerialisationGraph analysis : mapAFtoAnalyses.get(exampleFramework)) {
 				analysis.setTitle(analysis.getTitle() + " " + titleToSet);
 				SimpleGraph<TransitionStateNode> graph = analysis.getGraphResulting();
-				SerialisableExtensionPlotter.plotAnalysis(analysis, groundPlotter);
+				SerialisationGraphPlotter.plotAnalysis(analysis, groundPlotter);
 			}
 			groundPlotter.show();
 			index++;
@@ -98,10 +97,10 @@ public class SerialisabilityAnalysisPlotter {
 	 * @param height Height of the new frames created.
 	 */
 	public static void plotAnalyses(Semantics[] semantics, DungTheory[] frameworks, String title, int width, int height) {
-		HashMap<DungTheory, ContainerTransitionStateAnalysis[]> convExamples = new HashMap<>();
+		HashMap<DungTheory, SerialisationGraph[]> convExamples = new HashMap<>();
 
 		for (DungTheory example : frameworks) {
-			ContainerTransitionStateAnalysis[] analyses = new ContainerTransitionStateAnalysis[semantics.length];
+			SerialisationGraph[] analyses = new SerialisationGraph[semantics.length];
 			for (int i = 0; i < analyses.length; i++) {
 				analyses[i] = SerialisableExtensionReasonerWithAnalysis
 						.getSerialisableReasonerForSemantics(semantics[i])
@@ -110,6 +109,6 @@ public class SerialisabilityAnalysisPlotter {
 			convExamples.put(example, analyses);
 		}
 
-		SerialisabilityAnalysisPlotter.plotAnalyses(convExamples, title, width, height);
+		SerialisationAnalysisPlotter.plotAnalyses(convExamples, title, width, height);
 	}
 }

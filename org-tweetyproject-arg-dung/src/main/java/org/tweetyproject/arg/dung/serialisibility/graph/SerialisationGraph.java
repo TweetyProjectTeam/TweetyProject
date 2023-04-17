@@ -16,17 +16,19 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility;
+package org.tweetyproject.arg.dung.serialisibility.graph;
 
 import java.rmi.NoSuchObjectException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotter.TransitionStateNode;
+import org.tweetyproject.arg.dung.serialisibility.TransitionState;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.graphs.SimpleGraph;
+import org.tweetyproject.graphs.*;
+import org.tweetyproject.math.matrix.Matrix;
 
 /**
  * This class represents an object summarizing all information gathered during an analysis of a {@link TransitionState}, regarding serializable extensions.
@@ -38,7 +40,7 @@ import org.tweetyproject.graphs.SimpleGraph;
  * @version TweetyProject 1.23
  *
  */
-public class ContainerTransitionStateAnalysis {
+public class SerialisationGraph implements Graph<TransitionStateNode> {
 
 	/**
 	 * Searches in a specified set for a analysis of the specified transition state.
@@ -47,8 +49,8 @@ public class ContainerTransitionStateAnalysis {
 	 * @param state Transition state, which is used as a condition to find the analysis to search for.
 	 * @return null or the analysis of the specified state this transition state.
 	 */
-	public static ContainerTransitionStateAnalysis getAnalysisByState(HashSet<ContainerTransitionStateAnalysis> setOfAnalyses, TransitionState state) {
-		for (ContainerTransitionStateAnalysis analysis : setOfAnalyses) {
+	public static SerialisationGraph getAnalysisByState(HashSet<SerialisationGraph> setOfAnalyses, TransitionState state) {
+		for (SerialisationGraph analysis : setOfAnalyses) {
 			if(analysis.getStateExamined().equals(state)) {
 				return analysis;
 			}
@@ -60,7 +62,7 @@ public class ContainerTransitionStateAnalysis {
 	private SimpleGraph<TransitionStateNode> graphResulting;
 	private TransitionStateNode root;
 	private Collection<Extension<DungTheory>> extensionsFound;
-	private HashSet<ContainerTransitionStateAnalysis> analysesSuccessive;
+	private HashSet<SerialisationGraph> analysesSuccessive;
 	private Extension<DungTheory> setInitial;
 	private String title;
 
@@ -75,13 +77,13 @@ public class ContainerTransitionStateAnalysis {
 	 * @param subAnalyses Analyses, done in reducted sub-frameworks of the current framework.
 	 * @param initialSet Set of arguments, which was used to generate the state of this analysis.
 	 */
-	public ContainerTransitionStateAnalysis(
+	public SerialisationGraph(
 			TransitionState examinedState,
 			Semantics usedSemantics,
 			SimpleGraph<TransitionStateNode> resultingGraph,
 			TransitionStateNode root,
 			Collection<Extension<DungTheory>> foundExtensions,
-			HashSet<ContainerTransitionStateAnalysis> subAnalyses,
+			HashSet<SerialisationGraph> subAnalyses,
 			Extension<DungTheory> initialSet) {
 
 		{
@@ -126,20 +128,20 @@ public class ContainerTransitionStateAnalysis {
 	 * @param newSubAnalysis Analysis, done in reducted sub-frameworks of the current framework.
 	 * @return True if successfully executed.
 	 */
-	public boolean addSubAnalysis(ContainerTransitionStateAnalysis newSubAnalysis) {
+	public boolean addSubAnalysis(SerialisationGraph newSubAnalysis) {
 		return this.analysesSuccessive.add(newSubAnalysis);
 	}
 
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (!(obj instanceof ContainerTransitionStateAnalysis)) {
+		if (!(obj instanceof SerialisationGraph)) {
 			return false;
 		}
 		if (this == obj) {
 			return true;
 		}
-		ContainerTransitionStateAnalysis other = (ContainerTransitionStateAnalysis) obj;
+		SerialisationGraph other = (SerialisationGraph) obj;
 
 		return  this.semanticsUsed.equals(other.semanticsUsed) &&
 				this.graphResulting.equals(other.graphResulting) &&
@@ -152,8 +154,8 @@ public class ContainerTransitionStateAnalysis {
 	/**
 	 * @return Analyses, done in reducted sub-frameworks of the current framework.
 	 */
-	public ContainerTransitionStateAnalysis[] getAnalysesSuccessive() {
-		return this.analysesSuccessive.toArray(new ContainerTransitionStateAnalysis[0]);
+	public SerialisationGraph[] getAnalysesSuccessive() {
+		return this.analysesSuccessive.toArray(new SerialisationGraph[0]);
 	}
 
 	/**
@@ -214,7 +216,7 @@ public class ContainerTransitionStateAnalysis {
 	 *
 	 * @param subAnalysis Analysis of a successive transition state
 	 */
-	public void integrateSubAnalysis(ContainerTransitionStateAnalysis subAnalysis) {
+	public void integrateSubAnalysis(SerialisationGraph subAnalysis) {
 		// integrate findings of sub-level in this level's analysis
 		this.analysesSuccessive.add(subAnalysis);
 		this.extensionsFound.addAll(subAnalysis.getExtensionsFound());
@@ -245,6 +247,126 @@ public class ContainerTransitionStateAnalysis {
 				+ "Root: " + this.root.toString() + "\n"
 				+ "Graph: " + this.graphResulting.toString();
 		return printedResult;
+	}
+
+	@Override
+	public GeneralGraph<TransitionStateNode> getRestriction(Collection<TransitionStateNode> nodes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean add(TransitionStateNode node) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean add(GeneralEdge<TransitionStateNode> edge) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Collection<TransitionStateNode> getNodes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getNumberOfNodes() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean areAdjacent(TransitionStateNode a, TransitionStateNode b) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public GeneralEdge<TransitionStateNode> getEdge(TransitionStateNode a, TransitionStateNode b) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<? extends GeneralEdge<? extends TransitionStateNode>> getEdges() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator<TransitionStateNode> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean contains(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Collection<TransitionStateNode> getChildren(Node node) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<TransitionStateNode> getParents(Node node) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean existsDirectedPath(TransitionStateNode node1, TransitionStateNode node2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Collection<TransitionStateNode> getNeighbors(TransitionStateNode node) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Matrix getAdjacencyMatrix() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Graph<TransitionStateNode> getComplementGraph(int selfloops) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<Collection<TransitionStateNode>> getStronglyConnectedComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<Graph<TransitionStateNode>> getSubgraphs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasSelfLoops() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isWeightedGraph() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

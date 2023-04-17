@@ -25,14 +25,14 @@ import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
-import org.tweetyproject.arg.dung.serialisibility.SerialisabilityExampleFinder;
-import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisabilityAnalysisPlotter;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationAnalysisPlotter;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisibility.SerialisationExampleFinder;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 
 /**
- * This class summarises examples displaying the usage of {@link SerialisabilityExampleFinder}
+ * This class summarises examples displaying the usage of {@link SerialisationExampleFinder}
  * for a chosen type of serialisable semantics.
  *
  * @see source Matthias Thimm. Revisiting initial sets in abstract argumentation.
@@ -69,8 +69,8 @@ public class SerialisabilityExampleFinderExample {
 			ZoneId z = ZoneId.of( "Europe/Berlin" );
 			ZonedDateTime now = ZonedDateTime.now( z );
 
-			SerialisabilityExampleFinder exampleFinder = new SerialisabilityExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack, maxNumberTryGenerateFramework);
-			LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> examples = exampleFinder.findExampleForDifferentSemantics(semanticsUsed, numberOfExamples, false, false); //exampleFinder.findExampleArrayForDifferentSemantics(
+			SerialisationExampleFinder exampleFinder = new SerialisationExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack, maxNumberTryGenerateFramework);
+			LinkedHashMap<DungTheory, SerialisationGraph[]> examples = exampleFinder.findExampleForDifferentSemantics(semanticsUsed, numberOfExamples, false, false); //exampleFinder.findExampleArrayForDifferentSemantics(
 			/*							semanticsUsed,
 									numberOfArgumentsAtStart,
 									numberOfArguments,
@@ -97,7 +97,7 @@ public class SerialisabilityExampleFinderExample {
 				index++;
 			}
 
-			SerialisabilityAnalysisPlotter.plotAnalyses( examples, "Example_", 2000, 1000);
+			SerialisationAnalysisPlotter.plotAnalyses( examples, "Example_", 2000, 1000);
 		}catch(Exception e) {
 
 		}

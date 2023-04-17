@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
-import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
 
 /**
  * This interface defines methods to analyze the equivalence of two graphs representing the generation process of serializing sets of arguments to extensions. 
@@ -35,6 +35,6 @@ public interface ISerializingComparator {
      * @param analysis2 An analysis of the serialisable extensions.
      * @return true if both analyses are equivalent wrt. to the kernel
      */
-	public boolean isEquivalent(ContainerTransitionStateAnalysis analysis1, ContainerTransitionStateAnalysis analysis2);
+	public boolean isEquivalent(SerialisationGraph analysis1, SerialisationGraph analysis2);
 	
 }

@@ -20,11 +20,11 @@ package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisabilityAnalysisPlotter;
-import org.tweetyproject.arg.dung.serialisibility.plotter.SerialisableExtensionPlotter;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationAnalysisPlotter;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraphPlotter;
 
 /**
- * This class summarises examples displaying the usage of {@link SerialisableExtensionPlotter} 
+ * This class summarises examples displaying the usage of {@link SerialisationGraphPlotter} 
  * for a chosen type of serialisable semantics.
  * <br>
  * <br> See
@@ -55,7 +55,7 @@ public class SerialisableExtensionPlotterExample {
 		
 		
 		//System.out.println("======================================== all Examples ========================================");
-		SerialisabilityAnalysisPlotter.plotAnalyses(semanticsUsed, exampleFrameworks, "Example", 2000, 1000);
+		SerialisationAnalysisPlotter.plotAnalyses(semanticsUsed, exampleFrameworks, "Example", 2000, 1000);
 		System.out.println("");
 	}
 

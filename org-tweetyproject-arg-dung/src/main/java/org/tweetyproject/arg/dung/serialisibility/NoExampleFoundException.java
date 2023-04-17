@@ -18,19 +18,18 @@
  */
 package org.tweetyproject.arg.dung.serialisibility;
 
-import org.tweetyproject.commons.postulates.Postulate;
-import org.tweetyproject.arg.dung.principles.Principle;
-
 /**
- * This class represents exceptions, which are thrown if a {@link Postulate} couldn't be satisfied.
- * 
- * @see Principle
+ * This class represents an exception, thrown if no example was found.
  * 
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public class ExceptionNotSatisfiedPostulate extends Exception {
+public class NoExampleFoundException extends Exception {
 
-	private static final long serialVersionUID = -300571613685618521L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1846199849923418223L;
+
 }

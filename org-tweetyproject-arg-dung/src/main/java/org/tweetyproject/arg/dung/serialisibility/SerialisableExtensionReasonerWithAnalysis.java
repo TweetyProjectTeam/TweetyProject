@@ -30,7 +30,8 @@ import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedStableReasoner
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisedUnchallengedReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotter.TransitionStateNode;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisibility.graph.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.SimpleGraph;
 
@@ -85,13 +86,13 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	 * @param framework Argumentation framework, for which the extensions shall be computed.
 	 * @return Analysis of the framework, containing all found extensions and further information e.g. derivation graph.
 	 */
-	public ContainerTransitionStateAnalysis getModelsWithAnalysis(DungTheory framework) {
+	public SerialisationGraph getModelsWithAnalysis(DungTheory framework) {
 
 		Extension<DungTheory> initExtension = new Extension<>();
 		TransitionState initState = new TransitionState(framework, initExtension);
 
 		return this.getModelsRecursiveWithAnalysis(
-				new HashSet<ContainerTransitionStateAnalysis>(),
+				new HashSet<SerialisationGraph>(),
 				initState,
 				null);
 	}
@@ -119,12 +120,12 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 	 * @return Analysis of the current state.
 	 */
 	@SuppressWarnings("unchecked")
-	private ContainerTransitionStateAnalysis getModelsRecursiveWithAnalysis(
-			HashSet<ContainerTransitionStateAnalysis> consistencyCheckSet,
+	private SerialisationGraph getModelsRecursiveWithAnalysis(
+			HashSet<SerialisationGraph> consistencyCheckSet,
 			TransitionState state,
 			Extension<DungTheory> setInitial) {
 
-		var analysis = ContainerTransitionStateAnalysis.getAnalysisByState(consistencyCheckSet, state);
+		var analysis = SerialisationGraph.getAnalysisByState(consistencyCheckSet, state);
 		if(analysis != null ) {
 			return analysis;
 		}
@@ -132,13 +133,13 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 		var root = new TransitionStateNode(state);
 		var graphGenerationProcess = new SimpleGraph<TransitionStateNode>();
 		graphGenerationProcess.add(root);
-		var currentAnalysis = new ContainerTransitionStateAnalysis(
+		var currentAnalysis = new SerialisationGraph(
 				state, 
 				this.usedSemantics, 
 				graphGenerationProcess, 
 				root, 
 				new HashSet<Extension<DungTheory>>(), 
-				new HashSet<ContainerTransitionStateAnalysis>(), 
+				new HashSet<SerialisationGraph>(), 
 				setInitial);
 		consistencyCheckSet.add(currentAnalysis);
 
@@ -155,7 +156,7 @@ public abstract class SerialisableExtensionReasonerWithAnalysis extends Serialis
 			TransitionState newState = state.transitToNewState(newExt);
 
 			// [RECURSIVE CALL] examine reduced framework
-			ContainerTransitionStateAnalysis subAnalysis = this.getModelsRecursiveWithAnalysis(consistencyCheckSet, newState, newExt);
+			SerialisationGraph subAnalysis = this.getModelsRecursiveWithAnalysis(consistencyCheckSet, newState, newExt);
 
 			currentAnalysis.integrateSubAnalysis(subAnalysis);
 		}

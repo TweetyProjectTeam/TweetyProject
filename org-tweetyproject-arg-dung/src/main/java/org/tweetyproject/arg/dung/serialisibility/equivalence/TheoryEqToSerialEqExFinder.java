@@ -22,8 +22,9 @@ import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.equivalence.ITheoryComparator;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
+import org.tweetyproject.arg.dung.serialisibility.NoExampleFoundException;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
@@ -86,32 +87,32 @@ public class TheoryEqToSerialEqExFinder {
 	 * @param theoryBeEqual If TRUE, frameworks returned are equivalent wrt the comparator of the object.
 	 * @param serialGraphBeEqual If TRUE, serializing analyses are equivalent wrt the comparator of the object.
 	 * @return Map of the generated frameworks and their associated analyses.
-	 * @throws ExceptionNoExampleFound Thrown if the object couldn't create examples compliant to the conditions, within the specified number of maximum iterations.
+	 * @throws NoExampleFoundException Thrown if the object couldn't create examples compliant to the conditions, within the specified number of maximum iterations.
 	 */
-	public LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]> findExamples(
+	public LinkedHashMap<DungTheory, SerialisationGraph[]> findExamples(
 			Semantics semanticsUsed,
 			boolean theoryBeEqual, 
-			boolean serialGraphBeEqual) throws ExceptionNoExampleFound {
+			boolean serialGraphBeEqual) throws NoExampleFoundException {
 
 		for (int i = 0; i < this.maxNumberTryFindExample; i++) {
 			var generatedFramework1 = this.generator.next();
 			var generatedFramework2 = this.generator.next();
 
 			if(frameworkComparator.isEquivalent(generatedFramework1, generatedFramework2) == theoryBeEqual) {
-				ContainerTransitionStateAnalysis analysis1 = SerialisableExtensionReasonerWithAnalysis
+				SerialisationGraph analysis1 = SerialisableExtensionReasonerWithAnalysis
 						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsWithAnalysis(generatedFramework1);
-				ContainerTransitionStateAnalysis analysis2 = SerialisableExtensionReasonerWithAnalysis
+				SerialisationGraph analysis2 = SerialisableExtensionReasonerWithAnalysis
 						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsWithAnalysis(generatedFramework2);
 
 				if(analysisComparator.isEquivalent(analysis1, analysis2) == serialGraphBeEqual) {
-					var output = new LinkedHashMap<DungTheory, ContainerTransitionStateAnalysis[]>();
-					output.put(generatedFramework1, new ContainerTransitionStateAnalysis[] {analysis1});
-					output.put(generatedFramework2, new ContainerTransitionStateAnalysis[] {analysis2});
+					var output = new LinkedHashMap<DungTheory, SerialisationGraph[]>();
+					output.put(generatedFramework1, new SerialisationGraph[] {analysis1});
+					output.put(generatedFramework2, new SerialisationGraph[] {analysis2});
 					return output;
 				}
 			}
 		}
 
-		throw new ExceptionNoExampleFound();
+		throw new NoExampleFoundException();
 	}
 }
