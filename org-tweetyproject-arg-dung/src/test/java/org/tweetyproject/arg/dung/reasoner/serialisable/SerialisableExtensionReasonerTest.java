@@ -16,7 +16,7 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility;
+package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +26,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.tweetyproject.arg.dung.examples.SerialisableExtensionReasonerExample;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -38,16 +37,16 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @version TweetyProject 1.23
  *
  */
-class SerialisableExtensionReasoner_Tests {
+class SerialisableExtensionReasonerTest {
 
 	/**
-	 * This test, verifies that the method "getModelsWithAnalysis" works correctly, 
+	 * This test, verifies that the method "getModels" works correctly, 
 	 * by comparing its results with those of verified reasoners of the specified semantics.
-	 * The verified reasoners are given by the class {link AbstractExtensionReasoner}.
+	 * The verified reasoners are given by the class {@link AbstractExtensionReasoner}.
 	 */
 	@ParameterizedTest
 	@EnumSource(names = { "ADM", "CO", "GR", "PR", "ST" })
-	void getModelsWithAnalysis_knownSemantics_findSameExtensions(Semantics semantics) {
+	void getModels_knownSemantics_findSameExtensions(Semantics semantics) {
 		
 		//Arrange
 		//Semantics semantics = Semantics.ADM;
@@ -64,6 +63,35 @@ class SerialisableExtensionReasoner_Tests {
 			//Act	
 			Collection<Extension<DungTheory>> extensionsActual = reasonerToTest.getModels(frameworks[i]);
 			Collection<Extension<DungTheory>> extensionsExpected = reasonerVerified.getModels(frameworks[i]);
+			
+			//Assert
+			assertEquals(extensionsExpected, extensionsActual);
+		}
+		
+	}
+	
+	/**
+	 * This test, verifies that the method "getModelsGraph" works correctly, 
+	 * by comparing its extensions with those of the method "getModels".
+	 */
+	@ParameterizedTest
+	@EnumSource(names = { "ADM", "CO", "GR", "PR", "ST" })
+	void getModelsGraph_knownSemantics_findSameExtensions(Semantics semantics) {
+		
+		//Arrange
+		//Semantics semantics = Semantics.ADM;
+				
+		var reasoner = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics);
+		var frameworks = new DungTheory[3];
+		frameworks[0] = SerialisableExtensionReasonerExample.buildExample1();
+		frameworks[1] = SerialisableExtensionReasonerExample.buildExample2();
+		frameworks[2] = SerialisableExtensionReasonerExample.buildExample3();
+		
+		for (int i = 0; i < frameworks.length; i++) {
+			
+			//Act	
+			Collection<Extension<DungTheory>> extensionsActual = reasoner.getModels(frameworks[i]);
+			Collection<Extension<DungTheory>> extensionsExpected = reasoner.getModelsGraph(frameworks[i]).getExtensions();
 			
 			//Assert
 			assertEquals(extensionsExpected, extensionsActual);

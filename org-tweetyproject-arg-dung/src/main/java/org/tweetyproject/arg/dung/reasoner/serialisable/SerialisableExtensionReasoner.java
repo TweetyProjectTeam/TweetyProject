@@ -30,6 +30,7 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.TransitionState;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
 import org.tweetyproject.arg.dung.serialisibility.graph.TransitionStateNode;
+import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -79,7 +80,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	@Override
 	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
 		TransitionState initState = new TransitionState(bbase, new Extension<>());
-		return this.getModelsRecursive(initState, new HashSet<>());
+		return this.getModelsRecursive(initState, new SerialisationSequence(), new HashSet<SerialisationSequence>());
 	}
 
 	/**
@@ -97,6 +98,18 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		return this.getModelsRecursiveGraph(
 				new HashSet<SerialisationGraph>(),
 				initState);
+	}
+
+	/**
+	 * Creates a set of sequences, each sequences is showing the serialisation path to generate the final extension regarding the semantics of the reasoner.
+	 * @param framework Argumentation framework, for which the extensions shall be computed.
+	 * @return Set of sequences tracing the serialisation process for each final extension
+	 */
+	public HashSet<SerialisationSequence> getModelsSequences(DungTheory framework){
+		TransitionState initState = new TransitionState(framework, new Extension<>());
+		HashSet<SerialisationSequence> output = new HashSet<>();
+		this.getModelsRecursive(initState, new SerialisationSequence(), output);
+		return output;
 	}
 
 	/**
@@ -151,24 +164,35 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	/**
 	 * recursively computes all possible states of the transition system defined by the selection and termination function
 	 * the transition system is traversed with a depth-first search approach
-	 * @param state the current state of the transition system
-	 * @param result all states obtained so far, i.e. all extensions that resulted from the transitions
-	 * @return the set of all obtained states (extensions)
+	 * @param in_State the current state of the transition system
+	 * @param in_ParentSequence Sequence of extensions of the transition states leading to this state
+	 * @param out_SequencesFound Out parameter, defining the sequences of all final extensions
+	 * @return Collection of all final extension regarding the semantics of the reasoner
 	 */
-	private Collection<Extension<DungTheory>> getModelsRecursive(TransitionState state, Collection<Extension<DungTheory>> result) {
+	private Collection<Extension<DungTheory>> getModelsRecursive(
+			TransitionState in_State,
+			SerialisationSequence in_ParentSequence,
+			HashSet<SerialisationSequence> out_SequencesFound) {
+
+		Collection<Extension<DungTheory>> result = new HashSet<>();
+		SerialisationSequence newSequence = new SerialisationSequence();
+		newSequence.addAll(in_ParentSequence);
+		newSequence.add(in_State.getExtension());
+
 		// check whether the current state is acceptable, if yes add to results
-		if (this.terminationFunction(state)) {
-			result.add(state.getExtension());
+		if (this.terminationFunction(in_State)) {
+			out_SequencesFound.add(newSequence);
+			result.add(in_State.getExtension());
 		}
 
-		Collection<Extension<DungTheory>> newExts = this.selectInitialSetsForReduction(state);
+		Collection<Extension<DungTheory>> newExts = this.selectInitialSetsForReduction(in_State);
 
 		// recursively compute successor states
 		// iterate depth-first through all initial sets (and hence their induced states) and add all found final extensions
 		for (Extension<DungTheory> newExt: newExts) {
-			TransitionState newState = state.transitToNewState(newExt);
+			TransitionState newState = in_State.transitToNewState(newExt);
 			// compute possible extension resulting from the reduced framework in the new state
-			result.addAll(this.getModelsRecursive(newState, result));
+			result.addAll(this.getModelsRecursive(newState, newSequence, out_SequencesFound));
 		}
 		return result;
 	}
