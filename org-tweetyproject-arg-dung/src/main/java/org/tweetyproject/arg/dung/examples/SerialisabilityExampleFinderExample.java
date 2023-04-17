@@ -25,14 +25,14 @@ import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.SerialisationExampleFinder;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationAnalysisPlotter;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraphGenerator;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 
 /**
- * This class summarises examples displaying the usage of {@link SerialisationExampleFinder}
+ * This class summarises examples displaying the usage of {@link SerialisationGraphGenerator}
  * for a chosen type of serialisable semantics.
  *
  * @see source Matthias Thimm. Revisiting initial sets in abstract argumentation.
@@ -69,7 +69,7 @@ public class SerialisabilityExampleFinderExample {
 			ZoneId z = ZoneId.of( "Europe/Berlin" );
 			ZonedDateTime now = ZonedDateTime.now( z );
 
-			SerialisationExampleFinder exampleFinder = new SerialisationExampleFinder(numberOfArguments, attackProbability, avoidSelfAttack, maxNumberTryGenerateFramework);
+			SerialisationGraphGenerator exampleFinder = new SerialisationGraphGenerator(numberOfArguments, attackProbability, avoidSelfAttack, maxNumberTryGenerateFramework);
 			LinkedHashMap<DungTheory, SerialisationGraph[]> examples = exampleFinder.findExampleForDifferentSemantics(semanticsUsed, numberOfExamples, false, false); //exampleFinder.findExampleArrayForDifferentSemantics(
 			/*							semanticsUsed,
 									numberOfArgumentsAtStart,

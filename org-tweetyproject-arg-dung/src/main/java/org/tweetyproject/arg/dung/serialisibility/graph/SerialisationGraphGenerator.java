@@ -16,7 +16,7 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility;
+package org.tweetyproject.arg.dung.serialisibility.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +26,8 @@ import java.util.LinkedHashMap;
 import org.tweetyproject.arg.dung.principles.Principle;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisibility.NoExampleFoundException;
+import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
@@ -45,7 +46,7 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationExampleFinder {
+public class SerialisationGraphGenerator {
 
 	private DefaultDungTheoryGenerator generator;
 	private DungTheoryGenerationParameters parameters;
@@ -62,7 +63,7 @@ public class SerialisationExampleFinder {
 	 * @param avoidSelfAttacks {@link DungTheoryGenerationParameters#avoidSelfAttacks}
 	 * @param maxNumberTryGenerateFramework Number how often the generator can retry to generate a framework complied to the conditions, before aborting the process.
 	 */
-	public SerialisationExampleFinder(int numberOfArguments, double attackProbability, boolean avoidSelfAttacks, int maxNumberTryGenerateFramework) {
+	public SerialisationGraphGenerator(int numberOfArguments, double attackProbability, boolean avoidSelfAttacks, int maxNumberTryGenerateFramework) {
 		this.parameters = new DungTheoryGenerationParameters();
 		this.changeParameterNumberOfArguments(numberOfArguments);
 		this.changeParameterAttackProbability(attackProbability);
