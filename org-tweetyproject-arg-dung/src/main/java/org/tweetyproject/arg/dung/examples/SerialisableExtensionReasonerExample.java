@@ -162,6 +162,14 @@ public class SerialisableExtensionReasonerExample {
 	}
 	
 	
+	/**
+	 * Uses the specified reasoner to compute the serialisation graph of the specified framework, regarding the semantics of the reasoner, 
+	 * and prints these findings in uniform style and layout.
+	 * 
+	 * @param reasoner Reasoner used to generate the extension of the example's framework.
+	 * @param description Description of the semantics, which will be derived by the reasoner.
+	 * @param examples Exemplary argumentation frameworks, to demonstrate the validity of the reasoning.
+	 */
 	protected static void executeExamplesGraphs(SerialisableExtensionReasoner reasoner, String description, DungTheory[] examples) {
 		System.out.println(description + ":");
 		for (int i = 0; i < examples.length-1; i++) {
@@ -173,7 +181,12 @@ public class SerialisableExtensionReasonerExample {
 		System.out.println("");
 	}
 	
-	
+	/**
+	 * Uses the specified reasoner to derive all serialisation graphs of the specified framework, regarding the semantics of the reasoner.
+	 * 
+	 * @param frameWork Problem instance, for which all extensions of the semantic, specified by the choice of reasoner, shall be found.
+	 * @param reasoner Reasoner of a specific semantic, to generate all extension, using the concept of serialisability.
+	 */
 	protected static void examineGraphInUniformLayout(DungTheory frameWork, SerialisableExtensionReasoner reasoner) {
 		System.out.println(reasoner.getModelsGraph(frameWork));
 	}

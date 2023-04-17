@@ -37,7 +37,7 @@ import org.tweetyproject.commons.postulates.PostulateEvaluatable;
 
 /**
  * This class represents a generator for exemplary frameworks with serialisable extensions.
- * The objects of this class verify that the generated frameworks and their  serialisation graphs comply specified conditions.
+ * The objects of this class verify that the generated frameworks and their serialisation graphs comply specified conditions.
  *
  * @see DefaultDungTheoryGenerator
  * @see org.tweetyproject.arg.dung.learning.ExampleFinder
@@ -86,7 +86,7 @@ public class SerialisationGraphGenerator {
 	}
 	
 	/**
-	 * Adds a specified postulate as a condition, which is satisfied by all serialisation graphs of the serialisable extensions 
+	 * Adds a specified postulate as a condition, which is satisfied by all serialisation graphs 
 	 * wrt the specified semantics, for all generated frameworks. The parameter evaluation is used to verify the condition.
 	 * @param condition condition, which is satisfied by all analyses, or rather the graph resulting from the analysis
 	 * @param evaluation Used to verify if the condition is satisfied by a analysis or rather the graph resulting from the analysis
@@ -131,10 +131,13 @@ public class SerialisationGraphGenerator {
 	 * Creates an exemplary abstract argumentation framework. The framework itself, and its serialisation graphs comply to the conditions of this generator.
 	 *
 	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
-	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, returns NULL if no framework can be generated.
-	 * @param abortGraphNotComply If TRUE, an exception is thrown and the method aborted whenever an graph doesn't comply the conditions. If FALSE, returns NULL if graph doesn't satisfies conditions.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be 
+	 * generated. If FALSE, returns NULL if no framework can be generated.
+	 * @param abortGraphNotComply If TRUE, an exception is thrown and the method aborted whenever an graph doesn't comply the conditions. If FALSE, 
+	 * returns NULL if graph doesn't satisfies conditions.
 	 * @return Generated exemplary framework. 
-	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
+	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number 
+	 * of maximum attempts or if the serilisation graph of the generated framework does not comply the conditions
 	 */
 	public DungTheory findExample(
 			Semantics semanticsForSerializing, 
@@ -158,10 +161,13 @@ public class SerialisationGraphGenerator {
 	 *
 	 * @param semanticsForSerializing Semantics of the extensions created during the serializing process, which will be analyzed.
 	 * @param numberOfExamples Number of examples generated.
-	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, skips settings for non compliant frameworks and returns less output.
-	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, skips non compliant analysis and returns less output.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated.
+	 * If FALSE, skips settings for non compliant frameworks and returns less output.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. 
+	 * If FALSE, skips non compliant analysis and returns less output.
 	 * @return Generated exemplary frameworks. 
-	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
+	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number 
+	 * of maximum attempts or if the serilisation graph of the generated framework does not comply the conditions
 	 */
 	public DungTheory[] findExample(
 			Semantics semanticsForSerializing, 
@@ -193,9 +199,11 @@ public class SerialisationGraphGenerator {
 	 * @param numberOfExamplesPerIncrement Number of examples created with the same number of arguments.
 	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased each time.
 	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, skips settings for non compliant frameworks and returns less output.
-	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, skips non compliant analysis and returns less output.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. 
+	 * If FALSE, skips non compliant analysis and returns less output.
 	 * @return Array of analysis results, analyzing each a different randomly generated exemplary argumentation framework.
-	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
+	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number 
+	 * of maximum attempts or if the serilisation graph of the generated framework does not comply the conditions
 	 */
 	public  DungTheory[] findExample(
 			Semantics semanticsForSerializing,
@@ -222,10 +230,13 @@ public class SerialisationGraphGenerator {
 	 * Generates argumentation frameworks and analyzes their serialisable extensions regarding the specified semantics.
 	 * @param semanticsForSerializing Array of semantics, used to create the different analyses.
 	 * @param numberOfExamples Number of exemplary frameworks, which will be generated.
-	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, skips settings for non compliant frameworks and returns less output.
-	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, skips non compliant analysis and returns less output.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. 
+	 * If FALSE, skips settings for non compliant frameworks and returns less output.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. 
+	 * If FALSE, skips non compliant analysis and returns less output.
 	 * @return Frameworks mapped to the associated serialisation graphs using different semantics
-	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
+	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number 
+	 * of maximum attempts or if the serilisation graph of the generated framework does not comply the conditions
 	 */
 	public LinkedHashMap<DungTheory, SerialisationGraph[]> findExampleForDifferentSemantics(
 			Semantics[] semanticsForSerializing,
@@ -268,10 +279,13 @@ public class SerialisationGraphGenerator {
 	 * @param maxNumberOfArguments Maximum number of arguments of any framework generated by this method.
 	 * @param numberOfExamplesPerIncrement Number of examples created with the same number of arguments.
 	 * @param incrementForNumberOfArguments Increment by which the number of arguments is increased each time.
-	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. If FALSE, skips settings for non compliant frameworks and returns less output.
-	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. If FALSE, skips non compliant analysis and returns less output.
+	 * @param abortFrameworkNotComply If TRUE, an exception is thrown and the method aborted whenever no framework compliant to the conditions can be generated. 
+	 * If FALSE, skips settings for non compliant frameworks and returns less output.
+	 * @param abortAnalysisNotComply If TRUE, an exception is thrown and the method aborted whenever an analysis doesn't comply the conditions. 
+	 * If FALSE, skips non compliant analysis and returns less output.
 	 * @return Frameworks mapped to the associated serialisation graphs using different semantics
-	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number of maximum attempts
+	 * @throws NoExampleFoundException Throws an exception, if no framework compliant to the conditions could be created within the specified number 
+	 * of maximum attempts or if the serilisation graph of the generated framework does not comply the conditions
 	 */
 	public  LinkedHashMap<DungTheory, SerialisationGraph[]> findExampleForDifferentSemantics(
 			Semantics[] semanticsForSerializing,

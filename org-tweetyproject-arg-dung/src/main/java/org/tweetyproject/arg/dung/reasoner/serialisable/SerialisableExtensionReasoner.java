@@ -126,16 +126,6 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	public abstract boolean terminationFunction(TransitionState state);
 
 	/**
-	 * Checks if the specified termination function of the reasoner is fulfilled.
-	 *
-	 * @param state current transition state of the process
-	 * @return true if state is acceptable
-	 */
-	protected boolean checkTerminationFunction(TransitionState state) {
-		return this.terminationFunction(state);
-	}
-
-	/**
 	 * Selects, by using the specified selection function of the reasoner, those initial sets which should be used to reduct the framework
 	 * in order to transit to a new state
 	 *
@@ -152,7 +142,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	}
 
 	/**
-	 * @param semantics Semantics used to generate the extensions found during the examination.
+	 * @param semantics Semantics used to generate the extensions
 	 */
 	protected void setSemantic(Semantics semantics) {
 		this.usedSemantics = semantics;
@@ -167,7 +157,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 */
 	private Collection<Extension<DungTheory>> getModelsRecursive(TransitionState state, Collection<Extension<DungTheory>> result) {
 		// check whether the current state is acceptable, if yes add to results
-		if (this.checkTerminationFunction(state)) {
+		if (this.terminationFunction(state)) {
 			result.add(state.getExtension());
 		}
 
@@ -184,12 +174,11 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	}
 
 	/**
-	 * Examines recursively the specified state and all states that can be reducted from this one,
-	 * until the termination function is satisfied.
+	 * Creates a graph by examining recursively the specified state and all states that can be reducted from this one.
 	 *
 	 * @param duplicityCheckSet Set of all graphs, computed during the process
-	 * @param state Current transition state of the serialisation process.
-	 * @return Graph showing the serialisation process, starting with the current state.
+	 * @param state Current transition state of the serialisation process
+	 * @return Graph showing the serialisation process, starting with the current state
 	 */
 	private SerialisationGraph getModelsRecursiveGraph(
 			HashSet<SerialisationGraph> duplicityCheckSet,
@@ -205,7 +194,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		duplicityCheckSet.add(graph);
 
 		// check whether a construction of an extension is finished
-		if (this.checkTerminationFunction(state)) {
+		if (this.terminationFunction(state)) {
 			// found final extension
 			graph.addExtension(state.getExtension());
 		}

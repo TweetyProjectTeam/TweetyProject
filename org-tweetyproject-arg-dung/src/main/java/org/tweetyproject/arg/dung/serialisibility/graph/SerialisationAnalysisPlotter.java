@@ -44,7 +44,7 @@ import org.tweetyproject.commons.Plotter;
 public class SerialisationAnalysisPlotter {
 
 	/**
-	 * Plots specified analyses of the serializing generation of extensions, each in a separate frame.
+	 * Plots specified analyses of the serialising generation of extensions, each in a separate frame.
 	 * @param graphs Graphs of the serialisation process.
 	 * @param title Title, common to all specified  serialisation graphs  to plot
 	 * @param width Width of the new frames created.
@@ -62,7 +62,7 @@ public class SerialisationAnalysisPlotter {
 	
 	/**
 	 * Plots specified frameworks and their associated serialisation graphs 
-	 * for the specified semantics in one frame per framework.
+	 * for the specified semantics. Creates one frame for every single framework and its graphs.
 	 * @param mapAFtoGraphs Frameworks mapped to the associated serialisation graphs using different semantics
 	 * @param title Title, common to all specified analyses to plot
 	 * @param width Width of the new frames created.
@@ -85,7 +85,7 @@ public class SerialisationAnalysisPlotter {
 	
 	/**
 	 * Plots specified frameworks and their associated serialisation graphs 
-	 * for the specified semantics in one frame per framework.
+	 * for the specified semantics. Creates one frame for every single framework and its graphs.
 	 * @param semantics Semantics of the extension created
 	 * @param frameworks Frameworks, for which the extensions should be found.
 	 * @param title Title, common to all specified  serialisation graphs to plot

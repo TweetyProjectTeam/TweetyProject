@@ -26,14 +26,12 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.TransitionState;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.graphs.DirectedEdge;
-import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.SimpleGraph;
 
 
 /**
- * This class represents a graph visualising the different {@link TransitionState} during the generation process of serializable extensions.
+ * This class represents a graph visualising the different {@link TransitionState} during the generation process of serialisable extensions.
  *
  * @see SimpleGraph
  * @see Matthias Thimm. Revisiting initial sets in abstract argumentation. Argument & Computation 13 (2022) 325–360 DOI 10.3233/AAC-210018
@@ -45,15 +43,26 @@ import org.tweetyproject.graphs.SimpleGraph;
  */
 public class SerialisationGraph extends SimpleGraph<TransitionStateNode> {
 
+	/**
+	 * Node of the transition state with whom the processing of the examined framework started
+	 */
 	private TransitionStateNode root;
-	private HashSet<Extension<DungTheory>> extensionsFound = new HashSet<Extension<DungTheory>>();
+
+	/**
+	 * Set of serialisable extension, which are shown in the graph
+	 */
+	private HashSet<Extension<DungTheory>> extensionsFound = new HashSet<>();
+
+	/**
+	 * Semantics used to generate the graph
+	 */
 	private Semantics semanticUsed;
 
 	/**
 	 * Creates a graph containing all transition states during the generation process of the serialisable extensions.
 	 *
 	 * @param graph Graph, showing a serialisation process.
-	 * @param root Node with whom the processing of the examined framework started
+	 * @param root Node of the transition state with whom the processing of the examined framework started
 	 * @param semanticsUsed Semantics used for the serialisation process.
 	 */
 	public SerialisationGraph(Graph<TransitionStateNode> graph, TransitionStateNode root, Semantics semanticsUsed) {
@@ -64,23 +73,38 @@ public class SerialisationGraph extends SimpleGraph<TransitionStateNode> {
 	/**
 	 * Creates a graph containing all transition states during the generation process of the serialisable extensions.
 	 *
-	 * @param root Node with whom the processing of the examined framework started
+	 * @param root Node of the transition state with whom the processing of the examined framework started
 	 * @param semanticsUsed Semantics used for the serialisation process.
 	 */
 	public SerialisationGraph(TransitionStateNode root, Semantics semanticsUsed) {
 		super();
 		this.init(root, semanticsUsed);
 	}
-	
-	private void init(TransitionStateNode root, Semantics semanticsUsed) {
-		this.initRoot(root);
-		this.semanticUsed = semanticsUsed;
-	}
 
+	/**
+	 * Adds an extension to the set of serialisable extensions, that are shown in this graph
+	 * @param extension extension to add
+	 * @return TRUE iff the extension could be added
+	 */
 	public boolean addExtension(Extension<DungTheory> extension) {
 		return this.extensionsFound.add(extension);
 	}
-	
+
+	/**
+	 *  Adds a graph as a subgraph
+	 *
+	 * @param superExit Node of the this graph, under which the new graph will be anchored
+	 * @param subGraph Graph, which will be added to the super-graph
+	 * @param subEntry Node of the subgraph, which will be connected to the super-graph
+	 * @param label Label of the newly created edge, from the superExit node to the subRoot node
+	 * @throws NoSuchObjectException Thrown if superExit is not a node of this graph
+	 */
+	public boolean addSubGraph(TransitionStateNode superExit,
+			SerialisationGraph subGraph, TransitionStateNode subEntry, String label ) throws NoSuchObjectException {
+		super.addSubGraph(superExit, subGraph, subEntry, label);
+		return this.extensionsFound.addAll(subGraph.getExtensions());
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -95,25 +119,25 @@ public class SerialisationGraph extends SimpleGraph<TransitionStateNode> {
 		return  this.root.equals(other.root) &&
 				super.equals(other);
 	}
-	
+
 	/**
 	 * @return Array of extensions, that have been found during the process shown by this graph.
 	 */
 	public Collection<Extension<DungTheory>> getExtensions(){
-		HashSet<Extension<DungTheory>> output = new HashSet<Extension<DungTheory>>();
-		output.addAll(extensionsFound);
+		HashSet<Extension<DungTheory>> output = new HashSet<>();
+		output.addAll(this.extensionsFound);
 		return output;
 	}
 
 	/**
-	 * @return Node with whom the processing of the examined framework started
+	 * @return Node of the transition state with whom the processing of the examined framework started
 	 */
 	public TransitionStateNode getRoot() {
 		return this.root;
 	}
-	
+
 	/**
-	 * @return Semantics used for the serialisation process.
+	 * @return Semantics used for the serialisation process
 	 */
 	public Semantics getSemantics() {
 		return this.semanticUsed;
@@ -144,20 +168,10 @@ public class SerialisationGraph extends SimpleGraph<TransitionStateNode> {
 		this.root = root;
 		this.add(root);
 	}
-	
-	/**
-	 *  Adds a graph as a subgraph
-	 * 
-	 * @param superExit Node of the this graph, under which the new graph will be anchored
-	 * @param subGraph Graph, which will be added to the super-graph
-	 * @param subEntry Node of the subgraph, which will be connected to the super-graph
-	 * @param label Label of the newly created edge, from the superExit node to the subRoot node
-     * @throws NoSuchObjectException Thrown if superExit is not a node of this graph
-	 */
-	public boolean addSubGraph(TransitionStateNode superExit,
-			SerialisationGraph subGraph, TransitionStateNode subEntry, String label ) throws NoSuchObjectException {
-    	super.addSubGraph(superExit, subGraph, subEntry, label);
-		return this.extensionsFound.addAll(subGraph.getExtensions());
+
+	private void init(TransitionStateNode root, Semantics semanticsUsed) {
+		this.initRoot(root);
+		this.semanticUsed = semanticsUsed;
 	}
 
 }
