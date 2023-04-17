@@ -21,7 +21,6 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.serialisibility.TransitionState;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -35,7 +34,7 @@ import java.util.Map;
  *
  * @author Lars Bengel
  */
-public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasonerWithAnalysis {
+public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasoner {
     	
 	public SerialisedUnchallengedReasoner() {
 		super(Semantics.UC);

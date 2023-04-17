@@ -22,8 +22,6 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
-import java.util.Iterator;
-
 import org.tweetyproject.arg.dung.reasoner.serialisable.*;
 
 /**
@@ -141,13 +139,13 @@ public class SerialisableExtensionReasonerExample {
 	 * @param description Description of the semantics, which will be derived by the reasoner.
 	 * @param examples Exemplary argumentation frameworks, to demonstrate the validity of the reasoning.
 	 */
-	protected static void executeExamplesInUniformLayout(SerialisableExtensionReasoner reasoner, String description, DungTheory[] examples) {
+	protected static void executeExamplesExtensions(SerialisableExtensionReasoner reasoner, String description, DungTheory[] examples) {
 		System.out.println(description + ":");
 		for (int i = 0; i < examples.length-1; i++) {
-			examineFrameworkWithReasonerInUniformLayout(examples[i], reasoner);
+			examineFrameworkInUniformLayout(examples[i], reasoner);
 			System.out.println("");
 		}
-		examineFrameworkWithReasonerInUniformLayout(examples[examples.length-1], reasoner);
+		examineFrameworkInUniformLayout(examples[examples.length-1], reasoner);
 		System.out.println("======================================================================================================");
 		System.out.println("");
 	}
@@ -158,9 +156,26 @@ public class SerialisableExtensionReasonerExample {
 	 * @param frameWork Problem instance, for which all extensions of the semantic, specified by the choice of reasoner, shall be found.
 	 * @param reasoner Reasoner of a specific semantic, to generate all extension, using the concept of serialisability.
 	 */
-	protected static void examineFrameworkWithReasonerInUniformLayout(DungTheory frameWork, SerialisableExtensionReasoner reasoner) {
+	protected static void examineFrameworkInUniformLayout(DungTheory frameWork, SerialisableExtensionReasoner reasoner) {
 		System.out.println("AF: " + frameWork);
 		System.out.println("Extensions: " + reasoner.getModels(frameWork));
+	}
+	
+	
+	protected static void executeExamplesGraphs(SerialisableExtensionReasoner reasoner, String description, DungTheory[] examples) {
+		System.out.println(description + ":");
+		for (int i = 0; i < examples.length-1; i++) {
+			examineGraphInUniformLayout(examples[i], reasoner);
+			System.out.println("");
+		}
+		examineGraphInUniformLayout(examples[examples.length-1], reasoner);
+		System.out.println("======================================================================================================");
+		System.out.println("");
+	}
+	
+	
+	protected static void examineGraphInUniformLayout(DungTheory frameWork, SerialisableExtensionReasoner reasoner) {
+		System.out.println(reasoner.getModelsGraph(frameWork));
 	}
 	
 	/**
@@ -171,21 +186,27 @@ public class SerialisableExtensionReasonerExample {
 		DungTheory[] examples = new DungTheory[] {buildExample1(), buildExample2(), buildExample3()};
 		
 		SerialisedAdmissibleReasoner admReasoner = new SerialisedAdmissibleReasoner();
-		executeExamplesInUniformLayout(admReasoner, "Admissible Semantics", examples);
+		executeExamplesExtensions(admReasoner, "Admissible Semantics", examples);
+		executeExamplesGraphs(admReasoner, "Admissible Semantics", examples);
 		
 		SerialisedCompleteReasoner coReasoner = new SerialisedCompleteReasoner();
-		executeExamplesInUniformLayout(coReasoner, "Complete Semantics", examples);
+		executeExamplesExtensions(coReasoner, "Complete Semantics", examples);
+		executeExamplesGraphs(coReasoner, "Complete Semantics", examples);
 		
 		SerialisedGroundedReasoner grReasoner = new SerialisedGroundedReasoner();
-		executeExamplesInUniformLayout(grReasoner, "Grounded Semantics", examples);
+		executeExamplesExtensions(grReasoner, "Grounded Semantics", examples);
+		executeExamplesGraphs(grReasoner, "Grounded Semantics", examples);
 		
 		SerialisedPreferredReasoner prReasoner = new SerialisedPreferredReasoner();
-		executeExamplesInUniformLayout(prReasoner, "Preferred Semantics", examples);
+		executeExamplesExtensions(prReasoner, "Preferred Semantics", examples);
+		executeExamplesGraphs(prReasoner, "Preferred Semantics", examples);
 		
 		SerialisedStableReasoner stReasoner = new SerialisedStableReasoner();
-		executeExamplesInUniformLayout(stReasoner, "Stable Semantics", examples);
+		executeExamplesExtensions(stReasoner, "Stable Semantics", examples);
+		executeExamplesGraphs(stReasoner, "Stable Semantics", examples);
 		
 		SerialisedUnchallengedReasoner ucReasoner = new SerialisedUnchallengedReasoner();
-		executeExamplesInUniformLayout(ucReasoner, "Unchallenged Semantics", examples);
+		executeExamplesExtensions(ucReasoner, "Unchallenged Semantics", examples);
+		executeExamplesGraphs(ucReasoner, "Unchallenged Semantics", examples);
 	}	
 }

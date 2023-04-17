@@ -20,13 +20,11 @@ package org.tweetyproject.arg.dung.serialisibility.graph;
 
 import java.util.HashMap;
 
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.commons.Plotter;
-import org.tweetyproject.graphs.SimpleGraph;
-import org.tweetyproject.graphs.util.GraphPlotter;
 
 /**
  * This class summarizes static methods used to plot serialisability analyses, 
@@ -100,7 +98,7 @@ public class SerialisationAnalysisPlotter {
 		for (DungTheory example : frameworks) {
 			SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];
 			for (int i = 0; i < graphs.length; i++) {
-				graphs[i] = SerialisableExtensionReasonerWithAnalysis
+				graphs[i] = SerialisableExtensionReasoner
 						.getSerialisableReasonerForSemantics(semantics[i])
 						.getModelsGraph(example);
 			}

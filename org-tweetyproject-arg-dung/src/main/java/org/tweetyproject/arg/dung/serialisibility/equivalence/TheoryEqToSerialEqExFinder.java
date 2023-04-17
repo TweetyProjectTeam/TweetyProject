@@ -21,9 +21,9 @@ package org.tweetyproject.arg.dung.serialisibility.equivalence;
 import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.equivalence.ITheoryComparator;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.NoExampleFoundException;
-import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
@@ -99,9 +99,9 @@ public class TheoryEqToSerialEqExFinder {
 			var generatedFramework2 = this.generator.next();
 
 			if(frameworkComparator.isEquivalent(generatedFramework1, generatedFramework2) == theoryBeEqual) {
-				SerialisationGraph analysis1 = SerialisableExtensionReasonerWithAnalysis
+				SerialisationGraph analysis1 = SerialisableExtensionReasoner
 						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsGraph(generatedFramework1);
-				SerialisationGraph analysis2 = SerialisableExtensionReasonerWithAnalysis
+				SerialisationGraph analysis2 = SerialisableExtensionReasoner
 						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsGraph(generatedFramework2);
 
 				if(analysisComparator.isEquivalent(analysis1, analysis2) == serialGraphBeEqual) {

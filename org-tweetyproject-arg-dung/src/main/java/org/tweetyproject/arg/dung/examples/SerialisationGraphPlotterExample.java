@@ -42,15 +42,15 @@ import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraphPlotte
  * @author Julian Sander
  *
  */
-public class SerialisableExtensionPlotterExample {
+public class SerialisationGraphPlotterExample {
 	
 	
 	public static void main(String[] args) {
 		Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.UC};
 		DungTheory[] exampleFrameworks = new DungTheory[] {
-				SerialisableExtensionReasonerWithAnalysisExample.buildExample1(),
-				SerialisableExtensionReasonerWithAnalysisExample.buildExample2(),
-				SerialisableExtensionReasonerWithAnalysisExample.buildExample3()
+				SerialisableExtensionReasonerExample.buildExample1(),
+				SerialisableExtensionReasonerExample.buildExample2(),
+				SerialisableExtensionReasonerExample.buildExample3()
 				};
 		
 		

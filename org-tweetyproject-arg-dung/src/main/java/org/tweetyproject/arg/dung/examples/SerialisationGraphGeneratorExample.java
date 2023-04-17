@@ -45,7 +45,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  * @version TweetyProject 1.23
  *
  */
-public class SerialisabilityExampleFinderExample {
+public class SerialisationGraphGeneratorExample {
 
 	public static void main(String[] args) {
 
@@ -64,7 +64,7 @@ public class SerialisabilityExampleFinderExample {
 					+ File.separator + "Documents"
 					+ File.separator + "TweetyProject"
 					+ File.separator + "SerialisabilityExampleFinderExample";
-			SerialisabilityExampleFinderExample.createDir(path);
+			SerialisationGraphGeneratorExample.createDir(path);
 
 			ZoneId z = ZoneId.of( "Europe/Berlin" );
 			ZonedDateTime now = ZonedDateTime.now( z );

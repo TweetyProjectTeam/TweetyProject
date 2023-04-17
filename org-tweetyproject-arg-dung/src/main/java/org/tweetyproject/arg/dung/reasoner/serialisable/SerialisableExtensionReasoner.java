@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.reasoner.serialisable;
 
+import java.rmi.NoSuchObjectException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,6 +28,8 @@ import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.TransitionState;
+import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisibility.graph.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -37,6 +40,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * Termination function b((AF, S)):      If the given state satisfies a specific condition, its extension may be accepted by the associated serialised semantics
  *
  * @author Lars Bengel
+ * @author Julian Sander
  */
 public abstract class SerialisableExtensionReasoner extends AbstractExtensionReasoner {
 	/**
@@ -56,6 +60,16 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		};
 	}
 
+	protected Semantics usedSemantics;
+
+	/**
+	 * @param usedSemantics Semantics used to generate the extensions found during the examination.
+	 */
+	public SerialisableExtensionReasoner(Semantics usedSemantics) {
+		super();
+		this.usedSemantics = usedSemantics;
+	}
+
 	@Override
 	public Extension<DungTheory> getModel(DungTheory bbase) {
 		// not supported
@@ -66,6 +80,30 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	public Collection<Extension<DungTheory>> getModels(DungTheory bbase) {
 		TransitionState initState = new TransitionState(bbase, new Extension<>());
 		return this.getModelsRecursive(initState, new HashSet<>());
+	}
+
+	/**
+	 * Creates a graph, visualizing the transition states of the serialisation process, which creates all serialisable extensions
+	 * according to the specified semantics of the specified framework.
+	 *
+	 * @param framework Argumentation framework, for which the extensions shall be computed.
+	 * @return Graph showing the serialisation process.
+	 */
+	public SerialisationGraph getModelsGraph(DungTheory framework) {
+
+		Extension<DungTheory> initExtension = new Extension<>();
+		TransitionState initState = new TransitionState(framework, initExtension);
+
+		return this.getModelsRecursiveGraph(
+				new HashSet<SerialisationGraph>(),
+				initState);
+	}
+
+	/**
+	 * @return Semantics used to generate the extensions found during the examination.
+	 */
+	public Semantics getSemantic() {
+		return this.usedSemantics;
 	}
 
 	/**
@@ -98,6 +136,29 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	}
 
 	/**
+	 * Selects, by using the specified selection function of the reasoner, those initial sets which should be used to reduct the framework
+	 * in order to transit to a new state
+	 *
+	 * @param state current transition state of the process
+	 * @return candidate sets S' via the selection function
+	 */
+	protected Collection<Extension<DungTheory>> selectInitialSetsForReduction(TransitionState state) {
+		// compute the candidate sets S' via the selection function
+		// compute all initial sets, sorted in the three categories unattacked, unchallenged, challenged
+		Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(state.getTheory());
+		// select initial sets according to given specific semantic
+		Collection<Extension<DungTheory>> newExts = this.selectionFunction(initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
+		return newExts;
+	}
+
+	/**
+	 * @param semantics Semantics used to generate the extensions found during the examination.
+	 */
+	protected void setSemantic(Semantics semantics) {
+		this.usedSemantics = semantics;
+	}
+
+	/**
 	 * recursively computes all possible states of the transition system defined by the selection and termination function
 	 * the transition system is traversed with a depth-first search approach
 	 * @param state the current state of the transition system
@@ -123,18 +184,51 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	}
 
 	/**
-	 * Selects, by using the specified selection function of the reasoner, those initial sets which should be used to reduct the framework
-	 * in order to transit to a new state
+	 * Examines recursively the specified state and all states that can be reducted from this one,
+	 * until the termination function is satisfied.
 	 *
-	 * @param state current transition state of the process
-	 * @return candidate sets S' via the selection function
+	 * @param consistencyCheckSet Set of all graphs, computed during the process
+	 * @param state Current transition state of the serialisation process.
+	 * @return Graph showing the serialisation process, starting with the current state.
 	 */
-	protected Collection<Extension<DungTheory>> selectInitialSetsForReduction(TransitionState state) {
-		// compute the candidate sets S' via the selection function
-		// compute all initial sets, sorted in the three categories unattacked, unchallenged, challenged
-		Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(state.getTheory());
-		// select initial sets according to given specific semantic
-		Collection<Extension<DungTheory>> newExts = this.selectionFunction(initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
-		return newExts;
+	private SerialisationGraph getModelsRecursiveGraph(
+			HashSet<SerialisationGraph> consistencyCheckSet,
+			TransitionState state) {
+
+		for (SerialisationGraph existingGraph : consistencyCheckSet) {
+			if(existingGraph.getRoot().getState() == state) {
+				return existingGraph;
+			}
+		}
+
+		var graph = new SerialisationGraph(new TransitionStateNode(state), this.usedSemantics);
+		consistencyCheckSet.add(graph);
+
+		// check whether a construction of an extension is finished
+		if (this.checkTerminationFunction(state)) {
+			// found final extension
+			graph.addExtension(state.getExtension());
+		}
+
+
+		Collection<Extension<DungTheory>> newExtensions = this.selectInitialSetsForReduction(state);
+
+		// [TERMINATION CONDITION] - terminates if newExtensions empty -  iterate depth-first through all reductions
+		for (Extension<DungTheory> newExt : newExtensions) {
+			TransitionState newState = state.transitToNewState(newExt);
+
+			// [RECURSIVE CALL] examine reduced framework
+			SerialisationGraph subGraph = this.getModelsRecursiveGraph(consistencyCheckSet, newState);
+
+			try {
+				graph.addSubGraph(graph.getRoot(), subGraph, subGraph.getRoot(), newExt.toString());
+			} catch (NoSuchObjectException e) {
+				// not possible
+				e.printStackTrace();
+				throw new RuntimeException();
+			}
+		}
+
+		return graph;
 	}
 }

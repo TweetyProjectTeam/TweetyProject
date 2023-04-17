@@ -25,9 +25,9 @@ import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.principles.Principle;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.NoExampleFoundException;
-import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
@@ -244,7 +244,7 @@ public class SerialisationGraphGenerator {
 				for (int j = 0; j < semanticsForSerializing.length; j++) {
 					if(checkGraph(semanticsForSerializing[j], generatedFramework)) 
 					{
-						SerialisationGraph graph = SerialisableExtensionReasonerWithAnalysis.
+						SerialisationGraph graph = SerialisableExtensionReasoner.
 								getSerialisableReasonerForSemantics(semanticsForSerializing[j]).getModelsGraph(generatedFramework);;
 						if(graph != null)analysesForDiffSemantics.add(graph);
 					}

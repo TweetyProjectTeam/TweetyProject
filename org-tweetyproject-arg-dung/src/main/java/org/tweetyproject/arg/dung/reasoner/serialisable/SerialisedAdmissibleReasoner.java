@@ -20,7 +20,6 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
 import org.tweetyproject.arg.dung.serialisibility.TransitionState;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -32,7 +31,7 @@ import java.util.HashSet;
  *
  * @author Lars Bengel
  */
-public class SerialisedAdmissibleReasoner extends SerialisableExtensionReasonerWithAnalysis {
+public class SerialisedAdmissibleReasoner extends SerialisableExtensionReasoner {
     
 	
 	public SerialisedAdmissibleReasoner() {
