@@ -87,7 +87,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode,
 		lstLabels.add(graph.getSemantics().description());
 		lstLabels.add("Green: found Extensions");
 		//lstLabels.add("Found Extensions (shown in green):");
-		//lstLabels.add(analysis.getExtensionsFound().toString());
+		//lstLabels.add(graph.getExtensions().toString());
 		sePlotter.addLabels(lstLabels);
 	}
 

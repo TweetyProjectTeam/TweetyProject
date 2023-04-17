@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.graph;
 
+import java.rmi.NoSuchObjectException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -25,6 +26,8 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.TransitionState;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.graphs.DirectedEdge;
+import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.SimpleGraph;
 
@@ -121,7 +124,8 @@ public class SerialisationGraph extends SimpleGraph<TransitionStateNode> {
 	 */
 	@Override
 	public String toString(){
-		String printedResult = "Root: " + this.root.toString() + "\n"
+		String printedResult = "Extensions: " + this.extensionsFound.toString() + "\n"
+				+ "Root: " + this.root.toString() + "\n"
 				+ "Graph: " + super.toString();
 		return printedResult;
 	}
@@ -139,6 +143,21 @@ public class SerialisationGraph extends SimpleGraph<TransitionStateNode> {
 		}
 		this.root = root;
 		this.add(root);
+	}
+	
+	/**
+	 *  Adds a graph as a subgraph
+	 * 
+	 * @param superExit Node of the this graph, under which the new graph will be anchored
+	 * @param subGraph Graph, which will be added to the super-graph
+	 * @param subEntry Node of the subgraph, which will be connected to the super-graph
+	 * @param label Label of the newly created edge, from the superExit node to the subRoot node
+     * @throws NoSuchObjectException Thrown if superExit is not a node of this graph
+	 */
+	public boolean addSubGraph(TransitionStateNode superExit,
+			SerialisationGraph subGraph, TransitionStateNode subEntry, String label ) throws NoSuchObjectException {
+    	super.addSubGraph(superExit, subGraph, subEntry, label);
+		return this.extensionsFound.addAll(subGraph.getExtensions());
 	}
 
 }
