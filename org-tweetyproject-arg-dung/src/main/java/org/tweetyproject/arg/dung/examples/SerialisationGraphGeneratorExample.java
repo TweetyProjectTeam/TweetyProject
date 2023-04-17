@@ -51,8 +51,8 @@ public class SerialisationGraphGeneratorExample {
 
 		try {
 			int numberOfArguments = 6;
-			int numberOfArgumentsAtStart = 3;
-			int incrementOfArguments = 1;
+			//int numberOfArgumentsAtStart = 3;
+			//int incrementOfArguments = 1;
 			int numberOfExamples = 4;
 			int maxNumberTryGenerateFramework = 10;
 			double attackProbability = 0.2;

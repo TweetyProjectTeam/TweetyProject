@@ -187,22 +187,22 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 * Examines recursively the specified state and all states that can be reducted from this one,
 	 * until the termination function is satisfied.
 	 *
-	 * @param consistencyCheckSet Set of all graphs, computed during the process
+	 * @param duplicityCheckSet Set of all graphs, computed during the process
 	 * @param state Current transition state of the serialisation process.
 	 * @return Graph showing the serialisation process, starting with the current state.
 	 */
 	private SerialisationGraph getModelsRecursiveGraph(
-			HashSet<SerialisationGraph> consistencyCheckSet,
+			HashSet<SerialisationGraph> duplicityCheckSet,
 			TransitionState state) {
 
-		for (SerialisationGraph existingGraph : consistencyCheckSet) {
-			if(existingGraph.getRoot().getState() == state) {
+		for (SerialisationGraph existingGraph : duplicityCheckSet) {
+			if(existingGraph.getRoot().getState().equals(state)) {
 				return existingGraph;
 			}
 		}
 
 		var graph = new SerialisationGraph(new TransitionStateNode(state), this.usedSemantics);
-		consistencyCheckSet.add(graph);
+		duplicityCheckSet.add(graph);
 
 		// check whether a construction of an extension is finished
 		if (this.checkTerminationFunction(state)) {
@@ -218,7 +218,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 			TransitionState newState = state.transitToNewState(newExt);
 
 			// [RECURSIVE CALL] examine reduced framework
-			SerialisationGraph subGraph = this.getModelsRecursiveGraph(consistencyCheckSet, newState);
+			SerialisationGraph subGraph = this.getModelsRecursiveGraph(duplicityCheckSet, newState);
 
 			try {
 				graph.addSubGraph(graph.getRoot(), subGraph, subGraph.getRoot(), newExt.toString());
