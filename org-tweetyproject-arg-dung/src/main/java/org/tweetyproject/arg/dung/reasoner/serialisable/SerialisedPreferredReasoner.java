@@ -20,7 +20,7 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.syntax.TransitionState;
+import org.tweetyproject.arg.dung.serialisibility.TransitionState;
 
 
 /**

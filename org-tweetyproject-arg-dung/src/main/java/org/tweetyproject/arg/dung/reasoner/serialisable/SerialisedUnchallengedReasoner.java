@@ -22,8 +22,8 @@ import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.SerialisableExtensionReasonerWithAnalysis;
+import org.tweetyproject.arg.dung.serialisibility.TransitionState;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.syntax.TransitionState;
 
 import java.util.Collection;
 import java.util.HashSet;

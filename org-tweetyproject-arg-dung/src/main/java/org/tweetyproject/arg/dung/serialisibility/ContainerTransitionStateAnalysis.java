@@ -26,7 +26,6 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.plotter.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.syntax.TransitionState;
 import org.tweetyproject.graphs.SimpleGraph;
 
 /**

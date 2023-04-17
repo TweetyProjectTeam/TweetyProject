@@ -19,7 +19,6 @@
 package org.tweetyproject.arg.dung.serialisibility.plotter;
 
 import org.tweetyproject.arg.dung.serialisibility.*;
-import org.tweetyproject.arg.dung.syntax.TransitionState;
 import org.tweetyproject.graphs.Node;
 
 

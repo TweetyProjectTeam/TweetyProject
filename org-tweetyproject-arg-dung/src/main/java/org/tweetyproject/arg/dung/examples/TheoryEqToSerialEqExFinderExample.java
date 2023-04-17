@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import org.tweetyproject.arg.dung.equivalence.AdmissibleKernel;
 import org.tweetyproject.arg.dung.equivalence.ITheoryComparator;
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
+import org.tweetyproject.arg.dung.equivalence.EquivalenceKernel;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.ContainerTransitionStateAnalysis;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.ExceptionNoExampleFound;
@@ -51,13 +52,13 @@ public class TheoryEqToSerialEqExFinderExample {
 	
 	public static void main(String[] args) {
 
-		ITheoryComparator frameworkComparator = new StrongEquivalence(new AdmissibleKernel());
+		ITheoryComparator frameworkComparator = new StrongEquivalence(EquivalenceKernel.ADMISSIBLE);
 		ISerializingComparator analysisComparator = new IsomorphEquivalence();
-		boolean theoryBeEqual = false;
+		boolean theoryBeEqual = true;
 		boolean serialGraphBeEqual = true;
-		int numberOfArguments = 6;
+		int numberOfArguments = 10;
 		int numberOfExamples = 1;
-		int maxNumberTryFindExample = 10;
+		int maxNumberTryFindExample = 1000;
 		double attackProbability = 0.2;
 		boolean avoidSelfAttacks = false;
 		Semantics semanticsUsed = Semantics.ADM;
