@@ -45,12 +45,10 @@ class SerialisableExtensionReasonerTest {
 	 * The verified reasoners are given by the class {@link AbstractExtensionReasoner}.
 	 */
 	@ParameterizedTest
-	@EnumSource(names = { "ADM", "CO", "GR", "PR", "ST" })
+	@EnumSource(names = {"ADM", "CO", "GR", "PR", "ST"}) 
 	void getModels_knownSemantics_findSameExtensions(Semantics semantics) {
 		
-		//Arrange
-		//Semantics semantics = Semantics.ADM;
-				
+		//Arrange				
 		var reasonerToTest = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics);
 		var reasonerVerified = AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics);
 		var frameworks = new DungTheory[3];
@@ -63,35 +61,6 @@ class SerialisableExtensionReasonerTest {
 			//Act	
 			Collection<Extension<DungTheory>> extensionsActual = reasonerToTest.getModels(frameworks[i]);
 			Collection<Extension<DungTheory>> extensionsExpected = reasonerVerified.getModels(frameworks[i]);
-			
-			//Assert
-			assertEquals(extensionsExpected, extensionsActual);
-		}
-		
-	}
-	
-	/**
-	 * This test, verifies that the method "getModelsGraph" works correctly, 
-	 * by comparing its extensions with those of the method "getModels".
-	 */
-	@ParameterizedTest
-	@EnumSource(names = { "ADM", "CO", "GR", "PR", "ST" })
-	void getModelsGraph_knownSemantics_findSameExtensions(Semantics semantics) {
-		
-		//Arrange
-		//Semantics semantics = Semantics.ADM;
-				
-		var reasoner = SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics);
-		var frameworks = new DungTheory[3];
-		frameworks[0] = SerialisableExtensionReasonerExample.buildExample1();
-		frameworks[1] = SerialisableExtensionReasonerExample.buildExample2();
-		frameworks[2] = SerialisableExtensionReasonerExample.buildExample3();
-		
-		for (int i = 0; i < frameworks.length; i++) {
-			
-			//Act	
-			Collection<Extension<DungTheory>> extensionsActual = reasoner.getModels(frameworks[i]);
-			Collection<Extension<DungTheory>> extensionsExpected = reasoner.getModelsGraph(frameworks[i]).getExtensions();
 			
 			//Assert
 			assertEquals(extensionsExpected, extensionsActual);

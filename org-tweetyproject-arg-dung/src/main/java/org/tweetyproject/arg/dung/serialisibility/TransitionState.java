@@ -18,6 +18,8 @@
  */
 package org.tweetyproject.arg.dung.serialisibility;
 
+import java.util.Collection;
+
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -74,10 +76,10 @@ public class TransitionState {
 	}
 	
 	/**
-	 * Compute a transition state by reducting the framework of this state by a specified extension
+	 * Computes a new transition state by reducting the framework of this state by a specified extension
 	 *
 	 * @param transitionSet Set of arguments, used to reduct framework
-	 * @return
+	 * @return newly created transition state
 	 */
 	public TransitionState transitToNewState(Extension<DungTheory> transitionSet) {
 		// reduct framework of the current state by the given extension newExt
@@ -85,5 +87,25 @@ public class TransitionState {
 		Extension<DungTheory> newStateExtension = new Extension<>(this.extension);
 		newStateExtension.addAll(transitionSet);
 		return new TransitionState(reduct, newStateExtension);
+	}
+	
+	/**
+	 * Returns the next transition state, which is reached by reducting the framework of this state by the specified extension. 
+	 * The method will only return a newly created state, if there's no equal in the collection of already existing states. 
+	 * If there exists an equal state in the specified collection, then this one will be returned.
+	 * 
+	 * @param transitionSet Set of arguments, used to reduct framework
+	 * @param existingStates States that have already been created in the associated process
+	 * @return Transition State which will be reached by reducting the framework by the specified set
+	 */
+	public TransitionState transitToNewState(
+			Extension<DungTheory> transitionSet, 
+			Collection<TransitionState> existingStates){
+		TransitionState output = this.transitToNewState(transitionSet);
+		for (TransitionState existingState : existingStates) {
+			if(existingState.equals(output)) output = existingState;
+		}
+		
+		return output;
 	}
 }

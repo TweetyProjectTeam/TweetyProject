@@ -191,35 +191,58 @@ public class SerialisableExtensionReasonerExample {
 		System.out.println(reasoner.getModelsGraph(frameWork));
 	}
 	
+	protected static void executeExamplesSequences(SerialisableExtensionReasoner reasoner, String description, DungTheory[] examples) {
+		System.out.println(description + ":");
+		for (int i = 0; i < examples.length-1; i++) {
+			examineSequencesInUniformLayout(examples[i], reasoner);
+			System.out.println("");
+		}
+		examineSequencesInUniformLayout(examples[examples.length-1], reasoner);
+		System.out.println("======================================================================================================");
+		System.out.println("");
+	}
+	
+	protected static void examineSequencesInUniformLayout(DungTheory frameWork, SerialisableExtensionReasoner reasoner) {
+		System.out.println(reasoner.getModelsSequences(frameWork));
+	}
+	
 	/**
 	 * 
 	 * @param args No input required.
 	 */
 	public static void main(String[] args) {
 		DungTheory[] examples = new DungTheory[] {buildExample1(), buildExample2(), buildExample3()};
-		
-		SerialisedAdmissibleReasoner admReasoner = new SerialisedAdmissibleReasoner();
-		executeExamplesExtensions(admReasoner, "Admissible Semantics", examples);
-		executeExamplesGraphs(admReasoner, "Admissible Semantics", examples);
-		
+
+		SerialisedAdmissibleReasoner admReasoner = new SerialisedAdmissibleReasoner(); 
+		executeExamplesExtensions(admReasoner, "Admissible Semantics", examples); 
+		executeExamplesGraphs(admReasoner,"Admissible Semantics", examples); 
+		executeExamplesSequences(admReasoner,"Admissible Semantics", examples);
+
 		SerialisedCompleteReasoner coReasoner = new SerialisedCompleteReasoner();
 		executeExamplesExtensions(coReasoner, "Complete Semantics", examples);
 		executeExamplesGraphs(coReasoner, "Complete Semantics", examples);
-		
+		executeExamplesSequences(coReasoner, "Complete Semantics", examples);
+
 		SerialisedGroundedReasoner grReasoner = new SerialisedGroundedReasoner();
 		executeExamplesExtensions(grReasoner, "Grounded Semantics", examples);
 		executeExamplesGraphs(grReasoner, "Grounded Semantics", examples);
-		
+		executeExamplesSequences(grReasoner, "Grounded Semantics", examples);
+
+
 		SerialisedPreferredReasoner prReasoner = new SerialisedPreferredReasoner();
 		executeExamplesExtensions(prReasoner, "Preferred Semantics", examples);
 		executeExamplesGraphs(prReasoner, "Preferred Semantics", examples);
-		
+		executeExamplesSequences(prReasoner, "Preferred Semantics", examples);
+
+
 		SerialisedStableReasoner stReasoner = new SerialisedStableReasoner();
 		executeExamplesExtensions(stReasoner, "Stable Semantics", examples);
 		executeExamplesGraphs(stReasoner, "Stable Semantics", examples);
-		
-		SerialisedUnchallengedReasoner ucReasoner = new SerialisedUnchallengedReasoner();
-		executeExamplesExtensions(ucReasoner, "Unchallenged Semantics", examples);
-		executeExamplesGraphs(ucReasoner, "Unchallenged Semantics", examples);
+		executeExamplesSequences(stReasoner, "Stable Semantics", examples);
+
+		SerialisedUnchallengedReasoner ucReasoner = new SerialisedUnchallengedReasoner(); 
+		executeExamplesExtensions(ucReasoner,"Unchallenged Semantics", examples); 
+		executeExamplesGraphs(ucReasoner, "Unchallenged Semantics", examples); 
+		executeExamplesSequences(ucReasoner, "Unchallenged Semantics", examples);
 	}	
 }
