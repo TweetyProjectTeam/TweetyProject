@@ -20,7 +20,6 @@ package org.tweetyproject.arg.dung.serialisibility.graph;
 
 import java.util.ArrayList;
 
-import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.util.GraphPlotter;
