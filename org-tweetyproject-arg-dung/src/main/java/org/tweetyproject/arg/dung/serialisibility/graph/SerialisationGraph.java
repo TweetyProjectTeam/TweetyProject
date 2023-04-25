@@ -25,6 +25,7 @@ import java.util.HashSet;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.TransitionState;
+import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.SimpleGraph;
@@ -142,6 +143,55 @@ public class SerialisationGraph extends SimpleGraph<TransitionStateNode> {
 	public Semantics getSemantics() {
 		return this.semanticUsed;
 	}
+	
+	/**
+	 * Returns the path from the root to the specified node as a sequence of the extensions of the transition states on that path.
+	 * @param node Destination of the path
+	 * @return
+	 */
+	public SerialisationSequence getSerialisationSequence(TransitionStateNode node) {
+		if(!this.getNodes().contains(node)) throw new IllegalArgumentException("node is not part of this graph");
+		
+		SerialisationSequence output = new SerialisationSequence();
+		
+		// we perform a DFS.
+		getSequenceRecusive(node, this.root, output);
+		return output;
+	}
+	
+	/**
+	 * Recursive Method to compute the sequence of the path to one node in a DFS approach
+	 * @param in_SearchedNode final destination of the path
+	 * @param in_PointedNode node pointed at in this iteration of the recursive calls
+	 * @param inout_IsOnPath True iff. the searched node has been found on the path
+	 * @param out_Sequence Sequence which will be returned
+	 */
+	private boolean getSequenceRecusive(
+			TransitionStateNode in_SearchedNode, 
+			TransitionStateNode in_PointedNode,  
+			SerialisationSequence out_Sequence) {
+		boolean out_IsOnPath = false;
+		
+		//[TERMINATION CONDITION]
+		if(in_PointedNode.equals(in_SearchedNode)) 
+		{ 
+			out_IsOnPath = true;
+		}
+		else {
+			for (TransitionStateNode childNode : this.getChildren(in_PointedNode)) {
+				// [RECUSIVE CALL]
+				boolean chldIsOnPath = this.getSequenceRecusive(in_SearchedNode, childNode,  out_Sequence);
+				if(chldIsOnPath) {
+					out_IsOnPath = true;
+					continue;
+				}
+			}
+		}
+		
+		if(out_IsOnPath) out_Sequence.add(in_PointedNode.getState().getExtension());
+		return out_IsOnPath;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

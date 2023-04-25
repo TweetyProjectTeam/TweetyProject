@@ -82,7 +82,6 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		Extension<DungTheory> initExtension = new Extension<>();
 		TransitionState initState = new TransitionState(bbase, initExtension);
 		TransitionStateNode root = new TransitionStateNode(initState);
-		Boolean isFirstRun = true;
 		
 		return this.getModelsRecursive(
 				initState,
@@ -90,7 +89,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 				new SerialisationSequence() ,
 				root,
 				new HashSet<TransitionState>(),
-				isFirstRun,
+				true,
 				new HashSet<SerialisationSequence>(),
 				new SerialisationGraph(root, usedSemantics));
 	}
@@ -107,7 +106,6 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		Extension<DungTheory> initExtension = new Extension<>();
 		TransitionState initState = new TransitionState(bbase, initExtension);
 		TransitionStateNode root = new TransitionStateNode(initState);
-		Boolean isFirstRun = true;
 		SerialisationGraph output = new SerialisationGraph(root, usedSemantics);
 		
 		this.getModelsRecursive(
@@ -116,7 +114,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 				new SerialisationSequence() ,
 				root,
 				new HashSet<TransitionState>(),
-				isFirstRun,
+				true,
 				new HashSet<SerialisationSequence>(),
 				output);
 		
@@ -132,7 +130,6 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		Extension<DungTheory> initExtension = new Extension<>();
 		TransitionState initState = new TransitionState(bbase, initExtension);
 		TransitionStateNode root = new TransitionStateNode(initState);
-		Boolean isFirstRun = true;
 		HashSet<SerialisationSequence> output = new HashSet<>();
 		
 		this.getModelsRecursive(
@@ -141,7 +138,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 				new SerialisationSequence() ,
 				root,
 				new HashSet<TransitionState>(),
-				isFirstRun,
+				true,
 				output,
 				new SerialisationGraph(root, usedSemantics));
 		return output;
@@ -226,16 +223,15 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 			SerialisationSequence in_ParentSequence,
 			TransitionStateNode in_ParentNode,
 			HashSet<TransitionState> inout_VisitedStates,
-			boolean inout_IsFirstRun,
+			boolean in_IsFirstRun,
 			HashSet<SerialisationSequence> out_SequencesFound,
 			SerialisationGraph out_Graph) {
 		Collection<Extension<DungTheory>> result = new HashSet<Extension<DungTheory>>();
 		SerialisationSequence newSequence = createNewSequence(in_State, in_ParentSequence);
 		TransitionStateNode newNode;
 		
-		if(inout_IsFirstRun) {
+		if(in_IsFirstRun) {
 			// only runs once in first call of method
-			inout_IsFirstRun = false;
 			newNode = in_ParentNode; // necessary since root is already created
 		}else {
 			newNode = createNewNode(in_State, out_Graph, in_ParentNode, in_InitialSet);
@@ -259,7 +255,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 			// compute possible extension resulting from the reduced framework in the new state
 			result.addAll(this.getModelsRecursive(
 					newState, newExt, newSequence, newNode,
-					inout_VisitedStates, inout_IsFirstRun,
+					inout_VisitedStates, false,
 					out_SequencesFound, out_Graph));
 		}
 		return result;

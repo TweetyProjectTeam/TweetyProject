@@ -18,7 +18,9 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.sequence;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.*;
 import org.tweetyproject.arg.dung.syntax.*;
@@ -44,5 +46,39 @@ public class SerialisationSequence extends LinkedHashSet<Extension<DungTheory>> 
 			if(output == null || extension.size() > output.size()) output = extension;
 		}
 		return output;
+	}
+	
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == this)
+            return true;
+
+        if (!(o instanceof Set))
+            return false;
+        SerialisationSequence c = (SerialisationSequence) o;
+        if (c.size() != size())
+            return false;
+        try {
+            for (Extension<DungTheory> extension : c) {
+				if(!containsEqual(extension)) return false;
+			}
+            return true;
+        } catch (ClassCastException | NullPointerException unused) {
+            return false;
+        }
+	}
+	
+	
+	/**
+	 * Checks if there's an extension in this sequence, which is equal to the one specified
+	 * @param input Extension, for which an equivalent is searched for.
+	 * @return TRUE iff there is an equivalent extension in this sequence
+	 */
+	public boolean containsEqual(Extension<DungTheory> input) {
+		for (Extension<DungTheory> e : this) {
+			if(e.equals(input)) return true;
+		}
+		return false;
 	}
 }
