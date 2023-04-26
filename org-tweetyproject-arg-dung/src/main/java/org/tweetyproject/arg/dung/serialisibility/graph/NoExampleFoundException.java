@@ -16,7 +16,7 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility;
+package org.tweetyproject.arg.dung.serialisibility.graph;
 
 /**
  * This class represents an exception, thrown if no example was found.
