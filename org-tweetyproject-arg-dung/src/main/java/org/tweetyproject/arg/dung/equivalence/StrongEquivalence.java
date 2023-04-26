@@ -19,6 +19,7 @@
 
 package org.tweetyproject.arg.dung.equivalence;
 
+import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 

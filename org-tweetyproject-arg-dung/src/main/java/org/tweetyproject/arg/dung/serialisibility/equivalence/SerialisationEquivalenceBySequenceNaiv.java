@@ -40,16 +40,10 @@ public class SerialisationEquivalenceBySequenceNaiv implements IEquivalence<Seri
 
 	@Override
 	public boolean isEquivalent(Collection<SerialisationSequence> sequences) {
-		for (SerialisationSequence seq1 : sequences) {
-			boolean foundEquivalent = false;
-			for (SerialisationSequence seq2 : sequences) {
-				if(seq1 == seq2) continue;
-				if(seq1.equals(seq2)) {
-					foundEquivalent = true;
-					break;
-				}
-			}
-			if(!foundEquivalent) return false;
+		SerialisationSequence first = sequences.iterator().next();
+		for (SerialisationSequence seq : sequences) {
+			if(seq == first) continue;
+			if(!isEquivalent(seq, first)) return false;
 		}
 		return true;
 	}

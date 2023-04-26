@@ -16,48 +16,40 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.equivalence;
+package org.tweetyproject.arg.dung.equivalence;
 
 import java.util.Collection;
 
-import org.tweetyproject.arg.dung.equivalence.IEquivalence;
+import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 sets of extensions are equivalent, 
- * by comparing if they consist of equivalent elements (naiv approach). 
+ * This class represents an comparator, which defines if 2 argumentation frameworks are equivalent, 
+ * by comparing if they have the same extensions wrt a semantics specified by a reasoner. 
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationEquivalenceByExtensionNaiv
-		implements IEquivalence<Collection<Extension<DungTheory>>> {
+public class StandardEquivalence implements IEquivalence<DungTheory>  {
 
-	@Override
-	public boolean isEquivalent(Collection<Extension<DungTheory>> obj1, Collection<Extension<DungTheory>> obj2) {
-		for (Extension<DungTheory> ext1 : obj1) {
-			boolean hasFoundEqual = false;
-			for (Extension<DungTheory> ext2 : obj2) {
-				if(ext2.equals(ext1)) { 
-					hasFoundEqual = true;
-					break;
-				}
-			}
-			if(!hasFoundEqual) return false;
-		}
-		return true;
+	private AbstractExtensionReasoner reasoner;
+
+	/**
+	 * @param reasoner Reasoner used to compute the extensions of a argumentation framework, in order to examine its equivalence
+	 */
+	public StandardEquivalence(AbstractExtensionReasoner reasoner) {
+		super();
+		this.reasoner = reasoner;
 	}
 
 	@Override
-	public boolean isEquivalent(Collection<Collection<Extension<DungTheory>>> objects) {
-		for (Collection<Extension<DungTheory>> collection : objects) {
+	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
+		for (Extension<DungTheory> ext1 : reasoner.getModels(obj1)) {
 			boolean foundEquivalent = false;
-			for (Collection<Extension<DungTheory>> collection2 : objects) {
-				if(collection == collection2) continue;
-				if(isEquivalent(collection, collection2)) 
-				{
+			for (Extension<DungTheory> ext2 : reasoner.getModels(obj2)) {
+				if(ext1.equals(ext2)) {
 					foundEquivalent = true;
 					break;
 				}
@@ -68,10 +60,20 @@ public class SerialisationEquivalenceByExtensionNaiv
 	}
 
 	@Override
-	public Collection<Collection<Extension<DungTheory>>> getEquivalentTheories(
-			Collection<Extension<DungTheory>> object) {
+	public boolean isEquivalent(Collection<DungTheory> objects) {
+		DungTheory first = objects.iterator().next();
+		for (DungTheory framework : objects) {
+			if(framework == first) continue;
+			if(!isEquivalent(framework, first))return false;
+		}
+		return true;
+	}
+
+	@Override
+	public Collection<DungTheory> getEquivalentTheories(DungTheory object) {
 		// not supported
 		return null;
 	}
 
+	
 }

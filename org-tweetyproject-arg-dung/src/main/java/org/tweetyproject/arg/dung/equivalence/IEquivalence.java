@@ -40,7 +40,8 @@ public interface IEquivalence<T> {
 	public boolean isEquivalent(T obj1, T obj2);
 	
 	 /**
-     * Checks whether the specified objects are equivalent
+     * Checks whether the specified objects are equivalent, 
+     * in a sense that every single object is equivalent to every other object in the set
      * @param objects A collection of objects of the type-parameter
      * @return TRUE iff all objects are equivalent
      */

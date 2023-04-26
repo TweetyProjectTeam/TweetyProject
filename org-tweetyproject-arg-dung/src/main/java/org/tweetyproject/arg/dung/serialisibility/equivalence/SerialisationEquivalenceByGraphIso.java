@@ -41,16 +41,10 @@ public class SerialisationEquivalenceByGraphIso implements IEquivalence<Serialis
 
 	@Override
 	public boolean isEquivalent(Collection<SerialisationGraph> graphs) {
+		SerialisationGraph first = graphs.iterator().next();
 		for (SerialisationGraph graph : graphs) {
-			boolean foundEquivalent = false;
-			for (SerialisationGraph anotherGraph : graphs) {
-				if(graph == anotherGraph) continue;
-				if(isEquivalent(graph, anotherGraph)) {
-					foundEquivalent = true;
-					break;
-				}
-			}
-			if(!foundEquivalent) return false;
+			if(graph == first) continue;
+			if(!isEquivalent(graph, first)) return false;
 		}
 		return true;
 	}

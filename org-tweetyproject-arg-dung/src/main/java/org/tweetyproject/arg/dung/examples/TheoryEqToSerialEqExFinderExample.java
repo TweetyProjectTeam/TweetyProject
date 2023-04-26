@@ -24,10 +24,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 
-import org.tweetyproject.arg.dung.equivalence.AdmissibleKernel;
 import org.tweetyproject.arg.dung.equivalence.IEquivalence;
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
-import org.tweetyproject.arg.dung.equivalence.EquivalenceKernel;
+import org.tweetyproject.arg.dung.equivalence.strong.AdmissibleKernel;
+import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.NoExampleFoundException;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.ISerializingComparator;
