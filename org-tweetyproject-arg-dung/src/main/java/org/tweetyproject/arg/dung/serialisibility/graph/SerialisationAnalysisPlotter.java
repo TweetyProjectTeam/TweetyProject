@@ -93,7 +93,7 @@ public class SerialisationAnalysisPlotter {
 	 * @param height Height of the new frames created.
 	 */
 	public static void plotAnalyses(Semantics[] semantics, DungTheory[] frameworks, String title, int width, int height) {
-		HashMap<DungTheory, SerialisationGraph[]> convExamples = new HashMap<>();
+		var convExamples = new HashMap<DungTheory, SerialisationGraph[]>();
 
 		for (DungTheory example : frameworks) {
 			SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];

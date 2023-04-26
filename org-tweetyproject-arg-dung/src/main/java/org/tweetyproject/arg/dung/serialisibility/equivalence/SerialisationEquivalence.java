@@ -80,6 +80,7 @@ public abstract class SerialisationEquivalence<T> implements IEquivalence<DungTh
 	@Override
 	public Collection<DungTheory> getEquivalentTheories(DungTheory framework) {
 		var objects = comparator.getEquivalentTheories(getRelevantAspect(framework));
+		if(objects == null) return null;
 		var out_frameworks = new HashSet<DungTheory>();
 		for (T element : objects) {
 			out_frameworks.add(getFramework(element));
