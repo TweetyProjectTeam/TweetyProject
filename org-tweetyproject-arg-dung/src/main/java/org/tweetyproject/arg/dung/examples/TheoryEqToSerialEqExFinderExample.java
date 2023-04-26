@@ -25,13 +25,13 @@ import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.equivalence.AdmissibleKernel;
-import org.tweetyproject.arg.dung.equivalence.ITheoryComparator;
+import org.tweetyproject.arg.dung.equivalence.IEquivalence;
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
 import org.tweetyproject.arg.dung.equivalence.EquivalenceKernel;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.NoExampleFoundException;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.ISerializingComparator;
-import org.tweetyproject.arg.dung.serialisibility.equivalence.IsomorphEquivalence;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphIso;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.TheoryEqToSerialEqExFinder;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationAnalysisPlotter;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
@@ -52,8 +52,8 @@ public class TheoryEqToSerialEqExFinderExample {
 	
 	public static void main(String[] args) {
 
-		ITheoryComparator frameworkComparator = new StrongEquivalence(EquivalenceKernel.ADMISSIBLE);
-		ISerializingComparator analysisComparator = new IsomorphEquivalence();
+		IEquivalence frameworkComparator = new StrongEquivalence(EquivalenceKernel.ADMISSIBLE);
+		ISerializingComparator analysisComparator = new SerialisationEquivalenceByGraphIso();
 		boolean theoryBeEqual = true;
 		boolean serialGraphBeEqual = true;
 		int numberOfArguments = 10;

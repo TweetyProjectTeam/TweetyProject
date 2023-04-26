@@ -20,7 +20,8 @@ package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
 import java.util.LinkedHashMap;
 
-import org.tweetyproject.arg.dung.equivalence.ITheoryComparator;
+import org.tweetyproject.arg.dung.equivalence.IEquivalence;
+import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.NoExampleFoundException;
@@ -44,7 +45,7 @@ import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
  */
 public class TheoryEqToSerialEqExFinder {
 
-	private ITheoryComparator frameworkComparator;
+	private StrongEquivalence strongEquivalenceComparator;
 	private ISerializingComparator analysisComparator;
 	private DefaultDungTheoryGenerator generator;
 	private DungTheoryGenerationParameters parameters;
@@ -52,7 +53,7 @@ public class TheoryEqToSerialEqExFinder {
 	
 	/**
 	 * 
-	 * @param frameworkComparator Compares if two generated frameworks are equivalent to one another
+	 * @param strongEquivalenceComparator Compares if two generated frameworks are equivalent to one another
 	 * @param analysisComparator Compare if two serializing analysis are equivalent to one another
 	 * @param numberOfArguments {@link DungTheoryGenerationParameters#numberOfArguments}
 	 * @param attackProbability {@link DungTheoryGenerationParameters#attackProbability}
@@ -60,13 +61,13 @@ public class TheoryEqToSerialEqExFinder {
 	 * @param maxNumberTryFindExample Maximal number of iterations, the generator does in order to find a suitable example
 	 */
 	public TheoryEqToSerialEqExFinder(
-			ITheoryComparator frameworkComparator,
+			StrongEquivalence strongEquivalenceComparator,
 			ISerializingComparator analysisComparator,			
 			int numberOfArguments, 
 			double attackProbability, 
 			boolean avoidSelfAttacks,
 			int maxNumberTryFindExample) {
-		this.frameworkComparator = frameworkComparator;
+		this.strongEquivalenceComparator = strongEquivalenceComparator;
 		this.analysisComparator = analysisComparator;
 		this.maxNumberTryFindExample = maxNumberTryFindExample;
 		
@@ -98,7 +99,7 @@ public class TheoryEqToSerialEqExFinder {
 			var generatedFramework1 = this.generator.next();
 			var generatedFramework2 = this.generator.next();
 
-			if(frameworkComparator.isEquivalent(generatedFramework1, generatedFramework2) == theoryBeEqual) {
+			if(strongEquivalenceComparator.isEquivalent(generatedFramework1, generatedFramework2) == theoryBeEqual) {
 				SerialisationGraph analysis1 = SerialisableExtensionReasoner
 						.getSerialisableReasonerForSemantics(semanticsUsed).getModelsGraph(generatedFramework1);
 				SerialisationGraph analysis2 = SerialisableExtensionReasoner

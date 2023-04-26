@@ -18,23 +18,47 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
+import java.util.Collection;
+
+import org.tweetyproject.arg.dung.equivalence.IEquivalence;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
+import org.tweetyproject.graphs.util.GraphUtil;
+
 
 /**
- * This interface defines methods to analyze the equivalence of two graphs representing the generation process of serializing sets of arguments to extensions. 
+ * This class represents an comparator, which defines if 2 graphs are equivalent, by comparing if they're isomorphic. 
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public interface ISerializingComparator {
+public class SerialisationEquivalenceByGraphIso implements IEquivalence<SerialisationGraph> {
 
-	/**
-     * compute whether the given analyses are equivalent wrt. the kernel
-     * @param analysis1 An analysis of the serialisable extensions.
-     * @param analysis2 An analysis of the serialisable extensions.
-     * @return true if both analyses are equivalent wrt. to the kernel
-     */
-	public boolean isEquivalent(SerialisationGraph analysis1, SerialisationGraph analysis2);
-	
+	@Override
+	public boolean isEquivalent(SerialisationGraph graph1, SerialisationGraph graph2) {
+		return GraphUtil.isIsomorphic(graph1, graph2);
+	}
+
+	@Override
+	public boolean isEquivalent(Collection<SerialisationGraph> graphs) {
+		for (SerialisationGraph graph : graphs) {
+			boolean foundEquivalent = false;
+			for (SerialisationGraph anotherGraph : graphs) {
+				if(graph == anotherGraph) continue;
+				if(isEquivalent(graph, anotherGraph)) {
+					foundEquivalent = true;
+					break;
+				}
+			}
+			if(!foundEquivalent) return false;
+		}
+		return true;
+	}
+
+	@Override
+	public Collection<SerialisationGraph> getEquivalentTheories(SerialisationGraph object) {
+		// not supported
+		return null;
+	}
+
 }

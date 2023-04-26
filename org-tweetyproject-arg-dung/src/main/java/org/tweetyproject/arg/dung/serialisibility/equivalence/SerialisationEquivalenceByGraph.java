@@ -18,21 +18,41 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
+import org.tweetyproject.arg.dung.equivalence.IEquivalence;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
-import org.tweetyproject.graphs.util.GraphUtil;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 graphs are equivalent, by comparing if they're isomorphic. 
+ * This class represents an comparator, which defines if 2 frameworks are equivalent, 
+ * by comparing their serialisation graphs. 
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public class IsomorphEquivalence implements ISerializingComparator {
+public class SerialisationEquivalenceByGraph extends SerialisationEquivalence<SerialisationGraph> {
+
+	private SerialisableExtensionReasoner reasoner;
+	
+	/**
+	 * @param comparator {@link SerialisationEquivalence::comparator}
+	 * @param reasoner Reasoner used to compute the graphs
+	 */
+	public SerialisationEquivalenceByGraph(IEquivalence<SerialisationGraph> comparator,
+			SerialisableExtensionReasoner reasoner) {
+		super(comparator);
+		this.reasoner = reasoner;
+	}
+	
+	@Override
+	protected SerialisationGraph getRelevantAspect(DungTheory framework) {
+		return reasoner.getModelsGraph(framework);
+	}
 
 	@Override
-	public boolean isEquivalent(SerialisationGraph graph1, SerialisationGraph graph2) {
-		return GraphUtil.isIsomorphic(graph1, graph2);
+	protected DungTheory getFramework(SerialisationGraph object) {
+		return object.getRoot().getState().getTheory();
 	}
 
 }

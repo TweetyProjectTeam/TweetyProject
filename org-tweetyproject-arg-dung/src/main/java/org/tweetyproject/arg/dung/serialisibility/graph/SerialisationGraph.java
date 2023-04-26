@@ -183,7 +183,7 @@ public class SerialisationGraph extends SimpleGraph<TransitionStateNode> {
 				boolean chldIsOnPath = this.getSequenceRecusive(in_SearchedNode, childNode,  out_Sequence);
 				if(chldIsOnPath) {
 					out_IsOnPath = true;
-					continue;
+					break;
 				}
 			}
 		}
