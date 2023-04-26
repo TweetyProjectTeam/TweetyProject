@@ -87,4 +87,9 @@ public abstract class SerialisationEquivalence<T> implements IEquivalence<DungTh
 		}
 		return out_frameworks;
 	}
+	
+	@Override
+	public String getDescription() {
+		return this.comparator.getDescription();
+	}
 }

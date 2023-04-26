@@ -55,4 +55,9 @@ public class SerialisationEquivalenceByGraphIso implements IEquivalence<Serialis
 		return null;
 	}
 
+	@Override
+	public String getDescription() {
+		return "serialGraphIsoEQ";
+	}
+
 }

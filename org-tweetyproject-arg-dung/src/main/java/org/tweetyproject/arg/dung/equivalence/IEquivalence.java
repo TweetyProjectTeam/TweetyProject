@@ -52,4 +52,9 @@ public interface IEquivalence<T> {
      */
 	public Collection<T> getEquivalentTheories(T object);
 	
+	/**
+	 * 
+	 * @return Description of the definition
+	 */
+	public String getDescription();
 }

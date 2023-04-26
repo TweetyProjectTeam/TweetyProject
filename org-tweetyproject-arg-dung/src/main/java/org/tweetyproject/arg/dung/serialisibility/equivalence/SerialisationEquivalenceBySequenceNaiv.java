@@ -54,4 +54,9 @@ public class SerialisationEquivalenceBySequenceNaiv implements IEquivalence<Seri
 		return null;
 	}
 
+	@Override
+	public String getDescription() {
+		return "serialSequenceNaivEQ";
+	}
+
 }

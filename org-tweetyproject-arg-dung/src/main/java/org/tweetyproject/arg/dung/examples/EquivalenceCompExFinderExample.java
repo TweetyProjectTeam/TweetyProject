@@ -49,14 +49,12 @@ public class EquivalenceCompExFinderExample {
 
 		Semantics semanticsUsed = Semantics.ADM;
 		IEquivalence<DungTheory> equivalence1 = new StrongEquivalence(EquivalenceKernel.ADMISSIBLE);
-		String equi1Name = "strongEQ";
 		IEquivalence<DungTheory> equivalence2 = new SerialisationEquivalenceByGraph(
 				new SerialisationEquivalenceByGraphIso(),
 				SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
-		String equi2Name = "serialGraphIsoEQ";
-		boolean theoryBeEqual = true;
+		boolean theoryBeEqual = false;
 		boolean serialGraphBeEqual = true;
-		int numberOfArguments = 3;
+		int numberOfArguments = 6;
 		int numberOfExamples = 1;
 		int maxNumberTryFindExample = 10;
 		double attackProbability = 0.2;
@@ -84,9 +82,9 @@ public class EquivalenceCompExFinderExample {
 				findExamples(theoryBeEqual, serialGraphBeEqual, maxNumberTryFindExample, numberOfExamples);
 		int i = 0;
 		for (DungTheory frameworkKey : examples.keySet()) {
-			writeFile(frameworkKey, semanticsUsed, theoryBeEqual, serialGraphBeEqual, writer, path, now, i, equi1Name, equi2Name, 0);
+			writeFile(frameworkKey, semanticsUsed, theoryBeEqual, serialGraphBeEqual, writer, path, now, i, equivalence1.getDescription(), equivalence2.getDescription(), 0);
 			DungTheory secondExample = examples.get(frameworkKey);
-			writeFile(secondExample, semanticsUsed, theoryBeEqual, serialGraphBeEqual, writer, path, now, i, equi1Name, equi2Name, 1);
+			writeFile(secondExample, semanticsUsed, theoryBeEqual, serialGraphBeEqual, writer, path, now, i, equivalence1.getDescription(), equivalence2.getDescription(), 1);
 			SerialisationAnalysisPlotter.plotAnalyses(
 					new Semantics[] {semanticsUsed},
 					new DungTheory[] {frameworkKey, secondExample},

@@ -75,5 +75,10 @@ public class StandardEquivalence implements IEquivalence<DungTheory>  {
 		return null;
 	}
 
+	@Override
+	public String getDescription() {
+		return "StandardEQ";
+	}
+
 	
 }

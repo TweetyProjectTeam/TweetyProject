@@ -135,4 +135,9 @@ public class StrongEquivalence implements IEquivalence<DungTheory> {
 
 		return theories;
 	}
+
+	@Override
+	public String getDescription() {
+		return "strongEQ";
+	}
 }
