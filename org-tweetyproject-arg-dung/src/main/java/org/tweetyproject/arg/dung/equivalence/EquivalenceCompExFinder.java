@@ -1,3 +1,21 @@
+/*
+ *  This file is part of "TweetyProject", a collection of Java libraries for
+ *  logical aspects of artificial intelligence and knowledge representation.
+ *
+ *  TweetyProject is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License version 3 as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.dung.equivalence;
 
 import java.util.HashMap;
@@ -6,6 +24,15 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 
+/**
+ * This class represents an example generator. Objects of this class generate argumentation frameworks, which comply
+ * conditions regarding their state of equivalence to each other. The conditions are expressed by different 
+ * definitions of equivalence between the two frameworks and whether the frameworks have to be equivalent or must not.
+ *
+ * @author Julian Sander
+ * @version TweetyProject 1.23
+ *
+ */
 public class EquivalenceCompExFinder {
 
 	private IEquivalence<DungTheory> equivalence1;
