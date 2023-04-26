@@ -53,7 +53,8 @@ public abstract class EquivalenceKernel {
      * @param theory a dung theory
      * @return a dung theory representing the kernel of the given AF
      */
-    public DungTheory getKernel(DungTheory theory) {
+    @SuppressWarnings("unlikely-arg-type")
+	public DungTheory getKernel(DungTheory theory) {
         // create copy of theory
         DungTheory kernel = new DungTheory(theory);
         kernel.addAllAttacks(theory.getAttacks());

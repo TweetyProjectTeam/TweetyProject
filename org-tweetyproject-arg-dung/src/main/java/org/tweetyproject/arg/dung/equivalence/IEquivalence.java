@@ -20,8 +20,6 @@ package org.tweetyproject.arg.dung.equivalence;
 
 import java.util.Collection;
 
-import org.tweetyproject.arg.dung.syntax.DungTheory;
-
 /**
  * This interface defines methods to analyze the equivalence of two objects. 
  *
