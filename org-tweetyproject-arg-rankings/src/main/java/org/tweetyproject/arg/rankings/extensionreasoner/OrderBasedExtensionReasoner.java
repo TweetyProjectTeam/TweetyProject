@@ -1,7 +1,6 @@
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
@@ -26,18 +25,21 @@ public class OrderBasedExtensionReasoner {
 
     /**
      * Returns the order-based extensions, which are a subset of the Extensions given at creation of this reasoner.
-     * Result depends on the chosen Aggregation Function.
+     * Result depends on the chosen Aggregation Function and support vector function.
      * Aggregation with MIN/MAX of the empty Extension is interpreted as +Infinity/0 respectively.
      *
+     * @param extensions set of extensions
+     * @param function a specific function that computes the support vector
      * @return order-based extension subset of Extensions for specified aggregation function
      * @throws Exception invalid argumentation Function
      */
-    public Collection<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions) throws Exception {
+    public Collection<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions, SupportVectorFunction function) throws Exception {
         HashMap<Vector<Double>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = new HashMap<>();
         Vector<Double> argmax = new Vector<>();
         argmax.add(0d);
         for (Extension<DungTheory> ext : extensions) {
-            Vector<Double> aggregatedVec = getSupportVector(ext, extensions, true);
+            Vector<Double> suppVec = function.getSupportVector(ext, extensions, true);
+            Vector<Double> aggregatedVec = aggregate(suppVec);
 
             aggregatedVectorToExtensionSetMap.computeIfAbsent(aggregatedVec, k -> new HashSet<>());
             Set<Extension<DungTheory>> newExtensionSet = aggregatedVectorToExtensionSetMap.get(aggregatedVec);
@@ -51,25 +53,7 @@ public class OrderBasedExtensionReasoner {
         return aggregatedVectorToExtensionSetMap.get(argmax);
     }
 
-    /**
-     * Returns a vector with the number of every of ext arguments appearances in predefined Extensions.
-     *
-     * @param ext        an extension (from all extensions of this reasoners semantic)
-     * @param extensions a collection of Extensions for reasoner
-     * @param aggregate  raw support vector if false, otherwise returns vector aggregated with the currently assigned aggregation function
-     * @return support vector "vsupp"
-     */
-    public Vector<Double> getSupportVector(Extension<DungTheory> ext, Collection<Extension<DungTheory>> extensions, boolean aggregate) {
-        Vector<Double> vsupp = new Vector<>();
-        for (Argument arg : ext) {
-            vsupp.add(getNumberOfContainsInExtensions(arg, extensions));
-        }
-        if (aggregate) {
-            return aggregate(vsupp);
-        } else {
-            return vsupp;
-        }
-    }
+ 
 
     /**
      * Set a new aggregation function.
@@ -87,25 +71,6 @@ public class OrderBasedExtensionReasoner {
      */
     public AggregationFunction getAggregationFunction() {
         return this.aggregationFunction;
-    }
-
-
-    /**
-     * Returns the number of predefined Extensions in which arg is contained.
-     * (ne_semantic(arg,theory)
-     *
-     * @param arg an argument
-     * @return number of Extensions that arg appears in.
-     */
-    private Double getNumberOfContainsInExtensions(Argument arg, Collection<Extension<DungTheory>> extensions) {
-        double count = 0d;
-        for (Extension<DungTheory> ext : extensions) {
-            if (ext.contains(arg)) {
-                count++;
-            }
-
-        }
-        return count;
     }
 
 
@@ -221,4 +186,8 @@ public class OrderBasedExtensionReasoner {
         }
         return Math.sqrt(sum);
     }
+    
+   
+    
+    
 }

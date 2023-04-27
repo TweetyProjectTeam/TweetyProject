@@ -77,31 +77,32 @@ public class OrderBasedExtensionReasonerExample {
 //            Extension<DungTheory> ext = new Extension<>(set);
 //            extensions.add(ext);
 //        }
+        NumberOfContainsInExtentions nocie = new NumberOfContainsInExtentions();
         OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(AggregationFunction.SUM);
-        System.out.println("OBE_pr,sum:" + OBER.getModels(prExtensions));
+        System.out.println("OBE_pr,sum:" + OBER.getModels(prExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.MAX);
-        System.out.println("OBE_pr,max:" + OBER.getModels(prExtensions));
+        System.out.println("OBE_pr,max:" + OBER.getModels(prExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.MIN);
-        System.out.println("OBE_pr,min:" + OBER.getModels(prExtensions));
+        System.out.println("OBE_pr,min:" + OBER.getModels(prExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.LEXIMAX);
-        System.out.println("OBE_pr,leximax:" + OBER.getModels(prExtensions));
+        System.out.println("OBE_pr,leximax:" + OBER.getModels(prExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.LEXIMIN);
-        System.out.println("OBE_pr,leximin:" + OBER.getModels(prExtensions));
+        System.out.println("OBE_pr,leximin:" + OBER.getModels(prExtensions,nocie));
 
         System.out.println();
 
         Collection<Extension<DungTheory>> adExtensions = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADMISSIBLE_SEMANTICS).getModels(example3);
         OBER.setAggregationFunction(AggregationFunction.SUM);
 
-        System.out.println("OBE_ad,sum:" + OBER.getModels(adExtensions));
+        System.out.println("OBE_ad,sum:" + OBER.getModels(adExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.MAX);
-        System.out.println("OBE_ad,max:" + OBER.getModels(adExtensions));
+        System.out.println("OBE_ad,max:" + OBER.getModels(adExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.MIN);
-        System.out.println("OBE_ad,min:" + OBER.getModels(adExtensions));
+        System.out.println("OBE_ad,min:" + OBER.getModels(adExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.LEXIMAX);
-        System.out.println("OBE_ad,leximax:" + OBER.getModels(adExtensions));
+        System.out.println("OBE_ad,leximax:" + OBER.getModels(adExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.LEXIMIN);
-        System.out.println("OBE_ad,leximin:" + OBER.getModels(adExtensions));
+        System.out.println("OBE_ad,leximin:" + OBER.getModels(adExtensions,nocie));
 
 
     }
