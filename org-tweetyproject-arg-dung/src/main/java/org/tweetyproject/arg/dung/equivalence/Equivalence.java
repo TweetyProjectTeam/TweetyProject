@@ -27,7 +27,7 @@ import java.util.Collection;
  * @version TweetyProject 1.23
  *
  */
-public interface IEquivalence<T> {
+public interface Equivalence<T> {
 
 	/**
      * Checks whether the specified objects are equivalent

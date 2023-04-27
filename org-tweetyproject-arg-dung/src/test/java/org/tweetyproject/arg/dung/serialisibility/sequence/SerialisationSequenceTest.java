@@ -23,6 +23,7 @@ import java.util.HashSet;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 

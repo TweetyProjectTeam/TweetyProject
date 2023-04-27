@@ -22,8 +22,8 @@ import java.util.LinkedList;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequence;
 import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequenceTest;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
 
 /**
  * Tests to verify the code in the class {@link SerialisationEquivalenceBySequenceNaiv}.

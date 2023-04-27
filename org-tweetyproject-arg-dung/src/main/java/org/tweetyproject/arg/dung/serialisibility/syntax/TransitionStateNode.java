@@ -16,7 +16,7 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.graph;
+package org.tweetyproject.arg.dung.serialisibility.syntax;
 
 import org.tweetyproject.arg.dung.serialisibility.*;
 import org.tweetyproject.graphs.Node;

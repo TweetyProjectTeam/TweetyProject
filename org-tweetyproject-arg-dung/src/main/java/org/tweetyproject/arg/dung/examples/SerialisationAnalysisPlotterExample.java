@@ -19,7 +19,7 @@
 package org.tweetyproject.arg.dung.examples;
 
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationAnalysisPlotter;
+import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationAnalysisPlotter;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**

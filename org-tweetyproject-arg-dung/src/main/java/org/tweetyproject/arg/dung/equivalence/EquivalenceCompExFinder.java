@@ -37,8 +37,8 @@ import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
  */
 public class EquivalenceCompExFinder {
 
-	private IEquivalence<DungTheory> equivalence1;
-	private IEquivalence<DungTheory> equivalence2;
+	private Equivalence<DungTheory> equivalence1;
+	private Equivalence<DungTheory> equivalence2;
 	private DefaultDungTheoryGenerator generator;
 	private DungTheoryGenerationParameters parameters;
 
@@ -54,8 +54,8 @@ public class EquivalenceCompExFinder {
 	 * @param maxNumberTryFindExample Maximal number of iterations, the generator does in order to find a suitable example
 	 */
 	public EquivalenceCompExFinder(
-			IEquivalence<DungTheory> equivalence1,
-			IEquivalence<DungTheory> equivalence2,			
+			Equivalence<DungTheory> equivalence1,
+			Equivalence<DungTheory> equivalence2,			
 			int numberOfArguments, 
 			double attackProbability, 
 			boolean avoidSelfAttacks) {

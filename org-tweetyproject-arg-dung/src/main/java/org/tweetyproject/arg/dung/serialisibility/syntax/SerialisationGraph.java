@@ -16,7 +16,7 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.graph;
+package org.tweetyproject.arg.dung.serialisibility.syntax;
 
 import java.rmi.NoSuchObjectException;
 import java.util.Collection;
@@ -24,8 +24,6 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.TransitionState;
-import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.Graph;
 import org.tweetyproject.graphs.SimpleGraph;

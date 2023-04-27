@@ -16,7 +16,7 @@
  *
  *  Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility.sequence;
+package org.tweetyproject.arg.dung.serialisibility.syntax;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

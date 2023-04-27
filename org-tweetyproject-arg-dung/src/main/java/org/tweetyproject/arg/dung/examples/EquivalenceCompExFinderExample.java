@@ -25,14 +25,14 @@ import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.equivalence.EquivalenceCompExFinder;
-import org.tweetyproject.arg.dung.equivalence.IEquivalence;
+import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
 import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraph;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphIso;
-import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationAnalysisPlotter;
+import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationAnalysisPlotter;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 
@@ -48,8 +48,8 @@ public class EquivalenceCompExFinderExample {
 	public static void main(String[] args) {
 
 		Semantics semanticsUsed = Semantics.ADM;
-		IEquivalence<DungTheory> equivalence1 = new StrongEquivalence(EquivalenceKernel.ADMISSIBLE);
-		IEquivalence<DungTheory> equivalence2 = new SerialisationEquivalenceByGraph(
+		Equivalence<DungTheory> equivalence1 = new StrongEquivalence(EquivalenceKernel.ADMISSIBLE);
+		Equivalence<DungTheory> equivalence2 = new SerialisationEquivalenceByGraph(
 				new SerialisationEquivalenceByGraphIso(),
 				SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
 		boolean theoryBeEqual = false;

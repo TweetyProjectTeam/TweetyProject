@@ -20,7 +20,7 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.TransitionState;
+import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionState;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;

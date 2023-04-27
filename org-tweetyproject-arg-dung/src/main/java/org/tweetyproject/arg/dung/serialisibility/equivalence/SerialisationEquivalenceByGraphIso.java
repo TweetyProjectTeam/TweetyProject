@@ -20,8 +20,8 @@ package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
 import java.util.Collection;
 
-import org.tweetyproject.arg.dung.equivalence.IEquivalence;
-import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
+import org.tweetyproject.arg.dung.equivalence.Equivalence;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
 import org.tweetyproject.graphs.util.GraphUtil;
 
 
@@ -32,7 +32,7 @@ import org.tweetyproject.graphs.util.GraphUtil;
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationEquivalenceByGraphIso implements IEquivalence<SerialisationGraph> {
+public class SerialisationEquivalenceByGraphIso implements Equivalence<SerialisationGraph> {
 
 	@Override
 	public boolean isEquivalent(SerialisationGraph graph1, SerialisationGraph graph2) {

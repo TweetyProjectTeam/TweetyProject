@@ -20,8 +20,8 @@ package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
 import java.util.Collection;
 
-import org.tweetyproject.arg.dung.equivalence.IEquivalence;
-import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequence;
+import org.tweetyproject.arg.dung.equivalence.Equivalence;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
 
 /**
  * This class represents an comparator, which defines if 2 sequences are equivalent, 
@@ -31,7 +31,7 @@ import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequence
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationEquivalenceBySequenceNaiv implements IEquivalence<SerialisationSequence>{
+public class SerialisationEquivalenceBySequenceNaiv implements Equivalence<SerialisationSequence>{
 
 	@Override
 	public boolean isEquivalent(SerialisationSequence seq1, SerialisationSequence seq2) {

@@ -16,7 +16,7 @@
  *
  *  Copyright 2022 The TweetyProject Team <http://tweetyproject.org/contact/>
  */
-package org.tweetyproject.arg.dung.serialisibility;
+package org.tweetyproject.arg.dung.serialisibility.syntax;
 
 import java.util.Collection;
 

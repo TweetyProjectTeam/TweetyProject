@@ -30,7 +30,7 @@ import java.util.*;
  *
  * @author Lars Bengel
  */
-public class StrongEquivalence implements IEquivalence<DungTheory> {
+public class StrongEquivalence implements Equivalence<DungTheory> {
 
 	private EquivalenceKernel kernel;
 

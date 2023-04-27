@@ -24,9 +24,9 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.TransitionState;
-import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
-import org.tweetyproject.arg.dung.serialisibility.graph.TransitionStateNode;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionState;
+import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.*;
 

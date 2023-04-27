@@ -32,7 +32,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @version TweetyProject 1.23
  *
  */
-public class StandardEquivalence implements IEquivalence<DungTheory>  {
+public class StandardEquivalence implements Equivalence<DungTheory>  {
 
 	private AbstractExtensionReasoner reasoner;
 

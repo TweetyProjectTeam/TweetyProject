@@ -26,10 +26,10 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.TransitionState;
-import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
-import org.tweetyproject.arg.dung.serialisibility.graph.TransitionStateNode;
-import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequence;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
+import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionState;
+import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.DirectedEdge;
 
@@ -61,14 +61,14 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		};
 	}
 
-	protected Semantics usedSemantics;
+	protected Semantics semantics;
 
 	/**
-	 * @param usedSemantics Semantics used to generate the extensions found during the examination.
+	 * @param semantics Semantics used to generate the extensions found during the examination.
 	 */
-	public SerialisableExtensionReasoner(Semantics usedSemantics) {
+	public SerialisableExtensionReasoner(Semantics semantics) {
 		super();
-		this.usedSemantics = usedSemantics;
+		this.semantics = semantics;
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 				new HashSet<TransitionState>(),
 				true,
 				new HashSet<SerialisationSequence>(),
-				new SerialisationGraph(root, usedSemantics));
+				new SerialisationGraph(root, semantics));
 	}
 
 	/**
@@ -106,7 +106,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		Extension<DungTheory> initExtension = new Extension<>();
 		TransitionState initState = new TransitionState(bbase, initExtension);
 		TransitionStateNode root = new TransitionStateNode(initState);
-		SerialisationGraph output = new SerialisationGraph(root, usedSemantics);
+		SerialisationGraph output = new SerialisationGraph(root, semantics);
 		
 		this.getModelsRecursive(
 				initState,
@@ -140,15 +140,15 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 				new HashSet<TransitionState>(),
 				true,
 				output,
-				new SerialisationGraph(root, usedSemantics));
+				new SerialisationGraph(root, semantics));
 		return output;
 	}
 
 	/**
 	 * @return Semantics used to generate the extensions found during the examination.
 	 */
-	public Semantics getSemantic() {
-		return this.usedSemantics;
+	public Semantics getSemantics() {
+		return this.semantics;
 	}
 
 	/**
@@ -190,7 +190,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 * @param semantics Semantics used to generate the extensions
 	 */
 	protected void setSemantic(Semantics semantics) {
-		this.usedSemantics = semantics;
+		this.semantics = semantics;
 	}
 	
 	private SerialisationSequence createNewSequence(TransitionState in_State,

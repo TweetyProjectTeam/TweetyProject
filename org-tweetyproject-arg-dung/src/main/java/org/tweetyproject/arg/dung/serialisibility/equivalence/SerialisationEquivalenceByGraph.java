@@ -18,9 +18,9 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
-import org.tweetyproject.arg.dung.equivalence.IEquivalence;
+import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
-import org.tweetyproject.arg.dung.serialisibility.graph.SerialisationGraph;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -39,7 +39,7 @@ public class SerialisationEquivalenceByGraph extends SerialisationEquivalence<Se
 	 * @param comparator {@link SerialisationEquivalence::comparator}
 	 * @param reasoner Reasoner used to compute the graphs
 	 */
-	public SerialisationEquivalenceByGraph(IEquivalence<SerialisationGraph> comparator,
+	public SerialisationEquivalenceByGraph(Equivalence<SerialisationGraph> comparator,
 			SerialisableExtensionReasoner reasoner) {
 		super(comparator);
 		this.reasoner = reasoner;

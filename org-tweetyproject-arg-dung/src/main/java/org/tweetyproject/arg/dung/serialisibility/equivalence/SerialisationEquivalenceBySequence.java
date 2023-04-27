@@ -20,9 +20,9 @@ package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
 import java.util.HashSet;
 
-import org.tweetyproject.arg.dung.equivalence.IEquivalence;
+import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
-import org.tweetyproject.arg.dung.serialisibility.sequence.SerialisationSequence;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -41,7 +41,7 @@ public class SerialisationEquivalenceBySequence extends SerialisationEquivalence
 	 * @param comparator {@link SerialisationEquivalence::comparator}
 	 * @param reasoner Reasoner used to compute the sequences
 	 */
-	public SerialisationEquivalenceBySequence(IEquivalence<HashSet<SerialisationSequence>> comparator,
+	public SerialisationEquivalenceBySequence(Equivalence<HashSet<SerialisationSequence>> comparator,
 			SerialisableExtensionReasoner reasoner) {
 		super(comparator);
 		this.reasoner = reasoner;

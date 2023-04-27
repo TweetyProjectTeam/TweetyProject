@@ -21,7 +21,9 @@ package org.tweetyproject.arg.dung.serialisibility.equivalence;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.tweetyproject.arg.dung.equivalence.IEquivalence;
+import org.tweetyproject.arg.dung.equivalence.Equivalence;
+import org.tweetyproject.arg.dung.syntax.Argument;
+import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
@@ -32,17 +34,17 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @version TweetyProject 1.23
  *
  */
-public abstract class SerialisationEquivalence<T> implements IEquivalence<DungTheory> {
+public abstract class SerialisationEquivalence<T> implements Equivalence<DungTheory> {
 
 	/**
 	 * Comparator used to define the equivalence of two graphs
 	 */
-	private IEquivalence<T> comparator;
+	private Equivalence<T> comparator;
 	
 	/**
 	 * @param comparator Comparator used to define the equivalence of two graphs
 	 */
-	public SerialisationEquivalence(IEquivalence<T> comparator) {
+	public SerialisationEquivalence(Equivalence<T> comparator) {
 		super();
 		this.comparator = comparator;
 	}
