@@ -58,7 +58,7 @@ public class SerialisationSequenceTest {
 		var seqAB12BCX = new SerialisationSequence();
 		var seqAB2BCX = new SerialisationSequence();
 
-		SerialisationSequenceTest.CreateSequencesForTest(seqAB11X, seqAB12X, seqAB2X, seqBCX, seqAB11BCX, seqAB12BCX, seqAB2BCX);
+		CreateSequencesForTest(seqAB11X, seqAB12X, seqAB2X, seqBCX, seqAB11BCX, seqAB12BCX, seqAB2BCX);
 
 		//Assert
 		Assert.assertTrue(seqAB11.equals(seqAB12));

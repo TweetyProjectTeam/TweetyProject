@@ -59,25 +59,9 @@ public class SerialisationSequence extends LinkedHashSet<Extension<DungTheory>> 
         if (c.size() != size())
             return false;
         try {
-            for (Extension<DungTheory> extension : c) {
-				if(!containsEqual(extension)) return false;
-			}
-            return true;
+        	return super.equals(c);
         } catch (ClassCastException | NullPointerException unused) {
             return false;
         }
-	}
-	
-	
-	/**
-	 * Checks if there's an extension in this sequence, which is equal to the one specified
-	 * @param input Extension, for which an equivalent is searched for.
-	 * @return TRUE iff there is an equivalent extension in this sequence
-	 */
-	public boolean containsEqual(Extension<DungTheory> input) {
-		for (Extension<DungTheory> e : this) {
-			if(e.equals(input)) return true;
-		}
-		return false;
 	}
 }
