@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
-import java.util.HashSet;
+import java.util.LinkedList;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -66,10 +66,10 @@ class SerialisationEquivalenceByGraphIsoTest {
 		var frameNotEQ1 = new SerialisationGraph(new TransitionStateNode(new TransitionState(new DungTheory(), new Extension<DungTheory>())), Semantics.ADM);
 		var frameNotEQ2 = new SerialisationGraph(new TransitionStateNode(new TransitionState(new DungTheory(), new Extension<DungTheory>())), Semantics.ADM);
 
-		var framesEQ = new HashSet<SerialisationGraph>();
+		var framesEQ = new LinkedList<SerialisationGraph>();
 		framesEQ.add(frameEQ1);
 		framesEQ.add(frameEQ2);
-		var framesNotEQ = new HashSet<SerialisationGraph>();
+		var framesNotEQ = new LinkedList<SerialisationGraph>();
 		framesNotEQ.add(frameNotEQ1);
 		framesNotEQ.add(frameNotEQ2);
 

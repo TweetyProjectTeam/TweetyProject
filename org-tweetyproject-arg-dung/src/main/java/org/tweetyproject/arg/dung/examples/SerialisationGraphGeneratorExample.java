@@ -50,14 +50,14 @@ public class SerialisationGraphGeneratorExample {
 	public static void main(String[] args) {
 
 		try {
-			int numberOfArguments = 6;
+			int numberOfArguments = 4;
 			//int numberOfArgumentsAtStart = 3;
 			//int incrementOfArguments = 1;
-			int numberOfExamples = 4;
+			int numberOfExamples = 10;
 			int maxNumberTryGenerateFramework = 10;
 			double attackProbability = 0.2;
 			boolean avoidSelfAttack = false;
-			Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.GR, Semantics.UC};
+			Semantics[] semanticsUsed = new Semantics[] {Semantics.ADM, Semantics.CO, Semantics.GR};
 
 			ApxWriter writer = new ApxWriter();
 			String path = System.getProperty("user.home")

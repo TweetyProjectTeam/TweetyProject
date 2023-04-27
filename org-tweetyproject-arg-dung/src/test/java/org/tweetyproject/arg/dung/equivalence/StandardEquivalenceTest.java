@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.dung.equivalence;
 
-import java.util.HashSet;
+import java.util.LinkedList;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -65,10 +65,10 @@ class StandardEquivalenceTest {
 				var frameNotEQ1 = new DungTheory();
 				var frameNotEQ2 = new DungTheory();
 				
-				var framesEQ = new HashSet<DungTheory>();
+				var framesEQ = new LinkedList<DungTheory>();
 				framesEQ.add(frameEQ1);
 				framesEQ.add(frameEQ2);
-				var framesNotEQ = new HashSet<DungTheory>();
+				var framesNotEQ = new LinkedList<DungTheory>();
 				framesNotEQ.add(frameNotEQ1);
 				framesNotEQ.add(frameNotEQ2);
 				
@@ -98,18 +98,18 @@ class StandardEquivalenceTest {
 	
 	private void createFrameworksAdmEQ(DungTheory out_framework1, DungTheory out_framework2) {
 		
-		Assert.fail(); // !!!!!!!!!!!!!!!!!!!! ist kein equivalentes Beispiel !!!!!!!!!!!!!!!!!!!!!!!!!
+		
 		
 		var a = new Argument("a");
 		var b = new Argument("b");
 		var c = new Argument("c");
 		var d = new Argument("d");
-		var e = new Argument("e");
-		out_framework1.add(new Argument[] {a,b,c,d,e});
-		out_framework2.add(new Argument[] {a,b,c,d,e});
+		out_framework1.add(new Argument[] {a,b,c,d});
+		out_framework2.add(new Argument[] {a,b,c,d});
 		
-		out_framework1.add(new Attack[] {new Attack(a, b),new Attack(b, c), new Attack(c, d), new Attack(e, c)});
-		out_framework2.add(new Attack[] {new Attack(a, b),new Attack(b, d), new Attack(d, c), new Attack(b, e), new Attack(c, b)});
+		out_framework1.add(new Attack[] {new Attack(a, b),new Attack(a, c), new Attack(d, d)});
+		out_framework2.add(new Attack[] {new Attack(b, b),new Attack(c, c), new Attack(c, d)});
+		//Extension for ADM: {{},{a}}, CO: {{a}}, GR: {{a}}, for both frameworks
 	}
 
 }
