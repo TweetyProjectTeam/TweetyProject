@@ -46,61 +46,61 @@ class SerialisationSequenceTest {
 		var argsAB = new HashSet<Argument>();
 		argsAB.add(a);
 		argsAB.add(b);
-		var ext1 = new Extension<DungTheory>(argsAB);
+		var extAB1_1 = new Extension<DungTheory>(argsAB);
 		
-		var ext2 = new Extension<DungTheory>(argsAB);
+		var extAB1_2 = new Extension<DungTheory>(argsAB);
 		
 		var argsAB2 = new HashSet<Argument>();
 		argsAB2.add(a);
 		argsAB2.add(b);
-		var ext3 = new Extension<DungTheory>(argsAB2);
+		var extAB2 = new Extension<DungTheory>(argsAB2);
 		
 		var argsBC = new HashSet<Argument>();
 		argsBC.add(b);
 		argsBC.add(c);
-		var extX = new Extension<DungTheory>(argsBC);
+		var extBC = new Extension<DungTheory>(argsBC);
 		
 		//Act
-		var seq1 = new SerialisationSequence();
-		seq1.add(ext1);
+		var seqAB1_1 = new SerialisationSequence();
+		seqAB1_1.add(extAB1_1);
 		
-		var seq2 = new SerialisationSequence();
-		seq2.add(ext2);
+		var seqAB1_2 = new SerialisationSequence();
+		seqAB1_2.add(extAB1_2);
 		
-		var seq3 = new SerialisationSequence();
-		seq3.add(ext3);
+		var seqAB2 = new SerialisationSequence();
+		seqAB2.add(extAB2);
 		
-		var seqX = new SerialisationSequence();
-		seqX.add(extX);
+		var seqBC = new SerialisationSequence();
+		seqBC.add(extBC);
 		
-		var seq1X = new SerialisationSequence();
-		seq1X.add(ext1);
-		seq1X.add(extX);
+		var seqAB1_1_BC = new SerialisationSequence();
+		seqAB1_1_BC.add(extAB1_1);
+		seqAB1_1_BC.add(extBC);
 		
-		var seq2X = new SerialisationSequence();
-		seq2X.add(ext2);
-		seq2X.add(extX);
+		var seqAB1_2_BC = new SerialisationSequence();
+		seqAB1_2_BC.add(extAB1_2);
+		seqAB1_2_BC.add(extBC);
 		
-		var seq3X = new SerialisationSequence();
-		seq3X.add(ext3);
-		seq3X.add(extX);
+		var seqAB2_BC = new SerialisationSequence();
+		seqAB2_BC.add(extAB2);
+		seqAB2_BC.add(extBC);
 		
 		//Assert
-		Assert.assertTrue(seq1.equals(seq2));
-		Assert.assertTrue(seq1.equals(seq3));
-		Assert.assertTrue(seq2.equals(seq3));
+		Assert.assertTrue(seqAB1_1.equals(seqAB1_2));
+		Assert.assertTrue(seqAB1_1.equals(seqAB2));
+		Assert.assertTrue(seqAB1_2.equals(seqAB2));
 		
-		Assert.assertFalse(seq1.equals(seqX));
-		Assert.assertFalse(seq2.equals(seqX));
-		Assert.assertFalse(seq3.equals(seqX));
+		Assert.assertFalse(seqAB1_1.equals(seqBC));
+		Assert.assertFalse(seqAB1_2.equals(seqBC));
+		Assert.assertFalse(seqAB2.equals(seqBC));
 		
-		Assert.assertTrue(seq1X.equals(seq2X));
-		Assert.assertTrue(seq1X.equals(seq3X));
-		Assert.assertTrue(seq2X.equals(seq3X));
+		Assert.assertTrue(seqAB1_1_BC.equals(seqAB1_2_BC));
+		Assert.assertTrue(seqAB1_1_BC.equals(seqAB2_BC));
+		Assert.assertTrue(seqAB1_2_BC.equals(seqAB2_BC));
 		
-		Assert.assertFalse(seq1X.equals(seqX));
-		Assert.assertFalse(seq2X.equals(seqX));
-		Assert.assertFalse(seq3X.equals(seqX));
+		Assert.assertFalse(seqAB1_1_BC.equals(seqBC));
+		Assert.assertFalse(seqAB1_2_BC.equals(seqBC));
+		Assert.assertFalse(seqAB2_BC.equals(seqBC));
 	}
 
 }
