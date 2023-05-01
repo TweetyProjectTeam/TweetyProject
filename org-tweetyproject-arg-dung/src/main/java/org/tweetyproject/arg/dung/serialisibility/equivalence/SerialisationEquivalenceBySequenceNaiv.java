@@ -31,25 +31,26 @@ import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationEquivalenceBySequenceNaiv implements Equivalence<SerialisationSequence>{
+public class SerialisationEquivalenceBySequenceNaiv implements Equivalence<Collection<SerialisationSequence>>{
 
 	@Override
-	public boolean isEquivalent(SerialisationSequence seq1, SerialisationSequence seq2) {
+	public boolean isEquivalent(Collection<SerialisationSequence> seq1, Collection<SerialisationSequence> seq2) {
 		return seq1.equals(seq2);
 	}
 
 	@Override
-	public boolean isEquivalent(Collection<SerialisationSequence> sequences) {
-		SerialisationSequence first = sequences.iterator().next();
-		for (SerialisationSequence seq : sequences) {
+	public boolean isEquivalent(Collection<Collection<SerialisationSequence>> sequences) {
+		Collection<SerialisationSequence> first = sequences.iterator().next();
+		for (Collection<SerialisationSequence> seq : sequences) {
 			if(seq == first) continue;
-			if(!isEquivalent(seq, first)) return false;
+			if(!isEquivalent(seq, first)) 
+				return false;
 		}
 		return true;
 	}
 
 	@Override
-	public Collection<SerialisationSequence> getEquivalentTheories(SerialisationSequence sequence) {
+	public Collection<Collection<SerialisationSequence>> getEquivalentTheories(Collection<SerialisationSequence> sequence) {
 		// not supported
 		return null;
 	}

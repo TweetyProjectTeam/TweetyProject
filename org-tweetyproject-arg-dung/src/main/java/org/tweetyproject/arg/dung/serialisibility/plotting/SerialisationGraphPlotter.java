@@ -20,12 +20,13 @@ package org.tweetyproject.arg.dung.serialisibility.plotting;
 
 import java.util.ArrayList;
 
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
 import org.tweetyproject.graphs.util.GraphPlotter;
-import org.tweetyproject.arg.dung.reasoner.serialisable.*;
-import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
-import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionStateNode;
 
 import com.mxgraph.util.mxConstants;
 
@@ -53,7 +54,7 @@ import com.mxgraph.util.mxConstants;
  * @author Julian Sander
  * @version TweetyProject 1.23
  */
-public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode, Edge<TransitionStateNode>> {
+public class SerialisationGraphPlotter extends GraphPlotter<Extension<DungTheory>, Edge<Extension<DungTheory>>> {
 
 	/**
 	 * Plots the specified graph in a new created frame.
@@ -117,8 +118,8 @@ public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode,
 	}
 
 	@Override
-	public String getStyle(TransitionStateNode node) {
-		boolean isHighlighted = this.graph.getExtensions().contains(node.getState().getExtension());
+	public String getStyle(Extension<DungTheory> node) {
+		boolean isHighlighted = this.graph.getExtensions().contains(node);
 		String style;
 
 		if(isHighlighted) {
@@ -137,7 +138,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode,
 	}
 
 	@Override
-	protected String getPrettyName(Edge<TransitionStateNode> edge) {
+	protected String getPrettyName(Edge<Extension<DungTheory>> edge) {
 		String label = edge.getLabel();
 		if((label == null) || label.isEmpty()) {
 			label = this.LABEL_DEFAULT_EDGE;
@@ -146,8 +147,8 @@ public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode,
 	}
 
 	@Override
-	protected String getPrettyName(TransitionStateNode node) {
-		String name = node.getName();
+	protected String getPrettyName(Extension<DungTheory> node) {
+		String name = node.toString();
 		if((name == null)|| name.isEmpty()) {
 			name = this.LABEL_DEFAULT_NODE;
 		}
@@ -159,7 +160,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode,
 	 * @param node Node, that shall be represented.
 	 * @return String describing the layout of the regular node.
 	 */
-	protected String getStyleNode(TransitionStateNode node) {
+	protected String getStyleNode(Extension<DungTheory> node) {
 		String styleString = "";
 		styleString += mxConstants.STYLE_FONTSIZE + "=" + this.FONTSIZE + ";";
 		return  styleString
@@ -173,7 +174,7 @@ public class SerialisationGraphPlotter extends GraphPlotter<TransitionStateNode,
 	 * @param node Node, that shall be represented as highlighted.
 	 * @return String describing the layout of the highlighted node.
 	 */
-	protected String getStyleNodeHighlighted(TransitionStateNode node) {
+	protected String getStyleNodeHighlighted(Extension<DungTheory> node) {
 		String styleString = "";
 		styleString += mxConstants.STYLE_FONTSIZE + "=" + this.FONTSIZE + ";";
 		return  styleString

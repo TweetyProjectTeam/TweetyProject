@@ -62,6 +62,10 @@ class SerialisableExtensionReasonerTest {
 			Collection<Extension<DungTheory>> extensionsActual = reasonerToTest.getModels(frameworks[i]);
 			Collection<Extension<DungTheory>> extensionsExpected = reasonerVerified.getModels(frameworks[i]);
 			
+			System.out.println(semantics.description());
+			System.out.println("Expected:" + extensionsExpected.toString());
+			System.out.println("Actual:" + extensionsActual.toString());
+			
 			//Assert
 			assertEquals(extensionsExpected, extensionsActual);
 		}

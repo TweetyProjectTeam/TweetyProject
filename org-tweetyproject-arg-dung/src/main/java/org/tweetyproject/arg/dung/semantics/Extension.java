@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.semantics;
 import java.util.*;
 
 import org.tweetyproject.arg.dung.syntax.*;
+import org.tweetyproject.graphs.Node;
 
 
 /**
@@ -29,7 +30,7 @@ import org.tweetyproject.arg.dung.syntax.*;
  * @author Matthias Thimm
  *
  */
-public class Extension <T extends ArgumentationFramework<Argument>> extends AbstractArgumentationInterpretation<T> implements Collection<Argument>, Comparable<Extension<T>> {
+public class Extension <T extends ArgumentationFramework<Argument>> extends AbstractArgumentationInterpretation<T> implements Collection<Argument>, Comparable<Extension<T>> , Node {
 	
 	/**
 	 * The arguments in the extension
@@ -74,6 +75,7 @@ public class Extension <T extends ArgumentationFramework<Argument>> extends Abst
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -199,6 +201,7 @@ public class Extension <T extends ArgumentationFramework<Argument>> extends Abst
 	/* (non-Javadoc)
 	 * @see java.util.Collection#toArray(T[])
 	 */
+	@SuppressWarnings("hiding")
 	@Override
 	public <T> T[] toArray(T[] arg0) {
 		return this.arguments.toArray(arg0);

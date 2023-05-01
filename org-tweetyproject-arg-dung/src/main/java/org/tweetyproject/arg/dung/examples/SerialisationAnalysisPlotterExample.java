@@ -32,7 +32,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class SerialisationAnalysisPlotterExample {
 	
 	public static void main(String[] args) {
-		var frameworks = new DungTheory[2];
+		var frameworks = new DungTheory[3];
 		frameworks[0] = SerialisableExtensionReasonerExample.buildExample1();
 		frameworks[1] = SerialisableExtensionReasonerExample.buildExample2();
 		frameworks[2] = SerialisableExtensionReasonerExample.buildExample3();

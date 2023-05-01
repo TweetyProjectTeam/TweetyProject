@@ -18,42 +18,47 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
+import java.util.Collection;
+
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
-import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
-import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 frameworks are equivalent,
- * by comparing their serialisation graphs.
+ * This class represents an comparator, which defines if 2 graphs are equivalent, by comparing their set of nodes. 
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationEquivalenceByGraph extends SerialisationEquivalence<SerialisationGraph> {
+public class SerialisationEquivalenceByGraphNaiv implements Equivalence<SerialisationGraph>{
 
-	private SerialisableExtensionReasoner reasoner;
-
-	/**
-	 * @param comparator {@link SerialisationEquivalence::comparator}
-	 * @param reasoner Reasoner used to compute the graphs
-	 */
-	public SerialisationEquivalenceByGraph(Equivalence<SerialisationGraph> comparator,
-			SerialisableExtensionReasoner reasoner) {
-		super(comparator);
-		this.reasoner = reasoner;
+	@Override
+	public boolean isEquivalent(SerialisationGraph graph1, SerialisationGraph graph2) {
+		return graph1.getNodes().equals(graph2.getNodes());
 	}
 
 	@Override
-	protected DungTheory getFramework(SerialisationGraph object) {
-		// not supported
+	public boolean isEquivalent(Collection<SerialisationGraph> graphs) {
+		SerialisationGraph first = graphs.iterator().next();
+		for (SerialisationGraph graph : graphs) {
+			if(!isEquivalent(first, graph))
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public Collection<SerialisationGraph> getEquivalentTheories(SerialisationGraph graph) {
+		//not supported
 		return null;
 	}
 
 	@Override
-	protected SerialisationGraph getRelevantAspect(DungTheory framework) {
-		return this.reasoner.getModelsGraph(framework);
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	
 
 }

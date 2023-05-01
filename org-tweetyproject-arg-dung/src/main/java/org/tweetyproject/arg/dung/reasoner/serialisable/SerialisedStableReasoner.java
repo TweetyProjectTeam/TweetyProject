@@ -18,8 +18,9 @@
  */
 package org.tweetyproject.arg.dung.reasoner.serialisable;
 
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionState;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
 /**
@@ -35,12 +36,13 @@ public class SerialisedStableReasoner extends SerialisedAdmissibleReasoner {
 	}
 
 	/**
-     * A set S is accepted iff the AF of the state is empty
-     * @param state the current state
+     * A set S is accepted iff the framework is empty
+     * @param reducedFramework The current framework of the transition system
+	 * @param constructedExtension The extension constructed so far.
      * @return true, iff the AF has  no arguments or attacks
      */
     @Override
-    public boolean terminationFunction(TransitionState state) {
-        return state.getTheory().isEmpty();
+    public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
+        return reducedFramework.isEmpty();
     }
 }

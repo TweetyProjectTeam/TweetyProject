@@ -46,17 +46,7 @@ public class StandardEquivalence implements Equivalence<DungTheory>  {
 
 	@Override
 	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
-		for (Extension<DungTheory> ext1 : reasoner.getModels(obj1)) {
-			boolean foundEquivalent = false;
-			for (Extension<DungTheory> ext2 : reasoner.getModels(obj2)) {
-				if(ext1.equals(ext2)) {
-					foundEquivalent = true;
-					break;
-				}
-			}
-			if(!foundEquivalent) return false;
-		}
-		return true;
+		return reasoner.getModels(obj1).equals(reasoner.getModels(obj2));
 	}
 
 	@Override

@@ -61,6 +61,7 @@ public class SerialisationSequenceTest {
 
 		CreateSequencesForTest(seqAB11X, seqAB12X, seqAB2X, seqBCX, seqAB11BCX, seqAB12BCX, seqAB2BCX);
 
+		//Act
 		//Assert
 		Assert.assertTrue(seqAB11.equals(seqAB12));
 		Assert.assertTrue(seqAB11.equals(seqAB2));
@@ -118,7 +119,6 @@ public class SerialisationSequenceTest {
 		argsBC.add(c);
 		var extBC = new Extension<DungTheory>(argsBC);
 
-		//Act
 		out_seqAB11.add(extAB11);
 
 		out_seqAB12.add(extAB12);

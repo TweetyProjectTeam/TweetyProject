@@ -24,6 +24,7 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationAnalysisPlotter;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -48,7 +49,8 @@ class StandardEquivalenceTest {
 		createFrameworksAdmEQ(frameEQ1, frameEQ2);
 		createFrameworksAdmNotEQ(frameNotEQ1, frameNotEQ2);
 		
-		var equivalence = new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADM));
+		var equivalence = new StandardEquivalence(AbstractExtensionReasoner
+				.getSimpleReasonerForSemantics(Semantics.ADM));
 		
 		//Act
 		//Assert
@@ -75,12 +77,16 @@ class StandardEquivalenceTest {
 				createFrameworksAdmEQ(frameEQ1, frameEQ2);
 				createFrameworksAdmNotEQ(frameNotEQ1, frameNotEQ2);
 				
-				var equivalence = new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADM));
+				var equivalence = new StandardEquivalence(AbstractExtensionReasoner
+						.getSimpleReasonerForSemantics(Semantics.ADM));
 				
 				//Act
 				//Assert
 				Assert.assertTrue(equivalence.isEquivalent(framesEQ));
 				Assert.assertFalse(equivalence.isEquivalent(framesNotEQ));
+				
+				
+				
 	}
 	
 	private void createFrameworksAdmNotEQ(DungTheory out_framework1, DungTheory out_framework2) {
@@ -94,11 +100,14 @@ class StandardEquivalenceTest {
 		
 		out_framework1.add(new Attack[] {new Attack(a, b),new Attack(b, c), new Attack(c, d), new Attack(e, c)});
 		out_framework2.add(new Attack[] {new Attack(a, b),new Attack(b, c), new Attack(c, d), new Attack(b, e)});
+		
+		/*
+		SerialisationAnalysisPlotter.plotAnalyses(new Semantics[] {Semantics.ADM}, 
+				new DungTheory[] {out_framework1, out_framework2}, "Ex", 2000, 1000);
+				*/
 	}
 	
 	private void createFrameworksAdmEQ(DungTheory out_framework1, DungTheory out_framework2) {
-		
-		
 		
 		var a = new Argument("a");
 		var b = new Argument("b");

@@ -18,10 +18,10 @@
  */
 package org.tweetyproject.arg.dung.examples;
 
-import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationAnalysisPlotter;
 import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationGraphPlotter;
+import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
 
 /**
  * This class summarises examples displaying the usage of {@link SerialisationGraphPlotter} 
@@ -46,17 +46,24 @@ public class SerialisationGraphPlotterExample {
 	
 	
 	public static void main(String[] args) {
-		Semantics[] semanticsUsed = new Semantics[] {Semantics.CO, Semantics.UC};
-		DungTheory[] exampleFrameworks = new DungTheory[] {
-				SerialisableExtensionReasonerExample.buildExample1(),
-				SerialisableExtensionReasonerExample.buildExample2(),
-				SerialisableExtensionReasonerExample.buildExample3()
+		Semantics semanticsUsed = Semantics.PR;
+		SerialisationGraph[] examples = new SerialisationGraph[] {
+				SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed)
+				.getModelsGraph(SerialisableExtensionReasonerExample.buildExample1()),
+				SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed)
+				.getModelsGraph(SerialisableExtensionReasonerExample.buildExample2()),
+				SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed)
+				.getModelsGraph(SerialisableExtensionReasonerExample.buildExample3())
 				};
 		
 		
+		
+		
 		//System.out.println("======================================== all Examples ========================================");
-		SerialisationAnalysisPlotter.plotAnalyses(semanticsUsed, exampleFrameworks, "Example", 2000, 1000);
-		System.out.println("");
+		for (SerialisationGraph graph : examples) {
+			SerialisationGraphPlotter.plotGraph(graph, 1000, 2000, "Example");
+			System.out.println("");
+		}
 	}
 
 }

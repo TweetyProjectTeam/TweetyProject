@@ -20,7 +20,6 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionState;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -49,7 +48,7 @@ public class SerialisedAdmissibleReasoner extends SerialisableExtensionReasoner 
     }
 
     @Override
-    public boolean terminationFunction(TransitionState state) {
+    public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
         // terminate iff there are no more initial sets
         return true;
     }

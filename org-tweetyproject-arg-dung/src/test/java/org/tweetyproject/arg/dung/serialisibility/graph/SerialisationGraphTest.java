@@ -26,8 +26,6 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
 import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
-import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionState;
-import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionStateNode;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.graphs.*;
@@ -45,7 +43,6 @@ class SerialisationGraphTest {
 	void testGetSerialisationSequence() {
 		
 		//Arrange
-		var framework = new DungTheory();
 		var a = new Argument("a");
 		var b = new Argument("b");
 		var c = new Argument("c");
@@ -54,9 +51,23 @@ class SerialisationGraphTest {
 		var f = new Argument("f");
 		var x = new Argument("x");
 		var y = new Argument("y");
+	
 		var argsA = new HashSet<Argument>();
 		argsA.add(a);
 		var extA = new Extension<DungTheory>(argsA);
+		var extA2 = new Extension<DungTheory>();
+		extA2.add(a);
+		var extB = new Extension<DungTheory>();
+		extB.add(b);
+		var extC = new Extension<DungTheory>();
+		extC.add(c);
+		var extD = new Extension<DungTheory>();
+		extD.add(d);
+		var extE = new Extension<DungTheory>();
+		extE.add(e);
+		var extF = new Extension<DungTheory>();
+		extF.add(f);
+		
 		var argsAB = new HashSet<Argument>();
 		argsAB.add(a);
 		argsAB.add(b);
@@ -96,56 +107,53 @@ class SerialisationGraphTest {
 		argsAEFY.add(y);
 		var extAEFY = new Extension<DungTheory>(argsAEFY);
 		
-		var rootA = new TransitionStateNode(new TransitionState(framework, extA));
-		var graph = new SerialisationGraph(rootA, Semantics.ADM);
+
+		var graph = new SerialisationGraph(extA, Semantics.ADM, new HashSet<Extension<DungTheory>>());
 		
-		var nodeAB = new TransitionStateNode(new TransitionState(framework, extAB));
-		graph.add(nodeAB);
-		graph.add(new DirectedEdge<TransitionStateNode>(rootA, nodeAB));
+		graph.add(extAB);
+		graph.add(new DirectedEdge<Extension<DungTheory>>(extA, extAB));
 		
-		var nodeABC = new TransitionStateNode(new TransitionState(framework, extABC));
-		graph.add(nodeABC);
-		graph.add(new DirectedEdge<TransitionStateNode>(nodeAB, nodeABC));
+		graph.add(extABC);
+		graph.add(new DirectedEdge<Extension<DungTheory>>(extAB, extABC));
 		
-		var nodeABCD = new TransitionStateNode(new TransitionState(framework, extABCD));
-		graph.add(nodeABCD);
-		graph.add(new DirectedEdge<TransitionStateNode>(nodeABC, nodeABCD));
+		graph.add(extABCD);
+		graph.add(new DirectedEdge<Extension<DungTheory>>(extABC, extABCD));
 		
-		var nodeABCDX = new TransitionStateNode(new TransitionState(framework, extABCDX));
-		graph.add(nodeABCDX);
-		graph.add(new DirectedEdge<TransitionStateNode>(nodeABCD, nodeABCDX));
+		graph.add(extABCDX);
+		graph.add(new DirectedEdge<Extension<DungTheory>>(extABCD, extABCDX));
 		
+		graph.add(extAE);
+		graph.add(new DirectedEdge<Extension<DungTheory>>(extA, extAE));
 		
-		var nodeAE = new TransitionStateNode(new TransitionState(framework, extAE));
-		graph.add(nodeAE);
-		graph.add(new DirectedEdge<TransitionStateNode>(rootA, nodeAE));
+		graph.add(extAEF);
+		graph.add(new DirectedEdge<Extension<DungTheory>>(extAE, extAEF));
 		
-		var nodeAEF = new TransitionStateNode(new TransitionState(framework, extAEF));
-		graph.add(nodeAEF);
-		graph.add(new DirectedEdge<TransitionStateNode>(nodeAE, nodeAEF));
+		graph.add(extAEFY);
+		graph.add(new DirectedEdge<Extension<DungTheory>>(extAEF, extAEFY));
 		
-		var nodeAEFY = new TransitionStateNode(new TransitionState(framework, extAEFY));
-		graph.add(nodeAEFY);
-		graph.add(new DirectedEdge<TransitionStateNode>(nodeAEF, nodeAEFY));
+		var expSeq1 = new SerialisationSequence();	
+		expSeq1.add(extA2);
+		expSeq1.add(extB);
+		expSeq1.add(extC);
+		expSeq1.add(extD);
 		
-		var expSeq1 = new SerialisationSequence();
-		expSeq1.add(extA);
-		expSeq1.add(extAB);
-		expSeq1.add(extABC);
-		expSeq1.add(extABCD);
+		var expSeqs1 = new HashSet<SerialisationSequence>();
+		expSeqs1.add(expSeq1);
 		
 		var expSeq2 = new SerialisationSequence();
 		expSeq2.add(extA);
-		expSeq2.add(extAE);
-		expSeq2.add(extAEF);
+		expSeq2.add(extE);
+		expSeq2.add(extF);
+		var expSeqs2 = new HashSet<SerialisationSequence>();
+		expSeqs2.add(expSeq2);
 		
 		//Act
-		var actSeq1 = graph.getSerialisationSequence(nodeABCD);
-		var actSeq2 = graph.getSerialisationSequence(nodeAEF);
+		var actSeq1 = graph.getSerialisationSequences(extABCD);
+		var actSeq2 = graph.getSerialisationSequences(extAEF);
 		
 		//Assert		
-		Assert.assertEquals(expSeq1, actSeq1);
-		Assert.assertEquals(expSeq2, actSeq2);
+		Assert.assertEquals(expSeqs1, actSeq1);
+		Assert.assertEquals(expSeqs2, actSeq2);
 	}
 
 }

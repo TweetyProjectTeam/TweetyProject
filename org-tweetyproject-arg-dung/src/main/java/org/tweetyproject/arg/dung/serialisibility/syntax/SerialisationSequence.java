@@ -19,15 +19,14 @@
 package org.tweetyproject.arg.dung.serialisibility.syntax;
 
 import java.util.LinkedHashSet;
-import java.util.Set;
 
-import org.tweetyproject.arg.dung.semantics.*;
-import org.tweetyproject.arg.dung.syntax.*;
+import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents a sequence of set of arguments, which is typically generated during the process 
+ * This class represents a sequence of sets of arguments, which is typically generated during the process
  * of finding extensions in a framework by serialising sets of arguments.
- * 
+ *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
@@ -35,33 +34,36 @@ import org.tweetyproject.arg.dung.syntax.*;
 public class SerialisationSequence extends LinkedHashSet<Extension<DungTheory>> {
 
 	private static final long serialVersionUID = -109538431325318647L;
-	
+
+	public SerialisationSequence() {
+		super();
+	}
+
 	/**
-	 * @return The extension of this sequence, which has the most arguments and which is thus seen as the final extension
+	 * Creates a sequence, containing the specified element as the first element in the list
+	 * @param root First element of the sequence
 	 */
-	public Extension<DungTheory> getExtensionFinal() {
-		Extension<DungTheory> output = null;
+	public SerialisationSequence(Extension<DungTheory> root) {
+		super();
+		this.add(root);
+	}
+
+	/**
+	 * Creates a sequence, containing all arguments of the specified sequence, in the same order
+	 * @param parentSequence Sequence specifying part of the arguments on this sequence
+	 */
+	public SerialisationSequence(SerialisationSequence parentSequence) {
+		super(parentSequence);
+	}
+
+	/**
+	 * @return An extension containing all arguments of the sets of this sequence
+	 */
+	public Extension<DungTheory> getCompleteExtension() {
+		Extension<DungTheory> output = new Extension<>();
 		for (Extension<DungTheory> extension : this) {
-			if(output == null || extension.size() > output.size()) output = extension;
+			output.addAll(extension);
 		}
 		return output;
-	}
-	
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o == this)
-            return true;
-
-        if (!(o instanceof Set))
-            return false;
-        SerialisationSequence c = (SerialisationSequence) o;
-        if (c.size() != size())
-            return false;
-        try {
-        	return super.equals(c);
-        } catch (ClassCastException | NullPointerException unused) {
-            return false;
-        }
 	}
 }

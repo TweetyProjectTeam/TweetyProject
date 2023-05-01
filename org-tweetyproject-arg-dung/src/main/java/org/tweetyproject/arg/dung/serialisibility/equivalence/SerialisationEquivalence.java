@@ -22,13 +22,11 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
-import org.tweetyproject.arg.dung.syntax.Argument;
-import org.tweetyproject.arg.dung.syntax.ArgumentationFramework;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 frameworks are equivalent, 
- * by comparing their serialisability. 
+ * This class represents an comparator, which defines if 2 frameworks are equivalent,
+ * by comparing their serialisability.
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
@@ -40,7 +38,7 @@ public abstract class SerialisationEquivalence<T> implements Equivalence<DungThe
 	 * Comparator used to define the equivalence of two graphs
 	 */
 	private Equivalence<T> comparator;
-	
+
 	/**
 	 * @param comparator Comparator used to define the equivalence of two graphs
 	 */
@@ -48,50 +46,52 @@ public abstract class SerialisationEquivalence<T> implements Equivalence<DungThe
 		super();
 		this.comparator = comparator;
 	}
-	
-	/**
-	 * Method to retrieve the aspect of the serialisation, 
-	 * which is important for the comparison of the equivalence of the frameworks to compare
-	 * @param framework Abstract argumentation framework, which is to be compared
-	 * @return Aspect of the serialisation, which is needed for the comparator to define equivalence
-	 */
-	protected abstract T getRelevantAspect(DungTheory framework);
-	
-	/**
-	 * @param object Aspect of the serialisation, used to compare equivalence
-	 * @return Framework, which is associated with this aspect
-	 */
-	protected abstract DungTheory getFramework(T object);
-	
+
 	@Override
-	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
-		return comparator.isEquivalent(getRelevantAspect(obj1), getRelevantAspect(obj2));
+	public String getDescription() {
+		return this.comparator.getDescription();
+	}
+
+	@Override
+	public Collection<DungTheory> getEquivalentTheories(DungTheory framework) {
+		var objects = this.comparator.getEquivalentTheories(this.getRelevantAspect(framework));
+		if(objects == null) {
+			return null;
+		}
+		var out_frameworks = new HashSet<DungTheory>();
+		for (T element : objects) {
+			out_frameworks.add(this.getFramework(element));
+		}
+		return out_frameworks;
 	}
 
 	@Override
 	public boolean isEquivalent(Collection<DungTheory> objects) {
 		var aspects = new HashSet<T>();
-		
+
 		for (DungTheory framework : objects) {
-			aspects.add(getRelevantAspect(framework));
+			aspects.add(this.getRelevantAspect(framework));
 		}
-		
-		return comparator.isEquivalent(aspects);
+
+		return this.comparator.isEquivalent(aspects);
 	}
 
 	@Override
-	public Collection<DungTheory> getEquivalentTheories(DungTheory framework) {
-		var objects = comparator.getEquivalentTheories(getRelevantAspect(framework));
-		if(objects == null) return null;
-		var out_frameworks = new HashSet<DungTheory>();
-		for (T element : objects) {
-			out_frameworks.add(getFramework(element));
-		}
-		return out_frameworks;
+	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
+		return this.comparator.isEquivalent(this.getRelevantAspect(obj1), this.getRelevantAspect(obj2));
 	}
-	
-	@Override
-	public String getDescription() {
-		return this.comparator.getDescription();
-	}
+
+	/**
+	 * @param object Aspect of the serialisation, used to compare equivalence
+	 * @return Framework, which is associated with this aspect
+	 */
+	protected abstract DungTheory getFramework(T object);
+
+	/**
+	 * Method to retrieve the aspect of the serialisation,
+	 * which is important for the comparison of the equivalence of the frameworks to compare
+	 * @param framework Abstract argumentation framework, which is to be compared
+	 * @return Aspect of the serialisation, which is needed for the comparator to define equivalence
+	 */
+	protected abstract T getRelevantAspect(DungTheory framework);
 }

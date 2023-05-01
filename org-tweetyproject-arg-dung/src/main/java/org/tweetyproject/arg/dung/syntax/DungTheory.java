@@ -1020,6 +1020,18 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return DefaultGraph.getInducedSubgraphs(this);
 	}
 
+	/**
+	 * Method to check if an equal object to this object is contained in the specified set
+	 * @param setOfEquals Set of object of the same class
+	 * @return TRUE iff an equal object is contained in the specified set
+	 */
+	public boolean equalsIn(HashSet<DungTheory> setOfEquals) {
+		for (DungTheory elem : setOfEquals) {
+			if(this.equals(elem)) return true;
+		}
+		return false;
+	}
+
 
 
 
