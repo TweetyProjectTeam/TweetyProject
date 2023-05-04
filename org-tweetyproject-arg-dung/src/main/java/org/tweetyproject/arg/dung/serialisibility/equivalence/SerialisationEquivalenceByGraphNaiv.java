@@ -48,12 +48,6 @@ public class SerialisationEquivalenceByGraphNaiv implements Equivalence<Serialis
 	}
 
 	@Override
-	public Collection<SerialisationGraph> getEquivalentTheories(SerialisationGraph graph) {
-		//not supported
-		return null;
-	}
-
-	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
 		return null;

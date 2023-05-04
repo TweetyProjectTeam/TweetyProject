@@ -50,12 +50,6 @@ public class SerialisationEquivalenceBySequenceNaiv implements Equivalence<Colle
 	}
 
 	@Override
-	public Collection<Collection<SerialisationSequence>> getEquivalentTheories(Collection<SerialisationSequence> sequence) {
-		// not supported
-		return null;
-	}
-
-	@Override
 	public String getDescription() {
 		return "serialSequenceNaivEQ";
 	}

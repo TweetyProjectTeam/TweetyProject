@@ -60,12 +60,6 @@ public class StandardEquivalence implements Equivalence<DungTheory>  {
 	}
 
 	@Override
-	public Collection<DungTheory> getEquivalentTheories(DungTheory object) {
-		// not supported
-		return null;
-	}
-
-	@Override
 	public String getDescription() {
 		return "StandardEQ";
 	}

@@ -30,7 +30,7 @@ import java.util.*;
  *
  * @author Lars Bengel
  */
-public class StrongEquivalence implements Equivalence<DungTheory> {
+public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentTheories<DungTheory> {
 
 	private EquivalenceKernel kernel;
 
@@ -43,13 +43,7 @@ public class StrongEquivalence implements Equivalence<DungTheory> {
 		this.kernel = kernel;
 	}
 
-	/**
-	 * compute whether the given theories are strongly equivalent wrt. the kernel
-	 * 
-	 * @param theory1 a dung theory
-	 * @param theory2 a dung theory
-	 * @return true if both theories are equivalent wrt. to the kernel
-	 */
+	@Override
 	public boolean isEquivalent(DungTheory theory1, DungTheory theory2) {
 		DungTheory kernelTheory1 = this.kernel.getKernel(theory1);
 		DungTheory kernelTheory2 = this.kernel.getKernel(theory2);
@@ -58,12 +52,7 @@ public class StrongEquivalence implements Equivalence<DungTheory> {
 
 	}
 
-	/**
-	 * compute whether the given theories are strongly equivalent wrt. the kernel
-	 * 
-	 * @param theories a collection of dung theories
-	 * @return true if all theories are equivalent wrt. to the kernel
-	 */
+	@Override
 	public boolean isEquivalent(Collection<DungTheory> theories) {
 		Collection<DungTheory> kernelTheories = new HashSet<>();
 		for (DungTheory theory : theories) {
@@ -103,13 +92,7 @@ public class StrongEquivalence implements Equivalence<DungTheory> {
 		 * return theories; }
 		 */
 
-	/**
-	 * compute all strongly equivalent theories for the given theory i.e. enumerate
-	 * all theories and compare to the base theory
-	 * 
-	 * @param baseTheory a dung theory
-	 * @return collection of strongly equivalent theories
-	 */
+	@Override
 	public Collection<DungTheory> getEquivalentTheories(DungTheory baseTheory) {
 		EnumeratingDungTheoryGenerator theoryGenerator = new EnumeratingDungTheoryGenerator();
 		int numArgs = baseTheory.size();

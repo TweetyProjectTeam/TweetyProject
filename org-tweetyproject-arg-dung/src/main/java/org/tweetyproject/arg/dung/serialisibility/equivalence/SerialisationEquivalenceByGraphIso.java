@@ -50,12 +50,6 @@ public class SerialisationEquivalenceByGraphIso implements Equivalence<Serialisa
 	}
 
 	@Override
-	public Collection<SerialisationGraph> getEquivalentTheories(SerialisationGraph object) {
-		// not supported
-		return null;
-	}
-
-	@Override
 	public String getDescription() {
 		return "serialGraphIsoEQ";
 	}

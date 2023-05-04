@@ -84,6 +84,7 @@ public class EquivalenceCompExFinder {
 	 * this parameter defines the maximum number of pairs returned by this method.
 	 * @return Pair of frameworks, which are equivalent to each other as specified in the method call
 	 */
+	@SuppressWarnings("unchecked")
 	public LinkedHashMap<DungTheory,DungTheory> findExamples(
 			boolean equivalence1IsTRUE, 
 			boolean equivalence2IsTRUE,
@@ -101,22 +102,22 @@ public class EquivalenceCompExFinder {
 					generatedFramework1, 
 					this.generator);
 
-			if(equivalence1IsTRUE && generatedFramework2 == null && equivalence1.getEquivalentTheories(generatedFramework1) != null) {
+			if(equivalence1IsTRUE && generatedFramework2 == null && (equivalence1 instanceof EquivalentTheories<?>)) {
 				generatedFramework2 = generateCompliantFramework(
 						equivalence1IsTRUE, 
 						equivalence2IsTRUE,
 						numberOfMaxRandomGenerationTries, 
 						generatedFramework1, 
-						equivalence1.getEquivalentTheories(generatedFramework1).iterator());
+						((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(generatedFramework1).iterator());
 			}
 			// single IF-statements, since framework could still be null, after method call
-			if(equivalence2IsTRUE && generatedFramework2 == null && equivalence2.getEquivalentTheories(generatedFramework1) != null) {
+			if(equivalence2IsTRUE && generatedFramework2 == null && (equivalence2 instanceof EquivalentTheories<?>)) {
 				generatedFramework2 = generateCompliantFramework(
 						equivalence1IsTRUE, 
 						equivalence2IsTRUE,
 						numberOfMaxRandomGenerationTries, 
 						generatedFramework1, 
-						equivalence2.getEquivalentTheories(generatedFramework1).iterator());
+						((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator());
 			}					
 
 			if(generatedFramework2 == null)
