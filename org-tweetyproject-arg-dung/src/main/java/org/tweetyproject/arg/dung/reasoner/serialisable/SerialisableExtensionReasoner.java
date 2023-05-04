@@ -36,7 +36,8 @@ import org.tweetyproject.graphs.DirectedEdge;
  *
  * to implement this class, you need to define a selection and a termination function
  * Selection function a(UA, UC, C):     selects and returns a subset of the initial sets
- * Termination function b((AF, S)):      If the given state satisfies a specific condition, its extension may be accepted by the associated serialised semantics
+ * Termination function b((AF, S)):      If the given state satisfies a specific condition, 
+ * its extension may be accepted by the associated serialised semantics
  *
  * @author Lars Bengel
  * @author Julian Sander
@@ -96,7 +97,8 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	}
 
 	/**
-	 * Creates a set of sequences, each sequences is showing the serialisation path to generate the final extension regarding the semantics of the reasoner.
+	 * Creates a set of sequences, each sequences is showing the serialisation path to generate the final extension regarding 
+	 * the semantics of the reasoner.
 	 * @param bbase Argumentation framework, for which the extensions shall be computed.
 	 * @return Set of sequences tracing the serialisation process for each final extension
 	 */
@@ -145,7 +147,8 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		// compute all initial sets, sorted in the three categories unattacked, unchallenged, challenged
 		Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(framework);
 		// select initial sets according to given specific semantic
-		Collection<Extension<DungTheory>> newExts = this.selectionFunction(initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
+		Collection<Extension<DungTheory>> newExts = this.selectionFunction(
+				initialSets.get("unattacked"), initialSets.get("unchallenged"), initialSets.get("challenged"));
 		return newExts;
 	}
 

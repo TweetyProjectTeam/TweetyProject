@@ -38,7 +38,10 @@ public class SerialisedAdmissibleReasoner extends SerialisableExtensionReasoner 
 	}
 
 	@Override
-    public Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
+    public Collection<Extension<DungTheory>> selectionFunction(
+    		Collection<Extension<DungTheory>> unattacked, 
+    		Collection<Extension<DungTheory>> unchallenged, 
+    		Collection<Extension<DungTheory>> challenged) {
         // select all initial sets as possible successors
         Collection<Extension<DungTheory>> result = new HashSet<>(unattacked);
         result.addAll(unchallenged);
