@@ -25,6 +25,7 @@ import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 
 import org.tweetyproject.arg.dung.equivalence.EquivalenceCompExFinder;
+import org.tweetyproject.arg.dung.equivalence.DecisionMaker;
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
 import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
@@ -32,8 +33,11 @@ import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionRea
 import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraph;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphIso;
+import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
 import org.tweetyproject.arg.dung.serialisibility.plotting.SerialisationAnalysisPlotter;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
+import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 
 /**
@@ -52,14 +56,27 @@ public class EquivalenceCompExFinderExample {
 		Equivalence<DungTheory> equivalence2 = new SerialisationEquivalenceByGraph(
 				new SerialisationEquivalenceByGraphIso(),
 				SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
-		boolean theoryBeEqual = false;
-		boolean serialGraphBeEqual = true;
-		int numberOfArguments = 6;
-		int numberOfExamples = 1;
+		var decisionMaker = new DecisionMaker() {
+			@Override
+			public boolean decide(boolean isEQ1, boolean isEQ2) {
+				return isEQ1 != isEQ2;
+			}
+			
+			@Override
+			public boolean getShallCriteriaBeTrueB() {
+				return true;
+			}
+			
+			@Override
+			public boolean getShallCriteriaBeTrueA() {
+				return true;
+			}
+		};
 		int maxNumberTryFindExample = 10;
-		double attackProbability = 0.2;
-		boolean avoidSelfAttacks = false;
-
+		var parameters = new DungTheoryGenerationParameters();
+		parameters.numberOfArguments = 6;
+		parameters.attackProbability = 0.2;
+		parameters.avoidSelfAttacks = false;
 
 		ApxWriter writer = new ApxWriter();
 		String path = System.getProperty("user.home")
@@ -75,16 +92,22 @@ public class EquivalenceCompExFinderExample {
 		EquivalenceCompExFinder exampleFinder = new EquivalenceCompExFinder(
 				equivalence1,
 				equivalence2,
-				numberOfArguments, 
-				attackProbability, 
-				avoidSelfAttacks);
-		LinkedHashMap<DungTheory, DungTheory> examples = exampleFinder.
-				findExamples(theoryBeEqual, serialGraphBeEqual, maxNumberTryFindExample, numberOfExamples);
+				decisionMaker);
+		LinkedHashMap<DungTheory, DungTheory> examples;
+		try {
+			examples = exampleFinder.
+					findExample(
+							maxNumberTryFindExample,
+							new DefaultDungTheoryGenerator(parameters),
+							new DefaultDungTheoryGenerator(parameters));
+		
 		int i = 0;
 		for (DungTheory frameworkKey : examples.keySet()) {
-			writeFile(frameworkKey, semanticsUsed, theoryBeEqual, serialGraphBeEqual, writer, path, now, i, equivalence1.getDescription(), equivalence2.getDescription(), 0);
+			boolean isEQ1 = equivalence1.isEquivalent(frameworkKey, examples.get(frameworkKey));
+			boolean isEQ2 = equivalence2.isEquivalent(frameworkKey, examples.get(frameworkKey));
+			writeFile(frameworkKey, semanticsUsed, isEQ1, isEQ2, writer, path, now, i, equivalence1.getDescription(), equivalence2.getDescription(), 0);
 			DungTheory secondExample = examples.get(frameworkKey);
-			writeFile(secondExample, semanticsUsed, theoryBeEqual, serialGraphBeEqual, writer, path, now, i, equivalence1.getDescription(), equivalence2.getDescription(), 1);
+			writeFile(secondExample, semanticsUsed, isEQ1, isEQ2, writer, path, now, i, equivalence1.getDescription(), equivalence2.getDescription(), 1);
 			SerialisationAnalysisPlotter.plotAnalyses(
 					new Semantics[] {semanticsUsed},
 					new DungTheory[] {frameworkKey, secondExample},
@@ -92,15 +115,17 @@ public class EquivalenceCompExFinderExample {
 					2000, 1000);
 			i++;
 		}
-		if(examples.isEmpty()) System.out.println("No Examples found.");
+		} catch (NoExampleFoundException e) {
+			System.out.println("No Examples found.");
+		}
 		System.out.println("Processing finished");
 	}
 
-	private static void writeFile(DungTheory framework, Semantics semanticsUsed, boolean theoryBeEqual, boolean serialGraphBeEqual,
+	private static void writeFile(DungTheory framework, Semantics semanticsUsed, boolean isEQ1, boolean isEQ2,
 			ApxWriter writer, String path, ZonedDateTime now, int indexInExampleSeries, String equi1Name, String equi2Name, int indexInPair) {
 		File file = new File(path + File.separator +
-				equi1Name + "_" + theoryBeEqual + "_" +
-				equi2Name + "_" + serialGraphBeEqual + "_" +
+				equi1Name + "_" + isEQ1 + "_" +
+				equi2Name + "_" + isEQ2 + "_" +
 				semanticsUsed.abbreviation() + "_" +
 				"Example"  + "_" +
 				now.getYear() + "_" +

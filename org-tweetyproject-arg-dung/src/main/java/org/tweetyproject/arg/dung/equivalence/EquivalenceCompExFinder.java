@@ -22,9 +22,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.NoSuchElementException;
 
+import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
 import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
+import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
 
 /**
  * This class represents an example generator. Objects of this class generate argumentation frameworks, which comply
@@ -39,8 +41,7 @@ public class EquivalenceCompExFinder {
 
 	private Equivalence<DungTheory> equivalence1;
 	private Equivalence<DungTheory> equivalence2;
-	private DefaultDungTheoryGenerator generator;
-	private DungTheoryGenerationParameters parameters;
+	private DecisionMaker decisionMaker;
 
 	/**
 	 * 
@@ -48,73 +49,53 @@ public class EquivalenceCompExFinder {
 	 * the definition of the equivalence should be different than the one used for equivalence2
 	 * @param equivalence2 Compares if two generated frameworks are equivalent to one another, 
 	 * the definition of the equivalence should be different than the one used for equivalence1
-	 * @param numberOfArguments {@link DungTheoryGenerationParameters#numberOfArguments}
-	 * @param attackProbability {@link DungTheoryGenerationParameters#attackProbability}
-	 * @param avoidSelfAttacks {@link DungTheoryGenerationParameters#avoidSelfAttacks}
-	 * @param maxNumberTryFindExample Maximal number of iterations, the generator does in order to find a suitable example
+	 * @param decisionMaker Object, which decides if the resulting equivalences are acceptable
 	 */
 	public EquivalenceCompExFinder(
 			Equivalence<DungTheory> equivalence1,
-			Equivalence<DungTheory> equivalence2,			
-			int numberOfArguments, 
-			double attackProbability, 
-			boolean avoidSelfAttacks) {
+			Equivalence<DungTheory> equivalence2,
+			DecisionMaker decisionMaker) {
 		this.equivalence1 = equivalence1;
 		this.equivalence2 = equivalence2;
-
-		this.parameters = new DungTheoryGenerationParameters();
-		this.parameters.numberOfArguments = numberOfArguments;
-		this.parameters.attackProbability = attackProbability;
-		this.parameters.avoidSelfAttacks = avoidSelfAttacks;
-
-		this.generator = new DefaultDungTheoryGenerator(this.parameters);
+		this.decisionMaker = decisionMaker;
 	}
 
 	/**
 	 * Generates argumentation frameworks, with the behaviors wrt equivalence as specified.
-	 * @param equivalence1IsTRUE If TRUE, then the two generated argumentation frameworks are equivalent 
-	 * wrt the definition of equivalence1. If FALSE both framewokrs are not equivalent wrt this definition.
-	 * @param equivalence2IsTRUE If TRUE, then the two generated argumentation frameworks are equivalent 
-	 * wrt the definition of equivalence2. If FALSE both framewokrs are not equivalent wrt this definition.
 	 * @param numberOfMaxRandomGenerationTries Maximum Number of iterations trying to generate randomly 
 	 * 2 frameworks compliant to the specified conditions. After surpassing this threshold, the second 
 	 * framework will be generated on the basis of the first one (if a an equivalent framework was demanded)
-	 * @param numberOfMaxIterations Maximum number of iterations and thus possible pairs of examples. In each 
-	 * iteration it will be tried to generate a pair of frameworks. Thus if every iteration is successful, 
-	 * this parameter defines the maximum number of pairs returned by this method.
+	 * @param generatorFramework1 Iterator, which generates the first framework
+	 * @param generatorFramework2 Iterator, which generates the second framework (Note that the framework will be generated as an 
+	 * equivalent theory if wished, in case this generator fails. 
 	 * @return Pair of frameworks, which are equivalent to each other as specified in the method call
+	 * @throws NoExampleFoundException Thrown if no pair of frameworks (compliant to the equivalent-conditions) could be generated
 	 */
 	@SuppressWarnings("unchecked")
-	public LinkedHashMap<DungTheory,DungTheory> findExamples(
-			boolean equivalence1IsTRUE, 
-			boolean equivalence2IsTRUE,
+	public LinkedHashMap<DungTheory,DungTheory> findExample(
 			int numberOfMaxRandomGenerationTries,
-			int numberOfMaxIterations){
+			Iterator<DungTheory> generatorFramework1,
+			Iterator<DungTheory> generatorFramework2) 
+					throws NoExampleFoundException{
 
 		var output = new LinkedHashMap<DungTheory,DungTheory>();
 
-		for (int i = 0; i < numberOfMaxIterations; i++) {
-			var generatedFramework1 = this.generator.next();
+		
+			var generatedFramework1 = generatorFramework1.next();
 			DungTheory generatedFramework2 = generateCompliantFramework(
-					equivalence1IsTRUE, 
-					equivalence2IsTRUE,
 					numberOfMaxRandomGenerationTries, 
 					generatedFramework1, 
-					this.generator);
+					generatorFramework2);
 
-			if(equivalence1IsTRUE && generatedFramework2 == null && (equivalence1 instanceof EquivalentTheories<?>)) {
+			if(decisionMaker.getShallCriteriaBeTrueA() && generatedFramework2 == null && (equivalence1 instanceof EquivalentTheories<?>)) {
 				generatedFramework2 = generateCompliantFramework(
-						equivalence1IsTRUE, 
-						equivalence2IsTRUE,
 						numberOfMaxRandomGenerationTries, 
 						generatedFramework1, 
 						((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(generatedFramework1).iterator());
 			}
 			// single IF-statements, since framework could still be null, after method call
-			if(equivalence2IsTRUE && generatedFramework2 == null && (equivalence2 instanceof EquivalentTheories<?>)) {
+			if(decisionMaker.getShallCriteriaBeTrueB() && generatedFramework2 == null && (equivalence2 instanceof EquivalentTheories<?>)) {
 				generatedFramework2 = generateCompliantFramework(
-						equivalence1IsTRUE, 
-						equivalence2IsTRUE,
 						numberOfMaxRandomGenerationTries, 
 						generatedFramework1, 
 						((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator());
@@ -122,24 +103,20 @@ public class EquivalenceCompExFinder {
 
 			if(generatedFramework2 == null)
 				// equivalent theory could not be generated
-				continue; // skips this iteration since no pair could be generated
+				throw new NoExampleFoundException();
 
 			output.put(generatedFramework1, generatedFramework2);
-		}
+		
 
 		return output;
 	}
 
-	private DungTheory generateCompliantFramework(boolean equivalence1IsTRUE, boolean equivalence2IsTRUE,
-			int numberOfMaxRandomGenerationTries, DungTheory framework, Iterator<DungTheory> generator) {
+	private DungTheory generateCompliantFramework(int numberOfMaxRandomGenerationTries, DungTheory framework, Iterator<DungTheory> generator) {
 		DungTheory output = null;
 		for (int j = 0; j < numberOfMaxRandomGenerationTries; j++) {
 			try {
 				DungTheory temp = generator.next();
-				if(
-						equivalence1.isEquivalent(framework, temp) == equivalence1IsTRUE &&
-						equivalence2.isEquivalent(framework, temp) == equivalence2IsTRUE
-						) {
+				if( decisionMaker.decide(equivalence1.isEquivalent(framework, temp), equivalence2.isEquivalent(framework, temp))) {
 					output = temp;
 					break; // stops generation of a framework
 				}
