@@ -21,12 +21,11 @@ package org.tweetyproject.arg.dung.equivalence;
 import java.util.Collection;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
-import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents an comparator, which defines if 2 argumentation frameworks are equivalent, 
- * by comparing if they have the same extensions wrt a semantics specified by a reasoner. 
+ * This class represents an comparator, which defines if 2 argumentation frameworks are equivalent,
+ * by comparing if they have the same extensions wrt a semantics specified by a reasoner.
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
@@ -45,24 +44,26 @@ public class StandardEquivalence implements Equivalence<DungTheory>  {
 	}
 
 	@Override
-	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
-		return reasoner.getModels(obj1).equals(reasoner.getModels(obj2));
+	public String getDescription() {
+		return "StandardEQ";
 	}
 
 	@Override
 	public boolean isEquivalent(Collection<DungTheory> objects) {
 		DungTheory first = objects.iterator().next();
 		for (DungTheory framework : objects) {
-			if(framework == first) continue;
-			if(!isEquivalent(framework, first))return false;
+			if(framework == first) {
+				continue;
+			}
+			if(!this.isEquivalent(framework, first)) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	@Override
-	public String getDescription() {
-		return "StandardEQ";
+	public boolean isEquivalent(DungTheory obj1, DungTheory obj2) {
+		return this.reasoner.getModels(obj1).equals(this.reasoner.getModels(obj2));
 	}
-
-	
 }
