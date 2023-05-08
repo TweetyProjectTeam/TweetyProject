@@ -22,7 +22,6 @@ import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
-import org.tweetyproject.commons.Plotter;
 
 /**
  * This class summarizes some examples, showcasing the usage of the {@link DungTheoryPlotter} to visualize argumentation frameworks
