@@ -94,7 +94,7 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 		if(this.attacks == null){
 			this.currentSize = 1;
 			this.arguments = new HashSet<Argument>();
-			arguments.add(new Argument("A1"));
+			arguments.add(new Argument("a1"));
 			this.possibleAttacks = this.generatePossibleAttacks(arguments);
 			this.attacks = new BitSet(this.possibleAttacks.size());
 		}else{
@@ -102,7 +102,7 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 				this.currentSize++;
 				this.arguments = new HashSet<Argument>();
 				for(int i = 0; i < this.currentSize;i++)
-					arguments.add(new Argument("A"+i));				
+					arguments.add(new Argument("a"+i));				
 				this.possibleAttacks = this.generatePossibleAttacks(this.arguments);
 				this.attacks = new BitSet(this.possibleAttacks.size());				
 			}

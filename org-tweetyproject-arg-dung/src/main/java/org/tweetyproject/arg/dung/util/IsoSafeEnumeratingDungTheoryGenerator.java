@@ -101,7 +101,7 @@ public class IsoSafeEnumeratingDungTheoryGenerator implements DungTheoryGenerato
 		this.cntAttacks = 0;
 		DungTheory theory = new DungTheory();
 		for(int i = 0; i < this.cntArguments; i++)
-			theory.add(new Argument("A"+i));
+			theory.add(new Argument("a"+i));
 		this.currentTheories.clear();
 		this.currentTheories.add(theory);
 		this.iterator = this.currentTheories.iterator();
