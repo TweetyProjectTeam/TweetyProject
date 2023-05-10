@@ -19,6 +19,7 @@
 
 package org.tweetyproject.arg.dung.equivalence.strong;
 
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -71,4 +72,31 @@ public abstract class EquivalenceKernel {
      * @return the set of useless attacks
      */
     public abstract Collection<Attack> getUselessAttacks(DungTheory theory);
+    
+    /**
+     * Returns a suitable kernel for the specified semantics
+     * @param semantics Semantics influencing the equivalence
+     * @return kernel to assess the equivalence
+     */
+    public static EquivalenceKernel getKernel(Semantics semantics) {
+    	switch (semantics) {
+		case ADM: {
+			return EquivalenceKernel.ADMISSIBLE;
+		}
+		case CO:{
+			return EquivalenceKernel.COMPLETE;
+		}
+		case GR:{
+			return EquivalenceKernel.GROUNDED;
+		}
+		case ST:{
+			return EquivalenceKernel.STABLE;
+		}
+		case PR:{
+			return EquivalenceKernel.ADMISSIBLE;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + semantics);
+		}
+    }
 }

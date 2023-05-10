@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
@@ -33,7 +34,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationEquivalenceBySequence extends SerialisationEquivalence<HashSet<SerialisationSequence>>{
+public class SerialisationEquivalenceBySequence extends SerialisationEquivalence<Collection<SerialisationSequence>>{
 
 	private SerialisableExtensionReasoner reasoner;
 	
@@ -41,7 +42,7 @@ public class SerialisationEquivalenceBySequence extends SerialisationEquivalence
 	 * @param comparator {@link SerialisationEquivalence::comparator}
 	 * @param reasoner Reasoner used to compute the sequences
 	 */
-	public SerialisationEquivalenceBySequence(Equivalence<HashSet<SerialisationSequence>> comparator,
+	public SerialisationEquivalenceBySequence(Equivalence<Collection<SerialisationSequence>> comparator,
 			SerialisableExtensionReasoner reasoner) {
 		super(comparator);
 		this.reasoner = reasoner;
@@ -53,7 +54,7 @@ public class SerialisationEquivalenceBySequence extends SerialisationEquivalence
 	}
 
 	@Override
-	protected DungTheory getFramework(HashSet<SerialisationSequence> object) {
+	protected DungTheory getFramework(Collection<SerialisationSequence> object) {
 		// not supported
 		return null;
 	}

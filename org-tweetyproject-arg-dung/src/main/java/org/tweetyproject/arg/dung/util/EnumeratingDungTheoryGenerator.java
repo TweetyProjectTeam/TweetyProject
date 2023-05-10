@@ -138,5 +138,9 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 	public boolean hasNext() {
 		return true;
 	}
+	
+	public int getCurrentSize() {
+		return currentSize;
+	}
 
 }

@@ -24,10 +24,6 @@ import java.util.NoSuchElementException;
 
 import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
-import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
-import org.tweetyproject.arg.dung.util.DungTheoryGenerator;
-
 /**
  * This class represents an example generator. Objects of this class generate argumentation frameworks, which comply
  * conditions regarding their state of equivalence to each other. The conditions are expressed by different 
