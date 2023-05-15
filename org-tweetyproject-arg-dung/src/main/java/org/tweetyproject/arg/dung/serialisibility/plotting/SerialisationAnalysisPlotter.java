@@ -94,6 +94,44 @@ public class SerialisationAnalysisPlotter {
 	 * @param height Height of the new frames created.
 	 */
 	public static void plotAnalyses(Semantics[] semantics, DungTheory[] frameworks, String title, int width, int height) {
+		SerialisationAnalysisPlotter.plotAnalyses(generateGraphs(semantics, frameworks), title, width, height);
+	}
+	
+	/**
+	 * Plots specified frameworks and their associated serialisation graphs 
+	 * for the specified semantics. Creates one single frame for all frameworks and graphs.
+	 * @param mapAFtoGraphs Frameworks mapped to the associated serialisation graphs using different semantics
+	 * @param title Title, common to all specified analyses to plot
+	 * @param width Width of the new frames created.
+	 * @param height Height of the new frames created.
+	 */
+	public static void plotAnalysesOneFrame(HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String title, int width, int height) {
+		Plotter groundPlotter = new Plotter();
+		groundPlotter.createFrame(width, height);
+		for (DungTheory exampleFramework : mapAFtoGraphs.keySet()) {
+			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, title);
+			for (SerialisationGraph graph : mapAFtoGraphs.get(exampleFramework)) {
+				SerialisationGraphPlotter.plotGraph(graph, groundPlotter, title);
+			}
+		}
+		groundPlotter.show();
+	}
+
+	/**
+	 * Plots specified frameworks and their associated serialisation graphs 
+	 * for the specified semantics. Creates one single frame for all frameworks and graphs.
+	 * @param semantics Semantics of the extension created
+	 * @param frameworks Frameworks, for which the extensions should be found.
+	 * @param title Title, common to all specified  serialisation graphs to plot
+	 * @param width Width of the new frames created.
+	 * @param height Height of the new frames created.
+	 */
+	public static void plotAnalysesOneFrame(Semantics[] semantics, DungTheory[] frameworks, String title, int width, int height) {
+		SerialisationAnalysisPlotter.plotAnalysesOneFrame(generateGraphs(semantics, frameworks), title, width, height);
+	}
+	
+	private static HashMap<DungTheory, SerialisationGraph[]> generateGraphs(Semantics[] semantics,
+			DungTheory[] frameworks) {
 		var convExamples = new HashMap<DungTheory, SerialisationGraph[]>();
 
 		for (DungTheory example : frameworks) {
@@ -105,7 +143,6 @@ public class SerialisationAnalysisPlotter {
 			}
 			convExamples.put(example, graphs);
 		}
-
-		SerialisationAnalysisPlotter.plotAnalyses(convExamples, title, width, height);
+		return convExamples;
 	}
 }

@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.commons;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.util.List;
@@ -56,6 +57,7 @@ public class Plotter {
 	public void createFrame(int frameWidth, int frameHeight) {
 		this.frame = new JFrame();
 		this.mainPanel = new JPanel(new FlowLayout());
+		this.mainPanel.setPreferredSize(new Dimension(frameWidth, frameHeight));
         this.frame.setSize(frameWidth, frameHeight);	
         
 	}
