@@ -43,8 +43,6 @@ import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquiv
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequenceNaiv;
 import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
-import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 import org.tweetyproject.arg.dung.writer.ApxWriter;
 
@@ -93,7 +91,7 @@ public class EquivalenceCompExFinderExample {
 		//High numbers seem to be preferable, since they increase the chance of getting a compliant framework.
 		int maxNumberTryFindExample = 30;
 		// creates only pairs with less arguments than maxNumArguments. If maxNumArguments is 0, then no limit
-		int maxNumArguments = 4;
+		int maxNumArguments = 5;
 
 		//[STEP] 2/5: set the sort of equivalences, which you would like to investigate
 		Equivalence<DungTheory> equivalence1 = new StrongEquivalence(EquivalenceKernel.getKernel(semanticsUsed));
@@ -126,23 +124,13 @@ public class EquivalenceCompExFinderExample {
 		// [STEP] 4/5: set the generators, which will be used to generate the frameworks
 		var fstFrameworkGen = new EnumeratingDungTheoryGenerator();
 
-		var parameters = new DungTheoryGenerationParameters();
-		parameters.attackProbability = 0.2;
-		parameters.avoidSelfAttacks = false;
 		int factorNumArgsGen1ToGen2 = 1;
-		var scndFrameworkGen = new DefaultDungTheoryGenerator(parameters);
-
-		//[STEP] 5/5: set the destination, where the files of the frameworks shall be saved to
-		String path = System.getProperty("user.home")
-				+ File.separator + "experiments"
-				+ File.separator + "tweetyProject"
-				+ File.separator + "eQExperiment_Strong"
-				+ File.separator + semanticsUsed.abbreviation();
-
-		// ================================== optional configuration ==========================================
-
-		//[STEP] 6: you can choose to create a new generator, for each new pair of frameworks
-		// methods below are called once, before trying to generate such a pair
+//		var parameters = new DungTheoryGenerationParameters();
+//		parameters.attackProbability = 0.2;
+//		parameters.avoidSelfAttacks = false;
+//		var scndFrameworkGen = new DefaultDungTheoryGenerator(parameters);
+		/*You can choose to create a new generator, for each new pair of frameworks. 
+		The methods below are called once, before trying to generate such a pair*/
 		Function<String, Iterator<DungTheory>> getGen1 = new Function<>() {
 
 			@Override
@@ -154,11 +142,22 @@ public class EquivalenceCompExFinderExample {
 
 			@Override
 			public Iterator<DungTheory> apply(String t) {
-				parameters.numberOfArguments = fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2;
-				return scndFrameworkGen;
+//				parameters.numberOfArguments = fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2;
+//				return scndFrameworkGen;
+				var scndGen = new EnumeratingDungTheoryGenerator();
+				while(scndGen.getCurrentSize() < fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2) {
+					scndGen.next();
+				}
+				return scndGen;
 			}
 		};
 
+		//[STEP] 5/5: set the destination, where the files of the frameworks shall be saved to
+		String path = System.getProperty("user.home")
+				+ File.separator + "experiments"
+				+ File.separator + "tweetyProject"
+				+ File.separator + "eQExperiment_Strong"
+				+ File.separator + semanticsUsed.abbreviation();
 		// ================================== configuration completed =======================================================
 		EquivalenceCompExFinderExample.createDir(path);
 		ZoneId z = ZoneId.of( "Europe/Berlin" );
@@ -183,7 +182,7 @@ public class EquivalenceCompExFinderExample {
 			} catch (NoExampleFoundException e) {
 				//System.out.println("No Examples found.");
 			}
-		}while( maxNumArguments == 0 || examplePair.keySet().toArray(new DungTheory[1])[0].getNodes().size() < maxNumArguments);
+		}while( maxNumArguments == 0 || examplePair.keySet().toArray(new DungTheory[1])[0].getNodes().size() < maxNumArguments + 1);
 		
 		System.out.println("Finished processing for semantics: " + semanticsUsed.abbreviation());
 	}

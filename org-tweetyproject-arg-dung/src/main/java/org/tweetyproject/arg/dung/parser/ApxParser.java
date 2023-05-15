@@ -41,12 +41,21 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @author Matthias Thimm
  */
 public class ApxParser extends AbstractDungParser {
-
+	
 	/* (non-Javadoc)
 	 * @see argc.parser.Parser#parse(java.io.File)
 	 */
 	@Override
 	public DungTheory parse(Reader reader) throws IOException{
+	 return parse(reader, false);
+	}
+	
+	public DungTheory parseIgnoreComments(Reader reader) throws IOException{
+		 return parse(reader, true);
+		}
+	
+	
+	private DungTheory parse(Reader reader, boolean ignoreComment) throws IOException{
 		DungTheory theory = new DungTheory();
 		BufferedReader in = new BufferedReader(reader);
 		String row = null;
@@ -83,8 +92,13 @@ public class ApxParser extends AbstractDungParser {
 				row = row.substring(1,row.length()-1).trim();				
 				theory.addAttack(arguments.get(row.substring(0, row.indexOf(","))),arguments.get(row.substring(row.indexOf(",")+1, row.length())));
 			}else{
-				in.close();
-				throw new IOException("Argument or attack declaration expected, found " + row);
+				if(ignoreComment) {
+					System.out.println(row);
+				}
+				else {
+					in.close();
+					throw new IOException("Argument or attack declaration expected, found " + row);
+				}
 			}	
 		}
 		in.close();
