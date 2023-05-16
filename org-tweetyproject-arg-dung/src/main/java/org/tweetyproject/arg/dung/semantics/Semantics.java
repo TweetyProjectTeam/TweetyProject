@@ -18,6 +18,8 @@
  */
  package org.tweetyproject.arg.dung.semantics;
 
+import java.util.NoSuchElementException;
+
 /**
  * This enum lists all semantics.
  * @author Matthias Thimm
@@ -123,5 +125,19 @@ public enum Semantics {
 	 */
 	public String abbreviation(){
 		return this.abbreviation;
+	}
+	
+	/**
+	 * Returns the semantics, which abbreviation is described by the string.
+	 * @param abbreviation Abbreviation of the semantics to return.
+	 * @return Semantics, with the abbreviation as specified in the parameter.
+	 */
+	public static Semantics getSemantics(String abbreviation) {
+		for (Semantics element : Semantics.values()) {
+			if(element.abbreviation.equals(abbreviation)) {
+				return element;
+			}
+		}
+		throw new NoSuchElementException();
 	}
 }
