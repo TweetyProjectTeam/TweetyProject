@@ -19,6 +19,8 @@
 package org.tweetyproject.arg.dung.serialisibility.plotting;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
@@ -115,7 +117,14 @@ public class SerialisationAnalysisPlotter {
 		for (DungTheory exampleFramework : mapAFtoGraphs.keySet()) {
 			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, titles[i]);
 			for (SerialisationGraph graph : mapAFtoGraphs.get(exampleFramework)) {
-				SerialisationGraphPlotter.plotGraph(graph, groundPlotter, titles[i]);
+				if(graph == null) {
+					var labels = new LinkedList<String>();
+					labels.add("No Sequence found.");
+					groundPlotter.addLabels(labels);
+				}
+				else {
+					SerialisationGraphPlotter.plotGraph(graph, groundPlotter, titles[i]);
+				}
 			}
 			i++;
 		}
@@ -144,9 +153,14 @@ public class SerialisationAnalysisPlotter {
 		for (DungTheory example : frameworks) {
 			SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];
 			for (int i = 0; i < graphs.length; i++) {
-				graphs[i] = SerialisableExtensionReasoner
-						.getSerialisableReasonerForSemantics(semantics[i])
-						.getModelsGraph(example);
+				try {
+					graphs[i] = SerialisableExtensionReasoner
+							.getSerialisableReasonerForSemantics(semantics[i])
+							.getModelsGraph(example);
+				}
+				catch(NoSuchElementException e) {
+					graphs[i] = null;
+				}
 			}
 			convExamples.put(example, graphs);
 		}
