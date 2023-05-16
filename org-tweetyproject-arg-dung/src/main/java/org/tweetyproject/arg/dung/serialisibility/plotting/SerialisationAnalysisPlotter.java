@@ -26,6 +26,7 @@ import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationGraph;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.commons.Plotter;
+import org.tweetyproject.commons.PlotterMultiFrame;
 
 /**
  * This class summarizes static methods used to plot serialisability analyses, 
@@ -101,20 +102,25 @@ public class SerialisationAnalysisPlotter {
 	 * Plots specified frameworks and their associated serialisation graphs 
 	 * for the specified semantics. Creates one single frame for all frameworks and graphs.
 	 * @param mapAFtoGraphs Frameworks mapped to the associated serialisation graphs using different semantics
-	 * @param title Title, common to all specified analyses to plot
+	 * @param titles Titles of the frameworks
+	 * @param plotter The plotter, in which a new frame will be created.
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
 	 */
-	public static void plotAnalysesOneFrame(HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String title, int width, int height) {
-		Plotter groundPlotter = new Plotter();
+	public static PlotterMultiFrame plotAnalysesOneFrame(
+			HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String[] titles, int width, int height) {
+		var groundPlotter = new PlotterMultiFrame();
 		groundPlotter.createFrame(width, height);
+		int i = 0;
 		for (DungTheory exampleFramework : mapAFtoGraphs.keySet()) {
-			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, title);
+			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, titles[i]);
 			for (SerialisationGraph graph : mapAFtoGraphs.get(exampleFramework)) {
-				SerialisationGraphPlotter.plotGraph(graph, groundPlotter, title);
+				SerialisationGraphPlotter.plotGraph(graph, groundPlotter, titles[i]);
 			}
+			i++;
 		}
 		groundPlotter.show();
+		return groundPlotter;
 	}
 
 	/**
@@ -122,12 +128,13 @@ public class SerialisationAnalysisPlotter {
 	 * for the specified semantics. Creates one single frame for all frameworks and graphs.
 	 * @param semantics Semantics of the extension created
 	 * @param frameworks Frameworks, for which the extensions should be found.
-	 * @param title Title, common to all specified  serialisation graphs to plot
+	 * @param titles Titles of the frameworks
+	 * @param plotter The plotter, in which a new frame will be created.
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
 	 */
-	public static void plotAnalysesOneFrame(Semantics[] semantics, DungTheory[] frameworks, String title, int width, int height) {
-		SerialisationAnalysisPlotter.plotAnalysesOneFrame(generateGraphs(semantics, frameworks), title, width, height);
+	public static PlotterMultiFrame plotAnalysesOneFrame(Semantics[] semantics, DungTheory[] frameworks, String[] titles, int width, int height) {
+		return SerialisationAnalysisPlotter.plotAnalysesOneFrame(generateGraphs(semantics, frameworks), titles, width, height);
 	}
 	
 	private static HashMap<DungTheory, SerialisationGraph[]> generateGraphs(Semantics[] semantics,

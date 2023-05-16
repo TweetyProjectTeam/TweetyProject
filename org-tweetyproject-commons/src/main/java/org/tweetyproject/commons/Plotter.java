@@ -20,7 +20,6 @@ package org.tweetyproject.commons;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.LayoutManager;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -37,7 +36,7 @@ public class Plotter {
 	/**
 	 * The frame where the model is drawn
 	 */
-	private JFrame frame;
+	protected JFrame frame;
 	/**
 	 * The main panel in the frame
 	 */
