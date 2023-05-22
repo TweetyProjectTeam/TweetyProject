@@ -47,8 +47,10 @@ public class SerialisationSequenceTest {
 		var seqAB11BC = new SerialisationSequence();
 		var seqAB12BC = new SerialisationSequence();
 		var seqAB2BC = new SerialisationSequence();
+		var seqDE = new SerialisationSequence();
+		var seqED = new SerialisationSequence();
 
-		CreateSequencesForTest(seqAB11, seqAB12, seqAB2, seqBC, seqAB11BC, seqAB12BC, seqAB2BC);
+		CreateSequencesForTest(seqAB11, seqAB12, seqAB2, seqBC, seqAB11BC, seqAB12BC, seqAB2BC, seqDE, seqED);
 
 		//create same Sequences on different arguments (different objects)
 		var seqAB11X = new SerialisationSequence();
@@ -58,8 +60,10 @@ public class SerialisationSequenceTest {
 		var seqAB11BCX = new SerialisationSequence();
 		var seqAB12BCX = new SerialisationSequence();
 		var seqAB2BCX = new SerialisationSequence();
+		var seqDEX = new SerialisationSequence();
+		var seqEDX = new SerialisationSequence();
 
-		CreateSequencesForTest(seqAB11X, seqAB12X, seqAB2X, seqBCX, seqAB11BCX, seqAB12BCX, seqAB2BCX);
+		CreateSequencesForTest(seqAB11X, seqAB12X, seqAB2X, seqBCX, seqAB11BCX, seqAB12BCX, seqAB2BCX, seqDEX, seqEDX);
 
 		//Act
 		//Assert
@@ -79,6 +83,9 @@ public class SerialisationSequenceTest {
 		Assert.assertFalse(seqAB12BC.equals(seqBC));
 		Assert.assertFalse(seqAB2BC.equals(seqBC));
 		
+		Assert.assertFalse(seqDE.equals(seqED));
+		Assert.assertFalse(seqED.equals(seqDE));
+		
 		//compare same sequences, but with arguments being two different objects
 		Assert.assertTrue(seqAB11.equals(seqAB11X));
 		Assert.assertTrue(seqAB12.equals(seqAB12X));
@@ -87,6 +94,8 @@ public class SerialisationSequenceTest {
 		Assert.assertTrue(seqAB11BC.equals(seqAB11BCX));
 		Assert.assertTrue(seqAB12BC.equals(seqAB12BCX));
 		Assert.assertTrue(seqAB2BC.equals(seqAB2BCX));
+		Assert.assertTrue(seqDE.equals(seqDEX));
+		Assert.assertTrue(seqED.equals(seqEDX));
 	}
 
 
@@ -97,10 +106,14 @@ public class SerialisationSequenceTest {
 			SerialisationSequence out_seqBC, 
 			SerialisationSequence out_seqAB11BC, 
 			SerialisationSequence out_seqAB12BC, 
-			SerialisationSequence out_seqAB2BC ) {
+			SerialisationSequence out_seqAB2BC, 
+			SerialisationSequence out_seqDE,
+			SerialisationSequence out_seqED) {
 		var a = new Argument("a");
 		var b = new Argument("b");
 		var c = new Argument("c");
+		var d = new Argument("d");
+		var e = new Argument("e");
 
 		var argsAB = new HashSet<Argument>();
 		argsAB.add(a);
@@ -118,6 +131,12 @@ public class SerialisationSequenceTest {
 		argsBC.add(b);
 		argsBC.add(c);
 		var extBC = new Extension<DungTheory>(argsBC);
+		
+		var extD = new Extension<DungTheory>();
+		extD.add(d);
+		
+		var extE = new Extension<DungTheory>();
+		extE.add(e);
 
 		out_seqAB11.add(extAB11);
 
@@ -135,5 +154,11 @@ public class SerialisationSequenceTest {
 
 		out_seqAB2BC.add(extAB2);
 		out_seqAB2BC.add(extBC);
+		
+		out_seqDE.add(extD);
+		out_seqDE.add(extE);
+		
+		out_seqED.add(extE);
+		out_seqED.add(extD);
 	}
 }
