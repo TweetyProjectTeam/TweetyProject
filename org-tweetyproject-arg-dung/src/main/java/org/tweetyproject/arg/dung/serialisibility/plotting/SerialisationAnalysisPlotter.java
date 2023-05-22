@@ -97,25 +97,24 @@ public class SerialisationAnalysisPlotter {
 	 * @param height Height of the new frames created.
 	 */
 	public static void plotAnalyses(Semantics[] semantics, DungTheory[] frameworks, String title, int width, int height) {
-		SerialisationAnalysisPlotter.plotAnalyses(generateGraphs(semantics, frameworks), title, width, height);
+		SerialisationAnalysisPlotter.plotAnalyses(generateGraphsMapToAF(semantics, frameworks), title, width, height);
 	}
 	
 	/**
 	 * Plots specified frameworks and their associated serialisation graphs 
 	 * for the specified semantics. Creates one single frame for all frameworks and graphs.
 	 * @param mapAFtoGraphs Frameworks mapped to the associated serialisation graphs using different semantics
-	 * @param titles Titles of the frameworks
+	 * @param title Title of the frameworks
 	 * @param plotter The plotter, in which a new frame will be created.
 	 * @param width Width of the new frames created.
 	 * @param height Height of the new frames created.
 	 */
 	public static PlotterMultiFrame plotAnalysesOneFrame(
-			HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String[] titles, int width, int height) {
+			HashMap<DungTheory, SerialisationGraph[]> mapAFtoGraphs, String title, int width, int height) {
 		var groundPlotter = new PlotterMultiFrame();
 		groundPlotter.createFrame(width, height);
-		int i = 0;
 		for (DungTheory exampleFramework : mapAFtoGraphs.keySet()) {
-			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, titles[i]);
+			DungTheoryPlotter.plotFramework(exampleFramework, groundPlotter, title);
 			for (SerialisationGraph graph : mapAFtoGraphs.get(exampleFramework)) {
 				if(graph == null) {
 					var labels = new LinkedList<String>();
@@ -123,10 +122,9 @@ public class SerialisationAnalysisPlotter {
 					groundPlotter.addLabels(labels);
 				}
 				else {
-					SerialisationGraphPlotter.plotGraph(graph, groundPlotter, titles[i]);
+					SerialisationGraphPlotter.plotGraph(graph, groundPlotter, title);
 				}
 			}
-			i++;
 		}
 		groundPlotter.show();
 		return groundPlotter;
@@ -143,25 +141,47 @@ public class SerialisationAnalysisPlotter {
 	 * @param height Height of the new frames created.
 	 */
 	public static PlotterMultiFrame plotAnalysesOneFrame(Semantics[] semantics, DungTheory[] frameworks, String[] titles, int width, int height) {
-		return SerialisationAnalysisPlotter.plotAnalysesOneFrame(generateGraphs(semantics, frameworks), titles, width, height);
+		var groundPlotter = new PlotterMultiFrame();
+		groundPlotter.createFrame(width, height);
+		for (int i = 0; i < titles.length; i++) {
+			DungTheoryPlotter.plotFramework(frameworks[i], groundPlotter, titles[i]);
+			for (SerialisationGraph graph : generateGraphs(semantics, frameworks[i])) {
+				if(graph == null) {
+					var labels = new LinkedList<String>();
+					labels.add("No Sequence found.");
+					groundPlotter.addLabels(labels);
+				}
+				else {
+					SerialisationGraphPlotter.plotGraph(graph, groundPlotter, titles[i]);
+				}
+			}
+		}
+		groundPlotter.show();
+		return groundPlotter;
 	}
 	
-	private static HashMap<DungTheory, SerialisationGraph[]> generateGraphs(Semantics[] semantics,
+	private static SerialisationGraph[] generateGraphs(Semantics[] semantics,
+			DungTheory framework) {
+		SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];
+		for (int i = 0; i < graphs.length; i++) {
+			try {
+				graphs[i] = SerialisableExtensionReasoner
+						.getSerialisableReasonerForSemantics(semantics[i])
+						.getModelsGraph(framework);
+			}
+			catch(NoSuchElementException e) {
+				graphs[i] = null;
+			}
+		}
+		return graphs;
+	}
+	
+	private static HashMap<DungTheory, SerialisationGraph[]> generateGraphsMapToAF(Semantics[] semantics,
 			DungTheory[] frameworks) {
 		var convExamples = new HashMap<DungTheory, SerialisationGraph[]>();
 
 		for (DungTheory example : frameworks) {
-			SerialisationGraph[] graphs = new SerialisationGraph[semantics.length];
-			for (int i = 0; i < graphs.length; i++) {
-				try {
-					graphs[i] = SerialisableExtensionReasoner
-							.getSerialisableReasonerForSemantics(semantics[i])
-							.getModelsGraph(example);
-				}
-				catch(NoSuchElementException e) {
-					graphs[i] = null;
-				}
-			}
+			var graphs = generateGraphs(semantics, example);
 			convExamples.put(example, graphs);
 		}
 		return convExamples;

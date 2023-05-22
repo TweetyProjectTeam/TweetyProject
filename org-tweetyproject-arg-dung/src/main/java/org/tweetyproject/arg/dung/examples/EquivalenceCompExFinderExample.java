@@ -91,7 +91,11 @@ public class EquivalenceCompExFinderExample {
 		//High numbers seem to be preferable, since they increase the chance of getting a compliant framework.
 		int maxNumberTryFindExample = 30;
 		// creates only pairs with less arguments than maxNumArguments. If maxNumArguments is 0, then no limit
-		int maxNumArguments = 5;
+		int maxNumArguments = 3;
+		// creates only pairs with this minimal number of arguments
+		int minNumArgument = 3;
+		// if TRUE, then the generated frameworks will both have the same number of arguments
+		boolean onlySameNumberOfArguments = true;
 
 		//[STEP] 2/5: set the sort of equivalences, which you would like to investigate
 		Equivalence<DungTheory> equivalence1 = new StrongEquivalence(EquivalenceKernel.getKernel(semanticsUsed));
@@ -123,7 +127,6 @@ public class EquivalenceCompExFinderExample {
 
 		// [STEP] 4/5: set the generators, which will be used to generate the frameworks
 		var fstFrameworkGen = new EnumeratingDungTheoryGenerator();
-
 		int factorNumArgsGen1ToGen2 = 1;
 //		var parameters = new DungTheoryGenerationParameters();
 //		parameters.attackProbability = 0.2;
@@ -160,16 +163,21 @@ public class EquivalenceCompExFinderExample {
 				+ File.separator + semanticsUsed.abbreviation();
 		// ================================== configuration completed =======================================================
 		EquivalenceCompExFinderExample.createDir(path);
-		ZoneId z = ZoneId.of( "Europe/Berlin" );
-		ZonedDateTime now = ZonedDateTime.now( z );
+		var z = ZoneId.of( "Europe/Berlin" );
+		var now = ZonedDateTime.now( z );
 		String idSeries = "" + now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getHour() + now.getMinute();
 		int indexInSeries = 0;
 		LinkedHashMap<DungTheory, DungTheory> examplePair = null;
+		
+		while(fstFrameworkGen.getCurrentSize() < minNumArgument) {
+			fstFrameworkGen.next();
+		}
 		
 		do{
 			try {
 				examplePair = EquivalenceCompExFinderExample.generateOnePair(
 						maxNumberTryFindExample,
+						onlySameNumberOfArguments,
 						semanticsUsed, getGen1, getGen2, equivalence1, equivalence2, decisionMaker,
 						path, idSeries, indexInSeries, z);
 				indexInSeries++;
@@ -191,7 +199,7 @@ public class EquivalenceCompExFinderExample {
 	 * Creates a new directory iff path described does not exist
 	 */
 	private static void createDir(String path) {
-		File customDir = new File(path);
+		var customDir = new File(path);
 		customDir.mkdirs();
 	}
 
@@ -200,6 +208,7 @@ public class EquivalenceCompExFinderExample {
 	 */
 	private static LinkedHashMap<DungTheory, DungTheory> generateOnePair(
 			int maxNumberTryFindExample,
+			boolean onlySameNumberOfArguments,
 			Semantics semanticsUsed,
 			Function<String, Iterator<DungTheory>> getGen1,
 			Function<String, Iterator<DungTheory>> getGen2,
@@ -212,25 +221,24 @@ public class EquivalenceCompExFinderExample {
 			ZoneId currentZone) throws NoExampleFoundException {
 		
 
-		EquivalenceCompExFinder exampleFinder = new EquivalenceCompExFinder(
+		var exampleFinder = new EquivalenceCompExFinder(
 				equivalence1,
 				equivalence2,
 				decisionMaker);
-		LinkedHashMap<DungTheory, DungTheory> output = null;
 		//System.out.println("Processing started: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
-
-		ZonedDateTime timeStampProcessStart = ZonedDateTime.now( currentZone );
-		output = exampleFinder.
+		var timeStampProcessStart = ZonedDateTime.now( currentZone );
+		var output = exampleFinder.
 				findExample(
 						maxNumberTryFindExample,
+						onlySameNumberOfArguments,
 						getGen1.apply(""),
 						getGen2.apply(""));
-		ZonedDateTime timeStampProcessFinished = ZonedDateTime.now( currentZone );
+		var timeStampProcessFinished = ZonedDateTime.now( currentZone );
 
 		for (DungTheory frameworkKey : output.keySet()) {
 			boolean isEQ1 = equivalence1.isEquivalent(frameworkKey, output.get(frameworkKey));
 			boolean isEQ2 = equivalence2.isEquivalent(frameworkKey, output.get(frameworkKey));
-			DungTheory secondExample = output.get(frameworkKey);
+			var secondExample = output.get(frameworkKey);
 			EquivalenceCompExFinderExample.writeFile(
 					path, frameworkKey, idSeries, indexInSeries, 0,
 					semanticsUsed, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
@@ -284,12 +292,12 @@ public class EquivalenceCompExFinderExample {
 			ZonedDateTime dateTimeProcessFinished) {
 
 		var writer = new ApxWriter();
-		File file = new File(path + File.separator +
+		var file = new File(path + File.separator +
 				equi1Name + "_" + isEQ1 + "_" +
 				equi2Name + "_" + isEQ2 + "_" +
 				semanticsUsed.abbreviation() + "_" +
 				numArgumentFramework1 + "_" + numArgumentFramework2 + "_" +
-				idSeries + "_" + indexInSeries + "_" + indexInPair + "_" +
+				idSeries + "_" + indexInSeries + "_" + indexInPair + 
 				".apx");
 
 		var addInfo = new String[8];

@@ -61,6 +61,8 @@ public class EquivalenceCompExFinder {
 	 * @param numberOfMaxRandomGenerationTries Maximum Number of iterations trying to generate randomly 
 	 * 2 frameworks compliant to the specified conditions. After surpassing this threshold, the second 
 	 * framework will be generated on the basis of the first one (if a an equivalent framework was demanded)
+	 * @param onlySameNumberOfArguments If TRUE the two generated frameworks will have the same number of arguments. 
+	 * If FALSE, the number of arguments may differ from one framework to another.
 	 * @param generatorFramework1 Iterator, which generates the first framework
 	 * @param generatorFramework2 Iterator, which generates the second framework (Note that the framework will be generated as an 
 	 * equivalent theory if wished, in case this generator fails. 
@@ -70,6 +72,7 @@ public class EquivalenceCompExFinder {
 	@SuppressWarnings("unchecked")
 	public LinkedHashMap<DungTheory,DungTheory> findExample(
 			int numberOfMaxRandomGenerationTries,
+			boolean onlySameNumberOfArguments,
 			Iterator<DungTheory> generatorFramework1,
 			Iterator<DungTheory> generatorFramework2) 
 					throws NoExampleFoundException{
@@ -80,12 +83,14 @@ public class EquivalenceCompExFinder {
 			var generatedFramework1 = generatorFramework1.next();
 			DungTheory generatedFramework2 = generateCompliantFramework(
 					numberOfMaxRandomGenerationTries, 
+					onlySameNumberOfArguments,
 					generatedFramework1, 
 					generatorFramework2);
 
 			if(decisionMaker.getShallCriteriaBeTrueA() && generatedFramework2 == null && (equivalence1 instanceof EquivalentTheories<?>)) {
 				generatedFramework2 = generateCompliantFramework(
 						numberOfMaxRandomGenerationTries, 
+						onlySameNumberOfArguments,
 						generatedFramework1, 
 						((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(generatedFramework1).iterator());
 			}
@@ -93,6 +98,7 @@ public class EquivalenceCompExFinder {
 			if(decisionMaker.getShallCriteriaBeTrueB() && generatedFramework2 == null && (equivalence2 instanceof EquivalentTheories<?>)) {
 				generatedFramework2 = generateCompliantFramework(
 						numberOfMaxRandomGenerationTries, 
+						onlySameNumberOfArguments,
 						generatedFramework1, 
 						((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator());
 			}					
@@ -107,11 +113,14 @@ public class EquivalenceCompExFinder {
 		return output;
 	}
 
-	private DungTheory generateCompliantFramework(int numberOfMaxRandomGenerationTries, DungTheory framework, Iterator<DungTheory> generator) {
+	private DungTheory generateCompliantFramework(int numberOfMaxRandomGenerationTries, boolean onlySameNumArgs, DungTheory framework, Iterator<DungTheory> generator) {
 		DungTheory output = null;
 		for (int j = 0; j < numberOfMaxRandomGenerationTries; j++) {
 			try {
 				DungTheory temp = generator.next();
+				if(onlySameNumArgs && temp.getNumberOfNodes() != framework.getNumberOfNodes()) {
+					continue; //skips this try
+				}
 				if( decisionMaker.decide(equivalence1.isEquivalent(framework, temp), equivalence2.isEquivalent(framework, temp))) {
 					output = temp;
 					break; // stops generation of a framework
