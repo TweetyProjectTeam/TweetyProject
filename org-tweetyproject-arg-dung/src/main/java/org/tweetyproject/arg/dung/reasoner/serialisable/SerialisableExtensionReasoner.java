@@ -20,7 +20,6 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
@@ -103,7 +102,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 * @param bbase Argumentation framework, for which the extensions shall be computed.
 	 * @return Set of sequences tracing the serialisation process for each final extension
 	 */
-	public LinkedList<SerialisationSequence> getModelsSequences(DungTheory bbase){
+	public HashSet<SerialisationSequence> getModelsSequences(DungTheory bbase){
 		var initSeq = new SerialisationSequence();
 		initSeq.add(new Extension<DungTheory>());
 		return this.getModelsRecursive( bbase, initSeq);
@@ -160,7 +159,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		this.semantics = semantics;
 	}
 
-	private Collection<Extension<DungTheory>> computeExtension(LinkedList<SerialisationSequence> sequences){
+	private Collection<Extension<DungTheory>> computeExtension(HashSet<SerialisationSequence> sequences){
 		var output = new HashSet<Extension<DungTheory>>();
 
 		for (SerialisationSequence sequence : sequences) {
@@ -169,7 +168,7 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 		return output;
 	}
 
-	private SerialisationGraph computeGraph(LinkedList<SerialisationSequence> sequences) {
+	private SerialisationGraph computeGraph(HashSet<SerialisationSequence> sequences) {
 		var iterationOfSequences = sequences.iterator();
 		var sequence = iterationOfSequences.next(); // get first sequence
 		var iterationOfSets = sequence.iterator();
@@ -214,11 +213,11 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	 * @param out_SequencesFound Out parameter, defining the sequences of all final extensions
 	 * @return Collection of all final extension regarding the semantics of the reasoner
 	 */
-	private LinkedList<SerialisationSequence> getModelsRecursive(
+	private HashSet<SerialisationSequence> getModelsRecursive(
 			DungTheory currentFramework,
 			SerialisationSequence parentSequence) {
 
-		var output = new LinkedList<SerialisationSequence>();
+		var output = new HashSet<SerialisationSequence>();
 
 		// check whether the current state is acceptable, if yes add to results
 		if (this.terminationFunction(currentFramework, parentSequence.getCompleteExtension())) {

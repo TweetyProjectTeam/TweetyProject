@@ -66,4 +66,21 @@ public class SerialisationSequence extends LinkedHashSet<Extension<DungTheory>> 
 		}
 		return output;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof SerialisationSequence)) return false;
+		
+		var otherSequence = (SerialisationSequence) o;
+		
+		if(!super.equals(otherSequence)) return false;
+		
+		// consider order of elements
+		var iteratorThis = this.iterator();
+		var iteratorOther = otherSequence.iterator();
+		while(iteratorThis.hasNext()) {
+			if(!iteratorThis.next().equals(iteratorOther.next())) return false;
+		}
+		return true;
+	}
 }

@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import org.junit.Assert;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -101,8 +100,8 @@ class SerialisableExtensionReasonerTest {
 		var actualSeqs2 = reasonerToTest.getModelsSequences(example2);
 		
 		//Assert
-		Assert.assertTrue(expectedSeqs1.equals(actualSeqs1));
-		Assert.assertTrue(expectedSeqs2.equals(actualSeqs2));
+		Assert.assertEquals(expectedSeqs1, actualSeqs1);
+		Assert.assertEquals(expectedSeqs2, actualSeqs2);
 	}
 	
 	private DungTheory getExample1(Argument a0, Argument a1, Argument a2, Argument a3) {
@@ -131,8 +130,8 @@ class SerialisableExtensionReasonerTest {
 		return output;
 	}
 	
-	private LinkedList<SerialisationSequence> getSequencesForExample1(Argument a0, Argument a1, Argument a2, Argument a3){ 
-		var output = new LinkedList<SerialisationSequence>();
+	private HashSet<SerialisationSequence> getSequencesForExample1(Argument a0, Argument a1, Argument a2, Argument a3){ 
+		var output = new HashSet<SerialisationSequence>();
 		
 		var extEMPTY = new Extension<DungTheory>();
 		var ext0 = new Extension<DungTheory>();
@@ -187,8 +186,8 @@ class SerialisableExtensionReasonerTest {
 		return output;
 	}
 	
-	private LinkedList<SerialisationSequence> getSequencesForExample2(Argument a0, Argument a1, Argument a2, Argument a3){ 
-		var output = new LinkedList<SerialisationSequence>();
+	private HashSet<SerialisationSequence> getSequencesForExample2(Argument a0, Argument a1, Argument a2, Argument a3){ 
+		var output = new HashSet<SerialisationSequence>();
 		
 		var extEMPTY = new Extension<DungTheory>();
 		var ext0 = new Extension<DungTheory>();
