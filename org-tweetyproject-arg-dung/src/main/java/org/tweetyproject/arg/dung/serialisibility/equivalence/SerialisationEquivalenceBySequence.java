@@ -19,7 +19,7 @@
 package org.tweetyproject.arg.dung.serialisibility.equivalence;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedList;
 
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
@@ -49,7 +49,7 @@ public class SerialisationEquivalenceBySequence extends SerialisationEquivalence
 	}
 	
 	@Override
-	protected HashSet<SerialisationSequence> getRelevantAspect(DungTheory framework) {
+	protected LinkedList<SerialisationSequence> getRelevantAspect(DungTheory framework) {
 		return reasoner.getModelsSequences(framework);
 	}
 
