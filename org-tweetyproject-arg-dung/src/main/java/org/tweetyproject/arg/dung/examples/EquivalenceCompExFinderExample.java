@@ -35,10 +35,15 @@ import java.util.function.Function;
 import org.tweetyproject.arg.dung.equivalence.DecisionMaker;
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.equivalence.EquivalenceCompExFinder;
+import org.tweetyproject.arg.dung.equivalence.StandardEquivalence;
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
 import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
+import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Semantics;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraph;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphIso;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphNaiv;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequence;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequenceNaiv;
 import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
@@ -70,12 +75,14 @@ public class EquivalenceCompExFinderExample {
 			startSeries(semantics);
 		});
 		 */
-
+		int numArgugments = Integer.parseInt(args[0]);
+		String eq1Command = args[1];
+		String eq2Command = args[2];
 		for (Semantics semantics : semanticsUsed) {
 			Thread thread = new Thread(semantics.abbreviation()) {
 				@Override
 				public void run(){
-					EquivalenceCompExFinderExample.startSeries(semantics);
+					EquivalenceCompExFinderExample.startSeries(semantics, numArgugments, eq1Command, eq2Command);
 				}
 			};
 			thread.start();
@@ -85,23 +92,49 @@ public class EquivalenceCompExFinderExample {
 	/*
 	 * Starts a new series to generate diff. examples of the same semantics
 	 */
-	private static void startSeries(Semantics semanticsUsed) {
+	private static void startSeries(Semantics semanticsUsed, int numArguments, String eq1Command, String eq2Command) {
 		//======================= STEPS to configure experiment ===============================================   <= Configuration starts here
 		//[STEP] 1/5: set number for tries to compute 2nd framework.
 		//High numbers seem to be preferable, since they increase the chance of getting a compliant framework.
 		int maxNumberTryFindExample = 30;
 		// creates only pairs with less arguments than maxNumArguments. If maxNumArguments is 0, then no limit
-		int maxNumArguments = 3;
+		int maxNumArguments = numArguments;
 		// creates only pairs with this minimal number of arguments
-		int minNumArgument = 3;
+		int minNumArgument = numArguments;
 		// if TRUE, then the generated frameworks will both have the same number of arguments
 		boolean onlySameNumberOfArguments = true;
 
 		//[STEP] 2/5: set the sort of equivalences, which you would like to investigate
-		Equivalence<DungTheory> equivalence1 = new StrongEquivalence(EquivalenceKernel.getKernel(semanticsUsed));
-		Equivalence<DungTheory> equivalence2 = new SerialisationEquivalenceBySequence(
-				new SerialisationEquivalenceBySequenceNaiv(), 
-				SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+		Equivalence<DungTheory> equivalence1;
+		Equivalence<DungTheory> equivalence2;
+		
+		switch(eq1Command.toLowerCase()) {
+		case "strong":
+			equivalence1 = new StrongEquivalence(EquivalenceKernel.getKernel(semanticsUsed));
+			break;
+		case "standard":
+			equivalence1 = new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semanticsUsed));
+			break;
+		default:
+			throw new IllegalArgumentException("eq1Command(2. argument) is not a known command");
+		}
+		
+		switch(eq2Command.toLowerCase()) {
+		case "sequencenaiv":
+			equivalence2 = new SerialisationEquivalenceBySequence(
+					new SerialisationEquivalenceBySequenceNaiv(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+			break;
+		case "graphisomorph":
+			equivalence2 = new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+			break;
+		case "graphnaiv":
+			equivalence2 = new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+		default:
+			throw new IllegalArgumentException("eq2Command(3. argument) is not a known command");
+		}
 		
 		// [STEP] 3/5: define how the two equivalence should be compared to one another
 		var decisionMaker = new DecisionMaker() {
@@ -159,7 +192,8 @@ public class EquivalenceCompExFinderExample {
 		String path = System.getProperty("user.home")
 				+ File.separator + "experiments"
 				+ File.separator + "tweetyProject"
-				+ File.separator + "eQExperiment_Strong"
+				+ File.separator + "eQExperiment"
+				+ File.separator + equivalence1.getDescription() + "_" + equivalence2.getDescription()
 				+ File.separator + semanticsUsed.abbreviation();
 		// ================================== configuration completed =======================================================
 		EquivalenceCompExFinderExample.createDir(path);
