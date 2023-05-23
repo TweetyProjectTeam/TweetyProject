@@ -70,19 +70,15 @@ public class EquivalenceCompExFinderExample {
 		semanticsUsed.add(Semantics.ST);
 		//semanticsUsed.add(Semantics.UC);
 
-		/*
-		semanticsUsed.parallelStream().forEach(semantics ->{
-			startSeries(semantics);
-		});
-		 */
 		int numArgugments = Integer.parseInt(args[0]);
 		String eq1Command = args[1];
 		String eq2Command = args[2];
+		String pathToFolder = args.length > 3 ? args[3] : "";
 		for (Semantics semantics : semanticsUsed) {
 			Thread thread = new Thread(semantics.abbreviation()) {
 				@Override
 				public void run(){
-					EquivalenceCompExFinderExample.startSeries(semantics, numArgugments, eq1Command, eq2Command);
+					EquivalenceCompExFinderExample.startSeries(semantics, numArgugments, eq1Command, eq2Command, pathToFolder);
 				}
 			};
 			thread.start();
@@ -92,7 +88,7 @@ public class EquivalenceCompExFinderExample {
 	/*
 	 * Starts a new series to generate diff. examples of the same semantics
 	 */
-	private static void startSeries(Semantics semanticsUsed, int numArguments, String eq1Command, String eq2Command) {
+	private static void startSeries(Semantics semanticsUsed, int numArguments, String eq1Command, String eq2Command, String pathToFolder) {
 		//======================= STEPS to configure experiment ===============================================   <= Configuration starts here
 		//[STEP] 1/5: set number for tries to compute 2nd framework.
 		//High numbers seem to be preferable, since they increase the chance of getting a compliant framework.
@@ -189,11 +185,10 @@ public class EquivalenceCompExFinderExample {
 		};
 
 		//[STEP] 5/5: set the destination, where the files of the frameworks shall be saved to
-		String path = System.getProperty("user.home")
-				+ File.separator + "experiments"
-				+ File.separator + "tweetyProject"
-				+ File.separator + "eQExperiment"
-				+ File.separator + equivalence1.getDescription() + "_" + equivalence2.getDescription()
+		String path = "";
+		if(!pathToFolder.isBlank()) path = pathToFolder + File.separator;
+		path = path
+				+ equivalence1.getDescription() + "_" + equivalence2.getDescription()
 				+ File.separator + semanticsUsed.abbreviation();
 		// ================================== configuration completed =======================================================
 		EquivalenceCompExFinderExample.createDir(path);
@@ -224,7 +219,7 @@ public class EquivalenceCompExFinderExample {
 			} catch (NoExampleFoundException e) {
 				//System.out.println("No Examples found.");
 			}
-		}while( maxNumArguments == 0 || examplePair.keySet().toArray(new DungTheory[1])[0].getNodes().size() < maxNumArguments + 1);
+		}while( maxNumArguments == 0 || examplePair != null && (examplePair.keySet().toArray(new DungTheory[1])[0].getNodes().size() < maxNumArguments + 1));
 		
 		System.out.println("Finished processing for semantics: " + semanticsUsed.abbreviation());
 	}
