@@ -60,52 +60,61 @@ public class EquivalenceClassifierExample {
 		String path = args.length > 3 ? args[3] : "";
 		
 		for (Semantics singleSemantics : semanticsUsed) {
-			
-			var equivalence = new HashSet<Equivalence<DungTheory>>();
-			//add all equivalences if no argument was given
-			if(!eqcommand.isBlank()) {
-				switch(eqcommand.toLowerCase()) {
-				case "strong":
-					equivalence.add(new StrongEquivalence(EquivalenceKernel.getKernel(singleSemantics)));
-					break;
-				case "standard":
-					equivalence.add(new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(singleSemantics)));
-					break;
-				case "sequencenaiv":
-					equivalence.add(new SerialisationEquivalenceBySequence(
-							new SerialisationEquivalenceBySequenceNaiv(), 
-							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-					break;
-				case "graphisomorph":
-					equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
-							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-					break;
-				case "graphnaiv":
-					equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
-							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-				default:
-					throw new IllegalArgumentException("eqCommand is not a known equivalence");
+			Thread thread = new Thread(singleSemantics.abbreviation()) {
+				@Override
+				public void run(){
+					examineSemantics(argNumber, eqcommand, path, singleSemantics);
 				}
-			}
-			else {
-				equivalence.add(new StrongEquivalence(EquivalenceKernel.getKernel(singleSemantics)));
-				equivalence.add(new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(singleSemantics)));
-				equivalence.add(new SerialisationEquivalenceBySequence(
-						new SerialisationEquivalenceBySequenceNaiv(), 
-						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-				equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
-						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-				equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
-						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-			}
-			
-			for (Equivalence<DungTheory> singleEQ : equivalence) {
-				examineSemantics(singleSemantics, singleEQ, argNumber, path);
-			}
+			};
+			thread.start();
 		}
 	}
 
-	private static void examineSemantics(Semantics singleSemantics, Equivalence<DungTheory> equivalence, int argNumber, String path) {
+	private static void examineSemantics(int argNumber, String eqcommand, String path, Semantics singleSemantics) {
+		var equivalence = new HashSet<Equivalence<DungTheory>>();
+		//add all equivalences if no argument was given
+		if(!eqcommand.isBlank()) {
+			switch(eqcommand.toLowerCase()) {
+			case "strong":
+				equivalence.add(new StrongEquivalence(EquivalenceKernel.getKernel(singleSemantics)));
+				break;
+			case "standard":
+				equivalence.add(new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(singleSemantics)));
+				break;
+			case "sequencenaiv":
+				equivalence.add(new SerialisationEquivalenceBySequence(
+						new SerialisationEquivalenceBySequenceNaiv(), 
+						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
+				break;
+			case "graphisomorph":
+				equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
+						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
+				break;
+			case "graphnaiv":
+				equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
+						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
+			default:
+				throw new IllegalArgumentException("eqCommand is not a known equivalence");
+			}
+		}
+		else {
+			equivalence.add(new StrongEquivalence(EquivalenceKernel.getKernel(singleSemantics)));
+			equivalence.add(new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(singleSemantics)));
+			equivalence.add(new SerialisationEquivalenceBySequence(
+					new SerialisationEquivalenceBySequenceNaiv(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
+			equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
+			equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
+		}
+		
+		for (Equivalence<DungTheory> singleEQ : equivalence) {
+			examineCase(singleSemantics, singleEQ, argNumber, path);
+		}
+	}
+
+	private static void examineCase(Semantics singleSemantics, Equivalence<DungTheory> equivalence, int argNumber, String path) {
 		var generator = new EnumeratingDungTheoryGenerator();
 		generator.setCurrentSize(argNumber);
 		var classifier = new EquivalenceClassifier(equivalence);
