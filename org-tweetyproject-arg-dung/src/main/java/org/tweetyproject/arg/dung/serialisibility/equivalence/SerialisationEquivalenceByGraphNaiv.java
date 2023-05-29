@@ -49,8 +49,7 @@ public class SerialisationEquivalenceByGraphNaiv implements Equivalence<Serialis
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "serialGraphNaivEQ";
 	}
 
 	

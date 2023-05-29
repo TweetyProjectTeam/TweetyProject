@@ -45,7 +45,7 @@ public class StandardEquivalence implements Equivalence<DungTheory>  {
 
 	@Override
 	public String getDescription() {
-		return "StandardEQ";
+		return "standardEQ";
 	}
 
 	@Override

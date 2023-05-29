@@ -121,7 +121,7 @@ public class EquivalenceCompExFinderExample {
 			equivalence1 = new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semanticsUsed));
 			break;
 		default:
-			throw new IllegalArgumentException("eq1Command(2. argument) is not a known command");
+			throw new IllegalArgumentException("eq1Command is not a known equivalence");
 		}
 		
 		switch(eq2Command.toLowerCase()) {
@@ -138,7 +138,7 @@ public class EquivalenceCompExFinderExample {
 			equivalence2 = new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
 					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
 		default:
-			throw new IllegalArgumentException("eq2Command(3. argument) is not a known command");
+			throw new IllegalArgumentException("eq2Command is not a known equivalence");
 		}
 		
 		// [STEP] 3/5: define how the two equivalence should be compared to one another
@@ -290,7 +290,7 @@ public class EquivalenceCompExFinderExample {
 	/*
 	 * Appends a file with a set of comments
 	 */
-	private static void writeComment(File f, String[] comments) throws IOException {
+	public static void writeComment(File f, String[] comments) throws IOException {
 
 		try(FileWriter fw = new FileWriter(f, true);
 				BufferedWriter bw = new BufferedWriter(fw);
