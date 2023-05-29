@@ -169,6 +169,8 @@ public abstract class SerialisableExtensionReasoner extends AbstractExtensionRea
 	}
 
 	private SerialisationGraph computeGraph(HashSet<SerialisationSequence> sequences) {
+		if(sequences.isEmpty())return new SerialisationGraph(this.semantics, new HashSet<Extension<DungTheory>>());
+		
 		var iterationOfSequences = sequences.iterator();
 		var sequence = iterationOfSequences.next(); // get first sequence
 		var iterationOfSets = sequence.iterator();
