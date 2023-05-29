@@ -217,7 +217,7 @@ public class EquivalenceCompExFinderExample {
 				2000, 1000);
 				 */
 			} catch (NoExampleFoundException e) {
-				//System.out.println("No Examples found.");
+				System.out.println("No Examples found for " + semanticsUsed.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
 			}
 		}while( maxNumArguments == 0 || examplePair == null || examplePair.keySet().toArray(new DungTheory[1])[0].getNodes().size() < maxNumArguments + 1);
 		

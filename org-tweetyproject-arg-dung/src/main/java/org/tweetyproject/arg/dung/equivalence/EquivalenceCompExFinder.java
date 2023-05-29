@@ -81,6 +81,7 @@ public class EquivalenceCompExFinder {
 
 		
 			var generatedFramework1 = generatorFramework1.next();
+			//System.out.println("Generated:    1st AF       " + generatedFramework1.getNumberOfNodes() + " Arguments / " + generatedFramework1.getEdges().size() + " Attacks");
 			DungTheory generatedFramework2 = generateCompliantFramework(
 					numberOfMaxRandomGenerationTries, 
 					onlySameNumberOfArguments,
@@ -103,9 +104,11 @@ public class EquivalenceCompExFinder {
 						((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator());
 			}					
 
-			if(generatedFramework2 == null)
+			if(generatedFramework2 == null) {
 				// equivalent theory could not be generated
+				//System.out.println("No 2nd AF found");
 				throw new NoExampleFoundException();
+			}
 
 			output.put(generatedFramework1, generatedFramework2);
 		
@@ -123,13 +126,14 @@ public class EquivalenceCompExFinder {
 				}
 				if( decisionMaker.decide(equivalence1.isEquivalent(framework, temp), equivalence2.isEquivalent(framework, temp))) {
 					output = temp;
+					//System.out.println("Generated:    2nd AF       " + output.getNumberOfNodes() + " Arguments / " + output.getEdges().size() + " Attacks");
 					break; // stops generation of a framework
 				}
 			}catch(NoSuchElementException e) {
 				// nothing needed to do, iterator has just nothing to create
 			}
 		}
-
+		
 		return output;
 	}
 }
