@@ -18,7 +18,7 @@
  */
 package org.tweetyproject.arg.dung.serialisibility.syntax;
 
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -31,7 +31,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationSequence extends LinkedHashSet<Extension<DungTheory>> {
+public class SerialisationSequence extends LinkedList<Extension<DungTheory>> {
 
 	private static final long serialVersionUID = -109538431325318647L;
 
@@ -55,6 +55,25 @@ public class SerialisationSequence extends LinkedHashSet<Extension<DungTheory>> 
 	public SerialisationSequence(SerialisationSequence parentSequence) {
 		super(parentSequence);
 	}
+	
+	@Override
+	public boolean add(Extension<DungTheory> element) {
+		if(this.contains(element)) {
+			return false;
+		}
+		
+		return super.add(element);
+	}
+	
+	@Override
+	public void add(int index, Extension<DungTheory> element) {
+		if(this.contains(element)) {
+			return;
+		}
+		
+		super.add(index, element);
+		return;
+	}
 
 	/**
 	 * @return An extension containing all arguments of the sets of this sequence
@@ -67,20 +86,17 @@ public class SerialisationSequence extends LinkedHashSet<Extension<DungTheory>> 
 		return output;
 	}
 	
-	@Override
-	public boolean equals(Object o) {
-		if(!(o instanceof SerialisationSequence)) return false;
-		
-		var otherSequence = (SerialisationSequence) o;
-		
-		if(!super.equals(otherSequence)) return false;
-		
-		// consider order of elements
-		var iteratorThis = this.iterator();
-		var iteratorOther = otherSequence.iterator();
-		while(iteratorThis.hasNext()) {
-			if(!iteratorThis.next().equals(iteratorOther.next())) return false;
-		}
-		return true;
-	}
+	/*
+	 * @Override public boolean equals(Object o) { if(!(o instanceof
+	 * SerialisationSequence)) return false;
+	 * 
+	 * var otherSequence = (SerialisationSequence) o;
+	 * 
+	 * if(!super.equals(otherSequence)) return false;
+	 * 
+	 * // consider order of elements var iteratorThis = this.iterator(); var
+	 * iteratorOther = otherSequence.iterator(); while(iteratorThis.hasNext()) {
+	 * if(!iteratorThis.next().equals(iteratorOther.next())) return false; } return
+	 * true; }
+	 */
 }
