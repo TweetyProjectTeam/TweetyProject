@@ -36,7 +36,9 @@ public class SerialisationEquivalenceByGraphIso implements Equivalence<Serialisa
 
 	@Override
 	public boolean isEquivalent(SerialisationGraph graph1, SerialisationGraph graph2) {
-		return GraphUtil.isIsomorphic(graph1, graph2);
+		if(graph1.getNodes().size() != graph2.getNodes().size()) return false;
+		else if (graph1.getNodes().size() == 0) return true;
+		else return GraphUtil.isIsomorphic(graph1, graph2);
 	}
 
 	@Override
