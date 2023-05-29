@@ -96,7 +96,7 @@ public class EquivalenceCompExFinderExample {
 		// creates only pairs with less arguments than maxNumArguments. If maxNumArguments is 0, then no limit
 		int maxNumArguments = numArguments;
 		// creates only pairs with this minimal number of arguments
-		int minNumArgument = numArguments;
+		int minNumArguments = numArguments;
 		// if TRUE, then the generated frameworks will both have the same number of arguments
 		boolean onlySameNumberOfArguments = true;
 
@@ -157,6 +157,7 @@ public class EquivalenceCompExFinderExample {
 		// [STEP] 4/5: set the generators, which will be used to generate the frameworks
 		var fstFrameworkGen = new EnumeratingDungTheoryGenerator();
 		int factorNumArgsGen1ToGen2 = 1;
+		fstFrameworkGen.setCurrentSize(minNumArguments);
 //		var parameters = new DungTheoryGenerationParameters();
 //		parameters.attackProbability = 0.2;
 //		parameters.avoidSelfAttacks = false;
@@ -177,9 +178,7 @@ public class EquivalenceCompExFinderExample {
 //				parameters.numberOfArguments = fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2;
 //				return scndFrameworkGen;
 				var scndGen = new EnumeratingDungTheoryGenerator();
-				while(scndGen.getCurrentSize() < fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2) {
-					scndGen.next();
-				}
+				scndGen.setCurrentSize(fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2);
 				return scndGen;
 			}
 		};
@@ -197,10 +196,6 @@ public class EquivalenceCompExFinderExample {
 		String idSeries = "" + now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getHour() + now.getMinute();
 		int indexInSeries = 0;
 		LinkedHashMap<DungTheory, DungTheory> examplePair = null;
-		
-		while(fstFrameworkGen.getCurrentSize() < minNumArgument) {
-			fstFrameworkGen.next();
-		}
 		
 		do{
 			try {

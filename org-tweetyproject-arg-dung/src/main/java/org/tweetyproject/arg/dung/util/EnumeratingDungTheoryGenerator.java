@@ -38,7 +38,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 
 	/** The size of the currently generated theories. */
-	private int currentSize;
+	private int currentSize = 1;
 	/** used to enumerate all possible attack combinations. */
 	private BitSet attacks = null;	
 	/**The set of possible attacks. */
@@ -92,9 +92,9 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 	@Override
 	public DungTheory next() {
 		if(this.attacks == null){
-			this.currentSize = 1;
 			this.arguments = new HashSet<Argument>();
-			arguments.add(new Argument("a1"));
+			for(int i = 0; i < this.currentSize;i++)
+				arguments.add(new Argument("a"+i));
 			this.possibleAttacks = this.generatePossibleAttacks(arguments);
 			this.attacks = new BitSet(this.possibleAttacks.size());
 		}else{
@@ -139,8 +139,24 @@ public class EnumeratingDungTheoryGenerator implements DungTheoryGenerator {
 		return true;
 	}
 	
+	/**
+	 * @return Number of arguments of the last argumentation framework created by this generator, if the number was not newly set.
+	 */
 	public int getCurrentSize() {
 		return currentSize;
+	}
+	
+	/**
+	 * Sets a new number of arguments for this generator and resets the generation process, 
+	 * so that the generator restarts going through all possible attacks
+	 * @param newSize Number of arguments of the generator. Has to be > 0.
+	 * @return true iff the number of arguments was successfully set
+	 */
+	public boolean setCurrentSize(int newSize) {
+		if(newSize < 1) throw new IllegalArgumentException("Size has to be > 0");
+		this.currentSize = newSize;
+		this.attacks = null; // resets generator
+		return this.currentSize == newSize;
 	}
 
 }
