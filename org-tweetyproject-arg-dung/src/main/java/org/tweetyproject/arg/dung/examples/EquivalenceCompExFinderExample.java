@@ -73,12 +73,21 @@ public class EquivalenceCompExFinderExample {
 		int numArgugments = Integer.parseInt(args[0]);
 		String eq1Command = args[1];
 		String eq2Command = args[2];
-		String pathToFolder = args.length > 3 ? args[3] : "";
+		int argNumTries = 0;
+		if(args.length > 3) {
+			try {
+				argNumTries = Integer.parseInt(args[3]);
+			}catch(NumberFormatException e) {
+				//do nothing
+			}
+		}
+		int numTries = argNumTries > 0 ? argNumTries : 1000;		
+		String pathToFolder = args.length > 4 ? args[4] : "";
 		for (Semantics semantics : semanticsUsed) {
 			Thread thread = new Thread(semantics.abbreviation()) {
 				@Override
 				public void run(){
-					EquivalenceCompExFinderExample.startSeries(semantics, numArgugments, eq1Command, eq2Command, pathToFolder);
+					EquivalenceCompExFinderExample.startSeries(semantics, numTries, numArgugments, eq1Command, eq2Command, pathToFolder);
 				}
 			};
 			thread.start();
@@ -88,11 +97,11 @@ public class EquivalenceCompExFinderExample {
 	/*
 	 * Starts a new series to generate diff. examples of the same semantics
 	 */
-	private static void startSeries(Semantics semanticsUsed, int numArguments, String eq1Command, String eq2Command, String pathToFolder) {
+	private static void startSeries(Semantics semanticsUsed, int numTries, int numArguments, String eq1Command, String eq2Command, String pathToFolder) {
 		//======================= STEPS to configure experiment ===============================================   <= Configuration starts here
 		//[STEP] 1/5: set number for tries to compute 2nd framework.
 		//High numbers seem to be preferable, since they increase the chance of getting a compliant framework.
-		int maxNumberTryFindExample = 30;
+		int maxNumberTryFindExample = numTries;
 		// creates only pairs with less arguments than maxNumArguments. If maxNumArguments is 0, then no limit
 		int maxNumArguments = numArguments;
 		// creates only pairs with this minimal number of arguments
