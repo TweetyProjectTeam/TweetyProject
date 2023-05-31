@@ -72,5 +72,10 @@ public class EquivalenceClassifier {
 		return classes.toArray(new DungTheory[0]);
 	}
 	
-	
+	/**
+	 * @return The equivalence definition used by this classifier
+	 */
+	public Equivalence<DungTheory> getEquivalence() {
+		return this.equivalence;
+	}
 }

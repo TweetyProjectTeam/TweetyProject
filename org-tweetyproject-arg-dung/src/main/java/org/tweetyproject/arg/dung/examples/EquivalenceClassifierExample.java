@@ -20,6 +20,7 @@ package org.tweetyproject.arg.dung.examples;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
@@ -55,96 +56,106 @@ public class EquivalenceClassifierExample {
 		else {
 			semanticsUsed = new Semantics[] {Semantics.ADM, Semantics.CO,  Semantics.PR,  Semantics.ST,  Semantics.GR};
 		}
-		
+	
 		var eqcommand = args.length > 2 ? args[2] : "";
 		String path = args.length > 3 ? args[3] : "";
 		
-		for (Semantics singleSemantics : semanticsUsed) {
-			Thread thread = new Thread(singleSemantics.abbreviation()) {
-				@Override
-				public void run(){
-					examineSemantics(argNumber, eqcommand, path, singleSemantics);
+		var mapSemEQ = new HashMap<Semantics, HashSet<Equivalence<DungTheory>>>();
+		
+		for (Semantics semantics : semanticsUsed) {
+			var tempEQs = new HashSet<Equivalence<DungTheory>>();
+			//add all equivalences if no argument was given
+			if(!eqcommand.isBlank()) {
+				switch(eqcommand.toLowerCase()) {
+				case "strong":
+					tempEQs.add(new StrongEquivalence(EquivalenceKernel.getKernel(semantics)));
+					break;
+				case "standard":
+					tempEQs.add(new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics)));
+					break;
+				case "sequencenaiv":
+					tempEQs.add(new SerialisationEquivalenceBySequence(
+							new SerialisationEquivalenceBySequenceNaiv(), 
+							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+					break;
+				case "graphisomorph":
+					tempEQs.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
+							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+					break;
+				case "graphnaiv":
+					tempEQs.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
+							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+				default:
+					throw new IllegalArgumentException("eqCommand is not a known equivalence");
 				}
-			};
-			thread.start();
-		}
-	}
-
-	private static void examineSemantics(int argNumber, String eqcommand, String path, Semantics singleSemantics) {
-		var equivalence = new HashSet<Equivalence<DungTheory>>();
-		//add all equivalences if no argument was given
-		if(!eqcommand.isBlank()) {
-			switch(eqcommand.toLowerCase()) {
-			case "strong":
-				equivalence.add(new StrongEquivalence(EquivalenceKernel.getKernel(singleSemantics)));
-				break;
-			case "standard":
-				equivalence.add(new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(singleSemantics)));
-				break;
-			case "sequencenaiv":
-				equivalence.add(new SerialisationEquivalenceBySequence(
-						new SerialisationEquivalenceBySequenceNaiv(), 
-						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-				break;
-			case "graphisomorph":
-				equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
-						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-				break;
-			case "graphnaiv":
-				equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
-						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-			default:
-				throw new IllegalArgumentException("eqCommand is not a known equivalence");
 			}
-		}
-		else {
-			equivalence.add(new StrongEquivalence(EquivalenceKernel.getKernel(singleSemantics)));
-			equivalence.add(new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(singleSemantics)));
-			equivalence.add(new SerialisationEquivalenceBySequence(
-					new SerialisationEquivalenceBySequenceNaiv(), 
-					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-			equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
-					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
-			equivalence.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
-					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(singleSemantics)));
+			else {
+				tempEQs.add(new StrongEquivalence(EquivalenceKernel.getKernel(semantics)));
+				tempEQs.add(new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semantics)));
+				tempEQs.add(new SerialisationEquivalenceBySequence(
+						new SerialisationEquivalenceBySequenceNaiv(), 
+						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+				tempEQs.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
+						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+				tempEQs.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
+						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+			}
+			mapSemEQ.put(semantics, tempEQs);
 		}
 		
-		for (Equivalence<DungTheory> singleEQ : equivalence) {
-			examineCase(singleSemantics, singleEQ, argNumber, path);
-		}
+		saveClasses(mapSemEQ, argNumber, path);
 	}
 
-	private static void examineCase(Semantics singleSemantics, Equivalence<DungTheory> equivalence, int argNumber, String path) {
+	private static void saveClasses(HashMap<Semantics, HashSet<Equivalence<DungTheory>>> mapSemEQ, int argNumber, String path) {
 		var generator = new EnumeratingDungTheoryGenerator();
 		generator.setCurrentSize(argNumber);
-		var classifier = new EquivalenceClassifier(equivalence);
-
+		var mapSemClassifiers = new HashMap<Semantics, HashSet<EquivalenceClassifier>>();
+		
+		for (var semantic : mapSemEQ.keySet()) {
+			var tempClassifiers = new HashSet<EquivalenceClassifier>();
+			for (Equivalence<DungTheory> eqElem : mapSemEQ.get(semantic)) {
+				tempClassifiers.add(new EquivalenceClassifier(eqElem));
+			}
+			mapSemClassifiers.put(semantic, tempClassifiers);
+		}
+		
 		// calculate equivalence classes
 		while(generator.getCurrentSize() < argNumber + 1) {
-			classifier.examineNewTheory(generator.next());
+			var tempFramework = generator.next();
+			for (var semantics : mapSemClassifiers.keySet()) {
+				var tempClassifiers = mapSemClassifiers.get(semantics);
+				for (EquivalenceClassifier classifier : tempClassifiers) {
+					classifier.examineNewTheory(tempFramework);
+				}
+			}
 		}
 
 		// save classes
-		String pathSub = path.isBlank() ? "" : path + File.separator ;
-		pathSub = pathSub + "EQClasses"
-				+ File.separator + equivalence.getDescription() 
-				+ File.separator + "Arg_"+ argNumber 
-				+ File.separator + singleSemantics.abbreviation();
-		var folder = new File(pathSub);
-		folder.mkdirs();
-		var writer = new ApxWriter();
-		var classes = classifier.getClasses();
-		var addInfo = new String[2];
-		addInfo[0] = "Equivalence:" + equivalence.getDescription();
-		addInfo[1] = "Semantics:" + singleSemantics.abbreviation();
+		for (var semantics : mapSemClassifiers.keySet()) {
+			var tempClassifiers = mapSemClassifiers.get(semantics);
+			for (EquivalenceClassifier classifier : tempClassifiers) {
+				String pathSub = path.isBlank() ? "" : path + File.separator ;
+				pathSub = pathSub + "EQClasses"
+						+ File.separator + classifier.getEquivalence().getDescription() 
+						+ File.separator + "Arg_"+ argNumber 
+						+ File.separator + semantics.abbreviation();
+				var folder = new File(pathSub);
+				folder.mkdirs();
+				var writer = new ApxWriter();
+				var classes = classifier.getClasses();
+				var addInfo = new String[2];
+				addInfo[0] = "Equivalence:" + classifier.getEquivalence().getDescription();
+				addInfo[1] = "Semantics:" + semantics.abbreviation();
 
-		for (int i = 0; i < classes.length; i++) {
-			var file = new File(pathSub + File.separator + "Class_" + i + ".apx");
-			try {
-				writer.write(classes[i], file);
-				EquivalenceCompExFinderExample.writeComment(file, addInfo);
-			} catch (IOException e) {
-				e.printStackTrace();
+				for (int i = 0; i < classes.length; i++) {
+					var file = new File(pathSub + File.separator + "Class_" + i + ".apx");
+					try {
+						writer.write(classes[i], file);
+						EquivalenceCompExFinderExample.writeComment(file, addInfo);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}
