@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.equivalence;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -74,7 +75,8 @@ public class EquivalenceCompExFinder {
 			int numberOfMaxRandomGenerationTries,
 			boolean onlySameNumberOfArguments,
 			Iterator<DungTheory> generatorFramework1,
-			Iterator<DungTheory> generatorFramework2) 
+			Iterator<DungTheory> generatorFramework2,
+			Function<DungTheory[], Boolean> askContinuing) 
 					throws NoExampleFoundException{
 
 		var output = new LinkedHashMap<DungTheory,DungTheory>();
@@ -86,14 +88,16 @@ public class EquivalenceCompExFinder {
 					numberOfMaxRandomGenerationTries, 
 					onlySameNumberOfArguments,
 					generatedFramework1, 
-					generatorFramework2);
+					generatorFramework2,
+					askContinuing);
 
 			if(decisionMaker.getShallCriteriaBeTrueA() && generatedFramework2 == null && (equivalence1 instanceof EquivalentTheories<?>)) {
 				generatedFramework2 = generateCompliantFramework(
 						numberOfMaxRandomGenerationTries, 
 						onlySameNumberOfArguments,
 						generatedFramework1, 
-						((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(generatedFramework1).iterator());
+						((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(generatedFramework1).iterator(),
+						askContinuing);
 			}
 			// single IF-statements, since framework could still be null, after method call
 			if(decisionMaker.getShallCriteriaBeTrueB() && generatedFramework2 == null && (equivalence2 instanceof EquivalentTheories<?>)) {
@@ -101,7 +105,8 @@ public class EquivalenceCompExFinder {
 						numberOfMaxRandomGenerationTries, 
 						onlySameNumberOfArguments,
 						generatedFramework1, 
-						((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator());
+						((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator(),
+						askContinuing);
 			}					
 
 			if(generatedFramework2 == null) {
@@ -116,13 +121,23 @@ public class EquivalenceCompExFinder {
 		return output;
 	}
 
-	private DungTheory generateCompliantFramework(int numberOfMaxRandomGenerationTries, boolean onlySameNumArgs, DungTheory framework, Iterator<DungTheory> generator) {
+	private DungTheory generateCompliantFramework(
+			int numberOfMaxRandomGenerationTries, 
+			boolean onlySameNumArgs, 
+			DungTheory framework, 
+			Iterator<DungTheory> generator,
+			Function<DungTheory[], Boolean> askContinuing) {
 		DungTheory output = null;
 		for (int j = 0; j < numberOfMaxRandomGenerationTries; j++) {
 			try {
 				DungTheory temp = generator.next();
 				if(onlySameNumArgs && temp.getNumberOfNodes() != framework.getNumberOfNodes()) {
-					continue; //skips this try
+					if(askContinuing.apply(new DungTheory[] {framework, temp})) {
+						continue;
+					}
+					else {
+						break;
+					}
 				}
 				if( decisionMaker.decide(equivalence1.isEquivalent(framework, temp), equivalence2.isEquivalent(framework, temp))) {
 					output = temp;

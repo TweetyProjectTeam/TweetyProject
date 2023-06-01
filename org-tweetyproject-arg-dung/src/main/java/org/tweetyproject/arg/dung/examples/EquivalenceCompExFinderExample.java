@@ -137,6 +137,7 @@ public class EquivalenceCompExFinderExample {
 		case "graphnaiv":
 			equivalence2 = new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
 					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+			break;
 		default:
 			throw new IllegalArgumentException("eq2Command is not a known equivalence");
 		}
@@ -173,14 +174,14 @@ public class EquivalenceCompExFinderExample {
 //		var scndFrameworkGen = new DefaultDungTheoryGenerator(parameters);
 		/*You can choose to create a new generator, for each new pair of frameworks. 
 		The methods below are called once, before trying to generate such a pair*/
-		Function<String, Iterator<DungTheory>> getGen1 = new Function<>() {
+		var getGen1 = new Function<String, Iterator<DungTheory>>() {
 
 			@Override
 			public Iterator<DungTheory> apply(String t) {
 				return fstFrameworkGen;
 			}
 		};
-		Function<String, Iterator<DungTheory>> getGen2 = new Function<>() {
+		var getGen2 = new Function<String, Iterator<DungTheory>>() {
 
 			@Override
 			public Iterator<DungTheory> apply(String t) {
@@ -189,6 +190,21 @@ public class EquivalenceCompExFinderExample {
 				var scndGen = new EnumeratingDungTheoryGenerator();
 				scndGen.setCurrentSize(fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2);
 				return scndGen;
+			}
+		};
+		
+		var askContinuingGenerating2ndFramework = new Function<DungTheory[], Boolean>() {
+			@Override
+			public Boolean apply(DungTheory[] generatedFrameworks) {
+				// abort generation if the number of arguments is different 
+				//(and hence 2nd enumerationg gen has generated all frameworks with the same number of arguments)
+				if(generatedFrameworks[0].getNumberOfNodes() > generatedFrameworks[1].getNumberOfNodes()) {
+					return false;
+				}else if(generatedFrameworks[0].getNumberOfNodes() < generatedFrameworks[1].getNumberOfNodes()) {
+					return false;
+				}else {
+					return true;
+				}
 			}
 		};
 
@@ -211,7 +227,7 @@ public class EquivalenceCompExFinderExample {
 				examplePair = EquivalenceCompExFinderExample.generateOnePair(
 						maxNumberTryFindExample,
 						onlySameNumberOfArguments,
-						semanticsUsed, getGen1, getGen2, equivalence1, equivalence2, decisionMaker,
+						semanticsUsed, getGen1, getGen2, equivalence1, equivalence2, decisionMaker, askContinuingGenerating2ndFramework,
 						path, idSeries, indexInSeries, z);
 				indexInSeries++;
 				/*SerialisationAnalysisPlotter.plotAnalyses(
@@ -248,6 +264,7 @@ public class EquivalenceCompExFinderExample {
 			Equivalence<DungTheory> equivalence1,
 			Equivalence<DungTheory> equivalence2,
 			DecisionMaker decisionMaker,
+			Function<DungTheory[], Boolean> askContinuing,
 			String path,
 			String idSeries,
 			int indexInSeries,
@@ -265,7 +282,8 @@ public class EquivalenceCompExFinderExample {
 						maxNumberTryFindExample,
 						onlySameNumberOfArguments,
 						getGen1.apply(""),
-						getGen2.apply(""));
+						getGen2.apply(""),
+						askContinuing);
 		var timeStampProcessFinished = ZonedDateTime.now( currentZone );
 
 		for (DungTheory frameworkKey : output.keySet()) {
