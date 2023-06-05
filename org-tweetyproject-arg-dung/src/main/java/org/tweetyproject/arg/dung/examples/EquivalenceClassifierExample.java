@@ -19,7 +19,6 @@
 package org.tweetyproject.arg.dung.examples;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -38,7 +37,6 @@ import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquiv
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequenceNaiv;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
-import org.tweetyproject.arg.dung.writer.ApxWriter;
 
 /**
  * This class summarizes example showing how to use the {@link EquivalenceClassifier}
@@ -56,12 +54,12 @@ public class EquivalenceClassifierExample {
 		else {
 			semanticsUsed = new Semantics[] {Semantics.ADM, Semantics.CO,  Semantics.PR,  Semantics.ST,  Semantics.GR};
 		}
-	
+
 		var eqcommand = args.length > 2 ? args[2] : "";
-		String path = args.length > 3 ? args[3] : "";
-		
+		String path = args.length > 3 ? args[3] : System.getProperty("user.dir");
+
 		var mapSemEQ = new HashMap<Semantics, HashSet<Equivalence<DungTheory>>>();
-		
+
 		for (Semantics semantics : semanticsUsed) {
 			var tempEQs = new HashSet<Equivalence<DungTheory>>();
 			//add all equivalences if no argument was given
@@ -102,58 +100,33 @@ public class EquivalenceClassifierExample {
 			}
 			mapSemEQ.put(semantics, tempEQs);
 		}
-		
-		saveClasses(mapSemEQ, argNumber, path);
-	}
 
-	private static void saveClasses(HashMap<Semantics, HashSet<Equivalence<DungTheory>>> mapSemEQ, int argNumber, String path) {
 		var generator = new EnumeratingDungTheoryGenerator();
 		generator.setCurrentSize(argNumber);
 		var mapSemClassifiers = new HashMap<Semantics, HashSet<EquivalenceClassifier>>();
-		
+
+		// create classifier
 		for (var semantic : mapSemEQ.keySet()) {
 			var tempClassifiers = new HashSet<EquivalenceClassifier>();
 			for (Equivalence<DungTheory> eqElem : mapSemEQ.get(semantic)) {
-				tempClassifiers.add(new EquivalenceClassifier(eqElem));
+				String pathSub = path 
+						+ File.separator + "EQClasses" 
+						+ File.separator + eqElem.getDescription()
+						+ File.separator + argNumber + "_Arguments"
+						+ File.separator + semantic.abbreviation();
+				tempClassifiers.add(new EquivalenceClassifier(eqElem, pathSub));
 			}
 			mapSemClassifiers.put(semantic, tempClassifiers);
 		}
-		
-		// calculate equivalence classes
+
+		// generate one framework and calculate equivalence classes
 		while(generator.getCurrentSize() < argNumber + 1) {
 			var tempFramework = generator.next();
 			for (var semantics : mapSemClassifiers.keySet()) {
 				var tempClassifiers = mapSemClassifiers.get(semantics);
 				for (EquivalenceClassifier classifier : tempClassifiers) {
-					classifier.examineNewTheory(tempFramework);
-				}
-			}
-		}
+					if(classifier.examineNewTheory(tempFramework)) {
 
-		// save classes
-		for (var semantics : mapSemClassifiers.keySet()) {
-			var tempClassifiers = mapSemClassifiers.get(semantics);
-			for (EquivalenceClassifier classifier : tempClassifiers) {
-				String pathSub = path.isBlank() ? "" : path + File.separator ;
-				pathSub = pathSub + "EQClasses"
-						+ File.separator + classifier.getEquivalence().getDescription() 
-						+ File.separator + "Arg_"+ argNumber 
-						+ File.separator + semantics.abbreviation();
-				var folder = new File(pathSub);
-				folder.mkdirs();
-				var writer = new ApxWriter();
-				var classes = classifier.getClasses();
-				var addInfo = new String[2];
-				addInfo[0] = "Equivalence:" + classifier.getEquivalence().getDescription();
-				addInfo[1] = "Semantics:" + semantics.abbreviation();
-
-				for (int i = 0; i < classes.length; i++) {
-					var file = new File(pathSub + File.separator + "Class_" + i + ".apx");
-					try {
-						writer.write(classes[i], file);
-						EquivalenceCompExFinderExample.writeComment(file, addInfo);
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
 				}
 			}

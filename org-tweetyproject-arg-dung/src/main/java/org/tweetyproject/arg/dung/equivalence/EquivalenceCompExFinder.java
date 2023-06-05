@@ -62,8 +62,6 @@ public class EquivalenceCompExFinder {
 	 * @param numberOfMaxRandomGenerationTries Maximum Number of iterations trying to generate randomly 
 	 * 2 frameworks compliant to the specified conditions. After surpassing this threshold, the second 
 	 * framework will be generated on the basis of the first one (if a an equivalent framework was demanded)
-	 * @param onlySameNumberOfArguments If TRUE the two generated frameworks will have the same number of arguments. 
-	 * If FALSE, the number of arguments may differ from one framework to another.
 	 * @param generatorFramework1 Iterator, which generates the first framework
 	 * @param generatorFramework2 Iterator, which generates the second framework (Note that the framework will be generated as an 
 	 * equivalent theory if wished, in case this generator fails. 
@@ -73,82 +71,83 @@ public class EquivalenceCompExFinder {
 	@SuppressWarnings("unchecked")
 	public LinkedHashMap<DungTheory,DungTheory> findExample(
 			int numberOfMaxRandomGenerationTries,
-			boolean onlySameNumberOfArguments,
 			Iterator<DungTheory> generatorFramework1,
 			Iterator<DungTheory> generatorFramework2,
-			Function<DungTheory[], Boolean> askContinuing) 
+			Function<DungTheory[], Boolean> askIfInterestingPair,
+			Function<DungTheory[], Boolean> askContinueGenerate2nd) 
 					throws NoExampleFoundException{
 
 		var output = new LinkedHashMap<DungTheory,DungTheory>();
 
-		
-			var generatedFramework1 = generatorFramework1.next();
-			//System.out.println("Generated:    1st AF       " + generatedFramework1.getNumberOfNodes() + " Arguments / " + generatedFramework1.getEdges().size() + " Attacks");
-			DungTheory generatedFramework2 = generateCompliantFramework(
+
+		var generatedFramework1 = generatorFramework1.next();
+		//System.out.println("Generated:    1st AF       " + generatedFramework1.getNumberOfNodes() + " Arguments / " + generatedFramework1.getEdges().size() + " Attacks");
+		DungTheory generatedFramework2 = generateCompliantFramework(
+				numberOfMaxRandomGenerationTries, 
+				generatedFramework1, 
+				generatorFramework2,
+				askIfInterestingPair,
+				askContinueGenerate2nd);
+
+		if(decisionMaker.getShallCriteriaBeTrueA() && generatedFramework2 == null && (equivalence1 instanceof EquivalentTheories<?>)) {
+			generatedFramework2 = generateCompliantFramework(
 					numberOfMaxRandomGenerationTries, 
-					onlySameNumberOfArguments,
 					generatedFramework1, 
-					generatorFramework2,
-					askContinuing);
+					((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(generatedFramework1).iterator(),
+					askIfInterestingPair,
+					askContinueGenerate2nd);
+		}
+		// single IF-statements, since framework could still be null, after method call
+		if(decisionMaker.getShallCriteriaBeTrueB() && generatedFramework2 == null && (equivalence2 instanceof EquivalentTheories<?>)) {
+			generatedFramework2 = generateCompliantFramework(
+					numberOfMaxRandomGenerationTries, 
+					generatedFramework1, 
+					((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator(),
+					askIfInterestingPair,
+					askContinueGenerate2nd);
+		}					
 
-			if(decisionMaker.getShallCriteriaBeTrueA() && generatedFramework2 == null && (equivalence1 instanceof EquivalentTheories<?>)) {
-				generatedFramework2 = generateCompliantFramework(
-						numberOfMaxRandomGenerationTries, 
-						onlySameNumberOfArguments,
-						generatedFramework1, 
-						((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(generatedFramework1).iterator(),
-						askContinuing);
-			}
-			// single IF-statements, since framework could still be null, after method call
-			if(decisionMaker.getShallCriteriaBeTrueB() && generatedFramework2 == null && (equivalence2 instanceof EquivalentTheories<?>)) {
-				generatedFramework2 = generateCompliantFramework(
-						numberOfMaxRandomGenerationTries, 
-						onlySameNumberOfArguments,
-						generatedFramework1, 
-						((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator(),
-						askContinuing);
-			}					
+		if(generatedFramework2 == null) {
+			// equivalent theory could not be generated
+			//System.out.println("No 2nd AF found");
+			throw new NoExampleFoundException();
+		}
 
-			if(generatedFramework2 == null) {
-				// equivalent theory could not be generated
-				//System.out.println("No 2nd AF found");
-				throw new NoExampleFoundException();
-			}
+		output.put(generatedFramework1, generatedFramework2);
 
-			output.put(generatedFramework1, generatedFramework2);
-		
 
 		return output;
 	}
 
 	private DungTheory generateCompliantFramework(
-			int numberOfMaxRandomGenerationTries, 
-			boolean onlySameNumArgs, 
+			int numberOfMaxRandomGenerationTries,
 			DungTheory framework, 
 			Iterator<DungTheory> generator,
-			Function<DungTheory[], Boolean> askContinuing) {
+			Function<DungTheory[], Boolean> askIfInterestingPair,
+			Function<DungTheory[], Boolean> askContinueGenerate2nd) {
 		DungTheory output = null;
 		for (int j = 0; j < numberOfMaxRandomGenerationTries; j++) {
 			try {
 				DungTheory temp = generator.next();
-				if(onlySameNumArgs && temp.getNumberOfNodes() != framework.getNumberOfNodes()) {
-					if(askContinuing.apply(new DungTheory[] {framework, temp})) {
-						continue;
-					}
-					else {
-						break;
+
+				if(askIfInterestingPair.apply(new DungTheory[] {framework, temp})) {
+					if( decisionMaker.decide(equivalence1.isEquivalent(framework, temp), equivalence2.isEquivalent(framework, temp))) {
+						output = temp;
+						//System.out.println("Generated:    2nd AF       " + output.getNumberOfNodes() + " Arguments / " + output.getEdges().size() + " Attacks");
+						break; // stops generation of a framework
 					}
 				}
-				if( decisionMaker.decide(equivalence1.isEquivalent(framework, temp), equivalence2.isEquivalent(framework, temp))) {
-					output = temp;
-					//System.out.println("Generated:    2nd AF       " + output.getNumberOfNodes() + " Arguments / " + output.getEdges().size() + " Attacks");
-					break; // stops generation of a framework
+
+				// ask if it should be continued to try to generate a 2nd framework
+				if(!askContinueGenerate2nd.apply(new DungTheory[] {framework, temp})) {
+					break;
 				}
+
 			}catch(NoSuchElementException e) {
 				// nothing needed to do, iterator has just nothing to create
 			}
 		}
-		
+
 		return output;
 	}
 }

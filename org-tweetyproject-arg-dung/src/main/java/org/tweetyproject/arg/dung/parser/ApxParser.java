@@ -47,15 +47,15 @@ public class ApxParser extends AbstractDungParser {
 	 */
 	@Override
 	public DungTheory parse(Reader reader) throws IOException{
-	 return parse(reader, false);
+	 return parse(reader, false, false);
 	}
 	
-	public DungTheory parseIgnoreComments(Reader reader) throws IOException{
-		 return parse(reader, true);
+	public DungTheory parseIgnoreComments(Reader reader, boolean printCommands) throws IOException{
+		 return parse(reader, true, printCommands);
 		}
 	
 	
-	private DungTheory parse(Reader reader, boolean ignoreComment) throws IOException{
+	private DungTheory parse(Reader reader, boolean ignoreComment, boolean printCommands) throws IOException{
 		DungTheory theory = new DungTheory();
 		BufferedReader in = new BufferedReader(reader);
 		String row = null;
@@ -93,7 +93,9 @@ public class ApxParser extends AbstractDungParser {
 				theory.addAttack(arguments.get(row.substring(0, row.indexOf(","))),arguments.get(row.substring(row.indexOf(",")+1, row.length())));
 			}else{
 				if(ignoreComment) {
-					System.out.println(row);
+					if(printCommands) {
+						System.out.println(row);
+					}
 				}
 				else {
 					in.close();

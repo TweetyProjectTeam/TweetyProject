@@ -107,46 +107,17 @@ public class EquivalenceCompExFinderExample {
 		// creates only pairs with this minimal number of arguments
 		int minNumArguments = numArguments;
 		// if TRUE, then the generated frameworks will both have the same number of arguments
-		boolean onlySameNumberOfArguments = true;
+		boolean onlySameNumberOfArguments = false;
 
 		//[STEP] 2/5: set the sort of equivalences, which you would like to investigate
-		Equivalence<DungTheory> equivalence1;
-		Equivalence<DungTheory> equivalence2;
-		
-		switch(eq1Command.toLowerCase()) {
-		case "strong":
-			equivalence1 = new StrongEquivalence(EquivalenceKernel.getKernel(semanticsUsed));
-			break;
-		case "standard":
-			equivalence1 = new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semanticsUsed));
-			break;
-		default:
-			throw new IllegalArgumentException("eq1Command is not a known equivalence");
-		}
-		
-		switch(eq2Command.toLowerCase()) {
-		case "sequencenaiv":
-			equivalence2 = new SerialisationEquivalenceBySequence(
-					new SerialisationEquivalenceBySequenceNaiv(), 
-					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
-			break;
-		case "graphisomorph":
-			equivalence2 = new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
-					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
-			break;
-		case "graphnaiv":
-			equivalence2 = new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
-					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
-			break;
-		default:
-			throw new IllegalArgumentException("eq2Command is not a known equivalence");
-		}
+		var equivalence1 = getEquivalence(semanticsUsed, eq1Command);
+		var equivalence2 = getEquivalence(semanticsUsed, eq2Command);
 		
 		// [STEP] 3/5: define how the two equivalence should be compared to one another
 		var decisionMaker = new DecisionMaker() {
 			@Override
 			public boolean decide(boolean isEQ1, boolean isEQ2) {
-				return isEQ1 != isEQ2;
+				return isEQ1 && !isEQ2;
 			}
 
 			// This method is used to decide, if the 2nd framework shall be generated as an equivalent framework 
@@ -160,7 +131,33 @@ public class EquivalenceCompExFinderExample {
 			//to the 1st framework in the definition of equivalence2
 			@Override
 			public boolean getShallCriteriaBeTrueB() {
-				return true;
+				return false;
+			}
+		};
+		var askIfInterestingPair = new Function<DungTheory[], Boolean>(){
+			@Override
+			public Boolean apply(DungTheory[] generatedFrameworks) {
+				if(generatedFrameworks[0].getNumberOfNodes() > generatedFrameworks[1].getNumberOfNodes()) {
+					return false;
+				}
+				else {
+					return true;
+				}
+			}
+		};
+		
+		var askContinuingGenerating2ndFramework = new Function<DungTheory[], Boolean>() {
+			@Override
+			public Boolean apply(DungTheory[] generatedFrameworks) {
+				// abort generation if the number of arguments is different 
+				//(and hence 2nd enumerationg gen has generated all frameworks with the same number of arguments)
+				if(generatedFrameworks[0].getNumberOfNodes() > generatedFrameworks[1].getNumberOfNodes()) {
+					return !onlySameNumberOfArguments;
+				}else if(generatedFrameworks[0].getNumberOfNodes() < generatedFrameworks[1].getNumberOfNodes()) {
+					return !onlySameNumberOfArguments;
+				}else {
+					return true;
+				}
 			}
 		};
 
@@ -192,21 +189,6 @@ public class EquivalenceCompExFinderExample {
 				return scndGen;
 			}
 		};
-		
-		var askContinuingGenerating2ndFramework = new Function<DungTheory[], Boolean>() {
-			@Override
-			public Boolean apply(DungTheory[] generatedFrameworks) {
-				// abort generation if the number of arguments is different 
-				//(and hence 2nd enumerationg gen has generated all frameworks with the same number of arguments)
-				if(generatedFrameworks[0].getNumberOfNodes() > generatedFrameworks[1].getNumberOfNodes()) {
-					return false;
-				}else if(generatedFrameworks[0].getNumberOfNodes() < generatedFrameworks[1].getNumberOfNodes()) {
-					return false;
-				}else {
-					return true;
-				}
-			}
-		};
 
 		//[STEP] 5/5: set the destination, where the files of the frameworks shall be saved to
 		String path = "";
@@ -226,8 +208,8 @@ public class EquivalenceCompExFinderExample {
 			try {
 				examplePair = EquivalenceCompExFinderExample.generateOnePair(
 						maxNumberTryFindExample,
-						onlySameNumberOfArguments,
-						semanticsUsed, getGen1, getGen2, equivalence1, equivalence2, decisionMaker, askContinuingGenerating2ndFramework,
+						semanticsUsed, getGen1, getGen2, equivalence1, equivalence2, 
+						decisionMaker, askIfInterestingPair, askContinuingGenerating2ndFramework,
 						path, idSeries, indexInSeries, z);
 				indexInSeries++;
 				/*SerialisationAnalysisPlotter.plotAnalyses(
@@ -244,6 +226,27 @@ public class EquivalenceCompExFinderExample {
 		System.out.println("Finished processing for semantics: " + semanticsUsed.abbreviation());
 	}
 
+	private static Equivalence<DungTheory> getEquivalence(Semantics semanticsUsed, String eqCommand) {
+		switch(eqCommand.toLowerCase()) {
+		case "strong":
+			return new StrongEquivalence(EquivalenceKernel.getKernel(semanticsUsed));
+		case "standard":
+			return new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semanticsUsed));
+		case "sequencenaiv":
+			return new SerialisationEquivalenceBySequence(
+					new SerialisationEquivalenceBySequenceNaiv(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+		case "graphisomorph":
+			return new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+		case "graphnaiv":
+			return new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+		default:
+			throw new IllegalArgumentException("eq1Command is not a known equivalence");
+		}
+	}
+
 	/*
 	 * Creates a new directory iff path described does not exist
 	 */
@@ -257,14 +260,14 @@ public class EquivalenceCompExFinderExample {
 	 */
 	private static LinkedHashMap<DungTheory, DungTheory> generateOnePair(
 			int maxNumberTryFindExample,
-			boolean onlySameNumberOfArguments,
 			Semantics semanticsUsed,
 			Function<String, Iterator<DungTheory>> getGen1,
 			Function<String, Iterator<DungTheory>> getGen2,
 			Equivalence<DungTheory> equivalence1,
 			Equivalence<DungTheory> equivalence2,
 			DecisionMaker decisionMaker,
-			Function<DungTheory[], Boolean> askContinuing,
+			Function<DungTheory[], Boolean> askIfInterestingPair,
+			Function<DungTheory[], Boolean> askContinuingGenerating2ndFrame,
 			String path,
 			String idSeries,
 			int indexInSeries,
@@ -280,10 +283,10 @@ public class EquivalenceCompExFinderExample {
 		var output = exampleFinder.
 				findExample(
 						maxNumberTryFindExample,
-						onlySameNumberOfArguments,
 						getGen1.apply(""),
 						getGen2.apply(""),
-						askContinuing);
+						askIfInterestingPair,
+						askContinuingGenerating2ndFrame);
 		var timeStampProcessFinished = ZonedDateTime.now( currentZone );
 
 		for (DungTheory frameworkKey : output.keySet()) {

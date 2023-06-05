@@ -18,10 +18,16 @@
  */
 package org.tweetyproject.arg.dung.equivalence.classes;
 
-import java.util.HashSet;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
+import org.tweetyproject.arg.dung.examples.EquivalenceCompExFinderExample;
+import org.tweetyproject.arg.dung.parser.ApxFilenameFilter;
+import org.tweetyproject.arg.dung.parser.ApxParser;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.writer.ApxWriter;
 
 /**
  * This class is responsible for classifying abstract argumentation frameworks due to their equivalence
@@ -30,12 +36,13 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
  */
 public class EquivalenceClassifier {
 
-	private HashSet<DungTheory> classes;
+	private String pathToFolderClasses;
 	private Equivalence<DungTheory> equivalence;
 
-	public EquivalenceClassifier(Equivalence<DungTheory> equivalence) {
+	public EquivalenceClassifier(Equivalence<DungTheory> equivalence, String path) {
 		super();
-		this.classes = new HashSet<DungTheory>();
+		this.pathToFolderClasses = path;
+		createFolderForClasses(path);
 		this.equivalence = equivalence;
 	}
 	
@@ -45,11 +52,13 @@ public class EquivalenceClassifier {
 	 * @return TRUE iff a new class was added to the classifier
 	 */
 	public boolean examineNewTheory(DungTheory framework) {
+		var classes = loadClasses();
 		for (DungTheory dungTheory : classes) {
 			if(equivalence.isEquivalent(dungTheory, framework)) return false;
 		}
 		
-		return this.classes.add(framework);
+		saveClass(framework, classes.length);
+		return true;
 	}
 	
 	/**
@@ -58,7 +67,7 @@ public class EquivalenceClassifier {
 	 * @throws ClassNotFoundException Thrown if no suitable equivalence class was found
 	 */
 	public DungTheory getEquivalenceClass(DungTheory framework) throws ClassNotFoundException {
-		for (DungTheory dungTheory : classes) {
+		for (DungTheory dungTheory : loadClasses()) {
 			if(equivalence.isEquivalent(dungTheory, framework)) return dungTheory;
 		}
 		
@@ -69,7 +78,7 @@ public class EquivalenceClassifier {
 	 * @return Array of abstract argumentation frameworks. Each represents one equivalence class.
 	 */
 	public DungTheory[] getClasses() {
-		return classes.toArray(new DungTheory[0]);
+		return loadClasses();
 	}
 	
 	/**
@@ -77,5 +86,42 @@ public class EquivalenceClassifier {
 	 */
 	public Equivalence<DungTheory> getEquivalence() {
 		return this.equivalence;
+	}
+	
+	private void createFolderForClasses(String path) {
+		var folder = new File(path);
+		folder.mkdirs();
+		//System.out.println("Created Folder in: " + path );
+	}
+	
+	private boolean saveClass(DungTheory eqClass, int index) {
+		var writer = new ApxWriter();
+		var addInfo = new String[1];
+		addInfo[0] = "Equivalence:" + this.getEquivalence().getDescription();
+
+		var file = new File(this.pathToFolderClasses + File.separator + "Class_" + index + ".apx");
+		try {
+			writer.write(eqClass, file);
+			EquivalenceCompExFinderExample.writeComment(file, addInfo);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private DungTheory[] loadClasses() {
+		var apxFiles = new File(this.pathToFolderClasses).listFiles(new ApxFilenameFilter());
+		var output = new DungTheory[apxFiles.length];
+		var parser = new ApxParser();
+		for (int i = 0; i < apxFiles.length; i++) {
+			try {
+				output[i] = parser.parseIgnoreComments(new FileReader(apxFiles[i]), false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return output;
 	}
 }
