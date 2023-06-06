@@ -59,6 +59,8 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  *
  */
 public class EquivalenceCompExFinderExample {
+	
+	private static final String VERSION = "4";
 
 	public static void main(String[] args) {
 
@@ -134,6 +136,27 @@ public class EquivalenceCompExFinderExample {
 				return false;
 			}
 		};
+		var askIf1stFrameworkInteresting = new Function<DungTheory, Boolean>(){
+			@Override
+			public Boolean apply(DungTheory generatedFramework) {
+				boolean hasIsolatedNode = false;
+				for(var node : generatedFramework.getNodes()) {
+					if(
+							(generatedFramework.getAttacked(node).size() 
+									+ generatedFramework.getAttackers(node).size()) == 0) {
+						hasIsolatedNode = true;
+					}
+				}
+
+				if(hasIsolatedNode) {
+					return false;
+				}
+				else {
+					return true;
+				}
+			}
+		};
+		
 		var askIfInterestingPair = new Function<DungTheory[], Boolean>(){
 			@Override
 			public Boolean apply(DungTheory[] generatedFrameworks) {
@@ -141,7 +164,21 @@ public class EquivalenceCompExFinderExample {
 					return false;
 				}
 				else {
-					return true;
+					boolean hasIsolatedNode = false;
+					for(var node : generatedFrameworks[1].getNodes()) {
+						if(
+								(generatedFrameworks[1].getAttacked(node).size() 
+										+ generatedFrameworks[1].getAttackers(node).size()) == 0) {
+							hasIsolatedNode = true;
+						}
+					}
+					
+					if(hasIsolatedNode) {
+						return false;
+					}
+					else {
+						return true;
+					}
 				}
 			}
 		};
@@ -194,7 +231,7 @@ public class EquivalenceCompExFinderExample {
 		String path = "";
 		if(!pathToFolder.isBlank()) path = pathToFolder + File.separator;
 		path = path
-				+ equivalence1.getDescription() + "_" + equivalence2.getDescription()
+				+ equivalence1.getDescription() + "_" + equivalence2.getDescription() + "_V" + VERSION
 				+ File.separator + semanticsUsed.abbreviation();
 		// ================================== configuration completed =======================================================
 		EquivalenceCompExFinderExample.createDir(path);
@@ -209,7 +246,7 @@ public class EquivalenceCompExFinderExample {
 				examplePair = EquivalenceCompExFinderExample.generateOnePair(
 						maxNumberTryFindExample,
 						semanticsUsed, getGen1, getGen2, equivalence1, equivalence2, 
-						decisionMaker, askIfInterestingPair, askContinuingGenerating2ndFramework,
+						decisionMaker, askIf1stFrameworkInteresting, askIfInterestingPair, askContinuingGenerating2ndFramework,
 						path, idSeries, indexInSeries, z);
 				indexInSeries++;
 				/*SerialisationAnalysisPlotter.plotAnalyses(
@@ -266,6 +303,7 @@ public class EquivalenceCompExFinderExample {
 			Equivalence<DungTheory> equivalence1,
 			Equivalence<DungTheory> equivalence2,
 			DecisionMaker decisionMaker,
+			Function<DungTheory, Boolean> askIf1stFrameworkInteresting,
 			Function<DungTheory[], Boolean> askIfInterestingPair,
 			Function<DungTheory[], Boolean> askContinuingGenerating2ndFrame,
 			String path,
@@ -285,6 +323,7 @@ public class EquivalenceCompExFinderExample {
 						maxNumberTryFindExample,
 						getGen1.apply(""),
 						getGen2.apply(""),
+						askIf1stFrameworkInteresting,
 						askIfInterestingPair,
 						askContinuingGenerating2ndFrame);
 		var timeStampProcessFinished = ZonedDateTime.now( currentZone );

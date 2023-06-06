@@ -73,6 +73,7 @@ public class EquivalenceCompExFinder {
 			int numberOfMaxRandomGenerationTries,
 			Iterator<DungTheory> generatorFramework1,
 			Iterator<DungTheory> generatorFramework2,
+			Function<DungTheory, Boolean> askIf1stFrameInteresting,
 			Function<DungTheory[], Boolean> askIfInterestingPair,
 			Function<DungTheory[], Boolean> askContinueGenerate2nd) 
 					throws NoExampleFoundException{
@@ -82,6 +83,11 @@ public class EquivalenceCompExFinder {
 
 		var generatedFramework1 = generatorFramework1.next();
 		//System.out.println("Generated:    1st AF       " + generatedFramework1.getNumberOfNodes() + " Arguments / " + generatedFramework1.getEdges().size() + " Attacks");
+		
+		if(!askIf1stFrameInteresting.apply(generatedFramework1)) {
+			throw new NoExampleFoundException();
+		}
+		
 		DungTheory generatedFramework2 = generateCompliantFramework(
 				numberOfMaxRandomGenerationTries, 
 				generatedFramework1, 
@@ -139,10 +145,12 @@ public class EquivalenceCompExFinder {
 				}
 
 				// ask if it should be continued to try to generate a 2nd framework
-				if(!askContinueGenerate2nd.apply(new DungTheory[] {framework, temp})) {
+				if(askContinueGenerate2nd.apply(new DungTheory[] {framework, temp})) 
+				{
+					continue;
+				}else{
 					break;
 				}
-
 			}catch(NoSuchElementException e) {
 				// nothing needed to do, iterator has just nothing to create
 			}
