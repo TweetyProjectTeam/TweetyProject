@@ -44,6 +44,8 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraph;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphIso;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphNaiv;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByReductions;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByReductionsNaiv;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequence;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequenceNaiv;
 import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
@@ -60,7 +62,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "4";
+	private static final String VERSION = "6";
 
 	public static void main(String[] args) {
 
@@ -278,6 +280,9 @@ public class EquivalenceCompExFinderExample {
 					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
 		case "graphnaiv":
 			return new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
+					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+		case "reductsequencenaiv":
+			return new SerialisationEquivalenceByReductions(new SerialisationEquivalenceByReductionsNaiv(), 
 					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
 		default:
 			throw new IllegalArgumentException("eq1Command is not a known equivalence");

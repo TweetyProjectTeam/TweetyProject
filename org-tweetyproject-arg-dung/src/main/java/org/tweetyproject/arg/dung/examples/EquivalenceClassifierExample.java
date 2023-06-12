@@ -33,6 +33,8 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraph;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphIso;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphNaiv;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByReductions;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByReductionsNaiv;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequence;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequenceNaiv;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -83,6 +85,11 @@ public class EquivalenceClassifierExample {
 				case "graphnaiv":
 					tempEQs.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
 							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+					break;
+				case "reductsequencenaiv":
+					tempEQs.add(new SerialisationEquivalenceByReductions(new SerialisationEquivalenceByReductionsNaiv(), 
+							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+					break;
 				default:
 					throw new IllegalArgumentException("eqCommand is not a known equivalence");
 				}
@@ -96,6 +103,8 @@ public class EquivalenceClassifierExample {
 				tempEQs.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphIso(), 
 						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
 				tempEQs.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
+						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
+				tempEQs.add(new SerialisationEquivalenceByReductions(new SerialisationEquivalenceByReductionsNaiv(), 
 						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
 			}
 			mapSemEQ.put(semantics, tempEQs);
