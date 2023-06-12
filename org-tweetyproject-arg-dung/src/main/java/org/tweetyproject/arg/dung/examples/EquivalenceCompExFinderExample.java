@@ -62,7 +62,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "6";
+	private static final String VERSION = "7";
 
 	public static void main(String[] args) {
 
@@ -111,7 +111,7 @@ public class EquivalenceCompExFinderExample {
 		// creates only pairs with this minimal number of arguments
 		int minNumArguments = numArguments;
 		// if TRUE, then the generated frameworks will both have the same number of arguments
-		boolean onlySameNumberOfArguments = false;
+		boolean onlySameNumberOfArguments = true;
 
 		//[STEP] 2/5: set the sort of equivalences, which you would like to investigate
 		var equivalence1 = getEquivalence(semanticsUsed, eq1Command);
@@ -121,7 +121,7 @@ public class EquivalenceCompExFinderExample {
 		var decisionMaker = new DecisionMaker() {
 			@Override
 			public boolean decide(boolean isEQ1, boolean isEQ2) {
-				return isEQ1 && !isEQ2;
+				return isEQ1 != isEQ2;
 			}
 
 			// This method is used to decide, if the 2nd framework shall be generated as an equivalent framework 
@@ -141,46 +141,18 @@ public class EquivalenceCompExFinderExample {
 		var askIf1stFrameworkInteresting = new Function<DungTheory, Boolean>(){
 			@Override
 			public Boolean apply(DungTheory generatedFramework) {
-				boolean hasIsolatedNode = false;
-				for(var node : generatedFramework.getNodes()) {
-					if(
-							(generatedFramework.getAttacked(node).size() 
-									+ generatedFramework.getAttackers(node).size()) == 0) {
-						hasIsolatedNode = true;
-					}
-				}
-
-				if(hasIsolatedNode) {
-					return false;
-				}
-				else {
-					return true;
-				}
+				return true;
 			}
 		};
 		
 		var askIfInterestingPair = new Function<DungTheory[], Boolean>(){
 			@Override
 			public Boolean apply(DungTheory[] generatedFrameworks) {
-				if(generatedFrameworks[0].getNumberOfNodes() > generatedFrameworks[1].getNumberOfNodes()) {
-					return false;
+				if(generatedFrameworks[0].getNumberOfNodes() == generatedFrameworks[1].getNumberOfNodes()) {
+					return true;
 				}
 				else {
-					boolean hasIsolatedNode = false;
-					for(var node : generatedFrameworks[1].getNodes()) {
-						if(
-								(generatedFrameworks[1].getAttacked(node).size() 
-										+ generatedFrameworks[1].getAttackers(node).size()) == 0) {
-							hasIsolatedNode = true;
-						}
-					}
-					
-					if(hasIsolatedNode) {
-						return false;
-					}
-					else {
-						return true;
-					}
+					return false;
 				}
 			}
 		};
