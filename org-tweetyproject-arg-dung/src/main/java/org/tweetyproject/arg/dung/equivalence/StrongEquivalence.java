@@ -48,22 +48,21 @@ public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentThe
 		DungTheory kernelTheory1 = this.kernel.getKernel(theory1);
 		DungTheory kernelTheory2 = this.kernel.getKernel(theory2);
 
-		return kernelTheory1.getAttacks().equals(kernelTheory2.getAttacks());
+		return kernelTheory1.equals(kernelTheory2);
 
 	}
 
 	@Override
 	public boolean isEquivalent(Collection<DungTheory> theories) {
-		Collection<DungTheory> kernelTheories = new HashSet<>();
-		for (DungTheory theory : theories) {
-			kernelTheories.add(this.kernel.getKernel(theory));
-		}
-
-		DungTheory first = kernelTheories.iterator().next();
-		for (DungTheory kernelTheory : kernelTheories) {
-			if (!kernelTheory.getAttacks().equals(first.getAttacks()))
+		var first = theories.iterator().next();
+		
+		for(var elem : theories) {
+			if(elem == first) continue;
+			else if(!isEquivalent(elem, first)) {
 				return false;
+			}
 		}
+		
 		return true;
 	}
 
