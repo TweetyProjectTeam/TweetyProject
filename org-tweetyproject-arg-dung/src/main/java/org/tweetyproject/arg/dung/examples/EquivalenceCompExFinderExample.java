@@ -241,11 +241,11 @@ public class EquivalenceCompExFinderExample {
 		var now = ZonedDateTime.now( z );
 		String idSeries = "" + now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getHour() + now.getMinute();
 		int indexInSeries = 0;
-		LinkedHashMap<DungTheory, DungTheory> examplePair = null;
+		//LinkedHashMap<DungTheory, DungTheory> examplePair = null;
 		
 		do{
 			try {
-				examplePair = EquivalenceCompExFinderExample.generateOnePair(
+				EquivalenceCompExFinderExample.generateOnePair(
 						maxNumberTryFindExample,
 						semanticsUsed, getGen1, getGen2, equivalence1, equivalence2, 
 						decisionMaker, askIf1stFrameworkInteresting, askIfInterestingPair, askContinuingGenerating2ndFramework,
@@ -260,7 +260,7 @@ public class EquivalenceCompExFinderExample {
 			} catch (NoExampleFoundException e) {
 				System.out.println("No Examples found for " + semanticsUsed.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
 			}
-		}while( maxNumArguments == 0 || examplePair == null || examplePair.keySet().toArray(new DungTheory[1])[0].getNodes().size() < maxNumArguments + 1);
+		}while( maxNumArguments == 0 || fstFrameworkGen.getCurrentSize() < maxNumArguments + 1);
 		
 		System.out.println("Finished processing for semantics: " + semanticsUsed.abbreviation());
 	}
