@@ -62,17 +62,9 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "8";
+	private static final String VERSION = "9";
 
 	public static void main(String[] args) {
-
-		Collection<Semantics> semanticsUsed = new HashSet<>();
-		semanticsUsed.add(Semantics.ADM);
-		semanticsUsed.add(Semantics.CO);
-		semanticsUsed.add(Semantics.GR);
-		semanticsUsed.add(Semantics.PR);
-		semanticsUsed.add(Semantics.ST);
-		//semanticsUsed.add(Semantics.UC);
 
 		int numArgugments = Integer.parseInt(args[0]);
 		String eq1Command = args[1];
@@ -85,13 +77,34 @@ public class EquivalenceCompExFinderExample {
 				//do nothing
 			}
 		}
-		int numTries = argNumTries > 0 ? argNumTries : 1000;		
-		String pathToFolder = args.length > 4 ? args[4] : "";
-		for (Semantics semantics : semanticsUsed) {
+		int numTries = argNumTries > 0 ? argNumTries : 1000;
+		
+		Collection<Semantics> semanticsUsed1 = new HashSet<>();
+		if(args.length > 4) {
+			semanticsUsed1.add(Semantics.getSemantics(args[4]));
+		}
+		else {
+			semanticsUsed1.add(Semantics.ADM);
+			semanticsUsed1.add(Semantics.CO);
+			semanticsUsed1.add(Semantics.GR);
+			semanticsUsed1.add(Semantics.PR);
+			semanticsUsed1.add(Semantics.ST);
+			//semanticsUsed1.add(Semantics.UC);
+		}
+		
+		Semantics semanticsUsed2 = args.length > 5 ? Semantics.getSemantics(args[5]) : null;
+		
+		String pathToFolder = args.length > 6 ? args[6] : "";
+		for (Semantics semantics : semanticsUsed1) {
 			Thread thread = new Thread(semantics.abbreviation()) {
 				@Override
 				public void run(){
-					EquivalenceCompExFinderExample.startSeries(semantics, numTries, numArgugments, eq1Command, eq2Command, pathToFolder);
+					if(semanticsUsed2 != null) {
+						EquivalenceCompExFinderExample.startSeries(semantics, semanticsUsed2, numTries, numArgugments, eq1Command, eq2Command, pathToFolder);
+					}
+					else {
+						EquivalenceCompExFinderExample.startSeries(semantics, semantics, numTries, numArgugments, eq1Command, eq2Command, pathToFolder);
+					}
 				}
 			};
 			thread.start();
@@ -101,7 +114,7 @@ public class EquivalenceCompExFinderExample {
 	/*
 	 * Starts a new series to generate diff. examples of the same semantics
 	 */
-	private static void startSeries(Semantics semanticsUsed, int numTries, int numArguments, String eq1Command, String eq2Command, String pathToFolder) {
+	private static void startSeries(Semantics semanticsUsed1, Semantics semanticsUsed2, int numTries, int numArguments, String eq1Command, String eq2Command, String pathToFolder) {
 		//======================= STEPS to configure experiment ===============================================   <= Configuration starts here
 		//[STEP] 1/5: set number for tries to compute 2nd framework.
 		//High numbers seem to be preferable, since they increase the chance of getting a compliant framework.
@@ -114,8 +127,8 @@ public class EquivalenceCompExFinderExample {
 		boolean onlySameNumberOfArguments = true;
 
 		//[STEP] 2/5: set the sort of equivalences, which you would like to investigate
-		var equivalence1 = getEquivalence(semanticsUsed, eq1Command);
-		var equivalence2 = getEquivalence(semanticsUsed, eq2Command);
+		var equivalence1 = getEquivalence(semanticsUsed1, eq1Command);
+		var equivalence2 = getEquivalence(semanticsUsed2, eq2Command);
 		
 		// [STEP] 3/5: define how the two equivalence should be compared to one another
 		var decisionMaker = new DecisionMaker() {
@@ -206,7 +219,11 @@ public class EquivalenceCompExFinderExample {
 		if(!pathToFolder.isBlank()) path = pathToFolder + File.separator;
 		path = path
 				+ equivalence1.getDescription() + "_" + equivalence2.getDescription() + "_V" + VERSION
-				+ File.separator + semanticsUsed.abbreviation();
+				+ File.separator;
+		String semanticsDesc = semanticsUsed1.equals(semanticsUsed2) ?
+				semanticsUsed1.abbreviation():
+				semanticsUsed1.abbreviation() + "_" + semanticsUsed2.abbreviation();
+		path = path + semanticsDesc;
 		// ================================== configuration completed =======================================================
 		EquivalenceCompExFinderExample.createDir(path);
 		var z = ZoneId.of( "Europe/Berlin" );
@@ -219,7 +236,7 @@ public class EquivalenceCompExFinderExample {
 			try {
 				EquivalenceCompExFinderExample.generateOnePair(
 						maxNumberTryFindExample,
-						semanticsUsed, getGen1, getGen2, equivalence1, equivalence2, 
+						semanticsUsed1, semanticsUsed2, getGen1, getGen2, equivalence1, equivalence2, 
 						decisionMaker, askIf1stFrameworkInteresting, askIfInterestingPair, askContinuingGenerating2ndFramework,
 						path, idSeries, indexInSeries, z);
 				indexInSeries++;
@@ -230,11 +247,11 @@ public class EquivalenceCompExFinderExample {
 				2000, 1000);
 				 */
 			} catch (NoExampleFoundException e) {
-				System.out.println("No Examples found for " + semanticsUsed.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
+				System.out.println("No Examples found for " + semanticsUsed1.abbreviation() + "/" + semanticsUsed1.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
 			}
 		}while( maxNumArguments == 0 || fstFrameworkGen.getCurrentSize() < maxNumArguments + 1);
 		
-		System.out.println("Finished processing for semantics: " + semanticsUsed.abbreviation());
+		System.out.println("Finished processing for semantics: " + semanticsUsed1.abbreviation() + "/" + semanticsUsed1.abbreviation());
 	}
 
 	private static Equivalence<DungTheory> getEquivalence(Semantics semanticsUsed, String eqCommand) {
@@ -274,7 +291,8 @@ public class EquivalenceCompExFinderExample {
 	 */
 	private static LinkedHashMap<DungTheory, DungTheory> generateOnePair(
 			int maxNumberTryFindExample,
-			Semantics semanticsUsed,
+			Semantics semanticsUsed1,
+			Semantics semanticsUsed2,
 			Function<String, Iterator<DungTheory>> getGen1,
 			Function<String, Iterator<DungTheory>> getGen2,
 			Equivalence<DungTheory> equivalence1,
@@ -311,12 +329,12 @@ public class EquivalenceCompExFinderExample {
 			var secondExample = output.get(frameworkKey);
 			EquivalenceCompExFinderExample.writeFile(
 					path, frameworkKey, idSeries, indexInSeries, 0,
-					semanticsUsed, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
+					semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
 					frameworkKey.getNumberOfNodes(), secondExample.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished);
 
 			EquivalenceCompExFinderExample.writeFile(
 					path, secondExample, idSeries, indexInSeries, 1,
-					semanticsUsed, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
+					semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
 					frameworkKey.getNumberOfNodes(), secondExample.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished);
 		}
 		//System.out.println("Processing finished: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
@@ -351,7 +369,8 @@ public class EquivalenceCompExFinderExample {
 			String idSeries,
 			int indexInSeries,
 			int indexInPair,
-			Semantics semanticsUsed,
+			Semantics semanticsUsed1,
+			Semantics semanticsUsed2,
 			String equi1Name,
 			String equi2Name,
 			boolean isEQ1,
@@ -362,13 +381,13 @@ public class EquivalenceCompExFinderExample {
 			ZonedDateTime dateTimeProcessFinished) {
 
 		var writer = new ApxWriter();
-		var file = new File(path + File.separator +
-				equi1Name + "_" + isEQ1 + "_" +
-				equi2Name + "_" + isEQ2 + "_" +
-				semanticsUsed.abbreviation() + "_" +
+		String pathFile = path + File.separator +
+				equi1Name + "_" + semanticsUsed1.abbreviation() + "_" + isEQ1 + "_" +
+				equi2Name + "_" + semanticsUsed2.abbreviation() + "_" + isEQ2 + "_" +
 				numArgumentFramework1 + "_" + numArgumentFramework2 + "_" +
 				idSeries + "_" + indexInSeries + "_" + indexInPair + 
-				".apx");
+				".apx";
+		var file = new File(pathFile);
 
 		var addInfo = new String[8];
 		addInfo[0] = "Date of creation:";
