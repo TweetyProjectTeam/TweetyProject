@@ -247,11 +247,11 @@ public class EquivalenceCompExFinderExample {
 				2000, 1000);
 				 */
 			} catch (NoExampleFoundException e) {
-				System.out.println("No Examples found for " + semanticsUsed1.abbreviation() + "/" + semanticsUsed1.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
+				System.out.println("No Examples found for " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
 			}
 		}while( maxNumArguments == 0 || fstFrameworkGen.getCurrentSize() < maxNumArguments + 1);
 		
-		System.out.println("Finished processing for semantics: " + semanticsUsed1.abbreviation() + "/" + semanticsUsed1.abbreviation());
+		System.out.println("Finished processing for semantics: " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation());
 	}
 
 	private static Equivalence<DungTheory> getEquivalence(Semantics semanticsUsed, String eqCommand) {
