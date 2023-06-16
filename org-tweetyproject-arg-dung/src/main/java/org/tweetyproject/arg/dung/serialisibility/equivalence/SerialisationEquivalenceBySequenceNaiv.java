@@ -24,8 +24,10 @@ import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
 
 /**
- * This class represents an comparator, which defines if 2 sequences are equivalent, 
- * by comparing if they consist of equivalent elements (naiv approach). 
+ * This class represents an comparator, which defines if 2 sets of sequences are equivalent. 
+ * Those sets are deemed equivalent, if for each sequence in one set there is an equivalent sequence 
+ * in the other set.Two single sequences are expected to be equivalent if they consist of equivalent elements 
+ * in a similar order (naive approach). 
  *
  * @author Julian Sander
  * @version TweetyProject 1.23

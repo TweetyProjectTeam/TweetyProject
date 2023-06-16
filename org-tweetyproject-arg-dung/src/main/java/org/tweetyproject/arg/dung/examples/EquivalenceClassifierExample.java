@@ -33,8 +33,8 @@ import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraph;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphIso;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByGraphNaiv;
-import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByReductions;
-import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByReductionsNaiv;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByTransitionStateSequence;
+import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceByTransitionStateSequenceNaiv;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequence;
 import org.tweetyproject.arg.dung.serialisibility.equivalence.SerialisationEquivalenceBySequenceNaiv;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -87,7 +87,7 @@ public class EquivalenceClassifierExample {
 							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
 					break;
 				case "reductsequencenaiv":
-					tempEQs.add(new SerialisationEquivalenceByReductions(new SerialisationEquivalenceByReductionsNaiv(), 
+					tempEQs.add(new SerialisationEquivalenceByTransitionStateSequence(new SerialisationEquivalenceByTransitionStateSequenceNaiv(), 
 							SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
 					break;
 				default:
@@ -104,7 +104,7 @@ public class EquivalenceClassifierExample {
 						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
 				tempEQs.add(new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
 						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
-				tempEQs.add(new SerialisationEquivalenceByReductions(new SerialisationEquivalenceByReductionsNaiv(), 
+				tempEQs.add(new SerialisationEquivalenceByTransitionStateSequence(new SerialisationEquivalenceByTransitionStateSequenceNaiv(), 
 						SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semantics)));
 			}
 			mapSemEQ.put(semantics, tempEQs);

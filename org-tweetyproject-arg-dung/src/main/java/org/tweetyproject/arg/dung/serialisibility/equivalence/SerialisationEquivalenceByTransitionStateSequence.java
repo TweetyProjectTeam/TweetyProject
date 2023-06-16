@@ -24,39 +24,43 @@ import java.util.HashSet;
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.reasoner.serialisable.SerialisableExtensionReasoner;
 import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
+import org.tweetyproject.arg.dung.serialisibility.syntax.TransitionStateSequence;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * This class represents an comparator, which defines if 2 frameworks are equivalent, 
- * by comparing their serialisation sequences. 
+ * by comparing their {@link TransitionStateSequence sequences of transition states}. 
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
  *
  */
-public class SerialisationEquivalenceBySequence extends SerialisationEquivalence<Collection<SerialisationSequence>>{
+public class SerialisationEquivalenceByTransitionStateSequence extends SerialisationEquivalence<Collection<TransitionStateSequence>> {
 
 	private SerialisableExtensionReasoner reasoner;
 	
 	/**
-	 * @param comparator {@link SerialisationEquivalence.Comparator}
-	 * @param reasoner Reasoner used to compute the sequences
+	 * @param comparator {@link SerialisationEquivalence.comparator}
+	 * @param reasoner Reasoner used to compute the {@link SerialisationSequence SerialisationSequences}
 	 */
-	public SerialisationEquivalenceBySequence(Equivalence<Collection<SerialisationSequence>> comparator,
+	public SerialisationEquivalenceByTransitionStateSequence(Equivalence<Collection<TransitionStateSequence>> comparator,
 			SerialisableExtensionReasoner reasoner) {
 		super(comparator);
 		this.reasoner = reasoner;
 	}
-	
+
 	@Override
-	protected HashSet<SerialisationSequence> getRelevantAspect(DungTheory framework) {
-		return reasoner.getModelsSequences(framework);
+	protected DungTheory getFramework(Collection<TransitionStateSequence> object) {
+		return object.iterator().next().getFirst().getTheory();
 	}
 
 	@Override
-	protected DungTheory getFramework(Collection<SerialisationSequence> object) {
-		// not supported
-		return null;
+	protected Collection<TransitionStateSequence> getRelevantAspect(DungTheory framework) {
+		var output = new HashSet<TransitionStateSequence>();
+		for(var sequence : this.reasoner.getModelsSequences(framework)) {
+			output.add(new TransitionStateSequence(framework, sequence));
+		}
+		
+		return output;
 	}
-
 }

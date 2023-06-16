@@ -24,8 +24,8 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * This class represents a sequence of sets of arguments, which is typically generated during the process
- * of finding extensions in a framework by serialising sets of arguments.
+ * This class represents a sequence of sets of arguments. 
+ * Each set of arguments is a part of the serialisable extensions of an abstract argumentation framework.
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
