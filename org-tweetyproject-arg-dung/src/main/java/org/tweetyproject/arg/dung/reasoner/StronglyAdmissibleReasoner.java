@@ -72,14 +72,18 @@ public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
 		    }
 		    
 		    var defenders = bbase.getAttackers(attacker);
+		    boolean atLeastOneDefenderIsDefended = false;
 		    //[TERMINATION CONDITION]
 		    for (Argument defender : defenders) {
 		    	//[RECURSIVE CALL]
-				if(!checkStrongyDefended(bbase, extWithoutCandidate, defender))
+				if(checkStrongyDefended(bbase, extWithoutCandidate, defender))
 				{
-					return false;
+					atLeastOneDefenderIsDefended = true;
 				}
 			}
+		    if(!atLeastOneDefenderIsDefended) {
+		    	return false;
+		    }
 		}
 		return true;
 	}
