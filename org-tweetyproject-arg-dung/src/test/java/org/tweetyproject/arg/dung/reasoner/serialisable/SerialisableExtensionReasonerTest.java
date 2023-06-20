@@ -34,6 +34,8 @@ import org.tweetyproject.arg.dung.serialisibility.syntax.SerialisationSequence;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.util.DefaultDungTheoryGenerator;
+import org.tweetyproject.arg.dung.util.DungTheoryGenerationParameters;
 
 /**
  * Tests to verify the code in the class {@link SerialisableExtensionReasoner}.
@@ -50,7 +52,7 @@ class SerialisableExtensionReasonerTest {
 	 * The verified reasoners are given by the class {@link AbstractExtensionReasoner}.
 	 */
 	@ParameterizedTest
-	@EnumSource(names = {"ADM", "CO", "GR", "PR", "ST"}) 
+	@EnumSource(names = {"ADM", "CO", "GR", "PR", "ST"}) //, "SA"
 	void getModels_knownSemantics_findSameExtensions(Semantics semantics) {
 		
 		//Arrange				
@@ -70,6 +72,23 @@ class SerialisableExtensionReasonerTest {
 			System.out.println(semantics.description());
 			System.out.println("Expected:" + extensionsExpected.toString());
 			System.out.println("Actual:" + extensionsActual.toString());
+			
+			//Assert
+			assertEquals(extensionsExpected, extensionsActual);
+		}
+		
+		var parameters = new DungTheoryGenerationParameters();
+		parameters.attackProbability = 0.2;
+		parameters.avoidSelfAttacks = false;
+		parameters.numberOfArguments = 20;
+		var generator = new DefaultDungTheoryGenerator(parameters);
+		
+		for (int i = 0; i < 10; i++) {
+			var dungTheory = generator.next();
+			
+			//Act	
+			Collection<Extension<DungTheory>> extensionsActual = reasonerToTest.getModels(dungTheory);
+			Collection<Extension<DungTheory>> extensionsExpected = reasonerVerified.getModels(dungTheory);
 			
 			//Assert
 			assertEquals(extensionsExpected, extensionsActual);

@@ -46,7 +46,11 @@ public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
      */
     @Override
     public Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
-        Collection<Extension<DungTheory>> result = new HashSet<>();
+        return select(unattacked);
+    }
+
+	public static Collection<Extension<DungTheory>> select(Collection<Extension<DungTheory>> unattacked) {
+		Collection<Extension<DungTheory>> result = new HashSet<>();
 
         for (Extension<DungTheory> ext: unattacked) {
             if (ext.size() == 1) {
@@ -54,5 +58,5 @@ public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
             }
         }
         return result;
-    }
+	}
 }

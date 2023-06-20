@@ -57,6 +57,8 @@ public enum Semantics {
 	N ("naive semantics", "N"),
 	/** UC */
 	UC("unchallenged semantics", "UC"),
+	/** SA */
+	SA("strongly admissible semantics", "SA"),
 	/** diverse */
 	diverse ("diverse semantics", "div");
 	/**
@@ -94,7 +96,9 @@ public enum Semantics {
 		/** NAIVE_SEMANTICS */
 		NAIVE_SEMANTICS = N,
 		/** UNCHALLENGED_SEMANTICS */
-		UNCHALLENGED_SEMANTICS = UC;
+		UNCHALLENGED_SEMANTICS = UC,
+		/** STRONGLY_ADMISSBLE_SEMANTICS */
+		STRONGLY_ADMISSIBLE_SEMANTICS = SA;
 		
 	/** The description of the semantics. */
 	private String description;
