@@ -62,7 +62,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "9";
+	private static final String VERSION = "10";
 
 	public static void main(String[] args) {
 
@@ -89,7 +89,8 @@ public class EquivalenceCompExFinderExample {
 			semanticsUsed1.add(Semantics.GR);
 			semanticsUsed1.add(Semantics.PR);
 			semanticsUsed1.add(Semantics.ST);
-			//semanticsUsed1.add(Semantics.UC);
+			semanticsUsed1.add(Semantics.UC);
+			semanticsUsed1.add(Semantics.SA);
 		}
 		
 		Semantics semanticsUsed2 = args.length > 5 ? Semantics.getSemantics(args[5]) : null;
@@ -232,6 +233,7 @@ public class EquivalenceCompExFinderExample {
 		int indexInSeries = 0;
 		//LinkedHashMap<DungTheory, DungTheory> examplePair = null;
 		
+		int numFstFramesGenerated = 0;
 		do{
 			try {
 				EquivalenceCompExFinderExample.generateOnePair(
@@ -249,6 +251,8 @@ public class EquivalenceCompExFinderExample {
 			} catch (NoExampleFoundException e) {
 				System.out.println("No Examples found for " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
 			}
+			numFstFramesGenerated++;
+			PrintLoadingBarConsole(numFstFramesGenerated, numArguments, semanticsUsed1, semanticsUsed2);
 		}while( maxNumArguments == 0 || fstFrameworkGen.getCurrentSize() < maxNumArguments + 1);
 		
 		System.out.println("Finished processing for semantics: " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation());
@@ -420,5 +424,21 @@ public class EquivalenceCompExFinderExample {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void PrintLoadingBarConsole(int numberDone, int numArguments, Semantics semanticsUsed1, Semantics semanticsUsed2) {
+		double allFrames = java.lang.Math.pow(java.lang.Math.pow(2,numArguments),numArguments);
+		double procentDone = (numberDone * 100) / allFrames;
+		System.out.println("(" + numberDone + "/" + allFrames + ") examined for " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation());
+		System.out.print("[");
+		for (int i = 0; i < 100; i++) {
+			if(procentDone > i) {
+				System.out.print("█");
+			}else {
+				System.out.print("|");
+			}
+		}
+			
+		System.out.println("]");
 	}
 }

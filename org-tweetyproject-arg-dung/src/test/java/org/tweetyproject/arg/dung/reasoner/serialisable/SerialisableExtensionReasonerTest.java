@@ -52,7 +52,7 @@ class SerialisableExtensionReasonerTest {
 	 * The verified reasoners are given by the class {@link AbstractExtensionReasoner}.
 	 */
 	@ParameterizedTest
-	@EnumSource(names = {"ADM", "CO", "GR", "PR", "ST"}) //, "SA"
+	@EnumSource(names = {"ADM", "CO", "GR", "PR", "ST"}) // , "SA" 
 	void getModels_knownSemantics_findSameExtensions(Semantics semantics) {
 		
 		//Arrange				
@@ -80,10 +80,10 @@ class SerialisableExtensionReasonerTest {
 		var parameters = new DungTheoryGenerationParameters();
 		parameters.attackProbability = 0.2;
 		parameters.avoidSelfAttacks = false;
-		parameters.numberOfArguments = 20;
+		parameters.numberOfArguments = 10;
 		var generator = new DefaultDungTheoryGenerator(parameters);
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			var dungTheory = generator.next();
 			
 			//Act	
