@@ -62,17 +62,18 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "10";
+	private static final String VERSION = "11";
 
 	public static void main(String[] args) {
 
 		int numArgugments = Integer.parseInt(args[0]);
 		String eq1Command = args[1];
 		String eq2Command = args[2];
+		String experimentName = args[3];
 		int argNumTries = 0;
-		if(args.length > 3) {
+		if(args.length > 4) {
 			try {
-				argNumTries = Integer.parseInt(args[3]);
+				argNumTries = Integer.parseInt(args[4]);
 			}catch(NumberFormatException e) {
 				//do nothing
 			}
@@ -80,8 +81,8 @@ public class EquivalenceCompExFinderExample {
 		int numTries = argNumTries > 0 ? argNumTries : 1000;
 		
 		Collection<Semantics> semanticsUsed1 = new HashSet<>();
-		if(args.length > 4) {
-			semanticsUsed1.add(Semantics.getSemantics(args[4]));
+		if(args.length > 5) {
+			semanticsUsed1.add(Semantics.getSemantics(args[5]));
 		}
 		else {
 			semanticsUsed1.add(Semantics.ADM);
@@ -93,18 +94,20 @@ public class EquivalenceCompExFinderExample {
 			semanticsUsed1.add(Semantics.SA);
 		}
 		
-		Semantics semanticsUsed2 = args.length > 5 ? Semantics.getSemantics(args[5]) : null;
+		Semantics semanticsUsed2 = args.length > 6 ? Semantics.getSemantics(args[6]) : null;
 		
-		String pathToFolder = args.length > 6 ? args[6] : "";
+		String pathToFolder = args.length > 7 ? args[7] : "";
 		for (Semantics semantics : semanticsUsed1) {
 			Thread thread = new Thread(semantics.abbreviation()) {
 				@Override
 				public void run(){
 					if(semanticsUsed2 != null) {
-						EquivalenceCompExFinderExample.startSeries(semantics, semanticsUsed2, numTries, numArgugments, eq1Command, eq2Command, pathToFolder);
+						EquivalenceCompExFinderExample.startSeries(
+								semantics, semanticsUsed2, numTries, numArgugments, eq1Command, eq2Command, pathToFolder, experimentName);
 					}
 					else {
-						EquivalenceCompExFinderExample.startSeries(semantics, semantics, numTries, numArgugments, eq1Command, eq2Command, pathToFolder);
+						EquivalenceCompExFinderExample.startSeries(
+								semantics, semantics, numTries, numArgugments, eq1Command, eq2Command, pathToFolder, experimentName);
 					}
 				}
 			};
@@ -115,7 +118,15 @@ public class EquivalenceCompExFinderExample {
 	/*
 	 * Starts a new series to generate diff. examples of the same semantics
 	 */
-	private static void startSeries(Semantics semanticsUsed1, Semantics semanticsUsed2, int numTries, int numArguments, String eq1Command, String eq2Command, String pathToFolder) {
+	private static void startSeries(
+			Semantics semanticsUsed1, 
+			Semantics semanticsUsed2, 
+			int numTries, 
+			int numArguments, 
+			String eq1Command, 
+			String eq2Command, 
+			String pathToFolder,
+			String expName) {
 		//======================= STEPS to configure experiment ===============================================   <= Configuration starts here
 		//[STEP] 1/5: set number for tries to compute 2nd framework.
 		//High numbers seem to be preferable, since they increase the chance of getting a compliant framework.
@@ -219,7 +230,8 @@ public class EquivalenceCompExFinderExample {
 		String path = "";
 		if(!pathToFolder.isBlank()) path = pathToFolder + File.separator;
 		path = path
-				+ equivalence1.getDescription() + "_" + equivalence2.getDescription() + "_V" + VERSION
+				+ expName
+				//+ equivalence1.getDescription() + "_" + equivalence2.getDescription() + "_V" + VERSION
 				+ File.separator;
 		String semanticsDesc = semanticsUsed1.equals(semanticsUsed2) ?
 				semanticsUsed1.abbreviation():
@@ -240,7 +252,7 @@ public class EquivalenceCompExFinderExample {
 						maxNumberTryFindExample,
 						semanticsUsed1, semanticsUsed2, getGen1, getGen2, equivalence1, equivalence2, 
 						decisionMaker, askIf1stFrameworkInteresting, askIfInterestingPair, askContinuingGenerating2ndFramework,
-						path, idSeries, indexInSeries, z);
+						path, idSeries, indexInSeries, z, numFstFramesGenerated);
 				indexInSeries++;
 				/*SerialisationAnalysisPlotter.plotAnalyses(
 				new Semantics[] {semanticsUsed},
@@ -308,7 +320,8 @@ public class EquivalenceCompExFinderExample {
 			String path,
 			String idSeries,
 			int indexInSeries,
-			ZoneId currentZone) throws NoExampleFoundException {
+			ZoneId currentZone,
+			int numberFstAF) throws NoExampleFoundException {
 		
 
 		var exampleFinder = new EquivalenceCompExFinder(
@@ -334,12 +347,12 @@ public class EquivalenceCompExFinderExample {
 			EquivalenceCompExFinderExample.writeFile(
 					path, frameworkKey, idSeries, indexInSeries, 0,
 					semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
-					frameworkKey.getNumberOfNodes(), secondExample.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished);
+					frameworkKey.getNumberOfNodes(), secondExample.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numberFstAF);
 
 			EquivalenceCompExFinderExample.writeFile(
 					path, secondExample, idSeries, indexInSeries, 1,
 					semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
-					frameworkKey.getNumberOfNodes(), secondExample.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished);
+					frameworkKey.getNumberOfNodes(), secondExample.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numberFstAF);
 		}
 		//System.out.println("Processing finished: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
 
@@ -382,7 +395,8 @@ public class EquivalenceCompExFinderExample {
 			int numArgumentFramework1,
 			int numArgumentFramework2,
 			ZonedDateTime dateTimeProcessStart,
-			ZonedDateTime dateTimeProcessFinished) {
+			ZonedDateTime dateTimeProcessFinished,
+			int numberFstAFCreated) {
 
 		var writer = new ApxWriter();
 		String pathFile = path + File.separator +
@@ -393,7 +407,7 @@ public class EquivalenceCompExFinderExample {
 				".apx";
 		var file = new File(pathFile);
 
-		var addInfo = new String[8];
+		var addInfo = new String[9];
 		addInfo[0] = "Date of creation:";
 		addInfo[1] = dateTimeProcessStart.getYear() + "_" +
 				dateTimeProcessStart.getMonthValue() + "_" +
@@ -414,9 +428,13 @@ public class EquivalenceCompExFinderExample {
 				dateTimeProcessFinished.getMinute() + "m" +
 				dateTimeProcessFinished.getSecond() + "s" +
 				dateTimeProcessFinished.getNano();
-		addInfo[6] = "Processing Time:";
 		Duration procTime = Duration.between(dateTimeProcessStart, dateTimeProcessFinished).abs();
-		addInfo[7] = procTime.toString();	
+		addInfo[6] = "Processing Time: " + procTime.toString();
+		addInfo[7] = "Generating Tool: EQExperiment_V" + VERSION;
+		double allFrameToCreate = java.lang.Math.pow(java.lang.Math.pow(2,numArgumentFramework1),numArgumentFramework1);
+		addInfo[8] = "Generation-Progress: (" 
+				+ numberFstAFCreated + "/" 
+				+ java.lang.Math.round(allFrameToCreate) + ")";
 
 		try {
 			writer.write(framework, file);
