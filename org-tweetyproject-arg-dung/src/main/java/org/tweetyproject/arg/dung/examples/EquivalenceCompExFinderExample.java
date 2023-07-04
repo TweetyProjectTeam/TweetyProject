@@ -96,7 +96,7 @@ public class EquivalenceCompExFinderExample {
 		
 		Semantics semanticsUsed2 = args.length > 6 ? Semantics.getSemantics(args[6]) : null;
 		
-		String pathToFolder = args.length > 7 ? args[7] : "";
+		String pathToFolder = args.length > 7 ? args[7] : System.getProperty("user.dir");
 		for (Semantics semantics : semanticsUsed1) {
 			Thread thread = new Thread(semantics.abbreviation()) {
 				@Override
@@ -228,15 +228,14 @@ public class EquivalenceCompExFinderExample {
 
 		//[STEP] 5/5: set the destination, where the files of the frameworks shall be saved to
 		String path = "";
-		if(!pathToFolder.isBlank()) path = pathToFolder + File.separator;
-		path = path
-				+ expName
-				//+ equivalence1.getDescription() + "_" + equivalence2.getDescription() + "_V" + VERSION
-				+ File.separator;
+		path = pathToFolder 
+				+ File.separator
+				+ expName;
+				//+ equivalence1.getDescription() + "_" + equivalence2.getDescription() + "_V" + VERSION;
 		String semanticsDesc = semanticsUsed1.equals(semanticsUsed2) ?
 				semanticsUsed1.abbreviation():
 				semanticsUsed1.abbreviation() + "_" + semanticsUsed2.abbreviation();
-		path = path + semanticsDesc;
+		path = path + File.separator + semanticsDesc;
 		// ================================== configuration completed =======================================================
 		EquivalenceCompExFinderExample.createDir(path);
 		var z = ZoneId.of( "Europe/Berlin" );
@@ -286,7 +285,7 @@ public class EquivalenceCompExFinderExample {
 		case "graphnaiv":
 			return new SerialisationEquivalenceByGraph(new SerialisationEquivalenceByGraphNaiv(), 
 					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
-		case "reductsequencenaiv":
+		case "transeqnaiv":
 			return new SerialisationEquivalenceByTransitionStateSequence(new SerialisationEquivalenceByTransitionStateSequenceNaiv(), 
 					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
 		default:
@@ -446,17 +445,13 @@ public class EquivalenceCompExFinderExample {
 	
 	private static void PrintLoadingBarConsole(int numberDone, int numArguments, Semantics semanticsUsed1, Semantics semanticsUsed2) {
 		double allFrames = java.lang.Math.pow(java.lang.Math.pow(2,numArguments),numArguments);
-		double procentDone = (numberDone * 100) / allFrames;
-		System.out.println("(" + numberDone + "/" + allFrames + ") examined for " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation());
-		System.out.print("[");
-		for (int i = 0; i < 100; i++) {
-			if(procentDone > i) {
-				System.out.print("█");
-			}else {
-				System.out.print("|");
-			}
-		}
-			
-		System.out.println("]");
+		//double procentDone = (numberDone * 100) / allFrames;
+		System.out.println("(" + numberDone + "/" + allFrames + ") examined " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation());
+		/*
+		 * System.out.print("["); for (int i = 0; i < 100; i++) { if(procentDone > i) {
+		 * System.out.print("█"); }else { System.out.print("|"); } }
+		 * 
+		 * System.out.println("]");
+		 */
 	}
 }
