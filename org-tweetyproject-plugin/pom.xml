@@ -8,7 +8,7 @@
   <parent>
   <groupId>org.tweetyproject</groupId>
   <artifactId>parent-pom</artifactId>
-    <version>1.23-SNAPSHOT</version>
+    <version>1.24-SNAPSHOT</version>
   </parent>
   
   
@@ -21,7 +21,7 @@
   <dependency>
   	<groupId>org.tweetyproject</groupId>
   	<artifactId>math</artifactId>
-  	<version>1.23-SNAPSHOT</version>
+  	<version>1.24-SNAPSHOT</version>
   </dependency>
   </dependencies>
 </project>

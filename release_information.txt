@@ -1,3 +1,9 @@
+11.07.2023 - TweetyProject 1.24
+  New libraries: <none>
+  New functionalities: <none>
+  Minor changes:
+    - Minor bugfixes
+    - Fixed JavaDoc
 23.01.2023 - TweetyProject 1.23
   New libraries: <none>
   New functionalities:
