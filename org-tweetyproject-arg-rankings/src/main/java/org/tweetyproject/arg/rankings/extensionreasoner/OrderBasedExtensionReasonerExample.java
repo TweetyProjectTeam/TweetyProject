@@ -77,7 +77,7 @@ public class OrderBasedExtensionReasonerExample {
 //            Extension<DungTheory> ext = new Extension<>(set);
 //            extensions.add(ext);
 //        }
-        NumberOfContainsInExtentions nocie = new NumberOfContainsInExtentions();
+        NumberOfContainsInExtensions nocie = new NumberOfContainsInExtensions();
         OrderBasedExtensionReasoner OBER = new OrderBasedExtensionReasoner(AggregationFunction.SUM);
         System.out.println("OBE_pr,sum:" + OBER.getModels(prExtensions,nocie));
         OBER.setAggregationFunction(AggregationFunction.MAX);

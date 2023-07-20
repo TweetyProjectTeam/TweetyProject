@@ -989,6 +989,18 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 		return DefaultGraph.getInducedSubgraphs(this);
 	}
 
+	/**
+	 * Checks whether the given extension is complete wrt. this theory.
+	 * @param e some extension
+	 * @return "true" iff the extension is complete.
+	 */
+	public boolean isComplete(Extension<DungTheory> e) {
+		for(Argument a: this)
+			if(!e.contains(a))
+				if(this.isAcceptable(a, e))
+					return false;
+		return true;				
+	}
 
 
 

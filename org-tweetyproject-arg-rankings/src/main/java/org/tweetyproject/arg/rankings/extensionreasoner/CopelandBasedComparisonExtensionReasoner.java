@@ -1,5 +1,6 @@
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -28,8 +29,11 @@ public class CopelandBasedComparisonExtensionReasoner {
 	 * @param dung an Argumentation Framework
 	 * @param criteria the comparison criteria
 	 * @return a set of Extensions which are considered as the best ones
+	 * @throws IllegalAccessException 
+	 * @throws InvocationTargetException 
+	 * @throws NoSuchMethodException 
 	 */
-	public LinkedList<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions, DungTheory dung, ComparisonCriteria criteria) {
+	public LinkedList<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions, DungTheory dung, ComparisonCriteria criteria) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		int argmax =  - extensions.size();
 		LinkedList<Extension<DungTheory>> bestExt = new LinkedList<Extension<DungTheory>>();
 		LinkedList<Extension<DungTheory>> greaterEqual = new LinkedList<Extension<DungTheory>>();

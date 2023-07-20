@@ -1,5 +1,7 @@
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -24,8 +26,11 @@ public interface ComparisonCriteria {
 	 * @param dung an argumentation framework
 	 * @param e1 an Extension
 	 * @param e2 an Extension
-	 * @return the value 0 if e1 == e2; a value less then 0 if e1 < e2 and a value greater than 0 if e1 > e2
+	 * @return value 0 if e1 == e2; value less then 0 if e1 < e2 and value greater than 0 if e1 > e2
+	 * @throws IllegalAccessException 
+	 * @throws InvocationTargetException 
+	 * @throws NoSuchMethodException 
 	 */
-	int compare(DungTheory dung, Extension<DungTheory> e1, Extension<DungTheory> e2);
+	int compare(DungTheory dung, Extension<DungTheory> e1, Extension<DungTheory> e2) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 
 }

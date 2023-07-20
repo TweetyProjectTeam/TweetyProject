@@ -20,6 +20,7 @@
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.ExtensionRankingSemantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -27,6 +28,7 @@ import org.tweetyproject.commons.util.SetTools;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.*;
 
 
@@ -136,6 +138,44 @@ public class ExtensionRankingReasoner {
     public List<List<Extension<DungTheory>>> getModels(DungTheory theory) throws InvocationTargetException, IllegalAccessException {
         return getModels(theory,false);
     }
+    
+    
+    //cardinal mode!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public List<List<Argument>> rankArguments(DungTheory theory) throws InvocationTargetException, IllegalAccessException{
+		List<List<Extension<DungTheory>>> result = getModels(theory);
+		Map<Argument, Boolean> argMap = new HashMap<>();
+	    Collection<Argument> nodes = theory.getNodes();
+	    int count = 0;
+	    for(Argument arg : nodes) {
+        	argMap.put(arg, false);
+        }
+	    List<Extension<DungTheory>> rankedExt;
+	    List<List<Argument>> ranks = new ArrayList<>();
+        for(int i = result.size()-1; i >= 0; i--) {
+        	List<Argument> rank = new ArrayList<>();
+        	rankedExt = result.get(i);
+        	for(Extension<DungTheory> ext : rankedExt) {
+        		 Iterator<Argument> it = ext.iterator();
+        		 while( it.hasNext() ) {
+        			 Argument arg = it.next();
+        			 if(argMap.get(arg) == false) {
+        				 argMap.put(arg, true);
+        				 rank.add(arg);
+        				 count++;
+        			 } 
+        		 }
+        	}
+        	if(rank.size() > 0) {
+   			 ranks.add(rank); 
+   		    } 
+        	if( count == nodes.size()){
+        		break;
+        	}
+        }
+		return ranks;
+	}
+    
+    
 
     /**
      * Returns the correct comparison sign for two extensions by using the base functions in correct order.
@@ -197,7 +237,7 @@ public class ExtensionRankingReasoner {
                         map.put(comparison,null);
                     }
                     break;
-                case R_PR, R_CO_PR:
+                case R_PR: // , R_CO_PR
                     if (isStrictlySmaller(cs1, cs2,false)) {
                         map.put(comparison, '>');
                     } else if (isStrictlyBigger(cs1, cs2,false)) {
@@ -445,7 +485,7 @@ public class ExtensionRankingReasoner {
      * @param ext2 extension on the right side
      * @return the current sign between two extensions
      */
-    private Character getSign(Extension<DungTheory> ext1, Extension<DungTheory> ext2){
+    private Character getSign(Extension<DungTheory> ext1, Extension<DungTheory> ext2){             
         List<Extension<DungTheory>> comparison = new ArrayList<>();
         comparison.add(ext1);
         comparison.add(ext2);
@@ -470,7 +510,7 @@ public class ExtensionRankingReasoner {
                 methods.add(ExtensionRankingReasoner.class.getMethod("getConflicts", Extension.class, DungTheory.class));
                 methods.add(ExtensionRankingReasoner.class.getMethod("getUndefended", Extension.class, DungTheory.class));
             }
-            case R_CO, R_GR, R_CO_PR-> {
+            case R_CO, R_GR-> { // , R_CO_PR   !!!!!!!!!!!!!!!
                 methods.add(ExtensionRankingReasoner.class.getMethod("getConflicts", Extension.class, DungTheory.class));
                 methods.add(ExtensionRankingReasoner.class.getMethod("getUndefended", Extension.class, DungTheory.class));
                 methods.add(ExtensionRankingReasoner.class.getMethod("getDefendedNotIn", Extension.class, DungTheory.class));
