@@ -10,7 +10,6 @@ import java.util.Vector;
 import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimplePreferredReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.ExtensionRankingSemantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
