@@ -83,4 +83,15 @@ public class TransitionState {
     	var other = (TransitionState) obj;
     	return this.theory.equals(other.getTheory()) && this.extension.equals(other.extension);
     }
+    
+    @Override
+	public int hashCode() {
+		final int prime = 67;
+		int result = 1;
+		result = prime * result
+				+ ((theory == null) ? 0 : theory.hashCode());
+		result = prime * result
+				+ ((extension == null) ? 0 : extension.hashCode());
+		return result;
+	}
 }

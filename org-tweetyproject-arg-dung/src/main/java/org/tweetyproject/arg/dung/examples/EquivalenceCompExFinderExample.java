@@ -35,6 +35,7 @@ import java.util.function.Function;
 import org.tweetyproject.arg.dung.equivalence.DecisionMaker;
 import org.tweetyproject.arg.dung.equivalence.Equivalence;
 import org.tweetyproject.arg.dung.equivalence.EquivalenceCompExFinder;
+import org.tweetyproject.arg.dung.equivalence.IdentityEquivalence;
 import org.tweetyproject.arg.dung.equivalence.StandardEquivalence;
 import org.tweetyproject.arg.dung.equivalence.StrongEquivalence;
 import org.tweetyproject.arg.dung.equivalence.strong.EquivalenceKernel;
@@ -288,6 +289,8 @@ public class EquivalenceCompExFinderExample {
 		case "transeqnaiv":
 			return new SerialisationEquivalenceByTransitionStateSequence(new SerialisationEquivalenceByTransitionStateSequenceNaiv(), 
 					SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+		case "identity":
+			return new IdentityEquivalence();
 		default:
 			throw new IllegalArgumentException("eq1Command is not a known equivalence");
 		}
