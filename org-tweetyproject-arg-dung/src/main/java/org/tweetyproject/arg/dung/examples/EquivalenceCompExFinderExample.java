@@ -26,7 +26,6 @@ import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -63,7 +62,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "11";
+	private static final String VERSION = "15";
 
 	public static void main(String[] args) {
 
@@ -81,30 +80,34 @@ public class EquivalenceCompExFinderExample {
 		}
 		int numTries = argNumTries > 0 ? argNumTries : 1000;
 		
-		Collection<Semantics> semanticsUsed1 = new HashSet<>();
-		if(args.length > 5) {
-			semanticsUsed1.add(Semantics.getSemantics(args[5]));
+		Semantics[] semanticsUsed1 = args.length > 5 ? parseSemantics(args[5]) : null;
+		
+		Semantics[] semanticsUsed2;
+		if(args.length > 6) {
+			semanticsUsed2 = parseSemantics(args[6]);
 		}
 		else {
-			semanticsUsed1.add(Semantics.ADM);
-			semanticsUsed1.add(Semantics.CO);
-			semanticsUsed1.add(Semantics.GR);
-			semanticsUsed1.add(Semantics.PR);
-			semanticsUsed1.add(Semantics.ST);
-			semanticsUsed1.add(Semantics.UC);
-			semanticsUsed1.add(Semantics.SA);
+			semanticsUsed2 = new Semantics[7];
+			semanticsUsed2[0] = Semantics.ADM;
+			semanticsUsed2[1] = Semantics.CO;
+			semanticsUsed2[2] = Semantics.GR;
+			semanticsUsed2[3] = Semantics.PR;
+			semanticsUsed2[4] = Semantics.ST;
+			semanticsUsed2[5] = Semantics.UC;
+			semanticsUsed2[6] = Semantics.SA;
 		}
 		
-		Semantics semanticsUsed2 = args.length > 6 ? Semantics.getSemantics(args[6]) : null;
-		
 		String pathToFolder = args.length > 7 ? args[7] : System.getProperty("user.dir");
-		for (Semantics semantics : semanticsUsed1) {
+		
+		for (Semantics semantics : semanticsUsed2) {
 			Thread thread = new Thread(semantics.abbreviation()) {
 				@Override
 				public void run(){
-					if(semanticsUsed2 != null) {
-						EquivalenceCompExFinderExample.startSeries(
-								semantics, semanticsUsed2, numTries, numArgugments, eq1Command, eq2Command, pathToFolder, experimentName);
+					if(semanticsUsed1 != null) {
+						for(Semantics semantics1 : semanticsUsed1) {
+							EquivalenceCompExFinderExample.startSeries(
+									semantics, semantics1, numTries, numArgugments, eq1Command, eq2Command, pathToFolder, experimentName);
+						}
 					}
 					else {
 						EquivalenceCompExFinderExample.startSeries(
@@ -275,7 +278,12 @@ public class EquivalenceCompExFinderExample {
 		case "strong":
 			return new StrongEquivalence(EquivalenceKernel.getKernel(semanticsUsed));
 		case "standard":
-			return new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semanticsUsed));
+			if(semanticsUsed.equals(Semantics.UC) || semanticsUsed.equals(Semantics.SA)) {
+				return new StandardEquivalence(SerialisableExtensionReasoner.getSerialisableReasonerForSemantics(semanticsUsed));
+			}
+			else {
+				return new StandardEquivalence(AbstractExtensionReasoner.getSimpleReasonerForSemantics(semanticsUsed));
+			}
 		case "sequencenaiv":
 			return new SerialisationEquivalenceBySequence(
 					new SerialisationEquivalenceBySequenceNaiv(), 
@@ -457,4 +465,28 @@ public class EquivalenceCompExFinderExample {
 		 * System.out.println("]");
 		 */
 	}
+	
+	private static Semantics[] parseSemantics(String command) {
+		int idxComma = command.indexOf(',');
+		if(idxComma == -1){
+			return new Semantics[] {Semantics.getSemantics(command)};
+		}
+		else {
+			String temp = command;
+			var output = new HashSet<Semantics>();
+			while(temp.length() > 0) {
+				idxComma = temp.indexOf(',');
+				if(idxComma == -1) {
+					output.add(Semantics.getSemantics(temp));
+					break;
+				}
+				
+				output.add(Semantics.getSemantics(temp.substring(0, idxComma)));
+				temp = temp.substring(idxComma + 1);
+			}
+				
+			return output.toArray(new Semantics[0]);
+		}
+	}
+	
 }

@@ -29,7 +29,7 @@ import java.util.HashSet;
 
 /**
  * Reasoner for strong admissibility
- * A set of arguments E is strongly admissible iff all every argument A in E is defended by some argument B in E \ {A}
+ * A set of arguments E is strongly admissible iff all every argument A in E is defended by some argument B in E \ {A}, which itself is strongly defended by E \ {A}, 
  * i.e. no argument in E is defended only by itself
  *
  * @author Lars Bengel

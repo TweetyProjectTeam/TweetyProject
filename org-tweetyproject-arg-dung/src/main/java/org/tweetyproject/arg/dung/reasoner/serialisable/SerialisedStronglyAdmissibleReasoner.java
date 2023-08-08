@@ -26,8 +26,8 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * This class represents a reasoner to compute the extensions of the strongly admissible {@link Semantics} by serialising unattacked initial sets.
- * A set of arguments E is strongly admissible iff every argument A in E is defended by some argument B in E \ {A}, in other words no argument 
- * in E is defended only by itself.
+ * A set of arguments E is strongly admissible iff every argument A in E is defended by some argument B in E \ {A}, which itself is strongly defended by E \ {A}, 
+ * in other words no argument in E is defended only by itself.
  *
  * @author Julian Sander
  * @version TweetyProject 1.23
