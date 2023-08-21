@@ -27,7 +27,6 @@ import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.function.Function;
 
@@ -62,7 +61,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "15";
+	private static final String VERSION = "16";
 
 	public static void main(String[] args) {
 
@@ -106,7 +105,7 @@ public class EquivalenceCompExFinderExample {
 					if(semanticsUsed1 != null) {
 						for(Semantics semantics1 : semanticsUsed1) {
 							EquivalenceCompExFinderExample.startSeries(
-									semantics, semantics1, numTries, numArgugments, eq1Command, eq2Command, pathToFolder, experimentName);
+									semantics1, semantics, numTries, numArgugments, eq1Command, eq2Command, pathToFolder, experimentName);
 						}
 					}
 					else {
@@ -185,21 +184,6 @@ public class EquivalenceCompExFinderExample {
 				}
 			}
 		};
-		
-		var askContinuingGenerating2ndFramework = new Function<DungTheory[], Boolean>() {
-			@Override
-			public Boolean apply(DungTheory[] generatedFrameworks) {
-				// abort generation if the number of arguments is different 
-				//(and hence 2nd enumerationg gen has generated all frameworks with the same number of arguments)
-				if(generatedFrameworks[0].getNumberOfNodes() > generatedFrameworks[1].getNumberOfNodes()) {
-					return !onlySameNumberOfArguments;
-				}else if(generatedFrameworks[0].getNumberOfNodes() < generatedFrameworks[1].getNumberOfNodes()) {
-					return !onlySameNumberOfArguments;
-				}else {
-					return true;
-				}
-			}
-		};
 
 		// [STEP] 4/5: set the generators, which will be used to generate the frameworks
 		var fstFrameworkGen = new EnumeratingDungTheoryGenerator();
@@ -209,24 +193,34 @@ public class EquivalenceCompExFinderExample {
 //		parameters.attackProbability = 0.2;
 //		parameters.avoidSelfAttacks = false;
 //		var scndFrameworkGen = new DefaultDungTheoryGenerator(parameters);
+		
 		/*You can choose to create a new generator, for each new pair of frameworks. 
 		The methods below are called once, before trying to generate such a pair*/
-		var getGen1 = new Function<String, Iterator<DungTheory>>() {
+		var getGen2 = new Function<String, EnumeratingDungTheoryGenerator>() {
 
 			@Override
-			public Iterator<DungTheory> apply(String t) {
-				return fstFrameworkGen;
-			}
-		};
-		var getGen2 = new Function<String, Iterator<DungTheory>>() {
-
-			@Override
-			public Iterator<DungTheory> apply(String t) {
+			public EnumeratingDungTheoryGenerator apply(String t) {
 //				parameters.numberOfArguments = fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2;
 //				return scndFrameworkGen;
 				var scndGen = new EnumeratingDungTheoryGenerator();
 				scndGen.setCurrentSize(fstFrameworkGen.getCurrentSize() * factorNumArgsGen1ToGen2);
+				scndGen.setAttacks(fstFrameworkGen.getAttacks());
 				return scndGen;
+			}
+		};
+		
+		var askGen2Finished = new Function<EnumeratingDungTheoryGenerator, Boolean>() {
+			@Override
+			public Boolean apply(EnumeratingDungTheoryGenerator gen2) {
+				// abort generation if the number of arguments is different 
+				//(and hence 2nd enumerationg gen has generated all frameworks with the same number of arguments)
+				if(gen2.getCurrentSize() > fstFrameworkGen.getCurrentSize()) {
+					return !onlySameNumberOfArguments;
+				}else if(gen2.getCurrentSize() < fstFrameworkGen.getCurrentSize()) {
+					return !onlySameNumberOfArguments;
+				}else {
+					return true;
+				}
 			}
 		};
 
@@ -235,12 +229,13 @@ public class EquivalenceCompExFinderExample {
 		path = pathToFolder 
 				+ File.separator
 				+ expName;
-				//+ equivalence1.getDescription() + "_" + equivalence2.getDescription() + "_V" + VERSION;
 		String semanticsDesc = semanticsUsed1.equals(semanticsUsed2) ?
 				semanticsUsed1.abbreviation():
 				semanticsUsed1.abbreviation() + "_" + semanticsUsed2.abbreviation();
 		path = path + File.separator + semanticsDesc;
+		
 		// ================================== configuration completed =======================================================
+		
 		EquivalenceCompExFinderExample.createDir(path);
 		var z = ZoneId.of( "Europe/Berlin" );
 		var now = ZonedDateTime.now( z );
@@ -250,19 +245,28 @@ public class EquivalenceCompExFinderExample {
 		
 		int numFstFramesGenerated = 0;
 		do{
-			try {
-				EquivalenceCompExFinderExample.generateOnePair(
-						maxNumberTryFindExample,
-						semanticsUsed1, semanticsUsed2, getGen1, getGen2, equivalence1, equivalence2, 
-						decisionMaker, askIf1stFrameworkInteresting, askIfInterestingPair, askContinuingGenerating2ndFramework,
-						path, idSeries, indexInSeries, z, numFstFramesGenerated);
-				indexInSeries++;
-				/*SerialisationAnalysisPlotter.plotAnalyses(
-				new Semantics[] {semanticsUsed},
-				new DungTheory[] {examplePair.keySet().toArray(new DungTheory[1])[0], examplePair.values().toArray(new DungTheory[1])[0]},
-				"Example_",
-				2000, 1000);
-				 */
+			try {				
+				var framework1 = fstFrameworkGen.next();
+				var exampleFinder = new EquivalenceCompExFinder(
+						equivalence1,
+						equivalence2,
+						decisionMaker);
+				//System.out.println("Processing started: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
+				var timeStampProcessStart = ZonedDateTime.now( z );
+				var examples = exampleFinder.
+						findAllExamples(
+								maxNumberTryFindExample,
+								framework1,
+								getGen2.apply(""),
+								askIf1stFrameworkInteresting,
+								askIfInterestingPair,
+								askGen2Finished);
+				var timeStampProcessFinished = ZonedDateTime.now( z );
+
+				indexInSeries = saveExamples(semanticsUsed1, semanticsUsed2, equivalence1, equivalence2, path, idSeries,
+						indexInSeries, numFstFramesGenerated, timeStampProcessStart, examples,
+						timeStampProcessFinished);
+				//System.out.println("Processing finished: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
 			} catch (NoExampleFoundException e) {
 				System.out.println("No Examples found for " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
 			}
@@ -271,6 +275,37 @@ public class EquivalenceCompExFinderExample {
 		}while( maxNumArguments == 0 || fstFrameworkGen.getCurrentSize() < maxNumArguments + 1);
 		
 		System.out.println("Finished processing for semantics: " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation());
+	}
+
+	public static int saveExamples(
+			Semantics semanticsUsed1, 
+			Semantics semanticsUsed2,
+			Equivalence<DungTheory> equivalence1, 
+			Equivalence<DungTheory> equivalence2, 
+			String path, 
+			String idSeries,
+			int indexInSeries, 
+			int numFstFramesGenerated, 
+			ZonedDateTime timeStampProcessStart,
+			LinkedHashMap<DungTheory, HashSet<DungTheory>> examples, 
+			ZonedDateTime timeStampProcessFinished) {
+		for (DungTheory frameworkKey : examples.keySet()) {
+			for(var frameworkValue : examples.get(frameworkKey)) {
+				boolean isEQ1 = equivalence1.isEquivalent(frameworkKey, frameworkValue);
+				boolean isEQ2 = equivalence2.isEquivalent(frameworkKey, frameworkValue);
+				EquivalenceCompExFinderExample.writeFile(
+						path, frameworkKey, idSeries, indexInSeries, 0,
+						semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
+						frameworkKey.getNumberOfNodes(), frameworkValue.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numFstFramesGenerated);
+
+				EquivalenceCompExFinderExample.writeFile(
+						path, frameworkValue, idSeries, indexInSeries, 1,
+						semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
+						frameworkKey.getNumberOfNodes(), frameworkValue.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numFstFramesGenerated);
+				indexInSeries++;
+			}
+		}
+		return indexInSeries;
 	}
 
 	private static Equivalence<DungTheory> getEquivalence(Semantics semanticsUsed, String eqCommand) {
@@ -310,63 +345,6 @@ public class EquivalenceCompExFinderExample {
 	private static void createDir(String path) {
 		var customDir = new File(path);
 		customDir.mkdirs();
-	}
-
-	/*
-	 * Generates a pair of exemplary frameworks
-	 */
-	private static LinkedHashMap<DungTheory, DungTheory> generateOnePair(
-			int maxNumberTryFindExample,
-			Semantics semanticsUsed1,
-			Semantics semanticsUsed2,
-			Function<String, Iterator<DungTheory>> getGen1,
-			Function<String, Iterator<DungTheory>> getGen2,
-			Equivalence<DungTheory> equivalence1,
-			Equivalence<DungTheory> equivalence2,
-			DecisionMaker decisionMaker,
-			Function<DungTheory, Boolean> askIf1stFrameworkInteresting,
-			Function<DungTheory[], Boolean> askIfInterestingPair,
-			Function<DungTheory[], Boolean> askContinuingGenerating2ndFrame,
-			String path,
-			String idSeries,
-			int indexInSeries,
-			ZoneId currentZone,
-			int numberFstAF) throws NoExampleFoundException {
-		
-
-		var exampleFinder = new EquivalenceCompExFinder(
-				equivalence1,
-				equivalence2,
-				decisionMaker);
-		//System.out.println("Processing started: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
-		var timeStampProcessStart = ZonedDateTime.now( currentZone );
-		var output = exampleFinder.
-				findExample(
-						maxNumberTryFindExample,
-						getGen1.apply(""),
-						getGen2.apply(""),
-						askIf1stFrameworkInteresting,
-						askIfInterestingPair,
-						askContinuingGenerating2ndFrame);
-		var timeStampProcessFinished = ZonedDateTime.now( currentZone );
-
-		for (DungTheory frameworkKey : output.keySet()) {
-			boolean isEQ1 = equivalence1.isEquivalent(frameworkKey, output.get(frameworkKey));
-			boolean isEQ2 = equivalence2.isEquivalent(frameworkKey, output.get(frameworkKey));
-			var secondExample = output.get(frameworkKey);
-			EquivalenceCompExFinderExample.writeFile(
-					path, frameworkKey, idSeries, indexInSeries, 0,
-					semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
-					frameworkKey.getNumberOfNodes(), secondExample.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numberFstAF);
-
-			EquivalenceCompExFinderExample.writeFile(
-					path, secondExample, idSeries, indexInSeries, 1,
-					semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
-					frameworkKey.getNumberOfNodes(), secondExample.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numberFstAF);
-		}
-		//System.out.println("Processing finished: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
-
-		return output;
 	}
 
 	/*

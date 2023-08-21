@@ -18,6 +18,7 @@
  */
 package org.tweetyproject.arg.dung.equivalence;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.NoSuchElementException;
@@ -25,6 +26,7 @@ import java.util.function.Function;
 
 import org.tweetyproject.arg.dung.serialisibility.plotting.NoExampleFoundException;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.arg.dung.util.EnumeratingDungTheoryGenerator;
 /**
  * This class represents an example generator. Objects of this class generate argumentation frameworks, which comply
  * conditions regarding their state of equivalence to each other. The conditions are expressed by different 
@@ -56,13 +58,67 @@ public class EquivalenceCompExFinder {
 		this.equivalence2 = equivalence2;
 		this.decisionMaker = decisionMaker;
 	}
-
+	
 	/**
-	 * Generates argumentation frameworks, with the behaviors wrt equivalence as specified.
+	 * Generates all possible examples of pairs of frameworks, containing the specified framework. 
+	 * These pairs show an behavior wrt. equivalence as specified in the decisionMaker.
 	 * @param numberOfMaxRandomGenerationTries Maximum Number of iterations trying to generate randomly 
 	 * 2 frameworks compliant to the specified conditions. After surpassing this threshold, the second 
 	 * framework will be generated on the basis of the first one (if a an equivalent framework was demanded)
-	 * @param generatorFramework1 Iterator, which generates the first framework
+	 * @param framework1  Framework, for which a second partner shall be generated.
+	 * @param generatorFramework2 Iterator, which generates the second framework (Note that the framework will be generated as an 
+	 * equivalent theory if wished, in case this generator fails. 
+	 * @param askIf1stFrameInteresting Function which checks if the generated 1st framework is interesting enough to try to generate a partner framework
+	 * @param askIfInterestingPair Function which checks, if the generated pair is interesting enough to examine its equivalence
+	 * @param askContinueGenerate2nd Function which checks, if the generation of 2nd frameworks in order to form a valide pair, 
+	 * should be continued or not, based on the properties of the last generated pair
+	 * @return Pair of frameworks, which are equivalent to each other as specified in the method call
+	 * @throws NoExampleFoundException Thrown if no pair of frameworks (compliant to the equivalent-conditions) could be generated
+	 */
+	public LinkedHashMap<DungTheory,HashSet<DungTheory>> findAllExamples(
+			int numberOfMaxRandomGenerationTries,
+			DungTheory framework1,
+			EnumeratingDungTheoryGenerator generatorFramework2,
+			Function<DungTheory, Boolean> askIf1stFrameInteresting,
+			Function<DungTheory[], Boolean> askIfInterestingPair,
+			Function<EnumeratingDungTheoryGenerator, Boolean> askGen2Finished) 
+					throws NoExampleFoundException{
+		
+		var output = new LinkedHashMap<DungTheory,HashSet<DungTheory>>();
+		
+		DungTheory tempKey = null;
+		DungTheory tempValue = null;
+		try {
+			do{
+				var example = findExample(numberOfMaxRandomGenerationTries, 
+						framework1, generatorFramework2, 
+						askIf1stFrameInteresting, askIfInterestingPair, 
+						t -> askGen2Finished.apply(generatorFramework2) );
+				tempKey = example.keySet().iterator().next();
+				tempValue = example.get(tempKey);
+				
+				if(!output.containsKey(tempKey)) {
+					output.put(tempKey, new HashSet<DungTheory>());
+				}
+				output.get(tempKey).add(tempValue);
+				
+			}while(askGen2Finished.apply(generatorFramework2));
+		} catch(NoExampleFoundException e) {
+			if(output.size() == 0) {
+				// only throw exception if no prior examples have been found
+				throw new NoExampleFoundException();
+			}
+		}
+		
+		return output;
+	}
+
+	/**
+	 * Generates a second argumentation framework, so that the pair has the specified behavior.
+	 * @param numberOfMaxRandomGenerationTries Maximum Number of iterations trying to generate randomly 
+	 * 2 frameworks compliant to the specified conditions. After surpassing this threshold, the second 
+	 * framework will be generated on the basis of the first one (if a an equivalent framework was demanded)
+	 * @param framework1 Framework, for which a second partner shall be generated.
 	 * @param generatorFramework2 Iterator, which generates the second framework (Note that the framework will be generated as an 
 	 * equivalent theory if wished, in case this generator fails. 
 	 * @param askIf1stFrameInteresting Function which checks if the generated 1st framework is interesting enough to try to generate a partner framework
@@ -75,46 +131,51 @@ public class EquivalenceCompExFinder {
 	@SuppressWarnings("unchecked")
 	public LinkedHashMap<DungTheory,DungTheory> findExample(
 			int numberOfMaxRandomGenerationTries,
-			Iterator<DungTheory> generatorFramework1,
+			DungTheory framework1,
 			Iterator<DungTheory> generatorFramework2,
 			Function<DungTheory, Boolean> askIf1stFrameInteresting,
 			Function<DungTheory[], Boolean> askIfInterestingPair,
-			Function<DungTheory[], Boolean> askContinueGenerate2nd) 
+			Function<String, Boolean> askContinueGenerate2nd) 
 					throws NoExampleFoundException{
 
 		var output = new LinkedHashMap<DungTheory,DungTheory>();
 
-
-		var generatedFramework1 = generatorFramework1.next();
 		//System.out.println("Generated:    1st AF       " + generatedFramework1.getNumberOfNodes() + " Arguments / " + generatedFramework1.getEdges().size() + " Attacks");
 		
-		if(!askIf1stFrameInteresting.apply(generatedFramework1)) {
+		if(!askIf1stFrameInteresting.apply(framework1)) {
 			throw new NoExampleFoundException();
 		}
 		
 		DungTheory generatedFramework2 = generateCompliantFramework(
 				numberOfMaxRandomGenerationTries, 
-				generatedFramework1, 
+				framework1, 
 				generatorFramework2,
 				askIfInterestingPair,
-				askContinueGenerate2nd);
+				t -> askContinueGenerate2nd.apply(""));
 
+		var alwaysTrue = new Function<String, Boolean>(){
+
+			@Override
+			public Boolean apply(String t) {
+				return true;
+			}};
+		
 		if(decisionMaker.getShallCriteriaBeTrueA() && generatedFramework2 == null && (equivalence1 instanceof EquivalentTheories<?>)) {
 			generatedFramework2 = generateCompliantFramework(
 					numberOfMaxRandomGenerationTries, 
-					generatedFramework1, 
-					((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(generatedFramework1).iterator(),
+					framework1, 
+					((EquivalentTheories<DungTheory>) equivalence1).getEquivalentTheories(framework1).iterator(),
 					askIfInterestingPair,
-					askContinueGenerate2nd);
+					alwaysTrue);
 		}
 		// single IF-statements, since framework could still be null, after method call
 		if(decisionMaker.getShallCriteriaBeTrueB() && generatedFramework2 == null && (equivalence2 instanceof EquivalentTheories<?>)) {
 			generatedFramework2 = generateCompliantFramework(
 					numberOfMaxRandomGenerationTries, 
-					generatedFramework1, 
-					((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(generatedFramework1).iterator(),
+					framework1, 
+					((EquivalentTheories<DungTheory>) equivalence2).getEquivalentTheories(framework1).iterator(),
 					askIfInterestingPair,
-					askContinueGenerate2nd);
+					alwaysTrue);
 		}					
 
 		if(generatedFramework2 == null) {
@@ -123,7 +184,7 @@ public class EquivalenceCompExFinder {
 			throw new NoExampleFoundException();
 		}
 
-		output.put(generatedFramework1, generatedFramework2);
+		output.put(framework1, generatedFramework2);
 
 
 		return output;
@@ -134,10 +195,10 @@ public class EquivalenceCompExFinder {
 			DungTheory framework, 
 			Iterator<DungTheory> generator,
 			Function<DungTheory[], Boolean> askIfInterestingPair,
-			Function<DungTheory[], Boolean> askContinueGenerate2nd) {
+			Function<String, Boolean> askContinueGenerate2nd) {
 		DungTheory output = null;
-		for (int j = 0; j < numberOfMaxRandomGenerationTries; j++) {
-			try {
+		try {
+			for (int j = 0; j < numberOfMaxRandomGenerationTries; j++) {
 				DungTheory temp = generator.next();
 
 				if(askIfInterestingPair.apply(new DungTheory[] {framework, temp})) {
@@ -149,15 +210,18 @@ public class EquivalenceCompExFinder {
 				}
 
 				// ask if it should be continued to try to generate a 2nd framework
-				if(askContinueGenerate2nd.apply(new DungTheory[] {framework, temp})) 
+				if(askContinueGenerate2nd.apply("")) 
 				{
 					continue;
-				}else{
+				}else{					
 					break;
 				}
-			}catch(NoSuchElementException e) {
-				// nothing needed to do, iterator has just nothing to create
 			}
+			if(generator.hasNext()) {
+				//System.out.println("DEBUG: could be more tries");
+			}
+		}catch(NoSuchElementException e) {
+			// nothing needed to do, iterator has just nothing to create
 		}
 
 		return output;

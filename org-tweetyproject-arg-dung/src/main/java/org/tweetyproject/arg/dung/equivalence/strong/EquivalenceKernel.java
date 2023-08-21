@@ -48,6 +48,14 @@ public abstract class EquivalenceKernel {
      * ADMISSIBLE
      */
     public static final EquivalenceKernel ADMISSIBLE = new AdmissibleKernel();
+    /**
+     * UNCHALLENGED
+     */
+    public static final EquivalenceKernel UNCHALLENGED = new UnchallengedKernel();
+    /**
+     * STRONG ADMISSIBLE
+     */
+    public static final EquivalenceKernel STRONGADMISSIBLE = new StrongAdmissibleKernel();
 
     /**
      * computes the kernel of the given AF
@@ -94,6 +102,12 @@ public abstract class EquivalenceKernel {
 		}
 		case PR:{
 			return EquivalenceKernel.ADMISSIBLE;
+		}
+		case UC:{
+			return EquivalenceKernel.UNCHALLENGED;
+		}
+		case SA:{
+			return EquivalenceKernel.STRONGADMISSIBLE;
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + semantics);

@@ -95,6 +95,7 @@ public class StrongEquivalence implements Equivalence<DungTheory>, EquivalentThe
 	public Collection<DungTheory> getEquivalentTheories(DungTheory baseTheory) {
 		EnumeratingDungTheoryGenerator theoryGenerator = new EnumeratingDungTheoryGenerator();
 		int numArgs = baseTheory.size();
+		theoryGenerator.setCurrentSize(numArgs);
 		DungTheory baseKernel = this.kernel.getKernel(baseTheory);
 
 		Collection<DungTheory> theories = new HashSet<>();
