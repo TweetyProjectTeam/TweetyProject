@@ -624,6 +624,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 				result |= this.remove((Argument)a);
 			else if(a instanceof Attack)
 				result |= this.remove((Attack)a);
+		removeEmptyParents();
 		return result;
 	}
 	
@@ -1030,6 +1031,23 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 			if(this.equals(elem)) return true;
 		}
 		return false;
+	}
+	
+	private void removeEmptyParents() {
+		cleanUpMap(parents);
+		cleanUpMap(children);
+	}
+
+	private static void cleanUpMap(Map<Argument,Set<Argument>> map) {
+		var tempArgsToRemove = new HashSet<Argument>();
+		for (Argument a : map.keySet()) {
+			if(map.get(a).size() == 0) {
+				tempArgsToRemove.add(a);
+			}
+		}
+		for (Argument a : tempArgsToRemove) {
+			map.remove(a);
+		}
 	}
 
 
