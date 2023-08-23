@@ -61,7 +61,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "17";
+	private static final String VERSION = "18";
 
 	public static void main(String[] args) {
 
