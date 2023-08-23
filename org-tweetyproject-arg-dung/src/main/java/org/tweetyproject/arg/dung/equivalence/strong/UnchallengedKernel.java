@@ -20,6 +20,7 @@ package org.tweetyproject.arg.dung.equivalence.strong;
 
 import java.util.Collection;
 
+import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -34,11 +35,19 @@ public class UnchallengedKernel extends EquivalenceKernel {
 
 	@Override
 	public Collection<Attack> getUselessAttacks(DungTheory theory) {
-		var output = new AdmissibleKernel().getUselessAttacks(theory);
-		output.addAll(new CompleteKernel().getUselessAttacks(theory));
-		output.addAll(new GroundedKernel().getUselessAttacks(theory));
-		output.addAll(new StableKernel().getUselessAttacks(theory));
-		return output;
+		var uselessAttacks = new AdmissibleKernel().getUselessAttacks(theory);
+		for (Argument a: theory) {
+			for (Argument b : theory) {
+				if(theory.isAttackedBy(b, b)) {
+					if (a != b) {
+						if (!theory.isAttackedBy(a, b)) {
+							uselessAttacks.add(new Attack(a, b));
+						}
+					}
+				}
+			}
+		}
+		return uselessAttacks;
 	}
 
 }

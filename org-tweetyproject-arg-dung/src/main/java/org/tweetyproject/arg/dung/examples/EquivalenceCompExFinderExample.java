@@ -61,7 +61,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "16";
+	private static final String VERSION = "17";
 
 	public static void main(String[] args) {
 
@@ -104,8 +104,14 @@ public class EquivalenceCompExFinderExample {
 				public void run(){
 					if(semanticsUsed1 != null) {
 						for(Semantics semantics1 : semanticsUsed1) {
-							EquivalenceCompExFinderExample.startSeries(
-									semantics1, semantics, numTries, numArgugments, eq1Command, eq2Command, pathToFolder, experimentName);
+							Thread thread2 = new Thread(semantics.abbreviation()) {
+								@Override
+								public void run(){
+									EquivalenceCompExFinderExample.startSeries(
+											semantics1, semantics, numTries, numArgugments, eq1Command, eq2Command, pathToFolder, experimentName);
+								}
+							};
+							thread2.start();
 						}
 					}
 					else {
