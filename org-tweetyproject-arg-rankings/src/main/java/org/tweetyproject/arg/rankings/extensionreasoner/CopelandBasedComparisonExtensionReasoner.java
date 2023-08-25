@@ -1,8 +1,14 @@
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -13,7 +19,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
  * Reasoner for refining extension based semantics.
- * The reasoner selects the "best" Extensions of a set of Extensions concerning a given criteria.
+ * The reasoner ranks Extensions concerning a given criteria.
  * Based on "On Supported Inference and Extension Selection in Abstract Argumentation Frameworks" (S. Konieczny et al., 2015)
  * 
  * @author Benjamin Birner
@@ -23,19 +29,22 @@ public class CopelandBasedComparisonExtensionReasoner {
 
 	
 	/**
-	 * selects the best Extensions of a set of Extensions concerning a given criteria by pairwise comparison. 
+	 * Ranks the Extensions concerning a given criteria by pairwise comparison. 
 	 * 
 	 * @param extensions a set of Extensions
 	 * @param dung an Argumentation Framework
 	 * @param criteria the comparison criteria
-	 * @return a set of Extensions which are considered as the best ones
+	 * @return HashMap including ranked Extensions
 	 * @throws IllegalAccessException 
 	 * @throws InvocationTargetException 
 	 * @throws NoSuchMethodException 
 	 */
-	public LinkedList<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions, DungTheory dung, ComparisonCriteria criteria) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		int argmax =  - extensions.size();
-		LinkedList<Extension<DungTheory>> bestExt = new LinkedList<Extension<DungTheory>>();
+	public ArrayList<LinkedList<Extension<DungTheory>>> getModels(Collection<Extension<DungTheory>> extensions, DungTheory dung, ComparisonCriteria criteria) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	
+		ArrayList<LinkedList<Extension<DungTheory>>> rankList = new ArrayList<>(2*extensions.size()+1);
+		for( int i=0; i < 2*extensions.size()+1; i++ ) {
+			rankList.add(new LinkedList<Extension<DungTheory>>());
+		}
 		LinkedList<Extension<DungTheory>> greaterEqual = new LinkedList<Extension<DungTheory>>();
 		LinkedList<Extension<DungTheory>> lessEqual = new LinkedList<Extension<DungTheory>>();
 		for(Extension<DungTheory> ext1 : extensions) {
@@ -54,19 +63,10 @@ public class CopelandBasedComparisonExtensionReasoner {
 					}
 				}
 			}
-			if( argmax < lessEqual.size() - greaterEqual.size()) {
-				argmax = lessEqual.size() - greaterEqual.size();
-				bestExt.clear();
-				bestExt.add(ext1);
-			}else {
-				if( argmax == lessEqual.size() - greaterEqual.size()) {
-					bestExt.add(ext1);
-				}
-			}
-			greaterEqual.clear();
-			lessEqual.clear();
+			int rank = greaterEqual.size() - lessEqual.size() + extensions.size();
+			rankList.get(rank).add(ext1);
 		}
-		return bestExt;
+		return rankList;
 	}
 	
 }

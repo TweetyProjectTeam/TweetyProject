@@ -1,11 +1,15 @@
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.ExtensionRankingSemantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -61,35 +65,73 @@ public class CopelandBasedComparisonExtensionReasonerExample {
         
         CopelandBasedComparisonExtensionReasoner coba = new CopelandBasedComparisonExtensionReasoner();
         
-        LinkedList<Extension<DungTheory>> res0 = coba.getModels(extensionList, dung, strDef);
-        LinkedList<Extension<DungTheory>> res1 = coba.getModels(extensionList, dung, argNonAtt);
-        LinkedList<Extension<DungTheory>> res2 = coba.getModels(extensionList, dung, subDelCo);
-        LinkedList<Extension<DungTheory>> res3 = coba.getModels(extensionList, dung, DelCo);
+        ArrayList<LinkedList<Extension<DungTheory>>> res0 = coba.getModels(extensionList, dung, strDef);
+        ArrayList<LinkedList<Extension<DungTheory>>> res1 = coba.getModels(extensionList, dung, argNonAtt);
+        ArrayList<LinkedList<Extension<DungTheory>>> res2 = coba.getModels(extensionList, dung, subDelCo);
+        ArrayList<LinkedList<Extension<DungTheory>>> res3 = coba.getModels(extensionList, dung, DelCo);
+        
+
+
+    
+        
+        
+     
         
         
         System.out.println("results Strongly Defended:");
-        for( Extension<DungTheory> ex : res0) {
-        	System.out.println(ex.toString());
+        int rank = 1;
+        for( LinkedList<Extension<DungTheory>> rankList : res0) {
+        	if(rankList.size() > 0) {
+        		System.out.print("Rank " + rank + ": ");
+            	for(Extension<DungTheory> ex : rankList ) {
+            		System.out.print(ex.toString());
+            	}
+            	rank++;
+            	System.out.println("");
+        	}
         }
-        System.out.println();
+        System.out.println("");	
         
         System.out.println("results Arguments Non Attacked:");
-        for( Extension<DungTheory> ex : res1) {
-        	System.out.println(ex.toString());
+        rank = 1;
+        for( LinkedList<Extension<DungTheory>> rankList : res1) {
+        	if(rankList.size() > 0) {
+        		System.out.print("Rank " + rank + ": ");
+            	for(Extension<DungTheory> ex : rankList ) {
+            		System.out.print(ex.toString());
+            	}
+            	rank++;
+            	System.out.println("");
+        	}
         }
-        System.out.println();
+        System.out.println("");
         
         System.out.println("results Subset Delete Attacks:");
-        for( Extension<DungTheory> ex : res2) {
-        	System.out.println(ex.toString());
+        rank = 1;
+        for( LinkedList<Extension<DungTheory>> rankList : res2) {
+        	if(rankList.size() > 0) {
+        		System.out.print("Rank " + rank + ": ");
+            	for(Extension<DungTheory> ex : rankList ) {
+            		System.out.print(ex.toString());
+            	}
+            	rank++;
+            	System.out.println("");
+        	}
         }
-        System.out.println();
+        System.out.println("");
         
         System.out.println("results Delete Attacks:");
-        for( Extension<DungTheory> ex : res3) {
-        	System.out.println(ex.toString());
+        rank = 1;
+        for( LinkedList<Extension<DungTheory>> rankList : res3) {
+        	if(rankList.size() > 0) {
+        		System.out.print("Rank " + rank + ": ");
+            	for(Extension<DungTheory> ex : rankList ) {
+            		System.out.print(ex.toString());
+            	}
+            	rank++;
+            	System.out.println("");
+        	}
         }
         
 	}
-
 }
