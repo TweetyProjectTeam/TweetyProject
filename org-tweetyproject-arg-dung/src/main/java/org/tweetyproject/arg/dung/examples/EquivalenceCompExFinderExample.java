@@ -61,7 +61,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "18";
+	private static final String VERSION = "19";
 
 	public static void main(String[] args) {
 
@@ -250,6 +250,8 @@ public class EquivalenceCompExFinderExample {
 		//LinkedHashMap<DungTheory, DungTheory> examplePair = null;
 		
 		int numFstFramesGenerated = 0;
+		boolean fstDirectionFound = false;
+		boolean scndDirectionFound = false;
 		do{
 			try {				
 				var framework1 = fstFrameworkGen.next();
@@ -268,11 +270,27 @@ public class EquivalenceCompExFinderExample {
 								askIfInterestingPair,
 								askGen2Finished);
 				var timeStampProcessFinished = ZonedDateTime.now( z );
-
+				
 				indexInSeries = saveExamples(semanticsUsed1, semanticsUsed2, equivalence1, equivalence2, path, idSeries,
 						indexInSeries, numFstFramesGenerated, timeStampProcessStart, examples,
 						timeStampProcessFinished);
 				//System.out.println("Processing finished: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
+				
+				for (var fstFramework : examples.keySet()) {
+					for(var scndFramework : examples.get(fstFramework)) {
+						if(equivalence1.isEquivalent(fstFramework, scndFramework)) {
+							fstDirectionFound = true;
+						}else {
+							scndDirectionFound = true;
+						}
+						
+						if(fstDirectionFound && scndDirectionFound) {
+							System.out.println("Finished processing for semantics: " + semanticsUsed1.abbreviation() 
+							+ "/" + semanticsUsed2.abbreviation() + "-------- found Examples in both directions" );
+							return;
+						}
+					}
+				}
 			} catch (NoExampleFoundException e) {
 				System.out.println("No Examples found for " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation() + " " + fstFrameworkGen.getCurrentSize() + " Arguments");
 			}
