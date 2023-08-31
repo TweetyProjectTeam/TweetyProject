@@ -624,6 +624,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 				result |= this.remove((Argument)a);
 			else if(a instanceof Attack)
 				result |= this.remove((Attack)a);
+		removeEmptyParents();
 		return result;
 	}
 	
@@ -1018,6 +1019,35 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 */
 	public Collection<Graph<Argument>> getInducedSubgraphs() {
 		return DefaultGraph.getInducedSubgraphs(this);
+	}
+
+	/**
+	 * Method to check if an equal object to this object is contained in the specified set
+	 * @param setOfEquals Set of object of the same class
+	 * @return TRUE iff an equal object is contained in the specified set
+	 */
+	public boolean equalsIn(HashSet<DungTheory> setOfEquals) {
+		for (DungTheory elem : setOfEquals) {
+			if(this.equals(elem)) return true;
+		}
+		return false;
+	}
+	
+	private void removeEmptyParents() {
+		cleanUpMap(parents);
+		cleanUpMap(children);
+	}
+
+	private static void cleanUpMap(Map<Argument,Set<Argument>> map) {
+		var tempArgsToRemove = new HashSet<Argument>();
+		for (Argument a : map.keySet()) {
+			if(map.get(a).size() == 0) {
+				tempArgsToRemove.add(a);
+			}
+		}
+		for (Argument a : tempArgsToRemove) {
+			map.remove(a);
+		}
 	}
 
 
