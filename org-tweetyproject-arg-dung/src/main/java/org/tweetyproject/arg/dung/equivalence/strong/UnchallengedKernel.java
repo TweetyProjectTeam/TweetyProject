@@ -19,7 +19,11 @@
 package org.tweetyproject.arg.dung.equivalence.strong;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 
+import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
+import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.Attack;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -35,19 +39,65 @@ public class UnchallengedKernel extends EquivalenceKernel {
 
 	@Override
 	public Collection<Attack> getUselessAttacks(DungTheory theory) {
-		var uselessAttacks = new AdmissibleKernel().getUselessAttacks(theory);
+		
+		var reducts = getReducts(theory);
+	
+		Collection<Attack> uselessAttacks = new HashSet<>();
 		for (Argument a: theory) {
 			for (Argument b : theory) {
-				if(theory.isAttackedBy(b, b)) {
-					if (a != b) {
-						if (!theory.isAttackedBy(a, b)) {
-							uselessAttacks.add(new Attack(a, b));
+				if (a != b) {
+					//a different b
+					boolean argAInIS = false;
+					boolean argBFlipped = false;
+					for (var reduct : reducts) {
+						//check for all possible reducted frameworks 
+						if(reduct.contains(a) && reduct.contains(b)) {
+							// reduct containing a and b
+							var iniSets = getInitialSets(reduct);
+							for(var iniSet : iniSets) {
+								if(iniSet.contains(a)) {
+									// a is unchallenged/unattacked IS
+									argAInIS = true;
+								}
+							}
+							if(!argAInIS) {
+								// 1. condition is still fulfilled, therefore check 2.
+								var copyReduct = reduct.clone();
+								copyReduct.remove(new Attack(a, b));
+								var changedIniSets = getInitialSets(copyReduct);
+								if(!iniSets.equals(changedIniSets)) {
+									// b changes status after removing attack
+									argBFlipped = true;
+								}
+							}
 						}
 					}
-				}
+					
+					if( !argAInIS && !argBFlipped) {
+						uselessAttacks.add(new Attack(a,b));
+					}
+				}	
 			}
 		}
 		return uselessAttacks;
+	}
+	
+	private HashSet<DungTheory> getReducts(DungTheory framework){
+		var output = new HashSet<DungTheory>();
+		for(var initSet : getInitialSets(framework)) {//[TERMINATION CONDITION]
+			var reduct = framework.getReduct(initSet);
+			output.add(reduct);
+			output.addAll(getReducts(reduct));//[RECURSIVE CALL]
+		}
+		return output;
+	}
+	
+	private Collection<Extension<DungTheory>> getInitialSets(DungTheory framework) {
+		Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(framework);
+		Collection<Extension<DungTheory>> result = new HashSet<>();
+        result.addAll(initialSets.get("unattacked"));
+        result.addAll(initialSets.get("unchallenged"));
+		return result;
 	}
 
 }
