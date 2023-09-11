@@ -27,7 +27,6 @@ import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.function.Function;
 
 import org.tweetyproject.arg.dung.equivalence.DecisionMaker;
@@ -61,7 +60,7 @@ import org.tweetyproject.arg.dung.writer.ApxWriter;
  */
 public class EquivalenceCompExFinderExample {
 	
-	private static final String VERSION = "19";
+	private static final String VERSION = "20";
 
 	public static void main(String[] args) {
 
@@ -270,18 +269,22 @@ public class EquivalenceCompExFinderExample {
 								askIfInterestingPair,
 								askGen2Finished);
 				var timeStampProcessFinished = ZonedDateTime.now( z );
-				
-				indexInSeries = saveExamples(semanticsUsed1, semanticsUsed2, equivalence1, equivalence2, path, idSeries,
-						indexInSeries, numFstFramesGenerated, timeStampProcessStart, examples,
-						timeStampProcessFinished);
 				//System.out.println("Processing finished: No.: " + idSeries + "_"+ indexInSeries + " " + semanticsUsed.abbreviation());
 				
 				for (var fstFramework : examples.keySet()) {
 					for(var scndFramework : examples.get(fstFramework)) {
-						if(equivalence1.isEquivalent(fstFramework, scndFramework)) {
+						if(equivalence1.isEquivalent(fstFramework, scndFramework) && !fstDirectionFound) {
 							fstDirectionFound = true;
-						}else {
+							saveExamples(semanticsUsed1, semanticsUsed2, equivalence1, equivalence2, path, idSeries,
+									indexInSeries, numFstFramesGenerated, timeStampProcessStart, fstFramework, 
+									scndFramework, timeStampProcessFinished);
+							indexInSeries++;
+						}else if(equivalence2.isEquivalent(fstFramework, scndFramework) && !scndDirectionFound) {
 							scndDirectionFound = true;
+							saveExamples(semanticsUsed1, semanticsUsed2, equivalence1, equivalence2, path, idSeries,
+									indexInSeries, numFstFramesGenerated, timeStampProcessStart, fstFramework, 
+									scndFramework, timeStampProcessFinished);
+							indexInSeries++;
 						}
 						
 						if(fstDirectionFound && scndDirectionFound) {
@@ -301,7 +304,7 @@ public class EquivalenceCompExFinderExample {
 		System.out.println("Finished processing for semantics: " + semanticsUsed1.abbreviation() + "/" + semanticsUsed2.abbreviation());
 	}
 
-	public static int saveExamples(
+	public static void saveExamples(
 			Semantics semanticsUsed1, 
 			Semantics semanticsUsed2,
 			Equivalence<DungTheory> equivalence1, 
@@ -311,25 +314,22 @@ public class EquivalenceCompExFinderExample {
 			int indexInSeries, 
 			int numFstFramesGenerated, 
 			ZonedDateTime timeStampProcessStart,
-			LinkedHashMap<DungTheory, HashSet<DungTheory>> examples, 
+			DungTheory framework1, 
+			DungTheory framework2,
 			ZonedDateTime timeStampProcessFinished) {
-		for (DungTheory frameworkKey : examples.keySet()) {
-			for(var frameworkValue : examples.get(frameworkKey)) {
-				boolean isEQ1 = equivalence1.isEquivalent(frameworkKey, frameworkValue);
-				boolean isEQ2 = equivalence2.isEquivalent(frameworkKey, frameworkValue);
+		
+				boolean isEQ1 = equivalence1.isEquivalent(framework1, framework2);
+				boolean isEQ2 = equivalence2.isEquivalent(framework1, framework2);
 				EquivalenceCompExFinderExample.writeFile(
-						path, frameworkKey, idSeries, indexInSeries, 0,
+						path, framework1, idSeries, indexInSeries, 0,
 						semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
-						frameworkKey.getNumberOfNodes(), frameworkValue.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numFstFramesGenerated);
+						framework1.getNumberOfNodes(), framework2.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numFstFramesGenerated);
 
 				EquivalenceCompExFinderExample.writeFile(
-						path, frameworkValue, idSeries, indexInSeries, 1,
+						path, framework2, idSeries, indexInSeries, 1,
 						semanticsUsed1, semanticsUsed2, equivalence1.getDescription(), equivalence2.getDescription(), isEQ1, isEQ2,
-						frameworkKey.getNumberOfNodes(), frameworkValue.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numFstFramesGenerated);
-				indexInSeries++;
-			}
-		}
-		return indexInSeries;
+						framework1.getNumberOfNodes(), framework2.getNumberOfNodes(), timeStampProcessStart, timeStampProcessFinished, numFstFramesGenerated);
+			
 	}
 
 	private static Equivalence<DungTheory> getEquivalence(Semantics semanticsUsed, String eqCommand) {
