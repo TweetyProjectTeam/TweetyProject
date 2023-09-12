@@ -36,6 +36,7 @@ import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
 import org.tweetyproject.logics.commons.analysis.AbstractMusEnumerator;
 import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
+import org.tweetyproject.logics.commons.analysis.NaiveMusEnumerator;
 import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory;
 import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory.Measure;
@@ -67,7 +68,7 @@ public class InconsistencyMeasurementService{
 	/** The SAT solver configured for this service. */
 	public static SatSolver satSolver = new Sat4jSolver();
 	/** The MUS enumerator configured for this service. */
-	public static AbstractMusEnumerator<PlFormula> musEnumerator = new MarcoMusEnumerator("/home/shared/incmes/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
+	public static AbstractMusEnumerator<PlFormula> musEnumerator = new NaiveMusEnumerator<PlFormula>(new Sat4jSolver());//new MarcoMusEnumerator("/home/shared/incmes/marco_py-1.0/marco.py");
 	//public static AbstractMusEnumerator<PropositionalFormula> musEnumerator =  new MarcoMusEnumerator("/Users/mthimm/Projects/misc_bins/marco_py-1.0/marco.py");//new NaiveMusEnumerator<PropositionalFormula>(new Sat4jSolver());
 	/** The linear optimization solver configured for this service. */
 	public static Solver linearSolver = new ApacheCommonsSimplex();
