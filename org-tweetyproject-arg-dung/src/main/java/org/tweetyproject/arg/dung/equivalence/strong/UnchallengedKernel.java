@@ -41,14 +41,15 @@ public class UnchallengedKernel extends EquivalenceKernel {
 	public Collection<Attack> getUselessAttacks(DungTheory theory) {
 		
 		var reducts = getReducts(theory);
-	
-		Collection<Attack> uselessAttacks = new HashSet<>();
-		for (Argument a: theory) {
-			for (Argument b : theory) {
+		// remove at least all attacks of the ADM-Kernel, important to remove attacks of self-attacking argument at defending arguments
+		// these attacks are not removed by the approach below
+		Collection<Attack> uselessAttacks = new AdmissibleKernel().getUselessAttacks(theory);
+		for (Argument b: theory) {
+			Collection<Attack> uselessAttacksCandidates = new HashSet<>();
+			for (Argument a : theory) {
 				if (a != b) {
 					//a different b
 					boolean argAInIS = false;
-					boolean argBFlipped = false;
 					for (var reduct : reducts) {
 						//check for all possible reducted frameworks 
 						if(reduct.contains(a) && reduct.contains(b)) {
@@ -58,35 +59,40 @@ public class UnchallengedKernel extends EquivalenceKernel {
 								if(iniSet.contains(a)) {
 									// a is unchallenged/unattacked IS
 									argAInIS = true;
-								}
-							}
-							if(!argAInIS) {
-								// 1. condition is still fulfilled, therefore check 2.
-								var copyReduct = reduct.clone();
-								copyReduct.remove(new Attack(a, b));
-								var changedIniSets = getInitialSets(copyReduct);
-								if(!iniSets.equals(changedIniSets)) {
-									// b changes status after removing attack
-									argBFlipped = true;
+									break;
 								}
 							}
 						}
+						
+						if(argAInIS) {
+							break;
+						}
 					}
-					
-					if( !argAInIS && !argBFlipped) {
-						uselessAttacks.add(new Attack(a,b));
+					if(!argAInIS) {
+						uselessAttacksCandidates.add(new Attack(a,b));
 					}
 				}	
+			}
+			// create AF without the candidates for useless attacks
+			var kernelTheory = theory.clone();
+			for(var uselessAttackCandidate : uselessAttacksCandidates) {
+				kernelTheory.remove(uselessAttackCandidate);
+			}
+			//check if the set of reducts stayed the same
+			var kernelReducts = getReducts(kernelTheory);
+			if(kernelReducts.equals(reducts)) {
+				uselessAttacks.addAll(uselessAttacksCandidates);
 			}
 		}
 		return uselessAttacks;
 	}
 	
 	private HashSet<DungTheory> getReducts(DungTheory framework){
+		//including original framework
 		var output = new HashSet<DungTheory>();
+		output.add(framework);
 		for(var initSet : getInitialSets(framework)) {//[TERMINATION CONDITION]
 			var reduct = framework.getReduct(initSet);
-			output.add(reduct);
 			output.addAll(getReducts(reduct));//[RECURSIVE CALL]
 		}
 		return output;
