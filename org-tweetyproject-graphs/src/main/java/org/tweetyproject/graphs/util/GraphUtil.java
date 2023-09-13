@@ -419,4 +419,31 @@ public abstract class GraphUtil {
 			result.put(node, (result.get(node)-min)/(max-min));
 		return result;
 	}
+	
+	/**
+	 * Returns "true" if the graph is (simply) connected, i.e.
+	 * if there is a path from every node to each other node 
+	 * (ignoring edge directions).
+	 * @param <T> a Node
+	 * @param g some graph
+	 * @return "true" if the graph is (simply) connected
+	 */
+	public static  <T extends Node> boolean isConnected(Graph<T> g) {
+		Queue<T> q = new LinkedList<>();
+		Set<T> visited = new HashSet<>();
+		q.add(g.getNodes().iterator().next());
+		while(!q.isEmpty()) {
+			T node = q.poll();
+			if(visited.contains(node))
+				continue;
+			visited.add(node);
+			if(visited.size() == g.getNumberOfNodes())
+				return true;
+			for(T node2: g.getChildren(node))
+				q.add(node2);
+			for(T node2: g.getParents(node))
+				q.add(node2);			
+		}		
+		return false;
+	}
 }
