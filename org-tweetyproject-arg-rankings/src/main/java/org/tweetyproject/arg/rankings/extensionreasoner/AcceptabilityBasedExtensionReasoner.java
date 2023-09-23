@@ -7,6 +7,7 @@ import org.tweetyproject.commons.util.Pair;
 import org.tweetyproject.comparator.GeneralComparator;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Reasoner for refining extension based semantics based on acceptability of arguments.
@@ -124,6 +125,29 @@ public class AcceptabilityBasedExtensionReasoner {
             }
         }
         return extensionToScoreMap;
+    }
+    
+    
+    /**
+     * transforms the Map to ArrayList. It maintains the structure.
+     * 
+     * @param ranks the Map to transform
+     * @return the ArrayList 
+     */
+    public ArrayList<LinkedList<Extension<DungTheory>>> mapToArrayList(Map<Integer, Collection<Extension<DungTheory>>> extensionsMap) {
+  
+        List<Integer> sortedRanks = extensionsMap.keySet().stream().sorted().collect(Collectors.toList());
+        ArrayList<LinkedList<Extension<DungTheory>>> result = new ArrayList<>();
+        for (int rank : sortedRanks) {
+            Collection<Extension<DungTheory>> rankExtensions = extensionsMap.get(rank);
+            LinkedList<Extension<DungTheory>> linkedList = new LinkedList<>();
+            for(Extension<DungTheory> e : rankExtensions) {
+            	linkedList.add(e);
+            }
+            result.add(0,linkedList);
+        }
+
+        return result;
     }
 
 }

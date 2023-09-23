@@ -4,6 +4,7 @@ import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Reasoner for refining extension based semantics.
@@ -52,6 +53,72 @@ public class OrderBasedExtensionReasoner {
         }
         return aggregatedVectorToExtensionSetMap.get(argmax);
     }
+    
+    
+    /**
+     * Returns the ranked order-based extensions, which are a subset of the Extensions given at creation of this reasoner.
+     * Result depends on the chosen Aggregation Function and support vector function.
+     * Aggregation with MIN/MAX of the empty Extension is interpreted as +Infinity/0 respectively.
+     *
+     * @param extensions set of extensions
+     * @param function a specific function that computes the support vector
+     * @return ranked order-based extension subset of Extensions for specified aggregation function
+     * @throws Exception invalid argumentation Function
+     */
+    public HashMap<Vector<Double>, Set<Extension<DungTheory>>> getRankedExtensions(Collection<Extension<DungTheory>> extensions, SupportVectorFunction function) throws Exception {
+    	
+    	HashMap<Vector<Double>, Set<Extension<DungTheory>>> aggregatedVectorToExtensionSetMap = new HashMap<>();
+        Vector<Double> argmax = new Vector<>();
+        argmax.add(0d);
+        for (Extension<DungTheory> ext : extensions) {
+            Vector<Double> suppVec = function.getSupportVector(ext, extensions, true);
+            Vector<Double> aggregatedVec = aggregate(suppVec);
+
+            aggregatedVectorToExtensionSetMap.computeIfAbsent(aggregatedVec, k -> new HashSet<>());
+            Set<Extension<DungTheory>> newExtensionSet = aggregatedVectorToExtensionSetMap.get(aggregatedVec);
+            newExtensionSet.add(ext);
+            aggregatedVectorToExtensionSetMap.put(aggregatedVec, newExtensionSet);
+            if (compare(aggregatedVec, argmax) > 0) {
+                argmax = aggregatedVec;
+            }
+
+        }
+        return aggregatedVectorToExtensionSetMap;
+    	
+    }
+    
+    
+    
+    /**
+     * transforms the Map to ArrayList. It maintains the structure.
+     * 
+     * @param extensionsMap the Map to transform
+     * @return the ArrayList 
+     */
+    public ArrayList<LinkedList<Extension<DungTheory>>> mapToArrayList(Map<Vector<Double>, Set<Extension<DungTheory>>> extensionsMap) {
+   
+        List<Map.Entry<Vector<Double>, Set<Extension<DungTheory>>>> sortedEntries = extensionsMap.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey, this::compare))
+                .collect(Collectors.toList());
+
+      
+        ArrayList<LinkedList<Extension<DungTheory>>> result = new ArrayList<>();
+
+       
+        for (Map.Entry<Vector<Double>, Set<Extension<DungTheory>>> entry : sortedEntries) {
+            Set<Extension<DungTheory>> rankExtensions = entry.getValue();
+            LinkedList<Extension<DungTheory>> linkedList = new LinkedList<>();
+            for(Extension<DungTheory> ex : rankExtensions) {
+            	linkedList.add(ex);
+            }
+            result.add(linkedList);
+        }
+
+        return result;
+    }
+    
+    
 
  
 
@@ -146,7 +213,7 @@ public class OrderBasedExtensionReasoner {
      * @param v2 second vector to compare
      * @return see Arrays.compare(double[] a,double[] b);
      */
-    public Integer compare(Vector<Double> v1, Vector<Double> v2) throws Exception {
+    public Integer compare(Vector<Double> v1, Vector<Double> v2) {
         int returnInt;
         switch (aggregationFunction) {
 
@@ -163,7 +230,9 @@ public class OrderBasedExtensionReasoner {
                 return returnInt;
             }
         }
-        throw new Exception("Unsupported aggregation function");
+        //throw new Exception("Unsupported aggregation function");
+        
+        return null;
 
 
     }

@@ -27,7 +27,6 @@ import org.tweetyproject.commons.util.SetTools;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.*;
 
 
@@ -618,6 +617,30 @@ public class ExtensionRankingReasoner {
 
 
     }
+    
+    
+    /**
+     * transforms the List to ArrayList. It maintains the structure.
+     * 
+     * @param ranks the List to transform
+     * @return the ArrayList 
+     */
+    public ArrayList<LinkedList<Extension<DungTheory>>> ListToArrayList(List<List<Extension<DungTheory>>> ranks) {
+		   
+	    ArrayList<LinkedList<Extension<DungTheory>>> result = new ArrayList<>();
+	    for(List<Extension<DungTheory>> rank : ranks) {
+	    	LinkedList<Extension<DungTheory>> linkedList = new LinkedList<>();
+	    	for(Extension<DungTheory> e : rank) {
+	    		linkedList.add(e);
+	    	}
+	    	result.add(0,linkedList);
+	    }
+	    return result;
+	}
+    
+    
+    
+    
     /**
      * This method always returns true because the solver is native
      */

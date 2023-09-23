@@ -1,5 +1,6 @@
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,7 +17,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 
 /**
- * Reasoner for selecting the "best" Extensions of a set of Extensions.
+ * Reasoner that ranks a set of Extensions.
  * Based on "Rank Extension Ranking Semantics" (K. Skiba, 2023)
  * 
  * @author Benjamin Birner
@@ -43,18 +44,20 @@ public class RankBasedPairwiseExtensionReasoner {
 	
 	
 	/**
-	 * selects the best Extensions of a set of Extensions concerning a given Aggregation, Extension Ranking Semantics and Strength Vector
+	 * Ranks the given Extensions concerning a given Aggregation, Extension Ranking Semantics and Strength Vector
 	 * by pairwise comparison. 
 	 * 
 	 * @param extensions a set of Extensions
 	 * @param dung an Argumentation Framework
 	 * @param function a function to calculate the Strength Vector
-	 * @return a set of Extensions which are considered as the best ones
+	 * @return ArrayList that includes the ranked Extensions
 	 */
-	public  LinkedList<Extension<DungTheory>> getModels(Collection<Extension<DungTheory>> extensions, DungTheory dung, StrengthVectorFunction function) throws Exception{
+	public  ArrayList<LinkedList<Extension<DungTheory>>> getModels(Collection<Extension<DungTheory>> extensions, DungTheory dung, StrengthVectorFunction function) throws Exception{
 		
-		int argmax =  - extensions.size();
-		LinkedList<Extension<DungTheory>> bestExt = new LinkedList<Extension<DungTheory>>();
+		ArrayList<LinkedList<Extension<DungTheory>>> rankList = new ArrayList<>(2*extensions.size()+1);
+		for( int i=0; i < 2*extensions.size()+1; i++ ) {
+			rankList.add(new LinkedList<Extension<DungTheory>>());
+		}
 		LinkedList<Extension<DungTheory>> greaterEqual = new LinkedList<Extension<DungTheory>>();
 		LinkedList<Extension<DungTheory>> lessEqual = new LinkedList<Extension<DungTheory>>();
 		for(Extension<DungTheory> ext1 : extensions) {
@@ -86,19 +89,10 @@ public class RankBasedPairwiseExtensionReasoner {
 					}
 				}
 			}
-			if( argmax < (lessEqual.size() - greaterEqual.size())) {
-				argmax = (lessEqual.size() - greaterEqual.size());
-				bestExt.clear();
-				bestExt.add(ext1);
-			}else {
-				if( argmax == (lessEqual.size() - greaterEqual.size())) {
-					bestExt.add(ext1);
-				}
-			}
-			greaterEqual.clear();
-			lessEqual.clear();
+			int rank = greaterEqual.size() - lessEqual.size() + extensions.size();
+			rankList.get(rank).add(ext1);
 		}
-		return bestExt;
+		return rankList;
 	}
 	
 	

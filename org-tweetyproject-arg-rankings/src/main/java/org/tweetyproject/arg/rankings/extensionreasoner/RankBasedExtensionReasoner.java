@@ -6,6 +6,7 @@ import org.tweetyproject.arg.dung.syntax.DungTheory;
 import org.tweetyproject.comparator.GeneralComparator;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Reasoner for refining extension based semantics with argument rankings.
@@ -195,7 +196,7 @@ public class RankBasedExtensionReasoner {
      * @param v2 second vector to compare
      * @return see Arrays.compare(int[],int[]);
      */
-    public Integer compare(Vector<Double> v1, Vector<Double> v2) throws Exception {
+    public Integer compare(Vector<Double> v1, Vector<Double> v2) {
         int returnInt;
         switch (aggregationFunction) {
 
@@ -212,8 +213,43 @@ public class RankBasedExtensionReasoner {
                 return returnInt;
             }
         }
-        throw new Exception("Unsupported aggregation function.");
-
+        //throw new Exception("Unsupported aggregation function.");
+        return null;
 
     }
+    
+    
+    
+    /**
+     * transforms the Map to ArrayList. It maintains the structure.
+     * 
+     * @param extensionsMap the Map to transform
+     * @return the ArrayList 
+     */
+    public ArrayList<LinkedList<Extension<DungTheory>>> mapToArrayList(Map<Vector<Double>, Set<Extension<DungTheory>>> extensionsMap) {
+   
+        List<Map.Entry<Vector<Double>, Set<Extension<DungTheory>>>> sortedEntries = extensionsMap.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey, this::compare))
+                .collect(Collectors.toList());
+
+      
+        ArrayList<LinkedList<Extension<DungTheory>>> result = new ArrayList<>();
+
+       
+        for (Map.Entry<Vector<Double>, Set<Extension<DungTheory>>> entry : sortedEntries) {
+            Set<Extension<DungTheory>> rankExtensions = entry.getValue();
+            LinkedList<Extension<DungTheory>> linkedList = new LinkedList<>();
+            for(Extension<DungTheory> ex : rankExtensions) {
+            	linkedList.add(ex);
+            }
+            result.add(linkedList);
+        }
+
+        return result;
+    }
+
+    
+    
+    
 }

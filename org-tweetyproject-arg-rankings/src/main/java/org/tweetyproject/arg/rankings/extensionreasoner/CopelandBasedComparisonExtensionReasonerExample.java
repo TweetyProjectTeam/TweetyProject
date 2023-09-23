@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
-import org.tweetyproject.arg.dung.semantics.ExtensionRankingSemantics;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
@@ -53,7 +52,7 @@ public class CopelandBasedComparisonExtensionReasonerExample {
         e2.add(c);
         e2.add(d);
 
-        //it is also possible to add more then two Extensions to the list. The reasoner returns the best one(s)
+       
         Collection<Extension<DungTheory>> extensionList = new HashSet<>();
         extensionList.add(e1);
         extensionList.add(e2);

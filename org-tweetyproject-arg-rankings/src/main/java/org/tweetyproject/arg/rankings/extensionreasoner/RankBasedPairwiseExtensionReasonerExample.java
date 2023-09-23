@@ -1,5 +1,6 @@
 package org.tweetyproject.arg.rankings.extensionreasoner;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -57,14 +58,23 @@ public class RankBasedPairwiseExtensionReasonerExample {
         
         RankBasedPairwiseExtensionReasoner mod = new RankBasedPairwiseExtensionReasoner(AggregationFunction.LEXIMIN, ExtensionRankingSemantics.R_PR);
         Collection<Extension<DungTheory>> prExt = new SimplePreferredReasoner().getModels(example);
-        LinkedList<Extension<DungTheory>> best = mod.getModels(prExt, example, new CategorizerRanking());
+        ArrayList<LinkedList<Extension<DungTheory>>> ranks = mod.getModels(prExt, example, new CategorizerRanking());
 
         
-        System.out.println("The best Extension(s):");
-        
-        for(Extension<DungTheory> bestE : best) {
-        	System.out.println(bestE.toString());
+        System.out.println("Ranked Extensions:");
+        int rank = 1;
+        for( LinkedList<Extension<DungTheory>> rankList : ranks) {
+        	if(rankList.size() > 0) {
+        		System.out.print("Rank " + rank + ": ");
+            	for(Extension<DungTheory> ex : rankList ) {
+            		System.out.print(ex.toString());
+            	}
+            	rank++;
+            	System.out.println("");
+        	}
         }
+        System.out.println("");	
 	}
+	
 
 }

@@ -34,7 +34,7 @@ public class CopelandBasedComparisonExtensionReasoner {
 	 * @param extensions a set of Extensions
 	 * @param dung an Argumentation Framework
 	 * @param criteria the comparison criteria
-	 * @return HashMap including ranked Extensions
+	 * @return ArrayList including ranked Extensions
 	 * @throws IllegalAccessException 
 	 * @throws InvocationTargetException 
 	 * @throws NoSuchMethodException 
