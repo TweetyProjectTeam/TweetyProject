@@ -18,6 +18,9 @@
 */
 package org.tweetyproject.arg.dung.causal.syntax;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.tweetyproject.arg.dung.syntax.*;
 import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
@@ -64,6 +67,21 @@ public class CausalTheory extends DungTheory {
 		}
 	}
 	
+	public Set<CausalArgument> getArguments(){
+		var output = new HashSet<CausalArgument>();
+		for(var argument : getNodes()) {
+			output.add((CausalArgument) argument);
+		}
+		return output;
+	}
+	
+	public boolean addAttack(CausalArgument attacker, CausalArgument attacked) {
+		if(!checkUndercut((CausalArgument) attacker, (CausalArgument) attacked)) {
+			throw new IllegalArgumentException("the attacking argument does not undercut the attacked argument");
+		}
+		
+		return super.addAttack((Argument) attacker, (Argument) attacked);
+	}
 	
 	@Override
 	public boolean addAttack(Argument attacker, Argument attacked) {
@@ -71,11 +89,7 @@ public class CausalTheory extends DungTheory {
 			throw new IllegalArgumentException("argument is not of type CausalArgument");
 		}
 		
-		if(!checkUndercut((CausalArgument) attacker, (CausalArgument) attacked)) {
-			throw new IllegalArgumentException("the attacking argument does not undercut the attacked argument");
-		}
-		
-		return super.addAttack(attacker, attacked);
+		return addAttack((CausalArgument) attacker, (CausalArgument) attacked);
 	}
 	
 	@Override

@@ -66,39 +66,30 @@ public class CausalModel {
 	public CausalModel(Set<Equivalence> structuralEquations) {
 		var explainableAtoms = new HashSet<Proposition>();
 		var backGroundAtoms = new HashSet<Proposition>();
-		
+
 		for(var eq : structuralEquations) {
 			var pair = eq.getFormulas();
-			buildV(explainableAtoms, pair.getFirst());
-			buildV(explainableAtoms, pair.getSecond());
+			if(pair.getFirst().isLiteral()) {
+				explainableAtoms.addAll(pair.getFirst().getAtoms());
+			}
+			else {
+				throw new IllegalArgumentException("only literal are acceptable at the left hand side of the equation");
+			}
 		}
-		
+
 		for(var eq : structuralEquations) {
 			var pair = eq.getFormulas();
-			buildU(explainableAtoms, backGroundAtoms, pair.getFirst());
-			buildU(explainableAtoms, backGroundAtoms, pair.getSecond());
+			for(var atom : pair.getSecond().getAtoms()) {
+				if(!explainableAtoms.contains(atom)) {
+					backGroundAtoms.add(atom);
+				}
+			}
 		}
 		commonConstructor(backGroundAtoms, explainableAtoms, structuralEquations);
 	}
 	
 	public Set<PlFormula> getBeliefs(){
 		return new HashSet<PlFormula>(StructuralEquations);
-	}
-	
-	private void buildV(HashSet<Proposition> explainableAtoms, PlFormula formula) {
-		if(formula.isLiteral()) {
-			explainableAtoms.addAll(formula.getAtoms());
-		}
-	}
-
-	private void buildU(HashSet<Proposition> explainableAtoms, HashSet<Proposition> backGroundAtoms, PlFormula formula) {
-		if(!formula.isLiteral()) {
-			for(var atom : formula.getAtoms()) {
-				if(!explainableAtoms.contains(atom)) {
-					backGroundAtoms.add(atom);
-				}
-			}
-		}
 	}
 	
 	private void commonConstructor(Set<Proposition> backGroundAtoms, Set<Proposition> explainableAtoms, Set<Equivalence> structuralEquations) {
@@ -128,15 +119,7 @@ public class CausalModel {
 						throw new IllegalArgumentException("boolean structural equation has same explainable atom on both sides");
 					}
 					hasEQ = true;
-				}else if(pair.getSecond().isLiteral() && pair.getSecond().getAtoms().contains(atom)) {
-					if(hasEQ) {
-						throw new IllegalArgumentException("has more than one boolean structural equation for an explainable atom");
-					}
-					if(pair.getFirst().getAtoms().contains(atom)) {
-						throw new IllegalArgumentException("boolean structural equation has same explainable atom on both sides");
-					}
-					hasEQ = true;
-				}					
+				}				
 			}
 			
 			if(!hasEQ) {
@@ -146,11 +129,17 @@ public class CausalModel {
 		
 		for(var eq : structuralEquations) {
 			var pair = eq.getFormulas();
-			for( var atom : pair.getFirst().getAtoms()) {
-				if(!backGroundAtoms.contains(atom) && !explainableAtoms.contains(atom)) {
-					throw new IllegalArgumentException("boolean structural equation uses "
-							+ "atoms different from the background or explainable atoms");
-				}
+			checkIfOnlyExplainableBackgroundAtoms(backGroundAtoms, explainableAtoms, pair.getFirst());
+			checkIfOnlyExplainableBackgroundAtoms(backGroundAtoms, explainableAtoms, pair.getSecond());
+		}
+	}
+
+	private static void checkIfOnlyExplainableBackgroundAtoms(Set<Proposition> backGroundAtoms,
+			Set<Proposition> explainableAtoms, PlFormula formula) {
+		for( var atom : formula.getAtoms()) {
+			if(!backGroundAtoms.contains(atom) && !explainableAtoms.contains(atom)) {
+				throw new IllegalArgumentException("boolean structural equation uses "
+						+ "atoms different from the background or explainable atoms");
 			}
 		}
 	}

@@ -51,36 +51,36 @@ class CausalModelTest {
 		var flu = new Proposition("flu");
 		var shortOfBreath = new Proposition("short-of-breath");
 		var fever = new Proposition("fever");
-//		var chills = new Proposition("chills");
+		var chills = new Proposition("chills");
 		
 		var eq1 = new Equivalence(covid, corona);
 		var eq2 = new Equivalence(flu, influenza);
 		var eq3 = new Equivalence(fever, new Disjunction(covid, flu));
-		//var eq4 = new Equivalence(chills, fever);
+		var eq4 = new Equivalence(chills, fever);
 		var eq5 = new Equivalence(shortOfBreath, new Conjunction(covid, atRisk));
 		var wrongEq3 = new Equivalence(fever, new Disjunction(covid, fever));
 		var missingFluEq2 = new Equivalence(fever, influenza);
-		var doubleFeverEq4 = new Equivalence(new Conjunction(covid, atRisk), fever);
+		var doubleFeverEq4 = new Equivalence(fever, new Conjunction(covid, atRisk));
 		
 		//Act
-		var model1 = BuildFirstOption(corona, influenza, atRisk, covid, flu, shortOfBreath, fever,  eq1, eq2, eq3, eq5);
-		var model2 = BuildSecondOption(eq1, eq2, eq3, eq5);
+		var model1 = BuildFirstOption(corona, influenza, atRisk, covid, flu, shortOfBreath, fever, chills,  eq1, eq2, eq3, eq4, eq5);
+		var model2 = BuildSecondOption(eq1, eq2, eq3, eq4, eq5);
 		
 		//Assure
 		Assert.assertEquals(model1.hashCode(), model2.hashCode());
 //		Assert.assertEquals(model1, model2);
 		Assertions.assertThrowsExactly(IllegalArgumentException.class, () 
-				-> BuildFirstOption(corona, influenza, atRisk, covid, flu, shortOfBreath, fever,  eq1, eq2, wrongEq3, eq5));
+				-> BuildFirstOption(corona, influenza, atRisk, covid, flu, shortOfBreath, fever, chills,  eq1, eq2, wrongEq3, eq4, eq5));
 		Assertions.assertThrowsExactly(IllegalArgumentException.class, () 
-				-> BuildFirstOption(corona, influenza, atRisk, covid, flu, shortOfBreath, fever,  eq1, missingFluEq2, eq3, eq5));
+				-> BuildFirstOption(corona, influenza, atRisk, covid, flu, shortOfBreath, fever, chills,  eq1, missingFluEq2, eq3, eq4, eq5)); //simulates missing eq for one explainable atom
 		Assertions.assertThrowsExactly(IllegalArgumentException.class, () 
-				-> BuildFirstOption(corona, influenza, atRisk, covid, flu, shortOfBreath, fever,  eq1, eq2, eq3, doubleFeverEq4));
+				-> BuildFirstOption(corona, influenza, atRisk, covid, flu, shortOfBreath, fever, chills,  eq1, eq2, eq3, doubleFeverEq4, eq5)); //simulates having more than one eq for a explainable atim
 //		Assertions.assertEquals(model1, model2);
 	}
 	
 	private CausalModel BuildFirstOption(Proposition corona, Proposition influenza, Proposition atRisk, Proposition covid, 
-			Proposition flu, Proposition shortOfBreath, Proposition fever, 
-			Equivalence eq1, Equivalence eq2, Equivalence eq3, Equivalence eq4 ) {
+			Proposition flu, Proposition shortOfBreath, Proposition fever, Proposition chills,
+			Equivalence eq1, Equivalence eq2, Equivalence eq3, Equivalence eq4, Equivalence eq5) {
 		
 		var u = new HashSet<Proposition>();
 		u.add(corona);
@@ -92,26 +92,26 @@ class CausalModelTest {
 		v.add(flu);
 		v.add(shortOfBreath);
 		v.add(fever);
-//		v.add(chills);
+		v.add(chills);
 
 		var eqs = new HashSet<Equivalence>();
 		eqs.add(eq1);
 		eqs.add(eq2);
 		eqs.add(eq3);
 		eqs.add(eq4);
-//		eqs.add(eq5);
+		eqs.add(eq5);
 		
 		return new CausalModel(u, v, eqs);
 		
 	}
 	
-	private CausalModel BuildSecondOption(Equivalence eq1, Equivalence eq2, Equivalence eq3, Equivalence eq4) {
+	private CausalModel BuildSecondOption(Equivalence eq1, Equivalence eq2, Equivalence eq3, Equivalence eq4, Equivalence eq5) {
 		var eqs = new HashSet<Equivalence>();
 		eqs.add(eq1);
 		eqs.add(eq2);
 		eqs.add(eq3);
 		eqs.add(eq4);
-//		eqs.add(eq5);
+		eqs.add(eq5);
 		
 		return new CausalModel(eqs);
 	}
