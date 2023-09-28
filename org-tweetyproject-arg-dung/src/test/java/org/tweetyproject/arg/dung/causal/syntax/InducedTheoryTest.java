@@ -31,16 +31,15 @@ import org.tweetyproject.logics.pl.syntax.Equivalence;
 import org.tweetyproject.logics.pl.syntax.Negation;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
-import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
- * @author User
+ * @author Julian Sander
  *
  */
-class CausalTheoryTest {
+class InducedTheoryTest {
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalTheory#addAttack(org.tweetyproject.arg.dung.syntax.Argument, org.tweetyproject.arg.dung.syntax.Argument)}.
+	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.InducedTheory#addAttack(org.tweetyproject.arg.dung.syntax.Argument, org.tweetyproject.arg.dung.syntax.Argument)}.
 	 */
 	@Test
 	void testAddAttack() {
@@ -51,13 +50,13 @@ class CausalTheoryTest {
 		var shortOfBreath = new Proposition("short-of-breath");
 		var negInfluenza = new Negation(influenza);
 		var causalKnowledgeBase = setup(corona, influenza, fever, shortOfBreath, negInfluenza);
-		var framework = new CausalTheory(causalKnowledgeBase);
+		var framework = new InducedTheory(causalKnowledgeBase);
 		var args = framework.getArguments();
 		var attacker = args.iterator().next();
-		CausalArgument victim = null;
+		InducedArgument victim = null;
 		
 		for(var arg : args) {
-			if(!arg.Premises.contains(attacker.Conclusion.complement())) {
+			if(!arg.getPremises().contains(attacker.getConclusion().complement())) {
 				victim = arg;
 				break;
 			}
@@ -65,13 +64,13 @@ class CausalTheoryTest {
 		
 		//Act
 		//Assert
-		CausalArgument victim2 = victim;
+		InducedArgument victim2 = victim;
 		Assertions.assertThrowsExactly(IllegalArgumentException.class, () -> framework.addAttack(attacker, victim2));
 		Assertions.assertThrowsExactly(IllegalArgumentException.class, () -> framework.addAttack((Argument)attacker, (Argument) victim2));
 	}
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalTheory#add(org.tweetyproject.arg.dung.syntax.Argument)}.
+	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.InducedTheory#add(org.tweetyproject.arg.dung.syntax.Argument)}.
 	 */
 	@Test
 	void testAddArgument() {
@@ -82,7 +81,7 @@ class CausalTheoryTest {
 		var shortOfBreath = new Proposition("short-of-breath");
 		var negInfluenza = new Negation(influenza);
 		var causalKnowledgeBase = setup(corona, influenza, fever, shortOfBreath, negInfluenza);
-		var framework = new CausalTheory(causalKnowledgeBase);
+		var framework = new InducedTheory(causalKnowledgeBase);
 		var a0 = new Argument("a0");
 
 		//Act
@@ -91,7 +90,7 @@ class CausalTheoryTest {
 	}
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalTheory#CausalTheory(org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase)}.
+	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.InducedTheory#CausalTheory(org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase)}.
 	 */
 	@Test
 	void testCausalTheory() {
@@ -111,8 +110,8 @@ class CausalTheoryTest {
 		Assertions.assertFalse(causalKnowledgeBase.entails(premises, negShortOfBreath));
 		
 		//Act
-		causalKnowledgeBase.Facts.StructuralEquations.add(new Equivalence(fever, new Tautology()));
-		var framework = new CausalTheory(causalKnowledgeBase);
+		causalKnowledgeBase.add(fever);
+		var framework = new InducedTheory(causalKnowledgeBase);
 		var reasoner = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ST);
 		var extensions = reasoner.getModels(framework);
 		
@@ -122,10 +121,10 @@ class CausalTheoryTest {
 			boolean hasConclusionShortOfBreath = false;
 			boolean hasConclusionNotShortOfBreath = false;
 			for(var argument : ext) {
-				if(((CausalArgument) argument).Conclusion.equals(shortOfBreath)) {
+				if(((InducedArgument) argument).getConclusion().equals(shortOfBreath)) {
 					hasConclusionShortOfBreath = true;
 				}
-				if(((CausalArgument) argument).Conclusion.equals(negShortOfBreath)) {
+				if(((InducedArgument) argument).getConclusion().equals(negShortOfBreath)) {
 					hasConclusionNotShortOfBreath = true;
 				}
 			}
@@ -146,18 +145,18 @@ class CausalTheoryTest {
 		var premises2 = new HashSet<PlFormula>();
 		var formula = new Conjunction(new Negation(corona), fever);
 		premises2.add(formula);
-		Assertions.assertTrue(causalKnowledgeBase2.getConclusions(premises2).contains(influenza));
+		Assertions.assertTrue(causalKnowledgeBase2.getSingelAtomConclusions(premises2).contains(influenza));
 		
 		//Act
-		causalKnowledgeBase2.Facts.StructuralEquations.add(new Equivalence(formula, new Tautology()));
-		var framework2 = new CausalTheory(causalKnowledgeBase2);
+		causalKnowledgeBase2.add(formula);
+		var framework2 = new InducedTheory(causalKnowledgeBase2);
 		var extensions2 = reasoner.getModels(framework2);
 		
 		boolean allExtConcludeInfluenza = true;
 		for(var ext : extensions2) {
 			boolean hasConclusionInfluenza = false;
 			for(var argument : ext) {
-				if(((CausalArgument) argument).Conclusion.equals(influenza)) {
+				if(((InducedArgument) argument).getConclusion().equals(influenza)) {
 					hasConclusionInfluenza = true;
 				}
 			}

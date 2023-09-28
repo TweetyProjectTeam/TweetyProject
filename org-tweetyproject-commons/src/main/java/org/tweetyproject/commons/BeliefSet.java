@@ -46,7 +46,7 @@ public abstract class BeliefSet<T extends Formula,S extends Signature> implement
 	/**
 	 * The set of formulas of this belief base.
 	 */
-	private Set<T> formulas;
+	protected Set<T> formulas;
 	
 	/**
 	 * The signature of this belief base. It is always larger than or equal to 

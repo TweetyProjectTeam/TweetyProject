@@ -43,26 +43,31 @@ class CausalKnowledgeBaseTest {
 	void testCausalKnowledgeBase() {
 		//Arrange
 		var corona = new Proposition("corona");
+		var atRisk = new Proposition("at-risk");
 		var influenza = new Proposition("influenza");
 		var fever = new Proposition("fever");
 		var negInfluenza = new Negation(influenza);
-		var causalKnowledgeBase = setup(corona, influenza, fever, negInfluenza);
+		var causalModel = setupModel(corona, atRisk, influenza, fever);
+		var causalKnowledgeBase = setup(corona, atRisk, negInfluenza, causalModel);
 		var notLiteral = new Conjunction(negInfluenza, corona);
 		var notBackGroundAtom = new Proposition("this is not a background-atom");
 		
 				
 		//Assert
-		causalKnowledgeBase.Assumptions.remove(negInfluenza); //simulate missing assumption for background atom
+		var assumptions2 = causalKnowledgeBase.getAssumptions();
+		assumptions2.remove(negInfluenza); //simulate missing assumption for background atom
 		Assertions.assertThrowsExactly(IllegalArgumentException.class, () 
-				-> new CausalKnowledgeBase(causalKnowledgeBase.Facts, causalKnowledgeBase.Assumptions));
-		causalKnowledgeBase.Assumptions.add(negInfluenza);	
-		causalKnowledgeBase.Assumptions.add(notLiteral);	//simulate some assumptions being no literal
+				-> new CausalKnowledgeBase(causalModel, assumptions2));
+		var assumptions3 = causalKnowledgeBase.getAssumptions();
+		assumptions3.add(negInfluenza);	
+		assumptions3.add(notLiteral);	//simulate some assumptions being no literal
 		Assertions.assertThrowsExactly(IllegalArgumentException.class, () 
-				-> new CausalKnowledgeBase(causalKnowledgeBase.Facts, causalKnowledgeBase.Assumptions));
-		causalKnowledgeBase.Assumptions.remove(notLiteral);
-		causalKnowledgeBase.Assumptions.add(notBackGroundAtom); //simulate assumption anything else than a background-atom
+				-> new CausalKnowledgeBase(causalModel, assumptions3));
+		var assumptions4 = causalKnowledgeBase.getAssumptions();
+		assumptions4.remove(notLiteral);
+		assumptions4.add(notBackGroundAtom); //simulate assumption anything else than a background-atom
 		Assertions.assertThrowsExactly(IllegalArgumentException.class, () 
-				-> new CausalKnowledgeBase(causalKnowledgeBase.Facts, causalKnowledgeBase.Assumptions));
+				-> new CausalKnowledgeBase(causalModel, assumptions4));
 	}
 
 	/**
@@ -72,10 +77,12 @@ class CausalKnowledgeBaseTest {
 	void testEntails() {
 		//Arrange
 		var corona = new Proposition("corona");
+		var atRisk = new Proposition("at-risk");
 		var influenza = new Proposition("influenza");
 		var fever = new Proposition("fever");
 		var negInfluenza = new Negation(influenza);
-		var causalKnowledgeBase = setup(corona, influenza, fever, negInfluenza);
+		var causalModel = setupModel(corona, atRisk, influenza, fever);
+		var causalKnowledgeBase = setup(corona, atRisk, negInfluenza, causalModel);
 
 		//Act
 		var premises = new HashSet<PlFormula>();
@@ -84,28 +91,26 @@ class CausalKnowledgeBaseTest {
 	}
 
 	/**
-	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase#getConclusions(java.util.Set)}.
+	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase#getSingelAtomConclusions(java.util.Set)}.
 	 */
 	@Test
 	void testGetConclusions() {
 		//Arrange
 		var corona = new Proposition("corona");
+		var atRisk = new Proposition("at-risk");
 		var influenza = new Proposition("influenza");
 		var fever = new Proposition("fever");
 		var negInfluenza = new Negation(influenza);
-		var causalKnowledgeBase = setup(corona, influenza, fever, negInfluenza);
+		var causalModel = setupModel(corona, atRisk, influenza, fever);
+		var causalKnowledgeBase = setup(corona, atRisk, negInfluenza, causalModel);
 
 		//Act
 		var premises = new HashSet<PlFormula>();
 		premises.add(new Conjunction(new Negation(corona), fever));
-		Assertions.assertTrue(causalKnowledgeBase.getConclusions(premises).contains(influenza));
+		Assertions.assertTrue(causalKnowledgeBase.getSingelAtomConclusions(premises).contains(influenza));
 	}
 	
-	
-	private CausalKnowledgeBase setup(Proposition corona, Proposition influenza, Proposition fever, Negation negInfluenza) {
-		//causal model
-		var atRisk = new Proposition("at-risk");
-
+	private CausalModel setupModel(Proposition corona, Proposition atRisk, Proposition influenza, Proposition fever) {
 		var covid = new Proposition("covid");
 		var flu = new Proposition("flu");
 		var shortOfBreath = new Proposition("short-of-breath");
@@ -122,8 +127,10 @@ class CausalKnowledgeBaseTest {
 		eqs.add(eq3);
 		eqs.add(eq4);
 		eqs.add(eq5);
-		var causalModel = new CausalModel(eqs);
-
+		return new CausalModel(eqs);
+	}
+	
+	private CausalKnowledgeBase setup(Proposition corona, Proposition atRisk, Negation negInfluenza, CausalModel causalModel) {
 		// Assumptions
 		var negAtRisk = new Negation(atRisk);
 		var negCorona = new Negation(corona);
