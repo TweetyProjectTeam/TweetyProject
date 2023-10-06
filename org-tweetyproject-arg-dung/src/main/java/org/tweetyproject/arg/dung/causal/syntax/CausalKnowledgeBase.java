@@ -21,9 +21,7 @@ package org.tweetyproject.arg.dung.causal.syntax;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.tweetyproject.logics.pl.reasoner.SimplePlReasoner;
 import org.tweetyproject.logics.pl.syntax.Negation;
-import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 
 /**
@@ -37,14 +35,12 @@ import org.tweetyproject.logics.pl.syntax.PlFormula;
  * @version TweetyProject 1.23
  *
  */
-public class CausalKnowledgeBase extends PlBeliefSet {
-
+public class CausalKnowledgeBase extends KnowledgeBase {
+	
 	/**
-	 * set of background assumptions <br/> - <br/>
-	 * There is at least one background assumption for each background atom (in K).
-	 * A background assumption for an atom u is a literal l \in {u, \neg{u}}.
+	 * A causal model, which is the basis of this knowledge base.
 	 */
-	private HashSet<PlFormula> assumptions;
+	private CausalModel causalModel;
 
 	/**
 	 * Creates a new causal knowledge base
@@ -52,7 +48,8 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 	 * @param assumptions Set of assumptions about the background atoms of the causal model.
 	 */
 	public CausalKnowledgeBase(CausalModel facts, Set<PlFormula> assumptions) {
-		super(facts.getStructuralEquations());
+		super(assumptions);
+		this.causalModel = facts;
 		for(var assumption : assumptions) {
 			if(!assumption.isLiteral()) {
 				throw new IllegalArgumentException("There is at least one background assumption, that is not a literal.");
@@ -70,29 +67,23 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 				throw new IllegalArgumentException("There is at least one background atom without any assumption.");
 			}
 		}
-
-		this.assumptions = new HashSet<>(assumptions);
 	}
-
-	public boolean addAssumption(PlFormula assumption) {
-		return this.assumptions.add(assumption);
-	}
-
+	
 	/**
-	 * Computes if a specified conclusion could be drawn from adding the specified premises to this instance.
-	 * @param premises Set of formulas, which will be added to this knowledge base.
-	 * @param conclusion Formula, which is checked to be a conclusion of the combination of this instance and the specified premises or not.
-	 * @return TRUE iff the specified formula is a conclusion of this knowledge base and the specified set of premises.
+	 * @return The underlying causal model of this instance.
 	 */
-	public boolean entails(Set<PlFormula> premises, PlFormula conclusion) {
-		var beliefs = new HashSet<>(this.formulas);
-		beliefs.addAll(premises);
-		var beliefSet = new PlBeliefSet(beliefs);
-		return new SimplePlReasoner().query(beliefSet, conclusion);
+	public CausalModel getCausalModel() {
+		return this.causalModel;
 	}
-
-	public HashSet<PlFormula> getAssumptions() {
-		return new HashSet<>(this.assumptions);
+	
+	/**
+	 * @return Returns all propositional formulas of this knowledge base, this includes the structural equations of the underlying causal model.
+	 */
+	@Override
+	public HashSet<PlFormula> getBeliefs(){
+		var output = new HashSet<PlFormula>(this.formulas);
+		output.addAll(this.causalModel.getStructuralEquations());
+		return output;
 	}
 
 	/**
@@ -103,7 +94,7 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 	 */
 	public HashSet<PlFormula> getSingelAtomConclusions(Set<PlFormula> premises){
 		var conclusions = new HashSet<PlFormula>();
-		for(var formula : this.formulas) {
+		for(var formula : this.causalModel.getStructuralEquations()) {
 			for(var atom : formula.getAtoms()) {
 				if(this.entails(premises, atom)) {
 					conclusions.add(atom);
@@ -112,9 +103,5 @@ public class CausalKnowledgeBase extends PlBeliefSet {
 		}
 
 		return conclusions;
-	}
-	
-	public boolean removeAssumption(PlFormula assumption) {
-		return this.assumptions.remove(assumption);
 	}
 }

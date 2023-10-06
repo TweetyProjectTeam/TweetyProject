@@ -1,21 +1,21 @@
 /*
-* This file is part of "TweetyProject", a collection of Java libraries for
-* logical aspects of artificial intelligence and knowledge representation.
-*
-* TweetyProject is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License version 3 as
-* published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
-*
-* Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
-*/
+ * This file is part of "TweetyProject", a collection of Java libraries for
+ * logical aspects of artificial intelligence and knowledge representation.
+ *
+ * TweetyProject is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2023 The TweetyProject Team <http://tweetyproject.org/contact/>
+ */
 package org.tweetyproject.arg.dung.causal.syntax;
 
 import java.util.HashSet;
@@ -36,23 +36,26 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  */
 class CausalKnowledgeBaseTest {
 
+
 	/**
 	 * Test method for {@link org.tweetyproject.arg.dung.causal.syntax.CausalKnowledgeBase#CausalKnowledgeBase(org.tweetyproject.arg.dung.causal.syntax.CausalModel, java.util.Set)}.
 	 */
 	@Test
 	void testCausalKnowledgeBase() {
 		//Arrange
+		var covid = new Proposition("covid");
 		var corona = new Proposition("corona");
+		var shortOfBreath = new Proposition("short-of-breath");
 		var atRisk = new Proposition("at-risk");
 		var influenza = new Proposition("influenza");
 		var fever = new Proposition("fever");
 		var negInfluenza = new Negation(influenza);
-		var causalModel = setupModel(corona, atRisk, influenza, fever);
+		var causalModel = setupModel(covid, corona, shortOfBreath, atRisk, influenza, fever);
 		var causalKnowledgeBase = setup(corona, atRisk, negInfluenza, causalModel);
 		var notLiteral = new Conjunction(negInfluenza, corona);
 		var notBackGroundAtom = new Proposition("this is not a background-atom");
-		
-				
+
+
 		//Assert
 		var assumptions2 = causalKnowledgeBase.getAssumptions();
 		assumptions2.remove(negInfluenza); //simulate missing assumption for background atom
@@ -76,12 +79,14 @@ class CausalKnowledgeBaseTest {
 	@Test
 	void testEntails() {
 		//Arrange
+		var covid = new Proposition("covid");
 		var corona = new Proposition("corona");
+		var shortOfBreath = new Proposition("short-of-breath");
 		var atRisk = new Proposition("at-risk");
 		var influenza = new Proposition("influenza");
 		var fever = new Proposition("fever");
 		var negInfluenza = new Negation(influenza);
-		var causalModel = setupModel(corona, atRisk, influenza, fever);
+		var causalModel = setupModel(covid, corona, shortOfBreath, atRisk, influenza, fever);
 		var causalKnowledgeBase = setup(corona, atRisk, negInfluenza, causalModel);
 
 		//Act
@@ -96,12 +101,14 @@ class CausalKnowledgeBaseTest {
 	@Test
 	void testGetConclusions() {
 		//Arrange
+		var covid = new Proposition("covid");
 		var corona = new Proposition("corona");
+		var shortOfBreath = new Proposition("short-of-breath");
 		var atRisk = new Proposition("at-risk");
 		var influenza = new Proposition("influenza");
 		var fever = new Proposition("fever");
 		var negInfluenza = new Negation(influenza);
-		var causalModel = setupModel(corona, atRisk, influenza, fever);
+		var causalModel = setupModel(covid, corona, shortOfBreath, atRisk, influenza, fever);
 		var causalKnowledgeBase = setup(corona, atRisk, negInfluenza, causalModel);
 
 		//Act
@@ -109,11 +116,11 @@ class CausalKnowledgeBaseTest {
 		premises.add(new Conjunction(new Negation(corona), fever));
 		Assertions.assertTrue(causalKnowledgeBase.getSingelAtomConclusions(premises).contains(influenza));
 	}
-	
-	private CausalModel setupModel(Proposition corona, Proposition atRisk, Proposition influenza, Proposition fever) {
-		var covid = new Proposition("covid");
+
+	private CausalModel setupModel(Proposition covid, Proposition corona, Proposition shortOfBreath, Proposition atRisk, Proposition influenza, Proposition fever) {
+		
 		var flu = new Proposition("flu");
-		var shortOfBreath = new Proposition("short-of-breath");
+		
 		var chills = new Proposition("chills");
 
 		var eq1 = new Equivalence(covid, corona);
@@ -129,7 +136,7 @@ class CausalKnowledgeBaseTest {
 		eqs.add(eq5);
 		return new CausalModel(eqs);
 	}
-	
+
 	private CausalKnowledgeBase setup(Proposition corona, Proposition atRisk, Negation negInfluenza, CausalModel causalModel) {
 		// Assumptions
 		var negAtRisk = new Negation(atRisk);

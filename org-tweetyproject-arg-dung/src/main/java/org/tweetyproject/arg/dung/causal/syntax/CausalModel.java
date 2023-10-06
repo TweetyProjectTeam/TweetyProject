@@ -18,12 +18,17 @@
  */
 package org.tweetyproject.arg.dung.causal.syntax;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.tweetyproject.logics.pl.syntax.Equivalence;
+import org.tweetyproject.logics.pl.syntax.Negation;
+import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
+import org.tweetyproject.logics.pl.syntax.Tautology;
 
 /**
  * This class describes a causal model.
@@ -36,7 +41,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * @version TweetyProject 1.23
  *
  */
-public class CausalModel {
+public class CausalModel extends PlBeliefSet {
 
 	/**
 	 * Builds the necessary elements of a causal model, from a specified set of equivalences, used as structural equations
@@ -116,27 +121,21 @@ public class CausalModel {
 	 * background atoms <br/> - <br/>
 	 * Background atoms represent variables that are determined outside of the model. They are typically unobservable and uncontrollable.
 	 */
-	private HashSet<Proposition> backGroundAtoms;
+	protected HashSet<Proposition> backGroundAtoms;
 
 	/**
 	 * explainable atoms <br/> - <br/>
 	 * Every explainable atom v is functionally dependent on other atoms of the model.
 	 */
-	private HashSet<Proposition> explainableAtoms;
-
-	/**
-	 * boolean structural equations <br/> - <br/>
-	 * Represent the causal mechanism by which the explainable atoms are determined by the other atoms in the model.
-	 */
-	private HashSet<Equivalence> structuralEquations;
+	protected HashSet<Proposition> explainableAtoms;
 
 	/**
 	 * Creates an empty causal model
 	 */
 	public CausalModel() {
+		super();
 		this.backGroundAtoms = new HashSet<>();
 		this.explainableAtoms = new HashSet<>();
-		this.structuralEquations = new HashSet<>();
 	}
 
 	/**
@@ -145,6 +144,7 @@ public class CausalModel {
 	 * which only occurs on the left side of the equation
 	 */
 	public CausalModel(Set<Equivalence> structuralEquations) {
+		super(structuralEquations);
 		var explainableAtoms = new HashSet<Proposition>();
 		var backGroundAtoms = new HashSet<Proposition>();
 
@@ -163,6 +163,37 @@ public class CausalModel {
 		this.commonConstructor(backGroundAtoms, explainableAtoms, structuralEquations);
 	}
 
+	@Override
+	public boolean add(PlFormula formula) {
+		if(formula instanceof Equivalence) {
+			return super.add(formula);
+		}
+
+		throw new IllegalArgumentException("only Equivalence formulas are eligible");
+	}
+
+	@Override
+	public boolean add(PlFormula... formulas) {
+		for(var formula : formulas) {
+			if(!(formula instanceof Equivalence)) {
+				throw new IllegalArgumentException("only Equivalence formulas are eligible");
+			}
+		}
+
+		return super.add(formulas);
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends PlFormula> formulas) {
+		for(var formula : formulas) {
+			if(!(formula instanceof Equivalence)) {
+				throw new IllegalArgumentException("only Equivalence formulas are eligible");
+			}
+		}
+
+		return super.addAll(formulas);
+	}
+
 	/**
 	 * Adds a specified atom to the background atoms of this instance.
 	 * @param atom Atom to add to the background atoms of this instance.
@@ -177,7 +208,7 @@ public class CausalModel {
 		var newBackgroundAtoms = new HashSet<>(this.backGroundAtoms);
 		newBackgroundAtoms.add(atom);
 
-		CausalModel.checkCorrectForm(newBackgroundAtoms, this.explainableAtoms, this.structuralEquations);
+		CausalModel.checkCorrectForm(newBackgroundAtoms, this.explainableAtoms, this.getStructuralEquations());
 		return this.backGroundAtoms.add(atom);
 	}
 
@@ -196,12 +227,12 @@ public class CausalModel {
 		}
 		var newExplainableAtoms = new HashSet<>(this.explainableAtoms);
 		newExplainableAtoms.add(atom);
-		var newEquations = new HashSet<>(this.structuralEquations);
+		var newEquations = this.getStructuralEquations();
 		newEquations.add(structuralEquation);
 
 		CausalModel.checkCorrectForm(this.backGroundAtoms, newExplainableAtoms, newEquations);
-		this.explainableAtoms = newExplainableAtoms;
-		this.structuralEquations = newEquations;
+		this.explainableAtoms.add(atom);
+		this.add(structuralEquation);
 		return true;
 	}
 
@@ -215,10 +246,10 @@ public class CausalModel {
 	 * @throws IllegalArgumentException if adding the specified equation would violate the definition of a causal model
 	 */
 	public boolean addStructuralEquation(Equivalence equation) {
-		if(this.structuralEquations.contains(equation)) {
+		if(this.formulas.contains(equation)) {
 			return false;
 		}
-		var newEquations = new HashSet<>(this.structuralEquations);
+		var newEquations = this.getStructuralEquations();
 		newEquations.add(equation);
 		var newExplainable = new HashSet<>(this.explainableAtoms);
 		var newBackGround = new HashSet<>(this.backGroundAtoms);
@@ -236,9 +267,9 @@ public class CausalModel {
 		}
 
 		CausalModel.checkCorrectForm(newBackGround, newExplainable, newEquations);
-		this.structuralEquations = newEquations;
-		this.explainableAtoms = newExplainable;
-		this.backGroundAtoms = newBackGround;
+		this.add(equation);
+		this.explainableAtoms.addAll(this.explainableAtoms);
+		this.backGroundAtoms.addAll(this.backGroundAtoms);
 		return true;
 	}
 
@@ -252,7 +283,7 @@ public class CausalModel {
 
 		if( other.backGroundAtoms.equals(this.backGroundAtoms)
 				&& other.explainableAtoms.equals(this.explainableAtoms)
-				&& other.structuralEquations.equals(this.structuralEquations)) {
+				&& other.formulas.equals(this.formulas)) {
 			return true;
 		}
 		else {
@@ -261,15 +292,59 @@ public class CausalModel {
 	}
 
 	public HashSet<Proposition> getBackGroundAtoms() {
-		return new HashSet<Proposition>(this.backGroundAtoms);
+		return new HashSet<>(this.backGroundAtoms);
 	}
 
 	public HashSet<Proposition> getExplainableAtoms() {
-		return new HashSet<Proposition>(this.explainableAtoms);
+		return new HashSet<>(this.explainableAtoms);
 	}
 
 	public HashSet<Equivalence> getStructuralEquations(){
-		return new HashSet<Equivalence>(this.structuralEquations);
+		var output = new HashSet<Equivalence>();
+		for(var formula : this.formulas) {
+			if(formula instanceof Equivalence) {
+				output.add((Equivalence) formula);
+			}
+		}
+		return output;
+	}
+
+	/**
+	 * @return A twin model to this instance.
+	 */
+	public CausalModel getTwinModel() {
+		var explainableAtoms = new HashSet<>(this.getExplainableAtoms());
+		var structuralEquations = this.getStructuralEquations();
+		var counterFactualEquations = new HashSet<>(structuralEquations);
+
+		for(var originalExpAtom : this.explainableAtoms) {
+			var counterfactualCopy = new Proposition(originalExpAtom.getName() + "*");
+			explainableAtoms.add(counterfactualCopy);
+
+			var eqsToAdd = new HashSet<Equivalence>();
+			var eqsToRemove = new HashSet<Equivalence>();
+
+			for(var eq : counterFactualEquations) {
+				if(!eq.getAtoms().contains(originalExpAtom)) {
+					continue;
+				}
+
+				// replace all occurrences of the original atom with the counterfactual copy
+				var eqReplaced = eq;
+				int occ = eq.numberOfOccurrences(originalExpAtom);
+				for(int i = 0; i < occ; i++) {
+					eqReplaced = (Equivalence) eq.replace(originalExpAtom, counterfactualCopy, i + 1);
+				}
+				eqsToRemove.add(eq);
+				eqsToAdd.add(eqReplaced);
+			}
+
+			counterFactualEquations.removeAll(eqsToRemove);
+			counterFactualEquations.addAll(eqsToAdd);
+		}
+
+		structuralEquations.addAll(counterFactualEquations);
+		return new CausalModel(structuralEquations);
 	}
 
 	@Override
@@ -278,14 +353,44 @@ public class CausalModel {
 		int result = 1;
 		result = (prime * result) + ((this.backGroundAtoms == null) ? 0 : this.backGroundAtoms.hashCode())
 				+ ((this.explainableAtoms == null) ? 0 : this.explainableAtoms.hashCode())
-				+ ((this.structuralEquations == null) ? 0 : this.structuralEquations.hashCode());
+				+ ((this.formulas == null) ? 0 : this.formulas.hashCode());
 		return result;
+	}
+
+	/**
+	 * This method implements the interventional statement, by replacing all structural equations for the specified explainable atom "v" of this causal model with a
+	 * formula "v = x".
+	 * @param v Explainable atom of this causal model, which is to be intervened on.
+	 * @param x Truth value of the intervention.
+	 */
+	public void intervene(Proposition v, boolean x) {
+		if(!this.explainableAtoms.contains(v)){
+			throw new IllegalArgumentException("The specified variable has to be an explainable atom of the causal model");
+		}
+
+		var eqToRemove = new HashSet<PlFormula>();
+		for(var eq : this.getStructuralEquations()) {
+			var leftHandSide = eq.getFormulas().getFirst();
+			if(leftHandSide.getAtoms().contains(v)) {
+				eqToRemove.add(eq);
+			}
+		}
+		if(eqToRemove.isEmpty()) {
+			throw new NoSuchElementException("There is a explainable atom, without any structural equation");
+		}
+
+		this.formulas.removeAll(eqToRemove);
+		if(x) {
+			this.formulas.add(new Equivalence(v, new Tautology()));
+		}else {
+			this.formulas.add(new Equivalence(v, new Negation(new Tautology())));
+		}
 	}
 
 	private void commonConstructor(Set<Proposition> backGroundAtoms, Set<Proposition> explainableAtoms, Set<Equivalence> structuralEquations) {
 		CausalModel.checkCorrectForm(backGroundAtoms, explainableAtoms, structuralEquations);
 		this.backGroundAtoms = new HashSet<>(backGroundAtoms);
 		this.explainableAtoms = new HashSet<>(explainableAtoms);
-		this.structuralEquations = new HashSet<>(structuralEquations);
+		this.addAll(structuralEquations);
 	}
 }
