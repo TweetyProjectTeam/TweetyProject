@@ -84,4 +84,11 @@ public class KnowledgeBase extends PlBeliefSet{
 	public boolean removeAssumption(PlFormula assumption) {
 		return this.assumptions.remove(assumption);
 	}
+	
+	@Override
+	public KnowledgeBase clone() {
+		var output = new KnowledgeBase(this.assumptions);
+		output.addAll(this.formulas);
+		return output;
+	}
 }

@@ -53,7 +53,7 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	/**
 	 * the layout of the plot
 	 */
-	private mxHierarchicalLayout layout;
+	protected mxHierarchicalLayout layout;
 	/**
 	 * a container to contain the plot
 	 */
@@ -209,9 +209,14 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 			this.layout = new mxHierarchicalLayout(this.graphPlot, SwingConstants.WEST);
 		}
 
-		this.layout.setIntraCellSpacing(this.vertexSpacing);
+		setVertexSpacing();
 		this.layout.execute(this.graphPlot.getDefaultParent());
 		this.graphPlot.getModel().endUpdate();
+	}
+
+
+	protected void setVertexSpacing() {
+		this.layout.setIntraCellSpacing(this.vertexSpacing);
 	}
 
 	private void buildPanel() {

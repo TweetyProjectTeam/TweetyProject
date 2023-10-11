@@ -57,11 +57,12 @@ class CounterfactualStatementTest {
 				premises.add(fever);
 				var interventions = new HashMap<Proposition, Boolean>();
 				interventions.put(covid, false);
+				var feverCopy = new Proposition("fever*");
 				var conclusions1 = new HashSet<PlFormula>();
-				conclusions1.add( new Proposition("fever*"));
+				conclusions1.add(feverCopy);
 				var counterfactualStatement1 = new CounterfactualStatement(conclusions1, interventions, premises);
 				var conclusions2 = new HashSet<PlFormula>();
-				conclusions2.add( new Negation(new Proposition("fever*")));
+				conclusions2.add( new Negation(feverCopy));
 				var counterfactualStatement2 = new CounterfactualStatement(conclusions2, interventions, premises);
 				
 				//Assert
@@ -72,7 +73,9 @@ class CounterfactualStatementTest {
 				var premises2 = new HashSet<PlFormula>();
 				premises2.add(new Conjunction(fever, shortOfBreath));
 				var counterfactualStatement3 = new CounterfactualStatement(conclusions1, interventions, premises2);
-				Assertions.assertTrue(counterfactualStatement3.holds(causalKnowledgeBase));
+				var counterfactualStatement4 = new CounterfactualStatement(conclusions2, interventions, premises2);
+				Assertions.assertFalse(counterfactualStatement3.holds(causalKnowledgeBase));
+				Assertions.assertFalse(counterfactualStatement4.holds(causalKnowledgeBase));
 	}
 	
 	private CausalModel setupModel(Proposition covid, Proposition corona, Proposition shortOfBreath, Proposition atRisk, Proposition influenza, Proposition fever) {

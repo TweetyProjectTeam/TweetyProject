@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.causal.syntax;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
@@ -36,7 +37,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  * @version TweetyProject 1.23
  *
  */
-public class CounterfactualStatement extends CausalStatement {
+public class CounterfactualStatement extends InterventionalStatement {
 
 	/**
 	 * Creates a new counterfactual causal statement.
@@ -60,7 +61,24 @@ public class CounterfactualStatement extends CausalStatement {
 		return true;
 	}
 	
+	@Override
+	public void VisualizeHolds(CausalKnowledgeBase cKbase)
+	{
+		var causalKnowledgeBaseCopy = getIntervenedTwinModel(cKbase);
+		causalKnowledgeBaseCopy.addAll(this.getPremises());
+		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
+		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000,  
+				"Premises: " + this.getPremises().toString() 
+				+ " \n Interventions: " + this.getInterventions().toString()
+				+ " \n Conclusions: " + this.getConclusions().toString());
+	}
+	
 	private boolean checkCounterFactualStatement(CausalKnowledgeBase cKbase, PlFormula conclusion) {
+		var newKnowledgeBase = getIntervenedTwinModel(cKbase);
+		return newKnowledgeBase.entails(this.getPremises(), conclusion);
+	}
+
+	protected CausalKnowledgeBase getIntervenedTwinModel(CausalKnowledgeBase cKbase) {
 		var twin = cKbase.getCausalModel().getTwinModel();
 		var interventions = this.getInterventions();
 		for(var expAtom : interventions.keySet()) {
@@ -68,7 +86,7 @@ public class CounterfactualStatement extends CausalStatement {
 		}
 		
 		var newKnowledgeBase = new CausalKnowledgeBase(twin, cKbase.getAssumptions());
-		newKnowledgeBase.addAll(cKbase.getBeliefs());
-		return newKnowledgeBase.entails(this.getPremises(), conclusion);
+		newKnowledgeBase.addAll(cKbase.getBeliefsWithoutStructuralEquations());
+		return newKnowledgeBase;
 	}
 }

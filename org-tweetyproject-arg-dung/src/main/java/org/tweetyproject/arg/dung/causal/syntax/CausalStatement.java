@@ -18,11 +18,10 @@
 */
 package org.tweetyproject.arg.dung.causal.syntax;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
+import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
-import org.tweetyproject.logics.pl.syntax.Proposition;
 
 /**
  * This class is describes a causal statement, such as an interventional or counterfactual statement.
@@ -33,31 +32,23 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  */
 public abstract class CausalStatement {
 	private HashSet<PlFormula> conclusions;
-	private HashMap<Proposition, Boolean> interventions;
+	
 	private HashSet<PlFormula> premises;
-	
-	
-	
+
 	/**
 	 * Creates a new causal statement.
 	 * @param conclusions Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
 	 * @param interventions Maps explainable atoms to boolean values.
 	 * @param premises PlFormulas which have to be true, so that the conclusions can be drawn.
 	 */
-	public CausalStatement(HashSet<PlFormula> conclusions, HashMap<Proposition, Boolean> interventions,
-			HashSet<PlFormula> premises) {
+	public CausalStatement(HashSet<PlFormula> conclusions, HashSet<PlFormula> premises) {
 		super();
 		this.conclusions = conclusions;
-		this.interventions = interventions;
 		this.premises = premises;
 	}
 
 	public HashSet<PlFormula> getConclusions(){
 		return new HashSet<PlFormula>(this.conclusions);
-	}
-	
-	public HashMap<Proposition, Boolean> getInterventions(){
-		return new HashMap<Proposition, Boolean>(this.interventions);
 	}
 	
 	public HashSet<PlFormula> getPremises(){
@@ -69,5 +60,25 @@ public abstract class CausalStatement {
 	 * @param cKbase Causal knowledge base
 	 * @return TRUE iff this instance holds in the specified knowledge base.
 	 */
-	public abstract boolean holds(CausalKnowledgeBase cKbase);
+	public boolean holds(CausalKnowledgeBase cKbase) {
+		for(var conclusion : this.getConclusions()) {
+			if(!checkStatement(cKbase, conclusion)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public void VisualizeHolds(CausalKnowledgeBase cKbase)
+	{
+		var causalKnowledgeBaseCopy = cKbase.clone();
+		causalKnowledgeBaseCopy.addAll(this.getPremises());
+		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
+		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000, "Premises: " + this.getPremises().toString() + " \n Conclusions: " + this.getConclusions().toString());
+	}
+	
+	private boolean checkStatement(CausalKnowledgeBase cKbase, PlFormula conclusion) {
+		return cKbase.entails(this.getPremises(), conclusion);
+	}
 }

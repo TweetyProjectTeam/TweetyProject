@@ -21,6 +21,7 @@ package org.tweetyproject.arg.dung.causal.syntax;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.tweetyproject.arg.dung.util.DungTheoryPlotter;
 import org.tweetyproject.logics.pl.syntax.PlFormula;
 import org.tweetyproject.logics.pl.syntax.Proposition;
 
@@ -38,6 +39,7 @@ import org.tweetyproject.logics.pl.syntax.Proposition;
  */
 public class InterventionalStatement extends CausalStatement{
 
+	private HashMap<Proposition, Boolean> interventions;
 	/**
 	 * Creates a new interventional causal statement.
 	 * @param conclusions Conclusions, which would be true, iff this statement is true and the interventions were realized and the premises are met.
@@ -46,7 +48,13 @@ public class InterventionalStatement extends CausalStatement{
 	 */
 	public InterventionalStatement(HashSet<PlFormula> conclusions, HashMap<Proposition, Boolean> interventions,
 			HashSet<PlFormula> premises) {
-		super(conclusions, interventions, premises);
+		super(conclusions, premises);
+		
+		this.interventions = interventions;
+	}
+	
+	public HashMap<Proposition, Boolean> getInterventions(){
+		return new HashMap<Proposition, Boolean>(this.interventions);
 	}
 
 	@Override
@@ -60,15 +68,32 @@ public class InterventionalStatement extends CausalStatement{
 		return true;
 	}
 	
+	@Override
+	public void VisualizeHolds(CausalKnowledgeBase cKbase)
+	{
+		var causalKnowledgeBaseCopy = getIntervenedCopy(cKbase);
+		causalKnowledgeBaseCopy.addAll(this.getPremises());
+		var inducedAF = new InducedTheory(causalKnowledgeBaseCopy);
+		DungTheoryPlotter.plotFramework(inducedAF, 3000, 2000,  
+				"Premises: " + this.getPremises().toString() 
+				+ " \n Interventions: " + this.getInterventions().toString()
+				+ " \n Conclusions: " + this.getConclusions().toString());
+	}
+	
 	private boolean checkInterventionalStatement(CausalKnowledgeBase cKbase, PlFormula conclusion) {
+		var newKnowledgeBase = getIntervenedCopy(cKbase);
+		return newKnowledgeBase.entails(this.getPremises(), conclusion);
+	}
+
+	protected CausalKnowledgeBase getIntervenedCopy(CausalKnowledgeBase cKbase) {
 		var interventions = this.getInterventions();
-		var causalModel = new CausalModel(cKbase.getCausalModel().getStructuralEquations());
+		var causalModel = cKbase.getCausalModel().clone();
 		for(var expAtom : interventions.keySet()) {
 			causalModel.intervene(expAtom, interventions.get(expAtom).booleanValue());
 		}
 		
 		var newKnowledgeBase = new CausalKnowledgeBase(causalModel, cKbase.getAssumptions());
-		newKnowledgeBase.addAll(cKbase.getBeliefs());
-		return newKnowledgeBase.entails(this.getPremises(), conclusion);
+		newKnowledgeBase.addAll(cKbase.getBeliefsWithoutStructuralEquations());
+		return newKnowledgeBase;
 	}
 }

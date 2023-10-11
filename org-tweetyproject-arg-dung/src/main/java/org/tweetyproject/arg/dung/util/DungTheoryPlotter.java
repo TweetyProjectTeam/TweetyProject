@@ -56,7 +56,8 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 	private final String STYLE_NODE_ROUNDED = "=true;";
 	private final int VERTEX_WIDTH = 30;
 	private final int VERTEX_HEIGHT = 30;
-	private final int VERTEX_SPACING = 50;
+	private final int VERTEX_SPACING = 100;
+	private final int RANK_SPACING = 150;
 	private final int FONTSIZE = 14;
 	
 	/**
@@ -114,6 +115,12 @@ public class DungTheoryPlotter extends GraphPlotter<Argument, Edge<Argument>> {
 	@Override
 	protected int getVertexSpacing() {
 		return VERTEX_SPACING;
+	}
+	
+	@Override
+	protected void setVertexSpacing() {
+		this.layout.setIntraCellSpacing(VERTEX_SPACING);
+		this.layout.setInterRankCellSpacing(RANK_SPACING);
 	}
 	
 	/**

@@ -85,6 +85,10 @@ public class CausalKnowledgeBase extends KnowledgeBase {
 		output.addAll(this.causalModel.getStructuralEquations());
 		return output;
 	}
+	
+	public HashSet<PlFormula> getBeliefsWithoutStructuralEquations(){
+		return new HashSet<PlFormula>(this.formulas);
+	}
 
 	/**
 	 * Returns all 1-atom-conclusions of this instance if the specified set of formulas is
@@ -98,10 +102,22 @@ public class CausalKnowledgeBase extends KnowledgeBase {
 			for(var atom : formula.getAtoms()) {
 				if(this.entails(premises, atom)) {
 					conclusions.add(atom);
+				}else{
+					var negAtom = new Negation(atom);
+					if(this.entails(premises, negAtom)){
+						conclusions.add(negAtom);
+					}
 				}
 			}
 		}
 
 		return conclusions;
+	}
+	
+	@Override
+	public CausalKnowledgeBase clone() {
+		var output = new CausalKnowledgeBase(this.causalModel, this.getAssumptions());
+		output.addAll(this.formulas);
+		return output;
 	}
 }

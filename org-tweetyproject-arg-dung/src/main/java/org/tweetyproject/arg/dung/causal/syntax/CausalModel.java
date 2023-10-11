@@ -386,6 +386,11 @@ public class CausalModel extends PlBeliefSet {
 			this.formulas.add(new Equivalence(v, new Negation(new Tautology())));
 		}
 	}
+	
+	@Override
+	public CausalModel clone() {
+		return new CausalModel(this.getStructuralEquations());
+	}
 
 	private void commonConstructor(Set<Proposition> backGroundAtoms, Set<Proposition> explainableAtoms, Set<Equivalence> structuralEquations) {
 		CausalModel.checkCorrectForm(backGroundAtoms, explainableAtoms, structuralEquations);

@@ -65,7 +65,7 @@ public class Plotter {
 	 * Show the frame after adding some plots
 	 */
 	public void show() {
-		JScrollPane scrollPane = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollPane = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		this.frame.add(scrollPane);
         this.frame.setVisible(true);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
