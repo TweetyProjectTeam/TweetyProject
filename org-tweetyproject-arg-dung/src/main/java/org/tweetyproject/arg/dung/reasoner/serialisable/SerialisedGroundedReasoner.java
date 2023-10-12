@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -30,7 +31,13 @@ import java.util.HashSet;
  * @author Lars Bengel
  */
 public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
-    /**
+    
+	public SerialisedGroundedReasoner() {
+		super();
+		setSemantic(Semantics.GR);
+	}
+
+	/**
      * select all unattacked inital singleton-sets
      * @param unattacked the set of unattacked initial sets
      * @param unchallenged the set of unchallenged initial sets
@@ -39,7 +46,11 @@ public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
      */
     @Override
     public Collection<Extension<DungTheory>> selectionFunction(Collection<Extension<DungTheory>> unattacked, Collection<Extension<DungTheory>> unchallenged, Collection<Extension<DungTheory>> challenged) {
-        Collection<Extension<DungTheory>> result = new HashSet<>();
+        return select(unattacked);
+    }
+
+	public static Collection<Extension<DungTheory>> select(Collection<Extension<DungTheory>> unattacked) {
+		Collection<Extension<DungTheory>> result = new HashSet<>();
 
         for (Extension<DungTheory> ext: unattacked) {
             if (ext.size() == 1) {
@@ -47,5 +58,5 @@ public class SerialisedGroundedReasoner extends SerialisedCompleteReasoner {
             }
         }
         return result;
-    }
+	}
 }

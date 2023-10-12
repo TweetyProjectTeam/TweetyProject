@@ -42,32 +42,49 @@ public class DungTheoryGeneratorExample {
 	 */
 	public static void main(String[] args) throws IOException{
 		ApxWriter writer = new ApxWriter();
-		String path = "/home/anna/";
+		String path = System.getProperty("user.home") 
+				+ File.separator + "Documents" 
+				+ File.separator + "TweetyProject"
+				+ File.separator + "DungTheoryGeneratorExample";
+		createDir(path);
 		
 		EnumeratingDungTheoryGenerator gen1 = new EnumeratingDungTheoryGenerator();
+		String pathSubFolder = path + File.separator + "Enumerating";
+		createDir(pathSubFolder);
 		for (int i = 0; i < 20; i++) {
-			File f = new File(path + "/enumerating" + i + ".apx");
+			File f = new File(pathSubFolder + File.separator +  "enumerating" + i + ".apx");
 			writer.write(gen1.next(), f); 
 		}
 		
 		DungTheoryGenerationParameters params = new DungTheoryGenerationParameters();
 		DungTheoryGenerator gen2 = new DefaultDungTheoryGenerator(params);
+		pathSubFolder = path + File.separator + "Default";
+		createDir(pathSubFolder);
 		for (int i = 0; i < 10; i++) {
-			File f = new File(path + "/default" + i + ".apx");
+			File f = new File(pathSubFolder + File.separator +  "default" + i + ".apx");
 			writer.write(gen2.next(), f); 
 		}
 		
 		DungTheoryGenerator gen3 = new IsoSafeEnumeratingDungTheoryGenerator();
+		pathSubFolder = path + File.separator + "IsoSafeEnumerating";
+		createDir(pathSubFolder);
 		for (int i = 0; i < 10; i++) {
-			File f = new File(path + "/isoSafeEnumerating" + i + ".apx");
+			File f = new File(pathSubFolder + File.separator +  "isoSafeEnumerating" + i + ".apx");
 			writer.write(gen3.next(), f); 
 		}
 		
 		DungTheoryGenerator gen4 = new PodlaszewskiCaminadaDungTheoryGenerator(2);
+		pathSubFolder = path + File.separator + "Podlaszewski";
+		createDir(pathSubFolder);
 		for (int i = 0; i < 10; i++) {
-			File f = new File(path + "/podlaszewski" + i + ".apx");
+			File f = new File(pathSubFolder + File.separator +  "podlaszewski" + i + ".apx");
 			writer.write(gen4.next(), f); 
 		}
 
+	}
+	
+	private static void createDir(String path) {
+		File customDir = new File(path);
+		customDir.mkdirs();
 	}
 }

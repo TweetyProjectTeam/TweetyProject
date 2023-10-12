@@ -18,12 +18,14 @@
  */
 package org.tweetyproject.commons;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  * A class for managing and displaying several plots in a single frame
@@ -34,7 +36,7 @@ public class Plotter {
 	/**
 	 * The frame where the model is drawn
 	 */
-	private JFrame frame;
+	protected JFrame frame;
 	/**
 	 * The main panel in the frame
 	 */
@@ -53,7 +55,8 @@ public class Plotter {
 	 */
 	public void createFrame(int frameWidth, int frameHeight) {
 		this.frame = new JFrame();
-		this.mainPanel = new JPanel();
+		this.mainPanel = new JPanel(new FlowLayout());
+		this.mainPanel.setPreferredSize(new Dimension(frameWidth, frameHeight));
         this.frame.setSize(frameWidth, frameHeight);	
         
 	}
@@ -62,7 +65,8 @@ public class Plotter {
 	 * Show the frame after adding some plots
 	 */
 	public void show() {
-		this.frame.add(mainPanel);
+		JScrollPane scrollPane = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		this.frame.add(scrollPane);
         this.frame.setVisible(true);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}

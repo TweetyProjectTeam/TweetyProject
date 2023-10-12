@@ -20,8 +20,8 @@ package org.tweetyproject.arg.dung.reasoner.serialisable;
 
 import org.tweetyproject.arg.dung.reasoner.SimpleInitialReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.arg.dung.semantics.Semantics;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.arg.dung.syntax.TransitionState;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,7 +34,12 @@ import java.util.Map;
  * @author Lars Bengel
  */
 public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasoner {
-    /**
+    	
+	public SerialisedUnchallengedReasoner() {
+		super(Semantics.UC);
+	}
+
+	/**
      * a selection function that simply returns all unattacked and unchallenged sets
      * @param unattacked the set of unattacked initial sets
      * @param unchallenged the set of unchallenged initial sets
@@ -50,11 +55,12 @@ public class SerialisedUnchallengedReasoner extends SerialisableExtensionReasone
 
     /**
      * terminate if there is no unattacked or unchallenged initial set remaining
-     * @param state the state of the transition system
+     * @param reducedFramework The current framework of the transition system
+	 * @param constructedExtension The extension constructed so far.
      * @return true, if there are no more unattacked or unchallenged inital sets
      */
-    public boolean terminationFunction(TransitionState state) {
-        Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(state.getTheory());
+    public boolean terminationFunction(DungTheory reducedFramework, Extension<DungTheory> constructedExtension) {
+        Map<String, Collection<Extension<DungTheory>>> initialSets = SimpleInitialReasoner.partitionInitialSets(reducedFramework);
         return initialSets.get("unattacked").isEmpty() && initialSets.get("unchallenged").isEmpty();
     }
 }

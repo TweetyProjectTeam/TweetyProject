@@ -18,6 +18,8 @@
  */
  package org.tweetyproject.arg.dung.semantics;
 
+import java.util.NoSuchElementException;
+
 /**
  * This enum lists all semantics.
  * @author Matthias Thimm
@@ -52,7 +54,11 @@ public enum Semantics {
 	/** SCF2 */
 	SCF2 ("SCF2 semantics", "SCF2"),
 	/** N */
-	N ("Naive semantics", "N"),
+	N ("naive semantics", "N"),
+	/** UC */
+	UC("unchallenged semantics", "UC"),
+	/** SA */
+	SA("strongly admissible semantics", "SA"),
 	/** diverse */
 	diverse ("diverse semantics", "div");
 	/**
@@ -88,7 +94,11 @@ public enum Semantics {
 		/** SCF2_SEMANTICS */
 		SCF2_SEMANTICS = SCF2,
 		/** NAIVE_SEMANTICS */
-		NAIVE_SEMANTICS = N;
+		NAIVE_SEMANTICS = N,
+		/** UNCHALLENGED_SEMANTICS */
+		UNCHALLENGED_SEMANTICS = UC,
+		/** STRONGLY_ADMISSBLE_SEMANTICS */
+		STRONGLY_ADMISSIBLE_SEMANTICS = SA;
 		
 	/** The description of the semantics. */
 	private String description;
@@ -119,5 +129,19 @@ public enum Semantics {
 	 */
 	public String abbreviation(){
 		return this.abbreviation;
+	}
+	
+	/**
+	 * Returns the semantics, which abbreviation is described by the string.
+	 * @param abbreviation Abbreviation of the semantics to return.
+	 * @return Semantics, with the abbreviation as specified in the parameter.
+	 */
+	public static Semantics getSemantics(String abbreviation) {
+		for (Semantics element : Semantics.values()) {
+			if(element.abbreviation.equals(abbreviation)) {
+				return element;
+			}
+		}
+		throw new NoSuchElementException();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- *  This file is part of "TweetyProject", a collection of Java libraries for
+! *  This file is part of "TweetyProject", a collection of Java libraries for
  *  logical aspects of artificial intelligence and knowledge representation.
  *
  *  TweetyProject is free software: you can redistribute it and/or modify

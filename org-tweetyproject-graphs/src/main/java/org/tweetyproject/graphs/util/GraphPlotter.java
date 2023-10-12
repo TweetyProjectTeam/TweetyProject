@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.tweetyproject.commons.Plotter;
 import org.tweetyproject.graphs.Edge;
@@ -44,7 +45,7 @@ import com.mxgraph.view.mxGraph;
  * @param <S> the edge class of the grpah which is to plot
  */
 public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
-	
+
 	/**
 	 * the ground plotter which may accommodate multiple plots
 	 */
@@ -52,7 +53,7 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	/**
 	 * the layout of the plot
 	 */
-	private mxHierarchicalLayout layout;
+	protected mxHierarchicalLayout layout;
 	/**
 	 * a container to contain the plot
 	 */
@@ -64,7 +65,7 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	/**
 	 * the nodes to be drawn
 	 */
-	private Collection<T> nodes;
+	protected Collection<T> nodes;
 	/**
 	 * the edges to be drawn between the nodes
 	 */
@@ -88,7 +89,7 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	 * the font size of labels in the plot
 	 */
 	protected int fontSize;
-	
+
 	/**
 	 * Create a new instance
 	 * @param plotter the ground plotter
@@ -97,61 +98,15 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	@SuppressWarnings("unchecked")
 	public GraphPlotter(Plotter plotter, Graph<T> graph) {
 		this.plotter = plotter;
-		nodes = graph.getNodes();
-		edges = (Collection<S>) graph.getEdges();
-		vertexWidth = getVertexWidth();
-		vertexHeight = getVertexHeight();
-		fontSize = getFontSize();
-		vertexSpacing = getVertexSpacing();
+		this.nodes = graph.getNodes();
+		this.edges = (Collection<S>) graph.getEdges();
+		this.vertexWidth = this.getVertexWidth();
+		this.vertexHeight = this.getVertexHeight();
+		this.fontSize = this.getFontSize();
+		this.vertexSpacing = this.getVertexSpacing();
 	}
 
 
-	/**
-	 * Parse the elements of the graph to visual elements and align them
-	 * in a hierarchical (top-to-bottom) layout
-	 */
-	public void createGraph() {
-		
-		this.panel = new JPanel();
-		int width = plotter.getFrame().getMaximumSize().width;
-		int height = plotter.getFrame().getMaximumSize().height;
-        panel.setSize(width, height);
-	    
-        Object parent = graphPlot.getDefaultParent();
-        graphPlot.getModel().beginUpdate();
-
-        Map<String, Object> vertexObjects = new HashMap<>();
-        Map<Node, String> objectLabels = new HashMap<>();
-        this.nodes.forEach(node -> {
-        	String vertexName = getPrettyName(node);
-        	String style = getStyle(node);
-            Object vertexObject = graphPlot.insertVertex(parent, null, vertexName, 0, 0, vertexWidth, vertexHeight, style);
-            vertexObjects.put(vertexName, vertexObject);
-            objectLabels.put(node, vertexName);
-        });
-        edges.forEach(edge -> {
-        	Node nodeA = ((Edge) edge).getNodeA();
-        	Node nodeB = ((Edge) edge).getNodeB();
-        	String vertexNameA = objectLabels.get(nodeA);
-        	String vertexNameB = objectLabels.get(nodeB);
-        	Object vertexObjectA = vertexObjects.get(vertexNameA);
-        	Object vertexObjectB = vertexObjects.get(vertexNameB);
-        	String edgeLabel = getPrettyName(edge);
-        	graphPlot.insertEdge(parent, null, edgeLabel, vertexObjectA, vertexObjectB);
-        });
-        layout = new mxHierarchicalLayout(graphPlot);
-        layout.setIntraCellSpacing(vertexSpacing);
-        layout.execute(graphPlot.getDefaultParent());
-        graphPlot.getModel().endUpdate();
-        
-        final mxGraphComponent graphComponent = new mxGraphComponent(graphPlot);
-        int hgap = plotter.getHGap();
-        int vgap = plotter.getVGap();
-        panel.setLayout( new FlowLayout(FlowLayout.LEFT, hgap, vgap) );
-        panel.add(graphComponent);
-        plotter.add(panel);
-	}
-	
 	/**
 	 * Add some description to the panel
 	 * @param labels some labels that will be aligned vertically
@@ -164,19 +119,54 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 		labelHTML += "</html>";
 		this.panel.add( new JLabel(labelHTML), FlowLayout.CENTER );
 	}
-	
+
 	/**
-	 * Retrieve a pretty name for a node that will be displayed at the vertex
-	 * @param node the node
-	 * @return a pretty name
+	 * Parse the elements of the graph to visual elements and align them
+	 * in a hierarchical (top-to-bottom) layout
 	 */
-	protected abstract String getPrettyName(T node);
+	public void createGraph() {
+		this.createGraph(true);
+	}
+
+	/**
+	 * Parse the elements of the graph to visual elements and align them
+	 * in a hierarchical layout in a specified orientation
+	 * @param isVertical If TRUE layout of graph is "top-to-bottom", if FALSE, layout is "left-to-right"
+	 */
+	public void createGraph(boolean isVertical) {
+		this.buildPanel();
+		Object parent = this.getParentOfGraph();
+		Map<String, Object> vertexObjects = new HashMap<>();
+		Map<Node, String> objectLabels = new HashMap<>();
+		this.insertNodesInGraph(parent, vertexObjects, objectLabels);
+		this.insertEdgesInGraph(parent, vertexObjects, objectLabels);
+		this.buildLayout(isVertical);
+		this.buildGraph();
+	}
+
+	/**
+	 * Get the font size of labels in the plot
+	 * @return the font size
+	 */
+	protected abstract int getFontSize();
+
+
 	/**
 	 * Retrieve a pretty name for an edge that will be displayed at the vertex
 	 * @param edge the edge
 	 * @return a pretty name
 	 */
 	protected abstract String getPrettyName(S edge);
+
+
+	/**
+	 * Retrieve a pretty name for a node that will be displayed at the vertex
+	 * @param node the node
+	 * @return a pretty name
+	 */
+	protected abstract String getPrettyName(T node);
+
+
 	/**
 	 * Retrieve a string that describes the style of the vertex corresponding to the node
 	 * according to the syntax of MX
@@ -186,24 +176,94 @@ public abstract class GraphPlotter<T extends Node, S extends GeneralEdge<T>>  {
 	protected abstract String getStyle(T node);
 
 	/**
-	 * Get the width of a vertex
-	 * @return the width
-	 */
-	protected abstract double getVertexWidth();
-	/**
 	 * Get the height of a vertex
 	 * @return the height
 	 */
 	protected abstract double getVertexHeight();
-	/**
-	 * Get the font size of labels in the plot
-	 * @return the font size
-	 */
-	protected abstract int getFontSize(); 
+
 	/**
 	 * Get the horizontal spacing between vertices
 	 * @return the horizontal spacing
 	 */
 	protected abstract int getVertexSpacing();
-	
+
+	/**
+	 * Get the width of a vertex
+	 * @return the width
+	 */
+	protected abstract double getVertexWidth();
+
+	private void buildGraph() {
+		final mxGraphComponent graphComponent = new mxGraphComponent(this.graphPlot);
+		int hgap = this.plotter.getHGap();
+		int vgap = this.plotter.getVGap();
+		this.panel.setLayout( new FlowLayout(FlowLayout.LEFT, hgap, vgap) );
+		this.panel.add(graphComponent);
+		this.plotter.add(this.panel);
+	}
+	private void buildLayout(boolean isVertical) {
+		if(isVertical) {
+			this.layout = new mxHierarchicalLayout(this.graphPlot, SwingConstants.NORTH);
+		}
+		else {
+			this.layout = new mxHierarchicalLayout(this.graphPlot, SwingConstants.WEST);
+		}
+
+		setVertexSpacing();
+		this.layout.execute(this.graphPlot.getDefaultParent());
+		this.graphPlot.getModel().endUpdate();
+	}
+
+
+	protected void setVertexSpacing() {
+		this.layout.setIntraCellSpacing(this.vertexSpacing);
+	}
+
+	private void buildPanel() {
+		this.panel = new JPanel();
+		int width = this.plotter.getFrame().getMaximumSize().width;
+		int height = this.plotter.getFrame().getMaximumSize().height;
+		this.panel.setSize(width, height);
+	}
+
+
+	private Object getParentOfGraph() {
+		Object parent = this.graphPlot.getDefaultParent();
+		this.graphPlot.getModel().beginUpdate();
+		return parent;
+	}
+
+
+	private void insertEdgesInGraph(Object parent, Map<String, Object> vertexObjects,
+			Map<Node, String> objectLabels) {
+		this.edges.forEach(edge -> {
+			Node nodeA = ((Edge) edge).getNodeA();
+			Node nodeB = ((Edge) edge).getNodeB();
+			String vertexNameA = objectLabels.get(nodeA);
+			String vertexNameB = objectLabels.get(nodeB);
+			Object vertexObjectA = vertexObjects.get(vertexNameA);
+			Object vertexObjectB = vertexObjects.get(vertexNameB);
+			String edgeLabel = this.getPrettyName(edge);
+			this.graphPlot.insertEdge(parent, null, edgeLabel, vertexObjectA, vertexObjectB);
+		});
+	}
+
+
+	private void insertNode(Map<String, Object> vertexObjects, Map<Node, String> objectLabels, T node,
+			String vertexName, Object vertexObject) {
+		vertexObjects.put(vertexName, vertexObject);
+		objectLabels.put(node, vertexName);
+	}
+
+
+	private void insertNodesInGraph(Object parent, Map<String, Object> vertexObjects,
+			Map<Node, String> objectLabels) {
+		this.nodes.forEach(node -> {
+			String vertexName = this.getPrettyName(node);
+			String style = this.getStyle(node);
+			Object vertexObject = this.graphPlot.insertVertex(parent, null, vertexName, 0, 0, this.vertexWidth, this.vertexHeight, style);
+			this.insertNode(vertexObjects, objectLabels, node, vertexName, vertexObject);
+		});
+	}
+
 }
