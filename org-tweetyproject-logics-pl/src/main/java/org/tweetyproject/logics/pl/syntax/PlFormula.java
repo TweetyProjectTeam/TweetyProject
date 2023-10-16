@@ -180,15 +180,20 @@ public abstract class PlFormula implements ClassicalFormula {
 			Set<Set<PlFormula>> permutations = new SetTools<PlFormula>().permutations(disjunctions);
 			Disjunction dnf = new Disjunction();
 			for (Set<PlFormula> elems : permutations) {
-				Conjunction celems = (Conjunction) new Conjunction(elems).collapseAssociativeFormulas();
+				PlFormula celems = new Conjunction(elems).collapseAssociativeFormulas();
 				boolean inconsistentConjunct = false;
-				for (PlFormula e1 : celems) {
-					for (PlFormula e2 : celems) {
+				if(celems instanceof Conjunction)
+				for (PlFormula e1 : (Conjunction)celems) {
+					for (PlFormula e2 :  (Conjunction)celems) {
 						if (e1.equals(e2.complement())) {
 							inconsistentConjunct = true;
 							break;
 						}
 					} 
+				}else {
+					Set<PlFormula> set = new HashSet<>();
+					set.add(celems);
+					celems = new Conjunction(set);					
 				}
 				if (inconsistentConjunct)
 					continue;
