@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -153,18 +155,27 @@ public class QdimacsWriter {
 		}
 		
 		// Collect clauses with standard dimacs converter
-		String dimacs_clauses = DimacsSatSolver.convertToDimacs(simplified_cnf, mappings, "", 0);
-		int first_line_end = dimacs_clauses.indexOf("\n");
-		String preamble = dimacs_clauses.substring(0, first_line_end) + " 0\n";
-		if (DISABLE_PREAMBLE_ZERO)
-			preamble = dimacs_clauses.substring(0, first_line_end) + "\n";
-		String clauses = dimacs_clauses.substring(first_line_end + 1);
-
-		writer.write(preamble);
+		List<String> dimacs_clauses = DimacsSatSolver.convertToDimacs(simplified_cnf, mappings, new LinkedList<String>());
+		String preamble = dimacs_clauses.get(0);
+		if (!DISABLE_PREAMBLE_ZERO)
+			preamble += " 0";
+		
+		writer.write(preamble + "\n");
 		writer.write(quantifiers);
-		writer.write(clauses);
+		
+		boolean first = true;
+		for(String s: dimacs_clauses)
+			if(first)
+				first = false;
+			else writer.write(s + "\n");
 
-		return preamble + quantifiers.strip() + clauses.strip();
+		String result =preamble + quantifiers.strip();
+		first = true;
+		for(String s: dimacs_clauses)
+			if(first)
+				first = false;
+			else result += s + "\n";
+		return result;
 	}
 
 	/**

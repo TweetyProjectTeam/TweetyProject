@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.tweetyproject.commons.Interpretation;
@@ -66,10 +68,10 @@ public abstract class DimacsSatSolver extends SatSolver{
 	 * Dimacs representation. 
 	 * 
 	 * @param formulas a collection of formulas
-	 * @return a string in Dimacs CNF.
+	 * @return a list of strings in Dimacs CNF.
 	 */
-	public static String convertToDimacs(Collection<PlFormula> formulas) {
-		return DimacsSatSolver.convertToDimacs(formulas, DimacsSatSolver.getDefaultIndices(formulas).getFirst(),"",0);
+	public static List<String> convertToDimacs(Collection<PlFormula> formulas) {
+		return DimacsSatSolver.convertToDimacs(formulas, DimacsSatSolver.getDefaultIndices(formulas).getFirst(),new LinkedList<String>());
 	}
 	
 
@@ -79,11 +81,10 @@ public abstract class DimacsSatSolver extends SatSolver{
 	 * @param prop_index a map mapping propositions (=signature) to the indices that are
 	 *                 used for writing the clauses.
 	 * @param additional_clauses additional clauses to be considered
-	 * @param num_additional_clauses number of additional clauses
-	 * @return a string in Dimacs CNF.
+	 * @return  a list of strings in Dimacs CNF.
 	 */
-	public static String convertToDimacs(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, String additional_clauses, int num_additional_clauses) {
-		String s = "";
+	public static List<String> convertToDimacs(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, List<String> additional_clauses) {
+		List<String> result = new LinkedList<>();		
 		int num_clauses = 0;
 		for (PlFormula p : formulas) {
 			Conjunction conj;
@@ -116,21 +117,32 @@ public abstract class DimacsSatSolver extends SatSolver{
 								"This should not happen: formula is supposed to be in CNF but another formula than a literal has been encountered. The type of the formula is " + p2.getClass());
 				}
 				if (stemp != "")
-					s += stemp + "0\n";
+					result.add(stemp + "0");
 				else  {
-					if (foundContradiction) 
+					if (foundContradiction) { 
 						//case: whole clause is a contradiction, therefore the entire kb is false
-						return  "p cnf 1 2\n1 0\n-1 0\n";
-					else
+						List<String> s = new LinkedList<>();
+						s.add("p cnf 1 2");
+						s.add("1 0");
+						s.add("-1 0");
+						return s;
+					}else
 						//case: whole clause is a tautology, remove it from kb
 						num_clauses--;		
 				}
 			}
 		}
-		if (s == "") 
+		if (result.isEmpty() && num_clauses == 0) { 
 			//case: entire kb is a tautology
-			return "p cnf 0 0\n";
-		return "p cnf " + prop_index.keySet().size() + " " + (num_clauses+num_additional_clauses) + "\n" + s + additional_clauses;
+			List<String> s = new LinkedList<>();
+			s.add("p cnf 0 0");			
+			return s;
+
+		}
+		result.add(0,"p cnf " + prop_index.keySet().size() + " " + (num_clauses+additional_clauses.size()));
+		result.addAll(additional_clauses);
+		// add additional clauses
+		return result;
 	}
 
 	/**
@@ -141,17 +153,17 @@ public abstract class DimacsSatSolver extends SatSolver{
 	 * @param prop_index a map mapping propositions (=signature) to the indices that are
 	 *                 used for writing the clauses.
 	 * @param additional_clauses additional clauses in text form to be added (already correctly formatted in CNF!)
-	 * @param num_additional_clauses the number of additional clauses to be added.
 	 * @return the file handler.
 	 * @throws IOException if something went wrong while creating a temporary file.
 	 */
-	protected static File createTmpDimacsFile(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, String additional_clauses, int num_additional_clauses)
+	protected static File createTmpDimacsFile(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, List<String> additional_clauses)
 			throws IOException {
-		String r = DimacsSatSolver.convertToDimacs(formulas, prop_index, additional_clauses, num_additional_clauses);
+		List<String> r = DimacsSatSolver.convertToDimacs(formulas, prop_index, additional_clauses);
 		File f = File.createTempFile("tweety-sat", ".cnf", DimacsSatSolver.tempFolder);
 		f.deleteOnExit();
 		PrintWriter writer = new PrintWriter(f, "UTF-8");
-		writer.print(r);
+		for(String s: r)
+			writer.println(s);
 		writer.close();
 		return f;
 	}
@@ -183,7 +195,7 @@ public abstract class DimacsSatSolver extends SatSolver{
 	 */
 	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas){
 		Pair<Map<Proposition,Integer>,Map<Integer,Proposition>> i = getDefaultIndices(formulas);
-		return this.getWitness(formulas, i.getFirst(), i.getSecond(),"",0);
+		return this.getWitness(formulas, i.getFirst(), i.getSecond(),new LinkedList<String>());
 	}
 	
 	/**
@@ -193,10 +205,9 @@ public abstract class DimacsSatSolver extends SatSolver{
 	 * @param prop_index mapping propositions to numbers used for representing the SAT instance
 	 * @param prop_inverted_index  inverted index of prop_index
 	 * @param additional_clauses additional clauses in text form to be added (already correctly formatted in CNF!)
-	 * @param num_additional_clauses the number of additional_clauses
 	 * @return some model of the formulas or null.
 	 */
-	public abstract Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, String additional_clauses, int num_additional_clauses);
+	public abstract Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, List<String> additional_clauses);
 	
 	/**
 	 * Checks whether the given set of formulas is satisfiable.
@@ -206,7 +217,7 @@ public abstract class DimacsSatSolver extends SatSolver{
 	 */
 	public boolean isSatisfiable(Collection<PlFormula> formulas) {
 		Pair<Map<Proposition,Integer>,Map<Integer,Proposition>> i = getDefaultIndices(formulas);
-		return this.isSatisfiable(formulas, i.getFirst(), "", 0);
+		return this.isSatisfiable(formulas, i.getFirst(), new LinkedList<String>());
 	}
 	
 	/**
@@ -216,10 +227,9 @@ public abstract class DimacsSatSolver extends SatSolver{
 	 * @param prop_index maps propositions to the number that shall be used to
 	 * 		represent it (a natural number > 0).
 	 * @param additional_clauses additional clauses in text form to be added (already correctly formatted in CNF!)
-	 * @param num_additional_clauses the number of additional_clauses
 	 * @return "true" if the set is consistent.
 	 */
-	public abstract boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, String additional_clauses, int num_additional_clauses);
+	public abstract boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, List<String> additional_clauses);
 
 	@Override
 	public abstract boolean isInstalled();

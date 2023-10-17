@@ -21,6 +21,7 @@ package org.tweetyproject.logics.pl.sat;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -70,10 +71,10 @@ public class CmdLineSatSolver extends DimacsSatSolver {
 	}
 
 	@Override
-	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, String additional_clauses, int num_additional_clauses) {
+	public Interpretation<PlBeliefSet, PlFormula> getWitness(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, Map<Integer,Proposition> prop_inverted_index, List<String> additional_clauses) {
 		try {			
 			// create temporary file in Dimacs CNF format.
-			File f = DimacsSatSolver.createTmpDimacsFile(formulas, prop_index, additional_clauses, num_additional_clauses);
+			File f = DimacsSatSolver.createTmpDimacsFile(formulas, prop_index, additional_clauses);
 			String output = NativeShell
 					.invokeExecutable(this.binaryLocation + " " + options + " " + f.getAbsolutePath());
 			f.delete();
@@ -104,10 +105,10 @@ public class CmdLineSatSolver extends DimacsSatSolver {
 	}
 
 	@Override
-	public boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, String additional_clauses, int num_additional_clauses) {
+	public boolean isSatisfiable(Collection<PlFormula> formulas, Map<Proposition,Integer> prop_index, List<String> additional_clauses) {
 		try {			
 			// create temporary file in Dimacs CNF format.
-			File f = DimacsSatSolver.createTmpDimacsFile(formulas, prop_index, additional_clauses, num_additional_clauses);
+			File f = DimacsSatSolver.createTmpDimacsFile(formulas, prop_index, additional_clauses);
 			String output = NativeShell
 					.invokeExecutable(this.binaryLocation + " " + options + " " + f.getAbsolutePath());
 			// delete file
