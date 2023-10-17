@@ -190,6 +190,58 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	}
 	
 	/**
+	 * Checks a specified extension, if it's strongly admissible or not.
+	 * @param ext Extension of this instance, which is to be checked if strongly admissible.
+	 * @return TRUE iff the specified extension {@code ext} is strongly admissible.
+	 * In other words all arguments in {@code ext} are strongly defended by {@code ext}, 
+	 * i.e. the argument is defended by some other argument in {@code ext}
+	 */
+	public boolean isStronglyAdmissable(Extension<DungTheory> ext) {
+		if(!this.isAdmissable(ext)) return false;
+		boolean isDefended = true;
+        for (Argument a: ext) {
+            if (!checkStrongyDefended(ext, a)) 
+            {
+            	isDefended = false;
+            	break;
+            }  
+        }
+        return isDefended;
+	}
+	
+	/**
+     * Checks whether a specified argument is strongly defended or not by a specified set of arguments
+     *
+     * @param admSet Set of arguments, which might defend the specified argument
+     * @param candidate Argument, which is to be examined
+     * @return TRUE iff the specified argument {@code candidate} is strongly defended by the set {@code admSet}
+     */
+	private boolean checkStrongyDefended(Extension<DungTheory> admSet,Argument candidate) {
+		Extension<DungTheory> extWithoutCandidate = new Extension<DungTheory>(admSet);
+		extWithoutCandidate.remove(candidate);
+		for (Argument attacker: this.getAttackers(candidate)) {
+		    if (!this.isAttacked(attacker, extWithoutCandidate)) {
+		        return false;
+		    }
+		    
+		    var defenders = this.getAttackers(attacker);
+		    boolean atLeastOneDefenderIsDefended = false;
+		    //[TERMINATION CONDITION]
+		    for (Argument defender : defenders) {
+		    	//[RECURSIVE CALL]
+				if(checkStrongyDefended(extWithoutCandidate, defender))
+				{
+					atLeastOneDefenderIsDefended = true;
+				}
+			}
+		    if(!atLeastOneDefenderIsDefended) {
+		    	return false;
+		    }
+		}
+		return true;
+	}
+	
+	/**
 	 * Depth-First-Search to find a cycle in the theory. Auxiliary method to determine if the theory is well-founded
 	 * @param i current node
 	 * @param arguments list of all nodes (arguments)
@@ -292,6 +344,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 	 * @param ext an extension, ie. a set of arguments
 	 * @return true if some argument of <code>ext</code> attacks argument.
 	 */
+	@SuppressWarnings("rawtypes")
 	public boolean isAttacked(Argument argument, Extension<? extends ArgumentationFramework> ext){
 		if(!this.parents.containsKey(argument))
 			return false;

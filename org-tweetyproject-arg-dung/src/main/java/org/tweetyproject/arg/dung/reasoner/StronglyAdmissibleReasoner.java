@@ -21,7 +21,6 @@ package org.tweetyproject.arg.dung.reasoner;
 
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.semantics.Semantics;
-import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 import java.util.Collection;
@@ -41,52 +40,12 @@ public class StronglyAdmissibleReasoner extends AbstractExtensionReasoner {
         Collection<Extension<DungTheory>> admExts = AbstractExtensionReasoner.getSimpleReasonerForSemantics(Semantics.ADM).getModels(bbase);
         Collection<Extension<DungTheory>> exts = new HashSet<>();
         for (Extension<DungTheory> ext: admExts) {
-            boolean isDefended = true;
-            for (Argument a: ext) {
-                if (!checkStrongyDefended(bbase, ext, a)) 
-                {
-                	isDefended = false;
-                	break;
-                }  
-            }
-            if (isDefended)
-                exts.add(ext);
+            if (bbase.isStronglyAdmissable(ext)) {
+            	exts.add(ext);
+            } 
         }
         return exts;
     }
-
-    /**
-     * Checks wheter a specified argument is strongly defended or not by a specified set of arguments
-     * 
-     * @param bbase Abstract argumentation framework in which the specified set and argument are part of
-     * @param admSet Set of arguments, which might defend the specified argument
-     * @param candidate Argument, which is to be examined
-     * @return TRUE iff the specified argument {@link candidate} is strongly defended by the set {@link admSet}
-     */
-	private boolean checkStrongyDefended(DungTheory bbase, Extension<DungTheory> admSet,Argument candidate) {
-		Extension<DungTheory> extWithoutCandidate = new Extension<DungTheory>(admSet);
-		extWithoutCandidate.remove(candidate);
-		for (Argument attacker: ((DungTheory) bbase).getAttackers(candidate)) {
-		    if (!bbase.isAttacked(attacker, extWithoutCandidate)) {
-		        return false;
-		    }
-		    
-		    var defenders = bbase.getAttackers(attacker);
-		    boolean atLeastOneDefenderIsDefended = false;
-		    //[TERMINATION CONDITION]
-		    for (Argument defender : defenders) {
-		    	//[RECURSIVE CALL]
-				if(checkStrongyDefended(bbase, extWithoutCandidate, defender))
-				{
-					atLeastOneDefenderIsDefended = true;
-				}
-			}
-		    if(!atLeastOneDefenderIsDefended) {
-		    	return false;
-		    }
-		}
-		return true;
-	}
 
     @Override
     public Extension<DungTheory> getModel(DungTheory bbase) {
