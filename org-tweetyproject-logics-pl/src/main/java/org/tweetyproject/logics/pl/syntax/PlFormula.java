@@ -184,6 +184,10 @@ public abstract class PlFormula implements ClassicalFormula {
 				boolean inconsistentConjunct = false;
 				if(celems instanceof Conjunction)
 				for (PlFormula e1 : (Conjunction)celems) {
+					if(e1 instanceof Contradiction) {
+						inconsistentConjunct = true;
+						break;
+					}
 					for (PlFormula e2 :  (Conjunction)celems) {
 						if (e1.equals(e2.complement())) {
 							inconsistentConjunct = true;
