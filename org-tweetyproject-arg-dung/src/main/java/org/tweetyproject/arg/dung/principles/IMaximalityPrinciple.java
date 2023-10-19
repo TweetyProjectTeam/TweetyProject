@@ -55,11 +55,11 @@ public class IMaximalityPrinciple extends Principle{
 
         for (Extension<DungTheory> ext1: exts) {
             for (Extension<DungTheory> ext2: exts) {
-                // if ext2 is a subset of ext1 and ext1 != ext2, then the principle is violated
+                // if ext1 is a subset of ext2 and ext1 != ext2, then the principle is violated
                 if (ext1.equals(ext2)) {
                     continue;
                 }
-                if (ext1.containsAll(ext2)) {
+                if (ext2.containsAll(ext1)) {
                     return false;
                 }
             }
