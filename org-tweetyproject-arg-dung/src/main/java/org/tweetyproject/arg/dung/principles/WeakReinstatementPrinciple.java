@@ -30,7 +30,7 @@ import java.util.Collection;
  * Weak Reinstatement Principle
  * A semantics satisfies weak reinstatement if for all extensions E it holds that:
  * if E strongly defends an argument a, then a is in E
- * An argument a is strongly defended by E iff some argument in E \ {a} defends a
+ * An argument a is strongly defended by E (denoted as sd(a,E)) iff ∀b ∈ A : bRa =⇒ ∃c ∈ E \ {a} : cRb and sd(c,E \ {a})
  *
  * see: Baroni, P., and Giacomin, M. (2007). On principle-based evaluation of extension-based argumentation semantics.
  *
@@ -57,14 +57,7 @@ public class WeakReinstatementPrinciple extends Principle {
             for (Argument a: theory) {
                 if (ext.contains(a))
                     continue;
-                boolean stronglyDefended = true;
-                for (Argument b: theory.getAttackers(a)) {
-                    if (!theory.isAttacked(b, ext)) {
-                        stronglyDefended = false;
-                        break;
-                    }
-                }
-                if (stronglyDefended)
+                if (theory.checkStrongyDefended(ext, a))
                     return false;
             }
         }

@@ -216,7 +216,7 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
      * @param candidate Argument, which is to be examined
      * @return TRUE iff the specified argument {@code candidate} is strongly defended by the set {@code admSet}
      */
-	private boolean checkStrongyDefended(Extension<DungTheory> admSet,Argument candidate) {
+	public boolean checkStrongyDefended(Extension<DungTheory> admSet,Argument candidate) {
 		Extension<DungTheory> extWithoutCandidate = new Extension<DungTheory>(admSet);
 		extWithoutCandidate.remove(candidate);
 		for (Argument attacker: this.getAttackers(candidate)) {
