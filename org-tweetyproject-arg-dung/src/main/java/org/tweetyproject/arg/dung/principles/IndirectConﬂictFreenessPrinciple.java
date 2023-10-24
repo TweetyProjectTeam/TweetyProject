@@ -26,24 +26,22 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Allowing abstention principle <br>
- * A semantics satisfies the "allowing abstention principle" iff<br>
- * for every AF=(A,R) and for every a ∈ A,<br>
- * if there exist two extensions E1,E2 ∈ σ(AF) such that a ∈ E1 and a ∈ E2+,<br>
- * then there exists an extension E3 ∈ σ(AF) such that a not(∈) (E3 ∪ E3+).
- 
+ * Indirect conﬂict-freeness<br>
+ * A semantics S satisﬁes the indirect conﬂict-freeness principle if and only if <br>
+ * for every argumentation framework F, for every E in S(F), E is without indirect conﬂicts in F.
  * 
  * @author Julian Sander
  * @version TweetyProject 1.24
  * 
- * @see "Baroni P, Caminada M, Giacomin M. An introduction to argumentation semantics. The knowledge engineering review. 2011;26(4):365-410."
+ * @see "van der Torre L, Vesic S. The Principle-Based Approach to Abstract Argumentation Semantics. 
+ * In: Handbook of formal argumentation, Vol. 1. College Publications; 2018. p. 2735-78."
  *
  */
-public class AllowingAbstentionPrinciple extends Principle {
+public class IndirectConﬂictFreenessPrinciple extends Principle{
 
 	@Override
 	public String getName() {
-		return "Allowing Abstention";
+		return "Indirect Conﬂictfree";
 	}
 
 	@Override
@@ -54,36 +52,20 @@ public class AllowingAbstentionPrinciple extends Principle {
 	@Override
 	public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
 		DungTheory theory = (DungTheory) kb;
-        Collection<Extension<DungTheory>> exts = ev.getModels(theory);
-        for(var a : kb) {
-        	for(var ext1 : exts) {
-        		if(!ext1.contains(a)) {
-        			continue;
-        		}        			
-        		// a in E1
-            	for(var ext2 : exts) {
-            		if(!theory.getAttacked(ext2).contains(a)) {
-            			continue;
-            		}
-            		// a in E2+
-            		if(!searchForE3(theory, exts, a)) {
-            			return false;
-            		}
-            	}
-            }
-        }
-        return true;
-	}
-
-	private static boolean searchForE3(DungTheory theory, Collection<Extension<DungTheory>> exts, Argument a) {
-		for(var ext3 : exts) {
-			if(!ext3.contains(a) && !theory.getAttacked(ext3).contains(a)) {
-				//found E3
-				return true;
+		Collection<Extension<DungTheory>> exts = ev.getModels(theory);
+		for(var ext : exts) {
+			for(var a : ext) {
+				for(var b : ext) {
+					if(a.equals(b)) {
+						continue;
+					}
+					if(theory.isIndirectAttack(a, b)) {
+						return false;
+					}
+				}
 			}
 		}
-		
-		return false;
+		return true;
 	}
 
 }

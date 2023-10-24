@@ -25,6 +25,7 @@ import org.tweetyproject.arg.dung.reasoner.SimpleGroundedReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleStableReasoner;
 import org.tweetyproject.arg.dung.semantics.*;
 import org.tweetyproject.commons.*;
+import org.tweetyproject.commons.util.SetTools;
 import org.tweetyproject.graphs.*;
 import org.tweetyproject.math.matrix.Matrix;
 import org.tweetyproject.math.term.IntegerConstant;
@@ -337,6 +338,69 @@ public class DungTheory extends BeliefSet<Argument,DungSignature> implements Gra
 			attacked.addAll(this.getAttacked(a));
 		return attacked;
 	}
+	
+	/**
+     * Method for calculating isolated sets in a given theory <br>
+     * A set E is isolated in a theory AF iff there exists no argument a in {AF \ E}, with a attacks E
+     * and there exists no argument b in E, with b attacks {AF \ E}.
+     * @param theory An abstract argumentation framework.
+     * @return A set of isolated arguments in the specified framework.
+     */
+    public Collection<Extension<DungTheory>> getIsolatedSets() {
+        //store attacked of each argument
+        Map<Argument, Collection<Argument>> attacked = new HashMap<>();
+        for (Argument a: this) {
+        	attacked.put(a, this.getAttacked(a));
+        }
+
+        // check all subsets
+        var unattackedSets = this.getUnattackedSets();
+        Collection<Extension<DungTheory>> isolatedSets = new HashSet<>();
+        for (var subset: unattackedSets) {
+            boolean isIsolated = true;
+            for (Argument a: subset) {
+                if (!subset.containsAll(attacked.get(a))) {
+                	isIsolated = false;
+                    break;
+                }
+            }
+            if (isIsolated) {
+            	isolatedSets.add(subset);
+            } 
+        }
+        return isolatedSets;
+    }
+	
+	/**
+     * utility method for calculating unattacked sets in a given theory
+     * a set E is unattacked in theory iff there exists no argument a in theory \ E, with a attacks E
+     * @param theory a dung theory
+     * @return the unattacked sets
+     */
+    public Collection<Extension<DungTheory>> getUnattackedSets() {
+        // store attackers of each argument
+        Map<Argument, Collection<Argument>> attackers = new HashMap<>();
+        for (Argument a: this) {
+            attackers.put(a, this.getAttackers(a));
+        }
+
+        // check all subsets
+        Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(this);
+        Collection<Extension<DungTheory>> unattackedSets = new HashSet<>();
+        for (Set<Argument> subset: subsets) {
+            boolean attacked = false;
+            for (Argument a: subset) {
+                if (!subset.containsAll(attackers.get(a))) {
+                    attacked = true;
+                    break;
+                }
+            }
+            if (!attacked) {
+            	unattackedSets.add(new Extension<DungTheory>(subset));
+            }
+        }
+        return unattackedSets;
+    }
 
 	/**
 	 * returns true if some argument of <code>ext</code> attacks argument.

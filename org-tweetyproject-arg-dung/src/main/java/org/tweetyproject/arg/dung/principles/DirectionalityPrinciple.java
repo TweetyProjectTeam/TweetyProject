@@ -23,7 +23,6 @@ import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-import org.tweetyproject.commons.util.SetTools;
 
 import java.util.*;
 
@@ -53,56 +52,41 @@ public class DirectionalityPrinciple extends Principle {
         DungTheory theory = (DungTheory) kb;
         Collection<Extension<DungTheory>> exts = ev.getModels(theory);
 
-        Collection<Extension<DungTheory>> unattackedSets = this.getUnattackedSets(theory);
+        Collection<Extension<DungTheory>> unattackedSets = theory.getUnattackedSets();
         for (Extension<DungTheory> set: unattackedSets) {
-            // calculate extensions of the theory restricted to set
-            DungTheory theory_set = (DungTheory) theory.getRestriction(set);
-            Collection<Extension<DungTheory>> exts_set = ev.getModels(theory_set);
+        	// calculate extensions of the theory restricted to set
+        	Collection<Extension<DungTheory>> exts_set = calculateExtensionsOfRestriction(ev, theory, set);
 
             // get intersections of the extensions of theory with set
-            Collection<Extension<DungTheory>> exts_2 = new HashSet<>();
-            for (Extension<DungTheory> ext: exts) {
-                Extension<DungTheory> new_ext = new Extension<DungTheory>(ext);
-                new_ext.retainAll(set);
-                exts_2.add(new_ext);
-            }
+            Collection<Extension<DungTheory>> exts_2 = calculateExtensionsIntersection(exts, set);
 
-            // if these two sets are not equal, then this semantics violates directionality
-            if (!exts_set.equals(exts_2))
+            if (checkIfViolation(exts_set, exts_2))
                 return false;
         }
         return true;
     }
 
-    /**
-     * utility method for calculating unattacked sets in a given theory
-     * a set E is unattacked in theory iff there exists no argument a in theory \ E, with a attacks E
-     * @param theory a dung theory
-     * @return the unattacked sets
-     */
-    private Collection<Extension<DungTheory>> getUnattackedSets(DungTheory theory) {
+	protected boolean checkIfViolation(Collection<Extension<DungTheory>> extsRestriction,
+			Collection<Extension<DungTheory>> extsIntersection) {
+		// if these two sets are not equal, then this semantics violates directionality
+		return !extsRestriction.equals(extsIntersection);
+	}
 
-        // store attackers of each argument
-        Map<Argument, Collection<Argument>> attackers = new HashMap<>();
-        for (Argument a: theory) {
-            attackers.put(a, theory.getAttackers(a));
-        }
+	protected Collection<Extension<DungTheory>> calculateExtensionsIntersection(Collection<Extension<DungTheory>> exts,
+			Extension<DungTheory> unattackedSet) {
+		Collection<Extension<DungTheory>> exts_2 = new HashSet<>();
+		for (Extension<DungTheory> ext: exts) {
+		    Extension<DungTheory> new_ext = new Extension<DungTheory>(ext);
+		    new_ext.retainAll(unattackedSet);
+		    exts_2.add(new_ext);
+		}
+		return exts_2;
+	}
 
-        // check all subsets
-        Set<Set<Argument>> subsets = new SetTools<Argument>().subsets(theory);
-        Collection<Extension<DungTheory>> unattackedSets = new HashSet<>();
-        for (Set<Argument> subset: subsets) {
-            boolean attacked = false;
-            for (Argument a: subset) {
-                if (!subset.containsAll(attackers.get(a))) {
-                    attacked = true;
-                    break;
-                }
-            }
-            if (!attacked)
-                unattackedSets.add(new Extension<DungTheory>(subset));
-
-        }
-        return unattackedSets;
-    }
+	protected Collection<Extension<DungTheory>> calculateExtensionsOfRestriction(AbstractExtensionReasoner ev,
+			DungTheory theory, Extension<DungTheory> unattackedSet) {
+		DungTheory theory_set = (DungTheory) theory.getRestriction(unattackedSet);
+		Collection<Extension<DungTheory>> exts_set = ev.getModels(theory_set);
+		return exts_set;
+	}
 }

@@ -19,6 +19,7 @@
 package org.tweetyproject.arg.dung.principles;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
@@ -26,24 +27,23 @@ import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
 /**
- * Allowing abstention principle <br>
- * A semantics satisfies the "allowing abstention principle" iff<br>
- * for every AF=(A,R) and for every a ∈ A,<br>
- * if there exist two extensions E1,E2 ∈ σ(AF) such that a ∈ E1 and a ∈ E2+,<br>
- * then there exists an extension E3 ∈ σ(AF) such that a not(∈) (E3 ∪ E3+).
- 
+ * Non-Interference<br>
+ * A semantics satisfies non-interference if for every isolated set U in an abstract argumentation framework F it holds that:<br>
+ * The extensions of F restricted to U are equal to the extensions of F intersected with U
  * 
  * @author Julian Sander
  * @version TweetyProject 1.24
  * 
- * @see "Baroni P, Caminada M, Giacomin M. An introduction to argumentation semantics. The knowledge engineering review. 2011;26(4):365-410."
+ * @see "van der Torre L, Vesic S. The Principle-Based Approach to Abstract Argumentation Semantics. 
+ * In: Handbook of formal argumentation, Vol. 1. College Publications; 2018. p. 2735-78."
+ * @see DirectionalityPrinciple
  *
  */
-public class AllowingAbstentionPrinciple extends Principle {
+public class NonInterferencePrinciple extends Principle {
 
 	@Override
 	public String getName() {
-		return "Allowing Abstention";
+		return "NonInterference";
 	}
 
 	@Override
@@ -55,35 +55,25 @@ public class AllowingAbstentionPrinciple extends Principle {
 	public boolean isSatisfied(Collection<Argument> kb, AbstractExtensionReasoner ev) {
 		DungTheory theory = (DungTheory) kb;
         Collection<Extension<DungTheory>> exts = ev.getModels(theory);
-        for(var a : kb) {
-        	for(var ext1 : exts) {
-        		if(!ext1.contains(a)) {
-        			continue;
-        		}        			
-        		// a in E1
-            	for(var ext2 : exts) {
-            		if(!theory.getAttacked(ext2).contains(a)) {
-            			continue;
-            		}
-            		// a in E2+
-            		if(!searchForE3(theory, exts, a)) {
-            			return false;
-            		}
-            	}
+
+        Collection<Extension<DungTheory>> isolatedSets = theory.getIsolatedSets();
+        for (Extension<DungTheory> set: isolatedSets) {
+            // calculate extensions of the theory restricted to the set
+            DungTheory theory_set = (DungTheory) theory.getRestriction(set);
+            Collection<Extension<DungTheory>> exts_set = ev.getModels(theory_set);
+
+            // get intersections of the extensions of theory with the set
+            Collection<Extension<DungTheory>> exts_2 = new HashSet<>();
+            for (Extension<DungTheory> ext: exts) {
+                Extension<DungTheory> new_ext = new Extension<DungTheory>(ext);
+                new_ext.retainAll(set);
+                exts_2.add(new_ext);
             }
+
+            // if these two sets are not equal, then this semantics violates non-interference
+            if (!exts_set.equals(exts_2))
+                return false;
         }
         return true;
 	}
-
-	private static boolean searchForE3(DungTheory theory, Collection<Extension<DungTheory>> exts, Argument a) {
-		for(var ext3 : exts) {
-			if(!ext3.contains(a) && !theory.getAttacked(ext3).contains(a)) {
-				//found E3
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
 }
