@@ -35,23 +35,37 @@ public class DungReasonerController {
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(
 							Semantics.getSemantics(pyArgPost.getSemantics()));
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		DungReasonerResponse reasonerResponse = new DungReasonerResponse(pyArgPost.getCmd(), pyArgPost.getEmail(), pyArgPost.getNr_of_arguments(),pyArgPost.getAttacks(), pyArgPost.getSemantics(),pyArgPost.getSolver(),null,0,"ERRORs");
+		DungReasonerResponse reasonerResponse = new DungReasonerResponse(pyArgPost.getCmd(), pyArgPost.getEmail(), pyArgPost.getNr_of_arguments(),pyArgPost.getAttacks(), pyArgPost.getSemantics(),pyArgPost.getSolver(),null,0,pyArgPost.getUnit_timeout(),"ERRORs");
 		Collection<Extension<DungTheory>> models = null;
+		TimeUnit unit = Utils.getTimoutUnit(pyArgPost.getUnit_timeout());
+		System.out.println(pyArgPost.getUnit_timeout());
 		try{
-				long millis = System.currentTimeMillis();
-				// handle timeout
-				DungReasonerCallee callee = DungReasonerCalleeFactory.getCallee(
-							Command.getCommand(pyArgPost.getCmd()), reasoner,dungTheory);
+			// handle timeout
+			DungReasonerCallee callee = DungReasonerCalleeFactory.getCallee(
+				Command.getCommand(pyArgPost.getCmd()), reasoner,dungTheory);
 				Future<Collection<Extension<DungTheory>>> future = executor.submit(callee);
 				int user_timeout = pyArgPost.getTimeout();
 				if (user_timeout > SERVICES_TIMEOUT){
 					user_timeout = SERVICES_TIMEOUT;
 				}
-			    models = future.get(user_timeout, TimeUnit.SECONDS);
+
+				
+				
+				long millis = System.currentTimeMillis();
+			    models = future.get(user_timeout, unit);
 			    executor.shutdownNow();
 				millis = System.currentTimeMillis() - millis;
-				long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
-				reasonerResponse.setTime(seconds);
+				long time = 0;
+				if (pyArgPost.getUnit_timeout().equals("sec")){
+					System.out.println("converting millis to seconds");
+					time = TimeUnit.MILLISECONDS.toSeconds(millis);
+					System.out.println(time);
+
+				}
+				else {
+					time = millis;
+				}
+				reasonerResponse.setTime(time);
 				reasonerResponse.setAnswer(models.toString());
 				reasonerResponse.setStatus("SUCCESS");
 			} catch (TimeoutException e) {

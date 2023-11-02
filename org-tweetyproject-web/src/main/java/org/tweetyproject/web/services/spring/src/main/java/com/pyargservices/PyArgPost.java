@@ -22,6 +22,15 @@ public class PyArgPost {
     private String semantics;
     private String solver;
     private int timeout; // Timeout in seconds
+    private String unit_timeout;
+
+  public String getUnit_timeout() {
+      return unit_timeout;
+    }
+
+    public void setUnit_timeout(String unit_timeout) {
+      this.unit_timeout = unit_timeout;
+    }
 
   public String getCmd() {
     return this.cmd;

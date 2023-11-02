@@ -11,6 +11,16 @@ public class DungReasonerResponse {
     private String solver;
     private String answer;
     private double time;
+    private String unit_time;
+    
+    public String getUnit_time() {
+        return unit_time;
+    }
+
+    public void setUnit_time(String unit_time) {
+        this.unit_time = unit_time;
+    }
+
     private String status;
 
     
@@ -18,7 +28,7 @@ public class DungReasonerResponse {
     public DungReasonerResponse() {
     }
 
-    public DungReasonerResponse(String reply, String email, int nr_of_arguments, List<List<Integer>> attacks, String semantics, String solver, String answer, int time, String status) {
+    public DungReasonerResponse(String reply, String email, int nr_of_arguments, List<List<Integer>> attacks, String semantics, String solver, String answer, int time, String unit_time, String status) {
         this.reply = reply;
         this.email = email;
         this.nr_of_arguments = nr_of_arguments;
@@ -27,6 +37,7 @@ public class DungReasonerResponse {
         this.solver = solver;
         this.answer = answer;
         this.time = time;
+        this.unit_time = unit_time;
         this.status = status;
     }
 

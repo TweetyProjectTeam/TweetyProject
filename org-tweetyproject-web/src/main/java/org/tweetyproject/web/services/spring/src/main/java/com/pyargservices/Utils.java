@@ -1,6 +1,7 @@
 package org.tweetyproject.web.services.spring.src.main.java.com.pyargservices;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.tweetyproject.arg.dung.syntax.Argument;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -48,6 +49,21 @@ public final class Utils {
 
     public static String[] splitStringInput(String stringInput, String delimiter) {
         return stringInput.split(delimiter);
+    }
+
+    public static TimeUnit getTimoutUnit(String unit){
+        switch (unit) {
+			case "ms":
+				System.out.println("Unit of timeout set to ms" );
+				return TimeUnit.MILLISECONDS;
+			
+			case "sec":
+				System.out.println("Unit of timeout set to seconds" );
+				return  TimeUnit.SECONDS;
+			default:
+				System.out.println("Unit of timeout set to seconds" );
+				return TimeUnit.SECONDS;
+		}
     }
 
 }
