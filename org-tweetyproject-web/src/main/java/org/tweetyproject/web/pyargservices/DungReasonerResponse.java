@@ -1,4 +1,5 @@
-package org.tweetyproject.web.services.spring.src.main.java.com.pyargservices;
+package org.tweetyproject.web.pyargservices;
+
 import java.util.List;
 import java.util.Objects;
 public class DungReasonerResponse {

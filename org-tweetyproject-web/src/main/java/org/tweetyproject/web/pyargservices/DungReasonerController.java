@@ -1,4 +1,4 @@
-package org.tweetyproject.web.services.spring.src.main.java.com.pyargservices;
+package org.tweetyproject.web.pyargservices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
 
-import org.tweetyproject.web.services.spring.src.main.java.com.pyargservices.AbstractExtensionReasonerFactory.Semantics;
-import org.tweetyproject.web.services.spring.src.main.java.com.pyargservices.DungReasonerCalleeFactory.Command;
+import org.tweetyproject.web.pyargservices.AbstractExtensionReasonerFactory.Semantics;
+import org.tweetyproject.web.pyargservices.DungReasonerCalleeFactory.Command;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
