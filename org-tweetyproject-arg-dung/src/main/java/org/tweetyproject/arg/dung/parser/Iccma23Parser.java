@@ -66,20 +66,17 @@ public class Iccma23Parser extends AbstractDungParser {
 			if(row.startsWith("#")) continue;
 			// problem definition line, check validity later
 			if(row.startsWith("p af")){
-				numArgs = Integer.parseInt(row.substring(4).trim());				
+				numArgs = Integer.parseInt(row.substring(4).trim());
+				for(int i = 1; i <= numArgs;i++)
+					theory.add(new Argument("a" + i));
 				continue;
 			}
 			// line describing an attack
 			attacker = row.substring(0,row.indexOf(" ")).trim();
 			attacked = row.substring(row.indexOf(" ")+1).trim();
-			theory.add(new Argument("a" + attacker));
-			theory.add(new Argument("a" + attacked));
 			theory.add(new Attack(new Argument("a" + attacker),new Argument("a" + attacked)));
 		}
 		in.close();
-		// check validity
-		if(theory.size() != numArgs)
-			throw new IOException("Illegal number of arguments and/or attacks.");
 		return theory;
 	}	
 }
