@@ -1,4 +1,5 @@
-package org.tweetyproject.web.services.spring.src.main.java.com.pyargservices;
+package org.tweetyproject.web.pyargservices;
+
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
