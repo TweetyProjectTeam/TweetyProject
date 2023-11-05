@@ -1,5 +1,6 @@
 package org.tweetyproject.web.pyargservices;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.Callable;
@@ -9,20 +10,32 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.json.JSONException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
-
+import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.ParserException;
+import org.tweetyproject.logics.fol.parser.FolParser;
+import org.tweetyproject.logics.fol.syntax.FolFormula;
+import org.tweetyproject.logics.fol.syntax.Negation;
 import org.tweetyproject.web.pyargservices.AbstractExtensionReasonerFactory.Semantics;
 import org.tweetyproject.web.pyargservices.DungReasonerCalleeFactory.Command;
-
+import org.tweetyproject.web.services.DelpService;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.tweetyproject.arg.delp.parser.DelpParser;
+import org.tweetyproject.arg.delp.reasoner.DelpReasoner;
+import org.tweetyproject.arg.delp.semantics.ComparisonCriterion;
+import org.tweetyproject.arg.delp.semantics.DelpAnswer;
+import org.tweetyproject.arg.delp.semantics.EmptyCriterion;
+import org.tweetyproject.arg.delp.semantics.GeneralizedSpecificity;
+import org.tweetyproject.arg.delp.syntax.DefeasibleLogicProgram;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
 
 @RestController
-public class DungReasonerController {
+public class RequestController {
 
 	private final int SERVICES_TIMEOUT = 600;
 
@@ -108,6 +121,52 @@ public class DungReasonerController {
 
 		//response.setSemantics(AbstractExtensionReasonerFactory.Semantics.values());
 		return response;
+	}
+
+	@PostMapping(value = "/delp", produces = "application/json")
+	@ResponseBody
+	public DelpResponse handleRequest(
+  	@RequestBody DelpPost delpPost) {
+		  DelpResponse delpResponse =  new DelpResponse("query", delpPost.getEmail(), delpPost.getCompcriterion(), delpPost.getKb(), delpPost.getQuery(), delpPost.getTimeout(),null, 0.0, delpPost.getUnit_timeout(),null);
+		  try {
+
+			DelpParser parser = new DelpParser();
+			DefeasibleLogicProgram delp = parser.parseBeliefBase(delpPost.getKb());
+				ComparisonCriterion comp = null;
+				if(delpPost.getCompcriterion().equals(DelpService.JSON_ATTR_COMP_EMPTY))
+						comp = new EmptyCriterion();
+				if(delpPost.getCompcriterion().equals(DelpService.JSON_ATTR_COMP_GENSPEC))
+						comp = new GeneralizedSpecificity();
+				if(comp == null)
+					throw new JSONException("Malformed JSON: unknown value for attribute \"compcriterion\"");
+				DelpReasoner reasoner = new DelpReasoner(comp);
+				FolParser folParser = new FolParser();
+				folParser.setSignature(parser.getSignature());
+				String qString = delpPost.getQuery().trim();
+				Formula f = null;
+				if(qString.startsWith("~"))
+						f = new Negation((FolFormula)folParser.parseFormula(qString.substring(1)));
+				else f = folParser.parseFormula(qString);
+				
+				DelpAnswer.Type ans = reasoner.query(delp,(FolFormula) f);
+				System.out.println(ans.toString());
+
+				delpResponse.setAnswer(ans.toString());
+				delpResponse.setStatus("SUCCESS");
+
+				System.out.println(delpResponse.toString());
+
+
+				return delpResponse;
+		
+	} catch (ParserException e) {			
+		throw new JSONException("Malformed JSON: syntax of knowledge base and/or query does not conform to the given format.");
+	} catch (IOException e) {			
+		throw new JSONException("Malformed JSON: syntax of knowledge base and/or query does not conform to the given format.");
+	} catch(Exception e){
+		e.printStackTrace();
+		throw new JSONException("An unexpected error occured. Please contact an administrator.");
+	}		
 	}
 
 
