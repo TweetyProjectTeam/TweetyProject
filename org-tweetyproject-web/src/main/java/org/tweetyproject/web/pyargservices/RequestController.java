@@ -3,6 +3,8 @@ package org.tweetyproject.web.pyargservices;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,18 +12,31 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.json.JSONException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.commons.BeliefSet;
 import org.tweetyproject.commons.Formula;
+import org.tweetyproject.commons.Parser;
 import org.tweetyproject.commons.ParserException;
+import org.tweetyproject.logics.commons.analysis.InconsistencyMeasure;
 import org.tweetyproject.logics.fol.parser.FolParser;
 import org.tweetyproject.logics.fol.syntax.FolFormula;
 import org.tweetyproject.logics.fol.syntax.Negation;
+import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory;
+import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory.Measure;
+import org.tweetyproject.logics.pl.parser.PlParserFactory;
+import org.tweetyproject.logics.pl.parser.PlParserFactory.Format;
+import org.tweetyproject.logics.pl.syntax.PlBeliefSet;
+import org.tweetyproject.logics.pl.syntax.PlFormula;
+import org.tweetyproject.logics.pl.syntax.PlSignature;
+import org.tweetyproject.web.TweetyServer;
 import org.tweetyproject.web.pyargservices.AbstractExtensionReasonerFactory.Semantics;
 import org.tweetyproject.web.pyargservices.DungReasonerCalleeFactory.Command;
 import org.tweetyproject.web.services.DelpService;
+import org.tweetyproject.web.services.InconsistencyMeasurementService;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.tweetyproject.arg.delp.parser.DelpParser;
@@ -33,6 +48,8 @@ import org.tweetyproject.arg.delp.semantics.GeneralizedSpecificity;
 import org.tweetyproject.arg.delp.syntax.DefeasibleLogicProgram;
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.semantics.Extension;
+import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory;
+import org.tweetyproject.logics.pl.analysis.InconsistencyMeasureFactory.Measure;
 
 @RestController
 public class RequestController {
@@ -41,8 +58,16 @@ public class RequestController {
 
 	@PostMapping(value = "/dung", produces = "application/json")
 	@ResponseBody
-	public DungReasonerResponse handleRequest(
+	public Response handleRequest(
   	@RequestBody PyArgPost pyArgPost) {
+
+		System.out.println((pyArgPost.toString()));
+
+		if (pyArgPost.getCmd().equals("info"))
+			return (Response) getInfo(pyArgPost);
+
+		
+		if (pyArgPost.getCmd().equals("get_models") || pyArgPost.getCmd().equals("get_model")) {
 		DungTheory dungTheory = Utils.getDungTheory(pyArgPost.getNr_of_arguments(), pyArgPost.getAttacks());
 		
 		AbstractExtensionReasoner reasoner = AbstractExtensionReasonerFactory.getReasoner(
@@ -94,6 +119,10 @@ public class RequestController {
 				executor.shutdownNow();
 			}
 		return reasonerResponse;
+		}
+		else{
+			return new DungReasonerResponse();
+		}
 	}
 
 
@@ -125,7 +154,7 @@ public class RequestController {
 
 	@PostMapping(value = "/delp", produces = "application/json")
 	@ResponseBody
-	public DelpResponse handleRequest(
+	public Response handleRequest(
   	@RequestBody DelpPost delpPost) {
 		  DelpResponse delpResponse =  new DelpResponse("query", delpPost.getEmail(), delpPost.getCompcriterion(), delpPost.getKb(), delpPost.getQuery(), delpPost.getTimeout(),null, 0.0, delpPost.getUnit_timeout(),null);
 		  try {
@@ -168,6 +197,120 @@ public class RequestController {
 		throw new JSONException("An unexpected error occured. Please contact an administrator.");
 	}		
 	}
+
+
+	@PostMapping(value = "/incmes", produces = "application/json")
+	@ResponseBody
+	public Response handleRequest(
+  	@RequestBody InconsistencyPost incmesPost) {
+		InconsistencyResponse icmesResponse = new InconsistencyResponse();
+
+		if (incmesPost.getCmd().equals("value")){
+			return handleGetICMESValue(incmesPost);
+		}
+
+		if (incmesPost.getCmd().equals("info")){
+			icmesResponse.reply("info");
+			return icmesResponse;
+		}
+
+		return icmesResponse;
+	}
+
+
+
+	private class MeasurementCallee implements Callable<Double>{
+		InconsistencyMeasure<BeliefSet<PlFormula,?>> measure;
+		BeliefSet<PlFormula,PlSignature> beliefSet;
+		public MeasurementCallee(InconsistencyMeasure<BeliefSet<PlFormula,?>> measure, BeliefSet<PlFormula,PlSignature> beliefSet){
+			this.measure = measure;
+			this.beliefSet = beliefSet;
+		}
+		@Override
+		public Double call() throws Exception {
+			return this.measure.inconsistencyMeasure(this.beliefSet);
+		}		
+	}
+
+
+
+	private InconsistencyResponse handleGetICMESValue(InconsistencyPost query) throws JSONException{
+		InconsistencyResponse icmesResponse = new InconsistencyResponse();
+		System.out.println();
+		// if(!query.has(InconsistencyMeasurementService.JSON_ATTR_MEASURE))
+		// 	throw new JSONException("Malformed JSON: no \"measure\" attribute given");		
+		InconsistencyMeasure<BeliefSet<PlFormula,?>> measure =
+				InconsistencyMeasureFactory.getInconsistencyMeasure(
+						Measure.getMeasure(query.getMeasure()));
+		if(measure == null)
+			throw new JSONException("Malformed JSON: unknown value for attribute \"measure\"");
+		// if(!query.has(InconsistencyMeasurementService.JSON_ATTR_FORMAT))
+		// 	throw new JSONException("Malformed JSON: no \"format\" attribute given");
+		Parser<PlBeliefSet,PlFormula> parser = PlParserFactory.getParserForFormat(
+						Format.getFormat(query.getFormat()));
+		if(parser == null)
+			throw new JSONException("Malformed JSON: unknown value for attribute \"format\"");
+		try {
+			PlBeliefSet beliefSet = parser.parseBeliefBase(query.getKb());			
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			double val;
+			long millis = System.currentTimeMillis();
+			try{
+				// handle timeout				
+				Future<Double> future = executor.submit(new MeasurementCallee(measure, beliefSet));
+			    val = future.get(InconsistencyMeasurementService.timeout, TimeUnit.SECONDS);
+			    executor.shutdownNow();
+			} catch (TimeoutException e) {
+				//inconsistency value of -1 indicates that a timeout has occurred
+				executor.shutdownNow();
+				val = -1;
+			} catch (Exception e){
+				//inconsistency value of -2 indicates some general error
+				TweetyServer.log(InconsistencyMeasurementService.ID, "Unhandled exception: " + e.getMessage());
+				executor.shutdownNow();
+				val = -2;
+			}
+			//inconsistency value of -3 indicates infinity
+			if(val == Double.POSITIVE_INFINITY)
+				val = -3;
+			millis = System.currentTimeMillis() - millis;
+
+			icmesResponse.setEmail(query.getEmail());
+			icmesResponse.setFormat(query.getFormat());
+			icmesResponse.setKb(query.getKb());
+			icmesResponse.setMeasure(query.getMeasure());
+			icmesResponse.setReply("value");
+			icmesResponse.setTime(millis);
+			icmesResponse.setValue(val);
+	
+			return icmesResponse;
+		} catch (ParserException e) {			
+			throw new JSONException("Malformed JSON: syntax of knowledge base does not conform to the given format.");
+		} catch (IOException e) {			
+			throw new JSONException("Malformed JSON: syntax of knowledge base does not conform to the given format.");
+		} catch(Exception e){
+			TweetyServer.log(InconsistencyMeasurementService.ID, "Unhandled exception: " + e.getMessage());
+			throw new JSONException("An unexpected error occured. Please contact an administrator.");
+		}
+	}
+
+	private JSONObject handleGetMeasures() throws JSONException{
+		JSONObject jsonReply = new JSONObject();
+		List<JSONObject> value = new LinkedList<JSONObject>();
+		JSONObject jsonMes;
+		for(Measure m: InconsistencyMeasureFactory.Measure.values()){
+			jsonMes = new JSONObject();
+			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_ID, m.id);
+			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_LABEL, m.label);	
+			value.add(jsonMes);
+		}
+		jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_MEASURES, value);
+		return jsonReply;
+	}	
+
+	
+
+
 
 
 }

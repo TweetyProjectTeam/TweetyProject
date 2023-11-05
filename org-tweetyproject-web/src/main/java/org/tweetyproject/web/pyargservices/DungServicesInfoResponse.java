@@ -3,7 +3,7 @@ package org.tweetyproject.web.pyargservices;
 import java.util.List;
 import java.util.Objects;
 
-public class DungServicesInfoResponse {
+public class DungServicesInfoResponse extends Response {
     private String reply;
     private String email;
     private int backend_timeout;

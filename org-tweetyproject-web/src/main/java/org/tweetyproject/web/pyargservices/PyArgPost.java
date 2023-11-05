@@ -3,17 +3,6 @@ package org.tweetyproject.web.pyargservices;
 import java.util.List;
 
 public class PyArgPost {
-//   {
-//     "cmd": "get_models",
-//     "email": "pyarg@mail.com",
-//     "nr_of_arguments": 3,
-//     "attacks": [[1, 2], [2, 1], [3, 3], [3, 1]],
-//     "semantics": "wad",
-// "solver": "simple",
-// "timeout": <maximal ms allowed for computation>
-// }
-
-
 
     private String cmd;
     private String email;

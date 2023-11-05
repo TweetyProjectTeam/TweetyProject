@@ -2,7 +2,7 @@ package org.tweetyproject.web.pyargservices;
 
 import java.util.List;
 import java.util.Objects;
-public class DungReasonerResponse {
+public class DungReasonerResponse extends Response {
 
     private String reply;
     private String email;

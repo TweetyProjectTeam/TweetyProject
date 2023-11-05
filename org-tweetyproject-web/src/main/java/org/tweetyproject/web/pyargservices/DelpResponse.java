@@ -1,7 +1,7 @@
 package org.tweetyproject.web.pyargservices;
 import java.util.Objects;
 
-public class DelpResponse {
+public class DelpResponse extends Response {
     private String reply;
     private String email;
     private String compcriterion;
