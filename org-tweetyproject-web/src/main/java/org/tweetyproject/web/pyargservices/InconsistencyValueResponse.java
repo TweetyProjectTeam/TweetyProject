@@ -1,7 +1,7 @@
 package org.tweetyproject.web.pyargservices;
 import java.util.Objects;
 
-public class InconsistencyResponse extends Response {
+public class InconsistencyValueResponse extends Response {
     private String reply;
     private String email;
     private String measure;
@@ -10,10 +10,10 @@ public class InconsistencyResponse extends Response {
     private double value;
     private double time;
 
-    public InconsistencyResponse() {
+    public InconsistencyValueResponse() {
     }
 
-    public InconsistencyResponse(String reply, String email, String measure, String kb, String format, double value, double time) {
+    public InconsistencyValueResponse(String reply, String email, String measure, String kb, String format, double value, double time) {
         this.reply = reply;
         this.email = email;
         this.measure = measure;
@@ -79,37 +79,37 @@ public class InconsistencyResponse extends Response {
         this.time = time;
     }
 
-    public InconsistencyResponse reply(String reply) {
+    public InconsistencyValueResponse reply(String reply) {
         setReply(reply);
         return this;
     }
 
-    public InconsistencyResponse email(String email) {
+    public InconsistencyValueResponse email(String email) {
         setEmail(email);
         return this;
     }
 
-    public InconsistencyResponse measure(String measure) {
+    public InconsistencyValueResponse measure(String measure) {
         setMeasure(measure);
         return this;
     }
 
-    public InconsistencyResponse kb(String kb) {
+    public InconsistencyValueResponse kb(String kb) {
         setKb(kb);
         return this;
     }
 
-    public InconsistencyResponse format(String format) {
+    public InconsistencyValueResponse format(String format) {
         setFormat(format);
         return this;
     }
 
-    public InconsistencyResponse value(double value) {
+    public InconsistencyValueResponse value(double value) {
         setValue(value);
         return this;
     }
 
-    public InconsistencyResponse time(double time) {
+    public InconsistencyValueResponse time(double time) {
         setTime(time);
         return this;
     }
@@ -118,10 +118,10 @@ public class InconsistencyResponse extends Response {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof InconsistencyResponse)) {
+        if (!(o instanceof InconsistencyValueResponse)) {
             return false;
         }
-        InconsistencyResponse inconsistencyResponse = (InconsistencyResponse) o;
+        InconsistencyValueResponse inconsistencyResponse = (InconsistencyValueResponse) o;
         return Objects.equals(reply, inconsistencyResponse.reply) && Objects.equals(email, inconsistencyResponse.email) && Objects.equals(measure, inconsistencyResponse.measure) && Objects.equals(kb, inconsistencyResponse.kb) && Objects.equals(format, inconsistencyResponse.format) && value == inconsistencyResponse.value && time == inconsistencyResponse.time;
     }
 

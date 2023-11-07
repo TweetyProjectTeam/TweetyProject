@@ -3,6 +3,7 @@ package org.tweetyproject.web.pyargservices;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -203,16 +204,22 @@ public class RequestController {
 	@ResponseBody
 	public Response handleRequest(
   	@RequestBody InconsistencyPost incmesPost) {
-		InconsistencyResponse icmesResponse = new InconsistencyResponse();
+		InconsistencyValueResponse icmesResponse = new InconsistencyValueResponse();
 
-		if (incmesPost.getCmd().equals("value")){
-			return handleGetICMESValue(incmesPost);
+		try {
+			
+			if (incmesPost.getCmd().equals("value")){
+				return handleGetICMESValue(incmesPost);
+			}
+	
+			if (incmesPost.getCmd().equals("measures")){
+				
+				return handleGetMeasures(incmesPost);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 
-		if (incmesPost.getCmd().equals("info")){
-			icmesResponse.reply("info");
-			return icmesResponse;
-		}
 
 		return icmesResponse;
 	}
@@ -234,9 +241,8 @@ public class RequestController {
 
 
 
-	private InconsistencyResponse handleGetICMESValue(InconsistencyPost query) throws JSONException{
-		InconsistencyResponse icmesResponse = new InconsistencyResponse();
-		System.out.println();
+	private InconsistencyValueResponse handleGetICMESValue(InconsistencyPost query) throws JSONException{
+		InconsistencyValueResponse icmesResponse = new InconsistencyValueResponse();
 		// if(!query.has(InconsistencyMeasurementService.JSON_ATTR_MEASURE))
 		// 	throw new JSONException("Malformed JSON: no \"measure\" attribute given");		
 		InconsistencyMeasure<BeliefSet<PlFormula,?>> measure =
@@ -251,7 +257,9 @@ public class RequestController {
 		if(parser == null)
 			throw new JSONException("Malformed JSON: unknown value for attribute \"format\"");
 		try {
-			PlBeliefSet beliefSet = parser.parseBeliefBase(query.getKb());			
+			System.out.println("Parse kb");
+			PlBeliefSet beliefSet = parser.parseBeliefBase(query.getKb());
+			System.out.println("Parse finish");			
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 			double val;
 			long millis = System.currentTimeMillis();
@@ -294,18 +302,29 @@ public class RequestController {
 		}
 	}
 
-	private JSONObject handleGetMeasures() throws JSONException{
-		JSONObject jsonReply = new JSONObject();
-		List<JSONObject> value = new LinkedList<JSONObject>();
-		JSONObject jsonMes;
+
+
+		/**
+	 * Handles the "List inconsistency measures" command
+	 * @param query some query
+	 * @return the reply
+	 * @throws JSONException if some JSON issue occurs.
+		 * @throws org.codehaus.jettison.json.JSONException
+	 */
+	private InconsistencyGetMeasuresResponse handleGetMeasures(InconsistencyPost query) throws JSONException, org.codehaus.jettison.json.JSONException{
+		InconsistencyGetMeasuresResponse response = new InconsistencyGetMeasuresResponse();
+		List<HashMap<String,String>> value = new LinkedList<HashMap<String,String>>();
+		HashMap<String,String> jsonMes;
 		for(Measure m: InconsistencyMeasureFactory.Measure.values()){
-			jsonMes = new JSONObject();
+			jsonMes = new HashMap<String,String>();
 			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_ID, m.id);
 			jsonMes.put(InconsistencyMeasurementService.JSON_ATTR_LABEL, m.label);	
 			value.add(jsonMes);
 		}
-		jsonReply.put(InconsistencyMeasurementService.JSON_ATTR_MEASURES, value);
-		return jsonReply;
+		response.setMeasures(value);
+		response.setEmail(query.getEmail());
+		response.reply(query.getCmd());
+		return response;
 	}	
 
 	
