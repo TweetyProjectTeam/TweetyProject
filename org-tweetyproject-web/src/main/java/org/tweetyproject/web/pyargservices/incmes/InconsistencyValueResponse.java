@@ -1,5 +1,7 @@
-package org.tweetyproject.web.pyargservices;
+package org.tweetyproject.web.pyargservices.incmes;
 import java.util.Objects;
+
+import org.tweetyproject.web.pyargservices.Response;
 
 public class InconsistencyValueResponse extends Response {
     private String reply;
@@ -9,6 +11,15 @@ public class InconsistencyValueResponse extends Response {
     private String format;
     private double value;
     private double time;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public InconsistencyValueResponse() {
     }

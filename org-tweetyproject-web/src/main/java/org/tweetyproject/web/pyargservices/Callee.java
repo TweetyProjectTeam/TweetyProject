@@ -2,7 +2,7 @@ package org.tweetyproject.web.pyargservices;
 
 import java.util.concurrent.Callable;
 
-public class DungReasonerCallee implements Callable {
+public class Callee implements Callable {
 
     @Override
     public Object call() throws Exception {

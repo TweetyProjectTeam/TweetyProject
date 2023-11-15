@@ -1,4 +1,4 @@
-package org.tweetyproject.web.pyargservices;
+package org.tweetyproject.web.pyargservices.dung;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.reasoner.SimpleAdmissibleReasoner;

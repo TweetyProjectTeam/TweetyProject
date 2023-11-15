@@ -1,7 +1,9 @@
-package org.tweetyproject.web.pyargservices;
+package org.tweetyproject.web.pyargservices.dung;
 
 import org.tweetyproject.arg.dung.reasoner.AbstractExtensionReasoner;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
+import org.tweetyproject.web.pyargservices.Callee;
+
 
 
 
@@ -40,7 +42,7 @@ public class DungReasonerCalleeFactory {
 	 * @param im some identifier of an inconsistency measure.
 	 * @return the requested inconsistency measure.
 	 */
-	public static  DungReasonerCallee getCallee(Command cmd, AbstractExtensionReasoner reasoner, DungTheory bbase){
+	public static  Callee getCallee(Command cmd, AbstractExtensionReasoner reasoner, DungTheory bbase){
 		switch(cmd){
 			case GET_MODELS:
 				return new DungReasonerGetModelsCallee(reasoner, bbase);

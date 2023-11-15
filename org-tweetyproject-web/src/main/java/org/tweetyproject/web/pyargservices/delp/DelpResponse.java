@@ -1,6 +1,6 @@
-package org.tweetyproject.web.pyargservices;
+package org.tweetyproject.web.pyargservices.delp;
 import java.util.Objects;
-
+import org.tweetyproject.web.pyargservices.Response;
 public class DelpResponse extends Response {
     private String reply;
     private String email;

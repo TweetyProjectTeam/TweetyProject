@@ -1,10 +1,10 @@
-package org.tweetyproject.web.pyargservices;
+package org.tweetyproject.web.pyargservices.incmes;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.codehaus.jettison.json.JSONObject;
+import org.tweetyproject.web.pyargservices.Response;
+
 import java.util.Objects;
 
 public class InconsistencyGetMeasuresResponse extends Response {

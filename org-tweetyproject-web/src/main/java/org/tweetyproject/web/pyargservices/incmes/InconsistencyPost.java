@@ -1,27 +1,28 @@
-package org.tweetyproject.web.pyargservices;
-
+package org.tweetyproject.web.pyargservices.incmes;
 import java.util.Objects;
 
-public class DelpPost {
+import org.tweetyproject.web.pyargservices.Post;
+
+public class InconsistencyPost extends Post {
 
     private String cmd;
     private String email;
-    private String compcriterion;
+    private String measure;
     private String kb;
-    private String query;
+    private String format;
     private int timeout;
     private String unit_timeout;
     
 
-    public DelpPost() {
+    public InconsistencyPost() {
     }
 
-    public DelpPost(String cmd, String email, String compcriterion, String kb, String query, int timeout, String unit_timeout) {
+    public InconsistencyPost(String cmd, String email, String measure, String kb, String format, int timeout, String unit_timeout) {
         this.cmd = cmd;
         this.email = email;
-        this.compcriterion = compcriterion;
+        this.measure = measure;
         this.kb = kb;
-        this.query = query;
+        this.format = format;
         this.timeout = timeout;
         this.unit_timeout = unit_timeout;
     }
@@ -42,12 +43,12 @@ public class DelpPost {
         this.email = email;
     }
 
-    public String getCompcriterion() {
-        return this.compcriterion;
+    public String getMeasure() {
+        return this.measure;
     }
 
-    public void setCompcriterion(String compcriterion) {
-        this.compcriterion = compcriterion;
+    public void setMeasure(String measure) {
+        this.measure = measure;
     }
 
     public String getKb() {
@@ -58,12 +59,12 @@ public class DelpPost {
         this.kb = kb;
     }
 
-    public String getQuery() {
-        return this.query;
+    public String getFormat() {
+        return this.format;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     public int getTimeout() {
@@ -82,37 +83,37 @@ public class DelpPost {
         this.unit_timeout = unit_timeout;
     }
 
-    public DelpPost cmd(String cmd) {
+    public InconsistencyPost cmd(String cmd) {
         setCmd(cmd);
         return this;
     }
 
-    public DelpPost email(String email) {
+    public InconsistencyPost email(String email) {
         setEmail(email);
         return this;
     }
 
-    public DelpPost compcriterion(String compcriterion) {
-        setCompcriterion(compcriterion);
+    public InconsistencyPost measure(String measure) {
+        setMeasure(measure);
         return this;
     }
 
-    public DelpPost kb(String kb) {
+    public InconsistencyPost kb(String kb) {
         setKb(kb);
         return this;
     }
 
-    public DelpPost query(String query) {
-        setQuery(query);
+    public InconsistencyPost format(String format) {
+        setFormat(format);
         return this;
     }
 
-    public DelpPost timeout(int timeout) {
+    public InconsistencyPost timeout(int timeout) {
         setTimeout(timeout);
         return this;
     }
 
-    public DelpPost unit_timeout(String unit_timeout) {
+    public InconsistencyPost unit_timeout(String unit_timeout) {
         setUnit_timeout(unit_timeout);
         return this;
     }
@@ -121,16 +122,16 @@ public class DelpPost {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof DelpPost)) {
+        if (!(o instanceof InconsistencyPost)) {
             return false;
         }
-        DelpPost delpPost = (DelpPost) o;
-        return Objects.equals(cmd, delpPost.cmd) && Objects.equals(email, delpPost.email) && Objects.equals(compcriterion, delpPost.compcriterion) && Objects.equals(kb, delpPost.kb) && Objects.equals(query, delpPost.query) && timeout == delpPost.timeout && Objects.equals(unit_timeout, delpPost.unit_timeout);
+        InconsistencyPost inconsistencyPost = (InconsistencyPost) o;
+        return Objects.equals(cmd, inconsistencyPost.cmd) && Objects.equals(email, inconsistencyPost.email) && Objects.equals(measure, inconsistencyPost.measure) && Objects.equals(kb, inconsistencyPost.kb) && Objects.equals(format, inconsistencyPost.format) && timeout == inconsistencyPost.timeout && Objects.equals(unit_timeout, inconsistencyPost.unit_timeout);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cmd, email, compcriterion, kb, query, timeout, unit_timeout);
+        return Objects.hash(cmd, email, measure, kb, format, timeout, unit_timeout);
     }
 
     @Override
@@ -138,12 +139,13 @@ public class DelpPost {
         return "{" +
             " cmd='" + getCmd() + "'" +
             ", email='" + getEmail() + "'" +
-            ", compcriterion='" + getCompcriterion() + "'" +
+            ", measure='" + getMeasure() + "'" +
             ", kb='" + getKb() + "'" +
-            ", query='" + getQuery() + "'" +
+            ", format='" + getFormat() + "'" +
             ", timeout='" + getTimeout() + "'" +
             ", unit_timeout='" + getUnit_timeout() + "'" +
             "}";
     }
-     
+
+    
 }

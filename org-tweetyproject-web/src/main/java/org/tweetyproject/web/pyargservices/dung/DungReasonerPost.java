@@ -1,8 +1,9 @@
-package org.tweetyproject.web.pyargservices;
+package org.tweetyproject.web.pyargservices.dung;
 
 import java.util.List;
 
-public class PyArgPost {
+public class DungReasonerPost
+ {
 
     private String cmd;
     private String email;

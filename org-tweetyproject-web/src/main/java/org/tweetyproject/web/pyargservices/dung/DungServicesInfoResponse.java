@@ -1,7 +1,9 @@
-package org.tweetyproject.web.pyargservices;
+package org.tweetyproject.web.pyargservices.dung;
 
 import java.util.List;
 import java.util.Objects;
+
+import org.tweetyproject.web.pyargservices.Response;
 
 public class DungServicesInfoResponse extends Response {
     private String reply;
