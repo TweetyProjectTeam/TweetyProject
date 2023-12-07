@@ -12,7 +12,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.json.JSONException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tweetyproject.arg.dung.syntax.DungTheory;
@@ -45,6 +50,7 @@ import org.tweetyproject.web.services.DelpService;
 import org.tweetyproject.web.services.InconsistencyMeasurementService;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.tweetyproject.arg.delp.parser.DelpParser;
 import org.tweetyproject.arg.delp.reasoner.DelpReasoner;
 import org.tweetyproject.arg.delp.semantics.ComparisonCriterion;
@@ -67,7 +73,7 @@ public class RequestController {
 	private final int SERVICES_TIMEOUT_DELP = 600;
 	private final int SERVICES_TIMEOUT_INCMES = 300;
 
-	@PostMapping(value = "/dung", produces = "application/json")
+	@PostMapping(value = "/dung", produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public Response handleRequest(
   	@RequestBody DungReasonerPost dungReasonerPost) {
@@ -112,7 +118,13 @@ public class RequestController {
 		}
 	}
 
-
+	@PostMapping(value = "/ping", produces = "application/json")
+	@ResponseBody
+	public Ping ping(@RequestBody Ping ping_Greeting) {
+		System.out.println("==== PING ====");
+		return ping_Greeting;
+	}
+	
 	@PostMapping(value = "/info", produces = "application/json")
 	@ResponseBody
 	public DungServicesInfoResponse getInfo(@RequestBody DungReasonerPost pyArgPost){
@@ -139,7 +151,8 @@ public class RequestController {
 		return response;
 	}
 
-	@PostMapping(value = "/delp", produces = "application/json")
+	
+	@PostMapping(value = "/delp", produces = "application/json", consumes="application/json")
 	@ResponseBody
 	public Response handleRequest(
   	@RequestBody DelpPost delpPost) {
