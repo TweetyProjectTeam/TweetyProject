@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class RestServiceCorsApplication {
-    String allowedOrigins = "http://127.0.0.1:3000";
+    String allowedOrigins = "http://tweetyproject.org";
 	public static void main(String[] args) {
 		SpringApplication.run(RestServiceCorsApplication.class, args);
 	}
