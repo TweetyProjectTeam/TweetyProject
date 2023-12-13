@@ -156,6 +156,8 @@ public class RequestController {
 	@ResponseBody
 	public Response handleRequest(
   	@RequestBody DelpPost delpPost) {
+
+		System.out.println(delpPost.toString());
 		  
 		DelpResponse delpResponse =  new DelpResponse("query", delpPost.getEmail(), delpPost.getCompcriterion(), delpPost.getKb(), delpPost.getQuery(), delpPost.getTimeout(),null, 0.0, delpPost.getUnit_timeout(),null);
 		TimeUnit unit = Utils.getTimoutUnit(delpPost.getUnit_timeout());

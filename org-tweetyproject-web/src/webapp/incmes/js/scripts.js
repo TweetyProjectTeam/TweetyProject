@@ -162,8 +162,6 @@ function select(){
 					 "format": "",
 					 "timeout": 60000,
 					 "unit_timeout": "ms"
-
-
    	           }),
   		dataType: "json",
   		success: function(response){populateMeasures(response);},
